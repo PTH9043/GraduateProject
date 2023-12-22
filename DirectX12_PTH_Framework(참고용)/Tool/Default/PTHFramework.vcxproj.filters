@@ -1,0 +1,253 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="targetver.h">
+      <Filter>99.Default\Ects</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>99.Default\Ects</Filter>
+    </ClInclude>
+    <ClInclude Include="PTHFramework.h">
+      <Filter>99.Default\Ects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ToolDefines.h">
+      <Filter>98.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ToolMaker.h">
+      <Filter>98.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TToolApp.h">
+      <Filter>00.ToolApp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TImGuiView.h">
+      <Filter>03.ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TImGuiManager.h">
+      <Filter>01.Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TMainScene.h">
+      <Filter>02.Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TProtoMaker.h">
+      <Filter>97,ProtoMaker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TAssimpModel.h">
+      <Filter>96.AssimpModel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TAssimpMeshContainer.h">
+      <Filter>96.AssimpModel\MeshContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TAssimpBoneNode.h">
+      <Filter>96.AssimpModel\BoneNode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TAssimpAnimation.h">
+      <Filter>96.AssimpModel\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TAssimpChannel.h">
+      <Filter>96.AssimpModel\Animation\Channel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui\imconfig.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui\imgui.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui\imgui_impl_dx12.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui\imgui_impl_win32.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui\imgui_internal.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui\imstb_rectpack.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui\imstb_textedit.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui\imstb_truetype.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TMainView.h">
+      <Filter>03.ImGui\MainView</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TModelConverter.h">
+      <Filter>03.ImGui\ModelConverter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TShowModelObject.h">
+      <Filter>05.ShowModel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TShowAnimModelObject.h">
+      <Filter>05.ShowModel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TMainCamera.h">
+      <Filter>04.Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TSceneView.h">
+      <Filter>03.ImGui\SceneView</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TStructureObj.h">
+      <Filter>06.StructedObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TShowTerrain.h">
+      <Filter>05.ShowModel</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>99.Default\Ects</Filter>
+    </Image>
+    <Image Include="PTHFramework.ico">
+      <Filter>99.Default\Ects</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="99.Default">
+      <UniqueIdentifier>{62b51734-10fb-45b2-86e3-bf452e040e15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Default\Ects">
+      <UniqueIdentifier>{7ad0dfa5-1b8c-4ec6-a4ee-828ec6f9c469}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Defines">
+      <UniqueIdentifier>{320c8f47-e502-4b1e-9602-c2c106d27e06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.ToolApp">
+      <UniqueIdentifier>{0df6df78-7e00-4fec-88dc-50317885301e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Manager">
+      <UniqueIdentifier>{ac40e34b-efef-4e4f-998a-0b0746d3ac97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97,ProtoMaker">
+      <UniqueIdentifier>{bf48f7ac-ff34-4a54-b163-549969bfe036}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.AssimpModel">
+      <UniqueIdentifier>{9941895f-827e-4340-a22e-fdf54ec417d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.AssimpModel\MeshContainer">
+      <UniqueIdentifier>{27e6966d-b630-4fe2-b779-7f56f6bb2b2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.AssimpModel\BoneNode">
+      <UniqueIdentifier>{657df7cc-9ea6-4676-91a0-30a12b955753}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.AssimpModel\Animation">
+      <UniqueIdentifier>{610748f7-61b9-4855-80ee-944ae3ad518f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.AssimpModel\Animation\Channel">
+      <UniqueIdentifier>{deb01764-2eb7-4aea-96ad-3ee24e9f5fbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Default\ImGui">
+      <UniqueIdentifier>{c7d3dfce-cac6-4a1b-bfaa-478bf21f9c3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Camera">
+      <UniqueIdentifier>{8ac47de2-46f4-4665-bd96-8b1283f3c4a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.ImGui">
+      <UniqueIdentifier>{a94136b3-04e2-4ba5-9efb-2e644a5b6355}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.ImGui\MainView">
+      <UniqueIdentifier>{6842d6c2-1ffa-4ce2-a528-966d483896ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.ImGui\ModelConverter">
+      <UniqueIdentifier>{584a110c-1e6d-4451-915a-c6b8788dcbe9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.ImGui\SceneView">
+      <UniqueIdentifier>{2c359554-3419-40c7-b524-c6de49fe24b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Scene">
+      <UniqueIdentifier>{98f009ff-dd42-4ff3-8883-f634da0b2968}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.ShowModel">
+      <UniqueIdentifier>{0de3facb-a0ea-4856-8c1b-c51b6a5fbb40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.StructedObject">
+      <UniqueIdentifier>{ca12e037-bebb-40f3-985e-2d49134c8a15}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="PTHFramework.rc">
+      <Filter>99.Default\Ects</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="PTHFramework.cpp">
+      <Filter>99.Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TToolApp.cpp">
+      <Filter>00.ToolApp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TImGuiView.cpp">
+      <Filter>03.ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TImGuiManager.cpp">
+      <Filter>01.Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TMainScene.cpp">
+      <Filter>02.Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TProtoMaker.cpp">
+      <Filter>97,ProtoMaker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TAssimpModel.cpp">
+      <Filter>96.AssimpModel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TAssimpMeshContainer.cpp">
+      <Filter>96.AssimpModel\MeshContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TAssimpBoneNode.cpp">
+      <Filter>96.AssimpModel\BoneNode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TAssimpAnimation.cpp">
+      <Filter>96.AssimpModel\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TAssimpChannel.cpp">
+      <Filter>96.AssimpModel\Animation\Channel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGui\imgui.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGui\imgui_demo.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGui\imgui_draw.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGui\imgui_impl_dx12.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGui\imgui_impl_win32.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGui\imgui_tables.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGui\imgui_widgets.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TMainView.cpp">
+      <Filter>03.ImGui\MainView</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TModelConverter.cpp">
+      <Filter>03.ImGui\ModelConverter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TShowModelObject.cpp">
+      <Filter>05.ShowModel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TShowAnimModelObject.cpp">
+      <Filter>05.ShowModel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TMainCamera.cpp">
+      <Filter>04.Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TSceneView.cpp">
+      <Filter>03.ImGui\SceneView</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TStructureObj.cpp">
+      <Filter>06.StructedObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TShowTerrain.cpp">
+      <Filter>05.ShowModel</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
