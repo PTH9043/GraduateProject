@@ -1,2 +1,66 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" />
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="99.Defines">
+      <UniqueIdentifier>{00db823c-72f6-4292-8f1b-90e99574c20e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Super">
+      <UniqueIdentifier>{5a074676-f883-426d-8f7e-b1f010a7e89a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Use">
+      <UniqueIdentifier>{6a6a532a-01e5-4a50-b9ca-586d9136b625}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.CoreGrobal">
+      <UniqueIdentifier>{5588a636-9a32-407d-9dc7-cb8a2d591c8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Super\Base">
+      <UniqueIdentifier>{c89d4576-b348-437d-9082-de1b67bca212}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Public\CoreDefines.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SmartPointer.h">
+      <Filter>98.Use</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CorePacket.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CoreEnum.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CoreMacro.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CoreFunction.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CoreTls.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CoreTypedef.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UCoreGrobal.h">
+      <Filter>00.CoreGrobal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UBase.h">
+      <Filter>97.Super\Base</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Private\SmartPointer.cpp">
+      <Filter>98.Use</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\CoreConcept.h">
+      <Filter>99.Defines</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UCoreGrobal.cpp">
+      <Filter>00.CoreGrobal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UBase.cpp">
+      <Filter>97.Super\Base</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
