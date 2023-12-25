@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+
+
+message POSITION {
+float x = 1;
+float y = 2;
+float z = 3;
+}
+
+message SC_CHECKLOGIN{
+	int64 id = 1;
+}
+
+message SC_POS {
+	int64 id = 1;
+	POSITION pos = 2;
+	int64 move_time = 3;
+}
+
+message SC_PUT_OBJECT {
+	int64 id = 1;
+	POSITION pos = 2;
+	int32 o_type = 3;
+}
+
+message SC_REMOVE_OBJECT {
+	int64 id = 1;
+}
+
+enum Direction{
+	UP = 0;
+	DOWN = 1;
+	LEFT = 2;
+	RIGHT = 3;
+}
+
+message CS_LOGIN {
+	string user_name = 1;
+}
+
+message CS_MOVE {
+	Direction dir = 1;
+	int64 move_time = 2;
+}
+
+message CS_LOGOUT{
+	int64 id = 1;
+}

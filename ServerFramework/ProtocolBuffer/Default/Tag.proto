@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+enum TAG_CS
+{
+	TAG_CS_LOGIN = 0;
+	TAG_CS_MOVE = 1;
+	TAG_CS_CHAT = 2;
+	TAG_CS_LOGOUT = 3;
+}
+
+enum TAG_SERVER
+{
+	TAG_SC_LOGIN = 0;
+	TAG_SC_MOVE = 1;
+	TAG_SC_CHAT = 2;
+	TAG_SC_LOGOUT = 3;
+}
