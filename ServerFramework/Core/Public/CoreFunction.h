@@ -68,12 +68,12 @@ namespace Core
 	/*
 	@ Date: 2023-12-26
 	@ Writer: 박태현
-	@ Explain: 단순히 객체를 만드는 함수이다, 생성자의 변수들이 제대로 들어왔는지 확인하고 안들어왔으면 에러 출력, USE_DEBUG에서만 사용
+	@ Explain: 단순히 객체를 만드는 함수이다, 
 	*/
-	template<class T, class...Args>
-		requires ConstructWidthArgsCheck<T, Args...>
+	template<class T, class... Args>
+		requires ConstructWithArgsCheck<T, Args...>
 	static SHPTR<T> Create(Args&&... args) {
-		SHPTR<T> pInstance = Core::PTH::MakeShared<T>(std::make_shared<T>(std::forward<Args>(args)...));
+		SHPTR<T> pInstance = Core::MakeShared<T>(std::make_shared<T>(std::forward<Args>(args)...));
 		return pInstance;
 	}
 	/*
@@ -85,7 +85,7 @@ namespace Core
 		requires	CheckToSameMethodArgs<T, Args...>
 	static SHPTR<T> CreateInitNative(Args&&... args) {
 		static_assert(CheckToSameMethodArgs<T, Args...>, "NativeConstruct의 인자가 잘못되었습니다.");
-		SHPTR<T> pInstance{ Core::PTH::MakeShared<T>(std::make_shared<T>()) };
+		SHPTR<T> pInstance{ Core::MakeShared<T>(std::make_shared<T>()) };
 		if (false ==  (pInstance->NativeConstruct(args...))) {
 #ifdef USE_DEBUG
 			DEBUG::ErrorToCreateClass(pInstance);
@@ -105,7 +105,7 @@ namespace Core
 		requires CheckToSameMethodArgs<T, Args...>
 	static SHPTR<T> CreateInitNativeNotMsg(Args&&... args) {
 		static_assert(CheckToSameMethodArgs<T, Args...>, "NativeConstruct의 인자가 잘못되었습니다.");
-		SHPTR<T> pInstance{ Core::PTH::MakeShared<T>(std::make_shared<T>()) };
+		SHPTR<T> pInstance{ Core::MakeShared<T>(std::make_shared<T>()) };
 		if (false == (pInstance->NativeConstruct(args...))) {
 			pInstance.reset();
 		}
@@ -118,12 +118,11 @@ namespace Core
 						Natvie함수가 있는지 확인 후, 생성자의 변수와 Args...의 변수가 동일한지 판단.
 	*/
 	template<class T, class ...Args>
-		requires ConstructWidthArgsCheck<T, Args...>
+		requires ConstructWithArgsCheck<T, Args...>
 	&& CheckToSameMethodArgs<T>
 		static SHPTR<T> CreateInitConstructor(Args&&... args) {
-		;
-		static_assert(ConstructWidthArgsCheck<T, Args...>, "생성자의 인자가 잘못되었습니다.");
-		SHPTR<T> pInstance{ Core::PTH::MakeShared<T>(std::make_shared<T>(std::forward<Args>(args)...)) };
+		static_assert(ConstructWithArgsCheck<T, Args...>, "생성자의 인자가 잘못되었습니다.");
+		SHPTR<T> pInstance{ Core::MakeShared<T>(std::make_shared<T>(std::forward<Args>(args)...)) };
 		if (false == (pInstance->NativeConstruct())) {
 			ErrorToCreateClass(pInstance);
 			pInstance.reset();
@@ -136,11 +135,11 @@ namespace Core
 	@ Explain: CreateInitConstructor 동일, 다만 메시지는 출력하지 않음
 	*/
 	template<class T, class ...Args>
-		requires ConstructWidthArgsCheck<T, Args...>
+		requires ConstructWithArgsCheck<T, Args...>
 	&& CheckToSameMethodArgs<T>
 		static SHPTR<T>  CreateInitConstructorNotMsg(Args&&... args) {
-		static_assert(ConstructWidthArgsCheck<T, Args...>, "생성자의 인자가 잘못되었습니다.");
-		SHPTR<T> pInstance{ Core::PTH::MakeShared<T>(std::make_shared<T>(std::forward<Args>(args)...)) };
+		static_assert(ConstructWithArgsCheck<T, Args...>, "생성자의 인자가 잘못되었습니다.");
+		SHPTR<T> pInstance{ Core::MakeShared<T>(std::make_shared<T>(std::forward<Args>(args)...)) };
 		if (false ==  (pInstance->NativeConstruct())) {
 			pInstance.reset();
 		}
@@ -154,7 +153,7 @@ namespace Core
 	template<class T>
 	static SHPTR<T> CloneThis(const T& _rhs)
 	{
-		SHPTR<T> pInstance{ Core::PTH::MakeShared<T>(std::make_shared<T>(_rhs)) };
+		SHPTR<T> pInstance{ Core::MakeShared<T>(std::make_shared<T>(_rhs)) };
 		return pInstance;
 	}
 

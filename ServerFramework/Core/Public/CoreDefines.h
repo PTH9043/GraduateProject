@@ -5,6 +5,7 @@
 #pragma warning (disable : 6031)
 #pragma warning (disable : 4150)
 
+
 #define _CRT_SECURE_NO_WARNINGS 0
 
 #define _WIN32_WINDOWS 0x0601
@@ -29,9 +30,12 @@
 #include <oneapi/tbb/concurrent_unordered_set.h>
 #include <oneapi/tbb/concurrent_vector.h>
 #include <oneapi/tbb/concurrent_set.h>
+#include <oneapi/tbb/mutex.h>
+#include <mutex>
 #include <thread>
 #include <string>
 #include <array>
+#include <concepts>
 #include "CusMath/CusMath.h"
 #include<concepts>
 
@@ -45,8 +49,10 @@
 #include "CoreMacro.h"
 #include "CoreTls.h"
 
+
 namespace Asio = boost::asio;
 
 namespace Core{ }
+
 
 #endif 

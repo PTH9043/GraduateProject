@@ -104,6 +104,14 @@ namespace Core {
 
 	template<class T>
 	using ATOMIC = std::atomic<T>;
+
+	template<class T>
+	using LOCKGUARD = std::lock_guard<T>;
+
+	// TBB Mutex
+	using MUTEX = tbb::mutex;
+
+	using THREADFUNC = std::function<void(void*)>;
 }
 
 

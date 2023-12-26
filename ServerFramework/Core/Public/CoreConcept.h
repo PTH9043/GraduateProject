@@ -18,11 +18,15 @@ namespace Core
 	template<class T, class U>
 	concept Convertible = std::is_convertible_v<T*, U*>();
 
+
+	template <typename Base, typename Derived>
+	concept BASE_CHECK = std::is_base_of_v<Base, Derived>;
+
 	/*
-@ Date: 2023-12-26
-@ Writer: 박태현
-@ Explain: shared_ptr 전용, 해당 변수가 이동할 수 있는지 체크한다. 
-*/
+	@ Date: 2023-12-26
+	@ Writer: 박태현
+	@ Explain: shared_ptr 전용, 해당 변수가 이동할 수 있는지 체크한다. 
+	*/
 	template <typename T>
 	concept SharedPtrConvertible = requires(T t) {
 		{ std::shared_ptr<T>(std::move(t)) };
@@ -34,15 +38,7 @@ namespace Core
 	@ Explain: Args...에서 펼친 변수들과 생성자의 변수들이 맞는지 확인
 	*/
 	template<typename T, class ...Args>
-	concept ConstructWidthArgsCheck = std::is_constructible_v<T, Args...>;
-
-	/*
-	@ Date: 2023-12-26
-	@ Writer: 박태현
-	@ Explain: 생성자가 있는지 확인
-	*/
-	template <typename T, typename DevicePtr, typename GpuCommandPtr>
-	concept ConstructArgsMatch = std::is_constructible_v<T, DevicePtr, GpuCommandPtr>;
+	concept ConstructWithArgsCheck = std::is_constructible_v<T, Args...>;
 
 	/*
 	@ Date: 2023-12-26

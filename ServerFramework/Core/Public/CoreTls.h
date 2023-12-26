@@ -16,7 +16,7 @@ namespace Core
 		@ Writer: 박태현
 		@ Explain: Thread_Local에서 Thread의 ID를 정의한다. 
 		*/
-		static thread_local _uint		g_ThreadID;
+		static  thread_local _uint		g_ThreadID;
 	}
 }
 

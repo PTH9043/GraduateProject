@@ -46,7 +46,7 @@ Is_Nullptr_Debug(T, DEBUG_MACRO_TO_METHOD)
 @ Explain: NO_COPY 매크로가 존재하면 복제 불가한 클래스라는 말이다. 
 */
 #define NO_COPY(ClassName)							\
-private: \
+public: \
 ClassName(const ClassName&) = delete;					\
 ClassName& operator=(const ClassName&) = delete; 
 
@@ -103,5 +103,18 @@ void ClassName::DestoryInstance(){  m_pInstance.reset(); }
 #define CRASH(Value) Core::DEBUG::Crash(Value);
 #define ASSERT_CRASH(COND, Value) Core::DEBUG::AssertCrash(Value, COND);
 
+
+/*
+@ Date: 2023-12-26
+@ Writer: 박태현
+@ Explain:  DLL 파일 관리하는 매크로, EXPORT 일때와 Exprot 아닐 때 구분하게 해준다. 
+*/
+#ifdef CORE_EXPORTS
+#define CORE_DLL   _declspec(dllexport)
+#define CACHE_ALGIN_CORE_DLL  _declspec(dllexport) __declspec(align(16))
+#else
+#define CORE_DLL  _declspec(dllimport)
+#define CACHE_ALGIN_CORE_DLL  _declspec(dllimport) __declspec(align(16))
+#endif
 
 #endif // _SERVERFRAMEWORK_CORE_PUBLIC_COREMACRO_H

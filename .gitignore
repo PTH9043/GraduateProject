@@ -17,4 +17,5 @@ Bin/
 *.lastbuildstate 
 *.suo 
 *.db 
-ServerFramework/ProtocolBuffer/ThirdPartyLib/libprotobufd.lib
+libprotobufd.lib
+ProtocolBufferD.lib
