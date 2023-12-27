@@ -15,8 +15,6 @@ public:
 	~UCoreGrobal();
 public: /* CoreGrobal */
 	/*
-	@ Date: 2023-12-26
-	@ Writer: 박태현
 	@ Explain: CoreGrobal의 내용을 초기화
 	*/
 	HRESULT ReadyCoreGrobal();

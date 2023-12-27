@@ -36,6 +36,7 @@
 #include <string>
 #include <array>
 #include <concepts>
+#include <chrono>
 #include "CusMath/CusMath.h"
 #include<concepts>
 
@@ -48,6 +49,8 @@
 #include "CoreFunction.h"
 #include "CoreMacro.h"
 #include "CoreTls.h"
+
+#include "Lock.h"
 
 
 namespace Asio = boost::asio;

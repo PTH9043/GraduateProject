@@ -23,33 +23,19 @@ public:
 
 public:
 	/*
-	@ Date: 2023-12-26
-	@ Writer: 박태현
 	@ Explain:  실제 쓰레드를 등록하는 함수
 	*/
 	void RegisterFunc(const THREADFUNC& _CallBack, void* _Data);
 	/*
-	@ Date: 2023-12-26
-	@ Writer: 박태현
 	@ Explain:  실제 쓰레드를 실행하는 함수
 	*/
 	void Join();
 private:
 	/*
-	@ Date: 2023-12-26
-	@ Writer: 박태현
 	@ Explain:  쓰레드에 등록하는 함수
 	*/
 	static void ThreadJoin(const THREADFUNC& _CallBack, void* _Data, _uint _iCurrentThreadID);
-	/*
-	@ Date: 2023-12-26
-	@ Writer: 박태현
-	*/
 	static void InitTLS(_uint _iCurrentThreadID);
-	/*
-	@ Date: 2023-12-26
-	@ Writer: 박태현
-	*/
 	static void DestroyTLS();
 
 	// 초기화 함수 -> UBase에 기록됨 

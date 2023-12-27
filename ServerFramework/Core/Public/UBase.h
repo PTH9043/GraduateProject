@@ -15,8 +15,6 @@ protected:
 
 protected:
 	/*
-	@ Date: 2023-12-26
-	@ Writer: 박태현
 	@ Explain:  자기 자신의 WEAKPTR을 캐스팅 하기 위한 함수들이다. 
 	*/
 	template<class T>
@@ -25,8 +23,6 @@ protected:
 	WKPTR<T> ThisWeak() { return Core::static_shared_cast<T>(weak_from_this()); }
 
 	/*
-	@ Date: 2023-12-26
-	@ Writer: 박태현
 	@ Explain:  메모리를 해제해야 할 것이 있을 때 FREE에 정의하여 해제한다. 
 	*/
 	virtual void Free() PURE;

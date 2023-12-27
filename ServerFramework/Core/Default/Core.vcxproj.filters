@@ -19,6 +19,9 @@
     <Filter Include="01.Manager">
       <UniqueIdentifier>{5121236a-45dc-4e7c-89a5-0a7a0e6bf6b2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98.Use\Lock">
+      <UniqueIdentifier>{d05bf69f-0859-40ae-94cc-ee7c8fcc25ac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\UBase.h">
@@ -57,6 +60,9 @@
     <ClInclude Include="..\Public\UThreadManager.h">
       <Filter>01.Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Lock.h">
+      <Filter>98.Use\Lock</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\UBase.cpp">
@@ -70,6 +76,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UThreadManager.cpp">
       <Filter>01.Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Lock.cpp">
+      <Filter>98.Use\Lock</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

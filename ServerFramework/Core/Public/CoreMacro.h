@@ -1,6 +1,79 @@
 #ifndef _SERVERFRAMEWORK_CORE_PUBLIC_COREMACRO_H
 #define _SERVERFRAMEWORK_CORE_PUBLIC_COREMACRO_H
 
+/*
+==========================
+					SHOW
+==========================
+*/
+
+/*
+@ Date: 2023-12-28
+@ Writer: 박태현
+@ Explain:  함수를 실행시킬 때, 레퍼런스를 통해 해당하는 변수의 값이 바뀔 수 있을 경우를 나타냄
+*/
+#define REF_OUT
+
+/*
+@ Date: 2023-12-28
+@ Writer: 박태현
+@ Explain:  함수를 선언할 때, 레퍼런스를 통해 해당하는 변수의 값이 바뀔 수 있을 경우를 나타냄
+*/
+#define REF_INNER 
+
+
+/*
+@ Date: 2023-12-28
+@ Writer: 박태현
+@ Explain: 함수를 실행시킬 때,  Pointer를 통해 해당하는 변수의 값이 바뀔 수 있음을 나타냄
+*/
+#define POINTER_OUT 
+
+
+/*
+@ Date: 2023-12-28
+@ Writer: 박태현
+@ Explain: 함수를 선언할 때,  Pointer를 통해 해당하는 변수의 값이 바뀔 수 있음을 나타냄
+*/
+#define POINTER_INNTER 
+
+/*
+@ Date: 2023-12-28
+@ Writer: 박태현
+@ Explain: 읽기 전용 변수를 나타낸다.
+*/
+#define READONLY
+
+/*
+==========================
+					LOCK	
+==========================
+@ Date: 2023-12-28
+@ Writer: 박태현
+@ Explain: 매크로로 Lock들을 다룰때 사용한다.
+*/
+
+
+#define		USE_MANY_LOCKS(count)		ARRAY<Core::RWLock, count>;
+#define		USE_LOCK									USE_MANY_LOCKS(1)
+#define		READ_LOCK_IDX(idx)				Core::ReadLockGuard readLockGuard_##idx(_locks[idx]);
+#define		READ_LOCK								READ_LOCK_IDX(0)
+#define		WRITE_LOCK_IDX(idx)				Core::WriteLockGuard writeLockGuard_##idx(_locks[idx]);
+#define		WRITE_LOCK								READ_LOCK_IDX(0)
+
+/*
+==========================
+					DEBUG
+==========================
+*/
+
+/*
+@ Date: 2023-12-26
+@ Writer: 박태현
+@ Explain: 강제로 크래쉬를 일으키는 매크로
+*/
+#define CRASH(Value) Core::DEBUG::Crash(Value);
+#define ASSERT_CRASH(COND, Value) Core::DEBUG::AssertCrash(Value, COND);
 
 /*
 @ Date: 2023-12-26
@@ -11,22 +84,6 @@
 __FILE__, __LINE__, __FUNCTION__ 
 #define LOG_MACRO_TO_METHOD(x) \
 typeid(x).name() , __LINE__, __FUNCTION__
-
-
-/*
-@ Date: 2023-12-26
-@ Writer: 박태현
-@ Explain: namespace의 시작과 끝을 구분하는 영역 지정
-*/
-#define BEGIN(NAME) namespace NAME{
-#define END }
-
-/*
-@ Date: 2023-12-26
-@ Writer: 박태현
-@ Explain: 조건에 맞으면 리턴하는 메크로
-*/
-#define RETURN_CHECK(SITUATION, RETURN) if(SITUATION) return RETURN;
 
 /*
 @ Date: 2023-12-26
@@ -39,6 +96,15 @@ typeid(x).name() , __LINE__, __FUNCTION__
 Is_Nullptr_Debug(T, DEBUG_MACRO_TO_METHOD)
 
 #endif 
+
+
+
+/*
+==========================
+					CLASS
+==========================
+*/
+
 
 /*
 @ Date: 2023-12-26
@@ -95,14 +161,6 @@ void ClassName::DestoryInstance(){  m_pInstance.reset(); }
     return pInstance; \
 }();
 
-/*
-@ Date: 2023-12-26
-@ Writer: 박태현
-@ Explain: 강제로 크래쉬를 일으키는 매크로
-*/
-#define CRASH(Value) Core::DEBUG::Crash(Value);
-#define ASSERT_CRASH(COND, Value) Core::DEBUG::AssertCrash(Value, COND);
-
 
 /*
 @ Date: 2023-12-26
@@ -116,5 +174,28 @@ void ClassName::DestoryInstance(){  m_pInstance.reset(); }
 #define CORE_DLL  _declspec(dllimport)
 #define CACHE_ALGIN_CORE_DLL  _declspec(dllimport) __declspec(align(16))
 #endif
+
+
+
+/*
+==========================
+					ECT
+==========================
+*/
+
+/*
+@ Date: 2023-12-26
+@ Writer: 박태현
+@ Explain: namespace의 시작과 끝을 구분하는 영역 지정
+*/
+#define BEGIN(NAME) namespace NAME{
+#define END }
+
+/*
+@ Date: 2023-12-26
+@ Writer: 박태현
+@ Explain: 조건에 맞으면 리턴하는 메크로
+*/
+#define RETURN_CHECK(SITUATION, RETURN) if(SITUATION) return RETURN;
 
 #endif // _SERVERFRAMEWORK_CORE_PUBLIC_COREMACRO_H
