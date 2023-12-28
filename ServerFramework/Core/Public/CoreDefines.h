@@ -51,6 +51,7 @@
 #include "CoreTls.h"
 
 #include "Lock.h"
+#include "LockFreeStack.h"
 
 
 namespace Asio = boost::asio;

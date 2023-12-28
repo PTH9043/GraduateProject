@@ -50,6 +50,28 @@ namespace Core
 		{ t->NativeConstruct(args...) } -> std::same_as<bool>;
 	};
 
+
+	/*
+	@ Date: 2023-12-26
+	@ Writer: 박태현
+	@ Explain: SmartPointer인지 확인하는 Concept 
+	*/
+	template <typename T>
+	concept SmartPointer = requires(T t) {
+		{ t.get() } -> std::same_as<typename T::element_type*>;
+		{ t.reset() } -> std::same_as<void>;
+	};
+
+	/*
+	@ Date: 2023-12-26
+	@ Writer: 박태현
+	@ Explain: Pointer의 배열인지 확인하는 conecept
+	*/
+	template <typename T>
+	concept PointerArray = requires(T t) {
+		{ *t } -> std::same_as<std::remove_extent_t<T>>;  
+	};
+
 	template <typename T, typename U>
 	concept ConvertibleFrom = (SameType<T, U> || ParentsChildType<T, U> || Convertible<T, U>);
 	template <typename T, typename U>

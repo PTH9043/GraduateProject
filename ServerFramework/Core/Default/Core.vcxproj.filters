@@ -22,6 +22,15 @@
     <Filter Include="98.Use\Lock">
       <UniqueIdentifier>{d05bf69f-0859-40ae-94cc-ee7c8fcc25ac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="96.Debug">
+      <UniqueIdentifier>{65b6d4d5-e2dc-4cd2-a071-67116dea07d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Debug\DeadLockProfiler">
+      <UniqueIdentifier>{a0170836-5d8e-457b-ba57-c371fc562ce2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Use\LockFree">
+      <UniqueIdentifier>{02277d15-f896-42a8-bd44-51caebb24e2c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\UBase.h">
@@ -63,6 +72,12 @@
     <ClInclude Include="..\Public\Lock.h">
       <Filter>98.Use\Lock</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UDeadLockProfiler.h">
+      <Filter>96.Debug\DeadLockProfiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LockFreeStack.h">
+      <Filter>98.Use\LockFree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\UBase.cpp">
@@ -79,6 +94,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Lock.cpp">
       <Filter>98.Use\Lock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UDeadLockProfiler.cpp">
+      <Filter>96.Debug\DeadLockProfiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LockFreeStack.cpp">
+      <Filter>98.Use\LockFree</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

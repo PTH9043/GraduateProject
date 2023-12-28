@@ -15,7 +15,7 @@ namespace Core
 		RWLock::RWLock(const RWLock& _rhs) 
 		{
 			m_lockFlag.store(_rhs.m_lockFlag.load());
-			m_WriteCount.store(_rhs.m_lockFlag.load());
+			m_WriteCount.store(_rhs.m_WriteCount.load());
 		}
 		RWLock::~RWLock()
 		{
@@ -23,7 +23,8 @@ namespace Core
 		RWLock& RWLock::operator=(const RWLock& _lock)
 		{
 			m_lockFlag.store(_lock.m_lockFlag.load());
-			m_WriteCount.store(_lock.m_lockFlag.load());
+			m_WriteCount.store(_lock.m_WriteCount.load());
+			return *this;
 		}
 		void RWLock::WriteLock()
 		{
