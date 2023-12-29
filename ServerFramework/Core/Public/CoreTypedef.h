@@ -79,7 +79,13 @@ namespace Core {
 	template<class Type, class Other>
 	using CONUNORMAP = tbb::concurrent_unordered_map<Type, Other>;
 
-	template<class Type, class Other, class Compare>
+	template<class Type, class Other, class Compare = std::less<Type>>
+	using CONMULTIMAP = tbb::concurrent_multimap<Type, Other, Compare>;
+
+	template<class Type, class Other>
+	using CONMAP = tbb::concurrent_map<Type, Other>;
+
+	template<class Type, class Other, class Compare = tbb::tbb_hash_compare<Type>>
 	using CONHASHMAP = tbb::concurrent_hash_map<Type, Other, Compare>;
 
 	template<class Type>
@@ -96,6 +102,9 @@ namespace Core {
 
 	template<class Type>
 	using CONSET = tbb::concurrent_set<Type>;
+
+	template<class Type, class Compare = std::less<Type>>
+	using CONMULTISET = tbb::concurrent_multiset<Type, Compare>;
 
 	using IOContext = boost::asio::io_context;
 

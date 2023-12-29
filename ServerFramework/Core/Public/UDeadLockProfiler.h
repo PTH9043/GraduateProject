@@ -2,14 +2,15 @@
 #define _SERVERFRAMEWORK_CORE_PUBLIC_UDEADLOCKPROFILER
 
 #include "UBase.h"
+#include <stack>
 
 BEGIN(Core)
 
-enum class DEADLOCKLOG : _ushort{
-
-};
-
-
+/*
+@ Date: 2023-12-29
+@ Writer: 박태현
+@ Explain: DeadLock을 검출하기 위한 프로파일러
+*/
 class UDeadLockProfiler final : public UBase {
 public:
 	UDeadLockProfiler();
@@ -17,19 +18,43 @@ public:
 	DESTRUCTOR(UDeadLockProfiler)
 
 public:
-	void PushLock(DEADLOCKLOG _eDeadLockLog);
-	void PopLock(DEADLOCKLOG _eDeadLockLog);
+	/*
+	@ Date: 2023-12-29
+	@ Writer: 박태현
+	*/
+	void PushLock(const char* _DeadLockLog);
+	/*
+	@ Date: 2023-12-29
+	@ Writer: 박태현
+	*/
+	void PopLock(const char* _DeadLockLog);
+	/*
+	@ Date: 2023-12-29
+	@ Writer: 박태현
+	*/
 	void CheckCycle();
 private:
-	void Dfs(const _long _Index);
+	/*
+	@ Date: 2023-12-29
+	@ Writer: 박태현
+	*/
+	void Dfs(const _long _Here);
 
 private:
 	virtual void Free() override;
 
 private:
-	CONUNORMAP<DEADLOCKLOG, _long>		m_NameTold;
-	CONUNORMAP<_long, DEADLOCKLOG>		m_idToName;
+	CONUNORMAP<const char*, _long>			m_NameTold;
+	CONUNORMAP<_long, const char*>			m_IdToName;
+	static thread_local	std::stack<_long>		s_LockStack;
+	CONMAP<_long, CONSET<_long>>				m_LockHistory;
 
+	MUTEX																m_Mutex;
+
+	CONVECTOR<_long>										m_DiscoveredOrder; // 노드가 발견된 순서를 기록하는 배열
+	std::atomic<_long>											m_DiscoveredCount; // 노드가 발견된 순서
+	CONVECTOR<_bool>										m_Finished; // Dfs가 종료되었는지 여부
+	CONVECTOR<_long>										m_Parent; 
 };
 
 END

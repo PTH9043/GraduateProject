@@ -26,8 +26,18 @@ namespace Core
 			m_WriteCount.store(_lock.m_WriteCount.load());
 			return *this;
 		}
+
+#ifdef USE_DEBUG
+		void RWLock::WriteLock(const char* _name)
+#else
 		void RWLock::WriteLock()
+#endif
 		{
+
+#ifdef USE_DEBUG
+			GGROBAL.PushLock(_name);
+#endif
+
 			// 상위 16비트만 추출한다. 
 			const _llong LockThreadID = (m_lockFlag.load() & WRITE_THREAD_MASK) >> 16;
 
@@ -41,7 +51,7 @@ namespace Core
 			auto BeginTime = std::chrono::high_resolution_clock::now();
 
 			// 소유권을 가져온다. 
-			const _llong Desired = ((TLS::g_ThreadID << 16) & WRITE_THREAD_MASK);
+			const _llong Desired = ((static_cast<_llong>(TLS::g_ThreadID) << 16) & WRITE_THREAD_MASK);
 			while (true)
 			{
 				for (_uint SpinCount = 0; SpinCount < MAX_SPIN_COUNT; ++SpinCount)
@@ -70,8 +80,16 @@ namespace Core
 		@ Date: 2023-12-27
 		@ Writer: 박태현
 		*/
+#ifdef USE_DEBUG
+		void RWLock::WriteUnLock(const char* _name)
+#else
 		void RWLock::WriteUnLock()
+#endif
 		{
+#ifdef USE_DEBUG
+			GGROBAL.PopLock(_name);
+#endif
+
 			// ReadLock을 다 풀기전에 WriteLock은 불가능
 			if ((m_lockFlag.load() & READ_THREAD_MASK) != 0)
 			{
@@ -88,8 +106,16 @@ namespace Core
 		@ Date: 2023-12-27
 		@ Writer: 박태현
 		*/
+#ifdef USE_DEBUG
+		void RWLock::ReadLock(const char* _name)
+#else 
 		void RWLock::ReadLock()
+#endif
 		{
+#ifdef USE_DEBUG
+			GGROBAL.PushLock(_name);
+#endif
+
 			// 상위 16비트만 추출한다. 
 			const _llong LockThreadID = (m_lockFlag.load() & READ_THREAD_MASK) >> 16;
 			// 만약 동일한 쓰레드가 Lock을 소유하고 있으면 무조건 성공시킨다. 
@@ -126,8 +152,16 @@ namespace Core
 		@ Date: 2023-12-27
 		@ Writer: 박태현
 		*/
+#ifdef USE_DEBUG
+		void RWLock::ReadUnLock(const char* _name)
+#else
 		void RWLock::ReadUnLock()
+#endif
 		{
+#ifdef USE_DEBUG
+			GGROBAL.PopLock(_name);
+#endif
+
 			if ((m_lockFlag.fetch_sub(1) & READ_THREAD_MASK) == 0)
 			{
 				CRASH("MUTIPLE_UNLOCK");

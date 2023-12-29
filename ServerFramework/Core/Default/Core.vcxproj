@@ -28,7 +28,7 @@
     <ClInclude Include="..\Public\CoreTls.h" />
     <ClInclude Include="..\Public\CoreTypedef.h" />
     <ClInclude Include="..\Public\Lock.h" />
-    <ClInclude Include="..\Public\LockFreeStack.h" />
+    <ClInclude Include="..\Public\LockFree.h" />
     <ClInclude Include="..\Public\SmartPointer.h" />
     <ClInclude Include="..\Public\UBase.h" />
     <ClInclude Include="..\Public\UCoreGrobal.h" />
@@ -37,7 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Lock.cpp" />
-    <ClCompile Include="..\Private\LockFreeStack.cpp" />
+    <ClCompile Include="..\Private\LockFree.cpp" />
     <ClCompile Include="..\Private\SmartPointer.cpp" />
     <ClCompile Include="..\Private\UBase.cpp" />
     <ClCompile Include="..\Private\UCoreGrobal.cpp" />

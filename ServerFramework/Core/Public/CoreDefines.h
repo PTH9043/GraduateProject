@@ -28,6 +28,7 @@
 #include <oneapi/tbb/concurrent_queue.h>
 #include <oneapi/tbb/concurrent_unordered_map.h>
 #include <oneapi/tbb/concurrent_unordered_set.h>
+#include <oneapi/tbb/concurrent_map.h>
 #include <oneapi/tbb/concurrent_vector.h>
 #include <oneapi/tbb/concurrent_set.h>
 #include <oneapi/tbb/mutex.h>
@@ -50,8 +51,9 @@
 #include "CoreMacro.h"
 #include "CoreTls.h"
 
+#include "UCoreGrobal.h"
 #include "Lock.h"
-#include "LockFreeStack.h"
+#include "LockFree.h"
 
 
 namespace Asio = boost::asio;

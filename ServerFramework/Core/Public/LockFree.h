@@ -1,13 +1,42 @@
-#ifndef _SERVERFRAMEWORK_CORE_PUBLIC_LOCKFREECONTAINER_H
-#define _SERVERFRAMEWORK_CORE_PUBLIC_LOCKFREECONTAINER_H
+#ifndef _SERVERFRAMEWORK_CORE_PUBLIC_LOCKFREE_H
+#define _SERVERFRAMEWORK_CORE_PUBLIC_LOCKFREE_H
 
 #include <random>
 #include <queue>
 
 namespace Core
 {
+	/*
+	@ Date: 2023-12-29
+	@ Writer: 박태현
+	@ Explain: 멀티쓰레드 환경에서 하나의 포인터에 CAS가 몰리는 것을 방지하기 위해 쓰레드를 잠시 대기시키는 클래스
+	*/
+	class CACHE_ALGIN Backoff {
+	public:
+		Backoff(int _minDelay, int _maxDelay) : m_UniformBackOff{ _minDelay, _maxDelay }, m_Limit{ 0 }, m_MaxDelay{ _maxDelay } {}
+
+		void Relax() {
+			int delay = 0;
+			m_Limit = m_UniformBackOff(m_Dre);
+			m_Limit *= 2;
+			if (m_Limit > m_MaxDelay)
+				m_Limit = m_MaxDelay;
+			std::this_thread::sleep_for(std::chrono::microseconds(delay));
+		}
+	private:
+		std::default_random_engine					m_Dre;
+		std::uniform_int_distribution<int>		m_UniformBackOff;
+		int																m_MaxDelay;
+		int																m_Limit;
+	};
+
 	namespace PTHStack {
 
+		/*
+		@ Date: 2023-12-29
+		@ Writer: 박태현
+		@ Explain: Stack의 노드
+		*/
 		template<class T>
 		struct CACHE_ALGIN NODE {
 
@@ -37,7 +66,11 @@ namespace Core
 			std::atomic_uint		retireEpoch;
 			bool								isRemove;
 		};
-
+		/*
+		@ Date: 2023-12-29
+		@ Writer: 박태현
+		@ Explain: Stack의 EBR Controller
+		*/
 		template<class T>
 		class EBRController {
 		public:
@@ -118,26 +151,11 @@ namespace Core
 			std::array<std::atomic_uint, TLS::MAX_THREAD>					m_Reservation;
 			int																										m_CurrentNumThreads;
 		};
-
-		class CACHE_ALGIN Backoff {
-		public:
-			Backoff(int _minDelay, int _maxDelay) : m_UniformBackOff{ _minDelay, _maxDelay }, m_Limit{ 0 }, m_MaxDelay{ _maxDelay } {}
-
-			void Relax() {
-				int delay = 0;
-				m_Limit = m_UniformBackOff(m_Dre);
-				m_Limit *= 2;
-				if (m_Limit > m_MaxDelay)
-					m_Limit = m_MaxDelay;
-				std::this_thread::sleep_for(std::chrono::microseconds(delay));
-			}
-		private:
-			std::default_random_engine					m_Dre;
-			std::uniform_int_distribution<int>		m_UniformBackOff;
-			int																m_MaxDelay;
-			int																m_Limit;
-		};
-
+		/*
+		@ Date: 2023-12-29
+		@ Writer: 박태현
+		@ Explain: LockFreeStack + Backoff
+		*/
 		template<class T>
 		class CACHE_ALGIN LockFreeStack {
 		public:
@@ -149,6 +167,16 @@ namespace Core
 			void Initialize(int _currentThread, int _remainCount)
 			{
 				m_EBRController.Initialize(_currentThread, _remainCount);
+			}
+
+			T Top()
+			{
+				NODE<T>* pNode = m_Top;
+				if (nullptr == pNode)
+				{
+					return T();
+				}
+				return pNode->data;
 			}
 
 			void Push(T _data, bool _isRemove = false)
@@ -188,6 +216,12 @@ namespace Core
 				}
 			}
 
+			bool IsEmpty()
+			{
+				NODE<T>* pNode = m_Top;
+				return pNode == nullptr;
+			}
+
 			void clear()
 			{
 				NODE<T>* p = m_Top;
@@ -207,14 +241,14 @@ namespace Core
 			}
 		private:
 			EBRController<T>	m_EBRController;
-			Backoff						m_BackOff;
+			Core::Backoff			m_BackOff;
 			NODE<T>* volatile	m_Top;
 		};
 	}
 
 	template<class T>
-	using LFSTACK = Core::PTHStack::LockFreeStack<T>;
+	using CONSTACK = Core::PTHStack::LockFreeStack<T>;
 }
 
 
-#endif // _SERVERFRAMEWORK_CORE_PUBLIC_LOCKFREECONTAINER_H
+#endif // _SERVERFRAMEWORK_CORE_PUBLIC_LOCKFREE_H

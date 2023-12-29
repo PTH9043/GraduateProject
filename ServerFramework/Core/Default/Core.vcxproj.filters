@@ -75,7 +75,7 @@
     <ClInclude Include="..\Public\UDeadLockProfiler.h">
       <Filter>96.Debug\DeadLockProfiler</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\LockFreeStack.h">
+    <ClInclude Include="..\Public\LockFree.h">
       <Filter>98.Use\LockFree</Filter>
     </ClInclude>
   </ItemGroup>
@@ -98,7 +98,7 @@
     <ClCompile Include="..\Private\UDeadLockProfiler.cpp">
       <Filter>96.Debug\DeadLockProfiler</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\LockFreeStack.cpp">
+    <ClCompile Include="..\Private\LockFree.cpp">
       <Filter>98.Use\LockFree</Filter>
     </ClCompile>
   </ItemGroup>

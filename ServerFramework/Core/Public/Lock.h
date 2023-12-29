@@ -40,9 +40,27 @@ public:
 	~RWLock();
 
 	RWLock& operator =(const RWLock& _lock);
+#ifdef USE_DEBUG
 	/*
 	@ Explain:  WriteLock 해당하는 Lock이 걸릴 동안, 모든 Lock은 동작하지 않는다. 
 	*/
+	void WriteLock(const char* _name);
+	/*
+	@ Explain:  WriteLock 해제
+	*/
+	void WriteUnLock(const char* _name);
+	/*
+	@ Explain:  ReadLock 같은 Read Lock이 걸려있어도 그냥 통과하지만 WriteLock이 걸릴 경우 대기
+	*/
+	void ReadLock(const char* _name);
+	/*
+	@ Explain:  ReadLock 해제 
+	*/
+	void ReadUnLock(const char* _name);
+#else 
+	/*
+@ Explain:  WriteLock 해당하는 Lock이 걸릴 동안, 모든 Lock은 동작하지 않는다.
+*/
 	void WriteLock();
 	/*
 	@ Explain:  WriteLock 해제
@@ -53,9 +71,10 @@ public:
 	*/
 	void ReadLock();
 	/*
-	@ Explain:  ReadLock 해제 
+	@ Explain:  ReadLock 해제
 	*/
 	void ReadUnLock();
+#endif 
 private:
 	ATOMIC<_llong>	m_lockFlag;
 	ATOMIC<_uint>	m_WriteCount;
@@ -63,20 +82,39 @@ private:
 
 class ReadLockGuard {
 public:
-	ReadLockGuard(const RWLock& _Lock) : m_Lock{ _Lock } { m_Lock.ReadLock(); }
+
+#ifdef USE_DEBUG
+	ReadLockGuard(const RWLock& _Lock, const char* _name) : m_Lock{ _Lock }, m_Name{ _name } { m_Lock.ReadLock(_name); }
+	~ReadLockGuard() { m_Lock.ReadUnLock(m_Name); }
+#else
+	ReadLockGuard(const RWLock& _Lock) : m_Lock{ _Lock }, { m_Lock.ReadLock(); }
 	~ReadLockGuard() { m_Lock.ReadUnLock(); }
+#endif
 
 private:
-	RWLock		m_Lock;
+	RWLock		   m_Lock;
+
+#ifdef USE_DEBUG
+	const char*  m_Name;
+#endif
 };
 
 class WriteLockGuard {
 public:
-	WriteLockGuard(const RWLock& _Lock) : m_Lock{ _Lock } { m_Lock.WriteLock(); }
+#ifdef USE_DEBUG
+	WriteLockGuard(const RWLock& _Lock, const char* _name) : m_Lock{ _Lock }, m_Name{ _name } { m_Lock.WriteLock(_name); }
+	~WriteLockGuard() { m_Lock.WriteUnLock(m_Name); }
+#else
+	WriteLockGuard(const RWLock& _Lock) : m_Lock{ _Lock }, { m_Lock.WriteLock(); }
 	~WriteLockGuard() { m_Lock.WriteUnLock(); }
+#endif
 
 private:
-	RWLock		m_Lock;
+	RWLock			m_Lock;
+
+#ifdef USE_DEBUG
+	const char*   m_Name;
+#endif 
 };
 
 END

@@ -3,6 +3,7 @@
 
 BEGIN(Core)
 class UThreadManager;
+class UDeadLockProfiler;
 /*
 @ Date: 2023-12-26
 @ Writer: 박태현
@@ -14,18 +15,21 @@ public:
 	NO_COPY(UCoreGrobal)
 	~UCoreGrobal();
 public: /* CoreGrobal */
-	/*
-	@ Explain: CoreGrobal의 내용을 초기화
-	*/
 	HRESULT ReadyCoreGrobal();
 public: /* ThreadManager */
 	void RegisterFunc(const THREADFUNC& _CallBack, void* _Data);
 	void Join();
 
+public: /* DeadLockProfiler*/
+	void PushLock(const char* _DeadLockLog);
+	void PopLock(const char* _DeadLockLog);
+	void CheckCycle();
+
 private:
-	MUTEX										m_Mutex;
-	IOContext*									m_pContext;
-	SHPTR<UThreadManager>	m_spThreadManager;
+	MUTEX											m_Mutex;
+	IOContext*										m_pContext;
+	SHPTR<UThreadManager>		m_spThreadManager;
+	SHPTR< UDeadLockProfiler>		m_spDeadLockProfiler;
 };
 
 CORE_DLL extern		UCoreGrobal e_CoreGrobal;
