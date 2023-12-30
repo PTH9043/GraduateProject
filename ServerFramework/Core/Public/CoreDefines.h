@@ -8,16 +8,28 @@
 
 #define _CRT_SECURE_NO_WARNINGS 0
 
-#define _WIN32_WINDOWS 0x0601
-#define BOOST_ASIO_WINDOWS
-#define  _WINSOCK_DEPRECATED_NO_WARNINGS
-
 #define USE_DEBUG 0
 
+/*
+@ Date: 2023-12-30
+@ Writer: 박태현
+@ Explain
+- 현재 실행되는 코드의 상황이 Window OS인지 Linux OS인지 정의한다.
+*/
+#define WINDOW_OS
+// #define LINUX_OS
+
+#ifdef WINDOW_OS
+
+#define _WIN32_WINDOWS 0x6001
+#define _WINSOCK_DEPRECATED_NO_WARNINGS 
+
+#endif
+
 #ifdef _DEBUG
-#pragma comment (lib, "CusLibDebug")
+#pragma comment (lib, "PthMathD")
 #else
-#pragma comment (lib, "CusLib")
+#pragma comment (lib, "PthMath")
 #endif
 
 #include <iostream>
@@ -38,16 +50,17 @@
 #include <array>
 #include <concepts>
 #include <chrono>
-#include "CusMath/CusMath.h"
+#include "PthMath/PthMath.h"
 #include<concepts>
-
-#include "SmartPointer.h"
 
 #include "CoreConcept.h"
 #include "CoreTypedef.h"
+#include "SmartPointer.h"
+
+#include "CoreFunction.h"
 #include "CorePacket.h"
 #include "CoreEnum.h"
-#include "CoreFunction.h"
+
 #include "CoreMacro.h"
 #include "CoreTls.h"
 

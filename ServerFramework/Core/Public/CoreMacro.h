@@ -1,6 +1,7 @@
 #ifndef _SERVERFRAMEWORK_CORE_PUBLIC_COREMACRO_H
 #define _SERVERFRAMEWORK_CORE_PUBLIC_COREMACRO_H
 
+
 /*
 ==========================
 					SHOW
@@ -10,14 +11,16 @@
 /*
 @ Date: 2023-12-28
 @ Writer: 박태현
-@ Explain:  함수를 실행시킬 때, 레퍼런스를 통해 해당하는 변수의 값이 바뀔 수 있을 경우를 나타냄
+@ Explain
+- 함수를 실행시킬 때, 레퍼런스를 통해 해당하는 변수의 값이 바뀔 수 있을 경우를 나타냄
 */
 #define REF_OUT
 
 /*
 @ Date: 2023-12-28
 @ Writer: 박태현
-@ Explain:  함수를 선언할 때, 레퍼런스를 통해 해당하는 변수의 값이 바뀔 수 있을 경우를 나타냄
+@ Explain
+- 함수를 선언할 때, 레퍼런스를 통해 해당하는 변수의 값이 바뀔 수 있을 경우를 나타냄
 */
 #define REF_INNER 
 
@@ -25,7 +28,8 @@
 /*
 @ Date: 2023-12-28
 @ Writer: 박태현
-@ Explain: 함수를 실행시킬 때,  Pointer를 통해 해당하는 변수의 값이 바뀔 수 있음을 나타냄
+@ Explain
+- 함수를 실행시킬 때,  Pointer를 통해 해당하는 변수의 값이 바뀔 수 있음을 나타냄
 */
 #define POINTER_OUT 
 
@@ -33,16 +37,26 @@
 /*
 @ Date: 2023-12-28
 @ Writer: 박태현
-@ Explain: 함수를 선언할 때,  Pointer를 통해 해당하는 변수의 값이 바뀔 수 있음을 나타냄
+@ Explain
+- 함수를 선언할 때,  Pointer를 통해 해당하는 변수의 값이 바뀔 수 있음을 나타냄
 */
 #define POINTER_INNTER 
 
 /*
 @ Date: 2023-12-28
 @ Writer: 박태현
-@ Explain: 읽기 전용 변수를 나타낸다.
+@ Explain
+- 읽기 전용 변수를 나타낸다.
 */
 #define READONLY
+
+/*
+@ Date: 2023-12-30
+@ Writer: 박태현
+@ Explain
+- 가상함수라는 것을 나타내는 매크로
+*/
+#define PURE = 0
 
 /*
 ==========================
@@ -50,7 +64,8 @@
 ==========================
 @ Date: 2023-12-28
 @ Writer: 박태현
-@ Explain: 매크로로 Lock들을 다룰때 사용한다.
+@ Explain
+- 매크로로 Lock들을 다룰때 사용한다.
 */
 
 
@@ -76,7 +91,8 @@
 /*
 @ Date: 2023-12-26
 @ Writer: 박태현
-@ Explain: 강제로 크래쉬를 일으키는 매크로
+@ Explain
+- 강제로 크래쉬를 일으키는 매크로
 */
 #define CRASH(Value) Core::DEBUG::Crash(Value);
 #define ASSERT_CRASH(COND, Value) Core::DEBUG::AssertCrash(Value, COND);
@@ -84,7 +100,8 @@
 /*
 @ Date: 2023-12-26
 @ Writer: 박태현
-@ Explain: DEBUG_MACRO를 위한 FILE_LINE_FUNCTION등을 정의 
+@ Explain
+- DEBUG_MACRO를 위한 FILE_LINE_FUNCTION등을 정의 
 */
 #define DEBUG_MACRO_TO_METHOD \
 __FILE__, __LINE__, __FUNCTION__ 
@@ -94,7 +111,8 @@ typeid(x).name() , __LINE__, __FUNCTION__
 /*
 @ Date: 2023-12-26
 @ Writer: 박태현
-@ Explain: NULL이면 Message 박스 출력
+@ Explain
+- NULL이면 Message 박스 출력
 */
 #ifdef USE_DEBUG
 
@@ -115,7 +133,8 @@ Is_Nullptr_Debug(T, DEBUG_MACRO_TO_METHOD)
 /*
 @ Date: 2023-12-26
 @ Writer: 박태현
-@ Explain: NO_COPY 매크로가 존재하면 복제 불가한 클래스라는 말이다. 
+@ Explain
+- NO_COPY 매크로가 존재하면 복제 불가한 클래스라는 말이다. 
 */
 #define NO_COPY(ClassName)							\
 public: \
@@ -125,14 +144,16 @@ ClassName& operator=(const ClassName&) = delete;
 /*
 @ Date: 2023-12-26
 @ Writer: 박태현
-@ Explain: 소멸자에 Free를 호출하게 만드는 매크로
+@ Explain
+- 소멸자에 Free를 호출하게 만드는 매크로
 */
 #define DESTRUCTOR(ClassName) virtual ~ClassName() {Free();}
 
 /*
 @ Date: 2023-12-26
 @ Writer: 박태현
-@ Explain: 헤더파일에 싱글톤에 사용할 함수와 변수를 정의
+@ Explain
+- 헤더파일에 싱글톤에 사용할 함수와 변수를 정의
 */
 #define DECLARE_SINGLETON(ClassName)					\
 		NO_COPY(ClassName)								\
@@ -145,7 +166,8 @@ private:												\
 /*
 @ Date: 2023-12-26
 @ Writer: 박태현
-@ Explain: 헤더파일에서 정의한 함수와 변수를 CPP파일에서 초기화 그리고 정의하여 싱글톤이 되도록한다. 
+@ Explain
+- 헤더파일에서 정의한 함수와 변수를 CPP파일에서 초기화 그리고 정의하여 싱글톤이 되도록한다. 
 */
 #define IMPLEMENT_SINGLETON(ClassName)					\
 SHPTR<ClassName> ClassName::m_pInstance = nullptr;			\
@@ -160,7 +182,8 @@ void ClassName::DestoryInstance(){  m_pInstance.reset(); }
 /*
 @ Date: 2023-12-26
 @ Writer: 박태현
-@ Explain: 싱글톤 클래스의 값을 받아오는 매크로
+@ Explain
+- 싱글톤 클래스의 값을 받아오는 매크로
 */
 #define GET_INSTANCE(CLASSNAME) [](){ \
   SHPTR<CLASSNAME> pInstance = CLASSNAME::GetInstance();	\
@@ -171,7 +194,8 @@ void ClassName::DestoryInstance(){  m_pInstance.reset(); }
 /*
 @ Date: 2023-12-26
 @ Writer: 박태현
-@ Explain:  DLL 파일 관리하는 매크로, EXPORT 일때와 Exprot 아닐 때 구분하게 해준다. 
+@ Explain
+- DLL 파일 관리하는 매크로, EXPORT 일때와 Exprot 아닐 때 구분하게 해준다. 
 */
 #ifdef CORE_EXPORTS
 #define CORE_DLL   _declspec(dllexport)

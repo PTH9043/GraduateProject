@@ -31,6 +31,12 @@
     <Filter Include="98.Use\LockFree">
       <UniqueIdentifier>{02277d15-f896-42a8-bd44-51caebb24e2c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98.Use\Allocator">
+      <UniqueIdentifier>{22da3a53-b665-4dfc-b036-b47e2d3412ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Use\Memory">
+      <UniqueIdentifier>{4d7c1bef-33d4-4faa-ad0f-34a50cc99784}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\UBase.h">
@@ -78,6 +84,12 @@
     <ClInclude Include="..\Public\LockFree.h">
       <Filter>98.Use\LockFree</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Allocator.h">
+      <Filter>98.Use\Allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Memory.h">
+      <Filter>98.Use\Memory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\UBase.cpp">
@@ -100,6 +112,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\LockFree.cpp">
       <Filter>98.Use\LockFree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Allocator.cpp">
+      <Filter>98.Use\Allocator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Memory.cpp">
+      <Filter>98.Use\Memory</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

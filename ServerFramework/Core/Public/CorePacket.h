@@ -12,7 +12,8 @@ namespace Core
 	/*
 	@ Data: 2023-12-22
 	@ Writer: 박태현
-	@ Explain: Buffer의 길이나 Cache의 길이를 정의한 enum
+	@ Explain
+	- Buffer의 길이나 Cache의 길이를 정의한 enum
 	*/
 	enum
 	{
@@ -23,7 +24,8 @@ namespace Core
 	/*
 	@ Data: 2023-12-22
 	@ Writer: 박태현
-	@ Explain: Packet의 앞쪽 부분을 담당하는 Head 부분이다.
+	@ Explain
+	- Packet의 앞쪽 부분을 담당하는 Head 부분이다.
 	*/
 	struct PACKETHEAD {
 		short		PacketSize;

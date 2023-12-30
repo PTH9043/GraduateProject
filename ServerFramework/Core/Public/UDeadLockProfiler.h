@@ -9,7 +9,8 @@ BEGIN(Core)
 /*
 @ Date: 2023-12-29
 @ Writer: 박태현
-@ Explain: DeadLock을 검출하기 위한 프로파일러
+@ Explain
+- DeadLock을 검출하기 위한 프로파일러
 */
 class UDeadLockProfiler final : public UBase {
 public:
@@ -18,26 +19,11 @@ public:
 	DESTRUCTOR(UDeadLockProfiler)
 
 public:
-	/*
-	@ Date: 2023-12-29
-	@ Writer: 박태현
-	*/
+
 	void PushLock(const char* _DeadLockLog);
-	/*
-	@ Date: 2023-12-29
-	@ Writer: 박태현
-	*/
 	void PopLock(const char* _DeadLockLog);
-	/*
-	@ Date: 2023-12-29
-	@ Writer: 박태현
-	*/
 	void CheckCycle();
 private:
-	/*
-	@ Date: 2023-12-29
-	@ Writer: 박태현
-	*/
 	void Dfs(const _long _Here);
 
 private:

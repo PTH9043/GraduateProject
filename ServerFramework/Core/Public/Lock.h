@@ -28,7 +28,8 @@ R: ReadFlag(Shared Lock Count)
 /*
 @ Date: 2023-12-27
 @ Writer: 박태현
-@ Explain:  RW Lock 정의
+@ Explain
+- RW Lock 정의
 
 W -> R (O)
 R -> W (X)
@@ -41,38 +42,15 @@ public:
 
 	RWLock& operator =(const RWLock& _lock);
 #ifdef USE_DEBUG
-	/*
-	@ Explain:  WriteLock 해당하는 Lock이 걸릴 동안, 모든 Lock은 동작하지 않는다. 
-	*/
+
 	void WriteLock(const char* _name);
-	/*
-	@ Explain:  WriteLock 해제
-	*/
 	void WriteUnLock(const char* _name);
-	/*
-	@ Explain:  ReadLock 같은 Read Lock이 걸려있어도 그냥 통과하지만 WriteLock이 걸릴 경우 대기
-	*/
 	void ReadLock(const char* _name);
-	/*
-	@ Explain:  ReadLock 해제 
-	*/
 	void ReadUnLock(const char* _name);
 #else 
-	/*
-@ Explain:  WriteLock 해당하는 Lock이 걸릴 동안, 모든 Lock은 동작하지 않는다.
-*/
 	void WriteLock();
-	/*
-	@ Explain:  WriteLock 해제
-	*/
 	void WriteUnLock();
-	/*
-	@ Explain:  ReadLock 같은 Read Lock이 걸려있어도 그냥 통과하지만 WriteLock이 걸릴 경우 대기
-	*/
 	void ReadLock();
-	/*
-	@ Explain:  ReadLock 해제
-	*/
 	void ReadUnLock();
 #endif 
 private:

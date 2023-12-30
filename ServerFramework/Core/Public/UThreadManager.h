@@ -13,7 +13,8 @@ using THRAEDVECTOR = VECTOR<THREAD>;
 /*
 @ Date: 2023-12-26
 @ Writer: 박태현
-@ Explain:  Thread를 관리하는 매니저 클래스 
+@ Explain
+- Thread를 관리하는 매니저 클래스 
 */
 class CACHE_ALGIN_CORE_DLL UThreadManager final : public UBase {
 public:
@@ -22,18 +23,9 @@ public:
 	DESTRUCTOR(UThreadManager)
 
 public:
-	/*
-	@ Explain:  실제 쓰레드를 등록하는 함수
-	*/
 	void RegisterFunc(const THREADFUNC& _CallBack, void* _Data);
-	/*
-	@ Explain:  실제 쓰레드를 실행하는 함수
-	*/
 	void Join();
 private:
-	/*
-	@ Explain:  쓰레드에 등록하는 함수
-	*/
 	static void ThreadJoin(const THREADFUNC& _CallBack, void* _Data, _uint _iCurrentThreadID);
 	static void InitTLS(_uint _iCurrentThreadID);
 	static void DestroyTLS();

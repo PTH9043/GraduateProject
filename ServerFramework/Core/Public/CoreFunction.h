@@ -10,7 +10,8 @@ namespace Core
 		/*
 		@ Date: 2023-12-26
 		@ Writer: 박태현
-		@ Explain: 일부로 크래쉬을 일으켜 에러를 내는 함수, USE_DEBUG에서만 사용
+		@ Explain
+		- 일부로 크래쉬을 일으켜 에러를 내는 함수, USE_DEBUG에서만 사용
 		*/
 		template<class T>
 		void Crash(T&& _value)
@@ -22,7 +23,8 @@ namespace Core
 		/*
 		@ Date: 2023-12-26
 		@ Writer: 박태현
-		@ Explain: 조건이 통과되면 Crash를 내는 함수, USE_DEBUG에서만 사용
+		@ Explain
+		- 조건이 통과되면 Crash를 내는 함수, USE_DEBUG에서만 사용
 		*/
 		template<class T>
 		void AssertCrash(T&& _value, const bool _isCondition)
@@ -35,7 +37,8 @@ namespace Core
 		/*
 		@ Date: 2023-12-26
 		@ Writer: 박태현
-		@ Explain: 디버그 메시지를 출력하는 함수, USE_DEBUG에서만 사용
+		@ Explain
+		- 디버그 메시지를 출력하는 함수, USE_DEBUG에서만 사용
 		*/
 		static void Debugging_Message(const char* FILE,
 			const unsigned int& LINE, const char* FUNC, const _string& _pMessage)
@@ -57,7 +60,8 @@ namespace Core
 		/*
 		@ Date: 2023-12-26
 		@ Writer: 박태현
-		@ Explain: 객체를 생성할 때, 에러가 있는 클래스에서만 해당 클래스의 type을 확인하여 메시지를 띄우는 함수, USE_DEBUG에서만 사용
+		@ Explain
+		- 객체를 생성할 때, 에러가 있는 클래스에서만 해당 클래스의 type을 확인하여 메시지를 띄우는 함수, USE_DEBUG에서만 사용
 		*/
 		template<typename T>
 		static void ErrorToCreateClass(T& _rhs) {
@@ -68,7 +72,8 @@ namespace Core
 	/*
 	@ Date: 2023-12-26
 	@ Writer: 박태현
-	@ Explain: 단순히 객체를 만드는 함수이다, 
+	@ Explain
+	- 단순히 객체를 만드는 함수이다, 
 	*/
 	template<class T, class... Args>
 		requires ConstructWithArgsCheck<T, Args...>
@@ -79,7 +84,8 @@ namespace Core
 	/*
 	@ Date: 2023-12-26
 	@ Writer: 박태현
-	@ Explain: NatvieConstruct 함수를 호출 한 후 , 실패하면 nullptr 리턴, 함수에서 초기화
+	@ Explain
+	- NatvieConstruct 함수를 호출 한 후 , 실패하면 nullptr 리턴, 함수에서 초기화
 	*/
 	template<class T, class ...Args>
 		requires	CheckToSameMethodArgs<T, Args...>
@@ -99,7 +105,8 @@ namespace Core
 	/*
 	@ Date: 2023-12-26
 	@ Writer: 박태현
-	@ Explain: CreateInitNative 동일, 다만 메시지는 출력하지 않음
+	@ Explain
+	- CreateInitNative 동일, 다만 메시지는 출력하지 않음
 	*/
 	template<class T, class ...Args>
 		requires CheckToSameMethodArgs<T, Args...>
@@ -114,8 +121,9 @@ namespace Core
 	/*
 	@ Date: 2023-12-26
 	@ Writer: 박태현
-	@ Explain: NatvieConstruct 함수를 호출 한 후 , 실패하면 nullptr 리턴, 생성자에서 초기화, 
-						Natvie함수가 있는지 확인 후, 생성자의 변수와 Args...의 변수가 동일한지 판단.
+	@ Explain
+	- NatvieConstruct 함수를 호출 한 후 , 실패하면 nullptr 리턴, 생성자에서 초기화, 
+	Natvie함수가 있는지 확인 후, 생성자의 변수와 Args...의 변수가 동일한지 판단.
 	*/
 	template<class T, class ...Args>
 		requires ConstructWithArgsCheck<T, Args...>
@@ -132,7 +140,8 @@ namespace Core
 	/*
 	@ Date: 2023-12-26
 	@ Writer: 박태현
-	@ Explain: CreateInitConstructor 동일, 다만 메시지는 출력하지 않음
+	@ Explain
+	- CreateInitConstructor 동일, 다만 메시지는 출력하지 않음
 	*/
 	template<class T, class ...Args>
 		requires ConstructWithArgsCheck<T, Args...>
@@ -148,7 +157,8 @@ namespace Core
 	/*
 	@ Date: 2023-12-26
 	@ Writer: 박태현
-	@ Explain: 자기 자신을 클론하는 함수이다. 
+	@ Explain
+	- 자기 자신을 클론하는 함수이다. 
 	*/
 	template<class T>
 	static SHPTR<T> CloneThis(const T& _rhs)

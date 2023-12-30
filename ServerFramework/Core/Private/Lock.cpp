@@ -8,7 +8,8 @@ namespace Core
 		/*
 		@ Date: 2023-12-27
 		@ Writer: 박태현
-		@	 Explain: 아무도 공유하지 않을 경우 Write Lock을 걸어서 자신이 원하는 값이 실행되기를 바란다. 
+		@	 Explain
+		- 아무도 공유하지 않을 경우 Write Lock을 걸어서 자신이 원하는 값이 실행되기를 바란다. 
 		*/
 		RWLock::RWLock() : m_lockFlag{ 0 }, m_WriteCount{ 0 } {
 		}

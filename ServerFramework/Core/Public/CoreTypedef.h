@@ -3,7 +3,8 @@
 /*
 @ Date: 2023-12-26
 @ Writer: 박태현
-@ Explain: 서버 프레임워크 구축에서 사용할 변수 타입들 정의
+@ Explain
+- 서버 프레임워크 구축에서 사용할 변수 타입들 정의
 */
 namespace Core {
 
@@ -33,20 +34,19 @@ namespace Core {
 	using _bool = bool;
 	using _tchar = wchar_t;
 
-	using _float2 = DirectX::PTH::Vector2;
-	using _float3 = DirectX::PTH::Vector3;
-	using _float4 = DirectX::PTH::Vector4;
+	/*
+	GLM (OpenGl용 수학 라이브러리) 
+	*/
+	using _float2 = PTH::Vector2;
+	using _float3 = PTH::Vector3;
+	using _float4 = PTH::Vector4;
 
-	using _int2 = DirectX::XMINT2;
-	using _int3 = DirectX::XMINT3;
-	using _int4 = DirectX::XMINT4;
+	using _int2 = glm::int2;
+	using _int3 = glm::int3;
+	using _int4 = glm::int4;
 
-	using _retangle = DirectX::PTH::RECTANGLE;
-	using _float4x4 = DirectX::PTH::Matrix;
-	using _quaternion = DirectX::PTH::Quaternion;
-
-	using _xmvector = DirectX::XMVECTOR;
-	using _xmmatrix = DirectX::XMMATRIX;
+	using _float4x4 = PTH::Matrix;
+	using _quaternion = PTH::Quaternion;
 
 	using _wstring = std::wstring;
 	using _string = std::string;
