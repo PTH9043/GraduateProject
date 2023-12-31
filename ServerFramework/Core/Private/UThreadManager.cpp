@@ -4,7 +4,7 @@
 
 namespace Core
 {
-	UThreadManager::UThreadManager() : m_iCurThreadNum{0}
+	UThreadManager::UThreadManager() : m_CurThreadNum{0}
 	{
 	}
 	/*
@@ -15,7 +15,7 @@ namespace Core
 	{
 		LOCKGUARD<MUTEX> Lock{ m_Mutex };
 
-		m_ThreadContainer.emplace_back(ThreadJoin, _CallBack, _Data, m_iCurThreadNum++);
+		m_ThreadContainer.emplace_back(ThreadJoin, _CallBack, _Data, m_CurThreadNum++);
 	}
 	/*
 	@ Date: 2023-12-26
@@ -32,9 +32,9 @@ namespace Core
 	@ Date: 2023-12-26
 	@ Writer: 박태현
 	*/
-	void UThreadManager::ThreadJoin(const THREADFUNC& _CallBack, void* _Data, _uint _iCurrentThreadID)
+	void UThreadManager::ThreadJoin(const THREADFUNC& _CallBack, void* _Data, _uint _CurrentThreadID)
 	{
-		InitTLS(_iCurrentThreadID);
+		InitTLS(_CurrentThreadID);
 		_CallBack(_Data);
 		DestroyTLS();
 	}
@@ -42,9 +42,9 @@ namespace Core
 	@ Date: 2023-12-26
 	@ Writer: 박태현
 	*/
-	void UThreadManager::InitTLS(_uint _iCurrentThreadID)
+	void UThreadManager::InitTLS(_uint _CurrentThreadID)
 	{
-		TLS::g_ThreadID = _iCurrentThreadID;
+		TLS::g_ThreadID = _CurrentThreadID;
 	}
 	/*
 	@ Date: 2023-12-26

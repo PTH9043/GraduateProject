@@ -26,8 +26,8 @@ public:
 	void RegisterFunc(const THREADFUNC& _CallBack, void* _Data);
 	void Join();
 private:
-	static void ThreadJoin(const THREADFUNC& _CallBack, void* _Data, _uint _iCurrentThreadID);
-	static void InitTLS(_uint _iCurrentThreadID);
+	static void ThreadJoin(const THREADFUNC& _CallBack, void* _Data, _uint _CurrentThreadID);
+	static void InitTLS(_uint _CurrentThreadID);
 	static void DestroyTLS();
 
 	// 초기화 함수 -> UBase에 기록됨 
@@ -36,7 +36,7 @@ private:
 	MUTEX							m_Mutex;
 	THRAEDVECTOR			m_ThreadContainer;
 	// Thread Num
-	std::atomic< _uint>		m_iCurThreadNum;
+	std::atomic< _uint>		m_CurThreadNum;
 };
 
 END

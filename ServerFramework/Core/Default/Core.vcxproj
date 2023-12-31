@@ -24,28 +24,40 @@
     <ClInclude Include="..\Public\CoreDefines.h" />
     <ClInclude Include="..\Public\CoreEnum.h" />
     <ClInclude Include="..\Public\CoreFunction.h" />
+    <ClInclude Include="..\Public\CoreGrobal.h" />
     <ClInclude Include="..\Public\CoreMacro.h" />
     <ClInclude Include="..\Public\CorePacket.h" />
+    <ClInclude Include="..\Public\CoreStruct.h" />
     <ClInclude Include="..\Public\CoreTls.h" />
+    <ClInclude Include="..\Public\CoreTypecast.h" />
     <ClInclude Include="..\Public\CoreTypedef.h" />
     <ClInclude Include="..\Public\Lock.h" />
     <ClInclude Include="..\Public\LockFree.h" />
     <ClInclude Include="..\Public\Memory.h" />
     <ClInclude Include="..\Public\SmartPointer.h" />
+    <ClInclude Include="..\Public\UAwsContext.h" />
     <ClInclude Include="..\Public\UBase.h" />
-    <ClInclude Include="..\Public\UCoreGrobal.h" />
+    <ClInclude Include="..\Public\UBuffer.h" />
+    <ClInclude Include="..\Public\UCoreInstance.h" />
     <ClInclude Include="..\Public\UDeadLockProfiler.h" />
+    <ClInclude Include="..\Public\UObjectPool.h" />
+    <ClInclude Include="..\Public\USession.h" />
     <ClInclude Include="..\Public\UThreadManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Allocator.cpp" />
+    <ClCompile Include="..\Private\CoreGrobal.cpp" />
     <ClCompile Include="..\Private\Lock.cpp" />
     <ClCompile Include="..\Private\LockFree.cpp" />
     <ClCompile Include="..\Private\Memory.cpp" />
     <ClCompile Include="..\Private\SmartPointer.cpp" />
+    <ClCompile Include="..\Private\UAwsContext.cpp" />
     <ClCompile Include="..\Private\UBase.cpp" />
-    <ClCompile Include="..\Private\UCoreGrobal.cpp" />
+    <ClCompile Include="..\Private\UBuffer.cpp" />
+    <ClCompile Include="..\Private\UCoreInstance.cpp" />
     <ClCompile Include="..\Private\UDeadLockProfiler.cpp" />
+    <ClCompile Include="..\Private\UObjectPool.cpp" />
+    <ClCompile Include="..\Private\USession.cpp" />
     <ClCompile Include="..\Private\UThreadManager.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

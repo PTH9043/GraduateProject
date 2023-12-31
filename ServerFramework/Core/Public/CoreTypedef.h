@@ -103,6 +103,9 @@ namespace Core {
 	template<class Type>
 	using CONSET = tbb::concurrent_set<Type>;
 
+	template<class Type>
+	using QUEUE = std::queue<Type>;
+
 	template<class Type, class Compare = std::less<Type>>
 	using CONMULTISET = tbb::concurrent_multiset<Type, Compare>;
 

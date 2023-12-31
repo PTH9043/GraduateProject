@@ -14,7 +14,7 @@ namespace Core {
 	@ Explain
 	- 기본적인 메모리 할당과 Delete를 맡고 있는 클래스이다. 
 	*/
-	class BaseAllocator {
+	class CORE_DLL UBaseAllocator {
 	public:
 		/*
 		@ Date: 2023-12-30
@@ -33,6 +33,35 @@ namespace Core {
 	----------------------------------------
 	BASE ALLOCATOR
 	----------------------------------------
+	POOL ALLOCATOR
+	----------------------------------------
+	*/
+		/*
+		@ Date: 2023-12-31
+		@ Writer: 박태현
+		@ Explain
+		- 메모리 풀 객체 할당을 위한 클래스
+		*/
+		class CORE_DLL UPoolAllocator {
+		public:
+			/*
+			@ Date: 2023-12-30
+			@ Writer: 박태현
+			*/
+			static void* Alloc(_ullong _size);
+			/*
+			@ Date: 2023-12-30
+			@ Writer: 박태현
+			*/
+			static void Release(void* _ptr);
+	};
+
+
+
+	/*
+	----------------------------------------
+	POOL ALLOCATOR
+	----------------------------------------
 	STOMP ALLOCATOR
 	----------------------------------------
 	*/
@@ -42,7 +71,7 @@ namespace Core {
 	@ Explain
 	- 해당하는 OS에 맞게 가상 메모리를 할당해주는 클래스이다.
 	*/
-	class StompAllocator{
+	class CORE_DLL UStompAllocator{
 		/*
 		@ Date: 2023-12-30
 		@ Writer: 박태현
@@ -77,6 +106,21 @@ namespace Core {
 	STOMP ALLOCATOR
 	----------------------------------------
 	*/
+
+	template<class Type, class... Args>
+	Type* MemoryAlloc(Args&&... args)
+	{
+		Type* memory = static_cast<Type*>(UPoolAllocator::Alloc(sizeof(Type)));
+		new(memory)Type(std::forward<Args>(args)...); // placement new
+		return memory;
+	}
+
+	template<class Type>
+	void MemoryRelease(Type* obj)
+	{
+		obj->~Type();
+		UPoolAllocator::Release(obj);
+	}
 }
 
 

@@ -1,5 +1,6 @@
 #include "CoreDefines.h"
 #include "Lock.h"
+#include "UDeadLockProfiler.h"
 
 namespace Core
 {
@@ -11,17 +12,17 @@ namespace Core
 		@	 Explain
 		- 아무도 공유하지 않을 경우 Write Lock을 걸어서 자신이 원하는 값이 실행되기를 바란다. 
 		*/
-		RWLock::RWLock() : m_lockFlag{ 0 }, m_WriteCount{ 0 } {
+		URWLock::URWLock() : m_lockFlag{ 0 }, m_WriteCount{ 0 } {
 		}
-		RWLock::RWLock(const RWLock& _rhs) 
+		URWLock::URWLock(const URWLock& _rhs) 
 		{
 			m_lockFlag.store(_rhs.m_lockFlag.load());
 			m_WriteCount.store(_rhs.m_WriteCount.load());
 		}
-		RWLock::~RWLock()
+		URWLock::~URWLock()
 		{
 		}
-		RWLock& RWLock::operator=(const RWLock& _lock)
+		URWLock& URWLock::operator=(const URWLock& _lock)
 		{
 			m_lockFlag.store(_lock.m_lockFlag.load());
 			m_WriteCount.store(_lock.m_WriteCount.load());
@@ -29,14 +30,14 @@ namespace Core
 		}
 
 #ifdef USE_DEBUG
-		void RWLock::WriteLock(const char* _name)
+		void URWLock::WriteLock(const char* _name)
 #else
 		void RWLock::WriteLock()
 #endif
 		{
 
 #ifdef USE_DEBUG
-			GGROBAL.PushLock(_name);
+			g_DeadLockProfiler->PushLock(_name);
 #endif
 
 			// 상위 16비트만 추출한다. 
@@ -82,13 +83,13 @@ namespace Core
 		@ Writer: 박태현
 		*/
 #ifdef USE_DEBUG
-		void RWLock::WriteUnLock(const char* _name)
+		void URWLock::WriteUnLock(const char* _name)
 #else
 		void RWLock::WriteUnLock()
 #endif
 		{
 #ifdef USE_DEBUG
-			GGROBAL.PopLock(_name);
+			g_DeadLockProfiler->PopLock(_name);
 #endif
 
 			// ReadLock을 다 풀기전에 WriteLock은 불가능
@@ -108,13 +109,13 @@ namespace Core
 		@ Writer: 박태현
 		*/
 #ifdef USE_DEBUG
-		void RWLock::ReadLock(const char* _name)
+		void URWLock::ReadLock(const char* _name)
 #else 
 		void RWLock::ReadLock()
 #endif
 		{
 #ifdef USE_DEBUG
-			GGROBAL.PushLock(_name);
+			g_DeadLockProfiler->PushLock(_name);
 #endif
 
 			// 상위 16비트만 추출한다. 
@@ -154,13 +155,13 @@ namespace Core
 		@ Writer: 박태현
 		*/
 #ifdef USE_DEBUG
-		void RWLock::ReadUnLock(const char* _name)
+		void URWLock::ReadUnLock(const char* _name)
 #else
 		void RWLock::ReadUnLock()
 #endif
 		{
 #ifdef USE_DEBUG
-			GGROBAL.PopLock(_name);
+			g_DeadLockProfiler->PopLock(_name);
 #endif
 
 			if ((m_lockFlag.fetch_sub(1) & READ_THREAD_MASK) == 0)

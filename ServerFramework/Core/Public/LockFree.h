@@ -1,9 +1,6 @@
 #ifndef _SERVERFRAMEWORK_CORE_PUBLIC_LOCKFREE_H
 #define _SERVERFRAMEWORK_CORE_PUBLIC_LOCKFREE_H
 
-#include <random>
-#include <queue>
-
 namespace Core
 {
 	/*
@@ -28,6 +25,98 @@ namespace Core
 		std::uniform_int_distribution<int>		m_UniformBackOff;
 		int																m_MaxDelay;
 		int																m_Limit;
+	};
+
+	/*
+	@ Date: 2023-12-31
+	@ Writer: 박태현
+	@ Explain: EBR Controller를 정의함
+	*/
+	template<class NODE>
+	class EBRController {
+	public:
+		EBRController() : m_Epoch{ 0 }, m_RemainCount{ 0 }, m_Retired{},
+			m_Reservation{}, m_CurrentNumThreads{ } {}
+		~EBRController()
+		{
+			clear_ebr();
+		}
+
+		void Initialize(int _currThread, int _remainCount)
+		{
+			m_CurrentNumThreads = _currThread;
+			m_RemainCount = _remainCount;
+
+			for (int i = 0; i < m_CurrentNumThreads; ++i)
+			{
+				m_Reservation[i] = 0;
+			}
+		}
+
+		// 만들어진 시간들 중 가장 먼저 호출된 시간을 가져온다. 
+		unsigned int get_min_reservation() {
+			unsigned int min_re = 0xffffffff;
+			for (int i = 0; i < m_CurrentNumThreads; ++i) {
+				min_re = std::min(min_re, m_Reservation[i].load(std::memory_order_relaxed));
+			}
+			return min_re;
+		}
+
+		// 호출된 시간이 가장 작은 것을 기준으로 메모리 해제
+		void empty() {
+			unsigned int max_safe_epoch = get_min_reservation();
+
+			while (false == m_Retired[TLS::g_ThreadID].empty()) {
+				auto f = m_Retired[TLS::g_ThreadID].front();
+				if (f->retireEpoch >= max_safe_epoch)
+					break;
+				m_Retired[TLS::g_ThreadID].pop();
+				Core::MemoryRelease(f);
+			}
+		}
+
+		// RemainCount보다 크면 Empty 호출 
+		void retire(NODE* ptr) {
+			m_Retired[TLS::g_ThreadID].push(ptr);
+			ptr->retireEpoch = m_Epoch.load(std::memory_order_relaxed);
+			if (m_Retired[TLS::g_ThreadID].size() >= m_RemainCount) {
+				empty();
+			}
+		}
+
+		// Reservation에 예약
+		void start_op() {
+			m_Reservation[TLS::g_ThreadID].store(m_Epoch.fetch_add(1, std::memory_order_relaxed), std::memory_order_relaxed);
+		}
+
+		// Reservation을 해제한다. 
+		void end_op() {
+			m_Reservation[TLS::g_ThreadID].store(ENDOP_VALUE, std::memory_order_relaxed);
+		}
+
+	private:
+		// 프로그램 종료시 모든 메모리를 해제한다. 
+		void clear_ebr()
+		{
+			for (int i = 0; i < m_CurrentNumThreads; ++i)
+			{
+				while (!m_Retired[i].empty())
+				{
+					NODE* node = m_Retired[i].front();
+					Core::MemoryRelease(node);
+					m_Retired[i].pop();
+				}
+			}
+			m_Epoch = 0;
+		}
+
+	private:
+		static constexpr	unsigned int												ENDOP_VALUE{ 0xffffffff };
+		std::atomic_uint																		m_Epoch;
+		unsigned int																				m_RemainCount;
+		std::array<std::queue<NODE*>, TLS::MAX_THREAD>	m_Retired;
+		std::array<std::atomic_uint, TLS::MAX_THREAD>			m_Reservation;
+		int																								m_CurrentNumThreads;
 	};
 
 	namespace PTHStack {
@@ -56,7 +145,7 @@ namespace Core
 				{
 					if constexpr ((std::is_pointer<T>()))
 					{
-						delete data;
+						Core::MemoryAlloc(data);
 					}
 				}
 			}
@@ -65,91 +154,6 @@ namespace Core
 			T									data;
 			std::atomic_uint		retireEpoch;
 			bool								isRemove;
-		};
-		/*
-		@ Date: 2023-12-29
-		@ Writer: 박태현
-		@ Explain: Stack의 EBR Controller
-		*/
-		template<class T>
-		class EBRController {
-		public:
-			EBRController() : m_Epoch{ 0 }, m_RemainCount{ 0 }, m_Retired{},
-				m_Reservation{}, m_CurrentNumThreads{ } {}
-			~EBRController()
-			{
-				clear_ebr();
-			}
-
-			void Initialize(int _currThread, int _remainCount)
-			{
-				m_CurrentNumThreads = _currThread;
-				m_RemainCount = _remainCount;
-
-				for (int i = 0; i < m_CurrentNumThreads; ++i)
-				{
-					m_Reservation[i] = 0;
-				}
-			}
-
-			unsigned int get_min_reservation() {
-				unsigned int min_re = 0xffffffff;
-				for (int i = 0; i < m_CurrentNumThreads; ++i) {
-					min_re = std::min(min_re, m_Reservation[i].load(std::memory_order_relaxed));
-				}
-				return min_re;
-			}
-
-			void empty() {
-				unsigned int max_safe_epoch = get_min_reservation();
-
-				while (false == m_Retired[TLS::g_ThreadID].empty()) {
-					auto f = m_Retired[TLS::g_ThreadID].front();
-					if (f->retireEpoch >= max_safe_epoch)
-						break;
-					m_Retired[TLS::g_ThreadID].pop();
-					delete f;
-				}
-			}
-
-			void retire(NODE<T>* ptr) {
-				m_Retired[TLS::g_ThreadID].push(ptr);
-				ptr->retireEpoch = m_Epoch.load(std::memory_order_relaxed);
-				if (m_Retired[TLS::g_ThreadID].size() >= m_RemainCount) {
-					empty();
-				}
-			}
-
-			void start_op() {
-				m_Reservation[TLS::g_ThreadID].store(m_Epoch.fetch_add(1, std::memory_order_relaxed), std::memory_order_relaxed);
-			}
-
-			void end_op() {
-				m_Reservation[TLS::g_ThreadID].store(ENDOP_VALUE, std::memory_order_relaxed);
-			}
-
-		private:
-			void clear_ebr()
-			{
-				for (int i = 0; i < m_CurrentNumThreads; ++i)
-				{
-					while (!m_Retired[i].empty())
-					{
-						NODE<T>* node = m_Retired[i].front();
-						delete node;
-						m_Retired[i].pop();
-					}
-				}
-				m_Epoch = 0;
-			}
-
-		private:
-			static constexpr	unsigned int														ENDOP_VALUE{ 0xffffffff };
-			std::atomic_uint																				m_Epoch;
-			unsigned int																						m_RemainCount;
-			std::array<std::queue<NODE<T>*>, TLS::MAX_THREAD>		m_Retired;
-			std::array<std::atomic_uint, TLS::MAX_THREAD>					m_Reservation;
-			int																										m_CurrentNumThreads;
 		};
 		/*
 		@ Date: 2023-12-29
@@ -169,6 +173,7 @@ namespace Core
 				m_EBRController.Initialize(_currentThread, _remainCount);
 			}
 
+			// 맨 위에 있는 값을 꺼내온다. 
 			T Top()
 			{
 				NODE<T>* pNode = m_Top;
@@ -179,20 +184,24 @@ namespace Core
 				return pNode->data;
 			}
 
+			// Top에 값을 밀어 넣는다. 
 			void Push(T _data, bool _isRemove = false)
 			{
 				m_EBRController.start_op();
-				NODE<T>* newNode = new NODE{ _data, _isRemove };
+				NODE<T>* newNode = Core::MemoryAlloc<NODE<T>>( _data, _isRemove );
 				while (true) {
 					NODE<T>* p = m_Top;
 					newNode->next = p;
+					// 카스 성공
 					if (true == CAS(p, newNode)) {
 						m_EBRController.end_op();
 						return;
 					}
+					// 실패시 잠시 대기
 					m_BackOff.Relax();
 				}
 			}
+			// Top으로부터 값을 꺼낸다. 
 			T Pop() {
 				m_EBRController.start_op();
 				while (true)
@@ -201,10 +210,11 @@ namespace Core
 					if (ptr == nullptr)
 					{
 						m_EBRController.end_op();
-						return -2;
+						return T();
 					}
 					NODE<T>* next = ptr->next;
 					T data = ptr->data;
+
 					if (false == CAS(ptr, next))
 					{
 						m_BackOff.Relax();
@@ -228,7 +238,7 @@ namespace Core
 				while (p != nullptr) {
 					NODE<T>* t = p;
 					p = p->next;
-					delete t;
+					Core::MemoryRelease<NODE<T>>(t);
 				}
 				m_Top = nullptr;
 			}
@@ -240,9 +250,9 @@ namespace Core
 					reinterpret_cast<long long>(_new));
 			}
 		private:
-			EBRController<T>	m_EBRController;
-			Core::Backoff			m_BackOff;
-			NODE<T>* volatile	m_Top;
+			EBRController<NODE<T>>		m_EBRController;
+			Core::Backoff							m_BackOff;
+			NODE<T>* volatile					m_Top;
 		};
 	}
 

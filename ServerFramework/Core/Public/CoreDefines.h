@@ -9,6 +9,7 @@
 #define _CRT_SECURE_NO_WARNINGS 0
 
 #define USE_DEBUG 0
+// #define USE_STOMP 0
 
 /*
 @ Date: 2023-12-30
@@ -20,16 +21,37 @@
 // #define LINUX_OS
 
 #ifdef WINDOW_OS
-
 #define _WIN32_WINDOWS 0x6001
 #define _WINSOCK_DEPRECATED_NO_WARNINGS 
+#else
+#include <stdlib.h>
+#include <sys/mman.h>
+#endif
 
+/*
+@ Date: 2023-12-26
+@ Writer: 박태현
+@ Explain
+- DLL 파일 관리하는 매크로, EXPORT 일때와 Exprot 아닐 때 구분하게 해준다.
+*/
+#ifdef CORE_EXPORTS
+#define CORE_DLL   _declspec(dllexport)
+#define CACHE_ALGIN_CORE_DLL  _declspec(dllexport) __declspec(align(16))
+#else
+#define CORE_DLL  _declspec(dllimport)
+#define CACHE_ALGIN_CORE_DLL  _declspec(dllimport) __declspec(align(16))
 #endif
 
 #ifdef _DEBUG
 #pragma comment (lib, "PthMathD")
+#pragma comment (lib, "aws-cpp-sdk-gameliftd")
+#pragma comment (lib, "aws-cpp-sdk-ec2d")
+#pragma comment (lib, "aws-cpp-sdk-cored")
 #else
 #pragma comment (lib, "PthMath")
+#pragma comment (lib, "aws-cpp-sdk-gamelift")
+#pragma comment (lib, "aws-cpp-sdk-ec2")
+#pragma comment (lib, "aws-cpp-sdk-core")
 #endif
 
 #include <iostream>
@@ -52,21 +74,27 @@
 #include <chrono>
 #include "PthMath/PthMath.h"
 #include<concepts>
+#include <random>
+#include <queue>
 
 #include "CoreConcept.h"
 #include "CoreTypedef.h"
+#include "CoreTypecast.h"
+#include "CoreGrobal.h"
+#include "CoreMacro.h"
+#include "Lock.h"
+#include "Allocator.h"
 #include "SmartPointer.h"
 
 #include "CoreFunction.h"
 #include "CorePacket.h"
 #include "CoreEnum.h"
-
-#include "CoreMacro.h"
+#include "CoreStruct.h"
 #include "CoreTls.h"
 
-#include "UCoreGrobal.h"
-#include "Lock.h"
+#include "UCoreInstance.h"
 #include "LockFree.h"
+#include "UBuffer.h"
 
 
 namespace Asio = boost::asio;

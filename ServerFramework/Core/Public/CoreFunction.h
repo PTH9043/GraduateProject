@@ -11,33 +11,6 @@ namespace Core
 		@ Date: 2023-12-26
 		@ Writer: 박태현
 		@ Explain
-		- 일부로 크래쉬을 일으켜 에러를 내는 함수, USE_DEBUG에서만 사용
-		*/
-		template<class T>
-		void Crash(T&& _value)
-		{
-			_uint* Crash{ nullptr };
-			__analysis_assume(nullptr != Crash);
-			*Crash = 0xDEADBEEF;
-		}
-		/*
-		@ Date: 2023-12-26
-		@ Writer: 박태현
-		@ Explain
-		- 조건이 통과되면 Crash를 내는 함수, USE_DEBUG에서만 사용
-		*/
-		template<class T>
-		void AssertCrash(T&& _value, const bool _isCondition)
-		{
-			if (true == _isCondition)
-			{
-				Crash(std::forward<T>(_value));
-			}
-		}
-		/*
-		@ Date: 2023-12-26
-		@ Writer: 박태현
-		@ Explain
 		- 디버그 메시지를 출력하는 함수, USE_DEBUG에서만 사용
 		*/
 		static void Debugging_Message(const char* FILE,
@@ -78,8 +51,8 @@ namespace Core
 	template<class T, class... Args>
 		requires ConstructWithArgsCheck<T, Args...>
 	static SHPTR<T> Create(Args&&... args) {
-		SHPTR<T> pInstance = Core::MakeShared<T>(std::make_shared<T>(std::forward<Args>(args)...));
-		return pInstance;
+		SHPTR<T> pInstance = Core::MakeShared<T>(std::forward<Args>(args)...);
+		return std::move(pInstance);
 	}
 	/*
 	@ Date: 2023-12-26
@@ -91,14 +64,14 @@ namespace Core
 		requires	CheckToSameMethodArgs<T, Args...>
 	static SHPTR<T> CreateInitNative(Args&&... args) {
 		static_assert(CheckToSameMethodArgs<T, Args...>, "NativeConstruct의 인자가 잘못되었습니다.");
-		SHPTR<T> pInstance{ Core::MakeShared<T>(std::make_shared<T>()) };
+		SHPTR<T> pInstance{ Core::MakeShared<T>() };
 		if (false ==  (pInstance->NativeConstruct(args...))) {
 #ifdef USE_DEBUG
 			DEBUG::ErrorToCreateClass(pInstance);
 #endif
 			pInstance.reset();
 		}
-		return pInstance;
+		return std::move(pInstance);
 	}
 
 
@@ -112,11 +85,11 @@ namespace Core
 		requires CheckToSameMethodArgs<T, Args...>
 	static SHPTR<T> CreateInitNativeNotMsg(Args&&... args) {
 		static_assert(CheckToSameMethodArgs<T, Args...>, "NativeConstruct의 인자가 잘못되었습니다.");
-		SHPTR<T> pInstance{ Core::MakeShared<T>(std::make_shared<T>()) };
+		SHPTR<T> pInstance{ Core::MakeShared<T>() };
 		if (false == (pInstance->NativeConstruct(args...))) {
 			pInstance.reset();
 		}
-		return pInstance;
+		return std::move(pInstance);
 	}
 	/*
 	@ Date: 2023-12-26
@@ -130,12 +103,12 @@ namespace Core
 	&& CheckToSameMethodArgs<T>
 		static SHPTR<T> CreateInitConstructor(Args&&... args) {
 		static_assert(ConstructWithArgsCheck<T, Args...>, "생성자의 인자가 잘못되었습니다.");
-		SHPTR<T> pInstance{ Core::MakeShared<T>(std::make_shared<T>(std::forward<Args>(args)...)) };
+		SHPTR<T> pInstance{ Core::MakeShared<T>(std::forward<Args>(args)...) };
 		if (false == (pInstance->NativeConstruct())) {
 			ErrorToCreateClass(pInstance);
 			pInstance.reset();
 		}
-		return pInstance;
+		return std::move(pInstance);
 	}
 	/*
 	@ Date: 2023-12-26
@@ -148,11 +121,11 @@ namespace Core
 	&& CheckToSameMethodArgs<T>
 		static SHPTR<T>  CreateInitConstructorNotMsg(Args&&... args) {
 		static_assert(ConstructWithArgsCheck<T, Args...>, "생성자의 인자가 잘못되었습니다.");
-		SHPTR<T> pInstance{ Core::MakeShared<T>(std::make_shared<T>(std::forward<Args>(args)...)) };
+		SHPTR<T> pInstance{ Core::MakeShared<T>(std::forward<Args>(args)...) };
 		if (false ==  (pInstance->NativeConstruct())) {
 			pInstance.reset();
 		}
-		return pInstance;
+		return std::move(pInstance);
 	}
 	/*
 	@ Date: 2023-12-26
@@ -163,8 +136,8 @@ namespace Core
 	template<class T>
 	static SHPTR<T> CloneThis(const T& _rhs)
 	{
-		SHPTR<T> pInstance{ Core::MakeShared<T>(std::make_shared<T>(_rhs)) };
-		return pInstance;
+		SHPTR<T> pInstance{ Core::MakeShared<T>(_rhs) };
+		return std::move(pInstance);
 	}
 
 #pragma endregion FUNCTION

@@ -1,26 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="98.Use">
-      <UniqueIdentifier>{27fa35e3-3988-4150-ba0f-cec3d67b2484}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97.Super">
       <UniqueIdentifier>{a5df70c3-53f2-4d85-96ec-37f9327d0d29}</UniqueIdentifier>
     </Filter>
-    <Filter Include="98.Use\SmartPtr">
-      <UniqueIdentifier>{b7395a0b-aaef-430e-b000-20fa8eaddee5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="00.CoreGrobal">
-      <UniqueIdentifier>{cce573dc-41c4-4746-84fe-db1dfc769b23}</UniqueIdentifier>
-    </Filter>
     <Filter Include="99.Default">
       <UniqueIdentifier>{2d92c9ba-fb70-495a-b2cb-27237017fc01}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Manager">
-      <UniqueIdentifier>{5121236a-45dc-4e7c-89a5-0a7a0e6bf6b2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="98.Use\Lock">
-      <UniqueIdentifier>{d05bf69f-0859-40ae-94cc-ee7c8fcc25ac}</UniqueIdentifier>
     </Filter>
     <Filter Include="96.Debug">
       <UniqueIdentifier>{65b6d4d5-e2dc-4cd2-a071-67116dea07d9}</UniqueIdentifier>
@@ -28,25 +13,49 @@
     <Filter Include="96.Debug\DeadLockProfiler">
       <UniqueIdentifier>{a0170836-5d8e-457b-ba57-c371fc562ce2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="98.Use\LockFree">
-      <UniqueIdentifier>{02277d15-f896-42a8-bd44-51caebb24e2c}</UniqueIdentifier>
+    <Filter Include="98.Utility">
+      <UniqueIdentifier>{27fa35e3-3988-4150-ba0f-cec3d67b2484}</UniqueIdentifier>
     </Filter>
-    <Filter Include="98.Use\Allocator">
-      <UniqueIdentifier>{22da3a53-b665-4dfc-b036-b47e2d3412ad}</UniqueIdentifier>
+    <Filter Include="98.Utility\Lock">
+      <UniqueIdentifier>{d05bf69f-0859-40ae-94cc-ee7c8fcc25ac}</UniqueIdentifier>
     </Filter>
-    <Filter Include="98.Use\Memory">
+    <Filter Include="98.Utility\Buffer">
+      <UniqueIdentifier>{3316de88-0b05-4062-8a55-589bfdaea719}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Utility\Memory">
       <UniqueIdentifier>{4d7c1bef-33d4-4faa-ad0f-34a50cc99784}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Utility\LFContainer">
+      <UniqueIdentifier>{b7395a0b-aaef-430e-b000-20fa8eaddee5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Manager">
+      <UniqueIdentifier>{5121236a-45dc-4e7c-89a5-0a7a0e6bf6b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Manager\Thread">
+      <UniqueIdentifier>{451b4d18-b3df-4900-bd4f-b89a4a009efa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Context">
+      <UniqueIdentifier>{07a21da4-54d8-46cc-a9a0-55e6401735bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Context\aws">
+      <UniqueIdentifier>{e356f2b8-de07-4f0f-b862-9d4f2c0ebb85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Session">
+      <UniqueIdentifier>{113fff01-053a-454f-832b-fb5e44a5bd28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.CoreInstance">
+      <UniqueIdentifier>{b3593e4a-d6a9-458e-9390-388768fdd94e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.CoreGrobal">
+      <UniqueIdentifier>{cce573dc-41c4-4746-84fe-db1dfc769b23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Utility\ObjectPool">
+      <UniqueIdentifier>{230e67c7-1ad2-4f50-95c3-103334143824}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\UBase.h">
       <Filter>97.Super</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\SmartPointer.h">
-      <Filter>98.Use\SmartPtr</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\UCoreGrobal.h">
-      <Filter>00.CoreGrobal</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CoreDefines.h">
       <Filter>99.Default</Filter>
@@ -72,52 +81,94 @@
     <ClInclude Include="..\Public\CoreConcept.h">
       <Filter>99.Default</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UThreadManager.h">
-      <Filter>01.Manager</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Lock.h">
-      <Filter>98.Use\Lock</Filter>
+      <Filter>98.Utility\Lock</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UDeadLockProfiler.h">
       <Filter>96.Debug\DeadLockProfiler</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\LockFree.h">
-      <Filter>98.Use\LockFree</Filter>
+    <ClInclude Include="..\Public\Memory.h">
+      <Filter>98.Utility\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UThreadManager.h">
+      <Filter>02.Manager\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CoreStruct.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UBuffer.h">
+      <Filter>98.Utility\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UAwsContext.h">
+      <Filter>03.Context\aws</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\USession.h">
+      <Filter>04.Session</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Allocator.h">
-      <Filter>98.Use\Allocator</Filter>
+      <Filter>98.Utility\Memory</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Memory.h">
-      <Filter>98.Use\Memory</Filter>
+    <ClInclude Include="..\Public\LockFree.h">
+      <Filter>98.Utility\LFContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SmartPointer.h">
+      <Filter>98.Utility\LFContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UCoreInstance.h">
+      <Filter>01.CoreInstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CoreGrobal.h">
+      <Filter>00.CoreGrobal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UObjectPool.h">
+      <Filter>98.Utility\ObjectPool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CoreTypecast.h">
+      <Filter>99.Default</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\UBase.cpp">
       <Filter>97.Super</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\SmartPointer.cpp">
-      <Filter>98.Use\SmartPtr</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\UCoreGrobal.cpp">
-      <Filter>00.CoreGrobal</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\UThreadManager.cpp">
-      <Filter>01.Manager</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Lock.cpp">
-      <Filter>98.Use\Lock</Filter>
+      <Filter>98.Utility\Lock</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UDeadLockProfiler.cpp">
       <Filter>96.Debug\DeadLockProfiler</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\LockFree.cpp">
-      <Filter>98.Use\LockFree</Filter>
+    <ClCompile Include="..\Private\Memory.cpp">
+      <Filter>98.Utility\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UThreadManager.cpp">
+      <Filter>02.Manager\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UBuffer.cpp">
+      <Filter>98.Utility\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UAwsContext.cpp">
+      <Filter>03.Context\aws</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\USession.cpp">
+      <Filter>04.Session</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Allocator.cpp">
-      <Filter>98.Use\Allocator</Filter>
+      <Filter>98.Utility\Memory</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Memory.cpp">
-      <Filter>98.Use\Memory</Filter>
+    <ClCompile Include="..\Private\LockFree.cpp">
+      <Filter>98.Utility\LFContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SmartPointer.cpp">
+      <Filter>98.Utility\LFContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UCoreInstance.cpp">
+      <Filter>01.CoreInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CoreGrobal.cpp">
+      <Filter>00.CoreGrobal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UObjectPool.cpp">
+      <Filter>98.Utility\ObjectPool</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

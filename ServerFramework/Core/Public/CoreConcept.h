@@ -25,16 +25,6 @@ namespace Core
 	/*
 	@ Date: 2023-12-26
 	@ Writer: 박태현
-	@ Explain: shared_ptr 전용, 해당 변수가 이동할 수 있는지 체크한다. 
-	*/
-	template <typename T>
-	concept SharedPtrConvertible = requires(T t) {
-		{ std::shared_ptr<T>(std::move(t)) };
-	};
-
-	/*
-	@ Date: 2023-12-26
-	@ Writer: 박태현
 	@ Explain: Args...에서 펼친 변수들과 생성자의 변수들이 맞는지 확인
 	*/
 	template<typename T, class ...Args>
@@ -74,8 +64,6 @@ namespace Core
 
 	template <typename T, typename U>
 	concept ConvertibleFrom = (SameType<T, U> || ParentsChildType<T, U> || Convertible<T, U>);
-	template <typename T, typename U>
-	concept SharedPtrConvertibleFrom = SharedPtrConvertible<U> && (SameType<T, U> || ParentsChildType<T, U>);
 }
 
 

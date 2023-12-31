@@ -12,17 +12,19 @@
 @ Date: 2023-12-28
 @ Writer: 박태현
 @ Explain
-- 함수를 실행시킬 때, 레퍼런스를 통해 해당하는 변수의 값이 바뀔 수 있을 경우를 나타냄
+- 함수 정의할 때, 레퍼런스를 통해 해당하는 변수의 값이 바뀔 수 있을 경우를 나타냄
 */
 #define REF_OUT
+
 
 /*
 @ Date: 2023-12-28
 @ Writer: 박태현
 @ Explain
-- 함수를 선언할 때, 레퍼런스를 통해 해당하는 변수의 값이 바뀔 수 있을 경우를 나타냄
+- 함수를 실행시킬 때, 레퍼런스를 통해 해당하는 변수의 값이 바뀔 수 있을 경우를 나타냄
 */
-#define REF_INNER 
+#define REF_IN
+
 
 
 /*
@@ -32,15 +34,6 @@
 - 함수를 실행시킬 때,  Pointer를 통해 해당하는 변수의 값이 바뀔 수 있음을 나타냄
 */
 #define POINTER_OUT 
-
-
-/*
-@ Date: 2023-12-28
-@ Writer: 박태현
-@ Explain
-- 함수를 선언할 때,  Pointer를 통해 해당하는 변수의 값이 바뀔 수 있음을 나타냄
-*/
-#define POINTER_INNTER 
 
 /*
 @ Date: 2023-12-28
@@ -77,7 +70,7 @@
 #define		WRITE_LOCK_IDX(idx)				Core::WriteLockGuard writeLockGuard_##idx(_locks[idx]);
 #endif
 
-#define		USE_MANY_LOCKS(count)		ARRAY<Core::RWLock, count>;
+#define		USE_MANY_LOCKS(count)		Core::ARRAY<Core::Lock::URWLock, count>
 #define		USE_LOCK									USE_MANY_LOCKS(1)
 #define		READ_LOCK								READ_LOCK_IDX(0)
 #define		WRITE_LOCK								READ_LOCK_IDX(0)
@@ -94,8 +87,22 @@
 @ Explain
 - 강제로 크래쉬를 일으키는 매크로
 */
-#define CRASH(Value) Core::DEBUG::Crash(Value);
-#define ASSERT_CRASH(COND, Value) Core::DEBUG::AssertCrash(Value, COND);
+#define CRASH(cause) 	\
+{											\
+	int* crash = nullptr;				\
+	__analysis_assume(crash != nullptr);	\
+	*crash = 0xDEADBEEF;					\
+}
+
+#define ASSERT_CRASH(COND) \
+{									\
+	if (!(COND))					\
+	{								\
+		CRASH("ASSERT_CRASH");		\
+		__analysis_assume(COND);	\
+	}								\
+}
+
 
 /*
 @ Date: 2023-12-26
@@ -107,20 +114,6 @@
 __FILE__, __LINE__, __FUNCTION__ 
 #define LOG_MACRO_TO_METHOD(x) \
 typeid(x).name() , __LINE__, __FUNCTION__
-
-/*
-@ Date: 2023-12-26
-@ Writer: 박태현
-@ Explain
-- NULL이면 Message 박스 출력
-*/
-#ifdef USE_DEBUG
-
-#define ISNULLPTR(T) \
-Is_Nullptr_Debug(T, DEBUG_MACRO_TO_METHOD)
-
-#endif 
-
 
 
 /*
@@ -190,22 +183,19 @@ void ClassName::DestoryInstance(){  m_pInstance.reset(); }
     return pInstance; \
 }();
 
-
 /*
-@ Date: 2023-12-26
-@ Writer: 박태현
-@ Explain
-- DLL 파일 관리하는 매크로, EXPORT 일때와 Exprot 아닐 때 구분하게 해준다. 
+==========================
+			MEMORY ALLOCATE
+==========================
 */
-#ifdef CORE_EXPORTS
-#define CORE_DLL   _declspec(dllexport)
-#define CACHE_ALGIN_CORE_DLL  _declspec(dllexport) __declspec(align(16))
+
+#ifdef USE_DEBUG
+#define MEMORYALLOC(size)		Core::UPoolAllocator::Alloc(size)
+#define MEMORYRELEASE(ptr)		Core::UPoolAllocator::Release(ptr)
 #else
-#define CORE_DLL  _declspec(dllimport)
-#define CACHE_ALGIN_CORE_DLL  _declspec(dllimport) __declspec(align(16))
+#define MEMORYALLOC(size)		Core::UBaseAllocator::Alloc(size)
+#define MEMORYRELEASE(ptr)		Core::UBaseAllocator::Release(ptr)
 #endif
-
-
 
 /*
 ==========================
@@ -227,5 +217,6 @@ void ClassName::DestoryInstance(){  m_pInstance.reset(); }
 @ Explain: 조건에 맞으면 리턴하는 메크로
 */
 #define RETURN_CHECK(SITUATION, RETURN) if(SITUATION) return RETURN;
+
 
 #endif // _SERVERFRAMEWORK_CORE_PUBLIC_COREMACRO_H

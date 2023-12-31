@@ -8,7 +8,7 @@ namespace Core
 	@ Writer: 박태현
 	@ Explain: Cash라인을 16바이트 단위로 맞추기 위해 필요한 변수
 	*/
-	constexpr static unsigned short CASH_ALGIN_VALUE{ 16 };
+	#define CASH_ALGIN_VALUE 16
 
 #ifdef _WIN64
 	using llong = long long;
@@ -60,11 +60,11 @@ namespace Core
 		template<class T, class U>
 		friend USharedPtr<T> const_shared_cast(const USharedPtr<U>& _rhs);
 	public:
-		URefCounter(const std::shared_ptr<T>& _ptr) :
-			ptr(_ptr), ref_strong(1), ref_weak(1) {
+		URefCounter(T* _ptr) :
+			m_Ptr(_ptr), m_RefStrong(1), m_RefWeak(1) {
 		}
-		URefCounter(const std::shared_ptr<T>& _ptr, llong _strong, llong _weak) :
-			ptr(_ptr), ref_strong{ _strong }, ref_weak{ _weak } {
+		URefCounter(T* _ptr, llong _strong, llong _weak) :
+			m_Ptr(_ptr), m_RefStrong{ _strong }, m_RefWeak{ _weak } {
 		}
 
 		~URefCounter() { }
@@ -74,11 +74,11 @@ namespace Core
 		{
 			while (true)
 			{
-				llong value = ref_strong.load();
+				llong value = m_RefStrong.load();
 
 				if (value > 0)
 				{
-					if (true == CAS_VALUE(ref_strong, value, value + 1))
+					if (true == CAS_VALUE(m_RefStrong, value, value + 1))
 					{
 						return this;
 					}
@@ -98,12 +98,12 @@ namespace Core
 			// Strong의 값이 0
 			while (true)
 			{
-				value = ref_strong.load();
-				if (true == CAS_VALUE(ref_strong, value, value - 1))
+				value = m_RefStrong.load();
+				if (true == CAS_VALUE(m_RefStrong, value, value - 1))
 				{
 					if (value <= 1)
 					{
-						delete this;
+						Core::MemoryRelease<URefCounter<T>>(this);
 					}
 					return --value;
 				}
@@ -114,8 +114,8 @@ namespace Core
 		{
 			while (true)
 			{
-				llong value = ref_weak.load();
-				if (true == CAS_VALUE(ref_weak, value, value + 1))
+				llong value = m_RefWeak.load();
+				if (true == CAS_VALUE(m_RefWeak, value, value + 1))
 				{
 					return this;
 				}
@@ -126,26 +126,26 @@ namespace Core
 		{
 			while (true)
 			{
-				llong value = ref_weak.load();
-				if (true == CAS_VALUE(ref_weak, value, value - 1))
+				llong value = m_RefWeak.load();
+				if (true == CAS_VALUE(m_RefWeak, value, value - 1))
 				{
 					value -= 1;
 					return value;
 				}
 			}
-			return ref_weak.load();
+			return m_RefWeak.load();
 		}
 
-		llong GetUseCount() { return ref_strong.load() + ref_weak.load(); }
+		llong GetUseCount() { return m_RefStrong.load() + m_RefWeak.load(); }
 
-		const std::atomic<llong>& GetRefStrongCount() { return ref_strong; }
-		const std::atomic<llong>& GetRefWeakCount() { return ref_weak; }
+		const std::atomic<llong>& GetRefStrongCount() { return m_RefStrong; }
+		const std::atomic<llong>& GetRefWeakCount() { return m_RefWeak; }
 
-		T* get() const { return ptr.get(); }
+		T* get() const { return m_Ptr; }
 
-		std::shared_ptr<T> GetShared() const { return ptr; }
+		T* GetShared() const { return m_Ptr; }
 
-		void SetShared(const std::shared_ptr<T>& _shared) { ptr = _shared; }
+		void SetShared(const T* _shared) { m_Ptr = _shared; }
 	private:
 		/*
 		@ Date: 2023-12-26
@@ -163,15 +163,15 @@ namespace Core
 		@ Explain
 		- 메모리를 재정렬시킨 후 ptr를 set한다.
 		*/
-		void SetSharedPtr(std::shared_ptr<T> _ptr)
+		void SetSharedPtr(T* _ptr)
 		{
 			std::atomic_thread_fence(std::memory_order_seq_cst);
-			ptr = _ptr;
+			m_Ptr = _ptr;
 		}
 	private:
-		std::atomic<llong>						ref_strong;
-		std::atomic<llong>						ref_weak;
-		std::shared_ptr<T>						ptr;
+		std::atomic<llong>		m_RefStrong;
+		std::atomic<llong>		m_RefWeak;
+		T*									m_Ptr;
 	};
 
 	/*
@@ -198,24 +198,24 @@ namespace Core
 
 		using cas_ptr = std::atomic<llong>;
 	public:
-		USharedPtr() : _RefCounter{ nullptr } { }
-		USharedPtr(URefCounter<T>* _Ref) : _RefCounter{ _Ref } {	}
-		USharedPtr(nullptr_t) : _RefCounter{ nullptr } {}
+		USharedPtr() : m_RefCounter{ nullptr } { }
+		USharedPtr(URefCounter<T>* _Ref) : m_RefCounter{ _Ref } {	}
+		USharedPtr(nullptr_t) : m_RefCounter{ nullptr } {}
 		template<class U>
 			requires std::is_base_of_v<T, U>
-		USharedPtr(const USharedPtr<U>& _rhs) : _RefCounter{ nullptr }
+		USharedPtr(const USharedPtr<U>& _rhs) : m_RefCounter{ nullptr }
 		{
-			_RefCounter = reinterpret_cast<URefCounter<T>*>(_rhs.AddShared());
+			m_RefCounter = reinterpret_cast<URefCounter<T>*>(_rhs.AddShared());
 		}
-		USharedPtr(const USharedPtr& _rhs) : _RefCounter{ nullptr } { Move(_rhs); }
+		USharedPtr(const USharedPtr& _rhs) : m_RefCounter{ nullptr } { Move(_rhs); }
 
-		USharedPtr(USharedPtr&& _rhs) noexcept : _RefCounter{ _rhs._RefCounter } { _rhs._RefCounter = nullptr; }
+		USharedPtr(USharedPtr&& _rhs) noexcept : m_RefCounter{ _rhs.m_RefCounter } { _rhs.m_RefCounter = nullptr; }
 
-		USharedPtr(const UWeakPtr<T>& _rhs) : _RefCounter{ _rhs.AddShared() } {  }
+		USharedPtr(const UWeakPtr<T>& _rhs) : m_RefCounter{ _rhs.AddShared() } {  }
 
 		~USharedPtr()
 		{
-			Release(_RefCounter);
+			Release(m_RefCounter);
 		}
 	private:
 		/*
@@ -225,15 +225,15 @@ namespace Core
 		- EnableSharedFromThis 클래스를 상속 받는 클래스에 불러올 SharedPtr( 자기 자신의 Weak 포인터를 
 		가지게 하기 위함이다.
 		*/
-		void _Enable_shared_from_this(const std::shared_ptr<T>& _Ptr, std::true_type) {
-			_Ptr->SetSharedFromThis(*this);
+		void _Enable_shared_from_this(T* _ptr, std::true_type) {
+			_ptr->SetSharedFromThis(*this);
 		}
-		void _Enable_shared_from_this(const std::shared_ptr<T>&, std::false_type) {}
+		void _Enable_shared_from_this(T* _ptr, std::false_type) {}
 	public:
-		void SetEnableShared(const std::shared_ptr<T>& new_ptr, URefCounter<T>* new_ctr)
+		void SetEnableShared(T* _ptr, URefCounter<T>* new_ctr)
 		{
-			_RefCounter = new_ctr;
-			_Enable_shared_from_this(new_ptr, std::bool_constant<std::conjunction_v<_Can_enable_shared<T>>>{});
+			m_RefCounter = new_ctr;
+			_Enable_shared_from_this(_ptr, std::bool_constant<std::conjunction_v<_Can_enable_shared<T>>>{});
 		}
 
 	public:
@@ -243,11 +243,11 @@ namespace Core
 			URefCounter* prevptr{ nullptr };
 			while (true)
 			{
-				prevptr = _RefCounter;
+				prevptr = m_RefCounter;
 				if (prevptr == nullptr)
 					return *this;
 
-				if (true == CAS_POINTER(&_RefCounter, prevptr, nullptr))
+				if (true == CAS_POINTER(&m_RefCounter, prevptr, nullptr))
 				{
 					Release(prevptr);
 					return *this;
@@ -268,12 +268,12 @@ namespace Core
 
 			while (true)
 			{
-				prevptr = _RefCounter;
-				otherptr = _rhs._RefCounter;
+				prevptr = m_RefCounter;
+				otherptr = _rhs.m_RefCounter;
 				// 상대방이 null일 때
 				if (otherptr == nullptr)
 				{
-					if (true == CAS_POINTER(&_RefCounter, prevptr, nullptr))
+					if (true == CAS_POINTER(&m_RefCounter, prevptr, nullptr))
 					{
 						return *this;
 					}
@@ -282,13 +282,13 @@ namespace Core
 				// 자기 자신과 같을 때
 				if (otherptr == prevptr)
 				{
-					_rhs._RefCounter = nullptr;
+					_rhs.m_RefCounter = nullptr;
 					return *this;
 				}
 				// 상대방과 다른 때
-				if (true == CAS_POINTER(&_RefCounter, prevptr, otherptr))
+				if (true == CAS_POINTER(&m_RefCounter, prevptr, otherptr))
 				{
-					_rhs._RefCounter = nullptr;
+					_rhs.m_RefCounter = nullptr;
 					return *this;
 				}
 			}
@@ -304,12 +304,12 @@ namespace Core
 
 			while (true)
 			{
-				prevptr = _RefCounter;
+				prevptr = m_RefCounter;
 				otherptr = reinterpret_cast<URefCounter<T>*>(_rhs.AddShared());
 				// 다른 sharedPtr이 NULL 일때, 현재 값을 Release 한다. 
 				if (otherptr == nullptr)
 				{
-					if (true == CAS_POINTER(&_RefCounter, prevptr, nullptr))
+					if (true == CAS_POINTER(&m_RefCounter, prevptr, nullptr))
 					{
 						if (nullptr != prevptr)
 						{
@@ -326,7 +326,7 @@ namespace Core
 					return *this;
 				}
 				// 다른 값일 때, 해당 값과 현재 값을 교환 한 후 본래 값을 Release 한다. 
-				if (true == CAS_POINTER(&_RefCounter, prevptr, otherptr))
+				if (true == CAS_POINTER(&m_RefCounter, prevptr, otherptr))
 				{
 					if (nullptr != prevptr)
 					{
@@ -347,12 +347,12 @@ namespace Core
 
 			while (true)
 			{
-				prevptr = _RefCounter;
+				prevptr = m_RefCounter;
 				otherptr = _rhs.AddShared();
 				// 다른 녀석이 null 일때 
 				if (otherptr == nullptr)
 				{
-					if (true == CAS_POINTER(&_RefCounter, prevptr, nullptr))
+					if (true == CAS_POINTER(&m_RefCounter, prevptr, nullptr))
 					{
 						if (nullptr != prevptr)
 						{
@@ -369,7 +369,7 @@ namespace Core
 					return *this;
 				}
 				// 값이 다를 때
-				if (true == CAS_POINTER(&_RefCounter, prevptr, otherptr))
+				if (true == CAS_POINTER(&m_RefCounter, prevptr, otherptr))
 				{
 					if (nullptr != prevptr)
 					{
@@ -387,35 +387,35 @@ namespace Core
 		T* operator->() const { return get(); }
 		T& operator*() { return *get(); }
 
-		bool operator ==(nullptr_t _ptr) const { return _RefCounter == _ptr; }
-		bool operator !=(nullptr_t _ptr) const { return _RefCounter != _ptr; }
+		bool operator ==(nullptr_t _ptr) const { return m_RefCounter == _ptr; }
+		bool operator !=(nullptr_t _ptr) const { return m_RefCounter != _ptr; }
 
 		template<class T2>
-		bool operator ==(const T2*& _rhs) const { return _RefCounter == _rhs; }
+		bool operator ==(const T2*& _rhs) const { return m_RefCounter == _rhs; }
 
 		template<class T2>
-		bool operator !=(const T2*& _rhs) const { return _RefCounter != _rhs; }
+		bool operator !=(const T2*& _rhs) const { return m_RefCounter != _rhs; }
 
 		template<class T2>
-		bool operator ==(const USharedPtr<T2>& _rhs) const { return _RefCounter == _rhs._RefCounter; }
+		bool operator ==(const USharedPtr<T2>& _rhs) const { return m_RefCounter == _rhs.m_RefCounter; }
 
 		template<class T2>
-		bool operator !=(const USharedPtr<T2>& _rhs) const { return _RefCounter != _rhs._RefCounter; }
+		bool operator !=(const USharedPtr<T2>& _rhs) const { return m_RefCounter != _rhs.m_RefCounter; }
 
-		T** operator&() const { &_RefCounter->get(); }
+		T** operator&() const { &m_RefCounter->get(); }
 
-		T* get() const { if (nullptr == _RefCounter) return nullptr; return _RefCounter->get(); }
+		T* get() const { if (nullptr == m_RefCounter) return nullptr; return m_RefCounter->get(); }
 
 		void reset()
 		{
 			URefCounter<T>* prevref{ nullptr };
 			while (true)
 			{
-				prevref = _RefCounter;
+				prevref = m_RefCounter;
 				if (prevref == nullptr)
 					return;
 
-				if (true == CAS_POINTER(&_RefCounter, prevref, nullptr))
+				if (true == CAS_POINTER(&m_RefCounter, prevref, nullptr))
 				{
 					Release(prevref);
 					return;
@@ -425,12 +425,12 @@ namespace Core
 
 		llong use_count()
 		{
-			return _RefCounter->GetUseCount();
+			return m_RefCounter->GetUseCount();
 		}
 
 		operator bool()
 		{
-			URefCounter<T>* currptr = _RefCounter;
+			URefCounter<T>* currptr = m_RefCounter;
 
 			if (nullptr != currptr)
 				if (currptr->GetUseCount() > 0)
@@ -447,12 +447,12 @@ namespace Core
 
 			while (true)
 			{
-				prev = _RefCounter;
+				prev = m_RefCounter;
 				if (nullptr == prev)
 					return nullptr;
 
 				getptr = prev->ComparePointerToStrong();
-				curr = _RefCounter;
+				curr = m_RefCounter;
 				// 현재 가져온 ptr과 curr 값들이 같으면 리턴
 				if (getptr == curr)
 					return curr;
@@ -476,11 +476,11 @@ namespace Core
 
 			while (true)
 			{
-				prev = _RefCounter;
+				prev = m_RefCounter;
 				if (nullptr == prev)
 					return;
 
-				if (true == CAS_POINTER(&_RefCounter, prev, nullptr))
+				if (true == CAS_POINTER(&m_RefCounter, prev, nullptr))
 					return;
 			}
 		}
@@ -492,12 +492,12 @@ namespace Core
 
 			while (true)
 			{
-				prev = _RefCounter;
+				prev = m_RefCounter;
 				if (nullptr == prev)
 					return nullptr;
 
 				getptr = prev->ComparePointerToWeak();
-				curr = _RefCounter;
+				curr = m_RefCounter;
 
 				if (getptr == curr)
 					return curr;
@@ -534,12 +534,12 @@ namespace Core
 
 			while (true)
 			{
-				prevptr = _RefCounter;
+				prevptr = m_RefCounter;
 				otherptr = _rhs.AddShared();
 
 				if (otherptr == nullptr)
 				{
-					if (true == CAS_POINTER(&_RefCounter, prevptr, nullptr))
+					if (true == CAS_POINTER(&m_RefCounter, prevptr, nullptr))
 					{
 						if (nullptr != prevptr)
 						{
@@ -556,7 +556,7 @@ namespace Core
 					return *this;
 				}
 
-				if (true == CAS_POINTER(&_RefCounter, prevptr, otherptr))
+				if (true == CAS_POINTER(&m_RefCounter, prevptr, otherptr))
 				{
 					if (nullptr != prevptr)
 					{
@@ -569,7 +569,7 @@ namespace Core
 		}
 
 	private:
-		URefCounter<T>* _RefCounter;
+		URefCounter<T>* m_RefCounter;
 	};
 
 	template<class T>
@@ -593,15 +593,15 @@ namespace Core
 		friend class USharedPtr<T>;
 		friend class UEnableSharedFromThis<T>;
 	public:
-		UWeakPtr() : _RefCounter{ nullptr } { }
-		UWeakPtr(URefCounter<T>* _Ref) : _RefCounter{ _Ref->ComparePointerToWeak() } {	}
-		UWeakPtr(nullptr_t) : _RefCounter{ nullptr } {}
+		UWeakPtr() : m_RefCounter{ nullptr } { }
+		UWeakPtr(URefCounter<T>* _Ref) : m_RefCounter{ _Ref->ComparePointerToWeak() } {	}
+		UWeakPtr(nullptr_t) : m_RefCounter{ nullptr } {}
 		template<class U>
-		UWeakPtr(const UWeakPtr<U>& _rhs) : _RefCounter{ _rhs.AddWeak() } {}
-		UWeakPtr(const UWeakPtr& _rhs) : _RefCounter{ _rhs.AddWeak() } {	}
-		UWeakPtr(UWeakPtr&& _rhs) : _RefCounter{ _rhs._RefCounter } { _rhs._RefCounter = nullptr; }
-		UWeakPtr(USharedPtr<T> _sharedPtr) : _RefCounter{ _sharedPtr.AddWeak() } { }
-		~UWeakPtr() { Release(_RefCounter); }
+		UWeakPtr(const UWeakPtr<U>& _rhs) : m_RefCounter{ _rhs.AddWeak() } {}
+		UWeakPtr(const UWeakPtr& _rhs) : m_RefCounter{ _rhs.AddWeak() } {	}
+		UWeakPtr(UWeakPtr&& _rhs) : m_RefCounter{ _rhs.m_RefCounter } { _rhs.m_RefCounter = nullptr; }
+		UWeakPtr(USharedPtr<T> _sharedPtr) : m_RefCounter{ _sharedPtr.AddWeak() } { }
+		~UWeakPtr() { Release(m_RefCounter); }
 	public:
 
 		UWeakPtr& operator =(nullptr_t)
@@ -609,11 +609,11 @@ namespace Core
 			URefCounter<T>* prevptr{ nullptr };
 			while (true)
 			{
-				prevptr = _RefCounter;
+				prevptr = m_RefCounter;
 				if (prevptr == nullptr)
 					return *this;
 
-				if (true == CAS_POINTER(&_RefCounter, prevptr, nullptr))
+				if (true == CAS_POINTER(&m_RefCounter, prevptr, nullptr))
 				{
 					Release(prevptr);
 					return *this;
@@ -629,12 +629,12 @@ namespace Core
 
 			while (true)
 			{
-				prevptr = _RefCounter;
+				prevptr = m_RefCounter;
 				otherptr = _rhs.AddWeak();
 
 				if (otherptr == nullptr)
 				{
-					if (true == CAS_POINTER(&_RefCounter, prevptr, nullptr))
+					if (true == CAS_POINTER(&m_RefCounter, prevptr, nullptr))
 					{
 						if (nullptr != prevptr)
 						{
@@ -651,7 +651,7 @@ namespace Core
 					return *this;
 				}
 
-				if (true == CAS_POINTER(&_RefCounter, prevptr, otherptr))
+				if (true == CAS_POINTER(&m_RefCounter, prevptr, otherptr))
 				{
 					if (nullptr != prevptr)
 					{
@@ -672,12 +672,12 @@ namespace Core
 
 			while (true)
 			{
-				prevptr = _RefCounter;
+				prevptr = m_RefCounter;
 				otherptr = _rhs.AddWeak();
 
 				if (otherptr == nullptr)
 				{
-					if (true == CAS_POINTER(&_RefCounter, prevptr, nullptr))
+					if (true == CAS_POINTER(&m_RefCounter, prevptr, nullptr))
 					{
 						if (nullptr != prevptr)
 						{
@@ -694,7 +694,7 @@ namespace Core
 					return *this;
 				}
 
-				if (true == CAS_POINTER(&_RefCounter, prevptr, otherptr))
+				if (true == CAS_POINTER(&m_RefCounter, prevptr, otherptr))
 				{
 					if (nullptr != prevptr)
 					{
@@ -708,20 +708,20 @@ namespace Core
 			return *this;
 		}
 
-		bool operator ==(nullptr_t _ptr) const { return _RefCounter == _ptr; }
-		bool operator !=(nullptr_t _ptr) const { return _RefCounter != _ptr; }
+		bool operator ==(nullptr_t _ptr) const { return m_RefCounter == _ptr; }
+		bool operator !=(nullptr_t _ptr) const { return m_RefCounter != _ptr; }
 
 		template<class T2>
-		bool operator ==(const T2*& _rhs) const { return _RefCounter == _rhs; }
+		bool operator ==(const T2*& _rhs) const { return m_RefCounter == _rhs; }
 
 		template<class T2>
-		bool operator !=(const T2*& _rhs) const { return _RefCounter != _rhs; }
+		bool operator !=(const T2*& _rhs) const { return m_RefCounter != _rhs; }
 
 		template<class T2>
-		bool operator ==(const USharedPtr<T2>& _rhs) const { return _RefCounter == _rhs._RefCounter; }
+		bool operator ==(const USharedPtr<T2>& _rhs) const { return m_RefCounter == _rhs.m_RefCounter; }
 
 		template<class T2>
-		bool operator !=(const USharedPtr<T2>& _rhs) const { return _RefCounter != _rhs._RefCounter; }
+		bool operator !=(const USharedPtr<T2>& _rhs) const { return m_RefCounter != _rhs.m_RefCounter; }
 
 		USharedPtr<T> lock() const { return USharedPtr<T>(*this); }
 
@@ -730,11 +730,11 @@ namespace Core
 			URefCounter<T>* prevref{ nullptr };
 			while (true)
 			{
-				prevref = _RefCounter;
+				prevref = m_RefCounter;
 				if (prevref == nullptr)
 					return;
 
-				if (true == CAS_POINTER(&_RefCounter, prevref, nullptr))
+				if (true == CAS_POINTER(&m_RefCounter, prevref, nullptr))
 				{
 					Release(prevref);
 					return;
@@ -744,12 +744,12 @@ namespace Core
 
 		llong use_count() const
 		{
-			return _RefCounter->GetUseCount();
+			return m_RefCounter->GetUseCount();
 		}
 
 		operator bool() const
 		{
-			URefCounter<T>* currptr = _RefCounter;
+			URefCounter<T>* currptr = m_RefCounter;
 
 			if (nullptr != currptr)
 				if (currptr->GetUseCount() > 0)
@@ -760,7 +760,7 @@ namespace Core
 
 		void SetEnableShared(const USharedPtr<T>& _rhs)
 		{
-			_RefCounter = _rhs._RefCounter->ComparePointerToWeak();
+			m_RefCounter = _rhs.m_RefCounter->ComparePointerToWeak();
 		}
 	private:
 
@@ -772,12 +772,12 @@ namespace Core
 
 			while (true)
 			{
-				prev = _RefCounter;
+				prev = m_RefCounter;
 				if (nullptr == prev)
 					return nullptr;
 
 				getptr = prev->ComparePointerToStrong();
-				curr = _RefCounter;
+				curr = m_RefCounter;
 
 				if (getptr == curr)
 					return curr;
@@ -796,12 +796,12 @@ namespace Core
 
 			while (true)
 			{
-				prev = _RefCounter;
+				prev = m_RefCounter;
 				if (nullptr == prev)
 					return nullptr;
 
 				getptr = prev->ComparePointerToWeak();
-				curr = _RefCounter;
+				curr = m_RefCounter;
 
 				if (getptr == curr)
 					return curr;
@@ -827,11 +827,11 @@ namespace Core
 			llong value = _ptr->ReleasePointerToWeak();
 			if (value <= 0)
 			{
-				_RefCounter = nullptr;
+				m_RefCounter = nullptr;
 			}
 		}
 	private:
-		mutable URefCounter<T>* _RefCounter;
+		mutable URefCounter<T>* m_RefCounter;
 	};
 
 	template<typename T>
@@ -840,11 +840,11 @@ namespace Core
 		friend  class URefCounter<T>;
 	protected:
 		UEnableSharedFromThis()
-			: Wptr()
+			: m_Wptr()
 		{}
 
 		UEnableSharedFromThis(const UEnableSharedFromThis& other)
-			: Wptr()
+			: m_Wptr()
 		{}
 
 		UEnableSharedFromThis& operator=(const UEnableSharedFromThis&)
@@ -858,25 +858,26 @@ namespace Core
 
 		USharedPtr<T> shared_from_this()
 		{
-			return (USharedPtr<T>(Wptr));
+			return (USharedPtr<T>(m_Wptr));
 		}
 
 		UWeakPtr<T> weak_from_this()
 		{
-			return Wptr;
+			return m_Wptr;
 		}
 
-		void SetSharedFromThis(const USharedPtr<T>& _ptr) { Wptr.SetEnableShared(_ptr); }
+		void SetSharedFromThis(const USharedPtr<T>& _ptr) { m_Wptr.SetEnableShared(_ptr); }
 	private:
-		UWeakPtr<T> Wptr;
+		UWeakPtr<T> m_Wptr;
 	};
 
-	template<class T>
-	USharedPtr<T> MakeShared(const std::shared_ptr<T>& _ptr)
+	template<class T, class ...Args>
+	USharedPtr<T> MakeShared(Args&&... _args)
 	{
 		USharedPtr<T> SharedPtr;
-		URefCounter<T>* pRefCounter = new URefCounter<T>(_ptr);
-		SharedPtr.SetEnableShared(_ptr, pRefCounter);
+		T* ptr = Core::MemoryAlloc<T>(std::forward<Args>(_args)...);
+		URefCounter<T>* pRefCounter = Core::MemoryAlloc<URefCounter<T>>(ptr);
+		SharedPtr.SetEnableShared(ptr, pRefCounter);
 		return std::move(SharedPtr);
 	}
 
@@ -884,7 +885,7 @@ namespace Core
 	USharedPtr<T> static_shared_cast(const USharedPtr<U>& _rhs)
 	{
 		URefCounter<T>* RefCounter = reinterpret_cast<URefCounter<T>*>(_rhs.AddShared());
-		RefCounter->SetShared(std::static_pointer_cast<T>(_rhs._RefCounter->ptr));
+		RefCounter->SetShared(static_cast<T>(_rhs.m_RefCounter->m_Ptr));
 		return USharedPtr<T> {RefCounter};
 	}
 
@@ -893,7 +894,7 @@ namespace Core
 	USharedPtr<T> dynamic_shared_cast(const USharedPtr<U>& _rhs)
 	{
 		URefCounter<T>* RefCounter = reinterpret_cast<URefCounter<T>*>(_rhs.AddShared());
-		RefCounter->SetShared(std::dynamic_pointer_cast<T>(_rhs._RefCounter->ptr));
+		RefCounter->SetShared(dynamic_cast<T>(_rhs.m_RefCounter->m_Ptr));
 		return USharedPtr<T> {RefCounter};
 	}
 
@@ -901,7 +902,7 @@ namespace Core
 	USharedPtr<T> reinterpret_shared_cast(const USharedPtr<U>& _rhs)
 	{
 		URefCounter<T>* RefCounter = reinterpret_cast<URefCounter<T>*>(_rhs.AddShared());
-		RefCounter->SetShared(std::reinterpret_pointer_cast<T>(_rhs._RefCounter->ptr));
+		RefCounter->SetShared(reinterpret_cast<T>(_rhs.m_RefCounter->m_Ptr));
 		return USharedPtr<T> {RefCounter};
 	}
 
@@ -909,7 +910,7 @@ namespace Core
 	USharedPtr<T> const_shared_cast(const USharedPtr<U>& _rhs)
 	{
 		URefCounter<T>* RefCounter = reinterpret_cast<URefCounter<T>*>(_rhs.AddShared());
-		RefCounter->SetShared(std::const_pointer_cast<T>(_rhs._RefCounter->ptr));
+		RefCounter->SetShared(const_cast<T>(_rhs.m_RefCounter->m_Ptr));
 		return USharedPtr<T> {RefCounter};
 	}
 }
@@ -922,7 +923,7 @@ namespace Core
 namespace Core {
 
 	template<class T>
-	using SHPTR = __declspec(align(Core::CASH_ALGIN_VALUE)) USharedPtr<T>;
+	using SHPTR = __declspec(align(CASH_ALGIN_VALUE)) USharedPtr<T>;
 
 	template<class T>
 	using CSHPTR = const SHPTR<T>;
@@ -931,7 +932,7 @@ namespace Core {
 	using CSHPTRREF = const SHPTR<T>&;
 
 	template<class T>
-	using WKPTR = __declspec(align(Core::CASH_ALGIN_VALUE))   UWeakPtr<T>;
+	using WKPTR = __declspec(align(CASH_ALGIN_VALUE))   UWeakPtr<T>;
 
 	template<class T>
 	using CWKPTR = const WKPTR<T>;
@@ -940,7 +941,7 @@ namespace Core {
 	using CWKPTRREF = const WKPTR<T>&;
 }
 
-#define CACHE_ALGIN  __declspec(align(Core::CASH_ALGIN_VALUE)) 
+#define CACHE_ALGIN  __declspec(align(CASH_ALGIN_VALUE)) 
 
 
 namespace std
