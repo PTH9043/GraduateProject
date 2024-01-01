@@ -4,24 +4,24 @@
 
 namespace Core
 {
+	IMPLEMENT_ONCEDATA(UCoreInstance);
+
 	CORE_DLL SHPTR<UCoreInstance> e_CoreGrobal = Create<UCoreInstance>();
-	UCoreInstance::UCoreInstance() : m_ThreadManager{ Create<Core::UThreadManager>() }, 
-		m_Context{nullptr}
+	UCoreInstance::UCoreInstance() : m_ThreadManager{ Create<Core::UThreadManager>() }
 	{
+		CREATEINSTANCE_ONCEDATA
 	}
 
 	UCoreInstance::~UCoreInstance()
 	{
 		LOCKGUARD<MUTEX> Lock{ m_Mutex };
-		if (nullptr != m_Context)
-			m_Context->stop();
 		using namespace std;
 		std::this_thread::sleep_for(100ms);
 
 		m_ThreadManager.reset();
 	}
 
-	HRESULT UCoreInstance::ReadyCoreGrobal()
+	bool UCoreInstance::NativeConstruct()
 	{
 
 		return S_OK;
@@ -44,6 +44,10 @@ namespace Core
 	void UCoreInstance::Join()
 	{
 		m_ThreadManager->Join();
+	}
+
+	void UCoreInstance::Free()
+	{
 	}
 
 	/*

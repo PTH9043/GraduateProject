@@ -9,6 +9,4 @@ int main()
 
 	CS_LOGIN csLogin;
 	PROTOFUNC::MakeCsLogin("Name", csLogin);
-
-
 }

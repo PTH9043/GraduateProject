@@ -69,7 +69,12 @@ namespace Core {
 	MEMORYADMINSTER
 	------------------------------
 	*/
-
+	/*
+	@ Date: 2023-12-31
+	@ Writer: 박태현
+	@ Explain
+	- 메모리를 관리하는 관리자 클래스
+	*/
 	class CACHE_ALGIN_CORE_DLL UMemoryAdminster {
 		enum
 		{

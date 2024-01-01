@@ -35,11 +35,13 @@
     <ClInclude Include="..\Public\LockFree.h" />
     <ClInclude Include="..\Public\Memory.h" />
     <ClInclude Include="..\Public\SmartPointer.h" />
+    <ClInclude Include="..\Public\UAsioCore.h" />
     <ClInclude Include="..\Public\UAwsContext.h" />
     <ClInclude Include="..\Public\UBase.h" />
     <ClInclude Include="..\Public\UBuffer.h" />
     <ClInclude Include="..\Public\UCoreInstance.h" />
     <ClInclude Include="..\Public\UDeadLockProfiler.h" />
+    <ClInclude Include="..\Public\UObject.h" />
     <ClInclude Include="..\Public\UObjectPool.h" />
     <ClInclude Include="..\Public\USession.h" />
     <ClInclude Include="..\Public\UThreadManager.h" />
@@ -51,11 +53,13 @@
     <ClCompile Include="..\Private\LockFree.cpp" />
     <ClCompile Include="..\Private\Memory.cpp" />
     <ClCompile Include="..\Private\SmartPointer.cpp" />
+    <ClCompile Include="..\Private\UAsioCore.cpp" />
     <ClCompile Include="..\Private\UAwsContext.cpp" />
     <ClCompile Include="..\Private\UBase.cpp" />
     <ClCompile Include="..\Private\UBuffer.cpp" />
     <ClCompile Include="..\Private\UCoreInstance.cpp" />
     <ClCompile Include="..\Private\UDeadLockProfiler.cpp" />
+    <ClCompile Include="..\Private\UObject.cpp" />
     <ClCompile Include="..\Private\UObjectPool.cpp" />
     <ClCompile Include="..\Private\USession.cpp" />
     <ClCompile Include="..\Private\UThreadManager.cpp" />
@@ -162,6 +166,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\ThirdPartyLib\;</AdditionalLibraryDirectories>
+      <LargeAddressAware>true</LargeAddressAware>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -199,6 +204,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\ThirdPartyLib\;</AdditionalLibraryDirectories>
+      <LargeAddressAware>true</LargeAddressAware>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

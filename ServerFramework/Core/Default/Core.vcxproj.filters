@@ -40,9 +40,6 @@
     <Filter Include="03.Context\aws">
       <UniqueIdentifier>{e356f2b8-de07-4f0f-b862-9d4f2c0ebb85}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Session">
-      <UniqueIdentifier>{113fff01-053a-454f-832b-fb5e44a5bd28}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.CoreInstance">
       <UniqueIdentifier>{b3593e4a-d6a9-458e-9390-388768fdd94e}</UniqueIdentifier>
     </Filter>
@@ -51,6 +48,18 @@
     </Filter>
     <Filter Include="98.Utility\ObjectPool">
       <UniqueIdentifier>{230e67c7-1ad2-4f50-95c3-103334143824}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Network">
+      <UniqueIdentifier>{f9f34431-a3ff-4ff2-a791-739328a22d8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Network\Session">
+      <UniqueIdentifier>{113fff01-053a-454f-832b-fb5e44a5bd28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Network\AsioCore">
+      <UniqueIdentifier>{0e44ce4c-1ee3-4dc5-897c-416bbcb16875}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Super\Object">
+      <UniqueIdentifier>{147a2659-d2cb-4b8a-aa58-cb4a3bca7e83}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -103,7 +112,7 @@
       <Filter>03.Context\aws</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\USession.h">
-      <Filter>04.Session</Filter>
+      <Filter>04.Network\Session</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Allocator.h">
       <Filter>98.Utility\Memory</Filter>
@@ -125,6 +134,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\CoreTypecast.h">
       <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UAsioCore.h">
+      <Filter>04.Network\AsioCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UObject.h">
+      <Filter>97.Super\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -150,7 +165,7 @@
       <Filter>03.Context\aws</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\USession.cpp">
-      <Filter>04.Session</Filter>
+      <Filter>04.Network\Session</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Allocator.cpp">
       <Filter>98.Utility\Memory</Filter>
@@ -169,6 +184,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\UObjectPool.cpp">
       <Filter>98.Utility\ObjectPool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UAsioCore.cpp">
+      <Filter>04.Network\AsioCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UObject.cpp">
+      <Filter>97.Super\Object</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

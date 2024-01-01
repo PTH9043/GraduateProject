@@ -61,6 +61,7 @@ namespace Core
 	------------------------------
 	*/
 
+	// 저장할 메모리 할당
 	UMemoryAdminster::UMemoryAdminster()
 	{
 		_uint Size = 16;
@@ -81,6 +82,7 @@ namespace Core
 		m_Pools.clear();
 	}
 
+	// SIze의 크기가 해당 메모리에 없으면 그냥 할당, 아니라면 해제한다. 
 	void* UMemoryAdminster::Allocate(_ullong _Size)
 	{
 		MEMORYHEADER* Header = nullptr;
@@ -101,7 +103,7 @@ namespace Core
 #endif
 		return MEMORYHEADER::AttachHeader(Header, AllocateSize);
 	}
-
+	// SIze의 크기가 해당 메모리에 없으면 해제, 아니면 반납한다. 
 	void UMemoryAdminster::Release(void* _Ptr)
 	{
 		MEMORYHEADER* Header = MEMORYHEADER::DetachHeader(_Ptr);
@@ -122,7 +124,7 @@ namespace Core
 		}
 #endif
 	}
-
+	// 메모리 할당을 해주는 함수이다. 
 	void UMemoryAdminster::MakeMemoryPool(REF_OUT _uint& _Size, REF_OUT _uint& _TableIndex,
 		const _uint _Limited, const _uint _AddValue)
 	{

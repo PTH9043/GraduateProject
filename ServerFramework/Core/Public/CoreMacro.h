@@ -185,17 +185,30 @@ void ClassName::DestoryInstance(){  m_pInstance.reset(); }
 
 /*
 ==========================
-			MEMORY ALLOCATE
+			Type List Define 
 ==========================
 */
 
-#ifdef USE_DEBUG
-#define MEMORYALLOC(size)		Core::UPoolAllocator::Alloc(size)
-#define MEMORYRELEASE(ptr)		Core::UPoolAllocator::Release(ptr)
-#else
-#define MEMORYALLOC(size)		Core::UBaseAllocator::Alloc(size)
-#define MEMORYRELEASE(ptr)		Core::UBaseAllocator::Release(ptr)
-#endif
+/*
+@ Date: 2024-01-01
+@ Writer: 박태현
+@ Explain
+- TypeList를 생성하기 위한 매크로 
+*/
+#define DEFCLARE_TL using TL = TL;  int typeId;
+#define INIT_TL(Type) typeId = Core::IndexOf<TL, Type>::value;
+
+
+/*
+==========================
+			OnceData
+==========================
+*/
+
+#define DECLARE_ONCEDATA private: static bool IsMake;
+#define IMPLEMENT_ONCEDATA(Class) bool Class::IsMake = false;
+#define CREATEINSTANCE_ONCEDATA  ASSERT_CRASH(false == IsMake); IsMake = true; 
+
 
 /*
 ==========================

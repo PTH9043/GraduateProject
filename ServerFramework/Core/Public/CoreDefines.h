@@ -101,5 +101,4 @@ namespace Asio = boost::asio;
 
 namespace Core{ }
 
-
 #endif 

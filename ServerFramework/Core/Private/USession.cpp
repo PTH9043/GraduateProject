@@ -11,6 +11,9 @@ namespace Core
 
 	_bool USession::Start()
 	{
+		/*
+		
+		*/
 		ReadData();
 		return true;
 	}

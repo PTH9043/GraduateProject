@@ -885,7 +885,7 @@ namespace Core
 	USharedPtr<T> static_shared_cast(const USharedPtr<U>& _rhs)
 	{
 		URefCounter<T>* RefCounter = reinterpret_cast<URefCounter<T>*>(_rhs.AddShared());
-		RefCounter->SetShared(static_cast<T>(_rhs.m_RefCounter->m_Ptr));
+		RefCounter->SetShared(static_cast<T*>(_rhs.m_RefCounter->m_Ptr));
 		return USharedPtr<T> {RefCounter};
 	}
 
@@ -894,7 +894,7 @@ namespace Core
 	USharedPtr<T> dynamic_shared_cast(const USharedPtr<U>& _rhs)
 	{
 		URefCounter<T>* RefCounter = reinterpret_cast<URefCounter<T>*>(_rhs.AddShared());
-		RefCounter->SetShared(dynamic_cast<T>(_rhs.m_RefCounter->m_Ptr));
+		RefCounter->SetShared(TypeCast<U*>(_rhs.m_RefCounter->m_Ptr));
 		return USharedPtr<T> {RefCounter};
 	}
 
@@ -902,7 +902,7 @@ namespace Core
 	USharedPtr<T> reinterpret_shared_cast(const USharedPtr<U>& _rhs)
 	{
 		URefCounter<T>* RefCounter = reinterpret_cast<URefCounter<T>*>(_rhs.AddShared());
-		RefCounter->SetShared(reinterpret_cast<T>(_rhs.m_RefCounter->m_Ptr));
+		RefCounter->SetShared(reinterpret_cast<T*>(_rhs.m_RefCounter->m_Ptr));
 		return USharedPtr<T> {RefCounter};
 	}
 
@@ -910,7 +910,7 @@ namespace Core
 	USharedPtr<T> const_shared_cast(const USharedPtr<U>& _rhs)
 	{
 		URefCounter<T>* RefCounter = reinterpret_cast<URefCounter<T>*>(_rhs.AddShared());
-		RefCounter->SetShared(const_cast<T>(_rhs.m_RefCounter->m_Ptr));
+		RefCounter->SetShared(const_cast<T*>(_rhs.m_RefCounter->m_Ptr));
 		return USharedPtr<T> {RefCounter};
 	}
 }

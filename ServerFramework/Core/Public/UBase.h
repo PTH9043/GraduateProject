@@ -29,6 +29,8 @@ protected:
 	- 메모리를 해제해야 할 것이 있을 때 FREE에 정의하여 해제한다. 
 	*/
 	virtual void Free() PURE;
+
+protected:
 };
 
 END
