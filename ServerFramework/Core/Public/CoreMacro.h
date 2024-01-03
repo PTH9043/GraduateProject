@@ -7,25 +7,28 @@
 					SHOW
 ==========================
 */
-
 /*
-@ Date: 2023-12-28
-@ Writer: 박태현
+@ Date: 2023-12-28, Writer: 박태현
 @ Explain
-- 함수 정의할 때, 레퍼런스를 통해 해당하는 변수의 값이 바뀔 수 있을 경우를 나타냄
+- 함수를 실행시킬 때, 레퍼런스를 통해 해당하는 변수의 값이 바뀔 수 있을 경우를 나타냄
 */
 #define REF_OUT
 
 
 /*
-@ Date: 2023-12-28
-@ Writer: 박태현
+@ Date: 2023-12-28,  Writer: 박태현
 @ Explain
-- 함수를 실행시킬 때, 레퍼런스를 통해 해당하는 변수의 값이 바뀔 수 있을 경우를 나타냄
+- 함수 정의할 때, 레퍼런스를 통해 해당하는 변수의 값이 바뀔 수 있을 경우를 나타냄
 */
 #define REF_IN
 
 
+/*
+@ Date: 2023-12-28, Writer: 박태현
+@ Explain
+- 레퍼런스 함수를 리턴하는 경우를 나타낸다. 
+*/
+#define REF_RETURN
 
 /*
 @ Date: 2023-12-28
@@ -70,7 +73,7 @@
 #define		WRITE_LOCK_IDX(idx)				Core::WriteLockGuard writeLockGuard_##idx(_locks[idx]);
 #endif
 
-#define		USE_MANY_LOCKS(count)		Core::ARRAY<Core::Lock::URWLock, count>
+#define		USE_MANY_LOCKS(count)		Core::ARRAY<Core::URWLock, count>
 #define		USE_LOCK									USE_MANY_LOCKS(1)
 #define		READ_LOCK								READ_LOCK_IDX(0)
 #define		WRITE_LOCK								READ_LOCK_IDX(0)
@@ -205,11 +208,39 @@ void ClassName::DestoryInstance(){  m_pInstance.reset(); }
 ==========================
 */
 
+
+/*
+@ Date: 2024-01-01,  Writer: 박태현
+@ Explain
+- 단 한번만 생성되어야 하는 구조체, 클레스에 정의하는 매크로이다. 
+*/
 #define DECLARE_ONCEDATA private: static bool IsMake;
 #define IMPLEMENT_ONCEDATA(Class) bool Class::IsMake = false;
 #define CREATEINSTANCE_ONCEDATA  ASSERT_CRASH(false == IsMake); IsMake = true; 
 
 
+/*
+==========================
+			CONSTRUCTOR 
+==========================
+*/
+
+/*
+@ Date: 2024-01-02,  Writer: 박태현
+@ Explain
+-  OBJECT 생성자에 정의되어 있는 변수를 매크로화 시켰다. 
+*/
+#define OBJCON_CONSTRUCTOR Core::SHPTR<Core::UCoreInstance> _spCoreInstance
+#define OBJCON_CONDATA _spCoreInstance 
+
+/*
+@ Date: 2024-01-02,  Writer: 박태현
+@ Explain
+-  Session 생성자에 정의되어 있는 변수를 매크로화 시켰다.
+*/
+#define SESSION_CONSTRUCTOR MOVE OBJCON_CONSTRUCTOR, Asio::ip::tcp::socket&& _TcpSocket,  \
+Core::SESSIONTYPE _SessionType,SESSIONID _ID, Core::SHPTR<Core::UService> _spService
+#define SESSION_CONDATA OBJCON_CONDATA, std::move(_TcpSocket), _SessionType, _ID, _spService
 /*
 ==========================
 					ECT

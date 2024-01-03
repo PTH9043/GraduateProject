@@ -149,8 +149,6 @@ namespace Core {
 	template<class TL>
 	bool TypeConversion<TL>::s_convert[length][length];
 
-
-
 	template<class To, class From>
 	To TypeCast(From* _Ptr) {
 		if constexpr (nullptr == _Ptr)

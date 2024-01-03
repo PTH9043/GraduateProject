@@ -4,7 +4,7 @@
 
 namespace Core
 {
-	void* UBaseAllocator::Alloc(_ullong  _size)
+	void* UBaseAllocator::Alloc(size_t  _size)
 	{
 		return ::malloc(_size);
 	}
@@ -24,12 +24,12 @@ namespace Core
 	*/
 
 
-	void* UStompAllocator::Alloc(_ullong _size)
+	void* UStompAllocator::Alloc(size_t _size)
 	{
 		// 반올림을 위한 코드
-		const _ullong PageCount = (_size + PAGE_SIZE - 1) / PAGE_SIZE;
+		const size_t PageCount = (_size + PAGE_SIZE - 1) / PAGE_SIZE;
 		// PageCount에 뒤에 부분에 할당할 수 있게 DataOffset 조정해서 오버플로우 문제 해결
-		const _ullong DataOffset = PageCount * PAGE_SIZE - _size;
+		const size_t DataOffset = PageCount * PAGE_SIZE - _size;
 
 		
 #ifdef WINDOW_OS
@@ -43,28 +43,28 @@ namespace Core
 	void UStompAllocator::Release(void* _ptr)
 	{
 		// DataOffset을 조정해서 할당한 메모리를 원래 자리로 돌아가게 만든다. 
-		const _llong address = reinterpret_cast<_llong>(_ptr);
-		const _llong baseAddress = address - (address % PAGE_SIZE);
+		const size_t address = reinterpret_cast<size_t>(_ptr);
+		const size_t baseAddress = address - (address % PAGE_SIZE);
 		::VirtualFree(reinterpret_cast<void*>(baseAddress), 0, MEM_RELEASE);
 	}
 #else
-	void StompAllocator::Release(void* _ptr, _ullong _size)
+	void StompAllocator::Release(void* _ptr, size_t _size)
 	{	
 		const _ullong PageCount = (_size + PAGE_SIZE - 1) / PAGE_SIZE;
-		const _llong address = reinterpret_cast<_llong>(_ptr);
-		const _llong BaseAddress = address - (address % PAGE_SIZE);
+		const size_t address = reinterpret_cast<size_t>(_ptr);
+		const size_t BaseAddress = address - (address % PAGE_SIZE);
 		munmap(reinterpret_cast<_byte*>(BaseAddress), PAGE_SIZE);
 	}
 #endif
 
-	void* UPoolAllocator::Alloc(_ullong _size)
+	void* UPoolAllocator::Alloc(size_t _size)
 	{
-		return g_MemoryAdminster->Allocate(_size);
+		return g_pMemoryAdminster->Allocate(_size);
 	}
 
 	void UPoolAllocator::Release(void* _ptr)
 	{
-		g_MemoryAdminster->Release(_ptr);
+		g_pMemoryAdminster->Release(_ptr);
 	}
 
 	/*

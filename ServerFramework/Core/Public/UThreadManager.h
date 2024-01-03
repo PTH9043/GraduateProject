@@ -5,8 +5,6 @@
 
 
 BEGIN(Core)
-template<class T>
-using VECTOR = std::vector<T>;
 using THREAD = std::thread;
 using THRAEDVECTOR = VECTOR<THREAD>;
 

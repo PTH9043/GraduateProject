@@ -4,7 +4,11 @@
 
 namespace PROTOFUNC
 {
-	void MakeCsLogin(const std::string& _strName, CS_LOGIN& _login);
+	CS_LOGIN CreateCsLoginPacket(std::string _strName);
+	CS_LOGOUT CreateCsLogOutPacket(long long _id);
+
+	SC_CHECKLOGIN CreateScCheckLogin(long long _id);
+	SC_REMOVE_OBJECT CreateScRemoveObject(long long _id);
 
 	class PROTOCOL_MEMORY_LEAK_REMOVER
 	{

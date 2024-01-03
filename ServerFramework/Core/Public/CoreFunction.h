@@ -4,44 +4,30 @@
 namespace Core
 {
 #pragma region FUNCTION 
-#ifdef USE_DEBUG
-	namespace DEBUG
-	{
-		/*
-		@ Date: 2023-12-26
-		@ Writer: 박태현
-		@ Explain
-		- 디버그 메시지를 출력하는 함수, USE_DEBUG에서만 사용
-		*/
-		static void Debugging_Message(const char* FILE,
-			const unsigned int& LINE, const char* FUNC, const _string& _pMessage)
-		{
-#ifdef USE_DEBUG
-			char	szMessage[MAX_PATH] = "";
-			_string ClassName = _pMessage;
-			_string str = "";
-			str += "\nFILE: ";
-			str += FILE;
-			str += "\n LINE: ";
-			str += std::to_string(LINE);
-			str += "\n";
-			str += FUNC;
-			ClassName.append(str);
-			MessageBoxA(0, ClassName.c_str(), nullptr, MB_OK);
-#endif
-		}
-		/*
-		@ Date: 2023-12-26
-		@ Writer: 박태현
-		@ Explain
-		- 객체를 생성할 때, 에러가 있는 클래스에서만 해당 클래스의 type을 확인하여 메시지를 띄우는 함수, USE_DEBUG에서만 사용
-		*/
-		template<typename T>
-		static void ErrorToCreateClass(T& _rhs) {
-			MessageBoxA(0, typeid(T).name(), nullptr, MB_OK);
-		}
+	/*
+	@ Date: 2023-01-02,  Writer: 박태현
+	@ Explain
+	- 멀티쓰레드에서 안전하게 값을 바꾸기 위한 함수
+	*/
+	template<class T, class Value>
+	bool CAS(T* _pData, Value _expected, const Value& _value) {
+		return std::atomic_compare_exchange_strong(
+			reinterpret_cast<volatile ATOMIC<T>*>(_pData), &_expected, _value);
 	}
-#endif
+	
+	/*
+	@ Date: 2023-01-02,  Writer: 박태현
+	@ Explain
+	- 멀티쓰레드에서 안전하게 값을 바꾸기 위한 함수
+	*/
+	template<class T, class Value>
+	bool CAS(REF_IN std::atomic<T>& _Data, Value _expected, const Value& _value) {
+		return _Data.compare_exchange_strong(_expected, _value);
+	}
+
+	template<class T1, class T2>
+	std::pair<T1, T2> MakePair(T1& _t1, T2& _t2) { return std::move(std::pair<T1, T2>(_t1, _t2)); }
+
 	/*
 	@ Date: 2023-12-26
 	@ Writer: 박태현
@@ -67,7 +53,7 @@ namespace Core
 		SHPTR<T> pInstance{ Core::MakeShared<T>() };
 		if (false ==  (pInstance->NativeConstruct(args...))) {
 #ifdef USE_DEBUG
-			DEBUG::ErrorToCreateClass(pInstance);
+			CRASH("SHPTR<T>::CreateInitNative");
 #endif
 			pInstance.reset();
 		}
@@ -105,7 +91,9 @@ namespace Core
 		static_assert(ConstructWithArgsCheck<T, Args...>, "생성자의 인자가 잘못되었습니다.");
 		SHPTR<T> pInstance{ Core::MakeShared<T>(std::forward<Args>(args)...) };
 		if (false == (pInstance->NativeConstruct())) {
-			ErrorToCreateClass(pInstance);
+#ifdef USE_DEBUG
+			CRASH("SHPTR<T>::CreateInitConstructor");
+#endif
 			pInstance.reset();
 		}
 		return std::move(pInstance);

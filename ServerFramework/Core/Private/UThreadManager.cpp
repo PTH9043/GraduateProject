@@ -1,5 +1,4 @@
 #include "CoreDefines.h"
-#include <vector>
 #include "UThreadManager.h"
 
 namespace Core

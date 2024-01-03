@@ -22,9 +22,10 @@ namespace Core
 	};
 
 	enum class SESSIONTYPE : unsigned int {
-
 		OBJECT, PLAYER, MONSTER, TYPE_END
 	};
+
+	enum class SERVICETYPE { CLIENT, SERVER, TYPE_END };
 
 	enum {
 		MAX_BUFFER_LENGTH = 600, 

@@ -41,10 +41,10 @@
       private:\
    //
 #else
-   #define BOOST_MOVE_IMPL_NO_COPY_CTOR_OR_ASSIGN(TYPE) \
+   #define BOOST_MOVE_IMPL_NO_COPY_CTOR_OR_ASSIGN(SERVICETYPE) \
       public:\
-      TYPE(TYPE const &) = delete;\
-      TYPE& operator=(TYPE const &) = delete;\
+      SERVICETYPE(SERVICETYPE const &) = delete;\
+      SERVICETYPE& operator=(SERVICETYPE const &) = delete;\
       public:\
       typedef int boost_move_no_copy_constructor_or_assign; \
       private:\
@@ -299,8 +299,8 @@
    //! This macro marks a type as movable but not copyable, disabling copy construction
    //! and assignment. The user will need to write a move constructor/assignment as explained
    //! in the documentation to fully write a movable but not copyable class.
-   #define BOOST_MOVABLE_BUT_NOT_COPYABLE(TYPE)\
-      BOOST_MOVE_IMPL_NO_COPY_CTOR_OR_ASSIGN(TYPE)\
+   #define BOOST_MOVABLE_BUT_NOT_COPYABLE(SERVICETYPE)\
+      BOOST_MOVE_IMPL_NO_COPY_CTOR_OR_ASSIGN(SERVICETYPE)\
       public:\
       typedef int boost_move_emulation_t;\
       private:\
@@ -309,11 +309,11 @@
    //! This macro marks a type as copyable and movable.
    //! The user will need to write a move constructor/assignment and a copy assignment
    //! as explained in the documentation to fully write a copyable and movable class.
-   #define BOOST_COPYABLE_AND_MOVABLE(TYPE)\
+   #define BOOST_COPYABLE_AND_MOVABLE(SERVICETYPE)\
    //
 
    #if !defined(BOOST_MOVE_DOXYGEN_INVOKED)
-   #define BOOST_COPYABLE_AND_MOVABLE_ALT(TYPE)\
+   #define BOOST_COPYABLE_AND_MOVABLE_ALT(SERVICETYPE)\
    //
    #endif   //#if !defined(BOOST_MOVE_DOXYGEN_INVOKED)
 
@@ -339,8 +339,8 @@
    //!This macro is used to achieve portable syntax in move
    //!constructors and assignments for classes marked as
    //!BOOST_COPYABLE_AND_MOVABLE or BOOST_MOVABLE_BUT_NOT_COPYABLE
-   #define BOOST_RV_REF(TYPE)\
-      TYPE && \
+   #define BOOST_RV_REF(SERVICETYPE)\
+      SERVICETYPE && \
    //
 
    //!This macro is used to achieve portable syntax in move
@@ -377,24 +377,24 @@
 
    //!This macro is used to achieve portable syntax in copy
    //!assignment for classes marked as BOOST_COPYABLE_AND_MOVABLE.
-   #define BOOST_COPY_ASSIGN_REF(TYPE)\
-      const TYPE & \
+   #define BOOST_COPY_ASSIGN_REF(SERVICETYPE)\
+      const SERVICETYPE & \
    //
 
    //! This macro is used to implement portable perfect forwarding
    //! as explained in the documentation.
-   #define BOOST_FWD_REF(TYPE)\
-      TYPE && \
+   #define BOOST_FWD_REF(SERVICETYPE)\
+      SERVICETYPE && \
    //
 
    #if !defined(BOOST_MOVE_DOXYGEN_INVOKED)
 
-   #define BOOST_RV_REF_2_TEMPL_ARGS(TYPE, ARG1, ARG2)\
-      TYPE<ARG1, ARG2> && \
+   #define BOOST_RV_REF_2_TEMPL_ARGS(SERVICETYPE, ARG1, ARG2)\
+      SERVICETYPE<ARG1, ARG2> && \
    //
 
-   #define BOOST_RV_REF_3_TEMPL_ARGS(TYPE, ARG1, ARG2, ARG3)\
-      TYPE<ARG1, ARG2, ARG3> && \
+   #define BOOST_RV_REF_3_TEMPL_ARGS(SERVICETYPE, ARG1, ARG2, ARG3)\
+      SERVICETYPE<ARG1, ARG2, ARG3> && \
    //
 
    #define BOOST_COPY_ASSIGN_REF_BEG \
@@ -405,16 +405,16 @@
       & \
    //
 
-   #define BOOST_COPY_ASSIGN_REF_2_TEMPL_ARGS(TYPE, ARG1, ARG2)\
-      const TYPE<ARG1, ARG2> & \
+   #define BOOST_COPY_ASSIGN_REF_2_TEMPL_ARGS(SERVICETYPE, ARG1, ARG2)\
+      const SERVICETYPE<ARG1, ARG2> & \
    //
 
-   #define BOOST_COPY_ASSIGN_REF_3_TEMPL_ARGS(TYPE, ARG1, ARG2, ARG3)\
-      const TYPE<ARG1, ARG2, ARG3>& \
+   #define BOOST_COPY_ASSIGN_REF_3_TEMPL_ARGS(SERVICETYPE, ARG1, ARG2, ARG3)\
+      const SERVICETYPE<ARG1, ARG2, ARG3>& \
    //
 
-   #define BOOST_CATCH_CONST_RLVALUE(TYPE)\
-      const TYPE & \
+   #define BOOST_CATCH_CONST_RLVALUE(SERVICETYPE)\
+      const SERVICETYPE & \
    //
 
    #endif   //#if !defined(BOOST_MOVE_DOXYGEN_INVOKED)

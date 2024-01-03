@@ -31,7 +31,7 @@ private:
 	virtual void Free() override;
 private:
 	MUTEX											m_Mutex;
-	SHPTR<UThreadManager>		m_ThreadManager;
+	SHPTR<UThreadManager>		m_spThreadManager;
 };
 
 END

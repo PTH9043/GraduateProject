@@ -6,10 +6,10 @@
 namespace Core
 {
 #ifdef USE_DEBUG
-	CORE_DLL UDeadLockProfiler* g_DeadLockProfiler = nullptr;
+	CORE_DLL UDeadLockProfiler* g_pDeadLockProfiler = nullptr;
 #endif
 
-	CORE_DLL  UMemoryAdminster* g_MemoryAdminster = nullptr;
+	CORE_DLL  UMemoryAdminster* g_pMemoryAdminster = nullptr;
 
 	class CoreGlobal
 	{
@@ -17,18 +17,18 @@ namespace Core
 		CoreGlobal()
 		{
 #ifdef USE_DEBUG
-			g_DeadLockProfiler = new UDeadLockProfiler;
+			g_pDeadLockProfiler = new UDeadLockProfiler;
 #endif
 
-			g_MemoryAdminster = new UMemoryAdminster;
+			g_pMemoryAdminster = new UMemoryAdminster;
 		}
 
 		~CoreGlobal()
 		{
 #ifdef USE_DEBUG
-			delete g_DeadLockProfiler;
+			delete g_pDeadLockProfiler;
 #endif
-			delete g_MemoryAdminster;
+			delete g_pMemoryAdminster;
 		}
 	} CoreGlobal;
 } 

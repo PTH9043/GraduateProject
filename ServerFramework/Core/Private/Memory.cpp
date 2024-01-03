@@ -66,11 +66,11 @@ namespace Core
 	{
 		_uint Size = 16;
 		_uint TableIndex = 0;
-		MakeMemoryPool(REF_IN Size, REF_IN TableIndex, 1024, 16);
-		MakeMemoryPool(REF_IN Size, REF_IN TableIndex, 2048, 32);
-		MakeMemoryPool(REF_IN Size, REF_IN TableIndex, 4096, 64);
-		MakeMemoryPool(REF_IN Size, REF_IN TableIndex, 8192, 128);
-		MakeMemoryPool(REF_IN Size, REF_IN TableIndex, 12288, 256);
+		MakeMemoryPool(REF_OUT Size, REF_OUT TableIndex, 512, 16);
+		MakeMemoryPool(REF_OUT Size, REF_OUT TableIndex, 1024, 32);
+		MakeMemoryPool(REF_OUT Size, REF_OUT TableIndex, 2048, 64);
+		MakeMemoryPool(REF_OUT Size, REF_OUT TableIndex, 3072, 128);
+		MakeMemoryPool(REF_OUT Size, REF_OUT TableIndex, 5120, 256);
 	}
 
 	UMemoryAdminster::~UMemoryAdminster()
@@ -125,7 +125,7 @@ namespace Core
 #endif
 	}
 	// 메모리 할당을 해주는 함수이다. 
-	void UMemoryAdminster::MakeMemoryPool(REF_OUT _uint& _Size, REF_OUT _uint& _TableIndex,
+	void UMemoryAdminster::MakeMemoryPool(REF_IN _uint& _Size, REF_IN _uint& _TableIndex,
 		const _uint _Limited, const _uint _AddValue)
 	{
 		for (; _Size <= _Limited; _Size += _AddValue)

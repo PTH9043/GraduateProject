@@ -11,8 +11,7 @@ namespace Core
 	};
 
 	/*
-	@ Data: 2023-12-22
-	@ Writer: 박태현
+	@ Data: 2023-12-22, Writer: 박태현
 	@ Explain
 	- Packet의 앞쪽 부분을 담당하는 Head 부분이다.
 	*/

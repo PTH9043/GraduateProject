@@ -240,7 +240,7 @@ namespace Core
 
 		USharedPtr& operator =(nullptr_t)
 		{
-			URefCounter* prevptr{ nullptr };
+			URefCounter<T>* prevptr{ nullptr };
 			while (true)
 			{
 				prevptr = m_RefCounter;

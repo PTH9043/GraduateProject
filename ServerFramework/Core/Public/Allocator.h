@@ -20,7 +20,7 @@ namespace Core {
 		@ Date: 2023-12-30
 		@ Writer: 박태현
 		*/
-		static void* Alloc(_ullong _size);
+		static void* Alloc(size_t _size);
 		/*
 		@ Date: 2023-12-30
 		@ Writer: 박태현
@@ -48,7 +48,7 @@ namespace Core {
 			@ Date: 2023-12-30
 			@ Writer: 박태현
 			*/
-			static void* Alloc(_ullong _size);
+			static void* Alloc(size_t _size);
 			/*
 			@ Date: 2023-12-30
 			@ Writer: 박태현
@@ -86,7 +86,7 @@ namespace Core {
 		@ Date: 2023-12-30
 		@ Writer: 박태현
 		*/
-		static void* Alloc(_ullong _size);
+		static void* Alloc(size_t _size);
 
 #ifdef WINDOW_OS
 		/*
@@ -103,7 +103,50 @@ namespace Core {
 	----------------------------------------
 	STOMP ALLOCATOR
 	----------------------------------------
-	STOMP ALLOCATOR
+	STL ALLOCATOR
+	----------------------------------------
+	*/
+
+	template<class T>
+	class STLAllocator {
+	public:
+		
+		STLAllocator() {}
+
+		template<class Other>
+		STLAllocator(const STLAllocator<Other>&) {}
+
+		T* Allocate(size_t _size) {
+			const size_t size = _size * sizeof(T);
+			return static_cast<T*>(UPoolAllocator::Alloc(size));
+		}
+
+		void Deallocate(T* _Ptr, size_t _size) {
+			UPoolAllocator::Release(_Ptr);
+		}
+
+	private:
+		// 다른 형식의 Allocator가 같은 종류로 간주되게 함
+		template <class U>
+		friend class STLAllocator;
+	};
+
+	template <class T1, class T2>
+	bool operator==(const STLAllocator<T1>&, const STLAllocator<T2>&) noexcept {
+		return true;
+	}
+
+	template <class T1, class T2>
+	bool operator!=(const STLAllocator<T1>&, const STLAllocator<T2>&) noexcept {
+		return false;
+	}
+
+
+	/*
+	----------------------------------------
+	STL ALLOCATOR
+	----------------------------------------
+	MEMORY ALLOC FUNC
 	----------------------------------------
 	*/
 

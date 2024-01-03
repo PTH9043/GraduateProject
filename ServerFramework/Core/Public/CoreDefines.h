@@ -72,18 +72,24 @@
 #include <array>
 #include <concepts>
 #include <chrono>
-#include "PthMath/PthMath.h"
 #include<concepts>
 #include <random>
 #include <queue>
+#include <string>
+#include <vector>
+
+#include "PthMath/PthMath.h"
+
+namespace Asio = boost::asio;
 
 #include "CoreConcept.h"
+#include "CoreGrobal.h"
+#include "Allocator.h"
+
 #include "CoreTypedef.h"
 #include "CoreTypecast.h"
-#include "CoreGrobal.h"
 #include "CoreMacro.h"
 #include "Lock.h"
-#include "Allocator.h"
 #include "SmartPointer.h"
 
 #include "CoreFunction.h"
@@ -95,10 +101,5 @@
 #include "UCoreInstance.h"
 #include "LockFree.h"
 #include "UBuffer.h"
-
-
-namespace Asio = boost::asio;
-
-namespace Core{ }
 
 #endif 

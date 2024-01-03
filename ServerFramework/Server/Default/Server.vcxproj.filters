@@ -10,6 +10,18 @@
     <Filter Include="01.ServerApp">
       <UniqueIdentifier>{30a72322-098b-45cb-be43-a9af84a48672}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.Session">
+      <UniqueIdentifier>{9187a522-5423-4d0f-a953-e634f4e8138a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Network">
+      <UniqueIdentifier>{09bbe56e-9b37-4089-a483-508f03258725}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Network\ServerAdimin">
+      <UniqueIdentifier>{84df9930-7505-4a48-a840-308fd3035637}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Session\Player">
+      <UniqueIdentifier>{fdbc3898-3fdd-429b-8d81-5c07c9bc6fd6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -18,6 +30,12 @@
     <ClCompile Include="..\Private\CServerApp.cpp">
       <Filter>01.ServerApp</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\CServerAdiminstor.cpp">
+      <Filter>02.Network\ServerAdimin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CPlayerSession.cpp">
+      <Filter>03.Session\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\CServerApp.h">
@@ -25,6 +43,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\ServerDefines.h">
       <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CServerAdiminstor.h">
+      <Filter>02.Network\ServerAdimin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CPlayerSession.h">
+      <Filter>03.Session\Player</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

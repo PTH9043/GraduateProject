@@ -78,8 +78,8 @@ namespace Core {
 	class CACHE_ALGIN_CORE_DLL UMemoryAdminster {
 		enum
 		{
-			POOL_COUNT = (1024 / 16) + (1024 / 32) + (2048 / 64) + (2048 / 128) + (4096 / 256),
-			MAX_ALLOC_SIZE = 12288
+			POOL_COUNT = (512 / 16) + (512 / 32) + (1024 / 64) + (1024 / 128) + (2048 / 256),
+			MAX_ALLOC_SIZE = 5120
 		};
 	public: 
 		UMemoryAdminster();
@@ -89,7 +89,7 @@ namespace Core {
 		void Release(void* _Ptr);
 
 	private:
-		void MakeMemoryPool(REF_OUT _uint& _Size, REF_OUT _uint& _TableIndex,
+		void MakeMemoryPool(REF_IN _uint& _Size, REF_IN _uint& _TableIndex,
 			const _uint _Limited, const _uint _AddValue);
 
 	private:

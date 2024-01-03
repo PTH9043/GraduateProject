@@ -63,7 +63,7 @@ template <typename, typename, typename, typename, typename,
 namespace detail {
 
 template <typename Executor, typename CandidateExecutor = void,
-    typename IoContext = io_context,
+    typename m_IOContext = io_context,
     typename PolymorphicExecutor = executor, typename = void>
 class handler_work_base
 {
@@ -123,9 +123,9 @@ private:
 };
 
 template <typename Executor, typename CandidateExecutor,
-    typename IoContext, typename PolymorphicExecutor>
+    typename m_IOContext, typename PolymorphicExecutor>
 class handler_work_base<Executor, CandidateExecutor,
-    IoContext, PolymorphicExecutor,
+    m_IOContext, PolymorphicExecutor,
     typename enable_if<
       !execution::is_executor<Executor>::value
         && (!is_same<Executor, PolymorphicExecutor>::value
@@ -198,12 +198,12 @@ private:
   bool owns_work_;
 };
 
-template <typename Executor, typename IoContext, typename PolymorphicExecutor>
-class handler_work_base<Executor, void, IoContext, PolymorphicExecutor,
+template <typename Executor, typename m_IOContext, typename PolymorphicExecutor>
+class handler_work_base<Executor, void, m_IOContext, PolymorphicExecutor,
     typename enable_if<
       is_same<
         Executor,
-        typename IoContext::executor_type
+        typename m_IOContext::executor_type
       >::value
     >::type>
 {
@@ -227,14 +227,14 @@ public:
   }
 };
 
-template <typename Executor, typename IoContext>
-class handler_work_base<Executor, void, IoContext, Executor>
+template <typename Executor, typename m_IOContext>
+class handler_work_base<Executor, void, m_IOContext, Executor>
 {
 public:
   explicit handler_work_base(int, int, const Executor& ex) BOOST_ASIO_NOEXCEPT
 #if !defined(BOOST_ASIO_NO_TYPEID)
     : executor_(
-        ex.target_type() == typeid(typename IoContext::executor_type)
+        ex.target_type() == typeid(typename m_IOContext::executor_type)
           ? Executor() : ex)
 #else // !defined(BOOST_ASIO_NO_TYPEID)
     : executor_(ex)
@@ -303,7 +303,7 @@ template <
     typename T1, typename T2, typename T3, typename T4, typename T5,
     typename T6, typename T7, typename T8, typename T9,
 #endif // defined(BOOST_ASIO_HAS_VARIADIC_TEMPLATES)
-    typename CandidateExecutor, typename IoContext,
+    typename CandidateExecutor, typename m_IOContext,
     typename PolymorphicExecutor>
 class handler_work_base<
 #if defined(BOOST_ASIO_HAS_VARIADIC_TEMPLATES)
@@ -311,7 +311,7 @@ class handler_work_base<
 #else // defined(BOOST_ASIO_HAS_VARIADIC_TEMPLATES)
     execution::any_executor<T1, T2, T3, T4, T5, T6, T7, T8, T9>,
 #endif // defined(BOOST_ASIO_HAS_VARIADIC_TEMPLATES)
-    CandidateExecutor, IoContext, PolymorphicExecutor>
+    CandidateExecutor, m_IOContext, PolymorphicExecutor>
 {
 public:
   typedef
@@ -326,7 +326,7 @@ public:
       const executor_type& ex) BOOST_ASIO_NOEXCEPT
 #if !defined(BOOST_ASIO_NO_TYPEID)
     : executor_(
-        ex.target_type() == typeid(typename IoContext::executor_type)
+        ex.target_type() == typeid(typename m_IOContext::executor_type)
           ? executor_type()
           : boost::asio::prefer(ex, execution::outstanding_work.tracked))
 #else // !defined(BOOST_ASIO_NO_TYPEID)
@@ -385,10 +385,10 @@ private:
 #if !defined(BOOST_ASIO_USE_TS_EXECUTOR_AS_DEFAULT)
 
 template <typename Executor, typename CandidateExecutor,
-    typename IoContext, typename PolymorphicExecutor>
+    typename m_IOContext, typename PolymorphicExecutor>
 class handler_work_base<
     Executor, CandidateExecutor,
-    IoContext, PolymorphicExecutor,
+    m_IOContext, PolymorphicExecutor,
     typename enable_if<
       is_same<Executor, any_completion_executor>::value
         || is_same<Executor, any_io_executor>::value
@@ -401,7 +401,7 @@ public:
       const executor_type& ex) BOOST_ASIO_NOEXCEPT
 #if !defined(BOOST_ASIO_NO_TYPEID)
     : executor_(
-        ex.target_type() == typeid(typename IoContext::executor_type)
+        ex.target_type() == typeid(typename m_IOContext::executor_type)
           ? executor_type()
           : boost::asio::prefer(ex, execution::outstanding_work.tracked))
 #else // !defined(BOOST_ASIO_NO_TYPEID)

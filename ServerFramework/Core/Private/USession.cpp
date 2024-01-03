@@ -1,67 +1,75 @@
 #include "CoreDefines.h"
 #include "USession.h"
 #include "UBuffer.h"
+#include "UService.h"
 
 namespace Core
 {
-	USession::USession(MOVE Asio::ip::tcp::socket&& _TcpSocket, SESSIONTYPE _SessionType, ID _ID) : 
-		m_TcpSocket(std::move(_TcpSocket)), m_SessionType(_SessionType), m_ID(_ID), m_CurBuffuerLocation{0}
+	USession::USession(OBJCON_CONSTRUCTOR, MOVE TCPSOCKET&& _TcpSocket, SESSIONTYPE _SessionType, SESSIONID _ID,
+		SHPTR<UService> _spService) :
+		UObject(OBJCON_CONDATA),
+		m_TcpSocket(std::move(_TcpSocket)), m_SessionType(_SessionType), m_ID(_ID), m_CurBuffuerLocation{0},
+		m_wpService{_spService}
 	{
 	}
 
 	_bool USession::Start()
 	{
-		/*
-		
-		*/
 		ReadData();
 		return true;
 	}
 
-	_bool USession::ReadData()
+	void USession::ReadData()
 	{
-		_bool result{ true };
+		USession& Session = *this;
 		m_TcpSocket.async_read_some(Asio::buffer(m_RecvBuffer),
-			[&](const boost::system::error_code& _error, std::size_t _Size)
+			[&Session](const boost::system::error_code& _error, std::size_t _Size)
 			{
 				if (!_error)
 				{
-					// Insert Buffer Queue
-					UBuffer Buf(m_RecvBuffer.data(), (_uint)(_Size));
-					// Packet Combine 
-					PacketCombine(std::move(Buf));
-					ZeroMemory(&m_RecvBuffer, MAX_BUFFER_LENGTH);
-					// Read Data
-					ReadData();
+					if (_Size == 0)
+					{
+						Session.Leave();
+						return;
+					}
+
+					UBuffer Buf(Session.m_RecvBuffer.data(), (_uint)(_Size));
+					Session.PacketCombine(std::move(Buf));
+					ZeroMemory(&Session.m_RecvBuffer, MAX_BUFFER_LENGTH);
+					Session.ReadData();
 				}
 				else
 				{
 #ifdef USE_DEBUG
 					if (_error.value() == boost::asio::error::operation_aborted) return;
-					std::cout << "Receive Error on Session[" << m_ID << "] EC[" << _error << "]\n";
+					std::cout << "Receive Error on Session[" << Session.m_ID << "] EC[" << _error << "]\n";
 #endif
-					result = false;
+					Session.Leave();
 				}
 			});
-		return result;
 	}
 
-	_bool USession::WriteData(_char* _Packet, const PACKETHEAD& _PacketHead)
+	_bool USession::WriteData(_char* _pPacket, const PACKETHEAD& _PacketHead)
 	{
-		_bool result{ true };
-		CombineSendBuffer(m_SendBuffer, _Packet, _PacketHead);
+		CombineSendBuffer( _pPacket, _PacketHead);
 		// Buffer의 길이는 Packet의 길이 + PACKETHEAD의 길이이다.
 		size_t BufferLength = static_cast<size_t>(_PacketHead.PacketSize + PACKETHEAD_SIZE);
+		SESSIONID SessionID = m_ID;
+		_bool result{ true };
+
 		m_TcpSocket.async_write_some(Asio::buffer(m_SendBuffer, BufferLength),
-			[&](const boost::system::error_code& _error, std::size_t _Size)
+			[&BufferLength, &SessionID, &result, &_PacketHead](const boost::system::error_code& _error, std::size_t _Size)
 			{
 				// Packet
 				if (!_error)
 				{
+				}
+				else
+				{
 #ifdef USE_DEBUG
-					if (_Size == _PacketHead.PacketSize)
+					if (_Size  != BufferLength)
 					{
-						std::cout << "Packet Send Failed [" << m_ID << "] EC [" << _error << "]\n";
+						std::cout << "Packet Send Failed [" << SessionID << "] EC [" << _error << "]\n";
 					}
 #endif
 					result = false;
@@ -70,8 +78,9 @@ namespace Core
 		return result;
 	}
 
-	void USession::End()
+	void USession::Disconnect()
 	{
+		m_TcpSocket.close();
 	}
 
 	/*
@@ -83,8 +92,7 @@ namespace Core
 	*/
 
 	/*
-	@ Data: 2023-12-31
-	@	 Writer : 박태현
+	@ Data: 2023-12-31, Writer : 박태현
 	@ Explain
 	- Buffer 클래스를 받아서 Combine 한 후 Packet을 처리하는 함수이다.
 	*/
@@ -121,21 +129,37 @@ namespace Core
 	}
 
 	/*
-	@ Data: 2023-12-31
-	@	 Writer : 박태현
+	@ Data: 2023-12-31,  Writer : 박태현
 	@ Explain
 	- Buffer를 조합하는 함수
 	*/
-	void USession::CombineSendBuffer(REF_OUT BUFFER& _SendBuffer, _char* _Packet, const PACKETHEAD& _PacketHead)
+	void USession::CombineSendBuffer( _char* _pPacket, const PACKETHEAD& _PacketHead)
 	{
-		ZeroMemory(&_SendBuffer[0], MAX_BUFFER_LENGTH);
-		memcpy(&_SendBuffer[0], &_PacketHead, PACKETHEAD_SIZE);
+		ZeroMemory(&m_SendBuffer[0], MAX_BUFFER_LENGTH);
+		memcpy(&m_SendBuffer[0], &_PacketHead, PACKETHEAD_SIZE);
 		// [0 ~ 1] : PACKETSIZE		[2 ~ 3] : PACKETTYPE		[4 ~ ] Remain... 
-		memcpy(&_SendBuffer[PACKETHEAD_SIZE], _Packet, _PacketHead.PacketSize);
+		memcpy(&m_SendBuffer[PACKETHEAD_SIZE], _pPacket, _PacketHead.PacketSize);
+	}
+
+	void USession::RunReceiveFunc(const SENDRECVFUNC& _Func)
+	{
+		m_TcpSocket.async_read_some(Asio::buffer(m_RecvBuffer), _Func);
+	}
+
+	void USession::RunSendFunc(const SENDRECVFUNC& _Func)
+	{
+		m_TcpSocket.async_write_some(Asio::buffer(m_SendBuffer), _Func);
+	}
+
+	void USession::Leave()
+	{
+		SHPTR<UService> spService =m_wpService.lock();
+		spService->LeaveService(m_ID);
 	}
 
 	void USession::Free()
 	{
+		m_TcpSocket.close();
 	}
 
 }
