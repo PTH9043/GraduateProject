@@ -201,24 +201,6 @@ void ClassName::DestoryInstance(){  m_pInstance.reset(); }
 #define DEFCLARE_TL using TL = TL;  int typeId;
 #define INIT_TL(Type) typeId = Core::IndexOf<TL, Type>::value;
 
-
-/*
-==========================
-			OnceData
-==========================
-*/
-
-
-/*
-@ Date: 2024-01-01,  Writer: 박태현
-@ Explain
-- 단 한번만 생성되어야 하는 구조체, 클레스에 정의하는 매크로이다. 
-*/
-#define DECLARE_ONCEDATA private: static bool IsMake;
-#define IMPLEMENT_ONCEDATA(Class) bool Class::IsMake = false;
-#define CREATEINSTANCE_ONCEDATA  ASSERT_CRASH(false == IsMake); IsMake = true; 
-
-
 /*
 ==========================
 			CONSTRUCTOR 
@@ -238,9 +220,9 @@ void ClassName::DestoryInstance(){  m_pInstance.reset(); }
 @ Explain
 -  Session 생성자에 정의되어 있는 변수를 매크로화 시켰다.
 */
-#define SESSION_CONSTRUCTOR MOVE OBJCON_CONSTRUCTOR, Asio::ip::tcp::socket&& _TcpSocket,  \
-Core::SESSIONTYPE _SessionType,SESSIONID _ID, Core::SHPTR<Core::UService> _spService
-#define SESSION_CONDATA OBJCON_CONDATA, std::move(_TcpSocket), _SessionType, _ID, _spService
+#define SESSION_CONSTRUCTOR OBJCON_CONSTRUCTOR,  Asio::ip::tcp::socket _TcpSocket, \
+Core::SHPTR<Core::UService> _spService,  SESSIONID _ID
+#define SESSION_CONDATA(SessionType) OBJCON_CONDATA, std::move(_TcpSocket), _spService, _ID, SessionType
 /*
 ==========================
 					ECT

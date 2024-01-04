@@ -15,9 +15,11 @@ public:
 	CServerAdiminstor(OBJCON_CONSTRUCTOR);
 	NO_COPY(CServerAdiminstor)
 	DESTRUCTOR(CServerAdiminstor)
+public:
+	virtual bool NativeConstruct() override;
 protected:
 	// UServerService을(를) 통해 상속됨
-	void AsyncAccept() override;
+	virtual void Connect() override;
 private:
 	void Free() override;
 };

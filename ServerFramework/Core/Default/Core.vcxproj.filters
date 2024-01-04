@@ -62,7 +62,7 @@
       <UniqueIdentifier>{a66b5119-4dec-41d7-a49e-eea37e12cf99}</UniqueIdentifier>
     </Filter>
     <Filter Include="03.Network\Service\Client">
-      <UniqueIdentifier>{9c4bf776-ffcd-4964-a7eb-dc45f3635d95}</UniqueIdentifier>
+      <UniqueIdentifier>{6d84328e-d16c-47d5-8f77-cceb970cbeed}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -144,11 +144,11 @@
     <ClInclude Include="..\Public\UServerService.h">
       <Filter>03.Network\Service\Server</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UClientService.h">
-      <Filter>03.Network\Service\Client</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\UAwsConnector.h">
       <Filter>03.Network\aws</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UClientService.h">
+      <Filter>03.Network\Service\Client</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -200,11 +200,11 @@
     <ClCompile Include="..\Private\UServerService.cpp">
       <Filter>03.Network\Service\Server</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UClientService.cpp">
-      <Filter>03.Network\Service\Client</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\UAwsConnector.cpp">
       <Filter>03.Network\aws</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UClientService.cpp">
+      <Filter>03.Network\Service\Client</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

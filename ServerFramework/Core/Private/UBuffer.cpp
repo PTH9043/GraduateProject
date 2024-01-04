@@ -43,7 +43,7 @@ namespace Core {
 	void UBuffer::CombineBuffers(_char* const _pDefiniationBuffer, REF_OUT _llong& _CurrentBufferLocation)
 	{
 		// 본래  버퍼에 현재 버퍼의 크기만큼 이동한 후, 받아온 packet 데이터를 이어붙인다. 
-		::memcpy(_pDefiniationBuffer + _CurrentBufferLocation, m_Buff.data(), m_BufferLength);
+		::memcpy(_pDefiniationBuffer, m_Buff.data(), m_BufferLength);
 		// 현재 버퍼의 위치를 이동시킨다. 
 		_CurrentBufferLocation += m_BufferLength;
 	}

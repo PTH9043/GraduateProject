@@ -17,24 +17,25 @@ public:
 	UServerService(OBJCON_CONSTRUCTOR);
 	DESTRUCTOR(UServerService)
 public:
-	virtual _bool NativeConstruct() override;
+	virtual _bool NativeConstruct() PURE;
 	virtual _bool Start() override;
 	virtual SHPTR<USession> FindSession(const SESSIONID _SessionID) override;
 	virtual void BroadCastMessage(_char* _pPacket, const PACKETHEAD& _PacketHead) override;
 	virtual void LeaveService(const SESSIONID _SessionID) override;
 	virtual void RemoveService(const SESSIONID _SessionID) override;
-protected:
 	virtual void InsertSession(SHPTR<USession> _spSession) override;
-	virtual void AsyncAccept() PURE;
 protected:
 	// Thread에 집어넣을 함수
-	static void ThreadFunc(void* _spServerService);
+	static void ThreadFunc(void* _spService);
+protected: /* get set */
+	TCPACCEPTOR& GetTcpAccepctor(REF_RETURN) { return m_TcpAcceptor; }
 private:
 	virtual void Free() PURE;
 private:
-	ATOMIC<_bool>				m_isConinueThread;
 	// Session Conatiner
 	SESSIONCONTAINER		m_SessionContainer;
+	// Tcps
+	TCPACCEPTOR					m_TcpAcceptor;
 };
 
 END

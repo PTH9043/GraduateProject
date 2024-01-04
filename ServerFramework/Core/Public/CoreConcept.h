@@ -23,16 +23,14 @@ namespace Core
 	concept BASE_CHECK = std::is_base_of_v<Base, Derived>;
 
 	/*
-	@ Date: 2023-12-26
-	@ Writer: 박태현
+	@ Date: 2023-12-26, Writer: 박태현
 	@ Explain: Args...에서 펼친 변수들과 생성자의 변수들이 맞는지 확인
 	*/
 	template<typename T, class ...Args>
-	concept ConstructWithArgsCheck = std::is_constructible_v<T, Args...>;
+	concept ConstructArgsCheck = std::is_constructible_v<T, Args...>;
 
 	/*
-	@ Date: 2023-12-26
-	@ Writer: 박태현
+	@ Date: 2023-12-26, Writer: 박태현
 	@ Explain: 클래스에 NativeConstruct 함수가 정의되어있는지 확인
 	*/
 	template <typename T, typename... Args>

@@ -145,7 +145,7 @@ namespace Core
 
 		T* GetShared() const { return m_Ptr; }
 
-		void SetShared(const T* _shared) { m_Ptr = _shared; }
+		void SetShared(T* _shared) { m_Ptr = _shared; }
 	private:
 		/*
 		@ Date: 2023-12-26

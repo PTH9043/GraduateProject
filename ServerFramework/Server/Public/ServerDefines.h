@@ -14,8 +14,8 @@
 #pragma comment(lib, "Core")
 #pragma comment(lib, "ProtocolBuffer")
 #endif
+namespace Core {}
 
-namespace Server{}
-namespace Core{}
+using namespace Core;
 
 #endif // _SERVERFRAMEWORK_SERVER_PUBLIC_SERVERDEFINES_H

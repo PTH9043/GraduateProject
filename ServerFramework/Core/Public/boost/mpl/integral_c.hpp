@@ -1,81 +1,51 @@
-/*!
-@file
-Adapts Boost.MPL IntegralConstants for use with Hana.
 
-Copyright Louis Dionne 2013-2022
-Distributed under the Boost Software License, Version 1.0.
-(See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
- */
+#ifndef BOOST_MPL_INTEGRAL_C_HPP_INCLUDED
+#define BOOST_MPL_INTEGRAL_C_HPP_INCLUDED
 
-#ifndef BOOST_HANA_EXT_BOOST_MPL_INTEGRAL_C_HPP
-#define BOOST_HANA_EXT_BOOST_MPL_INTEGRAL_C_HPP
+// Copyright Aleksey Gurtovoy 2000-2006
+//
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
+//
+// See http://www.boost.org/libs/mpl for documentation.
 
-#include <boost/hana/concept/integral_constant.hpp>
-#include <boost/hana/config.hpp>
-#include <boost/hana/core/tag_of.hpp>
-#include <boost/hana/core/when.hpp>
-#include <boost/hana/fwd/core/to.hpp>
+// $Id$
+// $Date$
+// $Revision$
 
-#include <boost/mpl/integral_c.hpp>
-#include <boost/mpl/integral_c_tag.hpp>
+#include <boost/mpl/integral_c_fwd.hpp>
+#include <boost/mpl/aux_/config/ctps.hpp>
+#include <boost/mpl/aux_/config/static_constant.hpp>
+#include <boost/mpl/aux_/config/workaround.hpp>
 
-#include <type_traits>
-
-
-#ifdef BOOST_HANA_DOXYGEN_INVOKED
-namespace boost { namespace mpl {
-    //! @ingroup group-ext-mpl
-    //! Adapter for IntegralConstants from the Boost.MPL.
-    //!
-    //! Provided models
-    //! ---------------
-    //! 1. `Constant` and `IntegralConstant`\n
-    //! A Boost.MPL IntegralConstant is a model of the `IntegralConstant`
-    //! and `Constant` concepts just like `hana::integral_constant`s are.
-    //! As a consequence, they are also implicitly a model of the concepts
-    //! provided for all models of `Constant`.
-    //! @include example/ext/boost/mpl/integral_c/integral_constant.cpp
-    template <typename T, T v>
-    struct integral_c { };
-}}
+#if BOOST_WORKAROUND(__HP_aCC, <= 53800)
+// the type of non-type template arguments may not depend on template arguments
+#   define AUX_WRAPPER_PARAMS(N) typename T, long N
+#else
+#   define AUX_WRAPPER_PARAMS(N) typename T, T N
 #endif
 
+#define AUX_WRAPPER_NAME integral_c
+#define AUX_WRAPPER_VALUE_TYPE T
+#define AUX_WRAPPER_INST(value) AUX_WRAPPER_NAME< T, value >
+#include <boost/mpl/aux_/integral_wrapper.hpp>
 
-namespace boost { namespace hana {
-    namespace ext { namespace boost { namespace mpl {
-        template <typename T>
-        struct integral_c_tag { using value_type = T; };
-    }}}
 
-    template <typename T>
-    struct tag_of<T, when<
-        std::is_same<
-            typename T::tag,
-            ::boost::mpl::integral_c_tag
-        >::value
-    >> {
-        using type = ext::boost::mpl::integral_c_tag<
-            typename hana::tag_of<typename T::value_type>::type
-        >;
-    };
+#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) \
+ && !BOOST_WORKAROUND(BOOST_BORLANDC, <= 0x551)
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
+// 'bool' constant doesn't have 'next'/'prior' members
+template< bool C >
+struct integral_c<bool, C>
+{
+    BOOST_STATIC_CONSTANT(bool, value = C);
+    typedef integral_c_tag tag;
+    typedef integral_c type;
+    typedef bool value_type;
+    operator bool() const { return this->value; }
+};
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE
+#endif
 
-    //////////////////////////////////////////////////////////////////////////
-    // IntegralConstant/Constant
-    //////////////////////////////////////////////////////////////////////////
-    template <typename T>
-    struct IntegralConstant<ext::boost::mpl::integral_c_tag<T>> {
-        static constexpr bool value = true;
-    };
-
-    template <typename T, typename C>
-    struct to_impl<ext::boost::mpl::integral_c_tag<T>, C,
-        when<hana::IntegralConstant<C>::value>
-    > : embedding<is_embedded<typename C::value_type, T>::value> {
-        template <typename N>
-        static constexpr auto apply(N const&) {
-            return ::boost::mpl::integral_c<T, N::value>{};
-        }
-    };
-}} // end namespace boost::hana
-
-#endif // !BOOST_HANA_EXT_BOOST_MPL_INTEGRAL_C_HPP
+#endif // BOOST_MPL_INTEGRAL_C_HPP_INCLUDED

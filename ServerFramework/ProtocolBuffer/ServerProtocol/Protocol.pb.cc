@@ -304,7 +304,7 @@ const char descriptor_table_protodef_Protocol_2eproto[] PROTOBUF_SECTION_VARIABL
     "C_PUT_OBJECT\022\n\n\002id\030\001 \001(\003\022\026\n\003pos\030\002 \001(\0132\t."
     "POSITION\022\016\n\006o_type\030\003 \001(\005\"\036\n\020SC_REMOVE_OB"
     "JECT\022\n\n\002id\030\001 \001(\003\"\035\n\010CS_LOGIN\022\021\n\tuser_nam"
-    "e\030\001 \001(\t\"5\n\007CS_MOVE\022\027\n\003dir\030\001 \001(\0162\n.Direct"
+    "e\030\001 \001(\014\"5\n\007CS_MOVE\022\027\n\003dir\030\001 \001(\0162\n.Direct"
     "ion\022\021\n\tmove_time\030\002 \001(\003\"\027\n\tCS_LOGOUT\022\n\n\002i"
     "d\030\001 \001(\003*2\n\tDirection\022\006\n\002UP\020\000\022\010\n\004DOWN\020\001\022\010"
     "\n\004LEFT\020\002\022\t\n\005RIGHT\020\003b\006proto3"
@@ -1575,7 +1575,7 @@ const char* CS_LOGIN::_InternalParse(
 
 
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 1, 0, 26, 2> CS_LOGIN::_table_ = {
+const ::_pbi::TcParseTable<0, 1, 0, 0, 2> CS_LOGIN::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
@@ -1589,21 +1589,18 @@ const ::_pbi::TcParseTable<0, 1, 0, 26, 2> CS_LOGIN::_table_ = {
     &_CS_LOGIN_default_instance_._instance,
     ::_pbi::TcParser::GenericFallback,  // fallback
   }, {{
-    // string user_name = 1;
-    {::_pbi::TcParser::FastUS1,
+    // bytes user_name = 1;
+    {::_pbi::TcParser::FastBS1,
      {10, 63, 0, PROTOBUF_FIELD_OFFSET(CS_LOGIN, _impl_.user_name_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // string user_name = 1;
+    // bytes user_name = 1;
     {PROTOBUF_FIELD_OFFSET(CS_LOGIN, _impl_.user_name_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    (0 | ::_fl::kFcSingular | ::_fl::kBytes | ::_fl::kRepAString)},
   }},
   // no aux_entries
   {{
-    "\10\11\0\0\0\0\0\0"
-    "CS_LOGIN"
-    "user_name"
   }},
 };
 
@@ -1614,12 +1611,10 @@ const ::_pbi::TcParseTable<0, 1, 0, 26, 2> CS_LOGIN::_table_ = {
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
-  // string user_name = 1;
+  // bytes user_name = 1;
   if (!this->_internal_user_name().empty()) {
     const std::string& _s = this->_internal_user_name();
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-        _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "CS_LOGIN.user_name");
-    target = stream->WriteStringMaybeAliased(1, _s, target);
+    target = stream->WriteBytesMaybeAliased(1, _s, target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -1639,9 +1634,9 @@ const ::_pbi::TcParseTable<0, 1, 0, 26, 2> CS_LOGIN::_table_ = {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // string user_name = 1;
+  // bytes user_name = 1;
   if (!this->_internal_user_name().empty()) {
-    total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+    total_size += 1 + ::google::protobuf::internal::WireFormatLite::BytesSize(
                                     this->_internal_user_name());
   }
 

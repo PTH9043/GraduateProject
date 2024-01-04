@@ -1,5 +1,7 @@
 #include "ServerDefines.h"
 #include "CServerAdiminstor.h"
+#include "CPlayerSession.h"
+#include "UCoreInstance.h"
 
 namespace Server
 {
@@ -8,10 +10,36 @@ namespace Server
 	{
 	}
 
-	void CServerAdiminstor::AsyncAccept()
+	bool CServerAdiminstor::NativeConstruct()
 	{
-		TCPACCEPTOR& Acceptor = GetTcpAccepctor();
+		Connect();
+		return __super::NativeConstruct();
+	}
+
+	void CServerAdiminstor::Connect()
+	{
+		TCPACCEPTOR& TcpAcceptor = GetTcpAccepctor();
 		TCPSOCKET& TcpSocket = GetTcpSocket();
+		TcpAcceptor.async_accept(TcpSocket, [&](const boost::system::error_code& _error) {
+			if (!_error)
+			{
+				SESSIONID id = GiveID();
+				Core::SHPTR<Core::UCoreInstance> spCoreInstance = GetCoreInstance();
+
+				Core::SHPTR<Core::USession> spSession =
+					Core::Create<CPlayerSession>(spCoreInstance, std::move(TcpSocket), ThisShared<CServerAdiminstor>(), id);
+
+				// Insert 
+				InsertSession(spSession);
+
+#ifdef USE_DEBUG
+		//		std::cout << "Accept Success [" << id << "]\n";
+#endif 
+
+				spSession->Start();
+			}
+			Connect();
+			});
 	}
 
 	void CServerAdiminstor::Free()

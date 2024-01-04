@@ -29,20 +29,18 @@ namespace Core
 	std::pair<T1, T2> MakePair(T1& _t1, T2& _t2) { return std::move(std::pair<T1, T2>(_t1, _t2)); }
 
 	/*
-	@ Date: 2023-12-26
-	@ Writer: 박태현
+	@ Date: 2023-12-26, Writer: 박태현
 	@ Explain
 	- 단순히 객체를 만드는 함수이다, 
 	*/
 	template<class T, class... Args>
-		requires ConstructWithArgsCheck<T, Args...>
+		requires ConstructArgsCheck<T, Args...>
 	static SHPTR<T> Create(Args&&... args) {
 		SHPTR<T> pInstance = Core::MakeShared<T>(std::forward<Args>(args)...);
 		return std::move(pInstance);
 	}
 	/*
-	@ Date: 2023-12-26
-	@ Writer: 박태현
+	@ Date: 2023-12-26, Writer: 박태현
 	@ Explain
 	- NatvieConstruct 함수를 호출 한 후 , 실패하면 nullptr 리턴, 함수에서 초기화
 	*/
@@ -59,11 +57,8 @@ namespace Core
 		}
 		return std::move(pInstance);
 	}
-
-
 	/*
-	@ Date: 2023-12-26
-	@ Writer: 박태현
+	@ Date: 2023-12-26, Writer: 박태현
 	@ Explain
 	- CreateInitNative 동일, 다만 메시지는 출력하지 않음
 	*/
@@ -78,17 +73,16 @@ namespace Core
 		return std::move(pInstance);
 	}
 	/*
-	@ Date: 2023-12-26
-	@ Writer: 박태현
+	@ Date: 2023-12-26, Writer: 박태현
 	@ Explain
 	- NatvieConstruct 함수를 호출 한 후 , 실패하면 nullptr 리턴, 생성자에서 초기화, 
 	Natvie함수가 있는지 확인 후, 생성자의 변수와 Args...의 변수가 동일한지 판단.
 	*/
 	template<class T, class ...Args>
-		requires ConstructWithArgsCheck<T, Args...>
+		requires ConstructArgsCheck<T, Args...>
 	&& CheckToSameMethodArgs<T>
 		static SHPTR<T> CreateInitConstructor(Args&&... args) {
-		static_assert(ConstructWithArgsCheck<T, Args...>, "생성자의 인자가 잘못되었습니다.");
+		static_assert(ConstructArgsCheck<T, Args...>, "생성자의 인자가 잘못되었습니다.");
 		SHPTR<T> pInstance{ Core::MakeShared<T>(std::forward<Args>(args)...) };
 		if (false == (pInstance->NativeConstruct())) {
 #ifdef USE_DEBUG
@@ -99,16 +93,15 @@ namespace Core
 		return std::move(pInstance);
 	}
 	/*
-	@ Date: 2023-12-26
-	@ Writer: 박태현
+	@ Date: 2023-12-26, Writer: 박태현
 	@ Explain
 	- CreateInitConstructor 동일, 다만 메시지는 출력하지 않음
 	*/
 	template<class T, class ...Args>
-		requires ConstructWithArgsCheck<T, Args...>
+		requires ConstructArgsCheck<T, Args...>
 	&& CheckToSameMethodArgs<T>
 		static SHPTR<T>  CreateInitConstructorNotMsg(Args&&... args) {
-		static_assert(ConstructWithArgsCheck<T, Args...>, "생성자의 인자가 잘못되었습니다.");
+		static_assert(ConstructArgsCheck<T, Args...>, "생성자의 인자가 잘못되었습니다.");
 		SHPTR<T> pInstance{ Core::MakeShared<T>(std::forward<Args>(args)...) };
 		if (false ==  (pInstance->NativeConstruct())) {
 			pInstance.reset();
@@ -116,8 +109,7 @@ namespace Core
 		return std::move(pInstance);
 	}
 	/*
-	@ Date: 2023-12-26
-	@ Writer: 박태현
+	@ Date: 2023-12-26, Writer: 박태현
 	@ Explain
 	- 자기 자신을 클론하는 함수이다. 
 	*/

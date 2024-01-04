@@ -5,6 +5,7 @@
 
 BEGIN(Core)
 class UThreadManager;
+class UConnector;
 /*
 @ Date: 2023-12-26
 @ Writer: 박태현
@@ -13,7 +14,6 @@ class UThreadManager;
 무조건 한 개만 생성한다. 
 */
 class CACHE_ALGIN_CORE_DLL UCoreInstance : public UBase {
-	DECLARE_ONCEDATA
 public:
 	UCoreInstance();
 	NO_COPY(UCoreInstance)
@@ -24,7 +24,6 @@ public: /* CoreGrobal */
 public: /* ThreadManager */
 	void RegisterFunc(const THREADFUNC& _CallBack, void* _Data);
 	void Join();
-
 public:
 
 private:

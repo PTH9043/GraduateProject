@@ -15,7 +15,7 @@ BEGIN(Server)
 */
 class CPlayerSession final : public Core::USession {
 public:
-	CPlayerSession(SESSION_CONSTRUCTOR);
+	CPlayerSession(OBJCON_CONSTRUCTOR, TCPSOCKET _TcpSocket, Core::SHPTR<Core::UService> _spService, SESSIONID _ID);
 	NO_COPY(CPlayerSession)
 	DESTRUCTOR(CPlayerSession)
 public:
@@ -25,9 +25,9 @@ public:
 	// 클라이언트에게 버퍼를 조합하여 전송하는 함수
 	virtual _bool WriteData(_char* _pPacket, const Core::PACKETHEAD& _PacketHead) override;
 	virtual void Disconnect() override;
-
+	virtual void ConnectTcpSocket() override;
 protected:
-	virtual _bool ProcessPacket(_char* _pPacket, const Core::PACKETHEAD& _PacketHead) PURE;
+	virtual _bool ProcessPacket(_char* _pPacket, const Core::PACKETHEAD& _PacketHead) override;
 private:
 	virtual void Free() override;
 

@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="99.Default">
+      <UniqueIdentifier>{ab9842ae-060e-43bf-8ae0-97e975c8cd4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.Main">
+      <UniqueIdentifier>{27b10a1a-3e2d-449f-8ac2-c0ab82a29fd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.ClientApp">
+      <UniqueIdentifier>{d97ce93d-3e02-4521-a606-30de3b714426}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Session">
+      <UniqueIdentifier>{efdbde34-b6f1-4cb9-8fcd-49fdaeef8bb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Network">
+      <UniqueIdentifier>{42927aa8-8d33-4934-8795-90404981324e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Network\ClientAdiminstor">
+      <UniqueIdentifier>{47d31094-04c4-4405-9cc6-0c8eb89eacd0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>00.Main</Filter>
+    </ClCompile>
+    <ClCompile Include="CClientSession.cpp">
+      <Filter>03.Session</Filter>
+    </ClCompile>
+    <ClCompile Include="CClientAdiminstor.cpp">
+      <Filter>02.Network\ClientAdiminstor</Filter>
+    </ClCompile>
+    <ClCompile Include="CClientApp.cpp">
+      <Filter>01.ClientApp</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ClientDefines.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="CClientSession.h">
+      <Filter>03.Session</Filter>
+    </ClInclude>
+    <ClInclude Include="CClientAdiminstor.h">
+      <Filter>02.Network\ClientAdiminstor</Filter>
+    </ClInclude>
+    <ClInclude Include="CClientApp.h">
+      <Filter>01.ClientApp</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

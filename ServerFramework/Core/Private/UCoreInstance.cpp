@@ -4,12 +4,10 @@
 
 namespace Core
 {
-	IMPLEMENT_ONCEDATA(UCoreInstance);
-
 	CORE_DLL SHPTR<UCoreInstance> e_CoreGrobal = Create<UCoreInstance>();
 	UCoreInstance::UCoreInstance() : m_spThreadManager{ Create<Core::UThreadManager>() }
 	{
-		CREATEINSTANCE_ONCEDATA
+
 	}
 
 	bool UCoreInstance::NativeConstruct()

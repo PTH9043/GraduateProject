@@ -1171,7 +1171,7 @@ class CS_LOGIN final :
   enum : int {
     kUserNameFieldNumber = 1,
   };
-  // string user_name = 1;
+  // bytes user_name = 1;
   void clear_user_name() ;
   const std::string& user_name() const;
   template <typename Arg_ = const std::string&, typename... Args_>
@@ -1194,7 +1194,7 @@ class CS_LOGIN final :
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
       0, 1, 0,
-      26, 2>
+      0, 2>
       _table_;
   friend class ::google::protobuf::MessageLite;
   friend class ::google::protobuf::Arena;
@@ -2063,7 +2063,7 @@ inline void SC_REMOVE_OBJECT::_internal_set_id(::int64_t value) {
 
 // CS_LOGIN
 
-// string user_name = 1;
+// bytes user_name = 1;
 inline void CS_LOGIN::clear_user_name() {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   _impl_.user_name_.ClearToEmpty();
@@ -2078,7 +2078,7 @@ inline PROTOBUF_ALWAYS_INLINE void CS_LOGIN::set_user_name(Arg_&& arg,
                                                      Args_... args) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   ;
-  _impl_.user_name_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  _impl_.user_name_.SetBytes(static_cast<Arg_&&>(arg), args..., GetArena());
   // @@protoc_insertion_point(field_set:CS_LOGIN.user_name)
 }
 inline std::string* CS_LOGIN::mutable_user_name() ABSL_ATTRIBUTE_LIFETIME_BOUND {
