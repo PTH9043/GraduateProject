@@ -29,6 +29,11 @@ public:
 	virtual void Disconnect() PURE;
 	virtual void ConnectTcpSocket() PURE;
 
+	/*
+	@ Date: 2023-01-04, Writer: 박태현
+	@ Explain
+	- ProtocolBuffer를 조합하기 위한 함수이다. 
+	*/
 	template<class T>
 	void CombineProto(REF_IN UBuffer& _Buffer, REF_IN PACKETHEAD& _PacketHead, const T& _data, short _tag)
 	{
@@ -36,7 +41,11 @@ public:
 		short size = static_cast<short>(_data.ByteSizeLong());
 		_PacketHead = PACKETHEAD{ size, _tag };
 	}
-
+	/*
+	@ Date: 2023-01-05, Writer: 박태현
+	@ Explain
+	- ProtocolBuffer를 보내기 위한 템플릿 함수이다. 
+	*/
 	template<class T>
 	void SendProtoData(const T& _data, short _tag)
 	{

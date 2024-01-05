@@ -74,6 +74,7 @@ void CClientSession::ConnectTcpSocket()
 			}
 			else
 			{
+				ReadData();
 				SendMsg();
 			}
 		});
@@ -81,24 +82,21 @@ void CClientSession::ConnectTcpSocket()
 
 void CClientSession::SendMsg()
 {
-	//static std::vector<std::string> wordList = {
-	//"apple", "banana", "chocolate", "dog", "elephant",
-	//"flower", "guitar", "happiness", "internet", "jazz"
-	//};
+	static std::vector<std::string> wordList = {
+	"apple", "banana", "chocolate", "dog", "elephant",
+	"flower", "guitar", "happiness", "internet", "jazz"
+	};
 
-	//CS_LOGIN Login;
-	//Login.set_user_name(wordList[rand() % wordList.size()]);
-	//Core::UBuffer Buffer;
-	//Core::PACKETHEAD PacketHead;
-	//CombineProto<CS_LOGIN>(REF_OUT Buffer, REF_OUT PacketHead, Login, TAG_CS_LOGIN);
-	//WriteData(&Buffer.GetBuffer()[0], PacketHead);
+	CS_LOGIN Login;
+	Login.set_user_name(wordList[rand() % wordList.size()]);
+	SendProtoData(Login, TAG_CS_LOGIN);
 
 	// Remove Object а╤гу 
-	CS_LOGOUT logout;
-	logout.set_id(GetID());
-	SendProtoData(logout, TAG_CS::TAG_CS_LOGOUT);
+	//CS_LOGOUT logout;
+	//logout.set_id(GetID());
+	//SendProtoData(logout, TAG_CS::TAG_CS_LOGOUT);
 
-	Disconnect();
+	//Disconnect();
 }
 
 _bool CClientSession::ProcessPacket(_char* _pPacket, const Core::PACKETHEAD& _PacketHead)

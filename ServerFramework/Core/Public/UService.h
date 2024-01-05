@@ -24,6 +24,7 @@ public:
 	virtual void BroadCastMessage(_char* _pPacket, const PACKETHEAD& _PacketHead) PURE;
 	// Session의 TCP Socket 연결만 끊고 Insert나 기타 다른 함수들을 정의해서 Socket들 제거
 	virtual void LeaveService(const SESSIONID _SessionID) PURE;
+	// Session을 Container에 저장하는 함수이다. 
 	virtual void InsertSession(SESSIONID _SessionID, SHPTR<USession> _spSession) PURE;
 protected:
 	virtual void Connect() PURE;

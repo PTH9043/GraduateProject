@@ -25,7 +25,6 @@ namespace Core
 	void USession::ReadData()
 	{
 		RETURN_CHECK(false == m_isConnect, ;);
-
 		MemoryInitialization(m_RecvBuffer.data(), MAX_BUFFER_LENGTH);
 		m_TcpSocket.async_read_some(Asio::buffer(m_RecvBuffer, MAX_BUFFER_LENGTH),
 			[&](const boost::system::error_code& _error, std::size_t _Size)
@@ -117,6 +116,7 @@ namespace Core
 			m_CurBuffuerLocation -= CurrPacket;
 			pBufferMove += CurrPacket;
 			moveBuffer += CurrPacket;
+			ThreadNanoRelax(1);
 		}
 		m_CurBuffuerLocation = 0;
 		MemoryInitialization(m_TotalBuffer.data(), MAX_PROCESSBUF_LENGTH);

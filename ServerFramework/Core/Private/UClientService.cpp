@@ -41,9 +41,6 @@ namespace Core {
 		SESSIONCONTAINER::accessor acces;
 		const auto& iter = m_SessionContainer.find(acces, _SessionID);
 		RETURN_CHECK(true == acces.empty(), ;);
-#ifdef USE_DEBUG
-		std::cout << acces->first << "\n";
-#endif
 		// Disconnect
 		{
 		//	std::atomic_thread_fence(std::memory_order_seq_cst);

@@ -5,30 +5,55 @@ namespace Core
 {
 #pragma region FUNCTION 
 
+	/*
+	@ Date: 2023-01-05,  Writer: 박태현
+	@ Explain
+	- _temp가 _Value를 넘었는지 확인하는 함수
+	*/
 	template<class T, class Value >
 	requires (Number<T> && Number<Value>)
 	T CheckOverValue(const T& _temp, const Value& _Value)
 	{
-		if (_temp >= _Value)
+		T convert = static_cast<T>(_Value);
+		if (_temp >= convert)
 		{
-			return static_cast<T>(_Value);
+			return convert;
 		}
 		return _temp;
 	}
-
+	/*
+	@ Date: 2023-01-05,  Writer: 박태현
+	@ Explain
+	- 메모리를 초기화하기 위한 함수, Window함수인 ZeroMemory를 쓰지 않기 위함이다.
+	*/
 	template<class T>
-	void MemoryInitialization(T* _pData, const _int _bufferSize)
+	void MemoryInitialization(T* _pData, const size_t _bufferSize)
 	{
-		std::memset(_pData, 0, _bufferSize);
+		constexpr static _int ZEROMEMORY{ 0 };
+		std::memset(_pData, ZEROMEMORY, _bufferSize);
 	}
-
+	/*
+	@ Date: 2023-01-05,  Writer: 박태현
+	@ Explain
+	- 해당 Thread를 nanoseconds만큼 쉬는 함수이다.
+	*/
 	template<class T>
 	requires std::is_integral_v<T>
-	void ThreadRelax(const T& _data)
+	void ThreadNanoRelax(const T& _data)
 	{
 		std::this_thread::sleep_for(std::chrono::nanoseconds(_data));
 	}
-
+	/*
+	@ Date: 2023-01-05,  Writer: 박태현
+	@ Explain
+	- 해당 Thread를 MicroSeconds만큼 쉬는 함수이다.
+	*/
+	template<class T>
+		requires std::is_integral_v<T>
+	void ThreadMicroRelax(const T& _data)
+	{
+		std::this_thread::sleep_for(std::chrono::microseconds(_data));
+	}
 	/*
 	@ Date: 2023-01-02,  Writer: 박태현
 	@ Explain

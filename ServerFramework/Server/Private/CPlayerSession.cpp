@@ -21,7 +21,7 @@ namespace Server {
 
 	_bool CPlayerSession::WriteData(_char* _pPacket, const Core::PACKETHEAD& _PacketHead)
 	{
-		RETURN_CHECK(false == IsConnect(), false);
+		RETURN_CHECK(false == IsConnect() , false);
 
 		CombineSendBuffer( _pPacket, _PacketHead);
 		_bool result{ true };

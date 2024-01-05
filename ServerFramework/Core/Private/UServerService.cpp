@@ -49,11 +49,6 @@ namespace Core {
 	void UServerService::LeaveService(const SESSIONID _SessionID)
 	{
 		const auto& iter = m_SessionContainer.find(_SessionID);
-#ifdef USE_DEBUG
-		{
-			std::cout << _SessionID << "\n";
-		}
-#endif
 		RETURN_CHECK(iter == m_SessionContainer.end(), ;);
 		// Disconnect
 		{
@@ -65,6 +60,7 @@ namespace Core {
 	void UServerService::InsertSession(SESSIONID _SessionID, SHPTR<USession> _spSession)
 	{
 		RETURN_CHECK(nullptr == _spSession, ;);
+		READ_LOCK(GetRunTimeLock(REF_RETURN));
 		m_SessionContainer.insert(MakePair(_SessionID, _spSession));
 	}
 

@@ -4,7 +4,7 @@
 #include "CClientSession.h"
 
 CClientAdiminstor::CClientAdiminstor(OBJCON_CONSTRUCTOR) : 
-	UClientService(OBJCON_CONDATA), m_iMaxSessionCount{5000}
+	UClientService(OBJCON_CONDATA), m_iMaxSessionCount{500}
 {
 }
 
