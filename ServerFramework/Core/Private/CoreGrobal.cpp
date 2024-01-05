@@ -30,5 +30,7 @@ namespace Core
 #endif
 			delete g_pMemoryAdminster;
 		}
-	} CoreGlobal;
+	};
+	CoreGlobal CoreGrobal;
+
 } 

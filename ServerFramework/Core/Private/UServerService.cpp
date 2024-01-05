@@ -49,23 +49,23 @@ namespace Core {
 	void UServerService::LeaveService(const SESSIONID _SessionID)
 	{
 		const auto& iter = m_SessionContainer.find(_SessionID);
+#ifdef USE_DEBUG
+		{
+			std::cout << _SessionID << "\n";
+		}
+#endif
 		RETURN_CHECK(iter == m_SessionContainer.end(), ;);
 		// Disconnect
-		iter->second->Disconnect();
+		{
+			WRITE_LOCK(GetRunTimeLock(REF_RETURN));
+			m_SessionContainer.unsafe_erase(iter);
+		}
 	}
 
-	void UServerService::RemoveService(const SESSIONID _SessionID)
-	{
-		const auto& iter = m_SessionContainer.find(_SessionID);
-		RETURN_CHECK(iter == m_SessionContainer.end(), ;);
-		iter->second = nullptr;
-	}
-
-	void UServerService::InsertSession(SHPTR<USession> _spSession)
+	void UServerService::InsertSession(SESSIONID _SessionID, SHPTR<USession> _spSession)
 	{
 		RETURN_CHECK(nullptr == _spSession, ;);
-		SESSIONID SessionID = _spSession->GetID();
-		m_SessionContainer.emplace(MakePair(SessionID, _spSession));
+		m_SessionContainer.insert(MakePair(_SessionID, _spSession));
 	}
 
 	void UServerService::ThreadFunc(void* _spService)
@@ -84,8 +84,6 @@ namespace Core {
 
 	void UServerService::Free()
 	{
-		LOCKGUARD<MUTEX> M{ GetLastLock()};
-
 		for (auto& iter : m_SessionContainer)
 		{
 			iter.second->Disconnect();

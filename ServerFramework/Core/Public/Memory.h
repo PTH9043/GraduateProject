@@ -89,7 +89,7 @@ namespace Core {
 		void Release(void* _Ptr);
 
 	private:
-		void MakeMemoryPool(REF_IN _uint& _Size, REF_IN _uint& _TableIndex,
+		void MakeMemoryPool(_uint _Size, REF_IN _uint& _TableIndex,
 			const _uint _Limited, const _uint _AddValue);
 
 	private:

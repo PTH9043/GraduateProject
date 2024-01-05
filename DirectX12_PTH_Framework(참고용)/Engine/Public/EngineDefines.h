@@ -51,7 +51,7 @@ static const char* CLONETYPE_ONCE_STRING{ "CLONETYPE_ONCE" };
 // Use Atomic Shared PTr
 #define _USE_ATOMIC
 // Use Debugging Values
-//#define _USE_DEBUGGING
+#define _USE_DEBUGGING
 
 #include <d3d12.h>
 #include <dxgi1_4.h>

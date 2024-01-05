@@ -23,9 +23,9 @@ namespace Core
 	*/
 	void UMemoryPool::Push(MEMORYHEADER* _ptr)
 	{
+		std::atomic_thread_fence(std::memory_order_seq_cst);
 		MEMORYHEADER* Ptr = _ptr;
 		{
-			std::atomic_thread_fence(std::memory_order_seq_cst);
 			Ptr->AllocateSize = 0;
 		}
 		m_MemoryQueue.push(std::move(_ptr));
@@ -34,6 +34,7 @@ namespace Core
 
 	MEMORYHEADER* UMemoryPool::Pop()
 	{
+		std::atomic_thread_fence(std::memory_order_seq_cst);
 		MEMORYHEADER* Header = nullptr;
 		if (false == m_MemoryQueue.empty())
 		{
@@ -66,11 +67,11 @@ namespace Core
 	{
 		_uint Size = 16;
 		_uint TableIndex = 0;
-		MakeMemoryPool(REF_OUT Size, REF_OUT TableIndex, 512, 16);
-		MakeMemoryPool(REF_OUT Size, REF_OUT TableIndex, 1024, 32);
-		MakeMemoryPool(REF_OUT Size, REF_OUT TableIndex, 2048, 64);
-		MakeMemoryPool(REF_OUT Size, REF_OUT TableIndex, 3072, 128);
-		MakeMemoryPool(REF_OUT Size, REF_OUT TableIndex, 5120, 256);
+		MakeMemoryPool(16, REF_OUT TableIndex, 512, 16);
+		MakeMemoryPool(512, REF_OUT TableIndex, 1024, 32);
+		MakeMemoryPool(1024, REF_OUT TableIndex, 2048, 64);
+		MakeMemoryPool(2048 , REF_OUT TableIndex, 3072, 128);
+		MakeMemoryPool(3072, REF_OUT TableIndex, 5120, 256);
 	}
 
 	UMemoryAdminster::~UMemoryAdminster()
@@ -125,10 +126,10 @@ namespace Core
 #endif
 	}
 	// 메모리 할당을 해주는 함수이다. 
-	void UMemoryAdminster::MakeMemoryPool(REF_IN _uint& _Size, REF_IN _uint& _TableIndex,
+	void UMemoryAdminster::MakeMemoryPool(_uint _Size, REF_IN _uint& _TableIndex,
 		const _uint _Limited, const _uint _AddValue)
 	{
-		for (; _Size <= _Limited; _Size += _AddValue)
+		for (; _Size <= _Limited;)
 		{
 			UMemoryPool* pool = new UMemoryPool(_Size);
 			m_Pools.push_back(pool);
@@ -138,6 +139,7 @@ namespace Core
 				m_PoolTable[_TableIndex] = pool;
 				++_TableIndex;
 			}
+			_Size += _AddValue;
 		}
 	}
 

@@ -1,5 +1,5 @@
-#ifndef _SERVERFRAMEWORK_CORE_PUBLIC_THREADMANAGER_H
-#define _SERVERFRAMEWORK_CORE_PUBLIC_THREADMANAGER_H
+#ifndef _SERVERFRAMEWORK_CORE_PUBLIC_UTHREADMANAGER_H
+#define _SERVERFRAMEWORK_CORE_PUBLIC_UTHREADMANAGER_H
 
 #include "UBase.h"
 
@@ -14,7 +14,7 @@ using THRAEDVECTOR = VECTOR<THREAD>;
 @ Explain
 - Thread를 관리하는 매니저 클래스 
 */
-class CACHE_ALGIN_CORE_DLL UThreadManager final : public UBase {
+class CACHE_ALGIN UThreadManager final : public UBase {
 public:
 	UThreadManager();
 	NO_COPY(UThreadManager)
@@ -39,4 +39,4 @@ private:
 
 END
 
-#endif // _SERVERFRAMEWORK_CORE_PUBLIC_THREADMANAGER_H
+#endif // _SERVERFRAMEWORK_CORE_PUBLIC_UTHREADMANAGER_H

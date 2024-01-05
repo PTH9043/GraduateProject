@@ -8,11 +8,12 @@ namespace Core
 	USession::USession(OBJCON_CONSTRUCTOR, MOVE TCPSOCKET _TcpSocket, SHPTR<UService> _spService, SESSIONID _ID, SESSIONTYPE _SessionType) :
 		UObject(OBJCON_CONDATA),
 		m_TcpSocket(std::move(_TcpSocket)), m_SessionType(_SessionType), m_ID(_ID), m_CurBuffuerLocation{0},
-		m_wpService{_spService}
+		m_wpService{_spService},
+		m_isConnect{true}
 	{
-		ZeroMemory(&m_RecvBuffer, MAX_BUFFER_LENGTH);
-		ZeroMemory(&m_SendBuffer, MAX_BUFFER_LENGTH);
-		ZeroMemory(&m_TotalBuffer, MAX_PROCESSBUF_LENGTH);
+		MemoryInitialization(m_SendBuffer.data(), MAX_BUFFER_LENGTH);
+		MemoryInitialization(m_RecvBuffer.data(), MAX_BUFFER_LENGTH);
+		MemoryInitialization(m_TotalBuffer.data(), MAX_PROCESSBUF_LENGTH);
 	}
 
 	_bool USession::Start()
@@ -23,11 +24,12 @@ namespace Core
 
 	void USession::ReadData()
 	{
-	//	BUFFER recv;
-		ZeroMemory(&m_RecvBuffer, MAX_BUFFER_LENGTH);
+		RETURN_CHECK(false == m_isConnect, ;);
+
+		MemoryInitialization(m_RecvBuffer.data(), MAX_BUFFER_LENGTH);
 		m_TcpSocket.async_read_some(Asio::buffer(m_RecvBuffer, MAX_BUFFER_LENGTH),
 			[&](const boost::system::error_code& _error, std::size_t _Size)
-			{
+			{	
 				if (!_error)
 				{
 					if (_Size == 0)
@@ -51,24 +53,29 @@ namespace Core
 
 	_bool USession::WriteData(_char* _pPacket, const PACKETHEAD& _PacketHead)
 	{
+		RETURN_CHECK(false == m_isConnect, false);
 		return true;
 	}
 
 	void USession::Disconnect()
 	{
-		m_TcpSocket.close();
+		m_isConnect = false;
 	}
 
 	void USession::ConnectTcpSocket()
 	{
-		SESSIONID ID = m_ID;
-		SHPTR<UService> spService = GetService(REF_RETURN);
 		m_TcpSocket.async_connect(Asio::ip::tcp::endpoint(Asio::ip::address::from_string(IP_ADDRESS),
-			Core::TCP_PORT_NUM), [&spService, &ID](const boost::system::error_code& _error) {
+			Core::TCP_PORT_NUM), [&](const boost::system::error_code& _error) {
+
+				SESSIONID ID = m_ID;
+				SHPTR<UService> spService = GetService(REF_RETURN);
 				// 만약 연결 실패했으면 제거
 				if (_error)
 				{
-					spService->RemoveService(ID);
+#ifdef USE_DEBUG
+					std::cout << "Connect Error on Session[" << m_ID << "] EC[" << _error << "]\n";
+#endif
+					spService->LeaveService(ID);
 				}
 			});
 	}
@@ -94,7 +101,7 @@ namespace Core
 			// PacketSize를 구한다. 
 			PACKETHEAD PacketHead;
 			memcpy(&PacketHead, pBufferMove, PACKETHEAD_SIZE);
-			short CurrPacket = PacketHead.PacketSize;
+			short CurrPacket = PacketHead.PacketSize + PACKETHEAD_SIZE;
 			// 패킷의 현재 위치가 음수가 되는 경우면 
 			if ((m_CurBuffuerLocation - CurrPacket ) < 0)
 			{
@@ -102,7 +109,6 @@ namespace Core
 				_uint EraseValue = MAX_PROCESSBUF_LENGTH - moveBuffer;
 				// 최종적인 버퍼에 PacketSize만큼 이동하여 앞쪽에 존재하는 데이터들을 지운다. 
 				memmove(&m_TotalBuffer[0], pBufferMove, EraseValue);
-				ZeroMemory(&m_TotalBuffer[EraseValue], moveBuffer);
 				return;
 			}
 			
@@ -113,7 +119,7 @@ namespace Core
 			moveBuffer += CurrPacket;
 		}
 		m_CurBuffuerLocation = 0;
-		ZeroMemory(&m_TotalBuffer, MAX_PROCESSBUF_LENGTH);
+		MemoryInitialization(m_TotalBuffer.data(), MAX_PROCESSBUF_LENGTH);
 	}
 
 	/*

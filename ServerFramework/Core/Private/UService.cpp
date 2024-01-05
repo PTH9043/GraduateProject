@@ -22,7 +22,7 @@ namespace Core {
 	{
 	}
 
-	void UService::InsertSession(SHPTR<USession> _spSession)
+	void UService::InsertSession(SESSIONID _SessionID, SHPTR<USession> _spSession)
 	{
 	}
 
@@ -33,8 +33,6 @@ namespace Core {
 
 	void UService::Free()
 	{
-		LOCKGUARD<MUTEX> M{ m_LastLock };
-
 		m_TcpSocket.close();
 		m_IOContext.stop();
 	}

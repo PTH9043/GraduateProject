@@ -30,12 +30,11 @@ namespace Server
 					Core::Create<CPlayerSession>(spCoreInstance, std::move(TcpSocket), ThisShared<CServerAdiminstor>(), id);
 
 				// Insert 
-				InsertSession(spSession);
+				InsertSession(id, spSession);
 
 #ifdef USE_DEBUG
 		//		std::cout << "Accept Success [" << id << "]\n";
 #endif 
-
 				spSession->Start();
 			}
 			Connect();

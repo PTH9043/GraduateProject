@@ -723,7 +723,12 @@ namespace Core
 		template<class T2>
 		bool operator !=(const USharedPtr<T2>& _rhs) const { return m_RefCounter != _rhs.m_RefCounter; }
 
-		USharedPtr<T> lock() const { return USharedPtr<T>(*this); }
+		USharedPtr<T> lock() const
+		{ 
+			if (nullptr == m_RefCounter) 
+				return nullptr;  
+			return USharedPtr<T>(*this); 
+		}
 
 		void reset()
 		{
@@ -875,7 +880,7 @@ namespace Core
 	USharedPtr<T> MakeShared(Args&&... _args)
 	{
 		USharedPtr<T> SharedPtr;
-		T* ptr = Core::MemoryAlloc<T>(std::forward<Args>(_args)...);
+		T* ptr =  Core::MemoryAlloc<T>(std::forward<Args>(_args)...);
 		URefCounter<T>* pRefCounter = Core::MemoryAlloc<URefCounter<T>>(ptr);
 		SharedPtr.SetEnableShared(ptr, pRefCounter);
 		return std::move(SharedPtr);

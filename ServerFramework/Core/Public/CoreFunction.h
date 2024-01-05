@@ -4,6 +4,31 @@
 namespace Core
 {
 #pragma region FUNCTION 
+
+	template<class T, class Value >
+	requires (Number<T> && Number<Value>)
+	T CheckOverValue(const T& _temp, const Value& _Value)
+	{
+		if (_temp >= _Value)
+		{
+			return static_cast<T>(_Value);
+		}
+		return _temp;
+	}
+
+	template<class T>
+	void MemoryInitialization(T* _pData, const _int _bufferSize)
+	{
+		std::memset(_pData, 0, _bufferSize);
+	}
+
+	template<class T>
+	requires std::is_integral_v<T>
+	void ThreadRelax(const T& _data)
+	{
+		std::this_thread::sleep_for(std::chrono::nanoseconds(_data));
+	}
+
 	/*
 	@ Date: 2023-01-02,  Writer: นฺลยว๖
 	@ Explain

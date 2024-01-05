@@ -64,6 +64,9 @@
     <Filter Include="03.Network\Service\Client">
       <UniqueIdentifier>{6d84328e-d16c-47d5-8f77-cceb970cbeed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Manager\RandomManager">
+      <UniqueIdentifier>{99b09565-9bc8-471d-ac1b-234ce37782f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\UBase.h">
@@ -150,6 +153,9 @@
     <ClInclude Include="..\Public\UClientService.h">
       <Filter>03.Network\Service\Client</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\URandomManager.h">
+      <Filter>02.Manager\RandomManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\UBase.cpp">
@@ -205,6 +211,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UClientService.cpp">
       <Filter>03.Network\Service\Client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\URandomManager.cpp">
+      <Filter>02.Manager\RandomManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -21,6 +21,8 @@ namespace Server {
 
 	_bool CPlayerSession::WriteData(_char* _pPacket, const Core::PACKETHEAD& _PacketHead)
 	{
+		RETURN_CHECK(false == IsConnect(), false);
+
 		CombineSendBuffer( _pPacket, _PacketHead);
 		_bool result{ true };
 
@@ -33,11 +35,17 @@ namespace Server {
 				if (_error)
 				{
 					if (nullptr != Service)
-						Service->RemoveService(SessionID);
+						Service->LeaveService(SessionID);
 				}
 				else
 				{
-					result = false;
+					if (false == IsConnect())
+					{
+						if (nullptr != Service)
+						{
+							Service->LeaveService(SessionID);
+						}
+					}
 				}
 			});
 		return result;
@@ -52,6 +60,8 @@ namespace Server {
 		CombineProto<SC_REMOVE_OBJECT>(Buffer, PacketHead, scRemoveObject, TAG_SC_LOGOUT);
 
 		WriteData(&Buffer.GetBuffer()[0], PacketHead);
+
+		__super::Disconnect();
 	}
 
 	void CPlayerSession::ConnectTcpSocket()
@@ -65,7 +75,7 @@ namespace Server {
 				// 만약 연결 실패했으면 제거
 				if (_error)
 				{
-					spService->RemoveService(ID);
+					spService->LeaveService(ID);
 				}
 			});
 	}
@@ -78,6 +88,7 @@ namespace Server {
 		{
 			CS_LOGIN Login;
 			Login.ParseFromArray(_pPacket, static_cast<_int>(_PacketHead.PacketSize));
+			std::cout << Login.user_name() << "\n";
 		}
 		{
 			// Remove Object 조합 
@@ -89,7 +100,17 @@ namespace Server {
 
 			WriteData(&Buffer.GetBuffer()[0], PacketHead);
 		}
-			break;
+		break;
+		case TAG_CS::TAG_CS_LOGOUT:
+		{
+			CS_LOGOUT logout;
+			logout.ParseFromArray(_pPacket, static_cast<_int>(_PacketHead.PacketSize));
+
+			SHPTR<UService> spService = GetService();
+			spService->LeaveService(logout.id());
+			return false;
+		}
+		break;
 		}
 		return true;
 	}

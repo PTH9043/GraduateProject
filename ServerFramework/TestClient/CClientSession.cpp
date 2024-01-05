@@ -31,12 +31,25 @@ _bool CClientSession::WriteData(_char* _pPacket, const Core::PACKETHEAD& _Packet
 			if (_error)
 			{
 				if (nullptr != Service)
-					Service->RemoveService(SessionID);
+				{
+					Service->LeaveService(SessionID);
+					return;
+				}
 				result = false;
 			}
 			else
 			{
-				SendMsg();
+				if (false == IsConnect())
+				{
+					if (nullptr != Service)
+					{
+						Service->LeaveService(SessionID);
+					}
+				}
+				else
+				{
+					SendMsg();
+				}
 			}
 		});
 	return result;
@@ -44,13 +57,7 @@ _bool CClientSession::WriteData(_char* _pPacket, const Core::PACKETHEAD& _Packet
 
 void CClientSession::Disconnect()
 {		
-	// Remove Object 조합 
-	SC_REMOVE_OBJECT scRemoveObject = PROTOFUNC::CreateScRemoveObject(GetID());
-	Core::UBuffer Buffer;
-	Core::PACKETHEAD PacketHead;
-	CombineProto<SC_REMOVE_OBJECT>(Buffer, PacketHead, scRemoveObject, TAG_SC_LOGOUT);
-
-	WriteData(&Buffer.GetBuffer()[0], PacketHead);
+	__super::Disconnect();
 }
 
 void CClientSession::ConnectTcpSocket()
@@ -63,7 +70,7 @@ void CClientSession::ConnectTcpSocket()
 			// 만약 연결 실패했으면 제거
 			if (_error)
 			{
-				spService->RemoveService(ID);
+				spService->LeaveService(ID);
 			}
 			else
 			{
@@ -74,17 +81,24 @@ void CClientSession::ConnectTcpSocket()
 
 void CClientSession::SendMsg()
 {
-	static std::vector<std::string> wordList = {
-	"apple", "banana", "chocolate", "dog", "elephant",
-	"flower", "guitar", "happiness", "internet", "jazz"
-	};
+	//static std::vector<std::string> wordList = {
+	//"apple", "banana", "chocolate", "dog", "elephant",
+	//"flower", "guitar", "happiness", "internet", "jazz"
+	//};
 
-	CS_LOGIN Login;
-	Login.set_user_name(wordList[rand() % wordList.size()]);
-	Core::UBuffer Buffer;
-	Core::PACKETHEAD PacketHead;
-	CombineProto<CS_LOGIN>(REF_OUT Buffer, REF_OUT PacketHead, Login, TAG_CS_LOGIN);
-	WriteData(&Buffer.GetBuffer()[0], PacketHead);
+	//CS_LOGIN Login;
+	//Login.set_user_name(wordList[rand() % wordList.size()]);
+	//Core::UBuffer Buffer;
+	//Core::PACKETHEAD PacketHead;
+	//CombineProto<CS_LOGIN>(REF_OUT Buffer, REF_OUT PacketHead, Login, TAG_CS_LOGIN);
+	//WriteData(&Buffer.GetBuffer()[0], PacketHead);
+
+	// Remove Object 조합 
+	CS_LOGOUT logout;
+	logout.set_id(GetID());
+	SendProtoData(logout, TAG_CS::TAG_CS_LOGOUT);
+
+	Disconnect();
 }
 
 _bool CClientSession::ProcessPacket(_char* _pPacket, const Core::PACKETHEAD& _PacketHead)
@@ -95,7 +109,7 @@ _bool CClientSession::ProcessPacket(_char* _pPacket, const Core::PACKETHEAD& _Pa
 	{
 		SC_CHECKLOGIN Login;
 		Login.ParseFromArray(_pPacket, static_cast<_int>(_PacketHead.PacketSize));
-
+		std::cout << Login.id() << "\n";
 		ReadData();
 	}
 		break;

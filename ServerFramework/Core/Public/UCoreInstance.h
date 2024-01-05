@@ -5,7 +5,7 @@
 
 BEGIN(Core)
 class UThreadManager;
-class UConnector;
+class URandomManager;
 /*
 @ Date: 2023-12-26
 @ Writer: นฺลยว๖
@@ -24,13 +24,16 @@ public: /* CoreGrobal */
 public: /* ThreadManager */
 	void RegisterFunc(const THREADFUNC& _CallBack, void* _Data);
 	void Join();
-public:
+public: /* RandomManager */
+	_int		ReturnRadomNumber(const _int _iMinNum, const _int _iMaxNum);
+	_int		ReturnRadomNumber(const _int _iMaxNum);
 
 private:
 	virtual void Free() override;
 private:
 	MUTEX											m_Mutex;
 	SHPTR<UThreadManager>		m_spThreadManager;
+	SHPTR<URandomManager>		m_spRandomManager;
 };
 
 END

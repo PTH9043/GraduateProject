@@ -2,7 +2,6 @@
 #include "UClientService.h"
 #include "USession.h"
 #include "UCoreInstance.h"
-
 namespace Core {
 
 	UClientService::UClientService(OBJCON_CONSTRUCTOR) : 
@@ -24,7 +23,7 @@ namespace Core {
 	{
 		SESSIONCONTAINER::accessor acces;
 		const auto& iter = m_SessionContainer.find(acces, _SessionID);
-		RETURN_CHECK(false == acces.empty(), nullptr);
+		RETURN_CHECK(true == acces.empty(), nullptr);
 		return acces->second;
 	}
 
@@ -41,25 +40,31 @@ namespace Core {
 	{
 		SESSIONCONTAINER::accessor acces;
 		const auto& iter = m_SessionContainer.find(acces, _SessionID);
-		RETURN_CHECK(false == acces.empty(), ;);
+		RETURN_CHECK(true == acces.empty(), ;);
+#ifdef USE_DEBUG
+		std::cout << acces->first << "\n";
+#endif
 		// Disconnect
-		acces->second->Disconnect();
+		{
+		//	std::atomic_thread_fence(std::memory_order_seq_cst);
+			m_RemainIDQueue.push(acces->first);
+			m_SessionContainer.erase(acces);
+		}
 	}
 
-	void UClientService::RemoveService(const SESSIONID _SessionID)
-	{
-		SESSIONCONTAINER::accessor acces;
-		const auto& iter = m_SessionContainer.find(acces, _SessionID);
-		RETURN_CHECK(false == acces.empty(), ;);
-		acces->second = nullptr;
-		__super::LeaveService(_SessionID);
-	}
-
-	void UClientService::InsertSession(SHPTR<USession> _spSession)
+	void UClientService::InsertSession(SESSIONID _SessionID, SHPTR<USession> _spSession)
 	{
 		RETURN_CHECK(nullptr == _spSession, ;);
-		SESSIONID SessionID = _spSession->GetID();
-		m_SessionContainer.emplace(MakePair(SessionID, _spSession));
+		if (nullptr == FindSession(_SessionID))
+		{
+			m_SessionContainer.emplace(MakePair(_SessionID, _spSession));
+		}
+		else
+		{
+			SESSIONCONTAINER::accessor acces;
+			const auto& iter = m_SessionContainer.find(acces, _SessionID);
+			acces->second = _spSession;
+		}
 	}
 
 	void UClientService::RunningThread(void* _pService)
@@ -81,6 +86,10 @@ namespace Core {
 		SESSIONID SessionID{ 0 };
 		m_RemainIDQueue.try_pop(SessionID);
 		return SessionID;
+	}
+
+	void UClientService::RemoveDisconnectSockets()
+	{
 	}
 
 	void UClientService::Free()

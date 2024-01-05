@@ -1,11 +1,13 @@
 #include "CoreDefines.h"
 #include "UCoreInstance.h"
 #include "UThreadManager.h"
+#include "URandomManager.h"
 
 namespace Core
 {
-	CORE_DLL SHPTR<UCoreInstance> e_CoreGrobal = Create<UCoreInstance>();
-	UCoreInstance::UCoreInstance() : m_spThreadManager{ Create<Core::UThreadManager>() }
+	UCoreInstance::UCoreInstance() : 
+		m_spThreadManager{ Create<Core::UThreadManager>() }, 
+		m_spRandomManager{Create<Core::URandomManager>()}
 	{
 
 	}
@@ -35,16 +37,27 @@ namespace Core
 		m_spThreadManager->Join();
 	}
 
-	void UCoreInstance::Free()
-	{
-		LOCKGUARD<MUTEX> Lock{ m_Mutex };
-		using namespace std;
-		std::this_thread::sleep_for(100ms);
-
-		m_spThreadManager.reset();
-	}
 
 	/*
+	-----------------------------
+	UThreadManager
+	-----------------------------
+	URandomManager
+	-----------------------------
+	*/
+
+
+	_int UCoreInstance::ReturnRadomNumber(const _int _iMinNum, const _int _iMaxNum)
+	{
+		return m_spRandomManager->ReturnRadomNumber(_iMinNum, _iMaxNum);
+	}
+
+	_int UCoreInstance::ReturnRadomNumber(const _int _iMaxNum)
+	{
+		return m_spRandomManager->ReturnRadomNumber(_iMaxNum);
+	}
+
+		/*
 	-----------------------------
 	UThreadManager
 	-----------------------------
@@ -52,4 +65,14 @@ namespace Core
 	-----------------------------
 	*/
 
+
+	void UCoreInstance::Free()
+	{
+		LOCKGUARD<MUTEX> Lock{ m_Mutex };
+		using namespace std;
+		std::this_thread::sleep_for(100ms);
+
+		m_spThreadManager.reset();
+		m_spRandomManager.reset();
+	}
 }

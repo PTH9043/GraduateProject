@@ -7,8 +7,14 @@
 namespace Core
 {
 	/*
-@ Date: 2023-12-26
-@ Writer: 박태현
+	@ Date: 2024-01-05, Writer: 박태현
+	@ Explain: 해당하는 Template가 숫자인지 확인
+	*/
+	template <typename T>
+	concept Number = std::integral<T> || std::floating_point<T>;
+
+	/*
+@ Date: 2023-12-26, Writer: 박태현
 @ Explain: 같은 놈인지, 부모 타입인지, operator = 연산 수행 가능한지 
 */
 	template <class T, class U>

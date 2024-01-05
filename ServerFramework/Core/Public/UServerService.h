@@ -6,7 +6,7 @@
 BEGIN(Core)
 
 /*
-@ Date: 2024-01-02, Writer: 박태현
+@ Date: 2024-01-05, Writer: 박태현
 @ Explain
 -  ServerService로 재정의해서 사용한다.  Server Framework에서 재정의 해서 사용해야한다. 
 */
@@ -21,9 +21,9 @@ public:
 	virtual _bool Start() override;
 	virtual SHPTR<USession> FindSession(const SESSIONID _SessionID) override;
 	virtual void BroadCastMessage(_char* _pPacket, const PACKETHEAD& _PacketHead) override;
+	// 여기서는 Session 자체를 제거
 	virtual void LeaveService(const SESSIONID _SessionID) override;
-	virtual void RemoveService(const SESSIONID _SessionID) override;
-	virtual void InsertSession(SHPTR<USession> _spSession) override;
+	virtual void InsertSession(SESSIONID _SessionID, SHPTR<USession> _spSession) override;
 protected:
 	// Thread에 집어넣을 함수
 	static void ThreadFunc(void* _spService);
