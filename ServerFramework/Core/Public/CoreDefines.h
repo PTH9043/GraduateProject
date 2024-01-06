@@ -44,14 +44,10 @@
 
 #ifdef _DEBUG
 #pragma comment (lib, "PthMathD")
-#pragma comment (lib, "aws-cpp-sdk-gameliftd")
-#pragma comment (lib, "aws-cpp-sdk-ec2d")
-#pragma comment (lib, "aws-cpp-sdk-cored")
+#pragma comment (lib, "gamelift-sdkd")
 #else
 #pragma comment (lib, "PthMath")
-#pragma comment (lib, "aws-cpp-sdk-gamelift")
-#pragma comment (lib, "aws-cpp-sdk-ec2")
-#pragma comment (lib, "aws-cpp-sdk-core")
+#pragma comment (lib, "gamelift-sdk")
 #endif
 
 #include <iostream>
@@ -79,6 +75,8 @@
 #include <vector>
 
 #include "PthMath/PthMath.h"
+
+#include <aws/gamelift/internal/model/Message.h>
 
 namespace Asio = boost::asio;
 

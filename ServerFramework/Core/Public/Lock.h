@@ -94,6 +94,12 @@ namespace Core {
 #endif 
 	};
 
+
+		/*
+		@ Date: 2024-01-06,  Writer: 박태현
+		@ Explain
+		- AWS 버전에서 따온 SpinLock
+		*/
 	class CACHE_ALGIN_CORE_DLL UFastSpinLock {
 	public:
 		enum LockFlag
