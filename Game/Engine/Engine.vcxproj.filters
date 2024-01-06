@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{15d0b3e8-a67c-43a3-aca3-f73db45401c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{26e6df75-5c03-4808-925a-3165f38e6969}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HLSL">
+      <UniqueIdentifier>{e316ed3c-15a1-44be-851d-5359af9768e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture">
+      <UniqueIdentifier>{74cb3f2d-7c71-429d-ae00-557a5d4f1a96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{6a70b192-0983-4e0c-b8ee-45d0014c8535}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Timer">
+      <UniqueIdentifier>{346ee66e-30a1-433a-bbe1-0dc0e503bdf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{d25cd843-011c-4387-a399-0ab643c41c8d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="EnginePch.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dx12.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="WICTextureLoader12.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandQueue.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceAndFactory.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="RootSignature.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="SwapChainAndRtvDsvHeap.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="DDSTextureLoader12.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="EnginePch.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="WICTextureLoader12.cpp">
+      <Filter>Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="DDSTextureLoader12.cpp">
+      <Filter>Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandQueue.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="DeviceAndFactory.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="RootSignature.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="SwapChainAndRtvDsvHeap.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Resources\Shader\Shaders.hlsli">
+      <Filter>HLSL</Filter>
+    </None>
+  </ItemGroup>
+</Project>
