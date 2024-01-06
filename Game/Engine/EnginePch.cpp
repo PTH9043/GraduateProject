@@ -3,6 +3,7 @@
 #include "Engine.h"
 
 unique_ptr<Engine> gGameFrameWork = make_unique<Engine>();
+
 /*
 m_pd3dVertexBuffer = ::CreateBufferResource(pd3dDevice, pd3dCommandList, pVertices, m_nStride* m_nVertices, D3D12_HEAP_TYPE_DEFAULT,
         D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, & m_pd3dVertexUploadBuffer);

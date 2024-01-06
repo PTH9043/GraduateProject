@@ -24,15 +24,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="EnginePch.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="d3dx12.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="WICTextureLoader12.h">
       <Filter>Texture</Filter>
     </ClInclude>
@@ -75,14 +66,17 @@
     <ClInclude Include="DDSTextureLoader12.h">
       <Filter>Texture</Filter>
     </ClInclude>
+    <ClInclude Include="d3dx12.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="EnginePch.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="pch.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="EnginePch.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
     <ClCompile Include="WICTextureLoader12.cpp">
       <Filter>Texture</Filter>
     </ClCompile>
@@ -124,6 +118,12 @@
     </ClCompile>
     <ClCompile Include="Shader.cpp">
       <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="EnginePch.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

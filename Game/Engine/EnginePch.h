@@ -36,7 +36,6 @@ enum
 #include <map>
 using namespace std;
 
-
 #define WIN32_LEAN_AND_MEAN             // 거의 사용되지 않는 내용을 Windows 헤더에서 제외합니다.
 // Windows 헤더 파일
 #include <windows.h>
@@ -71,12 +70,12 @@ using Microsoft::WRL::ComPtr;
 
 #define DEVICE gGameFrameWork->GetDeviceAndFactory()->GetDevice()
 #define CMDLIST gGameFrameWork->GetCommandQueue()->GetCmdList()
-#define GRAPHICS_ROOT_SIGNATURE		gGameFrameWork->GetRootSignature()->GetGraphicsRootSignature()
-
+#define GRAPHICS_ROOT_SIGNATURE	gGameFrameWork->GetRootSignature()->GetGraphicsRootSignature()
+//2024-01-07 이성현
+#define RTVDESCRIPTORHEAP gGameFrameWork->GetSwapChainAndRtvDsvHeap()->GetRTVHeap()
+#define SWAPCHAIN gGameFrameWork->GetSwapChainAndRtvDsvHeap()->GetSwapChain()
 
 extern unique_ptr<class Engine> gGameFrameWork;
-
-
 
 
 #define RANDOM_COLOR XMFLOAT4(rand() / float(RAND_MAX), rand() / float(RAND_MAX), rand() / float(RAND_MAX), rand() / float(RAND_MAX))
@@ -126,7 +125,6 @@ namespace DX
 		}
 	}
 }
-
 
 
 namespace Vector3

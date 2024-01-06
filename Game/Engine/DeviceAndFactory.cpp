@@ -3,7 +3,6 @@
 
 void DeviceAndFactory::InitDeviceAndFactory()
 {
-
 	CreateDxgiFactory();
 	CreateDirect3DDevice();
 }
@@ -24,9 +23,7 @@ void DeviceAndFactory::CreateDxgiFactory()
 
 void DeviceAndFactory::CreateDirect3DDevice()
 {
-
 	ComPtr<IDXGIAdapter1> pd3dAdapter = nullptr;
-
 
 	for (UINT i = 0; m_cpdxgiFactory->EnumAdapters1(i, &pd3dAdapter) != DXGI_ERROR_NOT_FOUND; ++i) {
 		DXGI_ADAPTER_DESC1 dxgiAdapterDesc;
@@ -54,10 +51,5 @@ void DeviceAndFactory::CreateDirect3DDevice()
 	//디바이스가 지원하는 다중 샘플의 품질 수준을 확인한다. 
 	m_bMsaa4xEnable = (m_nMsaa4xQualityLevels > 1) ? true : false;
 	//다중 샘플의 품질 수준이 1보다 크면 다중 샘플링을 활성화한다. 
-
-	
-
-
-
 }
 //-----------------------------------------

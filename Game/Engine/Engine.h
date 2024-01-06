@@ -31,6 +31,7 @@ private:
 	CGameTimer m_GameTimer;
 	_TCHAR m_pszFrameRate[50];
 	CCamera* m_pCamera = NULL;
+
 private:
 	CScene* m_pScene;
 	ComPtr<ID3D12PipelineState> m_pd3dPipelineState;
