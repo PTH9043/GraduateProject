@@ -25,6 +25,7 @@ namespace Core
 
 	static const std::string IP_ADDRESS = "127.0.0.1";
 	constexpr static unsigned int PACKETHEAD_SIZE{ sizeof(PACKETHEAD) };
+	constexpr static unsigned int PACKETSIZE_SIZE{ sizeof(short) };
 }
 
 #endif // _SERVERFRAMEWORK_CORE_PUBLIC_COREPAKCET_H

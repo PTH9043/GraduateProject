@@ -56,6 +56,7 @@ static const char* CLONETYPE_ONCE_STRING{ "CLONETYPE_ONCE" };
 #include <d3d12.h>
 #include <dxgi1_4.h>
 #include <dxgi.h>
+#include <DXGIDebug.h>
 
 #include <d3dcompiler.h>
 #include <DirectXMath.h>

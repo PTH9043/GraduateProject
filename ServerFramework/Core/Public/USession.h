@@ -44,9 +44,10 @@ public:
 	/*
 	@ Date: 2023-01-05, Writer: 박태현
 	@ Explain
-	- ProtocolBuffer를 보내기 위한 템플릿 함수이다. 
+	- ProtocolBuffer를 TCP에 연결된 상대에게 보내기 위한 템플릿 함수이다. 
 	*/
 	template<class T>
+	requires CheckProtoType<T>
 	void SendProtoData(const T& _data, short _tag)
 	{
 		Core::UBuffer Buffer;

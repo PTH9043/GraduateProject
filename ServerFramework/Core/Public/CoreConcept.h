@@ -14,9 +14,9 @@ namespace Core
 	concept Number = std::integral<T> || std::floating_point<T>;
 
 	/*
-@ Date: 2023-12-26, Writer: 박태현
-@ Explain: 같은 놈인지, 부모 타입인지, operator = 연산 수행 가능한지 
-*/
+	@ Date: 2023-12-26, Writer: 박태현
+	@ Explain: 같은 놈인지, 부모 타입인지, operator = 연산 수행 가능한지 
+	*/
 	template <class T, class U>
 	concept SameType = std::is_same_v<T, U>();
 	template <class T, class U>
@@ -43,7 +43,14 @@ namespace Core
 	concept CheckToSameMethodArgs = requires(T * t, Args&&... args) {
 		{ t->NativeConstruct(args...) } -> std::same_as<bool>;
 	};
-
+	/*
+	@ Date: 2024-01-06, Writer: 박태현
+	@ Explain: ProtoType 클래스인지 체크하는 concept
+	*/
+	template<typename T>
+	concept CheckProtoType = requires(T * _t) {
+		{_t->ByteSizeLong() }->std::same_as<size_t>;
+	};
 
 	/*
 	@ Date: 2023-12-26

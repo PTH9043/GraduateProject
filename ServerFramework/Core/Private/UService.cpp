@@ -8,7 +8,8 @@ namespace Core {
 		UObject(OBJCON_CONDATA), m_ServiceType{_Type}, 
 		m_TcpSocket{ m_IOContext },
 		m_CurrentSessionCount{0},
-		m_IDIssuance{0}
+		m_IDIssuance{0}, 
+		m_isAwsActivation{false}
 	{
 	}
 

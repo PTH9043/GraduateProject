@@ -19,6 +19,8 @@ public:
 public:
 	virtual _bool NativeConstruct() PURE;
 	virtual _bool Start() override;
+public:
+	/* AWS */
 	virtual SHPTR<USession> FindSession(const SESSIONID _SessionID) override;
 	virtual void BroadCastMessage(_char* _pPacket, const PACKETHEAD& _PacketHead) override;
 	// 여기서는 Session 자체를 제거

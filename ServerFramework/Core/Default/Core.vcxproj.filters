@@ -52,9 +52,6 @@
     <Filter Include="03.Network\Session">
       <UniqueIdentifier>{113fff01-053a-454f-832b-fb5e44a5bd28}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.Network\aws">
-      <UniqueIdentifier>{e356f2b8-de07-4f0f-b862-9d4f2c0ebb85}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03.Network\Service">
       <UniqueIdentifier>{0e44ce4c-1ee3-4dc5-897c-416bbcb16875}</UniqueIdentifier>
     </Filter>
@@ -147,9 +144,6 @@
     <ClInclude Include="..\Public\UServerService.h">
       <Filter>03.Network\Service\Server</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UAwsConnector.h">
-      <Filter>03.Network\aws</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\UClientService.h">
       <Filter>03.Network\Service\Client</Filter>
     </ClInclude>
@@ -205,9 +199,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\UServerService.cpp">
       <Filter>03.Network\Service\Server</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\UAwsConnector.cpp">
-      <Filter>03.Network\aws</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UClientService.cpp">
       <Filter>03.Network\Service\Client</Filter>

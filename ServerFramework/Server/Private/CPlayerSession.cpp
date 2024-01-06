@@ -27,8 +27,9 @@ namespace Server {
 		_bool result{ true };
 
 		TCPSOCKET& Socket = GetTcpSocket(REF_RETURN);
+
 		Socket.async_write_some(Asio::buffer(GetSendBuff(), _PacketHead.PacketSize + PACKETHEAD_SIZE),
-			[&](const boost::system::error_code& _error, std::size_t _Size) {
+			[this](const boost::system::error_code& _error, std::size_t _Size) {
 			SESSIONID SessionID = GetID();
 			Core::SHPTR<Core::UService> Service{ GetService() };
 				// Packet
@@ -67,15 +68,15 @@ namespace Server {
 	void CPlayerSession::ConnectTcpSocket()
 	{
 		TCPSOCKET& TcpSocket = GetTcpSocket(REF_RETURN);
-		SESSIONID ID = GetID();
-		SHPTR<UService> spService = GetService(REF_RETURN);
-		CPlayerSession* pSession = this;
 		TcpSocket.async_connect(Asio::ip::tcp::endpoint(Asio::ip::address::from_string(IP_ADDRESS),
-			Core::TCP_PORT_NUM), [&spService, &ID, pSession](const boost::system::error_code& _error) {
+			Core::TCP_PORT_NUM), [this](const boost::system::error_code& _error) {
+				SESSIONID ID = GetID();
+				SHPTR<UService> spService = GetService(REF_RETURN);
 				// 만약 연결 실패했으면 제거
 				if (_error)
 				{
-					spService->LeaveService(ID);
+					if (nullptr != spService)
+						spService->LeaveService(ID);
 				}
 			});
 	}
@@ -88,7 +89,7 @@ namespace Server {
 		{
 			CS_LOGIN Login;
 			Login.ParseFromArray(_pPacket, static_cast<_int>(_PacketHead.PacketSize));
-			std::cout << Login.user_name() << "\n";
+	//		std::cout << Login.user_name() << "\n";
 		}
 		{
 			// Remove Object 조합 

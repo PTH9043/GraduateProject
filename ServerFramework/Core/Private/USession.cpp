@@ -25,9 +25,8 @@ namespace Core
 	void USession::ReadData()
 	{
 		RETURN_CHECK(false == m_isConnect, ;);
-		MemoryInitialization(m_RecvBuffer.data(), MAX_BUFFER_LENGTH);
 		m_TcpSocket.async_read_some(Asio::buffer(m_RecvBuffer, MAX_BUFFER_LENGTH),
-			[&](const boost::system::error_code& _error, std::size_t _Size)
+			[this](const boost::system::error_code& _error, std::size_t _Size)
 			{	
 				if (!_error)
 				{
@@ -64,7 +63,7 @@ namespace Core
 	void USession::ConnectTcpSocket()
 	{
 		m_TcpSocket.async_connect(Asio::ip::tcp::endpoint(Asio::ip::address::from_string(IP_ADDRESS),
-			Core::TCP_PORT_NUM), [&](const boost::system::error_code& _error) {
+			Core::TCP_PORT_NUM), [this](const boost::system::error_code& _error) {
 
 				SESSIONID ID = m_ID;
 				SHPTR<UService> spService = GetService(REF_RETURN);
@@ -88,6 +87,7 @@ namespace Core
 	{
 		// 버퍼를 조합한다. 
 		{
+			ThreadNanoRelax(1);
 			_llong value = m_CurBuffuerLocation.load();
 			::memcpy(&m_TotalBuffer[value], _pPacket, _Size);
 			m_CurBuffuerLocation.store(value + _Size);
@@ -97,26 +97,30 @@ namespace Core
 		// 만약 BufferLocation이 존재할 때
 		while (m_CurBuffuerLocation > 0)
 		{
-			// PacketSize를 구한다. 
-			PACKETHEAD PacketHead;
-			memcpy(&PacketHead, pBufferMove, PACKETHEAD_SIZE);
-			short CurrPacket = PacketHead.PacketSize + PACKETHEAD_SIZE;
+			short len{ 0 };
+			memcpy(&len, pBufferMove, PACKETSIZE_SIZE);
+			short CurrPacket = len + PACKETHEAD_SIZE;
 			// 패킷의 현재 위치가 음수가 되는 경우면 
 			if ((m_CurBuffuerLocation - CurrPacket ) < 0)
 			{
+#ifdef USE_DEBUG
+				std::cout << CurrPacket << "\n";
+#endif
 				// 전체 버퍼값에서 이동한 Packet 사이즈를 뺀 후 
 				_uint EraseValue = MAX_PROCESSBUF_LENGTH - moveBuffer;
 				// 최종적인 버퍼에 PacketSize만큼 이동하여 앞쪽에 존재하는 데이터들을 지운다. 
 				memmove(&m_TotalBuffer[0], pBufferMove, EraseValue);
 				return;
 			}
-			
+			// PacketSize를 구한다. 
+			PACKETHEAD PacketHead;
+			memcpy(&PacketHead, pBufferMove, PACKETHEAD_SIZE);
+
 			ProcessPacket(pBufferMove + PACKETHEAD_SIZE, PacketHead);
 			// Buffer의 위치를 옮긴다. 
 			m_CurBuffuerLocation -= CurrPacket;
 			pBufferMove += CurrPacket;
 			moveBuffer += CurrPacket;
-			ThreadNanoRelax(1);
 		}
 		m_CurBuffuerLocation = 0;
 		MemoryInitialization(m_TotalBuffer.data(), MAX_PROCESSBUF_LENGTH);

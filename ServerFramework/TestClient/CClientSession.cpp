@@ -24,7 +24,7 @@ _bool CClientSession::WriteData(_char* _pPacket, const Core::PACKETHEAD& _Packet
 
 	TCPSOCKET& Socket = GetTcpSocket(REF_RETURN);
 	Socket.async_write_some(Asio::buffer(GetSendBuff(), _PacketHead.PacketSize + PACKETHEAD_SIZE),
-		[&](const boost::system::error_code& _error, std::size_t _Size) {
+		[this](const boost::system::error_code& _error, std::size_t _Size) {
 			SESSIONID SessionID = GetID();
 			Core::SHPTR<Core::UService> Service{ GetService() };
 			// Packet
@@ -35,7 +35,6 @@ _bool CClientSession::WriteData(_char* _pPacket, const Core::PACKETHEAD& _Packet
 					Service->LeaveService(SessionID);
 					return;
 				}
-				result = false;
 			}
 			else
 			{
@@ -64,7 +63,7 @@ void CClientSession::ConnectTcpSocket()
 {
 	TCPSOCKET& TcpSocket = GetTcpSocket(REF_RETURN);
 	TcpSocket.async_connect(Asio::ip::tcp::endpoint(Asio::ip::address::from_string(IP_ADDRESS),
-		Core::TCP_PORT_NUM), [&](const boost::system::error_code& _error) {
+		Core::TCP_PORT_NUM), [this](const boost::system::error_code& _error) {
 			SHPTR<UService> spService = GetService();
 			SESSIONID ID = GetID();
 			// 만약 연결 실패했으면 제거
@@ -90,7 +89,6 @@ void CClientSession::SendMsg()
 	CS_LOGIN Login;
 	Login.set_user_name(wordList[rand() % wordList.size()]);
 	SendProtoData(Login, TAG_CS_LOGIN);
-
 	// Remove Object 조합 
 	//CS_LOGOUT logout;
 	//logout.set_id(GetID());
@@ -107,8 +105,7 @@ _bool CClientSession::ProcessPacket(_char* _pPacket, const Core::PACKETHEAD& _Pa
 	{
 		SC_CHECKLOGIN Login;
 		Login.ParseFromArray(_pPacket, static_cast<_int>(_PacketHead.PacketSize));
-		std::cout << Login.id() << "\n";
-		ReadData();
+	//	std::cout << Login.id() << "\n";
 	}
 		break;
 	}

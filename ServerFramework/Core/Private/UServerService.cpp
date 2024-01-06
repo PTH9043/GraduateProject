@@ -52,15 +52,19 @@ namespace Core {
 		RETURN_CHECK(iter == m_SessionContainer.end(), ;);
 		// Disconnect
 		{
-			WRITE_LOCK(GetRunTimeLock(REF_RETURN));
-			m_SessionContainer.unsafe_erase(iter);
+			std::atomic_thread_fence(std::memory_order_seq_cst);
+			if (iter->second)
+			{
+				iter->second->Disconnect();
+				iter->second.reset();
+			}
+	//		m_SessionContainer.unsafe_erase(iter);
 		}
 	}
 
 	void UServerService::InsertSession(SESSIONID _SessionID, SHPTR<USession> _spSession)
 	{
 		RETURN_CHECK(nullptr == _spSession, ;);
-		READ_LOCK(GetRunTimeLock(REF_RETURN));
 		m_SessionContainer.insert(MakePair(_SessionID, _spSession));
 	}
 

@@ -18,6 +18,7 @@ public:
 public:
 	virtual _bool NativeConstruct() PURE;
 	virtual _bool Start() override;
+public:
 	virtual SHPTR<USession> FindSession(const SESSIONID _SessionID) override;
 	virtual void BroadCastMessage(_char* _pPacket, const PACKETHEAD& _PacketHead) override;
 	virtual void LeaveService(const SESSIONID _SessionID) override;

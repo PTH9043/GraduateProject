@@ -93,5 +93,42 @@ namespace Core {
 		const char* m_Name;
 #endif 
 	};
+
+	class CACHE_ALGIN_CORE_DLL UFastSpinLock {
+	public:
+		enum LockFlag
+		{
+			LF_WRITE_MASK = 0x7FF00000,
+			LF_WRITE_FLAG = 0x00100000,
+			LF_READ_MASK = 0x000FFFFF
+		};
+	public:
+		UFastSpinLock();
+		UFastSpinLock(const UFastSpinLock& _rhs);
+		UFastSpinLock& operator =(const UFastSpinLock& _lock);
+		~UFastSpinLock();
+
+		/// exclusive mode
+		void EnterWriteLock();
+		void LeaveWriteLock();
+
+		/// shared mode
+		void EnterReadLock();
+		void LeaveReadLock();
+
+		long long  GetLockFlag() const { return m_LockFlag.load(std::memory_order_seq_cst); }
+	private:
+		ATOMIC<_llong>	m_LockFlag;
+	};
+
+	class UReadSpinLockGuard {
+	public:
+		UReadSpinLockGuard(const UFastSpinLock& _Lock) : m_SpinLock{ _Lock } {}
+		~UReadSpinLockGuard() { m_SpinLock.LeaveReadLock(); }
+
+
+	private:
+		UFastSpinLock			m_SpinLock;
+	};
 }
 #endif 

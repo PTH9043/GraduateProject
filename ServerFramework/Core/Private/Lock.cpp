@@ -168,4 +168,67 @@ namespace Core
 		}
 	}
 
+	/*
+	============================================
+	RWLock 
+	============================================
+	FastSpinLock
+	============================================
+	*/
+
+	UFastSpinLock::UFastSpinLock() : m_LockFlag{ 0 } { }
+
+	UFastSpinLock::UFastSpinLock(const UFastSpinLock& _rhs) :
+		m_LockFlag{ _rhs.m_LockFlag.load() } {}
+
+	UFastSpinLock& UFastSpinLock::operator=(const UFastSpinLock& _lock)
+	{
+		m_LockFlag.store(_lock.m_LockFlag, std::memory_order_seq_cst);
+		return *this;
+	}
+
+	UFastSpinLock::~UFastSpinLock(){ }
+
+	void UFastSpinLock::EnterWriteLock()
+	{
+		while (true)
+		{
+			while (m_LockFlag.load(std::memory_order_relaxed) & LF_WRITE_MASK)
+				std::this_thread::yield();
+
+			
+			if ((m_LockFlag.fetch_add(LF_WRITE_FLAG, std::memory_order_acquire) & LF_WRITE_MASK) == LF_WRITE_FLAG)
+			{
+				while (m_LockFlag.load(std::memory_order_relaxed) & LF_READ_MASK)
+					std::this_thread::yield();
+				return;
+			}
+			m_LockFlag.fetch_sub(LF_WRITE_FLAG, std::memory_order_relaxed);
+		}
+	}
+
+	void UFastSpinLock::LeaveWriteLock()
+	{
+		m_LockFlag.fetch_sub(LF_WRITE_FLAG, std::memory_order_relaxed);
+	}
+
+	void UFastSpinLock::EnterReadLock()
+	{
+		while (true)
+		{
+			while (m_LockFlag.load(std::memory_order_relaxed) & LF_WRITE_MASK)
+				std::this_thread::yield();
+
+			if ((m_LockFlag.fetch_add(1, std::memory_order_acquire) & LF_WRITE_MASK) == LF_WRITE_FLAG)
+			{
+				return;
+			}
+			m_LockFlag.fetch_sub(1, std::memory_order_relaxed);
+		}
+	}
+
+	void UFastSpinLock::LeaveReadLock()
+	{
+		m_LockFlag.fetch_sub(1, std::memory_order_relaxed);
+	}
 }
