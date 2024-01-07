@@ -9,7 +9,12 @@ void Game::Init(HINSTANCE hInstance, HWND hWnd)
 
 void Game::Update()
 {
+	//2024-01-07 이성현
+	//Tool에서의 렌더링 과정을 RenderBegin과 RenderEnd 사이에 적용시키기 위한
+	//Render와 RenderBegin, RenderEnd의 분리.
+	gGameFrameWork->RenderBegin();
 	gGameFrameWork->Render();
+	gGameFrameWork->RenderEnd();
 }
 
 void Game::Destroy()

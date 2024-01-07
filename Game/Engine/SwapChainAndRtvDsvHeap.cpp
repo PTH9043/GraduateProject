@@ -15,9 +15,6 @@ void SwapChainAndRtvDsvHeap::InitSwapChainAndRtvDsvHeap(const ComPtr<IDXGIFactor
 	CreateSwapChain(_Factory, _Device, _CmdQueue, MsaaEnable, MsaaQualityLevels);
 
 	CreateDepthStencilView(_Device, MsaaEnable, MsaaQualityLevels);
-
-
-
 }
 
 void SwapChainAndRtvDsvHeap::ChangeSwapChainState(const ComPtr<ID3D12Device>& _Device)
@@ -124,10 +121,7 @@ void SwapChainAndRtvDsvHeap::CreateRtvAndDsvDescriptorHeaps(const ComPtr<ID3D12D
 	d3dDescriptorHeapDesc.NumDescriptors = 1;
 	d3dDescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
 	DX::ThrowIfFailed(_Device->CreateDescriptorHeap(&d3dDescriptorHeapDesc, IID_PPV_ARGS(&m_pd3dDsvDescriptorHeap)));
-
-
 }
-
 
 void SwapChainAndRtvDsvHeap::CreateSwapChain(const ComPtr<IDXGIFactory4>& _Factory, const ComPtr<ID3D12Device>& _Device, const ComPtr< ID3D12CommandQueue>& _CmdQueue, bool MssaaEnable, uint16 MsaaQualityLevels)
 {

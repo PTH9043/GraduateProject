@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="main">
+      <UniqueIdentifier>{f21bdaf7-e663-4372-8e2a-3211e3c86e80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="main\Default">
+      <UniqueIdentifier>{0c3d1955-71ee-4468-a049-61d985276ae3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="main\Default\Resources">
+      <UniqueIdentifier>{c68d1a61-89e3-4661-9019-7d557d756f71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="main\Imgui">
+      <UniqueIdentifier>{8ae8dc19-e177-4ef8-969f-7087e9b85e58}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Imgui\imgui.cpp">
+      <Filter>main\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui_demo.cpp">
+      <Filter>main\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui_draw.cpp">
+      <Filter>main\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui_impl_dx12.cpp">
+      <Filter>main\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui_impl_win32.cpp">
+      <Filter>main\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui_tables.cpp">
+      <Filter>main\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui_widgets.cpp">
+      <Filter>main\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Tool.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="ToolInstance.cpp">
+      <Filter>main\Default</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>main\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>main\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>main\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="Tool.h">
+      <Filter>main\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolInstance.h">
+      <Filter>main\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imconfig.h">
+      <Filter>main\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imgui.h">
+      <Filter>main\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imgui_impl_dx12.h">
+      <Filter>main\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imgui_impl_win32.h">
+      <Filter>main\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imgui_internal.h">
+      <Filter>main\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imstb_rectpack.h">
+      <Filter>main\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imstb_textedit.h">
+      <Filter>main\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imstb_truetype.h">
+      <Filter>main\Imgui</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>main\Default\Resources</Filter>
+    </Image>
+    <Image Include="Tool.ico">
+      <Filter>main\Default\Resources</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Tool.rc">
+      <Filter>main\Default\Resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

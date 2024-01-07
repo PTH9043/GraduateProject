@@ -6,9 +6,6 @@
 
 bool Engine::OnCreate(HINSTANCE hInstance, HWND hMainWnd)
 {
-
-	
-
 	for (int i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)m_spCommandQueue->m_nFenceValues[i] = 0;
 	m_pScene = NULL;
 
@@ -80,24 +77,19 @@ void Engine::RenderBegin()
 void Engine::RenderEnd()
 {
 	m_spCommandQueue->RenderEnd();
+	m_GameTimer.GetFrameRate(m_pszFrameRate + 12, 37);
+	::SetWindowText(m_spSwapChainAndRtvDsvHeap->m_hWnd, m_pszFrameRate);
 }
 
 void Engine::Render() {
+	//2024-01-07 이성현
+	//Tool에서의 렌더링 과정을 RenderBegin과 RenderEnd 사이에 적용시키기 위한
+	//Render와 RenderBegin, RenderEnd의 분리.
 	m_GameTimer.Tick(0.0f);
-
 	ProcessInput();
 	AnimateObjects();
 
-	RenderBegin();
-
 	if (m_pScene)m_pScene->Render(m_spCommandQueue->GetCmdList().Get(), m_pCamera);
-	
-	//TODO
-
-
-	RenderEnd();
-	m_GameTimer.GetFrameRate(m_pszFrameRate + 12, 37);
-	::SetWindowText(m_spSwapChainAndRtvDsvHeap->m_hWnd, m_pszFrameRate);
 }
 
 
