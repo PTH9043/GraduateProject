@@ -21,6 +21,7 @@ namespace Core {
 
 	void UService::LeaveService(const SESSIONID _SessionID)
 	{
+		auto iter = Aws::GameLift::Server::InitSDK();
 	}
 
 	void UService::InsertSession(SESSIONID _SessionID, SHPTR<USession> _spSession)
