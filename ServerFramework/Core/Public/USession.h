@@ -8,7 +8,7 @@ BEGIN(Core)
 class UService;
 
 /*
-@ Date: 2023-01-05, Writer: 박태현
+@ Date: 2023-01-06, Writer: 박태현
 @ Explain
 - 클라이언트와 통신하기 위한 Session 클래스이고 가상함수로 Server 솔루션에서 해당 클래스를 부모로 자식 클래스를 
 정의해주어야 한다.
@@ -79,7 +79,7 @@ private:
 	SESSIONID						m_ID;
 	SESSIONTYPE				m_SessionType;
 	TCPSOCKET					m_TcpSocket;
-	ATOMIC<_llong>			m_CurBuffuerLocation;
+	_llong								m_CurBuffuerLocation;
 	// Buffer 모음
 	TOTALBUFFER				m_TotalBuffer;
 	BUFFER							m_SendBuffer;

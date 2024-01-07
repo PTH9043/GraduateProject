@@ -53,8 +53,6 @@
 #endif
 
 #define GAMELIFT_USE_STD
-
-#include <aws/gamelift/model/GameServer.h>
 #include <aws/gamelift/server/GameLiftServerAPI.h>
 
 #include <iostream>

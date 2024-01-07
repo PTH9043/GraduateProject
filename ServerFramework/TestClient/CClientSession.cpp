@@ -105,7 +105,7 @@ _bool CClientSession::ProcessPacket(_char* _pPacket, const Core::PACKETHEAD& _Pa
 	{
 		SC_CHECKLOGIN Login;
 		Login.ParseFromArray(_pPacket, static_cast<_int>(_PacketHead.PacketSize));
-	//	std::cout << Login.id() << "\n";
+		std::cout << Login.id() << "\n";
 	}
 		break;
 	}

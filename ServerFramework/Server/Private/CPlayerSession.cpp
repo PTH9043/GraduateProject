@@ -89,7 +89,7 @@ namespace Server {
 		{
 			CS_LOGIN Login;
 			Login.ParseFromArray(_pPacket, static_cast<_int>(_PacketHead.PacketSize));
-	//		std::cout << Login.user_name() << "\n";
+			std::cout << Login.user_name() << "\n";
 		}
 		{
 			// Remove Object а╤гу 
