@@ -50,6 +50,9 @@ void DeviceAndFactory::CreateDirect3DDevice()
 	m_nMsaa4xQualityLevels = d3dMsaaQualityLevels.NumQualityLevels;
 	//디바이스가 지원하는 다중 샘플의 품질 수준을 확인한다. 
 	m_bMsaa4xEnable = (m_nMsaa4xQualityLevels > 1) ? true : false;
-	//다중 샘플의 품질 수준이 1보다 크면 다중 샘플링을 활성화한다. 
+	//다중 샘플의 품질 수준이 1보다 크면 다중 샘플링을 활성화한다.
+	::gnCbvSrvDescriptorIncrementSize = m_cpd3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	::gnRtvDescriptorIncrementSize = m_cpd3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	::gnDsvDescriptorIncrementSize = m_cpd3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 }
 //-----------------------------------------

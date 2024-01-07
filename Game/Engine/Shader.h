@@ -46,3 +46,14 @@ public:
 
 	virtual void CreateShader(const wstring& shaderFile, const string& vs, const string& ps, const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12RootSignature>& _RootSignature);
 };
+
+class CTexturedModelShader : public CShader
+{
+public:
+	CTexturedModelShader();
+	virtual ~CTexturedModelShader();
+	virtual D3D12_INPUT_LAYOUT_DESC CreateInputLayout();
+
+	virtual void CreateShader(const wstring& shaderFile, const string& vs, const string& ps, const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12RootSignature>& _RootSignature);
+
+};

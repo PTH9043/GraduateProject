@@ -3,16 +3,7 @@
 #define FRAME_BUFFER_WIDTH 800
 #define FRAME_BUFFER_HEIGHT 600
 //#define _WITH_SWAPCHAIN_FULLSCREEN_STATE
-//--------------
-using int8 = __int8;
-using int16 = __int16;
-using int32 = __int32;
-using int64 = __int64;
-using uint8 = unsigned __int8;
-using uint16 = unsigned __int16;
-using uint32 = unsigned __int32;
-using uint64 = unsigned __int64;
-//------------------------------
+
 
 enum
 {
@@ -27,11 +18,19 @@ enum
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "dxguid.lib")
 
+#include <stdlib.h>
+#include <malloc.h>
+#include <memory.h>
 #include <tchar.h>
-#include <memory>
-#include <string>
-#include <vector>
+#include <math.h>
 #include <array>
+#include <vector>
+#include <random>
+#include <string>
+#include <wrl.h>
+#include <shellapi.h>
+#include <fstream>
+#include <string>
 #include <list>
 #include <map>
 using namespace std;
@@ -69,6 +68,22 @@ using Microsoft::WRL::ComPtr;
 extern unique_ptr<class Engine> gGameFrameWork;
 
 
+//--------------
+using int8 = __int8;
+using int16 = __int16;
+using int32 = __int32;
+using int64 = __int64;
+using uint8 = unsigned __int8;
+using uint16 = unsigned __int16;
+using uint32 = unsigned __int32;
+using uint64 = unsigned __int64;
+//------------------------------
+
+extern UINT gnCbvSrvDescriptorIncrementSize;
+extern UINT	gnRtvDescriptorIncrementSize;
+extern UINT gnDsvDescriptorIncrementSize;
+//--
+
 #define RANDOM_COLOR XMFLOAT4(rand() / float(RAND_MAX), rand() / float(RAND_MAX), rand() / float(RAND_MAX), rand() / float(RAND_MAX))
 
 namespace Util {
@@ -78,8 +93,14 @@ namespace Util {
 		D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, ID3D12Resource** ppd3dUploadBuffer =
 		NULL);
 
-	/*extern 	ComPtr<ID3D12Resource> CreateBufferResource(const ComPtr<ID3D12Device>& device, const ComPtr<ID3D12GraphicsCommandList>& commandList,
-		const void* data, UINT sizePerData, UINT dataCount, D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, ID3D12Resource** uploadBuffer = nullptr);*/
+	extern ComPtr<ID3D12Resource> CreateTextureResourceFromDDSFile(const ComPtr<ID3D12Device>& _Device, wchar_t* pszFileName, ID3D12Resource** ppd3dUploadBuffer, D3D12_RESOURCE_STATES d3dResourceStates = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+	extern ComPtr<ID3D12Resource> CreateTextureResourceFromWICFile(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, wchar_t* pszFileName, ID3D12Resource** ppd3dUploadBuffer, D3D12_RESOURCE_STATES d3dResourceStates = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+	extern ComPtr<ID3D12Resource> CreateTexture2DResource(const ComPtr<ID3D12Device>& _Device,
+		const ComPtr<ID3D12GraphicsCommandList>& _CommandList, UINT nWidth, UINT nHeight, UINT nElements, UINT nMipLevels, DXGI_FORMAT dxgiFormat, D3D12_RESOURCE_FLAGS d3dResourceFlags, D3D12_RESOURCE_STATES d3dResourceStates, D3D12_CLEAR_VALUE* pd3dClearValue);
+
+
+	extern 	ComPtr<ID3D12Resource> CreateBufferResource(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList,
+		const void* pData, UINT sizePerData, UINT dataCount, D3D12_HEAP_TYPE d3dHeapType, D3D12_RESOURCE_STATES d3dResourceStates, ID3D12Resource** ppd3dUploadBuffer = nullptr);
 
 	extern void SynchronizeResourceTransition(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, ComPtr<ID3D12Resource> pd3dResource, D3D12_RESOURCE_STATES d3dStateBefore, D3D12_RESOURCE_STATES d3dStateAfter);
 	extern void ExecuteCommandList(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, const ComPtr<ID3D12CommandQueue>& _CmdQueue, const ComPtr<ID3D12Fence>& _Fence, UINT64 nFenceValue, HANDLE hFenceEvent);

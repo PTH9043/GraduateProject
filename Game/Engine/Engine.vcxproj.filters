@@ -22,6 +22,15 @@
     <Filter Include="Components">
       <UniqueIdentifier>{d25cd843-011c-4387-a399-0ab643c41c8d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Mesh">
+      <UniqueIdentifier>{e20c38ed-49a1-487c-880b-50ac15ad9756}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DescriptorHeap">
+      <UniqueIdentifier>{ce82851a-3933-4d4f-a293-2781cfdc4fd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject">
+      <UniqueIdentifier>{b80b9861-1252-486e-8cdb-d3a7b8f1c3b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WICTextureLoader12.h">
@@ -51,12 +60,6 @@
     <ClInclude Include="Camera.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -74,6 +77,27 @@
     </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex.h">
+      <Filter>Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureModelMesh.h">
+      <Filter>Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="CbvSrvUavDescriptorHeap.h">
+      <Filter>DescriptorHeap</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>GameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -107,12 +131,6 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Components</Filter>
     </ClCompile>
@@ -124,6 +142,27 @@
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Vertex.cpp">
+      <Filter>Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureModelMesh.cpp">
+      <Filter>Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="CbvSrvUavDescriptorHeap.cpp">
+      <Filter>DescriptorHeap</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>GameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
