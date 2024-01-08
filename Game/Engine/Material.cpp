@@ -23,10 +23,15 @@ void CMaterial::ReleaseUploadBuffers()
 {
 	if (m_pTexture) m_pTexture->ReleaseUploadBuffers();
 }
-void CMaterial::UpdateShaderVariables(ComPtr<ID3D12GraphicsCommandList> _CommandList)
+void CMaterial::UpdateShaderVariables(const ComPtr<ID3D12GraphicsCommandList>& _CommandList)
 {
 	if (m_pTexture) m_pTexture->UpdateShaderVariables(_CommandList);
-	_CommandList->SetGraphicsRoot32BitConstants(0, 1, &m_nType, 32);
+
+	/*_CommandList->SetGraphicsRoot32BitConstants(1, 4, &m_xmf4AmbientColor, 16);
+	_CommandList->SetGraphicsRoot32BitConstants(1, 4, &m_xmf4AlbedoColor, 20);
+	_CommandList->SetGraphicsRoot32BitConstants(1, 4, &m_xmf4SpecularColor, 24);
+	_CommandList->SetGraphicsRoot32BitConstants(1, 4, &m_xmf4EmissiveColor, 28);*/
+	_CommandList->SetGraphicsRoot32BitConstants(1, 1, &m_nType, 16);
 }
 
 void CMaterial::ReleaseShaderVariables()

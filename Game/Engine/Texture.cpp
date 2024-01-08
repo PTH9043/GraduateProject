@@ -1,8 +1,7 @@
 #include "pch.h"
 #include "Texture.h"
-#include "Shader.h"
 #include "GameObject.h"
-#include "CbvSrvUavDescriptorHeap.h"
+#include "Scene.h"
 
 
 
@@ -63,7 +62,7 @@ void CTexture::SetSampler(int nIndex, D3D12_GPU_DESCRIPTOR_HANDLE d3dSamplerGpuD
 	m_pd3dSamplerGpuDescriptorHandles[nIndex] = d3dSamplerGpuDescriptorHandle;
 }
 
-void CTexture::UpdateShaderVariables(ComPtr<ID3D12GraphicsCommandList> _CommandList)
+void CTexture::UpdateShaderVariables(const ComPtr<ID3D12GraphicsCommandList>& _CommandList)
 {
 	if (m_nRootParameters == m_nTextures)
 	{
@@ -81,7 +80,7 @@ void CTexture::UpdateShaderVariables(ComPtr<ID3D12GraphicsCommandList> _CommandL
 
 
 
-void CTexture::UpdateShaderVariable(ComPtr<ID3D12GraphicsCommandList> _CommandList, int nParameterIndex, int nTextureIndex)
+void CTexture::UpdateShaderVariable(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, int nParameterIndex, int nTextureIndex)
 {
 	_CommandList->SetGraphicsRootDescriptorTable(m_pnRootParameterIndices[nParameterIndex], m_pd3dSrvGpuDescriptorHandles[nTextureIndex]);
 }
@@ -99,30 +98,32 @@ void CTexture::ReleaseUploadBuffers()
 	}
 }
 
-void CTexture::LoadTextureFromDDSFile(ComPtr<ID3D12Device> _Device, ComPtr<ID3D12GraphicsCommandList> _CommandList, wchar_t* pszFileName, UINT nResourceType, UINT nIndex)
+void CTexture::LoadTextureFromDDSFile(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, wchar_t* pszFileName, UINT nResourceType, UINT nIndex)
 {
 	m_pnResourceTypes[nIndex] = nResourceType;
-	m_ppd3dTextures[nIndex] = Util::CreateTextureResourceFromDDSFile(_Device, pszFileName, &m_ppd3dTextureUploadBuffers[nIndex], D3D12_RESOURCE_STATE_GENERIC_READ/*D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE*/);
+	m_ppd3dTextures[nIndex] = CreateTextureResourceFromDDSFile(_Device.Get(),_CommandList.Get(), pszFileName, &m_ppd3dTextureUploadBuffers[nIndex], D3D12_RESOURCE_STATE_GENERIC_READ/*D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE*/);
+	m_ppstrTextureNames[nIndex] = pszFileName;
 }
 
-ComPtr<ID3D12Resource> CTexture::CreateTexture(ComPtr<ID3D12Device> _Device, ComPtr<ID3D12GraphicsCommandList> _CommandList, UINT nIndex, UINT nResourceType, UINT nWidth, UINT nHeight, UINT nElements, UINT nMipLevels, DXGI_FORMAT dxgiFormat, D3D12_RESOURCE_FLAGS d3dResourceFlags, D3D12_RESOURCE_STATES d3dResourceStates, D3D12_CLEAR_VALUE* pd3dClearValue)
+ComPtr<ID3D12Resource> CTexture::CreateTexture(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, UINT nIndex, UINT nResourceType, UINT nWidth, UINT nHeight, UINT nElements, UINT nMipLevels, DXGI_FORMAT dxgiFormat, D3D12_RESOURCE_FLAGS d3dResourceFlags, D3D12_RESOURCE_STATES d3dResourceStates, D3D12_CLEAR_VALUE* pd3dClearValue)
+{
+	m_pnResourceTypes[nIndex] = nResourceType;
+	m_ppd3dTextures[nIndex] = Util::CreateTexture2DResource(_Device, _CommandList, nWidth, nHeight, nElements, nMipLevels, dxgiFormat, d3dResourceFlags, d3dResourceStates, pd3dClearValue);
+
+	return(m_ppd3dTextures[nIndex]);
+}
+
+ComPtr<ID3D12Resource> CTexture::CreateTexture(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, UINT nWidth, UINT nHeight, UINT nElements, UINT nMipLevels, DXGI_FORMAT dxgiFormat, D3D12_RESOURCE_FLAGS d3dResourceFlags, D3D12_RESOURCE_STATES d3dResourceStates, D3D12_CLEAR_VALUE* pd3dClearValue, UINT nResourceType, UINT nIndex)
 {
 	m_pnResourceTypes[nIndex] = nResourceType;
 	m_ppd3dTextures[nIndex] = Util::CreateTexture2DResource(_Device, _CommandList, nWidth, nHeight, nElements, nMipLevels, dxgiFormat, d3dResourceFlags, d3dResourceStates, pd3dClearValue);
 	return(m_ppd3dTextures[nIndex].Get());
 }
 
-ComPtr<ID3D12Resource> CTexture::CreateTexture(ComPtr<ID3D12Device> _Device, ComPtr<ID3D12GraphicsCommandList> _CommandList, UINT nWidth, UINT nHeight, UINT nElements, UINT nMipLevels, DXGI_FORMAT dxgiFormat, D3D12_RESOURCE_FLAGS d3dResourceFlags, D3D12_RESOURCE_STATES d3dResourceStates, D3D12_CLEAR_VALUE* pd3dClearValue, UINT nResourceType, UINT nIndex)
-{
-	m_pnResourceTypes[nIndex] = nResourceType;
-	m_ppd3dTextures[nIndex] = Util::CreateTexture2DResource(_Device, _CommandList, nWidth, nHeight, nElements, nMipLevels, dxgiFormat, d3dResourceFlags, d3dResourceStates, pd3dClearValue);
-	return(m_ppd3dTextures[nIndex].Get());
-}
 
 
 
-
-int CTexture::LoadTextureFromFile(ComPtr<ID3D12Device> _Device, ComPtr<ID3D12GraphicsCommandList> _CommandList, CGameObject* pParent, FILE* pInFile, CShader* pShader, UINT nIndex)
+int CTexture::LoadTextureFromFile(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, CGameObject* pParent, FILE* pInFile, shared_ptr<CShader> pShader, UINT nIndex)
 {
 	char pstrTextureName[64] = { '\0' };
 
@@ -159,7 +160,7 @@ int CTexture::LoadTextureFromFile(ComPtr<ID3D12Device> _Device, ComPtr<ID3D12Gra
 		if (!bDuplicated)
 		{
 			LoadTextureFromDDSFile(_Device, _CommandList, m_ppstrTextureNames[nIndex].data(), RESOURCE_TEXTURE2D, nIndex);
-			CbvSrvUavDescriptorHeap::CreateShaderResourceView(_Device, this, nIndex);
+			CScene::CreateShaderResourceView(_Device, this, nIndex);
 #ifdef _WITH_STANDARD_TEXTURE_MULTIPLE_DESCRIPTORS
 			m_pnRootParameterIndices[nIndex] = PARAMETER_STANDARD_TEXTURE + nIndex;
 #endif
@@ -182,10 +183,10 @@ int CTexture::LoadTextureFromFile(ComPtr<ID3D12Device> _Device, ComPtr<ID3D12Gra
 					m_pnRootParameterIndices[nIndex] = nParameterIndex;
 				}
 			}
-			else {
+			/*else {
 				LoadTextureFromDDSFile(_Device, _CommandList, m_ppstrTextureNames[nIndex].data(), RESOURCE_TEXTURE2D, nIndex);
-				CbvSrvUavDescriptorHeap::CreateShaderResourceView(_Device, this, nIndex);
-			}
+				CScene::CreateShaderResourceView(_Device, this, nIndex);
+			}*/
 		}
 	}
 	return(bLoaded);

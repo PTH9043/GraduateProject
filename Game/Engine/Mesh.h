@@ -75,15 +75,16 @@ public:
 	virtual void IASetBeforeRender(const ComPtr<ID3D12GraphicsCommandList>& _CommandList);
 	virtual void RenderMesh(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, UINT _nSubset);
 	virtual void RenderMesh_OneIndexBuffer(const ComPtr<ID3D12GraphicsCommandList>& _CommandList);
+	UINT GetType() { return(m_nType); }
 };
 
 //
-//class CTriangleMesh : public CMesh
-//{
-//public:
-//	CTriangleMesh(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList);
-//	virtual ~CTriangleMesh() { }
-//};
+class CTriangleMesh : public CMesh
+{
+public:
+	CTriangleMesh(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList);
+	virtual ~CTriangleMesh() { }
+};
 //
 //class CCubeMeshDiffused : public CMesh
 //{

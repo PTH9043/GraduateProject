@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "Camera.h"
+#include "Player.h"
+#include "Shader.h"
 
 CCamera::CCamera() {
 	m_xmf4x4View = Matrix4x4::Identity();
@@ -43,20 +45,35 @@ void CCamera::GenerateViewMatrix(XMFLOAT3 xmf3Position, XMFLOAT3 xmf3LookAt, XMF
 }
 void CCamera::CreateShaderVariables(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList)
 {
+	//UINT ncbElementBytes = ((sizeof(VS_CB_CAMERA_INFO) + 255) & ~255); //256의 배수
+	//m_pd3dcbCamera = CreateBufferResource(_Device.Get(), _CommandList.Get(), NULL, ncbElementBytes, D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, NULL);
+
+	//m_pd3dcbCamera->Map(0, NULL, (void**)&m_pcbMappedCamera);
 }
 void CCamera::UpdateShaderVariables(const ComPtr<ID3D12GraphicsCommandList>& _CommandList)
 {
+	//XMStoreFloat4x4(&m_pcbMappedCamera->m_xmf4x4View, XMMatrixTranspose(XMLoadFloat4x4(&m_xmf4x4View)));
+	//XMStoreFloat4x4(&m_pcbMappedCamera->m_xmf4x4Projection, XMMatrixTranspose(XMLoadFloat4x4(&m_xmf4x4Projection)));
+
+	//D3D12_GPU_VIRTUAL_ADDRESS d3dGpuVirtualAddress = m_pd3dcbCamera->GetGPUVirtualAddress();
+	//_CommandList->SetGraphicsRootConstantBufferView(0, d3dGpuVirtualAddress);
+
+	
 	XMFLOAT4X4 xmf4x4View;
-	XMStoreFloat4x4(&xmf4x4View, XMMatrixTranspose(XMLoadFloat4x4(&m_xmf4x4View)));
-	//루트 파라메터 인덱스 1의
-	_CommandList->SetGraphicsRoot32BitConstants(1, 16, &xmf4x4View, 0);
 	XMFLOAT4X4 xmf4x4Projection;
-	XMStoreFloat4x4(&xmf4x4Projection,
-		XMMatrixTranspose(XMLoadFloat4x4(&m_xmf4x4Projection)));
-	_CommandList->SetGraphicsRoot32BitConstants(1, 16, &xmf4x4Projection, 16);
+	XMStoreFloat4x4(&xmf4x4View, XMMatrixTranspose(XMLoadFloat4x4(&m_xmf4x4View)));
+	XMStoreFloat4x4(&xmf4x4Projection, XMMatrixTranspose(XMLoadFloat4x4(&m_xmf4x4Projection)));
+	_CommandList->SetGraphicsRoot32BitConstants(0, 16, &xmf4x4View, 0);
+	_CommandList->SetGraphicsRoot32BitConstants(0, 16, &xmf4x4Projection, 16);
+
 }
 void CCamera::ReleaseShaderVariables()
 {
+	if (m_pd3dcbCamera)
+	{
+		m_pd3dcbCamera->Unmap(0, NULL);
+		//m_pd3dcbCamera->Release();
+	}
 }
 void CCamera::SetViewportsAndScissorRects(const ComPtr<ID3D12GraphicsCommandList>& _CommandList)
 {

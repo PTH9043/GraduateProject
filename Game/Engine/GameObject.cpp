@@ -5,11 +5,6 @@
 #include "Material.h"
 #include "TextureModelMesh.h"
 
-void CMaterial::ReleaseShaderVariables()
-{
-	if (m_pShader) m_pShader->ReleaseShaderVariables();
-	if (m_pTexture) m_pTexture->ReleaseShaderVariables();
-}
 
 CGameObject::CGameObject()
 {
@@ -109,14 +104,14 @@ CGameObject* CGameObject::FindFrame(char* pstrFrameName)
 	return(NULL);
 }
 
-void CGameObject::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera)
+void CGameObject::Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, CCamera* pCamera)
 {
 	if (!m_bActive) return;
 
 
 
 
-	UpdateShaderVariables(pd3dCommandList);
+	UpdateShaderVariables(_CommandList);
 
 
 
@@ -126,30 +121,30 @@ void CGameObject::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pC
 		{
 			if (m_ppMaterials[i])
 			{
-				if (m_ppMaterials[i]->m_pShader) m_ppMaterials[i]->m_pShader->Render(pd3dCommandList, pCamera);
-				m_ppMaterials[i]->UpdateShaderVariables(pd3dCommandList);
+				if (m_ppMaterials[i]->m_pShader) m_ppMaterials[i]->m_pShader->Render(_CommandList, pCamera);
+				m_ppMaterials[i]->UpdateShaderVariables(_CommandList);
 			}
 
-			if (m_pMesh) m_pMesh->RenderMesh(pd3dCommandList, i);
+			if (m_pMesh) m_pMesh->RenderMesh(_CommandList, i);
 		
 		}
 	}
-	if (m_pSibling) m_pSibling->Render(pd3dCommandList, pCamera);
-	if (m_pChild) m_pChild->Render(pd3dCommandList, pCamera);
+	if (m_pSibling) m_pSibling->Render(_CommandList, pCamera);
+	if (m_pChild) m_pChild->Render(_CommandList, pCamera);
 }
 
 
-void CGameObject::CreateShaderVariables(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)
+void CGameObject::CreateShaderVariables(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList)
 {
 
 }
 
-void CGameObject::UpdateShaderVariables(ID3D12GraphicsCommandList* pd3dCommandList)
+void CGameObject::UpdateShaderVariables(const ComPtr<ID3D12GraphicsCommandList>& _CommandList)
 {
 	
 		XMFLOAT4X4 xmf4x4World;
 		XMStoreFloat4x4(&xmf4x4World, XMMatrixTranspose(XMLoadFloat4x4(&m_xmf4x4World)));
-		pd3dCommandList->SetGraphicsRoot32BitConstants(1, 16, &xmf4x4World, 0);
+		_CommandList->SetGraphicsRoot32BitConstants(1, 16, &xmf4x4World, 0);
 	
 }
 
@@ -290,7 +285,7 @@ int CGameObject::FindReplicatedTexture(_TCHAR* pstrTextureName, D3D12_GPU_DESCRI
 	return(nParameterIndex);
 }
 
-void CGameObject::LoadMaterialsFromFile(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, CGameObject* pParent, FILE* pInFile, CShader* pShader)
+void CGameObject::LoadMaterialsFromFile(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, CGameObject* pParent, FILE* pInFile, shared_ptr<CShader> pShader)
 {
 	char pstrToken[64] = { '\0' };
 
@@ -320,7 +315,7 @@ void CGameObject::LoadMaterialsFromFile(ID3D12Device* pd3dDevice, ID3D12Graphics
 			pTexture = new CTexture(7, RESOURCE_TEXTURE2D, 0, 7); //0:Albedo, 1:Specular, 2:Metallic, 3:Normal, 4:Emission, 5:DetailAlbedo, 6:DetailNormal
 #else
 			pTexture = make_shared<CTexture>(7, RESOURCE_TEXTURE2D, 0, 1); //0:Albedo, 1:Specular, 2:Metallic, 3:Normal, 4:Emission, 5:DetailAlbedo, 6:DetailNormal
-			pTexture->SetRootParameterIndex(0, 3);
+			pTexture->SetRootParameterIndex(0, 2);
 #endif
 			pMaterial->SetTexture(pTexture);
 			//			pMaterial->SetShader(pShader);
@@ -363,31 +358,31 @@ void CGameObject::LoadMaterialsFromFile(ID3D12Device* pd3dDevice, ID3D12Graphics
 		}
 		else if (!strcmp(pstrToken, "<AlbedoMap>:"))
 		{
-			if (pTexture->LoadTextureFromFile(pd3dDevice, pd3dCommandList, pParent, pInFile, pShader, 0)) pMaterial->SetMaterialType(MATERIAL_ALBEDO_MAP);
+			if (pTexture->LoadTextureFromFile(_Device, _CommandList, pParent, pInFile, pShader, 0)) pMaterial->SetMaterialType(MATERIAL_ALBEDO_MAP);
 		}
 		else if (!strcmp(pstrToken, "<SpecularMap>:"))
 		{
-			if (pTexture->LoadTextureFromFile(pd3dDevice, pd3dCommandList, pParent, pInFile, pShader, 1)) pMaterial->SetMaterialType(MATERIAL_SPECULAR_MAP);
+			if (pTexture->LoadTextureFromFile(_Device, _CommandList, pParent, pInFile, pShader, 1)) pMaterial->SetMaterialType(MATERIAL_SPECULAR_MAP);
 		}
 		else if (!strcmp(pstrToken, "<NormalMap>:"))
 		{
-			if (pTexture->LoadTextureFromFile(pd3dDevice, pd3dCommandList, pParent, pInFile, pShader, 2)) pMaterial->SetMaterialType(MATERIAL_NORMAL_MAP);
+			if (pTexture->LoadTextureFromFile(_Device, _CommandList, pParent, pInFile, pShader, 2)) pMaterial->SetMaterialType(MATERIAL_NORMAL_MAP);
 		}
 		else if (!strcmp(pstrToken, "<MetallicMap>:"))
 		{
-			if (pTexture->LoadTextureFromFile(pd3dDevice, pd3dCommandList, pParent, pInFile, pShader, 3)) pMaterial->SetMaterialType(MATERIAL_METALLIC_MAP);
+			if (pTexture->LoadTextureFromFile(_Device, _CommandList, pParent, pInFile, pShader, 3)) pMaterial->SetMaterialType(MATERIAL_METALLIC_MAP);
 		}
 		else if (!strcmp(pstrToken, "<EmissionMap>:"))
 		{
-			if (pTexture->LoadTextureFromFile(pd3dDevice, pd3dCommandList, pParent, pInFile, pShader, 4)) pMaterial->SetMaterialType(MATERIAL_EMISSION_MAP);
+			if (pTexture->LoadTextureFromFile(_Device, _CommandList, pParent, pInFile, pShader, 4)) pMaterial->SetMaterialType(MATERIAL_EMISSION_MAP);
 		}
 		else if (!strcmp(pstrToken, "<DetailAlbedoMap>:"))
 		{
-			if (pTexture->LoadTextureFromFile(pd3dDevice, pd3dCommandList, pParent, pInFile, pShader, 5)) pMaterial->SetMaterialType(MATERIAL_DETAIL_ALBEDO_MAP);
+			if (pTexture->LoadTextureFromFile(_Device, _CommandList, pParent, pInFile, pShader, 5)) pMaterial->SetMaterialType(MATERIAL_DETAIL_ALBEDO_MAP);
 		}
 		else if (!strcmp(pstrToken, "<DetailNormalMap>:"))
 		{
-			if (pTexture->LoadTextureFromFile(pd3dDevice, pd3dCommandList, pParent, pInFile, pShader, 6)) pMaterial->SetMaterialType(MATERIAL_DETAIL_NORMAL_MAP);
+			if (pTexture->LoadTextureFromFile(_Device, _CommandList, pParent, pInFile, pShader, 6)) pMaterial->SetMaterialType(MATERIAL_DETAIL_NORMAL_MAP);
 		}
 		else if (!strcmp(pstrToken, "</Materials>"))
 		{
@@ -396,7 +391,7 @@ void CGameObject::LoadMaterialsFromFile(ID3D12Device* pd3dDevice, ID3D12Graphics
 	}
 }
 
-CGameObject* CGameObject::LoadFrameHierarchyFromFile(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, ID3D12RootSignature* pd3dGraphicsRootSignature, CGameObject* pParent, FILE* pInFile, CShader* pShader)
+void CGameObject::LoadFrameHierarchyFromFile(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, ID3D12RootSignature* pd3dGraphicsRootSignature, CGameObject* pParent, FILE* pInFile, shared_ptr<CShader> pShader)
 {
 	char pstrToken[64] = { '\0' };
 
@@ -405,7 +400,7 @@ CGameObject* CGameObject::LoadFrameHierarchyFromFile(ID3D12Device* pd3dDevice, I
 
 	int nFrame = 0, nTextures = 0;
 
-	CGameObject* pGameObject = NULL;
+	
 
 	for (; ; )
 	{
@@ -415,14 +410,14 @@ CGameObject* CGameObject::LoadFrameHierarchyFromFile(ID3D12Device* pd3dDevice, I
 
 		if (!strcmp(pstrToken, "<Frame>:"))
 		{
-			pGameObject = new CGameObject();
+			
 
 			nReads = (UINT)::fread(&nFrame, sizeof(int), 1, pInFile);
 			nReads = (UINT)::fread(&nTextures, sizeof(int), 1, pInFile);
 
 			nReads = (UINT)::fread(&nStrLength, sizeof(BYTE), 1, pInFile);
-			nReads = (UINT)::fread(pGameObject->m_pstrFrameName, sizeof(char), nStrLength, pInFile);
-			pGameObject->m_pstrFrameName[nStrLength] = '\0';
+			nReads = (UINT)::fread(m_pstrFrameName, sizeof(char), nStrLength, pInFile);
+			m_pstrFrameName[nStrLength] = '\0';
 		}
 		else if (!strcmp(pstrToken, "<Transform>:"))
 		{
@@ -435,17 +430,17 @@ CGameObject* CGameObject::LoadFrameHierarchyFromFile(ID3D12Device* pd3dDevice, I
 		}
 		else if (!strcmp(pstrToken, "<TransformMatrix>:"))
 		{
-			nReads = (UINT)::fread(&pGameObject->m_xmf4x4Transform, sizeof(float), 16, pInFile);
+			nReads = (UINT)::fread(&m_xmf4x4Transform, sizeof(float), 16, pInFile);
 		}
 		else if (!strcmp(pstrToken, "<Mesh>:"))
 		{
-			shared_ptr<TextureModelMesh>pMesh = make_shared<TextureModelMesh>(pd3dDevice, pd3dCommandList);
-			pMesh->LoadMeshFromFile(pd3dDevice, pd3dCommandList, pInFile);
-			pGameObject->SetMesh(pMesh);
+			shared_ptr<TextureModelMesh>pMesh = make_shared<TextureModelMesh>(_Device, _CommandList);
+			pMesh->LoadMeshFromFile(_Device, _CommandList, pInFile);
+			SetMesh(pMesh);
 		}
 		else if (!strcmp(pstrToken, "<Materials>:"))
 		{
-			pGameObject->LoadMaterialsFromFile(pd3dDevice, pd3dCommandList, pParent, pInFile, pShader);
+			LoadMaterialsFromFile(_Device, _CommandList, pParent, pInFile, pShader);
 		}
 		else if (!strcmp(pstrToken, "<Children>:"))
 		{
@@ -456,8 +451,8 @@ CGameObject* CGameObject::LoadFrameHierarchyFromFile(ID3D12Device* pd3dDevice, I
 				for (int i = 0; i < nChilds; i++)
 				{
 					std::shared_ptr<CGameObject> pChild = std::make_shared<CGameObject>();
-					pChild ->LoadFrameHierarchyFromFile(pd3dDevice, pd3dCommandList, pd3dGraphicsRootSignature, pGameObject, pInFile, pShader);
-					if (pChild) pGameObject->SetChild(pChild,false);
+					pChild ->LoadFrameHierarchyFromFile(_Device, _CommandList, pd3dGraphicsRootSignature, this, pInFile, pShader);
+					if (pChild) SetChild(pChild,false);
 #ifdef _WITH_DEBUG_FRAME_HIERARCHY
 					TCHAR pstrDebug[256] = { 0 };
 					_stprintf_s(pstrDebug, 256, _T("(Frame: %p) (Parent: %p)\n"), pChild, pGameObject);
@@ -471,7 +466,7 @@ CGameObject* CGameObject::LoadFrameHierarchyFromFile(ID3D12Device* pd3dDevice, I
 			break;
 		}
 	}
-	return(pGameObject);
+	
 }
 
 void CGameObject::PrintFrameInfo(shared_ptr<CGameObject> pGameObject, shared_ptr<CGameObject> pParent)
@@ -485,13 +480,14 @@ void CGameObject::PrintFrameInfo(shared_ptr<CGameObject> pGameObject, shared_ptr
 	if (pGameObject->m_pChild) CGameObject::PrintFrameInfo(pGameObject->m_pChild, pGameObject);
 }
 
-CGameObject* CGameObject::LoadGeometryFromFile(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, ID3D12RootSignature* pd3dGraphicsRootSignature, char* pstrFileName, CShader* pShader)
+shared_ptr<CGameObject> CGameObject::LoadGeometryFromFile(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, ID3D12RootSignature* pd3dGraphicsRootSignature, char* pstrFileName, shared_ptr<CShader> pShader)
 {
 	FILE* pInFile = NULL;
 	::fopen_s(&pInFile, pstrFileName, "rb");
 	::rewind(pInFile);
 
-	CGameObject* pGameObject = CGameObject::LoadFrameHierarchyFromFile(pd3dDevice, pd3dCommandList, pd3dGraphicsRootSignature, NULL, pInFile, pShader);
+	shared_ptr<CGameObject> pGameObject = make_shared<CGameObject>();
+	pGameObject->LoadFrameHierarchyFromFile(_Device, _CommandList, pd3dGraphicsRootSignature, NULL, pInFile, pShader);
 
 #ifdef _WITH_DEBUG_FRAME_HIERARCHY
 	TCHAR pstrDebug[256] = { 0 };

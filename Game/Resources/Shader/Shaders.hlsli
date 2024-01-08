@@ -7,17 +7,22 @@ struct MATERIAL
 	float4					m_cEmissive;
 };
 
-//게임 객체의 정보를 위한 상수 버퍼를 선언한다. 
-cbuffer cbGameObjectInfo : register(b0)
-{
-	matrix gmtxWorld : packoffset(c0);
-};
+
 //카메라의 정보를 위한 상수 버퍼를 선언한다. 
 cbuffer cbCameraInfo : register(b1)
 {
-	matrix gmtxView : packoffset(c0);
-	matrix gmtxProjection : packoffset(c4);
+	matrix		gmtxView : packoffset(c0);
+	matrix		gmtxProjection : packoffset(c4);
 };
+
+cbuffer cbGameObjectInfo : register(b2)
+{
+	matrix		gmtxGameObject : packoffset(c0);
+//	MATERIAL	gMaterial : packoffset(c4);
+	uint		gnTexturesMask : packoffset(c4);
+
+};
+
 //정점 셰이더의 입력을 위한 구조체를 선언한다. 
 
 #define MATERIAL_ALBEDO_MAP			0x01
@@ -28,19 +33,10 @@ cbuffer cbCameraInfo : register(b1)
 #define MATERIAL_DETAIL_ALBEDO_MAP	0x20
 #define MATERIAL_DETAIL_NORMAL_MAP	0x40
 
-#define _WITH_STANDARD_TEXTURE_MULTIPLE_DESCRIPTORS
 
-#ifdef _WITH_STANDARD_TEXTURE_MULTIPLE_DESCRIPTORS
-Texture2D gtxtAlbedoTexture : register(t6);
-Texture2D gtxtSpecularTexture : register(t7);
-Texture2D gtxtNormalTexture : register(t8);
-Texture2D gtxtMetallicTexture : register(t9);
-Texture2D gtxtEmissionTexture : register(t10);
-Texture2D gtxtDetailAlbedoTexture : register(t11);
-Texture2D gtxtDetailNormalTexture : register(t12);
-#else
+
 Texture2D gtxtStandardTextures[7] : register(t6);
-#endif
+
 
 SamplerState gssWrap : register(s0);
 
@@ -86,19 +82,12 @@ float4 PSStandard(VS_STANDARD_OUTPUT input) : SV_TARGET
 	float4 cMetallicColor = float4(0.0f, 0.0f, 0.0f, 1.0f);
 	float4 cEmissionColor = float4(0.0f, 0.0f, 0.0f, 1.0f);
 
-#ifdef _WITH_STANDARD_TEXTURE_MULTIPLE_DESCRIPTORS
-	if (gnTexturesMask & MATERIAL_ALBEDO_MAP) cAlbedoColor = gtxtAlbedoTexture.Sample(gssWrap, input.uv);
-	if (gnTexturesMask & MATERIAL_SPECULAR_MAP) cSpecularColor = gtxtSpecularTexture.Sample(gssWrap, input.uv);
-	if (gnTexturesMask & MATERIAL_NORMAL_MAP) cNormalColor = gtxtNormalTexture.Sample(gssWrap, input.uv);
-	if (gnTexturesMask & MATERIAL_METALLIC_MAP) cMetallicColor = gtxtMetallicTexture.Sample(gssWrap, input.uv);
-	if (gnTexturesMask & MATERIAL_EMISSION_MAP) cEmissionColor = gtxtEmissionTexture.Sample(gssWrap, input.uv);
-#else
+
 	if (gnTexturesMask & MATERIAL_ALBEDO_MAP) cAlbedoColor = gtxtStandardTextures[0].Sample(gssWrap, input.uv);
 	if (gnTexturesMask & MATERIAL_SPECULAR_MAP) cSpecularColor = gtxtStandardTextures[1].Sample(gssWrap, input.uv);
 	if (gnTexturesMask & MATERIAL_NORMAL_MAP) cNormalColor = gtxtStandardTextures[2].Sample(gssWrap, input.uv);
 	if (gnTexturesMask & MATERIAL_METALLIC_MAP) cMetallicColor = gtxtStandardTextures[3].Sample(gssWrap, input.uv);
 	if (gnTexturesMask & MATERIAL_EMISSION_MAP) cEmissionColor = gtxtStandardTextures[4].Sample(gssWrap, input.uv);
-#endif
 
 	float4 cIllumination = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	float4 cColor = cAlbedoColor + cSpecularColor + cEmissionColor;
@@ -119,3 +108,29 @@ float4 PSStandard(VS_STANDARD_OUTPUT input) : SV_TARGET
 
 
 
+struct VS_INPUT
+{
+	float3 position : POSITION;
+	float4 color : COLOR;
+};
+//정점 셰이더의 출력(픽셀 셰이더의 입력)을 위한 구조체를 선언한다. 
+struct VS_OUTPUT
+{
+	float4 position : SV_POSITION;
+	float4 color : COLOR;
+};
+//정점 셰이더를 정의한다.
+VS_OUTPUT VSDiffused(VS_INPUT input)
+{
+	VS_OUTPUT output;
+	//정점을 변환(월드 변환, 카메라 변환, 투영 변환)한다. 
+	output.position = mul(mul(mul(float4(input.position, 1.0f), gmtxGameObject), gmtxView),
+		gmtxProjection);
+	output.color = input.color;
+	return(output);
+}
+//픽셀 셰이더를 정의한다.
+float4 PSDiffused(VS_OUTPUT input) : SV_TARGET
+{
+	return(input.color);
+}

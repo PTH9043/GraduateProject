@@ -60,19 +60,19 @@ public:
 
 	virtual void Animate(float fTimeElapsed, XMFLOAT4X4* pxmf4x4Parent = NULL);
 
-	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera = NULL);
+	virtual void Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, CCamera* pCamera = NULL);
 	//virtual void Render(bool Terrain, ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera = NULL);
 
-	virtual void CreateShaderVariables(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList);
-	virtual void UpdateShaderVariables(ID3D12GraphicsCommandList* pd3dCommandList);
+	virtual void CreateShaderVariables(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList);
+	virtual void UpdateShaderVariables(const ComPtr<ID3D12GraphicsCommandList>& _CommandList);
 
 	virtual void ReleaseShaderVariables();
 
 	//void SetCbvGPUDescriptorHandle(D3D12_GPU_DESCRIPTOR_HANDLE d3dCbvGPUDescriptorHandle) { m_d3dCbvGPUDescriptorHandle = d3dCbvGPUDescriptorHandle; }
 
-	virtual void UpdateShaderVariable(ID3D12GraphicsCommandList* pd3dCommandList, XMFLOAT4X4* pxmf4x4World);
-	virtual void UpdateShaderVariable(ID3D12GraphicsCommandList* pd3dCommandList, CMaterial* pMaterial);
-	//virtual void UpdateShaderVariable(ID3D12GraphicsCommandList* pd3dCommandList, float* Onhit);
+	//virtual void UpdateShaderVariable( const ComPtr<ID3D12GraphicsCommandList>& _CommandList, XMFLOAT4X4* pxmf4x4World);
+	//virtual void UpdateShaderVariable( const ComPtr<ID3D12GraphicsCommandList>& _CommandList, CMaterial* pMaterial);
+
 	virtual void ReleaseUploadBuffers();
 
 	XMFLOAT3 GetPosition();
@@ -82,7 +82,7 @@ public:
 	XMFLOAT4X4 GetTransform();
 	XMFLOAT4X4 GetWorld();
 	CGameObject* GetParent() { return (m_pParent); }
-	UINT GetMeshType();
+	UINT GetMeshType() { return((m_pMesh) ? m_pMesh->GetType() : 0x00); }
 
 	void SetPosition(float x, float y, float z);
 	void SetPosition(XMFLOAT3 xmf3Position);
@@ -120,10 +120,10 @@ public:
 	void SetNewUp(XMFLOAT3 newUp);
 
 public:
-	void LoadMaterialsFromFile(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, CGameObject* pParent, FILE* pInFile, CShader* pShader);
+	void LoadMaterialsFromFile(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, CGameObject*, FILE* pInFile, shared_ptr<CShader> pShader);
 
-	static CGameObject* LoadFrameHierarchyFromFile(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, ID3D12RootSignature* pd3dGraphicsRootSignature, CGameObject* pParent, FILE* pInFile, CShader* pShader);
-	static CGameObject* LoadGeometryFromFile(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, ID3D12RootSignature* pd3dGraphicsRootSignature, char* pstrFileName, CShader* pShader);
+	 void LoadFrameHierarchyFromFile(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, ID3D12RootSignature* pd3dGraphicsRootSignature, CGameObject* pParent, FILE* pInFile, shared_ptr<CShader> pShader);
+	shared_ptr<CGameObject> LoadGeometryFromFile(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, ID3D12RootSignature* pd3dGraphicsRootSignature, char* pstrFileName, shared_ptr<CShader> pShader);
 
 	static void PrintFrameInfo(shared_ptr<CGameObject> pGameObject, shared_ptr<CGameObject> pParent );
 };

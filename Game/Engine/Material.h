@@ -4,6 +4,15 @@ class CShader;
 class CTexture;
 
 
+#define MATERIAL_ALBEDO_MAP			0x01
+#define MATERIAL_SPECULAR_MAP		0x02
+#define MATERIAL_NORMAL_MAP			0x04
+#define MATERIAL_METALLIC_MAP		0x08
+#define MATERIAL_EMISSION_MAP		0x10
+#define MATERIAL_DETAIL_ALBEDO_MAP	0x20
+#define MATERIAL_DETAIL_NORMAL_MAP	0x40
+
+
 class CMaterial
 {
 public:
@@ -19,19 +28,19 @@ public:
 
 public:
 
-	std::shared_ptr<CTexture> m_pTexture = NULL;
+	shared_ptr<CTexture> m_pTexture = NULL;
 
 	XMFLOAT4						m_xmf4AlbedoColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	XMFLOAT4						m_xmf4EmissiveColor = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 	XMFLOAT4						m_xmf4SpecularColor = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 	XMFLOAT4						m_xmf4AmbientColor = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 	
-	void SetShader(std::shared_ptr<CShader> pShader);
+	void SetShader(shared_ptr<CShader> pShader);
 	void SetMaterialType(UINT nType) { m_nType |= nType; }
-	void SetTexture(std::shared_ptr<CTexture> pTexture);
-	std::shared_ptr<CTexture> GetTexture() { return m_pTexture; }
+	void SetTexture(shared_ptr<CTexture> pTexture);
+	shared_ptr<CTexture> GetTexture() { return m_pTexture; }
 
-	virtual void UpdateShaderVariables(ComPtr<ID3D12GraphicsCommandList> _CommandList);
+	virtual void UpdateShaderVariables(const ComPtr<ID3D12GraphicsCommandList>& _CommandList);
 	virtual void ReleaseShaderVariables();
 
 	virtual void ReleaseUploadBuffers();

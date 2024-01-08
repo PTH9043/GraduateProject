@@ -1,6 +1,5 @@
 #pragma once
 #include "EnginePch.h"
-#include "Timer.h"
 #include "Scene.h"
 #include "DeviceAndFactory.h"
 #include "SwapChainAndRtvDsvHeap.h"

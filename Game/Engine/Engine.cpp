@@ -43,7 +43,7 @@ void Engine::BuildObjects()
 	m_pCamera->SetViewport(0, 0, m_spSwapChainAndRtvDsvHeap->m_nWndClientWidth, m_spSwapChainAndRtvDsvHeap->m_nWndClientHeight, 0.0f, 1.0f);
 	m_pCamera->SetScissorRect(0, 0, m_spSwapChainAndRtvDsvHeap->m_nWndClientWidth, m_spSwapChainAndRtvDsvHeap->m_nWndClientHeight);
 	m_pCamera->GenerateProjectionMatrix(1.0f, 500.0f, float(m_spSwapChainAndRtvDsvHeap->m_nWndClientWidth) / float(m_spSwapChainAndRtvDsvHeap->m_nWndClientHeight), 90.0f);
-	m_pCamera->GenerateViewMatrix(XMFLOAT3(0.0f, 15.0f, -25.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 1.0f, 0.0f));
+	m_pCamera->GenerateViewMatrix(XMFLOAT3(0.0f, 1.0f, -5.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 1.0f, 0.0f));
 
 	m_pScene = new CScene();
 	m_pScene->BuildObjects(m_spDevice->GetDevice().Get(), m_spCommandQueue->GetCmdList().Get(),m_spRootSignature->GetGraphicsRootSignature());
@@ -72,6 +72,9 @@ void Engine::AnimateObjects()
 void Engine::RenderBegin()
 {
 	m_spCommandQueue->RenderBegin();
+
+	if (m_pCamera)m_pCamera->SetViewportsAndScissorRects(m_spCommandQueue->GetCmdList());
+
 }
 
 void Engine::RenderEnd()

@@ -1,8 +1,10 @@
 #pragma once
 
-class CShader;
+
 class CGameObject;
 class CMaterial;
+class CScene;
+class CShader;
 #define RESOURCE_TEXTURE1D			0x01
 #define RESOURCE_TEXTURE2D			0x02
 #define RESOURCE_TEXTURE2D_ARRAY	0x03	//[]
@@ -45,16 +47,16 @@ public:
 //----------------------
 	void SetSampler(int nIndex, D3D12_GPU_DESCRIPTOR_HANDLE d3dSamplerGpuDescriptorHandle);
 
-	void UpdateShaderVariable(ComPtr<ID3D12GraphicsCommandList> _CommandList, int nParameterIndex, int nTextureIndex);
-	void UpdateShaderVariables(ComPtr<ID3D12GraphicsCommandList> _CommandList);
+	void UpdateShaderVariable(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, int nParameterIndex, int nTextureIndex);
+	void UpdateShaderVariables(const ComPtr<ID3D12GraphicsCommandList>& _CommandList);
 
 	void ReleaseShaderVariables();
 
-	void LoadTextureFromDDSFile(ComPtr<ID3D12Device> _Device, ComPtr<ID3D12GraphicsCommandList> _CommandList, wchar_t* pszFileName, UINT nResourceType, UINT nIndex);
+	void LoadTextureFromDDSFile(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, wchar_t* pszFileName, UINT nResourceType, UINT nIndex);
 	
-	ComPtr<ID3D12Resource> CreateTexture(ComPtr<ID3D12Device> _Device, ComPtr<ID3D12GraphicsCommandList> _CommandList, UINT nIndex, UINT nResourceType, UINT nWidth, UINT nHeight, UINT nElements, UINT nMipLevels, DXGI_FORMAT dxgiFormat, D3D12_RESOURCE_FLAGS d3dResourceFlags, D3D12_RESOURCE_STATES d3dResourceStates, D3D12_CLEAR_VALUE* pd3dClearValue);
-	ComPtr<ID3D12Resource> CreateTexture(ComPtr<ID3D12Device> _Device, ComPtr<ID3D12GraphicsCommandList> _CommandList, UINT nWidth, UINT nHeight, UINT nElements, UINT nMipLevels, DXGI_FORMAT dxgiFormat, D3D12_RESOURCE_FLAGS d3dResourceFlags, D3D12_RESOURCE_STATES d3dResourceStates, D3D12_CLEAR_VALUE* pd3dClearValue, UINT nResourceType, UINT nIndex);
-	int LoadTextureFromFile(ComPtr<ID3D12Device> _Device, ComPtr<ID3D12GraphicsCommandList> _CommandList, CGameObject* pParent, FILE* pInFile, CShader* pShader, UINT nIndex);
+	ComPtr<ID3D12Resource> CreateTexture(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, UINT nIndex, UINT nResourceType, UINT nWidth, UINT nHeight, UINT nElements, UINT nMipLevels, DXGI_FORMAT dxgiFormat, D3D12_RESOURCE_FLAGS d3dResourceFlags, D3D12_RESOURCE_STATES d3dResourceStates, D3D12_CLEAR_VALUE* pd3dClearValue);
+	ComPtr<ID3D12Resource> CreateTexture(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, UINT nWidth, UINT nHeight, UINT nElements, UINT nMipLevels, DXGI_FORMAT dxgiFormat, D3D12_RESOURCE_FLAGS d3dResourceFlags, D3D12_RESOURCE_STATES d3dResourceStates, D3D12_CLEAR_VALUE* pd3dClearValue, UINT nResourceType, UINT nIndex);
+	int LoadTextureFromFile(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, CGameObject* pParent, FILE* pInFile, shared_ptr<CShader> pShader, UINT nIndex);
 
 
 	void SetRootParameterIndex(int nIndex, UINT nRootParameterIndex);

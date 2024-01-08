@@ -3,8 +3,8 @@
 
 
 struct VS_CB_CAMERA_INFO {
-	XMFLOAT4X4 m_xmf4x4View;
-	XMFLOAT4X4 m_xmf4x4Projection;
+	XMFLOAT4X4						m_xmf4x4View;
+	XMFLOAT4X4						m_xmf4x4Projection;
 };
 
 class CCamera
@@ -18,7 +18,9 @@ protected:
 	//ºäÆ÷Æ®¿Í ¾¾Àú »ç°¢Çü
 	D3D12_VIEWPORT m_d3dViewport;
 	D3D12_RECT m_d3dScissorRect;
-
+protected:
+	ComPtr<ID3D12Resource> m_pd3dcbCamera;
+	VS_CB_CAMERA_INFO* m_pcbMappedCamera = NULL;
 public:
 	CCamera();
 	virtual ~CCamera();
