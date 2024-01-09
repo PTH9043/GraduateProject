@@ -8,6 +8,17 @@ namespace Core
 	/*
 	@ Date: 2023-01-09,  Writer: 박태현
 	@ Explain
+	- 앱을 만들어서 등록하는 함수이다. 
+	*/
+	template<class T>
+	static void CreateAndRegisterApp()
+	{
+		Core::g_RegisterApp = new T;
+	}
+
+	/*
+	@ Date: 2023-01-09,  Writer: 박태현
+	@ Explain
 	- 현재 밀리세컨드를 구하는 함수이다. 
 	*/
 	static _llong CurrentMilliseconds()

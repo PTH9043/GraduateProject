@@ -27,6 +27,8 @@ namespace Core
 
 		~CoreGlobal()
 		{
+			// 만약 Register App이 비어있으면 크래쉬
+			ASSERT_CRASH(nullptr == g_RegisterApp);
 			delete g_RegisterApp;
 
 #ifdef USE_DEBUG
