@@ -19,8 +19,6 @@ public:
 	// 해당 함수가 
 	virtual _bool Start() PURE;
 public:
-	/* Game Start Session*/
-
 	// ID를 통해서 SessionID
 	virtual SHPTR<USession> FindSession(const SESSIONID _SessionID) PURE;
 	// 전체 서버 참여자에게 메시지를 보내는 함수이다. 
@@ -36,6 +34,7 @@ protected: /* Get Set */
 	IOContext& GetIOContext(REF_RETURN) { return m_IOContext; }
 	TCPSOCKET& GetTcpSocket(REF_RETURN) { return m_TcpSocket; }
 	MUTEX& GetLock(REF_RETURN) { return m_Lock; }
+	IOContext* GetIOConectPointer() { return &m_IOContext; }
 private:
 	virtual void Free() override;
 private:

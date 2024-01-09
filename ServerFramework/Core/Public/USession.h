@@ -35,9 +35,9 @@ public:
 	- ProtocolBuffer를 조합하기 위한 함수이다. 
 	*/
 	template<class T>
-	void CombineProto(REF_IN UBuffer& _Buffer, REF_IN PACKETHEAD& _PacketHead, const T& _data, short _tag)
+	void CombineProto(REF_IN BUFFER& _Buffer, REF_IN PACKETHEAD& _PacketHead, const T& _data, short _tag)
 	{
-		_data.SerializePartialToArray((void*)&_Buffer.GetBuffer()[0], static_cast<int>(_data.ByteSizeLong()));
+		_data.SerializePartialToArray((void*)&_Buffer[0], static_cast<int>(_data.ByteSizeLong()));
 		short size = static_cast<short>(_data.ByteSizeLong());
 		_PacketHead = PACKETHEAD{ size, _tag };
 	}
@@ -50,10 +50,10 @@ public:
 	requires CheckProtoType<T>
 	void SendProtoData(const T& _data, short _tag)
 	{
-		Core::UBuffer Buffer;
+		static thread_local BUFFER Buffer;
 		Core::PACKETHEAD PacketHead;
 		CombineProto<T>(REF_OUT Buffer, REF_OUT PacketHead, _data, _tag);
-		WriteData(&Buffer.GetBuffer()[0], PacketHead);
+		WriteData(&Buffer[0], PacketHead);
 	}
 public: /*Get Set */
 	const SESSIONID GetID() const { return m_ID; }

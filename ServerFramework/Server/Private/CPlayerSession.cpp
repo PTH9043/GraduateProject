@@ -56,12 +56,7 @@ namespace Server {
 	{
 		// Remove Object 조합 
 		SC_REMOVE_OBJECT scRemoveObject = PROTOFUNC::CreateScRemoveObject(GetID());
-		Core::UBuffer Buffer;
-		Core::PACKETHEAD PacketHead;
-		CombineProto<SC_REMOVE_OBJECT>(Buffer, PacketHead, scRemoveObject, TAG_SC_LOGOUT);
-
-		WriteData(&Buffer.GetBuffer()[0], PacketHead);
-
+		SendProtoData(scRemoveObject, TAG_SC_LOGOUT);
 		__super::Disconnect();
 	}
 
@@ -91,24 +86,20 @@ namespace Server {
 			Login.ParseFromArray(_pPacket, static_cast<_int>(_PacketHead.PacketSize));
 			std::cout << Login.user_name() << "\n";
 		}
-		{
-			// Remove Object 조합 
-			SC_CHECKLOGIN scCheckLogin;
-			scCheckLogin.set_id(GetID());
-			Core::UBuffer Buffer;
-			Core::PACKETHEAD PacketHead;
-			CombineProto<SC_CHECKLOGIN>(REF_OUT Buffer, REF_OUT PacketHead, scCheckLogin, TAG_SC_LOGIN);
-
-			WriteData(&Buffer.GetBuffer()[0], PacketHead);
-		}
+		//{
+		//	// Remove Object 조합 
+		//	SC_CHECKLOGIN scCheckLogin;
+		//	scCheckLogin.set_id(GetID());
+		//	SendProtoData(scCheckLogin, TAG_SC_LOGIN);
+		//}
 		break;
 		case TAG_CS::TAG_CS_LOGOUT:
 		{
 			CS_LOGOUT logout;
 			logout.ParseFromArray(_pPacket, static_cast<_int>(_PacketHead.PacketSize));
-
-			SHPTR<UService> spService = GetService();
-			spService->LeaveService(logout.id());
+			std::cout << _PacketHead.PacketSize << "\n";
+	//		SHPTR<UService> spService = GetService();
+		//	spService->LeaveService(logout.id());
 			return false;
 		}
 		break;

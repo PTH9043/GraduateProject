@@ -1,6 +1,5 @@
 #include "CoreDefines.h"
 #include "USession.h"
-#include "UBuffer.h"
 #include "UService.h"
 
 namespace Core
@@ -25,8 +24,7 @@ namespace Core
 	void USession::ReadData()
 	{
 		RETURN_CHECK(false == m_isConnect, ;);
-		MemoryInitialization(m_RecvBuffer.data(), MAX_BUFFER_LENGTH);
-		m_TcpSocket.async_read_some(Asio::buffer(m_RecvBuffer, MAX_BUFFER_LENGTH),
+		m_TcpSocket.async_read_some(Asio::buffer(m_RecvBuffer),
 			[this](const boost::system::error_code& _error, std::size_t _Size)
 			{	
 				if (!_error)
@@ -96,30 +94,27 @@ namespace Core
 		// 만약 BufferLocation이 존재할 때
 		while (m_CurBuffuerLocation > 0)
 		{
-			short len{ 0 };
-			memcpy(&len, pBufferMove, PACKETSIZE_SIZE);
-			short CurrPacket = len + PACKETHEAD_SIZE;
+			// PacketSize를 구한다. 
+			PACKETHEAD PacketHead;
+			memcpy(&PacketHead, pBufferMove, PACKETHEAD_SIZE);
+			short CurrPacket = PacketHead.PacketSize + PACKETHEAD_SIZE;
 			// 패킷의 현재 위치가 음수가 되는 경우면 
 			if ((m_CurBuffuerLocation - CurrPacket) < 0)
 			{
 				// 전체 버퍼값에서 이동한 Packet 사이즈를 뺀 후 
-				_uint EraseValue = MAX_PROCESSBUF_LENGTH - moveBuffer;
+			//	_uint EraseValue = MAX_PROCESSBUF_LENGTH - moveBuffer;
 				// 최종적인 버퍼에 PacketSize만큼 이동하여 앞쪽에 존재하는 데이터들을 지운다. 
-				memmove(&m_TotalBuffer[0], pBufferMove, EraseValue);
+				memcpy(&m_TotalBuffer[0], pBufferMove, m_CurBuffuerLocation);
 				return;
 			}
-			// PacketSize를 구한다. 
-			PACKETHEAD PacketHead;
-			memcpy(&PacketHead, pBufferMove, PACKETHEAD_SIZE);
-
-			ProcessPacket(pBufferMove + PACKETHEAD_SIZE, PacketHead);
+			ProcessPacket(&pBufferMove[PACKETHEAD_SIZE], PacketHead);
 			// Buffer의 위치를 옮긴다. 
 			m_CurBuffuerLocation -= CurrPacket;
 			pBufferMove += CurrPacket;
 			moveBuffer += CurrPacket;
-	//		ThreadNanoRelax(1);
 		}
 		m_CurBuffuerLocation = 0;
+		MemoryInitialization(m_TotalBuffer.data(), MAX_PROCESSBUF_LENGTH);
 	}
 
 	/*

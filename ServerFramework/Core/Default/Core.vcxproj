@@ -35,12 +35,14 @@
     <ClInclude Include="..\Public\LockFree.h" />
     <ClInclude Include="..\Public\Memory.h" />
     <ClInclude Include="..\Public\SmartPointer.h" />
+    <ClInclude Include="..\Public\UAwsConnector.h" />
     <ClInclude Include="..\Public\UClientService.h" />
+    <ClInclude Include="..\Public\ULogger.h" />
+    <ClInclude Include="..\Public\ULogManager.h" />
     <ClInclude Include="..\Public\URandomManager.h" />
     <ClInclude Include="..\Public\UServerService.h" />
     <ClInclude Include="..\Public\UService.h" />
     <ClInclude Include="..\Public\UBase.h" />
-    <ClInclude Include="..\Public\UBuffer.h" />
     <ClInclude Include="..\Public\UCoreInstance.h" />
     <ClInclude Include="..\Public\UDeadLockProfiler.h" />
     <ClInclude Include="..\Public\UObject.h" />
@@ -55,12 +57,14 @@
     <ClCompile Include="..\Private\LockFree.cpp" />
     <ClCompile Include="..\Private\Memory.cpp" />
     <ClCompile Include="..\Private\SmartPointer.cpp" />
+    <ClCompile Include="..\Private\UAwsConnector.cpp" />
     <ClCompile Include="..\Private\UClientService.cpp" />
+    <ClCompile Include="..\Private\ULogger.cpp" />
+    <ClCompile Include="..\Private\ULogManager.cpp" />
     <ClCompile Include="..\Private\URandomManager.cpp" />
     <ClCompile Include="..\Private\UServerService.cpp" />
     <ClCompile Include="..\Private\UService.cpp" />
     <ClCompile Include="..\Private\UBase.cpp" />
-    <ClCompile Include="..\Private\UBuffer.cpp" />
     <ClCompile Include="..\Private\UCoreInstance.cpp" />
     <ClCompile Include="..\Private\UDeadLockProfiler.cpp" />
     <ClCompile Include="..\Private\UObject.cpp" />
@@ -89,6 +93,7 @@
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <EnableUnitySupport>true</EnableUnitySupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -102,6 +107,7 @@
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <EnableUnitySupport>true</EnableUnitySupport>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -165,6 +171,7 @@
       <LanguageStandard_C>Default</LanguageStandard_C>
       <PreprocessorDefinitions>_SILENCE_ALL_CXX23_DEPRECATION_WARNINGS;CORE_EXPORTS;_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -205,6 +212,7 @@
       <LanguageStandard_C>Default</LanguageStandard_C>
       <PreprocessorDefinitions>_SILENCE_ALL_CXX23_DEPRECATION_WARNINGS;CORE_EXPORTS;_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

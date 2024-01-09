@@ -21,8 +21,7 @@
 // #define LINUX_OS
 
 #ifdef WINDOW_OS
-#define _WIN32_WINDOWS 0x6001
-#define _WINSOCK_DEPRECATED_NO_WARNINGS 
+#define _WIN32_WINNT 0x0A00
 #else
 #include <stdlib.h>
 #include <sys/mman.h>
@@ -101,6 +100,5 @@ namespace Asio = boost::asio;
 
 #include "UCoreInstance.h"
 #include "LockFree.h"
-#include "UBuffer.h"
 
 #endif 
