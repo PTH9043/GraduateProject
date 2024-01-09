@@ -6,6 +6,7 @@
 BEGIN(Core)
 class UThreadManager;
 class URandomManager;
+class ULogManager;
 /*
 @ Date: 2023-12-26
 @ Writer: นฺลยว๖
@@ -28,12 +29,17 @@ public: /* RandomManager */
 	_int		ReturnRadomNumber(const _int _iMinNum, const _int _iMaxNum);
 	_int		ReturnRadomNumber(const _int _iMaxNum);
 
+public: /* LogManager */
+	void PrintOut(const char* _fmt, ...);
+	void FileOut(const char* _fmt, ...);
+
 private:
 	virtual void Free() override;
 private:
 	MUTEX											m_Mutex;
 	SHPTR<UThreadManager>		m_spThreadManager;
 	SHPTR<URandomManager>		m_spRandomManager;
+	SHPTR<ULogManager>				m_spLogManager;
 };
 
 END

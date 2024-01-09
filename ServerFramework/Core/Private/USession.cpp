@@ -101,8 +101,6 @@ namespace Core
 			// 패킷의 현재 위치가 음수가 되는 경우면 
 			if ((m_CurBuffuerLocation - CurrPacket) < 0)
 			{
-				// 전체 버퍼값에서 이동한 Packet 사이즈를 뺀 후 
-			//	_uint EraseValue = MAX_PROCESSBUF_LENGTH - moveBuffer;
 				// 최종적인 버퍼에 PacketSize만큼 이동하여 앞쪽에 존재하는 데이터들을 지운다. 
 				memcpy(&m_TotalBuffer[0], pBufferMove, m_CurBuffuerLocation);
 				return;

@@ -2,7 +2,6 @@
 #define _SERVERFRAMEWORK_CORE_PUBLIC_ULOGMANAGER_H
 
 #include "UBase.h"
-#include <fstream>
 
 BEGIN(Core)
 
@@ -12,8 +11,8 @@ public:
 	NO_COPY(ULogManager)
 	DESTRUCTOR(ULogManager)
 public:
-	
-
+	void PrintOut(const char* _string);
+	void FileOut(const char* _string);
 private:
 	virtual void Free() override;
 

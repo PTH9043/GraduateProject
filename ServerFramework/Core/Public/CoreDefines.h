@@ -43,14 +43,21 @@
 
 #ifdef _DEBUG
 #pragma comment (lib, "PthMathD")
-#pragma comment (lib, "aws-cpp-sdk-gamelifd")
+#pragma comment(lib, "aws-cpp-sdk-core")
+#pragma comment(lib, "aws-cpp-sdk-sqs")
+#pragma comment(lib, "aws-cpp-sdk-sts")
+#pragma comment (lib, "aws-cpp-sdk-gamelift")
 #pragma comment (lib, "aws-cpp-sdk-gamelift-server")
 #else
 #pragma comment (lib, "PthMath")
+#pragma comment(lib, "aws-cpp-sdk-core")
+#pragma comment(lib, "aws-cpp-sdk-sqs")
+#pragma comment(lib, "aws-cpp-sdk-sts")
 #pragma comment (lib, "aws-cpp-sdk-gamelift")
 #pragma comment (lib, "aws-cpp-sdk-gamelift-server")
 #endif
 
+#include <aws/core/Aws.h>
 #define GAMELIFT_USE_STD
 #include <aws/gamelift/server/GameLiftServerAPI.h>
 
@@ -77,6 +84,7 @@
 #include <queue>
 #include <string>
 #include <vector>
+#include <fstream>
 
 #include "PthMath/PthMath.h"
 

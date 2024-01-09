@@ -5,8 +5,7 @@
 namespace Core
 {
 	/*
-	@ Date: 2023-12-26
-	@ Writer: 박태현
+	@ Date: 2024-01-09,  Writer: 박태현
 	@ Explain:  LOGTYPE의 enum 
 	*/
 	enum class LOGTYPE : unsigned int

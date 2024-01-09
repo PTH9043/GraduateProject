@@ -31,13 +31,15 @@
     <ClInclude Include="..\Public\CoreTls.h" />
     <ClInclude Include="..\Public\CoreTypecast.h" />
     <ClInclude Include="..\Public\CoreTypedef.h" />
+    <ClInclude Include="..\Public\ini.h" />
+    <ClInclude Include="..\Public\INIReader.h" />
     <ClInclude Include="..\Public\Lock.h" />
     <ClInclude Include="..\Public\LockFree.h" />
     <ClInclude Include="..\Public\Memory.h" />
     <ClInclude Include="..\Public\SmartPointer.h" />
+    <ClInclude Include="..\Public\UApp.h" />
     <ClInclude Include="..\Public\UAwsConnector.h" />
     <ClInclude Include="..\Public\UClientService.h" />
-    <ClInclude Include="..\Public\ULogger.h" />
     <ClInclude Include="..\Public\ULogManager.h" />
     <ClInclude Include="..\Public\URandomManager.h" />
     <ClInclude Include="..\Public\UServerService.h" />
@@ -53,13 +55,14 @@
   <ItemGroup>
     <ClCompile Include="..\Private\Allocator.cpp" />
     <ClCompile Include="..\Private\CoreGrobal.cpp" />
+    <ClCompile Include="..\Private\INIReader.cpp" />
     <ClCompile Include="..\Private\Lock.cpp" />
     <ClCompile Include="..\Private\LockFree.cpp" />
     <ClCompile Include="..\Private\Memory.cpp" />
     <ClCompile Include="..\Private\SmartPointer.cpp" />
+    <ClCompile Include="..\Private\UApp.cpp" />
     <ClCompile Include="..\Private\UAwsConnector.cpp" />
     <ClCompile Include="..\Private\UClientService.cpp" />
-    <ClCompile Include="..\Private\ULogger.cpp" />
     <ClCompile Include="..\Private\ULogManager.cpp" />
     <ClCompile Include="..\Private\URandomManager.cpp" />
     <ClCompile Include="..\Private\UServerService.cpp" />
@@ -71,6 +74,7 @@
     <ClCompile Include="..\Private\UObjectPool.cpp" />
     <ClCompile Include="..\Private\USession.cpp" />
     <ClCompile Include="..\Private\UThreadManager.cpp" />
+    <ClCompile Include="..\Public\ini.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -86,6 +90,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <EnableUnitySupport>true</EnableUnitySupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -100,6 +105,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <EnableUnitySupport>true</EnableUnitySupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>

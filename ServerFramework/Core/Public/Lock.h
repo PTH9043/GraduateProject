@@ -95,11 +95,11 @@ namespace Core {
 	};
 
 
-		/*
-		@ Date: 2024-01-06,  Writer: 박태현
-		@ Explain
-		- AWS 버전에서 따온 SpinLock
-		*/
+	/*
+	@ Date: 2024-01-06,  Writer: 박태현
+	@ Explain
+	- AWS 버전에서 따온 SpinLock
+	*/
 	class CACHE_ALGIN_CORE_DLL UFastSpinLock {
 	public:
 		enum LockFlag
@@ -129,12 +129,32 @@ namespace Core {
 
 	class UReadSpinLockGuard {
 	public:
-		UReadSpinLockGuard(const UFastSpinLock& _Lock) : m_SpinLock{ _Lock } {}
+		UReadSpinLockGuard(const UFastSpinLock& _Lock) : m_SpinLock{ _Lock } { m_SpinLock.EnterReadLock(); }
 		~UReadSpinLockGuard() { m_SpinLock.LeaveReadLock(); }
 
 
 	private:
 		UFastSpinLock			m_SpinLock;
+	};
+
+	class UWriteSpinLockGuard {
+	public:
+		UWriteSpinLockGuard(const UFastSpinLock& _Lock) : m_SpinLock{ _Lock } { m_SpinLock.EnterWriteLock(); }
+		~UWriteSpinLockGuard() { m_SpinLock.LeaveWriteLock(); }
+
+
+	private:
+		UFastSpinLock			m_SpinLock;
+	};
+
+	/*
+	@ Date: 2024-01-06,  Writer: 박태현
+	@ Explain
+	- AWS 버전에서 따온 SpinLock
+	*/
+	class CACHE_ALGIN_CORE_DLL UGuardSpinLock {
+	public:
+
 	};
 }
 #endif 

@@ -4,10 +4,12 @@
 namespace Core
 {
 #ifdef USE_DEBUG
-	CORE_DLL extern class UDeadLockProfiler* g_pDeadLockProfiler;
+	CORE_DLL		extern class UDeadLockProfiler* g_pDeadLockProfiler;
 #endif
 
 	CORE_DLL 	extern class UMemoryAdminster* g_pMemoryAdminster;
+
+	CORE_DLL		extern class UApp*							 g_RegisterApp;
 }
 
 #endif // _SERVERFRAMEWORK_CORE_PUBLIC_COREGROBAL_H
