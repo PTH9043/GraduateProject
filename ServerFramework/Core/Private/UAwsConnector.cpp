@@ -10,7 +10,7 @@ namespace Core{
 	{
 	}
 
-	_bool UAwsConnector::NativeConstruct()
+	_bool UAwsConnector::Start()
 	{
 		SHPTR<UCoreInstance> spCoreInstance = GetCoreInstance();
 		try

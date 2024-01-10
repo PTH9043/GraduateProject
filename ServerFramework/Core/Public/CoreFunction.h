@@ -5,16 +5,20 @@ namespace Core
 {
 #pragma region FUNCTION 
 
+
 	/*
-	@ Date: 2023-01-09,  Writer: 박태현
+	@ Date: 2023-01-10,  Writer: 박태현
 	@ Explain
-	- 앱을 만들어서 등록하는 함수이다. 
+	- 앱을 만들어서 등록하는 함수이다.
 	*/
 	template<class T>
-	static void CreateAndRegisterApp()
+	T* CreateAndRegisterApp()
 	{
-		Core::g_RegisterApp = new T;
+		T* App = new T;
+		Core::g_RegisterApp = App;
+		return App;
 	}
+
 
 	/*
 	@ Date: 2023-01-09,  Writer: 박태현

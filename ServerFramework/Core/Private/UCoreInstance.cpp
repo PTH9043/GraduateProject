@@ -14,12 +14,6 @@ namespace Core
 
 	}
 
-	bool UCoreInstance::NativeConstruct()
-	{
-
-		return S_OK;
-	}
-
 	/*
 	-----------------------------
 	CoreGrobal

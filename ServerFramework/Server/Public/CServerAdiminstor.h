@@ -4,6 +4,7 @@
 #include "UServerService.h"
 
 BEGIN(Server)
+class  CAwsServerConnector;
 
 /*
 @ Date: 2023-01-02, Writer: 박태현
@@ -12,16 +13,22 @@ BEGIN(Server)
 */
 class CACHE_ALGIN CServerAdiminstor final : public Core::UServerService{
 public:
-	CServerAdiminstor(OBJCON_CONSTRUCTOR);
+	CServerAdiminstor(OBJCON_CONSTRUCTOR, _bool _CreateAwsConnector = false);
 	NO_COPY(CServerAdiminstor)
 	DESTRUCTOR(CServerAdiminstor)
 public:
 	virtual bool NativeConstruct() override;
+public: /*  Get Set*/
+	SHPTR<CAwsServerConnector> GetAwsConnector() const { return m_spAwsConnector; }
 protected:
 	// UServerService을(를) 통해 상속됨
 	virtual void Connect() override;
 private:
 	void Free() override;
+
+private:
+	/* Connector */
+	SHPTR<CAwsServerConnector>		m_spAwsConnector;
 };
 
 END

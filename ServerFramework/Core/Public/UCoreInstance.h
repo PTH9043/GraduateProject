@@ -19,9 +19,8 @@ public:
 	UCoreInstance();
 	NO_COPY(UCoreInstance)
 	DESTRUCTOR(UCoreInstance)
+public:
 
-public: /* CoreGrobal */
-	bool NativeConstruct();
 public: /* ThreadManager */
 	void RegisterFunc(const THREADFUNC& _CallBack, void* _Data);
 	void Join();

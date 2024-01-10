@@ -13,7 +13,7 @@ BEGIN(Server)
 @ Explain
 - Client에 존재하는 플레이어들과 통신하기 위한 클래스
 */
-class CPlayerSession final : public Core::USession {
+class CACHE_ALGIN CPlayerSession final : public Core::USession {
 public:
 	CPlayerSession(OBJCON_CONSTRUCTOR, TCPSOCKET _TcpSocket, Core::SHPTR<Core::UService> _spService, SESSIONID _ID);
 	NO_COPY(CPlayerSession)

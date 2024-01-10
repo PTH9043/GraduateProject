@@ -2,12 +2,17 @@
 #include "CServerAdiminstor.h"
 #include "CPlayerSession.h"
 #include "UCoreInstance.h"
+#include "CAwsServerConnector.h"
 
 namespace Server
 {
-	CServerAdiminstor::CServerAdiminstor(OBJCON_CONSTRUCTOR) :
-		Core::UServerService(OBJCON_CONDATA)
+	CServerAdiminstor::CServerAdiminstor(OBJCON_CONSTRUCTOR, _bool _CreateAwsConnector) :
+		Core::UServerService(OBJCON_CONDATA), m_spAwsConnector{nullptr}
 	{
+		if (true == _CreateAwsConnector)
+		{
+			m_spAwsConnector = Create<CAwsServerConnector>(GetCoreInstance());
+		}
 	}
 
 	bool CServerAdiminstor::NativeConstruct()

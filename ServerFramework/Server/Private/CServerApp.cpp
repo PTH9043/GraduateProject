@@ -6,24 +6,15 @@
 
 namespace Server
 {
-	CServerApp::CServerApp() : m_spCoreInstance{Core::Create<Core::UCoreInstance>() }
+	CServerApp::CServerApp() 
 	{
 
 	}
 
-	void CServerApp::Init()
+	_bool CServerApp::Start()
 	{
-		m_spServerAdiminster = Core::CreateInitConstructor<CServerAdiminstor>(m_spCoreInstance);
+		CreateServiceObject<CServerAdiminstor>();
 		std::cout << "Start Server!\n";
-		if (true == m_spServerAdiminster->Start())
-		{
-			return;
-		}
-	}
-
-	void CServerApp::Free()
-	{
-		m_spServerAdiminster.reset();
-		m_spCoreInstance.reset();
+		return GetService()->Start();
 	}
 }

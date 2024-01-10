@@ -42,6 +42,7 @@
     <ClInclude Include="..\Public\UClientService.h" />
     <ClInclude Include="..\Public\ULogManager.h" />
     <ClInclude Include="..\Public\URandomManager.h" />
+    <ClInclude Include="..\Public\URoom.h" />
     <ClInclude Include="..\Public\UServerService.h" />
     <ClInclude Include="..\Public\UService.h" />
     <ClInclude Include="..\Public\UBase.h" />
@@ -65,6 +66,7 @@
     <ClCompile Include="..\Private\UClientService.cpp" />
     <ClCompile Include="..\Private\ULogManager.cpp" />
     <ClCompile Include="..\Private\URandomManager.cpp" />
+    <ClCompile Include="..\Private\URoom.cpp" />
     <ClCompile Include="..\Private\UServerService.cpp" />
     <ClCompile Include="..\Private\UService.cpp" />
     <ClCompile Include="..\Private\UBase.cpp" />

@@ -2,6 +2,7 @@
 #include "UServerService.h"
 #include "USession.h"
 #include "UCoreInstance.h"
+#include "UAwsConnector.h"
 
 namespace Core {
 

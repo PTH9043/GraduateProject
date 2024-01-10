@@ -22,6 +22,9 @@
     <Filter Include="03.Session\Player">
       <UniqueIdentifier>{fdbc3898-3fdd-429b-8d81-5c07c9bc6fd6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Network\AwsServerConnector">
+      <UniqueIdentifier>{56e5882c-216a-49c9-be4b-23427e786a36}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -36,6 +39,9 @@
     <ClCompile Include="..\Private\CPlayerSession.cpp">
       <Filter>03.Session\Player</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\CAwsServerConnector.cpp">
+      <Filter>02.Network\AwsServerConnector</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\CServerApp.h">
@@ -49,6 +55,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\CPlayerSession.h">
       <Filter>03.Session\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CAwsServerConnector.h">
+      <Filter>02.Network\AwsServerConnector</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

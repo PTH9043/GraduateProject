@@ -4,7 +4,7 @@
 #include "CClientSession.h"
 
 CClientAdiminstor::CClientAdiminstor(OBJCON_CONSTRUCTOR) : 
-	UClientService(OBJCON_CONDATA), m_iMaxSessionCount{500}
+	UClientService(OBJCON_CONDATA), m_iMaxSessionCount{4}
 {
 }
 
@@ -36,7 +36,7 @@ void CClientAdiminstor::Connect()
 	SHPTR<CClientAdiminstor> spClientAdiminstor = ThisShared<CClientAdiminstor>();
 	for (_uint j = 0; j < 2; ++j)
 	{
-		for (_uint i = 0; i < 1000; ++i)
+		for (_uint i = 0; i < m_iMaxSessionCount; ++i)
 		{
 			TCPSOCKET tcpSocket(GetIOContext());
 			SESSIONID SessionID = GiveID();

@@ -68,8 +68,6 @@ protected:
 	void CombineSendBuffer(_char* _pPacket, const PACKETHEAD& _PacketHead);
 	void Leave();
 
-	void ClearSendBuff() { ZeroMemory(&m_SendBuffer, MAX_BUFFER_LENGTH); }
-
 	BUFFER& GetSendBuff(REF_RETURN) { return m_SendBuffer; }
 	MUTEX& GetLock(REF_RETURN) { return m_Lock; }
 private:

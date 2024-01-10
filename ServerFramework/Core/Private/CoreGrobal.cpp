@@ -18,6 +18,7 @@ namespace Core
 	public:
 		CoreGlobal()
 		{
+			LOCKGUARD<MUTEX>	LL{ m_Mutex };
 #ifdef USE_DEBUG
 			g_pDeadLockProfiler = new UDeadLockProfiler;
 #endif
@@ -27,8 +28,12 @@ namespace Core
 
 		~CoreGlobal()
 		{
+			LOCKGUARD<MUTEX>	LL{ m_Mutex };
 			// 만약 Register App이 비어있으면 크래쉬
-			ASSERT_CRASH(nullptr == g_RegisterApp);
+			if (nullptr == g_RegisterApp)
+			{
+				CRASH("NOT REGISTER APP")
+			}
 			delete g_RegisterApp;
 
 #ifdef USE_DEBUG
@@ -36,6 +41,9 @@ namespace Core
 #endif
 			delete g_pMemoryAdminster;
 		}
+
+	private:
+		MUTEX		m_Mutex;
 	};
 	CoreGlobal CoreGrobal;
 

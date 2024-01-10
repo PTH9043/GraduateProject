@@ -1,11 +1,7 @@
 #ifndef _SERVERFRAMEWORK_SERVER_PUBLIC_CSERVERAPP_H
 #define _SERVERFRAMEWORK_SERVER_PUBLIC_CSERVERAPP_H
 
-#include "UBase.h"
-
-BEGIN(Core)
-class UCoreInstance;
-END
+#include "UApp.h"
 
 BEGIN(Server)
 class CServerAdiminstor;
@@ -14,19 +10,13 @@ class CServerAdiminstor;
 @ Explain
 - ServerApp을 관리하는 클래스
 */
-class CServerApp : public Core::UBase {
+class CServerApp : public Core::UApp {
 public:
 	CServerApp();
 	NO_COPY(CServerApp)
-	DESTRUCTOR(CServerApp)
 public:
-	void Init();
+	virtual _bool Start() override;
 private:
-	virtual void Free() override;
-
-private:
-	Core::SHPTR<Core::UCoreInstance>	m_spCoreInstance;
-	Core::SHPTR< CServerAdiminstor>		m_spServerAdiminster;
 };
 
 END

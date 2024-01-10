@@ -13,16 +13,20 @@ public:
 	UAwsConnector(OBJCON_CONSTRUCTOR);
 	DESTRUCTOR(UAwsConnector)
 public:
-	virtual _bool NativeConstruct() PURE;
+	virtual _bool Start() PURE;
 public: /* Get Set */
 	_bool IsAwsActivated() const { return m_isAwsActivated; }
-
+	AWSGAMESESSION& GetAwsGameSession(REF_RETURN) { return m_AwsGameSession; }
+	Aws::SDKOptions& GetSDKOption(REF_RETURN) { return m_SDKOptions; }
+	const _uint GetCheckTerminationCnt() const { return m_CheckTerminationCount; }
 protected:
 	void OnStartGameSession(Aws::GameLift::Server::Model::GameSession _Session);
 	void OnProcessTerminate();
 
 	virtual void StartGameSession() PURE;
 	virtual void TerminateGameSession(_int _exitCode) PURE;
+protected  /* */:
+	UFastSpinLock& GetFastSpinLock(REF_RETURN) { return m_FastSpinLock; }
 private:
 	virtual void Free() override;
 private:

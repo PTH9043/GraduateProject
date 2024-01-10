@@ -4,6 +4,8 @@
 #include "UService.h"
 
 BEGIN(Core)
+/* Aws Connector */
+class UAwsConnector;
 
 /*
 @ Date: 2024-01-05, Writer: นฺลยว๖
@@ -35,9 +37,9 @@ private:
 	virtual void Free() PURE;
 private:
 	// Session Conatiner
-	SESSIONCONTAINER		m_SessionContainer;
+	SESSIONCONTAINER				m_SessionContainer;
 	// Tcps
-	TCPACCEPTOR					m_TcpAcceptor;
+	TCPACCEPTOR							m_TcpAcceptor;
 };
 
 END

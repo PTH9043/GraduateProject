@@ -18,11 +18,12 @@ public:
 public:
 	virtual _bool Start() PURE;
 protected:
-	template<class T>
-	 requires ParentsChildType<UService, T>
-	SHPTR<T> CreateServiceObject() {
-		return CreateInitConstructor<T>(m_spCoreInstance);
+	template<class T, class... Args>
+	void CreateServiceObject(Args&&... _args) {
+		m_spService = CreateInitConstructor<T>(m_spCoreInstance, std::forward<Args>(_args)...);
 	}
+protected: /* get set*/
+	CSHPTRREF<UService> GetService() { return m_spService; }
 private:
 	SHPTR<UCoreInstance> m_spCoreInstance;
 	SHPTR<UService>			 m_spService;
