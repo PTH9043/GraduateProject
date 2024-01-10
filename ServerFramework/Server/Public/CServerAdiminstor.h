@@ -18,6 +18,7 @@ public:
 	DESTRUCTOR(CServerAdiminstor)
 public:
 	virtual bool NativeConstruct() override;
+	virtual bool Start() override;
 public: /*  Get Set*/
 	SHPTR<CAwsServerConnector> GetAwsConnector() const { return m_spAwsConnector; }
 protected:

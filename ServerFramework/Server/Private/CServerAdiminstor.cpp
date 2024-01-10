@@ -21,6 +21,15 @@ namespace Server
 		return __super::NativeConstruct();
 	}
 
+	bool CServerAdiminstor::Start()
+	{
+		if(nullptr != m_spAwsConnector)
+		{
+			m_spAwsConnector->Start();
+		}
+		return __super::Start();
+	}
+
 	void CServerAdiminstor::Connect()
 	{
 		TCPACCEPTOR& TcpAcceptor = GetTcpAccepctor();
@@ -48,5 +57,6 @@ namespace Server
 
 	void CServerAdiminstor::Free()
 	{
+		m_spAwsConnector.reset();
 	}
 }

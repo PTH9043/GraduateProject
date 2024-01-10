@@ -13,7 +13,7 @@ namespace Server
 
 	_bool CServerApp::Start()
 	{
-		CreateServiceObject<CServerAdiminstor>();
+		CreateServiceObject<CServerAdiminstor>(true);
 		std::cout << "Start Server!\n";
 		return GetService()->Start();
 	}
