@@ -34,7 +34,7 @@ protected:
 public:
 public:
 	static unique_ptr<CbvSrvUavDescriptorHeap> m_pDescriptorHeap;
-//	static CbvSrvUavDescriptorHeap* m_pDescriptorHeap;
+
 
 	static void CreateCbvSrvDescriptorHeaps(const ComPtr<ID3D12Device>& _Device, int nConstantBufferViews, int nShaderResourceViews);
 	static void CreateConstantBufferViews(const ComPtr<ID3D12Device>& _Device, int nConstantBufferViews, const ComPtr<ID3D12Resource>& _ConstantBuffers, UINT nStride);

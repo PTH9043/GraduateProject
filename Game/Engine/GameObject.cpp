@@ -58,7 +58,7 @@ void CGameObject::SetChild(std::shared_ptr<CGameObject> pChild, bool bReferenceU
 	}
 	if (pChild)
 	{
-		pChild->m_pParent = this;
+		pChild->m_pParent =this;
 	}
 }
 
@@ -109,7 +109,7 @@ void CGameObject::Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, 
 	if (!m_bActive) return;
 
 
-
+	UpdateTransform(NULL);
 
 	UpdateShaderVariables(_CommandList);
 
@@ -121,7 +121,7 @@ void CGameObject::Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, 
 		{
 			if (m_ppMaterials[i])
 			{
-				if (m_ppMaterials[i]->m_pShader) m_ppMaterials[i]->m_pShader->Render(_CommandList, pCamera);
+				if (m_ppMaterials[i]->m_pShader) m_ppMaterials[0]->m_pShader->Render(_CommandList, pCamera);
 				m_ppMaterials[i]->UpdateShaderVariables(_CommandList);
 			}
 
@@ -296,7 +296,6 @@ void CGameObject::LoadMaterialsFromFile(const ComPtr<ID3D12Device>& _Device, con
 
 	m_ppMaterials.resize(m_nMaterials);
 	for (int i = 0; i < m_nMaterials; i++) m_ppMaterials[i] = NULL;
-
 	shared_ptr<CMaterial> pMaterial = NULL;
 	shared_ptr<CTexture> pTexture = NULL;
 
@@ -318,7 +317,7 @@ void CGameObject::LoadMaterialsFromFile(const ComPtr<ID3D12Device>& _Device, con
 			pTexture->SetRootParameterIndex(0, 2);
 #endif
 			pMaterial->SetTexture(pTexture);
-			//			pMaterial->SetShader(pShader);
+			pMaterial->SetShader(pShader);
 			SetMaterial(nMaterial, pMaterial);
 
 			UINT nMeshType = GetMeshType();
@@ -400,7 +399,7 @@ void CGameObject::LoadFrameHierarchyFromFile(const ComPtr<ID3D12Device>& _Device
 
 	int nFrame = 0, nTextures = 0;
 
-	
+	//shared_ptr<CGameObject> pGameObject;
 
 	for (; ; )
 	{
@@ -410,7 +409,7 @@ void CGameObject::LoadFrameHierarchyFromFile(const ComPtr<ID3D12Device>& _Device
 
 		if (!strcmp(pstrToken, "<Frame>:"))
 		{
-			
+			//pGameObject = make_shared<CGameObject>();
 
 			nReads = (UINT)::fread(&nFrame, sizeof(int), 1, pInFile);
 			nReads = (UINT)::fread(&nTextures, sizeof(int), 1, pInFile);
@@ -452,7 +451,7 @@ void CGameObject::LoadFrameHierarchyFromFile(const ComPtr<ID3D12Device>& _Device
 				{
 					std::shared_ptr<CGameObject> pChild = std::make_shared<CGameObject>();
 					pChild ->LoadFrameHierarchyFromFile(_Device, _CommandList, pd3dGraphicsRootSignature, this, pInFile, pShader);
-					if (pChild) SetChild(pChild,false);
+					if (pChild) pChild->SetChild(pChild,false);
 #ifdef _WITH_DEBUG_FRAME_HIERARCHY
 					TCHAR pstrDebug[256] = { 0 };
 					_stprintf_s(pstrDebug, 256, _T("(Frame: %p) (Parent: %p)\n"), pChild, pGameObject);
@@ -480,14 +479,25 @@ void CGameObject::PrintFrameInfo(shared_ptr<CGameObject> pGameObject, shared_ptr
 	if (pGameObject->m_pChild) CGameObject::PrintFrameInfo(pGameObject->m_pChild, pGameObject);
 }
 
-shared_ptr<CGameObject> CGameObject::LoadGeometryFromFile(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, ID3D12RootSignature* pd3dGraphicsRootSignature, char* pstrFileName, shared_ptr<CShader> pShader)
+void CGameObject::LoadGeometryFromFile(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, ID3D12RootSignature* pd3dGraphicsRootSignature, char* pstrFileName, shared_ptr<CShader> pShader)
 {
 	FILE* pInFile = NULL;
 	::fopen_s(&pInFile, pstrFileName, "rb");
 	::rewind(pInFile);
-
-	shared_ptr<CGameObject> pGameObject = make_shared<CGameObject>();
-	pGameObject->LoadFrameHierarchyFromFile(_Device, _CommandList, pd3dGraphicsRootSignature, NULL, pInFile, pShader);
+	//FILE* pInFile = fopen(pstrFileName, "rb");
+	//if (pInFile != NULL) {
+	//	fseek(pInFile, 0, SEEK_SET); // 파일의 시작으로 이동
+	//	// 파일 작업 수행
+	//	// ...
+	//	fclose(pInFile); // 파일 닫기
+	//}
+	//else {
+	//	// 파일을 열지 못한 경우 처리
+	//	perror("파일 열기 실패"); // 오류 메시지 출력
+	//	// 또는 사용자에게 오류를 알리고 적절히 처리
+	//}
+	
+	this->LoadFrameHierarchyFromFile(_Device, _CommandList, pd3dGraphicsRootSignature, NULL, pInFile, pShader);
 
 #ifdef _WITH_DEBUG_FRAME_HIERARCHY
 	TCHAR pstrDebug[256] = { 0 };
@@ -497,5 +507,5 @@ shared_ptr<CGameObject> CGameObject::LoadGeometryFromFile(const ComPtr<ID3D12Dev
 	CGameObject::PrintFrameInfo(pGameObject, NULL);
 #endif
 
-	return(pGameObject);
+//	return(pGameObject);
 }

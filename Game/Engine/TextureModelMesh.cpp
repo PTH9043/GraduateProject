@@ -4,6 +4,21 @@
 #include "TextureModelMesh.h"
 
 
+void TextureModelMesh::ReleaseUploadBuffers()
+{
+    if (m_pd3dPositionUploadBuffer) m_pd3dPositionUploadBuffer.Reset();
+    if (m_pd3dNormalUploadBuffer) m_pd3dNormalUploadBuffer.Reset();
+    if (m_ppd3dIndexUploadBuffers.data())
+    {
+        m_ppd3dIndexUploadBuffers.clear();
+        vector<ComPtr<ID3D12Resource>>().swap(m_ppd3dIndexUploadBuffers);
+    }
+    if (m_pd3dTextureCoord0UploadBuffer)m_pd3dTextureCoord0UploadBuffer.Reset();
+    if (m_pd3dTextureCoord1UploadBuffer)m_pd3dTextureCoord1UploadBuffer.Reset();
+    if (m_pd3dTangentUploadBuffer)m_pd3dTangentUploadBuffer.Reset();
+    if (m_pd3dBiTangentUploadBuffer)m_pd3dBiTangentUploadBuffer.Reset();
+};
+
 
 void TextureModelMesh::LoadMeshFromFile(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, const string& filePath)
 {

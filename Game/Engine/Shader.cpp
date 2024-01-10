@@ -145,9 +145,9 @@ void CShader::UpdateShaderVariables(const ComPtr<ID3D12GraphicsCommandList>& _Co
 void CShader::UpdateShaderVariable(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, XMFLOAT4X4
 	* pxmf4x4World)
 {
-	XMFLOAT4X4 xmf4x4World;
-	XMStoreFloat4x4(&xmf4x4World, XMMatrixTranspose(XMLoadFloat4x4(pxmf4x4World)));
-	_CommandList->SetGraphicsRoot32BitConstants(0, 16, &xmf4x4World, 0);
+	//XMFLOAT4X4 xmf4x4World;
+	//XMStoreFloat4x4(&xmf4x4World, XMMatrixTranspose(XMLoadFloat4x4(pxmf4x4World)));
+	//_CommandList->SetGraphicsRoot32BitConstants(0, 16, &xmf4x4World, 0);
 }
 void CShader::ReleaseShaderVariables()
 {

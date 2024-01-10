@@ -14,11 +14,13 @@ CTexture::CTexture(int nTextures, UINT nTextureType, int nSamplers, int nRootPar
 	{
 		m_ppd3dTextureUploadBuffers.resize(m_nTextures); // 업로드 버퍼 생성
 		m_ppd3dTextures.resize(m_nTextures); // 텍스쳐 리소스 생성
-		m_ppstrTextureNames.resize(m_nTextures); // 각 텍스쳐의 이름을 저장하는 배열 생성
-		for (int i = 0; i < m_nTextures; i++) {
-			m_ppstrTextureNames[i].resize(64);
-			m_ppstrTextureNames[i][0] = '\0';
-		}
+		//m_ppstrTextureNames.resize(m_nTextures); // 각 텍스쳐의 이름을 저장하는 배열 생성
+		//for (int i = 0; i < m_nTextures; i++) {
+		//	m_ppstrTextureNames[i].resize(64);
+		//	m_ppstrTextureNames[i][0] = '\0';
+		//}
+		m_ppstrTextureNames = new _TCHAR[m_nTextures][64];
+		for (int i = 0; i < m_nTextures; i++) m_ppstrTextureNames[i][0] = '\0';
 
 		m_pd3dSrvGpuDescriptorHandles.resize(m_nTextures); // 
 		for (int i = 0; i < m_nTextures; i++) m_pd3dSrvGpuDescriptorHandles[i].ptr = NULL;
@@ -102,7 +104,7 @@ void CTexture::LoadTextureFromDDSFile(const ComPtr<ID3D12Device>& _Device, const
 {
 	m_pnResourceTypes[nIndex] = nResourceType;
 	m_ppd3dTextures[nIndex] = CreateTextureResourceFromDDSFile(_Device.Get(),_CommandList.Get(), pszFileName, &m_ppd3dTextureUploadBuffers[nIndex], D3D12_RESOURCE_STATE_GENERIC_READ/*D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE*/);
-	m_ppstrTextureNames[nIndex] = pszFileName;
+	//m_ppstrTextureNames[nIndex] = pszFileName;
 }
 
 ComPtr<ID3D12Resource> CTexture::CreateTexture(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, UINT nIndex, UINT nResourceType, UINT nWidth, UINT nHeight, UINT nElements, UINT nMipLevels, DXGI_FORMAT dxgiFormat, D3D12_RESOURCE_FLAGS d3dResourceFlags, D3D12_RESOURCE_STATES d3dResourceStates, D3D12_CLEAR_VALUE* pd3dClearValue)
@@ -138,14 +140,17 @@ int CTexture::LoadTextureFromFile(const ComPtr<ID3D12Device>& _Device, const Com
 	{
 		bLoaded = true;
 		char pstrFilePath[64] = { '\0' };
+
+		//strcpy_s(pstrFilePath, 64, "..\\Resources\\Model\\Textures\\");
 		strcpy_s(pstrFilePath, 64, "Model/Textures/");
 
 		bDuplicated = (pstrTextureName[0] == '@');
 		strcpy_s(pstrFilePath + 15, 64 - 15, (bDuplicated) ? (pstrTextureName + 1) : pstrTextureName);
 		strcpy_s(pstrFilePath + 15 + ((bDuplicated) ? (nStrLength - 1) : nStrLength), 64 - 15 - ((bDuplicated) ? (nStrLength - 1) : nStrLength), ".dds");
-
+		//경로 28글자
 		size_t nConverted = 0;
-		mbstowcs_s(&nConverted, const_cast<wchar_t*>(m_ppstrTextureNames[nIndex].data()), 64, pstrFilePath, _TRUNCATE);
+		//mbstowcs_s(&nConverted, const_cast<wchar_t*>(m_ppstrTextureNames[nIndex].data()), 128, pstrFilePath, _TRUNCATE);
+		mbstowcs_s(&nConverted, m_ppstrTextureNames[nIndex], 64, pstrFilePath, _TRUNCATE);
 
 		//#define _WITH_DISPLAY_TEXTURE_NAME
 
@@ -154,12 +159,12 @@ int CTexture::LoadTextureFromFile(const ComPtr<ID3D12Device>& _Device, const Com
 #ifdef _WITH_DISPLAY_TEXTURE_NAME
 		static int nTextures = 0, nRepeatedTextures = 0;
 		TCHAR pstrDebug[256] = { 0 };
-		_stprintf_s(pstrDebug, 256, _T("Texture Name: %d %c %s\n"), (pstrTextureName[0] == '@') ? nRepeatedTextures++ : nTextures++, (pstrTextureName[0] == '@') ? '@' : ' ', m_ppstrTextureNames[nIndex].c_str());
+		_stprintf_s(pstrDebug, 256, _T("Texture Name: %d %c %s\n"), (pstrTextureName[0] == '@') ? nRepeatedTextures++ : nTextures++, (pstrTextureName[0] == '@') ? '@' : ' ', m_ppstrTextureNames[nIndex]);
 		OutputDebugString(pstrDebug);
 #endif
 		if (!bDuplicated)
 		{
-			LoadTextureFromDDSFile(_Device, _CommandList, m_ppstrTextureNames[nIndex].data(), RESOURCE_TEXTURE2D, nIndex);
+			LoadTextureFromDDSFile(_Device, _CommandList, m_ppstrTextureNames[nIndex], RESOURCE_TEXTURE2D, nIndex);
 			CScene::CreateShaderResourceView(_Device, this, nIndex);
 #ifdef _WITH_STANDARD_TEXTURE_MULTIPLE_DESCRIPTORS
 			m_pnRootParameterIndices[nIndex] = PARAMETER_STANDARD_TEXTURE + nIndex;
@@ -176,7 +181,7 @@ int CTexture::LoadTextureFromFile(const ComPtr<ID3D12Device>& _Device, const Com
 					pRootGameObject = pRootGameObject->m_pParent;
 				}
 				D3D12_GPU_DESCRIPTOR_HANDLE d3dSrvGpuDescriptorHandle;
-				int nParameterIndex = pRootGameObject->FindReplicatedTexture(m_ppstrTextureNames[nIndex].data(), &d3dSrvGpuDescriptorHandle);
+				int nParameterIndex = pRootGameObject->FindReplicatedTexture(m_ppstrTextureNames[nIndex], &d3dSrvGpuDescriptorHandle);
 				if (nParameterIndex >= 0)
 				{
 					m_pd3dSrvGpuDescriptorHandles[nIndex] = d3dSrvGpuDescriptorHandle;

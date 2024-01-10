@@ -122,8 +122,8 @@ public:
 public:
 	void LoadMaterialsFromFile(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, CGameObject*, FILE* pInFile, shared_ptr<CShader> pShader);
 
-	 void LoadFrameHierarchyFromFile(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, ID3D12RootSignature* pd3dGraphicsRootSignature, CGameObject* pParent, FILE* pInFile, shared_ptr<CShader> pShader);
-	shared_ptr<CGameObject> LoadGeometryFromFile(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, ID3D12RootSignature* pd3dGraphicsRootSignature, char* pstrFileName, shared_ptr<CShader> pShader);
+	void LoadFrameHierarchyFromFile(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, ID3D12RootSignature* pd3dGraphicsRootSignature, CGameObject* pParent, FILE* pInFile, shared_ptr<CShader> pShader);
+	void LoadGeometryFromFile(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, ID3D12RootSignature* pd3dGraphicsRootSignature, char* pstrFileName, shared_ptr<CShader> pShader);
 
 	static void PrintFrameInfo(shared_ptr<CGameObject> pGameObject, shared_ptr<CGameObject> pParent );
 };

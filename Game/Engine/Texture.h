@@ -28,7 +28,8 @@ private:
 	vector<ComPtr<ID3D12Resource>> m_ppd3dTextureUploadBuffers;	//Texture 업로드 버퍼
 
 	vector<UINT> m_pnResourceTypes;		// 각각의 Texture 들의 타입
-	vector<std::wstring> m_ppstrTextureNames;	// Texture의 이름
+	//vector<wstring> m_ppstrTextureNames;	// Texture의 이름
+	_TCHAR(*m_ppstrTextureNames)[64] = NULL;
 	vector<DXGI_FORMAT> m_pdxgiBufferFormats;	// Texture Dxgi 포맷
 	vector<int> m_pnBufferElements;
 	vector<int> m_pnBufferStrides;
@@ -65,7 +66,7 @@ public:
 //---------------------
 	int GetRootParameters() { return(m_nRootParameters); }
 	int GetTextures() { return(m_nTextures); }
-	_TCHAR* GetTextureName(int nIndex) { return(m_ppstrTextureNames[nIndex].data()); }
+	_TCHAR* GetTextureName(int nIndex) { return(m_ppstrTextureNames[nIndex]); }
 
 	ComPtr<ID3D12Resource> GetResource(int nIndex) { return(m_ppd3dTextures[nIndex]); }
 	D3D12_GPU_DESCRIPTOR_HANDLE GetGpuDescriptorHandle(int nIndex) { return(m_pd3dSrvGpuDescriptorHandles[nIndex]); }

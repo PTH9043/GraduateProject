@@ -166,7 +166,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Resources\Shader\Shaders.hlsli">
+    <None Include="..\CodeDungeon\Shader\Shaders.hlsli">
       <Filter>HLSL</Filter>
     </None>
   </ItemGroup>

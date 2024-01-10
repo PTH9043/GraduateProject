@@ -152,16 +152,23 @@ void CScene::BuildObjects(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D
 	CreateCbvSrvDescriptorHeaps(_Device, 0, 30);
 	m_ppObjects = make_shared<CGameObject>();
 
-	shared_ptr<CDiffusedShader> pShader = make_shared<CDiffusedShader>();
-	pShader->CreateShader(L"..\\Resources\\Shader\\Shaders.hlsli", "VSDiffused", "PSDiffused", _Device, _RootSignature);
-	pShader->CreateShaderVariables(_Device, _CommandList);
-	/*m_ppObjects->LoadGeometryFromFile(_Device.Get(), _CommandList.Get(), _RootSignature.Get(), "Rock.bin", pShader);
-	m_ppObjects->SetShader(pShader);*/
-	
-	shared_ptr<CTriangleMesh> Tri = make_shared<CTriangleMesh>(_Device, _CommandList);
-	m_ppObjects->SetMesh(Tri);
-	m_ppObjects->SetShader(pShader);
+	//shared_ptr<CDiffusedShader> pShader = make_shared<CDiffusedShader>();
+	//pShader->CreateShader(L"..\\Resources\\Shader\\Shaders.hlsli", "VSDiffused", "PSDiffused", _Device, _RootSignature);
+	//pShader->CreateShaderVariables(_Device, _CommandList);
+	///*m_ppObjects->LoadGeometryFromFile(_Device.Get(), _CommandList.Get(), _RootSignature.Get(), "Rock.bin", pShader);
+	//m_ppObjects->SetShader(pShader);*/
+	//
+	//shared_ptr<CTriangleMesh> Tri = make_shared<CTriangleMesh>(_Device, _CommandList);
+	//m_ppObjects->SetMesh(Tri);
+	//m_ppObjects->SetShader(pShader);
 
+
+	shared_ptr<CTexturedModelShader> pShader = make_shared<CTexturedModelShader>();
+	pShader->CreateShader(L"Shader/Shaders.hlsli", "VSStandard", "PSStandard", _Device, _RootSignature);
+	pShader->CreateShaderVariables(_Device, _CommandList);
+	m_ppObjects->LoadGeometryFromFile(_Device.Get(), _CommandList.Get(), _RootSignature.Get(),"Model/DB_Five.bin", pShader);
+	// "Model/DB_Five.bin" 
+	//"..\\Resources\\Model\\DB_Five.bin"
 }
 
 void CScene::ReleaseObjects()

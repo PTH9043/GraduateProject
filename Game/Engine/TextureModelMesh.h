@@ -32,6 +32,6 @@ public:
 public:
 	virtual void CreateShaderVariables(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList) {}
 	virtual void UpdateShaderVariables(const ComPtr<ID3D12GraphicsCommandList>& _CommandList) {}
-	virtual void ReleaseUploadBuffers() {}
+	virtual void ReleaseUploadBuffers();
 };
 

@@ -15,9 +15,9 @@ void RootSignature::CreateGraphicsRootSignature(ComPtr<ID3D12Device>& _Device)
 
 
 	CD3DX12_ROOT_PARAMETER pd3dRootParameters[3]{};
-//	pd3dRootParameters[0].InitAsConstantBufferView(1); // b1 Camera관련
-	pd3dRootParameters[0].InitAsConstants(32, 1, 0, D3D12_SHADER_VISIBILITY_VERTEX); //Camera관련.
-	pd3dRootParameters[1].InitAsConstants(17, 2, 0, D3D12_SHADER_VISIBILITY_VERTEX); //GameObject관련.
+	pd3dRootParameters[0].InitAsConstantBufferView(1); // b1 Camera관련
+	//pd3dRootParameters[0].InitAsConstants(32, 1, 0, D3D12_SHADER_VISIBILITY_ALL); //Camera관련.
+	pd3dRootParameters[1].InitAsConstants(17, 2, 0, D3D12_SHADER_VISIBILITY_ALL); //GameObject관련.
 	pd3dRootParameters[2].InitAsDescriptorTable(1, pd3dDescriptorRanges);	//텍스처 
 	
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc[1]{};
