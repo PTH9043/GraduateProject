@@ -22,6 +22,7 @@
 
 #ifdef WINDOW_OS
 #define _WIN32_WINNT 0x0A00
+#define WIN32
 #else
 #include <stdlib.h>
 #include <sys/mman.h>
@@ -47,7 +48,9 @@
 #pragma comment(lib, "aws-cpp-sdk-sqs")
 #pragma comment(lib, "aws-cpp-sdk-sts")
 #pragma comment (lib, "aws-cpp-sdk-gamelift")
-#pragma comment (lib, "aws-cpp-sdk-gamelift-server")
+#pragma comment (lib, "aws-cpp-sdk-gamelift-serverd")
+#pragma comment (lib, "libcrypto")
+#pragma comment (lib, "libssl")
 #else
 #pragma comment (lib, "PthMath")
 #pragma comment(lib, "aws-cpp-sdk-core")
@@ -55,10 +58,13 @@
 #pragma comment(lib, "aws-cpp-sdk-sts")
 #pragma comment (lib, "aws-cpp-sdk-gamelift")
 #pragma comment (lib, "aws-cpp-sdk-gamelift-server")
+#pragma comment (lib, "libcrypto")
+#pragma comment (lib, "libssl")
 #endif
 
 #include <aws/core/Aws.h>
 #define GAMELIFT_USE_STD
+#define DDGAMELIFT_USE_STD = 1
 #include <aws/gamelift/server/GameLiftServerAPI.h>
 
 #include <iostream>
