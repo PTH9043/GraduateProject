@@ -35,8 +35,8 @@ CTexture::CTexture(int nTextures, UINT nTextureType, int nSamplers, int nRootPar
 		for (int i = 0; i < m_nTextures; i++) m_pnBufferStrides[i] = 0;
 	}
 
-	m_nRootParameters = nRootParameters;
-	if (nRootParameters > 0) m_pnRootParameterIndices.resize(nRootParameters);
+	m_nRootParameters = 7;
+	if (nRootParameters > 0) m_pnRootParameterIndices.resize(7);   //이 부분 ->FindReplicateTextures과 파라메터 개수 관련 검토해야함.
 	for (int i = 0; i < m_nRootParameters; i++) m_pnRootParameterIndices[i] = -1;
 
 	m_nSamplers = nSamplers;
@@ -188,10 +188,10 @@ int CTexture::LoadTextureFromFile(const ComPtr<ID3D12Device>& _Device, const Com
 					m_pnRootParameterIndices[nIndex] = nParameterIndex;
 				}
 			}
-			/*else {
-				LoadTextureFromDDSFile(_Device, _CommandList, m_ppstrTextureNames[nIndex].data(), RESOURCE_TEXTURE2D, nIndex);
+			else {
+				LoadTextureFromDDSFile(_Device, _CommandList, m_ppstrTextureNames[nIndex], RESOURCE_TEXTURE2D, nIndex);
 				CScene::CreateShaderResourceView(_Device, this, nIndex);
-			}*/
+			}
 		}
 	}
 	return(bLoaded);

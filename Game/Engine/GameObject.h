@@ -28,7 +28,6 @@ public:
 
 public:
 	CGameObject();
-	//CGameObject(int nMaterials);
 	CGameObject(int nMaterials);
 	virtual ~CGameObject();
 
@@ -39,12 +38,8 @@ public:
 	int	m_nMaterials = 0;
 	vector<shared_ptr<CMaterial>> m_ppMaterials;
 
-
-	//CMaterial *m_pMaterial = NULL;
-
 	XMFLOAT4X4						m_xmf4x4Transform;
 	XMFLOAT4X4						m_xmf4x4World;
-
 
 	CGameObject* m_pParent = NULL;
 	shared_ptr<CGameObject> m_pChild = nullptr;
@@ -56,7 +51,7 @@ public:
 	void SetMaterial(int nMaterial, shared_ptr<CMaterial> pMaterial);
 	
 
-	void SetChild(std::shared_ptr<CGameObject> pChild, bool bReferenceUpdate = false);
+	void SetChild(shared_ptr<CGameObject> pChild);
 
 	virtual void Animate(float fTimeElapsed, XMFLOAT4X4* pxmf4x4Parent = NULL);
 

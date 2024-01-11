@@ -45,7 +45,7 @@ void CGameObject::Release()
 	if (--m_nReferences <= 0) delete this;
 }
 
-void CGameObject::SetChild(std::shared_ptr<CGameObject> pChild, bool bReferenceUpdate)
+void CGameObject::SetChild(std::shared_ptr<CGameObject> pChild)
 {
 	if (m_pChild)
 	{
@@ -107,9 +107,6 @@ CGameObject* CGameObject::FindFrame(char* pstrFrameName)
 void CGameObject::Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, CCamera* pCamera)
 {
 	if (!m_bActive) return;
-
-
-	UpdateTransform(NULL);
 
 	UpdateShaderVariables(_CommandList);
 
@@ -367,22 +364,22 @@ void CGameObject::LoadMaterialsFromFile(const ComPtr<ID3D12Device>& _Device, con
 		{
 			if (pTexture->LoadTextureFromFile(_Device, _CommandList, pParent, pInFile, pShader, 2)) pMaterial->SetMaterialType(MATERIAL_NORMAL_MAP);
 		}
-		else if (!strcmp(pstrToken, "<MetallicMap>:"))
-		{
-			if (pTexture->LoadTextureFromFile(_Device, _CommandList, pParent, pInFile, pShader, 3)) pMaterial->SetMaterialType(MATERIAL_METALLIC_MAP);
-		}
-		else if (!strcmp(pstrToken, "<EmissionMap>:"))
-		{
-			if (pTexture->LoadTextureFromFile(_Device, _CommandList, pParent, pInFile, pShader, 4)) pMaterial->SetMaterialType(MATERIAL_EMISSION_MAP);
-		}
-		else if (!strcmp(pstrToken, "<DetailAlbedoMap>:"))
-		{
-			if (pTexture->LoadTextureFromFile(_Device, _CommandList, pParent, pInFile, pShader, 5)) pMaterial->SetMaterialType(MATERIAL_DETAIL_ALBEDO_MAP);
-		}
-		else if (!strcmp(pstrToken, "<DetailNormalMap>:"))
-		{
-			if (pTexture->LoadTextureFromFile(_Device, _CommandList, pParent, pInFile, pShader, 6)) pMaterial->SetMaterialType(MATERIAL_DETAIL_NORMAL_MAP);
-		}
+		//else if (!strcmp(pstrToken, "<MetallicMap>:"))
+		//{
+		//	if (pTexture->LoadTextureFromFile(_Device, _CommandList, pParent, pInFile, pShader, 3)) pMaterial->SetMaterialType(MATERIAL_METALLIC_MAP);
+		//}
+		//else if (!strcmp(pstrToken, "<EmissionMap>:"))
+		//{
+		//	if (pTexture->LoadTextureFromFile(_Device, _CommandList, pParent, pInFile, pShader, 4)) pMaterial->SetMaterialType(MATERIAL_EMISSION_MAP);
+		//}
+		//else if (!strcmp(pstrToken, "<DetailAlbedoMap>:"))
+		//{
+		//	if (pTexture->LoadTextureFromFile(_Device, _CommandList, pParent, pInFile, pShader, 5)) pMaterial->SetMaterialType(MATERIAL_DETAIL_ALBEDO_MAP);
+		//}
+		//else if (!strcmp(pstrToken, "<DetailNormalMap>:"))
+		//{
+		//	if (pTexture->LoadTextureFromFile(_Device, _CommandList, pParent, pInFile, pShader, 6)) pMaterial->SetMaterialType(MATERIAL_DETAIL_NORMAL_MAP);
+		//}
 		else if (!strcmp(pstrToken, "</Materials>"))
 		{
 			break;
@@ -449,9 +446,9 @@ void CGameObject::LoadFrameHierarchyFromFile(const ComPtr<ID3D12Device>& _Device
 			{
 				for (int i = 0; i < nChilds; i++)
 				{
-					std::shared_ptr<CGameObject> pChild = std::make_shared<CGameObject>();
+					shared_ptr<CGameObject> pChild = make_shared<CGameObject>();
 					pChild ->LoadFrameHierarchyFromFile(_Device, _CommandList, pd3dGraphicsRootSignature, this, pInFile, pShader);
-					if (pChild) pChild->SetChild(pChild,false);
+					if (pChild) SetChild(pChild);
 #ifdef _WITH_DEBUG_FRAME_HIERARCHY
 					TCHAR pstrDebug[256] = { 0 };
 					_stprintf_s(pstrDebug, 256, _T("(Frame: %p) (Parent: %p)\n"), pChild, pGameObject);

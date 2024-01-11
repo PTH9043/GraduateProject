@@ -166,9 +166,11 @@ void CScene::BuildObjects(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D
 	shared_ptr<CTexturedModelShader> pShader = make_shared<CTexturedModelShader>();
 	pShader->CreateShader(L"Shader/Shaders.hlsli", "VSStandard", "PSStandard", _Device, _RootSignature);
 	pShader->CreateShaderVariables(_Device, _CommandList);
-	m_ppObjects->LoadGeometryFromFile(_Device.Get(), _CommandList.Get(), _RootSignature.Get(),"Model/DB_Five.bin", pShader);
+	m_ppObjects->LoadGeometryFromFile(_Device.Get(), _CommandList.Get(), _RootSignature.Get(),"Model/MainTank.bin", pShader);
 	// "Model/DB_Five.bin" 
 	//"..\\Resources\\Model\\DB_Five.bin"
+
+	m_ppObjects->Rotate(0,-90.0f,0);
 }
 
 void CScene::ReleaseObjects()
@@ -203,7 +205,7 @@ void CScene::Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, CCame
 
 	if (pCamera) pCamera->UpdateShaderVariables(_CommandList);
 
-	
+	if (m_ppObjects)m_ppObjects->UpdateTransform(nullptr);
 	if (m_ppObjects) m_ppObjects->Render(_CommandList.Get(), pCamera);
 	
 }
