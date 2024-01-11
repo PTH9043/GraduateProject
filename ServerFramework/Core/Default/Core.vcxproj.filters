@@ -73,6 +73,9 @@
     <Filter Include="97.Super\App">
       <UniqueIdentifier>{a434c906-b883-4658-95d9-97e7fa7e9c00}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.Network\Connector">
+      <UniqueIdentifier>{c245dd3e-5bc1-4aa9-b629-2d70ab8d53b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\UBase.h">
@@ -171,6 +174,9 @@
     <ClInclude Include="..\Public\URoom.h">
       <Filter>03.Network\Room</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UAwsConnector.h">
+      <Filter>03.Network\Connector</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\UBase.cpp">
@@ -238,6 +244,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\URoom.cpp">
       <Filter>03.Network\Room</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UAwsConnector.cpp">
+      <Filter>03.Network\Connector</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

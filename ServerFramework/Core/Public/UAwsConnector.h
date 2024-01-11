@@ -1,0 +1,15 @@
+#ifndef _SERVERFRAMEWORK_CORE_PUBLIC_UAWSCONNECTOR_H
+#define _SERVERFRAMEWORK_CORE_PUBLIC_UAWSCONNECTOR_H
+
+#include "UObject.h"
+
+BEGIN(Core)
+
+class CACHE_ALGIN_CORE_DLL  UAwsConnector abstract : public UObject {
+public:
+	UAwsConnector();
+};
+
+END
+
+#endif // _SERVERFRAMEWORK_CORE_PUBLIC_UAWSCONNECTOR_H

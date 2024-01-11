@@ -38,6 +38,7 @@
     <ClInclude Include="..\Public\Memory.h" />
     <ClInclude Include="..\Public\SmartPointer.h" />
     <ClInclude Include="..\Public\UApp.h" />
+    <ClInclude Include="..\Public\UAwsConnector.h" />
     <ClInclude Include="..\Public\UClientService.h" />
     <ClInclude Include="..\Public\ULogManager.h" />
     <ClInclude Include="..\Public\URandomManager.h" />
@@ -61,6 +62,7 @@
     <ClCompile Include="..\Private\Memory.cpp" />
     <ClCompile Include="..\Private\SmartPointer.cpp" />
     <ClCompile Include="..\Private\UApp.cpp" />
+    <ClCompile Include="..\Private\UAwsConnector.cpp" />
     <ClCompile Include="..\Private\UClientService.cpp" />
     <ClCompile Include="..\Private\ULogManager.cpp" />
     <ClCompile Include="..\Private\URandomManager.cpp" />

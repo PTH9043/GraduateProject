@@ -46,8 +46,6 @@ private:
 	TCPSOCKET						m_TcpSocket;
 	// Lock
 	MUTEX								m_Lock;
-	// AWS Activation
-	_bool									m_isAwsActivation;
 };
 
 END
