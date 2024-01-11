@@ -47,25 +47,19 @@
 #pragma comment(lib, "aws-cpp-sdk-core")
 #pragma comment(lib, "aws-cpp-sdk-sqs")
 #pragma comment(lib, "aws-cpp-sdk-sts")
-#pragma comment (lib, "aws-cpp-sdk-gamelift")
-#pragma comment (lib, "aws-cpp-sdk-gamelift-serverd")
-#pragma comment (lib, "libcrypto")
-#pragma comment (lib, "libssl")
+#pragma comment(lib, "aws-cpp-sdk-ec2")
+#pragma comment(lib, "aws-cpp-sdk-s3")
 #else
 #pragma comment (lib, "PthMath")
 #pragma comment(lib, "aws-cpp-sdk-core")
 #pragma comment(lib, "aws-cpp-sdk-sqs")
 #pragma comment(lib, "aws-cpp-sdk-sts")
-#pragma comment (lib, "aws-cpp-sdk-gamelift")
-#pragma comment (lib, "aws-cpp-sdk-gamelift-server")
-#pragma comment (lib, "libcrypto")
-#pragma comment (lib, "libssl")
+#pragma comment(lib, "aws-cpp-sdk-ec2")
+#pragma comment(lib, "aws-cpp-sdk-s3")
 #endif
 
 #include <aws/core/Aws.h>
-#define GAMELIFT_USE_STD
-#define DDGAMELIFT_USE_STD = 1
-#include <aws/gamelift/server/GameLiftServerAPI.h>
+#include <aws/s3/s3.h>
 
 #include <iostream>
 #include <atomic>
