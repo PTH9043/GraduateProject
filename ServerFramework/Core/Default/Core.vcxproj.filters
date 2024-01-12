@@ -236,9 +236,6 @@
     <ClCompile Include="..\Private\INIReader.cpp">
       <Filter>98.Utility\INIReader</Filter>
     </ClCompile>
-    <ClCompile Include="..\Public\ini.cpp">
-      <Filter>98.Utility\INIReader</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\UApp.cpp">
       <Filter>97.Super\App</Filter>
     </ClCompile>
@@ -247,6 +244,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UAwsConnector.cpp">
       <Filter>03.Network\Connector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ini.cpp">
+      <Filter>98.Utility\INIReader</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

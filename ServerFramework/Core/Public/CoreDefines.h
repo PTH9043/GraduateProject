@@ -44,22 +44,19 @@
 
 #ifdef _DEBUG
 #pragma comment (lib, "PthMathD")
-#pragma comment(lib, "aws-cpp-sdk-core")
-#pragma comment(lib, "aws-cpp-sdk-sqs")
-#pragma comment(lib, "aws-cpp-sdk-sts")
-#pragma comment(lib, "aws-cpp-sdk-ec2")
-#pragma comment(lib, "aws-cpp-sdk-s3")
 #else
 #pragma comment (lib, "PthMath")
-#pragma comment(lib, "aws-cpp-sdk-core")
-#pragma comment(lib, "aws-cpp-sdk-sqs")
-#pragma comment(lib, "aws-cpp-sdk-sts")
-#pragma comment(lib, "aws-cpp-sdk-ec2")
-#pragma comment(lib, "aws-cpp-sdk-s3")
 #endif
 
+#pragma comment (lib, "aws-cpp-sdk-core")
+#pragma comment (lib, "aws-crt-cpp")
+#pragma comment (lib, "aws-cpp-sdk-ec2")
+
 #include <aws/core/Aws.h>
-#include <aws/s3/s3.h>
+#include <aws/ec2/EC2Client.h>
+#include <aws/ec2/model/RunInstancesRequest.h>
+#include <aws/ec2/model/DescribeInstancesRequest.h>
+#include <aws/ec2/model/InstanceState.h>
 
 #include <iostream>
 #include <atomic>
