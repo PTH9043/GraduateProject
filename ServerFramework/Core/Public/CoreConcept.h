@@ -20,7 +20,15 @@ namespace Core
 	template <class T, class U>
 	concept SameType = std::is_same_v<T, U>();
 	template <class T, class U>
+	/*
+	@ Date: 2023-12-26, Writer: 박태현
+	@ Explain: 부모 자식인지 확인하는 coencept
+	*/
 	concept ParentsChildType = std::is_base_of_v<T*, U*>() || std::is_base_of_v<U*, T*>();
+	/*
+	@ Date: 2023-12-26, Writer: 박태현
+	@ Explain: T에서 U로 변환이 가능한지 확인하는 concept
+	*/
 	template<class T, class U>
 	concept Convertible = std::is_convertible_v<T*, U*>();
 

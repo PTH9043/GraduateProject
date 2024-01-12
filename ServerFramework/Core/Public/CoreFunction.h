@@ -5,6 +5,32 @@ namespace Core
 {
 #pragma region FUNCTION 
 
+
+	/*
+	@ Date: 2023-01-10,  Writer: 박태현
+	@ Explain
+	- 앱을 만들어서 등록하는 함수이다.
+	*/
+	template<class T>
+	T* CreateAndRegisterApp()
+	{
+		T* App = new T;
+		Core::g_RegisterApp = App;
+		return App;
+	}
+
+
+	/*
+	@ Date: 2023-01-09,  Writer: 박태현
+	@ Explain
+	- 현재 밀리세컨드를 구하는 함수이다. 
+	*/
+	static _llong CurrentMilliseconds()
+	{
+		auto Time = std::chrono::high_resolution_clock::now();
+		return std::chrono::duration_cast<std::chrono::milliseconds>(Time.time_since_epoch()).count();
+	}
+
 	/*
 	@ Date: 2023-01-05,  Writer: 박태현
 	@ Explain
@@ -12,7 +38,7 @@ namespace Core
 	*/
 	template<class T, class Value >
 	requires (Number<T> && Number<Value>)
-	T CheckOverValue(const T& _temp, const Value& _Value)
+	static T CheckOverValue(const T& _temp, const Value& _Value)
 	{
 		T convert = static_cast<T>(_Value);
 		if (_temp >= convert)
@@ -27,7 +53,7 @@ namespace Core
 	- 메모리를 초기화하기 위한 함수, Window함수인 ZeroMemory를 쓰지 않기 위함이다.
 	*/
 	template<class T>
-	void MemoryInitialization(T* _pData, const size_t _bufferSize)
+	static void MemoryInitialization(T* _pData, const size_t _bufferSize)
 	{
 		constexpr static _int ZEROMEMORY{ 0 };
 		std::memset(_pData, ZEROMEMORY, _bufferSize);
@@ -39,7 +65,7 @@ namespace Core
 	*/
 	template<class T>
 	requires std::is_integral_v<T>
-	void ThreadNanoRelax(const T& _data)
+	static void ThreadNanoRelax(const T& _data)
 	{
 		std::this_thread::sleep_for(std::chrono::nanoseconds(_data));
 	}
@@ -50,7 +76,7 @@ namespace Core
 	*/
 	template<class T>
 		requires std::is_integral_v<T>
-	void ThreadMicroRelax(const T& _data)
+	static void ThreadMicroRelax(const T& _data)
 	{
 		std::this_thread::sleep_for(std::chrono::microseconds(_data));
 	}
@@ -60,7 +86,7 @@ namespace Core
 	- 멀티쓰레드에서 안전하게 값을 바꾸기 위한 함수
 	*/
 	template<class T, class Value>
-	bool CAS(T* _pData, Value _expected, const Value& _value) {
+	static bool CAS(T* _pData, Value _expected, const Value& _value) {
 		return std::atomic_compare_exchange_strong(
 			reinterpret_cast<volatile ATOMIC<T>*>(_pData), &_expected, _value);
 	}
@@ -71,12 +97,12 @@ namespace Core
 	- 멀티쓰레드에서 안전하게 값을 바꾸기 위한 함수
 	*/
 	template<class T, class Value>
-	bool CAS(REF_IN std::atomic<T>& _Data, Value _expected, const Value& _value) {
+	static bool CAS(REF_IN std::atomic<T>& _Data, Value _expected, const Value& _value) {
 		return _Data.compare_exchange_strong(_expected, _value);
 	}
 
 	template<class T1, class T2>
-	std::pair<T1, T2> MakePair(T1& _t1, T2& _t2) { return std::move(std::pair<T1, T2>(_t1, _t2)); }
+	static std::pair<T1, T2> MakePair(T1& _t1, T2& _t2) { return std::move(std::pair<T1, T2>(_t1, _t2)); }
 
 	/*
 	@ Date: 2023-12-26, Writer: 박태현

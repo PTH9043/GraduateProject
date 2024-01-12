@@ -16,6 +16,11 @@ namespace Server
 		return __super::NativeConstruct();
 	}
 
+	bool CServerAdiminstor::Start()
+	{
+		return __super::Start();
+	}
+
 	void CServerAdiminstor::Connect()
 	{
 		TCPACCEPTOR& TcpAcceptor = GetTcpAccepctor();
@@ -40,7 +45,6 @@ namespace Server
 			Connect();
 			});
 	}
-
 	void CServerAdiminstor::Free()
 	{
 	}

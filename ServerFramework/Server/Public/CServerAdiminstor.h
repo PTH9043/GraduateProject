@@ -4,7 +4,6 @@
 #include "UServerService.h"
 
 BEGIN(Server)
-
 /*
 @ Date: 2023-01-02, Writer: 박태현
 @ Explain
@@ -17,6 +16,7 @@ public:
 	DESTRUCTOR(CServerAdiminstor)
 public:
 	virtual bool NativeConstruct() override;
+	virtual bool Start() override;
 protected:
 	// UServerService을(를) 통해 상속됨
 	virtual void Connect() override;

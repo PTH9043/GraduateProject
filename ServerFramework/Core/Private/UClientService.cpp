@@ -16,7 +16,7 @@ namespace Core {
 	}
 
 	_bool UClientService::Start()	{
-		return true;
+		return __super::Start();
 	}
 
 	SHPTR<USession> UClientService::FindSession(const SESSIONID _SessionID)

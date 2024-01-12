@@ -17,12 +17,9 @@
 @ Explain
 - 현재 실행되는 코드의 상황이 Window OS인지 Linux OS인지 정의한다.
 */
-#define WINDOW_OS
-// #define LINUX_OS
 
-#ifdef WINDOW_OS
-#define _WIN32_WINDOWS 0x6001
-#define _WINSOCK_DEPRECATED_NO_WARNINGS 
+#ifdef _WIN32
+#define _WIN32_WINNT 0x0A00
 #else
 #include <stdlib.h>
 #include <sys/mman.h>
@@ -44,16 +41,19 @@
 
 #ifdef _DEBUG
 #pragma comment (lib, "PthMathD")
-#pragma comment (lib, "aws-cpp-sdk-gamelifd")
-#pragma comment (lib, "aws-cpp-sdk-gamelift-server")
 #else
 #pragma comment (lib, "PthMath")
-#pragma comment (lib, "aws-cpp-sdk-gamelift")
-#pragma comment (lib, "aws-cpp-sdk-gamelift-server")
 #endif
 
-#define GAMELIFT_USE_STD
-#include <aws/gamelift/server/GameLiftServerAPI.h>
+#pragma comment (lib, "aws-cpp-sdk-core")
+#pragma comment (lib, "aws-crt-cpp")
+#pragma comment (lib, "aws-cpp-sdk-ec2")
+
+#include <aws/core/Aws.h>
+#include <aws/ec2/EC2Client.h>
+#include <aws/ec2/model/RunInstancesRequest.h>
+#include <aws/ec2/model/DescribeInstancesRequest.h>
+#include <aws/ec2/model/InstanceState.h>
 
 #include <iostream>
 #include <atomic>
@@ -78,6 +78,7 @@
 #include <queue>
 #include <string>
 #include <vector>
+#include <fstream>
 
 #include "PthMath/PthMath.h"
 
@@ -101,6 +102,5 @@ namespace Asio = boost::asio;
 
 #include "UCoreInstance.h"
 #include "LockFree.h"
-#include "UBuffer.h"
 
 #endif 

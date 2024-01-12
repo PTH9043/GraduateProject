@@ -2,11 +2,9 @@
 ipch/
 x64/
 Reference/
-Bin/
 *.vsidx
 *.lock
 *.sqlite
-*.exe 
 *.ilk 
 *.pdb 
 *.obj 

@@ -7,25 +7,25 @@ namespace Core {
 
 	UServerService::UServerService(OBJCON_CONSTRUCTOR) : 
 		UService(OBJCON_CONDATA, SERVICETYPE::SERVER), 
-		m_TcpAcceptor{ GetIOContext(),Asio::ip::tcp::endpoint(Asio::ip::make_address(IP_ADDRESS),
-	TCP_PORT_NUM) }
+		m_TcpAcceptor{ GetIOContext(),Asio::ip::tcp::endpoint(Asio::ip::tcp::v4(),TCP_PORT_NUM) }
 	{
+
 	}
 
 	_bool UServerService::NativeConstruct()
 	{
-		SHPTR<UCoreInstance> spCoreInstance = GetCoreInstance();
-
-		for (_uint i = 0; i < TLS::MAX_THREAD; ++i)
-		{
-			spCoreInstance->RegisterFunc(UServerService::ThreadFunc, this);
-		}
 		return true;
 	}
 
 	_bool UServerService::Start()
 	{
+		__super::Start();
 		SHPTR<UCoreInstance> spCoreInstance = GetCoreInstance();
+
+		for (_uint i = 0; i < TLS::MAX_THREAD; ++i)
+		{
+			spCoreInstance->RegisterFunc(UServerService::ThreadFunc, GetIOConectPointer());
+		}
 		spCoreInstance->Join();
 		return true;
 	}
@@ -72,14 +72,10 @@ namespace Core {
 	{
 		RETURN_CHECK(nullptr == _spService, ;);
 
-		UServerService* pService = static_cast<UServerService*>(_spService);
-		IOContext& context = pService->GetIOContext(REF_RETURN);
+		IOContext* pService = static_cast<IOContext*>(_spService);
 		// Running 
-		while (true)
-		{
-			// 실행 
-			context.run();
-		}
+		// 실행 
+		pService->run();
 	}
 
 	void UServerService::Free()

@@ -21,5 +21,7 @@ private:
 
 private:
 	_uint		m_iMaxSessionCount;
+
+	ARRAY< VECTOR<SHPTR<class CClientSession>>, TLS::MAX_THREAD> vecSessions;
 };
 

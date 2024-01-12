@@ -23,34 +23,7 @@ _bool CClientSession::WriteData(_char* _pPacket, const Core::PACKETHEAD& _Packet
 	_bool result{ true };
 
 	TCPSOCKET& Socket = GetTcpSocket(REF_RETURN);
-	Socket.async_write_some(Asio::buffer(GetSendBuff(), _PacketHead.PacketSize + PACKETHEAD_SIZE),
-		[this](const boost::system::error_code& _error, std::size_t _Size) {
-			SESSIONID SessionID = GetID();
-			Core::SHPTR<Core::UService> Service{ GetService() };
-			// Packet
-			if (_error)
-			{
-				if (nullptr != Service)
-				{
-					Service->LeaveService(SessionID);
-					return;
-				}
-			}
-			else
-			{
-				if (false == IsConnect())
-				{
-					if (nullptr != Service)
-					{
-						Service->LeaveService(SessionID);
-					}
-				}
-				else
-				{
-					SendMsg();
-				}
-			}
-		});
+	Socket.write_some(Asio::buffer(GetSendBuff(), _PacketHead.PacketSize + PACKETHEAD_SIZE));
 	return result;
 }
 
@@ -62,21 +35,8 @@ void CClientSession::Disconnect()
 void CClientSession::ConnectTcpSocket()
 {
 	TCPSOCKET& TcpSocket = GetTcpSocket(REF_RETURN);
-	TcpSocket.async_connect(Asio::ip::tcp::endpoint(Asio::ip::address::from_string(IP_ADDRESS),
-		Core::TCP_PORT_NUM), [this](const boost::system::error_code& _error) {
-			SHPTR<UService> spService = GetService();
-			SESSIONID ID = GetID();
-			// 만약 연결 실패했으면 제거
-			if (_error)
-			{
-				spService->LeaveService(ID);
-			}
-			else
-			{
-				ReadData();
-				SendMsg();
-			}
-		});
+	TcpSocket.connect(Asio::ip::tcp::endpoint(Asio::ip::address::from_string("3.39.11.88"),
+		Core::TCP_PORT_NUM));
 }
 
 void CClientSession::SendMsg()
@@ -105,7 +65,7 @@ _bool CClientSession::ProcessPacket(_char* _pPacket, const Core::PACKETHEAD& _Pa
 	{
 		SC_CHECKLOGIN Login;
 		Login.ParseFromArray(_pPacket, static_cast<_int>(_PacketHead.PacketSize));
-		std::cout << Login.id() << "\n";
+	//	std::cout << Login.id() << "\n";
 	}
 		break;
 	}

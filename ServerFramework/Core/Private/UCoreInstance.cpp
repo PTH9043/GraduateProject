@@ -2,20 +2,16 @@
 #include "UCoreInstance.h"
 #include "UThreadManager.h"
 #include "URandomManager.h"
+#include "ULogManager.h"
 
 namespace Core
 {
 	UCoreInstance::UCoreInstance() : 
 		m_spThreadManager{ Create<Core::UThreadManager>() }, 
-		m_spRandomManager{Create<Core::URandomManager>()}
+		m_spRandomManager{Create<Core::URandomManager>()}, 
+		m_spLogManager{Create<Core::ULogManager>() }
 	{
 
-	}
-
-	bool UCoreInstance::NativeConstruct()
-	{
-
-		return S_OK;
 	}
 
 	/*
@@ -57,14 +53,41 @@ namespace Core
 		return m_spRandomManager->ReturnRadomNumber(_iMaxNum);
 	}
 
-		/*
+	/*
 	-----------------------------
 	UThreadManager
 	-----------------------------
-	UDeadLockProfiler
+	ULogManager
 	-----------------------------
 	*/
 
+	void UCoreInstance::PrintOut(const char* _fmt, ...)
+	{
+		va_list args;
+		va_start(args, _fmt);
+		vsprintf_s(TLS::g_LogTextBuffer, _fmt, args);
+		va_end(args);
+
+		m_spLogManager->PrintOut(TLS::g_LogTextBuffer);
+	}
+
+	void UCoreInstance::FileOut(const char* _fmt, ...)
+	{
+		va_list args;
+		va_start(args, _fmt);
+		vsprintf_s(TLS::g_LogTextBuffer, _fmt, args);
+		va_end(args);
+
+		m_spLogManager->FileOut(TLS::g_LogTextBuffer);
+	}
+
+	/*
+	-----------------------------
+	UThreadManager
+	-----------------------------
+	ULogManager
+	-----------------------------
+	*/
 
 	void UCoreInstance::Free()
 	{
