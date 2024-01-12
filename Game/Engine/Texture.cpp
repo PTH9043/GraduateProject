@@ -35,8 +35,8 @@ CTexture::CTexture(int nTextures, UINT nTextureType, int nSamplers, int nRootPar
 		for (int i = 0; i < m_nTextures; i++) m_pnBufferStrides[i] = 0;
 	}
 
-	m_nRootParameters = 7;
-	if (nRootParameters > 0) m_pnRootParameterIndices.resize(7);   //이 부분 ->FindReplicateTextures과 파라메터 개수 관련 검토해야함.
+	m_nRootParameters = 3;
+	if (nRootParameters > 0) m_pnRootParameterIndices.resize(3);   //이 부분 ->FindReplicateTextures과 파라메터 개수 관련 검토해야함.
 	for (int i = 0; i < m_nRootParameters; i++) m_pnRootParameterIndices[i] = -1;
 
 	m_nSamplers = nSamplers;
