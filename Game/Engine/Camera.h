@@ -22,6 +22,10 @@ protected:
 public:
 	CCamera();
 	virtual ~CCamera();
+	//2024-01-12 이성현 뷰, 프로젝션 행렬 반환 함수
+	XMFLOAT4X4 GetViewMatrix() { return m_xmf4x4View; }
+	XMFLOAT4X4 GetProjectionMatrix() { return m_xmf4x4Projection; }
+	D3D12_VIEWPORT GetViewPort() { return m_d3dViewport; }
 
 	virtual void CreateShaderVariables(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList);
 	virtual void ReleaseShaderVariables();

@@ -1,27 +1,25 @@
 #pragma once
-
-#pragma comment(lib, "Engine.lib")
-#include "../Engine/EnginePch.h"
-
-//Imgui 사용을 위한 헤더
-#include "ImGui/imgui.h"
-#include "ImGui/imgui_impl_win32.h"
-#include "ImGui/imgui_impl_dx12.h"
-#include "ImGui/imgui_internal.h"
-#include "ImGui/imstb_rectpack.h"
-#include "ImGui/imstb_textedit.h"
-#include "ImGui/imstb_truetype.h"
+#include "ToolDefines.h"
+#include "ToolScene.h"
+#include "ToolManager.h"
 
 class Tool
 {
 public:
 	void Init(HINSTANCE hInstance, HWND hWnd);
+	void InitImgui(HWND hWnd);
+	void BuildToolScene();
 	void Update();
 	void Destroy();
 	void Render();
+	void ImguiRender();
+	LRESULT CALLBACK OnProcessingWindowMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
+	void OnProcessingMouseMessage(HWND hwnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
+	void OnProcessingKeyboardMessage(HWND hwnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
+
 private:
+	shared_ptr<ToolManager> m_pToolManager;
+	shared_ptr<CCamera> m_pToolCamera;
+	shared_ptr<ToolScene> m_pToolScene;
 	ComPtr<ID3D12DescriptorHeap> m_pdxgiSRVDescriptorHeapForImgui;
-	bool show_demo_window = true;
-	bool show_another_window = false;
-	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 };

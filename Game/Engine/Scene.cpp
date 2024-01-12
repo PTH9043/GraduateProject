@@ -21,14 +21,8 @@ bool CScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wPar
 	return false;
 }
 
-
-
-
-
-
 void CScene::BuildObjects(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList,const ComPtr<ID3D12RootSignature>& _RootSignature)
 {
-	
 	//가로x세로x깊이가 12x12x12인 정육면체 메쉬를 생성한다. 
 	CCubeMeshDiffused* pCubeMesh = new CCubeMeshDiffused(_Device, _CommandList,
 		12.0f, 12.0f, 12.0f);
@@ -45,7 +39,6 @@ void CScene::BuildObjects(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D
 
 void CScene::ReleaseObjects()
 {
-	
 	if (m_ppObjects)
 	{
 		for (int j = 0; j < m_nObjects; j++) if (m_ppObjects[j]) delete m_ppObjects[j];
@@ -62,11 +55,6 @@ void CScene::ReleaseUploadBuffers()
 	}
 }
 
-
-
-
-
-
 void CScene::AnimateObjects(float fTimeElapsed)
 {
 	for (int j = 0; j < m_nObjects; j++)
@@ -74,7 +62,6 @@ void CScene::AnimateObjects(float fTimeElapsed)
 		m_ppObjects[j]->Animate(fTimeElapsed);
 	}
 }
-
 
 void CScene::Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, CCamera* pCamera)
 {

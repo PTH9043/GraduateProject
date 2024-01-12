@@ -21,8 +21,6 @@ void CMesh::Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList)
 	////메쉬의 정점 버퍼 뷰를 렌더링한다(파이프라인(입력 조립기)을 작동하게 한다).
 	//pd3dCommandList->DrawInstanced(m_nVertices, 1, m_nOffset, 0);
 
-
-
 	_CommandList->IASetPrimitiveTopology(m_d3dPrimitiveTopology);
 	_CommandList->IASetVertexBuffers(m_nSlot, 1, &m_d3dVertexBufferView);
 	if (m_pd3dIndexBuffer)
@@ -59,8 +57,6 @@ CTriangleMesh::CTriangleMesh(const ComPtr<ID3D12Device>& _Device, const ComPtr<I
 		m_d3dVertexBufferView.StrideInBytes = m_nStride; //정점의 크기 바이트로 color정점이라 XMFLOAT4 ->16바이트 
 		m_d3dVertexBufferView.SizeInBytes = m_nStride * m_nVertices; //정점 버퍼 전체 크기
 }
-
-
 
 CCubeMeshDiffused::CCubeMeshDiffused(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, float fWidth, float fHeight, float fDepth) : CMesh(_Device,
 	_CommandList)
