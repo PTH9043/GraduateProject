@@ -17,12 +17,9 @@
 @ Explain
 - 현재 실행되는 코드의 상황이 Window OS인지 Linux OS인지 정의한다.
 */
-#define WINDOW_OS
-// #define LINUX_OS
 
-#ifdef WINDOW_OS
+#ifdef _WIN32
 #define _WIN32_WINNT 0x0A00
-#define WIN32
 #else
 #include <stdlib.h>
 #include <sys/mman.h>

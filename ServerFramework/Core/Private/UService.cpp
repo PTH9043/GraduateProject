@@ -15,7 +15,6 @@ namespace Core {
 
 	_bool UService::Start()
 	{
-		_wsetlocale(LC_ALL, L"korean");
 		return true;
 	}
 

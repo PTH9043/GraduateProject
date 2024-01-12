@@ -32,14 +32,14 @@ namespace Core
 		const size_t DataOffset = PageCount * PAGE_SIZE - _size;
 
 		
-#ifdef WINDOW_OS
+#ifdef _WIN32
 		void* BaseAddress = ::VirtualAlloc(NULL, PageCount * PAGE_SIZE, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
 #else
 		void* BaseAddress = mmap(NULL, PageCount * PAGE_SIZE, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
 #endif
 		return static_cast<void*>(static_cast<_byte*>(BaseAddress) + DataOffset);
 	}
-#ifdef WINDOW_OS
+#ifdef _WIN32
 	void UStompAllocator::Release(void* _ptr)
 	{
 		// DataOffset을 조정해서 할당한 메모리를 원래 자리로 돌아가게 만든다. 

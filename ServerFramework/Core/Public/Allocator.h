@@ -88,7 +88,7 @@ namespace Core {
 		*/
 		static void* Alloc(size_t _size);
 
-#ifdef WINDOW_OS
+#ifdef _WIN32
 		/*
 		@ Date: 2023-12-30
 		@ Writer: นฺลยว๖

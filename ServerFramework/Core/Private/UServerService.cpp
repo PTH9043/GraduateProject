@@ -7,9 +7,9 @@ namespace Core {
 
 	UServerService::UServerService(OBJCON_CONSTRUCTOR) : 
 		UService(OBJCON_CONDATA, SERVICETYPE::SERVER), 
-		m_TcpAcceptor{ GetIOContext(),Asio::ip::tcp::endpoint(Asio::ip::make_address(IP_ADDRESS),
-	TCP_PORT_NUM) }
+		m_TcpAcceptor{ GetIOContext(),Asio::ip::tcp::endpoint(Asio::ip::tcp::v4(),TCP_PORT_NUM) }
 	{
+
 	}
 
 	_bool UServerService::NativeConstruct()
