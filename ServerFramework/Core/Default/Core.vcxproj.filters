@@ -79,6 +79,12 @@
     <Filter Include="98.Lua">
       <UniqueIdentifier>{70a90b66-5918-41b3-8428-356a321ea39e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Space">
+      <UniqueIdentifier>{2c9e0d8e-a040-4db2-b627-b425d77c9421}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Space\3DQuadTree">
+      <UniqueIdentifier>{a012bc79-9aa1-4b30-ab32-64427d23f4f5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\UBase.h">
@@ -180,6 +186,9 @@
     <ClInclude Include="..\Public\ULuaLoader.h">
       <Filter>97.Utility\LuaLoader</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\U3DQuardTree.h">
+      <Filter>04.Space\3DQuadTree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\UBase.cpp">
@@ -250,6 +259,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\ULuaLoader.cpp">
       <Filter>97.Utility\LuaLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\U3DQuardTree.cpp">
+      <Filter>04.Space\3DQuadTree</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

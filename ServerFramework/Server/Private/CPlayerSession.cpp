@@ -71,13 +71,6 @@ namespace Server {
 			CS_LOGIN Login;
 			Login.ParseFromArray(_pPacket, static_cast<_int>(_PacketHead.PacketSize));
 			_llong value = CurrentMilliseconds() - Login.time_test();
-
-			++a;
-			if (a >= 100'000)
-			{
-				std::cout << Login.user_name() << "\n";
-				a = 0;
-			}
 		}
 		//{
 		//	// Remove Object а╤гу 

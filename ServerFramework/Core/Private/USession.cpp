@@ -62,7 +62,7 @@ namespace Core
 	void USession::ConnectTcpSocket(){ }
 
 	/*
-	@ Data: 2024-01-04, Writer : 박태현
+	@ Data: 2024-01-13, Writer : 박태현
 	@ Explain
 	- Buffer 클래스를 받아서 Combine 한 후 Packet을 처리하는 함수이다.
 	*/
@@ -89,7 +89,7 @@ namespace Core
 		//		std::cout << m_CurBuffuerLocation << "\n";
 #endif
 				// 최종적인 버퍼에 PacketSize만큼 이동하여 앞쪽에 존재하는 데이터들을 지운다. 
-				memmove(&m_TotalBuffer[0], pBufferMove, MAX_PROCESSBUF_LENGTH - m_CurBuffuerLocation);
+				memmove(&m_TotalBuffer[0], pBufferMove, MAX_PROCESSBUF_LENGTH - moveBuffer);
 				return;
 			}
 			ProcessPacket(&pBufferMove[PACKETHEAD_SIZE], PacketHead);
