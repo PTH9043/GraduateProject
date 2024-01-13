@@ -5,8 +5,7 @@
 namespace Core {
 
 	URoom::URoom(OBJCON_CONSTRUCTOR, _uint _MaxSessionCount) :
-		UObject(OBJCON_CONDATA), m_MaxSessionCount{_MaxSessionCount}, 
-		m_isEmptyRoom{true}
+		UObject(OBJCON_CONDATA), m_RoomID{ 0 }, m_MaxSessionCount {_MaxSessionCount}, m_isEmptyRoom{true}
 	{
 	}
 

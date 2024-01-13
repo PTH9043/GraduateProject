@@ -17,4 +17,3 @@ Reference/
 *.db 
 libprotobufd.lib
 ProtocolBufferD.lib
-ServerFramework/Core/ThirdPartyLib/gamelift-sdk.lib

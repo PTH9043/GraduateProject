@@ -29,6 +29,7 @@ namespace Core
 	using CAMID = unsigned short;
 
 	using SESSIONID = _ullong;
+	using ROOMID = _llong;
 
 	using _float = float;
 	using _double = double;
@@ -109,7 +110,7 @@ namespace Core
 	using CONMULTISET = tbb::concurrent_multiset<Type, Compare>;
 
 	template<typename Type>
-	using Deque = std::deque <Type, Core::STLAllocator<Type >>;
+	using Deque = std::deque <Type>;
 
 	template<class Type>
 	using QUEUE = std::queue<Type, Deque<Type>>;

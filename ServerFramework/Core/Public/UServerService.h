@@ -6,7 +6,6 @@
 BEGIN(Core)
 /* Aws Connector */
 class UAwsConnector;
-
 /*
 @ Date: 2024-01-05, Writer: นฺลยว๖
 @ Explain

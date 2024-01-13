@@ -1170,6 +1170,7 @@ class CS_LOGIN final :
 
   enum : int {
     kUserNameFieldNumber = 1,
+    kTimeTestFieldNumber = 2,
   };
   // bytes user_name = 1;
   void clear_user_name() ;
@@ -1187,13 +1188,23 @@ class CS_LOGIN final :
   std::string* _internal_mutable_user_name();
 
   public:
+  // int64 time_test = 2;
+  void clear_time_test() ;
+  ::int64_t time_test() const;
+  void set_time_test(::int64_t value);
+
+  private:
+  ::int64_t _internal_time_test() const;
+  void _internal_set_time_test(::int64_t value);
+
+  public:
   // @@protoc_insertion_point(class_scope:CS_LOGIN)
  private:
   class _Internal;
 
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      0, 1, 0,
+      1, 2, 0,
       0, 2>
       _table_;
   friend class ::google::protobuf::MessageLite;
@@ -1211,6 +1222,7 @@ class CS_LOGIN final :
         inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                               ::google::protobuf::Arena* arena, const Impl_& from);
     ::google::protobuf::internal::ArenaStringPtr user_name_;
+    ::int64_t time_test_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -2114,6 +2126,29 @@ inline void CS_LOGIN::set_allocated_user_name(std::string* value) {
         }
   #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   // @@protoc_insertion_point(field_set_allocated:CS_LOGIN.user_name)
+}
+
+// int64 time_test = 2;
+inline void CS_LOGIN::clear_time_test() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.time_test_ = ::int64_t{0};
+}
+inline ::int64_t CS_LOGIN::time_test() const {
+  // @@protoc_insertion_point(field_get:CS_LOGIN.time_test)
+  return _internal_time_test();
+}
+inline void CS_LOGIN::set_time_test(::int64_t value) {
+  _internal_set_time_test(value);
+  // @@protoc_insertion_point(field_set:CS_LOGIN.time_test)
+}
+inline ::int64_t CS_LOGIN::_internal_time_test() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.time_test_;
+}
+inline void CS_LOGIN::_internal_set_time_test(::int64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.time_test_ = value;
 }
 
 // -------------------------------------------------------------------

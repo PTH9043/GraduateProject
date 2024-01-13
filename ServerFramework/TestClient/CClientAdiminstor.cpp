@@ -4,7 +4,7 @@
 #include "CClientSession.h"
 
 CClientAdiminstor::CClientAdiminstor(OBJCON_CONSTRUCTOR) : 
-	UClientService(OBJCON_CONDATA), m_iMaxSessionCount{2}
+	UClientService(OBJCON_CONDATA), m_iMaxSessionCount{1000}
 {
 }
 
@@ -34,7 +34,7 @@ void CClientAdiminstor::Connect()
 {
 	SHPTR<UCoreInstance> spCoreInstance = GetCoreInstance();
 	SHPTR<CClientAdiminstor> spClientAdiminstor = ThisShared<CClientAdiminstor>();
-	for (_uint j = 0; j < 2; ++j)
+	for (_uint j = 0; j < 4; ++j)
 	{
 		for (_uint i = 0; i < m_iMaxSessionCount; ++i)
 		{
@@ -56,9 +56,12 @@ void CClientAdiminstor::Tick()
 	};
 
 	CS_LOGIN Login;
-	Login.set_user_name(wordList[rand() % 10]);
+	Login.set_time_test(CurrentMilliseconds());
 	for (auto& iter : vecSessions[TLS::g_ThreadID])
+	{
+		Login.set_user_name(wordList[rand() % 10]);
 		iter->SendProtoData(Login, TAG_CS_LOGIN);
+	}
 }
 
 void CClientAdiminstor::ThreadFunc(void* _Service)
