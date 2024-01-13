@@ -29,6 +29,7 @@ namespace Core
 	using CAMID = unsigned short;
 
 	using SESSIONID = _ullong;
+	using ROOMID = _llong;
 
 	using _float = float;
 	using _double = double;
