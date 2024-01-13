@@ -109,7 +109,7 @@ namespace Core
 	using CONMULTISET = tbb::concurrent_multiset<Type, Compare>;
 
 	template<typename Type>
-	using Deque = std::deque <Type, Core::STLAllocator<Type >>;
+	using Deque = std::deque <Type>;
 
 	template<class Type>
 	using QUEUE = std::queue<Type, Deque<Type>>;

@@ -23,7 +23,6 @@ namespace Core
 		PACKETHEAD(const short _size, const short _type) : PacketSize(_size), PacketType(_type) {}
 	};
 
-	static const std::string IP_ADDRESS = "3.39.11.88";
 	constexpr static unsigned int PACKETHEAD_SIZE{ sizeof(PACKETHEAD) };
 	constexpr static unsigned int PACKETSIZE_SIZE{ sizeof(short) };
 }

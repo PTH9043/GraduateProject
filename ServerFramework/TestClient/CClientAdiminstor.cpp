@@ -4,7 +4,7 @@
 #include "CClientSession.h"
 
 CClientAdiminstor::CClientAdiminstor(OBJCON_CONSTRUCTOR) : 
-	UClientService(OBJCON_CONDATA), m_iMaxSessionCount{2}
+	UClientService(OBJCON_CONDATA), m_iMaxSessionCount{10}
 {
 }
 
@@ -56,6 +56,7 @@ void CClientAdiminstor::Tick()
 	};
 
 	CS_LOGIN Login;
+	Login.set_time_test(CurrentMilliseconds());
 	Login.set_user_name(wordList[rand() % 10]);
 	for (auto& iter : vecSessions[TLS::g_ThreadID])
 		iter->SendProtoData(Login, TAG_CS_LOGIN);

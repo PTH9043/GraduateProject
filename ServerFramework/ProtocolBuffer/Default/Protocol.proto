@@ -37,6 +37,7 @@ enum Direction{
 
 message CS_LOGIN {
 	bytes user_name = 1;
+	int64 time_test = 2;
 }
 
 message CS_MOVE {

@@ -35,7 +35,7 @@ void CClientSession::Disconnect()
 void CClientSession::ConnectTcpSocket()
 {
 	TCPSOCKET& TcpSocket = GetTcpSocket(REF_RETURN);
-	TcpSocket.connect(Asio::ip::tcp::endpoint(Asio::ip::address::from_string("3.39.11.88"),
+	TcpSocket.connect(Asio::ip::tcp::endpoint(Asio::ip::address::from_string("127.0.0.1"),
 		Core::TCP_PORT_NUM));
 }
 
@@ -47,6 +47,7 @@ void CClientSession::SendMsg()
 	};
 
 	CS_LOGIN Login;
+	Login.set_time_test(CurrentMilliseconds());
 	Login.set_user_name(wordList[rand() % wordList.size()]);
 	SendProtoData(Login, TAG_CS_LOGIN);
 	// Remove Object а╤гу 

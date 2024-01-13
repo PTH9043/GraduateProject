@@ -9,8 +9,7 @@ using THREAD = std::thread;
 using THRAEDVECTOR = VECTOR<THREAD>;
 
 /*
-@ Date: 2023-12-26
-@ Writer: 박태현
+@ Date: 2023-12-26, Writer: 박태현
 @ Explain
 - Thread를 관리하는 매니저 클래스 
 */

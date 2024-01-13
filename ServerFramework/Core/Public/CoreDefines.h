@@ -39,21 +39,15 @@
 #define CACHE_ALGIN_CORE_DLL  _declspec(dllimport) __declspec(align(16))
 #endif
 
+#ifdef _WIN32
 #ifdef _DEBUG
 #pragma comment (lib, "PthMathD")
 #else
 #pragma comment (lib, "PthMath")
 #endif
 
-#pragma comment (lib, "aws-cpp-sdk-core")
-#pragma comment (lib, "aws-crt-cpp")
-#pragma comment (lib, "aws-cpp-sdk-ec2")
-
-#include <aws/core/Aws.h>
-#include <aws/ec2/EC2Client.h>
-#include <aws/ec2/model/RunInstancesRequest.h>
-#include <aws/ec2/model/DescribeInstancesRequest.h>
-#include <aws/ec2/model/InstanceState.h>
+#pragma comment(lib, "liblua54")
+#endif 
 
 #include <iostream>
 #include <atomic>
@@ -80,6 +74,12 @@
 #include <vector>
 #include <fstream>
 
+extern "C" {
+#include <lua/lua.h>
+#include <lua/lualib.h>
+#include <lua/lauxlib.h>
+}
+
 #include "PthMath/PthMath.h"
 
 namespace Asio = boost::asio;
@@ -93,6 +93,7 @@ namespace Asio = boost::asio;
 #include "CoreMacro.h"
 #include "Lock.h"
 #include "SmartPointer.h"
+#include "ULuaLoader.h"
 
 #include "CoreFunction.h"
 #include "CorePacket.h"

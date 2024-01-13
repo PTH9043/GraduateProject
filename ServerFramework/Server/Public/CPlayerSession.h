@@ -32,7 +32,7 @@ private:
 	virtual void Free() override;
 
 private:
-
+	ATOMIC<_uint> a;
 };
 
 

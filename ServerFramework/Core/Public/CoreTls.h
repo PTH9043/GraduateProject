@@ -11,7 +11,7 @@ namespace Core
 		@ Explain
 		- 일을 처리할 MAX_THRED의 수 
 		*/
-		constexpr _uint											MAX_THREAD{  16  };
+		constexpr static _uint									 MAX_THREAD{ 16 };
 		/*
 		@ Date: 2023-12-26
 		@ Writer: 박태현

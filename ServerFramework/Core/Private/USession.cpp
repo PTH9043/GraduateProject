@@ -59,23 +59,7 @@ namespace Core
 		m_isConnect = false;
 	}
 
-	void USession::ConnectTcpSocket()
-	{
-		m_TcpSocket.async_connect(Asio::ip::tcp::endpoint(Asio::ip::address::from_string(IP_ADDRESS),
-			Core::TCP_PORT_NUM), [this](const boost::system::error_code& _error) {
-
-				SESSIONID ID = m_ID;
-				SHPTR<UService> spService = GetService(REF_RETURN);
-				// 만약 연결 실패했으면 제거
-				if (_error)
-				{
-#ifdef USE_DEBUG
-					std::cout << "Connect Error on Session[" << m_ID << "] EC[" << _error << "]\n";
-#endif
-					spService->LeaveService(ID);
-				}
-			});
-	}
+	void USession::ConnectTcpSocket(){ }
 
 	/*
 	@ Data: 2024-01-04, Writer : 박태현
@@ -101,8 +85,11 @@ namespace Core
 			// 패킷의 현재 위치가 음수가 되는 경우면 
 			if ((m_CurBuffuerLocation - CurrPacket) < 0)
 			{
+#ifdef USE_DEBUG
+		//		std::cout << m_CurBuffuerLocation << "\n";
+#endif
 				// 최종적인 버퍼에 PacketSize만큼 이동하여 앞쪽에 존재하는 데이터들을 지운다. 
-				memcpy(&m_TotalBuffer[0], pBufferMove, m_CurBuffuerLocation);
+				memmove(&m_TotalBuffer[0], pBufferMove, m_CurBuffuerLocation);
 				return;
 			}
 			ProcessPacket(&pBufferMove[PACKETHEAD_SIZE], PacketHead);
