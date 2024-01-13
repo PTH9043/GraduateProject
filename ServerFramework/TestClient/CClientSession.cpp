@@ -35,6 +35,8 @@ void CClientSession::Disconnect()
 void CClientSession::ConnectTcpSocket()
 {
 	TCPSOCKET& TcpSocket = GetTcpSocket(REF_RETURN);
+	//43.203.88.154
+	// 127.0.0.1
 	TcpSocket.connect(Asio::ip::tcp::endpoint(Asio::ip::address::from_string("127.0.0.1"),
 		Core::TCP_PORT_NUM));
 }

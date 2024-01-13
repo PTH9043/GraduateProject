@@ -89,7 +89,7 @@ namespace Core
 		//		std::cout << m_CurBuffuerLocation << "\n";
 #endif
 				// 최종적인 버퍼에 PacketSize만큼 이동하여 앞쪽에 존재하는 데이터들을 지운다. 
-				memmove(&m_TotalBuffer[0], pBufferMove, m_CurBuffuerLocation);
+				memmove(&m_TotalBuffer[0], pBufferMove, MAX_PROCESSBUF_LENGTH - m_CurBuffuerLocation);
 				return;
 			}
 			ProcessPacket(&pBufferMove[PACKETHEAD_SIZE], PacketHead);

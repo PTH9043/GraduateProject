@@ -25,6 +25,8 @@ namespace Core
 
 	constexpr static unsigned int PACKETHEAD_SIZE{ sizeof(PACKETHEAD) };
 	constexpr static unsigned int PACKETSIZE_SIZE{ sizeof(short) };
+
+	constexpr static const char* IP_ADDRESS{ "43.203.88.154" };
 }
 
 #endif // _SERVERFRAMEWORK_CORE_PUBLIC_COREPAKCET_H

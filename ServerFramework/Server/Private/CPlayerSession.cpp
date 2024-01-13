@@ -72,11 +72,11 @@ namespace Server {
 			Login.ParseFromArray(_pPacket, static_cast<_int>(_PacketHead.PacketSize));
 			_llong value = CurrentMilliseconds() - Login.time_test();
 
-			a.fetch_add(1);
-			if (a >= 10000)
+			++a;
+			if (a >= 100'000)
 			{
-				std::cout << value << "\n";
-				exit(-1);
+				std::cout << Login.user_name() << "\n";
+				a = 0;
 			}
 		}
 		//{
