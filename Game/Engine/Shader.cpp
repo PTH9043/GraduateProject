@@ -12,7 +12,6 @@ CShader::~CShader()
 
 }
 
-
 D3D12_RASTERIZER_DESC CShader::CreateRasterizerState()
 {
 	D3D12_RASTERIZER_DESC d3dRasterizerDesc;
@@ -99,8 +98,6 @@ void CShader::CreateShader(const wstring& shaderFile, const string& vs, const st
 	{
 		OutputDebugStringA(reinterpret_cast<char*>(error->GetBufferPointer()));
 	}
-	
-
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC d3dPipelineStateDesc;
 	::ZeroMemory(&d3dPipelineStateDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
@@ -124,7 +121,6 @@ void CShader::CreateShader(const wstring& shaderFile, const string& vs, const st
 	if (d3dPipelineStateDesc.InputLayout.pInputElementDescs) delete[]
 		d3dPipelineStateDesc.InputLayout.pInputElementDescs;
 }
-
 
 void CShader::OnPrepareRender(const ComPtr<ID3D12GraphicsCommandList>& _CommandList)
 {
@@ -153,7 +149,6 @@ void CShader::ReleaseShaderVariables()
 {
 }
 
-
 CDiffusedShader::CDiffusedShader()
 {
 }
@@ -175,7 +170,6 @@ D3D12_INPUT_LAYOUT_DESC CDiffusedShader::CreateInputLayout()
 	d3dInputLayoutDesc.NumElements = nInputElementDescs;
 	return(d3dInputLayoutDesc);
 }
-
 
 
 void CDiffusedShader::CreateShader(const wstring& shaderFile, const string& vs, const string& ps, const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12RootSignature>& _RootSignature)
