@@ -57,9 +57,6 @@
     <ClCompile Include="ToolScene.cpp">
       <Filter>main\ToolScene</Filter>
     </ClCompile>
-    <ClCompile Include="GridMesh.cpp">
-      <Filter>main\ToolComponent</Filter>
-    </ClCompile>
     <ClCompile Include="ToolGridObject.cpp">
       <Filter>main\ToolComponent</Filter>
     </ClCompile>
@@ -109,9 +106,6 @@
     </ClInclude>
     <ClInclude Include="ToolScene.h">
       <Filter>main\ToolScene</Filter>
-    </ClInclude>
-    <ClInclude Include="GridMesh.h">
-      <Filter>main\ToolComponent</Filter>
     </ClInclude>
     <ClInclude Include="ToolDefines.h">
       <Filter>main\Default</Filter>

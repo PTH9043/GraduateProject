@@ -4,11 +4,8 @@
 #include "Texture.h"
 #include "CbvSrvUavDescriptorHeap.h"
 
-
 unique_ptr<CbvSrvUavDescriptorHeap> CScene::m_pDescriptorHeap=nullptr;
 //CbvSrvUavDescriptorHeap* CScene::m_pDescriptorHeap = NULL;
-
-
 
 void CScene::CreateCbvSrvDescriptorHeaps(const ComPtr<ID3D12Device>& _Device, int nConstantBufferViews, int nShaderResourceViews)
 {
@@ -142,71 +139,65 @@ bool CScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wPar
 }
 
 
-
-
-
-
 void CScene::BuildObjects(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList,const ComPtr<ID3D12RootSignature>& _RootSignature)
 {
 	m_pDescriptorHeap = make_unique<CbvSrvUavDescriptorHeap>();
 	CreateCbvSrvDescriptorHeaps(_Device, 0, 30);
-	m_ppObjects = make_shared<CGameObject>();
 
-	//shared_ptr<CDiffusedShader> pShader = make_shared<CDiffusedShader>();
-	//pShader->CreateShader(L"..\\Resources\\Shader\\Shaders.hlsli", "VSDiffused", "PSDiffused", _Device, _RootSignature);
-	//pShader->CreateShaderVariables(_Device, _CommandList);
-	///*m_ppObjects->LoadGeometryFromFile(_Device.Get(), _CommandList.Get(), _RootSignature.Get(), "Rock.bin", pShader);
-	//m_ppObjects->SetShader(pShader);*/
-	//
-	//shared_ptr<CTriangleMesh> Tri = make_shared<CTriangleMesh>(_Device, _CommandList);
-	//m_ppObjects->SetMesh(Tri);
-	//m_ppObjects->SetShader(pShader);
+	// m_ppObjects를 vector로 변경
+	m_ppObjects.clear();
 
+	auto pObject = make_shared<CGameObject>();
 
 	shared_ptr<CTexturedModelShader> pShader = make_shared<CTexturedModelShader>();
 	pShader->CreateShader(L"Shader/Shaders.hlsli", "VSStandard", "PSStandard", _Device, _RootSignature);
 	pShader->CreateShaderVariables(_Device, _CommandList);
-	m_ppObjects->LoadGeometryFromFile(_Device.Get(), _CommandList.Get(), _RootSignature.Get(),"Model/MainTank.bin", pShader);
+	pObject->LoadGeometryFromFile(_Device.Get(), _CommandList.Get(), _RootSignature.Get(),"Model/MainTank.bin", pShader);
 	// "Model/DB_Five.bin" 
 	//"..\\Resources\\Model\\DB_Five.bin"
+	pObject->Rotate(0,-90.0f,0);
+	// vector에 shared_ptr을 추가
+	m_ppObjects.push_back(pObject);
 
-	m_ppObjects->Rotate(0,-90.0f,0);
 }
 
 void CScene::ReleaseObjects()
 {
-	
-	
 }
 
 void CScene::ReleaseUploadBuffers()
 {
-	if (m_ppObjects)
+	for (const auto& pObject : m_ppObjects)
 	{
-	
-			m_ppObjects->ReleaseUploadBuffers();
+		if (pObject)
+			pObject->ReleaseUploadBuffers();
 	}
 }
 
 
 void CScene::AnimateObjects(float fTimeElapsed)
 {
-	
-
-	if (m_ppObjects)m_ppObjects->Animate(fTimeElapsed);
-	
+	for (const auto& pObject : m_ppObjects)
+	{
+		if (pObject)
+			pObject->Animate(fTimeElapsed);
+	}
 }
 
 
 void CScene::Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, CCamera* pCamera)
 {
-
 	if(m_pDescriptorHeap->m_pd3dCbvSrvUavDescriptorHeap)_CommandList->SetDescriptorHeaps(1, m_pDescriptorHeap->m_pd3dCbvSrvUavDescriptorHeap.GetAddressOf());
 
 	if (pCamera) pCamera->UpdateShaderVariables(_CommandList);
 
-	if (m_ppObjects)m_ppObjects->UpdateTransform(nullptr);
-	if (m_ppObjects) m_ppObjects->Render(_CommandList.Get(), pCamera);
-	
+	for (const auto& pObject : m_ppObjects)
+	{
+		if (pObject)
+		{
+			pObject->UpdateTransform(nullptr);
+			pObject->Render(_CommandList.Get(), pCamera);
+		}
+	}
 }
 

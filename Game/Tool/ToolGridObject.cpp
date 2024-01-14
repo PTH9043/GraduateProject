@@ -1,5 +1,6 @@
 #include "ToolGridObject.h"
 #include "Shader.h"
+#include "Material.h"
 
 ToolGridObject::ToolGridObject(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, 
     const ComPtr<ID3D12RootSignature>& _RootSignature, int nWidth, int nLength, int nBlockWidth, int nBlockLength, XMFLOAT3 xmf3Scale, XMFLOAT4 xmf4Color)
@@ -35,38 +36,17 @@ ToolGridObject::ToolGridObject(const ComPtr<ID3D12Device>& _Device, const ComPtr
     float fDepth = static_cast<float>(nLength) * xmf3Scale.z;
 
     SetPosition(XMFLOAT3(-fWidth / 2, 0.0f, -fDepth / 2));
+    SetBOB(fWidth, fHeight, fDepth);
 
+    shared_ptr<CDiffusedShader> pGridShader = make_shared<CDiffusedShader>();
+    pGridShader->CreateShader(L"..\\Resources\\Shader\\Shaders.hlsli", "VSDiffused", "PSDiffused", _Device, _RootSignature);
+    pGridShader->CreateShaderVariables(_Device, _CommandList);
 
-    SetOOBB(fWidth, fHeight, fDepth);
-
-    //스마트 포인터화 필요
-    CDiffusedShader* pShader = new CDiffusedShader();
-    pShader->CreateShader(L"..\\Resources\\Shader\\Shaders.hlsli", "VSDiffused", "PSDiffused", _Device, _RootSignature);
-    pShader->CreateShaderVariables(_Device, _CommandList);
-    SetShader(pShader);
+    SetShader(pGridShader);
 }
 
 ToolGridObject::~ToolGridObject()
 {
-}
-
-void ToolGridObject::UpdateBoundingBox()
-{
-    m_xmOOBB.Center = { 0.0f, 0.0f, 0.0f };
-    XMStoreFloat4(&m_xmOOBB.Orientation, XMQuaternionNormalize(XMLoadFloat4(&m_xmOOBB.Orientation)));
-}
-
-
-void ToolGridObject::SetPosition(XMFLOAT3 xmf3Position)
-{
-    m_xmf4x4World._41 = xmf3Position.x;
-    m_xmf4x4World._42 = xmf3Position.y;
-    m_xmf4x4World._43 = xmf3Position.z;
-}
-
-void ToolGridObject::SetOOBB(float fWidth, float fHeight, float fDepth)
-{
-    m_xmOOBB = BoundingOrientedBox(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(fWidth * 0.5f, fHeight * 0.5f, fDepth * 0.5f), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
 void ToolGridObject::SetMesh(int nIndex, const shared_ptr<CMesh> pMesh)
@@ -79,15 +59,24 @@ void ToolGridObject::SetMesh(int nIndex, const shared_ptr<CMesh> pMesh)
 
 void ToolGridObject::Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, CCamera* pCamera)
 {
-    OnPrepareRender();
+    UpdateShaderVariables(_CommandList);
 
-    if (m_pShader)
-    {        
-        m_pShader->UpdateShaderVariable(_CommandList, &m_xmf4x4World);
-        m_pShader->Render(_CommandList, pCamera);
+    if (m_nMaterials > 0)
+    {
+        for (int i = 0; i < m_nMaterials; i++)
+        {
+            if (m_ppMaterials[i])
+            {
+                if (m_ppMaterials[i]->m_pShader) m_ppMaterials[0]->m_pShader->Render(_CommandList, pCamera);
+                m_ppMaterials[i]->UpdateShaderVariables(_CommandList);
+            }
+
+            for (const auto& ppMeshes : m_ppMeshes) {
+                ppMeshes->RenderMesh(_CommandList, 0);
+            }
+
+        }
     }
-    m_xmOOBB.Transform(m_xmOOBB, XMLoadFloat4x4(&m_xmf4x4World));
-    for (const auto& ppMeshes : m_ppMeshes) {
-        ppMeshes->Render(_CommandList);
-    }
+
+   
 }

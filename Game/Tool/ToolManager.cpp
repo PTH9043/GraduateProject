@@ -25,7 +25,7 @@ void ToolManager::DisplayWindow()
     if (m_pScene && m_pScene->m_pToolGrid)
     {
         ImGui::Text("ToolGrid Bounding Box:");
-        BoundingOrientedBox boundingBox = m_pScene->m_pToolGrid->GetOOBB();
+        BoundingOrientedBox boundingBox = m_pScene->m_pToolGrid->GetBOB();
 
         // 그리드 메쉬 바운딩 박스 중심
         XMFLOAT3 center = boundingBox.Center;
@@ -100,7 +100,7 @@ RayHitResult ToolManager::CastRay(const Ray& ray, const shared_ptr<ToolGridObjec
 
     //충돌 검사
     float intersectionDistance;
-    if (Grid->GetOOBB().Intersects(XMLoadFloat3(&ray.origin), ray.direction, intersectionDistance))
+    if (Grid->GetBOB().Intersects(XMLoadFloat3(&ray.origin), ray.direction, intersectionDistance))
     {
         // 광선이 박스와 교차하면 true를 반환하고, 충돌 지점을 계산
         XMVECTOR intersectionPointVector = XMVectorAdd(XMLoadFloat3(&ray.origin), XMVectorScale(ray.direction, intersectionDistance));

@@ -12,20 +12,11 @@ private:
 	int								m_nWidth;
 	int								m_nLength;
 	XMFLOAT3						m_xmf3Scale;
+
 	vector<std::shared_ptr<CMesh>>	m_ppMeshes;
 	int m_nMeshes;
 
-protected:
-	BoundingOrientedBox			m_xmOOBB = BoundingOrientedBox();
-
 public:
-	void UpdateBoundingBox();
-	void SetPosition(XMFLOAT3 xmf3Position);
-	XMFLOAT3 GetPosition(){ return(XMFLOAT3(m_xmf4x4World._41, m_xmf4x4World._42, m_xmf4x4World._43)); }
-
-	XMFLOAT4X4 GetWorldMtx() { return m_xmf4x4World; };
-	void SetOOBB(float fWidth, float fHeight, float fDepth);
-	BoundingOrientedBox GetOOBB() { return m_xmOOBB; }
 	XMFLOAT3 GetScale() { return(m_xmf3Scale); }
 	float GetWidth() { return(m_nWidth * m_xmf3Scale.x); }
 	float GetLength() { return(m_nLength * m_xmf3Scale.z); }

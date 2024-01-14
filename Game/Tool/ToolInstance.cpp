@@ -44,7 +44,7 @@ void Tool::BuildToolScene()
     m_pToolCamera->SetViewport(0, 0, RTVDSVDESCRIPTORHEAP->m_nWndClientWidth, RTVDSVDESCRIPTORHEAP->m_nWndClientHeight, 0.0f, 1.0f);
     m_pToolCamera->SetScissorRect(0, 0, RTVDSVDESCRIPTORHEAP->m_nWndClientWidth, RTVDSVDESCRIPTORHEAP->m_nWndClientHeight);
     m_pToolCamera->GenerateProjectionMatrix(1.0f, 500.0f, float(RTVDSVDESCRIPTORHEAP->m_nWndClientWidth) / float(RTVDSVDESCRIPTORHEAP->m_nWndClientHeight), 90.0f);
-
+    m_pToolCamera->CreateShaderVariables(DEVICE.Get(), CMDLIST.Get());
     m_pToolCamera->GenerateViewMatrix(XMFLOAT3(0.0f, 15.0f, -25.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 1.0f, 0.0f));
 
     m_pToolScene = make_shared<ToolScene>();
