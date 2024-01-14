@@ -163,7 +163,7 @@ D3D12_INPUT_LAYOUT_DESC CDiffusedShader::CreateInputLayout()
 		D3D12_INPUT_ELEMENT_DESC[nInputElementDescs];
 	pd3dInputElementDescs[0] = { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
 	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };
-	pd3dInputElementDescs[1] = { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12,
+	pd3dInputElementDescs[1] = { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0,
 	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };
 	D3D12_INPUT_LAYOUT_DESC d3dInputLayoutDesc;
 	d3dInputLayoutDesc.pInputElementDescs = pd3dInputElementDescs;
@@ -171,13 +171,49 @@ D3D12_INPUT_LAYOUT_DESC CDiffusedShader::CreateInputLayout()
 	return(d3dInputLayoutDesc);
 }
 
-
+//2024-01-14 이성현 툴 그리드메쉬를 와이어프레임모드로 렌더하기 위한 수정
 void CDiffusedShader::CreateShader(const wstring& shaderFile, const string& vs, const string& ps, const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12RootSignature>& _RootSignature)
 {
-	CShader::CreateShader(shaderFile, vs, ps,_Device, _RootSignature);
+	ComPtr<ID3DBlob> pd3dVertexShaderBlob, pd3dPixelShaderBlob, error;
+
+	UINT nCompileFlags = 0;
+#if defined(_DEBUG)
+	nCompileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+	DX::ThrowIfFailed(::D3DCompileFromFile(shaderFile.c_str(), NULL, NULL, vs.c_str(), "vs_5_1",
+		nCompileFlags, 0, pd3dVertexShaderBlob.GetAddressOf(), &error));
+	DX::ThrowIfFailed(::D3DCompileFromFile(shaderFile.c_str(), NULL, NULL, ps.c_str(), "ps_5_1",
+		nCompileFlags, 0, pd3dPixelShaderBlob.GetAddressOf(), &error));
+	if (error)
+	{
+		OutputDebugStringA(reinterpret_cast<char*>(error->GetBufferPointer()));
+	}
+
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC d3dPipelineStateDesc;
+	::ZeroMemory(&d3dPipelineStateDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
+	d3dPipelineStateDesc.pRootSignature = _RootSignature.Get();
+	d3dPipelineStateDesc.VS = CD3DX12_SHADER_BYTECODE(pd3dVertexShaderBlob.Get());
+	d3dPipelineStateDesc.PS = CD3DX12_SHADER_BYTECODE(pd3dPixelShaderBlob.Get());
+	d3dPipelineStateDesc.RasterizerState = CreateRasterizerState();
+	/////////////////////////////////////////////////////////////////////////
+	d3dPipelineStateDesc.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
+	/////////////////////////////////////////////////////////////////////////
+	d3dPipelineStateDesc.BlendState = CreateBlendState();
+	d3dPipelineStateDesc.DepthStencilState = CreateDepthStencilState();
+	d3dPipelineStateDesc.InputLayout = CreateInputLayout();
+	d3dPipelineStateDesc.SampleMask = UINT_MAX;
+	d3dPipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	d3dPipelineStateDesc.NumRenderTargets = 1;
+	d3dPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+	d3dPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	d3dPipelineStateDesc.SampleDesc.Count = 1;
+	d3dPipelineStateDesc.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
+	_Device->CreateGraphicsPipelineState(&d3dPipelineStateDesc,
+		IID_PPV_ARGS(&m_pd3dPipelineStates));
+
+	if (d3dPipelineStateDesc.InputLayout.pInputElementDescs) delete[]
+		d3dPipelineStateDesc.InputLayout.pInputElementDescs;
 }
-
-
 
 CTexturedModelShader::CTexturedModelShader()
 {
@@ -203,8 +239,6 @@ D3D12_INPUT_LAYOUT_DESC CTexturedModelShader::CreateInputLayout()
 
 	return(d3dInputLayoutDesc);
 }
-
-
 
 void CTexturedModelShader::CreateShader(const wstring& shaderFile, const string& vs, const string& ps, const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12RootSignature>& _RootSignature)
 {

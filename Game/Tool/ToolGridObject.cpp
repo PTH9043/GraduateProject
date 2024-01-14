@@ -67,16 +67,14 @@ void ToolGridObject::Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandLis
         {
             if (m_ppMaterials[i])
             {
-                if (m_ppMaterials[i]->m_pShader) m_ppMaterials[0]->m_pShader->Render(_CommandList, pCamera);
-                m_ppMaterials[i]->UpdateShaderVariables(_CommandList);
+                if (m_ppMaterials[i]->m_pShader) 
+                    m_ppMaterials[0]->m_pShader->Render(_CommandList, pCamera);
             }
-
-            for (const auto& ppMeshes : m_ppMeshes) {
-                ppMeshes->RenderMesh(_CommandList, 0);
-            }
-
         }
     }
 
+    for (const auto& ppMeshes : m_ppMeshes) {
+        ppMeshes->RenderMesh(_CommandList, 0);
+    }
    
 }

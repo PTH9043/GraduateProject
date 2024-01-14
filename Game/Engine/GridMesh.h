@@ -14,4 +14,8 @@ protected:
     int m_nWidth;
     int m_nLength;
     XMFLOAT3 m_xmf3Scale = XMFLOAT3(1.0f, 1.0f, 1.0f);
+
+    vector<XMFLOAT4>    m_pxmf4Colors;
+    ComPtr<ID3D12Resource> m_pd3dColorBuffer;
+    ComPtr<ID3D12Resource> m_pd3dColorUploadBuffer;
 };

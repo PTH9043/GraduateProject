@@ -10,6 +10,7 @@ void ToolScene::BuildObjects(const ComPtr<ID3D12Device>& _Device, const ComPtr<I
 	XMFLOAT3 xmf3Scale(6.0f, 1.0f, 6.0f);
 	XMFLOAT4 xmf4Color(0.0f, 0.5f, 0.0f, 0.0f);
 	m_pToolGrid = make_shared<ToolGridObject>(_Device, _CommandList, _RootSignature, 257, 257, 34, 34, xmf3Scale, xmf4Color);
+	m_pToolGrid->GetBOB().Center = XMFLOAT3(0.0f, 0.0f, 0.0f);
 }
 
 
@@ -22,8 +23,8 @@ void ToolScene::Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, CC
 
 	if (m_pToolGrid)
 	{
+		m_pToolGrid->UpdateTransform(nullptr);
 		m_pToolGrid->Render(_CommandList, pCamera);
-		m_pToolGrid->UpdateBOB();
 	}
 }
 

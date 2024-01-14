@@ -66,7 +66,7 @@ using Microsoft::WRL::ComPtr;
 
 //2024-01-12 이성현 
 //툴 실행시 필요한 define문
-#define TOOL_MODE
+//#define TOOL_MODE
 
 
 #define DEVICE gGameFrameWork->GetDeviceAndFactory()->GetDevice()

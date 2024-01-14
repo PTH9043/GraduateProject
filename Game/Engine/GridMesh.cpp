@@ -15,23 +15,39 @@ GridMesh::GridMesh(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12Graph
     m_nLength = nLength;
     m_xmf3Scale = xmf3Scale;
 
+    m_pxmf3Positions.resize(m_nVertices);
+    m_pxmf4Colors.resize(m_nVertices);
 
-    vector<std::shared_ptr<CDiffusedVertex>> pVertices;
-    pVertices.reserve(m_nVertices);
+    for (int i = 0, z = zStart; z < (zStart + nLength); z++)
+    {
+        for (int x = xStart; x < (xStart + nWidth); x++, i++)
+        {
+            m_pxmf3Positions[i] = XMFLOAT3((x * m_xmf3Scale.x), 0, (z * m_xmf3Scale.z));
+            m_pxmf4Colors[i] = xmf4Color;
+        }
+    }
 
-    for (int z = zStart; z < (zStart + nLength); z++) 
-        for (int x = xStart; x < (xStart + nWidth); x++) 
-            pVertices.push_back(make_shared<CDiffusedVertex>(XMFLOAT3((x * m_xmf3Scale.x), 0, (z * m_xmf3Scale.z)), xmf4Color));
-
-    m_pd3dPositionBuffer = Util::CreateBufferResource(_Device, _CommandList, pVertices.data(),
+    m_pd3dPositionBuffer = Util::CreateBufferResource(_Device, _CommandList, m_pxmf3Positions.data(),
         m_nStride * m_nVertices, D3D12_HEAP_TYPE_DEFAULT,
         D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, &m_pd3dPositionUploadBuffer);
+
+    m_pd3dColorBuffer = Util::CreateBufferResource(_Device, _CommandList, m_pxmf4Colors.data(),
+       sizeof(XMFLOAT4) * m_nVertices, D3D12_HEAP_TYPE_DEFAULT,
+        D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, &m_pd3dColorUploadBuffer);
 
     D3D12_VERTEX_BUFFER_VIEW positionBufferView;
     positionBufferView.BufferLocation = m_pd3dPositionBuffer->GetGPUVirtualAddress();
     positionBufferView.StrideInBytes = m_nStride;
     positionBufferView.SizeInBytes = m_nStride * m_nVertices;
+
     m_pd3dVertexBufferViews.push_back(positionBufferView);
+
+    D3D12_VERTEX_BUFFER_VIEW colorBufferView;
+    colorBufferView.BufferLocation = m_pd3dColorBuffer->GetGPUVirtualAddress();
+    colorBufferView.StrideInBytes = sizeof(XMFLOAT4);
+    colorBufferView.SizeInBytes = sizeof(XMFLOAT4) * m_nVertices;
+
+    m_pd3dVertexBufferViews.push_back(colorBufferView);
 
     m_nSubMeshes = 1;
     m_pnSubSetIndices.resize(m_nSubMeshes);
