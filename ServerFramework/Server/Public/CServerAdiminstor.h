@@ -11,7 +11,7 @@ BEGIN(Server)
 */
 class CACHE_ALGIN CServerAdiminstor final : public Core::UServerService{
 public:
-	CServerAdiminstor(OBJCON_CONSTRUCTOR);
+	CServerAdiminstor(OBJCON_CONSTRUCTOR, const _string& _strNavigationPath = "");
 	NO_COPY(CServerAdiminstor)
 	DESTRUCTOR(CServerAdiminstor)
 public:

@@ -5,8 +5,8 @@
 
 namespace Server
 {
-	CServerAdiminstor::CServerAdiminstor(OBJCON_CONSTRUCTOR) :
-		Core::UServerService(OBJCON_CONDATA)
+	CServerAdiminstor::CServerAdiminstor(OBJCON_CONSTRUCTOR, const _string& _strNavigationPath) :
+		Core::UServerService(OBJCON_CONDATA, _strNavigationPath)
 	{
 	}
 

@@ -4,13 +4,13 @@
 namespace Core {
 
 	UCell::UCell() : m_vCenterPos{}, m_Index{0}, m_vPlane{}, 
-		m_Points{}, m_Lines{}, m_Normals{}, m_Neighbors{-1, -1, -1}
+		m_Points{}, m_Lines{}, m_Normals{}, m_NeighborIndexes{-1, -1, -1}
 	{
 	}
 
 	_bool UCell::NativeConstruct(const ARRAY<_float3, POINT_END>& _Points, const _int _iIndex)
 	{
-		::memcpy(&m_Neighbors[0], &_Points[0], sizeof(_float3) * POINT_END);
+		::memcpy(&m_NeighborIndexes[0], &_Points[0], sizeof(_float3) * POINT_END);
 		m_Index = _iIndex;
 		for (auto& iter : m_Points)
 		{
@@ -18,6 +18,62 @@ namespace Core {
 		}
 		m_vCenterPos /= 3;
 		return true;
+	}
+
+	/*
+	 Positon이 Cell 위에 있는지 판단하는 함수이다. 
+	*/
+	_bool UCell::IsIn(const _float3& _vPos, REF_IN _int& _NeighborIndex)
+	{
+		for (_int i = 0; i < POINT_END; ++i){
+			_float3 vPoints = m_Points[i];
+			_float3 vDir = glm::normalize((_vPos - vPoints));
+
+			_float3 vNormal = m_Normals[i];
+			_float D = glm::dot(vDir, vNormal);
+			if (0 < D){
+				_NeighborIndex = m_NeighborIndexes[i];
+				return false;
+			}
+		}
+		return true;
+	}
+
+	_bool UCell::UpdateNeighbor(SHPTR<UCell> _spCell, POINT _Point1, POINT _Point2, LINE _Line)
+	{
+		if (true == IsCompareCell(_spCell, _Point1, _Point2))
+		{
+			// 이웃을 등록한다. 
+			_spCell->m_NeighborIndexes[_Line] = m_Index;
+			return true;
+		}
+		return false;
+	}
+
+	_bool UCell::IsCompareCell(SHPTR<UCell> _spCell, POINT _Point1, POINT _Point2)
+	{
+		if (m_Points[POINT_A] == _spCell->m_Points[_Point1])
+		{
+			RETURN_CHECK(m_Points[POINT_B] == _spCell->m_Points[_Point2], true);
+			RETURN_CHECK(m_Points[POINT_C] == _spCell->m_Points[_Point2], true);
+		}
+		if (m_Points[POINT_B] == _spCell->m_Points[_Point1])
+		{
+			RETURN_CHECK(m_Points[POINT_A] == _spCell->m_Points[_Point2], true);
+			RETURN_CHECK(m_Points[POINT_C] == _spCell->m_Points[_Point2], true);
+		}
+		if (m_Points[POINT_C] == _spCell->m_Points[_Point1])
+		{
+			RETURN_CHECK(m_Points[POINT_A] == _spCell->m_Points[_Point2], true);
+			RETURN_CHECK(m_Points[POINT_B] == _spCell->m_Points[_Point2], true);
+		}
+		return true;
+	}
+
+	_float UCell::ComputeHeight(const _float3& _vPosition)
+	{
+		_float4 vPlane = m_vPlane;
+		return PTH::PlaneDotCoord(vPlane, _vPosition) + _vPosition.y;
 	}
 
 	void UCell::ResortPoints()

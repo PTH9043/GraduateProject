@@ -79,17 +79,17 @@
     <Filter Include="98.Lua">
       <UniqueIdentifier>{70a90b66-5918-41b3-8428-356a321ea39e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Space">
+    <Filter Include="04.GameSpace">
       <UniqueIdentifier>{2c9e0d8e-a040-4db2-b627-b425d77c9421}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Space\Navigation">
+    <Filter Include="04.GameSpace\Navigation">
       <UniqueIdentifier>{535524e5-4cad-4fe8-a921-3c7fd6c1757b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Space\Astar">
-      <UniqueIdentifier>{a012bc79-9aa1-4b30-ab32-64427d23f4f5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Space\Cell">
+    <Filter Include="04.GameSpace\Navigation\Cell">
       <UniqueIdentifier>{c2cf8271-240c-4bd8-9890-e934ae83d107}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.GameSpace\PathFinder">
+      <UniqueIdentifier>{142446d8-8752-433b-b597-2581a739a26a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -131,9 +131,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\UThreadManager.h">
       <Filter>02.Manager\Thread</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\CoreStruct.h">
-      <Filter>99.Default</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\USession.h">
       <Filter>03.Network\Session</Filter>
@@ -193,7 +190,16 @@
       <Filter>97.Utility\LuaLoader</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UCell.h">
-      <Filter>04.Space\Cell</Filter>
+      <Filter>04.GameSpace\Navigation\Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UNavigation.h">
+      <Filter>04.GameSpace\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CoreStruct.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UPathFinder.h">
+      <Filter>04.GameSpace\PathFinder</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -267,7 +273,13 @@
       <Filter>97.Utility\LuaLoader</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UCell.cpp">
-      <Filter>04.Space\Cell</Filter>
+      <Filter>04.GameSpace\Navigation\Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UNavigation.cpp">
+      <Filter>04.GameSpace\Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UPathFinder.cpp">
+      <Filter>04.GameSpace\PathFinder</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -42,6 +42,8 @@
     <ClInclude Include="..\Public\UClientService.h" />
     <ClInclude Include="..\Public\ULogManager.h" />
     <ClInclude Include="..\Public\ULuaLoader.h" />
+    <ClInclude Include="..\Public\UNavigation.h" />
+    <ClInclude Include="..\Public\UPathFinder.h" />
     <ClInclude Include="..\Public\URandomManager.h" />
     <ClInclude Include="..\Public\URoom.h" />
     <ClInclude Include="..\Public\UServerService.h" />
@@ -68,6 +70,8 @@
     <ClCompile Include="..\Private\UClientService.cpp" />
     <ClCompile Include="..\Private\ULogManager.cpp" />
     <ClCompile Include="..\Private\ULuaLoader.cpp" />
+    <ClCompile Include="..\Private\UNavigation.cpp" />
+    <ClCompile Include="..\Private\UPathFinder.cpp" />
     <ClCompile Include="..\Private\URandomManager.cpp" />
     <ClCompile Include="..\Private\URoom.cpp" />
     <ClCompile Include="..\Private\UServerService.cpp" />

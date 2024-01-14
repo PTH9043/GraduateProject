@@ -2,12 +2,14 @@
 #include "UServerService.h"
 #include "USession.h"
 #include "UCoreInstance.h"
+#include "UNavigation.h"
 
 namespace Core {
 
-	UServerService::UServerService(OBJCON_CONSTRUCTOR) : 
+	UServerService::UServerService(OBJCON_CONSTRUCTOR, const _string& _strNavigationPath) :
 		UService(OBJCON_CONDATA, SERVICETYPE::SERVER), 
-		m_TcpAcceptor{ GetIOContext(),Asio::ip::tcp::endpoint(Asio::ip::tcp::v4(),TCP_PORT_NUM) }
+		m_TcpAcceptor{ GetIOContext(),Asio::ip::tcp::endpoint(Asio::ip::tcp::v4(),TCP_PORT_NUM) }, 
+		m_spNavigation{nullptr}
 	{
 
 	}
