@@ -8,6 +8,12 @@
 #include "gtx/rotate_vector.hpp"
 #include "gtx/vector_query.hpp"
 #include "gtx/euler_angles.hpp"
+#include "gtx/associated_min_max.hpp"
+#include "gtc/epsilon.hpp"
+#include "gtc/bitfield.hpp"
+#include "gtc/constants.hpp"
+#include "gtx/dual_quaternion.hpp"
+#include "gtc/quaternion.hpp"
 
 namespace PTH
 {
@@ -46,6 +52,8 @@ namespace PTH
     static constexpr Vector3 RightVec3{ 1.f, 0.f, 0.f };
     static constexpr Vector3 UpVec3{ 0.f, 1.f, 0.f };
     static constexpr Vector3 LookVec3{ 0.f, 0.f, 1.f };
+    static constexpr Vector4 VectorOne{ 1.f, 1.f, 1.f, 1.f };
+    static constexpr Vector4 VectorSelect1110{ 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF, 0.f };
 
     //------------------------------------------------------------------------------
     //  4x4 Matrix (assumes right-handed cooordinates)
@@ -102,6 +110,16 @@ namespace PTH
         Matrix& operator*= (const matrix4x4& M) noexcept;
         Matrix& operator*= (float S) noexcept;
         Matrix& operator/= (float S) noexcept;
+
+
+       friend Matrix operator+ (const Matrix& M1, const Matrix& M2) noexcept;
+       friend  Matrix operator- (const Matrix& M1, const Matrix& M2) noexcept;
+       friend Matrix operator* (const Matrix& M1, const Matrix& M2) noexcept;
+       friend  Matrix operator* (const Matrix& M, float S) noexcept;
+       friend Matrix operator/ (const Matrix& M, float S) noexcept;
+       friend Matrix operator/ (const Matrix& M1, const Matrix& M2) noexcept;
+        // Element-wise divide
+       friend Matrix operator* (float S, const Matrix& M) noexcept;
 
         Matrix& operator/= (const matrix4x4& M) noexcept;
         // Element-wise divide
@@ -233,6 +251,11 @@ namespace PTH
     // Element-wise divide
     Matrix operator* (float S, const Matrix& M) noexcept;
 
+    
+    Vector4 PlaneFromPoints(const Vector3& _vPoint1, const Vector3& _vPoint2,
+        const Vector3& _vPoint3);
+
+    float PlaneDotCoord(const Vector4& _Plane, const Vector3& _vPoint);
 }
 
 #endif // _PTHMATH_PTHMATH_H
