@@ -20,6 +20,7 @@ void Game::Update()
 void Game::Destroy()
 {
 	gGameFrameWork->OnDestroy();
+
 }
 
 LRESULT CALLBACK Game::OnProcessingWindowMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {

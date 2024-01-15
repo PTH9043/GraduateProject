@@ -38,10 +38,7 @@ ToolGridObject::ToolGridObject(const ComPtr<ID3D12Device>& _Device, const ComPtr
     SetPosition(XMFLOAT3(-fWidth / 2, 0.0f, -fDepth / 2));
     SetBOB(fWidth, fHeight, fDepth);
 
-    shared_ptr<CDiffusedShader> pGridShader = make_shared<CDiffusedShader>();
-    pGridShader->CreateShader(L"..\\Resources\\Shader\\Shaders.hlsli", "VSDiffused", "PSDiffused", _Device, _RootSignature);
-    pGridShader->CreateShaderVariables(_Device, _CommandList);
-
+    shared_ptr<CDiffusedWireFrameShader> pGridShader = make_shared<CDiffusedWireFrameShader>(_Device, _RootSignature, L"Shader/Shader.hlsli", "VSDiffused", "PSDiffused");
     SetShader(pGridShader);
 }
 

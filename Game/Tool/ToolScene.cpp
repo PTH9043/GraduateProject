@@ -5,7 +5,7 @@
 void ToolScene::BuildObjects(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, const ComPtr<ID3D12RootSignature>& _RootSignature)
 {
 	m_pDescriptorHeap = make_unique<CbvSrvUavDescriptorHeap>();
-	CreateCbvSrvDescriptorHeaps(_Device, 0, 30);
+	CreateCbvSrvDescriptorHeaps(0, 30);
 
 	XMFLOAT3 xmf3Scale(6.0f, 1.0f, 6.0f);
 	XMFLOAT4 xmf4Color(0.0f, 0.5f, 0.0f, 0.0f);

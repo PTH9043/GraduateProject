@@ -102,6 +102,9 @@
     <ClInclude Include="GridMesh.h">
       <Filter>Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WICTextureLoader12.cpp">
@@ -169,6 +172,9 @@
     </ClCompile>
     <ClCompile Include="GridMesh.cpp">
       <Filter>Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
