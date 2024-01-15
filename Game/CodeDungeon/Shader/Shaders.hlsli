@@ -107,7 +107,6 @@ float4 PSStandard(VS_STANDARD_OUTPUT input) : SV_TARGET
 
 
 
-
 struct VS_INPUT
 {
 	float3 position : POSITION;

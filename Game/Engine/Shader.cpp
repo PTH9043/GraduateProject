@@ -25,8 +25,6 @@ CShader::CShader(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12RootSig
 	}
 
 
-	
-
 	/*
 	ifstream ifsFile{ shaderFile.c_str(), ios::in | ios::binary };
 	vector<BYTE> pByteCode{ istreambuf_iterator<char> {ifsFile}, {} };
@@ -45,9 +43,6 @@ CShader::CShader(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12RootSig
 	}
 	*/
 
-
-	
-	
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC d3dPipelineStateDesc;
 	::ZeroMemory(&d3dPipelineStateDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
@@ -73,6 +68,7 @@ CShader::CShader(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12RootSig
 }
 
 
+
 void CShader::SetPipelineState(const ComPtr<ID3D12GraphicsCommandList>& _CommandList)
 {
 	//파이프라인에 그래픽스 상태 객체를 설정한다. 
@@ -82,7 +78,6 @@ void CShader::Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, CCam
 {
 	SetPipelineState(_CommandList);
 }
-
 
 
 
@@ -141,6 +136,7 @@ CDiffusedFilledShader::~CDiffusedFilledShader()
 
 CDiffusedWireFrameShader::CDiffusedWireFrameShader(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12RootSignature>& _RootSignature, const wstring& shaderFile, const string& vs, const string& ps)
 {
+
 	m_pd3dInputLayouts.clear();
 	m_pd3dInputLayouts =
 	{
@@ -162,7 +158,6 @@ CDiffusedWireFrameShader::CDiffusedWireFrameShader(const ComPtr<ID3D12Device>& _
 	{
 		OutputDebugStringA(reinterpret_cast<char*>(error->GetBufferPointer()));
 	}
-
 
 	CD3DX12_RASTERIZER_DESC RasterizerDesc{ D3D12_DEFAULT };
 	RasterizerDesc.FillMode = D3D12_FILL_MODE_WIREFRAME;
@@ -189,6 +184,7 @@ CDiffusedWireFrameShader::CDiffusedWireFrameShader(const ComPtr<ID3D12Device>& _
 	if (d3dPipelineStateDesc.InputLayout.pInputElementDescs) delete[]
 		d3dPipelineStateDesc.InputLayout.pInputElementDescs;
 }
+
 CDiffusedWireFrameShader::~CDiffusedWireFrameShader()
 {
 }
@@ -223,7 +219,6 @@ CTexturedModelShader::CTexturedModelShader(const ComPtr<ID3D12Device>& _Device, 
 	{
 		OutputDebugStringA(reinterpret_cast<char*>(error->GetBufferPointer()));
 	}
-
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC d3dPipelineStateDesc;
 	::ZeroMemory(&d3dPipelineStateDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));

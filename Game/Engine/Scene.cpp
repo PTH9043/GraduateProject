@@ -5,6 +5,7 @@
 #include "CbvSrvUavDescriptorHeap.h"
 
 
+
 unique_ptr<CbvSrvUavDescriptorHeap> CScene::m_pDescriptorHeap= make_unique<CbvSrvUavDescriptorHeap>();
 
 //CbvSrvUavDescriptorHeap* CScene::m_pDescriptorHeap = NULL;
@@ -31,7 +32,7 @@ void CScene::CreateCbvSrvDescriptorHeaps(int nConstantBufferViews, int nShaderRe
 	m_pDescriptorHeap->m_d3dSrvGPUDescriptorNextHandle = m_pDescriptorHeap->m_d3dSrvGPUDescriptorStartHandle;
 }
 
-void CScene::CreateConstantBufferViews( int nConstantBufferViews, const ComPtr<ID3D12Resource>& _ConstantBuffers, UINT nStride)
+void CScene::CreateConstantBufferViews(int nConstantBufferViews, const ComPtr<ID3D12Resource>& _ConstantBuffers, UINT nStride)
 {
 	D3D12_GPU_VIRTUAL_ADDRESS d3dGpuVirtualAddress = _ConstantBuffers->GetGPUVirtualAddress();
 	D3D12_CONSTANT_BUFFER_VIEW_DESC d3dCBVDesc;
@@ -143,66 +144,67 @@ bool CScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wPar
 }
 
 
-
-
-
-
 void CScene::BuildObjects(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList,const ComPtr<ID3D12RootSignature>& _RootSignature)
 {
+
 	
 	CScene::CreateCbvSrvDescriptorHeaps(0, 30);
-	m_ppObjects = make_shared<CGameObject>();
+	shared_ptr<CGameObject> object = make_shared<CGameObject>();
 
 	shared_ptr<CDiffusedWireFrameShader> pShader = make_shared<CDiffusedWireFrameShader>(_Device, _RootSignature,L"Shader/Shaders.hlsli", "VSDiffused", "PSDiffused");
 
 	
 	shared_ptr<CTriangleMesh> Tri = make_shared<CTriangleMesh>(_Device, _CommandList);
-	m_ppObjects->SetMesh(Tri);
-	m_ppObjects->SetShader(pShader);
-	m_ppObjects->SetScale(3.0, 3, 3);
-
+	object->SetMesh(Tri);
+	object->SetShader(pShader);
+	object->SetScale(3.0, 3, 3);
+	m_ppObjects.push_back(object);
 	//shared_ptr<CTexturedModelShader> pShader = make_shared<CTexturedModelShader>(_Device, _RootSignature,L"Shader/Shaders.hlsli", "VSStandard", "PSStandard");
 	//m_ppObjects->LoadGeometryFromFile(_Device.Get(), _CommandList.Get(), _RootSignature.Get(),"Model/MainTank.bin", pShader);
 	//// "Model/DB_Five.bin" 
 	////"..\\Resources\\Model\\DB_Five.bin"
 
 	//m_ppObjects->Rotate(0,-90.0f,0);
+
 }
 
 void CScene::ReleaseObjects()
 {
-	
-	
 }
 
 void CScene::ReleaseUploadBuffers()
 {
-	if (m_ppObjects)
+	for (const auto& pObject : m_ppObjects)
 	{
-	
-			m_ppObjects->ReleaseUploadBuffers();
+		if (pObject)
+			pObject->ReleaseUploadBuffers();
 	}
 }
 
 
 void CScene::AnimateObjects(float fTimeElapsed)
 {
-	
-
-	if (m_ppObjects)m_ppObjects->Animate(fTimeElapsed);
-	
+	for (const auto& pObject : m_ppObjects)
+	{
+		if (pObject)
+			pObject->Animate(fTimeElapsed);
+	}
 }
 
 
 void CScene::Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, CCamera* pCamera)
 {
-
 	if(m_pDescriptorHeap->m_pd3dCbvSrvUavDescriptorHeap)_CommandList->SetDescriptorHeaps(1, m_pDescriptorHeap->m_pd3dCbvSrvUavDescriptorHeap.GetAddressOf());
 
 	if (pCamera) pCamera->UpdateShaderVariables(_CommandList);
 
-	if (m_ppObjects)m_ppObjects->UpdateTransform(nullptr);
-	if (m_ppObjects) m_ppObjects->Render(_CommandList.Get(), pCamera);
-	
+	for (const auto& pObject : m_ppObjects)
+	{
+		if (pObject)
+		{
+			pObject->UpdateTransform(nullptr);
+			pObject->Render(_CommandList.Get(), pCamera);
+		}
+	}
 }
 

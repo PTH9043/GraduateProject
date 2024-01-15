@@ -523,3 +523,56 @@ const float PTH::Matrix::ComputeDistanceSq(const Vector3& _vPos)
 	Vector3 v = GetPos() - _vPos;
 	return v.x * v.x + v.y * v.y  + v.z * v.z;
 }
+
+Matrix PTH::operator+(const Matrix& M1, const Matrix& M2) noexcept
+{
+	return M1.m + M2.m;
+}
+
+Matrix PTH::operator-(const Matrix& M1, const Matrix& M2) noexcept
+{
+	return M1.m - M2.m;
+}
+
+Matrix PTH::operator*(const Matrix& M1, const Matrix& M2) noexcept
+{
+	return M1.m * M2.m;
+}
+
+Matrix PTH::operator*(const Matrix& M, float S) noexcept
+{
+	return M.m * S;
+}
+
+Matrix PTH::operator/(const Matrix& M, float S) noexcept
+{
+	return M.m / S;
+}
+
+Matrix PTH::operator/(const Matrix& M1, const Matrix& M2) noexcept
+{
+	return M1.m / M2.m;
+}
+
+Matrix PTH::operator*(float S, const Matrix& M) noexcept
+{
+	return M.m * S;
+}
+
+Vector4 PTH::PlaneFromPoints(const Vector3& _vPoint1, const Vector3& _vPoint2, const Vector3& _vPoint3)
+{
+	Vector3 v21 = _vPoint1 - _vPoint2;
+	Vector3 v31 = _vPoint1 - _vPoint3;
+
+	Vector3 N = glm::cross(v21, v31);
+	N = glm::normalize(N);
+
+	float D = glm::dot(N, _vPoint1) * -1.f;
+	return Vector4(N, D);
+}
+
+float PTH::PlaneDotCoord(const Vector4& _Plane, const Vector3& _vPoint)
+{
+	Vector4 v3 = glm::mix(VectorOne, Vector4(_vPoint, 1.f), VectorSelect1110);
+	return glm::dot(_Plane, v3);
+}

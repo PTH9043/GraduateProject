@@ -124,6 +124,7 @@ inline constexpr CS_LOGIN::Impl_::Impl_(
       : user_name_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
+        time_test_{::int64_t{0}},
         _cached_size_{0} {}
 
 template <typename>
@@ -253,6 +254,7 @@ const ::uint32_t TableStruct_Protocol_2eproto::offsets[] PROTOBUF_SECTION_VARIAB
     ~0u,  // no _split_
     ~0u,  // no sizeof(Split)
     PROTOBUF_FIELD_OFFSET(::CS_LOGIN, _impl_.user_name_),
+    PROTOBUF_FIELD_OFFSET(::CS_LOGIN, _impl_.time_test_),
     ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::CS_MOVE, _internal_metadata_),
     ~0u,  // no _extensions_
@@ -282,8 +284,8 @@ static const ::_pbi::MigrationSchema
         {34, 45, -1, sizeof(::SC_PUT_OBJECT)},
         {48, -1, -1, sizeof(::SC_REMOVE_OBJECT)},
         {57, -1, -1, sizeof(::CS_LOGIN)},
-        {66, -1, -1, sizeof(::CS_MOVE)},
-        {76, -1, -1, sizeof(::CS_LOGOUT)},
+        {67, -1, -1, sizeof(::CS_MOVE)},
+        {77, -1, -1, sizeof(::CS_LOGOUT)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -303,17 +305,18 @@ const char descriptor_table_protodef_Protocol_2eproto[] PROTOBUF_SECTION_VARIABL
     "\002 \001(\0132\t.POSITION\022\021\n\tmove_time\030\003 \001(\003\"C\n\rS"
     "C_PUT_OBJECT\022\n\n\002id\030\001 \001(\003\022\026\n\003pos\030\002 \001(\0132\t."
     "POSITION\022\016\n\006o_type\030\003 \001(\005\"\036\n\020SC_REMOVE_OB"
-    "JECT\022\n\n\002id\030\001 \001(\003\"\035\n\010CS_LOGIN\022\021\n\tuser_nam"
-    "e\030\001 \001(\014\"5\n\007CS_MOVE\022\027\n\003dir\030\001 \001(\0162\n.Direct"
-    "ion\022\021\n\tmove_time\030\002 \001(\003\"\027\n\tCS_LOGOUT\022\n\n\002i"
-    "d\030\001 \001(\003*2\n\tDirection\022\006\n\002UP\020\000\022\010\n\004DOWN\020\001\022\010"
-    "\n\004LEFT\020\002\022\t\n\005RIGHT\020\003b\006proto3"
+    "JECT\022\n\n\002id\030\001 \001(\003\"0\n\010CS_LOGIN\022\021\n\tuser_nam"
+    "e\030\001 \001(\014\022\021\n\ttime_test\030\002 \001(\003\"5\n\007CS_MOVE\022\027\n"
+    "\003dir\030\001 \001(\0162\n.Direction\022\021\n\tmove_time\030\002 \001("
+    "\003\"\027\n\tCS_LOGOUT\022\n\n\002id\030\001 \001(\003*2\n\tDirection\022"
+    "\006\n\002UP\020\000\022\010\n\004DOWN\020\001\022\010\n\004LEFT\020\002\022\t\n\005RIGHT\020\003b\006"
+    "proto3"
 };
 static ::absl::once_flag descriptor_table_Protocol_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Protocol_2eproto = {
     false,
     false,
-    427,
+    446,
     descriptor_table_protodef_Protocol_2eproto,
     "Protocol.proto",
     &descriptor_table_Protocol_2eproto_once,
@@ -1533,6 +1536,7 @@ CS_LOGIN::CS_LOGIN(
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_);
+  _impl_.time_test_ = from._impl_.time_test_;
 
   // @@protoc_insertion_point(copy_constructor:CS_LOGIN)
 }
@@ -1544,6 +1548,7 @@ inline PROTOBUF_NDEBUG_INLINE CS_LOGIN::Impl_::Impl_(
 
 inline void CS_LOGIN::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_.time_test_ = {};
 }
 CS_LOGIN::~CS_LOGIN() {
   // @@protoc_insertion_point(destructor:CS_LOGIN)
@@ -1564,6 +1569,7 @@ PROTOBUF_NOINLINE void CS_LOGIN::Clear() {
   (void) cached_has_bits;
 
   _impl_.user_name_.ClearToEmpty();
+  _impl_.time_test_ = ::int64_t{0};
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
@@ -1575,20 +1581,23 @@ const char* CS_LOGIN::_InternalParse(
 
 
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 1, 0, 0, 2> CS_LOGIN::_table_ = {
+const ::_pbi::TcParseTable<1, 2, 0, 0, 2> CS_LOGIN::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    1, 0,  // max_field_number, fast_idx_mask
+    2, 8,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967294,  // skipmap
+    4294967292,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    1,  // num_field_entries
+    2,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     &_CS_LOGIN_default_instance_._instance,
     ::_pbi::TcParser::GenericFallback,  // fallback
   }, {{
+    // int64 time_test = 2;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(CS_LOGIN, _impl_.time_test_), 63>(),
+     {16, 63, 0, PROTOBUF_FIELD_OFFSET(CS_LOGIN, _impl_.time_test_)}},
     // bytes user_name = 1;
     {::_pbi::TcParser::FastBS1,
      {10, 63, 0, PROTOBUF_FIELD_OFFSET(CS_LOGIN, _impl_.user_name_)}},
@@ -1598,6 +1607,9 @@ const ::_pbi::TcParseTable<0, 1, 0, 0, 2> CS_LOGIN::_table_ = {
     // bytes user_name = 1;
     {PROTOBUF_FIELD_OFFSET(CS_LOGIN, _impl_.user_name_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kBytes | ::_fl::kRepAString)},
+    // int64 time_test = 2;
+    {PROTOBUF_FIELD_OFFSET(CS_LOGIN, _impl_.time_test_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
   }},
   // no aux_entries
   {{
@@ -1615,6 +1627,13 @@ const ::_pbi::TcParseTable<0, 1, 0, 0, 2> CS_LOGIN::_table_ = {
   if (!this->_internal_user_name().empty()) {
     const std::string& _s = this->_internal_user_name();
     target = stream->WriteBytesMaybeAliased(1, _s, target);
+  }
+
+  // int64 time_test = 2;
+  if (this->_internal_time_test() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::
+        WriteInt64ToArrayWithField<2>(
+            stream, this->_internal_time_test(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -1640,6 +1659,12 @@ const ::_pbi::TcParseTable<0, 1, 0, 0, 2> CS_LOGIN::_table_ = {
                                     this->_internal_user_name());
   }
 
+  // int64 time_test = 2;
+  if (this->_internal_time_test() != 0) {
+    total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
+        this->_internal_time_test());
+  }
+
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
@@ -1661,6 +1686,9 @@ void CS_LOGIN::MergeImpl(::google::protobuf::Message& to_msg, const ::google::pr
 
   if (!from._internal_user_name().empty()) {
     _this->_internal_set_user_name(from._internal_user_name());
+  }
+  if (from._internal_time_test() != 0) {
+    _this->_internal_set_time_test(from._internal_time_test());
   }
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -1685,6 +1713,7 @@ void CS_LOGIN::InternalSwap(CS_LOGIN* PROTOBUF_RESTRICT other) {
   ABSL_DCHECK_EQ(arena, other->GetArena());
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.user_name_, &other->_impl_.user_name_, arena);
+        swap(_impl_.time_test_, other->_impl_.time_test_);
 }
 
 ::google::protobuf::Metadata CS_LOGIN::GetMetadata() const {

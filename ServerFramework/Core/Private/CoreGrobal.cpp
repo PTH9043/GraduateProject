@@ -19,6 +19,7 @@ namespace Core
 		CoreGlobal()
 		{
 			LOCKGUARD<MUTEX>	LL{ m_Mutex };
+
 #ifdef USE_DEBUG
 			g_pDeadLockProfiler = new UDeadLockProfiler;
 #endif

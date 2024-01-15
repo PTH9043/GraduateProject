@@ -27,9 +27,7 @@ public:
 	
 protected:
 	//씬은 셰이더들의 집합이다. 셰이더들은 게임 객체들의 집합이다.
-	
-	//vector<unique_ptr<CGameObject>> m_ppObjects;
-	shared_ptr<CGameObject> m_ppObjects;
+	vector<shared_ptr<CGameObject>> m_ppObjects;
 
 public:
 public:

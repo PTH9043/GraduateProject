@@ -64,13 +64,23 @@ using namespace DirectX;
 using namespace DirectX::PackedVector;
 using Microsoft::WRL::ComPtr;
 
+//2024-01-12 이성현 
+//툴 실행시 필요한 define문
+//#define TOOL_MODE
+
 
 #define DEVICE gGameFrameWork->GetDeviceAndFactory()->GetDevice()
 #define CMDLIST gGameFrameWork->GetCommandQueue()->GetCmdList()
+#define CMDALLOCATOR gGameFrameWork->GetCommandQueue()->GetCmdAllocator()
+#define CMDQUEUE gGameFrameWork->GetCommandQueue()->GetCmdQueue()
+#define CMD gGameFrameWork->GetCommandQueue()
+
 #define GRAPHICS_ROOT_SIGNATURE	gGameFrameWork->GetRootSignature()->GetGraphicsRootSignature()
 //2024-01-07 이성현
+#define RTVDSVDESCRIPTORHEAP gGameFrameWork->GetSwapChainAndRtvDsvHeap()
 #define RTVDESCRIPTORHEAP gGameFrameWork->GetSwapChainAndRtvDsvHeap()->GetRTVHeap()
 #define SWAPCHAIN gGameFrameWork->GetSwapChainAndRtvDsvHeap()->GetSwapChain()
+#define FENCE gGameFrameWork->GetCommandQueue()->GetFence()
 
 
 //-------------
@@ -332,12 +342,10 @@ namespace Matrix4x4
 			NearZ, FarZ));
 		return(xmmtx4x4Result);
 	}
-	inline XMFLOAT4X4 LookAtLH(XMFLOAT3& xmf3EyePosition, XMFLOAT3& xmf3LookAtPosition,
-		XMFLOAT3& xmf3UpDirection)
+	inline XMFLOAT4X4 LookAtLH(XMFLOAT3& xmf3EyePosition, XMFLOAT3& xmf3LookAtPosition, XMFLOAT3& xmf3UpDirection)
 	{
 		XMFLOAT4X4 xmmtx4x4Result;
-		XMStoreFloat4x4(&xmmtx4x4Result, XMMatrixLookAtLH(XMLoadFloat3(&xmf3EyePosition),
-			XMLoadFloat3(&xmf3LookAtPosition), XMLoadFloat3(&xmf3UpDirection)));
+		XMStoreFloat4x4(&xmmtx4x4Result, XMMatrixLookAtLH(XMLoadFloat3(&xmf3EyePosition), XMLoadFloat3(&xmf3LookAtPosition), XMLoadFloat3(&xmf3UpDirection)));
 		return(xmmtx4x4Result);
 	}
 }

@@ -9,7 +9,6 @@ public:
 	~CVertex() {}
 };
 
-
 class CDiffusedVertex : public CVertex
 {
 protected:

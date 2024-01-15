@@ -25,11 +25,13 @@ public:
 	void DeleteSession(const SESSIONID _SessionID);
 	void BroadCastMessage(char* _pPacket, PACKETHEAD _PacketHead);
 public: /* Get Set */
+	ROOMID GetRoomID() const { return m_RoomID; }
 	_uint GetMaxSessionCount() const { return m_MaxSessionCount; }
 	_bool IsEmptyRoom() const { return m_isEmptyRoom.load(); }
 private:
 	virtual void Free() override;
 private:
+	ROOMID								m_RoomID;
 	_uint									m_MaxSessionCount;
 	ATOMIC<_bool>				m_isEmptyRoom;
 	SESSIONCONTAINER		m_SessionContainer;

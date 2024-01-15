@@ -13,6 +13,15 @@
     <Filter Include="main\Imgui">
       <UniqueIdentifier>{8ae8dc19-e177-4ef8-969f-7087e9b85e58}</UniqueIdentifier>
     </Filter>
+    <Filter Include="main\ToolManager">
+      <UniqueIdentifier>{33ef7870-45ed-40ae-a352-5e4ceb5da9d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="main\ToolScene">
+      <UniqueIdentifier>{aa8838f1-6f28-40a3-ae74-b29084eeb8b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="main\ToolComponent">
+      <UniqueIdentifier>{815889ef-e355-476e-89ad-80c7d14f1d11}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Imgui\imgui.cpp">
@@ -41,6 +50,15 @@
     </ClCompile>
     <ClCompile Include="ToolInstance.cpp">
       <Filter>main\Default</Filter>
+    </ClCompile>
+    <ClCompile Include="ToolManager.cpp">
+      <Filter>main\ToolManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ToolScene.cpp">
+      <Filter>main\ToolScene</Filter>
+    </ClCompile>
+    <ClCompile Include="ToolGridObject.cpp">
+      <Filter>main\ToolComponent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -82,6 +100,18 @@
     </ClInclude>
     <ClInclude Include="Imgui\imstb_truetype.h">
       <Filter>main\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolManager.h">
+      <Filter>main\ToolManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolScene.h">
+      <Filter>main\ToolScene</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolDefines.h">
+      <Filter>main\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolGridObject.h">
+      <Filter>main\ToolComponent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

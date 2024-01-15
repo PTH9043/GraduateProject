@@ -13,6 +13,7 @@ namespace Server
 
 	_bool CServerApp::Start()
 	{
+		std::cout << CurrentMilliseconds() << "\n";
 		std::cout << "Start Server!\n";
 		try
 		{

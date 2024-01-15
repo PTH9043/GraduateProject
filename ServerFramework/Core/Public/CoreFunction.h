@@ -32,6 +32,17 @@ namespace Core
 	}
 
 	/*
+	@ Date: 2023-01-13,  Writer: 박태현
+	@ Explain
+	- 현재 밀리세컨드를 구하는 함수이다.
+	*/
+	static _llong CurrentTime()
+	{
+		auto Time = std::chrono::system_clock::now();
+		return std::chrono::duration_cast<std::chrono::milliseconds>(Time.time_since_epoch()).count();
+	}
+
+	/*
 	@ Date: 2023-01-05,  Writer: 박태현
 	@ Explain
 	- _temp가 _Value를 넘었는지 확인하는 함수

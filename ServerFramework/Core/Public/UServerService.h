@@ -4,9 +4,7 @@
 #include "UService.h"
 
 BEGIN(Core)
-/* Aws Connector */
-class UAwsConnector;
-
+class UNavigation;
 /*
 @ Date: 2024-01-05, Writer: นฺลยว๖
 @ Explain
@@ -16,7 +14,7 @@ class CACHE_ALGIN_CORE_DLL UServerService abstract  : public UService {
 public: /* USING */
 	using SESSIONCONTAINER = CONUNORMAP<SESSIONID, SHPTR<USession>>;
 public: 
-	UServerService(OBJCON_CONSTRUCTOR);
+	UServerService(OBJCON_CONSTRUCTOR, const _string& _strNavigationPath = "");
 	DESTRUCTOR(UServerService)
 public:
 	virtual _bool NativeConstruct() PURE;
@@ -36,10 +34,12 @@ protected: /* get set */
 private:
 	virtual void Free() PURE;
 private:
-	// Session Conatiner
-	SESSIONCONTAINER				m_SessionContainer;
 	// Tcps
 	TCPACCEPTOR							m_TcpAcceptor;
+	// Session Conatiner
+	SESSIONCONTAINER				m_SessionContainer;
+	// Navigation
+	SHPTR<UNavigation>				m_spNavigation;
 };
 
 END

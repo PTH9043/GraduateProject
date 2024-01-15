@@ -60,21 +60,7 @@ namespace Server {
 		__super::Disconnect();
 	}
 
-	void CPlayerSession::ConnectTcpSocket()
-	{
-		TCPSOCKET& TcpSocket = GetTcpSocket(REF_RETURN);
-		TcpSocket.async_connect(Asio::ip::tcp::endpoint(Asio::ip::address::from_string(IP_ADDRESS),
-			Core::TCP_PORT_NUM), [this](const boost::system::error_code& _error) {
-				SESSIONID ID = GetID();
-				SHPTR<UService> spService = GetService(REF_RETURN);
-				// 만약 연결 실패했으면 제거
-				if (_error)
-				{
-					if (nullptr != spService)
-						spService->LeaveService(ID);
-				}
-			});
-	}
+	void CPlayerSession::ConnectTcpSocket(){}
 
 	_bool CPlayerSession::ProcessPacket(_char* _pPacket, const Core::PACKETHEAD& _PacketHead)
 	{
@@ -84,7 +70,7 @@ namespace Server {
 		{
 			CS_LOGIN Login;
 			Login.ParseFromArray(_pPacket, static_cast<_int>(_PacketHead.PacketSize));
-			std::cout << Login.user_name() << "\n";
+			_llong value = CurrentMilliseconds() - Login.time_test();
 		}
 		//{
 		//	// Remove Object 조합 

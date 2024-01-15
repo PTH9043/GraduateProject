@@ -16,3 +16,5 @@
 namespace Core {}
 
 using namespace Core;
+
+static const std::string IP_ADDRESS = "3.39.11.88";

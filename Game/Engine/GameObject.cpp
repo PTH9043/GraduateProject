@@ -10,8 +10,6 @@ CGameObject::CGameObject()
 {
 	m_xmf4x4World = Matrix4x4::Identity();
 	m_xmf4x4Transform = Matrix4x4::Identity();
-	
-
 }
 
 CGameObject::CGameObject(int nMaterials)
@@ -62,11 +60,6 @@ void CGameObject::SetChild(std::shared_ptr<CGameObject> pChild)
 	}
 }
 
-
-
-
-
-
 void CGameObject::SetShader(shared_ptr<CShader> pShader, shared_ptr<CTexture> pTexture)
 {
 	if (!m_ppMaterials.data())
@@ -110,8 +103,6 @@ void CGameObject::Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, 
 
 	UpdateShaderVariables(_CommandList);
 
-
-
 	if (m_nMaterials > 0)
 	{
 		for (int i = 0; i < m_nMaterials; i++)
@@ -138,16 +129,11 @@ void CGameObject::CreateShaderVariables(const ComPtr<ID3D12Device>& _Device, con
 
 void CGameObject::UpdateShaderVariables(const ComPtr<ID3D12GraphicsCommandList>& _CommandList)
 {
-	
-		XMFLOAT4X4 xmf4x4World;
-		XMStoreFloat4x4(&xmf4x4World, XMMatrixTranspose(XMLoadFloat4x4(&m_xmf4x4World)));
-		_CommandList->SetGraphicsRoot32BitConstants(1, 16, &xmf4x4World, 0);
+	XMFLOAT4X4 xmf4x4World;
+	XMStoreFloat4x4(&xmf4x4World, XMMatrixTranspose(XMLoadFloat4x4(&m_xmf4x4World)));
+	_CommandList->SetGraphicsRoot32BitConstants(1, 16, &xmf4x4World, 0);
 	
 }
-
-
-
-
 
 void CGameObject::ReleaseShaderVariables()
 {
@@ -253,6 +239,17 @@ void CGameObject::Rotate(XMFLOAT3* pxmf3Axis, float fAngle)
 	UpdateTransform(NULL);
 }
 
+//2024-01-14 이성현 바운딩박스 관련 추가
+void CGameObject::SetBOB(float fWidth, float fHeight, float fDepth)
+{
+	m_pBOB = BoundingOrientedBox(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(fWidth * 0.5f, fHeight * 0.5f, fDepth * 0.5f), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
+}
+
+void CGameObject::UpdateBOB()
+{
+	m_pBOB.Center = GetPosition();
+	XMStoreFloat4(&m_pBOB.Orientation, XMQuaternionNormalize(XMLoadFloat4(&m_pBOB.Orientation)));
+}
 
 //#define _WITH_DEBUG_FRAME_HIERARCHY
 

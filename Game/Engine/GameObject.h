@@ -14,9 +14,6 @@ class CTexture;
 #define MATERIAL_DETAIL_ALBEDO_MAP	0x20
 #define MATERIAL_DETAIL_NORMAL_MAP	0x40
 
-
-
-
 class CGameObject
 {
 private:
@@ -30,6 +27,14 @@ public:
 	CGameObject();
 	CGameObject(int nMaterials);
 	virtual ~CGameObject();
+	
+//2024-01-14 이성현 바운딩박스 추가
+private:
+	BoundingOrientedBox			m_pBOB = BoundingOrientedBox();
+public:
+	BoundingOrientedBox GetBOB() { return m_pBOB; }
+	void SetBOB(float fWidth, float fHeight, float fDepth);
+	void UpdateBOB();
 
 public:
 	char							m_pstrFrameName[64];
@@ -74,8 +79,8 @@ public:
 	XMFLOAT3 GetLook();
 	XMFLOAT3 GetUp();
 	XMFLOAT3 GetRight();
-	XMFLOAT4X4 GetTransform();
-	XMFLOAT4X4 GetWorld();
+	XMFLOAT4X4 GetTransform() { return m_xmf4x4Transform; };
+	XMFLOAT4X4 GetWorld() { return m_xmf4x4World; };
 	CGameObject* GetParent() { return (m_pParent); }
 	UINT GetMeshType() { return((m_pMesh) ? m_pMesh->GetType() : 0x00); }
 
