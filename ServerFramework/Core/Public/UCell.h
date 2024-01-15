@@ -17,7 +17,7 @@ public:
 public:
 	UCell();
 	NO_COPY(UCell)
-		DESTRUCTOR(UCell)
+	DESTRUCTOR(UCell)
 public:
 	_bool NativeConstruct(const ARRAY<_float3, POINT_END>& _Points, const _int _iIndex);
 	_bool IsIn(const _float3& _vPos, REF_IN _int& _NeighborIndex);
@@ -30,6 +30,7 @@ public: /* Get Set */
 	_float3 GetPoint(POINT _point) const { return m_Points[_point]; }
 	// Index Return
 	const ARRAY<_int, LINE_END>& GetNeightborIndexes() const { return m_NeighborIndexes; }
+	ARRAY<UCell*, LINE_END> GetNeighborCelles() const { return m_NeightborCells; }
 private:
 	void ResortPoints();
 	void CalculateCrossResult(ARRAY<_float3, POINT_END>& _Crosses);
@@ -45,6 +46,8 @@ private:
 	ARRAY<_float3, LINE_END>			m_Lines;
 	ARRAY<_float3, LINE_END>			m_Normals;
 	ARRAY<_int, LINE_END>					m_NeighborIndexes;
+	// Use Extern
+	ARRAY<UCell*, LINE_END>			m_NeightborCells;
 };
 END
 

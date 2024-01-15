@@ -73,6 +73,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <list>
 
 extern "C" {
 #include <lua/lua.h>

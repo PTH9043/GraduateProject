@@ -26,6 +26,7 @@ public:
 	_bool IsCheckOverNavigationArea(const _float3 _vPosition, REF_IN _int& _Index);
 	// Cell을 찾아 리턴하는 함수
 	SHPTR<UCell>	FindCell(const _float3 _vPosition, REF_IN _int& _Index);
+	SHPTR<UCell> FindCell(const _float3 _vPosition);
 private:
 	void ReadyNeighbor();
 private:
