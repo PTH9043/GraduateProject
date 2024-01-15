@@ -4,7 +4,7 @@
 
 struct Ray
 {
-	XMFLOAT3 origin;
+	XMVECTOR origin;
 	XMVECTOR direction;
 };
 
@@ -23,7 +23,7 @@ public:
 
 	void DisplayWindow();
 	XMFLOAT3 ScreenToWorldCoordinates(float screenX, float screenY, const shared_ptr<ToolScene>& pScene);
-	RayHitResult CastRay(const Ray& ray, const shared_ptr<ToolGridObject>& Grid);
+	RayHitResult CastRay(const Ray& ray, const shared_ptr<CGameObject>& Grid, const XMFLOAT4X4& worldMatrix);
 private:
 	ImVec2 clickPos;
 	XMFLOAT3 worldPos;

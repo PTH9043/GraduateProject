@@ -22,24 +22,6 @@ void ToolManager::DisplayWindow()
     ImVec2 mousePos = ImGui::GetMousePos();
     ImGui::Text("Mouse Position: (%.1f, %.1f)", mousePos.x, mousePos.y);
 
-    if (m_pScene && m_pScene->m_pToolGrid)
-    {
-        ImGui::Text("ToolGrid Bounding Box:");
-        BoundingOrientedBox boundingBox = m_pScene->m_pToolGrid->GetBOB();
-
-        // 그리드 메쉬 바운딩 박스 중심
-        XMFLOAT3 center = boundingBox.Center;
-        ImGui::Text("Center: (%.1f, %.1f, %.1f)", center.x, center.y, center.z);
-
-        // 그리드 메쉬 바운딩 박스 크기
-        XMFLOAT3 extents = boundingBox.Extents;
-        ImGui::Text("Extents: (%.1f, %.1f, %.1f)", extents.x, extents.y, extents.z);
-
-        // 그리드 메쉬 바운딩 박스 회전
-        XMFLOAT4 orientation = boundingBox.Orientation;
-        ImGui::Text("Orientation: (%.2f, %.2f, %.2f, %.2f)", orientation.x, orientation.y, orientation.z, orientation.w);
-    }
-
     if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
     {
         clickPos = ImVec2(mousePos.x, mousePos.y);
@@ -62,6 +44,8 @@ XMFLOAT3 ToolManager::ScreenToWorldCoordinates(float screenX, float screenY, con
     XMFLOAT3 CameraPostionfloat3;
     XMStoreFloat3(&CameraPostionfloat3, invViewMatrix.r[3]);
 
+    XMVECTOR CameraPositionVector = XMLoadFloat3(&CameraPostionfloat3);
+
     XMMATRIX projectionMatrix = XMLoadFloat4x4(&projectionMatrixBeforeLoad);
     XMMATRIX viewProjectionInverse = XMMatrixInverse(nullptr, viewMatrix * projectionMatrix);
 
@@ -77,7 +61,7 @@ XMFLOAT3 ToolManager::ScreenToWorldCoordinates(float screenX, float screenY, con
 
     //광선 생성
     Ray ray;
-    ray.origin = CameraPostionfloat3;
+    ray.origin = CameraPositionVector;
     XMFLOAT3 rayDirection;
 
     rayDirection.x = worldSpace.x - CameraPostionfloat3.x;
@@ -88,30 +72,48 @@ XMFLOAT3 ToolManager::ScreenToWorldCoordinates(float screenX, float screenY, con
     ray.direction = normalizedrayDirection;
 
     //광선 충돌 검사
-    RayHitResult hitResult = CastRay(ray, pScene->m_pToolGrid);
+    RayHitResult hitResult = CastRay(ray, pScene->GetObjects()[0], pScene->GetObjects()[0]->GetWorld4X4());
 
     return hitResult.hit ? hitResult.position : XMFLOAT3(0.0f, 0.0f, 0.0f);
 }
 
-RayHitResult ToolManager::CastRay(const Ray& ray, const shared_ptr<ToolGridObject>& Grid)
+RayHitResult ToolManager::CastRay(const Ray& ray, const shared_ptr<CGameObject>& Grid, const XMFLOAT4X4& worldMatrix)
 {
     RayHitResult result;
     result.hit = false;
 
-    //충돌 검사
-    float intersectionDistance;
-    if (Grid->GetBOB().Intersects(XMLoadFloat3(&ray.origin), ray.direction, intersectionDistance))
+    // Iterate over each submesh of the grid object
+    if(Grid->m_nMeshes != 0)
     {
-        // 광선이 박스와 교차하면 true를 반환하고, 충돌 지점을 계산
-        XMVECTOR intersectionPointVector = XMVectorAdd(XMLoadFloat3(&ray.origin), XMVectorScale(ray.direction, intersectionDistance));
-        XMStoreFloat3(&result.position, intersectionPointVector);
-        result.hit = true;
-    }
-    else
-    {
-        result.hit = false;
-    }
+        for (int i = 0; i < Grid->m_nMeshes; ++i)
+        {
+            shared_ptr<CMesh> subMesh = Grid->GetMeshes()[i];
 
+            for (size_t j = 0; j < subMesh->GetSubSetIndices().size(); j++)
+            {
+                for (size_t k = 0; k + 2 < subMesh->GetSubSetIndices()[j].size(); k++)
+                {
+                    XMFLOAT3 vertex0 = subMesh->TransformPoint(subMesh->GetPositions()[subMesh->GetSubSetIndices()[j][k]], worldMatrix);
+                    XMFLOAT3 vertex1 = subMesh->TransformPoint(subMesh->GetPositions()[subMesh->GetSubSetIndices()[j][k + 1]], worldMatrix);
+                    XMFLOAT3 vertex2 = subMesh->TransformPoint(subMesh->GetPositions()[subMesh->GetSubSetIndices()[j][k + 2]], worldMatrix);
+
+                    float Distance;
+                    if (DirectX::TriangleTests::Intersects(ray.origin, ray.direction,
+                        XMLoadFloat3(&vertex0), XMLoadFloat3(&vertex1), XMLoadFloat3(&vertex2), Distance))
+                    {
+                        XMVECTOR intersectionPointVector = XMVectorAdd(ray.origin, XMVectorScale(ray.direction, Distance));
+                        XMFLOAT3 intersectionPoint;
+                        XMStoreFloat3(&intersectionPoint, intersectionPointVector);
+
+                        result.position = intersectionPoint;
+                        result.hit = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
     return result;
 }
+
 

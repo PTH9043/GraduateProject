@@ -66,7 +66,8 @@ GridMesh::GridMesh(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12Graph
         {
             for (int x = 0; x < nWidth; x++)
             {
-                if ((x == 0) && (z > 0)) m_ppnSubSetIndices[0][j++] = (UINT)(x + (z * nWidth));
+                if ((x == 0) && (z > 0)) 
+                    m_ppnSubSetIndices[0][j++] = (UINT)(x + (z * nWidth));
                 m_ppnSubSetIndices[0][j++] = (UINT)(x + (z * nWidth));
                 m_ppnSubSetIndices[0][j++] = (UINT)((x + (z * nWidth)) + nWidth);
             }
@@ -75,7 +76,8 @@ GridMesh::GridMesh(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12Graph
         {
             for (int x = nWidth - 1; x >= 0; x--)
             {
-                if (x == (nWidth - 1)) m_ppnSubSetIndices[0][j++] = (UINT)(x + (z * nWidth));
+                if (x == (nWidth - 1)) 
+                    m_ppnSubSetIndices[0][j++] = (UINT)(x + (z * nWidth));
                 m_ppnSubSetIndices[0][j++] = (UINT)(x + (z * nWidth));
                 m_ppnSubSetIndices[0][j++] = (UINT)((x + (z * nWidth)) + nWidth);
             }

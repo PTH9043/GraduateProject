@@ -65,7 +65,6 @@ void Engine::AnimateObjects()
 void Engine::RenderBegin()
 {
 	m_spCommandQueue->RenderBegin();
-	if (m_pCamera)m_pCamera->SetViewportsAndScissorRects(m_spCommandQueue->GetCmdList());
 	m_GameTimer.Tick(0.0f);
 }
 
@@ -79,6 +78,7 @@ void Engine::RenderEnd()
 void Engine::Render() {
 	ProcessInput();
 	AnimateObjects();
+	if (m_pCamera)m_pCamera->SetViewportsAndScissorRects(m_spCommandQueue->GetCmdList());
 	if (m_pScene)m_pScene->Render(m_spCommandQueue->GetCmdList().Get(), m_pCamera);
 }
 

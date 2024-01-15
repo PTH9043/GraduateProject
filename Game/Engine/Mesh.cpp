@@ -14,6 +14,17 @@ void CMesh::ReleaseUploadBuffers()
 	}
 };
 
+XMFLOAT3 CMesh::TransformPoint(const XMFLOAT3& point, const XMFLOAT4X4& worldMatrix) const
+{
+	XMVECTOR pointVec = XMLoadFloat3(&point);
+	XMMATRIX worldMatrixXM = XMLoadFloat4x4(&worldMatrix);
+	XMVECTOR worldtransformedpointVec = XMVector3TransformCoord(pointVec, worldMatrixXM);
+	XMFLOAT3 worldtransformedpointf3;
+	XMStoreFloat3(&worldtransformedpointf3, worldtransformedpointVec);
+
+	return worldtransformedpointf3;
+}
+
 void CMesh::IASetBeforeRender(const ComPtr<ID3D12GraphicsCommandList>& _CommandList)
 {
 	_CommandList->IASetPrimitiveTopology(m_d3dPrimitiveTopology);

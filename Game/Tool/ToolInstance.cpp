@@ -77,6 +77,8 @@ void Tool::Destroy()
 
 void Tool::Render()
 {
+    if (m_pToolCamera)
+        m_pToolCamera->SetViewportsAndScissorRects(CMDLIST.Get());
     if (m_pToolScene)
         m_pToolScene->Render(CMDLIST.Get(), m_pToolCamera.get());
 }
