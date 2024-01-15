@@ -55,11 +55,11 @@ protected:
 protected:
 	UINT m_nIndices = 0;
 	vector<UINT> m_pnIndices;
-	UINT                            m_nSubMeshes = 0;
 
-	std::vector<UINT> m_pnSubSetIndices;
-	std::vector<UINT> m_pnSubSetStartIndices;
-	std::vector<std::vector<UINT>> m_ppnSubSetIndices;
+	UINT m_nSubMeshes = 0;
+	vector<UINT> m_pnSubSetIndices;
+	vector<UINT> m_pnSubSetStartIndices;
+	vector<vector<UINT>> m_ppnSubSetIndices;
 	
 	// 모델 활용을 위해 벡터로 인덱스 버퍼 만듦 - SubsetIndexBuffer활용 
 	vector<ComPtr<ID3D12Resource>> m_ppd3dIndexBuffers;
@@ -72,6 +72,13 @@ protected:
 	UINT m_nBaseVertex = 0;
 	//인덱스 버퍼의 인덱스에 더해질 인덱스이다. 
 public:
+	vector<XMFLOAT3> GetPositions() { return m_pxmf3Positions; }
+	vector<vector<UINT>> GetSubSetIndices() { return m_ppnSubSetIndices; }
+	vector<UINT> GetIndices() { return m_pnIndices; }
+public:
+	//2024-01-15 이성현
+	//픽킹 처리를 위한 정점 월드변환 함수
+	XMFLOAT3 TransformPoint(const XMFLOAT3& point, const XMFLOAT4X4& worldMatrix) const;
 	virtual void IASetBeforeRender(const ComPtr<ID3D12GraphicsCommandList>& _CommandList);
 	virtual void RenderMesh(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, UINT _nSubset);
 	virtual void RenderMesh_OneIndexBuffer(const ComPtr<ID3D12GraphicsCommandList>& _CommandList);

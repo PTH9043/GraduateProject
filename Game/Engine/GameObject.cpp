@@ -113,8 +113,14 @@ void CGameObject::Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, 
 				m_ppMaterials[i]->UpdateShaderVariables(_CommandList);
 			}
 
-			if (m_pMesh) m_pMesh->RenderMesh(_CommandList, i);
-		
+			if (m_pMesh)
+				m_pMesh->RenderMesh(_CommandList, i);
+			else if(m_nMeshes != 0)
+			{
+				for (const auto& ppMeshes : m_ppMeshes) {
+					ppMeshes->RenderMesh(_CommandList, 0);
+				}
+			}
 		}
 	}
 	if (m_pSibling) m_pSibling->Render(_CommandList, pCamera);

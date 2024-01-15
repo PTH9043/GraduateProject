@@ -24,7 +24,8 @@ public:
 	virtual void UpdateShaderVariables(const ComPtr<ID3D12GraphicsCommandList>& _CommandList) {}
 	virtual void ReleaseShaderVariables() {}
 	//그래픽 루트 시그너쳐를 생성한다. 
-	
+	vector<shared_ptr<CGameObject>> GetObjects() { return m_ppObjects;}
+
 protected:
 	//씬은 셰이더들의 집합이다. 셰이더들은 게임 객체들의 집합이다.
 	vector<shared_ptr<CGameObject>> m_ppObjects;

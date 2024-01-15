@@ -45,6 +45,7 @@ namespace Core {
 		{
 			// 이웃을 등록한다. 
 			_spCell->m_NeighborIndexes[_Line] = m_Index;
+			_spCell->m_NeightborCells[_Line] = this;
 			return true;
 		}
 		return false;

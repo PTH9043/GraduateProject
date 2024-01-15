@@ -18,11 +18,6 @@ bool Engine::OnCreate(HINSTANCE hInstance, HWND hMainWnd)
 	m_spCommandQueue->CreateCommandQueueAndList(m_spDevice->GetDevice(), m_spSwapChainAndRtvDsvHeap);
 	m_spSwapChainAndRtvDsvHeap->InitSwapChainAndRtvDsvHeap(m_spDevice->GetFactory(), m_spDevice->GetDevice(), m_spCommandQueue->GetCmdQueue(), m_spDevice->GetMsaa4xEnable(), m_spDevice->GetMsaa4xQualityLevels());
 	m_spRootSignature->InitRootSignature(m_spDevice->GetDevice());
-
-	//2024-01-10 이성현 툴모드일시 씬전환을 위한 ifndef문 추가, GameTimer 리셋 분리
-#ifndef TOOL_MODE
-	BuildObjects();
-#endif
 	m_GameTimer.Reset();
 	return(true);
 }
@@ -72,9 +67,7 @@ void Engine::AnimateObjects()
 void Engine::RenderBegin()
 {
 	m_spCommandQueue->RenderBegin();
-
-	if (m_pCamera)m_pCamera->SetViewportsAndScissorRects(m_spCommandQueue->GetCmdList());
-
+	m_GameTimer.Tick(0.0f);
 }
 
 void Engine::RenderEnd()
@@ -85,15 +78,10 @@ void Engine::RenderEnd()
 }
 
 void Engine::Render() {
-	//2024-01-07 이성현
-	//Tool에서의 렌더링 과정을 RenderBegin과 RenderEnd 사이에 적용시키기 위한
-	//Render와 RenderBegin, RenderEnd의 분리.
-	m_GameTimer.Tick(0.0f);
-#ifndef TOOL_MODE
 	ProcessInput();
 	AnimateObjects();
+	if (m_pCamera)m_pCamera->SetViewportsAndScissorRects(m_spCommandQueue->GetCmdList());
 	if (m_pScene)m_pScene->Render(m_spCommandQueue->GetCmdList().Get(), m_pCamera);
-#endif
 }
 
 void Engine::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam,

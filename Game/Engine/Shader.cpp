@@ -6,43 +6,45 @@ CShader::CShader()
 
 }
 
-//그래픽스 파이프라인 상태 객체를 생성한다.
-CShader::CShader(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12RootSignature>& _RootSignature,const wstring& shaderFile, const string& vs, const string& ps)
+//2024-01-15 이성현 
+//컴파일된 cso에서 쉐이더 정보 읽는 함수 추가. 앞으론 이 함수를 통해 쉐이더를 생성하는 것을 지향한다.
+D3D12_SHADER_BYTECODE CShader::ReadCompiledShaderFromFile(const wchar_t* pszFileName, ComPtr<ID3DBlob>& pd3dShaderBlob)
 {
-	ComPtr<ID3DBlob> pd3dVertexShaderBlob, pd3dPixelShaderBlob,error;
-
-	UINT nCompileFlags = 0;
-#if defined(_DEBUG)
-	nCompileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
-#endif
-	DX::ThrowIfFailed(::D3DCompileFromFile(shaderFile.c_str(), NULL, NULL, vs.c_str(), "vs_5_1",
-		nCompileFlags, 0, pd3dVertexShaderBlob.GetAddressOf(), &error));
-	DX::ThrowIfFailed(::D3DCompileFromFile(shaderFile.c_str(), NULL, NULL, ps.c_str(), "ps_5_1",
-		nCompileFlags, 0, pd3dPixelShaderBlob.GetAddressOf(), &error));
-	if (error)
+	ifstream file(pszFileName, ios::binary | ios::ate);
+	if (!file.is_open())
 	{
-		OutputDebugStringA(reinterpret_cast<char*>(error->GetBufferPointer()));
+		// 파일 열기 실패 처리
+		return {}; // 빈 D3D12_SHADER_BYTECODE 반환
 	}
 
+	streamsize size = file.tellg();
+	file.seekg(0, ios::beg);
 
-	/*
-	ifstream ifsFile{ shaderFile.c_str(), ios::in | ios::binary };
-	vector<BYTE> pByteCode{ istreambuf_iterator<char> {ifsFile}, {} };
-	UINT nReadBytes = (UINT)ifsFile.tellg();
-
-	D3D12_SHADER_BYTECODE d3dByteCode;
-	if (pd3dVertexShaderBlob) {
-		HRESULT hResult = D3DCreateBlob(nReadBytes, pd3dVertexShaderBlob.GetAddressOf());
-		memcpy((pd3dVertexShaderBlob)->GetBufferPointer(), pByteCode.data(), nReadBytes);
-		d3dByteCode.BytecodeLength = (pd3dVertexShaderBlob)->GetBufferSize();
-		d3dByteCode.pShaderBytecode = (pd3dVertexShaderBlob)->GetBufferPointer();
+	vector<char> buffer(size);
+	if (!file.read(buffer.data(), size))
+	{
+		// 파일 읽기 실패 처리
+		return {}; // 빈 D3D12_SHADER_BYTECODE 반환
 	}
-	else {
-		d3dByteCode.BytecodeLength = nReadBytes;
-		d3dByteCode.pShaderBytecode = pByteCode.data();
-	}
-	*/
+	// Create a smart pointer to manage the blob
+	pd3dShaderBlob.Reset();
+	DX::ThrowIfFailed(D3DCreateBlob(size, pd3dShaderBlob.GetAddressOf()));
+	std::memcpy(pd3dShaderBlob->GetBufferPointer(), buffer.data(), size);
 
+	D3D12_SHADER_BYTECODE d3dShaderByteCode = {};
+	d3dShaderByteCode.BytecodeLength = size;
+	d3dShaderByteCode.pShaderBytecode = pd3dShaderBlob->GetBufferPointer();
+
+	return d3dShaderByteCode;
+}
+
+//그래픽스 파이프라인 상태 객체를 생성한다.
+CShader::CShader(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12RootSignature>& _RootSignature, const wstring& vs, const wstring& ps)
+{
+	ComPtr<ID3DBlob> pd3dVertexShaderBlob, pd3dPixelShaderBlob;
+
+	ReadCompiledShaderFromFile(vs.c_str(), pd3dVertexShaderBlob);
+	ReadCompiledShaderFromFile(ps.c_str(), pd3dPixelShaderBlob);
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC d3dPipelineStateDesc;
 	::ZeroMemory(&d3dPipelineStateDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
@@ -62,11 +64,11 @@ CShader::CShader(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12RootSig
 	d3dPipelineStateDesc.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
 	_Device->CreateGraphicsPipelineState(&d3dPipelineStateDesc,
 		IID_PPV_ARGS(&m_pd3dPipelineStates));
-	
-	if (d3dPipelineStateDesc.InputLayout.pInputElementDescs) delete[]
-		d3dPipelineStateDesc.InputLayout.pInputElementDescs;
 }
 
+CShader::~CShader()
+{
+}
 
 
 void CShader::SetPipelineState(const ComPtr<ID3D12GraphicsCommandList>& _CommandList)
@@ -74,6 +76,7 @@ void CShader::SetPipelineState(const ComPtr<ID3D12GraphicsCommandList>& _Command
 	//파이프라인에 그래픽스 상태 객체를 설정한다. 
 	_CommandList->SetPipelineState(m_pd3dPipelineStates.Get());
 }
+
 void CShader::Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, CCamera* pCamera)
 {
 	SetPipelineState(_CommandList);
@@ -81,7 +84,7 @@ void CShader::Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, CCam
 
 
 
-CDiffusedFilledShader::CDiffusedFilledShader(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12RootSignature>& _RootSignature, const wstring& shaderFile, const string& vs, const string& ps)
+CDiffusedFilledShader::CDiffusedFilledShader(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12RootSignature>& _RootSignature, const wstring& vs, const wstring& ps)
 {
 	m_pd3dInputLayouts.clear();
 	m_pd3dInputLayouts =
@@ -90,22 +93,10 @@ CDiffusedFilledShader::CDiffusedFilledShader(const ComPtr<ID3D12Device>& _Device
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
 
-	ComPtr<ID3DBlob> pd3dVertexShaderBlob, pd3dPixelShaderBlob, error;
+	ComPtr<ID3DBlob> pd3dVertexShaderBlob, pd3dPixelShaderBlob;
 
-	UINT nCompileFlags = 0;
-#if defined(_DEBUG)
-	nCompileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
-#endif
-	DX::ThrowIfFailed(::D3DCompileFromFile(shaderFile.c_str(), NULL, NULL, vs.c_str(), "vs_5_1",
-		nCompileFlags, 0, pd3dVertexShaderBlob.GetAddressOf(), &error));
-	DX::ThrowIfFailed(::D3DCompileFromFile(shaderFile.c_str(), NULL, NULL, ps.c_str(), "ps_5_1",
-		nCompileFlags, 0, pd3dPixelShaderBlob.GetAddressOf(), &error));
-	if (error)
-	{
-		OutputDebugStringA(reinterpret_cast<char*>(error->GetBufferPointer()));
-	}
-
-
+	ReadCompiledShaderFromFile(vs.c_str(), pd3dVertexShaderBlob);
+	ReadCompiledShaderFromFile(ps.c_str(), pd3dPixelShaderBlob);
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC d3dPipelineStateDesc;
 	::ZeroMemory(&d3dPipelineStateDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
@@ -125,18 +116,15 @@ CDiffusedFilledShader::CDiffusedFilledShader(const ComPtr<ID3D12Device>& _Device
 	d3dPipelineStateDesc.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
 	_Device->CreateGraphicsPipelineState(&d3dPipelineStateDesc,
 		IID_PPV_ARGS(&m_pd3dPipelineStates));
-
-	if (d3dPipelineStateDesc.InputLayout.pInputElementDescs) delete[]
-		d3dPipelineStateDesc.InputLayout.pInputElementDescs;
 }
+
 CDiffusedFilledShader::~CDiffusedFilledShader()
 {
 }
 
 
-CDiffusedWireFrameShader::CDiffusedWireFrameShader(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12RootSignature>& _RootSignature, const wstring& shaderFile, const string& vs, const string& ps)
+CDiffusedWireFrameShader::CDiffusedWireFrameShader(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12RootSignature>& _RootSignature, const wstring& vs, const wstring& ps)
 {
-
 	m_pd3dInputLayouts.clear();
 	m_pd3dInputLayouts =
 	{
@@ -144,20 +132,10 @@ CDiffusedWireFrameShader::CDiffusedWireFrameShader(const ComPtr<ID3D12Device>& _
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
 
-	ComPtr<ID3DBlob> pd3dVertexShaderBlob, pd3dPixelShaderBlob, error;
+	ComPtr<ID3DBlob> pd3dVertexShaderBlob, pd3dPixelShaderBlob;
 
-	UINT nCompileFlags = 0;
-#if defined(_DEBUG)
-	nCompileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
-#endif
-	DX::ThrowIfFailed(::D3DCompileFromFile(shaderFile.c_str(), NULL, NULL, vs.c_str(), "vs_5_1",
-		nCompileFlags, 0, pd3dVertexShaderBlob.GetAddressOf(), &error));
-	DX::ThrowIfFailed(::D3DCompileFromFile(shaderFile.c_str(), NULL, NULL, ps.c_str(), "ps_5_1",
-		nCompileFlags, 0, pd3dPixelShaderBlob.GetAddressOf(), &error));
-	if (error)
-	{
-		OutputDebugStringA(reinterpret_cast<char*>(error->GetBufferPointer()));
-	}
+	ReadCompiledShaderFromFile(vs.c_str(), pd3dVertexShaderBlob);
+	ReadCompiledShaderFromFile(ps.c_str(), pd3dPixelShaderBlob);
 
 	CD3DX12_RASTERIZER_DESC RasterizerDesc{ D3D12_DEFAULT };
 	RasterizerDesc.FillMode = D3D12_FILL_MODE_WIREFRAME;
@@ -180,20 +158,13 @@ CDiffusedWireFrameShader::CDiffusedWireFrameShader(const ComPtr<ID3D12Device>& _
 	d3dPipelineStateDesc.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
 	_Device->CreateGraphicsPipelineState(&d3dPipelineStateDesc,
 		IID_PPV_ARGS(&m_pd3dPipelineStates));
-
-	if (d3dPipelineStateDesc.InputLayout.pInputElementDescs) delete[]
-		d3dPipelineStateDesc.InputLayout.pInputElementDescs;
 }
 
 CDiffusedWireFrameShader::~CDiffusedWireFrameShader()
 {
 }
 
-
-
-
-
-CTexturedModelShader::CTexturedModelShader(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12RootSignature>& _RootSignature, const wstring& shaderFile, const string& vs, const string& ps)
+CTexturedModelShader::CTexturedModelShader(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12RootSignature>& _RootSignature, const wstring& vs, const wstring& ps)
 {
 	m_pd3dInputLayouts.clear();
 	m_pd3dInputLayouts =
@@ -205,20 +176,10 @@ CTexturedModelShader::CTexturedModelShader(const ComPtr<ID3D12Device>& _Device, 
 		{ "BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 4, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
 
-	ComPtr<ID3DBlob> pd3dVertexShaderBlob, pd3dPixelShaderBlob, error;
+	ComPtr<ID3DBlob> pd3dVertexShaderBlob, pd3dPixelShaderBlob;
 
-	UINT nCompileFlags = 0;
-#if defined(_DEBUG)
-	nCompileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
-#endif
-	DX::ThrowIfFailed(::D3DCompileFromFile(shaderFile.c_str(), NULL, NULL, vs.c_str(), "vs_5_1",
-		nCompileFlags, 0, pd3dVertexShaderBlob.GetAddressOf(), &error));
-	DX::ThrowIfFailed(::D3DCompileFromFile(shaderFile.c_str(), NULL, NULL, ps.c_str(), "ps_5_1",
-		nCompileFlags, 0, pd3dPixelShaderBlob.GetAddressOf(), &error));
-	if (error)
-	{
-		OutputDebugStringA(reinterpret_cast<char*>(error->GetBufferPointer()));
-	}
+	ReadCompiledShaderFromFile(vs.c_str(), pd3dVertexShaderBlob);
+	ReadCompiledShaderFromFile(ps.c_str(), pd3dPixelShaderBlob);
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC d3dPipelineStateDesc;
 	::ZeroMemory(&d3dPipelineStateDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
@@ -238,10 +199,8 @@ CTexturedModelShader::CTexturedModelShader(const ComPtr<ID3D12Device>& _Device, 
 	d3dPipelineStateDesc.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
 	_Device->CreateGraphicsPipelineState(&d3dPipelineStateDesc,
 		IID_PPV_ARGS(&m_pd3dPipelineStates));
-
-	if (d3dPipelineStateDesc.InputLayout.pInputElementDescs) delete[]
-		d3dPipelineStateDesc.InputLayout.pInputElementDescs;
 }
+
 CTexturedModelShader::~CTexturedModelShader()
 {
 }

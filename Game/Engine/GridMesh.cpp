@@ -6,7 +6,7 @@
 GridMesh::GridMesh(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, int xStart, int zStart, int nWidth, int nLength, XMFLOAT3 xmf3Scale, XMFLOAT4 xmf4Color)
 {
     m_nVertices = nWidth * nLength;
-    m_nStride = sizeof(XMFLOAT3);
+    m_nStride = sizeof(CDiffusedVertex);
     m_nOffset = 0;
     m_nSlot = 0;
     m_d3dPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
@@ -16,24 +16,23 @@ GridMesh::GridMesh(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12Graph
     m_xmf3Scale = xmf3Scale;
 
     m_pxmf3Positions.resize(m_nVertices);
-    m_pxmf4Colors.resize(m_nVertices);
+
+    vector<CDiffusedVertex> pVertices;
+    pVertices.resize(m_nVertices);
 
     for (int i = 0, z = zStart; z < (zStart + nLength); z++)
     {
         for (int x = xStart; x < (xStart + nWidth); x++, i++)
         {
+            pVertices[i] = CDiffusedVertex(XMFLOAT3((x * m_xmf3Scale.x), 0, (z * m_xmf3Scale.z)),
+                XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));
             m_pxmf3Positions[i] = XMFLOAT3((x * m_xmf3Scale.x), 0, (z * m_xmf3Scale.z));
-            m_pxmf4Colors[i] = xmf4Color;
         }
     }
 
-    m_pd3dPositionBuffer = Util::CreateBufferResource(_Device, _CommandList, m_pxmf3Positions.data(),
+    m_pd3dPositionBuffer = Util::CreateBufferResource(_Device, _CommandList, pVertices.data(),
         m_nStride * m_nVertices, D3D12_HEAP_TYPE_DEFAULT,
         D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, &m_pd3dPositionUploadBuffer);
-
-    m_pd3dColorBuffer = Util::CreateBufferResource(_Device, _CommandList, m_pxmf4Colors.data(),
-       sizeof(XMFLOAT4) * m_nVertices, D3D12_HEAP_TYPE_DEFAULT,
-        D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, &m_pd3dColorUploadBuffer);
 
     D3D12_VERTEX_BUFFER_VIEW positionBufferView;
     positionBufferView.BufferLocation = m_pd3dPositionBuffer->GetGPUVirtualAddress();
@@ -41,13 +40,6 @@ GridMesh::GridMesh(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12Graph
     positionBufferView.SizeInBytes = m_nStride * m_nVertices;
 
     m_pd3dVertexBufferViews.push_back(positionBufferView);
-
-    D3D12_VERTEX_BUFFER_VIEW colorBufferView;
-    colorBufferView.BufferLocation = m_pd3dColorBuffer->GetGPUVirtualAddress();
-    colorBufferView.StrideInBytes = sizeof(XMFLOAT4);
-    colorBufferView.SizeInBytes = sizeof(XMFLOAT4) * m_nVertices;
-
-    m_pd3dVertexBufferViews.push_back(colorBufferView);
 
     m_nSubMeshes = 1;
     m_pnSubSetIndices.resize(m_nSubMeshes);
@@ -66,7 +58,8 @@ GridMesh::GridMesh(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12Graph
         {
             for (int x = 0; x < nWidth; x++)
             {
-                if ((x == 0) && (z > 0)) m_ppnSubSetIndices[0][j++] = (UINT)(x + (z * nWidth));
+                if ((x == 0) && (z > 0)) 
+                    m_ppnSubSetIndices[0][j++] = (UINT)(x + (z * nWidth));
                 m_ppnSubSetIndices[0][j++] = (UINT)(x + (z * nWidth));
                 m_ppnSubSetIndices[0][j++] = (UINT)((x + (z * nWidth)) + nWidth);
             }
@@ -75,7 +68,8 @@ GridMesh::GridMesh(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12Graph
         {
             for (int x = nWidth - 1; x >= 0; x--)
             {
-                if (x == (nWidth - 1)) m_ppnSubSetIndices[0][j++] = (UINT)(x + (z * nWidth));
+                if (x == (nWidth - 1)) 
+                    m_ppnSubSetIndices[0][j++] = (UINT)(x + (z * nWidth));
                 m_ppnSubSetIndices[0][j++] = (UINT)(x + (z * nWidth));
                 m_ppnSubSetIndices[0][j++] = (UINT)((x + (z * nWidth)) + nWidth);
             }

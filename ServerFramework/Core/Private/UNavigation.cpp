@@ -93,6 +93,19 @@ namespace Core {
 		return nullptr;
 	}
 
+	SHPTR<UCell> UNavigation::FindCell(const _float3 _vPosition)
+	{
+		_int NeighborIndex{ 0 };
+		for (auto iter : m_CellContainer)
+		{
+			if (true == iter->IsIn(_vPosition, NeighborIndex))
+			{
+				return iter;
+			}
+		}
+		return nullptr;
+	}
+
 	void UNavigation::ReadyNeighbor()
 	{
 		for (auto SourCell : m_CellContainer)

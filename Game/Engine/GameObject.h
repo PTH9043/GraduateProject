@@ -40,6 +40,9 @@ public:
 	char							m_pstrFrameName[64];
 	shared_ptr<CMesh> m_pMesh;
 
+	vector<shared_ptr<CMesh>>	m_ppMeshes;
+	int m_nMeshes = 0;
+
 	int	m_nMaterials = 0;
 	vector<shared_ptr<CMaterial>> m_ppMaterials;
 
@@ -50,8 +53,15 @@ public:
 	shared_ptr<CGameObject> m_pChild = nullptr;
 	shared_ptr<CGameObject> m_pSibling = nullptr;
 
+	shared_ptr<CMesh> GetMesh() { return m_pMesh; }
+	vector<shared_ptr<CMesh>> GetMeshes() { return m_ppMeshes; }
 
 	void SetMesh(shared_ptr<CMesh> pMesh) { m_pMesh = pMesh; }
+	void SetMeshes(const shared_ptr<CMesh>& pMesh)
+	{
+		m_ppMeshes.push_back(pMesh);
+		m_nMeshes++;
+	}
 	void SetShader(shared_ptr<CShader> pShader, shared_ptr<CTexture> pTexture = NULL);
 	void SetMaterial(int nMaterial, shared_ptr<CMaterial> pMaterial);
 	
@@ -79,8 +89,8 @@ public:
 	XMFLOAT3 GetLook();
 	XMFLOAT3 GetUp();
 	XMFLOAT3 GetRight();
-	XMFLOAT4X4 GetTransform() { return m_xmf4x4Transform; };
-	XMFLOAT4X4 GetWorld() { return m_xmf4x4World; };
+	XMFLOAT4X4 GetTransform4X4() { return m_xmf4x4Transform; };
+	XMFLOAT4X4 GetWorld4X4() { return m_xmf4x4World; };
 	CGameObject* GetParent() { return (m_pParent); }
 	UINT GetMeshType() { return((m_pMesh) ? m_pMesh->GetType() : 0x00); }
 

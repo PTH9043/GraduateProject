@@ -5,7 +5,6 @@ namespace Core
 {
 #pragma region FUNCTION 
 
-
 	/*
 	@ Date: 2023-01-10,  Writer: 박태현
 	@ Explain
@@ -18,8 +17,6 @@ namespace Core
 		Core::g_RegisterApp = App;
 		return App;
 	}
-
-
 	/*
 	@ Date: 2023-01-09,  Writer: 박태현
 	@ Explain
@@ -30,7 +27,6 @@ namespace Core
 		auto Time = std::chrono::high_resolution_clock::now();
 		return std::chrono::duration_cast<std::chrono::milliseconds>(Time.time_since_epoch()).count();
 	}
-
 	/*
 	@ Date: 2023-01-13,  Writer: 박태현
 	@ Explain

@@ -41,6 +41,8 @@ enum
 #include <map>
 #include <chrono>
 #include <Mmsystem.h>
+#include <iostream>
+#include <sstream>
 using namespace std;
 
 #define WIN32_LEAN_AND_MEAN             // 거의 사용되지 않는 내용을 Windows 헤더에서 제외합니다.
@@ -64,10 +66,6 @@ using namespace std;
 using namespace DirectX;
 using namespace DirectX::PackedVector;
 using Microsoft::WRL::ComPtr;
-
-//2024-01-12 이성현 
-//툴 실행시 필요한 define문
-//#define TOOL_MODE
 
 
 #define DEVICE gGameFrameWork->GetDeviceAndFactory()->GetDevice()

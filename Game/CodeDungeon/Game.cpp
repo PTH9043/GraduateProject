@@ -5,6 +5,7 @@
 void Game::Init(HINSTANCE hInstance, HWND hWnd)
 {
 	gGameFrameWork->OnCreate(hInstance,hWnd);
+	gGameFrameWork->BuildObjects();
 }
 
 void Game::Update()

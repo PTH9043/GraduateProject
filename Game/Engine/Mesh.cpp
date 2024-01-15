@@ -14,6 +14,17 @@ void CMesh::ReleaseUploadBuffers()
 	}
 };
 
+XMFLOAT3 CMesh::TransformPoint(const XMFLOAT3& point, const XMFLOAT4X4& worldMatrix) const
+{
+	XMVECTOR pointVec = XMLoadFloat3(&point);
+	XMMATRIX worldMatrixXM = XMLoadFloat4x4(&worldMatrix);
+	XMVECTOR worldtransformedpointVec = XMVector3TransformCoord(pointVec, worldMatrixXM);
+	XMFLOAT3 worldtransformedpointf3;
+	XMStoreFloat3(&worldtransformedpointf3, worldtransformedpointVec);
+
+	return worldtransformedpointf3;
+}
+
 void CMesh::IASetBeforeRender(const ComPtr<ID3D12GraphicsCommandList>& _CommandList)
 {
 	_CommandList->IASetPrimitiveTopology(m_d3dPrimitiveTopology);
@@ -75,5 +86,6 @@ CTriangleMesh::CTriangleMesh(const ComPtr<ID3D12Device>& _Device, const ComPtr<I
 	m_pd3dPositionBufferView.BufferLocation = m_pd3dPositionBuffer->GetGPUVirtualAddress();
 	m_pd3dPositionBufferView.StrideInBytes = m_nStride;
 		m_pd3dPositionBufferView.SizeInBytes = m_nStride * m_nVertices;
+
 	m_pd3dVertexBufferViews.emplace_back(m_pd3dPositionBufferView);
 }
