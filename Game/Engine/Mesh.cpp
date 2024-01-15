@@ -86,5 +86,6 @@ CTriangleMesh::CTriangleMesh(const ComPtr<ID3D12Device>& _Device, const ComPtr<I
 	m_pd3dPositionBufferView.BufferLocation = m_pd3dPositionBuffer->GetGPUVirtualAddress();
 	m_pd3dPositionBufferView.StrideInBytes = m_nStride;
 		m_pd3dPositionBufferView.SizeInBytes = m_nStride * m_nVertices;
+
 	m_pd3dVertexBufferViews.emplace_back(m_pd3dPositionBufferView);
 }
