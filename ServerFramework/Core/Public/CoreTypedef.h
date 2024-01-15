@@ -118,6 +118,9 @@ namespace Core
 	template<class Type>
 	using VECTOR = std::vector<Type>;
 
+	template<class Type>
+	using LIST = std::list<Type>;
+
 	using string = std::basic_string<char, std::char_traits<char>, Core::STLAllocator<char>>;
 	using wstring = std::basic_string<wchar_t, std::char_traits<wchar_t>, Core::STLAllocator<wchar_t>>;
 
