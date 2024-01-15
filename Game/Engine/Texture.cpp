@@ -165,7 +165,7 @@ int CTexture::LoadTextureFromFile(const ComPtr<ID3D12Device>& _Device, const Com
 		if (!bDuplicated)
 		{
 			LoadTextureFromDDSFile(_Device, _CommandList, m_ppstrTextureNames[nIndex], RESOURCE_TEXTURE2D, nIndex);
-			CScene::CreateShaderResourceView(_Device, this, nIndex);
+			CScene::CreateShaderResourceView(this, nIndex);
 #ifdef _WITH_STANDARD_TEXTURE_MULTIPLE_DESCRIPTORS
 			m_pnRootParameterIndices[nIndex] = PARAMETER_STANDARD_TEXTURE + nIndex;
 #endif
@@ -190,7 +190,7 @@ int CTexture::LoadTextureFromFile(const ComPtr<ID3D12Device>& _Device, const Com
 			}
 			else {
 				LoadTextureFromDDSFile(_Device, _CommandList, m_ppstrTextureNames[nIndex], RESOURCE_TEXTURE2D, nIndex);
-				CScene::CreateShaderResourceView(_Device, this, nIndex);
+				CScene::CreateShaderResourceView(this, nIndex);
 			}
 		}
 	}

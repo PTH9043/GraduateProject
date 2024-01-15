@@ -8,8 +8,8 @@ void SwapChainAndRtvDsvHeap::InitSwapChainAndRtvDsvHeap(const ComPtr<IDXGIFactor
 	m_nDsvDescriptorIncrementSize = 0;
 	m_nSwapChainBufferIndex = 0;
 
-	m_nWndClientWidth = FRAME_BUFFER_WIDTH;
-	m_nWndClientHeight = FRAME_BUFFER_HEIGHT;
+	m_nWndClientWidth = Factor::FRAME_BUFFER_WIDTH;
+	m_nWndClientHeight = Factor::FRAME_BUFFER_HEIGHT;
 
 	CreateRtvAndDsvDescriptorHeaps(_Device);
 	CreateSwapChain(_Factory, _Device, _CmdQueue, MsaaEnable, MsaaQualityLevels);

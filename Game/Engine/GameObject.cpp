@@ -118,7 +118,7 @@ void CGameObject::Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, 
 		{
 			if (m_ppMaterials[i])
 			{
-				if (m_ppMaterials[i]->m_pShader) m_ppMaterials[0]->m_pShader->Render(_CommandList, pCamera);
+				if (m_ppMaterials[i]->m_pShader) m_ppMaterials[0]->m_pShader->SetPipelineState(_CommandList);
 				m_ppMaterials[i]->UpdateShaderVariables(_CommandList);
 			}
 

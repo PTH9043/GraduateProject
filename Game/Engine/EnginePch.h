@@ -1,7 +1,7 @@
 
 #pragma once
-#define FRAME_BUFFER_WIDTH 800
-#define FRAME_BUFFER_HEIGHT 600
+
+
 //#define _WITH_SWAPCHAIN_FULLSCREEN_STATE
 
 
@@ -72,8 +72,18 @@ using Microsoft::WRL::ComPtr;
 #define RTVDESCRIPTORHEAP gGameFrameWork->GetSwapChainAndRtvDsvHeap()->GetRTVHeap()
 #define SWAPCHAIN gGameFrameWork->GetSwapChainAndRtvDsvHeap()->GetSwapChain()
 
+
+//-------------
 extern unique_ptr<class Engine> gGameFrameWork;
 
+extern UINT gnCbvSrvDescriptorIncrementSize;
+extern UINT	gnRtvDescriptorIncrementSize;
+extern UINT gnDsvDescriptorIncrementSize;
+//-------------
+namespace Factor {
+	constexpr int FRAME_BUFFER_WIDTH = 800;
+	constexpr int FRAME_BUFFER_HEIGHT = 600;
+}
 
 //--------------
 using int8 = __int8;
@@ -86,9 +96,7 @@ using uint32 = unsigned __int32;
 using uint64 = unsigned __int64;
 //------------------------------
 
-extern UINT gnCbvSrvDescriptorIncrementSize;
-extern UINT	gnRtvDescriptorIncrementSize;
-extern UINT gnDsvDescriptorIncrementSize;
+
 //--
 
 #define RANDOM_COLOR XMFLOAT4(rand() / float(RAND_MAX), rand() / float(RAND_MAX), rand() / float(RAND_MAX), rand() / float(RAND_MAX))

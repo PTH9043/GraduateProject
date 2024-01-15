@@ -36,11 +36,11 @@ public:
 	static unique_ptr<CbvSrvUavDescriptorHeap> m_pDescriptorHeap;
 
 
-	static void CreateCbvSrvDescriptorHeaps(const ComPtr<ID3D12Device>& _Device, int nConstantBufferViews, int nShaderResourceViews);
-	static void CreateConstantBufferViews(const ComPtr<ID3D12Device>& _Device, int nConstantBufferViews, const ComPtr<ID3D12Resource>& _ConstantBuffers, UINT nStride);
-	static D3D12_GPU_DESCRIPTOR_HANDLE CreateConstantBufferView(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12Resource>& _ConstantBuffer, UINT nStride);
-	static D3D12_GPU_DESCRIPTOR_HANDLE CreateConstantBufferView(const ComPtr<ID3D12Device>& _Device, D3D12_GPU_VIRTUAL_ADDRESS d3dGpuVirtualAddress, UINT nStride);
-	static void CreateShaderResourceViews(const ComPtr<ID3D12Device>& _Device, CTexture* pTexture, UINT nDescriptorHeapIndex, UINT nRootParameterStartIndex);
-	static void CreateShaderResourceView(const ComPtr<ID3D12Device>& _Device, CTexture* pTexture, int nIndex, UINT nRootParameterStartIndex);
-	static void CreateShaderResourceView(const ComPtr<ID3D12Device>& _Device, CTexture* pTexture, int nIndex);
+	static void CreateCbvSrvDescriptorHeaps(int nConstantBufferViews, int nShaderResourceViews);
+	static void CreateConstantBufferViews( int nConstantBufferViews, const ComPtr<ID3D12Resource>& _ConstantBuffers, UINT nStride);
+	static D3D12_GPU_DESCRIPTOR_HANDLE CreateConstantBufferView(const ComPtr<ID3D12Resource>& _ConstantBuffer, UINT nStride);
+	static D3D12_GPU_DESCRIPTOR_HANDLE CreateConstantBufferView(D3D12_GPU_VIRTUAL_ADDRESS d3dGpuVirtualAddress, UINT nStride);
+	static void CreateShaderResourceViews( CTexture* pTexture, UINT nDescriptorHeapIndex, UINT nRootParameterStartIndex);
+	static void CreateShaderResourceView(CTexture* pTexture, int nIndex, UINT nRootParameterStartIndex);
+	static void CreateShaderResourceView(CTexture* pTexture, int nIndex);
 };

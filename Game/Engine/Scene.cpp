@@ -5,19 +5,20 @@
 #include "CbvSrvUavDescriptorHeap.h"
 
 
-unique_ptr<CbvSrvUavDescriptorHeap> CScene::m_pDescriptorHeap=nullptr;
+unique_ptr<CbvSrvUavDescriptorHeap> CScene::m_pDescriptorHeap= make_unique<CbvSrvUavDescriptorHeap>();
+
 //CbvSrvUavDescriptorHeap* CScene::m_pDescriptorHeap = NULL;
 
 
 
-void CScene::CreateCbvSrvDescriptorHeaps(const ComPtr<ID3D12Device>& _Device, int nConstantBufferViews, int nShaderResourceViews)
+void CScene::CreateCbvSrvDescriptorHeaps(int nConstantBufferViews, int nShaderResourceViews)
 {
 	D3D12_DESCRIPTOR_HEAP_DESC d3dDescriptorHeapDesc;
 	d3dDescriptorHeapDesc.NumDescriptors = nConstantBufferViews + nShaderResourceViews; //CBVs + SRVs 
 	d3dDescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	d3dDescriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	d3dDescriptorHeapDesc.NodeMask = 0;
-	_Device->CreateDescriptorHeap(&d3dDescriptorHeapDesc, IID_PPV_ARGS(&m_pDescriptorHeap->m_pd3dCbvSrvUavDescriptorHeap));
+	DEVICE->CreateDescriptorHeap(&d3dDescriptorHeapDesc, IID_PPV_ARGS(&m_pDescriptorHeap->m_pd3dCbvSrvUavDescriptorHeap));
 
 	m_pDescriptorHeap->m_d3dCbvCPUDescriptorStartHandle = m_pDescriptorHeap->m_pd3dCbvSrvUavDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 	m_pDescriptorHeap->m_d3dCbvGPUDescriptorStartHandle = m_pDescriptorHeap->m_pd3dCbvSrvUavDescriptorHeap->GetGPUDescriptorHandleForHeapStart();
@@ -30,7 +31,7 @@ void CScene::CreateCbvSrvDescriptorHeaps(const ComPtr<ID3D12Device>& _Device, in
 	m_pDescriptorHeap->m_d3dSrvGPUDescriptorNextHandle = m_pDescriptorHeap->m_d3dSrvGPUDescriptorStartHandle;
 }
 
-void CScene::CreateConstantBufferViews(const ComPtr<ID3D12Device>& _Device, int nConstantBufferViews, const ComPtr<ID3D12Resource>& _ConstantBuffers, UINT nStride)
+void CScene::CreateConstantBufferViews( int nConstantBufferViews, const ComPtr<ID3D12Resource>& _ConstantBuffers, UINT nStride)
 {
 	D3D12_GPU_VIRTUAL_ADDRESS d3dGpuVirtualAddress = _ConstantBuffers->GetGPUVirtualAddress();
 	D3D12_CONSTANT_BUFFER_VIEW_DESC d3dCBVDesc;
@@ -38,18 +39,18 @@ void CScene::CreateConstantBufferViews(const ComPtr<ID3D12Device>& _Device, int 
 	for (int j = 0; j < nConstantBufferViews; j++)
 	{
 		d3dCBVDesc.BufferLocation = d3dGpuVirtualAddress + (nStride * j);
-		_Device->CreateConstantBufferView(&d3dCBVDesc, m_pDescriptorHeap->m_d3dCbvCPUDescriptorNextHandle);
+		DEVICE->CreateConstantBufferView(&d3dCBVDesc, m_pDescriptorHeap->m_d3dCbvCPUDescriptorNextHandle);
 		m_pDescriptorHeap->m_d3dCbvCPUDescriptorNextHandle.ptr += ::gnCbvSrvDescriptorIncrementSize;
 		m_pDescriptorHeap->m_d3dCbvGPUDescriptorNextHandle.ptr += ::gnCbvSrvDescriptorIncrementSize;
 	}
 }
 
-D3D12_GPU_DESCRIPTOR_HANDLE CScene::CreateConstantBufferView(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12Resource>& _ConstantBuffer, UINT nStride)
+D3D12_GPU_DESCRIPTOR_HANDLE CScene::CreateConstantBufferView( const ComPtr<ID3D12Resource>& _ConstantBuffer, UINT nStride)
 {
 	D3D12_CONSTANT_BUFFER_VIEW_DESC d3dCBVDesc;
 	d3dCBVDesc.SizeInBytes = nStride;
 	d3dCBVDesc.BufferLocation = _ConstantBuffer->GetGPUVirtualAddress();
-	_Device->CreateConstantBufferView(&d3dCBVDesc, m_pDescriptorHeap->m_d3dCbvCPUDescriptorNextHandle);
+	DEVICE->CreateConstantBufferView(&d3dCBVDesc, m_pDescriptorHeap->m_d3dCbvCPUDescriptorNextHandle);
 	D3D12_GPU_DESCRIPTOR_HANDLE d3dCbvGPUDescriptorHandle = m_pDescriptorHeap->m_d3dCbvGPUDescriptorNextHandle;
 	m_pDescriptorHeap->m_d3dCbvCPUDescriptorNextHandle.ptr += ::gnCbvSrvDescriptorIncrementSize;
 	m_pDescriptorHeap->m_d3dCbvGPUDescriptorNextHandle.ptr += ::gnCbvSrvDescriptorIncrementSize;
@@ -57,12 +58,12 @@ D3D12_GPU_DESCRIPTOR_HANDLE CScene::CreateConstantBufferView(const ComPtr<ID3D12
 	return(d3dCbvGPUDescriptorHandle);
 }
 
-D3D12_GPU_DESCRIPTOR_HANDLE CScene::CreateConstantBufferView(const ComPtr<ID3D12Device>& _Device, D3D12_GPU_VIRTUAL_ADDRESS d3dGpuVirtualAddress, UINT nStride)
+D3D12_GPU_DESCRIPTOR_HANDLE CScene::CreateConstantBufferView( D3D12_GPU_VIRTUAL_ADDRESS d3dGpuVirtualAddress, UINT nStride)
 {
 	D3D12_CONSTANT_BUFFER_VIEW_DESC d3dCBVDesc;
 	d3dCBVDesc.SizeInBytes = nStride;
 	d3dCBVDesc.BufferLocation = d3dGpuVirtualAddress;
-	_Device->CreateConstantBufferView(&d3dCBVDesc, m_pDescriptorHeap->m_d3dCbvCPUDescriptorNextHandle);
+	DEVICE->CreateConstantBufferView(&d3dCBVDesc, m_pDescriptorHeap->m_d3dCbvCPUDescriptorNextHandle);
 	D3D12_GPU_DESCRIPTOR_HANDLE d3dCbvGPUDescriptorHandle = m_pDescriptorHeap->m_d3dCbvGPUDescriptorNextHandle;
 	m_pDescriptorHeap->m_d3dCbvCPUDescriptorNextHandle.ptr += ::gnCbvSrvDescriptorIncrementSize;
 	m_pDescriptorHeap->m_d3dCbvGPUDescriptorNextHandle.ptr += ::gnCbvSrvDescriptorIncrementSize;
@@ -70,7 +71,7 @@ D3D12_GPU_DESCRIPTOR_HANDLE CScene::CreateConstantBufferView(const ComPtr<ID3D12
 	return(d3dCbvGPUDescriptorHandle);
 }
 
-void CScene::CreateShaderResourceViews(const ComPtr<ID3D12Device>& _Device, CTexture* pTexture, UINT nDescriptorHeapIndex, UINT nRootParameterStartIndex)
+void CScene::CreateShaderResourceViews(CTexture* pTexture, UINT nDescriptorHeapIndex, UINT nRootParameterStartIndex)
 {
 	m_pDescriptorHeap->m_d3dSrvCPUDescriptorNextHandle.ptr += (::gnCbvSrvDescriptorIncrementSize * nDescriptorHeapIndex);
 	m_pDescriptorHeap->m_d3dSrvGPUDescriptorNextHandle.ptr += (::gnCbvSrvDescriptorIncrementSize * nDescriptorHeapIndex);
@@ -80,7 +81,7 @@ void CScene::CreateShaderResourceViews(const ComPtr<ID3D12Device>& _Device, CTex
 	{
 		ComPtr<ID3D12Resource> pShaderResource = pTexture->GetResource(i);
 		D3D12_SHADER_RESOURCE_VIEW_DESC d3dShaderResourceViewDesc = pTexture->GetShaderResourceViewDesc(i);
-		_Device->CreateShaderResourceView(pShaderResource.Get(), &d3dShaderResourceViewDesc, m_pDescriptorHeap->m_d3dSrvCPUDescriptorNextHandle);
+		DEVICE->CreateShaderResourceView(pShaderResource.Get(), &d3dShaderResourceViewDesc, m_pDescriptorHeap->m_d3dSrvCPUDescriptorNextHandle);
 		m_pDescriptorHeap->m_d3dSrvCPUDescriptorNextHandle.ptr += ::gnCbvSrvDescriptorIncrementSize;
 
 		pTexture->SetGpuDescriptorHandle(i, m_pDescriptorHeap->m_d3dSrvGPUDescriptorNextHandle);
@@ -90,14 +91,14 @@ void CScene::CreateShaderResourceViews(const ComPtr<ID3D12Device>& _Device, CTex
 	for (int i = 0; i < nRootParameters; i++) pTexture->SetRootParameterIndex(i, nRootParameterStartIndex + i);
 }
 
-void CScene::CreateShaderResourceView(const ComPtr<ID3D12Device>& _Device, CTexture* pTexture, int nIndex, UINT nRootParameterStartIndex)
+void CScene::CreateShaderResourceView( CTexture* pTexture, int nIndex, UINT nRootParameterStartIndex)
 {
 	ComPtr<ID3D12Resource> pShaderResource= pTexture->GetResource(nIndex);
 	D3D12_GPU_DESCRIPTOR_HANDLE d3dGpuDescriptorHandle = pTexture->GetGpuDescriptorHandle(nIndex);
 	if (pShaderResource && !d3dGpuDescriptorHandle.ptr)
 	{
 		D3D12_SHADER_RESOURCE_VIEW_DESC d3dShaderResourceViewDesc = pTexture->GetShaderResourceViewDesc(nIndex);
-		_Device->CreateShaderResourceView(pShaderResource.Get(), &d3dShaderResourceViewDesc, m_pDescriptorHeap->m_d3dSrvCPUDescriptorNextHandle);
+		DEVICE->CreateShaderResourceView(pShaderResource.Get(), &d3dShaderResourceViewDesc, m_pDescriptorHeap->m_d3dSrvCPUDescriptorNextHandle);
 		m_pDescriptorHeap->m_d3dSrvCPUDescriptorNextHandle.ptr += ::gnCbvSrvDescriptorIncrementSize;
 
 		pTexture->SetGpuDescriptorHandle(nIndex, m_pDescriptorHeap->m_d3dSrvGPUDescriptorNextHandle);
@@ -107,14 +108,14 @@ void CScene::CreateShaderResourceView(const ComPtr<ID3D12Device>& _Device, CText
 	}
 }
 
-void CScene::CreateShaderResourceView(const ComPtr<ID3D12Device>& _Device, CTexture* pTexture, int nIndex)
+void CScene::CreateShaderResourceView(CTexture* pTexture, int nIndex)
 {
 	ComPtr<ID3D12Resource>  pShaderResource = pTexture->GetResource(nIndex);
 	D3D12_GPU_DESCRIPTOR_HANDLE d3dGpuDescriptorHandle = pTexture->GetGpuDescriptorHandle(nIndex);
 	if (pShaderResource && !d3dGpuDescriptorHandle.ptr)
 	{
 		D3D12_SHADER_RESOURCE_VIEW_DESC d3dShaderResourceViewDesc = pTexture->GetShaderResourceViewDesc(nIndex);
-		_Device->CreateShaderResourceView(pShaderResource.Get(), &d3dShaderResourceViewDesc, m_pDescriptorHeap->m_d3dSrvCPUDescriptorNextHandle);
+		DEVICE->CreateShaderResourceView(pShaderResource.Get(), &d3dShaderResourceViewDesc, m_pDescriptorHeap->m_d3dSrvCPUDescriptorNextHandle);
 		m_pDescriptorHeap->m_d3dSrvCPUDescriptorNextHandle.ptr += ::gnCbvSrvDescriptorIncrementSize;
 
 		pTexture->SetGpuDescriptorHandle(nIndex, m_pDescriptorHeap->m_d3dSrvGPUDescriptorNextHandle);
@@ -148,29 +149,24 @@ bool CScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wPar
 
 void CScene::BuildObjects(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList,const ComPtr<ID3D12RootSignature>& _RootSignature)
 {
-	m_pDescriptorHeap = make_unique<CbvSrvUavDescriptorHeap>();
-	CreateCbvSrvDescriptorHeaps(_Device, 0, 30);
+	
+	CScene::CreateCbvSrvDescriptorHeaps(0, 30);
 	m_ppObjects = make_shared<CGameObject>();
 
-	//shared_ptr<CDiffusedShader> pShader = make_shared<CDiffusedShader>();
-	//pShader->CreateShader(L"..\\Resources\\Shader\\Shaders.hlsli", "VSDiffused", "PSDiffused", _Device, _RootSignature);
-	//pShader->CreateShaderVariables(_Device, _CommandList);
-	///*m_ppObjects->LoadGeometryFromFile(_Device.Get(), _CommandList.Get(), _RootSignature.Get(), "Rock.bin", pShader);
-	//m_ppObjects->SetShader(pShader);*/
-	//
-	//shared_ptr<CTriangleMesh> Tri = make_shared<CTriangleMesh>(_Device, _CommandList);
-	//m_ppObjects->SetMesh(Tri);
-	//m_ppObjects->SetShader(pShader);
+	shared_ptr<CDiffusedWireFrameShader> pShader = make_shared<CDiffusedWireFrameShader>(_Device, _RootSignature,L"Shader/Shaders.hlsli", "VSDiffused", "PSDiffused");
 
+	
+	shared_ptr<CTriangleMesh> Tri = make_shared<CTriangleMesh>(_Device, _CommandList);
+	m_ppObjects->SetMesh(Tri);
+	m_ppObjects->SetShader(pShader);
+	m_ppObjects->SetScale(3.0, 3, 3);
 
-	shared_ptr<CTexturedModelShader> pShader = make_shared<CTexturedModelShader>();
-	pShader->CreateShader(L"Shader/Shaders.hlsli", "VSStandard", "PSStandard", _Device, _RootSignature);
-	pShader->CreateShaderVariables(_Device, _CommandList);
-	m_ppObjects->LoadGeometryFromFile(_Device.Get(), _CommandList.Get(), _RootSignature.Get(),"Model/MainTank.bin", pShader);
-	// "Model/DB_Five.bin" 
-	//"..\\Resources\\Model\\DB_Five.bin"
+	//shared_ptr<CTexturedModelShader> pShader = make_shared<CTexturedModelShader>(_Device, _RootSignature,L"Shader/Shaders.hlsli", "VSStandard", "PSStandard");
+	//m_ppObjects->LoadGeometryFromFile(_Device.Get(), _CommandList.Get(), _RootSignature.Get(),"Model/MainTank.bin", pShader);
+	//// "Model/DB_Five.bin" 
+	////"..\\Resources\\Model\\DB_Five.bin"
 
-	m_ppObjects->Rotate(0,-90.0f,0);
+	//m_ppObjects->Rotate(0,-90.0f,0);
 }
 
 void CScene::ReleaseObjects()
