@@ -31,6 +31,12 @@
     <Filter Include="GameObject">
       <UniqueIdentifier>{b80b9861-1252-486e-8cdb-d3a7b8f1c3b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="HLSL\Standard">
+      <UniqueIdentifier>{ec02c5ca-a001-4d4c-8864-1944e160a228}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HLSL\Diffuse">
+      <UniqueIdentifier>{3438067d-2869-426f-9d3a-880bd864a87e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WICTextureLoader12.h">
@@ -172,8 +178,22 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\CodeDungeon\Shader\Shaders.hlsli">
+    <None Include="..\Resources\Shader\Default.hlsli">
       <Filter>HLSL</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Resources\Shader\DiffusePS.hlsl">
+      <Filter>HLSL\Diffuse</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Shader\DiffuseVS.hlsl">
+      <Filter>HLSL\Diffuse</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Shader\StandardPS.hlsl">
+      <Filter>HLSL\Standard</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Shader\StandardVS.hlsl">
+      <Filter>HLSL\Standard</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

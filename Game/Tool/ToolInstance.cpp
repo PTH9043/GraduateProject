@@ -60,7 +60,6 @@ void Tool::BuildToolScene()
 void Tool::Update()
 {
     gGameFrameWork->RenderBegin();
-    gGameFrameWork->Render();
     Render();
     ImguiRender();
     gGameFrameWork->RenderEnd();
