@@ -129,22 +129,22 @@ namespace PTH
         Matrix operator- () const noexcept { return m * -1.f; }
 
 
-        const Vector3& GetRight() { return *((glm::vec3*)(&m[MATROW_RIGHT][0])); }
+        const Vector3& GetRight() const { return *((glm::vec3*)(&m[MATROW_RIGHT][0])); }
 
-        const Vector3& GetLeft() { return -1.f * GetRight(); }
-        const Vector3& GetUp() { return *((glm::vec3*)(&m[MATROW_UP][0])); }
-        const Vector3& GetDown() { return -1.f * GetUp(); }
-        const Vector3& GetLook() { return *((glm::vec3*)(&m[MATROW_LOOK][0])); }
-        const Vector3& GetBack() { return -1.f * GetLook(); }
-        const Vector3& GetPos() { return *((glm::vec3*)(&m[MATROW_POS][0]));  }
+        const Vector3& GetLeft() const { return -1.f * GetRight(); }
+        const Vector3& GetUp()  const  { return *((glm::vec3*)(&m[MATROW_UP][0])); }
+        const Vector3& GetDown() const  { return -1.f * GetUp(); }
+        const Vector3& GetLook() const  { return *((glm::vec3*)(&m[MATROW_LOOK][0])); }
+        const Vector3& GetBack() const { return -1.f * GetLook(); }
+        const Vector3& GetPos() const  { return *((glm::vec3*)(&m[MATROW_POS][0]));  }
 
-        void SetRight(const Vector3& _vState) { *((glm::vec3*)(&m[MATROW_RIGHT][0])) = _vState; }
-        void SetUp(const Vector3& _vState) { *((glm::vec3*)(&m[MATROW_UP][0])) = _vState; }
-        void SetLook(const Vector3& _vState) { *((glm::vec3*)(&m[MATROW_LOOK][0])) = _vState; }
-        void SetPos(const Vector3& _vState) { *((glm::vec3*)(&m[MATROW_POS][0])) = _vState; }
+        void SetRight(const Vector3& _vState)  const  { *((glm::vec3*)(&m[MATROW_RIGHT][0])) = _vState; }
+        void SetUp(const Vector3& _vState) const  { *((glm::vec3*)(&m[MATROW_UP][0])) = _vState; }
+        void SetLook(const Vector3& _vState) const  { *((glm::vec3*)(&m[MATROW_LOOK][0])) = _vState; }
+        void SetPos(const Vector3& _vState) const { *((glm::vec3*)(&m[MATROW_POS][0])) = _vState; }
 
         // Matrix operations
-        void Decompose(OUT Vector3& scale, OUT Quaternion& rotation, OUT  Vector3& translation) noexcept;
+        void Decompose(OUT Vector3& scale, OUT Quaternion& rotation, OUT  Vector3& translation)  noexcept;
 
         Matrix Transpose() const noexcept;
         void Transpose(OUT Matrix& result) const noexcept;

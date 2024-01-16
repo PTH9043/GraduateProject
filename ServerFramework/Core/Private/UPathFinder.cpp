@@ -6,7 +6,7 @@
 namespace Core {
 
 	UPathFinder::UPathFinder() : 
-		m_MaxCellCount{0}, m_CheckOpens{}, m_CheckCloses{}, m_DistanceWeights{}
+		m_MaxCellCount{0}, m_CheckOpens{}, m_DistanceWeights{}
 		,m_VisitedListes{}, m_BestListes{}
 	{
 	}
@@ -19,7 +19,6 @@ namespace Core {
 		// value 
 		for (_int i = 0; i < TLS::MAX_THREAD; ++i)
 		{
-			m_CheckCloses.resize(m_MaxCellCount);
 			m_CheckOpens.resize(m_MaxCellCount);
 			m_DistanceWeights.resize(m_MaxCellCount);
 		}
@@ -38,55 +37,55 @@ namespace Core {
 
 	void UPathFinder::MakeRoutine(SHPTR<UCell> _spStartCell, SHPTR<UCell> _spEndCell)
 	{
-		SHPTR<UCell> spTile = _spStartCell;
+		UCell* pCell = _spStartCell.get();
+		m_CheckOpens[pCell->GetIndex()] = VISITED_VALUE;
 		// Find Size만큼만 찾고 루트를 찾지 않는다(최적화를 위함)
 		for (_int i = 0; i < FIND_SIZE; ++i)
 		{
-			_int Index = spTile->GetIndex();
+			_int Index = pCell->GetIndex();
 			// 만약 방문했던 노드가 비어있지 않으면 제거
 			if (false == m_VisitedListes.empty())
 			{
 				m_VisitedListes.pop_front();
 			}
-			m_CheckOpens[Index] = VISITED_VALUE;
 
-			for (auto& CheckTile : spTile->GetNeighborCelles())
+			for (auto& CheckCell : pCell->GetNeighborCelles())
 			{
-				_int CheckIndex = CheckTile->GetIndex();
+				_int CheckIndex = CheckCell->GetIndex();
 				if (VISITED_VALUE == m_CheckOpens[CheckIndex])
 					continue;
 
-				m_ParentsCellNodes[CheckIndex] = CheckTile;
-				if (_spEndCell == CheckTile)
+				m_ParentsCellNodes[CheckIndex] = CheckCell;
+				if (_spEndCell.get()  == CheckCell)
 				{
-
+					MakeBestRoutine(_spStartCell.get(), CheckCell);
 					return;
 				}
-				/* CheckCenterPos  */
-				_float3 vDir = CheckTile->GetCenterPos() - _spStartCell->GetCenterPos();
-				// Y는 따로
-				_float YPos = vDir.y;
-				vDir.y = 0;
 				// 코스트를 구함 
 				_float Cost = ComputeDistCost(_spStartCell->GetCenterPos(), _spEndCell->GetCenterPos(), 
-					CheckTile->GetCenterPos(), spTile->GetCenterPos()) + glm::length2(vDir) + YPos;
+					CheckCell->GetCenterPos(), pCell->GetCenterPos());
 				// CheckOpen 
-				m_CheckOpens[CheckTile->GetIndex()] = true;
+				m_CheckOpens[CheckCell->GetIndex()] = VISITED_VALUE;
 				// 방문한 노드에 집어 넣는다. 
-				m_VisitedListes.push_back(CheckTile->GetIndex());
+				m_VisitedListes.push_back(CheckCell);
 			}
 			if (0 < m_VisitedListes.size())
 			{
 				VECTOR<_float>& DistanceWeights = m_DistanceWeights;
-				m_VisitedListes.sort([&DistanceWeights](_int _Visited1, _int _Visited2) {
-					return DistanceWeights[_Visited1] < DistanceWeights[_Visited2];
+				m_VisitedListes.sort([&DistanceWeights]( UCell* _visited1, UCell* _visited2) {
+					_int Index1 = _visited1->GetIndex();
+					_int Index2 = _visited2->GetIndex();
+					return DistanceWeights[Index1] < DistanceWeights[Index2];
 					});
+
+				pCell =  m_VisitedListes.front();
 			}
 			else
 			{
 				break;
 			}
 		}
+		MakeBestRoutine(_spStartCell.get(), pCell);
 	}
 
 	void UPathFinder::MakeBestRoutine(UCell* _pStartCell, UCell* _pEndCell)
@@ -105,7 +104,6 @@ namespace Core {
 	void UPathFinder::Release()
 	{
 		// value release
-		MemoryInitialization(&m_CheckCloses[0], m_MaxCellCount);
 		MemoryInitialization(&m_CheckOpens[0], m_MaxCellCount);
 		MemoryInitialization(&m_DistanceWeights[0], m_MaxCellCount);
 
