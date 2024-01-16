@@ -24,6 +24,8 @@ bool Engine::OnCreate(HINSTANCE hInstance, HWND hMainWnd)
 
 void Engine::OnDestroy()
 {
+	
+
 	m_spCommandQueue->WaitForGpuComplete();
 	m_spSwapChainAndRtvDsvHeap->GetSwapChain()->SetFullscreenState(FALSE, NULL);
 }

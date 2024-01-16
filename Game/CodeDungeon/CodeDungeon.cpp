@@ -67,7 +67,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, //응용 프로그램 시작 진
         }
     }
     g_Game->Destroy();
-
+   // _CrtDumpMemoryLeaks();
     return (int)msg.wParam;
 }
 

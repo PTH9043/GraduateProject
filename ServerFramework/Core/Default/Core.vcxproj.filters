@@ -91,6 +91,9 @@
     <Filter Include="04.GameSpace\PathFinder">
       <UniqueIdentifier>{142446d8-8752-433b-b597-2581a739a26a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.GameSpace\Octree">
+      <UniqueIdentifier>{d9f58a22-f13a-4cc0-ade8-6846179eaa09}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\UBase.h">

@@ -17,6 +17,8 @@ public:
 	// Find Path
 	void FindPath(SHPTR<UNavigation> _spNavigation,
 		_float3 _vStartPos, _float3 _vEndPos);
+public: /* Get Set */
+	LIST<UCell*> GetBestList() const { return m_BestListes; }
 private:
 	void MakeRoutine(SHPTR<UCell> _spStartCell, SHPTR<UCell> _spEndCell);
 	void MakeBestRoutine(UCell* _pStartCell, UCell* _pEndCell);
@@ -34,11 +36,10 @@ private:
 	VECTOR<UCell*>				m_ParentsCellNodes;
 	// Open Close
 	VECTOR<_int>					m_CheckOpens;
-	VECTOR<_int>					m_CheckCloses;
 	// Weight
 	VECTOR<_float>				m_DistanceWeights;
 	// List
-	LIST<_int>							m_VisitedListes;
+	LIST<UCell*>						m_VisitedListes;
 	LIST<UCell*>						m_BestListes;
 };
 

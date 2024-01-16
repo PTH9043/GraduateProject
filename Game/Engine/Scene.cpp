@@ -145,7 +145,7 @@ void CScene::BuildObjects(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D
 	CScene::CreateCbvSrvDescriptorHeaps(0, 30);
 	shared_ptr<CGameObject> object = make_shared<CGameObject>();
 
-	shared_ptr<CDiffusedWireFrameShader> pShader = make_shared<CDiffusedWireFrameShader>(_Device, _RootSignature, L"../Resources/Shader/cso/DiffuseVS.cso", L"../Resources/Shader/cso/DiffusePS.cso");
+	shared_ptr<CDiffusedWireFrameShader> pShader = make_shared<CDiffusedWireFrameShader>(_Device, _RootSignature, L"Shader/cso/DiffuseVS.cso", L"Shader/cso/DiffusePS.cso");
 
 	
 	shared_ptr<CTriangleMesh> Tri = make_shared<CTriangleMesh>(_Device, _CommandList);

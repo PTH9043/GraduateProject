@@ -20,11 +20,12 @@ enum
 #pragma comment(lib, "windowscodecs.lib")
 
 
+
+
 #include <stdlib.h>
 #include <malloc.h>
 #include <stdio.h>
 #include <cstdio>
-#include <cstdlib>
 #include <memory.h>
 #include <tchar.h>
 #include <math.h>
