@@ -82,20 +82,18 @@ RayHitResult ToolManager::CastRay(const Ray& ray, const shared_ptr<CGameObject>&
     RayHitResult result;
     result.hit = false;
 
-    // Iterate over each submesh of the grid object
     if(Grid->m_nMeshes != 0)
     {
         for (int i = 0; i < Grid->m_nMeshes; ++i)
         {
             shared_ptr<CMesh> subMesh = Grid->GetMeshes()[i];
-
             for (size_t j = 0; j < subMesh->GetSubSetIndices().size(); j++)
             {
                 for (size_t k = 0; k + 2 < subMesh->GetSubSetIndices()[j].size(); k++)
                 {
-                    XMFLOAT3 vertex0 = subMesh->TransformPoint(subMesh->GetPositions()[subMesh->GetSubSetIndices()[j][k]], worldMatrix);
-                    XMFLOAT3 vertex1 = subMesh->TransformPoint(subMesh->GetPositions()[subMesh->GetSubSetIndices()[j][k + 1]], worldMatrix);
-                    XMFLOAT3 vertex2 = subMesh->TransformPoint(subMesh->GetPositions()[subMesh->GetSubSetIndices()[j][k + 2]], worldMatrix);
+                    XMFLOAT3 vertex0 = Vector3::TransformCoord(subMesh->GetPositions()[subMesh->GetSubSetIndices()[j][k]], worldMatrix);
+                    XMFLOAT3 vertex1 = Vector3::TransformCoord(subMesh->GetPositions()[subMesh->GetSubSetIndices()[j][k + 1]], worldMatrix);
+                    XMFLOAT3 vertex2 = Vector3::TransformCoord(subMesh->GetPositions()[subMesh->GetSubSetIndices()[j][k + 2]], worldMatrix);
 
                     float Distance;
                     if (DirectX::TriangleTests::Intersects(ray.origin, ray.direction,

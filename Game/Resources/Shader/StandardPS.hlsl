@@ -1,5 +1,6 @@
 
 #include "Default.hlsli"
+
 struct VS_STANDARD_INPUT
 {
     float3 position : POSITION;

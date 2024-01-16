@@ -96,9 +96,6 @@ void Tool::ImguiRender()
     ImGui::Render();
 
     CMDLIST->SetDescriptorHeaps(1, m_pdxgiSRVDescriptorHeapForImgui.GetAddressOf());
-   /* D3D12_CPU_DESCRIPTOR_HANDLE d3dRtvCPUDescriptorHandle = RTVDESCRIPTORHEAP->GetCPUDescriptorHandleForHeapStart();
-    d3dRtvCPUDescriptorHandle.ptr += (SWAPCHAIN->GetCurrentBackBufferIndex() * gGameFrameWork->GetSwapChainAndRtvDsvHeap()->GetRTVIncrementSize());
-    CMDLIST->OMSetRenderTargets(1u, &d3dRtvCPUDescriptorHandle, FALSE, nullptr);*/
     ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), CMDLIST.Get());
 }
 
