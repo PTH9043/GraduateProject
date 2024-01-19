@@ -14,6 +14,7 @@
 #include "gtc/constants.hpp"
 #include "gtx/dual_quaternion.hpp"
 #include "gtc/quaternion.hpp"
+#include "gtx/quaternion.hpp"
 
 namespace PTH
 {
@@ -24,7 +25,6 @@ namespace PTH
 	using Vector2 = glm::vec2;
 	using Vector3 = glm::vec3;
 	using Vector4 = glm::vec4;
-    using Quaternion = glm::quat;
 
 	using matrix2x2 = glm::mat2x2;
 	using matrix3x3 = glm::mat3x3;
@@ -32,6 +32,7 @@ namespace PTH
 
 	struct Matrix;
 	struct OUTMATRIX;
+    struct Quaternion;
 
 	// OutMatrix
 #pragma region OUTMATRIX
@@ -54,6 +55,7 @@ namespace PTH
     static constexpr Vector3 LookVec3{ 0.f, 0.f, 1.f };
     static constexpr Vector4 VectorOne{ 1.f, 1.f, 1.f, 1.f };
     static constexpr Vector4 VectorSelect1110{ 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF, 0.f };
+    static constexpr Vector4  VectorEpsilon = { 1.192092896e-7f, 1.192092896e-7f, 1.192092896e-7f, 1.192092896e-7f };
 
     //------------------------------------------------------------------------------
     //  4x4 Matrix (assumes right-handed cooordinates)
@@ -131,11 +133,11 @@ namespace PTH
 
         const Vector3& GetRight() const { return *((glm::vec3*)(&m[MATROW_RIGHT][0])); }
 
-        const Vector3& GetLeft() const { return -1.f * GetRight(); }
+        const Vector3 GetLeft() const { return -1.f * GetRight(); }
         const Vector3& GetUp()  const  { return *((glm::vec3*)(&m[MATROW_UP][0])); }
-        const Vector3& GetDown() const  { return -1.f * GetUp(); }
+        const Vector3 GetDown() const  { return -1.f * GetUp(); }
         const Vector3& GetLook() const  { return *((glm::vec3*)(&m[MATROW_LOOK][0])); }
-        const Vector3& GetBack() const { return -1.f * GetLook(); }
+        const Vector3 GetBack() const { return -1.f * GetLook(); }
         const Vector3& GetPos() const  { return *((glm::vec3*)(&m[MATROW_POS][0]));  }
 
         void SetRight(const Vector3& _vState)  const  { *((glm::vec3*)(&m[MATROW_RIGHT][0])) = _vState; }
@@ -143,6 +145,8 @@ namespace PTH
         void SetLook(const Vector3& _vState) const  { *((glm::vec3*)(&m[MATROW_LOOK][0])) = _vState; }
         void SetPos(const Vector3& _vState) const { *((glm::vec3*)(&m[MATROW_POS][0])) = _vState; }
 
+        Vector3 GetScale() const;
+        void SetScale(Vector3 _vScale) const;
         // Matrix operations
         void Decompose(OUT Vector3& scale, OUT Quaternion& rotation, OUT  Vector3& translation)  noexcept;
 
@@ -237,8 +241,7 @@ namespace PTH
                 0, 0, 1.f, 0,
                 0, 0, 0, 1.f);
 
-        private:
-            mutable matrix4x4   m;
+         mutable matrix4x4   m;
     };
 
     // Binary operators
@@ -251,11 +254,105 @@ namespace PTH
     // Element-wise divide
     Matrix operator* (float S, const Matrix& M) noexcept;
 
-    
-    Vector4 PlaneFromPoints(const Vector3& _vPoint1, const Vector3& _vPoint2,
+    struct Quaternion 
+    {
+        friend Matrix;
+
+        Quaternion() noexcept : quat(0, 0, 0, 1.f) {}
+        constexpr Quaternion(float ix, float iy, float iz, float iw) noexcept : quat(ix, iy, iz, iw) {}
+        Quaternion(const Vector3& v, float scalar) noexcept : quat(v.x, v.y, v.z, scalar) {}
+        explicit Quaternion(const Vector4& v) noexcept : quat(v.x, v.y, v.z, v.w) {}
+
+        Quaternion(const Quaternion&);
+        Quaternion& operator=(const Quaternion&) ;
+
+        Quaternion(Quaternion&&) ;
+        Quaternion& operator=(Quaternion&&) ;
+
+        Quaternion(const glm::quat&);
+        Quaternion& operator=(const glm::quat&);
+
+        Quaternion(glm::quat&&);
+        Quaternion& operator=(glm::quat&&);
+
+        // Comparison operators
+        bool operator == (const Quaternion& q) const noexcept;
+        bool operator != (const Quaternion& q) const noexcept;
+
+        // Assignment operators
+        Quaternion& operator+= (const Quaternion& q) noexcept;
+        Quaternion& operator-= (const Quaternion& q) noexcept;
+        Quaternion& operator*= (const Quaternion& q) noexcept;
+        Quaternion& operator*= (float S) noexcept;
+        Quaternion& operator/= (const Quaternion& q) noexcept;
+
+        // Unary operators
+        Quaternion operator+ () const  noexcept { return *this; }
+        Quaternion operator- () const noexcept;
+
+        glm::quat GetQuaternion() const ;
+
+        // Quaternion operations
+        float Length() const noexcept;
+        float LengthSquared() const noexcept;
+
+        void Normalize() noexcept;
+        void Normalize(Quaternion& result) const noexcept;
+
+        void Conjugate() noexcept;
+        void Conjugate(Quaternion& result) const noexcept;
+
+        float Dot(const Quaternion& Q) const noexcept;
+
+        void RotateTowards(const Quaternion& target, const float& maxAngle) noexcept;
+        void __cdecl RotateTowards(const Quaternion& target, const float& maxAngle, Quaternion& result) const noexcept;
+
+        // Computes rotation about y-axis (y), then x-axis (x), then z-axis (z)
+        Vector3 ToEuler() const noexcept;
+
+        // Static functions
+        static Quaternion CreateFromAxisAngle(const Vector3& axis, const float& angle) noexcept;
+
+        // Rotates about y-axis (yaw), then x-axis (pitch), then z-axis (roll)
+        static Quaternion CreateFromYawPitchRoll(const float& yaw, const float& pitch, const float& roll) noexcept;
+
+        // Rotates about y-axis (angles.y), then x-axis (angles.x), then z-axis (angles.z)
+        static Quaternion CreateFromYawPitchRoll(const Vector3& angles) noexcept;
+
+        static Quaternion CreateFromRotationMatrix(const Matrix& M) noexcept;
+
+        static void Lerp(const Quaternion& q1, const Quaternion& q2, const float& t, Quaternion& result) noexcept;
+        static Quaternion Lerp(const Quaternion& q1, const Quaternion& q2, const float& t) noexcept;
+
+        static void Slerp(const Quaternion& q1, const Quaternion& q2, const float& t, Quaternion& result) noexcept;
+        static Quaternion Slerp(const Quaternion& q1, const Quaternion& q2, const float& t) noexcept;
+
+        static void Concatenate(const Quaternion& q1, const Quaternion& q2, Quaternion& result) noexcept;
+        static Quaternion Concatenate(const Quaternion& q1, const Quaternion& q2) noexcept;
+
+        static void __cdecl FromToRotation(const Vector3& fromDir, const Vector3& toDir, Quaternion& result) noexcept;
+        static Quaternion FromToRotation(const Vector3& fromDir, const Vector3& toDir) noexcept;
+
+        static void __cdecl LookRotation(const Vector3& forward, const Vector3& up, Quaternion& result) noexcept;
+        static Quaternion LookRotation(const Vector3& forward, const Vector3& up) noexcept;
+
+        static float Angle(const Quaternion& q1, const Quaternion& q2) noexcept;
+
+        // Constants
+        static const Quaternion Identity;
+
+        mutable Vector4         quat;
+    };
+
+     Vector4 PlaneFromPoints(const Vector3& _vPoint1, const Vector3& _vPoint2,
         const Vector3& _vPoint3);
 
-    float PlaneDotCoord(const Vector4& _Plane, const Vector3& _vPoint);
+     float PlaneDotCoord(const Vector4& _Plane, const Vector3& _vPoint);
+
+     Vector3 TransformNormal(const Vector3& normal, const Matrix& transform);
+
+    // glm을 사용한 XMVector3TransformCoord 비슷한 함수
+     Vector3 TransformCoord(const Vector3& position, const Matrix& transform);
 }
 
 #endif // _PTHMATH_PTHMATH_H

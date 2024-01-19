@@ -79,20 +79,44 @@
     <Filter Include="98.Lua">
       <UniqueIdentifier>{70a90b66-5918-41b3-8428-356a321ea39e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.GameSpace">
+    <Filter Include="02.Manager\Octree">
+      <UniqueIdentifier>{d9f58a22-f13a-4cc0-ade8-6846179eaa09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.GamePath">
       <UniqueIdentifier>{2c9e0d8e-a040-4db2-b627-b425d77c9421}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.GameSpace\Navigation">
+    <Filter Include="04.GamePath\Navigation">
       <UniqueIdentifier>{535524e5-4cad-4fe8-a921-3c7fd6c1757b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.GameSpace\Navigation\Cell">
+    <Filter Include="04.GamePath\Navigation\Cell">
       <UniqueIdentifier>{c2cf8271-240c-4bd8-9890-e934ae83d107}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.GameSpace\PathFinder">
+    <Filter Include="04.GamePath\PathFinder">
       <UniqueIdentifier>{142446d8-8752-433b-b597-2581a739a26a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.GameSpace\Octree">
-      <UniqueIdentifier>{d9f58a22-f13a-4cc0-ade8-6846179eaa09}</UniqueIdentifier>
+    <Filter Include="05.GameSpace">
+      <UniqueIdentifier>{76fb96b1-d618-47cb-bd34-6fcedfab92f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.GameSpace\Space">
+      <UniqueIdentifier>{4bd16e08-66dc-4293-be69-f0af6d756305}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component">
+      <UniqueIdentifier>{f501c7ca-7708-4935-bf29-9f5b917b2ca6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component\Collider">
+      <UniqueIdentifier>{1d442d0f-1a0e-40c8-88f7-502ca7ba6668}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component\Transform">
+      <UniqueIdentifier>{df148501-a305-4c30-8e17-32b87f6ba81e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component\Collider\AABB">
+      <UniqueIdentifier>{6ef0db1e-a080-4038-a65a-6898e05ce38e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component\Collider\OBB">
+      <UniqueIdentifier>{c8496f06-affb-4fb3-b90d-aa91227c8a14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component\Collider\Sphere">
+      <UniqueIdentifier>{f35c2d33-b97a-4b5e-9d51-312972ff4ace}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -193,16 +217,34 @@
       <Filter>97.Utility\LuaLoader</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UCell.h">
-      <Filter>04.GameSpace\Navigation\Cell</Filter>
+      <Filter>04.GamePath\Navigation\Cell</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UNavigation.h">
-      <Filter>04.GameSpace\Navigation</Filter>
+      <Filter>04.GamePath\Navigation</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CoreStruct.h">
       <Filter>99.Default</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UPathFinder.h">
-      <Filter>04.GameSpace\PathFinder</Filter>
+      <Filter>04.GamePath\PathFinder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\USpace.h">
+      <Filter>05.GameSpace\Space</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UCollider.h">
+      <Filter>06.Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UTransform.h">
+      <Filter>06.Component\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UAABBCollider.h">
+      <Filter>06.Component\Collider\AABB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UOBBCollider.h">
+      <Filter>06.Component\Collider\OBB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\USphere.h">
+      <Filter>06.Component\Collider\Sphere</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -276,13 +318,31 @@
       <Filter>97.Utility\LuaLoader</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UCell.cpp">
-      <Filter>04.GameSpace\Navigation\Cell</Filter>
+      <Filter>04.GamePath\Navigation\Cell</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UNavigation.cpp">
-      <Filter>04.GameSpace\Navigation</Filter>
+      <Filter>04.GamePath\Navigation</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UPathFinder.cpp">
-      <Filter>04.GameSpace\PathFinder</Filter>
+      <Filter>04.GamePath\PathFinder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\USpace.cpp">
+      <Filter>05.GameSpace\Space</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UCollider.cpp">
+      <Filter>06.Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UTransform.cpp">
+      <Filter>06.Component\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UAABBCollider.cpp">
+      <Filter>06.Component\Collider\AABB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UOBBCollider.cpp">
+      <Filter>06.Component\Collider\OBB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\USphere.cpp">
+      <Filter>06.Component\Collider\Sphere</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

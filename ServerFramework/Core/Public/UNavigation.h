@@ -21,12 +21,12 @@ public:
 public:
 	_bool NativeConstruct(const _string& _Paths);
 	// 객체의 Y값이 해당 Cell 바로 위로 만드는 함수 
-	const _float ComputeHeight(const _float3 _vPosition, REF_IN  _int& _Index);
+	const _float ComputeHeight(const Vector3 _vPosition, REF_IN  _int& _Index);
 	// 네비게이션의 범위를 벗어나는지 확인하는 함수
-	_bool IsCheckOverNavigationArea(const _float3 _vPosition, REF_IN _int& _Index);
+	_bool IsCheckOverNavigationArea(const Vector3 _vPosition, REF_IN _int& _Index);
 	// Cell을 찾아 리턴하는 함수
-	SHPTR<UCell>	FindCell(const _float3 _vPosition, REF_IN _int& _Index);
-	SHPTR<UCell> FindCell(const _float3 _vPosition);
+	SHPTR<UCell>	FindCell(const Vector3 _vPosition, REF_IN _int& _Index);
+	SHPTR<UCell> FindCell(const Vector3 _vPosition);
 private:
 	void ReadyNeighbor();
 private:

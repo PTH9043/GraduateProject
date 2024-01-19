@@ -40,15 +40,15 @@ namespace Core
 	/*
 	GLM (OpenGl용 수학 라이브러리)
 	*/
-	using _float2 = PTH::Vector2;
-	using _float3 = PTH::Vector3;
-	using _float4 = PTH::Vector4;
+	using Vector2 = PTH::Vector2;
+	using Vector3 = PTH::Vector3;
+	using Vector4 = PTH::Vector4;
 
 	using _int2 = glm::int2;
 	using _int3 = glm::int3;
 	using _int4 = glm::int4;
 
-	using _float4x4 = PTH::Matrix;
+	using _matrix = PTH::Matrix;
 	using _quaternion = PTH::Quaternion;
 
 	using _wstring = std::wstring;

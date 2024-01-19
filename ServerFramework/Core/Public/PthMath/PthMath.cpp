@@ -84,6 +84,25 @@ Matrix& PTH::Matrix::operator/=(const matrix4x4& M) noexcept
 	return *this;
 }
 
+Vector3 PTH::Matrix::GetScale() const
+{
+	Vector3 vRight = GetRight();
+	Vector3 vUp = GetUp();
+	Vector3 vLook = GetLook();
+	return Vector3{ glm::length(vRight) , glm::length(vUp), glm::length(vLook) };
+}
+
+void PTH::Matrix::SetScale(Vector3 _vScale) const
+{
+	Vector3 vRight = GetRight();
+	Vector3 vUp = GetUp();
+	Vector3 vLook = GetLook();
+
+	SetRight(glm::normalize(vRight) * _vScale.x);
+	SetUp(glm::normalize(vUp) * _vScale.y);
+	SetLook(glm::normalize(vLook) * _vScale.z);
+}
+
 void PTH::Matrix::Decompose(OUT Vector3& scale, OUT Quaternion& rotation, OUT  Vector3& translation) noexcept
 {
 	translation = glm::vec3(m[3]);
@@ -273,7 +292,7 @@ Matrix PTH::Matrix::CreateWorld(const Vector3& position, const Vector3& forward,
 
 Matrix PTH::Matrix::CreateFromQuaternion(const Quaternion& quat) noexcept
 {
-	return glm::toMat4(quat);
+	return glm::toMat4(quat.GetQuaternion());
 }
 
 Matrix PTH::Matrix::CreateFromYawPitchRoll(const float& yaw, const float& pitch, const float& roll) noexcept
@@ -308,12 +327,12 @@ Matrix PTH::Matrix::Lerp(const Matrix& M1, const Matrix& M2, const float& t) noe
 
 void PTH::Matrix::Transform(const Matrix& M, const Quaternion& rotation, Matrix& result) noexcept
 {
-	result = M * glm::toMat4(rotation);
+	result = M * glm::toMat4(rotation.GetQuaternion());
 }
 
 Matrix PTH::Matrix::Transform(const Matrix& M, const Quaternion& rotation) noexcept
 {
-	return M * glm::toMat4(rotation);
+	return M * glm::toMat4(rotation.GetQuaternion());
 }
 
 const Matrix PTH::Matrix::MatrixSetScaling(const Vector3& _v3Scaling) noexcept
@@ -366,7 +385,7 @@ const Vector3 PTH::Matrix::GetScaling() noexcept
 const void PTH::Matrix::Combine(const Vector3& _vScale, const Vector3& _vPos, const Quaternion& _vRotation) noexcept
 {
 	matrix4x4 scaleMatrix = glm::scale(Identity, _vScale);
-	matrix4x4 rotationMatrix = glm::toMat4(_vRotation);
+	matrix4x4 rotationMatrix = glm::toMat4(_vRotation.GetQuaternion());
 	matrix4x4 translationMatrix = glm::translate(Identity, _vPos);
 
 	// 스케일, 회전, 위치 순서로 행렬을 조합
@@ -381,7 +400,7 @@ void PTH::Matrix::LookAt(const Vector3& _vPos)
 	
 	Vector3 Right = glm::normalize(glm::cross(UpVec3, Look));
 	Vector3 Up = glm::normalize(glm::cross(Look, Right));
-	Quaternion q = glm::quatLookAt(Look, Up);
+	glm::qua q = glm::quatLookAt(Look, Up);
 	Matrix mat = glm::toMat4(q);
 
 	mat.SetRight(glm::vec3(mat.m * glm::vec4(GetRight(), 0.f)));
@@ -559,6 +578,293 @@ Matrix PTH::operator*(float S, const Matrix& M) noexcept
 	return M.m * S;
 }
 
+PTH::Quaternion::Quaternion(const Quaternion& _quat) : quat{_quat.quat}
+{
+}
+
+Quaternion& PTH::Quaternion::operator=(const Quaternion& _quat) 
+{
+	quat = _quat.quat;
+	return *this;
+}
+
+PTH::Quaternion::Quaternion(Quaternion&& _quat) : quat{ _quat.quat }
+{
+}
+
+Quaternion& PTH::Quaternion::operator=(Quaternion&& _quat)
+{
+	quat = _quat.quat;
+	return *this;
+}
+
+PTH::Quaternion::Quaternion(const glm::quat& _q)
+{
+	::memcpy(&quat, &_q, sizeof(glm::vec4));
+}
+
+Quaternion& PTH::Quaternion::operator=(const glm::quat& _q)
+{
+	::memcpy(&quat, &_q, sizeof(glm::vec4));
+	return *this;
+}
+
+PTH::Quaternion::Quaternion(glm::quat&& _q)
+{
+	::memcpy(&quat, &_q, sizeof(glm::vec4));
+}
+
+Quaternion& PTH::Quaternion::operator=(glm::quat&& _q)
+{
+	::memcpy(&quat, &_q, sizeof(glm::vec4));
+	return *this;
+}
+
+bool PTH::Quaternion::operator==(const Quaternion& q) const noexcept
+{
+	return quat == q.quat;
+}
+
+bool PTH::Quaternion::operator!=(const Quaternion& q) const noexcept
+{
+	return quat != q.quat;
+}
+
+Quaternion& PTH::Quaternion::operator+=(const Quaternion& q) noexcept
+{
+	quat += q.quat;
+	return *this;
+}
+
+Quaternion& PTH::Quaternion::operator-=(const Quaternion& q) noexcept
+{
+	quat -= q.quat;
+	return *this;
+}
+
+Quaternion& PTH::Quaternion::operator*=(const Quaternion& q) noexcept
+{
+	quat *= q.quat;
+	return *this;
+}
+
+Quaternion& PTH::Quaternion::operator*=(float S) noexcept
+{
+	quat *= S;
+	return *this;
+}
+
+Quaternion& PTH::Quaternion::operator/=(const Quaternion& q) noexcept
+{
+	quat /= q.quat;
+	return *this;
+}
+
+Quaternion PTH::Quaternion::operator-() const noexcept
+{
+	quat *= -1.f;
+	return Quaternion();
+}
+
+glm::quat PTH::Quaternion::GetQuaternion() const
+{
+	glm::quat q;
+	::memcpy(&q, &quat, sizeof(glm::quat));
+	return q;
+}
+
+float PTH::Quaternion::Length() const noexcept
+{
+	return glm::length(quat);
+}
+
+float PTH::Quaternion::LengthSquared() const noexcept
+{
+	return glm::length2(quat);
+}
+
+void PTH::Quaternion::Normalize() noexcept
+{
+	quat = glm::normalize(quat);
+}
+
+void PTH::Quaternion::Normalize(Quaternion& result) const noexcept
+{
+	result.quat = glm::normalize(quat);
+}
+
+void PTH::Quaternion::Conjugate() noexcept
+{
+	glm::quat quatRepresentation(quat.w, quat.x, quat.y, quat.z);
+	glm::quat conjugateQuat = glm::conjugate(quatRepresentation);
+	::memcpy(&quat, &conjugateQuat, sizeof(glm::vec4));
+}
+
+void PTH::Quaternion::Conjugate(Quaternion& result) const noexcept
+{
+	glm::quat quatRepresentation(quat.w, quat.x, quat.y, quat.z);
+	glm::quat conjugateQuat = glm::conjugate(quatRepresentation);
+	result.quat = Vector4{ conjugateQuat.x, conjugateQuat.y, conjugateQuat.z, conjugateQuat.w };
+}
+
+float PTH::Quaternion::Dot(const Quaternion& Q) const noexcept
+{
+	return glm::dot(quat, Q.quat);
+}
+
+Vector3 PTH::Quaternion::ToEuler() const noexcept
+{
+	const float xx = quat.x * quat.x;
+	const float yy = quat.y * quat.y;
+	const float zz = quat.z * quat.z;
+
+	const float m31 = 2.f * quat.x * quat.z + 2.f * quat.y * quat.w;
+	const float m32 = 2.f * quat.y * quat.z - 2.f * quat.x * quat.w;
+	const float m33 = 1.f - 2.f * xx - 2.f * yy;
+
+	const float cy = sqrtf(m33 * m33 + m31 * m31);
+	const float cx = atan2f(-m32, cy);
+	if (cy > 16.f * FLT_EPSILON)
+	{
+		const float m12 = 2.f * quat.x * quat.y + 2.f * quat.z * quat.w;
+		const float m22 = 1.f - 2.f * xx - 2.f * zz;
+
+		return Vector3(cx, atan2f(m31, m33), atan2f(m12, m22));
+	}
+	else
+	{
+		const float m11 = 1.f - 2.f * yy - 2.f * zz;
+		const float m21 = 2.f * quat.x * quat.y - 2.f * quat.z * quat.w;
+
+		return Vector3(cx, 0.f, atan2f(-m21, m11));
+	}
+}
+
+Quaternion PTH::Quaternion::CreateFromAxisAngle(const Vector3& axis, const float& angle) noexcept
+{
+	glm::quat R = glm::angleAxis(angle, axis);
+	Quaternion resultVec4(R.x, R.y, R.z, R.w);
+	return resultVec4;
+}
+
+Quaternion PTH::Quaternion::CreateFromYawPitchRoll(const float& yaw, const float& pitch, const float& roll) noexcept
+{
+	glm::quat R = glm::yawPitchRoll(yaw, pitch, roll);
+	Quaternion resultVec4(R.x, R.y, R.z, R.w);
+	return resultVec4;
+}
+
+Quaternion PTH::Quaternion::CreateFromYawPitchRoll(const Vector3& angles) noexcept
+{
+	glm::quat R = glm::yawPitchRoll(angles.x, angles.y, angles.z);
+	Quaternion resultVec4(R.x, R.y, R.z, R.w);
+	return resultVec4;
+}
+
+Quaternion PTH::Quaternion::CreateFromRotationMatrix(const Matrix& M) noexcept
+{
+	glm::quat R = glm::quat_cast(M.m);
+	Quaternion resultVec4(R.x, R.y, R.z, R.w);
+	return resultVec4;
+}
+
+void PTH::Quaternion::Lerp(const Quaternion& q1, const Quaternion& q2, const float& t, Quaternion& result) noexcept
+{
+	glm::vec4 Q0 = q1.quat;
+	glm::vec4 Q1 = q2.quat;
+
+	// glm::dot 함수로 대체
+	float dot = glm::dot(Q0, Q1);
+
+	glm::vec4 R;
+	if (dot >= 0.0f) {
+		// glm::lerp 함수로 대체
+		R = glm::lerp(Q0, Q1, t);
+	}
+	else {
+		// glm::replicate 함수는 glm에서 직접 사용할 수 없습니다.
+		// glm::vec4(tv)로 대체
+		float tv = t;
+		float t1v = 1.0f - t;
+		glm::vec4 X0 = Q0 * t1v;
+		glm::vec4 X1 = Q1 * tv;
+		R = X0 - X1;
+	}
+
+	// glm::normalize 함수로 대체
+	result.quat = glm::normalize(R);
+}
+
+Quaternion PTH::Quaternion::Lerp(const Quaternion& q1, const Quaternion& q2, const float& t) noexcept
+{
+	Quaternion quat;
+	Lerp(q1, q2, t, quat);
+	return quat;
+}
+
+void PTH::Quaternion::Slerp(const Quaternion& q1, const Quaternion& q2, const float& t, Quaternion& result) noexcept
+{
+	glm::quat  quat1 = q1.GetQuaternion();
+	glm::quat quat2 = q2.GetQuaternion();
+	result = glm::slerp(quat1, quat2, t);
+}
+
+Quaternion PTH::Quaternion::Slerp(const Quaternion& q1, const Quaternion& q2, const float& t) noexcept
+{
+	Quaternion quat;
+	Slerp(q1, q2, t, quat);
+	return quat;
+}
+
+void PTH::Quaternion::Concatenate(const Quaternion& q1, const Quaternion& q2, Quaternion& result) noexcept
+{
+	glm::quat  quat1 = q1.GetQuaternion();
+	glm::quat quat2 = q2.GetQuaternion();
+	result = glm::cross(quat1, quat2);
+}
+
+Quaternion PTH::Quaternion::Concatenate(const Quaternion& q1, const Quaternion& q2) noexcept
+{
+	Quaternion quat;
+	Concatenate(q1, q2, quat);
+	return quat;
+}
+
+void __cdecl PTH::Quaternion::FromToRotation(const Vector3& fromDir, const Vector3& toDir, Quaternion& result) noexcept
+{ 
+	// glm::quat으로 변환
+	result = glm::rotation(glm::normalize(fromDir), glm::normalize(toDir));
+}
+
+Quaternion PTH::Quaternion::FromToRotation(const Vector3& fromDir, const Vector3& toDir) noexcept
+{
+	Quaternion quat;
+	FromToRotation(fromDir, toDir, quat);
+	return quat;
+}
+
+void __cdecl PTH::Quaternion::LookRotation(const Vector3& forward, const Vector3& up, Quaternion& result) noexcept
+{
+	// glm::quat으로 변환
+	result = glm::quat_cast(glm::lookAt(glm::vec3(0.0f), glm::normalize(forward), glm::normalize(up)));
+}
+
+Quaternion PTH::Quaternion::LookRotation(const Vector3& forward, const Vector3& up) noexcept
+{
+	Quaternion quat;
+	LookRotation(forward, up, quat);
+	return quat;
+}
+
+float PTH::Quaternion::Angle(const Quaternion& q1, const Quaternion& q2) noexcept
+{
+	glm::quat R = glm::cross(q1.GetQuaternion(), glm::conjugate(q2.GetQuaternion()));
+	Quaternion q{ R };
+
+	const float rs = R.w;
+	return 2.0f * atan2(glm::length(glm::vec3(q.quat)), rs);
+}
+
 Vector4 PTH::PlaneFromPoints(const Vector3& _vPoint1, const Vector3& _vPoint2, const Vector3& _vPoint3)
 {
 	Vector3 v21 = _vPoint1 - _vPoint2;
@@ -575,4 +881,22 @@ float PTH::PlaneDotCoord(const Vector4& _Plane, const Vector3& _vPoint)
 {
 	Vector4 v3 = glm::mix(VectorOne, Vector4(_vPoint, 1.f), VectorSelect1110);
 	return glm::dot(_Plane, v3);
+}
+
+Vector3 PTH::TransformNormal(const Vector3& normal, const Matrix& transform)
+{
+	// glm::mat3를 사용하여 벡터를 변환
+	glm::mat3 rotationMat(transform.m);
+	glm::vec3 transformedNormal = rotationMat * normal;
+
+	// 정규화
+	return glm::normalize(transformedNormal);
+}
+
+Vector3 PTH::TransformCoord(const Vector3& position, const Matrix& transform)
+{
+	glm::vec4 homogenousPos = transform.m * glm::vec4(position, 1.0f);
+	// 화면 좌표계로 변환
+	homogenousPos /= homogenousPos.w;
+	return glm::vec3(homogenousPos);
 }

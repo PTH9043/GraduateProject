@@ -25,6 +25,8 @@ namespace Core
 	enum {
 		MAX_BUFFER_LENGTH = 500, 
 		MAX_PROCESSBUF_LENGTH = MAX_BUFFER_LENGTH * 5,
+		MAX_OCTREENODE_LENGTH = 8, 
+
 	};
 }
 
