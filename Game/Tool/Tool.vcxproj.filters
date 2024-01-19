@@ -51,14 +51,20 @@
     <ClCompile Include="ToolInstance.cpp">
       <Filter>main\Default</Filter>
     </ClCompile>
-    <ClCompile Include="ToolManager.cpp">
-      <Filter>main\ToolManager</Filter>
-    </ClCompile>
     <ClCompile Include="ToolScene.cpp">
       <Filter>main\ToolScene</Filter>
     </ClCompile>
-    <ClCompile Include="ToolGridObject.cpp">
-      <Filter>main\ToolComponent</Filter>
+    <ClCompile Include="PickingManager.cpp">
+      <Filter>main\ToolManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ImguiManager.cpp">
+      <Filter>main\ToolManager</Filter>
+    </ClCompile>
+    <ClCompile Include="InteractionManager.cpp">
+      <Filter>main\ToolManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ToolManager.cpp">
+      <Filter>main\ToolManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -101,17 +107,23 @@
     <ClInclude Include="Imgui\imstb_truetype.h">
       <Filter>main\Imgui</Filter>
     </ClInclude>
-    <ClInclude Include="ToolManager.h">
-      <Filter>main\ToolManager</Filter>
-    </ClInclude>
     <ClInclude Include="ToolScene.h">
       <Filter>main\ToolScene</Filter>
     </ClInclude>
     <ClInclude Include="ToolDefines.h">
       <Filter>main\Default</Filter>
     </ClInclude>
-    <ClInclude Include="ToolGridObject.h">
-      <Filter>main\ToolComponent</Filter>
+    <ClInclude Include="PickingManager.h">
+      <Filter>main\ToolManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ImguiManager.h">
+      <Filter>main\ToolManager</Filter>
+    </ClInclude>
+    <ClInclude Include="InteractionManager.h">
+      <Filter>main\ToolManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolManager.h">
+      <Filter>main\ToolManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

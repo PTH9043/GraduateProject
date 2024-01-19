@@ -1,9 +1,5 @@
-
 #pragma once
-
-
 //#define _WITH_SWAPCHAIN_FULLSCREEN_STATE
-
 
 enum
 {
@@ -18,9 +14,6 @@ enum
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "windowscodecs.lib")
-
-
-
 
 #include <stdlib.h>
 #include <malloc.h>
@@ -106,10 +99,21 @@ using uint32 = unsigned __int32;
 using uint64 = unsigned __int64;
 //------------------------------
 
-
-//--
-
 #define RANDOM_COLOR XMFLOAT4(rand() / float(RAND_MAX), rand() / float(RAND_MAX), rand() / float(RAND_MAX), rand() / float(RAND_MAX))
+
+//2024-01-17 ÀÌ¼ºÇö
+#define DIR_FORWARD					0x01
+#define DIR_BACKWARD				0x02
+#define DIR_LEFT					0x04
+#define DIR_RIGHT					0x08
+#define DIR_UP						0x10
+#define DIR_DOWN					0x20
+
+enum CameraMode {
+	NONE,
+	DEBUG_CAMERA,
+	GAME_CAMERA
+};
 
 
 extern ComPtr<ID3D12Resource> CreateTextureResourceFromDDSFile(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, const wchar_t* pszFileName, ID3D12Resource** ppd3dUploadBuffer, D3D12_RESOURCE_STATES d3dResourceStates = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
@@ -127,7 +131,6 @@ namespace Util {
 	extern ComPtr<ID3D12Resource> CreateTexture2DResource(const ComPtr<ID3D12Device>& _Device,
 		const ComPtr<ID3D12GraphicsCommandList>& _CommandList, UINT nWidth, UINT nHeight, UINT nElements, UINT nMipLevels, DXGI_FORMAT dxgiFormat, D3D12_RESOURCE_FLAGS d3dResourceFlags, D3D12_RESOURCE_STATES d3dResourceStates, D3D12_CLEAR_VALUE* pd3dClearValue);
 
-
 	extern 	ComPtr<ID3D12Resource> CreateBufferResource(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList,
 		const void* pData, UINT sizePerData, UINT dataCount, D3D12_HEAP_TYPE d3dHeapType, D3D12_RESOURCE_STATES d3dResourceStates, ID3D12Resource** ppd3dUploadBuffer = nullptr);
 
@@ -135,7 +138,6 @@ namespace Util {
 	extern void ExecuteCommandList(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, const ComPtr<ID3D12CommandQueue>& _CmdQueue, const ComPtr<ID3D12Fence>& _Fence, UINT64 nFenceValue, HANDLE hFenceEvent);
 	extern void WaitForGpuComplete(const ComPtr<ID3D12CommandQueue>& _CmdQueue, const ComPtr<ID3D12Fence>& _Fence, UINT64 nFenceValue, HANDLE hFenceEvent);
 }
-
 
 namespace DX
 {
@@ -166,7 +168,6 @@ namespace DX
 		}
 	}
 }
-
 
 namespace Vector3
 {

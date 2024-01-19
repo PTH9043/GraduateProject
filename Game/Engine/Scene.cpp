@@ -5,7 +5,6 @@
 #include "CbvSrvUavDescriptorHeap.h"
 unique_ptr<CbvSrvUavDescriptorHeap> CScene::m_pDescriptorHeap= make_unique<CbvSrvUavDescriptorHeap>();
 
-
 void CScene::CreateCbvSrvDescriptorHeaps(int nConstantBufferViews, int nShaderResourceViews)
 {
 	D3D12_DESCRIPTOR_HEAP_DESC d3dDescriptorHeapDesc;
@@ -118,7 +117,6 @@ void CScene::CreateShaderResourceView(CTexture* pTexture, int nIndex)
 	}
 }
 
-
 CScene::CScene()
 {
 }
@@ -129,6 +127,7 @@ CScene::~CScene()
 
 bool CScene::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
+
 	return false;
 }
 
@@ -166,6 +165,11 @@ void CScene::ReleaseObjects()
 {
 }
 
+bool CScene::ProcessInput(UCHAR* pKeysBuffer)
+{
+	return(false);
+}
+
 void CScene::ReleaseUploadBuffers()
 {
 	for (const auto& pObject : m_ppObjects)
@@ -186,7 +190,7 @@ void CScene::AnimateObjects(float fTimeElapsed)
 }
 
 
-void CScene::Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, CCamera* pCamera)
+void CScene::Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, const shared_ptr<CCamera>& pCamera)
 {
 	if(m_pDescriptorHeap->m_pd3dCbvSrvUavDescriptorHeap)_CommandList->SetDescriptorHeaps(1, m_pDescriptorHeap->m_pd3dCbvSrvUavDescriptorHeap.GetAddressOf());
 
@@ -196,7 +200,6 @@ void CScene::Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, CCame
 	{
 		if (pObject)
 		{
-			pObject->UpdateTransform(nullptr);
 			pObject->Render(_CommandList.Get(), pCamera);
 		}
 	}

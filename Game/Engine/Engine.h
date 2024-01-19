@@ -25,14 +25,14 @@ public:
 	void AnimateObjects(); 
 	void BuildObjects();
 	void ReleaseObjects();
-
+	CGameTimer GetTimer(){ return m_GameTimer; }
+	_TCHAR m_pszFrameRate[50];
 private:
 	CGameTimer m_GameTimer;
-	_TCHAR m_pszFrameRate[50];
-	CCamera* m_pCamera = NULL;
+	shared_ptr<CCamera> m_pCamera = nullptr;
 
 private:
-	CScene* m_pScene;
+	shared_ptr<CScene> m_pScene;
 	ComPtr<ID3D12PipelineState> m_pd3dPipelineState;
 	
 

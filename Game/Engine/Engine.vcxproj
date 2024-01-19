@@ -165,6 +165,7 @@
     <ClInclude Include="EnginePch.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GridMesh.h" />
+    <ClInclude Include="GridObject.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="pch.h" />
@@ -190,6 +191,7 @@
     <ClCompile Include="EnginePch.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GridMesh.cpp" />
+    <ClCompile Include="GridObject.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="pch.cpp">

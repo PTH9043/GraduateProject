@@ -1,9 +1,6 @@
 #include "pch.h"
 #include "Engine.h"
 
-
-
-
 bool Engine::OnCreate(HINSTANCE hInstance, HWND hMainWnd)
 {
 	for (int i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)m_spCommandQueue->m_nFenceValues[i] = 0;
@@ -18,7 +15,6 @@ bool Engine::OnCreate(HINSTANCE hInstance, HWND hMainWnd)
 	m_spCommandQueue->CreateCommandQueueAndList(m_spDevice->GetDevice(), m_spSwapChainAndRtvDsvHeap);
 	m_spSwapChainAndRtvDsvHeap->InitSwapChainAndRtvDsvHeap(m_spDevice->GetFactory(), m_spDevice->GetDevice(), m_spCommandQueue->GetCmdQueue(), m_spDevice->GetMsaa4xEnable(), m_spDevice->GetMsaa4xQualityLevels());
 	m_spRootSignature->InitRootSignature(m_spDevice->GetDevice());
-	m_GameTimer.Reset();
 	return(true);
 }
 
@@ -35,13 +31,13 @@ void Engine::BuildObjects()
 	m_spCommandQueue->GetCmdList()->Reset(m_spCommandQueue->GetCmdAllocator().Get(), NULL);
 
 	//카메라 객체를 생성하여 뷰포트, 씨저 사각형, 투영 변환 행렬, 카메라 변환 행렬을 생성하고 설정한다. 
-	m_pCamera = new CCamera();
+	m_pCamera = make_shared<CCamera>();
 	m_pCamera->SetViewport(0, 0, m_spSwapChainAndRtvDsvHeap->m_nWndClientWidth, m_spSwapChainAndRtvDsvHeap->m_nWndClientHeight, 0.0f, 1.0f);
 	m_pCamera->SetScissorRect(0, 0, m_spSwapChainAndRtvDsvHeap->m_nWndClientWidth, m_spSwapChainAndRtvDsvHeap->m_nWndClientHeight);
 	m_pCamera->GenerateProjectionMatrix(1.0f, 500.0f, float(m_spSwapChainAndRtvDsvHeap->m_nWndClientWidth) / float(m_spSwapChainAndRtvDsvHeap->m_nWndClientHeight), 90.0f);
 	m_pCamera->GenerateViewMatrix(XMFLOAT3(0.0f, 1.0f, -25.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 1.0f, 0.0f));
 	m_pCamera->CreateShaderVariables(m_spDevice->GetDevice(), m_spCommandQueue->GetCmdList());
-	m_pScene = new CScene();
+	m_pScene = make_shared<CScene>();
 	m_pScene->BuildObjects(m_spDevice->GetDevice().Get(), m_spCommandQueue->GetCmdList().Get(),m_spRootSignature->GetGraphicsRootSignature());
 	Util::ExecuteCommandList(m_spCommandQueue->GetCmdList(), m_spCommandQueue->GetCmdQueue(), m_spCommandQueue->GetFence(), ++m_spCommandQueue->m_nFenceValues[m_spSwapChainAndRtvDsvHeap->GetSwapChainIndex()], m_spCommandQueue->m_hFenceEvent);
 
@@ -51,7 +47,6 @@ void Engine::BuildObjects()
 void Engine::ReleaseObjects()
 {
 	if (m_pScene)m_pScene->ReleaseObjects();
-	if (m_pScene)delete m_pScene;
 }
 
 
@@ -67,14 +62,11 @@ void Engine::AnimateObjects()
 void Engine::RenderBegin()
 {
 	m_spCommandQueue->RenderBegin();
-	m_GameTimer.Tick(0.0f);
 }
 
 void Engine::RenderEnd()
 {
 	m_spCommandQueue->RenderEnd();
-	m_GameTimer.GetFrameRate(m_pszFrameRate + 12, 37);
-	::SetWindowText(m_spSwapChainAndRtvDsvHeap->m_hWnd, m_pszFrameRate);
 }
 
 void Engine::Render() {

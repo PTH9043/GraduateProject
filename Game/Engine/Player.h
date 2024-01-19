@@ -3,17 +3,7 @@
 #include "GameObject.h"
 #include "Camera.h"
 
-enum Direction
-{
-	FORWARD,
-	BACKWARD,
-	RIGHT, 
-	LEFT,
-	UP,
-	DOWN
-};
-
-class CPlayer : public CGameObject, enable_shared_from_this<CPlayer>
+class CPlayer : public CGameObject, public enable_shared_from_this<CPlayer>
 {
 protected:
 	XMFLOAT3					m_xmf3Position = XMFLOAT3(0.0f, 0.0f, 0.0f);
@@ -62,11 +52,11 @@ public:
 	shared_ptr<CCamera> GetCamera() { return(m_pCamera); }
 	void SetCamera(shared_ptr<CCamera> pCamera) { m_pCamera = pCamera; }
 
-	void Move(Direction enDirection, float fDistance, bool bVelocity = false);
+	void Move(DWORD dwDirection, float fDistance, bool bVelocity = false);
 	void Move(const XMFLOAT3& xmf3Shift, bool bVelocity = false);
 	void Move(float fxOffset = 0.0f, float fyOffset = 0.0f, float fzOffset = 0.0f);
 	void Rotate(float x, float y, float z);
-
+	void Zoom(int delta, float zoomSpeed);
 	void Update(float fTimeElapsed);
 
 	virtual void OnPlayerUpdateCallback(float fTimeElapsed) { }
@@ -75,11 +65,12 @@ public:
 	virtual void OnCameraUpdateCallback(float fTimeElapsed) { }
 	void SetCameraUpdatedContext(LPVOID pContext) { m_pCameraUpdatedContext = pContext; }
 
+	virtual void InitCamera(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, const ComPtr<ID3D12RootSignature>& _RootSignature) {};
 	virtual void CreateShaderVariables(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList);
 	virtual void ReleaseShaderVariables();
 	virtual void UpdateShaderVariables(const ComPtr<ID3D12GraphicsCommandList>& _CommandList);
 
-	shared_ptr<CCamera> OnChangeCamera(CameraMode nNewCameraMode, CameraMode nCurrentCameraMode);
+	virtual shared_ptr<CCamera> OnChangeCamera(CameraMode nNewCameraMode, CameraMode nCurrentCameraMode);
 
 	virtual shared_ptr<CCamera> ChangeCamera(CameraMode nNewCameraMode, float fTimeElapsed) { return(NULL); }
 	virtual void OnPrepareRender();
@@ -88,11 +79,16 @@ public:
 public:
 };
 
+
+//2024-01-17 이성현 디버그용 플레이어.
+
 class CDebugPlayer : public CPlayer
 {
 public:
-	CDebugPlayer(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, const ComPtr<ID3D12RootSignature>& _RootSignature);
+	CDebugPlayer();
 	virtual ~CDebugPlayer();
 
+	virtual void InitCamera(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, const ComPtr<ID3D12RootSignature>& _RootSignature);
+	virtual void OnCameraUpdateCallback(float fTimeElapsed);
 	virtual shared_ptr<CCamera> ChangeCamera(CameraMode enMode, float fTimeElapsed);
 };

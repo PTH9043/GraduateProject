@@ -28,20 +28,9 @@ public:
 	CGameObject(int nMaterials);
 	virtual ~CGameObject();
 	
-//2024-01-14 이성현 바운딩박스 추가
-private:
-	BoundingOrientedBox			m_pBOB = BoundingOrientedBox();
-public:
-	BoundingOrientedBox GetBOB() { return m_pBOB; }
-	void SetBOB(float fWidth, float fHeight, float fDepth);
-	void UpdateBOB();
-
 public:
 	char							m_pstrFrameName[64];
-	shared_ptr<CMesh> m_pMesh;
-
-	vector<shared_ptr<CMesh>>	m_ppMeshes;
-	int m_nMeshes = 0;
+	shared_ptr<CMesh>				m_pMesh;
 
 	int	m_nMaterials = 0;
 	vector<shared_ptr<CMaterial>> m_ppMaterials;
@@ -53,15 +42,14 @@ public:
 	shared_ptr<CGameObject> m_pChild = nullptr;
 	shared_ptr<CGameObject> m_pSibling = nullptr;
 
+	vector<shared_ptr<CGameObject>> m_ppBOBObject;
+
 	shared_ptr<CMesh> GetMesh() { return m_pMesh; }
-	vector<shared_ptr<CMesh>> GetMeshes() { return m_ppMeshes; }
+	XMFLOAT3 GetAABBCenter() const { return m_pMesh->GetAABBCenter(); }
+	XMFLOAT3 GetAABBExtents() const { return m_pMesh->GetAABBExtents(); }
 
 	void SetMesh(shared_ptr<CMesh> pMesh) { m_pMesh = pMesh; }
-	void SetMeshes(const shared_ptr<CMesh>& pMesh)
-	{
-		m_ppMeshes.push_back(pMesh);
-		m_nMeshes++;
-	}
+
 	void SetShader(shared_ptr<CShader> pShader, shared_ptr<CTexture> pTexture = NULL);
 	void SetMaterial(int nMaterial, shared_ptr<CMaterial> pMaterial);
 	
@@ -70,7 +58,7 @@ public:
 
 	virtual void Animate(float fTimeElapsed, XMFLOAT4X4* pxmf4x4Parent = NULL);
 
-	virtual void Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, CCamera* pCamera = NULL);
+	virtual void Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, const shared_ptr<CCamera>& pCamera = nullptr);
 	//virtual void Render(bool Terrain, ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera = NULL);
 
 	virtual void CreateShaderVariables(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList);
@@ -133,7 +121,14 @@ public:
 	void LoadMaterialsFromFile(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, CGameObject*, FILE* pInFile, shared_ptr<CShader> pShader);
 
 	void LoadFrameHierarchyFromFile(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, ID3D12RootSignature* pd3dGraphicsRootSignature, CGameObject* pParent, FILE* pInFile, shared_ptr<CShader> pShader);
-	void LoadGeometryFromFile(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, ID3D12RootSignature* pd3dGraphicsRootSignature, char* pstrFileName, shared_ptr<CShader> pShader);
+	void LoadGeometryFromFile(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, ID3D12RootSignature* pd3dGraphicsRootSignature, const char* pstrFileName, shared_ptr<CShader> pShader);
 
 	static void PrintFrameInfo(shared_ptr<CGameObject> pGameObject, shared_ptr<CGameObject> pParent );
+};
+
+class BoundingBoxObject : public CGameObject
+{
+public:
+	BoundingBoxObject(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, const ComPtr<ID3D12RootSignature>& _RootSignature, XMFLOAT3 xmf3Center, XMFLOAT3 xmf3Extent);
+	~BoundingBoxObject();
 };

@@ -9,6 +9,7 @@
 #define VERTEXT_TEXTURE_COORD1			0x20
 #define VERTEXT_BONE_INDEX_WEIGHT		0x1000
 
+#include "Vertex.h"
 
 class CMesh
 {
@@ -27,7 +28,7 @@ protected:
 //--------바운딩 박스 -------------
 	XMFLOAT3 m_xmf3AABBCenter = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	XMFLOAT3 m_xmf3AABBExtents = XMFLOAT3(0.0f, 0.0f, 0.0f);
-
+	BoundingOrientedBox m_BOB;
 //----------------------정점 정보들 버퍼 만들 떄 필요-------------------
 protected:
 	D3D12_PRIMITIVE_TOPOLOGY m_d3dPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
@@ -75,6 +76,15 @@ public:
 	vector<XMFLOAT3> GetPositions() { return m_pxmf3Positions; }
 	vector<vector<UINT>> GetSubSetIndices() { return m_ppnSubSetIndices; }
 	vector<UINT> GetIndices() { return m_pnIndices; }
+
+	//2024-01-18 이성현
+	//BoundingOrientedBox생성
+	void CreateBoundingBox();
+	void CreateOrientedBoxFromAABB();
+	void UpdateBoundingBox(const XMFLOAT4X4& worldMatrix);
+	BoundingOrientedBox GetBoundingBox() const { return m_BOB; };
+	XMFLOAT3 GetAABBCenter() const { return m_xmf3AABBCenter; }
+	XMFLOAT3 GetAABBExtents() const { return m_xmf3AABBExtents; }
 public:
 	//2024-01-15 이성현
 	//픽킹 처리를 위한 정점 월드변환 함수
@@ -92,11 +102,13 @@ public:
 	CTriangleMesh(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList);
 	virtual ~CTriangleMesh() { }
 };
-//
-//class CCubeMeshDiffused : public CMesh
-//{
-//public:
-//	//직육면체의 가로, 세로, 깊이의 길이를 지정하여 직육면체 메쉬를 생성한다. 
-//	CCubeMeshDiffused(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, float fWidth = 2.0f, float fHeight = 2.0f, float fDepth = 2.0f);
-//	virtual ~CCubeMeshDiffused();
-//};
+
+
+//2024-01-18 이성현 
+//바운딩 박스 렌더링을 위한 메쉬 클래스
+class CBoundingBoxMesh : public CMesh
+{
+public:
+	CBoundingBoxMesh(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, XMFLOAT3 center, XMFLOAT3 extents);
+	virtual ~CBoundingBoxMesh() {}
+};

@@ -1,6 +1,8 @@
 #pragma once
 #include "Timer.h"
 #include "Shader.h"
+#include "Player.h"
+
 
 class CbvSrvUavDescriptorHeap;
 class CTexture;
@@ -19,7 +21,7 @@ public:
 	void ReleaseObjects();
 	bool ProcessInput(UCHAR* pKeysBuffer);
 	void AnimateObjects(float fTimeElapsed);
-	void Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, CCamera* pCamera);
+	void Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, const shared_ptr<CCamera>& pCamera);
 	void ReleaseUploadBuffers();
 	virtual void UpdateShaderVariables(const ComPtr<ID3D12GraphicsCommandList>& _CommandList) {}
 	virtual void ReleaseShaderVariables() {}
@@ -29,8 +31,9 @@ public:
 protected:
 	//씬은 셰이더들의 집합이다. 셰이더들은 게임 객체들의 집합이다.
 	vector<shared_ptr<CGameObject>> m_ppObjects;
-
+	shared_ptr<CPlayer> m_pPlayer;
 public:
+	shared_ptr<CPlayer> GetPlayer() { return m_pPlayer;}
 public:
 	static unique_ptr<CbvSrvUavDescriptorHeap> m_pDescriptorHeap;
 

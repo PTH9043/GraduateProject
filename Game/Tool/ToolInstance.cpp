@@ -1,10 +1,10 @@
 #include "ToolInstance.h"
 #include "Engine.h"
-#define TOOL_MODE
 
 void Tool::Init(HINSTANCE hInstance, HWND hWnd)
 {
 	gGameFrameWork->OnCreate(hInstance, hWnd);
+    gGameFrameWork->GetTimer().Reset();
     BuildToolScene();
     InitImgui(hWnd);
 }
@@ -40,19 +40,17 @@ void Tool::BuildToolScene()
 {
     CMDLIST->Reset(CMDALLOCATOR.Get(), NULL);
 
-    m_pToolCamera = make_shared<CCamera>();
-    m_pToolCamera->SetViewport(0, 0, RTVDSVDESCRIPTORHEAP->m_nWndClientWidth, RTVDSVDESCRIPTORHEAP->m_nWndClientHeight, 0.0f, 1.0f);
-    m_pToolCamera->SetScissorRect(0, 0, RTVDSVDESCRIPTORHEAP->m_nWndClientWidth, RTVDSVDESCRIPTORHEAP->m_nWndClientHeight);
-    m_pToolCamera->GenerateProjectionMatrix(1.0f, 500.0f, float(RTVDSVDESCRIPTORHEAP->m_nWndClientWidth) / float(RTVDSVDESCRIPTORHEAP->m_nWndClientHeight), 90.0f);
-    m_pToolCamera->CreateShaderVariables(DEVICE.Get(), CMDLIST.Get());
-    m_pToolCamera->GenerateViewMatrix(XMFLOAT3(0.0f, 15.0f, -25.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 1.0f, 0.0f));
-
     m_pToolScene = make_shared<ToolScene>();
     m_pToolScene->BuildObjects(DEVICE.Get(), CMDLIST.Get(), GRAPHICS_ROOT_SIGNATURE);
 
-    m_pToolManager = make_shared<ToolManager>();
-    m_pToolManager->InitCamera(m_pToolCamera);
-    m_pToolManager->InitScene(m_pToolScene);
+    m_pToolScene->GetPlayer() = m_pToolPlayer = make_shared<CDebugPlayer>();
+    m_pToolPlayer->InitCamera(DEVICE.Get(), CMDLIST.Get(), GRAPHICS_ROOT_SIGNATURE);
+    m_pToolCamera = m_pToolPlayer->GetCamera();
+
+    m_pToolPlayer->SetPosition(XMFLOAT3(0.f, 20.f, 0.f));
+
+    m_pImguiManager = make_shared<ImguiManager>();
+    m_pInteractionManager = make_shared <InteractionManager>();
 
     Util::ExecuteCommandList(CMDLIST, CMDQUEUE, FENCE, ++CMD->m_nFenceValues[RTVDSVDESCRIPTORHEAP->GetSwapChainIndex()], CMD->m_hFenceEvent);
 }
@@ -60,9 +58,14 @@ void Tool::BuildToolScene()
 void Tool::Update()
 {
     gGameFrameWork->RenderBegin();
+    gGameFrameWork->GetTimer().Tick(0.0f);
+    ProcessInput();
+    AnimateObjects();
     Render();
     ImguiRender();
     gGameFrameWork->RenderEnd();
+    gGameFrameWork->GetTimer().GetFrameRate(gGameFrameWork->m_pszFrameRate + 12, 37);
+    ::SetWindowText(RTVDSVDESCRIPTORHEAP->m_hWnd, gGameFrameWork->m_pszFrameRate);
 }
 
 void Tool::Destroy()
@@ -80,7 +83,10 @@ void Tool::Render()
     if (m_pToolCamera)
         m_pToolCamera->SetViewportsAndScissorRects(CMDLIST.Get());
     if (m_pToolScene)
-        m_pToolScene->Render(CMDLIST.Get(), m_pToolCamera.get());
+    {
+        m_pToolScene->AnimateObjects(gGameFrameWork->GetTimer().GetTimeElapsed());
+        m_pToolScene->Render(CMDLIST.Get(), m_pToolCamera);
+    }
 }
 
 void Tool::ImguiRender()
@@ -92,7 +98,7 @@ void Tool::ImguiRender()
 
     //테스트를 위한 예제 윈도우
     //ImGui::ShowDemoWindow();
-    if(m_pToolManager) m_pToolManager->DisplayWindow();
+    if(m_pImguiManager) m_pImguiManager->DisplayWindow(m_pToolPlayer, m_pToolScene, m_pToolCamera);
     ImGui::Render();
 
     CMDLIST->SetDescriptorHeaps(1, m_pdxgiSRVDescriptorHeapForImgui.GetAddressOf());
@@ -101,7 +107,32 @@ void Tool::ImguiRender()
 
 LRESULT Tool::OnProcessingWindowMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
-    return LRESULT();
+    switch (nMessageID)
+    {
+    case WM_ACTIVATE:
+    {
+        if (LOWORD(wParam) == WA_INACTIVE)
+            gGameFrameWork->GetTimer().Stop();
+        else
+            gGameFrameWork->GetTimer().Start();
+        break;
+    }
+    case WM_SIZE:
+        break;
+    case WM_LBUTTONDOWN:
+    case WM_RBUTTONDOWN:
+    case WM_LBUTTONUP:
+    case WM_RBUTTONUP:
+    case WM_MOUSEMOVE:
+        OnProcessingMouseMessage(hWnd, nMessageID, wParam, lParam);
+        break;
+    case WM_KEYDOWN:
+        OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
+        break;
+    case WM_KEYUP:
+        break;
+    }
+    return(0);
 }
 
 void Tool::OnProcessingMouseMessage(HWND hwnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
@@ -110,4 +141,33 @@ void Tool::OnProcessingMouseMessage(HWND hwnd, UINT nMessageID, WPARAM wParam, L
 
 void Tool::OnProcessingKeyboardMessage(HWND hwnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
+    switch (nMessageID)
+    {
+    case WM_KEYDOWN:
+        switch (wParam)
+        {
+        case VK_ESCAPE:
+            ::PostQuitMessage(0);
+            break;
+        }
+        break;
+    default:
+        break;
+    }
 }
+
+void Tool::ProcessInput()
+{
+    m_pInteractionManager->MovePlayerWithKeyBoard(m_pToolPlayer);
+    m_pInteractionManager->PlayerZoomMoveMent(m_pToolPlayer);
+    m_pInteractionManager->PlayerRotate(m_pToolPlayer);
+    m_pToolPlayer->Update(gGameFrameWork->GetTimer().GetTimeElapsed());
+}
+
+void Tool::AnimateObjects()
+{
+    if (m_pToolScene)m_pToolScene->AnimateObjects(gGameFrameWork->GetTimer().GetTimeElapsed());
+}
+
+
+

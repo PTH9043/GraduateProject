@@ -47,6 +47,14 @@ public:
 
 };
 
+class CDiffusedWireFrameShaderForBOB : public CShader
+{
+public:
+	CDiffusedWireFrameShaderForBOB(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12RootSignature>& _RootSignature, const wstring& vs, const wstring& ps);
+	virtual ~CDiffusedWireFrameShaderForBOB();
+
+};
+
 class CTexturedModelShader : public CShader
 {
 public:

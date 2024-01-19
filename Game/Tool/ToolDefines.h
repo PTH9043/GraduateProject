@@ -12,3 +12,7 @@
 #include "ImGui/imstb_truetype.h"
 
 #include <limits>
+
+#define MOVEMENT_SPEED 0.1f
+#define ZOOM_SPEED 0.02f
+

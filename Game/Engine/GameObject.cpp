@@ -80,7 +80,6 @@ void CGameObject::SetMaterial(int nMaterial, std::shared_ptr<CMaterial> pMateria
 
 void CGameObject::Animate(float fTimeElapsed, XMFLOAT4X4* pxmf4x4Parent)
 {
-
 	if (m_pSibling) m_pSibling->Animate(fTimeElapsed, pxmf4x4Parent);
 	if (m_pChild) m_pChild->Animate(fTimeElapsed, &m_xmf4x4World);
 	//UpdateBoundingBox();
@@ -97,9 +96,13 @@ CGameObject* CGameObject::FindFrame(char* pstrFrameName)
 	return(NULL);
 }
 
-void CGameObject::Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, CCamera* pCamera)
+void CGameObject::Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, const shared_ptr<CCamera>& pCamera)
 {
-	if (!m_bActive) return;
+	if (!m_bActive) 
+	{
+		if (m_pChild) m_pChild->Render(_CommandList, pCamera);
+		return;
+	}
 
 	UpdateShaderVariables(_CommandList);
 
@@ -114,12 +117,8 @@ void CGameObject::Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, 
 			}
 
 			if (m_pMesh)
-				m_pMesh->RenderMesh(_CommandList, i);
-			else if(m_nMeshes != 0)
 			{
-				for (const auto& ppMeshes : m_ppMeshes) {
-					ppMeshes->RenderMesh(_CommandList, 0);
-				}
+				m_pMesh->RenderMesh(_CommandList, i);
 			}
 		}
 	}
@@ -153,6 +152,9 @@ void CGameObject::ReleaseUploadBuffers()
 void CGameObject::UpdateTransform(XMFLOAT4X4* pxmf4x4Parent)
 {
 	m_xmf4x4World = (pxmf4x4Parent) ? Matrix4x4::Multiply(m_xmf4x4Transform, *pxmf4x4Parent) : m_xmf4x4Transform;
+
+	if (m_pMesh)
+		m_pMesh->UpdateBoundingBox(m_xmf4x4World);
 
 	if (m_pSibling) m_pSibling->UpdateTransform(pxmf4x4Parent);
 	if (m_pChild) m_pChild->UpdateTransform(&m_xmf4x4World);
@@ -245,17 +247,6 @@ void CGameObject::Rotate(XMFLOAT3* pxmf3Axis, float fAngle)
 	UpdateTransform(NULL);
 }
 
-//2024-01-14 이성현 바운딩박스 관련 추가
-void CGameObject::SetBOB(float fWidth, float fHeight, float fDepth)
-{
-	m_pBOB = BoundingOrientedBox(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(fWidth * 0.5f, fHeight * 0.5f, fDepth * 0.5f), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
-}
-
-void CGameObject::UpdateBOB()
-{
-	m_pBOB.Center = GetPosition();
-	XMStoreFloat4(&m_pBOB.Orientation, XMQuaternionNormalize(XMLoadFloat4(&m_pBOB.Orientation)));
-}
 
 //#define _WITH_DEBUG_FRAME_HIERARCHY
 
@@ -479,7 +470,7 @@ void CGameObject::PrintFrameInfo(shared_ptr<CGameObject> pGameObject, shared_ptr
 	if (pGameObject->m_pChild) CGameObject::PrintFrameInfo(pGameObject->m_pChild, pGameObject);
 }
 
-void CGameObject::LoadGeometryFromFile(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, ID3D12RootSignature* pd3dGraphicsRootSignature, char* pstrFileName, shared_ptr<CShader> pShader)
+void CGameObject::LoadGeometryFromFile(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, ID3D12RootSignature* pd3dGraphicsRootSignature, const char* pstrFileName, shared_ptr<CShader> pShader)
 {
 	FILE* pInFile = NULL;
 	::fopen_s(&pInFile, pstrFileName, "rb");
@@ -508,4 +499,18 @@ void CGameObject::LoadGeometryFromFile(const ComPtr<ID3D12Device>& _Device, cons
 #endif
 
 //	return(pGameObject);
+}
+
+BoundingBoxObject::BoundingBoxObject(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, const ComPtr<ID3D12RootSignature>& _RootSignature, XMFLOAT3 xmf3Center, XMFLOAT3 xmf3Extent)
+{
+	shared_ptr<CBoundingBoxMesh> boundingboxmesh;
+	boundingboxmesh = make_shared<CBoundingBoxMesh>(_Device, _CommandList, xmf3Center, xmf3Extent);
+	SetMesh(boundingboxmesh);
+	shared_ptr<CDiffusedWireFrameShaderForBOB> pBobShader = make_shared<CDiffusedWireFrameShaderForBOB>(_Device, _RootSignature, L"Shader/cso/DiffuseVS.cso", L"Shader/cso/DiffusePS.cso");
+	SetShader(pBobShader);
+	SetActive(true);
+}
+
+BoundingBoxObject::~BoundingBoxObject()
+{
 }

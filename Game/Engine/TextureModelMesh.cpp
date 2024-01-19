@@ -220,6 +220,9 @@ void TextureModelMesh::LoadMeshFromFile(const ComPtr<ID3D12Device>& _Device, con
         {
             nReads = (UINT)::fread(&m_xmf3AABBCenter, sizeof(XMFLOAT3), 1, pInFile);
             nReads = (UINT)::fread(&m_xmf3AABBExtents, sizeof(XMFLOAT3), 1, pInFile);
+            //2024-01-18 이성현
+            //AABB로 BoundingOrientedBox생성
+            CreateOrientedBoxFromAABB();
         }
         else if (!strcmp(pstrToken, "<Positions>:"))
         {

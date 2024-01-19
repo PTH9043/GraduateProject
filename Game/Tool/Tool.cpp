@@ -40,12 +40,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     {
         return FALSE;
     }
-    g_Tool->Init(hInstance, hMainWnd);
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_TOOL));
 
     MSG msg;
 
+    bool rightMouseButtonDown = false;
     // 기본 메시지 루프입니다:
     while (1)
     {
@@ -54,6 +54,24 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             if (msg.message == WM_QUIT) break;
             if (!::TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
             {
+                if (msg.message == WM_MOUSEWHEEL) {
+                    // Extract the scroll delta from the message
+                    g_Tool->GetInteractionManageer()->SetScrollDelta(GET_WHEEL_DELTA_WPARAM(msg.wParam));
+                }
+                if (msg.message == WM_RBUTTONDOWN && !rightMouseButtonDown) {
+                    g_Tool->GetInteractionManageer()->SaveOldCursorPos();
+                    rightMouseButtonDown = true;
+                    ShowCursor(FALSE);
+                    g_Tool->GetInteractionManageer()->SetRightMouseButtonDown(true);
+                }
+                else if (msg.message == WM_RBUTTONDOWN && rightMouseButtonDown) {
+                    g_Tool->GetInteractionManageer()->SetRightMouseButtonDown(true);
+                }
+                else if (msg.message == WM_RBUTTONUP) {
+                    g_Tool->GetInteractionManageer()->SetRightMouseButtonDown(false);
+                    ShowCursor(TRUE);
+                    rightMouseButtonDown = false;
+                }          
                 ::TranslateMessage(&msg);
                 ::DispatchMessage(&msg);
             }
@@ -61,12 +79,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         else
         {
             g_Tool->Update();
-
         }
     }
     g_Tool->Destroy();
 
-    return (int) msg.wParam;
+    return ((int) msg.wParam);
 }
 
 
@@ -122,6 +139,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    if (!hMainWnd) return(FALSE);
 
+   g_Tool->Init(hInstance, hMainWnd);
+
    ShowWindow(hMainWnd, nCmdShow);
    UpdateWindow(hMainWnd);
 
@@ -150,11 +169,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 //LRESULT = long
 //콜백함수란? 특정 이벤트가 일어나면 자동으로 실행하는 함수
 
-    if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
-    {
-        return true;
-    }
-
     int wmId, wmEvent;
     PAINTSTRUCT ps;
     HDC hdc;
@@ -169,6 +183,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_MOUSEMOVE:
     case WM_KEYDOWN:
     case WM_KEYUP:
+        g_Tool->OnProcessingWindowMessage(hWnd, message, wParam, lParam);
         break;
     case WM_COMMAND:
         wmId = LOWORD(wParam);
@@ -197,6 +212,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
+
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+        return true;
+
     return 0;//운영체제가 이 메세지에 관여하지 않고 프로그래머가 관여한다.
     //-1을 반환하면 운영체제가 진행하는 작업을 취소한다.
 }

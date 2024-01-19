@@ -3,30 +3,31 @@
 #include "Vertex.h"
 #include "GridMesh.h"
 
-GridMesh::GridMesh(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, int xStart, int zStart, int nWidth, int nLength, XMFLOAT3 xmf3Scale, XMFLOAT4 xmf4Color)
+GridMesh::GridMesh(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList,
+    int nWidth, int nLength, XMFLOAT3 xmf3Scale, XMFLOAT4 xmf4Color)
 {
-    m_nVertices = nWidth * nLength;
-    m_nStride = sizeof(CDiffusedVertex);
-    m_nOffset = 0;
-    m_nSlot = 0;
-    m_d3dPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
-
     m_nWidth = nWidth;
     m_nLength = nLength;
     m_xmf3Scale = xmf3Scale;
+
+    m_nVertices = (nWidth) * (nLength);
+    m_nStride = sizeof(CDiffusedVertex);
+    m_nOffset = 0;
+    m_nSlot = 0;
+    m_d3dPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
     m_pxmf3Positions.resize(m_nVertices);
 
     vector<CDiffusedVertex> pVertices;
     pVertices.resize(m_nVertices);
 
-    for (int i = 0, z = zStart; z < (zStart + nLength); z++)
+    int i = 0;
+    for (int z = 0; z < nLength; z++)
     {
-        for (int x = xStart; x < (xStart + nWidth); x++, i++)
+        for (int x = 0; x < nWidth; x++, i++)
         {
-            pVertices[i] = CDiffusedVertex(XMFLOAT3((x * m_xmf3Scale.x), 0, (z * m_xmf3Scale.z)),
-                XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));
-            m_pxmf3Positions[i] = XMFLOAT3((x * m_xmf3Scale.x), 0, (z * m_xmf3Scale.z));
+            pVertices[i] = CDiffusedVertex(XMFLOAT3(x * m_xmf3Scale.x, 0, z * m_xmf3Scale.z), xmf4Color);
+            m_pxmf3Positions[i] = XMFLOAT3(x * m_xmf3Scale.x, 0, z * m_xmf3Scale.z);
         }
     }
 
@@ -41,54 +42,51 @@ GridMesh::GridMesh(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12Graph
 
     m_pd3dVertexBufferViews.push_back(positionBufferView);
 
+    CreateBoundingBox();
+
     m_nSubMeshes = 1;
     m_pnSubSetIndices.resize(m_nSubMeshes);
     m_ppnSubSetIndices.resize(m_nSubMeshes);
-    m_pnSubSetIndices[0] = ((nWidth * 2) * (nLength - 1)) + ((nLength - 1) - 1);
-    m_ppnSubSetIndices[0].resize(m_pnSubSetIndices[0]);
+
+    int numRectangles = (m_nWidth - 1) * (m_nLength - 1);
+    int indicesPerRect = 6;
+    int numIndices = numRectangles * indicesPerRect;
+
+    m_pnSubSetIndices[0] = numIndices;
+    m_ppnSubSetIndices[0].resize(numIndices);
 
     m_ppd3dIndexBuffers.resize(m_nSubMeshes);
     m_ppd3dIndexUploadBuffers.resize(m_nSubMeshes);
     m_pd3dIndexBufferViews.resize(m_nSubMeshes);
 
-    int j = 0;
-    for (int z = 0; z < nLength - 1; z++)
+    int index = 0;
+    for (int z = 0; z < m_nLength - 1; z++)
     {
-        if ((z % 2) == 0)
-        {
-            for (int x = 0; x < nWidth; x++)
-            {
-                if ((x == 0) && (z > 0)) 
-                    m_ppnSubSetIndices[0][j++] = (UINT)(x + (z * nWidth));
-                m_ppnSubSetIndices[0][j++] = (UINT)(x + (z * nWidth));
-                m_ppnSubSetIndices[0][j++] = (UINT)((x + (z * nWidth)) + nWidth);
-            }
-        }
-        else
-        {
-            for (int x = nWidth - 1; x >= 0; x--)
-            {
-                if (x == (nWidth - 1)) 
-                    m_ppnSubSetIndices[0][j++] = (UINT)(x + (z * nWidth));
-                m_ppnSubSetIndices[0][j++] = (UINT)(x + (z * nWidth));
-                m_ppnSubSetIndices[0][j++] = (UINT)((x + (z * nWidth)) + nWidth);
-            }
+        for (int x = 0; x < m_nWidth - 1; x++)
+        {          
+            m_ppnSubSetIndices[0][index++] = z * m_nWidth + x;
+            m_ppnSubSetIndices[0][index++] = (z + 1) * m_nWidth + x;
+            m_ppnSubSetIndices[0][index++] = z * m_nWidth + (x + 1);
+
+            m_ppnSubSetIndices[0][index++] = (z + 1) * m_nWidth + x;
+            m_ppnSubSetIndices[0][index++] = (z + 1) * m_nWidth + (x + 1);
+            m_ppnSubSetIndices[0][index++] = z * m_nWidth + (x + 1);
         }
     }
 
-    m_ppd3dIndexBuffers[0] = (Util::CreateBufferResource(
+    m_ppd3dIndexBuffers[0] = Util::CreateBufferResource(
         _Device, _CommandList,
         m_ppnSubSetIndices[0].data(),
         sizeof(UINT) * m_pnSubSetIndices[0],
         D3D12_HEAP_TYPE_DEFAULT,
         D3D12_RESOURCE_STATE_INDEX_BUFFER,
-        &m_ppd3dIndexUploadBuffers[0]));
+        &m_ppd3dIndexUploadBuffers[0]);
 
     D3D12_INDEX_BUFFER_VIEW indexBufferView;
     indexBufferView.BufferLocation = m_ppd3dIndexBuffers[0]->GetGPUVirtualAddress();
     indexBufferView.Format = DXGI_FORMAT_R32_UINT;
     indexBufferView.SizeInBytes = sizeof(UINT) * m_pnSubSetIndices[0];
-    m_pd3dIndexBufferViews[0] = (indexBufferView);
+    m_pd3dIndexBufferViews[0] = indexBufferView;
 }
 
 GridMesh::~GridMesh()

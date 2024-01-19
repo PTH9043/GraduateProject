@@ -7,12 +7,6 @@ struct VS_CB_CAMERA_INFO {
 	XMFLOAT4X4						m_xmf4x4Projection;
 };
 
-enum CameraMode {
-	NONE,
-	DEBUG_CAMERA,
-	GAME_CAMERA
-};
-
 class CCamera
 {
 protected:
@@ -65,7 +59,7 @@ public:
 	void SetCameraLookWorld(XMFLOAT3 xmf3LookAtWorld) { m_xmf3LookAtWorld = xmf3LookAtWorld; }
 	void SetOffset(XMFLOAT3 xmf3Offset) { m_xmf3Offset = xmf3Offset; m_xmf3Position.x += xmf3Offset.x; m_xmf3Position.y += xmf3Offset.y; m_xmf3Position.z += xmf3Offset.z; }
 	void SetTimeLag(float fTimeLag) { m_fTimeLag = fTimeLag; }
-	void SetCameraPlayer(const shared_ptr<CPlayer>& player) { m_pPlayer = player; }
+	void SetCameraPlayer(const shared_ptr<CPlayer> player) { m_pPlayer = player; }
 
 	virtual void CreateShaderVariables(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList);
 	virtual void ReleaseShaderVariables();

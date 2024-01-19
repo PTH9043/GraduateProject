@@ -31,7 +31,6 @@ CPlayer::CPlayer() : CGameObject(0)
 	m_pCameraUpdatedContext = NULL;
 }
 
-
 CPlayer::~CPlayer()
 {
 	ReleaseShaderVariables();
@@ -52,33 +51,20 @@ void CPlayer::UpdateShaderVariables(const ComPtr<ID3D12GraphicsCommandList>& _Co
 }
 
 
-void CPlayer::Move(Direction enDirection, float fDistance, bool bUpdateVelocity)
+void CPlayer::Move(DWORD dwDirection, float fDistance, bool bUpdateVelocity)
 {
-	XMFLOAT3 xmf3Shift = XMFLOAT3(0, 0, 0);
-	switch (enDirection)
+	if (dwDirection)
 	{
-	case FORWARD:
-		xmf3Shift = Vector3::Add(xmf3Shift, m_xmf3Look, fDistance);
-		break;
-	case BACKWARD:
-		xmf3Shift = Vector3::Add(xmf3Shift, m_xmf3Look, -fDistance);
-		break;
-	case RIGHT:
-		xmf3Shift = Vector3::Add(xmf3Shift, m_xmf3Right, fDistance);
-		break;
-	case LEFT:
-		xmf3Shift = Vector3::Add(xmf3Shift, m_xmf3Right, -fDistance);
-		break;
-	case UP:
-		xmf3Shift = Vector3::Add(xmf3Shift, m_xmf3Up, fDistance);
-		break;
-	case DOWN:
-		xmf3Shift = Vector3::Add(xmf3Shift, m_xmf3Up, -fDistance);
-		break;
-	default:
-		break;
+		XMFLOAT3 xmf3Shift = XMFLOAT3(0, 0, 0);
+		if (dwDirection & DIR_FORWARD) xmf3Shift = Vector3::Add(xmf3Shift, m_xmf3Look, fDistance);
+		if (dwDirection & DIR_BACKWARD) xmf3Shift = Vector3::Add(xmf3Shift, m_xmf3Look, -fDistance);
+		if (dwDirection & DIR_RIGHT) xmf3Shift = Vector3::Add(xmf3Shift, m_xmf3Right, fDistance);
+		if (dwDirection & DIR_LEFT) xmf3Shift = Vector3::Add(xmf3Shift, m_xmf3Right, -fDistance);
+		if (dwDirection & DIR_UP) xmf3Shift = Vector3::Add(xmf3Shift, m_xmf3Up, fDistance);
+		if (dwDirection & DIR_DOWN) xmf3Shift = Vector3::Add(xmf3Shift, m_xmf3Up, -fDistance);
+
+		Move(xmf3Shift, bUpdateVelocity);
 	}
-	Move(xmf3Shift, bUpdateVelocity);
 }
 
 void CPlayer::Move(const XMFLOAT3& xmf3Shift, bool bUpdateVelocity)
@@ -94,38 +80,18 @@ void CPlayer::Move(const XMFLOAT3& xmf3Shift, bool bUpdateVelocity)
 	}
 }
 
+void CPlayer::Zoom(int delta, float zoomSpeed)
+{
+	XMFLOAT3 lookDirection = m_pCamera->GetCameraLook();
+	XMFLOAT3 ZoomingMovement = Vector3::ScalarProduct(lookDirection, delta * zoomSpeed);
+
+	Move(ZoomingMovement);
+}
+
 void CPlayer::Rotate(float x, float y, float z)
 {
 	CameraMode nCurrentCameraMode = m_pCamera->GetCameraMode();
-	if ((nCurrentCameraMode == DEBUG_CAMERA) || (nCurrentCameraMode == GAME_CAMERA))
-	{
-		if (x != 0.0f)
-		{
-			m_fPitch += x;
-			if (m_fPitch > +89.0f) { x -= (m_fPitch - 89.0f); m_fPitch = +89.0f; }
-			if (m_fPitch < -89.0f) { x -= (m_fPitch + 89.0f); m_fPitch = -89.0f; }
-		}
-		if (y != 0.0f)
-		{
-			m_fYaw += y;
-			if (m_fYaw > 360.0f) m_fYaw -= 360.0f;
-			if (m_fYaw < 0.0f) m_fYaw += 360.0f;
-		}
-		if (z != 0.0f)
-		{
-			m_fRoll += z;
-			if (m_fRoll > +20.0f) { z -= (m_fRoll - 20.0f); m_fRoll = +20.0f; }
-			if (m_fRoll < -20.0f) { z -= (m_fRoll + 20.0f); m_fRoll = -20.0f; }
-		}
-		m_pCamera->Rotate(x, y, z);
-		if (y != 0.0f)
-		{
-			XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&m_xmf3Up), XMConvertToRadians(y));
-			m_xmf3Look = Vector3::TransformNormal(m_xmf3Look, xmmtxRotate);
-			m_xmf3Right = Vector3::TransformNormal(m_xmf3Right, xmmtxRotate);
-		}
-	}
-	else
+	if ((nCurrentCameraMode == DEBUG_CAMERA))
 	{
 		m_pCamera->Rotate(x, y, z);
 		if (x != 0.0f)
@@ -140,17 +106,7 @@ void CPlayer::Rotate(float x, float y, float z)
 			m_xmf3Look = Vector3::TransformNormal(m_xmf3Look, xmmtxRotate);
 			m_xmf3Right = Vector3::TransformNormal(m_xmf3Right, xmmtxRotate);
 		}
-		if (z != 0.0f)
-		{
-			XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&m_xmf3Look), XMConvertToRadians(z));
-			m_xmf3Up = Vector3::TransformNormal(m_xmf3Up, xmmtxRotate);
-			m_xmf3Right = Vector3::TransformNormal(m_xmf3Right, xmmtxRotate);
-		}
 	}
-
-	m_xmf3Look = Vector3::Normalize(m_xmf3Look);
-	m_xmf3Right = Vector3::CrossProduct(m_xmf3Up, m_xmf3Look, true);
-	m_xmf3Up = Vector3::CrossProduct(m_xmf3Look, m_xmf3Right, true);
 }
 
 void CPlayer::Update(float fTimeElapsed)
@@ -171,9 +127,8 @@ void CPlayer::Update(float fTimeElapsed)
 
 	if (m_pPlayerUpdatedContext) OnPlayerUpdateCallback(fTimeElapsed);
 
-	CameraMode nCurrentCameraMode = m_pCamera->GetCameraMode();
 	m_pCamera->Update(m_xmf3Position, fTimeElapsed);
-	if (m_pCameraUpdatedContext) OnCameraUpdateCallback(fTimeElapsed);
+	OnCameraUpdateCallback(fTimeElapsed);
 	m_pCamera->SetLookAt(m_xmf3Position);
 	m_pCamera->RegenerateViewMatrix();
 
@@ -186,38 +141,17 @@ void CPlayer::Update(float fTimeElapsed)
 shared_ptr<CCamera> CPlayer::OnChangeCamera(CameraMode nNewCameraMode, CameraMode nCurrentCameraMode)
 {
 	shared_ptr<CCamera> pNewCamera;
+	shared_ptr<CPlayer> pNewCamerasPlayer;
 	switch (nNewCameraMode)
 	{
 	case DEBUG_CAMERA:
 		pNewCamera = make_shared<CDebugCamera>(m_pCamera);
 		break;
-	//case GAME_CAMERA:
-	//	pNewCamera = new CThirdPersonCamera(m_pCamera);
-	//	break;
 	}
-	//if (nCurrentCameraMode == SPACESHIP_CAMERA)
-	//{
-	//	m_xmf3Right = Vector3::Normalize(XMFLOAT3(m_xmf3Right.x, 0.0f, m_xmf3Right.z));
-	//	m_xmf3Up = Vector3::Normalize(XMFLOAT3(0.0f, 1.0f, 0.0f));
-	//	m_xmf3Look = Vector3::Normalize(XMFLOAT3(m_xmf3Look.x, 0.0f, m_xmf3Look.z));
-
-	//	m_fPitch = 0.0f;
-	//	m_fRoll = 0.0f;
-	//	m_fYaw = Vector3::Angle(XMFLOAT3(0.0f, 0.0f, 1.0f), m_xmf3Look);
-	//	if (m_xmf3Look.x < 0.0f) m_fYaw = -m_fYaw;
-	//}
-	//else if ((nNewCameraMode == SPACESHIP_CAMERA) && m_pCamera)
-	//{
-	//	m_xmf3Right = m_pCamera->GetRightVector();
-	//	m_xmf3Up = m_pCamera->GetUpVector();
-	//	m_xmf3Look = m_pCamera->GetLookVector();
-	//}
-
 	if (pNewCamera)
 	{
 		pNewCamera->SetCameraMode(nNewCameraMode);
-		shared_ptr<CPlayer> sharedThis = shared_from_this();
-		pNewCamera->SetCameraPlayer(sharedThis);
+		pNewCamera->SetCameraPlayer(shared_from_this());
 	}
 
 	return(pNewCamera);
@@ -244,14 +178,21 @@ void CPlayer::Render(const ComPtr<ID3D12GraphicsCommandList>& _CommandList, shar
 	}*/
 }
 
-CDebugPlayer::CDebugPlayer(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, const ComPtr<ID3D12RootSignature>& _RootSignature)
+CDebugPlayer::CDebugPlayer() : CPlayer()
 {
-	m_pCamera = ChangeCamera(DEBUG_CAMERA, 0.0f);
-	CreateShaderVariables(_Device, _CommandList);
 }
 
 CDebugPlayer::~CDebugPlayer()
 {
+}
+
+//2024-01-17 이성현
+//shared_from_this()는 생성자 밖에서 호출되어야 하므로 카메라 초기화 부분을 생성자에서 분리시키고
+//별도로 호출함. 앞으로 상속된 플레이어 클래스를 생성할때도 항상 이렇게 하는것을 지향함.
+void CDebugPlayer::InitCamera(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, const ComPtr<ID3D12RootSignature>& _RootSignature)
+{
+	m_pCamera = ChangeCamera(DEBUG_CAMERA, 0.0f);
+	CreateShaderVariables(_Device, _CommandList);
 }
 
 shared_ptr<CCamera> CDebugPlayer::ChangeCamera(CameraMode enMode, float fTimeElapsed)
@@ -267,7 +208,7 @@ shared_ptr<CCamera> CDebugPlayer::ChangeCamera(CameraMode enMode, float fTimeEla
 		SetMaxVelocityY(400.0f);
 		m_pCamera = OnChangeCamera(DEBUG_CAMERA, nCurrentCameraMode);
 		m_pCamera->SetTimeLag(0.25f);
-		m_pCamera->SetOffset(XMFLOAT3(0.0f, 20.0f, -50.0f));
+		m_pCamera->SetOffset(XMFLOAT3(0.0f, 1.0f, -1.0f));
 		m_pCamera->SetCameraPosition(Vector3::Add(m_xmf3Position, m_pCamera->GetOffset()));
 		m_pCamera->GenerateProjectionMatrix(1.01f, 50000.0f, Factor::ASPECT_RATIO, 60.0f);
 		break;
@@ -278,3 +219,16 @@ shared_ptr<CCamera> CDebugPlayer::ChangeCamera(CameraMode enMode, float fTimeEla
 
 	return(m_pCamera);
 }
+
+
+
+void CDebugPlayer::OnCameraUpdateCallback(float fTimeElapsed)
+{
+	/*if (m_pCamera->GetCameraMode() == DEBUG_CAMERA)
+	{
+		shared_ptr<CDebugCamera> pDebugPersonCamera = dynamic_pointer_cast<CDebugCamera>(m_pCamera);
+		pDebugPersonCamera->SetLookAt(XMFLOAT3(GetPosition().x, GetPosition().y, GetPosition().z));
+	}*/
+}
+
+
