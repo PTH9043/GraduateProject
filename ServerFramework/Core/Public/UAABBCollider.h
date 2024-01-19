@@ -7,7 +7,7 @@ BEGIN(Core)
 /*
 @ Date: 2023-01-18, Writer: 박태현
 @ Explain
-- 객체의 충돌처리를 하기 위한 클래스이다.
+- 객체의 AABB충돌을 하기 위한 클래스이다.
 */
 class CACHE_ALGIN_CORE_DLL UAABBCollider final : public UCollider {
 public:

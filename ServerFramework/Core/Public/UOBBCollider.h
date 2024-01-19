@@ -5,6 +5,11 @@
 
 BEGIN(Core)
 
+/*
+@ Date: 2023-01-19, Writer: 박태현
+@ Explain
+- 객체의 OBB충돌을 하기 위한 클래스이다.
+*/
 class CACHE_ALGIN_CORE_DLL UOBBCollider final : public UCollider {
 public:
 	enum { PROJ_AXIS_CNT = 15};
