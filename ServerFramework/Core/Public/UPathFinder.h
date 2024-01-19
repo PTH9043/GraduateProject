@@ -16,7 +16,7 @@ public:
 	_bool NativeConstruct(const VECTOR<SHPTR<UCell>>& _Cells);
 	// Find Path
 	void FindPath(SHPTR<UNavigation> _spNavigation,
-		_float3 _vStartPos, _float3 _vEndPos);
+		Vector3 _vStartPos, Vector3 _vEndPos);
 public: /* Get Set */
 	LIST<UCell*> GetBestList() const { return m_BestListes; }
 private:
@@ -24,8 +24,8 @@ private:
 	void MakeBestRoutine(UCell* _pStartCell, UCell* _pEndCell);
 	void Release();
 
-	_float ComputeDistCost(const _float3 _vStart, const _float3 _vEnd,
-		const _float3 _vVisited, const _float3 _vCur);
+	_float ComputeDistCost(const Vector3 _vStart, const Vector3 _vEnd,
+		const Vector3 _vVisited, const Vector3 _vCur);
 private:
 	virtual void Free() override;
 private:

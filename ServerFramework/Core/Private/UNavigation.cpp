@@ -18,7 +18,7 @@ namespace Core {
 		return true;
 	}
 
-	const _float UNavigation::ComputeHeight(const _float3 _vPosition, REF_IN  _int& _Index)
+	const _float UNavigation::ComputeHeight(const Vector3 _vPosition, REF_IN  _int& _Index)
 	{
 		RETURN_CHECK(_Index >= m_MaxCellCount, _vPosition.y);
 		SHPTR<UCell> spCell = m_CellContainer[_Index];
@@ -42,7 +42,7 @@ namespace Core {
 		return _vPosition.y;
 	}
 
-	_bool UNavigation::IsCheckOverNavigationArea(const _float3 _vPosition, REF_IN  _int& _Index)
+	_bool UNavigation::IsCheckOverNavigationArea(const Vector3 _vPosition, REF_IN  _int& _Index)
 	{
 		_int Index = _Index;
 		if (-1 == Index || Index >= m_MaxCellCount)
@@ -79,7 +79,7 @@ namespace Core {
 		return false;
 	}
 
-	SHPTR<UCell> UNavigation::FindCell(const _float3 _vPosition, REF_IN  _int& _Index)
+	SHPTR<UCell> UNavigation::FindCell(const Vector3 _vPosition, REF_IN  _int& _Index)
 	{
 		_int NeighborIndex{ 0 };
 		for (auto iter : m_CellContainer)
@@ -93,7 +93,7 @@ namespace Core {
 		return nullptr;
 	}
 
-	SHPTR<UCell> UNavigation::FindCell(const _float3 _vPosition)
+	SHPTR<UCell> UNavigation::FindCell(const Vector3 _vPosition)
 	{
 		_int NeighborIndex{ 0 };
 		for (auto iter : m_CellContainer)

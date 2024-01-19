@@ -25,7 +25,7 @@ namespace Core {
 		return true;
 	}
 
-	void UPathFinder::FindPath(SHPTR<UNavigation> _spNavigation, _float3 _vStartPos, _float3 _vEndPos)
+	void UPathFinder::FindPath(SHPTR<UNavigation> _spNavigation, Vector3 _vStartPos, Vector3 _vEndPos)
 	{
 		RETURN_CHECK(nullptr == _spNavigation, ;);
 		Release();
@@ -111,15 +111,15 @@ namespace Core {
 		m_BestListes.clear();
 	}
 
-	_float UPathFinder::ComputeDistCost(const _float3 _vStart, const _float3 _vEnd, 
-		const _float3 _vVisited, const _float3 _vCur)
+	_float UPathFinder::ComputeDistCost(const Vector3 _vStart, const Vector3 _vEnd, 
+		const Vector3 _vVisited, const Vector3 _vCur)
 	{
 		// 시작지에서 방문지까지 거리 
-		_float3 vCostF = _vVisited - _vStart;
+		Vector3 vCostF = _vVisited - _vStart;
 		// 방문지에서 목표까지 거리
-		_float3 vCostG = _vVisited - _vEnd;
+		Vector3 vCostG = _vVisited - _vEnd;
 		// 방문지에서 현재 있는 타일까지 거리
-		_float3 vCostT = _vVisited - _vCur;
+		Vector3 vCostT = _vVisited - _vCur;
 		/* YPos */
 		_float PosYF = vCostF.y; _float PosGF = vCostG.y; _float PosTF = vCostT.y;
 		vCostF.y = 0; vCostG.y = 0; vCostT.y = 0;

@@ -37,12 +37,15 @@
     <ClInclude Include="..\Public\LockFree.h" />
     <ClInclude Include="..\Public\Memory.h" />
     <ClInclude Include="..\Public\SmartPointer.h" />
+    <ClInclude Include="..\Public\UAABBCollider.h" />
     <ClInclude Include="..\Public\UApp.h" />
     <ClInclude Include="..\Public\UCell.h" />
     <ClInclude Include="..\Public\UClientService.h" />
+    <ClInclude Include="..\Public\UCollider.h" />
     <ClInclude Include="..\Public\ULogManager.h" />
     <ClInclude Include="..\Public\ULuaLoader.h" />
     <ClInclude Include="..\Public\UNavigation.h" />
+    <ClInclude Include="..\Public\UOBBCollider.h" />
     <ClInclude Include="..\Public\UPathFinder.h" />
     <ClInclude Include="..\Public\URandomManager.h" />
     <ClInclude Include="..\Public\URoom.h" />
@@ -54,7 +57,10 @@
     <ClInclude Include="..\Public\UObject.h" />
     <ClInclude Include="..\Public\UObjectPool.h" />
     <ClInclude Include="..\Public\USession.h" />
+    <ClInclude Include="..\Public\USpace.h" />
+    <ClInclude Include="..\Public\USphereCollider.h" />
     <ClInclude Include="..\Public\UThreadManager.h" />
+    <ClInclude Include="..\Public\UTransform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Allocator.cpp" />
@@ -65,12 +71,15 @@
     <ClCompile Include="..\Private\LockFree.cpp" />
     <ClCompile Include="..\Private\Memory.cpp" />
     <ClCompile Include="..\Private\SmartPointer.cpp" />
+    <ClCompile Include="..\Private\UAABBCollider.cpp" />
     <ClCompile Include="..\Private\UApp.cpp" />
     <ClCompile Include="..\Private\UCell.cpp" />
     <ClCompile Include="..\Private\UClientService.cpp" />
+    <ClCompile Include="..\Private\UCollider.cpp" />
     <ClCompile Include="..\Private\ULogManager.cpp" />
     <ClCompile Include="..\Private\ULuaLoader.cpp" />
     <ClCompile Include="..\Private\UNavigation.cpp" />
+    <ClCompile Include="..\Private\UOBBCollider.cpp" />
     <ClCompile Include="..\Private\UPathFinder.cpp" />
     <ClCompile Include="..\Private\URandomManager.cpp" />
     <ClCompile Include="..\Private\URoom.cpp" />
@@ -82,7 +91,10 @@
     <ClCompile Include="..\Private\UObject.cpp" />
     <ClCompile Include="..\Private\UObjectPool.cpp" />
     <ClCompile Include="..\Private\USession.cpp" />
+    <ClCompile Include="..\Private\USpace.cpp" />
+    <ClCompile Include="..\Private\USphereCollider.cpp" />
     <ClCompile Include="..\Private\UThreadManager.cpp" />
+    <ClCompile Include="..\Private\UTransform.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
