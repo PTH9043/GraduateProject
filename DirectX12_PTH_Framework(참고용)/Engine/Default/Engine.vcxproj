@@ -397,6 +397,7 @@
       <AdditionalIncludeDirectories>..\\Public\\;</AdditionalIncludeDirectories>
       <EnableModules>false</EnableModules>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -427,6 +428,7 @@
       <AdditionalIncludeDirectories>..\\Public\\;</AdditionalIncludeDirectories>
       <EnableModules>false</EnableModules>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -457,6 +459,7 @@
       <AdditionalIncludeDirectories>..\\Public\\;</AdditionalIncludeDirectories>
       <EnableModules>false</EnableModules>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -487,6 +490,7 @@
       <AdditionalIncludeDirectories>..\\Public\\;</AdditionalIncludeDirectories>
       <EnableModules>false</EnableModules>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
