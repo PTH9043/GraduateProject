@@ -11,7 +11,7 @@ class UService;
 @ Explain
 - 프로그램을 시작하기 위한 App 클래스이다. 
 */
-class CACHE_ALGIN_CORE_DLL UApp  {
+class CORE_DLL UApp  {
 public:
 	UApp();
 	virtual ~UApp();

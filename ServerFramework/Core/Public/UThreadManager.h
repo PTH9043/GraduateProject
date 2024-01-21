@@ -13,7 +13,7 @@ using THRAEDVECTOR = VECTOR<THREAD>;
 @ Explain
 - Thread를 관리하는 매니저 클래스 
 */
-class CACHE_ALGIN UThreadManager final : public UBase {
+class  UThreadManager final : public UBase {
 public:
 	UThreadManager();
 	NO_COPY(UThreadManager)

@@ -3,12 +3,6 @@
 
 namespace Core
 {
-	/*
-	@ Date: 2023-12-26
-	@ Writer: 박태현
-	@ Explain: Cash라인을 16바이트 단위로 맞추기 위해 필요한 변수
-	*/
-	#define CASH_ALGIN_VALUE 16
 
 #ifdef _WIN64
 	using llong = long long;
@@ -46,7 +40,7 @@ namespace Core
 	@ Explain: ReferenceCounter -> 값을 매겨주는 카운터, CAS를 통해 관리
 	*/
 	template<class T>
-	class __declspec(align(CASH_ALGIN_VALUE)) URefCounter {
+	class  URefCounter {
 
 		template<class T, class U>
 		friend USharedPtr<T> static_shared_cast(const USharedPtr<U>& _rhs);
@@ -928,7 +922,7 @@ namespace Core
 namespace Core {
 
 	template<class T>
-	using SHPTR = __declspec(align(CASH_ALGIN_VALUE)) USharedPtr<T>;
+	using SHPTR = USharedPtr<T>;
 
 	template<class T>
 	using CSHPTR = const SHPTR<T>;
@@ -937,7 +931,7 @@ namespace Core {
 	using CSHPTRREF = const SHPTR<T>&;
 
 	template<class T>
-	using WKPTR = __declspec(align(CASH_ALGIN_VALUE))   UWeakPtr<T>;
+	using WKPTR = UWeakPtr<T>;
 
 	template<class T>
 	using CWKPTR = const WKPTR<T>;
@@ -945,8 +939,6 @@ namespace Core {
 	template<class T>
 	using CWKPTRREF = const WKPTR<T>&;
 }
-
-#define CACHE_ALGIN  __declspec(align(CASH_ALGIN_VALUE)) 
 
 
 namespace std

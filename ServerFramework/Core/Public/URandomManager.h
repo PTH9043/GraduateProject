@@ -5,7 +5,7 @@
 
 BEGIN(Core)
 
-class CACHE_ALGIN URandomManager final : public UBase {
+class  URandomManager final : public UBase {
 public:
 	URandomManager();
 	NO_COPY(URandomManager)

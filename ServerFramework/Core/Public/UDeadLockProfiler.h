@@ -12,7 +12,7 @@ BEGIN(Core)
 @ Explain
 - DeadLock을 검출하기 위한 프로파일러
 */
-class CACHE_ALGIN UDeadLockProfiler final : public UBase {
+class UDeadLockProfiler final : public UBase {
 public:
 	UDeadLockProfiler();
 	NO_COPY(UDeadLockProfiler)

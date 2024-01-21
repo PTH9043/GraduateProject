@@ -10,7 +10,7 @@ BEGIN(Core)
 @ Explain
 - 객체의 위치를 정의하기 위한 클래스이다. 
 */
-class CACHE_ALGIN_CORE_DLL UTransform final : public UBase {
+class CORE_DLL UTransform final : public UBase {
 public:
 	UTransform();
 	NO_COPY(UTransform)

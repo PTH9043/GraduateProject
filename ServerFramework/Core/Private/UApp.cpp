@@ -1,5 +1,6 @@
 #include "CoreDefines.h"
 #include "UApp.h"
+#include "UCoreInstance.h"
 
 namespace Core
 {

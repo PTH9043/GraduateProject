@@ -13,7 +13,7 @@ class UService;
 - 클라이언트와 통신하기 위한 Session 클래스이고 가상함수로 Server 솔루션에서 해당 클래스를 부모로 자식 클래스를 
 정의해주어야 한다.
 */
-class CACHE_ALGIN_CORE_DLL USession abstract : public UObject  {
+class CORE_DLL USession abstract : public UObject  {
 public:
 	using BUFFER = ARRAY<_char, MAX_BUFFER_LENGTH>;
 	using TOTALBUFFER = ARRAY<_char, MAX_PROCESSBUF_LENGTH>;

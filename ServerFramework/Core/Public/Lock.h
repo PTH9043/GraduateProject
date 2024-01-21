@@ -33,7 +33,7 @@ namespace Core {
 	W -> R (O)
 	R -> W (X)
 	*/
-	class CACHE_ALGIN_CORE_DLL URWLock {
+	class CORE_DLL URWLock {
 	public:
 		URWLock();
 		URWLock(const URWLock& _rhs);
@@ -100,7 +100,7 @@ namespace Core {
 	@ Explain
 	- AWS 버전에서 따온 SpinLock
 	*/
-	class CACHE_ALGIN_CORE_DLL UFastSpinLock {
+	class CORE_DLL UFastSpinLock {
 	public:
 		enum LockFlag
 		{
@@ -152,7 +152,7 @@ namespace Core {
 	@ Explain
 	- AWS 버전에서 따온 SpinLock
 	*/
-	class CACHE_ALGIN_CORE_DLL UGuardSpinLock {
+	class CORE_DLL UGuardSpinLock {
 	public:
 
 	};

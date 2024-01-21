@@ -33,10 +33,8 @@
 */
 #ifdef CORE_EXPORTS
 #define CORE_DLL   _declspec(dllexport)
-#define CACHE_ALGIN_CORE_DLL  _declspec(dllexport) __declspec(align(16))
 #else
 #define CORE_DLL  _declspec(dllimport)
-#define CACHE_ALGIN_CORE_DLL  _declspec(dllimport) __declspec(align(16))
 #endif
 
 #ifdef _WIN32
@@ -102,7 +100,6 @@ namespace Asio = boost::asio;
 #include "CoreStruct.h"
 #include "CoreTls.h"
 
-#include "UCoreInstance.h"
 #include "LockFree.h"
 
 #endif 

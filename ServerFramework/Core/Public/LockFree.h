@@ -3,12 +3,14 @@
 
 namespace Core
 {
+	static constexpr unsigned  long long MASK_VALUE = 0xFFFFFFFFFFFFFFFE;
+	static constexpr int CHECK_MARKING{ 0x1 };
 	/*
 	@ Date: 2023-12-29
 	@ Writer: 박태현
 	@ Explain: 멀티쓰레드 환경에서 하나의 포인터에 CAS가 몰리는 것을 방지하기 위해 쓰레드를 잠시 대기시키는 클래스
 	*/
-	class CACHE_ALGIN Backoff {
+	class Backoff {
 	public:
 		Backoff(int _minDelay, int _maxDelay) : m_UniformBackOff{ _minDelay, _maxDelay }, m_Limit{ 0 }, m_MaxDelay{ _maxDelay } {}
 
@@ -127,7 +129,7 @@ namespace Core
 		@ Explain: Stack의 노드
 		*/
 		template<class T>
-		struct CACHE_ALGIN NODE {
+		struct  NODE {
 
 			NODE<T>() : next{ nullptr }, retireEpoch{ 0 }, isRemove{ false }
 			{
@@ -161,7 +163,7 @@ namespace Core
 		@ Explain: LockFreeStack + Backoff
 		*/
 		template<class T>
-		class CACHE_ALGIN LockFreeStack {
+		class  LockFreeStack {
 		public:
 			LockFreeStack() : m_BackOff{ 1, 50 }, m_Top{ nullptr } { }
 			~LockFreeStack() {
@@ -256,8 +258,192 @@ namespace Core
 		};
 	}
 
+	namespace PTHList {
+
+		/*
+		@ Date: 2024-01-21, Writer: 박태현
+		@ Explain: List의 노드이다. 
+		*/
+		template<class T>
+		class  LFNODE {
+		public:
+			T value;
+			unsigned int retireEpoch;
+			// remove 되었는지 확인 
+			unsigned long long next;
+
+			LFNODE() {
+				next = 0;
+			}
+			LFNODE(T _value) {
+				value = _value;
+				next = 0;
+			}
+			~LFNODE() {
+			}
+			LFNODE* GetNext() { 
+				return reinterpret_cast<LFNODE*>(next & MASK_VALUE);
+			}
+			void SetNext(LFNODE* ptr) {
+				next = reinterpret_cast<unsigned long long>(ptr);
+			}
+			LFNODE* GetNextWithMark(bool* mark) {
+				unsigned long long  temp = next;
+				*mark = (temp % 2) == 1;
+				return reinterpret_cast<LFNODE*>(temp & MASK_VALUE);
+			}
+			bool CAS(unsigned long long old_value, unsigned long long new_value)
+			{
+				return atomic_compare_exchange_strong(
+					reinterpret_cast<std::atomic_ullong*>(&next),
+					&old_value, new_value);
+			}
+			bool CAS(LFNODE* old_next, LFNODE* new_next, bool old_mark, bool new_mark) {
+				unsigned long long old_value = reinterpret_cast<unsigned long long>(old_next);
+				if (old_mark) old_value = old_value | CHECK_MARKING;
+				else old_value = old_value & MASK_VALUE;
+				unsigned long long new_value = reinterpret_cast<unsigned long long>(new_next);
+				if (new_mark) new_value = new_value | CHECK_MARKING;
+				else new_value = new_value & MASK_VALUE;
+				return CAS(old_value, new_value);
+			}
+			bool TryMark(LFNODE* ptr)
+			{
+				unsigned long long old_value = reinterpret_cast<unsigned long long>(ptr) & MASK_VALUE;
+				unsigned long long new_value = old_value | CHECK_MARKING;
+				return CAS(old_value, new_value);
+			}
+			bool IsMarked() {
+				return (0 != (next & CHECK_MARKING));
+			}
+
+			T& operator ->() {
+				return value;
+			}
+		};
+
+		template<class T>
+		class LockFreeList {
+		public:
+			LockFreeList() {
+				m_Head.SetNext(&m_Tail);
+			}
+			~LockFreeList() {	Clear();}
+			void Initialize(int _currThreadNum, int _remainCount) {
+				m_EBRController.Initialize(_currThreadNum, _remainCount);
+			}
+
+			void Clear() {
+				while (m_Head.GetNext() != &m_Tail) {
+					LFNODE<T>* temp = m_Head.GetNext();
+					m_Head.next = temp->next;
+					delete temp;
+				}
+			}
+		
+			bool Insert(T _value) {
+				LFNODE<T>* newNode = new LFNODE<T>{ _value };
+				LFNODE<T>* last = &m_Tail;
+				m_EBRController.start_op();
+				LFNODE<T>* prev{ nullptr }, * curr{ nullptr };
+				while (true) {
+					Find(_value, prev, curr);
+					if (last != prev) {
+						m_EBRController.end_op();
+						delete newNode;
+						return false;
+					}
+					newNode->SetNext(curr);
+					if (false == prev->CAS(curr, newNode, false, false)) {
+						continue;
+					}
+					m_EBRController.end_op();
+					return true;
+				}
+				return false;
+			}
+			bool Remove(T _value) {
+				LFNODE<T> prev{ nullptr }, * curr{ nullptr };
+				LFNODE<T>* last = &m_Tail;
+				m_EBRController.start_op();
+				while (true) {
+					Find(_value, prev, curr);
+					if (last == curr) {
+						m_EBRController.end_op();
+						return false;
+					}
+					LFNODE<T>* succ = curr->GetNext();
+					if (false == curr->TryMark(succ)) {
+						continue;
+					}
+					bool isSucc = prev->CAS(curr, succ, false, false);
+					if (true == isSucc) {
+						m_EBRController.retire(curr);
+					}
+					m_EBRController.end_op();
+					return true;
+				}
+				return false;
+			}
+			bool IsContains(T _value) {
+				m_EBRController.start_op();
+				LFNODE<T>* curr = &m_Head;
+				LFNODE<T>* last = &m_Tail;
+				while (curr->value == _value) {
+					curr = curr->GetNext();
+					if (last == curr)
+					{
+						m_EBRController.end_op();
+						return false;
+					}
+				}
+				int ret = (false == curr->IsMarked()) && (_value == curr->value);
+				m_EBRController.end_op();
+				return ret;
+			}
+
+			auto begin() { return &m_Head; }
+			auto end() { return &m_Tail; }
+		private:
+			void Find(T _value, LFNODE<T>*& _prev, LFNODE<T>*& _curr)
+			{
+			retry:
+				LFNODE<T>* prev = &m_Head;
+				LFNODE<T>* last = &m_Tail;
+				LFNODE<T>* curr = prev->GetNext();
+				while (last != curr)
+				{
+					bool isRemoved{ false };
+					LFNODE<T>* succ = curr->GetNextWithMark(&isRemoved);
+					while (true == isRemoved) {
+						if (false == prev->CAS(curr, succ, false, false)) {
+							goto retry;
+						}
+						m_EBRController.retire(curr);
+						curr = succ;
+						succ = curr->GetNextWithMark(&isRemoved);
+					}
+					if (curr->key == _value) {
+						_prev = prev; _curr = curr;
+						return;
+					}
+					prev = curr;
+					curr = curr->GetNext();
+				}
+				_prev = prev; _curr = curr;
+			}
+		private:
+			EBRController<LFNODE<T>>	m_EBRController;
+			LFNODE<T>									m_Head;
+			LFNODE<T>									m_Tail;
+		};
+	}
+
 	template<class T>
 	using CONSTACK = Core::PTHStack::LockFreeStack<T>;
+
+	template<class T>
+	using CONLIST = Core::PTHList::LockFreeList<T>;
 }
 
 

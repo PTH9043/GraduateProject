@@ -14,7 +14,7 @@ enum class COLLIDERTYPE {
 @ Explain
 - 객체의 충돌처리를 하기 위한 클래스이다. 
 */
-class CACHE_ALGIN_CORE_DLL UCollider abstract : public UBase {
+class CORE_DLL UCollider abstract : public UBase {
 public:
 	enum { AXIS_CNT = 3 };
 public:

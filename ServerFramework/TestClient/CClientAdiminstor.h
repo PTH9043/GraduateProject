@@ -2,7 +2,7 @@
 
 #include "UClientService.h"
 
-class CACHE_ALGIN CClientAdiminstor final : public UClientService {
+class  CClientAdiminstor final : public UClientService {
 public:
 	CClientAdiminstor(OBJCON_CONSTRUCTOR);
 	NO_COPY(CClientAdiminstor)

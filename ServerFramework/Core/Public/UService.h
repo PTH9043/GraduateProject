@@ -10,7 +10,7 @@ class USession;
 @ Explain
 - PlayerSession 积己, 杯府 棺 AWS 楷搬 包府
 */
-class CACHE_ALGIN_CORE_DLL UService abstract : public UObject {
+class CORE_DLL UService abstract : public UObject {
 public:
 	UService(OBJCON_CONSTRUCTOR, SERVICETYPE _Type);
 	DESTRUCTOR(UService)

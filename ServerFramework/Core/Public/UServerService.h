@@ -10,7 +10,7 @@ class UNavigation;
 @ Explain
 -  ServerService로 재정의해서 사용한다.  Server Framework에서 재정의 해서 사용해야한다. 
 */
-class CACHE_ALGIN_CORE_DLL UServerService abstract  : public UService {
+class CORE_DLL UServerService abstract  : public UService {
 public: /* USING */
 	using SESSIONCONTAINER = CONUNORMAP<SESSIONID, SHPTR<USession>>;
 public: 
