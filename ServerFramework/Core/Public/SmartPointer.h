@@ -136,8 +136,7 @@ namespace Core
 		const std::atomic<llong>& GetRefWeakCount() { return m_RefWeak; }
 
 		T* get() const { return m_Ptr; }
-
-		T* GetShared() const { return m_Ptr; }
+		T** getAddress() const { return &m_Ptr; }
 
 		void SetShared(T* _shared) { m_Ptr = _shared; }
 	private:
@@ -165,7 +164,7 @@ namespace Core
 	private:
 		std::atomic<llong>		m_RefStrong;
 		std::atomic<llong>		m_RefWeak;
-		T*									m_Ptr;
+		mutable T*					m_Ptr;
 	};
 
 	/*
@@ -384,6 +383,9 @@ namespace Core
 		bool operator ==(nullptr_t _ptr) const { return m_RefCounter == _ptr; }
 		bool operator !=(nullptr_t _ptr) const { return m_RefCounter != _ptr; }
 
+		bool operator==(const USharedPtr& other) const {	return m_RefCounter == other.m_RefCounter;	}
+		bool operator!=(const USharedPtr& other) const { return m_RefCounter != other.m_RefCounter; }
+
 		template<class T2>
 		bool operator ==(const T2*& _rhs) const { return m_RefCounter == _rhs; }
 
@@ -396,9 +398,10 @@ namespace Core
 		template<class T2>
 		bool operator !=(const USharedPtr<T2>& _rhs) const { return m_RefCounter != _rhs.m_RefCounter; }
 
-		T** operator&() const { &m_RefCounter->get(); }
+		USharedPtr<T>* operator&() { return this; }
 
 		T* get() const { if (nullptr == m_RefCounter) return nullptr; return m_RefCounter->get(); }
+		T** getAddressof() const { if (nullptr == m_RefCounter) return nullptr; return m_RefCounter->getAddress(); }
 
 		void reset()
 		{
@@ -563,7 +566,7 @@ namespace Core
 		}
 
 	private:
-		URefCounter<T>* m_RefCounter;
+		mutable URefCounter<T>* m_RefCounter;
 	};
 
 	template<class T>

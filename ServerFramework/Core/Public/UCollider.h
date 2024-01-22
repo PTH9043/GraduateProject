@@ -5,10 +5,6 @@
 
 BEGIN(Core)
 
-enum class COLLIDERTYPE {
-	AABB, OBB, SPHERE, COLL_END
-};
-
 /*
 @ Date: 2023-01-18, Writer: นฺลยว๖
 @ Explain
@@ -25,7 +21,7 @@ public:
 	virtual _bool IsCollision(SHPTR<UCollider> _spCollider) PURE;
 public: /* get set*/
 	const Vector3 GetOriginPosition() const { return m_vOriginPosition; }
-	const Vector3 GetOriginScale() const { return m_vOriginScale; }
+	const Vector3 GetOriginScale() const { return m_vScale; }
 	_matrix  GetChangeMatrix() const { return m_mChangeMatrix;  }
 	const Vector3 GetChangeScale() const { return m_vChangeScale; }
 
@@ -39,7 +35,7 @@ private:
 	COLLIDERTYPE		m_ColliderType;
 	// Origin 
 	Vector3					m_vOriginPosition;
-	Vector3					m_vOriginScale;
+	Vector3					m_vScale;
 	// Change 
 	_matrix					m_mChangeMatrix;
 	Vector3					m_vChangeScale;

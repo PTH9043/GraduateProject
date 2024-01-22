@@ -22,6 +22,10 @@ namespace Core
 
 	enum class SERVICETYPE { CLIENT, SERVER, TYPE_END };
 
+	enum class COLLIDERTYPE {
+		AABB, OBB, SPHERE, COLL_END
+	};
+
 	enum {
 		MAX_BUFFER_LENGTH = 500, 
 		MAX_PROCESSBUF_LENGTH = MAX_BUFFER_LENGTH * 5,

@@ -6,9 +6,11 @@
 
 BEGIN(Core)
 class UService;
+class UTransform;
+class UCollider;
 
 /*
-@ Date: 2023-01-06, Writer: 박태현
+@ Date: 2023-01-22, Writer: 박태현
 @ Explain
 - 클라이언트와 통신하기 위한 Session 클래스이고 가상함수로 Server 솔루션에서 해당 클래스를 부모로 자식 클래스를 
 정의해주어야 한다.
@@ -56,25 +58,29 @@ public:
 		WriteData(&Buffer[0], PacketHead);
 	}
 public: /*Get Set */
-	const SESSIONID GetID() const { return m_ID; }
+	const SESSIONID GetSessionID() const { return m_SessionID; }
 	const SESSIONTYPE GetSessionType() const { return m_SessionType; }
 	TCPSOCKET& GetTcpSocket(REF_RETURN) { return m_TcpSocket; }
 	SHPTR<UService> GetService() const { return m_wpService.lock(); }
-	const _bool IsConnect() const { return m_isConnect.load(); }
 
+	SHPTR<UTransform> GetTransform() const { return m_spTransform; }
+	SHPTR<UCollider> GetCollider() const { return m_spCollider; }
+
+	const _bool IsConnected() const { return m_isConnected.load(); }
 protected:
 	void PacketCombine(_char* _pPacket, _llong _Size);
 	virtual _bool ProcessPacket(_char* _pPacket, const PACKETHEAD& _PacketHead) PURE;
 	void CombineSendBuffer(_char* _pPacket, const PACKETHEAD& _PacketHead);
 	void Leave();
 
+	void CreateCollider(COLLIDERTYPE _ColliderType, const Vector3& _vCenter, const Vector3& _vScale);
+
 	BUFFER& GetSendBuff(REF_RETURN) { return m_SendBuffer; }
-	MUTEX& GetLock(REF_RETURN) { return m_Lock; }
 private:
 	virtual void Free() override;
 
 private:
-	SESSIONID						m_ID;
+	SESSIONID						m_SessionID;
 	SESSIONTYPE				m_SessionType;
 	TCPSOCKET					m_TcpSocket;
 	_llong								m_CurBuffuerLocation;
@@ -85,8 +91,10 @@ private:
 	// Service
 	WKPTR<UService>		m_wpService;
 
-	MUTEX							m_Lock;
-	ATOMIC<_bool>			m_isConnect;
+	SHPTR<UTransform> m_spTransform;
+	SHPTR<UCollider>		m_spCollider;
+
+	ATOMIC<_bool>			m_isConnected;
 };
 
 END

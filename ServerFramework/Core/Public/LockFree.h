@@ -6,8 +6,7 @@ namespace Core
 	static constexpr unsigned  long long MASK_VALUE = 0xFFFFFFFFFFFFFFFE;
 	static constexpr int CHECK_MARKING{ 0x1 };
 	/*
-	@ Date: 2023-12-29
-	@ Writer: 박태현
+	@ Date: 2023-12-29, Writer: 박태현
 	@ Explain: 멀티쓰레드 환경에서 하나의 포인터에 CAS가 몰리는 것을 방지하기 위해 쓰레드를 잠시 대기시키는 클래스
 	*/
 	class Backoff {
@@ -30,8 +29,7 @@ namespace Core
 	};
 
 	/*
-	@ Date: 2023-12-31
-	@ Writer: 박태현
+	@ Date: 2023-12-31, Writer: 박태현
 	@ Explain: EBR Controller를 정의함
 	*/
 	template<class NODE>
@@ -124,42 +122,35 @@ namespace Core
 	namespace PTHStack {
 
 		/*
-		@ Date: 2023-12-29
-		@ Writer: 박태현
+		@ Date: 2023-12-29, Writer: 박태현
 		@ Explain: Stack의 노드
 		*/
 		template<class T>
-		struct  NODE {
+		struct __declspec(align(16)) NODE {
 
-			NODE<T>() : next{ nullptr }, retireEpoch{ 0 }, isRemove{ false }
+			NODE<T>() : next{ nullptr }, retireEpoch{ 0 }
 			{
 				if constexpr ((true == std::is_pointer<T>()) || (true == SmartPointer<T>))
-					data = nullptr;
+					value = nullptr;
 				else
-					data = T();
+					value = T();
 			}
-			NODE<T>(T _data, bool _isRemove = false) : next{ nullptr }, retireEpoch{ 0 }, data{ _data }, isRemove{ _isRemove }
-			{}
+			NODE<T>(T _value) : next{ nullptr }, retireEpoch{ 0 }, value{ _value }{}
 
 			~NODE<T>()
 			{
-				if (true == isRemove)
+				if constexpr ((std::is_pointer<T>()))
 				{
-					if constexpr ((std::is_pointer<T>()))
-					{
-						Core::MemoryAlloc(data);
-					}
+					Core::MemoryAlloc(value);
 				}
 			}
 		public:
+			T									value;
 			NODE<T>* volatile	next;
-			T									data;
 			std::atomic_uint		retireEpoch;
-			bool								isRemove;
 		};
 		/*
-		@ Date: 2023-12-29
-		@ Writer: 박태현
+		@ Date: 2023-12-29, Writer: 박태현
 		@ Explain: LockFreeStack + Backoff
 		*/
 		template<class T>
@@ -183,14 +174,14 @@ namespace Core
 				{
 					return T();
 				}
-				return pNode->data;
+				return pNode->value;
 			}
 
 			// Top에 값을 밀어 넣는다. 
-			void Push(T _data, bool _isRemove = false)
+			void Push(T _value)
 			{
 				m_EBRController.start_op();
-				NODE<T>* newNode = Core::MemoryAlloc<NODE<T>>( _data, _isRemove );
+				NODE<T>* newNode = Core::MemoryAlloc<NODE<T>>( _value );
 				while (true) {
 					NODE<T>* p = m_Top;
 					newNode->next = p;
@@ -215,7 +206,7 @@ namespace Core
 						return T();
 					}
 					NODE<T>* next = ptr->next;
-					T data = ptr->data;
+					T data = ptr->value;
 
 					if (false == CAS(ptr, next))
 					{
@@ -265,21 +256,28 @@ namespace Core
 		@ Explain: List의 노드이다. 
 		*/
 		template<class T>
-		class  LFNODE {
+		class __declspec(align(16)) LFNODE {
 		public:
 			T value;
 			unsigned int retireEpoch;
 			// remove 되었는지 확인 
 			unsigned long long next;
 
-			LFNODE() {
-				next = 0;
+			LFNODE() : retireEpoch{ 0 }, next{ 0 } {
+				if constexpr ((true == std::is_pointer<T>()) || (true == SmartPointer<T>))
+					value = nullptr;
+				else
+					value = T();
 			}
-			LFNODE(T _value) {
+			LFNODE(T _value) : retireEpoch{ 0 }, next{ 0 } {
 				value = _value;
-				next = 0;
 			}
-			~LFNODE() {
+			~LFNODE() 
+			{
+				if constexpr ((std::is_pointer<T>()))
+				{
+					Core::MemoryAlloc(value);
+				}
 			}
 			LFNODE* GetNext() { 
 				return reinterpret_cast<LFNODE*>(next & MASK_VALUE);
@@ -342,7 +340,7 @@ namespace Core
 			}
 		
 			bool Insert(T _value) {
-				LFNODE<T>* newNode = new LFNODE<T>{ _value };
+				LFNODE<T>* newNode = Core::MemoryAlloc<LFNODE<T>>(_value);
 				LFNODE<T>* last = &m_Tail;
 				m_EBRController.start_op();
 				LFNODE<T>* prev{ nullptr }, * curr{ nullptr };

@@ -5,7 +5,7 @@ namespace Core {
 
 	UCollider::UCollider(COLLIDERTYPE _ColliderType, const Vector3 _vOriPos,
 		const Vector3 _vOriScale) : m_ColliderType{_ColliderType},
-		m_vOriginPosition{ _vOriPos }, m_vOriginScale{ _vOriScale }, 
+		m_vOriginPosition{ _vOriPos }, m_vScale{ _vOriScale }, 
 		m_mChangeMatrix{_matrix::Identity}, m_vChangeScale{}
 	{
 	}

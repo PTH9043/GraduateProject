@@ -13,8 +13,8 @@ namespace Core {
 	{
 		RETURN_CHECK(nullptr == _spSession, false);
 		// 이미 있으면 리턴
-		RETURN_CHECK(nullptr != FindSession(_spSession->GetID()), false)
-		SESSIONID id = _spSession->GetID();
+		RETURN_CHECK(nullptr != FindSession(_spSession->GetSessionID()), false)
+		SESSIONID id = _spSession->GetSessionID();
 		m_SessionContainer.emplace(MakePair(id, _spSession));
 		m_isEmptyRoom.store(false, std::memory_order_seq_cst);
 		return true;

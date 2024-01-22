@@ -16,7 +16,7 @@ public:
 	NO_COPY(UTransform)
 	DESTRUCTOR(UTransform)
 public:
-	const Vector3 GetScale() const { return m_vOriginScale; }
+	const Vector3 GetScale() const { return m_vScale; }
 	const Vector3 GetAngles() const;
 	const _float	GetXAngle() const;
 	const _float	GetYAngle() const;
@@ -33,6 +33,8 @@ public:
 	const Vector3 GetDown() const { return m_mWorldMatrix.GetDown(); }
 	const Vector3 GetBack() const { return m_mWorldMatrix.GetBack(); }
 	const Vector3 GetPos() const { return m_mWorldMatrix.GetPos(); }
+
+	void SetScale(const Vector3 _vScale);
 
 	void SetRight(const Vector3 _vec) { m_mWorldMatrix.SetRight(_vec); }
 	void SetUp(const Vector3 _vec) { m_mWorldMatrix.SetUp(_vec); }
@@ -52,7 +54,7 @@ private:
 	virtual void Free() override;
 private:
 	_matrix				m_mWorldMatrix;
-	Vector3				m_vOriginScale;
+	Vector3				m_vScale;
 	_quaternion		m_Rotation;
 };
 
