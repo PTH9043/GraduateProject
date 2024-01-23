@@ -421,7 +421,7 @@ namespace Core
 						curr = succ;
 						succ = curr->GetNextWithMark(&isRemoved);
 					}
-					if (curr->key == _value) {
+					if (curr->value == _value) {
 						_prev = prev; _curr = curr;
 						return;
 					}

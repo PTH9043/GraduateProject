@@ -4,7 +4,11 @@
 #include "UBase.h"
 
 BEGIN(Core)
-
+/*
+@ Date: 2023-01-22, Writer: 박태현
+@ Explain
+- Random한 값들을 추출하는 클래스이다. 
+*/
 class  URandomManager final : public UBase {
 public:
 	URandomManager();

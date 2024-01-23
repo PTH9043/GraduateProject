@@ -5,12 +5,13 @@
 #include "UOBBCollider.h"
 #include "USphereCollider.h"
 #include "UTransform.h"
+#include "USpace.h"
 
 namespace Core
 {
 	USession::USession(OBJCON_CONSTRUCTOR, MOVE TCPSOCKET _TcpSocket, SHPTR<UService> _spService, SESSIONID _ID, SESSIONTYPE _SessionType) :
 		UObject(OBJCON_CONDATA),
-		m_TcpSocket(std::move(_TcpSocket)), m_SessionType(_SessionType), m_SessionID(_ID), m_CurBuffuerLocation{0},
+		m_TcpSocket(std::move(_TcpSocket)), m_SessionType(_SessionType), m_SessionID(_ID), m_SpaceIndex{0}, m_CurBuffuerLocation{0},
 		m_wpService{_spService},
 		m_isConnected{true},
 		 m_spTransform{nullptr},	m_spCollider{nullptr}
@@ -66,6 +67,12 @@ namespace Core
 	}
 
 	void USession::ConnectTcpSocket(){ }
+
+	void USession::BringSpaceIndex(SHPTR<USpace> _spSpace)
+	{
+		RETURN_CHECK(nullptr == _spSpace, ;);
+		m_SpaceIndex = _spSpace->GetSpaceIndex();
+	}
 
 	/*
 	@ Data: 2024-01-13, Writer : นฺลยว๖

@@ -3,13 +3,15 @@
 #include "UThreadManager.h"
 #include "URandomManager.h"
 #include "ULogManager.h"
+#include "USpaceManager.h"
 
 namespace Core
 {
 	UCoreInstance::UCoreInstance() : 
 		m_spThreadManager{ Create<Core::UThreadManager>() }, 
 		m_spRandomManager{Create<Core::URandomManager>()}, 
-		m_spLogManager{Create<Core::ULogManager>() }
+		m_spLogManager{Create<Core::ULogManager>() },
+		m_spSpaceManager{ Create<Core::USpaceManager>() }
 	{
 
 	}
@@ -83,19 +85,25 @@ namespace Core
 
 	/*
 	-----------------------------
-	UThreadManager
-	-----------------------------
 	ULogManager
 	-----------------------------
+	USpaceManager
+	-----------------------------
 	*/
+
+	void UCoreInstance::BuildGameSpace(const SPACEINFO& _SpaceInfo)
+	{
+		m_spSpaceManager->BuildGameSpace(_SpaceInfo);
+	}
 
 	void UCoreInstance::Free()
 	{
 		LOCKGUARD<MUTEX> Lock{ m_Mutex };
 		using namespace std;
 		std::this_thread::sleep_for(100ms);
-
-		m_spThreadManager.reset();
+		m_spSpaceManager.reset();
 		m_spRandomManager.reset();
+		m_spLogManager.reset();
+		m_spThreadManager.reset();
 	}
 }

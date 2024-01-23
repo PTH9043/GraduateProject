@@ -7,6 +7,7 @@ BEGIN(Core)
 class UThreadManager;
 class URandomManager;
 class ULogManager;
+class USpaceManager;
 /*
 @ Date: 2023-12-26
 @ Writer: นฺลยว๖
@@ -25,10 +26,11 @@ public: /* ThreadManager */
 public: /* RandomManager */
 	_int		ReturnRadomNumber(const _int _iMinNum, const _int _iMaxNum);
 	_int		ReturnRadomNumber(const _int _iMaxNum);
-
 public: /* LogManager */
 	void PrintOut(const char* _fmt, ...);
 	void FileOut(const char* _fmt, ...);
+public: /* SpaceManager */
+	void BuildGameSpace(const SPACEINFO& _SpaceInfo);
 
 private:
 	virtual void Free() override;
@@ -37,6 +39,7 @@ private:
 	SHPTR<UThreadManager>		m_spThreadManager;
 	SHPTR<URandomManager>		m_spRandomManager;
 	SHPTR<ULogManager>				m_spLogManager;
+	SHPTR<USpaceManager>			m_spSpaceManager;
 };
 
 END

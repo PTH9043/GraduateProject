@@ -49,6 +49,7 @@
     <ClInclude Include="..\Public\UPathFinder.h" />
     <ClInclude Include="..\Public\URandomManager.h" />
     <ClInclude Include="..\Public\URoom.h" />
+    <ClInclude Include="..\Public\URoomManager.h" />
     <ClInclude Include="..\Public\UServerService.h" />
     <ClInclude Include="..\Public\UService.h" />
     <ClInclude Include="..\Public\UBase.h" />
@@ -58,6 +59,7 @@
     <ClInclude Include="..\Public\UObjectPool.h" />
     <ClInclude Include="..\Public\USession.h" />
     <ClInclude Include="..\Public\USpace.h" />
+    <ClInclude Include="..\Public\USpaceManager.h" />
     <ClInclude Include="..\Public\USphereCollider.h" />
     <ClInclude Include="..\Public\UThreadManager.h" />
     <ClInclude Include="..\Public\UTransform.h" />
@@ -83,6 +85,7 @@
     <ClCompile Include="..\Private\UPathFinder.cpp" />
     <ClCompile Include="..\Private\URandomManager.cpp" />
     <ClCompile Include="..\Private\URoom.cpp" />
+    <ClCompile Include="..\Private\URoomManager.cpp" />
     <ClCompile Include="..\Private\UServerService.cpp" />
     <ClCompile Include="..\Private\UService.cpp" />
     <ClCompile Include="..\Private\UBase.cpp" />
@@ -92,6 +95,7 @@
     <ClCompile Include="..\Private\UObjectPool.cpp" />
     <ClCompile Include="..\Private\USession.cpp" />
     <ClCompile Include="..\Private\USpace.cpp" />
+    <ClCompile Include="..\Private\USpaceManager.cpp" />
     <ClCompile Include="..\Private\USphereCollider.cpp" />
     <ClCompile Include="..\Private\UThreadManager.cpp" />
     <ClCompile Include="..\Private\UTransform.cpp" />
