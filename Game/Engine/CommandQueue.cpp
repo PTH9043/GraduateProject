@@ -45,7 +45,6 @@ void CommandQueue::RenderBegin() {//여기서 DescriptorHeap Set해도됨.
 
 	CMDLIST->SetGraphicsRootSignature(GRAPHICS_ROOT_SIGNATURE.Get());
 
-	
 	//여기서 Viewport, ScissorRect 설정해도되지만, 카메라의 정보에 넣어 설정해도됨.그게 나은듯.
 }
 

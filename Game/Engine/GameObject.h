@@ -14,11 +14,15 @@ class CTexture;
 #define MATERIAL_DETAIL_ALBEDO_MAP	0x20
 #define MATERIAL_DETAIL_NORMAL_MAP	0x40
 
+enum OBJECT_TYPE : unsigned int {
+	PLAYER, MOB, TERRAIN, GRID, BOUNDING_BOX, NOTYPE
+};
+
 class CGameObject
 {
 private:
 	int								m_nReferences = 0;
-
+	OBJECT_TYPE						m_eType;
 public:
 	void AddRef();
 	void Release();
@@ -29,6 +33,10 @@ public:
 	virtual ~CGameObject();
 	
 public:
+	//2024-01-20 이성현 오브젝트 구분용 태그 추가
+	void SetType(OBJECT_TYPE pType) { m_eType = pType; }
+	OBJECT_TYPE GetType() { return m_eType; }
+
 	char							m_pstrFrameName[64];
 	shared_ptr<CMesh>				m_pMesh;
 

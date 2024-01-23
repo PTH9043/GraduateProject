@@ -72,7 +72,6 @@ RayHitResult PickingManager::ReturnScreenToWorldRayClosestHitResult(Ray pRay, co
             closestHitResult = currentHitResult;
         }
     }
-
     return closestHitResult;
 }
 
@@ -82,10 +81,26 @@ RayHitResult PickingManager::RayIntersectionWithWorldObject(const Ray& ray, cons
     shared_ptr<CMesh> ObjectMesh = Object->GetMesh();
 
     // 레이와 바운딩 박스 충돌 검사
-    float hitDistance;
+    float objecthitdistance = 0;
     BoundingOrientedBox objectOrientedBox = ObjectMesh->GetBoundingBox();
 
-    if (!objectOrientedBox.Intersects(ray.origin, ray.direction, hitDistance))
+    if(Object->GetType() == GRID)
+    {
+        if (objectOrientedBox.Intersects(ray.origin, ray.direction, objecthitdistance))
+        {
+            result.hit = true;
+            result.hitObject = Object;
+            XMVECTOR intersectionPointVector = XMVectorAdd(ray.origin, XMVectorScale(ray.direction, objecthitdistance));
+            XMFLOAT3 intersectionPoint;
+            XMStoreFloat3(&intersectionPoint, intersectionPointVector);
+
+            result.hitPosition = intersectionPoint;
+            result.hitDistance = objecthitdistance;
+        }
+        return result;
+    }
+
+    if(!objectOrientedBox.Intersects(ray.origin, ray.direction, objecthitdistance))
         return result;
 
     for (size_t j = 0; j < ObjectMesh->GetSubSetIndices().size(); j++)
@@ -95,25 +110,24 @@ RayHitResult PickingManager::RayIntersectionWithWorldObject(const Ray& ray, cons
             XMFLOAT3 vertex0 = Vector3::TransformCoord(ObjectMesh->GetPositions()[ObjectMesh->GetSubSetIndices()[j][k]], worldMatrix);
             XMFLOAT3 vertex1 = Vector3::TransformCoord(ObjectMesh->GetPositions()[ObjectMesh->GetSubSetIndices()[j][k + 1]], worldMatrix);
             XMFLOAT3 vertex2 = Vector3::TransformCoord(ObjectMesh->GetPositions()[ObjectMesh->GetSubSetIndices()[j][k + 2]], worldMatrix);
-
-            float distance;
-            if (DirectX::TriangleTests::Intersects(ray.origin, ray.direction,
-                XMLoadFloat3(&vertex0), XMLoadFloat3(&vertex1), XMLoadFloat3(&vertex2), distance))
+            float meshhitdistance = 0;
+            if (DirectX::TriangleTests::Intersects(ray.origin, ray.direction, XMLoadFloat3(&vertex0), XMLoadFloat3(&vertex1), XMLoadFloat3(&vertex2), meshhitdistance))
             {
                 result.hit = true;
                 result.hitObject = Object;
                 //이전 것보다 앞에 있는지 검사
-                if (distance < result.hitDistance)
+                if (meshhitdistance < result.hitDistance)
                 {
-                    XMVECTOR intersectionPointVector = XMVectorAdd(ray.origin, XMVectorScale(ray.direction, distance));
+                    XMVECTOR intersectionPointVector = XMVectorAdd(ray.origin, XMVectorScale(ray.direction, meshhitdistance));
                     XMFLOAT3 intersectionPoint;
                     XMStoreFloat3(&intersectionPoint, intersectionPointVector);
 
                     result.hitPosition = intersectionPoint;
-                    result.hitDistance = distance;
+                    result.hitDistance = meshhitdistance;
                 }
             }
         }
     }
     return result;
 }
+

@@ -136,6 +136,8 @@ CTriangleMesh::CTriangleMesh(const ComPtr<ID3D12Device>& _Device, const ComPtr<I
 	m_pd3dVertexBufferViews.emplace_back(m_pd3dPositionBufferView);
 }
 
+
+
 /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 CBoundingBoxMesh::CBoundingBoxMesh(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, XMFLOAT3 center, XMFLOAT3 extents)
@@ -217,3 +219,4 @@ CBoundingBoxMesh::CBoundingBoxMesh(const ComPtr<ID3D12Device>& _Device, const Co
 	indexBufferView.SizeInBytes = sizeof(UINT) * m_pnSubSetIndices[0];
 	m_pd3dIndexBufferViews[0] = indexBufferView;
 }
+

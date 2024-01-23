@@ -112,3 +112,4 @@ public:
 	CBoundingBoxMesh(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, XMFLOAT3 center, XMFLOAT3 extents);
 	virtual ~CBoundingBoxMesh() {}
 };
+

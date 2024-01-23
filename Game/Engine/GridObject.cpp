@@ -4,12 +4,11 @@
 #include "GridMesh.h"
 #include "Material.h"
 
-ToolGridObject::ToolGridObject(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList,
+GridObject::GridObject(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList,
     const ComPtr<ID3D12RootSignature>& _RootSignature, int nWidth, int nLength, XMFLOAT3 xmf3Scale, XMFLOAT4 xmf4Color)
 {
     m_nWidth = nWidth;
     m_nLength = nLength;
-
     m_xmf3Scale = xmf3Scale;
 
     shared_ptr<GridMesh> pGridMesh = make_shared<GridMesh>(_Device, _CommandList, nWidth, nLength, xmf3Scale, xmf4Color);
@@ -24,10 +23,11 @@ ToolGridObject::ToolGridObject(const ComPtr<ID3D12Device>& _Device, const ComPtr
 
     shared_ptr<CDiffusedWireFrameShader> pGridShader = make_shared<CDiffusedWireFrameShader>(_Device, _RootSignature, L"Shader/cso/DiffuseVS.cso", L"Shader/cso/DiffusePS.cso");
     SetShader(pGridShader);
+    SetType(GRID);
     SetActive(true);
 }
 
-ToolGridObject::~ToolGridObject()
+GridObject::~GridObject()
 {
 }
 

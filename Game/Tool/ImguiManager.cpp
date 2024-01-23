@@ -1,9 +1,12 @@
 #include "ImguiManager.h"
+#include "Engine.h"
+#include "GridObject.h"
 
 ImguiManager::ImguiManager()
 {
-    m_pRecordedWorldPos = XMFLOAT3(0.f, 0.f, 0.f);
+    m_xmf3PickedWorldPos = XMFLOAT3(0.f, 0.f, 0.f);
     m_pPickingManager = make_shared<PickingManager>();
+    m_bPickingEnabled = false;
 }
 
 ImguiManager::~ImguiManager()
@@ -22,15 +25,20 @@ void ImguiManager::DisplayWindow(const shared_ptr<CPlayer>& pPlayer, const share
     ImVec2 MousePosition = m_pPickingManager->GetMousePos();
     ImGui::Text("Mouse Position: (%.1f, %.1f)", MousePosition.x, MousePosition.y);
 
-    if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+    if (ImGui::Checkbox("Enable Picking", &m_bPickingEnabled)) {}
+    if (m_bPickingEnabled)
     {
-        Ray ray;
-        ray = m_pPickingManager->CreateWorldRayFromScreenCoords(MousePosition.x, MousePosition.y, pCamera);
-        RayHitResult Result;
-        Result = m_pPickingManager->ReturnScreenToWorldRayClosestHitResult(ray, pScene, pCamera);
-        m_pRecordedWorldPos = Result.hitPosition;
-    }
-    ImGui::Text("World Position: (%.1f, %.1f, %.1f)", m_pRecordedWorldPos.x, m_pRecordedWorldPos.y, m_pRecordedWorldPos.z);
+        if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+        {
+            Ray ray;
+            ray = m_pPickingManager->CreateWorldRayFromScreenCoords(MousePosition.x, MousePosition.y, pCamera);
+            RayHitResult Result;
+            Result = m_pPickingManager->ReturnScreenToWorldRayClosestHitResult(ray, pScene, pCamera);
+            m_xmf3PickedWorldPos = Result.hitPosition;
+
+        }
+        ImGui::Text("World Position: (%.1f, %.1f, %.1f)", m_xmf3PickedWorldPos.x, m_xmf3PickedWorldPos.y, m_xmf3PickedWorldPos.z);
+    }  
 
     if (pPlayer)
     {
