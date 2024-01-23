@@ -9,7 +9,7 @@ BEGIN(Core)
 @ Explain
 -  ClientService로 재정의해서 사용한다.  Client Framework에서 재정의 
 */
-class CACHE_ALGIN_CORE_DLL UClientService abstract : public UService {
+class CORE_DLL UClientService abstract : public UService {
 public: /* USING */
 	using SESSIONCONTAINER = CONHASHMAP<SESSIONID, SHPTR<USession>>;
 public:

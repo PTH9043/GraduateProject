@@ -8,7 +8,7 @@ BEGIN(Core)
 @ Explain
 - 최상위 부모 클래스, 서버에서 객체의 역활을 하는 모든 클래스는 모두 이 클래스를 무조건 상속 받는다.
 */
-class  CACHE_ALGIN_CORE_DLL  UBase abstract : public Core::UEnableSharedFromThis<UBase> {
+class  CORE_DLL  UBase abstract : public Core::UEnableSharedFromThis<UBase> {
 protected:
 	UBase();
 	UBase(const UBase& _rhs);

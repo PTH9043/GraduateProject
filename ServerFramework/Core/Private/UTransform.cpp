@@ -3,7 +3,7 @@
 
 namespace Core {
 
-	UTransform::UTransform() : m_mWorldMatrix{_matrix::Identity}, m_Rotation{}, m_vOriginScale{}
+	UTransform::UTransform() : m_mWorldMatrix{_matrix::Identity}, m_Rotation{}, m_vScale{}
 	{
 	}
 
@@ -29,6 +29,16 @@ namespace Core {
 	{
 		Vector3 vEuler = m_Rotation.ToEuler();
 		return glm::degrees(vEuler.z);
+	}
+
+	void UTransform::SetScale(const Vector3 _vScale)
+	{
+		if (m_vScale != _vScale)
+		{
+			m_vScale = _vScale;
+			std::atomic_thread_fence(std::memory_order_seq_cst);
+			m_mWorldMatrix.SetScale(m_vScale);
+		}
 	}
 
 	void UTransform::RotateFix(const Vector3 _vStandardAngle, const _float _TurnAnge)

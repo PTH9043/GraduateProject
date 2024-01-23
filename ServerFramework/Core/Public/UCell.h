@@ -10,7 +10,7 @@ BEGIN(Core)
 - Navigation으로 지형 충돌을 수행할 예정인데 그것을 위한 클래스로 3개의 점을 이루어서
 삼각형을 이루고 그 위에서 플레이어가 벗어나는지 벗어나지 않는지 확인하는 클래스이다.
 */
-class CACHE_ALGIN_CORE_DLL  UCell final : public UBase {
+class CORE_DLL  UCell final : public UBase {
 public:
 	enum POINT : _int { POINT_A, POINT_B, POINT_C, POINT_END };
 	enum LINE : _int { LINE_AB, LINE_BC, LINE_CA, LINE_END };

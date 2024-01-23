@@ -5,16 +5,12 @@
 
 BEGIN(Core)
 
-enum class COLLIDERTYPE {
-	AABB, OBB, SPHERE, COLL_END
-};
-
 /*
 @ Date: 2023-01-18, Writer: 박태현
 @ Explain
 - 객체의 충돌처리를 하기 위한 클래스이다. 
 */
-class CACHE_ALGIN_CORE_DLL UCollider abstract : public UBase {
+class CORE_DLL UCollider abstract : public UBase {
 public:
 	enum { AXIS_CNT = 3 };
 public:
@@ -25,7 +21,7 @@ public:
 	virtual _bool IsCollision(SHPTR<UCollider> _spCollider) PURE;
 public: /* get set*/
 	const Vector3 GetOriginPosition() const { return m_vOriginPosition; }
-	const Vector3 GetOriginScale() const { return m_vOriginScale; }
+	const Vector3 GetOriginScale() const { return m_vScale; }
 	_matrix  GetChangeMatrix() const { return m_mChangeMatrix;  }
 	const Vector3 GetChangeScale() const { return m_vChangeScale; }
 
@@ -39,7 +35,7 @@ private:
 	COLLIDERTYPE		m_ColliderType;
 	// Origin 
 	Vector3					m_vOriginPosition;
-	Vector3					m_vOriginScale;
+	Vector3					m_vScale;
 	// Change 
 	_matrix					m_mChangeMatrix;
 	Vector3					m_vChangeScale;

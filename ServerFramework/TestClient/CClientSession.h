@@ -4,7 +4,7 @@ BEGIN(Core)
 class UService;
 END
 
-class CACHE_ALGIN CClientSession final : public USession {
+class  CClientSession final : public USession {
 public:
 	CClientSession(OBJCON_CONSTRUCTOR, TCPSOCKET _TcpSocket, Core::SHPTR<Core::UService> _spService, SESSIONID _ID);
 	NO_COPY(CClientSession)

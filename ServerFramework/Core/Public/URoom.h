@@ -11,7 +11,7 @@ class USession;
 - 각 프레임워크에서 재정의하는 Room 클래스로 해당 룸에서 세션들을 받아서 해당 세션들이 얼마나 들어왔는지 
 확인하고 해당 룸에서 게임에 대한 처리를 수행한다. 
 */
-class CACHE_ALGIN_CORE_DLL URoom abstract : public UObject {
+class CORE_DLL URoom abstract : public UObject {
 public:
 	using SESSIONCONTAINER = CONHASHMAP<SESSIONID, SHPTR<USession>>;
 public:

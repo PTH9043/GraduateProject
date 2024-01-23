@@ -9,7 +9,7 @@ BEGIN(Core)
 @ Explain
 - 객체의 AABB충돌을 하기 위한 클래스이다.
 */
-class CACHE_ALGIN_CORE_DLL UAABBCollider final : public UCollider {
+class CORE_DLL UAABBCollider final : public UCollider {
 public:
 	UAABBCollider(const Vector3 _vOriPos, const Vector3 _vOriScale);
 	NO_COPY(UAABBCollider)

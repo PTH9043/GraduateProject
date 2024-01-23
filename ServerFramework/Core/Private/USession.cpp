@@ -1,14 +1,19 @@
 #include "CoreDefines.h"
 #include "USession.h"
 #include "UService.h"
+#include "UAABBCollider.h"
+#include "UOBBCollider.h"
+#include "USphereCollider.h"
+#include "UTransform.h"
 
 namespace Core
 {
 	USession::USession(OBJCON_CONSTRUCTOR, MOVE TCPSOCKET _TcpSocket, SHPTR<UService> _spService, SESSIONID _ID, SESSIONTYPE _SessionType) :
 		UObject(OBJCON_CONDATA),
-		m_TcpSocket(std::move(_TcpSocket)), m_SessionType(_SessionType), m_ID(_ID), m_CurBuffuerLocation{0},
+		m_TcpSocket(std::move(_TcpSocket)), m_SessionType(_SessionType), m_SessionID(_ID), m_CurBuffuerLocation{0},
 		m_wpService{_spService},
-		m_isConnect{true}
+		m_isConnected{true},
+		 m_spTransform{nullptr},	m_spCollider{nullptr}
 	{
 		MemoryInitialization(m_SendBuffer.data(), MAX_BUFFER_LENGTH);
 		MemoryInitialization(m_RecvBuffer.data(), MAX_BUFFER_LENGTH);
@@ -17,13 +22,14 @@ namespace Core
 
 	_bool USession::Start()
 	{
+		m_spTransform = Create<UTransform>();
 		ReadData();
 		return true;
 	}
 
 	void USession::ReadData()
 	{
-		RETURN_CHECK(false == m_isConnect, ;);
+		RETURN_CHECK(false == m_isConnected, ;);
 		m_TcpSocket.async_read_some(Asio::buffer(m_RecvBuffer),
 			[this](const boost::system::error_code& _error, std::size_t _Size)
 			{	
@@ -41,7 +47,7 @@ namespace Core
 				{
 #ifdef USE_DEBUG
 					if (_error.value() == boost::asio::error::operation_aborted) return;
-					std::cout << "Receive Error on Session[" << m_ID << "] EC[" << _error << "]\n";
+					std::cout << "Receive Error on Session[" << m_SessionID << "] EC[" << _error << "]\n";
 #endif
 					Leave();
 				}
@@ -50,13 +56,13 @@ namespace Core
 
 	_bool USession::WriteData(_char* _pPacket, const PACKETHEAD& _PacketHead)
 	{
-		RETURN_CHECK(false == m_isConnect, false);
+		RETURN_CHECK(false == m_isConnected, false);
 		return true;
 	}
 
 	void USession::Disconnect()
 	{
-		m_isConnect = false;
+		m_isConnected = false;
 	}
 
 	void USession::ConnectTcpSocket(){ }
@@ -118,7 +124,22 @@ namespace Core
 	void USession::Leave()
 	{
 		SHPTR<UService> spService =m_wpService.lock();
-		spService->LeaveService(m_ID);
+		spService->LeaveService(m_SessionID);
+	}
+
+	void USession::CreateCollider(COLLIDERTYPE _ColliderType, const Vector3& _vCenter, const Vector3& _vScale)
+	{
+		switch (_ColliderType) {
+		case COLLIDERTYPE::OBB:
+			m_spCollider = Create<UOBBCollider>(_vCenter, _vScale);
+			break;
+		case COLLIDERTYPE::AABB:
+			m_spCollider = Create<UAABBCollider>(_vCenter, _vScale);
+			break;
+		case COLLIDERTYPE::SPHERE:
+			m_spCollider = Create<USphereCollider>(_vCenter, _vScale);
+			break;
+		}
 	}
 
 	void USession::Free()

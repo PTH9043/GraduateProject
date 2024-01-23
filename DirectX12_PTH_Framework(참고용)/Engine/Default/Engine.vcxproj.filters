@@ -196,9 +196,6 @@
     <Filter Include="07.Resource\VIBuffer\Triangle">
       <UniqueIdentifier>{6220d9d7-d005-4a66-9031-358af8f1aa59}</UniqueIdentifier>
     </Filter>
-    <Filter Include="07.Resource\VIBuffer\Instance">
-      <UniqueIdentifier>{c12a1f63-50dd-4c57-926b-bb0550cc078e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="07.Resource\VIBuffer\Cube">
       <UniqueIdentifier>{15051424-0989-4e2f-b4be-b8b0ac46d197}</UniqueIdentifier>
     </Filter>

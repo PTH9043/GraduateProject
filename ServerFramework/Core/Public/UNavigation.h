@@ -13,7 +13,7 @@ BEGIN(Core)
 class UCell;
 using CELLCONTAINER = VECTOR<SHPTR<UCell>>;
 
-class CACHE_ALGIN_CORE_DLL UNavigation final : public UBase {
+class CORE_DLL UNavigation final : public UBase {
 public:
 	UNavigation();
 	NO_COPY(UNavigation)

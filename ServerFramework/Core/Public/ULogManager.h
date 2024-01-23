@@ -5,7 +5,7 @@
 
 BEGIN(Core)
 
-class CACHE_ALGIN ULogManager final : public UBase  {
+class  ULogManager final : public UBase  {
 public:
 	ULogManager();
 	NO_COPY(ULogManager)

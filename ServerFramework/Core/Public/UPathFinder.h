@@ -7,7 +7,7 @@ BEGIN(Core)
 class UCell;
 class UNavigation;
 
-class CACHE_ALGIN_CORE_DLL UPathFinder final : public UBase {
+class CORE_DLL UPathFinder final : public UBase {
 public:
 	UPathFinder();
 	NO_COPY(UPathFinder)

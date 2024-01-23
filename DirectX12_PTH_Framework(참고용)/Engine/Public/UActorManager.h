@@ -44,7 +44,7 @@ private:
 	// Containers
 	PROTOTYPES				m_ProtoTypes;
 	CLONEARR					m_arrClones;
-	CLONEVECTOR			m_vecTickClones;
+	CLONEVECTOR				m_vecTickClones;
 	SHPTR<URenderer>	m_spRenderer;
 };
 

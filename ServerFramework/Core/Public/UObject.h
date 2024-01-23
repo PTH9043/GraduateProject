@@ -12,7 +12,7 @@ class UCoreInstance;
 @ Explain
 - UCoreInstance 객체가 필요한 모든 클래스
 */
-class CACHE_ALGIN_CORE_DLL  UObject abstract : public UBase {
+class CORE_DLL  UObject abstract : public UBase {
 public:
 	UObject(SHPTR<UCoreInstance> _spCoreInstance);
 	UObject(const UObject& _rhs);

@@ -11,7 +11,7 @@ namespace Core {
 	@ Explain
 	- 메모리의 앞 부분을 나타내는 Header이다.
 	*/
-	struct CACHE_ALGIN MEMORYHEADER {
+	struct  MEMORYHEADER {
 
 		MEMORYHEADER(_llong _Size) : AllocateSize{ _Size } {}
 
@@ -46,7 +46,7 @@ namespace Core {
 	@ Explain
 	- 메모리들을 저장하는 클래스
 	*/
-	class CACHE_ALGIN_CORE_DLL UMemoryPool {
+	class CORE_DLL UMemoryPool {
 		using MEMORYQUEUE = CONQUEUE<MEMORYHEADER*>;
 	public:
 		UMemoryPool(const _ullong& _AllocateSize);
@@ -75,7 +75,7 @@ namespace Core {
 	@ Explain
 	- 메모리를 관리하는 관리자 클래스
 	*/
-	class CACHE_ALGIN_CORE_DLL UMemoryAdminster {
+	class CORE_DLL UMemoryAdminster {
 		enum
 		{
 			POOL_COUNT = (512 / 16) + (512 / 32) + (1024 / 64) + (1024 / 128) + (2048 / 256),

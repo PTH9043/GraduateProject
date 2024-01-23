@@ -21,7 +21,7 @@ namespace Server {
 
 	_bool CPlayerSession::WriteData(_char* _pPacket, const Core::PACKETHEAD& _PacketHead)
 	{
-		RETURN_CHECK(false == IsConnect() , false);
+		RETURN_CHECK(false == IsConnected() , false);
 
 		CombineSendBuffer( _pPacket, _PacketHead);
 		_bool result{ true };
@@ -30,7 +30,7 @@ namespace Server {
 
 		Socket.async_write_some(Asio::buffer(GetSendBuff(), _PacketHead.PacketSize + PACKETHEAD_SIZE),
 			[this](const boost::system::error_code& _error, std::size_t _Size) {
-			SESSIONID SessionID = GetID();
+			SESSIONID SessionID = GetSessionID();
 			Core::SHPTR<Core::UService> Service{ GetService() };
 				// Packet
 				if (_error)
@@ -40,7 +40,7 @@ namespace Server {
 				}
 				else
 				{
-					if (false == IsConnect())
+					if (false == IsConnected())
 					{
 						if (nullptr != Service)
 						{
@@ -55,7 +55,7 @@ namespace Server {
 	void CPlayerSession::Disconnect()
 	{
 		// Remove Object а╤гу 
-		SC_REMOVE_OBJECT scRemoveObject = PROTOFUNC::CreateScRemoveObject(GetID());
+		SC_REMOVE_OBJECT scRemoveObject = PROTOFUNC::CreateScRemoveObject(GetSessionID());
 		SendProtoData(scRemoveObject, TAG_SC_LOGOUT);
 		__super::Disconnect();
 	}
