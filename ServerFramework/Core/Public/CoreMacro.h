@@ -234,8 +234,8 @@ void ClassName::DestoryInstance(){  m_pInstance.reset(); }
 -  Session 생성자에 정의되어 있는 변수를 매크로화 시켰다.
 */
 #define SESSION_CONSTRUCTOR OBJCON_CONSTRUCTOR,  Asio::ip::tcp::socket _TcpSocket, \
-Core::SHPTR<Core::UService> _spService,  SESSIONID _ID
-#define SESSION_CONDATA(SessionType) OBJCON_CONDATA, std::move(_TcpSocket), _spService, _ID, SessionType
+ SESSIONID _ID
+#define SESSION_CONDATA(SessionType) OBJCON_CONDATA, std::move(_TcpSocket), _ID, SessionType
 /*
 ==========================
 					ECT

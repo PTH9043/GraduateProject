@@ -42,6 +42,8 @@
     <ClInclude Include="..\Public\UCell.h" />
     <ClInclude Include="..\Public\UClientService.h" />
     <ClInclude Include="..\Public\UCollider.h" />
+    <ClInclude Include="..\Public\UDataBase.h" />
+    <ClInclude Include="..\Public\UJobTimer.h" />
     <ClInclude Include="..\Public\ULogManager.h" />
     <ClInclude Include="..\Public\ULuaLoader.h" />
     <ClInclude Include="..\Public\UNavigation.h" />
@@ -78,6 +80,8 @@
     <ClCompile Include="..\Private\UCell.cpp" />
     <ClCompile Include="..\Private\UClientService.cpp" />
     <ClCompile Include="..\Private\UCollider.cpp" />
+    <ClCompile Include="..\Private\UDataBase.cpp" />
+    <ClCompile Include="..\Private\UJobTimer.cpp" />
     <ClCompile Include="..\Private\ULogManager.cpp" />
     <ClCompile Include="..\Private\ULuaLoader.cpp" />
     <ClCompile Include="..\Private\UNavigation.cpp" />

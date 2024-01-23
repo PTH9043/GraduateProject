@@ -5,8 +5,7 @@
 namespace Core
 {
 	UApp::UApp() :
-		m_spCoreInstance{ Create<UCoreInstance>() },
-		 m_spService{nullptr}
+		m_spCoreInstance{ Create<UCoreInstance>() }
 	{
 #ifdef _WIN32
 		_wsetlocale(LC_ALL, L"korean");
@@ -15,8 +14,8 @@ namespace Core
 #endif
 	}
 
-	UApp::~UApp()
-	{
+	UApp::~UApp(){
+		m_spCoreInstance.reset();
 	}
 
 	_bool UApp::Start()

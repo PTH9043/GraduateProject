@@ -5,6 +5,8 @@
 
 
 BEGIN(Core)
+class UJobTimer;
+
 using THREAD = std::thread;
 using THRAEDVECTOR = VECTOR<THREAD>;
 
@@ -21,6 +23,7 @@ public:
 
 public:
 	void RegisterFunc(const THREADFUNC& _CallBack, void* _Data);
+	void RegisterJobTimer(SHPTR<UJobTimer> _spJobTImer);
 	void Join();
 private:
 	static void ThreadJoin(const THREADFUNC& _CallBack, void* _Data, _uint _CurrentThreadID);

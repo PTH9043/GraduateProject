@@ -21,7 +21,7 @@ public:
 	using BUFFER = ARRAY<_char, MAX_BUFFER_LENGTH>;
 	using TOTALBUFFER = ARRAY<_char, MAX_PROCESSBUF_LENGTH>;
 public:
-	USession(OBJCON_CONSTRUCTOR, MOVE TCPSOCKET _TcpSocket, SHPTR<UService> _spService,  SESSIONID _ID, SESSIONTYPE _SessionType);
+	USession(OBJCON_CONSTRUCTOR, MOVE TCPSOCKET _TcpSocket, SESSIONID _ID, SESSIONTYPE _SessionType);
 	DESTRUCTOR(USession)
 public: 
 	virtual _bool Start() PURE;
@@ -63,7 +63,6 @@ public: /*Get Set */
 	const SESSIONTYPE GetSessionType() const { return m_SessionType; }
 	const _int GetSpaceID() const { return m_SpaceIndex; }
 	TCPSOCKET& GetTcpSocket(REF_RETURN) { return m_TcpSocket; }
-	SHPTR<UService> GetService() const { return m_wpService.lock(); }
 	SHPTR<UTransform> GetTransform() const { return m_spTransform; }
 	SHPTR<UCollider> GetCollider() const { return m_spCollider; }
 	const _bool IsConnected() const { return m_isConnected.load(); }
@@ -91,8 +90,6 @@ private:
 	TOTALBUFFER				m_TotalBuffer;
 	BUFFER							m_SendBuffer;
 	BUFFER							m_RecvBuffer;
-	// Service
-	WKPTR<UService>		m_wpService;
 
 	SHPTR<UTransform> m_spTransform;
 	SHPTR<UCollider>		m_spCollider;
