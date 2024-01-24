@@ -1,5 +1,4 @@
 #include "EngineDefine.h"
-#include "UGraphicDevice.h"
 #include "UDevice.h"
 #include "UGpuCommand.h"
 #include "USwapChain.h"
@@ -8,6 +7,7 @@
 #include "URenderTargetGroup.h"
 #include "UTexture.h"
 #include "UShaderConstantBuffer.h"
+#include "UGraphicDevice.h"
 
 UGraphicDevice::UGraphicDevice() :
 	m_spDevice{ nullptr },
@@ -89,7 +89,7 @@ HRESULT UGraphicDevice::ReadyGraphicDevice(const GRAPHICDESC& _stGraphicsDesc)
 
 void UGraphicDevice::OmSetDefaultRenderTarget()
 {
-	m_spDefaultRenderTargetGroup->OmSetRenderTargets(1, m_spSwapChain->GetBackBufferIndex(), m_spGraphicRenderObject);
+	m_spDefaultRenderTargetGroup->OmSetRenderTargets(1, m_spSwapChain->GetBackBufferIndex(), m_spGpuCommand);
 }
 
 SHPTR<UTexture> UGraphicDevice::GetDefaultBackTexture()
@@ -140,8 +140,8 @@ HRESULT UGraphicDevice::MainRenderBegin()
 	pGraphicCmdList->RSSetViewports(1, &m_stD3DViewport);
 	pGraphicCmdList->RSSetScissorRects(1, &m_stD3DWindowSizeRect);
 
-	m_spDefaultRenderTargetGroup->ClearRenderTargetView(m_spSwapChain->GetBackBufferIndex(), m_spGraphicRenderObject);
-	m_spDefaultRenderTargetGroup->OmSetRenderTargets(1, m_spSwapChain->GetBackBufferIndex(), m_spGraphicRenderObject);
+	m_spDefaultRenderTargetGroup->ClearRenderTargetView(m_spSwapChain->GetBackBufferIndex(), m_spGpuCommand);
+	m_spDefaultRenderTargetGroup->OmSetRenderTargets(1, m_spSwapChain->GetBackBufferIndex(), m_spGpuCommand);
 	return S_OK;
 }
 
@@ -166,31 +166,6 @@ HRESULT UGraphicDevice::MainRenderEnd()
 	m_spGpuCommand->WaitForEndFrameResource();
 	m_spSwapChain->SwapChainIndx();
 	return S_OK;
-}
-
-CSHPTRREF<UDevice> UGraphicDevice::GetDevice() const
-{
-	return m_spDevice;
-}
-
-CSHPTRREF<UGpuCommand> UGraphicDevice::GetGpuCommand() const
-{
-	return m_spGpuCommand;
-}
-
-CSHPTRREF<UTableDescriptor> UGraphicDevice::GetTableDescriptor() const
-{
-	return m_spTableDescriptor;
-}
-
-CSHPTRREF<URootSignature> UGraphicDevice::GetRootSignature() const
-{
-	return m_spRootSignature;
-}
-
-CSHPTRREF<USwapChain> UGraphicDevice::GetSwapChain() const
-{
-	return m_spSwapChain;
 }
 
 void UGraphicDevice::ResizeViewPort()

@@ -4,7 +4,7 @@
 BEGIN(Engine)
 class UCommand;
 
-class UTableDescriptor abstract : public UBase{
+class UTableDescriptor final : public UBase{
 public:
 	UTableDescriptor();
 	NO_COPY(UTableDescriptor)

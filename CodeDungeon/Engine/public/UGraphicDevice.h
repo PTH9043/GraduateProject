@@ -21,6 +21,10 @@ public:
 		DESTRUCTOR(UGraphicDevice)
 public:
 	CSHPTRREF<USwapChain> GetSwapChain() const { return m_spSwapChain; }
+	CSHPTRREF<UDevice>			GetDevice() const { return m_spDevice; }
+	CSHPTRREF<UGpuCommand>		GetGpuCommand() const { return m_spGpuCommand; }
+	CSHPTRREF<UTableDescriptor>	GetTableDescriptor() const { return m_spTableDescriptor; }
+	CSHPTRREF<URootSignature>	GetRootSignature() const { return m_spRootSignature; }
 
 	const _bool IsGamePaused() const { return m_isGamePaused; }
 	const _bool IsScreenMinimized() const { return m_isScreenMinimized; }
@@ -32,6 +36,7 @@ public:
 	const D3D12_VIEWPORT& GetD3DViewport() const { return m_stD3DViewport; }
 	const D3D12_RECT& GetD3DWindowSizeRect() const { return m_stD3DWindowSizeRect; }
 	CSHPTRREF<GRAPHICDESC> GetGraphicDesc() const { return m_spGraphicDesc; }
+
 
 	void SetDefaultRtGroup(CSHPTRREF<URenderTargetGroup> _rtGroup) { this->m_spDefaultRenderTargetGroup = _rtGroup; }
 public:
@@ -47,12 +52,6 @@ public:
 	// Clear BackBuffer View
 	HRESULT MainRenderBegin();
 	HRESULT MainRenderEnd();
-public:
-	CSHPTRREF<UDevice>			GetDevice() const;
-	CSHPTRREF<UGpuCommand>		GetGpuCommand() const;
-	CSHPTRREF<UTableDescriptor>	GetTableDescriptor() const;
-	CSHPTRREF<URootSignature>	GetRootSignature() const;
-
 private:
 	void ResizeViewPort();
 private:
@@ -78,3 +77,5 @@ private:
 	// GraphicDesc
 	SHPTR<GRAPHICDESC>									m_spGraphicDesc;
 };
+
+END

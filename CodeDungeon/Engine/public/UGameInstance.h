@@ -9,10 +9,12 @@ class UDevice;
 class UGpuCommand;
 class UTableDescriptor;
 class URootSignature;
+class USwapChain;
 
 class UResourceManager;
 class UGraphicDevice;
 class URenderTargetManager;
+class URenderTargetGroup;
 
 class UGameInstance : public UBase 
 {
