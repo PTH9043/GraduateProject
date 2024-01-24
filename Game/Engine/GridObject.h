@@ -1,11 +1,11 @@
 #pragma once
 #include "GameObject.h"
 
-class ToolGridObject : public CGameObject
+class GridObject : public CGameObject
 {
 public:
-	ToolGridObject(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, const ComPtr<ID3D12RootSignature>& _RootSignature, int nWidth, int nLength, XMFLOAT3 xmf3Scale, XMFLOAT4 xmf4Color);
-	~ToolGridObject();
+	GridObject(const ComPtr<ID3D12Device>& _Device, const ComPtr<ID3D12GraphicsCommandList>& _CommandList, const ComPtr<ID3D12RootSignature>& _RootSignature, int nWidth, int nLength, XMFLOAT3 xmf3Scale, XMFLOAT4 xmf4Color);
+	~GridObject();
 private:
 	int								m_nWidth;
 	int								m_nLength;

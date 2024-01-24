@@ -10,6 +10,7 @@ CGameObject::CGameObject()
 {
 	m_xmf4x4World = Matrix4x4::Identity();
 	m_xmf4x4Transform = Matrix4x4::Identity();
+	m_eType = NOTYPE;
 }
 
 CGameObject::CGameObject(int nMaterials)
@@ -508,6 +509,7 @@ BoundingBoxObject::BoundingBoxObject(const ComPtr<ID3D12Device>& _Device, const 
 	SetMesh(boundingboxmesh);
 	shared_ptr<CDiffusedWireFrameShaderForBOB> pBobShader = make_shared<CDiffusedWireFrameShaderForBOB>(_Device, _RootSignature, L"Shader/cso/DiffuseVS.cso", L"Shader/cso/DiffusePS.cso");
 	SetShader(pBobShader);
+	SetType(BOUNDING_BOX);
 	SetActive(true);
 }
 

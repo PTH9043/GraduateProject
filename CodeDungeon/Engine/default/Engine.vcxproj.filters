@@ -1,0 +1,259 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="99.Default">
+      <UniqueIdentifier>{39535b89-52a8-471d-9058-89255aa174cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Super">
+      <UniqueIdentifier>{0ca7bdf7-e603-4f6f-b136-53e28db7347a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Default\Struct">
+      <UniqueIdentifier>{6de7b64e-83a6-4752-9894-66cec341b659}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Super\Object">
+      <UniqueIdentifier>{0422184e-8c7e-4a97-bcb8-f65d291283aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Super\Base">
+      <UniqueIdentifier>{9f88f402-6580-4c6d-9e57-26991de1c9fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.DxClass">
+      <UniqueIdentifier>{8c86b252-dbdb-427e-9827-a47f55dee782}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.DxClass\Device">
+      <UniqueIdentifier>{3e41f507-8c14-4976-96e8-344995a2e592}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.DxClass\Command">
+      <UniqueIdentifier>{c5ec7109-a828-4020-9a78-d69cfc943d74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.DxClass\Command\GPU">
+      <UniqueIdentifier>{f421da4a-1d8b-4fef-89d8-9eac70314c7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.DxClass\GlobalConstants">
+      <UniqueIdentifier>{d1d7604a-7ca3-424b-ae6d-804b8d961115}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Needs">
+      <UniqueIdentifier>{8df4b430-0bd2-4c76-87a7-92acda718222}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Needs\Method">
+      <UniqueIdentifier>{fc89b5e1-6801-4d75-a0d1-ad4ef71e3fe2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.DxClass\ShaderBuffer">
+      <UniqueIdentifier>{f1f364ed-abfa-40b4-9351-183544a80d73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.DxClass\StructedBuffer">
+      <UniqueIdentifier>{53671a04-d598-4c92-93b9-8841b773b2cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.DxClass\TableDescriptor">
+      <UniqueIdentifier>{7e767d63-bf69-486b-bba3-ec3594e15b7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.DxClass\RootSignature">
+      <UniqueIdentifier>{936693f7-98c6-4420-8f0f-135fbda2c605}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.DxClass\SwapChains">
+      <UniqueIdentifier>{d080eea8-4a5e-4e2f-95aa-1466b4ed1ad7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.Instance">
+      <UniqueIdentifier>{f3310adc-3721-40c0-a896-a88a419174b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.Instance\Game">
+      <UniqueIdentifier>{6d510d9a-4d3b-4ace-90ed-bee5bd6c03cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Manager">
+      <UniqueIdentifier>{0a145115-e42f-4f2f-969c-77a071efa5dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Manager\GraphicDevice">
+      <UniqueIdentifier>{1ac1a1db-a83c-45d8-97ef-03b2023d1dea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Resource">
+      <UniqueIdentifier>{81064a1a-8eed-474c-aa97-d3a2d14f5e89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Resource\TextGroup">
+      <UniqueIdentifier>{b209d61e-d30a-4584-bc16-167021c564f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Resource\TextGroup\Texture">
+      <UniqueIdentifier>{a3a0470f-6abe-4de2-89b8-26b37a12fa98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Resource\Shader">
+      <UniqueIdentifier>{64052136-665d-4575-b472-b863fd894583}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Resource\Shader\Compute">
+      <UniqueIdentifier>{bb925018-1e83-4ce1-903c-13d98542468f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.DxClass\Command\Compute">
+      <UniqueIdentifier>{9507d151-3dbd-41fc-a592-a7337b4469ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Manager\ResourceManager">
+      <UniqueIdentifier>{9ca511da-29ab-4890-b2af-4fe95bebe1fb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\private\EngineStruct.cpp">
+      <Filter>99.Default\Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UObject.cpp">
+      <Filter>96.Super\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UCloneObject.cpp">
+      <Filter>96.Super\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UBase.cpp">
+      <Filter>96.Super\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UDevice.cpp">
+      <Filter>02.DxClass\Device</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UCommand.cpp">
+      <Filter>02.DxClass\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UGpuCommand.cpp">
+      <Filter>02.DxClass\Command\GPU</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UGlobalConstantBuffer.cpp">
+      <Filter>02.DxClass\GlobalConstants</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UMethod.cpp">
+      <Filter>97.Needs\Method</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UShaderConstantBuffer.cpp">
+      <Filter>02.DxClass\ShaderBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UShaderStructedBuffer.cpp">
+      <Filter>02.DxClass\StructedBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UTableDescriptor.cpp">
+      <Filter>02.DxClass\TableDescriptor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\URootSignature.cpp">
+      <Filter>02.DxClass\RootSignature</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\USwapChain.cpp">
+      <Filter>02.DxClass\SwapChains</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UGameInstance.cpp">
+      <Filter>00.Instance\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UGraphicDevice.cpp">
+      <Filter>01.Manager\GraphicDevice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UTexture.cpp">
+      <Filter>07.Resource\TextGroup\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UTexGroup.cpp">
+      <Filter>07.Resource\TextGroup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UResource.cpp">
+      <Filter>07.Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UShader.cpp">
+      <Filter>07.Resource\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UComputeShader.cpp">
+      <Filter>07.Resource\Shader\Compute</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UComputeCommand.cpp">
+      <Filter>02.DxClass\Command\Compute</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UResourceManager.cpp">
+      <Filter>01.Manager\ResourceManager</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\public\EngineDefine.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EngineConcept.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EngineEnum.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EngineTypedef.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EngineFunction.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EngineMacro.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EngineMake.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EngineShaderParam.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EngineStruct.h">
+      <Filter>99.Default\Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UObject.h">
+      <Filter>96.Super\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UCloneObject.h">
+      <Filter>96.Super\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UBase.h">
+      <Filter>96.Super\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UDevice.h">
+      <Filter>02.DxClass\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UCommand.h">
+      <Filter>02.DxClass\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UGpuCommand.h">
+      <Filter>02.DxClass\Command\GPU</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UGlobalConstantBuffer.h">
+      <Filter>02.DxClass\GlobalConstants</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UMethod.h">
+      <Filter>97.Needs\Method</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UShaderConstantBuffer.h">
+      <Filter>02.DxClass\ShaderBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UShaderStructedBuffer.h">
+      <Filter>02.DxClass\StructedBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UTableDescriptor.h">
+      <Filter>02.DxClass\TableDescriptor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\URootSignature.h">
+      <Filter>02.DxClass\RootSignature</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\USwapChain.h">
+      <Filter>02.DxClass\SwapChains</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UGameInstance.h">
+      <Filter>00.Instance\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UGraphicDevice.h">
+      <Filter>01.Manager\GraphicDevice</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UTexture.h">
+      <Filter>07.Resource\TextGroup\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UTexGroup.h">
+      <Filter>07.Resource\TextGroup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UResource.h">
+      <Filter>07.Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UShader.h">
+      <Filter>07.Resource\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UComputeShader.h">
+      <Filter>07.Resource\Shader\Compute</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UComputeCommand.h">
+      <Filter>02.DxClass\Command\Compute</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UResourceManager.h">
+      <Filter>01.Manager\ResourceManager</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

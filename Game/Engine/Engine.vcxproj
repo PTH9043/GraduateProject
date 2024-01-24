@@ -157,6 +157,7 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CbvSrvUavDescriptorHeap.h" />
+    <ClInclude Include="NavigationCell.h" />
     <ClInclude Include="CommandQueue.h" />
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="DDSTextureLoader12.h" />
@@ -168,6 +169,7 @@
     <ClInclude Include="GridObject.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="NavigationMesh.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="RootSignature.h" />
@@ -184,6 +186,7 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CbvSrvUavDescriptorHeap.cpp" />
+    <ClCompile Include="NavigationCell.cpp" />
     <ClCompile Include="CommandQueue.cpp" />
     <ClCompile Include="DDSTextureLoader12.cpp" />
     <ClCompile Include="DeviceAndFactory.cpp" />
@@ -194,6 +197,7 @@
     <ClCompile Include="GridObject.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="NavigationMesh.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

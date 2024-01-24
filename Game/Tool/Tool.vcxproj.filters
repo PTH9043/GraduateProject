@@ -22,6 +22,9 @@
     <Filter Include="main\ToolComponent">
       <UniqueIdentifier>{815889ef-e355-476e-89ad-80c7d14f1d11}</UniqueIdentifier>
     </Filter>
+    <Filter Include="main\ToolInstance">
+      <UniqueIdentifier>{d29f546a-fd2a-450f-b6f6-e7d30d24f27b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Imgui\imgui.cpp">
@@ -48,9 +51,6 @@
     <ClCompile Include="Tool.cpp">
       <Filter>main</Filter>
     </ClCompile>
-    <ClCompile Include="ToolInstance.cpp">
-      <Filter>main\Default</Filter>
-    </ClCompile>
     <ClCompile Include="ToolScene.cpp">
       <Filter>main\ToolScene</Filter>
     </ClCompile>
@@ -66,6 +66,9 @@
     <ClCompile Include="ToolManager.cpp">
       <Filter>main\ToolManager</Filter>
     </ClCompile>
+    <ClCompile Include="ToolInstance.cpp">
+      <Filter>main\ToolInstance</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -78,9 +81,6 @@
       <Filter>main\Default</Filter>
     </ClInclude>
     <ClInclude Include="Tool.h">
-      <Filter>main\Default</Filter>
-    </ClInclude>
-    <ClInclude Include="ToolInstance.h">
       <Filter>main\Default</Filter>
     </ClInclude>
     <ClInclude Include="Imgui\imconfig.h">
@@ -124,6 +124,9 @@
     </ClInclude>
     <ClInclude Include="ToolManager.h">
       <Filter>main\ToolManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolInstance.h">
+      <Filter>main\ToolInstance</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

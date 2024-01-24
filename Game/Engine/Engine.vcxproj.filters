@@ -37,6 +37,9 @@
     <Filter Include="HLSL\Diffuse">
       <UniqueIdentifier>{3438067d-2869-426f-9d3a-880bd864a87e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Navigation">
+      <UniqueIdentifier>{e5c33044-ee12-40da-a347-f1d0763af1d6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WICTextureLoader12.h">
@@ -114,6 +117,12 @@
     <ClInclude Include="GridObject.h">
       <Filter>GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="NavigationCell.h">
+      <Filter>Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="NavigationMesh.h">
+      <Filter>Navigation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WICTextureLoader12.cpp">
@@ -187,6 +196,12 @@
     </ClCompile>
     <ClCompile Include="GridObject.cpp">
       <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="NavigationCell.cpp">
+      <Filter>Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="NavigationMesh.cpp">
+      <Filter>Navigation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

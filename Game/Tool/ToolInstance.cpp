@@ -1,5 +1,6 @@
 #include "ToolInstance.h"
 #include "Engine.h"
+#include "NavigationCell.h"
 
 void Tool::Init(HINSTANCE hInstance, HWND hWnd)
 {
@@ -7,6 +8,25 @@ void Tool::Init(HINSTANCE hInstance, HWND hWnd)
     gGameFrameWork->GetTimer().Reset();
     BuildToolScene();
     InitImgui(hWnd);
+}
+
+void Tool::BuildToolScene()
+{
+    CMDLIST->Reset(CMDALLOCATOR.Get(), NULL);
+
+    m_pToolScene = make_shared<ToolScene>();
+    m_pToolScene->BuildObjects(DEVICE.Get(), CMDLIST.Get(), GRAPHICS_ROOT_SIGNATURE);
+
+    m_pToolScene->GetPlayer() = m_pToolPlayer = make_shared<CDebugPlayer>();
+    m_pToolPlayer->InitCamera(DEVICE.Get(), CMDLIST.Get(), GRAPHICS_ROOT_SIGNATURE);
+    m_pToolCamera = m_pToolPlayer->GetCamera();
+
+    m_pToolPlayer->SetPosition(XMFLOAT3(0.f, 20.f, 0.f));
+
+    m_pImguiManager = make_shared<ImguiManager>();
+    m_pInteractionManager = make_shared <InteractionManager>();
+
+    Util::ExecuteCommandList(CMDLIST, CMDQUEUE, FENCE, ++CMD->m_nFenceValues[RTVDSVDESCRIPTORHEAP->GetSwapChainIndex()], CMD->m_hFenceEvent);
 }
 
 void Tool::InitImgui(HWND hWnd)
@@ -34,25 +54,6 @@ void Tool::InitImgui(HWND hWnd)
         DXGI_FORMAT_R8G8B8A8_UNORM, m_pdxgiSRVDescriptorHeapForImgui.Get(),
         m_pdxgiSRVDescriptorHeapForImgui.Get()->GetCPUDescriptorHandleForHeapStart(),
         m_pdxgiSRVDescriptorHeapForImgui.Get()->GetGPUDescriptorHandleForHeapStart());
-}
-
-void Tool::BuildToolScene()
-{
-    CMDLIST->Reset(CMDALLOCATOR.Get(), NULL);
-
-    m_pToolScene = make_shared<ToolScene>();
-    m_pToolScene->BuildObjects(DEVICE.Get(), CMDLIST.Get(), GRAPHICS_ROOT_SIGNATURE);
-
-    m_pToolScene->GetPlayer() = m_pToolPlayer = make_shared<CDebugPlayer>();
-    m_pToolPlayer->InitCamera(DEVICE.Get(), CMDLIST.Get(), GRAPHICS_ROOT_SIGNATURE);
-    m_pToolCamera = m_pToolPlayer->GetCamera();
-
-    m_pToolPlayer->SetPosition(XMFLOAT3(0.f, 20.f, 0.f));
-
-    m_pImguiManager = make_shared<ImguiManager>();
-    m_pInteractionManager = make_shared <InteractionManager>();
-
-    Util::ExecuteCommandList(CMDLIST, CMDQUEUE, FENCE, ++CMD->m_nFenceValues[RTVDSVDESCRIPTORHEAP->GetSwapChainIndex()], CMD->m_hFenceEvent);
 }
 
 void Tool::Update()
@@ -98,7 +99,11 @@ void Tool::ImguiRender()
 
     //테스트를 위한 예제 윈도우
     //ImGui::ShowDemoWindow();
-    if(m_pImguiManager) m_pImguiManager->DisplayWindow(m_pToolPlayer, m_pToolScene, m_pToolCamera);
+
+    if(m_pImguiManager) 
+        m_pImguiManager->DisplayWindow(m_pToolPlayer, m_pToolScene, m_pToolCamera);
+
+
     ImGui::Render();
 
     CMDLIST->SetDescriptorHeaps(1, m_pdxgiSRVDescriptorHeapForImgui.GetAddressOf());
