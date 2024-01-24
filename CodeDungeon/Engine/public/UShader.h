@@ -50,10 +50,7 @@ protected:
 	const _wstring GetShaderType(const SHADERMAININFO& _eShaderType);
 
 	D3D12_PRIMITIVE_TOPOLOGY_TYPE GetToplologyType(const D3D12_PRIMITIVE_TOPOLOGY _eTopology);
-#ifdef _USE_IMGUI
-public:
-	virtual void ShowObjectInfo() override;
-#endif
+
 private:
 	using PIPELINECONTAINER = UNORMAP<_wstring, ComPtr<Dx12PipelineState>>;
 	static PIPELINECONTAINER					s_m_PipeLineContainer;
@@ -62,7 +59,7 @@ private:
 	SHPTR<UCommand>								m_spCommand;
 	SHPTR<UTableDescriptor>						m_spTableDescriptor;
 	SHPTR<URootSignature>						m_spRootSignature;
-	SHADERDESC											m_stShaderDesc;
+	SHADERDESC									m_stShaderDesc;
 };
 
 END
