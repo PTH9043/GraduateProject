@@ -9,6 +9,7 @@ class UJobTimer;
 
 using THREAD = std::thread;
 using THRAEDVECTOR = VECTOR<THREAD>;
+using JOBTIMERCONTAINER = VECTOR<SHPTR<UJobTimer>>;
 
 /*
 @ Date: 2023-12-26, Writer: 박태현
@@ -33,10 +34,11 @@ private:
 	// 초기화 함수 -> UBase에 기록됨 
 	virtual void Free() override;
 private:
-	MUTEX							m_Mutex;
-	THRAEDVECTOR			m_ThreadContainer;
+	MUTEX								m_Mutex;
+	THRAEDVECTOR				m_ThreadContainer;
+	JOBTIMERCONTAINER		m_JobTimerContainer;
 	// Thread Num
-	std::atomic< _uint>		m_CurThreadNum;
+	std::atomic< _uint>			m_CurThreadNum;
 };
 
 END

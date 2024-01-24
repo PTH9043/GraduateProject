@@ -19,8 +19,8 @@ public:
 	virtual _bool Start() PURE;
 protected:
 	template<class T, class... Args>
-	void RegisterServiceObject(Args&&... _args) {
-		m_spCoreInstance->ReadyCoreInstance(CreateInitConstructor<T>(m_spCoreInstance, std::forward<Args>(_args)...));
+	SHPTR<T> CreateServiceObject(Args&&... _args) {
+		return CreateInitConstructor<T>(m_spCoreInstance, std::forward<Args>(_args)...);
 	}
 protected: /* get set*/
 	CSHPTRREF<UCoreInstance>	GetCoreInstance() { return m_spCoreInstance; }

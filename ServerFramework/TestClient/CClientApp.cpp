@@ -10,7 +10,7 @@ CClientApp::CClientApp()
 _bool CClientApp::Start()
 {
 	std::cout << CurrentMilliseconds() << "\n";
-	RegisterServiceObject<CClientAdiminstor>();
+	CreateServiceObject<CClientAdiminstor>();
 
 	std::cout << "Start Client!\n";
 	return GetService()->Start();

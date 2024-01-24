@@ -17,7 +17,6 @@ public:
 public:
 	static void TimerThread(void* _pJobTimer);
 	 void RunTimer();
-
 	void TurnOffRunningThread() { m_isRunningThread = false; }
 protected:
 	virtual void TickTimer() PURE;

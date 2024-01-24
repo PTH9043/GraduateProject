@@ -28,6 +28,7 @@ namespace Core
 
 		LOCKGUARD<MUTEX> Lock{ m_Mutex };
 		m_ThreadContainer.emplace_back(ThreadJoin, UJobTimer::TimerThread, _spJobTImer.get(), m_CurThreadNum++);
+		m_JobTimerContainer.push_back(_spJobTImer);
 	}
 	/*
 	@ Date: 2023-12-26
@@ -69,5 +70,7 @@ namespace Core
 
 	void UThreadManager::Free()
 	{
+		m_JobTimerContainer.clear();
+		m_ThreadContainer.clear();
 	}
 }

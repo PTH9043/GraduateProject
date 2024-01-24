@@ -18,7 +18,7 @@ namespace Core {
 	{
 		while (m_isRunningThread) 
 		{
-
+			TickTimer();
 		}
 	}
 

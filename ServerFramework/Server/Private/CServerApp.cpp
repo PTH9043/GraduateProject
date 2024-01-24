@@ -17,7 +17,7 @@ namespace Server
 		std::cout << "Start Server!\n";
 		try
 		{
-			RegisterServiceObject<CServerAdiminstor>();
+			CreateServiceObject<CServerAdiminstor>();
 			std::cout << "Create Service Object!\n";
 			return GetService()->Start();
 		}
