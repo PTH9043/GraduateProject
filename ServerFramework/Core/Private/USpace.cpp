@@ -2,84 +2,74 @@
 #include "USpace.h"
 #include "USession.h"
 #include "UAABBCollider.h"
+
 namespace Core {
 
-	USpace::USpace() :  m_wpParents{}, m_SpaceChild{},
+	USpace::USpace() : m_SpaceIndex{0}, m_DepthLevel{0}, m_isChildNode{false}, m_wpParents{}, m_SpaceChild{},
 	m_spCollider{ nullptr }, m_SessionContainer{}
 	{
 		m_SessionContainer.Initialize(TLS::MAX_THREAD, TLS::MAX_THREAD * 5);
 	}
 
-	_bool USpace::NativeConstruct(REF_IN _int& _CurIndex, const _int _MaxCnt, const SPACEINFO& _SpaceInfo, SHPTR<USpace> _spParents)
+	_bool USpace::NativeConstruct(const SPACEINFO& _SpaceInfo, SHPTR<USpace> _spParents)
 	{
+		m_wpParents = _spParents;
 		m_spCollider = Create<UAABBCollider>(_SpaceInfo.vCenter, _SpaceInfo.vExtents);
-
-		if (_MaxCnt <= _CurIndex)
-		{
-			return true;
-		}
-		m_SpaceChild.resize(MAX_OCTREENODE_LENGTH);
-		_CurIndex += MAX_OCTREENODE_LENGTH;
-
-		Vector3 HalfExtents = _SpaceInfo.vExtents / 2.f;
-		// Index: 0
-		{
-			Vector3 ChildCenter = _SpaceInfo.vCenter - HalfExtents;
-			SPACEINFO spaceInfo{ ChildCenter, HalfExtents };
-			m_SpaceChild[0] = CreateInitNative<USpace>(REF_OUT _CurIndex , _MaxCnt, spaceInfo);
-		}
-		// Index: 1
-		{
-			Vector3 ChildCenter{ _SpaceInfo.vCenter.x + HalfExtents.x, _SpaceInfo.vCenter.y - HalfExtents.y, _SpaceInfo.vCenter.z - HalfExtents.z };
-			SPACEINFO spaceInfo{ ChildCenter, HalfExtents};
-			m_SpaceChild[1] = CreateInitNative<USpace>(REF_OUT _CurIndex, _MaxCnt, spaceInfo);
-		}
-		// Index: 2
-		{
-			Vector3 ChildCenter{ _SpaceInfo.vCenter.x - HalfExtents.x, _SpaceInfo.vCenter.y + HalfExtents.y, _SpaceInfo.vCenter.z - HalfExtents.z };
-			SPACEINFO spaceInfo{ ChildCenter, HalfExtents };
-			m_SpaceChild[2] = CreateInitNative<USpace>(REF_OUT _CurIndex, _MaxCnt, spaceInfo);
-		}
-		// Index: 3
-		{
-			Vector3 ChildCenter{ _SpaceInfo.vCenter.x + HalfExtents.x, _SpaceInfo.vCenter.y + HalfExtents.y, _SpaceInfo.vCenter.z - HalfExtents.z };
-			SPACEINFO spaceInfo{ ChildCenter, HalfExtents };
-			m_SpaceChild[3] = CreateInitNative<USpace>(REF_OUT _CurIndex, _MaxCnt, spaceInfo);
-		}
-		// Index: 4
-		{
-			Vector3 ChildCenter{ _SpaceInfo.vCenter.x - HalfExtents.x, _SpaceInfo.vCenter.y - HalfExtents.y, _SpaceInfo.vCenter.z + HalfExtents.z };
-			SPACEINFO spaceInfo{ ChildCenter, HalfExtents };
-			m_SpaceChild[4] = CreateInitNative<USpace>(REF_OUT _CurIndex, _MaxCnt, spaceInfo);
-		}
-		// Index: 5
-		{
-			Vector3 ChildCenter{ _SpaceInfo.vCenter.x + HalfExtents.x, _SpaceInfo.vCenter.y - HalfExtents.y, _SpaceInfo.vCenter.z + HalfExtents.z };
-			SPACEINFO spaceInfo{ ChildCenter, HalfExtents };
-			m_SpaceChild[5] = CreateInitNative<USpace>(REF_OUT _CurIndex, _MaxCnt, spaceInfo);
-		}
-		// Index: 6
-		{
-			Vector3 ChildCenter{ _SpaceInfo.vCenter.x - HalfExtents.x, _SpaceInfo.vCenter.y + HalfExtents.y, _SpaceInfo.vCenter.z + HalfExtents.z };
-			SPACEINFO spaceInfo{ ChildCenter, HalfExtents };
-			m_SpaceChild[6] = CreateInitNative<USpace>(REF_OUT _CurIndex, _MaxCnt, spaceInfo);
-		}
-		// Index: 7
-		{
-			Vector3 ChildCenter = _SpaceInfo.vCenter + HalfExtents;
-			SPACEINFO spaceInfo{ ChildCenter, HalfExtents };
-			m_SpaceChild[7] = CreateInitNative<USpace>(REF_OUT _CurIndex, _MaxCnt, spaceInfo);
-		}
+		m_DepthLevel = _SpaceInfo.Depths;
+		m_SpaceIndex = _SpaceInfo.Index;
 		return true;
 	}
 
-	void USpace::InsertSession(SHPTR<USession> _spSession)
+	_bool USpace::InsertSession(SHPTR<USession> _spSession)
 	{
-
+		return InsertSessionRecursively(_spSession);
 	}
 
-	void USpace::Rebalance()
+	void USpace::BroadCastMessage(_char* _pPacket, const PACKETHEAD& _PacketHead)
 	{
+		for (auto& iter : m_SessionContainer) {
+			iter->WriteData(_pPacket, _PacketHead);
+		}
+	}
+
+	_int USpace::GetChildIndexToPosition(const Vector3 _vPos)
+	{
+		_int index = 0;
+		index |= (m_spCollider->GetOriginPosition().x > _vPos.x) ? 1 : 0;
+		index |= (m_spCollider->GetOriginPosition().y > _vPos.y) ? 2 : 0;
+		index |= (m_spCollider->GetOriginPosition().z > _vPos.z) ? 4 : 0;
+		return index;
+	}
+
+	_bool USpace::IsContains(SHPTR<UCollider> _spCollider)
+	{
+		RETURN_CHECK(nullptr == _spCollider, false);
+		return m_spCollider->IsCollision(_spCollider);
+	}
+
+	SHPTR<USpace> USpace::MakeChild(const _int _Index, const SPACEINFO& _SpaceInfo)
+	{
+		RETURN_CHECK(MAX_OCTREENODE_LENGTH <= _Index, nullptr);
+		if (m_SpaceChild.size() <= 0) {
+			m_SpaceChild.resize(MAX_OCTREENODE_LENGTH);
+		}
+		m_SpaceChild[_Index] = CreateInitNative<USpace>(_SpaceInfo, ThisShared<USpace>());
+		return m_SpaceChild[_Index];
+	}
+
+	_bool USpace::InsertSessionRecursively(CSHPTRREF<USession> _spSession)
+	{
+		RETURN_CHECK(false == m_spCollider->IsCollision(_spSession->GetCollider()), false);
+		// 재귀 함수로 Insert 한다. 
+		if (true == m_isChildNode) {
+			_spSession->BringSpaceIndex(ThisShared<USpace>());
+			m_SessionContainer.Insert(_spSession);
+		}
+		else
+		{
+			return InsertSessionRecursively(_spSession);
+		}
+		return true;
 	}
 
 	void USpace::Free()

@@ -3,25 +3,59 @@
 #include "UThreadManager.h"
 #include "URandomManager.h"
 #include "ULogManager.h"
+#include "USpaceManager.h"
+#include "UService.h"
 
 namespace Core
 {
-	UCoreInstance::UCoreInstance() : 
+	UCoreInstance::UCoreInstance() :
+		m_spService { nullptr},
 		m_spThreadManager{ Create<Core::UThreadManager>() }, 
 		m_spRandomManager{Create<Core::URandomManager>()}, 
-		m_spLogManager{Create<Core::ULogManager>() }
+		m_spLogManager{Create<Core::ULogManager>() },
+		m_spSpaceManager{ Create<Core::USpaceManager>() }
 	{
 
 	}
 
+	void UCoreInstance::ReadyCoreInstance(SHPTR<UService> _spService)
+	{
+		RETURN_CHECK(nullptr == _spService, ;);
+		m_spService = _spService;
+	}
+
+	void UCoreInstance::Start()
+	{
+		m_spService->Start();
+	}
+
+	SHPTR<USession> UCoreInstance::FindSession(const SESSIONID _SessionID)
+	{
+		return m_spService->FindSession(_SessionID);
+	}
+
+	void UCoreInstance::BroadCastMessage(_char* _pPacket, const PACKETHEAD& _PacketHead)
+	{
+		m_spService->BroadCastMessage(_pPacket, _PacketHead);
+	}
+
+	void UCoreInstance::LeaveService(const SESSIONID _SessionID)
+	{
+		m_spService->LeaveService(_SessionID);
+	}
+
+	void UCoreInstance::InsertSession(SESSIONID _SessionID, SHPTR<USession> _spSession)
+	{
+		m_spService->InsertSession(_SessionID, _spSession);
+	}
+
 	/*
 	-----------------------------
-	CoreGrobal
+	CoreInstance
 	-----------------------------
 	UThreadManager
 	-----------------------------
 	*/
-
 
 	void UCoreInstance::RegisterFunc(const THREADFUNC& _CallBack, void* _Data)
 	{
@@ -83,19 +117,25 @@ namespace Core
 
 	/*
 	-----------------------------
-	UThreadManager
-	-----------------------------
 	ULogManager
 	-----------------------------
+	USpaceManager
+	-----------------------------
 	*/
+
+	void UCoreInstance::BuildGameSpace(const SPACEINFO& _SpaceInfo)
+	{
+		m_spSpaceManager->BuildGameSpace(_SpaceInfo);
+	}
 
 	void UCoreInstance::Free()
 	{
 		LOCKGUARD<MUTEX> Lock{ m_Mutex };
 		using namespace std;
 		std::this_thread::sleep_for(100ms);
-
-		m_spThreadManager.reset();
+		m_spSpaceManager.reset();
 		m_spRandomManager.reset();
+		m_spLogManager.reset();
+		m_spThreadManager.reset();
 	}
 }

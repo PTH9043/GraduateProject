@@ -8,6 +8,7 @@ BEGIN(Core)
 class UService;
 class UTransform;
 class UCollider;
+class USpace;
 
 /*
 @ Date: 2023-01-22, Writer: 박태현
@@ -20,7 +21,7 @@ public:
 	using BUFFER = ARRAY<_char, MAX_BUFFER_LENGTH>;
 	using TOTALBUFFER = ARRAY<_char, MAX_PROCESSBUF_LENGTH>;
 public:
-	USession(OBJCON_CONSTRUCTOR, MOVE TCPSOCKET _TcpSocket, SHPTR<UService> _spService,  SESSIONID _ID, SESSIONTYPE _SessionType);
+	USession(OBJCON_CONSTRUCTOR, MOVE TCPSOCKET _TcpSocket, SESSIONID _ID, SESSIONTYPE _SessionType);
 	DESTRUCTOR(USession)
 public: 
 	virtual _bool Start() PURE;
@@ -60,13 +61,13 @@ public:
 public: /*Get Set */
 	const SESSIONID GetSessionID() const { return m_SessionID; }
 	const SESSIONTYPE GetSessionType() const { return m_SessionType; }
+	const _int GetSpaceID() const { return m_SpaceIndex; }
 	TCPSOCKET& GetTcpSocket(REF_RETURN) { return m_TcpSocket; }
-	SHPTR<UService> GetService() const { return m_wpService.lock(); }
-
 	SHPTR<UTransform> GetTransform() const { return m_spTransform; }
 	SHPTR<UCollider> GetCollider() const { return m_spCollider; }
-
 	const _bool IsConnected() const { return m_isConnected.load(); }
+
+	void BringSpaceIndex(SHPTR<USpace> _spSpace);
 protected:
 	void PacketCombine(_char* _pPacket, _llong _Size);
 	virtual _bool ProcessPacket(_char* _pPacket, const PACKETHEAD& _PacketHead) PURE;
@@ -82,14 +83,13 @@ private:
 private:
 	SESSIONID						m_SessionID;
 	SESSIONTYPE				m_SessionType;
+	_int									m_SpaceIndex;
 	TCPSOCKET					m_TcpSocket;
 	_llong								m_CurBuffuerLocation;
 	// Buffer 모음
 	TOTALBUFFER				m_TotalBuffer;
 	BUFFER							m_SendBuffer;
 	BUFFER							m_RecvBuffer;
-	// Service
-	WKPTR<UService>		m_wpService;
 
 	SHPTR<UTransform> m_spTransform;
 	SHPTR<UCollider>		m_spCollider;

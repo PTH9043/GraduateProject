@@ -19,14 +19,13 @@ public:
 	virtual _bool Start() PURE;
 protected:
 	template<class T, class... Args>
-	void CreateServiceObject(Args&&... _args) {
-		m_spService = CreateInitConstructor<T>(m_spCoreInstance, std::forward<Args>(_args)...);
+	void RegisterServiceObject(Args&&... _args) {
+		m_spCoreInstance->ReadyCoreInstance(CreateInitConstructor<T>(m_spCoreInstance, std::forward<Args>(_args)...));
 	}
 protected: /* get set*/
-	CSHPTRREF<UService> GetService() { return m_spService; }
+	CSHPTRREF<UCoreInstance>	GetCoreInstance() { return m_spCoreInstance; }
 private:
 	SHPTR<UCoreInstance> m_spCoreInstance;
-	SHPTR<UService>			 m_spService;
 };
 
 END

@@ -6,12 +6,18 @@ namespace Core
 	namespace TLS
 	{
 		/*
-		@ Date: 2023-12-26
-		@ Writer: 박태현
+		@ Date: 2024.01.23,  Writer: 박태현
 		@ Explain
-		- 일을 처리할 MAX_THRED의 수 
+		- 전체 쓰레드가 생성될 수 있는 개수
 		*/
-		constexpr static _uint									 MAX_THREAD{ 16 };
+		constexpr static _uint									 MAX_THREAD{ 20 };
+
+		/*
+		@ Date: 2024.01.23,  Writer: 박태현
+		@ Explain
+		- 일을 처리할 MAX_THRED의 수
+		*/
+		constexpr static _uint									 MAX_WORKTHREAD{ 16 };
 		/*
 		@ Date: 2023-12-26
 		@ Writer: 박태현

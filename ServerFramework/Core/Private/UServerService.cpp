@@ -24,7 +24,7 @@ namespace Core {
 		__super::Start();
 		SHPTR<UCoreInstance> spCoreInstance = GetCoreInstance();
 
-		for (_uint i = 0; i < TLS::MAX_THREAD; ++i)
+		for (_uint i = 0; i < TLS::MAX_WORKTHREAD; ++i)
 		{
 			spCoreInstance->RegisterFunc(UServerService::ThreadFunc, GetIOConectPointer());
 		}

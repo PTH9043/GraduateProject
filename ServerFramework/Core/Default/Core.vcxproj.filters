@@ -79,9 +79,6 @@
     <Filter Include="98.Lua">
       <UniqueIdentifier>{70a90b66-5918-41b3-8428-356a321ea39e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Manager\Octree">
-      <UniqueIdentifier>{d9f58a22-f13a-4cc0-ade8-6846179eaa09}</UniqueIdentifier>
-    </Filter>
     <Filter Include="04.GamePath">
       <UniqueIdentifier>{2c9e0d8e-a040-4db2-b627-b425d77c9421}</UniqueIdentifier>
     </Filter>
@@ -117,6 +114,18 @@
     </Filter>
     <Filter Include="06.Component\Collider\Sphere">
       <UniqueIdentifier>{f35c2d33-b97a-4b5e-9d51-312972ff4ace}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Manager\SpaceManager">
+      <UniqueIdentifier>{d9f58a22-f13a-4cc0-ade8-6846179eaa09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.DataBase">
+      <UniqueIdentifier>{c407a3aa-7a7b-47bc-ba49-e4fb8705f1bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Manager\RoomManager">
+      <UniqueIdentifier>{894e260d-26ea-436b-9dd1-0a0181c46fd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Network\JobTimer">
+      <UniqueIdentifier>{61a0a5f9-323f-42e3-9c95-123c650010e9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -246,6 +255,18 @@
     <ClInclude Include="..\Public\USphereCollider.h">
       <Filter>06.Component\Collider\Sphere</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\USpaceManager.h">
+      <Filter>02.Manager\SpaceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\URoomManager.h">
+      <Filter>02.Manager\RoomManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UDataBase.h">
+      <Filter>07.DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UJobTimer.h">
+      <Filter>03.Network\JobTimer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\UBase.cpp">
@@ -343,6 +364,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\USphereCollider.cpp">
       <Filter>06.Component\Collider\Sphere</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\USpaceManager.cpp">
+      <Filter>02.Manager\SpaceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\URoomManager.cpp">
+      <Filter>02.Manager\RoomManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UDataBase.cpp">
+      <Filter>07.DataBase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UJobTimer.cpp">
+      <Filter>03.Network\JobTimer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
