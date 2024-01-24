@@ -4,7 +4,6 @@
 BEGIN(Engine)
 class UDevice;
 class UTableDescriptor;
-class UComputeTableDescriptor;
 
 class UShaderStructedBuffer final : public UBase {
 public:

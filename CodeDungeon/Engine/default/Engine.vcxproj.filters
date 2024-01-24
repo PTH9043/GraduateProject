@@ -89,6 +89,15 @@
     <Filter Include="01.Manager\ResourceManager">
       <UniqueIdentifier>{9ca511da-29ab-4890-b2af-4fe95bebe1fb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.Utility">
+      <UniqueIdentifier>{a16fa7a0-3f61-4c5a-9668-e3e121efbd74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Utility\RenderTargetGroup">
+      <UniqueIdentifier>{bfddea0a-d0fe-4b5d-b3f4-cb1a27ee326d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Manager\RenderTargetManager">
+      <UniqueIdentifier>{393ef3a5-7e44-4b0f-a37b-540889e2cb03}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -159,6 +168,12 @@
     </ClCompile>
     <ClCompile Include="..\private\UResourceManager.cpp">
       <Filter>01.Manager\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\URenderTargetGroup.cpp">
+      <Filter>03.Utility\RenderTargetGroup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\URenderTargetManager.cpp">
+      <Filter>01.Manager\RenderTargetManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -254,6 +269,12 @@
     </ClInclude>
     <ClInclude Include="..\public\UResourceManager.h">
       <Filter>01.Manager\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\URenderTargetGroup.h">
+      <Filter>03.Utility\RenderTargetGroup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\URenderTargetManager.h">
+      <Filter>01.Manager\RenderTargetManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

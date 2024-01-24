@@ -1,8 +1,10 @@
 #include "EngineDefine.h"
 #include "UGameInstance.h"
 
+#include "URenderTargetManager.h"
 #include "UResourceManager.h"
 #include "UGraphicDevice.h"
+
 
 IMPLEMENT_SINGLETON(UGameInstance);
 
@@ -148,3 +150,53 @@ CSHPTRREF<URootSignature> UGameInstance::GetRootSignature() const
 {
 	return m_spGraphicDevice->GetRootSignature();
 }
+
+HRESULT UGameInstance::AddRenderTargetGroup(const RTGROUPID& _eGroupID, const std::vector<RTDESC>& _rtVec)
+{
+	return m_spRenderTargetManager->AddRenderTargetGroup(_eGroupID, _rtVec);
+}
+
+void UGameInstance::RemoveRenderTargetGroup(const RTGROUPID _eGroupID)
+{
+	m_spRenderTargetManager->RemoveRenderTargetGroup(_eGroupID);
+}
+
+// OMSetRenderTarget 
+void	 UGameInstance::OmSetRenderTargets(CSHPTRREF<UCommand> _spCommand, const RTGROUPID& _eGroupID, const _uint _index, const _uint _iOffset)
+{
+	m_spRenderTargetManager->OmSetRenderTargets(_spCommand, _eGroupID, _index, _iOffset);
+}
+void	 UGameInstance::OmSetRenderTargets(CSHPTRREF<UCommand> _spCommand, const RTGROUPID& _eGroupID)
+{
+	m_spRenderTargetManager->OmSetRenderTargets(_spCommand, _eGroupID);
+}
+// ClearRenderTargetView
+void	 UGameInstance::ClearRenderTargetView(CSHPTRREF<UCommand> _spCommand, const RTGROUPID& _eGroupID, const _uint _index)
+{
+	m_spRenderTargetManager->ClearRenderTargetView(_spCommand, _eGroupID, _index);
+}
+void	 UGameInstance::ClearRenderTargetView(CSHPTRREF<UCommand> _spCommand, const RTGROUPID& _eGroupID)
+{
+	m_spRenderTargetManager->ClearRenderTargetView(_spCommand, _eGroupID);
+}
+// Waiting
+void	 UGameInstance::WaitTargetToResource(CSHPTRREF<UCommand> _spCommand, const RTGROUPID& _eGroupID)
+{
+	m_spRenderTargetManager->WaitTargetToResource(_spCommand, _eGroupID);
+}
+void	 UGameInstance::WaitResourceToTarget(CSHPTRREF<UCommand> _spCommand, const RTGROUPID& _eGroupID)
+{
+	m_spRenderTargetManager->WaitResourceToTarget(_spCommand, _eGroupID);
+}
+
+
+SHPTR<URenderTargetGroup> UGameInstance::FindRenderTargetGroup(const RTGROUPID& _eGroupID)
+{
+	return m_spRenderTargetManager->FindRenderTargetGroup(_eGroupID);
+}
+
+SHPTR<UTexture> UGameInstance::FindRenderTargetTexture(const RTGROUPID _eGroupID, const RTOBJID _eObjID)
+{
+	return m_spRenderTargetManager->FindRenderTargetTexture(_eGroupID, _eObjID);
+}
+

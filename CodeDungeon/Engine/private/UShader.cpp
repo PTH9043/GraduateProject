@@ -7,8 +7,9 @@
 #include "UGpuCommand.h"
 #include "UTableDescriptor.h"
 #include "UShaderConstantBuffer.h"
-#include "UTexture.h"
 #include "UShaderStructedBuffer.h"
+#include "UTexture.h"
+
 
 UShader::PIPELINECONTAINER					UShader::s_m_PipeLineContainer;
 
@@ -89,7 +90,7 @@ void UShader::SettingPipeLineState(CSHPTRREF<UCommand> _spCommand)
 
 void UShader::CommitLocalShaderDatas(CSHPTRREF<UCommand> _spCommand)
 {
-	m_spTableDescriptor->CommitTable(_spCommand);
+	m_spTableDescriptor->CommitGraphicTable(_spCommand);
 }
 
 HRESULT UShader::CreateShader()
@@ -293,78 +294,3 @@ D3D12_PRIMITIVE_TOPOLOGY_TYPE UShader::GetToplologyType(const D3D12_PRIMITIVE_TO
 		return D3D12_PRIMITIVE_TOPOLOGY_TYPE_UNDEFINED;
 	}
 }
-
-#ifdef _USE_IMGUI
-/*
-typedef struct tagShaderDesc
-	{
-		// 이름만 있으면 Compute Shader를 빌드한다.
-		tagShaderDesc(const _wstring& _wstrShaderName) :
-			eType(GRAPHICISCONTROLTYPE::COMPUTE),
-			wstrShaderName(_wstrShaderName), pElement(nullptr), iNumElement(0), ShaderList({ SHADERMAININFO::CS_MAIN}),
-			iRenderTargets(1),
-			RenderFormats(DXGI_FORMAT_UNKNOWN),
-			eRasterRizerType(RASTERIZER_TYPE::CULL_BACK),
-			eDepthStencilType(DEPTH_STENCIL_TYPE::LESS),
-			eBlendType(BLEND_TYPE::DEFAULT)
-		{}
-
-		// 렌더 타겟에 그릴 수 있게 해주는 쉐이더이다.
-		 tagShaderDesc(const _wstring& _wstrShaderName,
-			D3D12_INPUT_ELEMENT_DESC* _pDesc,
-			const _uint& _iNumElement,
-			const SHADERLIST& _ShaderList,
-			const RENDERFORMATS& _RenderForamts,
-			const RASTERIZER_TYPE& _eRasterRizerType = RASTERIZER_TYPE::CULL_BACK,
-			const DEPTH_STENCIL_TYPE& _eDepthStencilType = DEPTH_STENCIL_TYPE::LESS,
-			const BLEND_TYPE& _eBlendType = BLEND_TYPE::DEFAULT)
-			:
-			 eType(GRAPHICISCONTROLTYPE::GRAPHICS),
-			wstrShaderName(_wstrShaderName), pElement(_pDesc), iNumElement(_iNumElement), ShaderList(_ShaderList),
-			iRenderTargets((_uint)_RenderForamts.size()),
-			RenderFormats(_RenderForamts),
-			eRasterRizerType(_eRasterRizerType),
-			eDepthStencilType(_eDepthStencilType),
-			eBlendType(_eBlendType)
-		{}
-		// 일반 화면에 그리는 쉐이더 1개의 렌더 타겟에 Format만 맞으면 그릴 수 있따.
-		 tagShaderDesc(const _wstring& _wstrShaderName,
-			D3D12_INPUT_ELEMENT_DESC* _pDesc,
-			const _uint& _iNumElement,
-			const SHADERLIST& _ShaderList,
-			const RASTERIZER_TYPE& _eRasterRizerType = RASTERIZER_TYPE::CULL_BACK,
-			const DEPTH_STENCIL_TYPE& _eDepthStencilType = DEPTH_STENCIL_TYPE::LESS,
-			const BLEND_TYPE& _eBlendType = BLEND_TYPE::DEFAULT)
-			:
-			 eType(GRAPHICISCONTROLTYPE::GRAPHICS),
-			wstrShaderName(_wstrShaderName), pElement(_pDesc), iNumElement(_iNumElement), ShaderList(_ShaderList),
-			 RenderFormats(RENDERFORMATS{DXGI_FORMAT_R8G8B8A8_UNORM}),
-			 iRenderTargets(1),
-			eRasterRizerType(_eRasterRizerType),
-			eDepthStencilType(_eDepthStencilType),
-			eBlendType(_eBlendType)
-		{}
-
-		 GRAPHICISCONTROLTYPE						eType;
-		_wstring														wstrShaderName;
-		D3D12_INPUT_ELEMENT_DESC*			pElement;
-		_uint															iNumElement;
-		SHADERLIST												ShaderList;
-		_uint															iRenderTargets;
-		RENDERFORMATS									RenderFormats;
-		RASTERIZER_TYPE									eRasterRizerType;
-		DEPTH_STENCIL_TYPE							eDepthStencilType;
-		BLEND_TYPE												eBlendType;
-	}SHADERDESC;
-*/
-
-void UShader::ShowObjectInfo()
-{
-	static const char* SHADER_NAME{ "Shader" };
-	if (ImGui::TreeNode(SHADER_NAME))
-	{
-		ImGui::Text(UMethod::ConvertWToS(m_stShaderDesc.wstrShaderName).c_str());
-		ImGui::TreePop();
-	}
-}
-#endif

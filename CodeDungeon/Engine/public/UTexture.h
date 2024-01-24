@@ -50,3 +50,5 @@ private:
 private:
 	static constexpr D3D12_CPU_DESCRIPTOR_HANDLE NULL_HANDLE {NULL};
 };
+
+END

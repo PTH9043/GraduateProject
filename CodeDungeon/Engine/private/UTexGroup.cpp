@@ -1,7 +1,7 @@
 #include "EngineDefine.h"
+#include "UShader.h"
 #include "UTexGroup.h"
 #include "UTexture.h"
-#include "UShader.h"
 #include "UGameInstance.h"
 
 namespace fs = std::filesystem;
@@ -147,23 +147,3 @@ void UTexGroup::CreateTexture(const _wstring& _wstrPath, const TEXTURECREATETYPE
 		m_vecTextureContainer.push_back(pTexture);
 	}
 }
-#ifdef _USE_IMGUI
-#include "UMethod.h"
-
-void UTexGroup::ShowObjectInfo()
-{
-	static const char* TexGroupName{ "TexGroup" };
-	if (ImGui::TreeNode("TexGroup"))
-	{
-		static VECTOR<_string> vecTextureName;
-		if (vecTextureName.size() == 0)
-		{
-			for (auto& iter : m_TextureNames)
-			{
-				vecTextureName.push_back(UMethod::ConvertWToS(iter.first));
-			}
-		}
-		ImGui::TreePop();
-	}
-}
-#endif

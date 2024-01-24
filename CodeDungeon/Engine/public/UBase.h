@@ -2,6 +2,11 @@
 
 BEGIN(Engine)
 
+/*
+최상위 클래스 모든 클래스는 반드시 이 클래스의 하위 클래스여야 한다.
+예외란 존재하지 않는다.
+*/
+
 class UBase abstract : public std::enable_shared_from_this<UBase> {
 protected:
 	UBase();

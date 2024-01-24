@@ -2,6 +2,7 @@
 #include "UShaderStructedBuffer.h"
 #include "UGameInstance.h"
 #include "UDevice.h"
+#include "UTableDescriptor.h"
 
 
 UShaderStructedBuffer::UShaderStructedBuffer() :

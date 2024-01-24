@@ -34,7 +34,7 @@
 // Use Atomic Shared PTr
 #define _USE_ATOMIC
 // Use Debugging Values
-#define _USE_DEBUGGING
+//#define _USE_DEBUGGING
 
 #include <d3d12.h>
 #include <dxgi1_4.h>
@@ -49,6 +49,8 @@
 #include <DirectXTK/SpriteFont.h>
 #include <DirectXTK/DescriptorHeap.h>
 #include "DirectXTK/d3dx12.h"
+
+
 #include "MathLib/CusMath.h"
 
 #define DIRECTINPUT_VERSION 0x0800

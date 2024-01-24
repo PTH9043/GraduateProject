@@ -39,10 +39,7 @@ private:
 	void LoadFolder(const _wstring& _wstrPath, const _bool& _isUnderLoadFolder, const _bool _isAllLoadFolder,
 		const TEXTURECREATETYPE _eTextureCreateType);
 	void CreateTexture(const _wstring& _wstrPath, const TEXTURECREATETYPE _eTextureCreateType);
-#ifdef _USE_IMGUI
-public:
-	virtual void ShowObjectInfo() override;
-#endif
+
 private:
 	TEXTURECONTAINER		m_vecTextureContainer;
 	TEXNAMES						m_TextureNames;

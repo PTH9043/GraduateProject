@@ -1,11 +1,11 @@
 #include "EngineDefine.h"
-#include "UTexture.h"
 #include "UDevice.h"
+#include "UGameInstance.h"
 #include "UGpuCommand.h"
 #include <DirectXTK/ResourceUploadBatch.h>
 #include <DirectXTK/DDSTextureLoader.h>
 #include <DirectXTK/WICTextureLoader.h>
-#include "UGameInstance.h"
+#include "UTexture.h"
 
 namespace fs = std::filesystem;
 
@@ -63,7 +63,7 @@ HRESULT UTexture::NativeConstruct(CSHPTRREF<UDevice> _spDevice, const _wstring& 
 
 			SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
-			auto uploadResourcesFinished = ResoureceUpLoad.End(spGameInstance->GetGpuCommandQueue().Get());
+			auto uploadResourcesFinished = ResoureceUpLoad.End(spGameInstance->GetGpuCommand()->GetCmdQue().Get());
 			// Wait for the upload thread to terminate
 			uploadResourcesFinished.wait();
 		}

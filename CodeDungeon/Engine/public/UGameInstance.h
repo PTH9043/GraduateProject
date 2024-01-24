@@ -1,5 +1,4 @@
 #pragma once
-#include "EngineDefine.h"
 #include "UBase.h"
 
 BEGIN(Engine)
@@ -13,6 +12,7 @@ class URootSignature;
 
 class UResourceManager;
 class UGraphicDevice;
+class URenderTargetManager;
 
 class UGameInstance : public UBase 
 {
@@ -51,9 +51,27 @@ public: /*  GraphicDevice */
 	CSHPTRREF<UGpuCommand>		GetGpuCommand() const;
 	CSHPTRREF<UTableDescriptor>	GetTableDescriptor() const;
 	CSHPTRREF<URootSignature>	GetRootSignature() const;
+
+public: /*  RenderTargetManager */
+	HRESULT		AddRenderTargetGroup(const RTGROUPID& _eGroupID, const std::vector<RTDESC>& _rtVec);
+	void					RemoveRenderTargetGroup(const RTGROUPID _eGroupID);
+
+	// OMSetRenderTarget 
+	void					OmSetRenderTargets(CSHPTRREF<UCommand> _spCommand, const RTGROUPID& _eGroupID, const _uint _index, const _uint _iOffset);
+	void					OmSetRenderTargets(CSHPTRREF<UCommand> _spCommand, const RTGROUPID& _eGroupID);
+	// ClearRenderTargetView
+	void					ClearRenderTargetView(CSHPTRREF<UCommand> _spCommand, const RTGROUPID& _eGroupID, const _uint _index);
+	void					ClearRenderTargetView(CSHPTRREF<UCommand> _spCommand, const RTGROUPID& _eGroupID);
+	// Waiting
+	void					WaitTargetToResource(CSHPTRREF<UCommand> _spCommand, const RTGROUPID& _eGroupID);
+	void					WaitResourceToTarget(CSHPTRREF<UCommand> _spCommand, const RTGROUPID& _eGroupID);
+	// Get RT Group 
+	SHPTR<URenderTargetGroup>	 FindRenderTargetGroup(const RTGROUPID& _eGroupID);
+	SHPTR<UTexture> FindRenderTargetTexture(const RTGROUPID _eGroupID, const RTOBJID _eObjID);
 private:
 	SHPTR<UResourceManager>				m_spResourceManager;
 	SHPTR<UGraphicDevice>						m_spGraphicDevice;
+	SHPTR<URenderTargetManager>		m_spRenderTargetManager;
 };
 
 END
