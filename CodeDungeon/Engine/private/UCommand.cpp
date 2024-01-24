@@ -3,7 +3,7 @@
 #include "UDevice.h"
 #include "URootSignature.h"
 
-_uint														UCommand::s_iRenderFence;
+_uint UCommand::s_iRenderFence;
 
 UCommand::UCommand() :
 	m_cpFence{ nullptr },

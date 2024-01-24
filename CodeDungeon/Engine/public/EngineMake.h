@@ -77,7 +77,7 @@
 
 #pragma region LAYER
 
-#define LAYTER_CAM L"LayerCamera"
+#define LAYER_CAM L"LayerCamera"
 #define LAYER_DEFAULT L"LayerDefault"
 #define LAYER_SKYBOX L"LayerSkyBox"
 #define LAYER_TERRAIN L"LayerTerrain"

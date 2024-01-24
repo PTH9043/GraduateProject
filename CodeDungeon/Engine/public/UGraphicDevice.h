@@ -8,7 +8,7 @@ class UGpuCommand;
 class UComputeCommand;
 class USwapChain;
 class UGraphicsTableDescriptor;
-class UGrobalConstantBuffer;
+class UGlobalConstantBuffer;
 class UShaderConstantBuffer;
 class URenderTargetGroup;
 class URootSignature;

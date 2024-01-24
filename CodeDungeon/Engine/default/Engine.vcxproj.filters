@@ -94,6 +94,54 @@
     <Filter Include="01.Manager\RenderTargetManager">
       <UniqueIdentifier>{393ef3a5-7e44-4b0f-a37b-540889e2cb03}</UniqueIdentifier>
     </Filter>
+    <Filter Include="07.Resource\VIBuffer">
+      <UniqueIdentifier>{bcf7bdc7-6f46-424f-9d0f-4c8235f1111a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Resource\VIBuffer\Rect">
+      <UniqueIdentifier>{4a7a585f-cc5d-4ee2-b33f-f549973ef9d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor">
+      <UniqueIdentifier>{0d518e3b-ea8b-4f4e-9967-e1f30f483955}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\01.Pawn">
+      <UniqueIdentifier>{52f1163c-78dc-4394-baea-fec550bf3e5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\02.Camera">
+      <UniqueIdentifier>{e15d0f09-c1b8-44d6-b9b1-5e840055bcda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component">
+      <UniqueIdentifier>{4f70f2b5-7a18-45ff-a900-80092b6c7c57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component\Transform">
+      <UniqueIdentifier>{125a0b54-6c80-4124-b35f-8f09087700b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Manager\ShaderBufferManager">
+      <UniqueIdentifier>{d005d701-1f5b-4029-8d5c-300c2fdd6bec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Manager\PipeLine">
+      <UniqueIdentifier>{a1e1ef3e-120a-47b3-b089-965005441b7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Utility\Frustom">
+      <UniqueIdentifier>{5bdd26da-93b2-43a7-951f-5ecb7a5ea815}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\01.Pawn\Default">
+      <UniqueIdentifier>{f366d738-a619-4489-810d-cfc20246c072}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\01.Pawn\Default\Cube">
+      <UniqueIdentifier>{8a7334eb-e29b-41d7-8cab-aa7bd2129b3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\01.Pawn\Default\Debugging">
+      <UniqueIdentifier>{7b1ee622-d741-4230-9e24-de1cf618b103}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\01.Pawn\Default\Sphere">
+      <UniqueIdentifier>{0546f690-36a2-4a1e-8261-549e0ebdd190}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Manager\ActorManager">
+      <UniqueIdentifier>{aa651a47-e01b-48fd-873f-e464644ef5a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Manager\ActorManager\Group">
+      <UniqueIdentifier>{16f5e381-93ac-4105-a78f-b3adde437454}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -170,6 +218,51 @@
     </ClCompile>
     <ClCompile Include="..\private\URenderTargetManager.cpp">
       <Filter>01.Manager\RenderTargetManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UVIBuffer.cpp">
+      <Filter>07.Resource\VIBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UVIBufferRect.cpp">
+      <Filter>07.Resource\VIBuffer\Rect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UActor.cpp">
+      <Filter>05.Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UComponent.cpp">
+      <Filter>06.Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UTransform.cpp">
+      <Filter>06.Component\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UShaderBufferManager.cpp">
+      <Filter>01.Manager\ShaderBufferManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UPipeLine.cpp">
+      <Filter>01.Manager\PipeLine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UCamera.cpp">
+      <Filter>05.Actor\02.Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UFrustomCulling.cpp">
+      <Filter>03.Utility\Frustom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UPawn.cpp">
+      <Filter>05.Actor\01.Pawn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UDefaultSphere.cpp">
+      <Filter>05.Actor\01.Pawn\Default\Sphere</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UDefaultDebugging.cpp">
+      <Filter>05.Actor\01.Pawn\Default\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UDefaultCube.cpp">
+      <Filter>05.Actor\01.Pawn\Default\Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UActorManager.cpp">
+      <Filter>01.Manager\ActorManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UActorGroup.cpp">
+      <Filter>01.Manager\ActorManager\Group</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -271,6 +364,51 @@
     </ClInclude>
     <ClInclude Include="..\public\URenderTargetManager.h">
       <Filter>01.Manager\RenderTargetManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UVIBuffer.h">
+      <Filter>07.Resource\VIBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UVIBufferRect.h">
+      <Filter>07.Resource\VIBuffer\Rect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UActor.h">
+      <Filter>05.Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UComponent.h">
+      <Filter>06.Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UTransform.h">
+      <Filter>06.Component\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UShaderBufferManager.h">
+      <Filter>01.Manager\ShaderBufferManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UPipeLine.h">
+      <Filter>01.Manager\PipeLine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UCamera.h">
+      <Filter>05.Actor\02.Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UFrustomCulling.h">
+      <Filter>03.Utility\Frustom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UPawn.h">
+      <Filter>05.Actor\01.Pawn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UDefaultSphere.h">
+      <Filter>05.Actor\01.Pawn\Default\Sphere</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UDefaultDebugging.h">
+      <Filter>05.Actor\01.Pawn\Default\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UDefaultCube.h">
+      <Filter>05.Actor\01.Pawn\Default\Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UActorManager.h">
+      <Filter>01.Manager\ActorManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UActorGroup.h">
+      <Filter>01.Manager\ActorManager\Group</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

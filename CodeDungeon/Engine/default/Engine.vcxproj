@@ -28,6 +28,17 @@
     <ClInclude Include="..\public\EngineShaderParam.h" />
     <ClInclude Include="..\public\EngineStruct.h" />
     <ClInclude Include="..\public\EngineTypedef.h" />
+    <ClInclude Include="..\public\UActor.h" />
+    <ClInclude Include="..\public\UActorGroup.h" />
+    <ClInclude Include="..\public\UActorManager.h" />
+    <ClInclude Include="..\public\UCamera.h" />
+    <ClInclude Include="..\public\UComponent.h" />
+    <ClInclude Include="..\public\UDefaultCube.h" />
+    <ClInclude Include="..\public\UDefaultDebugging.h" />
+    <ClInclude Include="..\public\UDefaultSphere.h" />
+    <ClInclude Include="..\public\UFrustomCulling.h" />
+    <ClInclude Include="..\public\UPawn.h" />
+    <ClInclude Include="..\public\UPipeLine.h" />
     <ClInclude Include="..\public\URenderTargetManager.h" />
     <ClInclude Include="..\public\UBase.h" />
     <ClInclude Include="..\public\UCloneObject.h" />
@@ -46,15 +57,30 @@
     <ClInclude Include="..\public\UResourceManager.h" />
     <ClInclude Include="..\public\URootSignature.h" />
     <ClInclude Include="..\public\UShader.h" />
+    <ClInclude Include="..\public\UShaderBufferManager.h" />
     <ClInclude Include="..\public\UShaderConstantBuffer.h" />
     <ClInclude Include="..\public\UShaderStructedBuffer.h" />
     <ClInclude Include="..\public\USwapChain.h" />
     <ClInclude Include="..\public\UTableDescriptor.h" />
     <ClInclude Include="..\public\UTexGroup.h" />
     <ClInclude Include="..\public\UTexture.h" />
+    <ClInclude Include="..\public\UTransform.h" />
+    <ClInclude Include="..\public\UVIBuffer.h" />
+    <ClInclude Include="..\public\UVIBufferRect.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp" />
+    <ClCompile Include="..\private\UActor.cpp" />
+    <ClCompile Include="..\private\UActorGroup.cpp" />
+    <ClCompile Include="..\private\UActorManager.cpp" />
+    <ClCompile Include="..\private\UCamera.cpp" />
+    <ClCompile Include="..\private\UComponent.cpp" />
+    <ClCompile Include="..\private\UDefaultCube.cpp" />
+    <ClCompile Include="..\private\UDefaultDebugging.cpp" />
+    <ClCompile Include="..\private\UDefaultSphere.cpp" />
+    <ClCompile Include="..\private\UFrustomCulling.cpp" />
+    <ClCompile Include="..\private\UPawn.cpp" />
+    <ClCompile Include="..\private\UPipeLine.cpp" />
     <ClCompile Include="..\private\URenderTargetManager.cpp" />
     <ClCompile Include="..\private\UBase.cpp" />
     <ClCompile Include="..\private\UCloneObject.cpp" />
@@ -73,12 +99,16 @@
     <ClCompile Include="..\private\UResourceManager.cpp" />
     <ClCompile Include="..\private\URootSignature.cpp" />
     <ClCompile Include="..\private\UShader.cpp" />
+    <ClCompile Include="..\private\UShaderBufferManager.cpp" />
     <ClCompile Include="..\private\UShaderConstantBuffer.cpp" />
     <ClCompile Include="..\private\UShaderStructedBuffer.cpp" />
     <ClCompile Include="..\private\USwapChain.cpp" />
     <ClCompile Include="..\private\UTableDescriptor.cpp" />
     <ClCompile Include="..\private\UTexGroup.cpp" />
     <ClCompile Include="..\private\UTexture.cpp" />
+    <ClCompile Include="..\private\UTransform.cpp" />
+    <ClCompile Include="..\private\UVIBuffer.cpp" />
+    <ClCompile Include="..\private\UVIBufferRect.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

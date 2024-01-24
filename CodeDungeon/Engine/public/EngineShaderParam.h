@@ -27,18 +27,18 @@ namespace Engine {
 
 #pragma region GROBADATA
 
-	struct GROBALINFO
+	struct GLOBALINFO
 	{
 		float		  fDeltaTime{ 0 };
 		_float3     vPadding;
 	};
 
-	struct GROBALPARAM
+	struct GLOBALPARAM
 	{
-		GROBALINFO		stGrobalInfo;
+		GLOBALINFO		stGlobalInfo;
 	};
 
-#pragma endregion GROBALDATA
+#pragma endregion GLOBALDATA
 
 #pragma region TRANSFORM 
 
@@ -192,9 +192,9 @@ namespace Engine {
 
 #pragma region PARTICLE
 
-	struct GROBALPARTICLEINFO
+	struct GLOBALPARTICLEINFO
 	{
-		GROBALPARTICLEINFO() : iMaxCount{ 0 }, iAddCount{ 0 },
+		GLOBALPARTICLEINFO() : iMaxCount{ 0 }, iAddCount{ 0 },
 			iFrameNumber{ 0 }, fDeltaTime{ 0 }, fAccTime{ 0 },
 			fMinLifeTime{ 0 }, fMaxLifeTime{ 0 }, fMinSpeed{ 0 },
 			fMaxSpeed{ 0 }, fStartScaleParticle{ 0 }, fEndScaleParticle{ 0 }, fPadding{ 0 }
@@ -233,7 +233,7 @@ namespace Engine {
 
 	typedef struct tagParticleParam
 	{
-		GROBALPARTICLEINFO stGrobalParticleInfo{};
+		GLOBALPARTICLEINFO stGlobalParticleInfo{};
 	}PARTICLEPARAM;
 
 	struct ANIMATEDPARTICLEPARAM
