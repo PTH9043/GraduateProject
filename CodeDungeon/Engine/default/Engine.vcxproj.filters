@@ -193,6 +193,9 @@
     <Filter Include="98.ShaderFile\Common\NonAlpha">
       <UniqueIdentifier>{104e7551-0d78-4507-ab6e-17a48b75c41d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98.ShaderFile\RTS">
+      <UniqueIdentifier>{a3ff3e2a-6b15-4090-a652-6c31b7ba2d48}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -557,6 +560,12 @@
   <ItemGroup>
     <FxCompile Include="..\..\Shader\Rect.hlsl">
       <Filter>98.ShaderFile\Common\NonAlpha</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\FinalDeffered.hlsl">
+      <Filter>98.ShaderFile\RTS</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\BlendDeffered.hlsl">
+      <Filter>98.ShaderFile\RTS</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

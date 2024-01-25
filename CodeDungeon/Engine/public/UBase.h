@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _PTH_FRAMEWORK_ENGIEN_PUBLIC_UBASE_H
+#define _PTH_FRAMEWORK_ENGIEN_PUBLIC_UBASE_H
 
 BEGIN(Engine)
 
@@ -24,3 +25,5 @@ protected:
 };
 
 END
+
+#endif // _PTH_FRAMEWORK_ENGIEN_PUBLIC_UBASE_H

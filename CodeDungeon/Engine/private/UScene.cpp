@@ -7,7 +7,7 @@
 #include "UGameInstance.h"
 #include "UTransform.h"
 #include "URenderTargetGroup.h"
-#include "UCommand.h"
+#include "UGpuCommand.h"
 
 UScene::UScene(CSHPTRREF<UDevice> _spDevice, const _ushort _iSceneID)
     : UObject(_spDevice),

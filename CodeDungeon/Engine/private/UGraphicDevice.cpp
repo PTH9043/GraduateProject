@@ -31,7 +31,7 @@ void UGraphicDevice::Free()
 {
 }
 
-HRESULT UGraphicDevice::ReadyGraphicDevice(const GRAPHICDESC& _stGraphicsDesc)
+HRESULT UGraphicDevice::ReadyGraphicDevice(const GRAPHICDESC& _stGraphicsDesc, OUTPUTDATA& _stOutDesc)
 {
 	m_spGraphicDesc = std::make_shared<GRAPHICDESC>(_stGraphicsDesc);
 	// Create DxObject Device Gpu 
@@ -83,7 +83,8 @@ HRESULT UGraphicDevice::ReadyGraphicDevice(const GRAPHICDESC& _stGraphicsDesc)
 		m_spTableDescriptor = CreateNative<UTableDescriptor>(m_spDevice, MAX_GRAPHIC_TABLES,
 			CBV_REGISTER_END + SRV_REGISTER_END, GRAPHICS_CONSTANT_BUFFER_VALUE);
 	}
-
+	_stOutDesc.wpDevice = GetDevice();
+	_stOutDesc.wpGpuCmd = GetGpuCommand();
 	return S_OK;
 }
 

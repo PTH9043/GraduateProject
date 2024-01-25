@@ -43,7 +43,7 @@ public:
 	// Free
 	virtual void	 Free() override;
 	// Ready
-	HRESULT	ReadyGraphicDevice(const GRAPHICDESC& _stGraphicsDesc);
+	HRESULT	ReadyGraphicDevice(const GRAPHICDESC& _stGraphicsDesc, OUTPUTDATA& _stOutDesc);
 	void	 OmSetDefaultRenderTarget();
 	SHPTR<UTexture> GetDefaultBackTexture();
 

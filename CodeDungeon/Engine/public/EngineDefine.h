@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _PTH_FRAMEWORK_ENGIEN_PUBLIC_UENGINEDEFINES_H
+#define _PTH_FRAMEWORK_ENGIEN_PUBLIC_UENGINEDEFINES_H
 
 #pragma warning (disable : 4251)
 
@@ -22,14 +23,6 @@
 #endif
 
 #pragma comment (lib, "libxl")
-
-
-#ifndef DBG_NEW 
-
-#define DBG_NEW new ( _NORMAL_BLOCK, __FILE__, __LINE__ ) 
-#define new DBG_NEW 
-
-#endif
 
 // Use Atomic Shared PTr
 #define _USE_ATOMIC
@@ -57,6 +50,7 @@
 #include <dinput.h>
 #include "DirectXTK/GamePad.h"
 
+#include <Windows.h>
 #include <iostream>
 #include <array>
 #include <concepts>
@@ -71,6 +65,8 @@
 #include <set>
 #include <random>
 #include <filesystem>
+#include <unordered_map>
+#include <atomic>
 
 #include "EngineConcept.h"
 #include "UDelegate.h"
@@ -101,3 +97,5 @@ namespace Engine {
 #define DEFAULT_OUTFOLDEREXTENSION		Engine::DXVALUE::g_OutFolderExtension
 
 using namespace Engine;
+
+#endif // _PTH_FRAMEWORK_ENGIEN_PUBLIC_UENGINEDEFINES_H

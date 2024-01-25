@@ -1,4 +1,3 @@
-#include "EngineDefine.h"
 #include "UGameInstance.h"
 //#include "UGraphicRenderManager.h"
 #include "UShaderBufferManager.h"
@@ -67,22 +66,22 @@ UGameInstance::UGameInstance() :
 	//m_spGraphicRenderManager{ Create<UGraphicRenderManager>() },
 	m_spShaderBufferManager{ Create<UShaderBufferManager>() },
 	m_spGraphicDevice(Create<UGraphicDevice>()),
-	//m_spTimerManager{ Create<UTimerManager>() },
+	m_spTimerManager{ Create<UTimerManager>() },
 	//m_spInputManager{ Create<UInputManager>() },
 
 	//m_spFontMananger{ Create<UFontManager>() },
 	m_spActorManager(Create<UActorManager>()),
-	//m_spComponentManager(Create<UComponentManager>()),
+	m_spComponentManager(Create<UComponentManager>()),
 	m_spResourceManager(Create<UResourceManager>()),
-	//m_spSceneManager{ Create<USceneManager>() },
+	m_spSceneManager{ Create<USceneManager>() },
 
 	m_spRenderTargetManager(Create<URenderTargetManager>()),
 	//m_spComputeManager(Create<UComputeManager>()),
-	m_spPipeLine{ Create<UPipeLine>() }
+	m_spPipeLine{ Create<UPipeLine>() },
 	//m_spPicking{ Create<UPicking>() },
-	//m_spFilePathManager{ Create<UFilePathManager>() },
+	m_spFilePathManager{ Create<UFilePathManager>() },
 	//m_spRandomManager{ Create<URandomManager>() },
-	//m_spRenderer{ nullptr },
+	m_spRenderer{ nullptr }
 	//m_spGraphicRenderObject{ nullptr }
 {
 
@@ -96,21 +95,21 @@ UGameInstance::~UGameInstance()
 void UGameInstance::Free()
 {
 	//ClearOnceTypeData();
-	//m_spRenderer->ClearAllData();
+	m_spRenderer->ClearAllData();
 
-	//m_spRenderer.reset();
+	m_spRenderer.reset();
 	//m_spGraphicRenderObject.reset();
 
 	//m_isGamming = false;
 	//m_spRandomManager.reset();
-	//m_spFilePathManager.reset();
+	m_spFilePathManager.reset();
 	//m_spPicking.reset();
 	m_spPipeLine.reset();
 	//m_spComputeManager.reset();
 	m_spRenderTargetManager.reset();
-	//m_spSceneManager.reset();
+	m_spSceneManager.reset();
 	m_spActorManager.reset();
-	//m_spComponentManager.reset();
+	m_spComponentManager.reset();
 	m_spResourceManager.reset();
 	//m_spFontMananger.reset();
 	//m_spInputManager.reset();
@@ -131,9 +130,8 @@ void UGameInstance::Free()
 HRESULT UGameInstance::ReadyInstance(const GRAPHICDESC& _stDesc, OUTPUTDATA& _stOutDesc)
 {
 	//RETURN_CHECK_FAILED(m_spGraphicRenderManager->ReadyGraphicRenderManager(_stOutDesc, 4), E_FAIL);
+	RETURN_CHECK_FAILED(m_spGraphicDevice->ReadyGraphicDevice(_stDesc, _stOutDesc), E_FAIL);
 	RETURN_CHECK_FAILED(m_spShaderBufferManager->ReadyShaderBufferManager(_stOutDesc.wpDevice.lock()), E_FAIL);
-
-	RETURN_CHECK_FAILED(m_spGraphicDevice->ReadyGraphicDevice(_stDesc), E_FAIL);
 	//RETURN_CHECK_FAILED(m_spInputManager->ReadyInpuDevice(m_spGraphicDevice->GetGraphicDesc()), E_FAIL);
 	RETURN_CHECK_FAILED(m_spRenderTargetManager->ReadyRenderTarget(m_spGraphicDevice, m_spGraphicDevice->GetDevice()), E_FAIL);
 	//RETURN_CHECK_FAILED(m_spComputeManager->NativeComputeManager(m_spGraphicRenderObject), E_FAIL);
@@ -683,27 +681,27 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 	// Graphics Shader
 	{
 		// Finals 
-		//{
-		//	CreateGraphicsShader(PROTO_RES_FINALDEFFEREDSHADER, CLONETYPE::CLONE_STATIC,
-		//		SHADERDESC(L"FinalDeffered", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
-		//			SHADERLIST{ VS_MAIN, PS_MAIN }, RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
+		{
+			CreateGraphicsShader(PROTO_RES_FINALDEFFEREDSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"FinalDeffered", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }, RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
 
-		//	CreateGraphicsShader(PROTO_RES_BLENDDEFFEREDSHADER, CLONETYPE::CLONE_STATIC,
-		//		SHADERDESC(L"BlendDeffered", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
-		//			SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{
-		//			DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
-		//			DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
+			CreateGraphicsShader(PROTO_RES_BLENDDEFFEREDSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"BlendDeffered", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{
+					DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
+					DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
 
-		//	CreateGraphicsShader(PROTO_RES_DEBUG2DTARGETSHADER, CLONETYPE::CLONE_STATIC,
-		//		SHADERDESC(L"Debug2DTarget", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
-		//			SHADERLIST{ VS_MAIN, PS_MAIN }, RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
+			//CreateGraphicsShader(PROTO_RES_DEBUG2DTARGETSHADER, CLONETYPE::CLONE_STATIC,
+			//	SHADERDESC(L"Debug2DTarget", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+			//		SHADERLIST{ VS_MAIN, PS_MAIN }, RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
 
-		//	CreateGraphicsShader(PROTO_RES_SCREENRENDERONBJSHADER, CLONETYPE::CLONE_STATIC,
-		//		SHADERDESC(L"ScreenRenderObj", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
-		//			SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{
-		//			DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
-		//			DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
-		//}
+			//CreateGraphicsShader(PROTO_RES_SCREENRENDERONBJSHADER, CLONETYPE::CLONE_STATIC,
+			//	SHADERDESC(L"ScreenRenderObj", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+			//		SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{
+			//		DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
+			//		DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
+		}
 		//// Light Shadow
 		//{
 		//	CreateGraphicsShader(PROTO_RES_LIGHTDIRECTIONSHADER, CLONETYPE::CLONE_STATIC,

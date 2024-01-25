@@ -1,4 +1,5 @@
 #pragma once
+#include "EngineDefine.h"
 #include "UBase.h"
 
 BEGIN(Engine)

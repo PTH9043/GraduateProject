@@ -1,10 +1,10 @@
 ﻿// Tool.cpp : 애플리케이션에 대한 진입점을 정의합니다.
 //
 
-#include "framework.h"
 #include "Tool.h"
-#include "TToolApp.h"
+#include "ToolDefines.h"
 #include "UGameInstance.h"
+ #include "TToolApp.h"
 
 #define MAX_LOADSTRING 100
 
@@ -36,10 +36,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     // 전역 문자열을 초기화합니다.
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_PTHFRAMEWORK, szWindowClass, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDC_TOOL, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
-    // 애플리케이션 초기화를 수행합니다:
+    //// 애플리케이션 초기화를 수행합니다:
     if (!InitInstance(hInstance, nCmdShow))
     {
         return FALSE;

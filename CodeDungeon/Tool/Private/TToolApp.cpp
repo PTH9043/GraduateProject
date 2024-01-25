@@ -43,7 +43,7 @@ HRESULT TToolApp::NativeConstruct(const HWND& _hWnd, const HINSTANCE& _hInst)
 	}
 	OUTPUTDATA stOutputData;
 	RETURN_CHECK_FAILED(m_spGameInstance->ReadyInstance(stGraphicDesc, stOutputData), E_FAIL);
-	RETURN_CHECK_FAILED(m_spGameInstance->LoadFirstFilder(FIRST_RESOURCE_FOLDER), E_FAIL);
+//	RETURN_CHECK_FAILED(m_spGameInstance->LoadFirstFilder(FIRST_RESOURCE_FOLDER), E_FAIL);
 
 
 	//TProtoMaker::CreateProtoData(m_spGameInstance, stOutputData.wpDevice.lock(), stOutputData.wpGpuCmd.lock());
