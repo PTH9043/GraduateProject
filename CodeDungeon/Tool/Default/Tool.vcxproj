@@ -153,8 +153,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\TMainCamera.h" />
+    <ClInclude Include="..\Public\TMainScene.h" />
     <ClInclude Include="..\Public\ToolDefines.h" />
     <ClInclude Include="..\Public\ToolMaker.h" />
+    <ClInclude Include="..\Public\TTestObject.h" />
     <ClInclude Include="..\Public\TToolApp.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
@@ -167,6 +170,9 @@
     <ClInclude Include="Tool.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\TMainCamera.cpp" />
+    <ClCompile Include="..\Private\TMainScene.cpp" />
+    <ClCompile Include="..\Private\TTestObject.cpp" />
     <ClCompile Include="..\Private\TToolApp.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>

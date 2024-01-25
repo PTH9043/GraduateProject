@@ -14,6 +14,15 @@
     <Filter Include="00.ToolApp">
       <UniqueIdentifier>{c391732e-65d6-407b-b3a0-b2bec519d102}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.TestObject">
+      <UniqueIdentifier>{a2c96dd7-b3bc-4a61-a218-0a92d4e34656}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Camera">
+      <UniqueIdentifier>{7f200341-c113-4bbe-88af-fbb991bc661e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Scene">
+      <UniqueIdentifier>{d98156e8-4470-4a21-b08b-d96b502ead44}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ToolDefines.h">
@@ -37,6 +46,15 @@
     <ClInclude Include="framework.h">
       <Filter>99.Default</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\TTestObject.h">
+      <Filter>05.TestObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TMainCamera.h">
+      <Filter>04.Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TMainScene.h">
+      <Filter>02.Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\TToolApp.cpp">
@@ -44,6 +62,15 @@
     </ClCompile>
     <ClCompile Include="Tool.cpp">
       <Filter>99.Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TTestObject.cpp">
+      <Filter>05.TestObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TMainCamera.cpp">
+      <Filter>04.Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TMainScene.cpp">
+      <Filter>02.Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
