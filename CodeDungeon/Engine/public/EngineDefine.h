@@ -73,6 +73,7 @@
 #include <filesystem>
 
 #include "EngineConcept.h"
+#include "UDelegate.h"
 
 #include "EngineTypedef.h"
 #include "EngineEnum.h"

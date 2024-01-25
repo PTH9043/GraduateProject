@@ -51,3 +51,4 @@ namespace Engine
 	concept AtomicPtrConvertibleFrom = (SameType<T, U> || ParentsChildType<T, U>);
 
 }
+

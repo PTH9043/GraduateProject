@@ -226,7 +226,7 @@ _uint UPipeLine::GetID(const CAMERATYPE _eCamerType)
 	_uint iIndex{ MAIN_CAMERA_ID };
 	if (_eCamerType != CAMERATYPE::MAIN && _eCamerType != CAMERATYPE::DEFFERED && _eCamerType != CAMERATYPE::SHADOWLIGHT)
 	{
-		for (_uint i = (_uint)CAMERATYPE::OTEHR; i < MAX_CAM_SIZE; ++i)
+		for (_uint i = (_uint)CAMERATYPE::OTHER; i < MAX_CAM_SIZE; ++i)
 		{
 			if (nullptr == m_arrCameras[i])
 				return i;

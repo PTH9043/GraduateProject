@@ -142,6 +142,57 @@
     <Filter Include="01.Manager\ActorManager\Group">
       <UniqueIdentifier>{16f5e381-93ac-4105-a78f-b3adde437454}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Scene">
+      <UniqueIdentifier>{b217ba5e-7f75-4e68-bac5-77110a84f9ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Needs\Delegate">
+      <UniqueIdentifier>{64fe0bea-9dcd-417e-8810-880060e45da7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Scene\Loader">
+      <UniqueIdentifier>{93b6bb8f-661c-454c-a3f2-0971d4188102}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Scene\Loader\Resource">
+      <UniqueIdentifier>{cd3596ff-462c-4747-ba89-b16484e82d78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Manager\SceneManager">
+      <UniqueIdentifier>{7275cf29-8733-4a30-8ae1-15639d644161}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Utility\Timer">
+      <UniqueIdentifier>{b5efe7c2-fb63-468f-ade3-075e83f22914}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Manager\TimerManager">
+      <UniqueIdentifier>{d43b08f1-918b-4837-b457-b7cb8ae23a32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Manager\FilePathManager">
+      <UniqueIdentifier>{3862186b-f818-40f4-88f1-8822ea65145d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Manager\ComponentManager">
+      <UniqueIdentifier>{5a11fa2c-fa68-4ccf-aaf4-41b752be5886}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Scene\Light">
+      <UniqueIdentifier>{ba78e63a-a7c3-42ab-88a4-a202344ab348}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component\Renderer">
+      <UniqueIdentifier>{c7454cc4-9788-4a19-9577-bee9b6d67b21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\02.Camera\DefferedCamera">
+      <UniqueIdentifier>{1c70b4ba-f29b-4882-8602-e1a35c144020}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Resource\VIBuffer\Cube">
+      <UniqueIdentifier>{a71e00b7-7e30-41bf-8092-51a66f4825ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Resource\VIBuffer\Sphere">
+      <UniqueIdentifier>{380e7c92-c557-4869-b26f-4d3a9e9ec590}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.ShaderFile">
+      <UniqueIdentifier>{55f4e238-5f9b-49ec-a8dc-27fc9cc738c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.ShaderFile\Common">
+      <UniqueIdentifier>{8f4e86dc-0191-4926-be05-3beba5a10d90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.ShaderFile\Common\NonAlpha">
+      <UniqueIdentifier>{104e7551-0d78-4507-ab6e-17a48b75c41d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -263,6 +314,48 @@
     </ClCompile>
     <ClCompile Include="..\private\UActorGroup.cpp">
       <Filter>01.Manager\ActorManager\Group</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UScene.cpp">
+      <Filter>04.Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UDelegate.cpp">
+      <Filter>97.Needs\Delegate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ULoader.cpp">
+      <Filter>04.Scene\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UResourceLoader.cpp">
+      <Filter>04.Scene\Loader\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\USceneManager.cpp">
+      <Filter>01.Manager\SceneManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UTimer.cpp">
+      <Filter>03.Utility\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UTimerManager.cpp">
+      <Filter>01.Manager\TimerManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UFilePathManager.cpp">
+      <Filter>01.Manager\FilePathManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UComponentManager.cpp">
+      <Filter>01.Manager\ComponentManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ULight.cpp">
+      <Filter>04.Scene\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\URenderer.cpp">
+      <Filter>06.Component\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UDefferedCamera.cpp">
+      <Filter>05.Actor\02.Camera\DefferedCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UVIBufferCube.cpp">
+      <Filter>07.Resource\VIBuffer\Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UVIBufferSphere.cpp">
+      <Filter>07.Resource\VIBuffer\Sphere</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -410,5 +503,60 @@
     <ClInclude Include="..\public\UActorGroup.h">
       <Filter>01.Manager\ActorManager\Group</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\UScene.h">
+      <Filter>04.Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UDelegate.h">
+      <Filter>97.Needs\Delegate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ULoader.h">
+      <Filter>04.Scene\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UResourceLoader.h">
+      <Filter>04.Scene\Loader\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\USceneManager.h">
+      <Filter>01.Manager\SceneManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UTimer.h">
+      <Filter>03.Utility\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UTimerManager.h">
+      <Filter>01.Manager\TimerManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UFilePathManager.h">
+      <Filter>01.Manager\FilePathManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UComponentManager.h">
+      <Filter>01.Manager\ComponentManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ULight.h">
+      <Filter>04.Scene\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\URenderer.h">
+      <Filter>06.Component\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UDefferedCamera.h">
+      <Filter>05.Actor\02.Camera\DefferedCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UVIBufferCube.h">
+      <Filter>07.Resource\VIBuffer\Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UVIBufferSphere.h">
+      <Filter>07.Resource\VIBuffer\Sphere</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Shader\ShaderGrobalFunc.hlsli">
+      <Filter>98.ShaderFile\Common</Filter>
+    </None>
+    <None Include="..\..\Shader\ShaderParams.hlsli">
+      <Filter>98.ShaderFile\Common</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\..\Shader\Rect.hlsl">
+      <Filter>98.ShaderFile\Common\NonAlpha</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

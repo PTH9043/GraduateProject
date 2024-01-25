@@ -8,13 +8,14 @@ class UResource;
 class UComponent;
 class URenderer;
 
+
+using PROTOTYPES = UNORMAP<_wstring, SHPTR<UActor>>;
+using CLONES = UNORMAP<_wstring, SHPTR<UActorGroup>>;
+using CLONEVECTOR = VECTOR<SHPTR<UActorGroup>>;
 using CLONEARR = ARRAY<CLONES, CLONE_MAX_SIZE>;
 
+
 class UActorManager : public UBase {
-private:
-	using PROTOTYPES = UNORMAP<_wstring, SHPTR<UActor>>;
-	using CLONES = UNORMAP<_wstring, SHPTR<UActorGroup>>;
-	using CLONEVECTOR = VECTOR<SHPTR<UActorGroup>>;
 public:
 	UActorManager();
 	NO_COPY(UActorManager)

@@ -33,12 +33,19 @@
     <ClInclude Include="..\public\UActorManager.h" />
     <ClInclude Include="..\public\UCamera.h" />
     <ClInclude Include="..\public\UComponent.h" />
+    <ClInclude Include="..\public\UComponentManager.h" />
     <ClInclude Include="..\public\UDefaultCube.h" />
     <ClInclude Include="..\public\UDefaultDebugging.h" />
     <ClInclude Include="..\public\UDefaultSphere.h" />
+    <ClInclude Include="..\public\UDefferedCamera.h" />
+    <ClInclude Include="..\public\UDelegate.h" />
+    <ClInclude Include="..\public\UFilePathManager.h" />
     <ClInclude Include="..\public\UFrustomCulling.h" />
+    <ClInclude Include="..\public\ULight.h" />
+    <ClInclude Include="..\public\ULoader.h" />
     <ClInclude Include="..\public\UPawn.h" />
     <ClInclude Include="..\public\UPipeLine.h" />
+    <ClInclude Include="..\public\URenderer.h" />
     <ClInclude Include="..\public\URenderTargetManager.h" />
     <ClInclude Include="..\public\UBase.h" />
     <ClInclude Include="..\public\UCloneObject.h" />
@@ -54,8 +61,15 @@
     <ClInclude Include="..\public\UObject.h" />
     <ClInclude Include="..\public\URenderTargetGroup.h" />
     <ClInclude Include="..\public\UResource.h" />
+    <ClInclude Include="..\public\UResourceLoader.h" />
     <ClInclude Include="..\public\UResourceManager.h" />
     <ClInclude Include="..\public\URootSignature.h" />
+    <ClInclude Include="..\public\UScene.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\public\USceneManager.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\public\UShader.h" />
     <ClInclude Include="..\public\UShaderBufferManager.h" />
     <ClInclude Include="..\public\UShaderConstantBuffer.h" />
@@ -64,9 +78,13 @@
     <ClInclude Include="..\public\UTableDescriptor.h" />
     <ClInclude Include="..\public\UTexGroup.h" />
     <ClInclude Include="..\public\UTexture.h" />
+    <ClInclude Include="..\public\UTimer.h" />
+    <ClInclude Include="..\public\UTimerManager.h" />
     <ClInclude Include="..\public\UTransform.h" />
     <ClInclude Include="..\public\UVIBuffer.h" />
+    <ClInclude Include="..\public\UVIBufferCube.h" />
     <ClInclude Include="..\public\UVIBufferRect.h" />
+    <ClInclude Include="..\public\UVIBufferSphere.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp" />
@@ -75,12 +93,19 @@
     <ClCompile Include="..\private\UActorManager.cpp" />
     <ClCompile Include="..\private\UCamera.cpp" />
     <ClCompile Include="..\private\UComponent.cpp" />
+    <ClCompile Include="..\private\UComponentManager.cpp" />
     <ClCompile Include="..\private\UDefaultCube.cpp" />
     <ClCompile Include="..\private\UDefaultDebugging.cpp" />
     <ClCompile Include="..\private\UDefaultSphere.cpp" />
+    <ClCompile Include="..\private\UDefferedCamera.cpp" />
+    <ClCompile Include="..\private\UDelegate.cpp" />
+    <ClCompile Include="..\private\UFilePathManager.cpp" />
     <ClCompile Include="..\private\UFrustomCulling.cpp" />
+    <ClCompile Include="..\private\ULight.cpp" />
+    <ClCompile Include="..\private\ULoader.cpp" />
     <ClCompile Include="..\private\UPawn.cpp" />
     <ClCompile Include="..\private\UPipeLine.cpp" />
+    <ClCompile Include="..\private\URenderer.cpp" />
     <ClCompile Include="..\private\URenderTargetManager.cpp" />
     <ClCompile Include="..\private\UBase.cpp" />
     <ClCompile Include="..\private\UCloneObject.cpp" />
@@ -96,8 +121,15 @@
     <ClCompile Include="..\private\UObject.cpp" />
     <ClCompile Include="..\private\URenderTargetGroup.cpp" />
     <ClCompile Include="..\private\UResource.cpp" />
+    <ClCompile Include="..\private\UResourceLoader.cpp" />
     <ClCompile Include="..\private\UResourceManager.cpp" />
     <ClCompile Include="..\private\URootSignature.cpp" />
+    <ClCompile Include="..\private\UScene.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\private\USceneManager.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\private\UShader.cpp" />
     <ClCompile Include="..\private\UShaderBufferManager.cpp" />
     <ClCompile Include="..\private\UShaderConstantBuffer.cpp" />
@@ -106,9 +138,22 @@
     <ClCompile Include="..\private\UTableDescriptor.cpp" />
     <ClCompile Include="..\private\UTexGroup.cpp" />
     <ClCompile Include="..\private\UTexture.cpp" />
+    <ClCompile Include="..\private\UTimer.cpp" />
+    <ClCompile Include="..\private\UTimerManager.cpp" />
     <ClCompile Include="..\private\UTransform.cpp" />
     <ClCompile Include="..\private\UVIBuffer.cpp" />
+    <ClCompile Include="..\private\UVIBufferCube.cpp" />
     <ClCompile Include="..\private\UVIBufferRect.cpp" />
+    <ClCompile Include="..\private\UVIBufferSphere.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\..\Shader\Rect.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Shader\ShaderGrobalFunc.hlsli" />
+    <None Include="..\..\Shader\ShaderParams.hlsli" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -164,6 +209,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>..\bin\</OutDir>
+    <TargetName>$(ProjectName)D</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>..\bin\</OutDir>

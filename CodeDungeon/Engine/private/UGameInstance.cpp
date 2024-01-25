@@ -1,13 +1,64 @@
 #include "EngineDefine.h"
 #include "UGameInstance.h"
-
-#include "URenderTargetManager.h"
-#include "UResourceManager.h"
-#include "UGraphicDevice.h"
+//#include "UGraphicRenderManager.h"
 #include "UShaderBufferManager.h"
-#include "UPipeLine.h"
-#include "UActorManager.h"
+#include "UGraphicDevice.h"
+#include "UTimerManager.h"
+//#include "UInputManager.h"
 
+//#include  "UFontManager.h"
+#include "UActorManager.h"
+#include "UComponentManager.h"
+#include "UResourceManager.h"
+#include "USceneManager.h"
+//#include "UThreadPoolManager.h"
+
+#include "UPipeLine.h"
+#include "URenderTargetManager.h"
+//#include "UComputeManager.h"
+//#include "UPicking.h"
+#include "UFilePathManager.h"
+//#include "URandomManager.h"
+
+#include "URenderer.h"
+
+
+#include "URootSignature.h"
+#include "UShaderConstantBuffer.h"
+#include "UGlobalConstantBuffer.h"
+
+#include "UDevice.h"
+#include "UGpuCommand.h"
+#include "UTableDescriptor.h"
+#include "UComputeCommand.h"
+
+#include "UDefferedCamera.h"
+#include "UDefaultCube.h"
+#include "UDefaultDebugging.h"
+
+
+#include "UShader.h"
+#include "UComputeShader.h"
+
+#include "UVIBufferRect.h"
+//#include "UVIBufferPoint.h"
+//#include "UVIBufferTriangle.h"
+//#include "UVIBufferSphere.h"
+//#include "UVIBufferCube.h"
+//#include "UVIBufferPlane.h"
+//#include "UVIBufferSkyBox.h"
+
+//#include "UParticleSystem.h"
+
+//#include "URectTransform.h"
+//#include "USkyBox.h"
+//#include "UTerrain.h"
+//#include "UParticle.h"
+//#include "UCollider.h"
+//#include "UAnimatedParticle.h"
+//#include "UMirror.h"
+//#include "UScreenRenderObj.h"
+//#include "UMirrorCamera.h"
 
 IMPLEMENT_SINGLETON(UGameInstance);
 
@@ -79,9 +130,148 @@ void UGameInstance::Free()
 
 HRESULT UGameInstance::ReadyInstance(const GRAPHICDESC& _stDesc, OUTPUTDATA& _stOutDesc)
 {
+	//RETURN_CHECK_FAILED(m_spGraphicRenderManager->ReadyGraphicRenderManager(_stOutDesc, 4), E_FAIL);
+	RETURN_CHECK_FAILED(m_spShaderBufferManager->ReadyShaderBufferManager(_stOutDesc.wpDevice.lock()), E_FAIL);
+
+	RETURN_CHECK_FAILED(m_spGraphicDevice->ReadyGraphicDevice(_stDesc), E_FAIL);
+	//RETURN_CHECK_FAILED(m_spInputManager->ReadyInpuDevice(m_spGraphicDevice->GetGraphicDesc()), E_FAIL);
+	RETURN_CHECK_FAILED(m_spRenderTargetManager->ReadyRenderTarget(m_spGraphicDevice, m_spGraphicDevice->GetDevice()), E_FAIL);
+	//RETURN_CHECK_FAILED(m_spComputeManager->NativeComputeManager(m_spGraphicRenderObject), E_FAIL);
+
+	RETURN_CHECK_FAILED(ReadyRenderTarget(_stOutDesc), E_FAIL);
+	RETURN_CHECK_FAILED(ReadyResource(_stOutDesc), E_FAIL);
+	RETURN_CHECK_FAILED(ReadyComp(_stOutDesc), E_FAIL);
+	RETURN_CHECK_FAILED(ReadyActor(_stOutDesc), E_FAIL);
+
+	//RETURN_CHECK_FAILED(m_spFontMananger->ReadyFontManager(m_spGraphicRenderObject, m_spGraphicDevice->GetSwapChain(),
+	//	m_spRenderTargetManager, m_spGraphicDevice->GetD3DViewport()), E_FAIL);
+	RETURN_CHECK_FAILED(m_spActorManager->ReadyActorManager(m_spRenderer), E_FAIL);
+	RETURN_CHECK_FAILED(m_spSceneManager->ReadySceneManager(this), E_FAIL);
+	
+	//RETURN_CHECK_FAILED(m_spComputeManager->ReadyComputeManager(m_spGraphicDevice), E_FAIL);
+	RETURN_CHECK_FAILED(m_spPipeLine->ReadyPipeLine(this), E_FAIL);
+	//RETURN_CHECK_FAILED(m_spPicking->ReadyPickingDesc(m_spGraphicDevice->GetGraphicDesc()), E_FAIL);
+
+	//RegisterInsideWorkThread(std::thread::hardware_concurrency());
+	m_isGamming = true;
 	return S_OK;
 }
 
+HRESULT UGameInstance::CreateGraphicsShader(const _wstring& _wstrProtoName, const CLONETYPE _eCloneType,
+	const SHADERDESC& _stShaderDesc, const GRAPHICRENDEROBJECT_TYPE _eType)
+{
+	
+	SHPTR<UShader> pShader = CreateConstructorToNative<UShader>(
+		m_spGraphicDevice->GetDevice(), m_spGraphicDevice->GetRootSignature(),
+		_stShaderDesc
+	);
+	RETURN_CHECK(nullptr == pShader, E_FAIL);
+	// AddPrototype
+	return AddPrototype(_wstrProtoName, _eCloneType, pShader);
+}
+
+void UGameInstance::OtherFrame(const _double& _dTimeDelta, const WPARAM& _wParam)
+{
+	//m_spInputManager->InvokeKeyMethods((_ubyte)_wParam, _dTimeDelta);
+}
+
+void UGameInstance::AwakeTick()
+{
+	//m_spInputManager->KeyTick();
+//	m_spInputManager->MouseTick();
+	//m_spPicking->TickRayInWorldSpace(this);
+	m_spPipeLine->FrustomTick();
+	m_spRenderer->ClearRenderingData();
+}
+
+void UGameInstance::Tick(const _double& _dTimeDelta)
+{
+	m_spSceneManager->Tick(_dTimeDelta);
+	m_spActorManager->Tick(_dTimeDelta);
+	m_spRenderer->Tick(_dTimeDelta);
+}
+
+void UGameInstance::LateTick(const _double& _dTimeDelta)
+{
+	m_spSceneManager->LateTick(_dTimeDelta);
+	m_spActorManager->LateTick(_dTimeDelta);
+
+	m_spSceneManager->CollisionTick(_dTimeDelta);
+}
+
+void UGameInstance::RenderBegin()
+{
+	m_spGraphicDevice->MainRenderBegin();
+	m_spRenderer->Render();
+//	m_spFontMananger->Render();
+}
+
+
+void UGameInstance::RenderEnd()
+{
+	/* Gpu 동기화 시키는 부분 */
+	m_spGraphicDevice->MainRenderEnd();
+}
+
+HRESULT UGameInstance::OnWindowResize(const _uint& _iWinSizeX, const _uint& _iWinSizeY, const GRAPHICDESC::WINMODE _eWindowMode)
+{
+	RETURN_CHECK_FAILED(m_spGraphicDevice->OnResize(_iWinSizeX, _iWinSizeY, _eWindowMode), E_FAIL);
+	m_spRenderTargetManager->OnResizeWindow(m_spGraphicDevice);
+	//m_spPicking->ReadyPickingDesc(m_spGraphicDevice->GetGraphicDesc());
+#ifdef _USE_DEBUGGING
+	m_spComputeManager->OnResizeDebugRenderObject(m_spGraphicDevice);
+#endif 
+	return S_OK;
+}
+
+void UGameInstance::ClearOnceTypeData()
+{
+	//m_spRenderer->ClearRenderingData();
+	m_spActorManager->ClearOnceTypeData();
+	m_spResourceManager->ClearOnceTypeData();
+	m_spPipeLine->ClearOneTypeCamera();
+}
+
+/*
+==================================================
+GraphicDevice
+==================================================
+UTimerManager
+==================================================
+*/
+
+HRESULT UGameInstance::CreateTimer(const _wstring& _wstrName)
+{
+	return m_spTimerManager->CreateTimer(_wstrName);
+}
+
+SHPTR<UTimer> UGameInstance::CreateTimerAdd(const _wstring& _wstrName)
+{
+	return m_spTimerManager->CreateTimerAdd(_wstrName);
+}
+
+HRESULT UGameInstance::RemoveTimer(const _wstring& _wstrName)
+{
+	return m_spTimerManager->RemoveTimer(_wstrName);
+}
+
+/*
+==================================================
+ActorManager
+==================================================
+ComponentManager
+==================================================
+*/
+
+HRESULT UGameInstance::AddPrototype(const _wstring& _wstrPrototypes, CSHPTRREF<UComponent> _spComponent)
+{
+	return m_spComponentManager->AddPrototype(_wstrPrototypes, _spComponent);
+}
+
+SHPTR<UComponent> UGameInstance::CloneComp(const _wstring& _wstrPrototypes, const VOIDDATAS& _stDatas)
+{
+	return m_spComponentManager->CloneComp(_wstrPrototypes, _stDatas);
+}
 
 /*
 ==================================================
@@ -114,6 +304,59 @@ void UGameInstance::AddPipeLineState(const _wstring& _wstrName, const ComPtr<Dx1
 void UGameInstance::SettingPipeLineState(const _wstring& _wstrName, CSHPTRREF<UCommand> _spCommand)
 {
 	m_spResourceManager->SettingPipeLineState(_wstrName, _spCommand);
+}
+
+/*
+==================================================
+ResourceManager
+==================================================
+SceneManager
+==================================================
+*/
+
+void UGameInstance::OutLightControlInfo(LIGHTPARAM& _stLightControl)
+{
+	m_spSceneManager->OutLightControlInfo(_stLightControl);
+}
+
+void UGameInstance::ChangeLightCamIndex(const CAMID& _iID)
+{
+	m_spSceneManager->ChangeLightCamIndex(_iID);
+}
+
+CSHPTRREF<UScene> UGameInstance::GetCurScene() const
+{
+	return m_spSceneManager->GetScene();
+}
+
+void UGameInstance::RegisterScene(CSHPTRREF<UScene> _spScene)
+{
+	m_spSceneManager->RegisterScene(_spScene);
+}
+
+HRESULT UGameInstance::AddLight(const LIGHTINFO& _stInfo)
+{
+	return m_spSceneManager->AddLight(_stInfo);
+}
+
+void UGameInstance::OutLight(const LIGHTTYPE& _eLightType, const _uint& _iIndex, SHPTR<ULight>& _spLight)
+{
+	m_spSceneManager->OutLight(_eLightType, _iIndex, _spLight);
+}
+
+HRESULT UGameInstance::ActiveLIght(const LIGHTTYPE& _eLightType, const _uint& _iIndex, const _bool& _isActive)
+{
+	return m_spSceneManager->ActiveLIght(_eLightType, _iIndex, _isActive);
+}
+
+HRESULT UGameInstance::DeleteLight(const LIGHTTYPE& _eLightType, const _uint& _iIndex)
+{
+	return m_spSceneManager->DeleteLight(_eLightType, _iIndex);
+}
+
+HRESULT UGameInstance::ClearLight()
+{
+	return m_spSceneManager->ClearLight();
 }
 
 /*
@@ -370,3 +613,425 @@ void UGameInstance::RemoveActor(CSHPTRREF<UActor> _spActor)
 	m_spActorManager->RemoveActor(_spActor);
 }
 
+/*
+==================================================
+Picking
+==================================================
+FilePath
+==================================================
+*/
+
+SHPTR<FILEGROUP> UGameInstance::FindFolder(const PATHS& _vecFolderList)
+{
+	return m_spFilePathManager->FindFolder(_vecFolderList);
+}
+
+SHPTR<FILEGROUP> UGameInstance::FindFolder(const _wstring& _wstrFindName, const _wstring& _wstrParentsFolderName)
+{
+	return m_spFilePathManager->FindFolder(_wstrFindName, _wstrParentsFolderName);
+}
+
+HRESULT UGameInstance::LoadFirstFilder(const _wstring& _wstrFilePath)
+{
+	return m_spFilePathManager->LoadFirstFilder(_wstrFilePath);
+}
+
+/*
+==================================================
+ReadyDatas
+==================================================
+*/
+
+HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
+{
+	// VIBuffer
+	{
+
+		AddPrototype(PROTO_RES_VIBUFFERRECT, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferRect>(
+			_stData.wpDevice.lock(), VIBUFFERTYPE::GENERIC));
+
+		AddPrototype(PROTO_RES_VIBUFFERNORMALRECT, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferRect>(
+			_stData.wpDevice.lock(), VIBUFFERTYPE::NORMAL));
+		
+	/*	AddPrototype(PROTO_RES_VIBUFFERPOINT, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferPoint>(
+			_stData.wpDevice.lock()));
+
+		AddPrototype(PROTO_RES_VIBUFFERTRIANGLE, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferTriangle>(
+			_stData.wpDevice.lock()));
+
+		AddPrototype(PROTO_RES_VIBUFFERSHPHERE, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferSphere>(
+			_stData.wpDevice.lock(), VIBUFFERTYPE::GENERIC));
+
+		AddPrototype(PROTO_RES_VIBUFFERNORMALSPHERE, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferSphere>(
+			_stData.wpDevice.lock(), VIBUFFERTYPE::NORMAL));
+
+		AddPrototype(PROTO_RES_VIBUFFERCUBE, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferCube>(
+			_stData.wpDevice.lock(), VIBUFFERTYPE::GENERIC));
+
+		AddPrototype(PROTO_RES_VIBUFFERNORMALCUBE, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferCube>(
+			_stData.wpDevice.lock(), VIBUFFERTYPE::NORMAL));
+
+		AddPrototype(PROTO_RES_VIBUFFERPLANE, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferPlane>(
+			_stData.wpDevice.lock(), VIBUFFERTYPE::GENERIC));
+
+		AddPrototype(PROTO_RES_VIBUFFERNORMALPLANE, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferPlane>(
+			_stData.wpDevice.lock(), VIBUFFERTYPE::NORMAL));
+
+		AddPrototype(PROTO_RES_VIBUFFERSKYBOX, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferSkyBox>(
+			_stData.wpDevice.lock()));*/
+	}
+	// Graphics Shader
+	{
+		// Finals 
+		//{
+		//	CreateGraphicsShader(PROTO_RES_FINALDEFFEREDSHADER, CLONETYPE::CLONE_STATIC,
+		//		SHADERDESC(L"FinalDeffered", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+		//			SHADERLIST{ VS_MAIN, PS_MAIN }, RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
+
+		//	CreateGraphicsShader(PROTO_RES_BLENDDEFFEREDSHADER, CLONETYPE::CLONE_STATIC,
+		//		SHADERDESC(L"BlendDeffered", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+		//			SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{
+		//			DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
+		//			DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
+
+		//	CreateGraphicsShader(PROTO_RES_DEBUG2DTARGETSHADER, CLONETYPE::CLONE_STATIC,
+		//		SHADERDESC(L"Debug2DTarget", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+		//			SHADERLIST{ VS_MAIN, PS_MAIN }, RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
+
+		//	CreateGraphicsShader(PROTO_RES_SCREENRENDERONBJSHADER, CLONETYPE::CLONE_STATIC,
+		//		SHADERDESC(L"ScreenRenderObj", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+		//			SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{
+		//			DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
+		//			DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
+		//}
+		//// Light Shadow
+		//{
+		//	CreateGraphicsShader(PROTO_RES_LIGHTDIRECTIONSHADER, CLONETYPE::CLONE_STATIC,
+		//		SHADERDESC(L"LightDirection", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+		//			SHADERLIST{ VS_MAIN, PS_MAIN },
+		//			RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R8G8B8A8_UNORM,
+		//			DXGI_FORMAT_R8G8B8A8_UNORM },
+		//			RASTERIZER_TYPE::CULL_NONE, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST
+		//		), GRAPHICRENDEROBJECT_TYPE::LIGHT);
+
+		//	CreateGraphicsShader(PROTO_RES_LIGHTPOINTSHADER, CLONETYPE::CLONE_STATIC,
+		//		SHADERDESC(L"LightPoint", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+		//			SHADERLIST{ VS_MAIN, PS_MAIN },
+		//			RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R8G8B8A8_UNORM,
+		//			DXGI_FORMAT_R8G8B8A8_UNORM },
+		//			RASTERIZER_TYPE::CULL_NONE, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST,
+		//			BLEND_TYPE::ADD_BLEND), GRAPHICRENDEROBJECT_TYPE::LIGHT);
+		//}
+		// NonAlpha
+		//{
+		//	CreateGraphicsShader(PROTO_RES_MODELSHADER, CLONETYPE::CLONE_STATIC,
+		//		SHADERDESC(L"Model", VTXMODEL_DECLARATION::Element, VTXMODEL_DECLARATION::iNumElement,
+		//			SHADERLIST{ VS_MAIN, PS_MAIN },
+		//			RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
+		//			DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT
+		//			}));
+
+		//	CreateGraphicsShader(PROTO_RES_EQUIPMENTSHADER, CLONETYPE::CLONE_STATIC,
+		//		SHADERDESC(L"EquipmentModel", VTXMODEL_DECLARATION::Element, VTXMODEL_DECLARATION::iNumElement,
+		//			SHADERLIST{ VS_MAIN, PS_MAIN },
+		//			RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
+		//			DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT
+		//			}));
+
+		//	CreateGraphicsShader(PROTO_RES_ANIMMODELSHADER, CLONETYPE::CLONE_STATIC,
+		//		SHADERDESC(L"AnimModel", VTXANIMMODEL_DECLARATION::Element, VTXANIMMODEL_DECLARATION::iNumElement,
+		//			SHADERLIST{ VS_MAIN, PS_MAIN },
+		//			RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
+		//			DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT
+		//			}));
+
+		//	CreateGraphicsShader(PROTO_RES_3DNORMALCUBESHADER, CLONETYPE::CLONE_STATIC,
+		//		SHADERDESC(L"3DNormalCube", VTXNORMALCUBE_DECLARATION::Element, VTXNORMALCUBE_DECLARATION::iNumElement,
+		//			SHADERLIST{ VS_MAIN, PS_MAIN },
+		//			RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
+		//			DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT
+		//			}));
+
+		//	CreateGraphicsShader(PROTO_RES_NORMALOBJECTSHADER, CLONETYPE::CLONE_STATIC,
+		//		SHADERDESC(L"NormalObject", VTXNORMAL_DECLARATION::Element, VTXNORMAL_DECLARATION::iNumElement,
+		//			SHADERLIST{ VS_MAIN, PS_MAIN },
+		//			RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
+		//			DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT
+		//			}));
+
+		//	CreateGraphicsShader(PROTO_RES_MIRRORSHADER, CLONETYPE::CLONE_STATIC,
+		//		SHADERDESC(L"Mirror", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+		//			SHADERLIST{ VS_MAIN, PS_MAIN },
+		//			RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
+		//			DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT
+		//			}));
+
+		//	CreateGraphicsShader(PROTO_RES_WATERSHADER, CLONETYPE::CLONE_STATIC,
+		//		SHADERDESC(L"Water", VTXPOINT_DELCARTION::Element, VTXPOINT_DELCARTION::iNumElement,
+		//			SHADERLIST{ VS_MAIN, PS_MAIN },
+		//			RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
+		//			DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT },
+		//			RASTERIZER_TYPE::CULL_NONE, DEPTH_STENCIL_TYPE::LESS_NO_WRITE, BLEND_TYPE::ALPHA_BLEND));
+		//}
+		//// Alpha
+		//{
+		//	CreateGraphicsShader(PROTO_RES_PARTICLE2DSHADER, CLONETYPE::CLONE_STATIC,
+		//		SHADERDESC(L"2DParticle", VTXPOINT_DELCARTION::Element, VTXPOINT_DELCARTION::iNumElement,
+		//			SHADERLIST{ VS_MAIN, PS_MAIN, GS_MAIN },
+		//			RENDERFORMATS{ DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_B8G8R8A8_UNORM,	DXGI_FORMAT_R16G16B16A16_FLOAT },
+		//			RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE, BLEND_TYPE::ALPHA_BLEND,
+		//			D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST));
+
+		//	CreateGraphicsShader(PROTO_RES_2DANIMATEPARTICLESHADER, CLONETYPE::CLONE_STATIC,
+		//		SHADERDESC(L"2DAnimateParticle", VTXPOINT_DELCARTION::Element, VTXPOINT_DELCARTION::iNumElement,
+		//			SHADERLIST{ VS_MAIN, PS_MAIN, GS_MAIN },
+		//			RENDERFORMATS{ DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_B8G8R8A8_UNORM,	DXGI_FORMAT_R16G16B16A16_FLOAT },
+		//			RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE, BLEND_TYPE::ALPHA_BLEND,
+		//			D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST));
+		//}
+		//// SkyBox
+		//{
+		//	CreateGraphicsShader(PROTO_RES_SKYBOXSHADER, CLONETYPE::CLONE_STATIC,
+		//		SHADERDESC(L"SkyBox", VTXSKYBOX_DECLARATION::Element, VTXSKYBOX_DECLARATION::iNumElement,
+		//			SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
+		//			DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT },
+		//			RASTERIZER_TYPE::CULL_FRONT, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST));
+		//}
+		//// Ect 
+		//{
+		//	CreateGraphicsShader(PROTO_RES_DEBUGGINGDEFAULTSHADER, CLONETYPE::CLONE_STATIC,
+		//		SHADERDESC(L"DebugDefaultObject", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+		//			SHADERLIST{ VS_MAIN, PS_MAIN },
+		//			RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
+		//			DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT },
+		//			RASTERIZER_TYPE::CULL_NONE, DEPTH_STENCIL_TYPE::LESS, BLEND_TYPE::ALPHA_BLEND));
+		//}
+		{
+			CreateGraphicsShader(PROTO_RES_RECTSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"Rect", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }));
+		}
+		//// Create  Tess
+		//{
+		//	CreateGraphicsShader(PROTO_RES_TERRAINTESSALATIONSHADER, CLONETYPE::CLONE_STATIC,
+		//		SHADERDESC(L"TerrainTess", VTXNORMAL_DECLARATION::Element, VTXNORMAL_DECLARATION::iNumElement,
+		//			SHADERLIST{ VS_MAIN, PS_MAIN, DS_MAIN, HS_MAIN },
+		//			RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
+		//			DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT },
+		//			RASTERIZER_TYPE::WIREFRAME, DEPTH_STENCIL_TYPE::LESS, BLEND_TYPE::DEFAULT,
+		//			D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST));
+		//}
+		//// Ect 
+		//{
+		//	CreateGraphicsShader(PROTO_RES_2DUISHADER, CLONETYPE::CLONE_STATIC,
+		//		SHADERDESC(L"UI2D", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+		//			SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{
+		//			DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
+		//			DEPTH_STENCIL_TYPE::LESS));
+		//}
+	}
+	//// Compute Shader 
+	//{
+	//	CreateComputeShader(PROTO_RES_COMPUTEANIMATIONSHADER, CLONETYPE::CLONE_STATIC,
+	//		SHADERDESC{ L"ComputeAnimation" });
+
+	//	CreateComputeShader(PROTO_RES_COMPUTEPARTICLE2DSHADER, CLONETYPE::CLONE_STATIC,
+	//		SHADERDESC{ L"Compute2DParticle" });
+	//}
+
+	// Particle System 
+	//{
+	//	AddPrototype(PROTO_RES_PARTICLESYSTEM, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UParticleSystem>(_stData.wpDevice.lock()));
+	//}
+
+	return S_OK;
+}
+
+HRESULT UGameInstance::ReadyComp(const OUTPUTDATA& _stData)
+{
+	// Add Deffered Camera
+	{
+		AddPrototype(PROTO_ACTOR_DEFFEREDCAMERA, CreateConstructorToNative<UDefferedCamera>(
+			_stData.wpDevice.lock(), LAYER_CAM, CLONETYPE::CLONE_STATIC));
+	}
+	{
+		m_spRenderer = CreateConstructorToNative<URenderer>(_stData.wpDevice.lock(), _stData.wpGpuCmd.lock(), m_spGraphicDevice,
+			m_spPipeLine, m_spSceneManager, m_spRenderTargetManager, nullptr);
+		AddPrototype(PROTO_COMP_RENDERER, m_spRenderer);
+	}
+	//{
+	//	// Add Rect Transform
+	//	AddPrototype(PROTO_COMP_RECTTRANSFORM, CreateConstructorToNativeNotMsg<URectTransform>(_stData.wpDevice.lock()));
+	//}
+	//{
+	//	AddPrototype(PROTO_COMP_SPHERECOLLIDER, CreateConstructorToNativeNotMsg<UCollider>(_stData.wpDevice.lock(), UCollider::TYPE_SPHERE));
+	//	AddPrototype(PROTO_COMP_ABBCOLLIDER, CreateConstructorToNativeNotMsg<UCollider>(_stData.wpDevice.lock(), UCollider::TYPE_AABB));
+	//	AddPrototype(PROTO_COMP_OBBCOLLIDER, CreateConstructorToNativeNotMsg<UCollider>(_stData.wpDevice.lock(), UCollider::TYPE_OBB));
+	//}
+	return S_OK;
+}
+
+HRESULT UGameInstance::ReadyActor(const OUTPUTDATA& _stData)
+{
+	// Add Default 
+	{
+		AddPrototype(PROTO_ACTOR_DEFAULTCUBE, CreateConstructorToNative<UDefaultCube>(
+			_stData.wpDevice.lock(), LAYER_DEFAULT, CLONETYPE::CLONE_ONCE));
+
+#ifdef _USE_DEBUGGING
+		AddPrototype(PROTO_ACTOR_DEUBGGINGDEFAULTOBJECT, CreateConstructorToNative<UDefaultDebugging>(
+			_stData.wpDevice.lock(), LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
+#endif 
+	}
+	/*{
+		AddPrototype(PROTO_ACTOR_TERRAIN, CreateConstructorToNative<UTerrain>(
+			_stData.wpDevice.lock(), LAYER_TERRAIN, CLONETYPE::CLONE_ONCE));
+
+		AddPrototype(PROTO_ACTOR_SKYBOX, CreateConstructorToNative<USkyBox>(
+			_stData.wpDevice.lock(), LAYER_SKYBOX, CLONETYPE::CLONE_ONCE));
+
+		AddPrototype(PROTO_ACTOR_PARTICLE, CreateConstructorToNative<UParticle>(
+			_stData.wpDevice.lock(), LAYER_PARTICLE, CLONETYPE::CLONE_ONCE));
+
+		AddPrototype(PROTO_ACTOR_ANIMATEPARTICLE, CreateConstructorToNative<UAnimatedParticle>(
+			_stData.wpDevice.lock(), LAYER_PARTICLE, CLONETYPE::CLONE_ONCE));
+
+		AddPrototype(PROTO_ACTOR_MIRROR, CreateConstructorToNative<UMirror>(
+			_stData.wpDevice.lock(), LAYER_MIRROR, CLONETYPE::CLONE_ONCE));
+
+		AddPrototype(PROTO_ACTOR_SCREENRENDEROBJ, CreateConstructorToNative<UScreenRenderObj>(
+			_stData.wpDevice.lock(), LAYER_SCREENRENDEROBJ, CLONETYPE::CLONE_ONCE));
+
+		AddPrototype(PROTO_RES_MIRRORCAMERA, CreateConstructorToNative<UMirrorCamera>(
+			_stData.wpDevice.lock(), LAYTER_CAM, CLONETYPE::CLONE_ONCE));
+	}*/
+	return S_OK;
+}
+
+HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
+{
+	CSHPTRREF<GRAPHICDESC> GraphicDesc = m_spGraphicDevice->GetGraphicDesc();
+
+	{
+			// LightShadow 
+		{
+			std::vector<RTDESC> vecRts{
+				RTDESC{ RTOBJID::LIGHTSHADE_AMBIENT_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM,
+					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f } },
+					RTDESC{ RTOBJID::LIGHTSHADE_SHADE_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM,
+						GraphicDesc->iWinCX, GraphicDesc->iWinCY, {0.f, 0.f, 0.f, 1.f} },
+					RTDESC{ RTOBJID::LIGHTSHADE_SPECULAR_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM,
+							GraphicDesc->iWinCX, GraphicDesc->iWinCY, {0.f, 0.f, 0.f, 0.f } }
+			};
+			// Add RenderTargetGroup
+			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::LIGHTSHADE_DEFFERED, vecRts);
+		}
+		// NonAlpha_Deffered 
+		{
+			std::vector<RTDESC> vecRts{
+				RTDESC{ RTOBJID::NONALPHA_DIFFUSE_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM,
+					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 1.f, 0.f } },
+					RTDESC{ RTOBJID::NONALPHA_NOMRAL_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
+						GraphicDesc->iWinCX, GraphicDesc->iWinCY, {1.f, 1.f, 1.f, 1.f}},
+					RTDESC{ RTOBJID::NONALPHA_DEPTH_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
+							GraphicDesc->iWinCX, GraphicDesc->iWinCY, {1.f, 1.f, 1.f, 1.f}},
+					RTDESC{ RTOBJID::NONALPHA_POSITION_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
+							GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f } }
+			};
+			// Add RenderTargetGroup
+			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::NONALPHA_DEFFERED, vecRts);
+		}
+		// Alpha Deffered
+		{
+			std::vector<RTDESC> vecRts{
+				RTDESC{ RTOBJID::ALPHA_DIFFUSE_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM,
+					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f } },
+					RTDESC{ RTOBJID::ALPHA_GLOW_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM,
+						GraphicDesc->iWinCX, GraphicDesc->iWinCY, {0.f, 0.f, 0.f, 0.f} },
+					RTDESC{ RTOBJID::ALPHA_GLOW_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R16G16B16A16_FLOAT,
+							GraphicDesc->iWinCX, GraphicDesc->iWinCY, {0.f, 0.f, 0.f, 0.f} }
+			};
+			// Add 
+			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::ALPHA_DEFFERED, vecRts);
+		}
+		{
+			std::vector<RTDESC> vecRts{
+				RTDESC{ RTOBJID::UI2D_SCREEN_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
+					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f } }
+			};
+			// Add RenderTargetGroup
+			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::UI2D_DEFFERED, vecRts);
+		}
+		{
+			std::vector<RTDESC> vecRts{
+				RTDESC{ RTOBJID::BLEND_SCREEN_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
+					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f } }
+			};
+			// Add RenderTargetGroup
+			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::BLEND_DEFFERED, vecRts);
+		}
+
+
+		// NonAlpha_Deffered 
+		{
+			std::vector<RTDESC> vecRts{
+				RTDESC{ RTOBJID::SCREENNONA_DIFFUSE_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM,
+					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 1.f, 0.f } },
+					RTDESC{ RTOBJID::SCREENNONA_NOMRAL_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
+						GraphicDesc->iWinCX, GraphicDesc->iWinCY, {1.f, 1.f, 1.f, 1.f}},
+					RTDESC{ RTOBJID::SCREENNONA_DEPTH_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
+							GraphicDesc->iWinCX, GraphicDesc->iWinCY, {1.f, 1.f, 1.f, 1.f}},
+					RTDESC{ RTOBJID::SCREENNONA_POSITION_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
+							GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f } }
+			};
+			// Add RenderTargetGroup
+			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::SCREEN_NONALPHA_DEFFERED, vecRts);
+		}
+		// Alpha Deffered
+		{
+			std::vector<RTDESC> vecRts{
+				RTDESC{ RTOBJID::SCREENALPHA_DIFFUSE_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM,
+					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f } },
+					RTDESC{ RTOBJID::SCREENALPHA_GLOW_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM,
+						GraphicDesc->iWinCX, GraphicDesc->iWinCY, {0.f, 0.f, 0.f, 0.f} },
+					RTDESC{ RTOBJID::SCREENALPHA_GLOW_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R16G16B16A16_FLOAT,
+							GraphicDesc->iWinCX, GraphicDesc->iWinCY, {0.f, 0.f, 0.f, 0.f} }
+			};
+			// Add 
+			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::SCREEN_ALPHA_DEFFERED, vecRts);
+		}
+		{
+			std::vector<RTDESC> vecRts{
+				RTDESC{ RTOBJID::SCREENBLEND_SCREEN_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
+					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f } }
+			};
+			// Add RenderTargetGroup
+			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::SCREEN_BLEND_DEFFERED, vecRts);
+		}
+	}
+
+#ifdef _USE_DEBUGGING
+	/*
+	렌더 타겟 디버깅을 위한 것
+	*/
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_POSITION_DEFFERED,
+		_float2(100.f, 100.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
+
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_DIFFUSE_DEFFERED,
+		_float2(100.f, 210.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
+
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_NOMRAL_DEFFERED,
+		_float2(100.f, 320.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
+
+
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_AMBIENT_DEFFERED,
+		_float2(100.f, 430.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
+
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_SHADE_DEFFERED,
+		_float2(100.f, 540.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
+
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_SPECULAR_DEFFERED,
+		_float2(100.f, 650.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
+#endif
+	return S_OK;
+}
