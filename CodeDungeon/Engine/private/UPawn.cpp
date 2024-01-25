@@ -53,7 +53,6 @@ bool UPawn::IsHit(CSHPTRREF<UPawn> _pEnemy)
 
 void UPawn::AddRenderGroup(const RENDERID _iRenderID)
 {
-	m_vecRenderingDatas.push_back(_iRenderID);
 	m_spRenderer->AddRenderGroup(_iRenderID, GetShader(), ThisShared<UPawn>());
 }
 

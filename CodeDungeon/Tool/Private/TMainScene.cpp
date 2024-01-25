@@ -3,6 +3,8 @@
 #include "TMainCamera.h"
 #include "UGameInstance.h"
 #include "UTransform.h"
+#include "TTestObject.h"
+#include "UTransform.h"
 
 TMainScene::TMainScene(CSHPTRREF<UDevice> _spDevice)
 	: UScene(_spDevice, (_uint)IMGTAG::MAIN),
@@ -31,11 +33,16 @@ HRESULT TMainScene::LoadSceneData()
 		vecDatas.push_back(&tDesc);
 
 		m_spMainCamera = std::static_pointer_cast<TMainCamera>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MAINCAMERA, vecDatas));
-		m_spMainCamera->GetTransform()->SetPos({ 0.f, 0.f, -100.f });
+		m_spMainCamera->GetTransform()->SetPos({ 0.f, 0.f, -10.f });
 	}
 	{
 		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL, {1.f, 1.f, 1.f, 1.f}, {1.f, 1.f, 1.f, 1.f}, {1.f, 1.f, 1.f, 1.f}, {0.f, -1.f, -1.f,}, {0.f, 10000.f, 0.f}, 0.f, 0.f ,
 			1.f, 2.f });
+	}
+
+	{
+		m_spTestObject = std::static_pointer_cast<TTestObject>(spGameInstance->CloneActorAdd(L"Proto_Actor_TestObject"));
+		m_spTestObject->GetTransform()->SetPos({ 0.f, 0.f, 0.f });
 	}
 
 	return S_OK;

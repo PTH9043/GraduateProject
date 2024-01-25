@@ -6,6 +6,7 @@
 BEGIN(Tool)
 
 class TMainCamera;
+class TTestObject;
 
 class TMainScene : public UScene {
 public:
@@ -21,6 +22,7 @@ public:
 private:
 	// Main
 	SHPTR<TMainCamera>			m_spMainCamera;
+	SHPTR<TTestObject>				m_spTestObject;
 };
 
 END

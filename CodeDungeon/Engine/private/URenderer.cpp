@@ -157,7 +157,7 @@ HRESULT URenderer::Render()
     // ============== Bind Static Buffer =============
 
     // Render 
-    RenderRTs();
+  //  RenderRTs();
     RenderPriority();
     RenderShadowLight();
     RenderNonAlphaBlend();

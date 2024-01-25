@@ -2,6 +2,9 @@
 #include "TToolApp.h"
 #include "UGameInstance.h"
 #include "UTimer.h"
+#include "TMainCamera.h"
+#include "TTestObject.h"
+#include "TMainScene.h"
 
 TToolApp::TToolApp() :
 	m_iTickCount{ 0 },
@@ -45,11 +48,16 @@ HRESULT TToolApp::NativeConstruct(const HWND& _hWnd, const HINSTANCE& _hInst)
 	RETURN_CHECK_FAILED(m_spGameInstance->ReadyInstance(stGraphicDesc, stOutputData), E_FAIL);
 //	RETURN_CHECK_FAILED(m_spGameInstance->LoadFirstFilder(FIRST_RESOURCE_FOLDER), E_FAIL);
 
+	m_spGameInstance->AddPrototype(PROTO_ACTOR_MAINCAMERA,
+		CreateConstructorToNative<TMainCamera>(stOutputData.wpDevice.lock(), LAYER_CAM, CLONETYPE::CLONE_STATIC));
+
+	m_spGameInstance->AddPrototype(L"Proto_Actor_TestObject",
+		CreateConstructorToNative<TTestObject>(stOutputData.wpDevice.lock(), LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 
 	//TProtoMaker::CreateProtoData(m_spGameInstance, stOutputData.wpDevice.lock(), stOutputData.wpGpuCmd.lock());
 
 	// Register 
-	//m_spGameInstance->RegisterScene(CreateConstructorNative<TMainScene>(stOutputData.wpDevice.lock()));
+	m_spGameInstance->RegisterScene(CreateConstructorNative<TMainScene>(stOutputData.wpDevice.lock()));
 	// ReadyManager
 	//RETURN_CHECK_FAILED(m_spImGuiManager->ReadyManager(stGraphicDesc, stOutputData), E_FAIL);
 
