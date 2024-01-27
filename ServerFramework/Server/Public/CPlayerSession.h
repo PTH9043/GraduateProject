@@ -15,7 +15,7 @@ BEGIN(Server)
 */
 class  CPlayerSession final : public Core::USession {
 public:
-	CPlayerSession(OBJCON_CONSTRUCTOR, TCPSOCKET _TcpSocket, Core::SHPTR<Core::UService> _spService, SESSIONID _ID);
+	CPlayerSession(SESSION_CONSTRUCTOR);
 	NO_COPY(CPlayerSession)
 	DESTRUCTOR(CPlayerSession)
 public:

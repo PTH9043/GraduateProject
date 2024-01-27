@@ -32,7 +32,7 @@ namespace Server
 				Core::SHPTR<Core::UCoreInstance> spCoreInstance = GetCoreInstance();
 
 				Core::SHPTR<Core::USession> spSession =
-					Core::Create<CPlayerSession>(spCoreInstance, std::move(TcpSocket), ThisShared<CServerAdiminstor>(), id);
+					Core::Create<CPlayerSession>(spCoreInstance, std::move(TcpSocket), id);
 
 				// Insert 
 				InsertSession(id, spSession);

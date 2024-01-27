@@ -24,7 +24,7 @@ public:
 	DESTRUCTOR(UCoreInstance)
 public:
 	void ReadyCoreInstance(SHPTR<UService> _spService);
-	void Start();
+	_bool Start();
 public: /* Service */
 	// ID를 통해서 SessionID
 	 SHPTR<USession> FindSession(const SESSIONID _SessionID);

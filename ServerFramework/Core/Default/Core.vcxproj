@@ -42,7 +42,8 @@
     <ClInclude Include="..\Public\UCell.h" />
     <ClInclude Include="..\Public\UClientService.h" />
     <ClInclude Include="..\Public\UCollider.h" />
-    <ClInclude Include="..\Public\UDataBase.h" />
+    <ClInclude Include="..\Public\UDBConnector.h" />
+    <ClInclude Include="..\Public\UDBManager.h" />
     <ClInclude Include="..\Public\UJobTimer.h" />
     <ClInclude Include="..\Public\ULogManager.h" />
     <ClInclude Include="..\Public\ULuaLoader.h" />
@@ -63,6 +64,7 @@
     <ClInclude Include="..\Public\USpace.h" />
     <ClInclude Include="..\Public\USpaceManager.h" />
     <ClInclude Include="..\Public\USphereCollider.h" />
+    <ClInclude Include="..\Public\USqlDBQuery.h" />
     <ClInclude Include="..\Public\UThreadManager.h" />
     <ClInclude Include="..\Public\UTransform.h" />
   </ItemGroup>
@@ -80,7 +82,8 @@
     <ClCompile Include="..\Private\UCell.cpp" />
     <ClCompile Include="..\Private\UClientService.cpp" />
     <ClCompile Include="..\Private\UCollider.cpp" />
-    <ClCompile Include="..\Private\UDataBase.cpp" />
+    <ClCompile Include="..\Private\UDBConnector.cpp" />
+    <ClCompile Include="..\Private\UDBManager.cpp" />
     <ClCompile Include="..\Private\UJobTimer.cpp" />
     <ClCompile Include="..\Private\ULogManager.cpp" />
     <ClCompile Include="..\Private\ULuaLoader.cpp" />
@@ -101,6 +104,7 @@
     <ClCompile Include="..\Private\USpace.cpp" />
     <ClCompile Include="..\Private\USpaceManager.cpp" />
     <ClCompile Include="..\Private\USphereCollider.cpp" />
+    <ClCompile Include="..\Private\USqlDBQuery.cpp" />
     <ClCompile Include="..\Private\UThreadManager.cpp" />
     <ClCompile Include="..\Private\UTransform.cpp" />
   </ItemGroup>
@@ -185,6 +189,7 @@
       <LanguageStandard_C>Default</LanguageStandard_C>
       <PreprocessorDefinitions>_SILENCE_ALL_CXX23_DEPRECATION_WARNINGS;CORE_EXPORTS;_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -226,6 +231,7 @@
       <LanguageStandard_C>Default</LanguageStandard_C>
       <PreprocessorDefinitions>_SILENCE_ALL_CXX23_DEPRECATION_WARNINGS;CORE_EXPORTS;_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

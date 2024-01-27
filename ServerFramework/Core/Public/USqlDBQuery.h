@@ -1,0 +1,15 @@
+#ifndef _SERVERFRAMEWORK_CORE_PUBLIC_USQLDBQUERY
+#define _SERVERFRAMEWORK_CORE_PUBLIC_USQLDBQUERY
+
+#include "UBase.h"
+
+BEGIN(Core)
+
+class CORE_DLL USqlDBQuery final : public UBase {
+public:
+
+};
+
+END
+
+#endif // _SERVERFRAMEWORK_CORE_PUBLIC_USQLDBQUERY

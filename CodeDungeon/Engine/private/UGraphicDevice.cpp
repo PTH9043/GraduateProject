@@ -79,7 +79,7 @@ HRESULT UGraphicDevice::ReadyGraphicDevice(const GRAPHICDESC& _stGraphicsDesc, O
 	}
 	//Create TableDescriptor
 	{
-		const _uint MAX_GRAPHIC_TABLES = 2'0000;
+		const _uint MAX_GRAPHIC_TABLES = 1'5000;
 		m_spTableDescriptor = CreateNative<UTableDescriptor>(m_spDevice, MAX_GRAPHIC_TABLES,
 			CBV_REGISTER_END + SRV_REGISTER_END, GRAPHICS_CONSTANT_BUFFER_VALUE);
 	}
@@ -127,8 +127,6 @@ HRESULT UGraphicDevice::MainRenderBegin()
 	// 명령 목록을 대기열에 추가했다면 명령 목록을 재설정해야 한다. 
 	RETURN_CHECK_FAILED(pGraphicCmdList->Reset(FrameContext->cpAllocator.Get(), nullptr), E_FAIL);
 
-	// Set Root Signature
-		//m_spCommand->Clear();
 	// Bind And Clear 
 	m_spTableDescriptor->BindAndClear(m_spGpuCommand);
 	// Root Signature

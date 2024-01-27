@@ -70,6 +70,10 @@ namespace Core
 
 	void UThreadManager::Free()
 	{
+		for (auto& iter : m_JobTimerContainer)
+		{
+			iter->TurnOffRunningThread();
+		}
 		m_JobTimerContainer.clear();
 		m_ThreadContainer.clear();
 	}

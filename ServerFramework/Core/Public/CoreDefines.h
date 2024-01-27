@@ -4,6 +4,7 @@
 #pragma warning (disable : 4251)
 #pragma warning (disable : 6031)
 #pragma warning (disable : 4150)
+#pragma warning (disable : 4200)
 
 
 #define _CRT_SECURE_NO_WARNINGS 0
@@ -37,15 +38,21 @@
 #define CORE_DLL  _declspec(dllimport)
 #endif
 
-#ifdef _WIN32
 #ifdef _DEBUG
 #pragma comment (lib, "PthMathD")
+#pragma comment (lib, "redis++_staticd")
+#pragma comment (lib, "hiredisd")
 #else
 #pragma comment (lib, "PthMath")
+#pragma comment (lib, "redis++_static")
+#pragma comment (lib, "hiredis")
 #endif
 
+#pragma comment (lib, "libcrypto")
+#pragma comment (lib, "libssl")
+#pragma comment (lib, "mysqlcppconn8")
+#pragma comment (lib, "mysqlcppconn")
 #pragma comment(lib, "liblua54")
-#endif 
 
 #include <iostream>
 #include <atomic>
@@ -78,6 +85,10 @@ extern "C" {
 #include <lua/lualib.h>
 #include <lua/lauxlib.h>
 }
+
+#include <mysql/mysql_connection.h>
+#include <mysql/mysql_driver.h>
+#include <sw/redis++/redis.h>
 
 #include "PthMath/PthMath.h"
 

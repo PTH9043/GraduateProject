@@ -6,7 +6,7 @@ END
 
 class  CClientSession final : public USession {
 public:
-	CClientSession(OBJCON_CONSTRUCTOR, TCPSOCKET _TcpSocket, Core::SHPTR<Core::UService> _spService, SESSIONID _ID);
+	CClientSession(SESSION_CONSTRUCTOR);
 	NO_COPY(CClientSession)
 	DESTRUCTOR(CClientSession)
 public:

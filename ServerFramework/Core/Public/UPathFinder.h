@@ -7,6 +7,12 @@ BEGIN(Core)
 class UCell;
 class UNavigation;
 
+/*
+@ Date: 2023-01-15, Writer: 박태현
+@ Explain
+-  AStar와 Navigation Mesh를 이용해서 길을 찾기 위한 클래스, 해당 클래스는 쓰레드 개수만큼 만들 예정이다. 
+Work Thread만큼 만들지, Job스레드만큼 만들지는 아직 미정
+*/
 class CORE_DLL UPathFinder final : public UBase {
 public:
 	UPathFinder();

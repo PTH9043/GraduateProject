@@ -8,7 +8,8 @@ BEGIN(Core)
 /*
 @ Date: 2024-01-23, Writer: 박태현
 @ Explain
-- 일을 생성하는 클래스
+- 일을 생성하는 클래스로 해당 클래스를 통해 몬스터의 AI, 실시간으로 DB에 저장이 필요한 값들을 
+저장할 수 있다. 
 */
 class UJobTimer abstract : public UObject {
 public:

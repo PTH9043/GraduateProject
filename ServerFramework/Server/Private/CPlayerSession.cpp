@@ -1,11 +1,11 @@
 #include "ServerDefines.h"
 #include "CPlayerSession.h"
-#include "UService.h"
+#include "UCoreInstance.h"
 
 namespace Server {
 
-	CPlayerSession::CPlayerSession(OBJCON_CONSTRUCTOR, TCPSOCKET _TcpSocket, Core::SHPTR<Core::UService> _spService, SESSIONID _ID)
-		: Core::USession(OBJCON_CONDATA, std::move(_TcpSocket), _spService, _ID, Core::SESSIONTYPE::PLAYER)
+	CPlayerSession::CPlayerSession(SESSION_CONSTRUCTOR)
+		: Core::USession(SESSION_CONDATA(Core::SESSIONTYPE::PLAYER))
 	{
 	}
 
@@ -31,20 +31,20 @@ namespace Server {
 		Socket.async_write_some(Asio::buffer(GetSendBuff(), _PacketHead.PacketSize + PACKETHEAD_SIZE),
 			[this](const boost::system::error_code& _error, std::size_t _Size) {
 			SESSIONID SessionID = GetSessionID();
-			Core::SHPTR<Core::UService> Service{ GetService() };
+			Core::SHPTR<Core::UCoreInstance> spCoreInstance{ GetCoreInstance() };
 				// Packet
 				if (_error)
 				{
-					if (nullptr != Service)
-						Service->LeaveService(SessionID);
+					if (nullptr != spCoreInstance)
+						spCoreInstance->LeaveService(SessionID);
 				}
 				else
 				{
 					if (false == IsConnected())
 					{
-						if (nullptr != Service)
+						if (nullptr != spCoreInstance)
 						{
-							Service->LeaveService(SessionID);
+							spCoreInstance->LeaveService(SessionID);
 						}
 					}
 				}

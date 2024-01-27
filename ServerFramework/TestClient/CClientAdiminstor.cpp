@@ -40,7 +40,7 @@ void CClientAdiminstor::Connect()
 		{
 			TCPSOCKET tcpSocket(GetIOContext());
 			SESSIONID SessionID = GiveID();
-			SHPTR<CClientSession> spClientSession = Create<CClientSession>(spCoreInstance, std::move(tcpSocket), spClientAdiminstor, SessionID);
+			SHPTR<CClientSession> spClientSession = Create<CClientSession>(spCoreInstance, std::move(tcpSocket), SessionID);
 			InsertSession(SessionID, spClientSession);
 			spClientSession->ConnectTcpSocket();
 			vecSessions[j].push_back(spClientSession);

@@ -24,9 +24,9 @@ namespace Core
 		m_spService = _spService;
 	}
 
-	void UCoreInstance::Start()
+	_bool UCoreInstance::Start()
 	{
-		m_spService->Start();
+		return m_spService->Start();
 	}
 
 	SHPTR<USession> UCoreInstance::FindSession(const SESSIONID _SessionID)

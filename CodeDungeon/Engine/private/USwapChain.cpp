@@ -55,6 +55,6 @@ HRESULT USwapChain::NativeConstruct(const GRAPHICDESC& _stGraphicDesc, const _ui
 
 HRESULT USwapChain::Present()
 {
-	m_cpSwapChain->Present(1, 0);
+	m_cpSwapChain->Present(0, 0);
 	return S_OK;
 }

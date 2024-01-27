@@ -2,8 +2,8 @@
 #include "CClientSession.h"
 #include "UService.h"
 
-CClientSession::CClientSession(OBJCON_CONSTRUCTOR, TCPSOCKET _TcpSocket, Core::SHPTR<Core::UService> _spService, SESSIONID _ID)
-	: Core::USession(OBJCON_CONDATA, std::move(_TcpSocket), _spService, _ID, Core::SESSIONTYPE::PLAYER)
+CClientSession::CClientSession(SESSION_CONSTRUCTOR)
+	: Core::USession(SESSION_CONDATA(Core::SESSIONTYPE::PLAYER))
 {
 }
 

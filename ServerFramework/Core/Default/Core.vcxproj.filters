@@ -127,6 +127,12 @@
     <Filter Include="03.Network\JobTimer">
       <UniqueIdentifier>{61a0a5f9-323f-42e3-9c95-123c650010e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="07.DataBase\SqlDBQuery">
+      <UniqueIdentifier>{ba293885-dad6-415b-90c6-943581ad12b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Manager\DatabaseManager">
+      <UniqueIdentifier>{b3c6da9b-9662-4dc2-bc17-f6510f90ef7e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\UBase.h">
@@ -261,11 +267,17 @@
     <ClInclude Include="..\Public\URoomManager.h">
       <Filter>02.Manager\RoomManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UDataBase.h">
-      <Filter>07.DataBase</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\UJobTimer.h">
       <Filter>03.Network\JobTimer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UDBConnector.h">
+      <Filter>07.DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\USqlDBQuery.h">
+      <Filter>07.DataBase\SqlDBQuery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UDBManager.h">
+      <Filter>02.Manager\DatabaseManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -371,11 +383,17 @@
     <ClCompile Include="..\Private\URoomManager.cpp">
       <Filter>02.Manager\RoomManager</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UDataBase.cpp">
-      <Filter>07.DataBase</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\UJobTimer.cpp">
       <Filter>03.Network\JobTimer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UDBConnector.cpp">
+      <Filter>07.DataBase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\USqlDBQuery.cpp">
+      <Filter>07.DataBase\SqlDBQuery</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UDBManager.cpp">
+      <Filter>02.Manager\DatabaseManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
