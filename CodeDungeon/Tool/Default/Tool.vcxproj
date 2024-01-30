@@ -157,6 +157,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\TAssimpAnimation.h" />
+    <ClInclude Include="..\Public\TAssimpChannel.h" />
+    <ClInclude Include="..\Public\TAssimpMeshContainer.h" />
+    <ClInclude Include="..\Public\TAssimpModel.h" />
     <ClInclude Include="..\Public\TMainCamera.h" />
     <ClInclude Include="..\Public\TMainScene.h" />
     <ClInclude Include="..\Public\ToolDefines.h" />
@@ -168,12 +172,17 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\Public\TAssimpBoneNode.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Tool.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\TAssimpAnimation.cpp" />
+    <ClCompile Include="..\Private\TAssimpChannel.cpp" />
+    <ClCompile Include="..\Private\TAssimpMeshContainer.cpp" />
+    <ClCompile Include="..\Private\TAssimpModel.cpp" />
     <ClCompile Include="..\Private\TMainCamera.cpp" />
     <ClCompile Include="..\Private\TMainScene.cpp" />
     <ClCompile Include="..\Private\TTestObject.cpp" />
@@ -183,6 +192,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\Private\TAssimpBoneNode.cpp" />
     <ClCompile Include="Tool.cpp" />
   </ItemGroup>
   <ItemGroup>

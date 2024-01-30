@@ -174,6 +174,50 @@ namespace Engine {
 		return pInstance;
 	}
 
+	/*
+	@ Date: 2023-01-09,  Writer: 박태현
+	@ Explain
+	- 현재 밀리세컨드를 구하는 함수이다.
+	*/
+	static _llong CurrentMilliseconds()
+	{
+		auto Time = std::chrono::high_resolution_clock::now();
+		return std::chrono::duration_cast<std::chrono::milliseconds>(Time.time_since_epoch()).count();
+	}
+
+	/*
+	@ Date: 2023-01-05,  Writer: 박태현
+	@ Explain
+	- 해당 Thread를 nanoseconds만큼 쉬는 함수이다.
+	*/
+	template<class T>
+		requires std::is_integral_v<T>
+	static void ThreadNanoRelax(const T& _data)
+	{
+		std::this_thread::sleep_for(std::chrono::nanoseconds(_data));
+	}
+	/*
+	@ Date: 2023-01-05,  Writer: 박태현
+	@ Explain
+	- 해당 Thread를 MicroSeconds만큼 쉬는 함수이다.
+	*/
+	template<class T>
+		requires std::is_integral_v<T>
+	static void ThreadMicroRelax(const T& _data)
+	{
+		std::this_thread::sleep_for(std::chrono::microseconds(_data));
+	}
+	/*
+`@ Date: 2023-01-05,  Writer: 박태현
+`@ Explain
+`- 해당 Thread를 MicroSeconds만큼 쉬는 함수이다.
+`*/
+	template<class T>
+		requires std::is_integral_v<T>
+	static void ThreadMiliRelax(const T& _data)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(_data));
+	}
 
 #ifdef _USE_ATOMIC
 	template<class T, class U>

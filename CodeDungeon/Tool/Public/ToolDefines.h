@@ -1,15 +1,15 @@
 #ifndef _PTH_FRAMEWORK_TOOL_PUBLIC_TOOLDEFINES_H
 #define _PTH_FRAMEWORK_TOOL_PUBLIC_TOOLDEFINES_H
 
-//#include <assimp/scene.h>
-//#include <assimp/Importer.hpp>
-//#include <assimp/postprocess.h>
-//
-//#ifdef _DEBUG
-//#pragma comment(lib, "AssimpD.lib")
-//#else
-//#pragma comment(lib, "Assimp.lib")
-//#endif
+#include <assimp/scene.h>
+#include <assimp/Importer.hpp>
+#include <assimp/postprocess.h>
+
+#ifdef _DEBUG
+#pragma comment(lib, "AssimpD.lib")
+#else
+#pragma comment(lib, "Assimp.lib")
+#endif
 
 #ifdef _DEBUG
 #pragma comment(lib, "EngineD.lib")

@@ -14,8 +14,8 @@ namespace Engine {
 
 	using _ulong = unsigned long;
 	using _long = signed long;
-	using _ulonglong = unsigned long long;
-	using _longlong = signed long long;
+	using _ullong = unsigned long long;
+	using _llong = signed long long;
 
 	using	CLASSID = _uint;
 

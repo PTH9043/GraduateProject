@@ -51,6 +51,7 @@ struct WAITCHECKACTOR;
 
 using CLONES = UNORMAP<_wstring, SHPTR<UActorGroup>>;
 using CLONEARR = ARRAY<CLONES, CLONE_MAX_SIZE>;
+using KEYMETHOD = UDelegate<void, const _double&>;
 
 class UGameInstance : public UBase 
 {
@@ -105,6 +106,18 @@ public: /* TimerManager */
 	HRESULT CreateTimer(const _wstring& _wstrName);
 	SHPTR<UTimer> CreateTimerAdd(const _wstring& _wstrName);
 	HRESULT RemoveTimer(const _wstring& _wstrName);
+
+public: /* InputManager*/
+	void AddKeyMethod(const _ubyte& _bFirstKeyID, const _wstring& _wstrSecondsKeyName, const KEYMETHOD& _keyMethod);
+	void DeleteKeyMethod(const _ubyte& _bFirstKeyID, const _wstring& _wstrSecondsKeyName);
+	_bool GetDIKeyDown(const _ubyte& _bKeyID);
+	_bool GetDIKeyUp(const _ubyte& _bKeyID);
+	_bool GetDIKeyPressing(const _ubyte& _bKeyID);
+	_bool GetDIMBtnDown(const DIMOUSEBUTTON& _eMouseBtn);
+	_bool GetDIMBtnUp(const DIMOUSEBUTTON& _eMouseBtn);
+	_bool GetDIMBtnPressing(const DIMOUSEBUTTON& _eMouseBtn);
+	_long GetDIMMoveState(const DIMOUSEMOVE& _eMouseMove);
+	_float2 GetMousePosition();
 
 public: /* ActorManager */
 	const  CLONEARR& GetClonesArr() const;
@@ -221,9 +234,8 @@ private:
 	SHPTR<URenderer>								m_spRenderer;
 	SHPTR<UFilePathManager>					m_spFilePathManager;
 	
-	
-	//SHPTR<UGraphicRenderManager>	m_spGraphicRenderManager;
-	//SHPTR<UInputManager>						m_spInputManager;
+
+	SHPTR<UInputManager>						m_spInputManager;
 	//SHPTR< UFontManager>						m_spFontMananger;
 	//SHPTR<UComputeManager>				m_spComputeManager;
 	//SHPTR<UPicking>									m_spPicking;

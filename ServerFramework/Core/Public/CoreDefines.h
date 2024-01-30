@@ -42,16 +42,19 @@
 #pragma comment (lib, "PthMathD")
 #pragma comment (lib, "redis++_staticd")
 #pragma comment (lib, "hiredisd")
+#pragma comment (lib, "libcryptod")
+#pragma comment (lib, "libssld")
+#pragma comment (lib, "mysqlcppconn8d")
+#pragma comment (lib, "mysqlcppconnd")
 #else
 #pragma comment (lib, "PthMath")
 #pragma comment (lib, "redis++_static")
 #pragma comment (lib, "hiredis")
-#endif
-
 #pragma comment (lib, "libcrypto")
 #pragma comment (lib, "libssl")
 #pragma comment (lib, "mysqlcppconn8")
 #pragma comment (lib, "mysqlcppconn")
+#endif
 #pragma comment(lib, "liblua54")
 
 #include <iostream>
@@ -86,8 +89,11 @@ extern "C" {
 #include <lua/lauxlib.h>
 }
 
-#include <mysql/mysql_connection.h>
 #include <mysql/mysql_driver.h>
+#include <mysql/mysql_connection.h>
+#include <mysql/common.h>
+#include <mysql/cppconn/prepared_statement.h>
+
 #include <sw/redis++/redis.h>
 
 #include "PthMath/PthMath.h"

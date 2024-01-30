@@ -67,6 +67,7 @@
 #include <filesystem>
 #include <unordered_map>
 #include <atomic>
+#include <fstream>
 
 #include "EngineConcept.h"
 #include "UDelegate.h"

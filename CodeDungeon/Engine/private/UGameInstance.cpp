@@ -3,7 +3,7 @@
 #include "UShaderBufferManager.h"
 #include "UGraphicDevice.h"
 #include "UTimerManager.h"
-//#include "UInputManager.h"
+#include "UInputManager.h"
 
 //#include  "UFontManager.h"
 #include "UActorManager.h"
@@ -67,7 +67,7 @@ UGameInstance::UGameInstance() :
 	m_spShaderBufferManager{ Create<UShaderBufferManager>() },
 	m_spGraphicDevice(Create<UGraphicDevice>()),
 	m_spTimerManager{ Create<UTimerManager>() },
-	//m_spInputManager{ Create<UInputManager>() },
+	m_spInputManager{ Create<UInputManager>() },
 
 	//m_spFontMananger{ Create<UFontManager>() },
 	m_spActorManager(Create<UActorManager>()),
@@ -170,13 +170,13 @@ HRESULT UGameInstance::CreateGraphicsShader(const _wstring& _wstrProtoName, cons
 
 void UGameInstance::OtherFrame(const _double& _dTimeDelta, const WPARAM& _wParam)
 {
-	//m_spInputManager->InvokeKeyMethods((_ubyte)_wParam, _dTimeDelta);
+	m_spInputManager->InvokeKeyMethods((_ubyte)_wParam, _dTimeDelta);
 }
 
 void UGameInstance::AwakeTick()
 {
-	//m_spInputManager->KeyTick();
-//	m_spInputManager->MouseTick();
+	m_spInputManager->KeyTick();
+	m_spInputManager->MouseTick();
 	//m_spPicking->TickRayInWorldSpace(this);
 	m_spPipeLine->FrustomTick();
 	m_spRenderer->ClearRenderingData();
@@ -255,7 +255,65 @@ HRESULT UGameInstance::RemoveTimer(const _wstring& _wstrName)
 
 /*
 ==================================================
-ActorManager
+UTimerManager
+==================================================
+UInputManager
+==================================================
+*/
+
+void UGameInstance::AddKeyMethod(const _ubyte& _bFirstKeyID, const _wstring& _wstrSecondsKeyName, const KEYMETHOD& _keyMethod)
+{
+	m_spInputManager->AddKeyMethod(_bFirstKeyID, _wstrSecondsKeyName, _keyMethod);
+}
+
+void UGameInstance::DeleteKeyMethod(const _ubyte& _bFirstKeyID, const _wstring& _wstrSecondsKeyName)
+{
+	m_spInputManager->DeleteKeyMethod(_bFirstKeyID, _wstrSecondsKeyName);
+}
+
+_bool UGameInstance::GetDIKeyDown(const _ubyte& _bKeyID)
+{
+	return m_spInputManager->GetDIKeyDown(_bKeyID);
+}
+
+_bool UGameInstance::GetDIKeyUp(const _ubyte& _bKeyID)
+{
+	return m_spInputManager->GetDIKeyUp(_bKeyID);
+}
+
+_bool UGameInstance::GetDIKeyPressing(const _ubyte& _bKeyID)
+{
+	return m_spInputManager->GetDIKeyPressing(_bKeyID);
+}
+
+_bool UGameInstance::GetDIMBtnDown(const DIMOUSEBUTTON& _eMouseBtn)
+{
+	return m_spInputManager->GetDIMBtnDown(_eMouseBtn);
+}
+
+_bool UGameInstance::GetDIMBtnUp(const DIMOUSEBUTTON& _eMouseBtn)
+{
+	return m_spInputManager->GetDIMBtnUp(_eMouseBtn);
+}
+
+_bool UGameInstance::GetDIMBtnPressing(const DIMOUSEBUTTON& _eMouseBtn)
+{
+	return m_spInputManager->GetDIMBtnPressing(_eMouseBtn);
+}
+
+_long UGameInstance::GetDIMMoveState(const DIMOUSEMOVE& _eMouseMove)
+{
+	return m_spInputManager->GetDIMMoveState(_eMouseMove);
+}
+
+_float2 UGameInstance::GetMousePosition()
+{
+	return m_spInputManager->GetMousePosition();
+}
+
+/*
+==================================================
+UInputManager
 ==================================================
 ComponentManager
 ==================================================
@@ -721,13 +779,13 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 		//			BLEND_TYPE::ADD_BLEND), GRAPHICRENDEROBJECT_TYPE::LIGHT);
 		//}
 		// NonAlpha
-		//{
-		//	CreateGraphicsShader(PROTO_RES_MODELSHADER, CLONETYPE::CLONE_STATIC,
-		//		SHADERDESC(L"Model", VTXMODEL_DECLARATION::Element, VTXMODEL_DECLARATION::iNumElement,
-		//			SHADERLIST{ VS_MAIN, PS_MAIN },
-		//			RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
-		//			DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT
-		//			}));
+		{
+			CreateGraphicsShader(PROTO_RES_MODELSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"Model", VTXMODEL_DECLARATION::Element, VTXMODEL_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN },
+					RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
+					DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT
+					}));
 
 		//	CreateGraphicsShader(PROTO_RES_EQUIPMENTSHADER, CLONETYPE::CLONE_STATIC,
 		//		SHADERDESC(L"EquipmentModel", VTXMODEL_DECLARATION::Element, VTXMODEL_DECLARATION::iNumElement,
@@ -736,12 +794,12 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 		//			DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT
 		//			}));
 
-		//	CreateGraphicsShader(PROTO_RES_ANIMMODELSHADER, CLONETYPE::CLONE_STATIC,
-		//		SHADERDESC(L"AnimModel", VTXANIMMODEL_DECLARATION::Element, VTXANIMMODEL_DECLARATION::iNumElement,
-		//			SHADERLIST{ VS_MAIN, PS_MAIN },
-		//			RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
-		//			DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT
-		//			}));
+			CreateGraphicsShader(PROTO_RES_ANIMMODELSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"AnimModel", VTXANIMMODEL_DECLARATION::Element, VTXANIMMODEL_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN },
+					RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
+					DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT
+					}));
 
 		//	CreateGraphicsShader(PROTO_RES_3DNORMALCUBESHADER, CLONETYPE::CLONE_STATIC,
 		//		SHADERDESC(L"3DNormalCube", VTXNORMALCUBE_DECLARATION::Element, VTXNORMALCUBE_DECLARATION::iNumElement,
@@ -770,7 +828,7 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 		//			RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
 		//			DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT },
 		//			RASTERIZER_TYPE::CULL_NONE, DEPTH_STENCIL_TYPE::LESS_NO_WRITE, BLEND_TYPE::ALPHA_BLEND));
-		//}
+		}
 		//// Alpha
 		//{
 		//	CreateGraphicsShader(PROTO_RES_PARTICLE2DSHADER, CLONETYPE::CLONE_STATIC,
@@ -827,7 +885,7 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 		//			DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
 		//			DEPTH_STENCIL_TYPE::LESS));
 		//}
-	}
+		}
 	//// Compute Shader 
 	//{
 	//	CreateComputeShader(PROTO_RES_COMPUTEANIMATIONSHADER, CLONETYPE::CLONE_STATIC,

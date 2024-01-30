@@ -133,6 +133,9 @@
     <Filter Include="02.Manager\DatabaseManager">
       <UniqueIdentifier>{b3c6da9b-9662-4dc2-bc17-f6510f90ef7e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="07.DataBase\SqlConnector">
+      <UniqueIdentifier>{6af20a06-0aa2-40a4-9d43-bab8bb441c38}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\UBase.h">
@@ -270,7 +273,7 @@
     <ClInclude Include="..\Public\UJobTimer.h">
       <Filter>03.Network\JobTimer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UDBConnector.h">
+    <ClInclude Include="..\Public\UMySqlDriver.h">
       <Filter>07.DataBase</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\USqlDBQuery.h">
@@ -278,6 +281,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\UDBManager.h">
       <Filter>02.Manager\DatabaseManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UMySqlConnector.h">
+      <Filter>07.DataBase\SqlConnector</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -386,7 +392,7 @@
     <ClCompile Include="..\Private\UJobTimer.cpp">
       <Filter>03.Network\JobTimer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UDBConnector.cpp">
+    <ClCompile Include="..\Private\UMySqlDriver.cpp">
       <Filter>07.DataBase</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\USqlDBQuery.cpp">
@@ -394,6 +400,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UDBManager.cpp">
       <Filter>02.Manager\DatabaseManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UMySqlConnector.cpp">
+      <Filter>07.DataBase\SqlConnector</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

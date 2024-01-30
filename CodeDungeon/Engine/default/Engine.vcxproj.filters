@@ -196,6 +196,30 @@
     <Filter Include="98.ShaderFile\RTS">
       <UniqueIdentifier>{a3ff3e2a-6b15-4090-a652-6c31b7ba2d48}</UniqueIdentifier>
     </Filter>
+    <Filter Include="07.Resource\Model">
+      <UniqueIdentifier>{f2315302-8a69-4e80-8ac4-1fe20879186f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Resource\Model\MeshContainer">
+      <UniqueIdentifier>{03083128-7f83-4e82-bdc0-b16cfcfc79ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Resource\Model\BoneNode">
+      <UniqueIdentifier>{e764c4cc-9c7e-4f2a-a1a5-68aec43b4d2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Resource\Model\Animation">
+      <UniqueIdentifier>{43242ec3-8438-4280-a9ee-813880c340f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Resource\Model\Animation\Channel">
+      <UniqueIdentifier>{4e47c13d-362f-48d9-947f-4e7ce0f6d165}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component\RectTransform">
+      <UniqueIdentifier>{92e28880-4fea-4f56-9003-42e0aab6b1d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\01.Pawn\UserInterface">
+      <UniqueIdentifier>{bae89e40-752e-42aa-82a1-4ad2516638ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Manager\InputManager">
+      <UniqueIdentifier>{0451c500-0dec-4e63-8fca-4d0ab513a986}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -359,6 +383,33 @@
     </ClCompile>
     <ClCompile Include="..\private\UVIBufferSphere.cpp">
       <Filter>07.Resource\VIBuffer\Sphere</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UModel.cpp">
+      <Filter>07.Resource\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UBoneNode.cpp">
+      <Filter>07.Resource\Model\BoneNode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UMeshContainer.cpp">
+      <Filter>07.Resource\Model\MeshContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UAnimation.cpp">
+      <Filter>07.Resource\Model\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UChannel.cpp">
+      <Filter>07.Resource\Model\Animation\Channel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UAnimModel.cpp">
+      <Filter>07.Resource\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\URectTransform.cpp">
+      <Filter>06.Component\RectTransform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UUserInterface.cpp">
+      <Filter>05.Actor\01.Pawn\UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UInputManager.cpp">
+      <Filter>01.Manager\InputManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -547,6 +598,33 @@
     </ClInclude>
     <ClInclude Include="..\public\UVIBufferSphere.h">
       <Filter>07.Resource\VIBuffer\Sphere</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UModel.h">
+      <Filter>07.Resource\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UBoneNode.h">
+      <Filter>07.Resource\Model\BoneNode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UMeshContainer.h">
+      <Filter>07.Resource\Model\MeshContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UAnimation.h">
+      <Filter>07.Resource\Model\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UChannel.h">
+      <Filter>07.Resource\Model\Animation\Channel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UAnimModel.h">
+      <Filter>07.Resource\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\URectTransform.h">
+      <Filter>06.Component\RectTransform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UUserInterface.h">
+      <Filter>05.Actor\01.Pawn\UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UInputManager.h">
+      <Filter>01.Manager\InputManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

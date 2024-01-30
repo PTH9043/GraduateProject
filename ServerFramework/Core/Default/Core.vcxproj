@@ -42,7 +42,8 @@
     <ClInclude Include="..\Public\UCell.h" />
     <ClInclude Include="..\Public\UClientService.h" />
     <ClInclude Include="..\Public\UCollider.h" />
-    <ClInclude Include="..\Public\UDBConnector.h" />
+    <ClInclude Include="..\Public\UMySqlConnector.h" />
+    <ClInclude Include="..\Public\UMySqlDriver.h" />
     <ClInclude Include="..\Public\UDBManager.h" />
     <ClInclude Include="..\Public\UJobTimer.h" />
     <ClInclude Include="..\Public\ULogManager.h" />
@@ -82,7 +83,8 @@
     <ClCompile Include="..\Private\UCell.cpp" />
     <ClCompile Include="..\Private\UClientService.cpp" />
     <ClCompile Include="..\Private\UCollider.cpp" />
-    <ClCompile Include="..\Private\UDBConnector.cpp" />
+    <ClCompile Include="..\Private\UMySqlConnector.cpp" />
+    <ClCompile Include="..\Private\UMySqlDriver.cpp" />
     <ClCompile Include="..\Private\UDBManager.cpp" />
     <ClCompile Include="..\Private\UJobTimer.cpp" />
     <ClCompile Include="..\Private\ULogManager.cpp" />
