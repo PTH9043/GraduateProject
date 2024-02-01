@@ -1,14 +1,14 @@
 #pragma once
 
-#include "UApp.h"
+#include "ACoreApp.h"
 
 BEGIN(Core)
-class UCoreInstance;
+class ACoreInstance;
 END
 
 class CClientAdiminstor;
 
-class CClientApp final : public UApp {
+class CClientApp final : public ACoreApp {
 public:
 	CClientApp();
 	NO_COPY(CClientApp)

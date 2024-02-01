@@ -10,17 +10,17 @@ namespace Core
 	@	 Explain
 	- 아무도 공유하지 않을 경우 Write Lock을 걸어서 자신이 원하는 값이 실행되기를 바란다.
 	*/
-	URWLock::URWLock() : m_lockFlag{ 0 }, m_WriteCount{ 0 } {
+	ARWLock::ARWLock() : m_lockFlag{ 0 }, m_WriteCount{ 0 } {
 	}
-	URWLock::URWLock(const URWLock& _rhs)
+	ARWLock::ARWLock(const ARWLock& _rhs)
 	{
 		m_lockFlag.store(_rhs.m_lockFlag.load());
 		m_WriteCount.store(_rhs.m_WriteCount.load());
 	}
-	URWLock::~URWLock()
+	ARWLock::~ARWLock()
 	{
 	}
-	URWLock& URWLock::operator=(const URWLock& _lock)
+	ARWLock& ARWLock::operator=(const ARWLock& _lock)
 	{
 		m_lockFlag.store(_lock.m_lockFlag.load());
 		m_WriteCount.store(_lock.m_WriteCount.load());
@@ -28,7 +28,7 @@ namespace Core
 	}
 
 #ifdef USE_DEBUG
-	void URWLock::WriteLock(const char* _name)
+	void ARWLock::WriteLock(const char* _name)
 #else
 	void RWLock::WriteLock()
 #endif
@@ -81,7 +81,7 @@ namespace Core
 	@ Writer: 박태현
 	*/
 #ifdef USE_DEBUG
-	void URWLock::WriteUnLock(const char* _name)
+	void ARWLock::WriteUnLock(const char* _name)
 #else
 	void RWLock::WriteUnLock()
 #endif
@@ -107,7 +107,7 @@ namespace Core
 	@ Writer: 박태현
 	*/
 #ifdef USE_DEBUG
-	void URWLock::ReadLock(const char* _name)
+	void ARWLock::ReadLock(const char* _name)
 #else 
 	void RWLock::ReadLock()
 #endif
@@ -153,7 +153,7 @@ namespace Core
 	@ Writer: 박태현
 	*/
 #ifdef USE_DEBUG
-	void URWLock::ReadUnLock(const char* _name)
+	void ARWLock::ReadUnLock(const char* _name)
 #else
 	void RWLock::ReadUnLock()
 #endif
@@ -176,20 +176,20 @@ namespace Core
 	============================================
 	*/
 
-	UFastSpinLock::UFastSpinLock() : m_LockFlag{ 0 } { }
+	AFastSpinLock::AFastSpinLock() : m_LockFlag{ 0 } { }
 
-	UFastSpinLock::UFastSpinLock(const UFastSpinLock& _rhs) :
+	AFastSpinLock::AFastSpinLock(const AFastSpinLock& _rhs) :
 		m_LockFlag{ _rhs.m_LockFlag.load() } {}
 
-	UFastSpinLock& UFastSpinLock::operator=(const UFastSpinLock& _lock)
+	AFastSpinLock& AFastSpinLock::operator=(const AFastSpinLock& _lock)
 	{
 		m_LockFlag.store(_lock.m_LockFlag, std::memory_order_seq_cst);
 		return *this;
 	}
 
-	UFastSpinLock::~UFastSpinLock(){ }
+	AFastSpinLock::~AFastSpinLock(){ }
 
-	void UFastSpinLock::EnterWriteLock()
+	void AFastSpinLock::EnterWriteLock()
 	{
 		while (true)
 		{
@@ -207,12 +207,12 @@ namespace Core
 		}
 	}
 
-	void UFastSpinLock::LeaveWriteLock()
+	void AFastSpinLock::LeaveWriteLock()
 	{
 		m_LockFlag.fetch_sub(LF_WRITE_FLAG, std::memory_order_relaxed);
 	}
 
-	void UFastSpinLock::EnterReadLock()
+	void AFastSpinLock::EnterReadLock()
 	{
 		while (true)
 		{
@@ -227,7 +227,7 @@ namespace Core
 		}
 	}
 
-	void UFastSpinLock::LeaveReadLock()
+	void AFastSpinLock::LeaveReadLock()
 	{
 		m_LockFlag.fetch_sub(1, std::memory_order_relaxed);
 	}

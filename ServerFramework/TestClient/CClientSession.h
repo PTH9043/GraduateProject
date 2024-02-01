@@ -1,10 +1,10 @@
-#include "USession.h"
+#include "ASession.h"
 
 BEGIN(Core)
-class UService;
+class AService;
 END
 
-class  CClientSession final : public USession {
+class  CClientSession final : public ASession {
 public:
 	CClientSession(SESSION_CONSTRUCTOR);
 	NO_COPY(CClientSession)

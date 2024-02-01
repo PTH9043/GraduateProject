@@ -35,16 +35,16 @@
     <Filter Include="97.AssimpLoad\Animation\Channel">
       <UniqueIdentifier>{8030e1ba-89c0-4b65-bba2-21b67a85f001}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.TestObject\98.Defines">
+    <Filter Include="98.Defines">
       <UniqueIdentifier>{29413899-746b-4cf3-9492-35009ea7a7d3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ToolDefines.h">
-      <Filter>05.TestObject\98.Defines</Filter>
+      <Filter>98.Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ToolMaker.h">
-      <Filter>05.TestObject\98.Defines</Filter>
+      <Filter>98.Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TToolApp.h">
       <Filter>00.ToolApp</Filter>

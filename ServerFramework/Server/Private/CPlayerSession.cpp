@@ -1,11 +1,11 @@
 #include "ServerDefines.h"
 #include "CPlayerSession.h"
-#include "UCoreInstance.h"
+#include "ACoreInstance.h"
 
 namespace Server {
 
 	CPlayerSession::CPlayerSession(SESSION_CONSTRUCTOR)
-		: Core::USession(SESSION_CONDATA(Core::SESSIONTYPE::PLAYER))
+		: Core::ASession(SESSION_CONDATA(Core::SESSIONTYPE::PLAYER))
 	{
 	}
 
@@ -31,7 +31,7 @@ namespace Server {
 		Socket.async_write_some(Asio::buffer(GetSendBuff(), _PacketHead.PacketSize + PACKETHEAD_SIZE),
 			[this](const boost::system::error_code& _error, std::size_t _Size) {
 			SESSIONID SessionID = GetSessionID();
-			Core::SHPTR<Core::UCoreInstance> spCoreInstance{ GetCoreInstance() };
+			Core::SHPTR<Core::ACoreInstance> spCoreInstance{ GetCoreInstance() };
 				// Packet
 				if (_error)
 				{

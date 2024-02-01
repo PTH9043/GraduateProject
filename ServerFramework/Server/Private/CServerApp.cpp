@@ -1,6 +1,6 @@
 #include "ServerDefines.h"
 #include "CServerApp.h"
-#include "UCoreInstance.h"
+#include "ACoreInstance.h"
 #include "CServerAdiminstor.h"
 
 

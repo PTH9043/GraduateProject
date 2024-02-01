@@ -17,3 +17,4 @@ Reference/
 *.db 
 libprotobufd.lib
 ProtocolBufferD.lib
+Engine.lib

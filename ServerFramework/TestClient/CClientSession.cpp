@@ -1,9 +1,9 @@
 #include "ClientDefines.h"
 #include "CClientSession.h"
-#include "UService.h"
+#include "AService.h"
 
 CClientSession::CClientSession(SESSION_CONSTRUCTOR)
-	: Core::USession(SESSION_CONDATA(Core::SESSIONTYPE::PLAYER))
+	: Core::ASession(SESSION_CONDATA(Core::SESSIONTYPE::PLAYER))
 {
 }
 

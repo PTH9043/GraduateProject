@@ -1,7 +1,7 @@
 #include "ServerDefines.h"
 #include "CServerAdiminstor.h"
 #include "CPlayerSession.h"
-#include "UCoreInstance.h"
+#include "ACoreInstance.h"
 
 namespace Server
 {
@@ -29,9 +29,9 @@ namespace Server
 			if (!_error)
 			{
 				SESSIONID id = GiveID();
-				Core::SHPTR<Core::UCoreInstance> spCoreInstance = GetCoreInstance();
+				Core::SHPTR<Core::ACoreInstance> spCoreInstance = GetCoreInstance();
 
-				Core::SHPTR<Core::USession> spSession =
+				Core::SHPTR<Core::ASession> spSession =
 					Core::Create<CPlayerSession>(spCoreInstance, std::move(TcpSocket), id);
 
 				// Insert 

@@ -115,7 +115,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\Reference\Librarys\; ..\ThirdPartyLib\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\Reference\Librarys\;..\ThirdPartyLib\</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
   </ItemDefinitionGroup>
@@ -141,7 +141,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\Reference\Librarys\; ..\ThirdPartyLib\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\Reference\Librarys\;..\ThirdPartyLib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -162,7 +162,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\Reference\Librarys\; ..\ThirdPartyLib\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\Reference\Librarys\;..\ThirdPartyLib\</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
   </ItemDefinitionGroup>
@@ -188,7 +188,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\Reference\Librarys\; ..\ThirdPartyLib\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\Reference\Librarys\;..\ThirdPartyLib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

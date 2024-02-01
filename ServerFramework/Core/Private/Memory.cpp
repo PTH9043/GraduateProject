@@ -3,13 +3,13 @@
 
 namespace Core
 {
-	UMemoryPool::UMemoryPool(const _ullong& _AllocateSize) : 
+	AMemoryPool::AMemoryPool(const _ullong& _AllocateSize) : 
 		m_AllocateSize{_AllocateSize}, m_AllocateCount{0}
 	{
 
 	}
 
-	UMemoryPool::~UMemoryPool()
+	AMemoryPool::~AMemoryPool()
 	{
 		while (m_MemoryQueue.empty() == false)
 		{
@@ -21,7 +21,7 @@ namespace Core
 	/*
 	* 반납된 메모리를 풀에 저장한다. 
 	*/
-	void UMemoryPool::Push(MEMORYHEADER* _ptr)
+	void AMemoryPool::Push(MEMORYHEADER* _ptr)
 	{
 		std::atomic_thread_fence(std::memory_order_seq_cst);
 		MEMORYHEADER* Ptr = _ptr;
@@ -32,7 +32,7 @@ namespace Core
 		m_AllocateCount.fetch_add(1);
 	}
 
-	MEMORYHEADER* UMemoryPool::Pop()
+	MEMORYHEADER* AMemoryPool::Pop()
 	{
 		std::atomic_thread_fence(std::memory_order_seq_cst);
 		MEMORYHEADER* Header = nullptr;
@@ -63,7 +63,7 @@ namespace Core
 	*/
 
 	// 저장할 메모리 할당
-	UMemoryAdminster::UMemoryAdminster()
+	AMemoryAdminster::AMemoryAdminster()
 	{
 		_uint Size = 16;
 		_uint TableIndex = 0;
@@ -74,7 +74,7 @@ namespace Core
 		MakeMemoryPool(3072, REF_OUT TableIndex, 5120, 256);
 	}
 
-	UMemoryAdminster::~UMemoryAdminster()
+	AMemoryAdminster::~AMemoryAdminster()
 	{
 		for (auto& iter : m_Pools)
 		{
@@ -84,7 +84,7 @@ namespace Core
 	}
 
 	// SIze의 크기가 해당 메모리에 없으면 그냥 할당, 아니라면 해제한다. 
-	void* UMemoryAdminster::Allocate(_ullong _Size)
+	void* AMemoryAdminster::Allocate(_ullong _Size)
 	{
 		MEMORYHEADER* Header = nullptr;
 		const _ullong AllocateSize = _Size + sizeof(MEMORYHEADER);
@@ -105,7 +105,7 @@ namespace Core
 		return MEMORYHEADER::AttachHeader(Header, AllocateSize);
 	}
 	// SIze의 크기가 해당 메모리에 없으면 해제, 아니면 반납한다. 
-	void UMemoryAdminster::Release(void* _Ptr)
+	void AMemoryAdminster::Release(void* _Ptr)
 	{
 		MEMORYHEADER* Header = MEMORYHEADER::DetachHeader(_Ptr);
 
@@ -126,12 +126,12 @@ namespace Core
 #endif
 	}
 	// 메모리 할당을 해주는 함수이다. 
-	void UMemoryAdminster::MakeMemoryPool(_uint _Size, REF_IN _uint& _TableIndex,
+	void AMemoryAdminster::MakeMemoryPool(_uint _Size, REF_IN _uint& _TableIndex,
 		const _uint _Limited, const _uint _AddValue)
 	{
 		for (; _Size <= _Limited;)
 		{
-			UMemoryPool* pool = new UMemoryPool(_Size);
+			AMemoryPool* pool = new AMemoryPool(_Size);
 			m_Pools.push_back(pool);
 
 			while (_TableIndex <= _Size)

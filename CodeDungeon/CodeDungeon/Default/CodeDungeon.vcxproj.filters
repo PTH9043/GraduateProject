@@ -7,8 +7,20 @@
     <Filter Include="00.ClientApp">
       <UniqueIdentifier>{1e655642-da5e-488b-a22f-456946c18643}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98.Defines">
+      <UniqueIdentifier>{c071762e-2038-44de-8bfe-6b4dbccb818a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="90.Server">
+      <UniqueIdentifier>{5d4f5c49-410f-4489-8243-1375700409cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\ClientDefines.h">
+      <Filter>98.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ClientProto.h">
+      <Filter>98.Defines</Filter>
+    </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>99.Default</Filter>
     </ClInclude>
@@ -21,6 +33,9 @@
     <ClInclude Include="CodeDungeon.h">
       <Filter>99.Default</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CClientApp.h">
+      <Filter>00.ClientApp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -31,13 +46,16 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="CodeDungeon.rc">
-      <Filter>99.Default</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="CodeDungeon.cpp">
       <Filter>99.Default</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\CClientApp.cpp">
+      <Filter>00.ClientApp</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="CodeDungeon.rc">
+      <Filter>99.Default</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

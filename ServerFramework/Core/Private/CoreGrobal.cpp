@@ -2,7 +2,7 @@
 #include "CoreGrobal.h"
 #include "UDeadLockProfiler.h"
 #include "Memory.h"
-#include "UApp.h"
+#include "ACoreApp.h"
 
 namespace Core
 {
@@ -10,8 +10,8 @@ namespace Core
 	CORE_DLL UDeadLockProfiler*		g_pDeadLockProfiler = nullptr;
 #endif
 
-	CORE_DLL  UMemoryAdminster* g_pMemoryAdminster = nullptr;
-	CORE_DLL	 UApp*						    g_RegisterApp = nullptr;
+	CORE_DLL  AMemoryAdminster* g_pMemoryAdminster = nullptr;
+	CORE_DLL	 ACoreApp*						    g_RegisterApp = nullptr;
 
 	class CoreGlobal
 	{
@@ -24,7 +24,7 @@ namespace Core
 			g_pDeadLockProfiler = new UDeadLockProfiler;
 #endif
 
-			g_pMemoryAdminster = new UMemoryAdminster;
+			g_pMemoryAdminster = new AMemoryAdminster;
 		}
 
 		~CoreGlobal()

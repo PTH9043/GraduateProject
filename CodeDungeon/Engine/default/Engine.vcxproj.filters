@@ -220,6 +220,9 @@
     <Filter Include="01.Manager\InputManager">
       <UniqueIdentifier>{0451c500-0dec-4e63-8fca-4d0ab513a986}</UniqueIdentifier>
     </Filter>
+    <Filter Include="90.Server">
+      <UniqueIdentifier>{be3812da-4c30-4d9b-9003-aa2d14cdd06b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">

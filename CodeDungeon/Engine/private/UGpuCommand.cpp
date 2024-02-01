@@ -144,6 +144,8 @@ void UGpuCommand::WaitForGpuResourceUpload()
 	GetCmdQue()->ExecuteCommandLists(_countof(cmdListArr), cmdListArr);
 	// Synchronization
 	GpuCpuSynchronization();
+	// 1밀리 세컨드만큼 기다린다. 
+	ThreadMiliRelax(1);
 
 	++m_iGraphicResourceUploadIndex;
 	if (m_iGraphicResourceUploadIndex >= RESOURCE_LOADER_CNT)

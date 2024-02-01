@@ -90,7 +90,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>..\\Public\\;..\\..\\Reference\\Headers\\;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\\Public\\;..\\..\\Reference\\Headers\\;..\\Default\\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -108,7 +108,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>..\\Public\\;..\\..\\Reference\\Headers\\;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\\Public\\;..\\..\\Reference\\Headers\\;..\\Default\\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -126,7 +126,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>..\\Public\\;..\\..\\Reference\\Headers\\;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\\Public\\;..\\..\\Reference\\Headers\\;..\\Default\\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -144,7 +144,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>..\\Public\\;..\\..\\Reference\\Headers\\;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\\Public\\;..\\..\\Reference\\Headers\\;..\\Default\\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -155,12 +155,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\CClientApp.h" />
+    <ClInclude Include="..\Public\ClientDefines.h" />
+    <ClInclude Include="..\Public\ClientProto.h" />
     <ClInclude Include="CodeDungeon.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\CClientApp.cpp" />
     <ClCompile Include="CodeDungeon.cpp" />
   </ItemGroup>
   <ItemGroup>

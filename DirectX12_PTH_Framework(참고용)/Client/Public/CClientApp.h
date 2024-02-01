@@ -2,7 +2,6 @@
 #define _PTH_FRAMEWORK_CLIENT_PUBLIC_CCLIENTAPP_H
 
 #include "UBase.h"
-#include <latch>
 
 BEGIN(Engine)
 class UGameInstance;

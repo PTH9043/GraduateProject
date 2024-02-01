@@ -20,6 +20,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Allocator.h" />
+    <ClInclude Include="..\Public\AMySqlConnector.h" />
+    <ClInclude Include="..\Public\AMySqlDriver.h" />
     <ClInclude Include="..\Public\CoreConcept.h" />
     <ClInclude Include="..\Public\CoreDefines.h" />
     <ClInclude Include="..\Public\CoreEnum.h" />
@@ -27,6 +29,7 @@
     <ClInclude Include="..\Public\CoreGrobal.h" />
     <ClInclude Include="..\Public\CoreMacro.h" />
     <ClInclude Include="..\Public\CorePacket.h" />
+    <ClInclude Include="..\Public\CoreSqlDefines.h" />
     <ClInclude Include="..\Public\CoreStruct.h" />
     <ClInclude Include="..\Public\CoreTls.h" />
     <ClInclude Include="..\Public\CoreTypecast.h" />
@@ -38,39 +41,39 @@
     <ClInclude Include="..\Public\Memory.h" />
     <ClInclude Include="..\Public\SmartPointer.h" />
     <ClInclude Include="..\Public\UAABBCollider.h" />
-    <ClInclude Include="..\Public\UApp.h" />
-    <ClInclude Include="..\Public\UCell.h" />
-    <ClInclude Include="..\Public\UClientService.h" />
-    <ClInclude Include="..\Public\UCollider.h" />
-    <ClInclude Include="..\Public\UMySqlConnector.h" />
-    <ClInclude Include="..\Public\UMySqlDriver.h" />
-    <ClInclude Include="..\Public\UDBManager.h" />
-    <ClInclude Include="..\Public\UJobTimer.h" />
-    <ClInclude Include="..\Public\ULogManager.h" />
-    <ClInclude Include="..\Public\ULuaLoader.h" />
-    <ClInclude Include="..\Public\UNavigation.h" />
-    <ClInclude Include="..\Public\UOBBCollider.h" />
-    <ClInclude Include="..\Public\UPathFinder.h" />
-    <ClInclude Include="..\Public\URandomManager.h" />
-    <ClInclude Include="..\Public\URoom.h" />
-    <ClInclude Include="..\Public\URoomManager.h" />
-    <ClInclude Include="..\Public\UServerService.h" />
-    <ClInclude Include="..\Public\UService.h" />
-    <ClInclude Include="..\Public\UBase.h" />
-    <ClInclude Include="..\Public\UCoreInstance.h" />
+    <ClInclude Include="..\Public\ACoreApp.h" />
+    <ClInclude Include="..\Public\ACell.h" />
+    <ClInclude Include="..\Public\AStressClientService.h" />
+    <ClInclude Include="..\Public\ACollider.h" />
+    <ClInclude Include="..\Public\ADBManager.h" />
+    <ClInclude Include="..\Public\AJobTimer.h" />
+    <ClInclude Include="..\Public\ALogManager.h" />
+    <ClInclude Include="..\Public\ALuaLoader.h" />
+    <ClInclude Include="..\Public\ANavigation.h" />
+    <ClInclude Include="..\Public\AOBBCollider.h" />
+    <ClInclude Include="..\Public\APathFinder.h" />
+    <ClInclude Include="..\Public\ARandomManager.h" />
+    <ClInclude Include="..\Public\ARoom.h" />
+    <ClInclude Include="..\Public\ARoomManager.h" />
+    <ClInclude Include="..\Public\AServerService.h" />
+    <ClInclude Include="..\Public\AService.h" />
+    <ClInclude Include="..\Public\ACoreBase.h" />
+    <ClInclude Include="..\Public\ACoreInstance.h" />
     <ClInclude Include="..\Public\UDeadLockProfiler.h" />
-    <ClInclude Include="..\Public\UObject.h" />
+    <ClInclude Include="..\Public\ACoreObject.h" />
     <ClInclude Include="..\Public\UObjectPool.h" />
-    <ClInclude Include="..\Public\USession.h" />
-    <ClInclude Include="..\Public\USpace.h" />
-    <ClInclude Include="..\Public\USpaceManager.h" />
-    <ClInclude Include="..\Public\USphereCollider.h" />
+    <ClInclude Include="..\Public\ASession.h" />
+    <ClInclude Include="..\Public\ASpace.h" />
+    <ClInclude Include="..\Public\ASpaceManager.h" />
+    <ClInclude Include="..\Public\ASphereCollider.h" />
+    <ClInclude Include="..\Public\AThreadManager.h" />
+    <ClInclude Include="..\Public\ATransform.h" />
     <ClInclude Include="..\Public\USqlDBQuery.h" />
-    <ClInclude Include="..\Public\UThreadManager.h" />
-    <ClInclude Include="..\Public\UTransform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Allocator.cpp" />
+    <ClCompile Include="..\Private\AMySqlConnector.cpp" />
+    <ClCompile Include="..\Private\AMySqlDriver.cpp" />
     <ClCompile Include="..\Private\CoreGrobal.cpp" />
     <ClCompile Include="..\Private\ini.cpp" />
     <ClCompile Include="..\Private\INIReader.cpp" />
@@ -79,36 +82,34 @@
     <ClCompile Include="..\Private\Memory.cpp" />
     <ClCompile Include="..\Private\SmartPointer.cpp" />
     <ClCompile Include="..\Private\UAABBCollider.cpp" />
-    <ClCompile Include="..\Private\UApp.cpp" />
-    <ClCompile Include="..\Private\UCell.cpp" />
-    <ClCompile Include="..\Private\UClientService.cpp" />
-    <ClCompile Include="..\Private\UCollider.cpp" />
-    <ClCompile Include="..\Private\UMySqlConnector.cpp" />
-    <ClCompile Include="..\Private\UMySqlDriver.cpp" />
-    <ClCompile Include="..\Private\UDBManager.cpp" />
-    <ClCompile Include="..\Private\UJobTimer.cpp" />
-    <ClCompile Include="..\Private\ULogManager.cpp" />
-    <ClCompile Include="..\Private\ULuaLoader.cpp" />
-    <ClCompile Include="..\Private\UNavigation.cpp" />
-    <ClCompile Include="..\Private\UOBBCollider.cpp" />
-    <ClCompile Include="..\Private\UPathFinder.cpp" />
-    <ClCompile Include="..\Private\URandomManager.cpp" />
-    <ClCompile Include="..\Private\URoom.cpp" />
-    <ClCompile Include="..\Private\URoomManager.cpp" />
-    <ClCompile Include="..\Private\UServerService.cpp" />
-    <ClCompile Include="..\Private\UService.cpp" />
-    <ClCompile Include="..\Private\UBase.cpp" />
-    <ClCompile Include="..\Private\UCoreInstance.cpp" />
+    <ClCompile Include="..\Private\ACoreApp.cpp" />
+    <ClCompile Include="..\Private\ACell.cpp" />
+    <ClCompile Include="..\Private\AStressClientService.cpp" />
+    <ClCompile Include="..\Private\ACollider.cpp" />
+    <ClCompile Include="..\Private\ADBManager.cpp" />
+    <ClCompile Include="..\Private\AJobTimer.cpp" />
+    <ClCompile Include="..\Private\ALogManager.cpp" />
+    <ClCompile Include="..\Private\ALuaLoader.cpp" />
+    <ClCompile Include="..\Private\ANavigation.cpp" />
+    <ClCompile Include="..\Private\AOBBCollider.cpp" />
+    <ClCompile Include="..\Private\APathFinder.cpp" />
+    <ClCompile Include="..\Private\ARandomManager.cpp" />
+    <ClCompile Include="..\Private\ARoom.cpp" />
+    <ClCompile Include="..\Private\ARoomManager.cpp" />
+    <ClCompile Include="..\Private\AServerService.cpp" />
+    <ClCompile Include="..\Private\AService.cpp" />
+    <ClCompile Include="..\Private\ACoreBase.cpp" />
+    <ClCompile Include="..\Private\ACoreInstance.cpp" />
     <ClCompile Include="..\Private\UDeadLockProfiler.cpp" />
-    <ClCompile Include="..\Private\UObject.cpp" />
+    <ClCompile Include="..\Private\ACoreObject.cpp" />
     <ClCompile Include="..\Private\UObjectPool.cpp" />
-    <ClCompile Include="..\Private\USession.cpp" />
-    <ClCompile Include="..\Private\USpace.cpp" />
-    <ClCompile Include="..\Private\USpaceManager.cpp" />
-    <ClCompile Include="..\Private\USphereCollider.cpp" />
+    <ClCompile Include="..\Private\ASession.cpp" />
+    <ClCompile Include="..\Private\ASpace.cpp" />
+    <ClCompile Include="..\Private\ASpaceManager.cpp" />
+    <ClCompile Include="..\Private\ASphereCollider.cpp" />
+    <ClCompile Include="..\Private\AThreadManager.cpp" />
+    <ClCompile Include="..\Private\ATransform.cpp" />
     <ClCompile Include="..\Private\USqlDBQuery.cpp" />
-    <ClCompile Include="..\Private\UThreadManager.cpp" />
-    <ClCompile Include="..\Private\UTransform.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -196,7 +197,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\ThirdPartyLib\;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\ThirdPartyLib\</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
   </ItemDefinitionGroup>
@@ -219,7 +220,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\ThirdPartyLib\;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\ThirdPartyLib\</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
   </ItemDefinitionGroup>
@@ -238,7 +239,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\ThirdPartyLib\;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\ThirdPartyLib\</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
   </ItemDefinitionGroup>
@@ -261,7 +262,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\ThirdPartyLib\;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\ThirdPartyLib\</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
   </ItemDefinitionGroup>

@@ -1,10 +1,10 @@
 #include "ClientDefines.h"
 #include "CClientAdiminstor.h"
-#include "UCoreInstance.h"
+#include "ACoreInstance.h"
 #include "CClientSession.h"
 
 CClientAdiminstor::CClientAdiminstor(OBJCON_CONSTRUCTOR) : 
-	UClientService(OBJCON_CONDATA), m_iMaxSessionCount{1000}
+	AStressClientService(OBJCON_CONDATA), m_iMaxSessionCount{1000}
 {
 }
 
@@ -18,7 +18,7 @@ bool CClientAdiminstor::NativeConstruct()
 _bool CClientAdiminstor::Start()
 {
 	__super::Start();
-	SHPTR<UCoreInstance> spCoreInstance = GetCoreInstance();
+	SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
 
 	for (_uint i = 0; i < 2; ++i)
 	{
@@ -32,7 +32,7 @@ _bool CClientAdiminstor::Start()
 
 void CClientAdiminstor::Connect()
 {
-	SHPTR<UCoreInstance> spCoreInstance = GetCoreInstance();
+	SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
 	SHPTR<CClientAdiminstor> spClientAdiminstor = ThisShared<CClientAdiminstor>();
 	for (_uint j = 0; j < 4; ++j)
 	{

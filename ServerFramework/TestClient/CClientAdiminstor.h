@@ -1,8 +1,8 @@
 #pragma once
 
-#include "UClientService.h"
+#include "AStressClientService.h"
 
-class  CClientAdiminstor final : public UClientService {
+class  CClientAdiminstor final : public AStressClientService {
 public:
 	CClientAdiminstor(OBJCON_CONSTRUCTOR);
 	NO_COPY(CClientAdiminstor)

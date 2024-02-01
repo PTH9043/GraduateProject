@@ -1,7 +1,7 @@
 #ifndef _SERVERFRAMEWORK_SERVER_PUBLIC_CSERVERAPP_H
 #define _SERVERFRAMEWORK_SERVER_PUBLIC_CSERVERAPP_H
 
-#include "UApp.h"
+#include "ACoreApp.h"
 
 BEGIN(Server)
 class CServerAdiminstor;
@@ -10,7 +10,7 @@ class CServerAdiminstor;
 @ Explain
 - ServerApp을 관리하는 클래스
 */
-class CServerApp : public Core::UApp {
+class CServerApp : public Core::ACoreApp {
 public:
 	CServerApp();
 	NO_COPY(CServerApp)

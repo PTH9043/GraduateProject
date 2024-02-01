@@ -5,9 +5,9 @@ VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ServerApp", "Server\Default\Server.vcxproj", "{98ECE56B-0A39-4F6A-BFDA-16CB606E14EC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "(ProtocolBuffer)", "ProtocolBuffer\Default\ProtocolBuffer.vcxproj", "{BF35EA0E-3016-4043-A67D-9991CE40CF2D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ProtocolBuffer", "ProtocolBuffer\Default\ProtocolBuffer.vcxproj", "{BF35EA0E-3016-4043-A67D-9991CE40CF2D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "(Core)", "Core\Default\Core.vcxproj", "{D13A36E2-A8C3-4333-A02A-DD0C41A389B0}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "Core\Default\Core.vcxproj", "{D13A36E2-A8C3-4333-A02A-DD0C41A389B0}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestClient", "TestClient\TestClient.vcxproj", "{BDAC2FE2-9144-423D-AAC4-51700EEDB575}"
 EndProject

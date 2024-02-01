@@ -1,10 +1,10 @@
 #ifndef _SERVERFRAMEWORK_SERVER_PUBLIC_CPLAYERSESSION_H
 #define _SERVERFRAMEWORK_SERVER_PUBLIC_CPLAYERSESSION_H
 
-#include "USession.h"
+#include "ASession.h"
 
 BEGIN(Core)
-class UService;
+class AService;
 END
 
 BEGIN(Server)
@@ -13,7 +13,7 @@ BEGIN(Server)
 @ Explain
 - Client에 존재하는 플레이어들과 통신하기 위한 클래스
 */
-class  CPlayerSession final : public Core::USession {
+class  CPlayerSession final : public Core::ASession {
 public:
 	CPlayerSession(SESSION_CONSTRUCTOR);
 	NO_COPY(CPlayerSession)

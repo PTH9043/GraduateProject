@@ -1,7 +1,7 @@
 #ifndef _SERVERFRAMEWORK_SERVER_PUBLIC_CSERVERADIMINSTOR_H
 #define _SERVERFRAMEWORK_SERVER_PUBLIC_CSERVERADIMINSTOR_H
 
-#include "UServerService.h"
+#include "AServerService.h"
 
 BEGIN(Server)
 /*

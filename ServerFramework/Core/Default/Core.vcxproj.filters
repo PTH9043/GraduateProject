@@ -28,9 +28,6 @@
     <Filter Include="03.Network\Service\Server">
       <UniqueIdentifier>{a66b5119-4dec-41d7-a49e-eea37e12cf99}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.Network\Service\Client">
-      <UniqueIdentifier>{6d84328e-d16c-47d5-8f77-cceb970cbeed}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Manager\RandomManager">
       <UniqueIdentifier>{99b09565-9bc8-471d-ac1b-234ce37782f6}</UniqueIdentifier>
     </Filter>
@@ -136,9 +133,12 @@
     <Filter Include="07.DataBase\SqlConnector">
       <UniqueIdentifier>{6af20a06-0aa2-40a4-9d43-bab8bb441c38}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.Network\Service\StressClient">
+      <UniqueIdentifier>{6d84328e-d16c-47d5-8f77-cceb970cbeed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Public\UBase.h">
+    <ClInclude Include="..\Public\ACoreBase.h">
       <Filter>96.Super</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CoreDefines.h">
@@ -174,10 +174,10 @@
     <ClInclude Include="..\Public\Memory.h">
       <Filter>97.Utility\Memory</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UThreadManager.h">
+    <ClInclude Include="..\Public\AThreadManager.h">
       <Filter>02.Manager\Thread</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\USession.h">
+    <ClInclude Include="..\Public\ASession.h">
       <Filter>03.Network\Session</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Allocator.h">
@@ -189,7 +189,7 @@
     <ClInclude Include="..\Public\SmartPointer.h">
       <Filter>97.Utility\LFContainer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UCoreInstance.h">
+    <ClInclude Include="..\Public\ACoreInstance.h">
       <Filter>01.CoreInstance</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CoreGrobal.h">
@@ -201,22 +201,22 @@
     <ClInclude Include="..\Public\CoreTypecast.h">
       <Filter>99.Default</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UService.h">
+    <ClInclude Include="..\Public\AService.h">
       <Filter>03.Network\Service</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UObject.h">
+    <ClInclude Include="..\Public\ACoreObject.h">
       <Filter>96.Super\Object</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UServerService.h">
+    <ClInclude Include="..\Public\AServerService.h">
       <Filter>03.Network\Service\Server</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UClientService.h">
-      <Filter>03.Network\Service\Client</Filter>
+    <ClInclude Include="..\Public\AStressClientService.h">
+      <Filter>03.Network\Service\StressClient</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\URandomManager.h">
+    <ClInclude Include="..\Public\ARandomManager.h">
       <Filter>02.Manager\RandomManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\ULogManager.h">
+    <ClInclude Include="..\Public\ALogManager.h">
       <Filter>02.Manager\LogManager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\INIReader.h">
@@ -225,69 +225,72 @@
     <ClInclude Include="..\Public\ini.h">
       <Filter>97.Utility\INIReader</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UApp.h">
+    <ClInclude Include="..\Public\ACoreApp.h">
       <Filter>96.Super\App</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\URoom.h">
+    <ClInclude Include="..\Public\ARoom.h">
       <Filter>03.Network\Room</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\ULuaLoader.h">
+    <ClInclude Include="..\Public\ALuaLoader.h">
       <Filter>97.Utility\LuaLoader</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UCell.h">
+    <ClInclude Include="..\Public\ACell.h">
       <Filter>04.GamePath\Navigation\Cell</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UNavigation.h">
+    <ClInclude Include="..\Public\ANavigation.h">
       <Filter>04.GamePath\Navigation</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CoreStruct.h">
       <Filter>99.Default</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UPathFinder.h">
+    <ClInclude Include="..\Public\APathFinder.h">
       <Filter>04.GamePath\PathFinder</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\USpace.h">
+    <ClInclude Include="..\Public\ASpace.h">
       <Filter>05.GameSpace\Space</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UCollider.h">
+    <ClInclude Include="..\Public\ACollider.h">
       <Filter>06.Component\Collider</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UTransform.h">
+    <ClInclude Include="..\Public\ATransform.h">
       <Filter>06.Component\Transform</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UAABBCollider.h">
       <Filter>06.Component\Collider\AABB</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UOBBCollider.h">
+    <ClInclude Include="..\Public\AOBBCollider.h">
       <Filter>06.Component\Collider\OBB</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\USphereCollider.h">
+    <ClInclude Include="..\Public\ASphereCollider.h">
       <Filter>06.Component\Collider\Sphere</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\USpaceManager.h">
+    <ClInclude Include="..\Public\ASpaceManager.h">
       <Filter>02.Manager\SpaceManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\URoomManager.h">
+    <ClInclude Include="..\Public\ARoomManager.h">
       <Filter>02.Manager\RoomManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UJobTimer.h">
+    <ClInclude Include="..\Public\AJobTimer.h">
       <Filter>03.Network\JobTimer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UMySqlDriver.h">
+    <ClInclude Include="..\Public\ADBManager.h">
+      <Filter>02.Manager\DatabaseManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AMySqlDriver.h">
       <Filter>07.DataBase</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\USqlDBQuery.h">
       <Filter>07.DataBase\SqlDBQuery</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UDBManager.h">
-      <Filter>02.Manager\DatabaseManager</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\UMySqlConnector.h">
+    <ClInclude Include="..\Public\AMySqlConnector.h">
       <Filter>07.DataBase\SqlConnector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CoreSqlDefines.h">
+      <Filter>99.Default</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Private\UBase.cpp">
+    <ClCompile Include="..\Private\ACoreBase.cpp">
       <Filter>96.Super</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Lock.cpp">
@@ -299,10 +302,10 @@
     <ClCompile Include="..\Private\Memory.cpp">
       <Filter>97.Utility\Memory</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UThreadManager.cpp">
+    <ClCompile Include="..\Private\AThreadManager.cpp">
       <Filter>02.Manager\Thread</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\USession.cpp">
+    <ClCompile Include="..\Private\ASession.cpp">
       <Filter>03.Network\Session</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Allocator.cpp">
@@ -314,7 +317,7 @@
     <ClCompile Include="..\Private\SmartPointer.cpp">
       <Filter>97.Utility\LFContainer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UCoreInstance.cpp">
+    <ClCompile Include="..\Private\ACoreInstance.cpp">
       <Filter>01.CoreInstance</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CoreGrobal.cpp">
@@ -323,85 +326,85 @@
     <ClCompile Include="..\Private\UObjectPool.cpp">
       <Filter>97.Utility\ObjectPool</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UService.cpp">
+    <ClCompile Include="..\Private\AService.cpp">
       <Filter>03.Network\Service</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UObject.cpp">
+    <ClCompile Include="..\Private\ACoreObject.cpp">
       <Filter>96.Super\Object</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UServerService.cpp">
+    <ClCompile Include="..\Private\AServerService.cpp">
       <Filter>03.Network\Service\Server</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UClientService.cpp">
-      <Filter>03.Network\Service\Client</Filter>
+    <ClCompile Include="..\Private\AStressClientService.cpp">
+      <Filter>03.Network\Service\StressClient</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\URandomManager.cpp">
+    <ClCompile Include="..\Private\ARandomManager.cpp">
       <Filter>02.Manager\RandomManager</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\ULogManager.cpp">
+    <ClCompile Include="..\Private\ALogManager.cpp">
       <Filter>02.Manager\LogManager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\INIReader.cpp">
       <Filter>97.Utility\INIReader</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UApp.cpp">
+    <ClCompile Include="..\Private\ACoreApp.cpp">
       <Filter>96.Super\App</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\URoom.cpp">
+    <ClCompile Include="..\Private\ARoom.cpp">
       <Filter>03.Network\Room</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ini.cpp">
       <Filter>97.Utility\INIReader</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\ULuaLoader.cpp">
+    <ClCompile Include="..\Private\ALuaLoader.cpp">
       <Filter>97.Utility\LuaLoader</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UCell.cpp">
+    <ClCompile Include="..\Private\ACell.cpp">
       <Filter>04.GamePath\Navigation\Cell</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UNavigation.cpp">
+    <ClCompile Include="..\Private\ANavigation.cpp">
       <Filter>04.GamePath\Navigation</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UPathFinder.cpp">
+    <ClCompile Include="..\Private\APathFinder.cpp">
       <Filter>04.GamePath\PathFinder</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\USpace.cpp">
+    <ClCompile Include="..\Private\ASpace.cpp">
       <Filter>05.GameSpace\Space</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UCollider.cpp">
+    <ClCompile Include="..\Private\ACollider.cpp">
       <Filter>06.Component\Collider</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UTransform.cpp">
+    <ClCompile Include="..\Private\ATransform.cpp">
       <Filter>06.Component\Transform</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UAABBCollider.cpp">
       <Filter>06.Component\Collider\AABB</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UOBBCollider.cpp">
+    <ClCompile Include="..\Private\AOBBCollider.cpp">
       <Filter>06.Component\Collider\OBB</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\USphereCollider.cpp">
+    <ClCompile Include="..\Private\ASphereCollider.cpp">
       <Filter>06.Component\Collider\Sphere</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\USpaceManager.cpp">
+    <ClCompile Include="..\Private\ASpaceManager.cpp">
       <Filter>02.Manager\SpaceManager</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\URoomManager.cpp">
+    <ClCompile Include="..\Private\ARoomManager.cpp">
       <Filter>02.Manager\RoomManager</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UJobTimer.cpp">
+    <ClCompile Include="..\Private\AJobTimer.cpp">
       <Filter>03.Network\JobTimer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UMySqlDriver.cpp">
+    <ClCompile Include="..\Private\ADBManager.cpp">
+      <Filter>02.Manager\DatabaseManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AMySqlDriver.cpp">
       <Filter>07.DataBase</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\USqlDBQuery.cpp">
       <Filter>07.DataBase\SqlDBQuery</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UDBManager.cpp">
-      <Filter>02.Manager\DatabaseManager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\UMySqlConnector.cpp">
+    <ClCompile Include="..\Private\AMySqlConnector.cpp">
       <Filter>07.DataBase\SqlConnector</Filter>
     </ClCompile>
   </ItemGroup>

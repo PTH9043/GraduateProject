@@ -6,13 +6,14 @@
 
 #include "CoreDefines.h"
 #include "ProtocolBuffer.h"
+#include "CoreSqlDefines.h"
 
 #ifdef _DEBUG
-#pragma comment(lib, "CoreD")
 #pragma comment(lib, "ProtocolBufferD")
+#pragma comment(lib, "CoreD")
 #else
-#pragma comment(lib, "Core")
 #pragma comment(lib, "ProtocolBuffer")
+#pragma comment(lib, "Core")
 #endif
 namespace Core {}
 

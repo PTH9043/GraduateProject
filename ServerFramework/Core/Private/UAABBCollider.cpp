@@ -4,7 +4,7 @@
 namespace Core {
 
 	UAABBCollider::UAABBCollider(const Vector3 _vOriPos, const Vector3 _vOriScale) : 
-		UCollider(COLLIDERTYPE::AABB, _vOriPos, _vOriScale)
+		ACollider(COLLIDERTYPE::AABB, _vOriPos, _vOriScale)
 	{
 	}
 
@@ -20,7 +20,7 @@ namespace Core {
 		}
 	}
 
-	_bool UAABBCollider::IsCollision(SHPTR<UCollider> _spCollider)
+	_bool UAABBCollider::IsCollision(SHPTR<ACollider> _spCollider)
 	{
 		RETURN_CHECK(__super::IsCollision(_spCollider), false);
 		_matrix ChangeMatrix = GetChangeMatrix();

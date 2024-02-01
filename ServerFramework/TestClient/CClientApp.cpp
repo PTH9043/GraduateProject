@@ -1,6 +1,6 @@
 #include "ClientDefines.h"
 #include "CClientApp.h"
-#include "UCoreInstance.h"
+#include "ACoreInstance.h"
 #include "CClientAdiminstor.h"
 
 CClientApp::CClientApp() 
