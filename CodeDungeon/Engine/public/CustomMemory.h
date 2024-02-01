@@ -88,28 +88,59 @@ namespace Engine {
 		ARRAY<UMemoryPool*, MAX_ALLOC_SIZE + 1>	m_PoolTable;
 		CONVECTOR<UMemoryPool*>									m_Pools;
 	};
-	extern class UMemoryAdminster* GAdimister;
 	/*
 	===========================================================
 	MemoryAdminster
 	===========================================================
-	PoolAllocator
+	BaseAllocator
 	===========================================================
 	*/
 	/*
 	@ Date: 2024-02-01,  Writer: 박태현
 	@ Explain
-	- 메모리 풀 객체 할당을 위한 클래스
+	- 기본적인 할당을 위한 클래스
 	*/
-	class  UPoolAllocator {
+	class UBaseAllocator
+	{
 	public:
-		static void* Alloc(size_t _size);
-		static void Release(void* _ptr);
+		static void* Alloc(size_t size);
+		static void	Release(void* ptr);
 	};
+	/*
+	===========================================================
+	UBaseAllocator
+	===========================================================
+	UObjectPool
+	===========================================================
+	*/
+	template<class Type>
+	class UObjectPool {
+	public:
+		template<class... Args>
+		static Type* Pop(Args&&... _args) {
+			Type* memory = static_cast<Type*>(UMemoryHeader::AttachHeader(s_MemoryPool.Pop(), s_AllocSize));
+			new(memory)Type(forward<Args>(_args)...); // placement new
+			return memory;
+		}
+		static void Push(Type* obj)
+		{
+			obj->~Type();
+			s_MemoryPool.Push(UMemoryHeader::DetachHeader(obj));
+		}
+	private:
+		static UMemoryPool	s_MemoryPool;
+		static _int						s_AllocSize;
+	};
+
+	template<typename Type>
+	_int UObjectPool<Type>::s_AllocSize = sizeof(Type) + sizeof(UMemoryHeader);
+
+	template<typename Type>
+	UMemoryPool UObjectPool<Type>::s_MemoryPool{ s_AllocSize };
 
 	/*
 	===========================================================
-	PoolAllocator
+	UObjectPool
 	===========================================================
 	Make
 	===========================================================
@@ -120,7 +151,7 @@ namespace Engine {
 		template<typename Type, typename... Args>
 		Type* xnew(Args&&... args)
 		{
-			Type* memory = static_cast<Type*>(UPoolAllocator::Alloc(sizeof(Type)));
+			Type* memory = static_cast<Type*>(UBaseAllocator::Alloc(sizeof(Type)));
 			new(memory)Type(std::forward<Args>(args)...); // placement new
 			return memory;
 		}
@@ -129,7 +160,7 @@ namespace Engine {
 		void xdelete(Type* obj)
 		{
 			obj->~Type();
-			UPoolAllocator::Release(obj);
+			UBaseAllocator::Release(obj);
 		}
 
 		template<typename Type, typename... Args>

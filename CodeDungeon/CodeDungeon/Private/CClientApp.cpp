@@ -66,7 +66,7 @@ void CClientApp::Render()
 	ZeroMemory(&msg, sizeof(MSG));
 
 	// 기본 메시지 루프입니다:
-	while (m_spGameInstance->IsGamming())
+	while (true)
 	{
 		// if PeekMeesage
 		while (::PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))

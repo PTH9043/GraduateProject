@@ -146,7 +146,7 @@ HRESULT URenderer::AddDebugRenderGroup(const DEBUGRENDERID _eID, CSHPTRREF<UShad
 
 void URenderer::Tick(const _double& _dTimeDelta)
 {
-    m_stGlobalParam.stGlobalInfo.fDeltaTime = static_cast<_float>(_dTimeDelta);
+    m_stGlobalParam.stGlobalInfo.fDeltaTime += static_cast<_float>(_dTimeDelta);
 }
 
 HRESULT URenderer::Render()

@@ -79,11 +79,6 @@ HRESULT UTexture::NativeConstruct(CSHPTRREF<UDevice> _spDevice, const _wstring& 
 	return S_OK;
 }
 
-HRESULT UTexture::NativeConstruct(CSHPTRREF<UDevice> _spDevice, const VECTOR<_wstring>& _convecPaths)
-{
-	return E_NOTIMPL;
-}
-
 HRESULT UTexture::NativeConstruct(CSHPTRREF<UDevice> _spDevice, const TEXTURETYPEDESC& _stTextureDesc)
 {
 	RETURN_CHECK(nullptr == _spDevice, E_FAIL);

@@ -3,6 +3,11 @@
 
 #include "ShaderGrobalFunc.hlsli"
 
+cbuffer RECTCOLOR : register(b3)
+{
+    float4 g_RectColor;
+};
+
 struct VS_IN
 {
 	float3 vPosition : POSITION;
@@ -40,7 +45,8 @@ PS_OUT PS_Main(PS_In Input)
 {
     PS_OUT Out = (PS_OUT) 0;
 
-    Out.vColor = g_Texture0.Sample(g_Sampler_Normal, Input.vTexUV);
+    Out.vColor = g_RectColor;
+   Out.vColor.r = g_GrobalInfo.fDeltaTime;
 
     return Out;
 }

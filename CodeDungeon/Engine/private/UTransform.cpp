@@ -10,7 +10,7 @@ constexpr _uint							UTransform::TRANSFORMPARAM_SIZE;
 UTransform::UTransform(CSHPTRREF<UDevice> _spDevice) :
 	UComponent(_spDevice),
 	// Shader 
-	m_spWaterShaderBuffer{ nullptr },
+	m_TransformBuffer{ nullptr },
 	m_stTransformParam{},
 	m_mWorldMatrix{ _float4x4::Identity },
 	m_mChangeWorldMatrix{ _float4x4::Identity },
@@ -86,7 +86,7 @@ HRESULT UTransform::NativeConstruct()
 	RETURN_CHECK_FAILED(__super::NativeConstruct(), E_FAIL);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	// 이미 만들어진 Shader ConstnatBuffer를 가져옴
-	spGameInstance->GetPreAllocatedConstantBuffer(PREALLOCATED_TRANSFORM, m_spWaterShaderBuffer);
+	spGameInstance->GetPreAllocatedConstantBuffer(PREALLOCATED_TRANSFORM, m_TransformBuffer);
 	return S_OK;
 }
 
@@ -371,13 +371,13 @@ const _float UTransform::ComputeDistanceSq(const _float3& _vPos)
 HRESULT UTransform::BindTransformData(CSHPTRREF< UShader> _spShader)
 {
 	RETURN_CHECK(nullptr == _spShader, E_FAIL);
-	RETURN_CHECK(nullptr == m_spWaterShaderBuffer, E_FAIL);
+	RETURN_CHECK(nullptr == m_TransformBuffer, E_FAIL);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	TransformUpdate();
 	m_stTransformParam.iCamIndex = spGameInstance->GetRenderCamID();
 	m_stTransformParam.mPrevWorldMatrix = m_stTransformParam.mWorldMatrix;
 	m_stTransformParam.mWorldMatrix = m_mChangeWorldMatrix.Transpose();
-	return _spShader->BindCBVBuffer(m_spWaterShaderBuffer, &m_stTransformParam, TRANSFORMPARAM_SIZE);
+	return _spShader->BindCBVBuffer(m_TransformBuffer, &m_stTransformParam, TRANSFORMPARAM_SIZE);
 }
 
 HRESULT UTransform::BindTransformData(CSHPTRREF<UShader> _spShader, const _float4x4& _mTransform)
@@ -387,7 +387,7 @@ HRESULT UTransform::BindTransformData(CSHPTRREF<UShader> _spShader, const _float
 	m_stTransformParam.iCamIndex = spGameInstance->GetRenderCamID();
 	m_stTransformParam.mPrevWorldMatrix = _mTransform;
 	m_stTransformParam.mWorldMatrix = m_mChangeWorldMatrix.Transpose();
-	return _spShader->BindCBVBuffer(m_spWaterShaderBuffer, &m_stTransformParam, TRANSFORMPARAM_SIZE);
+	return _spShader->BindCBVBuffer(m_TransformBuffer, &m_stTransformParam, TRANSFORMPARAM_SIZE);
 }
 
 HRESULT UTransform::BindTransformData(CSHPTRREF<UShader> _spShader, CAMID _RenderCamID)
@@ -397,7 +397,7 @@ HRESULT UTransform::BindTransformData(CSHPTRREF<UShader> _spShader, CAMID _Rende
 	m_stTransformParam.iCamIndex = _RenderCamID;
 	m_stTransformParam.mPrevWorldMatrix = m_stTransformParam.mWorldMatrix;
 	m_stTransformParam.mWorldMatrix = m_mChangeWorldMatrix.Transpose();
-	return _spShader->BindCBVBuffer(m_spWaterShaderBuffer, &m_stTransformParam, TRANSFORMPARAM_SIZE);
+	return _spShader->BindCBVBuffer(m_TransformBuffer, &m_stTransformParam, TRANSFORMPARAM_SIZE);
 }
 
 #ifdef _USE_IMGUI

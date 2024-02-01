@@ -111,7 +111,7 @@ public:
 	static constexpr _uint							TRANSFORMPARAM_SIZE{sizeof(TRANSFORMPARAM)};
 private:
 	// Shader 
-	SHPTR<UShaderConstantBuffer>	m_spWaterShaderBuffer{ nullptr };
+	SHPTR<UShaderConstantBuffer>	m_TransformBuffer{ nullptr };
 	TRANSFORMPARAM							m_stTransformParam{};
 	// Needs Value 
 	_float4x4												m_mWorldMatrix{ _float4x4::Identity };

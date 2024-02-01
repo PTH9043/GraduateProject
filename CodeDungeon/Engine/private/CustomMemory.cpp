@@ -118,31 +118,17 @@ namespace Engine {
 	===========================================================
 	UMemoryAdminster
 	===========================================================
-	UPoolAllocator
+	UBaseAllocator
 	===========================================================
 	*/
-
-	class UMemoryAdminster* GAdimister = nullptr;
-	class MemoryGlobal {
-	public:
-		MemoryGlobal()
-		{
-			GAdimister = new UMemoryAdminster;
-		}
-		~MemoryGlobal()
-		{
-			delete GAdimister;
-		}
-	}MemoryGlobal;
-
-	void* UPoolAllocator::Alloc(size_t _size)
+	void* UBaseAllocator::Alloc(size_t size)
 	{
-		return GAdimister->Allocate(_size);
+		return ::malloc(size);
 	}
 
-	void UPoolAllocator::Release(void* _ptr)
+	void UBaseAllocator::Release(void* ptr)
 	{
-		GAdimister->Release(_ptr);
+		::free(ptr);
 	}
 
 }

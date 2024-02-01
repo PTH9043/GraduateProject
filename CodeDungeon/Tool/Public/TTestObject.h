@@ -5,11 +5,15 @@
 BEGIN(Engine)
 
 class UVIBufferRect;
+class UShaderConstantBuffer;
 
 END
 
 BEGIN(Tool)
 
+struct RECTCOLOR {
+	_float4 g_RectColor;
+};
 
 class TTestObject : public UPawn{
 public:
@@ -29,8 +33,11 @@ protected:
 	// Damaged
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy) override;
 private:
+	static constexpr _uint							RECTCOLOR_SIZE{ sizeof(RECTCOLOR) };
 	// Cube
-	SHPTR< UVIBufferRect>		m_spVIBufferRect;
+	SHPTR< UVIBufferRect>					m_spVIBufferRect;
+	SHPTR< UShaderConstantBuffer>	m_spRectColorBuffer;
+	RECTCOLOR											m_RectColor;
 };
 
 END

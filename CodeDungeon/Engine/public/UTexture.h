@@ -24,9 +24,6 @@ public:
 	virtual void Free() override;
 	HRESULT NativeConstruct(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrPath,
 		const TEXTURECREATETYPE _eTextureType = TEXTURECREATETYPE::TEX2D);
-
-	HRESULT NativeConstruct(CSHPTRREF<UDevice> _spDevice, 	const VECTOR<_wstring>& _convecPaths);
-
 	HRESULT NativeConstruct(CSHPTRREF<UDevice> _spDevice, 	const TEXTURETYPEDESC& _stTextureDesc);
 	HRESULT NativeConstruct(CSHPTRREF<UDevice> _spDevice, const ComPtr<Dx12Resource>& _cpResource);
 private:

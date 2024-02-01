@@ -183,9 +183,9 @@ void UGameInstance::AwakeTick()
 
 void UGameInstance::Tick(const _double& _dTimeDelta)
 {
+	m_spRenderer->Tick(_dTimeDelta);
 	m_spSceneManager->Tick(_dTimeDelta);
 	m_spActorManager->Tick(_dTimeDelta);
-	m_spRenderer->Tick(_dTimeDelta);
 }
 
 void UGameInstance::LateTick(const _double& _dTimeDelta)

@@ -15,7 +15,7 @@ class UGlobalConstantBuffer final : public UBase {
 public:
 	UGlobalConstantBuffer();
 	NO_COPY(UGlobalConstantBuffer)
-		DESTRUCTOR(UGlobalConstantBuffer)
+	DESTRUCTOR(UGlobalConstantBuffer)
 public:
 	virtual void Free() override;
 	HRESULT NativeConstruct(CSHPTRREF<UDevice> _spDevice, const CBV_REGISTER& _eReg, const _uint& _iSize);

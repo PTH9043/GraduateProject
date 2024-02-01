@@ -117,7 +117,7 @@ private:
 	SHPTR<USceneManager>															m_spSceneManager;
 	SHPTR<URenderTargetManager>											m_spRenderTargetManager;
 	SHPTR<UComputeManager>													m_spComputeManager;
-	SHPTR<UCommand>															m_spCastingCommand;
+	SHPTR<UCommand>																	m_spCastingCommand;
 	SHPTR<UVIBufferRect>																m_spVIBufferRect;
 	_short																								m_sNonAlphaBlendIndex;
 #ifdef _USE_DEBUGGING																	

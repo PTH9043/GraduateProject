@@ -3,6 +3,12 @@
 
 #include "ShaderGrobalFunc.hlsli"
 
+cbuffer BLENDCOLOR : register(b3)
+{
+    float4 g_RectColor;
+    float4 g_Default;
+};
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -48,6 +54,7 @@ PS_OUT PS_Main(PS_In In)
     vector vColor = vDiffuseDesc/* * (vShadeDesc + vAmbientDesc + vSpecularDesc)*/;
 
     Out.vColor = vColor;
+    Out.vColor.r = g_GrobalInfo.fDeltaTime;
     Out.vColor.a = vDiffuseDesc.a;
     return Out;
 }

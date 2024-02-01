@@ -8,12 +8,12 @@ class UDevice;
 class UCommand;
 
 class UShaderBufferManager : public UBase {
-	using GlobalBUFFERCONTAINER = ARRAY<SHPTR<UGlobalConstantBuffer>, GLOBAL_BUFFER_END>;
+	using GLOBALBUFFERCONTAINER = ARRAY<SHPTR<UGlobalConstantBuffer>, GLOBAL_BUFFER_END>;
 	using PREALLOCATEDCBUFFERCONTANER = ARRAY<SHPTR<UShaderConstantBuffer>, PREALLOCATED_BUFFER_END>;
 public:
 	UShaderBufferManager();
 	NO_COPY(UShaderBufferManager)
-		DESTRUCTOR(UShaderBufferManager)
+	DESTRUCTOR(UShaderBufferManager)
 public:
 	virtual void Free() override;
 public:
@@ -31,8 +31,8 @@ private:
 		const CBV_REGISTER& _eReg, const _uint& _iBufferSize, const _uint _iCnt);
 private:
 	// GlobalBufferContainer
-	GlobalBUFFERCONTAINER					m_arrGlobalConstantBufferContainer;
-	PREALLOCATEDCBUFFERCONTANER	m_arrPreAllocatedCBufferContainer;
+	GLOBALBUFFERCONTAINER						m_arrGlobalConstantBufferContainer;
+	PREALLOCATEDCBUFFERCONTANER		m_arrPreAllocatedCBufferContainer;
 };
 
 END
