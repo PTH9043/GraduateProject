@@ -39,6 +39,7 @@
 #endif
 
 #define STATIC_CONCPP
+#define _STOMP
 
 #ifdef _DEBUG
 #pragma comment (lib, "PthMathD")

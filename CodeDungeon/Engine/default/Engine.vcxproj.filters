@@ -4,17 +4,8 @@
     <Filter Include="99.Default">
       <UniqueIdentifier>{39535b89-52a8-471d-9058-89255aa174cf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="96.Super">
-      <UniqueIdentifier>{0ca7bdf7-e603-4f6f-b136-53e28db7347a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="99.Default\Struct">
       <UniqueIdentifier>{6de7b64e-83a6-4752-9894-66cec341b659}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96.Super\Object">
-      <UniqueIdentifier>{0422184e-8c7e-4a97-bcb8-f65d291283aa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96.Super\Base">
-      <UniqueIdentifier>{9f88f402-6580-4c6d-9e57-26991de1c9fc}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.DxClass">
       <UniqueIdentifier>{8c86b252-dbdb-427e-9827-a47f55dee782}</UniqueIdentifier>
@@ -30,12 +21,6 @@
     </Filter>
     <Filter Include="02.DxClass\GlobalConstants">
       <UniqueIdentifier>{d1d7604a-7ca3-424b-ae6d-804b8d961115}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="97.Needs">
-      <UniqueIdentifier>{8df4b430-0bd2-4c76-87a7-92acda718222}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="97.Needs\Method">
-      <UniqueIdentifier>{fc89b5e1-6801-4d75-a0d1-ad4ef71e3fe2}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.DxClass\ShaderBuffer">
       <UniqueIdentifier>{f1f364ed-abfa-40b4-9351-183544a80d73}</UniqueIdentifier>
@@ -145,9 +130,6 @@
     <Filter Include="04.Scene">
       <UniqueIdentifier>{b217ba5e-7f75-4e68-bac5-77110a84f9ef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97.Needs\Delegate">
-      <UniqueIdentifier>{64fe0bea-9dcd-417e-8810-880060e45da7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="04.Scene\Loader">
       <UniqueIdentifier>{93b6bb8f-661c-454c-a3f2-0971d4188102}</UniqueIdentifier>
     </Filter>
@@ -220,8 +202,29 @@
     <Filter Include="01.Manager\InputManager">
       <UniqueIdentifier>{0451c500-0dec-4e63-8fca-4d0ab513a986}</UniqueIdentifier>
     </Filter>
-    <Filter Include="90.Server">
+    <Filter Include="95.Super">
+      <UniqueIdentifier>{0ca7bdf7-e603-4f6f-b136-53e28db7347a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.Super\Object">
+      <UniqueIdentifier>{0422184e-8c7e-4a97-bcb8-f65d291283aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.Super\Base">
+      <UniqueIdentifier>{9f88f402-6580-4c6d-9e57-26991de1c9fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.ClientNeeds">
+      <UniqueIdentifier>{8df4b430-0bd2-4c76-87a7-92acda718222}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.ClientNeeds\Method">
+      <UniqueIdentifier>{fc89b5e1-6801-4d75-a0d1-ad4ef71e3fe2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.ClientNeeds\Delegate">
+      <UniqueIdentifier>{64fe0bea-9dcd-417e-8810-880060e45da7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.ServerNeed">
       <UniqueIdentifier>{be3812da-4c30-4d9b-9003-aa2d14cdd06b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.ClientNeeds\MemoryPool">
+      <UniqueIdentifier>{fc441c1a-e190-47b4-b00c-f587f2ae8725}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -229,13 +232,13 @@
       <Filter>99.Default\Struct</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UObject.cpp">
-      <Filter>96.Super\Object</Filter>
+      <Filter>95.Super\Object</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UCloneObject.cpp">
-      <Filter>96.Super\Object</Filter>
+      <Filter>95.Super\Object</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UBase.cpp">
-      <Filter>96.Super\Base</Filter>
+      <Filter>95.Super\Base</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UDevice.cpp">
       <Filter>02.DxClass\Device</Filter>
@@ -250,7 +253,7 @@
       <Filter>02.DxClass\GlobalConstants</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UMethod.cpp">
-      <Filter>97.Needs\Method</Filter>
+      <Filter>97.ClientNeeds\Method</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UShaderConstantBuffer.cpp">
       <Filter>02.DxClass\ShaderBuffer</Filter>
@@ -349,7 +352,7 @@
       <Filter>04.Scene</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UDelegate.cpp">
-      <Filter>97.Needs\Delegate</Filter>
+      <Filter>97.ClientNeeds\Delegate</Filter>
     </ClCompile>
     <ClCompile Include="..\private\ULoader.cpp">
       <Filter>04.Scene\Loader</Filter>
@@ -414,6 +417,12 @@
     <ClCompile Include="..\private\UInputManager.cpp">
       <Filter>01.Manager\InputManager</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\ServerUtility.cpp">
+      <Filter>96.ServerNeed</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\CustomMemory.cpp">
+      <Filter>97.ClientNeeds\MemoryPool</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\EngineDefine.h">
@@ -444,13 +453,13 @@
       <Filter>99.Default\Struct</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UObject.h">
-      <Filter>96.Super\Object</Filter>
+      <Filter>95.Super\Object</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UCloneObject.h">
-      <Filter>96.Super\Object</Filter>
+      <Filter>95.Super\Object</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UBase.h">
-      <Filter>96.Super\Base</Filter>
+      <Filter>95.Super\Base</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UDevice.h">
       <Filter>02.DxClass\Device</Filter>
@@ -465,7 +474,7 @@
       <Filter>02.DxClass\GlobalConstants</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UMethod.h">
-      <Filter>97.Needs\Method</Filter>
+      <Filter>97.ClientNeeds\Method</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UShaderConstantBuffer.h">
       <Filter>02.DxClass\ShaderBuffer</Filter>
@@ -564,7 +573,7 @@
       <Filter>04.Scene</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UDelegate.h">
-      <Filter>97.Needs\Delegate</Filter>
+      <Filter>97.ClientNeeds\Delegate</Filter>
     </ClInclude>
     <ClInclude Include="..\public\ULoader.h">
       <Filter>04.Scene\Loader</Filter>
@@ -628,6 +637,12 @@
     </ClInclude>
     <ClInclude Include="..\public\UInputManager.h">
       <Filter>01.Manager\InputManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ServerUtility.h">
+      <Filter>96.ServerNeed</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\CustomMemory.h">
+      <Filter>97.ClientNeeds\MemoryPool</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

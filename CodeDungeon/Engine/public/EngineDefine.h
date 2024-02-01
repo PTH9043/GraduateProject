@@ -1,6 +1,4 @@
-#ifndef _PTH_FRAMEWORK_ENGIEN_PUBLIC_UENGINEDEFINES_H
-#define _PTH_FRAMEWORK_ENGIEN_PUBLIC_UENGINEDEFINES_H
-
+#pragma once
 #pragma warning (disable : 4251)
 
 #pragma region DX12
@@ -28,7 +26,12 @@
 #define _USE_ATOMIC
 // Use Debugging Values
 //#define _USE_DEBUGGING
+#pragma comment(lib, "WS2_32.lib")
+#pragma comment(lib, "MSWSock.lib")
 
+
+#include <WS2tcpip.h>
+#include <MSWSock.h>
 #include <d3d12.h>
 #include <dxgi1_4.h>
 #include <dxgi.h>
@@ -59,6 +62,7 @@
 #include <thread>
 #include <set>
 #include <unordered_set>
+#include <stack>
 #include <queue>
 #include <list>
 #include <vector>
@@ -69,10 +73,15 @@
 #include <atomic>
 #include <fstream>
 
+#include <concurrent_queue.h>
+#include <concurrent_vector.h>
+
+
 #include "EngineConcept.h"
 #include "UDelegate.h"
-
 #include "EngineTypedef.h"
+#include "CustomMemory.h"
+
 #include "EngineEnum.h"
 #include "EngineFunction.h"
 #include "EngineMacro.h"
@@ -98,5 +107,3 @@ namespace Engine {
 #define DEFAULT_OUTFOLDEREXTENSION		Engine::DXVALUE::g_OutFolderExtension
 
 using namespace Engine;
-
-#endif // _PTH_FRAMEWORK_ENGIEN_PUBLIC_UENGINEDEFINES_H

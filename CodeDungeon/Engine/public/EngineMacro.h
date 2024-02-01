@@ -34,7 +34,7 @@ SHPTR<ClassName> ClassName::m_pInstance = nullptr;			\
 SHPTR<ClassName> ClassName::GetInstance()					\
 {														\
 	if (nullptr == m_pInstance)							\
-		m_pInstance = Create<ClassName>();		\
+		m_pInstance = std::make_shared<ClassName>();		\
 	return m_pInstance;									\
 }														
 
@@ -48,7 +48,7 @@ SHPTR<ClassName> ClassName::GetInstance()					\
 #define CLONE_MACRO(CLASS, DEBUG) \
 public: \
  virtual SHPTR<UCloneObject> Clone(const VOIDDATAS& _tDatas) override {   \
-SHPTR<CLASS> pInstance { std::make_shared<CLASS>(*this)}; \
+SHPTR<CLASS> pInstance { Make::MakeShared<CLASS>(*this)}; \
 if(FAILED(pInstance->NativeConstructClone(_tDatas))) \
 { \
 DEBUG_MSG(DEBUG) \

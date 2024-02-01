@@ -106,6 +106,15 @@ namespace Engine {
 	template<class Type>
 	using UNOSET = std::unordered_set<Type>;
 
+	template<class Type>
+	using STACK = std::stack<Type>;
+
+	template<class Type>
+	using CONQUEUE = concurrency::concurrent_queue<Type>;
+
+	template<class Type>
+	using CONVECTOR = concurrency::concurrent_vector<Type>;
+
 	namespace VOIDS {
 		using VOIDDATAS = std::vector<void*>;
 	}

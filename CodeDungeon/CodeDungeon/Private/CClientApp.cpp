@@ -39,10 +39,14 @@ HRESULT CClientApp::NativeConstruct(const HINSTANCE& _hInst, const _uint& _iCmdS
 	m_spTickTimer = m_spGameInstance->CreateTimerAdd(TICK_TIMER);
 	m_spRenderTimer = m_spGameInstance->CreateTimerAdd(RENDER_TIMER);
 	m_spRenderDeltaTimer = m_spGameInstance->CreateTimerAdd(RENDER_DELETATIMER);
+	return S_OK;
+}
 
+void CClientApp::Render()
+{
 	if (FALSE == InitInstance(m_hInst, m_iCmdShow))
 	{
-		return E_FAIL;
+		return;
 	}
 
 	/* Graphic Desc */
@@ -56,18 +60,8 @@ HRESULT CClientApp::NativeConstruct(const HINSTANCE& _hInst, const _uint& _iCmdS
 	}
 	OUTPUTDATA stOutputData;
 	RETURN_CHECK_FAILED(m_spGameInstance->ReadyInstance(stGraphicDesc, stOutputData), ;);
-	RETURN_CHECK_FAILED(m_spGameInstance->LoadFirstFilder(FIRST_RESOURCE_FOLDER), ;);
+	//RETURN_CHECK_FAILED(m_spGameInstance->LoadFirstFilder(FIRST_RESOURCE_FOLDER), ;);
 
-	//CProtoMaker::CreateProtoData(m_spGameInstance, stOutputData.wpDevice.lock(), stOutputData.wpGpuCmd.lock());
-
-	// Register 
-	//m_spGameInstance->RegisterScene(CreateConstructorNative<CStage1Scene>(stOutputData.wpDevice.lock()));
-
-	return S_OK;
-}
-
-void CClientApp::Render()
-{
 	MSG msg{};
 	ZeroMemory(&msg, sizeof(MSG));
 
@@ -132,7 +126,7 @@ BOOL CClientApp::InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, true);
 
-	m_hwnd = CreateWindowW(L"Client", L"Clients", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
+	m_hwnd = CreateWindowW(L"CodeDungeon", L"CodeDungeons", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
 		0, 0, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance, nullptr);
 
 	if (!m_hwnd)

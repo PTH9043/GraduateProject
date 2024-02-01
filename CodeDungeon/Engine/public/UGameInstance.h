@@ -210,15 +210,12 @@ public: /* ShaderBufferManager*/
 	void	 BindGlobalBuffer(const GLOBAL_CBUFFERTYPE _eGrobalCBuffer, CSHPTRREF<UCommand> _spCommand, const void* _pBuffer, const _uint _iSize);
 	HRESULT GetGlobalConstantBuffer(const GLOBAL_CBUFFERTYPE _eGrobalCBuffer, SHPTRREF<UGlobalConstantBuffer> _spGrobalConstantBuffer);
 	HRESULT GetPreAllocatedConstantBuffer(const PREALLOCATED_CBUFFERTYPE _ePreAllocatedCBufferType, SHPTRREF<UShaderConstantBuffer> _spShaderConstantBuffer);
-
-
 private: /* Ready Datas */
 	HRESULT ReadyResource(const OUTPUTDATA& _stData);
 	HRESULT ReadyComp(const OUTPUTDATA& _stData);
 	HRESULT ReadyActor(const OUTPUTDATA& _stData);
 	HRESULT ReadyRenderTarget(const OUTPUTDATA& _stData);
 private:
-
 	_bool															m_isGamming;
 	
 	SHPTR<UResourceManager>				m_spResourceManager;
@@ -241,9 +238,6 @@ private:
 	//SHPTR<UPicking>									m_spPicking;
 
 	//SHPTR<URandomManager>				m_spRandomManager;
-	
-
-
 	
 
 	

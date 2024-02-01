@@ -41,8 +41,7 @@ namespace Core {
 	*/
 
 	/*
-	@ Date: 2023-12-31
-	@ Writer: 박태현
+	@ Date: 2023-12-31, Writer: 박태현
 	@ Explain
 	- 메모리들을 저장하는 클래스
 	*/

@@ -86,7 +86,7 @@ namespace Engine {
 	template<class T, class ...Args>
 		requires ConstructWidthArgsCheck<T, Args...>
 	static SHPTR<T> Create(Args&&... args) {
-		SHPTR<T> pInstance{ std::make_shared<T>(args...) };
+		SHPTR<T> pInstance{ Make::MakeShared<T>(args...) };
 		return pInstance;
 	}
 
@@ -95,7 +95,7 @@ namespace Engine {
 		requires	CheckToSameMethodArgs<T, Args...>
 	static SHPTR<T> CreateNative(Args&&... args) {
 		static_assert(CheckToSameMethodArgs<T, Args...>, "NativeConstruct의 인자가 잘못되었습니다.");
-		SHPTR<T> pInstance{ std::make_shared<T>() };
+		SHPTR<T> pInstance{ Make::MakeShared<T>() };
 		if (FAILED(pInstance->NativeConstruct(args...))) {
 			ErrorToCreateClass(pInstance);
 			pInstance.reset();
@@ -108,7 +108,7 @@ namespace Engine {
 		requires CheckToSameMethodArgs<T, Args...>
 	static SHPTR<T> CreateNativeNotMsg(Args&&... args) {
 		static_assert(CheckToSameMethodArgs<T, Args...>, "NativeConstruct의 인자가 잘못되었습니다.");
-		SHPTR<T> pInstance{ std::make_shared<T>() };
+		SHPTR<T> pInstance{ Make::MakeShared<T>() };
 		if (FAILED(pInstance->NativeConstruct(args...))) {
 			pInstance.reset();
 		}
@@ -119,7 +119,7 @@ namespace Engine {
 	template<class T, class ...Args>
 		requires  CheckToSameMethodArgs<T, Args...>
 	static SHPTR<T> CreateConstructorNative(CSHPTRREF<class UDevice> _pDevice, Args&&... args) {
-		SHPTR<T> pInstance{ std::make_shared<T>(_pDevice) };
+		SHPTR<T> pInstance{ Make::MakeShared<T>(_pDevice) };
 		if (FAILED(pInstance->NativeConstruct(args...))) {
 			ErrorToCreateClass(pInstance);
 			pInstance.reset();
@@ -131,7 +131,7 @@ namespace Engine {
 	template<class T, class ...Args>
 		requires CheckToSameMethodArgs<T, Args...>
 	static SHPTR<T> CreateConstructorNativeNotMsg(CSHPTRREF<class UDevice> _pDevice, Args&&... args) {
-		SHPTR<T> pInstance{ std::make_shared<T>(_pDevice) };
+		SHPTR<T> pInstance{ Make::MakeShared<T>(_pDevice) };
 		if (FAILED(pInstance->NativeConstruct(args...))) {
 			pInstance.reset();
 		}
@@ -145,7 +145,7 @@ namespace Engine {
 		static SHPTR<T> CreateConstructorToNative(Args&&... args) {
 		;
 		static_assert(ConstructWidthArgsCheck<T, Args...>, "생성자의 인자가 잘못되었습니다.");
-		SHPTR<T> pInstance{ std::make_shared<T>(args...) };
+		SHPTR<T> pInstance{ Make::MakeShared<T>(args...) };
 		if (FAILED(pInstance->NativeConstruct())) {
 			ErrorToCreateClass(pInstance);
 			pInstance.reset();
@@ -159,7 +159,7 @@ namespace Engine {
 	&& CheckToSameMethodArgs<T>
 		static SHPTR<T> CreateConstructorToNativeNotMsg(Args&&... args) {
 		static_assert(ConstructWidthArgsCheck<T, Args...>, "생성자의 인자가 잘못되었습니다.");
-		SHPTR<T> pInstance{ std::make_shared<T>(args...) };
+		SHPTR<T> pInstance{ Make::MakeShared<T>(args...) };
 		if (FAILED(pInstance->NativeConstruct())) {
 			pInstance.reset();
 		}
@@ -170,7 +170,7 @@ namespace Engine {
 	template<class T>
 	static SHPTR<T> CloneThis(const T& _rhs)
 	{
-		SHPTR<T> pInstance{ std::make_shared<T>(_rhs) };
+		SHPTR<T> pInstance{ Make::MakeShared<T>(_rhs) };
 		return pInstance;
 	}
 

@@ -113,7 +113,7 @@ void UGameInstance::Free()
 	m_spResourceManager.reset();
 	//m_spFontMananger.reset();
 	//m_spInputManager.reset();
-	//m_spTimerManager.reset();
+	m_spTimerManager.reset();
 	m_spGraphicDevice.reset();
 	m_spShaderBufferManager.reset();
 	//m_spGraphicRenderManager.reset();
@@ -129,10 +129,9 @@ void UGameInstance::Free()
 
 HRESULT UGameInstance::ReadyInstance(const GRAPHICDESC& _stDesc, OUTPUTDATA& _stOutDesc)
 {
-	//RETURN_CHECK_FAILED(m_spGraphicRenderManager->ReadyGraphicRenderManager(_stOutDesc, 4), E_FAIL);
 	RETURN_CHECK_FAILED(m_spGraphicDevice->ReadyGraphicDevice(_stDesc, _stOutDesc), E_FAIL);
 	RETURN_CHECK_FAILED(m_spShaderBufferManager->ReadyShaderBufferManager(_stOutDesc.wpDevice.lock()), E_FAIL);
-	//RETURN_CHECK_FAILED(m_spInputManager->ReadyInpuDevice(m_spGraphicDevice->GetGraphicDesc()), E_FAIL);
+	RETURN_CHECK_FAILED(m_spInputManager->ReadyInpuDevice(m_spGraphicDevice->GetGraphicDesc()), E_FAIL);
 	RETURN_CHECK_FAILED(m_spRenderTargetManager->ReadyRenderTarget(m_spGraphicDevice, m_spGraphicDevice->GetDevice()), E_FAIL);
 	//RETURN_CHECK_FAILED(m_spComputeManager->NativeComputeManager(m_spGraphicRenderObject), E_FAIL);
 
