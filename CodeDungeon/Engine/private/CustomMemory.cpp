@@ -130,5 +130,38 @@ namespace Engine {
 	{
 		::free(ptr);
 	}
+	/*
+	===========================================================
+	UBaseAllocator
+	===========================================================
+	UPoolAllocator
+	===========================================================
+	*/
+
+	class MemoryGlobal {
+	public:
+		MemoryGlobal() : m_pMemoryAdiminster{ nullptr } {
+			m_pMemoryAdiminster = new UMemoryAdminster;
+		}
+		~MemoryGlobal() {
+			delete m_pMemoryAdiminster;
+		}
+	public:
+		UMemoryAdminster* GetMemoryAdiminster() const { return m_pMemoryAdiminster; }
+
+	private:
+		UMemoryAdminster* m_pMemoryAdiminster;
+	};
+	MemoryGlobal MGlobal;
+
+	void* UPoolAllocator::Alloc(size_t _size)
+	{
+		return MGlobal.GetMemoryAdiminster()->Allocate(_size);
+	}
+
+	void UPoolAllocator::Release(void* _ptr)
+	{
+		MGlobal.GetMemoryAdiminster()->Release(_ptr);
+	}
 
 }

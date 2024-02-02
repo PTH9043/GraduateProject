@@ -13,6 +13,9 @@
     <Filter Include="90.Server">
       <UniqueIdentifier>{5d4f5c49-410f-4489-8243-1375700409cf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98.Defines\20.Network">
+      <UniqueIdentifier>{36ebf3c6-114c-4160-a57a-e1510b9c2c27}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ClientDefines.h">

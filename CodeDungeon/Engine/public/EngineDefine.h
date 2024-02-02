@@ -72,6 +72,7 @@
 #include <unordered_map>
 #include <atomic>
 #include <fstream>
+#include <locale>
 
 #include <concurrent_queue.h>
 #include <concurrent_vector.h>

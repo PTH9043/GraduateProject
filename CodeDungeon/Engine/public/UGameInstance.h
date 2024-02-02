@@ -21,6 +21,7 @@ class UComputeManager;
 class UPicking;
 class UFilePathManager;
 class URandomManager;
+class UThreadManager;
 
 class URenderer;
 
@@ -102,6 +103,11 @@ public: /*  GraphicDevice */
 	// Ready
 	SHPTR<UTexture>		GetDefaultBackTexture() const;
 
+public: /* ShaderBufferManager*/
+	void	 BindGlobalBuffer(const GLOBAL_CBUFFERTYPE _eGrobalCBuffer, CSHPTRREF<UCommand> _spCommand, const void* _pBuffer, const _uint _iSize);
+	HRESULT GetGlobalConstantBuffer(const GLOBAL_CBUFFERTYPE _eGrobalCBuffer, SHPTRREF<UGlobalConstantBuffer> _spGrobalConstantBuffer);
+	HRESULT GetPreAllocatedConstantBuffer(const PREALLOCATED_CBUFFERTYPE _ePreAllocatedCBufferType, SHPTRREF<UShaderConstantBuffer> _spShaderConstantBuffer);
+
 public: /* TimerManager */
 	HRESULT CreateTimer(const _wstring& _wstrName);
 	SHPTR<UTimer> CreateTimerAdd(const _wstring& _wstrName);
@@ -118,7 +124,10 @@ public: /* InputManager*/
 	_bool GetDIMBtnPressing(const DIMOUSEBUTTON& _eMouseBtn);
 	_long GetDIMMoveState(const DIMOUSEMOVE& _eMouseMove);
 	_float2 GetMousePosition();
-
+public: /* ThreadManager */
+	void RegisterFuncToRegister(const THREADFUNC& _CallBack, void* _pData);
+	void JoinRegister();
+	void DetachRegister();
 public: /* ActorManager */
 	const  CLONEARR& GetClonesArr() const;
 	HRESULT AddPrototype(const _wstring& _wstrName, CSHPTRREF<UActor> _spActor);
@@ -155,8 +164,6 @@ public: /* SceneManager*/
 	HRESULT DeleteLight(const LIGHTTYPE& _eLightType, const _uint& _iIndex);
 	// Clear
 	HRESULT ClearLight();
-
-
 
 public: /*  RenderTargetManager */
 	HRESULT		AddRenderTargetGroup(const RTGROUPID& _eGroupID, const std::vector<RTDESC>& _rtVec);
@@ -202,14 +209,8 @@ public: /* PipeLine */
 public: /* FilePath Manager*/
 	SHPTR<FILEGROUP> FindFolder(const PATHS& _vecFolderList);
 	SHPTR<FILEGROUP>	FindFolder(const _wstring& _wstrFindName, const _wstring& _wstrParentsFolderName = L"");
-
 	HRESULT LoadFirstFilder(const _wstring& _wstrFilePath);
 
-
-public: /* ShaderBufferManager*/
-	void	 BindGlobalBuffer(const GLOBAL_CBUFFERTYPE _eGrobalCBuffer, CSHPTRREF<UCommand> _spCommand, const void* _pBuffer, const _uint _iSize);
-	HRESULT GetGlobalConstantBuffer(const GLOBAL_CBUFFERTYPE _eGrobalCBuffer, SHPTRREF<UGlobalConstantBuffer> _spGrobalConstantBuffer);
-	HRESULT GetPreAllocatedConstantBuffer(const PREALLOCATED_CBUFFERTYPE _ePreAllocatedCBufferType, SHPTRREF<UShaderConstantBuffer> _spShaderConstantBuffer);
 private: /* Ready Datas */
 	HRESULT ReadyResource(const OUTPUTDATA& _stData);
 	HRESULT ReadyComp(const OUTPUTDATA& _stData);
@@ -218,35 +219,28 @@ private: /* Ready Datas */
 private:
 	_bool															m_isGamming;
 	
-	SHPTR<UResourceManager>				m_spResourceManager;
 	SHPTR<UGraphicDevice>						m_spGraphicDevice;
-	SHPTR<URenderTargetManager>		m_spRenderTargetManager;
 	SHPTR<UShaderBufferManager>		m_spShaderBufferManager;
-	SHPTR<UPipeLine>								m_spPipeLine;
-	SHPTR<UActorManager>						m_spActorManager;
-
 	SHPTR<UTimerManager>						m_spTimerManager;
-	SHPTR<UComponentManager>			m_spComponentManager;
-	SHPTR<USceneManager>					m_spSceneManager;
-	SHPTR<URenderer>								m_spRenderer;
-	SHPTR<UFilePathManager>					m_spFilePathManager;
-	
-
 	SHPTR<UInputManager>						m_spInputManager;
+	SHPTR<UThreadManager>					m_spThreadManager;
+
+	SHPTR<UActorManager>						m_spActorManager;
+	SHPTR<UComponentManager>			m_spComponentManager;
+	SHPTR<UResourceManager>				m_spResourceManager;
+	SHPTR<USceneManager>						m_spSceneManager;
+
+	SHPTR<URenderTargetManager>		m_spRenderTargetManager;
+	SHPTR<UPipeLine>									m_spPipeLine;
+	SHPTR<UFilePathManager>					m_spFilePathManager;
+
+	SHPTR<URenderer>								m_spRenderer;
 	//SHPTR< UFontManager>						m_spFontMananger;
 	//SHPTR<UComputeManager>				m_spComputeManager;
 	//SHPTR<UPicking>									m_spPicking;
 
 	//SHPTR<URandomManager>				m_spRandomManager;
 	
-
-	
-	
-	
-
-	
-	
-
 };
 
 END

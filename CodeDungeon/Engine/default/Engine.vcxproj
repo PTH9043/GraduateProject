@@ -52,6 +52,8 @@
     <ClInclude Include="..\public\ULoader.h" />
     <ClInclude Include="..\public\UMeshContainer.h" />
     <ClInclude Include="..\public\UModel.h" />
+    <ClInclude Include="..\public\UNetworkAdiminster.h" />
+    <ClInclude Include="..\public\UNetworkManager.h" />
     <ClInclude Include="..\public\UPawn.h" />
     <ClInclude Include="..\public\UPipeLine.h" />
     <ClInclude Include="..\public\URectTransform.h" />
@@ -91,6 +93,7 @@
     <ClInclude Include="..\public\UTableDescriptor.h" />
     <ClInclude Include="..\public\UTexGroup.h" />
     <ClInclude Include="..\public\UTexture.h" />
+    <ClInclude Include="..\public\UThreadManager.h" />
     <ClInclude Include="..\public\UTimer.h" />
     <ClInclude Include="..\public\UTimerManager.h" />
     <ClInclude Include="..\public\UTransform.h" />
@@ -99,6 +102,7 @@
     <ClInclude Include="..\public\UVIBufferCube.h" />
     <ClInclude Include="..\public\UVIBufferRect.h" />
     <ClInclude Include="..\public\UVIBufferSphere.h" />
+    <ClInclude Include="..\public\UWorkThread.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\CustomMemory.cpp" />
@@ -126,6 +130,8 @@
     <ClCompile Include="..\private\ULoader.cpp" />
     <ClCompile Include="..\private\UMeshContainer.cpp" />
     <ClCompile Include="..\private\UModel.cpp" />
+    <ClCompile Include="..\private\UNetworkAdiminster.cpp" />
+    <ClCompile Include="..\private\UNetworkManager.cpp" />
     <ClCompile Include="..\private\UPawn.cpp" />
     <ClCompile Include="..\private\UPipeLine.cpp" />
     <ClCompile Include="..\private\URectTransform.cpp" />
@@ -165,6 +171,7 @@
     <ClCompile Include="..\private\UTableDescriptor.cpp" />
     <ClCompile Include="..\private\UTexGroup.cpp" />
     <ClCompile Include="..\private\UTexture.cpp" />
+    <ClCompile Include="..\private\UThreadManager.cpp" />
     <ClCompile Include="..\private\UTimer.cpp" />
     <ClCompile Include="..\private\UTimerManager.cpp" />
     <ClCompile Include="..\private\UTransform.cpp" />
@@ -173,6 +180,7 @@
     <ClCompile Include="..\private\UVIBufferCube.cpp" />
     <ClCompile Include="..\private\UVIBufferRect.cpp" />
     <ClCompile Include="..\private\UVIBufferSphere.cpp" />
+    <ClCompile Include="..\private\UWorkThread.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Shader\BlendDeffered.hlsl">

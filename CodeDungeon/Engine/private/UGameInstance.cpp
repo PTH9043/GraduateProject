@@ -18,6 +18,7 @@
 //#include "UPicking.h"
 #include "UFilePathManager.h"
 //#include "URandomManager.h"
+#include "UThreadManager.h"
 
 #include "URenderer.h"
 
@@ -62,12 +63,12 @@
 IMPLEMENT_SINGLETON(UGameInstance);
 
 UGameInstance::UGameInstance() :
-	//m_isGamming{ true },
-	//m_spGraphicRenderManager{ Create<UGraphicRenderManager>() },
-	m_spShaderBufferManager{ Create<UShaderBufferManager>() },
+	m_isGamming{ true },
 	m_spGraphicDevice(Create<UGraphicDevice>()),
+	m_spShaderBufferManager{ Create<UShaderBufferManager>() },
 	m_spTimerManager{ Create<UTimerManager>() },
 	m_spInputManager{ Create<UInputManager>() },
+	m_spThreadManager{Create<UThreadManager>()},
 
 	//m_spFontMananger{ Create<UFontManager>() },
 	m_spActorManager(Create<UActorManager>()),
@@ -203,7 +204,6 @@ void UGameInstance::RenderBegin()
 //	m_spFontMananger->Render();
 }
 
-
 void UGameInstance::RenderEnd()
 {
 	/* Gpu 동기화 시키는 부분 */
@@ -229,9 +229,122 @@ void UGameInstance::ClearOnceTypeData()
 	m_spPipeLine->ClearOneTypeCamera();
 }
 
+
+/*
+-----------------------------
+UGameInstance
+-----------------------------
+UGraphicDevice
+-----------------------------
+*/
+
+const _bool UGameInstance::IsGamePaused() const
+{
+	return m_spGraphicDevice->IsGamePaused();
+}
+
+const _bool UGameInstance::IsScreenMinimized() const
+{
+	return m_spGraphicDevice->IsScreenMinimized();
+}
+
+const _bool UGameInstance::IsScreenMaximized() const
+{
+	return m_spGraphicDevice->IsScreenMaximized();
+}
+
+const _bool UGameInstance::IsScreenFullScreen() const
+{
+	return m_spGraphicDevice->IsScreenFullScreen();
+}
+
+const _bool UGameInstance::IsMssa4xState() const
+{
+	return m_spGraphicDevice->IsMssa4xState();
+}
+
+const _uint& UGameInstance::GetMssa4xQuality() const
+{
+	return m_spGraphicDevice->GetMssa4xQuality();
+}
+
+const D3D12_VIEWPORT& UGameInstance::GetD3DViewport() const
+{
+	return m_spGraphicDevice->GetD3DViewport();
+}
+
+const D3D12_RECT& UGameInstance::GetD3DWindowSizeRect() const
+{
+	return m_spGraphicDevice->GetD3DWindowSizeRect();
+}
+
+CSHPTRREF<GRAPHICDESC>UGameInstance::GetGraphicDesc() const
+{
+	return m_spGraphicDevice->GetGraphicDesc();
+}
+
+SHPTR<UTexture> UGameInstance::GetDefaultBackTexture() const
+{
+	return m_spGraphicDevice->GetDefaultBackTexture();
+}
+
+CSHPTRREF<UDevice> UGameInstance::GetDevice() const
+{
+	return m_spGraphicDevice->GetDevice();
+}
+
+CSHPTRREF<UGpuCommand> UGameInstance::GetGpuCommand() const
+{
+	return m_spGraphicDevice->GetGpuCommand();
+}
+
+CSHPTRREF<UTableDescriptor> UGameInstance::GetTableDescriptor() const
+{
+	return m_spGraphicDevice->GetTableDescriptor();
+}
+
+CSHPTRREF<URootSignature> UGameInstance::GetRootSignature() const
+{
+	return m_spGraphicDevice->GetRootSignature();
+}
+
+HRESULT UGameInstance::AddRenderTargetGroup(const RTGROUPID& _eGroupID, const std::vector<RTDESC>& _rtVec)
+{
+	return m_spRenderTargetManager->AddRenderTargetGroup(_eGroupID, _rtVec);
+}
+
+void UGameInstance::RemoveRenderTargetGroup(const RTGROUPID _eGroupID)
+{
+	m_spRenderTargetManager->RemoveRenderTargetGroup(_eGroupID);
+}
+
 /*
 ==================================================
 GraphicDevice
+==================================================
+ShaderBufferManager
+==================================================
+*/
+
+void UGameInstance::BindGlobalBuffer(const GLOBAL_CBUFFERTYPE _eGrobalCBuffer, CSHPTRREF<UCommand> _spCommand, const void* _pBuffer, const _uint _iSize)
+{
+	m_spShaderBufferManager->BindGlobalBuffer(_eGrobalCBuffer, _spCommand, _pBuffer, _iSize);
+}
+
+HRESULT UGameInstance::GetGlobalConstantBuffer(const GLOBAL_CBUFFERTYPE _eGrobalCBuffer, SHPTRREF<UGlobalConstantBuffer> _spGrobalConstantBuffer)
+{
+	return m_spShaderBufferManager->GetGlobalConstantBuffer(_eGrobalCBuffer, _spGrobalConstantBuffer);
+}
+
+HRESULT UGameInstance::GetPreAllocatedConstantBuffer(const PREALLOCATED_CBUFFERTYPE _ePreAllocatedCBufferType, SHPTRREF<UShaderConstantBuffer> _spShaderConstantBuffer)
+{
+	return m_spShaderBufferManager->GetPreAllocatedConstantBuffer(_ePreAllocatedCBufferType, _spShaderConstantBuffer);
+}
+
+
+/*
+==================================================
+ShaderBufferManager
 ==================================================
 UTimerManager
 ==================================================
@@ -314,6 +427,68 @@ _float2 UGameInstance::GetMousePosition()
 ==================================================
 UInputManager
 ==================================================
+UThreadManager
+==================================================
+*/
+
+void UGameInstance::RegisterFuncToRegister(const THREADFUNC& _CallBack, void* _pData)
+{
+	m_spThreadManager->RegisterFuncToRegister(_CallBack, _pData);
+}
+
+void UGameInstance::JoinRegister()
+{
+	m_spThreadManager->JoinRegister();
+}
+
+void UGameInstance::DetachRegister()
+{
+	m_spThreadManager->DetachRegister();
+}
+
+
+/*
+==================================================
+ThreadManager
+==================================================
+ActorManager
+==================================================
+*/
+
+const CLONEARR& UGameInstance::GetClonesArr() const
+{
+	return m_spActorManager->GetClonesArr();
+}
+
+HRESULT UGameInstance::AddPrototype(const _wstring& _wstrName, CSHPTRREF<UActor> _spActor)
+{
+	return m_spActorManager->AddPrototypes(_wstrName, _spActor);
+}
+
+void UGameInstance::CloneActor(const _wstring& _wstrProto, const VOIDDATAS& _stDatas)
+{
+	m_spActorManager->CloneActor(_wstrProto, _stDatas);
+}
+
+SHPTR<UActor> UGameInstance::CloneActorAdd(const _wstring& _wstrProto, const VOIDDATAS& _stDatas)
+{
+	return m_spActorManager->CloneActorAdd(_wstrProto, _stDatas);
+}
+
+SHPTR<UActor> UGameInstance::CloneActorAddAndNotInLayer(const _wstring& _wstrProto, const VOIDDATAS& _stDatas)
+{
+	return m_spActorManager->CloneActorAddAndNotInLayer(_wstrProto, _stDatas);
+}
+
+void UGameInstance::RemoveActor(CSHPTRREF<UActor> _spActor)
+{
+	m_spActorManager->RemoveActor(_spActor);
+}
+
+/*
+==================================================
+ActorManager
+==================================================
 ComponentManager
 ==================================================
 */
@@ -330,7 +505,7 @@ SHPTR<UComponent> UGameInstance::CloneComp(const _wstring& _wstrPrototypes, cons
 
 /*
 ==================================================
-GameInstance
+ComponentManager
 ==================================================
 ResourceManager
 ==================================================
@@ -414,94 +589,14 @@ HRESULT UGameInstance::ClearLight()
 	return m_spSceneManager->ClearLight();
 }
 
+
 /*
 ==================================================
-ResourceManager
+SceneManager
 ==================================================
-==================================================
-GraphicDevice
+RenderTargetManager
 ==================================================
 */
-
-const _bool UGameInstance::IsGamePaused() const
-{
-	return m_spGraphicDevice->IsGamePaused();
-}
-
-const _bool UGameInstance::IsScreenMinimized() const
-{
-	return m_spGraphicDevice->IsScreenMinimized();
-}
-
-const _bool UGameInstance::IsScreenMaximized() const
-{
-	return m_spGraphicDevice->IsScreenMaximized();
-}
-
-const _bool UGameInstance::IsScreenFullScreen() const
-{
-	return m_spGraphicDevice->IsScreenFullScreen();
-}
-
-const _bool UGameInstance::IsMssa4xState() const
-{
-	return m_spGraphicDevice->IsMssa4xState();
-}
-
-const _uint& UGameInstance::GetMssa4xQuality() const
-{
-	return m_spGraphicDevice->GetMssa4xQuality();
-}
-
-const D3D12_VIEWPORT& UGameInstance::GetD3DViewport() const
-{
-	return m_spGraphicDevice->GetD3DViewport();
-}
-
-const D3D12_RECT& UGameInstance::GetD3DWindowSizeRect() const
-{
-	return m_spGraphicDevice->GetD3DWindowSizeRect();
-}
-
-CSHPTRREF<GRAPHICDESC>UGameInstance::GetGraphicDesc() const
-{
-	return m_spGraphicDevice->GetGraphicDesc();
-}
-
-SHPTR<UTexture> UGameInstance::GetDefaultBackTexture() const
-{
-	return m_spGraphicDevice->GetDefaultBackTexture();
-}
-
-CSHPTRREF<UDevice> UGameInstance::GetDevice() const
-{
-	return m_spGraphicDevice->GetDevice();
-}
-
-CSHPTRREF<UGpuCommand> UGameInstance::GetGpuCommand() const
-{
-	return m_spGraphicDevice->GetGpuCommand();
-}
-
-CSHPTRREF<UTableDescriptor> UGameInstance::GetTableDescriptor() const
-{
-	return m_spGraphicDevice->GetTableDescriptor();
-}
-
-CSHPTRREF<URootSignature> UGameInstance::GetRootSignature() const
-{
-	return m_spGraphicDevice->GetRootSignature();
-}
-
-HRESULT UGameInstance::AddRenderTargetGroup(const RTGROUPID& _eGroupID, const std::vector<RTDESC>& _rtVec)
-{
-	return m_spRenderTargetManager->AddRenderTargetGroup(_eGroupID, _rtVec);
-}
-
-void UGameInstance::RemoveRenderTargetGroup(const RTGROUPID _eGroupID)
-{
-	m_spRenderTargetManager->RemoveRenderTargetGroup(_eGroupID);
-}
 
 // OMSetRenderTarget 
 void	 UGameInstance::OmSetRenderTargets(CSHPTRREF<UCommand> _spCommand, const RTGROUPID& _eGroupID, const _uint _index, const _uint _iOffset)
@@ -542,20 +637,13 @@ SHPTR<UTexture> UGameInstance::FindRenderTargetTexture(const RTGROUPID _eGroupID
 	return m_spRenderTargetManager->FindRenderTargetTexture(_eGroupID, _eObjID);
 }
 
-void UGameInstance::BindGlobalBuffer(const GLOBAL_CBUFFERTYPE _eGrobalCBuffer, CSHPTRREF<UCommand> _spCommand, const void* _pBuffer, const _uint _iSize)
-{
-	m_spShaderBufferManager->BindGlobalBuffer(_eGrobalCBuffer, _spCommand, _pBuffer, _iSize);
-}
-
-HRESULT UGameInstance::GetGlobalConstantBuffer(const GLOBAL_CBUFFERTYPE _eGrobalCBuffer, SHPTRREF<UGlobalConstantBuffer> _spGrobalConstantBuffer)
-{
-	return m_spShaderBufferManager->GetGlobalConstantBuffer(_eGrobalCBuffer, _spGrobalConstantBuffer);
-}
-
-HRESULT UGameInstance::GetPreAllocatedConstantBuffer(const PREALLOCATED_CBUFFERTYPE _ePreAllocatedCBufferType, SHPTRREF<UShaderConstantBuffer> _spShaderConstantBuffer)
-{
-	return m_spShaderBufferManager->GetPreAllocatedConstantBuffer(_ePreAllocatedCBufferType, _spShaderConstantBuffer);
-}
+/*
+==================================================
+RenderTargetManager
+==================================================
+PipeLine
+==================================================
+*/
 
 void UGameInstance::RegisterCameraInPipeline(CSHPTRREF<UCamera> _spCamera, CAMID& _iCamID, const VIEWPROJMATRIX& _stViewProjMatrix, const CAMERATYPE _eType)
 {
@@ -632,45 +720,7 @@ const CAMID UGameInstance::GetRenderCamID() const
 
 /*
 ==================================================
-ActorManager
-==================================================
-*/
-
-
-
-const CLONEARR& UGameInstance::GetClonesArr() const
-{
-	return m_spActorManager->GetClonesArr();
-}
-
-HRESULT UGameInstance::AddPrototype(const _wstring& _wstrName, CSHPTRREF<UActor> _spActor)
-{
-	return m_spActorManager->AddPrototypes(_wstrName, _spActor);
-}
-
-void UGameInstance::CloneActor(const _wstring& _wstrProto, const VOIDDATAS& _stDatas)
-{
-	m_spActorManager->CloneActor(_wstrProto, _stDatas);
-}
-
-SHPTR<UActor> UGameInstance::CloneActorAdd(const _wstring& _wstrProto, const VOIDDATAS& _stDatas)
-{
-	return m_spActorManager->CloneActorAdd(_wstrProto, _stDatas);
-}
-
-SHPTR<UActor> UGameInstance::CloneActorAddAndNotInLayer(const _wstring& _wstrProto, const VOIDDATAS& _stDatas)
-{
-	return m_spActorManager->CloneActorAddAndNotInLayer(_wstrProto, _stDatas);
-}
-
-void UGameInstance::RemoveActor(CSHPTRREF<UActor> _spActor)
-{
-	m_spActorManager->RemoveActor(_spActor);
-}
-
-/*
-==================================================
-Picking
+PipeLine
 ==================================================
 FilePath
 ==================================================

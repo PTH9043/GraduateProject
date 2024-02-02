@@ -106,12 +106,34 @@ namespace Engine {
 		static void* Alloc(size_t size);
 		static void	Release(void* ptr);
 	};
+		/*
+	===========================================================
+	BaseAllocator
+	===========================================================
+	PoolAllocator
+	===========================================================
+	*/
+	/*
+	@ Date: 2024-02-01,  Writer: 박태현
+	@ Explain
+	- Memory Adiminster으로 메모리 관리
+	*/
+	class UPoolAllocator {
+	public:
+		static void* Alloc(size_t _size);
+		static void Release(void* _ptr);
+	};
 	/*
 	===========================================================
-	UBaseAllocator
+	UPoolAllocator
 	===========================================================
 	UObjectPool
 	===========================================================
+	*/
+	/*
+	@ Date: 2024-02-02,  Writer: 박태현
+	@ Explain
+	- ObjectPool 클래스당 Memory Pool
 	*/
 	template<class Type>
 	class UObjectPool {
@@ -119,13 +141,19 @@ namespace Engine {
 		template<class... Args>
 		static Type* Pop(Args&&... _args) {
 			Type* memory = static_cast<Type*>(UMemoryHeader::AttachHeader(s_MemoryPool.Pop(), s_AllocSize));
-			new(memory)Type(forward<Args>(_args)...); // placement new
+			new(memory)Type(std::forward<Args>(_args)...); // placement new
 			return memory;
 		}
 		static void Push(Type* obj)
 		{
 			obj->~Type();
 			s_MemoryPool.Push(UMemoryHeader::DetachHeader(obj));
+		}
+
+		template<class... Args>
+		static std::shared_ptr<Type> MakeShared(Args&&... _args) {
+			std::shared_ptr<Type> ptr = { Pop(std::forward<Args>(_args)...), Push };
+			return std::move(ptr);
 		}
 	private:
 		static UMemoryPool	s_MemoryPool;
@@ -151,7 +179,7 @@ namespace Engine {
 		template<typename Type, typename... Args>
 		Type* xnew(Args&&... args)
 		{
-			Type* memory = static_cast<Type*>(UBaseAllocator::Alloc(sizeof(Type)));
+			Type* memory = static_cast<Type*>(UPoolAllocator::Alloc(sizeof(Type)));
 			new(memory)Type(std::forward<Args>(args)...); // placement new
 			return memory;
 		}
@@ -160,7 +188,7 @@ namespace Engine {
 		void xdelete(Type* obj)
 		{
 			obj->~Type();
-			UBaseAllocator::Release(obj);
+			UPoolAllocator::Release(obj);
 		}
 
 		template<typename Type, typename... Args>

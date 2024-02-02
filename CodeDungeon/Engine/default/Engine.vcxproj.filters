@@ -226,6 +226,18 @@
     <Filter Include="97.ClientNeeds\MemoryPool">
       <UniqueIdentifier>{fc441c1a-e190-47b4-b00c-f587f2ae8725}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Manager\NetworkManager">
+      <UniqueIdentifier>{86cb24b7-9ef5-4892-9a87-debaf5c9a572}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="20.Network">
+      <UniqueIdentifier>{558750bb-ac4b-4610-aa42-d72cfef50944}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Manager\ThreadManager">
+      <UniqueIdentifier>{bd0c8d4c-97e1-459e-87f8-3e51b45defd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Utility\Thread">
+      <UniqueIdentifier>{d5eec6f4-ca46-431b-9276-38d887215866}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -422,6 +434,18 @@
     </ClCompile>
     <ClCompile Include="..\private\CustomMemory.cpp">
       <Filter>97.ClientNeeds\MemoryPool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UNetworkManager.cpp">
+      <Filter>01.Manager\NetworkManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UNetworkAdiminster.cpp">
+      <Filter>20.Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UThreadManager.cpp">
+      <Filter>01.Manager\ThreadManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UWorkThread.cpp">
+      <Filter>03.Utility\Thread</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -643,6 +667,18 @@
     </ClInclude>
     <ClInclude Include="..\public\CustomMemory.h">
       <Filter>97.ClientNeeds\MemoryPool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UNetworkManager.h">
+      <Filter>01.Manager\NetworkManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UNetworkAdiminster.h">
+      <Filter>20.Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UThreadManager.h">
+      <Filter>01.Manager\ThreadManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UWorkThread.h">
+      <Filter>03.Utility\Thread</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

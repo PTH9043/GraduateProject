@@ -1,5 +1,6 @@
 #pragma once
 
+
 #define DEBUG_MACRO_TO_METHOD \
 __FILE__, __LINE__, __FUNCTION__ 
 
@@ -48,7 +49,7 @@ SHPTR<ClassName> ClassName::GetInstance()					\
 #define CLONE_MACRO(CLASS, DEBUG) \
 public: \
  virtual SHPTR<UCloneObject> Clone(const VOIDDATAS& _tDatas) override {   \
-SHPTR<CLASS> pInstance { Make::MakeShared<CLASS>(*this)}; \
+SHPTR<CLASS> pInstance { std::make_shared<CLASS>(*this)}; \
 if(FAILED(pInstance->NativeConstructClone(_tDatas))) \
 { \
 DEBUG_MSG(DEBUG) \
@@ -69,6 +70,29 @@ return ThisShared<UCloneObject>(); \
 public: \
 virtual ~CLASS() { Free(); }
 
+
+/*
+@ Date: 2023-12-28, Writer: 박태현
+@ Explain
+- 함수를 실행시킬 때, 레퍼런스를 통해 해당하는 변수의 값이 바뀔 수 있을 경우를 나타냄
+*/
+#define REF_OUT
+
+
+/*
+@ Date: 2023-12-28,  Writer: 박태현
+@ Explain
+- 함수 정의할 때, 레퍼런스를 통해 해당하는 변수의 값이 바뀔 수 있을 경우를 나타냄
+*/
+#define REF_IN
+
+
+/*
+@ Date: 2023-12-28, Writer: 박태현
+@ Explain
+- 레퍼런스 함수를 리턴하는 경우를 나타낸다.
+*/
+#define REF_RETURN
 
 
 #pragma endregion 바꿔야하는구간

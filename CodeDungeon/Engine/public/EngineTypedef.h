@@ -150,4 +150,10 @@ namespace Engine {
 
 	template<class T>
 	using CUNPTRREF = const UNPTR<T>&;
+	/*
+	@ Date: 2024-02-02, Writer: 박태현
+	@ Explain
+	- thread를 등록하기 위한 함수 
+	*/
+	using THREADFUNC = std::function<void(void*)>;
 }

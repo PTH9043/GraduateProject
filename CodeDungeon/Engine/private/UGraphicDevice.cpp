@@ -127,7 +127,7 @@ HRESULT UGraphicDevice::MainRenderBegin()
 	// 명령 목록을 대기열에 추가했다면 명령 목록을 재설정해야 한다. 
 	RETURN_CHECK_FAILED(pGraphicCmdList->Reset(FrameContext->cpAllocator.Get(), nullptr), E_FAIL);
 
-	// Bind And Clear 
+	// Bind And Clear
 	m_spTableDescriptor->BindAndClear(m_spGpuCommand);
 	// Root Signature
 	m_spGpuCommand->BindRootSignature(m_spRootSignature);
