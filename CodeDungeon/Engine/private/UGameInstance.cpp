@@ -4,7 +4,7 @@
 #include "UGraphicDevice.h"
 #include "UTimerManager.h"
 #include "UInputManager.h"
-
+#include "UThreadManager.h"
 //#include  "UFontManager.h"
 #include "UActorManager.h"
 #include "UComponentManager.h"
@@ -18,7 +18,7 @@
 //#include "UPicking.h"
 #include "UFilePathManager.h"
 //#include "URandomManager.h"
-#include "UThreadManager.h"
+#include "UNetworkManager.h"
 
 #include "URenderer.h"
 
@@ -82,6 +82,7 @@ UGameInstance::UGameInstance() :
 	//m_spPicking{ Create<UPicking>() },
 	m_spFilePathManager{ Create<UFilePathManager>() },
 	//m_spRandomManager{ Create<URandomManager>() },
+	m_spNetworkManager{Create<UNetworkManager>()},
 	m_spRenderer{ nullptr }
 	//m_spGraphicRenderObject{ nullptr }
 {
@@ -96,7 +97,7 @@ void UGameInstance::Free()
 {
 	//ClearOnceTypeData();
 	m_spRenderer->ClearAllData();
-
+	m_spNetworkManager.reset();
 	m_spRenderer.reset();
 	//m_spGraphicRenderObject.reset();
 
@@ -112,7 +113,8 @@ void UGameInstance::Free()
 	m_spComponentManager.reset();
 	m_spResourceManager.reset();
 	//m_spFontMananger.reset();
-	//m_spInputManager.reset();
+	m_spThreadManager.reset();
+	m_spInputManager.reset();
 	m_spTimerManager.reset();
 	m_spGraphicDevice.reset();
 	m_spShaderBufferManager.reset();
@@ -738,6 +740,21 @@ SHPTR<FILEGROUP> UGameInstance::FindFolder(const _wstring& _wstrFindName, const 
 HRESULT UGameInstance::LoadFirstFilder(const _wstring& _wstrFilePath)
 {
 	return m_spFilePathManager->LoadFirstFilder(_wstrFilePath);
+}
+
+HRESULT UGameInstance::StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController)
+{
+	return m_spNetworkManager->StartNetwork(_spNetworkBaseController);
+}
+
+void UGameInstance::InsertProcessedDataToContainer(void* _pData, size_t _Size, _int _DataType)
+{
+	m_spNetworkManager->InsertProcessedDataToContainer(_pData, _Size, _DataType);
+}
+
+void UGameInstance::PopProcessedData(POINTER_IN UProcessedData* _pData)
+{
+	m_spNetworkManager->PopProcessedData(_pData);
 }
 
 /*

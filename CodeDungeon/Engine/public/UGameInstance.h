@@ -22,6 +22,7 @@ class UPicking;
 class UFilePathManager;
 class URandomManager;
 class UThreadManager;
+class UNetworkManager;
 
 class URenderer;
 
@@ -46,6 +47,8 @@ class UGpuCommand;
 class UActorGroup;
 class UCommand;
 class UFont;
+class UNetworkBaseController;
+class UProcessedData;
 
 struct PICKINGDESC;
 struct WAITCHECKACTOR;
@@ -125,8 +128,11 @@ public: /* InputManager*/
 	_long GetDIMMoveState(const DIMOUSEMOVE& _eMouseMove);
 	_float2 GetMousePosition();
 public: /* ThreadManager */
+	// 스레드에 THREADFUNC 함수를 등록
 	void RegisterFuncToRegister(const THREADFUNC& _CallBack, void* _pData);
+	// 등록 된 함수들을 JOIN
 	void JoinRegister();
+	// 등록된 함수들을 Detach
 	void DetachRegister();
 public: /* ActorManager */
 	const  CLONEARR& GetClonesArr() const;
@@ -210,6 +216,10 @@ public: /* FilePath Manager*/
 	SHPTR<FILEGROUP> FindFolder(const PATHS& _vecFolderList);
 	SHPTR<FILEGROUP>	FindFolder(const _wstring& _wstrFindName, const _wstring& _wstrParentsFolderName = L"");
 	HRESULT LoadFirstFilder(const _wstring& _wstrFilePath);
+public: /* NetworkManager */
+	HRESULT StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController);
+	void InsertProcessedDataToContainer(void* _pData, size_t _Size, _int _DataType);
+	void PopProcessedData(POINTER_IN UProcessedData* _pData);
 private: /* Ready Datas */
 	HRESULT ReadyResource(const OUTPUTDATA& _stData);
 	HRESULT ReadyComp(const OUTPUTDATA& _stData);
@@ -232,6 +242,7 @@ private:
 	SHPTR<URenderTargetManager>		m_spRenderTargetManager;
 	SHPTR<UPipeLine>									m_spPipeLine;
 	SHPTR<UFilePathManager>					m_spFilePathManager;
+	SHPTR< UNetworkManager>				m_spNetworkManager;
 
 	SHPTR<URenderer>								m_spRenderer;
 	//SHPTR< UFontManager>						m_spFontMananger;

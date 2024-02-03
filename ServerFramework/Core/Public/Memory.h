@@ -77,7 +77,7 @@ namespace Core {
 	class CORE_DLL AMemoryAdminster {
 		enum
 		{
-			POOL_COUNT = (512 / 16) + (512 / 32) + (1024 / 64) + (1024 / 128) + (2048 / 256),
+			POOL_COUNT = (512 / 32) + (1024 / 64) + (1024 / 128) + (2048 / 256),
 			MAX_ALLOC_SIZE = 5120
 		};
 	public: 

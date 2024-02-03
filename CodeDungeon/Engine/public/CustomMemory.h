@@ -69,8 +69,8 @@ namespace Engine {
 	class UMemoryAdminster {
 		enum
 		{
-			POOL_COUNT = (512 / 16) + (512 / 32) + (1024 / 64) + (1024 / 128) + (2048 / 256),
-			MAX_ALLOC_SIZE = 5120
+			POOL_COUNT =  (512 / 32) + (1024 / 64) + (1024 / 128) + (2048 / 256),
+			MAX_ALLOC_SIZE = 4608
 		};
 	public:
 		UMemoryAdminster();
@@ -176,23 +176,54 @@ namespace Engine {
 
 	namespace Make {
 
+		/*
+		@ Date: 2024-02-03,  Writer: 박태현
+		@ Explain
+		- 할당을 내가 custom 하기 위한 함수
+		*/
 		template<typename Type, typename... Args>
-		Type* xnew(Args&&... args)
+		static Type* xnew(Args&&... args)
 		{
 			Type* memory = static_cast<Type*>(UPoolAllocator::Alloc(sizeof(Type)));
 			new(memory)Type(std::forward<Args>(args)...); // placement new
 			return memory;
 		}
-
+		/*
+		@ Date: 2024-02-03,  Writer: 박태현
+		@ Explain
+		- 마음데로 할당한 값을 삭제하는 함수
+		*/
 		template<typename Type>
-		void xdelete(Type* obj)
+		static void xdelete(Type* obj)
 		{
 			obj->~Type();
 			UPoolAllocator::Release(obj);
 		}
-
+		/*
+		@ Date: 2024-02-03,  Writer: 박태현
+		@ Explain
+		- char 형만 따로 new 정의
+		*/
+		static _char* AllocBuffer(size_t _number) {
+			_char* p = static_cast<_char*>(UPoolAllocator::Alloc(_number));
+			return p;
+		}
+		/*
+		@ Date: 2024-02-03,  Writer: 박태현
+		@ Explain
+		- char 형만 따로 delete 정의 
+		*/
+		static void ReleaseBuffer(_char* obj)
+		{
+			UPoolAllocator::Release(obj);
+		}
+		/*
+		@ Date: 2024-02-03,  Writer: 박태현
+		@ Explain
+		- make_shared를 custom
+		*/
 		template<typename Type, typename... Args>
-		std::shared_ptr<Type> MakeShared(Args&&... args)
+		static std::shared_ptr<Type> MakeShared(Args&&... args)
 		{
 			return std::shared_ptr<Type>{ xnew<Type>(std::forward<Args>(args)...), xdelete<Type> };
 		}

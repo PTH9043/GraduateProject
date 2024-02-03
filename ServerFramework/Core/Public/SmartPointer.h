@@ -947,8 +947,7 @@ namespace Core {
 namespace std
 {
 	/*
-	@ Date: 2023-12-26
-	@ Writer: 박태현
+	@ Date: 2023-12-26,  Writer: 박태현
 	@ Explain
 	- HASH opeartor() 연산에 대한 SharedPtr 재정의, concurrent_ 컨테이너에 사용하기 위함
 	*/
@@ -959,8 +958,7 @@ namespace std
 		}
 	};
 	/*
-	@ Date: 2023-12-26
-	@ Writer: 박태현
+	@ Date: 2023-12-26,  Writer: 박태현
 	@ Explain
 	- Equal 연산에 대한 SharedPtr 재정의, concurrent_ 컨테이너에 사용하기 위함
 	*/
@@ -971,8 +969,7 @@ namespace std
 		}
 	};
 	/*
-	@ Date: 2023-12-26
-	@ Writer: 박태현
+	@ Date: 2023-12-26,  Writer: 박태현
 	@ Explain
 	- less 연산에 대한 SharedPtr 재정의, concurrent_ 컨테이너에 사용하기 위함
 	*/

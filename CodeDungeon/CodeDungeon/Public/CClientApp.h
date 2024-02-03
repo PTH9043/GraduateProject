@@ -19,6 +19,9 @@ public:
 public:
 	virtual void Free() override;
 	HRESULT NativeConstruct(const HINSTANCE& _hInst, const _uint& _iCmdShow);
+
+	static void ClientThread(void* _pData);
+
 	// Tick
 	void Render();
 	void KeyUpdate(WPARAM _wParam);

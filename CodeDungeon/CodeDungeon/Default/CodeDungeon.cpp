@@ -38,10 +38,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
     SHPTR<CClientApp>       spClientApp = nullptr;
     spClientApp = CreateNative<CClientApp>(hInstance, nCmdShow);
-
-    spClientApp->Render();
+    // 스레드 실행
+    spGameInstance->JoinRegister();
+    // spClientApp->Render();
     spClientApp.reset();
     spGameInstance.reset();
+    UGameInstance::DestroyInstance();
     return (_int)(0);
 }
 

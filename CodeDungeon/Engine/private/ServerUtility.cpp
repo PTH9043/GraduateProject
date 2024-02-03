@@ -30,7 +30,7 @@ SOCKET UServerMethods::CreateUdpSocket(_int _OverlappedValue)
 	return WSASocket(AF_INET, SOCK_STREAM, IPPROTO_UDP, NULL, 0, _OverlappedValue);
 }
 
-void UServerMethods::RecvTcpPacket(const SOCKET& _Socket, REF_OUT UOverExp& _OverExp)
+void UServerMethods::RecvTcpPacket(const SOCKET& _Socket, REF_IN UOverExp& _OverExp)
 {
 	DWORD recv_flag = 0;
 	_OverExp.RecvReset();
@@ -71,28 +71,28 @@ UNetworkAddress
 ===========================================================
 */
 
-UOverExp::UOverExp()
+UOverExp::UOverExp(COMP_TYPE _type)
 {
 	m_wsaBuffer.len = MAX_BUFFER_LENGTH;
 	m_wsaBuffer.buf = &m_Buffer[0];
-	m_CompType = OP_RECV;
+	m_CompType = _type;
 	ZeroMemory(&m_Over, sizeof(WSAOVERLAPPED));
 }
 
-UOverExp::UOverExp(_char* _Packet, const int _Size)
+UOverExp::UOverExp(_char* _Packet, const int _Size, COMP_TYPE _type)
 {
 	m_wsaBuffer.len = _Size;
 	m_wsaBuffer.buf = &m_Buffer[0];
-	m_CompType = OP_SEND;
+	m_CompType = _type;
 	ZeroMemory(&m_Over, sizeof(WSAOVERLAPPED));
 	memcpy(&m_Buffer[0], _Packet, _Size);
 }
 
-UOverExp::UOverExp(_char* _pPacket, _short _PacketType, _short _PacketSize)
+UOverExp::UOverExp(_char* _pPacket, _short _PacketType, _short _PacketSize, COMP_TYPE _type)
 {
 	m_wsaBuffer.len = _PacketSize + PACKETSIZE_SIZE;
 	m_wsaBuffer.buf = &m_Buffer[0];
-	m_CompType = OP_SEND;
+	m_CompType = _type;
 	ZeroMemory(&m_Over, sizeof(WSAOVERLAPPED));
 
 	PACKETHEAD Packet{ _PacketSize, _PacketType };
@@ -100,11 +100,11 @@ UOverExp::UOverExp(_char* _pPacket, _short _PacketType, _short _PacketSize)
 	::memcpy(&m_Buffer[PACKETHEAD_SIZE], _pPacket, _PacketSize);
 }
 
-void UOverExp::RecvReset()
+void UOverExp::RecvReset(COMP_TYPE _type)
 {
 	m_wsaBuffer.len = MAX_BUFFER_LENGTH;
 	m_wsaBuffer.buf = &m_Buffer[0];
-	m_CompType = OP_RECV;
+	m_CompType = _type;
 	ZeroMemory(&m_Over, sizeof(WSAOVERLAPPED));
 }
 

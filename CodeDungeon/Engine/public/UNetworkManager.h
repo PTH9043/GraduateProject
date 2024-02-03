@@ -1,20 +1,30 @@
 #pragma once 
 
-#include "ServerUtility.h"
+#include "UBase.h"
+#include "UProcessedData.h"
 
 BEGIN(Engine)
+class UNetworkBaseController;
 
+/*
+@ Date: 2024-02-03,  Writer: 박태현
+@ Explain
+- Network Data들을 모으고 처리하기 위한 Manager
+*/
 class UNetworkManager final : public UBase {
 public:
 	UNetworkManager();
 	NO_COPY(UNetworkManager)
 	DESTRUCTOR(UNetworkManager)
 public:
-	HRESULT ReadyNetwork(const _wstring& _wstrIPAddress, const _int _PortNumber);
+	HRESULT StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController);
+	void InsertProcessedDataToContainer(void* _pData, size_t _Size, _int _DataType);
+	void PopProcessedData(POINTER_IN UProcessedData* _pData);
 private:
 	virtual void Free() override;
 private:
-	SHPTR<UNetworkAddress>	m_spNetworkAddress;
+	SHPTR<UNetworkBaseController>		m_spNetworkBaseController;
+	CONQUEUE<UProcessedData>				m_ProcessedDataContainer;
 };
 
 END

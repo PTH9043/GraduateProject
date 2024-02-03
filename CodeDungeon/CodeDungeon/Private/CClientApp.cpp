@@ -39,7 +39,16 @@ HRESULT CClientApp::NativeConstruct(const HINSTANCE& _hInst, const _uint& _iCmdS
 	m_spTickTimer = m_spGameInstance->CreateTimerAdd(TICK_TIMER);
 	m_spRenderTimer = m_spGameInstance->CreateTimerAdd(RENDER_TIMER);
 	m_spRenderDeltaTimer = m_spGameInstance->CreateTimerAdd(RENDER_DELETATIMER);
+	// 클라이언트 스레드 등록
+	m_spGameInstance->RegisterFuncToRegister(ClientThread, this);
 	return S_OK;
+}
+
+void CClientApp::ClientThread(void* _pData)
+{
+	RETURN_CHECK(nullptr == _pData, ;);
+	CClientApp* pClient = static_cast<CClientApp*>(_pData);
+	pClient->Render();
 }
 
 void CClientApp::Render()

@@ -67,8 +67,7 @@ namespace Core
 	{
 		_uint Size = 16;
 		_uint TableIndex = 0;
-		MakeMemoryPool(16, REF_OUT TableIndex, 512, 16);
-		MakeMemoryPool(512, REF_OUT TableIndex, 1024, 32);
+		MakeMemoryPool(32, REF_OUT TableIndex, 1024, 32);
 		MakeMemoryPool(1024, REF_OUT TableIndex, 2048, 64);
 		MakeMemoryPool(2048 , REF_OUT TableIndex, 3072, 128);
 		MakeMemoryPool(3072, REF_OUT TableIndex, 5120, 256);

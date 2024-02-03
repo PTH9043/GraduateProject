@@ -53,10 +53,10 @@ namespace Engine {
 		_uint Size = 16;
 		_uint TableIndex = 0;
 	//	MakeMemoryPool(16, TableIndex, 512, 16);
-		MakeMemoryPool(32, TableIndex, 1024, 32);
-		MakeMemoryPool(1024, TableIndex, 2048, 64);
-		MakeMemoryPool(2048, TableIndex, 3072, 128);
-		MakeMemoryPool(3072, TableIndex, 5120, 256);
+		MakeMemoryPool(32, REF_OUT TableIndex, 1024, 32);
+		MakeMemoryPool(1024, REF_OUT TableIndex, 2048, 64);
+		MakeMemoryPool(2048, REF_OUT TableIndex, 3072, 128);
+		MakeMemoryPool(3072, REF_OUT  TableIndex, 5120, 256);
 	}
 
 	UMemoryAdminster::~UMemoryAdminster()
@@ -139,6 +139,9 @@ namespace Engine {
 	===========================================================
 	*/
 
+	/*
+	
+	*/
 	class MemoryGlobal {
 	public:
 		MemoryGlobal() : m_pMemoryAdiminster{ nullptr } {

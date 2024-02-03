@@ -103,6 +103,7 @@ static const char* CLONETYPE_ONCE_STRING{ "CLONETYPE_ONCE" };
 #include "EngineStruct.h"
 #include "EngineShaderParam.h"
 
+#include "UDelegate.h"
 
 #pragma endregion DX12
 

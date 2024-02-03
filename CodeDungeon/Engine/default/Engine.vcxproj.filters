@@ -241,6 +241,12 @@
     <Filter Include="99.Default\ImGui">
       <UniqueIdentifier>{af4a8a41-0a31-4c27-bf04-56b0c5b8d87c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="20.Network\NetBaseController">
+      <UniqueIdentifier>{651250be-40f1-44d3-b60a-7bf9447b8e7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="20.Network\ProcessedData">
+      <UniqueIdentifier>{a486d5be-e9c9-4f42-b6e4-7671fb4aeb56}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -441,9 +447,6 @@
     <ClCompile Include="..\private\UNetworkManager.cpp">
       <Filter>01.Manager\NetworkManager</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\UNetworkBaseController.cpp">
-      <Filter>20.Network</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\UThreadManager.cpp">
       <Filter>01.Manager\ThreadManager</Filter>
     </ClCompile>
@@ -470,6 +473,12 @@
     </ClCompile>
     <ClCompile Include="..\public\ImGui\imgui.cpp">
       <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UNetworkBaseController.cpp">
+      <Filter>20.Network\NetBaseController</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UProcessedData.cpp">
+      <Filter>20.Network\ProcessedData</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -695,9 +704,6 @@
     <ClInclude Include="..\public\UNetworkManager.h">
       <Filter>01.Manager\NetworkManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\UNetworkBaseController.h">
-      <Filter>20.Network</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\UThreadManager.h">
       <Filter>01.Manager\ThreadManager</Filter>
     </ClInclude>
@@ -730,6 +736,12 @@
     </ClInclude>
     <ClInclude Include="..\public\ImGui\imconfig.h">
       <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UNetworkBaseController.h">
+      <Filter>20.Network\NetBaseController</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UProcessedData.h">
+      <Filter>20.Network\ProcessedData</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

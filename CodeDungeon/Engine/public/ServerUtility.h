@@ -6,7 +6,7 @@ BEGIN(Engine)
 
 using BUFFER = ARRAY < _char, MAX_BUFFER_LENGTH>;
 
-enum COMP_TYPE { OP_ACCEPT, OP_RECV, OP_SEND};
+enum COMP_TYPE { OP_TCP_SEND, OP_UDP_SEND, OP_SEND_END , OP_TCP_RECV, OP_UDP_RECV};
 
 class UOverExp;
 class UNetworkAddress;
@@ -23,7 +23,7 @@ public:
 	static void RegisterIocpToSocket(const SOCKET& _Socket, const HANDLE& _IocpHandle);
 	static SOCKET CreateTcpSocket(_int _OverlappedValue = 0);
 	static SOCKET CreateUdpSocket(_int _OverlappedValue = 0);
-	static void RecvTcpPacket(const SOCKET& _Socket, REF_OUT UOverExp& _OverExp);
+	static void RecvTcpPacket(const SOCKET& _Socket, REF_IN UOverExp& _OverExp);
 	static void SendTcpPacket(const SOCKET& _Socket, UOverExp* _pOverExp);
 	static void StartNonBlocking(const SOCKET& _Socket);
 	static bool ServerToConnect(const SOCKET& _Socket, SOCKADDR_IN* _pSocketAddr);
@@ -46,16 +46,18 @@ UOverExp
 */
 class UOverExp {
 public:
-	UOverExp();
-	UOverExp(_char* _Packet, const int _Size);
-	UOverExp(_char* _pPacket, _short _PacketType, _short _PacketSize);
+	UOverExp(COMP_TYPE _type = OP_TCP_RECV);
+	UOverExp(_char* _Packet, const int _Size, COMP_TYPE _type = OP_TCP_SEND);
+	UOverExp(_char* _pPacket, _short _PacketType, _short _PacketSize, COMP_TYPE _type = OP_TCP_SEND);
 public:
-	void RecvReset();
+	void RecvReset(COMP_TYPE _type = OP_TCP_RECV);
 public: /* get set */
 	WSAOVERLAPPED* GetOverlappedPointer() { return &m_Over; }
 	WSABUF* GetWsaBuffPointer() { return &m_wsaBuffer; }
 	const BUFFER& GetBuffer() const { return m_Buffer; }
 	const COMP_TYPE& GetCompType() const { return m_CompType; }
+
+	_char* GetBufferAddress(int _start = 0) { return &m_Buffer[_start]; }
 private:
 	WSAOVERLAPPED		m_Over;
 	WSABUF						m_wsaBuffer;

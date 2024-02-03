@@ -10,7 +10,7 @@ using THREADLIST = LIST<THREAD>;
 /*
 @ Date: 2024-02-02, Writer: 박태현
 @ Explain
-- Thread를 관리하는 매니저 클래스
+- Thread를 관리하는 매니저 클래스, 등록된 함수들을 JOIN 혹은 Detach로 실행한다. 
 */
 class UThreadManager final : public UBase {
 public:

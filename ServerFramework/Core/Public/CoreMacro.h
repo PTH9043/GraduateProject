@@ -31,24 +31,29 @@
 #define REF_RETURN
 
 /*
-@ Date: 2023-12-28
-@ Writer: 박태현
+@ Date: 2023-12-28. Writer: 박태현
 @ Explain
 - 함수를 실행시킬 때,  Pointer를 통해 해당하는 변수의 값이 바뀔 수 있음을 나타냄
 */
 #define POINTER_OUT 
 
+
 /*
-@ Date: 2023-12-28
-@ Writer: 박태현
+@ Date: 2023-12-28,  Writer: 박태현
+@ Explain
+- 함수를 정의할 때,  Pointer를 통해 해당하는 변수의 값이 바뀔 수 있음을 나타냄
+*/
+#define POINTER_IN
+
+/*
+@ Date: 2023-12-28, Writer: 박태현
 @ Explain
 - 읽기 전용 변수를 나타낸다.
 */
 #define READONLY
 
 /*
-@ Date: 2023-12-30
-@ Writer: 박태현
+@ Date: 2023-12-30, Writer: 박태현
 @ Explain
 - 가상함수라는 것을 나타내는 매크로
 */
@@ -88,8 +93,7 @@
 */
 
 /*
-@ Date: 2023-12-26
-@ Writer: 박태현
+@ Date: 2023-12-26, Writer: 박태현
 @ Explain
 - 강제로 크래쉬를 일으키는 매크로
 */
@@ -111,8 +115,7 @@
 
 
 /*
-@ Date: 2023-12-26
-@ Writer: 박태현
+@ Date: 2023-12-26, Writer: 박태현
 @ Explain
 - DEBUG_MACRO를 위한 FILE_LINE_FUNCTION등을 정의 
 */
@@ -130,8 +133,7 @@ typeid(x).name() , __LINE__, __FUNCTION__
 
 
 /*
-@ Date: 2023-12-26
-@ Writer: 박태현
+@ Date: 2023-12-26, Writer: 박태현
 @ Explain
 - NO_COPY 매크로가 존재하면 복제 불가한 클래스라는 말이다. 
 */
@@ -141,16 +143,14 @@ ClassName(const ClassName&) = delete;					\
 ClassName& operator=(const ClassName&) = delete; 
 
 /*
-@ Date: 2023-12-26
-@ Writer: 박태현
+@ Date: 2023-12-26, Writer: 박태현
 @ Explain
 - 소멸자에 Free를 호출하게 만드는 매크로
 */
 #define DESTRUCTOR(ClassName) virtual ~ClassName() {Free();}
 
 /*
-@ Date: 2023-12-26
-@ Writer: 박태현
+@ Date: 2023-12-26, Writer: 박태현
 @ Explain
 - 헤더파일에 싱글톤에 사용할 함수와 변수를 정의
 */
@@ -163,8 +163,7 @@ private:												\
 	static SHPTR<ClassName> m_pInstance;
 
 /*
-@ Date: 2023-12-26
-@ Writer: 박태현
+@ Date: 2023-12-26, Writer: 박태현
 @ Explain
 - 헤더파일에서 정의한 함수와 변수를 CPP파일에서 초기화 그리고 정의하여 싱글톤이 되도록한다. 
 */
@@ -179,8 +178,7 @@ SHPTR<ClassName> ClassName::GetInstance()					\
 void ClassName::DestoryInstance(){  m_pInstance.reset(); }		
 
 /*
-@ Date: 2023-12-26
-@ Writer: 박태현
+@ Date: 2023-12-26, Writer: 박태현
 @ Explain
 - 싱글톤 클래스의 값을 받아오는 매크로
 */
@@ -196,8 +194,7 @@ void ClassName::DestoryInstance(){  m_pInstance.reset(); }
 */
 
 /*
-@ Date: 2024-01-01
-@ Writer: 박태현
+@ Date: 2024-01-01, Writer: 박태현
 @ Explain
 - TypeList를 생성하기 위한 매크로 
 */
@@ -243,16 +240,14 @@ void ClassName::DestoryInstance(){  m_pInstance.reset(); }
 */
 
 /*
-@ Date: 2023-12-26
-@ Writer: 박태현
+@ Date: 2023-12-26, Writer: 박태현
 @ Explain: namespace의 시작과 끝을 구분하는 영역 지정
 */
 #define BEGIN(NAME) namespace NAME{
 #define END }
 
 /*
-@ Date: 2023-12-26
-@ Writer: 박태현
+@ Date: 2023-12-26, Writer: 박태현
 @ Explain: 조건에 맞으면 리턴하는 메크로
 */
 #define RETURN_CHECK(SITUATION, RETURN) if(SITUATION) return RETURN;

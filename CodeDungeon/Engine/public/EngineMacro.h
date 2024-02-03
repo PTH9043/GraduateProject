@@ -89,11 +89,58 @@ virtual ~CLASS() { Free(); }
 
 
 /*
-@ Date: 2023-12-28, Writer: 박태현
+@ Date: 2024-02-03,  Writer: 박태현
 @ Explain
 - 레퍼런스 함수를 리턴하는 경우를 나타낸다.
 */
 #define REF_RETURN
+
+/*
+@ Date: 2024-02-03,  Writer: 박태현
+@ Explain
+- 함수를 실행시킬 때,  Pointer를 통해 해당하는 변수의 값이 바뀔 수 있음을 나타냄
+*/
+#define POINTER_OUT 
+
+
+/*
+@ Date: 2024-02-03,  Writer: 박태현
+@ Explain
+- 함수를 정의할 때,  Pointer를 통해 해당하는 변수의 값이 바뀔 수 있음을 나타냄
+*/
+#define POINTER_IN
+
+/*
+@ Date: 2024-02-03,  Writer: 박태현
+@ Explain
+- 가상함수라는 것을 나타내는 매크로
+*/
+#define PURE = 0
+
+/*
+@ Date: 2024-02-03,  Writer: 박태현
+@ Explain
+- 강제로 크래쉬를 일으키는 매크로
+*/
+#define CRASH(cause) 	\
+{											\
+	int* crash = nullptr;				\
+	__analysis_assume(crash != nullptr);	\
+	*crash = 0xDEADBEEF;					\
+}
+/*
+@ Date: 2024-02-03,  Writer: 박태현
+@ Explain
+- 강제로 크래쉬를 일으키는 매크로, 조건문이 false일 때 실행
+*/
+#define ASSERT_CRASH(COND) \
+{									\
+	if (!(COND))					\
+	{								\
+		CRASH("ASSERT_CRASH");		\
+		__analysis_assume(COND);	\
+	}								\
+}
 
 
 #pragma endregion 바꿔야하는구간

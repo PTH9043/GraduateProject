@@ -65,6 +65,7 @@
     <ClInclude Include="..\public\UNetworkManager.h" />
     <ClInclude Include="..\public\UPawn.h" />
     <ClInclude Include="..\public\UPipeLine.h" />
+    <ClInclude Include="..\public\UProcessedData.h" />
     <ClInclude Include="..\public\URectTransform.h" />
     <ClInclude Include="..\public\URenderer.h" />
     <ClInclude Include="..\public\URenderTargetManager.h" />
@@ -143,6 +144,7 @@
     <ClCompile Include="..\private\UNetworkManager.cpp" />
     <ClCompile Include="..\private\UPawn.cpp" />
     <ClCompile Include="..\private\UPipeLine.cpp" />
+    <ClCompile Include="..\private\UProcessedData.cpp" />
     <ClCompile Include="..\private\URectTransform.cpp" />
     <ClCompile Include="..\private\URenderer.cpp" />
     <ClCompile Include="..\private\URenderTargetManager.cpp" />

@@ -35,10 +35,13 @@ namespace Engine
 		{ t->NativeConstruct(args...) } -> std::same_as<HRESULT>;
 	};
 
+
+	/*
+	@ Date: 2024-02-03, Writer: 박태현
+	@ Explain: 해당하는 Template가 숫자인지 확인
+	*/
 	template<class T>
-	concept CheckNumber = std::is_same_v<T, unsigned int> || std::is_same_v<T, float> || std::is_same_v<T, short> || std::is_same_v<T, long> ||
-		std::is_same_v<T, unsigned short> || std::is_same_v<T, int> || std::is_same_v<T, unsigned long> || std::is_same_v<T, unsigned long long>
-		|| std::is_same_v<T, long long> || std::is_same_v<T, unsigned char> || std::is_same_v<T, signed char>;
+	concept CheckNumber = std::is_integral_v<T> || std::is_floating_point_v<T>;
 
 	template<class T>
 	concept CheckAtomicNumber = std::is_same_v<T, std::atomic<unsigned int>> || std::is_same_v<T, std::atomic<float>>
