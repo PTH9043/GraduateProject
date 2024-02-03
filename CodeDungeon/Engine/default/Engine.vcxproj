@@ -26,6 +26,7 @@
     <ClInclude Include="..\public\EngineFunction.h" />
     <ClInclude Include="..\public\EngineMacro.h" />
     <ClInclude Include="..\public\EngineMake.h" />
+    <ClInclude Include="..\public\EnginePacket.h" />
     <ClInclude Include="..\public\EngineShaderParam.h" />
     <ClInclude Include="..\public\EngineStruct.h" />
     <ClInclude Include="..\public\EngineTypedef.h" />
@@ -52,7 +53,7 @@
     <ClInclude Include="..\public\ULoader.h" />
     <ClInclude Include="..\public\UMeshContainer.h" />
     <ClInclude Include="..\public\UModel.h" />
-    <ClInclude Include="..\public\UNetworkAdiminster.h" />
+    <ClInclude Include="..\public\UNetworkBaseController.h" />
     <ClInclude Include="..\public\UNetworkManager.h" />
     <ClInclude Include="..\public\UPawn.h" />
     <ClInclude Include="..\public\UPipeLine.h" />
@@ -130,7 +131,7 @@
     <ClCompile Include="..\private\ULoader.cpp" />
     <ClCompile Include="..\private\UMeshContainer.cpp" />
     <ClCompile Include="..\private\UModel.cpp" />
-    <ClCompile Include="..\private\UNetworkAdiminster.cpp" />
+    <ClCompile Include="..\private\UNetworkBaseController.cpp" />
     <ClCompile Include="..\private\UNetworkManager.cpp" />
     <ClCompile Include="..\private\UPawn.cpp" />
     <ClCompile Include="..\private\UPipeLine.cpp" />

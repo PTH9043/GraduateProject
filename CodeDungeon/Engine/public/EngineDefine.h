@@ -77,7 +77,7 @@
 #include <concurrent_queue.h>
 #include <concurrent_vector.h>
 
-
+#include "EnginePacket.h"
 #include "EngineConcept.h"
 #include "UDelegate.h"
 #include "EngineTypedef.h"

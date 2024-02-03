@@ -438,7 +438,7 @@
     <ClCompile Include="..\private\UNetworkManager.cpp">
       <Filter>01.Manager\NetworkManager</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\UNetworkAdiminster.cpp">
+    <ClCompile Include="..\private\UNetworkBaseController.cpp">
       <Filter>20.Network</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UThreadManager.cpp">
@@ -671,7 +671,7 @@
     <ClInclude Include="..\public\UNetworkManager.h">
       <Filter>01.Manager\NetworkManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\UNetworkAdiminster.h">
+    <ClInclude Include="..\public\UNetworkBaseController.h">
       <Filter>20.Network</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UThreadManager.h">
@@ -679,6 +679,9 @@
     </ClInclude>
     <ClInclude Include="..\public\UWorkThread.h">
       <Filter>03.Utility\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EnginePacket.h">
+      <Filter>99.Default</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

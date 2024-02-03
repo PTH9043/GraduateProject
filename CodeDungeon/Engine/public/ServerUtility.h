@@ -9,7 +9,7 @@ using BUFFER = ARRAY < _char, MAX_BUFFER_LENGTH>;
 enum COMP_TYPE { OP_ACCEPT, OP_RECV, OP_SEND};
 
 class UOverExp;
-
+class UNetworkAddress;
 /*
 @ Date: 2024-02-02, Writer: 박태현
 @ Explain
@@ -17,11 +17,17 @@ class UOverExp;
 */
 class UServerMethods {
 public:
-	static _bool InitConnection(WSADATA* _pWsaData);
+	// wsa를 통해서 서버와 연결할 준비를 하는 함수 
+	static _bool ReadyConnectToServer(WSADATA* _pWsaData);
 	static HANDLE CreateIocpHandle();
-	static SOCKET CreateTcpSocket();
-	static SOCKET CreateUdpSocket();
+	static void RegisterIocpToSocket(const SOCKET& _Socket, const HANDLE& _IocpHandle);
+	static SOCKET CreateTcpSocket(_int _OverlappedValue = 0);
+	static SOCKET CreateUdpSocket(_int _OverlappedValue = 0);
+	static void RecvTcpPacket(const SOCKET& _Socket, REF_OUT UOverExp& _OverExp);
+	static void SendTcpPacket(const SOCKET& _Socket, UOverExp* _pOverExp);
+	static void StartNonBlocking(const SOCKET& _Socket);
 	static bool ServerToConnect(const SOCKET& _Socket, SOCKADDR_IN* _pSocketAddr);
+	static bool ServerToConnect(const SOCKET& _Socket, CSHPTRREF<UNetworkAddress> _spNetworkAddress);
 public:
 	static constexpr _int ADDR_SIZE{ sizeof(SOCKADDR_IN) + 16 };
 };
@@ -42,6 +48,14 @@ class UOverExp {
 public:
 	UOverExp();
 	UOverExp(_char* _Packet, const int _Size);
+	UOverExp(_char* _pPacket, _short _PacketType, _short _PacketSize);
+public:
+	void RecvReset();
+public: /* get set */
+	WSAOVERLAPPED* GetOverlappedPointer() { return &m_Over; }
+	WSABUF* GetWsaBuffPointer() { return &m_wsaBuffer; }
+	const BUFFER& GetBuffer() const { return m_Buffer; }
+	const COMP_TYPE& GetCompType() const { return m_CompType; }
 private:
 	WSAOVERLAPPED		m_Over;
 	WSABUF						m_wsaBuffer;
@@ -70,6 +84,7 @@ public:
 	DESTRUCTOR(UNetworkAddress)
 public:
 	SOCKADDR_IN& GetSockAddr(REF_RETURN) { return m_SocketAddr; }
+	SOCKADDR_IN* GetSockAddrPointer()  { return &m_SocketAddr; }
 	const _uint GetPortNumber() const { return m_PortNumber; }
 	const _wstring& GetIPAddress() const { return m_wstrIPAddress; }
 private:

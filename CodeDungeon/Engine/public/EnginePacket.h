@@ -1,7 +1,6 @@
-#ifndef _SERVERFRAMEWORK_CORE_PUBLIC_COREPAKCET_H
-#define _SERVERFRAMEWORK_CORE_PUBLIC_COREPAKCET_H
+#pragma once
 
-namespace Core
+namespace Engine
 {
 	enum
 	{
@@ -11,7 +10,7 @@ namespace Core
 	};
 
 	/*
-	@ Data: 2023-12-22, Writer: 박태현
+	@ Data: 2024-02-03, Writer: 박태현
 	@ Explain
 	- Packet의 앞쪽 부분을 담당하는 Head 부분이다.
 	*/
@@ -26,5 +25,3 @@ namespace Core
 	constexpr static unsigned int PACKETHEAD_SIZE{ sizeof(PACKETHEAD) };
 	constexpr static unsigned int PACKETSIZE_SIZE{ sizeof(short) };
 }
-
-#endif // _SERVERFRAMEWORK_CORE_PUBLIC_COREPAKCET_H
