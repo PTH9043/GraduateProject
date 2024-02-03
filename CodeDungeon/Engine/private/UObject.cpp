@@ -17,7 +17,8 @@ HRESULT UObject::NativeConstruct()
 	return S_OK;
 }
 
-//#ifdef _USE_IMGUI
-//void UObject::ShowObjectInfo()
-//{
-//}
+#ifdef _USE_IMGUI
+void UObject::ShowObjectInfo()
+{
+}
+#endif

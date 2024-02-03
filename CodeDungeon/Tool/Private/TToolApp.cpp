@@ -2,6 +2,7 @@
 #include "TToolApp.h"
 #include "UGameInstance.h"
 #include "UTimer.h"
+#include "TImGuiManager.h"
 #include "TMainCamera.h"
 #include "TTestObject.h"
 #include "TMainScene.h"
@@ -11,7 +12,7 @@ TToolApp::TToolApp() :
 	m_hwnd{ NULL },
 	m_dRenderTick{ 0.0 },
 	m_spGameInstance{ nullptr },
-	//m_spImGuiManager{ nullptr },
+	m_spImGuiManager{ nullptr },
 	m_spTickTimer{ nullptr },
 	m_spDeltaTimer{ nullptr },
 	m_spRenderTimer{ nullptr },
@@ -32,7 +33,7 @@ void TToolApp::Free()
 HRESULT TToolApp::NativeConstruct(const HWND& _hWnd, const HINSTANCE& _hInst)
 {
 	m_spGameInstance = GET_INSTANCE(UGameInstance);
-	//m_spImGuiManager = GET_INSTANCE(TImGuiManager);
+	m_spImGuiManager = GET_INSTANCE(TImGuiManager);
 	/* Graphic Desc */
 	GRAPHICDESC	stGraphicDesc;
 	{
@@ -59,7 +60,7 @@ HRESULT TToolApp::NativeConstruct(const HWND& _hWnd, const HINSTANCE& _hInst)
 	// Register 
 	m_spGameInstance->RegisterScene(CreateConstructorNative<TMainScene>(stOutputData.wpDevice.lock()));
 	// ReadyManager
-	//RETURN_CHECK_FAILED(m_spImGuiManager->ReadyManager(stGraphicDesc, stOutputData), E_FAIL);
+	RETURN_CHECK_FAILED(m_spImGuiManager->ReadyManager(stGraphicDesc, stOutputData), E_FAIL);
 
 	m_spDeltaTimer = m_spGameInstance->CreateTimerAdd(DELTA_TIMER);
 	m_spTickTimer = m_spGameInstance->CreateTimerAdd(TICK_TIMER);
@@ -93,13 +94,13 @@ void TToolApp::Tick()
 		m_spGameInstance->AwakeTick();
 		// Tick 
 		m_spGameInstance->Tick(m_dDeltaTime);
-	//	m_spImGuiManager->Tick(m_dDeltaTime);
+		m_spImGuiManager->Tick(m_dDeltaTime);
 		// LateTick
 		m_spGameInstance->LateTick(m_dDeltaTime);
-		//m_spImGuiManager->LateTick(m_dDeltaTime);
+		m_spImGuiManager->LateTick(m_dDeltaTime);
 
 		m_spGameInstance->RenderBegin();
-	//	m_spImGuiManager->Render();
+		m_spImGuiManager->Render();
 		m_spGameInstance->RenderEnd();
 		m_dDeltaTime = 0;
 	}
