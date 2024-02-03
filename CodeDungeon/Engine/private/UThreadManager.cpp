@@ -1,7 +1,7 @@
 #include "EngineDefine.h"
 #include "UThreadManager.h"
 
-UThreadManager::UThreadManager() : m_RegisterThreadContainer{}, m_BackgroundThreadContainer{}
+UThreadManager::UThreadManager() : m_RegisterThreadContainer{}/*, m_BackgroundThreadContainer{}*/
 {
 }
 

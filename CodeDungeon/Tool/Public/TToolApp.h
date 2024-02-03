@@ -28,7 +28,7 @@ private:
 	_double									m_dRenderTick;
 
 	SHPTR<UGameInstance>	m_spGameInstance;
-	//SHPTR<TImGuiManager>	m_spImGuiManager;
+	SHPTR<TImGuiManager>	m_spImGuiManager;
 
 	SHPTR<UTimer>					m_spTickTimer;
 	SHPTR<UTimer>					m_spDeltaTimer;

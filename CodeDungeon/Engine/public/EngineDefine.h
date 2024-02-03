@@ -22,6 +22,19 @@
 
 #pragma comment (lib, "libxl")
 
+#define _USE_IMGUI
+#include "ImGui/imgui.h"
+#include "ImGui/imgui_impl_win32.h"
+#include "ImGui/imgui_impl_dx12.h"
+#include "ImGui/imgui_internal.h"
+#include "ImGui/imstb_rectpack.h"
+#include "ImGui/imstb_textedit.h"
+#include "ImGui/imstb_truetype.h"
+
+static const char* CLONETYPE_STRING{ "CloneType" };
+static const char* CLONETYPE_STATIC_STRING{ "CLONETYPE_STATIC" };
+static const char* CLONETYPE_ONCE_STRING{ "CLONETYPE_ONCE" };
+
 // Use Atomic Shared PTr
 #define _USE_ATOMIC
 // Use Debugging Values

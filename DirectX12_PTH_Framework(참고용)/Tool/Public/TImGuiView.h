@@ -36,7 +36,6 @@ public:
 			const ImVec2& _v2Size = ImVec2(0.f, 0.f))
 			: strName(_strName), MAINDESC(_imGuiFlags, _imgDockNodeFlags, _v2StartPos, _v2Size)
 		{}
-
 		_string								strName{ "" };
 	}DOCKDESC;
 public:

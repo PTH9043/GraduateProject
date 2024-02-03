@@ -38,6 +38,18 @@
     <Filter Include="98.Defines">
       <UniqueIdentifier>{29413899-746b-4cf3-9492-35009ea7a7d3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.ImGui">
+      <UniqueIdentifier>{a15e2982-0c86-49a7-9423-09f3f75a35d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Manager">
+      <UniqueIdentifier>{8a9cc8b2-ff5a-423b-9483-d0b8819b2628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Default\ImGui">
+      <UniqueIdentifier>{8e6a5e89-062b-45be-9d9a-7d087c633a9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.ImGui\MainView">
+      <UniqueIdentifier>{987c6277-00f6-4811-a06e-ab18cd254282}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ToolDefines.h">
@@ -85,6 +97,39 @@
     <ClInclude Include="..\Public\TAssimpChannel.h">
       <Filter>97.AssimpLoad\Animation\Channel</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\ImGui\imconfig.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui\imgui.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui\imgui_impl_dx12.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui\imgui_impl_win32.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui\imgui_internal.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui\imstb_rectpack.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui\imstb_textedit.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui\imstb_truetype.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TImGuiManager.h">
+      <Filter>01.Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TMainView.h">
+      <Filter>03.ImGui\MainView</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TImGuiView.h">
+      <Filter>03.ImGui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\TToolApp.cpp">
@@ -116,6 +161,36 @@
     </ClCompile>
     <ClCompile Include="..\Private\TAssimpChannel.cpp">
       <Filter>97.AssimpLoad\Animation\Channel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGui\imgui.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGui\imgui_demo.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGui\imgui_draw.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGui\imgui_impl_dx12.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGui\imgui_impl_win32.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGui\imgui_tables.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGui\imgui_widgets.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TImGuiView.cpp">
+      <Filter>03.ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TMainView.cpp">
+      <Filter>03.ImGui\MainView</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TImGuiManager.cpp">
+      <Filter>01.Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
