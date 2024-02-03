@@ -750,5 +750,11 @@
     <FxCompile Include="..\..\Shader\BlendDeffered.hlsl">
       <Filter>98.ShaderFile\RTS</Filter>
     </FxCompile>
+    <FxCompile Include="..\..\Shader\AnimModel.hlsl">
+      <Filter>98.ShaderFile\Common\NonAlpha</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\Model.hlsl">
+      <Filter>98.ShaderFile\Common\NonAlpha</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
