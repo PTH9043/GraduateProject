@@ -238,6 +238,9 @@
     <Filter Include="03.Utility\Thread">
       <UniqueIdentifier>{d5eec6f4-ca46-431b-9276-38d887215866}</UniqueIdentifier>
     </Filter>
+    <Filter Include="99.Default\ImGui">
+      <UniqueIdentifier>{af4a8a41-0a31-4c27-bf04-56b0c5b8d87c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -446,6 +449,27 @@
     </ClCompile>
     <ClCompile Include="..\private\UWorkThread.cpp">
       <Filter>03.Utility\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\public\ImGui\imgui_widgets.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\public\ImGui\imgui_tables.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\public\ImGui\imgui_impl_win32.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\public\ImGui\imgui_impl_dx12.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\public\ImGui\imgui_draw.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\public\ImGui\imgui_demo.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\public\ImGui\imgui.cpp">
+      <Filter>99.Default\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -682,6 +706,30 @@
     </ClInclude>
     <ClInclude Include="..\public\EnginePacket.h">
       <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ImGui\imstb_truetype.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ImGui\imstb_textedit.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ImGui\imstb_rectpack.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ImGui\imgui_internal.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ImGui\imgui_impl_win32.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ImGui\imgui_impl_dx12.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ImGui\imgui.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ImGui\imconfig.h">
+      <Filter>99.Default\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
