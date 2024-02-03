@@ -90,7 +90,6 @@ UGameInstance::UGameInstance() :
 
 UGameInstance::~UGameInstance()
 {
-	//Free();
 }
 
 void UGameInstance::Free()
@@ -742,6 +741,8 @@ HRESULT UGameInstance::LoadFirstFilder(const _wstring& _wstrFilePath)
 }
 
 /*
+==================================================
+FilePath
 ==================================================
 ReadyDatas
 ==================================================

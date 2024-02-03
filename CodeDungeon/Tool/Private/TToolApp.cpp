@@ -27,7 +27,8 @@ TToolApp::TToolApp() :
 
 void TToolApp::Free()
 {
-
+	m_spImGuiManager.reset();
+	TImGuiManager::DestroyInstance();
 }
 
 HRESULT TToolApp::NativeConstruct(const HWND& _hWnd, const HINSTANCE& _hInst)

@@ -27,6 +27,7 @@ ClassName& operator=(const ClassName&) = delete;
 		NO_COPY(ClassName)								\
 public :												\
 	static  SHPTR<ClassName> GetInstance();					\
+	static void DestroyInstance() { m_pInstance.reset(); }\
 private:												\
 	static SHPTR<ClassName> m_pInstance;
 

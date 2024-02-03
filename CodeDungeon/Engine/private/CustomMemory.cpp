@@ -1,5 +1,6 @@
 #include "EngineDefine.h"
 #include "CustomMemory.h"
+#include "UGameInstance.h"
 
 namespace Engine {
 
@@ -152,7 +153,7 @@ namespace Engine {
 	private:
 		UMemoryAdminster* m_pMemoryAdiminster;
 	};
-	MemoryGlobal MGlobal;
+	static MemoryGlobal MGlobal;
 
 	void* UPoolAllocator::Alloc(size_t _size)
 	{

@@ -210,7 +210,6 @@ public: /* FilePath Manager*/
 	SHPTR<FILEGROUP> FindFolder(const PATHS& _vecFolderList);
 	SHPTR<FILEGROUP>	FindFolder(const _wstring& _wstrFindName, const _wstring& _wstrParentsFolderName = L"");
 	HRESULT LoadFirstFilder(const _wstring& _wstrFilePath);
-
 private: /* Ready Datas */
 	HRESULT ReadyResource(const OUTPUTDATA& _stData);
 	HRESULT ReadyComp(const OUTPUTDATA& _stData);
@@ -240,7 +239,6 @@ private:
 	//SHPTR<UPicking>									m_spPicking;
 
 	//SHPTR<URandomManager>				m_spRandomManager;
-	
 };
 
 END
