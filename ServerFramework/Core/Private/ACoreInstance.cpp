@@ -131,6 +131,7 @@ namespace Core
 	void ACoreInstance::Free()
 	{
 		LOCKGUARD<MUTEX> Lock{ m_Mutex };
+		m_spService.reset();
 		m_spSpaceManager.reset();
 		m_spRandomManager.reset();
 		m_spLogManager.reset();

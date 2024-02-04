@@ -5,15 +5,6 @@
 
 namespace Core {
 	/*
-	@ Date: 2024-02-04, Writer: 박태현
-	@ Explain
-	-  기본 메모리 사이즈 (Memory Pool 최적화를 위함)
-	*/
-	enum
-	{
-		BASE_ALLOC_SIZE = 16
-	};
-	/*
 	@ Date: 2023-12-31
 	@ Writer: 박태현
 	@ Explain
@@ -85,9 +76,11 @@ namespace Core {
 	class CORE_DLL AMemoryAdiminstor {
 		enum
 		{
-			POOL_COUNT = 350,
-			MAX_ALLOC_SIZE = BASE_ALLOC_SIZE * POOL_COUNT
+			POOL_COUNT = (512 / 16) + (1024 / 32) + (1024 / 128) + (2048 / 256),
+			MAX_ALLOC_SIZE = 4608
 		};
+		using POOLTABLE = std::array<AMemoryPool*, MAX_ALLOC_SIZE + 1>;
+		using MEMORYTABLE = std::array<AMemoryPool*, POOL_COUNT>;
 	public:
 		AMemoryAdiminstor();
 		~AMemoryAdiminstor();
@@ -96,12 +89,13 @@ namespace Core {
 		void Release(void* _Ptr);
 
 	private:
-		void MakeMemoryPool(_uint _Size, const _uint _Limited, const _uint _AddValue);
+		void MakeMemoryPool(unsigned int& _Size, unsigned int& _MemoryIndex,
+			unsigned int& _TableIndex, const unsigned int  _Limited, const 	unsigned int  _AddValue);
 
 	private:
 		// 메모리를 빠르게 찾기 위한 풀 테이블이다. 
-		ARRAY<AMemoryPool*, POOL_COUNT>		m_PoolTable;
-		CONUNORMAP<_ullong, int>							m_KeyTable;
+		POOLTABLE			m_PoolTable;
+		MEMORYTABLE	m_MemoryTable;
 	};
 
 }

@@ -77,7 +77,7 @@ protected:
 	virtual void LateTickActive(const _double& _dTimeDetla) PURE;
 	virtual void RenderActive() PURE;
 	// 해당하는 함수가 있어야지 삭제함  @Writer: 박태현
-	void ActiveReleaseResource();
+	void ActiveResetSceneData();
 private:
 	void TickNonActive(const _double& _dTimeDelta) {}
 	void LateTickNonActive(const _double& _dTimeDelta) {}
@@ -91,8 +91,8 @@ private:
 	SHPTR<UGameInstance>	m_spGameInstance;
 
 	_string									m_strName;
-	_bool									m_isOpen;
-	_bool									m_isActive;
+	_bool										m_isOpen;
+	_bool										m_isActive;
 
 };
 

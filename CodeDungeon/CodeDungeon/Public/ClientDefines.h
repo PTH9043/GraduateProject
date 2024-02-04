@@ -43,6 +43,6 @@ namespace Client
 
 #include "ClientProto.h"
 
-static const _string IP_ADDRESS{ "127.0.0.1" };
+static const char* IP_ADDRESS{ "127.0.0.1" };
 
 using namespace Client;

@@ -52,12 +52,12 @@ void UAnimation::Free()
 
 HRESULT UAnimation::NativeConstruct(CSHPTRREF<UAnimModel> _spAnimModel, const ANIMDESC& _stAnimDesc)
 {
-	m_iNumChannels = static_cast<_uint>(_stAnimDesc.vecChannels.size());
+	m_iNumChannels = static_cast<_uint>(_stAnimDesc.Channels.size());
 	m_dDuration = _stAnimDesc.stExtraData.dDuration;
 	m_dTickPerSeconds = _stAnimDesc.stExtraData.dTickPerSeconds;
 	m_wstrName = _stAnimDesc.wstrName;
 	m_Channels.reserve(m_iNumChannels);
-	for (auto& iter : _stAnimDesc.vecChannels)
+	for (auto& iter : _stAnimDesc.Channels)
 	{
 		SHPTR<UChannel> pChannel{ CreateNative<UChannel>(_spAnimModel, iter) };
 		m_Channels.push_back(pChannel);
@@ -132,34 +132,34 @@ Save
 */
 void UAnimation::SaveSections(const _wstring& _wstrPath)
 {
-	std::wofstream Saves{ _wstrPath, std::ios::binary };
+	std::ofstream Saves{ _wstrPath.c_str(), std::ios::binary};
 	RETURN_CHECK(!Saves, ;);
 
 	_uint iFastSection = static_cast<_uint>(m_AnimFastSections.size());
 	// Save Fast Section 
-	Saves.write((_tchar*)&iFastSection, sizeof(_uint));
-	Saves.write((_tchar*)&m_AnimFastSections, sizeof(ANIMFASTSECTION) * iFastSection);
+	Saves.write((_char*)&iFastSection, sizeof(_uint));
+	Saves.write((_char*)&m_AnimFastSections, sizeof(ANIMFASTSECTION) * iFastSection);
 	// Save Clip Section
 	_uint iClipSection = static_cast<_uint>(m_AnimClipSection.size());
 	// Save Clip Section
-	Saves.write((_tchar*)&iClipSection, sizeof(_uint));
-	Saves.write((_tchar*)&m_AnimClipSection, sizeof(ANIMCLIPSECTION) * iClipSection);
+	Saves.write((_char*)&iClipSection, sizeof(_uint));
+	Saves.write((_char*)&m_AnimClipSection, sizeof(ANIMCLIPSECTION) * iClipSection);
 }
 
 void UAnimation::LoadSections(const _wstring& _wstrPath)
 {
-	std::wifstream Read{ _wstrPath, std::ios::binary };
+	std::ifstream Read{ _wstrPath.c_str(), std::ios::binary};
 	RETURN_CHECK(!Read, ;);
 
 	_uint iFastSection{ 0 };
-	Read.read((_tchar*)&iFastSection, sizeof(_uint));
+	Read.read((_char*)&iFastSection, sizeof(_uint));
 	m_AnimFastSections.resize(iFastSection);
-	Read.read((_tchar*)&m_AnimFastSections, sizeof(ANIMFASTSECTION) * iFastSection);
+	Read.read((_char*)&m_AnimFastSections, sizeof(ANIMFASTSECTION) * iFastSection);
 
 	_uint iClipSection{ 0 };
-	Read.read((_tchar*)&iClipSection, sizeof(_uint));
+	Read.read((_char*)&iClipSection, sizeof(_uint));
 	m_AnimClipSection.resize(iClipSection);
-	Read.read((_tchar*)&m_AnimClipSection, sizeof(ANIMCLIPSECTION) * iClipSection);
+	Read.read((_char*)&m_AnimClipSection, sizeof(ANIMCLIPSECTION) * iClipSection);
 }
 
 /*

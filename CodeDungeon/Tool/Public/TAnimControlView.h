@@ -22,7 +22,6 @@ public:
 	virtual void Free() override;
 
 	virtual HRESULT NativeConstruct() override;
-	void InsertImGuiView(const CSHPTRREF<TImGuiView> _spImGuiView);
 protected:
 	virtual HRESULT LoadResource() override;
 	virtual HRESULT ReleaseResource() override;
@@ -30,9 +29,10 @@ protected:
 	virtual void LateTickActive(const _double& _dTimeDetla) override;
 	virtual void RenderActive() override;
 private:
-	void RenderMenu();
+	void DockBuildInitSetting();
 private:
-	MAINDESC													m_stMainDesc;
+	MAINDESC					m_stMainDesc;
+	_bool							m_isInitSetting;
 };
 
 END

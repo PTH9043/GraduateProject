@@ -52,7 +52,7 @@ HRESULT URenderTargetManager::AddRenderTargetGroup(const RTGROUPID& _eGroupID, c
     if (find != m_RenderTargetGroups.end())
         return E_FAIL;
 
-    std::vector<RENDERTARGET> rtGroups{};
+    VECTOR<RENDERTARGET> rtGroups{};
     rtGroups.reserve(_rtVec.size());
 
     for (const RTDESC& iter : _rtVec) {

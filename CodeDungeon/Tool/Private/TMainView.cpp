@@ -7,7 +7,7 @@ TMainView::TMainView(CSHPTRREF<UDevice> _spDevice) :
     TImGuiView(_spDevice, "MainView"),
     m_stMainDesc{},
     m_stDebuggingView{},
-    m_vecOpenImGuies{},
+    m_OpenImGuies{},
     m_dShowDeltaTime{ 0.0 },
     m_isDockBuilding{ false }
 {
@@ -47,7 +47,7 @@ HRESULT TMainView::ReleaseResource()
 void TMainView::TickActive(const _double& _dTimeDelta)
 {
     m_dShowDeltaTime = _dTimeDelta;
-    for (auto& iter : m_vecOpenImGuies)
+    for (auto& iter : m_OpenImGuies)
     {
         iter->Tick(_dTimeDelta);
     }
@@ -55,7 +55,7 @@ void TMainView::TickActive(const _double& _dTimeDelta)
 
 void TMainView::LateTickActive(const _double& _dTimeDetla)
 {
-    for (auto& iter : m_vecOpenImGuies)
+    for (auto& iter : m_OpenImGuies)
     {
         iter->LateTick(_dTimeDetla);
     }
@@ -79,7 +79,7 @@ void TMainView::RenderActive()
 
         RenderMenu();
 
-        for (auto& iter : m_vecOpenImGuies)
+        for (auto& iter : m_OpenImGuies)
         {
             iter->Render();
         }
@@ -99,19 +99,24 @@ void TMainView::RenderMenu()
                 if (ImGui::MenuItem(iter->GetName().c_str(), "", &isOpen))
                 {
                     if (false == iter->IsActive()) {
-                        m_vecOpenImGuies.push_back(iter);
+                        m_OpenImGuies.insert(iter);
+                        iter->OpenImGui();
                     }
-                    iter->OpenImGui();
+                    else
+                    {
+                        iter->CloseImGui();
+                        m_OpenImGuies.erase(iter);
+                    }
                 }
             }
             ImGui::EndMenu();
         }
 
-        for (VECTOR<SHPTR<TImGuiView>>::iterator iter = m_vecOpenImGuies.begin(); iter != m_vecOpenImGuies.end();)
+        for (SET<SHPTR<TImGuiView>>::iterator iter = m_OpenImGuies.begin(); iter != m_OpenImGuies.end();)
         {
             if (false == (*iter)->IsOpen()) {
                 (*iter)->CloseImGui();
-                iter = m_vecOpenImGuies.erase(iter);
+                iter = m_OpenImGuies.erase(iter);
             }
             else {
                 ++iter;

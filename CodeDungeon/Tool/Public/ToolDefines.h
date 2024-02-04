@@ -36,7 +36,7 @@ namespace Tool
 	};
 
 	enum class IMGTAG : _ubyte {
-		MAIN, MODELCONVERTER, SCENEVIEW, EMPTY
+		MAIN, MODELCONVERTER, ANIMCONTROLVIEW, EMPTY
 	};
 
 #define WINDOW_WIDTH					Tool::DXVALUE::g_iWindowWidth

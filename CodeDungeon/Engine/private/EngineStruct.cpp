@@ -135,7 +135,7 @@ namespace Engine {
 	void tagFileGroup::AddFileGroup(const _wstring& _wstrFileName, CSHPTRREF<tagFileGroup> _spFileGroup)
 	{
 		wstrFolderName = _wstrFileName;
-		conuomapUnderFileGroupList.insert(std::pair<_wstring, SHPTR<tagFileGroup>>(_wstrFileName, _spFileGroup));
+		UnderFileGroupList.insert(std::pair<_wstring, SHPTR<tagFileGroup>>(_wstrFileName, _spFileGroup));
 	}
 
 	void tagFileGroup::AddFileData(const _wstring& _wstrFileName, CSHPTRREF<FILEDATA> _spData)
@@ -166,8 +166,8 @@ namespace Engine {
 
 	SHPTR<tagFileGroup> tagFileGroup::FindGroup(const _wstring& _wstrFileName)
 	{
-		const auto& iter = conuomapUnderFileGroupList.find(_wstrFileName);
-		if (iter == conuomapUnderFileGroupList.end())
+		const auto& iter = UnderFileGroupList.find(_wstrFileName);
+		if (iter == UnderFileGroupList.end())
 			return nullptr;
 
 		return iter->second;
@@ -175,9 +175,9 @@ namespace Engine {
 
 	SHPTR<tagFileGroup> tagFileGroup::FindUnder(const _wstring& _wstrFileName)
 	{
-		const auto& iter = conuomapUnderFileGroupList.find(_wstrFileName);
-		if (iter == conuomapUnderFileGroupList.end()) {
-			for (auto& iter : conuomapUnderFileGroupList) {
+		const auto& iter = UnderFileGroupList.find(_wstrFileName);
+		if (iter == UnderFileGroupList.end()) {
+			for (auto& iter : UnderFileGroupList) {
 				FindUnder(_wstrFileName);
 			}
 		}

@@ -233,11 +233,11 @@ namespace Engine {
 
 	typedef struct  tagFileGroup
 	{
-		_wstring																				wstrPath{ L"" };
-		_wstring																				wstrFolderName{ L"" };
-		UNORMAP<_wstring, SHPTR<tagFileGroup>>	conuomapUnderFileGroupList;
+		_wstring																		wstrPath{ L"" };
+		_wstring																		wstrFolderName{ L"" };
+		UNORMAP<_wstring, SHPTR<tagFileGroup>>	UnderFileGroupList;
 		UNORMAP<_wstring, SHPTR<FILEDATA>>			FileDataList;
-		SHPTR<tagFileGroup>													spParentsUpper = nullptr;
+		SHPTR<tagFileGroup>											spParentsUpper = nullptr;
 
 		void AddFileGroup(const _wstring& _wstrFileName, CSHPTRREF<tagFileGroup> _spFileGroup);
 		void AddFileData(const _wstring& _wstrFileName, CSHPTRREF<FILEDATA> _spData);
@@ -314,7 +314,7 @@ namespace Engine {
 
 		GRAPHICISCONTROLTYPE						eType;
 		_wstring														wstrShaderName;
-		D3D12_INPUT_ELEMENT_DESC* pElement;
+		D3D12_INPUT_ELEMENT_DESC*			pElement;
 		_uint															iNumElement;
 		SHADERLIST												ShaderList;
 		_uint															iRenderTargets;
@@ -403,12 +403,12 @@ namespace Engine {
 		_uint										iNumVertices = 0;
 		_uint										iNumIndices = 0;
 		_wstring									wstrName;
-		VECTOR<_float2>		vecUVTexCoords;
-		const _float3* pPosition{ nullptr };
-		const INDICIES32* pIndices = nullptr;
+		VECTOR<_float2>				UVTexCoords;
+		const _float3*						pPosition{ nullptr };
+		const INDICIES32*				pIndices = nullptr;
 		_uint										iMatrialIndex = 0;
 		_uint										iNumBones = 0;
-		VECTOR<_wstring>		vecBoneNodeNameList;
+		VECTOR<_wstring>				BoneNodeNameList;
 		_uint										iBoneNodeCnt = 0;
 
 		_float3									vMinVertex{};
@@ -419,7 +419,7 @@ namespace Engine {
 	{
 		_wstring				wstrBoneName = L"";
 		_uint					iNumMaxKeyFrames = 0;
-		KEYFRAME* pKeyFrames{ nullptr };
+		KEYFRAME*		pKeyFrames{ nullptr };
 	}CHANNELDESC;
 
 	typedef struct tagAnimExtraData {
@@ -433,7 +433,7 @@ namespace Engine {
 	typedef struct tagAnimDesc
 	{
 		_wstring												wstrName = L"";
-		VECTOR<CHANNELDESC>		vecChannels;
+		VECTOR<CHANNELDESC>				Channels;
 
 		ANIMEXTRADATA								stExtraData;
 	}ANIMDESC;
@@ -459,24 +459,24 @@ namespace Engine {
 	// Common Model Data
 	typedef struct tagCommonModelData
 	{
-		UNORMAP<_uint, VECTOR<_wstring>>		uomapMatrialData;
+		UNORMAP<_uint, VECTOR<_wstring>>						MatrialData;
 		_uint																					iMeshContainersCount = 0;
 		_uint																					iMatrialCount = 0;
 		_uint																					iNodeCnt = 0;
 
-		VECTOR<BONENODEDESC>									vecBNodeDatas;
+		VECTOR<BONENODEDESC>											BNodeDatas;
 	}COMMODELDATA;
 	// Model Desc
 	typedef struct tagModelDesc : public COMMODELDATA
 	{
-		VECTOR<MESHDESC>			vecMeshes;
+		VECTOR<MESHDESC>			Meshes;
 	}MODELDESC;
 	// Model Desc
 	typedef struct tagAnimModelDesc : public COMMODELDATA
 	{
-		VECTOR<ANIMMESHDESC>	vecMeshes;
-		VECTOR<ANIMDESC>				convecAnimes;
-		_uint													iAnimCount{ 0 };
+		VECTOR<ANIMMESHDESC>	Meshes;
+		VECTOR<ANIMDESC>				Animes;
+		_uint											iAnimCount{ 0 };
 	}ANIMMODELDESC;
 
 	// ModelMaterial

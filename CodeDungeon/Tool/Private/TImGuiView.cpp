@@ -40,6 +40,7 @@ void TImGuiView::CloseImGui()
 	m_pRenderFunc = &TImGuiView::RenderNonActive;
 	ReleaseResource();
 	m_isActive = false;
+	m_isOpen = false;
 }
 
 HRESULT TImGuiView::LoadResource()
@@ -64,7 +65,7 @@ void TImGuiView::RenderActive()
 {
 }
 
-void TImGuiView::ActiveReleaseResource()
+void TImGuiView::ActiveResetSceneData()
 {
 	SHPTR<TImGuiManager> pImGuiManager = GET_INSTANCE(TImGuiManager);
 	pImGuiManager->SetResetScene(true);

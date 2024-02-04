@@ -82,7 +82,7 @@ HRESULT UMeshContainer::SetUpBoneMatrix(ARRAY<_float4x4, MAX_BONE_SIZE>& _arrBon
 HRESULT UMeshContainer::ReadyVertices(void* _pData, CSHPTRREF<UModel> _spModel)
 {
 	MESHDESC* tMeshDesc = static_cast<MESHDESC*>(_pData);
-	ReceiveBoneNode(_spModel, tMeshDesc->vecBoneNodeNameList, tMeshDesc->iBoneNodeCnt);
+	ReceiveBoneNode(_spModel, tMeshDesc->BoneNodeNameList, tMeshDesc->iBoneNodeCnt);
 	return MakeVertices(tMeshDesc->pVtxModel, (void*)tMeshDesc->pPosition, sizeof(VTXMODEL),
 		tMeshDesc->iNumVertices, tMeshDesc->vMinVertex, tMeshDesc->vMaxVertex,
 		tMeshDesc->wstrName, tMeshDesc->iMatrialIndex);
@@ -91,7 +91,7 @@ HRESULT UMeshContainer::ReadyVertices(void* _pData, CSHPTRREF<UModel> _spModel)
 HRESULT UMeshContainer::ReadyAnimVertices(void* _pData, CSHPTRREF<UModel> _spModel)
 {
 	ANIMMESHDESC* tMeshDesc = static_cast<ANIMMESHDESC*>(_pData);
-	ReceiveBoneNode(_spModel, tMeshDesc->vecBoneNodeNameList, tMeshDesc->iBoneNodeCnt);
+	ReceiveBoneNode(_spModel, tMeshDesc->BoneNodeNameList, tMeshDesc->iBoneNodeCnt);
 	return MakeVertices(tMeshDesc->pVtxModel, (void*)tMeshDesc->pPosition, sizeof(VTXANIMMODEL),
 		tMeshDesc->iNumVertices, tMeshDesc->vMinVertex, tMeshDesc->vMaxVertex,
 		tMeshDesc->wstrName, tMeshDesc->iMatrialIndex);

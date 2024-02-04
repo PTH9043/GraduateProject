@@ -4,40 +4,38 @@
 
 namespace Engine {
 
-	UMemoryPool::UMemoryPool(_int _AllocSize) :
-		m_MemoryQueue{}, m_AllocSize{ MakeMultipleNumber<BASE_ALLOC_SIZE>(_AllocSize)}
+	UMemoryPool::UMemoryPool(long long _AllocSize) :	m_AllocSize{ _AllocSize }
 	{
+		::InitializeSListHead(&m_Header);
 	}
 
 	UMemoryPool::~UMemoryPool()
 	{
-		while (m_MemoryQueue.empty() == false)
-		{
-			UMemoryHeader* header;
-			m_MemoryQueue.try_pop(header);
-			::free(header);
-		}
+		while (UMemoryHeader* memory = static_cast<UMemoryHeader*>(::InterlockedPopEntrySList(&m_Header)))
+			::_aligned_free(memory);
 	}
 
 	void UMemoryPool::Push(UMemoryHeader* ptr)
 	{
 		ptr->SetAllocSize(0);
 
-		m_MemoryQueue.push(ptr);
+		::InterlockedPushEntrySList(&m_Header, static_cast<PSLIST_ENTRY>(ptr));
 	}
 
 	UMemoryHeader* UMemoryPool::Pop()
 	{
-		UMemoryHeader* Ptr{ nullptr };
-		if (false == m_MemoryQueue.empty())
+		UMemoryHeader* memory = static_cast<UMemoryHeader*>(::InterlockedPopEntrySList(&m_Header));
+
+		// 없으면 새로 만들다
+		if (memory == nullptr)
 		{
-			m_MemoryQueue.try_pop(Ptr);
+			memory = reinterpret_cast<UMemoryHeader*>(::_aligned_malloc(m_AllocSize, SLIST_ALIGNMENT));
 		}
 		else
 		{
-			Ptr = reinterpret_cast<UMemoryHeader*>(::malloc(m_AllocSize));
+			ASSERT_CRASH(memory->GetAllocSize() == 0);
 		}
-		return Ptr;
+		return memory;
 	}
 
 	/*
@@ -50,23 +48,27 @@ namespace Engine {
 
 	UMemoryAdminstor::UMemoryAdminstor()
 	{
-		_uint Size = BASE_ALLOC_SIZE;
-		MakeMemoryPool(Size, POOL_COUNT, Size);
+		unsigned int TableIndex = 0;
+		unsigned int MemoryIndex = 0;
+		unsigned int SIZE = 16;
+		MakeMemoryPool(SIZE, MemoryIndex, TableIndex, 512, 16);
+		MakeMemoryPool(SIZE, MemoryIndex, TableIndex, 1024 + 512, 32);
+		MakeMemoryPool(SIZE, MemoryIndex, TableIndex, 1024 + 1024 + 512, 128);
+		MakeMemoryPool(SIZE, MemoryIndex, TableIndex, MAX_ALLOC_SIZE + 1, 256);
 	}
 
 	UMemoryAdminstor::~UMemoryAdminstor()
 	{
-		for (auto& iter : m_PoolTable)
+		for (auto& iter : m_MemoryTable)
 		{
 			delete iter;
 		}
 	}
 
-	void* UMemoryAdminstor::Allocate(_ullong _Size)
+	void* UMemoryAdminstor::Allocate(unsigned long long _Size)
 	{
 		UMemoryHeader* Header = nullptr;
-		_ullong AllocateSize = _Size + sizeof(UMemoryHeader);
-		AllocateSize = MakeMultipleNumber<BASE_ALLOC_SIZE>(AllocateSize);
+		unsigned long long AllocateSize = _Size + sizeof(UMemoryHeader);
 		// 메모리 최대 크기를 꺼내오면 일반 할당 
 		if (AllocateSize > MAX_ALLOC_SIZE)
 		{
@@ -75,7 +77,7 @@ namespace Engine {
 		else
 		{
 			// 메모리 풀에서 꺼내온다. 
-			Header = m_PoolTable[m_KeyTable[AllocateSize]]->Pop();
+			Header = m_PoolTable[AllocateSize]->Pop();
 		}
 		return UMemoryHeader::AttachHeader(Header, AllocateSize);
 	}
@@ -84,32 +86,56 @@ namespace Engine {
 	{
 		UMemoryHeader* Header = UMemoryHeader::DetachHeader(_Ptr);
 
-		const _ullong AllocSize = Header->GetAllocSize();
+		const 	unsigned long long AllocSize = Header->GetAllocSize();
 		if (AllocSize > MAX_ALLOC_SIZE)
 		{
 			::free(Header);
 		}
 		else
 		{
-			m_PoolTable[m_KeyTable[AllocSize]]->Push(Header);
+			m_PoolTable[AllocSize]->Push(Header);
 		}
 	}
 
-	void UMemoryAdminstor::MakeMemoryPool(_uint _Size, const _uint _Limited, const _uint _AddValue)
+	void UMemoryAdminstor::MakeMemoryPool(unsigned int&  _Size, unsigned int& _MemoryIndex ,
+		unsigned int& _TableIndex, const unsigned int  _Limited, const 	unsigned int  _AddValue)
 	{
-		_uint Index{ 0 };
-		for (; Index < _Limited;)
+		for (; _Size < _Limited;)
 		{
 			UMemoryPool* pool = new UMemoryPool(_Size);
-			m_PoolTable[Index] = pool;
-			m_KeyTable.insert(MakePair(_Size, Index));
-			++Index;
+			m_MemoryTable[_MemoryIndex++] = pool;
+			while (_TableIndex <= _Size)
+			{
+				m_PoolTable[_TableIndex++] = pool;
+			}
 			_Size += _AddValue;
 		}
 	}
 	/*
 	===========================================================
 	UMemoryAdminster
+	===========================================================
+	MemoryGlobal
+	===========================================================
+	*/
+	class MemoryGlobal {
+	public:
+		MemoryGlobal() : m_pMemoryAdiminster{ nullptr } {
+			m_pMemoryAdiminster = new UMemoryAdminstor;
+		}
+		~MemoryGlobal() {
+			delete m_pMemoryAdiminster;
+		}
+	public:
+		UMemoryAdminstor* GetMemoryAdiminster() const { return m_pMemoryAdiminster; }
+
+	private:
+		UMemoryAdminstor* m_pMemoryAdiminster;
+	};
+	static MemoryGlobal g_MemoryGrobal;
+	/*
+	===========================================================
+	MemoryGlobal
 	===========================================================
 	UBaseAllocator
 	===========================================================
@@ -131,37 +157,18 @@ namespace Engine {
 	===========================================================
 	*/
 
-	/*
-	
-	*/
-	class MemoryGlobal {
-	public:
-		MemoryGlobal() : m_pMemoryAdiminster{ nullptr } {
-			m_pMemoryAdiminster = new UMemoryAdminstor;
-		}
-		~MemoryGlobal() {
-			delete m_pMemoryAdiminster;
-		}
-	public:
-		UMemoryAdminstor* GetMemoryAdiminster() const { return m_pMemoryAdiminster; }
-
-	private:
-		UMemoryAdminstor* m_pMemoryAdiminster;
-	};
-	static MemoryGlobal MGlobal;
-
 	void* UPoolAllocator::Alloc(size_t _size)
 	{
-		return MGlobal.GetMemoryAdiminster()->Allocate(_size);
+		return g_MemoryGrobal.GetMemoryAdiminster()->Allocate(_size);
 	}
 
 	void UPoolAllocator::Release(void* _ptr)
 	{
-		MGlobal.GetMemoryAdiminster()->Release(_ptr);
+		g_MemoryGrobal.GetMemoryAdiminster()->Release(_ptr);
 	}
 
 	void UPoolAllocator::Release(const void* _ptr)
 	{
-		MGlobal.GetMemoryAdiminster()->Release(const_cast<void*>(_ptr));
+		g_MemoryGrobal.GetMemoryAdiminster()->Release(const_cast<void*>(_ptr));
 	}
 }

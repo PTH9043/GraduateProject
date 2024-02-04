@@ -110,19 +110,19 @@ namespace Core
 	using CONMULTISET = tbb::concurrent_multiset<Type, Compare>;
 
 	template<typename Type>
-	using Deque = std::deque <Type>;
+	using Deque = std::deque <Type, USTLAllocator<Type>>;
 
 	template<class Type>
 	using QUEUE = std::queue<Type, Deque<Type>>;
 
 	template<class Type>
-	using VECTOR = std::vector<Type>;
+	using VECTOR = std::vector<Type, USTLAllocator<Type>>;
 
 	template<class Type>
-	using LIST = std::list<Type>;
+	using LIST = std::list<Type, USTLAllocator<Type>>;
 
-	using string = std::basic_string<char, std::char_traits<char>, Core::STLAllocator<char>>;
-	using wstring = std::basic_string<wchar_t, std::char_traits<wchar_t>, Core::STLAllocator<wchar_t>>;
+	using string = std::basic_string<char, std::char_traits<char>, Core::USTLAllocator<char>>;
+	using wstring = std::basic_string<wchar_t, std::char_traits<wchar_t>, Core::USTLAllocator<wchar_t>>;
 
 	using IOContext = boost::asio::io_context;
 

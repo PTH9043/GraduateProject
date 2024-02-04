@@ -8,12 +8,12 @@ using namespace Engine;
 
 int Engine::UMethod::ConvertStrToNum(const _string& _var)
 {
-	return std::stoi(_var);
+	return std::stoi(_var.c_str());
 }
 
 int Engine::UMethod::ConvertStrToNum(const _wstring& _var)
 {
-	return std::stoi(_var);
+	return std::stoi(_var.c_str());
 }
 
 _string Engine::UMethod::ConvertWToS(const _wstring& var)
@@ -310,7 +310,7 @@ _uint UMethod::CalcConstantBufferByteSize(const _uint& _iByteSize)
 
 ComPtr<DxBlob> UMethod::LoadBinary(const _wstring& _strFileName)
 {
-	std::ifstream fin(_strFileName, std::ios::binary);
+	std::ifstream fin(_strFileName.c_str(), std::ios::binary);
 	if (!fin) return nullptr;
 
 	fin.seekg(0, std::ios_base::end);

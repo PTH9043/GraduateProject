@@ -179,30 +179,30 @@ HRESULT UAnimModel::CreateAnimation(const  VECTOR<ANIMDESC>& _convecAnimDesc, co
 
 void UAnimModel::LoadToData(const _wstring& _wstrPath)
 {
-	std::ifstream read{ _wstrPath, std::ios::binary };
+	std::ifstream read{ _wstrPath, std::ios::binary};
 	RETURN_CHECK(!read, ;);
 	ThreadMiliRelax(10);
 	ANIMMODELDESC tDesc;
 	{
 		// MESH
-		LoadAnimMeshData(read, tDesc.vecMeshes);
+		LoadAnimMeshData(read, tDesc.Meshes);
 		// BoneNode
-		LoadBoneData(read, tDesc.vecBNodeDatas);
+		LoadBoneData(read, tDesc.BNodeDatas);
 		// Material
-		LoadMaterial(read, tDesc.uomapMatrialData);
+		LoadMaterial(read, tDesc.MatrialData);
 		// Animations
-		LoadAnimationData(read, tDesc.convecAnimes);
+		LoadAnimationData(read, tDesc.Animes);
 
 		fs::path FolderPath{ _wstrPath };
-		_wstring wstrPath = FolderPath;
-		_uint iFindIndex{ static_cast<_uint>(wstrPath.find(FolderPath.filename())) };
+		_wstring wstrPath = FolderPath.c_str();
+		_uint iFindIndex{ static_cast<_uint>(wstrPath.find(FolderPath.filename().c_str())) };
 		wstrPath = wstrPath.substr(0, iFindIndex);
 		wstrPath += SECTION_FOLDEDER_NAME;
 		// Create
 		CreateBoneNode(&tDesc);
 		CreateMeshContainers(&tDesc);
 		CreateMaterial(&tDesc);
-		CreateAnimation(tDesc.convecAnimes, wstrPath);
+		CreateAnimation(tDesc.Animes, wstrPath);
 
 
 		m_vecSetupBonMatrix.resize(GetMeshContainerCnt());
@@ -253,9 +253,9 @@ void UAnimModel::LoadAnimMeshData(std::ifstream& _ifRead, VECTOR<ANIMMESHDESC>& 
 			}
 			// BonCnt 
 			_ifRead.read((_char*)&iter.iBoneNodeCnt, sizeof(iter.iBoneNodeCnt));
-			iter.vecBoneNodeNameList.resize(iter.iBoneNodeCnt);
+			iter.BoneNodeNameList.resize(iter.iBoneNodeCnt);
 			if (0 != iter.iBoneNodeCnt) {
-				for (auto& name : iter.vecBoneNodeNameList)
+				for (auto& name : iter.BoneNodeNameList)
 				{
 					UMethod::ReadString(_ifRead, name);
 				}
@@ -281,8 +281,8 @@ void UAnimModel::LoadAnimationData(std::ifstream& _ifRead, VECTOR<ANIMDESC>& _co
 			_ifRead.read((_char*)&iChannelSize, sizeof(_uint));
 			if (iChannelSize == 0)
 				continue;
-			Animation.vecChannels.resize(iChannelSize);
-			for (auto& Channel : Animation.vecChannels)
+			Animation.Channels.resize(iChannelSize);
+			for (auto& Channel : Animation.Channels)
 			{
 				UMethod::ReadString(_ifRead, Channel.wstrBoneName);
 				_ifRead.read((_char*)&Channel.iNumMaxKeyFrames, sizeof(_uint));

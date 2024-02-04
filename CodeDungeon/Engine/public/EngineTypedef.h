@@ -46,7 +46,7 @@ namespace Engine {
 	using _string = std::string;
 
 	namespace PATH {
-		using PATHS = std::vector<std::wstring>;
+		using PATHS = std::vector<_wstring>;
 	}
 
 	using PATHS = PATH::PATHS;
@@ -80,34 +80,31 @@ namespace Engine {
 	using ARRAY = std::array<Type, Num>;
 
 	template<class T>
-	using LIST = std::list<T>;
+	using LIST = std::list<T, UStlAllocator<T>>;
 
 	template<class T>
-	using VECTOR = std::vector<T>;
+	using VECTOR = std::vector<T, UStlAllocator<T>>;
 
-	template<class Type, class Other>
-	using UNORMAP = std::unordered_map<Type, Other>;
+	template<class Type, class Other, class HASH = std::hash<Type>, class KEYEQ = std::equal_to<Type>>
+	using UNORMAP = std::unordered_map<Type, Other, HASH, KEYEQ, UStlAllocator<std::pair<const Type, Other>>>;
 
-	template<class Type>
-	using UNORSET = std::unordered_set<Type>;
+	template<class Type, class HASH = std::hash<Type>, class KEYEQ = std::equal_to<Type>>
+	using UNORSET = std::unordered_set<Type, HASH, KEYEQ, UStlAllocator<Type>>;
 
-	template<class Type>
-	using SET = std::set<Type>;
-
-	template<class Type>
-	using VECTOR = std::vector<Type>;
+	template<class Type, class Pred = std::less<Type>>
+	using SET = std::set<Type, Pred, UStlAllocator<Type>>;
 
 	template<class Type>
+	using DEQUE = std::deque<Type, UStlAllocator<Type>>;
+
+	template<class Type, class Container = DEQUE<Type>>
 	using QUEUE = std::queue<Type>;
 
-	template<class Type>
-	using PRIORITYQUEUE = std::priority_queue<Type>;
+	template<class Type, class Container = VECTOR<Type>, class Pred = std::less<class Container::value_type>>
+	using PRIORITYQUEUE = std::priority_queue<Type, Container, Pred>;
 
 	template<class Type>
-	using UNOSET = std::unordered_set<Type>;
-
-	template<class Type>
-	using STACK = std::stack<Type>;
+	using STACK = std::stack<Type, DEQUE<Type>>;
 
 	template<class Type>
 	using CONQUEUE = concurrency::concurrent_queue<Type>;

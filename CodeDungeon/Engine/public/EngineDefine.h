@@ -95,8 +95,8 @@ static const char* CLONETYPE_ONCE_STRING{ "CLONETYPE_ONCE" };
 #include "EnginePacket.h"
 #include "EngineConcept.h"
 #include "UDelegate.h"
-#include "EngineTypedef.h"
 #include "CustomMemory.h"
+#include "EngineTypedef.h"
 
 #include "EngineEnum.h"
 #include "EngineFunction.h"

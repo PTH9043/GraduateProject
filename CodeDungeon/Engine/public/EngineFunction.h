@@ -1,12 +1,10 @@
 #pragma once
 namespace Engine {
-
 	template <typename... Args>
 	constexpr char* GetArgsTypeName()
 	{
 		return typeid(Args...).name();
 	}
-
 
 #pragma region FUNCTION 
 	template<typename T>
@@ -67,7 +65,7 @@ namespace Engine {
 
 	static void Check_Error(const HRESULT& _eResult, const char* FILE,
 		const unsigned int& LINE, const char* FUNC) {
-		_string str = std::to_string(_eResult);
+		std::string str = std::to_string(_eResult);
 		str += "\nFILE: ";
 		str += FILE;
 		str += "\n LINE: ";

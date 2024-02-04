@@ -66,7 +66,7 @@ HRESULT UFilePathManager::LoadFirstFolder(const _wstring& _wstrFilePath)
 	fs::path p{ _wstrFilePath };
 	VECTOR<SHPTR<FILEGROUP>> vecFileGroup;
 	vecFileGroup.push_back(m_spFileGroup);
-	m_spFileGroup->wstrFolderName = p.filename();
+	m_spFileGroup->wstrFolderName =p.filename();
 	m_FileFolderGroup.insert(MakePair(m_spFileGroup->wstrFolderName, vecFileGroup));
 	LoadUpperFolder(m_spFileGroup->wstrFolderName, _wstrFilePath, m_spFileGroup);
 	m_spFileGroup->wstrPath = _wstrFilePath;
@@ -79,13 +79,13 @@ HRESULT UFilePathManager::ClearLoader(LIST<SHPTR<FILEGROUP>>& _lsFileGroup, CSHP
 
 	SHPTR<FILEGROUP> spFileGroup = _spFileGroup;
 
-	for (auto& iter : spFileGroup->conuomapUnderFileGroupList)
+	for (auto& iter : spFileGroup->UnderFileGroupList)
 	{
 		_lsFileGroup.push_back(iter.second);
 		ClearLoader(_lsFileGroup, iter.second);
 	}
 	_spFileGroup->FileDataList.clear();
-	_spFileGroup->conuomapUnderFileGroupList.clear();
+	_spFileGroup->UnderFileGroupList.clear();
 	return S_OK;
 }
 

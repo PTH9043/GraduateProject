@@ -170,7 +170,7 @@ HRESULT UModel::CreateBoneNode(void* _pData)
 {
 	MODELDESC* tDesc = static_cast<MODELDESC*>(_pData);
 
-	for (auto& iter : tDesc->vecBNodeDatas) {
+	for (auto& iter : tDesc->BNodeDatas) {
 
 		SHPTR<UBoneNode> pBoneNode = CreateNative<UBoneNode>(iter);
 
@@ -192,7 +192,7 @@ HRESULT UModel::CreateMeshContainers(void* _pData)
 {
 	MODELDESC* tDesc = static_cast<MODELDESC*>(_pData);
 
-	for (auto& iter : tDesc->vecMeshes)
+	for (auto& iter : tDesc->Meshes)
 	{
 		SHPTR<UMeshContainer> pMeshContainer{ CreateConstructorNative<UMeshContainer>(
 		GetDevice(),  (void*)&iter, ThisShared<UModel>()) };
@@ -207,9 +207,9 @@ HRESULT UModel::CreateMaterial(void* _pData)
 {
 	MODELDESC* tDesc = static_cast<MODELDESC*>(_pData);
 	if (nullptr != tDesc) {
-		m_vecMaterials.resize(tDesc->uomapMatrialData.size());
+		m_vecMaterials.resize(tDesc->MatrialData.size());
 
-		for (auto& iter : tDesc->uomapMatrialData) {
+		for (auto& iter : tDesc->MatrialData) {
 			SHPTR<MODELMATRIALDESC> pModelMaterial = std::make_shared<MODELMATRIALDESC>();
 			ZeroMemory(pModelMaterial.get(), sizeof(MODELMATRIALDESC));
 
@@ -228,17 +228,17 @@ HRESULT UModel::CreateMaterial(void* _pData)
 
 void UModel::LoadToData(const _wstring& _wstrPath)
 {
-	std::ifstream read{ _wstrPath, std::ios::binary };
+	std::ifstream read{ _wstrPath , std::ios::binary};
 	RETURN_CHECK(!read, ;);
 	ThreadMiliRelax(10);
 	MODELDESC tDesc;
 	{
 		// MESH
-		LoadMeshData(read, tDesc.vecMeshes);
+		LoadMeshData(read, tDesc.Meshes);
 		// BoneNode
-		LoadBoneData(read, tDesc.vecBNodeDatas);
+		LoadBoneData(read, tDesc.BNodeDatas);
 		// Material
-		LoadMaterial(read, tDesc.uomapMatrialData);
+		LoadMaterial(read, tDesc.MatrialData);
 
 		CreateBoneNode(&tDesc);
 		CreateMeshContainers(&tDesc);
@@ -282,9 +282,9 @@ void UModel::LoadMeshData(std::ifstream& _ifRead, VECTOR<MESHDESC>& _convecMeshe
 			}
 			// BonCnt 
 			_ifRead.read((_char*)&iter.iBoneNodeCnt, sizeof(iter.iBoneNodeCnt));
-			iter.vecBoneNodeNameList.resize(iter.iBoneNodeCnt);
+			iter.BoneNodeNameList.resize(iter.iBoneNodeCnt);
 			if (0 != iter.iBoneNodeCnt) {
-				for (auto& name : iter.vecBoneNodeNameList)
+				for (auto& name : iter.BoneNodeNameList)
 				{
 					UMethod::ReadString(_ifRead, name);
 				}

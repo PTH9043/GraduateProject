@@ -144,7 +144,7 @@ void TAssimpModel::GetData(MODELDESC& _tModelDesc)
 	for (auto& iter : m_vecMeshContainers) {
 		MESHDESC tMeshDesc;
 		iter->GetData(tMeshDesc);
-		_tModelDesc.vecMeshes.push_back(tMeshDesc);
+		_tModelDesc.Meshes.push_back(tMeshDesc);
 	}
 	// Materials
 	int i = 0;
@@ -168,13 +168,13 @@ void TAssimpModel::GetData(MODELDESC& _tModelDesc)
 				strTextureFileName.push_back(L"NULL");
 			}
 		}
-		_tModelDesc.uomapMatrialData.insert(std::pair<_uint, VECTOR<_wstring>>(i++, strTextureFileName));
+		_tModelDesc.MatrialData.insert(std::pair<_uint, VECTOR<_wstring>>(i++, strTextureFileName));
 	}
 	// BoneNode
 	for (auto& iter : m_vecBoneNodes) {
 		BONENODEDESC tDesc;
 		iter->GetData(tDesc);
-		_tModelDesc.vecBNodeDatas.push_back(tDesc);
+		_tModelDesc.BNodeDatas.push_back(tDesc);
 	}
 	_tModelDesc.iNodeCnt = (_uint)m_vecBoneNodes.size();
 	_tModelDesc.iMeshContainersCount = m_iNumMeshContainers;
@@ -187,7 +187,7 @@ void TAssimpModel::GetData(ANIMMODELDESC& _tAnimModelDesc)
 	for (auto& iter : m_vecMeshContainers) {
 		ANIMMESHDESC tMeshDesc;
 		iter->GetData(tMeshDesc);
-		_tAnimModelDesc.vecMeshes.push_back(tMeshDesc);
+		_tAnimModelDesc.Meshes.push_back(tMeshDesc);
 	}
 	// Materials
 	int i = 0;
@@ -211,19 +211,19 @@ void TAssimpModel::GetData(ANIMMODELDESC& _tAnimModelDesc)
 				strTextureFileName.push_back(L"NULL");
 			}
 		}
-		_tAnimModelDesc.uomapMatrialData.insert(std::pair<_uint, VECTOR<_wstring>>(i++, strTextureFileName));
+		_tAnimModelDesc.MatrialData.insert(std::pair<_uint, VECTOR<_wstring>>(i++, strTextureFileName));
 	}
 	// BoneNode
 	for (auto& iter : m_vecBoneNodes) {
 		BONENODEDESC tDesc;
 		iter->GetData(tDesc);
-		_tAnimModelDesc.vecBNodeDatas.push_back(tDesc);
+		_tAnimModelDesc.BNodeDatas.push_back(tDesc);
 	}
 	// Animation
 	for (auto& iter : m_vecAnimations) {
 		ANIMDESC tDesc;
 		iter->GetData(tDesc);
-		_tAnimModelDesc.convecAnimes.push_back(tDesc);
+		_tAnimModelDesc.Animes.push_back(tDesc);
 	}
 
 	_tAnimModelDesc.iNodeCnt = (_uint)m_vecBoneNodes.size();
@@ -245,11 +245,11 @@ void TAssimpModel::SaveNonAnimModel(const _wstring& _wstrPath, _wstring& _wstrCo
 	{
 		// MESH
 		{
-			size_t SIZE = stModelDesc.vecMeshes.size();
+			size_t SIZE = stModelDesc.Meshes.size();
 			save.write((_char*)&SIZE, sizeof(size_t));
 			if (0 != SIZE)
 			{
-				for (auto& iter : stModelDesc.vecMeshes) {
+				for (auto& iter : stModelDesc.Meshes) {
 					// Name 
 					UMethod::SaveString(save, UMethod::ConvertWToS(iter.wstrName));
 					// Vertex Model
@@ -272,7 +272,7 @@ void TAssimpModel::SaveNonAnimModel(const _wstring& _wstrPath, _wstring& _wstrCo
 					// BonCnt
 					save.write((_char*)&iter.iBoneNodeCnt, sizeof(iter.iBoneNodeCnt));
 					if (0 != iter.iBoneNodeCnt) {
-						for (auto& BoneNodeNames : iter.vecBoneNodeNameList)
+						for (auto& BoneNodeNames : iter.BoneNodeNameList)
 						{
 							UMethod::SaveString(save, UMethod::ConvertWToS(BoneNodeNames));
 						}
@@ -284,10 +284,10 @@ void TAssimpModel::SaveNonAnimModel(const _wstring& _wstrPath, _wstring& _wstrCo
 		}
 		// BoneNode
 		{
-			size_t SIZE = stModelDesc.vecBNodeDatas.size();
+			size_t SIZE = stModelDesc.BNodeDatas.size();
 			save.write((_char*)&SIZE, sizeof(size_t));
 			if (0 != SIZE) {
-				for (auto& iter : stModelDesc.vecBNodeDatas) {
+				for (auto& iter : stModelDesc.BNodeDatas) {
 					// Name
 					save.write((_char*)&iter.mOffsetMatrix, sizeof(_float4x4));
 					save.write((_char*)&iter.mTransformMatrix, sizeof(_float4x4));
@@ -299,10 +299,10 @@ void TAssimpModel::SaveNonAnimModel(const _wstring& _wstrPath, _wstring& _wstrCo
 		}
 		// Material
 		{
-			size_t SIZE = stModelDesc.uomapMatrialData.size();
+			size_t SIZE = stModelDesc.MatrialData.size();
 			save.write((_char*)&SIZE, sizeof(size_t));
 			if (0 != SIZE) {
-				for (auto& iter : stModelDesc.uomapMatrialData) {
+				for (auto& iter : stModelDesc.MatrialData) {
 					save.write((_char*)&iter.first, sizeof(iter.first));
 					// Materials
 					size_t STRING_SIZE = iter.second.size();
@@ -332,11 +332,11 @@ void TAssimpModel::SaveAnimModel(const _wstring& _wstrPath, _wstring& _wstrConve
 		{
 			// MESH
 			{
-				size_t SIZE = stModelDesc.vecMeshes.size();
+				size_t SIZE = stModelDesc.Meshes.size();
 				save.write((_char*)&SIZE, sizeof(size_t));
 				if (0 != SIZE)
 				{
-					for (auto& iter : stModelDesc.vecMeshes) {
+					for (auto& iter : stModelDesc.Meshes) {
 						// Name 
 						UMethod::SaveString(save, UMethod::ConvertWToS(iter.wstrName));
 						// Vertex Model
@@ -359,7 +359,7 @@ void TAssimpModel::SaveAnimModel(const _wstring& _wstrPath, _wstring& _wstrConve
 						// BonCnt
 						save.write((_char*)&iter.iBoneNodeCnt, sizeof(iter.iBoneNodeCnt));
 						if (0 != iter.iBoneNodeCnt) {
-							for (auto& BoneNodeNames : iter.vecBoneNodeNameList)
+							for (auto& BoneNodeNames : iter.BoneNodeNameList)
 							{
 								UMethod::SaveString(save, UMethod::ConvertWToS(BoneNodeNames));
 							}
@@ -371,10 +371,10 @@ void TAssimpModel::SaveAnimModel(const _wstring& _wstrPath, _wstring& _wstrConve
 			}
 			// BoneNode
 			{
-				size_t SIZE = stModelDesc.vecBNodeDatas.size();
+				size_t SIZE = stModelDesc.BNodeDatas.size();
 				save.write((_char*)&SIZE, sizeof(size_t));
 				if (0 != SIZE) {
-					for (auto& iter : stModelDesc.vecBNodeDatas) {
+					for (auto& iter : stModelDesc.BNodeDatas) {
 						// Name
 						save.write((_char*)&iter.mOffsetMatrix, sizeof(_float4x4));
 						save.write((_char*)&iter.mTransformMatrix, sizeof(_float4x4));
@@ -386,10 +386,10 @@ void TAssimpModel::SaveAnimModel(const _wstring& _wstrPath, _wstring& _wstrConve
 			}
 			// Material
 			{
-				size_t SIZE = stModelDesc.uomapMatrialData.size();
+				size_t SIZE = stModelDesc.MatrialData.size();
 				save.write((_char*)&SIZE, sizeof(size_t));
 				if (0 != SIZE) {
-					for (auto& iter : stModelDesc.uomapMatrialData) {
+					for (auto& iter : stModelDesc.MatrialData) {
 						save.write((_char*)&iter.first, sizeof(iter.first));
 						// Materials
 						size_t STRING_SIZE = iter.second.size();
@@ -404,17 +404,17 @@ void TAssimpModel::SaveAnimModel(const _wstring& _wstrPath, _wstring& _wstrConve
 		}
 		// Animation 
 		{
-			_uint iSize = (_uint)stModelDesc.convecAnimes.size();
+			_uint iSize = (_uint)stModelDesc.Animes.size();
 			save.write((_char*)&iSize, sizeof(_uint));
 			if (iSize != 0)
 			{
-				for (auto& iter : stModelDesc.convecAnimes)
+				for (auto& iter : stModelDesc.Animes)
 				{
 					save.write((_char*)&iter.stExtraData, sizeof(ANIMEXTRADATA));
 					UMethod::SaveString(save, UMethod::ConvertWToS(iter.wstrName));
-					_uint iChannelSize = (_uint)iter.vecChannels.size();
+					_uint iChannelSize = (_uint)iter.Channels.size();
 					save.write((_char*)&iChannelSize, sizeof(_uint));
-					for (auto& Channel : iter.vecChannels)
+					for (auto& Channel : iter.Channels)
 					{
 						UMethod::SaveString(save, UMethod::ConvertWToS(Channel.wstrBoneName));
 						save.write((_char*)&Channel.iNumMaxKeyFrames, sizeof(_uint));
@@ -516,7 +516,7 @@ HRESULT TAssimpModel::CreateMaterials(CSHPTRREF<FILEGROUP> _spFileGroup)
 			while (!isFindTexture)
 			{
 				spFileGroup = spFileGroup->spParentsUpper;
-				for (auto& iter : spFileGroup->conuomapUnderFileGroupList)
+				for (auto& iter : spFileGroup->UnderFileGroupList)
 				{
 					if (iter.first == m_wstrTextureFolderName)
 					{
@@ -533,7 +533,7 @@ HRESULT TAssimpModel::CreateMaterials(CSHPTRREF<FILEGROUP> _spFileGroup)
 			// down Folder
 		{
 			spFileGroup = _spFileGroup;
-			for (auto& iter : _spFileGroup->conuomapUnderFileGroupList)
+			for (auto& iter : _spFileGroup->UnderFileGroupList)
 			{
 				if (iter.first == m_wstrTextureFolderName)
 				{

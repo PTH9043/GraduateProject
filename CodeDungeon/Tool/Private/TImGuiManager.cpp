@@ -10,6 +10,7 @@
 //#include "URenderCommand.h"
 #include "UGameInstance.h"
 #include "TMainScene.h"
+#include "TAnimControlView.h"
 
 IMPLEMENT_SINGLETON(TImGuiManager)
 
@@ -130,6 +131,12 @@ HRESULT TImGuiManager::ReadyImGuiClass()
 		spModelConverter->CloseImGui();
 		m_ImGuiObjectContainer.insert(MakePair(IMGTAG::MODELCONVERTER, spModelConverter));
 		m_spMainView->InsertImGuiView(spModelConverter);
+	}
+	{
+		SHPTR<TAnimControlView> spAnimControlView = CreateConstructorNative<TAnimControlView>(m_spDevice);
+		spAnimControlView->CloseImGui();
+		m_ImGuiObjectContainer.insert(MakePair(IMGTAG::ANIMCONTROLVIEW, spAnimControlView));
+		m_spMainView->InsertImGuiView(spAnimControlView);
 	}
 	//{
 	//	SHPTR<TSceneView> spSceneView = CreateConstructorNative<TSceneView>(m_spDevice);

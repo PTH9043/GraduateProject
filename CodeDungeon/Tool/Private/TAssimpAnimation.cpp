@@ -68,9 +68,9 @@ void TAssimpAnimation::UpdateTransformMatrices(const _double& _dTimeDelta)
 void TAssimpAnimation::GetData(ANIMDESC& _stAnimDesc)
 {
 	_stAnimDesc.wstrName = m_wstrName;
-	_stAnimDesc.vecChannels.resize(m_iNumChannels);
+	_stAnimDesc.Channels.resize(m_iNumChannels);
 	for (_uint i = 0; i < m_iNumChannels; ++i) {
-		m_vecAssimpChannels[i]->GetData(_stAnimDesc.vecChannels[i]);
+		m_vecAssimpChannels[i]->GetData(_stAnimDesc.Channels[i]);
 	}
 	_stAnimDesc.stExtraData.dDuration = m_dDuration;
 	_stAnimDesc.stExtraData.dTickPerSeconds = m_dTickPerSeconds;

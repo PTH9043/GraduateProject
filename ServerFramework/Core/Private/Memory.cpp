@@ -4,7 +4,7 @@
 namespace Core
 {
 	AMemoryPool::AMemoryPool(const _ullong& _AllocateSize) : 
-		m_AllocateSize{ MakeMultipleNumber<BASE_ALLOC_SIZE>(_AllocateSize) }, m_AllocateCount{0}
+		m_AllocateSize{ _AllocateSize }, m_AllocateCount{0}
 	{
 
 	}
@@ -65,8 +65,13 @@ namespace Core
 	// 저장할 메모리 할당
 	AMemoryAdiminstor::AMemoryAdiminstor()
 	{
-		_uint Size = BASE_ALLOC_SIZE;
-		MakeMemoryPool(Size, POOL_COUNT, Size);
+		unsigned int TableIndex = 0;
+		unsigned int MemoryIndex = 0;
+		unsigned int SIZE = 16;
+		MakeMemoryPool(SIZE, MemoryIndex, TableIndex, 512, 16);
+		MakeMemoryPool(SIZE, MemoryIndex, TableIndex, 1024 + 512, 32);
+		MakeMemoryPool(SIZE, MemoryIndex, TableIndex, 1024 + 1024 + 512, 128);
+		MakeMemoryPool(SIZE, MemoryIndex, TableIndex, MAX_ALLOC_SIZE + 1, 256);
 	}
 
 	AMemoryAdiminstor::~AMemoryAdiminstor()
@@ -85,7 +90,6 @@ namespace Core
 #ifdef USE_STOMP
 		Header = reinterpret_cast<MEMORYHEADER*>(UStompAllocator::Alloc(_Size));
 #else
-		AllocateSize = MakeMultipleNumber<BASE_ALLOC_SIZE>(AllocateSize);
 		// 메모리 최대 크기를 꺼내오면 일반 할당 
 		if (AllocateSize > MAX_ALLOC_SIZE)
 		{
@@ -94,7 +98,7 @@ namespace Core
 		else
 		{
 			// 메모리 풀에서 꺼내온다. 
-			Header = m_PoolTable[m_KeyTable[AllocateSize]]->Pop();
+			Header = m_PoolTable[AllocateSize]->Pop();
 		}
 #endif
 		return MEMORYHEADER::AttachHeader(Header, AllocateSize);
@@ -116,22 +120,23 @@ namespace Core
 		}
 		else
 		{
-			m_PoolTable[m_KeyTable[AllocSize]]->Push(Header);
+			m_PoolTable[AllocSize]->Push(Header);
 		}
 #endif
 	}
 	// 메모리 할당을 해주는 함수이다. 
-	void AMemoryAdiminstor::MakeMemoryPool(_uint _Size, const _uint _Limited, const _uint _AddValue)
+	void AMemoryAdiminstor::MakeMemoryPool(unsigned int& _Size, unsigned int& _MemoryIndex,
+		unsigned int& _TableIndex, const unsigned int  _Limited, const 	unsigned int  _AddValue)
 	{
-		_uint index = 0;
-		for (; index < _Limited;)
+		for (; _Size < _Limited;)
 		{
 			AMemoryPool* pool = new AMemoryPool(_Size);
-			m_PoolTable[index] = pool;
-			m_KeyTable.insert(MakePair(_Size, index));
-			++index;
+			m_MemoryTable[_MemoryIndex++] = pool;
+			while (_TableIndex <= _Size)
+			{
+				m_PoolTable[_TableIndex++] = pool;
+			}
 			_Size += _AddValue;
 		}
 	}
-
 }

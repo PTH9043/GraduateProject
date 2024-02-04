@@ -67,7 +67,7 @@ HRESULT TModelView::ReleaseResource()
 	m_spModelFileFolder = nullptr;
 	m_spAnimModelFileFolder = nullptr;
 
-	ActiveReleaseResource();
+	ActiveResetSceneData();
 	return S_OK;
 }
 
@@ -199,7 +199,7 @@ void TModelView::ConvertModels()
 	{
 		SHPTR<FILEGROUP> ModelFolder = GetGameInstance()->FindFolder(L"Model");
 		// Folders 
-		for (const FOLDERPAIR& Folder : ModelFolder->conuomapUnderFileGroupList)
+		for (const FOLDERPAIR& Folder : ModelFolder->UnderFileGroupList)
 		{
 			LoadAssimpModelDatas(Folder.second);
 		}
@@ -216,7 +216,7 @@ void TModelView::ConvertAnimModels()
 		SHPTR<FILEGROUP> ModelFolder = GetGameInstance()->FindFolder(L"AnimModel");
 		m_conunomapAnimModel.clear();
 		// Folders 
-		for (const FOLDERPAIR& Folder : ModelFolder->conuomapUnderFileGroupList)
+		for (const FOLDERPAIR& Folder : ModelFolder->UnderFileGroupList)
 		{
 			LoadAssimpAnimModelDatas(Folder.second);
 		}
@@ -257,7 +257,7 @@ void TModelView::LoadAssimpModelDatas(CSHPTRREF<FILEGROUP> _spFolder)
 			}
 		}
 		// Folders 
-		for (const FOLDERPAIR& Folder : _spFolder->conuomapUnderFileGroupList)
+		for (const FOLDERPAIR& Folder : _spFolder->UnderFileGroupList)
 		{
 			LoadAssimpModelDatas(Folder.second);
 		}
@@ -306,7 +306,7 @@ void TModelView::LoadAssimpAnimModelDatas(CSHPTRREF<FILEGROUP> _spFolder)
 			}
 		}
 		// Folders 
-		for (const FOLDERPAIR& Folder : _spFolder->conuomapUnderFileGroupList)
+		for (const FOLDERPAIR& Folder : _spFolder->UnderFileGroupList)
 		{
 			LoadAssimpAnimModelDatas(Folder.second);
 		}

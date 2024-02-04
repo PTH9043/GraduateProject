@@ -34,7 +34,7 @@ private:
 	DOCKDESC												m_stDebuggingView;
 
 	VECTOR<SHPTR<TImGuiView>>			m_vecImGuies;
-	VECTOR<SHPTR<TImGuiView>>			m_vecOpenImGuies;
+	SET<SHPTR<TImGuiView>>					m_OpenImGuies;
 
 	_double														m_dShowDeltaTime;
 	_bool															m_isDockBuilding;

@@ -1,14 +1,15 @@
 #pragma once
 
 namespace Engine {
+
 	/*
 	@ Date: 2024-02-04, Writer: 박태현
 	@ Explain
-	-  기본 메모리 사이즈 (Memory Pool 최적화를 위함)
+	-  Window에서 지원하는 LockFreeList를 사용하기 위한 SLIST ENUM 
 	*/
 	enum
 	{
-		BASE_ALLOC_SIZE = 16
+		SLIST_ALIGNMENT = 16
 	};
 
 	/*
@@ -21,11 +22,12 @@ namespace Engine {
 	@ Explain
 	-  메모리 앞에 붙는 헤더
 	*/
-	class UMemoryHeader {
+	DECLSPEC_ALIGN(SLIST_ALIGNMENT)
+	class UMemoryHeader : public SLIST_ENTRY {
 	public:
-		UMemoryHeader(_llong _Size) : m_AllocSize{ _Size } {}
+		UMemoryHeader(long long _Size) : m_AllocSize{ _Size } {}
 
-		static void* AttachHeader(UMemoryHeader* _Header, _llong _Size) {
+		static void* AttachHeader(UMemoryHeader* _Header, long long _Size) {
 			new(_Header)UMemoryHeader(_Size);
 			return reinterpret_cast<void*>(++_Header);
 		}
@@ -35,10 +37,10 @@ namespace Engine {
 			return header;
 		}
 
-		_llong GetAllocSize() const { return m_AllocSize; }
-		void SetAllocSize(const _llong _AllocSize) { this->m_AllocSize = _AllocSize; }
+		long long GetAllocSize() const { return m_AllocSize; }
+		void SetAllocSize(const long long _AllocSize) { this->m_AllocSize = _AllocSize; }
 	private:
-		_llong	m_AllocSize;
+		long long	m_AllocSize;
 	};
 	/*
 	===========================================================
@@ -52,17 +54,18 @@ namespace Engine {
 	@ Explain
 	-  메모리리를 저장할 Memory Pool이다.
 	*/
+	DECLSPEC_ALIGN(SLIST_ALIGNMENT)
 	class UMemoryPool {
 	public:
-		UMemoryPool(_int _AllocSize);
+		UMemoryPool(long long _AllocSize);
 		~UMemoryPool();
 
 		void			Push(UMemoryHeader* ptr);
 		UMemoryHeader* Pop();
 
 	private:
-		CONPRIORITYQUEUE<UMemoryHeader*>		m_MemoryQueue;
-		_int																			m_AllocSize;
+		SLIST_HEADER			m_Header;
+		long long					m_AllocSize;
 	};
 	/*
 	===========================================================
@@ -79,24 +82,28 @@ namespace Engine {
 	class UMemoryAdminstor {
 		enum
 		{
-			POOL_COUNT = 350,
-			MAX_ALLOC_SIZE = BASE_ALLOC_SIZE * POOL_COUNT
+			POOL_COUNT = (512 / 16) + (1024 / 32) + (1024 / 128) + (2048 / 256),
+			MAX_ALLOC_SIZE = 4608
 		};
+		using POOLTABLE = std::array<UMemoryPool*, MAX_ALLOC_SIZE + 1>;
+		using MEMORYTABLE = std::array<UMemoryPool*, POOL_COUNT>;
 	public:
 		UMemoryAdminstor();
 		~UMemoryAdminstor();
 
-		void* Allocate(_ullong _Size);
+		void* Allocate(unsigned long long _Size);
 		void Release(void* _Ptr);
 
 	private:
-		void MakeMemoryPool(_uint _Size, const _uint _Limited, const _uint _AddValue);
+		void MakeMemoryPool(unsigned int&  _Size, unsigned int& _MemoryIndex,
+			unsigned int& _TableIndex, const unsigned int  _Limited, const 	unsigned int  _AddValue);
 
 	private:
 		// 메모리를 빠르게 찾기 위한 풀 테이블이다. 
-		ARRAY<UMemoryPool*, POOL_COUNT>		m_PoolTable;
-		CONUNOMAP<_ullong, int>							m_KeyTable;
+		POOLTABLE			m_PoolTable;
+		MEMORYTABLE	m_MemoryTable;
 	};
+
 	/*
 	===========================================================
 	MemoryAdminster
@@ -137,6 +144,49 @@ namespace Engine {
 	===========================================================
 	UPoolAllocator
 	===========================================================
+	UStlAllocator
+	===========================================================
+	*/
+
+	/*-------------------
+	STL Allocator
+-------------------*/
+
+	/*
+	@ Date: 2024-02-01,  Writer: 박태현
+	@ Explain
+	- STL에 사용하기 위한 Allocator
+	*/
+	template<typename T>
+	class UStlAllocator
+	{
+	public:
+		using value_type = T;
+
+		UStlAllocator() { }
+
+		template<typename Other>
+		UStlAllocator(const UStlAllocator<Other>&) { }
+
+		T* allocate(size_t count)
+		{
+			const size_t size = count * sizeof(T);
+			return static_cast<T*>(UPoolAllocator::Alloc(size));
+		}
+		void deallocate(T* ptr, size_t count)
+		{
+			UPoolAllocator::Release(ptr);
+		}
+		template<typename U>
+		bool operator==(const UStlAllocator<U>&) { return true; }
+
+		template<typename U>
+		bool operator!=(const UStlAllocator<U>&) { return false; }
+	};
+	/*
+	===========================================================
+	UStlAllocator
+	===========================================================
 	UObjectPool
 	===========================================================
 	*/
@@ -167,11 +217,11 @@ namespace Engine {
 		}
 	private:
 		static UMemoryPool	s_MemoryPool;
-		static _int						s_AllocSize;
+		static int							s_AllocSize;
 	};
 
 	template<typename Type>
-	_int UObjectPool<Type>::s_AllocSize = sizeof(Type) + sizeof(UMemoryHeader);
+	int UObjectPool<Type>::s_AllocSize = sizeof(Type) + sizeof(UMemoryHeader);
 
 	template<typename Type>
 	UMemoryPool UObjectPool<Type>::s_MemoryPool{ s_AllocSize };
