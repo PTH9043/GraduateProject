@@ -756,6 +756,11 @@ void UGameInstance::PopProcessedData(POINTER_IN UProcessedData* _pData)
 	m_spNetworkManager->PopProcessedData(_pData);
 }
 
+void UGameInstance::SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize)
+{
+	m_spNetworkManager->SendTcpPacket(_pPacket, _PacketType, _PacketSize);
+}
+
 void UGameInstance::NetworkEnd()
 {
 	m_spNetworkManager.reset();

@@ -82,15 +82,15 @@ namespace Core {
 	@ Explain
 	- 메모리를 관리하는 관리자 클래스
 	*/
-	class CORE_DLL AMemoryAdminster {
+	class CORE_DLL AMemoryAdiminstor {
 		enum
 		{
-			POOL_COUNT = 500,
+			POOL_COUNT = 350,
 			MAX_ALLOC_SIZE = BASE_ALLOC_SIZE * POOL_COUNT
 		};
 	public:
-		AMemoryAdminster();
-		~AMemoryAdminster();
+		AMemoryAdiminstor();
+		~AMemoryAdiminstor();
 
 		void* Allocate(_ullong _Size);
 		void Release(void* _Ptr);

@@ -7,7 +7,7 @@ namespace Core
 	CORE_DLL		extern class UDeadLockProfiler* g_pDeadLockProfiler;
 #endif
 
-	CORE_DLL 	extern class AMemoryAdminster* g_pMemoryAdminster;
+	CORE_DLL 	extern class AMemoryAdiminstor* g_pMemoryAdminster;
 
 	CORE_DLL		extern class ACoreApp*							 g_RegisterApp;
 }

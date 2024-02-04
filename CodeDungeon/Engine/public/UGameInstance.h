@@ -220,7 +220,21 @@ public: /* NetworkManager */
 	HRESULT StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController);
 	void InsertProcessedDataToContainer(void* _pData, size_t _Size, _int _DataType);
 	void PopProcessedData(POINTER_IN UProcessedData* _pData);
+	void SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize);
 	void NetworkEnd();
+	/*
+	@ Date: 2024-02-04, Writer: 박태현
+	@ Explain
+	- ProtocolBuffer를 TCP에 연결된 상대에게 보내기 위한 템플릿 함수이다.
+	*/
+	template<class T>
+	void CombineProto(REF_IN ARRAY<_char, MAX_BUFFER_LENGTH>& _Buffer, REF_IN PACKETHEAD& _PacketHead, 
+		const T& _data, short _tag)
+	{
+		_data.SerializePartialToArray((void*)&_Buffer[0], static_cast<int>(_data.ByteSizeLong()));
+		short size = static_cast<short>(_data.ByteSizeLong());
+		_PacketHead = PACKETHEAD{ size, _tag };
+	}
 private: /* Ready Datas */
 	HRESULT ReadyResource(const OUTPUTDATA& _stData);
 	HRESULT ReadyComp(const OUTPUTDATA& _stData);

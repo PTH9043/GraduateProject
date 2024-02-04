@@ -17,12 +17,12 @@ public:
 	DESTRUCTOR(UNetworkBaseController)
 public:
 	virtual HRESULT NativeConstruct(const _string& _strIPAddress, const _int _PortNumber) PURE;
+	void SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize);
 protected:
 	void ServerTick();
 	virtual void NativePacket() PURE;
-	void TcpPacketRecv(UOverExp* _pOverExp, _llong _numBytes);
+	void RecvPacketCombine(UOverExp* _pOverExp, _llong _numBytes);
 	virtual void ProcessPacket(_char* _pPacket, PACKETHEAD _PacketHead) PURE;
-	void SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize);
 	void RecvTcpPacket();
 	/*
 	@ Date: 2023-01-05, Writer: นฺลยว๖

@@ -11,7 +11,7 @@ class ACollider;
 class ASpace;
 
 /*
-@ Date: 2023-01-22, Writer: 박태현
+@ Date: 2024-01-22, Writer: 박태현
 @ Explain
 - 클라이언트와 통신하기 위한 Session 클래스이고 가상함수로 Server 솔루션에서 해당 클래스를 부모로 자식 클래스를 
 정의해주어야 한다.
@@ -33,7 +33,7 @@ public:
 	virtual void ConnectTcpSocket() PURE;
 
 	/*
-	@ Date: 2023-01-04, Writer: 박태현
+	@ Date: 2024-01-04, Writer: 박태현
 	@ Explain
 	- ProtocolBuffer를 조합하기 위한 함수이다. 
 	*/
@@ -45,7 +45,7 @@ public:
 		_PacketHead = PACKETHEAD{ size, _tag };
 	}
 	/*
-	@ Date: 2023-01-05, Writer: 박태현
+	@ Date: 2024-01-05, Writer: 박태현
 	@ Explain
 	- ProtocolBuffer를 TCP에 연결된 상대에게 보내기 위한 템플릿 함수이다. 
 	*/

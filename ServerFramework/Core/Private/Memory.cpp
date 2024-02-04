@@ -63,13 +63,13 @@ namespace Core
 	*/
 
 	// 저장할 메모리 할당
-	AMemoryAdminster::AMemoryAdminster()
+	AMemoryAdiminstor::AMemoryAdiminstor()
 	{
 		_uint Size = BASE_ALLOC_SIZE;
 		MakeMemoryPool(Size, POOL_COUNT, Size);
 	}
 
-	AMemoryAdminster::~AMemoryAdminster()
+	AMemoryAdiminstor::~AMemoryAdiminstor()
 	{
 		for (auto& iter : m_PoolTable)
 		{
@@ -78,7 +78,7 @@ namespace Core
 	}
 
 	// SIze의 크기가 해당 메모리에 없으면 그냥 할당, 아니라면 해제한다. 
-	void* AMemoryAdminster::Allocate(_ullong _Size)
+	void* AMemoryAdiminstor::Allocate(_ullong _Size)
 	{
 		MEMORYHEADER* Header = nullptr;
 		_ullong AllocateSize = _Size + sizeof(MEMORYHEADER);
@@ -100,7 +100,7 @@ namespace Core
 		return MEMORYHEADER::AttachHeader(Header, AllocateSize);
 	}
 	// SIze의 크기가 해당 메모리에 없으면 해제, 아니면 반납한다. 
-	void AMemoryAdminster::Release(void* _Ptr)
+	void AMemoryAdiminstor::Release(void* _Ptr)
 	{
 		MEMORYHEADER* Header = MEMORYHEADER::DetachHeader(_Ptr);
 
@@ -121,7 +121,7 @@ namespace Core
 #endif
 	}
 	// 메모리 할당을 해주는 함수이다. 
-	void AMemoryAdminster::MakeMemoryPool(_uint _Size, const _uint _Limited, const _uint _AddValue)
+	void AMemoryAdiminstor::MakeMemoryPool(_uint _Size, const _uint _Limited, const _uint _AddValue)
 	{
 		_uint index = 0;
 		for (; index < _Limited;)

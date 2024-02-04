@@ -31,6 +31,12 @@ HRESULT UNetworkBaseController::NativeConstruct(const _string& _strIPAddress, co
 	return S_OK;
 }
 
+void UNetworkBaseController::SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize)
+{
+	UOverExp* pOverExp = Make::xnew<UOverExp>(_pPacket, _PacketType, _PacketSize);
+	UServerMethods::SendTcpPacket(m_ClientTcpSocket, pOverExp);
+}
+
 void UNetworkBaseController::ServerTick()
 {
 	DWORD num_bytes;
@@ -60,7 +66,7 @@ void UNetworkBaseController::ServerTick()
 		Make::xdelete(ex_over);
 		break;
 	case OP_TCP_RECV:
-		TcpPacketRecv(ex_over, num_bytes);
+		RecvPacketCombine(ex_over, num_bytes);
 		RecvTcpPacket();
 		break;
 	}
@@ -71,7 +77,7 @@ void UNetworkBaseController::NativePacket()
 	RecvTcpPacket();
 }
 
-void UNetworkBaseController::TcpPacketRecv(UOverExp* _pOverExp, _llong _numBytes)
+void UNetworkBaseController::RecvPacketCombine(UOverExp* _pOverExp, _llong _numBytes)
 {
 	// Total Buffer에 값을 복사 
 	::memcpy(&m_TcpTotalBuffer[m_RemainBufferLength], _pOverExp->GetBufferAddress(), _numBytes);
@@ -100,12 +106,6 @@ void UNetworkBaseController::TcpPacketRecv(UOverExp* _pOverExp, _llong _numBytes
 void UNetworkBaseController::RecvTcpPacket()
 {
 	UServerMethods::RecvTcpPacket(m_ClientTcpSocket, REF_OUT m_RecvTcpOverExp);
-}
-
-void UNetworkBaseController::SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize)
-{
-	UOverExp* pOverExp = Make::xnew<UOverExp>(_pPacket, _PacketType, _PacketSize);
-	UServerMethods::SendTcpPacket(m_ClientTcpSocket, pOverExp);
 }
 
 void UNetworkBaseController::ServerThread(void* _pData)

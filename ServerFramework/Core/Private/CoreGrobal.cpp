@@ -10,7 +10,7 @@ namespace Core
 	CORE_DLL UDeadLockProfiler*		g_pDeadLockProfiler = nullptr;
 #endif
 
-	CORE_DLL  AMemoryAdminster* g_pMemoryAdminster = nullptr;
+	CORE_DLL  AMemoryAdiminstor* g_pMemoryAdminster = nullptr;
 	CORE_DLL	 ACoreApp*						    g_RegisterApp = nullptr;
 
 	class CoreGlobal
@@ -24,7 +24,7 @@ namespace Core
 			g_pDeadLockProfiler = new UDeadLockProfiler;
 #endif
 
-			g_pMemoryAdminster = new AMemoryAdminster;
+			g_pMemoryAdminster = new AMemoryAdiminstor;
 		}
 
 		~CoreGlobal()

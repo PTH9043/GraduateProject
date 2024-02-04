@@ -24,6 +24,12 @@ void UNetworkManager::PopProcessedData(POINTER_IN UProcessedData* _pData)
 	m_ProcessedDataContainer.try_pop(*_pData);
 }
 
+void UNetworkManager::SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize)
+{
+	RETURN_CHECK(nullptr == m_spNetworkBaseController, ;);
+	m_spNetworkBaseController->SendTcpPacket(_pPacket, _PacketType, _PacketSize);
+}
+
 void UNetworkManager::Free()
 {
 	m_spNetworkBaseController.reset();
