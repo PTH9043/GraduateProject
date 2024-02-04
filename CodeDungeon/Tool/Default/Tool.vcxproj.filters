@@ -50,6 +50,24 @@
     <Filter Include="03.ImGui\MainView">
       <UniqueIdentifier>{987c6277-00f6-4811-a06e-ab18cd254282}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.ImGui\Model">
+      <UniqueIdentifier>{64224bff-3468-4885-8617-9ba24e9bfe07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="90.ShowModel">
+      <UniqueIdentifier>{5fbdec0a-1c2f-4284-ad66-7fbd4092c90c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="90.ShowModel\Anim">
+      <UniqueIdentifier>{b5957300-6878-4226-bf9b-8378f74cd042}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="90.ShowModel\Model">
+      <UniqueIdentifier>{2faa2d8d-82f0-4422-b94f-5ee6bb8c311b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.ProtoMaker">
+      <UniqueIdentifier>{97cb2792-1399-4c46-b07d-c15593346f88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.ImGui\Animation">
+      <UniqueIdentifier>{dbb78db6-b5d0-457c-8b79-994d82f8147d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ToolDefines.h">
@@ -130,6 +148,21 @@
     <ClInclude Include="..\Public\TImGuiView.h">
       <Filter>03.ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\TModelView.h">
+      <Filter>03.ImGui\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TShowAnimModelObject.h">
+      <Filter>90.ShowModel\Anim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TShowModelObject.h">
+      <Filter>90.ShowModel\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TProtoMaker.h">
+      <Filter>96.ProtoMaker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TAnimControlView.h">
+      <Filter>03.ImGui\Animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\TToolApp.cpp">
@@ -191,6 +224,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\TImGuiManager.cpp">
       <Filter>01.Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TModelView.cpp">
+      <Filter>03.ImGui\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TShowAnimModelObject.cpp">
+      <Filter>90.ShowModel\Anim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TShowModelObject.cpp">
+      <Filter>90.ShowModel\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TProtoMaker.cpp">
+      <Filter>96.ProtoMaker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TAnimControlView.cpp">
+      <Filter>03.ImGui\Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

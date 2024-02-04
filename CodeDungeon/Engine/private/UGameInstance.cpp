@@ -97,7 +97,6 @@ void UGameInstance::Free()
 {
 	//ClearOnceTypeData();
 	m_spRenderer->ClearAllData();
-	m_spNetworkManager.reset();
 	m_spRenderer.reset();
 	//m_spGraphicRenderObject.reset();
 
@@ -217,14 +216,14 @@ HRESULT UGameInstance::OnWindowResize(const _uint& _iWinSizeX, const _uint& _iWi
 	m_spRenderTargetManager->OnResizeWindow(m_spGraphicDevice);
 	//m_spPicking->ReadyPickingDesc(m_spGraphicDevice->GetGraphicDesc());
 #ifdef _USE_DEBUGGING
-	m_spComputeManager->OnResizeDebugRenderObject(m_spGraphicDevice);
+	//m_spComputeManager->OnResizeDebugRenderObject(m_spGraphicDevice);
 #endif 
 	return S_OK;
 }
 
 void UGameInstance::ClearOnceTypeData()
 {
-	//m_spRenderer->ClearRenderingData();
+	m_spRenderer->ClearRenderingData();
 	m_spActorManager->ClearOnceTypeData();
 	m_spResourceManager->ClearOnceTypeData();
 	m_spPipeLine->ClearOneTypeCamera();
@@ -737,9 +736,9 @@ SHPTR<FILEGROUP> UGameInstance::FindFolder(const _wstring& _wstrFindName, const 
 	return m_spFilePathManager->FindFolder(_wstrFindName, _wstrParentsFolderName);
 }
 
-HRESULT UGameInstance::LoadFirstFilder(const _wstring& _wstrFilePath)
+HRESULT UGameInstance::LoadFirstFolder(const _wstring& _wstrFilePath)
 {
-	return m_spFilePathManager->LoadFirstFilder(_wstrFilePath);
+	return m_spFilePathManager->LoadFirstFolder(_wstrFilePath);
 }
 
 HRESULT UGameInstance::StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController)
@@ -755,6 +754,11 @@ void UGameInstance::InsertProcessedDataToContainer(void* _pData, size_t _Size, _
 void UGameInstance::PopProcessedData(POINTER_IN UProcessedData* _pData)
 {
 	m_spNetworkManager->PopProcessedData(_pData);
+}
+
+void UGameInstance::NetworkEnd()
+{
+	m_spNetworkManager.reset();
 }
 
 /*
@@ -817,15 +821,15 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 					DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
 					DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
 
-			//CreateGraphicsShader(PROTO_RES_DEBUG2DTARGETSHADER, CLONETYPE::CLONE_STATIC,
-			//	SHADERDESC(L"Debug2DTarget", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
-			//		SHADERLIST{ VS_MAIN, PS_MAIN }, RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
+			CreateGraphicsShader(PROTO_RES_DEBUG2DTARGETSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"Debug2DTarget", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }, RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
 
-			//CreateGraphicsShader(PROTO_RES_SCREENRENDERONBJSHADER, CLONETYPE::CLONE_STATIC,
-			//	SHADERDESC(L"ScreenRenderObj", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
-			//		SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{
-			//		DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
-			//		DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
+			CreateGraphicsShader(PROTO_RES_SCREENRENDERONBJSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"ScreenRenderObj", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{
+					DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
+					DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
 		}
 		//// Light Shadow
 		//{
@@ -920,15 +924,15 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 		//			DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT },
 		//			RASTERIZER_TYPE::CULL_FRONT, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST));
 		//}
-		//// Ect 
-		//{
-		//	CreateGraphicsShader(PROTO_RES_DEBUGGINGDEFAULTSHADER, CLONETYPE::CLONE_STATIC,
-		//		SHADERDESC(L"DebugDefaultObject", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
-		//			SHADERLIST{ VS_MAIN, PS_MAIN },
-		//			RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
-		//			DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT },
-		//			RASTERIZER_TYPE::CULL_NONE, DEPTH_STENCIL_TYPE::LESS, BLEND_TYPE::ALPHA_BLEND));
-		//}
+		// Ect 
+		{
+			CreateGraphicsShader(PROTO_RES_DEBUGGINGDEFAULTSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"DebugDefaultObject", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN },
+					RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
+					DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT },
+					RASTERIZER_TYPE::CULL_NONE, DEPTH_STENCIL_TYPE::LESS, BLEND_TYPE::ALPHA_BLEND));
+		}
 		{
 			CreateGraphicsShader(PROTO_RES_RECTSHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"Rect", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,

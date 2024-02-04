@@ -76,7 +76,7 @@ HRESULT UVIBufferRect::NativeConstruct()
 		// Index 개수
 		const _uint INDICES_CNT = 2;
 		// 목록
-		INDICIES16* pIndices = new INDICIES16[INDICES_CNT];
+		INDICIES16* pIndices = Make::AllocBuffer<INDICIES16>(INDICES_CNT);
 		ZeroMemory(pIndices, sizeof(INDICIES16) * INDICES_CNT);
 		{
 			pIndices[0] = { 0, 1, 2 };

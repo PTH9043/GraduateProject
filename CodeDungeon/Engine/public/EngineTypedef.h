@@ -115,6 +115,12 @@ namespace Engine {
 	template<class Type>
 	using CONVECTOR = concurrency::concurrent_vector<Type>;
 
+	template<class Type>
+	using CONPRIORITYQUEUE = concurrency::concurrent_priority_queue<Type>;
+
+	template<class Key, class Type>
+	using CONUNOMAP = concurrency::concurrent_unordered_map<Key, Type>;
+
 	namespace VOIDS {
 		using VOIDDATAS = std::vector<void*>;
 	}

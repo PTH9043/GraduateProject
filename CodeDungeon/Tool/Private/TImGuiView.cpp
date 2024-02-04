@@ -1,6 +1,7 @@
 #include "ToolDefines.h"
 #include "TImGuiView.h"
 #include "UGameInstance.h"
+#include "TImGuiManager.h"
 
 TImGuiView::TImGuiView(CSHPTRREF<UDevice> _spDevice, const _string& _strName)
 	: UObject(_spDevice),
@@ -61,4 +62,10 @@ void TImGuiView::LateTickActive(const _double& _dTimeDetla)
 
 void TImGuiView::RenderActive()
 {
+}
+
+void TImGuiView::ActiveReleaseResource()
+{
+	SHPTR<TImGuiManager> pImGuiManager = GET_INSTANCE(TImGuiManager);
+	pImGuiManager->SetResetScene(true);
 }

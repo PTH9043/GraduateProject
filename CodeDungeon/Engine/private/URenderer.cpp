@@ -232,7 +232,7 @@ void URenderer::RenderOtherCamera()
 void URenderer::BindDefferedTransform(SHPTR<UShader> _spShader)
 {
     RETURN_CHECK(nullptr == _spShader, ;);
-    _spShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, UTransform::TRANSFORMPARAM_SIZE);
+    _spShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
 }
 
 void URenderer::RenderRTs()
@@ -324,7 +324,7 @@ void URenderer::RenderBlend()
     SHPTR<UShader> spShader = FindShader(PROTO_RES_BLENDDEFFEREDSHADER);
     spShader->SettingPipeLineState(m_spCastingCommand);
     spShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
-    spShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, UTransform::TRANSFORMPARAM_SIZE);
+    spShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
     {
         SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::NONALPHA_DEFFERED);
         spShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::NONALPHA_DIFFUSE_DEFFERED));
@@ -404,7 +404,7 @@ void URenderer::RenderEnd()
         SHPTR<UShader> spDefferedShader = FindShader(PROTO_RES_FINALDEFFEREDSHADER);
         spDefferedShader->SettingPipeLineState(m_spCastingCommand);
         spDefferedShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
-        spDefferedShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, UTransform::TRANSFORMPARAM_SIZE);
+        spDefferedShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
         //  Diffuse Texture 가져와서 Bind 
         spDefferedShader->BindSRVBuffer(SRV_REGISTER::T0, m_spRenderTargetManager->
             FindRenderTargetTexture(RTGROUPID::BLEND_DEFFERED,
@@ -474,5 +474,5 @@ SHPTR<UShader> URenderer::FrameReadyDrawLast(const _wstring& _wstrShaderName)
 void URenderer::BindGrobalBuffer()
 {
     // Setting Grobal Data
-    m_spGlobalBuffer->SettingGlobalData(m_spCastingCommand, &m_stGlobalParam, GROBALBUFFER_SIZE);
+    m_spGlobalBuffer->SettingGlobalData(m_spCastingCommand, &m_stGlobalParam, GetTypeSize<GLOBALPARAM>());
 }

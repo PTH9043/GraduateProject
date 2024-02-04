@@ -197,7 +197,7 @@ namespace Engine {
 		std::this_thread::sleep_for(std::chrono::nanoseconds(_data));
 	}
 	/*
-	@ Date: 2023-01-05,  Writer: 박태현
+	@ Date: 2024-01-05,  Writer: 박태현
 	@ Explain
 	- 해당 Thread를 MicroSeconds만큼 쉬는 함수이다.
 	*/
@@ -207,11 +207,11 @@ namespace Engine {
 	{
 		std::this_thread::sleep_for(std::chrono::microseconds(_data));
 	}
-	/*
-`@ Date: 2023-01-05,  Writer: 박태현
-`@ Explain
-`- 해당 Thread를 MicroSeconds만큼 쉬는 함수이다.
-`*/
+		/*
+	@ Date: 2024-01-05,  Writer: 박태현
+	@ Explain
+	- 해당 Thread를 MiliSeconds만큼 쉬는 함수이다.
+	*/
 	template<class T>
 		requires std::is_integral_v<T>
 	static void ThreadMiliRelax(const T& _data)
@@ -219,35 +219,45 @@ namespace Engine {
 		std::this_thread::sleep_for(std::chrono::milliseconds(_data));
 	}
 
-#ifdef _USE_ATOMIC
-	template<class T, class U>
-	SHPTR<T> ATOM_STATIC_CAST(const SHPTR<U>& _ptr)
-	{
-		return std::static_pointer_cast<T>(_ptr.getShared());
+	/*
+	@ Date: 2024-02-04,  Writer: 박태현
+	@ Explain
+	- std::make_pair를 쓰기 싫어서 사용하는 함수
+	*/
+	template<class T1, class T2>
+	static std::pair<T1, T2> MakePair(const T1& _t1, const T2& _t2) { return std::move(std::pair<T1, T2>(_t1, _t2)); }
+	/*
+	@ Date: 2024-02-04,  Writer: 박태현
+	@ Explain
+	- sizeof를 쓰면, 지역 변수 호출인데 이 함수를 쓰면 전역 변수 호출이라 새로운 임시 변수를 만들지 않는다. 
+	*/
+	template<class Type>
+	static int GetTypeSize() { constexpr static int SIZE{ sizeof(Type) }; return SIZE; }
+	/*
+	@ Date: 2024-02-04,  Writer: 박태현
+	@ Explain
+	- 들어온 수를 num의 배수만큼의 수를 리턴하는 함수
+	*/
+	template<int Number, class T>
+	requires CheckNumber<T>
+	static T MakeMultipleNumber(T number) {
+		// 16의 배수로 만들기 위해 15를 더하고 16으로 나눕니다.
+		T remainder = number % Number;
+		if (remainder != 0) {
+			number += (Number - remainder);
+		}
+		return number;
+	}
+	/*
+	@ Date: 2024-02-04,  Writer: 박태현
+	@ Explain
+	- 들어온 수를 Divine 해주는 함수
+	*/
+	template<int Number, class T>
+	requires CheckNumber<T>
+	static T GetDivineNumber(T number) {
+		return static_cast<T>(number / Number);
 	}
 
-	template<class T, class U>
-	SHPTR<T> ATOM_DYNAMIC_CAST(const SHPTR<U>& _ptr)
-	{
-		return std::dynamic_pointer_cast<T>(_ptr.getShared());
-	}
-#else
-	template<class T, class U>
-	SHPTR<T>CUS_STATIC_CAST(const SHPTR<U>& _ptr)
-	{
-		return SHPTR<T>(_ptr, static_cast<T*>(_ptr.get()));
-	}
-
-	template<class T, class U>
-	SHPTR<T> CUS_DYNAMIC_CAST(const SHPTR<U>& _ptr)
-	{
-		if (auto* ptr = dynamic_cast<typename SHPTR<T>::element_type*>(_ptr.get())) {
-			return SHPTR<T>(_ptr, ptr);
-		}
-		else {
-			return SHPTR<T>();
-		}
-	}
-#endif
 #pragma endregion FUNCTION
 }

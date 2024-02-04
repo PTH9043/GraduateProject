@@ -3,7 +3,11 @@
 
 BEGIN(Engine)
 class UModel;
-
+/*
+@ Date: 2024-02-04, Writer: 박태현
+@ Explain
+- 모델의 뼈 정보를 담고 있는 클래스
+*/
 class  UBoneNode : public UBase{
 public:
 	UBoneNode();

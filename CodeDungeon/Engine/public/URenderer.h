@@ -102,7 +102,6 @@ private:
 private:
 	GLOBALPARAM																			m_stGlobalParam;
 	SHPTR< UGlobalConstantBuffer>											m_spGlobalBuffer;
-	constexpr static _uint																	GROBALBUFFER_SIZE{ sizeof(GLOBALPARAM) };
 	// Deffered Transform Param		
 	TRANSFORMPARAM																	 m_stFinalRenderTransformParam;
 	SHPTR<UShaderConstantBuffer>											m_spTransformConstantBuffer;

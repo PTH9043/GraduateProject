@@ -90,6 +90,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\\Public\\;..\\..\\Reference\\Headers\\</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -108,6 +109,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\\Public\\;..\\..\\Reference\\Headers\\</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -127,6 +129,7 @@
       <AdditionalIncludeDirectories>..\\Public\\;..\\..\\Reference\\Headers\\</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -146,6 +149,7 @@
       <AdditionalIncludeDirectories>..\\Public\\;..\\..\\Reference\\Headers\\</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -165,6 +169,7 @@
     <ClInclude Include="..\Public\ImGui\imstb_rectpack.h" />
     <ClInclude Include="..\Public\ImGui\imstb_textedit.h" />
     <ClInclude Include="..\Public\ImGui\imstb_truetype.h" />
+    <ClInclude Include="..\Public\TAnimControlView.h" />
     <ClInclude Include="..\Public\TAssimpAnimation.h" />
     <ClInclude Include="..\Public\TAssimpChannel.h" />
     <ClInclude Include="..\Public\TAssimpMeshContainer.h" />
@@ -174,8 +179,12 @@
     <ClInclude Include="..\Public\TMainCamera.h" />
     <ClInclude Include="..\Public\TMainScene.h" />
     <ClInclude Include="..\Public\TMainView.h" />
+    <ClInclude Include="..\Public\TModelView.h" />
     <ClInclude Include="..\Public\ToolDefines.h" />
     <ClInclude Include="..\Public\ToolMaker.h" />
+    <ClInclude Include="..\Public\TProtoMaker.h" />
+    <ClInclude Include="..\Public\TShowAnimModelObject.h" />
+    <ClInclude Include="..\Public\TShowModelObject.h" />
     <ClInclude Include="..\Public\TTestObject.h" />
     <ClInclude Include="..\Public\TToolApp.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
@@ -190,6 +199,7 @@
     <ClInclude Include="Tool.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\TAnimControlView.cpp" />
     <ClCompile Include="..\Private\TAssimpAnimation.cpp" />
     <ClCompile Include="..\Private\TAssimpChannel.cpp" />
     <ClCompile Include="..\Private\TAssimpMeshContainer.cpp" />
@@ -199,6 +209,10 @@
     <ClCompile Include="..\Private\TMainCamera.cpp" />
     <ClCompile Include="..\Private\TMainScene.cpp" />
     <ClCompile Include="..\Private\TMainView.cpp" />
+    <ClCompile Include="..\Private\TModelView.cpp" />
+    <ClCompile Include="..\Private\TProtoMaker.cpp" />
+    <ClCompile Include="..\Private\TShowAnimModelObject.cpp" />
+    <ClCompile Include="..\Private\TShowModelObject.cpp" />
     <ClCompile Include="..\Private\TTestObject.cpp" />
     <ClCompile Include="..\Private\TToolApp.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>

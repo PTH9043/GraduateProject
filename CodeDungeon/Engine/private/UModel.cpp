@@ -260,20 +260,20 @@ void UModel::LoadMeshData(std::ifstream& _ifRead, VECTOR<MESHDESC>& _convecMeshe
 			_ifRead.read((_char*)&iter.iNumIndices, sizeof(iter.iNumIndices));
 			// Positions
 			{
-				iter.pVtxModel = new VTXMODEL[iter.iNumVertices];
+				iter.pVtxModel = Make::AllocBuffer<VTXMODEL>(iter.iNumVertices);
 				size_t vtxModel = sizeof(VTXMODEL) * iter.iNumVertices;
 				_ifRead.read((_char*)iter.pVtxModel, vtxModel);
 			}
 			// Indexies
 			{
 				size_t index = sizeof(INDICIES32) * iter.iNumIndices;
-				iter.pIndices = new INDICIES32[iter.iNumIndices];
+				iter.pIndices = Make::AllocBuffer<INDICIES32>(iter.iNumIndices);
 				_ifRead.read((_char*)iter.pIndices, index);
 			}
 			// Positions 
 			{
 				size_t Positions = sizeof(_float3) * iter.iNumVertices;
-				iter.pPosition = new _float3[Positions];
+				iter.pPosition = Make::AllocBuffer<_float3>(Positions);
 				_ifRead.read((_char*)iter.pPosition, Positions);
 			}
 			{

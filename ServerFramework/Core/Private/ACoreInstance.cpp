@@ -131,8 +131,6 @@ namespace Core
 	void ACoreInstance::Free()
 	{
 		LOCKGUARD<MUTEX> Lock{ m_Mutex };
-		using namespace std;
-		std::this_thread::sleep_for(100ms);
 		m_spSpaceManager.reset();
 		m_spRandomManager.reset();
 		m_spLogManager.reset();

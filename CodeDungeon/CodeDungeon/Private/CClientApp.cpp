@@ -2,6 +2,7 @@
 #include "CClientApp.h"
 #include "UGameInstance.h"
 #include "UTimer.h"
+#include "UNetworkClientController.h"
 
 CClientApp::CClientApp() :
 	m_iTickCount{ 0 },
@@ -19,9 +20,7 @@ CClientApp::CClientApp() :
 	TICK_TIMER{ L"TICK_TIMER" },
 	RENDER_TIMER{ L"RENDER_TIMER" },
 	RENDER_DELETATIMER{ L"RENDER_DELTATIMER" },
-	m_isTickThread{ true },
-	m_isRenderingThread{ true },
-	m_isTickEnd{ false }
+	m_isTickThread{ true }
 {
 }
 
@@ -41,6 +40,8 @@ HRESULT CClientApp::NativeConstruct(const HINSTANCE& _hInst, const _uint& _iCmdS
 	m_spRenderDeltaTimer = m_spGameInstance->CreateTimerAdd(RENDER_DELETATIMER);
 	// 클라이언트 스레드 등록
 	m_spGameInstance->RegisterFuncToRegister(ClientThread, this);
+	// 네트워크 스레드 등록
+//	m_spGameInstance->StartNetwork(CreateNative<UNetworkClientController>(IP_ADDRESS, TCP_PORT_NUM));
 	return S_OK;
 }
 
@@ -75,7 +76,7 @@ void CClientApp::Render()
 	ZeroMemory(&msg, sizeof(MSG));
 
 	// 기본 메시지 루프입니다:
-	while (true)
+	while (m_isTickThread)
 	{
 		// if PeekMeesage
 		while (::PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
@@ -84,9 +85,8 @@ void CClientApp::Render()
 			::DispatchMessage(&msg);
 			if (msg.message == WM_QUIT)
 			{
-				m_isRenderingThread = false;
 				m_isTickThread = false;
-				m_spGameInstance->Free();
+				m_spGameInstance->NetworkEnd();
 				return;
 			}
 		}

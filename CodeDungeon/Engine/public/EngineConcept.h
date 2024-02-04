@@ -15,7 +15,14 @@ namespace Engine
 	concept SharedPtrConvertible = requires(T t) {
 		{ std::shared_ptr<T>(std::move(t)) };
 	};
-
+	/*
+	@ Date: 2024-02-04, Writer: 박태현
+	@ Explain: ProtoType 클래스인지 체크하는 concept
+	*/
+	template<typename T>
+	concept CheckProtoType = requires(T * _t) {
+		{_t->ByteSizeLong() }->std::same_as<size_t>;
+	};
 	template <typename T, typename U>
 	concept ConvertibleFrom = (SameType<T, U> || ParentsChildType<T, U> || Convertible<T, U>);
 

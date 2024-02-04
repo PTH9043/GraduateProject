@@ -38,7 +38,7 @@ static const char* CLONETYPE_ONCE_STRING{ "CLONETYPE_ONCE" };
 // Use Atomic Shared PTr
 #define _USE_ATOMIC
 // Use Debugging Values
-//#define _USE_DEBUGGING
+#define _USE_DEBUGGING
 #pragma comment(lib, "WS2_32.lib")
 #pragma comment(lib, "MSWSock.lib")
 
@@ -89,6 +89,8 @@ static const char* CLONETYPE_ONCE_STRING{ "CLONETYPE_ONCE" };
 
 #include <concurrent_queue.h>
 #include <concurrent_vector.h>
+#include <concurrent_priority_queue.h>
+#include <concurrent_unordered_map.h>
 
 #include "EnginePacket.h"
 #include "EngineConcept.h"

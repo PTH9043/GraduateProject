@@ -4,7 +4,11 @@
 BEGIN(Tool)
 class TAssimpModel;
 class TAssimpBoneNode;
-
+/*
+@ Date: 2024-02-04, Writer: 박태현
+@ Explain
+- Animation Frame 마다 있는 Channel 클래스
+*/
 class TAssimpChannel : public UBase {
 public:
 	TAssimpChannel();

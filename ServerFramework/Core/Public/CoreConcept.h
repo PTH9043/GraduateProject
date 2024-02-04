@@ -11,7 +11,7 @@ namespace Core
 	@ Explain: 해당하는 Template가 숫자인지 확인
 	*/
 	template <typename T>
-	concept Number = std::integral<T> || std::floating_point<T>;
+	concept CheckNumber = std::integral<T> || std::floating_point<T>;
 
 	/*
 	@ Date: 2023-12-26, Writer: 박태현

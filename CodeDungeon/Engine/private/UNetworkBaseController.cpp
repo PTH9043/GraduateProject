@@ -15,22 +15,19 @@ UNetworkBaseController::UNetworkBaseController() :
 {
 }
 
-HRESULT UNetworkBaseController::NativeConstruct(const _wstring& _wstrIPAddress, const _int _PortNumber)
+HRESULT UNetworkBaseController::NativeConstruct(const _string& _strIPAddress, const _int _PortNumber)
 {
 	// Create Socket
-	m_IocpHandle = UServerMethods::CreateIocpHandle();
-	m_ClientTcpSocket = UServerMethods::CreateTcpSocket(WSA_FLAG_OVERLAPPED);
-	UServerMethods::RegisterIocpToSocket(m_ClientTcpSocket, m_IocpHandle);
-	m_spNetworkAddress = Create<UNetworkAddress>(_wstrIPAddress, _PortNumber);
-
+	m_spNetworkAddress = Create<UNetworkAddress>(_strIPAddress, _PortNumber);
 	// Wsa Connect 
 	RETURN_CHECK(UServerMethods::ReadyConnectToServer(&m_WsaData), E_FAIL);	
+	m_ClientTcpSocket = UServerMethods::CreateTcpSocket();
 	RETURN_CHECK(UServerMethods::ServerToConnect(m_ClientTcpSocket, m_spNetworkAddress), E_FAIL);
+	m_IocpHandle = UServerMethods::CreateIocpHandle();
+	UServerMethods::RegisterIocpToSocket(m_ClientTcpSocket, m_IocpHandle);
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	spGameInstance->RegisterFuncToRegister(ServerThread, this);
-
-	RecvTcpPacket();
 	return S_OK;
 }
 
@@ -40,8 +37,11 @@ void UNetworkBaseController::ServerTick()
 	ULONG_PTR key;
 	WSAOVERLAPPED* over = nullptr;
 	BOOL ret = GetQueuedCompletionStatus(m_IocpHandle, &num_bytes, &key, &over, INFINITE);
+	if (SERVER_END == num_bytes)
+		return;
 	UOverExp* ex_over = reinterpret_cast<UOverExp*>(over);
-	
+
+
 	if (FALSE == ret) {
 		ASSERT_CRASH("Failed Connect");
 		if (ex_over->GetCompType() < OP_SEND_END)
@@ -66,14 +66,19 @@ void UNetworkBaseController::ServerTick()
 	}
 }
 
+void UNetworkBaseController::NativePacket()
+{
+	RecvTcpPacket();
+}
+
 void UNetworkBaseController::TcpPacketRecv(UOverExp* _pOverExp, _llong _numBytes)
 {
 	// Total Buffer에 값을 복사 
 	::memcpy(&m_TcpTotalBuffer[m_RemainBufferLength], _pOverExp->GetBufferAddress(), _numBytes);
-	_llong value = _numBytes + m_RemainBufferLength;
+	m_RemainBufferLength += _numBytes;
 	char* pBuffer = &m_TcpTotalBuffer[0];
 	_llong MoveBufferValue = 0;
-	while (value > 0)
+	while (m_RemainBufferLength > 0)
 	{
 		PACKETHEAD Head;
 		::memcpy(&Head, &m_TcpTotalBuffer[0], PACKETHEAD_SIZE);
@@ -84,7 +89,7 @@ void UNetworkBaseController::TcpPacketRecv(UOverExp* _pOverExp, _llong _numBytes
 			return;
 		}
 		ProcessPacket(&pBuffer[MoveBufferValue], Head);
-		MoveBufferValue -= CurrentPacketSize;
+		m_RemainBufferLength -= CurrentPacketSize;
 		pBuffer += CurrentPacketSize;
 		MoveBufferValue += CurrentPacketSize;
 	}
@@ -107,15 +112,20 @@ void UNetworkBaseController::ServerThread(void* _pData)
 {
 	UNetworkBaseController* pNetworkBaseController = static_cast<UNetworkBaseController*>(_pData);
 	RETURN_CHECK(nullptr == pNetworkBaseController, ;);
+	pNetworkBaseController->NativePacket();
 	while (pNetworkBaseController->m_isNetworkTickRunning)
 	{
 		pNetworkBaseController->ServerTick();
 	}
+	CloseHandle(pNetworkBaseController->m_IocpHandle);
 }
 
 void UNetworkBaseController::Free()
 {
+	std::atomic_thread_fence(std::memory_order_seq_cst);
 	m_isNetworkTickRunning = false;
+	PostQueuedCompletionStatus(m_IocpHandle, SERVER_END, 0, 0);
+	WaitForSingleObject(m_IocpHandle, INFINITE);
 	closesocket(m_ClientTcpSocket);
 	WSACleanup();
 }

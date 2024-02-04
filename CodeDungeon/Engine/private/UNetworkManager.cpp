@@ -26,5 +26,5 @@ void UNetworkManager::PopProcessedData(POINTER_IN UProcessedData* _pData)
 
 void UNetworkManager::Free()
 {
-
+	m_spNetworkBaseController.reset();
 }

@@ -215,11 +215,12 @@ public: /* PipeLine */
 public: /* FilePath Manager*/
 	SHPTR<FILEGROUP> FindFolder(const PATHS& _vecFolderList);
 	SHPTR<FILEGROUP>	FindFolder(const _wstring& _wstrFindName, const _wstring& _wstrParentsFolderName = L"");
-	HRESULT LoadFirstFilder(const _wstring& _wstrFilePath);
+	HRESULT LoadFirstFolder(const _wstring& _wstrFilePath);
 public: /* NetworkManager */
 	HRESULT StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController);
 	void InsertProcessedDataToContainer(void* _pData, size_t _Size, _int _DataType);
 	void PopProcessedData(POINTER_IN UProcessedData* _pData);
+	void NetworkEnd();
 private: /* Ready Datas */
 	HRESULT ReadyResource(const OUTPUTDATA& _stData);
 	HRESULT ReadyComp(const OUTPUTDATA& _stData);

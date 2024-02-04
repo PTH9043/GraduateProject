@@ -4,7 +4,15 @@
 #include "Allocator.h"
 
 namespace Core {
-
+	/*
+	@ Date: 2024-02-04, Writer: 박태현
+	@ Explain
+	-  기본 메모리 사이즈 (Memory Pool 최적화를 위함)
+	*/
+	enum
+	{
+		BASE_ALLOC_SIZE = 16
+	};
 	/*
 	@ Date: 2023-12-31
 	@ Writer: 박태현
@@ -46,7 +54,7 @@ namespace Core {
 	- 메모리들을 저장하는 클래스
 	*/
 	class CORE_DLL AMemoryPool {
-		using MEMORYQUEUE = CONQUEUE<MEMORYHEADER*>;
+		using MEMORYQUEUE = CONPRIORITYQUEUE<MEMORYHEADER*>;
 	public:
 		AMemoryPool(const _ullong& _AllocateSize);
 		~AMemoryPool();
@@ -77,10 +85,10 @@ namespace Core {
 	class CORE_DLL AMemoryAdminster {
 		enum
 		{
-			POOL_COUNT = (512 / 32) + (1024 / 64) + (1024 / 128) + (2048 / 256),
-			MAX_ALLOC_SIZE = 5120
+			POOL_COUNT = 500,
+			MAX_ALLOC_SIZE = BASE_ALLOC_SIZE * POOL_COUNT
 		};
-	public: 
+	public:
 		AMemoryAdminster();
 		~AMemoryAdminster();
 
@@ -88,14 +96,12 @@ namespace Core {
 		void Release(void* _Ptr);
 
 	private:
-		void MakeMemoryPool(_uint _Size, REF_IN _uint& _TableIndex,
-			const _uint _Limited, const _uint _AddValue);
+		void MakeMemoryPool(_uint _Size, const _uint _Limited, const _uint _AddValue);
 
 	private:
 		// 메모리를 빠르게 찾기 위한 풀 테이블이다. 
-		ARRAY<AMemoryPool*, MAX_ALLOC_SIZE + 1>		m_PoolTable;
-
-		CONVECTOR<AMemoryPool*>										m_Pools;
+		ARRAY<AMemoryPool*, POOL_COUNT>		m_PoolTable;
+		CONUNORMAP<_ullong, int>							m_KeyTable;
 	};
 
 }

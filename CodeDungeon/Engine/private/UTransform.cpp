@@ -5,8 +5,6 @@
 #include "UGameInstance.h"
 #include "UShader.h"
 
-constexpr _uint							UTransform::TRANSFORMPARAM_SIZE;
-
 UTransform::UTransform(CSHPTRREF<UDevice> _spDevice) :
 	UComponent(_spDevice),
 	// Shader 
@@ -377,7 +375,7 @@ HRESULT UTransform::BindTransformData(CSHPTRREF< UShader> _spShader)
 	m_stTransformParam.iCamIndex = spGameInstance->GetRenderCamID();
 	m_stTransformParam.mPrevWorldMatrix = m_stTransformParam.mWorldMatrix;
 	m_stTransformParam.mWorldMatrix = m_mChangeWorldMatrix.Transpose();
-	return _spShader->BindCBVBuffer(m_TransformBuffer, &m_stTransformParam, TRANSFORMPARAM_SIZE);
+	return _spShader->BindCBVBuffer(m_TransformBuffer, &m_stTransformParam, GetTypeSize<TRANSFORMPARAM>());
 }
 
 HRESULT UTransform::BindTransformData(CSHPTRREF<UShader> _spShader, const _float4x4& _mTransform)
@@ -387,7 +385,7 @@ HRESULT UTransform::BindTransformData(CSHPTRREF<UShader> _spShader, const _float
 	m_stTransformParam.iCamIndex = spGameInstance->GetRenderCamID();
 	m_stTransformParam.mPrevWorldMatrix = _mTransform;
 	m_stTransformParam.mWorldMatrix = m_mChangeWorldMatrix.Transpose();
-	return _spShader->BindCBVBuffer(m_TransformBuffer, &m_stTransformParam, TRANSFORMPARAM_SIZE);
+	return _spShader->BindCBVBuffer(m_TransformBuffer, &m_stTransformParam, GetTypeSize<TRANSFORMPARAM>());
 }
 
 HRESULT UTransform::BindTransformData(CSHPTRREF<UShader> _spShader, CAMID _RenderCamID)
@@ -397,7 +395,7 @@ HRESULT UTransform::BindTransformData(CSHPTRREF<UShader> _spShader, CAMID _Rende
 	m_stTransformParam.iCamIndex = _RenderCamID;
 	m_stTransformParam.mPrevWorldMatrix = m_stTransformParam.mWorldMatrix;
 	m_stTransformParam.mWorldMatrix = m_mChangeWorldMatrix.Transpose();
-	return _spShader->BindCBVBuffer(m_TransformBuffer, &m_stTransformParam, TRANSFORMPARAM_SIZE);
+	return _spShader->BindCBVBuffer(m_TransformBuffer, &m_stTransformParam, GetTypeSize<TRANSFORMPARAM>());
 }
 
 #ifdef _USE_IMGUI

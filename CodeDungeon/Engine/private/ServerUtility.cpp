@@ -6,7 +6,7 @@
 _bool UServerMethods::ReadyConnectToServer(WSADATA* _pWsaData)
 {
 	std::wcout.imbue(std::locale("Korean"));
-	_int Error = WSAStartup(MAKEWORD(2, 0), _pWsaData);
+	_int Error = WSAStartup(MAKEWORD(2, 2), _pWsaData);
 	return 0 != Error;
 }
 
@@ -20,14 +20,14 @@ void UServerMethods::RegisterIocpToSocket(const SOCKET& _Socket, const HANDLE& _
 	CreateIoCompletionPort(reinterpret_cast<HANDLE>(_Socket), _IocpHandle, 9999, 0);
 }
 
-SOCKET UServerMethods::CreateTcpSocket(_int _OverlappedValue)
+SOCKET UServerMethods::CreateTcpSocket()
 {
-	return WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, 0, _OverlappedValue);
+	return socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 }
 
-SOCKET UServerMethods::CreateUdpSocket(_int _OverlappedValue)
+SOCKET UServerMethods::CreateUdpSocket()
 {
-	return WSASocket(AF_INET, SOCK_STREAM, IPPROTO_UDP, NULL, 0, _OverlappedValue);
+	return socket(AF_INET, SOCK_STREAM, IPPROTO_UDP);
 }
 
 void UServerMethods::RecvTcpPacket(const SOCKET& _Socket, REF_IN UOverExp& _OverExp)
@@ -58,9 +58,9 @@ bool UServerMethods::ServerToConnect(const SOCKET& _Socket, SOCKADDR_IN* _pSocke
 
 bool UServerMethods::ServerToConnect(const SOCKET& _Socket, CSHPTRREF<UNetworkAddress> _spNetworkAddress)
 {
-	_int iResult = WSAConnect(_Socket, reinterpret_cast<sockaddr*>(_spNetworkAddress->GetSockAddrPointer()),
-		sizeof(SOCKADDR_IN), 0, 0, 0, 0);
-	return 0 != iResult;
+	_int iResult = connect(_Socket, reinterpret_cast<sockaddr*>(_spNetworkAddress->GetSockAddrPointer()),
+		sizeof(SOCKADDR_IN));
+	return SOCKET_ERROR == iResult;
 }
 
 /*
@@ -90,7 +90,7 @@ UOverExp::UOverExp(_char* _Packet, const int _Size, COMP_TYPE _type)
 
 UOverExp::UOverExp(_char* _pPacket, _short _PacketType, _short _PacketSize, COMP_TYPE _type)
 {
-	m_wsaBuffer.len = _PacketSize + PACKETSIZE_SIZE;
+	m_wsaBuffer.len = _PacketSize + PACKETHEAD_SIZE;
 	m_wsaBuffer.buf = &m_Buffer[0];
 	m_CompType = _type;
 	ZeroMemory(&m_Over, sizeof(WSAOVERLAPPED));
@@ -115,16 +115,8 @@ UOverExp
 UNetworkAddress
 ===========================================================
 */
-UNetworkAddress::UNetworkAddress(SOCKADDR_IN _SocketAddr) : m_SocketAddr{_SocketAddr}
-{
-	WCHAR buffer[100];
-	::InetNtopW(AF_INET, &m_SocketAddr.sin_addr, buffer, sizeof(buffer));
-	m_wstrIPAddress = buffer;
-	m_PortNumber = ::ntohs(m_SocketAddr.sin_port);
-}
-
-UNetworkAddress::UNetworkAddress(const _wstring& _wstrIPAddress, _uint _PortNumber) : 
-	m_wstrIPAddress{_wstrIPAddress}, m_PortNumber{_PortNumber}
+UNetworkAddress::UNetworkAddress(const _string& _strIPAddress, _uint _PortNumber) : 
+	m_strIPAddress{ _strIPAddress }, m_PortNumber{_PortNumber}
 {
 	::memset(&m_SocketAddr, 0, sizeof(SOCKADDR_IN));
 	m_SocketAddr.sin_family = AF_INET;
@@ -135,7 +127,7 @@ UNetworkAddress::UNetworkAddress(const _wstring& _wstrIPAddress, _uint _PortNumb
 IN_ADDR UNetworkAddress::IpToAddress()
 {
 	IN_ADDR address;
-	::InetPtonW(AF_INET, m_wstrIPAddress.c_str(), &address);
+	::inet_pton(AF_INET, m_strIPAddress.c_str(), &address);
 	return address;
 }
 

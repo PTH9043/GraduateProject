@@ -42,6 +42,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     spGameInstance->JoinRegister();
     // spClientApp->Render();
     spClientApp.reset();
+    spGameInstance->Free();
     spGameInstance.reset();
     UGameInstance::DestroyInstance();
     return (_int)(0);

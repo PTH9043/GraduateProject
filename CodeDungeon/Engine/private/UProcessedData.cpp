@@ -4,7 +4,7 @@
 UProcessedData::UProcessedData(void* _pData, size_t _Size, _int _DataType) : 
 	m_pData{nullptr}, m_DataType{_DataType}, m_isMake{true}
 {
-	m_pData = Make::AllocBuffer(_Size);
+	m_pData = Make::AllocBuffer<_char>(_Size);
 	::memcpy(m_pData, _pData, _Size);
 }
 

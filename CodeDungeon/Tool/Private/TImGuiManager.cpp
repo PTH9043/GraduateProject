@@ -5,7 +5,7 @@
 #include "UTableDescriptor.h"
 #include "TImGuiView.h"
 #include "TMainView.h"
-//#include "TModelConverter.h"
+#include "TModelView.h"
 //#include "TSceneView.h"
 //#include "URenderCommand.h"
 #include "UGameInstance.h"
@@ -14,7 +14,7 @@
 IMPLEMENT_SINGLETON(TImGuiManager)
 
 TImGuiManager::TImGuiManager() :
-	m_uomapImGuiObjects{},
+	m_ImGuiObjectContainer{},
 	m_spMainView{ nullptr },
 	m_spDevice{ nullptr },
 	m_spGpuCommand{ nullptr },
@@ -24,7 +24,7 @@ TImGuiManager::TImGuiManager() :
 
 void TImGuiManager::Free()
 {
-	m_uomapImGuiObjects.clear();
+	m_ImGuiObjectContainer.clear();
 	// Cleanup
 	ImGui_ImplDX12_Shutdown();
 	ImGui_ImplWin32_Shutdown();
@@ -72,8 +72,8 @@ HRESULT TImGuiManager::ReadyManager(const GRAPHICDESC& _stGraphicDesc, const OUT
 
 SHPTR<TImGuiView> TImGuiManager::GetImGuiObject(const IMGTAG _eImGuiTag)
 {
-	const IMGOBJECTS::iterator& it = m_uomapImGuiObjects.find(_eImGuiTag);
-	RETURN_CHECK(it == m_uomapImGuiObjects.end(), nullptr);
+	const IMGOBJECTS::iterator& it = m_ImGuiObjectContainer.find(_eImGuiTag);
+	RETURN_CHECK(it == m_ImGuiObjectContainer.end(), nullptr);
 	return it->second;
 }
 
@@ -123,14 +123,14 @@ HRESULT TImGuiManager::ReadyImGuiClass()
 {
 	{
 		m_spMainView = CreateConstructorNative<TMainView>(m_spDevice);
-		m_uomapImGuiObjects.insert(std::make_pair(IMGTAG::MAIN, m_spMainView));
+		m_ImGuiObjectContainer.insert(MakePair(IMGTAG::MAIN, m_spMainView));
 	}
-	//{
-	//	SHPTR<TModelConverter> spModelConverter = CreateConstructorNative<TModelConverter>(m_spDevice);
-	//	spModelConverter->CloseImGui();
-	//	m_uomapImGuiObjects.insert(std::make_pair(IMGTAG::MODELCONVERTER, spModelConverter));
-	//	m_spMainView->InsertImGuiView(spModelConverter);
-	//}
+	{
+		SHPTR<TModelView> spModelConverter = CreateConstructorNative<TModelView>(m_spDevice);
+		spModelConverter->CloseImGui();
+		m_ImGuiObjectContainer.insert(MakePair(IMGTAG::MODELCONVERTER, spModelConverter));
+		m_spMainView->InsertImGuiView(spModelConverter);
+	}
 	//{
 	//	SHPTR<TSceneView> spSceneView = CreateConstructorNative<TSceneView>(m_spDevice);
 	//	spSceneView->CloseImGui();

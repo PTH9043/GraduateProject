@@ -50,9 +50,7 @@ private:
 	const _wstring								RENDER_TIMER;
 	const _wstring								RENDER_DELETATIMER;
 
-	_bool												m_isRenderingThread;
 	_bool												m_isTickThread;
-	_bool												m_isTickEnd;
 
 };
 

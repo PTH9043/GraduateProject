@@ -106,9 +106,6 @@ public:
 public:
 	virtual void ShowObjectInfo() override;
 #endif
-public:
-	// Transform Param¿« Static value
-	static constexpr _uint							TRANSFORMPARAM_SIZE{sizeof(TRANSFORMPARAM)};
 private:
 	// Shader 
 	SHPTR<UShaderConstantBuffer>	m_TransformBuffer{ nullptr };

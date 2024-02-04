@@ -6,7 +6,7 @@ namespace Core
 #pragma region FUNCTION 
 
 	/*
-	@ Date: 2023-01-10,  Writer: 박태현
+	@ Date: 2024-01-10,  Writer: 박태현
 	@ Explain
 	- 앱을 만들어서 등록하는 함수이다.
 	*/
@@ -18,7 +18,7 @@ namespace Core
 		return App;
 	}
 	/*
-	@ Date: 2023-01-09,  Writer: 박태현
+	@ Date: 2024-01-09,  Writer: 박태현
 	@ Explain
 	- 현재 밀리세컨드를 구하는 함수이다. 
 	*/
@@ -28,7 +28,7 @@ namespace Core
 		return std::chrono::duration_cast<std::chrono::milliseconds>(Time.time_since_epoch()).count();
 	}
 	/*
-	@ Date: 2023-01-13,  Writer: 박태현
+	@ Date: 2024-01-13,  Writer: 박태현
 	@ Explain
 	- 현재 밀리세컨드를 구하는 함수이다.
 	*/
@@ -39,12 +39,12 @@ namespace Core
 	}
 
 	/*
-	@ Date: 2023-01-05,  Writer: 박태현
+	@ Date: 2024-01-05,  Writer: 박태현
 	@ Explain
 	- _temp가 _Value를 넘었는지 확인하는 함수
 	*/
 	template<class T, class Value >
-	requires (Number<T> && Number<Value>)
+	requires (CheckNumber<T> && CheckNumber<Value>)
 	static T CheckOverValue(const T& _temp, const Value& _Value)
 	{
 		T convert = static_cast<T>(_Value);
@@ -55,7 +55,7 @@ namespace Core
 		return _temp;
 	}
 	/*
-	@ Date: 2023-01-05,  Writer: 박태현
+	@ Date: 2024-01-05,  Writer: 박태현
 	@ Explain
 	- 메모리를 초기화하기 위한 함수, Window함수인 ZeroMemory를 쓰지 않기 위함이다.
 	*/
@@ -66,7 +66,7 @@ namespace Core
 		std::memset(_pData, ZEROMEMORY, _bufferSize);
 	}
 	/*
-	@ Date: 2023-01-05,  Writer: 박태현
+	@ Date: 2024-01-05,  Writer: 박태현
 	@ Explain
 	- 해당 Thread를 nanoseconds만큼 쉬는 함수이다.
 	*/
@@ -77,7 +77,7 @@ namespace Core
 		std::this_thread::sleep_for(std::chrono::nanoseconds(_data));
 	}
 	/*
-	@ Date: 2023-01-05,  Writer: 박태현
+	@ Date: 2024-01-05,  Writer: 박태현
 	@ Explain
 	- 해당 Thread를 MicroSeconds만큼 쉬는 함수이다.
 	*/
@@ -87,8 +87,20 @@ namespace Core
 	{
 		std::this_thread::sleep_for(std::chrono::microseconds(_data));
 	}
+
 	/*
-	@ Date: 2023-01-02,  Writer: 박태현
+	@ Date: 2024-01-05,  Writer: 박태현
+	@ Explain
+	- 해당 Thread를 MiliSeconds만큼 쉬는 함수이다.
+	*/
+	template<class T>
+		requires std::is_integral_v<T>
+	static void ThreadMiliRelax(const T& _data)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(_data));
+	}
+	/*
+	@ Date: 2024-01-02,  Writer: 박태현
 	@ Explain
 	- 멀티쓰레드에서 안전하게 값을 바꾸기 위한 함수
 	*/
@@ -99,7 +111,7 @@ namespace Core
 	}
 	
 	/*
-	@ Date: 2023-01-02,  Writer: 박태현
+	@ Date: 2024-01-02,  Writer: 박태현
 	@ Explain
 	- 멀티쓰레드에서 안전하게 값을 바꾸기 위한 함수
 	*/
@@ -107,12 +119,49 @@ namespace Core
 	static bool CAS(REF_IN std::atomic<T>& _Data, Value _expected, const Value& _value) {
 		return _Data.compare_exchange_strong(_expected, _value);
 	}
-
+	/*
+	@ Date: 2024-01-02,  Writer: 박태현
+	@ Explain
+	- std::make_pair를 쓰기 싫어서 사용하는 함수
+	*/
 	template<class T1, class T2>
 	static std::pair<T1, T2> MakePair(T1& _t1, T2& _t2) { return std::move(std::pair<T1, T2>(_t1, _t2)); }
 
 	/*
-	@ Date: 2023-12-26, Writer: 박태현
+	@ Date: 2024-02-04,  Writer: 박태현
+	@ Explain
+	- sizeof를 쓰면, 지역 변수 호출인데 이 함수를 쓰면 전역 변수 호출이라 새로운 임시 변수를 만들지 않는다.
+	*/
+	template<class Type>
+	static int GetTypeSize() { constexpr static int SIZE{ sizeof(Type) }; return SIZE; }
+	/*
+	@ Date: 2024-02-04,  Writer: 박태현
+	@ Explain
+	- 들어온 수를 num의 배수만큼의 수를 리턴하는 함수
+	*/
+	template<int Number, class T>
+		requires CheckNumber<T>
+	static T MakeMultipleNumber(T number) {
+		// 16의 배수로 만들기 위해 15를 더하고 16으로 나눕니다.
+		T remainder = number % Number;
+		if (remainder != 0) {
+			number += (Number - remainder);
+		}
+		return number;
+	}
+	/*
+	@ Date: 2024-02-04,  Writer: 박태현
+	@ Explain
+	- 들어온 수를 Divine 해주는 함수
+	*/
+	template<int Number, class T>
+		requires CheckNumber<T>
+	static T GetDivineNumber(T number) {
+		return static_cast<T>(number / Number);
+	}
+
+	/*
+	@ Date: 2024-12-26, Writer: 박태현
 	@ Explain
 	- 단순히 객체를 만드는 함수이다, 
 	*/

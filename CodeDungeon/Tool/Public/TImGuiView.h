@@ -3,7 +3,7 @@
 #include "UObject.h"
 
 /*
-@ Date: 2024-02-03, Writer: 이성현
+@ Date: 2024-02-04, Writer: 이성현, 박태현
 @ Explain
 - Imgui 뷰들의 부모 클래스
 */
@@ -76,7 +76,8 @@ protected:
 	virtual void TickActive(const _double& _dTimeDelta) PURE;
 	virtual void LateTickActive(const _double& _dTimeDetla) PURE;
 	virtual void RenderActive() PURE;
-
+	// 해당하는 함수가 있어야지 삭제함  @Writer: 박태현
+	void ActiveReleaseResource();
 private:
 	void TickNonActive(const _double& _dTimeDelta) {}
 	void LateTickNonActive(const _double& _dTimeDelta) {}

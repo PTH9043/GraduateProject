@@ -17,7 +17,7 @@ public:
 	SHPTR<FILEGROUP> FindFolder(const PATHS& _vecFolderList);
 	SHPTR<FILEGROUP>	FindFolder(const _wstring& _wstrFindName, const _wstring& _wstrParentsFolderName = L"");
 
-	HRESULT LoadFirstFilder(const _wstring& _wstrFilePath);
+	HRESULT LoadFirstFolder(const _wstring& _wstrFilePath);
 	HRESULT ClearLoader(LIST<SHPTR<FILEGROUP>>& _lsFileGroup, CSHPTRREF<FILEGROUP> _spFileGroup = nullptr);
 private:
 	HRESULT LoadUpperFolder(const _wstring& _wstrFirstFolderName, const _wstring& _wstrPath, CSHPTRREF<FILEGROUP> _spFileGroup = nullptr);

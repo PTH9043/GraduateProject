@@ -8,6 +8,11 @@ using BUFFER = ARRAY < _char, MAX_BUFFER_LENGTH>;
 
 enum COMP_TYPE { OP_TCP_SEND, OP_UDP_SEND, OP_SEND_END , OP_TCP_RECV, OP_UDP_RECV};
 
+enum
+{
+	SERVER_END = 99999
+};
+
 class UOverExp;
 class UNetworkAddress;
 /*
@@ -21,8 +26,8 @@ public:
 	static _bool ReadyConnectToServer(WSADATA* _pWsaData);
 	static HANDLE CreateIocpHandle();
 	static void RegisterIocpToSocket(const SOCKET& _Socket, const HANDLE& _IocpHandle);
-	static SOCKET CreateTcpSocket(_int _OverlappedValue = 0);
-	static SOCKET CreateUdpSocket(_int _OverlappedValue = 0);
+	static SOCKET CreateTcpSocket();
+	static SOCKET CreateUdpSocket();
 	static void RecvTcpPacket(const SOCKET& _Socket, REF_IN UOverExp& _OverExp);
 	static void SendTcpPacket(const SOCKET& _Socket, UOverExp* _pOverExp);
 	static void StartNonBlocking(const SOCKET& _Socket);
@@ -80,15 +85,14 @@ UNetworkAddress
 */
 class UNetworkAddress final : public UBase {
 public:
-	UNetworkAddress(SOCKADDR_IN _SocketAddr);
-	UNetworkAddress(const _wstring& _strIPAddress, _uint _PortNumber);
+	UNetworkAddress(const _string& _strIPAddress, _uint _PortNumber);
 	NO_COPY(UNetworkAddress)
 	DESTRUCTOR(UNetworkAddress)
 public:
 	SOCKADDR_IN& GetSockAddr(REF_RETURN) { return m_SocketAddr; }
 	SOCKADDR_IN* GetSockAddrPointer()  { return &m_SocketAddr; }
 	const _uint GetPortNumber() const { return m_PortNumber; }
-	const _wstring& GetIPAddress() const { return m_wstrIPAddress; }
+	const _string& GetIPAddress() const { return m_strIPAddress; }
 private:
 	IN_ADDR IpToAddress();
 private:
@@ -97,7 +101,7 @@ private:
 private:
 	SOCKADDR_IN			m_SocketAddr;
 	_uint							m_PortNumber;
-	_wstring						m_wstrIPAddress;
+	_string						m_strIPAddress;
 };
 /*
 ===========================================================

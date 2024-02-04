@@ -56,7 +56,7 @@ void UVIBuffer::Free()
 {
 	if (false == IsClone())
 	{
-		Safe_Delete_Array(m_pIndices);
+		Make::ReleaseBuffer(m_pIndices);
 	}
 }
 

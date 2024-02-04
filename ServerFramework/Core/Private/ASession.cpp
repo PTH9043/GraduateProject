@@ -95,7 +95,7 @@ namespace Core
 			memcpy(&PacketHead, pBufferMove, PACKETHEAD_SIZE);
 			short CurrPacket = PacketHead.PacketSize + PACKETHEAD_SIZE;
 			// 패킷의 현재 위치가 음수가 되는 경우면 
-			if ((m_CurBuffuerLocation - CurrPacket) < 0)
+			if ((m_CurBuffuerLocation - CurrPacket) < 0)     
 			{
 #ifdef USE_DEBUG
 		//		std::cout << m_CurBuffuerLocation << "\n";

@@ -53,7 +53,8 @@ HRESULT UChannel::NativeConstruct(CSHPTRREF<UAnimModel> _spAnimModel, const CHAN
 	m_wstrBoneName = _stChannelDesc.wstrBoneName;
 	m_spBoneNode = _spAnimModel->GetBoneNode(m_wstrBoneName);
 	KEYFRAME* pKeyFrame = _stChannelDesc.pKeyFrames;
-	Safe_Delete_Array(pKeyFrame);
+	Make::ReleaseBuffer(pKeyFrame);
+//	Safe_Delete_Array(pKeyFrame);
 	return S_OK;
 }
 

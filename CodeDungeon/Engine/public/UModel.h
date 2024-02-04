@@ -6,7 +6,11 @@ class UBoneNode;
 class UMeshContainer;
 class UShader;
 class UCommand;
-
+/*
+@ Date: 2024-02-04, Writer: 박태현
+@ Explain
+- 모델의 메쉬, 뼈 정보, 모델의 텍스쳐 정보들을 VECTOR 컨테이너들로 담고 있는 클래스이다. 
+*/
 class  UModel : public UResource{
 public:
 	enum class TYPE
@@ -40,14 +44,19 @@ public:
 	CLONE_MACRO(UModel, "UModel::Clone To Failed")
 	virtual void Free() override;
 	virtual HRESULT NativeConstruct() override;
+	// 해당 PATH로 모델 로드
 	 HRESULT NativeConstruct(const _wstring& _wstrPath);
+	 // 해당 폴더와 파일 데이터로 로드
 	 HRESULT NativeConstruct(CSHPTRREF<FILEGROUP> _spFileGroup, CSHPTRREF<FILEDATA> _spFileData);
+	 // PATH를 입력하고 파일 이름을 입력하면 찾아서 온다. 
 	 HRESULT NativeConstruct(const PATHS& _vecPaths, const _wstring& _wstrFileName);
+	 // 모델의 폴더 이름, 파일 이름을 입력하면 찾아서 모델 로드
 	 HRESULT NativeConstruct(const _wstring& _wstrModelFolder, const _wstring& _wstrFileName);
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;
-
+	// 모델에 텍스처를 바인드 하는 함수
 	 HRESULT BindTexture(const _uint _iMeshIndex,  const SRV_REGISTER _eRegister,
 		const TEXTYPE& _eTextureType,CSHPTRREF<UShader> _spShader);
+	 // 모델을 그리는 함수
 	virtual HRESULT Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader, CSHPTRREF<UCommand> _spCommand);
 protected:
 	// Set

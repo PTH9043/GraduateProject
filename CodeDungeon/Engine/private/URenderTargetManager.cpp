@@ -8,10 +8,9 @@
 #include "UGpuCommand.h"
 #include "UGameInstance.h"
 #include "UShader.h"
-//#include "UVIBufferRect.h"
+#include "UVIBufferRect.h"
 #include "UShaderConstantBuffer.h"
-
-//#include "UTransform.h"
+#include "UTransform.h"
 
 
 URenderTargetManager::URenderTargetManager() :
@@ -170,7 +169,7 @@ void URenderTargetManager::RenderDebugObjects(CSHPTRREF<UShader> _spShader, CSHP
 {
     for (auto& iter : m_vecRtObjects)
     {
-        _spShader->BindCBVBuffer(m_spTransformConstantBuffer, &iter.stTransformParam, UTransform::TRANSFORMPARAM_SIZE);
+        _spShader->BindCBVBuffer(m_spTransformConstantBuffer, &iter.stTransformParam, GetTypeSize<TRANSFORMPARAM>());
         _spShader->BindSRVBuffer(_eSrvRegister, FindRenderTargetTexture(iter.eRtGroupID, iter.eRtObjID));
         _spBuffer->Render(_spShader, _spCommand);
     }
@@ -224,3 +223,16 @@ void URenderTargetManager::CreateDefaultRenderTargets(CSHPTRREF<UGraphicDevice> 
     }
 }
 
+#ifdef _USE_DEBUGGING
+void URenderTargetManager::OnResizeDebugRenderObject(CSHPTRREF<UGraphicDevice> _spGraphicDevice)
+{
+    RTOBJS RtObject = m_vecRtObjects;
+    m_vecRtObjects.clear();
+    m_vecRtObjects.reserve(RtObject.size());
+
+    for (auto& iter : RtObject)
+    {
+        AddDebugRenderObjects(iter.eRtGroupID, iter.eRtObjID, iter.vPos, iter.vSize, _spGraphicDevice->GetGraphicDesc());
+    }
+}
+#endif

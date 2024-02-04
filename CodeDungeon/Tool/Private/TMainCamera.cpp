@@ -45,28 +45,29 @@ void TMainCamera::LateTickActive(const _double& _dTimeDelta)
     {
         SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
 
-       /* if (pGameInstance->GetDIKeyPressing(DIK_W))
+        if (pGameInstance->GetDIKeyPressing(DIK_W))
             GetTransform()->MoveForward(_dTimeDelta, 20.f);
         if (pGameInstance->GetDIKeyPressing(DIK_A))
             GetTransform()->MoveLeft(_dTimeDelta, 20.f);
         if (pGameInstance->GetDIKeyPressing(DIK_D))
             GetTransform()->MoveRight(_dTimeDelta, 20.f);
         if (pGameInstance->GetDIKeyPressing(DIK_S))
-            GetTransform()->MoveBack(_dTimeDelta, 20.f);*/
+            GetTransform()->MoveBack(_dTimeDelta, 20.f);
 
-        //_float2 MousePos = pGameInstance->GetMousePosition();
-        //if (MousePos.x > 0 && MousePos.x < WINDOW_WIDTH)
-        //{
-        //    if (MousePos.y > 0 && MousePos.y < WINDOW_HEIGHT)
-        //    {
-        //        _long		MouseMove = 0;
+        _float2 MousePos = pGameInstance->GetMousePosition();
+        if (MousePos.x > 0 && MousePos.x < WINDOW_WIDTH)
+        {
+            if (MousePos.y > 0 && MousePos.y < WINDOW_HEIGHT)
+            {
+                _long		MouseMove = 0;
 
-        //        if (MouseMove = pGameInstance->GetDIMMoveState(DIMOUSEMOVE::DIMM_X))
-        //            GetTransform()->RotateTurn(_float3(0.f, 1.f, 0.f), DirectX::XMConvertToRadians(90.f) * MouseMove * 0.1f, _dTimeDelta);
-        //    }
-        //}
+                if (MouseMove = pGameInstance->GetDIMMoveState(DIMOUSEMOVE::DIMM_X))
+                    GetTransform()->RotateTurn(_float3(0.f, 1.f, 0.f), DirectX::XMConvertToRadians(90.f) * MouseMove * 1.f, _dTimeDelta);
 
-
+                if (MouseMove = pGameInstance->GetDIMMoveState(DIMOUSEMOVE::DIMM_Y))
+                    GetTransform()->RotateTurn(GetTransform()->GetRight(), DirectX::XMConvertToRadians(90.f) * MouseMove * 1.f, _dTimeDelta);
+            }
+        }
     }
     else
     {

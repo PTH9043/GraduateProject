@@ -71,13 +71,13 @@ namespace Server {
 			CS_LOGIN Login;
 			Login.ParseFromArray(_pPacket, static_cast<_int>(_PacketHead.PacketSize));
 			_llong value = CurrentMilliseconds() - Login.time_test();
+			std::cout << Login.user_name() << std::endl;
 		}
-		//{
-		//	// Remove Object а╤гу 
-		//	SC_CHECKLOGIN scCheckLogin;
-		//	scCheckLogin.set_id(GetID());
-		//	SendProtoData(scCheckLogin, TAG_SC_LOGIN);
-		//}
+		{
+			SC_CHECKLOGIN scCheckLogin;
+			scCheckLogin.set_id(GetSessionID());
+			SendProtoData(scCheckLogin, TAG_SC_LOGIN);
+		}
 		break;
 		case TAG_CS::TAG_CS_LOGOUT:
 		{

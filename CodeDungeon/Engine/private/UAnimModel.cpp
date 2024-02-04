@@ -113,17 +113,17 @@ void UAnimModel::TickAnimation(const _double& _dDeltaTime)
 
 HRESULT UAnimModel::Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader, CSHPTRREF<UCommand> _spCommand)
 {
-	RETURN_CHECK(nullptr == _spShader, E_FAIL);
+	RETURN_CHECK(nullptr == _spShader, E_FAIL);   
 	RETURN_CHECK(GetMeshContainerCnt() <= _iMeshIndex, E_FAIL);
 	RETURN_CHECK(nullptr == GetMeshContainers()[_iMeshIndex], E_FAIL);
 	// 이전 본 값 세팅
-	_spShader->BindCBVBuffer(m_spPrevBoneMatrixShaderConstantBuffer, m_vecSetupBonMatrix[_iMeshIndex].data(), BONEMATRIXPARA_SIZE);
+	_spShader->BindCBVBuffer(m_spPrevBoneMatrixShaderConstantBuffer, m_vecSetupBonMatrix[_iMeshIndex].data(), GetTypeSize<BONEMATRIXPARAM>());
 	CSHPTRREF<UMeshContainer> spMeshContainer{ GetMeshContainers()[_iMeshIndex] };
 	spMeshContainer->SetUpBoneMatrix(m_vecSetupBonMatrix[_iMeshIndex]);
 	// 현재 본 값 세팅
-	_spShader->BindCBVBuffer(m_spBoneMatrixShaderConstantBuffer, m_vecSetupBonMatrix[_iMeshIndex].data(), BONEMATRIXPARA_SIZE);
+	_spShader->BindCBVBuffer(m_spBoneMatrixShaderConstantBuffer, m_vecSetupBonMatrix[_iMeshIndex].data(), GetTypeSize<BONEMATRIXPARAM>());
 	// 애니메이션 세팅
-	_spShader->BindCBVBuffer(m_spAnimShaderConstantBuffer, &m_stAnimParam, ANIMPARAM_SIZE);
+	_spShader->BindCBVBuffer(m_spAnimShaderConstantBuffer, &m_stAnimParam, GetTypeSize<ANIMATIONPARAM>());
 	spMeshContainer->Render(_spShader, _spCommand);
 	return S_OK;
 }
@@ -212,10 +212,7 @@ void UAnimModel::LoadToData(const _wstring& _wstrPath)
 				iter = _float4x4::Identity;
 		}
 
-#ifdef _USE_DEBUGGING
 		CreateShaderConstantBuffer();
-#endif
-
 		SetAnimation(5);
 	}
 }
@@ -234,20 +231,20 @@ void UAnimModel::LoadAnimMeshData(std::ifstream& _ifRead, VECTOR<ANIMMESHDESC>& 
 			_ifRead.read((_char*)&iter.iNumIndices, sizeof(iter.iNumIndices));
 			// Positions
 			{
-				iter.pVtxModel = new VTXANIMMODEL[iter.iNumVertices];
+				iter.pVtxModel = Make::AllocBuffer<VTXANIMMODEL>(iter.iNumVertices);
 				size_t vtxModel = sizeof(VTXANIMMODEL) * iter.iNumVertices;
 				_ifRead.read((_char*)iter.pVtxModel, vtxModel);
 			}
 			// Indexies
 			{
 				size_t index = sizeof(INDICIES32) * iter.iNumIndices;
-				iter.pIndices = new INDICIES32[iter.iNumIndices];
+				iter.pIndices = Make::AllocBuffer<INDICIES32>(iter.iNumIndices);
 				_ifRead.read((_char*)iter.pIndices, index);
 			}
 			// Positions 
 			{
 				size_t Positions = sizeof(_float3) * iter.iNumVertices;
-				iter.pPosition = new _float3[Positions];
+				iter.pPosition = Make::AllocBuffer<_float3>(Positions);
 				_ifRead.read((_char*)iter.pPosition, Positions);
 			}
 			{
@@ -289,7 +286,7 @@ void UAnimModel::LoadAnimationData(std::ifstream& _ifRead, VECTOR<ANIMDESC>& _co
 			{
 				UMethod::ReadString(_ifRead, Channel.wstrBoneName);
 				_ifRead.read((_char*)&Channel.iNumMaxKeyFrames, sizeof(_uint));
-				Channel.pKeyFrames = new KEYFRAME[Channel.iNumMaxKeyFrames];
+				Channel.pKeyFrames = Make::AllocBuffer<KEYFRAME>(Channel.iNumMaxKeyFrames);
 				_ifRead.read((_char*)Channel.pKeyFrames, sizeof(KEYFRAME) * Channel.iNumMaxKeyFrames);
 			}
 		}
@@ -339,13 +336,13 @@ void UAnimModel::SettingNextAnimSituation()
 
 HRESULT UAnimModel::CreateShaderConstantBuffer()
 {
-	m_spAnimShaderConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::ANIMMODEL, ANIMPARAM_SIZE);
+	m_spAnimShaderConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::ANIMMODEL, GetTypeSize<ANIMATIONPARAM>());
 	RETURN_CHECK(nullptr == m_spAnimShaderConstantBuffer, E_FAIL);
 
-	m_spBoneMatrixShaderConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::BONEMATRIX, BONEMATRIXPARA_SIZE);
+	m_spBoneMatrixShaderConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::BONEMATRIX, GetTypeSize<BONEMATRIXPARAM>());
 	RETURN_CHECK(nullptr == m_spBoneMatrixShaderConstantBuffer, E_FAIL);
 
-	m_spPrevBoneMatrixShaderConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::PREVBONEMATRIX, BONEMATRIXPARA_SIZE);
+	m_spPrevBoneMatrixShaderConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::PREVBONEMATRIX, GetTypeSize<BONEMATRIXPARAM>());
 	RETURN_CHECK(nullptr == m_spPrevBoneMatrixShaderConstantBuffer, E_FAIL);
 
 	return S_OK;

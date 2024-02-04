@@ -55,19 +55,21 @@ SHPTR<FILEGROUP> UFilePathManager::FindFolder(const _wstring& _wstrFindName, con
 	return iter->second.front();
 }
 
-HRESULT UFilePathManager::LoadFirstFilder(const _wstring& _wstrFilePath)
+HRESULT UFilePathManager::LoadFirstFolder(const _wstring& _wstrFilePath)
 {
 	LIST<SHPTR<FILEGROUP>> FILEGROUPS;
 	ClearLoader(FILEGROUPS, m_spFileGroup);
 	FILEGROUPS.clear();
-	m_spFileGroup = std::make_shared<FILEGROUP>();
+	m_FileFolderGroup.clear();
+	m_spFileGroup.reset();
+	m_spFileGroup = Make::MakeShared<FILEGROUP>();
 	fs::path p{ _wstrFilePath };
-	m_spFileGroup->wstrPath = _wstrFilePath;
-	m_spFileGroup->wstrFolderName = p.filename();
 	VECTOR<SHPTR<FILEGROUP>> vecFileGroup;
 	vecFileGroup.push_back(m_spFileGroup);
-	m_FileFolderGroup.insert(std::pair<_wstring, VECTOR<SHPTR<FILEGROUP>>>(m_spFileGroup->wstrFolderName, vecFileGroup));
+	m_spFileGroup->wstrFolderName = p.filename();
+	m_FileFolderGroup.insert(MakePair(m_spFileGroup->wstrFolderName, vecFileGroup));
 	LoadUpperFolder(m_spFileGroup->wstrFolderName, _wstrFilePath, m_spFileGroup);
+	m_spFileGroup->wstrPath = _wstrFilePath;
 	return S_OK;
 }
 
@@ -96,7 +98,7 @@ HRESULT UFilePathManager::LoadUpperFolder(const _wstring& _wstrFirstFolderName,
 	{
 		if (fs::is_regular_file(iter->status()))
 		{
-			SHPTR<FILEDATA> spFileData = std::make_shared<FILEDATA>();
+			SHPTR<FILEDATA> spFileData = Make::MakeShared<FILEDATA>();
 			spFileData->wstrfileName = iter->path().filename();
 			spFileData->wstrfilePath = iter->path();
 			spFileData->sindex = sIndex;
@@ -104,7 +106,7 @@ HRESULT UFilePathManager::LoadUpperFolder(const _wstring& _wstrFirstFolderName,
 		}
 		else if (fs::is_directory(iter->status()))
 		{
-			SHPTR<FILEGROUP> spFileGroup = std::make_shared<FILEGROUP>();
+			SHPTR<FILEGROUP> spFileGroup = Make::MakeShared<FILEGROUP>();
 			spFileGroup->wstrFolderName = iter->path().filename();
 			spFileGroup->wstrPath = iter->path();
 			spFileGroup->spParentsUpper = _spFileGroup;
@@ -115,7 +117,7 @@ HRESULT UFilePathManager::LoadUpperFolder(const _wstring& _wstrFirstFolderName,
 			{
 				VECTOR<SHPTR<FILEGROUP>> vecFileGroup;
 				vecFileGroup.push_back(spFileGroup);
-				m_FileFolderGroup.insert(std::pair<_wstring, VECTOR<SHPTR<FILEGROUP>>>(spFileGroup->wstrFolderName, vecFileGroup));
+				m_FileFolderGroup.insert(MakePair(spFileGroup->wstrFolderName, vecFileGroup));
 			}
 			else
 			{

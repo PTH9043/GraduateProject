@@ -46,8 +46,6 @@ PS_OUT PS_Main(PS_In Input)
     PS_OUT Out = (PS_OUT) 0;
 
     Out.vColor = g_RectColor;
-   Out.vColor.r = g_GrobalInfo.fDeltaTime;
-
     return Out;
 }
 

@@ -4,14 +4,14 @@
 namespace Core
 {
 	AMemoryPool::AMemoryPool(const _ullong& _AllocateSize) : 
-		m_AllocateSize{_AllocateSize}, m_AllocateCount{0}
+		m_AllocateSize{ MakeMultipleNumber<BASE_ALLOC_SIZE>(_AllocateSize) }, m_AllocateCount{0}
 	{
 
 	}
 
 	AMemoryPool::~AMemoryPool()
 	{
-		while (m_MemoryQueue.empty() == false)
+		while (!m_MemoryQueue.empty())            
 		{
 			MEMORYHEADER* header;
 			m_MemoryQueue.try_pop(header);
@@ -65,31 +65,27 @@ namespace Core
 	// 저장할 메모리 할당
 	AMemoryAdminster::AMemoryAdminster()
 	{
-		_uint Size = 16;
-		_uint TableIndex = 0;
-		MakeMemoryPool(32, REF_OUT TableIndex, 1024, 32);
-		MakeMemoryPool(1024, REF_OUT TableIndex, 2048, 64);
-		MakeMemoryPool(2048 , REF_OUT TableIndex, 3072, 128);
-		MakeMemoryPool(3072, REF_OUT TableIndex, 5120, 256);
+		_uint Size = BASE_ALLOC_SIZE;
+		MakeMemoryPool(Size, POOL_COUNT, Size);
 	}
 
 	AMemoryAdminster::~AMemoryAdminster()
 	{
-		for (auto& iter : m_Pools)
+		for (auto& iter : m_PoolTable)
 		{
 			delete iter;
 		}
-		m_Pools.clear();
 	}
 
 	// SIze의 크기가 해당 메모리에 없으면 그냥 할당, 아니라면 해제한다. 
 	void* AMemoryAdminster::Allocate(_ullong _Size)
 	{
 		MEMORYHEADER* Header = nullptr;
-		const _ullong AllocateSize = _Size + sizeof(MEMORYHEADER);
+		_ullong AllocateSize = _Size + sizeof(MEMORYHEADER);
 #ifdef USE_STOMP
 		Header = reinterpret_cast<MEMORYHEADER*>(UStompAllocator::Alloc(_Size));
 #else
+		AllocateSize = MakeMultipleNumber<BASE_ALLOC_SIZE>(AllocateSize);
 		// 메모리 최대 크기를 꺼내오면 일반 할당 
 		if (AllocateSize > MAX_ALLOC_SIZE)
 		{
@@ -98,7 +94,7 @@ namespace Core
 		else
 		{
 			// 메모리 풀에서 꺼내온다. 
-			Header = m_PoolTable[AllocateSize]->Pop();
+			Header = m_PoolTable[m_KeyTable[AllocateSize]]->Pop();
 		}
 #endif
 		return MEMORYHEADER::AttachHeader(Header, AllocateSize);
@@ -120,24 +116,20 @@ namespace Core
 		}
 		else
 		{
-			m_PoolTable[AllocSize]->Push(Header);
+			m_PoolTable[m_KeyTable[AllocSize]]->Push(Header);
 		}
 #endif
 	}
 	// 메모리 할당을 해주는 함수이다. 
-	void AMemoryAdminster::MakeMemoryPool(_uint _Size, REF_IN _uint& _TableIndex,
-		const _uint _Limited, const _uint _AddValue)
+	void AMemoryAdminster::MakeMemoryPool(_uint _Size, const _uint _Limited, const _uint _AddValue)
 	{
-		for (; _Size <= _Limited;)
+		_uint index = 0;
+		for (; index < _Limited;)
 		{
 			AMemoryPool* pool = new AMemoryPool(_Size);
-			m_Pools.push_back(pool);
-
-			while (_TableIndex <= _Size)
-			{
-				m_PoolTable[_TableIndex] = pool;
-				++_TableIndex;
-			}
+			m_PoolTable[index] = pool;
+			m_KeyTable.insert(MakePair(_Size, index));
+			++index;
 			_Size += _AddValue;
 		}
 	}

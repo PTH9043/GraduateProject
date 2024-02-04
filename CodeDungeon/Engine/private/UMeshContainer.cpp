@@ -112,7 +112,6 @@ HRESULT UMeshContainer::MakeVertices(void* _pVertices, void* _pPosition, const _
 	pVerticesPos.resize(_iVertexCnt);
 	::memcpy(&pVerticesPos[0], _pPosition, sizeof(_float3) * _iVertexCnt);
 
-
 	RETURN_CHECK_FAILED(CreateVtxBuffer(_iVertexCnt, _iVertexSize, _pVertices,
 		D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, pVerticesPos, false), E_FAIL);
 
@@ -122,8 +121,10 @@ HRESULT UMeshContainer::MakeVertices(void* _pVertices, void* _pPosition, const _
 	SetMinPosition(_vMinPos);
 	SetMaxPosition(_vMaxPos);
 
-	Safe_Delete_Array(_pVertices);
-	Safe_Delete_Array(_pPosition);
+	Make::ReleaseBuffer(_pVertices);
+	Make::ReleaseBuffer(_pPosition);
+	//Safe_Delete_Array(_pVertices);
+	//Safe_Delete_Array(_pPosition);
 	return S_OK;
 }
 

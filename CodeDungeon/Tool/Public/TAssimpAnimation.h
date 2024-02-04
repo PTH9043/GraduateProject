@@ -4,7 +4,11 @@
 BEGIN(Tool)
 class TAssimpChannel;
 class TAssimpModel;
-
+/*
+@ Date: 2024-02-04, Writer: 박태현
+@ Explain
+- Assimp를 로드하기 위한 Animation 클래스
+*/
 class TAssimpAnimation : public UBase {
 public:
 	TAssimpAnimation();

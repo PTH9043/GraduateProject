@@ -2,7 +2,11 @@
 #include "UBase.h"
 
 BEGIN(Tool)
-
+/*
+@ Date: 2024-02-04, Writer: 박태현
+@ Explain
+- Assimp를 로드하기 위한 Bone 클래스
+*/
 class TAssimpBoneNode : public UBase {
 public:
 	TAssimpBoneNode();

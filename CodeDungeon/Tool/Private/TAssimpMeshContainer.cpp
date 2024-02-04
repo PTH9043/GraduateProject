@@ -33,7 +33,7 @@ TAssimpMeshContainer::TAssimpMeshContainer(const TAssimpMeshContainer& _rhs) :
 void TAssimpMeshContainer::Free()
 {
 	if (false == IsClone()) {
-		Safe_Delete_Array(m_pVertexData);
+		Make::ReleaseBuffer(m_pVertexData);
 	}
 }
 
@@ -121,7 +121,7 @@ HRESULT TAssimpMeshContainer::ReadyVertices(aiMesh* _pMesh, CSHPTRREF<TAssimpMod
 	const _uint iNumVertices = _pMesh->mNumVertices;
 	m_iNumBuffers = 1;
 
-	VTXMODEL* pVertices = new VTXMODEL[iNumVertices];
+	VTXMODEL* pVertices = Make::AllocBuffer<VTXMODEL>(iNumVertices);
 	ZeroMemory(pVertices, sizeof(VTXMODEL) * iNumVertices);
 
 	VECTOR<_float3> pVerticesPos;
@@ -169,7 +169,7 @@ HRESULT TAssimpMeshContainer::ReadyAnimVertices(aiMesh* _pMesh, CSHPTRREF<TAssim
 	const _uint iNumVertices = _pMesh->mNumVertices;
 	m_iNumBuffers = 1;
 
-	VTXANIMMODEL* pVertices = new VTXANIMMODEL[iNumVertices];
+	VTXANIMMODEL* pVertices = Make::AllocBuffer<VTXANIMMODEL>(iNumVertices);
 	ZeroMemory(pVertices, sizeof(VTXANIMMODEL) * iNumVertices);
 
 	VECTOR<_float3> pVerticesPos;
@@ -241,7 +241,7 @@ HRESULT TAssimpMeshContainer::ReadyIndices(aiMesh* _pMesh)
 	const _uint NumIndicesPerPrimitive = 3;
 
 	// 16
-	INDICIES32* pIndices = new INDICIES32[NumPrimitive];
+	INDICIES32* pIndices = Make::AllocBuffer<INDICIES32>(NumPrimitive);
 	for (_uint i = 0; i < NumPrimitive; ++i)
 	{
 		pIndices[i]._1 = _pMesh->mFaces[i].mIndices[0];

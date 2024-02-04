@@ -102,7 +102,7 @@ HRESULT UVIBufferCube::NativeConstruct()
 	// IndexBuffer
 	{
 		const _uint INDICES_CNT = 12;
-		INDICIES16* pIndices = new INDICIES16[INDICES_CNT];
+		INDICIES16* pIndices = Make::AllocBuffer<INDICIES16>(INDICES_CNT);
 		ZeroMemory(pIndices, sizeof(INDICIES16) * INDICES_CNT);
 		// 인덱스 데이터 초기화
 	/* +x */

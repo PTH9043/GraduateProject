@@ -4,7 +4,11 @@
 BEGIN(Engine)
 class UModel;
 class UBoneNode;
-
+/*
+@ Date: 2024-02-04, Writer: 박태현
+@ Explain
+- 모델의 메쉬 정보를 들고 있는 컨테이너
+*/
 class  UMeshContainer : public UVIBuffer{
 public:
 	UMeshContainer(CSHPTRREF <UDevice> _spDevice);

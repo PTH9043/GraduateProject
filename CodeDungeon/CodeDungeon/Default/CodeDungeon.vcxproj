@@ -91,6 +91,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>..\\Public\\;..\\..\\Reference\\Headers\\;..\\Default\\</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -109,6 +110,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>..\\Public\\;..\\..\\Reference\\Headers\\;..\\Default\\</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -127,6 +129,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>..\\Public\\;..\\..\\Reference\\Headers\\;..\\Default\\</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -145,6 +148,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>..\\Public\\;..\\..\\Reference\\Headers\\;..\\Default\\</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -158,6 +162,7 @@
     <ClInclude Include="..\Public\CClientApp.h" />
     <ClInclude Include="..\Public\ClientDefines.h" />
     <ClInclude Include="..\Public\ClientProto.h" />
+    <ClInclude Include="..\Public\UNetworkClientController.h" />
     <ClInclude Include="CodeDungeon.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -165,6 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\CClientApp.cpp" />
+    <ClCompile Include="..\Private\UNetworkClientController.cpp" />
     <ClCompile Include="CodeDungeon.cpp" />
   </ItemGroup>
   <ItemGroup>

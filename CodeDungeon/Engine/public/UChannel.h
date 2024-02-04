@@ -5,7 +5,11 @@ BEGIN(Engine)
 class UAnimModel;
 class UAnimation;
 class UBoneNode;
-
+/*
+@ Date: 2024-02-04, Writer: 박태현
+@ Explain
+- Animation Frame 마다 있는 Channel 클래스
+*/
 class  UChannel : public UBase {
 public:
 	UChannel();

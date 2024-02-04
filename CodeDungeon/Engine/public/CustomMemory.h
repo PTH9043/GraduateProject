@@ -2,6 +2,16 @@
 
 namespace Engine {
 	/*
+	@ Date: 2024-02-04, Writer: 박태현
+	@ Explain
+	-  기본 메모리 사이즈 (Memory Pool 최적화를 위함)
+	*/
+	enum
+	{
+		BASE_ALLOC_SIZE = 16
+	};
+
+	/*
 	===========================================================
 	MemoryHeader
 	===========================================================
@@ -51,8 +61,8 @@ namespace Engine {
 		UMemoryHeader* Pop();
 
 	private:
-		CONQUEUE<UMemoryHeader*>		m_MemoryQueue;
-		_int															m_AllocSize;
+		CONPRIORITYQUEUE<UMemoryHeader*>		m_MemoryQueue;
+		_int																			m_AllocSize;
 	};
 	/*
 	===========================================================
@@ -62,31 +72,30 @@ namespace Engine {
 	===========================================================
 	*/
 	/*
-	@ Date: 2024-02-01, Writer: 박태현
+	@ Date: 2024-02-04, Writer: 박태현
 	@ Explain
 	-  메모리 풀을 관리하는 클래스
 	*/
-	class UMemoryAdminster {
+	class UMemoryAdminstor {
 		enum
 		{
-			POOL_COUNT =  (512 / 32) + (1024 / 64) + (1024 / 128) + (2048 / 256),
-			MAX_ALLOC_SIZE = 4608
+			POOL_COUNT = 350,
+			MAX_ALLOC_SIZE = BASE_ALLOC_SIZE * POOL_COUNT
 		};
 	public:
-		UMemoryAdminster();
-		~UMemoryAdminster();
+		UMemoryAdminstor();
+		~UMemoryAdminstor();
 
 		void* Allocate(_ullong _Size);
 		void Release(void* _Ptr);
 
 	private:
-		void MakeMemoryPool(_uint _Size, _uint& _TableIndex,
-			const _uint _Limited, const _uint _AddValue);
+		void MakeMemoryPool(_uint _Size, const _uint _Limited, const _uint _AddValue);
 
 	private:
 		// 메모리를 빠르게 찾기 위한 풀 테이블이다. 
-		ARRAY<UMemoryPool*, MAX_ALLOC_SIZE + 1>	m_PoolTable;
-		CONVECTOR<UMemoryPool*>									m_Pools;
+		ARRAY<UMemoryPool*, POOL_COUNT>		m_PoolTable;
+		CONUNOMAP<_ullong, int>							m_KeyTable;
 	};
 	/*
 	===========================================================
@@ -122,6 +131,7 @@ namespace Engine {
 	public:
 		static void* Alloc(size_t _size);
 		static void Release(void* _ptr);
+		static void Release(const void* _ptr);
 	};
 	/*
 	===========================================================
@@ -200,20 +210,32 @@ namespace Engine {
 			UPoolAllocator::Release(obj);
 		}
 		/*
-		@ Date: 2024-02-03,  Writer: 박태현
+		@ Date: 2024-02-04,  Writer: 박태현
 		@ Explain
-		- char 형만 따로 new 정의
+		- 배열을 할당하기 위한 함수
 		*/
-		static _char* AllocBuffer(size_t _number) {
-			_char* p = static_cast<_char*>(UPoolAllocator::Alloc(_number));
+		template<class T>
+		static T* AllocBuffer(size_t _number) {
+			T* p = static_cast<T*>(UPoolAllocator::Alloc(_number * sizeof(T)));
 			return p;
 		}
 		/*
 		@ Date: 2024-02-03,  Writer: 박태현
 		@ Explain
-		- char 형만 따로 delete 정의 
+		- 배열을 제거하기 위한 함수
 		*/
-		static void ReleaseBuffer(_char* obj)
+		template<class T>
+		static void ReleaseBuffer(T* obj)
+		{
+			UPoolAllocator::Release(obj);
+		}
+		/*
+		@ Date: 2024-02-03,  Writer: 박태현
+		@ Explain
+		- const 용 배열을 제거하기 위한 함수
+		*/
+		template<class T>
+		static void ReleaseBuffer(const T* obj)
 		{
 			UPoolAllocator::Release(obj);
 		}

@@ -1,17 +1,20 @@
 #pragma once
+#pragma warning (disable : 4244)
+#pragma warning (disable : 4018)
+#define _SILENCE_CXX23_ALIGNED_STORAGE_DEPRECATION_WARNING 
+#define _SILENCE_ALL_CXX23_DEPRECATION_WARNINGS
 
 #include "EngineDefine.h"
+#include "ProtocolBuffer.h"
+
 #ifdef _DEBUG
 #pragma comment(lib, "EngineD.lib")
+#pragma comment(lib, "ProtocolBufferD")
 #else
 #pragma comment(lib, "Engine.lib")
+#pragma comment(lib, "ProtocolBuffer")
 #endif
 
-#include <WS2tcpip.h>
-#include <MSWSock.h>
-
-#pragma comment(lib, "WS2_32.lib")
-#pragma comment(lib, "MSWSock.lib")
 
 namespace Client
 {
@@ -39,5 +42,7 @@ namespace Client
 }
 
 #include "ClientProto.h"
+
+static const _string IP_ADDRESS{ "127.0.0.1" };
 
 using namespace Client;

@@ -41,6 +41,8 @@ namespace Core
 			delete g_pDeadLockProfiler;
 #endif
 			delete g_pMemoryAdminster;
+
+			ThreadMiliRelax(5000);
 		}
 
 	private:

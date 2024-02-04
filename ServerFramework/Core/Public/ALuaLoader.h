@@ -17,7 +17,7 @@ public:
 	void LuaFunctionCall(const _char* _FunctionName);
 	
 	template<class T>
-	requires Number<T>
+	requires CheckNumber<T>
 	void PushNumber(T _number){
 		lua_tonumber(m_pLuaState, _number);
 	}
@@ -27,7 +27,7 @@ public:
 	void LuaFunctionEnd(const _int _parameterNum, const _int _returnNum);
 
 	template<class T>
-	requires Number<T>
+	requires CheckNumber<T>
 	// -1은 스택 최상위에 있다는 이야기이다.
 	T ToNumber(_int _order = -1) 
 	{ 

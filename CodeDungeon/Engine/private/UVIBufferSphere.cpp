@@ -114,7 +114,7 @@ HRESULT UVIBufferSphere::NativeConstruct()
 		// Index 개수
 		const _uint INDICES_CNT = NUM_LATITUDES * NUM_LOGITUDES * 6;
 		// 목록
-		INDICIES16* pIndices = new INDICIES16[INDICES_CNT];
+		INDICIES16* pIndices = Make::AllocBuffer<INDICIES16>(INDICES_CNT);
 		ZeroMemory(pIndices, sizeof(INDICIES16) * INDICES_CNT);
 		{
 			_uint iIndex{ 0 };

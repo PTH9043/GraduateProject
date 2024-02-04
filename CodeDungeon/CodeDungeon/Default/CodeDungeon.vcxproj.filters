@@ -10,9 +10,6 @@
     <Filter Include="98.Defines">
       <UniqueIdentifier>{c071762e-2038-44de-8bfe-6b4dbccb818a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="98.Defines\20.Network">
-      <UniqueIdentifier>{36ebf3c6-114c-4160-a57a-e1510b9c2c27}</UniqueIdentifier>
-    </Filter>
     <Filter Include="20.Server">
       <UniqueIdentifier>{5d4f5c49-410f-4489-8243-1375700409cf}</UniqueIdentifier>
     </Filter>
@@ -39,6 +36,9 @@
     <ClInclude Include="..\Public\CClientApp.h">
       <Filter>00.ClientApp</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UNetworkClientController.h">
+      <Filter>20.Server</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -54,6 +54,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\CClientApp.cpp">
       <Filter>00.ClientApp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UNetworkClientController.cpp">
+      <Filter>20.Server</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

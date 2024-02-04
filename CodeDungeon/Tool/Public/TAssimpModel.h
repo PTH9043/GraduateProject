@@ -10,7 +10,11 @@ class TAssimpMeshContainer;
 class TAssimpBoneNode;
 class TAssimpAnimation;
 
-
+/*
+@ Date: 2024-02-04, Writer: 박태현
+@ Explain
+- Assimp를 로드하기 위한 Model 클래스
+*/
 class TAssimpModel : public UResource {
 public:
 	enum class TYPE { ANIM, NONANIM };

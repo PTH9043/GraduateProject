@@ -211,21 +211,6 @@
     <Filter Include="95.Super\Base">
       <UniqueIdentifier>{9f88f402-6580-4c6d-9e57-26991de1c9fc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97.ClientNeeds">
-      <UniqueIdentifier>{8df4b430-0bd2-4c76-87a7-92acda718222}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="97.ClientNeeds\Method">
-      <UniqueIdentifier>{fc89b5e1-6801-4d75-a0d1-ad4ef71e3fe2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="97.ClientNeeds\Delegate">
-      <UniqueIdentifier>{64fe0bea-9dcd-417e-8810-880060e45da7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96.ServerNeed">
-      <UniqueIdentifier>{be3812da-4c30-4d9b-9003-aa2d14cdd06b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="97.ClientNeeds\MemoryPool">
-      <UniqueIdentifier>{fc441c1a-e190-47b4-b00c-f587f2ae8725}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Manager\NetworkManager">
       <UniqueIdentifier>{86cb24b7-9ef5-4892-9a87-debaf5c9a572}</UniqueIdentifier>
     </Filter>
@@ -246,6 +231,24 @@
     </Filter>
     <Filter Include="20.Network\ProcessedData">
       <UniqueIdentifier>{a486d5be-e9c9-4f42-b6e4-7671fb4aeb56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.ShaderFile\Debug">
+      <UniqueIdentifier>{d750533b-13fe-4621-a569-5a590816defe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Needs">
+      <UniqueIdentifier>{8df4b430-0bd2-4c76-87a7-92acda718222}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Needs\Method">
+      <UniqueIdentifier>{fc89b5e1-6801-4d75-a0d1-ad4ef71e3fe2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Needs\Delegate">
+      <UniqueIdentifier>{64fe0bea-9dcd-417e-8810-880060e45da7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Needs\MemoryPool">
+      <UniqueIdentifier>{fc441c1a-e190-47b4-b00c-f587f2ae8725}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Needs\ServerUtility">
+      <UniqueIdentifier>{be3812da-4c30-4d9b-9003-aa2d14cdd06b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -274,7 +277,7 @@
       <Filter>02.DxClass\GlobalConstants</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UMethod.cpp">
-      <Filter>97.ClientNeeds\Method</Filter>
+      <Filter>97.Needs\Method</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UShaderConstantBuffer.cpp">
       <Filter>02.DxClass\ShaderBuffer</Filter>
@@ -373,7 +376,7 @@
       <Filter>04.Scene</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UDelegate.cpp">
-      <Filter>97.ClientNeeds\Delegate</Filter>
+      <Filter>97.Needs\Delegate</Filter>
     </ClCompile>
     <ClCompile Include="..\private\ULoader.cpp">
       <Filter>04.Scene\Loader</Filter>
@@ -439,10 +442,10 @@
       <Filter>01.Manager\InputManager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\ServerUtility.cpp">
-      <Filter>96.ServerNeed</Filter>
+      <Filter>97.Needs\ServerUtility</Filter>
     </ClCompile>
     <ClCompile Include="..\private\CustomMemory.cpp">
-      <Filter>97.ClientNeeds\MemoryPool</Filter>
+      <Filter>97.Needs\MemoryPool</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UNetworkManager.cpp">
       <Filter>01.Manager\NetworkManager</Filter>
@@ -531,7 +534,7 @@
       <Filter>02.DxClass\GlobalConstants</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UMethod.h">
-      <Filter>97.ClientNeeds\Method</Filter>
+      <Filter>97.Needs\Method</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UShaderConstantBuffer.h">
       <Filter>02.DxClass\ShaderBuffer</Filter>
@@ -630,7 +633,7 @@
       <Filter>04.Scene</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UDelegate.h">
-      <Filter>97.ClientNeeds\Delegate</Filter>
+      <Filter>97.Needs\Delegate</Filter>
     </ClInclude>
     <ClInclude Include="..\public\ULoader.h">
       <Filter>04.Scene\Loader</Filter>
@@ -696,10 +699,10 @@
       <Filter>01.Manager\InputManager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\ServerUtility.h">
-      <Filter>96.ServerNeed</Filter>
+      <Filter>97.Needs\ServerUtility</Filter>
     </ClInclude>
     <ClInclude Include="..\public\CustomMemory.h">
-      <Filter>97.ClientNeeds\MemoryPool</Filter>
+      <Filter>97.Needs\MemoryPool</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UNetworkManager.h">
       <Filter>01.Manager\NetworkManager</Filter>
@@ -767,6 +770,15 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\Model.hlsl">
       <Filter>98.ShaderFile\Common\NonAlpha</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\ScreenRenderObj.hlsl">
+      <Filter>98.ShaderFile\Debug</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\DebugDefaultObject.hlsl">
+      <Filter>98.ShaderFile\Debug</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\Debug2DTarget.hlsl">
+      <Filter>98.ShaderFile\Debug</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

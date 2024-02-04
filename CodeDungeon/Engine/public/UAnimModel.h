@@ -5,7 +5,12 @@ BEGIN(Engine)
 class UShaderConstantBuffer;
 class UAnimation;
 class UTexture;
-
+/*
+@ Date: 2024-02-04, Writer: 박태현
+@ Explain
+- 모델의 메쉬, 뼈 정보, 모델의 텍스쳐 정보들을 VECTOR 컨테이너들로 담고 있는 클래스이다.
+애니메이션 정보도 들고 있어서 애니메이션을 실행할 수 있다.
+*/
 class  UAnimModel : public UModel{
 	using ANIMATIONS = VECTOR<SHPTR<UAnimation>>;
 	using SETUPBONEMATRIXES = ARRAY<_float4x4, MAX_BONE_SIZE>;
@@ -27,7 +32,9 @@ public:
 	virtual HRESULT NativeConstruct() override;
 	using UModel::NativeConstruct;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;
+	// 애니메이션을 Tick하는 함수
 	void TickAnimation(const _double& _dDeltaTime);
+	// 애니메이션을 렌더하는 함수
 	virtual HRESULT Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader, CSHPTRREF<UCommand> _spCommand) override;
 	// Set Animation
 	void SetAnimation(const _uint& _iAnimIndex);
@@ -50,8 +57,6 @@ private:
 	HRESULT CreateShaderConstantBuffer();
 private:
 	static	const inline _wstring					SECTION_FOLDEDER_NAME{ L"Section\\"};
-	static constexpr _uint								ANIMPARAM_SIZE{sizeof(ANIMATIONPARAM)};
-	static constexpr _uint								BONEMATRIXPARA_SIZE{sizeof(BONEMATRIXPARAM)};
 
 	ANIMATIONS															m_vecAnimations;
 	ANIMSTRINGS														m_AnimNamesGroup;

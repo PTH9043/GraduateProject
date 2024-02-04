@@ -3,7 +3,6 @@ namespace Engine {
 
 #pragma region VIEWPROJ
 
-
 	typedef struct tagViewProjMatrix {
 
 		_float4x4 mViewMatrix{ _float4x4::Identity };
@@ -42,7 +41,7 @@ namespace Engine {
 
 #pragma region TRANSFORM 
 
-	typedef struct tagTransformMatrix
+	typedef struct tagTransformMatrix 
 	{
 		_float4x4 mWorldMatrix{ _float4x4::Identity };
 		_float4x4 mPrevWorldMatrix{ _float4x4::Identity };

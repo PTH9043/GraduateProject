@@ -15,11 +15,10 @@ xcopy /y/s	.\ProtocolBuffer\Bin\*.lib											.\Reference\Librarys\
 xcopy /y/s	.\ProtocolBuffer\ThirdPartyLib\*.lib						.\Reference\Librarys\
 
 
-xcopy /y/s	.\Core\Public\CorePacket.h										.\(OutPut)\ServerReference\Headers\
-xcopy /y/s	.\ProtocolBuffer\ServerProtocol\*.*						.\(OutPut)\ServerReference\Headers\
-xcopy /y/s	.\ProtocolBuffer\Public\*.*										.\(OutPut)\ServerReference\Headers\
-xcopy /y/s	.\ProtocolBuffer\Bin\*.lib											.\(OutPut)\ServerReference\Librarys\
-xcopy /y/s	.\ProtocolBuffer\ThirdPartyLib\*.lib						.\(OutPut)\ServerReference\Librarys\
+xcopy /y/s	.\ProtocolBuffer\ServerProtocol\*.*						.\(OutPut)\Headers\
+xcopy /y/s	.\ProtocolBuffer\Public\*.*										.\(OutPut)\Headers\
+xcopy /y/s	.\ProtocolBuffer\Bin\*.lib											.\(OutPut)\Librarys\
+xcopy /y/s	.\ProtocolBuffer\ThirdPartyLib\*.lib						.\(OutPut)\Librarys\
 
 
 

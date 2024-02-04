@@ -8,7 +8,7 @@ namespace Server
 {
 	CServerApp::CServerApp() 
 	{
-
+		
 	}
 
 	_bool CServerApp::Start()

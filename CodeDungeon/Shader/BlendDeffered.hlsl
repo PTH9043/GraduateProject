@@ -54,7 +54,6 @@ PS_OUT PS_Main(PS_In In)
     vector vColor = vDiffuseDesc/* * (vShadeDesc + vAmbientDesc + vSpecularDesc)*/;
 
     Out.vColor = vColor;
-    Out.vColor.r = g_GrobalInfo.fDeltaTime;
     Out.vColor.a = vDiffuseDesc.a;
     return Out;
 }

@@ -41,7 +41,7 @@ private:
 private:
 	using IMGOBJECTS = UNORMAP<IMGTAG, SHPTR<TImGuiView>>;
 	// IMGUI Objects 
-	IMGOBJECTS												m_uomapImGuiObjects;
+	IMGOBJECTS												m_ImGuiObjectContainer;
 	SHPTR<TMainView>								m_spMainView;
 
 	SHPTR<UDevice>										m_spDevice;

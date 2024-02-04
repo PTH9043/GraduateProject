@@ -8,7 +8,11 @@ END
 BEGIN(Tool)
 class TAssimpBoneNode;
 class TAssimpModel;
-
+/*
+@ Date: 2024-02-04, Writer: 박태현
+@ Explain
+- Assimp를 로드하기 위한 meshContainer
+*/
 class TAssimpMeshContainer : public UVIBuffer {
 public:
 	TAssimpMeshContainer(CSHPTRREF <UDevice> _spDevice);

@@ -4,7 +4,11 @@
 BEGIN(Engine)
 class UAnimModel;
 class UChannel;
-
+/*
+@ Date: 2024-02-04, Writer: 박태현
+@ Explain
+- Animation를 담는 클래스 Channel들의 VECTOR 컨테이너를 들고 있다. 
+*/
 class   UAnimation : public UBase{
 public:
 	UAnimation();
