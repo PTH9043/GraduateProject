@@ -32,7 +32,7 @@ URenderer::URenderer(CSHPTRREF <UDevice> _spDevice, CSHPTRREF<UCommand> _spComma
     m_spPipeLine{ _spPipeLine }, m_spSceneManager{ _spSceneManager },
     m_spRenderTargetManager{ _spRenderTargetManager },
     m_spComputeManager{ _spComputeManager },
-    m_spVIBufferRect{ nullptr },
+    m_spVIBufferPlane{ nullptr },
     m_sNonAlphaBlendIndex{ 0 },
     m_spCastingCommand{ static_pointer_cast<UCommand>(_spGraphicDevice->GetGpuCommand()) }
 #ifdef _USE_DEBUGGING
@@ -53,7 +53,7 @@ HRESULT URenderer::NativeConstruct()
     }
     // Rendering
     {
-        m_spVIBufferRect = static_pointer_cast<UVIBufferRect>(spGameInstance->CloneResource(PROTO_RES_VIBUFFERRECT));
+        m_spVIBufferPlane = static_pointer_cast<UVIBufferRect>(spGameInstance->CloneResource(PROTO_RES_VIBUFFERRECT));
     }
     {
         // Add Shader 
@@ -174,7 +174,7 @@ HRESULT URenderer::Render()
 #ifdef _USE_DEBUGGING
     RenderDebug();
 
-    m_spRenderTargetManager->RenderDebugObjects(FrameReadyDrawLast(PROTO_RES_DEBUG2DTARGETSHADER), m_spVIBufferRect,
+    m_spRenderTargetManager->RenderDebugObjects(FrameReadyDrawLast(PROTO_RES_DEBUG2DTARGETSHADER), m_spVIBufferPlane,
         m_spCastingCommand, SRV_REGISTER::T0);
 #endif
     return S_OK;
@@ -205,7 +205,7 @@ void URenderer::ClearAllData()
     m_spSceneManager.reset();
     m_spRenderTargetManager.reset();
     m_spComputeManager.reset();
-    m_spVIBufferRect.reset();
+    m_spVIBufferPlane.reset();
 
     for (auto& iter : m_arrActiveDrawRenderList)
     {
@@ -335,7 +335,7 @@ void URenderer::RenderBlend()
         spShader->BindSRVBuffer(SRV_REGISTER::T2, spLightGroup->GetRenderTargetTexture(RTOBJID::LIGHTSHADE_SHADE_DEFFERED));
         spShader->BindSRVBuffer(SRV_REGISTER::T3, spLightGroup->GetRenderTargetTexture(RTOBJID::LIGHTSHADE_SPECULAR_DEFFERED));
     }
-    m_spVIBufferRect->Render(spShader, m_spCastingCommand);
+    m_spVIBufferPlane->Render(spShader, m_spCastingCommand);
     spRenderTargetGroup->WaitTargetToResource(m_spCastingCommand);
   
 }
@@ -418,7 +418,7 @@ void URenderer::RenderEnd()
             FindRenderTargetTexture(RTGROUPID::UI2D_DEFFERED,
                 RTOBJID::UI2D_SCREEN_DEFFERED));
         //  Render
-        m_spVIBufferRect->Render(spDefferedShader, m_spCastingCommand);
+        m_spVIBufferPlane->Render(spDefferedShader, m_spCastingCommand);
     }
 }
 

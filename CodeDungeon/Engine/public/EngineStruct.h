@@ -2,6 +2,15 @@
 
 namespace Engine {
 
+	template<class T>
+	struct SIZESTRUCT {
+	public:
+		static int VALUE_SIZE;
+	};
+
+	template<class T>
+	int SIZESTRUCT<T>::VALUE_SIZE{ sizeof(T) };
+
 	typedef  struct tagGraphicDesc {
 
 		enum WINMODE { MODE_FULL, MODE_WIN, MODE_END };

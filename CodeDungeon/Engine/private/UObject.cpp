@@ -20,5 +20,6 @@ HRESULT UObject::NativeConstruct()
 #ifdef _USE_IMGUI
 void UObject::ShowObjectInfo()
 {
+
 }
 #endif

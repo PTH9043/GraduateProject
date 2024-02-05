@@ -47,7 +47,7 @@ private:
 	SHPTR<ULoader>			m_spLoader;
 
 	LIGHTSHADERS				m_LightShaders;
-	SHPTR<UVIBufferRect>	m_spVIBufferRect;
+	SHPTR<UVIBufferRect>	m_spVIBufferPlane;
 
 	_ushort								m_sSceneID;
 	LIGHTGROUP						m_LightGroup;

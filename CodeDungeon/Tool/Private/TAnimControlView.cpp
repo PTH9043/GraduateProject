@@ -1,8 +1,10 @@
 #include "ToolDefines.h"
 #include "TAnimControlView.h"
+#include "TShowAnimModelObject.h"
+#include "UGameInstance.h"
 
 TAnimControlView::TAnimControlView(CSHPTRREF<UDevice> _spDevice) :
-    TImGuiView(_spDevice, "AnimControlView"), m_stMainDesc{}, m_isInitSetting{false}
+    TImGuiView(_spDevice, "AnimControlView"), m_stMainDesc{}, m_isInitSetting{false}, m_spAnimFileGroup{ nullptr}
 {
 }
 
@@ -14,16 +16,24 @@ HRESULT TAnimControlView::NativeConstruct()
 {
     m_stMainDesc = MAINDESC(ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoCollapse, ImGuiDockNodeFlags_None,
         ImVec2{ (_float)WINDOW_WIDTH, 0.f }, ImVec2{ 500.f, (_float)WINDOW_HEIGHT });
+
+	m_stAnimControlDesc = DOCKDESC("AnimControlViewer", ImGuiWindowFlags_NoFocusOnAppearing,
+		ImGuiDockNodeFlags_CentralNode);
+	m_stAnimModifyDesc = DOCKDESC("AnimModifyViewer", ImGuiWindowFlags_NoFocusOnAppearing,
+		ImGuiDockNodeFlags_CentralNode);
     return S_OK;
 }
 
 HRESULT TAnimControlView::LoadResource()
 {
+	m_spShowAnimModelObject = std::static_pointer_cast<TShowAnimModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWANIMMODELOBJECT));
     return S_OK;
 }
 
 HRESULT TAnimControlView::ReleaseResource()
 {
+	GetGameInstance()->RemoveActor(m_spShowAnimModelObject);
+	ActiveResetSceneData();
     return S_OK;
 }
 

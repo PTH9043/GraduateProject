@@ -93,6 +93,7 @@ HRESULT UVIBuffer::CreateVtxBuffer(const _uint& _iVertexCnt, const _uint& _iBuff
 		spGpuCommand->GetResCmdList().Get(), BUFFER_SIZE, _pVertexData,
 		m_cpVertexGpuBuffer, m_cpVertexUploadBuffer, D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER), E_FAIL);
 
+	// 자원 동기화
 	spGpuCommand->WaitForGpuResourceUpload();
 
 	m_stD3DVertexBufferView.BufferLocation = m_cpVertexGpuBuffer->GetGPUVirtualAddress();

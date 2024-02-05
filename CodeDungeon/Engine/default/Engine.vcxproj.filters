@@ -250,8 +250,11 @@
     <Filter Include="97.Needs\ServerUtility">
       <UniqueIdentifier>{be3812da-4c30-4d9b-9003-aa2d14cdd06b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97.Needs\STRING">
+    <Filter Include="97.Needs\String">
       <UniqueIdentifier>{04497f82-a600-45dd-a32e-0455bc44c87f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Resource\VIBuffer\Plane">
+      <UniqueIdentifier>{62b4d9f9-8d83-459b-bdba-cc5dd438e2c0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -487,7 +490,10 @@
       <Filter>20.Network\ProcessedData</Filter>
     </ClCompile>
     <ClCompile Include="..\private\CustomString.cpp">
-      <Filter>97.Needs\STRING</Filter>
+      <Filter>97.Needs\String</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UVIBufferPlane.cpp">
+      <Filter>07.Resource\VIBuffer\Plane</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -753,7 +759,10 @@
       <Filter>20.Network\ProcessedData</Filter>
     </ClInclude>
     <ClInclude Include="..\public\CustomString.h">
-      <Filter>97.Needs\STRING</Filter>
+      <Filter>97.Needs\String</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UVIBufferPlane.h">
+      <Filter>07.Resource\VIBuffer\Plane</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -788,6 +797,9 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\Debug2DTarget.hlsl">
       <Filter>98.ShaderFile\Debug</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\NormalObject.hlsl">
+      <Filter>98.ShaderFile\Common\NonAlpha</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

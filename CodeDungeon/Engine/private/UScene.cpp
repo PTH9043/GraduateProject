@@ -39,7 +39,7 @@ HRESULT UScene::NativeConstruct()
     // FLASH LIGHT
     m_LightShaders.insert(std::make_pair(LIGHTTYPE::TYPE_FLASHLIGHT, spShader));
     // Rect
-    m_spVIBufferRect = static_pointer_cast<UVIBufferRect>(spGameInstance->CloneResource(PROTO_RES_VIBUFFERRECT));
+    m_spVIBufferPlane = static_pointer_cast<UVIBufferRect>(spGameInstance->CloneResource(PROTO_RES_VIBUFFERRECT));
     return S_OK;
 }
 
@@ -77,7 +77,7 @@ void UScene::RenderLights()
         // Draw Light
         for (CSHPTRREF<ULight> spLight : LightIterator->second)
         {
-            spLight->Render(spCmdList,m_spVIBufferRect, LightPair.second);
+            spLight->Render(spCmdList,m_spVIBufferPlane, LightPair.second);
         }
     }
 }

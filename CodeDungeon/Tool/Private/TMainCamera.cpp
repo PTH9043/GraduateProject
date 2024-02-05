@@ -62,10 +62,10 @@ void TMainCamera::LateTickActive(const _double& _dTimeDelta)
                 _long		MouseMove = 0;
 
                 if (MouseMove = pGameInstance->GetDIMMoveState(DIMOUSEMOVE::DIMM_X))
-                    GetTransform()->RotateTurn(_float3(0.f, 1.f, 0.f), DirectX::XMConvertToRadians(90.f) * MouseMove * 1.f, _dTimeDelta);
+                    GetTransform()->RotateTurn(_float3(0.f, 1.f, 0.f), DirectX::XMConvertToRadians(90.f) * MouseMove * 5.f, _dTimeDelta);
 
                 if (MouseMove = pGameInstance->GetDIMMoveState(DIMOUSEMOVE::DIMM_Y))
-                    GetTransform()->RotateTurn(GetTransform()->GetRight(), DirectX::XMConvertToRadians(90.f) * MouseMove * 1.f, _dTimeDelta);
+                    GetTransform()->RotateTurn(GetTransform()->GetRight(), DirectX::XMConvertToRadians(90.f) * MouseMove * 5.f, _dTimeDelta);
             }
         }
     }

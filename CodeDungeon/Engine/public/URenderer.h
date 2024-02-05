@@ -117,7 +117,7 @@ private:
 	SHPTR<URenderTargetManager>											m_spRenderTargetManager;
 	SHPTR<UComputeManager>													m_spComputeManager;
 	SHPTR<UCommand>																	m_spCastingCommand;
-	SHPTR<UVIBufferRect>																m_spVIBufferRect;
+	SHPTR<UVIBufferRect>																m_spVIBufferPlane;
 	_short																								m_sNonAlphaBlendIndex;
 #ifdef _USE_DEBUGGING																	
 	 ARRAY<DRAWINGRENDERCONTAINER, DEBUG_RI_END>	 m_arrDrawDebugRenderList;

@@ -111,6 +111,7 @@
     <ClInclude Include="..\public\UUserInterface.h" />
     <ClInclude Include="..\public\UVIBuffer.h" />
     <ClInclude Include="..\public\UVIBufferCube.h" />
+    <ClInclude Include="..\public\UVIBufferPlane.h" />
     <ClInclude Include="..\public\UVIBufferRect.h" />
     <ClInclude Include="..\public\UVIBufferSphere.h" />
     <ClInclude Include="..\public\UWorkThread.h" />
@@ -191,6 +192,7 @@
     <ClCompile Include="..\private\UUserInterface.cpp" />
     <ClCompile Include="..\private\UVIBuffer.cpp" />
     <ClCompile Include="..\private\UVIBufferCube.cpp" />
+    <ClCompile Include="..\private\UVIBufferPlane.cpp" />
     <ClCompile Include="..\private\UVIBufferRect.cpp" />
     <ClCompile Include="..\private\UVIBufferSphere.cpp" />
     <ClCompile Include="..\private\UWorkThread.cpp" />
@@ -215,6 +217,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\Shader\Model.hlsl" />
+    <FxCompile Include="..\..\Shader\NormalObject.hlsl" />
     <FxCompile Include="..\..\Shader\Rect.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>

@@ -4,10 +4,10 @@
 
 BEGIN(Engine)
 class UAnimModel;
-class TShowAnimModelObject;
 END
 
 BEGIN(Tool)
+class TShowAnimModelObject;
 /*
 @ Date: 2024-02-04, Writer: นฺลยว๖
 @ Explain
@@ -33,9 +33,12 @@ private:
 	void DockBuildInitSetting();
 private:
 	MAINDESC												m_stMainDesc;
+	DOCKDESC											m_stAnimControlDesc;
+	DOCKDESC											m_stAnimModifyDesc;
 	_bool														m_isInitSetting;
 
 	SHPTR<TShowAnimModelObject>	m_spShowAnimModelObject;
+	SHPTR<FILEGROUP>							m_spAnimFileGroup;
 };
 
 END

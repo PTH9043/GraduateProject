@@ -67,7 +67,7 @@ HRESULT UVIBufferPlane::NativeConstruct()
 			for (_uint i = 0; i < VERTEX_CNT; ++i)
 				VertexPos[i] = Vertecies[i].vPosition;
 
-			RETURN_CHECK_FAILED(CreateVtxBuffer(VERTEX_CNT, sizeof(VTXDEFAULT), Vertecies.data(),
+			RETURN_CHECK_FAILED(CreateVtxBuffer(VERTEX_CNT, sizeof(VTXNORMAL), Vertecies.data(),
 				D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, VertexPos), E_FAIL);
 		}
 	}

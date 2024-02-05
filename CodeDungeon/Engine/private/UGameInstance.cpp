@@ -45,7 +45,7 @@
 //#include "UVIBufferTriangle.h"
 //#include "UVIBufferSphere.h"
 //#include "UVIBufferCube.h"
-//#include "UVIBufferPlane.h"
+#include "UVIBufferPlane.h"
 //#include "UVIBufferSkyBox.h"
 
 //#include "UParticleSystem.h"
@@ -785,6 +785,12 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 		AddPrototype(PROTO_RES_VIBUFFERNORMALRECT, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferRect>(
 			_stData.wpDevice.lock(), VIBUFFERTYPE::NORMAL));
 		
+		AddPrototype(PROTO_RES_VIBUFFERPLANE, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferPlane>(
+			_stData.wpDevice.lock(), VIBUFFERTYPE::GENERIC));
+
+		AddPrototype(PROTO_RES_VIBUFFERNORMALPLANE, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferPlane>(
+			_stData.wpDevice.lock(), VIBUFFERTYPE::NORMAL));
+
 	/*	AddPrototype(PROTO_RES_VIBUFFERPOINT, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferPoint>(
 			_stData.wpDevice.lock()));
 
@@ -802,9 +808,6 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 
 		AddPrototype(PROTO_RES_VIBUFFERNORMALCUBE, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferCube>(
 			_stData.wpDevice.lock(), VIBUFFERTYPE::NORMAL));
-
-		AddPrototype(PROTO_RES_VIBUFFERPLANE, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferPlane>(
-			_stData.wpDevice.lock(), VIBUFFERTYPE::GENERIC));
 
 		AddPrototype(PROTO_RES_VIBUFFERNORMALPLANE, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferPlane>(
 			_stData.wpDevice.lock(), VIBUFFERTYPE::NORMAL));
@@ -884,12 +887,12 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 		//			DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT
 		//			}));
 
-		//	CreateGraphicsShader(PROTO_RES_NORMALOBJECTSHADER, CLONETYPE::CLONE_STATIC,
-		//		SHADERDESC(L"NormalObject", VTXNORMAL_DECLARATION::Element, VTXNORMAL_DECLARATION::iNumElement,
-		//			SHADERLIST{ VS_MAIN, PS_MAIN },
-		//			RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
-		//			DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT
-		//			}));
+			CreateGraphicsShader(PROTO_RES_NORMALOBJECTSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"NormalObject", VTXNORMAL_DECLARATION::Element, VTXNORMAL_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN },
+					RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
+					DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT
+					}));
 
 		//	CreateGraphicsShader(PROTO_RES_MIRRORSHADER, CLONETYPE::CLONE_STATIC,
 		//		SHADERDESC(L"Mirror", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
@@ -1146,24 +1149,24 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 	/*
 	·»´õ Å¸°Ù µð¹ö±ëÀ» À§ÇÑ °Í
 	*/
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_POSITION_DEFFERED,
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_NOMRAL_DEFFERED,
 		_float2(100.f, 100.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_DIFFUSE_DEFFERED,
 		_float2(100.f, 210.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_NOMRAL_DEFFERED,
-		_float2(100.f, 320.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
+	////m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_NOMRAL_DEFFERED,
+	////	_float2(100.f, 320.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_AMBIENT_DEFFERED,
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::BLEND_DEFFERED, RTOBJID::BLEND_SCREEN_DEFFERED,
 		_float2(100.f, 430.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_SHADE_DEFFERED,
-		_float2(100.f, 540.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
+	//m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_SHADE_DEFFERED,
+	//	_float2(100.f, 540.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_SPECULAR_DEFFERED,
-		_float2(100.f, 650.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
+	//m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_SPECULAR_DEFFERED,
+	//	_float2(100.f, 650.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 #endif
 	return S_OK;
 }

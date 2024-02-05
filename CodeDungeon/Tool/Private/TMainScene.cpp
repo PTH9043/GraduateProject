@@ -40,10 +40,10 @@ HRESULT TMainScene::LoadSceneData()
 			1.f, 2.f });
 	}
 
-	//{
-	//	m_spTestObject = std::static_pointer_cast<TTestObject>(spGameInstance->CloneActorAdd(L"Proto_Actor_TestObject"));
-	//	m_spTestObject->GetTransform()->SetPos({ 0.f, 0.f, 0.f });
-	//}
+	{
+		m_spTestObject = std::static_pointer_cast<TTestObject>(spGameInstance->CloneActorAdd(L"Proto_Actor_TestObject"));
+		m_spTestObject->GetTransform()->SetPos({ 0.f, 0.f, 0.f });
+	}
 
 	return S_OK;
 }

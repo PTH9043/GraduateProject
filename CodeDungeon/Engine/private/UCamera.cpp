@@ -16,8 +16,14 @@ UCamera::UCamera(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const
 {
 }
 
-UCamera::UCamera(const UCamera& _rhs) :
-	UActor(_rhs)
+UCamera::UCamera(const UCamera& _rhs) : UActor(_rhs),
+m_mPrevViewMatrix{ _float4x4::Identity },
+m_mProjMatrix{ _float4x4::Identity },
+m_eProjType{ PROJECTION_TYPE::PROJ_END },
+m_stCamValue{},
+m_stCamProj{},
+m_iCamID{ 0 },
+m_isFrustomOn{ false }
 {
 }
 

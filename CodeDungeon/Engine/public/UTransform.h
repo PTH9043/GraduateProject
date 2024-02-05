@@ -49,7 +49,7 @@ public:
 	void SetNotApplyRotate(const _bool _isActive) { this->m_isNotApplyRotate = _isActive; }
 	void SetNotApplyPos(const _bool _isActive) { this->m_isNotApplyPos = _isActive; }
 	void SetNotApplyScale(const _bool _isActive) { this->m_isNotApplyScale = _isActive; }
-
+	void SetParentsTransform(CSHPTRREF<UTransform> _spTransform) { this->m_spParentsTransform = _spTransform; }
 public:
 	virtual void Free() override;
 	CLONE_MACRO(UTransform, "UTransform::Cloen To Failed")

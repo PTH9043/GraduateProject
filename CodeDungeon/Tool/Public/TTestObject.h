@@ -4,7 +4,7 @@
 
 BEGIN(Engine)
 
-class UVIBufferRect;
+class UVIBuffer;
 class UShaderConstantBuffer;
 
 END
@@ -35,7 +35,7 @@ protected:
 private:
 	static constexpr _uint							RECTCOLOR_SIZE{ sizeof(RECTCOLOR) };
 	// Cube
-	SHPTR< UVIBufferRect>					m_spVIBufferRect;
+	SHPTR< UVIBuffer>								m_spVIBufferPlane;
 	SHPTR< UShaderConstantBuffer>	m_spRectColorBuffer;
 	RECTCOLOR											m_RectColor;
 };

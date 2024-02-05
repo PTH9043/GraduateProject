@@ -100,10 +100,10 @@ static const char* CLONETYPE_ONCE_STRING{ "CLONETYPE_ONCE" };
 #include "EngineTypedef.h"
 
 #include "EngineEnum.h"
+#include "EngineStruct.h"
 #include "EngineFunction.h"
 #include "EngineMacro.h"
 #include "EngineMake.h"
-#include "EngineStruct.h"
 #include "EngineShaderParam.h"
 
 #include "UDelegate.h"
