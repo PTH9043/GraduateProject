@@ -43,6 +43,8 @@ private:
 private:
 	TEXTURECONTAINER		m_vecTextureContainer;
 	TEXNAMES						m_TextureNames;
+
+	const	static	_wstring		EMPTY_STRING;
 };
 
 END

@@ -17,7 +17,7 @@ TToolApp::TToolApp() :
 	m_spDeltaTimer{ nullptr },
 	m_spRenderTimer{ nullptr },
 	m_dDeltaTime{ 0 },
-	TICK_DOUBLE{ 1 / 120.f },
+	TICK_DOUBLE{ 1 / 180.f },
 	m_dShowTickFPS{ 0.0 },
 	DELTA_TIMER{ L"DELTA_TIMER" },
 	TICK_TIMER{ L"TICK_TIMER" },

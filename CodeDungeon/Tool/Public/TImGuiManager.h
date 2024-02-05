@@ -46,7 +46,7 @@ private:
 
 	SHPTR<UDevice>										m_spDevice;
 	SHPTR<UGpuCommand>						m_spGpuCommand;
-	SHPTR<UTableDescriptor>	m_spTableDesciptor;
+	SHPTR<UTableDescriptor>					m_spTableDesciptor;
 
 	_bool															m_isResetScene{ false };
 };

@@ -30,7 +30,7 @@ _wstring Engine::UMethod::ConvertSToW(const _string& var)
 	_wstring wstr;
 	size_t size;
 	wstr.resize(var.size());
-	mbstowcs_s(&size, &wstr[0], wstr.size() + 1, var.c_str(), var.size());
+	mbstowcs_s(&size, wstr.data(), wstr.size() + 1, var.c_str(), var.size());
 	return wstr;
 }
 

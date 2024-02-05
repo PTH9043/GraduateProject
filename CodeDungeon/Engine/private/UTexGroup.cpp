@@ -6,6 +6,7 @@
 
 namespace fs = std::filesystem;
 
+const	_wstring		UTexGroup::EMPTY_STRING{L""};
 
 UTexGroup::UTexGroup(CSHPTRREF<UDevice> _spDevice)
 	: UResource(_spDevice),
@@ -90,7 +91,7 @@ const _wstring& UTexGroup::GetTextureName(const _uint _iIndex)
 		if (iter.second == _iIndex)
 			return iter.first;
 	}
-	return EMPTY_WSTR;
+	return EMPTY_STRING;
 }
 
 const _uint UTexGroup::GetTextureIndex(const _wstring& _wstrTextureName)

@@ -96,6 +96,7 @@ static const char* CLONETYPE_ONCE_STRING{ "CLONETYPE_ONCE" };
 #include "EngineConcept.h"
 #include "UDelegate.h"
 #include "CustomMemory.h"
+#include "CustomString.h"
 #include "EngineTypedef.h"
 
 #include "EngineEnum.h"
@@ -113,8 +114,7 @@ namespace Engine {
 	namespace DXVALUE {
 		static const _float3					 g_BasicScale = _float3(1.f, 1.f, 1.f);
 		static constexpr _uint				 g_maxRegisterCnt{ REGISTER_CNT };
-		static const _wstring				 g_EmptyWstr{ L"" };
-		static const _wstring				 g_OutFolderExtension{ L".bin" };
+		static const _tchar*					 g_OutFolderExtension{ L".bin" };
 	}
 }
 

@@ -42,8 +42,8 @@ namespace Engine {
 	using _xmvector = DirectX::XMVECTOR;
 	using _xmmatrix = DirectX::XMMATRIX;
 
-	using _wstring = std::wstring;
-	using _string = std::string;
+	using _wstring = CustomString<wchar_t, std::wstring>;
+	using _string = CustomString<char, std::string>;
 
 	namespace PATH {
 		using PATHS = std::vector<_wstring>;
@@ -98,13 +98,13 @@ namespace Engine {
 	using DEQUE = std::deque<Type, UStlAllocator<Type>>;
 
 	template<class Type, class Container = DEQUE<Type>>
-	using QUEUE = std::queue<Type>;
+	using QUEUE = std::queue<Type, Container>;
 
 	template<class Type, class Container = VECTOR<Type>, class Pred = std::less<class Container::value_type>>
 	using PRIORITYQUEUE = std::priority_queue<Type, Container, Pred>;
 
-	template<class Type>
-	using STACK = std::stack<Type, DEQUE<Type>>;
+	template<class Type, class Container = DEQUE<Type>>
+	using STACK = std::stack<Type, Container>;
 
 	template<class Type>
 	using CONQUEUE = concurrency::concurrent_queue<Type>;

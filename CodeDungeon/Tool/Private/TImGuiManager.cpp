@@ -36,7 +36,6 @@ HRESULT TImGuiManager::ReadyManager(const GRAPHICDESC& _stGraphicDesc, const OUT
 {
 	m_spDevice = _stOutputData.wpDevice.lock();
 	m_spGpuCommand = static_pointer_cast<UGpuCommand>(_stOutputData.wpGpuCmd.lock());
-
 	ImGui::CreateContext();
 
 	ImGuiIO& io = ImGui::GetIO();

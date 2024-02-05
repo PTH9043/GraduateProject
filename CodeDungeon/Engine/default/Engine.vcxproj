@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\CustomMemory.h" />
+    <ClInclude Include="..\public\CustomString.h" />
     <ClInclude Include="..\public\EngineConcept.h" />
     <ClInclude Include="..\public\EngineDefine.h" />
     <ClInclude Include="..\public\EngineEnum.h" />
@@ -116,6 +117,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\CustomMemory.cpp" />
+    <ClCompile Include="..\private\CustomString.cpp" />
     <ClCompile Include="..\private\EngineStruct.cpp" />
     <ClCompile Include="..\private\ServerUtility.cpp" />
     <ClCompile Include="..\private\UActor.cpp" />

@@ -56,7 +56,7 @@ private:
 	void SettingNextAnimSituation();
 	HRESULT CreateShaderConstantBuffer();
 private:
-	static	const inline _wstring					SECTION_FOLDEDER_NAME{ L"Section\\"};
+	static	const  _wstring											SECTION_FOLDEDER_NAME;
 
 	ANIMATIONS															m_vecAnimations;
 	ANIMSTRINGS														m_AnimNamesGroup;

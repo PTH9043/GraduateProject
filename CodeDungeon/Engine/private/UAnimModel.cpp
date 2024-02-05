@@ -14,6 +14,8 @@
 
 namespace fs = std::filesystem;
 
+const  _wstring		UAnimModel::SECTION_FOLDEDER_NAME{ L"Section\\" };
+
 UAnimModel::UAnimModel(CSHPTRREF<UDevice> _spDevice) :
 	UModel(_spDevice, TYPE::ANIM),
 	m_vecAnimations{},

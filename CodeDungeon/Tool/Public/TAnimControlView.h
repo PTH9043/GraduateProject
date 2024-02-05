@@ -4,6 +4,7 @@
 
 BEGIN(Engine)
 class UAnimModel;
+class TShowAnimModelObject;
 END
 
 BEGIN(Tool)
@@ -31,8 +32,10 @@ protected:
 private:
 	void DockBuildInitSetting();
 private:
-	MAINDESC					m_stMainDesc;
-	_bool							m_isInitSetting;
+	MAINDESC												m_stMainDesc;
+	_bool														m_isInitSetting;
+
+	SHPTR<TShowAnimModelObject>	m_spShowAnimModelObject;
 };
 
 END

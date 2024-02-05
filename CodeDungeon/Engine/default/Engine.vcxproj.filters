@@ -250,6 +250,9 @@
     <Filter Include="97.Needs\ServerUtility">
       <UniqueIdentifier>{be3812da-4c30-4d9b-9003-aa2d14cdd06b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.Needs\STRING">
+      <UniqueIdentifier>{04497f82-a600-45dd-a32e-0455bc44c87f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -482,6 +485,9 @@
     </ClCompile>
     <ClCompile Include="..\private\UProcessedData.cpp">
       <Filter>20.Network\ProcessedData</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\CustomString.cpp">
+      <Filter>97.Needs\STRING</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -745,6 +751,9 @@
     </ClInclude>
     <ClInclude Include="..\public\UProcessedData.h">
       <Filter>20.Network\ProcessedData</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\CustomString.h">
+      <Filter>97.Needs\STRING</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

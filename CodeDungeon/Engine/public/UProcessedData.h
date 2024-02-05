@@ -58,7 +58,7 @@ namespace std {
 	/*
 	@ Date: 2024-02-03,  Writer: 박태현
 	@ Explain
-	- less 연산에 대한 SharedPtr 재정의, concurrent_ 컨테이너에 사용하기 위함
+	- less 연산에 대한 UProcessedData 재정의, concurrent_ 컨테이너에 사용하기 위함
 	*/
 	template <>
 	struct std::less<Engine::UProcessedData> {

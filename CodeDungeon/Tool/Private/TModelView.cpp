@@ -40,9 +40,9 @@ HRESULT TModelView::NativeConstruct()
 		ImVec2{ (_float)WINDOW_WIDTH, 0.f }, ImVec2{ 500.f, (_float)WINDOW_HEIGHT });
 
 	m_stModelDockDesc = DOCKDESC("ModelViewer", ImGuiWindowFlags_NoFocusOnAppearing,
-		ImGuiDockNodeFlags_NoCentralNode);
+		ImGuiDockNodeFlags_CentralNode);
 	m_stAnimModelDockDesc = DOCKDESC("AnimModelViewer", ImGuiWindowFlags_NoFocusOnAppearing,
-		ImGuiDockNodeFlags_NoCentralNode);
+		ImGuiDockNodeFlags_CentralNode);
 	return S_OK;
 }
 

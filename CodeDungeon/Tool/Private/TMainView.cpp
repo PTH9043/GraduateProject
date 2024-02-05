@@ -31,7 +31,7 @@ HRESULT TMainView::NativeConstruct()
 void TMainView::InsertImGuiView(const CSHPTRREF<TImGuiView> _spImGuiView)
 {
     RETURN_CHECK(nullptr == _spImGuiView, ;);
-    m_vecImGuies.push_back(_spImGuiView);
+    m_CloseImGuies.push_back(_spImGuiView);
 }
 
 HRESULT TMainView::LoadResource()
@@ -69,9 +69,7 @@ void TMainView::RenderActive()
     ImGui::Begin(GetName().c_str(), nullptr, m_stMainDesc.imgWindowFlags);
     {
         // Basic info
-        ImGuiContext& g = *GImGui;
-        ImGuiIO& io = g.IO;
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", m_dShowDeltaTime, 1.f / m_dShowDeltaTime);
         ImGui::Text("Application Delta %1f", m_dShowDeltaTime);
 
         m_stMainDesc.iDockSpaceID = ImGui::GetID(GetName().c_str());
@@ -93,7 +91,7 @@ void TMainView::RenderMenu()
     {
         if (ImGui::BeginMenu("Tools"))
         {
-            for (auto& iter : m_vecImGuies)
+            for (auto& iter : m_CloseImGuies)
             {
                 _bool isOpen = iter->IsOpen();
                 if (ImGui::MenuItem(iter->GetName().c_str(), "", &isOpen))
