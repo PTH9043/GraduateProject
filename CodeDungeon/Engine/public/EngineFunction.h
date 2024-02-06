@@ -231,7 +231,8 @@ namespace Engine {
 	- sizeof를 쓰면, 지역 변수 호출인데 이 함수를 쓰면 전역 변수 호출이라 새로운 임시 변수를 만들지 않는다. 
 	*/
 	template<class Type>
-	static int GetTypeSize() { static SIZESTRUCT<Type> size; return size.VALUE_SIZE; }
+	static int GetTypeSize() { static SIZESTRUCTINT<Type> size; return size.VALUE_SIZE; }
+
 	/*
 	@ Date: 2024-02-04,  Writer: 박태현
 	@ Explain

@@ -235,7 +235,6 @@ namespace Engine {
 	*/
 
 	namespace Make {
-
 		/*
 		@ Date: 2024-02-03,  Writer: นฺลยว๖
 		@ Explain

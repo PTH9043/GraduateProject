@@ -3,13 +3,13 @@
 namespace Engine {
 
 	template<class T>
-	struct SIZESTRUCT {
+	struct SIZESTRUCTINT {
 	public:
 		static int VALUE_SIZE;
 	};
 
 	template<class T>
-	int SIZESTRUCT<T>::VALUE_SIZE{ sizeof(T) };
+	int SIZESTRUCTINT<T>::VALUE_SIZE{ sizeof(T) };
 
 	typedef  struct tagGraphicDesc {
 

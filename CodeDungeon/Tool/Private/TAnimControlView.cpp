@@ -54,6 +54,7 @@ void TAnimControlView::RenderActive()
 	{
 		m_stMainDesc.iDockSpaceID = ImGui::GetID(GetName().c_str());
 		ImGui::DockSpace(m_stMainDesc.iDockSpaceID, ImVec2{}, m_stMainDesc.imgDockNodeFlags);
+		DockBuildInitSetting();
 		// Show Model
 		ImGui::NewLine();
 
@@ -69,11 +70,11 @@ void TAnimControlView::DockBuildInitSetting()
 		ImGui::DockBuilderRemoveNode(m_stMainDesc.iDockSpaceID);
 		ImGui::DockBuilderAddNode(m_stMainDesc.iDockSpaceID);
 		// Docking Build 
-	//	m_stModelDockDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Up, 0.5f, NULL, &dock_main_id);
-	//	m_stAnimModelDockDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.5f, NULL, &dock_main_id);
+		m_stAnimControlDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Up, 0.3f, NULL, &dock_main_id);
+		m_stAnimModifyDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.7f, NULL, &dock_main_id);
 
-	//	ImGui::DockBuilderDockWindow(m_stModelDockDesc.strName.c_str(), m_stModelDockDesc.iDockSpaceID);
-	//	ImGui::DockBuilderDockWindow(m_stAnimModelDockDesc.strName.c_str(), m_stAnimModelDockDesc.iDockSpaceID);
+		ImGui::DockBuilderDockWindow(m_stAnimControlDesc.strName.c_str(), m_stAnimControlDesc.iDockSpaceID);
+		ImGui::DockBuilderDockWindow(m_stAnimModifyDesc.strName.c_str(), m_stAnimModifyDesc.iDockSpaceID);
 		ImGui::DockBuilderFinish(m_stMainDesc.iDockSpaceID);
 	}
 	m_isInitSetting = true;
