@@ -44,6 +44,8 @@ private:
 
 	void LoadAssimpModelDatas(CSHPTRREF<FILEGROUP> _spFolder);
 	void LoadAssimpAnimModelDatas(CSHPTRREF<FILEGROUP> _spFolder);
+	void ResetModels();
+	void ResetAnimModels();
 private:
 	using MODELS = UNORMAP<_string, SHPTR<UModel>>;
 	using ANIMMODEL = UNORMAP<_string, SHPTR<UAnimModel>>;
@@ -55,8 +57,8 @@ private:
 	DOCKDESC											m_stModelDockDesc;
 	DOCKDESC											m_stAnimModelDockDesc;
 
-	MODELS													m_conunomapModels;
-	ANIMMODEL											m_conunomapAnimModel;
+	MODELS													m_ModelsContainer;
+	ANIMMODEL											m_AnimModelContainer;
 
 	SHPTR<FILEGROUP>							m_spModelFileFolder;
 	SHPTR<FILEGROUP>							m_spAnimModelFileFolder;
@@ -71,6 +73,8 @@ private:
 	_float3													m_vAnimModelScale;
 
 	_bool														m_isInitSetting;
+	_bool														m_isResetModel;
+	_bool														m_isResetAnimModel;
 };
 
 END

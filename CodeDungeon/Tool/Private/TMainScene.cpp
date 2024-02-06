@@ -33,7 +33,7 @@ HRESULT TMainScene::LoadSceneData()
 		vecDatas.push_back(&tDesc);
 
 		m_spMainCamera = std::static_pointer_cast<TMainCamera>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MAINCAMERA, vecDatas));
-		m_spMainCamera->GetTransform()->SetPos({ 0.f, 0.f, -10.f });
+		m_spMainCamera->GetTransform()->SetPos({ 0.f, 10.f, -100.f });
 	}
 	{
 		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL, {1.f, 1.f, 1.f, 1.f}, {1.f, 1.f, 1.f, 1.f}, {1.f, 1.f, 1.f, 1.f}, {0.f, -1.f, -1.f,}, {0.f, 10000.f, 0.f}, 0.f, 0.f ,

@@ -68,6 +68,9 @@
     <Filter Include="03.ImGui\Animation">
       <UniqueIdentifier>{dbb78db6-b5d0-457c-8b79-994d82f8147d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="90.ShowModel\AnimControlModel">
+      <UniqueIdentifier>{c9991766-7321-4751-b857-159b2259d33b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ToolDefines.h">
@@ -163,6 +166,9 @@
     <ClInclude Include="..\Public\TAnimControlView.h">
       <Filter>03.ImGui\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\TAnimControlModel.h">
+      <Filter>90.ShowModel\AnimControlModel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\TToolApp.cpp">
@@ -239,6 +245,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\TAnimControlView.cpp">
       <Filter>03.ImGui\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TAnimControlModel.cpp">
+      <Filter>90.ShowModel\AnimControlModel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

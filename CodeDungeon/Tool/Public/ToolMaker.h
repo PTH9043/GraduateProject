@@ -3,6 +3,7 @@
 
 #define PROTO_ACTOR_SHOWMODELOBJECT L"Proto_Actor_ShowModelObject"
 #define PROTO_ACTOR_SHOWANIMMODELOBJECT L"Proto_Actor_ShowAnimModelObject"
+#define PROTO_ACTOR_ANIMCONTROLMODELOBJECT L"Proto_Actor_AnimControlModelObject"
 #define PROTO_ACTOR_SHOWTERRAIN L"Proto_Actor_Showterrain"
 #define PROTO_ACTOR_MAINCAMERA L"Proto_Actor_MainCamera"
 

@@ -736,6 +736,11 @@ SHPTR<FILEGROUP> UGameInstance::FindFolder(const _wstring& _wstrFindName, const 
 	return m_spFilePathManager->FindFolder(_wstrFindName, _wstrParentsFolderName);
 }
 
+VECTOR<SHPTR<FILEGROUP>> UGameInstance::FindSameAllFolder(const _wstring& _wstrFindFolderName)
+{
+	return m_spFilePathManager->FindSameAllFolder(_wstrFindFolderName);
+}
+
 HRESULT UGameInstance::LoadFirstFolder(const _wstring& _wstrFilePath)
 {
 	return m_spFilePathManager->LoadFirstFolder(_wstrFilePath);

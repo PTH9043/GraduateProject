@@ -110,6 +110,12 @@ void TMainView::RenderMenu()
             ImGui::EndMenu();
         }
 
+        if (ImGui::BeginMenu("Explain"))
+        {
+            ImGui::Text("Camera Rotation Key - LCTRL");
+            ImGui::EndMenu();
+        }
+
         for (SET<SHPTR<TImGuiView>>::iterator iter = m_OpenImGuies.begin(); iter != m_OpenImGuies.end();)
         {
             if (false == (*iter)->IsOpen()) {

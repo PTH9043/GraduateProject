@@ -256,6 +256,15 @@
     <Filter Include="07.Resource\VIBuffer\Plane">
       <UniqueIdentifier>{62b4d9f9-8d83-459b-bdba-cc5dd438e2c0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06.Component\Animator">
+      <UniqueIdentifier>{5f28ddb1-77d0-4e36-89d6-5dbd0660cbaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component\Animator\AnimationClip">
+      <UniqueIdentifier>{cb9574ae-12a3-4913-8a70-0273691cbaa5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Manager\SoundManager">
+      <UniqueIdentifier>{9a21a9bf-826b-48ab-b67b-910195e12f1d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -494,6 +503,15 @@
     </ClCompile>
     <ClCompile Include="..\private\UVIBufferPlane.cpp">
       <Filter>07.Resource\VIBuffer\Plane</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UAnimator.cpp">
+      <Filter>06.Component\Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UAnimClip.cpp">
+      <Filter>06.Component\Animator\AnimationClip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\USoundManager.cpp">
+      <Filter>01.Manager\SoundManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -763,6 +781,15 @@
     </ClInclude>
     <ClInclude Include="..\public\UVIBufferPlane.h">
       <Filter>07.Resource\VIBuffer\Plane</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UAnimator.h">
+      <Filter>06.Component\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UAnimClip.h">
+      <Filter>06.Component\Animator\AnimationClip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\USoundManager.h">
+      <Filter>01.Manager\SoundManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

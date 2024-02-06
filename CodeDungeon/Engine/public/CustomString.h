@@ -20,9 +20,9 @@ namespace Engine
     template<class TChar, class TString>
     requires CheckCustomString<TChar, TString>
     class CustomString : public STRING<TChar> {
+        using ChangeType = std::conditional<std::is_same_v<TChar, char>, STRING<char>, STRING<wchar_t>>;
     public:
         using CUSSTRING = CustomString<TChar, TString>;
-
         CustomString() : STRING<TChar>() {}
         // 추가로 필요한 연산자들을 오버로딩합니다.
         CustomString(const TString& str) : STRING<TChar>(str) {}
@@ -154,6 +154,13 @@ namespace Engine
             *this += cstr;
             return *this;
         }
+
+        // Convert 함수 정의
+        ChangeType convertstr() const {
+            // std::wstring으로 변환하여 반환
+            return  std::move(ChangeType(this->begin(), this->end()));
+        }
+
 
         // 문자열을 다른 타입으로 변환하는 연산자를 추가합니다.
         operator STRING<TChar>() const {

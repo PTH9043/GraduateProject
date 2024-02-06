@@ -169,6 +169,7 @@
     <ClInclude Include="..\Public\ImGui\imstb_rectpack.h" />
     <ClInclude Include="..\Public\ImGui\imstb_textedit.h" />
     <ClInclude Include="..\Public\ImGui\imstb_truetype.h" />
+    <ClInclude Include="..\Public\TAnimControlModel.h" />
     <ClInclude Include="..\Public\TAnimControlView.h" />
     <ClInclude Include="..\Public\TAssimpAnimation.h" />
     <ClInclude Include="..\Public\TAssimpChannel.h" />
@@ -199,6 +200,7 @@
     <ClInclude Include="Tool.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\TAnimControlModel.cpp" />
     <ClCompile Include="..\Private\TAnimControlView.cpp" />
     <ClCompile Include="..\Private\TAssimpAnimation.cpp" />
     <ClCompile Include="..\Private\TAssimpChannel.cpp" />

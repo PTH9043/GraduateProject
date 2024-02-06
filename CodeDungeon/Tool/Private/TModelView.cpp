@@ -11,12 +11,12 @@
 #include "TImGuiManager.h"
 
 TModelView::TModelView(CSHPTRREF<UDevice> _spDevice) :
-	TImGuiView(_spDevice, "TModelView"),
+	TImGuiView(_spDevice, "ModelView"),
 	m_stMainDesc{},
 	m_stModelDockDesc{},
 	m_stAnimModelDockDesc{},
-	m_conunomapModels{},
-	m_conunomapAnimModel{},
+	m_ModelsContainer{},
+	m_AnimModelContainer{},
 	m_spModelFileFolder{ nullptr },
 	m_spAnimModelFileFolder{ nullptr },
 	m_vModelScale{},
@@ -25,7 +25,9 @@ TModelView::TModelView(CSHPTRREF<UDevice> _spDevice) :
 	m_isAllConverter{ false },
 	m_spShowAnimModelObject{ nullptr },
 	m_spShowModelObject{ nullptr },
-	m_isInitSetting{ false }
+	m_isInitSetting{ false },
+	m_isResetModel{ false },
+	m_isResetAnimModel{ false }
 {
 }
 
@@ -43,36 +45,32 @@ HRESULT TModelView::NativeConstruct()
 		ImGuiDockNodeFlags_CentralNode);
 	m_stAnimModelDockDesc = DOCKDESC("AnimModelViewer", ImGuiWindowFlags_NoFocusOnAppearing,
 		ImGuiDockNodeFlags_CentralNode);
-	return S_OK;
-}
 
-HRESULT TModelView::LoadResource()
-{
 	m_spShowAnimModelObject = std::static_pointer_cast<TShowAnimModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWANIMMODELOBJECT));
 	m_spShowModelObject = std::static_pointer_cast<TShowModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWMODELOBJECT));
 	return S_OK;
 }
 
+HRESULT TModelView::LoadResource()
+{
+	m_spShowAnimModelObject->SetActive(true);
+	m_spShowModelObject->SetActive(true);
+	return S_OK;
+}
+
 HRESULT TModelView::ReleaseResource()
 {
-	GetGameInstance()->RemoveActor(m_spShowAnimModelObject);
-	GetGameInstance()->RemoveActor(m_spShowModelObject);
-
-	m_spShowAnimModelObject.reset();
-	m_spShowModelObject.reset();
-
-	m_conunomapModels.clear();
-	m_conunomapAnimModel.clear();
-
-	m_spModelFileFolder = nullptr;
-	m_spAnimModelFileFolder = nullptr;
-
-	ActiveResetSceneData();
+	m_spShowAnimModelObject->SetActive(false);
+	m_spShowModelObject->SetActive(false);
 	return S_OK;
 }
 
 void TModelView::TickActive(const _double& _dTimeDelta)
 {
+	if (true == m_isResetModel)
+		m_spShowModelObject->SetShowModel(nullptr);
+	if (true == m_isResetAnimModel)
+		m_spShowAnimModelObject->SetShowModel(nullptr);
 }
 
 void TModelView::LateTickActive(const _double& _dTimeDetla)
@@ -121,6 +119,7 @@ void TModelView::ShowModels()
 	ImGui::Begin(m_stModelDockDesc.strName.c_str(), GetOpenPointer(), m_stModelDockDesc.imgWindowFlags);
 	{
 		ConvertModels();
+		ResetModels();
 		ShowModelList();
 	}
 	ImGui::End();
@@ -129,8 +128,9 @@ void TModelView::ShowModels()
 void TModelView::ShowAnimMoldels()
 {
 	ImGui::Begin(m_stAnimModelDockDesc.strName.c_str(), GetOpenPointer(), m_stAnimModelDockDesc.imgWindowFlags);
-	{
+	{		
 		ConvertAnimModels();
+		ResetAnimModels();
 		ShowAnimModelList();
 	}
 	ImGui::End();
@@ -141,7 +141,7 @@ void TModelView::ShowModelList()
 	if (ImGui::BeginListBox("Model List", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
 	{
 		using MODELPAIR = std::pair < _string, SHPTR<UModel>>;
-		for (const MODELPAIR& Model : m_conunomapModels)
+		for (const MODELPAIR& Model : m_ModelsContainer)
 		{
 			_bool isTrue{ false };
 			if (ImGui::Selectable(Model.first.c_str(), &isTrue))
@@ -159,7 +159,7 @@ void TModelView::ShowAnimModelList()
 	if (ImGui::BeginListBox("AnimModel List", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
 	{
 		using ANIMMODELPAIR = std::pair < _string, SHPTR<UAnimModel>>;
-		for (const ANIMMODELPAIR& Model : m_conunomapAnimModel)
+		for (const ANIMMODELPAIR& Model : m_AnimModelContainer)
 		{
 			_bool isTrue{ false };
 			if (ImGui::Selectable(Model.first.c_str(), &isTrue))
@@ -214,7 +214,7 @@ void TModelView::ConvertAnimModels()
 	if (ImGui::Button("ConvertAnimModels"))
 	{
 		SHPTR<FILEGROUP> ModelFolder = GetGameInstance()->FindFolder(L"AnimModel");
-		m_conunomapAnimModel.clear();
+		m_AnimModelContainer.clear();
 		// Folders 
 		for (const FOLDERPAIR& Folder : ModelFolder->UnderFileGroupList)
 		{
@@ -235,7 +235,7 @@ void TModelView::LoadAssimpModelDatas(CSHPTRREF<FILEGROUP> _spFolder)
 		for (const FILEPAIR& File : ConvertFolder->FileDataList)
 		{
 			SHPTR<UModel> spModel = CreateConstructorNativeNotMsg<UModel>(GetDevice(), File.second->wstrfilePath);
-			m_conunomapModels.insert(std::pair<_string, SHPTR<UModel>>(UMethod::ConvertWToS(File.second->wstrfileName), spModel));
+			m_ModelsContainer.insert(std::pair<_string, SHPTR<UModel>>(UMethod::ConvertWToS(File.second->wstrfileName), spModel));
 		}
 	}
 	else
@@ -253,7 +253,7 @@ void TModelView::LoadAssimpModelDatas(CSHPTRREF<FILEGROUP> _spFolder)
 				_wstring wstrPath;
 				spAssimpModel->SaveNonAnimModel(_spFolder->wstrPath, wstrPath);
 				SHPTR<UModel> spModel = CreateConstructorNativeNotMsg<UModel>(GetDevice(), wstrPath);
-				m_conunomapModels.insert(std::pair<_string, SHPTR<UModel>>(UMethod::ConvertWToS(File.second->wstrfileName), spModel));
+				m_ModelsContainer.insert(std::pair<_string, SHPTR<UModel>>(UMethod::ConvertWToS(File.second->wstrfileName), spModel));
 			}
 		}
 		// Folders 
@@ -274,7 +274,7 @@ void TModelView::LoadAssimpAnimModelDatas(CSHPTRREF<FILEGROUP> _spFolder)
 		for (const FILEPAIR& File : ConvertFolder->FileDataList)
 		{
 			SHPTR<UAnimModel> spModel = CreateConstructorNativeNotMsg<UAnimModel>(GetDevice(), File.second->wstrfilePath);
-			m_conunomapAnimModel.insert(std::pair<_string, SHPTR<UAnimModel>>(UMethod::ConvertWToS(File.second->wstrfileName), spModel));
+			m_AnimModelContainer.insert(std::pair<_string, SHPTR<UAnimModel>>(UMethod::ConvertWToS(File.second->wstrfileName), spModel));
 		}
 	}
 	else
@@ -302,7 +302,7 @@ void TModelView::LoadAssimpAnimModelDatas(CSHPTRREF<FILEGROUP> _spFolder)
 				_wstring wstrPath;
 				spAssimpModel->SaveAnimModel(_spFolder->wstrPath, wstrPath);
 				SHPTR<UAnimModel> spModel = CreateConstructorNativeNotMsg<UAnimModel>(GetDevice(), wstrPath);
-				m_conunomapAnimModel.insert(std::pair<_string, SHPTR<UAnimModel>>(UMethod::ConvertWToS(File.second->wstrfileName), spModel));
+				m_AnimModelContainer.insert(std::pair<_string, SHPTR<UAnimModel>>(UMethod::ConvertWToS(File.second->wstrfileName), spModel));
 			}
 		}
 		// Folders 
@@ -310,5 +310,27 @@ void TModelView::LoadAssimpAnimModelDatas(CSHPTRREF<FILEGROUP> _spFolder)
 		{
 			LoadAssimpAnimModelDatas(Folder.second);
 		}
+	}
+}
+
+void TModelView::ResetModels()
+{
+	ImGui::SameLine();
+	m_isResetModel = ImGui::Button("Reset Models");
+	if (true == m_isResetModel)
+	{
+		m_ModelsContainer.clear();
+		m_spModelFileFolder = nullptr;
+	}
+}
+
+void TModelView::ResetAnimModels()
+{
+	ImGui::SameLine();
+	m_isResetAnimModel = ImGui::Button("Reset AnimModels");
+	if (true == m_isResetAnimModel)
+	{
+		m_AnimModelContainer.clear();
+		m_spAnimModelFileFolder = nullptr;
 	}
 }

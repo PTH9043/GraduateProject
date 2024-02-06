@@ -8,6 +8,10 @@ END
 
 BEGIN(Tool)
 class TShowAnimModelObject;
+class TAnimControlModel;
+
+using ANIMFILECONTAINER = UNORMAP<_string, SHPTR<FILEDATA>>;
+
 /*
 @ Date: 2024-02-04, Writer: นฺลยว๖
 @ Explain
@@ -31,14 +35,20 @@ protected:
 	virtual void RenderActive() override;
 private:
 	void DockBuildInitSetting();
+	void AnimModelSelectView();
+	void AnimControlView();
+	void AnimModifyView();
 private:
 	MAINDESC												m_stMainDesc;
+	DOCKDESC											m_stAnimModelSelectDesc;
 	DOCKDESC											m_stAnimControlDesc;
 	DOCKDESC											m_stAnimModifyDesc;
 	_bool														m_isInitSetting;
 
-	SHPTR<TShowAnimModelObject>	m_spShowAnimModelObject;
-	SHPTR<FILEGROUP>							m_spAnimFileGroup;
+	SHPTR<TAnimControlModel>			m_spAnimControlModel;
+	SHPTR<UAnimModel>						m_spShowAnimModel;
+	ANIMFILECONTAINER							m_AnimFileContainer;
+	SHPTR<FILEDATA>								m_spSelectAnimFileData;
 };
 
 END

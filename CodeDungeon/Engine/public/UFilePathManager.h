@@ -16,6 +16,7 @@ public:
 
 	SHPTR<FILEGROUP> FindFolder(const PATHS& _vecFolderList);
 	SHPTR<FILEGROUP>	FindFolder(const _wstring& _wstrFindName, const _wstring& _wstrParentsFolderName = L"");
+	VECTOR<SHPTR<FILEGROUP>> FindSameAllFolder(const _wstring& _wstrFindFolderName);
 
 	HRESULT LoadFirstFolder(const _wstring& _wstrFilePath);
 	HRESULT ClearLoader(LIST<SHPTR<FILEGROUP>>& _lsFileGroup, CSHPTRREF<FILEGROUP> _spFileGroup = nullptr);

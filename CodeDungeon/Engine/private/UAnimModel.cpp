@@ -183,7 +183,6 @@ void UAnimModel::LoadToData(const _wstring& _wstrPath)
 {
 	std::ifstream read{ _wstrPath, std::ios::binary};
 	RETURN_CHECK(!read, ;);
-	ThreadMiliRelax(10);
 	ANIMMODELDESC tDesc;
 	{
 		// MESH
@@ -215,7 +214,7 @@ void UAnimModel::LoadToData(const _wstring& _wstrPath)
 		}
 
 		CreateShaderConstantBuffer();
-		SetAnimation(5);
+		SetAnimation(0);
 	}
 }
 

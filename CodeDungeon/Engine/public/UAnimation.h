@@ -20,12 +20,15 @@ public:
 	const _bool IsStop() const { return m_isStop; }
 	const _bool IsRepeat() const { return m_isRepeat; }
 	const _bool IsSupplySituation() const { return m_isSupplySituation; }
+	const _double& GetDuration() const { return m_dDuration; }
+	const _double& GetTimeAcc() const { return m_dTimeAcc; }
 
 	// Set Finish
 	void SetFinish(const _bool _isFinish) { this->m_isFinished = _isFinish; }
 	void SetStop(const _bool _isStop) { this->m_isStop = _isStop; }
 	void SetRepeat(const _bool _isRepeat) { this->m_isRepeat = _isRepeat; }
 	void SetSupplySituation(const _bool _isSupplySituation) { this->m_isSupplySituation = _isSupplySituation; }
+	void SetAnimTimeAcc(const _double& _dTimeAcc) { this->m_dTimeAcc = _dTimeAcc; }
 public:
 	SHPTR<UAnimation> Clone(CSHPTRREF<UAnimModel> _spAnimModel);
 	virtual void Free() override;

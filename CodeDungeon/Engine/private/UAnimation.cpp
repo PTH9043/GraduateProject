@@ -138,12 +138,18 @@ void UAnimation::SaveSections(const _wstring& _wstrPath)
 	_uint iFastSection = static_cast<_uint>(m_AnimFastSections.size());
 	// Save Fast Section 
 	Saves.write((_char*)&iFastSection, sizeof(_uint));
-	Saves.write((_char*)&m_AnimFastSections, sizeof(ANIMFASTSECTION) * iFastSection);
+	for (auto& iter : m_AnimFastSections)
+	{
+		Saves.write((_char*)&iter, sizeof(ANIMFASTSECTION));
+	}
 	// Save Clip Section
 	_uint iClipSection = static_cast<_uint>(m_AnimClipSection.size());
 	// Save Clip Section
 	Saves.write((_char*)&iClipSection, sizeof(_uint));
-	Saves.write((_char*)&m_AnimClipSection, sizeof(ANIMCLIPSECTION) * iClipSection);
+	for (auto& iter : m_AnimClipSection)
+	{
+		Saves.write((_char*)&iter, sizeof(ANIMCLIPSECTION) * iClipSection);
+	}
 }
 
 void UAnimation::LoadSections(const _wstring& _wstrPath)
@@ -154,12 +160,12 @@ void UAnimation::LoadSections(const _wstring& _wstrPath)
 	_uint iFastSection{ 0 };
 	Read.read((_char*)&iFastSection, sizeof(_uint));
 	m_AnimFastSections.resize(iFastSection);
-	Read.read((_char*)&m_AnimFastSections, sizeof(ANIMFASTSECTION) * iFastSection);
+	Read.read((_char*)&m_AnimFastSections[0], sizeof(ANIMFASTSECTION) * iFastSection);
 
 	_uint iClipSection{ 0 };
 	Read.read((_char*)&iClipSection, sizeof(_uint));
 	m_AnimClipSection.resize(iClipSection);
-	Read.read((_char*)&m_AnimClipSection, sizeof(ANIMCLIPSECTION) * iClipSection);
+	Read.read((_char*)&m_AnimClipSection[0], sizeof(ANIMCLIPSECTION) * iClipSection);
 }
 
 /*

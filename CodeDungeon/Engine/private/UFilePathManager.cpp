@@ -55,6 +55,13 @@ SHPTR<FILEGROUP> UFilePathManager::FindFolder(const _wstring& _wstrFindName, con
 	return iter->second.front();
 }
 
+VECTOR<SHPTR<FILEGROUP>> UFilePathManager::FindSameAllFolder(const _wstring& _wstrFindFolderName)
+{
+	const auto& iter = m_FileFolderGroup.find(_wstrFindFolderName);
+	RETURN_CHECK(m_FileFolderGroup.end() == iter, VECTOR<SHPTR<FILEGROUP>>{});
+	return iter->second;
+}
+
 HRESULT UFilePathManager::LoadFirstFolder(const _wstring& _wstrFilePath)
 {
 	LIST<SHPTR<FILEGROUP>> FILEGROUPS;
@@ -94,6 +101,7 @@ HRESULT UFilePathManager::LoadUpperFolder(const _wstring& _wstrFirstFolderName,
 {
 	fs::directory_iterator end;
 	_ushort sIndex{ 0 };
+	LIST<SHPTR<FILEGROUP>> MAKEGROUP;
 	for (fs::directory_iterator iter(_wstrPath); iter != end; ++iter)
 	{
 		if (fs::is_regular_file(iter->status()))
@@ -107,11 +115,11 @@ HRESULT UFilePathManager::LoadUpperFolder(const _wstring& _wstrFirstFolderName,
 		else if (fs::is_directory(iter->status()))
 		{
 			SHPTR<FILEGROUP> spFileGroup = Make::MakeShared<FILEGROUP>();
-			spFileGroup->wstrFolderName = iter->path().filename();
 			spFileGroup->wstrPath = iter->path();
+			spFileGroup->wstrFolderName = iter->path().filename();
 			spFileGroup->spParentsUpper = _spFileGroup;
 			_spFileGroup->AddFileGroup(spFileGroup->wstrFolderName, spFileGroup);
-
+			MAKEGROUP.push_back(spFileGroup);
 			const auto& iter = m_FileFolderGroup.find(spFileGroup->wstrFolderName);
 			if (iter == m_FileFolderGroup.end())
 			{
@@ -123,9 +131,12 @@ HRESULT UFilePathManager::LoadUpperFolder(const _wstring& _wstrFirstFolderName,
 			{
 				iter->second.push_back(spFileGroup);
 			}
-
-			LoadUpperFolder(spFileGroup->wstrFolderName, spFileGroup->wstrPath, spFileGroup);
 		}
 	}
+	for (auto& iter : MAKEGROUP)
+	{
+		LoadUpperFolder(iter->wstrFolderName, iter->wstrPath, iter);
+	}
+
 	return S_OK;
 }

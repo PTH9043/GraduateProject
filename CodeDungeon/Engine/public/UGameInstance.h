@@ -214,7 +214,10 @@ public: /* PipeLine */
 
 public: /* FilePath Manager*/
 	SHPTR<FILEGROUP> FindFolder(const PATHS& _vecFolderList);
+	// 같은 이름을 가진 폴더를 찾아서 리턴한다. 단 PatentsFolderName이 비어있다면 최상위 폴더를 찾아서 리턴, 입력했으면 상위 폴더의 이름까지 검색한다. 
 	SHPTR<FILEGROUP>	FindFolder(const _wstring& _wstrFindName, const _wstring& _wstrParentsFolderName = L"");
+	// 같은 이름을 가진 모든 폴더를 찾아서 리턴한다. 
+	VECTOR<SHPTR<FILEGROUP>> FindSameAllFolder(const _wstring& _wstrFindFolderName);
 	HRESULT LoadFirstFolder(const _wstring& _wstrFilePath);
 public: /* NetworkManager */
 	HRESULT StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController);

@@ -20,9 +20,15 @@ public:
 	UAnimModel(const UAnimModel& _rhs);
 	DESTRUCTOR(UAnimModel)
 public:
-	const _float GetSupplyLerpValue() const { return m_fSupplyLerpValue; }
 	ANIMATIONS& GetAnimations() { return m_vecAnimations; }
 	const ANIMATIONPARAM& GetAnimParam() const { return m_stAnimParam; }
+	const ANIMSTRINGS& GetAnimStrings() const { return m_AnimNamesGroup; }
+	CSHPTRREF<UAnimation> GetCurrentAnimation() const { return m_spCurAnimation; }
+	CSHPTRREF<UAnimation> GetNextAnimation() const { return m_spNextAnimation; }
+	const _float GetSupplyLerpValue() const { return m_fSupplyLerpValue; }
+	const _int GetCurrentAnimIndex() const { return m_iCurAnimIndex; }
+	const _int GetNetAnimIndex() const { return m_iNextAnimIndex; }
+	_bool IsChangeAnimation() const { return m_isChangeAnim; }
 
 	void SetSupplyLerpValue(const _float _fSupplyLerpValue) { this->m_fSupplyLerpValue = _fSupplyLerpValue; }
 	void SetAnimParam(const ANIMATIONPARAM& _stAnimParam) { this->m_stAnimParam = _stAnimParam; }
@@ -60,7 +66,7 @@ private:
 
 	ANIMATIONS															m_vecAnimations;
 	ANIMSTRINGS														m_AnimNamesGroup;
-	VECTOR<SETUPBONEMATRIXES>			m_vecSetupBonMatrix;
+	VECTOR<SETUPBONEMATRIXES>					m_vecSetupBonMatrix;
 	// Animations
 	SHPTR< UShaderConstantBuffer>					m_spAnimShaderConstantBuffer;
 	ANIMATIONPARAM												m_stAnimParam;
