@@ -40,18 +40,13 @@ HRESULT TAnimControlView::LoadResource()
 	SHPTR<FILEGROUP> AnimModels  = GetGameInstance()->FindFolder(L"AnimModel");
 	for (auto& iter : AnimModels->UnderFileGroupList)
 	{
-		// FBX 라는 하위 폴더를 찾는다. 
-		SHPTR<FILEGROUP> spFolder = iter.second->FindGroup(L"FBX");
-		if (nullptr == spFolder)
-		{
-			ASSERT_CRASH("Plz Make FBX Folder");
-		}
 		// FBX에서 Convert 라는 하위 폴더를 찾는다. 
-		SHPTR<FILEGROUP> spConvert = spFolder->FindGroup(L"Convert");
+		SHPTR<FILEGROUP> spConvert = iter.second->FindGroup(L"Convert");
 		if (nullptr == spConvert)
 		{
 			ASSERT_CRASH("Plz Make Convert Folder");
 		}
+		m_spSelectAnimFileFolder = spConvert;
 		for (auto& FileData : spConvert->FileDataList)
 		{
 			m_AnimFileContainer.insert(MakePair(UMethod::ConvertWToS(FileData.first), FileData.second));
@@ -135,7 +130,7 @@ void TAnimControlView::AnimModelSelectView()
 			if (nullptr != m_spSelectAnimFileData)
 			{
 				m_spShowAnimModel = CreateConstructorNative<UAnimModel>(GetDevice(), m_spSelectAnimFileData->wstrfilePath);
-				m_spAnimControlModel->SetShowModel(m_spShowAnimModel);
+				m_spAnimControlModel->SetShowModel(m_spShowAnimModel, m_spSelectAnimFileFolder);
 			}
 		}
 		if (nullptr == m_spSelectAnimFileData)

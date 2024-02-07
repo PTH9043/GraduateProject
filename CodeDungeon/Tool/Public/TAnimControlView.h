@@ -48,6 +48,7 @@ private:
 	SHPTR<TAnimControlModel>			m_spAnimControlModel;
 	SHPTR<UAnimModel>						m_spShowAnimModel;
 	ANIMFILECONTAINER							m_AnimFileContainer;
+	SHPTR<FILEGROUP>							m_spSelectAnimFileFolder;
 	SHPTR<FILEDATA>								m_spSelectAnimFileData;
 };
 

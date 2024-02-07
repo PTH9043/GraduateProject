@@ -22,6 +22,9 @@ public:
 	const _bool IsSupplySituation() const { return m_isSupplySituation; }
 	const _double& GetDuration() const { return m_dDuration; }
 	const _double& GetTimeAcc() const { return m_dTimeAcc; }
+	const _float GetTotalAnimFastValue() const { return m_fTotalAnimationFastValue; }
+
+	const VECTOR<ANIMFASTSECTION>& GetAnimFastSection() { return m_AnimFastSections; }
 
 	// Set Finish
 	void SetFinish(const _bool _isFinish) { this->m_isFinished = _isFinish; }
@@ -29,11 +32,14 @@ public:
 	void SetRepeat(const _bool _isRepeat) { this->m_isRepeat = _isRepeat; }
 	void SetSupplySituation(const _bool _isSupplySituation) { this->m_isSupplySituation = _isSupplySituation; }
 	void SetAnimTimeAcc(const _double& _dTimeAcc) { this->m_dTimeAcc = _dTimeAcc; }
+
+	void UpdateAnimFastSections(const _float _fTotalAnimFastValue, const VECTOR<ANIMFASTSECTION>& _AnimFastSection);
 public:
 	SHPTR<UAnimation> Clone(CSHPTRREF<UAnimModel> _spAnimModel);
 	virtual void Free() override;
 	HRESULT NativeConstruct(CSHPTRREF<UAnimModel> _spAnimModel, const ANIMDESC& _stAnimDesc);
 	void UpdateTransformMatrices(const _double& _dTimeDelta);
+	void UpdateTransformMatricesToTimeAcc(const _double& _TimeAcc);
 	void UpdateNextAnimTransformMatrices(const _double& _dTimeDelta, const _float _fSupplyValue,
 		CSHPTRREF<UAnimation> _spAnimation);
 
@@ -44,7 +50,6 @@ public:
 private:
 	using CHANNELS = VECTOR<SHPTR<UChannel>>;
 	using ANIMFASTSECTIONS = VECTOR<ANIMFASTSECTION>;
-	using ANIMCLIPSECTIONS = VECTOR<ANIMCLIPSECTION>;
 
 	static constexpr _float	MAX_SUPPLY_VALUE{1.f};
 
@@ -62,7 +67,7 @@ private:
 	_float									m_fSupplySituationValue;
 
 	ANIMFASTSECTIONS		m_AnimFastSections;
-	ANIMCLIPSECTIONS		m_AnimClipSection;
+	_float									m_fTotalAnimationFastValue;
 };
 
 END

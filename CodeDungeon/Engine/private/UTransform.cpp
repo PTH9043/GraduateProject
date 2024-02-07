@@ -12,6 +12,7 @@ UTransform::UTransform(CSHPTRREF<UDevice> _spDevice) :
 	m_stTransformParam{},
 	m_mWorldMatrix{ _float4x4::Identity },
 	m_mChangeWorldMatrix{ _float4x4::Identity },
+	m_mPivotMatrix{_float4x4::Identity},
 	m_vQuaternion{ _float4::Zero },
 	m_vScale{ 1.f, 1.f, 1.f },
 	m_isNotApplyRotate{ false },
@@ -110,10 +111,10 @@ void UTransform::TransformUpdate()
 		{
 			Matrix.MatrixSetRotationFix(_float3::Zero);
 		}
-		m_mChangeWorldMatrix = m_mWorldMatrix * Matrix;
+		m_mChangeWorldMatrix = m_mWorldMatrix * m_mPivotMatrix * Matrix;
 	}
 	else {
-		m_mChangeWorldMatrix = m_mWorldMatrix;
+		m_mChangeWorldMatrix = m_mWorldMatrix * m_mPivotMatrix;
 	}
 }
 

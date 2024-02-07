@@ -15,7 +15,8 @@ UAnimation::UAnimation() :
 	m_isStop{ false },
 	m_isRepeat{ false },
 	m_isSupplySituation{ false },
-	m_fSupplySituationValue{ 0 }
+	m_fSupplySituationValue{ 0 },
+	m_fTotalAnimationFastValue{1.f}
 {
 }
 
@@ -31,8 +32,15 @@ UAnimation::UAnimation(const UAnimation& _rhs) :
 	m_isStop{ false },
 	m_isRepeat{ false },
 	m_isSupplySituation{ false },
-	m_fSupplySituationValue{ 0 }
+	m_fSupplySituationValue{ 0 },
+	m_fTotalAnimationFastValue{ 1.f }
 {
+}
+
+void UAnimation::UpdateAnimFastSections(const _float _fTotalAnimFastValue, const VECTOR<ANIMFASTSECTION>& _AnimFastSection)
+{
+	m_fTotalAnimationFastValue = _fTotalAnimFastValue;
+	m_AnimFastSections = _AnimFastSection;
 }
 
 SHPTR<UAnimation> UAnimation::Clone(CSHPTRREF<UAnimModel> _spAnimModel)
@@ -76,9 +84,9 @@ void UAnimation::UpdateTransformMatrices(const _double& _dTimeDelta)
 	_double dValue = m_dTickPerSeconds * _dTimeDelta;
 	for (auto& iter : m_AnimFastSections)
 	{
-		iter.Convert(dValue, m_dTimeAcc, dValue);
+		iter.Convert(dValue, m_dTimeAcc);
 	}
-	m_dTimeAcc += dValue;
+	m_dTimeAcc += (dValue * m_fTotalAnimationFastValue);
 
 	if (m_dTimeAcc >= m_dDuration)
 	{
@@ -92,6 +100,15 @@ void UAnimation::UpdateTransformMatrices(const _double& _dTimeDelta)
 		{
 			iter->UpdateTransformMatrix(m_dTimeAcc, this);
 		}
+	}
+}
+
+void UAnimation::UpdateTransformMatricesToTimeAcc(const _double& _TimeAcc)
+{
+	m_dTimeAcc = _TimeAcc;
+	for (auto& iter : m_Channels)
+	{
+		iter->UpdateTransformMatrix(m_dTimeAcc, this);
 	}
 }
 
@@ -136,19 +153,12 @@ void UAnimation::SaveSections(const _wstring& _wstrPath)
 	RETURN_CHECK(!Saves, ;);
 
 	_uint iFastSection = static_cast<_uint>(m_AnimFastSections.size());
+	Saves.write((_char*)&m_fTotalAnimationFastValue, sizeof(_float));
 	// Save Fast Section 
 	Saves.write((_char*)&iFastSection, sizeof(_uint));
 	for (auto& iter : m_AnimFastSections)
 	{
 		Saves.write((_char*)&iter, sizeof(ANIMFASTSECTION));
-	}
-	// Save Clip Section
-	_uint iClipSection = static_cast<_uint>(m_AnimClipSection.size());
-	// Save Clip Section
-	Saves.write((_char*)&iClipSection, sizeof(_uint));
-	for (auto& iter : m_AnimClipSection)
-	{
-		Saves.write((_char*)&iter, sizeof(ANIMCLIPSECTION) * iClipSection);
 	}
 }
 
@@ -158,14 +168,10 @@ void UAnimation::LoadSections(const _wstring& _wstrPath)
 	RETURN_CHECK(!Read, ;);
 
 	_uint iFastSection{ 0 };
+	Read.read((_char*)&m_fTotalAnimationFastValue, sizeof(_float));
 	Read.read((_char*)&iFastSection, sizeof(_uint));
 	m_AnimFastSections.resize(iFastSection);
 	Read.read((_char*)&m_AnimFastSections[0], sizeof(ANIMFASTSECTION) * iFastSection);
-
-	_uint iClipSection{ 0 };
-	Read.read((_char*)&iClipSection, sizeof(_uint));
-	m_AnimClipSection.resize(iClipSection);
-	Read.read((_char*)&m_AnimClipSection[0], sizeof(ANIMCLIPSECTION) * iClipSection);
 }
 
 /*

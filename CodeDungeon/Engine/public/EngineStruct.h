@@ -506,7 +506,7 @@ namespace Engine {
 		_float fEndSpot = -1.f;
 		_float fFastValue = 1.f;
 
-		void Convert(const _double& _dValue, const _double& _dTimeValue, _double& _dConvert);
+		void Convert(_double& _dValue, const _double& _dTimeAcc);
 		_bool IsPass(const _double& _dTimeValue);
 	}ANIMFASTSECTION;
 

@@ -71,6 +71,9 @@
     <Filter Include="90.ShowModel\AnimControlModel">
       <UniqueIdentifier>{c9991766-7321-4751-b857-159b2259d33b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.ImGui\Camera">
+      <UniqueIdentifier>{87428a9f-92a2-41df-93f6-4b3be0a10aa0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ToolDefines.h">

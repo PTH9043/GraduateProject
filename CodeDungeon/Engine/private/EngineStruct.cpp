@@ -134,7 +134,6 @@ namespace Engine {
 
 	void tagFileGroup::AddFileGroup(const _wstring& _wstrFileName, CSHPTRREF<tagFileGroup> _spFileGroup)
 	{
-		wstrFolderName = _wstrFileName;
 		UnderFileGroupList.insert(std::pair<_wstring, SHPTR<tagFileGroup>>(_wstrFileName, _spFileGroup));
 	}
 
@@ -206,10 +205,10 @@ namespace Engine {
 
 #pragma region ANIMSECTION
 
-	void tagAnimFastSection::Convert(const _double& _dValue, const _double& _dTimeValue, _double& _dConvert)
+	void tagAnimFastSection::Convert(_double& _dValue, const _double& _dTimeAcc)
 	{
-		if (fStartSpot <= _dValue && _dValue <= fEndSpot)
-			_dConvert = (_dTimeValue * fFastValue);
+		if (fStartSpot <= _dTimeAcc && _dTimeAcc <= fEndSpot)
+			_dValue *= fFastValue;
 	}
 
 	_bool tagAnimFastSection::IsPass(const _double& _dTimeValue)

@@ -113,6 +113,16 @@ void UAnimModel::TickAnimation(const _double& _dDeltaTime)
 	}
 }
 
+void UAnimModel::UpdateCurAnimationToTimAcc(const _double& _TimeAcc)
+{
+	m_spCurAnimation->UpdateTransformMatricesToTimeAcc(_TimeAcc);
+	/* 부모로부터 자식뼈에게 누적시켜 전달한다.(CombinedTransformationMatrix) */
+	{
+		for (auto& BoneNode : GetBoneNodes())
+			BoneNode->UpdateCombinedMatrix();
+	}
+}
+
 HRESULT UAnimModel::Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader, CSHPTRREF<UCommand> _spCommand)
 {
 	RETURN_CHECK(nullptr == _spShader, E_FAIL);   

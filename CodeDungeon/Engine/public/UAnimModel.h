@@ -40,6 +40,7 @@ public:
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;
 	// 애니메이션을 Tick하는 함수
 	void TickAnimation(const _double& _dDeltaTime);
+	void UpdateCurAnimationToTimAcc(const _double& _TimeAcc);
 	// 애니메이션을 렌더하는 함수
 	virtual HRESULT Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader, CSHPTRREF<UCommand> _spCommand) override;
 	// Set Animation

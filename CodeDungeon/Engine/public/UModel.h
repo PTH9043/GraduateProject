@@ -29,7 +29,6 @@ public:
 	MESHCONTAINERS& GetMeshContainers() { return m_vecMeshContainer; }
 	BONENODES& GetBoneNodes() { return m_vecBoneNodes; }
 	MATERIERS& GetMaterials() { return m_vecMaterials; }
-public:
 	// Get BoneNode
 	SHPTR<UBoneNode> GetBoneNode(const _wstring& _strBoneNode);
 	const _uint& GetMeshContainerCnt() const { return m_iMeshContainerCnt; }

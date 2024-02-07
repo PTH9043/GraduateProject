@@ -187,6 +187,11 @@ namespace Engine
 
         bool operator ==(const CUSSTRING& _str) { return this->contains(_str.c_str()); }
         bool operator !=(const CUSSTRING& _str) { return false == this->contains(_str.c_str()); }
+
+        template<class T> 
+        static CUSSTRING to_string(T index) {
+            return  std::_Integral_to_string<TChar>(index);
+        }
     };
 
     template<class TChar, class TString>

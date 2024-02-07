@@ -25,7 +25,7 @@ HRESULT TMainScene::LoadSceneData()
 		tDesc.stCamProj = UCamera::CAMPROJ(UCamera::PROJECTION_TYPE::PERSPECTIVE, _float3(0.f, 0.f, 0.f),
 			_float3(0.f, 0.f, 1.f),
 			DirectX::XMConvertToRadians(60.0f), WINDOW_WIDTH, WINDOW_HEIGHT, 0.2f, 1000.f);
-		tDesc.stCamValue = UCamera::CAMVALUE(5.f, DirectX::XMConvertToRadians(90.f));
+		tDesc.stCamValue = UCamera::CAMVALUE(20.f, DirectX::XMConvertToRadians(90.f));
 		tDesc.eCamType = CAMERATYPE::MAIN;
 		// Actor Add Main Camera
 

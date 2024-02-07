@@ -64,9 +64,13 @@ public:
 	const _float4x4& GetProjMatrix() const { return m_mProjMatrix; }
 	const _bool& IsFrustomOn() const { return m_isFrustomOn; }
 	const _float GetCamFar() const { return m_stCamProj.fFar; }
+	const _float GetCamMoveSpeed() const { return m_stCamValue.fCamMoveSpeed; }
+	const _float GetCamRotSpeed() const { return m_stCamValue.fCamRotSpeed; }
 
 	void SetCamID(const _uint& _iCamID) { this->m_iCamID = _iCamID; }
 	void SetFrunstomOn(const _bool _isFrustomOn) { this->m_isFrustomOn = _isFrustomOn; }
+	void SetCamMoveSpeed(const _float _fMoveSpeed) { this->m_stCamValue.fCamMoveSpeed = _fMoveSpeed; }
+	void SetCamRotSpeed(const _float _fRotSpeed) { this->m_stCamValue.fCamRotSpeed = _fRotSpeed; }
 public:
 	virtual void Free() override PURE;
 	virtual SHPTR<UCloneObject> Clone(const VOIDDATAS& _vecDatas) override PURE;

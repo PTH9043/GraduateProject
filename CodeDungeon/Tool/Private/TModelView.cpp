@@ -9,6 +9,7 @@
 #include "TShowModelObject.h"
 #include "UAnimation.h"
 #include "TImGuiManager.h"
+#include "UTransform.h"
 
 TModelView::TModelView(CSHPTRREF<UDevice> _spDevice) :
 	TImGuiView(_spDevice, "ModelView"),
@@ -27,7 +28,9 @@ TModelView::TModelView(CSHPTRREF<UDevice> _spDevice) :
 	m_spShowModelObject{ nullptr },
 	m_isInitSetting{ false },
 	m_isResetModel{ false },
-	m_isResetAnimModel{ false }
+	m_isResetAnimModel{ false },
+	m_vModelPivotScale{},
+	m_vAnimModelPivotScale{}
 {
 }
 
@@ -45,32 +48,46 @@ HRESULT TModelView::NativeConstruct()
 		ImGuiDockNodeFlags_CentralNode);
 	m_stAnimModelDockDesc = DOCKDESC("AnimModelViewer", ImGuiWindowFlags_NoFocusOnAppearing,
 		ImGuiDockNodeFlags_CentralNode);
-
-	m_spShowAnimModelObject = std::static_pointer_cast<TShowAnimModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWANIMMODELOBJECT));
-	m_spShowModelObject = std::static_pointer_cast<TShowModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWMODELOBJECT));
 	return S_OK;
 }
 
 HRESULT TModelView::LoadResource()
 {
-	m_spShowAnimModelObject->SetActive(true);
-	m_spShowModelObject->SetActive(true);
+	m_spShowAnimModelObject = std::static_pointer_cast<TShowAnimModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWANIMMODELOBJECT));
+	m_spShowModelObject = std::static_pointer_cast<TShowModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWMODELOBJECT));
+	// AnimModelPivotScale
+	m_vAnimModelPivotScale = m_spShowAnimModelObject->GetTransform()->GetScale();
 	return S_OK;
 }
 
 HRESULT TModelView::ReleaseResource()
 {
-	m_spShowAnimModelObject->SetActive(false);
-	m_spShowModelObject->SetActive(false);
+	m_AnimModelContainer.clear();
+	m_ModelsContainer.clear();
+
+	m_spModelFileFolder = nullptr;
+	m_spAnimModelFileFolder = nullptr;
+
+	m_spShowModelObject.reset();
+	m_spShowAnimModelObject.reset();
+
+	GetGameInstance()->RemoveActor(m_spShowModelObject);
+	GetGameInstance()->RemoveActor(m_spShowAnimModelObject);
+
+	ActiveResetSceneData();
 	return S_OK;
 }
 
 void TModelView::TickActive(const _double& _dTimeDelta)
 {
 	if (true == m_isResetModel)
+	{
 		m_spShowModelObject->SetShowModel(nullptr);
+	}
 	if (true == m_isResetAnimModel)
+	{
 		m_spShowAnimModelObject->SetShowModel(nullptr);
+	}
 }
 
 void TModelView::LateTickActive(const _double& _dTimeDetla)
@@ -152,6 +169,12 @@ void TModelView::ShowModelList()
 		}
 		ImGui::EndListBox();
 	}
+
+	ImGui::DragFloat3("Model Scale", &m_vModelPivotScale.x, 0.001f);
+	if (true == ImGui::Button("Chage View Model Scale"))
+	{
+		m_spShowModelObject->GetTransform()->SetScale(m_vModelPivotScale);
+	}
 }
 
 void TModelView::ShowAnimModelList()
@@ -190,6 +213,12 @@ void TModelView::ShowAnimModelList()
 			}
 		}
 		ImGui::EndListBox();
+	}
+
+	ImGui::DragFloat3("AnimModel Scale", &m_vAnimModelPivotScale.x, 0.001f);
+	if (true == ImGui::Button("Chage View AnimModel Scale"))
+	{
+		m_spShowAnimModelObject->GetTransform()->SetScale(m_vAnimModelPivotScale);
 	}
 }
 
@@ -251,7 +280,7 @@ void TModelView::LoadAssimpModelDatas(CSHPTRREF<FILEGROUP> _spFolder)
 			if (nullptr != spAssimpModel)
 			{
 				_wstring wstrPath;
-				spAssimpModel->SaveNonAnimModel(_spFolder->wstrPath, wstrPath);
+				spAssimpModel->SaveNonAnimModel(_spFolder->spParentsUpper->wstrPath, wstrPath);
 				SHPTR<UModel> spModel = CreateConstructorNativeNotMsg<UModel>(GetDevice(), wstrPath);
 				m_ModelsContainer.insert(std::pair<_string, SHPTR<UModel>>(UMethod::ConvertWToS(File.second->wstrfileName), spModel));
 			}
@@ -300,7 +329,7 @@ void TModelView::LoadAssimpAnimModelDatas(CSHPTRREF<FILEGROUP> _spFolder)
 			if (nullptr != spAssimpModel)
 			{
 				_wstring wstrPath;
-				spAssimpModel->SaveAnimModel(_spFolder->wstrPath, wstrPath);
+				spAssimpModel->SaveAnimModel(_spFolder->spParentsUpper->wstrPath, wstrPath);
 				SHPTR<UAnimModel> spModel = CreateConstructorNativeNotMsg<UAnimModel>(GetDevice(), wstrPath);
 				m_AnimModelContainer.insert(std::pair<_string, SHPTR<UAnimModel>>(UMethod::ConvertWToS(File.second->wstrfileName), spModel));
 			}

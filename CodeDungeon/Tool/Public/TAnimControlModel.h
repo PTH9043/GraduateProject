@@ -13,12 +13,12 @@ using ANIMMATIONCLIPS = UNORMAP<_string, _int>;
 
 // Animation ColumID 
 enum ANIM_TABLE {
-
 	AnimColumnID_StartSpot,
 	AnimColumnID_EndSpot,
 	AnimColumnID_FastValue,
-
 };
+
+
 /*
 @ Date: 2024-02-06, Writer: นฺลยว๖
 @ Explain
@@ -39,7 +39,7 @@ public:
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;
 
-	void SetShowModel(CSHPTRREF<UAnimModel> _spModel);
+	void SetShowModel(CSHPTRREF<UAnimModel> _spModel, CSHPTRREF<FILEGROUP> _spFileFolder);
 	void AnimControlView();
 protected:
 	void SelectAnimation();
@@ -50,12 +50,17 @@ protected:
 	virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy) override;
 private:
-	SHPTR<UAnimModel>				m_spModel;
-	ANIMMATIONCLIPS						m_AnimationClips;
-	ANIMFASTSECTION						m_ModifyAnimFastSestion;
-	ANIMCLIPSECTION						m_ModifyAnimClipSection;
+	SHPTR<UAnimModel>					m_spModel;
+	SHPTR<FILEGROUP>						m_spModelFolder;
+	ANIMMATIONCLIPS							m_AnimationClips;
+	ANIMFASTSECTION							m_ModifyAnimFastSestion;
+	ANIMCLIPSECTION							m_ModifyAnimClipSection;
 
-	ImGuiTableSortSpecs*				m_FastSectionSortSpecs;
+	VECTOR<ANIMFASTSECTION>		m_AnimFastSections;
+	VECTOR<ANIMCLIPSECTION>		m_AnimClipSections;
+	_bool													m_isAnimationStop;
+	_float													m_fAnimTimeAcc;
+	_float													m_fTotalAnimFastvalue;
 };
 
 END

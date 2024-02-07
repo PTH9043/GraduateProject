@@ -112,7 +112,7 @@ void TMainView::RenderMenu()
 
         if (ImGui::BeginMenu("Explain"))
         {
-            ImGui::Text("Camera Rotation Key - LCTRL");
+            ImGui::Text("Camera Rotation Key - Mouse R Btn");
             ImGui::EndMenu();
         }
 

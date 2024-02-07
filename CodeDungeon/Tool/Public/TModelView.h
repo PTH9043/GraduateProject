@@ -75,6 +75,9 @@ private:
 	_bool														m_isInitSetting;
 	_bool														m_isResetModel;
 	_bool														m_isResetAnimModel;
+
+	_float3													m_vModelPivotScale;
+	_float3													m_vAnimModelPivotScale;
 };
 
 END

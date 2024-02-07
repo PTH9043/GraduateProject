@@ -118,9 +118,9 @@ namespace Engine {
 	}
 }
 
-#define BASIC_SCALE										Engine::DXVALUE::g_BasicScale
-#define MAX_REGISTER_CNT						Engine::DXVALUE::g_maxRegisterCnt
-#define EMPTY_WSTR									Engine::DXVALUE::g_EmptyWstr
+#define BASIC_SCALE												Engine::DXVALUE::g_BasicScale
+#define MAX_REGISTER_CNT								Engine::DXVALUE::g_maxRegisterCnt
+#define EMPTY_WSTR											Engine::DXVALUE::g_EmptyWstr
 #define DEFAULT_OUTFOLDEREXTENSION		Engine::DXVALUE::g_OutFolderExtension
 
 using namespace Engine;

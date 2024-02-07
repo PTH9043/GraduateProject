@@ -8,13 +8,15 @@
 
 TAnimControlModel::TAnimControlModel(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer,
 	const CLONETYPE& _eCloneType) : 
-	UPawn(_spDevice, _wstrLayer, _eCloneType), m_spModel{nullptr}, 
-	m_ModifyAnimFastSestion{},m_ModifyAnimClipSection{}, m_FastSectionSortSpecs{nullptr}
+	UPawn(_spDevice, _wstrLayer, _eCloneType), m_spModel{nullptr}, m_spModelFolder{nullptr},
+	m_ModifyAnimFastSestion{},m_ModifyAnimClipSection{}, 
+	m_isAnimationStop{false}, m_fAnimTimeAcc{0.f}, m_fTotalAnimFastvalue{1.f}
 {
 }
 
 TAnimControlModel::TAnimControlModel(const TAnimControlModel& _rhs) : UPawn(_rhs),
-m_spModel{ nullptr }, m_ModifyAnimFastSestion{}, m_ModifyAnimClipSection{}, m_FastSectionSortSpecs{nullptr}
+m_spModel{ nullptr }, m_spModelFolder{ nullptr }, m_ModifyAnimFastSestion{}, m_ModifyAnimClipSection{},
+m_isAnimationStop{ false }, m_fAnimTimeAcc{ 0.f }, m_fTotalAnimFastvalue{ 1.f }
 {
 }
 
@@ -36,15 +38,18 @@ HRESULT TAnimControlModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	return S_OK;
 }
 
-void TAnimControlModel::SetShowModel(CSHPTRREF<UAnimModel> _spModel)
+void TAnimControlModel::SetShowModel(CSHPTRREF<UAnimModel> _spModel, CSHPTRREF<FILEGROUP> _spFileFolder)
 {
 	RETURN_CHECK(nullptr == _spModel, ;);
+	RETURN_CHECK(nullptr == _spFileFolder, ;);
 	m_spModel = _spModel;
+	m_spModelFolder = _spFileFolder;
 	m_AnimationClips.clear();
 	for (auto& iter : m_spModel->GetAnimStrings())
 	{
 		m_AnimationClips.insert(MakePair(UMethod::ConvertWToS(iter.first), iter.second));
 	}
+	m_isAnimationStop = false;
 }
 
 void TAnimControlModel::AnimControlView()
@@ -72,37 +77,104 @@ void TAnimControlModel::SelectAnimation()
 
 void TAnimControlModel::ModifyAnimation()
 {
-	if (ImGui::TreeNode("ModifyAnimation"))
+	if (nullptr != m_spModel)
 	{
-		if (ImGui::BeginTable("FastSection", 10, ImGuiTableFlags_Resizable | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_Borders))
-		{
-			_float fStartSpot = -1.f;
-			_float fEndSpot = -1.f;
-			_float fFastValue = 1.f;
-			ImGui::TableSetupColumn("StartSpot", ImGuiTableColumnFlags_DefaultSort | ImGuiTableColumnFlags_WidthFixed, 0.0f, AnimColumnID_StartSpot);
-			ImGui::TableSetupColumn("EndSpot", ImGuiTableColumnFlags_WidthFixed, 0.0f, AnimColumnID_EndSpot);
-			ImGui::TableSetupColumn("FastValue", ImGuiTableColumnFlags_DefaultSort | ImGuiTableColumnFlags_WidthFixed, 0.0f, AnimColumnID_FastValue);
-			ImGui::TableSetupScrollFreeze(0, 1); // Make row always visible
-			ImGui::TableHeadersRow();
-			m_FastSectionSortSpecs = ImGui::TableGetSortSpecs();
-			if (m_FastSectionSortSpecs->SpecsDirty)
-			{
-				// 내가 세운 기준에 의해 정렬한다.
-			//	if (items.Size > 1)
-			//		qsort(&items[0], (size_t)items.Size, sizeof(items[0]), MyItem::CompareWithSortSpecs);
-				m_FastSectionSortSpecs->SpecsDirty = false;
-			}
-			ImGui::EndTable();
+		SHPTR<UAnimation> spAnimation = m_spModel->GetCurrentAnimation();
+		
+		m_fAnimTimeAcc = static_cast<_float>(spAnimation->GetTimeAcc());
+		_float AnimDuration = (_float)spAnimation->GetDuration();
+		ImGui::SliderFloat("TotalFastValue", &m_fTotalAnimFastvalue, 0, 10);
+		_bool isClicked = ImGui::SliderFloat("DeltaTime", &m_fAnimTimeAcc, 0.f, AnimDuration);
+		if (true == isClicked){
+			m_isAnimationStop = isClicked;
 		}
+		if (true == ImGui::Button("AnimStart"))
+		{
+			m_isAnimationStop = false;
+		}
+		ImGui::SameLine();
+		if (true == ImGui::Button("AnimStop"))
+		{
+			m_isAnimationStop = true;
+		}
+		if (ImGui::TreeNodeEx("ModifyAnimation", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			// Fast Section Node
+			{
+				if (ImGui::TreeNodeEx("FastSectionNode", ImGuiTreeNodeFlags_DefaultOpen))
+				{
+					if (ImGui::Button("LoadSection")) {
+						m_fTotalAnimFastvalue = spAnimation->GetTotalAnimFastValue();
+						m_AnimFastSections = spAnimation->GetAnimFastSection();
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("MakeFastSection")) {
+						m_AnimFastSections.push_back({});
+					}
+					if (ImGui::Button("Apply FastSection")) {
+						spAnimation->UpdateAnimFastSections(m_fTotalAnimFastvalue, m_AnimFastSections);
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("Save FastSection"))
+					{
+						spAnimation->UpdateAnimFastSections(m_fTotalAnimFastvalue, m_AnimFastSections);
+						spAnimation->SaveSections(m_spModelFolder->wstrPath);
+					}
+					// Options
+					static ImGuiTableFlags flags = ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Sortable | ImGuiTableFlags_SortMulti
+						| ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_NoBordersInBody
+						| ImGuiTableFlags_ScrollY;
 
-		ImGui::TreePop();
+					if (ImGui::BeginTable("FastSection", 3, flags, ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 10), 0.0f))
+					{
+						ImGui::TableSetupColumn("StartSpot", ImGuiTableColumnFlags_DefaultSort | ImGuiTableColumnFlags_WidthFixed, 0.0f, AnimColumnID_StartSpot);
+						ImGui::TableSetupColumn("EndSpot", ImGuiTableColumnFlags_WidthFixed, 0.0f, AnimColumnID_EndSpot);
+						ImGui::TableSetupColumn("FastValue", ImGuiTableColumnFlags_DefaultSort | ImGuiTableColumnFlags_WidthFixed, 0.0f, AnimColumnID_FastValue);
+						ImGui::TableHeadersRow();
+						_int iIndex{ 0 };
+						for (auto& iter : m_AnimFastSections)
+						{
+							static _string Start = "Start";
+							static _string End = "End";
+							static _string Fast = "Fast";
+							_string Index = _string::to_string(iIndex++);
+
+							ImGui::TableNextColumn();
+							ImGui::DragFloat(Start + Index, &iter.fStartSpot, 0.01f, 0.f, AnimDuration);
+							ImGui::TableNextColumn();
+							ImGui::DragFloat(End + Index, &iter.fEndSpot, 0.01f, 0.f, AnimDuration);
+							ImGui::TableNextColumn();
+							ImGui::DragFloat(Fast + Index, &iter.fFastValue, 0.01f, 0.f, AnimDuration);
+							ImGui::TableNextRow();
+						}
+						ImGui::EndTable();
+					}
+					ImGui::TreePop();
+				}
+			}
+
+			ImGui::TreePop();
+		}
+	}
+	else
+	{
+		ImGui::Text("Plz Load To Animation Model");
 	}
 }
 
 void TAnimControlModel::TickActive(const _double& _dTimeDelta)
 {
 	if (nullptr != m_spModel)
-		m_spModel->TickAnimation(_dTimeDelta);
+	{
+		if (false == m_isAnimationStop)
+		{
+			m_spModel->TickAnimation(_dTimeDelta);
+		}
+		else
+		{
+			m_spModel->UpdateCurAnimationToTimAcc(static_cast<_double>(m_fAnimTimeAcc));
+		}
+	}
 }
 
 void TAnimControlModel::LateTickActive(const _double& _dTimeDelta)
