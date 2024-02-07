@@ -67,6 +67,7 @@
     <ClInclude Include="..\public\UNetworkBaseController.h" />
     <ClInclude Include="..\public\UNetworkManager.h" />
     <ClInclude Include="..\public\UPawn.h" />
+    <ClInclude Include="..\public\UPicking.h" />
     <ClInclude Include="..\public\UPipeLine.h" />
     <ClInclude Include="..\public\UProcessedData.h" />
     <ClInclude Include="..\public\URectTransform.h" />
@@ -151,6 +152,7 @@
     <ClCompile Include="..\private\UNetworkBaseController.cpp" />
     <ClCompile Include="..\private\UNetworkManager.cpp" />
     <ClCompile Include="..\private\UPawn.cpp" />
+    <ClCompile Include="..\private\UPicking.cpp" />
     <ClCompile Include="..\private\UPipeLine.cpp" />
     <ClCompile Include="..\private\UProcessedData.cpp" />
     <ClCompile Include="..\private\URectTransform.cpp" />

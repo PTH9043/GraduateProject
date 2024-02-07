@@ -265,6 +265,9 @@
     <Filter Include="01.Manager\SoundManager">
       <UniqueIdentifier>{9a21a9bf-826b-48ab-b67b-910195e12f1d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Manager\Picking">
+      <UniqueIdentifier>{b599057d-c5cf-4133-ba2a-87b2ed7f3239}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -512,6 +515,9 @@
     </ClCompile>
     <ClCompile Include="..\private\USoundManager.cpp">
       <Filter>01.Manager\SoundManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UPicking.cpp">
+      <Filter>01.Manager\Picking</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -790,6 +796,9 @@
     </ClInclude>
     <ClInclude Include="..\public\USoundManager.h">
       <Filter>01.Manager\SoundManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UPicking.h">
+      <Filter>01.Manager\Picking</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
