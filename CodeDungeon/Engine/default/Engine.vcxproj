@@ -49,6 +49,7 @@
     <ClInclude Include="..\public\UAnimModel.h" />
     <ClInclude Include="..\public\UBoneNode.h" />
     <ClInclude Include="..\public\UCamera.h" />
+    <ClInclude Include="..\public\UCell.h" />
     <ClInclude Include="..\public\UChannel.h" />
     <ClInclude Include="..\public\UComponent.h" />
     <ClInclude Include="..\public\UComponentManager.h" />
@@ -64,9 +65,11 @@
     <ClInclude Include="..\public\ULoader.h" />
     <ClInclude Include="..\public\UMeshContainer.h" />
     <ClInclude Include="..\public\UModel.h" />
+    <ClInclude Include="..\public\UNavigation.h" />
     <ClInclude Include="..\public\UNetworkBaseController.h" />
     <ClInclude Include="..\public\UNetworkManager.h" />
     <ClInclude Include="..\public\UPawn.h" />
+    <ClInclude Include="..\public\UPicking.h" />
     <ClInclude Include="..\public\UPipeLine.h" />
     <ClInclude Include="..\public\UProcessedData.h" />
     <ClInclude Include="..\public\URectTransform.h" />
@@ -114,6 +117,7 @@
     <ClInclude Include="..\public\UUserInterface.h" />
     <ClInclude Include="..\public\UVIBuffer.h" />
     <ClInclude Include="..\public\UVIBufferCube.h" />
+    <ClInclude Include="..\public\UVIBufferGrid.h" />
     <ClInclude Include="..\public\UVIBufferPlane.h" />
     <ClInclude Include="..\public\UVIBufferRect.h" />
     <ClInclude Include="..\public\UVIBufferSphere.h" />
@@ -133,6 +137,7 @@
     <ClCompile Include="..\private\UAnimModel.cpp" />
     <ClCompile Include="..\private\UBoneNode.cpp" />
     <ClCompile Include="..\private\UCamera.cpp" />
+    <ClCompile Include="..\private\UCell.cpp" />
     <ClCompile Include="..\private\UChannel.cpp" />
     <ClCompile Include="..\private\UComponent.cpp" />
     <ClCompile Include="..\private\UComponentManager.cpp" />
@@ -148,9 +153,11 @@
     <ClCompile Include="..\private\ULoader.cpp" />
     <ClCompile Include="..\private\UMeshContainer.cpp" />
     <ClCompile Include="..\private\UModel.cpp" />
+    <ClCompile Include="..\private\UNavigation.cpp" />
     <ClCompile Include="..\private\UNetworkBaseController.cpp" />
     <ClCompile Include="..\private\UNetworkManager.cpp" />
     <ClCompile Include="..\private\UPawn.cpp" />
+    <ClCompile Include="..\private\UPicking.cpp" />
     <ClCompile Include="..\private\UPipeLine.cpp" />
     <ClCompile Include="..\private\UProcessedData.cpp" />
     <ClCompile Include="..\private\URectTransform.cpp" />
@@ -198,6 +205,7 @@
     <ClCompile Include="..\private\UUserInterface.cpp" />
     <ClCompile Include="..\private\UVIBuffer.cpp" />
     <ClCompile Include="..\private\UVIBufferCube.cpp" />
+    <ClCompile Include="..\private\UVIBufferGrid.cpp" />
     <ClCompile Include="..\private\UVIBufferPlane.cpp" />
     <ClCompile Include="..\private\UVIBufferRect.cpp" />
     <ClCompile Include="..\private\UVIBufferSphere.cpp" />
