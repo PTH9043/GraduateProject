@@ -268,6 +268,15 @@
     <Filter Include="01.Manager\Picking">
       <UniqueIdentifier>{b599057d-c5cf-4133-ba2a-87b2ed7f3239}</UniqueIdentifier>
     </Filter>
+    <Filter Include="07.Resource\Navigation">
+      <UniqueIdentifier>{c6030694-0a18-45f6-a083-9d1c1d550a43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Resource\Navigation\Cell">
+      <UniqueIdentifier>{4bce2516-bbaf-4005-af5d-f5c4a13087d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Resource\VIBuffer\Grid">
+      <UniqueIdentifier>{273e34ea-5dc2-4e96-ad2c-6ca47c07bff4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -518,6 +527,15 @@
     </ClCompile>
     <ClCompile Include="..\private\UPicking.cpp">
       <Filter>01.Manager\Picking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UCell.cpp">
+      <Filter>07.Resource\Navigation\Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UNavigation.cpp">
+      <Filter>07.Resource\Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UVIBufferGrid.cpp">
+      <Filter>07.Resource\VIBuffer\Grid</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -799,6 +817,15 @@
     </ClInclude>
     <ClInclude Include="..\public\UPicking.h">
       <Filter>01.Manager\Picking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UCell.h">
+      <Filter>07.Resource\Navigation\Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UNavigation.h">
+      <Filter>07.Resource\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UVIBufferGrid.h">
+      <Filter>07.Resource\VIBuffer\Grid</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
