@@ -46,6 +46,7 @@
 //#include "UVIBufferSphere.h"
 //#include "UVIBufferCube.h"
 #include "UVIBufferPlane.h"
+#include "UVIBufferGrid.h"
 //#include "UVIBufferSkyBox.h"
 
 //#include "UParticleSystem.h"
@@ -796,6 +797,12 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 		AddPrototype(PROTO_RES_VIBUFFERNORMALPLANE, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferPlane>(
 			_stData.wpDevice.lock(), VIBUFFERTYPE::NORMAL));
 
+		AddPrototype(PROTO_RES_VIBUFFERGRID, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferGrid>(
+			_stData.wpDevice.lock(), VIBUFFERTYPE::GENERIC));
+
+		AddPrototype(PROTO_RES_VIBUFFERNORMALGRID, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferGrid>(
+			_stData.wpDevice.lock(), VIBUFFERTYPE::NORMAL));
+
 	/*	AddPrototype(PROTO_RES_VIBUFFERPOINT, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferPoint>(
 			_stData.wpDevice.lock()));
 
@@ -951,6 +958,12 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 				SHADERDESC(L"Rect", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN }));
 		}
+		{
+			CreateGraphicsShader(PROTO_RES_GRIDSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"Grid", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }, RASTERIZER_TYPE::WIREFRAME));
+		}
+
 		//// Create  Tess
 		//{
 		//	CreateGraphicsShader(PROTO_RES_TERRAINTESSALATIONSHADER, CLONETYPE::CLONE_STATIC,

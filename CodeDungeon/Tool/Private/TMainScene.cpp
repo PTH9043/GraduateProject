@@ -4,6 +4,7 @@
 #include "UGameInstance.h"
 #include "UTransform.h"
 #include "TTestObject.h"
+#include "UVIBufferGrid.h"
 #include "UTransform.h"
 
 TMainScene::TMainScene(CSHPTRREF<UDevice> _spDevice)
@@ -41,8 +42,11 @@ HRESULT TMainScene::LoadSceneData()
 	}
 
 	{
+		_float GridScale = 7.0f;
 		m_spTestObject = std::static_pointer_cast<TTestObject>(spGameInstance->CloneActorAdd(L"Proto_Actor_TestObject"));
-		m_spTestObject->GetTransform()->SetPos({ 0.f, 0.f, 0.f });
+		m_spTestObject->GetTransform()->SetScale({ GridScale, 1.0f, GridScale });
+		m_spTestObject->GetTransform()->SetPos({ -(float)HALF_GRID_SIZE * GridScale, 0.f, -(float)HALF_GRID_SIZE * GridScale });
+
 	}
 
 	return S_OK;

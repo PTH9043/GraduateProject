@@ -12,6 +12,7 @@
 /* Graphics Shader */
 #define PROTO_RES_DEBUG2DTARGETSHADER L"Proto_Res_Debug2DTargetShader"
 #define PROTO_RES_DEBUGGINGDEFAULTSHADER L"Proto_Res_DebuggingDefaultShader"
+#define PROTO_RES_GRIDSHADER L"Proto_Res_GridShader"
 #define PROTO_RES_RECTSHADER L"Proto_Res_RectShader"
 #define PROTO_RES_FINALDEFFEREDSHADER L"Proto_Res_FinalDefferedShader"
 #define PROTO_RES_BLENDDEFFEREDSHADER L"Proto_Res_BlendDefferedShader"
@@ -54,6 +55,8 @@
 #define PROTO_RES_VIBUFFERNORMALCUBE L"Proto_Res_VIBufferNormalCube"
 #define PROTO_RES_VIBUFFERPLANE L"Proto_Res_VIBufferPlane"
 #define PROTO_RES_VIBUFFERNORMALPLANE L"Proto_Res_VIBufferNormalPlane"
+#define PROTO_RES_VIBUFFERGRID L"Proto_Res_VIBufferGrid"
+#define PROTO_RES_VIBUFFERNORMALGRID L"Proto_Res_VIBufferNormalGrid"
 #define PROTO_RES_VIBUFFERSKYBOX L"Proto_Res_VIBufferSkyBox"
 
 // Actor 

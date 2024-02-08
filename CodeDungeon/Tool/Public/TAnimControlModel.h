@@ -18,7 +18,6 @@ enum ANIM_TABLE {
 	AnimColumnID_FastValue,
 };
 
-
 /*
 @ Date: 2024-02-06, Writer: นฺลยว๖
 @ Explain

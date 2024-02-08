@@ -864,5 +864,8 @@
     <FxCompile Include="..\..\Shader\NormalObject.hlsl">
       <Filter>98.ShaderFile\Common\NonAlpha</Filter>
     </FxCompile>
+    <FxCompile Include="..\..\Shader\Grid.hlsl">
+      <Filter>98.ShaderFile\Common\NonAlpha</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
