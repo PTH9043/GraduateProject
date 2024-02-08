@@ -32,7 +32,7 @@ HRESULT UVIBufferGrid::NativeConstruct()
 			VertexPos.resize(VERTEX_CNT);
 			for (int i = 0, z = 0; z < GRID_SIZE; z++)
 				for (int x = 0; x < (GRID_SIZE); x++, i++)
-					Vertices[i] = VTXDEFAULT{ _float3(x, 0, z), _float2(0.f, 0.f) };
+					Vertices[i] = VTXDEFAULT{ _float3(static_cast<_float>(x), 0, static_cast<_float>(z)), _float2(0.f, 0.f) };
 
 			for (_uint i = 0; i < VERTEX_CNT; ++i)
 				VertexPos[i] = Vertices[i].vPosition;
@@ -50,7 +50,7 @@ HRESULT UVIBufferGrid::NativeConstruct()
 			VertexPos.resize(VERTEX_CNT);
 			for (int i = 0, z = 0; z < GRID_SIZE; z++)
 				for (int x = 0; x < (GRID_SIZE); x++, i++)
-					Vertices[i] = VTXNORMAL{ _float3(x, 0, z), _float3{0.f, 1.f, 0.f}, _float2(0.f, 0.f) };
+					Vertices[i] = VTXNORMAL{ _float3(static_cast<_float>(x), 0, static_cast<_float>(z)), _float3{0.f, 1.f, 0.f}, _float2(0.f, 0.f) };
 
 			for (_uint i = 0; i < VERTEX_CNT; ++i)
 				VertexPos[i] = Vertices[i].vPosition;

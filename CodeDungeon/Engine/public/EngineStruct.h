@@ -531,4 +531,48 @@ namespace Engine {
 
 #pragma endregion BUDLECOMMANDLIST
 
+#pragma region ANIMEVENT
+
+	
+	/*
+	@ Date: 2024-02-08, Writer: 박태현
+	@ Explain
+	- 애니메이션 Event를 위한 구간을 정의하는 구조체
+	*/
+	struct ANIMEVENTSECTIONDESC {
+		_double dStartTime;
+		_double dEndTime;
+		_bool		isEventActive;
+
+		_bool IsAnimEventActive(const _double& _dTimeAcc) {
+			isEventActive = false;
+			if (_dTimeAcc >= dStartTime && _dTimeAcc <= dEndTime)
+				isEventActive = true;
+
+			return isEventActive;
+		}
+	};
+
+	/*
+	@ Date: 2024-02-08, Writer: 박태현
+	@ Explain
+	- 애니메이션 Event가 발생된 지점을 정의하는 구조체
+	*/
+	struct ANIMOCURRESDESC {
+		_double		dAnimOccursTime;
+		_bool			isEventActive;
+
+		bool IsAnimOcurrs(const _double& _dTimeAcc) {
+			if (_dTimeAcc <= dAnimOccursTime)
+				isEventActive = true;
+			
+			return isEventActive;
+		}
+
+		void ResetEvent() { isEventActive = false; }
+	};
+
+
+
+#pragma endregion ANIMEVENT
 }

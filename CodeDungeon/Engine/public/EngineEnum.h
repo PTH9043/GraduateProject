@@ -25,6 +25,20 @@ namespace Engine {
 		TextureType_UNKNOWN = 18
 	};
 
+	/*
+	@ Date: 2024-02-08, Writer: 박태현
+	@ Explain
+	- 애니메이션 Event를 위해 필요한 객체를 정의함
+	*/
+	enum ANIMEVENT : _int {
+		EVENT_EFFECT,     // 이펙트 발생 			
+		EVENT_SOUND,     // 소리 발생 
+		EVEN_COLLIDER,	  // 콜라이더 발생
+		EVENT_CAMERA,    // 카메라 따라다님
+		EVENT_OBJACTIVE, // OBJ활성화
+		EVENT_END
+	};
+
 	typedef enum ERenderID : _ubyte
 	{
 		// 첫 번째 그려질 것

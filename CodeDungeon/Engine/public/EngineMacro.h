@@ -15,6 +15,8 @@ Debugging_Message(DEBUG_MACRO_TO_METHOD, Message);
 #define RETURN_CHECK_DXOBJECT(SITUATION, RETURN)  \
 { HRESULT hr = SITUATION; if (FAILED(hr)) { Check_Error(hr, DEBUG_MACRO_TO_METHOD);  return RETURN; } }
 
+#define RETURN_CHECK_CRASH(SITUATION, RETURN, MSG) {  if(SITUATION) { CRASH(MSG);} return RETURN;  }
+
 #define Is_Nullptr(T) \
 Is_Nullptr_Debug(T, DEBUG_MACRO_TO_METHOD)
 

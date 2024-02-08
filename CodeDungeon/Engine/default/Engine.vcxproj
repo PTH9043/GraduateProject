@@ -46,6 +46,7 @@
     <ClInclude Include="..\public\UAnimation.h" />
     <ClInclude Include="..\public\UAnimator.h" />
     <ClInclude Include="..\public\UAnimClip.h" />
+    <ClInclude Include="..\public\AnimEventParents.h" />
     <ClInclude Include="..\public\UAnimModel.h" />
     <ClInclude Include="..\public\UBoneNode.h" />
     <ClInclude Include="..\public\UCamera.h" />
@@ -134,6 +135,7 @@
     <ClCompile Include="..\private\UAnimation.cpp" />
     <ClCompile Include="..\private\UAnimator.cpp" />
     <ClCompile Include="..\private\UAnimClip.cpp" />
+    <ClCompile Include="..\private\AnimEventParents.cpp" />
     <ClCompile Include="..\private\UAnimModel.cpp" />
     <ClCompile Include="..\private\UBoneNode.cpp" />
     <ClCompile Include="..\private\UCamera.cpp" />
