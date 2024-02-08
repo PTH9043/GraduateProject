@@ -2,6 +2,7 @@
 #include "TTestObject.h"
 #include "UGameInstance.h"
 #include "UVIBufferRect.h"
+#include "UVIBufferGrid.h"
 #include "UTransform.h"
 #include "UShaderConstantBuffer.h"
 #include "UVIBufferPlane.h"
@@ -10,12 +11,12 @@
 TTestObject::TTestObject(CSHPTRREF<UDevice> _spDevice, 
 	const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UPawn(_spDevice, _wstrLayer, _eCloneType, BACKINGTYPE::STATIC),
-	m_spVIBufferPlane{ nullptr }, m_spRectColorBuffer{nullptr}
+	m_spVIBufferGrid{ nullptr }, m_spRectColorBuffer{nullptr}
 {
 }
 
 TTestObject::TTestObject(const TTestObject& _rhs) : 
-	UPawn(_rhs), m_spVIBufferPlane{ nullptr }
+	UPawn(_rhs), m_spVIBufferGrid{ nullptr }
 {
 }
 
@@ -34,12 +35,12 @@ HRESULT TTestObject::NativeConstructClone(const VOIDDATAS& _vecDatas)
 		return E_FAIL;
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	m_spVIBufferPlane = static_pointer_cast<UVIBufferPlane>(spGameInstance->CloneResource(PROTO_RES_VIBUFFERPLANE));
+	m_spVIBufferGrid = static_pointer_cast<UVIBufferGrid>(spGameInstance->CloneResource(PROTO_RES_VIBUFFERGRID));
 	// Add Shader 
-	AddShader(PROTO_RES_NORMALOBJECTSHADER);
+	AddShader(PROTO_RES_GRIDSHADER);
 
 	m_spRectColorBuffer = CreateNative< UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::B3, RECTCOLOR_SIZE, 1);
-	m_RectColor.g_RectColor = { 1.f, 1.f, 0.f, 1.f };
+	m_RectColor.g_RectColor = { 0.f, 1.f, 0.f, 1.f };
 	return S_OK;
 }
 
@@ -57,7 +58,7 @@ HRESULT TTestObject::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTab
 	__super::RenderActive(_spCommand, _spTableDescriptor);
 	GetTransform()->BindTransformData(GetShader());
 	GetShader()->BindCBVBuffer(m_spRectColorBuffer, &m_RectColor, RECTCOLOR_SIZE);
-	m_spVIBufferPlane->Render(GetShader(), _spCommand);
+	m_spVIBufferGrid->Render(GetShader(), _spCommand);
 	return S_OK;
 }
 

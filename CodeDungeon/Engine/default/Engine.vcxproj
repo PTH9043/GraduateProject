@@ -230,6 +230,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </FxCompile>
+    <FxCompile Include="..\..\Shader\Grid.hlsl" />
     <FxCompile Include="..\..\Shader\Model.hlsl" />
     <FxCompile Include="..\..\Shader\NormalObject.hlsl" />
     <FxCompile Include="..\..\Shader\Rect.hlsl">

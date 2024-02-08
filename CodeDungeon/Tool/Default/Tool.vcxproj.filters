@@ -74,6 +74,12 @@
     <Filter Include="03.ImGui\Camera">
       <UniqueIdentifier>{87428a9f-92a2-41df-93f6-4b3be0a10aa0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.ImGui\Map">
+      <UniqueIdentifier>{d9e63b2c-4aeb-411a-a262-5b6f7ae8d293}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="90.ShowModel\Map">
+      <UniqueIdentifier>{f1818212-5422-46a7-88a7-96a4514354cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ToolDefines.h">
@@ -172,6 +178,9 @@
     <ClInclude Include="..\Public\TAnimControlModel.h">
       <Filter>90.ShowModel\AnimControlModel</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\TShowMapObjects.h">
+      <Filter>90.ShowModel\Map</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\TToolApp.cpp">
@@ -251,6 +260,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\TAnimControlModel.cpp">
       <Filter>90.ShowModel\AnimControlModel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TShowMapObjects.cpp">
+      <Filter>90.ShowModel\Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -21,7 +21,7 @@ HRESULT UVIBufferGrid::NativeConstruct()
 	// Vertex 
 	{
 		// Vertex 개수
-		const _uint VERTEX_CNT = 257 * 257;
+		const _uint VERTEX_CNT = GRID_SIZE * GRID_SIZE;
 		if (VIBUFFERTYPE::GENERIC == GetBufferType())
 		{
 			VECTOR<VTXDEFAULT>	Vertices;
@@ -30,15 +30,15 @@ HRESULT UVIBufferGrid::NativeConstruct()
 			POSVECTOR VertexPos;
 
 			VertexPos.resize(VERTEX_CNT);
-			for (int i = 0, z = 0; z < 257; z++)
-				for (int x = 0; x < (257); x++, i++)
+			for (int i = 0, z = 0; z < GRID_SIZE; z++)
+				for (int x = 0; x < (GRID_SIZE); x++, i++)
 					Vertices[i] = VTXDEFAULT{ _float3(x, 0, z), _float2(0.f, 0.f) };
 
 			for (_uint i = 0; i < VERTEX_CNT; ++i)
 				VertexPos[i] = Vertices[i].vPosition;
 
 			RETURN_CHECK_FAILED(CreateVtxBuffer(VERTEX_CNT, sizeof(VTXDEFAULT), Vertices.data(),
-				D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP, VertexPos), E_FAIL);
+				D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, VertexPos), E_FAIL);
 		}
 		else
 		{
@@ -48,56 +48,41 @@ HRESULT UVIBufferGrid::NativeConstruct()
 			POSVECTOR VertexPos;
 
 			VertexPos.resize(VERTEX_CNT);
-			for (int i = 0, z = 0; z < 257; z++)
-				for (int x = 0; x < (257); x++, i++)
+			for (int i = 0, z = 0; z < GRID_SIZE; z++)
+				for (int x = 0; x < (GRID_SIZE); x++, i++)
 					Vertices[i] = VTXNORMAL{ _float3(x, 0, z), _float3{0.f, 1.f, 0.f}, _float2(0.f, 0.f) };
 
 			for (_uint i = 0; i < VERTEX_CNT; ++i)
 				VertexPos[i] = Vertices[i].vPosition;
 
 			RETURN_CHECK_FAILED(CreateVtxBuffer(VERTEX_CNT, sizeof(VTXDEFAULT), Vertices.data(),
-				D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP, VertexPos), E_FAIL);
+				D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, VertexPos), E_FAIL);
 		}
 	}
 	// Index
 	{
 		// Index 개수
-		const _uint INDICES_CNT = ((257 * 2) * (257 - 1)) + ((257 - 1) - 1);
+		const _uint INDICES_CNT = (GRID_SIZE - 1) * (GRID_SIZE - 1) * 6; // 각 정점마다 6개의 인덱스가 필요함 (2개의 삼각형을 이룸)
+
 		// 목록
-		INDICIES16* pIndices = new INDICIES16[INDICES_CNT];
-		ZeroMemory(pIndices, sizeof(INDICIES16) * INDICES_CNT);
-		{
-			pIndices[0] = { 0, 1, 2 };
-			pIndices[1] = { 0, 2, 3 };
+		INDICIES32* pIndices = Make::AllocBuffer<INDICIES32>(INDICES_CNT);
+		ZeroMemory(pIndices, sizeof(INDICIES32) * INDICES_CNT);
+
+		for (int z = 0, index = 0; z < GRID_SIZE - 1; ++z) {
+			for (int x = 0; x < GRID_SIZE - 1; ++x) {
+				// 현재 정점의 인덱스
+				_uint currentIndex = z * GRID_SIZE + x;
+
+				// 첫 번째 삼각형
+				pIndices[index++] = { currentIndex, currentIndex + 1, currentIndex + GRID_SIZE };
+				// 두 번째 삼각형
+				pIndices[index++] = { currentIndex + 1, currentIndex + GRID_SIZE + 1, currentIndex + GRID_SIZE };
+			}
 		}
 
-		//int j = 0;
-		//for (int z = 0; z < 257 - 1; z++)
-		//{
-		//	if ((z % 2) == 0)
-		//	{
-		//		for (int x = 0; x < 257; x++)
-		//		{
-		//			if ((x == 0) && (z > 0))
-		//				pIndices[j++] = { (x + (z * 257)),  (x + (z * 257)) + 257) } ;
-		//			pIndices[j++] = (UINT)(x + (z * 257));
-		//			pIndices[j++] = (UINT)((x + (z * 257)) + 257);
-		//		}
-		//	}
-		//	else
-		//	{
-		//		for (int x = 257 - 1; x >= 0; x--)
-		//		{
-		//			if (x == (257 - 1))
-		//				pIndices[j++] = (UINT)(x + (z * 257));
-		//			pIndices[j++] = (UINT)(x + (z * 257));
-		//			pIndices[j++] = (UINT)((x + (z * 257)) + 257);
-		//		}
-		//	}
-		//}
-
 		RETURN_CHECK_FAILED(CreateIndexBuffer(INDICES_CNT,
-			sizeof(INDICIES16), pIndices, DXGI_FORMAT_R16_UINT), E_FAIL);
+			sizeof(INDICIES16), pIndices, DXGI_FORMAT_R32_UINT), E_FAIL);
+
 	}
 	return S_OK;
 }
