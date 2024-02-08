@@ -2,6 +2,7 @@
 #include "UAnimation.h"
 #include "UChannel.h"
 #include "UGameInstance.h"
+#include "UMethod.h"
 
 UAnimation::UAnimation() :
 	UBase(),
@@ -149,7 +150,7 @@ Save
 */
 void UAnimation::SaveSections(const _wstring& _wstrPath)
 {
-	std::ofstream Saves{ _wstrPath.c_str(), std::ios::binary};
+	std::ofstream Saves{ _wstrPath, std::ios::binary};
 	RETURN_CHECK(!Saves, ;);
 
 	_uint iFastSection = static_cast<_uint>(m_AnimFastSections.size());
@@ -162,9 +163,21 @@ void UAnimation::SaveSections(const _wstring& _wstrPath)
 	}
 }
 
+void UAnimation::SaveSectionsPathIsFolder(const _wstring& _wstrPath)
+{
+	_wstring str = _wstrPath;
+	str.append(L"\\FastSection\\");
+	if (0 != _wmkdir(str))
+	{
+		str.append(m_wstrName);
+		str.append(DEFAULT_OUTFOLDEREXTENSION);
+		SaveSections(str);
+	}
+}
+
 void UAnimation::LoadSections(const _wstring& _wstrPath)
 {
-	std::ifstream Read{ _wstrPath.c_str(), std::ios::binary};
+	std::ifstream Read{ _wstrPath, std::ios::binary};
 	RETURN_CHECK(!Read, ;);
 
 	_uint iFastSection{ 0 };
@@ -172,6 +185,16 @@ void UAnimation::LoadSections(const _wstring& _wstrPath)
 	Read.read((_char*)&iFastSection, sizeof(_uint));
 	m_AnimFastSections.resize(iFastSection);
 	Read.read((_char*)&m_AnimFastSections[0], sizeof(ANIMFASTSECTION) * iFastSection);
+}
+
+void UAnimation::LoadSectionsPathIsFolder(const _wstring& _wstrPath)
+{
+	_wstring str = _wstrPath;
+	str.append(L"\\FastSection\\");
+	str.append(m_wstrName);
+	str.append(DEFAULT_OUTFOLDEREXTENSION);
+
+	LoadSections(str);
 }
 
 /*

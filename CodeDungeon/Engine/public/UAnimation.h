@@ -46,7 +46,9 @@ public:
 	void ResetData();
 	// Save Sections
 	void SaveSections(const _wstring& _wstrPath);
+	void SaveSectionsPathIsFolder(const _wstring& _wstrPath);
 	void LoadSections(const _wstring& _wstrPath);
+	void LoadSectionsPathIsFolder(const _wstring& _wstrPath);
 private:
 	using CHANNELS = VECTOR<SHPTR<UChannel>>;
 	using ANIMFASTSECTIONS = VECTOR<ANIMFASTSECTION>;

@@ -180,11 +180,7 @@ HRESULT UAnimModel::CreateAnimation(const  VECTOR<ANIMDESC>& _convecAnimDesc, co
 		m_vecAnimations.push_back(spAnimation);
 
 		m_AnimNamesGroup.insert(std::pair<_wstring, _uint>(spAnimation->GetAnimName(), iIndex++));
-
-		_wstring wstrPath = _wstrPath;
-		wstrPath += spAnimation->GetAnimName();
-		wstrPath += DEFAULT_OUTFOLDEREXTENSION;
-		spAnimation->LoadSections(wstrPath);
+		spAnimation->LoadSectionsPathIsFolder(_wstrPath);
 	}
 	return S_OK;
 }
@@ -204,11 +200,9 @@ void UAnimModel::LoadToData(const _wstring& _wstrPath)
 		// Animations
 		LoadAnimationData(read, tDesc.Animes);
 
-		fs::path FolderPath{ _wstrPath };
-		_wstring wstrPath = FolderPath.c_str();
-		_uint iFindIndex{ static_cast<_uint>(wstrPath.find(FolderPath.filename().c_str())) };
+		_wstring wstrPath = _wstrPath.c_str();
+		_uint iFindIndex{ static_cast<_uint>(wstrPath.find_last_of(L"\\"))};
 		wstrPath = wstrPath.substr(0, iFindIndex);
-		wstrPath += SECTION_FOLDEDER_NAME;
 		// Create
 		CreateBoneNode(&tDesc);
 		CreateMeshContainers(&tDesc);

@@ -1,6 +1,6 @@
 #pragma once
 #pragma warning (disable : 4251)
-
+#pragma warning (disable : 4244)
 #pragma region DX12
 
 #pragma comment (lib, "d3d12")

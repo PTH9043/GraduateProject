@@ -8,14 +8,14 @@
 
 TAnimControlModel::TAnimControlModel(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer,
 	const CLONETYPE& _eCloneType) : 
-	UPawn(_spDevice, _wstrLayer, _eCloneType), m_spModel{nullptr}, m_spModelFolder{nullptr},
+	UPawn(_spDevice, _wstrLayer, _eCloneType), m_spModel{nullptr}, m_spModelFolder{nullptr}, m_spCurAnimation{nullptr},
 	m_ModifyAnimFastSestion{},m_ModifyAnimClipSection{}, 
 	m_isAnimationStop{false}, m_fAnimTimeAcc{0.f}, m_fTotalAnimFastvalue{1.f}
 {
 }
 
 TAnimControlModel::TAnimControlModel(const TAnimControlModel& _rhs) : UPawn(_rhs),
-m_spModel{ nullptr }, m_spModelFolder{ nullptr }, m_ModifyAnimFastSestion{}, m_ModifyAnimClipSection{},
+m_spModel{ nullptr }, m_spModelFolder{ nullptr }, m_spCurAnimation{ nullptr }, m_ModifyAnimFastSestion{}, m_ModifyAnimClipSection{},
 m_isAnimationStop{ false }, m_fAnimTimeAcc{ 0.f }, m_fTotalAnimFastvalue{ 1.f }
 {
 }
@@ -52,7 +52,7 @@ void TAnimControlModel::SetShowModel(CSHPTRREF<UAnimModel> _spModel, CSHPTRREF<F
 	m_isAnimationStop = false;
 }
 
-void TAnimControlModel::AnimControlView()
+void TAnimControlModel::AnimationModify()
 {
 	SelectAnimation();
 	ModifyAnimation();
@@ -80,22 +80,31 @@ void TAnimControlModel::ModifyAnimation()
 	if (nullptr != m_spModel)
 	{
 		SHPTR<UAnimation> spAnimation = m_spModel->GetCurrentAnimation();
-		
-		m_fAnimTimeAcc = static_cast<_float>(spAnimation->GetTimeAcc());
-		_float AnimDuration = (_float)spAnimation->GetDuration();
-		ImGui::SliderFloat("TotalFastValue", &m_fTotalAnimFastvalue, 0, 10);
-		_bool isClicked = ImGui::SliderFloat("DeltaTime", &m_fAnimTimeAcc, 0.f, AnimDuration);
-		if (true == isClicked){
-			m_isAnimationStop = isClicked;
-		}
-		if (true == ImGui::Button("AnimStart"))
+		if (m_spCurAnimation != spAnimation)
 		{
-			m_isAnimationStop = false;
+			m_spCurAnimation = spAnimation;
+			m_fTotalAnimFastvalue = m_spCurAnimation->GetTotalAnimFastValue();
+			m_AnimFastSections = m_spCurAnimation->GetAnimFastSection();	
 		}
-		ImGui::SameLine();
-		if (true == ImGui::Button("AnimStop"))
+		_float AnimDuration = (_float)m_spCurAnimation->GetDuration();
+		_bool isClicked = false;
+		// Button And Slider
 		{
-			m_isAnimationStop = true;
+			m_fAnimTimeAcc = static_cast<_float>(m_spCurAnimation->GetTimeAcc());
+			ImGui::SliderFloat("TotalFastValue", &m_fTotalAnimFastvalue, 0, 10);
+			isClicked = ImGui::SliderFloat("DeltaTime", &m_fAnimTimeAcc, 0.f, AnimDuration);
+			if (true == isClicked) {
+				m_isAnimationStop = isClicked;
+			}
+			if (ImGui::Button("AnimStart"))
+			{
+				m_isAnimationStop = false;
+			}
+			ImGui::SameLine();
+			if (true == ImGui::Button("AnimStop"))
+			{
+				m_isAnimationStop = true;
+			}
 		}
 		if (ImGui::TreeNodeEx("ModifyAnimation", ImGuiTreeNodeFlags_DefaultOpen))
 		{
@@ -103,22 +112,25 @@ void TAnimControlModel::ModifyAnimation()
 			{
 				if (ImGui::TreeNodeEx("FastSectionNode", ImGuiTreeNodeFlags_DefaultOpen))
 				{
-					if (ImGui::Button("LoadSection")) {
-						m_fTotalAnimFastvalue = spAnimation->GetTotalAnimFastValue();
-						m_AnimFastSections = spAnimation->GetAnimFastSection();
-					}
-					ImGui::SameLine();
 					if (ImGui::Button("MakeFastSection")) {
 						m_AnimFastSections.push_back({});
 					}
-					if (ImGui::Button("Apply FastSection")) {
-						spAnimation->UpdateAnimFastSections(m_fTotalAnimFastvalue, m_AnimFastSections);
+					ImGui::SameLine();
+					if (ImGui::Button("ApplyFastSection")) {
+						m_spCurAnimation->UpdateAnimFastSections(m_fTotalAnimFastvalue, m_AnimFastSections);
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("ClearSection")) {
+						m_AnimFastSections.clear();
+					}
+					if (ImGui::Button("LoadSection")) {
+						m_spCurAnimation->LoadSectionsPathIsFolder(m_spModelFolder->wstrPath);
 					}
 					ImGui::SameLine();
 					if (ImGui::Button("Save FastSection"))
 					{
-						spAnimation->UpdateAnimFastSections(m_fTotalAnimFastvalue, m_AnimFastSections);
-						spAnimation->SaveSections(m_spModelFolder->wstrPath);
+						m_spCurAnimation->UpdateAnimFastSections(m_fTotalAnimFastvalue, m_AnimFastSections);
+						m_spCurAnimation->SaveSectionsPathIsFolder(m_spModelFolder->wstrPath);
 					}
 					// Options
 					static ImGuiTableFlags flags = ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Sortable | ImGuiTableFlags_SortMulti
@@ -127,9 +139,9 @@ void TAnimControlModel::ModifyAnimation()
 
 					if (ImGui::BeginTable("FastSection", 3, flags, ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 10), 0.0f))
 					{
-						ImGui::TableSetupColumn("StartSpot", ImGuiTableColumnFlags_DefaultSort | ImGuiTableColumnFlags_WidthFixed, 0.0f, AnimColumnID_StartSpot);
-						ImGui::TableSetupColumn("EndSpot", ImGuiTableColumnFlags_WidthFixed, 0.0f, AnimColumnID_EndSpot);
-						ImGui::TableSetupColumn("FastValue", ImGuiTableColumnFlags_DefaultSort | ImGuiTableColumnFlags_WidthFixed, 0.0f, AnimColumnID_FastValue);
+						ImGui::TableSetupColumn("StartSpot");
+						ImGui::TableSetupColumn("EndSpot");
+						ImGui::TableSetupColumn("FastValue");
 						ImGui::TableHeadersRow();
 						_int iIndex{ 0 };
 						for (auto& iter : m_AnimFastSections)
@@ -152,7 +164,6 @@ void TAnimControlModel::ModifyAnimation()
 					ImGui::TreePop();
 				}
 			}
-
 			ImGui::TreePop();
 		}
 	}

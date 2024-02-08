@@ -36,8 +36,8 @@ protected:
 private:
 	void DockBuildInitSetting();
 	void AnimModelSelectView();
-	void AnimControlView();
 	void AnimModifyView();
+	void AnimControlView();
 private:
 	MAINDESC												m_stMainDesc;
 	DOCKDESC											m_stAnimModelSelectDesc;

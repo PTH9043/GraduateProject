@@ -44,7 +44,7 @@ HRESULT TAnimControlView::LoadResource()
 		SHPTR<FILEGROUP> spConvert = iter.second->FindGroup(L"Convert");
 		if (nullptr == spConvert)
 		{
-			ASSERT_CRASH("Plz Make Convert Folder");
+			CRASH("Plz Make Convert Folder");
 		}
 		m_spSelectAnimFileFolder = spConvert;
 		for (auto& FileData : spConvert->FileDataList)
@@ -81,8 +81,8 @@ void TAnimControlView::RenderActive()
 		DockBuildInitSetting();
 		ImGui::DockSpace(m_stMainDesc.iDockSpaceID, ImVec2{}, m_stMainDesc.imgDockNodeFlags);
 		AnimModelSelectView();
-		AnimControlView();
 		AnimModifyView();
+		AnimControlView();
 	}
 	ImGui::End();
 }
@@ -141,19 +141,20 @@ void TAnimControlView::AnimModelSelectView()
 	ImGui::End();
 }
 
-void TAnimControlView::AnimControlView()
+void TAnimControlView::AnimModifyView()
 {
-	ImGui::Begin(m_stAnimControlDesc.strName.c_str(), GetOpenPointer(), m_stAnimControlDesc.imgWindowFlags);
+	ImGui::Begin(m_stAnimModifyDesc.strName.c_str(), GetOpenPointer(), m_stAnimModifyDesc.imgWindowFlags);
 	{
 		// select Animation
-		m_spAnimControlModel->AnimControlView();
+		m_spAnimControlModel->AnimationModify();
 	}
 	ImGui::End();
 }
 
-void TAnimControlView::AnimModifyView()
+
+void TAnimControlView::AnimControlView()
 {
-	ImGui::Begin(m_stAnimModifyDesc.strName.c_str(), GetOpenPointer(), m_stAnimModifyDesc.imgWindowFlags);
+	ImGui::Begin(m_stAnimControlDesc.strName.c_str(), GetOpenPointer(), m_stAnimControlDesc.imgWindowFlags);
 	{
 	}
 	ImGui::End();

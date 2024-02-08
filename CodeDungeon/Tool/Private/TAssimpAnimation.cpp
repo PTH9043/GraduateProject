@@ -35,6 +35,19 @@ void TAssimpAnimation::Free()
 HRESULT TAssimpAnimation::NativeConstruct(aiAnimation* _pAIAnim, CSHPTRREF<TAssimpModel> _spModel)
 {
 	m_wstrName = UMethod::ConvertSToW(_pAIAnim->mName.data);
+	if (m_wstrName.length() >= 20)
+	{
+		_int FirstIndex = m_wstrName.find(L"_");
+		_int Lastndex = m_wstrName.find_last_of(L"_");
+		if (FirstIndex != Lastndex)
+		{
+			m_wstrName = m_wstrName.substr(FirstIndex + 1, m_wstrName.length());
+		}
+		else
+		{
+			m_wstrName = m_wstrName.substr(m_wstrName.length() - 20, m_wstrName.length());
+		}
+	}
 	m_dDuration = _pAIAnim->mDuration;
 	m_dTickPerSeconds = _pAIAnim->mTicksPerSecond;
 	m_iNumChannels = _pAIAnim->mNumChannels;
