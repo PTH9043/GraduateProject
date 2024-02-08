@@ -22,6 +22,8 @@ public:
 	// AnimDesc
 	void GetData(ANIMDESC& _stAnimDesc);
 private:
+	void AnimationStringNameSplit(_wstring& _wstrAnimName);
+private:
 	using CHANNELS = VECTOR<SHPTR<TAssimpChannel>>;
 	_wstring				m_wstrName;
 	_uint					m_iNumChannels;

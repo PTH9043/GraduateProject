@@ -35,19 +35,7 @@ void TAssimpAnimation::Free()
 HRESULT TAssimpAnimation::NativeConstruct(aiAnimation* _pAIAnim, CSHPTRREF<TAssimpModel> _spModel)
 {
 	m_wstrName = UMethod::ConvertSToW(_pAIAnim->mName.data);
-	if (m_wstrName.length() >= 20)
-	{
-		_int FirstIndex = m_wstrName.find(L"_");
-		_int Lastndex = m_wstrName.find_last_of(L"_");
-		if (FirstIndex != Lastndex)
-		{
-			m_wstrName = m_wstrName.substr(FirstIndex + 1, m_wstrName.length());
-		}
-		else
-		{
-			m_wstrName = m_wstrName.substr(m_wstrName.length() - 20, m_wstrName.length());
-		}
-	}
+	AnimationStringNameSplit(m_wstrName);
 	m_dDuration = _pAIAnim->mDuration;
 	m_dTickPerSeconds = _pAIAnim->mTicksPerSecond;
 	m_iNumChannels = _pAIAnim->mNumChannels;
@@ -88,4 +76,21 @@ void TAssimpAnimation::GetData(ANIMDESC& _stAnimDesc)
 	_stAnimDesc.stExtraData.dDuration = m_dDuration;
 	_stAnimDesc.stExtraData.dTickPerSeconds = m_dTickPerSeconds;
 	_stAnimDesc.stExtraData.iNumChannels = m_iNumChannels;
+}
+
+void TAssimpAnimation::AnimationStringNameSplit(_wstring& _wstrAnimName)
+{
+	if (_wstrAnimName.length() >= 20)
+	{
+		_int FirstIndex = _wstrAnimName.find(L"_");
+		_int Lastndex = _wstrAnimName.find_last_of(L"_");
+		if (FirstIndex != Lastndex)
+		{
+			_wstrAnimName = _wstrAnimName.substr(FirstIndex + 1, _wstrAnimName.length());
+		}
+		else
+		{
+			_wstrAnimName = _wstrAnimName.substr(_wstrAnimName.length() - 20, _wstrAnimName.length());
+		}
+	}
 }

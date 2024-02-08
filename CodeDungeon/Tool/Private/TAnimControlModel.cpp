@@ -91,7 +91,7 @@ void TAnimControlModel::ModifyAnimation()
 		// Button And Slider
 		{
 			m_fAnimTimeAcc = static_cast<_float>(m_spCurAnimation->GetTimeAcc());
-			ImGui::SliderFloat("TotalFastValue", &m_fTotalAnimFastvalue, 0, 10);
+			ImGui::SliderFloat("TotalFastValue", &m_fTotalAnimFastvalue, 0, 100);
 			isClicked = ImGui::SliderFloat("DeltaTime", &m_fAnimTimeAcc, 0.f, AnimDuration);
 			if (true == isClicked) {
 				m_isAnimationStop = isClicked;
