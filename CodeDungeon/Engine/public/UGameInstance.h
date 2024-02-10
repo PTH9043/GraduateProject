@@ -55,7 +55,6 @@ struct WAITCHECKACTOR;
 
 using CLONES = UNORMAP<_wstring, SHPTR<UActorGroup>>;
 using CLONEARR = ARRAY<CLONES, CLONE_MAX_SIZE>;
-using KEYMETHOD = UDelegate<void, const _double&>;
 
 class UGameInstance : public UBase 
 {
@@ -117,15 +116,15 @@ public: /* TimerManager */
 	HRESULT RemoveTimer(const _wstring& _wstrName);
 
 public: /* InputManager*/
-	void AddKeyMethod(const _ubyte& _bFirstKeyID, const _wstring& _wstrSecondsKeyName, const KEYMETHOD& _keyMethod);
-	void DeleteKeyMethod(const _ubyte& _bFirstKeyID, const _wstring& _wstrSecondsKeyName);
-	_bool GetDIKeyDown(const _ubyte& _bKeyID);
-	_bool GetDIKeyUp(const _ubyte& _bKeyID);
-	_bool GetDIKeyPressing(const _ubyte& _bKeyID);
-	_bool GetDIMBtnDown(const DIMOUSEBUTTON& _eMouseBtn);
-	_bool GetDIMBtnUp(const DIMOUSEBUTTON& _eMouseBtn);
-	_bool GetDIMBtnPressing(const DIMOUSEBUTTON& _eMouseBtn);
-	_long GetDIMMoveState(const DIMOUSEMOVE& _eMouseMove);
+	void AddKeyMethod( _ubyte _bFirstKeyID, const _wstring& _wstrSecondsKeyName, const KEYACTIONFUNC& _keyMethod);
+	void DeleteKeyMethod( _ubyte _bFirstKeyID, const _wstring& _wstrSecondsKeyName);
+	_bool GetDIKeyDown( _ubyte _bKeyID);
+	_bool GetDIKeyUp( _ubyte _bKeyID);
+	_bool GetDIKeyPressing( _ubyte _bKeyID);
+	_bool GetDIMBtnDown(_ubyte _eMouseBtn);
+	_bool GetDIMBtnUp(_ubyte _eMouseBtn);
+	_bool GetDIMBtnPressing(_ubyte _eMouseBtn);
+	_long GetDIMMoveState(_ubyte _eMouseMove);
 	_float2 GetMousePosition();
 public: /* ThreadManager */
 	// 스레드에 THREADFUNC 함수를 등록

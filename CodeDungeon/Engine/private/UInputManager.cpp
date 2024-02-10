@@ -87,15 +87,15 @@ void UInputManager::InvokeKeyMethods(const _ubyte& _bFirstKeyID, const _double& 
     }
 }
 
-void UInputManager::AddKeyMethod(const _ubyte& _bFirstKeyID, const _wstring& _wstrSecondsKeyName, const KEYMETHOD& _keyMethod)
+void UInputManager::AddKeyMethod( _ubyte _bFirstKeyID, const _wstring& _wstrSecondsKeyName, const KEYACTIONFUNC& _keyMethod)
 {
     RETURN_CHECK(_bFirstKeyID >= MAX_KEYSIZE, ;);
     const auto& iter = m_arrKeyBinds[_bFirstKeyID].find(_wstrSecondsKeyName);
     RETURN_CHECK(iter != m_arrKeyBinds[_bFirstKeyID].end(), ;);
-    m_arrKeyBinds[_bFirstKeyID].insert(std::pair<_wstring, KEYMETHOD>(_wstrSecondsKeyName, _keyMethod));
+    m_arrKeyBinds[_bFirstKeyID].insert(std::pair<_wstring, KEYACTIONFUNC>(_wstrSecondsKeyName, _keyMethod));
 }
 
-void UInputManager::DeleteKeyMethod(const _ubyte& _bFirstKeyID, const _wstring& _wstrSecondsKeyName)
+void UInputManager::DeleteKeyMethod( _ubyte _bFirstKeyID, const _wstring& _wstrSecondsKeyName)
 {
     RETURN_CHECK(_bFirstKeyID >= MAX_KEYSIZE, ;);
     const auto& iter = m_arrKeyBinds[_bFirstKeyID].find(_wstrSecondsKeyName);
@@ -104,7 +104,7 @@ void UInputManager::DeleteKeyMethod(const _ubyte& _bFirstKeyID, const _wstring& 
     m_arrKeyBinds[_bFirstKeyID].erase(iter);
 }
 
-_bool UInputManager::GetDIKeyDown(const _ubyte& _bKeyID)
+_bool UInputManager::GetDIKeyDown( _ubyte _bKeyID)
 {
     RETURN_CHECK(_bKeyID >= MAX_KEYSIZE, false;);
     if (!m_arrPrevKeyState[_bKeyID] && m_arrKeyState[_bKeyID])
@@ -112,7 +112,7 @@ _bool UInputManager::GetDIKeyDown(const _ubyte& _bKeyID)
     return false;
 }
 
-_bool UInputManager::GetDIKeyUp(const _ubyte& _bKeyID)
+_bool UInputManager::GetDIKeyUp( _ubyte _bKeyID)
 {
     RETURN_CHECK(_bKeyID >= MAX_KEYSIZE, false;);
     if (m_arrPrevKeyState[_bKeyID] && !m_arrKeyState[_bKeyID])
@@ -126,7 +126,7 @@ _bool UInputManager::GetDIKeyPressing(const _ubyte& _bKeyID)
     return ((m_arrKeyState[_bKeyID] & 0x80)) > 0;
 }
 
-_bool UInputManager::GetDIMBtnDown(const DIMOUSEBUTTON& _eMouseBtn)
+_bool UInputManager::GetDIMBtnDown(_ubyte _eMouseBtn)
 {
     if (IsMouseInWindowSize())
     {
@@ -138,7 +138,7 @@ _bool UInputManager::GetDIMBtnDown(const DIMOUSEBUTTON& _eMouseBtn)
     return false;
 }
 
-_bool UInputManager::GetDIMBtnUp(const DIMOUSEBUTTON& _eMouseBtn)
+_bool UInputManager::GetDIMBtnUp(_ubyte _eMouseBtn)
 {
     if (IsMouseInWindowSize())
     {
@@ -150,7 +150,7 @@ _bool UInputManager::GetDIMBtnUp(const DIMOUSEBUTTON& _eMouseBtn)
     return false;
 }
 
-_bool UInputManager::GetDIMBtnPressing(const DIMOUSEBUTTON& _eMouseBtn)
+_bool UInputManager::GetDIMBtnPressing(_ubyte _eMouseBtn)
 {
     if (IsMouseInWindowSize())
     {

@@ -1,6 +1,7 @@
 #include "EngineDefine.h"
 #include "EngineStruct.h"
 #include <filesystem>
+#include "UGameInstance.h"
 
 namespace Engine {
 
@@ -241,4 +242,88 @@ namespace Engine {
 
 #pragma endregion ANIMSECTION 
 
+#pragma region ANIMEVENTTYPE
+
+	void ANIMEVENTDESC::RegisterEventFunc()
+	{
+		switch (MkEventType)
+		{
+		case MK_KEYBOARD:
+		{
+			switch (KeyPressType)
+			{
+			case KEYPRESSTYPE::KEY_UP:
+				MkEventFunc = IsKeyboardUp;
+				break;
+			case KEYPRESSTYPE::KEY_DOWN:
+				MkEventFunc = IsKeyboardDown;
+				break;
+			case KEYPRESSTYPE::KEY_PRESSING:
+				MkEventFunc = IsKeyboardPressing;
+				break;
+			}
+		}
+			break;
+		case MK_MOUSE:
+		{
+			switch (KeyPressType)
+			{
+			case KEYPRESSTYPE::KEY_UP:
+				MkEventFunc = IsMouseUp;
+				break;
+			case KEYPRESSTYPE::KEY_DOWN:
+				MkEventFunc = IsMouseDown;
+				break;
+			case KEYPRESSTYPE::KEY_PRESSING:
+				MkEventFunc = IsMousePressing;
+				break;
+			}
+		}
+			break;
+		}
+	}
+
+	_char* ANIMEVENTDESC::SaveLoadPointer()
+	{
+		_char* Pointer = reinterpret_cast<_char*>(this) + sizeof(MkEventFunc);
+		return Pointer;
+	}
+
+	_bool ANIMEVENTDESC::IsMouseUp(_ubyte _ubInputKey)
+	{
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		return spGameInstance->GetDIMBtnUp(_ubInputKey);
+	}
+
+	_bool ANIMEVENTDESC::IsMouseDown(_ubyte _ubInputKey)
+	{
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		return spGameInstance->GetDIMBtnDown(_ubInputKey);
+	}
+
+	_bool ANIMEVENTDESC::IsMousePressing(_ubyte _ubInputKey)
+	{
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		return spGameInstance->GetDIMBtnPressing(_ubInputKey);
+	}
+
+	_bool ANIMEVENTDESC::IsKeyboardUp(_ubyte _ubInputKey)
+	{
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		return spGameInstance->GetDIKeyUp(_ubInputKey);
+	}
+
+	_bool ANIMEVENTDESC::IsKeyboardDown(_ubyte _ubInputKey)
+	{
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		return spGameInstance->GetDIKeyDown(_ubInputKey);
+	}
+
+	_bool ANIMEVENTDESC::IsKeyboardPressing(_ubyte _ubInputKey)
+	{
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		return spGameInstance->GetDIKeyPressing(_ubInputKey);
+	}
+
+#pragma endregion ANIMEVENTTYPE
 }

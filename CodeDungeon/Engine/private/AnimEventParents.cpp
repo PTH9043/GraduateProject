@@ -1,40 +1,25 @@
 #include "EngineDefine.h"
 #include "AnimEventParents.h"
 
-UAnimEvent::UAnimEvent() : m_EventID{0}, m_AnimEventType{ANIMEVENT::EVENT_END}
+UAnimEvent::UAnimEvent(ANIMEVENTTYPE _AnimEventType, ANIMEVENTCATEGORY _AnimEventCategory) : 
+m_AnimEventType{ _AnimEventType }, m_AnimEventCategory{ _AnimEventCategory }
 {
 }
 
-UAnimEvent::UAnimEvent(const _int _EventID, ANIMEVENT _AnimEvent) :
-	m_EventID{ _EventID },
-	m_AnimEventType{ _AnimEvent }
+UAnimEvent::UAnimEvent(ANIMEVENTTYPE _AnimEventType, ANIMEVENTCATEGORY _AnimEventCategory) :
+	m_AnimEventType{ _AnimEventType },
+	m_AnimEventCategory{_AnimEventCategory}
 {
-}
-
-void UAnimEvent::Save(const _wstring& _wstrPath)
-{
-	std::ofstream Save{ _wstrPath };
-	RETURN_CHECK_CRASH(!Save, ; , "AnimEvent Save Failed  Plz Check Path");
-	SaveEvent(Save);
-}
-
-void UAnimEvent::Load(const _wstring& _wstrPath)
-{
-	std::ifstream Load{ _wstrPath };
-	RETURN_CHECK_CRASH(!Load, ;, "AnimEvent Load Failed  Plz Check Path");
-	LoadEvent(Load);
 }
 
 void UAnimEvent::SaveEvent( std::ofstream& _save)
 {
-	_save.write((_char*)&m_EventID, sizeof(_int));
-	_save.write((_char*)&m_AnimEventType, sizeof(ANIMEVENT));
+	_save.write((_char*)&m_AnimEventType, sizeof(ANIMEVENTTYPE));
 }
 
 void UAnimEvent::LoadEvent( std::ifstream& _load)
 {
-	_load.read((_char*)&m_EventID, sizeof(_int));
-	_load.read((_char*)&m_AnimEventType, sizeof(ANIMEVENT));
+	_load.read((_char*)&m_AnimEventType, sizeof(ANIMEVENTTYPE));
 }
 
 void UAnimEvent::Free()
@@ -49,38 +34,48 @@ AnimSectionEvent
 =====================================
 */
 
-UAnimSectionEvent::UAnimSectionEvent() : m_AnimEventDesc{}
+UAnimSectionEvent::UAnimSectionEvent(ANIMEVENTTYPE _AnimEventType) : 
+	UAnimEvent(_AnimEventType, ANIMEVENTCATEGORY::CATEGROY_SECTION), m_AnimSectionDesc{}
 {
 
 }
 
-UAnimSectionEvent::UAnimSectionEvent(const ANIMEVENTSECTIONDESC& _AnimEventDesc,
-	const _int _EventID, ANIMEVENT _AnimEvent) :
-	UAnimEvent(_EventID, _AnimEvent)
+UAnimSectionEvent::UAnimSectionEvent(const ANIMEVENTSECTIONDESC& _AnimEventDesc, ANIMEVENTTYPE _AnimEventType) :
+	m_AnimSectionDesc{ _AnimEventDesc }, UAnimEvent(_AnimEventType, ANIMEVENTCATEGORY::CATEGROY_SECTION)
 {
-	::memcpy(&m_AnimEventDesc, &_AnimEvent, sizeof(ANIMEVENTSECTIONDESC));
+	m_AnimSectionDesc.RegisterEventFunc();
 }
 
 
 _bool UAnimSectionEvent::EventCheck(CSHPTRREF<UAnimator> _spAnimator, const _double& _dTimeDelta, const _double& _dTimeAcc)
 {
-	if (m_AnimEventDesc.IsAnimEventActive(_dTimeAcc))
+	if (m_AnimSectionDesc.IsAnimEventActive(_dTimeAcc))
 	{
-		EventSituation(_spAnimator, _dTimeDelta);
+		if (true == m_AnimSectionDesc.IsMousekeyboardFunc())
+		{
+			EventSituation(_spAnimator, _dTimeDelta);
+		}
 	}
-	return m_AnimEventDesc.isEventActive;
+	return m_AnimSectionDesc.isEventActive;
+}
+
+void UAnimSectionEvent::ChangeAnimEventDesc(ANIMEVENTDESC* _AnimEventDesc)
+{
+	RETURN_CHECK(nullptr == _AnimEventDesc, ;);
+	m_AnimSectionDesc = *static_cast<ANIMEVENTSECTIONDESC*>(_AnimEventDesc);
 }
 
 void UAnimSectionEvent::SaveEvent( std::ofstream& _save)
 {
 	__super::SaveEvent(_save);
-	_save.write((_char*)&m_AnimEventDesc, sizeof(ANIMEVENTSECTIONDESC));
+	_save.write(m_AnimSectionDesc.SaveLoadPointer(), sizeof(ANIMEVENTSECTIONDESC)  - ANIMEVENTDESC::GetEventFuncSize());
 }
 
 void UAnimSectionEvent::LoadEvent( std::ifstream& _load)
 {
 	__super::LoadEvent(_load);
-	_load.read((_char*)&m_AnimEventDesc, sizeof(ANIMEVENTSECTIONDESC));
+	_load.read(m_AnimSectionDesc.SaveLoadPointer(), sizeof(ANIMEVENTSECTIONDESC) - ANIMEVENTDESC::GetEventFuncSize());
+	m_AnimSectionDesc.RegisterEventFunc();
 }
 
 void UAnimSectionEvent::Free()
@@ -95,14 +90,15 @@ AnimOccurEvent
 =====================================
 */
 
-UAnimOccurEvent::UAnimOccurEvent() : m_AnimOccurDesc{}
+UAnimOccurEvent::UAnimOccurEvent(ANIMEVENTTYPE _AnimEventType) :
+	UAnimEvent(_AnimEventType, ANIMEVENTCATEGORY::CATEGROY_SECTION), m_AnimOccurDesc{}
 {
 }
 
-UAnimOccurEvent::UAnimOccurEvent(const ANIMOCURRESDESC& _AnimEventDesc, const _int _EventID, ANIMEVENT _AnimEvent) : 
-	UAnimEvent(_EventID, _AnimEvent)
+UAnimOccurEvent::UAnimOccurEvent(const ANIMOCURRESDESC& _AnimEventDesc, ANIMEVENTTYPE _AnimEventType) :
+	m_AnimOccurDesc{ _AnimEventDesc }, UAnimEvent(_AnimEventType, ANIMEVENTCATEGORY::CATEGROY_OCCUR)
 {
-	::memcpy(&m_AnimOccurDesc, &_AnimEventDesc, sizeof(ANIMOCURRESDESC));
+	m_AnimOccurDesc.RegisterEventFunc();
 }
 
 
@@ -110,21 +106,31 @@ _bool UAnimOccurEvent::EventCheck(CSHPTRREF<UAnimator> _spAnimator, const _doubl
 {
 	if (m_AnimOccurDesc.IsAnimOcurrs(_dTimeAcc))
 	{
-		EventSituation(_spAnimator, _dTimeDelta);
+		if (true == m_AnimOccurDesc.IsMousekeyboardFunc())
+		{
+			EventSituation(_spAnimator, _dTimeDelta);
+		}
 	}
 	return m_AnimOccurDesc.dAnimOccursTime;
+}
+
+void UAnimOccurEvent::ChangeAnimEventDesc(ANIMEVENTDESC* _AnimEventDesc)
+{
+	RETURN_CHECK(nullptr == _AnimEventDesc, ;);
+	m_AnimOccurDesc = *static_cast<ANIMOCURRESDESC*>(_AnimEventDesc);
 }
 
 void UAnimOccurEvent::SaveEvent(std::ofstream& _save)
 {
 	__super::SaveEvent(_save);
-	_save.write((_char*)&m_AnimOccurDesc, sizeof(ANIMOCURRESDESC));
+	_save.write((_char*)&m_AnimOccurDesc, sizeof(ANIMOCURRESDESC) - ANIMEVENTDESC::GetEventFuncSize());
 }
 
 void UAnimOccurEvent::LoadEvent(std::ifstream& _load)
 {
 	__super::LoadEvent(_load);
-	_load.read((_char*)&m_AnimOccurDesc, sizeof(ANIMOCURRESDESC));
+	_load.read((_char*)&m_AnimOccurDesc, sizeof(ANIMOCURRESDESC) - ANIMEVENTDESC::GetEventFuncSize());
+	m_AnimOccurDesc.RegisterEventFunc();
 }
 
 void UAnimOccurEvent::Free()

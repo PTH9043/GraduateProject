@@ -180,7 +180,7 @@ HRESULT UAnimModel::CreateAnimation(const  VECTOR<ANIMDESC>& _convecAnimDesc, co
 		m_vecAnimations.push_back(spAnimation);
 
 		m_AnimNamesGroup.insert(std::pair<_wstring, _uint>(spAnimation->GetAnimName(), iIndex++));
-		spAnimation->LoadSectionsPathIsFolder(_wstrPath);
+		spAnimation->LoadAnimDataPathIsFolder(_wstrPath);
 	}
 	return S_OK;
 }

@@ -280,6 +280,9 @@
     <Filter Include="06.Component\Animator\AnimEvent">
       <UniqueIdentifier>{45c419df-057d-49e5-ba1b-ba6cd71d3a0e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06.Component\Animator\AnimEvent\Parents">
+      <UniqueIdentifier>{0609ab3e-fad7-44e5-aba8-0a27acbd5a94}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -540,8 +543,11 @@
     <ClCompile Include="..\private\UVIBufferGrid.cpp">
       <Filter>07.Resource\VIBuffer\Grid</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\AnimEventParents.cpp">
+    <ClCompile Include="..\private\AnimSectionEvents.cpp">
       <Filter>06.Component\Animator\AnimEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\AnimEventParents.cpp">
+      <Filter>06.Component\Animator\AnimEvent\Parents</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -833,8 +839,11 @@
     <ClInclude Include="..\public\UVIBufferGrid.h">
       <Filter>07.Resource\VIBuffer\Grid</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\AnimEventParents.h">
+    <ClInclude Include="..\public\AnimSectionEvents.h">
       <Filter>06.Component\Animator\AnimEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\AnimEventParents.h">
+      <Filter>06.Component\Animator\AnimEvent\Parents</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -531,18 +531,54 @@ namespace Engine {
 
 #pragma endregion BUDLECOMMANDLIST
 
-#pragma region ANIMEVENT
+#pragma region ANIMEVENTTYPE
 
-	
 	/*
-	@ Date: 2024-02-08, Writer: 박태현
+	@ Date: 2024-02-10, Writer: 박태현
+	@ Explain
+	- 애니메이션 이벤트 구조체의 상위 구조체
+	*/
+	struct ANIMEVENTDESC abstract {
+	private:
+		// Key가 눌릴 함수를 등록할 변수
+		MKEVENTFUNC	MkEventFunc;
+	public:  
+		_bool						isEventActive;
+		_ubyte					ubInputKey;
+		MKEVENTTYPE		MkEventType;
+		KEYPRESSTYPE	KeyPressType;
+
+		ANIMEVENTDESC() : isEventActive{ false }, ubInputKey{ 0 }, MkEventType{ MKEVENTTYPE::MK_END },
+			KeyPressType{KEYPRESSTYPE::KEY_END }, MkEventFunc{ IsEmptyFunc } { }
+
+		void RegisterEventFunc();
+		// Empty일 경우 그냥 true 리턴
+		_bool IsMousekeyboardFunc() { return MkEventFunc(ubInputKey); }
+		void ResetEvent() { isEventActive = false; }
+		_char* SaveLoadPointer();
+		static size_t GetEventFuncSize() { return sizeof(MKEVENTFUNC); }
+	private:
+		static _bool IsMouseUp(_ubyte _ubInputKey);
+		static _bool IsMouseDown(_ubyte _ubInputKey);
+		static _bool IsMousePressing(_ubyte _ubInputKey);
+
+		static _bool IsKeyboardUp(_ubyte _ubInputKey);
+		static _bool IsKeyboardDown(_ubyte _ubInputKey);
+		static _bool IsKeyboardPressing(_ubyte _ubInputKey);
+
+		static _bool IsEmptyFunc(_ubyte _ubInputKey) { return true; }
+	};
+
+	/*
+	@ Date: 2024-02-10, Writer: 박태현
 	@ Explain
 	- 애니메이션 Event를 위한 구간을 정의하는 구조체
 	*/
-	struct ANIMEVENTSECTIONDESC {
+	struct ANIMEVENTSECTIONDESC : public ANIMEVENTDESC {
 		_double dStartTime;
 		_double dEndTime;
-		_bool		isEventActive;
+
+		ANIMEVENTSECTIONDESC() : dStartTime{0.0}, dEndTime{0.0} {}
 
 		_bool IsAnimEventActive(const _double& _dTimeAcc) {
 			isEventActive = false;
@@ -552,27 +588,42 @@ namespace Engine {
 			return isEventActive;
 		}
 	};
-
 	/*
-	@ Date: 2024-02-08, Writer: 박태현
+	@ Date: 2024-02-10, Writer: 박태현
 	@ Explain
 	- 애니메이션 Event가 발생된 지점을 정의하는 구조체
 	*/
-	struct ANIMOCURRESDESC {
+	struct ANIMOCURRESDESC : public ANIMEVENTDESC {
 		_double		dAnimOccursTime;
-		_bool			isEventActive;
+
+		ANIMOCURRESDESC() : dAnimOccursTime{ 0.0 } {}
 
 		bool IsAnimOcurrs(const _double& _dTimeAcc) {
+			isEventActive = false;
+
 			if (_dTimeAcc <= dAnimOccursTime)
 				isEventActive = true;
 			
 			return isEventActive;
 		}
+	};
+	/*
+	@ Date: 2024-02-10, Writer: 박태현
+	@ Explain
+	-  애니메이션의 Event Desc 말고 각자의 Other Event를 담고 있는 구조체로 
+		해당 구조체를 정의함으로써, 다른 POINTER들이 개입할 여지를 없애기 위해서 정의함
+	*/
+	struct ANIMOTHEREVENTDESC abstract{ };
 
-		void ResetEvent() { isEventActive = false; }
+	/*
+	@ Date: 2024-02-10, Writer: 박태현
+	@ Explain
+	-  애니메이션이 다음으로 넘어가기 위한 구조체
+	*/
+	struct ANIMCHANGEBETWEENEVENTDESC : public ANIMOTHEREVENTDESC {
+		_wstring		wstrNextAnimName;
+
 	};
 
-
-
-#pragma endregion ANIMEVENT
+#pragma endregion ANIMEVENTTYPE
 }

@@ -3,8 +3,6 @@
 
 BEGIN(Engine)
 
-using KEYMETHOD = UDelegate<void, const _double&>;
-
 class UInputManager : public UBase {
 public:
 	UInputManager();
@@ -22,15 +20,15 @@ public:
 	void KeyTick();
 	void InvokeKeyMethods(const _ubyte& _bFirstKeyID, const _double& _dDeltaTime);
 
-	void AddKeyMethod(const _ubyte& _bFirstKeyID, const _wstring& _wstrSecondsKeyName, const KEYMETHOD& _keyMethod);
-	void DeleteKeyMethod(const _ubyte& _bFirstKeyID, const _wstring& _wstrSecondsKeyName);
-	_bool GetDIKeyDown(const _ubyte& _bKeyID);
-	_bool GetDIKeyUp(const _ubyte& _bKeyID);
+	void AddKeyMethod( _ubyte _bFirstKeyID, const _wstring& _wstrSecondsKeyName, const KEYACTIONFUNC& _keyMethod);
+	void DeleteKeyMethod( _ubyte _bFirstKeyID, const _wstring& _wstrSecondsKeyName);
+	_bool GetDIKeyDown( _ubyte _bKeyID);
+	_bool GetDIKeyUp( _ubyte _bKeyID);
 	_bool GetDIKeyPressing(const _ubyte& _bKeyID);
-	_bool GetDIMBtnDown(const DIMOUSEBUTTON& _eMouseBtn);
-	_bool GetDIMBtnUp(const DIMOUSEBUTTON& _eMouseBtn);
-	_bool GetDIMBtnPressing(const DIMOUSEBUTTON& _eMouseBtn);
-	_long GetDIMMoveState(const DIMOUSEMOVE& _eMouseMove) { return *((_long*)&m_eMouseState + _eMouseMove); }
+	_bool GetDIMBtnDown(_ubyte _eMouseBtn);
+	_bool GetDIMBtnUp(_ubyte _eMouseBtn);
+	_bool GetDIMBtnPressing(_ubyte _eMouseBtn);
+	_long GetDIMMoveState(_ubyte _eMouseMove) { return *((_long*)&m_eMouseState + _eMouseMove); }
 	// Get Mouse Position
 	_float2 GetMousePosition();
 private:
@@ -39,7 +37,7 @@ private:
 	_bool	IsMouseInWindowSize();
 private:
 	using	KEYARR = ARRAY<_ubyte, MAX_KEYSIZE>;
-	using	KEYMETHODS = UNORMAP<_wstring, KEYMETHOD>;
+	using	KEYMETHODS = UNORMAP<_wstring, KEYACTIONFUNC>;
 	using	KEYBINDS = ARRAY< KEYMETHODS, MAX_KEYSIZE>;
 
 	LPDIRECTINPUT8								m_pInput;

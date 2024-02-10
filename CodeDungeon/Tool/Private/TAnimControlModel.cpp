@@ -124,13 +124,13 @@ void TAnimControlModel::ModifyAnimation()
 						m_AnimFastSections.clear();
 					}
 					if (ImGui::Button("LoadSection")) {
-						m_spCurAnimation->LoadSectionsPathIsFolder(m_spModelFolder->wstrPath);
+						m_spCurAnimation->LoadAnimDataPathIsFolder(m_spModelFolder->wstrPath);
 					}
 					ImGui::SameLine();
 					if (ImGui::Button("Save FastSection"))
 					{
 						m_spCurAnimation->UpdateAnimFastSections(m_fTotalAnimFastvalue, m_AnimFastSections);
-						m_spCurAnimation->SaveSectionsPathIsFolder(m_spModelFolder->wstrPath);
+						m_spCurAnimation->SaveAnimDataPathIsFolder(m_spModelFolder->wstrPath);
 					}
 					// Options
 					static ImGuiTableFlags flags = ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Sortable | ImGuiTableFlags_SortMulti

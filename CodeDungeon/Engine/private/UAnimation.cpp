@@ -148,7 +148,7 @@ void UAnimation::ResetData()
 Save
 ====================================================
 */
-void UAnimation::SaveSections(const _wstring& _wstrPath)
+void UAnimation::SaveAnimData(const _wstring& _wstrPath)
 {
 	std::ofstream Saves{ _wstrPath, std::ios::binary};
 	RETURN_CHECK(!Saves, ;);
@@ -163,19 +163,19 @@ void UAnimation::SaveSections(const _wstring& _wstrPath)
 	}
 }
 
-void UAnimation::SaveSectionsPathIsFolder(const _wstring& _wstrPath)
+void UAnimation::SaveAnimDataPathIsFolder(const _wstring& _wstrPath)
 {
 	_wstring str = _wstrPath;
-	str.append(L"\\FastSection\\");
+	str.append(L"\\AnimData\\");
 	if (0 != _wmkdir(str))
 	{
 		str.append(m_wstrName);
 		str.append(DEFAULT_OUTFOLDEREXTENSION);
-		SaveSections(str);
+		SaveAnimData(str);
 	}
 }
 
-void UAnimation::LoadSections(const _wstring& _wstrPath)
+void UAnimation::LoadAnimData(const _wstring& _wstrPath)
 {
 	std::ifstream Read{ _wstrPath, std::ios::binary};
 	RETURN_CHECK(!Read, ;);
@@ -187,14 +187,14 @@ void UAnimation::LoadSections(const _wstring& _wstrPath)
 	Read.read((_char*)&m_AnimFastSections[0], sizeof(ANIMFASTSECTION) * iFastSection);
 }
 
-void UAnimation::LoadSectionsPathIsFolder(const _wstring& _wstrPath)
+void UAnimation::LoadAnimDataPathIsFolder(const _wstring& _wstrPath)
 {
 	_wstring str = _wstrPath;
-	str.append(L"\\FastSection\\");
+	str.append(L"\\AnimData\\");
 	str.append(m_wstrName);
 	str.append(DEFAULT_OUTFOLDEREXTENSION);
 
-	LoadSections(str);
+	LoadAnimData(str);
 }
 
 /*

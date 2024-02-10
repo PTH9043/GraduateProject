@@ -374,47 +374,47 @@ UInputManager
 ==================================================
 */
 
-void UGameInstance::AddKeyMethod(const _ubyte& _bFirstKeyID, const _wstring& _wstrSecondsKeyName, const KEYMETHOD& _keyMethod)
+void UGameInstance::AddKeyMethod(_ubyte _bFirstKeyID, const _wstring& _wstrSecondsKeyName, const KEYACTIONFUNC& _keyMethod)
 {
 	m_spInputManager->AddKeyMethod(_bFirstKeyID, _wstrSecondsKeyName, _keyMethod);
 }
 
-void UGameInstance::DeleteKeyMethod(const _ubyte& _bFirstKeyID, const _wstring& _wstrSecondsKeyName)
+void UGameInstance::DeleteKeyMethod( _ubyte _bFirstKeyID, const _wstring& _wstrSecondsKeyName)
 {
 	m_spInputManager->DeleteKeyMethod(_bFirstKeyID, _wstrSecondsKeyName);
 }
 
-_bool UGameInstance::GetDIKeyDown(const _ubyte& _bKeyID)
+_bool UGameInstance::GetDIKeyDown( _ubyte _bKeyID)
 {
 	return m_spInputManager->GetDIKeyDown(_bKeyID);
 }
 
-_bool UGameInstance::GetDIKeyUp(const _ubyte& _bKeyID)
+_bool UGameInstance::GetDIKeyUp( _ubyte _bKeyID)
 {
 	return m_spInputManager->GetDIKeyUp(_bKeyID);
 }
 
-_bool UGameInstance::GetDIKeyPressing(const _ubyte& _bKeyID)
+_bool UGameInstance::GetDIKeyPressing( _ubyte _bKeyID)
 {
 	return m_spInputManager->GetDIKeyPressing(_bKeyID);
 }
 
-_bool UGameInstance::GetDIMBtnDown(const DIMOUSEBUTTON& _eMouseBtn)
+_bool UGameInstance::GetDIMBtnDown(_ubyte _eMouseBtn)
 {
 	return m_spInputManager->GetDIMBtnDown(_eMouseBtn);
 }
 
-_bool UGameInstance::GetDIMBtnUp(const DIMOUSEBUTTON& _eMouseBtn)
+_bool UGameInstance::GetDIMBtnUp(_ubyte _eMouseBtn)
 {
 	return m_spInputManager->GetDIMBtnUp(_eMouseBtn);
 }
 
-_bool UGameInstance::GetDIMBtnPressing(const DIMOUSEBUTTON& _eMouseBtn)
+_bool UGameInstance::GetDIMBtnPressing(_ubyte _eMouseBtn)
 {
 	return m_spInputManager->GetDIMBtnPressing(_eMouseBtn);
 }
 
-_long UGameInstance::GetDIMMoveState(const DIMOUSEMOVE& _eMouseMove)
+_long UGameInstance::GetDIMMoveState(_ubyte _eMouseMove)
 {
 	return m_spInputManager->GetDIMMoveState(_eMouseMove);
 }

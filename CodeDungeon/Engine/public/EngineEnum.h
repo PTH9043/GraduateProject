@@ -25,18 +25,47 @@ namespace Engine {
 		TextureType_UNKNOWN = 18
 	};
 
+	enum class KEYPRESSTYPE : _int {
+		KEY_UP,
+		KEY_PRESSING,
+		KEY_DOWN,
+		KEY_END
+	};
 	/*
-	@ Date: 2024-02-08, Writer: 박태현
+	@ Date: 2024-02-10, Writer: 박태현
+	@ Explain
+	- . 애니메이션 카테고리를 정의한다.
+	*/
+	enum MKEVENTTYPE : _int {
+		MK_KEYBOARD, 
+		MK_MOUSE,
+		MK_END
+	};
+
+	/*
+	@ Date: 2024-02-10, Writer: 박태현
+	@ Explain
+	- . 애니메이션 카테고리를 정의한다. 
+	*/
+	enum class ANIMEVENTCATEGORY : _int {
+		CATEGROY_SECTION, 
+		CATEGROY_OCCUR,
+		CATEGROY_END
+	};
+	/*
+	@ Date: 2024-02-10, Writer: 박태현
 	@ Explain
 	- 애니메이션 Event를 위해 필요한 객체를 정의함
 	*/
-	enum ANIMEVENT : _int {
-		EVENT_EFFECT,     // 이펙트 발생 			
-		EVENT_SOUND,     // 소리 발생 
-		EVEN_COLLIDER,	  // 콜라이더 발생
-		EVENT_CAMERA,    // 카메라 따라다님
-		EVENT_OBJACTIVE, // OBJ활성화
-		EVENT_END
+	enum ANIMEVENTTYPE : _int {
+		ANIMEVENT_EFFECT,     // 이펙트 발생 			
+		ANIMEVENT_SOUND,     // 소리 발생 
+		ANIMEVENT_COLLIDER,	  // 콜라이더 발생
+		ANIMEVENT_CAMERA,    // 카메라 따라다님
+		ANIMEVENT_OBJACTIVE, // OBJ활성화
+		ANIMEVENT_ANIMCHANGESBETWEEN, // 다음 애니메이션이 섹션 사이에서 발생
+		ANIMEVENT_ANIMOCCURSTIMEPASS, // 애니메이션 이벤트 시간이 지나면 발생
+		ANIMEVENT_END
 	};
 
 	typedef enum ERenderID : _ubyte
@@ -247,10 +276,6 @@ namespace Engine {
 		PREALLOCATED_BUFFER_END
 	};
 
-	enum class PRESSTYPE : _ubyte {
-		DOWN, ING, UP, EMPTY
-	};
-
 	enum class CAMERATYPE
 	{
 		MAIN, DEFFERED, SHADOWLIGHT, OTHER,
@@ -261,8 +286,8 @@ namespace Engine {
 		GENERIC, NORMAL, BUFFEREND
 	};
 
-	enum DIMOUSEMOVE { DIMM_X, DIMM_Y, DIMM_WHEEL, DIMM_END };
-	enum DIMOUSEBUTTON { DIMB_L, DIMB_R, DIMB_WHEEL, DIMB_END };
+	enum DIMOUSEMOVE : _ubyte { DIMM_X, DIMM_Y, DIMM_WHEEL, DIMM_END };
+	enum DIMOUSEBUTTON : _ubyte { DIMB_L, DIMB_R, DIMB_WHEEL, DIMB_END };
 	enum class CURSOR_LOCKMODE { LOCKED, CONFINED, NONE, EMPTY };
 
 	enum VALUES

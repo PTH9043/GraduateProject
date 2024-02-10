@@ -159,4 +159,17 @@ namespace Engine {
 	- thread를 등록하기 위한 함수 
 	*/
 	using THREADFUNC = std::function<void(void*)>;
+	/*
+	@ Date: 2024-02-10, Writer: 박태현
+	@ Explain
+	- Key 행동을 등록하기 위한 함수
+	*/
+	using KEYACTIONFUNC = UDelegate<void, const _double&>;
+
+	/*
+	@ Date: 2024-02-10, Writer: 박태현
+	@ Explain
+	- Animation Event에서 Mouse 혹은 Keyboard가 눌린 함수를 등록하는 변수
+	*/
+	using MKEVENTFUNC = std::function<_bool(_ubyte)>;
 }
