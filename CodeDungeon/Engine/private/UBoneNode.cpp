@@ -54,6 +54,17 @@ void UBoneNode::FindParents(CSHPTRREF<UModel> _spModel)
 
 void UBoneNode::UpdateCombinedMatrix()
 {
+	ComputeCombinedMatrix();
+}
+
+void UBoneNode::RemoveCombineMatrixData()
+{
+	m_mCombineTransformMatirx.Set_Pos(_float3::Zero);
+	m_mCombineTransformMatirx = m_mCombineTransformMatirx.MatrixSetRotationFix(_float3::Zero);
+}
+
+void UBoneNode::ComputeCombinedMatrix()
+{
 	if (nullptr != m_spParentsNode)
 	{
 		m_mCombineTransformMatirx = m_mTransformMatrix * m_spParentsNode->GetCombineMatrix();

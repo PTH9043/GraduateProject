@@ -12,12 +12,10 @@ UAnimation::UAnimation() :
 	m_dTickPerSeconds{ 0 },
 	m_dDuration{ 0 },
 	m_dTimeAcc{ 0 },
-	m_isFinished{ false },
-	m_isStop{ false },
-	m_isRepeat{ false },
 	m_isSupplySituation{ false },
 	m_fSupplySituationValue{ 0 },
-	m_fTotalAnimationFastValue{1.f}
+	m_fTotalAnimationFastValue{1.f},
+	m_isFinishAnimation{false}
 {
 }
 
@@ -29,12 +27,10 @@ UAnimation::UAnimation(const UAnimation& _rhs) :
 	m_dTickPerSeconds{ _rhs.m_dTickPerSeconds },
 	m_dDuration{ _rhs.m_dDuration },
 	m_dTimeAcc{ 0.0 },
-	m_isFinished{ false },
-	m_isStop{ false },
-	m_isRepeat{ false },
 	m_isSupplySituation{ false },
 	m_fSupplySituationValue{ 0 },
-	m_fTotalAnimationFastValue{ 1.f }
+	m_fTotalAnimationFastValue{ 1.f },
+	m_isFinishAnimation{ false }
 {
 }
 
@@ -77,11 +73,6 @@ HRESULT UAnimation::NativeConstruct(CSHPTRREF<UAnimModel> _spAnimModel, const AN
 
 void UAnimation::UpdateTransformMatrices(const _double& _dTimeDelta)
 {
-	RETURN_CHECK(true == m_isStop, ;);
-	if (true == m_isRepeat)
-	{
-		RETURN_CHECK(true == m_isFinished, ;);
-	}
 	_double dValue = m_dTickPerSeconds * _dTimeDelta;
 	for (auto& iter : m_AnimFastSections)
 	{
@@ -92,8 +83,8 @@ void UAnimation::UpdateTransformMatrices(const _double& _dTimeDelta)
 	if (m_dTimeAcc >= m_dDuration)
 	{
 		m_dTimeAcc = 0.0;
-		m_isFinished = true;
 		m_isSupplySituation = false;
+		m_isFinishAnimation = true;
 	}
 	else
 	{
@@ -101,8 +92,10 @@ void UAnimation::UpdateTransformMatrices(const _double& _dTimeDelta)
 		{
 			iter->UpdateTransformMatrix(m_dTimeAcc, this);
 		}
+		m_isFinishAnimation = false;
 	}
 }
+
 
 void UAnimation::UpdateTransformMatricesToTimeAcc(const _double& _TimeAcc)
 {
@@ -119,7 +112,8 @@ void UAnimation::UpdateNextAnimTransformMatrices(const _double& _dTimeDelta, con
 
 	if (m_fSupplySituationValue >= MAX_SUPPLY_VALUE)
 	{
-		ResetData();
+		m_fSupplySituationValue = 0.001f;
+		m_isSupplySituation = false;
 	}
 	else
 	{
@@ -137,10 +131,9 @@ void UAnimation::UpdateNextAnimTransformMatrices(const _double& _dTimeDelta, con
 
 void UAnimation::ResetData()
 {
-	m_dTimeAcc = 0.0;
 	m_fSupplySituationValue = 0.001f;
 	m_isSupplySituation = false;
-	m_isFinished = false;
+	m_isFinishAnimation = false;
 }
 
 /*
@@ -196,6 +189,7 @@ void UAnimation::LoadAnimDataPathIsFolder(const _wstring& _wstrPath)
 
 	LoadAnimData(str);
 }
+
 
 /*
 ====================================================

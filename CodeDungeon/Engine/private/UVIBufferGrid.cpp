@@ -81,7 +81,7 @@ HRESULT UVIBufferGrid::NativeConstruct()
 		}
 
 		RETURN_CHECK_FAILED(CreateIndexBuffer(INDICES_CNT,
-			sizeof(INDICIES16), pIndices, DXGI_FORMAT_R32_UINT), E_FAIL);
+			sizeof(INDICIES32), pIndices, DXGI_FORMAT_R32_UINT), E_FAIL);
 
 	}
 	return S_OK;

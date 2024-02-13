@@ -30,7 +30,13 @@ public:
 	virtual void Free() override;
 	HRESULT NativeConstruct(const BONENODEDESC& _stBoneNodeDesc);
 	void FindParents(CSHPTRREF<UModel> _spModel);
-	void UpdateCombinedMatrix();
+	virtual void UpdateCombinedMatrix();
+protected:
+	const _float3& GetCombineMatrixLook() const { return *((_float3*)&m_mCombineTransformMatirx.m[DirectX::PTH::MATROW_LOOK][0]); }
+	const _float3& GetCombineMatrixPos() const { return *((_float3*)&m_mCombineTransformMatirx.m[DirectX::PTH::MATROW_POS][0]); }
+protected:
+	void RemoveCombineMatrixData();
+	void ComputeCombinedMatrix();
 private:
 	// 뼈의 가장 기본이 되는 것의 이름 (중요한 것)
 	static	_wstring					BASE_BONENODE_NAME;

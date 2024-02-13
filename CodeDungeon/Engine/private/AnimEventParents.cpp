@@ -1,11 +1,6 @@
 #include "EngineDefine.h"
 #include "AnimEventParents.h"
 
-UAnimEvent::UAnimEvent(ANIMEVENTTYPE _AnimEventType, ANIMEVENTCATEGORY _AnimEventCategory) : 
-m_AnimEventType{ _AnimEventType }, m_AnimEventCategory{ _AnimEventCategory }
-{
-}
-
 UAnimEvent::UAnimEvent(ANIMEVENTTYPE _AnimEventType, ANIMEVENTCATEGORY _AnimEventCategory) :
 	m_AnimEventType{ _AnimEventType },
 	m_AnimEventCategory{_AnimEventCategory}

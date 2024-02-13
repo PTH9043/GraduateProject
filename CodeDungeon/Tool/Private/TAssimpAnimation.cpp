@@ -82,8 +82,8 @@ void TAssimpAnimation::AnimationStringNameSplit(_wstring& _wstrAnimName)
 {
 	if (_wstrAnimName.length() >= 20)
 	{
-		_int FirstIndex = _wstrAnimName.find(L"_");
-		_int Lastndex = _wstrAnimName.find_last_of(L"_");
+		_int FirstIndex = static_cast<_int>(_wstrAnimName.find(L"_"));
+		_int Lastndex = static_cast<_int>(_wstrAnimName.find_last_of(L"_"));
 		if (FirstIndex != Lastndex)
 		{
 			_wstrAnimName = _wstrAnimName.substr(FirstIndex + 1, _wstrAnimName.length());

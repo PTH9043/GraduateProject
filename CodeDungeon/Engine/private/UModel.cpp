@@ -7,6 +7,7 @@
 #include "UShader.h"
 #include "UMeshContainer.h"
 #include "UTexture.h"
+#include "URootBoneNode.h"
 
 UModel::UModel(CSHPTRREF<UDevice> _spDevice, const TYPE& _eType) :
 	UResource(_spDevice),
@@ -166,15 +167,44 @@ HRESULT UModel::Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader, CS
 	return S_OK;
 }
 
-HRESULT UModel::CreateBoneNode(void* _pData)
+HRESULT UModel::CreateBoneNode(void* _pData, const _wstring& _wstrBoneNodeName)
 {
 	MODELDESC* tDesc = static_cast<MODELDESC*>(_pData);
 
-	for (auto& iter : tDesc->BNodeDatas) {
+	_int Index{ 0 };
 
-		SHPTR<UBoneNode> pBoneNode = CreateNative<UBoneNode>(iter);
+	if (true == _wstrBoneNodeName.empty())
+	{
+		_int Index{ 0 };
+		for (auto& iter : tDesc->BNodeDatas) {
+			SHPTR<UBoneNode> spBoneNode{ nullptr };
+			if (0 == Index++)
+			{
+				m_spRootBoneNode = CreateNative<URootBoneNode>(iter);
+				spBoneNode = m_spRootBoneNode;
+			}
+			else
+			{
+				spBoneNode = CreateNative<UBoneNode>(iter);
+			}
+			m_vecBoneNodes.push_back(spBoneNode);
+		}
+	}
+	else
+	{
+		for (auto& iter : tDesc->BNodeDatas) {
+			SHPTR<UBoneNode> spBoneNode{ nullptr };
+			if (iter.wstrName == _wstrBoneNodeName)
+			{
+				m_spRootBoneNode = CreateNative<URootBoneNode>(iter);
+				m_spRootBoneNode->OnRootBoneNode();
+				spBoneNode = m_spRootBoneNode;
+			}
+			else
+				spBoneNode = CreateNative<UBoneNode>(iter);
 
-		m_vecBoneNodes.push_back(pBoneNode);
+			m_vecBoneNodes.push_back(spBoneNode);
+		}
 	}
 
 	std::sort(m_vecBoneNodes.begin(), m_vecBoneNodes.end(), [&](SHPTR<UBoneNode>& p1, SHPTR<UBoneNode>& p2) {

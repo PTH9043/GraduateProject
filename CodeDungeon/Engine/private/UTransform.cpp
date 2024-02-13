@@ -12,7 +12,7 @@ UTransform::UTransform(CSHPTRREF<UDevice> _spDevice) :
 	m_stTransformParam{},
 	m_mWorldMatrix{ _float4x4::Identity },
 	m_mChangeWorldMatrix{ _float4x4::Identity },
-	m_mPivotMatrix{_float4x4::Identity},
+	m_mScaleMatrix{_float4x4::Identity},
 	m_vQuaternion{ _float4::Zero },
 	m_vScale{ 1.f, 1.f, 1.f },
 	m_isNotApplyRotate{ false },
@@ -57,6 +57,7 @@ void UTransform::SetScale(const _float3& _vScale)
 		return;
 
 	m_mWorldMatrix = m_mWorldMatrix.MatrixSetScaling(_vScale);
+	m_mScaleMatrix = _float4x4::CreateScale(_vScale);
 	m_vScale = _vScale;
 }
 
@@ -111,10 +112,10 @@ void UTransform::TransformUpdate()
 		{
 			Matrix.MatrixSetRotationFix(_float3::Zero);
 		}
-		m_mChangeWorldMatrix = m_mWorldMatrix * m_mPivotMatrix * Matrix;
+		m_mChangeWorldMatrix = m_mWorldMatrix * Matrix;
 	}
 	else {
-		m_mChangeWorldMatrix = m_mWorldMatrix * m_mPivotMatrix;
+		m_mChangeWorldMatrix = m_mWorldMatrix ;
 	}
 }
 
@@ -192,6 +193,11 @@ void UTransform::MoveRightNotY(const _double& _dTimeDelta, const _float& _fSpeed
 	vPosition -= vLook * static_cast<_float>(_dTimeDelta) * _fSpeed;
 	vPosition.y = 0.f;
 	SetPos(vPosition);
+}
+
+void UTransform::MovePos(const _float3& _vPos)
+{
+	SetPos(GetPos() + _vPos);
 }
 
 void UTransform::TranslatePos(const _float3& _vPos, const _double& _dTimeDelta, const _float& _fSpeed, const _float& _fLimitDistance)
@@ -287,9 +293,9 @@ void UTransform::RotateFix(const _float3& _vAngle)
 	SetLook(DirectX::XMVector3TransformNormal(_float3{ 0.f, 0.f, 1.f } *m_vScale.z, RotationMatrix));
 }
 
-void UTransform::RotateFix(const _float4& _vAngle)
+void UTransform::RotateFix(const _float4& _vQuaternion)
 {
-	m_vQuaternion = _vAngle;
+	m_vQuaternion = _vQuaternion;
 
 	_float4x4 RotationMatrix = _float4x4::CreateFromQuaternion(m_vQuaternion);
 
@@ -312,6 +318,17 @@ void UTransform::RotateTurn(const _float3& _vAxis, const _float& _fAngle)
 {
 	m_vQuaternion = DirectX::XMQuaternionRotationAxis(_vAxis, (_float)(DirectX::XMConvertToRadians(_fAngle)));
 	_float4x4 RotationMatrix = DirectX::XMMatrixRotationQuaternion(m_vQuaternion);
+
+	SetRight(DirectX::XMVector3TransformNormal(GetRight(), RotationMatrix));
+	SetUp(DirectX::XMVector3TransformNormal(GetUp(), RotationMatrix));
+	SetLook(DirectX::XMVector3TransformNormal(GetLook(), RotationMatrix));
+}
+
+void UTransform::RotateTurn(const _float4& _vQuaternion)
+{
+	m_vQuaternion = _vQuaternion;
+
+	_float4x4 RotationMatrix = _float4x4::CreateFromQuaternion(m_vQuaternion);
 
 	SetRight(DirectX::XMVector3TransformNormal(GetRight(), RotationMatrix));
 	SetUp(DirectX::XMVector3TransformNormal(GetUp(), RotationMatrix));

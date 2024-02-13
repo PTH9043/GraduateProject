@@ -5,6 +5,7 @@ BEGIN(Engine)
 class UShaderConstantBuffer;
 class UAnimation;
 class UTexture;
+class UTransform;
 /*
 @ Date: 2024-02-04, Writer: 박태현
 @ Explain
@@ -39,8 +40,10 @@ public:
 	using UModel::NativeConstruct;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;
 	// 애니메이션을 Tick하는 함수
-	void TickAnimation(const _double& _dDeltaTime);
-	void UpdateCurAnimationToTimAcc(const _double& _TimeAcc);
+	void TickAnimation(const _double& _dDeltaTime, const _float3& _vOffsetPos = {});
+	// 애니메이션을 Tick하면서 실제 RootBone의 위치 정보를 가져오는 함수
+	void TickAnimation(CSHPTRREF<UTransform> _spTransform, const _double& _dDeltaTime);
+	void UpdateCurAnimationToTimAcc(CSHPTRREF<UTransform> _spTransform, const _double& _TimeAcc);
 	// 애니메이션을 렌더하는 함수
 	virtual HRESULT Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader, CSHPTRREF<UCommand> _spCommand) override;
 	// Set Animation
@@ -50,6 +53,7 @@ public:
 	void ChangeAnimation(const _uint& _iAnimIndex);
 	void ChangeAnimation(const _wstring& _wstrAnimName);
 private:
+	void UpdateOwnerActorPos(CSHPTRREF<UTransform> _spTransform);
 	// CreateAnimation
 	HRESULT CreateAnimation(const VECTOR<ANIMDESC>& _convecAnimDesc, const _wstring& _wstrPath);
 	// Load To Data
@@ -63,27 +67,27 @@ private:
 	void SettingNextAnimSituation();
 	HRESULT CreateShaderConstantBuffer();
 private:
-	static	const  _wstring											SECTION_FOLDEDER_NAME;
-
-	ANIMATIONS															m_vecAnimations;
-	ANIMSTRINGS														m_AnimNamesGroup;
-	VECTOR<SETUPBONEMATRIXES>					m_vecSetupBonMatrix;
+	ANIMATIONS												m_vecAnimations;
+	ANIMSTRINGS											m_AnimNamesGroup;
+	VECTOR<SETUPBONEMATRIXES>		m_vecSetupBonMatrix;
 	// Animations
-	SHPTR< UShaderConstantBuffer>					m_spAnimShaderConstantBuffer;
-	ANIMATIONPARAM												m_stAnimParam;
+	SHPTR< UShaderConstantBuffer>		m_spAnimShaderConstantBuffer;
+	ANIMATIONPARAM									m_stAnimParam;
 	// Bone, PrevBone
-	SHPTR<UShaderConstantBuffer>					m_spBoneMatrixShaderConstantBuffer;
-	SHPTR<UShaderConstantBuffer>					m_spPrevBoneMatrixShaderConstantBuffer;
+	SHPTR<UShaderConstantBuffer>		m_spBoneMatrixShaderConstantBuffer;
+	SHPTR<UShaderConstantBuffer>		m_spPrevBoneMatrixShaderConstantBuffer;
 	//UpLoadResource
-	ComPtr<Dx12Resource>									m_cpUpLoadResource;
+	ComPtr<Dx12Resource>						m_cpUpLoadResource;
 
-	SHPTR<UAnimation>											m_spCurAnimation;
-	SHPTR<UAnimation>											m_spNextAnimation;
+	SHPTR<UAnimation>								m_spCurAnimation;
+	SHPTR<UAnimation>								m_spNextAnimation;
 
-	_uint																		m_iCurAnimIndex;
-	_uint																		m_iNextAnimIndex;
-	_float																		m_fSupplyLerpValue;
-	_bool																		m_isChangeAnim;
+	_uint															m_iCurAnimIndex;
+	_uint															m_iNextAnimIndex;
+	_float															m_fSupplyLerpValue;
+	_bool															m_isChangeAnim;
+
+	_float3														m_vOffsetPos;
 };
 
 END

@@ -6,6 +6,7 @@ class UBoneNode;
 class UMeshContainer;
 class UShader;
 class UCommand;
+class URootBoneNode;
 /*
 @ Date: 2024-02-04, Writer: นฺลยว๖
 @ Explain
@@ -32,6 +33,7 @@ public:
 	// Get BoneNode
 	SHPTR<UBoneNode> GetBoneNode(const _wstring& _strBoneNode);
 	const _uint& GetMeshContainerCnt() const { return m_iMeshContainerCnt; }
+	CSHPTRREF<URootBoneNode> GetRootBoneNode() const { return m_spRootBoneNode; }
 	const _uint& GetBoneNodesCnt() const { return m_iBoneNodeCnt; }
 	const _uint& GetMaterialsCnt() const { return m_iMaterialCnt; }
 
@@ -63,7 +65,7 @@ protected:
 	void SetBoneNodesCnt(const _uint _iBoneNodesCnt) { this->m_iBoneNodeCnt = _iBoneNodesCnt; }
 	void SetMaterialsCnt(const _uint _iMaterialCnt) { this->m_iMaterialCnt = _iMaterialCnt; }
 
-	HRESULT CreateBoneNode(void* _pData);
+	HRESULT CreateBoneNode(void* _pData, const _wstring& _wstrBoneNodeName = L"");
 	HRESULT CreateMeshContainers(void* _pData);
 	HRESULT CreateMaterial(void* _pData);
 	// Load To Data
@@ -74,19 +76,20 @@ protected:
 	void LoadMaterial(std::ifstream& _ifRead, UNORMAP<_uint, VECTOR<_wstring>>& _uomapMaterials);
 private:
 	// MeshContainer
-	MESHCONTAINERS		m_vecMeshContainer;
-	_uint								m_iMeshContainerCnt;
+	MESHCONTAINERS					m_vecMeshContainer;
+	_uint											m_iMeshContainerCnt;
 	// BoneNodes
-	BONENODES					m_vecBoneNodes;
-	_uint								m_iBoneNodeCnt;
+	BONENODES								m_vecBoneNodes;
+	_uint											m_iBoneNodeCnt;
+	SHPTR<URootBoneNode>		m_spRootBoneNode;
 	// Material
-	MATERIERS					m_vecMaterials;
-	_uint								m_iMaterialCnt;
+	MATERIERS								m_vecMaterials;
+	_uint											m_iMaterialCnt;
 	// Paths 
-	SHPTR<FILEGROUP>	m_spFileGroup;
-	SHPTR<FILEDATA>		m_spFileData;
+	SHPTR<FILEGROUP>				m_spFileGroup;
+	SHPTR<FILEDATA>					m_spFileData;
 
-	TYPE								m_eType;
+	TYPE											m_eType;
 };
 
 END

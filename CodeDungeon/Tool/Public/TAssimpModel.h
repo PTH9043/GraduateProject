@@ -88,7 +88,7 @@ private:
 	MATERIERS									m_vecMaterials;
 	_uint												m_iNumMaterials;
 	// PivotMatrix 
-	_float4x4										m_mPivotMatrix;
+	_float4x4										m_mScaleMatrix;
 	SHPTR<FILEGROUP>					m_spFileGroup;
 	SHPTR<FILEDATA>						m_spFileData;
 	TYPE												m_eModelType;

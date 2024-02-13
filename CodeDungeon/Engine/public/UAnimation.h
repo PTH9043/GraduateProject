@@ -16,20 +16,15 @@ public:
 	DESTRUCTOR(UAnimation)
 public:
 	const _wstring& GetAnimName() const { return m_wstrName; }
-	const _bool IsFinished() const { return m_isFinished; }
-	const _bool IsStop() const { return m_isStop; }
-	const _bool IsRepeat() const { return m_isRepeat; }
+	const _bool IsFinishAnim() const { return m_isFinishAnimation; }
 	const _bool IsSupplySituation() const { return m_isSupplySituation; }
 	const _double& GetDuration() const { return m_dDuration; }
 	const _double& GetTimeAcc() const { return m_dTimeAcc; }
-	const _float GetTotalAnimFastValue() const { return m_fTotalAnimationFastValue; }
+	const _float& GetTotalAnimFastValue() const { return m_fTotalAnimationFastValue; }
 
 	const VECTOR<ANIMFASTSECTION>& GetAnimFastSection() { return m_AnimFastSections; }
 
 	// Set Finish
-	void SetFinish(const _bool _isFinish) { this->m_isFinished = _isFinish; }
-	void SetStop(const _bool _isStop) { this->m_isStop = _isStop; }
-	void SetRepeat(const _bool _isRepeat) { this->m_isRepeat = _isRepeat; }
 	void SetSupplySituation(const _bool _isSupplySituation) { this->m_isSupplySituation = _isSupplySituation; }
 	void SetAnimTimeAcc(const _double& _dTimeAcc) { this->m_dTimeAcc = _dTimeAcc; }
 
@@ -39,7 +34,7 @@ public:
 	virtual void Free() override;
 	HRESULT NativeConstruct(CSHPTRREF<UAnimModel> _spAnimModel, const ANIMDESC& _stAnimDesc);
 	void UpdateTransformMatrices(const _double& _dTimeDelta);
-	void UpdateTransformMatricesToTimeAcc(const _double& _TimeAcc);
+	void UpdateTransformMatricesToTimeAcc( const _double& _TimeAcc);
 	void UpdateNextAnimTransformMatrices(const _double& _dTimeDelta, const _float _fSupplyValue,
 		CSHPTRREF<UAnimation> _spAnimation);
 
@@ -61,16 +56,12 @@ private:
 	_double								m_dTickPerSeconds;
 	_double								m_dDuration;
 	_double								m_dTimeAcc;
-	_bool									m_isFinished;
-	_bool									m_isStop;
-	_bool									m_isRepeat;
+	_bool									m_isFinishAnimation;
 	_bool									m_isSupplySituation;
-
 	_float									m_fSupplySituationValue;
 
 	ANIMFASTSECTIONS		m_AnimFastSections;
 	_float									m_fTotalAnimationFastValue;
-	SHPTR<UBoneNode>		m_spLastBoneNode;
 };
 
 END

@@ -93,6 +93,7 @@
     <ClInclude Include="..\public\UResource.h" />
     <ClInclude Include="..\public\UResourceLoader.h" />
     <ClInclude Include="..\public\UResourceManager.h" />
+    <ClInclude Include="..\public\URootBoneNode.h" />
     <ClInclude Include="..\public\URootSignature.h" />
     <ClInclude Include="..\public\UScene.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -183,6 +184,7 @@
     <ClCompile Include="..\private\UResource.cpp" />
     <ClCompile Include="..\private\UResourceLoader.cpp" />
     <ClCompile Include="..\private\UResourceManager.cpp" />
+    <ClCompile Include="..\private\URootBoneNode.cpp" />
     <ClCompile Include="..\private\URootSignature.cpp" />
     <ClCompile Include="..\private\UScene.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>

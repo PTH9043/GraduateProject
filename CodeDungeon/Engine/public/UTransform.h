@@ -19,8 +19,9 @@ public:
 	const _quaternion& GetRotation() const { return m_vQuaternion; }
 	const _float4x4 GetWorldMatrixTP() { TransformUpdate();  return XMMatrixTranspose(XMLoadFloat4x4(&m_mChangeWorldMatrix)); }
 	const _float4x4 GetWorldMatrixInv() { TransformUpdate();   return XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_mChangeWorldMatrix)); }
-	const _float4x4 GetWorldMatrix() const { return m_mWorldMatrix * m_mPivotMatrix; }
+	const _float4x4 GetWorldMatrix() const { return m_mWorldMatrix * m_mScaleMatrix; }
 	const _float4x4& GetChangeMatrix() { TransformUpdate();   return m_mChangeWorldMatrix; }
+	const _float4x4& GetPivotMatrix() const { return m_mScaleMatrix; }
 	// Get Parents Local Matrix
 	const _float4x4 GetParentsMatrix();
 
@@ -60,7 +61,6 @@ public:
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _stDatas) override;
 
 	void TransformUpdate();
-
 	// Move 
 	void MoveForward(const _double& _dTimeDelta, const _float& _fSpeed);
 	void MoveBack(const _double& _dTimeDelta, const _float& _fSpeed);
@@ -71,7 +71,7 @@ public:
 	void MoveBackNotY(const _double& _dTimeDelta, const _float& _fSpeed);
 	void MoveLeftNotY(const _double& _dTimeDelta, const _float& _fSpeed);
 	void MoveRightNotY(const _double& _dTimeDelta, const _float& _fSpeed);
-	// Translate To Pos
+	void MovePos(const _float3& _vPos);
 	void TranslatePos(const _float3& _vPos, const _double& _dTimeDelta, const _float& _fSpeed,
 		const _float& _fLimitDistance = 0.1f);
 	void TranslateDir(const _float3& _vDir, const _double& _dTimeDelta, const _float& _fSpeed);
@@ -88,9 +88,10 @@ public:
 	// Just Angle
 	void RotateFix(const _float3& _vAngle);
 	// Quaternion
-	void RotateFix(const _float4& _vAngle);
+	void RotateFix(const _float4& _vQuaternion);
 	void RotateTurn(const _float3& _vAxis, const _float& _fAngleSpeed, const _double& _dTimeDelta);
 	void RotateTurn(const _float3& _vAxis, const _float& _fAngle);
+	void RotateTurn(const _float4& _vQuaternion);
 	void RotateTurn(const _float3& _vAngle);
 	void LookAt(const _float3& _vTargetPos);
 	// Compute Distance
@@ -113,7 +114,7 @@ private:
 	// Needs Value 
 	_float4x4												m_mWorldMatrix{ _float4x4::Identity };
 	_float4x4												m_mChangeWorldMatrix{ _float4x4::Identity };
-	_float4x4												m_mPivotMatrix{ _float4x4::Identity };
+	_float4x4												m_mScaleMatrix{ _float4x4::Identity };
 	_quaternion											m_vQuaternion{ _float4::Zero };
 	_float3													m_vScale{ _float3::Zero };
 	// Parents Location

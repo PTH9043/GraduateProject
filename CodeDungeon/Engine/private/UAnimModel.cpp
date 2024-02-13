@@ -11,11 +11,10 @@
 #include "UTexGroup.h"
 #include "UGpuCommand.h"
 #include "UGameInstance.h"
+#include "UTransform.h"
+#include "URootBoneNode.h"
 
 namespace fs = std::filesystem;
-
-const  _wstring		UAnimModel::SECTION_FOLDEDER_NAME{ L"Section\\" };
-
 UAnimModel::UAnimModel(CSHPTRREF<UDevice> _spDevice) :
 	UModel(_spDevice, TYPE::ANIM),
 	m_vecAnimations{},
@@ -31,7 +30,8 @@ UAnimModel::UAnimModel(CSHPTRREF<UDevice> _spDevice) :
 	m_iCurAnimIndex{ 0 },
 	m_iNextAnimIndex{ 0 },
 	m_fSupplyLerpValue{ 0.f },
-	m_isChangeAnim{ false }
+	m_isChangeAnim{ false },
+	m_vOffsetPos{}
 {
 }
 
@@ -49,7 +49,8 @@ UAnimModel::UAnimModel(const UAnimModel& _rhs) :
 	m_iCurAnimIndex{ 0 },
 	m_iNextAnimIndex{ 0 },
 	m_fSupplyLerpValue{ 0.f },
-	m_isChangeAnim{ false }
+	m_isChangeAnim{ false },
+	m_vOffsetPos{}
 {
 
 }
@@ -87,8 +88,13 @@ HRESULT UAnimModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	return S_OK;
 }
 
-void UAnimModel::TickAnimation(const _double& _dDeltaTime)
+void UAnimModel::TickAnimation(const _double& _dDeltaTime, const _float3& _vOffsetPos)
 {
+	if (0 == m_spCurAnimation->GetTimeAcc())
+	{
+		m_vOffsetPos = _vOffsetPos;
+	}
+
 	if (nullptr != m_spNextAnimation)
 	{
 		m_spCurAnimation->UpdateNextAnimTransformMatrices(_dDeltaTime, m_fSupplyLerpValue,
@@ -113,14 +119,43 @@ void UAnimModel::TickAnimation(const _double& _dDeltaTime)
 	}
 }
 
-void UAnimModel::UpdateCurAnimationToTimAcc(const _double& _TimeAcc)
+void UAnimModel::TickAnimation(CSHPTRREF<UTransform> _spTransform, const _double& _dDeltaTime)
 {
-	m_spCurAnimation->UpdateTransformMatricesToTimeAcc(_TimeAcc);
+	TickAnimation(_dDeltaTime, _spTransform->GetPos());
+	ASSERT_CRASH(_spTransform && m_spCurAnimation);
+	if (false == m_spCurAnimation->IsFinishAnim())
+	{
+		_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), _spTransform->GetPivotMatrix());
+		_spTransform->MovePos(Position);
+
+		_float3 vLook = GetRootBoneNode()->GetMoveRootBoneAngle();
+		_spTransform->RotateTurn(vLook);
+	}
+	else
+	{
+		GetRootBoneNode()->ResetRootBoneInfo();
+	}
+}
+
+void UAnimModel::UpdateCurAnimationToTimAcc(CSHPTRREF<UTransform> _spTransform, const _double& _TimeAcc)
+{
+	if (0 == m_spCurAnimation->GetTimeAcc())
+	{
+		m_vOffsetPos = _spTransform->GetPos();
+	}
+
+	m_spCurAnimation->UpdateTransformMatricesToTimeAcc( _TimeAcc);
 	/* 부모로부터 자식뼈에게 누적시켜 전달한다.(CombinedTransformationMatrix) */
 	{
 		for (auto& BoneNode : GetBoneNodes())
 			BoneNode->UpdateCombinedMatrix();
 	}
+	ASSERT_CRASH(_spTransform && m_spCurAnimation);
+	_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetCurRootBonePos(), _spTransform->GetPivotMatrix());
+	_spTransform->SetPos(Position + m_vOffsetPos);
+
+	_float3 vLook = GetRootBoneNode()->GetCurRootBoneAngle();
+	_spTransform->RotateFix(vLook);
 }
 
 HRESULT UAnimModel::Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader, CSHPTRREF<UCommand> _spCommand)
@@ -168,6 +203,14 @@ void UAnimModel::ChangeAnimation(const _wstring& _wstrAnimName)
 	SettingNextAnimSituation();
 }
 
+void UAnimModel::UpdateOwnerActorPos(CSHPTRREF<UTransform> _spTransform)
+{
+	ASSERT_CRASH(_spTransform && m_spCurAnimation);
+	RETURN_CHECK(true == m_spCurAnimation->IsFinishAnim(), ;);
+	_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), _spTransform->GetPivotMatrix());
+	_spTransform->MovePos(Position);
+}
+
 HRESULT UAnimModel::CreateAnimation(const  VECTOR<ANIMDESC>& _convecAnimDesc, const _wstring& _wstrPath)
 {
 	m_vecAnimations.reserve(_convecAnimDesc.size());
@@ -203,8 +246,10 @@ void UAnimModel::LoadToData(const _wstring& _wstrPath)
 		_wstring wstrPath = _wstrPath.c_str();
 		_uint iFindIndex{ static_cast<_uint>(wstrPath.find_last_of(L"\\"))};
 		wstrPath = wstrPath.substr(0, iFindIndex);
+
+		_wstring RootBoneNodeName = tDesc.Animes[0].Channels[0].wstrBoneName;
 		// Create
-		CreateBoneNode(&tDesc);
+		CreateBoneNode(&tDesc, RootBoneNodeName);
 		CreateMeshContainers(&tDesc);
 		CreateMaterial(&tDesc);
 		CreateAnimation(tDesc.Animes, wstrPath);
@@ -329,14 +374,15 @@ void UAnimModel::SettingCurAnimSituation()
 	m_spCurAnimation = m_vecAnimations[m_iCurAnimIndex];
 	m_spCurAnimation->ResetData();
 	m_spNextAnimation = nullptr;
+	GetRootBoneNode()->ResetRootBoneInfo();
 }
 
 void UAnimModel::SettingNextAnimSituation()
 {
 	m_spNextAnimation = m_vecAnimations[m_iNextAnimIndex];
 	// Reset
-	m_spCurAnimation->SetFinish(false);
-	m_spCurAnimation->SetSupplySituation(false);
+	m_spCurAnimation->ResetData();
+	GetRootBoneNode()->ResetRootBoneInfo();
 }
 
 HRESULT UAnimModel::CreateShaderConstantBuffer()

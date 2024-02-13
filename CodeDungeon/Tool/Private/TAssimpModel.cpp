@@ -24,7 +24,7 @@ TAssimpModel::TAssimpModel(CSHPTRREF<UDevice> _spDevice) :
 	m_iNumAnimation{ 0 },
 	m_vecMaterials{},
 	m_iNumMaterials{ 0 },
-	m_mPivotMatrix{ _float4x4::Identity },
+	m_mScaleMatrix{ _float4x4::Identity },
 	m_spFileGroup{ nullptr },
 	m_spFileData{ nullptr },
 	m_eModelType{ TYPE::NONANIM },
@@ -46,7 +46,7 @@ TAssimpModel::TAssimpModel(const TAssimpModel& _rhs) :
 	m_iNumAnimation{ _rhs.m_iNumAnimation },
 	m_vecMaterials{ _rhs.m_vecMaterials },
 	m_iNumMaterials{ _rhs.m_iNumMaterials },
-	m_mPivotMatrix{ _rhs.m_mPivotMatrix },
+	m_mScaleMatrix{ _rhs.m_mScaleMatrix },
 	m_spFileGroup{ _rhs.m_spFileGroup },
 	m_spFileData{ _rhs.m_spFileData },
 	m_eModelType{ _rhs.m_eModelType },
@@ -84,7 +84,7 @@ HRESULT TAssimpModel::NativeConstruct(const TYPE& _eModelType, const _wstring& _
 	RETURN_CHECK_FAILED(NativeConstruct(), E_FAIL);
 	m_wstrTextureFolderName = _wstrTextureFolder;
 	m_eModelType = _eModelType;
-	m_mPivotMatrix = _mPivotMatrix;
+	m_mScaleMatrix = _mPivotMatrix;
 	return 	CreateModel(_wstrPath);
 }
 
@@ -95,7 +95,7 @@ HRESULT TAssimpModel::NativeConstruct(const TYPE& _eModelType, CSHPTRREF<FILEGRO
 	RETURN_CHECK(nullptr == _spFileGroup || nullptr == _spFileData, E_FAIL);
 	m_spFileGroup = _spFileGroup; m_spFileData = _spFileData;
 	m_eModelType = _eModelType;
-	m_mPivotMatrix = _mPivotMatrix;
+	m_mScaleMatrix = _mPivotMatrix;
 	return 	CreateModel(m_spFileData->wstrfilePath);
 }
 
@@ -109,7 +109,7 @@ HRESULT TAssimpModel::NativeConstruct(const TYPE& _eModelType, const PATHS& _vec
 	m_spFileData = m_spFileGroup->FindData(_wstrFileName);
 	RETURN_CHECK(nullptr == m_spFileData, E_FAIL);
 	m_eModelType = _eModelType;
-	m_mPivotMatrix = _mPivotMatrix;
+	m_mScaleMatrix = _mPivotMatrix;
 	return 	CreateModel(m_spFileData->wstrfilePath);
 }
 
@@ -122,7 +122,7 @@ HRESULT TAssimpModel::NativeConstruct(const TYPE& _eModelType, const _wstring& _
 	RETURN_CHECK(nullptr == m_spFileGroup, E_FAIL);
 	m_spFileData = m_spFileGroup->FindData(_wstrFileName);
 	RETURN_CHECK(nullptr == m_spFileData, E_FAIL);
-	m_mPivotMatrix = _mPivotMatrix;
+	m_mScaleMatrix = _mPivotMatrix;
 	return 	CreateModel(m_spFileData->wstrfilePath);
 }
 
@@ -476,7 +476,7 @@ HRESULT TAssimpModel::CreateModel(const _wstring& _wstrPath)
 
 	CreateBoneNodes(m_pAIScene->mRootNode);
 	// Create MeshContainers
-	RETURN_CHECK_FAILED(CreateMeshContainers(m_mPivotMatrix), E_FAIL);
+	RETURN_CHECK_FAILED(CreateMeshContainers(m_mScaleMatrix), E_FAIL);
 	RETURN_CHECK_FAILED(CreateMaterials(m_spFileGroup), E_FAIL);
 	RETURN_CHECK_FAILED(CreateAnimation(m_pAIScene), E_FAIL);
 

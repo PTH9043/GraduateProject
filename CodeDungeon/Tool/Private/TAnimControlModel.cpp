@@ -179,11 +179,11 @@ void TAnimControlModel::TickActive(const _double& _dTimeDelta)
 	{
 		if (false == m_isAnimationStop)
 		{
-			m_spModel->TickAnimation(_dTimeDelta);
+			m_spModel->TickAnimation(GetTransform(), _dTimeDelta);
 		}
 		else
 		{
-			m_spModel->UpdateCurAnimationToTimAcc(static_cast<_double>(m_fAnimTimeAcc));
+			m_spModel->UpdateCurAnimationToTimAcc(GetTransform(), static_cast<_double>(m_fAnimTimeAcc));
 		}
 	}
 }

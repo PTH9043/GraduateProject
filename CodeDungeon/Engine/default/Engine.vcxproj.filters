@@ -283,6 +283,9 @@
     <Filter Include="06.Component\Animator\AnimEvent\Parents">
       <UniqueIdentifier>{0609ab3e-fad7-44e5-aba8-0a27acbd5a94}</UniqueIdentifier>
     </Filter>
+    <Filter Include="07.Resource\Model\BoneNode\RootBone">
+      <UniqueIdentifier>{6e67b329-eba8-4e14-9657-3c4c6876f086}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -548,6 +551,9 @@
     </ClCompile>
     <ClCompile Include="..\private\AnimEventParents.cpp">
       <Filter>06.Component\Animator\AnimEvent\Parents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\URootBoneNode.cpp">
+      <Filter>07.Resource\Model\BoneNode\RootBone</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -844,6 +850,9 @@
     </ClInclude>
     <ClInclude Include="..\public\AnimEventParents.h">
       <Filter>06.Component\Animator\AnimEvent\Parents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\URootBoneNode.h">
+      <Filter>07.Resource\Model\BoneNode\RootBone</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
