@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="targetver.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ClientDefine.h">
+      <Filter>98.Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ClientProto.h">
+      <Filter>98.Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CProtoMaker.h">
+      <Filter>97.Proto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CClientApp.h">
+      <Filter>00.MainApp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CLogoScene.h">
+      <Filter>01.Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CMainCamera.h">
+      <Filter>03.Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CStage1Scene.h">
+      <Filter>01.Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CPlayer.h">
+      <Filter>04.Pawn\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CGun.h">
+      <Filter>04.Pawn\Object\Gun</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CPlayerGun.h">
+      <Filter>04.Pawn\Object\Gun\PlayerGun</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CTree.h">
+      <Filter>04.Pawn\Object\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CBullet.h">
+      <Filter>04.Pawn\Object\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CWater.h">
+      <Filter>04.Pawn\Water</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CAimingPoint.h">
+      <Filter>05.UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CMonster.h">
+      <Filter>04.Pawn\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CEffect.h">
+      <Filter>06.Effect</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>99.Default</Filter>
+    </Image>
+    <Image Include="Client.ico">
+      <Filter>99.Default</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="99.Default">
+      <UniqueIdentifier>{8832a679-1b29-4989-ac8c-826286dfe29f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Define">
+      <UniqueIdentifier>{118e1d0d-51c0-45a3-82da-32880bbeaa0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Proto">
+      <UniqueIdentifier>{35eced9d-aa8f-4e02-a1ff-7564e1ca5c54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.MainApp">
+      <UniqueIdentifier>{1bb9e64b-349d-4f3b-9378-d26c866278f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene">
+      <UniqueIdentifier>{d39629f9-f595-4f3e-a551-095ffdb5292f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Camera">
+      <UniqueIdentifier>{ada5be12-ba70-4bea-bcf9-8ed185836b25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Pawn">
+      <UniqueIdentifier>{9c5ca470-1b51-4bf1-bc91-a5276be530e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Pawn\Object">
+      <UniqueIdentifier>{f65c60f9-4e12-4da2-a0bb-46ffd1067e55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Pawn\Player">
+      <UniqueIdentifier>{ddf54407-8c2c-41a3-8b17-6c08e17a53cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Pawn\Monster">
+      <UniqueIdentifier>{6fc09ae2-2172-462f-ac20-ea9143fc0275}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Pawn\Object\Bullet">
+      <UniqueIdentifier>{bd357464-e738-4a6a-93ad-95944e115d46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Pawn\Object\Gun">
+      <UniqueIdentifier>{a0e78810-3fea-4d34-aa6e-3939ced04191}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Pawn\Object\Gun\PlayerGun">
+      <UniqueIdentifier>{f3171ace-c10e-49a6-90af-7fd7cabd0e8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Pawn\Object\Tree">
+      <UniqueIdentifier>{16d2f805-cae5-400b-ac6a-ae8dc72b9a72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Pawn\Water">
+      <UniqueIdentifier>{d1c43728-bb9c-4744-a95a-988458649d25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.UI">
+      <UniqueIdentifier>{39ed5874-d197-4f60-afdb-bf29882c3920}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Effect">
+      <UniqueIdentifier>{71d005a6-dae5-44db-b3e5-15933d98c083}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Client.rc">
+      <Filter>99.Default</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Client.cpp">
+      <Filter>99.Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CProtoMaker.cpp">
+      <Filter>97.Proto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CClientApp.cpp">
+      <Filter>00.MainApp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CLogoScene.cpp">
+      <Filter>01.Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CMainCamera.cpp">
+      <Filter>03.Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CStage1Scene.cpp">
+      <Filter>01.Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CPlayer.cpp">
+      <Filter>04.Pawn\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CGun.cpp">
+      <Filter>04.Pawn\Object\Gun</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CPlayerGun.cpp">
+      <Filter>04.Pawn\Object\Gun\PlayerGun</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CTree.cpp">
+      <Filter>04.Pawn\Object\Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CBullet.cpp">
+      <Filter>04.Pawn\Object\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CWater.cpp">
+      <Filter>04.Pawn\Water</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CAimingPoint.cpp">
+      <Filter>05.UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CMonster.cpp">
+      <Filter>04.Pawn\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CEffect.cpp">
+      <Filter>06.Effect</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
