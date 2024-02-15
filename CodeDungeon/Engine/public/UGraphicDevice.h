@@ -13,6 +13,7 @@ class UShaderConstantBuffer;
 class URenderTargetGroup;
 class URootSignature;
 class UTableDescriptor;
+class UComputeRootSignature;
 
 class UGraphicDevice : public UBase {
 public:
@@ -25,6 +26,7 @@ public:
 	CSHPTRREF<UGpuCommand>		GetGpuCommand() const { return m_spGpuCommand; }
 	CSHPTRREF<UTableDescriptor>	GetTableDescriptor() const { return m_spTableDescriptor; }
 	CSHPTRREF<URootSignature>	GetRootSignature() const { return m_spRootSignature; }
+	CSHPTRREF<UComputeRootSignature>	GetComputeRootSignature() const { return m_spComputeRootSignature; }
 
 	const _bool IsGamePaused() const { return m_isGamePaused; }
 	const _bool IsScreenMinimized() const { return m_isScreenMinimized; }
@@ -60,6 +62,7 @@ private:
 	SHPTR<UGpuCommand>								m_spGpuCommand;
 	SHPTR<UTableDescriptor>							m_spTableDescriptor;
 	SHPTR<URootSignature>							m_spRootSignature;
+	SHPTR<UComputeRootSignature>							m_spComputeRootSignature;
 	SHPTR<USwapChain>								m_spSwapChain;
 	// Default Rtv 
 	SHPTR< URenderTargetGroup>					m_spDefaultRenderTargetGroup;

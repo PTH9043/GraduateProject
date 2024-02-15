@@ -286,6 +286,18 @@
     <Filter Include="07.Resource\Model\BoneNode\RootBone">
       <UniqueIdentifier>{6e67b329-eba8-4e14-9657-3c4c6876f086}</UniqueIdentifier>
     </Filter>
+    <Filter Include="07.Resource\ParticleSystem">
+      <UniqueIdentifier>{e4f79b37-006b-4b31-8e44-ae802ade536a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\01.Pawn\Particle">
+      <UniqueIdentifier>{982d9e6b-71d2-4598-b604-f60e724487e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Resource\VIBuffer\Point">
+      <UniqueIdentifier>{0b1da262-21ff-4d98-aa2f-a65e96d8c7f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.ShaderFile\Common\Particle">
+      <UniqueIdentifier>{928235cc-88bf-4ff1-9c0e-69ea85e24001}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -554,6 +566,18 @@
     </ClCompile>
     <ClCompile Include="..\private\URootBoneNode.cpp">
       <Filter>07.Resource\Model\BoneNode\RootBone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UComputeRootSignature.cpp">
+      <Filter>02.DxClass\RootSignature</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UParticleSystem.cpp">
+      <Filter>07.Resource\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UParticle.cpp">
+      <Filter>05.Actor\01.Pawn\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UVIBufferPoint.cpp">
+      <Filter>07.Resource\VIBuffer\Point</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -854,6 +878,18 @@
     <ClInclude Include="..\public\URootBoneNode.h">
       <Filter>07.Resource\Model\BoneNode\RootBone</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\UComputeRootSignature.h">
+      <Filter>02.DxClass\RootSignature</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UParticleSystem.h">
+      <Filter>07.Resource\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UParticle.h">
+      <Filter>05.Actor\01.Pawn\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UVIBufferPoint.h">
+      <Filter>07.Resource\VIBuffer\Point</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Shader\ShaderGrobalFunc.hlsli">
@@ -861,6 +897,9 @@
     </None>
     <None Include="..\..\Shader\ShaderParams.hlsli">
       <Filter>98.ShaderFile\Common</Filter>
+    </None>
+    <None Include="..\..\Shader\ComputeFunc.hlsli">
+      <Filter>98.ShaderFile\Common\Particle</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -893,6 +932,12 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\Grid.hlsl">
       <Filter>98.ShaderFile\Common\NonAlpha</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\2DParticle.hlsl">
+      <Filter>98.ShaderFile\Common\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\Compute2DParticle.hlsl">
+      <Filter>98.ShaderFile\Common\Particle</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

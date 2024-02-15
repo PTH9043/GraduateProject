@@ -24,6 +24,7 @@
 
 
 #include "URootSignature.h"
+#include "UComputeRootSignature.h"
 #include "UShaderConstantBuffer.h"
 #include "UGlobalConstantBuffer.h"
 
@@ -41,7 +42,7 @@
 #include "UComputeShader.h"
 
 #include "UVIBufferRect.h"
-//#include "UVIBufferPoint.h"
+#include "UVIBufferPoint.h"
 //#include "UVIBufferTriangle.h"
 //#include "UVIBufferSphere.h"
 //#include "UVIBufferCube.h"
@@ -49,12 +50,12 @@
 #include "UVIBufferGrid.h"
 //#include "UVIBufferSkyBox.h"
 
-//#include "UParticleSystem.h"
+#include "UParticleSystem.h"
 
 //#include "URectTransform.h"
 //#include "USkyBox.h"
 //#include "UTerrain.h"
-//#include "UParticle.h"
+#include "UParticle.h"
 //#include "UCollider.h"
 //#include "UAnimatedParticle.h"
 //#include "UMirror.h"
@@ -164,6 +165,20 @@ HRESULT UGameInstance::CreateGraphicsShader(const _wstring& _wstrProtoName, cons
 		m_spGraphicDevice->GetDevice(), m_spGraphicDevice->GetRootSignature(),
 		_stShaderDesc
 	);
+	RETURN_CHECK(nullptr == pShader, E_FAIL);
+	// AddPrototype
+	return AddPrototype(_wstrProtoName, _eCloneType, pShader);
+}
+
+HRESULT UGameInstance::CreateComputeShader(const _wstring& _wstrProtoName, const CLONETYPE _eCloneType, const SHADERDESC& _stShaderDesc)
+{
+	RETURN_CHECK(_stShaderDesc.pElement != nullptr, E_FAIL);
+
+	// Shader 
+	SHPTR<UComputeShader> pShader = CreateConstructorToNative<UComputeShader>(
+		m_spGraphicDevice->GetDevice(), m_spGraphicDevice->GetComputeRootSignature(),
+		_stShaderDesc
+		);
 	RETURN_CHECK(nullptr == pShader, E_FAIL);
 	// AddPrototype
 	return AddPrototype(_wstrProtoName, _eCloneType, pShader);
@@ -785,6 +800,9 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 	// VIBuffer
 	{
 
+		AddPrototype(PROTO_RES_VIBUFFERPOINT, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferPoint>(
+			_stData.wpDevice.lock()));
+
 		AddPrototype(PROTO_RES_VIBUFFERRECT, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferRect>(
 			_stData.wpDevice.lock(), VIBUFFERTYPE::GENERIC));
 
@@ -922,12 +940,12 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 		}
 		//// Alpha
 		//{
-		//	CreateGraphicsShader(PROTO_RES_PARTICLE2DSHADER, CLONETYPE::CLONE_STATIC,
-		//		SHADERDESC(L"2DParticle", VTXPOINT_DELCARTION::Element, VTXPOINT_DELCARTION::iNumElement,
-		//			SHADERLIST{ VS_MAIN, PS_MAIN, GS_MAIN },
-		//			RENDERFORMATS{ DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_B8G8R8A8_UNORM,	DXGI_FORMAT_R16G16B16A16_FLOAT },
-		//			RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE, BLEND_TYPE::ALPHA_BLEND,
-		//			D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST));
+			CreateGraphicsShader(PROTO_RES_PARTICLE2DSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"2DParticle", VTXPOINT_DELCARTION::Element, VTXPOINT_DELCARTION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN, GS_MAIN },
+					RENDERFORMATS{ DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_B8G8R8A8_UNORM,	DXGI_FORMAT_R16G16B16A16_FLOAT },
+					RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE, BLEND_TYPE::ALPHA_BLEND,
+					D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST));
 
 		//	CreateGraphicsShader(PROTO_RES_2DANIMATEPARTICLESHADER, CLONETYPE::CLONE_STATIC,
 		//		SHADERDESC(L"2DAnimateParticle", VTXPOINT_DELCARTION::Element, VTXPOINT_DELCARTION::iNumElement,
@@ -984,18 +1002,18 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 		//}
 		}
 	//// Compute Shader 
-	//{
+	{
 	//	CreateComputeShader(PROTO_RES_COMPUTEANIMATIONSHADER, CLONETYPE::CLONE_STATIC,
 	//		SHADERDESC{ L"ComputeAnimation" });
 
-	//	CreateComputeShader(PROTO_RES_COMPUTEPARTICLE2DSHADER, CLONETYPE::CLONE_STATIC,
-	//		SHADERDESC{ L"Compute2DParticle" });
-	//}
+		CreateComputeShader(PROTO_RES_COMPUTEPARTICLE2DSHADER, CLONETYPE::CLONE_STATIC,
+			SHADERDESC{ L"Compute2DParticle" });
+	}
 
 	// Particle System 
-	//{
-	//	AddPrototype(PROTO_RES_PARTICLESYSTEM, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UParticleSystem>(_stData.wpDevice.lock()));
-	//}
+	{
+		AddPrototype(PROTO_RES_PARTICLESYSTEM, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UParticleSystem>(_stData.wpDevice.lock()));
+	}
 
 	return S_OK;
 }
@@ -1036,6 +1054,8 @@ HRESULT UGameInstance::ReadyActor(const OUTPUTDATA& _stData)
 			_stData.wpDevice.lock(), LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 #endif 
 	}
+	AddPrototype(PROTO_ACTOR_PARTICLE, CreateConstructorToNative<UParticle>(
+		_stData.wpDevice.lock(), LAYER_PARTICLE, CLONETYPE::CLONE_ONCE));
 	/*{
 		AddPrototype(PROTO_ACTOR_TERRAIN, CreateConstructorToNative<UTerrain>(
 			_stData.wpDevice.lock(), LAYER_TERRAIN, CLONETYPE::CLONE_ONCE));

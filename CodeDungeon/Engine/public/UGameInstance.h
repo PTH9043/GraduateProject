@@ -75,6 +75,8 @@ public:
 	// Create Shader
 	HRESULT CreateGraphicsShader(const _wstring& _wstrProtoName, const CLONETYPE _eCloneType,
 		const SHADERDESC& _stShaderDesc, const GRAPHICRENDEROBJECT_TYPE _eType = GRAPHICRENDEROBJECT_TYPE::COMMON);
+	HRESULT CreateComputeShader(const _wstring& _wstrProtoName, const CLONETYPE _eCloneType,
+		const SHADERDESC& _stShaderDesc);
 public:
 	void OtherFrame(const _double& _dTimeDelta, const WPARAM& _wParam);
 	void AwakeTick();

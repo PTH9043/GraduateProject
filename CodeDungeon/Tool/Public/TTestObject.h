@@ -6,7 +6,7 @@ BEGIN(Engine)
 
 class UVIBuffer;
 class UShaderConstantBuffer;
-
+class UParticle;
 END
 
 BEGIN(Tool)
@@ -36,6 +36,7 @@ private:
 	static constexpr _uint							RECTCOLOR_SIZE{ sizeof(RECTCOLOR) };
 	// Cube
 	SHPTR< UVIBuffer>								m_spVIBufferGrid;
+	SHPTR<UParticle>		m_spParticle;
 	SHPTR< UShaderConstantBuffer>	m_spRectColorBuffer;
 	RECTCOLOR											m_RectColor;
 };
