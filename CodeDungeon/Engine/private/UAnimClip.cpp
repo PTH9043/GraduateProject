@@ -56,12 +56,26 @@ void UAnimClip::RemoveEvent(CSHPTRREF<UAnimEvent> _spAnimEvent)
 	iter->second.erase(std::find(iter->second.begin(), iter->second.end(), _spAnimEvent));
 }
 
-void UAnimClip::Save(CSHPTRREF<UAnimModel> _spAnimModel, std::ofstream& _Save)
+void UAnimClip::Save(CSHPTRREF<UAnimator> _spAnimator, std::ofstream& _Save)
 {
-
+	ASSERT_CRASH(_spAnimator);
+	for (auto& iter : m_AnimEventContainer)
+	{
+		for (auto& Event : iter.second)
+		{
+			Event->SaveEvent(_Save);
+		}
+	}
 }
 
-void UAnimClip::Load(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _Read)
+void UAnimClip::Load(CSHPTRREF<UAnimator> _spAnimator, std::ifstream& _Read)
 {
-
+	ASSERT_CRASH(_spAnimator);
+	for (auto& iter : m_AnimEventContainer)
+	{
+		for (auto& Event : iter.second)
+		{
+			Event->LoadEvent(_Read);
+		}
+	}
 }

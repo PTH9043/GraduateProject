@@ -234,6 +234,8 @@ void UAnimModel::LoadToData(const _wstring& _wstrPath)
 	RETURN_CHECK(!read, ;);
 	ANIMMODELDESC tDesc;
 	{
+		// name set 
+		NameSetting(_wstrPath);
 		// MESH
 		LoadAnimMeshData(read, tDesc.Meshes);
 		// BoneNode

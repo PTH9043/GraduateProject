@@ -28,8 +28,8 @@ public:
 	void InsertEvent(ANIMEVENTTYPE _AnimEventType, CSHPTRREF<UAnimEvent> _spAnimEvent);
 	void RemoveEvent(CSHPTRREF<UAnimEvent> _spAnimEvent);
 
-	void Save(CSHPTRREF<UAnimModel> _spAnimModel, std::ofstream& _Save);
-	void Load(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _Read);
+	void Save(CSHPTRREF<UAnimator> _spAnimator, std::ofstream& _Save);
+	void Load(CSHPTRREF<UAnimator> _spAnimator, std::ifstream& _Read);
 private:
 	ANIMEVENTCONTAINER		m_AnimEventContainer;
 	SHPTR<UAnimation>			m_spAnimation;

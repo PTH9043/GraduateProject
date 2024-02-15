@@ -41,6 +41,7 @@ public:
 	CSHPTRREF<FILEDATA> GetFileData() const { return m_spFileData; }
 
 	const TYPE& GetType() const { return m_eType; }
+	const _wstring& GetModelName() const { return m_wstrModelName; }
 public:
 	CLONE_MACRO(UModel, "UModel::Clone To Failed")
 	virtual void Free() override;
@@ -70,10 +71,10 @@ protected:
 	HRESULT CreateMaterial(void* _pData);
 	// Load To Data
 	virtual void LoadToData(const _wstring& _wstrPath);
-
 	void LoadMeshData(std::ifstream& _ifRead, VECTOR<MESHDESC>& _vecMeshes);
 	void LoadBoneData(std::ifstream& _ifRead, VECTOR<BONENODEDESC>& _vecBones);
 	void LoadMaterial(std::ifstream& _ifRead, UNORMAP<_uint, VECTOR<_wstring>>& _uomapMaterials);
+	void NameSetting(const _wstring& _wstrPath);
 private:
 	// MeshContainer
 	MESHCONTAINERS					m_vecMeshContainer;
@@ -90,6 +91,7 @@ private:
 	SHPTR<FILEDATA>					m_spFileData;
 
 	TYPE											m_eType;
+	_wstring										m_wstrModelName;
 };
 
 END
