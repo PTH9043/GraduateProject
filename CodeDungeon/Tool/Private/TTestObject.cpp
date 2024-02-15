@@ -59,7 +59,6 @@ HRESULT TTestObject::NativeConstructClone(const VOIDDATAS& _vecDatas)
 		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 300;
 
 		m_spParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE,	{ &tDesc}));
-		m_spParticle->SetActive(true);
 	}
 	return S_OK;
 }
@@ -80,7 +79,7 @@ HRESULT TTestObject::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTab
 	GetTransform()->BindTransformData(GetShader());
 	GetShader()->BindCBVBuffer(m_spRectColorBuffer, &m_RectColor, RECTCOLOR_SIZE);
 	m_spVIBufferGrid->Render(GetShader(), _spCommand);
-
+	m_spParticle->SetActive(true);
 	return S_OK;
 }
 
