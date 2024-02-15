@@ -43,25 +43,24 @@ HRESULT TTestObject::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	m_spRectColorBuffer = CreateNative< UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::B3, RECTCOLOR_SIZE, 1);
 	m_RectColor.g_RectColor = { 0.f, 1.f, 0.f, 1.f };
 
-	//{
-	//	UParticle::PARTICLEDESC tDesc;
-	//	tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEPARTICLE2DSHADER;
-	//	tDesc.wstrParticleShader = PROTO_RES_PARTICLE2DSHADER;
-	//	tDesc.wstrParticleTextureName = L"Flare_Sparks_TexS";
+	{
+		UParticle::PARTICLEDESC tDesc;
+		tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEPARTICLE2DSHADER;
+		tDesc.wstrParticleShader = PROTO_RES_PARTICLE2DSHADER;
+		tDesc.wstrParticleTextureName = L"Flare_Sparks_TexS";
 
-	//	tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 2.f;
-	//	tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
-	//	tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 5.f;
-	//	tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 10.f;
-	//	tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 5000.f;
-	//	tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 2000.f;
-	//	tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 10.f;
-	//	tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 300;
+		tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 2.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 5.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 10.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 5000.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 2000.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 10.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 300;
 
-	//	m_spParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE,
-	//		{ &tDesc}));
-	//	//m_spParticle->SetActive(false);
-	//}
+		m_spParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE,	{ &tDesc}));
+		m_spParticle->SetActive(true);
+	}
 	return S_OK;
 }
 
@@ -81,8 +80,7 @@ HRESULT TTestObject::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTab
 	GetTransform()->BindTransformData(GetShader());
 	GetShader()->BindCBVBuffer(m_spRectColorBuffer, &m_RectColor, RECTCOLOR_SIZE);
 	m_spVIBufferGrid->Render(GetShader(), _spCommand);
-	/*m_spParticle->GetTransform()->SetPos(GetTransform()->GetPos() + _float3{ 0.f, 50.f, 0.f });
-	m_spParticle->SetActive(true);*/
+
 	return S_OK;
 }
 

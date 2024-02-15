@@ -75,7 +75,6 @@ void UParticle::LateTickActive(const _double& _dTimeDelta)
 
 HRESULT UParticle::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
-
 	__super::RenderActive(_spCommand, _spTableDescriptor);
 	m_spParticleSystem->Render();
 	BindShaderBuffer();

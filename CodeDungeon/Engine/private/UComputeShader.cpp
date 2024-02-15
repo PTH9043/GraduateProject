@@ -64,7 +64,7 @@ HRESULT	UComputeShader::BindUAVBuffer(const UAV_REGISTER _eReg, CSHPTRREF<UShade
 
 void UComputeShader::CommitLocalShaderDatas(CSHPTRREF<UCommand> _spCommand, const _uint& _iPosX, const _uint& _iPosY, const _uint& _iPosZ)
 {
-	__super::CommitLocalShaderDatas(_spCommand);
+	GetTableDescriptor()->CommitComputeTable(_spCommand);
 
 	_spCommand->GetGpuCmdList()->Dispatch(_iPosX, _iPosY, _iPosZ);
 	_spCommand->WaitForSynchronization();

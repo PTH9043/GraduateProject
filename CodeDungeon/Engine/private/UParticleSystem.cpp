@@ -59,7 +59,6 @@ HRESULT UParticleSystem::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	}
 
 	m_spUpdateParticleConstnatBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::ALLPARTICLEBUFFER, PARTICLEPARAM_SIZE);
-
 	m_spRenderParticleConstnatBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::ALLPARTICLEBUFFER, PARTICLEPARAM_SIZE);
 
 	m_spParticleStructedBuffer = CreateNative<UShaderStructedBuffer>(GetDevice(), sizeof(PARTICLE), m_iMaxParitcleCnt);
@@ -116,7 +115,7 @@ void UParticleSystem::BindShaderParams(CSHPTRREF<UShader> _spShader)
 
 void UParticleSystem::SettingComputeShader(const _wstring& _wstrProtoName)
 {
-	/*SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	m_spComputeShader = static_pointer_cast<UComputeShader>(spGameInstance->CloneResource(_wstrProtoName));
 
 	if (nullptr == m_spComputeShader)
@@ -124,7 +123,7 @@ void UParticleSystem::SettingComputeShader(const _wstring& _wstrProtoName)
 #ifdef _USE_DEBUGGING
 		assert("Get Compute Shader Failed");
 #endif 
-	}*/
+	}
 }
 
 _bool UParticleSystem::Load(const _wstring& _wstrPath)

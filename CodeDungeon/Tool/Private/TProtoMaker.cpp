@@ -21,8 +21,10 @@ HRESULT TProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance,
 	_spGameInstance->AddPrototype(PROTO_ACTOR_SHOWANIMMODELOBJECT, CreateConstructorToNative<TShowAnimModelObject>(_spDevice, LAYER_SHOWMODELL, CLONETYPE::CLONE_ONCE));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_ANIMCONTROLMODELOBJECT, CreateConstructorToNative<TAnimControlModel>(_spDevice, LAYER_SHOWMODELL, CLONETYPE::CLONE_STATIC));
 	
-	_spGameInstance->AddPrototype(PROTO_RES_PARTICLETEXTUREGROUP, CLONETYPE::CLONE_ONCE,
+	_spGameInstance->AddPrototype(PROTO_RES_PARTICLETEXTUREGROUP, CLONETYPE::CLONE_STATIC,
 		CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\Particle", true));
+
+
 
 	return S_OK;
 }
