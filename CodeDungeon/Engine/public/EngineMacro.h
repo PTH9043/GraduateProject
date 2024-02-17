@@ -119,31 +119,6 @@ virtual ~CLASS() { Free(); }
 */
 #define PURE = 0
 
-/*
-@ Date: 2024-02-03,  Writer: 박태현
-@ Explain
-- 강제로 크래쉬를 일으키는 매크로
-*/
-#define CRASH(cause) 	\
-{											\
-	int* crash = nullptr;				\
-	__analysis_assume(crash != nullptr);	\
-	*crash = 0xDEADBEEF;					\
-}
-/*
-@ Date: 2024-02-03,  Writer: 박태현
-@ Explain
-- 강제로 크래쉬를 일으키는 매크로, 조건문이 false일 때 실행
-*/
-#define ASSERT_CRASH(COND) \
-{									\
-	if (!(COND))					\
-	{								\
-		CRASH("ASSERT_CRASH");		\
-		__analysis_assume(COND);	\
-	}								\
-}
-
 
 #pragma endregion 바꿔야하는구간
 

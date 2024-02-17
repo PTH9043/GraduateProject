@@ -19,7 +19,8 @@ UModel::UModel(CSHPTRREF<UDevice> _spDevice, const TYPE& _eType) :
 	m_iMaterialCnt{ 0 },
 	m_spFileGroup{ nullptr },
 	m_spFileData{ nullptr },
-	m_eType{ _eType }
+	m_eType{ _eType },
+	m_wstrModelName{L""}
 {
 }
 
@@ -33,7 +34,8 @@ UModel::UModel(const UModel& _rhs) :
 	m_iMaterialCnt{ _rhs.m_iMaterialCnt },
 	m_spFileGroup{ _rhs.m_spFileGroup },
 	m_spFileData{ _rhs.m_spFileData },
-	m_eType{ _rhs.m_eType }
+	m_eType{ _rhs.m_eType },
+	m_wstrModelName{ L"" }
 {
 }
 
@@ -263,6 +265,7 @@ void UModel::LoadToData(const _wstring& _wstrPath)
 	ThreadMiliRelax(10);
 	MODELDESC tDesc;
 	{
+		BringModelName(_wstrPath);
 		// MESH
 		LoadMeshData(read, tDesc.Meshes);
 		// BoneNode
@@ -365,4 +368,9 @@ void UModel::LoadMaterial(std::ifstream& _ifRead, UNORMAP<_uint, VECTOR<_wstring
 			_uomapMaterials.insert(std::pair<_uint, VECTOR<_wstring>>(first, rtVec));
 		}
 	}
+}
+
+void UModel::BringModelName(const _wstring& _wstrPath)
+{
+	m_wstrModelName = _wstrPath.substr(_wstrPath.find_last_of(L"\\") + 1, _wstrPath.find_last_of(L"."));
 }

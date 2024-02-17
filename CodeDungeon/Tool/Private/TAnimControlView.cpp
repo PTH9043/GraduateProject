@@ -5,12 +5,49 @@
 #include "UMethod.h"
 #include "TAssimpModel.h"
 #include "UAnimModel.h"
+#include "UAnimation.h"
+#include "AnimEventParents.h"
+#include "AnimSectionEvents.h"
+
+const _char* TAnimControlView::KEYPRESSTAG[] = {
+	"KEY_UP", "KEY_PRESSING",	"KEY_DOWN","EMPTY"
+};
+
+const _char* TAnimControlView::KEYTAG[]{
+	"DIK_ESCAPE", "DIK_1", "DIK_2", "DIK_3", "DIK_4", "DIK_5",
+	"DIK_6", "DIK_7", "DIK_8", "DIK_9", "DIK_0", "DIK_MINUS",
+	"DIK_EQUALS", "DIK_BACK", "DIK_TAB", "DIK_Q", "DIK_W", "DIK_E",
+	"DIK_R", "DIK_T", "DIK_Y", "DIK_U", "DIK_I", "DIK_O", "DIK_P",
+	"DIK_LBRACKET", "DIK_RBRACKET", "DIK_RETURN", "DIK_LCONTROL", "DIK_A",
+	"DIK_S", "DIK_D", "DIK_F", "DIK_G", "DIK_H", "DIK_J", "DIK_K",
+	"DIK_L", "DIK_SEMICOLON", "DIK_APOSTROPHE", "DIK_GRAVE", "DIK_LSHIFT",
+	"DIK_BACKSLASH", "DIK_Z", "DIK_X", "DIK_C", "DIK_V", "DIK_B",
+	"DIK_N", "DIK_M", "DIK_COMMA", "DIK_PERIOD", "DIK_SLASH", "DIK_RSHIFT",
+	"DIK_MULTIPLY", "DIK_LMENU", "DIK_SPACE", "DIK_CAPITAL", "DIK_F1", "DIK_F2",
+	"DIK_F3", "DIK_F4", "DIK_F5", "DIK_F6", "DIK_F7", "DIK_F8", "DIK_F9",
+	"DIK_F10", "DIK_NUMLOCK", "DIK_SCROLL", "DIK_NUMPAD7", "DIK_NUMPAD8", "DIK_NUMPAD9",
+	"DIK_SUBTRACT", "DIK_NUMPAD4", "DIK_NUMPAD5", "DIK_NUMPAD6", "DIK_ADD", "DIK_NUMPAD1",
+	"DIK_NUMPAD2", "DIK_NUMPAD3", "DIK_NUMPAD0", "DIK_DECIMAL", "DIK_OEM_102", "DIK_F11",
+	"DIK_F12", "DIK_F13", "DIK_F14", "DIK_F15", "DIK_KANA", "DIK_ABNT_C1", "DIK_CONVERT",
+	"DIK_NOCONVERT", "DIK_YEN", "DIK_ABNT_C2", "DIK_NUMPADEQUALS", "DIK_PREVTRACK", "DIK_AT",
+	"DIK_COLON", "DIK_UNDERLINE", "DIK_KANJI", "DIK_STOP", "DIK_AX", "DIK_UNLABELED", "DIK_NEXTTRACK",
+	"DIK_NUMPADENTER", "DIK_RCONTROL", "DIK_MUTE", "DIK_CALCULATOR", "DIK_PLAYPAUSE", "DIK_MEDIASTOP",
+	"DIK_VOLUMEDOWN", "DIK_VOLUMEUP", "DIK_WEBHOME", "DIK_NUMPADCOMMA", "DIK_DIVIDE", "DIK_SYSRQ",
+	"DIK_RMENU", "DIK_PAUSE", "DIK_HOME", "DIK_UP", "DIK_PRIOR", "DIK_LEFT", "DIK_RIGHT", "DIK_END",
+	"DIK_DOWN", "DIK_NEXT", "DIK_INSERT", "DIK_DELETE", "DIK_LWIN", "DIK_RWIN", "DIK_APPS", "DIK_POWER",
+	"DIK_SLEEP", "DIK_WAKE", "DIK_WEBSEARCH", "DIK_WEBFAVORITES", "DIK_WEBREFRESH", "DIK_WEBSTOP",
+	"DIK_WEBFORWARD", "DIK_WEBBACK", "DIK_MYCOMPUTER", "DIK_MAIL", "DIK_MEDIASELECT", "EMPTY"
+};
+
+const _char* TAnimControlView::MOUSETAG[]{ "DIMB_L", "DIMB_R", "DIMB_WHEEL", "EMPTY" };
 
 TAnimControlView::TAnimControlView(CSHPTRREF<UDevice> _spDevice) :
     TImGuiView(_spDevice, "AnimControlView"), 
 	m_stMainDesc{},
 	m_isInitSetting{false}, 
-	m_spSelectAnimFileData{nullptr}
+	m_spSelectAnimFileData{nullptr},
+	m_iSelectAnimEvent{0},
+	m_spSelectAnim{nullptr}
 {
 }
 
@@ -24,8 +61,6 @@ HRESULT TAnimControlView::NativeConstruct()
         ImVec2{ (_float)WINDOW_WIDTH, 0.f }, ImVec2{ 500.f, (_float)WINDOW_HEIGHT });
 
 	m_stAnimModelSelectDesc = DOCKDESC("AnimModelSelect", ImGuiWindowFlags_NoFocusOnAppearing,
-		ImGuiDockNodeFlags_CentralNode);
-	m_stAnimControlDesc = DOCKDESC("AnimControlViewer", ImGuiWindowFlags_NoFocusOnAppearing,
 		ImGuiDockNodeFlags_CentralNode);
 	m_stAnimModifyDesc = DOCKDESC("AnimModifyViewer", ImGuiWindowFlags_NoFocusOnAppearing,
 		ImGuiDockNodeFlags_CentralNode);
@@ -42,10 +77,7 @@ HRESULT TAnimControlView::LoadResource()
 	{
 		// FBX에서 Convert 라는 하위 폴더를 찾는다. 
 		SHPTR<FILEGROUP> spConvert = iter.second->FindGroup(L"Convert");
-		if (nullptr == spConvert)
-		{
-			CRASH("Plz Make Convert Folder");
-		}
+		assert(nullptr != spConvert);
 		m_spSelectAnimFileFolder = spConvert;
 		for (auto& FileData : spConvert->FileDataList)
 		{
@@ -82,7 +114,6 @@ void TAnimControlView::RenderActive()
 		ImGui::DockSpace(m_stMainDesc.iDockSpaceID, ImVec2{}, m_stMainDesc.imgDockNodeFlags);
 		AnimModelSelectView();
 		AnimModifyView();
-		AnimControlView();
 	}
 	ImGui::End();
 }
@@ -95,12 +126,10 @@ void TAnimControlView::DockBuildInitSetting()
 		ImGui::DockBuilderRemoveNode(m_stMainDesc.iDockSpaceID);
 		ImGui::DockBuilderAddNode(m_stMainDesc.iDockSpaceID);
 		// Docking Build 
-	    m_stAnimModelSelectDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Up, 0.8f, NULL, &dock_main_id);
-		m_stAnimControlDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Up, 0.2f, &m_stAnimModelSelectDesc.iDockSpaceID, &dock_main_id);
-		m_stAnimModifyDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.2f, &m_stAnimControlDesc.iDockSpaceID, &dock_main_id);
+	    m_stAnimModelSelectDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Up, 0.2f, NULL, &dock_main_id);
+		m_stAnimModifyDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.8f, NULL, &dock_main_id);
 		// DockBuild
 		ImGui::DockBuilderDockWindow(m_stAnimModelSelectDesc.strName.c_str(), m_stAnimModelSelectDesc.iDockSpaceID);
-		ImGui::DockBuilderDockWindow(m_stAnimControlDesc.strName.c_str(), m_stAnimControlDesc.iDockSpaceID);
 		ImGui::DockBuilderDockWindow(m_stAnimModifyDesc.strName.c_str(), m_stAnimModifyDesc.iDockSpaceID);
 		ImGui::DockBuilderFinish(m_stMainDesc.iDockSpaceID);
 	}
@@ -131,6 +160,10 @@ void TAnimControlView::AnimModelSelectView()
 			{
 				m_spShowAnimModel = CreateConstructorNative<UAnimModel>(GetDevice(), m_spSelectAnimFileData->wstrfilePath);
 				m_spAnimControlModel->SetShowModel(m_spShowAnimModel, m_spSelectAnimFileFolder);
+				for (auto& iter : m_spShowAnimModel->GetAnimStrings())
+				{
+					m_AnimationNameTags.emplace_back(iter.first.c_str());
+				}
 			}
 		}
 		if (nullptr == m_spSelectAnimFileData)
@@ -146,16 +179,164 @@ void TAnimControlView::AnimModifyView()
 	ImGui::Begin(m_stAnimModifyDesc.strName.c_str(), GetOpenPointer(), m_stAnimModifyDesc.imgWindowFlags);
 	{
 		// select Animation
-		m_spAnimControlModel->AnimationModify();
+		m_spAnimControlModel->ShowAnimModify();
+		MakeAnimEvent();
 	}
 	ImGui::End();
 }
 
-
-void TAnimControlView::AnimControlView()
+void TAnimControlView::MakeAnimEvent()
 {
-	ImGui::Begin(m_stAnimControlDesc.strName.c_str(), GetOpenPointer(), m_stAnimControlDesc.imgWindowFlags);
+	RETURN_CHECK(nullptr == m_spShowAnimModel, ;);
+
+	static const _char* ANIMTYPETAG[]{ "EFFECT", "SOUND", "COLLIDER", "CAMERA", "OBJACTIVE", "ANIMCHANGEBETWEEN",
+		"ANIMOCCURSTIMERPASS" };
+
+	SHPTR<UAnimation> spCurAnimation = m_spShowAnimModel->GetCurrentAnimation();
+
+	if (ImGui::TreeNodeEx("MakeAnimEvent",ImGuiTreeNodeFlags_Bullet))
 	{
+		if (true == ImGui::Button("SelectAnim"))
+		{
+			m_spSelectAnim = spCurAnimation;
+		}
+
+		if (nullptr != m_spSelectAnim)
+		{
+			ImGui::Combo("AnimEvent", &m_iSelectAnimEvent, ANIMTYPETAG, 7);
+			if (true == ImGui::Button("MakeEvent"))
+			{
+				SHPTR<UAnimEvent> spAnimEvent{ nullptr };
+				switch (m_iSelectAnimEvent)
+				{
+				case ANIMEVENTTYPE::ANIMEVENT_ANIMCHANGESBETWEEN:
+					spAnimEvent = Create< UAnimChangeBetweenEvent>();
+					break;
+				case ANIMEVENTTYPE::ANIMEVENT_ANIMOCCURSTIMEPASS:
+					break;
+				case ANIMEVENTTYPE::ANIMEVENT_CAMERA:
+					break;
+				case ANIMEVENTTYPE::ANIMEVENT_COLLIDER:
+					break;
+				case ANIMEVENTTYPE::ANIMEVENT_EFFECT:
+					break;
+				case ANIMEVENTTYPE::ANIMEVENT_OBJACTIVE:
+					break;
+				case ANIMEVENTTYPE::ANIMEVENT_SOUND:
+					break;
+				}
+				spCurAnimation->InsertAnimEvent((ANIMEVENTTYPE)m_iSelectAnimEvent, spAnimEvent);
+			}
+
+			ImGuiTreeNodeFlags Flags = ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_DefaultOpen;
+			// Options
+			static ImGuiTableFlags flags = ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Sortable | ImGuiTableFlags_SortMulti
+				| ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_NoBordersInBody
+				| ImGuiTableFlags_ScrollY;
+
+			// Event Container 
+			for (auto& iter : m_spSelectAnim->GetAnimEventContainer())
+			{
+				switch (iter.first)
+				{
+				case ANIMEVENTTYPE::ANIMEVENT_ANIMCHANGESBETWEEN:
+					AnimChangesBetweenShow(m_spSelectAnim, flags, iter.second);
+					break;
+				case ANIMEVENTTYPE::ANIMEVENT_ANIMOCCURSTIMEPASS:
+					break;
+				case ANIMEVENTTYPE::ANIMEVENT_CAMERA:
+					break;
+				case ANIMEVENTTYPE::ANIMEVENT_COLLIDER:
+					break;
+				case ANIMEVENTTYPE::ANIMEVENT_EFFECT:
+					break;
+				case ANIMEVENTTYPE::ANIMEVENT_OBJACTIVE:
+					break;
+				case ANIMEVENTTYPE::ANIMEVENT_SOUND:
+					break;
+				}
+			}
+		}
+		ImGui::TreePop();
 	}
-	ImGui::End();
+}
+
+void TAnimControlView::AnimChangesBetweenShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFlags _flags,  const VECTOR<SHPTR<UAnimEvent>>& _AnimEvent)
+{
+	if (ImGui::TreeNodeEx("AnimChangesBetweenShow", ImGuiTreeNodeFlags_Bullet))
+	{
+		if (ImGui::BeginTable("AnimChangesBetween", 8, _flags, ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 20), 0.0f))
+		{
+			ImGui::TableSetupColumn("Idx");
+			ImGui::TableSetupColumn("Input");
+			ImGui::TableSetupColumn("Mouse");
+			ImGui::TableSetupColumn("Key");
+			ImGui::TableSetupColumn("StartT");
+			ImGui::TableSetupColumn("EndT");
+			ImGui::TableSetupColumn("NextAnim");
+			ImGui::TableSetupColumn("SupV");
+
+			static _int iSelectKeyPressEvent{ KEYPRESSEND - 1 };
+			static _int iSelectKeyboardEvent{ KEYBOARDEND - 1 };
+			static _int iSelectMouseEvent{ MOUSEEND - 1 };
+			static _int iSelectAnim{ 0 };
+
+			_int iIndex{ 0 };
+			_float TimeAcc = static_cast<_float>(_spAnim->GetTimeAcc());
+			for (auto& iter : _AnimEvent)
+			{
+				_string Index = _string::to_string(iIndex++);
+				static _string Idx = "%3d";
+				static _string Input = "##Input";
+				static _string Mouse = "##Mouse";
+				static _string Key = "##Key";
+				static _string StartT = "##StartT";
+				static _string EndT = "##EndT";
+				static _string NextAnim = "##NextAnim";
+				static _string SupV = "##SupV";
+
+				 ANIMEVENTSECTIONDESC* SectionDesc = static_cast<ANIMEVENTSECTIONDESC*>(iter->OutAnimEventDesc());
+
+				ImGui::TableNextColumn();
+				ImGui::Text(Idx, iIndex);
+				ImGui::TableNextColumn();
+				if (true == ImGui::Combo(Input + Index, &iSelectKeyPressEvent, KEYPRESSTAG, KEYPRESSEND))
+				{
+					SectionDesc->KeyPressType = static_cast<KEYPRESSTYPE>(iSelectKeyPressEvent);
+				}
+				ImGui::TableNextColumn();
+				if (true == ImGui::Combo(Key + Index, &iSelectKeyboardEvent, KEYTAG, KEYBOARDEND))
+				{
+					SectionDesc->ubInputKey = static_cast<_ubyte>(iSelectKeyboardEvent);
+				}
+				ImGui::TableNextColumn();
+				if (true == ImGui::Combo(Mouse + Index, &iSelectMouseEvent, MOUSETAG, MOUSEEND))
+				{
+					SectionDesc->MkEventType = static_cast<MKEVENTTYPE>(iSelectMouseEvent);
+				}
+				{
+					ImGui::TableNextColumn();
+					_float StartTime = static_cast<_float>(SectionDesc->dStartTime);
+					ImGui::SliderFloat(StartT + Index, &StartTime, 0.0f, TimeAcc);
+					SectionDesc->dStartTime = static_cast<_double>(StartTime);
+				}
+				{
+					ImGui::TableNextColumn();
+					_float EndTime = static_cast<_float>(SectionDesc->dEndTime);
+					ImGui::SliderFloat(EndT + Index, &EndTime, 0.0f, TimeAcc);
+					SectionDesc->dEndTime = static_cast<_double>(EndTime);
+				}
+				{
+					ImGui::TableNextColumn();
+					_float EndTime = static_cast<_float>(SectionDesc->dEndTime);
+					ImGui::SliderFloat(EndT + Index, &EndTime, 0.0f, TimeAcc);
+					SectionDesc->dEndTime = static_cast<_double>(EndTime);
+				}
+
+			}
+
+			ImGui::EndTable();
+		}
+		ImGui::TreePop();
+	}
 }

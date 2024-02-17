@@ -71,7 +71,7 @@ void UResourceManager::AddPipeLineState(const _wstring& _wstrName, const ComPtr<
 void UResourceManager::SettingPipeLineState(const _wstring& _wstrName, CSHPTRREF<UCommand> _spCommand)
 {
     const auto& iter = m_PipeLineContainer.find(_wstrName);
-    RETURN_CHECK(iter == m_PipeLineContainer.end(), ;);
+    assert(iter != m_PipeLineContainer.end());
     _spCommand->GetGpuCmdList()->SetPipelineState(iter->second.Get());
 }
 

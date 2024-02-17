@@ -3,6 +3,7 @@
 #include "UChannel.h"
 #include "UGameInstance.h"
 #include "UMethod.h"
+#include "AnimEventParents.h"
 
 UAnimation::UAnimation() :
 	UBase(),
@@ -71,7 +72,7 @@ HRESULT UAnimation::NativeConstruct(CSHPTRREF<UAnimModel> _spAnimModel, const AN
 	return S_OK;
 }
 
-void UAnimation::UpdateTransformMatrices(const _double& _dTimeDelta)
+void UAnimation::UpdateBoneMatrices(const _double& _dTimeDelta)
 {
 	_double dValue = m_dTickPerSeconds * _dTimeDelta;
 	for (auto& iter : m_AnimFastSections)
@@ -96,8 +97,7 @@ void UAnimation::UpdateTransformMatrices(const _double& _dTimeDelta)
 	}
 }
 
-
-void UAnimation::UpdateTransformMatricesToTimeAcc(const _double& _TimeAcc)
+void UAnimation::UpdateboneMatricesToTimeAcc(const _double& _TimeAcc)
 {
 	m_dTimeAcc = _TimeAcc;
 	for (auto& iter : m_Channels)
@@ -129,11 +129,56 @@ void UAnimation::UpdateNextAnimTransformMatrices(const _double& _dTimeDelta, con
 	}
 }
 
+void UAnimation::TickAnimEvent(UAnimModel* _pAnimModel, const _double& _TimeDelta)
+{
+	for (auto& iter : m_AnimEventContainer)
+	{
+		for (auto& Event : iter.second)
+		{
+			Event->EventCheck(_pAnimModel, _TimeDelta, m_dTimeAcc);
+		}
+	}
+}
+
 void UAnimation::ResetData()
 {
 	m_fSupplySituationValue = 0.001f;
 	m_isSupplySituation = false;
 	m_isFinishAnimation = false;
+}
+
+void UAnimation::InsertAnimEvent(ANIMEVENTTYPE _AnimEventType, CSHPTRREF<UAnimEvent> _spAnimEvent)
+{
+	assert(_AnimEventType <= ANIMEVENTTYPE::ANIMEVENT_END);
+	assert(_spAnimEvent);
+
+	const auto& FindIter = m_AnimEventContainer.find(_AnimEventType);
+	if (m_AnimEventContainer.end() == FindIter)
+	{
+		VECTOR<SHPTR<UAnimEvent>> EventVector;
+		EventVector.push_back(_spAnimEvent);
+		m_AnimEventContainer.emplace(MakePair(_AnimEventType, EventVector));
+	}
+	else
+	{
+		FindIter->second.push_back(_spAnimEvent);
+	}
+}
+
+void UAnimation::RemoveAnimEvent(CSHPTRREF<UAnimEvent> _spAnimEvent)
+{
+	assert(_spAnimEvent);
+	ANIMEVENTTYPE AnimEventType = _spAnimEvent->GetAnimEventType();
+	const auto& FindIter = m_AnimEventContainer.find(AnimEventType);
+	assert(FindIter != m_AnimEventContainer.end());
+	for (auto iter = FindIter->second.begin(); iter != FindIter->second.end(); ++iter)
+	{
+		if ((*iter) == _spAnimEvent)
+		{
+			FindIter->second.erase(iter);
+			break;
+		}
+	}
 }
 
 /*
@@ -153,6 +198,31 @@ void UAnimation::SaveAnimData(const _wstring& _wstrPath)
 	for (auto& iter : m_AnimFastSections)
 	{
 		Saves.write((_char*)&iter, sizeof(ANIMFASTSECTION));
+	}
+	// Anim Event save 
+	{
+		// Container Size Save 
+		{
+			_uint iSize = static_cast<_uint>(m_AnimEventContainer.size());
+			Saves.write((_char*)&iSize, sizeof(_uint));
+		}
+		for (auto& iter : m_AnimEventContainer)
+		{
+			// Evnet Type Save
+			{
+				Saves.write((_char*)&iter.first, sizeof(ANIMEVENTTYPE));
+			}
+			// Event Cnt Save
+			{
+				_uint EventCnt = static_cast<_uint>(iter.second.size());
+				Saves.write((_char*)&EventCnt, sizeof(_uint));
+			}
+			// Event save
+			for (auto& Event : iter.second)
+			{
+				Event->SaveEvent(Saves);
+			}
+		}
 	}
 }
 

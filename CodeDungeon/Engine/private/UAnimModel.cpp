@@ -30,8 +30,7 @@ UAnimModel::UAnimModel(CSHPTRREF<UDevice> _spDevice) :
 	m_iCurAnimIndex{ 0 },
 	m_iNextAnimIndex{ 0 },
 	m_fSupplyLerpValue{ 0.f },
-	m_isChangeAnim{ false },
-	m_vOffsetPos{}
+	m_isChangeAnim{ false }
 {
 }
 
@@ -49,8 +48,7 @@ UAnimModel::UAnimModel(const UAnimModel& _rhs) :
 	m_iCurAnimIndex{ 0 },
 	m_iNextAnimIndex{ 0 },
 	m_fSupplyLerpValue{ 0.f },
-	m_isChangeAnim{ false },
-	m_vOffsetPos{}
+	m_isChangeAnim{ false }
 {
 
 }
@@ -88,16 +86,11 @@ HRESULT UAnimModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	return S_OK;
 }
 
-void UAnimModel::TickAnimation(const _double& _dDeltaTime, const _float3& _vOffsetPos)
+void UAnimModel::TickAnimation(const _double& _dTimeDelta)
 {
-	if (0 == m_spCurAnimation->GetTimeAcc())
-	{
-		m_vOffsetPos = _vOffsetPos;
-	}
-
 	if (nullptr != m_spNextAnimation)
 	{
-		m_spCurAnimation->UpdateNextAnimTransformMatrices(_dDeltaTime, m_fSupplyLerpValue,
+		m_spCurAnimation->UpdateNextAnimTransformMatrices(_dTimeDelta, m_fSupplyLerpValue,
 			m_spNextAnimation);
 		if (false == m_spCurAnimation->IsSupplySituation())
 		{
@@ -108,7 +101,7 @@ void UAnimModel::TickAnimation(const _double& _dDeltaTime, const _float3& _vOffs
 	}
 	else
 	{
-		m_spCurAnimation->UpdateTransformMatrices(_dDeltaTime);
+		m_spCurAnimation->UpdateBoneMatrices(_dTimeDelta);
 		m_isChangeAnim = false;
 	}
 
@@ -119,10 +112,21 @@ void UAnimModel::TickAnimation(const _double& _dDeltaTime, const _float3& _vOffs
 	}
 }
 
-void UAnimModel::TickAnimation(CSHPTRREF<UTransform> _spTransform, const _double& _dDeltaTime)
+void UAnimModel::UpdateCurAnimationToTimeAcc(const _double& _dTimeAcc)
 {
-	TickAnimation(_dDeltaTime, _spTransform->GetPos());
-	ASSERT_CRASH(_spTransform && m_spCurAnimation);
+	m_spCurAnimation->UpdateboneMatricesToTimeAcc(_dTimeAcc);
+	/* 부모로부터 자식뼈에게 누적시켜 전달한다.(CombinedTransformationMatrix) */
+	{
+		for (auto& BoneNode : GetBoneNodes())
+			BoneNode->UpdateCombinedMatrix();
+	}
+}
+
+void UAnimModel::TickAnimationEvent(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta)
+{
+	assert(_spTransform && m_spCurAnimation);
+	m_spCurAnimation->TickAnimEvent(this, _dTimeDelta);
+	TickAnimation(_dTimeDelta);
 	if (false == m_spCurAnimation->IsFinishAnim())
 	{
 		_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), _spTransform->GetPivotMatrix());
@@ -137,25 +141,17 @@ void UAnimModel::TickAnimation(CSHPTRREF<UTransform> _spTransform, const _double
 	}
 }
 
-void UAnimModel::UpdateCurAnimationToTimAcc(CSHPTRREF<UTransform> _spTransform, const _double& _TimeAcc)
+void UAnimModel::UpdateCurAnimationToTimAccEvent(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta, const _double& _TimeAcc)
 {
-	if (0 == m_spCurAnimation->GetTimeAcc())
-	{
-		m_vOffsetPos = _spTransform->GetPos();
-	}
+	assert(_spTransform && m_spCurAnimation);
+	m_spCurAnimation->TickAnimEvent(this, _dTimeDelta);
+	UpdateCurAnimationToTimeAcc(_TimeAcc);
 
-	m_spCurAnimation->UpdateTransformMatricesToTimeAcc( _TimeAcc);
-	/* 부모로부터 자식뼈에게 누적시켜 전달한다.(CombinedTransformationMatrix) */
-	{
-		for (auto& BoneNode : GetBoneNodes())
-			BoneNode->UpdateCombinedMatrix();
-	}
-	ASSERT_CRASH(_spTransform && m_spCurAnimation);
-	_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetCurRootBonePos(), _spTransform->GetPivotMatrix());
-	_spTransform->SetPos(Position + m_vOffsetPos);
+	_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), _spTransform->GetPivotMatrix());
+	_spTransform->MovePos(Position);
 
-	_float3 vLook = GetRootBoneNode()->GetCurRootBoneAngle();
-	_spTransform->RotateFix(vLook);
+	_float3 vLook = GetRootBoneNode()->GetMoveRootBoneAngle();
+	_spTransform->RotateTurn(vLook);
 }
 
 HRESULT UAnimModel::Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader, CSHPTRREF<UCommand> _spCommand)
@@ -205,7 +201,7 @@ void UAnimModel::ChangeAnimation(const _wstring& _wstrAnimName)
 
 void UAnimModel::UpdateOwnerActorPos(CSHPTRREF<UTransform> _spTransform)
 {
-	ASSERT_CRASH(_spTransform && m_spCurAnimation);
+	assert(_spTransform && m_spCurAnimation);
 	RETURN_CHECK(true == m_spCurAnimation->IsFinishAnim(), ;);
 	_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), _spTransform->GetPivotMatrix());
 	_spTransform->MovePos(Position);
@@ -234,6 +230,7 @@ void UAnimModel::LoadToData(const _wstring& _wstrPath)
 	RETURN_CHECK(!read, ;);
 	ANIMMODELDESC tDesc;
 	{
+		BringModelName(_wstrPath);
 		// MESH
 		LoadAnimMeshData(read, tDesc.Meshes);
 		// BoneNode

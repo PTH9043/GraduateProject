@@ -39,11 +39,14 @@ public:
 	virtual HRESULT NativeConstruct() override;
 	using UModel::NativeConstruct;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;
-	// 애니메이션을 Tick하는 함수
-	void TickAnimation(const _double& _dDeltaTime, const _float3& _vOffsetPos = {});
-	// 애니메이션을 Tick하면서 실제 RootBone의 위치 정보를 가져오는 함수
-	void TickAnimation(CSHPTRREF<UTransform> _spTransform, const _double& _dDeltaTime);
-	void UpdateCurAnimationToTimAcc(CSHPTRREF<UTransform> _spTransform, const _double& _TimeAcc);
+	// 애니메이션을 timedelta의 흐름에 따라서 제어하는 함수 (TimeDelta는 현재 게임에서 흐르는 시간)
+	void TickAnimation(const _double& _dTimeDelta);
+	// 애니메이션을 timeAcc에 따라서 제어하는 함수 (TimAcc는 애니메이션 제어도)
+	void UpdateCurAnimationToTimeAcc(const _double& _dTimeAcc);
+	// 애니메이션을 Tick하면서 Event도 Tick하는 함수
+	void TickAnimationEvent(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta);
+	// 현재 애니메이션을 TimAcc 값에 따라서 제어하는 함수 Evnet도 TimeAcc에 따라 제어한다. 
+	void UpdateCurAnimationToTimAccEvent(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta, const _double& _TimeAcc);
 	// 애니메이션을 렌더하는 함수
 	virtual HRESULT Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader, CSHPTRREF<UCommand> _spCommand) override;
 	// Set Animation
@@ -86,8 +89,6 @@ private:
 	_uint															m_iNextAnimIndex;
 	_float															m_fSupplyLerpValue;
 	_bool															m_isChangeAnim;
-
-	_float3														m_vOffsetPos;
 };
 
 END

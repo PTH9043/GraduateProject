@@ -620,9 +620,13 @@ namespace Engine {
 	@ Explain
 	-  애니메이션이 다음으로 넘어가기 위한 구조체
 	*/
-	struct ANIMCHANGEBETWEENEVENTDESC : public ANIMOTHEREVENTDESC {
-		_wstring		wstrNextAnimName;
+	struct ANIMCHANGEDESC : public ANIMOTHEREVENTDESC {
+		_int				iNextAnimIndex;
+		_float			fSupplyAnimValue;
 
+		ANIMCHANGEDESC() : iNextAnimIndex{ 0}, fSupplyAnimValue{0.f}{}
+		ANIMCHANGEDESC(const _int _NextAnimIndex, const _float& _SupplyAnimValue) : 
+			iNextAnimIndex{ _NextAnimIndex }, fSupplyAnimValue{ _SupplyAnimValue } {}
 	};
 
 #pragma endregion ANIMEVENTTYPE

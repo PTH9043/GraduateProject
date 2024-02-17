@@ -56,7 +56,7 @@
 //#include "USkyBox.h"
 //#include "UTerrain.h"
 #include "UParticle.h"
-//#include "UCollider.h"
+#include "UCollider.h"
 //#include "UAnimatedParticle.h"
 //#include "UMirror.h"
 //#include "UScreenRenderObj.h"
@@ -88,7 +88,6 @@ UGameInstance::UGameInstance() :
 	m_spRenderer{ nullptr }
 	//m_spGraphicRenderObject{ nullptr }
 {
-
 }
 
 UGameInstance::~UGameInstance()
@@ -1034,11 +1033,11 @@ HRESULT UGameInstance::ReadyComp(const OUTPUTDATA& _stData)
 	//	// Add Rect Transform
 	//	AddPrototype(PROTO_COMP_RECTTRANSFORM, CreateConstructorToNativeNotMsg<URectTransform>(_stData.wpDevice.lock()));
 	//}
-	//{
-	//	AddPrototype(PROTO_COMP_SPHERECOLLIDER, CreateConstructorToNativeNotMsg<UCollider>(_stData.wpDevice.lock(), UCollider::TYPE_SPHERE));
-	//	AddPrototype(PROTO_COMP_ABBCOLLIDER, CreateConstructorToNativeNotMsg<UCollider>(_stData.wpDevice.lock(), UCollider::TYPE_AABB));
-	//	AddPrototype(PROTO_COMP_OBBCOLLIDER, CreateConstructorToNativeNotMsg<UCollider>(_stData.wpDevice.lock(), UCollider::TYPE_OBB));
-	//}
+	{
+		AddPrototype(PROTO_COMP_SPHERECOLLIDER, CreateConstructorToNativeNotMsg<UCollider>(_stData.wpDevice.lock(), UCollider::TYPE_SPHERE));
+		AddPrototype(PROTO_COMP_ABBCOLLIDER, CreateConstructorToNativeNotMsg<UCollider>(_stData.wpDevice.lock(), UCollider::TYPE_AABB));
+		AddPrototype(PROTO_COMP_OBBCOLLIDER, CreateConstructorToNativeNotMsg<UCollider>(_stData.wpDevice.lock(), UCollider::TYPE_OBB));
+	}
 	return S_OK;
 }
 

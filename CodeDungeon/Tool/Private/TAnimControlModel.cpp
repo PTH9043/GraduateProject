@@ -9,14 +9,15 @@
 TAnimControlModel::TAnimControlModel(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer,
 	const CLONETYPE& _eCloneType) : 
 	UPawn(_spDevice, _wstrLayer, _eCloneType), m_spModel{nullptr}, m_spModelFolder{nullptr}, m_spCurAnimation{nullptr},
-	m_ModifyAnimFastSestion{},m_ModifyAnimClipSection{}, 
-	m_isAnimationStop{false}, m_fAnimTimeAcc{0.f}, m_fTotalAnimFastvalue{1.f}
+	m_isAnimationStop{false}, m_fAnimTimeAcc{0.f}, m_fTotalAnimFastvalue{1.f},
+	m_isAnimEventActive{false}
 {
 }
 
 TAnimControlModel::TAnimControlModel(const TAnimControlModel& _rhs) : UPawn(_rhs),
-m_spModel{ nullptr }, m_spModelFolder{ nullptr }, m_spCurAnimation{ nullptr }, m_ModifyAnimFastSestion{}, m_ModifyAnimClipSection{},
-m_isAnimationStop{ false }, m_fAnimTimeAcc{ 0.f }, m_fTotalAnimFastvalue{ 1.f }
+m_spModel{ nullptr }, m_spModelFolder{ nullptr }, m_spCurAnimation{ nullptr }, 
+m_isAnimationStop{ false }, m_fAnimTimeAcc{ 0.f }, m_fTotalAnimFastvalue{ 1.f },
+m_isAnimEventActive{ false }
 {
 }
 
@@ -52,7 +53,7 @@ void TAnimControlModel::SetShowModel(CSHPTRREF<UAnimModel> _spModel, CSHPTRREF<F
 	m_isAnimationStop = false;
 }
 
-void TAnimControlModel::AnimationModify()
+void TAnimControlModel::ShowAnimModify()
 {
 	SelectAnimation();
 	ModifyAnimation();
@@ -91,6 +92,7 @@ void TAnimControlModel::ModifyAnimation()
 		// Button And Slider
 		{
 			m_fAnimTimeAcc = static_cast<_float>(m_spCurAnimation->GetTimeAcc());
+			ImGui::Checkbox("AnimEventActive", &m_isAnimEventActive);
 			ImGui::SliderFloat("TotalFastValue", &m_fTotalAnimFastvalue, 0, 100);
 			isClicked = ImGui::SliderFloat("DeltaTime", &m_fAnimTimeAcc, 0.f, AnimDuration);
 			if (true == isClicked) {
@@ -106,11 +108,11 @@ void TAnimControlModel::ModifyAnimation()
 				m_isAnimationStop = true;
 			}
 		}
-		if (ImGui::TreeNodeEx("ModifyAnimation", ImGuiTreeNodeFlags_DefaultOpen))
+		if (ImGui::TreeNodeEx("ModifyAnimation", ImGuiTreeNodeFlags_Bullet))
 		{
 			// Fast Section Node
 			{
-				if (ImGui::TreeNodeEx("FastSectionNode", ImGuiTreeNodeFlags_DefaultOpen))
+				if (ImGui::TreeNodeEx("FastSectionNode", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Bullet))
 				{
 					if (ImGui::Button("MakeFastSection")) {
 						m_AnimFastSections.push_back({});
@@ -133,11 +135,11 @@ void TAnimControlModel::ModifyAnimation()
 						m_spCurAnimation->SaveAnimDataPathIsFolder(m_spModelFolder->wstrPath);
 					}
 					// Options
-					static ImGuiTableFlags flags = ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Sortable | ImGuiTableFlags_SortMulti
+					static ImGuiTableFlags flags = ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Sortable | ImGuiTableFlags_SortMulti
 						| ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_NoBordersInBody
-						| ImGuiTableFlags_ScrollY;
+						| ImGuiTableFlags_ScrollY ;
 
-					if (ImGui::BeginTable("FastSection", 3, flags, ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 10), 0.0f))
+					if (ImGui::BeginTable("FastSection", 3, flags, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 10), 0.0f))
 					{
 						ImGui::TableSetupColumn("StartSpot");
 						ImGui::TableSetupColumn("EndSpot");
@@ -146,9 +148,9 @@ void TAnimControlModel::ModifyAnimation()
 						_int iIndex{ 0 };
 						for (auto& iter : m_AnimFastSections)
 						{
-							static _string Start = "Start";
-							static _string End = "End";
-							static _string Fast = "Fast";
+							static _string Start = "##S";
+							static _string End = "##E";
+							static _string Fast = "##F";
 							_string Index = _string::to_string(iIndex++);
 
 							ImGui::TableNextColumn();
@@ -177,13 +179,27 @@ void TAnimControlModel::TickActive(const _double& _dTimeDelta)
 {
 	if (nullptr != m_spModel)
 	{
-		if (false == m_isAnimationStop)
+		if (false == m_isAnimEventActive)
 		{
-			m_spModel->TickAnimation(GetTransform(), _dTimeDelta);
+			if (false == m_isAnimationStop)
+			{
+				m_spModel->TickAnimation(_dTimeDelta);
+			}
+			else
+			{
+				m_spModel->UpdateCurAnimationToTimeAcc(static_cast<_double>(m_fAnimTimeAcc));
+			}
 		}
 		else
 		{
-			m_spModel->UpdateCurAnimationToTimAcc(GetTransform(), static_cast<_double>(m_fAnimTimeAcc));
+			if (false == m_isAnimationStop)
+			{
+				m_spModel->TickAnimationEvent(GetTransform(), _dTimeDelta);
+			}
+			else
+			{
+				m_spModel->UpdateCurAnimationToTimAccEvent(GetTransform(), _dTimeDelta, static_cast<_double>(m_fAnimTimeAcc));
+			}
 		}
 	}
 }

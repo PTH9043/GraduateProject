@@ -49,13 +49,13 @@ void UNetworkBaseController::ServerTick()
 
 
 	if (FALSE == ret) {
-		ASSERT_CRASH("Failed Connect");
+		assert("Failed Connect");
 		if (ex_over->GetCompType() < OP_SEND_END)
 			Make::xdelete(ex_over);
 	}
 
 	if ((0 == num_bytes) && ((ex_over->GetCompType() == OP_TCP_RECV) || (ex_over->GetCompType() == OP_TCP_SEND))) {
-		ASSERT_CRASH("Failed Connect");
+		assert("Failed Connect");
 		if (ex_over->GetCompType() < OP_SEND_END)
 			Make::xdelete(ex_over);
 	}

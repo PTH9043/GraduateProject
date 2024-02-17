@@ -18,7 +18,7 @@ public:
 	const ANIMEVENTTYPE GetAnimEventType() const { return m_AnimEventType; }
 	const ANIMEVENTCATEGORY GetAnimEventCategory() const { return m_AnimEventCategory; }
 public:
-	virtual _bool EventCheck(CSHPTRREF<UAnimator> _spAnimator, const _double& _dTimeDelta, const _double& _dTimeAcc) PURE;
+	virtual _bool EventCheck(UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc) PURE;
 	// AnimEventDesc를 상속받는 구조체를 리턴하는 함수
 	virtual ANIMEVENTDESC* const OutAnimEventDesc() PURE;
 	// AnimEvent를 상속받는 구조체의 값을 변경하기 위한 함수
@@ -32,7 +32,7 @@ public:
 	virtual void LoadEvent(std::ifstream& _load) PURE;
 protected:
 	// Event 상황일 때를 정의
-	virtual void EventSituation(CSHPTRREF<UAnimator> _spAnimator, const _double& _dTimeDelta) PURE;
+	virtual void EventSituation(UAnimModel* _pAnimModel, const _double& _dTimeDelta) PURE;
 private:
 	virtual void Free() PURE;
 private:
@@ -57,12 +57,12 @@ protected:
 	UAnimSectionEvent(const ANIMEVENTSECTIONDESC& _AnimEventDesc, ANIMEVENTTYPE _AnimEventType);
 	DESTRUCTOR(UAnimSectionEvent)
 public:
-	virtual _bool EventCheck(CSHPTRREF<UAnimator> _spAnimator, const _double& _dTimeDelta, const _double& _dTimeAcc) override;
+	virtual _bool EventCheck(UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc) override;
 	virtual ANIMEVENTDESC* const OutAnimEventDesc() override { return &m_AnimSectionDesc; }
 	virtual void ChangeAnimEventDesc(ANIMEVENTDESC* _AnimEventDesc) override;
 protected:
 	// Event 상황일 때를 정의
-	virtual void EventSituation(CSHPTRREF<UAnimator> _spAnimator, const _double& _dTimeDelta) PURE;
+	virtual void EventSituation(UAnimModel* _pAnimModel, const _double& _dTimeDelta) PURE;
 	virtual void SaveEvent( std::ofstream& _save) PURE;
 	virtual void LoadEvent( std::ifstream& _load) PURE;
 private:
@@ -88,12 +88,12 @@ protected:
 	UAnimOccurEvent(const ANIMOCURRESDESC& _AnimEventDesc,  ANIMEVENTTYPE _AnimEvent);
 	DESTRUCTOR(UAnimOccurEvent)
 public:
-	virtual _bool EventCheck(CSHPTRREF<UAnimator> _spAnimator, const _double& _dTimeDelta, const _double& _dTimeAcc) override;
+	virtual _bool EventCheck(UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc) override;
 	virtual ANIMEVENTDESC* const OutAnimEventDesc() override { return &m_AnimOccurDesc; }
 	virtual void ChangeAnimEventDesc(ANIMEVENTDESC* _AnimEventDesc) override;
 protected:
 	// Event 상황일 때를 정의
-	virtual void EventSituation(CSHPTRREF<UAnimator> _spAnimator, const _double& _dTimeDelta) PURE;
+	virtual void EventSituation(UAnimModel* _pAnimModel, const _double& _dTimeDelta) PURE;
 	virtual void SaveEvent(std::ofstream& _save) PURE;
 	virtual void LoadEvent(std::ifstream& _load) PURE;
 private:

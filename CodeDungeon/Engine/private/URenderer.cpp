@@ -106,9 +106,10 @@ HRESULT URenderer::NativeConstructClone(const VOIDDATAS& _vectDatas)
 
 HRESULT URenderer::AddRenderGroup(const RENDERID _eID, CSHPTRREF<UShader> _spShader, CSHPTRREF<UPawn> _spPawn)
 {
-    RETURN_CHECK(nullptr == _spPawn, E_FAIL);
-
+    assert(_spPawn && _spShader);
+    // 쉐이더 이름 있는지 찾고
     const auto& findIter = m_arrActiveDrawRenderList[_eID].find(_spShader->GetShaderDesc().wstrShaderName);
+    // 찾아서 저 쉐이더 이름이 없으면
     if (findIter == m_arrActiveDrawRenderList[_eID].end())
     {
         LIST<SHPTR<UPawn>> PawnList;
@@ -134,6 +135,9 @@ HRESULT URenderer::AddDebugRenderGroup(const DEBUGRENDERID _eID, CSHPTRREF<UShad
         LIST<SHPTR<UPawn>> PawnList;
         PawnList.push_back(_spPawn);
         m_arrDrawDebugRenderList[_eID].emplace(std::pair<_wstring, LIST<SHPTR<UPawn>>>(_spShader->GetShaderDesc().wstrShaderName, PawnList));
+        // 쉐이더 이름별로 
+        // Pawn List 
+        // 
     }
     else
     {
@@ -447,7 +451,9 @@ SHPTR<UShader> URenderer::FindShader(const _wstring& _wstrProto)
 void URenderer::RenderObject(const _wstring& _wstrShaderName, PAWNLIST& _PawnList)
 {
     SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+    // Pipelinestate setting
     spGameInstance->SettingPipeLineState(_wstrShaderName, m_spCastingCommand);
+    // Shadr 필요한 Pawn끼리 list 쭉 그려
     for (auto& iter : _PawnList)
     {
         iter->Render(m_spCastingCommand, m_spGraphicDevice->GetTableDescriptor());
