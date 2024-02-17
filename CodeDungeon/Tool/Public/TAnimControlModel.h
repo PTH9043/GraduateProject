@@ -39,7 +39,7 @@ public:
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;
 
 	void SetShowModel(CSHPTRREF<UAnimModel> _spModel, CSHPTRREF<FILEGROUP> _spFileFolder);
-	void AnimationModify();
+	void ShowAnimModify();
 protected:
 	void SelectAnimation();
 	void ModifyAnimation();
@@ -53,13 +53,13 @@ private:
 	SHPTR<FILEGROUP>						m_spModelFolder;
 	SHPTR<UAnimation>						m_spCurAnimation;
 	ANIMMATIONCLIPS							m_AnimationClips;
-	ANIMFASTSECTION							m_ModifyAnimFastSestion;
-	ANIMCLIPSECTION							m_ModifyAnimClipSection;
 
 	VECTOR<ANIMFASTSECTION>		m_AnimFastSections;
 	_bool													m_isAnimationStop;
 	_float													m_fAnimTimeAcc;
 	_float													m_fTotalAnimFastvalue;
+
+	_bool													m_isAnimEventActive;
 };
 
 END

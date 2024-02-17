@@ -4,12 +4,16 @@
 BEGIN(Engine)
 class UAnimModel;
 class UChannel;
+class UAnimEvent;
 /*
-@ Date: 2024-02-04, Writer: 박태현
+@ Date: 2024-02-17, Writer: 박태현
 @ Explain
 - Animation를 담는 클래스 Channel들의 VECTOR 컨테이너를 들고 있다. 
 */
 class   UAnimation : public UBase{
+	using CHANNELS = VECTOR<SHPTR<UChannel>>;
+	using ANIMFASTSECTIONS = VECTOR<ANIMFASTSECTION>;
+	using ANIMEVENTCONTAINER = UNORMAP<ANIMEVENTTYPE, VECTOR<SHPTR<UAnimEvent>>>;
 public:
 	UAnimation();
 	UAnimation(const UAnimation& _rhs);
@@ -21,47 +25,52 @@ public:
 	const _double& GetDuration() const { return m_dDuration; }
 	const _double& GetTimeAcc() const { return m_dTimeAcc; }
 	const _float& GetTotalAnimFastValue() const { return m_fTotalAnimationFastValue; }
-
-	const VECTOR<ANIMFASTSECTION>& GetAnimFastSection() { return m_AnimFastSections; }
-
+	const VECTOR<ANIMFASTSECTION>& GetAnimFastSection() const { return m_AnimFastSections; }
+	const ANIMEVENTCONTAINER& GetAnimEventContainer() const { return m_AnimEventContainer; }
 	// Set Finish
 	void SetSupplySituation(const _bool _isSupplySituation) { this->m_isSupplySituation = _isSupplySituation; }
 	void SetAnimTimeAcc(const _double& _dTimeAcc) { this->m_dTimeAcc = _dTimeAcc; }
-
 	void UpdateAnimFastSections(const _float _fTotalAnimFastValue, const VECTOR<ANIMFASTSECTION>& _AnimFastSection);
 public:
 	SHPTR<UAnimation> Clone(CSHPTRREF<UAnimModel> _spAnimModel);
 	virtual void Free() override;
 	HRESULT NativeConstruct(CSHPTRREF<UAnimModel> _spAnimModel, const ANIMDESC& _stAnimDesc);
-	void UpdateTransformMatrices(const _double& _dTimeDelta);
-	void UpdateTransformMatricesToTimeAcc( const _double& _TimeAcc);
-	void UpdateNextAnimTransformMatrices(const _double& _dTimeDelta, const _float _fSupplyValue,
-		CSHPTRREF<UAnimation> _spAnimation);
-
+	// 애니메이션과 연결된 뼈 정보들을 업데이트
+	void UpdateBoneMatrices(const _double& _dTimeDelta);
+	// TimeAcc로 애니메이션과 연결된 뼈 정보들을 업데이트
+	void UpdateboneMatricesToTimeAcc( const _double& _TimeAcc);
+	// 다음 애니메이션으로 변경
+	void UpdateNextAnimTransformMatrices(const _double& _dTimeDelta, const _float _fSupplyValue, CSHPTRREF<UAnimation> _spAnimation);
+	// Animation Event Tick 
+	void TickAnimEvent(UAnimModel* _pAnimModel, const _double& _TimeDelta);
 	void ResetData();
+	// 애니메이션 이벤트를 집어넣는 함수
+	void InsertAnimEvent(ANIMEVENTTYPE _AnimEventType, CSHPTRREF<UAnimEvent> _spAnimEvent);
+	// 애니메이션 이벤트를 제거하는 함수
+	void RemoveAnimEvent(CSHPTRREF<UAnimEvent> _spAnimEvent);
 	// Save Sections
 	void SaveAnimData(const _wstring& _wstrPath);
 	void SaveAnimDataPathIsFolder(const _wstring& _wstrPath);
 	void LoadAnimData(const _wstring& _wstrPath);
 	void LoadAnimDataPathIsFolder(const _wstring& _wstrPath);
 private:
-	using CHANNELS = VECTOR<SHPTR<UChannel>>;
-	using ANIMFASTSECTIONS = VECTOR<ANIMFASTSECTION>;
 
 	static constexpr _float	MAX_SUPPLY_VALUE{1.f};
 
-	CHANNELS						m_Channels;
-	_wstring								m_wstrName;
-	_uint									m_iNumChannels;
-	_double								m_dTickPerSeconds;
-	_double								m_dDuration;
-	_double								m_dTimeAcc;
-	_bool									m_isFinishAnimation;
-	_bool									m_isSupplySituation;
-	_float									m_fSupplySituationValue;
+	CHANNELS							m_Channels;
+	_wstring									m_wstrName;
+	_uint										m_iNumChannels;
+	_double									m_dTickPerSeconds;
+	_double									m_dDuration;
+	_double									m_dTimeAcc;
+	_bool										m_isFinishAnimation;
+	_bool										m_isSupplySituation;
+	_float										m_fSupplySituationValue;
 
-	ANIMFASTSECTIONS		m_AnimFastSections;
-	_float									m_fTotalAnimationFastValue;
+	ANIMFASTSECTIONS			m_AnimFastSections;
+	_float										m_fTotalAnimationFastValue;
+	// Animation Event 
+	ANIMEVENTCONTAINER		m_AnimEventContainer;
 };
 
 END

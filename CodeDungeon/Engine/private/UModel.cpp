@@ -45,7 +45,8 @@ SHPTR<UBoneNode> UModel::GetBoneNode(const _wstring& _strBoneNode)
 	const BONENODES::iterator& it = std::find_if(m_vecBoneNodes.begin(), m_vecBoneNodes.end(), [&](const SHPTR<UBoneNode>& p) {
 		if (p->GetName() == _strBoneNode)
 			return true;
-		return false;	
+
+		return false;
 		});
 	RETURN_CHECK(m_vecBoneNodes.end() == it, nullptr);
 	return *it;
@@ -264,8 +265,7 @@ void UModel::LoadToData(const _wstring& _wstrPath)
 	ThreadMiliRelax(10);
 	MODELDESC tDesc;
 	{
-		// name set 
-		NameSetting(_wstrPath);
+		BringModelName(_wstrPath);
 		// MESH
 		LoadMeshData(read, tDesc.Meshes);
 		// BoneNode
@@ -370,7 +370,7 @@ void UModel::LoadMaterial(std::ifstream& _ifRead, UNORMAP<_uint, VECTOR<_wstring
 	}
 }
 
-void UModel::NameSetting(const _wstring& _wstrPath)
+void UModel::BringModelName(const _wstring& _wstrPath)
 {
 	m_wstrModelName = _wstrPath.substr(_wstrPath.find_last_of(L"\\") + 1, _wstrPath.find_last_of(L"."));
 }

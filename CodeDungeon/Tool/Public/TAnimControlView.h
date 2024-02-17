@@ -4,6 +4,8 @@
 
 BEGIN(Engine)
 class UAnimModel;
+class UAnimation;
+class UAnimEvent;
 END
 
 BEGIN(Tool)
@@ -37,11 +39,13 @@ private:
 	void DockBuildInitSetting();
 	void AnimModelSelectView();
 	void AnimModifyView();
-	void AnimControlView();
+private:
+	void MakeAnimEvent();
+
+	void AnimChangesBetweenShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFlags _flags,  const VECTOR<SHPTR<UAnimEvent>>& _AnimEvent);
 private:
 	MAINDESC												m_stMainDesc;
 	DOCKDESC											m_stAnimModelSelectDesc;
-	DOCKDESC											m_stAnimControlDesc;
 	DOCKDESC											m_stAnimModifyDesc;
 	_bool														m_isInitSetting;
 
@@ -50,6 +54,19 @@ private:
 	ANIMFILECONTAINER							m_AnimFileContainer;
 	SHPTR<FILEGROUP>							m_spSelectAnimFileFolder;
 	SHPTR<FILEDATA>								m_spSelectAnimFileData;
+
+	SHPTR<UAnimation>							m_spSelectAnim;
+
+	VECTOR<_char*>									m_AnimationNameTags;
+	_int															m_iSelectAnimEvent;
+
+	static constexpr	_int KEYPRESSEND{ 4 };
+	static constexpr	_int KEYBOARDEND{ 145 };
+	static constexpr	_int MOUSEEND{ 4 };
+
+	static const _char* KEYPRESSTAG[];
+	static const _char* KEYTAG[];
+	static const _char* MOUSETAG[];
 };
 
 END

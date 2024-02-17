@@ -7,11 +7,12 @@
 #include "UShaderConstantBuffer.h"
 #include "UVIBufferPlane.h"
 #include "UShader.h"
+#include "UParticle.h"
 
 TTestObject::TTestObject(CSHPTRREF<UDevice> _spDevice, 
 	const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UPawn(_spDevice, _wstrLayer, _eCloneType, BACKINGTYPE::STATIC),
-	m_spVIBufferGrid{ nullptr }, m_spRectColorBuffer{nullptr}
+	m_spVIBufferGrid{ nullptr }, m_spRectColorBuffer{nullptr}, m_spParticle{nullptr}
 {
 }
 
@@ -41,11 +42,30 @@ HRESULT TTestObject::NativeConstructClone(const VOIDDATAS& _vecDatas)
 
 	m_spRectColorBuffer = CreateNative< UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::B3, RECTCOLOR_SIZE, 1);
 	m_RectColor.g_RectColor = { 0.f, 1.f, 0.f, 1.f };
+
+	{
+		UParticle::PARTICLEDESC tDesc;
+		tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEPARTICLE2DSHADER;
+		tDesc.wstrParticleShader = PROTO_RES_PARTICLE2DSHADER;
+		tDesc.wstrParticleTextureName = L"Flare_Sparks_TexS";
+
+		tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 2.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 5.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 10.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 5000.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 2000.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 10.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 300;
+
+		m_spParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE,	{ &tDesc}));
+	}
 	return S_OK;
 }
 
 void TTestObject::TickActive(const _double& _dTimeDelta)
 {
+
 }
 
 void TTestObject::LateTickActive(const _double& _dTimeDelta)

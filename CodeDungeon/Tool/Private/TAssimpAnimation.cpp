@@ -62,7 +62,7 @@ HRESULT TAssimpAnimation::NativeConstruct(aiAnimation* _pAIAnim, CSHPTRREF<TAssi
 	return S_OK;
 }
 
-void TAssimpAnimation::UpdateTransformMatrices(const _double& _dTimeDelta)
+void TAssimpAnimation::UpdateBoneMatrices(const _double& _dTimeDelta)
 {
 }
 

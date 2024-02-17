@@ -3,6 +3,7 @@
 #include "UGpuCommand.h"
 #include "USwapChain.h"
 #include "URootSignature.h"
+#include "UComputeRootSignature.h"
 #include "UTableDescriptor.h"
 #include "URenderTargetGroup.h"
 #include "UTexture.h"
@@ -76,6 +77,11 @@ HRESULT UGraphicDevice::ReadyGraphicDevice(const GRAPHICDESC& _stGraphicsDesc, O
 	{
 		_uint iRegister = static_cast<_uint>(ROOT_REGISTER_TYPE::COMMON);
 		m_spRootSignature = CreateNative<URootSignature>(m_spDevice, ROOTREGISTER_SPACE_COMMON);
+	}
+	//Create ComputeRootSignature
+	{
+		_uint iRegister = static_cast<_uint>(ROOT_REGISTER_TYPE::COMPUTE_COMMON);
+		m_spComputeRootSignature = CreateNative<UComputeRootSignature>(m_spDevice, ROOTREGISTER_SPACE_COMMON);
 	}
 	//Create TableDescriptor
 	{

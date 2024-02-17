@@ -18,7 +18,7 @@ public:
 	virtual void Free() override;
 	HRESULT NativeConstruct(struct aiAnimation* _pAIAnim, CSHPTRREF< TAssimpModel> _spModel);
 	HRESULT NativeConstruct(struct aiAnimation* _pAIAnim, CSHPTRREF< TAssimpModel> _spModel, const _wstring& _strName);
-	void UpdateTransformMatrices(const _double& _dTimeDelta);
+	void UpdateBoneMatrices(const _double& _dTimeDelta);
 	// AnimDesc
 	void GetData(ANIMDESC& _stAnimDesc);
 private:

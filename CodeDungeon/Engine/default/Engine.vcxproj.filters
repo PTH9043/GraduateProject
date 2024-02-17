@@ -256,12 +256,6 @@
     <Filter Include="07.Resource\VIBuffer\Plane">
       <UniqueIdentifier>{62b4d9f9-8d83-459b-bdba-cc5dd438e2c0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06.Component\Animator">
-      <UniqueIdentifier>{5f28ddb1-77d0-4e36-89d6-5dbd0660cbaf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="06.Component\Animator\AnimationClip">
-      <UniqueIdentifier>{cb9574ae-12a3-4913-8a70-0273691cbaa5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Manager\SoundManager">
       <UniqueIdentifier>{9a21a9bf-826b-48ab-b67b-910195e12f1d}</UniqueIdentifier>
     </Filter>
@@ -277,14 +271,29 @@
     <Filter Include="07.Resource\VIBuffer\Grid">
       <UniqueIdentifier>{273e34ea-5dc2-4e96-ad2c-6ca47c07bff4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06.Component\Animator\AnimEvent">
-      <UniqueIdentifier>{45c419df-057d-49e5-ba1b-ba6cd71d3a0e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="06.Component\Animator\AnimEvent\Parents">
-      <UniqueIdentifier>{0609ab3e-fad7-44e5-aba8-0a27acbd5a94}</UniqueIdentifier>
-    </Filter>
     <Filter Include="07.Resource\Model\BoneNode\RootBone">
       <UniqueIdentifier>{6e67b329-eba8-4e14-9657-3c4c6876f086}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Resource\ParticleSystem">
+      <UniqueIdentifier>{e4f79b37-006b-4b31-8e44-ae802ade536a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\01.Pawn\Particle">
+      <UniqueIdentifier>{982d9e6b-71d2-4598-b604-f60e724487e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Resource\VIBuffer\Point">
+      <UniqueIdentifier>{0b1da262-21ff-4d98-aa2f-a65e96d8c7f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.ShaderFile\Common\Particle">
+      <UniqueIdentifier>{928235cc-88bf-4ff1-9c0e-69ea85e24001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Resource\Model\Animation\AnimEvent">
+      <UniqueIdentifier>{45c419df-057d-49e5-ba1b-ba6cd71d3a0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Resource\Model\Animation\AnimEvent\Parents">
+      <UniqueIdentifier>{0609ab3e-fad7-44e5-aba8-0a27acbd5a94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component\Collider">
+      <UniqueIdentifier>{b296dd99-2437-4100-90a3-0ed9acc49a1a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -525,12 +534,6 @@
     <ClCompile Include="..\private\UVIBufferPlane.cpp">
       <Filter>07.Resource\VIBuffer\Plane</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\UAnimator.cpp">
-      <Filter>06.Component\Animator</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\UAnimClip.cpp">
-      <Filter>06.Component\Animator\AnimationClip</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\USoundManager.cpp">
       <Filter>01.Manager\SoundManager</Filter>
     </ClCompile>
@@ -547,13 +550,28 @@
       <Filter>07.Resource\VIBuffer\Grid</Filter>
     </ClCompile>
     <ClCompile Include="..\private\AnimSectionEvents.cpp">
-      <Filter>06.Component\Animator\AnimEvent</Filter>
+      <Filter>07.Resource\Model\Animation\AnimEvent</Filter>
     </ClCompile>
     <ClCompile Include="..\private\AnimEventParents.cpp">
-      <Filter>06.Component\Animator\AnimEvent\Parents</Filter>
+      <Filter>07.Resource\Model\Animation\AnimEvent\Parents</Filter>
     </ClCompile>
     <ClCompile Include="..\private\URootBoneNode.cpp">
       <Filter>07.Resource\Model\BoneNode\RootBone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UComputeRootSignature.cpp">
+      <Filter>02.DxClass\RootSignature</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UParticleSystem.cpp">
+      <Filter>07.Resource\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UParticle.cpp">
+      <Filter>05.Actor\01.Pawn\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UVIBufferPoint.cpp">
+      <Filter>07.Resource\VIBuffer\Point</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UCollider.cpp">
+      <Filter>06.Component\Collider</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -824,12 +842,6 @@
     <ClInclude Include="..\public\UVIBufferPlane.h">
       <Filter>07.Resource\VIBuffer\Plane</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\UAnimator.h">
-      <Filter>06.Component\Animator</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\UAnimClip.h">
-      <Filter>06.Component\Animator\AnimationClip</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\USoundManager.h">
       <Filter>01.Manager\SoundManager</Filter>
     </ClInclude>
@@ -846,13 +858,28 @@
       <Filter>07.Resource\VIBuffer\Grid</Filter>
     </ClInclude>
     <ClInclude Include="..\public\AnimSectionEvents.h">
-      <Filter>06.Component\Animator\AnimEvent</Filter>
+      <Filter>07.Resource\Model\Animation\AnimEvent</Filter>
     </ClInclude>
     <ClInclude Include="..\public\AnimEventParents.h">
-      <Filter>06.Component\Animator\AnimEvent\Parents</Filter>
+      <Filter>07.Resource\Model\Animation\AnimEvent\Parents</Filter>
     </ClInclude>
     <ClInclude Include="..\public\URootBoneNode.h">
       <Filter>07.Resource\Model\BoneNode\RootBone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UComputeRootSignature.h">
+      <Filter>02.DxClass\RootSignature</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UParticleSystem.h">
+      <Filter>07.Resource\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UParticle.h">
+      <Filter>05.Actor\01.Pawn\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UVIBufferPoint.h">
+      <Filter>07.Resource\VIBuffer\Point</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UCollider.h">
+      <Filter>06.Component\Collider</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -861,6 +888,9 @@
     </None>
     <None Include="..\..\Shader\ShaderParams.hlsli">
       <Filter>98.ShaderFile\Common</Filter>
+    </None>
+    <None Include="..\..\Shader\ComputeFunc.hlsli">
+      <Filter>98.ShaderFile\Common\Particle</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -893,6 +923,12 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\Grid.hlsl">
       <Filter>98.ShaderFile\Common\NonAlpha</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\2DParticle.hlsl">
+      <Filter>98.ShaderFile\Common\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\Compute2DParticle.hlsl">
+      <Filter>98.ShaderFile\Common\Particle</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

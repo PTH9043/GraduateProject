@@ -71,10 +71,11 @@ protected:
 	HRESULT CreateMaterial(void* _pData);
 	// Load To Data
 	virtual void LoadToData(const _wstring& _wstrPath);
+
 	void LoadMeshData(std::ifstream& _ifRead, VECTOR<MESHDESC>& _vecMeshes);
 	void LoadBoneData(std::ifstream& _ifRead, VECTOR<BONENODEDESC>& _vecBones);
 	void LoadMaterial(std::ifstream& _ifRead, UNORMAP<_uint, VECTOR<_wstring>>& _uomapMaterials);
-	void NameSetting(const _wstring& _wstrPath);
+	void BringModelName(const _wstring& _wstrPath);
 private:
 	// MeshContainer
 	MESHCONTAINERS					m_vecMeshContainer;

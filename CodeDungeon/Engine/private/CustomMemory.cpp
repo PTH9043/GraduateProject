@@ -33,7 +33,7 @@ namespace Engine {
 		}
 		else
 		{
-			ASSERT_CRASH(memory->GetAllocSize() == 0);
+			assert(memory->GetAllocSize() == 0);
 		}
 		return memory;
 	}

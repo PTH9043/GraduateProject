@@ -45,16 +45,16 @@
     <ClInclude Include="..\public\UActorGroup.h" />
     <ClInclude Include="..\public\UActorManager.h" />
     <ClInclude Include="..\public\UAnimation.h" />
-    <ClInclude Include="..\public\UAnimator.h" />
-    <ClInclude Include="..\public\UAnimClip.h" />
     <ClInclude Include="..\public\AnimEventParents.h" />
     <ClInclude Include="..\public\UAnimModel.h" />
     <ClInclude Include="..\public\UBoneNode.h" />
     <ClInclude Include="..\public\UCamera.h" />
     <ClInclude Include="..\public\UCell.h" />
     <ClInclude Include="..\public\UChannel.h" />
+    <ClInclude Include="..\public\UCollider.h" />
     <ClInclude Include="..\public\UComponent.h" />
     <ClInclude Include="..\public\UComponentManager.h" />
+    <ClInclude Include="..\public\UComputeRootSignature.h" />
     <ClInclude Include="..\public\UDefaultCube.h" />
     <ClInclude Include="..\public\UDefaultDebugging.h" />
     <ClInclude Include="..\public\UDefaultSphere.h" />
@@ -70,6 +70,8 @@
     <ClInclude Include="..\public\UNavigation.h" />
     <ClInclude Include="..\public\UNetworkBaseController.h" />
     <ClInclude Include="..\public\UNetworkManager.h" />
+    <ClInclude Include="..\public\UParticle.h" />
+    <ClInclude Include="..\public\UParticleSystem.h" />
     <ClInclude Include="..\public\UPawn.h" />
     <ClInclude Include="..\public\UPicking.h" />
     <ClInclude Include="..\public\UPipeLine.h" />
@@ -122,6 +124,7 @@
     <ClInclude Include="..\public\UVIBufferCube.h" />
     <ClInclude Include="..\public\UVIBufferGrid.h" />
     <ClInclude Include="..\public\UVIBufferPlane.h" />
+    <ClInclude Include="..\public\UVIBufferPoint.h" />
     <ClInclude Include="..\public\UVIBufferRect.h" />
     <ClInclude Include="..\public\UVIBufferSphere.h" />
     <ClInclude Include="..\public\UWorkThread.h" />
@@ -136,16 +139,16 @@
     <ClCompile Include="..\private\UActorGroup.cpp" />
     <ClCompile Include="..\private\UActorManager.cpp" />
     <ClCompile Include="..\private\UAnimation.cpp" />
-    <ClCompile Include="..\private\UAnimator.cpp" />
-    <ClCompile Include="..\private\UAnimClip.cpp" />
     <ClCompile Include="..\private\AnimEventParents.cpp" />
     <ClCompile Include="..\private\UAnimModel.cpp" />
     <ClCompile Include="..\private\UBoneNode.cpp" />
     <ClCompile Include="..\private\UCamera.cpp" />
     <ClCompile Include="..\private\UCell.cpp" />
     <ClCompile Include="..\private\UChannel.cpp" />
+    <ClCompile Include="..\private\UCollider.cpp" />
     <ClCompile Include="..\private\UComponent.cpp" />
     <ClCompile Include="..\private\UComponentManager.cpp" />
+    <ClCompile Include="..\private\UComputeRootSignature.cpp" />
     <ClCompile Include="..\private\UDefaultCube.cpp" />
     <ClCompile Include="..\private\UDefaultDebugging.cpp" />
     <ClCompile Include="..\private\UDefaultSphere.cpp" />
@@ -161,6 +164,8 @@
     <ClCompile Include="..\private\UNavigation.cpp" />
     <ClCompile Include="..\private\UNetworkBaseController.cpp" />
     <ClCompile Include="..\private\UNetworkManager.cpp" />
+    <ClCompile Include="..\private\UParticle.cpp" />
+    <ClCompile Include="..\private\UParticleSystem.cpp" />
     <ClCompile Include="..\private\UPawn.cpp" />
     <ClCompile Include="..\private\UPicking.cpp" />
     <ClCompile Include="..\private\UPipeLine.cpp" />
@@ -213,6 +218,7 @@
     <ClCompile Include="..\private\UVIBufferCube.cpp" />
     <ClCompile Include="..\private\UVIBufferGrid.cpp" />
     <ClCompile Include="..\private\UVIBufferPlane.cpp" />
+    <ClCompile Include="..\private\UVIBufferPoint.cpp" />
     <ClCompile Include="..\private\UVIBufferRect.cpp" />
     <ClCompile Include="..\private\UVIBufferSphere.cpp" />
     <ClCompile Include="..\private\UWorkThread.cpp" />
@@ -225,11 +231,13 @@
     <ClCompile Include="..\public\ImGui\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\..\Shader\2DParticle.hlsl" />
     <FxCompile Include="..\..\Shader\AnimModel.hlsl" />
     <FxCompile Include="..\..\Shader\BlendDeffered.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </FxCompile>
+    <FxCompile Include="..\..\Shader\Compute2DParticle.hlsl" />
     <FxCompile Include="..\..\Shader\Debug2DTarget.hlsl" />
     <FxCompile Include="..\..\Shader\DebugDefaultObject.hlsl" />
     <FxCompile Include="..\..\Shader\FinalDeffered.hlsl">
@@ -248,6 +256,7 @@
     <FxCompile Include="..\..\Shader\ScreenRenderObj.hlsl" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\Shader\ComputeFunc.hlsli" />
     <None Include="..\..\Shader\ShaderGrobalFunc.hlsli" />
     <None Include="..\..\Shader\ShaderParams.hlsli" />
   </ItemGroup>

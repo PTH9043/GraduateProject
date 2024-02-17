@@ -42,13 +42,13 @@ UAnimSectionEvent::UAnimSectionEvent(const ANIMEVENTSECTIONDESC& _AnimEventDesc,
 }
 
 
-_bool UAnimSectionEvent::EventCheck(CSHPTRREF<UAnimator> _spAnimator, const _double& _dTimeDelta, const _double& _dTimeAcc)
+_bool UAnimSectionEvent::EventCheck(UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc)
 {
 	if (m_AnimSectionDesc.IsAnimEventActive(_dTimeAcc))
 	{
 		if (true == m_AnimSectionDesc.IsMousekeyboardFunc())
 		{
-			EventSituation(_spAnimator, _dTimeDelta);
+			EventSituation(_pAnimModel, _dTimeDelta);
 		}
 	}
 	return m_AnimSectionDesc.isEventActive;
@@ -97,13 +97,13 @@ UAnimOccurEvent::UAnimOccurEvent(const ANIMOCURRESDESC& _AnimEventDesc, ANIMEVEN
 }
 
 
-_bool UAnimOccurEvent::EventCheck(CSHPTRREF<UAnimator> _spAnimator, const _double& _dTimeDelta, const _double& _dTimeAcc)
+_bool UAnimOccurEvent::EventCheck(UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc)
 {
 	if (m_AnimOccurDesc.IsAnimOcurrs(_dTimeAcc))
 	{
 		if (true == m_AnimOccurDesc.IsMousekeyboardFunc())
 		{
-			EventSituation(_spAnimator, _dTimeDelta);
+			EventSituation(_pAnimModel, _dTimeDelta);
 		}
 	}
 	return m_AnimOccurDesc.dAnimOccursTime;
