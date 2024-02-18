@@ -54,7 +54,6 @@ HRESULT UChannel::NativeConstruct(CSHPTRREF<UAnimModel> _spAnimModel, const CHAN
 	m_spBoneNode = _spAnimModel->GetBoneNode(m_wstrBoneName);
 	KEYFRAME* pKeyFrame = _stChannelDesc.pKeyFrames;
 	Make::ReleaseBuffer(pKeyFrame);
-//	Safe_Delete_Array(pKeyFrame);
 	return S_OK;
 }
 
@@ -96,32 +95,35 @@ void UChannel::UpdateTransformMatrix(const _double& _dTimeAcc, UAnimation* _pAni
 
 	if (nullptr != m_spBoneNode)
 	{
-		//	std::lock_guard<std::mutex> LL{UGameInstance::GetMainMutex()};
 		m_spBoneNode->SetTransformMatrix(DirectX::XMMatrixAffineTransformation(m_vScale, ZERO_VALUE,
 			m_vRotation, m_vPosition));
 	}
 }
 
-void UChannel::UpdatSupplyToCurAndNextTransformMatrix(const _double& _dTimeAcc, const _float _fRatio,
-	UAnimation* _pAnimation, CSHPTRREF<UChannel> _spChannel)
+void UChannel::UpdateSupplyToCurAndNextTransformMatrix(const _double& _dTimeAcc, const _float _fRatio,
+	UAnimation* _pAnimation, CSHPTRREF<UChannel> _spNextAnimChannel)
 {
-	RETURN_CHECK(nullptr == _pAnimation || nullptr == _spChannel, ;);
+	assert(nullptr != _pAnimation && nullptr != _spNextAnimChannel);
 	// 현재 애니메이션과 다음 애니메이션의 첫 번째 값들을 Lerp 시킨다. 
-	ComputeCurKeyFrames(_dTimeAcc, m_iCurrentKeyFrames);
+	_int NextAnimCurrFrames = _spNextAnimChannel->GetCurrentKeyFrame();
 	// 값들을 Lerp 시킴
 	m_vScale = _float3::Lerp(m_vecKeyFrames[m_iCurrentKeyFrames].vScale,
-		_spChannel->m_vecKeyFrames[0].vScale, _fRatio);
+		_spNextAnimChannel->m_vecKeyFrames[NextAnimCurrFrames].vScale, _fRatio);
 	m_vRotation = _float4::Lerp(m_vecKeyFrames[m_iCurrentKeyFrames].vRotation,
-		_spChannel->m_vecKeyFrames[0].vRotation, _fRatio);
+		_spNextAnimChannel->m_vecKeyFrames[NextAnimCurrFrames].vRotation, _fRatio);
 	m_vPosition = _float4::Lerp(m_vecKeyFrames[m_iCurrentKeyFrames].vPosition,
-		_spChannel->m_vecKeyFrames[0].vPosition, _fRatio);
+		_spNextAnimChannel->m_vecKeyFrames[NextAnimCurrFrames].vPosition, _fRatio);
 
 	if (nullptr != m_spBoneNode)
 	{
-		//		std::lock_guard<std::mutex> LL{UGameInstance::GetMainMutex()};
 		m_spBoneNode->SetTransformMatrix(DirectX::XMMatrixAffineTransformation(m_vScale, ZERO_VALUE,
 			m_vRotation, m_vPosition));
 	}
+}
+
+void UChannel::ComputeCurKeyFrames(const _double& _dTimeAcc)
+{
+	ComputeCurKeyFrames(_dTimeAcc, m_iCurrentKeyFrames);
 }
 
 void UChannel::ComputeCurKeyFrames(const _double& _dTimeAcc, _uint& _iCurKeyFrame)

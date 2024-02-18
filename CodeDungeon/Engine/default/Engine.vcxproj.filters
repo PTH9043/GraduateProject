@@ -573,6 +573,9 @@
     <ClCompile Include="..\private\UCollider.cpp">
       <Filter>06.Component\Collider</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\AnimOccursEvents.cpp">
+      <Filter>07.Resource\Model\Animation\AnimEvent</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\EngineDefine.h">
@@ -880,6 +883,9 @@
     </ClInclude>
     <ClInclude Include="..\public\UCollider.h">
       <Filter>06.Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\AnimOccursEvents.h">
+      <Filter>07.Resource\Model\Animation\AnimEvent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

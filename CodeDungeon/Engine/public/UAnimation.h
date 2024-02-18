@@ -31,6 +31,8 @@ public:
 	void SetSupplySituation(const _bool _isSupplySituation) { this->m_isSupplySituation = _isSupplySituation; }
 	void SetAnimTimeAcc(const _double& _dTimeAcc) { this->m_dTimeAcc = _dTimeAcc; }
 	void UpdateAnimFastSections(const _float _fTotalAnimFastValue, const VECTOR<ANIMFASTSECTION>& _AnimFastSection);
+
+	void UpdateTimeAccToChannelIndex(const _double& _dTimeAcc);
 public:
 	SHPTR<UAnimation> Clone(CSHPTRREF<UAnimModel> _spAnimModel);
 	virtual void Free() override;
@@ -53,6 +55,8 @@ public:
 	void SaveAnimDataPathIsFolder(const _wstring& _wstrPath);
 	void LoadAnimData(const _wstring& _wstrPath);
 	void LoadAnimDataPathIsFolder(const _wstring& _wstrPath);
+private:
+	SHPTR<UAnimEvent> CreateAnimEvent(ANIMEVENTTYPE _AnimEventType, std::ifstream& _read);
 private:
 
 	static constexpr _float	MAX_SUPPLY_VALUE{1.f};

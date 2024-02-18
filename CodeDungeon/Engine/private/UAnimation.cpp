@@ -4,6 +4,8 @@
 #include "UGameInstance.h"
 #include "UMethod.h"
 #include "AnimEventParents.h"
+#include "AnimSectionEvents.h"
+#include "AnimOccursEvents.h"
 
 UAnimation::UAnimation() :
 	UBase(),
@@ -39,6 +41,19 @@ void UAnimation::UpdateAnimFastSections(const _float _fTotalAnimFastValue, const
 {
 	m_fTotalAnimationFastValue = _fTotalAnimFastValue;
 	m_AnimFastSections = _AnimFastSection;
+}
+
+void UAnimation::UpdateTimeAccToChannelIndex(const _double& _dTimeAcc)
+{
+	m_dTimeAcc = _dTimeAcc;
+	if (m_dTimeAcc >= m_dDuration)
+	{
+		m_dTimeAcc = m_dDuration;
+	}
+	for (auto& iter : m_Channels)
+	{
+		iter->ComputeCurKeyFrames(_dTimeAcc);
+	}
 }
 
 SHPTR<UAnimation> UAnimation::Clone(CSHPTRREF<UAnimModel> _spAnimModel)
@@ -108,7 +123,7 @@ void UAnimation::UpdateboneMatricesToTimeAcc(const _double& _TimeAcc)
 
 void UAnimation::UpdateNextAnimTransformMatrices(const _double& _dTimeDelta, const _float _fSupplyValue, CSHPTRREF<UAnimation> _spAnimation)
 {
-	m_fSupplySituationValue += (_float)(_dTimeDelta)*_fSupplyValue;
+	m_fSupplySituationValue += (_float)(_dTimeDelta * _fSupplyValue );
 
 	if (m_fSupplySituationValue >= MAX_SUPPLY_VALUE)
 	{
@@ -117,14 +132,11 @@ void UAnimation::UpdateNextAnimTransformMatrices(const _double& _dTimeDelta, con
 	}
 	else
 	{
-		if (_spAnimation->m_Channels.size() > 0)
+		m_isSupplySituation = true;
+		for (_uint i = 0; i < m_iNumChannels; ++i)
 		{
-			m_isSupplySituation = true;
-			for (_uint i = 0; i < m_iNumChannels; ++i)
-			{
-				m_Channels[i]->UpdatSupplyToCurAndNextTransformMatrix(m_dTimeAcc, m_fSupplySituationValue,
-					this, _spAnimation->m_Channels[i]);
-			}
+			m_Channels[i]->UpdateSupplyToCurAndNextTransformMatrix(m_dTimeAcc, m_fSupplySituationValue,
+				this, _spAnimation->m_Channels[i]);
 		}
 	}
 }
@@ -249,6 +261,36 @@ void UAnimation::LoadAnimData(const _wstring& _wstrPath)
 	Read.read((_char*)&iFastSection, sizeof(_uint));
 	m_AnimFastSections.resize(iFastSection);
 	Read.read((_char*)&m_AnimFastSections[0], sizeof(ANIMFASTSECTION) * iFastSection);
+
+	// Anim Event Load
+	{
+		_uint iSize{ 0 };
+		// Container Size Save 
+		{
+			Read.read((_char*)&iSize, sizeof(_uint));
+		}
+		for (_uint i = 0; i < iSize; ++i)
+		{
+			VECTOR<SHPTR<UAnimEvent>> AnimEventContainer;
+			ANIMEVENTTYPE EventType;
+			// Evnet Type Save
+			{
+				Read.read((_char*)&EventType, sizeof(ANIMEVENTTYPE));
+			}
+			_uint EventCnt{ 0 };
+			AnimEventContainer.reserve(EventCnt);
+			// Event Cnt Save
+			{
+				Read.read((_char*)&EventCnt, sizeof(_uint));
+			}
+			// Event save
+			for (_uint j = 0; j < EventCnt; ++j)
+			{
+				AnimEventContainer.push_back(CreateAnimEvent(EventType, Read));
+			}
+			m_AnimEventContainer.emplace(MakePair(EventType, AnimEventContainer));
+		}
+	}
 }
 
 void UAnimation::LoadAnimDataPathIsFolder(const _wstring& _wstrPath)
@@ -259,6 +301,31 @@ void UAnimation::LoadAnimDataPathIsFolder(const _wstring& _wstrPath)
 	str.append(DEFAULT_OUTFOLDEREXTENSION);
 
 	LoadAnimData(str);
+}
+
+SHPTR<UAnimEvent> UAnimation::CreateAnimEvent(ANIMEVENTTYPE _AnimEventType, std::ifstream& _read)
+{
+	SHPTR<UAnimEvent> spAnimEvent{ nullptr };
+	switch (_AnimEventType)
+	{
+	case ANIMEVENTTYPE::ANIMEVENT_ANIMCHANGESBETWEEN:
+		spAnimEvent = Create< UAnimChangeBetweenEvent>(_read);
+		break;
+	case ANIMEVENTTYPE::ANIMEVENT_ANIMOCCURSTIMEPASS:
+		spAnimEvent = Create< UAnimOccursTimePassEvent>(_read);
+		break;
+	case ANIMEVENTTYPE::ANIMEVENT_CAMERA:
+		break;
+	case ANIMEVENTTYPE::ANIMEVENT_COLLIDER:
+		break;
+	case ANIMEVENTTYPE::ANIMEVENT_EFFECT:
+		break;
+	case ANIMEVENTTYPE::ANIMEVENT_OBJACTIVE:
+		break;
+	case ANIMEVENTTYPE::ANIMEVENT_SOUND:
+		break;
+	}
+	return std::move(spAnimEvent);
 }
 
 

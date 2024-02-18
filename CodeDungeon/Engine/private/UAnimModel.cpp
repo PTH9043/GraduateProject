@@ -90,8 +90,7 @@ void UAnimModel::TickAnimation(const _double& _dTimeDelta)
 {
 	if (nullptr != m_spNextAnimation)
 	{
-		m_spCurAnimation->UpdateNextAnimTransformMatrices(_dTimeDelta, m_fSupplyLerpValue,
-			m_spNextAnimation);
+		m_spCurAnimation->UpdateNextAnimTransformMatrices(_dTimeDelta, m_fSupplyLerpValue, m_spNextAnimation);
 		if (false == m_spCurAnimation->IsSupplySituation())
 		{
 			m_spCurAnimation = m_spNextAnimation;
@@ -122,26 +121,30 @@ void UAnimModel::UpdateCurAnimationToTimeAcc(const _double& _dTimeAcc)
 	}
 }
 
-void UAnimModel::TickAnimationEvent(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta)
+void UAnimModel::TickAnimAndEvent(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta)
 {
 	assert(_spTransform && m_spCurAnimation);
 	m_spCurAnimation->TickAnimEvent(this, _dTimeDelta);
 	TickAnimation(_dTimeDelta);
-	if (false == m_spCurAnimation->IsFinishAnim())
-	{
-		_float3 vLook = GetRootBoneNode()->GetMoveRootBoneAngle();
-		_spTransform->RotateTurn(vLook);
 
-		_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), _spTransform->GetWorldMatrix());
-		_spTransform->SetPos(Position);
-	}
-	else
+	if (false == m_spCurAnimation->IsSupplySituation())
 	{
-		GetRootBoneNode()->ResetRootBoneInfo();
+		if (false == m_spCurAnimation->IsFinishAnim())
+		{
+			_float3 vLook = GetRootBoneNode()->GetMoveRootBoneAngle();
+			_spTransform->RotateTurn(vLook);
+
+			_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), _spTransform->GetWorldMatrix());
+			_spTransform->SetPos(Position);
+		}
+		else
+		{
+			GetRootBoneNode()->ResetRootBoneInfo();
+		}
 	}
 }
 
-void UAnimModel::UpdateCurAnimationToTimAccEvent(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta, const _double& _TimeAcc)
+void UAnimModel::TickAnimToTimAccAndEvent(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta, const _double& _TimeAcc)
 {
 	assert(_spTransform && m_spCurAnimation);
 	m_spCurAnimation->TickAnimEvent(this, _dTimeDelta);
@@ -187,16 +190,30 @@ void UAnimModel::SetAnimation(const _wstring& _wstrAnimName)
 
 void UAnimModel::ChangeAnimation(const _uint& _iAnimIndex)
 {
-	ChangeAnimIndex(_iAnimIndex, m_iNextAnimIndex);
-	// 다음 애니메이션이 세팅되는 상황일 때의 함수 실행
-	SettingNextAnimSituation();
+	ChangeAnimation(_iAnimIndex, 0.0);
 }
 
 void UAnimModel::ChangeAnimation(const _wstring& _wstrAnimName)
 {
-	ChangeAnimIndex(_wstrAnimName, m_iNextAnimIndex);
+	ChangeAnimation(_wstrAnimName, 0.0);
+}
+
+void UAnimModel::ChangeAnimation(const _uint& _iAnimIndex, const _double& _dNextTimeAcc)
+{
+	ChangeAnimIndex(_iAnimIndex, m_iNextAnimIndex);
 	// 다음 애니메이션이 세팅되는 상황일 때의 함수 실행
 	SettingNextAnimSituation();
+	// Change Time Acc
+	m_spNextAnimation->UpdateTimeAccToChannelIndex(_dNextTimeAcc);
+}
+
+void UAnimModel::ChangeAnimation(const _wstring& _wstrAnimName, const _double& _dNextTimeAcc)
+{
+	ChangeAnimIndex(_wstrAnimName, m_iCurAnimIndex);
+	// 현재 애니메이션이 세팅되는 상황일 때의 함수 실행
+	SettingCurAnimSituation();
+	// Change Time Acc
+	m_spNextAnimation->UpdateTimeAccToChannelIndex(_dNextTimeAcc);
 }
 
 void UAnimModel::OnShowOriginAnimation()
@@ -369,7 +386,7 @@ void UAnimModel::ChangeAnimIndex(const _wstring& _wstrAnimName, _uint& _iIndex)
 
 void UAnimModel::SettingCurAnimSituation()
 {
-	RETURN_CHECK(nullptr == m_vecAnimations[m_iCurAnimIndex], ;);
+	assert(nullptr != m_vecAnimations[m_iCurAnimIndex]);
 	m_spCurAnimation = m_vecAnimations[m_iCurAnimIndex];
 	m_spCurAnimation->ResetData();
 	m_spNextAnimation = nullptr;
@@ -381,6 +398,7 @@ void UAnimModel::SettingNextAnimSituation()
 	m_spNextAnimation = m_vecAnimations[m_iNextAnimIndex];
 	// Reset
 	m_spCurAnimation->ResetData();
+	m_spNextAnimation->ResetData();
 	GetRootBoneNode()->ResetRootBoneInfo();
 }
 

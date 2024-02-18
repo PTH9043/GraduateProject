@@ -15,14 +15,17 @@ public:
 	UChannel();
 	UChannel(const UChannel& _rhs);
 	DESTRUCTOR(UChannel)
+public: /* get set */
+	const _int GetCurrentKeyFrame() const { return m_iCurrentKeyFrames; }
 public:
 	SHPTR<UChannel> Clone(CSHPTRREF<UAnimModel> _spAnimModel);
 	virtual void Free() override;
 	HRESULT NativeConstruct(CSHPTRREF<UAnimModel> _spAnimModel, const CHANNELDESC& _stChannelDesc);
 	void UpdateTransformMatrix(const _double& _dTimeAcc, UAnimation* _pAnimation);
-	void UpdatSupplyToCurAndNextTransformMatrix(const _double& _dTimeAcc, const _float _fRatio,
-		UAnimation* _pAnimation, CSHPTRREF<UChannel> _spChannel);
+	void UpdateSupplyToCurAndNextTransformMatrix(const _double& _dTimeAcc, const _float _fRatio,
+		UAnimation* _pAnimation, CSHPTRREF<UChannel> _spNextAnimChannel);
 
+	void ComputeCurKeyFrames(const _double& _dTimeAcc);
 	void ComputeCurKeyFrames(const _double& _dTimeAcc, _uint& _iCurKeyFrame);
 	void ResetCurKeyFrames() { this->m_iCurrentKeyFrames = 0; }
 private:

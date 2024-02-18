@@ -541,26 +541,31 @@ namespace Engine {
 	struct ANIMEVENTDESC abstract {
 	private:
 		// Key가 눌릴 함수를 등록할 변수
-		MKEVENTFUNC	MkEventFunc;
+		MKEVENTFUNC		MkEventFunc;
 	public:  
-		_bool						isEventActive;
-		_ubyte					ubInputKey;
-		MKEVENTTYPE		MkEventType;
-		KEYPRESSTYPE	KeyPressType;
+		_bool							isEventActive;
+		_ubyte						ubInputKey;
+		MKEVENTTYPE			MkEventType;
+		KEYPRESSTYPE		KeyPressType;
+		DIMOUSEBUTTON	MouseButtonType;
 
-		ANIMEVENTDESC() : isEventActive{ false }, ubInputKey{ 0 }, MkEventType{ MKEVENTTYPE::MK_END },
-			KeyPressType{KEYPRESSTYPE::KEY_END }, MkEventFunc{ IsEmptyFunc } { }
+		ANIMEVENTDESC() : isEventActive{ false }, ubInputKey{ 146 }, MkEventType{ MKEVENTTYPE::MK_END },
+			KeyPressType{ KEYPRESSTYPE::KEY_END }, MouseButtonType{ DIMOUSEBUTTON::DIMB_WHEEL }, MkEventFunc{ IsEmptyFunc } { }
 
 		void RegisterEventFunc();
 		// Empty일 경우 그냥 true 리턴
 		_bool IsMousekeyboardFunc() { return MkEventFunc(ubInputKey); }
-		void ResetEvent() { isEventActive = false; }
 		_char* SaveLoadPointer();
 		static size_t GetEventFuncSize() { return sizeof(MKEVENTFUNC); }
+		void Reset();
 	private:
-		static _bool IsMouseUp(_ubyte _ubInputKey);
-		static _bool IsMouseDown(_ubyte _ubInputKey);
-		static _bool IsMousePressing(_ubyte _ubInputKey);
+		static _bool IsMouseLeftDown(_ubyte _ubInputKey);
+		static _bool IsMouseRightDown(_ubyte _ubInputKey);
+		static _bool IsMouseLeftUp(_ubyte _ubInputKey);
+		static _bool IsMouseRightUp(_ubyte _ubInputKey);
+		static _bool IsMouseLeftPress(_ubyte _ubInputKey);
+		static _bool IsMouseRightPress(_ubyte _ubInputKey);
+
 
 		static _bool IsKeyboardUp(_ubyte _ubInputKey);
 		static _bool IsKeyboardDown(_ubyte _ubInputKey);
@@ -602,9 +607,12 @@ namespace Engine {
 			isEventActive = false;
 
 			if (_dTimeAcc <= dAnimOccursTime)
+			{
 				isEventActive = true;
+				return true;
+			}
 			
-			return isEventActive;
+			return false;
 		}
 	};
 	/*
@@ -623,10 +631,12 @@ namespace Engine {
 	struct ANIMCHANGEDESC : public ANIMOTHEREVENTDESC {
 		_int				iNextAnimIndex;
 		_float			fSupplyAnimValue;
+		_double		dNextAnimTimeAcc;
 
-		ANIMCHANGEDESC() : iNextAnimIndex{ 0}, fSupplyAnimValue{0.f}{}
-		ANIMCHANGEDESC(const _int _NextAnimIndex, const _float& _SupplyAnimValue) : 
-			iNextAnimIndex{ _NextAnimIndex }, fSupplyAnimValue{ _SupplyAnimValue } {}
+		ANIMCHANGEDESC() : iNextAnimIndex{ 0 }, fSupplyAnimValue{ 1.f }, dNextAnimTimeAcc{ 0.0 } {}
+		ANIMCHANGEDESC(const _int _NextAnimIndex, const _float& _SupplyAnimValue, 
+			const _double& _dNextAnimTimeAcc) :
+			iNextAnimIndex{ _NextAnimIndex }, fSupplyAnimValue{ _SupplyAnimValue }, dNextAnimTimeAcc{ _dNextAnimTimeAcc } {}
 	};
 
 #pragma endregion ANIMEVENTTYPE

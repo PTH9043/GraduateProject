@@ -26,14 +26,14 @@ ANIMOTHEREVENTDESC* const UAnimChangeBetweenEvent::OutOtherEventDesc()
 
 void UAnimChangeBetweenEvent::ChangeOtherEventDesc(ANIMOTHEREVENTDESC* _AnimOtherEventDesc)
 {
-	RETURN_CHECK(nullptr == _AnimOtherEventDesc, ;);
+	assert(nullptr != _AnimOtherEventDesc);
 	m_AnimChangeDesc = *static_cast<ANIMCHANGEDESC*>(_AnimOtherEventDesc);
 }
 
 void UAnimChangeBetweenEvent::EventSituation(UAnimModel* _pAnimModel, const _double& _dTimeDelta)
 {
 	_pAnimModel->SetSupplyLerpValue(m_AnimChangeDesc.fSupplyAnimValue);
-	_pAnimModel->ChangeAnimation(m_AnimChangeDesc.iNextAnimIndex);
+	_pAnimModel->ChangeAnimation(m_AnimChangeDesc.iNextAnimIndex, m_AnimChangeDesc.dNextAnimTimeAcc);
 }
 
 void UAnimChangeBetweenEvent::SaveEvent(std::ofstream& _save)

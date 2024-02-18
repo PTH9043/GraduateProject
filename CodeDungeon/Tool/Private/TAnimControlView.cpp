@@ -8,6 +8,7 @@
 #include "UAnimation.h"
 #include "AnimEventParents.h"
 #include "AnimSectionEvents.h"
+#include "AnimOccursEvents.h"
 
 const _char* TAnimControlView::KEYPRESSTAG[] = {
 	"KEY_UP", "KEY_PRESSING",	"KEY_DOWN","EMPTY"
@@ -39,7 +40,11 @@ const _char* TAnimControlView::KEYTAG[]{
 	"DIK_WEBFORWARD", "DIK_WEBBACK", "DIK_MYCOMPUTER", "DIK_MAIL", "DIK_MEDIASELECT", "EMPTY"
 };
 
-const _char* TAnimControlView::MOUSETAG[]{ "DIMB_L", "DIMB_R", "DIMB_WHEEL", "EMPTY" };
+const _char* TAnimControlView::MKTAG[]{ "KEYBOARD", "MOUSE", "EMPTY" };
+
+const _char* TAnimControlView::MOUSETAG[]{ "LEFT", "RIGHT", "EMPTY" };
+
+const _char* TAnimControlView::s_AnimTags[1000]{};
 
 TAnimControlView::TAnimControlView(CSHPTRREF<UDevice> _spDevice) :
     TImGuiView(_spDevice, "AnimControlView"), 
@@ -47,7 +52,8 @@ TAnimControlView::TAnimControlView(CSHPTRREF<UDevice> _spDevice) :
 	m_isInitSetting{false}, 
 	m_spSelectAnimFileData{nullptr},
 	m_iSelectAnimEvent{0},
-	m_spSelectAnim{nullptr}
+	m_spSelectAnim{nullptr},
+	m_AnimMaxTagCount{0}
 {
 }
 
@@ -57,12 +63,13 @@ void TAnimControlView::Free()
 
 HRESULT TAnimControlView::NativeConstruct()
 {
-    m_stMainDesc = MAINDESC(ImGuiWindowFlags_NoBackground, ImGuiDockNodeFlags_None,
+    m_stMainDesc = MAINDESC(ImGuiWindowFlags_NoBackground , ImGuiDockNodeFlags_None,
         ImVec2{ (_float)WINDOW_WIDTH, 0.f }, ImVec2{ 500.f, (_float)WINDOW_HEIGHT });
 
-	m_stAnimModelSelectDesc = DOCKDESC("AnimModelSelect", ImGuiWindowFlags_NoFocusOnAppearing,
+	m_stAnimModelSelectDesc = DOCKDESC("AnimModelSelect", ImGuiWindowFlags_NoFocusOnAppearing ,
 		ImGuiDockNodeFlags_CentralNode);
-	m_stAnimModifyDesc = DOCKDESC("AnimModifyViewer", ImGuiWindowFlags_NoFocusOnAppearing,
+	m_stAnimModifyDesc = DOCKDESC("AnimModifyViewer", ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_HorizontalScrollbar | 
+		ImGuiWindowFlags_AlwaysVerticalScrollbar,
 		ImGuiDockNodeFlags_CentralNode);
 
 	m_spAnimControlModel = std::static_pointer_cast<TAnimControlModel>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_ANIMCONTROLMODELOBJECT));
@@ -163,6 +170,13 @@ void TAnimControlView::AnimModelSelectView()
 			{
 				m_spShowAnimModel = CreateConstructorNative<UAnimModel>(GetDevice(), m_spSelectAnimFileData->wstrfilePath);
 				m_spAnimControlModel->SetShowModel(m_spShowAnimModel, m_spSelectAnimFileFolder);
+
+				_int iIndex{ 0 };
+				for (auto& iter : m_spAnimControlModel->GetAnimationClips())
+				{
+					s_AnimTags[iIndex++] = iter.first.c_str();
+				}
+				m_AnimMaxTagCount = iIndex;
 			}
 		}
 		if (nullptr == m_spSelectAnimFileData)
@@ -195,38 +209,40 @@ void TAnimControlView::MakeAnimEvent()
 
 	if (ImGui::TreeNodeEx("MakeAnimEvent",ImGuiTreeNodeFlags_Bullet))
 	{
+		ImGui::Combo("AnimEvent", &m_iSelectAnimEvent, ANIMTYPETAG, 7);
 		if (true == ImGui::Button("SelectAnim"))
 		{
 			m_spSelectAnim = spCurAnimation;
 		}
+		ImGui::SameLine();
+		if (true == ImGui::Button("MakeEvent"))
+		{
+			SHPTR<UAnimEvent> spAnimEvent{ nullptr };
+			switch (m_iSelectAnimEvent)
+			{
+			case ANIMEVENTTYPE::ANIMEVENT_ANIMCHANGESBETWEEN:
+				spAnimEvent = Create< UAnimChangeBetweenEvent>();
+				break;
+			case ANIMEVENTTYPE::ANIMEVENT_ANIMOCCURSTIMEPASS:
+				spAnimEvent = Create<UAnimOccursTimePassEvent>();
+				break;
+			case ANIMEVENTTYPE::ANIMEVENT_CAMERA:
+				break;
+			case ANIMEVENTTYPE::ANIMEVENT_COLLIDER:
+				break;
+			case ANIMEVENTTYPE::ANIMEVENT_EFFECT:
+				break;
+			case ANIMEVENTTYPE::ANIMEVENT_OBJACTIVE:
+				break;
+			case ANIMEVENTTYPE::ANIMEVENT_SOUND:
+				break;
+			}
+			if (nullptr != m_spSelectAnim)
+				m_spSelectAnim->InsertAnimEvent((ANIMEVENTTYPE)m_iSelectAnimEvent, spAnimEvent);
+		}
 
 		if (nullptr != m_spSelectAnim)
 		{
-			ImGui::Combo("AnimEvent", &m_iSelectAnimEvent, ANIMTYPETAG, 7);
-			if (true == ImGui::Button("MakeEvent"))
-			{
-				SHPTR<UAnimEvent> spAnimEvent{ nullptr };
-				switch (m_iSelectAnimEvent)
-				{
-				case ANIMEVENTTYPE::ANIMEVENT_ANIMCHANGESBETWEEN:
-					spAnimEvent = Create< UAnimChangeBetweenEvent>();
-					break;
-				case ANIMEVENTTYPE::ANIMEVENT_ANIMOCCURSTIMEPASS:
-					break;
-				case ANIMEVENTTYPE::ANIMEVENT_CAMERA:
-					break;
-				case ANIMEVENTTYPE::ANIMEVENT_COLLIDER:
-					break;
-				case ANIMEVENTTYPE::ANIMEVENT_EFFECT:
-					break;
-				case ANIMEVENTTYPE::ANIMEVENT_OBJACTIVE:
-					break;
-				case ANIMEVENTTYPE::ANIMEVENT_SOUND:
-					break;
-				}
-				spCurAnimation->InsertAnimEvent((ANIMEVENTTYPE)m_iSelectAnimEvent, spAnimEvent);
-			}
-
 			ImGuiTreeNodeFlags Flags = ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_DefaultOpen;
 			// Options
 			static ImGuiTableFlags flags = ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Sortable | ImGuiTableFlags_SortMulti
@@ -241,6 +257,7 @@ void TAnimControlView::MakeAnimEvent()
 					AnimChangesBetweenShow(m_spSelectAnim, flags, iter.second);
 					break;
 				case ANIMEVENTTYPE::ANIMEVENT_ANIMOCCURSTIMEPASS:
+					AnimOccursTimePassShow(m_spSelectAnim, flags, iter.second);
 					break;
 				case ANIMEVENTTYPE::ANIMEVENT_CAMERA:
 					break;
@@ -255,6 +272,10 @@ void TAnimControlView::MakeAnimEvent()
 				}
 			}
 		}
+		else
+		{
+			ImGui::Text("Plz select Animation"); 
+		}
 		ImGui::TreePop();
 	}
 }
@@ -263,35 +284,31 @@ void TAnimControlView::AnimChangesBetweenShow(CSHPTRREF<UAnimation> _spAnim, ImG
 {
 	if (ImGui::TreeNodeEx("AnimChangesBetweenShow", ImGuiTreeNodeFlags_Bullet))
 	{
+		ImGui::SetNextItemWidth(-FLT_MIN);
 		if (ImGui::BeginTable("AnimChangesBetween", 8, _flags, ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 20), 0.0f))
 		{
-			ImGui::TableSetupColumn("Idx", ImGuiTableColumnFlags_WidthFixed);
+			ImGui::TableSetupColumn("Mk", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupColumn("Press", ImGuiTableColumnFlags_WidthStretch);
 			ImGui::TableSetupColumn("Input", ImGuiTableColumnFlags_WidthStretch);
-			ImGui::TableSetupColumn("Mouse", ImGuiTableColumnFlags_WidthStretch);
-			ImGui::TableSetupColumn("Key", ImGuiTableColumnFlags_WidthStretch);
 			ImGui::TableSetupColumn("StartT", ImGuiTableColumnFlags_WidthStretch);
 			ImGui::TableSetupColumn("EndT", ImGuiTableColumnFlags_WidthStretch);
 			ImGui::TableSetupColumn("NextAnim", ImGuiTableColumnFlags_WidthStretch);
 			ImGui::TableSetupColumn("SupV", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupColumn("NextTA", ImGuiTableColumnFlags_WidthStretch);
 			ImGui::TableSetupScrollFreeze(0, 1); // Make row always visible
 			ImGui::TableHeadersRow();
 
-			static _int iSelectKeyPressEvent{ KEYPRESSTAG_CNT - 1 };
-			static _int iSelectKeyboardEvent{ KEYBOARDTAG_CNT - 1 };
-			static _int iSelectMouseEvent{ MOUSETAG_CNT - 1 };
 			static _int iSelectAnim{ 0 };
+			static _float fNextTimeAcc{ 0.f };
 
-			static _string Idx = "%3d";
-			static _string Input = "##Input";
-			static _string Mouse = "##Mouse";
-			static _string Key = "##Key";
 			static _string StartT = "##StartT";
 			static _string EndT = "##EndT";
 			static _string NextAnim = "##NextAnim";
 			static _string SupV = "##SupV";
+			static _string NextAnimTimeAcc = "##NextAnimTimeAcc";
 
 			_int iIndex{ 0 };
-			_float TimeAcc = static_cast<_float>(_spAnim->GetTimeAcc());
+			_float Duration = static_cast<_float>(_spAnim->GetDuration());
 			for (auto& iter : _AnimEvent)
 			{
 				_string Index = _string::to_string(iIndex++);
@@ -299,54 +316,180 @@ void TAnimControlView::AnimChangesBetweenShow(CSHPTRREF<UAnimation> _spAnim, ImG
 				 ANIMEVENTSECTIONDESC* SectionDesc = static_cast<ANIMEVENTSECTIONDESC*>(iter->OutAnimEventDesc());
 				 ANIMCHANGEDESC* ChangeDesc = static_cast<ANIMCHANGEDESC*>(iter->OutOtherEventDesc());
 
-				ImGui::TableNextColumn();
-				ImGui::Text(Idx, iIndex);
-				ImGui::TableNextColumn();
-				ImGui::SetNextItemWidth(-FLT_MIN);
-				if (true == ImGui::Combo(Input + Index, &iSelectKeyPressEvent, KEYPRESSTAG, KEYPRESSTAG_CNT))
-				{
-					SectionDesc->KeyPressType = static_cast<KEYPRESSTYPE>(iSelectKeyPressEvent);
-				}
-				ImGui::TableNextColumn();
-				ImGui::SetNextItemWidth(-FLT_MIN);
-				if (true == ImGui::Combo(Key + Index, &iSelectKeyboardEvent, KEYTAG, KEYBOARDTAG_CNT))
-				{
-					SectionDesc->ubInputKey = static_cast<_ubyte>(iSelectKeyboardEvent);
-				}
-				ImGui::TableNextColumn();
-				ImGui::SetNextItemWidth(-FLT_MIN);
-				if (true == ImGui::Combo(Mouse + Index, &iSelectMouseEvent, MOUSETAG, MOUSETAG_CNT))
-				{
-					SectionDesc->MkEventType = static_cast<MKEVENTTYPE>(iSelectMouseEvent);
-				}
+				 AnimInputShow(SectionDesc, Index);
 				{
 					ImGui::TableNextColumn();
 					ImGui::SetNextItemWidth(-FLT_MIN);
 					_float StartTime = static_cast<_float>(SectionDesc->dStartTime);
-					ImGui::SliderFloat(StartT + Index, &StartTime, 0.0f, TimeAcc);
+					ImGui::DragFloat(StartT + Index, &StartTime, 0.0f, Duration);
 					SectionDesc->dStartTime = static_cast<_double>(StartTime);
 				}
 				{
 					ImGui::TableNextColumn();
 					ImGui::SetNextItemWidth(-FLT_MIN);
 					_float EndTime = static_cast<_float>(SectionDesc->dEndTime);
-					ImGui::SliderFloat(EndT + Index, &EndTime, 0.0f, TimeAcc);
+					ImGui::DragFloat(EndT + Index, &EndTime, 0.0f, Duration);
 					SectionDesc->dEndTime = static_cast<_double>(EndTime);
 				}
 				{
 					ImGui::TableNextColumn();
 					ImGui::SetNextItemWidth(-FLT_MIN);
-					ImGui::Text("Dfadf");
+					if (true == ImGui::Combo(NextAnim + Index, &iSelectAnim, &s_AnimTags[0], m_AnimMaxTagCount))
+					{
+						ChangeDesc->iNextAnimIndex = m_spAnimControlModel->GetAnimationClips().find(s_AnimTags[iSelectAnim])->second;
+						fNextTimeAcc = static_cast<_float>(m_spShowAnimModel->GetAnimations()[ChangeDesc->iNextAnimIndex]->GetTimeAcc());
+					}
 				}
 				{
 					ImGui::TableNextColumn();
 					ImGui::SetNextItemWidth(-FLT_MIN);
-					ImGui::DragFloat(SupV + Index, &ChangeDesc->fSupplyAnimValue, 0.01f, 0.0f, 10.f);
+					ImGui::DragFloat(SupV + Index, &ChangeDesc->fSupplyAnimValue, 0.01f, 0.01f, 10.f);
+				}
+				{
+					ImGui::TableNextColumn();
+					ImGui::SetNextItemWidth(-FLT_MIN);
+					_float Time = static_cast<_float>(ChangeDesc->dNextAnimTimeAcc);
+					ImGui::DragFloat(NextAnimTimeAcc + Index, &Time, 0.01f, 0.01f, fNextTimeAcc);
+					ChangeDesc->dNextAnimTimeAcc = static_cast<_double>(Time);
 				}
 				ImGui::TableNextRow();
 			}
 			ImGui::EndTable();
 		}
 		ImGui::TreePop();
+	}
+}
+
+void TAnimControlView::AnimOccursTimePassShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFlags _flags, const VECTOR<SHPTR<UAnimEvent>>& _AnimEvent)
+{
+	if (ImGui::TreeNodeEx("AnimOccursTimePassShow", ImGuiTreeNodeFlags_Bullet))
+	{
+		ImGui::SetNextItemWidth(-FLT_MIN);
+		if (ImGui::BeginTable("AnimOccursTimePass", 7, _flags, ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 20), 0.0f))
+		{
+			ImGui::TableSetupColumn("Mk", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupColumn("Press", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupColumn("Input", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupColumn("Over", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupColumn("NextAnim", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupColumn("SupV", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupColumn("NextTA", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupScrollFreeze(0, 1); // Make row always visible
+			ImGui::TableHeadersRow();
+
+			static _int iSelectAnim{ 0 };
+			static _float fNextTimeAcc{ 0.f };
+
+			static _string OverT = "##OverT2";
+			static _string NextAnim = "##NextAnim2";
+			static _string SupV = "##SupV2";
+			static _string NextAnimTimeAcc = "##NextAnimTimeAcc2";
+
+			_int iIndex{ 0 };
+			_float Duration = static_cast<_float>(_spAnim->GetDuration());
+			for (auto& iter : _AnimEvent)
+			{
+				_string Index = _string::to_string(iIndex++);
+
+				ANIMOCURRESDESC* OccursDesc = static_cast<ANIMOCURRESDESC*>(iter->OutAnimEventDesc());
+				ANIMCHANGEDESC* ChangeDesc = static_cast<ANIMCHANGEDESC*>(iter->OutOtherEventDesc());
+
+				AnimInputShow(OccursDesc, Index);
+				{
+					ImGui::TableNextColumn();
+					ImGui::SetNextItemWidth(-FLT_MIN);
+					_float Time = static_cast<_float>(OccursDesc->dAnimOccursTime);
+					ImGui::DragFloat(OverT + Index, &Time, 0.0f, Duration);
+					OccursDesc->dAnimOccursTime = static_cast<_double>(Time);
+				}
+				{
+					ImGui::TableNextColumn();
+					ImGui::SetNextItemWidth(-FLT_MIN);
+					if (true == ImGui::Combo(NextAnim + Index, &iSelectAnim, &s_AnimTags[0], m_AnimMaxTagCount))
+					{
+						ChangeDesc->iNextAnimIndex = m_spAnimControlModel->GetAnimationClips().find(s_AnimTags[iSelectAnim])->second;
+						fNextTimeAcc = static_cast<_float>(m_spShowAnimModel->GetAnimations()[ChangeDesc->iNextAnimIndex]->GetTimeAcc());
+					}
+				}
+				{
+					ImGui::TableNextColumn();
+					ImGui::SetNextItemWidth(-FLT_MIN);
+					ImGui::DragFloat(SupV + Index, &ChangeDesc->fSupplyAnimValue, 0.01f, 0.01f, 10.f);
+				}
+				{
+					ImGui::TableNextColumn();
+					ImGui::SetNextItemWidth(-FLT_MIN);
+					_float Time = static_cast<_float>(ChangeDesc->dNextAnimTimeAcc);
+					ImGui::DragFloat(NextAnimTimeAcc + Index, &Time, 0.01f, 0.01f, fNextTimeAcc);
+					ChangeDesc->dNextAnimTimeAcc = static_cast<_double>(Time);
+				}
+				ImGui::TableNextRow();
+			}
+			ImGui::EndTable();
+		}
+		ImGui::TreePop();
+	}
+}
+
+void TAnimControlView::AnimInputShow(ANIMEVENTDESC* _pEvenetDesc, const _string& _strIndex)
+{
+	static _string Input = "##Mk2";
+	static _string Mouse = "##Press2";
+	static _string Key = "##Input2";
+
+	 _int iSelectMkEvent{ static_cast<_int>(_pEvenetDesc->MkEventType)  };
+	 _int iSelectKeyPressEvent{ static_cast<_int>(_pEvenetDesc->KeyPressType)  };
+	 _int iSelectKeyboardEvent{ static_cast<_int>(_pEvenetDesc->ubInputKey - 1) };
+	 _int iSelectMouseEvent{ static_cast<_int>(_pEvenetDesc->MouseButtonType) };
+	 // Mk Event 기입, Mouse Event인지 Keyboard Event인지 확인 
+	{
+		ImGui::TableNextColumn();
+		ImGui::SetNextItemWidth(-FLT_MIN);
+		if (true == ImGui::Combo(Mouse + _strIndex, &iSelectMkEvent, MKTAG, MKTAG_CNT))
+		{
+			_pEvenetDesc->MkEventType = static_cast<MKEVENTTYPE>(iSelectMkEvent);
+			if (MKEVENTTYPE::MK_END == iSelectMkEvent)
+			{
+				_pEvenetDesc->Reset();
+			}
+		}
+	}
+	// KeyPressType을 결정한다. 
+	{
+		ImGui::TableNextColumn();
+		ImGui::SetNextItemWidth(-FLT_MIN);
+		if (true == ImGui::Combo(Input + _strIndex, &iSelectKeyPressEvent, KEYPRESSTAG, KEYPRESSTAG_CNT))
+		{
+			_pEvenetDesc->KeyPressType = static_cast<KEYPRESSTYPE>(iSelectKeyPressEvent);
+			_pEvenetDesc->RegisterEventFunc();
+		}
+	}
+	// MK 이벤트에 따라 Keyboard Input이냐 Mouse Input 이냐를 설정할 수 있게 만든다. 
+	{
+		ImGui::TableNextColumn();
+		ImGui::SetNextItemWidth(-FLT_MIN);
+		if (MKEVENTTYPE::MK_END == iSelectMkEvent)
+		{
+			ImGui::Text("Sel MK");
+		}
+		else
+		{
+			if (MKEVENTTYPE::MK_KEYBOARD == iSelectMkEvent)
+			{
+				if (true == ImGui::Combo(Key + _strIndex, &iSelectKeyboardEvent, KEYTAG, KEYBOARDTAG_CNT))
+				{
+					_pEvenetDesc->ubInputKey = static_cast<_ubyte>(iSelectKeyboardEvent + 1);
+					_pEvenetDesc->RegisterEventFunc();
+				}
+			}
+			else
+			{
+				if (true == ImGui::Combo(Key + _strIndex, &iSelectMouseEvent, MOUSETAG, MOUSETAG_CNT))
+				{
+					_pEvenetDesc->MouseButtonType = static_cast<DIMOUSEBUTTON>(iSelectMouseEvent);
+					_pEvenetDesc->RegisterEventFunc();
+				}
+			}
+		}
 	}
 }

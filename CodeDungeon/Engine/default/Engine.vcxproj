@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\public\AnimOccursEvents.h" />
     <ClInclude Include="..\public\AnimSectionEvents.h" />
     <ClInclude Include="..\public\CustomMemory.h" />
     <ClInclude Include="..\public\CustomString.h" />
@@ -130,6 +131,7 @@
     <ClInclude Include="..\public\UWorkThread.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\private\AnimOccursEvents.cpp" />
     <ClCompile Include="..\private\AnimSectionEvents.cpp" />
     <ClCompile Include="..\private\CustomMemory.cpp" />
     <ClCompile Include="..\private\CustomString.cpp" />

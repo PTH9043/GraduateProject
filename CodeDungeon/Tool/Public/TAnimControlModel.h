@@ -53,12 +53,12 @@ private:
 	SHPTR<FILEGROUP>						m_spModelFolder;
 	SHPTR<UAnimation>						m_spCurAnimation;
 	ANIMMATIONCLIPS							m_AnimationClips;
+	ANIMMATIONCLIPS							m_FindAnimClips;
 
 	VECTOR<ANIMFASTSECTION>		m_AnimFastSections;
 	_bool													m_isAnimationStop;
 	_float													m_fAnimTimeAcc;
 	_float													m_fTotalAnimFastvalue;
-
 	_bool													m_isAnimEventActive;
 };
 

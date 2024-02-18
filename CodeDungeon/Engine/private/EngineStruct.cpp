@@ -261,6 +261,9 @@ namespace Engine {
 			case KEYPRESSTYPE::KEY_PRESSING:
 				MkEventFunc = IsKeyboardPressing;
 				break;
+			default:
+				MkEventFunc = IsEmptyFunc;
+				break;
 			}
 		}
 			break;
@@ -269,16 +272,61 @@ namespace Engine {
 			switch (KeyPressType)
 			{
 			case KEYPRESSTYPE::KEY_UP:
-				MkEventFunc = IsMouseUp;
+			{
+				switch (MouseButtonType)
+				{
+				case DIMOUSEBUTTON::DIMB_L:
+					MkEventFunc = IsMouseLeftUp;
+					break;
+				case DIMOUSEBUTTON::DIMB_R:
+					MkEventFunc = IsMouseRightUp;
+					break;
+				default:
+					MkEventFunc = IsEmptyFunc;
+					break;
+				}
+			}
 				break;
 			case KEYPRESSTYPE::KEY_DOWN:
-				MkEventFunc = IsMouseDown;
-				break;
+			{
+				switch (MouseButtonType)
+				{
+				case DIMOUSEBUTTON::DIMB_L:
+					MkEventFunc = IsMouseLeftDown;
+					break;
+				case DIMOUSEBUTTON::DIMB_R:
+					MkEventFunc = IsMouseRightDown;
+					break;
+				default:
+					MkEventFunc = IsEmptyFunc;
+					break;
+				}
+			}
+			break;
 			case KEYPRESSTYPE::KEY_PRESSING:
-				MkEventFunc = IsMousePressing;
+			{
+				switch (MouseButtonType)
+				{
+				case DIMOUSEBUTTON::DIMB_L:
+					MkEventFunc = IsMouseLeftPress;
+					break;
+				case DIMOUSEBUTTON::DIMB_R:
+					MkEventFunc = IsMouseRightPress;
+					break;
+				default:
+					MkEventFunc = IsEmptyFunc;
+					break;
+				}
+			}
+				break;		
+			default:
+				MkEventFunc = IsEmptyFunc;
 				break;
 			}
 		}
+			break;
+		default:
+			MkEventFunc = IsEmptyFunc;
 			break;
 		}
 	}
@@ -289,22 +337,50 @@ namespace Engine {
 		return Pointer;
 	}
 
-	_bool ANIMEVENTDESC::IsMouseUp(_ubyte _ubInputKey)
+	void ANIMEVENTDESC::Reset()
 	{
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		return spGameInstance->GetDIMBtnUp(_ubInputKey);
+		isEventActive = false; 
+		ubInputKey = 145;
+		MkEventType = MKEVENTTYPE::MK_END;
+		KeyPressType = KEYPRESSTYPE::KEY_END;
+		MouseButtonType = DIMOUSEBUTTON::DIMB_WHEEL;
+		MkEventFunc = IsEmptyFunc;
 	}
 
-	_bool ANIMEVENTDESC::IsMouseDown(_ubyte _ubInputKey)
+	_bool ANIMEVENTDESC::IsMouseLeftDown(_ubyte _ubInputKey)
 	{
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		return spGameInstance->GetDIMBtnDown(_ubInputKey);
+		return spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_L);
 	}
 
-	_bool ANIMEVENTDESC::IsMousePressing(_ubyte _ubInputKey)
+	_bool ANIMEVENTDESC::IsMouseRightDown(_ubyte _ubInputKey)
 	{
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		return spGameInstance->GetDIMBtnPressing(_ubInputKey);
+		return spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_R);
+	}
+
+	_bool ANIMEVENTDESC::IsMouseLeftUp(_ubyte _ubInputKey)
+	{
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		return spGameInstance->GetDIMBtnUp(DIMOUSEBUTTON::DIMB_L);
+	}
+
+	_bool ANIMEVENTDESC::IsMouseRightUp(_ubyte _ubInputKey)
+	{
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		return spGameInstance->GetDIMBtnUp(DIMOUSEBUTTON::DIMB_R);
+	}
+
+	_bool ANIMEVENTDESC::IsMouseLeftPress(_ubyte _ubInputKey)
+	{
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		return spGameInstance->GetDIMBtnPressing(DIMOUSEBUTTON::DIMB_L);
+	}
+
+	_bool ANIMEVENTDESC::IsMouseRightPress(_ubyte _ubInputKey)
+	{
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		return spGameInstance->GetDIMBtnPressing(DIMOUSEBUTTON::DIMB_R);
 	}
 
 	_bool ANIMEVENTDESC::IsKeyboardUp(_ubyte _ubInputKey)

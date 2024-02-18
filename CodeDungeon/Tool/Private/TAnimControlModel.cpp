@@ -57,6 +57,7 @@ void TAnimControlModel::SetShowModel(CSHPTRREF<UAnimModel> _spModel, CSHPTRREF<F
 	for (auto& iter : m_spModel->GetAnimStrings())
 	{
 		m_AnimationClips.insert(MakePair(UMethod::ConvertWToS(iter.first), iter.second));
+		m_FindAnimClips.insert(MakePair(UMethod::ConvertWToS(iter.first), iter.second));
 	}
 	m_isAnimationStop = false;
 	m_fAnimTimeAcc = 0.f;
@@ -75,9 +76,28 @@ void TAnimControlModel::ShowAnimModify()
 void TAnimControlModel::SelectAnimation()
 {
 	ImGui::Text("SelectAnimation");
-	if (ImGui::BeginListBox("Select AnimationControl", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+	if (ImGui::Button("AnimTransformReset"))
 	{
-		for (auto& AnimClip : m_AnimationClips)
+		GetTransform()->SetPos(_float3::Zero);
+		GetTransform()->RotateFix(_float3::Zero);
+	}
+	static _char InputAnim[MAX_BUFFER_LENGTH];
+	ImGui::SetNextItemWidth(-FLT_MIN);
+	if (true == ImGui::InputText("InputAnim", InputAnim, MAX_BUFFER_LENGTH))
+	{
+		m_FindAnimClips.clear();
+		for (auto& AnimClips : m_AnimationClips)
+		{
+			if (true == UMethod::Is_Same_Text(AnimClips.first, InputAnim))
+			{
+				m_FindAnimClips.emplace(MakePair(AnimClips.first, AnimClips.second));
+			}
+		}
+	}
+	ImGui::SetNextItemWidth(-FLT_MIN);
+	if (ImGui::BeginListBox("Select AnimationControl", ImVec2(-FLT_MIN, 8 * ImGui::GetTextLineHeightWithSpacing())))
+	{
+		for (auto& AnimClip : m_FindAnimClips)
 		{
 			_bool isTrue{ false };
 			if (ImGui::Selectable(AnimClip.first.c_str(), &isTrue))
@@ -220,11 +240,11 @@ void TAnimControlModel::TickActive(const _double& _dTimeDelta)
 		{
 			if (false == m_isAnimationStop)
 			{
-				m_spModel->TickAnimationEvent(GetTransform(), _dTimeDelta);
+				m_spModel->TickAnimAndEvent(GetTransform(), _dTimeDelta);
 			}
 			else
 			{
-				m_spModel->UpdateCurAnimationToTimAccEvent(GetTransform(), _dTimeDelta, static_cast<_double>(m_fAnimTimeAcc));
+				m_spModel->TickAnimToTimAccAndEvent(GetTransform(), _dTimeDelta, static_cast<_double>(m_fAnimTimeAcc));
 			}
 		}
 	}
