@@ -39,6 +39,14 @@ HRESULT TAnimControlModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	return S_OK;
 }
 
+void TAnimControlModel::ReleaseShowModel()
+{
+	m_spModel.reset();
+	m_spModelFolder.reset();
+	m_AnimationClips.clear();
+	m_isAnimationStop = false;
+}
+
 void TAnimControlModel::SetShowModel(CSHPTRREF<UAnimModel> _spModel, CSHPTRREF<FILEGROUP> _spFileFolder)
 {
 	RETURN_CHECK(nullptr == _spModel, ;);
@@ -51,6 +59,11 @@ void TAnimControlModel::SetShowModel(CSHPTRREF<UAnimModel> _spModel, CSHPTRREF<F
 		m_AnimationClips.insert(MakePair(UMethod::ConvertWToS(iter.first), iter.second));
 	}
 	m_isAnimationStop = false;
+	m_fAnimTimeAcc = 0.f;
+	m_fTotalAnimFastvalue = 0.f;
+	m_isAnimEventActive = false;
+
+	m_spModel->OnShowOriginAnimation();
 }
 
 void TAnimControlModel::ShowAnimModify()
@@ -93,6 +106,16 @@ void TAnimControlModel::ModifyAnimation()
 		{
 			m_fAnimTimeAcc = static_cast<_float>(m_spCurAnimation->GetTimeAcc());
 			ImGui::Checkbox("AnimEventActive", &m_isAnimEventActive);
+			if (true == m_isAnimEventActive)
+			{
+				m_spModel->OnAdjustTransformToAnimation();
+			}
+			else
+			{
+				m_spModel->OnShowOriginAnimation();
+			}
+
+
 			ImGui::SliderFloat("TotalFastValue", &m_fTotalAnimFastvalue, 0, 100);
 			isClicked = ImGui::SliderFloat("DeltaTime", &m_fAnimTimeAcc, 0.f, AnimDuration);
 			if (true == isClicked) {
@@ -154,10 +177,13 @@ void TAnimControlModel::ModifyAnimation()
 							_string Index = _string::to_string(iIndex++);
 
 							ImGui::TableNextColumn();
+							ImGui::SetNextItemWidth(-FLT_MIN);
 							ImGui::DragFloat(Start + Index, &iter.fStartSpot, 0.01f, 0.f, AnimDuration);
 							ImGui::TableNextColumn();
+							ImGui::SetNextItemWidth(-FLT_MIN);
 							ImGui::DragFloat(End + Index, &iter.fEndSpot, 0.01f, 0.f, AnimDuration);
 							ImGui::TableNextColumn();
+							ImGui::SetNextItemWidth(-FLT_MIN);
 							ImGui::DragFloat(Fast + Index, &iter.fFastValue, 0.01f, 0.f, AnimDuration);
 							ImGui::TableNextRow();
 						}

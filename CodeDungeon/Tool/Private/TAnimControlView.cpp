@@ -89,7 +89,10 @@ HRESULT TAnimControlView::LoadResource()
 
 HRESULT TAnimControlView::ReleaseResource()
 {
+	m_spShowAnimModel = nullptr;
+	m_spSelectAnim = nullptr;
 	m_AnimFileContainer.clear();
+	m_spAnimControlModel->ReleaseShowModel();
 	m_spAnimControlModel->SetActive(false);
     return S_OK;
 }
@@ -160,10 +163,6 @@ void TAnimControlView::AnimModelSelectView()
 			{
 				m_spShowAnimModel = CreateConstructorNative<UAnimModel>(GetDevice(), m_spSelectAnimFileData->wstrfilePath);
 				m_spAnimControlModel->SetShowModel(m_spShowAnimModel, m_spSelectAnimFileFolder);
-				for (auto& iter : m_spShowAnimModel->GetAnimStrings())
-				{
-					m_AnimationNameTags.emplace_back(iter.first.c_str());
-				}
 			}
 		}
 		if (nullptr == m_spSelectAnimFileData)
@@ -231,8 +230,7 @@ void TAnimControlView::MakeAnimEvent()
 			ImGuiTreeNodeFlags Flags = ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_DefaultOpen;
 			// Options
 			static ImGuiTableFlags flags = ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Sortable | ImGuiTableFlags_SortMulti
-				| ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_NoBordersInBody
-				| ImGuiTableFlags_ScrollY;
+				| ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_NoBordersInBody| ImGuiTableFlags_ScrollY;
 
 			// Event Container 
 			for (auto& iter : m_spSelectAnim->GetAnimEventContainer())
@@ -267,74 +265,86 @@ void TAnimControlView::AnimChangesBetweenShow(CSHPTRREF<UAnimation> _spAnim, ImG
 	{
 		if (ImGui::BeginTable("AnimChangesBetween", 8, _flags, ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 20), 0.0f))
 		{
-			ImGui::TableSetupColumn("Idx");
-			ImGui::TableSetupColumn("Input");
-			ImGui::TableSetupColumn("Mouse");
-			ImGui::TableSetupColumn("Key");
-			ImGui::TableSetupColumn("StartT");
-			ImGui::TableSetupColumn("EndT");
-			ImGui::TableSetupColumn("NextAnim");
-			ImGui::TableSetupColumn("SupV");
+			ImGui::TableSetupColumn("Idx", ImGuiTableColumnFlags_WidthFixed);
+			ImGui::TableSetupColumn("Input", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupColumn("Mouse", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupColumn("Key", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupColumn("StartT", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupColumn("EndT", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupColumn("NextAnim", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupColumn("SupV", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupScrollFreeze(0, 1); // Make row always visible
+			ImGui::TableHeadersRow();
 
-			static _int iSelectKeyPressEvent{ KEYPRESSEND - 1 };
-			static _int iSelectKeyboardEvent{ KEYBOARDEND - 1 };
-			static _int iSelectMouseEvent{ MOUSEEND - 1 };
+			static _int iSelectKeyPressEvent{ KEYPRESSTAG_CNT - 1 };
+			static _int iSelectKeyboardEvent{ KEYBOARDTAG_CNT - 1 };
+			static _int iSelectMouseEvent{ MOUSETAG_CNT - 1 };
 			static _int iSelectAnim{ 0 };
+
+			static _string Idx = "%3d";
+			static _string Input = "##Input";
+			static _string Mouse = "##Mouse";
+			static _string Key = "##Key";
+			static _string StartT = "##StartT";
+			static _string EndT = "##EndT";
+			static _string NextAnim = "##NextAnim";
+			static _string SupV = "##SupV";
 
 			_int iIndex{ 0 };
 			_float TimeAcc = static_cast<_float>(_spAnim->GetTimeAcc());
 			for (auto& iter : _AnimEvent)
 			{
 				_string Index = _string::to_string(iIndex++);
-				static _string Idx = "%3d";
-				static _string Input = "##Input";
-				static _string Mouse = "##Mouse";
-				static _string Key = "##Key";
-				static _string StartT = "##StartT";
-				static _string EndT = "##EndT";
-				static _string NextAnim = "##NextAnim";
-				static _string SupV = "##SupV";
 
 				 ANIMEVENTSECTIONDESC* SectionDesc = static_cast<ANIMEVENTSECTIONDESC*>(iter->OutAnimEventDesc());
+				 ANIMCHANGEDESC* ChangeDesc = static_cast<ANIMCHANGEDESC*>(iter->OutOtherEventDesc());
 
 				ImGui::TableNextColumn();
 				ImGui::Text(Idx, iIndex);
 				ImGui::TableNextColumn();
-				if (true == ImGui::Combo(Input + Index, &iSelectKeyPressEvent, KEYPRESSTAG, KEYPRESSEND))
+				ImGui::SetNextItemWidth(-FLT_MIN);
+				if (true == ImGui::Combo(Input + Index, &iSelectKeyPressEvent, KEYPRESSTAG, KEYPRESSTAG_CNT))
 				{
 					SectionDesc->KeyPressType = static_cast<KEYPRESSTYPE>(iSelectKeyPressEvent);
 				}
 				ImGui::TableNextColumn();
-				if (true == ImGui::Combo(Key + Index, &iSelectKeyboardEvent, KEYTAG, KEYBOARDEND))
+				ImGui::SetNextItemWidth(-FLT_MIN);
+				if (true == ImGui::Combo(Key + Index, &iSelectKeyboardEvent, KEYTAG, KEYBOARDTAG_CNT))
 				{
 					SectionDesc->ubInputKey = static_cast<_ubyte>(iSelectKeyboardEvent);
 				}
 				ImGui::TableNextColumn();
-				if (true == ImGui::Combo(Mouse + Index, &iSelectMouseEvent, MOUSETAG, MOUSEEND))
+				ImGui::SetNextItemWidth(-FLT_MIN);
+				if (true == ImGui::Combo(Mouse + Index, &iSelectMouseEvent, MOUSETAG, MOUSETAG_CNT))
 				{
 					SectionDesc->MkEventType = static_cast<MKEVENTTYPE>(iSelectMouseEvent);
 				}
 				{
 					ImGui::TableNextColumn();
+					ImGui::SetNextItemWidth(-FLT_MIN);
 					_float StartTime = static_cast<_float>(SectionDesc->dStartTime);
 					ImGui::SliderFloat(StartT + Index, &StartTime, 0.0f, TimeAcc);
 					SectionDesc->dStartTime = static_cast<_double>(StartTime);
 				}
 				{
 					ImGui::TableNextColumn();
+					ImGui::SetNextItemWidth(-FLT_MIN);
 					_float EndTime = static_cast<_float>(SectionDesc->dEndTime);
 					ImGui::SliderFloat(EndT + Index, &EndTime, 0.0f, TimeAcc);
 					SectionDesc->dEndTime = static_cast<_double>(EndTime);
 				}
 				{
 					ImGui::TableNextColumn();
-					_float EndTime = static_cast<_float>(SectionDesc->dEndTime);
-					ImGui::SliderFloat(EndT + Index, &EndTime, 0.0f, TimeAcc);
-					SectionDesc->dEndTime = static_cast<_double>(EndTime);
+					ImGui::SetNextItemWidth(-FLT_MIN);
+					ImGui::Text("Dfadf");
 				}
-
+				{
+					ImGui::TableNextColumn();
+					ImGui::SetNextItemWidth(-FLT_MIN);
+					ImGui::DragFloat(SupV + Index, &ChangeDesc->fSupplyAnimValue, 0.01f, 0.0f, 10.f);
+				}
+				ImGui::TableNextRow();
 			}
-
 			ImGui::EndTable();
 		}
 		ImGui::TreePop();

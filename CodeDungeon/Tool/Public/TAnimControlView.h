@@ -56,13 +56,11 @@ private:
 	SHPTR<FILEDATA>								m_spSelectAnimFileData;
 
 	SHPTR<UAnimation>							m_spSelectAnim;
-
-	VECTOR<_char*>									m_AnimationNameTags;
 	_int															m_iSelectAnimEvent;
 
-	static constexpr	_int KEYPRESSEND{ 4 };
-	static constexpr	_int KEYBOARDEND{ 145 };
-	static constexpr	_int MOUSEEND{ 4 };
+	static constexpr	_int KEYPRESSTAG_CNT{ 4 };
+	static constexpr	_int KEYBOARDTAG_CNT{ 145 };
+	static constexpr	_int MOUSETAG_CNT{ 4 };
 
 	static const _char* KEYPRESSTAG[];
 	static const _char* KEYTAG[];

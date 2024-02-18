@@ -930,5 +930,11 @@
     <FxCompile Include="..\..\Shader\Compute2DParticle.hlsl">
       <Filter>98.ShaderFile\Common\Particle</Filter>
     </FxCompile>
+    <FxCompile Include="..\..\Shader\2DAnimateParticle.hlsl">
+      <Filter>98.ShaderFile\Common\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\ComputeAnimation.hlsl">
+      <Filter>98.ShaderFile\Common\Particle</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

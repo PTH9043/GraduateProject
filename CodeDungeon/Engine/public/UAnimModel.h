@@ -55,8 +55,10 @@ public:
 	// Change Animation
 	void ChangeAnimation(const _uint& _iAnimIndex);
 	void ChangeAnimation(const _wstring& _wstrAnimName);
+
+	void OnShowOriginAnimation();
+	void OnAdjustTransformToAnimation();
 private:
-	void UpdateOwnerActorPos(CSHPTRREF<UTransform> _spTransform);
 	// CreateAnimation
 	HRESULT CreateAnimation(const VECTOR<ANIMDESC>& _convecAnimDesc, const _wstring& _wstrPath);
 	// Load To Data

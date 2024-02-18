@@ -145,6 +145,7 @@ void UAnimation::ResetData()
 	m_fSupplySituationValue = 0.001f;
 	m_isSupplySituation = false;
 	m_isFinishAnimation = false;
+	m_dTimeAcc = 0.0;
 }
 
 void UAnimation::InsertAnimEvent(ANIMEVENTTYPE _AnimEventType, CSHPTRREF<UAnimEvent> _spAnimEvent)

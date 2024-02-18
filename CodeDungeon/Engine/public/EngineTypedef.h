@@ -74,11 +74,11 @@ namespace Engine {
 	using DxGIFactory = IDXGIFactory4;
 	using DxGISwapChain = IDXGISwapChain3;
 	using Dx12QueryHeap = ID3D12QueryHeap;
-
 	// Using
 	template<class Type, _uint Num>
 	using ARRAY = std::array<Type, Num>;
 
+#pragma region CUSTOM
 	template<class T>
 	using LIST = std::list<T, UStlAllocator<T>>;
 
@@ -105,6 +105,35 @@ namespace Engine {
 
 	template<class Type, class Container = DEQUE<Type>>
 	using STACK = std::stack<Type, Container>;
+#pragma endregion CUSTOM
+#pragma region ORIGIN
+	template<class T>
+	using ORILIST = std::list<T>;
+
+	template<class T>
+	using ORIVECTOR = std::vector<T>;
+
+	template<class Type, class Other, class HASH = std::hash<Type>, class KEYEQ = std::equal_to<Type>>
+	using ORIUNORMAP = std::unordered_map<Type, Other, HASH, KEYEQ>;
+
+	template<class Type, class HASH = std::hash<Type>, class KEYEQ = std::equal_to<Type>>
+	using ORIUNORSET = std::unordered_set<Type, HASH, KEYEQ>;
+
+	template<class Type, class Pred = std::less<Type>>
+	using ORISET = std::set<Type, Pred>;
+
+	template<class Type>
+	using ORIDEQUE = std::deque<Type>;
+
+	template<class Type, class Container = DEQUE<Type>>
+	using ORIQUEUE = std::queue<Type, Container>;
+
+	template<class Type, class Container = VECTOR<Type>, class Pred = std::less<class Container::value_type>>
+	using ORIPRIORITYQUEUE = std::priority_queue<Type, Container, Pred>;
+
+	template<class Type, class Container = DEQUE<Type>>
+	using ORISTACK = std::stack<Type, Container>;
+#pragma endregion ORIGIN
 
 	template<class Type>
 	using CONQUEUE = concurrency::concurrent_queue<Type>;

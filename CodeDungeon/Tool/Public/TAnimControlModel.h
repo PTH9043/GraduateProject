@@ -37,7 +37,7 @@ public:
 	virtual void Free() override;
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;
-
+	void ReleaseShowModel();
 	void SetShowModel(CSHPTRREF<UAnimModel> _spModel, CSHPTRREF<FILEGROUP> _spFileFolder);
 	void ShowAnimModify();
 protected:

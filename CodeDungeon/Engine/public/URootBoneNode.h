@@ -27,6 +27,7 @@ public:
 	virtual void Free() override;
 	virtual void UpdateCombinedMatrix() override;
 	void OnRootBoneNode();
+	void OffRootBoneNode();
 	void ResetRootBoneInfo();
 private:
 	void UpdateMoveBonePos();

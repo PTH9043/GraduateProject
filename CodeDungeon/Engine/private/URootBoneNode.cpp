@@ -40,6 +40,11 @@ void URootBoneNode::OnRootBoneNode()
 	m_RootBoneNodeFunc = UpdateRootBoneUpdateFunc;
 }
 
+void URootBoneNode::OffRootBoneNode()
+{
+	m_RootBoneNodeFunc = UpdateBasicBoneUpdateFunc;
+}
+
 void URootBoneNode::ResetRootBoneInfo()
 {
 	m_vPrevRootBonePos = _float3::Zero;

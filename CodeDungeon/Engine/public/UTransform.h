@@ -19,9 +19,8 @@ public:
 	const _quaternion& GetRotation() const { return m_vQuaternion; }
 	const _float4x4 GetWorldMatrixTP() { TransformUpdate();  return XMMatrixTranspose(XMLoadFloat4x4(&m_mChangeWorldMatrix)); }
 	const _float4x4 GetWorldMatrixInv() { TransformUpdate();   return XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_mChangeWorldMatrix)); }
-	const _float4x4 GetWorldMatrix() const { return m_mWorldMatrix * m_mScaleMatrix; }
+	const _float4x4& GetWorldMatrix() const { return m_mWorldMatrix; }
 	const _float4x4& GetChangeMatrix() { TransformUpdate();   return m_mChangeWorldMatrix; }
-	const _float4x4& GetPivotMatrix() const { return m_mScaleMatrix; }
 	// Get Parents Local Matrix
 	const _float4x4 GetParentsMatrix();
 
@@ -114,7 +113,6 @@ private:
 	// Needs Value 
 	_float4x4												m_mWorldMatrix{ _float4x4::Identity };
 	_float4x4												m_mChangeWorldMatrix{ _float4x4::Identity };
-	_float4x4												m_mScaleMatrix{ _float4x4::Identity };
 	_quaternion											m_vQuaternion{ _float4::Zero };
 	_float3													m_vScale{ _float3::Zero };
 	// Parents Location

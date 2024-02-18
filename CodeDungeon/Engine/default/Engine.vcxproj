@@ -231,6 +231,7 @@
     <ClCompile Include="..\public\ImGui\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\..\Shader\2DAnimateParticle.hlsl" />
     <FxCompile Include="..\..\Shader\2DParticle.hlsl" />
     <FxCompile Include="..\..\Shader\AnimModel.hlsl" />
     <FxCompile Include="..\..\Shader\BlendDeffered.hlsl">
@@ -238,6 +239,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\Shader\Compute2DParticle.hlsl" />
+    <FxCompile Include="..\..\Shader\ComputeAnimation.hlsl" />
     <FxCompile Include="..\..\Shader\Debug2DTarget.hlsl" />
     <FxCompile Include="..\..\Shader\DebugDefaultObject.hlsl" />
     <FxCompile Include="..\..\Shader\FinalDeffered.hlsl">

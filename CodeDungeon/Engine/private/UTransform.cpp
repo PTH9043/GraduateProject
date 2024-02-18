@@ -12,7 +12,6 @@ UTransform::UTransform(CSHPTRREF<UDevice> _spDevice) :
 	m_stTransformParam{},
 	m_mWorldMatrix{ _float4x4::Identity },
 	m_mChangeWorldMatrix{ _float4x4::Identity },
-	m_mScaleMatrix{_float4x4::Identity},
 	m_vQuaternion{ _float4::Zero },
 	m_vScale{ 1.f, 1.f, 1.f },
 	m_isNotApplyRotate{ false },
@@ -57,7 +56,6 @@ void UTransform::SetScale(const _float3& _vScale)
 		return;
 
 	m_mWorldMatrix = m_mWorldMatrix.MatrixSetScaling(_vScale);
-	m_mScaleMatrix = _float4x4::CreateScale(_vScale);
 	m_vScale = _vScale;
 }
 

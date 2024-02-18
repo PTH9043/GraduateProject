@@ -58,7 +58,8 @@ HRESULT TTestObject::NativeConstructClone(const VOIDDATAS& _vecDatas)
 		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 10.f;
 		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 300;
 
-		m_spParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE,	{ &tDesc}));
+		//m_spParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE,	{ &tDesc}));
+	//	m_spParticle->SetActive(true);
 	}
 	return S_OK;
 }

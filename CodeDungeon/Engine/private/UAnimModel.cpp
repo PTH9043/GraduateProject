@@ -129,11 +129,11 @@ void UAnimModel::TickAnimationEvent(CSHPTRREF<UTransform> _spTransform, const _d
 	TickAnimation(_dTimeDelta);
 	if (false == m_spCurAnimation->IsFinishAnim())
 	{
-		_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), _spTransform->GetPivotMatrix());
-		_spTransform->MovePos(Position);
-
 		_float3 vLook = GetRootBoneNode()->GetMoveRootBoneAngle();
 		_spTransform->RotateTurn(vLook);
+
+		_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), _spTransform->GetWorldMatrix());
+		_spTransform->SetPos(Position);
 	}
 	else
 	{
@@ -147,11 +147,11 @@ void UAnimModel::UpdateCurAnimationToTimAccEvent(CSHPTRREF<UTransform> _spTransf
 	m_spCurAnimation->TickAnimEvent(this, _dTimeDelta);
 	UpdateCurAnimationToTimeAcc(_TimeAcc);
 
-	_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), _spTransform->GetPivotMatrix());
-	_spTransform->MovePos(Position);
-
 	_float3 vLook = GetRootBoneNode()->GetMoveRootBoneAngle();
 	_spTransform->RotateTurn(vLook);
+
+	_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), _spTransform->GetWorldMatrix());
+	_spTransform->SetPos(Position);
 }
 
 HRESULT UAnimModel::Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader, CSHPTRREF<UCommand> _spCommand)
@@ -199,12 +199,14 @@ void UAnimModel::ChangeAnimation(const _wstring& _wstrAnimName)
 	SettingNextAnimSituation();
 }
 
-void UAnimModel::UpdateOwnerActorPos(CSHPTRREF<UTransform> _spTransform)
+void UAnimModel::OnShowOriginAnimation()
 {
-	assert(_spTransform && m_spCurAnimation);
-	RETURN_CHECK(true == m_spCurAnimation->IsFinishAnim(), ;);
-	_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), _spTransform->GetPivotMatrix());
-	_spTransform->MovePos(Position);
+	GetRootBoneNode()->OffRootBoneNode();
+}
+
+void UAnimModel::OnAdjustTransformToAnimation()
+{
+	GetRootBoneNode()->OnRootBoneNode();
 }
 
 HRESULT UAnimModel::CreateAnimation(const  VECTOR<ANIMDESC>& _convecAnimDesc, const _wstring& _wstrPath)
