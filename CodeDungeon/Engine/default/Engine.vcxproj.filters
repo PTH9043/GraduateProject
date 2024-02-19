@@ -295,6 +295,9 @@
     <Filter Include="06.Component\Collider">
       <UniqueIdentifier>{b296dd99-2437-4100-90a3-0ed9acc49a1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.Utility\Sound">
+      <UniqueIdentifier>{c768e6d2-3e14-4c43-973d-98d132aae2fb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -575,6 +578,9 @@
     </ClCompile>
     <ClCompile Include="..\private\AnimOccursEvents.cpp">
       <Filter>07.Resource\Model\Animation\AnimEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\USound.cpp">
+      <Filter>03.Utility\Sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -886,6 +892,9 @@
     </ClInclude>
     <ClInclude Include="..\public\AnimOccursEvents.h">
       <Filter>07.Resource\Model\Animation\AnimEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\USound.h">
+      <Filter>03.Utility\Sound</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

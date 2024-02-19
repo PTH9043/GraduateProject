@@ -585,13 +585,7 @@ namespace Engine {
 
 		ANIMEVENTSECTIONDESC() : dStartTime{0.0}, dEndTime{0.0} {}
 
-		_bool IsAnimEventActive(const _double& _dTimeAcc) {
-			isEventActive = false;
-			if (_dTimeAcc >= dStartTime && _dTimeAcc <= dEndTime)
-				isEventActive = true;
-
-			return isEventActive;
-		}
+		_bool IsAnimEventActive(const _double& _dTimeAcc);
 	};
 	/*
 	@ Date: 2024-02-10, Writer: 박태현
@@ -603,17 +597,7 @@ namespace Engine {
 
 		ANIMOCURRESDESC() : dAnimOccursTime{ 0.0 } {}
 
-		bool IsAnimOcurrs(const _double& _dTimeAcc) {
-			isEventActive = false;
-
-			if (_dTimeAcc <= dAnimOccursTime)
-			{
-				isEventActive = true;
-				return true;
-			}
-			
-			return false;
-		}
+		bool IsAnimOcurrs(const _double& _dTimeAcc);
 	};
 	/*
 	@ Date: 2024-02-10, Writer: 박태현

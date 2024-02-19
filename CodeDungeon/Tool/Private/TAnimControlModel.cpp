@@ -65,6 +65,7 @@ void TAnimControlModel::SetShowModel(CSHPTRREF<UAnimModel> _spModel, CSHPTRREF<F
 	m_isAnimEventActive = false;
 
 	m_spModel->OnShowOriginAnimation();
+	SetActive(true);
 }
 
 void TAnimControlModel::ShowAnimModify()

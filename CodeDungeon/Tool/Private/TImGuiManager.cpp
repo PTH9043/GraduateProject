@@ -11,6 +11,7 @@
 #include "UGameInstance.h"
 #include "TMainScene.h"
 #include "TAnimControlView.h"
+#include "TCameraView.h"
 
 IMPLEMENT_SINGLETON(TImGuiManager)
 
@@ -136,11 +137,11 @@ HRESULT TImGuiManager::ReadyImGuiClass()
 		m_ImGuiObjectContainer.insert(MakePair(IMGTAG::ANIMCONTROLVIEW, spAnimControlView));
 		m_spMainView->InsertImGuiView(spAnimControlView);
 	}
-	//{
-	//	SHPTR<TSceneView> spSceneView = CreateConstructorNative<TSceneView>(m_spDevice);
-	//	spSceneView->CloseImGui();
-	//	m_uomapImGuiObjects.insert(std::make_pair(IMGTAG::SCENEVIEW, spSceneView));
-	//	m_spMainView->InsertImGuiView(spSceneView);
-	//}
+	{
+		SHPTR<TCameraView> spCameraView = CreateConstructorNative<TCameraView>(m_spDevice);
+		spCameraView->CloseImGui();
+		m_ImGuiObjectContainer.insert(std::make_pair(IMGTAG::CAMERATOOL, spCameraView));
+		m_spMainView->InsertImGuiView(spCameraView);
+	}
 	return S_OK;
 }

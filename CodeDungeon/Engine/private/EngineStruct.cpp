@@ -402,4 +402,25 @@ namespace Engine {
 	}
 
 #pragma endregion ANIMEVENTTYPE
+
+	_bool ANIMEVENTSECTIONDESC::IsAnimEventActive(const _double& _dTimeAcc)
+	{
+		isEventActive = false;
+		if (_dTimeAcc >= dStartTime && _dTimeAcc <= dEndTime)
+			isEventActive = true;
+
+		return isEventActive;
+	}
+
+	bool ANIMOCURRESDESC::IsAnimOcurrs(const _double& _dTimeAcc) {
+		isEventActive = false;
+
+		if (_dTimeAcc <= dAnimOccursTime)
+		{
+			isEventActive = true;
+			return true;
+		}
+
+		return false;
+	}
 }

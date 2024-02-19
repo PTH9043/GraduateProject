@@ -78,7 +78,6 @@ HRESULT TAnimControlView::NativeConstruct()
 
 HRESULT TAnimControlView::LoadResource()
 {
-	m_spAnimControlModel->SetActive(true);
 	SHPTR<FILEGROUP> AnimModels  = GetGameInstance()->FindFolder(L"AnimModel");
 	for (auto& iter : AnimModels->UnderFileGroupList)
 	{
@@ -96,10 +95,8 @@ HRESULT TAnimControlView::LoadResource()
 
 HRESULT TAnimControlView::ReleaseResource()
 {
-	m_spShowAnimModel = nullptr;
 	m_spSelectAnim = nullptr;
 	m_AnimFileContainer.clear();
-	m_spAnimControlModel->ReleaseShowModel();
 	m_spAnimControlModel->SetActive(false);
     return S_OK;
 }

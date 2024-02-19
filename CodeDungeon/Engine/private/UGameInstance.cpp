@@ -19,6 +19,7 @@
 #include "UFilePathManager.h"
 //#include "URandomManager.h"
 #include "UNetworkManager.h"
+#include "USoundManager.h"
 
 #include "URenderer.h"
 
@@ -85,6 +86,7 @@ UGameInstance::UGameInstance() :
 	m_spFilePathManager{ Create<UFilePathManager>() },
 	//m_spRandomManager{ Create<URandomManager>() },
 	m_spNetworkManager{Create<UNetworkManager>()},
+	m_spSoundManager{Create<USoundManager>()},
 	m_spRenderer{ nullptr }
 	//m_spGraphicRenderObject{ nullptr }
 {
@@ -103,6 +105,8 @@ void UGameInstance::Free()
 
 	//m_isGamming = false;
 	//m_spRandomManager.reset();
+	m_spSoundManager.reset();
+	m_spNetworkManager.reset();
 	m_spFilePathManager.reset();
 	//m_spPicking.reset();
 	m_spPipeLine.reset();
@@ -112,13 +116,11 @@ void UGameInstance::Free()
 	m_spActorManager.reset();
 	m_spComponentManager.reset();
 	m_spResourceManager.reset();
-	//m_spFontMananger.reset();
 	m_spThreadManager.reset();
 	m_spInputManager.reset();
 	m_spTimerManager.reset();
 	m_spGraphicDevice.reset();
 	m_spShaderBufferManager.reset();
-	//m_spGraphicRenderManager.reset();
 
 
 #if defined(_DEBUG)
@@ -149,6 +151,7 @@ HRESULT UGameInstance::ReadyInstance(const GRAPHICDESC& _stDesc, OUTPUTDATA& _st
 	
 	//RETURN_CHECK_FAILED(m_spComputeManager->ReadyComputeManager(m_spGraphicDevice), E_FAIL);
 	RETURN_CHECK_FAILED(m_spPipeLine->ReadyPipeLine(this), E_FAIL);
+	RETURN_CHECK_FAILED(m_spSoundManager->ReadySoundManager(), E_FAIL);
 	//RETURN_CHECK_FAILED(m_spPicking->ReadyPickingDesc(m_spGraphicDevice->GetGraphicDesc()), E_FAIL);
 
 	//RegisterInsideWorkThread(std::thread::hardware_concurrency());

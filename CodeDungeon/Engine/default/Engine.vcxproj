@@ -111,6 +111,7 @@
     <ClInclude Include="..\public\UShaderBufferManager.h" />
     <ClInclude Include="..\public\UShaderConstantBuffer.h" />
     <ClInclude Include="..\public\UShaderStructedBuffer.h" />
+    <ClInclude Include="..\public\USound.h" />
     <ClInclude Include="..\public\USoundManager.h" />
     <ClInclude Include="..\public\USwapChain.h" />
     <ClInclude Include="..\public\UTableDescriptor.h" />
@@ -206,6 +207,7 @@
     <ClCompile Include="..\private\UShaderBufferManager.cpp" />
     <ClCompile Include="..\private\UShaderConstantBuffer.cpp" />
     <ClCompile Include="..\private\UShaderStructedBuffer.cpp" />
+    <ClCompile Include="..\private\USound.cpp" />
     <ClCompile Include="..\private\USoundManager.cpp" />
     <ClCompile Include="..\private\USwapChain.cpp" />
     <ClCompile Include="..\private\UTableDescriptor.cpp" />

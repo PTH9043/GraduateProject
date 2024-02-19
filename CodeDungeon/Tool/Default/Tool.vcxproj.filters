@@ -181,6 +181,9 @@
     <ClInclude Include="..\Public\TShowMapObjects.h">
       <Filter>90.ShowModel\Map</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\TCameraView.h">
+      <Filter>03.ImGui\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\TToolApp.cpp">
@@ -263,6 +266,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\TShowMapObjects.cpp">
       <Filter>90.ShowModel\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TCameraView.cpp">
+      <Filter>03.ImGui\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
