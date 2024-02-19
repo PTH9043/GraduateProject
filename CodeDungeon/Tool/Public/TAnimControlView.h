@@ -57,7 +57,6 @@ private:
 
 	SHPTR<UAnimation>							m_spSelectAnim;
 
-	VECTOR<_char*>									m_AnimationNameTags;
 	_int															m_iSelectAnimEvent;
 
 	static constexpr	_int KEYPRESSEND{ 4 };

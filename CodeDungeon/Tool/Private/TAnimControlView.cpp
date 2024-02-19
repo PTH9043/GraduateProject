@@ -160,10 +160,6 @@ void TAnimControlView::AnimModelSelectView()
 			{
 				m_spShowAnimModel = CreateConstructorNative<UAnimModel>(GetDevice(), m_spSelectAnimFileData->wstrfilePath);
 				m_spAnimControlModel->SetShowModel(m_spShowAnimModel, m_spSelectAnimFileFolder);
-				for (auto& iter : m_spShowAnimModel->GetAnimStrings())
-				{
-					m_AnimationNameTags.emplace_back(iter.first.c_str());
-				}
 			}
 		}
 		if (nullptr == m_spSelectAnimFileData)

@@ -79,6 +79,7 @@ HRESULT TTestObject::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTab
 	GetTransform()->BindTransformData(GetShader());
 	GetShader()->BindCBVBuffer(m_spRectColorBuffer, &m_RectColor, RECTCOLOR_SIZE);
 	m_spVIBufferGrid->Render(GetShader(), _spCommand);
+	m_spParticle->SetActive(true);
 	return S_OK;
 }
 
