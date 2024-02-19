@@ -41,7 +41,7 @@ cbuffer ALLPARTICLEBUFFER : register(b14)
     GROBALPARTICLEINFO g_GrobalParticleInfo;
 };
 
-StructuredBuffer<PARTICLE> g_ParticleData : register(t13);
+StructuredBuffer<PARTICLE> g_ParticleData : register(t14);
 
 // VS_MAIN
 // g_float_0    : Start Scale
