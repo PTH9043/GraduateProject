@@ -121,10 +121,11 @@ void UAnimModel::UpdateCurAnimationToTimeAcc(const _double& _dTimeAcc)
 	}
 }
 
-void UAnimModel::TickAnimAndEvent(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta)
+void UAnimModel::TickAnimAndEvent(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta, 
+	const _wstring& _wstrInputTrigger)
 {
 	assert(_spTransform && m_spCurAnimation);
-	m_spCurAnimation->TickAnimEvent(this, _dTimeDelta);
+	m_spCurAnimation->TickAnimEvent(this, _dTimeDelta, _wstrInputTrigger);
 	TickAnimation(_dTimeDelta);
 
 	if (false == m_spCurAnimation->IsSupplySituation())
@@ -144,10 +145,11 @@ void UAnimModel::TickAnimAndEvent(CSHPTRREF<UTransform> _spTransform, const _dou
 	}
 }
 
-void UAnimModel::TickAnimToTimAccAndEvent(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta, const _double& _TimeAcc)
+void UAnimModel::TickAnimToTimAccAndEvent(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta, const _double& _TimeAcc, 
+	const _wstring& _wstrInputTrigger)
 {
 	assert(_spTransform && m_spCurAnimation);
-	m_spCurAnimation->TickAnimEvent(this, _dTimeDelta);
+	m_spCurAnimation->TickAnimEvent(this, _dTimeDelta, _wstrInputTrigger);
 	UpdateCurAnimationToTimeAcc(_TimeAcc);
 
 	_float3 vLook = GetRootBoneNode()->GetMoveRootBoneAngle();
@@ -238,7 +240,7 @@ HRESULT UAnimModel::CreateAnimation(const  VECTOR<ANIMDESC>& _convecAnimDesc, co
 		m_vecAnimations.push_back(spAnimation);
 
 		m_AnimNamesGroup.insert(std::pair<_wstring, _uint>(spAnimation->GetAnimName(), iIndex++));
-		spAnimation->LoadAnimDataPathIsFolder(_wstrPath);
+		spAnimation->LoadAnimSectionDataPathIsFolder(_wstrPath);
 	}
 	return S_OK;
 }

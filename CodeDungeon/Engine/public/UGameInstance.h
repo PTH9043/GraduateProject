@@ -23,7 +23,7 @@ class UFilePathManager;
 class URandomManager;
 class UThreadManager;
 class UNetworkManager;
-class USoundManager;
+class UAudioSystemManager;
 
 class URenderer;
 
@@ -263,7 +263,7 @@ private:
 	SHPTR<UPipeLine>									m_spPipeLine;
 	SHPTR<UFilePathManager>					m_spFilePathManager;
 	SHPTR< UNetworkManager>				m_spNetworkManager;
-	SHPTR<USoundManager>						m_spSoundManager;
+	SHPTR< UAudioSystemManager>		m_spAudioSystemManager;
 
 	SHPTR<URenderer>								m_spRenderer;
 	//SHPTR< UFontManager>						m_spFontMananger;
