@@ -17,7 +17,7 @@ void UVIBufferCell::Free()
 
 HRESULT UVIBufferCell::NativeConstruct()
 {
-	return E_NOTIMPL;
+	return __super::NativeConstruct();
 }
 
 

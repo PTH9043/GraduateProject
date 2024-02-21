@@ -1,5 +1,5 @@
 #pragma once
-#include "UAnimEvent.h"
+#include "AnimEventParents.h"
 
 
 BEGIN(Engine)
@@ -9,19 +9,16 @@ BEGIN(Engine)
 @ Explain
 - 구간 사이에서 특정 이벤트가 발생할 때 다음 애니메이션으로 넘어가게 만드는 이벤트이다.
 */
-class UAnimOccurEvent final : public UAnimEvent {
+class UAnimOccursTimePassEvent final : public UAnimOccurEvent {
 public:
-	UAnimOccurEvent();
-	UAnimOccurEvent(std::ifstream& _load);
-	DESTRUCTOR(UAnimOccurEvent)
+	UAnimOccursTimePassEvent();
+	UAnimOccursTimePassEvent(std::ifstream& _load);
+	UAnimOccursTimePassEvent(const ANIMOCURRESDESC& _AnimEventDesc);
+	DESTRUCTOR(UAnimOccursTimePassEvent)
 public:
-	virtual _bool EventCheck(UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc,
-		const _wstring& _wstrInputTrigger) override;
-
-	virtual ANIMEVENTDESC* const OutAnimEventDesc() override;
-	virtual void ChangeAnimEventDesc(ANIMEVENTDESC* _AnimEventDesc) override;
-	virtual ANIMOTHEREVENTDESC* const OutOtherEventDesc() override;
-	virtual void ChangeOtherEventDesc(ANIMOTHEREVENTDESC* _AnimOtherEventDesc) override;
+	// UAnimSectionEvent을(를) 통해 상속됨
+	ANIMOTHEREVENTDESC* const OutOtherEventDesc() override;
+	void ChangeOtherEventDesc(ANIMOTHEREVENTDESC* _AnimOtherEventDesc) override;
 protected:
 	// Event 상황일 때를 정의
 	virtual void EventSituation(UAnimModel* _pAnimModel, const _double& _dTimeDelta) override;
@@ -30,9 +27,8 @@ protected:
 private:
 	virtual void Free() override;
 private:
-	ANIMOCURRESDESC					m_AnimOccurDesc;
 	// 애니메이션과 애니메이션 사이를 변경하는 이벤트
-	ANIMCHANGEDESC						m_AnimChangeDesc;
+	ANIMCHANGEDESC		m_AnimChangeDesc;
 };
 
 END

@@ -10,7 +10,7 @@ public:
 	DESTRUCTOR(UVIBufferCell)
 public:
 	CLONE_THIS(UVIBufferCell)
-		virtual void Free() override;
+	virtual void Free() override;
 	virtual HRESULT NativeConstruct() override;
 	HRESULT NativeConstruct(ARRAY<_float3, 3>& _Points);
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;

@@ -13,7 +13,7 @@ class UAnimEvent;
 class   UAnimation : public UBase{
 	using CHANNELS = VECTOR<SHPTR<UAnimChannel>>;
 	using ANIMFASTSECTIONS = VECTOR<ANIMFASTSECTION>;
-	using ANIMEVENTCONTAINER = UNORMAP<ANIMEVENTCATEGORY, VECTOR<SHPTR<UAnimEvent>>>;
+	using ANIMEVENTCONTAINER = UNORMAP<ANIMEVENTTYPE, VECTOR<SHPTR<UAnimEvent>>>;
 public:
 	UAnimation();
 	UAnimation(const UAnimation& _rhs);
@@ -47,7 +47,7 @@ public:
 	void TickAnimEvent(UAnimModel* _pAnimModel, const _double& _TimeDelta, const _wstring& _wstrInputTrigger);
 	void ResetData();
 	// 애니메이션 이벤트를 집어넣는 함수
-	void InsertAnimEvent(ANIMEVENTCATEGORY _AnimCategory, CSHPTRREF<UAnimEvent> _spAnimEvent);
+	void InsertAnimEvent(ANIMEVENTTYPE _AnimEventType, CSHPTRREF<UAnimEvent> _spAnimEvent);
 	// 애니메이션 이벤트를 제거하는 함수
 	void RemoveAnimEvent(CSHPTRREF<UAnimEvent> _spAnimEvent);
 	// Save Sections
@@ -61,7 +61,7 @@ public:
 	void LoadAnimEventData(const _wstring& _wstrPath);
 	void LoadAnimEventDataPathIsFolder(const _wstring& _wstrPath);
 private:
-	SHPTR<UAnimEvent> CreateAnimEvent(ANIMEVENTCATEGORY _AnimEventCategory, std::ifstream& _read);
+	SHPTR<UAnimEvent> CreateAnimEvent(ANIMEVENTTYPE _AnimEventType, std::ifstream& _read);
 private:
 
 	static constexpr _float	MAX_SUPPLY_VALUE{1.f};

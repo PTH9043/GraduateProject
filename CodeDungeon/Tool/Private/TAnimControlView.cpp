@@ -6,8 +6,8 @@
 #include "TAssimpModel.h"
 #include "UAnimModel.h"
 #include "UAnimation.h"
-#include "UAnimOccursEvent.h"
-#include "UAnimSectionEvent.h"
+#include "AnimOccursEvents.h"
+#include "AnimSectionEvents.h"
 
 
 const _char* TAnimControlView::s_AnimTags[1000]{};
@@ -180,24 +180,36 @@ void TAnimControlView::MakeAnimEvent()
 		ImGui::SameLine();
 		if (true == ImGui::Button("MakeEvent"))
 		{
-			ANIMEVENTCATEGORY Categroy = static_cast<ANIMEVENTCATEGORY>(m_iSelectAnimEvent);
+			ANIMEVENTTYPE Event = static_cast<ANIMEVENTTYPE>(m_iSelectAnimEvent);
 			SHPTR<UAnimEvent> spAnimEvent{ nullptr };
-			switch (Categroy)
+			switch (Event)
 			{
-			case ANIMEVENTCATEGORY::CATEGROY_SECTION:
-				spAnimEvent = Create< UAnimSectionEvent>();
+			case ANIMEVENT_CAMERA:
 				break;
-			case ANIMEVENTCATEGORY::CATEGROY_OCCUR:
-				spAnimEvent = Create< UAnimOccurEvent>();
+			case ANIMEVENT_ANIMCHANGESBETWEEN:
+				spAnimEvent = Create< UAnimChangeBetweenEvent>();
+				break;
+			case ANIMEVENT_COLLIDER:
+
+				break;
+			case ANIMEVENT_EFFECT:
+
+				break;
+			case ANIMEVENT_OBJACTIVE:
+
+				break;
+			case ANIMEVENT_ANIMOCCURSTIMEPASS:
+				spAnimEvent = Create< UAnimOccursTimePassEvent>();
+				break;
+			case ANIMEVENT_SOUND:
 				break;
 			}
 			if (nullptr != m_spSelectAnim)
-				m_spSelectAnim->InsertAnimEvent(Categroy, spAnimEvent);
+				m_spSelectAnim->InsertAnimEvent(Event, spAnimEvent);
 		}
 
 		if (nullptr != m_spSelectAnim)
 		{
-			ImGuiTreeNodeFlags Flags = ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_DefaultOpen;
 			// Options
 			static ImGuiTableFlags flags = ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Sortable | ImGuiTableFlags_SortMulti
 				| ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_NoBordersInBody| ImGuiTableFlags_ScrollY;
@@ -207,11 +219,21 @@ void TAnimControlView::MakeAnimEvent()
 			{
 				switch (iter.first)
 				{
-				case ANIMEVENTCATEGORY::CATEGROY_SECTION:
+				case ANIMEVENT_CAMERA:
+					break;
+				case ANIMEVENT_ANIMCHANGESBETWEEN:
 					AnimSectionShow(m_spSelectAnim, flags, iter.second);
 					break;
-				case ANIMEVENTCATEGORY::CATEGROY_OCCUR:
+				case ANIMEVENT_COLLIDER:
+					break;
+				case ANIMEVENT_EFFECT:
+					break;
+				case ANIMEVENT_OBJACTIVE:
+					break;
+				case ANIMEVENT_ANIMOCCURSTIMEPASS:
 					AnimOccursShow(m_spSelectAnim, flags, iter.second);
+					break;
+				case ANIMEVENT_SOUND:
 					break;
 				}
 			}

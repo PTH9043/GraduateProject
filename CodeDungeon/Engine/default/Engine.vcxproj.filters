@@ -256,9 +256,6 @@
     <Filter Include="07.Resource\VIBuffer\Plane">
       <UniqueIdentifier>{62b4d9f9-8d83-459b-bdba-cc5dd438e2c0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Manager\SoundManager">
-      <UniqueIdentifier>{9a21a9bf-826b-48ab-b67b-910195e12f1d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Manager\Picking">
       <UniqueIdentifier>{b599057d-c5cf-4133-ba2a-87b2ed7f3239}</UniqueIdentifier>
     </Filter>
@@ -295,14 +292,20 @@
     <Filter Include="06.Component\Collider">
       <UniqueIdentifier>{b296dd99-2437-4100-90a3-0ed9acc49a1a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.Utility\Sound">
-      <UniqueIdentifier>{c768e6d2-3e14-4c43-973d-98d132aae2fb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="07.Resource\VIBuffer\Cell">
       <UniqueIdentifier>{81c93ff4-a441-4622-ad24-a0585534d1bf}</UniqueIdentifier>
     </Filter>
     <Filter Include="07.Resource\Region">
       <UniqueIdentifier>{b7e1f845-bf2d-477e-9b3d-9a8124b96e4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Manager\AudioSystemManager">
+      <UniqueIdentifier>{be4c05c9-cf3c-445a-8610-de39adb6f6fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Resource\AudioSystem">
+      <UniqueIdentifier>{4bf28cdb-fdb8-4dc5-999c-7faeb29cd113}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Resource\AudioSystem\Sound">
+      <UniqueIdentifier>{c768e6d2-3e14-4c43-973d-98d132aae2fb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -480,9 +483,6 @@
     <ClCompile Include="..\private\UAnimation.cpp">
       <Filter>07.Resource\Model\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\UChannel.cpp">
-      <Filter>07.Resource\Model\Animation\Channel</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\UAnimModel.cpp">
       <Filter>07.Resource\Model</Filter>
     </ClCompile>
@@ -543,9 +543,6 @@
     <ClCompile Include="..\private\UVIBufferPlane.cpp">
       <Filter>07.Resource\VIBuffer\Plane</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\USoundManager.cpp">
-      <Filter>01.Manager\SoundManager</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\UPicking.cpp">
       <Filter>01.Manager\Picking</Filter>
     </ClCompile>
@@ -557,12 +554,6 @@
     </ClCompile>
     <ClCompile Include="..\private\UVIBufferGrid.cpp">
       <Filter>07.Resource\VIBuffer\Grid</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\AnimSectionEvents.cpp">
-      <Filter>07.Resource\Model\Animation\AnimEvent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\AnimEventParents.cpp">
-      <Filter>07.Resource\Model\Animation\AnimEvent\Parents</Filter>
     </ClCompile>
     <ClCompile Include="..\private\URootBoneNode.cpp">
       <Filter>07.Resource\Model\BoneNode\RootBone</Filter>
@@ -582,17 +573,32 @@
     <ClCompile Include="..\private\UCollider.cpp">
       <Filter>06.Component\Collider</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\AnimOccursEvents.cpp">
-      <Filter>07.Resource\Model\Animation\AnimEvent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\USound.cpp">
-      <Filter>03.Utility\Sound</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\UVIBufferCell.cpp">
       <Filter>07.Resource\VIBuffer\Cell</Filter>
     </ClCompile>
     <ClCompile Include="..\private\URegion.cpp">
       <Filter>07.Resource\Region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UAnimChannel.cpp">
+      <Filter>07.Resource\Model\Animation\Channel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\AnimEventParents.cpp">
+      <Filter>07.Resource\Model\Animation\AnimEvent\Parents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\AnimOccursEvents.cpp">
+      <Filter>07.Resource\Model\Animation\AnimEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\AnimSectionEvents.cpp">
+      <Filter>07.Resource\Model\Animation\AnimEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UAudioSystemManager.cpp">
+      <Filter>01.Manager\AudioSystemManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\AudioAPI.cpp">
+      <Filter>07.Resource\AudioSystem\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UAudioSystem.cpp">
+      <Filter>07.Resource\AudioSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -794,9 +800,6 @@
     <ClInclude Include="..\public\UAnimation.h">
       <Filter>07.Resource\Model\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\UChannel.h">
-      <Filter>07.Resource\Model\Animation\Channel</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\UAnimModel.h">
       <Filter>07.Resource\Model</Filter>
     </ClInclude>
@@ -863,9 +866,6 @@
     <ClInclude Include="..\public\UVIBufferPlane.h">
       <Filter>07.Resource\VIBuffer\Plane</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\USoundManager.h">
-      <Filter>01.Manager\SoundManager</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\UPicking.h">
       <Filter>01.Manager\Picking</Filter>
     </ClInclude>
@@ -877,12 +877,6 @@
     </ClInclude>
     <ClInclude Include="..\public\UVIBufferGrid.h">
       <Filter>07.Resource\VIBuffer\Grid</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\AnimSectionEvents.h">
-      <Filter>07.Resource\Model\Animation\AnimEvent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\AnimEventParents.h">
-      <Filter>07.Resource\Model\Animation\AnimEvent\Parents</Filter>
     </ClInclude>
     <ClInclude Include="..\public\URootBoneNode.h">
       <Filter>07.Resource\Model\BoneNode\RootBone</Filter>
@@ -902,17 +896,32 @@
     <ClInclude Include="..\public\UCollider.h">
       <Filter>06.Component\Collider</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\AnimOccursEvents.h">
-      <Filter>07.Resource\Model\Animation\AnimEvent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\USound.h">
-      <Filter>03.Utility\Sound</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\UVIBufferCell.h">
       <Filter>07.Resource\VIBuffer\Cell</Filter>
     </ClInclude>
     <ClInclude Include="..\public\URegion.h">
       <Filter>07.Resource\Region</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UAnimChannel.h">
+      <Filter>07.Resource\Model\Animation\Channel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\AnimEventParents.h">
+      <Filter>07.Resource\Model\Animation\AnimEvent\Parents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\AnimOccursEvents.h">
+      <Filter>07.Resource\Model\Animation\AnimEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\AnimSectionEvents.h">
+      <Filter>07.Resource\Model\Animation\AnimEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UAudioSystemManager.h">
+      <Filter>01.Manager\AudioSystemManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\AudioAPI.h">
+      <Filter>07.Resource\AudioSystem\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UAudioSystem.h">
+      <Filter>07.Resource\AudioSystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

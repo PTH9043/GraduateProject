@@ -73,6 +73,9 @@
     <Filter Include="03.ImGui\Navigation">
       <UniqueIdentifier>{4c8c560f-1860-4fd6-b960-0dae44593f4d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="99.Default">
+      <UniqueIdentifier>{a051e02a-ee11-49b4-a025-58d7927e968c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ToolDefines.h">
@@ -144,6 +147,18 @@
     <ClInclude Include="..\Public\TNavigationView.h">
       <Filter>03.ImGui\Navigation</Filter>
     </ClInclude>
+    <ClInclude Include="Tool.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\TToolApp.cpp">
@@ -208,6 +223,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\TNavigationView.cpp">
       <Filter>03.ImGui\Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="Tool.cpp">
+      <Filter>99.Default</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

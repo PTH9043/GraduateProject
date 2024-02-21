@@ -19,8 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\public\UAnimOccursEvent.h" />
-    <ClInclude Include="..\public\UAnimSectionEvent.h" />
+    <ClInclude Include="..\public\AnimEventParents.h" />
+    <ClInclude Include="..\public\AnimOccursEvents.h" />
+    <ClInclude Include="..\public\AnimSectionEvents.h" />
     <ClInclude Include="..\public\AudioAPI.h" />
     <ClInclude Include="..\public\CustomMemory.h" />
     <ClInclude Include="..\public\CustomString.h" />
@@ -47,7 +48,6 @@
     <ClInclude Include="..\public\UActorGroup.h" />
     <ClInclude Include="..\public\UActorManager.h" />
     <ClInclude Include="..\public\UAnimation.h" />
-    <ClInclude Include="..\public\UAnimEvent.h" />
     <ClInclude Include="..\public\UAnimModel.h" />
     <ClInclude Include="..\public\UAudioSystem.h" />
     <ClInclude Include="..\public\UAudioSystemManager.h" />
@@ -135,8 +135,9 @@
     <ClInclude Include="..\public\UWorkThread.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\private\UAnimOccursEvent.cpp" />
-    <ClCompile Include="..\private\UAnimSectionEvent.cpp" />
+    <ClCompile Include="..\private\AnimEventParents.cpp" />
+    <ClCompile Include="..\private\AnimOccursEvents.cpp" />
+    <ClCompile Include="..\private\AnimSectionEvents.cpp" />
     <ClCompile Include="..\private\AudioAPI.cpp" />
     <ClCompile Include="..\private\CustomMemory.cpp" />
     <ClCompile Include="..\private\CustomString.cpp" />
@@ -146,7 +147,6 @@
     <ClCompile Include="..\private\UActorGroup.cpp" />
     <ClCompile Include="..\private\UActorManager.cpp" />
     <ClCompile Include="..\private\UAnimation.cpp" />
-    <ClCompile Include="..\private\UAnimEvent.cpp" />
     <ClCompile Include="..\private\UAnimModel.cpp" />
     <ClCompile Include="..\private\UAudioSystem.cpp" />
     <ClCompile Include="..\private\UAudioSystemManager.cpp" />
