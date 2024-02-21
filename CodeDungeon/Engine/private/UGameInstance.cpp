@@ -801,7 +801,6 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 {
 	// VIBuffer
 	{
-
 		AddPrototype(PROTO_RES_VIBUFFERPOINT, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferPoint>(
 			_stData.wpDevice.lock()));
 

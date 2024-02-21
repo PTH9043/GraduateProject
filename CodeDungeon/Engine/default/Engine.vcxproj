@@ -78,6 +78,7 @@
     <ClInclude Include="..\public\UPipeLine.h" />
     <ClInclude Include="..\public\UProcessedData.h" />
     <ClInclude Include="..\public\URectTransform.h" />
+    <ClInclude Include="..\public\URegion.h" />
     <ClInclude Include="..\public\URenderer.h" />
     <ClInclude Include="..\public\URenderTargetManager.h" />
     <ClInclude Include="..\public\UBase.h" />
@@ -123,6 +124,7 @@
     <ClInclude Include="..\public\UTransform.h" />
     <ClInclude Include="..\public\UUserInterface.h" />
     <ClInclude Include="..\public\UVIBuffer.h" />
+    <ClInclude Include="..\public\UVIBufferCell.h" />
     <ClInclude Include="..\public\UVIBufferCube.h" />
     <ClInclude Include="..\public\UVIBufferGrid.h" />
     <ClInclude Include="..\public\UVIBufferPlane.h" />
@@ -174,6 +176,7 @@
     <ClCompile Include="..\private\UPipeLine.cpp" />
     <ClCompile Include="..\private\UProcessedData.cpp" />
     <ClCompile Include="..\private\URectTransform.cpp" />
+    <ClCompile Include="..\private\URegion.cpp" />
     <ClCompile Include="..\private\URenderer.cpp" />
     <ClCompile Include="..\private\URenderTargetManager.cpp" />
     <ClCompile Include="..\private\UBase.cpp" />
@@ -219,6 +222,7 @@
     <ClCompile Include="..\private\UTransform.cpp" />
     <ClCompile Include="..\private\UUserInterface.cpp" />
     <ClCompile Include="..\private\UVIBuffer.cpp" />
+    <ClCompile Include="..\private\UVIBufferCell.cpp" />
     <ClCompile Include="..\private\UVIBufferCube.cpp" />
     <ClCompile Include="..\private\UVIBufferGrid.cpp" />
     <ClCompile Include="..\private\UVIBufferPlane.cpp" />

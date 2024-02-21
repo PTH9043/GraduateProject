@@ -253,9 +253,6 @@
     <Filter Include="97.Needs\String">
       <UniqueIdentifier>{04497f82-a600-45dd-a32e-0455bc44c87f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="07.Resource\VIBuffer\Plane">
-      <UniqueIdentifier>{62b4d9f9-8d83-459b-bdba-cc5dd438e2c0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Manager\SoundManager">
       <UniqueIdentifier>{9a21a9bf-826b-48ab-b67b-910195e12f1d}</UniqueIdentifier>
     </Filter>
@@ -297,6 +294,15 @@
     </Filter>
     <Filter Include="03.Utility\Sound">
       <UniqueIdentifier>{c768e6d2-3e14-4c43-973d-98d132aae2fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Resource\Region">
+      <UniqueIdentifier>{0d283fdd-3e7a-49d2-9f1b-e305993e9138}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Resource\VIBuffer\Cell">
+      <UniqueIdentifier>{056eaeb5-932c-4b1e-a4cc-6de3c07d459e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Resource\VIBuffer\Plane">
+      <UniqueIdentifier>{62b4d9f9-8d83-459b-bdba-cc5dd438e2c0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -581,6 +587,12 @@
     </ClCompile>
     <ClCompile Include="..\private\USound.cpp">
       <Filter>03.Utility\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\URegion.cpp">
+      <Filter>07.Resource\Region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UVIBufferCell.cpp">
+      <Filter>07.Resource\VIBuffer\Cell</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -895,6 +907,12 @@
     </ClInclude>
     <ClInclude Include="..\public\USound.h">
       <Filter>03.Utility\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\URegion.h">
+      <Filter>07.Resource\Region</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UVIBufferCell.h">
+      <Filter>07.Resource\VIBuffer\Cell</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
