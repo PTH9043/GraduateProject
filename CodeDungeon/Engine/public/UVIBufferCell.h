@@ -2,12 +2,6 @@
 #include "UVIBuffer.h"
 
 BEGIN(Engine)
-/*
-@ Date: 2024-02-019, Writer:이성현
-@ Explain
-- Cell을 위한 VI버퍼
-*/
-
 
 class  UVIBufferCell : public UVIBuffer {
 public:

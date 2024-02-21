@@ -32,7 +32,6 @@ void URegion::tagCubeObjs::Rebalance()
 	spCube1->GetTransform()->SetPos(spCell->GetPoint(UCell::POINT_A));
 	spCube2->GetTransform()->SetPos(spCell->GetPoint(UCell::POINT_B));
 	spCube3->GetTransform()->SetPos(spCell->GetPoint(UCell::POINT_C));
-	spCell->ReBuffer();
 }
 
 void URegion::tagCubeObjs::Render_Cubes(CSHPTRREF<URenderer> _pRenderer)
@@ -53,7 +52,7 @@ URegion::URegion(CSHPTRREF<UDevice> _spDevice)
 
 URegion::URegion(const URegion& _rhs)
 	: UResource(_rhs),
-	m_spNavigation{nullptr},
+	m_spNavigation{ nullptr },
 	m_iIndex{ 0 },
 	m_NeighborRegion{}
 #ifdef _USE_DEBUGGING
@@ -74,8 +73,7 @@ HRESULT URegion::NativeConstruct()
 
 HRESULT URegion::NativeConstructClone(const VOIDDATAS& _vecDatas)
 {
-	if (nullptr == m_spNavigation)
-		m_spNavigation = UNavigation::Create(m_pDevice, m_pContext);
+
 
 
 	return E_NOTIMPL;

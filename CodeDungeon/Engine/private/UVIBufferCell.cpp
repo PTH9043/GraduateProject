@@ -17,14 +17,15 @@ void UVIBufferCell::Free()
 
 HRESULT UVIBufferCell::NativeConstruct()
 {
+	return E_NOTIMPL;
 }
+
 
 HRESULT UVIBufferCell::NativeConstruct(ARRAY<_float3, 3>& _Points)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstruct(), E_FAIL);
 	// Vertex 
 	{
-		// Vertex 개수
 		const _uint VERTEX_CNT = 3;
 		if (VIBUFFERTYPE::GENERIC == GetBufferType())
 		{
@@ -34,10 +35,10 @@ HRESULT UVIBufferCell::NativeConstruct(ARRAY<_float3, 3>& _Points)
 			POSVECTOR VertexPos;
 
 			VertexPos.resize(VERTEX_CNT);
-			Vertices[0] = VTXDEFAULT{ _Points[0], _float2(0.f, 0.f)};
-			Vertices[1] = VTXDEFAULT{ _Points[1], _float2(0.f, 0.f)};
-			Vertices[2] = VTXDEFAULT{ _Points[2], _float2(0.f, 0.f)};
-			
+			Vertices[0] = VTXDEFAULT{ _Points[0], _float2(0.f, 0.f) };
+			Vertices[1] = VTXDEFAULT{ _Points[1], _float2(0.f, 0.f) };
+			Vertices[2] = VTXDEFAULT{ _Points[2], _float2(0.f, 0.f) };
+
 			for (_uint i = 0; i < VERTEX_CNT; ++i)
 				VertexPos[i] = Vertices[i].vPosition;
 
@@ -55,7 +56,7 @@ HRESULT UVIBufferCell::NativeConstruct(ARRAY<_float3, 3>& _Points)
 			Vertices[0] = VTXNORMAL{ _Points[0], _float3{0.f, 1.f, 0.f}, _float2(0.f, 0.f) };
 			Vertices[1] = VTXNORMAL{ _Points[1], _float3{0.f, 1.f, 0.f}, _float2(0.f, 0.f) };
 			Vertices[2] = VTXNORMAL{ _Points[2], _float3{0.f, 1.f, 0.f}, _float2(0.f, 0.f) };
-	
+
 			for (_uint i = 0; i < VERTEX_CNT; ++i)
 				VertexPos[i] = Vertices[i].vPosition;
 
@@ -65,7 +66,6 @@ HRESULT UVIBufferCell::NativeConstruct(ARRAY<_float3, 3>& _Points)
 	}
 	// Index
 	{
-		// 목록
 		INDICIES16* pIndices = Make::AllocBuffer<INDICIES16>(1);
 		ZeroMemory(pIndices, sizeof(INDICIES16) * 1);
 

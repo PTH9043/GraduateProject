@@ -21,7 +21,7 @@ public:
 
 		void Create(SHPTRREF <UCell> _pCell);
 		void Rebalance();
-		void Render_Cubes(CSHPTRREF<URenderer> _pRenderer); 
+		void Render_Cubes(CSHPTRREF<URenderer> _pRenderer);
 	}CUBOBJS;
 #endif
 	URegion(CSHPTRREF<UDevice> _spDevice);
@@ -30,7 +30,7 @@ public:
 
 public:
 	CLONE_MACRO(URegion, "Region::Clone To Failed")
-	virtual void Free() override;
+		virtual void Free() override;
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;
 
@@ -39,7 +39,7 @@ protected:
 	SHPTR<UNavigation>	m_spNavigation;
 	_uint	m_iIndex = 0;
 	LIST<SHPTR<URegion>>	m_NeighborRegion;
-	
+
 #ifdef _USE_DEBUGGING
 	LIST<SHPTR<CUBOBJS>>	m_CubeObjList;
 #endif
