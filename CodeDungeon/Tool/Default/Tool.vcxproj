@@ -161,6 +161,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\ImGui\imconfig.h" />
+    <ClInclude Include="..\Public\ImGui\imgui.h" />
+    <ClInclude Include="..\Public\ImGui\imgui_impl_dx12.h" />
+    <ClInclude Include="..\Public\ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="..\Public\ImGui\imgui_internal.h" />
+    <ClInclude Include="..\Public\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="..\Public\ImGui\imstb_textedit.h" />
+    <ClInclude Include="..\Public\ImGui\imstb_truetype.h" />
     <ClInclude Include="..\Public\TAnimControlModel.h" />
     <ClInclude Include="..\Public\TAnimControlView.h" />
     <ClInclude Include="..\Public\TAssimpAnimation.h" />
@@ -178,6 +186,7 @@
     <ClInclude Include="..\Public\ToolDefines.h" />
     <ClInclude Include="..\Public\ToolMaker.h" />
     <ClInclude Include="..\Public\TProtoMaker.h" />
+    <ClInclude Include="..\Public\TRegion.h" />
     <ClInclude Include="..\Public\TShowAnimModelObject.h" />
     <ClInclude Include="..\Public\TShowMapObjects.h" />
     <ClInclude Include="..\Public\TShowModelObject.h" />
@@ -210,6 +219,7 @@
     <ClCompile Include="..\Private\TModelView.cpp" />
     <ClCompile Include="..\Private\TNavigationView.cpp" />
     <ClCompile Include="..\Private\TProtoMaker.cpp" />
+    <ClCompile Include="..\Private\TRegion.cpp" />
     <ClCompile Include="..\Private\TShowAnimModelObject.cpp" />
     <ClCompile Include="..\Private\TShowMapObjects.cpp" />
     <ClCompile Include="..\Private\TShowModelObject.cpp" />
@@ -221,6 +231,13 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Private\TAssimpBoneNode.cpp" />
+    <ClCompile Include="..\Public\ImGui\imgui.cpp" />
+    <ClCompile Include="..\Public\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="..\Public\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="..\Public\ImGui\imgui_impl_dx12.cpp" />
+    <ClCompile Include="..\Public\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="..\Public\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="..\Public\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Tool.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

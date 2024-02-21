@@ -76,6 +76,12 @@
     <Filter Include="99.Default">
       <UniqueIdentifier>{a051e02a-ee11-49b4-a025-58d7927e968c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="99.Default\ImGui">
+      <UniqueIdentifier>{09a9d0d8-cdc9-4b50-be4f-0e260b1b80e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="91.Region">
+      <UniqueIdentifier>{02461590-3fbd-437a-89bf-5c4b39b3e8dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ToolDefines.h">
@@ -159,6 +165,33 @@
     <ClInclude Include="framework.h">
       <Filter>99.Default</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\ImGui\imconfig.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui\imgui.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui\imgui_impl_dx12.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui\imgui_impl_win32.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui\imgui_internal.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui\imstb_rectpack.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui\imstb_textedit.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui\imstb_truetype.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TRegion.h">
+      <Filter>91.Region</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\TToolApp.cpp">
@@ -226,6 +259,30 @@
     </ClCompile>
     <ClCompile Include="Tool.cpp">
       <Filter>99.Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGui\imgui.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGui\imgui_demo.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGui\imgui_draw.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGui\imgui_impl_dx12.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGui\imgui_impl_win32.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGui\imgui_tables.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGui\imgui_widgets.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TRegion.cpp">
+      <Filter>91.Region</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
