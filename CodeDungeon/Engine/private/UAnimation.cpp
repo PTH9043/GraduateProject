@@ -1,11 +1,10 @@
 #include "EngineDefine.h"
 #include "UAnimation.h"
-#include "UChannel.h"
+#include "UAnimChannel.h"
 #include "UGameInstance.h"
 #include "UMethod.h"
-#include "AnimEventParents.h"
-#include "AnimSectionEvents.h"
-#include "AnimOccursEvents.h"
+#include "UAnimSectionEvent.h"
+#include "UAnimOccursEvent.h"
 
 UAnimation::UAnimation() :
 	UBase(),
@@ -80,7 +79,7 @@ HRESULT UAnimation::NativeConstruct(CSHPTRREF<UAnimModel> _spAnimModel, const AN
 	m_Channels.reserve(m_iNumChannels);
 	for (auto& iter : _stAnimDesc.Channels)
 	{
-		SHPTR<UChannel> pChannel{ CreateNative<UChannel>(_spAnimModel, iter) };
+		SHPTR<UAnimChannel> pChannel{ CreateNative<UAnimChannel>(_spAnimModel, iter) };
 		m_Channels.push_back(pChannel);
 	}
 
@@ -141,13 +140,13 @@ void UAnimation::UpdateNextAnimTransformMatrices(const _double& _dTimeDelta, con
 	}
 }
 
-void UAnimation::TickAnimEvent(UAnimModel* _pAnimModel, const _double& _TimeDelta)
+void UAnimation::TickAnimEvent(UAnimModel* _pAnimModel, const _double& _TimeDelta, const _wstring& _wstrInputTrigger)
 {
 	for (auto& iter : m_AnimEventContainer)
 	{
 		for (auto& Event : iter.second)
 		{
-			Event->EventCheck(_pAnimModel, _TimeDelta, m_dTimeAcc);
+			Event->EventCheck(_pAnimModel, _TimeDelta, m_dTimeAcc, _wstrInputTrigger);
 		}
 	}
 }
@@ -160,17 +159,17 @@ void UAnimation::ResetData()
 	m_dTimeAcc = 0.0;
 }
 
-void UAnimation::InsertAnimEvent(ANIMEVENTTYPE _AnimEventType, CSHPTRREF<UAnimEvent> _spAnimEvent)
+void UAnimation::InsertAnimEvent(ANIMEVENTCATEGORY _AnimCategory, CSHPTRREF<UAnimEvent> _spAnimEvent)
 {
-	assert(_AnimEventType <= ANIMEVENTTYPE::ANIMEVENT_END);
+	assert(_AnimCategory <= ANIMEVENTCATEGORY::CATEGROY_END);
 	assert(_spAnimEvent);
 
-	const auto& FindIter = m_AnimEventContainer.find(_AnimEventType);
+	const auto& FindIter = m_AnimEventContainer.find(_AnimCategory);
 	if (m_AnimEventContainer.end() == FindIter)
 	{
 		VECTOR<SHPTR<UAnimEvent>> EventVector;
 		EventVector.push_back(_spAnimEvent);
-		m_AnimEventContainer.emplace(MakePair(_AnimEventType, EventVector));
+		m_AnimEventContainer.emplace(MakePair(_AnimCategory, EventVector));
 	}
 	else
 	{
@@ -181,7 +180,7 @@ void UAnimation::InsertAnimEvent(ANIMEVENTTYPE _AnimEventType, CSHPTRREF<UAnimEv
 void UAnimation::RemoveAnimEvent(CSHPTRREF<UAnimEvent> _spAnimEvent)
 {
 	assert(_spAnimEvent);
-	ANIMEVENTTYPE AnimEventType = _spAnimEvent->GetAnimEventType();
+	ANIMEVENTCATEGORY AnimEventType = _spAnimEvent->GetAnimEventCategory();
 	const auto& FindIter = m_AnimEventContainer.find(AnimEventType);
 	assert(FindIter != m_AnimEventContainer.end());
 	for (auto iter = FindIter->second.begin(); iter != FindIter->second.end(); ++iter)
@@ -199,7 +198,7 @@ void UAnimation::RemoveAnimEvent(CSHPTRREF<UAnimEvent> _spAnimEvent)
 Save
 ====================================================
 */
-void UAnimation::SaveAnimData(const _wstring& _wstrPath)
+void UAnimation::SaveAnimSectionData(const _wstring& _wstrPath)
 {
 	std::ofstream Saves{ _wstrPath, std::ios::binary};
 	RETURN_CHECK(!Saves, ;);
@@ -212,6 +211,47 @@ void UAnimation::SaveAnimData(const _wstring& _wstrPath)
 	{
 		Saves.write((_char*)&iter, sizeof(ANIMFASTSECTION));
 	}
+}
+
+void UAnimation::SaveAnimSectionPathIsFolder(const _wstring& _wstrPath)
+{
+	_wstring str = _wstrPath;
+	str.append(L"\\AnimSection\\");
+	if (0 != _wmkdir(str))
+	{
+		str.append(m_wstrName);
+		str.append(DEFAULT_OUTFOLDEREXTENSION);
+		SaveAnimSectionData(str);
+	}
+}
+
+void UAnimation::LoadAnimSectionData(const _wstring& _wstrPath)
+{
+	std::ifstream Read{ _wstrPath, std::ios::binary};
+	RETURN_CHECK(!Read, ;);
+
+	_uint iFastSection{ 0 };
+	Read.read((_char*)&m_fTotalAnimationFastValue, sizeof(_float));
+	Read.read((_char*)&iFastSection, sizeof(_uint));
+	m_AnimFastSections.resize(iFastSection);
+	Read.read((_char*)&m_AnimFastSections[0], sizeof(ANIMFASTSECTION) * iFastSection);
+}
+
+void UAnimation::LoadAnimSectionDataPathIsFolder(const _wstring& _wstrPath)
+{
+	_wstring str = _wstrPath;
+	str.append(L"\\AnimSection\\");
+	str.append(m_wstrName);
+	str.append(DEFAULT_OUTFOLDEREXTENSION);
+
+	LoadAnimSectionData(str);
+}
+
+void UAnimation::SaveAnimEventData(const _wstring& _wstrPath)
+{
+	std::ofstream Saves{ _wstrPath, std::ios::binary };
+	RETURN_CHECK(!Saves, ;);
+
 	// Anim Event save 
 	{
 		// Container Size Save 
@@ -223,7 +263,7 @@ void UAnimation::SaveAnimData(const _wstring& _wstrPath)
 		{
 			// Evnet Type Save
 			{
-				Saves.write((_char*)&iter.first, sizeof(ANIMEVENTTYPE));
+				Saves.write((_char*)&iter.first, sizeof(ANIMEVENTCATEGORY));
 			}
 			// Event Cnt Save
 			{
@@ -239,29 +279,22 @@ void UAnimation::SaveAnimData(const _wstring& _wstrPath)
 	}
 }
 
-void UAnimation::SaveAnimDataPathIsFolder(const _wstring& _wstrPath)
+void UAnimation::SaveAnimEventPathIsFolder(const _wstring& _wstrPath)
 {
 	_wstring str = _wstrPath;
-	str.append(L"\\AnimData\\");
+	str.append(L"\\AnimEvent\\");
 	if (0 != _wmkdir(str))
 	{
 		str.append(m_wstrName);
 		str.append(DEFAULT_OUTFOLDEREXTENSION);
-		SaveAnimData(str);
+		SaveAnimSectionData(str);
 	}
 }
 
-void UAnimation::LoadAnimData(const _wstring& _wstrPath)
+void UAnimation::LoadAnimEventData(const _wstring& _wstrPath)
 {
-	std::ifstream Read{ _wstrPath, std::ios::binary};
+	std::ifstream Read{ _wstrPath, std::ios::binary };
 	RETURN_CHECK(!Read, ;);
-
-	_uint iFastSection{ 0 };
-	Read.read((_char*)&m_fTotalAnimationFastValue, sizeof(_float));
-	Read.read((_char*)&iFastSection, sizeof(_uint));
-	m_AnimFastSections.resize(iFastSection);
-	Read.read((_char*)&m_AnimFastSections[0], sizeof(ANIMFASTSECTION) * iFastSection);
-
 	// Anim Event Load
 	{
 		_uint iSize{ 0 };
@@ -272,10 +305,10 @@ void UAnimation::LoadAnimData(const _wstring& _wstrPath)
 		for (_uint i = 0; i < iSize; ++i)
 		{
 			VECTOR<SHPTR<UAnimEvent>> AnimEventContainer;
-			ANIMEVENTTYPE EventType;
+			ANIMEVENTCATEGORY EventCategory;
 			// Evnet Type Save
 			{
-				Read.read((_char*)&EventType, sizeof(ANIMEVENTTYPE));
+				Read.read((_char*)&EventCategory, sizeof(ANIMEVENTCATEGORY));
 			}
 			_uint EventCnt{ 0 };
 			AnimEventContainer.reserve(EventCnt);
@@ -286,43 +319,34 @@ void UAnimation::LoadAnimData(const _wstring& _wstrPath)
 			// Event save
 			for (_uint j = 0; j < EventCnt; ++j)
 			{
-				AnimEventContainer.push_back(CreateAnimEvent(EventType, Read));
+				AnimEventContainer.push_back(CreateAnimEvent(EventCategory, Read));
 			}
-			m_AnimEventContainer.emplace(MakePair(EventType, AnimEventContainer));
+			m_AnimEventContainer.emplace(MakePair(EventCategory, AnimEventContainer));
 		}
 	}
 }
 
-void UAnimation::LoadAnimDataPathIsFolder(const _wstring& _wstrPath)
+void UAnimation::LoadAnimEventDataPathIsFolder(const _wstring& _wstrPath)
 {
 	_wstring str = _wstrPath;
-	str.append(L"\\AnimData\\");
+	str.append(L"\\AnimEvent\\");
 	str.append(m_wstrName);
 	str.append(DEFAULT_OUTFOLDEREXTENSION);
 
-	LoadAnimData(str);
+	LoadAnimEventData(str);
 }
 
-SHPTR<UAnimEvent> UAnimation::CreateAnimEvent(ANIMEVENTTYPE _AnimEventType, std::ifstream& _read)
+
+SHPTR<UAnimEvent> UAnimation::CreateAnimEvent(ANIMEVENTCATEGORY _AnimCategory, std::ifstream& _read)
 {
 	SHPTR<UAnimEvent> spAnimEvent{ nullptr };
-	switch (_AnimEventType)
+	switch (_AnimCategory)
 	{
-	case ANIMEVENTTYPE::ANIMEVENT_ANIMCHANGESBETWEEN:
-		spAnimEvent = Create< UAnimChangeBetweenEvent>(_read);
+	case ANIMEVENTCATEGORY::CATEGROY_SECTION:
+		spAnimEvent = Create< UAnimSectionEvent>(_read);
 		break;
-	case ANIMEVENTTYPE::ANIMEVENT_ANIMOCCURSTIMEPASS:
-		spAnimEvent = Create< UAnimOccursTimePassEvent>(_read);
-		break;
-	case ANIMEVENTTYPE::ANIMEVENT_CAMERA:
-		break;
-	case ANIMEVENTTYPE::ANIMEVENT_COLLIDER:
-		break;
-	case ANIMEVENTTYPE::ANIMEVENT_EFFECT:
-		break;
-	case ANIMEVENTTYPE::ANIMEVENT_OBJACTIVE:
-		break;
-	case ANIMEVENTTYPE::ANIMEVENT_SOUND:
+	case ANIMEVENTCATEGORY::CATEGROY_OCCUR:
+		spAnimEvent = Create< UAnimOccurEvent>(_read);
 		break;
 	}
 	return std::move(spAnimEvent);

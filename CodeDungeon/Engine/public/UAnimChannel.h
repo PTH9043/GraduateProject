@@ -10,20 +10,20 @@ class UBoneNode;
 @ Explain
 - Animation Frame 마다 있는 Channel 클래스
 */
-class  UChannel : public UBase {
+class  UAnimChannel : public UBase {
 public:
-	UChannel();
-	UChannel(const UChannel& _rhs);
-	DESTRUCTOR(UChannel)
+	UAnimChannel();
+	UAnimChannel(const UAnimChannel& _rhs);
+	DESTRUCTOR(UAnimChannel)
 public: /* get set */
 	const _int GetCurrentKeyFrame() const { return m_iCurrentKeyFrames; }
 public:
-	SHPTR<UChannel> Clone(CSHPTRREF<UAnimModel> _spAnimModel);
+	SHPTR<UAnimChannel> Clone(CSHPTRREF<UAnimModel> _spAnimModel);
 	virtual void Free() override;
 	HRESULT NativeConstruct(CSHPTRREF<UAnimModel> _spAnimModel, const CHANNELDESC& _stChannelDesc);
 	void UpdateTransformMatrix(const _double& _dTimeAcc, UAnimation* _pAnimation);
 	void UpdateSupplyToCurAndNextTransformMatrix(const _double& _dTimeAcc, const _float _fRatio,
-		UAnimation* _pAnimation, CSHPTRREF<UChannel> _spNextAnimChannel);
+		UAnimation* _pAnimation, CSHPTRREF<UAnimChannel> _spNextAnimChannel);
 
 	void ComputeCurKeyFrames(const _double& _dTimeAcc);
 	void ComputeCurKeyFrames(const _double& _dTimeAcc, _uint& _iCurKeyFrame);

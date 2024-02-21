@@ -25,24 +25,8 @@ namespace Engine {
 		TextureType_UNKNOWN = 18
 	};
 
-	enum CHANNELID : _int { 
-		CH0, CH1, CH2, CH3, CH4, CH5, CH6, CH7, CH8, CH9, CH10, CH11, CH12, CH13, CH14, CH15, CH16, BGM, CH_S, CH_END };
-
-	enum class KEYPRESSTYPE : _int {
-		KEY_UP,
-		KEY_PRESSING,
-		KEY_DOWN,
-		KEY_END
-	};
-	/*
-	@ Date: 2024-02-10, Writer: 박태현
-	@ Explain
-	- . 애니메이션 카테고리를 정의한다.
-	*/
-	enum MKEVENTTYPE : _int {
-		MK_KEYBOARD, 
-		MK_MOUSE,
-		MK_END
+	enum SOUNDTYPE : _int {
+		SOUND_DEFAULT, SOUND_2D, SOUND_3D, SOUND_END
 	};
 
 	/*
@@ -66,8 +50,6 @@ namespace Engine {
 		ANIMEVENT_COLLIDER,	  // 콜라이더 발생
 		ANIMEVENT_CAMERA,    // 카메라 따라다님
 		ANIMEVENT_OBJACTIVE, // OBJ활성화
-		ANIMEVENT_ANIMCHANGESBETWEEN, // 다음 애니메이션이 섹션 사이에서 발생
-		ANIMEVENT_ANIMOCCURSTIMEPASS, // 애니메이션 이벤트 시간이 지나면 발생
 		ANIMEVENT_END
 	};
 
@@ -338,5 +320,6 @@ namespace Engine {
 		LIGHT_GRAPHICS_REGISTER_CNT = LIGHT_CBV_REGISTER_END + LIGHT_SRV_REGISTER_END,
 		MAX_BUFFER_LENGTH = 512,
 		MAX_PROCESSBUF_LENGTH = MAX_BUFFER_LENGTH * 5,
+		MAX_CHANNEL_CNT = 512,
 	};
 }

@@ -1,11 +1,11 @@
 #include "EngineDefine.h"
-#include "UChannel.h"
+#include "UAnimChannel.h"
 #include "UBoneNode.h"
 #include "UAnimModel.h"
 #include "UAnimation.h"
 #include "UGameInstance.h"
 
-UChannel::UChannel() :
+UAnimChannel::UAnimChannel() :
 	UBase(),
 	m_wstrBoneName{ L"" },
 	m_iNumKeyMaxRealSize{ 0 },
@@ -19,7 +19,7 @@ UChannel::UChannel() :
 {
 }
 
-UChannel::UChannel(const UChannel& _rhs) :
+UAnimChannel::UAnimChannel(const UAnimChannel& _rhs) :
 	UBase(_rhs),
 	m_wstrBoneName{ _rhs.m_wstrBoneName },
 	m_iNumKeyMaxRealSize{ _rhs.m_iNumKeyMaxRealSize },
@@ -33,18 +33,18 @@ UChannel::UChannel(const UChannel& _rhs) :
 {
 }
 
-SHPTR<UChannel> UChannel::Clone(CSHPTRREF<UAnimModel> _spAnimModel)
+SHPTR<UAnimChannel> UAnimChannel::Clone(CSHPTRREF<UAnimModel> _spAnimModel)
 {
-	SHPTR<UChannel> pChannel{ CloneThis<UChannel>(*this) };
+	SHPTR<UAnimChannel> pChannel{ CloneThis<UAnimChannel>(*this) };
 	pChannel->m_spBoneNode = _spAnimModel->GetBoneNode(m_spBoneNode->GetName());
 	return pChannel;
 }
 
-void UChannel::Free()
+void UAnimChannel::Free()
 {
 }
 
-HRESULT UChannel::NativeConstruct(CSHPTRREF<UAnimModel> _spAnimModel, const CHANNELDESC& _stChannelDesc)
+HRESULT UAnimChannel::NativeConstruct(CSHPTRREF<UAnimModel> _spAnimModel, const CHANNELDESC& _stChannelDesc)
 {
 	RETURN_CHECK(nullptr == _spAnimModel, E_FAIL);
 	m_iNumKeyMaxRealSize = _stChannelDesc.iNumMaxKeyFrames - 1;
@@ -58,7 +58,7 @@ HRESULT UChannel::NativeConstruct(CSHPTRREF<UAnimModel> _spAnimModel, const CHAN
 }
 
 // Update Transform Matrix
-void UChannel::UpdateTransformMatrix(const _double& _dTimeAcc, UAnimation* _pAnimation)
+void UAnimChannel::UpdateTransformMatrix(const _double& _dTimeAcc, UAnimation* _pAnimation)
 {
 	RETURN_CHECK(nullptr == _pAnimation, ;);
 
@@ -100,8 +100,8 @@ void UChannel::UpdateTransformMatrix(const _double& _dTimeAcc, UAnimation* _pAni
 	}
 }
 
-void UChannel::UpdateSupplyToCurAndNextTransformMatrix(const _double& _dTimeAcc, const _float _fRatio,
-	UAnimation* _pAnimation, CSHPTRREF<UChannel> _spNextAnimChannel)
+void UAnimChannel::UpdateSupplyToCurAndNextTransformMatrix(const _double& _dTimeAcc, const _float _fRatio,
+	UAnimation* _pAnimation, CSHPTRREF<UAnimChannel> _spNextAnimChannel)
 {
 	assert(nullptr != _pAnimation && nullptr != _spNextAnimChannel);
 	// 현재 애니메이션과 다음 애니메이션의 첫 번째 값들을 Lerp 시킨다. 
@@ -121,12 +121,12 @@ void UChannel::UpdateSupplyToCurAndNextTransformMatrix(const _double& _dTimeAcc,
 	}
 }
 
-void UChannel::ComputeCurKeyFrames(const _double& _dTimeAcc)
+void UAnimChannel::ComputeCurKeyFrames(const _double& _dTimeAcc)
 {
 	ComputeCurKeyFrames(_dTimeAcc, m_iCurrentKeyFrames);
 }
 
-void UChannel::ComputeCurKeyFrames(const _double& _dTimeAcc, _uint& _iCurKeyFrame)
+void UAnimChannel::ComputeCurKeyFrames(const _double& _dTimeAcc, _uint& _iCurKeyFrame)
 {
 	// 키 프레임이 1개 밖에 없을 경우.
 	if (m_vecKeyFrames.size() <= 1)

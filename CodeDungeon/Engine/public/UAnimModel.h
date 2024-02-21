@@ -44,9 +44,11 @@ public:
 	// 애니메이션을 timeAcc에 따라서 제어하는 함수 (TimAcc는 애니메이션 제어도)
 	void UpdateCurAnimationToTimeAcc(const _double& _dTimeAcc);
 	// 애니메이션을 Tick하면서 Event도 Tick하는 함수
-	void TickAnimAndEvent(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta);
+	void TickAnimAndEvent(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta, 
+		const _wstring& _wstrInputTrigger);
 	// 현재 애니메이션을 TimAcc 값에 따라서 제어하는 함수 Evnet도 TimeAcc에 따라 제어한다. 
-	void TickAnimToTimAccAndEvent(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta, const _double& _TimeAcc);
+	void TickAnimToTimAccAndEvent(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta, const _double& _TimeAcc,
+		const _wstring& _wstrInputTrigger);
 	// 애니메이션을 렌더하는 함수
 	virtual HRESULT Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader, CSHPTRREF<UCommand> _spCommand) override;
 	// Set Animation

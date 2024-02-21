@@ -533,46 +533,19 @@ namespace Engine {
 
 #pragma region ANIMEVENTTYPE
 
+
 	/*
 	@ Date: 2024-02-10, Writer: 박태현
 	@ Explain
 	- 애니메이션 이벤트 구조체의 상위 구조체
 	*/
 	struct ANIMEVENTDESC abstract {
-	private:
-		// Key가 눌릴 함수를 등록할 변수
-		MKEVENTFUNC		MkEventFunc;
-	public:  
-		_bool							isEventActive;
-		_ubyte						ubInputKey;
-		MKEVENTTYPE			MkEventType;
-		KEYPRESSTYPE		KeyPressType;
-		DIMOUSEBUTTON	MouseButtonType;
+	public:
+		_wstring						wstrEventTrigger;
 
-		ANIMEVENTDESC() : isEventActive{ false }, ubInputKey{ 146 }, MkEventType{ MKEVENTTYPE::MK_END },
-			KeyPressType{ KEYPRESSTYPE::KEY_END }, MouseButtonType{ DIMOUSEBUTTON::DIMB_WHEEL }, MkEventFunc{ IsEmptyFunc } { }
-
-		void RegisterEventFunc();
-		// Empty일 경우 그냥 true 리턴
-		_bool IsMousekeyboardFunc() { return MkEventFunc(ubInputKey); }
-		_char* SaveLoadPointer();
-		static size_t GetEventFuncSize() { return sizeof(MKEVENTFUNC); }
-		void Reset();
-	private:
-		static _bool IsMouseLeftDown(_ubyte _ubInputKey);
-		static _bool IsMouseRightDown(_ubyte _ubInputKey);
-		static _bool IsMouseLeftUp(_ubyte _ubInputKey);
-		static _bool IsMouseRightUp(_ubyte _ubInputKey);
-		static _bool IsMouseLeftPress(_ubyte _ubInputKey);
-		static _bool IsMouseRightPress(_ubyte _ubInputKey);
-
-
-		static _bool IsKeyboardUp(_ubyte _ubInputKey);
-		static _bool IsKeyboardDown(_ubyte _ubInputKey);
-		static _bool IsKeyboardPressing(_ubyte _ubInputKey);
-
-		static _bool IsEmptyFunc(_ubyte _ubInputKey) { return true; }
+		ANIMEVENTDESC() : wstrEventTrigger{ L"" } { wstrEventTrigger.resize(MAX_BUFFER_LENGTH); }
 	};
+
 
 	/*
 	@ Date: 2024-02-10, Writer: 박태현
@@ -624,4 +597,16 @@ namespace Engine {
 	};
 
 #pragma endregion ANIMEVENTTYPE
+
+
+#pragma region SOUND 
+
+	struct SOUNDDESC {
+		SOUNDTYPE			SoundType;
+		_float						fVolume;
+
+		SOUNDDESC() : SoundType{ SOUNDTYPE::SOUND_DEFAULT }, fVolume{ 0.f } { }
+	};
+
+#pragma endregion SOUND
 }

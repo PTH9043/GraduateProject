@@ -60,6 +60,9 @@ private:
 	_float													m_fAnimTimeAcc;
 	_float													m_fTotalAnimFastvalue;
 	_bool													m_isAnimEventActive;
+	// Input Trigger
+	_wstring												m_wstrInputTrigger;
+	_wstring												m_wstrImguiModifyInputTrigger;
 };
 
 END
