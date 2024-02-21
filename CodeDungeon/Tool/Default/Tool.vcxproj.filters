@@ -1,13 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="99.Default">
-      <UniqueIdentifier>{fc8b797d-9de3-44ae-b6fb-f37920a62e92}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99.Default\Ects">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="00.ToolApp">
       <UniqueIdentifier>{c391732e-65d6-407b-b3a0-b2bec519d102}</UniqueIdentifier>
     </Filter>
@@ -44,9 +37,6 @@
     <Filter Include="01.Manager">
       <UniqueIdentifier>{8a9cc8b2-ff5a-423b-9483-d0b8819b2628}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99.Default\ImGui">
-      <UniqueIdentifier>{8e6a5e89-062b-45be-9d9a-7d087c633a9e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03.ImGui\MainView">
       <UniqueIdentifier>{987c6277-00f6-4811-a06e-ab18cd254282}</UniqueIdentifier>
     </Filter>
@@ -80,6 +70,9 @@
     <Filter Include="90.ShowModel\Map">
       <UniqueIdentifier>{f1818212-5422-46a7-88a7-96a4514354cb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.ImGui\Navigation">
+      <UniqueIdentifier>{4c8c560f-1860-4fd6-b960-0dae44593f4d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ToolDefines.h">
@@ -90,18 +83,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\TToolApp.h">
       <Filter>00.ToolApp</Filter>
-    </ClInclude>
-    <ClInclude Include="Tool.h">
-      <Filter>99.Default</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>99.Default</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>99.Default</Filter>
-    </ClInclude>
-    <ClInclude Include="framework.h">
-      <Filter>99.Default</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TTestObject.h">
       <Filter>05.TestObject</Filter>
@@ -126,30 +107,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\TAssimpChannel.h">
       <Filter>97.AssimpLoad\Animation\Channel</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\ImGui\imconfig.h">
-      <Filter>99.Default\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\ImGui\imgui.h">
-      <Filter>99.Default\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\ImGui\imgui_impl_dx12.h">
-      <Filter>99.Default\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\ImGui\imgui_impl_win32.h">
-      <Filter>99.Default\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\ImGui\imgui_internal.h">
-      <Filter>99.Default\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\ImGui\imstb_rectpack.h">
-      <Filter>99.Default\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\ImGui\imstb_textedit.h">
-      <Filter>99.Default\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\ImGui\imstb_truetype.h">
-      <Filter>99.Default\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TImGuiManager.h">
       <Filter>01.Manager</Filter>
@@ -184,13 +141,13 @@
     <ClInclude Include="..\Public\TCameraView.h">
       <Filter>03.ImGui\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\TNavigationView.h">
+      <Filter>03.ImGui\Navigation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\TToolApp.cpp">
       <Filter>00.ToolApp</Filter>
-    </ClCompile>
-    <ClCompile Include="Tool.cpp">
-      <Filter>99.Default</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TTestObject.cpp">
       <Filter>05.TestObject</Filter>
@@ -215,27 +172,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\TAssimpChannel.cpp">
       <Filter>97.AssimpLoad\Animation\Channel</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Public\ImGui\imgui.cpp">
-      <Filter>99.Default\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Public\ImGui\imgui_demo.cpp">
-      <Filter>99.Default\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Public\ImGui\imgui_draw.cpp">
-      <Filter>99.Default\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Public\ImGui\imgui_impl_dx12.cpp">
-      <Filter>99.Default\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Public\ImGui\imgui_impl_win32.cpp">
-      <Filter>99.Default\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Public\ImGui\imgui_tables.cpp">
-      <Filter>99.Default\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Public\ImGui\imgui_widgets.cpp">
-      <Filter>99.Default\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TImGuiView.cpp">
       <Filter>03.ImGui</Filter>
@@ -270,18 +206,8 @@
     <ClCompile Include="..\Private\TCameraView.cpp">
       <Filter>03.ImGui\Camera</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Tool.rc">
-      <Filter>99.Default\Ects</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="small.ico">
-      <Filter>99.Default\Ects</Filter>
-    </Image>
-    <Image Include="Tool.ico">
-      <Filter>99.Default\Ects</Filter>
-    </Image>
+    <ClCompile Include="..\Private\TNavigationView.cpp">
+      <Filter>03.ImGui\Navigation</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

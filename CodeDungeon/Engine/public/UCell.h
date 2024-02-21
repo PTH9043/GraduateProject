@@ -1,6 +1,7 @@
 #pragma once
 
 #include "UObject.h"
+#include "UVIBufferCell.h"
 
 BEGIN(Engine)
 
@@ -64,6 +65,11 @@ private:
 	_int							m_iIndex;
 	// Planes
 	_float4							m_vPlane;
+
+#ifdef _USE_DEBUGGING
+private:
+	SHPTR<UVIBufferCell> m_spCellVIBuffer;
+#endif // _DEBUGGING
 };
 
 END

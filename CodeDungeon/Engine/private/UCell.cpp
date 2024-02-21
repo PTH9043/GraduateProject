@@ -30,6 +30,10 @@ HRESULT UCell::NativeConstruct(ARRAY<_float3, POINT_END>& _Points, const _uint _
 	m_iIndex = _iIndex;
 	ResortPoints();
 
+//#ifdef _USE_DEBUGGING
+//	m_spCellVIBuffer = UVIBufferCell
+//
+//#endif
 	_float3 vCenterPos{};
 	for (auto& iter : m_arrPoints) {
 		m_vCenterPos += iter;
