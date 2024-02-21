@@ -166,13 +166,14 @@ void TAnimControlView::MakeAnimEvent()
 {
 	RETURN_CHECK(nullptr == m_spShowAnimModel, ;);
 
-	static const _char* ANIMTYPETAG[]{"SECTION", "OCCURS"};
+	static const _char* ANIMTYPETAG[]{ "EFFECT", "SOUND", 
+		"COLLIDER", "CAMERA", "OBJACTIVE", "ANIMCAHNGEBETWEEN", "ANIMOCCURSTIMEPASS"};
 
 	SHPTR<UAnimation> spCurAnimation = m_spShowAnimModel->GetCurrentAnimation();
 
 	if (ImGui::TreeNodeEx("MakeAnimEvent",ImGuiTreeNodeFlags_Bullet))
 	{
-		ImGui::Combo("AnimEvent", &m_iSelectAnimEvent, ANIMTYPETAG, 2);
+		ImGui::Combo("AnimEvent", &m_iSelectAnimEvent, ANIMTYPETAG, ANIMEVENTTYPE::ANIMEVENT_END);
 		if (true == ImGui::Button("SelectAnim"))
 		{
 			m_spSelectAnim = spCurAnimation;

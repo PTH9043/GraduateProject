@@ -140,7 +140,7 @@ HRESULT TImGuiManager::ReadyImGuiClass()
 	{
 		SHPTR<TCameraView> spCameraView = CreateConstructorNative<TCameraView>(m_spDevice);
 		spCameraView->CloseImGui();
-		m_ImGuiObjectContainer.insert(std::make_pair(IMGTAG::CAMERATOOL, spCameraView));
+		m_ImGuiObjectContainer.insert(MakePair(IMGTAG::CAMERATOOL, spCameraView));
 		m_spMainView->InsertImGuiView(spCameraView);
 	}
 	return S_OK;
