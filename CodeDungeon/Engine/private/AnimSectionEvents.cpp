@@ -5,6 +5,8 @@
 #include "UCollider.h"
 #include "UBoneNode.h"
 #include "UGameInstance.h"
+#include "UPawn.h"
+#include "UTransform.h"
 
 UAnimChangeBetweenEvent::UAnimChangeBetweenEvent() : 
 	UAnimSectionEvent(ANIMEVENTTYPE::ANIMEVENT_ANIMCHANGESBETWEEN)
@@ -22,7 +24,7 @@ const ANIMOTHEREVENTDESC*  UAnimChangeBetweenEvent::OutOtherEventDesc()
 	return &m_AnimChangeDesc;
 }
 
-void UAnimChangeBetweenEvent::EventSituation(UAnimModel* _pAnimModel, const _double& _dTimeDelta)
+void UAnimChangeBetweenEvent::EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta)
 {
 	_pAnimModel->SetSupplyLerpValue(m_AnimChangeDesc.fSupplyAnimValue);
 	_pAnimModel->ChangeAnimation(m_AnimChangeDesc.iNextAnimIndex, m_AnimChangeDesc.dNextAnimTimeAcc);
@@ -55,6 +57,7 @@ AnimColliderEvent
 UAnimColliderEvent::UAnimColliderEvent() : 
 	UAnimSectionEvent(ANIMEVENTTYPE::ANIMEVENT_COLLIDER), m_AnimColliderDesc{}
 {
+
 }
 
 UAnimColliderEvent::UAnimColliderEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) :
@@ -63,15 +66,25 @@ UAnimColliderEvent::UAnimColliderEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::
 	LoadEvent(_spAnimModel, _load);
 }
 
-_bool UAnimColliderEvent::EventCheck(UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc, const _wstring& _wstrInputTrigger)
+_bool UAnimColliderEvent::EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc, const _wstring& _wstrInputTrigger)
 {
 #ifdef _USE_DEBUGGING
 	if (nullptr != m_AnimColliderDesc.spCollider)
 	{
+		SHPTR<UTransform> spTransform = _pPawn->GetTransform();
+		if (nullptr != m_AnimColliderDesc.spBoneNode){
+			m_AnimColliderDesc.spCollider->SetTransform(m_AnimColliderDesc.spBoneNode->GetCombineMatrix() * spTransform->GetWorldMatrix());
+		}
+		else
+		{
+			m_AnimColliderDesc.spCollider->SetTransform(spTransform->GetWorldMatrix());
+		}
 		m_AnimColliderDesc.spCollider->AddRenderer(RENDERID::RI_NONALPHA_LAST);
+		static _float3 vColor{ _float3{ 0.f, 1.f, 1.f } };
+		m_AnimColliderDesc.spCollider->ChangeColliderColor(vColor);
 	}
 #endif
-	return __super::EventCheck(_pAnimModel, _dTimeAcc, _dTimeAcc, _wstrInputTrigger);
+	return __super::EventCheck(_pPawn, _pAnimModel, _dTimeAcc, _dTimeAcc, _wstrInputTrigger);
 }
 
 const ANIMOTHEREVENTDESC*  UAnimColliderEvent::OutOtherEventDesc()
@@ -79,8 +92,14 @@ const ANIMOTHEREVENTDESC*  UAnimColliderEvent::OutOtherEventDesc()
 	return &m_AnimColliderDesc;
 }
 
-void UAnimColliderEvent::EventSituation(UAnimModel* _pAnimModel, const _double& _dTimeDelta)
+void UAnimColliderEvent::EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta)
 {
+#ifdef _USE_DEBUGGING
+	if (nullptr != m_AnimColliderDesc.spCollider) {
+		static _float3 vColor{ _float3{ 1.f, 1.f, 0.f } };
+		m_AnimColliderDesc.spCollider->ChangeColliderColor(vColor);
+	}
+#endif
 }
 
 void UAnimColliderEvent::SaveEvent(std::ofstream& _save)
@@ -124,4 +143,5 @@ void UAnimColliderEvent::LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifst
 
 void UAnimColliderEvent::Free()
 {
+	m_AnimColliderDesc.spCollider.reset();
 }

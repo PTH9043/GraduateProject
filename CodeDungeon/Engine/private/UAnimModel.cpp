@@ -86,6 +86,11 @@ HRESULT UAnimModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	return S_OK;
 }
 
+void UAnimModel::TickEvent(UPawn* _pPawn, const _wstring& _wstrInputTrigger, const _double& _TimeDelta)
+{
+	m_spCurAnimation->TickAnimEvent(_pPawn, this, _TimeDelta, _wstrInputTrigger);
+}
+
 void UAnimModel::TickAnimation(const _double& _dTimeDelta)
 {
 	if (nullptr != m_spNextAnimation)
@@ -121,11 +126,9 @@ void UAnimModel::UpdateCurAnimationToTimeAcc(const _double& _dTimeAcc)
 	}
 }
 
-void UAnimModel::TickAnimAndEvent(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta, 
-	const _wstring& _wstrInputTrigger)
+void UAnimModel::TickAnimChangeTransform(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta)
 {
 	assert(_spTransform && m_spCurAnimation);
-	m_spCurAnimation->TickAnimEvent(this, _dTimeDelta, _wstrInputTrigger);
 	TickAnimation(_dTimeDelta);
 
 	if (false == m_spCurAnimation->IsSupplySituation())
@@ -145,11 +148,9 @@ void UAnimModel::TickAnimAndEvent(CSHPTRREF<UTransform> _spTransform, const _dou
 	}
 }
 
-void UAnimModel::TickAnimToTimAccAndEvent(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta, const _double& _TimeAcc, 
-	const _wstring& _wstrInputTrigger)
+void UAnimModel::TickAnimToTimAccChangeTransform(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta, const _double& _TimeAcc)
 {
 	assert(_spTransform && m_spCurAnimation);
-	m_spCurAnimation->TickAnimEvent(this, _dTimeDelta, _wstrInputTrigger);
 	UpdateCurAnimationToTimeAcc(_TimeAcc);
 
 	_float3 vLook = GetRootBoneNode()->GetMoveRootBoneAngle();

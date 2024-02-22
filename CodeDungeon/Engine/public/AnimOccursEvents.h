@@ -19,7 +19,7 @@ public:
 	virtual const ANIMOTHEREVENTDESC*  OutOtherEventDesc() override;
 protected:
 	// Event 상황일 때를 정의
-	virtual void EventSituation(UAnimModel* _pAnimModel, const _double& _dTimeDelta) override;
+	virtual void EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta) override;
 	virtual void SaveEvent(std::ofstream& _save) override;
 	virtual void LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) override;
 private:

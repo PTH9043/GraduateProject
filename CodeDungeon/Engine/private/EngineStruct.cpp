@@ -222,7 +222,7 @@ namespace Engine {
 
 #pragma endregion ANIMSECTION 
 
-	_bool ANIMEVENTSECTIONDESC::IsAnimEventActive(const _double& _dTimeAcc)
+	_bool ANIMEVENTSECTIONDESC::IsAnimEventActive(const _double& _dTimeAcc) const
 	{
 		if (_dTimeAcc >= dStartTime && _dTimeAcc <= dEndTime)
 		{
@@ -233,7 +233,7 @@ namespace Engine {
 		return false;
 	}
 
-	bool ANIMOCURRESDESC::IsAnimOcurrs(const _double& _dTimeAcc) {
+	bool ANIMOCURRESDESC::IsAnimOcurrs(const _double& _dTimeAcc) const {
 
 		if (_dTimeAcc <= dAnimOccursTime)
 			return true;

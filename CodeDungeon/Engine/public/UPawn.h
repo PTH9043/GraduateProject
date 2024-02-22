@@ -4,6 +4,9 @@
 BEGIN(Engine)
 class URenderer;
 class UShader;
+class UCollider;
+
+using COLLIDERCONTAINER = UNORMAP<_wstring, SHPTR<UCollider>>;
 
 class UPawn  abstract : public UActor{
 public:
@@ -24,34 +27,39 @@ public:
 		virtual HRESULT NativeConstruct() override PURE;
 		virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override PURE;
 		// Hit 
-		virtual bool IsHit(CSHPTRREF<UPawn> _pEnemy);
+		bool IsHit(CSHPTRREF<UPawn> _spEnemy);
 
 		void AddRenderGroup(const RENDERID _iRenderID);
-	protected:
+protected: /* get set*/
+	// Get Renderer
+	CSHPTRREF<URenderer> GetRenderer() const { return m_spRenderer; }
+protected:
 		// Tick, LateTick, Render
 		virtual void TickActive(const _double& _dTimeDelta) override PURE;
 		virtual void LateTickActive(const _double& _dTimeDelta) override PURE;
 		virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override PURE;
 		// Damaged
 		virtual void Collision(CSHPTRREF<UPawn> _pEnemy) PURE;
+		// Add Collider
+		void AddColliderInContainer(const _wstring& _wstrTag ,const _wstring& _wstrColliderProto, const _float3& _vColliderPos, const _float3& _vColliderScale);
+		void AddColliderInContainer(const _wstring& _wstrTag, CSHPTRREF<UCollider> _spCollider);
 		// Add Shader
 		void AddShader(const _wstring& _wstrProtoTag, const _wstring& _wstrTag = RES_SHADER, const VOIDDATAS& _vecDatas = VOIDDATAS{});
 	#ifdef _USE_DEBUGGING
 		void AddDebugRenderGroup(const DEBUGRENDERID _iRenderID);
 	#endif
-		// Get Renderer
-		CSHPTRREF<URenderer> GetRenderer() const { return m_spRenderer; }
 	#ifdef _USE_IMGUI
 	public:
 		virtual void ShowObjectInfo() override;
 	#endif
 	private:
-		SHPTR<URenderer>	m_spRenderer;
-		SHPTR<UShader>		m_spShader;
+		SHPTR<URenderer>		m_spRenderer;
+		SHPTR<UShader>			m_spShader;
 
-		VECTOR<_uint>	m_vecRenderingDatas;
+		COLLIDERCONTAINER		m_ColliderContainer;
 	#ifdef _USE_DEBUGGING
-		std::atomic<_bool>		m_isDebugRenderingType;
+		VECTOR<_uint>				m_vecRenderingDatas;
+		_bool									m_isDebugRenderingType;
 	#endif 
 };
 

@@ -5,6 +5,7 @@ BEGIN(Engine)
 class UAnimModel;
 class UAnimChannel;
 class UAnimEvent;
+class UPawn;
 /*
 @ Date: 2024-02-17, Writer: 박태현
 @ Explain
@@ -44,7 +45,7 @@ public:
 	// 다음 애니메이션으로 변경
 	void UpdateNextAnimTransformMatrices(const _double& _dTimeDelta, const _float _fSupplyValue, CSHPTRREF<UAnimation> _spAnimation);
 	// Animation Event Tick 
-	void TickAnimEvent(UAnimModel* _pAnimModel, const _double& _TimeDelta, const _wstring& _wstrInputTrigger);
+	void TickAnimEvent(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _TimeDelta, const _wstring& _wstrInputTrigger);
 	void ResetData();
 	// 애니메이션 이벤트를 집어넣는 함수
 	void InsertAnimEvent(ANIMEVENTTYPE _AnimEventType, CSHPTRREF<UAnimEvent> _spAnimEvent);

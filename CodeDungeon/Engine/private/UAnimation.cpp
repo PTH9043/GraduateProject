@@ -67,6 +67,7 @@ SHPTR<UAnimation> UAnimation::Clone(CSHPTRREF<UAnimModel> _spAnimModel)
 
 void UAnimation::Free()
 {
+	m_AnimEventContainer.clear();
 	m_Channels.clear();
 }
 
@@ -140,13 +141,13 @@ void UAnimation::UpdateNextAnimTransformMatrices(const _double& _dTimeDelta, con
 	}
 }
 
-void UAnimation::TickAnimEvent(UAnimModel* _pAnimModel, const _double& _TimeDelta, const _wstring& _wstrInputTrigger)
+void UAnimation::TickAnimEvent(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _TimeDelta, const _wstring& _wstrInputTrigger)
 {
 	for (auto& iter : m_AnimEventContainer)
 	{
 		for (auto& Event : iter.second)
 		{
-			Event->EventCheck(_pAnimModel, _TimeDelta, m_dTimeAcc, _wstrInputTrigger);
+			Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, m_dTimeAcc, _wstrInputTrigger);
 		}
 	}
 }

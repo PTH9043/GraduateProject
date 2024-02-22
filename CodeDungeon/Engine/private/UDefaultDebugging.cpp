@@ -49,7 +49,7 @@ HRESULT UDefaultDebugging::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	}
 	AddShader(PROTO_RES_DEBUGGINGDEFAULTSHADER);
 
-	m_spDebuggingConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::B3, DEBUGPARAM_SIZE);
+	m_spDebuggingConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::B14, DEBUGPARAM_SIZE);
 	m_stDebuggParam.vDebugging.w = 0.5f;
 	return S_OK;
 }

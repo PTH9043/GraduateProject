@@ -19,7 +19,7 @@ const ANIMOTHEREVENTDESC*  UAnimOccursTimePassEvent::OutOtherEventDesc()
 	return &m_AnimChangeDesc;
 }
 
-void UAnimOccursTimePassEvent::EventSituation(UAnimModel* _pAnimModel, const _double& _dTimeDelta)
+void UAnimOccursTimePassEvent::EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta)
 {
 	_pAnimModel->SetSupplyLerpValue(m_AnimChangeDesc.fSupplyAnimValue);
 	_pAnimModel->ChangeAnimation(m_AnimChangeDesc.iNextAnimIndex, m_AnimChangeDesc.dNextAnimTimeAcc);

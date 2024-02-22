@@ -20,7 +20,7 @@ public:
 	virtual const ANIMOTHEREVENTDESC*  OutOtherEventDesc() override;
 protected:
 	// Event 상황일 때를 정의
-	virtual void EventSituation(UAnimModel* _pAnimModel, const _double& _dTimeDelta) override;
+	virtual void EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta) override;
 	virtual void SaveEvent(std::ofstream& _save) override;
 	virtual void LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) override;
 private:
@@ -49,13 +49,13 @@ public:
 	UAnimColliderEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load);
 	DESTRUCTOR(UAnimColliderEvent)
 public:
-	virtual _bool EventCheck(UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc,
+	virtual _bool EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc,
 		const _wstring& _wstrInputTrigger) override;
 	// UAnimSectionEvent을(를) 통해 상속됨
 	virtual const  ANIMOTHEREVENTDESC*  OutOtherEventDesc() override;
 protected:
 	// Event 상황일 때를 정의
-	virtual void EventSituation(UAnimModel* _pAnimModel, const _double& _dTimeDelta) override;
+	virtual void EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta) override;
 	virtual void SaveEvent(std::ofstream& _save) override;
 	virtual void LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) override;
 private:

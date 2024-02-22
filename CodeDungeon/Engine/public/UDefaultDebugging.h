@@ -16,7 +16,8 @@ public:
 	UDefaultDebugging(const UDefaultDebugging& _rhs);
 	DESTRUCTOR(UDefaultDebugging)
 
-	void SetColor(const _float4 _vColor) { m_stDebuggParam.vDebugging = _vColor; }
+	void SetColor(const _float4& _vColor) { m_stDebuggParam.vDebugging = _vColor; }
+	void SetColor(const _float3& _vColor) { ::memcpy(&m_stDebuggParam.vDebugging, &_vColor, sizeof(_float3)); }
 public:
 	CLONE_MACRO(UDefaultDebugging, "UDefaultDebugging::Clone To Failed")
 		virtual void Free() override;

@@ -5,6 +5,7 @@
 BEGIN(Engine)
 class UAnimModel;
 class UAnimator;
+class UPawn;
 /*
 @ Date: 2024-02-10, Writer: 박태현
 @ Explain
@@ -18,7 +19,7 @@ public:
 	const ANIMEVENTTYPE GetAnimEventType() const { return m_AnimEventType; }
 	const ANIMEVENTCATEGORY GetAnimEventCategory() const { return m_AnimEventCategory; }
 public:
-	virtual _bool EventCheck(UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc, 
+	virtual _bool EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc,
 		const _wstring& _wstrInputTrigger) PURE;
 	// AnimEventDesc를 상속받는 구조체를 리턴하는 함수
 	virtual const  ANIMEVENTDESC*  OutAnimEventDesc() PURE;
@@ -40,7 +41,7 @@ public:
 	virtual void LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) PURE;
 protected:
 	// Event 상황일 때를 정의
-	virtual void EventSituation(UAnimModel* _pAnimModel, const _double& _dTimeDelta) PURE;
+	virtual void EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta) PURE;
 private:
 	virtual void Free() PURE;
 private:
@@ -65,12 +66,14 @@ protected:
 	UAnimSectionEvent(const ANIMEVENTSECTIONDESC& _AnimEventDesc, ANIMEVENTTYPE _AnimEventType);
 	DESTRUCTOR(UAnimSectionEvent)
 public:
-	virtual _bool EventCheck(UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc,
+	virtual _bool EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc,
 		const _wstring& _wstrInputTrigger) override;
 	virtual const ANIMEVENTDESC*  OutAnimEventDesc() override { return &m_AnimSectionDesc; }
+protected: /* get set*/
+	const ANIMEVENTSECTIONDESC& GetAnimSectionDesc() const { return m_AnimSectionDesc; }
 protected:
 	// Event 상황일 때를 정의
-	virtual void EventSituation(UAnimModel* _pAnimModel, const _double& _dTimeDelta) PURE;
+	virtual void EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta) PURE;
 	virtual void SaveEvent( std::ofstream& _save) PURE;
 	virtual void LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) PURE;
 private:
@@ -96,12 +99,14 @@ protected:
 	UAnimOccurEvent(const ANIMOCURRESDESC& _AnimEventDesc,  ANIMEVENTTYPE _AnimEvent);
 	DESTRUCTOR(UAnimOccurEvent)
 public:
-	virtual _bool EventCheck(UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc,
+	virtual _bool EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc,
 		const _wstring& _wstrInputTrigger) override;
 	virtual const ANIMEVENTDESC*  OutAnimEventDesc() override { return &m_AnimOccurDesc; }
+protected: /* get set*/
+	const ANIMOCURRESDESC& GetAnimOccursDesc() const { return m_AnimOccurDesc; }
 protected:
 	// Event 상황일 때를 정의
-	virtual void EventSituation(UAnimModel* _pAnimModel, const _double& _dTimeDelta) PURE;
+	virtual void EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta) PURE;
 	virtual void SaveEvent(std::ofstream& _save) PURE;
 	virtual void LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) PURE;
 private:

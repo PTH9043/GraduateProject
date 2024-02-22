@@ -41,8 +41,8 @@
 #include "UVIBufferRect.h"
 #include "UVIBufferPoint.h"
 //#include "UVIBufferTriangle.h"
-//#include "UVIBufferSphere.h"
-//#include "UVIBufferCube.h"
+#include "UVIBufferSphere.h"
+#include "UVIBufferCube.h"
 #include "UVIBufferPlane.h"
 #include "UVIBufferGrid.h"
 //#include "UVIBufferSkyBox.h"
@@ -109,9 +109,9 @@ void UGameInstance::Free()
 	//m_spComputeManager.reset();
 	m_spRenderTargetManager.reset();
 	m_spSceneManager.reset();
-	m_spActorManager.reset();
-	m_spComponentManager.reset();
 	m_spResourceManager.reset();
+	m_spComponentManager.reset();
+	m_spActorManager.reset();
 	m_spThreadManager.reset();
 	m_spInputManager.reset();
 	m_spTimerManager.reset();
@@ -814,12 +814,6 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 		AddPrototype(PROTO_RES_VIBUFFERNORMALGRID, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferGrid>(
 			_stData.wpDevice.lock(), VIBUFFERTYPE::NORMAL));
 
-	/*	AddPrototype(PROTO_RES_VIBUFFERPOINT, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferPoint>(
-			_stData.wpDevice.lock()));
-
-		AddPrototype(PROTO_RES_VIBUFFERTRIANGLE, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferTriangle>(
-			_stData.wpDevice.lock()));
-
 		AddPrototype(PROTO_RES_VIBUFFERSHPHERE, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferSphere>(
 			_stData.wpDevice.lock(), VIBUFFERTYPE::GENERIC));
 
@@ -831,6 +825,11 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 
 		AddPrototype(PROTO_RES_VIBUFFERNORMALCUBE, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferCube>(
 			_stData.wpDevice.lock(), VIBUFFERTYPE::NORMAL));
+
+	/*	
+
+		AddPrototype(PROTO_RES_VIBUFFERTRIANGLE, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferTriangle>(
+			_stData.wpDevice.lock()));
 
 		AddPrototype(PROTO_RES_VIBUFFERNORMALPLANE, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferPlane>(
 			_stData.wpDevice.lock(), VIBUFFERTYPE::NORMAL));

@@ -8,6 +8,8 @@
 #include "UAnimation.h"
 #include "AnimOccursEvents.h"
 #include "AnimSectionEvents.h"
+#include "UBoneNode.h"
+#include "UCollider.h"
 
 
 const _char* TAnimControlView::s_AnimTags[1000]{};
@@ -294,14 +296,14 @@ void TAnimControlView::AnimSectionShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTable
 					ImGui::TableNextColumn();
 					ImGui::SetNextItemWidth(-FLT_MIN);
 					_float StartTime = static_cast<_float>(SectionDesc->dStartTime);
-					ImGui::DragFloat(StartT + Index, &StartTime, 0.0f, Duration);
+					ImGui::InputFloat(StartT + Index, &StartTime, 0.0f, Duration);
 					SectionDesc->dStartTime = static_cast<_double>(StartTime);
 				}
 				{
 					ImGui::TableNextColumn();
 					ImGui::SetNextItemWidth(-FLT_MIN);
 					_float EndTime = static_cast<_float>(SectionDesc->dEndTime);
-					ImGui::DragFloat(EndT + Index, &EndTime, 0.0f, Duration);
+					ImGui::InputFloat(EndT + Index, &EndTime, 0.0f, Duration);
 					SectionDesc->dEndTime = static_cast<_double>(EndTime);
 				}
 				{
@@ -316,13 +318,13 @@ void TAnimControlView::AnimSectionShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTable
 				{
 					ImGui::TableNextColumn();
 					ImGui::SetNextItemWidth(-FLT_MIN);
-					ImGui::DragFloat(SupV + Index, &ChangeDesc->fSupplyAnimValue, 0.01f, 0.01f, 10.f);
+					ImGui::InputFloat(SupV + Index, &ChangeDesc->fSupplyAnimValue);
 				}
 				{
 					ImGui::TableNextColumn();
 					ImGui::SetNextItemWidth(-FLT_MIN);
 					_float Time = static_cast<_float>(ChangeDesc->dNextAnimTimeAcc);
-					ImGui::DragFloat(NextAnimTimeAcc + Index, &Time, 0.01f, 0.01f, fNextTimeAcc);
+					ImGui::InputFloat(NextAnimTimeAcc + Index, &Time);
 					ChangeDesc->dNextAnimTimeAcc = static_cast<_double>(Time);
 				}
 				ImGui::TableNextRow();
@@ -379,7 +381,7 @@ void TAnimControlView::AnimOccursShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableF
 					ImGui::TableNextColumn();
 					ImGui::SetNextItemWidth(-FLT_MIN);
 					_float Time = static_cast<_float>(OccursDesc->dAnimOccursTime);
-					ImGui::DragFloat(OverT + Index, &Time, 0.0f, Duration);
+					ImGui::InputFloat(OverT + Index, &Time, 0.0f, Duration);
 					OccursDesc->dAnimOccursTime = static_cast<_double>(Time);
 				}
 				{
@@ -394,13 +396,13 @@ void TAnimControlView::AnimOccursShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableF
 				{
 					ImGui::TableNextColumn();
 					ImGui::SetNextItemWidth(-FLT_MIN);
-					ImGui::DragFloat(SupV + Index, &ChangeDesc->fSupplyAnimValue, 0.01f, 0.01f, 10.f);
+					ImGui::InputFloat(SupV + Index, &ChangeDesc->fSupplyAnimValue);
 				}
 				{
 					ImGui::TableNextColumn();
 					ImGui::SetNextItemWidth(-FLT_MIN);
 					_float Time = static_cast<_float>(ChangeDesc->dNextAnimTimeAcc);
-					ImGui::DragFloat(NextAnimTimeAcc + Index, &Time, 0.01f, 0.01f, fNextTimeAcc);
+					ImGui::InputFloat(NextAnimTimeAcc + Index, &Time);
 					ChangeDesc->dNextAnimTimeAcc = static_cast<_double>(Time);
 				}
 				ImGui::TableNextRow();
@@ -413,54 +415,145 @@ void TAnimControlView::AnimOccursShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableF
 
 void TAnimControlView::AnimColliderShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFlags _flags, const VECTOR<SHPTR<UAnimEvent>>& _AnimEvent)
 {
+	static const _char* COLLIDERTAG[]{ "AABB", "OBB", "SPHERE"};
+	static _string COLLIDER_NAME{ "MakeCollider##" };
+
+	static _string InputTrigger = "InputTrigger";
+	static _string StartT = "Start";
+	static _string EndT = "End";
+	static _string Collider = "##Collider3";
+	static _string BoneNodeStr = "##BoneNode3";
+	static _string CreateColliderButton = "Create";
+	static _string ReadColliderPos = "CollPos";
+	static _string TranslateCollider  = "Translater";
+	static _string ScaleCollider = "Scale";
+
 	if (ImGui::TreeNodeEx("AnimColliderShow", ImGuiTreeNodeFlags_Bullet))
 	{
-		ImGui::SetNextItemWidth(-FLT_MIN);
-		if (ImGui::BeginTable("AnimCollider", 6, _flags, ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 20), 0.0f))
+		_int iIndex{ 0 };
+		for (auto& iter : _AnimEvent)
 		{
-			ImGui::TableSetupColumn("InputTrigger", ImGuiTableColumnFlags_WidthStretch);
-			ImGui::TableSetupColumn("StartT", ImGuiTableColumnFlags_WidthStretch);
-			ImGui::TableSetupColumn("EndT", ImGuiTableColumnFlags_WidthStretch);
-			ImGui::TableSetupScrollFreeze(0, 1); // Make row always visible
-			ImGui::TableHeadersRow();
-
-			static _string InputTrigger = "##InputTrigger3";
-			static _string StartT = "##StartT3";
-			static _string EndT = "##EndT3";
-			_int iIndex{ 0 };
-			_float Duration = static_cast<_float>(_spAnim->GetDuration());
-			for (auto& iter : _AnimEvent)
+			_string Index = "##T3" + _string::to_string(iIndex++);
+			if (ImGui::TreeNodeEx(COLLIDER_NAME + Index))
 			{
-				_string Index = _string::to_string(iIndex++);
+				_float Duration = static_cast<_float>(_spAnim->GetDuration());
 				ANIMEVENTSECTIONDESC* SectionDesc = UAnimEvent::remove_const<ANIMEVENTSECTIONDESC*>(iter->OutAnimEventDesc());
 				ANIMCOLLIDERDESC* ChangeDesc = UAnimEvent::remove_const<ANIMCOLLIDERDESC*>(iter->OutOtherEventDesc());
+				// 1
 				{
-					ImGui::TableNextColumn();
-					ImGui::SetNextItemWidth(-FLT_MIN);
+					ImGui::SetNextItemWidth(300);
 					_string str = UMethod::ConvertWToS(SectionDesc->wstrEventTrigger);
 					if (true == ImGui::InputText(InputTrigger + Index, &str[0], MAX_BUFFER_LENGTH))
 					{
 						SectionDesc->wstrEventTrigger = UMethod::ConvertSToW(str);
 					}
 				}
+				// 2
 				{
-					ImGui::TableNextColumn();
-					ImGui::SetNextItemWidth(-FLT_MIN);
+					ImGui::SetNextItemWidth(100);
 					_float StartTime = static_cast<_float>(SectionDesc->dStartTime);
-					ImGui::DragFloat(StartT + Index, &StartTime, 0.0f, Duration);
+					ImGui::InputFloat(StartT + Index, &StartTime, 0.0f, Duration);
 					SectionDesc->dStartTime = static_cast<_double>(StartTime);
 				}
+				// 3
 				{
-					ImGui::TableNextColumn();
-					ImGui::SetNextItemWidth(-FLT_MIN);
+					ImGui::SameLine();
+					ImGui::SetNextItemWidth(100);
 					_float EndTime = static_cast<_float>(SectionDesc->dEndTime);
-					ImGui::DragFloat(EndT + Index, &EndTime, 0.0f, Duration);
+					ImGui::InputFloat(EndT + Index, &EndTime, 0.0f, Duration);
 					SectionDesc->dEndTime = static_cast<_double>(EndTime);
 				}
+				// 4
+				{
+					ImGui::SetNextItemWidth(100);
+					_string BoneStr{ "NO_SEL" };
+					if (nullptr != ChangeDesc->spBoneNode) {
+						BoneStr = UMethod::ConvertWToS(ChangeDesc->spBoneNode->GetName());
+					}
+					if (ImGui::BeginCombo(BoneNodeStr + Index, BoneStr.c_str())) {
 
-
+						_bool isTrue;
+						static _string NO_SEL{ "NO_SEL" };
+						if (ImGui::Selectable(NO_SEL + Index , &isTrue)) {
+							ChangeDesc->spBoneNode = nullptr;
+							ImGui::SetItemDefaultFocus();
+						}
+						else
+						{
+							for (auto& BoneNode : m_spShowAnimModel->GetBoneNodes())
+							{
+								_string ConvertBoneStr = UMethod::ConvertWToS(BoneNode->GetName());
+								if (ImGui::Selectable(ConvertBoneStr.c_str(), &isTrue)) {
+									ChangeDesc->spBoneNode = BoneNode;
+									ImGui::SetItemDefaultFocus();
+								}
+							}
+						}
+						ImGui::EndCombo();
+					}
+				}
+				// 5
+				{
+					ImGui::SameLine();
+					ImGui::SetNextItemWidth(100);
+					ImGui::Combo(Collider + Index, &ChangeDesc->iColliderType, COLLIDERTAG, 3);
+				}
+				// 6
+				{
+					ImGui::SameLine();
+					ImGui::SetNextItemWidth(100);
+					if (true == ImGui::Button(CreateColliderButton + Index))
+					{
+						UCollider::COLLIDERDESC Desc{ _float3{1.f, 1.f, 1.f}, _float3{0.f, 0.f, 0.f} };
+						switch (ChangeDesc->iColliderType)
+						{
+						case UCollider::TYPE_AABB:
+							ChangeDesc->spCollider = std::static_pointer_cast<UCollider>(GetGameInstance()->CloneComp(PROTO_COMP_ABBCOLLIDER, VOIDDATAS{ &Desc }));
+							break;
+						case UCollider::TYPE_OBB:
+							ChangeDesc->spCollider = std::static_pointer_cast<UCollider>(GetGameInstance()->CloneComp(PROTO_COMP_OBBCOLLIDER, VOIDDATAS{ &Desc }));
+							break;
+						case UCollider::TYPE_SPHERE:
+							ChangeDesc->spCollider = std::static_pointer_cast<UCollider>(GetGameInstance()->CloneComp(PROTO_COMP_SPHERECOLLIDER, VOIDDATAS{ &Desc }));
+							break;
+						}
+					}
+				}
+				if (nullptr != ChangeDesc->spCollider)
+				{
+					// 7 Show Pos
+					{
+						_float3 vCurPos = ChangeDesc->spCollider->GetCurPos();
+						ImGui::InputFloat3(ReadColliderPos + Index, &vCurPos.x, "%.3f", ImGuiInputTextFlags_ReadOnly);
+					}
+					// 8 
+					{
+						_float3 vTranslate = ChangeDesc->spCollider->GetTranslate();
+						if (true == ImGui::InputFloat3(TranslateCollider + Index, &vTranslate.x)) {
+							ChangeDesc->spCollider->SetTranslate(vTranslate);
+						}
+					}
+					// 9
+					{
+						_float3 vScale = ChangeDesc->spCollider->GetScale();
+						switch (ChangeDesc->iColliderType)
+						{
+						case UCollider::TYPE_SPHERE:
+							if (true == ImGui::InputFloat(ScaleCollider + Index, &vScale.x)){
+								ChangeDesc->spCollider->SetScale(vScale);
+							}
+							break;
+						case UCollider::TYPE_OBB:
+						case UCollider::TYPE_AABB:
+							if (true == ImGui::InputFloat3(ScaleCollider + Index, &vScale.x)) {
+								ChangeDesc->spCollider->SetScale(vScale);
+							}
+							break;
+						}
+					}
+				}
+				ImGui::TreePop();
 			}
-			ImGui::EndTable();
 		}
 		ImGui::TreePop();
 	}
