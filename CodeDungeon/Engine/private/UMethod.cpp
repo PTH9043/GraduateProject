@@ -22,16 +22,16 @@ _string Engine::UMethod::ConvertWToS(const _wstring& var)
 	size_t size;
 	str.resize(var.size());
 	wcstombs_s(&size, &str[0], str.size() + 1, var.c_str(), var.size());
-	return str;
+	return std::move(str);
 }
 
 _wstring Engine::UMethod::ConvertSToW(const _string& var)
 {
 	_wstring wstr;
 	size_t size;
-	wstr.resize(var.size());
+	wstr.resize(var.size() );
 	mbstowcs_s(&size, wstr.data(), wstr.size() + 1, var.c_str(), var.size());
-	return wstr;
+	return std::move(wstr);
 }
 
 _string Engine::UMethod::ConvertBigToSmall(const _string& _var)
@@ -39,7 +39,7 @@ _string Engine::UMethod::ConvertBigToSmall(const _string& _var)
 	_string str = "";
 	for (auto& iter : _var)
 		str += (_char)((_int)iter + 32);
-	return str;
+	return std::move(str);
 }
 
 _string Engine::UMethod::ConvertSmallToBig(const _string& _var)
@@ -47,7 +47,7 @@ _string Engine::UMethod::ConvertSmallToBig(const _string& _var)
 	_string str = "";
 	for (auto& iter : _var)
 		str += (_char)((_int)iter - 32);
-	return str;
+	return std::move(str);
 }
 
 _wstring Engine::UMethod::ConvertBigToSmall(const _wstring& _var)
@@ -55,7 +55,7 @@ _wstring Engine::UMethod::ConvertBigToSmall(const _wstring& _var)
 	_wstring str = L"";
 	for (auto& iter : _var)
 		str += (_tchar)((_int)iter + 32);
-	return str;
+	return std::move(str);
 }
 
 _wstring Engine::UMethod::ConvertSmallToBig(const _wstring& _var)
@@ -63,7 +63,7 @@ _wstring Engine::UMethod::ConvertSmallToBig(const _wstring& _var)
 	_wstring str = L"";
 	for (auto& iter : _var)
 		str += (_tchar)((_int)iter - 32);
-	return str;
+	return std::move(str);
 }
 
 const _bool Engine::UMethod::Is_Same_Text(const _string& _strOriginText, const _string& _strFindText)
@@ -145,7 +145,7 @@ _string Engine::UMethod::Find_Extension(const _string& _str)
 	_string str = _str;
 	_uint iIndex = (_uint)str.find_last_of(".");
 	_string returnStr = str.substr(iIndex + 1, str.length());
-	return returnStr;
+	return std::move(returnStr);
 }
 
 _wstring Engine::UMethod::Find_Extension(const _wstring& _str)
@@ -153,7 +153,7 @@ _wstring Engine::UMethod::Find_Extension(const _wstring& _str)
 	_wstring str = _str;
 	_uint iIndex = (_uint)str.find_last_of(L".");
 	_wstring returnStr = str.substr(iIndex + 1, str.length());
-	return returnStr;
+	return std::move(returnStr);
 }
 
 HRESULT UMethod::CreateBufferToUpLoadGpu(const ComPtr<Dx12Device>& _pDevice,

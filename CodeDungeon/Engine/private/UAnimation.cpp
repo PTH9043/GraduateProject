@@ -291,7 +291,7 @@ void UAnimation::SaveAnimEventPathIsFolder(const _wstring& _wstrPath)
 	}
 }
 
-void UAnimation::LoadAnimEventData(const _wstring& _wstrPath)
+void UAnimation::LoadAnimEventData(CSHPTRREF<UAnimModel> _spAnimModel, const _wstring& _wstrPath)
 {
 	std::ifstream Read{ _wstrPath, std::ios::binary };
 	RETURN_CHECK(!Read, ;);
@@ -319,25 +319,25 @@ void UAnimation::LoadAnimEventData(const _wstring& _wstrPath)
 			// Event save
 			for (_uint j = 0; j < EventCnt; ++j)
 			{
-				AnimEventContainer.push_back(CreateAnimEvent(EventType, Read));
+				AnimEventContainer.push_back(CreateAnimEvent(_spAnimModel, EventType, Read));
 			}
 			m_AnimEventContainer.emplace(MakePair(EventType, AnimEventContainer));
 		}
 	}
 }
 
-void UAnimation::LoadAnimEventDataPathIsFolder(const _wstring& _wstrPath)
+void UAnimation::LoadAnimEventDataPathIsFolder(CSHPTRREF<UAnimModel> _spAnimModel, const _wstring& _wstrPath)
 {
 	_wstring str = _wstrPath;
 	str.append(L"\\AnimEvent\\");
 	str.append(m_wstrName);
 	str.append(DEFAULT_OUTFOLDEREXTENSION);
 
-	LoadAnimEventData(str);
+	LoadAnimEventData(_spAnimModel, str);
 }
 
 
-SHPTR<UAnimEvent> UAnimation::CreateAnimEvent(ANIMEVENTTYPE _AnimEventType, std::ifstream& _read)
+SHPTR<UAnimEvent> UAnimation::CreateAnimEvent(CSHPTRREF<UAnimModel> _spAnimModel, ANIMEVENTTYPE _AnimEventType, std::ifstream& _read)
 {
 	SHPTR<UAnimEvent> spAnimEvent{ nullptr };
 	switch (_AnimEventType)
@@ -345,10 +345,10 @@ SHPTR<UAnimEvent> UAnimation::CreateAnimEvent(ANIMEVENTTYPE _AnimEventType, std:
 	case ANIMEVENT_CAMERA:
 		break;
 	case ANIMEVENT_ANIMCHANGESBETWEEN:
-		spAnimEvent = Create< UAnimChangeBetweenEvent>(_read);
+		spAnimEvent = Create< UAnimChangeBetweenEvent>(_spAnimModel, _read);
 		break;
 	case ANIMEVENT_COLLIDER:
-
+		spAnimEvent = Create<UAnimColliderEvent>(_spAnimModel, _read);
 		break;
 	case ANIMEVENT_EFFECT:
 
@@ -357,7 +357,7 @@ SHPTR<UAnimEvent> UAnimation::CreateAnimEvent(ANIMEVENTTYPE _AnimEventType, std:
 
 		break;
 	case ANIMEVENT_ANIMOCCURSTIMEPASS:
-		spAnimEvent = Create< UAnimOccursTimePassEvent>(_read);
+		spAnimEvent = Create< UAnimOccursTimePassEvent>(_spAnimModel, _read);
 		break;
 	case ANIMEVENT_SOUND:
 		break;

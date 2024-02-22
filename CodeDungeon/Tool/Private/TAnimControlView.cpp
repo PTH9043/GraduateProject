@@ -191,7 +191,7 @@ void TAnimControlView::MakeAnimEvent()
 				spAnimEvent = Create< UAnimChangeBetweenEvent>();
 				break;
 			case ANIMEVENT_COLLIDER:
-
+				spAnimEvent = Create<UAnimColliderEvent>();
 				break;
 			case ANIMEVENT_EFFECT:
 
@@ -226,6 +226,7 @@ void TAnimControlView::MakeAnimEvent()
 					AnimSectionShow(m_spSelectAnim, flags, iter.second);
 					break;
 				case ANIMEVENT_COLLIDER:
+					AnimColliderShow(m_spSelectAnim, flags, iter.second);
 					break;
 				case ANIMEVENT_EFFECT:
 					break;
@@ -263,7 +264,6 @@ void TAnimControlView::AnimSectionShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTable
 			ImGui::TableSetupScrollFreeze(0, 1); // Make row always visible
 			ImGui::TableHeadersRow();
 
-			static _int iSelectAnim{ 0 };
 			static _float fNextTimeAcc{ 0.f };
 			static _string InputTrigger = "##InputTrigger";
 			static _string StartT = "##StartT";
@@ -276,16 +276,19 @@ void TAnimControlView::AnimSectionShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTable
 			_float Duration = static_cast<_float>(_spAnim->GetDuration());
 			for (auto& iter : _AnimEvent)
 			{
-				_string Index = _string::to_string(iIndex++);
+				 _string Index = _string::to_string(iIndex++);
+				 ANIMEVENTSECTIONDESC* SectionDesc = UAnimEvent::remove_const<ANIMEVENTSECTIONDESC*>(iter->OutAnimEventDesc());
+				 ANIMCHANGEDESC* ChangeDesc = UAnimEvent::remove_const<ANIMCHANGEDESC*>(iter->OutOtherEventDesc());
 
-				 ANIMEVENTSECTIONDESC* SectionDesc = static_cast<ANIMEVENTSECTIONDESC*>(iter->OutAnimEventDesc());
-				 ANIMCHANGEDESC* ChangeDesc = static_cast<ANIMCHANGEDESC*>(iter->OutOtherEventDesc());
+				 _int iSelectAnim = ChangeDesc->iNextAnimIndex;
 				 {
 					 ImGui::TableNextColumn();
 					 ImGui::SetNextItemWidth(-FLT_MIN);
 					 _string str = UMethod::ConvertWToS(SectionDesc->wstrEventTrigger);
-					 ImGui::InputText(InputTrigger + Index, &str[0], MAX_BUFFER_LENGTH);
-					 SectionDesc->wstrEventTrigger = UMethod::ConvertSToW(str);
+					 if (true == ImGui::InputText(InputTrigger + Index, &str[0], MAX_BUFFER_LENGTH))
+					 {
+						 SectionDesc->wstrEventTrigger = UMethod::ConvertSToW(str);
+					 }
 				 }
 				{
 					ImGui::TableNextColumn();
@@ -345,7 +348,6 @@ void TAnimControlView::AnimOccursShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableF
 			ImGui::TableSetupScrollFreeze(0, 1); // Make row always visible
 			ImGui::TableHeadersRow();
 
-			static _int iSelectAnim{ 0 };
 			static _float fNextTimeAcc{ 0.f };
 
 			static _string InputTrigger = "##InputTrigger2";
@@ -358,17 +360,20 @@ void TAnimControlView::AnimOccursShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableF
 			_float Duration = static_cast<_float>(_spAnim->GetDuration());
 			for (auto& iter : _AnimEvent)
 			{
-				_string Index = _string::to_string(iIndex++);
+				 _string Index = _string::to_string(iIndex++);
 
-				ANIMOCURRESDESC* OccursDesc = static_cast<ANIMOCURRESDESC*>(iter->OutAnimEventDesc());
-				ANIMCHANGEDESC* ChangeDesc = static_cast<ANIMCHANGEDESC*>(iter->OutOtherEventDesc());
+				ANIMOCURRESDESC* OccursDesc = UAnimEvent::remove_const<ANIMOCURRESDESC*>(iter->OutAnimEventDesc());
+				ANIMCHANGEDESC* ChangeDesc = UAnimEvent::remove_const<ANIMCHANGEDESC*>(iter->OutOtherEventDesc());
 
+				_int iSelectAnim = ChangeDesc->iNextAnimIndex;
 				{
 					ImGui::TableNextColumn();
 					ImGui::SetNextItemWidth(-FLT_MIN);
 					_string str = UMethod::ConvertWToS(OccursDesc->wstrEventTrigger);
-					ImGui::InputText(InputTrigger + Index, &str[0], MAX_BUFFER_LENGTH);
-					OccursDesc->wstrEventTrigger = UMethod::ConvertSToW(str);
+					if (true == ImGui::InputText(InputTrigger + Index, &str[0], MAX_BUFFER_LENGTH))
+					{
+						OccursDesc->wstrEventTrigger = UMethod::ConvertSToW(str);
+					}
 				}
 				{
 					ImGui::TableNextColumn();
@@ -399,6 +404,61 @@ void TAnimControlView::AnimOccursShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableF
 					ChangeDesc->dNextAnimTimeAcc = static_cast<_double>(Time);
 				}
 				ImGui::TableNextRow();
+			}
+			ImGui::EndTable();
+		}
+		ImGui::TreePop();
+	}
+}
+
+void TAnimControlView::AnimColliderShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFlags _flags, const VECTOR<SHPTR<UAnimEvent>>& _AnimEvent)
+{
+	if (ImGui::TreeNodeEx("AnimColliderShow", ImGuiTreeNodeFlags_Bullet))
+	{
+		ImGui::SetNextItemWidth(-FLT_MIN);
+		if (ImGui::BeginTable("AnimCollider", 6, _flags, ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 20), 0.0f))
+		{
+			ImGui::TableSetupColumn("InputTrigger", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupColumn("StartT", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupColumn("EndT", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupScrollFreeze(0, 1); // Make row always visible
+			ImGui::TableHeadersRow();
+
+			static _string InputTrigger = "##InputTrigger3";
+			static _string StartT = "##StartT3";
+			static _string EndT = "##EndT3";
+			_int iIndex{ 0 };
+			_float Duration = static_cast<_float>(_spAnim->GetDuration());
+			for (auto& iter : _AnimEvent)
+			{
+				_string Index = _string::to_string(iIndex++);
+				ANIMEVENTSECTIONDESC* SectionDesc = UAnimEvent::remove_const<ANIMEVENTSECTIONDESC*>(iter->OutAnimEventDesc());
+				ANIMCOLLIDERDESC* ChangeDesc = UAnimEvent::remove_const<ANIMCOLLIDERDESC*>(iter->OutOtherEventDesc());
+				{
+					ImGui::TableNextColumn();
+					ImGui::SetNextItemWidth(-FLT_MIN);
+					_string str = UMethod::ConvertWToS(SectionDesc->wstrEventTrigger);
+					if (true == ImGui::InputText(InputTrigger + Index, &str[0], MAX_BUFFER_LENGTH))
+					{
+						SectionDesc->wstrEventTrigger = UMethod::ConvertSToW(str);
+					}
+				}
+				{
+					ImGui::TableNextColumn();
+					ImGui::SetNextItemWidth(-FLT_MIN);
+					_float StartTime = static_cast<_float>(SectionDesc->dStartTime);
+					ImGui::DragFloat(StartT + Index, &StartTime, 0.0f, Duration);
+					SectionDesc->dStartTime = static_cast<_double>(StartTime);
+				}
+				{
+					ImGui::TableNextColumn();
+					ImGui::SetNextItemWidth(-FLT_MIN);
+					_float EndTime = static_cast<_float>(SectionDesc->dEndTime);
+					ImGui::DragFloat(EndT + Index, &EndTime, 0.0f, Duration);
+					SectionDesc->dEndTime = static_cast<_double>(EndTime);
+				}
+
+
 			}
 			ImGui::EndTable();
 		}

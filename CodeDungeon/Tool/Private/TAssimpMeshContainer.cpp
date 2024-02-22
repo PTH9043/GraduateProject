@@ -9,7 +9,7 @@ TAssimpMeshContainer::TAssimpMeshContainer(CSHPTRREF<UDevice> _spDevice)
 	m_iMaterialIndex{ 0 },
 	m_iNumBones{ 0 },
 	m_iNumBuffers{ 0 },
-	m_vecBoneNodes{},
+	m_BoneNodeContainer{},
 	m_wstrName{ L"" },
 	m_vecUVTexCoords{},
 	m_vMinVertex{},
@@ -22,7 +22,7 @@ TAssimpMeshContainer::TAssimpMeshContainer(const TAssimpMeshContainer& _rhs) :
 	m_iMaterialIndex{ _rhs.m_iMaterialIndex },
 	m_iNumBones{ _rhs.m_iNumBones },
 	m_iNumBuffers{ _rhs.m_iNumBuffers },
-	m_vecBoneNodes{ _rhs.m_vecBoneNodes },
+	m_BoneNodeContainer{ _rhs.m_BoneNodeContainer },
 	m_wstrName{ _rhs.m_wstrName },
 	m_vecUVTexCoords{ _rhs.m_vecUVTexCoords },
 	m_vMinVertex{},
@@ -69,12 +69,12 @@ HRESULT TAssimpMeshContainer::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	RETURN_CHECK(nullptr == pModel, E_FAIL);
 
 	VECTOR<SHPTR<TAssimpBoneNode>> BoneNodes{};
-	for (auto& iter : m_vecBoneNodes) {
+	for (auto& iter : m_BoneNodeContainer) {
 		_float4x4 OffsetMatrix = iter->GetOffsetMatrix();
-		BoneNodes.push_back(pModel->GetBoneNode(iter->GetBoneName()));
+		BoneNodes.push_back(pModel->FindBoneNode(iter->GetBoneName()));
 	}
-	m_vecBoneNodes.clear();
-	m_vecBoneNodes = BoneNodes;
+	m_BoneNodeContainer.clear();
+	m_BoneNodeContainer = BoneNodes;
 	return S_OK;
 }
 
@@ -92,8 +92,8 @@ void TAssimpMeshContainer::GetData(MESHDESC& _stMeshDesc)
 	_stMeshDesc.pVtxModel = static_cast<VTXMODEL*>(m_pVertexData);
 	_stMeshDesc.pIndices = static_cast<const INDICIES32*>(GetIndices());
 	_stMeshDesc.pPosition = new _float3[GetVertexPos()->size()];
-	_stMeshDesc.iBoneNodeCnt = (_uint)m_vecBoneNodes.size();
-	for (auto& iter : m_vecBoneNodes)
+	_stMeshDesc.iBoneNodeCnt = (_uint)m_BoneNodeContainer.size();
+	for (auto& iter : m_BoneNodeContainer)
 		_stMeshDesc.BoneNodeNameList.push_back(iter->GetBoneName());
 	_stMeshDesc.vMaxVertex = m_vMaxVertex;
 	_stMeshDesc.vMinVertex = m_vMinVertex;
@@ -107,8 +107,8 @@ void TAssimpMeshContainer::GetData(ANIMMESHDESC& _stAnimMeshDesc)
 	_stAnimMeshDesc.wstrName = m_wstrName;
 	_stAnimMeshDesc.pVtxModel = static_cast<VTXANIMMODEL*>(m_pVertexData);
 	_stAnimMeshDesc.pIndices = static_cast<const INDICIES32*>(GetIndices());
-	_stAnimMeshDesc.iBoneNodeCnt = (_uint)m_vecBoneNodes.size();
-	for (auto& iter : m_vecBoneNodes)
+	_stAnimMeshDesc.iBoneNodeCnt = (_uint)m_BoneNodeContainer.size();
+	for (auto& iter : m_BoneNodeContainer)
 		_stAnimMeshDesc.BoneNodeNameList.push_back(iter->GetBoneName());
 	_stAnimMeshDesc.vMaxVertex = m_vMaxVertex;
 	_stAnimMeshDesc.vMinVertex = m_vMinVertex;
@@ -150,9 +150,9 @@ HRESULT TAssimpMeshContainer::ReadyVertices(aiMesh* _pMesh, CSHPTRREF<TAssimpMod
 		_float4x4 OffsetMatrix{ _float4x4::Identity };
 		::memcpy(&OffsetMatrix, &pBone->mOffsetMatrix, sizeof(_float4x4));
 
-		SHPTR<TAssimpBoneNode> pBoneNode = _spModel->GetBoneNode(UMethod::ConvertSToW(pBone->mName.data));
+		SHPTR<TAssimpBoneNode> pBoneNode = _spModel->FindBoneNode(UMethod::ConvertSToW(pBone->mName.data));
 		pBoneNode->SetOffsetMatrix(OffsetMatrix);
-		m_vecBoneNodes.push_back(pBoneNode);
+		m_BoneNodeContainer.push_back(pBoneNode);
 	}
 
 	RETURN_CHECK_FAILED(CreateVtxBuffer(iNumVertices, sizeof(VTXMODEL), pVertices,
@@ -194,9 +194,9 @@ HRESULT TAssimpMeshContainer::ReadyAnimVertices(aiMesh* _pMesh, CSHPTRREF<TAssim
 		::memcpy(&OffsetMatrix, &pBone->mOffsetMatrix, sizeof(_float4x4));
 		DirectX::XMStoreFloat4x4(&OffsetMatrix, DirectX::XMMatrixTranspose(XMLoadFloat4x4(&OffsetMatrix)));
 
-		SHPTR<TAssimpBoneNode> pBoneNode = _spModel->GetBoneNode(UMethod::ConvertSToW(pBone->mName.data));
+		SHPTR<TAssimpBoneNode> pBoneNode = _spModel->FindBoneNode(UMethod::ConvertSToW(pBone->mName.data));
 		pBoneNode->SetOffsetMatrix(OffsetMatrix);
-		m_vecBoneNodes.push_back(pBoneNode);
+		m_BoneNodeContainer.push_back(pBoneNode);
 
 		for (_uint j = 0; j < pBone->mNumWeights; ++j)
 		{

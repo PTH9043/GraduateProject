@@ -220,32 +220,15 @@ namespace Engine {
 		return false;
 	}
 
-	_bool tagAnimClipSection::IsPass(const _wstring& _wstrName, const _double& _dTimeValue, const _double& _dSupTime)
-	{
-		if (_wstrName == wstrName)
-		{
-			if (fEndValue - _dSupTime <= _dTimeValue)
-				return true;
-		}
-		return false;
-	}
-
-	_bool tagAnimClipSection::IsBetween(const _wstring& _wstrName, const _double& _dTimeValue)
-	{
-		if (_wstrName == wstrName)
-		{
-			if (fChange <= _dTimeValue && _dTimeValue <= fEndValue)
-				return true;
-		}
-		return false;
-	}
-
 #pragma endregion ANIMSECTION 
 
 	_bool ANIMEVENTSECTIONDESC::IsAnimEventActive(const _double& _dTimeAcc)
 	{
 		if (_dTimeAcc >= dStartTime && _dTimeAcc <= dEndTime)
+		{
+			
 			return true;
+		}
 
 		return false;
 	}

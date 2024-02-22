@@ -510,15 +510,6 @@ namespace Engine {
 		_bool IsPass(const _double& _dTimeValue);
 	}ANIMFASTSECTION;
 
-	typedef struct  tagAnimClipSection
-	{
-		_float			fChange = 0.f;
-		_float			fEndValue = 0.f;
-		_wstring		wstrName{ L"" };
-		_bool IsPass(const _wstring& _wstrName, const _double& _dTimeValue, const _double& _dSupTime);
-		_bool IsBetween(const _wstring& _wstrName, const _double& _dTimeValue);
-	}ANIMCLIPSECTION;
-
 #pragma endregion ANIMATIONFASTSECTION
 
 #pragma region BUDLECOMMANDLIST 
@@ -541,9 +532,10 @@ namespace Engine {
 	*/
 	struct ANIMEVENTDESC abstract {
 	public:
+		_bool							isActiveEvent;
 		_wstring						wstrEventTrigger;
 
-		ANIMEVENTDESC() : wstrEventTrigger{ L"" } { wstrEventTrigger.resize(MAX_BUFFER_LENGTH); }
+		ANIMEVENTDESC() : wstrEventTrigger{ L"" }, isActiveEvent{ false } { wstrEventTrigger.resize(MAX_BUFFER_LENGTH); }
 	};
 
 
@@ -594,6 +586,17 @@ namespace Engine {
 		ANIMCHANGEDESC(const _int _NextAnimIndex, const _float& _SupplyAnimValue, 
 			const _double& _dNextAnimTimeAcc) :
 			iNextAnimIndex{ _NextAnimIndex }, fSupplyAnimValue{ _SupplyAnimValue }, dNextAnimTimeAcc{ _dNextAnimTimeAcc } {}
+	};
+
+	struct ANIMCOLLIDERDESC : public ANIMOTHEREVENTDESC {
+		_wstring										wstrBoneName;
+		_int												iColliderType;
+
+		SHPTR<class UCollider>			spCollider;
+		SHPTR<class UBoneNode>	spBoneNode;
+
+		ANIMCOLLIDERDESC() : wstrBoneName{ L"" }, iColliderType{ 0 },
+			spCollider{ nullptr }, spBoneNode{ nullptr } {}
 	};
 
 #pragma endregion ANIMEVENTTYPE

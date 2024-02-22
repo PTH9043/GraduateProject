@@ -37,7 +37,7 @@ HRESULT TImGuiManager::ReadyManager(const GRAPHICDESC& _stGraphicDesc, const OUT
 {
 	m_spDevice = _stOutputData.wpDevice.lock();
 	m_spGpuCommand = static_pointer_cast<UGpuCommand>(_stOutputData.wpGpuCmd.lock());
-	ImGui::CreateContext();
+	ImGuiContext* pContext = ImGui::CreateContext();
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.Fonts->AddFontFromFileTTF("..\\..\\Resource\\Font\\NanumSquare_acB.ttf", 15, NULL, io.Fonts->GetGlyphRangesKorean());
@@ -67,6 +67,8 @@ HRESULT TImGuiManager::ReadyManager(const GRAPHICDESC& _stGraphicDesc, const OUT
 	ImGui_ImplDX12_CreateDeviceObjects();
 
 	RETURN_CHECK_FAILED(ReadyImGuiClass(), E_FAIL);
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	spGameInstance->SetImGuiContext(pContext);
 	return S_OK;
 }
 

@@ -71,6 +71,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
     spToolApp.reset();
     spGameInstance.reset();
+
+
+#if defined(_DEBUG)
+    IDXGIDebug1* pdxgiDebug = NULL;
+    DXGIGetDebugInterface1(0, __uuidof(IDXGIDebug1), (void**)&pdxgiDebug);
+    HRESULT hResult = pdxgiDebug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_DETAIL);
+    pdxgiDebug->Release();
+#endif
+
     return (_int)(msg.lParam);
 }
 

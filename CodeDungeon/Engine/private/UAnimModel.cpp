@@ -232,6 +232,9 @@ HRESULT UAnimModel::CreateAnimation(const  VECTOR<ANIMDESC>& _convecAnimDesc, co
 {
 	m_vecAnimations.reserve(_convecAnimDesc.size());
 	_uint iIndex{ 0 };
+
+	SHPTR<UAnimModel> spAnimModel = ThisShared<UAnimModel>();
+
 	for (auto& iter : _convecAnimDesc)
 	{
 		SHPTR<UAnimation> spAnimation{ CreateNative<UAnimation>(ThisShared<UAnimModel>(), iter) };
@@ -241,6 +244,7 @@ HRESULT UAnimModel::CreateAnimation(const  VECTOR<ANIMDESC>& _convecAnimDesc, co
 
 		m_AnimNamesGroup.insert(std::pair<_wstring, _uint>(spAnimation->GetAnimName(), iIndex++));
 		spAnimation->LoadAnimSectionDataPathIsFolder(_wstrPath);
+		spAnimation->LoadAnimEventDataPathIsFolder(spAnimModel, _wstrPath);
 	}
 	return S_OK;
 }

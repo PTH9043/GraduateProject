@@ -12,11 +12,14 @@ class UDefaultDebugging;
 class  UCollider final : public UComponent{
 public:
 	enum TYPE { TYPE_AABB, TYPE_OBB, TYPE_SPHERE, TYPE_END };
-	typedef struct tagColliderDesc
+	struct COLLIDERDESC
 	{
 		_float3		vScale;
 		_float3		vTranslation;
-	}COLLIDERDESC;
+
+		COLLIDERDESC() : vScale{}, vTranslation{} {}
+		COLLIDERDESC(const _float3& _vScale, const _float3& _vTranslation) : vScale{_vScale}, vTranslation{_vTranslation}{}
+	};
 
 	UCollider(CSHPTRREF <UDevice> _pDevice, const TYPE& _eType);
 	UCollider(const UCollider& _rhs);

@@ -29,7 +29,7 @@ void TAssimpChannel::Free()
 HRESULT TAssimpChannel::NativeConstruct(aiNodeAnim* _pChannel, CSHPTRREF<TAssimpModel> _pModel)
 {
 	m_wstrName = UMethod::ConvertSToW(_pChannel->mNodeName.data);
-	m_spBoneNode = _pModel->GetBoneNode(m_wstrName);
+	m_spBoneNode = _pModel->FindBoneNode(m_wstrName);
 
 	m_iNumMaxKeyFrames = max(_pChannel->mNumScalingKeys, _pChannel->mNumRotationKeys);
 	m_iNumMaxKeyFrames = max(m_iNumMaxKeyFrames, _pChannel->mNumPositionKeys);

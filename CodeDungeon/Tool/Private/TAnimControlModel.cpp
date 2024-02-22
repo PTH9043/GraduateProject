@@ -5,6 +5,7 @@
 #include "UShader.h"
 #include "UMethod.h"
 #include "UAnimation.h"
+#include "UTexGroup.h"
 
 TAnimControlModel::TAnimControlModel(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer,
 	const CLONETYPE& _eCloneType) : 
@@ -113,6 +114,8 @@ void TAnimControlModel::SelectAnimation()
 		}
 		ImGui::EndListBox();
 	}
+
+
 }
 
 void TAnimControlModel::ModifyAnimation()

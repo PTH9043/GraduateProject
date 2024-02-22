@@ -85,6 +85,8 @@ public:
 	void LateTick(const _double& _dTimeDelta);
 	void RenderBegin();
 	void RenderEnd();
+
+	void SetImGuiContext(ImGuiContext* _pContext);
 public:
 	HRESULT	OnWindowResize(const _uint& _iWinSizeX, const _uint& _iWinSizeY, const GRAPHICDESC::WINMODE _eWindowMode);
 	// Clear Once Type data 

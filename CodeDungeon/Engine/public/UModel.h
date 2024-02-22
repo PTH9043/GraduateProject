@@ -27,11 +27,11 @@ public:
 	UModel(const UModel& _rhs);
 	DESTRUCTOR(UModel)
 public:
-	MESHCONTAINERS& GetMeshContainers() { return m_vecMeshContainer; }
-	BONENODES& GetBoneNodes() { return m_vecBoneNodes; }
-	MATERIERS& GetMaterials() { return m_vecMaterials; }
+	MESHCONTAINERS& GetMeshContainers() { return m_MeshContainer; }
+	BONENODES& GetBoneNodes() { return m_BoneNodeContainer; }
+	MATERIERS& GetMaterials() { return m_MaterialContainer; }
 	// Get BoneNode
-	SHPTR<UBoneNode> GetBoneNode(const _wstring& _strBoneNode);
+	SHPTR<UBoneNode> FindBoneNode(const _wstring& _strBoneNode) const;
 	const _uint& GetMeshContainerCnt() const { return m_iMeshContainerCnt; }
 	CSHPTRREF<URootBoneNode> GetRootBoneNode() const { return m_spRootBoneNode; }
 	const _uint& GetBoneNodesCnt() const { return m_iBoneNodeCnt; }
@@ -78,14 +78,14 @@ protected:
 	void BringModelName(const _wstring& _wstrPath);
 private:
 	// MeshContainer
-	MESHCONTAINERS					m_vecMeshContainer;
+	MESHCONTAINERS					m_MeshContainer;
 	_uint											m_iMeshContainerCnt;
 	// BoneNodes
-	BONENODES								m_vecBoneNodes;
+	BONENODES								m_BoneNodeContainer;
 	_uint											m_iBoneNodeCnt;
 	SHPTR<URootBoneNode>		m_spRootBoneNode;
 	// Material
-	MATERIERS								m_vecMaterials;
+	MATERIERS								m_MaterialContainer;
 	_uint											m_iMaterialCnt;
 	// Paths 
 	SHPTR<FILEGROUP>				m_spFileGroup;

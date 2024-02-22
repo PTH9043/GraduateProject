@@ -57,6 +57,7 @@ HRESULT TToolApp::NativeConstruct(const HWND& _hWnd, const HINSTANCE& _hInst)
 	// ReadyManager
 	RETURN_CHECK_FAILED(m_spImGuiManager->ReadyManager(stGraphicDesc, stOutputData), E_FAIL);
 
+
 	m_spDeltaTimer = m_spGameInstance->CreateTimerAdd(DELTA_TIMER);
 	m_spTickTimer = m_spGameInstance->CreateTimerAdd(TICK_TIMER);
 	m_spRenderTimer = m_spGameInstance->CreateTimerAdd(RENDER_TIMER);

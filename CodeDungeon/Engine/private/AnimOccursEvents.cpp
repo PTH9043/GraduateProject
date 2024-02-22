@@ -8,26 +8,15 @@ UAnimOccursTimePassEvent::UAnimOccursTimePassEvent() :
 {
 }
 
-UAnimOccursTimePassEvent::UAnimOccursTimePassEvent(std::ifstream& _load) :
+UAnimOccursTimePassEvent::UAnimOccursTimePassEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) :
 	UAnimOccurEvent(ANIMEVENTTYPE::ANIMEVENT_ANIMOCCURSTIMEPASS)
 {
-	LoadEvent(_load);
+	LoadEvent(_spAnimModel, _load);
 }
 
-UAnimOccursTimePassEvent::UAnimOccursTimePassEvent(const ANIMOCURRESDESC& _AnimEventDesc) :
-	UAnimOccurEvent(_AnimEventDesc, ANIMEVENTTYPE::ANIMEVENT_ANIMOCCURSTIMEPASS)
-{
-}
-
-ANIMOTHEREVENTDESC* const UAnimOccursTimePassEvent::OutOtherEventDesc()
+const ANIMOTHEREVENTDESC*  UAnimOccursTimePassEvent::OutOtherEventDesc()
 {
 	return &m_AnimChangeDesc;
-}
-
-void UAnimOccursTimePassEvent::ChangeOtherEventDesc(ANIMOTHEREVENTDESC* _AnimOtherEventDesc)
-{
-	assert(nullptr != _AnimOtherEventDesc);
-	m_AnimChangeDesc = *static_cast<ANIMCHANGEDESC*>(_AnimOtherEventDesc);
 }
 
 void UAnimOccursTimePassEvent::EventSituation(UAnimModel* _pAnimModel, const _double& _dTimeDelta)
@@ -42,9 +31,9 @@ void UAnimOccursTimePassEvent::SaveEvent(std::ofstream& _save)
 	_save.write((_char*)&m_AnimChangeDesc, sizeof(ANIMCHANGEDESC));
 }
 
-void UAnimOccursTimePassEvent::LoadEvent(std::ifstream& _load)
+void UAnimOccursTimePassEvent::LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load)
 {
-	__super::LoadEvent(_load);
+	__super::LoadEvent(_spAnimModel, _load);
 	_load.read((_char*)&m_AnimChangeDesc, sizeof(ANIMCHANGEDESC));
 }
 

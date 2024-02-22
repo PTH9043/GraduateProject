@@ -283,12 +283,6 @@
     <Filter Include="98.ShaderFile\Common\Particle">
       <UniqueIdentifier>{928235cc-88bf-4ff1-9c0e-69ea85e24001}</UniqueIdentifier>
     </Filter>
-    <Filter Include="07.Resource\Model\Animation\AnimEvent">
-      <UniqueIdentifier>{45c419df-057d-49e5-ba1b-ba6cd71d3a0e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="07.Resource\Model\Animation\AnimEvent\Parents">
-      <UniqueIdentifier>{0609ab3e-fad7-44e5-aba8-0a27acbd5a94}</UniqueIdentifier>
-    </Filter>
     <Filter Include="06.Component\Collider">
       <UniqueIdentifier>{b296dd99-2437-4100-90a3-0ed9acc49a1a}</UniqueIdentifier>
     </Filter>
@@ -306,6 +300,15 @@
     </Filter>
     <Filter Include="07.Resource\AudioSystem\Sound">
       <UniqueIdentifier>{c768e6d2-3e14-4c43-973d-98d132aae2fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="21.Event">
+      <UniqueIdentifier>{c12926f2-c35e-46f9-b262-0d6d645dad88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="21.Event\AnimEvent">
+      <UniqueIdentifier>{45c419df-057d-49e5-ba1b-ba6cd71d3a0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="21.Event\AnimEvent\Parents">
+      <UniqueIdentifier>{0609ab3e-fad7-44e5-aba8-0a27acbd5a94}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -583,13 +586,13 @@
       <Filter>07.Resource\Model\Animation\Channel</Filter>
     </ClCompile>
     <ClCompile Include="..\private\AnimEventParents.cpp">
-      <Filter>07.Resource\Model\Animation\AnimEvent\Parents</Filter>
+      <Filter>21.Event\AnimEvent\Parents</Filter>
     </ClCompile>
     <ClCompile Include="..\private\AnimOccursEvents.cpp">
-      <Filter>07.Resource\Model\Animation\AnimEvent</Filter>
+      <Filter>21.Event\AnimEvent</Filter>
     </ClCompile>
     <ClCompile Include="..\private\AnimSectionEvents.cpp">
-      <Filter>07.Resource\Model\Animation\AnimEvent</Filter>
+      <Filter>21.Event\AnimEvent</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UAudioSystemManager.cpp">
       <Filter>01.Manager\AudioSystemManager</Filter>
@@ -906,13 +909,13 @@
       <Filter>07.Resource\Model\Animation\Channel</Filter>
     </ClInclude>
     <ClInclude Include="..\public\AnimEventParents.h">
-      <Filter>07.Resource\Model\Animation\AnimEvent\Parents</Filter>
+      <Filter>21.Event\AnimEvent\Parents</Filter>
     </ClInclude>
     <ClInclude Include="..\public\AnimOccursEvents.h">
-      <Filter>07.Resource\Model\Animation\AnimEvent</Filter>
+      <Filter>21.Event\AnimEvent</Filter>
     </ClInclude>
     <ClInclude Include="..\public\AnimSectionEvents.h">
-      <Filter>07.Resource\Model\Animation\AnimEvent</Filter>
+      <Filter>21.Event\AnimEvent</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UAudioSystemManager.h">
       <Filter>01.Manager\AudioSystemManager</Filter>

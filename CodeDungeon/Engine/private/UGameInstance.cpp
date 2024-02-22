@@ -117,14 +117,6 @@ void UGameInstance::Free()
 	m_spTimerManager.reset();
 	m_spGraphicDevice.reset();
 	m_spShaderBufferManager.reset();
-
-
-#if defined(_DEBUG)
-	IDXGIDebug1* pdxgiDebug = NULL;
-	DXGIGetDebugInterface1(0, __uuidof(IDXGIDebug1), (void**)&pdxgiDebug);
-	HRESULT hResult = pdxgiDebug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_DETAIL);
-	pdxgiDebug->Release();
-#endif
 }
 
 HRESULT UGameInstance::ReadyInstance(const GRAPHICDESC& _stDesc, OUTPUTDATA& _stOutDesc)
@@ -221,6 +213,11 @@ void UGameInstance::RenderEnd()
 {
 	/* Gpu 동기화 시키는 부분 */
 	m_spGraphicDevice->MainRenderEnd();
+}
+
+void UGameInstance::SetImGuiContext(ImGuiContext* _pContext)
+{
+	ImGui::SetCurrentContext(_pContext);
 }
 
 HRESULT UGameInstance::OnWindowResize(const _uint& _iWinSizeX, const _uint& _iWinSizeY, const GRAPHICDESC::WINMODE _eWindowMode)

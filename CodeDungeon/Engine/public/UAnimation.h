@@ -58,10 +58,10 @@ public:
 	// Save AnimEvent 
 	void SaveAnimEventData(const _wstring& _wstrPath);
 	void SaveAnimEventPathIsFolder(const _wstring& _wstrPath);
-	void LoadAnimEventData(const _wstring& _wstrPath);
-	void LoadAnimEventDataPathIsFolder(const _wstring& _wstrPath);
+	void LoadAnimEventData(CSHPTRREF<UAnimModel> _spAnimModel, const _wstring& _wstrPath);
+	void LoadAnimEventDataPathIsFolder(CSHPTRREF<UAnimModel> _spAnimModel, const _wstring& _wstrPath);
 private:
-	SHPTR<UAnimEvent> CreateAnimEvent(ANIMEVENTTYPE _AnimEventType, std::ifstream& _read);
+	SHPTR<UAnimEvent> CreateAnimEvent(CSHPTRREF<UAnimModel> _spAnimModel, ANIMEVENTTYPE _AnimEventType, std::ifstream& _read);
 private:
 
 	static constexpr _float	MAX_SUPPLY_VALUE{1.f};
