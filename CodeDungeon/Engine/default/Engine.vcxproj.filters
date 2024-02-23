@@ -310,6 +310,12 @@
     <Filter Include="21.Event\AnimEvent\Parents">
       <UniqueIdentifier>{0609ab3e-fad7-44e5-aba8-0a27acbd5a94}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Manager\PlayerManager">
+      <UniqueIdentifier>{80bfa24c-cc5c-4759-b081-8069ff738013}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Manager\MonsterManager">
+      <UniqueIdentifier>{17b4afcf-c409-440a-8c14-845f80867447}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -597,7 +603,7 @@
     <ClCompile Include="..\private\UAudioSystemManager.cpp">
       <Filter>01.Manager\AudioSystemManager</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\AudioAPI.cpp">
+    <ClCompile Include="..\private\USound.cpp">
       <Filter>07.Resource\AudioSystem\Sound</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UAudioSystem.cpp">
@@ -920,7 +926,7 @@
     <ClInclude Include="..\public\UAudioSystemManager.h">
       <Filter>01.Manager\AudioSystemManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\AudioAPI.h">
+    <ClInclude Include="..\public\USound.h">
       <Filter>07.Resource\AudioSystem\Sound</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UAudioSystem.h">

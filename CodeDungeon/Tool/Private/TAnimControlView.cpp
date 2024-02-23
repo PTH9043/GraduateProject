@@ -279,8 +279,8 @@ void TAnimControlView::AnimSectionShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTable
 			for (auto& iter : _AnimEvent)
 			{
 				 _string Index = _string::to_string(iIndex++);
-				 ANIMEVENTSECTIONDESC* SectionDesc = UAnimEvent::remove_const<ANIMEVENTSECTIONDESC*>(iter->OutAnimEventDesc());
-				 ANIMCHANGEDESC* ChangeDesc = UAnimEvent::remove_const<ANIMCHANGEDESC*>(iter->OutOtherEventDesc());
+				 ANIMEVENTSECTIONDESC* SectionDesc = remove_const<ANIMEVENTSECTIONDESC*>(iter->OutAnimEventDesc());
+				 ANIMCHANGEDESC* ChangeDesc = remove_const<ANIMCHANGEDESC*>(iter->OutOtherEventDesc());
 
 				 _int iSelectAnim = ChangeDesc->iNextAnimIndex;
 				 {
@@ -364,8 +364,8 @@ void TAnimControlView::AnimOccursShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableF
 			{
 				 _string Index = _string::to_string(iIndex++);
 
-				ANIMOCURRESDESC* OccursDesc = UAnimEvent::remove_const<ANIMOCURRESDESC*>(iter->OutAnimEventDesc());
-				ANIMCHANGEDESC* ChangeDesc = UAnimEvent::remove_const<ANIMCHANGEDESC*>(iter->OutOtherEventDesc());
+				ANIMOCURRESDESC* OccursDesc = remove_const<ANIMOCURRESDESC*>(iter->OutAnimEventDesc());
+				ANIMCHANGEDESC* ChangeDesc = remove_const<ANIMCHANGEDESC*>(iter->OutOtherEventDesc());
 
 				_int iSelectAnim = ChangeDesc->iNextAnimIndex;
 				{
@@ -437,8 +437,8 @@ void TAnimControlView::AnimColliderShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTabl
 			if (ImGui::TreeNodeEx(COLLIDER_NAME + Index))
 			{
 				_float Duration = static_cast<_float>(_spAnim->GetDuration());
-				ANIMEVENTSECTIONDESC* SectionDesc = UAnimEvent::remove_const<ANIMEVENTSECTIONDESC*>(iter->OutAnimEventDesc());
-				ANIMCOLLIDERDESC* ChangeDesc = UAnimEvent::remove_const<ANIMCOLLIDERDESC*>(iter->OutOtherEventDesc());
+				ANIMEVENTSECTIONDESC* SectionDesc = remove_const<ANIMEVENTSECTIONDESC*>(iter->OutAnimEventDesc());
+				ANIMCOLLIDERDESC* ChangeDesc = remove_const<ANIMCOLLIDERDESC*>(iter->OutOtherEventDesc());
 				// 1
 				{
 					ImGui::SetNextItemWidth(300);

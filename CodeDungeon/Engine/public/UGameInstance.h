@@ -223,6 +223,10 @@ public: /* FilePath Manager*/
 	// 같은 이름을 가진 모든 폴더를 찾아서 리턴한다. 
 	VECTOR<SHPTR<FILEGROUP>> FindSameAllFolder(const _wstring& _wstrFindFolderName);
 	HRESULT LoadFirstFolder(const _wstring& _wstrFilePath);
+public: /* AudioSystemManager*/
+	HRESULT CreateAudioSystem(const _wstring& _wstrProtoTypeTag, CLONETYPE _CloneType, const _wstring& _wstrSoundFolderPath);
+	HRESULT CreateAudioSystem(const _wstring& _wstrProtoTypeTag, CLONETYPE _CloneType, CSHPTRREF<FILEGROUP> _spSoundFileGroup);
+	HRESULT CreateAudioSystemToFolderName(const _wstring& _wstrProtoTypeTag, CLONETYPE _CloneType, const _wstring& _wstrSoundFolderName);
 public: /* NetworkManager */
 	HRESULT StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController);
 	void InsertProcessedDataToContainer(void* _pData, size_t _Size, _int _DataType);
@@ -262,10 +266,11 @@ private:
 	SHPTR<USceneManager>						m_spSceneManager;
 
 	SHPTR<URenderTargetManager>		m_spRenderTargetManager;
+
 	SHPTR<UPipeLine>									m_spPipeLine;
 	SHPTR<UFilePathManager>					m_spFilePathManager;
-	SHPTR< UNetworkManager>				m_spNetworkManager;
 	SHPTR< UAudioSystemManager>		m_spAudioSystemManager;
+	SHPTR< UNetworkManager>				m_spNetworkManager;
 
 	SHPTR<URenderer>								m_spRenderer;
 	//SHPTR< UFontManager>						m_spFontMananger;

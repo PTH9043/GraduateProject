@@ -163,7 +163,7 @@ HRESULT UActor::CreateResource(const _wstring& _wstrProtoTag, const _wstring& _s
 {
 	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
 	_pResource = pGameInstance->CloneResource(_wstrProtoTag, _vecDatas);
-	m_Resources.insert(std::pair<_wstring, SHPTR<UResource>>(_strResTag, _pResource));
+	m_Resources.insert(MakePair(_strResTag, _pResource));
 	return S_OK;
 }
 
@@ -171,7 +171,7 @@ HRESULT UActor::CreateComponent(const _wstring& _strProtoTag, const _wstring& _w
 {
 	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
 	_pComponent = pGameInstance->CloneComp(_strProtoTag, _vecDatas);
-	m_Components.insert(std::pair<_wstring, SHPTR<UComponent>>(_wstrTag, _pComponent));
+	m_Components.insert(MakePair(_wstrTag, _pComponent));
 	return S_OK;
 }
 

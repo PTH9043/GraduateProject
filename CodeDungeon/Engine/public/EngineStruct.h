@@ -608,7 +608,9 @@ namespace Engine {
 		SOUNDTYPE			SoundType;
 		_float						fVolume;
 
-		SOUNDDESC() : SoundType{ SOUNDTYPE::SOUND_DEFAULT }, fVolume{ 0.f } { }
+		SOUNDDESC() : SoundType{ SOUNDTYPE::SOUND_END }, fVolume{ 0.f } { }
+		SOUNDDESC(SOUNDTYPE _SoundType, _float _fVolume) : SoundType{_SoundType}, 
+			fVolume{_fVolume}{}
 	};
 
 #pragma endregion SOUND

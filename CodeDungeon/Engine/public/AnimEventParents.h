@@ -26,17 +26,6 @@ public:
 	// AnimEvent에 다른 구조체가 필요할 경우 해당 구조체의 상속을 받는 녀석들만 내보낼 수 있도록 한다.
 	virtual const ANIMOTHEREVENTDESC*  OutOtherEventDesc() PURE;
 
-	template<class T>
-	static T remove_const(const ANIMEVENTDESC* _Desc) { 
-		ANIMEVENTDESC* Desc = const_cast<ANIMEVENTDESC*>(_Desc);
-		return static_cast<T>(Desc);
-	}
-	template<class T>
-	static T remove_const(const ANIMOTHEREVENTDESC* _Desc) {
-		ANIMOTHEREVENTDESC* Desc = const_cast<ANIMOTHEREVENTDESC*>(_Desc);
-		return static_cast<T>(Desc);
-	}
-
 	virtual void SaveEvent(std::ofstream& _save) PURE;
 	virtual void LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) PURE;
 protected:

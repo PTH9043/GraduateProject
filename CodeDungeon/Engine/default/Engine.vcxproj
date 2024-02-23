@@ -22,7 +22,7 @@
     <ClInclude Include="..\public\AnimEventParents.h" />
     <ClInclude Include="..\public\AnimOccursEvents.h" />
     <ClInclude Include="..\public\AnimSectionEvents.h" />
-    <ClInclude Include="..\public\AudioAPI.h" />
+    <ClInclude Include="..\public\USound.h" />
     <ClInclude Include="..\public\CustomMemory.h" />
     <ClInclude Include="..\public\CustomString.h" />
     <ClInclude Include="..\public\EngineConcept.h" />
@@ -138,7 +138,7 @@
     <ClCompile Include="..\private\AnimEventParents.cpp" />
     <ClCompile Include="..\private\AnimOccursEvents.cpp" />
     <ClCompile Include="..\private\AnimSectionEvents.cpp" />
-    <ClCompile Include="..\private\AudioAPI.cpp" />
+    <ClCompile Include="..\private\USound.cpp" />
     <ClCompile Include="..\private\CustomMemory.cpp" />
     <ClCompile Include="..\private\CustomString.cpp" />
     <ClCompile Include="..\private\EngineStruct.cpp" />

@@ -258,6 +258,16 @@ namespace Engine {
 	static T GetDivineNumber(T number) {
 		return static_cast<T>(number / Number);
 	}
+	/*
+	@ Date: 2024-02-23,  Writer: 박태현
+	@ Explain
+	-  const 가 붙은 포인터에서 const를 제거하여 다른 자식 포인터로 캐스팅해주는 함수이다.
+	*/
+	template<class T, class U>
+	static T remove_const(const U _Desc) {
+		U Desc = const_cast<U>(_Desc);
+		return static_cast<T>(Desc);
+	}
 
 #pragma endregion FUNCTION
 }
