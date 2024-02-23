@@ -10,7 +10,7 @@ class UAudioSystem;
 class USound;
 class UTransform;
 
-using AUDIOSYSTEMCONTAINER = ARRAY <VECTOR<SHPTR< UAudioSystem>>, CLONE_MAX_SIZE>;
+using AUDIOSYSTEMCONTAINER = ARRAY <SHPTR< UAudioSystem>, CLONE_MAX_SIZE>;
 
 class UAudioSystemManager final : public UBase {
 public:
@@ -22,9 +22,9 @@ public:
 	void Tick();
 	void ClearOnceTypeData();
 
-	HRESULT CreateAudioSystem(UGameInstance* _pGameInstance, const _wstring& _wstrProtoTypeTag, CLONETYPE _CloneType, const _wstring& _wstrSoundFolderPath);
-	HRESULT CreateAudioSystem(UGameInstance* _pGameInstance, const _wstring& _wstrProtoTypeTag, CLONETYPE _CloneType, CSHPTRREF<FILEGROUP> _spSoundFileGroup);
-	HRESULT CreateAudioSystemToFolderName(UGameInstance* _pGameInstance, const _wstring& _wstrProtoTypeTag, CLONETYPE _CloneType, const _wstring& _wstrSoundFolderName);
+	HRESULT CreateAudioSystemAndRegister(UGameInstance* _pGameInstance,  CLONETYPE _CloneType, const _wstring& _wstrSoundFolderPath);
+	HRESULT CreateAudioSystemAndRegister(UGameInstance* _pGameInstance, CLONETYPE _CloneType, CSHPTRREF<FILEGROUP> _spSoundFileGroup);
+	HRESULT CreateAudioSystemToFolderNameAndRegister(UGameInstance* _pGameInstance, CLONETYPE _CloneType, const _wstring& _wstrSoundFolderName);
 
 	void Play(const _wstring& _wstrSoundName);
 	void PlayBGM(const _wstring& _wstrSoundName);

@@ -5,12 +5,15 @@ namespace fs = std::filesystem;
 
 UAudioSystem::UAudioSystem(CSHPTRREF<UDevice> _spDevice) : 
 	UResource(_spDevice), 
-	m_pSoundSystem{nullptr},m_pBGmChannel{nullptr},
-	m_SoundContainer{},	m_SoundOrders{}, m_ActiveSounds{}
+	m_pSoundSystem{nullptr},m_pBGmChannel{nullptr}, 
+	m_SoundContainer{},	m_SoundOrders{}, m_ActiveSounds{}, m_RemoveSounds{}
 {
 }
 
-UAudioSystem::UAudioSystem(const UAudioSystem& _rhs) : UResource(_rhs)
+UAudioSystem::UAudioSystem(const UAudioSystem& _rhs) 
+	: UResource(_rhs),
+	m_pSoundSystem{ nullptr }, m_pBGmChannel{ nullptr },
+	m_SoundContainer{}, m_SoundOrders{}, m_ActiveSounds{}, m_RemoveSounds{}
 {
 }
 
@@ -52,19 +55,39 @@ HRESULT UAudioSystem::NativeConstructClone(const VOIDDATAS& _Datas)
 void UAudioSystem::Tick()
 {
 	for (auto& iter : m_ActiveSounds)
+	{
 		iter->Tick(this);
+		if (false == iter->IsSoundPlay())
+			m_RemoveSounds.push_back(iter);
+	}
+
+	for (auto& iter : m_RemoveSounds)
+		m_ActiveSounds.erase(iter);
+
+	m_RemoveSounds.clear();
 }
 
 void UAudioSystem::Play(const _wstring& _wstrSoundName)
 {
+	SHPTR<USound> spSound = BringSound(_wstrSoundName);
+	assert(nullptr != spSound);
+	spSound->Play();
+	m_ActiveSounds.insert(spSound);
 }
 
 void UAudioSystem::PlayBGM(const _wstring& _wstrSoundName)
 {
+	SHPTR<USound> spSound = BringSound(_wstrSoundName);
+	assert(nullptr != spSound);
+	spSound->PlayBGM(&m_pBGmChannel);
 }
 
 void UAudioSystem::Stop(const _wstring& _wstrSoundName)
 {
+	SHPTR<USound> spSound = BringSound(_wstrSoundName);
+	assert(nullptr != spSound);
+	spSound->Stop();
+	m_ActiveSounds.erase(spSound);
 }
 
 void UAudioSystem::UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, const _float3& _vSoundVelocity, CSHPTRREF<UTransform> _spTransform)
@@ -130,6 +153,7 @@ void UAudioSystem::LoadSound(const _wstring& _wstrSoundFolderPath)
 void UAudioSystem::CreateSound(const _wstring& _wstrSoundPath)
 {
 	_wstring Name = _wstrSoundPath.substr(_wstrSoundPath.find_last_of(L"\\") + 1, _wstrSoundPath.find_last_of(L"."));
+	Name = Name.substr(0, Name.find_last_of(L"."));
 	_int SoundIndex = static_cast<_int>(m_SoundContainer.size());
 	m_SoundOrders.emplace(MakePair(Name, SoundIndex));
 	m_SoundContainer.push_back(Create<USound>(m_pSoundSystem, _wstrSoundPath, SoundIndex));

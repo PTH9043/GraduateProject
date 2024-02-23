@@ -50,6 +50,8 @@ class UCommand;
 class UFont;
 class UNetworkBaseController;
 class UProcessedData;
+class USound;
+class UTransform;
 
 struct PICKINGDESC;
 struct WAITCHECKACTOR;
@@ -224,9 +226,16 @@ public: /* FilePath Manager*/
 	VECTOR<SHPTR<FILEGROUP>> FindSameAllFolder(const _wstring& _wstrFindFolderName);
 	HRESULT LoadFirstFolder(const _wstring& _wstrFilePath);
 public: /* AudioSystemManager*/
-	HRESULT CreateAudioSystem(const _wstring& _wstrProtoTypeTag, CLONETYPE _CloneType, const _wstring& _wstrSoundFolderPath);
-	HRESULT CreateAudioSystem(const _wstring& _wstrProtoTypeTag, CLONETYPE _CloneType, CSHPTRREF<FILEGROUP> _spSoundFileGroup);
-	HRESULT CreateAudioSystemToFolderName(const _wstring& _wstrProtoTypeTag, CLONETYPE _CloneType, const _wstring& _wstrSoundFolderName);
+	HRESULT CreateAudioSystemAndRegister(CLONETYPE _CloneType, const _wstring& _wstrSoundFolderPath);
+	HRESULT CreateAudioSystemAndRegister( CLONETYPE _CloneType, CSHPTRREF<FILEGROUP> _spSoundFileGroup);
+	HRESULT CreateAudioSystemToFolderNameAndRegister(CLONETYPE _CloneType, const _wstring& _wstrSoundFolderName);
+	void SoundPlay(const _wstring& _wstrSoundName);
+	void SoundPlayBGM(const _wstring& _wstrSoundName);
+	void StopSound(const _wstring& _wstrSoundName);
+	void UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, const _float3& _vSoundVelocity, CSHPTRREF<UTransform> _spTransform);
+	void ChangeMinMaxDistance3D(const _wstring& _wstrSoundName, const _float _fMinDistance, const _float _fMaxDistance);
+	SHPTR<USound> BringSound(const _int _Index);
+	SHPTR<USound> BringSound(const _wstring& _wstrSoundName);
 public: /* NetworkManager */
 	HRESULT StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController);
 	void InsertProcessedDataToContainer(void* _pData, size_t _Size, _int _DataType);

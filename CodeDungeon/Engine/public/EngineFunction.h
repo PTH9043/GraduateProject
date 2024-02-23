@@ -263,10 +263,10 @@ namespace Engine {
 	@ Explain
 	-  const 가 붙은 포인터에서 const를 제거하여 다른 자식 포인터로 캐스팅해주는 함수이다.
 	*/
-	template<class T, class U>
-	static T remove_const(const U _Desc) {
-		U Desc = const_cast<U>(_Desc);
-		return static_cast<T>(Desc);
+	template<class ChangeT, class OriginT, class ConstT>
+	static ChangeT remove_const(ConstT _Desc) {
+		OriginT Desc = const_cast<OriginT>(_Desc);
+		return static_cast<ChangeT>(Desc);
 	}
 
 #pragma endregion FUNCTION

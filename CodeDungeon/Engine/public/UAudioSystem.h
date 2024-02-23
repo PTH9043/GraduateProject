@@ -6,6 +6,7 @@ BEGIN(Engine)
 using SOUNDCONTAINER = VECTOR<SHPTR<USound>>;
 using SOUNDORDERS = UNORMAP<_wstring, _int>;
 using ACTIVESOUND = UNORSET<SHPTR<USound>>;
+using REMOVESOUND = LIST<SHPTR<USound>>;
 
 class UAudioSystem final : public UResource {
 public:
@@ -45,6 +46,7 @@ private:
 	SOUNDCONTAINER		m_SoundContainer;
 	SOUNDORDERS			m_SoundOrders;
 	ACTIVESOUND				m_ActiveSounds;
+	REMOVESOUND			m_RemoveSounds;
 };
 
 END
