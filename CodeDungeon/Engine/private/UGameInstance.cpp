@@ -782,9 +782,19 @@ void UGameInstance::SoundPlay(const _wstring& _wstrSoundName)
 	m_spAudioSystemManager->Play(_wstrSoundName);
 }
 
+void UGameInstance::SoundPlay(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate)
+{
+	m_spAudioSystemManager->Play(_wstrSoundName, _fVolumeUpdate);
+}
+
 void UGameInstance::SoundPlayBGM(const _wstring& _wstrSoundName)
 {
 	m_spAudioSystemManager->PlayBGM(_wstrSoundName);
+}
+
+void UGameInstance::SoundPlayBGM(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate)
+{
+	m_spAudioSystemManager->PlayBGM(_wstrSoundName, _fVolumeUpdate);
 }
 
 void UGameInstance::StopSound(const _wstring& _wstrSoundName)
@@ -797,6 +807,11 @@ void UGameInstance::UpdateSound3D(const _wstring& _wstrSoundName, const _float3&
 	m_spAudioSystemManager->UpdateSound3D(_wstrSoundName, _vSoudPos, _vSoundVelocity, _spTargetTransform);
 }
 
+void UGameInstance::VolumeUpdate(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate)
+{
+	m_spAudioSystemManager->VolumeUpdate(_wstrSoundName, _fVolumeUpdate);
+}
+
 void UGameInstance::ChangeMinMaxDistance3D(const _wstring& _wstrSoundName, const _float _fMinDistance, const _float _fMaxDistance)
 {
 	m_spAudioSystemManager->ChangeMinMaxDistance3D(_wstrSoundName, _fMinDistance, _fMaxDistance);
@@ -804,12 +819,12 @@ void UGameInstance::ChangeMinMaxDistance3D(const _wstring& _wstrSoundName, const
 
 SHPTR<USound> UGameInstance::BringSound(const _int _Index)
 {
-	return SHPTR<USound>();
+	return m_spAudioSystemManager->BringSound(_Index);
 }
 
 SHPTR<USound> UGameInstance::BringSound(const _wstring& _wstrSoundName)
 {
-	return SHPTR<USound>();
+	return m_spAudioSystemManager->BringSound(_wstrSoundName);
 }
 
 /*

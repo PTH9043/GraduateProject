@@ -16,6 +16,9 @@ public:
 public: /* get set*/
 	const SOUNDCONTAINER& GetSoundContainer() const { return m_SoundContainer; }
 	const SOUNDORDERS& GetSoundOrders() const { return m_SoundOrders; }
+
+	CSHPTRREF<USound> GetSound() const { return m_spSound; }
+	CSHPTRREF<USound> GetBGMSound() const { return m_spBgmSound; }
 public:
 	CLONE_THIS(UAudioSystem)
 	virtual void Free() override;
@@ -27,8 +30,11 @@ public:
 
 	void Tick();
 	void Play(const _wstring& _wstrSoundName);
+	void Play(const _wstring& _wstrSoundName, const _float _fVolumeUpdate);
 	void PlayBGM(const _wstring& _wstrSoundName);
+	void PlayBGM(const _wstring& _wstrSoundName, const _float  _fVolumeUpdate);
 	void Stop(const _wstring& _wstrSoundName);
+	void VolumeUpdate(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
 
 	void UpdateSound3D(const _wstring& _wstrSoundName ,const _float3& _vSoudPos, const _float3& _vSoundVelocity, 
 		CSHPTRREF<UTransform> _spTargetTransform_CanNullptr = nullptr);
@@ -49,6 +55,9 @@ private:
 	SOUNDORDERS			m_SoundOrders;
 	ACTIVESOUND				m_ActiveSounds;
 	REMOVESOUND			m_RemoveSounds;
+
+	SHPTR<USound>			m_spSound;
+	SHPTR<USound>			m_spBgmSound;
 };
 
 END

@@ -72,6 +72,15 @@ void UAudioSystemManager::Play(const _wstring& _wstrSoundName)
 	}
 }
 
+void UAudioSystemManager::Play(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+			iter->Play(_wstrSoundName, _fVolumeUpdate);
+	}
+}
+
 void UAudioSystemManager::PlayBGM(const _wstring& _wstrSoundName)
 {
 	for (auto& iter : m_AudioSystemContainer)
@@ -81,12 +90,30 @@ void UAudioSystemManager::PlayBGM(const _wstring& _wstrSoundName)
 	}
 }
 
+void UAudioSystemManager::PlayBGM(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+			iter->PlayBGM(_wstrSoundName, _fVolumeUpdate);
+	}
+}
+
 void UAudioSystemManager::Stop(const _wstring& _wstrSoundName)
 {
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if(nullptr != iter)
 			iter->Stop(_wstrSoundName);
+	}
+}
+
+void UAudioSystemManager::VolumeUpdate(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+			iter->VolumeUpdate(_wstrSoundName, _fVolumeUpdate);
 	}
 }
 

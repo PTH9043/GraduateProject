@@ -49,6 +49,13 @@ void USound::Stop()
 	m_pChannel = nullptr;
 }
 
+void USound::UpdateVolume(const _float _fVolume)
+{
+	RETURN_CHECK(nullptr == m_pChannel, ;);
+	m_SoundDesc.fVolume = _fVolume;
+	m_pChannel->setVolume(_fVolume);
+}
+
 void USound::UpdateSound3D(const _float3& _vSoudPos, const _float3& _vSoundVelocity, 
 	CSHPTRREF<UTransform> _spTargetTransform_CanNullptr)
 {

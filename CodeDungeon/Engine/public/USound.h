@@ -17,12 +17,12 @@ public: /* get set */
 	FMOD::Sound* GetSound() const { return m_pSound; }
 	const _bool IsSoundPlay() const { return m_isSoundPlay; }
 
-	void SetVolume(const _float _fVolume) { m_SoundDesc.fVolume = _fVolume; }
 public:
 	void Tick(UAudioSystem* _pAudioSystem);
 	void Play();
 	void PlayBGM(IN FMOD::Channel** _ppChannel);
 	void Stop();
+	void UpdateVolume(const _float _fVolume) ;
 	void UpdateSound3D(const _float3& _vSoudPos, const _float3& _vSoundVelocity, CSHPTRREF<UTransform> _spTargetTransform_CanNullptr = nullptr);
 	void ChangeMinMaxDistance3D(const _float _fMinDistance, const _float _fMaxDistance);
 private:

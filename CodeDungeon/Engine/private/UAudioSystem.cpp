@@ -6,14 +6,16 @@ namespace fs = std::filesystem;
 UAudioSystem::UAudioSystem(CSHPTRREF<UDevice> _spDevice) : 
 	UResource(_spDevice), 
 	m_pSoundSystem{nullptr},m_pBGmChannel{nullptr}, 
-	m_SoundContainer{},	m_SoundOrders{}, m_ActiveSounds{}, m_RemoveSounds{}
+	m_SoundContainer{},	m_SoundOrders{}, m_ActiveSounds{}, m_RemoveSounds{},
+	m_spSound{nullptr}, m_spBgmSound{nullptr}
 {
 }
 
 UAudioSystem::UAudioSystem(const UAudioSystem& _rhs) 
 	: UResource(_rhs),
 	m_pSoundSystem{ nullptr }, m_pBGmChannel{ nullptr },
-	m_SoundContainer{}, m_SoundOrders{}, m_ActiveSounds{}, m_RemoveSounds{}
+	m_SoundContainer{}, m_SoundOrders{}, m_ActiveSounds{}, m_RemoveSounds{},
+	m_spSound{ nullptr }, m_spBgmSound{nullptr}
 {
 }
 
@@ -69,25 +71,49 @@ void UAudioSystem::Tick()
 
 void UAudioSystem::Play(const _wstring& _wstrSoundName)
 {
-	SHPTR<USound> spSound = BringSound(_wstrSoundName);
-	assert(nullptr != spSound);
-	spSound->Play();
-	m_ActiveSounds.insert(spSound);
+	m_spSound = BringSound(_wstrSoundName);
+	assert(nullptr != m_spSound);
+	m_spSound->Play();
+	m_ActiveSounds.insert(m_spSound);
+}
+
+void UAudioSystem::Play(const _wstring& _wstrSoundName, const _float _fVolumeUpdate)
+{
+	m_spSound = BringSound(_wstrSoundName);
+	assert(nullptr != m_spSound);
+	m_spSound->Play();
+	m_spSound->UpdateVolume(_fVolumeUpdate);
+	m_ActiveSounds.insert(m_spSound);
 }
 
 void UAudioSystem::PlayBGM(const _wstring& _wstrSoundName)
 {
-	SHPTR<USound> spSound = BringSound(_wstrSoundName);
-	assert(nullptr != spSound);
-	spSound->PlayBGM(&m_pBGmChannel);
+	m_spSound = BringSound(_wstrSoundName);
+	assert(nullptr != m_spSound);
+	m_spSound->PlayBGM(&m_pBGmChannel);
+}
+
+void UAudioSystem::PlayBGM(const _wstring& _wstrSoundName, const _float _fVolumeUpdate)
+{
+	m_spBgmSound = BringSound(_wstrSoundName);
+	assert(nullptr != m_spBgmSound);
+	m_spBgmSound->PlayBGM(&m_pBGmChannel);
+	m_spBgmSound->UpdateVolume(_fVolumeUpdate);
 }
 
 void UAudioSystem::Stop(const _wstring& _wstrSoundName)
 {
-	SHPTR<USound> spSound = BringSound(_wstrSoundName);
-	assert(nullptr != spSound);
-	spSound->Stop();
-	m_ActiveSounds.erase(spSound);
+	m_spSound = BringSound(_wstrSoundName);
+	assert(nullptr != m_spSound);
+	m_spSound->Stop();
+	m_ActiveSounds.erase(m_spSound);
+}
+
+void UAudioSystem::VolumeUpdate(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate)
+{
+	m_spSound = BringSound(_wstrSoundName);
+	assert(nullptr != m_spSound);
+	m_spSound->UpdateVolume(_fVolumeUpdate);
 }
 
 void UAudioSystem::UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, 
