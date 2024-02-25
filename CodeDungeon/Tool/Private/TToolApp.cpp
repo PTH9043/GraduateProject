@@ -62,7 +62,7 @@ HRESULT TToolApp::NativeConstruct(const HWND& _hWnd, const HINSTANCE& _hInst)
 	m_spTickTimer = m_spGameInstance->CreateTimerAdd(TICK_TIMER);
 	m_spRenderTimer = m_spGameInstance->CreateTimerAdd(RENDER_TIMER);
 
-//	m_spGameInstance->SoundPlay(L"background_1");
+	m_spGameInstance->SoundPlay(L"background_1");
 	//m_spGameInstance->SetCurrentContext(ImGui::GetCurrentContext());
 	return S_OK;
 }
