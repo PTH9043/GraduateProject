@@ -259,12 +259,6 @@
     <Filter Include="01.Manager\Picking">
       <UniqueIdentifier>{b599057d-c5cf-4133-ba2a-87b2ed7f3239}</UniqueIdentifier>
     </Filter>
-    <Filter Include="07.Resource\Navigation">
-      <UniqueIdentifier>{c6030694-0a18-45f6-a083-9d1c1d550a43}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="07.Resource\Navigation\Cell">
-      <UniqueIdentifier>{4bce2516-bbaf-4005-af5d-f5c4a13087d2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="07.Resource\VIBuffer\Grid">
       <UniqueIdentifier>{273e34ea-5dc2-4e96-ad2c-6ca47c07bff4}</UniqueIdentifier>
     </Filter>
@@ -288,9 +282,6 @@
     </Filter>
     <Filter Include="07.Resource\VIBuffer\Cell">
       <UniqueIdentifier>{81c93ff4-a441-4622-ad24-a0585534d1bf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="07.Resource\Region">
-      <UniqueIdentifier>{b7e1f845-bf2d-477e-9b3d-9a8124b96e4d}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Manager\AudioSystemManager">
       <UniqueIdentifier>{be4c05c9-cf3c-445a-8610-de39adb6f6fe}</UniqueIdentifier>
@@ -318,6 +309,24 @@
     </Filter>
     <Filter Include="01.Manager\CharacterManager">
       <UniqueIdentifier>{58de3f35-05ef-4b50-b6e5-59ecb076bd59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\01.Pawn\Default\DefaultCell">
+      <UniqueIdentifier>{241a23b1-5e19-4ea5-b5cb-866f6be8f3f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component\Navigation">
+      <UniqueIdentifier>{c6030694-0a18-45f6-a083-9d1c1d550a43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component\Navigation\Cell">
+      <UniqueIdentifier>{4bce2516-bbaf-4005-af5d-f5c4a13087d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component\Navigation\Stage">
+      <UniqueIdentifier>{edf13c4a-b79a-4147-9530-0635fcf40222}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component\Navigation\Region">
+      <UniqueIdentifier>{b7e1f845-bf2d-477e-9b3d-9a8124b96e4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Manager\StageManager">
+      <UniqueIdentifier>{f7620c82-c508-4c6d-acbb-a5cbb7ebb702}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -559,10 +568,10 @@
       <Filter>01.Manager\Picking</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UCell.cpp">
-      <Filter>07.Resource\Navigation\Cell</Filter>
+      <Filter>06.Component\Navigation\Cell</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UNavigation.cpp">
-      <Filter>07.Resource\Navigation</Filter>
+      <Filter>06.Component\Navigation</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UVIBufferGrid.cpp">
       <Filter>07.Resource\VIBuffer\Grid</Filter>
@@ -589,7 +598,7 @@
       <Filter>07.Resource\VIBuffer\Cell</Filter>
     </ClCompile>
     <ClCompile Include="..\private\URegion.cpp">
-      <Filter>07.Resource\Region</Filter>
+      <Filter>06.Component\Navigation\Region</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UAnimChannel.cpp">
       <Filter>07.Resource\Model\Animation\Channel</Filter>
@@ -620,6 +629,15 @@
     </ClCompile>
     <ClCompile Include="..\private\UController.cpp">
       <Filter>06.Component\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UDefaultCell.cpp">
+      <Filter>05.Actor\01.Pawn\Default\DefaultCell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UStage.cpp">
+      <Filter>06.Component\Navigation\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UStageManager.cpp">
+      <Filter>01.Manager\StageManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -891,10 +909,10 @@
       <Filter>01.Manager\Picking</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UCell.h">
-      <Filter>07.Resource\Navigation\Cell</Filter>
+      <Filter>06.Component\Navigation\Cell</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UNavigation.h">
-      <Filter>07.Resource\Navigation</Filter>
+      <Filter>06.Component\Navigation</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UVIBufferGrid.h">
       <Filter>07.Resource\VIBuffer\Grid</Filter>
@@ -921,7 +939,7 @@
       <Filter>07.Resource\VIBuffer\Cell</Filter>
     </ClInclude>
     <ClInclude Include="..\public\URegion.h">
-      <Filter>07.Resource\Region</Filter>
+      <Filter>06.Component\Navigation\Region</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UAnimChannel.h">
       <Filter>07.Resource\Model\Animation\Channel</Filter>
@@ -952,6 +970,15 @@
     </ClInclude>
     <ClInclude Include="..\public\UController.h">
       <Filter>06.Component\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UDefaultCell.h">
+      <Filter>05.Actor\01.Pawn\Default\DefaultCell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UStage.h">
+      <Filter>06.Component\Navigation\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UStageManager.h">
+      <Filter>01.Manager\StageManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
