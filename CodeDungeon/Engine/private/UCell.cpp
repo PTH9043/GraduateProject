@@ -1,5 +1,13 @@
 #include "EngineDefine.h"
 #include "UCell.h"
+#include "UVIBufferCell.h"
+#include "URenderer.h"
+#include "UGameInstance.h"
+#include "UTransform.h"
+#ifdef _USE_DEBUGGING
+#include "UDefaultCell.h"
+#endif
+
 
 UCell::UCell(CSHPTRREF<UDevice> _spDevice) : UObject(_spDevice),
 m_arrPoints{},
@@ -8,7 +16,10 @@ m_arrNormals{},
 m_arrNeighbors{ -1, -1, -1 },
 m_vCenterPos{},
 m_iIndex{ 0 },
-m_vPlane{}
+m_vPlane{},
+#ifdef _USE_DEBUGGING
+m_spCellPawn{ nullptr }
+#endif
 {
 }
 
@@ -30,15 +41,22 @@ HRESULT UCell::NativeConstruct(ARRAY<_float3, POINT_END>& _Points, const _uint _
 	m_iIndex = _iIndex;
 	ResortPoints();
 
-//#ifdef _USE_DEBUGGING
-//	m_spCellVIBuffer = UVIBufferCell
-//
-//#endif
+#ifdef _USE_DEBUGGING
+	m_spCellVIBuffer = CreateConstructorNative<UVIBufferCell>(GetDevice(), m_arrPoints);
+	RETURN_CHECK(nullptr == m_spCellVIBuffer, E_FAIL);
+#endif
 	_float3 vCenterPos{};
 	for (auto& iter : m_arrPoints) {
 		m_vCenterPos += iter;
 	}
 	m_vCenterPos /= 3.f;
+
+#ifdef _USE_DEBUGGING
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	m_spCellPawn = static_pointer_cast<UDefaultCell>(spGameInstance->CloneActorAddAndNotInLayer(
+		PROTO_ACTOR_DEUBGGINGDEFAULTCELL, { &m_spCellVIBuffer }));
+#endif
+
 	return S_OK;
 }
 
@@ -125,6 +143,12 @@ const _float UCell::ComputeHeight(const _float3& _vPosition)
 	return _float3(DirectX::XMPlaneDotCoord(m_vPlane, _vPosition)).y + _vPosition.y;
 }
 
+void UCell::ReBuffer()
+{
+	m_spCellVIBuffer.reset();
+	m_spCellVIBuffer = CreateConstructorNative<UVIBufferCell>(GetDevice(), m_arrPoints);
+}
+
 void UCell::CalculateCrossResult(ARRAY<_float3, POINT_END>& _arrPointsEnd)
 {
 	_float3 p1{ m_arrPoints[POINT_A].x, 0.f, m_arrPoints[POINT_A].z };
@@ -185,3 +209,20 @@ void UCell::MakeLineAndNormal()
 
 	m_vPlane = DirectX::XMPlaneFromPoints(m_arrPoints[POINT_B], m_arrPoints[POINT_A], m_arrPoints[POINT_C]);
 }
+
+#ifdef _USE_DEBUGGING
+
+void UCell::AddRenderer(RENDERID _eID)
+{
+	if (nullptr != m_spCellPawn)
+	{
+		m_spCellPawn->GetTransform()->SetPos(m_vCenterPos);
+		m_spCellPawn->AddRenderer(_eID);
+	}
+}
+void UCell::ChangeCellColor(const _float3& _vColor)
+{
+	RETURN_CHECK(nullptr != m_spCellPawn, ;);
+	m_spCellPawn->SetColor(_vColor);
+}
+#endif

@@ -12,6 +12,7 @@
 #include "TMainScene.h"
 #include "TAnimControlView.h"
 #include "TCameraView.h"
+#include "TNavigationView.h"
 
 IMPLEMENT_SINGLETON(TImGuiManager)
 
@@ -144,6 +145,12 @@ HRESULT TImGuiManager::ReadyImGuiClass()
 		spCameraView->CloseImGui();
 		m_ImGuiObjectContainer.insert(MakePair(IMGTAG::CAMERATOOL, spCameraView));
 		m_spMainView->InsertImGuiView(spCameraView);
+	}
+	{
+		SHPTR<TNavigationView> spNavigationView = CreateConstructorNative<TNavigationView>(m_spDevice);
+		spNavigationView->CloseImGui();
+		m_ImGuiObjectContainer.insert(MakePair(IMGTAG::CAMERATOOL, spNavigationView));
+		m_spMainView->InsertImGuiView(spNavigationView);
 	}
 	return S_OK;
 }

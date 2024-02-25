@@ -1,8 +1,8 @@
 #include "EngineDefine.h"
 #include "UVIBufferCell.h"
 
-UVIBufferCell::UVIBufferCell(CSHPTRREF<UDevice> _spDevice, const VIBUFFERTYPE _eBufferType)
-	:UVIBuffer(_spDevice, VISPACE_TYPE::SPACE_2D, VIINSTANCE_TYPE::SINGLE, _eBufferType)
+UVIBufferCell::UVIBufferCell(CSHPTRREF<UDevice> _spDevice)
+	:UVIBuffer(_spDevice, VISPACE_TYPE::SPACE_2D, VIINSTANCE_TYPE::SINGLE)
 {
 }
 

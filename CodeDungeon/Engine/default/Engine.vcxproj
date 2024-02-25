@@ -59,6 +59,7 @@
     <ClInclude Include="..\public\UComponent.h" />
     <ClInclude Include="..\public\UComponentManager.h" />
     <ClInclude Include="..\public\UComputeRootSignature.h" />
+    <ClInclude Include="..\public\UDefaultCell.h" />
     <ClInclude Include="..\public\UDefaultCube.h" />
     <ClInclude Include="..\public\UDefaultDebugging.h" />
     <ClInclude Include="..\public\UDefaultSphere.h" />
@@ -115,6 +116,8 @@
     <ClInclude Include="..\public\UShaderBufferManager.h" />
     <ClInclude Include="..\public\UShaderConstantBuffer.h" />
     <ClInclude Include="..\public\UShaderStructedBuffer.h" />
+    <ClInclude Include="..\public\UStage.h" />
+    <ClInclude Include="..\public\UStageManager.h" />
     <ClInclude Include="..\public\USwapChain.h" />
     <ClInclude Include="..\public\UTableDescriptor.h" />
     <ClInclude Include="..\public\UTexGroup.h" />
@@ -158,6 +161,7 @@
     <ClCompile Include="..\private\UComponent.cpp" />
     <ClCompile Include="..\private\UComponentManager.cpp" />
     <ClCompile Include="..\private\UComputeRootSignature.cpp" />
+    <ClCompile Include="..\private\UDefaultCell.cpp" />
     <ClCompile Include="..\private\UDefaultCube.cpp" />
     <ClCompile Include="..\private\UDefaultDebugging.cpp" />
     <ClCompile Include="..\private\UDefaultSphere.cpp" />
@@ -214,6 +218,8 @@
     <ClCompile Include="..\private\UShaderBufferManager.cpp" />
     <ClCompile Include="..\private\UShaderConstantBuffer.cpp" />
     <ClCompile Include="..\private\UShaderStructedBuffer.cpp" />
+    <ClCompile Include="..\private\UStage.cpp" />
+    <ClCompile Include="..\private\UStageManager.cpp" />
     <ClCompile Include="..\private\USwapChain.cpp" />
     <ClCompile Include="..\private\UTableDescriptor.cpp" />
     <ClCompile Include="..\private\UTexGroup.cpp" />

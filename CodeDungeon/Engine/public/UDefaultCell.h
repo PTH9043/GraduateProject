@@ -2,25 +2,19 @@
 #include "UPawn.h"
 
 BEGIN(Engine)
-class UVIBuffer;
+class UVIBufferCell;
 class UShaderConstantBuffer;
 
-class UDefaultDebugging : public UPawn{
+class UDefaultCell : public UPawn {
 public:
-	enum class DEBUGTYPE
-	{
-		DEBUG_CUBE, DEBUG_SPHERE, DEBUG_END
-	};
-public:
-	UDefaultDebugging(CSHPTRREF<UDevice> _spDevice, 	const _wstring& _wstrLayer, const CLONETYPE& _eCloneType);
-	UDefaultDebugging(const UDefaultDebugging& _rhs);
-	DESTRUCTOR(UDefaultDebugging)
-
+	UDefaultCell(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType);
+	UDefaultCell(const UDefaultCell& _rhs);
+	DESTRUCTOR(UDefaultCell)
 	void SetColor(const _float4& _vColor) { m_stDebuggParam.vDebugging = _vColor; }
 	void SetColor(const _float3& _vColor) { ::memcpy(&m_stDebuggParam.vDebugging, &_vColor, sizeof(_float3)); }
 public:
-	CLONE_MACRO(UDefaultDebugging, "UDefaultDebugging::Clone To Failed")
-		virtual void Free() override;
+	CLONE_MACRO(UDefaultCell, "UDefaultCell::Clone To Failed")
+	virtual void Free() override;
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;
 
@@ -33,12 +27,10 @@ protected:
 	// Damaged
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy) override;
 private:
-	static constexpr _uint							DEBUGPARAM_SIZE {sizeof(DEBUGGINPARAM)};
-
-	SHPTR< UVIBuffer>							m_spVIBuffer;
-	SHPTR< UShaderConstantBuffer>				m_spDebuggingConstantBuffer;
+	static constexpr _uint						DEBUGPARAM_SIZE{ sizeof(DEBUGGINPARAM) };
+	SHPTR<UVIBufferCell>						m_spVIBuffer;
+	SHPTR<UShaderConstantBuffer>				m_spDebuggingConstantBuffer;
 	DEBUGGINPARAM								m_stDebuggParam;
-	DEBUGTYPE									m_eDebugType;
 };
 
 END

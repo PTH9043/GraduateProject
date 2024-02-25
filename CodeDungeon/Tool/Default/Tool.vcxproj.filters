@@ -71,17 +71,14 @@
     <Filter Include="90.ShowModel\AnimControlModel">
       <UniqueIdentifier>{c9991766-7321-4751-b857-159b2259d33b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.ImGui\Map">
-      <UniqueIdentifier>{d9e63b2c-4aeb-411a-a262-5b6f7ae8d293}</UniqueIdentifier>
-    </Filter>
     <Filter Include="90.ShowModel\Map">
       <UniqueIdentifier>{f1818212-5422-46a7-88a7-96a4514354cb}</UniqueIdentifier>
     </Filter>
     <Filter Include="03.ImGui\CameraView">
       <UniqueIdentifier>{7c700fb0-fd1f-41e0-94e9-dc7fab7dae42}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06.Region">
-      <UniqueIdentifier>{5cdb119d-49d4-4487-86c8-13dcb7e7e76a}</UniqueIdentifier>
+    <Filter Include="03.ImGui\Navigation">
+      <UniqueIdentifier>{8b370064-78ad-4a89-b112-ad0dbb5ab91c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -187,8 +184,8 @@
     <ClInclude Include="..\Public\TCameraView.h">
       <Filter>03.ImGui\CameraView</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\TRegion.h">
-      <Filter>06.Region</Filter>
+    <ClInclude Include="..\Public\TNavigationView.h">
+      <Filter>03.ImGui\Navigation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -276,8 +273,8 @@
     <ClCompile Include="..\Private\TCameraView.cpp">
       <Filter>03.ImGui\CameraView</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\TRegion.cpp">
-      <Filter>06.Region</Filter>
+    <ClCompile Include="..\Private\TNavigationView.cpp">
+      <Filter>03.ImGui\Navigation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

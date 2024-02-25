@@ -5,7 +5,7 @@ BEGIN(Engine)
 
 class  UVIBufferCell : public UVIBuffer {
 public:
-	UVIBufferCell(CSHPTRREF <UDevice> _spDevice, const VIBUFFERTYPE _eBufferType);
+	UVIBufferCell(CSHPTRREF <UDevice> _spDevice);
 	UVIBufferCell(const UVIBufferCell& _rhs);
 	DESTRUCTOR(UVIBufferCell)
 public:

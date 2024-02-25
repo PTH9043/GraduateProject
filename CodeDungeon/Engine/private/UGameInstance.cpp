@@ -33,7 +33,7 @@
 #include "UDefferedCamera.h"
 #include "UDefaultCube.h"
 #include "UDefaultDebugging.h"
-
+#include "UDefaultCell.h"
 
 #include "UShader.h"
 #include "UComputeShader.h"
@@ -1044,6 +1044,10 @@ HRESULT UGameInstance::ReadyActor(const OUTPUTDATA& _stData)
 #ifdef _USE_DEBUGGING
 		AddPrototype(PROTO_ACTOR_DEUBGGINGDEFAULTOBJECT, CreateConstructorToNative<UDefaultDebugging>(
 			_stData.wpDevice.lock(), LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
+		
+		AddPrototype(PROTO_ACTOR_DEUBGGINGDEFAULTCELL, CreateConstructorToNative<UDefaultCell>(
+			_stData.wpDevice.lock(), LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
+
 #endif 
 	}
 	AddPrototype(PROTO_ACTOR_PARTICLE, CreateConstructorToNative<UParticle>(
