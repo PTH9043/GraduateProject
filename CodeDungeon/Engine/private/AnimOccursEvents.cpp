@@ -2,6 +2,9 @@
 #include "AnimOccursEvents.h"
 #include "UMethod.h"
 #include "UAnimModel.h"
+#include "UGameInstance.h"
+#include "USound.h"
+#include "UCharacter.h"
 
 UAnimOccursTimePassEvent::UAnimOccursTimePassEvent() : 
 	UAnimOccurEvent(ANIMEVENTTYPE::ANIMEVENT_ANIMOCCURSTIMEPASS)
@@ -38,5 +41,66 @@ void UAnimOccursTimePassEvent::LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std
 }
 
 void UAnimOccursTimePassEvent::Free()
+{
+}
+
+/*
+=================================================
+UAnimOccursTimePassEvent
+=================================================
+AnomSoundEvent
+=================================================
+*/
+
+UAnimSoundEvent::UAnimSoundEvent() :
+	UAnimOccurEvent(ANIMEVENTTYPE::ANIMEVENT_SOUND), m_spSound{nullptr}
+{
+}
+
+UAnimSoundEvent::UAnimSoundEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) :
+	UAnimOccurEvent(ANIMEVENTTYPE::ANIMEVENT_SOUND), m_spSound{ nullptr }
+{
+	LoadEvent(_spAnimModel, _load);
+}
+
+const ANIMOTHEREVENTDESC* UAnimSoundEvent::OutOtherEventDesc()
+{
+	return &m_AnimSoundDesc;
+}
+
+void UAnimSoundEvent::EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta)
+{
+	if (nullptr == m_spSound)
+	{
+		RETURN_CHECK(false == m_AnimSoundDesc.wstrSoundName.empty(), ;);
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		m_spSound = spGameInstance->BringSound(m_AnimSoundDesc.wstrSoundName);
+		m_spPlayerCharacter = spGameInstance->GetCurrPlayer();
+	}
+
+	m_spSound->Play();
+	m_spSound->ChangeMinMaxDistance3D(m_AnimSoundDesc.fMinSoundDistance, m_AnimSoundDesc.fMaxSoundDistance);
+//	m_spSound->UpdateSound3D(_pPawn->GetTransform())
+}
+
+void UAnimSoundEvent::SaveEvent(std::ofstream& _save)
+{
+	__super::SaveEvent(_save);
+	UMethod::SaveString(_save, m_AnimSoundDesc.wstrSoundName);
+	UMethod::SaveOther(_save, &m_AnimSoundDesc.vSoundVelocity);
+	UMethod::SaveOther(_save, &m_AnimSoundDesc.fMaxSoundDistance);
+	UMethod::SaveOther(_save, &m_AnimSoundDesc.fMinSoundDistance);
+}
+
+void UAnimSoundEvent::LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load)
+{
+	__super::LoadEvent(_spAnimModel, _load);
+	UMethod::ReadString(_load, m_AnimSoundDesc.wstrSoundName);
+	UMethod::ReadOther(_load, &m_AnimSoundDesc.vSoundVelocity);
+	UMethod::ReadOther(_load, &m_AnimSoundDesc.fMaxSoundDistance);
+	UMethod::ReadOther(_load, &m_AnimSoundDesc.fMinSoundDistance);
+}
+
+void UAnimSoundEvent::Free()
 {
 }

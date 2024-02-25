@@ -8,7 +8,6 @@ class UScene;
 class ULight;
 class URenderer;
 class UShaderConstantBuffer;
-class URenderCommand;
 class UGlobalConstantBuffer;
 class UPipeLine;
 class UGameInstance;
@@ -19,7 +18,7 @@ class USceneManager : public UBase {
 public:
 	USceneManager();
 	NO_COPY(USceneManager)
-		DESTRUCTOR(USceneManager)
+	DESTRUCTOR(USceneManager)
 public:
 	CSHPTRREF<UScene> GetScene() const { return m_spCurScene; }
 public:
@@ -50,15 +49,10 @@ public:
 private:
 	const _uint											m_c_iLightParamSize;
 	_uint														m_iLightCamIndex;
-
-	//SHPTR<URenderObject>					m_spLightRenderObject;
-
 	SHPTR<UScene>									m_spCurScene;
 
 	LIGHTPARAM											m_stLightParam;
 	SHPTR< UGlobalConstantBuffer>	m_spLightGlobalBuffer;
-	// Render Command
-	SHPTR<URenderCommand>				m_spRenderCommand;
 };
 
 END

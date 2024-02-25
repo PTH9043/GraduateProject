@@ -16,6 +16,7 @@
 #include "UFilePathManager.h"
 #include "UNetworkManager.h"
 #include "UAudioSystemManager.h"
+#include "UCharacterManager.h"
 
 #include "URenderer.h"
 
@@ -81,8 +82,8 @@ UGameInstance::UGameInstance() :
 	//m_spPicking{ Create<UPicking>() },
 	m_spFilePathManager{ Create<UFilePathManager>() },
 	//m_spRandomManager{ Create<URandomManager>() },
+	m_spAudioSystemManager{ Create<UAudioSystemManager>() },
 	m_spNetworkManager{Create<UNetworkManager>()},
-	m_spAudioSystemManager{Create<UAudioSystemManager>()},
 	m_spRenderer{ nullptr }
 	//m_spGraphicRenderObject{ nullptr }
 {
@@ -101,8 +102,8 @@ void UGameInstance::Free()
 
 	//m_isGamming = false;
 	//m_spRandomManager.reset();
-	m_spAudioSystemManager.reset();
 	m_spNetworkManager.reset();
+	m_spAudioSystemManager.reset();
 	m_spFilePathManager.reset();
 	//m_spPicking.reset();
 	m_spPipeLine.reset();
@@ -125,23 +126,18 @@ HRESULT UGameInstance::ReadyInstance(const GRAPHICDESC& _stDesc, OUTPUTDATA& _st
 	RETURN_CHECK_FAILED(m_spShaderBufferManager->ReadyShaderBufferManager(_stOutDesc.wpDevice.lock()), E_FAIL);
 	RETURN_CHECK_FAILED(m_spInputManager->ReadyInpuDevice(m_spGraphicDevice->GetGraphicDesc()), E_FAIL);
 	RETURN_CHECK_FAILED(m_spRenderTargetManager->ReadyRenderTarget(m_spGraphicDevice, m_spGraphicDevice->GetDevice()), E_FAIL);
-	//RETURN_CHECK_FAILED(m_spComputeManager->NativeComputeManager(m_spGraphicRenderObject), E_FAIL);
 
 	RETURN_CHECK_FAILED(ReadyRenderTarget(_stOutDesc), E_FAIL);
 	RETURN_CHECK_FAILED(ReadyResource(_stOutDesc), E_FAIL);
 	RETURN_CHECK_FAILED(ReadyComp(_stOutDesc), E_FAIL);
 	RETURN_CHECK_FAILED(ReadyActor(_stOutDesc), E_FAIL);
 
-	//RETURN_CHECK_FAILED(m_spFontMananger->ReadyFontManager(m_spGraphicRenderObject, m_spGraphicDevice->GetSwapChain(),
-	//	m_spRenderTargetManager, m_spGraphicDevice->GetD3DViewport()), E_FAIL);
 	RETURN_CHECK_FAILED(m_spActorManager->ReadyActorManager(m_spRenderer), E_FAIL);
 	RETURN_CHECK_FAILED(m_spSceneManager->ReadySceneManager(this), E_FAIL);
 	
-	//RETURN_CHECK_FAILED(m_spComputeManager->ReadyComputeManager(m_spGraphicDevice), E_FAIL);
 	RETURN_CHECK_FAILED(m_spPipeLine->ReadyPipeLine(this), E_FAIL);
 	RETURN_CHECK_FAILED(m_spAudioSystemManager->ReadyAudioSystemManager(this), E_FAIL);
 
-	//RegisterInsideWorkThread(std::thread::hardware_concurrency());
 	m_isGamming = true;
 	return S_OK;
 }
@@ -182,9 +178,10 @@ void UGameInstance::AwakeTick()
 {
 	m_spInputManager->KeyTick();
 	m_spInputManager->MouseTick();
-	//m_spPicking->TickRayInWorldSpace(this);
+	// m_spPicking->TickRayInWorldSpace(this);
 	m_spPipeLine->FrustomTick();
 	m_spRenderer->ClearRenderingData();
+	m_spAudioSystemManager->Tick();
 }
 
 void UGameInstance::Tick(const _double& _dTimeDelta)
@@ -237,6 +234,7 @@ void UGameInstance::ClearOnceTypeData()
 	m_spActorManager->ClearOnceTypeData();
 	m_spResourceManager->ClearOnceTypeData();
 	m_spPipeLine->ClearOneTypeCamera();
+	m_spAudioSystemManager->ClearOnceTypeData();
 }
 
 
@@ -732,7 +730,7 @@ const CAMID UGameInstance::GetRenderCamID() const
 ==================================================
 PipeLine
 ==================================================
-FilePath
+FilePathManager
 ==================================================
 */
 
@@ -755,6 +753,73 @@ HRESULT UGameInstance::LoadFirstFolder(const _wstring& _wstrFilePath)
 {
 	return m_spFilePathManager->LoadFirstFolder(_wstrFilePath);
 }
+
+/*
+==================================================
+FilePathManager
+==================================================
+AudioSystemManager
+==================================================
+*/
+
+HRESULT UGameInstance::CreateAudioSystemAndRegister(CLONETYPE _CloneType, const _wstring& _wstrSoundFolderPath)
+{
+	return m_spAudioSystemManager->CreateAudioSystemAndRegister(this, _CloneType, _wstrSoundFolderPath);
+}
+
+HRESULT UGameInstance::CreateAudioSystemAndRegister(CLONETYPE _CloneType, CSHPTRREF<FILEGROUP> _spSoundFileGroup)
+{
+	return m_spAudioSystemManager->CreateAudioSystemAndRegister(this, _CloneType, _spSoundFileGroup);
+}
+
+HRESULT UGameInstance::CreateAudioSystemToFolderNameAndRegister(CLONETYPE _CloneType, const _wstring& _wstrSoundFolderName)
+{
+	return m_spAudioSystemManager->CreateAudioSystemToFolderNameAndRegister(this, _CloneType, _wstrSoundFolderName);
+}
+
+void UGameInstance::SoundPlay(const _wstring& _wstrSoundName)
+{
+	m_spAudioSystemManager->Play(_wstrSoundName);
+}
+
+void UGameInstance::SoundPlayBGM(const _wstring& _wstrSoundName)
+{
+	m_spAudioSystemManager->PlayBGM(_wstrSoundName);
+}
+
+void UGameInstance::StopSound(const _wstring& _wstrSoundName)
+{
+	m_spAudioSystemManager->Stop(_wstrSoundName);
+}
+
+void UGameInstance::UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, const _float3& _vSoundVelocity, CSHPTRREF<UTransform> _spTargetTransform)
+{
+	m_spAudioSystemManager->UpdateSound3D(_wstrSoundName, _vSoudPos, _vSoundVelocity, _spTargetTransform);
+}
+
+void UGameInstance::ChangeMinMaxDistance3D(const _wstring& _wstrSoundName, const _float _fMinDistance, const _float _fMaxDistance)
+{
+	m_spAudioSystemManager->ChangeMinMaxDistance3D(_wstrSoundName, _fMinDistance, _fMaxDistance);
+}
+
+SHPTR<USound> UGameInstance::BringSound(const _int _Index)
+{
+	return SHPTR<USound>();
+}
+
+SHPTR<USound> UGameInstance::BringSound(const _wstring& _wstrSoundName)
+{
+	return SHPTR<USound>();
+}
+
+/*
+==================================================
+AudioSystemManager
+==================================================
+NetworkManager
+==================================================
+*/
+
 
 HRESULT UGameInstance::StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController)
 {
@@ -783,7 +848,25 @@ void UGameInstance::NetworkEnd()
 
 /*
 ==================================================
-FilePath
+NetworkManager
+==================================================
+CharacterManager
+==================================================
+*/
+
+CSHPTRREF<UCharacter> UGameInstance::GetCurrPlayer() const
+{
+	return m_spCharacterManager->GetCurrPlayer();
+}
+
+void UGameInstance::ReigsterCurrentPlayer(CSHPTRREF<UCharacter> _spCurrentPlayer)
+{
+	m_spCharacterManager->ReigsterCurrentPlayer(_spCurrentPlayer);
+}
+
+/*
+==================================================
+CharacterManager
 ==================================================
 ReadyDatas
 ==================================================

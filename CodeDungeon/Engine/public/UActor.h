@@ -103,7 +103,7 @@ private:
 	void															(UActor::* m_pAwakeTick)(const _double&);
 	void															(UActor::* m_pTick)(const _double&);
 	void															(UActor::* m_pLateTick)(const _double&);
-	HRESULT(UActor::* m_pRender)(CSHPTRREF<UCommand>, CSHPTRREF<UTableDescriptor>);
+	HRESULT												(UActor::* m_pRender)(CSHPTRREF<UCommand>, CSHPTRREF<UTableDescriptor>);
 
 	// Backing Type
 	BACKINGTYPE										m_eBackingType;

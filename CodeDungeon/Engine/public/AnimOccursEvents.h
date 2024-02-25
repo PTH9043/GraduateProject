@@ -3,7 +3,8 @@
 
 
 BEGIN(Engine)
-
+class USound;
+class UCharacter;
 /*
 @ Date: 2024-02-17, Writer: 박태현
 @ Explain
@@ -36,5 +37,26 @@ UAnimOccursTimePassEvent
 AnomSoundEvent
 =================================================
 */
+
+class UAnimSoundEvent final : public UAnimOccurEvent {
+public:
+	UAnimSoundEvent();
+	UAnimSoundEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load);
+	DESTRUCTOR(UAnimSoundEvent)
+public:
+	// UAnimSectionEvent을(를) 통해 상속됨
+	virtual const ANIMOTHEREVENTDESC* OutOtherEventDesc() override;
+protected:
+	// Event 상황일 때를 정의
+	virtual void EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta) override;
+	virtual void SaveEvent(std::ofstream& _save) override;
+	virtual void LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) override;
+private:
+	virtual void Free() override;
+private:
+	ANIMSOUNDDESC			m_AnimSoundDesc;
+	SHPTR<USound>				m_spSound;
+	SHPTR<UCharacter>		m_spPlayerCharacter;
+};
 
 END

@@ -42,6 +42,18 @@ namespace Engine
 		{ t->NativeConstruct(args...) } -> std::same_as<HRESULT>;
 	};
 
+	/*
+	@ Date: 2024-02-25, Writer: 박태현
+	@ Explain: Pointer인지 확인하는 Concept
+	*/
+	template<class T>
+	concept IsPointer = true == std::is_pointer_v<T>;
+	/*
+	@ Date: 2024-02-25, Writer: 박태현
+	@ Explain: Pointer가 아닌지 확인하는 Concept 
+	*/
+	template<class T>
+	concept IsNotPointer = false == IsPointer<T>;
 
 	/*
 	@ Date: 2024-02-05, Writer: 박태현

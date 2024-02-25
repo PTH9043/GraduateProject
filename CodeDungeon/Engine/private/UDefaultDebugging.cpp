@@ -20,6 +20,16 @@ UDefaultDebugging::UDefaultDebugging(const UDefaultDebugging& _rhs)
 {
 }
 
+void UDefaultDebugging::SetColor(const _float4& _vColor)
+{
+	m_stDebuggParam.vDebugging = _vColor;
+}
+
+void UDefaultDebugging::SetColor(const _float3& _vColor)
+{
+	::memcpy(&m_stDebuggParam.vDebugging, &_vColor, sizeof(_float3));
+}
+
 void UDefaultDebugging::Free()
 {
 }
