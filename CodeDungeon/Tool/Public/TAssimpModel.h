@@ -29,12 +29,12 @@ public:
 	DESTRUCTOR(TAssimpModel)
 public:
 	// Get BoneNode
-	SHPTR<TAssimpBoneNode> GetBoneNode(const _wstring& _strBoneNode);
+	SHPTR<TAssimpBoneNode> FindBoneNode(const _wstring& _strBoneNode);
 	const _uint GetNumMeshContainers() const { return m_iNumMeshContainers; }
 	const _uint GetNumMaterials() const { return m_iNumMaterials; }
 	const TYPE GetModelType() const { return m_eModelType; }
 	const MESHCONTAINERS& GetMeshContainers() const { return m_vecMeshContainers; }
-	const MATERIERS& GetMaterials() const { return m_vecMaterials; }
+	const MATERIERS& GetMaterials() const { return m_MaterialContainer; }
 public:
 	CLONE_MACRO(TAssimpModel, "TAssimpModel::Clone Failed")
 		virtual void Free() override;
@@ -79,13 +79,13 @@ private:
 	MESHCONTAINERS						m_vecMeshContainers;
 	_uint												m_iNumMeshContainers;
 	// BoneNodes
-	BONENODES									m_vecBoneNodes;
+	BONENODES									m_BoneNodeContainer;
 	_uint												m_iNumBoneNodes;
 	// Animation
 	ANIMATIONS									m_vecAnimations;
 	_uint												m_iNumAnimation;
 	// Materials 
-	MATERIERS									m_vecMaterials;
+	MATERIERS									m_MaterialContainer;
 	_uint												m_iNumMaterials;
 	// PivotMatrix 
 	_float4x4										m_mScaleMatrix;

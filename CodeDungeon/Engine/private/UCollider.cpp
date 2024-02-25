@@ -71,40 +71,11 @@ const _float3& UCollider::GetCurPos()
 
 const _float3& UCollider::GetScale()
 {
-	m_vScale = _float3::Zero;
-	switch (m_eType)
-	{
-	case TYPE_AABB:
-		if (nullptr != m_spAABB)
-			m_vScale = m_spAABB->Extents;
-		break;
-	case TYPE_OBB:
-		if (nullptr != m_spOBB)
-			m_vScale = m_spOBB->Extents;
-		break;
-	case TYPE_SPHERE:
-		if (nullptr != m_spSphere)
-			m_vScale.x = m_spSphere->Radius;
-		break;
-	}
 	return m_vScale;
 }
 
 const _float3& UCollider::GetTranslate()
 {
-	m_vTranslate = _float3(0.f, 0.f, 0.f);
-	switch (m_eType)
-	{
-	case TYPE_AABB:
-		m_vTranslate = m_spAABB_Original->Center;
-		break;
-	case TYPE_OBB:
-		m_vTranslate = m_spOBB_Original->Center;
-		break;
-	case TYPE_SPHERE:
-		m_vTranslate = m_spSphere_Original->Center;
-		break;
-	}
 	return m_vTranslate;
 }
 
@@ -114,17 +85,14 @@ void UCollider::SetScale(const _float3& _vScale)
 	{
 	case TYPE_AABB:
 		m_spAABB_Original->Extents = _vScale;
-		m_spAABB->Extents = _vScale;
 		m_vScale = _vScale;
 		break;
 	case TYPE_OBB:
 		m_spOBB_Original->Extents = _vScale;
-		m_spOBB->Extents = _vScale;
 		m_vScale = _vScale;
 		break;
 	case TYPE_SPHERE:
 		m_spSphere_Original->Radius = _vScale.x;
-		m_spSphere->Radius = _vScale.x;
 		m_vScale = { _vScale.x, _vScale.x, _vScale.x };
 		break;
 	}
@@ -136,17 +104,15 @@ void UCollider::SetTranslate(const _float3& _vTranslate)
 	{
 	case TYPE_AABB:
 		m_spAABB_Original->Center = _vTranslate;
-		m_spAABB->Center = _vTranslate;
 		break;
 	case TYPE_OBB:
 		m_spOBB_Original->Center = _vTranslate;
-		m_spOBB->Center = _vTranslate;
 		break;
 	case TYPE_SPHERE:
 		m_spSphere_Original->Center = _vTranslate;
-		m_spSphere->Center = _vTranslate;
 		break;
 	}
+	m_vTranslate = _vTranslate;
 }
 
 void UCollider::SetTransform(const _float3& _vPos, const _float4& _vQuaternion)
@@ -194,8 +160,33 @@ void UCollider::SetTransform(CSHPTRREF<UTransform> _spTransform)
 	}
 }
 
+void UCollider::SetTransform(const _float4x4& _Matrix)
+{
+	switch (m_eType)
+	{
+	case TYPE_AABB:
+		m_mTransformMatrix = _float4x4::Identity;
+		m_mTransformMatrix.Set_Pos(_Matrix.Get_Pos());
+		m_spAABB_Original->Transform(*m_spAABB.get(), m_mTransformMatrix);
+		break;
+	case TYPE_OBB:
+		m_mTransformMatrix = XMMatrixRotationQuaternion(DirectX::XMQuaternionRotationMatrix(_Matrix));
+		m_mTransformMatrix.Set_Pos(_Matrix.Get_Pos());
+		m_spOBB_Original->Transform(*m_spOBB.get(), m_mTransformMatrix);
+		break;
+	case TYPE_SPHERE:
+		m_mTransformMatrix = XMMatrixRotationQuaternion(DirectX::XMQuaternionRotationMatrix(_Matrix));
+		m_mTransformMatrix.Set_Pos(_Matrix.Get_Pos());
+		m_spSphere_Original->Transform(*m_spSphere.get(), m_mTransformMatrix);
+		break;
+	}
+}
+
 void UCollider::Free()
 {
+#ifdef _USE_DEBUGGING
+	m_spDebugDrawPawn.reset();
+#endif
 }
 
 
@@ -346,5 +337,9 @@ void UCollider::AddRenderer(RENDERID _eID)
 		}
 		m_spDebugDrawPawn->AddRenderer(_eID);
 	}
+}
+void UCollider::ChangeColliderColor(const _float3& _vColor)
+{
+	m_spDebugDrawPawn->SetColor(_vColor);
 }
 #endif

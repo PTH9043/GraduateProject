@@ -510,28 +510,23 @@ namespace Engine {
 		_bool IsPass(const _double& _dTimeValue);
 	}ANIMFASTSECTION;
 
-	typedef struct  tagAnimClipSection
-	{
-		_float			fChange = 0.f;
-		_float			fEndValue = 0.f;
-		_wstring		wstrName{ L"" };
-		_bool IsPass(const _wstring& _wstrName, const _double& _dTimeValue, const _double& _dSupTime);
-		_bool IsBetween(const _wstring& _wstrName, const _double& _dTimeValue);
-	}ANIMCLIPSECTION;
-
 #pragma endregion ANIMATIONFASTSECTION
 
-#pragma region BUDLECOMMANDLIST 
+#pragma region SOUND 
 
-	typedef struct tagBundCmdGroup
-	{
-		Microsoft::WRL::ComPtr<Dx12GraphicsCommandList>	  cpBundleCmdList{ nullptr };
-		Microsoft::WRL::ComPtr<Dx12CommandAllocator>		  cpAllocator{ nullptr };
-	}BUNDLECMDGROUP;
+	struct SOUNDDESC {
+		SOUNDTYPE			SoundType;
+		_float						fVolume;
 
-#pragma endregion BUDLECOMMANDLIST
+		SOUNDDESC() : SoundType{ SOUNDTYPE::SOUND_END }, fVolume{ 0.f } { }
+		SOUNDDESC(SOUNDTYPE _SoundType, _float _fVolume) : SoundType{ _SoundType },
+			fVolume{ _fVolume } {}
+	};
+
+#pragma endregion SOUND
 
 #pragma region ANIMEVENTTYPE
+
 
 	/*
 	@ Date: 2024-02-10, Writer: 박태현
@@ -539,40 +534,13 @@ namespace Engine {
 	- 애니메이션 이벤트 구조체의 상위 구조체
 	*/
 	struct ANIMEVENTDESC abstract {
-	private:
-		// Key가 눌릴 함수를 등록할 변수
-		MKEVENTFUNC		MkEventFunc;
-	public:  
-		_bool							isEventActive;
-		_ubyte						ubInputKey;
-		MKEVENTTYPE			MkEventType;
-		KEYPRESSTYPE		KeyPressType;
-		DIMOUSEBUTTON	MouseButtonType;
+	public:
+		_bool							isActiveEvent;
+		_wstring						wstrEventTrigger;
 
-		ANIMEVENTDESC() : isEventActive{ false }, ubInputKey{ 146 }, MkEventType{ MKEVENTTYPE::MK_END },
-			KeyPressType{ KEYPRESSTYPE::KEY_END }, MouseButtonType{ DIMOUSEBUTTON::DIMB_WHEEL }, MkEventFunc{ IsEmptyFunc } { }
-
-		void RegisterEventFunc();
-		// Empty일 경우 그냥 true 리턴
-		_bool IsMousekeyboardFunc() { return MkEventFunc(ubInputKey); }
-		_char* SaveLoadPointer();
-		static size_t GetEventFuncSize() { return sizeof(MKEVENTFUNC); }
-		void Reset();
-	private:
-		static _bool IsMouseLeftDown(_ubyte _ubInputKey);
-		static _bool IsMouseRightDown(_ubyte _ubInputKey);
-		static _bool IsMouseLeftUp(_ubyte _ubInputKey);
-		static _bool IsMouseRightUp(_ubyte _ubInputKey);
-		static _bool IsMouseLeftPress(_ubyte _ubInputKey);
-		static _bool IsMouseRightPress(_ubyte _ubInputKey);
-
-
-		static _bool IsKeyboardUp(_ubyte _ubInputKey);
-		static _bool IsKeyboardDown(_ubyte _ubInputKey);
-		static _bool IsKeyboardPressing(_ubyte _ubInputKey);
-
-		static _bool IsEmptyFunc(_ubyte _ubInputKey) { return true; }
+		ANIMEVENTDESC() : wstrEventTrigger{ L"" }, isActiveEvent{ false } { wstrEventTrigger.resize(MAX_BUFFER_LENGTH); }
 	};
+
 
 	/*
 	@ Date: 2024-02-10, Writer: 박태현
@@ -585,7 +553,7 @@ namespace Engine {
 
 		ANIMEVENTSECTIONDESC() : dStartTime{0.0}, dEndTime{0.0} {}
 
-		_bool IsAnimEventActive(const _double& _dTimeAcc);
+		_bool IsAnimEventActive(const _double& _dTimeAcc) const;
 	};
 	/*
 	@ Date: 2024-02-10, Writer: 박태현
@@ -597,7 +565,7 @@ namespace Engine {
 
 		ANIMOCURRESDESC() : dAnimOccursTime{ 0.0 } {}
 
-		bool IsAnimOcurrs(const _double& _dTimeAcc);
+		bool IsAnimOcurrs(const _double& _dTimeAcc) const;
 	};
 	/*
 	@ Date: 2024-02-10, Writer: 박태현
@@ -622,6 +590,35 @@ namespace Engine {
 			const _double& _dNextAnimTimeAcc) :
 			iNextAnimIndex{ _NextAnimIndex }, fSupplyAnimValue{ _SupplyAnimValue }, dNextAnimTimeAcc{ _dNextAnimTimeAcc } {}
 	};
+	/*
+	@ Date: 2024-02-21, Writer: 박태현
+	@ Explain
+	-  애니메이션 특정 구역에 Collider를 붙이기 위한 구조체이다. 
+	*/
+	struct ANIMCOLLIDERDESC : public ANIMOTHEREVENTDESC {
+		_wstring										wstrBoneName;
+		_int												iColliderType;
 
+		SHPTR<class UCollider>			spCollider;
+		SHPTR<class UBoneNode>	spBoneNode;
+
+		ANIMCOLLIDERDESC() : wstrBoneName{ L"" }, iColliderType{ 0 },
+			spCollider{ nullptr }, spBoneNode{ nullptr } {}
+	};
+	/*
+	@ Date: 2024-02-21, Writer: 박태현
+	@ Explain
+	-  애니메이션 특정 구역에 Collider를 붙이기 위한 구조체이다.
+	*/
+	struct ANIMSOUNDDESC : public ANIMOTHEREVENTDESC {
+		_wstring				wstrSoundName;
+		_float3				vSoundVelocity;
+		_float					fMinSoundDistance;
+		_float					fMaxSoundDistance;
+
+		ANIMSOUNDDESC() : wstrSoundName{ L"" }, vSoundVelocity{}, fMinSoundDistance{ 0.f }, fMaxSoundDistance{ 1.f }  {}
+
+	};
 #pragma endregion ANIMEVENTTYPE
+
 }

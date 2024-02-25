@@ -1,11 +1,10 @@
 #include "EngineDefine.h"
 #include "UAnimation.h"
-#include "UChannel.h"
+#include "UAnimChannel.h"
 #include "UGameInstance.h"
 #include "UMethod.h"
-#include "AnimEventParents.h"
-#include "AnimSectionEvents.h"
 #include "AnimOccursEvents.h"
+#include "AnimSectionEvents.h"
 
 UAnimation::UAnimation() :
 	UBase(),
@@ -68,6 +67,7 @@ SHPTR<UAnimation> UAnimation::Clone(CSHPTRREF<UAnimModel> _spAnimModel)
 
 void UAnimation::Free()
 {
+	m_AnimEventContainer.clear();
 	m_Channels.clear();
 }
 
@@ -80,7 +80,7 @@ HRESULT UAnimation::NativeConstruct(CSHPTRREF<UAnimModel> _spAnimModel, const AN
 	m_Channels.reserve(m_iNumChannels);
 	for (auto& iter : _stAnimDesc.Channels)
 	{
-		SHPTR<UChannel> pChannel{ CreateNative<UChannel>(_spAnimModel, iter) };
+		SHPTR<UAnimChannel> pChannel{ CreateNative<UAnimChannel>(_spAnimModel, iter) };
 		m_Channels.push_back(pChannel);
 	}
 
@@ -141,13 +141,13 @@ void UAnimation::UpdateNextAnimTransformMatrices(const _double& _dTimeDelta, con
 	}
 }
 
-void UAnimation::TickAnimEvent(UAnimModel* _pAnimModel, const _double& _TimeDelta)
+void UAnimation::TickAnimEvent(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _TimeDelta, const _wstring& _wstrInputTrigger)
 {
 	for (auto& iter : m_AnimEventContainer)
 	{
 		for (auto& Event : iter.second)
 		{
-			Event->EventCheck(_pAnimModel, _TimeDelta, m_dTimeAcc);
+			Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, m_dTimeAcc, _wstrInputTrigger);
 		}
 	}
 }
@@ -199,7 +199,7 @@ void UAnimation::RemoveAnimEvent(CSHPTRREF<UAnimEvent> _spAnimEvent)
 Save
 ====================================================
 */
-void UAnimation::SaveAnimData(const _wstring& _wstrPath)
+void UAnimation::SaveAnimSectionData(const _wstring& _wstrPath)
 {
 	std::ofstream Saves{ _wstrPath, std::ios::binary};
 	RETURN_CHECK(!Saves, ;);
@@ -212,6 +212,47 @@ void UAnimation::SaveAnimData(const _wstring& _wstrPath)
 	{
 		Saves.write((_char*)&iter, sizeof(ANIMFASTSECTION));
 	}
+}
+
+void UAnimation::SaveAnimSectionPathIsFolder(const _wstring& _wstrPath)
+{
+	_wstring str = _wstrPath;
+	str.append(L"\\AnimSection\\");
+	if (0 != _wmkdir(str))
+	{
+		str.append(m_wstrName);
+		str.append(DEFAULT_OUTFOLDEREXTENSION);
+		SaveAnimSectionData(str);
+	}
+}
+
+void UAnimation::LoadAnimSectionData(const _wstring& _wstrPath)
+{
+	std::ifstream Read{ _wstrPath, std::ios::binary};
+	RETURN_CHECK(!Read, ;);
+
+	_uint iFastSection{ 0 };
+	Read.read((_char*)&m_fTotalAnimationFastValue, sizeof(_float));
+	Read.read((_char*)&iFastSection, sizeof(_uint));
+	m_AnimFastSections.resize(iFastSection);
+	Read.read((_char*)&m_AnimFastSections[0], sizeof(ANIMFASTSECTION) * iFastSection);
+}
+
+void UAnimation::LoadAnimSectionDataPathIsFolder(const _wstring& _wstrPath)
+{
+	_wstring str = _wstrPath;
+	str.append(L"\\AnimSection\\");
+	str.append(m_wstrName);
+	str.append(DEFAULT_OUTFOLDEREXTENSION);
+
+	LoadAnimSectionData(str);
+}
+
+void UAnimation::SaveAnimEventData(const _wstring& _wstrPath)
+{
+	std::ofstream Saves{ _wstrPath, std::ios::binary };
+	RETURN_CHECK(!Saves, ;);
+
 	// Anim Event save 
 	{
 		// Container Size Save 
@@ -239,29 +280,22 @@ void UAnimation::SaveAnimData(const _wstring& _wstrPath)
 	}
 }
 
-void UAnimation::SaveAnimDataPathIsFolder(const _wstring& _wstrPath)
+void UAnimation::SaveAnimEventPathIsFolder(const _wstring& _wstrPath)
 {
 	_wstring str = _wstrPath;
-	str.append(L"\\AnimData\\");
+	str.append(L"\\AnimEvent\\");
 	if (0 != _wmkdir(str))
 	{
 		str.append(m_wstrName);
 		str.append(DEFAULT_OUTFOLDEREXTENSION);
-		SaveAnimData(str);
+		SaveAnimSectionData(str);
 	}
 }
 
-void UAnimation::LoadAnimData(const _wstring& _wstrPath)
+void UAnimation::LoadAnimEventData(CSHPTRREF<UAnimModel> _spAnimModel, const _wstring& _wstrPath)
 {
-	std::ifstream Read{ _wstrPath, std::ios::binary};
+	std::ifstream Read{ _wstrPath, std::ios::binary };
 	RETURN_CHECK(!Read, ;);
-
-	_uint iFastSection{ 0 };
-	Read.read((_char*)&m_fTotalAnimationFastValue, sizeof(_float));
-	Read.read((_char*)&iFastSection, sizeof(_uint));
-	m_AnimFastSections.resize(iFastSection);
-	Read.read((_char*)&m_AnimFastSections[0], sizeof(ANIMFASTSECTION) * iFastSection);
-
 	// Anim Event Load
 	{
 		_uint iSize{ 0 };
@@ -286,43 +320,47 @@ void UAnimation::LoadAnimData(const _wstring& _wstrPath)
 			// Event save
 			for (_uint j = 0; j < EventCnt; ++j)
 			{
-				AnimEventContainer.push_back(CreateAnimEvent(EventType, Read));
+				AnimEventContainer.push_back(CreateAnimEvent(_spAnimModel, EventType, Read));
 			}
 			m_AnimEventContainer.emplace(MakePair(EventType, AnimEventContainer));
 		}
 	}
 }
 
-void UAnimation::LoadAnimDataPathIsFolder(const _wstring& _wstrPath)
+void UAnimation::LoadAnimEventDataPathIsFolder(CSHPTRREF<UAnimModel> _spAnimModel, const _wstring& _wstrPath)
 {
 	_wstring str = _wstrPath;
-	str.append(L"\\AnimData\\");
+	str.append(L"\\AnimEvent\\");
 	str.append(m_wstrName);
 	str.append(DEFAULT_OUTFOLDEREXTENSION);
 
-	LoadAnimData(str);
+	LoadAnimEventData(_spAnimModel, str);
 }
 
-SHPTR<UAnimEvent> UAnimation::CreateAnimEvent(ANIMEVENTTYPE _AnimEventType, std::ifstream& _read)
+
+SHPTR<UAnimEvent> UAnimation::CreateAnimEvent(CSHPTRREF<UAnimModel> _spAnimModel, ANIMEVENTTYPE _AnimEventType, std::ifstream& _read)
 {
 	SHPTR<UAnimEvent> spAnimEvent{ nullptr };
 	switch (_AnimEventType)
 	{
-	case ANIMEVENTTYPE::ANIMEVENT_ANIMCHANGESBETWEEN:
-		spAnimEvent = Create< UAnimChangeBetweenEvent>(_read);
+	case ANIMEVENT_CAMERA:
 		break;
-	case ANIMEVENTTYPE::ANIMEVENT_ANIMOCCURSTIMEPASS:
-		spAnimEvent = Create< UAnimOccursTimePassEvent>(_read);
+	case ANIMEVENT_ANIMCHANGESBETWEEN:
+		spAnimEvent = Create< UAnimChangeBetweenEvent>(_spAnimModel, _read);
 		break;
-	case ANIMEVENTTYPE::ANIMEVENT_CAMERA:
+	case ANIMEVENT_COLLIDER:
+		spAnimEvent = Create<UAnimColliderEvent>(_spAnimModel, _read);
 		break;
-	case ANIMEVENTTYPE::ANIMEVENT_COLLIDER:
+	case ANIMEVENT_EFFECT:
+
 		break;
-	case ANIMEVENTTYPE::ANIMEVENT_EFFECT:
+	case ANIMEVENT_OBJACTIVE:
+
 		break;
-	case ANIMEVENTTYPE::ANIMEVENT_OBJACTIVE:
+	case ANIMEVENT_ANIMOCCURSTIMEPASS:
+		spAnimEvent = Create< UAnimOccursTimePassEvent>(_spAnimModel, _read);
 		break;
-	case ANIMEVENTTYPE::ANIMEVENT_SOUND:
+	case ANIMEVENT_SOUND:
 		break;
 	}
 	return std::move(spAnimEvent);

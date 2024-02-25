@@ -42,10 +42,9 @@ private:
 private:
 	void MakeAnimEvent();
 
-	void AnimChangesBetweenShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFlags _flags,  const VECTOR<SHPTR<UAnimEvent>>& _AnimEvent);
-	void AnimOccursTimePassShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFlags _flags, const VECTOR<SHPTR<UAnimEvent>>& _AnimEvent);
-	// 공통된 ImGui 창들을 여기에 기입 (키보드, 마우스 입력에 관한 ImGui)
-	void AnimInputShow(ANIMEVENTDESC* _pEvenetDesc, const _string& _strIndex);
+	void AnimSectionShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFlags _flags,  const VECTOR<SHPTR<UAnimEvent>>& _AnimEvent);
+	void AnimOccursShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFlags _flags, const VECTOR<SHPTR<UAnimEvent>>& _AnimEvent);
+	void AnimColliderShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFlags _flags, const VECTOR<SHPTR<UAnimEvent>>& _AnimEvent);
 private:
 	MAINDESC												m_stMainDesc;
 	DOCKDESC											m_stAnimModelSelectDesc;
@@ -61,16 +60,6 @@ private:
 	SHPTR<UAnimation>							m_spSelectAnim;
 	_int															m_iSelectAnimEvent;
 	_int															m_AnimMaxTagCount;
-
-	static constexpr	_int							 KEYPRESSTAG_CNT{ 4 };
-	static constexpr	_int							 KEYBOARDTAG_CNT{ 145 };
-	static constexpr  _int							 MOUSETAG_CNT{ 3 };
-	static constexpr	_int							 MKTAG_CNT{ 3 };
-
-	static const _char*								KEYPRESSTAG[];
-	static const _char*								KEYTAG[];
-	static const _char*								MOUSETAG[];
-	static const _char*								MKTAG[];
 
 	static 	const _char*								s_AnimTags[1000];
 };

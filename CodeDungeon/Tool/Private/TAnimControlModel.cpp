@@ -5,21 +5,27 @@
 #include "UShader.h"
 #include "UMethod.h"
 #include "UAnimation.h"
+#include "UTexGroup.h"
 
 TAnimControlModel::TAnimControlModel(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer,
 	const CLONETYPE& _eCloneType) : 
 	UPawn(_spDevice, _wstrLayer, _eCloneType), m_spModel{nullptr}, m_spModelFolder{nullptr}, m_spCurAnimation{nullptr},
 	m_isAnimationStop{false}, m_fAnimTimeAcc{0.f}, m_fTotalAnimFastvalue{1.f},
-	m_isAnimEventActive{false}
+	m_isAnimEventActive{false},
+	m_wstrImguiModifyInputTrigger{L""}, 
+	m_wstrInputTrigger{L""}
 {
 }
 
 TAnimControlModel::TAnimControlModel(const TAnimControlModel& _rhs) : UPawn(_rhs),
 m_spModel{ nullptr }, m_spModelFolder{ nullptr }, m_spCurAnimation{ nullptr }, 
 m_isAnimationStop{ false }, m_fAnimTimeAcc{ 0.f }, m_fTotalAnimFastvalue{ 1.f },
-m_isAnimEventActive{ false }
+m_isAnimEventActive{ false },
+m_wstrImguiModifyInputTrigger{ L"" },
+m_wstrInputTrigger{ L"" }
 {
 }
+
 
 void TAnimControlModel::Free()
 {
@@ -35,7 +41,7 @@ HRESULT TAnimControlModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_vecDatas), E_FAIL);
 	AddShader(PROTO_RES_ANIMMODELSHADER, RES_SHADER);
 	GetTransform()->SetScale({ 0.05f, 0.05f, 0.05f });
-
+	m_wstrImguiModifyInputTrigger.resize(MAX_BUFFER_LENGTH);
 	return S_OK;
 }
 
@@ -108,6 +114,8 @@ void TAnimControlModel::SelectAnimation()
 		}
 		ImGui::EndListBox();
 	}
+
+
 }
 
 void TAnimControlModel::ModifyAnimation()
@@ -135,10 +143,18 @@ void TAnimControlModel::ModifyAnimation()
 			{
 				m_spModel->OnShowOriginAnimation();
 			}
-
-
 			ImGui::SliderFloat("TotalFastValue", &m_fTotalAnimFastvalue, 0, 100);
 			isClicked = ImGui::SliderFloat("DeltaTime", &m_fAnimTimeAcc, 0.f, AnimDuration);
+			// Input Trigger
+			{
+				_string str = UMethod::ConvertWToS(m_wstrImguiModifyInputTrigger);
+				ImGui::InputText("##InputTrigger", &str[0], MAX_BUFFER_LENGTH);
+				m_wstrImguiModifyInputTrigger = UMethod::ConvertSToW(str);
+				if (true == ImGui::Button("SetTrigger")) {
+					m_wstrInputTrigger = m_wstrImguiModifyInputTrigger;
+				}
+			}
+
 			if (true == isClicked) {
 				m_isAnimationStop = isClicked;
 			}
@@ -170,13 +186,13 @@ void TAnimControlModel::ModifyAnimation()
 						m_AnimFastSections.clear();
 					}
 					if (ImGui::Button("LoadSection")) {
-						m_spCurAnimation->LoadAnimDataPathIsFolder(m_spModelFolder->wstrPath);
+						m_spCurAnimation->LoadAnimSectionDataPathIsFolder(m_spModelFolder->wstrPath);
 					}
 					ImGui::SameLine();
 					if (ImGui::Button("Save FastSection"))
 					{
 						m_spCurAnimation->UpdateAnimFastSections(m_fTotalAnimFastvalue, m_AnimFastSections);
-						m_spCurAnimation->SaveAnimDataPathIsFolder(m_spModelFolder->wstrPath);
+						m_spCurAnimation->SaveAnimSectionPathIsFolder(m_spModelFolder->wstrPath);
 					}
 					// Options
 					static ImGuiTableFlags flags = ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Sortable | ImGuiTableFlags_SortMulti
@@ -241,12 +257,15 @@ void TAnimControlModel::TickActive(const _double& _dTimeDelta)
 		{
 			if (false == m_isAnimationStop)
 			{
-				m_spModel->TickAnimAndEvent(GetTransform(), _dTimeDelta);
+				m_spModel->TickEvent(this, m_wstrInputTrigger, _dTimeDelta);
+				m_spModel->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
 			}
 			else
 			{
-				m_spModel->TickAnimToTimAccAndEvent(GetTransform(), _dTimeDelta, static_cast<_double>(m_fAnimTimeAcc));
+				m_spModel->TickEvent(this, m_wstrInputTrigger, _dTimeDelta);
+				m_spModel->TickAnimToTimAccChangeTransform(GetTransform(), _dTimeDelta, static_cast<_double>(m_fAnimTimeAcc));
 			}
+			m_wstrInputTrigger = L"";
 		}
 	}
 }

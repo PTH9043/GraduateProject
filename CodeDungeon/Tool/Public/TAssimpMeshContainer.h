@@ -37,7 +37,7 @@ private:
 	_uint																	m_iMaterialIndex;
 	_uint																	m_iNumBones;
 	_uint																	m_iNumBuffers;
-	VECTOR <SHPTR<TAssimpBoneNode>>	m_vecBoneNodes;
+	VECTOR <SHPTR<TAssimpBoneNode>>	m_BoneNodeContainer;
 	_wstring																m_wstrName;
 	void* m_pVertexData;
 	VECTOR<_float2>											m_vecUVTexCoords;

@@ -3,15 +3,16 @@
 
 BEGIN(Engine)
 class UAnimModel;
-class UChannel;
+class UAnimChannel;
 class UAnimEvent;
+class UPawn;
 /*
 @ Date: 2024-02-17, Writer: 박태현
 @ Explain
 - Animation를 담는 클래스 Channel들의 VECTOR 컨테이너를 들고 있다. 
 */
 class   UAnimation : public UBase{
-	using CHANNELS = VECTOR<SHPTR<UChannel>>;
+	using CHANNELS = VECTOR<SHPTR<UAnimChannel>>;
 	using ANIMFASTSECTIONS = VECTOR<ANIMFASTSECTION>;
 	using ANIMEVENTCONTAINER = UNORMAP<ANIMEVENTTYPE, VECTOR<SHPTR<UAnimEvent>>>;
 public:
@@ -44,19 +45,24 @@ public:
 	// 다음 애니메이션으로 변경
 	void UpdateNextAnimTransformMatrices(const _double& _dTimeDelta, const _float _fSupplyValue, CSHPTRREF<UAnimation> _spAnimation);
 	// Animation Event Tick 
-	void TickAnimEvent(UAnimModel* _pAnimModel, const _double& _TimeDelta);
+	void TickAnimEvent(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _TimeDelta, const _wstring& _wstrInputTrigger);
 	void ResetData();
 	// 애니메이션 이벤트를 집어넣는 함수
 	void InsertAnimEvent(ANIMEVENTTYPE _AnimEventType, CSHPTRREF<UAnimEvent> _spAnimEvent);
 	// 애니메이션 이벤트를 제거하는 함수
 	void RemoveAnimEvent(CSHPTRREF<UAnimEvent> _spAnimEvent);
 	// Save Sections
-	void SaveAnimData(const _wstring& _wstrPath);
-	void SaveAnimDataPathIsFolder(const _wstring& _wstrPath);
-	void LoadAnimData(const _wstring& _wstrPath);
-	void LoadAnimDataPathIsFolder(const _wstring& _wstrPath);
+	void SaveAnimSectionData(const _wstring& _wstrPath);
+	void SaveAnimSectionPathIsFolder(const _wstring& _wstrPath);
+	void LoadAnimSectionData(const _wstring& _wstrPath);
+	void LoadAnimSectionDataPathIsFolder(const _wstring& _wstrPath);
+	// Save AnimEvent 
+	void SaveAnimEventData(const _wstring& _wstrPath);
+	void SaveAnimEventPathIsFolder(const _wstring& _wstrPath);
+	void LoadAnimEventData(CSHPTRREF<UAnimModel> _spAnimModel, const _wstring& _wstrPath);
+	void LoadAnimEventDataPathIsFolder(CSHPTRREF<UAnimModel> _spAnimModel, const _wstring& _wstrPath);
 private:
-	SHPTR<UAnimEvent> CreateAnimEvent(ANIMEVENTTYPE _AnimEventType, std::ifstream& _read);
+	SHPTR<UAnimEvent> CreateAnimEvent(CSHPTRREF<UAnimModel> _spAnimModel, ANIMEVENTTYPE _AnimEventType, std::ifstream& _read);
 private:
 
 	static constexpr _float	MAX_SUPPLY_VALUE{1.f};

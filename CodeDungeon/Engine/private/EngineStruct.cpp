@@ -220,207 +220,23 @@ namespace Engine {
 		return false;
 	}
 
-	_bool tagAnimClipSection::IsPass(const _wstring& _wstrName, const _double& _dTimeValue, const _double& _dSupTime)
-	{
-		if (_wstrName == wstrName)
-		{
-			if (fEndValue - _dSupTime <= _dTimeValue)
-				return true;
-		}
-		return false;
-	}
-
-	_bool tagAnimClipSection::IsBetween(const _wstring& _wstrName, const _double& _dTimeValue)
-	{
-		if (_wstrName == wstrName)
-		{
-			if (fChange <= _dTimeValue && _dTimeValue <= fEndValue)
-				return true;
-		}
-		return false;
-	}
-
 #pragma endregion ANIMSECTION 
 
-#pragma region ANIMEVENTTYPE
-
-	void ANIMEVENTDESC::RegisterEventFunc()
+	_bool ANIMEVENTSECTIONDESC::IsAnimEventActive(const _double& _dTimeAcc) const
 	{
-		switch (MkEventType)
-		{
-		case MK_KEYBOARD:
-		{
-			switch (KeyPressType)
-			{
-			case KEYPRESSTYPE::KEY_UP:
-				MkEventFunc = IsKeyboardUp;
-				break;
-			case KEYPRESSTYPE::KEY_DOWN:
-				MkEventFunc = IsKeyboardDown;
-				break;
-			case KEYPRESSTYPE::KEY_PRESSING:
-				MkEventFunc = IsKeyboardPressing;
-				break;
-			default:
-				MkEventFunc = IsEmptyFunc;
-				break;
-			}
-		}
-			break;
-		case MK_MOUSE:
-		{
-			switch (KeyPressType)
-			{
-			case KEYPRESSTYPE::KEY_UP:
-			{
-				switch (MouseButtonType)
-				{
-				case DIMOUSEBUTTON::DIMB_L:
-					MkEventFunc = IsMouseLeftUp;
-					break;
-				case DIMOUSEBUTTON::DIMB_R:
-					MkEventFunc = IsMouseRightUp;
-					break;
-				default:
-					MkEventFunc = IsEmptyFunc;
-					break;
-				}
-			}
-				break;
-			case KEYPRESSTYPE::KEY_DOWN:
-			{
-				switch (MouseButtonType)
-				{
-				case DIMOUSEBUTTON::DIMB_L:
-					MkEventFunc = IsMouseLeftDown;
-					break;
-				case DIMOUSEBUTTON::DIMB_R:
-					MkEventFunc = IsMouseRightDown;
-					break;
-				default:
-					MkEventFunc = IsEmptyFunc;
-					break;
-				}
-			}
-			break;
-			case KEYPRESSTYPE::KEY_PRESSING:
-			{
-				switch (MouseButtonType)
-				{
-				case DIMOUSEBUTTON::DIMB_L:
-					MkEventFunc = IsMouseLeftPress;
-					break;
-				case DIMOUSEBUTTON::DIMB_R:
-					MkEventFunc = IsMouseRightPress;
-					break;
-				default:
-					MkEventFunc = IsEmptyFunc;
-					break;
-				}
-			}
-				break;		
-			default:
-				MkEventFunc = IsEmptyFunc;
-				break;
-			}
-		}
-			break;
-		default:
-			MkEventFunc = IsEmptyFunc;
-			break;
-		}
-	}
-
-	_char* ANIMEVENTDESC::SaveLoadPointer()
-	{
-		_char* Pointer = reinterpret_cast<_char*>(this) + sizeof(MkEventFunc);
-		return Pointer;
-	}
-
-	void ANIMEVENTDESC::Reset()
-	{
-		isEventActive = false; 
-		ubInputKey = 145;
-		MkEventType = MKEVENTTYPE::MK_END;
-		KeyPressType = KEYPRESSTYPE::KEY_END;
-		MouseButtonType = DIMOUSEBUTTON::DIMB_WHEEL;
-		MkEventFunc = IsEmptyFunc;
-	}
-
-	_bool ANIMEVENTDESC::IsMouseLeftDown(_ubyte _ubInputKey)
-	{
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		return spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_L);
-	}
-
-	_bool ANIMEVENTDESC::IsMouseRightDown(_ubyte _ubInputKey)
-	{
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		return spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_R);
-	}
-
-	_bool ANIMEVENTDESC::IsMouseLeftUp(_ubyte _ubInputKey)
-	{
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		return spGameInstance->GetDIMBtnUp(DIMOUSEBUTTON::DIMB_L);
-	}
-
-	_bool ANIMEVENTDESC::IsMouseRightUp(_ubyte _ubInputKey)
-	{
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		return spGameInstance->GetDIMBtnUp(DIMOUSEBUTTON::DIMB_R);
-	}
-
-	_bool ANIMEVENTDESC::IsMouseLeftPress(_ubyte _ubInputKey)
-	{
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		return spGameInstance->GetDIMBtnPressing(DIMOUSEBUTTON::DIMB_L);
-	}
-
-	_bool ANIMEVENTDESC::IsMouseRightPress(_ubyte _ubInputKey)
-	{
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		return spGameInstance->GetDIMBtnPressing(DIMOUSEBUTTON::DIMB_R);
-	}
-
-	_bool ANIMEVENTDESC::IsKeyboardUp(_ubyte _ubInputKey)
-	{
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		return spGameInstance->GetDIKeyUp(_ubInputKey);
-	}
-
-	_bool ANIMEVENTDESC::IsKeyboardDown(_ubyte _ubInputKey)
-	{
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		return spGameInstance->GetDIKeyDown(_ubInputKey);
-	}
-
-	_bool ANIMEVENTDESC::IsKeyboardPressing(_ubyte _ubInputKey)
-	{
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		return spGameInstance->GetDIKeyPressing(_ubInputKey);
-	}
-
-#pragma endregion ANIMEVENTTYPE
-
-	_bool ANIMEVENTSECTIONDESC::IsAnimEventActive(const _double& _dTimeAcc)
-	{
-		isEventActive = false;
 		if (_dTimeAcc >= dStartTime && _dTimeAcc <= dEndTime)
-			isEventActive = true;
-
-		return isEventActive;
-	}
-
-	bool ANIMOCURRESDESC::IsAnimOcurrs(const _double& _dTimeAcc) {
-		isEventActive = false;
-
-		if (_dTimeAcc <= dAnimOccursTime)
 		{
-			isEventActive = true;
+			
 			return true;
 		}
 
+		return false;
+	}
+
+	bool ANIMOCURRESDESC::IsAnimOcurrs(const _double& _dTimeAcc) const {
+
+		if (_dTimeAcc <= dAnimOccursTime)
+			return true;
 		return false;
 	}
 }

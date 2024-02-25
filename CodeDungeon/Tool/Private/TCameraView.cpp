@@ -5,7 +5,8 @@ TCameraView::TCameraView(CSHPTRREF<UDevice> _spDevice) :
 	TImGuiView(_spDevice, "CameraView"),
 	m_stMainDesc{},
 	m_stCameraView{},
-	m_isInitSetting{ false }
+	m_isInitSetting{ false },
+	m_dShowDeltaTime{ 0.0 }
 {
 }
 

@@ -5,6 +5,7 @@
 BEGIN(Engine)
 class UAnimModel;
 class UAnimator;
+class UPawn;
 /*
 @ Date: 2024-02-10, Writer: 박태현
 @ Explain
@@ -18,21 +19,18 @@ public:
 	const ANIMEVENTTYPE GetAnimEventType() const { return m_AnimEventType; }
 	const ANIMEVENTCATEGORY GetAnimEventCategory() const { return m_AnimEventCategory; }
 public:
-	virtual _bool EventCheck(UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc) PURE;
+	virtual _bool EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc,
+		const _wstring& _wstrInputTrigger) PURE;
 	// AnimEventDesc를 상속받는 구조체를 리턴하는 함수
-	virtual ANIMEVENTDESC* const OutAnimEventDesc() PURE;
-	// AnimEvent를 상속받는 구조체의 값을 변경하기 위한 함수
-	virtual void ChangeAnimEventDesc(ANIMEVENTDESC* _AnimEventDesc) PURE;
+	virtual const  ANIMEVENTDESC*  OutAnimEventDesc() PURE;
 	// AnimEvent에 다른 구조체가 필요할 경우 해당 구조체의 상속을 받는 녀석들만 내보낼 수 있도록 한다.
-	virtual ANIMOTHEREVENTDESC* const OutOtherEventDesc() PURE;
-	// AnimEvent에 다른 구조체가 필요할 경우 해당 구조체의 상속을 받는 녀석들만 받을 수 있도록 한다. 
-	virtual void ChangeOtherEventDesc(ANIMOTHEREVENTDESC* _AnimOtherEventDesc) PURE;
+	virtual const ANIMOTHEREVENTDESC*  OutOtherEventDesc() PURE;
 
 	virtual void SaveEvent(std::ofstream& _save) PURE;
-	virtual void LoadEvent(std::ifstream& _load) PURE;
+	virtual void LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) PURE;
 protected:
 	// Event 상황일 때를 정의
-	virtual void EventSituation(UAnimModel* _pAnimModel, const _double& _dTimeDelta) PURE;
+	virtual void EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta) PURE;
 private:
 	virtual void Free() PURE;
 private:
@@ -57,14 +55,16 @@ protected:
 	UAnimSectionEvent(const ANIMEVENTSECTIONDESC& _AnimEventDesc, ANIMEVENTTYPE _AnimEventType);
 	DESTRUCTOR(UAnimSectionEvent)
 public:
-	virtual _bool EventCheck(UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc) override;
-	virtual ANIMEVENTDESC* const OutAnimEventDesc() override { return &m_AnimSectionDesc; }
-	virtual void ChangeAnimEventDesc(ANIMEVENTDESC* _AnimEventDesc) override;
+	virtual _bool EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc,
+		const _wstring& _wstrInputTrigger) override;
+	virtual const ANIMEVENTDESC*  OutAnimEventDesc() override { return &m_AnimSectionDesc; }
+protected: /* get set*/
+	const ANIMEVENTSECTIONDESC& GetAnimSectionDesc() const { return m_AnimSectionDesc; }
 protected:
 	// Event 상황일 때를 정의
-	virtual void EventSituation(UAnimModel* _pAnimModel, const _double& _dTimeDelta) PURE;
+	virtual void EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta) PURE;
 	virtual void SaveEvent( std::ofstream& _save) PURE;
-	virtual void LoadEvent( std::ifstream& _load) PURE;
+	virtual void LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) PURE;
 private:
 	virtual void Free() PURE;
 private:
@@ -88,14 +88,16 @@ protected:
 	UAnimOccurEvent(const ANIMOCURRESDESC& _AnimEventDesc,  ANIMEVENTTYPE _AnimEvent);
 	DESTRUCTOR(UAnimOccurEvent)
 public:
-	virtual _bool EventCheck(UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc) override;
-	virtual ANIMEVENTDESC* const OutAnimEventDesc() override { return &m_AnimOccurDesc; }
-	virtual void ChangeAnimEventDesc(ANIMEVENTDESC* _AnimEventDesc) override;
+	virtual _bool EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc,
+		const _wstring& _wstrInputTrigger) override;
+	virtual const ANIMEVENTDESC*  OutAnimEventDesc() override { return &m_AnimOccurDesc; }
+protected: /* get set*/
+	const ANIMOCURRESDESC& GetAnimOccursDesc() const { return m_AnimOccurDesc; }
 protected:
 	// Event 상황일 때를 정의
-	virtual void EventSituation(UAnimModel* _pAnimModel, const _double& _dTimeDelta) PURE;
+	virtual void EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta) PURE;
 	virtual void SaveEvent(std::ofstream& _save) PURE;
-	virtual void LoadEvent(std::ifstream& _load) PURE;
+	virtual void LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) PURE;
 private:
 	virtual void Free() PURE;
 private:

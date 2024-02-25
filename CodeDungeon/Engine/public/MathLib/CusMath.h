@@ -613,18 +613,18 @@ namespace DirectX
             Matrix operator- () const noexcept;
 
 
-            Vector3 Get_Right() { return *((Vector3*)&this->m[MATROW_RIGHT][0]); }
-            Vector3 Get_Left() { return *((Vector3*)&this->m[MATROW_RIGHT][0]) * -1.f; }
-            Vector3 Get_Up() { return *((Vector3*)&this->m[MATROW_UP][0]); }
-            Vector3 Get_Down() { return *((Vector3*)&this->m[MATROW_UP][0]) * -1.f; }
-            Vector3 Get_Look() { return *((Vector3*)&this->m[MATROW_LOOK][0]); }
-            Vector3 Get_Back() { return *((Vector3*)&this->m[MATROW_LOOK][0]) * -1.f; }
-            Vector3 Get_Pos() { return *((Vector3*)&this->m[MATROW_POS][0]); }
+            const Vector3& Get_Right() const  { return *((Vector3*)&this->m[MATROW_RIGHT][0]); }
+            const Vector3& Get_Left() const { return *((Vector3*)&this->m[MATROW_RIGHT][0]) * -1.f; }
+            const Vector3& Get_Up() const  { return *((Vector3*)&this->m[MATROW_UP][0]); }
+            const Vector3& Get_Down() const  { return *((Vector3*)&this->m[MATROW_UP][0]) * -1.f; }
+            const Vector3& Get_Look() const  { return *((Vector3*)&this->m[MATROW_LOOK][0]); }
+            const Vector3& Get_Back() const  { return *((Vector3*)&this->m[MATROW_LOOK][0]) * -1.f; }
+            const Vector3& Get_Pos() const  { return *((Vector3*)&this->m[MATROW_POS][0]); }
 
-            void Set_Right(const Vector3& _vState) {  *(Vector3*)&this->m[MATROW_RIGHT][0] = _vState; }
-            void Set_Up(const Vector3& _vState) {  *(Vector3*)&this->m[MATROW_UP][0] = _vState; }
-            void Set_Look(const Vector3& _vState) { *(Vector3*)&this->m[MATROW_LOOK][0] = _vState; }
-            void Set_Pos(const Vector3& _vState) { *(Vector3*)&this->m[MATROW_POS][0] = _vState; }
+            void Set_Right(const Vector3& _vState) const  {  *(Vector3*)&this->m[MATROW_RIGHT][0] = _vState; }
+            void Set_Up(const Vector3& _vState) const  {  *(Vector3*)&this->m[MATROW_UP][0] = _vState; }
+            void Set_Look(const Vector3& _vState) const  { *(Vector3*)&this->m[MATROW_LOOK][0] = _vState; }
+            void Set_Pos(const Vector3& _vState) const  { *(Vector3*)&this->m[MATROW_POS][0] = _vState; }
 
             // Matrix operations
             bool Decompose(Vector3& scale, Quaternion& rotation, Vector3& translation) noexcept;
@@ -703,8 +703,8 @@ namespace DirectX
             static const Matrix MatrixSetFloat4(const Vector4& _vSetVector, const MATRIXROW& _eMatrixRow, const Matrix& _Matrix) noexcept;
             static const Matrix MatrixSetFloat3(const Vector3& _vSetVector, const MATRIXROW& _eMatrixRow, const Matrix& _Matrix) noexcept;
             static const  Matrix MatrixSetScaling(const Vector3& _v3Scaling, const Matrix& _Matrix) noexcept;
-            static const  Matrix MatrixSetRotationFix(const Vector3& _vRotation, const Matrix& _Matrix)noexcept;
-            static  const Matrix MatrixSetRotationTurn(const Vector3& _vRotation, const Matrix& _Matrix)noexcept;
+            static const  void MatrixSetRotationFix(const Vector3& _vRotation,  Matrix& _Matrix)noexcept;
+            static  const void MatrixSetRotationTurn(const Vector3& _vRotation,  Matrix& _Matrix)noexcept;
             static  const Vector3 Get_Scaling(const Matrix& _Matrix)noexcept;
             static const Matrix Combine_Matrix(const Vector3& _vScale, const Vector3& _vPos, const Quaternion& _vRotation)noexcept;
             static const Matrix Combine_Matrix(const OUTMATRIX& _OutMatrix)noexcept;
@@ -718,6 +718,30 @@ namespace DirectX
 
             Matrix LookAt(const Vector3& _vPos);
             Matrix LookAt(const Vector4& _vLookAt);
+
+
+            // Move 
+            void MoveForward(const double& _dTimeDelta, const float& _fSpeed);
+            void MoveBack(const double& _dTimeDelta, const float& _fSpeed);
+            void MoveLeft(const double& _dTimeDelta, const float& _fSpeed);
+            void MoveRight(const double& _dTimeDelta, const float& _fSpeed);
+            // Move Not Y
+            void MoveForwardNotY(const double& _dTimeDelta, const float& _fSpeed);
+            void MoveBackNotY(const double& _dTimeDelta, const float& _fSpeed);
+            void MoveLeftNotY(const double& _dTimeDelta, const float& _fSpeed);
+            void MoveRightNotY(const double& _dTimeDelta, const float& _fSpeed);
+            // Translate To Pos
+            void TranslatePos(const Vector3& _vPos, const double& _dTimeDelta, const float& _fSpeed,
+                const float& _fLimitDistance = 0.1f);
+            void TranslateDir(const Vector3& _vDir, const double& _dTimeDelta, const float& _fSpeed);
+            // Translate To Pos Not Y
+            void TranslatePosNotY(const Vector3& _vPos, const double& _dTimeDelta, const float& _fSpeed,
+                const float& _fLimitDistance = 0.1f);
+            void TranslateDirNotY(const Vector3& _vDir, const double& _dTimeDelta, const float& _fSpeed);
+            // Compute Distance
+            const float ComputeDistance(const Vector3& _vPos);
+            const float ComputeDistanceSq(const Vector3& _vPos);
+
             // Constants
             static const Matrix Identity;
         };
