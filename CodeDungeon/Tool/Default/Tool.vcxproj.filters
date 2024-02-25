@@ -80,6 +80,9 @@
     <Filter Include="90.ShowModel\Map">
       <UniqueIdentifier>{f1818212-5422-46a7-88a7-96a4514354cb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.ImGui\Particle">
+      <UniqueIdentifier>{984bf7d2-3388-417d-9e3e-2065b4c40ee3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ToolDefines.h">
@@ -184,6 +187,9 @@
     <ClInclude Include="..\Public\TCameraView.h">
       <Filter>03.ImGui\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\TParticleView.h">
+      <Filter>03.ImGui\Particle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\TToolApp.cpp">
@@ -269,6 +275,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\TCameraView.cpp">
       <Filter>03.ImGui\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TParticleView.cpp">
+      <Filter>03.ImGui\Particle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

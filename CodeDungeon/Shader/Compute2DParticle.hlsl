@@ -18,6 +18,9 @@ struct GROBALPARTICLEINFO
     float fMaxSpeed;
     float fStartScaleParticle;
     float fEndScaleParticle;
+    float		fParticleThickness;
+    //===========
+    float3     fParticleDirection;
     float fPadding;
 };
 
@@ -106,9 +109,9 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
 
             // [0~1] -> [-1~1]
             float3 dir = (noise - 0.5f) * 2.f;
-
-            g_ParticleWritedata[threadIndex.x].vWorldDir = normalize(dir);
-            g_ParticleWritedata[threadIndex.x].vWorldPos = (noise.xyz - 0.5f) * 25;
+           
+            g_ParticleWritedata[threadIndex.x].vWorldDir = normalize(g_GrobalParticleInfo.fParticleDirection);
+            g_ParticleWritedata[threadIndex.x].vWorldPos = (noise.xyz - 0.5f) * g_GrobalParticleInfo.fParticleThickness;
             g_ParticleWritedata[threadIndex.x].fLifeTime = ((g_GrobalParticleInfo.fMaxLifeTime - g_GrobalParticleInfo.fMinLifeTime) * noise.x)
             + g_GrobalParticleInfo.fMinLifeTime;
             g_ParticleWritedata[threadIndex.x].fCurTime = 0.f;
@@ -130,5 +133,121 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
     }
    
 }
+
+
+//float3x3 RotationMatrix(float3 axis, float angle)
+//{
+//    axis = normalize(axis);
+//    float s = sin(angle);
+//    float c = cos(angle);
+//    float oc = 1.0f - c;
+//
+//    float3x3 rotationMatrix;
+//    rotationMatrix[0] = float3(
+//        oc * axis.x * axis.x + c,
+//        oc * axis.x * axis.y - axis.z * s,
+//        oc * axis.x * axis.z + axis.y * s
+//        );
+//    rotationMatrix[1] = float3(
+//        oc * axis.x * axis.y + axis.z * s,
+//        oc * axis.y * axis.y + c,
+//        oc * axis.y * axis.z - axis.x * s
+//        );
+//    rotationMatrix[2] = float3(
+//        oc * axis.x * axis.z - axis.y * s,
+//        oc * axis.y * axis.z + axis.x * s,
+//        oc * axis.z * axis.z + c
+//        );
+//
+//    return rotationMatrix;
+//}
+//
+//void RotateAroundAxis(float3 axis, float angle, inout float3 position)
+//{
+//    float3x3 rotationMatrix = RotationMatrix(axis, angle);
+//    position = mul(rotationMatrix, position);
+//}
+//
+//[numthreads(1024, 1, 1)]
+//void CS_Main(int3 threadIndex : SV_DispatchThreadID)
+//{
+//    if (threadIndex.x >= g_GrobalParticleInfo.iMaxCount)
+//        return;
+//    
+//    g_SharedData[0].iAddCount = g_GrobalParticleInfo.iAddCount;
+//    // 모두 한 번 기다리는 것
+//    GroupMemoryBarrierWithGroupSync();
+//
+//    if (g_ParticleWritedata[threadIndex.x].iAlive == 0)
+//    {      
+//        while (true)
+//        {
+//            int remaining = g_SharedData[0].iAddCount;
+//            if (remaining <= 0)
+//                break;
+//
+//            int expected = remaining;
+//            int desired = remaining - 1;
+//            int originalValue;
+//            // Atomic 같은 느낌 한 번에 한 번만 실행된다. 
+//            // 1인자와 2인자가 같으면 desire을 다르면 OriginValue를 넣어준다. 
+//            InterlockedCompareExchange(g_SharedData[0].iAddCount, expected, desired, originalValue);
+//
+//            if (originalValue == expected)
+//            {
+//                g_ParticleWritedata[threadIndex.x].iAlive = 1;
+//                break;
+//            }
+//        }
+//
+//        // 랜덤 부분 간단하게 추출 Noise TexTexture 이용
+//        if (g_ParticleWritedata[threadIndex.x].iAlive == 1)
+//        {
+//            float x = ((float) threadIndex.x / (float) g_GrobalParticleInfo.iMaxCount) + g_GrobalParticleInfo.fAccTime;
+//
+//            float r1 = Rand(float2(x, g_GrobalParticleInfo.fAccTime));
+//            float r2 = Rand(float2(x * g_GrobalParticleInfo.fAccTime, g_GrobalParticleInfo.fAccTime));
+//            float r3 = Rand(float2(x * g_GrobalParticleInfo.fAccTime * g_GrobalParticleInfo.fAccTime, g_GrobalParticleInfo.fAccTime * g_GrobalParticleInfo.fAccTime));
+//
+//            // [0.5~1] -> [0~1]
+//            float3 noise =
+//            {
+//                2 * r1 - 1,
+//                2 * r2 - 1,
+//                2 * r3 - 1
+//            };
+//
+//            // [0~1] -> [-1~1]
+//            float3 dir = (noise - 0.5f) * 2.f;
+//           
+//            g_ParticleWritedata[threadIndex.x].vWorldDir = normalize(g_GrobalParticleInfo.fParticleDirection);
+//            g_ParticleWritedata[threadIndex.x].vWorldPos = (noise.xyz - 0.5f) * g_GrobalParticleInfo.fParticleThickness;
+//            g_ParticleWritedata[threadIndex.x].fLifeTime = ((g_GrobalParticleInfo.fMaxLifeTime - g_GrobalParticleInfo.fMinLifeTime) * noise.x)
+//            + g_GrobalParticleInfo.fMinLifeTime;
+//            g_ParticleWritedata[threadIndex.x].fCurTime = 0.f;
+//        }
+//    }
+//    else
+//    {
+//        float rotationAngle = 10 * g_GrobalParticleInfo.fDeltaTime;
+//
+//        // 주어진 축 주위로 파티클을 회전시킵니다.
+//        RotateAroundAxis(g_ParticleWritedata[threadIndex.x].vWorldDir, rotationAngle, g_ParticleWritedata[threadIndex.x].vWorldPos);
+//
+//        // 회전된 이동 방향을 사용하여 파티클을 이동시킵니다.
+//        float ratio = g_ParticleWritedata[threadIndex.x].fCurTime / g_ParticleWritedata[threadIndex.x].fLifeTime;
+//        float speed = (g_GrobalParticleInfo.fMaxSpeed - g_GrobalParticleInfo.fMinSpeed) * ratio + g_GrobalParticleInfo.fMinSpeed;
+//        g_ParticleWritedata[threadIndex.x].vWorldPos += g_ParticleWritedata[threadIndex.x].vWorldDir * 5 * g_GrobalParticleInfo.fDeltaTime;
+//
+//        // 파티클의 수명이 다 되었을 경우 파티클을 제거합니다.
+//        if (g_ParticleWritedata[threadIndex.x].fLifeTime < g_ParticleWritedata[threadIndex.x].fCurTime)
+//        {
+//            g_ParticleWritedata[threadIndex.x].iAlive = 0;
+//            return;
+//        }
+//    }
+//   
+//}
+
 
 #endif // _COMPUTE2DPARTICLE_

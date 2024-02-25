@@ -19,6 +19,9 @@ struct GROBALPARTICLEINFO
     float fMaxSpeed;
     float fStartScaleParticle;
     float fEndScaleParticle;
+    float		fParticleThickness;
+    //===========
+    float3     fParticleDirection;
     float fPadding;
 };
 

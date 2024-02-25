@@ -12,6 +12,7 @@
 #include "TMainScene.h"
 #include "TAnimControlView.h"
 #include "TCameraView.h"
+#include "TParticleView.h"
 
 IMPLEMENT_SINGLETON(TImGuiManager)
 
@@ -142,6 +143,12 @@ HRESULT TImGuiManager::ReadyImGuiClass()
 		spCameraView->CloseImGui();
 		m_ImGuiObjectContainer.insert(std::make_pair(IMGTAG::CAMERATOOL, spCameraView));
 		m_spMainView->InsertImGuiView(spCameraView);
+	}
+	{
+		SHPTR<TParticleView> spParticleView = CreateConstructorNative<TParticleView>(m_spDevice);
+		spParticleView->CloseImGui();
+		m_ImGuiObjectContainer.insert(std::make_pair(IMGTAG::PARTICLETOOL, spParticleView));
+		m_spMainView->InsertImGuiView(spParticleView);
 	}
 	return S_OK;
 }
