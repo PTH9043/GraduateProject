@@ -16,6 +16,7 @@
 #include "UFilePathManager.h"
 #include "UNetworkManager.h"
 #include "UAudioSystemManager.h"
+#include "UCharacterManager.h"
 
 #include "URenderer.h"
 
@@ -791,9 +792,9 @@ void UGameInstance::StopSound(const _wstring& _wstrSoundName)
 	m_spAudioSystemManager->Stop(_wstrSoundName);
 }
 
-void UGameInstance::UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, const _float3& _vSoundVelocity, CSHPTRREF<UTransform> _spTransform)
+void UGameInstance::UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, const _float3& _vSoundVelocity, CSHPTRREF<UTransform> _spTargetTransform)
 {
-	m_spAudioSystemManager->UpdateSound3D(_wstrSoundName, _vSoudPos, _vSoundVelocity, _spTransform);
+	m_spAudioSystemManager->UpdateSound3D(_wstrSoundName, _vSoudPos, _vSoundVelocity, _spTargetTransform);
 }
 
 void UGameInstance::ChangeMinMaxDistance3D(const _wstring& _wstrSoundName, const _float _fMinDistance, const _float _fMaxDistance)
@@ -847,7 +848,25 @@ void UGameInstance::NetworkEnd()
 
 /*
 ==================================================
-FilePath
+NetworkManager
+==================================================
+CharacterManager
+==================================================
+*/
+
+CSHPTRREF<UCharacter> UGameInstance::GetCurrPlayer() const
+{
+	return m_spCharacterManager->GetCurrPlayer();
+}
+
+void UGameInstance::ReigsterCurrentPlayer(CSHPTRREF<UCharacter> _spCurrentPlayer)
+{
+	m_spCharacterManager->ReigsterCurrentPlayer(_spCurrentPlayer);
+}
+
+/*
+==================================================
+CharacterManager
 ==================================================
 ReadyDatas
 ==================================================

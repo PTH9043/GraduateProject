@@ -512,15 +512,18 @@ namespace Engine {
 
 #pragma endregion ANIMATIONFASTSECTION
 
-#pragma region BUDLECOMMANDLIST 
+#pragma region SOUND 
 
-	typedef struct tagBundCmdGroup
-	{
-		Microsoft::WRL::ComPtr<Dx12GraphicsCommandList>	  cpBundleCmdList{ nullptr };
-		Microsoft::WRL::ComPtr<Dx12CommandAllocator>		  cpAllocator{ nullptr };
-	}BUNDLECMDGROUP;
+	struct SOUNDDESC {
+		SOUNDTYPE			SoundType;
+		_float						fVolume;
 
-#pragma endregion BUDLECOMMANDLIST
+		SOUNDDESC() : SoundType{ SOUNDTYPE::SOUND_END }, fVolume{ 0.f } { }
+		SOUNDDESC(SOUNDTYPE _SoundType, _float _fVolume) : SoundType{ _SoundType },
+			fVolume{ _fVolume } {}
+	};
+
+#pragma endregion SOUND
 
 #pragma region ANIMEVENTTYPE
 
@@ -587,7 +590,11 @@ namespace Engine {
 			const _double& _dNextAnimTimeAcc) :
 			iNextAnimIndex{ _NextAnimIndex }, fSupplyAnimValue{ _SupplyAnimValue }, dNextAnimTimeAcc{ _dNextAnimTimeAcc } {}
 	};
-
+	/*
+	@ Date: 2024-02-21, Writer: 박태현
+	@ Explain
+	-  애니메이션 특정 구역에 Collider를 붙이기 위한 구조체이다. 
+	*/
 	struct ANIMCOLLIDERDESC : public ANIMOTHEREVENTDESC {
 		_wstring										wstrBoneName;
 		_int												iColliderType;
@@ -598,20 +605,20 @@ namespace Engine {
 		ANIMCOLLIDERDESC() : wstrBoneName{ L"" }, iColliderType{ 0 },
 			spCollider{ nullptr }, spBoneNode{ nullptr } {}
 	};
+	/*
+	@ Date: 2024-02-21, Writer: 박태현
+	@ Explain
+	-  애니메이션 특정 구역에 Collider를 붙이기 위한 구조체이다.
+	*/
+	struct ANIMSOUNDDESC : public ANIMOTHEREVENTDESC {
+		_wstring				wstrSoundName;
+		_float3				vSoundVelocity;
+		_float					fMinSoundDistance;
+		_float					fMaxSoundDistance;
 
+		ANIMSOUNDDESC() : wstrSoundName{ L"" }, vSoundVelocity{}, fMinSoundDistance{ 0.f }, fMaxSoundDistance{ 1.f }  {}
+
+	};
 #pragma endregion ANIMEVENTTYPE
 
-
-#pragma region SOUND 
-
-	struct SOUNDDESC {
-		SOUNDTYPE			SoundType;
-		_float						fVolume;
-
-		SOUNDDESC() : SoundType{ SOUNDTYPE::SOUND_END }, fVolume{ 0.f } { }
-		SOUNDDESC(SOUNDTYPE _SoundType, _float _fVolume) : SoundType{_SoundType}, 
-			fVolume{_fVolume}{}
-	};
-
-#pragma endregion SOUND
 }

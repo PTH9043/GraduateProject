@@ -90,10 +90,11 @@ void UAudioSystem::Stop(const _wstring& _wstrSoundName)
 	m_ActiveSounds.erase(spSound);
 }
 
-void UAudioSystem::UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, const _float3& _vSoundVelocity, CSHPTRREF<UTransform> _spTransform)
+void UAudioSystem::UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, 
+	const _float3& _vSoundVelocity, CSHPTRREF<UTransform> _spTargetTransform_CanNullptr)
 {
 	CSHPTRREF<USound> spSound = FindActiveSound(_wstrSoundName);
-	spSound->UpdateSound3D(_vSoudPos, _vSoundVelocity, _spTransform);
+	spSound->UpdateSound3D(_vSoudPos, _vSoundVelocity, _spTargetTransform_CanNullptr);
 }
 
 void UAudioSystem::ChangeMinMaxDistance3D(const _wstring& _wstrSoundName, const _float _fMinDistance, const _float _fMaxDistance)

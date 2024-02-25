@@ -30,7 +30,10 @@ public:
 	void PlayBGM(const _wstring& _wstrSoundName);
 	void Stop(const _wstring& _wstrSoundName);
 
-	void UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, const _float3& _vSoundVelocity, CSHPTRREF<UTransform> _spTransform);
+	void UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, const _float3& _vSoundVelocity, 
+		CSHPTRREF<UTransform> _spTargetTransform = nullptr);
+	void UpdateSound3D(const _wstring& _wstrSoundName, CSHPTRREF<UTransform> _spSoundTransform, const _float3& _vSoundVelocity,
+		CSHPTRREF<UTransform> _spTargetTransform = nullptr);
 	void ChangeMinMaxDistance3D(const _wstring& _wstrSoundName, const _float _fMinDistance, const _float _fMaxDistance);
 
 	SHPTR<USound> BringSound(const _int _Index);

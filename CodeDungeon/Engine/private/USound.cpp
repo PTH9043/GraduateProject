@@ -50,7 +50,7 @@ void USound::Stop()
 }
 
 void USound::UpdateSound3D(const _float3& _vSoudPos, const _float3& _vSoundVelocity, 
-	CSHPTRREF<UTransform> _spTransform)
+	CSHPTRREF<UTransform> _spTargetTransform_CanNullptr)
 {
 	assert(SOUND_3D != m_SoundDesc.SoundType);
 	RETURN_CHECK(nullptr == m_pChannel, ;);
@@ -60,13 +60,19 @@ void USound::UpdateSound3D(const _float3& _vSoudPos, const _float3& _vSoundVeloc
 		::memcpy(&m_SoundVelocity, &_vSoundVelocity, GetTypeSize<_float3>());
 		m_pChannel->set3DAttributes(&m_SoundPos, &m_SoundVelocity);
 	}
-	// Listener Update
+	if (nullptr == _spTargetTransform_CanNullptr)
 	{
-		::memcpy(&m_ListenerPos, &_spTransform->GetPos(), GetTypeSize<_float3>());
-		::memcpy(&m_ListenerLook, &_spTransform->GetLook(), GetTypeSize<_float3>());
-		::memcpy(&m_ListenerUp, &_spTransform->GetUp(), GetTypeSize<_float3>());
-		m_pSystem->set3DListenerAttributes(0, &m_ListenerPos, nullptr, &m_ListenerLook, &m_ListenerUp);
+		::memcpy(&m_ListenerPos, &_float3::Zero, GetTypeSize<_float3>());
+		::memcpy(&m_ListenerLook, &_float3::Forward, GetTypeSize<_float3>());
+		::memcpy(&m_ListenerUp, &_float3::Up, GetTypeSize<_float3>());
 	}
+	else
+	{
+		::memcpy(&m_ListenerPos, &_spTargetTransform_CanNullptr->GetPos(), GetTypeSize<_float3>());
+		::memcpy(&m_ListenerLook, &_spTargetTransform_CanNullptr->GetLook(), GetTypeSize<_float3>());
+		::memcpy(&m_ListenerUp, &_spTargetTransform_CanNullptr->GetUp(), GetTypeSize<_float3>());
+	}
+	m_pSystem->set3DListenerAttributes(0, &m_ListenerPos, nullptr, &m_ListenerLook, &m_ListenerUp);
 	m_pSystem->update();
 }
 
@@ -78,7 +84,8 @@ void USound::ChangeMinMaxDistance3D(const _float _fMinDistance, const _float _fM
 
 void USound::Free()
 {
-	m_pSound->release();
+	if (nullptr != m_pSound)
+		m_pSound->release();
 }
 
 /*

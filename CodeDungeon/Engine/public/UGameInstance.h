@@ -24,6 +24,7 @@ class URandomManager;
 class UThreadManager;
 class UNetworkManager;
 class UAudioSystemManager;
+class UCharacterManager;
 
 class URenderer;
 
@@ -52,6 +53,7 @@ class UNetworkBaseController;
 class UProcessedData;
 class USound;
 class UTransform;
+class UCharacter;
 
 struct PICKINGDESC;
 struct WAITCHECKACTOR;
@@ -232,7 +234,8 @@ public: /* AudioSystemManager*/
 	void SoundPlay(const _wstring& _wstrSoundName);
 	void SoundPlayBGM(const _wstring& _wstrSoundName);
 	void StopSound(const _wstring& _wstrSoundName);
-	void UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, const _float3& _vSoundVelocity, CSHPTRREF<UTransform> _spTransform);
+	void UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, const _float3& _vSoundVelocity, 
+		CSHPTRREF<UTransform> _spTargetTransform = nullptr);
 	void ChangeMinMaxDistance3D(const _wstring& _wstrSoundName, const _float _fMinDistance, const _float _fMaxDistance);
 	SHPTR<USound> BringSound(const _int _Index);
 	SHPTR<USound> BringSound(const _wstring& _wstrSoundName);
@@ -255,6 +258,9 @@ public: /* NetworkManager */
 		short size = static_cast<short>(_data.ByteSizeLong());
 		_PacketHead = PACKETHEAD{ size, _tag };
 	}
+public: /* CharacterManager*/
+	CSHPTRREF<UCharacter> GetCurrPlayer() const;
+	void ReigsterCurrentPlayer(CSHPTRREF<UCharacter> _spCurrentPlayer);
 private: /* Ready Datas */
 	HRESULT ReadyResource(const OUTPUTDATA& _stData);
 	HRESULT ReadyComp(const OUTPUTDATA& _stData);
@@ -280,6 +286,7 @@ private:
 	SHPTR<UFilePathManager>					m_spFilePathManager;
 	SHPTR< UAudioSystemManager>		m_spAudioSystemManager;
 	SHPTR< UNetworkManager>				m_spNetworkManager;
+	SHPTR<UCharacterManager>				m_spCharacterManager;
 
 	SHPTR<URenderer>								m_spRenderer;
 	//SHPTR< UFontManager>						m_spFontMananger;

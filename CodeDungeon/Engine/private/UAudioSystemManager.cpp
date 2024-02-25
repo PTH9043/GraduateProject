@@ -2,7 +2,7 @@
 #include "UAudioSystemManager.h"
 #include "UGameInstance.h"
 #include "UAudioSystem.h"
-#include "UAudioSystem.h"
+#include "UTransform.h"
 
 UAudioSystemManager::UAudioSystemManager() : m_AudioSystemContainer{}, m_pSystem { nullptr }
 {
@@ -90,12 +90,21 @@ void UAudioSystemManager::Stop(const _wstring& _wstrSoundName)
 	}
 }
 
-void UAudioSystemManager::UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, const _float3& _vSoundVelocity, CSHPTRREF<UTransform> _spTransform)
+void UAudioSystemManager::UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, const _float3& _vSoundVelocity, CSHPTRREF<UTransform> _spTargetTransform)
 {
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
-			iter->UpdateSound3D(_wstrSoundName, _vSoudPos, _vSoundVelocity, _spTransform);
+			iter->UpdateSound3D(_wstrSoundName, _vSoudPos, _vSoundVelocity, _spTargetTransform);
+	}
+}
+
+void UAudioSystemManager::UpdateSound3D(const _wstring& _wstrSoundName, CSHPTRREF<UTransform> _spSoundTransform, const _float3& _vSoundVelocity, CSHPTRREF<UTransform> _spTargetTransform)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+			iter->UpdateSound3D(_wstrSoundName, _spSoundTransform->GetPos(), _vSoundVelocity, _spTargetTransform);
 	}
 }
 

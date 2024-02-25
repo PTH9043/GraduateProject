@@ -23,8 +23,7 @@ public:
 	void Play();
 	void PlayBGM(IN FMOD::Channel** _ppChannel);
 	void Stop();
-
-	void UpdateSound3D(const _float3& _vSoudPos, const _float3& _vSoundVelocity, CSHPTRREF<UTransform> _spTransform);
+	void UpdateSound3D(const _float3& _vSoudPos, const _float3& _vSoundVelocity, CSHPTRREF<UTransform> _spTargetTransform_CanNullptr = nullptr);
 	void ChangeMinMaxDistance3D(const _float _fMinDistance, const _float _fMaxDistance);
 private:
 	virtual void Free() override;
