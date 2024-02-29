@@ -35,6 +35,9 @@ public:
 	PARTICLEPARAM* GetParticleParam() {
 		return &m_stParticleParam;
 	}
+	ComputeParticleType* GetParticleTypeParam() {
+		return &m_stParticleType;
+	}
 #ifdef _USE_IMGUI
 public:
 	virtual void ShowObjectInfo() override;
@@ -42,15 +45,18 @@ public:
 private:
 	// static 
 	static constexpr _uint										PARTICLEPARAM_SIZE{sizeof(PARTICLEPARAM)};
-	static constexpr _float									CREATE_INTERVAL{0.05f};
+	static constexpr _uint										PARTICLETYPEPARAM_SIZE{sizeof(ComputeParticleType)};
+	static constexpr _float									CREATE_INTERVAL{0.5f};
 	static constexpr _ushort								COMPUTE_MAX_INDEX{3};
 	using COMPUTECOMMANDCONTAINER = ARRAY<SHPTR<UComputeCommand>, COMPUTE_MAX_INDEX>;
 
 	_uint																m_iMaxParitcleCnt;
 	PARTICLEPARAM											m_stParticleParam;
-	PARTICLEPARAM											m_stRenderParticleParam;
-	SHPTR< UShaderConstantBuffer>			m_spUpdateParticleConstnatBuffer;
-	SHPTR< UShaderConstantBuffer>			m_spRenderParticleConstnatBuffer;
+	//PARTICLEPARAM											m_stRenderParticleParam;
+	ComputeParticleType						m_stParticleType;
+	SHPTR< UShaderConstantBuffer>			m_spComputeShaderParticleConstantBuffer;
+	SHPTR< UShaderConstantBuffer>			m_spComputeShaderTypeConstantBuffer;
+	SHPTR< UShaderConstantBuffer>			m_spGraphicsShaderParticleConstantBuffer;
 	SHPTR<UShaderStructedBuffer>			m_spParticleStructedBuffer;
 	SHPTR<UShaderStructedBuffer>			m_spComputeShaderStructedBuffer;
 	// ComputeShader

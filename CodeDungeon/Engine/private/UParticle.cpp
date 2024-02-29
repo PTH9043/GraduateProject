@@ -47,10 +47,10 @@ HRESULT UParticle::NativeConstructClone(const VOIDDATAS& _convecDatas)
 		m_spParticleSystem->SettingComputeShader(stParticleDesc.wstrParticleComputeShader);
 		AddShader(stParticleDesc.wstrParticleShader);
 
-		for (int i = 0; i < 2; i++) {
+		/*for (int i = 0; i < 2; i++) {
 			_uint iIndex=m_spTexGroup->GetTextureIndex(stParticleDesc.wstrParticleTextureName[i]);
 			m_TextureIndexContainer.insert(std::pair<_uint, SRV_REGISTER>(iIndex, SRV_REGISTER::T0));
-		}
+		}*/
 		
 		m_LifeTimer = CUSTIMER{ stParticleDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime };
 
@@ -61,11 +61,11 @@ HRESULT UParticle::NativeConstructClone(const VOIDDATAS& _convecDatas)
 
 void UParticle::TickActive(const _double& _dTimeDelta)
 {
-	if (true == m_LifeTimer.IsOver(_dTimeDelta))
+	/*if (true == m_LifeTimer.IsOver(_dTimeDelta))
 	{
 		SetActive(false);
 		m_LifeTimer.ResetTimer();
-	}
+	}*/
 
 	m_spParticleSystem->Update(_dTimeDelta);
 }

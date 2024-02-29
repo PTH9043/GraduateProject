@@ -22,7 +22,12 @@ struct GROBALPARTICLEINFO
     float		fParticleThickness;
     //===========
     float3     fParticleDirection;
-    float fPadding;
+    float		fTextureWidth;
+    //================
+    float4		fParticlePosition;
+    //================
+    float		fTextureHeight;
+    float3 fPadding;
 };
 
 struct PARTICLE

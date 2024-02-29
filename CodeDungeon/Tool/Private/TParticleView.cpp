@@ -35,23 +35,23 @@ HRESULT TParticleView::LoadResource()
 		UParticle::PARTICLEDESC tDesc;
 		tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEPARTICLE2DSHADER;
 		tDesc.wstrParticleShader = PROTO_RES_PARTICLE2DSHADER;
-		tDesc.wstrParticleTextureName[0] = L"bubble";
-		tDesc.wstrParticleTextureName[1] = L"Flare_Sparks_TexS";
+		
 
-		tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 2.f;
-		tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
-		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 5.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
+		//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 1.f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 10.f;
-		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 20.f;
-		tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.5f;
-		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 10.f;
-		tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 50.f;
-		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 300;
-		tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 0.f;
-		tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(1.f,1.f,1.f);
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 0.8f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.3f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 50.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 100.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount =1000;
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 25.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.5f,0.5f,0.5f);
 		m_spParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
 	}
-	
+	m_spParticle->GetParticleTypeParam()->fParticleType = 1;
+	m_spParticle->SetActive(true);
 	return S_OK;
 }
 
@@ -77,6 +77,7 @@ void TParticleView::RenderActive()
 	ImGui::SetNextWindowPos(m_stMainDesc.vPos, ImGuiCond_Appearing);
 	ImGui::SetNextWindowSize(m_stMainDesc.vSize, ImGuiCond_Appearing);
 	// Name, OpenPointer, MainDesc 
+	
 	ImGui::Begin(GetName().c_str(), GetOpenPointer(), m_stMainDesc.imgWindowFlags);
 	{
 		m_stMainDesc.iDockSpaceID = ImGui::GetID(GetName().c_str());
@@ -112,16 +113,15 @@ void TParticleView::ParticleView()
 	ImGui::Begin(m_stParticleView.strName.c_str(), GetOpenPointer(), m_stParticleView.imgWindowFlags);
 	{
 		ImGui::Text("ParticleView");
-		if (true == ImGui::Button("Show Particle"))
+		/*if (true == ImGui::Button("Show Particle"))
 		{
 			m_spParticle->SetActive(true);
-		}
-		float& endScale = m_spParticle->GetParticleParam()->stGlobalParticleInfo.fEndScaleParticle;
-
+		}*/
 		if (ImGui::CollapsingHeader("Particle Settings", ImGuiTreeNodeFlags_DefaultOpen)) {
+
 			if (ImGui::DragFloat("EndScale", &m_spParticle->GetParticleParam()->stGlobalParticleInfo.fEndScaleParticle, 0.5f, 1.f, 20.f, "%.2f"))
 			{
-				
+
 			}
 			if (ImGui::DragFloat("StartScale", &m_spParticle->GetParticleParam()->stGlobalParticleInfo.fStartScaleParticle, 0.5f, 1.f, 20.f, "%.2f"))
 			{
@@ -138,7 +138,7 @@ void TParticleView::ParticleView()
 			if (ImGui::DragFloat("MinSpeed", &m_spParticle->GetParticleParam()->stGlobalParticleInfo.fMinSpeed, 0.5f, 10.f, 100.f, "%.2f"))
 			{
 
-			}	
+			}
 			if (ImGui::DragFloat("DirectionX", &m_spParticle->GetParticleParam()->stGlobalParticleInfo.fParticleDirection.x, 0.01f, -1.f, 1.f, "%.2f"))
 			{
 
@@ -158,7 +158,7 @@ void TParticleView::ParticleView()
 			ImGui::Text("Particle Texture Select");
 			if (ImGui::BeginListBox("Texture List", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
 			{
-				
+
 				using TEXNAMES = UNORMAP<_wstring, _uint>;
 				TEXNAMES m_TextureNames = m_spParticle->GetTextureGroup()->GetTextureNames();
 				for (auto& Texture : m_TextureNames)
@@ -170,8 +170,26 @@ void TParticleView::ParticleView()
 				}
 				ImGui::EndListBox();
 			}
-			
+
 		}
+
+		if (true == ImGui::Button("Normal Particle"))
+		{
+			m_spParticle->GetParticleTypeParam()->fParticleType = 0;
+		
+		
+		}
+		if (true == ImGui::Button("Random Particle")) {
+			m_spParticle->GetParticleTypeParam()->fParticleType = 1;
+			m_spParticle->GetParticleParam()->stGlobalParticleInfo.fParticleThickness = 25;
+			m_spParticle->GetParticleParam()->stGlobalParticleInfo.fEndScaleParticle = 1;
+			m_spParticle->GetParticleParam()->stGlobalParticleInfo.fStartScaleParticle = 10;
+			m_spParticle->GetParticleParam()->stGlobalParticleInfo.fMinLifeTime = 0.3f;
+			m_spParticle->GetParticleParam()->stGlobalParticleInfo.fMaxLifeTime = 0.8f;
+			m_spParticle->GetParticleParam()->stGlobalParticleInfo.fMaxSpeed = 50.f;
+			m_spParticle->GetParticleParam()->stGlobalParticleInfo.fMinSpeed = 100.f;
+		}
+		
 	}
 	ImGui::End();
 }

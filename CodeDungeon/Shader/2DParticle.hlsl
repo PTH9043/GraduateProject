@@ -22,7 +22,12 @@ struct GROBALPARTICLEINFO
     float		fParticleThickness;
     //===========
     float3     fParticleDirection;
-    float fPadding;
+    float		fTextureWidth;
+    //================
+    float4		fParticlePosition;
+    //================
+    float		fTextureHeight;
+    float3 fPadding;
 };
 
 struct PARTICLE
@@ -76,10 +81,10 @@ VS_OUT VS_Main(VS_IN In)
     Out.vViewPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
     Out.vViewPos += float4(g_ParticleData[In.iInstanceID].vWorldPos, 0.f);
     
-    Out.vViewPos = Out.vViewPos;
+    
     Out.vViewPos = mul(Out.vViewPos, GetViewProjInfo().mViewMatrix);
     Out.vTexUV = In.vTexUV;
-    
+    Out.iInstanceID = In.iInstanceID;
     return Out;
 }
 

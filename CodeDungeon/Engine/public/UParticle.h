@@ -16,6 +16,7 @@ public:
 		_wstring						 wstrParticleTextureName[2];
 		PARTICLEPARAM		ParticleParam;
 	};
+
 	struct PARTICLELOADATA
 	{
 		_wstring wstrParticleLoadPath;
@@ -52,6 +53,7 @@ public:
 	void SetTexture(_uint _index);
 	virtual void ShowObjectInfo() override;
 	PARTICLEPARAM* GetParticleParam() { return m_spParticleSystem->GetParticleParam(); }
+	ComputeParticleType* GetParticleTypeParam() { return m_spParticleSystem->GetParticleTypeParam(); }
 #endif
 private:
 	SHPTR<UTexGroup>				m_spTexGroup;
