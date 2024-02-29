@@ -14,7 +14,7 @@ USound::USound(FMOD::System* _pSystem, const _wstring& _wstrSoundPath, _int _Sou
 	assert(FMOD_OK == Result);
 }
 
-void USound::Tick(UAudioSystem* _pAudioSystem)
+void USound::Tick()
 {
 	RETURN_CHECK(nullptr == m_pChannel, ;);
 	m_pChannel->isPlaying(&m_isSoundPlay);
@@ -29,7 +29,6 @@ void USound::Play()
 	Stop();
 	m_pSystem->playSound(m_pSound, nullptr, false, &m_pChannel);
 	m_pChannel->setVolume(m_SoundDesc.fVolume);
-	m_SoundDesc.SoundType = SOUND_3D;
 }
 
 void USound::PlayBGM(IN FMOD::Channel** _ppChannel)
@@ -39,7 +38,6 @@ void USound::PlayBGM(IN FMOD::Channel** _ppChannel)
 	(*_ppChannel)->setMode(FMOD_LOOP_NORMAL);
 	(*_ppChannel)->setVolume(m_SoundDesc.fVolume);
 	m_pSystem->update();
-	m_SoundDesc.SoundType = SOUND_BACKGROUND;
 }
 
 void USound::Stop()
@@ -59,7 +57,7 @@ void USound::UpdateVolume(const _float _fVolume)
 void USound::UpdateSound3D(const _float3& _vSoudPos, const _float3& _vSoundVelocity, 
 	CSHPTRREF<UTransform> _spTargetTransform_CanNullptr)
 {
-	assert(SOUND_3D != m_SoundDesc.SoundType);
+	assert(SOUND_GAME != m_SoundDesc.SoundType);
 	RETURN_CHECK(nullptr == m_pChannel, ;);
 	// Sound Pos, Velocity Update
 	{
@@ -83,9 +81,14 @@ void USound::UpdateSound3D(const _float3& _vSoudPos, const _float3& _vSoundVeloc
 	m_pSystem->update();
 }
 
+void USound::UpdateSound3D(CSHPTRREF<UTransform> _spSelfTransform, const _float3& _vSoundVelocity, CSHPTRREF<UTransform> _spTargetTransform_CanNullptr)
+{
+	assert(nullptr != _spSelfTransform);
+	UpdateSound3D(_spSelfTransform->GetPos(), _vSoundVelocity, _spTargetTransform_CanNullptr);
+}
+
 void USound::ChangeMinMaxDistance3D(const _float _fMinDistance, const _float _fMaxDistance)
 {
-	assert(SOUND_3D != m_SoundDesc.SoundType);
 	m_pSound->set3DMinMaxDistance(_fMinDistance, _fMaxDistance);
 }
 

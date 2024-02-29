@@ -226,7 +226,6 @@ namespace Engine {
 	{
 		if (_dTimeAcc >= dStartTime && _dTimeAcc <= dEndTime)
 		{
-			
 			return true;
 		}
 
@@ -235,7 +234,7 @@ namespace Engine {
 
 	bool ANIMOCURRESDESC::IsAnimOcurrs(const _double& _dTimeAcc) const {
 
-		if (_dTimeAcc <= dAnimOccursTime)
+		if (_dTimeAcc >= dAnimOccursTime)
 			return true;
 		return false;
 	}

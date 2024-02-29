@@ -51,6 +51,8 @@ public:
 	void InsertAnimEvent(ANIMEVENTTYPE _AnimEventType, CSHPTRREF<UAnimEvent> _spAnimEvent);
 	// 애니메이션 이벤트를 제거하는 함수
 	void RemoveAnimEvent(CSHPTRREF<UAnimEvent> _spAnimEvent);
+	// Remove Event
+	void RemoveAnimEvent(ANIMEVENTTYPE _AnimEventType, _int _RemoveEvent);
 	// Save Sections
 	void SaveAnimSectionData(const _wstring& _wstrPath);
 	void SaveAnimSectionPathIsFolder(const _wstring& _wstrPath);

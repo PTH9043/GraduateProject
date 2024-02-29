@@ -102,10 +102,17 @@ void UAnimColliderEvent::EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, 
 
 void UAnimColliderEvent::SaveEvent(std::ofstream& _save)
 {
-	assert(nullptr != m_AnimColliderDesc.spBoneNode && nullptr != m_AnimColliderDesc.spCollider);
+	assert(nullptr != m_AnimColliderDesc.spCollider);
 
 	__super::SaveEvent(_save);
-	UMethod::SaveString(_save, m_AnimColliderDesc.wstrBoneName);
+	if (nullptr == m_AnimColliderDesc.spBoneNode)
+	{
+		UMethod::SaveString(_save, L"");
+	}
+	else
+	{
+		UMethod::SaveString(_save, m_AnimColliderDesc.spBoneNode->GetName());
+	}
 	_save.write((_char*)&m_AnimColliderDesc.iColliderType, sizeof(_int));
 
 	UCollider::COLLIDERDESC Desc(m_AnimColliderDesc.spCollider->GetScale(), m_AnimColliderDesc.spCollider->GetTranslate());
@@ -115,14 +122,15 @@ void UAnimColliderEvent::SaveEvent(std::ofstream& _save)
 void UAnimColliderEvent::LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load)
 {
 	__super::LoadEvent(_spAnimModel, _load);
-	UMethod::ReadString(_load, m_AnimColliderDesc.wstrBoneName);
+	_wstring wstrBoneName;
+	UMethod::ReadString(_load, wstrBoneName);
 	_load.read((_char*)&m_AnimColliderDesc.iColliderType, sizeof(_int));
 
 	UCollider::COLLIDERDESC Desc;
 	_load.read((_char*)&Desc, sizeof(UCollider::COLLIDERDESC));
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	m_AnimColliderDesc.spBoneNode = _spAnimModel->FindBoneNode(m_AnimColliderDesc.wstrBoneName);
+	m_AnimColliderDesc.spBoneNode = _spAnimModel->FindBoneNode(wstrBoneName);
 	switch (m_AnimColliderDesc.iColliderType)
 	{
 	case UCollider::TYPE_AABB:
@@ -136,7 +144,7 @@ void UAnimColliderEvent::LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifst
 		break;
 	}
 
-	assert(nullptr != m_AnimColliderDesc.spBoneNode && nullptr != m_AnimColliderDesc.spCollider);
+	assert( nullptr != m_AnimColliderDesc.spCollider);
 }
 
 void UAnimColliderEvent::Free()

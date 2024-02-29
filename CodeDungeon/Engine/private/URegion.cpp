@@ -219,7 +219,7 @@ HRESULT URegion::ClearCell()
 
 _bool URegion::Load(const _wstring& _wstrPath)
 {
-	RETURN_CHECK_FAILED(nullptr == m_spNavigation, E_FAIL)
+	RETURN_CHECK(nullptr == m_spNavigation, false)
 	m_spNavigation->Load(_wstrPath.c_str());
 #ifdef _USE_DEBUGGING
 	for (auto iter : *m_spNavigation->GetCells())
@@ -235,7 +235,7 @@ _bool URegion::Load(const _wstring& _wstrPath)
 
 _bool URegion::Save(const _wstring& _wstrPath)
 {
-	RETURN_CHECK_FAILED(nullptr == m_spNavigation, E_FAIL)
+	RETURN_CHECK(nullptr == m_spNavigation, false)
 	m_spNavigation->Save(_wstrPath.c_str());
 	return S_OK;
 }

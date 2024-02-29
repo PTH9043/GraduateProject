@@ -596,13 +596,12 @@ namespace Engine {
 	-  애니메이션 특정 구역에 Collider를 붙이기 위한 구조체이다. 
 	*/
 	struct ANIMCOLLIDERDESC : public ANIMOTHEREVENTDESC {
-		_wstring										wstrBoneName;
 		_int												iColliderType;
 
 		SHPTR<class UCollider>			spCollider;
 		SHPTR<class UBoneNode>	spBoneNode;
 
-		ANIMCOLLIDERDESC() : wstrBoneName{ L"" }, iColliderType{ 0 },
+		ANIMCOLLIDERDESC() :  iColliderType{ 0 },
 			spCollider{ nullptr }, spBoneNode{ nullptr } {}
 	};
 	/*

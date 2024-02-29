@@ -10,21 +10,26 @@ class UAudioSystem;
 class USound;
 class UTransform;
 
-using AUDIOSYSTEMCONTAINER = ARRAY <SHPTR< UAudioSystem>, CLONE_MAX_SIZE>;
-
+using AUDIOSYSTEMCONTAINER = ARRAY <SHPTR< UAudioSystem>, SOUND_END>;
+/*
+@ Date: 2024-02-25, Writer: 박태현
+@ Explain
+- UAudioSystem을 관리하는 매니저 클래스
+*/
 class UAudioSystemManager final : public UBase {
 public:
 	UAudioSystemManager();
 	NO_COPY(UAudioSystemManager)
 	DESTRUCTOR(UAudioSystemManager)
 public:
+	const AUDIOSYSTEMCONTAINER& GetAudioSystemContainer() const { return m_AudioSystemContainer; }
+	SHPTR<UAudioSystem> GetAudioSystem(const SOUNDTYPE _SoundType);
+public:
 	HRESULT ReadyAudioSystemManager(UGameInstance* _pGameInstance);
-	void Tick();
-	void ClearOnceTypeData();
 
-	HRESULT CreateAudioSystemAndRegister(UGameInstance* _pGameInstance,  CLONETYPE _CloneType, const _wstring& _wstrSoundFolderPath);
-	HRESULT CreateAudioSystemAndRegister(UGameInstance* _pGameInstance, CLONETYPE _CloneType, CSHPTRREF<FILEGROUP> _spSoundFileGroup);
-	HRESULT CreateAudioSystemToFolderNameAndRegister(UGameInstance* _pGameInstance, CLONETYPE _CloneType, const _wstring& _wstrSoundFolderName);
+	HRESULT CreateAudioSystemAndRegister(UGameInstance* _pGameInstance,  SOUNDTYPE _SoundType, const _wstring& _wstrSoundFolderPath);
+	HRESULT CreateAudioSystemAndRegister(UGameInstance* _pGameInstance, SOUNDTYPE _SoundType, CSHPTRREF<FILEGROUP> _spSoundFileGroup);
+	HRESULT CreateAudioSystemToFolderNameAndRegister(UGameInstance* _pGameInstance, SOUNDTYPE _SoundType, const _wstring& _wstrSoundFolderName);
 
 	void Play(const _wstring& _wstrSoundName);
 	void Play(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);

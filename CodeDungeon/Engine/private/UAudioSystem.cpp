@@ -6,7 +6,7 @@ namespace fs = std::filesystem;
 UAudioSystem::UAudioSystem(CSHPTRREF<UDevice> _spDevice) : 
 	UResource(_spDevice), 
 	m_pSoundSystem{nullptr},m_pBGmChannel{nullptr}, 
-	m_SoundContainer{},	m_SoundOrders{}, m_ActiveSounds{}, m_RemoveSounds{},
+	m_SoundContainer{},	m_SoundOrders{}, 
 	m_spSound{nullptr}, m_spBgmSound{nullptr}
 {
 }
@@ -14,7 +14,7 @@ UAudioSystem::UAudioSystem(CSHPTRREF<UDevice> _spDevice) :
 UAudioSystem::UAudioSystem(const UAudioSystem& _rhs) 
 	: UResource(_rhs),
 	m_pSoundSystem{ nullptr }, m_pBGmChannel{ nullptr },
-	m_SoundContainer{}, m_SoundOrders{}, m_ActiveSounds{}, m_RemoveSounds{},
+	m_SoundContainer{}, m_SoundOrders{}, 
 	m_spSound{ nullptr }, m_spBgmSound{nullptr}
 {
 }
@@ -54,27 +54,12 @@ HRESULT UAudioSystem::NativeConstructClone(const VOIDDATAS& _Datas)
 	return __super::NativeConstructClone(_Datas);
 }
 
-void UAudioSystem::Tick()
-{
-	for (auto& iter : m_ActiveSounds)
-	{
-		iter->Tick(this);
-		if (false == iter->IsSoundPlay())
-			m_RemoveSounds.push_back(iter);
-	}
-
-	for (auto& iter : m_RemoveSounds)
-		m_ActiveSounds.erase(iter);
-
-	m_RemoveSounds.clear();
-}
 
 void UAudioSystem::Play(const _wstring& _wstrSoundName)
 {
 	m_spSound = BringSound(_wstrSoundName);
 	assert(nullptr != m_spSound);
 	m_spSound->Play();
-	m_ActiveSounds.insert(m_spSound);
 }
 
 void UAudioSystem::Play(const _wstring& _wstrSoundName, const _float _fVolumeUpdate)
@@ -83,7 +68,6 @@ void UAudioSystem::Play(const _wstring& _wstrSoundName, const _float _fVolumeUpd
 	assert(nullptr != m_spSound);
 	m_spSound->Play();
 	m_spSound->UpdateVolume(_fVolumeUpdate);
-	m_ActiveSounds.insert(m_spSound);
 }
 
 void UAudioSystem::PlayBGM(const _wstring& _wstrSoundName)
@@ -106,7 +90,6 @@ void UAudioSystem::Stop(const _wstring& _wstrSoundName)
 	m_spSound = BringSound(_wstrSoundName);
 	assert(nullptr != m_spSound);
 	m_spSound->Stop();
-	m_ActiveSounds.erase(m_spSound);
 }
 
 void UAudioSystem::VolumeUpdate(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate)
@@ -119,13 +102,20 @@ void UAudioSystem::VolumeUpdate(const _wstring& _wstrSoundName, const _float& _f
 void UAudioSystem::UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, 
 	const _float3& _vSoundVelocity, CSHPTRREF<UTransform> _spTargetTransform_CanNullptr)
 {
-	CSHPTRREF<USound> spSound = FindActiveSound(_wstrSoundName);
+	CSHPTRREF<USound> spSound = BringSound(_wstrSoundName);
 	spSound->UpdateSound3D(_vSoudPos, _vSoundVelocity, _spTargetTransform_CanNullptr);
+}
+
+void UAudioSystem::UpdateSound3D(const _wstring& _wstrSoundName, CSHPTRREF<UTransform> _spSelfTransform, const _float3& _vSoundVelocity,
+	CSHPTRREF<UTransform> _spTargetTransform_CanNullptr)
+{
+	CSHPTRREF<USound> spSound = BringSound(_wstrSoundName);
+	spSound->UpdateSound3D(_spSelfTransform, _vSoundVelocity, _spTargetTransform_CanNullptr);
 }
 
 void UAudioSystem::ChangeMinMaxDistance3D(const _wstring& _wstrSoundName, const _float _fMinDistance, const _float _fMaxDistance)
 {
-	CSHPTRREF<USound> spSound = FindActiveSound(_wstrSoundName);
+	CSHPTRREF<USound> spSound = BringSound(_wstrSoundName);
 	spSound->ChangeMinMaxDistance3D(_fMinDistance, _fMaxDistance);
 }
 
@@ -142,24 +132,11 @@ SHPTR<USound> UAudioSystem::BringSound(const _wstring& _wstrSoundName)
 	return m_SoundContainer[FindIter->second];
 }
 
-SHPTR<USound> UAudioSystem::FindActiveSound(const _wstring& _wstrSoundName)
+void UAudioSystem::Release()
 {
-	RETURN_CHECK(m_SoundOrders.end() == m_SoundOrders.find(_wstrSoundName), nullptr);
-	CSHPTRREF<USound> spSound = m_SoundContainer[m_SoundOrders.find(_wstrSoundName)->second];
-	const auto& FindSound = m_ActiveSounds.find(spSound);
-	RETURN_CHECK(m_ActiveSounds.end() == FindSound, nullptr);
-	return spSound;
+	for (auto& iter : m_SoundContainer)
+		iter->Free();
 }
-
-SHPTR<USound> UAudioSystem::FIndActvieSound(const _int _Index)
-{
-	RETURN_CHECK(_Index < 0 || _Index >= m_SoundContainer.size(), nullptr)
-	CSHPTRREF<USound> spSound = m_SoundContainer[_Index];
-	const auto& FindSound = m_ActiveSounds.find(spSound);
-	RETURN_CHECK(m_ActiveSounds.end() == FindSound, nullptr);
-	return spSound;
-}
-
 void UAudioSystem::LoadSound(const _wstring& _wstrSoundFolderPath)
 {
 	fs::directory_iterator end;

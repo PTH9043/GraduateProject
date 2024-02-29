@@ -5,6 +5,7 @@
 #include "UGameInstance.h"
 #include "USound.h"
 #include "UCharacter.h"
+#include "UPawn.h"
 
 UAnimOccursTimePassEvent::UAnimOccursTimePassEvent() : 
 	UAnimOccurEvent(ANIMEVENTTYPE::ANIMEVENT_ANIMOCCURSTIMEPASS)
@@ -72,15 +73,20 @@ void UAnimSoundEvent::EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, con
 {
 	if (nullptr == m_spSound)
 	{
-		RETURN_CHECK(false == m_AnimSoundDesc.wstrSoundName.empty(), ;);
+		RETURN_CHECK(true == m_AnimSoundDesc.wstrSoundName.empty(), ;);
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 		m_spSound = spGameInstance->BringSound(m_AnimSoundDesc.wstrSoundName);
+		m_spSound->ChangeMinMaxDistance3D(m_AnimSoundDesc.fMinSoundDistance, m_AnimSoundDesc.fMaxSoundDistance);
 		m_spPlayerCharacter = spGameInstance->GetCurrPlayer();
 	}
-
-	m_spSound->Play();
-	m_spSound->ChangeMinMaxDistance3D(m_AnimSoundDesc.fMinSoundDistance, m_AnimSoundDesc.fMaxSoundDistance);
-//	m_spSound->UpdateSound3D(_pPawn->GetTransform())
+	m_spSound->Tick();
+	if (false == m_spSound->IsSoundPlay()){
+		m_spSound->Play();
+	}
+	if (nullptr == m_spPlayerCharacter)
+		m_spSound->UpdateSound3D(_pPawn->GetTransform(), m_AnimSoundDesc.vSoundVelocity);
+	else
+		m_spSound->UpdateSound3D(_pPawn->GetTransform(), m_AnimSoundDesc.vSoundVelocity, m_spPlayerCharacter->GetTransform());
 }
 
 void UAnimSoundEvent::SaveEvent(std::ofstream& _save)
