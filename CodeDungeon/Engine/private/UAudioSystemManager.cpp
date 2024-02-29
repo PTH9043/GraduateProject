@@ -6,6 +6,15 @@
 
 UAudioSystemManager::UAudioSystemManager() : m_AudioSystemContainer{}, m_pSystem { nullptr }
 {
+	for (auto& iter : m_AudioSystemContainer)
+		iter = nullptr;
+}
+
+SHPTR<UAudioSystem> UAudioSystemManager::GetAudioSystem(const SOUNDTYPE _SoundType)
+{
+	RETURN_CHECK(_SoundType >= SOUND_END, nullptr);
+	const auto& iter = m_AudioSystemContainer[_SoundType];
+	return iter;
 }
 
 HRESULT UAudioSystemManager::ReadyAudioSystemManager(UGameInstance* _pGameInstance)
@@ -19,48 +28,31 @@ HRESULT UAudioSystemManager::ReadyAudioSystemManager(UGameInstance* _pGameInstan
 	return S_OK;
 }
 
-void UAudioSystemManager::Tick()
-{
-	for (auto& iter : m_AudioSystemContainer)
-	{
-		if(nullptr != iter)
-			iter->Tick();
-	}
-}
-
-void UAudioSystemManager::ClearOnceTypeData()
-{
-	_int iCloneType = static_cast<_int>(CLONETYPE::CLONE_ONCE);
-	m_AudioSystemContainer[iCloneType].reset();
-}
-
-HRESULT UAudioSystemManager::CreateAudioSystemAndRegister(UGameInstance* _pGameInstance, CLONETYPE _CloneType,
+HRESULT UAudioSystemManager::CreateAudioSystemAndRegister(UGameInstance* _pGameInstance, SOUNDTYPE _SoundType,
 	const _wstring& _wstrSoundFolderPath)
 {
-	_int iCloneType = static_cast<_int>(_CloneType);
-	RETURN_CHECK(iCloneType >= MAX_CAM_SIZE, E_FAIL);
-	assert(nullptr == m_AudioSystemContainer[iCloneType]);
+	RETURN_CHECK(_SoundType >= SOUND_END, E_FAIL);
+	assert(nullptr == m_AudioSystemContainer[_SoundType]);
 	SHPTR<UAudioSystem> spAudioSystem{ CreateConstructorNative< UAudioSystem>(_pGameInstance->GetDevice(), m_pSystem, _wstrSoundFolderPath) };
-	m_AudioSystemContainer[iCloneType] = spAudioSystem;
+	m_AudioSystemContainer[_SoundType] = spAudioSystem;
 	return S_OK;
 }
 
-HRESULT UAudioSystemManager::CreateAudioSystemAndRegister(UGameInstance* _pGameInstance, CLONETYPE _CloneType,
+HRESULT UAudioSystemManager::CreateAudioSystemAndRegister(UGameInstance* _pGameInstance, SOUNDTYPE _SoundType,
 	CSHPTRREF<FILEGROUP> _spSoundFileGroup)
 {
-	_int iCloneType = static_cast<_int>(_CloneType);
-	RETURN_CHECK(iCloneType >= MAX_CAM_SIZE, E_FAIL);
-	assert(nullptr == m_AudioSystemContainer[iCloneType]);
+	RETURN_CHECK(_SoundType >= SOUND_END, E_FAIL);
+	assert(nullptr == m_AudioSystemContainer[_SoundType]);
 	SHPTR<UAudioSystem> spAudioSystem{ CreateConstructorNative< UAudioSystem>(_pGameInstance->GetDevice(), m_pSystem, _spSoundFileGroup) };
-	m_AudioSystemContainer[iCloneType] = spAudioSystem;
+	m_AudioSystemContainer[_SoundType] = spAudioSystem;
 	return S_OK;
 }
 
-HRESULT UAudioSystemManager::CreateAudioSystemToFolderNameAndRegister(UGameInstance* _pGameInstance,  CLONETYPE _CloneType,
+HRESULT UAudioSystemManager::CreateAudioSystemToFolderNameAndRegister(UGameInstance* _pGameInstance, SOUNDTYPE _SoundType,
 	const _wstring& _wstrSoundFolderName)
 {
 	SHPTR<FILEGROUP> spAudioFolder = _pGameInstance->FindFolder(_wstrSoundFolderName);
-	return CreateAudioSystemAndRegister(_pGameInstance, _CloneType, spAudioFolder);
+	return CreateAudioSystemAndRegister(_pGameInstance, _SoundType, spAudioFolder);
 }
 
 void UAudioSystemManager::Play(const _wstring& _wstrSoundName)
@@ -69,6 +61,15 @@ void UAudioSystemManager::Play(const _wstring& _wstrSoundName)
 	{
 		if (nullptr != iter)
 			iter->Play(_wstrSoundName);
+	}
+}
+
+void UAudioSystemManager::Play(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+			iter->Play(_wstrSoundName, _fVolumeUpdate);
 	}
 }
 
@@ -81,12 +82,30 @@ void UAudioSystemManager::PlayBGM(const _wstring& _wstrSoundName)
 	}
 }
 
+void UAudioSystemManager::PlayBGM(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+			iter->PlayBGM(_wstrSoundName, _fVolumeUpdate);
+	}
+}
+
 void UAudioSystemManager::Stop(const _wstring& _wstrSoundName)
 {
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if(nullptr != iter)
 			iter->Stop(_wstrSoundName);
+	}
+}
+
+void UAudioSystemManager::VolumeUpdate(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+			iter->VolumeUpdate(_wstrSoundName, _fVolumeUpdate);
 	}
 }
 
@@ -104,7 +123,7 @@ void UAudioSystemManager::UpdateSound3D(const _wstring& _wstrSoundName, CSHPTRRE
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
-			iter->UpdateSound3D(_wstrSoundName, _spSoundTransform->GetPos(), _vSoundVelocity, _spTargetTransform);
+			iter->UpdateSound3D(_wstrSoundName, _spSoundTransform, _vSoundVelocity, _spTargetTransform);
 	}
 }
 
@@ -141,6 +160,14 @@ SHPTR<USound> UAudioSystemManager::BringSound(const _wstring& _wstrSoundName)
 
 void UAudioSystemManager::Free()
 {
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+			iter->Release();
+
+		iter.reset();
+	}
+
 	if (m_pSystem) {
 		m_pSystem->release();
 	}

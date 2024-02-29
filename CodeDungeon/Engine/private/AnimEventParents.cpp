@@ -103,11 +103,19 @@ _bool UAnimOccurEvent::EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const 
 {
 	if (m_AnimOccurDesc.IsAnimOcurrs(_dTimeAcc))
 	{
-		if (true == m_AnimOccurDesc.wstrEventTrigger.empty() || m_AnimOccurDesc.wstrEventTrigger == _wstrInputTrigger)
+		if (false == m_AnimOccurDesc.isActiveEvent)
 		{
-			EventSituation(_pPawn, _pAnimModel, _dTimeDelta);
+			if (true == m_AnimOccurDesc.wstrEventTrigger.empty() || m_AnimOccurDesc.wstrEventTrigger == _wstrInputTrigger)
+			{
+				EventSituation(_pPawn, _pAnimModel, _dTimeDelta);
+				m_AnimOccurDesc.isActiveEvent = true;
+			}
 		}
 		return true;
+	}
+	else
+	{
+		m_AnimOccurDesc.isActiveEvent = false;
 	}
 	return false;
 }

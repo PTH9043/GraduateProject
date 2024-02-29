@@ -21,7 +21,7 @@ public:
 protected:
 	void ServerTick();
 	virtual void NativePacket() PURE;
-	void RecvPacketCombine(UOverExp* _pOverExp, _llong _numBytes);
+	void CombineRecvPacket(UOverExp* _pOverExp, _llong _numBytes);
 	virtual void ProcessPacket(_char* _pPacket, PACKETHEAD _PacketHead) PURE;
 	void RecvTcpPacket();
 	/*

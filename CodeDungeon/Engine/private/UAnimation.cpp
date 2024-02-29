@@ -194,6 +194,21 @@ void UAnimation::RemoveAnimEvent(CSHPTRREF<UAnimEvent> _spAnimEvent)
 	}
 }
 
+void UAnimation::RemoveAnimEvent(ANIMEVENTTYPE _AnimEventType, _int _RemoveEvent)
+{
+	const auto& FindIter = m_AnimEventContainer.find(_AnimEventType);
+	assert(FindIter != m_AnimEventContainer.end());
+	_int Index{ 0 };
+	for (auto iter = FindIter->second.begin(); iter != FindIter->second.end(); ++iter)
+	{
+		if (Index++ == _RemoveEvent)
+		{
+			FindIter->second.erase(iter);
+			break;
+		}
+	}
+}
+
 /*
 ====================================================
 Save
@@ -288,7 +303,7 @@ void UAnimation::SaveAnimEventPathIsFolder(const _wstring& _wstrPath)
 	{
 		str.append(m_wstrName);
 		str.append(DEFAULT_OUTFOLDEREXTENSION);
-		SaveAnimSectionData(str);
+		SaveAnimEventData(str);
 	}
 }
 
@@ -361,6 +376,7 @@ SHPTR<UAnimEvent> UAnimation::CreateAnimEvent(CSHPTRREF<UAnimModel> _spAnimModel
 		spAnimEvent = Create< UAnimOccursTimePassEvent>(_spAnimModel, _read);
 		break;
 	case ANIMEVENT_SOUND:
+		spAnimEvent = Create<UAnimSoundEvent>(_spAnimModel, _read);
 		break;
 	}
 	return std::move(spAnimEvent);

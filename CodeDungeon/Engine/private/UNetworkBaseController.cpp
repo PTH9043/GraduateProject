@@ -66,7 +66,7 @@ void UNetworkBaseController::ServerTick()
 		Make::xdelete(ex_over);
 		break;
 	case OP_TCP_RECV:
-		RecvPacketCombine(ex_over, num_bytes);
+		CombineRecvPacket(ex_over, num_bytes);
 		RecvTcpPacket();
 		break;
 	}
@@ -77,7 +77,7 @@ void UNetworkBaseController::NativePacket()
 	RecvTcpPacket();
 }
 
-void UNetworkBaseController::RecvPacketCombine(UOverExp* _pOverExp, _llong _numBytes)
+void UNetworkBaseController::CombineRecvPacket(UOverExp* _pOverExp, _llong _numBytes)
 {
 	// Total Buffer에 값을 복사 
 	::memcpy(&m_TcpTotalBuffer[m_RemainBufferLength], _pOverExp->GetBufferAddress(), _numBytes);

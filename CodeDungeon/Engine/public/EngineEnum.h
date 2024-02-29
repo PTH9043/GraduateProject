@@ -26,7 +26,7 @@ namespace Engine {
 	};
 
 	enum SOUNDTYPE : _int {
-		SOUND_BACKGROUND, SOUND_2D, SOUND_3D, SOUND_END
+		SOUND_BACKGROUND, SOUND_GAME, SOUND_END
 	};
 
 	/*

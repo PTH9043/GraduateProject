@@ -60,9 +60,9 @@ struct WAITCHECKACTOR;
 
 using CLONES = UNORMAP<_wstring, SHPTR<UActorGroup>>;
 using CLONEARR = ARRAY<CLONES, CLONE_MAX_SIZE>;
+using AUDIOSYSTEMCONTAINER = ARRAY <SHPTR< class UAudioSystem>, SOUND_END>;
 
-class UGameInstance : public UBase 
-{
+class UGameInstance : public UBase  {
 	DECLARE_SINGLETON(UGameInstance)
 public:
 	UGameInstance();
@@ -70,7 +70,6 @@ public:
 public:
 	const _bool IsGamming() const { return m_isGamming; }
 	void SetGamming(const _bool _isGamming) { this->m_isGamming = _isGamming; }
-
 public:
 	/* GameInstance */
 	// Free 
@@ -228,14 +227,19 @@ public: /* FilePath Manager*/
 	VECTOR<SHPTR<FILEGROUP>> FindSameAllFolder(const _wstring& _wstrFindFolderName);
 	HRESULT LoadFirstFolder(const _wstring& _wstrFilePath);
 public: /* AudioSystemManager*/
-	HRESULT CreateAudioSystemAndRegister(CLONETYPE _CloneType, const _wstring& _wstrSoundFolderPath);
-	HRESULT CreateAudioSystemAndRegister( CLONETYPE _CloneType, CSHPTRREF<FILEGROUP> _spSoundFileGroup);
-	HRESULT CreateAudioSystemToFolderNameAndRegister(CLONETYPE _CloneType, const _wstring& _wstrSoundFolderName);
+	const AUDIOSYSTEMCONTAINER& GetAudioSystemContainer() const;
+	SHPTR<UAudioSystem> GetAudioSystem(const SOUNDTYPE _SoundType);
+	HRESULT CreateAudioSystemAndRegister(SOUNDTYPE _SoundType, const _wstring& _wstrSoundFolderPath);
+	HRESULT CreateAudioSystemAndRegister(SOUNDTYPE _SoundType, CSHPTRREF<FILEGROUP> _spSoundFileGroup);
+	HRESULT CreateAudioSystemToFolderNameAndRegister(SOUNDTYPE _SoundType, const _wstring& _wstrSoundFolderName);
 	void SoundPlay(const _wstring& _wstrSoundName);
+	void SoundPlay(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
 	void SoundPlayBGM(const _wstring& _wstrSoundName);
+	void SoundPlayBGM(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
 	void StopSound(const _wstring& _wstrSoundName);
 	void UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, const _float3& _vSoundVelocity, 
 		CSHPTRREF<UTransform> _spTargetTransform = nullptr);
+	void VolumeUpdate(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
 	void ChangeMinMaxDistance3D(const _wstring& _wstrSoundName, const _float _fMinDistance, const _float _fMaxDistance);
 	SHPTR<USound> BringSound(const _int _Index);
 	SHPTR<USound> BringSound(const _wstring& _wstrSoundName);

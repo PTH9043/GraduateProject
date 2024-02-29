@@ -57,6 +57,8 @@ private:
 	ANIMSOUNDDESC			m_AnimSoundDesc;
 	SHPTR<USound>				m_spSound;
 	SHPTR<UCharacter>		m_spPlayerCharacter;
+
+
 };
 
 END

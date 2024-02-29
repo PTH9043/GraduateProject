@@ -84,6 +84,7 @@ UGameInstance::UGameInstance() :
 	//m_spRandomManager{ Create<URandomManager>() },
 	m_spAudioSystemManager{ Create<UAudioSystemManager>() },
 	m_spNetworkManager{Create<UNetworkManager>()},
+	m_spCharacterManager{Create<UCharacterManager>()},
 	m_spRenderer{ nullptr }
 	//m_spGraphicRenderObject{ nullptr }
 {
@@ -102,6 +103,7 @@ void UGameInstance::Free()
 
 	//m_isGamming = false;
 	//m_spRandomManager.reset();
+	m_spCharacterManager.reset();
 	m_spNetworkManager.reset();
 	m_spAudioSystemManager.reset();
 	m_spFilePathManager.reset();
@@ -181,7 +183,6 @@ void UGameInstance::AwakeTick()
 	// m_spPicking->TickRayInWorldSpace(this);
 	m_spPipeLine->FrustomTick();
 	m_spRenderer->ClearRenderingData();
-	m_spAudioSystemManager->Tick();
 }
 
 void UGameInstance::Tick(const _double& _dTimeDelta)
@@ -234,7 +235,6 @@ void UGameInstance::ClearOnceTypeData()
 	m_spActorManager->ClearOnceTypeData();
 	m_spResourceManager->ClearOnceTypeData();
 	m_spPipeLine->ClearOneTypeCamera();
-	m_spAudioSystemManager->ClearOnceTypeData();
 }
 
 
@@ -753,7 +753,6 @@ HRESULT UGameInstance::LoadFirstFolder(const _wstring& _wstrFilePath)
 {
 	return m_spFilePathManager->LoadFirstFolder(_wstrFilePath);
 }
-
 /*
 ==================================================
 FilePathManager
@@ -762,19 +761,29 @@ AudioSystemManager
 ==================================================
 */
 
-HRESULT UGameInstance::CreateAudioSystemAndRegister(CLONETYPE _CloneType, const _wstring& _wstrSoundFolderPath)
+const AUDIOSYSTEMCONTAINER& UGameInstance::GetAudioSystemContainer() const
 {
-	return m_spAudioSystemManager->CreateAudioSystemAndRegister(this, _CloneType, _wstrSoundFolderPath);
+	return m_spAudioSystemManager->GetAudioSystemContainer();
 }
 
-HRESULT UGameInstance::CreateAudioSystemAndRegister(CLONETYPE _CloneType, CSHPTRREF<FILEGROUP> _spSoundFileGroup)
+SHPTR<UAudioSystem> UGameInstance::GetAudioSystem(const SOUNDTYPE _SoundType)
 {
-	return m_spAudioSystemManager->CreateAudioSystemAndRegister(this, _CloneType, _spSoundFileGroup);
+	return m_spAudioSystemManager->GetAudioSystem(_SoundType);
 }
 
-HRESULT UGameInstance::CreateAudioSystemToFolderNameAndRegister(CLONETYPE _CloneType, const _wstring& _wstrSoundFolderName)
+HRESULT UGameInstance::CreateAudioSystemAndRegister(SOUNDTYPE _SoundType, const _wstring& _wstrSoundFolderPath)
 {
-	return m_spAudioSystemManager->CreateAudioSystemToFolderNameAndRegister(this, _CloneType, _wstrSoundFolderName);
+	return m_spAudioSystemManager->CreateAudioSystemAndRegister(this, _SoundType, _wstrSoundFolderPath);
+}
+
+HRESULT UGameInstance::CreateAudioSystemAndRegister(SOUNDTYPE _SoundType, CSHPTRREF<FILEGROUP> _spSoundFileGroup)
+{
+	return m_spAudioSystemManager->CreateAudioSystemAndRegister(this, _SoundType, _spSoundFileGroup);
+}
+
+HRESULT UGameInstance::CreateAudioSystemToFolderNameAndRegister(SOUNDTYPE _SoundType, const _wstring& _wstrSoundFolderName)
+{
+	return m_spAudioSystemManager->CreateAudioSystemToFolderNameAndRegister(this, _SoundType, _wstrSoundFolderName);
 }
 
 void UGameInstance::SoundPlay(const _wstring& _wstrSoundName)
@@ -782,9 +791,19 @@ void UGameInstance::SoundPlay(const _wstring& _wstrSoundName)
 	m_spAudioSystemManager->Play(_wstrSoundName);
 }
 
+void UGameInstance::SoundPlay(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate)
+{
+	m_spAudioSystemManager->Play(_wstrSoundName, _fVolumeUpdate);
+}
+
 void UGameInstance::SoundPlayBGM(const _wstring& _wstrSoundName)
 {
 	m_spAudioSystemManager->PlayBGM(_wstrSoundName);
+}
+
+void UGameInstance::SoundPlayBGM(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate)
+{
+	m_spAudioSystemManager->PlayBGM(_wstrSoundName, _fVolumeUpdate);
 }
 
 void UGameInstance::StopSound(const _wstring& _wstrSoundName)
@@ -797,6 +816,11 @@ void UGameInstance::UpdateSound3D(const _wstring& _wstrSoundName, const _float3&
 	m_spAudioSystemManager->UpdateSound3D(_wstrSoundName, _vSoudPos, _vSoundVelocity, _spTargetTransform);
 }
 
+void UGameInstance::VolumeUpdate(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate)
+{
+	m_spAudioSystemManager->VolumeUpdate(_wstrSoundName, _fVolumeUpdate);
+}
+
 void UGameInstance::ChangeMinMaxDistance3D(const _wstring& _wstrSoundName, const _float _fMinDistance, const _float _fMaxDistance)
 {
 	m_spAudioSystemManager->ChangeMinMaxDistance3D(_wstrSoundName, _fMinDistance, _fMaxDistance);
@@ -804,12 +828,12 @@ void UGameInstance::ChangeMinMaxDistance3D(const _wstring& _wstrSoundName, const
 
 SHPTR<USound> UGameInstance::BringSound(const _int _Index)
 {
-	return SHPTR<USound>();
+	return m_spAudioSystemManager->BringSound(_Index);
 }
 
 SHPTR<USound> UGameInstance::BringSound(const _wstring& _wstrSoundName)
 {
-	return SHPTR<USound>();
+	return m_spAudioSystemManager->BringSound(_wstrSoundName);
 }
 
 /*
