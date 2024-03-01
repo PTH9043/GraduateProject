@@ -22,7 +22,7 @@ UParticleSystem::UParticleSystem(CSHPTRREF<UDevice> _spDevice) :
 	m_spComputeShaderStructedBuffer{ nullptr },
 	m_spComputeShader{ nullptr },
 	m_spComputeCommand{ nullptr },
-	m_sComputeIndex{ 0 }
+	m_sComputeIndex{ 0 }, m_iParticleAddAmount{10}, m_fCreateInterval{2.5f}
 {
 }
 
@@ -35,7 +35,7 @@ UParticleSystem::UParticleSystem(const UParticleSystem& _rhs) :
 	m_spComputeShaderStructedBuffer{ nullptr },
 	m_spComputeShader{ nullptr },
 	m_spComputeCommand{ nullptr },
-	m_sComputeIndex{ 0 }
+	m_sComputeIndex{ 0 }, m_iParticleAddAmount{ 10 }, m_fCreateInterval{ 2.5f }
 {
 }
 
@@ -100,13 +100,13 @@ void UParticleSystem::Update(const _double& _dTimeDelta)
 		//m_stParticleParam.stGlobalParticleInfo.fAccTime += m_stParticleParam.stGlobalParticleInfo.fDeltaTime;
 		m_stParticleParam.stGlobalParticleInfo.fAccTime += static_cast<_float>(_dTimeDelta);
 		_int add = 0;
-		if (CREATE_INTERVAL < m_stParticleParam.stGlobalParticleInfo.fAccTime)
+		if (m_fCreateInterval < m_stParticleParam.stGlobalParticleInfo.fAccTime)
 		{
-			m_stParticleParam.stGlobalParticleInfo.fAccTime = m_stParticleParam.stGlobalParticleInfo.fAccTime - CREATE_INTERVAL;
+			m_stParticleParam.stGlobalParticleInfo.fAccTime = m_stParticleParam.stGlobalParticleInfo.fAccTime - m_fCreateInterval;
 
 
 			m_stParticleParam.stGlobalParticleInfo.fParticlePosition = _float4(float(vdist(gen)), float(vdist(gen)), float(vdist(gen)), float(cdist(gen)));
-			add = 1000;
+			add = m_iParticleAddAmount;
 			
 		}
 		m_stParticleParam.stGlobalParticleInfo.iAddCount = add;
