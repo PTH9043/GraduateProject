@@ -169,6 +169,26 @@ void TParticleView::ParticleView()
 				ImGui::EndListBox();
 			}
 			
+			
+			
+		}
+
+		
+		_bool Default = false;
+		if (ImGui::Selectable("Set Particle Type : Default", Default)) {
+			particleType->fParticleType = 0;
+			ImGui::OpenPopup("Default Particle");
+		}
+		_bool Automatic = false;
+		if (ImGui::Selectable("Set Particle Type : Automatic", Automatic)) {
+			particleType->fParticleType = 1;
+			ImGui::OpenPopup("Automatic Particle");
+		}
+		
+		if (ImGui::BeginPopup("Default Particle")) {
+			ImGui::SeparatorText("Particle Settings");
+			ImGui::SeparatorText("Current Particle Type : Default");
+
 			if (ImGui::SliderFloat("EndScale", &particleParam->stGlobalParticleInfo.fEndScaleParticle, 1.f, 20.f, "%.2f"))
 			{
 
@@ -185,7 +205,7 @@ void TParticleView::ParticleView()
 			{
 
 			}
-			if (ImGui::SliderFloat("MinSpeed", &particleParam->stGlobalParticleInfo.fMinSpeed,  10.f, 100.f, "%.2f"))
+			if (ImGui::SliderFloat("MinSpeed", &particleParam->stGlobalParticleInfo.fMinSpeed, 10.f, 100.f, "%.2f"))
 			{
 
 			}
@@ -193,29 +213,50 @@ void TParticleView::ParticleView()
 			{
 
 			}
-			if (ImGui::SliderFloat("DirectionY", &particleParam->stGlobalParticleInfo.fParticleDirection.y,  -1.f, 1.f, "%.2f"))
+			if (ImGui::SliderFloat("DirectionY", &particleParam->stGlobalParticleInfo.fParticleDirection.y, -1.f, 1.f, "%.2f"))
 			{
 
 			}
-			if (ImGui::SliderFloat("DirectionZ", &particleParam->stGlobalParticleInfo.fParticleDirection.z,  -1.f, 1.f, "%.2f"))
+			if (ImGui::SliderFloat("DirectionZ", &particleParam->stGlobalParticleInfo.fParticleDirection.z, -1.f, 1.f, "%.2f"))
 			{
 
 			}
-			if (ImGui::SliderFloat("Thickness", &particleParam->stGlobalParticleInfo.fParticleThickness,  0.f, 50.f, "%.2f"))
+			if (ImGui::SliderFloat("Thickness", &particleParam->stGlobalParticleInfo.fParticleThickness, 0.f, 50.f, "%.2f"))
+			{
+
+			}
+			ImGui::EndPopup();
+		}
+
+		if (ImGui::BeginPopup("Automatic Particle")) {
+			ImGui::SeparatorText("Particle Settings");
+			ImGui::SeparatorText("Current Particle Type : Automatic");
+
+			if (ImGui::SliderFloat("EndScale", &particleParam->stGlobalParticleInfo.fEndScaleParticle, 1.f, 20.f, "%.2f"))
+			{
+
+			}
+			if (ImGui::SliderFloat("StartScale", &particleParam->stGlobalParticleInfo.fStartScaleParticle, 1.f, 20.f, "%.2f"))
+			{
+
+			}
+			if (ImGui::SliderFloat("MaxLifeTime", &particleParam->stGlobalParticleInfo.fMaxLifeTime, 10.f, 20.f, "%.2f"))
+			{
+
+			}
+			if (ImGui::SliderFloat("MaxSpeed", &particleParam->stGlobalParticleInfo.fMaxSpeed, 10.f, 100.f, "%.2f"))
+			{
+
+			}
+			if (ImGui::SliderFloat("MinSpeed", &particleParam->stGlobalParticleInfo.fMinSpeed, 10.f, 100.f, "%.2f"))
 			{
 
 			}
 			
-			
+			ImGui::EndPopup();
 		}
 
-		if (true == ImGui::Button("Normal Particle"))
-		{
-			particleType->fParticleType = 0;
-		
-		
-		}
-		if (true == ImGui::Button("Random Particle")) {
+	/*	if (true == ImGui::Button("Random Particle")) {
 			particleType->fParticleType = 1;
 			particleParam->stGlobalParticleInfo.fParticleThickness = 25;
 			particleParam->stGlobalParticleInfo.fEndScaleParticle = 1;
@@ -224,7 +265,7 @@ void TParticleView::ParticleView()
 			particleParam->stGlobalParticleInfo.fMaxLifeTime = 0.8f;
 			particleParam->stGlobalParticleInfo.fMaxSpeed = 50.f;
 			particleParam->stGlobalParticleInfo.fMinSpeed = 100.f;
-		}
+		}*/
 		
 	}
 	ImGui::End();
