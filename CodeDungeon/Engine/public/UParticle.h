@@ -13,8 +13,8 @@ public:
 	{
 		_wstring						 wstrParticleShader{ L"" };
 		_wstring						 wstrParticleComputeShader{L""};
-		_wstring						 wstrParticleTextureName[2];
-		PARTICLEPARAM		ParticleParam;
+		_wstring						 wstrParticleTextureName;
+		PARTICLEPARAM					ParticleParam;
 	};
 
 	struct PARTICLELOADATA

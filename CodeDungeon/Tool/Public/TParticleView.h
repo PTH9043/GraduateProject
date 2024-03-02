@@ -27,9 +27,43 @@ protected:
 private:
 	void RenderMenu();
 	void DockBuildInitSetting();
+private:
+	//Multiple Particle Setting Functions
+	void MultipleParticleView();
+	void ResizeMultipleParticleVectors(_uint _resizeAmount);
 
-	void ParticleView();
-	void SetParticle(SHPTR<UParticle> _spParticle) { m_spParticle = _spParticle; }
+	//void MultipleParticleCountSetting();
+	//void MultipleParticleTimeSetting();
+	//void MultipleParticleTexSetting();
+	//void DefaultMultipleParticleSetting();
+	//void AutomaticMultipleParticleSetting();
+
+	void LoadMultipleParticleResource();
+	void ReleaseMultipleParticleResource();
+
+	void SetMultipleParticle(SHPTR<UParticle> _spParticle, int index) { m_MultipleParticle[index] = _spParticle; }
+	_uint GetMultipleParticleSize() { return m_iMultipleParticleSize; }
+private:
+	//Single Particle Setting Functions
+	void SingleParticleView();
+	void ResizeSingleParticleVectors(_uint _resizeAmount);
+
+	void SingleParticleCountSetting();
+	void SingleParticleTimeSetting();
+	void SingleParticleTexSetting();
+	void DefaultSingleParticleSetting();
+	void AutomaticSingleParticleSetting();
+
+	void LoadSingleParticleResource();
+	void ReleaseSingleParticleResource();
+	
+	void SetSingleParticle(SHPTR<UParticle> _spParticle, int index) { m_SingleParticle[index] = _spParticle; }
+	_uint GetSingleParticleSize() { return m_iSingleParticleSize; }
+private:
+	using PARTICLES = VECTOR<SHPTR<UParticle>>;
+	using PARTICLEPARAMS = VECTOR<PARTICLEPARAM*>;
+	using PARTICLETYPES = VECTOR<ComputeParticleType*>;
+	
 private:
 	MAINDESC													m_stMainDesc;
 	DOCKDESC												m_stParticleView;
@@ -40,8 +74,19 @@ private:
 	_double														m_dShowDeltaTime;
 	_bool															m_isInitSetting;
 
-	SHPTR<UParticle>		m_spParticle;
+	
 	_bool														m_isResetParticle;
+
+	_int m_iSingleParticleSize;
+	PARTICLES m_SingleParticle;
+	PARTICLEPARAMS m_SingleParticleParam;
+	PARTICLETYPES m_SingleParicleType;
+
+	_int m_iMultipleParticleSize;
+	PARTICLES m_MultipleParticle;
+	PARTICLEPARAMS m_MultipleParticleParam;
+	PARTICLETYPES m_MultipleParicleType;
+
 };
 
 
