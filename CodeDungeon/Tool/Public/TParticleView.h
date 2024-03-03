@@ -4,6 +4,7 @@
 
 BEGIN(Engine)
 class UParticle;
+class UAnimatedParticle;
 END
 
 BEGIN(Tool)
@@ -30,7 +31,7 @@ private:
 private:
 	//Multiple Particle Setting Functions
 	void MultipleParticleView();
-	void ResizeMultipleParticleVectors(_uint _resizeAmount);
+	void ResizeMultipleParticleVector(_uint _resizeAmount);
 
 	//void MultipleParticleCountSetting();
 	//void MultipleParticleTimeSetting();
@@ -46,7 +47,7 @@ private:
 private:
 	//Single Particle Setting Functions
 	void SingleParticleView();
-	void ResizeSingleParticleVectors(_uint _resizeAmount);
+	void ResizeSingleParticleVector(_uint _resizeAmount);
 
 	void SingleParticleCountSetting();
 	void SingleParticleTimeSetting();
@@ -59,8 +60,21 @@ private:
 	
 	void SetSingleParticle(SHPTR<UParticle> _spParticle, int index) { m_SingleParticle[index] = _spParticle; }
 	_uint GetSingleParticleSize() { return m_iSingleParticleSize; }
+
+private:
+	//Anim Particle Setting Functions
+	void AnimParticleView();
+	void ResizeAnimParticleVector(_uint _resizeAmount);
+	
+	void LoadAnimParticleResource();
+	void ReleaseAnimParticleResource();
+
+	void SetAnimParticle(SHPTR<UAnimatedParticle> _spParticle, int index) { m_AnimParticle[index] = _spParticle; }
+	_uint GetAnimParticleSize() { return m_iAnimParticleSize; }
+
 private:
 	using PARTICLES = VECTOR<SHPTR<UParticle>>;
+	using ANIMPARTICLES = VECTOR<SHPTR<UAnimatedParticle>>;
 	using PARTICLEPARAMS = VECTOR<PARTICLEPARAM*>;
 	using PARTICLETYPES = VECTOR<ComputeParticleType*>;
 	
@@ -80,12 +94,18 @@ private:
 	_int m_iSingleParticleSize;
 	PARTICLES m_SingleParticle;
 	PARTICLEPARAMS m_SingleParticleParam;
-	PARTICLETYPES m_SingleParicleType;
+	PARTICLETYPES m_SingleParticleType;
 
 	_int m_iMultipleParticleSize;
 	PARTICLES m_MultipleParticle;
 	PARTICLEPARAMS m_MultipleParticleParam;
-	PARTICLETYPES m_MultipleParicleType;
+	PARTICLETYPES m_MultipleParticleType;
+
+	_int m_iAnimParticleSize;
+	ANIMPARTICLES m_AnimParticle;
+	PARTICLEPARAMS m_AnimParticleParam;
+	PARTICLETYPES m_AnimParticleType;
+
 
 };
 

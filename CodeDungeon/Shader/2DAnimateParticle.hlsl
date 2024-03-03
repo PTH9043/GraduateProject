@@ -87,11 +87,11 @@ VS_OUT VS_Main(VS_IN In)
     Out.vViewPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
     Out.vViewPos += float4(g_ParticleData[In.iInstanceID].vWorldPos, 0.f);
     
-    Out.vViewPos = Out.vViewPos;
+  
     Out.vViewPos = mul(Out.vViewPos, GetViewProjInfo().mViewMatrix);
-    Out.vViewPos = mul(Out.vViewPos, GetViewProjInfo().mProjMatrix);
+   // Out.vViewPos = mul(Out.vViewPos, GetViewProjInfo().mProjMatrix);
     Out.vTexUV = In.vTexUV;
-    
+    Out.iInstanceID = In.iInstanceID;
     return Out;
 }
 
@@ -134,10 +134,10 @@ void GS_Main(point VS_OUT input[1], inout TriangleStream<GS_OUT> outputStream)
     VIEWPROJINFO stViewProjInfo = GetViewProjInfo();
     
     // Projection Space
-    //output[0].vPosition = mul(output[0].vPosition, stViewProjInfo.mProjMatrix);
-    //output[1].vPosition = mul(output[1].vPosition, stViewProjInfo.mProjMatrix);
-    //output[2].vPosition = mul(output[2].vPosition, stViewProjInfo.mProjMatrix);
-    //output[3].vPosition = mul(output[3].vPosition, stViewProjInfo.mProjMatrix);
+    output[0].vPosition = mul(output[0].vPosition, stViewProjInfo.mProjMatrix);
+    output[1].vPosition = mul(output[1].vPosition, stViewProjInfo.mProjMatrix);
+    output[2].vPosition = mul(output[2].vPosition, stViewProjInfo.mProjMatrix);
+    output[3].vPosition = mul(output[3].vPosition, stViewProjInfo.mProjMatrix);
 
     output[0].vTexUV = float2(0.f, 0.f);
     output[1].vTexUV = float2(1.f, 0.f);
@@ -176,10 +176,10 @@ struct PS_OUT
 PS_OUT PS_Main(GS_OUT In)
 {
     PS_OUT Out = (PS_OUT) 0;
-    Out.vColor = g_Texture0.Sample(g_Sampler_Clamp, In.vTexUV);
+    Out.vColor = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV);
     
-    if(IsColorUp(Out.vColor, 0.95f))
-        discard;
+ /*   if(IsColorUp(Out.vColor, 0.95f))
+        discard;*/
     
     return Out;
 }

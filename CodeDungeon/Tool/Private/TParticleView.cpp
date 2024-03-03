@@ -2,6 +2,7 @@
 #include "TParticleView.h"
 #include "UParticle.h"
 #include "UParticleSystem.h"
+#include "UAnimatedParticle.h"
 #include "UGameInstance.h"
 #include "UTexGroup.h"
 #include "UTexture.h"
@@ -12,8 +13,9 @@ TParticleView::TParticleView(CSHPTRREF<UDevice> _spDevice) :
 	m_stMainDesc{},
 	m_stParticleView{},
 	m_isInitSetting{ false }
-	, m_SingleParticle{nullptr}, m_SingleParticleParam{nullptr}, m_SingleParicleType{nullptr}
-	, m_MultipleParticle{nullptr}, m_MultipleParticleParam{nullptr}, m_MultipleParicleType{nullptr}
+	, m_SingleParticle{nullptr}, m_SingleParticleParam{nullptr}, m_SingleParticleType{nullptr}
+	, m_MultipleParticle{nullptr}, m_MultipleParticleParam{nullptr}, m_MultipleParticleType{nullptr}
+	, m_AnimParticle{nullptr}, m_AnimParticleParam{nullptr}, m_AnimParticleType{nullptr}
 {
 }
 
@@ -30,24 +32,37 @@ HRESULT TParticleView::NativeConstruct()
 	return S_OK;
 }
 
-
-void TParticleView::ResizeSingleParticleVectors(_uint _resizeAmount)
+//================================================================
+//**** 파티클 종류별로 관리하는 컨테이너(벡터) 크기 미리 할당 ****
+//================================================================
+void TParticleView::ResizeSingleParticleVector(_uint _resizeAmount)
 {
 	m_iSingleParticleSize = _resizeAmount;
 	m_SingleParticle.resize(m_iSingleParticleSize);
 	m_SingleParticleParam.resize(m_iSingleParticleSize);
-	m_SingleParicleType.resize(m_iSingleParticleSize);
+	m_SingleParticleType.resize(m_iSingleParticleSize);
 }
 
 
-
-void TParticleView::ResizeMultipleParticleVectors(_uint _resizeAmount)
+void TParticleView::ResizeMultipleParticleVector(_uint _resizeAmount)
 {
 	m_iMultipleParticleSize = _resizeAmount;
 	m_MultipleParticle.resize(m_iMultipleParticleSize);
 	m_MultipleParticleParam.resize(m_iMultipleParticleSize);
-	m_MultipleParicleType.resize(m_iMultipleParticleSize);
+	m_MultipleParticleType.resize(m_iMultipleParticleSize);
 }
+
+void TParticleView::ResizeAnimParticleVector(_uint _resizeAmount)
+{
+	m_iAnimParticleSize = _resizeAmount;
+	m_AnimParticle.resize(m_iAnimParticleSize);
+	m_AnimParticleParam.resize(m_iAnimParticleSize);
+	m_AnimParticleType.resize(m_iAnimParticleSize);
+}
+
+//================================================================
+//**************** 파티클 종류별로 리소스 할당 ****************
+//================================================================
 
 void TParticleView::LoadSingleParticleResource()
 {
@@ -73,10 +88,97 @@ void TParticleView::LoadSingleParticleResource()
 			m_SingleParticle[i] = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
 		}
 		m_SingleParticleParam[i] = m_SingleParticle[i]->GetParticleSystem()->GetParticleParam();
-		m_SingleParicleType[i] = m_SingleParticle[i]->GetParticleSystem()->GetParticleTypeParam();
-		m_SingleParicleType[i]->fParticleType = 1;
+		m_SingleParticleType[i] = m_SingleParticle[i]->GetParticleSystem()->GetParticleTypeParam();
+		m_SingleParticleType[i]->fParticleType = PARTICLE_TYPE_AUTO;
 	}
 }
+
+void TParticleView::LoadMultipleParticleResource()
+{
+	for (int i = 0; i < m_iMultipleParticleSize; i++) {
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		{
+			UParticle::PARTICLEDESC tDesc;
+			tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEPARTICLE2DSHADER;
+			tDesc.wstrParticleShader = PROTO_RES_PARTICLE2DSHADER;
+			
+
+			tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
+			//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 1.f * (i + 1);
+			tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 10.f * (i + 1);
+			tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 0.8f * (i + 1);
+			tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.3f * (i + 1);
+			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 50.f * (i + 1);
+			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 100.f * (i + 1);
+			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 500 * (i + 1);
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 25.f * (i + 1);
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.5f - i, 0.5f - i, 0.5f - i);
+			m_MultipleParticle[i] = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
+		}
+		m_MultipleParticleParam[i] = m_MultipleParticle[i]->GetParticleSystem()->GetParticleParam();
+		m_MultipleParticleType[i] = m_MultipleParticle[i]->GetParticleSystem()->GetParticleTypeParam();
+		m_MultipleParticleType[i]->fParticleType = PARTICLE_TYPE_AUTO;
+		m_MultipleParticle[i]->SetTexture(4);
+		//m_MultipleParticle[i]->SetActive(true);
+	}
+
+}
+
+void TParticleView::LoadAnimParticleResource()
+{
+	for (int i = 0; i < m_iAnimParticleSize; i++) {
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		{
+			UParticle::PARTICLEDESC tDesc;
+			tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEPARTICLE2DSHADER;
+			tDesc.wstrParticleShader = PROTO_RES_2DANIMATEPARTICLESHADER;
+		
+
+			tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
+			//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 10.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 30.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 5.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 3.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 50.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 100.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 1000;
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 25.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.0f, 0.0f, 0.1f);
+
+			UAnimatedParticle::ANIMPARTICLEDESC tAnimDesc;
+			tAnimDesc.vTextureSize = _float2{4.f, 4.f };
+			tAnimDesc.fNextAnimTime = 0.05f;
+			m_AnimParticle[i] = std::static_pointer_cast<UAnimatedParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_ANIMATEPARTICLE, { &tDesc,&tAnimDesc }));
+		}
+		m_AnimParticleParam[i] = m_AnimParticle[i]->GetParticleSystem()->GetParticleParam();
+		m_AnimParticleType[i] = m_AnimParticle[i]->GetParticleSystem()->GetParticleTypeParam();
+		m_AnimParticleType[i]->fParticleType = PARTICLE_TYPE_DEFAULT;
+		m_AnimParticle[i]->SetTexture(6);
+		*m_AnimParticle[i]->GetParticleSystem()->GetAddParticleAmount() = 1;
+		m_AnimParticle[i]->SetActive(true);
+	}
+
+}
+
+HRESULT TParticleView::LoadResource()
+{
+	ResizeSingleParticleVector(1);
+	LoadSingleParticleResource();
+
+	ResizeMultipleParticleVector(2);
+	LoadMultipleParticleResource();
+
+	ResizeAnimParticleVector(1);
+	LoadAnimParticleResource();
+
+	return S_OK;
+}
+
+//================================================================
+//**************** 파티클 종류별로 리소스 해제 ****************
+//================================================================
 
 void TParticleView::ReleaseSingleParticleResource()
 {
@@ -93,58 +195,30 @@ void TParticleView::ReleaseMultipleParticleResource()
 		_particle.reset();
 		GetGameInstance()->RemoveActor(_particle);
 	}//문제 유발될 수 있는 코드 RemoveActor의 상세 구현을 살펴보아야함.
-
 }
 
-void TParticleView::LoadMultipleParticleResource()
+void TParticleView::ReleaseAnimParticleResource()
 {
-	for (int i = 0; i < m_iMultipleParticleSize; i++) {
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		{
-			UParticle::PARTICLEDESC tDesc;
-			tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEPARTICLE2DSHADER;
-			tDesc.wstrParticleShader = PROTO_RES_PARTICLE2DSHADER;
-
-
-			tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
-			//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 1.f*(i+1);
-			tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 10.f * (i + 1);
-			tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 0.8f * (i + 1);
-			tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.3f * (i + 1);
-			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 50.f * (i + 1);
-			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 100.f * (i + 1);
-			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 500 * (i + 1);
-			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 25.f * (i + 1);
-			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.5f-i, 0.5f - i, 0.5f - i);
-			m_MultipleParticle[i] = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
-		}
-		m_MultipleParticleParam[i] = m_MultipleParticle[i]->GetParticleSystem()->GetParticleParam();
-		m_MultipleParicleType[i] = m_MultipleParticle[i]->GetParticleSystem()->GetParticleTypeParam();
-		m_MultipleParicleType[i]->fParticleType = 1;
-		m_MultipleParticle[i]->SetActive(true);
-	}
-	
+	for (auto& _particle : m_AnimParticle) {
+		_particle.reset();
+		GetGameInstance()->RemoveActor(_particle);
+	}//문제 유발될 수 있는 코드 RemoveActor의 상세 구현을 살펴보아야함.
 }
 
-HRESULT TParticleView::LoadResource()
-{
-	ResizeSingleParticleVectors(1);
-	LoadSingleParticleResource();
-	
-	ResizeMultipleParticleVectors(2);
-	LoadMultipleParticleResource();
-	
-	return S_OK;
-}
 
 HRESULT TParticleView::ReleaseResource()
 {
 	ReleaseSingleParticleResource();
 	ReleaseMultipleParticleResource();
+	ReleaseAnimParticleResource();
 
 	return S_OK;
 }
+
+
+//================================================================
+//************ 파티클 종류별로 Rendering 하는 부분 ************
+//================================================================
 
 void TParticleView::TickActive(const _double& _dTimeDelta)
 {
@@ -168,6 +242,7 @@ void TParticleView::RenderActive()
 		//여기부터 내 입력
 		SingleParticleView();
 		MultipleParticleView();
+		AnimParticleView();
 	}
 	ImGui::End();
 }
@@ -192,7 +267,9 @@ void TParticleView::DockBuildInitSetting()
 	m_isInitSetting = true;
 }
 
-
+//================================================================
+//************ SINGLE PARTICLE TOOL VIEW SETTING ************
+//================================================================
 
 void TParticleView::SingleParticleView()
 {
@@ -292,7 +369,7 @@ void TParticleView::DefaultSingleParticleSetting()
 {
 	_bool Default = false;
 	if (ImGui::Selectable("Set Particle Type : Default", Default)) {
-		m_SingleParicleType[0]->fParticleType = 0;
+		m_SingleParticleType[0]->fParticleType = PARTICLE_TYPE_DEFAULT;
 		ImGui::OpenPopup("Default Particle");
 	}
 
@@ -317,7 +394,7 @@ void TParticleView::AutomaticSingleParticleSetting()
 {
 	_bool Automatic = false;
 	if (ImGui::Selectable("Set Particle Type : Automatic", Automatic)) {
-		m_SingleParicleType[0]->fParticleType = 1;
+		m_SingleParticleType[0]->fParticleType = PARTICLE_TYPE_AUTO;
 		ImGui::OpenPopup("Automatic Particle");
 	}
 
@@ -338,7 +415,18 @@ void TParticleView::AutomaticSingleParticleSetting()
 	}
 }
 
+//================================================================
+//************ MULTIPLE PARTICLE TOOL VIEW SETTING ************
+//================================================================
 
 void TParticleView::MultipleParticleView()
+{
+}
+
+//================================================================
+//************ ANIM PARTICLE TOOL VIEW SETTING ************
+//================================================================
+
+void TParticleView::AnimParticleView()
 {
 }

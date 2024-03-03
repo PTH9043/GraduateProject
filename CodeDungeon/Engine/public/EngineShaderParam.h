@@ -240,8 +240,8 @@ namespace Engine {
 	};
 
 	struct ComputeParticleType {
-		ComputeParticleType() :fParticleType{ 0 }, padding{ 0,0,0 } {}
-		_uint fParticleType;
+		ComputeParticleType() :fParticleType{ PARTICLE_TYPE_DEFAULT }, padding{ 0,0,0 } {}
+		PARTICLE_TYPE fParticleType;
 		_float3 padding;
 	};
 

@@ -639,6 +639,9 @@
     <ClCompile Include="..\private\UStageManager.cpp">
       <Filter>01.Manager\StageManager</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\UAnimatedParticle.cpp">
+      <Filter>05.Actor\01.Pawn\Particle</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\EngineDefine.h">
@@ -979,6 +982,9 @@
     </ClInclude>
     <ClInclude Include="..\public\UStageManager.h">
       <Filter>01.Manager\StageManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UAnimatedParticle.h">
+      <Filter>05.Actor\01.Pawn\Particle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -55,7 +55,7 @@
 //#include "UTerrain.h"
 #include "UParticle.h"
 #include "UCollider.h"
-//#include "UAnimatedParticle.h"
+#include "UAnimatedParticle.h"
 //#include "UMirror.h"
 //#include "UScreenRenderObj.h"
 //#include "UMirrorCamera.h"
@@ -1102,8 +1102,8 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 		}
 	//// Compute Shader 
 	{
-	//	CreateComputeShader(PROTO_RES_COMPUTEANIMATIONSHADER, CLONETYPE::CLONE_STATIC,
-	//		SHADERDESC{ L"ComputeAnimation" });
+		CreateComputeShader(PROTO_RES_COMPUTEANIMATIONSHADER, CLONETYPE::CLONE_STATIC,
+			SHADERDESC{ L"ComputeAnimation" });
 
 		CreateComputeShader(PROTO_RES_COMPUTEPARTICLE2DSHADER, CLONETYPE::CLONE_STATIC,
 			SHADERDESC{ L"Compute2DParticle" });
@@ -1158,6 +1158,9 @@ HRESULT UGameInstance::ReadyActor(const OUTPUTDATA& _stData)
 #endif 
 	}
 	AddPrototype(PROTO_ACTOR_PARTICLE, CreateConstructorToNative<UParticle>(
+		_stData.wpDevice.lock(), LAYER_PARTICLE, CLONETYPE::CLONE_ONCE));
+
+	AddPrototype(PROTO_ACTOR_ANIMATEPARTICLE, CreateConstructorToNative<UAnimatedParticle>(
 		_stData.wpDevice.lock(), LAYER_PARTICLE, CLONETYPE::CLONE_ONCE));
 	/*{
 		AddPrototype(PROTO_ACTOR_TERRAIN, CreateConstructorToNative<UTerrain>(

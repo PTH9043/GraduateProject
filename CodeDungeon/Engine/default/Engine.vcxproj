@@ -22,6 +22,7 @@
     <ClInclude Include="..\public\AnimEventParents.h" />
     <ClInclude Include="..\public\AnimOccursEvents.h" />
     <ClInclude Include="..\public\AnimSectionEvents.h" />
+    <ClInclude Include="..\public\UAnimatedParticle.h" />
     <ClInclude Include="..\public\UCharacter.h" />
     <ClInclude Include="..\public\UCharacterManager.h" />
     <ClInclude Include="..\public\UController.h" />
@@ -144,6 +145,7 @@
     <ClCompile Include="..\private\AnimEventParents.cpp" />
     <ClCompile Include="..\private\AnimOccursEvents.cpp" />
     <ClCompile Include="..\private\AnimSectionEvents.cpp" />
+    <ClCompile Include="..\private\UAnimatedParticle.cpp" />
     <ClCompile Include="..\private\UCharacter.cpp" />
     <ClCompile Include="..\private\UCharacterManager.cpp" />
     <ClCompile Include="..\private\UController.cpp" />
