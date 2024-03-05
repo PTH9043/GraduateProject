@@ -11,7 +11,9 @@
 TParticleView::TParticleView(CSHPTRREF<UDevice> _spDevice) :
 	TImGuiView(_spDevice, "ParticleView"),
 	m_stMainDesc{},
-	m_stParticleView{},
+	m_stSingleParticleView{},
+	m_stMultiParticleView{},
+	m_stAnimParticleView{},
 	m_isInitSetting{ false }
 	, m_SingleParticle{nullptr}, m_SingleParticleParam{nullptr}, m_SingleParticleType{nullptr}
 	, m_MultipleParticle{nullptr}, m_MultipleParticleParam{nullptr}, m_MultipleParticleType{nullptr}
@@ -27,7 +29,9 @@ HRESULT TParticleView::NativeConstruct()
 {
 	m_stMainDesc = MAINDESC(ImGuiWindowFlags_NoBackground, ImGuiDockNodeFlags_None,
 		ImVec2{ (_float)WINDOW_WIDTH, 0.f }, ImVec2{ 500.f, (_float)WINDOW_HEIGHT });
-	m_stParticleView = DOCKDESC("ParticleViewer", ImGuiWindowFlags_NoFocusOnAppearing,
+	m_stSingleParticleView = DOCKDESC("Single Particle Viewer", ImGuiWindowFlags_NoFocusOnAppearing,
+		ImGuiDockNodeFlags_CentralNode);
+	m_stAnimParticleView = DOCKDESC("Anim Particle Viewer", ImGuiWindowFlags_NoFocusOnAppearing,
 		ImGuiDockNodeFlags_CentralNode);
 	return S_OK;
 }
@@ -90,6 +94,7 @@ void TParticleView::LoadSingleParticleResource()
 		m_SingleParticleParam[i] = m_SingleParticle[i]->GetParticleSystem()->GetParticleParam();
 		m_SingleParticleType[i] = m_SingleParticle[i]->GetParticleSystem()->GetParticleTypeParam();
 		m_SingleParticleType[i]->fParticleType = PARTICLE_TYPE_AUTO;
+		m_SingleParticle[i]->SetTexture(13);
 	}
 }
 
@@ -148,16 +153,16 @@ void TParticleView::LoadAnimParticleResource()
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.0f, 0.0f, 0.1f);
 
 			UAnimatedParticle::ANIMPARTICLEDESC tAnimDesc;
-			tAnimDesc.vTextureSize = _float2{4.f, 4.f };
-			tAnimDesc.fNextAnimTime = 0.05f;
+			tAnimDesc.vTextureSize = _float2{8.f, 8.f };
+			tAnimDesc.fNextAnimTime = 0.025f;
 			m_AnimParticle[i] = std::static_pointer_cast<UAnimatedParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_ANIMATEPARTICLE, { &tDesc,&tAnimDesc }));
 		}
 		m_AnimParticleParam[i] = m_AnimParticle[i]->GetParticleSystem()->GetParticleParam();
 		m_AnimParticleType[i] = m_AnimParticle[i]->GetParticleSystem()->GetParticleTypeParam();
-		m_AnimParticleType[i]->fParticleType = PARTICLE_TYPE_DEFAULT;
-		m_AnimParticle[i]->SetTexture(6);
-		*m_AnimParticle[i]->GetParticleSystem()->GetAddParticleAmount() = 1;
-		m_AnimParticle[i]->SetActive(true);
+	
+
+		m_AnimParticleType[i]->fParticleType = PARTICLE_TYPE_DEFAULT;		
+		
 	}
 
 }
@@ -243,6 +248,11 @@ void TParticleView::RenderActive()
 		SingleParticleView();
 		MultipleParticleView();
 		AnimParticleView();
+		
+		
+		
+		
+		
 	}
 	ImGui::End();
 }
@@ -259,9 +269,11 @@ void TParticleView::DockBuildInitSetting()
 		ImGui::DockBuilderRemoveNode(m_stMainDesc.iDockSpaceID);
 		ImGui::DockBuilderAddNode(m_stMainDesc.iDockSpaceID);
 		// Docking Build 
-		m_stParticleView.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Up, 1.f, NULL, &dock_main_id);
+		m_stSingleParticleView.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Up, 0.5f, NULL, &dock_main_id);
+		m_stAnimParticleView.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.5f, NULL, &dock_main_id);
 		// DockBuild
-		ImGui::DockBuilderDockWindow(m_stParticleView.strName.c_str(), m_stParticleView.iDockSpaceID);
+		ImGui::DockBuilderDockWindow(m_stSingleParticleView.strName.c_str(), m_stSingleParticleView.iDockSpaceID);
+		ImGui::DockBuilderDockWindow(m_stAnimParticleView.strName.c_str(), m_stAnimParticleView.iDockSpaceID);
 		ImGui::DockBuilderFinish(m_stMainDesc.iDockSpaceID);
 	}
 	m_isInitSetting = true;
@@ -274,37 +286,40 @@ void TParticleView::DockBuildInitSetting()
 void TParticleView::SingleParticleView()
 {
 	
-
-	ImGui::Begin(m_stParticleView.strName.c_str(), GetOpenPointer(), m_stParticleView.imgWindowFlags);
-	{
-		ImGui::Text("ParticleView");
-		if (true == ImGui::Button("Show Particle"))
-		{
-			m_SingleParticle[0]->SetActive(true);
-		}
-		if (true == ImGui::Button("Stop Particle"))
-		{
-			m_SingleParticle[0]->SetActive(false);
-		}
-
-		SingleParticleCountSetting();
-		SingleParticleTimeSetting();
-		SingleParticleTexSetting();
-		DefaultSingleParticleSetting();
-		AutomaticSingleParticleSetting();
 	
-	/*	if (true == ImGui::Button("Random Particle")) {
-			particleType->fParticleType = 1;
-			particleParam->stGlobalParticleInfo.fParticleThickness = 25;
-			particleParam->stGlobalParticleInfo.fEndScaleParticle = 1;
-			particleParam->stGlobalParticleInfo.fStartScaleParticle = 10;
-			particleParam->stGlobalParticleInfo.fMinLifeTime = 0.3f;
-			particleParam->stGlobalParticleInfo.fMaxLifeTime = 0.8f;
-			particleParam->stGlobalParticleInfo.fMaxSpeed = 50.f;
-			particleParam->stGlobalParticleInfo.fMinSpeed = 100.f;
-		}*/
-		
+		ImGui::Begin(m_stSingleParticleView.strName.c_str(), GetOpenPointer(), m_stSingleParticleView.imgWindowFlags);
+		{
+			if (ImGui::CollapsingHeader("Single Particle Settings", ImGuiTreeNodeFlags_DefaultOpen)) {
+			ImGui::Text("Single ParticleView");
+			if (true == ImGui::Button("Show Single Particle"))
+			{
+				m_SingleParticle[0]->SetActive(true);
+			}
+			if (true == ImGui::Button("Stop Single Particle"))
+			{
+				m_SingleParticle[0]->SetActive(false);
+			}
+
+			SingleParticleCountSetting();
+			SingleParticleTimeSetting();
+			SingleParticleTexSetting();
+			DefaultSingleParticleSetting();
+			AutomaticSingleParticleSetting();
+
+			/*	if (true == ImGui::Button("Random Particle")) {
+					particleType->fParticleType = 1;
+					particleParam->stGlobalParticleInfo.fParticleThickness = 25;
+					particleParam->stGlobalParticleInfo.fEndScaleParticle = 1;
+					particleParam->stGlobalParticleInfo.fStartScaleParticle = 10;
+					particleParam->stGlobalParticleInfo.fMinLifeTime = 0.3f;
+					particleParam->stGlobalParticleInfo.fMaxLifeTime = 0.8f;
+					particleParam->stGlobalParticleInfo.fMaxSpeed = 50.f;
+					particleParam->stGlobalParticleInfo.fMinSpeed = 100.f;
+				}*/
+
+		}
 	}
+	
 	ImGui::End();
 }
 
@@ -313,7 +328,7 @@ void TParticleView::SingleParticleView()
 void TParticleView::SingleParticleCountSetting()
 {
 	//파티클 한 사이클 생성 갯수.
-	if (ImGui::CollapsingHeader("Particle Count Setting", ImGuiTreeNodeFlags_DefaultOpen)) {
+	if (ImGui::CollapsingHeader("Single Particle Count Setting", ImGuiTreeNodeFlags_DefaultOpen)) {
 		_uint increment = 1;
 		ImGui::InputScalar("Enter Create Amount\n Min:1  Max :1000", ImGuiDataType_U32, m_SingleParticle[0]->GetParticleSystem()->GetAddParticleAmount(), &increment, &increment);
 		if (*m_SingleParticle[0]->GetParticleSystem()->GetAddParticleAmount() < 1) {
@@ -329,7 +344,7 @@ void TParticleView::SingleParticleCountSetting()
 void TParticleView::SingleParticleTimeSetting()
 {
 	//파티클의 생성 시간 정하기
-	if (ImGui::CollapsingHeader("Particle Create Time Interval", ImGuiTreeNodeFlags_DefaultOpen)) {
+	if (ImGui::CollapsingHeader("Single Particle Create Time Interval", ImGuiTreeNodeFlags_DefaultOpen)) {
 
 		ImGui::InputFloat("Enter Time Interval\n Min:0.f  Max :6.f", m_SingleParticle[0]->GetParticleSystem()->GetCreateInterval(), 0.1f, 1.0f, "%.2f", ImGuiInputTextFlags_CharsDecimal);
 		if (*m_SingleParticle[0]->GetParticleSystem()->GetCreateInterval() <= 0) {
@@ -343,10 +358,10 @@ void TParticleView::SingleParticleTimeSetting()
 
 void TParticleView::SingleParticleTexSetting()
 {
-	if (ImGui::CollapsingHeader("Particle Settings", ImGuiTreeNodeFlags_DefaultOpen)) {
+	 
 
 		//파티클의 텍스쳐 지정
-		ImGui::Text("Particle Texture Select");
+		ImGui::Text("Single Particle Texture Select");
 		if (ImGui::BeginListBox("Texture List", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
 		{
 
@@ -361,14 +376,14 @@ void TParticleView::SingleParticleTexSetting()
 			}
 			ImGui::EndListBox();
 		}
-	}
+	
 }
 
 
 void TParticleView::DefaultSingleParticleSetting()
 {
 	_bool Default = false;
-	if (ImGui::Selectable("Set Particle Type : Default", Default)) {
+	if (ImGui::Selectable("Set Single Particle Type : Default", Default)) {
 		m_SingleParticleType[0]->fParticleType = PARTICLE_TYPE_DEFAULT;
 		ImGui::OpenPopup("Default Particle");
 	}
@@ -393,7 +408,7 @@ void TParticleView::DefaultSingleParticleSetting()
 void TParticleView::AutomaticSingleParticleSetting()
 {
 	_bool Automatic = false;
-	if (ImGui::Selectable("Set Particle Type : Automatic", Automatic)) {
+	if (ImGui::Selectable("Set Single Particle Type : Automatic", Automatic)) {
 		m_SingleParticleType[0]->fParticleType = PARTICLE_TYPE_AUTO;
 		ImGui::OpenPopup("Automatic Particle");
 	}
@@ -421,6 +436,9 @@ void TParticleView::AutomaticSingleParticleSetting()
 
 void TParticleView::MultipleParticleView()
 {
+	if (ImGui::CollapsingHeader("Multiple Particle Settings", ImGuiTreeNodeFlags_DefaultOpen)) {
+
+	}
 }
 
 //================================================================
@@ -429,4 +447,157 @@ void TParticleView::MultipleParticleView()
 
 void TParticleView::AnimParticleView()
 {
+	
+		ImGui::Begin(m_stAnimParticleView.strName.c_str(), GetOpenPointer(), m_stAnimParticleView.imgWindowFlags);
+		{
+			if (ImGui::CollapsingHeader("Anim Particle Settings", ImGuiTreeNodeFlags_DefaultOpen)) {
+			ImGui::Text("Animation ParticleView");
+			if (true == ImGui::Button("Show Anim Particle"))
+			{
+				m_AnimParticle[0]->SetActive(true);
+			}
+			if (true == ImGui::Button("Stop Anim Particle"))
+			{
+				m_AnimParticle[0]->SetActive(false);
+			}
+
+			AnimParticleCountSetting();
+			AnimParticleTimeSetting();
+			AnimParticleTexSetting();
+			DefaultAnimParticleSetting();
+			AutomaticAnimParticleSetting();
+			}
+		}
+		ImGui::End();
+	
+	
+
 }
+
+
+void TParticleView::AnimParticleCountSetting() 
+{
+	//파티클 한 사이클 생성 갯수.
+	if (ImGui::CollapsingHeader("Anim Particle Count Setting", ImGuiTreeNodeFlags_DefaultOpen)) {
+		_uint increment = 1;
+		ImGui::InputScalar("Enter Create Amount\n Min:1  Max :1000", ImGuiDataType_U32, m_AnimParticle[0]->GetParticleSystem()->GetAddParticleAmount(), &increment, &increment);
+		if (*m_AnimParticle[0]->GetParticleSystem()->GetAddParticleAmount() < 1) {
+			*m_AnimParticle[0]->GetParticleSystem()->GetAddParticleAmount() = 1;
+		}
+		else if (*m_AnimParticle[0]->GetParticleSystem()->GetAddParticleAmount() > 1000) {
+			*m_AnimParticle[0]->GetParticleSystem()->GetAddParticleAmount() = 1000;
+		}
+	}
+}
+
+void TParticleView::AnimParticleTimeSetting() 
+{
+	//파티클의 생성 시간 정하기
+	if (ImGui::CollapsingHeader("Anim Particle Create Time Interval", ImGuiTreeNodeFlags_DefaultOpen)) {
+
+		ImGui::InputFloat("Enter Time Interval\n Min:0.f  Max :6.f", m_AnimParticle[0]->GetParticleSystem()->GetCreateInterval(), 0.1f, 1.0f, "%.2f", ImGuiInputTextFlags_CharsDecimal);
+		if (*m_AnimParticle[0]->GetParticleSystem()->GetCreateInterval() <= 0) {
+			*m_AnimParticle[0]->GetParticleSystem()->GetCreateInterval() = 0.1;
+		}
+		else if (*m_AnimParticle[0]->GetParticleSystem()->GetCreateInterval() > 6) {
+			*m_AnimParticle[0]->GetParticleSystem()->GetCreateInterval() = 6;
+		}
+	}
+}
+
+void TParticleView::AnimParticleTexSetting() 
+{
+	
+		//파티클의 텍스쳐 지정
+		ImGui::Text("Anim Particle Texture Select");
+		if (ImGui::BeginListBox("Texture List", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+		{
+
+			using TEXNAMES = UNORMAP<_wstring, _uint>;
+			TEXNAMES m_TextureNames = m_AnimParticle[0]->GetTextureGroup()->GetTextureNames();
+			for (auto& Texture : m_TextureNames)
+			{
+				if (ImGui::Selectable(UMethod::ConvertWToS(Texture.first)))
+				{
+					m_AnimParticle[0]->SetTexture(Texture.second);
+					if (Texture.second == 0 || Texture.second == 2 || Texture.second == 3) {
+						m_AnimParticle[0]->SetNextAnimTimer(0.025f);
+						m_AnimParticle[0]->SetTextureRowsAndCols(8.f,8.f);
+					}
+					else if (Texture.second == 1) {
+						m_AnimParticle[0]->SetNextAnimTimer(0.05f);
+						m_AnimParticle[0]->SetTextureRowsAndCols(2.f, 1.f);
+					}
+					else if (Texture.second ==4|| Texture.second == 5) {
+						m_AnimParticle[0]->SetNextAnimTimer(0.025f);
+						m_AnimParticle[0]->SetTextureRowsAndCols(6.f, 6.f);
+					}
+					else if (Texture.second == 8 || Texture.second == 9) {
+						m_AnimParticle[0]->SetNextAnimTimer(0.025f);
+						m_AnimParticle[0]->SetTextureRowsAndCols(8.f, 4.f);
+					}
+					else if (Texture.second == 6) {
+						m_AnimParticle[0]->SetNextAnimTimer(0.05f);
+						m_AnimParticle[0]->SetTextureRowsAndCols(4.f, 4.f);
+					}
+					else if (Texture.second == 7) {
+						m_AnimParticle[0]->SetNextAnimTimer(0.1f);
+						m_AnimParticle[0]->SetTextureRowsAndCols(8.f, 1.f);
+					}
+				}
+			}
+			ImGui::EndListBox();
+		}
+	
+}
+
+void TParticleView::DefaultAnimParticleSetting() 
+{
+	_bool Default = false;
+	if (ImGui::Selectable("Set Single Particle Type : Default", Default)) {
+		m_AnimParticleType[0]->fParticleType = PARTICLE_TYPE_DEFAULT;
+		ImGui::OpenPopup("Default Particle");
+	}
+
+	if (ImGui::BeginPopup("Default Particle")) {
+		ImGui::SeparatorText("Particle Settings");
+		ImGui::SeparatorText("Current Particle Type : Default");
+
+		ImGui::SliderFloat("EndScale", &m_AnimParticleParam[0]->stGlobalParticleInfo.fEndScaleParticle, 1.f, 40.f, "%.2f");
+		ImGui::SliderFloat("StartScale", &m_AnimParticleParam[0]->stGlobalParticleInfo.fStartScaleParticle, 1.f, 20.f, "%.2f");
+		ImGui::SliderFloat("MaxLifeTime", &m_AnimParticleParam[0]->stGlobalParticleInfo.fMaxLifeTime, 10.f, 20.f, "%.2f");
+		ImGui::SliderFloat("MaxSpeed", &m_AnimParticleParam[0]->stGlobalParticleInfo.fMaxSpeed, 10.f, 100.f, "%.2f");
+		ImGui::SliderFloat("MinSpeed", &m_AnimParticleParam[0]->stGlobalParticleInfo.fMinSpeed, 10.f, 100.f, "%.2f");
+		ImGui::SliderFloat("DirectionX", &m_AnimParticleParam[0]->stGlobalParticleInfo.fParticleDirection.x, -1.f, 1.f, "%.2f");
+		ImGui::SliderFloat("DirectionY", &m_AnimParticleParam[0]->stGlobalParticleInfo.fParticleDirection.y, -1.f, 1.f, "%.2f");
+		ImGui::SliderFloat("DirectionZ", &m_AnimParticleParam[0]->stGlobalParticleInfo.fParticleDirection.z, -1.f, 1.f, "%.2f");
+		ImGui::SliderFloat("Thickness", &m_AnimParticleParam[0]->stGlobalParticleInfo.fParticleThickness, 0.f, 50.f, "%.2f");
+		ImGui::EndPopup();
+	}
+}
+
+void TParticleView::AutomaticAnimParticleSetting() 
+{
+	_bool Automatic = false;
+	if (ImGui::Selectable("Set Single Particle Type : Automatic", Automatic)) {
+		m_AnimParticleType[0]->fParticleType = PARTICLE_TYPE_AUTO;
+		ImGui::OpenPopup("Automatic Particle");
+	}
+
+
+
+	if (ImGui::BeginPopup("Automatic Particle")) {
+		ImGui::SeparatorText("Particle Settings");
+		ImGui::SeparatorText("Current Particle Type : Automatic");
+
+		ImGui::SliderFloat("EndScale", &m_AnimParticleParam[0]->stGlobalParticleInfo.fEndScaleParticle, 1.f, 40.f, "%.2f");
+		ImGui::SliderFloat("StartScale", &m_AnimParticleParam[0]->stGlobalParticleInfo.fStartScaleParticle, 1.f, 20.f, "%.2f");
+		ImGui::SliderFloat("MaxLifeTime", &m_AnimParticleParam[0]->stGlobalParticleInfo.fMaxLifeTime, 10.f, 20.f, "%.2f");
+		ImGui::SliderFloat("MaxSpeed", &m_AnimParticleParam[0]->stGlobalParticleInfo.fMaxSpeed, 10.f, 100.f, "%.2f");
+		ImGui::SliderFloat("MinSpeed", &m_AnimParticleParam[0]->stGlobalParticleInfo.fMinSpeed, 10.f, 100.f, "%.2f");
+
+
+		ImGui::EndPopup();
+	}
+}
+

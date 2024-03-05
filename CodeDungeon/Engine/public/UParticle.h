@@ -54,7 +54,7 @@ public:
 	virtual void ShowObjectInfo() override;
 
 #endif
-private:
+protected:
 	SHPTR<UTexGroup>				m_spTexGroup;
 	SHPTR< UParticleSystem>	m_spParticleSystem;
 	SHPTR<UVIBufferPoint>		m_spVIBufferPoint;

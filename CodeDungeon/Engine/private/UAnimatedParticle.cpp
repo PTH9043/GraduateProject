@@ -20,6 +20,8 @@ UAnimatedParticle::UAnimatedParticle(const UParticle& _rhs) :
 {
 }
 
+
+
 void UAnimatedParticle::Free()
 {
 }
@@ -42,8 +44,20 @@ HRESULT UAnimatedParticle::NativeConstructClone(const VOIDDATAS& _convecDatas)
 		m_spAnimPaticleBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::ANIMATEPARTICLEPARAM, ANIMATEPARTICLE_SIZE);
 
 		m_NextAnimTimer = CUSTIMER(stParticleDesc.fNextAnimTime);
+		m_spTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_ANIMPARTICLETEXTUREGROUP));
 	}
 	return S_OK;
+}
+
+void UAnimatedParticle::SetNextAnimTimer(_float _fSetTime)
+{
+	m_NextAnimTimer.SetStandardTime(_fSetTime);
+	m_NextAnimTimer.ResetTimer();
+}
+
+void UAnimatedParticle::SetTextureRowsAndCols(_float _fRows, _float _fCols)
+{
+	m_vTextureSize = _float2(_fRows, _fCols);
 }
 
 void UAnimatedParticle::TickActive(const _double& _dTimeDelta)

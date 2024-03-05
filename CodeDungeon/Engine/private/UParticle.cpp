@@ -41,7 +41,8 @@ HRESULT UParticle::NativeConstructClone(const VOIDDATAS& _convecDatas)
 		PARTICLEDESC stParticleDesc = UMethod::ConvertTemplate_Index<PARTICLEDESC>(_convecDatas, 0);
 
 		m_spParticleSystem = static_pointer_cast<UParticleSystem>(spGameInstance->CloneResource(PROTO_RES_PARTICLESYSTEM, { &stParticleDesc.ParticleParam }));
-		m_spTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_PARTICLETEXTUREGROUP));
+		
+		if(m_spTexGroup==nullptr)m_spTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_PARTICLETEXTUREGROUP));
 		m_spVIBufferPoint = static_pointer_cast<UVIBufferPoint>(spGameInstance->CloneResource(PROTO_RES_VIBUFFERPOINT));
 
 		m_spParticleSystem->SettingComputeShader(stParticleDesc.wstrParticleComputeShader);

@@ -76,6 +76,7 @@
 // Texture
 
 #define PROTO_RES_PARTICLETEXTUREGROUP L"Proto_Res_ParticleTextureGroup"
+#define PROTO_RES_ANIMPARTICLETEXTUREGROUP L"Proto_Res_AnimParticleTextureGroup"
 
 #pragma endregion PROTO
 

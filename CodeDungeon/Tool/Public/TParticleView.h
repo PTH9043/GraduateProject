@@ -66,6 +66,12 @@ private:
 	void AnimParticleView();
 	void ResizeAnimParticleVector(_uint _resizeAmount);
 	
+	void AnimParticleCountSetting();
+	void AnimParticleTimeSetting();
+	void AnimParticleTexSetting();
+	void DefaultAnimParticleSetting();
+	void AutomaticAnimParticleSetting();
+
 	void LoadAnimParticleResource();
 	void ReleaseAnimParticleResource();
 
@@ -76,11 +82,14 @@ private:
 	using PARTICLES = VECTOR<SHPTR<UParticle>>;
 	using ANIMPARTICLES = VECTOR<SHPTR<UAnimatedParticle>>;
 	using PARTICLEPARAMS = VECTOR<PARTICLEPARAM*>;
+	using PARTICLEANIMPARAMS = VECTOR< ANIMATEDPARTICLEPARAM*>;
 	using PARTICLETYPES = VECTOR<ComputeParticleType*>;
 	
 private:
 	MAINDESC													m_stMainDesc;
-	DOCKDESC												m_stParticleView;
+	DOCKDESC												m_stSingleParticleView;
+	DOCKDESC												m_stMultiParticleView;
+	DOCKDESC												m_stAnimParticleView;
 
 	VECTOR<SHPTR<TImGuiView>>			m_CloseImGuies;
 	SET<SHPTR<TImGuiView>>					m_OpenImGuies;
@@ -104,6 +113,7 @@ private:
 	_int m_iAnimParticleSize;
 	ANIMPARTICLES m_AnimParticle;
 	PARTICLEPARAMS m_AnimParticleParam;
+	PARTICLEANIMPARAMS m_AnimParticleAnimParam;
 	PARTICLETYPES m_AnimParticleType;
 
 

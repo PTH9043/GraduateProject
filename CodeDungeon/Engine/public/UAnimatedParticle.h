@@ -17,6 +17,9 @@ public:
 	UAnimatedParticle(const UParticle& _rhs);
 	DESTRUCTOR(UAnimatedParticle)
 public:
+	void SetNextAnimTimer(_float _fSetTime);
+	void SetTextureRowsAndCols(_float _fRows, _float _fCols);
+public:
 	CLONE_MACRO(UAnimatedParticle, "UAnimatedParticle::Clone To Failed")
 	virtual void Free() override;
 	virtual HRESULT NativeConstruct() override;
