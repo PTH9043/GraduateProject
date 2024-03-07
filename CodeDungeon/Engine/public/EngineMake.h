@@ -8,6 +8,8 @@
 #define PROTO_COMP_OBBCOLLIDER L"Proto_Comp_ObbCollider"
 #define PROTO_COMP_ABBCOLLIDER L"Proto_Comp_ABBCollider"
 #define PROTO_COMP_SPHERECOLLIDER L"Proto_Comp_SphereCollider"
+#define PROTO_COMP_REGION L"Proto_Comp_Region"
+#define PROTO_COMP_NAVIGATION L"Proto_Comp_Navigation"
 
 /* Graphics Shader */
 #define PROTO_RES_DEBUG2DTARGETSHADER L"Proto_Res_Debug2DTargetShader"

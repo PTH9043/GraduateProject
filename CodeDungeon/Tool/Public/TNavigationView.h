@@ -2,6 +2,10 @@
 
 #include "TImGuiView.h"
 
+BEGIN(Engine)
+class UStageManager;
+END
+
 BEGIN(Tool)
 class TNavigationView : public TImGuiView {
 public:
@@ -40,6 +44,7 @@ private:
 	_bool													m_bRenderWireFrame;
 	_bool													m_bNavigationDebugColor;
 
+	_uint													m_iCreateRegionIndex;
 
 };
 END

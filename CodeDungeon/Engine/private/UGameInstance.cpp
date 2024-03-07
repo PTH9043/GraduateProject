@@ -50,6 +50,9 @@
 
 #include "UParticleSystem.h"
 
+#include "UStageManager.h"
+#include "UStage.h"
+
 //#include "URectTransform.h"
 //#include "USkyBox.h"
 //#include "UTerrain.h"
@@ -59,6 +62,9 @@
 //#include "UMirror.h"
 //#include "UScreenRenderObj.h"
 //#include "UMirrorCamera.h"
+
+#include "UNavigation.h"
+#include "URegion.h"
 
 IMPLEMENT_SINGLETON(UGameInstance);
 
@@ -85,7 +91,8 @@ UGameInstance::UGameInstance() :
 	m_spAudioSystemManager{ Create<UAudioSystemManager>() },
 	m_spNetworkManager{Create<UNetworkManager>()},
 	m_spCharacterManager{Create<UCharacterManager>()},
-	m_spRenderer{ nullptr }
+	m_spRenderer{ nullptr },
+	m_spStageManager{Create<UStageManager>()}
 	//m_spGraphicRenderObject{ nullptr }
 {
 }
@@ -120,6 +127,7 @@ void UGameInstance::Free()
 	m_spTimerManager.reset();
 	m_spGraphicDevice.reset();
 	m_spShaderBufferManager.reset();
+	m_spStageManager.reset();
 }
 
 HRESULT UGameInstance::ReadyInstance(const GRAPHICDESC& _stDesc, OUTPUTDATA& _stOutDesc)
@@ -892,6 +900,19 @@ void UGameInstance::ReigsterCurrentPlayer(CSHPTRREF<UCharacter> _spCurrentPlayer
 ==================================================
 CharacterManager
 ==================================================
+StageManager
+==================================================
+*/
+
+SHPTR<UStage> UGameInstance::GetStage()
+{
+	return m_spStageManager->GetStage();
+}
+
+/*
+==================================================
+StageManager
+==================================================
 ReadyDatas
 ==================================================
 */
@@ -1137,6 +1158,14 @@ HRESULT UGameInstance::ReadyComp(const OUTPUTDATA& _stData)
 		AddPrototype(PROTO_COMP_SPHERECOLLIDER, CreateConstructorToNativeNotMsg<UCollider>(_stData.wpDevice.lock(), UCollider::TYPE_SPHERE));
 		AddPrototype(PROTO_COMP_ABBCOLLIDER, CreateConstructorToNativeNotMsg<UCollider>(_stData.wpDevice.lock(), UCollider::TYPE_AABB));
 		AddPrototype(PROTO_COMP_OBBCOLLIDER, CreateConstructorToNativeNotMsg<UCollider>(_stData.wpDevice.lock(), UCollider::TYPE_OBB));
+	}
+	//Add Navigation
+	{
+		AddPrototype(PROTO_COMP_NAVIGATION, CreateConstructorToNativeNotMsg<UNavigation>(_stData.wpDevice.lock()));
+	}
+	//Add Region
+	{
+		AddPrototype(PROTO_COMP_REGION, CreateConstructorToNativeNotMsg<URegion>(_stData.wpDevice.lock()));
 	}
 	return S_OK;
 }

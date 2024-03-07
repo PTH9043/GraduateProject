@@ -1,5 +1,8 @@
 #include "ToolDefines.h"
+#include "UGameInstance.h"
 #include "TNavigationView.h"
+#include "UStageManager.h"
+#include "UStage.h"
 
 TNavigationView::TNavigationView(CSHPTRREF<UDevice> _spDevice) :
 	TImGuiView(_spDevice, "NavigationView"),
@@ -10,7 +13,8 @@ TNavigationView::TNavigationView(CSHPTRREF<UDevice> _spDevice) :
 	m_bAllRender{ false },
 	m_bRenderWireFrame{ false },
 	m_bNavigationDebugColor{ false },
-	m_dShowDeltaTime{ 0.0 }
+	m_dShowDeltaTime{ 0.0 },
+	m_iCreateRegionIndex{0}
 {
 }
 
@@ -82,6 +86,8 @@ void TNavigationView::DockBuildInitSetting()
 
 void TNavigationView::NavigationView()
 {
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
 	ImGui::Begin(m_stNavigationView.strName.c_str(), GetOpenPointer(), m_stNavigationView.imgWindowFlags);
 	{
 		ImGui::Checkbox("Navigation Modify", &m_bNavigationModify);
@@ -90,6 +96,9 @@ void TNavigationView::NavigationView()
 			ImGui::Checkbox("Navigation_WireFrame", &m_bRenderWireFrame);
 			ImGui::Checkbox("Navigation_DrawNav", &m_bNavigationDebugColor);
 			ImGui::Checkbox("Navigation_AllRender", &m_bAllRender);
+			ImGui::InputInt("Region Index", (_int*)&m_iCreateRegionIndex);
+			spGameInstance->GetStage()->CreateRegion(m_iCreateRegionIndex);
+
 		}
 	}
 	ImGui::End();

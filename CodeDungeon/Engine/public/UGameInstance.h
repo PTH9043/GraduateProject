@@ -55,6 +55,9 @@ class USound;
 class UTransform;
 class UCharacter;
 
+class UStageManager;
+class UStage;
+
 struct PICKINGDESC;
 struct WAITCHECKACTOR;
 
@@ -270,6 +273,10 @@ private: /* Ready Datas */
 	HRESULT ReadyComp(const OUTPUTDATA& _stData);
 	HRESULT ReadyActor(const OUTPUTDATA& _stData);
 	HRESULT ReadyRenderTarget(const OUTPUTDATA& _stData);
+
+public: /* StageManager */
+	SHPTR<UStage> GetStage();
+
 private:
 	_bool															m_isGamming;
 	
@@ -293,6 +300,7 @@ private:
 	SHPTR<UCharacterManager>				m_spCharacterManager;
 
 	SHPTR<URenderer>								m_spRenderer;
+	SHPTR<UStageManager>							m_spStageManager;
 	//SHPTR< UFontManager>						m_spFontMananger;
 	//SHPTR<UComputeManager>				m_spComputeManager;
 	//SHPTR<UPicking>									m_spPicking;

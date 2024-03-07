@@ -98,22 +98,23 @@ _bool UStage::Save(const _wstring& _wstrPath)
 
 HRESULT UStage::CreateRegion(const _uint& _iIndex)
 {
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	if (ImGui::TreeNodeEx("Create_Region", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (ImGui::BeginListBox("##listbox 2", ImVec2(-FLT_MIN, 3 * ImGui::GetTextLineHeightWithSpacing())))
 		{
-			for (auto& iter : m_RegionList)
+			/*for (auto& iter : m_RegionList)
 			{
 				char pName[MAX_PATH] = { "" };
 				sprintf_s(pName, "%d", iter.second->Get_Index());
 				ImGui::Text(pName);
-			}
+			}*/
 			ImGui::EndListBox();
 		}
 
 		if (ImGui::Button("Add_Region"))
 		{
-			for (auto& iter : m_RegionList)
+			/*for (auto& iter : m_RegionList)
 			{
 				if (iter.first == _iIndex)
 				{
@@ -126,9 +127,11 @@ HRESULT UStage::CreateRegion(const _uint& _iIndex)
 					ImGui::TreePop();
 					return E_FAIL;
 				}
-			}
-			SHPTR<URegion> pRegion = CreateConstructorNative<URegion>(GetDevice());
-			pRegion->Set_Index(_iIndex);
+			}*/
+			URegion::REGIONDESC RegionDesc;
+			RegionDesc.m_iIndex = _iIndex;			
+
+			SHPTR<URegion> pRegion = std::static_pointer_cast<URegion>(spGameInstance->CloneComp(PROTO_COMP_REGION, {&RegionDesc}));
 			m_RegionList.emplace(std::pair<_uint, SHPTR<URegion>>(_iIndex, pRegion));
 
 			AddArroundRegion();
