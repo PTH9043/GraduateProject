@@ -32,9 +32,6 @@ public:
 	// SaveLoada
 	_bool Load(const _wstring& _wstrPath);
 	_bool Save(const _wstring& _wstrPath);
-	PARTICLEPARAM* GetParticleParam() {
-		return &m_stParticleParam;
-	}
 #ifdef _USE_IMGUI
 public:
 	virtual void ShowObjectInfo() override;

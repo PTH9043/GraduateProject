@@ -40,7 +40,7 @@ private:
 	_uint							m_iNumBones;
 	_uint							m_iNumBuffers;
 	_wstring						m_wstrName;
-	BONENODES				m_BoneNodeContainer;
+	BONENODES				m_vecBoneNodes;
 };
 
 END

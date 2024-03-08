@@ -18,11 +18,11 @@ TAssimpModel::TAssimpModel(CSHPTRREF<UDevice> _spDevice) :
 	m_spImporter{ nullptr },
 	m_vecMeshContainers{},
 	m_iNumMeshContainers{ 0 },
-	m_BoneNodeContainer{},
+	m_vecBoneNodes{},
 	m_iNumBoneNodes{ 0 },
 	m_vecAnimations{},
 	m_iNumAnimation{ 0 },
-	m_MaterialContainer{},
+	m_vecMaterials{},
 	m_iNumMaterials{ 0 },
 	m_mScaleMatrix{ _float4x4::Identity },
 	m_spFileGroup{ nullptr },
@@ -40,11 +40,11 @@ TAssimpModel::TAssimpModel(const TAssimpModel& _rhs) :
 	m_spImporter{ _rhs.m_spImporter },
 	m_vecMeshContainers{ _rhs.m_vecMeshContainers },
 	m_iNumMeshContainers{ _rhs.m_iNumMeshContainers },
-	m_BoneNodeContainer{ _rhs.m_BoneNodeContainer },
+	m_vecBoneNodes{ _rhs.m_vecBoneNodes },
 	m_iNumBoneNodes{ _rhs.m_iNumBoneNodes },
 	m_vecAnimations{ _rhs.m_vecAnimations },
 	m_iNumAnimation{ _rhs.m_iNumAnimation },
-	m_MaterialContainer{ _rhs.m_MaterialContainer },
+	m_vecMaterials{ _rhs.m_vecMaterials },
 	m_iNumMaterials{ _rhs.m_iNumMaterials },
 	m_mScaleMatrix{ _rhs.m_mScaleMatrix },
 	m_spFileGroup{ _rhs.m_spFileGroup },
@@ -57,15 +57,15 @@ TAssimpModel::TAssimpModel(const TAssimpModel& _rhs) :
 {
 }
 
-SHPTR<TAssimpBoneNode> TAssimpModel::FindBoneNode(const _wstring& _strBoneNode)
+SHPTR<TAssimpBoneNode> TAssimpModel::GetBoneNode(const _wstring& _strBoneNode)
 {
-	const BONENODES::iterator& it = std::find_if(m_BoneNodeContainer.begin(), m_BoneNodeContainer.end(), [&](const SHPTR<TAssimpBoneNode>& p) {
+	const BONENODES::iterator& it = std::find_if(m_vecBoneNodes.begin(), m_vecBoneNodes.end(), [&](const SHPTR<TAssimpBoneNode>& p) {
 		if (p->GetBoneName() == _strBoneNode)
 			return true;
 
 		return false;
 		});
-	RETURN_CHECK(m_BoneNodeContainer.end() == it, nullptr);
+	RETURN_CHECK(m_vecBoneNodes.end() == it, nullptr);
 	return *it;
 }
 
@@ -148,7 +148,7 @@ void TAssimpModel::GetData(MODELDESC& _tModelDesc)
 	}
 	// Materials
 	int i = 0;
-	for (auto& iter : m_MaterialContainer) {
+	for (auto& iter : m_vecMaterials) {
 		VECTOR<_wstring> strTextureFileName{};
 		for (auto& value : iter->arrMaterialTexture) {
 			if (nullptr != value)
@@ -171,12 +171,12 @@ void TAssimpModel::GetData(MODELDESC& _tModelDesc)
 		_tModelDesc.MatrialData.insert(std::pair<_uint, VECTOR<_wstring>>(i++, strTextureFileName));
 	}
 	// BoneNode
-	for (auto& iter : m_BoneNodeContainer) {
+	for (auto& iter : m_vecBoneNodes) {
 		BONENODEDESC tDesc;
 		iter->GetData(tDesc);
 		_tModelDesc.BNodeDatas.push_back(tDesc);
 	}
-	_tModelDesc.iNodeCnt = (_uint)m_BoneNodeContainer.size();
+	_tModelDesc.iNodeCnt = (_uint)m_vecBoneNodes.size();
 	_tModelDesc.iMeshContainersCount = m_iNumMeshContainers;
 	_tModelDesc.iMatrialCount = m_iNumMaterials;
 }
@@ -191,7 +191,7 @@ void TAssimpModel::GetData(ANIMMODELDESC& _tAnimModelDesc)
 	}
 	// Materials
 	int i = 0;
-	for (auto& iter : m_MaterialContainer) {
+	for (auto& iter : m_vecMaterials) {
 		VECTOR<_wstring> strTextureFileName{};
 		for (auto& value : iter->arrMaterialTexture) {
 			if (nullptr != value)
@@ -214,7 +214,7 @@ void TAssimpModel::GetData(ANIMMODELDESC& _tAnimModelDesc)
 		_tAnimModelDesc.MatrialData.insert(std::pair<_uint, VECTOR<_wstring>>(i++, strTextureFileName));
 	}
 	// BoneNode
-	for (auto& iter : m_BoneNodeContainer) {
+	for (auto& iter : m_vecBoneNodes) {
 		BONENODEDESC tDesc;
 		iter->GetData(tDesc);
 		_tAnimModelDesc.BNodeDatas.push_back(tDesc);
@@ -226,7 +226,7 @@ void TAssimpModel::GetData(ANIMMODELDESC& _tAnimModelDesc)
 		_tAnimModelDesc.Animes.push_back(tDesc);
 	}
 
-	_tAnimModelDesc.iNodeCnt = (_uint)m_BoneNodeContainer.size();
+	_tAnimModelDesc.iNodeCnt = (_uint)m_vecBoneNodes.size();
 	_tAnimModelDesc.iMeshContainersCount = m_iNumMeshContainers;
 	_tAnimModelDesc.iMatrialCount = m_iNumMaterials;
 }
@@ -480,7 +480,7 @@ HRESULT TAssimpModel::CreateModel(const _wstring& _wstrPath)
 	RETURN_CHECK_FAILED(CreateMaterials(m_spFileGroup), E_FAIL);
 	RETURN_CHECK_FAILED(CreateAnimation(m_pAIScene), E_FAIL);
 
-	std::sort(m_BoneNodeContainer.begin(), m_BoneNodeContainer.end(), [&](SHPTR<TAssimpBoneNode>& p1, SHPTR<TAssimpBoneNode>& p2) {
+	std::sort(m_vecBoneNodes.begin(), m_vecBoneNodes.end(), [&](SHPTR<TAssimpBoneNode>& p1, SHPTR<TAssimpBoneNode>& p2) {
 		return p1->GetDepth() < p2->GetDepth();
 		});
 
@@ -546,7 +546,7 @@ HRESULT TAssimpModel::CreateMaterials(CSHPTRREF<FILEGROUP> _spFileGroup)
 	}
 
 	m_iNumMaterials = m_pAIScene->mNumMaterials;
-	m_MaterialContainer.reserve(m_iNumMaterials);
+	m_vecMaterials.reserve(m_iNumMaterials);
 	_wstring wstrPath = spFileGroup->wstrPath;
 	m_wstrTexturePath = wstrPath;
 
@@ -591,7 +591,7 @@ HRESULT TAssimpModel::CreateMaterials(CSHPTRREF<FILEGROUP> _spFileGroup)
 			++iCnt;
 		}
 		if (iCnt > 0)
-			m_MaterialContainer.push_back(pModelMaterial);
+			m_vecMaterials.push_back(pModelMaterial);
 	}
 
 	m_wstrTexturePath += L"\\";
@@ -608,7 +608,7 @@ HRESULT TAssimpModel::CreateBoneNodes(aiNode* _pNode, SHPTR<TAssimpBoneNode> _pP
 	SHPTR<TAssimpBoneNode> pBoneNode = CreateNative<TAssimpBoneNode>(_pParents,
 		_pNode->mName.data, TransformMatrix, _fDepths);
 
-	m_BoneNodeContainer.push_back({ pBoneNode });
+	m_vecBoneNodes.push_back({ pBoneNode });
 
 	for (_uint i = 0; i < _pNode->mNumChildren; ++i) {
 		CreateBoneNodes(_pNode->mChildren[i], pBoneNode, _fDepths + 0.1f);

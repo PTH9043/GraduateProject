@@ -7,7 +7,9 @@
 @ Explain
 - Imgui¿« ∏ﬁ¿Œ ∫‰
 */
+
 BEGIN(Tool)
+
 class TCameraView : public TImGuiView {
 public:
 	TCameraView(CSHPTRREF<UDevice> _spDevice);
@@ -39,4 +41,6 @@ private:
 	_double														m_dShowDeltaTime;
 	_bool															m_isInitSetting;
 };
+
+
 END

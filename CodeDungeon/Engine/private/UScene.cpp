@@ -28,16 +28,16 @@ HRESULT UScene::NativeConstruct()
 
     SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
     // Direction 
-    m_LightShaders.insert(MakePair(LIGHTTYPE::TYPE_DIRECTIONAL, static_pointer_cast<UShader>(
+    m_LightShaders.insert(std::make_pair(LIGHTTYPE::TYPE_DIRECTIONAL, static_pointer_cast<UShader>(
         spGameInstance->CloneResource(PROTO_RES_LIGHTDIRECTIONSHADER)
     )));
     SHPTR<UShader> spShader = static_pointer_cast<UShader>(spGameInstance->CloneResource(PROTO_RES_LIGHTPOINTSHADER));
     // Point
-    m_LightShaders.insert(MakePair(LIGHTTYPE::TYPE_POINT, spShader));
+    m_LightShaders.insert(std::make_pair(LIGHTTYPE::TYPE_POINT, spShader));
     // Spot
-    m_LightShaders.insert(MakePair(LIGHTTYPE::TYPE_SPOT, spShader));
+    m_LightShaders.insert(std::make_pair(LIGHTTYPE::TYPE_SPOT, spShader));
     // FLASH LIGHT
-    m_LightShaders.insert(MakePair(LIGHTTYPE::TYPE_FLASHLIGHT, spShader));
+    m_LightShaders.insert(std::make_pair(LIGHTTYPE::TYPE_FLASHLIGHT, spShader));
     // Rect
     m_spVIBufferPlane = static_pointer_cast<UVIBufferRect>(spGameInstance->CloneResource(PROTO_RES_VIBUFFERRECT));
     return S_OK;

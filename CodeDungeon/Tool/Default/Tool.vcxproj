@@ -182,10 +182,8 @@
     <ClInclude Include="..\Public\TMainScene.h" />
     <ClInclude Include="..\Public\TMainView.h" />
     <ClInclude Include="..\Public\TModelView.h" />
-    <ClInclude Include="..\Public\TNavigationView.h" />
     <ClInclude Include="..\Public\ToolDefines.h" />
     <ClInclude Include="..\Public\ToolMaker.h" />
-    <ClInclude Include="..\Public\TParticleView.h" />
     <ClInclude Include="..\Public\TProtoMaker.h" />
     <ClInclude Include="..\Public\TShowAnimModelObject.h" />
     <ClInclude Include="..\Public\TShowMapObjects.h" />
@@ -217,8 +215,6 @@
     <ClCompile Include="..\Private\TMainScene.cpp" />
     <ClCompile Include="..\Private\TMainView.cpp" />
     <ClCompile Include="..\Private\TModelView.cpp" />
-    <ClCompile Include="..\Private\TNavigationView.cpp" />
-    <ClCompile Include="..\Private\TParticleView.cpp" />
     <ClCompile Include="..\Private\TProtoMaker.cpp" />
     <ClCompile Include="..\Private\TShowAnimModelObject.cpp" />
     <ClCompile Include="..\Private\TShowMapObjects.cpp" />

@@ -16,8 +16,7 @@ public:
 	UDefaultDebugging(const UDefaultDebugging& _rhs);
 	DESTRUCTOR(UDefaultDebugging)
 
-	void SetColor(const _float4& _vColor);
-	void SetColor(const _float3& _vColor);
+	void SetColor(const _float4 _vColor) { m_stDebuggParam.vDebugging = _vColor; }
 public:
 	CLONE_MACRO(UDefaultDebugging, "UDefaultDebugging::Clone To Failed")
 		virtual void Free() override;
@@ -35,10 +34,10 @@ protected:
 private:
 	static constexpr _uint							DEBUGPARAM_SIZE {sizeof(DEBUGGINPARAM)};
 
-	SHPTR< UVIBuffer>							m_spVIBuffer;
-	SHPTR< UShaderConstantBuffer>				m_spDebuggingConstantBuffer;
+	SHPTR< UVIBuffer>								m_spVIBuffer;
+	SHPTR< UShaderConstantBuffer>	m_spDebuggingConstantBuffer;
 	DEBUGGINPARAM								m_stDebuggParam;
-	DEBUGTYPE									m_eDebugType;
+	DEBUGTYPE											m_eDebugType;
 };
 
 END

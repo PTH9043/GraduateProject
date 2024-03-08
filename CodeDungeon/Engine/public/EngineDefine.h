@@ -85,7 +85,6 @@ static const char* CLONETYPE_ONCE_STRING{ "CLONETYPE_ONCE" };
 #include <atomic>
 #include <fstream>
 #include <locale>
-#include <map>
 
 #include <concurrent_queue.h>
 #include <concurrent_vector.h>
@@ -124,5 +123,3 @@ namespace Engine {
 #define DEFAULT_OUTFOLDEREXTENSION		Engine::DXVALUE::g_OutFolderExtension
 
 using namespace Engine;
-
-#define INVALID_MINUS_STAGEVALUE -1

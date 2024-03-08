@@ -49,7 +49,7 @@ HRESULT UBoneNode::NativeConstruct(const BONENODEDESC& _stBoneNodeDesc)
 
 void UBoneNode::FindParents(CSHPTRREF<UModel> _spModel)
 {
-	m_spParentsNode = _spModel->FindBoneNode(m_wstrParetnsName);
+	m_spParentsNode = _spModel->GetBoneNode(m_wstrParetnsName);
 }
 
 void UBoneNode::UpdateCombinedMatrix()

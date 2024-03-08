@@ -3,8 +3,8 @@
 #include "UAnimChannel.h"
 #include "UGameInstance.h"
 #include "UMethod.h"
-#include "AnimOccursEvents.h"
-#include "AnimSectionEvents.h"
+#include "UAnimSectionEvent.h"
+#include "UAnimOccursEvent.h"
 
 UAnimation::UAnimation() :
 	UBase(),
@@ -67,7 +67,6 @@ SHPTR<UAnimation> UAnimation::Clone(CSHPTRREF<UAnimModel> _spAnimModel)
 
 void UAnimation::Free()
 {
-	m_AnimEventContainer.clear();
 	m_Channels.clear();
 }
 
@@ -141,13 +140,13 @@ void UAnimation::UpdateNextAnimTransformMatrices(const _double& _dTimeDelta, con
 	}
 }
 
-void UAnimation::TickAnimEvent(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _TimeDelta, const _wstring& _wstrInputTrigger)
+void UAnimation::TickAnimEvent(UAnimModel* _pAnimModel, const _double& _TimeDelta, const _wstring& _wstrInputTrigger)
 {
 	for (auto& iter : m_AnimEventContainer)
 	{
 		for (auto& Event : iter.second)
 		{
-			Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, m_dTimeAcc, _wstrInputTrigger);
+			Event->EventCheck(_pAnimModel, _TimeDelta, m_dTimeAcc, _wstrInputTrigger);
 		}
 	}
 }
@@ -160,17 +159,17 @@ void UAnimation::ResetData()
 	m_dTimeAcc = 0.0;
 }
 
-void UAnimation::InsertAnimEvent(ANIMEVENTTYPE _AnimEventType, CSHPTRREF<UAnimEvent> _spAnimEvent)
+void UAnimation::InsertAnimEvent(ANIMEVENTCATEGORY _AnimCategory, CSHPTRREF<UAnimEvent> _spAnimEvent)
 {
-	assert(_AnimEventType <= ANIMEVENTTYPE::ANIMEVENT_END);
+	assert(_AnimCategory <= ANIMEVENTCATEGORY::CATEGROY_END);
 	assert(_spAnimEvent);
 
-	const auto& FindIter = m_AnimEventContainer.find(_AnimEventType);
+	const auto& FindIter = m_AnimEventContainer.find(_AnimCategory);
 	if (m_AnimEventContainer.end() == FindIter)
 	{
 		VECTOR<SHPTR<UAnimEvent>> EventVector;
 		EventVector.push_back(_spAnimEvent);
-		m_AnimEventContainer.emplace(MakePair(_AnimEventType, EventVector));
+		m_AnimEventContainer.emplace(MakePair(_AnimCategory, EventVector));
 	}
 	else
 	{
@@ -181,27 +180,12 @@ void UAnimation::InsertAnimEvent(ANIMEVENTTYPE _AnimEventType, CSHPTRREF<UAnimEv
 void UAnimation::RemoveAnimEvent(CSHPTRREF<UAnimEvent> _spAnimEvent)
 {
 	assert(_spAnimEvent);
-	ANIMEVENTTYPE AnimEventType = _spAnimEvent->GetAnimEventType();
+	ANIMEVENTCATEGORY AnimEventType = _spAnimEvent->GetAnimEventCategory();
 	const auto& FindIter = m_AnimEventContainer.find(AnimEventType);
 	assert(FindIter != m_AnimEventContainer.end());
 	for (auto iter = FindIter->second.begin(); iter != FindIter->second.end(); ++iter)
 	{
 		if ((*iter) == _spAnimEvent)
-		{
-			FindIter->second.erase(iter);
-			break;
-		}
-	}
-}
-
-void UAnimation::RemoveAnimEvent(ANIMEVENTTYPE _AnimEventType, _int _RemoveEvent)
-{
-	const auto& FindIter = m_AnimEventContainer.find(_AnimEventType);
-	assert(FindIter != m_AnimEventContainer.end());
-	_int Index{ 0 };
-	for (auto iter = FindIter->second.begin(); iter != FindIter->second.end(); ++iter)
-	{
-		if (Index++ == _RemoveEvent)
 		{
 			FindIter->second.erase(iter);
 			break;
@@ -279,7 +263,7 @@ void UAnimation::SaveAnimEventData(const _wstring& _wstrPath)
 		{
 			// Evnet Type Save
 			{
-				Saves.write((_char*)&iter.first, sizeof(ANIMEVENTTYPE));
+				Saves.write((_char*)&iter.first, sizeof(ANIMEVENTCATEGORY));
 			}
 			// Event Cnt Save
 			{
@@ -303,11 +287,11 @@ void UAnimation::SaveAnimEventPathIsFolder(const _wstring& _wstrPath)
 	{
 		str.append(m_wstrName);
 		str.append(DEFAULT_OUTFOLDEREXTENSION);
-		SaveAnimEventData(str);
+		SaveAnimSectionData(str);
 	}
 }
 
-void UAnimation::LoadAnimEventData(CSHPTRREF<UAnimModel> _spAnimModel, const _wstring& _wstrPath)
+void UAnimation::LoadAnimEventData(const _wstring& _wstrPath)
 {
 	std::ifstream Read{ _wstrPath, std::ios::binary };
 	RETURN_CHECK(!Read, ;);
@@ -321,10 +305,10 @@ void UAnimation::LoadAnimEventData(CSHPTRREF<UAnimModel> _spAnimModel, const _ws
 		for (_uint i = 0; i < iSize; ++i)
 		{
 			VECTOR<SHPTR<UAnimEvent>> AnimEventContainer;
-			ANIMEVENTTYPE EventType;
+			ANIMEVENTCATEGORY EventCategory;
 			// Evnet Type Save
 			{
-				Read.read((_char*)&EventType, sizeof(ANIMEVENTTYPE));
+				Read.read((_char*)&EventCategory, sizeof(ANIMEVENTCATEGORY));
 			}
 			_uint EventCnt{ 0 };
 			AnimEventContainer.reserve(EventCnt);
@@ -335,48 +319,34 @@ void UAnimation::LoadAnimEventData(CSHPTRREF<UAnimModel> _spAnimModel, const _ws
 			// Event save
 			for (_uint j = 0; j < EventCnt; ++j)
 			{
-				AnimEventContainer.push_back(CreateAnimEvent(_spAnimModel, EventType, Read));
+				AnimEventContainer.push_back(CreateAnimEvent(EventCategory, Read));
 			}
-			m_AnimEventContainer.emplace(MakePair(EventType, AnimEventContainer));
+			m_AnimEventContainer.emplace(MakePair(EventCategory, AnimEventContainer));
 		}
 	}
 }
 
-void UAnimation::LoadAnimEventDataPathIsFolder(CSHPTRREF<UAnimModel> _spAnimModel, const _wstring& _wstrPath)
+void UAnimation::LoadAnimEventDataPathIsFolder(const _wstring& _wstrPath)
 {
 	_wstring str = _wstrPath;
 	str.append(L"\\AnimEvent\\");
 	str.append(m_wstrName);
 	str.append(DEFAULT_OUTFOLDEREXTENSION);
 
-	LoadAnimEventData(_spAnimModel, str);
+	LoadAnimEventData(str);
 }
 
 
-SHPTR<UAnimEvent> UAnimation::CreateAnimEvent(CSHPTRREF<UAnimModel> _spAnimModel, ANIMEVENTTYPE _AnimEventType, std::ifstream& _read)
+SHPTR<UAnimEvent> UAnimation::CreateAnimEvent(ANIMEVENTCATEGORY _AnimCategory, std::ifstream& _read)
 {
 	SHPTR<UAnimEvent> spAnimEvent{ nullptr };
-	switch (_AnimEventType)
+	switch (_AnimCategory)
 	{
-	case ANIMEVENT_CAMERA:
+	case ANIMEVENTCATEGORY::CATEGROY_SECTION:
+		spAnimEvent = Create< UAnimSectionEvent>(_read);
 		break;
-	case ANIMEVENT_ANIMCHANGESBETWEEN:
-		spAnimEvent = Create< UAnimChangeBetweenEvent>(_spAnimModel, _read);
-		break;
-	case ANIMEVENT_COLLIDER:
-		spAnimEvent = Create<UAnimColliderEvent>(_spAnimModel, _read);
-		break;
-	case ANIMEVENT_EFFECT:
-
-		break;
-	case ANIMEVENT_OBJACTIVE:
-
-		break;
-	case ANIMEVENT_ANIMOCCURSTIMEPASS:
-		spAnimEvent = Create< UAnimOccursTimePassEvent>(_spAnimModel, _read);
-		break;
-	case ANIMEVENT_SOUND:
-		spAnimEvent = Create<UAnimSoundEvent>(_spAnimModel, _read);
+	case ANIMEVENTCATEGORY::CATEGROY_OCCUR:
+		spAnimEvent = Create< UAnimOccurEvent>(_read);
 		break;
 	}
 	return std::move(spAnimEvent);

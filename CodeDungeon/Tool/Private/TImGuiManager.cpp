@@ -12,9 +12,6 @@
 #include "TMainScene.h"
 #include "TAnimControlView.h"
 #include "TCameraView.h"
-#include "TParticleView.h"
-#include "TNavigationView.h"
-
 
 IMPLEMENT_SINGLETON(TImGuiManager)
 
@@ -40,7 +37,7 @@ HRESULT TImGuiManager::ReadyManager(const GRAPHICDESC& _stGraphicDesc, const OUT
 {
 	m_spDevice = _stOutputData.wpDevice.lock();
 	m_spGpuCommand = static_pointer_cast<UGpuCommand>(_stOutputData.wpGpuCmd.lock());
-	ImGuiContext* pContext = ImGui::CreateContext();
+	ImGui::CreateContext();
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.Fonts->AddFontFromFileTTF("..\\..\\Resource\\Font\\NanumSquare_acB.ttf", 15, NULL, io.Fonts->GetGlyphRangesKorean());
@@ -70,8 +67,6 @@ HRESULT TImGuiManager::ReadyManager(const GRAPHICDESC& _stGraphicDesc, const OUT
 	ImGui_ImplDX12_CreateDeviceObjects();
 
 	RETURN_CHECK_FAILED(ReadyImGuiClass(), E_FAIL);
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	spGameInstance->SetImGuiContext(pContext);
 	return S_OK;
 }
 
@@ -145,22 +140,8 @@ HRESULT TImGuiManager::ReadyImGuiClass()
 	{
 		SHPTR<TCameraView> spCameraView = CreateConstructorNative<TCameraView>(m_spDevice);
 		spCameraView->CloseImGui();
-		m_ImGuiObjectContainer.insert(MakePair(IMGTAG::CAMERATOOL, spCameraView));
+		m_ImGuiObjectContainer.insert(std::make_pair(IMGTAG::CAMERATOOL, spCameraView));
 		m_spMainView->InsertImGuiView(spCameraView);
-	}
-	{
-
-		SHPTR<TParticleView> spParticleView = CreateConstructorNative<TParticleView>(m_spDevice);
-		spParticleView->CloseImGui();
-		m_ImGuiObjectContainer.insert(std::make_pair(IMGTAG::PARTICLETOOL, spParticleView));
-		m_spMainView->InsertImGuiView(spParticleView);
-	}
-	{
-		SHPTR<TNavigationView> spNavigationView = CreateConstructorNative<TNavigationView>(m_spDevice);
-		spNavigationView->CloseImGui();
-		m_ImGuiObjectContainer.insert(MakePair(IMGTAG::CAMERATOOL, spNavigationView));
-		m_spMainView->InsertImGuiView(spNavigationView);
-
 	}
 	return S_OK;
 }

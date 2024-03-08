@@ -2,12 +2,7 @@
 
 #include "UObject.h"
 
-
 BEGIN(Engine)
-class UDefaultCell;
-class UVIBufferCell;
-class URenderer;
-class UPawn;
 
 class UCell : public UObject{
 public:
@@ -41,7 +36,6 @@ public:
 	void SetNeighbor(const LINE& _eLine, const _uint& _iIndex) { m_arrNeighbors[_eLine] = _iIndex; }
 public:
 	virtual void Free() override;
-	using	UObject::NativeConstruct;
 	virtual  HRESULT NativeConstruct() override;
 	// Points
 	HRESULT NativeConstruct(ARRAY<_float3, POINT_END>& _Points, const _uint _iIndex);
@@ -50,11 +44,6 @@ public:
 	_bool IsComparePoints(const _float3& _vPointA, const _float3& _vPointB);
 	_bool IsComparePoint(CSHPTRREF<UCell> _pCell);
 	const _float ComputeHeight(const _float3& _vPosition);
-	void ReBuffer();
-#ifdef _USE_DEBUGGING
-	void AddRenderer(RENDERID _eID);
-	void ChangeCellColor(const _float3& _vColor);
-#endif
 private:
 	// CrossResult
 	void CalculateCrossResult(ARRAY<_float3, POINT_END>& _arrPointsEnd);
@@ -75,12 +64,6 @@ private:
 	_int							m_iIndex;
 	// Planes
 	_float4							m_vPlane;
-
-#ifdef _USE_DEBUGGING
-private:
-	SHPTR<UVIBufferCell> m_spCellVIBuffer;
-	SHPTR<UDefaultCell> m_spCellPawn;
-#endif // _DEBUGGING
 };
 
 END

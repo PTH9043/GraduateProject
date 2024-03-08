@@ -1,9 +1,9 @@
 #pragma once
 
 #include "UPawn.h"
-#include "UParticleSystem.h"
-BEGIN(Engine)
 
+BEGIN(Engine)
+class UParticleSystem;
 class UTexGroup;
 class UVIBufferPoint;
 
@@ -13,7 +13,7 @@ public:
 	{
 		_wstring						 wstrParticleShader{ L"" };
 		_wstring						 wstrParticleComputeShader{L""};
-		_wstring						 wstrParticleTextureName[2];
+		_wstring						 wstrParticleTextureName;
 		PARTICLEPARAM		ParticleParam;
 	};
 	struct PARTICLELOADATA
@@ -43,15 +43,12 @@ protected:
 	// Save Load
 	virtual _bool Save(const _wstring& _wstrPath);
 	virtual _bool Load(const _wstring& _wstrPath);
-public:
+
 	CSHPTRREF<UTexGroup> GetTextureGroup() const { return m_spTexGroup; }
 	CSHPTRREF<UParticleSystem> GetParticleSystem() const { return m_spParticleSystem; }
 #ifdef _USE_IMGUI
 public:
-	void SetTexture(const _wstring& TexName);
-	void SetTexture(_uint _index);
 	virtual void ShowObjectInfo() override;
-	PARTICLEPARAM* GetParticleParam() { return m_spParticleSystem->GetParticleParam(); }
 #endif
 private:
 	SHPTR<UTexGroup>				m_spTexGroup;
@@ -60,7 +57,6 @@ private:
 	// Texture Indexs
 	TEXTUREINDEXCONTAINER	m_TextureIndexContainer;
 	CUSTIMER									m_LifeTimer;
-	_uint TextureIndex;
 };
 
 END

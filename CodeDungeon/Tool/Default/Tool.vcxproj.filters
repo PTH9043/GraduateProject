@@ -71,17 +71,14 @@
     <Filter Include="90.ShowModel\AnimControlModel">
       <UniqueIdentifier>{c9991766-7321-4751-b857-159b2259d33b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.ImGui\Camera">
+      <UniqueIdentifier>{87428a9f-92a2-41df-93f6-4b3be0a10aa0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.ImGui\Map">
+      <UniqueIdentifier>{d9e63b2c-4aeb-411a-a262-5b6f7ae8d293}</UniqueIdentifier>
+    </Filter>
     <Filter Include="90.ShowModel\Map">
       <UniqueIdentifier>{f1818212-5422-46a7-88a7-96a4514354cb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.ImGui\CameraView">
-      <UniqueIdentifier>{7c700fb0-fd1f-41e0-94e9-dc7fab7dae42}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.ImGui\Navigation">
-      <UniqueIdentifier>{8b370064-78ad-4a89-b112-ad0dbb5ab91c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.ImGui\TParticleView">
-      <UniqueIdentifier>{5e071f80-7abf-440a-a39b-8cb71be5bae4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -185,13 +182,7 @@
       <Filter>90.ShowModel\Map</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TCameraView.h">
-      <Filter>03.ImGui\CameraView</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\TNavigationView.h">
-      <Filter>03.ImGui\Navigation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\TParticleView.h">
-      <Filter>03.ImGui\TParticleView</Filter>
+      <Filter>03.ImGui\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -277,13 +268,7 @@
       <Filter>90.ShowModel\Map</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TCameraView.cpp">
-      <Filter>03.ImGui\CameraView</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\TNavigationView.cpp">
-      <Filter>03.ImGui\Navigation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\TParticleView.cpp">
-      <Filter>03.ImGui\TParticleView</Filter>
+      <Filter>03.ImGui\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

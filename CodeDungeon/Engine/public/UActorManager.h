@@ -14,11 +14,12 @@ using CLONES = UNORMAP<_wstring, SHPTR<UActorGroup>>;
 using CLONEVECTOR = VECTOR<SHPTR<UActorGroup>>;
 using CLONEARR = ARRAY<CLONES, CLONE_MAX_SIZE>;
 
+
 class UActorManager : public UBase {
 public:
 	UActorManager();
 	NO_COPY(UActorManager)
-	DESTRUCTOR(UActorManager)
+		DESTRUCTOR(UActorManager)
 public:
 	const CLONEARR& GetClonesArr() const { return m_arrClones; }
 public:

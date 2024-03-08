@@ -16,7 +16,6 @@
 #include "UFilePathManager.h"
 #include "UNetworkManager.h"
 #include "UAudioSystemManager.h"
-#include "UCharacterManager.h"
 
 #include "URenderer.h"
 
@@ -34,7 +33,7 @@
 #include "UDefferedCamera.h"
 #include "UDefaultCube.h"
 #include "UDefaultDebugging.h"
-#include "UDefaultCell.h"
+
 
 #include "UShader.h"
 #include "UComputeShader.h"
@@ -42,8 +41,8 @@
 #include "UVIBufferRect.h"
 #include "UVIBufferPoint.h"
 //#include "UVIBufferTriangle.h"
-#include "UVIBufferSphere.h"
-#include "UVIBufferCube.h"
+//#include "UVIBufferSphere.h"
+//#include "UVIBufferCube.h"
 #include "UVIBufferPlane.h"
 #include "UVIBufferGrid.h"
 //#include "UVIBufferSkyBox.h"
@@ -82,9 +81,8 @@ UGameInstance::UGameInstance() :
 	//m_spPicking{ Create<UPicking>() },
 	m_spFilePathManager{ Create<UFilePathManager>() },
 	//m_spRandomManager{ Create<URandomManager>() },
-	m_spAudioSystemManager{ Create<UAudioSystemManager>() },
 	m_spNetworkManager{Create<UNetworkManager>()},
-	m_spCharacterManager{Create<UCharacterManager>()},
+	m_spAudioSystemManager{Create<UAudioSystemManager>()},
 	m_spRenderer{ nullptr }
 	//m_spGraphicRenderObject{ nullptr }
 {
@@ -103,23 +101,30 @@ void UGameInstance::Free()
 
 	//m_isGamming = false;
 	//m_spRandomManager.reset();
-	m_spCharacterManager.reset();
-	m_spNetworkManager.reset();
 	m_spAudioSystemManager.reset();
+	m_spNetworkManager.reset();
 	m_spFilePathManager.reset();
 	//m_spPicking.reset();
 	m_spPipeLine.reset();
 	//m_spComputeManager.reset();
 	m_spRenderTargetManager.reset();
 	m_spSceneManager.reset();
-	m_spResourceManager.reset();
-	m_spComponentManager.reset();
 	m_spActorManager.reset();
+	m_spComponentManager.reset();
+	m_spResourceManager.reset();
 	m_spThreadManager.reset();
 	m_spInputManager.reset();
 	m_spTimerManager.reset();
 	m_spGraphicDevice.reset();
 	m_spShaderBufferManager.reset();
+
+
+#if defined(_DEBUG)
+	IDXGIDebug1* pdxgiDebug = NULL;
+	DXGIGetDebugInterface1(0, __uuidof(IDXGIDebug1), (void**)&pdxgiDebug);
+	HRESULT hResult = pdxgiDebug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_DETAIL);
+	pdxgiDebug->Release();
+#endif
 }
 
 HRESULT UGameInstance::ReadyInstance(const GRAPHICDESC& _stDesc, OUTPUTDATA& _stOutDesc)
@@ -128,18 +133,23 @@ HRESULT UGameInstance::ReadyInstance(const GRAPHICDESC& _stDesc, OUTPUTDATA& _st
 	RETURN_CHECK_FAILED(m_spShaderBufferManager->ReadyShaderBufferManager(_stOutDesc.wpDevice.lock()), E_FAIL);
 	RETURN_CHECK_FAILED(m_spInputManager->ReadyInpuDevice(m_spGraphicDevice->GetGraphicDesc()), E_FAIL);
 	RETURN_CHECK_FAILED(m_spRenderTargetManager->ReadyRenderTarget(m_spGraphicDevice, m_spGraphicDevice->GetDevice()), E_FAIL);
+	//RETURN_CHECK_FAILED(m_spComputeManager->NativeComputeManager(m_spGraphicRenderObject), E_FAIL);
 
 	RETURN_CHECK_FAILED(ReadyRenderTarget(_stOutDesc), E_FAIL);
 	RETURN_CHECK_FAILED(ReadyResource(_stOutDesc), E_FAIL);
 	RETURN_CHECK_FAILED(ReadyComp(_stOutDesc), E_FAIL);
 	RETURN_CHECK_FAILED(ReadyActor(_stOutDesc), E_FAIL);
 
+	//RETURN_CHECK_FAILED(m_spFontMananger->ReadyFontManager(m_spGraphicRenderObject, m_spGraphicDevice->GetSwapChain(),
+	//	m_spRenderTargetManager, m_spGraphicDevice->GetD3DViewport()), E_FAIL);
 	RETURN_CHECK_FAILED(m_spActorManager->ReadyActorManager(m_spRenderer), E_FAIL);
 	RETURN_CHECK_FAILED(m_spSceneManager->ReadySceneManager(this), E_FAIL);
 	
+	//RETURN_CHECK_FAILED(m_spComputeManager->ReadyComputeManager(m_spGraphicDevice), E_FAIL);
 	RETURN_CHECK_FAILED(m_spPipeLine->ReadyPipeLine(this), E_FAIL);
 	RETURN_CHECK_FAILED(m_spAudioSystemManager->ReadyAudioSystemManager(this), E_FAIL);
 
+	//RegisterInsideWorkThread(std::thread::hardware_concurrency());
 	m_isGamming = true;
 	return S_OK;
 }
@@ -180,7 +190,7 @@ void UGameInstance::AwakeTick()
 {
 	m_spInputManager->KeyTick();
 	m_spInputManager->MouseTick();
-	// m_spPicking->TickRayInWorldSpace(this);
+	//m_spPicking->TickRayInWorldSpace(this);
 	m_spPipeLine->FrustomTick();
 	m_spRenderer->ClearRenderingData();
 }
@@ -211,11 +221,6 @@ void UGameInstance::RenderEnd()
 {
 	/* Gpu 동기화 시키는 부분 */
 	m_spGraphicDevice->MainRenderEnd();
-}
-
-void UGameInstance::SetImGuiContext(ImGuiContext* _pContext)
-{
-	ImGui::SetCurrentContext(_pContext);
 }
 
 HRESULT UGameInstance::OnWindowResize(const _uint& _iWinSizeX, const _uint& _iWinSizeY, const GRAPHICDESC::WINMODE _eWindowMode)
@@ -730,7 +735,7 @@ const CAMID UGameInstance::GetRenderCamID() const
 ==================================================
 PipeLine
 ==================================================
-FilePathManager
+FilePath
 ==================================================
 */
 
@@ -753,97 +758,6 @@ HRESULT UGameInstance::LoadFirstFolder(const _wstring& _wstrFilePath)
 {
 	return m_spFilePathManager->LoadFirstFolder(_wstrFilePath);
 }
-/*
-==================================================
-FilePathManager
-==================================================
-AudioSystemManager
-==================================================
-*/
-
-const AUDIOSYSTEMCONTAINER& UGameInstance::GetAudioSystemContainer() const
-{
-	return m_spAudioSystemManager->GetAudioSystemContainer();
-}
-
-SHPTR<UAudioSystem> UGameInstance::GetAudioSystem(const SOUNDTYPE _SoundType)
-{
-	return m_spAudioSystemManager->GetAudioSystem(_SoundType);
-}
-
-HRESULT UGameInstance::CreateAudioSystemAndRegister(SOUNDTYPE _SoundType, const _wstring& _wstrSoundFolderPath)
-{
-	return m_spAudioSystemManager->CreateAudioSystemAndRegister(this, _SoundType, _wstrSoundFolderPath);
-}
-
-HRESULT UGameInstance::CreateAudioSystemAndRegister(SOUNDTYPE _SoundType, CSHPTRREF<FILEGROUP> _spSoundFileGroup)
-{
-	return m_spAudioSystemManager->CreateAudioSystemAndRegister(this, _SoundType, _spSoundFileGroup);
-}
-
-HRESULT UGameInstance::CreateAudioSystemToFolderNameAndRegister(SOUNDTYPE _SoundType, const _wstring& _wstrSoundFolderName)
-{
-	return m_spAudioSystemManager->CreateAudioSystemToFolderNameAndRegister(this, _SoundType, _wstrSoundFolderName);
-}
-
-void UGameInstance::SoundPlay(const _wstring& _wstrSoundName)
-{
-	m_spAudioSystemManager->Play(_wstrSoundName);
-}
-
-void UGameInstance::SoundPlay(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate)
-{
-	m_spAudioSystemManager->Play(_wstrSoundName, _fVolumeUpdate);
-}
-
-void UGameInstance::SoundPlayBGM(const _wstring& _wstrSoundName)
-{
-	m_spAudioSystemManager->PlayBGM(_wstrSoundName);
-}
-
-void UGameInstance::SoundPlayBGM(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate)
-{
-	m_spAudioSystemManager->PlayBGM(_wstrSoundName, _fVolumeUpdate);
-}
-
-void UGameInstance::StopSound(const _wstring& _wstrSoundName)
-{
-	m_spAudioSystemManager->Stop(_wstrSoundName);
-}
-
-void UGameInstance::UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, const _float3& _vSoundVelocity, CSHPTRREF<UTransform> _spTargetTransform)
-{
-	m_spAudioSystemManager->UpdateSound3D(_wstrSoundName, _vSoudPos, _vSoundVelocity, _spTargetTransform);
-}
-
-void UGameInstance::VolumeUpdate(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate)
-{
-	m_spAudioSystemManager->VolumeUpdate(_wstrSoundName, _fVolumeUpdate);
-}
-
-void UGameInstance::ChangeMinMaxDistance3D(const _wstring& _wstrSoundName, const _float _fMinDistance, const _float _fMaxDistance)
-{
-	m_spAudioSystemManager->ChangeMinMaxDistance3D(_wstrSoundName, _fMinDistance, _fMaxDistance);
-}
-
-SHPTR<USound> UGameInstance::BringSound(const _int _Index)
-{
-	return m_spAudioSystemManager->BringSound(_Index);
-}
-
-SHPTR<USound> UGameInstance::BringSound(const _wstring& _wstrSoundName)
-{
-	return m_spAudioSystemManager->BringSound(_wstrSoundName);
-}
-
-/*
-==================================================
-AudioSystemManager
-==================================================
-NetworkManager
-==================================================
-*/
-
 
 HRESULT UGameInstance::StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController)
 {
@@ -872,25 +786,7 @@ void UGameInstance::NetworkEnd()
 
 /*
 ==================================================
-NetworkManager
-==================================================
-CharacterManager
-==================================================
-*/
-
-CSHPTRREF<UCharacter> UGameInstance::GetCurrPlayer() const
-{
-	return m_spCharacterManager->GetCurrPlayer();
-}
-
-void UGameInstance::ReigsterCurrentPlayer(CSHPTRREF<UCharacter> _spCurrentPlayer)
-{
-	m_spCharacterManager->ReigsterCurrentPlayer(_spCurrentPlayer);
-}
-
-/*
-==================================================
-CharacterManager
+FilePath
 ==================================================
 ReadyDatas
 ==================================================
@@ -900,6 +796,7 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 {
 	// VIBuffer
 	{
+
 		AddPrototype(PROTO_RES_VIBUFFERPOINT, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferPoint>(
 			_stData.wpDevice.lock()));
 
@@ -921,6 +818,12 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 		AddPrototype(PROTO_RES_VIBUFFERNORMALGRID, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferGrid>(
 			_stData.wpDevice.lock(), VIBUFFERTYPE::NORMAL));
 
+	/*	AddPrototype(PROTO_RES_VIBUFFERPOINT, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferPoint>(
+			_stData.wpDevice.lock()));
+
+		AddPrototype(PROTO_RES_VIBUFFERTRIANGLE, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferTriangle>(
+			_stData.wpDevice.lock()));
+
 		AddPrototype(PROTO_RES_VIBUFFERSHPHERE, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferSphere>(
 			_stData.wpDevice.lock(), VIBUFFERTYPE::GENERIC));
 
@@ -932,11 +835,6 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 
 		AddPrototype(PROTO_RES_VIBUFFERNORMALCUBE, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferCube>(
 			_stData.wpDevice.lock(), VIBUFFERTYPE::NORMAL));
-
-	/*	
-
-		AddPrototype(PROTO_RES_VIBUFFERTRIANGLE, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferTriangle>(
-			_stData.wpDevice.lock()));
 
 		AddPrototype(PROTO_RES_VIBUFFERNORMALPLANE, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferPlane>(
 			_stData.wpDevice.lock(), VIBUFFERTYPE::NORMAL));
@@ -1151,10 +1049,6 @@ HRESULT UGameInstance::ReadyActor(const OUTPUTDATA& _stData)
 #ifdef _USE_DEBUGGING
 		AddPrototype(PROTO_ACTOR_DEUBGGINGDEFAULTOBJECT, CreateConstructorToNative<UDefaultDebugging>(
 			_stData.wpDevice.lock(), LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
-		
-		AddPrototype(PROTO_ACTOR_DEUBGGINGDEFAULTCELL, CreateConstructorToNative<UDefaultCell>(
-			_stData.wpDevice.lock(), LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
-
 #endif 
 	}
 	AddPrototype(PROTO_ACTOR_PARTICLE, CreateConstructorToNative<UParticle>(

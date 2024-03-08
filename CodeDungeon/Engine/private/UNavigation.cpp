@@ -1,46 +1,32 @@
 #include "EngineDefine.h"
-#include "UGameInstance.h"
 #include "UNavigation.h"
 #include "UTransform.h"
 #include "UDevice.h"
 #include "UGpuCommand.h"
 #include "UMethod.h"
-#include "UCollider.h"
 #include <fstream>
 
 UNavigation::UNavigation(CSHPTRREF<UDevice> _spDevice)
-	: UComponent(_spDevice),
+	: UResource(_spDevice),
 	m_spCellContainer{},
 	m_spCurCell{ nullptr },
 	m_iCurIndex{ 0 }
 {
 }
 
-UNavigation::UNavigation(const UNavigation& _rhs) : UComponent(_rhs),
+UNavigation::UNavigation(const UNavigation& _rhs) : UResource(_rhs),
 m_spCellContainer{ _rhs.m_spCellContainer }
 {
 }
 
 void UNavigation::Free()
 {
-
 	m_spCellContainer.reset();
 }
 
 HRESULT UNavigation::NativeConstruct()
 {
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-
-	UCollider::COLLIDERDESC tDesc;
-
-	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
-	tDesc.vScale = _float3(0.f, 0.f, 0.f);
-
-	m_spCollider = std::static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_ABBCOLLIDER, { &tDesc}));
-
-	RETURN_CHECK_FAILED(ReadyNeighbor(), E_FAIL);
-
-	return S_OK;
+	return __super::NativeConstruct();
 }
 
 //HRESULT UNavigation::NativeConstruct(const VECTOR<SHPTR<UVIBufferTerrain>>& _vecTerrain)
@@ -170,23 +156,8 @@ SHPTR<UCell> UNavigation::FindCell(const _float3& _vPosition)
 	return nullptr;
 }
 
-_bool UNavigation::IsCollision(SHPTR<UCollider>& _pCollider)
+void UNavigation::InsertCell(const _float3& _vCellPos)
 {
-	if (nullptr == _pCollider || nullptr == m_spCollider)
-		return false;
-
-	if (true == m_spCollider->IsCollision(_pCollider))
-		return true;
-
-	return false;
-}
-
-void UNavigation::AddCell(SHPTR<UCell>& _spCell)
-{
-	if (nullptr == m_spCellContainer)
-		return;
-
-	m_spCellContainer->push_back(_spCell);
 }
 
 _bool UNavigation::Load(const _wstring& _wstrPath)

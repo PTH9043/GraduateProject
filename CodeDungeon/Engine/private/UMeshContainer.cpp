@@ -9,7 +9,7 @@ UMeshContainer::UMeshContainer(CSHPTRREF<UDevice> _spDevice)
 	m_iMaterialIndex{ 0 },
 	m_iNumBones{ 0 },
 	m_iNumBuffers{ 0 },
-	m_BoneNodeContainer{  },
+	m_vecBoneNodes{  },
 	m_wstrName{ L"" }
 {
 }
@@ -19,14 +19,14 @@ UMeshContainer::UMeshContainer(const UMeshContainer& _rhs) :
 	m_iMaterialIndex{ _rhs.m_iMaterialIndex },
 	m_iNumBones{ _rhs.m_iNumBones },
 	m_iNumBuffers{ _rhs.m_iNumBuffers },
-	m_BoneNodeContainer{ _rhs.m_BoneNodeContainer },
+	m_vecBoneNodes{ _rhs.m_vecBoneNodes },
 	m_wstrName{ _rhs.m_wstrName }
 {
 }
 
 void UMeshContainer::Free()
 {
-	m_BoneNodeContainer.clear();
+	m_vecBoneNodes.clear();
 }
 
 HRESULT UMeshContainer::NativeConstruct()
@@ -57,22 +57,22 @@ HRESULT UMeshContainer::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	RETURN_CHECK(nullptr == pModel, E_FAIL);
 	VECTOR<SHPTR<UBoneNode>> BoneModels{};
 
-	for (auto& BoneNode : m_BoneNodeContainer) {
-		SHPTR<UBoneNode> pBoneNode = pModel->FindBoneNode(BoneNode->GetName());
+	for (auto& BoneNode : m_vecBoneNodes) {
+		SHPTR<UBoneNode> pBoneNode = pModel->GetBoneNode(BoneNode->GetName());
 		BoneModels.push_back(pBoneNode);
 	}
 
-	m_BoneNodeContainer.clear();
-	m_BoneNodeContainer = BoneModels;
+	m_vecBoneNodes.clear();
+	m_vecBoneNodes = BoneModels;
 	return S_OK;
 }
 
 HRESULT UMeshContainer::SetUpBoneMatrix(ARRAY<_float4x4, MAX_BONE_SIZE>& _arrBones)
 {
-	for (_uint i = 0; i < m_BoneNodeContainer.size(); ++i)
+	for (_uint i = 0; i < m_vecBoneNodes.size(); ++i)
 	{
-		_arrBones[i] = m_BoneNodeContainer[i]->GetOffsetMatrix() *
-			m_BoneNodeContainer[i]->GetCombineMatrix();
+		_arrBones[i] = m_vecBoneNodes[i]->GetOffsetMatrix() *
+			m_vecBoneNodes[i]->GetCombineMatrix();
 
 		_arrBones[i] = _arrBones[i].Transpose();
 	}
@@ -133,8 +133,8 @@ void UMeshContainer::ReceiveBoneNode(CSHPTRREF<UModel> _spModel, const VECTOR<_w
 {
 	for (_uint i = 0; i < _iBoneNodeCnt; ++i)
 	{
-		SHPTR<UBoneNode> spBoneNode = _spModel->FindBoneNode(_convecBoneNameList[i]);
-		m_BoneNodeContainer.push_back(spBoneNode);
+		SHPTR<UBoneNode> spBoneNode = _spModel->GetBoneNode(_convecBoneNameList[i]);
+		m_vecBoneNodes.push_back(spBoneNode);
 	}
 	m_iNumBones = _iBoneNodeCnt;
 }

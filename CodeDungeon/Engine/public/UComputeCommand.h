@@ -6,9 +6,11 @@ class UDevice;
 
 class UComputeCommand : public UCommand {
 public:
+	using ALLOCATORARR = ARRAY<ComPtr<Dx12CommandAllocator>, 5>;
+public:
 	UComputeCommand();
 	NO_COPY(UComputeCommand)
-	DESTRUCTOR(UComputeCommand)
+		DESTRUCTOR(UComputeCommand)
 public:
 	virtual void Free() override;
 	virtual HRESULT NativeConstruct(CSHPTRREF<UDevice> _spDevice, const ComPtr<Dx12CommandQueue>& _cpCommandQueue) override;
@@ -18,7 +20,8 @@ public:
 	virtual void Clear() override;
 	/* Variable */
 private:
-	ComPtr<Dx12CommandAllocator>		m_cpCommandAllocator;
+	ALLOCATORARR		m_arrRenderAllocators;
+	_uint							m_iAllocatorIndex;
 };
 
 END

@@ -86,11 +86,6 @@ HRESULT UAnimModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	return S_OK;
 }
 
-void UAnimModel::TickEvent(UPawn* _pPawn, const _wstring& _wstrInputTrigger, const _double& _TimeDelta)
-{
-	m_spCurAnimation->TickAnimEvent(_pPawn, this, _TimeDelta, _wstrInputTrigger);
-}
-
 void UAnimModel::TickAnimation(const _double& _dTimeDelta)
 {
 	if (nullptr != m_spNextAnimation)
@@ -126,9 +121,11 @@ void UAnimModel::UpdateCurAnimationToTimeAcc(const _double& _dTimeAcc)
 	}
 }
 
-void UAnimModel::TickAnimChangeTransform(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta)
+void UAnimModel::TickAnimAndEvent(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta, 
+	const _wstring& _wstrInputTrigger)
 {
 	assert(_spTransform && m_spCurAnimation);
+	m_spCurAnimation->TickAnimEvent(this, _dTimeDelta, _wstrInputTrigger);
 	TickAnimation(_dTimeDelta);
 
 	if (false == m_spCurAnimation->IsSupplySituation())
@@ -148,9 +145,11 @@ void UAnimModel::TickAnimChangeTransform(CSHPTRREF<UTransform> _spTransform, con
 	}
 }
 
-void UAnimModel::TickAnimToTimAccChangeTransform(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta, const _double& _TimeAcc)
+void UAnimModel::TickAnimToTimAccAndEvent(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta, const _double& _TimeAcc, 
+	const _wstring& _wstrInputTrigger)
 {
 	assert(_spTransform && m_spCurAnimation);
+	m_spCurAnimation->TickAnimEvent(this, _dTimeDelta, _wstrInputTrigger);
 	UpdateCurAnimationToTimeAcc(_TimeAcc);
 
 	_float3 vLook = GetRootBoneNode()->GetMoveRootBoneAngle();
@@ -233,9 +232,6 @@ HRESULT UAnimModel::CreateAnimation(const  VECTOR<ANIMDESC>& _convecAnimDesc, co
 {
 	m_vecAnimations.reserve(_convecAnimDesc.size());
 	_uint iIndex{ 0 };
-
-	SHPTR<UAnimModel> spAnimModel = ThisShared<UAnimModel>();
-
 	for (auto& iter : _convecAnimDesc)
 	{
 		SHPTR<UAnimation> spAnimation{ CreateNative<UAnimation>(ThisShared<UAnimModel>(), iter) };
@@ -245,7 +241,6 @@ HRESULT UAnimModel::CreateAnimation(const  VECTOR<ANIMDESC>& _convecAnimDesc, co
 
 		m_AnimNamesGroup.insert(std::pair<_wstring, _uint>(spAnimation->GetAnimName(), iIndex++));
 		spAnimation->LoadAnimSectionDataPathIsFolder(_wstrPath);
-		spAnimation->LoadAnimEventDataPathIsFolder(spAnimModel, _wstrPath);
 	}
 	return S_OK;
 }

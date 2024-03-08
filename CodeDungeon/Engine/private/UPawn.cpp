@@ -3,7 +3,6 @@
 #include "UShader.h"
 #include "URenderer.h"
 #include "UGameInstance.h"
-#include "UCollider.h"
 
 UPawn::UPawn(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType, const BACKINGTYPE _eBackingType) :
 	UActor(_spDevice, _wstrLayer, _eCloneType, _eBackingType, USECOLLISIONTYPE::ACTIVE),
@@ -47,26 +46,9 @@ HRESULT UPawn::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	return S_OK;
 }
 
-bool UPawn::IsHit(CSHPTRREF<UPawn> _spEnemy)
+bool UPawn::IsHit(CSHPTRREF<UPawn> _pEnemy)
 {
-	assert(nullptr != _spEnemy);
-	RETURN_CHECK(0 >= m_ColliderContainer.size(), false);
-
-	_bool isTrue{ true };
-	for (auto& iter : _spEnemy->m_ColliderContainer)
-	{
-		const auto& Collider = m_ColliderContainer.find(iter.first);
-		if (Collider == m_ColliderContainer.end())
-		{
-			continue;
-		}
-
-		isTrue |= Collider->second->IsCollision(iter.second);
-	}
-	if (true == isTrue)
-		Collision(_spEnemy);
-
-	return isTrue;
+	return false;
 }
 
 void UPawn::AddRenderGroup(const RENDERID _iRenderID)
@@ -93,20 +75,6 @@ HRESULT UPawn::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDesc
 void UPawn::Collision(CSHPTRREF<UPawn> _pEnemy)
 {
 
-}
-
-void UPawn::AddColliderInContainer(const _wstring& _wstrTag, const _wstring& _wstrColliderProto, const _float3& _vColliderPos, const _float3& _vColliderScale)
-{
-	UCollider::COLLIDERDESC ColliderDesc{ _vColliderPos, _vColliderScale };
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	m_ColliderContainer.emplace(MakePair(_wstrTag, std::static_pointer_cast<UCollider>(spGameInstance->CloneComp(_wstrColliderProto,
-		VOIDDATAS{ &ColliderDesc }))));
-}
-
-void UPawn::AddColliderInContainer(const _wstring& _wstrTag, CSHPTRREF<UCollider> _spCollider)
-{
-	assert(nullptr != _spCollider);
-	m_ColliderContainer.emplace(MakePair(_wstrTag, _spCollider));
 }
 
 void UPawn::AddShader(const _wstring& _wstrProtoTag, const _wstring& _wstrTag, const VOIDDATAS& _vecDatas)
