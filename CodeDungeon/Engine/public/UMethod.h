@@ -55,6 +55,27 @@ namespace Engine
 
 		static void SaveString(std::ofstream& _os, const _wstring& _wstr);
 		static void ReadString(std::ifstream& _if, _string& _str);
+<<<<<<< HEAD
+=======
+
+		/*
+		@ Date: 2024-02-25, Writer: 박태현
+		@ Explain
+		-  Save를 편하게 쓰지 위해 함수화 
+		*/
+		template<class T>
+		requires IsNotPointer<T>
+		static void SaveOther(std::ofstream& _os, T*  _Others);
+		/*
+		@ Date: 2024-02-25, Writer: 박태현
+		@ Explain
+		-  Read를 쓰기 위해 함수화
+		*/
+		template<class T>
+		requires IsNotPointer<T>
+		static void ReadOther(std::ifstream& _if, T* _Others);
+
+>>>>>>> parent of ebb9d81d (以묎컙)
 
 		// Read Save WString
 		static void SaveString(HANDLE& _hFile, DWORD& _bytes, BOOL& _bTrue, const _wstring& _str);

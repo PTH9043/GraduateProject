@@ -19,9 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <ClInclude Include="..\public\UAnimOccursEvent.h" />
     <ClInclude Include="..\public\UAnimSectionEvent.h" />
     <ClInclude Include="..\public\AudioAPI.h" />
+=======
+    <ClInclude Include="..\public\AnimEventParents.h" />
+    <ClInclude Include="..\public\AnimOccursEvents.h" />
+    <ClInclude Include="..\public\AnimSectionEvents.h" />
+    <ClInclude Include="..\public\UCharacter.h" />
+    <ClInclude Include="..\public\UCharacterManager.h" />
+    <ClInclude Include="..\public\UController.h" />
+    <ClInclude Include="..\public\USound.h" />
+>>>>>>> parent of ebb9d81d (중간)
     <ClInclude Include="..\public\CustomMemory.h" />
     <ClInclude Include="..\public\CustomString.h" />
     <ClInclude Include="..\public\EngineConcept.h" />
@@ -133,9 +143,19 @@
     <ClInclude Include="..\public\UWorkThread.h" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <ClCompile Include="..\private\UAnimOccursEvent.cpp" />
     <ClCompile Include="..\private\UAnimSectionEvent.cpp" />
     <ClCompile Include="..\private\AudioAPI.cpp" />
+=======
+    <ClCompile Include="..\private\AnimEventParents.cpp" />
+    <ClCompile Include="..\private\AnimOccursEvents.cpp" />
+    <ClCompile Include="..\private\AnimSectionEvents.cpp" />
+    <ClCompile Include="..\private\UCharacter.cpp" />
+    <ClCompile Include="..\private\UCharacterManager.cpp" />
+    <ClCompile Include="..\private\UController.cpp" />
+    <ClCompile Include="..\private\USound.cpp" />
+>>>>>>> parent of ebb9d81d (중간)
     <ClCompile Include="..\private\CustomMemory.cpp" />
     <ClCompile Include="..\private\CustomString.cpp" />
     <ClCompile Include="..\private\EngineStruct.cpp" />

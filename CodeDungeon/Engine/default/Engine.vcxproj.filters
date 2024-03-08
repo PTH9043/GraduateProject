@@ -298,8 +298,49 @@
     <Filter Include="07.Resource\AudioSystem">
       <UniqueIdentifier>{520ce6a1-e67c-4264-9546-85d6ddb2c12e}</UniqueIdentifier>
     </Filter>
+<<<<<<< HEAD
     <Filter Include="07.Resource\AudioSystem\Audio">
       <UniqueIdentifier>{ea673e68-bce2-44d8-9e51-2631ac40d2a4}</UniqueIdentifier>
+=======
+    <Filter Include="07.Resource\AudioSystem\Sound">
+      <UniqueIdentifier>{c768e6d2-3e14-4c43-973d-98d132aae2fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="21.Event">
+      <UniqueIdentifier>{c12926f2-c35e-46f9-b262-0d6d645dad88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="21.Event\AnimEvent">
+      <UniqueIdentifier>{45c419df-057d-49e5-ba1b-ba6cd71d3a0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="21.Event\AnimEvent\Parents">
+      <UniqueIdentifier>{0609ab3e-fad7-44e5-aba8-0a27acbd5a94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\01.Pawn\Character">
+      <UniqueIdentifier>{53992b2e-1ae2-4f5a-b793-384b5066f9f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component\Controller">
+      <UniqueIdentifier>{c4b8fbfd-e4fc-43ca-b550-4eee1d89d8a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Manager\CharacterManager">
+      <UniqueIdentifier>{58de3f35-05ef-4b50-b6e5-59ecb076bd59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\01.Pawn\Default\DefaultCell">
+      <UniqueIdentifier>{241a23b1-5e19-4ea5-b5cb-866f6be8f3f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component\Navigation">
+      <UniqueIdentifier>{c6030694-0a18-45f6-a083-9d1c1d550a43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component\Navigation\Cell">
+      <UniqueIdentifier>{4bce2516-bbaf-4005-af5d-f5c4a13087d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component\Navigation\Stage">
+      <UniqueIdentifier>{edf13c4a-b79a-4147-9530-0635fcf40222}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component\Navigation\Region">
+      <UniqueIdentifier>{b7e1f845-bf2d-477e-9b3d-9a8124b96e4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Manager\StageManager">
+      <UniqueIdentifier>{f7620c82-c508-4c6d-acbb-a5cbb7ebb702}</UniqueIdentifier>
+>>>>>>> parent of ebb9d81d (중간)
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -588,6 +629,27 @@
     <ClCompile Include="..\private\UAudioSystem.cpp">
       <Filter>07.Resource\AudioSystem</Filter>
     </ClCompile>
+<<<<<<< HEAD
+=======
+    <ClCompile Include="..\private\UCharacter.cpp">
+      <Filter>05.Actor\01.Pawn\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UCharacterManager.cpp">
+      <Filter>01.Manager\CharacterManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UController.cpp">
+      <Filter>06.Component\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UDefaultCell.cpp">
+      <Filter>05.Actor\01.Pawn\Default\DefaultCell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UStage.cpp">
+      <Filter>06.Component\Navigation\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UStageManager.cpp">
+      <Filter>01.Manager\StageManager</Filter>
+    </ClCompile>
+>>>>>>> parent of ebb9d81d (중간)
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\EngineDefine.h">
@@ -905,6 +967,27 @@
     <ClInclude Include="..\public\UAudioSystem.h">
       <Filter>07.Resource\AudioSystem</Filter>
     </ClInclude>
+<<<<<<< HEAD
+=======
+    <ClInclude Include="..\public\UCharacter.h">
+      <Filter>05.Actor\01.Pawn\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UCharacterManager.h">
+      <Filter>01.Manager\CharacterManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UController.h">
+      <Filter>06.Component\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UDefaultCell.h">
+      <Filter>05.Actor\01.Pawn\Default\DefaultCell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UStage.h">
+      <Filter>06.Component\Navigation\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UStageManager.h">
+      <Filter>01.Manager\StageManager</Filter>
+    </ClInclude>
+>>>>>>> parent of ebb9d81d (중간)
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Shader\ShaderGrobalFunc.hlsli">
