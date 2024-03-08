@@ -55,10 +55,12 @@
 //#include "UTerrain.h"
 #include "UParticle.h"
 #include "UCollider.h"
-//#include "UAnimatedParticle.h"
+#include "UAnimatedParticle.h"
 //#include "UMirror.h"
 //#include "UScreenRenderObj.h"
 //#include "UMirrorCamera.h"
+
+#include "UPicking.h"
 
 IMPLEMENT_SINGLETON(UGameInstance);
 
@@ -79,7 +81,7 @@ UGameInstance::UGameInstance() :
 	m_spRenderTargetManager(Create<URenderTargetManager>()),
 	//m_spComputeManager(Create<UComputeManager>()),
 	m_spPipeLine{ Create<UPipeLine>() },
-	//m_spPicking{ Create<UPicking>() },
+	m_spPicking{ Create<UPicking>() },
 	m_spFilePathManager{ Create<UFilePathManager>() },
 	//m_spRandomManager{ Create<URandomManager>() },
 	m_spAudioSystemManager{ Create<UAudioSystemManager>() },
@@ -107,7 +109,7 @@ void UGameInstance::Free()
 	m_spNetworkManager.reset();
 	m_spAudioSystemManager.reset();
 	m_spFilePathManager.reset();
-	//m_spPicking.reset();
+	m_spPicking.reset();
 	m_spPipeLine.reset();
 	//m_spComputeManager.reset();
 	m_spRenderTargetManager.reset();
@@ -139,7 +141,7 @@ HRESULT UGameInstance::ReadyInstance(const GRAPHICDESC& _stDesc, OUTPUTDATA& _st
 	
 	RETURN_CHECK_FAILED(m_spPipeLine->ReadyPipeLine(this), E_FAIL);
 	RETURN_CHECK_FAILED(m_spAudioSystemManager->ReadyAudioSystemManager(this), E_FAIL);
-
+	RETURN_CHECK_FAILED(m_spPicking->ReadyPickingDesc(m_spGraphicDevice->GetGraphicDesc()), E_FAIL);
 	m_isGamming = true;
 	return S_OK;
 }
@@ -180,7 +182,7 @@ void UGameInstance::AwakeTick()
 {
 	m_spInputManager->KeyTick();
 	m_spInputManager->MouseTick();
-	// m_spPicking->TickRayInWorldSpace(this);
+	m_spPicking->CastRayInWorldSpace(this);
 	m_spPipeLine->FrustomTick();
 	m_spRenderer->ClearRenderingData();
 }
@@ -222,7 +224,7 @@ HRESULT UGameInstance::OnWindowResize(const _uint& _iWinSizeX, const _uint& _iWi
 {
 	RETURN_CHECK_FAILED(m_spGraphicDevice->OnResize(_iWinSizeX, _iWinSizeY, _eWindowMode), E_FAIL);
 	m_spRenderTargetManager->OnResizeWindow(m_spGraphicDevice);
-	//m_spPicking->ReadyPickingDesc(m_spGraphicDevice->GetGraphicDesc());
+	m_spPicking->ReadyPickingDesc(m_spGraphicDevice->GetGraphicDesc());
 #ifdef _USE_DEBUGGING
 	//m_spComputeManager->OnResizeDebugRenderObject(m_spGraphicDevice);
 #endif 
@@ -892,6 +894,32 @@ void UGameInstance::ReigsterCurrentPlayer(CSHPTRREF<UCharacter> _spCurrentPlayer
 ==================================================
 CharacterManager
 ==================================================
+Picking
+==================================================
+*/
+
+void UGameInstance::AddPickingObject(CSHPTRREF<UActor> _spActor, CSHPTRREF<UVIBuffer> _spVIBuffer)
+{
+	m_spPicking->AddPickingObject(_spActor, _spVIBuffer);
+}
+SHPTR<UActor> UGameInstance::GetPickingActor()
+{
+	return 	m_spPicking->GetPickingActor();
+}
+const PICKINGDESC& UGameInstance::GetPickDesc()
+{
+	return m_spPicking->GetPickDesc();
+}
+_bool UGameInstance::PickingMesh(CSHPTRREF<UActor> _spActor, CSHPTRREF<UVIBuffer> _spVIBuffer,
+	_float* _pDist, _float3* _pOut)
+{
+	return m_spPicking->PickingMesh(_spActor, _spVIBuffer, _pDist, _pOut);
+}
+
+/*
+==================================================
+Picking
+==================================================
 ReadyDatas
 ==================================================
 */
@@ -1102,8 +1130,8 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 		}
 	//// Compute Shader 
 	{
-	//	CreateComputeShader(PROTO_RES_COMPUTEANIMATIONSHADER, CLONETYPE::CLONE_STATIC,
-	//		SHADERDESC{ L"ComputeAnimation" });
+		CreateComputeShader(PROTO_RES_COMPUTEANIMATIONSHADER, CLONETYPE::CLONE_STATIC,
+			SHADERDESC{ L"ComputeAnimation" });
 
 		CreateComputeShader(PROTO_RES_COMPUTEPARTICLE2DSHADER, CLONETYPE::CLONE_STATIC,
 			SHADERDESC{ L"Compute2DParticle" });
@@ -1138,6 +1166,8 @@ HRESULT UGameInstance::ReadyComp(const OUTPUTDATA& _stData)
 		AddPrototype(PROTO_COMP_ABBCOLLIDER, CreateConstructorToNativeNotMsg<UCollider>(_stData.wpDevice.lock(), UCollider::TYPE_AABB));
 		AddPrototype(PROTO_COMP_OBBCOLLIDER, CreateConstructorToNativeNotMsg<UCollider>(_stData.wpDevice.lock(), UCollider::TYPE_OBB));
 	}
+
+
 	return S_OK;
 }
 
@@ -1158,6 +1188,9 @@ HRESULT UGameInstance::ReadyActor(const OUTPUTDATA& _stData)
 #endif 
 	}
 	AddPrototype(PROTO_ACTOR_PARTICLE, CreateConstructorToNative<UParticle>(
+		_stData.wpDevice.lock(), LAYER_PARTICLE, CLONETYPE::CLONE_ONCE));
+
+	AddPrototype(PROTO_ACTOR_ANIMATEPARTICLE, CreateConstructorToNative<UAnimatedParticle>(
 		_stData.wpDevice.lock(), LAYER_PARTICLE, CLONETYPE::CLONE_ONCE));
 	/*{
 		AddPrototype(PROTO_ACTOR_TERRAIN, CreateConstructorToNative<UTerrain>(
@@ -1311,3 +1344,5 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 #endif
 	return S_OK;
 }
+
+

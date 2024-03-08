@@ -13,9 +13,10 @@ public:
 	{
 		_wstring						 wstrParticleShader{ L"" };
 		_wstring						 wstrParticleComputeShader{L""};
-		_wstring						 wstrParticleTextureName[2];
-		PARTICLEPARAM		ParticleParam;
+		_wstring						 wstrParticleTextureName;
+		PARTICLEPARAM					ParticleParam;
 	};
+
 	struct PARTICLELOADATA
 	{
 		_wstring wstrParticleLoadPath;
@@ -51,9 +52,9 @@ public:
 	void SetTexture(const _wstring& TexName);
 	void SetTexture(_uint _index);
 	virtual void ShowObjectInfo() override;
-	PARTICLEPARAM* GetParticleParam() { return m_spParticleSystem->GetParticleParam(); }
+
 #endif
-private:
+protected:
 	SHPTR<UTexGroup>				m_spTexGroup;
 	SHPTR< UParticleSystem>	m_spParticleSystem;
 	SHPTR<UVIBufferPoint>		m_spVIBufferPoint;
