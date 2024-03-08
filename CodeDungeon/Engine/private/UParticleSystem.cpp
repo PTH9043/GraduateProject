@@ -13,7 +13,6 @@
 
 UParticleSystem::UParticleSystem(CSHPTRREF<UDevice> _spDevice) :
 	UResource(_spDevice),
-	m_iMaxParitcleCnt{ 1000 },
 	m_stParticleParam{},
 	m_spUpdateParticleConstnatBuffer{ nullptr },
 	m_spParticleStructedBuffer{ nullptr },
@@ -26,7 +25,6 @@ UParticleSystem::UParticleSystem(CSHPTRREF<UDevice> _spDevice) :
 
 UParticleSystem::UParticleSystem(const UParticleSystem& _rhs) :
 	UResource(_rhs),
-	m_iMaxParitcleCnt{ 1000 },
 	m_stParticleParam{},
 	m_spUpdateParticleConstnatBuffer{ nullptr },
 	m_spParticleStructedBuffer{ nullptr },
@@ -58,20 +56,15 @@ HRESULT UParticleSystem::NativeConstructClone(const VOIDDATAS& _vecDatas)
 		}
 	}
 
-	m_spUpdateParticleConstnatBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::ALLPARTICLEBUFFER, PARTICLEPARAM_SIZE);
-	m_spRenderParticleConstnatBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::ALLPARTICLEBUFFER, PARTICLEPARAM_SIZE);
+	m_spUpdateParticleConstnatBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::ALLPARTICLEBUFFER, GetTypeSize<PARTICLEPARAM>());
+	m_spRenderParticleConstnatBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::ALLPARTICLEBUFFER, GetTypeSize<PARTICLEPARAM>());
 
-	m_spParticleStructedBuffer = CreateNative<UShaderStructedBuffer>(GetDevice(), sizeof(PARTICLE), m_iMaxParitcleCnt);
+	m_spParticleStructedBuffer = CreateNative<UShaderStructedBuffer>(GetDevice(), sizeof(PARTICLE), m_stParticleParam.stGlobalParticleInfo.iMaxCount);
 	m_spComputeShaderStructedBuffer = CreateNative<UShaderStructedBuffer>(GetDevice(), sizeof(COMPUTESHADERINFO), 1);
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	{
 		ComPtr<Dx12CommandQueue> cpCommandQueue = UMethod::CreateCommandQueue(GetDevice()->GetDV(), D3D12_COMMAND_LIST_TYPE_COMPUTE);
-
-	/*	for (auto& iter : m_arrComputeCommands)
-		{
-			iter = CreateNative<UComputeCommand>(GetDevice(), cpCommandQueue);
-		}*/
 		m_spComputeCommand = CreateNative<UComputeCommand>(GetDevice(), cpCommandQueue);
 		m_spComputeTableDescriptor = CreateNative<UTableDescriptor>(GetDevice(), 1);
 	}
@@ -85,10 +78,10 @@ void UParticleSystem::Update(const _double& _dTimeDelta)
 		m_stParticleParam.stGlobalParticleInfo.fDeltaTime = static_cast<_float>(_dTimeDelta);
 		m_stParticleParam.stGlobalParticleInfo.fAccTime += m_stParticleParam.stGlobalParticleInfo.fDeltaTime;
 
-		if (CREATE_INTERVAL < m_stParticleParam.stGlobalParticleInfo.fAccTime)
+		if (3.f < m_stParticleParam.stGlobalParticleInfo.fAccTime)
 		{
-			m_stParticleParam.stGlobalParticleInfo.fAccTime = m_stParticleParam.stGlobalParticleInfo.fAccTime - CREATE_INTERVAL;
-			m_stParticleParam.stGlobalParticleInfo.iAddCount = 2;
+			m_stParticleParam.stGlobalParticleInfo.fAccTime -= 3.f;
+			m_stParticleParam.stGlobalParticleInfo.iAddCount = 1;
 		}
 	}
 }
@@ -98,19 +91,18 @@ void UParticleSystem::Render()
 	m_spComputeShader->SetTableDescriptor(m_spComputeTableDescriptor);
 	m_spComputeShader->BeginSettingDatas(m_spComputeCommand);
 
-	m_spComputeShader->BindCBVBuffer(m_spUpdateParticleConstnatBuffer, &m_stParticleParam, PARTICLEPARAM_SIZE);
+	m_spComputeShader->BindCBVBuffer(m_spUpdateParticleConstnatBuffer, &m_stParticleParam, GetTypeSize<PARTICLEPARAM>());
 	m_spComputeShader->BindUAVBuffer(UAV_REGISTER::PARTICLEWRITEDATA, m_spParticleStructedBuffer);
 	m_spComputeShader->BindUAVBuffer(UAV_REGISTER::SHRAEDDATA, m_spComputeShaderStructedBuffer);
 
 	m_spComputeShader->CommitLocalShaderDatas(m_spComputeCommand, 1, 1, 1);
-	//m_sComputeIndex = (m_sComputeIndex + 1) % m_arrComputeCommands.size();
 }
 
 void UParticleSystem::BindShaderParams(CSHPTRREF<UShader> _spShader)
 {
 	RETURN_CHECK(nullptr == _spShader, ;);
 	_spShader->BindSRVBuffer(SRV_REGISTER::T14, m_spParticleStructedBuffer);
-	_spShader->BindCBVBuffer(m_spRenderParticleConstnatBuffer, &m_stParticleParam, PARTICLEPARAM_SIZE);
+	_spShader->BindCBVBuffer(m_spRenderParticleConstnatBuffer, &m_stParticleParam, GetTypeSize<PARTICLEPARAM>());
 }
 
 void UParticleSystem::SettingComputeShader(const _wstring& _wstrProtoName)

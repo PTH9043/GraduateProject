@@ -53,11 +53,13 @@ HRESULT TAnimControlView::NativeConstruct()
 HRESULT TAnimControlView::LoadResource()
 {
 	SHPTR<FILEGROUP> AnimModels  = GetGameInstance()->FindFolder(L"AnimModel");
+
 	for (auto& iter : AnimModels->UnderFileGroupList)
 	{
 		// FBX에서 Convert 라는 하위 폴더를 찾는다. 
 		SHPTR<FILEGROUP> spConvert = iter.second->FindGroup(L"Convert");
-		assert(nullptr != spConvert);
+		if (nullptr == spConvert)
+			continue;
 		m_spSelectAnimFileFolder = spConvert;
 		for (auto& FileData : spConvert->FileDataList)
 		{

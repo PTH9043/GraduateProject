@@ -26,16 +26,8 @@ void UNetworkClientController::ProcessPacket(_char* _pPacket, PACKETHEAD _Packet
 	{
 	case TAG_SERVER::TAG_SC_LOGIN:
 	{
-		{
-			SC_CHECKLOGIN Login;
-			Login.ParseFromArray(_pPacket, static_cast<_int>(_PacketHead.PacketSize));
-		}
-		{
-			CS_LOGIN Login;
-			Login.set_time_test(CurrentMilliseconds());
-			Login.set_user_name("Hello");
-			SendProtoData<CS_LOGIN>(Login, TAG_CS_LOGIN);
-		}
+		SC_CHECKLOGIN Login;
+		Login.ParseFromArray(_pPacket, static_cast<_int>(_PacketHead.PacketSize));
 	}
 	break;
 	}

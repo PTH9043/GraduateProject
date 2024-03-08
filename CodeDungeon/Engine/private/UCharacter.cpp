@@ -4,11 +4,11 @@
 
 UCharacter::UCharacter(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, 
 	const CLONETYPE& _eCloneType) : 
-	UPawn(_spDevice, _wstrLayer, _eCloneType, BACKINGTYPE::DYNAMIC)
+	UPawn(_spDevice, _wstrLayer, _eCloneType, BACKINGTYPE::DYNAMIC), m_spController{nullptr}
 {
 }
 
-UCharacter::UCharacter(const UCharacter& _rhs) : UPawn(_rhs)
+UCharacter::UCharacter(const UCharacter& _rhs) : UPawn(_rhs), m_spController{ nullptr }
 {
 }
 

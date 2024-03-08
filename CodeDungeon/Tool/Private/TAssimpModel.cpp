@@ -31,7 +31,8 @@ TAssimpModel::TAssimpModel(CSHPTRREF<UDevice> _spDevice) :
 	m_wstrModelName{ L"" },
 	m_wstrTextureFolderName{ L"" },
 	m_pAIScene{ nullptr },
-	m_wstrTexturePath{ L"" }
+	m_wstrTexturePath{ L"" },
+	m_isLoadAnimationCountIsZero{false}
 {
 }
 
@@ -53,7 +54,8 @@ TAssimpModel::TAssimpModel(const TAssimpModel& _rhs) :
 	m_wstrModelName{ L"" },
 	m_wstrTextureFolderName{ L"" },
 	m_pAIScene{ nullptr },
-	m_wstrTexturePath{ L"" }
+	m_wstrTexturePath{ L"" },
+	m_isLoadAnimationCountIsZero{ false }
 {
 }
 
@@ -429,7 +431,7 @@ void TAssimpModel::SaveAnimModel(const _wstring& _wstrPath, _wstring& _wstrConve
 	}
 }
 
-void TAssimpModel::LoadAnimation(const _wstring& _wstrPath)
+void TAssimpModel::LoadAnimationFBX(const _wstring& _wstrPath)
 {
 	_uint iFlag = aiProcess_ConvertToLeftHanded | aiProcess_GenNormals | aiProcess_Triangulate | aiProcess_CalcTangentSpace;
 
@@ -445,6 +447,64 @@ void TAssimpModel::LoadAnimation(const _wstring& _wstrPath)
 	RETURN_CHECK(nullptr == pAIScene, ;);
 	// 애니메이션 만들어서 집어 넣는다.
 	CreateAnimation(pAIScene);
+}
+
+void TAssimpModel::LoadAnimation(const _wstring& _wstrPath)
+{
+	std::ifstream ifRead{ _wstrPath, std::ios::binary };
+	VECTOR<ANIMDESC> AnimDesc;
+	RETURN_CHECK(!ifRead, ;);
+	{
+		_uint iSize{ 0 };
+		ifRead.read((_char*)&iSize, sizeof(_uint));
+		if (0 != iSize)
+		{
+			AnimDesc.resize(iSize);
+			for (auto& Animation : AnimDesc)
+			{
+				ifRead.read((_char*)&Animation.stExtraData.iNumChannels, sizeof(int));
+				ifRead.read((_char*)&Animation.stExtraData.dDuration, sizeof(_double));
+				ifRead.read((_char*)&Animation.stExtraData.dTickPerSeconds, sizeof(_double));
+				UMethod::ReadStringUnity(ifRead, Animation.wstrName);
+				_uint iChannelSize{ 0 };
+				ifRead.read((_char*)&iChannelSize, sizeof(_int));
+				Animation.Channels.resize(iChannelSize);
+				for (auto& Channel : Animation.Channels)
+				{
+					UMethod::ReadStringUnity(ifRead, Channel.wstrBoneName);
+					ifRead.read((_char*)&Channel.iNumMaxKeyFrames, sizeof(_int));
+					Channel.pKeyFrames = Make::AllocBuffer<KEYFRAME>(Channel.iNumMaxKeyFrames);
+					for (_uint i = 0; i < Channel.iNumMaxKeyFrames; ++i)
+					{
+						KEYFRAME& KeyFrame = Channel.pKeyFrames[i];
+						ifRead.read((_char*)&KeyFrame.dTime, sizeof(_double));
+
+						ifRead.read((_char*)&KeyFrame.vScale.x, sizeof(_float));
+						ifRead.read((_char*)&KeyFrame.vScale.y, sizeof(_float));
+						ifRead.read((_char*)&KeyFrame.vScale.z, sizeof(_float));
+
+						ifRead.read((_char*)&KeyFrame.vRotation.x, sizeof(_float));
+						ifRead.read((_char*)&KeyFrame.vRotation.y, sizeof(_float));
+						ifRead.read((_char*)&KeyFrame.vRotation.z, sizeof(_float));
+						ifRead.read((_char*)&KeyFrame.vRotation.w, sizeof(_float));
+
+						ifRead.read((_char*)&KeyFrame.vPosition.x, sizeof(_float));
+						ifRead.read((_char*)&KeyFrame.vPosition.y, sizeof(_float));
+						ifRead.read((_char*)&KeyFrame.vPosition.z, sizeof(_float)); 
+						KeyFrame.vPosition.w = 1.f;
+					}
+				}
+			}
+		}
+
+		for (auto& iter : AnimDesc)
+		{
+			SHPTR<TAssimpAnimation> spAnimation{ CreateNative<TAssimpAnimation>(ThisShared<TAssimpModel>(), iter) };
+			RETURN_CHECK(nullptr == spAnimation, ;);
+			m_vecAnimations.push_back(spAnimation);
+		}
+	}
+
 }
 
 HRESULT TAssimpModel::CreateModel(const _wstring& _wstrPath)
@@ -568,25 +628,29 @@ HRESULT TAssimpModel::CreateMaterials(CSHPTRREF<FILEGROUP> _spFileGroup)
 			fs::path ps{ strTexturePath.data };
 
 			_wstring strRealName = ps.filename();
-			if (ps.extension() == L".TGA" || ps.extension() == L".tga")
-			{
-				size_t iIndex = strRealName.find(L".");
-				strRealName = strRealName.substr(0, iIndex);
-				strRealName += L".dds";
-				m_lsTextureExts.push_back(L".dds");
-			}
-			else
-			{
-				m_lsTextureExts.push_back(ps.extension());
-			}
+			_wstring strName = strRealName.substr(0, strRealName.find(L"."));
+			_wstring strLoadName = strName + L".dds";
 
 			_wstring Path = wstrPath;
 			Path += L"\\";
-			Path += strRealName;
+			Path += strLoadName;
 			// Create Texture 
 			pModelMaterial->arrMaterialTexture[j] = CreateConstructorNativeNotMsg<UTexGroup>(GetDevice(), Path);
-			if (nullptr == pModelMaterial->arrMaterialTexture[j]) {
-				continue;
+			if (nullptr == pModelMaterial->arrMaterialTexture[j])
+			{
+				// dds로 로드 실패시 다른 texture로 로드 시도
+				Path = wstrPath;
+				Path += L"\\";
+				Path += strRealName;
+				// Create Texture 
+				pModelMaterial->arrMaterialTexture[j] = CreateConstructorNativeNotMsg<UTexGroup>(GetDevice(), Path);
+				m_lsTextureExts.push_back(ps.extension());
+				if (nullptr == pModelMaterial->arrMaterialTexture[j])
+					continue;
+			}
+			else
+			{
+				m_lsTextureExts.push_back(L".dds");
 			}
 			++iCnt;
 		}
@@ -622,8 +686,12 @@ HRESULT TAssimpModel::CreateAnimation(const aiScene* _pAIScene)
 
 	m_iNumAnimation = _pAIScene->mNumAnimations;
 	SHPTR<TAssimpModel> pModel = ThisShared<TAssimpModel>();
+
 	for (_uint i = 0; i < m_iNumAnimation; ++i)
 	{
+		if (_pAIScene->mAnimations[i]->mNumChannels <= 1)
+			continue;
+
 		aiAnimation* pAIAnim = _pAIScene->mAnimations[i];
 
 		SHPTR<TAssimpAnimation> pAnimation = CreateNative<TAssimpAnimation>(pAIAnim, pModel);
@@ -632,7 +700,6 @@ HRESULT TAssimpModel::CreateAnimation(const aiScene* _pAIScene)
 
 		m_vecAnimations.push_back(pAnimation);
 	}
-
 	return S_OK;
 }
 

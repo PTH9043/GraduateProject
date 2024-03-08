@@ -24,8 +24,6 @@ private:
 	virtual void Free() override;
 private:
 	SHPTR<UCharacter>		m_spCurrentPlayer;
-
-	
 };
 
 END

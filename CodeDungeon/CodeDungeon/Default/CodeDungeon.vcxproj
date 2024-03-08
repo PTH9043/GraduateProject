@@ -163,6 +163,7 @@
     <ClInclude Include="..\Public\ClientDefines.h" />
     <ClInclude Include="..\Public\ClientProto.h" />
     <ClInclude Include="..\Public\UNetworkClientController.h" />
+    <ClInclude Include="..\Public\UPlayer.h" />
     <ClInclude Include="CodeDungeon.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -171,6 +172,7 @@
   <ItemGroup>
     <ClCompile Include="..\Private\CClientApp.cpp" />
     <ClCompile Include="..\Private\UNetworkClientController.cpp" />
+    <ClCompile Include="..\Private\UPlayer.cpp" />
     <ClCompile Include="CodeDungeon.cpp" />
   </ItemGroup>
   <ItemGroup>
