@@ -3,6 +3,8 @@
 #include "TNavigationView.h"
 #include "UStageManager.h"
 #include "UStage.h"
+#include "UInputManager.h"
+#include "UPicking.h"
 
 TNavigationView::TNavigationView(CSHPTRREF<UDevice> _spDevice) :
 	TImGuiView(_spDevice, "NavigationView"),
@@ -14,7 +16,8 @@ TNavigationView::TNavigationView(CSHPTRREF<UDevice> _spDevice) :
 	m_bRenderWireFrame{ false },
 	m_bNavigationDebugColor{ false },
 	m_dShowDeltaTime{ 0.0 },
-	m_iCreateRegionIndex{0}
+	m_iCreateRegionIndex{0},
+	m_iRegionIndex{ 0 }
 {
 }
 
@@ -84,6 +87,30 @@ void TNavigationView::DockBuildInitSetting()
 	m_isInitSetting = true;
 }
 
+void TNavigationView::ModifyNavigation(CSHPTRREF<URegion> _spRegion)
+{
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+	if (nullptr == _spRegion)
+		return;
+
+	_float2 MousePos = spGameInstance->GetMousePosition();
+	if (MousePos.x > 0 && MousePos.x < WINDOW_WIDTH)
+	{
+		if (MousePos.y > 0 && MousePos.y < WINDOW_HEIGHT)
+		{
+			/*_float3 v3Pos;
+			if (true == spGameInstance->GetDIMBtnDown(UInputManager::))
+			{
+				CNavigation* _pNav = _spRegion->Get_Navigation();
+				spGameInstance->GetStage()->Is_Picking(m_iRegionIndex);
+				PICKINGDESC* tDesc = spGameInstance->GetPickDesc();
+			}*/
+		}
+	}
+}
+
+
 void TNavigationView::NavigationView()
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
@@ -99,7 +126,22 @@ void TNavigationView::NavigationView()
 			ImGui::InputInt("Region Index", (_int*)&m_iCreateRegionIndex);
 			spGameInstance->GetStage()->CreateRegion(m_iCreateRegionIndex);
 
+			if (spGameInstance->GetStage()->GetRegionList().size() > 0)
+			{
+				_uint iSelect = spGameInstance->GetStage()->SelectRegion();
+				if (INVALID_MINUS_STAGEVALUE != iSelect)
+					m_iRegionIndex = iSelect;
+				spGameInstance->GetStage()->Delete_Region(m_iRegionIndex);
+				ModifyNavigation(spGameInstance->GetStage()->GetRegion(m_iRegionIndex));
+				spGameInstance->GetStage()->Control_Collider(m_iRegionIndex);
+				spGameInstance->GetStage()->ModifyCells(m_iRegionIndex);
+				spGameInstance->GetStage()->ShowCells(m_iRegionIndex);
+			}
 		}
+		ImGui::End();
 	}
-	ImGui::End();
 }
+
+
+
+	

@@ -4,6 +4,7 @@
 
 BEGIN(Engine)
 class UStageManager;
+class URegion;
 END
 
 BEGIN(Tool)
@@ -28,6 +29,9 @@ private:
 	void DockBuildInitSetting();
 
 	void NavigationView();
+	void ModifyNavigation(CSHPTRREF<URegion> _spRegion);
+
+
 private:
 	MAINDESC												m_stMainDesc;
 	DOCKDESC												m_stNavigationView;
@@ -45,6 +49,7 @@ private:
 	_bool													m_bNavigationDebugColor;
 
 	_uint													m_iCreateRegionIndex;
+	_uint													m_iRegionIndex;
 
 };
 END

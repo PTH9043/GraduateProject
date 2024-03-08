@@ -132,7 +132,7 @@ HRESULT UStage::CreateRegion(const _uint& _iIndex)
 			RegionDesc.m_iIndex = _iIndex;			
 
 			SHPTR<URegion> pRegion = std::static_pointer_cast<URegion>(spGameInstance->CloneComp(PROTO_COMP_REGION, {&RegionDesc}));
-			m_RegionList.emplace(std::pair<_uint, SHPTR<URegion>>(_iIndex, pRegion));
+			/*m_RegionList.emplace(std::pair<_uint, SHPTR<URegion>>(_iIndex, pRegion));*/
 
 			AddArroundRegion();
 		}
