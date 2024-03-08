@@ -62,6 +62,8 @@ public:
 	// Save Anim Model
 	void SaveAnimModel(const _wstring& _wstrPath, _wstring& _wstrConvertPath);
 	// Load Animation
+	void LoadAnimationFBX(const _wstring& _wstrPath);
+	// Load Animation
 	void LoadAnimation(const _wstring& _wstrPath);
 private:
 	// CreateModel
@@ -98,6 +100,7 @@ private:
 	_wstring											m_wstrTexturePath;
 
 	LIST<_wstring>							m_lsTextureExts;
+	_bool												m_isLoadAnimationCountIsZero;
 };
 
 END
