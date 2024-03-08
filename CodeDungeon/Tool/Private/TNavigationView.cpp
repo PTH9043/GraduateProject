@@ -5,6 +5,8 @@
 #include "UStage.h"
 #include "UInputManager.h"
 #include "UPicking.h"
+#include "UNavigation.h"
+#include "URegion.h"
 
 TNavigationView::TNavigationView(CSHPTRREF<UDevice> _spDevice) :
 	TImGuiView(_spDevice, "NavigationView"),
@@ -17,7 +19,9 @@ TNavigationView::TNavigationView(CSHPTRREF<UDevice> _spDevice) :
 	m_bNavigationDebugColor{ false },
 	m_dShowDeltaTime{ 0.0 },
 	m_iCreateRegionIndex{0},
-	m_iRegionIndex{ 0 }
+	m_iRegionIndex{ 0 },
+	m_spStageManager{nullptr},
+	m_vecPosList{}
 {
 }
 
@@ -31,6 +35,8 @@ HRESULT TNavigationView::NativeConstruct()
 		ImVec2{ (_float)WINDOW_WIDTH, 0.f }, ImVec2{ 500.f, (_float)WINDOW_HEIGHT });
 	m_stNavigationView = DOCKDESC("NavigationViewer", ImGuiWindowFlags_NoFocusOnAppearing,
 		ImGuiDockNodeFlags_CentralNode);
+
+	m_spStageManager = Create<UStageManager>();
 	return S_OK;
 }
 
@@ -46,6 +52,7 @@ HRESULT TNavigationView::ReleaseResource()
 
 void TNavigationView::TickActive(const _double& _dTimeDelta)
 {
+
 }
 
 void TNavigationView::LateTickActive(const _double& _dTimeDetla)
@@ -99,13 +106,57 @@ void TNavigationView::ModifyNavigation(CSHPTRREF<URegion> _spRegion)
 	{
 		if (MousePos.y > 0 && MousePos.y < WINDOW_HEIGHT)
 		{
-			/*_float3 v3Pos;
-			if (true == spGameInstance->GetDIMBtnDown(UInputManager::))
+			_float3 v3Pos;
+			if (true == spGameInstance->GetDIMBtnPressing(DIMOUSEBUTTON::DIMB_L))
 			{
-				CNavigation* _pNav = _spRegion->Get_Navigation();
-				spGameInstance->GetStage()->Is_Picking(m_iRegionIndex);
-				PICKINGDESC* tDesc = spGameInstance->GetPickDesc();
-			}*/
+				SHPTR<UNavigation> _spNav = _spRegion->GetNavigation();
+				m_spStageManager->GetStage()->Is_Picking(m_iRegionIndex);
+				PICKINGDESC tDesc = spGameInstance->GetPickDesc();
+
+				if (nullptr == tDesc.spActor)
+					return;
+	
+
+				v3Pos = tDesc.vPickPos;
+				CELLCONTAINER Cells;
+
+				if (nullptr != _spNav)
+					Cells = *_spNav->GetCells();
+
+				for (auto& iter : Cells)
+				{
+					for (_uint i = 0; i < UCell::POINT_END; ++i)
+					{
+						_float3 Point = iter->GetPoint((UCell::POINT)i);
+
+						if (v3Pos.y >= Point.y - 0.1f && v3Pos.y <= Point.y + 0.1f)
+						{
+							if (v3Pos.x >= Point.x - 0.5f && v3Pos.x <= Point.x + 0.5f)
+							{
+								if (v3Pos.z >= Point.z - 0.5f && v3Pos.z <= Point.z + 0.5f)
+								{
+									v3Pos = Point;
+								}
+							}
+						}
+					}
+				}
+				m_vecPosList.push_back(v3Pos);
+
+		/*		if (2 >= (_uint)m_vecPosList.size())
+				{
+					m_pCubePosArr[m_iSelIndex++]->Set_Position(XMLoadFloat3(&v3Pos));
+					m_bSelEnd = true;
+				}
+				else
+				{
+					_float3 vPos[3] = { m_vecPosList[SEL_1], m_vecPosList[SEL_2], m_vecPosList[SEL_3] };
+					_pStage->Add_Cell(CCell::Create(m_pDevice, m_pContext, vPos, ++m_iCellIndex));
+					m_vecPosList.clear();
+					m_iSelIndex = SEL_1;
+				}*/
+
+			}
 		}
 	}
 }
@@ -124,18 +175,20 @@ void TNavigationView::NavigationView()
 			ImGui::Checkbox("Navigation_DrawNav", &m_bNavigationDebugColor);
 			ImGui::Checkbox("Navigation_AllRender", &m_bAllRender);
 			ImGui::InputInt("Region Index", (_int*)&m_iCreateRegionIndex);
-			spGameInstance->GetStage()->CreateRegion(m_iCreateRegionIndex);
+			m_spStageManager->GetStage()->CreateRegion(m_iCreateRegionIndex);
+			
+			SHPTR<REGIONLIST> Regionlist = m_spStageManager->GetStage()->GetRegionList();
 
-			if (spGameInstance->GetStage()->GetRegionList().size() > 0)
+			if ((*Regionlist.get()).size() > 0)
 			{
-				_uint iSelect = spGameInstance->GetStage()->SelectRegion();
+				_uint iSelect = m_spStageManager->GetStage()->SelectRegion();
 				if (INVALID_MINUS_STAGEVALUE != iSelect)
 					m_iRegionIndex = iSelect;
-				spGameInstance->GetStage()->Delete_Region(m_iRegionIndex);
-				ModifyNavigation(spGameInstance->GetStage()->GetRegion(m_iRegionIndex));
-				spGameInstance->GetStage()->Control_Collider(m_iRegionIndex);
-				spGameInstance->GetStage()->ModifyCells(m_iRegionIndex);
-				spGameInstance->GetStage()->ShowCells(m_iRegionIndex);
+				m_spStageManager->GetStage()->Delete_Region(m_iRegionIndex);
+				ModifyNavigation(m_spStageManager->GetStage()->GetRegion(m_iRegionIndex));
+				m_spStageManager->GetStage()->Control_Collider(m_iRegionIndex);
+				m_spStageManager->GetStage()->ModifyCells(m_iRegionIndex);
+				m_spStageManager->GetStage()->ShowCells(m_iRegionIndex);
 			}
 		}
 		ImGui::End();

@@ -68,6 +68,9 @@ void URegion::Free()
 HRESULT URegion::NativeConstruct()
 {
 	RETURN_CHECK_FAILED(__super::NativeConstruct(), E_FAIL);
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	if (nullptr == m_spNavigation)
+		m_spNavigation = CreateConstructorNative<UNavigation>(spGameInstance->GetDevice());
 	return S_OK;
 }
 
@@ -75,13 +78,6 @@ HRESULT URegion::NativeConstructClone(const VOIDDATAS& _vecDatas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_vecDatas), E_FAIL);
 
-	REGIONDESC RegionDesc = UMethod::ConvertTemplate_Index<REGIONDESC>(_vecDatas, 0);
-
-	m_iIndex = RegionDesc.m_iIndex;
-
-	//SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	//if (nullptr == m_spNavigation)
-	//	m_spNavigation = std::static_pointer_cast<UNavigation>(spGameInstance->CloneComp(PROTO_COMP_NAVIGATION));
 	return S_OK;
 }
 

@@ -23,14 +23,6 @@ public:
 		void Rebalance();
 	}CUBOBJS;
 #endif
-	struct REGIONDESC
-	{
-		_uint	m_iIndex;
-
-		REGIONDESC() : m_iIndex{} {}
-		REGIONDESC(const _uint& _iIndex) : m_iIndex{ _iIndex }{}
-	};
-
 	URegion(CSHPTRREF<UDevice> _spDevice);
 	URegion(const URegion& _rhs);
 	DESTRUCTOR(URegion)
@@ -43,7 +35,7 @@ public:
 
 public:
 	SHPTR<UNavigation> GetNavigation() { return m_spNavigation; }
-	const _uint& Get_Index() const { return this->m_iIndex; }
+	const _uint& Get_Index() const { return m_iIndex; }
 	void Set_Index(const _uint& _iIndex) { this->m_iIndex = _iIndex; }
 
 	HRESULT AddCell(SHPTR<UCell>& _pCell);

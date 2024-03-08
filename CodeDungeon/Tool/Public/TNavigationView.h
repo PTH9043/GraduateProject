@@ -10,6 +10,10 @@ END
 BEGIN(Tool)
 class TNavigationView : public TImGuiView {
 public:
+	enum SELECT_OBJ
+	{
+		SEL_1, SEL_2, SEL_3, SEL_END
+	};
 	TNavigationView(CSHPTRREF<UDevice> _spDevice);
 	NO_COPY(TNavigationView)
 	DESTRUCTOR(TNavigationView)
@@ -42,6 +46,9 @@ private:
 	_double													m_dShowDeltaTime;
 	_bool													m_isInitSetting;
 
+	SHPTR<UStageManager>									m_spStageManager;
+	VECTOR<_float3>											m_vecPosList;
+	/*SHPTR<UDefaultCube>										m_spCubePosArr[SEL_END];*/
 private:
 	_bool													m_bNavigationModify;
 	_bool													m_bAllRender;
