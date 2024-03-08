@@ -211,16 +211,7 @@ void URenderer::ClearAllData()
     m_spComputeManager.reset();
     m_spVIBufferPlane.reset();
 
-    for (auto& iter : m_arrActiveDrawRenderList)
-    {
-        iter.clear();
-    }
-#ifdef  _USE_DEBUGGING
-    for (auto& iter : m_arrDrawDebugRenderList)
-    {
-        iter.clear();
-    }
-#endif //  _USE_DEBUGGING
+    ClearRenderingData();
 }
 
 void URenderer::RenderOtherCamera()

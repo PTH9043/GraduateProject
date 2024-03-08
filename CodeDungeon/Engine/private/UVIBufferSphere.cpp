@@ -114,26 +114,26 @@ HRESULT UVIBufferSphere::NativeConstruct()
 		// Index 개수
 		const _uint INDICES_CNT = NUM_LATITUDES * NUM_LOGITUDES * 6;
 		// 목록
-		INDICIES16* pIndices = Make::AllocBuffer<INDICIES16>(INDICES_CNT);
-		ZeroMemory(pIndices, sizeof(INDICIES16) * INDICES_CNT);
+		INDICIES32* pIndices = Make::AllocBuffer<INDICIES32>(INDICES_CNT);
+		ZeroMemory(pIndices, sizeof(INDICIES32) * INDICES_CNT);
 		{
 			_uint iIndex{ 0 };
-			for (_ushort i{ 0 }; i < NUM_LATITUDES; ++i)
+			for (_uint i{ 0 }; i < NUM_LATITUDES; ++i)
 			{
-				for (_ushort j = 0; j < NUM_LOGITUDES; ++j)
+				for (_uint j = 0; j < NUM_LOGITUDES; ++j)
 				{
-					_ushort iTopLeft = static_cast<_ushort>(i * (NUM_LOGITUDES + 1) + j);
-					_ushort iTopRight = static_cast<_ushort>(iTopLeft + 1);
-					_ushort iBottomLeft = static_cast<_ushort>((i + 1) * (NUM_LOGITUDES + 1) + j);
-					_ushort iBottomRight = static_cast<_ushort>(iBottomLeft + 1);
+					_uint iTopLeft = static_cast<_uint>(i * (NUM_LOGITUDES + 1) + j);
+					_uint iTopRight = static_cast<_uint>(iTopLeft + 1);
+					_uint iBottomLeft = static_cast<_uint>((i + 1) * (NUM_LOGITUDES + 1) + j);
+					_uint iBottomRight = static_cast<_uint>(iBottomLeft + 1);
 
-					pIndices[iIndex++] = INDICIES16{ iTopLeft, iBottomLeft, iTopRight };
-					pIndices[iIndex++] = INDICIES16{ iTopRight, iBottomLeft, iBottomRight };
+					pIndices[iIndex++] = INDICIES32{ iTopLeft, iBottomLeft, iTopRight };
+					pIndices[iIndex++] = INDICIES32{ iTopRight, iBottomLeft, iBottomRight };
 				}
 			}
 		}
 		RETURN_CHECK_FAILED(CreateIndexBuffer(INDICES_CNT,
-			sizeof(INDICIES16), pIndices, DXGI_FORMAT_R16_UINT), E_FAIL);
+			sizeof(INDICIES32), pIndices, DXGI_FORMAT_R32_UINT), E_FAIL);
 	}
 	return S_OK;
 }

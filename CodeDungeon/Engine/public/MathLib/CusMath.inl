@@ -3525,69 +3525,30 @@ inline const  Matrix Matrix::MatrixSetScaling(const Vector3& _v3Scaling, const M
     M.Set_Look(vLook);
     return M;
 }
-inline const  Matrix Matrix::MatrixSetRotationFix(const Vector3& _vRotation, const Matrix& _Matrix) noexcept
+inline const  void Matrix::MatrixSetRotationFix(const Vector3& _vRotation,  Matrix& _Matrix) noexcept
 {
     using namespace DirectX;
-    Vector3 v3Angle = _vRotation;
-    v3Angle.x = XMConvertToRadians(v3Angle.x);
-    v3Angle.y = XMConvertToRadians(v3Angle.y);
-    v3Angle.z = XMConvertToRadians(v3Angle.z);
-    XMMATRIX RotationMatrix =
-        XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&v3Angle));
+    Quaternion q = Quaternion::CreateFromYawPitchRoll(_vRotation);
 
-    OUTMATRIX OutMatrix = Get_OutMatrix(_Matrix);
+    Matrix RotationMatrix = Matrix::CreateFromQuaternion(q);
 
-    Vector3 v3Scale = OutMatrix.vScale;
-    Vector3 v3Right = Vector3(1.f, 0.f, 0.f), v3Up = Vector3(0.f, 1.f, 0.f), v3Look = Vector3(0.f, 0.f, 1.f);
-    XMVECTOR		vRight = XMVectorScale(XMLoadFloat3(&v3Right), v3Scale.x),
-        vUp = XMVectorScale(XMLoadFloat3(&v3Up), v3Scale.y), vLook = XMVectorScale(XMLoadFloat3(&v3Look), v3Scale.z);
+    Vector3 vScale = _Matrix.Get_Scaling();
 
-    vRight = XMVector3TransformNormal(vRight, RotationMatrix);
-    vUp = XMVector3TransformNormal(vUp, RotationMatrix);
-    vLook = XMVector3TransformNormal(vLook, RotationMatrix);
-
-    Matrix M = _Matrix;
-    XMStoreFloat3((Vector3*)&M.m[MATROW_RIGHT][0], vRight);
-    XMStoreFloat3((Vector3*)&M.m[MATROW_UP][0], vUp);
-    XMStoreFloat3((Vector3*)&M.m[MATROW_LOOK][0], vLook);
-    return M;
+    _Matrix.Set_Right(DirectX::XMVector3TransformNormal(Vector3::Right * vScale.x, RotationMatrix));
+    _Matrix.Set_Up(DirectX::XMVector3TransformNormal(Vector3::Up * vScale.y, RotationMatrix));
+    _Matrix.Set_Look(DirectX::XMVector3TransformNormal(Vector3::Forward * vScale.z, RotationMatrix));
 }
-inline const Matrix Matrix::MatrixSetRotationTurn(const Vector3& _vRotation, const Matrix& _Matrix) noexcept
+
+inline const void Matrix::MatrixSetRotationTurn(const Vector3& _vRotation,  Matrix& _Matrix) noexcept
 {
     using namespace DirectX;
-    Vector3 v3Angle = _vRotation;
-    v3Angle.x = XMConvertToRadians(v3Angle.x);
-    v3Angle.y = XMConvertToRadians(v3Angle.y);
-    v3Angle.z = XMConvertToRadians(v3Angle.z);
-    XMMATRIX RotationMatrix =
-        XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&v3Angle));
+    Quaternion q = Quaternion::CreateFromYawPitchRoll(_vRotation);
 
-    OUTMATRIX OutMatrix = Get_OutMatrix(_Matrix);
+    Matrix RotationMatrix = Matrix::CreateFromQuaternion(q);
 
-    Vector3 v3Scale = OutMatrix.vScale;
-
-    XMVECTOR		vRight = XMLoadFloat3((Vector3*)&_Matrix.m[MATROW_RIGHT][0]);
-    XMVECTOR		vUp = XMLoadFloat3((Vector3*)&_Matrix.m[MATROW_UP][0]);
-    XMVECTOR		vLook = XMLoadFloat3((Vector3*)&_Matrix.m[MATROW_LOOK][0]);
-
-    Vector3 v3Right, v3Up, v3Look;
-    XMStoreFloat3(&v3Right, vRight);
-    XMStoreFloat3(&v3Up, vUp);
-    XMStoreFloat3(&v3Look, vLook);
-
-    vRight = XMVectorScale(XMLoadFloat3(&v3Right), v3Scale.x);
-    vUp = XMVectorScale(XMLoadFloat3(&v3Up), v3Scale.y);
-    vLook = XMVectorScale(XMLoadFloat3(&v3Look), v3Scale.z);
-
-    vRight = XMVector3TransformNormal(vRight, RotationMatrix);
-    vUp = XMVector3TransformNormal(vUp, RotationMatrix);
-    vLook = XMVector3TransformNormal(vLook, RotationMatrix);
-
-    Matrix M = _Matrix;
-    XMStoreFloat3((Vector3*)&M.m[MATROW_RIGHT][0], vRight);
-    XMStoreFloat3((Vector3*)&M.m[MATROW_UP][0], vUp);
-    XMStoreFloat3((Vector3*)&M.m[MATROW_LOOK][0], vLook);
-    return M;
+    _Matrix.Set_Right(DirectX::XMVector3TransformNormal(_Matrix.Get_Right(), RotationMatrix));
+    _Matrix.Set_Up(DirectX::XMVector3TransformNormal(_Matrix.Get_Up(), RotationMatrix));
+    _Matrix.Set_Look(DirectX::XMVector3TransformNormal(_Matrix.Get_Look(), RotationMatrix));
 }
 
 inline const Vector3 Matrix::Get_Scaling(const Matrix& _Matrix) noexcept
@@ -3643,11 +3604,13 @@ inline const  Matrix Matrix::MatrixSetScaling(const Vector3& _v3Scaling) noexcep
 }
 inline const  Matrix Matrix::MatrixSetRotationFix(const Vector3& _vRotation)noexcept
 {
-    return Matrix::MatrixSetRotationFix(_vRotation, *this);
+    Matrix::MatrixSetRotationFix(_vRotation, *this);
+    return *this;
 }
 inline const Matrix Matrix::MatrixSetRotationTurn(const Vector3& _vRotation)noexcept
 {
-    return Matrix::MatrixSetRotationTurn(_vRotation, *this);
+    Matrix::MatrixSetRotationTurn(_vRotation, *this);
+    return *this;
 }
 
 inline const Vector3 Matrix::Get_Scaling()noexcept
@@ -3665,21 +3628,19 @@ inline const void Matrix::Combine(const OUTMATRIX& _OutMatrix)noexcept
 inline Matrix DirectX::PTH::Matrix::LookAt(const Vector3& _vPos)
 {
     using namespace DirectX;
-    Vector3 vPos = Get_Pos();
-    XMVECTOR vPosition = XMLoadFloat3(&vPos);
-    XMVECTOR vLook = XMVector3Normalize(XMVectorSubtract(XMLoadFloat3(&_vPos), vPosition));
-    if (XMVector3IsNaN(vLook))
-        return *this;
-    XMVECTOR Right = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook));
-    XMVECTOR Up = XMVector3Normalize(XMVector3Cross(vLook, Right));
-    Vector3 Scale = Get_Scaling();
+    Vector3 vPosition = Get_Pos();
+    Vector3 vLook = XMVector3Normalize(_vPos - vPosition);
 
-    Set_Right(Right);
-    Set_Up(Up);
-    Set_Look(vLook);
-    Set_Pos(vPos);
+    Vector3 vRight = DirectX::XMVector3Normalize(XMVector3Cross(Vector3::Up, vLook));
+    Vector3 vUp = DirectX::XMVector3Normalize(XMVector3Cross(vLook, vRight));
+    // Rotation Quaternion Matrix를 Look, Up 을 통해서 만든다. 
+    Quaternion q = Quaternion::LookRotation(vLook, vUp);
+    Matrix RotationMatrix = DirectX::XMMatrixRotationQuaternion(q);
 
-    MatrixSetScaling(Scale);
+    // Set Right Up Look 
+    Set_Right(DirectX::XMVector3TransformNormal(Get_Right(), RotationMatrix));
+    Set_Up(DirectX::XMVector3TransformNormal(Get_Up(), RotationMatrix));
+    Set_Look(DirectX::XMVector3TransformNormal(Get_Look(), RotationMatrix));
     return *this;
 }
 inline Matrix DirectX::PTH::Matrix::LookAt(const Vector4& _vLookAt)
@@ -3688,6 +3649,118 @@ inline Matrix DirectX::PTH::Matrix::LookAt(const Vector4& _vLookAt)
 
     LookAt(_vLookAt);
     return *this;
+}
+inline void DirectX::PTH::Matrix::MoveForward(const double& _dTimeDelta, const float& _fSpeed)
+{
+    Vector3 vPosition = Get_Pos();
+    Vector3 vLook = Get_Look();
+
+    vPosition += vLook * static_cast<float>(_dTimeDelta) * _fSpeed;
+    Set_Pos(vPosition);
+}
+inline void DirectX::PTH::Matrix::MoveBack(const double& _dTimeDelta, const float& _fSpeed)
+{
+    Vector3 vPosition = Get_Pos();
+    Vector3 vLook = Get_Look();
+
+    vPosition -= vLook * static_cast<float>(_dTimeDelta) * _fSpeed;
+    Set_Pos(vPosition);
+}
+inline void DirectX::PTH::Matrix::MoveLeft(const double& _dTimeDelta, const float& _fSpeed)
+{
+    Vector3 vPosition = Get_Pos();
+    Vector3 vLook = Get_Left();
+
+    vPosition += vLook * static_cast<float>(_dTimeDelta) * _fSpeed;
+    Set_Pos(vPosition);
+}
+inline void DirectX::PTH::Matrix::MoveRight(const double& _dTimeDelta, const float& _fSpeed)
+{
+    Vector3 vPosition = Get_Pos();
+    Vector3 vLook = Get_Right();
+
+    vPosition += vLook * static_cast<float>(_dTimeDelta) * _fSpeed;
+    Set_Pos(vPosition);
+}
+inline void DirectX::PTH::Matrix::MoveForwardNotY(const double& _dTimeDelta, const float& _fSpeed)
+{
+    Vector3 vPosition = Get_Pos();
+    Vector3 vLook = Get_Look();
+
+    vPosition += vLook * static_cast<float>(_dTimeDelta) * _fSpeed;
+    vPosition.y = 0.f;
+    Set_Pos(vPosition);
+}
+inline void DirectX::PTH::Matrix::MoveBackNotY(const double& _dTimeDelta, const float& _fSpeed)
+{
+    Vector3 vPosition = Get_Pos();
+    Vector3 vLook = Get_Look();
+
+    vPosition -= vLook * static_cast<float>(_dTimeDelta) * _fSpeed;
+    vPosition.y = 0.f;
+    Set_Pos(vPosition);
+}
+inline void DirectX::PTH::Matrix::MoveLeftNotY(const double& _dTimeDelta, const float& _fSpeed)
+{
+    Vector3 vPosition = Get_Pos();
+    Vector3 vLook = Get_Left();
+
+    vPosition += vLook * static_cast<float>(_dTimeDelta) * _fSpeed;
+    vPosition.y = 0.f;
+    Set_Pos(vPosition);
+}
+inline void DirectX::PTH::Matrix::MoveRightNotY(const double& _dTimeDelta, const float& _fSpeed)
+{
+    Vector3 vPosition = Get_Pos();
+    Vector3 vLook = Get_Right();
+
+    vPosition += vLook * static_cast<float>(_dTimeDelta) * _fSpeed;
+    vPosition.y = 0.f;
+    Set_Pos(vPosition);
+}
+inline void DirectX::PTH::Matrix::TranslatePos(const Vector3& _vPos, const double& _dTimeDelta, const float& _fSpeed, const float& _fLimitDistance)
+{
+    if (ComputeDistance(_vPos) <= _fLimitDistance * _fLimitDistance) {
+        Vector3 vPosition = Get_Pos();
+        Vector3 vLook = _vPos - vPosition;
+
+        vPosition += vLook * static_cast<float>(_dTimeDelta) * _fSpeed;
+        Set_Pos(vPosition);
+    }
+}
+inline void DirectX::PTH::Matrix::TranslateDir(const Vector3& _vDir, const double& _dTimeDelta, const float& _fSpeed)
+{
+    Vector3 vPosition = Get_Pos();
+
+    vPosition += _vDir * static_cast<float>(_dTimeDelta) * _fSpeed;
+    Set_Pos(vPosition);
+}
+inline void DirectX::PTH::Matrix::TranslatePosNotY(const Vector3& _vPos, const double& _dTimeDelta, const float& _fSpeed, const float& _fLimitDistance)
+{
+    if (ComputeDistance(_vPos) <= _fLimitDistance * _fLimitDistance) {
+        Vector3 vPosition = Get_Pos();
+        Vector3 vLook = _vPos - vPosition;
+
+        vPosition += vLook * static_cast<float>(_dTimeDelta) * _fSpeed;
+        vLook.y = 0;
+        Set_Pos(vPosition);
+    }
+}
+inline void DirectX::PTH::Matrix::TranslateDirNotY(const Vector3& _vDir, const double& _dTimeDelta, const float& _fSpeed)
+{
+    Vector3 vPosition = Get_Pos();
+
+    vPosition += _vDir * static_cast<float>(_dTimeDelta) * _fSpeed;
+    vPosition.y = 0;
+    Set_Pos(vPosition);
+}
+inline const float DirectX::PTH::Matrix::ComputeDistance(const Vector3& _vPos)
+{
+    return Vector3::Length(Get_Pos() - _vPos);
+}
+inline const float DirectX::PTH::Matrix::ComputeDistanceSq(const Vector3& _vPos)
+{
+    return Vector3::LengthSquared(Get_Pos() - _vPos);
 }
 /****************************************************************************
  *

@@ -96,10 +96,6 @@ SHPTR<UActor> UActorManager::CloneActorAddAndNotInLayer(const _wstring& _wstrPro
 	SHPTR<UActor> pInstance = FindActor(_wstrProto);
 	RETURN_CHECK(nullptr == pInstance, nullptr);
 
-	if (nullptr == pInstance->GetCloneData()) {
-		return nullptr;
-	}
-
 	SHPTR<UActor> pClones = static_pointer_cast<UActor>(pInstance->Clone(_stDatas));
 	RETURN_CHECK(nullptr == pClones, nullptr);
 

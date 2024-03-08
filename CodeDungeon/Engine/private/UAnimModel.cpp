@@ -86,8 +86,14 @@ HRESULT UAnimModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	return S_OK;
 }
 
+void UAnimModel::TickEvent(UPawn* _pPawn, const _wstring& _wstrInputTrigger, const _double& _TimeDelta)
+{
+	m_spCurAnimation->TickAnimEvent(_pPawn, this, _TimeDelta, _wstrInputTrigger);
+}
+
 void UAnimModel::TickAnimation(const _double& _dTimeDelta)
 {
+	RETURN_CHECK(nullptr == m_spCurAnimation, ;);
 	if (nullptr != m_spNextAnimation)
 	{
 		m_spCurAnimation->UpdateNextAnimTransformMatrices(_dTimeDelta, m_fSupplyLerpValue, m_spNextAnimation);
@@ -121,11 +127,9 @@ void UAnimModel::UpdateCurAnimationToTimeAcc(const _double& _dTimeAcc)
 	}
 }
 
-void UAnimModel::TickAnimAndEvent(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta, 
-	const _wstring& _wstrInputTrigger)
+void UAnimModel::TickAnimChangeTransform(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta)
 {
 	assert(_spTransform && m_spCurAnimation);
-	m_spCurAnimation->TickAnimEvent(this, _dTimeDelta, _wstrInputTrigger);
 	TickAnimation(_dTimeDelta);
 
 	if (false == m_spCurAnimation->IsSupplySituation())
@@ -145,11 +149,9 @@ void UAnimModel::TickAnimAndEvent(CSHPTRREF<UTransform> _spTransform, const _dou
 	}
 }
 
-void UAnimModel::TickAnimToTimAccAndEvent(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta, const _double& _TimeAcc, 
-	const _wstring& _wstrInputTrigger)
+void UAnimModel::TickAnimToTimAccChangeTransform(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta, const _double& _TimeAcc)
 {
 	assert(_spTransform && m_spCurAnimation);
-	m_spCurAnimation->TickAnimEvent(this, _dTimeDelta, _wstrInputTrigger);
 	UpdateCurAnimationToTimeAcc(_TimeAcc);
 
 	_float3 vLook = GetRootBoneNode()->GetMoveRootBoneAngle();
@@ -178,6 +180,7 @@ HRESULT UAnimModel::Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader
 
 void UAnimModel::SetAnimation(const _uint& _iAnimIndex)
 {
+	RETURN_CHECK(m_vecAnimations.size() == 0, ;);
 	ChangeAnimIndex(_iAnimIndex, m_iCurAnimIndex);
 	// 현재 애니메이션이 세팅되는 상황일 때의 함수 실행
 	SettingCurAnimSituation();
@@ -185,6 +188,7 @@ void UAnimModel::SetAnimation(const _uint& _iAnimIndex)
 
 void UAnimModel::SetAnimation(const _wstring& _wstrAnimName)
 {
+	RETURN_CHECK(m_vecAnimations.size() == 0, ;);
 	ChangeAnimIndex(_wstrAnimName, m_iCurAnimIndex);
 	// 현재 애니메이션이 세팅되는 상황일 때의 함수 실행
 	SettingCurAnimSituation();
@@ -232,6 +236,9 @@ HRESULT UAnimModel::CreateAnimation(const  VECTOR<ANIMDESC>& _convecAnimDesc, co
 {
 	m_vecAnimations.reserve(_convecAnimDesc.size());
 	_uint iIndex{ 0 };
+
+	SHPTR<UAnimModel> spAnimModel = ThisShared<UAnimModel>();
+
 	for (auto& iter : _convecAnimDesc)
 	{
 		SHPTR<UAnimation> spAnimation{ CreateNative<UAnimation>(ThisShared<UAnimModel>(), iter) };
@@ -241,6 +248,7 @@ HRESULT UAnimModel::CreateAnimation(const  VECTOR<ANIMDESC>& _convecAnimDesc, co
 
 		m_AnimNamesGroup.insert(std::pair<_wstring, _uint>(spAnimation->GetAnimName(), iIndex++));
 		spAnimation->LoadAnimSectionDataPathIsFolder(_wstrPath);
+		spAnimation->LoadAnimEventDataPathIsFolder(spAnimModel, _wstrPath);
 	}
 	return S_OK;
 }
@@ -265,7 +273,11 @@ void UAnimModel::LoadToData(const _wstring& _wstrPath)
 		_uint iFindIndex{ static_cast<_uint>(wstrPath.find_last_of(L"\\"))};
 		wstrPath = wstrPath.substr(0, iFindIndex);
 
-		_wstring RootBoneNodeName = tDesc.Animes[0].Channels[0].wstrBoneName;
+		_wstring RootBoneNodeName{ L"" };
+
+		if(0 != tDesc.Animes.size())
+			RootBoneNodeName = tDesc.Animes[0].Channels[0].wstrBoneName;
+		
 		// Create
 		CreateBoneNode(&tDesc, RootBoneNodeName);
 		CreateMeshContainers(&tDesc);
@@ -281,6 +293,7 @@ void UAnimModel::LoadToData(const _wstring& _wstrPath)
 		}
 
 		CreateShaderConstantBuffer();
+
 		SetAnimation(0);
 	}
 }
@@ -388,11 +401,13 @@ void UAnimModel::ChangeAnimIndex(const _wstring& _wstrAnimName, _uint& _iIndex)
 
 void UAnimModel::SettingCurAnimSituation()
 {
-	assert(nullptr != m_vecAnimations[m_iCurAnimIndex]);
 	m_spCurAnimation = m_vecAnimations[m_iCurAnimIndex];
 	m_spCurAnimation->ResetData();
 	m_spNextAnimation = nullptr;
-	GetRootBoneNode()->ResetRootBoneInfo();
+
+	SHPTR<URootBoneNode> spRootBoneNode{ GetRootBoneNode() };
+	if(nullptr != spRootBoneNode)
+		spRootBoneNode->ResetRootBoneInfo();
 }
 
 void UAnimModel::SettingNextAnimSituation()
@@ -401,7 +416,9 @@ void UAnimModel::SettingNextAnimSituation()
 	// Reset
 	m_spCurAnimation->ResetData();
 	m_spNextAnimation->ResetData();
-	GetRootBoneNode()->ResetRootBoneInfo();
+	SHPTR<URootBoneNode> spRootBoneNode{ GetRootBoneNode() };
+	if (nullptr != spRootBoneNode)
+		spRootBoneNode->ResetRootBoneInfo();
 }
 
 HRESULT UAnimModel::CreateShaderConstantBuffer()

@@ -9,4 +9,6 @@
 
 #define LAYER_SHOWMODELL L"Layer_ShowModel"
 
+#define PROTO_RES_TOOLAUDIO L"Tool_Res_ToolAudio"
+
 #endif // _PTH_FRAMEWORK_TOOL_PUBLIC_TOOLMKAER_H

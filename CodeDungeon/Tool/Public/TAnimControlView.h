@@ -44,6 +44,8 @@ private:
 
 	void AnimSectionShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFlags _flags,  const VECTOR<SHPTR<UAnimEvent>>& _AnimEvent);
 	void AnimOccursShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFlags _flags, const VECTOR<SHPTR<UAnimEvent>>& _AnimEvent);
+	void AnimColliderShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFlags _flags, const VECTOR<SHPTR<UAnimEvent>>& _AnimEvent);
+	void AnimSoundShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFlags _flags, const VECTOR<SHPTR<UAnimEvent>>& _AnimEvent);
 private:
 	MAINDESC												m_stMainDesc;
 	DOCKDESC											m_stAnimModelSelectDesc;
@@ -59,8 +61,11 @@ private:
 	SHPTR<UAnimation>							m_spSelectAnim;
 	_int															m_iSelectAnimEvent;
 	_int															m_AnimMaxTagCount;
+	_string													m_strSelectAnimationName;
 
 	static 	const _char*								s_AnimTags[1000];
+
+	LIST<_string>										m_FindSoundNames;
 };
 
 END

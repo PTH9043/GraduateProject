@@ -12,11 +12,14 @@ class UDefaultDebugging;
 class  UCollider final : public UComponent{
 public:
 	enum TYPE { TYPE_AABB, TYPE_OBB, TYPE_SPHERE, TYPE_END };
-	typedef struct tagColliderDesc
+	struct COLLIDERDESC
 	{
 		_float3		vScale;
 		_float3		vTranslation;
-	}COLLIDERDESC;
+
+		COLLIDERDESC() : vScale{}, vTranslation{} {}
+		COLLIDERDESC(const _float3& _vScale, const _float3& _vTranslation) : vScale{_vScale}, vTranslation{_vTranslation}{}
+	};
 
 	UCollider(CSHPTRREF <UDevice> _pDevice, const TYPE& _eType);
 	UCollider(const UCollider& _rhs);
@@ -31,6 +34,7 @@ public:
 	void SetTranslate(const _float3& _vTranslate);
 	void SetTransform(const _float3& _vPos, const _float4& _vQuaternion);
 	void SetTransform(CSHPTRREF< UTransform> _spTransform);
+	void SetTransform(const _float4x4& _Matrix);
 	// UComponent을(를) 통해 상속됨
 	virtual void Free() override;
 	CLONE_MACRO(UCollider, "UCollider::Clone To Failed")
@@ -39,6 +43,7 @@ public:
 	_bool IsCollision(CSHPTRREF<UCollider> _pCollider);
 #ifdef _USE_DEBUGGING
 	void AddRenderer(RENDERID _eID);
+	void ChangeColliderColor(const _float3& _vColor);
 #endif
 private:
 	SHPTR<DirectX::BoundingBox>					m_spAABB_Original;

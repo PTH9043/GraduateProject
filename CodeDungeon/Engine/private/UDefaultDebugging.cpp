@@ -20,6 +20,16 @@ UDefaultDebugging::UDefaultDebugging(const UDefaultDebugging& _rhs)
 {
 }
 
+void UDefaultDebugging::SetColor(const _float4& _vColor)
+{
+	m_stDebuggParam.vDebugging = _vColor;
+}
+
+void UDefaultDebugging::SetColor(const _float3& _vColor)
+{
+	::memcpy(&m_stDebuggParam.vDebugging, &_vColor, sizeof(_float3));
+}
+
 void UDefaultDebugging::Free()
 {
 }
@@ -49,7 +59,7 @@ HRESULT UDefaultDebugging::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	}
 	AddShader(PROTO_RES_DEBUGGINGDEFAULTSHADER);
 
-	m_spDebuggingConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::B3, DEBUGPARAM_SIZE);
+	m_spDebuggingConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::B14, DEBUGPARAM_SIZE);
 	m_stDebuggParam.vDebugging.w = 0.5f;
 	return S_OK;
 }

@@ -1,36 +1,68 @@
 #pragma once
-#include "UAnimEvent.h"
+#include "AnimEventParents.h"
 
 BEGIN(Engine)
+class UCollider;
+class UBoneNode;
 
 /*
-@ Date: 2024-02-21, Writer: 박태현
+@ Date: 2024-02-17, Writer: 박태현
 @ Explain
-- 구간에만 이벤트를 발생시키는 클래스
+- 구간 사이에서 특정 이벤트가 발생할 때 다음 애니메이션으로 넘어가게 만드는 이벤트이다. 
 */
-class UAnimSectionEvent final : public UAnimEvent {
+class UAnimChangeBetweenEvent final : public UAnimSectionEvent{
 public:
-	UAnimSectionEvent();
-	UAnimSectionEvent(std::ifstream& _load);
-	DESTRUCTOR(UAnimSectionEvent)
+	UAnimChangeBetweenEvent();
+	UAnimChangeBetweenEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load);
+	DESTRUCTOR(UAnimChangeBetweenEvent)
 public:
-	virtual _bool EventCheck(UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc,
-		const _wstring& _wstrInputTrigger) override;
-	virtual ANIMEVENTDESC* const OutAnimEventDesc() override { return &m_AnimSectionDesc; }
-	virtual void ChangeAnimEventDesc(ANIMEVENTDESC* _AnimEventDesc) override;
-	virtual ANIMOTHEREVENTDESC* const OutOtherEventDesc() override;
-	virtual void ChangeOtherEventDesc(ANIMOTHEREVENTDESC* _AnimOtherEventDesc) override;
+	// UAnimSectionEvent을(를) 통해 상속됨
+	virtual const ANIMOTHEREVENTDESC*  OutOtherEventDesc() override;
 protected:
 	// Event 상황일 때를 정의
-	virtual void EventSituation(UAnimModel* _pAnimModel, const _double& _dTimeDelta) override;
+	virtual void EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta) override;
 	virtual void SaveEvent(std::ofstream& _save) override;
-	virtual void LoadEvent(std::ifstream& _load) override;
+	virtual void LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) override;
 private:
 	virtual void Free() override;
 private:
-	ANIMEVENTSECTIONDESC			m_AnimSectionDesc;
 	// 애니메이션과 애니메이션 사이를 변경하는 이벤트
-	ANIMCHANGEDESC						m_AnimChangeDesc;
+	ANIMCHANGEDESC		m_AnimChangeDesc;
 };
+
+/*
+=================================================
+AnimChangeBetweenEvent
+=================================================
+AnimColliderEvent
+=================================================
+*/
+
+/*
+@ Date: 2024-02-22, Writer: 박태현
+@ Explain
+- 구간 사이에서 특정 이벤트가 발생할 때 다음 애니메이션으로 넘어가게 만드는 이벤트이다.
+*/
+class UAnimColliderEvent final : public UAnimSectionEvent {
+public:
+	UAnimColliderEvent();
+	UAnimColliderEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load);
+	DESTRUCTOR(UAnimColliderEvent)
+public:
+	virtual _bool EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc,
+		const _wstring& _wstrInputTrigger) override;
+	// UAnimSectionEvent을(를) 통해 상속됨
+	virtual const  ANIMOTHEREVENTDESC*  OutOtherEventDesc() override;
+protected:
+	// Event 상황일 때를 정의
+	virtual void EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta) override;
+	virtual void SaveEvent(std::ofstream& _save) override;
+	virtual void LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) override;
+private:
+	virtual void Free() override;
+private:
+	ANIMCOLLIDERDESC	m_AnimColliderDesc;
+};
+
 
 END

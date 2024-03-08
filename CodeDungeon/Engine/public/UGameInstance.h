@@ -24,6 +24,7 @@ class URandomManager;
 class UThreadManager;
 class UNetworkManager;
 class UAudioSystemManager;
+class UCharacterManager;
 
 class URenderer;
 
@@ -50,15 +51,18 @@ class UCommand;
 class UFont;
 class UNetworkBaseController;
 class UProcessedData;
+class USound;
+class UTransform;
+class UCharacter;
 
 struct PICKINGDESC;
 struct WAITCHECKACTOR;
 
 using CLONES = UNORMAP<_wstring, SHPTR<UActorGroup>>;
 using CLONEARR = ARRAY<CLONES, CLONE_MAX_SIZE>;
+using AUDIOSYSTEMCONTAINER = ARRAY <SHPTR< class UAudioSystem>, SOUND_END>;
 
-class UGameInstance : public UBase 
-{
+class UGameInstance : public UBase  {
 	DECLARE_SINGLETON(UGameInstance)
 public:
 	UGameInstance();
@@ -66,7 +70,6 @@ public:
 public:
 	const _bool IsGamming() const { return m_isGamming; }
 	void SetGamming(const _bool _isGamming) { this->m_isGamming = _isGamming; }
-
 public:
 	/* GameInstance */
 	// Free 
@@ -85,6 +88,8 @@ public:
 	void LateTick(const _double& _dTimeDelta);
 	void RenderBegin();
 	void RenderEnd();
+
+	void SetImGuiContext(ImGuiContext* _pContext);
 public:
 	HRESULT	OnWindowResize(const _uint& _iWinSizeX, const _uint& _iWinSizeY, const GRAPHICDESC::WINMODE _eWindowMode);
 	// Clear Once Type data 
@@ -221,6 +226,23 @@ public: /* FilePath Manager*/
 	// 같은 이름을 가진 모든 폴더를 찾아서 리턴한다. 
 	VECTOR<SHPTR<FILEGROUP>> FindSameAllFolder(const _wstring& _wstrFindFolderName);
 	HRESULT LoadFirstFolder(const _wstring& _wstrFilePath);
+public: /* AudioSystemManager*/
+	const AUDIOSYSTEMCONTAINER& GetAudioSystemContainer() const;
+	SHPTR<UAudioSystem> GetAudioSystem(const SOUNDTYPE _SoundType);
+	HRESULT CreateAudioSystemAndRegister(SOUNDTYPE _SoundType, const _wstring& _wstrSoundFolderPath);
+	HRESULT CreateAudioSystemAndRegister(SOUNDTYPE _SoundType, CSHPTRREF<FILEGROUP> _spSoundFileGroup);
+	HRESULT CreateAudioSystemToFolderNameAndRegister(SOUNDTYPE _SoundType, const _wstring& _wstrSoundFolderName);
+	void SoundPlay(const _wstring& _wstrSoundName);
+	void SoundPlay(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
+	void SoundPlayBGM(const _wstring& _wstrSoundName);
+	void SoundPlayBGM(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
+	void StopSound(const _wstring& _wstrSoundName);
+	void UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, const _float3& _vSoundVelocity, 
+		CSHPTRREF<UTransform> _spTargetTransform = nullptr);
+	void VolumeUpdate(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
+	void ChangeMinMaxDistance3D(const _wstring& _wstrSoundName, const _float _fMinDistance, const _float _fMaxDistance);
+	SHPTR<USound> BringSound(const _int _Index);
+	SHPTR<USound> BringSound(const _wstring& _wstrSoundName);
 public: /* NetworkManager */
 	HRESULT StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController);
 	void InsertProcessedDataToContainer(void* _pData, size_t _Size, _int _DataType);
@@ -240,6 +262,9 @@ public: /* NetworkManager */
 		short size = static_cast<short>(_data.ByteSizeLong());
 		_PacketHead = PACKETHEAD{ size, _tag };
 	}
+public: /* CharacterManager*/
+	CSHPTRREF<UCharacter> GetCurrPlayer() const;
+	void ReigsterCurrentPlayer(CSHPTRREF<UCharacter> _spCurrentPlayer);
 private: /* Ready Datas */
 	HRESULT ReadyResource(const OUTPUTDATA& _stData);
 	HRESULT ReadyComp(const OUTPUTDATA& _stData);
@@ -260,10 +285,12 @@ private:
 	SHPTR<USceneManager>						m_spSceneManager;
 
 	SHPTR<URenderTargetManager>		m_spRenderTargetManager;
+
 	SHPTR<UPipeLine>									m_spPipeLine;
 	SHPTR<UFilePathManager>					m_spFilePathManager;
-	SHPTR< UNetworkManager>				m_spNetworkManager;
 	SHPTR< UAudioSystemManager>		m_spAudioSystemManager;
+	SHPTR< UNetworkManager>				m_spNetworkManager;
+	SHPTR<UCharacterManager>				m_spCharacterManager;
 
 	SHPTR<URenderer>								m_spRenderer;
 	//SHPTR< UFontManager>						m_spFontMananger;

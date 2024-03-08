@@ -11,11 +11,11 @@
 
 UModel::UModel(CSHPTRREF<UDevice> _spDevice, const TYPE& _eType) :
 	UResource(_spDevice),
-	m_vecMeshContainer{},
+	m_MeshContainer{},
 	m_iMeshContainerCnt{ 0 },
-	m_vecBoneNodes{},
+	m_BoneNodeContainer{},
 	m_iBoneNodeCnt{ 0 },
-	m_vecMaterials{},
+	m_MaterialContainer{},
 	m_iMaterialCnt{ 0 },
 	m_spFileGroup{ nullptr },
 	m_spFileData{ nullptr },
@@ -26,11 +26,11 @@ UModel::UModel(CSHPTRREF<UDevice> _spDevice, const TYPE& _eType) :
 
 UModel::UModel(const UModel& _rhs) :
 	UResource(_rhs),
-	m_vecMeshContainer{ _rhs.m_vecMeshContainer },
+	m_MeshContainer{ _rhs.m_MeshContainer },
 	m_iMeshContainerCnt{ _rhs.m_iMeshContainerCnt },
-	m_vecBoneNodes{ _rhs.m_vecBoneNodes },
+	m_BoneNodeContainer{ _rhs.m_BoneNodeContainer },
 	m_iBoneNodeCnt{ _rhs.m_iBoneNodeCnt },
-	m_vecMaterials{ _rhs.m_vecMaterials },
+	m_MaterialContainer{ _rhs.m_MaterialContainer },
 	m_iMaterialCnt{ _rhs.m_iMaterialCnt },
 	m_spFileGroup{ _rhs.m_spFileGroup },
 	m_spFileData{ _rhs.m_spFileData },
@@ -40,23 +40,23 @@ UModel::UModel(const UModel& _rhs) :
 }
 
 
-SHPTR<UBoneNode> UModel::GetBoneNode(const _wstring& _strBoneNode)
+SHPTR<UBoneNode> UModel::FindBoneNode(const _wstring& _strBoneNode) const
 {
-	const BONENODES::iterator& it = std::find_if(m_vecBoneNodes.begin(), m_vecBoneNodes.end(), [&](const SHPTR<UBoneNode>& p) {
+	auto it = std::find_if(m_BoneNodeContainer.begin(), m_BoneNodeContainer.end(), [&](const SHPTR<UBoneNode>& p) {
 		if (p->GetName() == _strBoneNode)
 			return true;
 
 		return false;
 		});
-	RETURN_CHECK(m_vecBoneNodes.end() == it, nullptr);
+	RETURN_CHECK(m_BoneNodeContainer.end() == it, nullptr);
 	return *it;
 }
 
 void UModel::Free()
 {
-	m_vecBoneNodes.clear();
-	m_vecMeshContainer.clear();
-	m_vecMaterials.clear();
+	m_BoneNodeContainer.clear();
+	m_MeshContainer.clear();
+	m_MaterialContainer.clear();
 }
 
 HRESULT UModel::NativeConstruct()
@@ -111,13 +111,13 @@ HRESULT UModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	MESHCONTAINERS MeshContainers{};
 	BONENODES BoneNodes{};
 
-	for (auto& iter : m_vecBoneNodes) {
+	for (auto& iter : m_BoneNodeContainer) {
 		BoneNodes.push_back(iter->Clone());
 	}
-	m_vecBoneNodes.clear();
-	m_vecBoneNodes = BoneNodes;
+	m_BoneNodeContainer.clear();
+	m_BoneNodeContainer = BoneNodes;
 	// Bone Nodes
-	for (auto& iter : m_vecBoneNodes) {
+	for (auto& iter : m_BoneNodeContainer) {
 		iter->FindParents(ThisShared<UModel>());
 	}
 
@@ -127,11 +127,11 @@ HRESULT UModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 		tDatas.push_back(this);
 	}
 
-	for (auto& iter : m_vecMeshContainer) {
+	for (auto& iter : m_MeshContainer) {
 		MeshContainers.push_back(static_pointer_cast<UMeshContainer>(iter->Clone(tDatas)));
 	}
-	m_vecMeshContainer.clear();
-	m_vecMeshContainer = MeshContainers;
+	m_MeshContainer.clear();
+	m_MeshContainer = MeshContainers;
 
 	return S_OK;
 }
@@ -189,7 +189,7 @@ HRESULT UModel::CreateBoneNode(void* _pData, const _wstring& _wstrBoneNodeName)
 			{
 				spBoneNode = CreateNative<UBoneNode>(iter);
 			}
-			m_vecBoneNodes.push_back(spBoneNode);
+			m_BoneNodeContainer.push_back(spBoneNode);
 		}
 	}
 	else
@@ -205,18 +205,18 @@ HRESULT UModel::CreateBoneNode(void* _pData, const _wstring& _wstrBoneNodeName)
 			else
 				spBoneNode = CreateNative<UBoneNode>(iter);
 
-			m_vecBoneNodes.push_back(spBoneNode);
+			m_BoneNodeContainer.push_back(spBoneNode);
 		}
 	}
 
-	std::sort(m_vecBoneNodes.begin(), m_vecBoneNodes.end(), [&](SHPTR<UBoneNode>& p1, SHPTR<UBoneNode>& p2) {
+	std::sort(m_BoneNodeContainer.begin(), m_BoneNodeContainer.end(), [&](SHPTR<UBoneNode>& p1, SHPTR<UBoneNode>& p2) {
 		return p1->GetDepth() < p2->GetDepth();
 		});
 
-	for (auto& iter : m_vecBoneNodes) {
+	for (auto& iter : m_BoneNodeContainer) {
 		iter->FindParents(ThisShared<UModel>());
 	}
-	m_iBoneNodeCnt = (_uint)(m_vecBoneNodes.size());
+	m_iBoneNodeCnt = (_uint)(m_BoneNodeContainer.size());
 	return S_OK;
 }
 
@@ -229,9 +229,9 @@ HRESULT UModel::CreateMeshContainers(void* _pData)
 		SHPTR<UMeshContainer> pMeshContainer{ CreateConstructorNative<UMeshContainer>(
 		GetDevice(),  (void*)&iter, ThisShared<UModel>()) };
 
-		m_vecMeshContainer.push_back(pMeshContainer);
+		m_MeshContainer.push_back(pMeshContainer);
 	}
-	m_iMeshContainerCnt = static_cast<_uint>(m_vecMeshContainer.size());
+	m_iMeshContainerCnt = static_cast<_uint>(m_MeshContainer.size());
 	return S_OK;
 }
 
@@ -239,7 +239,7 @@ HRESULT UModel::CreateMaterial(void* _pData)
 {
 	MODELDESC* tDesc = static_cast<MODELDESC*>(_pData);
 	if (nullptr != tDesc) {
-		m_vecMaterials.resize(tDesc->MatrialData.size());
+		m_MaterialContainer.resize(tDesc->MatrialData.size());
 
 		for (auto& iter : tDesc->MatrialData) {
 			SHPTR<MODELMATRIALDESC> pModelMaterial = std::make_shared<MODELMATRIALDESC>();
@@ -252,7 +252,7 @@ HRESULT UModel::CreateMaterial(void* _pData)
 					pModelMaterial->arrMaterialTexture[i] = CreateConstructorNative<UTexGroup>(GetDevice(), iter.second[i]);
 				}
 			}
-			m_vecMaterials[iter.first] = pModelMaterial;
+			m_MaterialContainer[iter.first] = pModelMaterial;
 		}
 	}
 	return S_OK;

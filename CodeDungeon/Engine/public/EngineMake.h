@@ -65,6 +65,7 @@
 #define PROTO_ACTOR_DEFAULTCUBE L"Proto_Actor_DefaultCube"
 #define PROTO_ACTOR_DEFAULTSPHERE L"Proto_Actor_DefaultSphere"
 #define PROTO_ACTOR_DEUBGGINGDEFAULTOBJECT L"Proto_Actor_DebuggingDefaultObject"
+#define PROTO_ACTOR_DEUBGGINGDEFAULTCELL L"Proto_Actor_DebuggingDefaultCell"
 #define PROTO_ACTOR_TERRAIN L"Proto_Actor_Terrain"
 #define PROTO_ACTOR_SKYBOX L"Proto_Actor_SkyBox"
 #define PROTO_ACTOR_PARTICLE L"Proto_Actor_Particle"

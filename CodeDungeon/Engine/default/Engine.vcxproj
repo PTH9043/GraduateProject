@@ -19,15 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\public\UAnimOccursEvent.h" />
-    <ClInclude Include="..\public\UAnimSectionEvent.h" />
-    <ClInclude Include="..\public\AudioAPI.h" />
     <ClInclude Include="..\public\AnimEventParents.h" />
     <ClInclude Include="..\public\AnimOccursEvents.h" />
     <ClInclude Include="..\public\AnimSectionEvents.h" />
     <ClInclude Include="..\public\UCharacter.h" />
     <ClInclude Include="..\public\UCharacterManager.h" />
     <ClInclude Include="..\public\UController.h" />
+    <ClInclude Include="..\public\UInputController.h" />
     <ClInclude Include="..\public\USound.h" />
     <ClInclude Include="..\public\CustomMemory.h" />
     <ClInclude Include="..\public\CustomString.h" />
@@ -54,7 +52,6 @@
     <ClInclude Include="..\public\UActorGroup.h" />
     <ClInclude Include="..\public\UActorManager.h" />
     <ClInclude Include="..\public\UAnimation.h" />
-    <ClInclude Include="..\public\UAnimEvent.h" />
     <ClInclude Include="..\public\UAnimModel.h" />
     <ClInclude Include="..\public\UAudioSystem.h" />
     <ClInclude Include="..\public\UAudioSystemManager.h" />
@@ -66,6 +63,7 @@
     <ClInclude Include="..\public\UComponent.h" />
     <ClInclude Include="..\public\UComponentManager.h" />
     <ClInclude Include="..\public\UComputeRootSignature.h" />
+    <ClInclude Include="..\public\UDefaultCell.h" />
     <ClInclude Include="..\public\UDefaultCube.h" />
     <ClInclude Include="..\public\UDefaultDebugging.h" />
     <ClInclude Include="..\public\UDefaultSphere.h" />
@@ -88,6 +86,7 @@
     <ClInclude Include="..\public\UPipeLine.h" />
     <ClInclude Include="..\public\UProcessedData.h" />
     <ClInclude Include="..\public\URectTransform.h" />
+    <ClInclude Include="..\public\URegion.h" />
     <ClInclude Include="..\public\URenderer.h" />
     <ClInclude Include="..\public\URenderTargetManager.h" />
     <ClInclude Include="..\public\UBase.h" />
@@ -121,6 +120,8 @@
     <ClInclude Include="..\public\UShaderBufferManager.h" />
     <ClInclude Include="..\public\UShaderConstantBuffer.h" />
     <ClInclude Include="..\public\UShaderStructedBuffer.h" />
+    <ClInclude Include="..\public\UStage.h" />
+    <ClInclude Include="..\public\UStageManager.h" />
     <ClInclude Include="..\public\USwapChain.h" />
     <ClInclude Include="..\public\UTableDescriptor.h" />
     <ClInclude Include="..\public\UTexGroup.h" />
@@ -131,6 +132,7 @@
     <ClInclude Include="..\public\UTransform.h" />
     <ClInclude Include="..\public\UUserInterface.h" />
     <ClInclude Include="..\public\UVIBuffer.h" />
+    <ClInclude Include="..\public\UVIBufferCell.h" />
     <ClInclude Include="..\public\UVIBufferCube.h" />
     <ClInclude Include="..\public\UVIBufferGrid.h" />
     <ClInclude Include="..\public\UVIBufferPlane.h" />
@@ -140,15 +142,13 @@
     <ClInclude Include="..\public\UWorkThread.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\private\UAnimOccursEvent.cpp" />
-    <ClCompile Include="..\private\UAnimSectionEvent.cpp" />
-    <ClCompile Include="..\private\AudioAPI.cpp" />
     <ClCompile Include="..\private\AnimEventParents.cpp" />
     <ClCompile Include="..\private\AnimOccursEvents.cpp" />
     <ClCompile Include="..\private\AnimSectionEvents.cpp" />
     <ClCompile Include="..\private\UCharacter.cpp" />
     <ClCompile Include="..\private\UCharacterManager.cpp" />
     <ClCompile Include="..\private\UController.cpp" />
+    <ClCompile Include="..\private\UInputController.cpp" />
     <ClCompile Include="..\private\USound.cpp" />
     <ClCompile Include="..\private\CustomMemory.cpp" />
     <ClCompile Include="..\private\CustomString.cpp" />
@@ -158,7 +158,6 @@
     <ClCompile Include="..\private\UActorGroup.cpp" />
     <ClCompile Include="..\private\UActorManager.cpp" />
     <ClCompile Include="..\private\UAnimation.cpp" />
-    <ClCompile Include="..\private\UAnimEvent.cpp" />
     <ClCompile Include="..\private\UAnimModel.cpp" />
     <ClCompile Include="..\private\UAudioSystem.cpp" />
     <ClCompile Include="..\private\UAudioSystemManager.cpp" />
@@ -170,6 +169,7 @@
     <ClCompile Include="..\private\UComponent.cpp" />
     <ClCompile Include="..\private\UComponentManager.cpp" />
     <ClCompile Include="..\private\UComputeRootSignature.cpp" />
+    <ClCompile Include="..\private\UDefaultCell.cpp" />
     <ClCompile Include="..\private\UDefaultCube.cpp" />
     <ClCompile Include="..\private\UDefaultDebugging.cpp" />
     <ClCompile Include="..\private\UDefaultSphere.cpp" />
@@ -192,6 +192,7 @@
     <ClCompile Include="..\private\UPipeLine.cpp" />
     <ClCompile Include="..\private\UProcessedData.cpp" />
     <ClCompile Include="..\private\URectTransform.cpp" />
+    <ClCompile Include="..\private\URegion.cpp" />
     <ClCompile Include="..\private\URenderer.cpp" />
     <ClCompile Include="..\private\URenderTargetManager.cpp" />
     <ClCompile Include="..\private\UBase.cpp" />
@@ -225,6 +226,8 @@
     <ClCompile Include="..\private\UShaderBufferManager.cpp" />
     <ClCompile Include="..\private\UShaderConstantBuffer.cpp" />
     <ClCompile Include="..\private\UShaderStructedBuffer.cpp" />
+    <ClCompile Include="..\private\UStage.cpp" />
+    <ClCompile Include="..\private\UStageManager.cpp" />
     <ClCompile Include="..\private\USwapChain.cpp" />
     <ClCompile Include="..\private\UTableDescriptor.cpp" />
     <ClCompile Include="..\private\UTexGroup.cpp" />
@@ -235,6 +238,7 @@
     <ClCompile Include="..\private\UTransform.cpp" />
     <ClCompile Include="..\private\UUserInterface.cpp" />
     <ClCompile Include="..\private\UVIBuffer.cpp" />
+    <ClCompile Include="..\private\UVIBufferCell.cpp" />
     <ClCompile Include="..\private\UVIBufferCube.cpp" />
     <ClCompile Include="..\private\UVIBufferGrid.cpp" />
     <ClCompile Include="..\private\UVIBufferPlane.cpp" />

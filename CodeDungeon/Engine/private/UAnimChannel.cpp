@@ -36,7 +36,7 @@ UAnimChannel::UAnimChannel(const UAnimChannel& _rhs) :
 SHPTR<UAnimChannel> UAnimChannel::Clone(CSHPTRREF<UAnimModel> _spAnimModel)
 {
 	SHPTR<UAnimChannel> pChannel{ CloneThis<UAnimChannel>(*this) };
-	pChannel->m_spBoneNode = _spAnimModel->GetBoneNode(m_spBoneNode->GetName());
+	pChannel->m_spBoneNode = _spAnimModel->FindBoneNode(m_spBoneNode->GetName());
 	return pChannel;
 }
 
@@ -51,7 +51,7 @@ HRESULT UAnimChannel::NativeConstruct(CSHPTRREF<UAnimModel> _spAnimModel, const 
 	m_vecKeyFrames.resize(_stChannelDesc.iNumMaxKeyFrames);
 	::memcpy(&m_vecKeyFrames[0], _stChannelDesc.pKeyFrames, sizeof(KEYFRAME) * _stChannelDesc.iNumMaxKeyFrames);
 	m_wstrBoneName = _stChannelDesc.wstrBoneName;
-	m_spBoneNode = _spAnimModel->GetBoneNode(m_wstrBoneName);
+	m_spBoneNode = _spAnimModel->FindBoneNode(m_wstrBoneName);
 	KEYFRAME* pKeyFrame = _stChannelDesc.pKeyFrames;
 	Make::ReleaseBuffer(pKeyFrame);
 	return S_OK;

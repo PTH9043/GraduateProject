@@ -196,7 +196,9 @@ namespace Engine {
 		GLOBALPARTICLEINFO() : iMaxCount{ 0 }, iAddCount{ 0 },
 			iFrameNumber{ 0 }, fDeltaTime{ 0 }, fAccTime{ 0 },
 			fMinLifeTime{ 0 }, fMaxLifeTime{ 0 }, fMinSpeed{ 0 },
-			fMaxSpeed{ 0 }, fStartScaleParticle{ 0 }, fEndScaleParticle{ 0 }, fPadding{ 0 }
+			fMaxSpeed{ 0 }, fStartScaleParticle{ 0 }, fEndScaleParticle{ 0 }, fParticleThickness{ 0 }, fParticleDirection{ _float3(0,0,0)}, fPadding{
+			0
+		}
 		{}
 
 		_uint		iMaxCount;
@@ -212,7 +214,11 @@ namespace Engine {
 		_float		 fMaxSpeed;
 		_float		fStartScaleParticle;
 		_float		fEndScaleParticle;
+		_float		fParticleThickness;
+		
+		_float3     fParticleDirection;
 		_float		fPadding;
+		
 	};
 
 	struct PARTICLE

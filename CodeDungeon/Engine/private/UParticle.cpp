@@ -12,13 +12,13 @@
 UParticle::UParticle(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer,
 	const CLONETYPE& _eCloneType)
 	: UPawn(_spDevice, _wstrLayer, _eCloneType, BACKINGTYPE::NON),
-	m_spTexGroup{ nullptr }, m_spParticleSystem{ nullptr }, m_spVIBufferPoint{ nullptr }
+	m_spTexGroup{ nullptr }, m_spParticleSystem{ nullptr }, m_spVIBufferPoint{ nullptr },TextureIndex{0}
 {
 }
 
 UParticle::UParticle(const UParticle& _rhs) :
 	UPawn(_rhs),
-	m_spTexGroup{ nullptr }, m_spParticleSystem{ nullptr }, m_spVIBufferPoint{ nullptr }
+	m_spTexGroup{ nullptr }, m_spParticleSystem{ nullptr }, m_spVIBufferPoint{ nullptr }, TextureIndex{ 0 }
 {
 }
 
@@ -47,9 +47,11 @@ HRESULT UParticle::NativeConstructClone(const VOIDDATAS& _convecDatas)
 		m_spParticleSystem->SettingComputeShader(stParticleDesc.wstrParticleComputeShader);
 		AddShader(stParticleDesc.wstrParticleShader);
 
-		_uint iIndex = m_spTexGroup->GetTextureIndex(stParticleDesc.wstrParticleTextureName);
-		m_TextureIndexContainer.insert(std::pair<_uint, SRV_REGISTER>(iIndex, SRV_REGISTER::T0));
-
+		for (int i = 0; i < 2; i++) {
+			_uint iIndex=m_spTexGroup->GetTextureIndex(stParticleDesc.wstrParticleTextureName[i]);
+			m_TextureIndexContainer.insert(std::pair<_uint, SRV_REGISTER>(iIndex, SRV_REGISTER::T0));
+		}
+		
 		m_LifeTimer = CUSTIMER{ stParticleDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime };
 
 		SetActive(false);
@@ -83,10 +85,9 @@ HRESULT UParticle::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTable
 	// Bind Particle System Buffer
 	m_spParticleSystem->BindShaderParams(GetShader());
 	// bind Srv Buffer 
-	for (auto& iter : m_TextureIndexContainer)
-	{
-		GetShader()->BindSRVBuffer(iter.second, m_spTexGroup->GetTexture(iter.first));
-	}
+	
+	GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTexGroup->GetTexture(TextureIndex));
+	
 
 	m_spVIBufferPoint->Render(GetShader(), _spCommand, m_spParticleSystem->GetMaxParticleCnt());
 	return S_OK;
@@ -110,7 +111,20 @@ _bool UParticle::Load(const _wstring& _wstrPath)
 	return _bool();
 }
 
+
+
 #ifdef _USE_IMGUI
+
+void UParticle::SetTexture(const _wstring& TexName)
+{
+	TextureIndex = m_spTexGroup->GetTextureIndex(TexName);	
+}
+
+void UParticle::SetTexture(_uint _index)
+{
+	TextureIndex = _index;
+}
+
 void UParticle::ShowObjectInfo()
 {
 

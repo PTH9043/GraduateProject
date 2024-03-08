@@ -18,11 +18,11 @@ TAssimpModel::TAssimpModel(CSHPTRREF<UDevice> _spDevice) :
 	m_spImporter{ nullptr },
 	m_vecMeshContainers{},
 	m_iNumMeshContainers{ 0 },
-	m_vecBoneNodes{},
+	m_BoneNodeContainer{},
 	m_iNumBoneNodes{ 0 },
 	m_vecAnimations{},
 	m_iNumAnimation{ 0 },
-	m_vecMaterials{},
+	m_MaterialContainer{},
 	m_iNumMaterials{ 0 },
 	m_mScaleMatrix{ _float4x4::Identity },
 	m_spFileGroup{ nullptr },
@@ -31,7 +31,8 @@ TAssimpModel::TAssimpModel(CSHPTRREF<UDevice> _spDevice) :
 	m_wstrModelName{ L"" },
 	m_wstrTextureFolderName{ L"" },
 	m_pAIScene{ nullptr },
-	m_wstrTexturePath{ L"" }
+	m_wstrTexturePath{ L"" },
+	m_isLoadAnimationCountIsZero{false}
 {
 }
 
@@ -40,11 +41,11 @@ TAssimpModel::TAssimpModel(const TAssimpModel& _rhs) :
 	m_spImporter{ _rhs.m_spImporter },
 	m_vecMeshContainers{ _rhs.m_vecMeshContainers },
 	m_iNumMeshContainers{ _rhs.m_iNumMeshContainers },
-	m_vecBoneNodes{ _rhs.m_vecBoneNodes },
+	m_BoneNodeContainer{ _rhs.m_BoneNodeContainer },
 	m_iNumBoneNodes{ _rhs.m_iNumBoneNodes },
 	m_vecAnimations{ _rhs.m_vecAnimations },
 	m_iNumAnimation{ _rhs.m_iNumAnimation },
-	m_vecMaterials{ _rhs.m_vecMaterials },
+	m_MaterialContainer{ _rhs.m_MaterialContainer },
 	m_iNumMaterials{ _rhs.m_iNumMaterials },
 	m_mScaleMatrix{ _rhs.m_mScaleMatrix },
 	m_spFileGroup{ _rhs.m_spFileGroup },
@@ -53,19 +54,20 @@ TAssimpModel::TAssimpModel(const TAssimpModel& _rhs) :
 	m_wstrModelName{ L"" },
 	m_wstrTextureFolderName{ L"" },
 	m_pAIScene{ nullptr },
-	m_wstrTexturePath{ L"" }
+	m_wstrTexturePath{ L"" },
+	m_isLoadAnimationCountIsZero{ false }
 {
 }
 
-SHPTR<TAssimpBoneNode> TAssimpModel::GetBoneNode(const _wstring& _strBoneNode)
+SHPTR<TAssimpBoneNode> TAssimpModel::FindBoneNode(const _wstring& _strBoneNode)
 {
-	const BONENODES::iterator& it = std::find_if(m_vecBoneNodes.begin(), m_vecBoneNodes.end(), [&](const SHPTR<TAssimpBoneNode>& p) {
+	const BONENODES::iterator& it = std::find_if(m_BoneNodeContainer.begin(), m_BoneNodeContainer.end(), [&](const SHPTR<TAssimpBoneNode>& p) {
 		if (p->GetBoneName() == _strBoneNode)
 			return true;
 
 		return false;
 		});
-	RETURN_CHECK(m_vecBoneNodes.end() == it, nullptr);
+	RETURN_CHECK(m_BoneNodeContainer.end() == it, nullptr);
 	return *it;
 }
 
@@ -148,7 +150,7 @@ void TAssimpModel::GetData(MODELDESC& _tModelDesc)
 	}
 	// Materials
 	int i = 0;
-	for (auto& iter : m_vecMaterials) {
+	for (auto& iter : m_MaterialContainer) {
 		VECTOR<_wstring> strTextureFileName{};
 		for (auto& value : iter->arrMaterialTexture) {
 			if (nullptr != value)
@@ -171,12 +173,12 @@ void TAssimpModel::GetData(MODELDESC& _tModelDesc)
 		_tModelDesc.MatrialData.insert(std::pair<_uint, VECTOR<_wstring>>(i++, strTextureFileName));
 	}
 	// BoneNode
-	for (auto& iter : m_vecBoneNodes) {
+	for (auto& iter : m_BoneNodeContainer) {
 		BONENODEDESC tDesc;
 		iter->GetData(tDesc);
 		_tModelDesc.BNodeDatas.push_back(tDesc);
 	}
-	_tModelDesc.iNodeCnt = (_uint)m_vecBoneNodes.size();
+	_tModelDesc.iNodeCnt = (_uint)m_BoneNodeContainer.size();
 	_tModelDesc.iMeshContainersCount = m_iNumMeshContainers;
 	_tModelDesc.iMatrialCount = m_iNumMaterials;
 }
@@ -191,7 +193,7 @@ void TAssimpModel::GetData(ANIMMODELDESC& _tAnimModelDesc)
 	}
 	// Materials
 	int i = 0;
-	for (auto& iter : m_vecMaterials) {
+	for (auto& iter : m_MaterialContainer) {
 		VECTOR<_wstring> strTextureFileName{};
 		for (auto& value : iter->arrMaterialTexture) {
 			if (nullptr != value)
@@ -214,7 +216,7 @@ void TAssimpModel::GetData(ANIMMODELDESC& _tAnimModelDesc)
 		_tAnimModelDesc.MatrialData.insert(std::pair<_uint, VECTOR<_wstring>>(i++, strTextureFileName));
 	}
 	// BoneNode
-	for (auto& iter : m_vecBoneNodes) {
+	for (auto& iter : m_BoneNodeContainer) {
 		BONENODEDESC tDesc;
 		iter->GetData(tDesc);
 		_tAnimModelDesc.BNodeDatas.push_back(tDesc);
@@ -226,7 +228,7 @@ void TAssimpModel::GetData(ANIMMODELDESC& _tAnimModelDesc)
 		_tAnimModelDesc.Animes.push_back(tDesc);
 	}
 
-	_tAnimModelDesc.iNodeCnt = (_uint)m_vecBoneNodes.size();
+	_tAnimModelDesc.iNodeCnt = (_uint)m_BoneNodeContainer.size();
 	_tAnimModelDesc.iMeshContainersCount = m_iNumMeshContainers;
 	_tAnimModelDesc.iMatrialCount = m_iNumMaterials;
 }
@@ -429,7 +431,7 @@ void TAssimpModel::SaveAnimModel(const _wstring& _wstrPath, _wstring& _wstrConve
 	}
 }
 
-void TAssimpModel::LoadAnimation(const _wstring& _wstrPath)
+void TAssimpModel::LoadAnimationFBX(const _wstring& _wstrPath)
 {
 	_uint iFlag = aiProcess_ConvertToLeftHanded | aiProcess_GenNormals | aiProcess_Triangulate | aiProcess_CalcTangentSpace;
 
@@ -445,6 +447,64 @@ void TAssimpModel::LoadAnimation(const _wstring& _wstrPath)
 	RETURN_CHECK(nullptr == pAIScene, ;);
 	// 애니메이션 만들어서 집어 넣는다.
 	CreateAnimation(pAIScene);
+}
+
+void TAssimpModel::LoadAnimation(const _wstring& _wstrPath)
+{
+	std::ifstream ifRead{ _wstrPath, std::ios::binary };
+	VECTOR<ANIMDESC> AnimDesc;
+	RETURN_CHECK(!ifRead, ;);
+	{
+		_uint iSize{ 0 };
+		ifRead.read((_char*)&iSize, sizeof(_uint));
+		if (0 != iSize)
+		{
+			AnimDesc.resize(iSize);
+			for (auto& Animation : AnimDesc)
+			{
+				ifRead.read((_char*)&Animation.stExtraData.iNumChannels, sizeof(int));
+				ifRead.read((_char*)&Animation.stExtraData.dDuration, sizeof(_double));
+				ifRead.read((_char*)&Animation.stExtraData.dTickPerSeconds, sizeof(_double));
+				UMethod::ReadStringUnity(ifRead, Animation.wstrName);
+				_uint iChannelSize{ 0 };
+				ifRead.read((_char*)&iChannelSize, sizeof(_int));
+				Animation.Channels.resize(iChannelSize);
+				for (auto& Channel : Animation.Channels)
+				{
+					UMethod::ReadStringUnity(ifRead, Channel.wstrBoneName);
+					ifRead.read((_char*)&Channel.iNumMaxKeyFrames, sizeof(_int));
+					Channel.pKeyFrames = Make::AllocBuffer<KEYFRAME>(Channel.iNumMaxKeyFrames);
+					for (_uint i = 0; i < Channel.iNumMaxKeyFrames; ++i)
+					{
+						KEYFRAME& KeyFrame = Channel.pKeyFrames[i];
+						ifRead.read((_char*)&KeyFrame.dTime, sizeof(_double));
+
+						ifRead.read((_char*)&KeyFrame.vScale.x, sizeof(_float));
+						ifRead.read((_char*)&KeyFrame.vScale.y, sizeof(_float));
+						ifRead.read((_char*)&KeyFrame.vScale.z, sizeof(_float));
+
+						ifRead.read((_char*)&KeyFrame.vRotation.x, sizeof(_float));
+						ifRead.read((_char*)&KeyFrame.vRotation.y, sizeof(_float));
+						ifRead.read((_char*)&KeyFrame.vRotation.z, sizeof(_float));
+						ifRead.read((_char*)&KeyFrame.vRotation.w, sizeof(_float));
+
+						ifRead.read((_char*)&KeyFrame.vPosition.x, sizeof(_float));
+						ifRead.read((_char*)&KeyFrame.vPosition.y, sizeof(_float));
+						ifRead.read((_char*)&KeyFrame.vPosition.z, sizeof(_float)); 
+						KeyFrame.vPosition.w = 1.f;
+					}
+				}
+			}
+		}
+
+		for (auto& iter : AnimDesc)
+		{
+			SHPTR<TAssimpAnimation> spAnimation{ CreateNative<TAssimpAnimation>(ThisShared<TAssimpModel>(), iter) };
+			RETURN_CHECK(nullptr == spAnimation, ;);
+			m_vecAnimations.push_back(spAnimation);
+		}
+	}
+
 }
 
 HRESULT TAssimpModel::CreateModel(const _wstring& _wstrPath)
@@ -480,7 +540,7 @@ HRESULT TAssimpModel::CreateModel(const _wstring& _wstrPath)
 	RETURN_CHECK_FAILED(CreateMaterials(m_spFileGroup), E_FAIL);
 	RETURN_CHECK_FAILED(CreateAnimation(m_pAIScene), E_FAIL);
 
-	std::sort(m_vecBoneNodes.begin(), m_vecBoneNodes.end(), [&](SHPTR<TAssimpBoneNode>& p1, SHPTR<TAssimpBoneNode>& p2) {
+	std::sort(m_BoneNodeContainer.begin(), m_BoneNodeContainer.end(), [&](SHPTR<TAssimpBoneNode>& p1, SHPTR<TAssimpBoneNode>& p2) {
 		return p1->GetDepth() < p2->GetDepth();
 		});
 
@@ -546,7 +606,7 @@ HRESULT TAssimpModel::CreateMaterials(CSHPTRREF<FILEGROUP> _spFileGroup)
 	}
 
 	m_iNumMaterials = m_pAIScene->mNumMaterials;
-	m_vecMaterials.reserve(m_iNumMaterials);
+	m_MaterialContainer.reserve(m_iNumMaterials);
 	_wstring wstrPath = spFileGroup->wstrPath;
 	m_wstrTexturePath = wstrPath;
 
@@ -568,30 +628,34 @@ HRESULT TAssimpModel::CreateMaterials(CSHPTRREF<FILEGROUP> _spFileGroup)
 			fs::path ps{ strTexturePath.data };
 
 			_wstring strRealName = ps.filename();
-			if (ps.extension() == L".TGA" || ps.extension() == L".tga")
-			{
-				size_t iIndex = strRealName.find(L".");
-				strRealName = strRealName.substr(0, iIndex);
-				strRealName += L".dds";
-				m_lsTextureExts.push_back(L".dds");
-			}
-			else
-			{
-				m_lsTextureExts.push_back(ps.extension());
-			}
+			_wstring strName = strRealName.substr(0, strRealName.find(L"."));
+			_wstring strLoadName = strName + L".dds";
 
 			_wstring Path = wstrPath;
 			Path += L"\\";
-			Path += strRealName;
+			Path += strLoadName;
 			// Create Texture 
 			pModelMaterial->arrMaterialTexture[j] = CreateConstructorNativeNotMsg<UTexGroup>(GetDevice(), Path);
-			if (nullptr == pModelMaterial->arrMaterialTexture[j]) {
-				continue;
+			if (nullptr == pModelMaterial->arrMaterialTexture[j])
+			{
+				// dds로 로드 실패시 다른 texture로 로드 시도
+				Path = wstrPath;
+				Path += L"\\";
+				Path += strRealName;
+				// Create Texture 
+				pModelMaterial->arrMaterialTexture[j] = CreateConstructorNativeNotMsg<UTexGroup>(GetDevice(), Path);
+				m_lsTextureExts.push_back(ps.extension());
+				if (nullptr == pModelMaterial->arrMaterialTexture[j])
+					continue;
+			}
+			else
+			{
+				m_lsTextureExts.push_back(L".dds");
 			}
 			++iCnt;
 		}
 		if (iCnt > 0)
-			m_vecMaterials.push_back(pModelMaterial);
+			m_MaterialContainer.push_back(pModelMaterial);
 	}
 
 	m_wstrTexturePath += L"\\";
@@ -608,7 +672,7 @@ HRESULT TAssimpModel::CreateBoneNodes(aiNode* _pNode, SHPTR<TAssimpBoneNode> _pP
 	SHPTR<TAssimpBoneNode> pBoneNode = CreateNative<TAssimpBoneNode>(_pParents,
 		_pNode->mName.data, TransformMatrix, _fDepths);
 
-	m_vecBoneNodes.push_back({ pBoneNode });
+	m_BoneNodeContainer.push_back({ pBoneNode });
 
 	for (_uint i = 0; i < _pNode->mNumChildren; ++i) {
 		CreateBoneNodes(_pNode->mChildren[i], pBoneNode, _fDepths + 0.1f);
@@ -622,8 +686,12 @@ HRESULT TAssimpModel::CreateAnimation(const aiScene* _pAIScene)
 
 	m_iNumAnimation = _pAIScene->mNumAnimations;
 	SHPTR<TAssimpModel> pModel = ThisShared<TAssimpModel>();
+
 	for (_uint i = 0; i < m_iNumAnimation; ++i)
 	{
+		if (_pAIScene->mAnimations[i]->mNumChannels <= 1)
+			continue;
+
 		aiAnimation* pAIAnim = _pAIScene->mAnimations[i];
 
 		SHPTR<TAssimpAnimation> pAnimation = CreateNative<TAssimpAnimation>(pAIAnim, pModel);
@@ -632,7 +700,6 @@ HRESULT TAssimpModel::CreateAnimation(const aiScene* _pAIScene)
 
 		m_vecAnimations.push_back(pAnimation);
 	}
-
 	return S_OK;
 }
 

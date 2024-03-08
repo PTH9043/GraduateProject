@@ -5,6 +5,7 @@
 #include "UShader.h"
 #include "UMethod.h"
 #include "UAnimation.h"
+#include "UTexGroup.h"
 
 TAnimControlModel::TAnimControlModel(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer,
 	const CLONETYPE& _eCloneType) : 
@@ -113,6 +114,8 @@ void TAnimControlModel::SelectAnimation()
 		}
 		ImGui::EndListBox();
 	}
+
+
 }
 
 void TAnimControlModel::ModifyAnimation()
@@ -254,11 +257,13 @@ void TAnimControlModel::TickActive(const _double& _dTimeDelta)
 		{
 			if (false == m_isAnimationStop)
 			{
-				m_spModel->TickAnimAndEvent(GetTransform(), _dTimeDelta, m_wstrInputTrigger);
+				m_spModel->TickEvent(this, m_wstrInputTrigger, _dTimeDelta);
+				m_spModel->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
 			}
 			else
 			{
-				m_spModel->TickAnimToTimAccAndEvent(GetTransform(), _dTimeDelta, static_cast<_double>(m_fAnimTimeAcc), m_wstrInputTrigger);
+				m_spModel->TickEvent(this, m_wstrInputTrigger, _dTimeDelta);
+				m_spModel->TickAnimToTimAccChangeTransform(GetTransform(), _dTimeDelta, static_cast<_double>(m_fAnimTimeAcc));
 			}
 			m_wstrInputTrigger = L"";
 		}
