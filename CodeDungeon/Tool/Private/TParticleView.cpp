@@ -94,7 +94,7 @@ void TParticleView::LoadSingleParticleResource()
 		m_SingleParticleParam[i] = m_SingleParticle[i]->GetParticleSystem()->GetParticleParam();
 		m_SingleParticleType[i] = m_SingleParticle[i]->GetParticleSystem()->GetParticleTypeParam();
 		m_SingleParticleType[i]->fParticleType = PARTICLE_TYPE_AUTO;
-		m_SingleParticle[i]->SetTexture(13);
+		
 	}
 }
 
@@ -520,30 +520,19 @@ void TParticleView::AnimParticleTexSetting()
 				if (ImGui::Selectable(UMethod::ConvertWToS(Texture.first)))
 				{
 					m_AnimParticle[0]->SetTexture(Texture.second);
-					if (Texture.second == 0 || Texture.second == 2 || Texture.second == 3) {
+					if (Texture.second == 0 || Texture.second == 1 || Texture.second == 3 || Texture.second == 4) {
 						m_AnimParticle[0]->SetNextAnimTimer(0.025f);
 						m_AnimParticle[0]->SetTextureRowsAndCols(8.f,8.f);
 					}
-					else if (Texture.second == 1) {
-						m_AnimParticle[0]->SetNextAnimTimer(0.05f);
-						m_AnimParticle[0]->SetTextureRowsAndCols(2.f, 1.f);
-					}
-					else if (Texture.second ==4|| Texture.second == 5) {
+					else if (Texture.second == 5) {
 						m_AnimParticle[0]->SetNextAnimTimer(0.025f);
 						m_AnimParticle[0]->SetTextureRowsAndCols(6.f, 6.f);
 					}
-					else if (Texture.second == 8 || Texture.second == 9) {
+					else if (Texture.second == 2) {
 						m_AnimParticle[0]->SetNextAnimTimer(0.025f);
 						m_AnimParticle[0]->SetTextureRowsAndCols(8.f, 4.f);
 					}
-					else if (Texture.second == 6) {
-						m_AnimParticle[0]->SetNextAnimTimer(0.05f);
-						m_AnimParticle[0]->SetTextureRowsAndCols(4.f, 4.f);
-					}
-					else if (Texture.second == 7) {
-						m_AnimParticle[0]->SetNextAnimTimer(0.1f);
-						m_AnimParticle[0]->SetTextureRowsAndCols(8.f, 1.f);
-					}
+					
 				}
 			}
 			ImGui::EndListBox();
