@@ -11,27 +11,31 @@
 #include "UDevice.h"
 
 
+
+
 UParticleSystem::UParticleSystem(CSHPTRREF<UDevice> _spDevice) :
 	UResource(_spDevice),
+	m_iMaxParitcleCnt{ 1000 },
 	m_stParticleParam{},
-	m_spUpdateParticleConstnatBuffer{ nullptr },
+	m_spComputeShaderParticleConstantBuffer{ nullptr },
 	m_spParticleStructedBuffer{ nullptr },
 	m_spComputeShaderStructedBuffer{ nullptr },
 	m_spComputeShader{ nullptr },
 	m_spComputeCommand{ nullptr },
-	m_sComputeIndex{ 0 }
+	m_sComputeIndex{ 0 }, m_iParticleAddAmount{10}, m_fCreateInterval{2.5f}
 {
 }
 
 UParticleSystem::UParticleSystem(const UParticleSystem& _rhs) :
 	UResource(_rhs),
+	m_iMaxParitcleCnt{ 1000 },
 	m_stParticleParam{},
-	m_spUpdateParticleConstnatBuffer{ nullptr },
+	m_spComputeShaderParticleConstantBuffer{ nullptr },
 	m_spParticleStructedBuffer{ nullptr },
 	m_spComputeShaderStructedBuffer{ nullptr },
 	m_spComputeShader{ nullptr },
 	m_spComputeCommand{ nullptr },
-	m_sComputeIndex{ 0 }
+	m_sComputeIndex{ 0 }, m_iParticleAddAmount{ 10 }, m_fCreateInterval{ 2.5f }
 {
 }
 
@@ -56,15 +60,21 @@ HRESULT UParticleSystem::NativeConstructClone(const VOIDDATAS& _vecDatas)
 		}
 	}
 
-	m_spUpdateParticleConstnatBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::ALLPARTICLEBUFFER, GetTypeSize<PARTICLEPARAM>());
-	m_spRenderParticleConstnatBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::ALLPARTICLEBUFFER, GetTypeSize<PARTICLEPARAM>());
+	m_spComputeShaderParticleConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::ALLPARTICLEBUFFER, PARTICLEPARAM_SIZE);
+	m_spGraphicsShaderParticleConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::ALLPARTICLEBUFFER, PARTICLEPARAM_SIZE);
+	m_spComputeShaderTypeConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::PARTICLETYPEBUFFER, PARTICLETYPEPARAM_SIZE);
 
-	m_spParticleStructedBuffer = CreateNative<UShaderStructedBuffer>(GetDevice(), sizeof(PARTICLE), m_stParticleParam.stGlobalParticleInfo.iMaxCount);
+	m_spParticleStructedBuffer = CreateNative<UShaderStructedBuffer>(GetDevice(), sizeof(PARTICLE), m_iMaxParitcleCnt);
 	m_spComputeShaderStructedBuffer = CreateNative<UShaderStructedBuffer>(GetDevice(), sizeof(COMPUTESHADERINFO), 1);
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	{
 		ComPtr<Dx12CommandQueue> cpCommandQueue = UMethod::CreateCommandQueue(GetDevice()->GetDV(), D3D12_COMMAND_LIST_TYPE_COMPUTE);
+
+		/*	for (auto& iter : m_arrComputeCommands)
+			{
+				iter = CreateNative<UComputeCommand>(GetDevice(), cpCommandQueue);
+			}*/
 		m_spComputeCommand = CreateNative<UComputeCommand>(GetDevice(), cpCommandQueue);
 		m_spComputeTableDescriptor = CreateNative<UTableDescriptor>(GetDevice(), 1);
 	}
@@ -75,14 +85,31 @@ void UParticleSystem::Update(const _double& _dTimeDelta)
 {
 	RETURN_CHECK(nullptr == m_spComputeShader, ;)
 	{
-		m_stParticleParam.stGlobalParticleInfo.fDeltaTime = static_cast<_float>(_dTimeDelta);
-		m_stParticleParam.stGlobalParticleInfo.fAccTime += m_stParticleParam.stGlobalParticleInfo.fDeltaTime;
-
-		if (3.f < m_stParticleParam.stGlobalParticleInfo.fAccTime)
-		{
-			m_stParticleParam.stGlobalParticleInfo.fAccTime -= 3.f;
-			m_stParticleParam.stGlobalParticleInfo.iAddCount = 1;
+		std::random_device rd;   // non-deterministic generator
+		std::mt19937 gen(rd());  // to seed mersenne twister.
+		std::uniform_real_distribution<> vdist(-30.0, +30.0);
+		std::uniform_real_distribution<> cdist(0.0, +1.0);
+		if (m_stParticleType.fParticleType == 1) {
+		
 		}
+		else {
+			m_stParticleParam.stGlobalParticleInfo.fParticlePosition = _float4(0, 0, 0, 1);
+		}
+
+		m_stParticleParam.stGlobalParticleInfo.fDeltaTime = static_cast<_float>(_dTimeDelta);
+		//m_stParticleParam.stGlobalParticleInfo.fAccTime += m_stParticleParam.stGlobalParticleInfo.fDeltaTime;
+		m_stParticleParam.stGlobalParticleInfo.fAccTime += static_cast<_float>(_dTimeDelta);
+		_int add = 0;
+		if (m_fCreateInterval < m_stParticleParam.stGlobalParticleInfo.fAccTime)
+		{
+			m_stParticleParam.stGlobalParticleInfo.fAccTime = m_stParticleParam.stGlobalParticleInfo.fAccTime - m_fCreateInterval;
+
+
+			m_stParticleParam.stGlobalParticleInfo.fParticlePosition = _float4(float(vdist(gen)), float(vdist(gen)), float(vdist(gen)), float(cdist(gen)));
+			add = m_iParticleAddAmount;
+			
+		}
+		m_stParticleParam.stGlobalParticleInfo.iAddCount = add;
 	}
 }
 
@@ -91,18 +118,20 @@ void UParticleSystem::Render()
 	m_spComputeShader->SetTableDescriptor(m_spComputeTableDescriptor);
 	m_spComputeShader->BeginSettingDatas(m_spComputeCommand);
 
-	m_spComputeShader->BindCBVBuffer(m_spUpdateParticleConstnatBuffer, &m_stParticleParam, GetTypeSize<PARTICLEPARAM>());
+	m_spComputeShader->BindCBVBuffer(m_spComputeShaderParticleConstantBuffer, &m_stParticleParam, PARTICLEPARAM_SIZE);
+	m_spComputeShader->BindCBVBuffer(m_spComputeShaderTypeConstantBuffer, &m_stParticleType, PARTICLETYPEPARAM_SIZE);
 	m_spComputeShader->BindUAVBuffer(UAV_REGISTER::PARTICLEWRITEDATA, m_spParticleStructedBuffer);
 	m_spComputeShader->BindUAVBuffer(UAV_REGISTER::SHRAEDDATA, m_spComputeShaderStructedBuffer);
 
 	m_spComputeShader->CommitLocalShaderDatas(m_spComputeCommand, 1, 1, 1);
+	//m_sComputeIndex = (m_sComputeIndex + 1) % m_arrComputeCommands.size();
 }
 
 void UParticleSystem::BindShaderParams(CSHPTRREF<UShader> _spShader)
 {
 	RETURN_CHECK(nullptr == _spShader, ;);
 	_spShader->BindSRVBuffer(SRV_REGISTER::T14, m_spParticleStructedBuffer);
-	_spShader->BindCBVBuffer(m_spRenderParticleConstnatBuffer, &m_stParticleParam, GetTypeSize<PARTICLEPARAM>());
+	_spShader->BindCBVBuffer(m_spGraphicsShaderParticleConstantBuffer, &m_stParticleParam, PARTICLEPARAM_SIZE);
 }
 
 void UParticleSystem::SettingComputeShader(const _wstring& _wstrProtoName)

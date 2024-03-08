@@ -55,6 +55,9 @@ class USound;
 class UTransform;
 class UCharacter;
 
+class UStageManager;
+class UStage;
+
 struct PICKINGDESC;
 struct WAITCHECKACTOR;
 
@@ -265,11 +268,26 @@ public: /* NetworkManager */
 public: /* CharacterManager*/
 	CSHPTRREF<UCharacter> GetCurrPlayer() const;
 	void ReigsterCurrentPlayer(CSHPTRREF<UCharacter> _spCurrentPlayer);
+	/*
+	@ Date: 2024-03-08, Writer: 이성현
+	@ Explain
+	- Picking관련 함수들.
+	*/
+public: /* Picking */
+	void AddPickingObject(CSHPTRREF<UActor> _spActor, CSHPTRREF<UVIBuffer> _spVIBuffer);
+	SHPTR<UActor> GetPickingActor();
+	const PICKINGDESC& GetPickDesc();
+	_bool PickingMesh(CSHPTRREF<UActor> _spActor, CSHPTRREF<UVIBuffer> _spVIBuffer,
+		_float* _pDist, _float3* _pOut);
+
 private: /* Ready Datas */
 	HRESULT ReadyResource(const OUTPUTDATA& _stData);
 	HRESULT ReadyComp(const OUTPUTDATA& _stData);
 	HRESULT ReadyActor(const OUTPUTDATA& _stData);
 	HRESULT ReadyRenderTarget(const OUTPUTDATA& _stData);
+
+
+
 private:
 	_bool															m_isGamming;
 	
@@ -293,9 +311,10 @@ private:
 	SHPTR<UCharacterManager>				m_spCharacterManager;
 
 	SHPTR<URenderer>								m_spRenderer;
+
 	//SHPTR< UFontManager>						m_spFontMananger;
 	//SHPTR<UComputeManager>				m_spComputeManager;
-	//SHPTR<UPicking>									m_spPicking;
+	SHPTR<UPicking>									m_spPicking;
 
 	//SHPTR<URandomManager>				m_spRandomManager;
 };

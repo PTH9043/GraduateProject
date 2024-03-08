@@ -6,6 +6,7 @@
 #include "UDefaultCube.h"
 #include "UCollider.h"
 #include "UNavigation.h"
+#include "UMethod.h"
 
 void URegion::tagCubeObjs::Create(SHPTRREF<UCell> _pCell)
 {
@@ -67,15 +68,17 @@ void URegion::Free()
 HRESULT URegion::NativeConstruct()
 {
 	RETURN_CHECK_FAILED(__super::NativeConstruct(), E_FAIL);
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	if (nullptr == m_spNavigation)
-		m_spNavigation = CreateConstructorNative<UNavigation>(GetDevice());
-
+		m_spNavigation = CreateConstructorNative<UNavigation>(spGameInstance->GetDevice());
 	return S_OK;
 }
 
 HRESULT URegion::NativeConstructClone(const VOIDDATAS& _vecDatas)
 {
-	return E_NOTIMPL;
+	RETURN_CHECK_FAILED(__super::NativeConstructClone(_vecDatas), E_FAIL);
+
+	return S_OK;
 }
 
 HRESULT URegion::AddCell(SHPTR<UCell>& _pCell)

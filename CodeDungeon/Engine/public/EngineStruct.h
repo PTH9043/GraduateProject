@@ -207,6 +207,7 @@ namespace Engine {
 		_bool IsOver(const _double& _dTimeDelta);
 		void ResetTimer();
 		_bool IsPass() { return isPass; }
+		void SetStandardTime(_float _StandardTime) { fStandardTime = _StandardTime; }
 		// Timer
 		_float		fTimer = 0.f;
 		_float		fStandardTime = 0.f;

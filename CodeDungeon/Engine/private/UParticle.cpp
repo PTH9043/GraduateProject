@@ -41,16 +41,17 @@ HRESULT UParticle::NativeConstructClone(const VOIDDATAS& _convecDatas)
 		PARTICLEDESC stParticleDesc = UMethod::ConvertTemplate_Index<PARTICLEDESC>(_convecDatas, 0);
 
 		m_spParticleSystem = static_pointer_cast<UParticleSystem>(spGameInstance->CloneResource(PROTO_RES_PARTICLESYSTEM, { &stParticleDesc.ParticleParam }));
-		m_spTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_PARTICLETEXTUREGROUP));
+		
+		if(m_spTexGroup==nullptr)m_spTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_PARTICLETEXTUREGROUP));
 		m_spVIBufferPoint = static_pointer_cast<UVIBufferPoint>(spGameInstance->CloneResource(PROTO_RES_VIBUFFERPOINT));
 
 		m_spParticleSystem->SettingComputeShader(stParticleDesc.wstrParticleComputeShader);
 		AddShader(stParticleDesc.wstrParticleShader);
 
-		for (int i = 0; i < 2; i++) {
+		/*for (int i = 0; i < 2; i++) {
 			_uint iIndex=m_spTexGroup->GetTextureIndex(stParticleDesc.wstrParticleTextureName[i]);
 			m_TextureIndexContainer.insert(std::pair<_uint, SRV_REGISTER>(iIndex, SRV_REGISTER::T0));
-		}
+		}*/
 		
 		m_LifeTimer = CUSTIMER{ stParticleDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime };
 
@@ -61,11 +62,11 @@ HRESULT UParticle::NativeConstructClone(const VOIDDATAS& _convecDatas)
 
 void UParticle::TickActive(const _double& _dTimeDelta)
 {
-	if (true == m_LifeTimer.IsOver(_dTimeDelta))
+	/*if (true == m_LifeTimer.IsOver(_dTimeDelta))
 	{
 		SetActive(false);
 		m_LifeTimer.ResetTimer();
-	}
+	}*/
 
 	m_spParticleSystem->Update(_dTimeDelta);
 }

@@ -52,11 +52,10 @@ namespace Engine
 
 		static void SaveString(std::ofstream& _os, const _string& _str);
 		static void ReadString(std::ifstream& _if, _wstring& _wstr);
-		static void ReadStringUnity(std::ifstream& _if, _wstring& _wstr);
 
 		static void SaveString(std::ofstream& _os, const _wstring& _wstr);
 		static void ReadString(std::ifstream& _if, _string& _str);
-		static void ReadStringUnity(std::ifstream& _if, _string& _str);
+
 		/*
 		@ Date: 2024-02-25, Writer: นฺลยว๖
 		@ Explain

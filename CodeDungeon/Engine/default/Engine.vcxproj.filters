@@ -328,9 +328,6 @@
     <Filter Include="01.Manager\StageManager">
       <UniqueIdentifier>{f7620c82-c508-4c6d-acbb-a5cbb7ebb702}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06.Component\Controller\InputController">
-      <UniqueIdentifier>{ad7f7ef3-c6b7-481a-ae96-b07c5dd9ef58}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -642,8 +639,8 @@
     <ClCompile Include="..\private\UStageManager.cpp">
       <Filter>01.Manager\StageManager</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\UInputController.cpp">
-      <Filter>06.Component\Controller\InputController</Filter>
+    <ClCompile Include="..\private\UAnimatedParticle.cpp">
+      <Filter>05.Actor\01.Pawn\Particle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -986,8 +983,8 @@
     <ClInclude Include="..\public\UStageManager.h">
       <Filter>01.Manager\StageManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\UInputController.h">
-      <Filter>06.Component\Controller\InputController</Filter>
+    <ClInclude Include="..\public\UAnimatedParticle.h">
+      <Filter>05.Actor\01.Pawn\Particle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

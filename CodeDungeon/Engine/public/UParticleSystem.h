@@ -17,7 +17,7 @@ public:
 	UParticleSystem(const UParticleSystem& _rhs);
 	DESTRUCTOR(UParticleSystem)
 public:
-	 const _uint GetMaxParticleCnt() { return m_stParticleParam.stGlobalParticleInfo.iMaxCount; }
+	 const _uint GetMaxParticleCnt() { return m_iMaxParitcleCnt; }
 public:
 	CLONE_MACRO(UParticleSystem, "UParticleSystem::Clone To Failed")
 	virtual void Free() override;
@@ -32,8 +32,18 @@ public:
 	// SaveLoada
 	_bool Load(const _wstring& _wstrPath);
 	_bool Save(const _wstring& _wstrPath);
+public:
 	PARTICLEPARAM* GetParticleParam() {
 		return &m_stParticleParam;
+	}
+	ComputeParticleType* GetParticleTypeParam() {
+		return &m_stParticleType;
+	}
+	_uint* GetAddParticleAmount() {
+		return &m_iParticleAddAmount;
+	}
+	_float* GetCreateInterval() {
+		return &m_fCreateInterval;
 	}
 #ifdef _USE_IMGUI
 public:
@@ -41,17 +51,30 @@ public:
 #endif 
 private:
 	// static 
-	static constexpr _float									CREATE_INTERVAL{0.5f};
-	PARTICLEPARAM												m_stParticleParam;
-	SHPTR< UShaderConstantBuffer>				m_spUpdateParticleConstnatBuffer;
-	SHPTR< UShaderConstantBuffer>				m_spRenderParticleConstnatBuffer;
+	static constexpr _uint										PARTICLEPARAM_SIZE{sizeof(PARTICLEPARAM)};
+	static constexpr _uint										PARTICLETYPEPARAM_SIZE{sizeof(ComputeParticleType)};
+	//static constexpr _float									CREATE_INTERVAL{2.5f};
+	static constexpr _ushort								COMPUTE_MAX_INDEX{3};
+	using COMPUTECOMMANDCONTAINER = ARRAY<SHPTR<UComputeCommand>, COMPUTE_MAX_INDEX>;
+
+	
+	PARTICLEPARAM								m_stParticleParam;
+	ComputeParticleType							m_stParticleType;
+	SHPTR< UShaderConstantBuffer>				m_spComputeShaderParticleConstantBuffer;
+	SHPTR< UShaderConstantBuffer>				m_spComputeShaderTypeConstantBuffer;
+	SHPTR< UShaderConstantBuffer>				m_spGraphicsShaderParticleConstantBuffer;
 	SHPTR<UShaderStructedBuffer>				m_spParticleStructedBuffer;
 	SHPTR<UShaderStructedBuffer>				m_spComputeShaderStructedBuffer;
 	// ComputeShader
-	SHPTR<UComputeShader>							m_spComputeShader;
-	SHPTR<UComputeCommand>						m_spComputeCommand;
-	SHPTR< UTableDescriptor>							m_spComputeTableDescriptor;
-	_ushort																m_sComputeIndex;
+	SHPTR<UComputeShader>						m_spComputeShader;
+//	COMPUTECOMMANDCONTAINER				m_arrComputeCommands;
+	SHPTR<UComputeCommand>				m_spComputeCommand;
+	SHPTR< UTableDescriptor>						m_spComputeTableDescriptor;
+	
+	_uint										m_iMaxParitcleCnt;
+	_ushort										m_sComputeIndex;
+	_uint										m_iParticleAddAmount;
+	_float										m_fCreateInterval;
 };
 
 END

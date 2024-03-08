@@ -4,7 +4,6 @@
 
 BEGIN(Engine)
 class UTransform;
-class UController;
 /*
 @ Date: 2024-02-25, Writer: 박태현
 @ Explain
@@ -42,15 +41,13 @@ public:
 	_float OtherCharacterDirToLookConverter(CSHPTRREF<UTransform> _spOtherTransform);
 	// 다른 캐릭터를 바라보는 자기 자신의 Look Direction
 	_float3 OtherCharacterDirToLookVectorF3(CSHPTRREF<UTransform> _spOtherTransform);
-protected: /* get set*/
-	CSHPTRREF<UController> GetController() const { return m_spController; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) PURE;
 	virtual void LateTickActive(const _double& _dTimeDelta) PURE;
 	virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) PURE;
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy) PURE;
 private:
-	SHPTR<UController> m_spController;
+
 };
 
 END

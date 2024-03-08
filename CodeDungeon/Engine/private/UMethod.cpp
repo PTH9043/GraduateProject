@@ -335,22 +335,10 @@ void UMethod::ReadString(std::ifstream& _if, _wstring& _wstr) {
 
 	int size = 0;
 	_if.read((char*)&size, sizeof(int));
-	char* pText = Make::AllocBuffer<char>(size);
-	::memset(pText, 0, static_cast<size_t>(size));
+	char* pText = new char[size];
 	_if.read((char*)pText, size);
 	_wstr = ConvertSToW(pText);
-	Make::ReleaseBuffer(pText);
-}
-
-void Engine::UMethod::ReadStringUnity(std::ifstream& _if, _wstring& _wstr)
-{
-	int size = 0;
-	_if.read((char*)&size, sizeof(int));
-	char* pText = Make::AllocBuffer<char>(size);
-	::memset(pText, 0, static_cast<size_t>(size));
-	_if.read((char*)pText, size - 1);
-	_wstr = ConvertSToW(pText);
-	Make::ReleaseBuffer(pText);
+	Safe_Delete_Array(pText);
 }
 
 void Engine::UMethod::SaveString(std::ofstream& _os, const _wstring& _wstr)
@@ -359,13 +347,6 @@ void Engine::UMethod::SaveString(std::ofstream& _os, const _wstring& _wstr)
 }
 
 void Engine::UMethod::ReadString(std::ifstream& _if, _string& _str)
-{
-	_wstring wstr;
-	ReadString(_if, wstr);
-	_str = ConvertWToS(wstr);
-}
-
-void Engine::UMethod::ReadStringUnity(std::ifstream& _if, _string& _str)
 {
 	_wstring wstr;
 	ReadString(_if, wstr);

@@ -93,7 +93,6 @@ void UAnimModel::TickEvent(UPawn* _pPawn, const _wstring& _wstrInputTrigger, con
 
 void UAnimModel::TickAnimation(const _double& _dTimeDelta)
 {
-	RETURN_CHECK(nullptr == m_spCurAnimation, ;);
 	if (nullptr != m_spNextAnimation)
 	{
 		m_spCurAnimation->UpdateNextAnimTransformMatrices(_dTimeDelta, m_fSupplyLerpValue, m_spNextAnimation);
@@ -180,7 +179,6 @@ HRESULT UAnimModel::Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader
 
 void UAnimModel::SetAnimation(const _uint& _iAnimIndex)
 {
-	RETURN_CHECK(m_vecAnimations.size() == 0, ;);
 	ChangeAnimIndex(_iAnimIndex, m_iCurAnimIndex);
 	// 현재 애니메이션이 세팅되는 상황일 때의 함수 실행
 	SettingCurAnimSituation();
@@ -188,7 +186,6 @@ void UAnimModel::SetAnimation(const _uint& _iAnimIndex)
 
 void UAnimModel::SetAnimation(const _wstring& _wstrAnimName)
 {
-	RETURN_CHECK(m_vecAnimations.size() == 0, ;);
 	ChangeAnimIndex(_wstrAnimName, m_iCurAnimIndex);
 	// 현재 애니메이션이 세팅되는 상황일 때의 함수 실행
 	SettingCurAnimSituation();
@@ -273,11 +270,7 @@ void UAnimModel::LoadToData(const _wstring& _wstrPath)
 		_uint iFindIndex{ static_cast<_uint>(wstrPath.find_last_of(L"\\"))};
 		wstrPath = wstrPath.substr(0, iFindIndex);
 
-		_wstring RootBoneNodeName{ L"" };
-
-		if(0 != tDesc.Animes.size())
-			RootBoneNodeName = tDesc.Animes[0].Channels[0].wstrBoneName;
-		
+		_wstring RootBoneNodeName = tDesc.Animes[0].Channels[0].wstrBoneName;
 		// Create
 		CreateBoneNode(&tDesc, RootBoneNodeName);
 		CreateMeshContainers(&tDesc);
@@ -293,7 +286,6 @@ void UAnimModel::LoadToData(const _wstring& _wstrPath)
 		}
 
 		CreateShaderConstantBuffer();
-
 		SetAnimation(0);
 	}
 }
@@ -401,13 +393,11 @@ void UAnimModel::ChangeAnimIndex(const _wstring& _wstrAnimName, _uint& _iIndex)
 
 void UAnimModel::SettingCurAnimSituation()
 {
+	assert(nullptr != m_vecAnimations[m_iCurAnimIndex]);
 	m_spCurAnimation = m_vecAnimations[m_iCurAnimIndex];
 	m_spCurAnimation->ResetData();
 	m_spNextAnimation = nullptr;
-
-	SHPTR<URootBoneNode> spRootBoneNode{ GetRootBoneNode() };
-	if(nullptr != spRootBoneNode)
-		spRootBoneNode->ResetRootBoneInfo();
+	GetRootBoneNode()->ResetRootBoneInfo();
 }
 
 void UAnimModel::SettingNextAnimSituation()
@@ -416,9 +406,7 @@ void UAnimModel::SettingNextAnimSituation()
 	// Reset
 	m_spCurAnimation->ResetData();
 	m_spNextAnimation->ResetData();
-	SHPTR<URootBoneNode> spRootBoneNode{ GetRootBoneNode() };
-	if (nullptr != spRootBoneNode)
-		spRootBoneNode->ResetRootBoneInfo();
+	GetRootBoneNode()->ResetRootBoneInfo();
 }
 
 HRESULT UAnimModel::CreateShaderConstantBuffer()

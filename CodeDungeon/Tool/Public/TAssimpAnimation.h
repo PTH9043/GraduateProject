@@ -11,25 +11,20 @@ class TAssimpModel;
 */
 class TAssimpAnimation : public UBase {
 public:
-	using CHANNELS = VECTOR<SHPTR<TAssimpChannel>>;
-public:
 	TAssimpAnimation();
 	TAssimpAnimation(const TAssimpAnimation& _rhs);
 	DESTRUCTOR(TAssimpAnimation)
 public:
-	const CHANNELS& GetChannels() { return m_vecAssimpChannels; }
-public:
 	virtual void Free() override;
 	HRESULT NativeConstruct(struct aiAnimation* _pAIAnim, CSHPTRREF< TAssimpModel> _spModel);
 	HRESULT NativeConstruct(struct aiAnimation* _pAIAnim, CSHPTRREF< TAssimpModel> _spModel, const _wstring& _strName);
-	HRESULT NativeConstruct(struct aiAnimation* _pAIAnim, CSHPTRREF< TAssimpModel> _spModel, const CHANNELS& _Channeles);
-	HRESULT NativeConstruct(CSHPTRREF< TAssimpModel> _spModel, const ANIMDESC& _AnimDesc);
 	void UpdateBoneMatrices(const _double& _dTimeDelta);
 	// AnimDesc
 	void GetData(ANIMDESC& _stAnimDesc);
 private:
 	void AnimationStringNameSplit(_wstring& _wstrAnimName);
 private:
+	using CHANNELS = VECTOR<SHPTR<TAssimpChannel>>;
 	_wstring				m_wstrName;
 	_uint					m_iNumChannels;
 	_double				m_dTickPerSeconds;
