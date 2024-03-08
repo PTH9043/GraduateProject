@@ -1,5 +1,5 @@
-#ifndef _3DNORMALCUBE_HLSL_
-#define _3DNORMALCUBE_HLSL_
+#ifndef _ANIMMODEL_HLSL_
+#define _ANIMMODEL_HLSL_
 
 #include "ShaderGrobalFunc.hlsli"
 
@@ -174,4 +174,4 @@ PS_OUT PS_Main(PS_IN In)
     return Out;
 }
 
-#endif // _3DNORMALCUBE_HLSL_
+#endif // _ANIMMODEL_HLSL_

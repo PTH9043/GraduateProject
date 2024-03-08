@@ -91,6 +91,7 @@ void TImGuiManager::LateTick(const _double& _dDeltaTime)
 {
 	m_spMainView->LateTick(_dDeltaTime);
 
+	
 	if (true == m_isResetScene)
 	{
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
@@ -158,7 +159,7 @@ HRESULT TImGuiManager::ReadyImGuiClass()
 	{
 		SHPTR<TNavigationView> spNavigationView = CreateConstructorNative<TNavigationView>(m_spDevice);
 		spNavigationView->CloseImGui();
-		m_ImGuiObjectContainer.insert(MakePair(IMGTAG::CAMERATOOL, spNavigationView));
+		m_ImGuiObjectContainer.insert(MakePair(IMGTAG::NAVITOOL, spNavigationView));
 		m_spMainView->InsertImGuiView(spNavigationView);
 
 	}

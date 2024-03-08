@@ -1041,5 +1041,8 @@
     <FxCompile Include="..\..\Shader\ComputeAnimation.hlsl">
       <Filter>98.ShaderFile\Common\Particle</Filter>
     </FxCompile>
+    <FxCompile Include="..\..\Shader\3DNormalCube.hlsl">
+      <Filter>98.ShaderFile\Common\NonAlpha</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

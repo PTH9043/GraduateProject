@@ -257,6 +257,7 @@
   <ItemGroup>
     <FxCompile Include="..\..\Shader\2DAnimateParticle.hlsl" />
     <FxCompile Include="..\..\Shader\2DParticle.hlsl" />
+    <FxCompile Include="..\..\Shader\3DNormalCube.hlsl" />
     <FxCompile Include="..\..\Shader\AnimModel.hlsl" />
     <FxCompile Include="..\..\Shader\BlendDeffered.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>

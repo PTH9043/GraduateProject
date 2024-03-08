@@ -3,25 +3,37 @@
 #include "UGameInstance.h"
 #include "UCell.h"
 #include "UTransform.h"
-#include "UDefaultCube.h"
+#include "UDefaultDebugging.h"
 #include "UCollider.h"
 #include "UNavigation.h"
 #include "UMethod.h"
 
 void URegion::tagCubeObjs::Create(SHPTRREF<UCell> _pCell)
 {
+#ifdef _USE_DEBUGGING
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	SHPTR<UDefaultCube> spCube = std::static_pointer_cast<UDefaultCube>(spGameInstance->CloneActorAdd(PROTO_ACTOR_DEFAULTCUBE));
+	UDefaultDebugging::DEBUGTYPE eDebugType{ UDefaultDebugging::DEBUGTYPE::DEBUG_END };
+	eDebugType = UDefaultDebugging::DEBUGTYPE::DEBUG_CUBE;
+	// Clone Actor
 
-	_uint iCount = 0;
-	spCube1 = spCube;
+	VOIDDATAS vecDatas;
+	vecDatas.push_back(&eDebugType);
+
+	spCube1 = static_pointer_cast<UDefaultDebugging>(spGameInstance->CloneActorAddAndNotInLayer(
+		PROTO_ACTOR_DEUBGGINGDEFAULTOBJECT, vecDatas));;
 	spCube1->GetTransform()->SetPos(_pCell->GetPoint(UCell::POINT_A));
-	spCube2 = spCube;
+	spCube1->SetColor(_float4(1.0f, 1.0f, 1.0f, 0.5f));
+	spCube2 = static_pointer_cast<UDefaultDebugging>(spGameInstance->CloneActorAddAndNotInLayer(
+		PROTO_ACTOR_DEUBGGINGDEFAULTOBJECT, vecDatas));;
 	spCube2->GetTransform()->SetPos(_pCell->GetPoint(UCell::POINT_B));
-	spCube3 = spCube;
+	spCube2->SetColor(_float4(1.0f, 1.0f, 1.0f, 0.5f));
+	spCube3 = static_pointer_cast<UDefaultDebugging>(spGameInstance->CloneActorAddAndNotInLayer(
+		PROTO_ACTOR_DEUBGGINGDEFAULTOBJECT, vecDatas));;
 	spCube3->GetTransform()->SetPos(_pCell->GetPoint(UCell::POINT_C));
+	spCube3->SetColor(_float4(1.0f, 1.0f, 1.0f, 0.5f));
 
 	spCell = _pCell;
+#endif
 }
 
 void URegion::tagCubeObjs::Rebalance()
@@ -37,6 +49,26 @@ void URegion::tagCubeObjs::Rebalance()
 	spCube3->GetTransform()->SetPos(spCell->GetPoint(UCell::POINT_C));
 
 	spCell->ReBuffer();
+}
+
+void URegion::tagCubeObjs::AddCubesRenderGroup()
+{
+	if (nullptr != spCube1)
+		spCube1->AddRenderGroup(RENDERID::RI_NONALPHA_MIDDLE);
+
+	if (nullptr != spCube2)
+		spCube2->AddRenderGroup(RENDERID::RI_NONALPHA_MIDDLE);
+
+	if (nullptr != spCube3)
+		spCube3->AddRenderGroup(RENDERID::RI_NONALPHA_MIDDLE);
+}
+
+HRESULT URegion::AddRegionRenderGroup()
+{
+	for (auto& iter : m_CubeObjList)
+		iter.AddCubesRenderGroup();
+
+	return S_OK;
 }
 
 URegion::URegion(CSHPTRREF<UDevice> _spDevice)

@@ -6,7 +6,7 @@ class UNavigation;
 class UCell;
 //class UCollider;
 class URenderer;
-class UDefaultCube;
+class UDefaultDebugging;
 
 class URegion : public UComponent
 {
@@ -15,14 +15,16 @@ public:
 	typedef struct tagCubeObjs
 	{
 		SHPTR<UCell> spCell;
-		SHPTR<UDefaultCube> spCube1;
-		SHPTR<UDefaultCube> spCube2;
-		SHPTR<UDefaultCube> spCube3;
+		SHPTR<UDefaultDebugging> spCube1;
+		SHPTR<UDefaultDebugging> spCube2;
+		SHPTR<UDefaultDebugging> spCube3;
 
 		void Create(SHPTRREF <UCell> _pCell);
 		void Rebalance();
+		void AddCubesRenderGroup();
 	}CUBOBJS;
 #endif
+	HRESULT AddRegionRenderGroup();
 	URegion(CSHPTRREF<UDevice> _spDevice);
 	URegion(const URegion& _rhs);
 	DESTRUCTOR(URegion)

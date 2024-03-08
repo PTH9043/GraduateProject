@@ -74,6 +74,10 @@ SHPTR<UActor> UPicking::GetPickingActor()
 
 const PICKINGDESC& UPicking::GetPickDesc()
 {
+	if(m_WaitCheckActorList.size() < 1)
+
+
+
 	for (auto& iter : m_WaitCheckActorList)
 	{
 		_float3 v3Pos = _float3(0.f, 0.f, 0.f);
@@ -121,12 +125,12 @@ _bool UPicking::PickingMesh(CSHPTRREF<UActor> _spActor, CSHPTRREF<UVIBuffer> _sp
 	if (DXGI_FORMAT_R16_UINT == eFormat)
 	{
 		iSize = sizeof(INDICIES16);
+		_ushort iIndices = 0;
 		for (_uint i = 0; i < iNumFaces; ++i)
 		{
-			_ushort iIndices[3];
-			_float3 v1 = pVerticesPos[iIndices[0]];
-			_float3 v2 = pVerticesPos[iIndices[1]];
-			_float3 v3 = pVerticesPos[iIndices[2]];
+			_float3 v1 = pVerticesPos[iIndices++];
+			_float3 v2 = pVerticesPos[iIndices++];
+			_float3 v3 = pVerticesPos[iIndices++];
 
 			if (true == IsPickingCheck(vLocalRayPos, vLocalRayDir, v1, v2, v3, _spActor->GetTransform()->GetWorldMatrix(),
 				_pDist, _pOut))
@@ -138,12 +142,12 @@ _bool UPicking::PickingMesh(CSHPTRREF<UActor> _spActor, CSHPTRREF<UVIBuffer> _sp
 	else
 	{
 		iSize = sizeof(INDICIES32);
+		_uint iIndices = 0;
 		for (_uint i = 0; i < iNumFaces; ++i)
 		{
-			_uint iIndices[3];
-			_float3 v1 = pVerticesPos[iIndices[0]];
-			_float3 v2 = pVerticesPos[iIndices[1]];
-			_float3 v3 = pVerticesPos[iIndices[2]];
+			_float3 v1 = pVerticesPos[iIndices++];
+			_float3 v2 = pVerticesPos[iIndices++];
+			_float3 v3 = pVerticesPos[iIndices++];
 
 			_float fDist = 0.f;
 			_float3 v3Pos = _float3(0.f, 0.f, 0.f);

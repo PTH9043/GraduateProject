@@ -44,6 +44,7 @@ private:
 	IMGOBJECTS												m_ImGuiObjectContainer;
 	SHPTR<TMainView>								m_spMainView;
 
+
 	SHPTR<UDevice>										m_spDevice;
 	SHPTR<UGpuCommand>						m_spGpuCommand;
 	SHPTR<UTableDescriptor>					m_spTableDesciptor;

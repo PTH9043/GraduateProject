@@ -7,6 +7,9 @@
 #include "UPicking.h"
 #include "UNavigation.h"
 #include "URegion.h"
+#include "UDefaultDebugging.h"
+#include "UTransform.h"
+#include "UCell.h"
 
 TNavigationView::TNavigationView(CSHPTRREF<UDevice> _spDevice) :
 	TImGuiView(_spDevice, "NavigationView"),
@@ -18,10 +21,13 @@ TNavigationView::TNavigationView(CSHPTRREF<UDevice> _spDevice) :
 	m_bRenderWireFrame{ false },
 	m_bNavigationDebugColor{ false },
 	m_dShowDeltaTime{ 0.0 },
-	m_iCreateRegionIndex{0},
+	m_iCreateRegionIndex{ 0 },
 	m_iRegionIndex{ 0 },
-	m_spStageManager{nullptr},
-	m_vecPosList{}
+	m_spStageManager{ nullptr },
+	m_vecPosList{},
+	m_iSelIndex{ SEL_1 },
+	m_bSelEnd{ false },
+	m_iCellIndex{ 0 }
 {
 }
 
@@ -37,6 +43,24 @@ HRESULT TNavigationView::NativeConstruct()
 		ImGuiDockNodeFlags_CentralNode);
 
 	m_spStageManager = Create<UStageManager>();
+
+#ifdef _USE_DEBUGGING
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	UDefaultDebugging::DEBUGTYPE eDebugType{ UDefaultDebugging::DEBUGTYPE::DEBUG_END };
+	eDebugType = UDefaultDebugging::DEBUGTYPE::DEBUG_CUBE;
+	// Clone Actor
+
+	VOIDDATAS vecDatas;
+	vecDatas.push_back(&eDebugType); 
+	for (_uint i = 0; i < SEL_END; ++i)
+	{
+		m_spCubePosArr[i] = static_pointer_cast<UDefaultDebugging>(spGameInstance->CloneActorAddAndNotInLayer(
+			PROTO_ACTOR_DEUBGGINGDEFAULTOBJECT, vecDatas));
+		m_spCubePosArr[i]->GetTransform()->SetPos(_float3(0.f, 0.f, 0.f));
+		m_spCubePosArr[i]->SetColor(_float4(1.0f, 1.0f, 1.0f, 0.5f));
+	}
+#endif
+
 	return S_OK;
 }
 
@@ -57,6 +81,22 @@ void TNavigationView::TickActive(const _double& _dTimeDelta)
 
 void TNavigationView::LateTickActive(const _double& _dTimeDetla)
 {
+	//if (nullptr != m_spStageManager->GetStage())
+	//	m_spStageManager->GetStage()->UpdateRegion();
+
+	if (false == m_bAllRender)
+	{
+		if (nullptr != m_spStageManager->GetStage())
+			m_spStageManager->GetStage()->AddRender(m_iRegionIndex);
+	}
+	else
+	{
+		if (nullptr != m_spStageManager->GetStage())
+			m_spStageManager->GetStage()->AddRenderAll();
+	}
+
+	for (_uint i = 0; i < 3; ++i)
+		m_spCubePosArr[i]->AddRenderer(RENDERID::RI_NONALPHA_MIDDLE);
 }
 
 void TNavigationView::RenderActive()
@@ -110,7 +150,6 @@ void TNavigationView::ModifyNavigation(CSHPTRREF<URegion> _spRegion)
 			if (true == spGameInstance->GetDIMBtnPressing(DIMOUSEBUTTON::DIMB_L))
 			{
 				SHPTR<UNavigation> _spNav = _spRegion->GetNavigation();
-				m_spStageManager->GetStage()->Is_Picking(m_iRegionIndex);
 				PICKINGDESC tDesc = spGameInstance->GetPickDesc();
 
 				if (nullptr == tDesc.spActor)
@@ -143,19 +182,19 @@ void TNavigationView::ModifyNavigation(CSHPTRREF<URegion> _spRegion)
 				}
 				m_vecPosList.push_back(v3Pos);
 
-		/*		if (2 >= (_uint)m_vecPosList.size())
+				if (2 >= (_uint)m_vecPosList.size())
 				{
-					m_pCubePosArr[m_iSelIndex++]->Set_Position(XMLoadFloat3(&v3Pos));
+					m_spCubePosArr[m_iSelIndex++]->GetTransform()->SetPos(XMLoadFloat3(&v3Pos));
 					m_bSelEnd = true;
 				}
 				else
 				{
-					_float3 vPos[3] = { m_vecPosList[SEL_1], m_vecPosList[SEL_2], m_vecPosList[SEL_3] };
-					_pStage->Add_Cell(CCell::Create(m_pDevice, m_pContext, vPos, ++m_iCellIndex));
+					ARRAY<_float3,3> vPos = { m_vecPosList[SEL_1], m_vecPosList[SEL_2], m_vecPosList[SEL_3] };
+					SHPTR<UCell> NewCell = CreateConstructorNative<UCell>(spGameInstance->GetDevice(), vPos, ++m_iCellIndex);
+					_spRegion->AddCell(NewCell);
 					m_vecPosList.clear();
 					m_iSelIndex = SEL_1;
-				}*/
-
+				}
 			}
 		}
 	}
