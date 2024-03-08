@@ -9,7 +9,6 @@ class UCell;
 class UCollider;
 
 using REGIONLIST = std::map<_uint, SHPTR<URegion>>;
-
 class UStage : public UComponent
 {
 public:
@@ -24,7 +23,7 @@ public:
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;
 	
-	CSHPTRREF<REGIONLIST> GetRegionList() { return m_spRegionList; }
+	REGIONLIST GetRegionList() { return m_RegionList; }
 	SHPTR<URegion> GetRegion(const _uint& _iIndex);
 
 	HRESULT AddCell(const _uint& _iCellIndex, SHPTR<UCell>& _pCell);
@@ -53,7 +52,7 @@ public:
 	void AddArroundRegion();
 
 protected:
-	SHPTR<REGIONLIST> m_spRegionList;
+	REGIONLIST m_RegionList;
 	_bool	m_bInitRegion;
 
 	SHPTR<URegion> m_pDeleteRegion;

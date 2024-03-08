@@ -1,12 +1,9 @@
 #include "EngineDefine.h"
 #include "UStageManager.h"
 #include "UStage.h"
-#include "UGameInstance.h"
 
 UStageManager::UStageManager()
 {
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	m_spStage = CreateConstructorNative<UStage>(spGameInstance->GetDevice());
 }
 
 void UStageManager::Free()

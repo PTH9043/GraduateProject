@@ -22,6 +22,8 @@ public:
 
 private:
 	SHPTR<UStage> m_spStage;
+
+
 };
 
 END

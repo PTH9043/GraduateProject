@@ -22,12 +22,7 @@ struct GROBALPARTICLEINFO
     float		fParticleThickness;
     //===========
     float3     fParticleDirection;
-    float		fTextureWidth;
-    //================
-    float4		fParticlePosition;
-    //================
-    float		fTextureHeight;
-    float3 fPadding;
+    float fPadding;
 };
 
 struct PARTICLE
@@ -80,13 +75,11 @@ VS_OUT VS_Main(VS_IN In)
 
     Out.vViewPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
     Out.vViewPos += float4(g_ParticleData[In.iInstanceID].vWorldPos, 0.f);
-    // 컴퓨트 셰이더에서 RWStructuredBuffer에 적어놓은 각자 파티클 numthreads 1024개 중 우리는 
-    // maxParticle인 1000개 또는 500개 등 정한 수치만큼 해당 버퍼에 정보를 기입하였으므로
-    // 해당 정보를 instanceID로 받아와 읽어 사용함.
     
+    Out.vViewPos = Out.vViewPos;
     Out.vViewPos = mul(Out.vViewPos, GetViewProjInfo().mViewMatrix);
     Out.vTexUV = In.vTexUV;
-    Out.iInstanceID = In.iInstanceID;
+    
     return Out;
 }
 

@@ -29,10 +29,7 @@ void UNavigation::Free()
 
 HRESULT UNavigation::NativeConstruct()
 {
-	RETURN_CHECK_FAILED(__super::NativeConstruct(), E_FAIL);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-
-	m_spCellContainer = Create<CELLCONTAINER>();
 
 	UCollider::COLLIDERDESC tDesc;
 
