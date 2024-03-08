@@ -25,7 +25,6 @@
     <ClInclude Include="..\public\UCharacter.h" />
     <ClInclude Include="..\public\UCharacterManager.h" />
     <ClInclude Include="..\public\UController.h" />
-    <ClInclude Include="..\public\UInputController.h" />
     <ClInclude Include="..\public\USound.h" />
     <ClInclude Include="..\public\CustomMemory.h" />
     <ClInclude Include="..\public\CustomString.h" />
@@ -148,7 +147,6 @@
     <ClCompile Include="..\private\UCharacter.cpp" />
     <ClCompile Include="..\private\UCharacterManager.cpp" />
     <ClCompile Include="..\private\UController.cpp" />
-    <ClCompile Include="..\private\UInputController.cpp" />
     <ClCompile Include="..\private\USound.cpp" />
     <ClCompile Include="..\private\CustomMemory.cpp" />
     <ClCompile Include="..\private\CustomString.cpp" />

@@ -13,15 +13,6 @@
     <Filter Include="20.Server">
       <UniqueIdentifier>{5d4f5c49-410f-4489-8243-1375700409cf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.Pawn">
-      <UniqueIdentifier>{17bac2d6-0ca5-49a3-8eaa-7ac62d712f70}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05.Pawn\Character">
-      <UniqueIdentifier>{a1d80ac9-e366-4437-9cd1-e26bb29ff922}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05.Pawn\Character\Player">
-      <UniqueIdentifier>{009be569-c452-4086-b72f-39b49cd95160}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ClientDefines.h">
@@ -48,9 +39,6 @@
     <ClInclude Include="..\Public\UNetworkClientController.h">
       <Filter>20.Server</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UPlayer.h">
-      <Filter>05.Pawn\Character\Player</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -69,9 +57,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\UNetworkClientController.cpp">
       <Filter>20.Server</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\UPlayer.cpp">
-      <Filter>05.Pawn\Character\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

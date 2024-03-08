@@ -280,7 +280,7 @@ void TModelView::LoadAssimpModelDatas(CSHPTRREF<FILEGROUP> _spFolder)
 			if (nullptr != spAssimpModel)
 			{
 				_wstring wstrPath;
-				spAssimpModel->SaveNonAnimModel(_spFolder->wstrPath, wstrPath);
+				spAssimpModel->SaveNonAnimModel(_spFolder->spParentsUpper->wstrPath, wstrPath);
 				SHPTR<UModel> spModel = CreateConstructorNativeNotMsg<UModel>(GetDevice(), wstrPath);
 				m_ModelsContainer.insert(std::pair<_string, SHPTR<UModel>>(UMethod::ConvertWToS(File.second->wstrfileName), spModel));
 			}
@@ -296,7 +296,6 @@ void TModelView::LoadAssimpModelDatas(CSHPTRREF<FILEGROUP> _spFolder)
 void TModelView::LoadAssimpAnimModelDatas(CSHPTRREF<FILEGROUP> _spFolder)
 {
 	RETURN_CHECK(nullptr == _spFolder, ;);
-	RETURN_CHECK(_spFolder->wstrFolderName == L"Anim", ;);
 	SHPTR<FILEGROUP> ConvertFolder = _spFolder->FindGroup(L"Convert");
 	if (nullptr != ConvertFolder && 0 <= ConvertFolder->FileDataList.size())
 	{
@@ -309,7 +308,7 @@ void TModelView::LoadAssimpAnimModelDatas(CSHPTRREF<FILEGROUP> _spFolder)
 	}
 	else
 	{
-		SHPTR<FILEGROUP> spAnimFBX = _spFolder->FindGroup(L"AnimFBX");
+		// 애니메이션 FBX가 존재하는지 체크
 		SHPTR<FILEGROUP> spAnim = _spFolder->FindGroup(L"Anim");
 		// FileData
 		for (const FILEPAIR& File : _spFolder->FileDataList)
@@ -318,13 +317,6 @@ void TModelView::LoadAssimpAnimModelDatas(CSHPTRREF<FILEGROUP> _spFolder)
 			SHPTR<TAssimpModel> spAssimpModel = CreateConstructorNativeNotMsg<TAssimpModel>(GetDevice(),
 				TAssimpModel::TYPE::ANIM, _spFolder, File.second);
 
-			if (nullptr != spAnimFBX)
-			{
-				for (auto& iter : spAnimFBX->FileDataList)
-				{
-					spAssimpModel->LoadAnimationFBX(iter.second->wstrfilePath);
-				}
-			}
 			if (nullptr != spAnim)
 			{
 				for (auto& iter : spAnim->FileDataList)
@@ -333,14 +325,12 @@ void TModelView::LoadAssimpAnimModelDatas(CSHPTRREF<FILEGROUP> _spFolder)
 				}
 			}
 
-
-			// Save Anim Model
+			// Save Non Anim Model
 			if (nullptr != spAssimpModel)
 			{
 				_wstring wstrPath;
-				spAssimpModel->SaveAnimModel(_spFolder->wstrPath, wstrPath);
+				spAssimpModel->SaveAnimModel(_spFolder->spParentsUpper->wstrPath, wstrPath);
 				SHPTR<UAnimModel> spModel = CreateConstructorNativeNotMsg<UAnimModel>(GetDevice(), wstrPath);
-
 				m_AnimModelContainer.insert(std::pair<_string, SHPTR<UAnimModel>>(UMethod::ConvertWToS(File.second->wstrfileName), spModel));
 			}
 		}

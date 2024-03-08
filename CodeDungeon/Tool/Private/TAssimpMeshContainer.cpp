@@ -177,9 +177,7 @@ HRESULT TAssimpMeshContainer::ReadyAnimVertices(aiMesh* _pMesh, CSHPTRREF<TAssim
 	{
 		memcpy(&pVertices[i].vPosition, &_pMesh->mVertices[i], sizeof(_float3));
 		memcpy(&pVertices[i].vNormal, &_pMesh->mNormals[i], sizeof(_float3));
-		if (nullptr != _pMesh->mTangents) {
-			memcpy(&pVertices[i].vTangent, &_pMesh->mTangents[i], sizeof(_float3));
-		}
+		memcpy(&pVertices[i].vTangent, &_pMesh->mTangents[i], sizeof(_float3));
 		::memcpy(&pVerticesPos[i], &pVertices[i].vPosition, sizeof(_float3));
 
 		for (_uint j = 0; j < 5; ++j) {
