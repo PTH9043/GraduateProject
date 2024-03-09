@@ -84,16 +84,16 @@ void TNavigationView::LateTickActive(const _double& _dTimeDetla)
 	//if (nullptr != m_spStageManager->GetStage())
 	//	m_spStageManager->GetStage()->UpdateRegion();
 
-	if (false == m_bAllRender)
-	{
-		if (nullptr != m_spStageManager->GetStage())
-			m_spStageManager->GetStage()->AddRender(m_iRegionIndex);
-	}
-	else
-	{
-		if (nullptr != m_spStageManager->GetStage())
-			m_spStageManager->GetStage()->AddRenderAll();
-	}
+	//if (false == m_bAllRender)
+	//{
+	//	if (nullptr != m_spStageManager->GetStage())
+	//		m_spStageManager->GetStage()->AddRender(m_iRegionIndex);
+	//}
+	//else
+	//{
+	//	if (nullptr != m_spStageManager->GetStage())
+	//		m_spStageManager->GetStage()->AddRenderAll();
+	//}
 
 	for (_uint i = 0; i < 3; ++i)
 		m_spCubePosArr[i]->AddRenderer(RENDERID::RI_NONALPHA_MIDDLE);
