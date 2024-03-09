@@ -9,7 +9,7 @@ class UDefaultDebugging : public UPawn{
 public:
 	enum class DEBUGTYPE
 	{
-		DEBUG_CUBE, DEBUG_SPHERE, DEBUG_END
+		DEBUG_CUBE, DEBUG_SPHERE, DEBUG_CELL, DEBUG_END
 	};
 public:
 	UDefaultDebugging(CSHPTRREF<UDevice> _spDevice, 	const _wstring& _wstrLayer, const CLONETYPE& _eCloneType);

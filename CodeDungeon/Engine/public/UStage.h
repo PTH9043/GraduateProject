@@ -24,6 +24,9 @@ public:
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;
 	
+	virtual HRESULT AddRender(const _uint& _iIndex);
+	void AddRenderAll();
+
 	CSHPTRREF<REGIONLIST> GetRegionList() { return m_spRegionList; }
 	SHPTR<URegion> GetRegion(const _uint& _iIndex);
 

@@ -53,6 +53,8 @@ void TTestObject::TickActive(const _double& _dTimeDelta)
 
 void TTestObject::LateTickActive(const _double& _dTimeDelta)
 {
+	//SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	//spGameInstance->AddPickingObject(ThisShared<UActor>(), m_spVIBufferGrid);
 	AddRenderGroup(RENDERID::RI_NONALPHA_MIDDLE);
 }
 

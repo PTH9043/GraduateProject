@@ -46,7 +46,7 @@ HRESULT TMainScene::LoadSceneData()
 		m_spTestObject = std::static_pointer_cast<TTestObject>(spGameInstance->CloneActorAdd(L"Proto_Actor_TestObject"));
 		m_spTestObject->GetTransform()->SetScale({ GridScale, 1.0f, GridScale });
 		m_spTestObject->GetTransform()->SetPos({ -(float)HALF_GRID_SIZE * GridScale, 0.f, -(float)HALF_GRID_SIZE * GridScale });
-
+	
 	}
 
 	return S_OK;

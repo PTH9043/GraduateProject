@@ -40,6 +40,21 @@ HRESULT UStage::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	return S_OK;
 }
 
+HRESULT UStage::AddRender(const _uint& _iIndex)
+{
+	if (_iIndex >= (*m_spRegionList.get()).size())
+		return E_FAIL;
+
+	(*m_spRegionList.get())[_iIndex]->AddRegionRenderGroup();
+	return S_OK;
+}
+
+void UStage::AddRenderAll()
+{
+	for (auto& iter : (*m_spRegionList.get()))
+		iter.second->AddRegionRenderGroup();
+}
+
 SHPTR<URegion> UStage::GetRegion(const _uint& _iIndex)
 {
 	

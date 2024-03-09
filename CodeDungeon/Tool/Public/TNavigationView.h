@@ -5,6 +5,7 @@
 BEGIN(Engine)
 class UStageManager;
 class URegion;
+class UDefaultDebugging;
 END
 
 BEGIN(Tool)
@@ -48,7 +49,9 @@ private:
 
 	SHPTR<UStageManager>									m_spStageManager;
 	VECTOR<_float3>											m_vecPosList;
-	/*SHPTR<UDefaultCube>										m_spCubePosArr[SEL_END];*/
+	SHPTR<UDefaultDebugging>								m_spCubePosArr[SEL_END];
+	_uint													m_iSelIndex;
+	_bool													m_bSelEnd;
 private:
 	_bool													m_bNavigationModify;
 	_bool													m_bAllRender;
@@ -57,6 +60,7 @@ private:
 
 	_uint													m_iCreateRegionIndex;
 	_uint													m_iRegionIndex;
+	_uint													m_iCellIndex;
 
 };
 END
