@@ -240,9 +240,10 @@ namespace Engine {
 	};
 
 	struct ComputeParticleType {
-		ComputeParticleType() :fParticleType{ PARTICLE_TYPE_DEFAULT }, padding{ 0,0,0 } {}
+		ComputeParticleType() :fParticleType{ PARTICLE_TYPE_DEFAULT }, fParticleLifeTimeType{ PARTICLE_LIFETIME_TYPE_DEFAULT }, padding { 0, 0 } {}
 		PARTICLE_TYPE fParticleType;
-		_float3 padding;
+		PARTICLE_LIFETIME_TYPE fParticleLifeTimeType;
+		_float2 padding;
 	};
 
 	typedef struct tagParticleParam
