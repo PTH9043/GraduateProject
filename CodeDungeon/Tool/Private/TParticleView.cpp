@@ -492,12 +492,12 @@ void TParticleView::MultipleParticleTimeSetting()
 	//파티클의 생성 시간 정하기
 	if (ImGui::CollapsingHeader("Multiple Particle Create Time Interval", ImGuiTreeNodeFlags_DefaultOpen)) {
 
-		ImGui::InputFloat("Enter Time Interval\n Min:0.f  Max :6.f", m_AnimParticle[0]->GetParticleSystem()->GetCreateInterval(), 0.1f, 1.0f, "%.2f", ImGuiInputTextFlags_CharsDecimal);
-		if (*m_AnimParticle[0]->GetParticleSystem()->GetCreateInterval() <= 0) {
-			*m_AnimParticle[0]->GetParticleSystem()->GetCreateInterval() = 0.1;
+		ImGui::InputFloat("Enter Time Interval\n Min:0.f  Max :6.f", m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval(), 0.1f, 1.0f, "%.2f", ImGuiInputTextFlags_CharsDecimal);
+		if (*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() <= 0) {
+			*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() = 0.1;
 		}
-		else if (*m_AnimParticle[0]->GetParticleSystem()->GetCreateInterval() > 6) {
-			*m_AnimParticle[0]->GetParticleSystem()->GetCreateInterval() = 6;
+		else if (*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() > 6) {
+			*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() = 6;
 		}
 	}
 }
@@ -514,23 +514,7 @@ void TParticleView::MultipleParticleTexSetting()
 		TEXNAMES m_TextureNames = m_AnimParticle[0]->GetTextureGroup()->GetTextureNames();
 		for (auto& Texture : m_TextureNames)
 		{
-			if (ImGui::Selectable(UMethod::ConvertWToS(Texture.first)))
-			{
-				m_AnimParticle[0]->SetTexture(Texture.second);
-				if (Texture.second == 0 || Texture.second == 1 || Texture.second == 3 || Texture.second == 4) {
-					m_AnimParticle[0]->SetNextAnimTimer(0.025f);
-					m_AnimParticle[0]->SetTextureRowsAndCols(8.f, 8.f);
-				}
-				else if (Texture.second == 5) {
-					m_AnimParticle[0]->SetNextAnimTimer(0.025f);
-					m_AnimParticle[0]->SetTextureRowsAndCols(6.f, 6.f);
-				}
-				else if (Texture.second == 2) {
-					m_AnimParticle[0]->SetNextAnimTimer(0.025f);
-					m_AnimParticle[0]->SetTextureRowsAndCols(8.f, 4.f);
-				}
-
-			}
+			
 		}
 		ImGui::EndListBox();
 	}
@@ -549,16 +533,16 @@ void TParticleView::DefaultMultipleParticleSetting()
 		ImGui::SeparatorText("Particle Settings");
 		ImGui::SeparatorText("Current Particle Type : Default");
 
-		ImGui::SliderFloat("EndScale", &m_AnimParticleParam[0]->stGlobalParticleInfo.fEndScaleParticle, 1.f, 40.f, "%.2f");
-		ImGui::SliderFloat("StartScale", &m_AnimParticleParam[0]->stGlobalParticleInfo.fStartScaleParticle, 1.f, 20.f, "%.2f");
-		ImGui::SliderFloat("MaxLifeTime", &m_AnimParticleParam[0]->stGlobalParticleInfo.fMaxLifeTime, 3.f, 10.f, "%.2f");
-		ImGui::SliderFloat("MinLifeTime", &m_AnimParticleParam[0]->stGlobalParticleInfo.fMinLifeTime, 0.f, 5.f, "%.2f");
-		ImGui::SliderFloat("MaxSpeed", &m_AnimParticleParam[0]->stGlobalParticleInfo.fMaxSpeed, 10.f, 100.f, "%.2f");
-		ImGui::SliderFloat("MinSpeed", &m_AnimParticleParam[0]->stGlobalParticleInfo.fMinSpeed, 10.f, 100.f, "%.2f");
-		ImGui::SliderFloat("DirectionX", &m_AnimParticleParam[0]->stGlobalParticleInfo.fParticleDirection.x, -1.f, 1.f, "%.2f");
-		ImGui::SliderFloat("DirectionY", &m_AnimParticleParam[0]->stGlobalParticleInfo.fParticleDirection.y, -1.f, 1.f, "%.2f");
-		ImGui::SliderFloat("DirectionZ", &m_AnimParticleParam[0]->stGlobalParticleInfo.fParticleDirection.z, -1.f, 1.f, "%.2f");
-		ImGui::SliderFloat("Thickness", &m_AnimParticleParam[0]->stGlobalParticleInfo.fParticleThickness, 0.f, 50.f, "%.2f");
+		ImGui::SliderFloat("EndScale", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fEndScaleParticle, 1.f, 40.f, "%.2f");
+		ImGui::SliderFloat("StartScale", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fStartScaleParticle, 1.f, 20.f, "%.2f");
+		ImGui::SliderFloat("MaxLifeTime", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fMaxLifeTime, 3.f, 10.f, "%.2f");
+		ImGui::SliderFloat("MinLifeTime", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fMinLifeTime, 0.f, 5.f, "%.2f");
+		ImGui::SliderFloat("MaxSpeed", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fMaxSpeed, 10.f, 100.f, "%.2f");
+		ImGui::SliderFloat("MinSpeed", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fMinSpeed, 10.f, 100.f, "%.2f");
+		ImGui::SliderFloat("DirectionX", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fParticleDirection.x, -1.f, 1.f, "%.2f");
+		ImGui::SliderFloat("DirectionY", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fParticleDirection.y, -1.f, 1.f, "%.2f");
+		ImGui::SliderFloat("DirectionZ", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fParticleDirection.z, -1.f, 1.f, "%.2f");
+		ImGui::SliderFloat("Thickness", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fParticleThickness, 0.f, 50.f, "%.2f");
 		ImGui::EndPopup();
 	}
 }
@@ -577,10 +561,10 @@ void TParticleView::AutomaticMultipleParticleSetting()
 		ImGui::SeparatorText("Particle Settings");
 		ImGui::SeparatorText("Current Particle Type : Automatic");
 
-		ImGui::SliderFloat("EndScale", &m_AnimParticleParam[0]->stGlobalParticleInfo.fEndScaleParticle, 1.f, 40.f, "%.2f");
-		ImGui::SliderFloat("StartScale", &m_AnimParticleParam[0]->stGlobalParticleInfo.fStartScaleParticle, 1.f, 20.f, "%.2f");
-		ImGui::SliderFloat("MaxSpeed", &m_AnimParticleParam[0]->stGlobalParticleInfo.fMaxSpeed, 10.f, 100.f, "%.2f");
-		ImGui::SliderFloat("MinSpeed", &m_AnimParticleParam[0]->stGlobalParticleInfo.fMinSpeed, 10.f, 100.f, "%.2f");
+		ImGui::SliderFloat("EndScale", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fEndScaleParticle, 1.f, 40.f, "%.2f");
+		ImGui::SliderFloat("StartScale", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fStartScaleParticle, 1.f, 20.f, "%.2f");
+		ImGui::SliderFloat("MaxSpeed", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fMaxSpeed, 10.f, 100.f, "%.2f");
+		ImGui::SliderFloat("MinSpeed", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fMinSpeed, 10.f, 100.f, "%.2f");
 
 
 		ImGui::EndPopup();

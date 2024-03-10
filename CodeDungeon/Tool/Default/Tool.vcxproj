@@ -187,6 +187,7 @@
     <ClInclude Include="..\Public\ToolMaker.h" />
     <ClInclude Include="..\Public\TParticleView.h" />
     <ClInclude Include="..\Public\TProtoMaker.h" />
+    <ClInclude Include="..\Public\TRotationEffectView.h" />
     <ClInclude Include="..\Public\TShowAnimModelObject.h" />
     <ClInclude Include="..\Public\TShowMapObjects.h" />
     <ClInclude Include="..\Public\TShowModelObject.h" />
@@ -220,6 +221,7 @@
     <ClCompile Include="..\Private\TNavigationView.cpp" />
     <ClCompile Include="..\Private\TParticleView.cpp" />
     <ClCompile Include="..\Private\TProtoMaker.cpp" />
+    <ClCompile Include="..\Private\TRotationEffectView.cpp" />
     <ClCompile Include="..\Private\TShowAnimModelObject.cpp" />
     <ClCompile Include="..\Private\TShowMapObjects.cpp" />
     <ClCompile Include="..\Private\TShowModelObject.cpp" />

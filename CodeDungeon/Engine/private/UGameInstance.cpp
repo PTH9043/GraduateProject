@@ -1135,6 +1135,9 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 
 		CreateComputeShader(PROTO_RES_COMPUTEPARTICLE2DSHADER, CLONETYPE::CLONE_STATIC,
 			SHADERDESC{ L"Compute2DParticle" });
+		
+		CreateComputeShader(PROTO_RES_COMPUTEROTATIONEFFECT2DSHADER, CLONETYPE::CLONE_STATIC,
+			SHADERDESC{ L"Compute2DRotationEffect" });
 	}
 
 	// Particle System 

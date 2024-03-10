@@ -264,6 +264,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\Shader\Compute2DParticle.hlsl" />
+    <FxCompile Include="..\..\Shader\Compute2DRotationEffect.hlsl" />
     <FxCompile Include="..\..\Shader\ComputeAnimation.hlsl" />
     <FxCompile Include="..\..\Shader\Debug2DTarget.hlsl" />
     <FxCompile Include="..\..\Shader\DebugDefaultObject.hlsl" />

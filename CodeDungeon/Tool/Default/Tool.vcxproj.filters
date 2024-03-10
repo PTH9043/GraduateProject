@@ -83,6 +83,9 @@
     <Filter Include="03.ImGui\TParticleView">
       <UniqueIdentifier>{5e071f80-7abf-440a-a39b-8cb71be5bae4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.ImGui\Effect">
+      <UniqueIdentifier>{3fcb00dd-b2f4-48ed-9b2f-2489b963041f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ToolDefines.h">
@@ -193,6 +196,9 @@
     <ClInclude Include="..\Public\TParticleView.h">
       <Filter>03.ImGui\TParticleView</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\TRotationEffectView.h">
+      <Filter>03.ImGui\Effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\TToolApp.cpp">
@@ -284,6 +290,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\TParticleView.cpp">
       <Filter>03.ImGui\TParticleView</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TRotationEffectView.cpp">
+      <Filter>03.ImGui\Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
