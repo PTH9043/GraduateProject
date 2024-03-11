@@ -125,15 +125,27 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
             // [0~1] -> [-1~1]
             float3 dir = (noise - 0.5f) * 2.f;
 
-            //
-            if (g_ParticleType.fParticleType == 0) {//0이면 일반
-                g_ParticleWritedata[threadIndex.x].vWorldPos = (noise.xyz - 0.5f) * g_GrobalParticleInfo.fParticleThickness;
+            ////
+            //if (g_ParticleType.fParticleType == 0) {//0이면 일반
+            //    g_ParticleWritedata[threadIndex.x].vWorldPos = (noise.xyz - 0.5f) * g_GrobalParticleInfo.fParticleThickness;
+            //    g_ParticleWritedata[threadIndex.x].vWorldDir = normalize(g_GrobalParticleInfo.fParticleDirection);
+            //}
+            //else if (g_ParticleType.fParticleType == 1) {//1이면 버퍼로 받은 위치값으로.
+            //    g_ParticleWritedata[threadIndex.x].vWorldPos = g_GrobalParticleInfo.fParticlePosition;
+            //    g_ParticleWritedata[threadIndex.x].vWorldDir = normalize(dir);
+            //}
+            int radius = 15;
+
+
+            if (threadIndex.x % 2 == 0) {
+                g_ParticleWritedata[threadIndex.x].vWorldPos = float3(radius, 0, 0);
                 g_ParticleWritedata[threadIndex.x].vWorldDir = normalize(g_GrobalParticleInfo.fParticleDirection);
             }
-            else if (g_ParticleType.fParticleType == 1) {//1이면 버퍼로 받은 위치값으로.
-                g_ParticleWritedata[threadIndex.x].vWorldPos = g_GrobalParticleInfo.fParticlePosition;
-                g_ParticleWritedata[threadIndex.x].vWorldDir = normalize(dir);
+            else {
+                g_ParticleWritedata[threadIndex.x].vWorldPos = float3(-radius, 0, 0);
+                g_ParticleWritedata[threadIndex.x].vWorldDir = normalize(g_GrobalParticleInfo.fParticleDirection);
             }
+
 
             if (g_ParticleType.fParticleLifeTimeType == 0)//0 Default 
             {
@@ -163,16 +175,30 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
             g_ParticleWritedata[threadIndex.x].iAlive = 0;
             return;
         }
-        float angle = g_GrobalParticleInfo.fAccTime * 0.1;
-        float newX = g_ParticleWritedata[threadIndex.x].vWorldPos.x * cos(angle) - sin(angle) * g_ParticleWritedata[threadIndex.x].vWorldPos.z;
-        float newZ = g_ParticleWritedata[threadIndex.x].vWorldPos.x * sin(angle) + cos(angle) * g_ParticleWritedata[threadIndex.x].vWorldPos.z;
 
-        float ratio = g_ParticleWritedata[threadIndex.x].fCurTime / g_ParticleWritedata[threadIndex.x].fLifeTime;
-        float speed = (g_GrobalParticleInfo.fMaxSpeed - g_GrobalParticleInfo.fMinSpeed) * ratio + g_GrobalParticleInfo.fMinSpeed;
-        // g_ParticleWritedata[threadIndex.x].vWorldPos += g_ParticleWritedata[threadIndex.x].vWorldDir * speed * g_GrobalParticleInfo.fDeltaTime;
-        g_ParticleWritedata[threadIndex.x].vWorldPos.x = newX;
-        g_ParticleWritedata[threadIndex.x].vWorldPos.y += g_ParticleWritedata[threadIndex.x].vWorldDir.y * g_GrobalParticleInfo.fAccTime;
-        g_ParticleWritedata[threadIndex.x].vWorldPos.z = newZ;
+        float angle;
+
+        if (g_ParticleType.fParticleType == 0) { // DEFAULT 이 음방향 회전 + y값 변화 x
+            angle = 0.01;
+            float newX = g_ParticleWritedata[threadIndex.x].vWorldPos.x * cos(angle) - sin(angle) * g_ParticleWritedata[threadIndex.x].vWorldPos.z;
+            float newZ = g_ParticleWritedata[threadIndex.x].vWorldPos.x * sin(angle) + cos(angle) * g_ParticleWritedata[threadIndex.x].vWorldPos.z;
+  
+            g_ParticleWritedata[threadIndex.x].vWorldPos.x = newX;
+            g_ParticleWritedata[threadIndex.x].vWorldPos.z = newZ;
+        }
+        else if (g_ParticleType.fParticleType == 1) { //1AUTO이 양방향 회전 + y값 증가
+            angle = 0.01;
+            float newX = g_ParticleWritedata[threadIndex.x].vWorldPos.x * cos(angle) - sin(angle) * g_ParticleWritedata[threadIndex.x].vWorldPos.z;
+            float newZ = g_ParticleWritedata[threadIndex.x].vWorldPos.x * sin(angle) + cos(angle) * g_ParticleWritedata[threadIndex.x].vWorldPos.z;
+
+            g_ParticleWritedata[threadIndex.x].vWorldPos.x = newX;
+            g_ParticleWritedata[threadIndex.x].vWorldPos.y += g_ParticleWritedata[threadIndex.x].vWorldDir.y * 0.05;
+            g_ParticleWritedata[threadIndex.x].vWorldPos.z = newZ;
+           
+        }
+       
+       
+
     }
 
 }
