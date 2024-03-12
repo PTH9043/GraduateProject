@@ -36,6 +36,7 @@ private:
 	static constexpr _uint							RECTCOLOR_SIZE{ sizeof(RECTCOLOR) };
 	// Cube
 	SHPTR< UVIBuffer>								m_spVIBufferGrid;
+	SHPTR<UCollider>								m_spCollider;
 	//SHPTR<UParticle>		m_spParticle;
 	SHPTR< UShaderConstantBuffer>	m_spRectColorBuffer;
 	RECTCOLOR											m_RectColor;

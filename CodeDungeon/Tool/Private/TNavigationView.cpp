@@ -155,7 +155,6 @@ void TNavigationView::ModifyNavigation(CSHPTRREF<URegion> _spRegion)
 				if (nullptr == tDesc.spActor)
 					return;
 	
-
 				v3Pos = tDesc.vPickPos;
 				CELLCONTAINER Cells;
 

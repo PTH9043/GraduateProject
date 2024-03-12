@@ -2,6 +2,9 @@
 
 #include "UScene.h"
 
+BEGIN(Engine)
+class UGrid;
+END
 
 BEGIN(Tool)
 
@@ -22,7 +25,7 @@ public:
 private:
 	// Main
 	SHPTR<TMainCamera>			m_spMainCamera;
-	SHPTR<TTestObject>				m_spTestObject;
+	SHPTR<UGrid>				m_spTestObject;
 };
 
 END

@@ -3,9 +3,10 @@
 #include "TMainCamera.h"
 #include "UGameInstance.h"
 #include "UTransform.h"
-#include "TTestObject.h"
+#include "UGrid.h"
 #include "UVIBufferGrid.h"
 #include "UTransform.h"
+#include "UPicking.h"
 
 TMainScene::TMainScene(CSHPTRREF<UDevice> _spDevice)
 	: UScene(_spDevice, (_uint)IMGTAG::MAIN),
@@ -43,10 +44,14 @@ HRESULT TMainScene::LoadSceneData()
 
 	{
 		_float GridScale = 7.0f;
-		m_spTestObject = std::static_pointer_cast<TTestObject>(spGameInstance->CloneActorAdd(L"Proto_Actor_TestObject"));
+		m_spTestObject = std::static_pointer_cast<UGrid>(spGameInstance->CloneActorAdd(PROTO_ACTOR_GRID));
 		m_spTestObject->GetTransform()->SetScale({ GridScale, 1.0f, GridScale });
 		m_spTestObject->GetTransform()->SetPos({ -(float)HALF_GRID_SIZE * GridScale, 0.f, -(float)HALF_GRID_SIZE * GridScale });
-	
+		
+		MAINGRID stGrid;
+		stGrid.spGrid = m_spTestObject;
+
+		spGameInstance->AddPickingGrid(stGrid);
 	}
 
 	return S_OK;

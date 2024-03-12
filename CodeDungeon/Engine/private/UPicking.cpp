@@ -4,6 +4,8 @@
 #include "UVIBuffer.h"
 #include "UActor.h"
 #include "UGameInstance.h"
+#include "UGrid.h"
+#include "UCollider.h"
 
 UPicking::UPicking() :
 	m_vWindowSize{ 0.f, 0.f },
@@ -74,17 +76,30 @@ SHPTR<UActor> UPicking::GetPickingActor()
 
 const PICKINGDESC& UPicking::GetPickDesc()
 {
-	if(m_WaitCheckActorList.size() < 1)
-
-
-
+	bool bFoundValidPick = false;
 	for (auto& iter : m_WaitCheckActorList)
 	{
 		_float3 v3Pos = _float3(0.f, 0.f, 0.f);
 		_float fDist = 0.f;
 		if (true == PickingMesh(iter.spActor, iter.spVIBuffer, &fDist, &v3Pos))
+		{
 			AddPickingObject(PICKINGDESC(iter.spActor, v3Pos, fDist));
+			bFoundValidPick = true;
+		}
 	}
+	//만약 유의미한 픽킹이 진행이 안되었을 시
+	//그리드 위의 좌표를 반환 (y = 0의 좌표)
+	if (!bFoundValidPick)
+	{
+		_float3 v3Pos = _float3(0.f, 0.f, 0.f);
+		_float fDist = 0.f;
+		if (true == PickingOnGrid(m_spMainGrid.spGrid, &fDist, &v3Pos))
+		{
+			m_stPickingDesc = PICKINGDESC(m_spMainGrid.spGrid, v3Pos, fDist);
+		}
+		return m_stPickingDesc;
+	}
+
 	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
 	_float3 vCamPos = pGameInstance->GetMainCamPosition();
 	{
@@ -161,6 +176,35 @@ _bool UPicking::PickingMesh(CSHPTRREF<UActor> _spActor, CSHPTRREF<UVIBuffer> _sp
 	return false;
 }
 
+_bool UPicking::PickingOnGrid(CSHPTRREF<UGrid> _spGrid, _float* _pDist, _float3* _pOut)
+{
+	_float3 vLocalRayDir, vLocalRayPos;
+	_float4x4 WorldInv = _spGrid->GetTransform()->GetWorldMatrixInv();
+
+	vLocalRayPos = _float3::TransformCoord(m_vRayPos, WorldInv);
+	vLocalRayDir = _float3::TransformNormal(m_vRayDir, WorldInv);
+	vLocalRayDir.Normalize();
+
+	_float fDist = 0;
+
+	SHPTR<UCollider> spGridCollider = _spGrid->GetCollider();
+
+	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
+	_float3 vCamPos = pGameInstance->GetMainCamPosition();
+
+	if (spGridCollider->IsCollisionWithRay(vLocalRayPos, vLocalRayDir, &fDist))
+	{
+		_float3 v3Pos = vLocalRayPos + vLocalRayDir * fDist;
+		v3Pos = XMVector3TransformCoord(v3Pos, _spGrid->GetTransform()->GetWorldMatrix());
+		if (nullptr != _pDist)
+		*_pDist = fDist;
+		if (nullptr != _pOut)
+		*_pOut = v3Pos;
+		return true;
+	}
+	return false;
+}
+
 _bool UPicking::IsPickingCheck(const _float3& _vLocalRay, const _float3& _vDirRay, const _float3& _vPos1,
 	const _float3& _vPos2, const _float3& _vPos3, const _float4x4& _mWorldMatrix, _float* _pDist, _float3* _pOut)
 {
@@ -182,3 +226,9 @@ void UPicking::AddPickingObject(const PICKINGDESC& _stDesc)
 {
 	m_lsPickingList.push_back(_stDesc);
 }
+
+void UPicking::AddPickingGrid(const MAINGRID& _stGrid)
+{
+	m_spMainGrid = _stGrid;
+}
+

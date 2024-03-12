@@ -61,6 +61,7 @@
 //#include "UMirrorCamera.h"
 
 #include "UPicking.h"
+#include "UGrid.h"
 
 IMPLEMENT_SINGLETON(UGameInstance);
 
@@ -902,6 +903,10 @@ void UGameInstance::AddPickingObject(CSHPTRREF<UActor> _spActor, CSHPTRREF<UVIBu
 {
 	m_spPicking->AddPickingObject(_spActor, _spVIBuffer);
 }
+void UGameInstance::AddPickingGrid(const MAINGRID& _stGrid)
+{
+	m_spPicking->AddPickingGrid(_stGrid);
+}
 SHPTR<UActor> UGameInstance::GetPickingActor()
 {
 	return 	m_spPicking->GetPickingActor();
@@ -1189,6 +1194,8 @@ HRESULT UGameInstance::ReadyActor(const OUTPUTDATA& _stData)
 			_stData.wpDevice.lock(), LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 
 #endif 
+		AddPrototype(PROTO_ACTOR_GRID, CreateConstructorToNative<UGrid>(
+			_stData.wpDevice.lock(), LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	}
 	AddPrototype(PROTO_ACTOR_PARTICLE, CreateConstructorToNative<UParticle>(
 		_stData.wpDevice.lock(), LAYER_PARTICLE, CLONETYPE::CLONE_ONCE));

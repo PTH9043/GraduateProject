@@ -7,6 +7,8 @@ class UActor;
 class UTransform;
 class UVIBuffer;
 class UGameInstance;
+class UGrid;
+class UCollider;
 
 struct PICKINGDESC {
 	PICKINGDESC() = default;
@@ -25,6 +27,17 @@ struct WAITCHECKACTOR {
 	_bool operator == (const WAITCHECKACTOR& _stActor) const
 	{
 		if (spActor == _stActor.spActor && spVIBuffer == _stActor.spVIBuffer)
+			return true;
+
+		return false;
+	}
+};
+
+struct MAINGRID {
+	SHPTR<UGrid> spGrid{ nullptr };
+	_bool operator == (const MAINGRID& _stGrid) const
+	{
+		if (spGrid == _stGrid.spGrid)
 			return true;
 
 		return false;
@@ -62,10 +75,12 @@ public:
 	HRESULT ReadyPickingDesc(CSHPTRREF<GRAPHICDESC> _spGraphicDesc);
 	void CastRayInWorldSpace(UGameInstance* _pGameInstance);
 	void AddPickingObject(CSHPTRREF<UActor> _spActor, CSHPTRREF<UVIBuffer> _spVIBuffer);
+	void AddPickingGrid(const MAINGRID& _stGrid);
 	SHPTR<UActor> GetPickingActor();
 	const PICKINGDESC& GetPickDesc();
 	_bool PickingMesh(CSHPTRREF<UActor> _spActor, CSHPTRREF<UVIBuffer> _spVIBuffer,
 		_float* _pDist, _float3* _pOut);
+	_bool PickingOnGrid(CSHPTRREF<UGrid> _spGrid, _float* _pDist, _float3* _pOut);
 private:
 	_bool IsPickingCheck(const _float3& _vLocalRay, const _float3& _vDirRay, const _float3& _vPos1,
 		const _float3& _vPos2, const _float3& _vPos3, const _float4x4& _mWorldMatrix, _float* _pDist, _float3* _pOut);
@@ -82,6 +97,7 @@ private:
 	PICKINGLIST				m_lsPickingList;
 	PICKINGDESC				m_stPickingDesc;
 	WAITCHECKACTORLIST		m_WaitCheckActorList;
+	MAINGRID				m_spMainGrid;
 	_bool					m_isMouseInScreen;
 };
 

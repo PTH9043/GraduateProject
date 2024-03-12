@@ -58,8 +58,11 @@ class UCharacter;
 class UStageManager;
 class UStage;
 
+class UGrid;
+
 struct PICKINGDESC;
 struct WAITCHECKACTOR;
+struct MAINGRID;
 
 using CLONES = UNORMAP<_wstring, SHPTR<UActorGroup>>;
 using CLONEARR = ARRAY<CLONES, CLONE_MAX_SIZE>;
@@ -275,10 +278,12 @@ public: /* CharacterManager*/
 	*/
 public: /* Picking */
 	void AddPickingObject(CSHPTRREF<UActor> _spActor, CSHPTRREF<UVIBuffer> _spVIBuffer);
+	void AddPickingGrid(const MAINGRID& _stGrid);
 	SHPTR<UActor> GetPickingActor();
 	const PICKINGDESC& GetPickDesc();
 	_bool PickingMesh(CSHPTRREF<UActor> _spActor, CSHPTRREF<UVIBuffer> _spVIBuffer,
 		_float* _pDist, _float3* _pOut);
+
 
 private: /* Ready Datas */
 	HRESULT ReadyResource(const OUTPUTDATA& _stData);

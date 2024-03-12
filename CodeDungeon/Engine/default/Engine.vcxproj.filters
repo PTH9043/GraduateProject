@@ -328,6 +328,9 @@
     <Filter Include="01.Manager\StageManager">
       <UniqueIdentifier>{f7620c82-c508-4c6d-acbb-a5cbb7ebb702}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Actor\01.Pawn\Default\Grid">
+      <UniqueIdentifier>{2fae5188-b2c3-4398-ba45-07fdc20558a5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -641,6 +644,9 @@
     </ClCompile>
     <ClCompile Include="..\private\UAnimatedParticle.cpp">
       <Filter>05.Actor\01.Pawn\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UGrid.cpp">
+      <Filter>05.Actor\01.Pawn\Default\Grid</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -985,6 +991,9 @@
     </ClInclude>
     <ClInclude Include="..\public\UAnimatedParticle.h">
       <Filter>05.Actor\01.Pawn\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UGrid.h">
+      <Filter>05.Actor\01.Pawn\Default\Grid</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
