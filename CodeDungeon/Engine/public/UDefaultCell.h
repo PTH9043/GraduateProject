@@ -5,13 +5,19 @@ BEGIN(Engine)
 class UVIBufferCell;
 class UShaderConstantBuffer;
 
+struct DEBUGCOLOR {
+	_float4 g_DebugColor;
+};
+
 class UDefaultCell : public UPawn {
 public:
 	UDefaultCell(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType);
 	UDefaultCell(const UDefaultCell& _rhs);
 	DESTRUCTOR(UDefaultCell)
-	void SetColor(const _float4& _vColor) { m_stDebuggParam.vDebugging = _vColor; }
-	void SetColor(const _float3& _vColor) { ::memcpy(&m_stDebuggParam.vDebugging, &_vColor, sizeof(_float3)); }
+	void SetColor(const _float4& _vColor) { m_stDebuggParam.g_DebugColor = _vColor; }
+	void SetColor(const _float3& _vColor) { ::memcpy(&m_stDebuggParam.g_DebugColor, &_vColor, sizeof(_float3)); }
+	SHPTR<UVIBufferCell> GetVIBuffer() { return m_spVIBuffer; }
+	void SetVIBuffer(ARRAY<_float3, 3>& _Points);
 public:
 	CLONE_MACRO(UDefaultCell, "UDefaultCell::Clone To Failed")
 	virtual void Free() override;
@@ -27,10 +33,10 @@ protected:
 	// Damaged
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy) override;
 private:
-	static constexpr _uint						DEBUGPARAM_SIZE{ sizeof(DEBUGGINPARAM) };
+	static constexpr _uint						DEBUGPARAM_SIZE{ sizeof(DEBUGCOLOR) };
 	SHPTR<UVIBufferCell>						m_spVIBuffer;
 	SHPTR<UShaderConstantBuffer>				m_spDebuggingConstantBuffer;
-	DEBUGGINPARAM								m_stDebuggParam;
+	DEBUGCOLOR								m_stDebuggParam;
 };
 
 END

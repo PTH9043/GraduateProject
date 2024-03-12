@@ -55,10 +55,18 @@ HRESULT UCell::NativeConstruct(ARRAY<_float3, POINT_END>& _Points, const _uint _
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	m_spCellPawn = static_pointer_cast<UDefaultCell>(spGameInstance->CloneActorAddAndNotInLayer(
 		PROTO_ACTOR_DEUBGGINGDEFAULTCELL, { &m_spCellVIBuffer }));
+	m_spCellPawn->SetColor(_float4(0.6f, 0.0f, 0.0f, 0.5f));
 #endif
 
 	return S_OK;
 }
+
+#ifdef _USE_DEBUGGING
+void UCell::AddCellRenderGroup()
+{
+	m_spCellPawn->AddRenderGroup(RENDERID::RI_NONALPHA_MIDDLE);
+}
+#endif
 
 _bool UCell::IsIn(const _float3& _vPos, _int& _iNeightborIndex, _float3& _vLine)
 {
@@ -212,17 +220,15 @@ void UCell::MakeLineAndNormal()
 
 #ifdef _USE_DEBUGGING
 
-void UCell::AddRenderer(RENDERID _eID)
-{
-	if (nullptr != m_spCellPawn)
-	{
-		m_spCellPawn->GetTransform()->SetPos(m_vCenterPos);
-		m_spCellPawn->AddRenderer(_eID);
-	}
-}
 void UCell::ChangeCellColor(const _float3& _vColor)
 {
 	RETURN_CHECK(nullptr != m_spCellPawn, ;);
 	m_spCellPawn->SetColor(_vColor);
+}
+void UCell::ReRender()
+{
+	RETURN_CHECK(nullptr == m_spCellPawn, ;);
+	m_spCellPawn->GetVIBuffer().reset();
+	m_spCellPawn->SetVIBuffer(m_arrPoints);
 }
 #endif

@@ -45,15 +45,17 @@ public:
 	virtual  HRESULT NativeConstruct() override;
 	// Points
 	HRESULT NativeConstruct(ARRAY<_float3, POINT_END>& _Points, const _uint _iIndex);
+	void AddCellRenderGroup();
 public:
 	_bool IsIn(const _float3& _vPos, _int& _iNeightborIndex, _float3& _vLine);
 	_bool IsComparePoints(const _float3& _vPointA, const _float3& _vPointB);
 	_bool IsComparePoint(CSHPTRREF<UCell> _pCell);
 	const _float ComputeHeight(const _float3& _vPosition);
 	void ReBuffer();
+
 #ifdef _USE_DEBUGGING
-	void AddRenderer(RENDERID _eID);
 	void ChangeCellColor(const _float3& _vColor);
+	void ReRender();
 #endif
 private:
 	// CrossResult

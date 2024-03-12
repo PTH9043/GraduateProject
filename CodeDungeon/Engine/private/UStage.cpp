@@ -176,7 +176,7 @@ _int UStage::SelectRegion()
 		ImGui::TreePop();
 	}
 
-	return _int();
+	return iIndex;
 }
 
 void UStage::Control_Collider(const _uint& _iIndex)

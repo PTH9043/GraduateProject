@@ -19,6 +19,12 @@ UDefaultCell::UDefaultCell(const UDefaultCell& _rhs)
 {
 }
 
+void UDefaultCell::SetVIBuffer(ARRAY<_float3, 3>& _Points)
+{
+	m_spVIBuffer.reset();
+	m_spVIBuffer = CreateConstructorNative<UVIBufferCell>(GetDevice(), _Points);
+}
+
 void UDefaultCell::Free()
 {
 }
@@ -37,10 +43,11 @@ HRESULT UDefaultCell::NativeConstructClone(const VOIDDATAS& _vecDatas)
 
 	m_spVIBuffer = UMethod::ConvertTemplate_Index<SHPTR<UVIBufferCell>>(_vecDatas, 0);
 	
-	AddShader(PROTO_RES_DEBUGGINGDEFAULTSHADER);
+	AddShader(PROTO_RES_GRIDSHADER);
 
-	m_spDebuggingConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::B14, DEBUGPARAM_SIZE);
-	m_stDebuggParam.vDebugging.w = 0.5f;
+	m_spDebuggingConstantBuffer = CreateNative< UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::B3, DEBUGPARAM_SIZE, 1);
+	m_stDebuggParam.g_DebugColor = { 0.f, 1.f, 0.f, 1.f };
+
 	return S_OK;
 }
 
