@@ -52,6 +52,7 @@ void TRotationEffectView::ResizeMultipleParticleVector(_uint _resizeAmount)
 
 void TRotationEffectView::LoadMultipleParticleResource()
 {
+	// Default를 y값 증가하지않는 원 , AUTO를 y값 증가하는 원
 	for (int i = 0; i < m_iMultipleParticleSize; i++) {
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 		{
@@ -62,32 +63,45 @@ void TRotationEffectView::LoadMultipleParticleResource()
 
 			tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
 			//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 1.f * (i + 1);
-			tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 5.f * (i + 1);
-			tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 0.8f * (i + 1);
-			tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.3f * (i + 1);
-			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 10.f * (i + 1);
-			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 15.f * (i + 1);
-			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 100 * (i + 1);
-			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 5.f * (i + 1);
-			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.f, 0.1);
+			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 5.f ;
+			tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 5.f ;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 2.5f ;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.3f ;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 10.f ;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 15.f ;
+			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 100 ;
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 5.f ;
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.1f, 0.f);
 			m_MultipleParticle[i] = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
 		}
-		m_MultipleParticleParam[i] = m_MultipleParticle[i]->GetParticleSystem()->GetParticleParam();
-		m_MultipleParticleType[i] = m_MultipleParticle[i]->GetParticleSystem()->GetParticleTypeParam();
-		m_MultipleParticleType[i]->fParticleType = PARTICLE_TYPE_AUTO;
-		m_MultipleParticleType[i]->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
-		//m_MultipleParticle[i]->SetTexture(i);
-		//m_MultipleParticle[i]->SetActive(true);
 	}
-
+		{
+			m_MultipleParticleParam[0] = m_MultipleParticle[0]->GetParticleSystem()->GetParticleParam();
+			m_MultipleParticleType[0] = m_MultipleParticle[0]->GetParticleSystem()->GetParticleTypeParam();
+			m_MultipleParticleType[0]->fParticleType = PARTICLE_TYPE_DEFAULT;
+			m_MultipleParticleType[0]->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
+			m_MultipleParticle[0]->SetTexture(L"RedDot"); // y값 증가 x 원
+		}
+		{
+			m_MultipleParticleParam[1] = m_MultipleParticle[1]->GetParticleSystem()->GetParticleParam();
+			m_MultipleParticleType[1] = m_MultipleParticle[1]->GetParticleSystem()->GetParticleTypeParam();
+			m_MultipleParticleType[1]->fParticleType = PARTICLE_TYPE_AUTO;
+			m_MultipleParticleType[1]->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
+			m_MultipleParticle[1]->SetTexture(L"RedDot");// y값 증가 O 원
+		}
+		
+	
+	*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() = 0.05;
+	*m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount() = 1;
+	*m_MultipleParticle[1]->GetParticleSystem()->GetCreateInterval() = 0.05;
+	*m_MultipleParticle[1]->GetParticleSystem()->GetAddParticleAmount() = 1;
 }
 
 
 HRESULT TRotationEffectView::LoadResource()
 {
 
-	ResizeMultipleParticleVector(1);
+	ResizeMultipleParticleVector(2);
 	LoadMultipleParticleResource();
 
 	return S_OK;
@@ -182,17 +196,13 @@ void TRotationEffectView::MultipleParticleView()
 		if (ImGui::CollapsingHeader("Multiple Particle Settings", ImGuiTreeNodeFlags_DefaultOpen)) {
 			ImGui::Text("Multiple ParticleView");
 			_bool Show = false;
-			if (ImGui::Selectable("Show Multiple Particle", Show))
-			{
-				ImGui::OpenPopup("Show Multi Particle");
-
-			}
-			if (ImGui::BeginPopup("Show Multi Particle")) {
-				_uint increment = 1;
-				ImGui::InputScalar("Enter Create Amount\n Min:0  Max :5", ImGuiDataType_U32, &m_iCurActiveMultipleParticle, &increment, &increment);
-				if (m_iCurActiveMultipleParticle >= m_iMultipleParticleSize) m_iCurActiveMultipleParticle = m_iMultipleParticleSize;
-				for (int i = 0; i < m_iCurActiveMultipleParticle; i++) m_MultipleParticle[i]->SetActive(true);
-				ImGui::EndPopup();
+		
+			if (true == ImGui::Button("Start Multiple Particle")) {
+				//_uint increment = 1;
+				/*ImGui::InputScalar("Enter Create Amount\n Min:0  Max :5", ImGuiDataType_U32, &m_iCurActiveMultipleParticle, &increment, &increment);
+				if (m_iCurActiveMultipleParticle >= m_iMultipleParticleSize) m_iCurActiveMultipleParticle = m_iMultipleParticleSize;*/
+				for (int i = 0; i < m_iMultipleParticleSize; i++) m_MultipleParticle[i]->SetActive(true);
+				
 			}
 
 			if (true == ImGui::Button("Stop Multiple Particle"))
@@ -201,11 +211,12 @@ void TRotationEffectView::MultipleParticleView()
 					m_MultipleParticle[i]->SetActive(false);
 			}
 
-			MultipleParticleCountSetting();
+			MultipleParticleTexSetting();
+		/*	MultipleParticleCountSetting();
 			MultipleParticleTimeSetting();
 			MultipleParticleTexSetting();
 			DefaultMultipleParticleSetting();
-			AutomaticMultipleParticleSetting();
+			AutomaticMultipleParticleSetting();*/
 		}
 	}
 	ImGui::End();
@@ -235,7 +246,7 @@ void TRotationEffectView::MultipleParticleTimeSetting()
 
 		ImGui::InputFloat("Enter Time Interval\n Min:0.f  Max :6.f", m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval(), 0.1f, 1.0f, "%.2f", ImGuiInputTextFlags_CharsDecimal);
 		if (*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() <= 0) {
-			*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() = 0.1;
+			*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() = 0.0;
 		}
 		else if (*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() > 6) {
 			*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() = 6;
