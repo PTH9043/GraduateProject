@@ -189,7 +189,6 @@
     <ClInclude Include="..\Public\TProtoMaker.h" />
     <ClInclude Include="..\Public\TRotationEffectView.h" />
     <ClInclude Include="..\Public\TShowAnimModelObject.h" />
-    <ClInclude Include="..\Public\TShowMapObjects.h" />
     <ClInclude Include="..\Public\TShowModelObject.h" />
     <ClInclude Include="..\Public\TTestObject.h" />
     <ClInclude Include="..\Public\TToolApp.h">
@@ -223,7 +222,6 @@
     <ClCompile Include="..\Private\TProtoMaker.cpp" />
     <ClCompile Include="..\Private\TRotationEffectView.cpp" />
     <ClCompile Include="..\Private\TShowAnimModelObject.cpp" />
-    <ClCompile Include="..\Private\TShowMapObjects.cpp" />
     <ClCompile Include="..\Private\TShowModelObject.cpp" />
     <ClCompile Include="..\Private\TTestObject.cpp" />
     <ClCompile Include="..\Private\TToolApp.cpp">
