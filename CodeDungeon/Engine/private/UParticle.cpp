@@ -73,7 +73,7 @@ void UParticle::TickActive(const _double& _dTimeDelta)
 
 void UParticle::LateTickActive(const _double& _dTimeDelta)
 {
-	AddRenderGroup(RENDERID::RI_ALPHA);
+	AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
 }
 
 HRESULT UParticle::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)

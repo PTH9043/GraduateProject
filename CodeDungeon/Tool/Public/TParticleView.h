@@ -5,6 +5,7 @@
 BEGIN(Engine)
 class UParticle;
 class UAnimatedParticle;
+class UFire;
 END
 
 BEGIN(Tool)
@@ -118,6 +119,7 @@ private:
 	PARTICLEANIMPARAMS m_AnimParticleAnimParam;
 	PARTICLETYPES m_AnimParticleType;
 
+	SHPTR <UFire> m_stFire;
 
 };
 

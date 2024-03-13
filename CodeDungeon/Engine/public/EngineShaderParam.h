@@ -265,6 +265,25 @@ namespace Engine {
 
 #pragma endregion PARTICLE
 
+#pragma region FIRE
+
+	struct FIRENOISEBUFFER {
+		_float fFrameTime;
+		_float3 fScrollSpeeds;
+		_float3 fScales;
+		_float padding;
+	};
+
+	struct FIREDISTORTIONBUFFER {
+		_float2 fDistortion1;
+		_float2 fDistortion2;
+		_float2 fDistortion3;
+		_float fDistortionScale;
+		_float fDistortionBias;
+	};
+
+#pragma endregion FIRE
+
 #pragma region WATER
 
 	struct WATERIFNODESC

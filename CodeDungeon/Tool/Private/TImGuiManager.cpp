@@ -14,6 +14,7 @@
 #include "TCameraView.h"
 #include "TParticleView.h"
 #include "TRotationEffectView.h"
+#include "TBloodEffectView.h"
 #include "TNavigationView.h"
 
 
@@ -164,7 +165,13 @@ HRESULT TImGuiManager::ReadyImGuiClass()
 		m_ImGuiObjectContainer.insert(std::make_pair(IMGTAG::PARTICLETOOL, spRotationEffectView));
 		m_spMainView->InsertImGuiView(spRotationEffectView);
 	}
+	{
 
+		SHPTR<TBloodEffectView> spRotationEffectView = CreateConstructorNative<TBloodEffectView>(m_spDevice);
+		spRotationEffectView->CloseImGui();
+		m_ImGuiObjectContainer.insert(std::make_pair(IMGTAG::PARTICLETOOL, spRotationEffectView));
+		m_spMainView->InsertImGuiView(spRotationEffectView);
+	}
 	{
 		SHPTR<TNavigationView> spNavigationView = CreateConstructorNative<TNavigationView>(m_spDevice);
 		spNavigationView->CloseImGui();

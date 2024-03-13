@@ -34,6 +34,7 @@
 #define PROTO_RES_EQUIPMENTSHADER L"Proto_Res_EquipmentShader"
 #define PROTO_RES_2DUISHADER L"Proto_Res_2DUIShader"
 #define PROTO_RES_2DANIMATEPARTICLESHADER L"Proto_Res_2DAnimateParticleShader"
+#define PROTO_RES_2DFIRESHADER L"Proto_Res_2DFireShader"
 #define PROTO_RES_TERRAINTESSALATIONSHADER L"Proto_Res_TerrainTessalationShader"
 #define PROTO_RES_ENVIRONMENTMAPPING L"Proto_Res_EnvironmentMappingShader"
 #define PROTO_RES_MIRRORSHADER L"Proto_Res_MirrorShader"
@@ -42,6 +43,7 @@
 /* Compute Shader*/
 #define PROTO_RES_COMPUTEANIMATIONSHADER L"Proto_Res_ConputeAnimatonShader"
 #define PROTO_RES_COMPUTEPARTICLE2DSHADER L"Proto_Res_ComputeParticle2DShader"
+#define PROTO_RES_COMPUTEBLOODEFFECT2DSHADER L"Proto_Res_ComputeBloodEffect2DShader"
 #define PROTO_RES_COMPUTEROTATIONEFFECT2DSHADER L"Proto_Res_ComputeRotationEffect2DShader"
 
 // Particle 
@@ -76,6 +78,7 @@
 #define PROTO_ACTOR_SKYBOX L"Proto_Actor_SkyBox"
 #define PROTO_ACTOR_PARTICLE L"Proto_Actor_Particle"
 #define PROTO_ACTOR_ANIMATEPARTICLE L"Proto_Actor_AnimateParticle"
+#define PROTO_ACTOR_FIRE L"Proto_Actor_Fire"
 #define PROTO_ACTOR_MIRROR L"Proto_Actor_Mirror"
 #define PROTO_ACTOR_SCREENRENDEROBJ L"Proto_Actor_ScreenRenderObj"
 
@@ -83,6 +86,8 @@
 
 #define PROTO_RES_PARTICLETEXTUREGROUP L"Proto_Res_ParticleTextureGroup"
 #define PROTO_RES_ANIMPARTICLETEXTUREGROUP L"Proto_Res_AnimParticleTextureGroup"
+#define PROTO_RES_FIRETEXTUREGROUP L"Proto_Res_FireTextureGroup"
+
 
 #pragma endregion PROTO
 
