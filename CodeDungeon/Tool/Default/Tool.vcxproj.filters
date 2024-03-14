@@ -71,6 +71,9 @@
     <Filter Include="90.ShowModel\AnimControlModel">
       <UniqueIdentifier>{c9991766-7321-4751-b857-159b2259d33b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="90.ShowModel\Map">
+      <UniqueIdentifier>{f1818212-5422-46a7-88a7-96a4514354cb}</UniqueIdentifier>
+    </Filter>
     <Filter Include="03.ImGui\CameraView">
       <UniqueIdentifier>{7c700fb0-fd1f-41e0-94e9-dc7fab7dae42}</UniqueIdentifier>
     </Filter>
@@ -83,8 +86,8 @@
     <Filter Include="03.ImGui\Effect">
       <UniqueIdentifier>{3fcb00dd-b2f4-48ed-9b2f-2489b963041f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.ImGui\Map">
-      <UniqueIdentifier>{fbd7da9d-7431-46ef-bbec-7a40a222aa2b}</UniqueIdentifier>
+    <Filter Include="03.ImGui\Fire">
+      <UniqueIdentifier>{6b86b3d3-f1a2-4cdb-a69b-ff472050760f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +187,9 @@
     <ClInclude Include="..\Public\TAnimControlModel.h">
       <Filter>90.ShowModel\AnimControlModel</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\TShowMapObjects.h">
+      <Filter>90.ShowModel\Map</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\TCameraView.h">
       <Filter>03.ImGui\CameraView</Filter>
     </ClInclude>
@@ -195,6 +201,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\TRotationEffectView.h">
       <Filter>03.ImGui\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TBloodEffectView.h">
+      <Filter>03.ImGui\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TFireView.h">
+      <Filter>03.ImGui\Fire</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -276,6 +288,9 @@
     <ClCompile Include="..\Private\TAnimControlModel.cpp">
       <Filter>90.ShowModel\AnimControlModel</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\TShowMapObjects.cpp">
+      <Filter>90.ShowModel\Map</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\TCameraView.cpp">
       <Filter>03.ImGui\CameraView</Filter>
     </ClCompile>
@@ -287,6 +302,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\TRotationEffectView.cpp">
       <Filter>03.ImGui\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TBloodEffectView.cpp">
+      <Filter>03.ImGui\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TFireView.cpp">
+      <Filter>03.ImGui\Fire</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

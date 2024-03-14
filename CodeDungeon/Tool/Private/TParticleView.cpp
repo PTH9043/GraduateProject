@@ -5,6 +5,7 @@
 #include "UAnimatedParticle.h"
 #include "UGameInstance.h"
 #include "UTexGroup.h"
+
 #include "UTexture.h"
 #include "UMethod.h"
 
@@ -184,6 +185,9 @@ HRESULT TParticleView::LoadResource()
 	ResizeAnimParticleVector(1);
 	LoadAnimParticleResource();
 
+
+	
+
 	return S_OK;
 }
 
@@ -254,7 +258,6 @@ void TParticleView::RenderActive()
 		SingleParticleView();
 		MultipleParticleView();
 		AnimParticleView();
-		
 		
 		
 		

@@ -175,7 +175,9 @@
     <ClInclude Include="..\Public\TAssimpChannel.h" />
     <ClInclude Include="..\Public\TAssimpMeshContainer.h" />
     <ClInclude Include="..\Public\TAssimpModel.h" />
+    <ClInclude Include="..\Public\TBloodEffectView.h" />
     <ClInclude Include="..\Public\TCameraView.h" />
+    <ClInclude Include="..\Public\TFireView.h" />
     <ClInclude Include="..\Public\TImGuiManager.h" />
     <ClInclude Include="..\Public\TImGuiView.h" />
     <ClInclude Include="..\Public\TMainCamera.h" />
@@ -210,7 +212,9 @@
     <ClCompile Include="..\Private\TAssimpChannel.cpp" />
     <ClCompile Include="..\Private\TAssimpMeshContainer.cpp" />
     <ClCompile Include="..\Private\TAssimpModel.cpp" />
+    <ClCompile Include="..\Private\TBloodEffectView.cpp" />
     <ClCompile Include="..\Private\TCameraView.cpp" />
+    <ClCompile Include="..\Private\TFireView.cpp" />
     <ClCompile Include="..\Private\TImGuiManager.cpp" />
     <ClCompile Include="..\Private\TImGuiView.cpp" />
     <ClCompile Include="..\Private\TMainCamera.cpp" />

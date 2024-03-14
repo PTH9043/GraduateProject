@@ -1,0 +1,179 @@
+#include "EngineDefine.h"
+#include "UFire.h"
+#include "UShader.h"
+#include "UTexGroup.h"
+#include "UTexture.h"
+#include "UMethod.h"
+#include "UShaderConstantBuffer.h"
+#include "UGameInstance.h"
+#include "UTransform.h"
+#include "UVIBufferRect.h"
+
+UFire::UFire(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer,
+	const CLONETYPE& _eCloneType)
+	: UPawn(_spDevice, _wstrLayer, _eCloneType, BACKINGTYPE::NON),
+	m_spFireColorTexGroup{ nullptr },
+	m_spFireNoiseTexGroup{ nullptr },
+	m_spFireAlphaTexGroup{ nullptr },
+	m_spVIBufferRect{ nullptr }
+{
+}
+
+UFire::UFire(const UFire& _rhs) :
+	UPawn(_rhs),
+	m_spFireColorTexGroup{ nullptr },
+	m_spFireNoiseTexGroup{ nullptr },
+	m_spFireAlphaTexGroup{ nullptr },
+	m_spVIBufferRect{ nullptr }
+{
+}
+
+void UFire::Free()
+{
+}
+
+HRESULT UFire::NativeConstruct()
+{
+	return __super::NativeConstruct();
+}
+
+HRESULT UFire::NativeConstructClone(const VOIDDATAS& _convecDatas)
+{
+	RETURN_CHECK_FAILED(__super::NativeConstructClone(_convecDatas), E_FAIL);
+
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	if (_convecDatas.size() > 0)
+	{
+		FIREDESC stParticleDesc = UMethod::ConvertTemplate_Index<FIREDESC>(_convecDatas, 0);
+		m_spShaderFireNoiseBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::FIRENOISEBUFFER, sizeof(FIRENOISEBUFFER));
+		m_spShaderDistortionBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::FIREDISTORTION, sizeof(FIREDISTORTIONBUFFER));
+
+		if (m_spFireColorTexGroup == nullptr)m_spFireColorTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_FIRECOLORTEXTUREGROUP));
+		if (m_spFireNoiseTexGroup == nullptr)m_spFireNoiseTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_FIRENOISETEXTUREGROUP));
+		if (m_spFireAlphaTexGroup == nullptr)m_spFireAlphaTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_FIREALPHATEXTUREGROUP));
+		m_spVIBufferRect = static_pointer_cast<UVIBufferRect>(spGameInstance->CloneResource(PROTO_RES_VIBUFFERRECT));
+		
+	
+
+		AddShader(stParticleDesc.wstrFireShader);
+		
+		SetActive(false);
+	}
+	return S_OK;
+}
+
+void UFire::Update(const _double& _dTimeDelta)
+{
+	static float frameTime = 0.0f;
+	frameTime += 0.01f;
+	if (frameTime > 1000.0f)
+	{
+		frameTime = 0.0f;
+	}
+	m_stFireNoiseBuffer.fFrameTime = frameTime;
+	/*m_stFireNoiseBuffer.fFrameTime += static_cast<_float>(_dTimeDelta);
+	if (m_stFireNoiseBuffer.fFrameTime > 1000.f) {
+		m_stFireNoiseBuffer.fFrameTime = 0.f;
+	}*/
+	m_stFireNoiseBuffer.fScales = scales;
+	m_stFireNoiseBuffer.fScrollSpeeds = scrollSpeeds;
+	m_stFireDistortionBuffer.fDistortion1 = distortion1;
+	m_stFireDistortionBuffer.fDistortion2 = distortion2;
+	m_stFireDistortionBuffer.fDistortion3 = distortion3;
+
+	m_stFireDistortionBuffer.fDistortionScale = distortionScale;
+	m_stFireDistortionBuffer.fDistortionBias = distortionBias;
+}
+
+
+void UFire::TickActive(const _double& _dTimeDelta)
+{
+
+	Update(_dTimeDelta);
+
+}
+
+void UFire::LateTickActive(const _double& _dTimeDelta)
+{
+	AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
+}
+
+HRESULT UFire::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
+{
+	__super::RenderActive(_spCommand, _spTableDescriptor);
+
+	BindShaderBuffer();
+	// Bind Transform
+	GetTransform()->BindTransformData(GetShader());
+
+
+	GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spFireColorTexGroup->GetTexture(ColorTextureIndex));
+	GetShader()->BindSRVBuffer(SRV_REGISTER::T1, m_spFireNoiseTexGroup->GetTexture(NoiseTextureIndex));
+	GetShader()->BindSRVBuffer(SRV_REGISTER::T2, m_spFireAlphaTexGroup->GetTexture(AlphaTextureIndex));
+
+
+	m_spVIBufferRect->Render(GetShader(), _spCommand);
+	return S_OK;
+}
+
+void UFire::BindShaderBuffer()
+{
+	GetShader()->BindCBVBuffer(m_spShaderFireNoiseBuffer, &m_stFireNoiseBuffer, sizeof(FIRENOISEBUFFER));
+	GetShader()->BindCBVBuffer(m_spShaderDistortionBuffer, &m_stFireDistortionBuffer, sizeof(FIREDISTORTIONBUFFER));
+
+}
+
+void UFire::Collision(CSHPTRREF<UPawn> _pEnemy)
+{
+}
+
+_bool UFire::Save(const _wstring& _wstrPath)
+{
+	return _bool();
+}
+
+_bool UFire::Load(const _wstring& _wstrPath)
+{
+	return _bool();
+}
+
+
+
+#ifdef _USE_IMGUI
+
+
+void UFire::ShowObjectInfo()
+{
+
+}
+void UFire::SetColorTexture(const _wstring& TexName)
+{
+	ColorTextureIndex = m_spFireColorTexGroup->GetTextureIndex(TexName);
+}
+
+void UFire::SetColorTexture(_uint _index)
+{
+	ColorTextureIndex = _index;
+}
+
+void UFire::SetNoiseTexture(const _wstring& TexName)
+{
+	NoiseTextureIndex = m_spFireNoiseTexGroup->GetTextureIndex(TexName);
+}
+
+void UFire::SetNoiseTexture(_uint _index)
+{
+	NoiseTextureIndex = _index;
+}
+
+void UFire::SetAlphaTexture(const _wstring& TexName)
+{
+	AlphaTextureIndex = m_spFireAlphaTexGroup->GetTextureIndex(TexName);
+}
+
+void UFire::SetAlphaTexture(_uint _index)
+{
+	AlphaTextureIndex = _index;
+}
+
+#endif 
