@@ -5,7 +5,7 @@
 #include "UAnimatedParticle.h"
 #include "UGameInstance.h"
 #include "UTexGroup.h"
-#include "UFire.h"
+
 #include "UTexture.h"
 #include "UMethod.h"
 
@@ -185,12 +185,7 @@ HRESULT TParticleView::LoadResource()
 	ResizeAnimParticleVector(1);
 	LoadAnimParticleResource();
 
-	{
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		UFire::FIREDESC tFireDesc;
-		tFireDesc.wstrFireShader = PROTO_RES_2DFIRESHADER;
-		m_stFire= std::static_pointer_cast<UFire>(spGameInstance->CloneActorAdd(PROTO_ACTOR_FIRE, { &tFireDesc }));
-	}
+
 	
 
 	return S_OK;
@@ -265,7 +260,6 @@ void TParticleView::RenderActive()
 		AnimParticleView();
 		
 		
-		m_stFire->SetActive(true);
 		
 		
 	}

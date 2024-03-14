@@ -86,8 +86,9 @@
 
 #define PROTO_RES_PARTICLETEXTUREGROUP L"Proto_Res_ParticleTextureGroup"
 #define PROTO_RES_ANIMPARTICLETEXTUREGROUP L"Proto_Res_AnimParticleTextureGroup"
-#define PROTO_RES_FIRETEXTUREGROUP L"Proto_Res_FireTextureGroup"
-
+#define PROTO_RES_FIRECOLORTEXTUREGROUP L"Proto_Res_FireColorTextureGroup"
+#define PROTO_RES_FIRENOISETEXTUREGROUP L"Proto_Res_FireNoiseTextureGroup"
+#define PROTO_RES_FIREALPHATEXTUREGROUP L"Proto_Res_FireAlphaTextureGroup"
 
 #pragma endregion PROTO
 

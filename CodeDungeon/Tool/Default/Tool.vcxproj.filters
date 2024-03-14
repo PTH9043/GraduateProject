@@ -86,6 +86,9 @@
     <Filter Include="03.ImGui\Effect">
       <UniqueIdentifier>{3fcb00dd-b2f4-48ed-9b2f-2489b963041f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.ImGui\Fire">
+      <UniqueIdentifier>{6b86b3d3-f1a2-4cdb-a69b-ff472050760f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ToolDefines.h">
@@ -202,6 +205,9 @@
     <ClInclude Include="..\Public\TBloodEffectView.h">
       <Filter>03.ImGui\Effect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\TFireView.h">
+      <Filter>03.ImGui\Fire</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\TToolApp.cpp">
@@ -299,6 +305,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\TBloodEffectView.cpp">
       <Filter>03.ImGui\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TFireView.cpp">
+      <Filter>03.ImGui\Fire</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

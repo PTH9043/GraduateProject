@@ -36,16 +36,25 @@ protected:
 	virtual _bool Save(const _wstring& _wstrPath);
 	virtual _bool Load(const _wstring& _wstrPath);
 public:
-	CSHPTRREF<UTexGroup> GetTextureGroup() const { return m_spTexGroup; }
+	CSHPTRREF<UTexGroup> GetColorTextureGroup() const { return m_spFireColorTexGroup; }
+	CSHPTRREF<UTexGroup> GetNoiseTextureGroup() const { return m_spFireNoiseTexGroup; }
+	CSHPTRREF<UTexGroup> GetAlphaTextureGroup() const { return m_spFireAlphaTexGroup; }
 	
 #ifdef _USE_IMGUI
 public:
 
 	virtual void ShowObjectInfo() override;
-
+	void SetColorTexture(const _wstring& TexName);
+	void SetColorTexture(_uint _index);
+	void SetNoiseTexture(const _wstring& TexName);
+	void SetNoiseTexture(_uint _index);
+	void SetAlphaTexture(const _wstring& TexName);
+	void SetAlphaTexture(_uint _index);
 #endif
 protected:
-	SHPTR<UTexGroup>				m_spTexGroup;
+	SHPTR<UTexGroup>				m_spFireColorTexGroup;
+	SHPTR<UTexGroup>				m_spFireNoiseTexGroup;
+	SHPTR<UTexGroup>				m_spFireAlphaTexGroup;
 	SHPTR<UVIBufferRect>		m_spVIBufferRect;
 	
 	SHPTR< UShaderConstantBuffer>				m_spShaderFireNoiseBuffer;
@@ -69,6 +78,11 @@ protected:
 	float distortionScale = 0.8f;
 	float distortionBias = 0.5f;
 
+
+
+	_uint ColorTextureIndex = 0; 
+	_uint NoiseTextureIndex = 0;
+	_uint AlphaTextureIndex = 0;
 };
 
 END

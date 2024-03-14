@@ -12,13 +12,19 @@
 UFire::UFire(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer,
 	const CLONETYPE& _eCloneType)
 	: UPawn(_spDevice, _wstrLayer, _eCloneType, BACKINGTYPE::NON),
-	m_spTexGroup{ nullptr }, m_spVIBufferRect{ nullptr }
+	m_spFireColorTexGroup{ nullptr },
+	m_spFireNoiseTexGroup{ nullptr },
+	m_spFireAlphaTexGroup{ nullptr },
+	m_spVIBufferRect{ nullptr }
 {
 }
 
 UFire::UFire(const UFire& _rhs) :
 	UPawn(_rhs),
-	m_spTexGroup{ nullptr }, m_spVIBufferRect{ nullptr }
+	m_spFireColorTexGroup{ nullptr },
+	m_spFireNoiseTexGroup{ nullptr },
+	m_spFireAlphaTexGroup{ nullptr },
+	m_spVIBufferRect{ nullptr }
 {
 }
 
@@ -42,7 +48,9 @@ HRESULT UFire::NativeConstructClone(const VOIDDATAS& _convecDatas)
 		m_spShaderFireNoiseBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::FIRENOISEBUFFER, sizeof(FIRENOISEBUFFER));
 		m_spShaderDistortionBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::FIREDISTORTION, sizeof(FIREDISTORTIONBUFFER));
 
-		if (m_spTexGroup == nullptr)m_spTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_FIRETEXTUREGROUP));
+		if (m_spFireColorTexGroup == nullptr)m_spFireColorTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_FIRECOLORTEXTUREGROUP));
+		if (m_spFireNoiseTexGroup == nullptr)m_spFireNoiseTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_FIRENOISETEXTUREGROUP));
+		if (m_spFireAlphaTexGroup == nullptr)m_spFireAlphaTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_FIREALPHATEXTUREGROUP));
 		m_spVIBufferRect = static_pointer_cast<UVIBufferRect>(spGameInstance->CloneResource(PROTO_RES_VIBUFFERRECT));
 		
 	
@@ -99,9 +107,9 @@ HRESULT UFire::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDesc
 	GetTransform()->BindTransformData(GetShader());
 
 
-	GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTexGroup->GetTexture(L"fire01"));
-	GetShader()->BindSRVBuffer(SRV_REGISTER::T1, m_spTexGroup->GetTexture(L"noise01"));
-	GetShader()->BindSRVBuffer(SRV_REGISTER::T2, m_spTexGroup->GetTexture(L"alpha01"));
+	GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spFireColorTexGroup->GetTexture(ColorTextureIndex));
+	GetShader()->BindSRVBuffer(SRV_REGISTER::T1, m_spFireNoiseTexGroup->GetTexture(NoiseTextureIndex));
+	GetShader()->BindSRVBuffer(SRV_REGISTER::T2, m_spFireAlphaTexGroup->GetTexture(AlphaTextureIndex));
 
 
 	m_spVIBufferRect->Render(GetShader(), _spCommand);
@@ -138,4 +146,34 @@ void UFire::ShowObjectInfo()
 {
 
 }
+void UFire::SetColorTexture(const _wstring& TexName)
+{
+	ColorTextureIndex = m_spFireColorTexGroup->GetTextureIndex(TexName);
+}
+
+void UFire::SetColorTexture(_uint _index)
+{
+	ColorTextureIndex = _index;
+}
+
+void UFire::SetNoiseTexture(const _wstring& TexName)
+{
+	NoiseTextureIndex = m_spFireNoiseTexGroup->GetTextureIndex(TexName);
+}
+
+void UFire::SetNoiseTexture(_uint _index)
+{
+	NoiseTextureIndex = _index;
+}
+
+void UFire::SetAlphaTexture(const _wstring& TexName)
+{
+	AlphaTextureIndex = m_spFireAlphaTexGroup->GetTextureIndex(TexName);
+}
+
+void UFire::SetAlphaTexture(_uint _index)
+{
+	AlphaTextureIndex = _index;
+}
+
 #endif 
