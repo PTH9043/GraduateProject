@@ -44,7 +44,7 @@ VS_OUT VS_Main(VS_IN In)
 {
     VS_OUT Out = (VS_OUT) 0.f;
  
-    In.vPosition = In.vPosition * 50;
+   
     Out.vPosition = Compute_FinalMatrix(In.vPosition);
     
     Out.vTexCoord = In.vTexCoord;

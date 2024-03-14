@@ -7,6 +7,7 @@
 #include "UTexGroup.h"
 #include "UTexture.h"
 #include "UMethod.h"
+#include "UTransform.h"
 #include "UFire.h"
 
 TFireView::TFireView(CSHPTRREF<UDevice> _spDevice) :
@@ -147,6 +148,8 @@ void TFireView::FireView()
 			FireColorTextureSetting();
 			FireNoiseTextureSetting();
 			FireAlphaTextureSetting();
+			FireScalingSetting();
+			FirePosSetting();
 		}
 	}
 	ImGui::End();
@@ -204,4 +207,26 @@ void TFireView::FireAlphaTextureSetting() {
 		}
 		ImGui::EndListBox();
 	}
+}
+
+void TFireView::FireScalingSetting() {
+
+	static float Scale = 50.f;
+	ImGui::SliderFloat("Scale", &Scale, 1.f, 100.f, "%.2f");
+
+	_float3 ScaleFloat3 = _float3(Scale, Scale, Scale);
+	m_stFire->GetTransform()->SetScale(ScaleFloat3);
+}
+
+void TFireView::FirePosSetting() {
+
+	static _float posX = 0;
+	static _float posY = 0;
+	static _float posZ = 0;
+
+	ImGui::InputFloat("Input Fire Position X", &posX);
+	ImGui::InputFloat("Input Fire Position Y", &posY);
+	ImGui::InputFloat("Input Fire Position Z", &posZ);
+
+	m_stFire->GetTransform()->SetPos(_float3(posX, posY, posZ));
 }

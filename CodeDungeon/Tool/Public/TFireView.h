@@ -33,6 +33,8 @@ private:
 	void FireColorTextureSetting();
 	void FireNoiseTextureSetting();
 	void FireAlphaTextureSetting();
+	void FireScalingSetting();
+	void FirePosSetting();
 //private:
 //	//Multiple Particle Setting Functions
 //	void MultipleParticleView();
