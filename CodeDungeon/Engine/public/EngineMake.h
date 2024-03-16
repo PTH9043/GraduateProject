@@ -35,6 +35,7 @@
 #define PROTO_RES_2DUISHADER L"Proto_Res_2DUIShader"
 #define PROTO_RES_2DANIMATEPARTICLESHADER L"Proto_Res_2DAnimateParticleShader"
 #define PROTO_RES_2DFIRESHADER L"Proto_Res_2DFireShader"
+#define PROTO_RES_2DFOGSHADER L"Proto_Res_2DFogShader"
 #define PROTO_RES_TERRAINTESSALATIONSHADER L"Proto_Res_TerrainTessalationShader"
 #define PROTO_RES_ENVIRONMENTMAPPING L"Proto_Res_EnvironmentMappingShader"
 #define PROTO_RES_MIRRORSHADER L"Proto_Res_MirrorShader"
@@ -79,6 +80,7 @@
 #define PROTO_ACTOR_PARTICLE L"Proto_Actor_Particle"
 #define PROTO_ACTOR_ANIMATEPARTICLE L"Proto_Actor_AnimateParticle"
 #define PROTO_ACTOR_FIRE L"Proto_Actor_Fire"
+#define PROTO_ACTOR_FOG L"Proto_Actor_Fog"
 #define PROTO_ACTOR_MIRROR L"Proto_Actor_Mirror"
 #define PROTO_ACTOR_SCREENRENDEROBJ L"Proto_Actor_ScreenRenderObj"
 
@@ -89,6 +91,7 @@
 #define PROTO_RES_FIRECOLORTEXTUREGROUP L"Proto_Res_FireColorTextureGroup"
 #define PROTO_RES_FIRENOISETEXTUREGROUP L"Proto_Res_FireNoiseTextureGroup"
 #define PROTO_RES_FIREALPHATEXTUREGROUP L"Proto_Res_FireAlphaTextureGroup"
+#define PROTO_RES_FOGTEXTUREGROUP L"Proto_Res_FogTextureGroup"
 
 #pragma endregion PROTO
 

@@ -22,6 +22,8 @@ public:
 	virtual HRESULT LoadSceneData() override;
 	virtual void Tick(const _double& _dTimeDelta) override;
 	virtual void LateTick(const _double& _dTimeDelta) override;
+
+	SHPTR<UGrid>		GetGrid() { return		m_spTestObject; }
 private:
 	// Main
 	SHPTR<TMainCamera>			m_spMainCamera;

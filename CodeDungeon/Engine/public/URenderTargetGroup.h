@@ -47,6 +47,9 @@ public:
 	// Get Texture 
 	SHPTR<UTexture> GetRenderTargetTexture(const RTOBJID _eObJID);
 	SHPTR<UTexture> GetRenderTargetTexture(const _uint _iObjID);
+	//SetColor
+	void SetRenderTargetColor(const _uint _iObjID, _float4 color);
+	void SetRenderTargetColor(const RTOBJID _eObJID, _float4 color);
 
 private:
 	// RenderTargets

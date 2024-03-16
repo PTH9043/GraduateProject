@@ -83,7 +83,7 @@ namespace Engine {
 	typedef struct tagVertexCube
 	{
 		_float3		vPosition{ 0.f, 0.f, 0.f };
-		_float3		vTexUV{ 0.f, 0.f, 0.f };
+		_float2		vTexUV{ 0.f, 0.f};
 	}VTXCUBE;
 
 	typedef struct tagVertexCube_Declaration {
@@ -95,7 +95,7 @@ namespace Engine {
 	{
 		_float3		vPosition{ 0.f, 0.f, 0.f };
 		_float3		vNormal{ 0.f, 0.f, 0.f };
-		_float3		vTexUV{ 0.f, 0.f, 0.f };
+		_float2		vTexUV{ 0.f, 0.f };
 	}VTXNORCUBE;
 
 	typedef struct tagVertexNormalCube_Declaration {

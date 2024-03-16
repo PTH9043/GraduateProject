@@ -55,6 +55,7 @@
 //#include "UTerrain.h"
 #include "UParticle.h"
 #include "UFire.h"
+#include "UFog.h"
 #include "UCollider.h"
 #include "UAnimatedParticle.h"
 //#include "UMirror.h"
@@ -1092,6 +1093,11 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 					SHADERLIST{ VS_MAIN, PS_MAIN },
 					RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE, BLEND_TYPE::ALPHA_BLEND
 					));
+
+			CreateGraphicsShader(PROTO_RES_2DFOGSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"2DFog", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }
+				));
 		
 		}
 		//// SkyBox
@@ -1215,6 +1221,9 @@ HRESULT UGameInstance::ReadyActor(const OUTPUTDATA& _stData)
 		_stData.wpDevice.lock(), LAYER_PARTICLE, CLONETYPE::CLONE_ONCE));
 
 	AddPrototype(PROTO_ACTOR_FIRE, CreateConstructorToNative<UFire>(
+		_stData.wpDevice.lock(), LAYER_DEFAULT, CLONETYPE::CLONE_ONCE));
+
+	AddPrototype(PROTO_ACTOR_FOG, CreateConstructorToNative<UFog>(
 		_stData.wpDevice.lock(), LAYER_DEFAULT, CLONETYPE::CLONE_ONCE));
 	/*{
 		AddPrototype(PROTO_ACTOR_TERRAIN, CreateConstructorToNative<UTerrain>(

@@ -84,6 +84,7 @@ private:
 	SHPTR <UFire> m_stFire;
 
 
+
 };
 
 

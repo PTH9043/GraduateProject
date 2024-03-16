@@ -284,6 +284,20 @@ namespace Engine {
 
 #pragma endregion FIRE
 
+#pragma region FOG
+
+	struct FOGBUFFER {
+		_float fFogStart;
+		_float fFogEnd;
+		_float fFogDensity;
+		_uint fType;
+		_float4 fFogColor;
+	};
+
+	
+
+#pragma endregion FOG
+
 #pragma region WATER
 
 	struct WATERIFNODESC

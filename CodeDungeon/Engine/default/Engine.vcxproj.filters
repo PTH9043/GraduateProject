@@ -337,6 +337,12 @@
     <Filter Include="98.ShaderFile\Common\Fire">
       <UniqueIdentifier>{f96801a0-abf0-4089-8031-2322dbac3367}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Actor\Fog">
+      <UniqueIdentifier>{cefa7e93-486e-4f57-a754-a6975f840292}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.ShaderFile\Common\Fog">
+      <UniqueIdentifier>{0fa71142-cf1a-4653-aeca-5caf75b682fe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -656,6 +662,9 @@
     </ClCompile>
     <ClCompile Include="..\private\UFire.cpp">
       <Filter>05.Actor\01.Pawn\Fire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UFog.cpp">
+      <Filter>05.Actor\Fog</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1007,6 +1016,9 @@
     <ClInclude Include="..\public\UFire.h">
       <Filter>05.Actor\01.Pawn\Fire</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\UFog.h">
+      <Filter>05.Actor\Fog</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Shader\ShaderGrobalFunc.hlsli">
@@ -1073,6 +1085,9 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\2DFire.hlsl">
       <Filter>98.ShaderFile\Common\Fire</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\2DFog.hlsl">
+      <Filter>98.ShaderFile\Common\Fog</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

@@ -10,6 +10,7 @@
 #include "UTransform.h"
 #include "UFire.h"
 
+
 TFireView::TFireView(CSHPTRREF<UDevice> _spDevice) :
 	TImGuiView(_spDevice, "FireView"),
 	m_stMainDesc{},
@@ -46,6 +47,7 @@ HRESULT TFireView::LoadResource()
 		m_stFire = std::static_pointer_cast<UFire>(spGameInstance->CloneActorAdd(PROTO_ACTOR_FIRE, { &tFireDesc }));
 	}
 
+	
 
 	return S_OK;
 }
@@ -92,7 +94,6 @@ void TFireView::RenderActive()
 		//여기부터 내 입력
 
 		FireView();
-
 	}
 	ImGui::End();
 }

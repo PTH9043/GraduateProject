@@ -177,3 +177,27 @@ SHPTR<UTexture> URenderTargetGroup::GetRenderTargetTexture(const _uint _iObjID)
 
 	return m_vecRenderTargets[_iObjID].pTexture;
 }
+
+void URenderTargetGroup::SetRenderTargetColor(const RTOBJID _eObJID, _float4 color)
+{
+	const UNORMAP<RTOBJID, _uint>::iterator& IDIterator = m_FindRts.find(_eObJID);
+
+	_float r = color.x;
+	_float g = color.y;
+	_float b = color.z;
+	_float a = color.w;
+
+
+	m_vecRenderTargets[IDIterator->second].arrClearColor = ARRAY<_float, 4>{ r, g, b, a };
+}
+
+void URenderTargetGroup::SetRenderTargetColor(const _uint _iObjID,_float4 color)
+{
+	_float r = color.x;
+	_float g = color.y;
+	_float b = color.z;
+	_float a = color.w;
+
+
+	m_vecRenderTargets[_iObjID].arrClearColor = ARRAY<_float, 4>{ r,g,b,a };
+}

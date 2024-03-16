@@ -89,6 +89,9 @@
     <Filter Include="03.ImGui\Fire">
       <UniqueIdentifier>{6b86b3d3-f1a2-4cdb-a69b-ff472050760f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.ImGui\Fog">
+      <UniqueIdentifier>{cadca361-3da4-4704-a243-a4892ba2a8eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ToolDefines.h">
@@ -187,9 +190,6 @@
     <ClInclude Include="..\Public\TAnimControlModel.h">
       <Filter>90.ShowModel\AnimControlModel</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\TShowMapObjects.h">
-      <Filter>90.ShowModel\Map</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\TCameraView.h">
       <Filter>03.ImGui\CameraView</Filter>
     </ClInclude>
@@ -207,6 +207,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\TFireView.h">
       <Filter>03.ImGui\Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TFogView.h">
+      <Filter>03.ImGui\Fog</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -288,9 +291,6 @@
     <ClCompile Include="..\Private\TAnimControlModel.cpp">
       <Filter>90.ShowModel\AnimControlModel</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\TShowMapObjects.cpp">
-      <Filter>90.ShowModel\Map</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\TCameraView.cpp">
       <Filter>03.ImGui\CameraView</Filter>
     </ClCompile>
@@ -308,6 +308,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\TFireView.cpp">
       <Filter>03.ImGui\Fire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TFogView.cpp">
+      <Filter>03.ImGui\Fog</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

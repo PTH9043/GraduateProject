@@ -152,7 +152,9 @@ namespace Engine {
 		, TESSTERRAINFACTOR = B13
 		, FIRENOISEBUFFER = B14
 		, FIREDISTORTION = B15
+		, FOGBUFFER = B14
 		,
+
 	};
 
 	enum class SRV_REGISTER : unsigned short {
