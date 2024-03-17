@@ -221,12 +221,16 @@ void UAnimModel::ChangeAnimation(const _wstring& _wstrAnimName, const _double& _
 
 void UAnimModel::OnShowOriginAnimation()
 {
-	GetRootBoneNode()->OffRootBoneNode();
+	SHPTR<URootBoneNode> spRootBoneNode{ GetRootBoneNode() };
+	if (nullptr != spRootBoneNode)
+		spRootBoneNode->OffRootBoneNode();
 }
 
 void UAnimModel::OnAdjustTransformToAnimation()
 {
-	GetRootBoneNode()->OnRootBoneNode();
+	SHPTR<URootBoneNode> spRootBoneNode{ GetRootBoneNode() };
+	if (nullptr != spRootBoneNode)
+		spRootBoneNode->OnRootBoneNode();
 }
 
 HRESULT UAnimModel::CreateAnimation(const  VECTOR<ANIMDESC>& _convecAnimDesc, const _wstring& _wstrPath)
@@ -397,7 +401,10 @@ void UAnimModel::SettingCurAnimSituation()
 	m_spCurAnimation = m_vecAnimations[m_iCurAnimIndex];
 	m_spCurAnimation->ResetData();
 	m_spNextAnimation = nullptr;
-	GetRootBoneNode()->ResetRootBoneInfo();
+
+	SHPTR<URootBoneNode> spRootBoneNode{ GetRootBoneNode() };
+	if(nullptr != spRootBoneNode)
+		spRootBoneNode->ResetRootBoneInfo();
 }
 
 void UAnimModel::SettingNextAnimSituation()
@@ -406,7 +413,9 @@ void UAnimModel::SettingNextAnimSituation()
 	// Reset
 	m_spCurAnimation->ResetData();
 	m_spNextAnimation->ResetData();
-	GetRootBoneNode()->ResetRootBoneInfo();
+	SHPTR<URootBoneNode> spRootBoneNode{ GetRootBoneNode() };
+	if (nullptr != spRootBoneNode)
+		spRootBoneNode->ResetRootBoneInfo();
 }
 
 HRESULT UAnimModel::CreateShaderConstantBuffer()

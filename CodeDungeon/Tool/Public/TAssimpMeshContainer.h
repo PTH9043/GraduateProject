@@ -19,6 +19,8 @@ public:
 	TAssimpMeshContainer(const TAssimpMeshContainer& _rhs);
 	DESTRUCTOR(TAssimpMeshContainer)
 public:
+	const _wstring& GetMeshName() const { return m_wstrMeshName; }
+public:
 	CLONE_MACRO(TAssimpMeshContainer, "TAssimpMeshContainer::Clone To Failed")
 		virtual void Free() override;
 	virtual HRESULT NativeConstruct() override;
@@ -43,6 +45,7 @@ private:
 	VECTOR<_float2>											m_vecUVTexCoords;
 	_float3																m_vMinVertex;
 	_float3																m_vMaxVertex;
+	_wstring																m_wstrMeshName;
 };
 
 END

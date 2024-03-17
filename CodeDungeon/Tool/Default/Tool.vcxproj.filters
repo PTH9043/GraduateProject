@@ -62,9 +62,6 @@
     <Filter Include="90.ShowModel\Model">
       <UniqueIdentifier>{2faa2d8d-82f0-4422-b94f-5ee6bb8c311b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="96.ProtoMaker">
-      <UniqueIdentifier>{97cb2792-1399-4c46-b07d-c15593346f88}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03.ImGui\Animation">
       <UniqueIdentifier>{dbb78db6-b5d0-457c-8b79-994d82f8147d}</UniqueIdentifier>
     </Filter>
@@ -82,6 +79,12 @@
     </Filter>
     <Filter Include="03.ImGui\TParticleView">
       <UniqueIdentifier>{5e071f80-7abf-440a-a39b-8cb71be5bae4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.FBXLoader">
+      <UniqueIdentifier>{57a772d5-51c5-421c-aa33-d3853e3d0132}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.ProtoMaker">
+      <UniqueIdentifier>{97cb2792-1399-4c46-b07d-c15593346f88}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -173,7 +176,7 @@
       <Filter>90.ShowModel\Model</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TProtoMaker.h">
-      <Filter>96.ProtoMaker</Filter>
+      <Filter>95.ProtoMaker</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TAnimControlView.h">
       <Filter>03.ImGui\Animation</Filter>
@@ -192,6 +195,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\TParticleView.h">
       <Filter>03.ImGui\TParticleView</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TFBXModel.h">
+      <Filter>96.FBXLoader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -265,7 +271,7 @@
       <Filter>90.ShowModel\Model</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TProtoMaker.cpp">
-      <Filter>96.ProtoMaker</Filter>
+      <Filter>95.ProtoMaker</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TAnimControlView.cpp">
       <Filter>03.ImGui\Animation</Filter>
@@ -284,6 +290,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\TParticleView.cpp">
       <Filter>03.ImGui\TParticleView</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TFBXModel.cpp">
+      <Filter>96.FBXLoader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

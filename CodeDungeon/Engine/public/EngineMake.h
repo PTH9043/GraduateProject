@@ -21,6 +21,7 @@
 #define PROTO_RES_INSTANCERECTSHADER L"Proto_Res_InstanceRectShader"
 #define PROTO_RES_DEFAULTOBJECTSHADER L"Proto_Res_DefaultObjectShader"
 #define PROTO_RES_ANIMMODELSHADER L"Proto_Res_AnimModelShader"
+#define PROTO_RES_NOCULL_ANIMMODELSHADER L"Proto_Res_NoCull_AnimModelShader"
 #define PROTO_RES_MODELSHADER L"Proto_Res_ModelShader"
 #define PROTO_RES_NORMALOBJECTSHADER L"Proto_Res_NormalObjectShader"
 #define PROTO_RES_SKYBOXSHADER L"Proto_Res_SkyBoxShader"

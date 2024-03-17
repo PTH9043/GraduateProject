@@ -49,6 +49,7 @@ HRESULT TAssimpMeshContainer::NativeConstruct(aiMesh* _pMesh, const _uint& _iTyp
 
 	m_iMaterialIndex = _pMesh->mMaterialIndex;
 	m_wstrName = UMethod::ConvertSToW(_pMesh->mName.data);
+	m_wstrMeshName = UMethod::ConvertSToW(_pMesh->mName.C_Str());
 
 	if (TAssimpModel::TYPE::NONANIM == static_cast<TAssimpModel::TYPE>(_iType)) {
 		RETURN_CHECK_FAILED(ReadyVertices(_pMesh, _pModel, _mPivotMatrix), E_FAIL);

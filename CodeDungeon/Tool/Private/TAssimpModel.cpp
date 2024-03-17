@@ -219,6 +219,18 @@ void TAssimpModel::GetData(ANIMMODELDESC& _tAnimModelDesc)
 	for (auto& iter : m_BoneNodeContainer) {
 		BONENODEDESC tDesc;
 		iter->GetData(tDesc);
+		_bool bIsTrue{ false };
+		for (auto& Mesh : m_vecMeshContainers)
+		{
+			if (Mesh->GetMeshName() == tDesc.wstrName)
+			{
+				bIsTrue = true;
+				break;
+			}
+		}
+		if (bIsTrue)
+			continue;
+
 		_tAnimModelDesc.BNodeDatas.push_back(tDesc);
 	}
 	// Animation
