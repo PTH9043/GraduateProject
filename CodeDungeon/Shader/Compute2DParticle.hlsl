@@ -31,7 +31,8 @@ struct GROBALPARTICLEINFO
 
 struct ComputeParticleType {
     int fParticleType;
-    float3 fPadding;
+    int fParticleLifeTimeType;
+    float2 fPadding;
 };
 
 struct PARTICLE
@@ -134,9 +135,22 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
                 g_ParticleWritedata[threadIndex.x].vWorldDir = normalize(dir);
             }
 
-
-            g_ParticleWritedata[threadIndex.x].fLifeTime = ((g_GrobalParticleInfo.fMaxLifeTime - g_GrobalParticleInfo.fMinLifeTime) * noise.x)
+            if (g_ParticleType.fParticleLifeTimeType == 0)//0 Default 
+            {
+                if (g_GrobalParticleInfo.fMaxLifeTime > 0) {
+                    g_ParticleWritedata[threadIndex.x].fLifeTime = g_GrobalParticleInfo.fMaxLifeTime;
+                }
+                else {
+                    g_ParticleWritedata[threadIndex.x].fLifeTime =  g_GrobalParticleInfo.fMinLifeTime;
+                }
+              
+            }
+            else if (g_ParticleType.fParticleLifeTimeType == 1) {//1 Auto
+                //g_ParticleWritedata[threadIndex.x].fLifeTime = (noise.x) + noise.y + noise.z;
+                g_ParticleWritedata[threadIndex.x].fLifeTime = ((g_GrobalParticleInfo.fMaxLifeTime - g_GrobalParticleInfo.fMinLifeTime) * noise.x)
             + g_GrobalParticleInfo.fMinLifeTime;
+            }
+          
             g_ParticleWritedata[threadIndex.x].fCurTime = 0.f;
         }
     }

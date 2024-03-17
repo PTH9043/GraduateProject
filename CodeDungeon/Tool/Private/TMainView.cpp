@@ -113,6 +113,7 @@ void TMainView::RenderMenu()
         if (ImGui::BeginMenu("Explain"))
         {
             ImGui::Text("Camera Rotation Key - Mouse R Btn");
+            ImGui::Text("Camera ZoomIn ZoomOut Key - Mouse Scroll Btn");
             ImGui::EndMenu();
         }
 

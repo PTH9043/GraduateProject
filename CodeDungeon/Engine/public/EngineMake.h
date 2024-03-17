@@ -14,6 +14,7 @@
 /* Graphics Shader */
 #define PROTO_RES_DEBUG2DTARGETSHADER L"Proto_Res_Debug2DTargetShader"
 #define PROTO_RES_DEBUGGINGDEFAULTSHADER L"Proto_Res_DebuggingDefaultShader"
+#define PROTO_RES_DEBUGGINGWIREFRAMESHADER L"Proto_Res_DebuggingWireframeShader"
 #define PROTO_RES_GRIDSHADER L"Proto_Res_GridShader"
 #define PROTO_RES_RECTSHADER L"Proto_Res_RectShader"
 #define PROTO_RES_FINALDEFFEREDSHADER L"Proto_Res_FinalDefferedShader"
@@ -34,6 +35,8 @@
 #define PROTO_RES_EQUIPMENTSHADER L"Proto_Res_EquipmentShader"
 #define PROTO_RES_2DUISHADER L"Proto_Res_2DUIShader"
 #define PROTO_RES_2DANIMATEPARTICLESHADER L"Proto_Res_2DAnimateParticleShader"
+#define PROTO_RES_2DFIRESHADER L"Proto_Res_2DFireShader"
+#define PROTO_RES_2DFOGSHADER L"Proto_Res_2DFogShader"
 #define PROTO_RES_TERRAINTESSALATIONSHADER L"Proto_Res_TerrainTessalationShader"
 #define PROTO_RES_ENVIRONMENTMAPPING L"Proto_Res_EnvironmentMappingShader"
 #define PROTO_RES_MIRRORSHADER L"Proto_Res_MirrorShader"
@@ -42,6 +45,8 @@
 /* Compute Shader*/
 #define PROTO_RES_COMPUTEANIMATIONSHADER L"Proto_Res_ConputeAnimatonShader"
 #define PROTO_RES_COMPUTEPARTICLE2DSHADER L"Proto_Res_ComputeParticle2DShader"
+#define PROTO_RES_COMPUTEBLOODEFFECT2DSHADER L"Proto_Res_ComputeBloodEffect2DShader"
+#define PROTO_RES_COMPUTEROTATIONEFFECT2DSHADER L"Proto_Res_ComputeRotationEffect2DShader"
 
 // Particle 
 #define PROTO_RES_PARTICLESYSTEM L"Proto_Res_ParitlceSystem"
@@ -70,10 +75,13 @@
 #define PROTO_ACTOR_DEFAULTSPHERE L"Proto_Actor_DefaultSphere"
 #define PROTO_ACTOR_DEUBGGINGDEFAULTOBJECT L"Proto_Actor_DebuggingDefaultObject"
 #define PROTO_ACTOR_DEUBGGINGDEFAULTCELL L"Proto_Actor_DebuggingDefaultCell"
+#define PROTO_ACTOR_GRID L"Proto_Actor_Grid"
 #define PROTO_ACTOR_TERRAIN L"Proto_Actor_Terrain"
 #define PROTO_ACTOR_SKYBOX L"Proto_Actor_SkyBox"
 #define PROTO_ACTOR_PARTICLE L"Proto_Actor_Particle"
 #define PROTO_ACTOR_ANIMATEPARTICLE L"Proto_Actor_AnimateParticle"
+#define PROTO_ACTOR_FIRE L"Proto_Actor_Fire"
+#define PROTO_ACTOR_FOG L"Proto_Actor_Fog"
 #define PROTO_ACTOR_MIRROR L"Proto_Actor_Mirror"
 #define PROTO_ACTOR_SCREENRENDEROBJ L"Proto_Actor_ScreenRenderObj"
 
@@ -81,6 +89,10 @@
 
 #define PROTO_RES_PARTICLETEXTUREGROUP L"Proto_Res_ParticleTextureGroup"
 #define PROTO_RES_ANIMPARTICLETEXTUREGROUP L"Proto_Res_AnimParticleTextureGroup"
+#define PROTO_RES_FIRECOLORTEXTUREGROUP L"Proto_Res_FireColorTextureGroup"
+#define PROTO_RES_FIRENOISETEXTUREGROUP L"Proto_Res_FireNoiseTextureGroup"
+#define PROTO_RES_FIREALPHATEXTUREGROUP L"Proto_Res_FireAlphaTextureGroup"
+#define PROTO_RES_FOGTEXTUREGROUP L"Proto_Res_FogTextureGroup"
 
 #pragma endregion PROTO
 

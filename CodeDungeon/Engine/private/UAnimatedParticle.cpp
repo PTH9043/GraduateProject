@@ -57,6 +57,7 @@ void UAnimatedParticle::SetNextAnimTimer(_float _fSetTime)
 
 void UAnimatedParticle::SetTextureRowsAndCols(_float _fRows, _float _fCols)
 {
+	m_vUvPos = _float2(0, 0);
 	m_vTextureSize = _float2(_fRows, _fCols);
 }
 

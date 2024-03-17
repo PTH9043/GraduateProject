@@ -5,6 +5,7 @@
 BEGIN(Engine)
 class UParticle;
 class UAnimatedParticle;
+class UFire;
 END
 
 BEGIN(Tool)
@@ -33,17 +34,18 @@ private:
 	void MultipleParticleView();
 	void ResizeMultipleParticleVector(_uint _resizeAmount);
 
-	//void MultipleParticleCountSetting();
-	//void MultipleParticleTimeSetting();
-	//void MultipleParticleTexSetting();
-	//void DefaultMultipleParticleSetting();
-	//void AutomaticMultipleParticleSetting();
+	void MultipleParticleCountSetting();
+	void MultipleParticleTimeSetting();
+	void MultipleParticleTexSetting();
+	void DefaultMultipleParticleSetting();
+	void AutomaticMultipleParticleSetting();
 
 	void LoadMultipleParticleResource();
 	void ReleaseMultipleParticleResource();
 
 	void SetMultipleParticle(SHPTR<UParticle> _spParticle, int index) { m_MultipleParticle[index] = _spParticle; }
 	_uint GetMultipleParticleSize() { return m_iMultipleParticleSize; }
+	_uint GetMultipleParticleCurActiveSize() { return m_iCurActiveMultipleParticle; }
 private:
 	//Single Particle Setting Functions
 	void SingleParticleView();
@@ -109,6 +111,7 @@ private:
 	PARTICLES m_MultipleParticle;
 	PARTICLEPARAMS m_MultipleParticleParam;
 	PARTICLETYPES m_MultipleParticleType;
+	_int m_iCurActiveMultipleParticle;
 
 	_int m_iAnimParticleSize;
 	ANIMPARTICLES m_AnimParticle;
@@ -116,6 +119,7 @@ private:
 	PARTICLEANIMPARAMS m_AnimParticleAnimParam;
 	PARTICLETYPES m_AnimParticleType;
 
+	
 
 };
 

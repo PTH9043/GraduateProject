@@ -240,9 +240,10 @@ namespace Engine {
 	};
 
 	struct ComputeParticleType {
-		ComputeParticleType() :fParticleType{ PARTICLE_TYPE_DEFAULT }, padding{ 0,0,0 } {}
+		ComputeParticleType() :fParticleType{ PARTICLE_TYPE_DEFAULT }, fParticleLifeTimeType{ PARTICLE_LIFETIME_TYPE_DEFAULT }, padding { 0, 0 } {}
 		PARTICLE_TYPE fParticleType;
-		_float3 padding;
+		PARTICLE_LIFETIME_TYPE fParticleLifeTimeType;
+		_float2 padding;
 	};
 
 	typedef struct tagParticleParam
@@ -263,6 +264,39 @@ namespace Engine {
 	};
 
 #pragma endregion PARTICLE
+
+#pragma region FIRE
+
+	struct FIRENOISEBUFFER {
+		_float fFrameTime;
+		_float3 fScrollSpeeds;
+		_float3 fScales;
+		_float padding;
+	};
+
+	struct FIREDISTORTIONBUFFER {
+		_float2 fDistortion1;
+		_float2 fDistortion2;
+		_float2 fDistortion3;
+		_float fDistortionScale;
+		_float fDistortionBias;
+	};
+
+#pragma endregion FIRE
+
+#pragma region FOG
+
+	struct FOGBUFFER {
+		_float fFogStart;
+		_float fFogEnd;
+		_float fFogDensity;
+		_uint fType;
+		_float4 fFogColor;
+	};
+
+	
+
+#pragma endregion FOG
 
 #pragma region WATER
 

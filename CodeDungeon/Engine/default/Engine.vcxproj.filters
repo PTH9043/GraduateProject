@@ -328,6 +328,21 @@
     <Filter Include="01.Manager\StageManager">
       <UniqueIdentifier>{f7620c82-c508-4c6d-acbb-a5cbb7ebb702}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Actor\01.Pawn\Default\Grid">
+      <UniqueIdentifier>{2fae5188-b2c3-4398-ba45-07fdc20558a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\01.Pawn\Fire">
+      <UniqueIdentifier>{f12e0191-f2dd-4490-98d7-bed2903e327f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.ShaderFile\Common\Fire">
+      <UniqueIdentifier>{f96801a0-abf0-4089-8031-2322dbac3367}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\Fog">
+      <UniqueIdentifier>{cefa7e93-486e-4f57-a754-a6975f840292}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.ShaderFile\Common\Fog">
+      <UniqueIdentifier>{0fa71142-cf1a-4653-aeca-5caf75b682fe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -641,6 +656,15 @@
     </ClCompile>
     <ClCompile Include="..\private\UAnimatedParticle.cpp">
       <Filter>05.Actor\01.Pawn\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UGrid.cpp">
+      <Filter>05.Actor\01.Pawn\Default\Grid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UFire.cpp">
+      <Filter>05.Actor\01.Pawn\Fire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UFog.cpp">
+      <Filter>05.Actor\Fog</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -986,6 +1010,15 @@
     <ClInclude Include="..\public\UAnimatedParticle.h">
       <Filter>05.Actor\01.Pawn\Particle</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\UGrid.h">
+      <Filter>05.Actor\01.Pawn\Default\Grid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UFire.h">
+      <Filter>05.Actor\01.Pawn\Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UFog.h">
+      <Filter>05.Actor\Fog</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Shader\ShaderGrobalFunc.hlsli">
@@ -1043,6 +1076,18 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\3DNormalCube.hlsl">
       <Filter>98.ShaderFile\Common\NonAlpha</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\Compute2DRotationEffect.hlsl">
+      <Filter>98.ShaderFile\Common\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\Compute2DBloodEffect.hlsl">
+      <Filter>98.ShaderFile\Common\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\2DFire.hlsl">
+      <Filter>98.ShaderFile\Common\Fire</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\2DFog.hlsl">
+      <Filter>98.ShaderFile\Common\Fog</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

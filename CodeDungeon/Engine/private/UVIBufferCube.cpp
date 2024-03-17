@@ -32,28 +32,28 @@ HRESULT UVIBufferCube::NativeConstruct()
 			VertexPos.resize(VERTEX_CNT);
 			{
 				VertexPos[0] = Vertecies[0].vPosition = _float3(-0.5f, 0.5f, -0.5f);
-				Vertecies[0].vTexUV = Vertecies[0].vPosition;
+				Vertecies[0].vTexUV = _float2(0.0f, 1.0f);
 
 				VertexPos[1] = Vertecies[1].vPosition = _float3(0.5f, 0.5f, -0.5f);
-				Vertecies[1].vTexUV = Vertecies[1].vPosition;
+				Vertecies[1].vTexUV = _float2(1.0f, 1.0f);
 
 				VertexPos[2] = Vertecies[2].vPosition = _float3(0.5f, -0.5f, -0.5f);
-				Vertecies[2].vTexUV = Vertecies[2].vPosition;
+				Vertecies[2].vTexUV = _float2(1.0f, 0.0f);
 
 				VertexPos[3] = Vertecies[3].vPosition = _float3(-0.5f, -0.5f, -0.5f);
-				Vertecies[3].vTexUV = Vertecies[3].vPosition;
+				Vertecies[3].vTexUV = _float2(0.0f, 0.0f);
 
 				VertexPos[4] = Vertecies[4].vPosition = _float3(-0.5f, 0.5f, 0.5f);
-				Vertecies[4].vTexUV = Vertecies[4].vPosition;
+				Vertecies[4].vTexUV = _float2(0.0f, 1.0f);
 
 				VertexPos[5] = Vertecies[5].vPosition = _float3(0.5f, 0.5f, 0.5f);
-				Vertecies[5].vTexUV = Vertecies[5].vPosition;
+				Vertecies[5].vTexUV = _float2(1.0f, 1.0f);
 
 				VertexPos[6] = Vertecies[6].vPosition = _float3(0.5f, -0.5f, 0.5f);
-				Vertecies[6].vTexUV = Vertecies[6].vPosition;
+				Vertecies[6].vTexUV = _float2(1.0f, 0.0f);
 
 				VertexPos[7] = Vertecies[7].vPosition = _float3(-0.5f, -0.5f, 0.5f);
-				Vertecies[7].vTexUV = Vertecies[7].vPosition;
+				Vertecies[7].vTexUV = _float2(0.0f, 0.0f);
 			}
 
 			RETURN_CHECK_FAILED(CreateVtxBuffer(VERTEX_CNT, sizeof(VTXCUBE), Vertecies.data(),
@@ -67,28 +67,28 @@ HRESULT UVIBufferCube::NativeConstruct()
 			POSVECTOR VertexPos;
 			VertexPos.resize(VERTEX_CNT);
 			VertexPos[0] = Vertecies[0].vPosition = _float3(-0.5f, 0.5f, -0.5f);
-			Vertecies[0].vTexUV = Vertecies[0].vPosition;
+			Vertecies[0].vTexUV = _float2(0.0f, 1.0f);
 
 			VertexPos[1] = Vertecies[1].vPosition = _float3(0.5f, 0.5f, -0.5f);
-			Vertecies[1].vTexUV = Vertecies[1].vPosition;
+			Vertecies[1].vTexUV = _float2(1.0f, 1.0f);
 
 			VertexPos[2] = Vertecies[2].vPosition = _float3(0.5f, -0.5f, -0.5f);
-			Vertecies[2].vTexUV = Vertecies[2].vPosition;
+			Vertecies[2].vTexUV = _float2(1.0f, 0.0f);
 
 			VertexPos[3] = Vertecies[3].vPosition = _float3(-0.5f, -0.5f, -0.5f);
-			Vertecies[3].vTexUV = Vertecies[3].vPosition;
+			Vertecies[3].vTexUV = _float2(0.0f, 0.0f);
 
 			VertexPos[4] = Vertecies[4].vPosition = _float3(-0.5f, 0.5f, 0.5f);
-			Vertecies[4].vTexUV = Vertecies[4].vPosition;
+			Vertecies[4].vTexUV = _float2(0.0f, 1.0f);
 
 			VertexPos[5] = Vertecies[5].vPosition = _float3(0.5f, 0.5f, 0.5f);
-			Vertecies[5].vTexUV = Vertecies[5].vPosition;
+			Vertecies[5].vTexUV = _float2(1.0f, 1.0f);
 
 			VertexPos[6] = Vertecies[6].vPosition = _float3(0.5f, -0.5f, 0.5f);
-			Vertecies[6].vTexUV = Vertecies[6].vPosition;
+			Vertecies[6].vTexUV = _float2(1.0f, 0.0f);
 
 			VertexPos[7] = Vertecies[7].vPosition = _float3(-0.5f, -0.5f, 0.5f);
-			Vertecies[7].vTexUV = Vertecies[7].vPosition;
+			Vertecies[7].vTexUV = _float2(0.0f, 0.0f);
 
 			for (_uint i = 0; i < 8; ++i)
 			{

@@ -54,6 +54,8 @@
 //#include "USkyBox.h"
 //#include "UTerrain.h"
 #include "UParticle.h"
+#include "UFire.h"
+#include "UFog.h"
 #include "UCollider.h"
 #include "UAnimatedParticle.h"
 //#include "UMirror.h"
@@ -61,6 +63,7 @@
 //#include "UMirrorCamera.h"
 
 #include "UPicking.h"
+#include "UGrid.h"
 
 IMPLEMENT_SINGLETON(UGameInstance);
 
@@ -902,6 +905,10 @@ void UGameInstance::AddPickingObject(CSHPTRREF<UActor> _spActor, CSHPTRREF<UVIBu
 {
 	m_spPicking->AddPickingObject(_spActor, _spVIBuffer);
 }
+void UGameInstance::AddPickingGrid(const MAINGRID& _stGrid)
+{
+	m_spPicking->AddPickingGrid(_stGrid);
+}
 SHPTR<UActor> UGameInstance::GetPickingActor()
 {
 	return 	m_spPicking->GetPickingActor();
@@ -1087,6 +1094,18 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 					RENDERFORMATS{ DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_B8G8R8A8_UNORM,	DXGI_FORMAT_R16G16B16A16_FLOAT },
 					RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE, BLEND_TYPE::ALPHA_BLEND,
 					D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST));
+
+			CreateGraphicsShader(PROTO_RES_2DFIRESHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"2DFire", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN },
+					RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE, BLEND_TYPE::ALPHA_BLEND
+					));
+
+			CreateGraphicsShader(PROTO_RES_2DFOGSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"2DFog", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }
+				));
+		
 		}
 		//// SkyBox
 		//{
@@ -1142,6 +1161,12 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 
 		CreateComputeShader(PROTO_RES_COMPUTEPARTICLE2DSHADER, CLONETYPE::CLONE_STATIC,
 			SHADERDESC{ L"Compute2DParticle" });
+		
+		CreateComputeShader(PROTO_RES_COMPUTEROTATIONEFFECT2DSHADER, CLONETYPE::CLONE_STATIC,
+			SHADERDESC{ L"Compute2DRotationEffect" }); 
+
+		CreateComputeShader(PROTO_RES_COMPUTEBLOODEFFECT2DSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC{ L"Compute2DBloodEffect" });
 	}
 
 	// Particle System 
@@ -1193,12 +1218,20 @@ HRESULT UGameInstance::ReadyActor(const OUTPUTDATA& _stData)
 			_stData.wpDevice.lock(), LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 
 #endif 
+		AddPrototype(PROTO_ACTOR_GRID, CreateConstructorToNative<UGrid>(
+			_stData.wpDevice.lock(), LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	}
 	AddPrototype(PROTO_ACTOR_PARTICLE, CreateConstructorToNative<UParticle>(
 		_stData.wpDevice.lock(), LAYER_PARTICLE, CLONETYPE::CLONE_ONCE));
 
 	AddPrototype(PROTO_ACTOR_ANIMATEPARTICLE, CreateConstructorToNative<UAnimatedParticle>(
 		_stData.wpDevice.lock(), LAYER_PARTICLE, CLONETYPE::CLONE_ONCE));
+
+	AddPrototype(PROTO_ACTOR_FIRE, CreateConstructorToNative<UFire>(
+		_stData.wpDevice.lock(), LAYER_DEFAULT, CLONETYPE::CLONE_ONCE));
+
+	AddPrototype(PROTO_ACTOR_FOG, CreateConstructorToNative<UFog>(
+		_stData.wpDevice.lock(), LAYER_DEFAULT, CLONETYPE::CLONE_ONCE));
 	/*{
 		AddPrototype(PROTO_ACTOR_TERRAIN, CreateConstructorToNative<UTerrain>(
 			_stData.wpDevice.lock(), LAYER_TERRAIN, CLONETYPE::CLONE_ONCE));

@@ -13,6 +13,10 @@
 #include "TAnimControlView.h"
 #include "TCameraView.h"
 #include "TParticleView.h"
+#include "TRotationEffectView.h"
+#include "TBloodEffectView.h"
+#include "TFireView.h"
+#include "TFogView.h"
 #include "TNavigationView.h"
 
 
@@ -155,6 +159,35 @@ HRESULT TImGuiManager::ReadyImGuiClass()
 		spParticleView->CloseImGui();
 		m_ImGuiObjectContainer.insert(std::make_pair(IMGTAG::PARTICLETOOL, spParticleView));
 		m_spMainView->InsertImGuiView(spParticleView);
+	}
+	{
+
+		SHPTR<TRotationEffectView> spRotationEffectView = CreateConstructorNative<TRotationEffectView>(m_spDevice);
+		spRotationEffectView->CloseImGui();
+		m_ImGuiObjectContainer.insert(std::make_pair(IMGTAG::ROTATIONEFFECTTOOL, spRotationEffectView));
+		m_spMainView->InsertImGuiView(spRotationEffectView);
+	}
+	{
+
+		SHPTR<TBloodEffectView> spRotationEffectView = CreateConstructorNative<TBloodEffectView>(m_spDevice);
+		spRotationEffectView->CloseImGui();
+		m_ImGuiObjectContainer.insert(std::make_pair(IMGTAG::BLOODEFFECTTOOL, spRotationEffectView));
+		m_spMainView->InsertImGuiView(spRotationEffectView);
+	}
+
+	{
+
+		SHPTR<TFireView> spFireView = CreateConstructorNative<TFireView>(m_spDevice);
+		spFireView->CloseImGui();
+		m_ImGuiObjectContainer.insert(std::make_pair(IMGTAG::FIRETOOL, spFireView));
+		m_spMainView->InsertImGuiView(spFireView);
+	}
+	{
+
+		SHPTR<TFogView> spFogView = CreateConstructorNative<TFogView>(m_spDevice);
+		spFogView->CloseImGui();
+		m_ImGuiObjectContainer.insert(std::make_pair(IMGTAG::FOGTOOL, spFogView));
+		m_spMainView->InsertImGuiView(spFogView);
 	}
 	{
 		SHPTR<TNavigationView> spNavigationView = CreateConstructorNative<TNavigationView>(m_spDevice);

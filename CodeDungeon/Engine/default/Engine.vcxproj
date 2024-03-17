@@ -26,6 +26,9 @@
     <ClInclude Include="..\public\UCharacter.h" />
     <ClInclude Include="..\public\UCharacterManager.h" />
     <ClInclude Include="..\public\UController.h" />
+    <ClInclude Include="..\public\UFire.h" />
+    <ClInclude Include="..\public\UFog.h" />
+    <ClInclude Include="..\public\UGrid.h" />
     <ClInclude Include="..\public\USound.h" />
     <ClInclude Include="..\public\CustomMemory.h" />
     <ClInclude Include="..\public\CustomString.h" />
@@ -149,6 +152,9 @@
     <ClCompile Include="..\private\UCharacter.cpp" />
     <ClCompile Include="..\private\UCharacterManager.cpp" />
     <ClCompile Include="..\private\UController.cpp" />
+    <ClCompile Include="..\private\UFire.cpp" />
+    <ClCompile Include="..\private\UFog.cpp" />
+    <ClCompile Include="..\private\UGrid.cpp" />
     <ClCompile Include="..\private\USound.cpp" />
     <ClCompile Include="..\private\CustomMemory.cpp" />
     <ClCompile Include="..\private\CustomString.cpp" />
@@ -256,6 +262,8 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Shader\2DAnimateParticle.hlsl" />
+    <FxCompile Include="..\..\Shader\2DFire.hlsl" />
+    <FxCompile Include="..\..\Shader\2DFog.hlsl" />
     <FxCompile Include="..\..\Shader\2DParticle.hlsl" />
     <FxCompile Include="..\..\Shader\3DNormalCube.hlsl" />
     <FxCompile Include="..\..\Shader\AnimModel.hlsl" />
@@ -263,7 +271,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </FxCompile>
+    <FxCompile Include="..\..\Shader\Compute2DBloodEffect.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DParticle.hlsl" />
+    <FxCompile Include="..\..\Shader\Compute2DRotationEffect.hlsl" />
     <FxCompile Include="..\..\Shader\ComputeAnimation.hlsl" />
     <FxCompile Include="..\..\Shader\Debug2DTarget.hlsl" />
     <FxCompile Include="..\..\Shader\DebugDefaultObject.hlsl" />

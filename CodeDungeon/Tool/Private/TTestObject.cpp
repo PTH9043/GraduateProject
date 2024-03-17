@@ -8,6 +8,7 @@
 #include "UVIBufferPlane.h"
 #include "UShader.h"
 #include "UParticle.h"
+#include "UCollider.h"
 
 TTestObject::TTestObject(CSHPTRREF<UDevice> _spDevice, 
 	const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
@@ -42,6 +43,13 @@ HRESULT TTestObject::NativeConstructClone(const VOIDDATAS& _vecDatas)
 
 	m_spRectColorBuffer = CreateNative< UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::B3, RECTCOLOR_SIZE, 1);
 	m_RectColor.g_RectColor = { 0.f, 1.f, 0.f, 1.f };
+
+	UCollider::COLLIDERDESC tDesc;
+
+	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
+	tDesc.vScale = _float3(300.f, 0.f, 300.f);
+
+	m_spCollider = std::static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_ABBCOLLIDER, { &tDesc }));
 
 	return S_OK;
 }

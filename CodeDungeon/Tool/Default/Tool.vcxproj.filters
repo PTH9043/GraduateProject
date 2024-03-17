@@ -85,6 +85,14 @@
     </Filter>
     <Filter Include="95.ProtoMaker">
       <UniqueIdentifier>{97cb2792-1399-4c46-b07d-c15593346f88}</UniqueIdentifier>
+    <Filter Include="03.ImGui\Effect">
+      <UniqueIdentifier>{3fcb00dd-b2f4-48ed-9b2f-2489b963041f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.ImGui\Fire">
+      <UniqueIdentifier>{6b86b3d3-f1a2-4cdb-a69b-ff472050760f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.ImGui\Fog">
+      <UniqueIdentifier>{cadca361-3da4-4704-a243-a4892ba2a8eb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -184,9 +192,6 @@
     <ClInclude Include="..\Public\TAnimControlModel.h">
       <Filter>90.ShowModel\AnimControlModel</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\TShowMapObjects.h">
-      <Filter>90.ShowModel\Map</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\TCameraView.h">
       <Filter>03.ImGui\CameraView</Filter>
     </ClInclude>
@@ -198,6 +203,17 @@
     </ClInclude>
     <ClInclude Include="..\Public\TFBXModel.h">
       <Filter>96.FBXLoader</Filter>
+    <ClInclude Include="..\Public\TRotationEffectView.h">
+      <Filter>03.ImGui\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TBloodEffectView.h">
+      <Filter>03.ImGui\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TFireView.h">
+      <Filter>03.ImGui\Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TFogView.h">
+      <Filter>03.ImGui\Fog</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -279,9 +295,6 @@
     <ClCompile Include="..\Private\TAnimControlModel.cpp">
       <Filter>90.ShowModel\AnimControlModel</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\TShowMapObjects.cpp">
-      <Filter>90.ShowModel\Map</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\TCameraView.cpp">
       <Filter>03.ImGui\CameraView</Filter>
     </ClCompile>
@@ -293,6 +306,17 @@
     </ClCompile>
     <ClCompile Include="..\Private\TFBXModel.cpp">
       <Filter>96.FBXLoader</Filter>
+    <ClCompile Include="..\Private\TRotationEffectView.cpp">
+      <Filter>03.ImGui\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TBloodEffectView.cpp">
+      <Filter>03.ImGui\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TFireView.cpp">
+      <Filter>03.ImGui\Fire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TFogView.cpp">
+      <Filter>03.ImGui\Fog</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

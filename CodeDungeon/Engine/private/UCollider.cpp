@@ -313,8 +313,31 @@ _bool UCollider::IsCollision(CSHPTRREF<UCollider> _pCollider)
 
 	return m_isCollision;
 }
-#ifdef _USE_DEBUGGING
 
+_bool UCollider::IsCollisionWithRay(const _float3& _vOrigin, const _float3& _vDirection, _float* _pDist)
+{
+	switch (m_eType)
+	{
+	case TYPE_AABB:
+	{
+		m_isCollision = m_spAABB->Intersects(_vOrigin, _vDirection, *_pDist);
+	}
+	break;
+	case TYPE_OBB:
+	{
+		m_isCollision = m_spOBB->Intersects(_vOrigin, _vDirection, *_pDist);
+	}
+	break;
+	case TYPE_SPHERE:
+	{
+		m_isCollision = m_spSphere->Intersects(_vOrigin, _vDirection, *_pDist);
+	}
+	break;
+	}
+	return m_isCollision;
+}
+
+#ifdef _USE_DEBUGGING
 void UCollider::AddRenderer(RENDERID _eID)
 {
 	if (nullptr != m_spDebugDrawPawn)

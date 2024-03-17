@@ -2,6 +2,9 @@
 
 #include "UScene.h"
 
+BEGIN(Engine)
+class UGrid;
+END
 
 BEGIN(Tool)
 
@@ -19,10 +22,12 @@ public:
 	virtual HRESULT LoadSceneData() override;
 	virtual void Tick(const _double& _dTimeDelta) override;
 	virtual void LateTick(const _double& _dTimeDelta) override;
+
+	SHPTR<UGrid>		GetGrid() { return		m_spTestObject; }
 private:
 	// Main
 	SHPTR<TMainCamera>			m_spMainCamera;
-	SHPTR<TTestObject>				m_spTestObject;
+	SHPTR<UGrid>				m_spTestObject;
 };
 
 END

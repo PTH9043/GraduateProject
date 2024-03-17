@@ -175,8 +175,11 @@
     <ClInclude Include="..\Public\TAssimpChannel.h" />
     <ClInclude Include="..\Public\TAssimpMeshContainer.h" />
     <ClInclude Include="..\Public\TAssimpModel.h" />
+    <ClInclude Include="..\Public\TBloodEffectView.h" />
     <ClInclude Include="..\Public\TCameraView.h" />
     <ClInclude Include="..\Public\TFBXModel.h" />
+    <ClInclude Include="..\Public\TFireView.h" />
+    <ClInclude Include="..\Public\TFogView.h" />
     <ClInclude Include="..\Public\TImGuiManager.h" />
     <ClInclude Include="..\Public\TImGuiView.h" />
     <ClInclude Include="..\Public\TMainCamera.h" />
@@ -188,8 +191,8 @@
     <ClInclude Include="..\Public\ToolMaker.h" />
     <ClInclude Include="..\Public\TParticleView.h" />
     <ClInclude Include="..\Public\TProtoMaker.h" />
+    <ClInclude Include="..\Public\TRotationEffectView.h" />
     <ClInclude Include="..\Public\TShowAnimModelObject.h" />
-    <ClInclude Include="..\Public\TShowMapObjects.h" />
     <ClInclude Include="..\Public\TShowModelObject.h" />
     <ClInclude Include="..\Public\TTestObject.h" />
     <ClInclude Include="..\Public\TToolApp.h">
@@ -211,8 +214,11 @@
     <ClCompile Include="..\Private\TAssimpChannel.cpp" />
     <ClCompile Include="..\Private\TAssimpMeshContainer.cpp" />
     <ClCompile Include="..\Private\TAssimpModel.cpp" />
+    <ClCompile Include="..\Private\TBloodEffectView.cpp" />
     <ClCompile Include="..\Private\TCameraView.cpp" />
     <ClCompile Include="..\Private\TFBXModel.cpp" />
+    <ClCompile Include="..\Private\TFireView.cpp" />
+    <ClCompile Include="..\Private\TFogView.cpp" />
     <ClCompile Include="..\Private\TImGuiManager.cpp" />
     <ClCompile Include="..\Private\TImGuiView.cpp" />
     <ClCompile Include="..\Private\TMainCamera.cpp" />
@@ -222,8 +228,8 @@
     <ClCompile Include="..\Private\TNavigationView.cpp" />
     <ClCompile Include="..\Private\TParticleView.cpp" />
     <ClCompile Include="..\Private\TProtoMaker.cpp" />
+    <ClCompile Include="..\Private\TRotationEffectView.cpp" />
     <ClCompile Include="..\Private\TShowAnimModelObject.cpp" />
-    <ClCompile Include="..\Private\TShowMapObjects.cpp" />
     <ClCompile Include="..\Private\TShowModelObject.cpp" />
     <ClCompile Include="..\Private\TTestObject.cpp" />
     <ClCompile Include="..\Private\TToolApp.cpp">

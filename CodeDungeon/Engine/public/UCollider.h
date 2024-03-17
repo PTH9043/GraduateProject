@@ -41,6 +41,13 @@ public:
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _tDatas) override;
 	_bool IsCollision(CSHPTRREF<UCollider> _pCollider);
+	/*
+	@ Date: 2024-03-11, Writer: 이성현
+	@ Explain
+	- collider와 ray의 충돌처리를 위한 함수
+	*/
+	_bool IsCollisionWithRay(const _float3& _vOrigin, const _float3& _vDirection, _float* _pDist);
+
 #ifdef _USE_DEBUGGING
 	void AddRenderer(RENDERID _eID);
 	void ChangeColliderColor(const _float3& _vColor);

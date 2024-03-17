@@ -52,7 +52,7 @@ HRESULT TNavigationView::NativeConstruct()
 
 	VOIDDATAS vecDatas;
 	vecDatas.push_back(&eDebugType); 
-	for (_uint i = 0; i < SEL_END; ++i)
+	for (_uint i = 0; i < SEL_END; i++)
 	{
 		m_spCubePosArr[i] = static_pointer_cast<UDefaultDebugging>(spGameInstance->CloneActorAddAndNotInLayer(
 			PROTO_ACTOR_DEUBGGINGDEFAULTOBJECT, vecDatas));
@@ -81,21 +81,21 @@ void TNavigationView::TickActive(const _double& _dTimeDelta)
 
 void TNavigationView::LateTickActive(const _double& _dTimeDetla)
 {
-	//if (nullptr != m_spStageManager->GetStage())
-	//	m_spStageManager->GetStage()->UpdateRegion();
+	if (nullptr != m_spStageManager->GetStage())
+		m_spStageManager->GetStage()->UpdateRegion();
 
-	//if (false == m_bAllRender)
-	//{
-	//	if (nullptr != m_spStageManager->GetStage())
-	//		m_spStageManager->GetStage()->AddRender(m_iRegionIndex);
-	//}
-	//else
-	//{
-	//	if (nullptr != m_spStageManager->GetStage())
-	//		m_spStageManager->GetStage()->AddRenderAll();
-	//}
+	if (false == m_bAllRender)
+	{
+		if (nullptr != m_spStageManager->GetStage())
+			m_spStageManager->GetStage()->AddRender(m_iRegionIndex);
+	}
+	else
+	{
+		if (nullptr != m_spStageManager->GetStage())
+			m_spStageManager->GetStage()->AddRenderAll();
+	}
 
-	for (_uint i = 0; i < 3; ++i)
+	for (_uint i = 0; i < SEL_END; i++)
 		m_spCubePosArr[i]->AddRenderer(RENDERID::RI_NONALPHA_MIDDLE);
 }
 
@@ -147,7 +147,7 @@ void TNavigationView::ModifyNavigation(CSHPTRREF<URegion> _spRegion)
 		if (MousePos.y > 0 && MousePos.y < WINDOW_HEIGHT)
 		{
 			_float3 v3Pos;
-			if (true == spGameInstance->GetDIMBtnPressing(DIMOUSEBUTTON::DIMB_L))
+			if (true == spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_L))
 			{
 				SHPTR<UNavigation> _spNav = _spRegion->GetNavigation();
 				PICKINGDESC tDesc = spGameInstance->GetPickDesc();
@@ -155,7 +155,6 @@ void TNavigationView::ModifyNavigation(CSHPTRREF<URegion> _spRegion)
 				if (nullptr == tDesc.spActor)
 					return;
 	
-
 				v3Pos = tDesc.vPickPos;
 				CELLCONTAINER Cells;
 
@@ -168,11 +167,11 @@ void TNavigationView::ModifyNavigation(CSHPTRREF<URegion> _spRegion)
 					{
 						_float3 Point = iter->GetPoint((UCell::POINT)i);
 
-						if (v3Pos.y >= Point.y - 0.1f && v3Pos.y <= Point.y + 0.1f)
+						if (v3Pos.y >= Point.y - 3.0f && v3Pos.y <= Point.y + 3.0f)
 						{
-							if (v3Pos.x >= Point.x - 0.5f && v3Pos.x <= Point.x + 0.5f)
+							if (v3Pos.x >= Point.x - 3.f && v3Pos.x <= Point.x + 3.f)
 							{
-								if (v3Pos.z >= Point.z - 0.5f && v3Pos.z <= Point.z + 0.5f)
+								if (v3Pos.z >= Point.z - 3.f && v3Pos.z <= Point.z + 3.f)
 								{
 									v3Pos = Point;
 								}
@@ -182,19 +181,15 @@ void TNavigationView::ModifyNavigation(CSHPTRREF<URegion> _spRegion)
 				}
 				m_vecPosList.push_back(v3Pos);
 
-				if (2 >= (_uint)m_vecPosList.size())
+				m_spCubePosArr[m_iSelIndex++]->GetTransform()->SetPos(XMLoadFloat3(&v3Pos));
+				if((_uint)m_vecPosList.size() == 3)
 				{
-					m_spCubePosArr[m_iSelIndex++]->GetTransform()->SetPos(XMLoadFloat3(&v3Pos));
-					m_bSelEnd = true;
-				}
-				else
-				{
-					ARRAY<_float3,3> vPos = { m_vecPosList[SEL_1], m_vecPosList[SEL_2], m_vecPosList[SEL_3] };
+					ARRAY<_float3, 3> vPos = { m_vecPosList[SEL_1], m_vecPosList[SEL_2], m_vecPosList[SEL_3] };
 					SHPTR<UCell> NewCell = CreateConstructorNative<UCell>(spGameInstance->GetDevice(), vPos, ++m_iCellIndex);
 					_spRegion->AddCell(NewCell);
 					m_vecPosList.clear();
 					m_iSelIndex = SEL_1;
-				}
+				}				
 			}
 		}
 	}
@@ -223,11 +218,11 @@ void TNavigationView::NavigationView()
 				_uint iSelect = m_spStageManager->GetStage()->SelectRegion();
 				if (INVALID_MINUS_STAGEVALUE != iSelect)
 					m_iRegionIndex = iSelect;
-				m_spStageManager->GetStage()->Delete_Region(m_iRegionIndex);
 				ModifyNavigation(m_spStageManager->GetStage()->GetRegion(m_iRegionIndex));
 				m_spStageManager->GetStage()->Control_Collider(m_iRegionIndex);
 				m_spStageManager->GetStage()->ModifyCells(m_iRegionIndex);
 				m_spStageManager->GetStage()->ShowCells(m_iRegionIndex);
+				m_spStageManager->GetStage()->Delete_Region(m_iRegionIndex);
 			}
 		}
 		ImGui::End();
