@@ -36,6 +36,8 @@ private:
 	void NavigationView();
 	void ModifyNavigation(CSHPTRREF<URegion> _spRegion);
 
+	void Save();
+	void Load();
 
 private:
 	MAINDESC												m_stMainDesc;

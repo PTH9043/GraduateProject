@@ -13,12 +13,38 @@ void UStageManager::Free()
 {
 }
 
-_bool UStageManager::Load(const _wstring& _wstrPath)
+HRESULT UStageManager::Load(const _wstring& _wstrPath)
 {
-	return _bool();
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	if (nullptr != m_spStage)
+	{
+		m_spStage.reset();
+		m_spStage = CreateConstructorNative<UStage>(spGameInstance->GetDevice());
+	}
+	else
+	{
+		m_spStage = CreateConstructorNative<UStage>(spGameInstance->GetDevice());
+	}
+
+	SHPTR<FILEGROUP> Navifolder = spGameInstance->FindFolder(L"Navigation");
+	if (nullptr == Navifolder)
+		return S_OK;
+	for (auto& iter : Navifolder->FileDataList)
+	{
+		m_spStage->Load(iter.second->wstrfilePath);
+	}
+	m_spStage->AddArroundRegion();
+
+	return S_OK;
 }
 
-_bool UStageManager::Save(const _wstring& _wstrPath)
+HRESULT UStageManager::Save(const _wstring& _wstrPath)
 {
-	return _bool();
+	RETURN_CHECK(nullptr == m_spStage, E_FAIL)
+	_wstring str;
+	str.assign(_wstrPath.begin(), _wstrPath.end());
+	str.append(L"\\Navigation");
+	m_spStage->Save(str.c_str());
+
+	return S_OK;
 }

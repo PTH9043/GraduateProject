@@ -195,6 +195,22 @@ void TNavigationView::ModifyNavigation(CSHPTRREF<URegion> _spRegion)
 	}
 }
 
+void TNavigationView::Save()
+{
+	if (ImGui::Button("Save Current Regions"))
+	{
+		m_spStageManager->Save(FIRST_RESOURCE_FOLDER);
+	}
+}
+
+void TNavigationView::Load()
+{
+	if (ImGui::Button("Load Regions from File"))
+	{
+		m_spStageManager->Load(FIRST_RESOURCE_FOLDER);
+	}
+}
+
 
 void TNavigationView::NavigationView()
 {
@@ -209,6 +225,8 @@ void TNavigationView::NavigationView()
 			ImGui::Checkbox("Navigation_DrawNav", &m_bNavigationDebugColor);
 			ImGui::Checkbox("Navigation_AllRender", &m_bAllRender);
 			ImGui::InputInt("Region Index", (_int*)&m_iCreateRegionIndex);
+			Save();
+			Load();
 			m_spStageManager->GetStage()->CreateRegion(m_iCreateRegionIndex);
 			
 			SHPTR<REGIONLIST> Regionlist = m_spStageManager->GetStage()->GetRegionList();
@@ -219,6 +237,7 @@ void TNavigationView::NavigationView()
 				if (INVALID_MINUS_STAGEVALUE != iSelect)
 					m_iRegionIndex = iSelect;
 				ModifyNavigation(m_spStageManager->GetStage()->GetRegion(m_iRegionIndex));
+			
 				m_spStageManager->GetStage()->Control_Collider(m_iRegionIndex);
 				m_spStageManager->GetStage()->ModifyCells(m_iRegionIndex);
 				m_spStageManager->GetStage()->ShowCells(m_iRegionIndex);
