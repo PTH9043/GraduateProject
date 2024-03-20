@@ -46,6 +46,7 @@ namespace Tool
 #define WINDOW_HALF_HEIGHT		Tool::DXVALUE::g_iWindowHalfHeight
 
 #define FIRST_RESOURCE_FOLDER L"..\\..\\Resource"
+#define NAVI_FOLDER L"..\\..\\Resource\\Navigation"
 }
 
 #include "ToolMaker.h"

@@ -36,8 +36,8 @@ private:
 	void NavigationView();
 	void ModifyNavigation(CSHPTRREF<URegion> _spRegion);
 
-	void Save();
-	void Load();
+	void SaveCurrentRegions();
+	void LoadRegionsFromFile();
 
 private:
 	MAINDESC												m_stMainDesc;
@@ -59,6 +59,7 @@ private:
 	_bool													m_bAllRender;
 	_bool													m_bRenderWireFrame;
 	_bool													m_bNavigationDebugColor;
+	_bool													m_bOnWindow;
 
 	_uint													m_iCreateRegionIndex;
 	_uint													m_iRegionIndex;

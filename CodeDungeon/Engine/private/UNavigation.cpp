@@ -199,8 +199,11 @@ _bool UNavigation::Load(const _wstring& _wstrPath)
 
 	_uint iNum{ 0 };
 	load.read((char*)&iNum, sizeof(_uint));
+
+	m_spCellContainer.reset();
 	m_spCellContainer = std::make_shared<CELLCONTAINER>();
 	m_spCellContainer->resize(iNum);
+
 	// Num
 	load.read((char*)m_spCellContainer->data(), sizeof(UCell) * iNum);
 	return true;
@@ -209,7 +212,6 @@ _bool UNavigation::Load(const _wstring& _wstrPath)
 _bool UNavigation::Save(const _wstring& _wstrPath)
 {
 	std::ofstream save{ _wstrPath, std::ios::binary };
-	//RETURN_CHECK(!save, false);
 
 	_uint iNum{ (_uint)(*m_spCellContainer.get()).size() };
 	save.write((char*)&iNum, sizeof(_uint));

@@ -83,7 +83,7 @@ const PICKINGDESC& UPicking::GetPickDesc()
 		_float fDist = 0.f;
 		if (true == PickingMesh(iter.spActor, iter.spVIBuffer, &fDist, &v3Pos))
 		{
-			AddPickingObject(PICKINGDESC(iter.spActor, v3Pos, fDist));
+			AddPickingObject(PICKINGDESC(iter.spActor, v3Pos, fDist, true));
 			bFoundValidPick = true;
 		}
 	}
@@ -95,9 +95,14 @@ const PICKINGDESC& UPicking::GetPickDesc()
 		_float fDist = 0.f;
 		if (true == PickingOnGrid(m_spMainGrid.spGrid, &fDist, &v3Pos))
 		{
-			m_stPickingDesc = PICKINGDESC(m_spMainGrid.spGrid, v3Pos, fDist);
+			m_stPickingDesc = PICKINGDESC(m_spMainGrid.spGrid, v3Pos, fDist, true);
+			return m_stPickingDesc;
 		}
-		return m_stPickingDesc;
+		else
+		{
+			return PICKINGDESC{nullptr, v3Pos, fDist, false};
+		}
+		
 	}
 
 	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);

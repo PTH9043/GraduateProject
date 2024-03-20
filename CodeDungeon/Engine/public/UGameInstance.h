@@ -140,6 +140,7 @@ public: /* InputManager*/
 	_bool GetDIMBtnPressing(_ubyte _eMouseBtn);
 	_long GetDIMMoveState(_ubyte _eMouseMove);
 	_float2 GetMousePosition();
+	_bool IsMouseInWindowSize(const float _Width, const float _Height);
 public: /* ThreadManager */
 	// 스레드에 THREADFUNC 함수를 등록
 	void RegisterFuncToRegister(const THREADFUNC& _CallBack, void* _pData);

@@ -17,8 +17,8 @@ public:
 	SHPTR<UStage> GetStage() { return m_spStage; }
 	void Reset() { m_spStage.reset(); }
 
-	HRESULT Load(const _wstring& _wstrPath);
-	HRESULT Save(const _wstring& _wstrPath);
+	_bool Load(const _wstring& _wstrPath);
+	_bool Save(const _wstring& _wstrPath);
 
 private:
 	SHPTR<UStage> m_spStage;
