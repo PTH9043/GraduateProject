@@ -18,8 +18,6 @@ public:
 	UNavigation(const UNavigation& _rhs);
 	DESTRUCTOR(UNavigation)
 public:
-	CSHPTRREF<CELLCONTAINER> GetCellContainer() const { return m_spCellContainer; }
-public:
 	CLONE_MACRO(UNavigation, "Navigation::Clone To Failed")
 	virtual void Free() override;
 	virtual HRESULT NativeConstruct() override;
@@ -41,7 +39,7 @@ public:
 	_bool Load(const _wstring& _wstrPath);
 	_bool Save(const _wstring& _wstrPath);
 
-	SHPTR<CELLCONTAINER> GetCells() { return m_spCellContainer; }
+	CSHPTR<CELLCONTAINER> GetCells() const { return m_spCellContainer; }
 	const _int& GetCurIndex() const { return m_iCurIndex; }
 	void SetCurIndex(const _int& _iIndex) { m_iCurIndex = _iIndex; }
 	// Get Collider
@@ -50,7 +48,7 @@ public:
 private:
 	// Ready Neighbor
 	HRESULT ReadyNeighbor();
-private:private:
+private:
 	SHPTR<CELLCONTAINER>		m_spCellContainer;
 	SHPTR<UCell>				m_spCurCell;
 	_int						m_iCurIndex;

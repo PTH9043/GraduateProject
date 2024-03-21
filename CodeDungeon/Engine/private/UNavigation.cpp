@@ -194,28 +194,43 @@ void UNavigation::AddCell(SHPTR<UCell>& _spCell)
 
 _bool UNavigation::Load(const _wstring& _wstrPath)
 {
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	std::ifstream load{ _wstrPath, std::ios::binary };
-	RETURN_CHECK(!load, false);
+	RETURN_CHECK(load.fail(), false);
 
-	_uint iNum{ 0 };
-	load.read((char*)&iNum, sizeof(_uint));
+	_uint numCells;
+	load.read(reinterpret_cast<char*>(&numCells), sizeof(_uint));
 
-	m_spCellContainer.reset();
-	m_spCellContainer = std::make_shared<CELLCONTAINER>();
-	m_spCellContainer->resize(iNum);
-
-	// Num
-	load.read((char*)m_spCellContainer->data(), sizeof(UCell) * iNum);
+	m_spCellContainer->clear();
+	_int iCellIndex = 0;
+	for (_uint i = 0; i < numCells; ++i) {
+		ARRAY<_float3, 3> vPos;
+		_float3 f3Color;
+		load.read(reinterpret_cast<char*>(&f3Color), sizeof(f3Color));
+		load.read(reinterpret_cast<char*>(&vPos), sizeof(vPos));
+		SHPTR<UCell> NewCell = CreateConstructorNative<UCell>(spGameInstance->GetDevice(), vPos, ++iCellIndex);
+		NewCell->ChangeCellColor(f3Color);
+		AddCell(NewCell);
+		
+	}
 	return true;
 }
 
 _bool UNavigation::Save(const _wstring& _wstrPath)
 {
 	std::ofstream save{ _wstrPath, std::ios::binary };
+	RETURN_CHECK(save.fail(), false);
 
-	_uint iNum{ (_uint)(*m_spCellContainer.get()).size() };
-	save.write((char*)&iNum, sizeof(_uint));
-	save.write((char*)m_spCellContainer->data(), sizeof(UCell) * iNum);
+	_uint numCells = static_cast<_uint>(m_spCellContainer->size());
+	save.write(reinterpret_cast<const char*>(&numCells), sizeof(_uint));
+
+	for (SHPTR<UCell> cellPtr : *m_spCellContainer) {
+		UCell& cell = *cellPtr;
+		_float3 CellColor = cell.GetColor();
+
+		save.write(reinterpret_cast<const char*>(&CellColor), sizeof(_float3));
+		save.write(reinterpret_cast<const char*>(&(cell.GetPoints())), sizeof(cell.GetPoints()));
+	}
 	return true;
 }
 

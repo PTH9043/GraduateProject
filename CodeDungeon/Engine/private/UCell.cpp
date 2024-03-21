@@ -17,7 +17,9 @@ m_arrNeighbors{ -1, -1, -1 },
 m_vCenterPos{},
 m_iIndex{ 0 },
 m_vPlane{},
+m_f3Color{},
 #ifdef _USE_DEBUGGING
+m_spCellVIBuffer{ nullptr },
 m_spCellPawn{ nullptr }
 #endif
 {
@@ -29,7 +31,9 @@ void UCell::Free()
 
 HRESULT UCell::NativeConstruct()
 {
-	return __super::NativeConstruct();
+	RETURN_CHECK_FAILED(__super::NativeConstruct(), E_FAIL);
+
+	return S_OK;
 }
 
 HRESULT UCell::NativeConstruct(ARRAY<_float3, POINT_END>& _Points, const _uint _iIndex)
@@ -45,6 +49,7 @@ HRESULT UCell::NativeConstruct(ARRAY<_float3, POINT_END>& _Points, const _uint _
 	m_spCellVIBuffer = CreateConstructorNative<UVIBufferCell>(GetDevice(), m_arrPoints);
 	RETURN_CHECK(nullptr == m_spCellVIBuffer, E_FAIL);
 #endif
+
 	_float3 vCenterPos{};
 	for (auto& iter : m_arrPoints) {
 		m_vCenterPos += iter;
@@ -55,7 +60,8 @@ HRESULT UCell::NativeConstruct(ARRAY<_float3, POINT_END>& _Points, const _uint _
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	m_spCellPawn = static_pointer_cast<UDefaultCell>(spGameInstance->CloneActorAddAndNotInLayer(
 		PROTO_ACTOR_DEUBGGINGDEFAULTCELL, { &m_spCellVIBuffer }));
-	m_spCellPawn->SetColor(_float4(0.6f, 0.0f, 0.0f, 0.5f));
+	m_f3Color = _float3(0.6f, 0.f, 0.f);
+	m_spCellPawn->SetColor(m_f3Color);
 #endif
 
 	return S_OK;
@@ -153,8 +159,9 @@ const _float UCell::ComputeHeight(const _float3& _vPosition)
 
 void UCell::ReBuffer()
 {
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	m_spCellVIBuffer.reset();
-	m_spCellVIBuffer = CreateConstructorNative<UVIBufferCell>(GetDevice(), m_arrPoints);
+	m_spCellVIBuffer = CreateConstructorNative<UVIBufferCell>(spGameInstance->GetDevice(), m_arrPoints);
 }
 
 void UCell::CalculateCrossResult(ARRAY<_float3, POINT_END>& _arrPointsEnd)
@@ -222,8 +229,9 @@ void UCell::MakeLineAndNormal()
 
 void UCell::ChangeCellColor(const _float3& _vColor)
 {
-	RETURN_CHECK(nullptr != m_spCellPawn, ;);
-	m_spCellPawn->SetColor(_vColor);
+	RETURN_CHECK(nullptr == m_spCellPawn, ;);
+	m_f3Color = _vColor;
+	m_spCellPawn->SetColor(m_f3Color);
 }
 void UCell::ReRender()
 {
