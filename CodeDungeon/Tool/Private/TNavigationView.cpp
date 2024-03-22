@@ -324,8 +324,7 @@ void TNavigationView::NavigationView()
 
 			LoadRegionsFromFile();
 
-			ImGui::InputInt("Set Region's Index", (_int*)&m_iCreateRegionIndex);
-			m_spStageManager->GetStage()->CreateRegion(m_iCreateRegionIndex);
+			m_spStageManager->GetStage()->CreateRegion();
 			SHPTR<REGIONLIST> Regionlist = m_spStageManager->GetStage()->GetRegionList();
 
 			if (Regionlist->size() > 0)
