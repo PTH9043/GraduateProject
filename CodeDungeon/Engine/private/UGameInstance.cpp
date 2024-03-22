@@ -62,6 +62,7 @@
 //#include "UScreenRenderObj.h"
 //#include "UMirrorCamera.h"
 
+#include "UPawn.h"
 #include "UPicking.h"
 #include "UGrid.h"
 
@@ -914,26 +915,26 @@ Picking
 ==================================================
 */
 
-void UGameInstance::AddPickingObject(CSHPTRREF<UActor> _spActor, CSHPTRREF<UVIBuffer> _spVIBuffer)
+void UGameInstance::AddPickingObject(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer)
 {
-	m_spPicking->AddPickingObject(_spActor, _spVIBuffer);
+	m_spPicking->AddPickingObject(_spPawn, _spVIBuffer);
 }
 void UGameInstance::AddPickingGrid(const MAINGRID& _stGrid)
 {
 	m_spPicking->AddPickingGrid(_stGrid);
 }
-SHPTR<UActor> UGameInstance::GetPickingActor()
+SHPTR<UActor> UGameInstance::GetPickingPawn()
 {
-	return 	m_spPicking->GetPickingActor();
+	return 	m_spPicking->GetPickingPawn();
 }
 const PICKINGDESC& UGameInstance::GetPickDesc()
 {
 	return m_spPicking->GetPickDesc();
 }
-_bool UGameInstance::PickingMesh(CSHPTRREF<UActor> _spActor, CSHPTRREF<UVIBuffer> _spVIBuffer,
+_bool UGameInstance::PickingMesh(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer,
 	_float* _pDist, _float3* _pOut)
 {
-	return m_spPicking->PickingMesh(_spActor, _spVIBuffer, _pDist, _pOut);
+	return m_spPicking->PickingMesh(_spPawn, _spVIBuffer, _pDist, _pOut);
 }
 
 /*

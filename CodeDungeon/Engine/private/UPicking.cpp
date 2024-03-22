@@ -3,6 +3,7 @@
 #include "UTransform.h"
 #include "UVIBuffer.h"
 #include "UActor.h"
+#include "UPawn.h"
 #include "UGameInstance.h"
 #include "UGrid.h"
 #include "UCollider.h"
@@ -35,7 +36,7 @@ HRESULT UPicking::ReadyPickingDesc(CSHPTRREF<GRAPHICDESC> _spGraphicDesc)
 void UPicking::CastRayInWorldSpace(UGameInstance* _pGameInstance)
 {
 	RETURN_CHECK(nullptr == _pGameInstance, ;);
-	m_WaitCheckActorList.clear();
+	m_WaitCheckPawnList.clear();
 
 	_float2 vMousePos{ _pGameInstance->GetMousePosition() };
 	if ((m_stClientRect.left > vMousePos.x || vMousePos.x > m_stClientRect.right) &&
@@ -60,30 +61,31 @@ void UPicking::CastRayInWorldSpace(UGameInstance* _pGameInstance)
 	m_vRayDir = _float3::TransformNormal(m_vRayDir, mViewMatrixInv);
 }
 
-void UPicking::AddPickingObject(CSHPTRREF<UActor> _spActor, CSHPTRREF<UVIBuffer> _spVIBuffer)
+void UPicking::AddPickingObject(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer)
 {
-	WAITCHECKACTOR stActor;
-	stActor.spActor = _spActor;
-	stActor.spVIBuffer = _spVIBuffer;
-	m_WaitCheckActorList.insert(stActor);
+	WAITCHECKPAWN stPawn;
+	stPawn.spPawn = _spPawn;
+	stPawn.spVIBuffer = _spVIBuffer;
+	m_WaitCheckPawnList.insert(stPawn);
 }
 
-SHPTR<UActor> UPicking::GetPickingActor()
+SHPTR<UPawn> UPicking::GetPickingPawn()
 {
 	m_stPickingDesc = GetPickDesc();
-	return m_stPickingDesc.spActor;
+	return m_stPickingDesc.spPawn;
 }
 
 const PICKINGDESC& UPicking::GetPickDesc()
 {
 	bool bFoundValidPick = false;
-	for (auto& iter : m_WaitCheckActorList)
+	for (auto& iter : m_WaitCheckPawnList)
 	{
 		_float3 v3Pos = _float3(0.f, 0.f, 0.f);
 		_float fDist = 0.f;
-		if (true == PickingMesh(iter.spActor, iter.spVIBuffer, &fDist, &v3Pos))
+
+		if (true == PickingMesh(iter.spPawn, iter.spVIBuffer, &fDist, &v3Pos))
 		{
-			AddPickingObject(PICKINGDESC(iter.spActor, v3Pos, fDist, true));
+			AddPickingObject(PICKINGDESC(iter.spPawn, v3Pos, fDist, true));
 			bFoundValidPick = true;
 		}
 	}
@@ -125,56 +127,59 @@ const PICKINGDESC& UPicking::GetPickDesc()
 	return m_stPickingDesc;
 }
 
-_bool UPicking::PickingMesh(CSHPTRREF<UActor> _spActor, CSHPTRREF<UVIBuffer> _spVIBuffer,
+_bool UPicking::PickingMesh(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer,
 	_float* _pDist, _float3* _pOut)
 {
 	_float3 vLocalRayDir, vLocalRayPos;
-	_float4x4 WorldInv = _spActor->GetTransform()->GetWorldMatrixInv();
+	_float4x4 WorldInv = _spPawn->GetTransform()->GetWorldMatrixInv();
 
 	vLocalRayPos = _float3::TransformCoord(m_vRayPos, WorldInv);
 	vLocalRayDir = _float3::TransformNormal(m_vRayDir, WorldInv);
 	vLocalRayDir.Normalize();
 
-	_uint iNumFaces = _spVIBuffer->GetIndexCnt();
-	const VECTOR<_float3>& pVerticesPos = *_spVIBuffer->GetVertexPos().get();
-
-	const void* pIndices = _spVIBuffer->GetIndices();
-	DXGI_FORMAT eFormat = _spVIBuffer->GetIndexFormat();
-
-	_uint iSize = 0;
-	if (DXGI_FORMAT_R16_UINT == eFormat)
+	if(true == _spPawn->GetColliderContainer();)
 	{
-		iSize = sizeof(INDICIES16);
-		_ushort iIndices = 0;
-		for (_uint i = 0; i < iNumFaces; ++i)
-		{
-			_float3 v1 = pVerticesPos[iIndices++];
-			_float3 v2 = pVerticesPos[iIndices++];
-			_float3 v3 = pVerticesPos[iIndices++];
+		_uint iNumFaces = _spVIBuffer->GetIndexCnt();
+		const VECTOR<_float3>& pVerticesPos = *_spVIBuffer->GetVertexPos().get();
 
-			if (true == IsPickingCheck(vLocalRayPos, vLocalRayDir, v1, v2, v3, _spActor->GetTransform()->GetWorldMatrix(),
-				_pDist, _pOut))
+		const void* pIndices = _spVIBuffer->GetIndices();
+		DXGI_FORMAT eFormat = _spVIBuffer->GetIndexFormat();
+
+		_uint iSize = 0;
+		if (DXGI_FORMAT_R16_UINT == eFormat)
+		{
+			iSize = sizeof(INDICIES16);
+			_ushort iIndices = 0;
+			for (_uint i = 0; i < iNumFaces; ++i)
 			{
-				return true;
+				_float3 v1 = pVerticesPos[iIndices++];
+				_float3 v2 = pVerticesPos[iIndices++];
+				_float3 v3 = pVerticesPos[iIndices++];
+
+				if (true == IsPickingCheck(vLocalRayPos, vLocalRayDir, v1, v2, v3, _spPawn->GetTransform()->GetWorldMatrix(),
+					_pDist, _pOut))
+				{
+					return true;
+				}
 			}
 		}
-	}
-	else
-	{
-		iSize = sizeof(INDICIES32);
-		_uint iIndices = 0;
-		for (_uint i = 0; i < iNumFaces; ++i)
+		else
 		{
-			_float3 v1 = pVerticesPos[iIndices++];
-			_float3 v2 = pVerticesPos[iIndices++];
-			_float3 v3 = pVerticesPos[iIndices++];
-
-			_float fDist = 0.f;
-			_float3 v3Pos = _float3(0.f, 0.f, 0.f);
-			if (true == IsPickingCheck(vLocalRayPos, vLocalRayDir, v1, v2, v3, _spActor->GetTransform()->GetWorldMatrix(),
-				_pDist, _pOut))
+			iSize = sizeof(INDICIES32);
+			_uint iIndices = 0;
+			for (_uint i = 0; i < iNumFaces; ++i)
 			{
-				return true;
+				_float3 v1 = pVerticesPos[iIndices++];
+				_float3 v2 = pVerticesPos[iIndices++];
+				_float3 v3 = pVerticesPos[iIndices++];
+
+				_float fDist = 0.f;
+				_float3 v3Pos = _float3(0.f, 0.f, 0.f);
+				if (true == IsPickingCheck(vLocalRayPos, vLocalRayDir, v1, v2, v3, _spPawn->GetTransform()->GetWorldMatrix(),
+					_pDist, _pOut))
+				{
+					return true;
+				}
 			}
 		}
 	}
@@ -208,6 +213,13 @@ _bool UPicking::PickingOnGrid(CSHPTRREF<UGrid> _spGrid, _float* _pDist, _float3*
 		return true;
 	}
 	return false;
+}
+
+_bool UPicking::PickingCollider(CSHPTRREF<UPawn> _spPawn, const _float3& _vOrigin, const _float3& _vDirection, _float* _pDist)
+{
+	COLLIDERCONTAINER PawnColliderList = _spPawn->GetColliderContainer();
+
+	return _bool();
 }
 
 _bool UPicking::IsPickingCheck(const _float3& _vLocalRay, const _float3& _vDirRay, const _float3& _vPos1,

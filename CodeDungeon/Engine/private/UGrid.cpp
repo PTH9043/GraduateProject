@@ -42,7 +42,7 @@ HRESULT UGrid::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	AddShader(PROTO_RES_GRIDSHADER);
 
 	m_spRectColorBuffer = CreateNative< UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::B3, RECTCOLOR_SIZE, 1);
-	m_RectColor.g_RectColor = { 0.f, 1.f, 0.f, 1.f };
+	m_RectColor.g_RectColor = { 0.f, 1.f, 0.f, 0.5f };
 
 	UCollider::COLLIDERDESC tDesc;
 

@@ -47,14 +47,18 @@ void TMainCamera::LateTickActive(const _double& _dTimeDelta)
 
         if (true == pGameInstance->GetDIMBtnPressing(DIMOUSEBUTTON::DIMB_R))
         {
+            _double dMoveSpeed = _dTimeDelta;
+            if (true == pGameInstance->GetDIKeyPressing(DIK_LSHIFT))
+                dMoveSpeed = _dTimeDelta * 3;
+
             if (pGameInstance->GetDIKeyPressing(DIK_W))
-                GetTransform()->MoveForward(_dTimeDelta, GetCamMoveSpeed());
+                GetTransform()->MoveForward(dMoveSpeed, GetCamMoveSpeed());
             if (pGameInstance->GetDIKeyPressing(DIK_A))
-                GetTransform()->MoveLeft(_dTimeDelta, GetCamMoveSpeed());
+                GetTransform()->MoveLeft(dMoveSpeed, GetCamMoveSpeed());
             if (pGameInstance->GetDIKeyPressing(DIK_D))
-                GetTransform()->MoveRight(_dTimeDelta, GetCamMoveSpeed());
+                GetTransform()->MoveRight(dMoveSpeed, GetCamMoveSpeed());
             if (pGameInstance->GetDIKeyPressing(DIK_S))
-                GetTransform()->MoveBack(_dTimeDelta, GetCamMoveSpeed());
+                GetTransform()->MoveBack(dMoveSpeed, GetCamMoveSpeed());
 
             _long		MouseMove = 0;
 
