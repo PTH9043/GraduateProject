@@ -43,7 +43,7 @@ private:
 	void ConvertAnimModels();
 
 	void LoadAssimpModelDatas(CSHPTRREF<FILEGROUP> _spFolder);
-	void LoadAssimpAnimModelDatas(CSHPTRREF<FILEGROUP> _spFolder);
+	void LoadAnimModelData(CSHPTRREF<FILEGROUP> _spFolder);
 	void ResetModels();
 	void ResetAnimModels();
 private:

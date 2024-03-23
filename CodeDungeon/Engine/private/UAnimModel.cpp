@@ -260,7 +260,7 @@ void UAnimModel::LoadToData(const _wstring& _wstrPath)
 	RETURN_CHECK(!read, ;);
 	ANIMMODELDESC tDesc;
 	{
-		BringModelName(_wstrPath);
+		BringModelName(_wstrPath); 
 		// MESH
 		LoadAnimMeshData(read, tDesc.Meshes);
 		// BoneNode
@@ -274,7 +274,11 @@ void UAnimModel::LoadToData(const _wstring& _wstrPath)
 		_uint iFindIndex{ static_cast<_uint>(wstrPath.find_last_of(L"\\"))};
 		wstrPath = wstrPath.substr(0, iFindIndex);
 
-		_wstring RootBoneNodeName = tDesc.Animes[0].Channels[0].wstrBoneName;
+		_wstring RootBoneNodeName{L""};
+		if (tDesc.Animes.size() > 0)
+		{
+			RootBoneNodeName = tDesc.Animes[0].Channels[0].wstrBoneName;
+		}
 		// Create
 		CreateBoneNode(&tDesc, RootBoneNodeName);
 		CreateMeshContainers(&tDesc);

@@ -95,8 +95,8 @@ HRESULT URenderer::NativeConstruct()
         spGameInstance->GetPreAllocatedConstantBuffer(PREALLOCATED_TRANSFORM, m_spTransformConstantBuffer);
     }
     // Initailize 
-    \
-        return S_OK;
+
+     return S_OK;
 }
 
 HRESULT URenderer::NativeConstructClone(const VOIDDATAS& _vectDatas)
@@ -302,8 +302,9 @@ void URenderer::RenderNonAlphaBlend()
 
 void URenderer::RenderLights()
 {
+
     // Render Light
-   // m_spSceneManager->RenderLight(m_spPipeLine, m_spRenderTargetManager, m_stFinalRenderTransformParam);
+  //  m_spSceneManager->RenderLight(m_spPipeLine, m_spRenderTargetManager, m_stFinalRenderTransformParam);
 }
 
 void URenderer::RenderBlend()

@@ -524,7 +524,7 @@ HRESULT TAssimpModel::CreateModel(const _wstring& _wstrPath)
 {
 	std::filesystem::path PATH{ _wstrPath };
 	_wstring str = PATH.extension();
-	// FBX
+	// FBX 
 	RETURN_CHECK(str != L".fbx" && str != L".FBX", E_FAIL);
 
 	_wstring Path = _wstrPath;
@@ -535,7 +535,7 @@ HRESULT TAssimpModel::CreateModel(const _wstring& _wstrPath)
 	if (TYPE::NONANIM == m_eModelType)
 		iFlag = aiProcess_PreTransformVertices | aiProcess_ConvertToLeftHanded | aiProcess_GenNormals | aiProcess_Triangulate | aiProcess_CalcTangentSpace;
 	else
-		iFlag = aiProcess_ConvertToLeftHanded | aiProcess_GenNormals | aiProcess_Triangulate | aiProcess_CalcTangentSpace ;
+		iFlag = aiProcess_ConvertToLeftHanded | aiProcess_GenSmoothNormals | aiProcess_Triangulate | aiProcess_CalcTangentSpace;
 
 	// Read Improter 
 	m_spImporter = std::make_shared<Assimp::Importer>();
