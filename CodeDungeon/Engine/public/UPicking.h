@@ -12,12 +12,13 @@ class UCollider;
 
 struct PICKINGDESC {
 	PICKINGDESC() = default;
-	PICKINGDESC(CSHPTRREF<UActor> _spActor, const _float3& _vPickPos, const _float _fDist)
-		: spActor(_spActor), vPickPos(_vPickPos), fDist(_fDist)
+	PICKINGDESC(CSHPTRREF<UActor> _spActor, const _float3& _vPickPos, const _float _fDist, _bool _bSuccess)
+		: spActor(_spActor), vPickPos(_vPickPos), fDist(_fDist), bPickingSuccess(_bSuccess)
 	{}
 	SHPTR<UActor>	spActor{ nullptr };
 	_float3			vPickPos{ 0, 0, 0 };
 	_float			fDist{ 0 };
+	_bool			bPickingSuccess{ false };
 };
 
 struct WAITCHECKACTOR {

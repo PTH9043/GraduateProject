@@ -27,7 +27,8 @@ TNavigationView::TNavigationView(CSHPTRREF<UDevice> _spDevice) :
 	m_vecPosList{},
 	m_iSelIndex{ SEL_1 },
 	m_bSelEnd{ false },
-	m_iCellIndex{ 0 }
+	m_iCellIndex{ 0 },
+	m_bOnWindow{false}
 {
 }
 
@@ -152,7 +153,7 @@ void TNavigationView::ModifyNavigation(CSHPTRREF<URegion> _spRegion)
 				SHPTR<UNavigation> _spNav = _spRegion->GetNavigation();
 				PICKINGDESC tDesc = spGameInstance->GetPickDesc();
 
-				if (nullptr == tDesc.spActor)
+				if (!tDesc.bPickingSuccess)
 					return;
 	
 				v3Pos = tDesc.vPickPos;
@@ -189,8 +190,101 @@ void TNavigationView::ModifyNavigation(CSHPTRREF<URegion> _spRegion)
 					_spRegion->AddCell(NewCell);
 					m_vecPosList.clear();
 					m_iSelIndex = SEL_1;
+					for (int i = 0; i < 3; i++)
+						m_spCubePosArr[i]->GetTransform()->SetPos(_float3(0.f, 0.f, 0.f));
 				}				
 			}
+			// Rollback if 'z' key is pressed
+			else if (spGameInstance->GetDIKeyDown(DIK_BACK))
+			{
+				if (!m_vecPosList.empty())
+				{
+					m_vecPosList.pop_back(); 
+					m_iSelIndex--; 
+					if (m_iSelIndex < SEL_1)
+						m_iSelIndex = SEL_1;
+					m_spCubePosArr[m_iSelIndex]->GetTransform()->SetPos(_float3(0.f, 0.f, 0.f));
+				}
+				else
+				{
+					_spRegion->DeleteLatestCell();
+				}
+			}
+		}
+	}
+}
+
+void TNavigationView::SaveCurrentRegions()
+{
+	if (ImGui::Button("Save Current Regions"))
+	{
+		if (m_spStageManager->Save(FIRST_RESOURCE_FOLDER))
+		{
+			ImGui::OpenPopup("Save Success");
+		}
+		else
+			ImGui::OpenPopup("Save Failed");
+	}
+
+	ImGui::SetNextWindowPos(ImVec2(WINDOW_HALF_WIDTH, WINDOW_HALF_HEIGHT));
+
+	if (ImGui::BeginPopupModal("Save Success", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+	{	
+		ImGui::Text("Current Regions Successfully Saved At //Resource//Navigation");
+		m_bOnWindow = true;
+		if (ImGui::Button("OK", ImVec2(120, 0))) 
+		{
+			ImGui::CloseCurrentPopup(); 
+			m_bOnWindow = false;
+		}
+		ImGui::EndPopup();
+	}
+	if (ImGui::BeginPopupModal("Save Failed", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::Text("Save Failed");
+		m_bOnWindow = true;
+		if (ImGui::Button("OK", ImVec2(120, 0)))
+		{
+			ImGui::CloseCurrentPopup();
+			m_bOnWindow = false;
+		}
+		ImGui::EndPopup();
+	}
+}
+
+void TNavigationView::LoadRegionsFromFile()
+{
+	static bool showConfirmationDialog = false;
+	if (ImGui::Button("Load Regions from File"))
+	{
+		showConfirmationDialog = true;
+	}
+
+	if (showConfirmationDialog)
+	{
+		ImGui::OpenPopup("Confirmation##LoadRegionsDialog");
+		ImGui::SetNextWindowPos(ImVec2(WINDOW_HALF_WIDTH, WINDOW_HALF_HEIGHT));
+		if (ImGui::BeginPopupModal("Confirmation##LoadRegionsDialog", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			m_bOnWindow = true;
+			ImGui::Text("Your current proccess may get overwritten. Continue?");
+			ImGui::Separator();
+
+			if (ImGui::Button("Yes", ImVec2(120, 0)))
+			{
+				m_spStageManager->Load(FIRST_RESOURCE_FOLDER);
+				ImGui::CloseCurrentPopup(); 
+				showConfirmationDialog = false; 
+				m_bOnWindow = false;
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("No", ImVec2(120, 0)))
+			{
+				ImGui::CloseCurrentPopup(); 
+				showConfirmationDialog = false;
+				m_bOnWindow = false;
+			}
+			ImGui::EndPopup();
 		}
 	}
 }
@@ -202,24 +296,47 @@ void TNavigationView::NavigationView()
 
 	ImGui::Begin(m_stNavigationView.strName.c_str(), GetOpenPointer(), m_stNavigationView.imgWindowFlags);
 	{
-		ImGui::Checkbox("Navigation Modify", &m_bNavigationModify);
+		// Help window
+		if (ImGui::Button("Help"))
+		{
+			ImGui::OpenPopup("Help Popup");
+		}
+
+		if (ImGui::BeginPopup("Help Popup"))
+		{
+			ImGui::Text("Controls:");
+			ImGui::BulletText("Check 'Modify Navigation' to enable navigation modification.");
+			ImGui::BulletText("Check 'Render_All_Regions' to render all regions.");
+			ImGui::BulletText("Input an integer to set new region's index.");
+			ImGui::BulletText("Click 'Create Region' to create a new region with the specified index.");
+			ImGui::BulletText("Select a region from the list to modify its navigation.");
+			ImGui::BulletText("Move the mouse within the window to modify navigation.");
+			ImGui::BulletText("Click on the screen to set new cell's positions.");
+			ImGui::BulletText("Use Backspace key to undo latest action.");
+			ImGui::EndPopup();
+		}
+
+		
+		ImGui::Checkbox("Modify Navigation", &m_bNavigationModify);
 		if (true == m_bNavigationModify)
 		{
-			ImGui::Checkbox("Navigation_WireFrame", &m_bRenderWireFrame);
-			ImGui::Checkbox("Navigation_DrawNav", &m_bNavigationDebugColor);
-			ImGui::Checkbox("Navigation_AllRender", &m_bAllRender);
-			ImGui::InputInt("Region Index", (_int*)&m_iCreateRegionIndex);
-			m_spStageManager->GetStage()->CreateRegion(m_iCreateRegionIndex);
-			
+			ImGui::Checkbox("Render_All_Regions", &m_bAllRender);
+
+			LoadRegionsFromFile();
+
+			m_spStageManager->GetStage()->CreateRegion();
 			SHPTR<REGIONLIST> Regionlist = m_spStageManager->GetStage()->GetRegionList();
 
-			if ((*Regionlist.get()).size() > 0)
+			if (Regionlist->size() > 0)
 			{
+				SaveCurrentRegions();
 				_uint iSelect = m_spStageManager->GetStage()->SelectRegion();
 				if (INVALID_MINUS_STAGEVALUE != iSelect)
 					m_iRegionIndex = iSelect;
-				ModifyNavigation(m_spStageManager->GetStage()->GetRegion(m_iRegionIndex));
+				if(spGameInstance->IsMouseInWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT) && !m_bOnWindow)
+					ModifyNavigation(m_spStageManager->GetStage()->GetRegion(m_iRegionIndex));
 				m_spStageManager->GetStage()->Control_Collider(m_iRegionIndex);
+				m_spStageManager->GetStage()->SetColor(m_iRegionIndex);
 				m_spStageManager->GetStage()->ModifyCells(m_iRegionIndex);
 				m_spStageManager->GetStage()->ShowCells(m_iRegionIndex);
 				m_spStageManager->GetStage()->Delete_Region(m_iRegionIndex);

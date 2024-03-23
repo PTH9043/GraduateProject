@@ -8,7 +8,8 @@ class URegion;
 class UCell;
 class UCollider;
 
-using REGIONLIST = std::map<_uint, SHPTR<URegion>>;
+using REGIONLIST = VECTOR<SHPTR<URegion>>;
+using FILEPAIR = std::pair<_wstring, SHPTR<FILEDATA>>;
 
 class UStage : public UComponent
 {
@@ -34,11 +35,12 @@ public:
 	HRESULT ModifyCells(const _uint& _iCellIndex);
 	HRESULT ShowCells(const _uint& _iCellIndex);
 	HRESULT ClearCell(const _uint& _iCellIndex);
+	HRESULT SetColor(const _uint& _iCellIndex);
 
 	_bool Load(const _wstring& _wstrPath);
 	_bool Save(const _wstring& _wstrPath);
 
-	HRESULT CreateRegion(const _uint& _iIndex);
+	HRESULT CreateRegion();
 	_int SelectRegion();
 	void Control_Collider(const _uint& _iIndex);
 	HRESULT Delete_Region(_uint& _iIndex);
@@ -58,8 +60,6 @@ public:
 protected:
 	SHPTR<REGIONLIST> m_spRegionList;
 	_bool	m_bInitRegion;
-
-	SHPTR<URegion> m_pDeleteRegion;
 
 };
 

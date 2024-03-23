@@ -44,6 +44,8 @@ public:
 	HRESULT ModifyCells();
 	HRESULT ShowCells();
 	HRESULT ClearCell();
+	HRESULT SetColor();
+	HRESULT DeleteLatestCell();
 
 	_bool Load(const _wstring& _wstrPath);
 	_bool Save(const _wstring& _wstrPath);
@@ -58,11 +60,13 @@ public:
 	void Add_NeighborRegion(SHPTR<URegion>& _pRegion);
 
 
-
+private:
+	_float3				m_f3Color;
 protected:
 	SHPTR<UNavigation>	m_spNavigation;
 	_uint	m_iIndex = 0;
 	LIST<SHPTR<URegion>>	m_NeighborRegion;
+
 
 #ifdef _USE_DEBUGGING
 	LIST<CUBOBJS>	m_CubeObjList;

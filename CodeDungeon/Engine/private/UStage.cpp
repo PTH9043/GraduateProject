@@ -9,16 +9,14 @@
 UStage::UStage(CSHPTRREF<UDevice> _spDevice)
 	: UComponent(_spDevice),
 	m_spRegionList{ nullptr },
-	m_bInitRegion{ false  },
-	m_pDeleteRegion{ nullptr }
+	m_bInitRegion{ false  }
 {
 }
 
 UStage::UStage(const UStage& _rhs)
 	: UComponent(_rhs),
 	m_spRegionList{ nullptr },
-	m_bInitRegion{ false },
-	m_pDeleteRegion{ nullptr }
+	m_bInitRegion{ false }
 {
 }
 
@@ -42,7 +40,7 @@ HRESULT UStage::NativeConstructClone(const VOIDDATAS& _vecDatas)
 
 HRESULT UStage::AddRender(const _uint& _iIndex)
 {
-	if (_iIndex >= (*m_spRegionList.get()).size())
+	if (_iIndex >= m_spRegionList->size())
 		return E_FAIL;
 
 	(*m_spRegionList.get())[_iIndex]->AddRegionRenderGroup();
@@ -52,19 +50,19 @@ HRESULT UStage::AddRender(const _uint& _iIndex)
 void UStage::AddRenderAll()
 {
 	for (auto& iter : (*m_spRegionList.get()))
-		iter.second->AddRegionRenderGroup();
+		iter->AddRegionRenderGroup();
 }
 
 SHPTR<URegion> UStage::GetRegion(const _uint& _iIndex)
 {
-	
-	RETURN_CHECK(_iIndex >= (*m_spRegionList.get()).size(), nullptr)
+	RETURN_CHECK(_iIndex >= m_spRegionList->size(), nullptr)
 	return (*m_spRegionList.get())[_iIndex];
 }
 
 HRESULT UStage::AddCell(const _uint& _iCellIndex, SHPTR<UCell>& _pCell)
 {
-	RETURN_CHECK_FAILED(_iCellIndex >= (*m_spRegionList.get()).size(), E_FAIL)
+	if (_iCellIndex >= m_spRegionList->size())
+		return E_FAIL;
 
 	(*m_spRegionList.get())[_iCellIndex]->AddCell(_pCell);
 	return S_OK;
@@ -73,7 +71,8 @@ HRESULT UStage::AddCell(const _uint& _iCellIndex, SHPTR<UCell>& _pCell)
 
 HRESULT UStage::ModifyCells(const _uint& _iCellIndex)
 {
-	RETURN_CHECK_FAILED(_iCellIndex >= (*m_spRegionList.get()).size(), E_FAIL)
+	if (_iCellIndex >= m_spRegionList->size())
+		return E_FAIL;
 
 	(*m_spRegionList.get())[_iCellIndex]->ModifyCells();
 	return S_OK;
@@ -81,7 +80,8 @@ HRESULT UStage::ModifyCells(const _uint& _iCellIndex)
 
 HRESULT UStage::ShowCells(const _uint& _iCellIndex)
 {
-	RETURN_CHECK_FAILED(_iCellIndex >= (*m_spRegionList.get()).size(), E_FAIL)
+	if (_iCellIndex >= m_spRegionList->size())
+		return E_FAIL;
 
 	(*m_spRegionList.get())[_iCellIndex]->ShowCells();
 	return S_OK;
@@ -89,68 +89,87 @@ HRESULT UStage::ShowCells(const _uint& _iCellIndex)
 
 HRESULT UStage::ClearCell(const _uint& _iCellIndex)
 {
-	RETURN_CHECK_FAILED(_iCellIndex >= (*m_spRegionList.get()).size(), E_FAIL)
+	if (_iCellIndex >= m_spRegionList->size())
+		return E_FAIL;
 
 	(*m_spRegionList.get())[_iCellIndex]->ClearCell();
 	return S_OK;
 }
 
+HRESULT UStage::SetColor(const _uint& _iCellIndex)
+{
+	if (_iCellIndex >= m_spRegionList->size())
+		return E_FAIL;
+
+	(*m_spRegionList.get())[_iCellIndex]->SetColor();
+	return S_OK;
+}
+
 _bool UStage::Load(const _wstring& _wstrPath)
 {
-	SHPTR<URegion> pRegion = CreateConstructorNative<URegion>(GetDevice());
-	if (nullptr != pRegion)
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+	m_spRegionList.reset();
+	m_spRegionList = Create<REGIONLIST>();
+
+	SHPTR<FILEGROUP> NaviFolder = spGameInstance->FindFolder(L"Navigation");
+	// Folders 
+	for (const FILEPAIR& File : NaviFolder->FileDataList)
 	{
-		pRegion->Load(_wstrPath);
-		pRegion->Set_Index((_uint)(*m_spRegionList.get()).size());
-		(*m_spRegionList.get()).emplace(std::pair<_uint, SHPTR<URegion>>((_uint)(*m_spRegionList.get()).size(), pRegion));
+		SHPTR<URegion> pRegion = CreateConstructorNative<URegion>(GetDevice());
+		if (nullptr != pRegion)
+		{
+			pRegion->Load(File.second->wstrfilePath);
+			m_spRegionList->push_back(pRegion);
+		}
 	}
 	return true;
 }
 
 _bool UStage::Save(const _wstring& _wstrPath)
 {
+	_wstring str;
+	str.assign(_wstrPath.begin(), _wstrPath.end());
+	str.append(L"\\Navigation\\Navi_Region");
+
+	_uint iRegionNum = 0;
 	for (auto& iter : (*m_spRegionList.get()))
-	{
-		iter.second->Save(_wstrPath);
+	{		
+		_wstring numStr = std::to_wstring(iRegionNum);
+		str.append(numStr);
+		iter->Save(str);
+
+		// numStr을 다시 제거
+		size_t pos = str.find(numStr);
+		if (pos != _wstring::npos)
+			str.erase(pos, numStr.length());
+		iRegionNum++;
 	}
 	return true;
 }
 
-HRESULT UStage::CreateRegion(const _uint& _iIndex)
+HRESULT UStage::CreateRegion()
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	if (ImGui::TreeNodeEx("Create_Region", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (ImGui::BeginListBox("##listbox 2", ImVec2(-FLT_MIN, 3 * ImGui::GetTextLineHeightWithSpacing())))
 		{
+			_uint iRegionNum = 0;
 			for (auto& iter : (*m_spRegionList.get()))
 			{
-				char pName[MAX_PATH] = { "" };
-				sprintf_s(pName, "%d", iter.second->Get_Index());
+				char pName[MAX_PATH] = { "Region " };
+				sprintf_s(pName, "%d", iRegionNum);
 				ImGui::Text(pName);
+				iRegionNum++;
 			}
 			ImGui::EndListBox();
 		}
 
 		if (ImGui::Button("Add_Region"))
-		{
-			for (auto& iter : (*m_spRegionList.get()))
-			{
-				if (iter.first == _iIndex)
-				{
-					ImGui::TreePop();
-					return E_FAIL;
-				}
-
-				if (iter.second->Get_Index() == _iIndex)
-				{
-					ImGui::TreePop();
-					return E_FAIL;
-				}
-			}			
+		{			
 			SHPTR<URegion> pRegion = CreateConstructorNative<URegion>(spGameInstance->GetDevice());
-			pRegion->Set_Index(_iIndex);
-			(*m_spRegionList.get()).emplace(std::pair<_uint, SHPTR<URegion>>((_uint)(*m_spRegionList.get()).size(), pRegion));
+			m_spRegionList->push_back(pRegion);
 
 			AddArroundRegion();
 		}
@@ -164,14 +183,17 @@ _int UStage::SelectRegion()
 	_int iIndex = INVALID_MINUS_STAGEVALUE;
 	if (ImGui::TreeNodeEx("Select_Region", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		for (REGIONLIST::iterator it = (*m_spRegionList.get()).begin(); it != (*m_spRegionList.get()).end(); ++it)
+		_uint iRegionNum = 0;
+		for (REGIONLIST::iterator it = m_spRegionList->begin(); it != m_spRegionList->end(); ++it)
 		{
-			char pName[MAX_PATH] = { "" };
-			sprintf_s(pName, "%d", (*it).second->Get_Index());
+			char pName[MAX_PATH] = { "Region " };
+			sprintf_s(pName, "%d", iRegionNum);
 			if (ImGui::Selectable(pName))
 			{
-				iIndex = it->first;
+				iIndex = iRegionNum;
 			}
+			iRegionNum++;
+
 		}
 		ImGui::TreePop();
 	}
@@ -181,7 +203,7 @@ _int UStage::SelectRegion()
 
 void UStage::Control_Collider(const _uint& _iIndex)
 {
-	if (_iIndex >= (*m_spRegionList.get()).size())
+	if (_iIndex >= m_spRegionList->size())
 		return;
 
 	(*m_spRegionList.get())[_iIndex]->Control_Collider();
@@ -190,34 +212,13 @@ void UStage::Control_Collider(const _uint& _iIndex)
 
 HRESULT UStage::Delete_Region(_uint& _iIndex)
 {
-	if (ImGui::TreeNodeEx("Delete_Region"))
+	if (ImGui::TreeNodeEx("Delete_Current_Region"))
 	{
-		if (ImGui::BeginListBox("##listbox 2", ImVec2(-FLT_MIN, 3 * ImGui::GetTextLineHeightWithSpacing())))
-		{
-			for (REGIONLIST::iterator it = (*m_spRegionList.get()).begin(); it != (*m_spRegionList.get()).end(); ++it)
-			{
-				char pName[MAX_PATH] = { "" };
-				sprintf_s(pName, "%d", (*it).second->Get_Index());
-				if (ImGui::Selectable(pName))
-				{
-					m_pDeleteRegion = (*it).second;
-				}
-			}
-			ImGui::EndListBox();
-		}
-
 		if (ImGui::Button("Delete"))
 		{
-			for (REGIONLIST::iterator it = (*m_spRegionList.get()).begin(); it != (*m_spRegionList.get()).end(); ++it)
+			if (_iIndex < m_spRegionList->size())
 			{
-				if (m_pDeleteRegion == (*it).second)
-				{
-					((*it).second).reset();
-					(*m_spRegionList.get()).erase(it);
-					m_pDeleteRegion.reset();
-					_iIndex = 100000;
-					break;
-				}
+				m_spRegionList->erase(m_spRegionList->begin() + _iIndex);
 			}
 		}
 		ImGui::TreePop();
@@ -229,9 +230,9 @@ _bool UStage::Is_Collision(SHPTR<UCollider>& _pCollider, SHPTR<URegion>* _ppOut)
 {
 	for (auto& iter : (*m_spRegionList.get()))
 	{
-		if (true == iter.second->Is_Collision(_pCollider))
+		if (true == iter->Is_Collision(_pCollider))
 		{
-			*_ppOut = iter.second;
+			*_ppOut = iter;
 			return true;
 		}
 	}
@@ -261,12 +262,12 @@ void UStage::AddArroundRegion()
 {
 	for (auto& iter : (*m_spRegionList.get()))
 	{
-		iter.second->ClearNeightborRegion();
+		iter->ClearNeightborRegion();
 		for (auto& value : (*m_spRegionList.get()))
 		{
 			if (value == iter)
 				continue;
-			iter.second->Add_NeighborRegion(value.second);
+			iter->Add_NeighborRegion(value);
 		}
 	}
 }

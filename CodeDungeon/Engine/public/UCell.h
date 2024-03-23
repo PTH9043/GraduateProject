@@ -35,6 +35,7 @@ public:
 	const ARRAY<_int, LINE_END>& GetNeighbor() const { return m_arrNeighbors; }
 	const _float3& GetCenterPos() const { return m_vCenterPos; }
 	const _int& GetIndex() const { return m_iIndex; }
+	const _float3& GetColor() const{ return m_f3Color; }
 
 	void SetPoint(const POINT& _ePoint, const _float3& _vPoint) { m_arrPoints[_ePoint] = _vPoint; }
 	void SetCenterPos(const _float3& _vCenterPos) { this->m_vCenterPos = _vCenterPos; }
@@ -77,7 +78,8 @@ private:
 	_int							m_iIndex;
 	// Planes
 	_float4							m_vPlane;
-
+	// Color
+	_float3							m_f3Color;
 #ifdef _USE_DEBUGGING
 private:
 	SHPTR<UVIBufferCell> m_spCellVIBuffer;

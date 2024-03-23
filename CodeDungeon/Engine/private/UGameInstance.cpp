@@ -436,6 +436,19 @@ _float2 UGameInstance::GetMousePosition()
 	return m_spInputManager->GetMousePosition();
 }
 
+_bool UGameInstance::IsMouseInWindowSize(const float _Width, const float _Height)
+{
+	_float2 vMosuePos = m_spInputManager->GetMousePosition();
+	if (0.f <= vMosuePos.x && 0.f <= vMosuePos.y)
+	{
+		if (_Width >= vMosuePos.x && _Height >= vMosuePos.y)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 /*
 ==================================================
 UInputManager
