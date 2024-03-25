@@ -91,9 +91,9 @@ void TRotationEffectView::LoadMultipleParticleResource()
 		}
 		
 	
-	*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() = 0.05;
+	*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() = 0.05f;
 	*m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount() = 1;
-	*m_MultipleParticle[1]->GetParticleSystem()->GetCreateInterval() = 0.05;
+	*m_MultipleParticle[1]->GetParticleSystem()->GetCreateInterval() = 0.05f;
 	*m_MultipleParticle[1]->GetParticleSystem()->GetAddParticleAmount() = 1;
 }
 

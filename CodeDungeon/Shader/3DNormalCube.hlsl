@@ -52,9 +52,9 @@ struct PS_In
 struct PS_OUT
 {
     float4 vDiffuse : SV_TARGET0;
-    float4 vNormal : SV_TARGET1;
-    float4 vDepth : SV_TARGET2;
-    float4 vPosition : SV_Target3;
+    float4 vNormal : SV_TARGET1; 
+    float4 vDepth : SV_TARGET2; 
+    float4 vPosition : SV_Target3; 
 };
 
 PS_OUT PS_Main(PS_In In)

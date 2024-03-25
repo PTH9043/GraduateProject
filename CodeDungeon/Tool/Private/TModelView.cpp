@@ -10,6 +10,7 @@
 #include "UAnimation.h"
 #include "TImGuiManager.h"
 #include "UTransform.h"
+#include "TUnityModelLoader.h"
 
 TModelView::TModelView(CSHPTRREF<UDevice> _spDevice) :
 	TImGuiView(_spDevice, "ModelView"),
@@ -247,7 +248,7 @@ void TModelView::ConvertAnimModels()
 		// Folders 
 		for (const FOLDERPAIR& Folder : ModelFolder->UnderFileGroupList)
 		{
-			LoadAssimpAnimModelDatas(Folder.second);
+			LoadAnimModelData(Folder.second);
 		}
 		// Load 
 		GetGameInstance()->LoadFirstFolder(FIRST_RESOURCE_FOLDER);
@@ -293,61 +294,75 @@ void TModelView::LoadAssimpModelDatas(CSHPTRREF<FILEGROUP> _spFolder)
 	}
 }
 
-void TModelView::LoadAssimpAnimModelDatas(CSHPTRREF<FILEGROUP> _spFolder)
+void TModelView::LoadAnimModelData(CSHPTRREF<FILEGROUP> _spFolder)
 {
 	RETURN_CHECK(nullptr == _spFolder, ;);
 	RETURN_CHECK(_spFolder->wstrFolderName == L"Anim", ;);
-	SHPTR<FILEGROUP> ConvertFolder = _spFolder->FindGroup(L"Convert");
-	if (nullptr != ConvertFolder && 0 <= ConvertFolder->FileDataList.size())
+
+	SHPTR<FILEGROUP> UnityFBXFolder = _spFolder->FindGroup(L"UnityFBX");
+	if (nullptr != UnityFBXFolder)
 	{
 		// Convert Folder가 존재하는 경우 다시 만들지 않음 
-		for (const FILEPAIR& File : ConvertFolder->FileDataList)
+		for (const FILEPAIR& File : UnityFBXFolder->FileDataList)
 		{
-			SHPTR<UAnimModel> spModel = CreateConstructorNativeNotMsg<UAnimModel>(GetDevice(), File.second->wstrfilePath);
+			_wstring wstrConvertLoadPath = L"";
+			TUnityModelLoader::LoadUnityAnimFBXData(UnityFBXFolder, File.second, wstrConvertLoadPath);
+			SHPTR<UAnimModel> spModel = CreateConstructorNativeNotMsg<UAnimModel>(GetDevice(), wstrConvertLoadPath);
 			m_AnimModelContainer.insert(std::pair<_string, SHPTR<UAnimModel>>(UMethod::ConvertWToS(File.second->wstrfileName), spModel));
 		}
 	}
 	else
 	{
-		SHPTR<FILEGROUP> spAnimFBX = _spFolder->FindGroup(L"AnimFBX");
-		SHPTR<FILEGROUP> spAnim = _spFolder->FindGroup(L"Anim");
-		// FileData
-		for (const FILEPAIR& File : _spFolder->FileDataList)
+		SHPTR<FILEGROUP> ConvertFolder = _spFolder->FindGroup(L"Convert");
+		if (nullptr != ConvertFolder && 0 <= ConvertFolder->FileDataList.size())
 		{
-			// Assimp 
-			SHPTR<TAssimpModel> spAssimpModel = CreateConstructorNativeNotMsg<TAssimpModel>(GetDevice(),
-				TAssimpModel::TYPE::ANIM, _spFolder, File.second);
-
-			if (nullptr != spAnimFBX)
+			// Convert Folder가 존재하는 경우 다시 만들지 않음 
+			for (const FILEPAIR& File : ConvertFolder->FileDataList)
 			{
-				for (auto& iter : spAnimFBX->FileDataList)
-				{
-					spAssimpModel->LoadAnimationFBX(iter.second->wstrfilePath);
-				}
-			}
-			if (nullptr != spAnim)
-			{
-				for (auto& iter : spAnim->FileDataList)
-				{
-					spAssimpModel->LoadAnimation(iter.second->wstrfilePath);
-				}
-			}
-
-
-			// Save Anim Model
-			if (nullptr != spAssimpModel)
-			{
-				_wstring wstrPath;
-				spAssimpModel->SaveAnimModel(_spFolder->wstrPath, wstrPath);
-				SHPTR<UAnimModel> spModel = CreateConstructorNativeNotMsg<UAnimModel>(GetDevice(), wstrPath);
-
+				SHPTR<UAnimModel> spModel = CreateConstructorNativeNotMsg<UAnimModel>(GetDevice(), File.second->wstrfilePath);
 				m_AnimModelContainer.insert(std::pair<_string, SHPTR<UAnimModel>>(UMethod::ConvertWToS(File.second->wstrfileName), spModel));
 			}
 		}
-		// Folders 
-		for (const FOLDERPAIR& Folder : _spFolder->UnderFileGroupList)
+		else
 		{
-			LoadAssimpAnimModelDatas(Folder.second);
+			SHPTR<FILEGROUP> spAnimFBX = _spFolder->FindGroup(L"AnimFBX");
+			SHPTR<FILEGROUP> spAnim = _spFolder->FindGroup(L"Anim");
+			// FileData
+			for (const FILEPAIR& File : _spFolder->FileDataList)
+			{
+				// Assimp 
+				SHPTR<TAssimpModel> spAssimpModel = CreateConstructorNativeNotMsg<TAssimpModel>(GetDevice(),
+					TAssimpModel::TYPE::ANIM, _spFolder, File.second);
+
+				if (nullptr != spAnimFBX)
+				{
+					for (auto& iter : spAnimFBX->FileDataList)
+					{
+						spAssimpModel->LoadAnimationFBX(iter.second->wstrfilePath);
+					}
+				}
+				if (nullptr != spAnim)
+				{
+					for (auto& iter : spAnim->FileDataList)
+					{
+						spAssimpModel->LoadAnimation(iter.second->wstrfilePath);
+					}
+				}
+				// Save Anim Model
+				if (nullptr != spAssimpModel)
+				{
+					_wstring wstrPath;
+					spAssimpModel->SaveAnimModel(_spFolder->wstrPath, wstrPath);
+					SHPTR<UAnimModel> spModel = CreateConstructorNativeNotMsg<UAnimModel>(GetDevice(), wstrPath);
+
+					m_AnimModelContainer.insert(std::pair<_string, SHPTR<UAnimModel>>(UMethod::ConvertWToS(File.second->wstrfileName), spModel));
+				}
+			}
+			// Folders 
+			for (const FOLDERPAIR& Folder : _spFolder->UnderFileGroupList)
+			{
+				LoadAnimModelData(Folder.second);
+			}
 		}
 	}
 }

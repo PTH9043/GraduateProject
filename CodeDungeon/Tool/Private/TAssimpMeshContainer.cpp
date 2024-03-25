@@ -150,7 +150,6 @@ HRESULT TAssimpMeshContainer::ReadyVertices(aiMesh* _pMesh, CSHPTRREF<TAssimpMod
 		aiBone* pBone = _pMesh->mBones[i];
 		_float4x4 OffsetMatrix{ _float4x4::Identity };
 		::memcpy(&OffsetMatrix, &pBone->mOffsetMatrix, sizeof(_float4x4));
-
 		SHPTR<TAssimpBoneNode> pBoneNode = _spModel->FindBoneNode(UMethod::ConvertSToW(pBone->mName.data));
 		pBoneNode->SetOffsetMatrix(OffsetMatrix);
 		m_BoneNodeContainer.push_back(pBoneNode);
