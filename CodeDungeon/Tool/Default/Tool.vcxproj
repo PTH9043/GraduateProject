@@ -184,6 +184,7 @@
     <ClInclude Include="..\Public\TMainCamera.h" />
     <ClInclude Include="..\Public\TMainScene.h" />
     <ClInclude Include="..\Public\TMainView.h" />
+    <ClInclude Include="..\Public\TMapView.h" />
     <ClInclude Include="..\Public\TModelView.h" />
     <ClInclude Include="..\Public\TNavigationView.h" />
     <ClInclude Include="..\Public\ToolDefines.h" />
@@ -223,6 +224,7 @@
     <ClCompile Include="..\Private\TMainCamera.cpp" />
     <ClCompile Include="..\Private\TMainScene.cpp" />
     <ClCompile Include="..\Private\TMainView.cpp" />
+    <ClCompile Include="..\Private\TMapView.cpp" />
     <ClCompile Include="..\Private\TModelView.cpp" />
     <ClCompile Include="..\Private\TNavigationView.cpp" />
     <ClCompile Include="..\Private\TParticleView.cpp" />

@@ -68,9 +68,6 @@
     <Filter Include="90.ShowModel\AnimControlModel">
       <UniqueIdentifier>{c9991766-7321-4751-b857-159b2259d33b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="90.ShowModel\Map">
-      <UniqueIdentifier>{f1818212-5422-46a7-88a7-96a4514354cb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03.ImGui\CameraView">
       <UniqueIdentifier>{7c700fb0-fd1f-41e0-94e9-dc7fab7dae42}</UniqueIdentifier>
     </Filter>
@@ -94,6 +91,9 @@
     </Filter>
     <Filter Include="95.ProtoMaker">
       <UniqueIdentifier>{97cb2792-1399-4c46-b07d-c15593346f88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.ImGui\MapView">
+      <UniqueIdentifier>{9d76bb7f-cbe1-483d-a2c5-401411eccd5e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -217,6 +217,9 @@
     <ClInclude Include="..\Public\TUnityModelLoader.h">
       <Filter>96.UnityModelLoader</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\TMapView.h">
+      <Filter>03.ImGui\MapView</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\TToolApp.cpp">
@@ -320,6 +323,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\TUnityModelLoader.cpp">
       <Filter>96.UnityModelLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TMapView.cpp">
+      <Filter>03.ImGui\MapView</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

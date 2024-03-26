@@ -343,6 +343,9 @@
     <Filter Include="99.Default\ImGui">
       <UniqueIdentifier>{ff6eede3-b445-4113-b2a4-3d1b2ebecf17}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Actor\01.Pawn\Default\Axis">
+      <UniqueIdentifier>{a459d112-2017-4cd3-84c3-cbff66a2a8b5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\UObject.cpp">
@@ -665,6 +668,9 @@
     </ClCompile>
     <ClCompile Include="..\public\ImGui\imgui_widgets.cpp">
       <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UAxis.cpp">
+      <Filter>05.Actor\01.Pawn\Default\Axis</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1018,6 +1024,9 @@
     </ClInclude>
     <ClInclude Include="..\public\ImGui\imstb_truetype.h">
       <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UAxis.h">
+      <Filter>05.Actor\01.Pawn\Default\Axis</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

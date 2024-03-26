@@ -137,8 +137,7 @@ _bool UPicking::PickingMesh(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVI
 	vLocalRayDir = _float3::TransformNormal(m_vRayDir, WorldInv);
 	vLocalRayDir.Normalize();
 
-	if(true == _spPawn->GetColliderContainer();)
-	{
+
 		_uint iNumFaces = _spVIBuffer->GetIndexCnt();
 		const VECTOR<_float3>& pVerticesPos = *_spVIBuffer->GetVertexPos().get();
 
@@ -182,7 +181,7 @@ _bool UPicking::PickingMesh(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVI
 				}
 			}
 		}
-	}
+	
 	return false;
 }
 

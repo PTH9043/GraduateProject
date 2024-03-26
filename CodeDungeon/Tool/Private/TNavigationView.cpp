@@ -194,7 +194,8 @@ void TNavigationView::ModifyNavigation(CSHPTRREF<URegion> _spRegion)
 						m_spCubePosArr[i]->GetTransform()->SetPos(_float3(0.f, 0.f, 0.f));
 				}				
 			}
-			// Rollback if 'z' key is pressed
+
+			// Rollback if backspace key is pressed
 			else if (spGameInstance->GetDIKeyDown(DIK_BACK))
 			{
 				if (!m_vecPosList.empty())
