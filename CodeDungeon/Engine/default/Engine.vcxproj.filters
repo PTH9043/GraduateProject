@@ -343,6 +343,9 @@
     <Filter Include="98.ShaderFile\Common\Fog">
       <UniqueIdentifier>{0fa71142-cf1a-4653-aeca-5caf75b682fe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98.ShaderFile\Common\Light">
+      <UniqueIdentifier>{933ad2d2-108d-4c7f-9abd-62fec8dfff4e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -1030,6 +1033,12 @@
     <None Include="..\..\Shader\ComputeFunc.hlsli">
       <Filter>98.ShaderFile\Common\Particle</Filter>
     </None>
+    <None Include="..\..\Shader\LightShaderFunc.hlsli">
+      <Filter>98.ShaderFile\Common\Light</Filter>
+    </None>
+    <None Include="..\..\Shader\LightShaderParam.hlsli">
+      <Filter>98.ShaderFile\Common\Light</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Shader\Rect.hlsl">
@@ -1088,6 +1097,12 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\2DFog.hlsl">
       <Filter>98.ShaderFile\Common\Fog</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\LightDirection.hlsl">
+      <Filter>98.ShaderFile\Common\Light</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\LightPoint.hlsl">
+      <Filter>98.ShaderFile\Common\Light</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

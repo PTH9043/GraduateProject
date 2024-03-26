@@ -36,7 +36,7 @@ cbuffer GROBALINFO_PARAMS : register(b1)
     GROBALINFO g_GrobalInfo;
 }
 
-cbuffer TRANSFORM_PARAMS : register(b2)
+cbuffer TRANSFORM_PARAMS : register(b3)
 {
     matrix     g_WorldMatrix;
     matrix     g_PrevWorldMatrix;

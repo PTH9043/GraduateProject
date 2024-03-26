@@ -13,7 +13,7 @@
 UGrid::UGrid(CSHPTRREF<UDevice> _spDevice,
 	const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UPawn(_spDevice, _wstrLayer, _eCloneType, BACKINGTYPE::STATIC),
-	m_spVIBufferGrid{ nullptr }, m_spRectColorBuffer{ nullptr }
+	m_spVIBufferGrid{ nullptr }
 {
 }
 
@@ -41,8 +41,7 @@ HRESULT UGrid::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	// Add Shader 
 	AddShader(PROTO_RES_GRIDSHADER);
 
-	m_spRectColorBuffer = CreateNative< UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::B3, RECTCOLOR_SIZE, 1);
-	m_RectColor.g_RectColor = { 0.f, 1.f, 0.f, 1.f };
+
 
 	UCollider::COLLIDERDESC tDesc;
 
@@ -70,7 +69,7 @@ HRESULT UGrid::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDesc
 {
 	__super::RenderActive(_spCommand, _spTableDescriptor);
 	GetTransform()->BindTransformData(GetShader());
-	GetShader()->BindCBVBuffer(m_spRectColorBuffer, &m_RectColor, RECTCOLOR_SIZE);
+	
 	m_spVIBufferGrid->Render(GetShader(), _spCommand);
 	//m_spParticle->SetActive(true);
 	return S_OK;

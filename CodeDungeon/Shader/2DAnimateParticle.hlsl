@@ -42,7 +42,7 @@ struct PARTICLE
     float3 padding;
 };
 
-cbuffer ANIMPARTICLEBUFFER : register(b13)
+cbuffer ANIMPARTICLEBUFFER : register(b12)
 {
     matrix g_mAnimTextureMatrix;
 };
@@ -50,7 +50,7 @@ cbuffer ANIMPARTICLEBUFFER : register(b13)
 
 // All Particle
 
-cbuffer ALLPARTICLEBUFFER : register(b14)
+cbuffer ALLPARTICLEBUFFER : register(b13)
 {
     GROBALPARTICLEINFO g_GrobalParticleInfo;
 };

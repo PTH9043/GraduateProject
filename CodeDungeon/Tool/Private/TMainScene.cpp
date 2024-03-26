@@ -38,8 +38,19 @@ HRESULT TMainScene::LoadSceneData()
 		m_spMainCamera->GetTransform()->SetPos({ 0.f, 10.f, -100.f });
 	}
 	{
-		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL, {1.f, 1.f, 1.f, 1.f}, {1.f, 1.f, 1.f, 1.f}, {1.f, 1.f, 1.f, 1.f}, {0.f, -1.f, -1.f,}, {0.f, 10000.f, 0.f}, 0.f, 0.f ,
-			1.f, 2.f });
+		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL, {1.f, 1.f, 1.f, 1.f}, {0.5f, 0.5f, 0.5f, 1.f}, {1.f, 0.f, 0.f, 1.f}, {0.f, -1.f, 0.f,}, {0.f, 10000.f, 0.f}, 0.f, 0.f ,
+			0.1f, 0.1f });
+
+		/*AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL, {1.f, 1.f, 1.f, 1.f}, {0.05f, 0.05f, 0.05f, 0.05f}, {1.f, 1.f, 1.f, 1.f}, {0.f, -1.f, -1.f,},
+			{0.f, 100.f, 0.f}, 0.f, 0.f, 1.f, 200.f },
+			LIGHTCONTROL{ RIMLIGHT{} });*/
+		/*AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_FLASHLIGHT, {1.f, 0.f, 0.f, 1.f}, {1.f, 0.f, 0.f, 1.f}, {1.f, 0.f, 0.f, 1.f}, {0.f, 0.f, 1.f,}, {0.f, 0.f, -50.f}, 60.f, 60.f ,
+			100.f, 2.f });*/
+		/*
+		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_POINT, {1.f, 0.f, 0.f, 1.f}, {1.f, 0.f, 0.f, 1.f}, {1.f, 0.f, 0.f, 1.f}, {0.f, -1.f, -1.f,}, {0.f, 10000.f, 0.f}, 0.f, 0.f ,
+			1.f, 2.f });*/
+		/*AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_FLASHLIGHT, {1.f, 0.f, 0.f, 1.f}, {1.f, 0.f, 0.f, 1.f}, {1.f, 0.f, 0.f, 1.f}, {0.f, 0.f, 1.f,}, {0.f, 50.f, -100.f}, 60.f, 60.f ,
+			1.f, 2.f });*/
 	}
 
 	{

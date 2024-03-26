@@ -55,12 +55,12 @@ struct COMPUTESHARED
 
 // All Particle
 
-cbuffer ALLPARTICLEBUFFER : register(b14)
+cbuffer ALLPARTICLEBUFFER : register(b13)
 {
     GROBALPARTICLEINFO g_GrobalParticleInfo;
 };
 
-cbuffer PARTICLETYPEBUFFER : register(b15)
+cbuffer PARTICLETYPEBUFFER : register(b14)
 {
     ComputeParticleType g_ParticleType;
 }
