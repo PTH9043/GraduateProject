@@ -21,6 +21,7 @@ public:
 	#ifdef _USE_DEBUGGING
 		const std::atomic<_bool>& IsDebugRenderingType() const { return m_isDebugRenderingType; }
 	#endif 
+		const COLLIDERCONTAINER& GetColliderContainer() const { return m_ColliderContainer; }
 	public:
 		virtual SHPTR<UCloneObject> Clone(const VOIDDATAS& _vecDatas) override PURE;
 		virtual void Free() override PURE;
@@ -33,6 +34,7 @@ public:
 protected: /* get set*/
 	// Get Renderer
 	CSHPTRREF<URenderer> GetRenderer() const { return m_spRenderer; }
+
 protected:
 		// Tick, LateTick, Render
 		virtual void TickActive(const _double& _dTimeDelta) override PURE;

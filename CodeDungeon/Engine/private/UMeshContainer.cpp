@@ -72,7 +72,7 @@ HRESULT UMeshContainer::SetUpBoneMatrix(ARRAY<_float4x4, MAX_BONE_SIZE>& _arrBon
 	for (_uint i = 0; i < m_BoneNodeContainer.size(); ++i)
 	{
 		_arrBones[i] = m_BoneNodeContainer[i]->GetOffsetMatrix() *
-			m_BoneNodeContainer[i]->GetCombineMatrix();
+			 m_BoneNodeContainer[i]->GetCombineMatrix();
 
 		_arrBones[i] = _arrBones[i].Transpose();
 	}

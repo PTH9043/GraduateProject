@@ -59,6 +59,7 @@ class UStageManager;
 class UStage;
 
 class UGrid;
+class UPawn;
 
 struct PICKINGDESC;
 struct WAITCHECKACTOR;
@@ -140,6 +141,7 @@ public: /* InputManager*/
 	_bool GetDIMBtnPressing(_ubyte _eMouseBtn);
 	_long GetDIMMoveState(_ubyte _eMouseMove);
 	_float2 GetMousePosition();
+	_bool IsMouseInWindowSize(const float _Width, const float _Height);
 public: /* ThreadManager */
 	// 스레드에 THREADFUNC 함수를 등록
 	void RegisterFuncToRegister(const THREADFUNC& _CallBack, void* _pData);
@@ -277,11 +279,11 @@ public: /* CharacterManager*/
 	- Picking관련 함수들.
 	*/
 public: /* Picking */
-	void AddPickingObject(CSHPTRREF<UActor> _spActor, CSHPTRREF<UVIBuffer> _spVIBuffer);
+	void AddPickingObject(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer);
 	void AddPickingGrid(const MAINGRID& _stGrid);
-	SHPTR<UActor> GetPickingActor();
+	SHPTR<UActor> GetPickingPawn();
 	const PICKINGDESC& GetPickDesc();
-	_bool PickingMesh(CSHPTRREF<UActor> _spActor, CSHPTRREF<UVIBuffer> _spVIBuffer,
+	_bool PickingMesh(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer,
 		_float* _pDist, _float3* _pOut);
 
 

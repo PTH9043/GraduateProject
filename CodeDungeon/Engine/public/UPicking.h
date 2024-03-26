@@ -4,29 +4,34 @@
 
 BEGIN(Engine)
 class UActor;
+class UPawn;
 class UTransform;
 class UVIBuffer;
 class UGameInstance;
 class UGrid;
 class UCollider;
 
+
+using COLLIDERCONTAINER = UNORMAP<_wstring, SHPTR<UCollider>>;
+
 struct PICKINGDESC {
 	PICKINGDESC() = default;
-	PICKINGDESC(CSHPTRREF<UActor> _spActor, const _float3& _vPickPos, const _float _fDist)
-		: spActor(_spActor), vPickPos(_vPickPos), fDist(_fDist)
+	PICKINGDESC(CSHPTRREF<UPawn> _spPawn, const _float3& _vPickPos, const _float _fDist, _bool _bSuccess)
+		: spPawn(_spPawn), vPickPos(_vPickPos), fDist(_fDist), bPickingSuccess(_bSuccess)
 	{}
-	SHPTR<UActor>	spActor{ nullptr };
+	SHPTR<UPawn>	spPawn{ nullptr };
 	_float3			vPickPos{ 0, 0, 0 };
 	_float			fDist{ 0 };
+	_bool			bPickingSuccess{ false };
 };
 
-struct WAITCHECKACTOR {
-	SHPTR<UActor>			spActor{ nullptr };
+struct WAITCHECKPAWN {
+	SHPTR<UPawn>			spPawn{ nullptr };
 	SHPTR<UVIBuffer>		spVIBuffer{ nullptr };
 
-	_bool operator == (const WAITCHECKACTOR& _stActor) const
+	_bool operator == (const WAITCHECKPAWN& _stPawn) const
 	{
-		if (spActor == _stActor.spActor && spVIBuffer == _stActor.spVIBuffer)
+		if (spPawn == _stPawn.spPawn && spVIBuffer == _stPawn.spVIBuffer)
 			return true;
 
 		return false;
@@ -50,14 +55,14 @@ namespace std
 {
 	// Atomic 함수 재정의
 	template<>
-	struct hash<Engine::WAITCHECKACTOR> {
-		size_t operator()(WAITCHECKACTOR ptr) const {
-			return std::hash<WAITCHECKACTOR*>()(&ptr);
+	struct hash<Engine::WAITCHECKPAWN> {
+		size_t operator()(WAITCHECKPAWN ptr) const {
+			return std::hash<WAITCHECKPAWN*>()(&ptr);
 		}
 	};
 	template<>
-	struct equal_to<Engine::WAITCHECKACTOR> {
-		bool operator()(const Engine::WAITCHECKACTOR& lhs, const Engine::WAITCHECKACTOR& rhs) const {
+	struct equal_to<Engine::WAITCHECKPAWN> {
+		bool operator()(const Engine::WAITCHECKPAWN& lhs, const Engine::WAITCHECKPAWN& rhs) const {
 			return lhs == rhs;
 		}
 	};
@@ -74,13 +79,14 @@ public:
 	virtual void Free() override;
 	HRESULT ReadyPickingDesc(CSHPTRREF<GRAPHICDESC> _spGraphicDesc);
 	void CastRayInWorldSpace(UGameInstance* _pGameInstance);
-	void AddPickingObject(CSHPTRREF<UActor> _spActor, CSHPTRREF<UVIBuffer> _spVIBuffer);
+	void AddPickingObject(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer);
 	void AddPickingGrid(const MAINGRID& _stGrid);
-	SHPTR<UActor> GetPickingActor();
+	SHPTR<UPawn> GetPickingPawn();
 	const PICKINGDESC& GetPickDesc();
-	_bool PickingMesh(CSHPTRREF<UActor> _spActor, CSHPTRREF<UVIBuffer> _spVIBuffer,
+	_bool PickingMesh(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer,
 		_float* _pDist, _float3* _pOut);
 	_bool PickingOnGrid(CSHPTRREF<UGrid> _spGrid, _float* _pDist, _float3* _pOut);
+	_bool PickingCollider(CSHPTRREF<UPawn> _spPawn, const _float3& _vOrigin, const _float3& _vDirection, _float* _pDist);
 private:
 	_bool IsPickingCheck(const _float3& _vLocalRay, const _float3& _vDirRay, const _float3& _vPos1,
 		const _float3& _vPos2, const _float3& _vPos3, const _float4x4& _mWorldMatrix, _float* _pDist, _float3* _pOut);
@@ -88,7 +94,7 @@ private:
 	void AddPickingObject(const PICKINGDESC& _stDesc);
 private:
 	using PICKINGLIST = std::list<PICKINGDESC>;
-	using WAITCHECKACTORLIST = UNORSET<WAITCHECKACTOR>;
+	using WAITCHECKPAWNLIST = UNORSET<WAITCHECKPAWN>;
 	// // Dats
 	_float2					m_vWindowSize;
 	RECT					m_stClientRect;
@@ -96,7 +102,7 @@ private:
 	_float3					m_vRayDir;
 	PICKINGLIST				m_lsPickingList;
 	PICKINGDESC				m_stPickingDesc;
-	WAITCHECKACTORLIST		m_WaitCheckActorList;
+	WAITCHECKPAWNLIST		m_WaitCheckPawnList;
 	MAINGRID				m_spMainGrid;
 	_bool					m_isMouseInScreen;
 };

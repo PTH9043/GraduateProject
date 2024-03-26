@@ -22,15 +22,15 @@ void URegion::tagCubeObjs::Create(SHPTRREF<UCell> _pCell)
 	spCube1 = static_pointer_cast<UDefaultDebugging>(spGameInstance->CloneActorAddAndNotInLayer(
 		PROTO_ACTOR_DEUBGGINGDEFAULTOBJECT, vecDatas));;
 	spCube1->GetTransform()->SetPos(_pCell->GetPoint(UCell::POINT_A));
-	spCube1->SetColor(_float4(0.6f, 0.0f, 0.0f, 0.5f));
+	spCube1->SetColor(_float3(0.6f, 0.0f, 0.0f));
 	spCube2 = static_pointer_cast<UDefaultDebugging>(spGameInstance->CloneActorAddAndNotInLayer(
 		PROTO_ACTOR_DEUBGGINGDEFAULTOBJECT, vecDatas));;
 	spCube2->GetTransform()->SetPos(_pCell->GetPoint(UCell::POINT_B));
-	spCube2->SetColor(_float4(0.6f, 0.0f, 0.0f, 0.5f));
+	spCube2->SetColor(_float3(0.6f, 0.0f, 0.0f));
 	spCube3 = static_pointer_cast<UDefaultDebugging>(spGameInstance->CloneActorAddAndNotInLayer(
 		PROTO_ACTOR_DEUBGGINGDEFAULTOBJECT, vecDatas));;
 	spCube3->GetTransform()->SetPos(_pCell->GetPoint(UCell::POINT_C));
-	spCube3->SetColor(_float4(0.6f, 0.0f, 0.0f, 0.5f));
+	spCube3->SetColor(_float3(0.6f, 0.0f, 0.0f));
 
 	spCell = _pCell;
 #endif
@@ -70,16 +70,16 @@ HRESULT URegion::AddRegionRenderGroup()
 
 	RETURN_CHECK_FAILED(nullptr == m_spNavigation, E_FAIL);
 
-	SHPTR<CELLCONTAINER> pCells = m_spNavigation->GetCellContainer();
-	for (CELLCONTAINER::iterator it = pCells->begin(); it != pCells->end(); ++it)
+	for (SHPTR<UCell> iter : *m_spNavigation->GetCells())
 	{
-		(*it)->AddCellRenderGroup();
+		iter->AddCellRenderGroup();
 	}
 	return S_OK;
 }
 
 URegion::URegion(CSHPTRREF<UDevice> _spDevice)
 	: UComponent(_spDevice),
+	m_f3Color{0.6f, 0.f, 0.f},
 	m_spNavigation{ nullptr },
 	m_iIndex{ 0 },
 	m_NeighborRegion{}
@@ -91,6 +91,7 @@ URegion::URegion(CSHPTRREF<UDevice> _spDevice)
 
 URegion::URegion(const URegion& _rhs)
 	: UComponent(_rhs),
+	m_f3Color{ 0.6f, 0.f, 0.f },
 	m_spNavigation{ nullptr },
 	m_iIndex{ 0 },
 	m_NeighborRegion{}
@@ -140,7 +141,7 @@ HRESULT URegion::ModifyCells()
 
 	if (ImGui::TreeNodeEx("Region_Modfiy_Cells", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		SHPTR<CELLCONTAINER> pCells = m_spNavigation->GetCellContainer();
+		SHPTR<CELLCONTAINER> pCells = m_spNavigation->GetCells();
 		if (ImGui::Button("ReRender"))
 		{
 			for (CELLCONTAINER::iterator it = pCells->begin(); it != pCells->end(); ++it)
@@ -212,13 +213,13 @@ HRESULT URegion::ShowCells()
 
 	if (ImGui::TreeNodeEx("Region_Show_Cells", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		SHPTR<CELLCONTAINER> pCells = m_spNavigation->GetCellContainer();
+		SHPTR<CELLCONTAINER> pCells = m_spNavigation->GetCells();
 		_uint iIndex = 0;
 
 		if (ImGui::Button("Delete_ALL")) 
 		{
 			m_CubeObjList.clear();
-			pCells->clear(); 
+			pCells->clear();
 		}
 
 		for (CELLCONTAINER::iterator it = pCells->begin(); it != pCells->end(); ++it)
@@ -273,26 +274,82 @@ HRESULT URegion::ClearCell()
 	return S_OK;
 }
 
+
+HRESULT URegion::SetColor()
+{
+	RETURN_CHECK_FAILED(nullptr == m_spNavigation, E_FAIL)
+
+	if (ImGui::TreeNodeEx("Edit_Region_Color", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::BeginGroup();
+		ImGui::EndGroup();
+		ImGui::SameLine();
+		ImGui::PushItemWidth(200);
+		ImGui::ColorEdit4("##Pick_Region_Color", (float*)&m_f3Color,
+			ImGuiColorEditFlags_None | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_NoSidePreview);
+		if (ImGui::Button("Change"))
+		{
+			for (SHPTR<UCell> iter : *m_spNavigation->GetCells())
+			{
+				iter->ChangeCellColor(m_f3Color);
+			}
+			for (LIST<CUBOBJS>::iterator v = m_CubeObjList.begin(); v != m_CubeObjList.end(); ++v)
+			{
+				v->spCube1->SetColor(m_f3Color);
+				v->spCube2->SetColor(m_f3Color);
+				v->spCube3->SetColor(m_f3Color);
+			}
+		}
+		ImGui::PopItemWidth();
+		ImGui::TreePop();
+	}
+
+	return S_OK;
+}
+
+HRESULT URegion::DeleteLatestCell()
+{
+	SHPTR<CELLCONTAINER> pCells = m_spNavigation->GetCells();
+
+	if (!pCells->empty()) {
+		CELLCONTAINER::iterator it = --pCells->end();
+
+		for (LIST<CUBOBJS>::iterator v = m_CubeObjList.begin(); v != m_CubeObjList.end(); ++v)
+		{
+			if ((*v).spCell == (*it))
+			{
+				(*v).spCell.reset();
+				m_CubeObjList.erase(v);
+				break;
+			}
+		}
+		pCells->erase(it);
+	}
+	return S_OK;
+}
+
 _bool URegion::Load(const _wstring& _wstrPath)
 {
 	RETURN_CHECK(nullptr == m_spNavigation, false)
-	m_spNavigation->Load(_wstrPath.c_str());
+	m_spNavigation->Load(_wstrPath);
 #ifdef _USE_DEBUGGING
-	for (auto iter : *m_spNavigation->GetCells())
+	for (SHPTR<UCell> iter : *m_spNavigation->GetCells())
 	{
 		CUBOBJS tObjs;
 		tObjs.Create(iter);
+		tObjs.spCube1->SetColor(iter->GetColor());
+		tObjs.spCube2->SetColor(iter->GetColor());
+		tObjs.spCube3->SetColor(iter->GetColor());
 		m_CubeObjList.push_back(tObjs);
 	}
 #endif
-
 	return S_OK;
 }
 
 _bool URegion::Save(const _wstring& _wstrPath)
 {
 	RETURN_CHECK(nullptr == m_spNavigation, false)
-	m_spNavigation->Save(_wstrPath.c_str());
+	m_spNavigation->Save(_wstrPath);
 	return S_OK;
 }
 

@@ -62,6 +62,7 @@
 //#include "UScreenRenderObj.h"
 //#include "UMirrorCamera.h"
 
+#include "UPawn.h"
 #include "UPicking.h"
 #include "UGrid.h"
 
@@ -434,6 +435,19 @@ _long UGameInstance::GetDIMMoveState(_ubyte _eMouseMove)
 _float2 UGameInstance::GetMousePosition()
 {
 	return m_spInputManager->GetMousePosition();
+}
+
+_bool UGameInstance::IsMouseInWindowSize(const float _Width, const float _Height)
+{
+	_float2 vMosuePos = m_spInputManager->GetMousePosition();
+	if (0.f <= vMosuePos.x && 0.f <= vMosuePos.y)
+	{
+		if (_Width >= vMosuePos.x && _Height >= vMosuePos.y)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 /*
@@ -901,26 +915,26 @@ Picking
 ==================================================
 */
 
-void UGameInstance::AddPickingObject(CSHPTRREF<UActor> _spActor, CSHPTRREF<UVIBuffer> _spVIBuffer)
+void UGameInstance::AddPickingObject(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer)
 {
-	m_spPicking->AddPickingObject(_spActor, _spVIBuffer);
+	m_spPicking->AddPickingObject(_spPawn, _spVIBuffer);
 }
 void UGameInstance::AddPickingGrid(const MAINGRID& _stGrid)
 {
 	m_spPicking->AddPickingGrid(_stGrid);
 }
-SHPTR<UActor> UGameInstance::GetPickingActor()
+SHPTR<UActor> UGameInstance::GetPickingPawn()
 {
-	return 	m_spPicking->GetPickingActor();
+	return 	m_spPicking->GetPickingPawn();
 }
 const PICKINGDESC& UGameInstance::GetPickDesc()
 {
 	return m_spPicking->GetPickDesc();
 }
-_bool UGameInstance::PickingMesh(CSHPTRREF<UActor> _spActor, CSHPTRREF<UVIBuffer> _spVIBuffer,
+_bool UGameInstance::PickingMesh(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer,
 	_float* _pDist, _float3* _pOut)
 {
-	return m_spPicking->PickingMesh(_spActor, _spVIBuffer, _pDist, _pOut);
+	return m_spPicking->PickingMesh(_spPawn, _spVIBuffer, _pDist, _pOut);
 }
 
 /*

@@ -43,7 +43,7 @@ private:
 	void ConvertAnimModels();
 
 	void LoadAssimpModelDatas(CSHPTRREF<FILEGROUP> _spFolder);
-	void LoadAssimpAnimModelDatas(CSHPTRREF<FILEGROUP> _spFolder);
+	void LoadAnimModelData(CSHPTRREF<FILEGROUP> _spFolder);
 	void ResetModels();
 	void ResetAnimModels();
 private:
@@ -53,7 +53,7 @@ private:
 	using FOLDERPAIR = std::pair<_wstring, SHPTR<FILEGROUP>>;
 	using FILEPAIR = std::pair<_wstring, SHPTR<FILEDATA>>;
 
-	MAINDESC												m_stMainDesc;
+	MAINDESC											m_stMainDesc;
 	DOCKDESC											m_stModelDockDesc;
 	DOCKDESC											m_stAnimModelDockDesc;
 

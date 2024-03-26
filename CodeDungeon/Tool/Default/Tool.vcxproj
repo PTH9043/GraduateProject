@@ -177,7 +177,6 @@
     <ClInclude Include="..\Public\TAssimpModel.h" />
     <ClInclude Include="..\Public\TBloodEffectView.h" />
     <ClInclude Include="..\Public\TCameraView.h" />
-    <ClInclude Include="..\Public\TFBXModel.h" />
     <ClInclude Include="..\Public\TFireView.h" />
     <ClInclude Include="..\Public\TFogView.h" />
     <ClInclude Include="..\Public\TImGuiManager.h" />
@@ -185,6 +184,7 @@
     <ClInclude Include="..\Public\TMainCamera.h" />
     <ClInclude Include="..\Public\TMainScene.h" />
     <ClInclude Include="..\Public\TMainView.h" />
+    <ClInclude Include="..\Public\TMapView.h" />
     <ClInclude Include="..\Public\TModelView.h" />
     <ClInclude Include="..\Public\TNavigationView.h" />
     <ClInclude Include="..\Public\ToolDefines.h" />
@@ -202,6 +202,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Public\TAssimpBoneNode.h" />
+    <ClInclude Include="..\Public\TUnityModelLoader.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
@@ -216,7 +217,6 @@
     <ClCompile Include="..\Private\TAssimpModel.cpp" />
     <ClCompile Include="..\Private\TBloodEffectView.cpp" />
     <ClCompile Include="..\Private\TCameraView.cpp" />
-    <ClCompile Include="..\Private\TFBXModel.cpp" />
     <ClCompile Include="..\Private\TFireView.cpp" />
     <ClCompile Include="..\Private\TFogView.cpp" />
     <ClCompile Include="..\Private\TImGuiManager.cpp" />
@@ -224,6 +224,7 @@
     <ClCompile Include="..\Private\TMainCamera.cpp" />
     <ClCompile Include="..\Private\TMainScene.cpp" />
     <ClCompile Include="..\Private\TMainView.cpp" />
+    <ClCompile Include="..\Private\TMapView.cpp" />
     <ClCompile Include="..\Private\TModelView.cpp" />
     <ClCompile Include="..\Private\TNavigationView.cpp" />
     <ClCompile Include="..\Private\TParticleView.cpp" />
@@ -239,6 +240,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Private\TAssimpBoneNode.cpp" />
+    <ClCompile Include="..\Private\TUnityModelLoader.cpp" />
     <ClCompile Include="..\Public\ImGui\imgui.cpp" />
     <ClCompile Include="..\Public\ImGui\imgui_demo.cpp" />
     <ClCompile Include="..\Public\ImGui\imgui_draw.cpp" />

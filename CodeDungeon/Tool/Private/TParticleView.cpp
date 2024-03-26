@@ -123,7 +123,7 @@ void TParticleView::LoadMultipleParticleResource()
 			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 15.f * (i + 1);
 			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 100 * (i + 1);
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 5.f * (i + 1);
-			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.f, 0.1);
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.f, 0.1f);
 			m_MultipleParticle[i] = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
 		}
 		m_MultipleParticleParam[i] = m_MultipleParticle[i]->GetParticleSystem()->GetParticleParam();
@@ -350,7 +350,7 @@ void TParticleView::SingleParticleTimeSetting()
 
 		ImGui::InputFloat("Enter Time Interval\n Min:0.f  Max :6.f", m_SingleParticle[0]->GetParticleSystem()->GetCreateInterval(), 0.1f, 1.0f, "%.2f", ImGuiInputTextFlags_CharsDecimal);
 		if (*m_SingleParticle[0]->GetParticleSystem()->GetCreateInterval() <= 0) {
-			*m_SingleParticle[0]->GetParticleSystem()->GetCreateInterval() = 0.1;
+			*m_SingleParticle[0]->GetParticleSystem()->GetCreateInterval() = 0.1f;
 		}
 		else if (*m_SingleParticle[0]->GetParticleSystem()->GetCreateInterval() > 6) {
 			*m_SingleParticle[0]->GetParticleSystem()->GetCreateInterval() = 6;
@@ -497,7 +497,7 @@ void TParticleView::MultipleParticleTimeSetting()
 
 		ImGui::InputFloat("Enter Time Interval\n Min:0.f  Max :6.f", m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval(), 0.1f, 1.0f, "%.2f", ImGuiInputTextFlags_CharsDecimal);
 		if (*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() <= 0) {
-			*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() = 0.1;
+			*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() = 0.1f;
 		}
 		else if (*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() > 6) {
 			*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() = 6;
@@ -632,7 +632,7 @@ void TParticleView::AnimParticleTimeSetting()
 
 		ImGui::InputFloat("Enter Time Interval\n Min:0.f  Max :6.f", m_AnimParticle[0]->GetParticleSystem()->GetCreateInterval(), 0.1f, 1.0f, "%.2f", ImGuiInputTextFlags_CharsDecimal);
 		if (*m_AnimParticle[0]->GetParticleSystem()->GetCreateInterval() <= 0) {
-			*m_AnimParticle[0]->GetParticleSystem()->GetCreateInterval() = 0.1;
+			*m_AnimParticle[0]->GetParticleSystem()->GetCreateInterval() = 0.1f;
 		}
 		else if (*m_AnimParticle[0]->GetParticleSystem()->GetCreateInterval() > 6) {
 			*m_AnimParticle[0]->GetParticleSystem()->GetCreateInterval() = 6;

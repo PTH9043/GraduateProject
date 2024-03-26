@@ -45,7 +45,6 @@ void TShowModelObject::LateTickActive(const _double& _dTimeDelta)
 	}
 }
 
-
 HRESULT TShowModelObject::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
 	if (nullptr != m_spModel)
@@ -68,4 +67,5 @@ HRESULT TShowModelObject::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF
 
 void TShowModelObject::Collision(CSHPTRREF<UPawn> _pEnemy)
 {
+
 }
