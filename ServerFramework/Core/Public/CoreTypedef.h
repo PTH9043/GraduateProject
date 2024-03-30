@@ -51,11 +51,8 @@ namespace Core
 	using _matrix = PTH::Matrix;
 	using _quaternion = PTH::Quaternion;
 
-	using _wstring = std::wstring;
-	using _string = std::string;
-
-	using _wstringview = std::wstring_view;
-	using _stringview = std::string_view;
+	using _wstring = CustomString<wchar_t, std::wstring>;
+	using _string = CustomString<char, std::string>;
 
 	template<class T>
 	using _atomic = std::atomic<T>;

@@ -252,5 +252,18 @@ void ClassName::DestoryInstance(){  m_pInstance.reset(); }
 */
 #define RETURN_CHECK(SITUATION, RETURN) if(SITUATION) return RETURN;
 
+/*
+@ Date: 2024-03-24, Writer: 박태현
+@ Explain: SHPTR을 사용하는 클래스들을 미리 정의해 놓는다. 
+*/
+#define USING_SHARED_PTR(name)	using name##Ref = SHPTR<class name>;
+
+
+/*
+@ Date: 2024-03-28, Writer: 박태현
+@ Explain: WKPTR을 사용하는 클래스들을 미리 정의해 놓는다. 
+*/
+#define USING_WEAK_PTR(name)	using name##Ref = WKPTR<class name>;
+
 
 #endif // _SERVERFRAMEWORK_CORE_PUBLIC_COREMACRO_H

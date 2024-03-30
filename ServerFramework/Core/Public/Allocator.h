@@ -151,18 +151,32 @@ namespace Core {
 	*/
 
 	template<class Type, class... Args>
-	Type* MemoryAlloc(Args&&... args)
+	Type* MemoryAlloc(Args&&... _args)
 	{
 		Type* memory = static_cast<Type*>(UPoolAllocator::Alloc(sizeof(Type)));
-		new(memory)Type(std::forward<Args>(args)...); // placement new
+		new(memory)Type(std::forward<Args>(_args)...); // placement new
 		return memory;
 	}
 
 	template<class Type>
-	void MemoryRelease(Type* obj)
+	Type* MemoryAllocBuffer(size_t _bufferSize)
 	{
-		obj->~Type();
-		UPoolAllocator::Release(obj);
+		Type* memory = static_cast<Type*>(UPoolAllocator::Alloc(_bufferSize));
+		::memset(memory, 0, _bufferSize);
+		return memory;
+	}
+
+	template<class Type>
+	void MemoryRelease(Type* _obj)
+	{
+		_obj->~Type();
+		UPoolAllocator::Release(_obj);
+	}
+
+	template <class Type>
+	void MemoryBufferRelease(Type* _obj)
+	{
+		UPoolAllocator::Release(_obj);
 	}
 }
 

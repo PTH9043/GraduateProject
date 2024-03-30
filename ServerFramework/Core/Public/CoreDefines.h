@@ -7,7 +7,6 @@
 #pragma warning (disable : 4200)
 
 
-#define _CRT_SECURE_NO_WARNINGS 0
 
 #define USE_DEBUG 0
 // #define USE_STOMP 0
@@ -52,8 +51,6 @@
 #endif
 #pragma comment (lib, "libcrypto")
 #pragma comment (lib, "libssl")
-#pragma comment (lib, "mysqlcppconn8")
-#pragma comment (lib, "mysqlcppconn")
 #pragma comment(lib, "liblua54")
 
 #include <iostream>
@@ -81,6 +78,9 @@
 #include <vector>
 #include <fstream>
 #include <list>
+#include <regex>
+#include <corecrt_wstring.h>
+
 
 extern "C" {
 #include <lua/lua.h>
@@ -95,6 +95,7 @@ namespace Asio = boost::asio;
 #include "CoreConcept.h"
 #include "CoreGrobal.h"
 #include "Allocator.h"
+#include "CustomString.h"
 
 #include "CoreTypedef.h"
 #include "CoreTypecast.h"
@@ -108,6 +109,7 @@ namespace Asio = boost::asio;
 #include "CoreEnum.h"
 #include "CoreStruct.h"
 #include "CoreTls.h"
+#include "DBDataGroup.h"
 
 #include "LockFree.h"
 

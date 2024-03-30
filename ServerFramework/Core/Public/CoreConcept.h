@@ -83,6 +83,27 @@ namespace Core
 
 	template <typename T, typename U>
 	concept ConvertibleFrom = (SameType<T, U> || ParentsChildType<T, U> || Convertible<T, U>);
+
+	/*
+	@ Date: 2024-02-05, Writer: 박태현
+	@ Explain: String인지 확인하는 concept
+	*/
+	template<class T>
+	concept CheckStdStrings = std::is_same_v<T, std::string> || std::is_same_v<T, std::wstring>;
+
+	/*
+	@ Date: 2024-02-05, Writer: 박태현
+	@ Explain: char, wchar_t 인지 확인하는 concept
+	*/
+	template<class T>
+	concept CheckChar = std::is_same_v<T, char> || std::is_same_v<T, wchar_t>;
+	/*
+	@ Date: 2024-02-05, Writer: 박태현
+	@ Explain: CustomString 용 Concept으로 filesystem으로 변환 가능한지, TString의 값이 std::string, std::wstring 맞는지 확인
+	*/
+	template<class TChar, class TString>
+	concept CheckCustomString = CheckStdStrings<TString> || CheckChar<TChar>;
+
 }
 
 

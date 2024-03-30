@@ -20,8 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Allocator.h" />
-    <ClInclude Include="..\Public\AMySqlConnector.h" />
-    <ClInclude Include="..\Public\AMySqlDriver.h" />
+    <ClInclude Include="..\Public\ASqlDriver.h" />
     <ClInclude Include="..\Public\CoreConcept.h" />
     <ClInclude Include="..\Public\CoreDefines.h" />
     <ClInclude Include="..\Public\CoreEnum.h" />
@@ -34,6 +33,8 @@
     <ClInclude Include="..\Public\CoreTls.h" />
     <ClInclude Include="..\Public\CoreTypecast.h" />
     <ClInclude Include="..\Public\CoreTypedef.h" />
+    <ClInclude Include="..\Public\CustomString.h" />
+    <ClInclude Include="..\Public\DBDataGroup.h" />
     <ClInclude Include="..\Public\ini.h" />
     <ClInclude Include="..\Public\INIReader.h" />
     <ClInclude Include="..\Public\Lock.h" />
@@ -68,13 +69,13 @@
     <ClInclude Include="..\Public\ASphereCollider.h" />
     <ClInclude Include="..\Public\AThreadManager.h" />
     <ClInclude Include="..\Public\ATransform.h" />
-    <ClInclude Include="..\Public\USqlDBQuery.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Allocator.cpp" />
-    <ClCompile Include="..\Private\AMySqlConnector.cpp" />
-    <ClCompile Include="..\Private\AMySqlDriver.cpp" />
+    <ClCompile Include="..\Private\ASqlDriver.cpp" />
     <ClCompile Include="..\Private\CoreGrobal.cpp" />
+    <ClCompile Include="..\Private\CustomString.cpp" />
+    <ClCompile Include="..\Private\DBDataGroup.cpp" />
     <ClCompile Include="..\Private\ini.cpp" />
     <ClCompile Include="..\Private\INIReader.cpp" />
     <ClCompile Include="..\Private\Lock.cpp" />
@@ -109,7 +110,6 @@
     <ClCompile Include="..\Private\ASphereCollider.cpp" />
     <ClCompile Include="..\Private\AThreadManager.cpp" />
     <ClCompile Include="..\Private\ATransform.cpp" />
-    <ClCompile Include="..\Private\USqlDBQuery.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -169,18 +169,18 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>..\Bin\</OutDir>
+    <OutDir>..\Bin\debug\</OutDir>
     <TargetName>$(ProjectName)D</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>..\Bin\</OutDir>
+    <OutDir>..\Bin\release\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>..\Bin\</OutDir>
+    <OutDir>..\Bin\debug\</OutDir>
     <TargetName>$(ProjectName)D</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>..\Bin\</OutDir>
+    <OutDir>..\Bin\release\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
