@@ -91,12 +91,13 @@ HRESULT URenderer::NativeConstruct()
                 PROTO_ACTOR_DEFFEREDCAMERA, vecDatas));
         }
         m_stFinalRenderTransformParam.iCamIndex = m_spDefferedCamera->GetCamID();
+            
         // 이미 만들어진 Shader ConstnatBuffer를 가져옴
         spGameInstance->GetPreAllocatedConstantBuffer(PREALLOCATED_TRANSFORM, m_spTransformConstantBuffer);
     }
     // Initailize 
-
-     return S_OK;
+    \
+        return S_OK;
 }
 
 HRESULT URenderer::NativeConstructClone(const VOIDDATAS& _vectDatas)
@@ -302,9 +303,8 @@ void URenderer::RenderNonAlphaBlend()
 
 void URenderer::RenderLights()
 {
-
     // Render Light
-  //  m_spSceneManager->RenderLight(m_spPipeLine, m_spRenderTargetManager, m_stFinalRenderTransformParam);
+    m_spSceneManager->RenderLight(m_spPipeLine, m_spRenderTargetManager, m_stFinalRenderTransformParam);
 }
 
 void URenderer::RenderBlend()
@@ -327,9 +327,9 @@ void URenderer::RenderBlend()
     }
     {
         SHPTR<URenderTargetGroup> spLightGroup = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::LIGHTSHADE_DEFFERED);
-        spShader->BindSRVBuffer(SRV_REGISTER::T1, spLightGroup->GetRenderTargetTexture(RTOBJID::LIGHTSHADE_AMBIENT_DEFFERED));
-        spShader->BindSRVBuffer(SRV_REGISTER::T2, spLightGroup->GetRenderTargetTexture(RTOBJID::LIGHTSHADE_SHADE_DEFFERED));
-        spShader->BindSRVBuffer(SRV_REGISTER::T3, spLightGroup->GetRenderTargetTexture(RTOBJID::LIGHTSHADE_SPECULAR_DEFFERED));
+        spShader->BindSRVBuffer(SRV_REGISTER::T1, spLightGroup->GetRenderTargetTexture(RTOBJID::LIGHTSHADE_SHADE_DEFFERED));
+        spShader->BindSRVBuffer(SRV_REGISTER::T2, spLightGroup->GetRenderTargetTexture(RTOBJID::LIGHTSHADE_SPECULAR_DEFFERED));
+        spShader->BindSRVBuffer(SRV_REGISTER::T3, spLightGroup->GetRenderTargetTexture(RTOBJID::LIGHTSHADE_AMBIENT_DEFFERED));
     }
     m_spVIBufferPlane->Render(spShader, m_spCastingCommand);
     spRenderTargetGroup->WaitTargetToResource(m_spCastingCommand);

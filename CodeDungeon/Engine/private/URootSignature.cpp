@@ -56,12 +56,13 @@ HRESULT URootSignature::CreateRootSignature(CSHPTRREF<UDevice> _spDevice)
 		};
 
 		// ConstantBuffer View를 만들고, B0, B1 (전역) (GPUCOmmand)
-		const _uint PARAM_SIZE = 3;
+		const _uint PARAM_SIZE = 4;
 		ARRAY<CD3DX12_ROOT_PARAMETER, PARAM_SIZE> Param = {};
 		Param[0].InitAsConstantBufferView(static_cast<_uint>(CBV_REGISTER::B0));
 		Param[1].InitAsConstantBufferView(static_cast<_uint>(CBV_REGISTER::B1));
+		Param[2].InitAsConstantBufferView(static_cast<_uint>(CBV_REGISTER::B2));
 		// DescriptorTable을 Range 만큼 만든다. Table
-		Param[2].InitAsDescriptorTable(static_cast<_uint>(Ranges.size()), Ranges.data()); // 0번 -> b0 -> CBV
+		Param[3].InitAsDescriptorTable(static_cast<_uint>(Ranges.size()), Ranges.data()); // 0번 -> b0 -> CBV
 
 		for (auto& iter : Param)
 		{

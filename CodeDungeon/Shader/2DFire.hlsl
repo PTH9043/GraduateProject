@@ -5,7 +5,7 @@
 
 
 
-cbuffer FireNoiseBuffer : register(b14)
+cbuffer FireNoiseBuffer : register(b13)
 {
     float fFrameTime;
     float3 fScrollSpeeds;
@@ -13,7 +13,7 @@ cbuffer FireNoiseBuffer : register(b14)
     float padding;
 };
 
-cbuffer FireDistortionBuffer : register(b15)
+cbuffer FireDistortionBuffer : register(b14)
 {
     float2 fDistortion1;
     float2 fDistortion2;

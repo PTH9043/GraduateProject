@@ -3,10 +3,6 @@
 
 #include "ShaderGrobalFunc.hlsli"
 
-cbuffer RECTCOLOR : register(b3)
-{
-    float4 g_RectColor;
-};
 
 struct VS_IN
 {
@@ -45,7 +41,7 @@ PS_OUT PS_Main(PS_In Input)
 {
     PS_OUT Out = (PS_OUT) 0;
 
-    Out.vColor = g_RectColor;
+    Out.vColor = float4(0.0, 1.0, 0.0, 1.f);
     return Out;
 }
 

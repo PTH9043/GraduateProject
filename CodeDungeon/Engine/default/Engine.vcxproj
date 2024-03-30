@@ -284,6 +284,8 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\Shader\Grid.hlsl" />
+    <FxCompile Include="..\..\Shader\LightDirection.hlsl" />
+    <FxCompile Include="..\..\Shader\LightPoint.hlsl" />
     <FxCompile Include="..\..\Shader\Model.hlsl" />
     <FxCompile Include="..\..\Shader\NormalObject.hlsl" />
     <FxCompile Include="..\..\Shader\Rect.hlsl">
@@ -296,6 +298,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Shader\ComputeFunc.hlsli" />
+    <None Include="..\..\Shader\LightShaderFunc.hlsli" />
+    <None Include="..\..\Shader\LightShaderParam.hlsli" />
     <None Include="..\..\Shader\ShaderGrobalFunc.hlsli" />
     <None Include="..\..\Shader\ShaderParams.hlsli" />
   </ItemGroup>

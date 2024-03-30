@@ -3,7 +3,7 @@
 
 #include "ShaderGrobalFunc.hlsli"
 
-cbuffer RECTCOLOR : register(b3)
+cbuffer RECTCOLOR : register(b4)
 {
     float4 g_RectColor;
 };

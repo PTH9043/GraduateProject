@@ -46,6 +46,7 @@ PS_OUT PS_Main(PS_In In)
     vector vAmbientDesc = g_Texture3.Sample(g_Sampler_Normal, In.vTexUV);
 
     vector vColor = vDiffuseDesc * (vShadeDesc + vAmbientDesc + vSpecularDesc);
+    //(vShadeDesc + vAmbientDesc + vSpecularDesc)
     Out.vColor = vColor;
     Out.vColor.a = vDiffuseDesc.a;
     if (Out.vColor.a == 0)

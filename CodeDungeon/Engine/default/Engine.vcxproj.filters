@@ -1,6 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="99.Default">
+      <UniqueIdentifier>{39535b89-52a8-471d-9058-89255aa174cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Default\Struct">
+      <UniqueIdentifier>{6de7b64e-83a6-4752-9894-66cec341b659}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.DxClass">
       <UniqueIdentifier>{8c86b252-dbdb-427e-9827-a47f55dee782}</UniqueIdentifier>
     </Filter>
@@ -217,6 +223,9 @@
     <Filter Include="03.Utility\Thread">
       <UniqueIdentifier>{d5eec6f4-ca46-431b-9276-38d887215866}</UniqueIdentifier>
     </Filter>
+    <Filter Include="99.Default\ImGui">
+      <UniqueIdentifier>{af4a8a41-0a31-4c27-bf04-56b0c5b8d87c}</UniqueIdentifier>
+    </Filter>
     <Filter Include="20.Network\NetBaseController">
       <UniqueIdentifier>{651250be-40f1-44d3-b60a-7bf9447b8e7d}</UniqueIdentifier>
     </Filter>
@@ -334,20 +343,14 @@
     <Filter Include="98.ShaderFile\Common\Fog">
       <UniqueIdentifier>{0fa71142-cf1a-4653-aeca-5caf75b682fe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99.Default">
-      <UniqueIdentifier>{38629546-cf52-4e28-887f-2c09dc0fd896}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99.Default\Struct">
-      <UniqueIdentifier>{55b7b67b-9532-42f1-9169-c75989490459}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99.Default\ImGui">
-      <UniqueIdentifier>{ff6eede3-b445-4113-b2a4-3d1b2ebecf17}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05.Actor\01.Pawn\Default\Axis">
-      <UniqueIdentifier>{a459d112-2017-4cd3-84c3-cbff66a2a8b5}</UniqueIdentifier>
+    <Filter Include="98.ShaderFile\Common\Light">
+      <UniqueIdentifier>{933ad2d2-108d-4c7f-9abd-62fec8dfff4e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\private\EngineStruct.cpp">
+      <Filter>99.Default\Struct</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\UObject.cpp">
       <Filter>95.Super\Object</Filter>
     </ClCompile>
@@ -546,6 +549,27 @@
     <ClCompile Include="..\private\UWorkThread.cpp">
       <Filter>03.Utility\Thread</Filter>
     </ClCompile>
+    <ClCompile Include="..\public\ImGui\imgui_widgets.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\public\ImGui\imgui_tables.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\public\ImGui\imgui_impl_win32.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\public\ImGui\imgui_impl_dx12.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\public\ImGui\imgui_draw.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\public\ImGui\imgui_demo.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\public\ImGui\imgui.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\UNetworkBaseController.cpp">
       <Filter>20.Network\NetBaseController</Filter>
     </ClCompile>
@@ -645,35 +669,35 @@
     <ClCompile Include="..\private\UFog.cpp">
       <Filter>05.Actor\Fog</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\EngineStruct.cpp">
-      <Filter>99.Default\Struct</Filter>
-    </ClCompile>
-    <ClCompile Include="..\public\ImGui\imgui.cpp">
-      <Filter>99.Default\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\public\ImGui\imgui_demo.cpp">
-      <Filter>99.Default\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\public\ImGui\imgui_draw.cpp">
-      <Filter>99.Default\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\public\ImGui\imgui_impl_dx12.cpp">
-      <Filter>99.Default\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\public\ImGui\imgui_impl_win32.cpp">
-      <Filter>99.Default\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\public\ImGui\imgui_tables.cpp">
-      <Filter>99.Default\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\public\ImGui\imgui_widgets.cpp">
-      <Filter>99.Default\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\UAxis.cpp">
-      <Filter>05.Actor\01.Pawn\Default\Axis</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\public\EngineDefine.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EngineConcept.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EngineEnum.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EngineTypedef.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EngineFunction.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EngineMacro.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EngineMake.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EngineShaderParam.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EngineStruct.h">
+      <Filter>99.Default\Struct</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\UObject.h">
       <Filter>95.Super\Object</Filter>
     </ClInclude>
@@ -872,6 +896,33 @@
     <ClInclude Include="..\public\UWorkThread.h">
       <Filter>03.Utility\Thread</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\EnginePacket.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ImGui\imstb_truetype.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ImGui\imstb_textedit.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ImGui\imstb_rectpack.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ImGui\imgui_internal.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ImGui\imgui_impl_win32.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ImGui\imgui_impl_dx12.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ImGui\imgui.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ImGui\imconfig.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\UNetworkBaseController.h">
       <Filter>20.Network\NetBaseController</Filter>
     </ClInclude>
@@ -971,63 +1022,6 @@
     <ClInclude Include="..\public\UFog.h">
       <Filter>05.Actor\Fog</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\EngineConcept.h">
-      <Filter>99.Default</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\EngineDefine.h">
-      <Filter>99.Default</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\EngineEnum.h">
-      <Filter>99.Default</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\EngineFunction.h">
-      <Filter>99.Default</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\EngineMacro.h">
-      <Filter>99.Default</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\EngineMake.h">
-      <Filter>99.Default</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\EnginePacket.h">
-      <Filter>99.Default</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\EngineShaderParam.h">
-      <Filter>99.Default</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\EngineTypedef.h">
-      <Filter>99.Default</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\EngineStruct.h">
-      <Filter>99.Default\Struct</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\ImGui\imconfig.h">
-      <Filter>99.Default\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\ImGui\imgui.h">
-      <Filter>99.Default\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\ImGui\imgui_impl_dx12.h">
-      <Filter>99.Default\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\ImGui\imgui_impl_win32.h">
-      <Filter>99.Default\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\ImGui\imgui_internal.h">
-      <Filter>99.Default\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\ImGui\imstb_rectpack.h">
-      <Filter>99.Default\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\ImGui\imstb_textedit.h">
-      <Filter>99.Default\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\ImGui\imstb_truetype.h">
-      <Filter>99.Default\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\UAxis.h">
-      <Filter>05.Actor\01.Pawn\Default\Axis</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Shader\ShaderGrobalFunc.hlsli">
@@ -1038,6 +1032,12 @@
     </None>
     <None Include="..\..\Shader\ComputeFunc.hlsli">
       <Filter>98.ShaderFile\Common\Particle</Filter>
+    </None>
+    <None Include="..\..\Shader\LightShaderFunc.hlsli">
+      <Filter>98.ShaderFile\Common\Light</Filter>
+    </None>
+    <None Include="..\..\Shader\LightShaderParam.hlsli">
+      <Filter>98.ShaderFile\Common\Light</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1097,6 +1097,12 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\2DFog.hlsl">
       <Filter>98.ShaderFile\Common\Fog</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\LightDirection.hlsl">
+      <Filter>98.ShaderFile\Common\Light</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\LightPoint.hlsl">
+      <Filter>98.ShaderFile\Common\Light</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
