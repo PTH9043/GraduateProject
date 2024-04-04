@@ -4,11 +4,13 @@
 BEGIN(Engine)
 class UModel;
 class UAnimModel;
+class UPawn;
 END
 
 BEGIN(Tool)
 class TShowModelObject;
 class TShowAnimModelObject;
+class TGuizmoManager;
 /*
 @ Date: 2024-02-04, Writer: นฺลยว๖
 @ Explain
@@ -46,24 +48,37 @@ private:
 	void LoadAnimModelData(CSHPTRREF<FILEGROUP> _spFolder);
 	void ResetModels();
 	void ResetAnimModels();
+
+	void EditModel();
+	void ClearCurrentModel();
+	void ClearCurrentAnimModel();
 private:
 	using MODELS = UNORMAP<_string, SHPTR<UModel>>;
 	using ANIMMODEL = UNORMAP<_string, SHPTR<UAnimModel>>;
 	using FILEGROUPS = UNORMAP<_string, SHPTR<FILEGROUP>>;
 	using FOLDERPAIR = std::pair<_wstring, SHPTR<FILEGROUP>>;
 	using FILEPAIR = std::pair<_wstring, SHPTR<FILEDATA>>;
+	using SHOWMODELS = UNORMAP<_string, SHPTR<TShowModelObject>>;
+	using SHOWANIMEMODELS = UNORMAP<_string, SHPTR<TShowAnimModelObject>>;
 
 	MAINDESC											m_stMainDesc;
 	DOCKDESC											m_stModelDockDesc;
 	DOCKDESC											m_stAnimModelDockDesc;
+	DOCKDESC											m_stTransformEditorDesc;
 
 	MODELS													m_ModelsContainer;
 	ANIMMODEL											m_AnimModelContainer;
+	SHOWMODELS											m_ShowModelsContainer;
+	SHOWANIMEMODELS										m_ShowAnimModelsContainer;
 
 	SHPTR<FILEGROUP>							m_spModelFileFolder;
 	SHPTR<FILEGROUP>							m_spAnimModelFileFolder;
 
-	SHPTR<TShowAnimModelObject>	m_spShowAnimModelObject;
+	SHPTR<UPawn>					m_spSelectedModel;
+	_string							m_SelectedModelName;
+
+
+	SHPTR<TShowAnimModelObject>		m_spShowAnimModelObject;
 	SHPTR<TShowModelObject>			m_spShowModelObject;
 
 	_uint														m_iFileIndex;
@@ -76,8 +91,16 @@ private:
 	_bool														m_isResetModel;
 	_bool														m_isResetAnimModel;
 
-	_float3													m_vModelPivotScale;
-	_float3													m_vAnimModelPivotScale;
+	//_float3													m_vModelPivotScale;
+	//_float3													m_vAnimModelPivotScale;
+
+	SHPTR<TGuizmoManager>				m_spGuizmoManager;
+
+	_bool								m_bSelectedhasAnim;
+	_bool								m_bGuizmoActive;
+
+	_uint								m_iModelSuffix;
+	_uint								m_iAnimModelSuffix;
 };
 
 END

@@ -66,8 +66,20 @@ void TMapView::RenderActive()
 		m_stMainDesc.iDockSpaceID = ImGui::GetID(GetName().c_str());
 		DockBuildInitSetting();
 		ImGui::DockSpace(m_stMainDesc.iDockSpaceID, ImVec2{}, m_stMainDesc.imgDockNodeFlags);
+		MapView();
 
-		ImGui::NewLine();
 	}
 	ImGui::End();
+}
+
+void TMapView::MapView()
+{
+
+
+
+
+
+
+
+
 }

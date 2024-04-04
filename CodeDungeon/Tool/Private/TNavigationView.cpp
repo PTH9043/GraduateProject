@@ -10,6 +10,8 @@
 #include "UDefaultDebugging.h"
 #include "UTransform.h"
 #include "UCell.h"
+#include "TMainScene.h"
+#include "UGrid.h"
 
 TNavigationView::TNavigationView(CSHPTRREF<UDevice> _spDevice) :
 	TImGuiView(_spDevice, "NavigationView"),
@@ -38,6 +40,7 @@ void TNavigationView::Free()
 
 HRESULT TNavigationView::NativeConstruct()
 {
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	m_stMainDesc = MAINDESC(ImGuiWindowFlags_NoBackground, ImGuiDockNodeFlags_None,
 		ImVec2{ (_float)WINDOW_WIDTH, 0.f }, ImVec2{ 500.f, (_float)WINDOW_HEIGHT });
 	m_stNavigationView = DOCKDESC("NavigationViewer", ImGuiWindowFlags_NoFocusOnAppearing,
@@ -45,8 +48,8 @@ HRESULT TNavigationView::NativeConstruct()
 
 	m_spStageManager = Create<UStageManager>();
 
+
 #ifdef _USE_DEBUGGING
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	UDefaultDebugging::DEBUGTYPE eDebugType{ UDefaultDebugging::DEBUGTYPE::DEBUG_END };
 	eDebugType = UDefaultDebugging::DEBUGTYPE::DEBUG_CUBE;
 	// Clone Actor
@@ -317,7 +320,6 @@ void TNavigationView::NavigationView()
 			ImGui::EndPopup();
 		}
 
-		
 		ImGui::Checkbox("Modify Navigation", &m_bNavigationModify);
 		if (true == m_bNavigationModify)
 		{

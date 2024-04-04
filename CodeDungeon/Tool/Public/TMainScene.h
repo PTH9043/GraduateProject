@@ -10,6 +10,7 @@ BEGIN(Tool)
 
 class TMainCamera;
 class TTestObject;
+class TGuizmoManager;
 
 class TMainScene : public UScene {
 public:
@@ -28,6 +29,8 @@ private:
 	// Main
 	SHPTR<TMainCamera>			m_spMainCamera;
 	SHPTR<UGrid>				m_spTestObject;
+
+
 };
 
 END

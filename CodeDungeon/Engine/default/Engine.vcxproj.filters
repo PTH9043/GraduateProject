@@ -346,6 +346,9 @@
     <Filter Include="98.ShaderFile\Common\Light">
       <UniqueIdentifier>{933ad2d2-108d-4c7f-9abd-62fec8dfff4e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="99.Default\ImGui\Guizmo">
+      <UniqueIdentifier>{9464c2af-e4de-4527-8928-c326dcaa5b81}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -668,6 +671,22 @@
     </ClCompile>
     <ClCompile Include="..\private\UFog.cpp">
       <Filter>05.Actor\Fog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UAxis.cpp" />
+    <ClCompile Include="..\public\ImGui\ImGradient.cpp">
+      <Filter>99.Default\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\public\ImGui\GraphEditor.cpp">
+      <Filter>99.Default\ImGui\Guizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\public\ImGui\ImCurveEdit.cpp">
+      <Filter>99.Default\ImGui\Guizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\public\ImGui\ImGuizmo.cpp">
+      <Filter>99.Default\ImGui\Guizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\public\ImGui\ImSequencer.cpp">
+      <Filter>99.Default\ImGui\Guizmo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1021,6 +1040,25 @@
     </ClInclude>
     <ClInclude Include="..\public\UFog.h">
       <Filter>05.Actor\Fog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UAxis.h" />
+    <ClInclude Include="..\public\ImGui\ImGradient.h">
+      <Filter>99.Default\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ImGui\GraphEditor.h">
+      <Filter>99.Default\ImGui\Guizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ImGui\ImCurveEdit.h">
+      <Filter>99.Default\ImGui\Guizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ImGui\ImGuizmo.h">
+      <Filter>99.Default\ImGui\Guizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ImGui\ImSequencer.h">
+      <Filter>99.Default\ImGui\Guizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ImGui\ImZoomSlider.h">
+      <Filter>99.Default\ImGui\Guizmo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

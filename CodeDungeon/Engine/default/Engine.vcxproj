@@ -32,14 +32,20 @@
     <ClInclude Include="..\public\EngineShaderParam.h" />
     <ClInclude Include="..\public\EngineStruct.h" />
     <ClInclude Include="..\public\EngineTypedef.h" />
+    <ClInclude Include="..\public\ImGui\GraphEditor.h" />
     <ClInclude Include="..\public\ImGui\imconfig.h" />
+    <ClInclude Include="..\public\ImGui\ImCurveEdit.h" />
+    <ClInclude Include="..\public\ImGui\ImGradient.h" />
     <ClInclude Include="..\public\ImGui\imgui.h" />
+    <ClInclude Include="..\public\ImGui\ImGuizmo.h" />
     <ClInclude Include="..\public\ImGui\imgui_impl_dx12.h" />
     <ClInclude Include="..\public\ImGui\imgui_impl_win32.h" />
     <ClInclude Include="..\public\ImGui\imgui_internal.h" />
+    <ClInclude Include="..\public\ImGui\ImSequencer.h" />
     <ClInclude Include="..\public\ImGui\imstb_rectpack.h" />
     <ClInclude Include="..\public\ImGui\imstb_textedit.h" />
     <ClInclude Include="..\public\ImGui\imstb_truetype.h" />
+    <ClInclude Include="..\public\ImGui\ImZoomSlider.h" />
     <ClInclude Include="..\public\UAnimatedParticle.h" />
     <ClInclude Include="..\public\UAxis.h" />
     <ClInclude Include="..\public\UCharacter.h" />
@@ -254,13 +260,18 @@
     <ClCompile Include="..\private\UVIBufferRect.cpp" />
     <ClCompile Include="..\private\UVIBufferSphere.cpp" />
     <ClCompile Include="..\private\UWorkThread.cpp" />
+    <ClCompile Include="..\public\ImGui\GraphEditor.cpp" />
+    <ClCompile Include="..\public\ImGui\ImCurveEdit.cpp" />
+    <ClCompile Include="..\public\ImGui\ImGradient.cpp" />
     <ClCompile Include="..\public\ImGui\imgui.cpp" />
+    <ClCompile Include="..\public\ImGui\ImGuizmo.cpp" />
     <ClCompile Include="..\public\ImGui\imgui_demo.cpp" />
     <ClCompile Include="..\public\ImGui\imgui_draw.cpp" />
     <ClCompile Include="..\public\ImGui\imgui_impl_dx12.cpp" />
     <ClCompile Include="..\public\ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="..\public\ImGui\imgui_tables.cpp" />
     <ClCompile Include="..\public\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="..\public\ImGui\ImSequencer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Shader\2DAnimateParticle.hlsl" />

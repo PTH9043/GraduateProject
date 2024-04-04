@@ -89,6 +89,8 @@ const PICKINGDESC& UPicking::GetPickDesc()
 			bFoundValidPick = true;
 		}
 	}
+
+#ifdef _USE_DEBUGGING
 	//만약 유의미한 픽킹이 진행이 안되었을 시
 	//그리드 위의 좌표를 반환 (y = 0의 좌표)
 	if (!bFoundValidPick)
@@ -101,11 +103,9 @@ const PICKINGDESC& UPicking::GetPickDesc()
 			return m_stPickingDesc;
 		}
 		else
-		{
 			return PICKINGDESC{nullptr, v3Pos, fDist, false};
-		}
-		
 	}
+#endif
 
 	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
 	_float3 vCamPos = pGameInstance->GetMainCamPosition();

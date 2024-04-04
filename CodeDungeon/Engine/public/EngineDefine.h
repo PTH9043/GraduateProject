@@ -22,6 +22,7 @@
 #pragma comment (lib, "libxl")
 
 #define _USE_IMGUI
+#define IMGUI_DEFINE_MATH_OPERATORS
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_win32.h"
 #include "ImGui/imgui_impl_dx12.h"
@@ -29,6 +30,12 @@
 #include "ImGui/imstb_rectpack.h"
 #include "ImGui/imstb_textedit.h"
 #include "ImGui/imstb_truetype.h"
+
+#include "ImGui/ImGuizmo.h"
+#include "ImGui/ImSequencer.h"
+#include "ImGui/ImZoomSlider.h"
+#include "ImGui/ImCurveEdit.h"
+#include "ImGui/GraphEditor.h"
 
 static const char* CLONETYPE_STRING{ "CloneType" };
 static const char* CLONETYPE_STATIC_STRING{ "CLONETYPE_STATIC" };

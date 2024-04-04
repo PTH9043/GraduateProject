@@ -29,6 +29,9 @@ protected:
 	void DockBuildInitSetting();
 	void RenderActive() override;
 private:
+	void MapView();
+
+private:
 	MAINDESC												m_stMainDesc;
 	DOCKDESC												m_stMapView;
 

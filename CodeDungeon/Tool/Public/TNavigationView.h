@@ -9,6 +9,7 @@ class UDefaultDebugging;
 END
 
 BEGIN(Tool)
+class TGuizmoManager;
 class TNavigationView : public TImGuiView {
 public:
 	enum SELECT_OBJ

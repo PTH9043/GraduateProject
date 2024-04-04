@@ -11,12 +11,16 @@
 #include "TImGuiManager.h"
 #include "UTransform.h"
 #include "TUnityModelLoader.h"
+#include "TGuizmoManager.h"
+#include "UPicking.h"
+#include "UPawn.h"
 
 TModelView::TModelView(CSHPTRREF<UDevice> _spDevice) :
 	TImGuiView(_spDevice, "ModelView"),
 	m_stMainDesc{},
 	m_stModelDockDesc{},
 	m_stAnimModelDockDesc{},
+	m_stTransformEditorDesc{},
 	m_ModelsContainer{},
 	m_AnimModelContainer{},
 	m_spModelFileFolder{ nullptr },
@@ -30,8 +34,15 @@ TModelView::TModelView(CSHPTRREF<UDevice> _spDevice) :
 	m_isInitSetting{ false },
 	m_isResetModel{ false },
 	m_isResetAnimModel{ false },
-	m_vModelPivotScale{},
-	m_vAnimModelPivotScale{}
+	m_spGuizmoManager{nullptr},
+	m_bSelectedhasAnim{false},
+	m_bGuizmoActive{false},
+	m_ShowAnimModelsContainer{},
+	m_ShowModelsContainer{},
+	m_spSelectedModel{nullptr},
+	m_SelectedModelName{},
+	m_iModelSuffix{ 0 },
+	m_iAnimModelSuffix{ 0 }
 {
 }
 
@@ -49,15 +60,18 @@ HRESULT TModelView::NativeConstruct()
 		ImGuiDockNodeFlags_CentralNode);
 	m_stAnimModelDockDesc = DOCKDESC("AnimModelViewer", ImGuiWindowFlags_NoFocusOnAppearing,
 		ImGuiDockNodeFlags_CentralNode);
+	m_stTransformEditorDesc = DOCKDESC("ModelEditor", ImGuiWindowFlags_NoFocusOnAppearing,
+		ImGuiDockNodeFlags_CentralNode);
+
+	m_spGuizmoManager = Create<TGuizmoManager>();
+
 	return S_OK;
 }
 
 HRESULT TModelView::LoadResource()
 {
-	m_spShowAnimModelObject = std::static_pointer_cast<TShowAnimModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWANIMMODELOBJECT));
-	m_spShowModelObject = std::static_pointer_cast<TShowModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWMODELOBJECT));
-	// AnimModelPivotScale
-	m_vAnimModelPivotScale = m_spShowAnimModelObject->GetTransform()->GetScale();
+	//// AnimModelPivotScale
+	//m_vAnimModelPivotScale = m_spShowAnimModelObject->GetTransform()->GetScale();
 	return S_OK;
 }
 
@@ -65,12 +79,15 @@ HRESULT TModelView::ReleaseResource()
 {
 	m_AnimModelContainer.clear();
 	m_ModelsContainer.clear();
+	m_ShowModelsContainer.clear();
+	m_ShowAnimModelsContainer.clear();
 
 	m_spModelFileFolder = nullptr;
 	m_spAnimModelFileFolder = nullptr;
 
 	m_spShowModelObject.reset();
 	m_spShowAnimModelObject.reset();
+	m_spSelectedModel.reset();
 
 	GetGameInstance()->RemoveActor(m_spShowModelObject);
 	GetGameInstance()->RemoveActor(m_spShowAnimModelObject);
@@ -81,14 +98,6 @@ HRESULT TModelView::ReleaseResource()
 
 void TModelView::TickActive(const _double& _dTimeDelta)
 {
-	if (true == m_isResetModel)
-	{
-		m_spShowModelObject->SetShowModel(nullptr);
-	}
-	if (true == m_isResetAnimModel)
-	{
-		m_spShowAnimModelObject->SetShowModel(nullptr);
-	}
 }
 
 void TModelView::LateTickActive(const _double& _dTimeDetla)
@@ -109,7 +118,7 @@ void TModelView::RenderActive()
 		ImGui::NewLine();
 		ShowModels();
 		ShowAnimMoldels();
-
+		EditModel();
 	}
 	ImGui::End();
 }
@@ -122,11 +131,14 @@ void TModelView::DockBuildInitSetting()
 		ImGui::DockBuilderRemoveNode(m_stMainDesc.iDockSpaceID);
 		ImGui::DockBuilderAddNode(m_stMainDesc.iDockSpaceID);
 		// Docking Build 
-		m_stModelDockDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Up, 0.5f, NULL, &dock_main_id);
-		m_stAnimModelDockDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.5f, NULL, &dock_main_id);
+		m_stModelDockDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Up, 0.3f, NULL, &dock_main_id);
+		m_stTransformEditorDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.4f, NULL, &dock_main_id);
+		m_stAnimModelDockDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.4f, NULL, &dock_main_id);
 
 		ImGui::DockBuilderDockWindow(m_stModelDockDesc.strName.c_str(), m_stModelDockDesc.iDockSpaceID);
 		ImGui::DockBuilderDockWindow(m_stAnimModelDockDesc.strName.c_str(), m_stAnimModelDockDesc.iDockSpaceID);
+		ImGui::DockBuilderDockWindow(m_stTransformEditorDesc.strName.c_str(), m_stTransformEditorDesc.iDockSpaceID);
+
 		ImGui::DockBuilderFinish(m_stMainDesc.iDockSpaceID);
 	}
 	m_isInitSetting = true;
@@ -136,9 +148,13 @@ void TModelView::ShowModels()
 {
 	ImGui::Begin(m_stModelDockDesc.strName.c_str(), GetOpenPointer(), m_stModelDockDesc.imgWindowFlags);
 	{
-		ConvertModels();
-		ResetModels();
-		ShowModelList();
+		if (ImGui::TreeNodeEx("ShowModel", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			ConvertModels();
+			ResetModels();
+			ShowModelList();
+			ImGui::TreePop();
+		}
 	}
 	ImGui::End();
 }
@@ -156,71 +172,189 @@ void TModelView::ShowAnimMoldels()
 
 void TModelView::ShowModelList()
 {
-	if (ImGui::BeginListBox("Model List", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+	if (ImGui::TreeNodeEx("Add ShowModel", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		using MODELPAIR = std::pair < _string, SHPTR<UModel>>;
-		for (const MODELPAIR& Model : m_ModelsContainer)
+		if (ImGui::BeginListBox("Model List to Add", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
 		{
-			_bool isTrue{ false };
-			if (ImGui::Selectable(Model.first.c_str(), &isTrue))
+			using MODELPAIR = std::pair < _string, SHPTR<UModel>>;
+			for (const MODELPAIR& Model : m_ModelsContainer)
 			{
-				// Set Show Model
-				m_spShowModelObject->SetShowModel(Model.second);
-			}
-		}
-		ImGui::EndListBox();
-	}
+				_bool isTrue{ false };
+				if (ImGui::Selectable(Model.first.c_str(), &isTrue))
+				{
+					_string uniqueName = Model.first;
+					_string numStr = std::to_string(m_iModelSuffix);
+					while (m_ShowModelsContainer.find(uniqueName) != m_ShowModelsContainer.end())				
+						uniqueName.append(numStr);
 
-	ImGui::DragFloat3("Model Scale", &m_vModelPivotScale.x, 0.001f);
-	if (true == ImGui::Button("Chage View Model Scale"))
+					SHPTR<TShowModelObject> newModel = std::static_pointer_cast<TShowModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWMODELOBJECT));
+					newModel->SetShowModel(Model.second);
+					m_ShowModelsContainer.emplace(uniqueName, newModel);
+
+					// numStr을 다시 제거
+					size_t pos = uniqueName.find(numStr);
+					if (pos != _wstring::npos)
+						uniqueName.erase(pos, numStr.length());
+					m_iModelSuffix++;
+				}
+			}
+			ImGui::EndListBox();
+		}
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNodeEx("Current ShowModels", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		m_spShowModelObject->GetTransform()->SetScale(m_vModelPivotScale);
+		if (ImGui::BeginListBox("Current Models Shown", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+		{
+			for (auto& Model : m_ShowModelsContainer)
+			{
+				_bool isTrue{ false };
+				if (ImGui::Selectable(Model.first.c_str(), &isTrue))
+				{
+					m_spSelectedModel = static_pointer_cast<UPawn>(Model.second);
+					m_SelectedModelName = Model.first;
+					m_bSelectedhasAnim = false;
+				}
+			}
+			ImGui::EndListBox();
+		}
+		if (ImGui::Button("Clear Current ShowModels"))
+			ClearCurrentModel();
+		ImGui::TreePop();
+
 	}
 }
 
 void TModelView::ShowAnimModelList()
 {
-	if (ImGui::BeginListBox("AnimModel List", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+	if (ImGui::TreeNodeEx("Add AnimShowModel", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		using ANIMMODELPAIR = std::pair < _string, SHPTR<UAnimModel>>;
-		for (const ANIMMODELPAIR& Model : m_AnimModelContainer)
+		if (ImGui::BeginListBox("AnimModel List", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
 		{
-			_bool isTrue{ false };
-			if (ImGui::Selectable(Model.first.c_str(), &isTrue))
+			using ANIMMODELPAIR = std::pair < _string, SHPTR<UAnimModel>>;
+			for (const ANIMMODELPAIR& Model : m_AnimModelContainer)
 			{
-				// Set Show Model
-				m_spShowAnimModelObject->SetShowModel(Model.second);
-			}
-		}
-		ImGui::EndListBox();
-	}
-	ImGui::NewLine();
-	if (ImGui::BeginListBox("Select Animation", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
-	{
-		if (nullptr != m_spShowAnimModelObject)
-		{
-			CSHPTRREF<UAnimModel> spModel = m_spShowAnimModelObject->GetAnimModel();
-			if (nullptr != spModel)
-			{
-				for (auto& Animation : spModel->GetAnimations())
+				_bool isTrue{ false };
+				if (ImGui::Selectable(Model.first.c_str(), &isTrue))
 				{
-					_string strName = UMethod::ConvertWToS(Animation->GetAnimName());
-					_bool isTrue{ false };
-					if (ImGui::Selectable(strName.c_str(), &isTrue))
-					{
-						spModel->SetAnimation(Animation->GetAnimName());
-					}
+					_string uniqueName = Model.first;
+					_string numStr = std::to_string(m_iAnimModelSuffix);
+					while (m_ShowAnimModelsContainer.find(uniqueName) != m_ShowAnimModelsContainer.end())
+						uniqueName.append(numStr);
+
+					SHPTR<TShowAnimModelObject> newAnimModel = std::static_pointer_cast<TShowAnimModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWANIMMODELOBJECT));
+					newAnimModel->SetShowModel(Model.second);
+					m_ShowAnimModelsContainer.emplace(uniqueName, newAnimModel);
+
+					// numStr을 다시 제거
+					size_t pos = uniqueName.find(numStr);
+					if (pos != _wstring::npos)
+						uniqueName.erase(pos, numStr.length());
+					m_iAnimModelSuffix++;
 				}
 			}
+			ImGui::EndListBox();
 		}
-		ImGui::EndListBox();
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNodeEx("Current AnimShowModels", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (ImGui::BeginListBox("Current AnimModels Shown", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+		{
+			for (auto& Model : m_ShowAnimModelsContainer)
+			{
+				_bool isTrue{ false };
+				if (ImGui::Selectable(Model.first.c_str(), &isTrue))
+				{
+					m_spSelectedModel = static_pointer_cast<UPawn>(Model.second);
+					m_SelectedModelName = Model.first;
+					m_bSelectedhasAnim = true;
+				}
+			}
+			ImGui::EndListBox();
+		}
+		if (ImGui::Button("Clear Current AnimShowModels"))
+			ClearCurrentAnimModel();
+		ImGui::TreePop();
+	
 	}
 
-	ImGui::DragFloat3("AnimModel Scale", &m_vAnimModelPivotScale.x, 0.001f);
-	if (true == ImGui::Button("Chage View AnimModel Scale"))
+	if(m_bSelectedhasAnim)
 	{
-		m_spShowAnimModelObject->GetTransform()->SetScale(m_vAnimModelPivotScale);
+		if (ImGui::TreeNodeEx("Select Animation", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			if (ImGui::BeginListBox("Select Animation", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+			{
+				if (nullptr != m_spSelectedModel)
+				{
+					CSHPTRREF<UAnimModel> spModel = (dynamic_pointer_cast<TShowAnimModelObject>(m_spSelectedModel))->GetAnimModel();
+					if (nullptr != spModel)
+					{
+						for (auto& Animation : spModel->GetAnimations())
+						{
+							_string strName = UMethod::ConvertWToS(Animation->GetAnimName());
+							_bool isTrue{ false };
+							if (ImGui::Selectable(strName.c_str(), &isTrue))
+							{
+								spModel->SetAnimation(Animation->GetAnimName());
+							}
+						}
+					}
+				}
+				ImGui::EndListBox();
+			}
+			ImGui::TreePop();
+		}
 	}
+}
+
+void TModelView::EditModel()
+{
+	ImGui::Begin(m_stTransformEditorDesc.strName.c_str(), GetOpenPointer(), m_stTransformEditorDesc.imgWindowFlags);
+	{
+		if (m_spSelectedModel != nullptr)
+		{
+			m_spGuizmoManager->SetSelectedActor(m_spSelectedModel);
+
+			ImGui::Text("Selected Model: %s", m_SelectedModelName.c_str());
+			ImGui::Checkbox("Change Model Transform", &m_bGuizmoActive);
+			if (true == m_bGuizmoActive)
+			{
+				m_spGuizmoManager->EditTransformViaGuizmo();
+			}
+		}
+		else
+			ImGui::Text("Selected Model: None, Select Current Model to edit transform");
+	}
+	ImGui::End();
+}
+
+void TModelView::ClearCurrentModel()
+{
+	for (auto& Model : m_ShowModelsContainer)
+	{
+		if (Model.second == m_spSelectedModel)
+		{
+			GetGameInstance()->RemoveActor(Model.second);
+			Model.second.reset();
+			m_ShowModelsContainer.erase(Model.first);
+		}
+	}
+	m_spSelectedModel.reset();
+}
+
+void TModelView::ClearCurrentAnimModel()
+{
+	for (auto& Model : m_ShowAnimModelsContainer)
+	{
+		if (Model.second == m_spSelectedModel)
+		{
+			GetGameInstance()->RemoveActor(Model.second);
+			Model.second.reset();
+			m_ShowAnimModelsContainer.erase(Model.first);
+		}
+	}
+	m_spSelectedModel.reset();
 }
 
 void TModelView::ConvertModels()
@@ -388,3 +522,4 @@ void TModelView::ResetAnimModels()
 		m_spAnimModelFileFolder = nullptr;
 	}
 }
+

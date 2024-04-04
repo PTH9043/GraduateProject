@@ -7,6 +7,7 @@
 #include "UVIBufferGrid.h"
 #include "UTransform.h"
 #include "UPicking.h"
+#include "TGuizmoManager.h"
 
 TMainScene::TMainScene(CSHPTRREF<UDevice> _spDevice)
 	: UScene(_spDevice, (_uint)IMGTAG::MAIN),
@@ -63,6 +64,7 @@ HRESULT TMainScene::LoadSceneData()
 		stGrid.spGrid = m_spTestObject;
 
 		spGameInstance->AddPickingGrid(stGrid);
+
 	}
 
 	return S_OK;
@@ -74,4 +76,5 @@ void TMainScene::Tick(const _double& _dTimeDelta)
 
 void TMainScene::LateTick(const _double& _dTimeDelta)
 {
+
 }

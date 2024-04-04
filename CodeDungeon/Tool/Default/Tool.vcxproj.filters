@@ -95,6 +95,12 @@
     <Filter Include="03.ImGui\MapView">
       <UniqueIdentifier>{9d76bb7f-cbe1-483d-a2c5-401411eccd5e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="99.Default\ImGui\Guizmo">
+      <UniqueIdentifier>{8135f72d-c259-4b60-a417-25ec751b32c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="91.GuizmoManager">
+      <UniqueIdentifier>{cb1408c4-57f9-4a13-8033-3b803b012428}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ToolDefines.h">
@@ -220,6 +226,27 @@
     <ClInclude Include="..\Public\TMapView.h">
       <Filter>03.ImGui\MapView</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\ImGui\GraphEditor.h">
+      <Filter>99.Default\ImGui\Guizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui\ImCurveEdit.h">
+      <Filter>99.Default\ImGui\Guizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui\ImGradient.h">
+      <Filter>99.Default\ImGui\Guizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui\ImGuizmo.h">
+      <Filter>99.Default\ImGui\Guizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui\ImSequencer.h">
+      <Filter>99.Default\ImGui\Guizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui\ImZoomSlider.h">
+      <Filter>99.Default\ImGui\Guizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TGuizmoManager.h">
+      <Filter>91.GuizmoManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\TToolApp.cpp">
@@ -326,6 +353,24 @@
     </ClCompile>
     <ClCompile Include="..\Private\TMapView.cpp">
       <Filter>03.ImGui\MapView</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGui\GraphEditor.cpp">
+      <Filter>99.Default\ImGui\Guizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGui\ImCurveEdit.cpp">
+      <Filter>99.Default\ImGui\Guizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGui\ImGradient.cpp">
+      <Filter>99.Default\ImGui\Guizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGui\ImGuizmo.cpp">
+      <Filter>99.Default\ImGui\Guizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGui\ImSequencer.cpp">
+      <Filter>99.Default\ImGui\Guizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TGuizmoManager.cpp">
+      <Filter>91.GuizmoManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
