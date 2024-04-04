@@ -22,6 +22,8 @@
     <ClInclude Include="..\Public\Allocator.h" />
     <ClInclude Include="..\Public\AMySqlConnector.h" />
     <ClInclude Include="..\Public\AMySqlDriver.h" />
+    <ClInclude Include="..\Public\AMySqlTable.h" />
+    <ClInclude Include="..\Public\ASqlLoginTable.h" />
     <ClInclude Include="..\Public\CoreConcept.h" />
     <ClInclude Include="..\Public\CoreDefines.h" />
     <ClInclude Include="..\Public\CoreEnum.h" />
@@ -29,13 +31,13 @@
     <ClInclude Include="..\Public\CoreGrobal.h" />
     <ClInclude Include="..\Public\CoreMacro.h" />
     <ClInclude Include="..\Public\CorePacket.h" />
-    <ClInclude Include="..\Public\CoreSqlDefines.h" />
+    <ClInclude Include="..\Public\CoreStatic.h" />
     <ClInclude Include="..\Public\CoreStruct.h" />
     <ClInclude Include="..\Public\CoreTls.h" />
     <ClInclude Include="..\Public\CoreTypecast.h" />
     <ClInclude Include="..\Public\CoreTypedef.h" />
-    <ClInclude Include="..\Public\ini.h" />
-    <ClInclude Include="..\Public\INIReader.h" />
+    <ClInclude Include="..\Public\CustomString.h" />
+    <ClInclude Include="..\Public\DBDataGroup.h" />
     <ClInclude Include="..\Public\Lock.h" />
     <ClInclude Include="..\Public\LockFree.h" />
     <ClInclude Include="..\Public\Memory.h" />
@@ -45,7 +47,6 @@
     <ClInclude Include="..\Public\ACell.h" />
     <ClInclude Include="..\Public\AStressClientService.h" />
     <ClInclude Include="..\Public\ACollider.h" />
-    <ClInclude Include="..\Public\ADBManager.h" />
     <ClInclude Include="..\Public\AJobTimer.h" />
     <ClInclude Include="..\Public\ALogManager.h" />
     <ClInclude Include="..\Public\ALuaLoader.h" />
@@ -68,15 +69,16 @@
     <ClInclude Include="..\Public\ASphereCollider.h" />
     <ClInclude Include="..\Public\AThreadManager.h" />
     <ClInclude Include="..\Public\ATransform.h" />
-    <ClInclude Include="..\Public\USqlDBQuery.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Allocator.cpp" />
     <ClCompile Include="..\Private\AMySqlConnector.cpp" />
     <ClCompile Include="..\Private\AMySqlDriver.cpp" />
+    <ClCompile Include="..\Private\AMySqlTable.cpp" />
+    <ClCompile Include="..\Private\ASqlLoginTable.cpp" />
     <ClCompile Include="..\Private\CoreGrobal.cpp" />
-    <ClCompile Include="..\Private\ini.cpp" />
-    <ClCompile Include="..\Private\INIReader.cpp" />
+    <ClCompile Include="..\Private\CustomString.cpp" />
+    <ClCompile Include="..\Private\DBDataGroup.cpp" />
     <ClCompile Include="..\Private\Lock.cpp" />
     <ClCompile Include="..\Private\LockFree.cpp" />
     <ClCompile Include="..\Private\Memory.cpp" />
@@ -86,7 +88,6 @@
     <ClCompile Include="..\Private\ACell.cpp" />
     <ClCompile Include="..\Private\AStressClientService.cpp" />
     <ClCompile Include="..\Private\ACollider.cpp" />
-    <ClCompile Include="..\Private\ADBManager.cpp" />
     <ClCompile Include="..\Private\AJobTimer.cpp" />
     <ClCompile Include="..\Private\ALogManager.cpp" />
     <ClCompile Include="..\Private\ALuaLoader.cpp" />
@@ -109,7 +110,6 @@
     <ClCompile Include="..\Private\ASphereCollider.cpp" />
     <ClCompile Include="..\Private\AThreadManager.cpp" />
     <ClCompile Include="..\Private\ATransform.cpp" />
-    <ClCompile Include="..\Private\USqlDBQuery.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -169,18 +169,18 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>..\Bin\</OutDir>
+    <OutDir>..\Bin\debug\</OutDir>
     <TargetName>$(ProjectName)D</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>..\Bin\</OutDir>
+    <OutDir>..\Bin\release\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>..\Bin\</OutDir>
+    <OutDir>..\Bin\debug\</OutDir>
     <TargetName>$(ProjectName)D</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>..\Bin\</OutDir>
+    <OutDir>..\Bin\release\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

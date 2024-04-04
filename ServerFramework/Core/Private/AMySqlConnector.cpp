@@ -1,18 +1,23 @@
 #include "CoreDefines.h"
-#include "CoreSqlDefines.h"
 #include "AMySqlConnector.h"
 
 namespace Core {
 
-	AMySqlConnector::AMySqlConnector() : m_pConnection{nullptr}{
+	AMySqlConnector::AMySqlConnector() : m_pConnection{ nullptr }, m_iThreadIndex{ 0 } {
 	}
 
 	_bool AMySqlConnector::NativeConstruct(sql::mysql::MySQL_Driver* _pDriver, const _string& _strAddress, 
-		const _string& _strName, const _string& _strPassward)
+		const _string& _strName, const _string& _strPassward, _int _iThreadID)
 	{
-		RETURN_CHECK(nullptr == _pDriver, false);
+		assert(nullptr != _pDriver);
 		m_pConnection = _pDriver->connect(_strAddress.c_str(), _strName.c_str(), _strPassward.c_str());
-		return nullptr != m_pConnection;
+		m_iThreadIndex = _iThreadID;
+
+		if (nullptr == m_pConnection)
+			return false;
+
+		m_pConnection->setSchema("CodeDungeon");
+		return true;
 	}
 
 	sql::Statement* AMySqlConnector::MakeStatement(){

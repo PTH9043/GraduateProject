@@ -19,14 +19,17 @@ public:
 	DESTRUCTOR(AMySqlConnector)
 public:
 	_bool NativeConstruct(sql::mysql::MySQL_Driver* _pDriver, const _string& _strAddress, const _string& _strName, 
-		const _string& _strPassward);
-
+		const _string& _strPassward, _int _iThreadID);
 	sql::Statement* MakeStatement();
 	sql::PreparedStatement* MakePrepareStatement(const _string& _strStateString);
+public: 
+	// get Thread Index 
+	const _int GetThreadIndex() const { return m_iThreadIndex; }
 private:
 	virtual void Free() override;
 private:
 	sql::Connection*	m_pConnection;
+	_int							m_iThreadIndex;
 };
 
 END

@@ -5,8 +5,9 @@
 
 BEGIN(Core)
 class AMySqlConnector;
+class AMySqlTable;
 /*
-@ Date: 2023-01-28, Writer: 박태현
+@ Date: 2024-01-28, Writer: 박태현
 @ Explain
 -  DataBase와 연결을 하기 위한 클래스이다. 
 연결할 데이터베이스는 mysql, redis

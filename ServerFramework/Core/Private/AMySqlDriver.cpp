@@ -1,7 +1,7 @@
 #include "CoreDefines.h"
-#include "CoreSqlDefines.h"
 #include "AMySqlDriver.h"
 #include "AMySqlConnector.h"
+#include "AMySqlTable.h"
 
 namespace Core {
 	AMySqlDriver::AMySqlDriver() : 
@@ -14,12 +14,33 @@ namespace Core {
 	{
 		// Connect My Sql 
 		m_pDriver = sql::mysql::get_driver_instance();
-		RETURN_CHECK(nullptr == m_pDriver, false);
+		assert(nullptr != m_pDriver);
+		// 실제 데이터베이스가 존재하는지 확인 
+		{
+			// 데이터베이스 서버에 연결한다. 
+			std::unique_ptr<sql::Connection> Conn(m_pDriver->connect(_strAddress.c_str(), _strName.c_str(), _strPassward.c_str()));
+			// Statement 객체를 생성
+			std::unique_ptr<sql::Statement> Stmt(Conn->createStatement());
+			// Query문 작성 
+			_string CheckDBExistQuery = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '";
+			CheckDBExistQuery += SQL_DATABASE_NAME;
+			CheckDBExistQuery += "'";
+			// Make Result 
+			std::unique_ptr<sql::ResultSet> res(Stmt->executeQuery(CheckDBExistQuery.c_str()));
+			// 데이터베이스가 존재하지 않는다면
+			if (false == res->next())
+			{
+				_string CreateDBQuery = "CREATE DATABASE ";
+				CreateDBQuery.append(SQL_DATABASE_NAME);
+				Stmt->executeUpdate(CreateDBQuery.c_str());
+			}
+		}
 		// MySql Ready
+		_int i = 0; 
 		for (auto& iter : m_MySqlArray)
 		{
-			iter = CreateInitNative<AMySqlConnector>(m_pDriver, _strAddress, _strName, _strPassward);
-			RETURN_CHECK(nullptr == iter, false);
+			iter = CreateInitNative<AMySqlConnector>(m_pDriver, _strAddress, _strName, _strPassward, i++);
+			assert(nullptr != iter);
 		}
 		return true;
 	}
