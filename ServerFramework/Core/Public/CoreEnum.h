@@ -59,12 +59,24 @@ namespace Core
 			LOGIN, 
 			TABLE_END
 		};
+		/*
+		@ Date: 2024-03-31,  Writer: 박태현
+		@ Explain:  Query Type을 정의한다. 
+		*/
+		enum class QUERYTYPE
+		{
+			INSERT, 
+			UPDATE,
+			REMOVE, 
+			FIND, 
+			QUERY_END
+		};
 	}
 
 	using SQLDATATYPE = Sql::DATATYPE;
 	using SQLINDEXTYPE = Sql::INDEXTYPE;
 	using SQLTABLETYPE = Sql::TABLETYPE;
-
+	using SQLQUERYTYPE = Sql::QUERYTYPE;
 
 	enum class SESSIONTYPE : unsigned int {
 		OBJECT, PLAYER, MONSTER, TYPE_END
@@ -75,6 +87,7 @@ namespace Core
 	enum class COLLIDERTYPE {
 		AABB, OBB, SPHERE, COLL_END
 	};
+
 
 	enum {
 		MAX_BUFFER_LENGTH = 512, 

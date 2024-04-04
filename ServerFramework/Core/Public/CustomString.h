@@ -62,7 +62,6 @@ namespace Core
             return *this;
         }
 
-
         CustomString& operator =(const STRING<TChar>& _str) {
             STRING<TChar>::operator=(_str);
             return *this;
@@ -136,7 +135,6 @@ namespace Core
             return *this;
         }
 
-
         CustomString& operator<<(const CUSSTRING& other) {
             *this += other;
             return *this;
@@ -152,7 +150,6 @@ namespace Core
             // std::wstring으로 변환하여 반환
             return  std::move(ChangeType(this->begin(), this->end()));
         }
-
 
         // 문자열을 다른 타입으로 변환하는 연산자를 추가합니다.
         operator STRING<TChar>() const {
@@ -196,6 +193,20 @@ namespace Core
     template<class TChar, class TString>
         requires CheckCustomString<TChar, TString>
     bool operator !=(const TChar* _str1, const CustomString<TChar, TString>& _str2) { return false == _str2.contains(_str1); }
+
+    template<class TChar, class TString>
+        requires CheckCustomString<TChar, TString>
+    CustomString<TChar, TString> operator+(const TChar* _pChar,  CustomString<TChar, TString> _strText)
+    {
+        return _strText.append(_pChar);
+    }
+
+
+
+    /*
+    	using string = std::basic_string<char, std::char_traits<char>, Core::USTLAllocator<char>>;
+	using wstring = std::basic_string<wchar_t, std::char_traits<wchar_t>, Core::USTLAllocator<wchar_t>>;
+    */
 }
 
 namespace std

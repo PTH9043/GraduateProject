@@ -118,8 +118,8 @@ namespace Core
 	template<class Type>
 	using LIST = std::list<Type, USTLAllocator<Type>>;
 
-	using string = std::basic_string<char, std::char_traits<char>, Core::USTLAllocator<char>>;
-	using wstring = std::basic_string<wchar_t, std::char_traits<wchar_t>, Core::USTLAllocator<wchar_t>>;
+	using string = CustomString<char, std::string>;
+	using wstring = CustomString<_tchar, std::wstring>;
 
 	using IOContext = boost::asio::io_context;
 

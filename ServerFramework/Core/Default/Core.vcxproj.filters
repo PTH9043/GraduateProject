@@ -67,9 +67,6 @@
     <Filter Include="97.Utility\ObjectPool">
       <UniqueIdentifier>{230e67c7-1ad2-4f50-95c3-103334143824}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97.Utility\INIReader">
-      <UniqueIdentifier>{91c4dc71-855e-4581-a294-bdda9d7d7d65}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97.Utility\LuaLoader">
       <UniqueIdentifier>{2ad6d3ab-aa44-4faa-ba72-e8e3f280712e}</UniqueIdentifier>
     </Filter>
@@ -124,9 +121,6 @@
     <Filter Include="03.Network\JobTimer">
       <UniqueIdentifier>{61a0a5f9-323f-42e3-9c95-123c650010e9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Manager\DatabaseManager">
-      <UniqueIdentifier>{b3c6da9b-9662-4dc2-bc17-f6510f90ef7e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03.Network\Service\StressClient">
       <UniqueIdentifier>{6d84328e-d16c-47d5-8f77-cceb970cbeed}</UniqueIdentifier>
     </Filter>
@@ -135,6 +129,15 @@
     </Filter>
     <Filter Include="97.Utility\CustomString">
       <UniqueIdentifier>{be92a052-51f9-42ee-9fd8-b32828b83976}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.DataBase\MySqlConnector">
+      <UniqueIdentifier>{a6aab818-4994-412e-ad91-dbeb6d6e60fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.DataBase\MySqlTable">
+      <UniqueIdentifier>{607effaa-e250-41ca-b9ba-4bbe909f0d15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.DataBase\MySqlTable\LoginTable">
+      <UniqueIdentifier>{14e2df0d-fd6a-4cd5-aef1-ad1b1ce3049a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -219,12 +222,6 @@
     <ClInclude Include="..\Public\ALogManager.h">
       <Filter>02.Manager\LogManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\INIReader.h">
-      <Filter>97.Utility\INIReader</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\ini.h">
-      <Filter>97.Utility\INIReader</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\ACoreApp.h">
       <Filter>96.Super\App</Filter>
     </ClInclude>
@@ -273,20 +270,26 @@
     <ClInclude Include="..\Public\AJobTimer.h">
       <Filter>03.Network\JobTimer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\ADBManager.h">
-      <Filter>02.Manager\DatabaseManager</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\CoreSqlDefines.h">
-      <Filter>99.Default</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\DBDataGroup.h">
       <Filter>97.Utility\DBClass</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CustomString.h">
       <Filter>97.Utility\CustomString</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\ASqlDriver.h">
+    <ClInclude Include="..\Public\AMySqlDriver.h">
       <Filter>07.DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AMySqlConnector.h">
+      <Filter>07.DataBase\MySqlConnector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AMySqlTable.h">
+      <Filter>07.DataBase\MySqlTable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CoreStatic.h">
+      <Filter>99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ASqlLoginTable.h">
+      <Filter>07.DataBase\MySqlTable\LoginTable</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -344,17 +347,11 @@
     <ClCompile Include="..\Private\ALogManager.cpp">
       <Filter>02.Manager\LogManager</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\INIReader.cpp">
-      <Filter>97.Utility\INIReader</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\ACoreApp.cpp">
       <Filter>96.Super\App</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ARoom.cpp">
       <Filter>03.Network\Room</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\ini.cpp">
-      <Filter>97.Utility\INIReader</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ALuaLoader.cpp">
       <Filter>97.Utility\LuaLoader</Filter>
@@ -395,17 +392,23 @@
     <ClCompile Include="..\Private\AJobTimer.cpp">
       <Filter>03.Network\JobTimer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\ADBManager.cpp">
-      <Filter>02.Manager\DatabaseManager</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\DBDataGroup.cpp">
       <Filter>97.Utility\DBClass</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CustomString.cpp">
       <Filter>97.Utility\CustomString</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\ASqlDriver.cpp">
+    <ClCompile Include="..\Private\AMySqlDriver.cpp">
       <Filter>07.DataBase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AMySqlConnector.cpp">
+      <Filter>07.DataBase\MySqlConnector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AMySqlTable.cpp">
+      <Filter>07.DataBase\MySqlTable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ASqlLoginTable.cpp">
+      <Filter>07.DataBase\MySqlTable\LoginTable</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

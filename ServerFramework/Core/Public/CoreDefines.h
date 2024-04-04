@@ -44,10 +44,14 @@
 #pragma comment (lib, "PthMathD")
 #pragma comment (lib, "redis++_staticd")
 #pragma comment (lib, "hiredisd")
+#pragma comment(lib, "mysqlcppconn_debug")
+#pragma comment(lib, "mysqlcppconn8_debug")
 #else
 #pragma comment (lib, "PthMath")
 #pragma comment (lib, "redis++_static")
 #pragma comment (lib, "hiredis")
+#pragma comment(lib, "mysqlcppconn")
+#pragma comment(lib, "mysqlcppconn8")
 #endif
 #pragma comment (lib, "libcrypto")
 #pragma comment (lib, "libssl")
@@ -80,6 +84,11 @@
 #include <list>
 #include <regex>
 #include <corecrt_wstring.h>
+#include <mysql/mysql_connection.h>
+#include <mysql/mysql_driver.h>
+#include <mysql/cppconn/prepared_statement.h>
+// 컴파일 타임에서 유용하게 사용할 수 있는 variant 
+#include <variant>
 
 
 extern "C" {
@@ -100,6 +109,7 @@ namespace Asio = boost::asio;
 #include "CoreTypedef.h"
 #include "CoreTypecast.h"
 #include "CoreMacro.h"
+#include "CoreStatic.h"
 #include "Lock.h"
 #include "SmartPointer.h"
 #include "ALuaLoader.h"

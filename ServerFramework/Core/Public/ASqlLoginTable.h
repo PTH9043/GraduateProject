@@ -1,0 +1,14 @@
+#ifndef _SERVERFRAMEWORK_CORE_PUBLIC_ASQLLOGINTABLE_H
+#define _SERVERFRAMEWORK_CORE_PUBLIC_ASQLLOGINTABLE_H
+
+#include "AMySqlTable.h"
+
+BEGIN(Core)
+
+class ASqlLoginTable final : public AMySqlTable {
+
+};
+
+END
+
+#endif // _SERVERFRAMEWORK_CORE_PUBLIC_ASQLLOGINTABLE_H

@@ -1,3 +1,6 @@
+#ifndef _SERVERFRAMEWORK_CORE_PUBLIC_DBGROUP_H
+#define _SERVERFRAMEWORK_CORE_PUBLIC_DBGROUP_H
+
 
 BEGIN(Core)
 
@@ -14,10 +17,10 @@ USING_SHARED_PTR(UIndex);
 class USqlHelpers
 {
 public:
-	static _wstring		Format(const _tchar* _format, ...);
-	static _wstring		DataType2String(SQLDATATYPE _type);
-	static _wstring		RemoveWhiteSpace(const _wstring& _str);
-	static SQLDATATYPE		String2DataType(const _tchar* _str, OUT _int& _maxLen);
+	static _string		Format(const _char* _format, ...);
+	static _string		DataType2String(SQLDATATYPE _type);
+	static _string		RemoveWhiteSpace(const _string& _str);
+	static SQLDATATYPE		String2DataType(const _char* _str, OUT _int& _maxLen);
 };
 
 /*
@@ -94,3 +97,5 @@ private:
 };
 
 END
+
+#endif // _SERVERFRAMEWORK_CORE_PUBLIC_DBGROUP_H
