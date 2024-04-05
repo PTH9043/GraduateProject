@@ -235,7 +235,7 @@ void TModelView::ShowAnimModelList()
 			for (const ANIMMODELPAIR& Model : m_AnimModelContainer)
 			{
 				_bool isTrue{ false };
-				if (ImGui::Selectable(Model.first.c_str(), &isTrue))
+				if (ImGui::Selectable(Model.first.c_str(), &isTrue, ImGuiTreeNodeFlags_Selected))
 				{
 					_string uniqueName = Model.first;
 					_string numStr = std::to_string(m_iAnimModelSuffix);
@@ -276,7 +276,6 @@ void TModelView::ShowAnimModelList()
 		if (ImGui::Button("Clear Current AnimShowModels"))
 			ClearCurrentAnimModel();
 		ImGui::TreePop();
-	
 	}
 
 	if(m_bSelectedhasAnim)

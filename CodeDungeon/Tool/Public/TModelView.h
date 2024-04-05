@@ -66,41 +66,41 @@ private:
 	DOCKDESC											m_stAnimModelDockDesc;
 	DOCKDESC											m_stTransformEditorDesc;
 
-	MODELS													m_ModelsContainer;
+	MODELS												m_ModelsContainer;
 	ANIMMODEL											m_AnimModelContainer;
 	SHOWMODELS											m_ShowModelsContainer;
 	SHOWANIMEMODELS										m_ShowAnimModelsContainer;
 
-	SHPTR<FILEGROUP>							m_spModelFileFolder;
-	SHPTR<FILEGROUP>							m_spAnimModelFileFolder;
+	SHPTR<FILEGROUP>									m_spModelFileFolder;
+	SHPTR<FILEGROUP>									m_spAnimModelFileFolder;
 
-	SHPTR<UPawn>					m_spSelectedModel;
-	_string							m_SelectedModelName;
+	SHPTR<UPawn>										m_spSelectedModel;
+	_string												m_SelectedModelName;
 
 
-	SHPTR<TShowAnimModelObject>		m_spShowAnimModelObject;
-	SHPTR<TShowModelObject>			m_spShowModelObject;
+	SHPTR<TShowAnimModelObject>							m_spShowAnimModelObject;
+	SHPTR<TShowModelObject>								m_spShowModelObject;
 
-	_uint														m_iFileIndex;
+	_uint												m_iFileIndex;
 
-	_bool														m_isAllConverter;
-	_float3													m_vModelScale;
-	_float3													m_vAnimModelScale;
+	_bool												m_isAllConverter;
+	_float3												m_vModelScale;
+	_float3												m_vAnimModelScale;
 
-	_bool														m_isInitSetting;
-	_bool														m_isResetModel;
-	_bool														m_isResetAnimModel;
+	_bool												m_isInitSetting;
+	_bool												m_isResetModel;
+	_bool												m_isResetAnimModel;
 
-	//_float3													m_vModelPivotScale;
-	//_float3													m_vAnimModelPivotScale;
+	//_float3											m_vModelPivotScale;
+	//_float3											m_vAnimModelPivotScale;
 
-	SHPTR<TGuizmoManager>				m_spGuizmoManager;
+	SHPTR<TGuizmoManager>								m_spGuizmoManager;
 
-	_bool								m_bSelectedhasAnim;
-	_bool								m_bGuizmoActive;
+	_bool												m_bSelectedhasAnim;
+	_bool												m_bGuizmoActive;
 
-	_uint								m_iModelSuffix;
-	_uint								m_iAnimModelSuffix;
+	_uint												m_iModelSuffix;
+	_uint												m_iAnimModelSuffix;
 };
 
 END
