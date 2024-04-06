@@ -75,7 +75,7 @@ SHPTR<UPawn> UPicking::GetPickingPawn()
 	return m_stPickingDesc.spPawn;
 }
 
-const PICKINGDESC& UPicking::GetPickDesc()
+const PICKINGDESC UPicking::GetPickDesc()
 {
 	bool bFoundValidPick = false;
 	for (auto& iter : m_WaitCheckPawnList)

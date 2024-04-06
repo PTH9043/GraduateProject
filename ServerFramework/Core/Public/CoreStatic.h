@@ -3,4 +3,6 @@
 
 static const char* SQL_DATABASE_NAME{ "SQL_TABLE_NAME" };
 
+static const char* SQL_LOGINTABLE_NAME{ "Login" };
+
 #endif // _SERVERFRAMEWORK_CORE_PUBLIC_CORESTATIC_H

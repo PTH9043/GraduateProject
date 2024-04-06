@@ -16,14 +16,13 @@ namespace Core
 		std::unique_ptr<sql::Statement> State(_spMySqlConnector->MakeStatement());
 		std::unique_ptr<sql::PreparedStatement> PrepareState(_spMySqlConnector->MakePrepareStatement());
 
-		m_upStatement = std::move(State);
-		m_upPrepareStatement = std::move(PrepareState);
 		_string tableName = _strTableName;
 		_string dbName = SQL_DATABASE_NAME;
 		_string checkTableExistsQuery = "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '"
 			+ dbName + "' AND table_name = '" + tableName + "'";
 
 		std::unique_ptr<sql::ResultSet> Res(State->executeQuery(checkTableExistsQuery.c_str()));
+		assert(Res != nullptr);
 		// 만약 데이터베이스에 테이블이 존재하지 않는다면
 		if (false == Res->next() || Res->getInt(1) < 0)
 		{

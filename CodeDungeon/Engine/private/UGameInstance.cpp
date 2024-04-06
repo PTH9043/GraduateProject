@@ -927,7 +927,7 @@ SHPTR<UActor> UGameInstance::GetPickingPawn()
 {
 	return 	m_spPicking->GetPickingPawn();
 }
-const PICKINGDESC& UGameInstance::GetPickDesc()
+const PICKINGDESC UGameInstance::GetPickDesc()
 {
 	return m_spPicking->GetPickDesc();
 }

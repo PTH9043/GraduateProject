@@ -74,6 +74,12 @@ void UTransform::SetParent(CSHPTRREF<UTransform> _spTransform)
 	m_spParentsTransform = _spTransform;
 }
 
+void UTransform::SetNewWorldMtx(const _float4x4& _newworldMtx)
+{
+	m_mWorldMatrix = _newworldMtx;
+	TransformUpdate();
+}
+
 void UTransform::Free()
 {
 	m_spParentsTransform.reset();

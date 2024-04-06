@@ -2,10 +2,11 @@
 #include "AMySqlDriver.h"
 #include "AMySqlConnector.h"
 #include "AMySqlTable.h"
+#include "ASqlLoginTable.h"
 
 namespace Core {
 	AMySqlDriver::AMySqlDriver() : 
-		m_pDriver{ nullptr }, m_MySqlArray{}
+		m_pDriver{ nullptr }, m_MySqlConnectContainer{}
 	{
 	}
 
@@ -27,6 +28,7 @@ namespace Core {
 			CheckDBExistQuery += "'";
 			// Make Result 
 			std::unique_ptr<sql::ResultSet> res(Stmt->executeQuery(CheckDBExistQuery.c_str()));
+			assert(res != nullptr);
 			// 데이터베이스가 존재하지 않는다면
 			if (false == res->next())
 			{
@@ -37,11 +39,15 @@ namespace Core {
 		}
 		// MySql Ready
 		_int i = 0; 
-		for (auto& iter : m_MySqlArray)
+		for (auto& iter : m_MySqlConnectContainer)
 		{
 			iter = CreateInitNative<AMySqlConnector>(m_pDriver, _strAddress, _strName, _strPassward, i++);
 			assert(nullptr != iter);
 		}
+
+		m_MySqlTableContainer[SQLTABLETYPE::LOGIN] = CreateInitNative<ASqlLoginTable>(m_MySqlConnectContainer[0], 
+			SQL_LOGINTABLE_NAME);
+
 		return true;
 	}
 

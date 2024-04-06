@@ -251,7 +251,17 @@ namespace Core
 		SHPTR<T> pInstance{ Core::MakeShared<T>(_rhs) };
 		return std::move(pInstance);
 	}
-
+	/*
+	@ Date: 2024-04-06, Writer: 박태현
+	@ Explain
+	- char을 조합하는 함수이다.
+	*/
+	static _string CombineRawString(const _char* _p1, const _char* _p2)
+	{
+		_string str(_p1);
+		str += _p2;
+		return std::move(str);
+	}
 #pragma endregion FUNCTION
 }
 

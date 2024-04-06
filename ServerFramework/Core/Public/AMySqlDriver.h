@@ -15,6 +15,7 @@ class AMySqlTable;
 class CORE_DLL AMySqlDriver final : public ACoreBase {
 public:
 	using SQLARRAY = ARRAY<SHPTR<AMySqlConnector>, TLS::MAX_WORKTHREAD>;
+	using SQLTABLE = ARRAY<SHPTR<AMySqlTable>, MAX_SQLTABLE_LENGTH>;
 public:
 	AMySqlDriver();
 	NO_COPY(AMySqlDriver)
@@ -25,7 +26,8 @@ private:
 	virtual void Free() override;
 private:
 	sql::mysql::MySQL_Driver*	 m_pDriver;
-	SQLARRAY									 m_MySqlArray;
+	SQLARRAY									 m_MySqlConnectContainer;
+	SQLTABLE									 m_MySqlTableContainer;
 };
 
 END

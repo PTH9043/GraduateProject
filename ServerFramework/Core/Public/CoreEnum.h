@@ -54,7 +54,7 @@ namespace Core
 		@ Date: 2024-03-24,  Writer: 박태현
 		@ Explain:  Table의 Type 
 		*/
-		enum class TABLETYPE
+		enum TABLETYPE
 		{
 			LOGIN, 
 			TABLE_END
@@ -90,10 +90,11 @@ namespace Core
 
 
 	enum {
-		MAX_BUFFER_LENGTH = 512, 
+		MAX_BUFFER_LENGTH = 512,
 		MAX_PROCESSBUF_LENGTH = MAX_BUFFER_LENGTH * 5,
-		MAX_OCTREENODE_LENGTH = 8, 
+		MAX_OCTREENODE_LENGTH = 8,
 		MAX_SQLSTRING_LENGTH = 200,
+		MAX_SQLTABLE_LENGTH = (_int)(SQLTABLETYPE::TABLE_END),
 	};
 }
 

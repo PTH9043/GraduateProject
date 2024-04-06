@@ -177,6 +177,10 @@ namespace Core
         static CUSSTRING to_string(T index) {
             return  std::_Integral_to_string<TChar>(index);
         }
+
+        public: /* freind*/
+
+           friend CustomString<TChar, TString> operator +(const TChar* _p1, const TChar* _p2);
     };
 
     template<class TChar, class TString>
@@ -200,7 +204,13 @@ namespace Core
     {
         return _strText.append(_pChar);
     }
-
+    template<class TChar, class TString>
+    CustomString<TChar, TString> operator+(const TChar* _p1, const TChar* _p2)
+    {
+        CustomString<TChar, TString> str(_p1);
+        str += _p2;
+        return std::move(str);
+    }
 
 
     /*

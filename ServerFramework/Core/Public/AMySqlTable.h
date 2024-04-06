@@ -17,23 +17,19 @@ public:
 public:
 	_bool NativeConstruct(SHPTR<AMySqlConnector> _spMySqlConnector, const _string& _strTableName);
 	// ExcuteQueryMessage
-	virtual _bool ExcuteQueryMessage(SQLQUERYTYPE _QueryType, const _string& _strQueryData, ...) PURE;
+	virtual _bool ExcuteQueryMessage(SHPTR<AMySqlConnector> _spMySqlConnector, 
+		SQLQUERYTYPE _sqlQueryType, const _string& _strQueryData, ...) PURE;
 public: /* get set*/
 	const SQLTABLETYPE GetTableType() const { return m_eSqlTableType; }
 	const _string& GetTableName() const { return m_strTableName; }
 protected:
 	// Create Table
-	virtual _bool CreateTable(const std::unique_ptr<sql::Statement>& _Unique) PURE;
-protected: /* get set*/
-	sql::Statement* GetStatement() const { return m_upStatement.get(); }
-	sql::PreparedStatement* GetPrepareStatement() const { return m_upPrepareStatement.get(); }
+	virtual _bool CreateTable(const std::unique_ptr<sql::Statement>& _stmt) PURE;
 private:
 	virtual void Free() override;
 private: // prepare
 	SQLTABLETYPE													m_eSqlTableType;
 	_string																	m_strTableName;
-	std::unique_ptr<sql::Statement> 					m_upStatement;
-	std::unique_ptr<sql::PreparedStatement>	m_upPrepareStatement;
 };
 
 END

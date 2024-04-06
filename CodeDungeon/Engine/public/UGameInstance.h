@@ -282,7 +282,7 @@ public: /* Picking */
 	void AddPickingObject(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer);
 	void AddPickingGrid(const MAINGRID& _stGrid);
 	SHPTR<UActor> GetPickingPawn();
-	const PICKINGDESC& GetPickDesc();
+	const PICKINGDESC GetPickDesc();
 	_bool PickingMesh(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer,
 		_float* _pDist, _float3* _pOut);
 
