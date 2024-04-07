@@ -46,10 +46,7 @@ public:
 	void SetLook(const _float3& _vLook) { m_mWorldMatrix.Set_Look(_vLook); }
 	void SetPos(const _float3& _vPos) { m_mWorldMatrix.Set_Pos(_vPos); }
 
-	void SetNewWorldMtx(const _float4x4& _newworldMtx) {
-		m_mWorldMatrix = _newworldMtx;
-		TransformUpdate();
-	}
+	
 
 	void SetNotApplyRotate(const _bool _isActive) { this->m_isNotApplyRotate = _isActive; }
 	void SetNotApplyPos(const _bool _isActive) { this->m_isNotApplyPos = _isActive; }
