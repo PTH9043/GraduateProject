@@ -70,7 +70,7 @@ void UScene::RenderLights()
         }
 
         // Bind Transform Param
-        LightPair.second->BindSRVBuffer(SRV_REGISTER::T0, spGroup->GetRenderTargetTexture(RTOBJID::NONALPHA_NOMRAL_DEFFERED));
+        LightPair.second->BindSRVBuffer(SRV_REGISTER::T0, spGroup->GetRenderTargetTexture(RTOBJID::NONALPHA_NORMAL_DEFFERED));
         LightPair.second->BindSRVBuffer(SRV_REGISTER::T1, spGroup->GetRenderTargetTexture(RTOBJID::NONALPHA_DEPTH_DEFFERED));
         LightPair.second->BindSRVBuffer(SRV_REGISTER::T2, spGroup->GetRenderTargetTexture(RTOBJID::NONALPHA_POSITION_DEFFERED));
 

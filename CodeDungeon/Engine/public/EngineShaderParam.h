@@ -133,12 +133,15 @@ namespace Engine {
 	typedef struct tagLightInfo
 	{
 		tagLightInfo() = default;
-		tagLightInfo(const LIGHTTYPE& _eLightInfo, const _float4& _vDiffuse, const _float4& _vAmbient, const _float4& _vSpecular,
+		tagLightInfo(const LIGHTTYPE& _eLightInfo,const LIGHTVERSION& _eLightVersion, const _float4& _vDiffuse, const _float4& _vAmbient, const _float4& _vSpecular,
 			const _float3& _vDirection, const _float3& _vPosition, const _float& _fRangle, const _float& _fAngle = 0.f,
-			const _float _fLightPower = 1.f, const _float _fSpecularPowValue = 1.f)
-			: eLightType(_eLightInfo), vDiffuse(_vDiffuse), vAmbient(_vAmbient), vSpecular(_vSpecular)
+			const _float _fLightPower = 1.f, const _float _fSpecularPowValue = 1.f
+		,const _float _fFallOff=0.f,const _float _fPhi=0.f,const _float _fTheta=0.f
+			,const _float3 _vAttenuation=_float3(0,0,0))
+			: eLightType(_eLightInfo), eLightVersion(_eLightVersion), vDiffuse(_vDiffuse), vAmbient(_vAmbient), vSpecular(_vSpecular)
 			, vDirection(_vDirection), vPosition(_vPosition),
-			fRange(_fRangle), fAngle(_fAngle), fLightPower(_fLightPower), fSpecularPowValue{ _fSpecularPowValue }
+			fRange(_fRangle), fAngle(_fAngle), fLightPower(_fLightPower), fSpecularPowValue( _fSpecularPowValue)
+			,fFallOff(_fFallOff), fPhi(fPhi), fTheta(fTheta), vAttenuation(vAttenuation)
 		{}
 		_float4				vDiffuse = _float4(0.f, 0.f, 0.f, 0.f);
 		_float4				vAmbient = _float4(0.f, 0.f, 0.f, 0.f);
@@ -147,12 +150,18 @@ namespace Engine {
 		_float4				vPosition = _float4(0.f, 0.f, 0.f, 0.f);
 		// 4 =====================
 		LIGHTTYPE		eLightType = LIGHTTYPE::LIGHT_END;
+		LIGHTVERSION    eLightVersion = LIGHTVERSION::TYPE_ORIGINAL;
 		_float					fRange = 0.f;
 		_float					fAngle{ 0.f };
 		_float					fLightPower{ 1.f };
 		// 4 =====================
 		_float					fSpecularPowValue{ 1.f };
-		_float3       vPadding;
+		//2024-4-8 서정원 용빠 조명을 위한 추가
+		_float			fFallOff=5.0f;
+		_float			fPhi= 0.f;//Phi 가 더 커야함
+		_float			fTheta=0.f;
+		_float3			vAttenuation=_float3(1.0f,0.001f,0.0001f);
+		
 
 	}LIGHTINFO;
 
