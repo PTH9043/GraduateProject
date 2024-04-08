@@ -62,9 +62,16 @@ PS_OUT PS_Main(PS_In Input)
     float4 vViewPosition = mul(vPosition, g_tLightParam.mViewMatrix);
     float4 vViewNormal = mul(vNormal, g_tLightParam.mViewMatrix);
     vViewNormal = normalize(vViewNormal);
-   
-    
-    LIGHTCOLOR tLightColor = CalculateLightColor(vViewNormal.xyz, vViewPosition.xyz, vNormal.xyz, vPosition.xyz);
+    LIGHTCOLOR tLightColor = (LIGHTCOLOR) 0.f;
+  
+    if (g_tLightInfo.eLightVersion == 0)
+    {
+       tLightColor = CalculateLightColor(vViewNormal.xyz, vViewPosition.xyz, vNormal.xyz, vPosition.xyz);
+    }
+    else
+    {
+        tLightColor = Lighting(vViewPosition.xyz, vViewNormal.xyz);
+    }
     Out.vAmbient = tLightColor.vAmbient;
     Out.vShade = tLightColor.vDiffuse;
     Out.vSpecular = tLightColor.vSpecular;

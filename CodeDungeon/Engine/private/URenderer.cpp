@@ -410,9 +410,9 @@ void URenderer::RenderEnd()
             FindRenderTargetTexture(RTGROUPID::ALPHA_DEFFERED,
                 RTOBJID::ALPHA_DIFFUSE_DEFFERED));
         //  Diffuse Texture 가져와서 Bind 
-        spDefferedShader->BindSRVBuffer(SRV_REGISTER::T2, m_spRenderTargetManager->
+   /*     spDefferedShader->BindSRVBuffer(SRV_REGISTER::T2, m_spRenderTargetManager->
             FindRenderTargetTexture(RTGROUPID::UI2D_DEFFERED,
-                RTOBJID::UI2D_SCREEN_DEFFERED));
+                RTOBJID::UI2D_SCREEN_DEFFERED));*/
         //  Render
         m_spVIBufferPlane->Render(spDefferedShader, m_spCastingCommand);
     }

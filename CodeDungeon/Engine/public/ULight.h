@@ -32,6 +32,8 @@ public:
 	void SetAngle(const _float& _fAngle) { this->m_stLightParam.tLightInfo.fAngle = _fAngle; }
 	void SetLightPower(const _float& _fPower) { this->m_stLightParam.tLightInfo.fLightPower = _fPower; }
 	void SetSpecularPowValue(const _float _fPowValue) { this->m_stLightParam.tLightInfo.fSpecularPowValue = _fPowValue; }
+	void SetLightVersion(const LIGHTVERSION _version) { this->m_stLightParam.tLightInfo.eLightVersion = _version; }
+
 public:
 	// Free
 	virtual void Free() override;

@@ -349,6 +349,9 @@
     <Filter Include="99.Default\ImGui\Guizmo">
       <UniqueIdentifier>{9464c2af-e4de-4527-8928-c326dcaa5b81}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98.ShaderFile\Common\Light\Original">
+      <UniqueIdentifier>{cd1f6e0f-2f7c-4556-a4c4-6f5da750c266}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -1071,11 +1074,11 @@
     <None Include="..\..\Shader\ComputeFunc.hlsli">
       <Filter>98.ShaderFile\Common\Particle</Filter>
     </None>
-    <None Include="..\..\Shader\LightShaderFunc.hlsli">
-      <Filter>98.ShaderFile\Common\Light</Filter>
-    </None>
     <None Include="..\..\Shader\LightShaderParam.hlsli">
       <Filter>98.ShaderFile\Common\Light</Filter>
+    </None>
+    <None Include="..\..\Shader\LightShaderFunc.hlsli">
+      <Filter>98.ShaderFile\Common\Light\Original</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

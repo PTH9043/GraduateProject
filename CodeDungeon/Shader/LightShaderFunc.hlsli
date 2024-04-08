@@ -47,7 +47,7 @@ void DirectionShade(in float4 vNormalDesc, out float4 vShade)
     vShade.a = 1.f;
 }
 
-void DirectionalSpecular(in float4 vNormal, in float4 vWorldPos, out float4 vSepecular)
+void DirectionalSpecular(in float4 vNormal, in float4 vWorldPos, out float4 vSpecular)
 {
     float4 vCamLook = normalize(float4(vWorldPos.xyz - g_tLightParam.vLightCamPos.xyz, 0.f));
     float4 vLightDir = normalize(g_tLightInfo.vDirection);
@@ -55,8 +55,8 @@ void DirectionalSpecular(in float4 vNormal, in float4 vWorldPos, out float4 vSep
     float4 reflection = reflect(-vLightDir, vNormal);
     float fLightDensity = pow(dot(vCamLook, reflection), g_tLightInfo.fSpecularPowValue);
         
-    vSepecular = (g_tLightInfo.vSpecular * fLightDensity);
-    vSepecular.a = 1.f;
+    vSpecular = (g_tLightInfo.vSpecular * fLightDensity);
+    vSpecular.a = 1.f;
 }
 
 void DirectionalShadow(in float4 vWorldPos, out float4 vShadow)
@@ -141,8 +141,11 @@ LIGHTCOLOR CalculateLightColor(float3 vViewNormal, float3 vViewPos, float3 vWorl
     if (g_tLightInfo.eLightType == 0)
     {
         // Directional Light
-        viewLightDir = normalize(mul(float4(g_tLightInfo.vDirection.xyz, 0.f), g_tLightParam.mViewMatrix).xyz);
-        diffuseRatio = saturate(dot(-viewLightDir, vViewNormal));
+        //viewLightDir = normalize(mul(float4(g_tLightInfo.vDirection.xyz, 0.f), g_tLightParam.mViewMatrix).xyz);
+        //diffuseRatio = saturate(dot(-viewLightDir, vViewNormal));
+        float3 vToLight = -normalize(mul(float4(g_tLightInfo.vDirection.xyz, 0.f), g_tLightParam.mViewMatrix).xyz);
+        diffuseRatio = dot(vToLight, vViewNormal);
+        
     }
     else if (g_tLightInfo.eLightType == 1)
     {
@@ -228,7 +231,198 @@ LIGHTCOLOR CalculateLightColor(float3 vViewNormal, float3 vViewPos, float3 vWorl
     color.vDiffuse.a = 1.f;
     return color;
 }
+//=========================================================================================================================================
 
+#define DIRECTIONAL_LIGHT	0
+#define POINT_LIGHT			1
+#define SPOT_LIGHT			2
+
+
+
+
+LIGHTCOLOR DirectionalLight(float3 vNormal, float3 vToCamera)
+{
+    
+    LIGHTCOLOR color = (LIGHTCOLOR) 0.f;
+   // float3 vToLight = -g_tLightInfo.vDirection;
+    float3 vToLight = -normalize(mul(float4(g_tLightInfo.vDirection.xyz, 0.f), g_tLightParam.mViewMatrix).xyz);
+    float fDiffuseFactor = dot(vToLight, vNormal);
+    float fSpecularFactor = 0.0f;
+  
+//    if (fDiffuseFactor > 0.0f)
+//    {
+//        if (gMaterial.m_cSpecular.a != 0.0f)
+//        {
+//#ifdef _WITH_REFLECT
+//			float3 vReflect = reflect(-vToLight, vNormal);
+//			fSpecularFactor = pow(max(dot(vReflect, vToCamera), 0.0f), gMaterial.m_cSpecular.a);
+//#else
+//#ifdef _WITH_LOCAL_VIEWER_HIGHLIGHTING
+//            float3 vHalf = normalize(vToCamera + vToLight);
+//#else
+//			float3 vHalf = float3(0.0f, 1.0f, 0.0f);
+//#endif
+//            fSpecularFactor = pow(max(dot(vHalf, vNormal), 0.0f), gMaterial.m_cSpecular.a);
+//#endif
+//        }
+//    }
+    color.vAmbient = g_tLightInfo.vAmbient; // * gMaterial.m_cAmbient;
+
+    color.vDiffuse = g_tLightInfo.vDiffuse * fDiffuseFactor; //* gMaterial.m_cDiffuse
+
+    color.vSpecular = g_tLightInfo.vSpecular * fSpecularFactor; // * fSpecularFactor * gMaterial.m_cSpecular
+    return color;
+
+}
+
+
+LIGHTCOLOR PointLight(float3 vViewPosition, float3 vViewNormal, float3 vViewToCamera)
+{
+    
+    LIGHTCOLOR color = (LIGHTCOLOR) 0.f;
+    
+    float3 viewLightPos = mul(float4(g_tLightInfo.vPosition.xyz, 1.f), g_tLightParam.mViewMatrix).xyz;
+    float3 vToLight = viewLightPos - vViewPosition;
+    float fDistance = length(vToLight);
+    if (fDistance <= g_tLightInfo.fRange)
+    {
+        float fSpecularFactor = 0.0f;
+        vToLight /= fDistance;
+        float fDiffuseFactor = dot(vToLight, vViewNormal);
+//        if (fDiffuseFactor > 0.0f)
+//        {
+//            if (gMaterial.m_cSpecular.a != 0.0f)
+//            {
+//#ifdef _WITH_REFLECT
+//				float3 vReflect = reflect(-vToLight, vViewNormal);
+//				fSpecularFactor = pow(max(dot(vReflect, vViewToCamera), 0.0f), gMaterial.m_cSpecular.a);
+//#else
+//#ifdef _WITH_LOCAL_VIEWER_HIGHLIGHTING
+//				float3 vHalf = normalize(vViewToCamera + vToLight);
+//#else
+//                float3 vHalf = float3(0.0f, 1.0f, 0.0f);
+//#endif
+//                fSpecularFactor = pow(max(dot(vHalf, vViewNormal), 0.0f), gMaterial.m_cSpecular.a);
+//#endif
+//            }
+//        }
+        float fAttenuationFactor = 1.0f / dot(float3(1.0f,0.001f,0.0001f), float3(1.0f, fDistance, fDistance * fDistance));
+		
+        
+        color.vAmbient = g_tLightInfo.vAmbient * fAttenuationFactor; // * gMaterial.m_cAmbient;
+
+        color.vDiffuse = g_tLightInfo.vDiffuse * fDiffuseFactor * fAttenuationFactor; //* gMaterial.m_cDiffuse
+
+        color.vSpecular = g_tLightInfo.vSpecular * fSpecularFactor * fAttenuationFactor; // * fSpecularFactor * gMaterial.m_cSpecular
+    
+        return color;
+    }
+    return ((LIGHTCOLOR) 0.f);
+}
+
+#define _WITH_LOCAL_VIEWER_HIGHLIGHTING
+#define _WITH_THETA_PHI_CONES
+
+LIGHTCOLOR SpotLight(float3 vPosition, float3 vNormal, float3 vToCamera)
+{
+    
+   
+    LIGHTCOLOR color = (LIGHTCOLOR) 0.f;
+    float3 viewLightPos = mul(float4(g_tLightInfo.vPosition.xyz, 1.f), g_tLightParam.mViewMatrix).xyz;
+    //float3 vToLight = g_tLightInfo.vPosition.xyz - vPosition; //월드좌표시
+    float3 vToLight = viewLightPos - vPosition;
+    
+    float fDistance = length(vToLight);
+    if (fDistance <= g_tLightInfo.fRange)
+    {
+        float fSpecularFactor = 0.0f;
+        vToLight /= fDistance;
+        float fDiffuseFactor = dot(vToLight, vNormal);
+        if (fDiffuseFactor > 0.0f)
+        {
+            
+#ifdef _WITH_REFLECT
+				float3 vReflect = reflect(-vToLight, vViewNormal);
+				fSpecularFactor = pow(max(dot(vReflect, vToCamera), 0.0f), gMaterial.m_cSpecular.a);
+#else
+#ifdef _WITH_LOCAL_VIEWER_HIGHLIGHTING
+                float3 vHalf = normalize(vToCamera + vToLight);
+#else
+                float3 vHalf = float3(0.0f, 1.0f, 0.0f);
+#endif
+                fSpecularFactor = pow(max(dot(vHalf, vNormal), 0.0f),1.f);
+#endif
+            
+        }
+#ifdef _WITH_THETA_PHI_CONES
+        float3 vDirection = normalize(mul(float4(g_tLightInfo.vDirection.xyz, 0.f), g_tLightParam.mViewMatrix).xyz);
+        float fAlpha = max(dot(-vToLight, vDirection), 0.0f);
+        float fSpotFactor = pow(max(((fAlpha - g_tLightInfo.fPhi) / (g_tLightInfo.fTheta - g_tLightInfo.fPhi)), 0.0f), g_tLightInfo.fFallOff);
+#else
+        float fSpotFactor = pow(max(dot(-vToLight, gLights[i].m_vDirection), 0.0f), gLights[i].m_fFalloff);
+#endif
+        //float3 vAttenuation = mul(float4(g_tLightInfo.vAttenuation.xyz, 1.f), g_tLightParam.mViewMatrix).xyz;
+        float fAttenuationFactor = 1.0f / dot(g_tLightInfo.vAttenuation, float3(1.0f, fDistance, fDistance * fDistance));
+
+     
+        color.vAmbient = g_tLightInfo.vAmbient * fAttenuationFactor * fSpotFactor; // * gMaterial.m_cAmbient;
+
+        color.vDiffuse = g_tLightInfo.vDiffuse * fDiffuseFactor * fAttenuationFactor * fSpotFactor; //* gMaterial.m_cDiffuse
+
+        color.vSpecular = g_tLightInfo.vSpecular * fAttenuationFactor * fSpotFactor * fSpecularFactor; // * fSpecularFactor * gMaterial.m_cSpecular
+        return color;
+        
+        }
+    return ((LIGHTCOLOR) 0.f); //조명 밖 픽셀 시.
+}
+
+
+LIGHTCOLOR Lighting(float3 vViewPosition, float3 vViewNormal)
+{
+    
+    LIGHTCOLOR color = (LIGHTCOLOR) 0.f;
+    float3 vCameraPosition = float3(g_tLightParam.vLightCamPos.x, g_tLightParam.vLightCamPos.y, g_tLightParam.vLightCamPos.z);
+    vCameraPosition = mul(float4(vCameraPosition.xyz, 1.f), g_tLightParam.mViewMatrix).xyz;
+    float3 vToCamera = normalize(vCameraPosition - vViewPosition);
+
+  
+
+      
+    if (g_tLightInfo.eLightType == DIRECTIONAL_LIGHT)
+    {
+       
+        color.vDiffuse += DirectionalLight(vViewNormal, vToCamera).vDiffuse;
+
+        color.vAmbient += DirectionalLight(vViewNormal, vToCamera).vAmbient;
+
+        color.vSpecular += DirectionalLight(vViewNormal, vToCamera).vSpecular;
+
+    }
+    //else if (g_tLightInfo.eLightType == POINT_LIGHT)
+    //{
+    //    color.vDiffuse += PointLight(vViewPosition,vViewNormal, vToCamera).vDiffuse;
+
+    //    color.vAmbient += PointLight(vViewPosition,vViewNormal, vToCamera).vAmbient;
+
+    //    color.vSpecular += PointLight(vViewPosition,vViewNormal, vToCamera).vSpecular;
+
+    //}
+    else if (g_tLightInfo.eLightType == SPOT_LIGHT)
+    {
+        color.vDiffuse += SpotLight(vViewPosition, vViewNormal, vToCamera).vDiffuse;
+
+       color.vAmbient += SpotLight(vViewPosition,vViewNormal, vToCamera).vAmbient;
+
+        color.vSpecular += SpotLight(vViewPosition,vViewNormal, vToCamera).vSpecular;
+    }
+
+    
+   // color.vAmbient += g_vGlobalAmbient; // * gMaterial.m_cAmbient);   
+    color.vDiffuse = saturate(color.vDiffuse * g_tLightInfo.fLightPower);
+    color.vDiffuse.a = 1.f;
+    
+    return (color);
+}
 
 
 #endif // _LIGHTSHADERFUNC_HLSLI_
