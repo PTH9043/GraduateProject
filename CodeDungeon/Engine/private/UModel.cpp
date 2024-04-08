@@ -324,6 +324,7 @@ void UModel::LoadMeshData(std::ifstream& _ifRead, VECTOR<MESHDESC>& _convecMeshe
 			}
 			// Material Index
 			_ifRead.read((_char*)&iter.iMatrialIndex, sizeof(iter.iMatrialIndex));
+
 		}
 	}
 }

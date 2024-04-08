@@ -50,6 +50,7 @@ PS_OUT PS_Main(PS_In Input)
     float4 vDepth = g_Texture1.Sample(g_Sampler_Normal, Input.vTexUV);
     float4 vPosition = g_Texture2.Sample(g_Sampler_Normal, Input.vTexUV);
     
+    
     if(vDepth.w == 0.f)
     {
         Out.vAmbient = float4(1.f, 1.f, 1.f, 1.f);

@@ -42,7 +42,10 @@ TModelView::TModelView(CSHPTRREF<UDevice> _spDevice) :
 	m_spSelectedModel{nullptr},
 	m_SelectedModelName{},
 	m_iModelSuffix{ 0 },
-	m_iAnimModelSuffix{ 0 }
+	m_iAnimModelSuffix{ 0 },
+	m_spCopiedModel{nullptr},
+	m_iCopiedModelSuffix{0},
+	m_CopiedModelName{}
 {
 }
 
@@ -354,6 +357,44 @@ void TModelView::ClearCurrentAnimModel()
 		}
 	}
 	m_spSelectedModel.reset();
+}
+
+HRESULT TModelView::CopyCurrentModel()
+{
+	RETURN_CHECK(m_spSelectedModel == nullptr, E_FAIL)
+
+	if (m_spCopiedModel != nullptr)
+		m_spCopiedModel.reset();
+	m_spCopiedModel = m_spSelectedModel;
+
+	return S_OK;
+}
+
+HRESULT TModelView::PasteCopiedModel()
+{
+	RETURN_CHECK(m_spCopiedModel == nullptr, E_FAIL)
+
+	if (m_spCopiedModel != m_spSelectedModel)
+	{
+		m_CopiedModelName = m_SelectedModelName;
+		m_iCopiedModelSuffix = 0;
+	}
+
+	_string numStr = std::to_string(m_iCopiedModelSuffix);
+	m_CopiedModelName.append("_Clone");
+	m_CopiedModelName.append(numStr);
+	m_iCopiedModelSuffix++;
+
+	if (m_bSelectedhasAnim)
+		m_ShowAnimModelsContainer.emplace(m_CopiedModelName, dynamic_pointer_cast<TShowAnimModelObject>(m_spCopiedModel));
+	else
+		m_ShowModelsContainer.emplace(m_CopiedModelName, dynamic_pointer_cast<TShowModelObject>(m_spCopiedModel));
+
+	size_t pos = m_CopiedModelName.find(numStr);
+	if (pos != _wstring::npos)
+		m_CopiedModelName.erase(pos, numStr.length());
+
+	return S_OK;
 }
 
 void TModelView::ConvertModels()
