@@ -88,7 +88,9 @@ void USceneManager::RenderLight(CSHPTRREF<UPipeLine> _spPipeLine, CSHPTRREF<URen
 
 		if (nullptr != m_spCurScene)
 		{
+			//수정사항 2024-04-09
 			m_stLightParam.mScreenWorldMatrix = _stDefferendParam.mWorldMatrix;
+				//_spPipeLine->GetMainCamWorldMatrix();
 			{
 				// View Proj
 				m_stLightParam.mScreenViewmatrix = _spPipeLine->GetCamViewMatrix(_stDefferendParam.iCamIndex);

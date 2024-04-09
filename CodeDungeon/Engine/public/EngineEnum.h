@@ -159,7 +159,7 @@ namespace Engine {
 		, FIRENOISEBUFFER = B13
 		, FIREDISTORTION = B14
 		, FOGBUFFER = B14
-		,
+		, MODELCHECKBUF = B7,
 
 	};
 

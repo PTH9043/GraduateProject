@@ -62,6 +62,7 @@ cbuffer LIGHTBUFFER : register(b2)
 };
 
 
+
 cbuffer LIGHTCONTROLPARAM : register(b4)
 {
     LIGHTINFO                       g_tLightInfo;

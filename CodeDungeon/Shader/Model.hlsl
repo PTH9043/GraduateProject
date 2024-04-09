@@ -3,6 +3,11 @@
 
 #include "ShaderGrobalFunc.hlsli"
 
+cbuffer HasNormalBuffer : register(b7)
+{
+    int HasBuffer;
+};
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -85,18 +90,25 @@ PS_OUT PS_Main(PS_IN In)
     
     if(Out.vDiffuse.a <= 0.05)
         discard;
+    if (HasBuffer)
+    {
+        vector vNormalDesc = g_Texture1.Sample(g_Sampler_Normal, In.vTexUV0);
+        float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
     
-    vector vNormalDesc = g_Texture1.Sample(g_Sampler_Normal, In.vTexUV0);
-    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
+        float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+        vNormal = mul(vNormal, WorldMatrix);
     
-    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
-    vNormal = mul(vNormal, WorldMatrix);
-    
-   // Out.vNormal = normalize(float4(vNormal, 0.f));
+        Out.vNormal = normalize(float4(vNormal, 0.f));
+    }
+    else
+    {
+        Out.vNormal = In.vNormal;
+    }
+   
     
     Out.vDepth = float4(In.vProjPos.w / tMainViewProj.fCamFar, In.vProjPos.z / In.vProjPos.w, 1.f, In.vPosition.w);
     Out.vPosition = In.vWorldPos;
-    Out.vNormal = In.vNormal;
+   // 
     return Out;
 }
 

@@ -40,11 +40,12 @@ HRESULT TMainScene::LoadSceneData()
 		m_spMainCamera->GetTransform()->SetPos({ 0.f, 10.f, -100.f });
 	}
 	{
-		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL,LIGHTVERSION::TYPE_ORIGINAL, {1.f, 0.f, 0.f, 1.f}, {0.f, 0.f,0.f, 1.f}, {0.0f, 0.f, 0.f, 1.f}, {0.f, -1.f, 0.f,}, {0.f, 10000.f, 0.f}, 0.f, 0.f ,
+		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL,LIGHTVERSION::TYPE_ORIGINAL, {0.5f, 0.5f, 0.5f, 1.f}, {0.15f, 0.15f,0.15f, 1.f}, {0.3f, 0.3f, 0.3f, 1.f}, {0.f, -1.f, 0.f,}, {0.f, 10000.f, 0.f}, 0.f, 0.f ,
 			1.f, 0.2f });
 
-			AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_SPOT,LIGHTVERSION::TYPE_ORIGINAL, {0.f, 1.f, 1.f, 0.f}, {0.f, 0.f, 0.f, 1.f}, {0.f, 0.f, 0.f, 1.f}, {0.f, 0.f, 1.f,}, m_spMainCamera->GetTransform()->GetPos(), 60.f, 60.f ,
-				20.f, 2.f, 3.0f,(float)cos(60.f*(3.141592654f/180.0f)),(float)cos(30.0f * (3.141592654f / 180.0f)),_float3(1.0f, 0.001f, 0.0001f) });
+		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_FLASHLIGHT,LIGHTVERSION::TYPE_ORIGINAL, {0.7f, 0.7f, 0.7f, 0.f}, {0.1f, 0.1f, 0.1f, 1.f}, {0.1f, 0.1f, 0.1f, 1.f}, {0.f, 0.f, 1.f,}
+			, m_spMainCamera->GetTransform()->GetPos(), 150.f, 60.f ,
+			100.f, 2.f, 8.0f,(float)cos(DirectX::XMConvertToRadians(30.f)),(float)cos(DirectX::XMConvertToRadians(15.f)),_float3(1.0f, 0.1f, 0.01f) });
 
 		/*AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL, {1.f, 1.f, 1.f, 1.f}, {0.05f, 0.05f, 0.05f, 0.05f}, {1.f, 1.f, 1.f, 1.f}, {0.f, -1.f, -1.f,},
 			{0.f, 100.f, 0.f}, 0.f, 0.f, 1.f, 200.f },
@@ -77,7 +78,7 @@ void TMainScene::Tick(const _double& _dTimeDelta)
 {
 	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
 	SHPTR<ULight> SpotLight;
-	OutLight(LIGHTTYPE::TYPE_SPOT, 0, SpotLight);
+	OutLight(LIGHTTYPE::TYPE_FLASHLIGHT, 0, SpotLight);
 	SpotLight->SetLightPos(m_spMainCamera->GetTransform()->GetPos());
 	SpotLight->SetDirection(m_spMainCamera->GetTransform()->GetLook());
 	if (pGameInstance->GetDIKeyPressing(DIK_1))

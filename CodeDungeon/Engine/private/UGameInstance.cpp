@@ -970,7 +970,7 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 		AddPrototype(PROTO_RES_VIBUFFERNORMALGRID, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferGrid>(
 			_stData.wpDevice.lock(), VIBUFFERTYPE::NORMAL));
 
-		AddPrototype(PROTO_RES_VIBUFFERSHPHERE, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferSphere>(
+		AddPrototype(PROTO_RES_VIBUFFERSPHERE, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferSphere>(
 			_stData.wpDevice.lock(), VIBUFFERTYPE::GENERIC));
 
 		AddPrototype(PROTO_RES_VIBUFFERNORMALSPHERE, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferSphere>(

@@ -5,6 +5,7 @@ BEGIN(Engine)
 class UShaderConstantBuffer;
 class UShader;
 class UVIBufferRect;
+
 class URenderObject;
 
 class ULight : public UObject {
@@ -41,6 +42,7 @@ public:
 
 	// Render
 	void Render(SHPTR<UCommand> spCmdList, CSHPTRREF<UVIBufferRect> _spVIBufferRect, CSHPTRREF<UShader> _spShader);
+
 	void OutLightInfo(LIGHTINFO& _stLightInfo);
 	void OutLightControl(LIGHTCONTROL& _stLightControl);
 private:

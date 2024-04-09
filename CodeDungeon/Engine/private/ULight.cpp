@@ -4,6 +4,7 @@
 #include "UShaderConstantBuffer.h"
 #include "UShader.h"
 #include "UVIBufferRect.h"
+
 #include "URenderTargetManager.h"
 //#include "URenderObject.h"
 
@@ -38,6 +39,7 @@ void ULight::Render(SHPTR<UCommand> spCmdList,CSHPTRREF<UVIBufferRect> _spVIBuff
 
 	_spVIBufferRect->Render(_spShader, spCmdList);
 }
+
 
 void ULight::OutLightInfo(LIGHTINFO& _stLightInfo)
 {
