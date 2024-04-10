@@ -47,6 +47,7 @@
 #define PROTO_RES_COMPUTEPARTICLE2DSHADER L"Proto_Res_ComputeParticle2DShader"
 #define PROTO_RES_COMPUTEBLOODEFFECT2DSHADER L"Proto_Res_ComputeBloodEffect2DShader"
 #define PROTO_RES_COMPUTEROTATIONEFFECT2DSHADER L"Proto_Res_ComputeRotationEffect2DShader"
+#define PROTO_RES_COMPUTEEMITPARTICLE2DSHADER L"Proto_Res_ComputeEmitParticle2DShader"
 
 // Particle 
 #define PROTO_RES_PARTICLESYSTEM L"Proto_Res_ParitlceSystem"

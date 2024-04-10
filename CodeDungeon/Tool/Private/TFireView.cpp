@@ -15,7 +15,9 @@ TFireView::TFireView(CSHPTRREF<UDevice> _spDevice) :
 	TImGuiView(_spDevice, "FireView"),
 	m_stMainDesc{},
 	m_stFireView{},
-	m_isInitSetting{ false }
+	m_stMultiParticleView{},
+	m_isInitSetting{ false }, m_MultipleParticle{ nullptr }, m_MultipleParticleParam{ nullptr }, m_MultipleParticleType{ nullptr }
+	, m_iMultipleParticleSize{ 0 }, m_iCurActiveMultipleParticle{ 0 }
 	
 {
 }
@@ -30,10 +32,64 @@ HRESULT TFireView::NativeConstruct()
 		ImVec2{ (_float)WINDOW_WIDTH, 0.f }, ImVec2{ 500.f, (_float)WINDOW_HEIGHT });
 	m_stFireView = DOCKDESC("Fire Viewer", ImGuiWindowFlags_NoFocusOnAppearing,
 		ImGuiDockNodeFlags_CentralNode);
-
+	m_stMultiParticleView = DOCKDESC("Emit Effect Viewer", ImGuiWindowFlags_NoFocusOnAppearing,
+		ImGuiDockNodeFlags_CentralNode);
 	return S_OK;
 }
+void TFireView::ResizeMultipleParticleVector(_uint _resizeAmount)
+{
+	m_iMultipleParticleSize = _resizeAmount;
+	m_MultipleParticle.resize(m_iMultipleParticleSize);
+	m_MultipleParticleParam.resize(m_iMultipleParticleSize);
+	m_MultipleParticleType.resize(m_iMultipleParticleSize);
+}
 
+void TFireView::LoadMultipleParticleResource()
+{
+	// Default를 y값 증가하지않는 원 , AUTO를 y값 증가하는 원
+	for (int i = 0; i < m_iMultipleParticleSize; i++) {
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		{
+			UParticle::PARTICLEDESC tDesc;
+			tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEEMITPARTICLE2DSHADER;
+			tDesc.wstrParticleShader = PROTO_RES_PARTICLE2DSHADER;
+
+
+			tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
+			//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 5.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 5.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 2.5f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.3f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 10.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 15.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 100;
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 5.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.1f, 0.f);
+			m_MultipleParticle[i] = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
+		}
+	}
+	{
+		m_MultipleParticleParam[0] = m_MultipleParticle[0]->GetParticleSystem()->GetParticleParam();
+		m_MultipleParticleType[0] = m_MultipleParticle[0]->GetParticleSystem()->GetParticleTypeParam();
+		m_MultipleParticleType[0]->fParticleType = PARTICLE_TYPE_DEFAULT;
+		m_MultipleParticleType[0]->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
+		m_MultipleParticle[0]->SetTexture(L"RedDot"); // y값 증가 x 원
+	}
+	{
+		m_MultipleParticleParam[1] = m_MultipleParticle[1]->GetParticleSystem()->GetParticleParam();
+		m_MultipleParticleType[1] = m_MultipleParticle[1]->GetParticleSystem()->GetParticleTypeParam();
+		m_MultipleParticleType[1]->fParticleType = PARTICLE_TYPE_AUTO;
+		m_MultipleParticleType[1]->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
+		m_MultipleParticle[1]->SetTexture(L"RedDot");// y값 증가 O 원
+	}
+
+
+	*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() = 0.05f;
+	*m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount() = 1;
+	*m_MultipleParticle[1]->GetParticleSystem()->GetCreateInterval() = 0.05f;
+	*m_MultipleParticle[1]->GetParticleSystem()->GetAddParticleAmount() = 1;
+}
 
 
 
@@ -46,8 +102,8 @@ HRESULT TFireView::LoadResource()
 		tFireDesc.wstrFireShader = PROTO_RES_2DFIRESHADER;
 		m_stFire = std::static_pointer_cast<UFire>(spGameInstance->CloneActorAdd(PROTO_ACTOR_FIRE, { &tFireDesc }));
 	}
-
-	
+	ResizeMultipleParticleVector(2);
+	LoadMultipleParticleResource();
 
 	return S_OK;
 }
@@ -56,12 +112,20 @@ HRESULT TFireView::LoadResource()
 //**************** 파티클 종류별로 리소스 해제 ****************
 //================================================================
 
+void TFireView::ReleaseMultipleParticleResource()
+{
+	for (auto& _particle : m_MultipleParticle) {
+		_particle.reset();
+		GetGameInstance()->RemoveActor(_particle);
+	}//문제 유발될 수 있는 코드 RemoveActor의 상세 구현을 살펴보아야함.
+}
 
 
 
 HRESULT TFireView::ReleaseResource()
 {
 
+	ReleaseMultipleParticleResource();
 
 
 	return S_OK;
@@ -94,6 +158,7 @@ void TFireView::RenderActive()
 		//여기부터 내 입력
 
 		FireView();
+		MultipleParticleView();
 	}
 	ImGui::End();
 }
@@ -111,9 +176,11 @@ void TFireView::DockBuildInitSetting()
 		ImGui::DockBuilderAddNode(m_stMainDesc.iDockSpaceID);
 		// Docking Build 
 		m_stFireView.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Up, 0.5f, NULL, &dock_main_id);
-
+		m_stMultiParticleView.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.f, NULL, &dock_main_id);
 		// DockBuild		
 		ImGui::DockBuilderDockWindow(m_stFireView.strName.c_str(), m_stFireView.iDockSpaceID);
+		ImGui::DockBuilderDockWindow(m_stMultiParticleView.strName.c_str(), m_stMultiParticleView.iDockSpaceID);
+
 		ImGui::DockBuilderFinish(m_stMainDesc.iDockSpaceID);
 	}
 	m_isInitSetting = true;
@@ -124,7 +191,91 @@ void TFireView::DockBuildInitSetting()
 //================================================================
 //************ MULTIPLE PARTICLE TOOL VIEW SETTING ************
 //================================================================
+void TFireView::MultipleParticleView()
+{
+	ImGui::Begin(m_stMultiParticleView.strName.c_str(), GetOpenPointer(), m_stMultiParticleView.imgWindowFlags);
+	{
+		if (ImGui::CollapsingHeader("Multiple Particle Settings", ImGuiTreeNodeFlags_DefaultOpen)) {
+			ImGui::Text("Multiple ParticleView");
+			_bool Show = false;
 
+			if (true == ImGui::Button("Start Multiple Particle")) {
+				//_uint increment = 1;
+				/*ImGui::InputScalar("Enter Create Amount\n Min:0  Max :5", ImGuiDataType_U32, &m_iCurActiveMultipleParticle, &increment, &increment);
+				if (m_iCurActiveMultipleParticle >= m_iMultipleParticleSize) m_iCurActiveMultipleParticle = m_iMultipleParticleSize;*/
+				for (int i = 0; i < m_iMultipleParticleSize; i++) m_MultipleParticle[i]->SetActive(true);
+
+			}
+
+			if (true == ImGui::Button("Stop Multiple Particle"))
+			{
+				for (int i = 0; i < m_iMultipleParticleSize; i++)
+					m_MultipleParticle[i]->SetActive(false);
+			}
+
+			MultipleParticleTexSetting();
+			/*	MultipleParticleCountSetting();
+				MultipleParticleTimeSetting();
+				MultipleParticleTexSetting();
+				DefaultMultipleParticleSetting();
+				AutomaticMultipleParticleSetting();*/
+		}
+	}
+	ImGui::End();
+}
+
+
+
+
+
+
+
+
+
+
+
+void TFireView::MultipleParticleTexSetting()
+{
+
+	ImGui::Text("Multiple Particle Texture Select");
+	if (ImGui::BeginListBox("Texture List", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+	{
+
+		using TEXNAMES = UNORMAP<_wstring, _uint>;
+		TEXNAMES m_TextureNames = m_MultipleParticle[0]->GetTextureGroup()->GetTextureNames();
+		for (auto& Texture : m_TextureNames)
+		{
+			if (ImGui::Selectable(UMethod::ConvertWToS(Texture.first)))
+			{
+				m_MultipleParticle[0]->SetTexture(Texture.second);
+			}
+		}
+		ImGui::EndListBox();
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//-----------------
 void TFireView::FireView()
 {
 	ImGui::Begin(m_stFireView.strName.c_str(), GetOpenPointer(), m_stFireView.imgWindowFlags);
@@ -133,14 +284,14 @@ void TFireView::FireView()
 			ImGui::Text("Fire View");
 			
 
-			if (true == ImGui::Button("Start Multiple Particle")) {
+			if (true == ImGui::Button("Start Fire")) {
 			
 
 				m_stFire->SetActive(true);
 
 			}
 
-			if (true == ImGui::Button("Stop Multiple Particle"))
+			if (true == ImGui::Button("Stop Fire"))
 			{
 
 				m_stFire->SetActive(false);

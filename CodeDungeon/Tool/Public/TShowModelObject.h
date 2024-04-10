@@ -32,8 +32,8 @@ protected:
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy) override;
 private:
 	SHPTR<UModel>				m_spModel;
-	SHPTR<UShaderConstantBuffer>				m_spShaderNormalCheckBuffer;
-	int HasNormalTex=0;
+	SHPTR<UShaderConstantBuffer>				m_spShaderTexCheckBuffer;
+	int HasTex[4]{};
 };
 
 END
