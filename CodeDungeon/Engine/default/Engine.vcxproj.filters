@@ -349,8 +349,8 @@
     <Filter Include="99.Default\ImGui\Guizmo">
       <UniqueIdentifier>{9464c2af-e4de-4527-8928-c326dcaa5b81}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06.Component\Material">
-      <UniqueIdentifier>{f1089457-435a-4131-98a7-69da415baa0f}</UniqueIdentifier>
+    <Filter Include="98.ShaderFile\Common\Light\Original">
+      <UniqueIdentifier>{cd1f6e0f-2f7c-4556-a4c4-6f5da750c266}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -691,7 +691,7 @@
       <Filter>99.Default\ImGui\Guizmo</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UModelMaterial.cpp">
-      <Filter>06.Component\Material</Filter>
+      <Filter>07.Resource\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1065,7 +1065,7 @@
       <Filter>99.Default\ImGui\Guizmo</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UModelMaterial.h">
-      <Filter>06.Component\Material</Filter>
+      <Filter>07.Resource\Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1078,11 +1078,11 @@
     <None Include="..\..\Shader\ComputeFunc.hlsli">
       <Filter>98.ShaderFile\Common\Particle</Filter>
     </None>
-    <None Include="..\..\Shader\LightShaderFunc.hlsli">
-      <Filter>98.ShaderFile\Common\Light</Filter>
-    </None>
     <None Include="..\..\Shader\LightShaderParam.hlsli">
       <Filter>98.ShaderFile\Common\Light</Filter>
+    </None>
+    <None Include="..\..\Shader\LightShaderFunc.hlsli">
+      <Filter>98.ShaderFile\Common\Light\Original</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1148,6 +1148,9 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\LightPoint.hlsl">
       <Filter>98.ShaderFile\Common\Light</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\Compute2DEmitParticle.hlsl">
+      <Filter>98.ShaderFile\Common\Particle</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
