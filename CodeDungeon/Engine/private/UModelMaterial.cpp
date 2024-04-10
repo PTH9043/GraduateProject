@@ -29,7 +29,7 @@ void UModelMaterial::Free()
 HRESULT UModelMaterial::NativeConstruct()
 {
 	// 만약 남아있는 머터리얼 DrawNumber가 남아있으면, Remain Numbering부터 찾아온다. 
-	if (s_RemainMaterialDrawNumber.size() <= 0)
+	if (s_RemainMaterialDrawNumber.size() > 0)
 	{
 		m_iMaterialIndex = s_RemainMaterialDrawNumber.front();
 		s_RemainMaterialDrawNumber.erase(s_RemainMaterialDrawNumber.begin());

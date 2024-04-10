@@ -4,6 +4,7 @@
 #include "UTransform.h"
 #include "UShaderConstantBuffer.h"
 #include "UShader.h"
+#include "UModelMaterial.h"
 
 TShowModelObject::TShowModelObject(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UPawn(_spDevice, _wstrLayer, _eCloneType),
@@ -29,7 +30,7 @@ HRESULT TShowModelObject::NativeConstruct()
 HRESULT TShowModelObject::NativeConstructClone(const VOIDDATAS& _vecDatas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_vecDatas), E_FAIL);
-	m_spShaderNormalCheckBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::MODELCHECKBUF, sizeof(int));
+	m_spShaderNormalCheckBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::MODELCHECKBUF, static_cast<_int>(sizeof(int)));
 
 	AddShader(PROTO_RES_MODELSHADER, RES_SHADER);
 	return S_OK;
@@ -62,7 +63,7 @@ HRESULT TShowModelObject::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF
 			m_spModel->BindTexture(i, SRV_REGISTER::T0, TEXTYPE::TextureType_DIFFUSE, GetShader());
 			m_spModel->BindTexture(i, SRV_REGISTER::T1, TEXTYPE::TextureType_NORMALS, GetShader());
 			
-			if (m_spModel->GetMaterials()[0]->arrMaterialTexture[TEXTYPE::TextureType_NORMALS] == nullptr) {
+			if (false == m_spModel->GetMaterials()[0]->IsEmpty(TextureType_NORMALS)) {
 				HasNormalTex = 0;
 				GetShader()->BindCBVBuffer(m_spShaderNormalCheckBuffer, &HasNormalTex, sizeof(int));
 			}

@@ -41,6 +41,7 @@ public:
 public: /* get set */
 	const MODELMATERIALINFO GetMaterialInfo(TEXTYPE _TexType) const { return m_MaterialInfoContainer[_TexType]; }
 	const _int GetMaterialIndex() const { return m_iMaterialIndex; }
+	_bool IsEmpty(TEXTYPE _TexType) const { return m_MaterialTexContainer[_TexType] == nullptr; }
 private:
 	// Material Draw Number 
 	static _int																s_AllMaterialDrawLength;
