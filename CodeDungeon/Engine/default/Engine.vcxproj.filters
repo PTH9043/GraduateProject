@@ -349,6 +349,9 @@
     <Filter Include="99.Default\ImGui\Guizmo">
       <UniqueIdentifier>{9464c2af-e4de-4527-8928-c326dcaa5b81}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06.Component\Material">
+      <UniqueIdentifier>{f1089457-435a-4131-98a7-69da415baa0f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -672,7 +675,6 @@
     <ClCompile Include="..\private\UFog.cpp">
       <Filter>05.Actor\Fog</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\UAxis.cpp" />
     <ClCompile Include="..\public\ImGui\ImGradient.cpp">
       <Filter>99.Default\ImGui</Filter>
     </ClCompile>
@@ -687,6 +689,9 @@
     </ClCompile>
     <ClCompile Include="..\public\ImGui\ImSequencer.cpp">
       <Filter>99.Default\ImGui\Guizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UModelMaterial.cpp">
+      <Filter>06.Component\Material</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1041,7 +1046,6 @@
     <ClInclude Include="..\public\UFog.h">
       <Filter>05.Actor\Fog</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\UAxis.h" />
     <ClInclude Include="..\public\ImGui\ImGradient.h">
       <Filter>99.Default\ImGui</Filter>
     </ClInclude>
@@ -1059,6 +1063,9 @@
     </ClInclude>
     <ClInclude Include="..\public\ImGui\ImZoomSlider.h">
       <Filter>99.Default\ImGui\Guizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UModelMaterial.h">
+      <Filter>06.Component\Material</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

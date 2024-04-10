@@ -7,9 +7,10 @@ BEGIN(Core)
 class AService;
 class AThreadManager;
 class ARandomManager;
-class ALogManager;
+class ALogger;
 class ASpaceManager;
 class ASession;
+class AMySqlDriver;
 /*
 @ Date: 2024-01-23
 @ Writer: นฺลยว๖
@@ -41,11 +42,9 @@ public: /* ThreadManager */
 public: /* RandomManager */
 	_int		ReturnRadomNumber(const _int _iMinNum, const _int _iMaxNum);
 	_int		ReturnRadomNumber(const _int _iMaxNum);
-public: /* LogManager */
-	void PrintOut(const char* _fmt, ...);
-	void FileOut(const char* _fmt, ...);
 public: /* SpaceManager */
 	void BuildGameSpace(const SPACEINFO& _SpaceInfo);
+public: /* MySqlDriver */
 
 private:
 	virtual void Free() override;
@@ -54,8 +53,8 @@ private:
 	SHPTR<AService>						m_spService;
 	SHPTR<AThreadManager>		m_spThreadManager;
 	SHPTR<ARandomManager>		m_spRandomManager;
-	SHPTR<ALogManager>				m_spLogManager;
 	SHPTR<ASpaceManager>			m_spSpaceManager;
+	SHPTR< AMySqlDriver>				m_spMySqlDriver;
 };
 
 END

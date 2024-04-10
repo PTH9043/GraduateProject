@@ -48,7 +48,7 @@
     <ClInclude Include="..\Public\AStressClientService.h" />
     <ClInclude Include="..\Public\ACollider.h" />
     <ClInclude Include="..\Public\AJobTimer.h" />
-    <ClInclude Include="..\Public\ALogManager.h" />
+    <ClInclude Include="..\Public\ALogger.h" />
     <ClInclude Include="..\Public\ALuaLoader.h" />
     <ClInclude Include="..\Public\ANavigation.h" />
     <ClInclude Include="..\Public\AOBBCollider.h" />
@@ -89,7 +89,7 @@
     <ClCompile Include="..\Private\AStressClientService.cpp" />
     <ClCompile Include="..\Private\ACollider.cpp" />
     <ClCompile Include="..\Private\AJobTimer.cpp" />
-    <ClCompile Include="..\Private\ALogManager.cpp" />
+    <ClCompile Include="..\Private\ALogger.cpp" />
     <ClCompile Include="..\Private\ALuaLoader.cpp" />
     <ClCompile Include="..\Private\ANavigation.cpp" />
     <ClCompile Include="..\Private\AOBBCollider.cpp" />

@@ -87,7 +87,10 @@
 #include <mysql/mysql_connection.h>
 #include <mysql/mysql_driver.h>
 #include <mysql/cppconn/prepared_statement.h>
-// 컴파일 타임에서 유용하게 사용할 수 있는 variant 
+#include <mysql/cppconn/exception.h>
+#include <mysql/cppconn/resultset.h>
+#include <mysql/cppconn/statement.h>
+#include <tuple>
 #include <variant>
 
 

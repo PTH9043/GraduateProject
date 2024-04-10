@@ -13,6 +13,7 @@
 #include "UGameInstance.h"
 #include "UTransform.h"
 #include "URootBoneNode.h"
+#include "UModelMaterial.h"
 
 namespace fs = std::filesystem;
 UAnimModel::UAnimModel(CSHPTRREF<UDevice> _spDevice) :
@@ -261,12 +262,14 @@ void UAnimModel::LoadToData(const _wstring& _wstrPath)
 	ANIMMODELDESC tDesc;
 	{
 		BringModelName(_wstrPath); 
+		// MaterialInfos 
+		MATERIALINFOS		vecMaterialInfo;
 		// MESH
 		LoadAnimMeshData(read, tDesc.Meshes);
 		// BoneNode
 		LoadBoneData(read, tDesc.BNodeDatas);
 		// Material
-		LoadMaterial(read, tDesc.MatrialData);
+		LoadMaterial(read, tDesc.MatrialData, vecMaterialInfo);
 		// Animations
 		LoadAnimationData(read, tDesc.Animes);
 
@@ -282,10 +285,9 @@ void UAnimModel::LoadToData(const _wstring& _wstrPath)
 		// Create
 		CreateBoneNode(&tDesc, RootBoneNodeName);
 		CreateMeshContainers(&tDesc);
-		CreateMaterial(&tDesc);
+		CreateMaterial(&tDesc, vecMaterialInfo);
 		CreateAnimation(tDesc.Animes, wstrPath);
-
-
+		// BondMatrix
 		m_vecSetupBonMatrix.resize(GetMeshContainerCnt());
 		for (_uint i = 0; i < GetMeshContainerCnt(); ++i)
 		{

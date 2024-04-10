@@ -4,8 +4,9 @@
 
 namespace Core
 {
-	AMySqlTable::AMySqlTable(SQLTABLETYPE _eTableType) :m_eSqlTableType{ _eTableType },
-		m_strTableName { "" }, m_upStatement{ nullptr }, m_upPrepareStatement{nullptr}
+	AMySqlTable::AMySqlTable(SQLTABLETYPE _eTableType) :
+		 m_eSqlTableType{ _eTableType }, m_strTableName { "" }, m_upProcedureStatement{nullptr}, 
+		m_spSqlConnector{nullptr}
 	{
 	}
 
@@ -13,8 +14,7 @@ namespace Core
 	{
 		assert(nullptr != _spMySqlConnector);
 
-		std::unique_ptr<sql::Statement> State(_spMySqlConnector->MakeStatement());
-		std::unique_ptr<sql::PreparedStatement> PrepareState(_spMySqlConnector->MakePrepareStatement());
+		std::shared_ptr<sql::Statement> State(_spMySqlConnector->GetStatement());
 
 		_string tableName = _strTableName;
 		_string dbName = SQL_DATABASE_NAME;
@@ -27,9 +27,59 @@ namespace Core
 		if (false == Res->next() || Res->getInt(1) < 0)
 		{
 			// Table을 생성한다. 
-			return CreateTable(State);
+			return CreateTable(State.get());
 		}
 		return false;
+	}
+
+	void AMySqlTable::BindParam(_int _ParamIndex, _bool _Value)
+	{
+		assert(nullptr != m_upProcedureStatement);
+		m_upProcedureStatement->setBoolean(_ParamIndex, _Value);
+	}
+
+	void AMySqlTable::BindParam(_int _ParamIndex, _float _Value)
+	{
+		assert(nullptr != m_upProcedureStatement);
+		m_upProcedureStatement->setDouble(_ParamIndex, static_cast<_double>(_Value));
+	}
+
+	void AMySqlTable::BindParam(_int _ParamIndex, _double _Value)
+	{
+		assert(nullptr != m_upProcedureStatement);
+		m_upProcedureStatement->setDouble(_ParamIndex, _Value);
+	}
+
+	void AMySqlTable::BindParam(_int _ParamIndex, _short _Value)
+	{
+		assert(nullptr != m_upProcedureStatement);
+		m_upProcedureStatement->setInt(_ParamIndex, static_cast<_int>(_Value));
+	}
+
+	void AMySqlTable::BindParam(_int _ParamIndex, _int _Value)
+	{
+		assert(nullptr != m_upProcedureStatement);
+		m_upProcedureStatement->setInt(_ParamIndex, _Value);
+	}
+
+	void AMySqlTable::BindParam(_int _ParamIndex, _llong _Value)
+	{
+		assert(nullptr != m_upProcedureStatement);
+		m_upProcedureStatement->setInt64(_ParamIndex, _Value);
+	}
+
+	void AMySqlTable::BindParam(_int _ParamIndex, const _string& _Value)
+	{
+		assert(nullptr != m_upProcedureStatement);
+		m_upProcedureStatement->setString(_ParamIndex, _Value.c_str());
+	}
+
+	void AMySqlTable::UpdateProcedureValue(CSHPTRREF<AMySqlConnector> _spMySqlConnector, std::unique_ptr<sql::PreparedStatement>&& _upProcedureStatement)
+	{
+		assert(nullptr != m_spSqlConnector && nullptr != m_upProcedureStatement.get());
+		m_spSqlConnector = _spMySqlConnector;
+		m_upProcedureStatement = std::move(_upProcedureStatement);
+		m_spSqlConnector->UseConnector();
 	}
 
 	void AMySqlTable::Free()

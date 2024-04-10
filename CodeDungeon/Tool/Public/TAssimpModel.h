@@ -88,6 +88,7 @@ private:
 	_uint												m_iNumAnimation;
 	// Materials 
 	MATERIERS									m_MaterialContainer;
+	VECTOR<MODELMATERIALINFO>			m_MaterialInfoContainer;
 	_uint												m_iNumMaterials;
 	// PivotMatrix 
 	_float4x4										m_mScaleMatrix;

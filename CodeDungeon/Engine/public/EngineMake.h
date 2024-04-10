@@ -94,6 +94,11 @@
 #define PROTO_RES_FIREALPHATEXTUREGROUP L"Proto_Res_FireAlphaTextureGroup"
 #define PROTO_RES_FOGTEXTUREGROUP L"Proto_Res_FogTextureGroup"
 
+
+// material 
+
+#define PROTO_RES_MATERIAL L"Proto_Res_Material"
+
 #pragma endregion PROTO
 
 #pragma region LAYER

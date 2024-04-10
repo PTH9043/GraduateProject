@@ -3,15 +3,16 @@
 #include "UDeadLockProfiler.h"
 #include "Memory.h"
 #include "ACoreApp.h"
+#include "ALogger.h"
 
 namespace Core
 {
 #ifdef USE_DEBUG
-	CORE_DLL UDeadLockProfiler*		g_pDeadLockProfiler = nullptr;
+	CORE_DLL UDeadLockProfiler*			g_pDeadLockProfiler = nullptr;
 #endif
 
-	CORE_DLL  AMemoryAdiminstor* g_pMemoryAdminster = nullptr;
-	CORE_DLL	 ACoreApp*						    g_RegisterApp = nullptr;
+	CORE_DLL  AMemoryAdiminstor*	g_pMemoryAdminster = nullptr;
+	CORE_DLL	 ALogger*							g_pLogger = nullptr;
 
 	class CoreGlobal
 	{
@@ -25,6 +26,7 @@ namespace Core
 #endif
 
 			g_pMemoryAdminster = new AMemoryAdiminstor;
+			g_pLogger = new ALogger;
 		}
 
 		~CoreGlobal()
@@ -41,6 +43,7 @@ namespace Core
 			delete g_pDeadLockProfiler;
 #endif
 			delete g_pMemoryAdminster;
+			delete g_pLogger;
 
 			ThreadMiliRelax(5000);
 		}

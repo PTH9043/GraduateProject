@@ -20,16 +20,24 @@ public:
 public:
 	_bool NativeConstruct(sql::mysql::MySQL_Driver* _pDriver, const _string& _strAddress, const _string& _strName, 
 		const _string& _strPassward, _int _iThreadID);
-	sql::Statement* MakeStatement();
 	sql::PreparedStatement* MakePrepareStatement(const _string& _strStateString);
+	void UseConnector();
+	void ReturnConnector();
+public: /* get set */
+	const std::shared_ptr<sql::Statement>& GetStatement() const { return m_spStatement; }
+	_bool IsUseConnector() const { return m_isUseConnector.load(std::memory_order_seq_cst); }
+protected:
+	void ChangeUseConnectorValueToCas(_bool _isValue);
 public: 
 	// get Thread Index 
 	const _int GetThreadIndex() const { return m_iThreadIndex; }
 private:
 	virtual void Free() override;
 private:
-	sql::Connection*	m_pConnection;
-	_int							m_iThreadIndex;
+	sql::Connection*													m_pConnection;
+	_int																			m_iThreadIndex;
+	std::shared_ptr<sql::Statement>						m_spStatement;
+	std::atomic_bool													m_isUseConnector;
 };
 
 END

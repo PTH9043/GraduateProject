@@ -65,6 +65,7 @@
 #include "UPawn.h"
 #include "UPicking.h"
 #include "UGrid.h"
+#include "UModelMaterial.h"
 
 IMPLEMENT_SINGLETON(UGameInstance);
 
@@ -1187,7 +1188,6 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 	{
 		AddPrototype(PROTO_RES_PARTICLESYSTEM, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UParticleSystem>(_stData.wpDevice.lock()));
 	}
-
 	return S_OK;
 }
 

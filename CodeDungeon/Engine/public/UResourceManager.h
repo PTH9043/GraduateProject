@@ -10,7 +10,7 @@ class UResourceManager : public UBase {
 public:
 	UResourceManager();
 	NO_COPY(UResourceManager)
-		DESTRUCTOR(UResourceManager)
+	DESTRUCTOR(UResourceManager)
 public:
 	virtual void Free() override;
 
@@ -31,7 +31,6 @@ private:
 	using PIPELINECONTAINER = UNORMAP<_wstring, ComPtr<Dx12PipelineState>>;
 
 	PROTOTYPEARR			m_arrPrototypes;
-
 	PIPELINECONTAINER	m_PipeLineContainer;
 };
 

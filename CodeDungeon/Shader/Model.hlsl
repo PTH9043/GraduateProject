@@ -92,7 +92,7 @@ PS_OUT PS_Main(PS_IN In)
     float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
     vNormal = mul(vNormal, WorldMatrix);
     
-    Out.vNormal = normalize(float4(vNormal, 0.f));
+    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 1.f);
     Out.vDepth = float4(In.vProjPos.w / tMainViewProj.fCamFar, In.vProjPos.z / In.vProjPos.w, 1.f, In.vPosition.w);
     Out.vPosition = In.vWorldPos;
    

@@ -1,10 +1,11 @@
 #include "CoreDefines.h"
 #include "DBDataGroup.h"
+#include "AMySqlConnector.h"
 
 namespace Core
 {
 	// Format을 리턴
-	_string USqlHelpers::Format(const _char* _format, ...)
+	_string ASqlHelpers::Format(const _char* _format, ...)
 	{
 		_char buf[4096];
 
@@ -17,7 +18,7 @@ namespace Core
 	}
 
 	// 데이터 타입을 String 형태로 리턴
-	_string USqlHelpers::DataType2String(SQLDATATYPE _type)
+	_string ASqlHelpers::DataType2String(SQLDATATYPE _type)
 	{
 		switch (_type)
 		{
@@ -34,12 +35,12 @@ namespace Core
 		case SQLDATATYPE::VARCHAR:		return "Varchar";
 		case SQLDATATYPE::BINARY:		return "Binary";
 		case SQLDATATYPE::NVARCHAR:	return "NVarChar";
-		default:					
+		default:
 			return "None";
 		}
 	}
 
-	_string USqlHelpers::RemoveWhiteSpace(const _string& _str)
+	_string ASqlHelpers::RemoveWhiteSpace(const _string& _str)
 	{
 		_string ret = _str;
 
@@ -55,7 +56,7 @@ namespace Core
 
 	// std::wcmatch: 정규 표현식과 일치하는 문자열의 각 부분은 wcmath 객체에 저장된다. 
 
-	SQLDATATYPE USqlHelpers::String2DataType(const _char* _str, OUT _int& _maxLen)
+	SQLDATATYPE ASqlHelpers::String2DataType(const _char* _str, OUT _int& _maxLen)
 	{
 		// 정규식 표현 설정 
 		std::regex reg("([a-z]+)(\\((max|\\d+)\\))?");
@@ -92,53 +93,50 @@ namespace Core
 
 	/*
 	===============================
-	USqlHelpers
+	ASqlHelpers
 	===============================
-	USqlColumn
-	===============================
-	*/
-
-
-	_wstring USqlColumn::CreateText(){
-		return L"";
-	}
-
-	/*
-	===============================
-	USqlColumn
-	===============================
-	USqlIndex
+	AQueryFunc
 	===============================
 	*/
-
-	_wstring UIndex::GetUniqueName()
+	_bool AQueryFunc::MakeProcedureFunc(sql::Statement* _pStatement, 
+		const _char* _pProcedureName, const _char* _pDefineFunc)
 	{
-		return _wstring();
+		assert(nullptr != _pStatement);
+		_string CheckQuery = "SHOW PROCEDURE STATUS WHERE Db = '";
+		CheckQuery += SQL_DATABASE_NAME;
+		CheckQuery += "' And Name = '";
+		CheckQuery += _pProcedureName; 
+		CheckQuery += "'";
+		
+		std::unique_ptr<sql::ResultSet> res(_pStatement->executeQuery(CheckQuery.c_str()));
+		if (true == res->next())
+			return true;
+
+		_string CreateQuery{ "CREATE PROCEDURE " };
+		CreateQuery += _pProcedureName;
+		CreateQuery += "(IN userName VARCHAR(255), IN passWord VARCHAR(255)) ";
+		CreateQuery += "BEGIN ";
+		CreateQuery += "INSERT INTO users(username, password) VALUES (userName, passWord);  ";
+		CreateQuery += "END;";
+		return _pStatement->execute(CreateQuery.c_str());
 	}
 
-	_wstring UIndex::CreateName(const _wstring& _wstrTableName)
+	sql::PreparedStatement* AQueryFunc::ExcuteProcedureFunc(CSHPTRREF<class AMySqlConnector> _spConnector, 
+		const _char* _pProcedureName, _int _MethodLength)
 	{
-		return _wstring();
+		assert(nullptr != _spConnector);
+		_string ExcuteProcedureQuery = "CALL ";
+		ExcuteProcedureQuery += _pProcedureName;
+		ExcuteProcedureQuery += "(";
+		for (_int i = 1; i <= _MethodLength; ++i)
+		{
+			ExcuteProcedureQuery += "?";
+			if (i != _MethodLength)
+			{
+				ExcuteProcedureQuery += ", ";
+			}
+		}
+		ExcuteProcedureQuery += ")";
+		return _spConnector->MakePrepareStatement(ExcuteProcedureQuery.c_str());
 	}
-
-	_wstring UIndex::GetTypeText()
-	{
-		return _wstring();
-	}
-
-	_wstring UIndex::GetKeyText()
-	{
-		return _wstring();
-	}
-
-	_wstring UIndex::CreateColumnsText()
-	{
-		return _wstring();
-	}
-
-	_bool UIndex::IsDependsOn(const _wstring& _wstrColumnName)
-	{
-		return _bool();
-	}
-
 }
