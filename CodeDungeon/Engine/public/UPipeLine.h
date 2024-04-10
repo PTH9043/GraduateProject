@@ -32,6 +32,8 @@ public:
 	void BindViewProjMatrix(CSHPTRREF<UCommand> _spCommand);
 
 	const _float4x4 GetMainCamViewMatrix() const;
+	//2024-4-9 수정 서정원
+	const _float4x4 GetMainCamWorldMatrix() const;
 	const _float4x4& GetMainCamProjMatrix() const;
 	const _float3& GetMainCamPosition();
 	const _float4x4 GetCamViewMatrix(const CAMID& _iID) const;

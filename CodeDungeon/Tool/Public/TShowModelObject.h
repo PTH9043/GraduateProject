@@ -3,6 +3,7 @@
 
 BEGIN(Engine)
 class UModel;
+class UShaderConstantBuffer;
 END
 
 BEGIN(Tool)
@@ -31,6 +32,8 @@ protected:
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy) override;
 private:
 	SHPTR<UModel>				m_spModel;
+	SHPTR<UShaderConstantBuffer>				m_spShaderNormalCheckBuffer;
+	int HasNormalTex=0;
 };
 
 END

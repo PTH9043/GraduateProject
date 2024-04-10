@@ -10,12 +10,16 @@ struct LIGHTINFO
     float4      vPosition;
     
     int            eLightType;
+    int         eLightVersion;
     float         fRange;
     float         fAngle;
     float         fLightPower;
     
     float         fSpecularPowValue;
-    float3       vPadding;
+    float fFallOff;
+    float fPhi;
+    float fTheta;
+    float3 vAttenuation;
 };
 
 struct LIGHTCOLOR
@@ -58,6 +62,7 @@ cbuffer LIGHTBUFFER : register(b2)
 };
 
 
+
 cbuffer LIGHTCONTROLPARAM : register(b4)
 {
     LIGHTINFO                       g_tLightInfo;
@@ -66,7 +71,7 @@ cbuffer LIGHTCONTROLPARAM : register(b4)
 
 float4 g_vMaterialSpecular = float4(1.f, 1.f, 1.f, 1.f);
 float4 g_vMaterialAmbient = float4(1.f, 1.f, 1.f, 1.f);
-
+float g_vGlobalAmbient = float4(0.2f, 0.2f, 0.2f, 1.0f);
 
 SamplerState g_Sampler_Normal : register(s0);
 SamplerState g_Sampler_Clamp : register(s1);

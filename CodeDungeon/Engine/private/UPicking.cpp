@@ -80,9 +80,17 @@ const PICKINGDESC UPicking::GetPickDesc()
 	bool bFoundValidPick = false;
 	for (auto& iter : m_WaitCheckPawnList)
 	{
+		_float3 vLocalRayDir, vLocalRayPos;
+		_float4x4 WorldInv = iter.spPawn->GetTransform()->GetWorldMatrixInv();
+
+		vLocalRayPos = _float3::TransformCoord(m_vRayPos, WorldInv);
+		vLocalRayDir = _float3::TransformNormal(m_vRayDir, WorldInv);
+		vLocalRayDir.Normalize();
+
 		_float3 v3Pos = _float3(0.f, 0.f, 0.f);
 		_float fDist = 0.f;
 
+	/*	if(PickingCollider())*/
 		if (true == PickingMesh(iter.spPawn, iter.spVIBuffer, &fDist, &v3Pos))
 		{
 			AddPickingObject(PICKINGDESC(iter.spPawn, v3Pos, fDist, true));
@@ -130,57 +138,49 @@ const PICKINGDESC UPicking::GetPickDesc()
 _bool UPicking::PickingMesh(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer,
 	_float* _pDist, _float3* _pOut)
 {
-	_float3 vLocalRayDir, vLocalRayPos;
-	_float4x4 WorldInv = _spPawn->GetTransform()->GetWorldMatrixInv();
+	_uint iNumFaces = _spVIBuffer->GetIndexCnt();
+	const VECTOR<_float3>& pVerticesPos = *_spVIBuffer->GetVertexPos().get();
 
-	vLocalRayPos = _float3::TransformCoord(m_vRayPos, WorldInv);
-	vLocalRayDir = _float3::TransformNormal(m_vRayDir, WorldInv);
-	vLocalRayDir.Normalize();
+	const void* pIndices = _spVIBuffer->GetIndices();
+	DXGI_FORMAT eFormat = _spVIBuffer->GetIndexFormat();
 
-
-		_uint iNumFaces = _spVIBuffer->GetIndexCnt();
-		const VECTOR<_float3>& pVerticesPos = *_spVIBuffer->GetVertexPos().get();
-
-		const void* pIndices = _spVIBuffer->GetIndices();
-		DXGI_FORMAT eFormat = _spVIBuffer->GetIndexFormat();
-
-		_uint iSize = 0;
-		if (DXGI_FORMAT_R16_UINT == eFormat)
+	_uint iSize = 0;
+	if (DXGI_FORMAT_R16_UINT == eFormat)
+	{
+		iSize = sizeof(INDICIES16);
+		_ushort iIndices = 0;
+		for (_uint i = 0; i < iNumFaces; ++i)
 		{
-			iSize = sizeof(INDICIES16);
-			_ushort iIndices = 0;
-			for (_uint i = 0; i < iNumFaces; ++i)
-			{
-				_float3 v1 = pVerticesPos[iIndices++];
-				_float3 v2 = pVerticesPos[iIndices++];
-				_float3 v3 = pVerticesPos[iIndices++];
+			_float3 v1 = pVerticesPos[iIndices++];
+			_float3 v2 = pVerticesPos[iIndices++];
+			_float3 v3 = pVerticesPos[iIndices++];
 
-				if (true == IsPickingCheck(vLocalRayPos, vLocalRayDir, v1, v2, v3, _spPawn->GetTransform()->GetWorldMatrix(),
-					_pDist, _pOut))
-				{
-					return true;
-				}
-			}
+	/*		if (true == IsPickingCheck(vLocalRayPos, vLocalRayDir, v1, v2, v3, _spPawn->GetTransform()->GetWorldMatrix(),
+				_pDist, _pOut))
+			{
+				return true;
+			}*/
 		}
-		else
+	}
+	else
+	{
+		iSize = sizeof(INDICIES32);
+		_uint iIndices = 0;
+		for (_uint i = 0; i < iNumFaces; ++i)
 		{
-			iSize = sizeof(INDICIES32);
-			_uint iIndices = 0;
-			for (_uint i = 0; i < iNumFaces; ++i)
-			{
-				_float3 v1 = pVerticesPos[iIndices++];
-				_float3 v2 = pVerticesPos[iIndices++];
-				_float3 v3 = pVerticesPos[iIndices++];
+			_float3 v1 = pVerticesPos[iIndices++];
+			_float3 v2 = pVerticesPos[iIndices++];
+			_float3 v3 = pVerticesPos[iIndices++];
 
-				_float fDist = 0.f;
-				_float3 v3Pos = _float3(0.f, 0.f, 0.f);
-				if (true == IsPickingCheck(vLocalRayPos, vLocalRayDir, v1, v2, v3, _spPawn->GetTransform()->GetWorldMatrix(),
-					_pDist, _pOut))
-				{
-					return true;
-				}
-			}
+			_float fDist = 0.f;
+			_float3 v3Pos = _float3(0.f, 0.f, 0.f);
+			//if (true == IsPickingCheck(vLocalRayPos, vLocalRayDir, v1, v2, v3, _spPawn->GetTransform()->GetWorldMatrix(),
+			//	_pDist, _pOut))
+			//{
+			//	return true;
+			//}
 		}
+	}
 	
 	return false;
 }
@@ -217,8 +217,14 @@ _bool UPicking::PickingOnGrid(CSHPTRREF<UGrid> _spGrid, _float* _pDist, _float3*
 _bool UPicking::PickingCollider(CSHPTRREF<UPawn> _spPawn, const _float3& _vOrigin, const _float3& _vDirection, _float* _pDist)
 {
 	COLLIDERCONTAINER PawnColliderList = _spPawn->GetColliderContainer();
-
-	return _bool();
+	SHPTR<UCollider> PawnCollider;
+	for (auto& iter : PawnColliderList)
+	{
+		PawnCollider = iter.second;
+		if (PawnCollider->IsCollisionWithRay(_vOrigin, _vDirection, _pDist))
+			return true;
+	}
+	return false;
 }
 
 _bool UPicking::IsPickingCheck(const _float3& _vLocalRay, const _float3& _vDirRay, const _float3& _vPos1,

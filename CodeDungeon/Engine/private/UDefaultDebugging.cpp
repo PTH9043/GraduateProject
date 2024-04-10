@@ -55,7 +55,7 @@ HRESULT UDefaultDebugging::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	}
 	else
 	{
-		m_spVIBuffer = static_pointer_cast<UVIBuffer>(spGameInstnace->CloneResource(PROTO_RES_VIBUFFERSHPHERE));
+		m_spVIBuffer = static_pointer_cast<UVIBuffer>(spGameInstnace->CloneResource(PROTO_RES_VIBUFFERSPHERE));
 	}
 	AddShader(PROTO_RES_DEBUGGINGDEFAULTSHADER);
 

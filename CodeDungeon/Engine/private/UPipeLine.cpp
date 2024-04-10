@@ -115,6 +115,13 @@ const _float4x4 UPipeLine::GetMainCamViewMatrix() const
 	return m_spMainCamera->GetTransform()->GetWorldMatrixInv();
 }
 
+//2024-04-09 ¼öÁ¤
+const _float4x4 UPipeLine::GetMainCamWorldMatrix() const
+{
+	RETURN_CHECK(nullptr == m_spMainCamera, _float4x4::Identity);
+	return m_spMainCamera->GetTransform()->GetWorldMatrix();
+}
+
 const _float4x4& UPipeLine::GetMainCamProjMatrix() const
 {
 	RETURN_CHECK(nullptr == m_spMainCamera, _float4x4::Identity);

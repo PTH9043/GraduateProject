@@ -6,6 +6,7 @@ class ULight;
 class ULoader;
 class UShader;
 class UVIBufferRect;
+
 class UShaderConstantBuffer;
 
 
@@ -48,6 +49,7 @@ private:
 
 	LIGHTSHADERS				m_LightShaders;
 	SHPTR<UVIBufferRect>	m_spVIBufferPlane;
+	
 
 	_ushort								m_sSceneID;
 	LIGHTGROUP						m_LightGroup;

@@ -57,7 +57,7 @@
 #define PROTO_RES_VIBUFFERNORMALRECT L"Proto_Res_VIBufferNormalRect"
 #define PROTO_RES_VIBUFFERTRIANGLE L"Proto_Res_VIBufferTriangle"
 #define PROTO_RES_VIINSTANCEBUFFERRECT L"Proto_Res_VIInstanceBufferRect"
-#define PROTO_RES_VIBUFFERSHPHERE L"Proto_Res_VIBufferSphere"
+#define PROTO_RES_VIBUFFERSPHERE L"Proto_Res_VIBufferSphere"
 #define PROTO_RES_VIBUFFERNORMALSPHERE L"Proto_Res_VIBufferNormalSphere"
 #define PROTO_RES_VIBUFFERCUBE L"Proto__Res_VIBufferCube"
 #define PROTO_RES_VIBUFFERCELL L"Proto__Res_VIBufferCell"

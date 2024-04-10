@@ -330,6 +330,7 @@ void UModel::LoadMeshData(REF_IN std::ifstream& _ifRead, REF_IN VECTOR<MESHDESC>
 			}
 			// Material Index
 			_ifRead.read((_char*)&iter.iMatrialIndex, sizeof(iter.iMatrialIndex));
+
 		}
 	}
 }

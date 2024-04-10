@@ -52,6 +52,9 @@ private:
 	void EditModel();
 	void ClearCurrentModel();
 	void ClearCurrentAnimModel();
+
+	HRESULT CopyCurrentModel();
+	HRESULT PasteCopiedModel();
 private:
 	using MODELS = UNORMAP<_string, SHPTR<UModel>>;
 	using ANIMMODEL = UNORMAP<_string, SHPTR<UAnimModel>>;
@@ -76,7 +79,9 @@ private:
 
 	SHPTR<UPawn>										m_spSelectedModel;
 	_string												m_SelectedModelName;
+	_string												m_CopiedModelName;
 
+	SHPTR<UPawn>										m_spCopiedModel;
 
 	SHPTR<TShowAnimModelObject>							m_spShowAnimModelObject;
 	SHPTR<TShowModelObject>								m_spShowModelObject;
@@ -91,9 +96,6 @@ private:
 	_bool												m_isResetModel;
 	_bool												m_isResetAnimModel;
 
-	//_float3											m_vModelPivotScale;
-	//_float3											m_vAnimModelPivotScale;
-
 	SHPTR<TGuizmoManager>								m_spGuizmoManager;
 
 	_bool												m_bSelectedhasAnim;
@@ -101,6 +103,7 @@ private:
 
 	_uint												m_iModelSuffix;
 	_uint												m_iAnimModelSuffix;
+	_uint												m_iCopiedModelSuffix;
 };
 
 END
