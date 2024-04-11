@@ -42,6 +42,11 @@ public:
 
 	const TYPE& GetType() const { return m_eType; }
 	const _wstring& GetModelName() const { return m_wstrModelName; }
+
+	_float3 GetMaxVertexPos();
+	_float3 GetMinVertexPos();
+	_float3 GetCenterPos();
+
 public:
 	CLONE_MACRO(UModel, "UModel::Clone To Failed")
 	virtual void Free() override;

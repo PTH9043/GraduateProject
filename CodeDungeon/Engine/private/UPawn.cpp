@@ -36,14 +36,19 @@ void UPawn::Free()
 
 HRESULT UPawn::NativeConstruct()
 {
-	return __super::NativeConstruct();
+	RETURN_CHECK_FAILED(__super::NativeConstruct(), E_FAIL);
+
+	return S_OK;
 }
 
 HRESULT UPawn::NativeConstructClone(const VOIDDATAS& _vecDatas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_vecDatas), E_FAIL);
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	// Renderer
 	m_spRenderer = AddComponent<URenderer>(PROTO_COMP_RENDERER, COM_RENDERER);
+
+
 	return S_OK;
 }
 

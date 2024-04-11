@@ -3,14 +3,19 @@
 #include "UAnimModel.h"
 #include "UTransform.h"
 #include "UShader.h"
+#include "UGameInstance.h"
+#include "UCollider.h"
 
 TShowAnimModelObject::TShowAnimModelObject(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType) :
-	UPawn(_spDevice, _wstrLayer, _eCloneType)
+	UPawn(_spDevice, _wstrLayer, _eCloneType),
+	m_spModel{nullptr}
+
 {
 }
 
 TShowAnimModelObject::TShowAnimModelObject(const TShowAnimModelObject& _rhs) :
-	UPawn(_rhs)
+	UPawn(_rhs),
+	m_spModel{ nullptr }
 {
 }
 
@@ -26,8 +31,23 @@ HRESULT TShowAnimModelObject::NativeConstruct()
 HRESULT TShowAnimModelObject::NativeConstructClone(const VOIDDATAS& _vecDatas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_vecDatas), E_FAIL);
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	UCollider::COLLIDERDESC tDesc;
+	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
+	tDesc.vScale = _float3(1.f, 1.f, 1.f);
+	SHPTR<UCollider> Collider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
+
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution<float> dis(0.5f, 1.0f);
+
+	_float3 randomFloat(dis(gen), dis(gen), dis(gen));
+
+	Collider->ChangeColliderColor(randomFloat);
+
+	_wstring mainColliderTag = L"Main";
+	AddColliderInContainer(mainColliderTag, Collider);
 	AddShader(PROTO_RES_ANIMMODELSHADER, RES_SHADER);
-	GetTransform()->SetScale({ 0.05f, 0.05f, 0.05f });
 
 	return S_OK;
 }

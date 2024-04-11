@@ -98,6 +98,30 @@ void UCollider::SetScale(const _float3& _vScale)
 	}
 }
 
+void UCollider::SetScaleToFitModel(const _float3& minVertex, const _float3& maxVertex)
+{
+	_float3 size = maxVertex - minVertex;
+	_float3 center = (maxVertex + minVertex) * 0.5f;
+
+	switch (m_eType)
+	{
+	case TYPE_AABB:
+		m_spAABB_Original->Center = center;
+		m_spAABB_Original->Extents = size;
+		m_vScale = size;
+		break;
+	case TYPE_OBB:
+		m_spOBB_Original->Center = center;
+		m_spOBB_Original->Extents = size;
+		m_vScale = size;
+		break;
+	case TYPE_SPHERE:
+		m_spSphere_Original->Radius = (size).x;
+		m_vScale = { (size).x, (size).x, (size).x };
+		break;
+	}
+}
+
 void UCollider::SetTranslate(const _float3& _vTranslate)
 {
 	switch (m_eType)
@@ -170,17 +194,19 @@ void UCollider::SetTransform(const _float4x4& _Matrix)
 		m_spAABB_Original->Transform(*m_spAABB.get(), m_mTransformMatrix);
 		break;
 	case TYPE_OBB:
-		m_mTransformMatrix = XMMatrixRotationQuaternion(DirectX::XMQuaternionRotationMatrix(_Matrix));
-		m_mTransformMatrix.Set_Pos(_Matrix.Get_Pos());
+		m_mTransformMatrix = _Matrix;
 		m_spOBB_Original->Transform(*m_spOBB.get(), m_mTransformMatrix);
+		m_vScale = _float3(m_spOBB->Extents);
 		break;
 	case TYPE_SPHERE:
-		m_mTransformMatrix = XMMatrixRotationQuaternion(DirectX::XMQuaternionRotationMatrix(_Matrix));
-		m_mTransformMatrix.Set_Pos(_Matrix.Get_Pos());
+		m_mTransformMatrix = _Matrix;
 		m_spSphere_Original->Transform(*m_spSphere.get(), m_mTransformMatrix);
+		m_vScale = _float3((m_spSphere->Radius, m_spSphere->Radius, m_spSphere->Radius));
 		break;
 	}
 }
+
+
 
 void UCollider::Free()
 {

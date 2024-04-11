@@ -919,6 +919,10 @@ void UGameInstance::AddPickingObject(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuff
 {
 	m_spPicking->AddPickingObject(_spPawn, _spVIBuffer);
 }
+void UGameInstance::DeletePickingObject(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer)
+{
+	m_spPicking->DeletePickingObject(_spPawn, _spVIBuffer);
+}
 void UGameInstance::AddPickingGrid(const MAINGRID& _stGrid)
 {
 	m_spPicking->AddPickingGrid(_stGrid);
@@ -931,10 +935,10 @@ const PICKINGDESC UGameInstance::GetPickDesc()
 {
 	return m_spPicking->GetPickDesc();
 }
-_bool UGameInstance::PickingMesh(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer,
+_bool UGameInstance::PickingMesh(const _float3& _RayPos, const _float3& _RayDir, CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer,
 	_float* _pDist, _float3* _pOut)
 {
-	return m_spPicking->PickingMesh(_spPawn, _spVIBuffer, _pDist, _pOut);
+	return m_spPicking->PickingMesh(_RayPos, _RayDir, _spPawn, _spVIBuffer, _pDist, _pOut);
 }
 
 /*
@@ -1136,7 +1140,7 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 					SHADERLIST{ VS_MAIN, PS_MAIN },
 					RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
 					DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT },
-					RASTERIZER_TYPE::CULL_NONE, DEPTH_STENCIL_TYPE::LESS, BLEND_TYPE::ALPHA_BLEND));
+					RASTERIZER_TYPE::CULL_NONE, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE, BLEND_TYPE::ALPHA_BLEND));
 		}
 		{
 			CreateGraphicsShader(PROTO_RES_RECTSHADER, CLONETYPE::CLONE_STATIC,

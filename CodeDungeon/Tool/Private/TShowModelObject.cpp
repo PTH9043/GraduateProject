@@ -4,6 +4,8 @@
 #include "UTransform.h"
 #include "UShaderConstantBuffer.h"
 #include "UShader.h"
+#include "UGameInstance.h"
+#include "UCollider.h"
 
 TShowModelObject::TShowModelObject(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UPawn(_spDevice, _wstrLayer, _eCloneType),
@@ -29,8 +31,22 @@ HRESULT TShowModelObject::NativeConstruct()
 HRESULT TShowModelObject::NativeConstructClone(const VOIDDATAS& _vecDatas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_vecDatas), E_FAIL);
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	m_spShaderNormalCheckBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::MODELCHECKBUF, sizeof(int));
+	UCollider::COLLIDERDESC tDesc;
+	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
+	tDesc.vScale = _float3(1.f, 1.f, 1.f);
+	SHPTR<UCollider> Collider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
 
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution<float> dis(0.0f, 1.0f);
+
+	_float3 randomFloat(dis(gen), dis(gen), dis(gen));
+
+	Collider->ChangeColliderColor(randomFloat);
+	_wstring mainColliderTag = L"Main";
+	AddColliderInContainer(mainColliderTag, Collider);
 	AddShader(PROTO_RES_MODELSHADER, RES_SHADER);
 	return S_OK;
 }

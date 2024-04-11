@@ -5,6 +5,7 @@ BEGIN(Engine)
 class UModel;
 class UAnimModel;
 class UPawn;
+class UMapLayout;
 END
 
 BEGIN(Tool)
@@ -53,6 +54,8 @@ private:
 	void ClearCurrentModel();
 	void ClearCurrentAnimModel();
 
+	void MouseInput();
+
 	HRESULT CopyCurrentModel();
 	HRESULT PasteCopiedModel();
 private:
@@ -99,11 +102,13 @@ private:
 	SHPTR<TGuizmoManager>								m_spGuizmoManager;
 
 	_bool												m_bSelectedhasAnim;
-	_bool												m_bGuizmoActive;
+	_bool												m_bColliderActive;
 
 	_uint												m_iModelSuffix;
 	_uint												m_iAnimModelSuffix;
 	_uint												m_iCopiedModelSuffix;
+
+	SHPTR<UMapLayout>									m_spMapLayout;
 };
 
 END

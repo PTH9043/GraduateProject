@@ -352,6 +352,9 @@
     <Filter Include="98.ShaderFile\Common\Light\Original">
       <UniqueIdentifier>{cd1f6e0f-2f7c-4556-a4c4-6f5da750c266}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06.Component\MapLayout">
+      <UniqueIdentifier>{d0a4a055-d6ec-4027-bcd7-cc08aebddc44}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -440,9 +443,6 @@
     </ClCompile>
     <ClCompile Include="..\private\UComponent.cpp">
       <Filter>06.Component</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\UTransform.cpp">
-      <Filter>06.Component\Transform</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UShaderBufferManager.cpp">
       <Filter>01.Manager\ShaderBufferManager</Filter>
@@ -675,7 +675,6 @@
     <ClCompile Include="..\private\UFog.cpp">
       <Filter>05.Actor\Fog</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\UAxis.cpp" />
     <ClCompile Include="..\public\ImGui\ImGradient.cpp">
       <Filter>99.Default\ImGui</Filter>
     </ClCompile>
@@ -690,6 +689,12 @@
     </ClCompile>
     <ClCompile Include="..\public\ImGui\ImSequencer.cpp">
       <Filter>99.Default\ImGui\Guizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UMapLayout.cpp">
+      <Filter>06.Component\MapLayout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UTransform.cpp">
+      <Filter>06.Component\Transform</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -803,9 +808,6 @@
     </ClInclude>
     <ClInclude Include="..\public\UComponent.h">
       <Filter>06.Component</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\UTransform.h">
-      <Filter>06.Component\Transform</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UShaderBufferManager.h">
       <Filter>01.Manager\ShaderBufferManager</Filter>
@@ -1044,7 +1046,6 @@
     <ClInclude Include="..\public\UFog.h">
       <Filter>05.Actor\Fog</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\UAxis.h" />
     <ClInclude Include="..\public\ImGui\ImGradient.h">
       <Filter>99.Default\ImGui</Filter>
     </ClInclude>
@@ -1062,6 +1063,12 @@
     </ClInclude>
     <ClInclude Include="..\public\ImGui\ImZoomSlider.h">
       <Filter>99.Default\ImGui\Guizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UMapLayout.h">
+      <Filter>06.Component\MapLayout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UTransform.h">
+      <Filter>06.Component\Transform</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

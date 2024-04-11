@@ -52,6 +52,51 @@ SHPTR<UBoneNode> UModel::FindBoneNode(const _wstring& _strBoneNode) const
 	return *it;
 }
 
+_float3 UModel::GetMaxVertexPos()
+{
+	_float3 maxVertexPos = _float3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+
+	for (auto& MeshContainer : m_MeshContainer)
+	{
+		const _float3& maxMeshVertexPos = MeshContainer->GetMaxVertexPos();
+		maxVertexPos.x = max(maxVertexPos.x, maxMeshVertexPos.x);
+		maxVertexPos.y = max(maxVertexPos.y, maxMeshVertexPos.y);
+		maxVertexPos.z = max(maxVertexPos.z, maxMeshVertexPos.z);
+	}
+
+	return maxVertexPos; // 최대 버텍스 반환
+}
+
+_float3 UModel::GetMinVertexPos()
+{
+	_float3 minVertexPos = _float3(FLT_MAX, FLT_MAX, FLT_MAX);
+
+	for (auto& MeshContainer : m_MeshContainer)
+	{
+		const _float3& minMeshVertexPos = MeshContainer->GetMinVertexPos();
+		minVertexPos.x = min(minVertexPos.x, minMeshVertexPos.x);
+		minVertexPos.y = min(minVertexPos.y, minMeshVertexPos.y);
+		minVertexPos.z = min(minVertexPos.z, minMeshVertexPos.z);
+	}
+
+	return minVertexPos; // 최대 버텍스 반환
+}
+
+_float3 UModel::GetCenterPos()
+{
+	// 최소 버텍스와 최대 버텍스를 얻어옴
+	const _float3& minVertexPos = GetMinVertexPos();
+	const _float3& maxVertexPos = GetMaxVertexPos();
+
+	// 중심 위치 계산
+	_float3 centerPos;
+	centerPos.x = (maxVertexPos.x + minVertexPos.x) * 0.5f;
+	centerPos.y = (maxVertexPos.y + minVertexPos.y) * 0.5f;
+	centerPos.z = (maxVertexPos.z + minVertexPos.z) * 0.5f;
+
+	return centerPos;
+}
+
 void UModel::Free()
 {
 	m_BoneNodeContainer.clear();
@@ -375,3 +420,4 @@ void UModel::BringModelName(const _wstring& _wstrPath)
 {
 	m_wstrModelName = _wstrPath.substr(_wstrPath.find_last_of(L"\\") + 1, _wstrPath.find_last_of(L"."));
 }
+

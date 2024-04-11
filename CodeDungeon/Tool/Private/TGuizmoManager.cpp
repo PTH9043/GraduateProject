@@ -5,6 +5,7 @@
 #include "UCamera.h"
 #include "TGuizmoManager.h"
 #include "UPawn.h"
+#include "UCollider.h"
 
 TGuizmoManager::TGuizmoManager() :
 	m_stGuizmoDesc{}
@@ -126,5 +127,8 @@ void TGuizmoManager::EditTransformViaGuizmo()
 	ImGuizmo::Manipulate(cameraView, cameraProj, mCurrentGizmoOperation, mCurrentGizmoMode, World, NULL, NULL);
 	ConvertFloatArrayToXMFLOAT4x4(World, m_stGuizmoDesc.mtWorld);
 	m_stGuizmoDesc.spSelectedActor->GetTransform()->SetNewWorldMtx(m_stGuizmoDesc.mtWorld);
+	for (auto& Collider : m_stGuizmoDesc.spSelectedActor->GetColliderContainer())
+		Collider.second->SetTransform(m_stGuizmoDesc.mtWorld);
+
 		
 }

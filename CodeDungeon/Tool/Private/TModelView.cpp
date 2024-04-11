@@ -2,6 +2,7 @@
 #include "TModelView.h"
 #include "UGameInstance.h"
 #include "UMethod.h"
+#include "UPawn.h"
 #include "TAssimpModel.h"
 #include "UModel.h"
 #include "UAnimModel.h"
@@ -13,7 +14,10 @@
 #include "TUnityModelLoader.h"
 #include "TGuizmoManager.h"
 #include "UPicking.h"
-#include "UPawn.h"
+#include "UMapLayout.h"
+#include "UVIBuffer.h"
+#include "UMeshContainer.h"
+#include "UCollider.h"
 
 TModelView::TModelView(CSHPTRREF<UDevice> _spDevice) :
 	TImGuiView(_spDevice, "ModelView"),
@@ -36,7 +40,7 @@ TModelView::TModelView(CSHPTRREF<UDevice> _spDevice) :
 	m_isResetAnimModel{ false },
 	m_spGuizmoManager{nullptr},
 	m_bSelectedhasAnim{false},
-	m_bGuizmoActive{false},
+	m_bColliderActive{false},
 	m_ShowAnimModelsContainer{},
 	m_ShowModelsContainer{},
 	m_spSelectedModel{nullptr},
@@ -45,7 +49,8 @@ TModelView::TModelView(CSHPTRREF<UDevice> _spDevice) :
 	m_iAnimModelSuffix{ 0 },
 	m_spCopiedModel{nullptr},
 	m_iCopiedModelSuffix{0},
-	m_CopiedModelName{}
+	m_CopiedModelName{},
+	m_spMapLayout{nullptr}
 {
 }
 
@@ -67,6 +72,7 @@ HRESULT TModelView::NativeConstruct()
 		ImGuiDockNodeFlags_CentralNode);
 
 	m_spGuizmoManager = Create<TGuizmoManager>();
+	m_spMapLayout = CreateConstructorNativeNotMsg<UMapLayout>(GetGameInstance()->GetDevice());
 
 	return S_OK;
 }
@@ -105,6 +111,38 @@ void TModelView::TickActive(const _double& _dTimeDelta)
 
 void TModelView::LateTickActive(const _double& _dTimeDetla)
 {
+	if(m_spSelectedModel != nullptr)
+	{
+		if(m_bColliderActive)
+		{
+			for (auto& Colliders : m_spSelectedModel->GetColliderContainer())
+				Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_MIDDLE);
+		}
+	}
+
+	for (auto& ShowModel : m_ShowModelsContainer)
+	{
+		//픽킹이 가능하도록 픽킹목록에 추가
+		SHPTR<UModel> spModel = ShowModel.second->GetShowModel();
+		for (auto& Mesh : spModel->GetMeshContainers())
+		{
+			SHPTR<UVIBuffer> spVIbuffer = static_pointer_cast<UVIBuffer>(Mesh);
+			SHPTR<UPawn> pawnModel = static_pointer_cast<UPawn>(ShowModel.second);
+			GetGameInstance()->AddPickingObject(pawnModel, spVIbuffer);
+		}
+	}
+
+	for (auto& ShowAnimModel : m_ShowAnimModelsContainer)
+	{
+		//픽킹이 가능하도록 픽킹목록에 추가
+		SHPTR<UModel> spModel = ShowAnimModel.second->GetAnimModel();
+		for (auto& Mesh : spModel->GetMeshContainers())
+		{
+			SHPTR<UVIBuffer> spVIbuffer = static_pointer_cast<UVIBuffer>(Mesh);
+			SHPTR<UPawn> pawnModel = static_pointer_cast<UPawn>(ShowAnimModel.second);
+			GetGameInstance()->AddPickingObject(pawnModel, spVIbuffer);
+		}
+	}
 }
 
 void TModelView::RenderActive()
@@ -121,6 +159,7 @@ void TModelView::RenderActive()
 		ImGui::NewLine();
 		ShowModels();
 		ShowAnimMoldels();
+		MouseInput();
 		EditModel();
 	}
 	ImGui::End();
@@ -185,13 +224,23 @@ void TModelView::ShowModelList()
 				_bool isTrue{ false };
 				if (ImGui::Selectable(Model.first.c_str(), &isTrue))
 				{
+					//numStr를 활용하여 중복된 모델 구분
 					_string uniqueName = Model.first;
 					_string numStr = std::to_string(m_iModelSuffix);
 					while (m_ShowModelsContainer.find(uniqueName) != m_ShowModelsContainer.end())				
 						uniqueName.append(numStr);
 
+					//ShowModel을 컨테이너에 추가
 					SHPTR<TShowModelObject> newModel = std::static_pointer_cast<TShowModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWMODELOBJECT));
 					newModel->SetShowModel(Model.second);
+
+					for (auto& Containers : newModel->GetColliderContainer())
+					{
+						Containers.second->SetTranslate(newModel->GetShowModel()->GetCenterPos());
+						Containers.second->SetScaleToFitModel(newModel->GetShowModel()->GetMinVertexPos(), newModel->GetShowModel()->GetMaxVertexPos());
+						Containers.second->SetTransform(newModel->GetTransform());
+					}
+
 					m_ShowModelsContainer.emplace(uniqueName, newModel);
 
 					// numStr을 다시 제거
@@ -240,13 +289,23 @@ void TModelView::ShowAnimModelList()
 				_bool isTrue{ false };
 				if (ImGui::Selectable(Model.first.c_str(), &isTrue, ImGuiTreeNodeFlags_Selected))
 				{
+					//numStr를 활용하여 중복된 모델 구분
 					_string uniqueName = Model.first;
 					_string numStr = std::to_string(m_iAnimModelSuffix);
 					while (m_ShowAnimModelsContainer.find(uniqueName) != m_ShowAnimModelsContainer.end())
 						uniqueName.append(numStr);
 
+					//ShowModel을 컨테이너에 추가
 					SHPTR<TShowAnimModelObject> newAnimModel = std::static_pointer_cast<TShowAnimModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWANIMMODELOBJECT));
 					newAnimModel->SetShowModel(Model.second);
+
+					for (auto& Containers : newAnimModel->GetColliderContainer())
+					{
+						Containers.second->SetTranslate(newAnimModel->GetAnimModel()->GetCenterPos());
+						Containers.second->SetScaleToFitModel(newAnimModel->GetAnimModel()->GetMinVertexPos(), newAnimModel->GetAnimModel()->GetMaxVertexPos());
+						Containers.second->SetTransform(newAnimModel->GetTransform());
+					}
+
 					m_ShowAnimModelsContainer.emplace(uniqueName, newAnimModel);
 
 					// numStr을 다시 제거
@@ -319,11 +378,8 @@ void TModelView::EditModel()
 			m_spGuizmoManager->SetSelectedActor(m_spSelectedModel);
 
 			ImGui::Text("Selected Model: %s", m_SelectedModelName.c_str());
-			ImGui::Checkbox("Change Model Transform", &m_bGuizmoActive);
-			if (true == m_bGuizmoActive)
-			{
-				m_spGuizmoManager->EditTransformViaGuizmo();
-			}
+			m_spGuizmoManager->EditTransformViaGuizmo();
+			ImGui::Checkbox("Show Collider", &m_bColliderActive);
 		}
 		else
 			ImGui::Text("Selected Model: None, Select Current Model to edit transform");
@@ -333,13 +389,13 @@ void TModelView::EditModel()
 
 void TModelView::ClearCurrentModel()
 {
-	for (auto& Model : m_ShowModelsContainer)
+	for (auto& showModel : m_ShowModelsContainer)
 	{
-		if (Model.second == m_spSelectedModel)
-		{
-			GetGameInstance()->RemoveActor(Model.second);
-			Model.second.reset();
-			m_ShowModelsContainer.erase(Model.first);
+		if (showModel.second == m_spSelectedModel)
+		{	
+			GetGameInstance()->RemoveActor(showModel.second);
+			showModel.second.reset();
+			m_ShowModelsContainer.erase(showModel.first);
 		}
 	}
 	m_spSelectedModel.reset();
@@ -347,16 +403,57 @@ void TModelView::ClearCurrentModel()
 
 void TModelView::ClearCurrentAnimModel()
 {
-	for (auto& Model : m_ShowAnimModelsContainer)
+	for (auto& showModel : m_ShowAnimModelsContainer)
 	{
-		if (Model.second == m_spSelectedModel)
+		if (showModel.second == m_spSelectedModel)
 		{
-			GetGameInstance()->RemoveActor(Model.second);
-			Model.second.reset();
-			m_ShowAnimModelsContainer.erase(Model.first);
+			GetGameInstance()->RemoveActor(showModel.second);
+			showModel.second.reset();
+			m_ShowAnimModelsContainer.erase(showModel.first);
 		}
 	}
 	m_spSelectedModel.reset();
+}
+
+void TModelView::MouseInput()
+{
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	_float2 MousePos = spGameInstance->GetMousePosition();
+
+	if (MousePos.x <= 0 || MousePos.x >= WINDOW_WIDTH)
+		return;
+
+	if (MousePos.y <= 0 || MousePos.y >= WINDOW_HEIGHT)
+		return;
+
+	if (!spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_L))
+		return;
+
+	PICKINGDESC tDesc = spGameInstance->GetPickDesc();
+	if (!tDesc.bPickingSuccess)
+		return;
+
+	for (auto& ShowModel : m_ShowModelsContainer)
+	{
+		if (ShowModel.second == tDesc.spPawn)
+		{
+			m_spSelectedModel = tDesc.spPawn;
+			m_SelectedModelName = ShowModel.first;
+			m_bSelectedhasAnim = false;
+			return;
+		}
+	}
+
+	for (auto& ShowModel : m_ShowAnimModelsContainer)
+	{
+		if (ShowModel.second == tDesc.spPawn)
+		{
+			m_spSelectedModel = tDesc.spPawn;
+			m_SelectedModelName = ShowModel.first;
+			m_bSelectedhasAnim = true;
+			return;
+		}
+	}
 }
 
 HRESULT TModelView::CopyCurrentModel()
@@ -381,18 +478,19 @@ HRESULT TModelView::PasteCopiedModel()
 	}
 
 	_string numStr = std::to_string(m_iCopiedModelSuffix);
-	m_CopiedModelName.append("_Clone");
-	m_CopiedModelName.append(numStr);
+	_string cloneName = m_CopiedModelName;
+	cloneName.append("_Clone");
+	cloneName.append(numStr);
 	m_iCopiedModelSuffix++;
 
 	if (m_bSelectedhasAnim)
-		m_ShowAnimModelsContainer.emplace(m_CopiedModelName, dynamic_pointer_cast<TShowAnimModelObject>(m_spCopiedModel));
+		m_ShowAnimModelsContainer.emplace(cloneName, dynamic_pointer_cast<TShowAnimModelObject>(m_spCopiedModel));
 	else
-		m_ShowModelsContainer.emplace(m_CopiedModelName, dynamic_pointer_cast<TShowModelObject>(m_spCopiedModel));
+		m_ShowModelsContainer.emplace(cloneName, dynamic_pointer_cast<TShowModelObject>(m_spCopiedModel));
 
-	size_t pos = m_CopiedModelName.find(numStr);
+	size_t pos = cloneName.find(numStr);
 	if (pos != _wstring::npos)
-		m_CopiedModelName.erase(pos, numStr.length());
+		cloneName.erase(pos, numStr.length());
 
 	return S_OK;
 }

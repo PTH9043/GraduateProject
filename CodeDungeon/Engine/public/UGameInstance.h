@@ -280,10 +280,11 @@ public: /* CharacterManager*/
 	*/
 public: /* Picking */
 	void AddPickingObject(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer);
+	void DeletePickingObject(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer);
 	void AddPickingGrid(const MAINGRID& _stGrid);
 	SHPTR<UActor> GetPickingPawn();
 	const PICKINGDESC GetPickDesc();
-	_bool PickingMesh(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer,
+	_bool PickingMesh(const _float3& _RayPos, const _float3& _RayDir, CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer,
 		_float* _pDist, _float3* _pOut);
 
 
