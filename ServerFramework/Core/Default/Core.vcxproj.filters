@@ -31,9 +31,6 @@
     <Filter Include="02.Manager\RandomManager">
       <UniqueIdentifier>{99b09565-9bc8-471d-ac1b-234ce37782f6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Manager\LogManager">
-      <UniqueIdentifier>{7fd155e8-277c-4366-9709-58645d03818d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03.Network\Room">
       <UniqueIdentifier>{e647efd8-c98c-4309-8ae6-79d10359b786}</UniqueIdentifier>
     </Filter>
@@ -139,6 +136,9 @@
     <Filter Include="07.DataBase\MySqlTable\LoginTable">
       <UniqueIdentifier>{14e2df0d-fd6a-4cd5-aef1-ad1b1ce3049a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.Utility\Logger">
+      <UniqueIdentifier>{7fd155e8-277c-4366-9709-58645d03818d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ACoreBase.h">
@@ -219,8 +219,8 @@
     <ClInclude Include="..\Public\ARandomManager.h">
       <Filter>02.Manager\RandomManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\ALogManager.h">
-      <Filter>02.Manager\LogManager</Filter>
+    <ClInclude Include="..\Public\ALogger.h">
+      <Filter>97.Utility\Logger</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ACoreApp.h">
       <Filter>96.Super\App</Filter>
@@ -344,8 +344,8 @@
     <ClCompile Include="..\Private\ARandomManager.cpp">
       <Filter>02.Manager\RandomManager</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\ALogManager.cpp">
-      <Filter>02.Manager\LogManager</Filter>
+    <ClCompile Include="..\Private\ALogger.cpp">
+      <Filter>97.Utility\Logger</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ACoreApp.cpp">
       <Filter>96.Super\App</Filter>

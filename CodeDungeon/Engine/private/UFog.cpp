@@ -39,7 +39,7 @@ HRESULT UFog::NativeConstructClone(const VOIDDATAS& _convecDatas)
 	if (_convecDatas.size() > 0)
 	{
 		FOGDESC stParticleDesc = UMethod::ConvertTemplate_Index<FOGDESC>(_convecDatas, 0);
-		m_spShaderFogBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::FOGBUFFER, sizeof(FOGBUFFER));
+		m_spShaderFogBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::FOGBUFFER, static_cast<_int>(sizeof(FOGBUFFER)));
 
 
 		if (m_spFogTexGroup == nullptr)m_spFogTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_FOGTEXTUREGROUP));

@@ -207,10 +207,10 @@ void ClassName::DestoryInstance(){  m_pInstance.reset(); }
 ==========================
 */
 
-#define LOGPRINTOUT_CLASSLINE(LogManager, String) LogManager->PrintOut("%s\nFILE:%s, LINE:%d\n", String, typeid(this).name(), __LINE__);
-#define LOGPRINTOUT(LogManager, Printf, String) LogManager->PrintOut(Printf, String);
-#define FILEPRINTOUT_CLASSLINE(LogManager, String) LogManager->FileOut("%s\nFILE:%s, LINE:%d\n", String, typeid(this).name(), __LINE__);
-#define FILEPRINTOUT(LogManager, Printf, String) LogManager->FileOut(Printf, String);
+//#define LOGPRINTOUT_CLASSLINE(LogManager, String) LogManager->PrintOut("%s\nFILE:%s, LINE:%d\n", String, typeid(this).name(), __LINE__);
+//#define LOGPRINTOUT(LogManager, Printf, String) LogManager->PrintOut(Printf, String);
+//#define FILEPRINTOUT_CLASSLINE(LogManager, String) LogManager->FileOut("%s\nFILE:%s, LINE:%d\n", String, typeid(this).name(), __LINE__);
+//#define FILEPRINTOUT(LogManager, Printf, String) LogManager->FileOut(Printf, String);
 /*
 ==========================
 			CONSTRUCTOR 

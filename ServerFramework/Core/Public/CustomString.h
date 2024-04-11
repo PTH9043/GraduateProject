@@ -3,7 +3,6 @@
 
 namespace Core
 {
-
     /*
     @ Date: 2024-02-05,  Writer: นฺลยว๖
     @ Explain
@@ -177,10 +176,6 @@ namespace Core
         static CUSSTRING to_string(T index) {
             return  std::_Integral_to_string<TChar>(index);
         }
-
-        public: /* freind*/
-
-           friend CustomString<TChar, TString> operator +(const TChar* _p1, const TChar* _p2);
     };
 
     template<class TChar, class TString>
@@ -204,15 +199,6 @@ namespace Core
     {
         return _strText.append(_pChar);
     }
-    template<class TChar, class TString>
-    CustomString<TChar, TString> operator+(const TChar* _p1, const TChar* _p2)
-    {
-        CustomString<TChar, TString> str(_p1);
-        str += _p2;
-        return std::move(str);
-    }
-
-
     /*
     	using string = std::basic_string<char, std::char_traits<char>, Core::USTLAllocator<char>>;
 	using wstring = std::basic_string<wchar_t, std::char_traits<wchar_t>, Core::USTLAllocator<wchar_t>>;

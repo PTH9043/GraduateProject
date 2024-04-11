@@ -326,6 +326,11 @@ void TAssimpModel::SaveNonAnimModel(const _wstring& _wstrPath, _wstring& _wstrCo
 						UMethod::SaveString(save, UMethod::ConvertWToS(TextureName));
 					}
 				}
+
+				for (auto& iter : m_MaterialInfoContainer)
+				{
+					save.write((_char*)&iter, sizeof(MODELMATERIALINFO));
+				}
 			}
 		}
 	}
@@ -412,6 +417,11 @@ void TAssimpModel::SaveAnimModel(const _wstring& _wstrPath, _wstring& _wstrConve
 						for (auto& TextureName : iter.second) {
 							UMethod::SaveString(save, UMethod::ConvertWToS(TextureName));
 						}
+					}
+
+					for (auto& iter : m_MaterialInfoContainer)
+					{
+						save.write((_char*)&iter, sizeof(MODELMATERIALINFO));
 					}
 				}
 			}
@@ -625,8 +635,32 @@ HRESULT TAssimpModel::CreateMaterials(CSHPTRREF<FILEGROUP> _spFileGroup)
 	m_wstrTexturePath = wstrPath;
 
 	for (_uint i = 0; i < m_iNumMaterials; ++i) {
+		MODELMATERIALINFO MaterialInfo;
 		// Matrail 
 		aiMaterial* pAiMaterial = m_pAIScene->mMaterials[i];
+
+		aiColor4D color(0.f, 0.f, 0.f, 0.f);
+		if (AI_SUCCESS == pAiMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, color)) {
+			MaterialInfo.vDiffuse = _float4{ color.r, color.g, color.b, color.a };
+		}
+
+		if (AI_SUCCESS == pAiMaterial->Get(AI_MATKEY_COLOR_SPECULAR, color)) {
+			MaterialInfo.vSpecular = _float4{ color.r, color.g, color.b, color.a };
+		}
+
+		if (AI_SUCCESS == pAiMaterial->Get(AI_MATKEY_COLOR_AMBIENT, color)) {
+			MaterialInfo.vAmbient = _float4{ color.r, color.g, color.b, color.a };
+		}
+
+		if (AI_SUCCESS == pAiMaterial->Get(AI_MATKEY_COLOR_EMISSIVE, color)) {
+			MaterialInfo.vEmissive = _float4{ color.r, color.g, color.b, color.a };
+		}
+
+		pAiMaterial->Get(AI_MATKEY_SHININESS, MaterialInfo.fShininess);
+		pAiMaterial->Get(AI_MATKEY_OPACITY, MaterialInfo.fOpacity);
+		pAiMaterial->Get(AI_MATKEY_TRANSPARENCYFACTOR, MaterialInfo.fTransparencyFactor);
+		pAiMaterial->Get(AI_MATKEY_BUMPSCALING, MaterialInfo.fBumpScaling);
+		pAiMaterial->Get(AI_MATKEY_REFLECTIVITY, MaterialInfo.fReflectivity);
 
 		_uint iCnt{ 0 };
 		SHPTR<MODELMATRIALDESC> pModelMaterial = std::make_shared<MODELMATRIALDESC>();
@@ -669,7 +703,10 @@ HRESULT TAssimpModel::CreateMaterials(CSHPTRREF<FILEGROUP> _spFileGroup)
 			++iCnt;
 		}
 		if (iCnt > 0)
+		{
 			m_MaterialContainer.push_back(pModelMaterial);
+			m_MaterialInfoContainer.push_back(MaterialInfo);
+		}
 	}
 
 	m_wstrTexturePath += L"\\";

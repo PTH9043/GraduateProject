@@ -2,7 +2,6 @@
 #include "ACoreInstance.h"
 #include "AThreadManager.h"
 #include "ARandomManager.h"
-#include "ALogManager.h"
 #include "ASpaceManager.h"
 #include "AService.h"
 
@@ -12,7 +11,6 @@ namespace Core
 		m_spService { nullptr},
 		m_spThreadManager{ Create<Core::AThreadManager>() }, 
 		m_spRandomManager{Create<Core::ARandomManager>()}, 
-		m_spLogManager{Create<Core::ALogManager>() },
 		m_spSpaceManager{ Create<Core::ASpaceManager>() }
 	{
 
@@ -89,35 +87,7 @@ namespace Core
 
 	/*
 	-----------------------------
-	UThreadManager
-	-----------------------------
-	ULogManager
-	-----------------------------
-	*/
-
-	void ACoreInstance::PrintOut(const char* _fmt, ...)
-	{
-		va_list args;
-		va_start(args, _fmt);
-		vsprintf_s(TLS::g_LogTextBuffer, _fmt, args);
-		va_end(args);
-
-		m_spLogManager->PrintOut(TLS::g_LogTextBuffer);
-	}
-
-	void ACoreInstance::FileOut(const char* _fmt, ...)
-	{
-		va_list args;
-		va_start(args, _fmt);
-		vsprintf_s(TLS::g_LogTextBuffer, _fmt, args);
-		va_end(args);
-
-		m_spLogManager->FileOut(TLS::g_LogTextBuffer);
-	}
-
-	/*
-	-----------------------------
-	ULogManager
+	URandomManager
 	-----------------------------
 	USpaceManager
 	-----------------------------
@@ -134,7 +104,6 @@ namespace Core
 		m_spService.reset();
 		m_spSpaceManager.reset();
 		m_spRandomManager.reset();
-		m_spLogManager.reset();
 		m_spThreadManager.reset();
 	}
 }

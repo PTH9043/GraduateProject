@@ -7,6 +7,7 @@ class UMeshContainer;
 class UShader;
 class UCommand;
 class URootBoneNode;
+class UModelMaterial;
 /*
 @ Date: 2024-02-04, Writer: นฺลยว๖
 @ Explain
@@ -21,7 +22,8 @@ public:
 
 	using BONENODES = VECTOR<SHPTR<UBoneNode>>;
 	using MESHCONTAINERS = VECTOR<SHPTR<UMeshContainer>>;
-	using MATERIERS = VECTOR<SHPTR<MODELMATRIALDESC>>;
+	using MATERIERS = VECTOR<SHPTR<UModelMaterial>>;
+	using MATERIALINFOS = VECTOR<MODELMATERIALINFO>;
 public:
 	UModel(CSHPTRREF<UDevice> _spDevice, const TYPE& _eType = TYPE::NONANIM);
 	UModel(const UModel& _rhs);
@@ -73,13 +75,13 @@ protected:
 
 	HRESULT CreateBoneNode(void* _pData, const _wstring& _wstrBoneNodeName = L"");
 	HRESULT CreateMeshContainers(void* _pData);
-	HRESULT CreateMaterial(void* _pData);
+	HRESULT CreateMaterial(void* _pData, const MATERIALINFOS& _vecMaterialInfo);
 	// Load To Data
 	virtual void LoadToData(const _wstring& _wstrPath);
 
-	void LoadMeshData(std::ifstream& _ifRead, VECTOR<MESHDESC>& _vecMeshes);
-	void LoadBoneData(std::ifstream& _ifRead, VECTOR<BONENODEDESC>& _vecBones);
-	void LoadMaterial(std::ifstream& _ifRead, UNORMAP<_uint, VECTOR<_wstring>>& _uomapMaterials);
+	void LoadMeshData(REF_IN std::ifstream& _ifRead, REF_IN VECTOR<MESHDESC>& _vecMeshes);
+	void LoadBoneData(REF_IN std::ifstream& _ifRead, REF_IN VECTOR<BONENODEDESC>& _vecBones);
+	void LoadMaterial(REF_IN std::ifstream& _ifRead, REF_IN UNORMAP<_uint, VECTOR<_wstring>>& _uomapMaterials, REF_IN MATERIALINFOS& _vecMaterialInfos);
 	void BringModelName(const _wstring& _wstrPath);
 private:
 	// MeshContainer

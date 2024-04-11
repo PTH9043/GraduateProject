@@ -3,10 +3,12 @@
 
 #include "ShaderGrobalFunc.hlsli"
 
+
 cbuffer HasNormalBuffer : register(b7)
 {
-    int HasBuffer;
+    int HasBuffer[4];
 };
+
 
 struct VS_IN
 {
@@ -75,9 +77,10 @@ struct PS_IN
 struct PS_OUT
 {
     float4 vDiffuse : SV_TARGET0;
-    float4 vNormal : SV_TARGET1;
-    float4 vDepth : SV_TARGET2;
-    float4 vPosition : SV_Target3;
+    float4 vSpecular : SV_TARGET1;
+    float4 vNormal : SV_TARGET2;
+    float4 vDepth : SV_TARGET3;
+    float4 vPosition : SV_Target4;
 };
 
 PS_OUT PS_Main(PS_IN In)
@@ -85,19 +88,28 @@ PS_OUT PS_Main(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
     
     VIEWPROJINFO tMainViewProj = GetViewProjInfo();
-    // Out Color
-    Out.vDiffuse = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV0);
+    // Out Color    
     
-    if(Out.vDiffuse.a <= 0.05)
+    if (HasBuffer[0])
+        Out.vDiffuse = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV0);
+    if (HasBuffer[1])
+        Out.vSpecular = g_Texture1.Sample(g_Sampler_Normal, In.vTexUV0);
+  
+    
+    if (Out.vDiffuse.a <= 0.05)
         discard;
-    if (HasBuffer)
+
+    if (HasBuffer[2])
     {
-        vector vNormalDesc = g_Texture1.Sample(g_Sampler_Normal, In.vTexUV0);
+        vector vNormalDesc = g_Texture2.Sample(g_Sampler_Normal, In.vTexUV0);
         float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
+
     
-        float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
-        vNormal = mul(vNormal, WorldMatrix);
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    vNormal = mul(vNormal, WorldMatrix);
     
+    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 1.f);
+
         Out.vNormal = normalize(float4(vNormal, 0.f));
     }
     else
@@ -105,10 +117,10 @@ PS_OUT PS_Main(PS_IN In)
         Out.vNormal = In.vNormal;
     }
    
-    
+
     Out.vDepth = float4(In.vProjPos.w / tMainViewProj.fCamFar, In.vProjPos.z / In.vProjPos.w, 1.f, In.vPosition.w);
     Out.vPosition = In.vWorldPos;
-   // 
+   
     return Out;
 }
 

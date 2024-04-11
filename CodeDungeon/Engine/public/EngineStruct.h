@@ -397,6 +397,31 @@ namespace Engine {
 
 #pragma region MODEL
 
+	/*
+	@ Date: 2024-04-10, Writer: 박태현
+	@ Explain
+	-  머터리얼 값들을 추출하기 위한 구조체이다. 
+	*/
+	struct MODELMATERIALINFO {
+
+		_float4			vDiffuse;
+		_float4			vAmbient;
+		_float4			vSpecular;
+		_float4			vEmissive;
+		_float4			vTransparent;
+		_float4			vReflective;
+		_float				fShininess;
+		_float				fOpacity;
+		_float				fTransparencyFactor;
+		_float				fBumpScaling;
+		_float				fReflectivity;
+
+		MODELMATERIALINFO() : vDiffuse{}, vAmbient{}, vSpecular{}, vEmissive{}, vTransparent{}, 
+			vReflective{}, fShininess{ 0 }, fOpacity{ 0 }, fTransparencyFactor{ 0 }, fBumpScaling{ 0 }, 
+			fReflectivity{ 0 }
+		{}
+	};
+
 	// Key Frame
 	typedef struct tagKeyFrame
 	{
@@ -469,12 +494,13 @@ namespace Engine {
 	// Common Model Data
 	typedef struct tagCommonModelData
 	{
-		UNORMAP<_uint, VECTOR<_wstring>>						MatrialData;
-		_uint																					iMeshContainersCount = 0;
-		_uint																					iMatrialCount = 0;
-		_uint																					iNodeCnt = 0;
-
-		VECTOR<BONENODEDESC>											BNodeDatas;
+		MODELMATERIALINFO												 ModelMaterialInfo;
+		UNORMAP<_uint, VECTOR<_wstring>>	 MatrialData;
+		_uint																 iMeshContainersCount = 0;
+		_uint																 iMatrialCount = 0;
+		_uint																 iNodeCnt = 0;
+																				 
+		VECTOR<BONENODEDESC>						 BNodeDatas;
 	}COMMODELDATA;
 	// Model Desc
 	typedef struct tagModelDesc : public COMMODELDATA
@@ -493,7 +519,7 @@ namespace Engine {
 	typedef struct tagModelMatrial
 	{
 		// Texture
-		ARRAY<SHPTR<class UTexGroup>, TEXTYPE::TextureType_UNKNOWN> arrMaterialTexture{ nullptr };
+		ARRAY<SHPTR<class UTexGroup>, TEXTYPE::TextureType_UNKNOWN>  arrMaterialTexture{ nullptr };
 	}MODELMATRIALDESC;
 
 #pragma endregion MODEL

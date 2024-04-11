@@ -8,6 +8,7 @@
 #include "UMeshContainer.h"
 #include "UTexture.h"
 #include "URootBoneNode.h"
+#include "UModelMaterial.h"
 
 UModel::UModel(CSHPTRREF<UDevice> _spDevice, const TYPE& _eType) :
 	UResource(_spDevice),
@@ -193,10 +194,10 @@ HRESULT UModel::BindTexture(const _uint _iMeshIndex, const SRV_REGISTER _eRegist
 	{
 		if (nullptr != GetMaterials()[spMeshContainer->GetMaterialIndex()])
 		{
-			SHPTR<UTexGroup> spTexture = GetMaterials()[spMeshContainer->GetMaterialIndex()]->arrMaterialTexture[_eTextureType];
-			if (nullptr != spTexture)
+			SHPTRREF<UModelMaterial> spMaterial = GetMaterials()[spMeshContainer->GetMaterialIndex()];
+			if (nullptr != spMaterial)
 			{
-				spTexture->SetUpTextureIndex(_spShader, _eRegister, 0);
+				spMaterial->BindTexture(_spShader, _eRegister, _eTextureType);
 			}
 		}
 	}
@@ -280,24 +281,27 @@ HRESULT UModel::CreateMeshContainers(void* _pData)
 	return S_OK;
 }
 
-HRESULT UModel::CreateMaterial(void* _pData)
+HRESULT UModel::CreateMaterial(void* _pData, const MATERIALINFOS& _vecMaterialInfo)
 {
 	MODELDESC* tDesc = static_cast<MODELDESC*>(_pData);
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	if (nullptr != tDesc) {
 		m_MaterialContainer.resize(tDesc->MatrialData.size());
-
 		for (auto& iter : tDesc->MatrialData) {
-			SHPTR<MODELMATRIALDESC> pModelMaterial = std::make_shared<MODELMATRIALDESC>();
-			ZeroMemory(pModelMaterial.get(), sizeof(MODELMATRIALDESC));
-
+			VECTOR<SHPTR<UTexGroup>> vecMaterialTexGroup;
+			vecMaterialTexGroup.resize(TEXTYPE::TextureType_UNKNOWN);
 			for (_uint i = 0; i < TEXTYPE::TextureType_UNKNOWN; ++i)
 			{
 				if (iter.second[i] != L"NULL")
 				{
-					pModelMaterial->arrMaterialTexture[i] = CreateConstructorNative<UTexGroup>(GetDevice(), iter.second[i]);
+					vecMaterialTexGroup[i] = CreateConstructorNative<UTexGroup>(GetDevice(), iter.second[i]);
 				}
 			}
-			m_MaterialContainer[iter.first] = pModelMaterial;
+			UModelMaterial::DESC Desc;
+			Desc.MaterialInfoContainer = _vecMaterialInfo;
+			Desc.MaterialTexContainer = vecMaterialTexGroup;
+			// MaterialContainer 
+			m_MaterialContainer[iter.first] = CreateConstructorToNative<UModelMaterial>(GetDevice(), Desc);
 		}
 	}
 	return S_OK;
@@ -309,22 +313,24 @@ void UModel::LoadToData(const _wstring& _wstrPath)
 	RETURN_CHECK(!read, ;);
 	ThreadMiliRelax(10);
 	MODELDESC tDesc;
+
+	MATERIALINFOS		vecMaterialInfo(TEXTYPE::TextureType_UNKNOWN);
 	{
 		BringModelName(_wstrPath);
 		// MESH
-		LoadMeshData(read, tDesc.Meshes);
+		LoadMeshData(REF_OUT read, REF_OUT tDesc.Meshes);
 		// BoneNode
-		LoadBoneData(read, tDesc.BNodeDatas);
+		LoadBoneData(REF_OUT read, REF_OUT tDesc.BNodeDatas);
 		// Material
-		LoadMaterial(read, tDesc.MatrialData);
+		LoadMaterial(REF_OUT read, REF_OUT tDesc.MatrialData, REF_OUT vecMaterialInfo);
 
 		CreateBoneNode(&tDesc);
 		CreateMeshContainers(&tDesc);
-		CreateMaterial(&tDesc);
+		CreateMaterial(&tDesc, vecMaterialInfo);
 	}
 }
 
-void UModel::LoadMeshData(std::ifstream& _ifRead, VECTOR<MESHDESC>& _convecMeshes)
+void UModel::LoadMeshData(REF_IN std::ifstream& _ifRead, REF_IN VECTOR<MESHDESC>& _convecMeshes)
 {
 	size_t SIZE = 0;
 	_ifRead.read((_char*)&SIZE, sizeof(size_t));
@@ -374,7 +380,7 @@ void UModel::LoadMeshData(std::ifstream& _ifRead, VECTOR<MESHDESC>& _convecMeshe
 	}
 }
 
-void UModel::LoadBoneData(std::ifstream& _ifRead, VECTOR<BONENODEDESC>& _convecBones)
+void UModel::LoadBoneData(REF_IN std::ifstream& _ifRead, REF_IN VECTOR<BONENODEDESC>& _convecBones)
 {
 	size_t SIZE = 0;
 	_ifRead.read((_char*)&SIZE, sizeof(size_t));
@@ -391,7 +397,8 @@ void UModel::LoadBoneData(std::ifstream& _ifRead, VECTOR<BONENODEDESC>& _convecB
 	}
 }
 
-void UModel::LoadMaterial(std::ifstream& _ifRead, UNORMAP<_uint, VECTOR<_wstring>>& _uomapMaterials)
+void UModel::LoadMaterial(REF_IN std::ifstream& _ifRead, REF_IN UNORMAP<_uint, VECTOR<_wstring>>& _uomapMaterials,
+	REF_IN MATERIALINFOS& _vecMaterialInfos)
 {
 	size_t SIZE = 0;
 	_ifRead.read((_char*)&SIZE, sizeof(size_t));
@@ -413,6 +420,9 @@ void UModel::LoadMaterial(std::ifstream& _ifRead, UNORMAP<_uint, VECTOR<_wstring
 			}
 			_uomapMaterials.insert(std::pair<_uint, VECTOR<_wstring>>(first, rtVec));
 		}
+
+		_vecMaterialInfos.resize(SIZE);
+		_ifRead.read((_char*)&_vecMaterialInfos[0], sizeof(MODELMATERIALINFO) * TEXTYPE::TextureType_UNKNOWN);
 	}
 }
 

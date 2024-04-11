@@ -248,6 +248,15 @@ namespace Engine {
 		_float3		padding;
 	};
 
+	struct PARTICLEPLUS : public PARTICLE
+	{
+		PARTICLEPLUS():fStartTime{0},fAmp{0},fPeriod{0},PlusPadding{0}{}
+		_float fStartTime;
+		_float fAmp;
+		_float fPeriod;
+		_float PlusPadding;
+	};
+
 	struct ComputeParticleType {
 		ComputeParticleType() :fParticleType{ PARTICLE_TYPE_DEFAULT }, fParticleLifeTimeType{ PARTICLE_LIFETIME_TYPE_DEFAULT }, padding { 0, 0 } {}
 		PARTICLE_TYPE fParticleType;

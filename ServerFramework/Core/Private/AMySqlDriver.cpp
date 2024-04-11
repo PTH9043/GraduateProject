@@ -5,8 +5,8 @@
 #include "ASqlLoginTable.h"
 
 namespace Core {
-	AMySqlDriver::AMySqlDriver() : 
-		m_pDriver{ nullptr }, m_MySqlConnectContainer{}
+	AMySqlDriver::AMySqlDriver(OBJCON_CONSTRUCTOR) :
+		ACoreObject(OBJCON_CONDATA), m_pDriver{ nullptr }, m_MySqlConnectContainer{}
 	{
 	}
 
@@ -43,12 +43,45 @@ namespace Core {
 		{
 			iter = CreateInitNative<AMySqlConnector>(m_pDriver, _strAddress, _strName, _strPassward, i++);
 			assert(nullptr != iter);
+
 		}
 
-		m_MySqlTableContainer[SQLTABLETYPE::LOGIN] = CreateInitNative<ASqlLoginTable>(m_MySqlConnectContainer[0], 
-			SQL_LOGINTABLE_NAME);
+		m_MySqlTableContainer[SQLTABLETYPE::LOGIN] = CreateInitNative<ASqlLoginTable>(m_MySqlConnectContainer[0], SQL_LOGINTABLE_NAME);
 
 		return true;
+	}
+
+	_bool AMySqlDriver::ExcuteQueryMessage(SQLTABLETYPE _TableType, SQLQUERYTYPE _sqlQueryType, const _string& _strQueryData)
+	{
+
+	}
+
+	void AMySqlDriver::BindParam(SQLTABLETYPE _TableType, _int _ParamIndex, _bool _Value)
+	{
+	}
+
+	void AMySqlDriver::BindParam(SQLTABLETYPE _TableType, _int _ParamIndex, _float _Value)
+	{
+	}
+
+	void AMySqlDriver::BindParam(SQLTABLETYPE _TableType, _int _ParamIndex, _double _Value)
+	{
+	}
+
+	void AMySqlDriver::BindParam(SQLTABLETYPE _TableType, _int _ParamIndex, _short _Value)
+	{
+	}
+
+	void AMySqlDriver::BindParam(SQLTABLETYPE _TableType, _int _ParamIndex, _int _Value)
+	{
+	}
+
+	void AMySqlDriver::BindParam(SQLTABLETYPE _TableType, _int _ParamIndex, _llong _Value)
+	{
+	}
+
+	void AMySqlDriver::BindParam(SQLTABLETYPE _TableType, _int _ParamIndex, const _string& _Value)
+	{
 	}
 
 	void AMySqlDriver::Free() {
