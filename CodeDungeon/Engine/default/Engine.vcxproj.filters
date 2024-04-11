@@ -1152,5 +1152,8 @@
     <FxCompile Include="..\..\Shader\Compute2DEmitParticle.hlsl">
       <Filter>98.ShaderFile\Common\Particle</Filter>
     </FxCompile>
+    <FxCompile Include="..\..\Shader\2DParticlePlus.hlsl">
+      <Filter>98.ShaderFile\Common\Particle</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

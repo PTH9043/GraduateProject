@@ -52,7 +52,7 @@ void TFireView::LoadMultipleParticleResource()
 		{
 			UParticle::PARTICLEDESC tDesc;
 			tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEEMITPARTICLE2DSHADER;
-			tDesc.wstrParticleShader = PROTO_RES_PARTICLE2DSHADER;
+			tDesc.wstrParticleShader = PROTO_RES_PARTICLEPLUS2DSHADER;
 
 
 			tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
@@ -63,7 +63,7 @@ void TFireView::LoadMultipleParticleResource()
 			tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.3f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 10.f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 15.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 100;
+			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 1000;
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 5.f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.1f, 0.f);
 			m_MultipleParticle[i] = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
@@ -77,18 +77,20 @@ void TFireView::LoadMultipleParticleResource()
 		m_MultipleParticle[0]->SetTexture(L"RedDot"); // y값 증가 x 원
 	}
 	{
-		m_MultipleParticleParam[1] = m_MultipleParticle[1]->GetParticleSystem()->GetParticleParam();
-		m_MultipleParticleType[1] = m_MultipleParticle[1]->GetParticleSystem()->GetParticleTypeParam();
-		m_MultipleParticleType[1]->fParticleType = PARTICLE_TYPE_AUTO;
-		m_MultipleParticleType[1]->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
-		m_MultipleParticle[1]->SetTexture(L"RedDot");// y값 증가 O 원
+		//m_MultipleParticleParam[1] = m_MultipleParticle[1]->GetParticleSystem()->GetParticleParam();
+		//m_MultipleParticleType[1] = m_MultipleParticle[1]->GetParticleSystem()->GetParticleTypeParam();
+		//m_MultipleParticleType[1]->fParticleType = PARTICLE_TYPE_AUTO;
+		//m_MultipleParticleType[1]->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
+		//m_MultipleParticle[1]->SetTexture(L"RedBubble");// y값 증가 O 원
 	}
 
 
 	*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() = 0.05f;
 	*m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount() = 1;
-	*m_MultipleParticle[1]->GetParticleSystem()->GetCreateInterval() = 0.05f;
-	*m_MultipleParticle[1]->GetParticleSystem()->GetAddParticleAmount() = 1;
+	m_MultipleParticle[0]->GetParticleSystem()->SetUAVBUFFERPLUS(true);
+	//*m_MultipleParticle[1]->GetParticleSystem()->GetCreateInterval() = 0.05f;
+	//*m_MultipleParticle[1]->GetParticleSystem()->GetAddParticleAmount() = 1;
+	//m_MultipleParticle[1]->GetParticleSystem()->SetUAVBUFFERPLUS(true);
 }
 
 
@@ -102,7 +104,7 @@ HRESULT TFireView::LoadResource()
 		tFireDesc.wstrFireShader = PROTO_RES_2DFIRESHADER;
 		m_stFire = std::static_pointer_cast<UFire>(spGameInstance->CloneActorAdd(PROTO_ACTOR_FIRE, { &tFireDesc }));
 	}
-	ResizeMultipleParticleVector(2);
+	ResizeMultipleParticleVector(1);
 	LoadMultipleParticleResource();
 
 	return S_OK;
@@ -361,12 +363,14 @@ void TFireView::FireAlphaTextureSetting() {
 	}
 }
 
+
+
 void TFireView::FireScalingSetting() {
 
 	static float Scale = 50.f;
 	ImGui::SliderFloat("Scale", &Scale, 1.f, 100.f, "%.2f");
 
-	_float3 ScaleFloat3 = _float3(Scale, Scale, Scale);
+	_float3 ScaleFloat3 = _float3(Scale, Scale, 1);
 	m_stFire->GetTransform()->SetScale(ScaleFloat3);
 }
 
