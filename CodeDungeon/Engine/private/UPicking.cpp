@@ -8,6 +8,7 @@
 #include "UGrid.h"
 #include "UCollider.h"
 
+
 UPicking::UPicking() :
 	m_vWindowSize{ 0.f, 0.f },
 	m_stClientRect{ 0, 0, 0, 0 },
@@ -59,6 +60,7 @@ void UPicking::CastRayInWorldSpace(UGameInstance* _pGameInstance)
 
 	m_vRayPos = _float3::TransformCoord(m_vRayPos, mViewMatrixInv);
 	m_vRayDir = _float3::TransformNormal(m_vRayDir, mViewMatrixInv);
+	m_vRayDir.Normalize();
 }
 
 void UPicking::AddPickingObject(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer)
@@ -67,6 +69,20 @@ void UPicking::AddPickingObject(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _
 	stPawn.spPawn = _spPawn;
 	stPawn.spVIBuffer = _spVIBuffer;
 	m_WaitCheckPawnList.insert(stPawn);
+}
+
+void UPicking::DeletePickingObject(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer)
+{
+	WAITCHECKPAWN stPawn;
+	stPawn.spPawn = _spPawn;
+	stPawn.spVIBuffer = _spVIBuffer;
+
+	// 해당 객체를 찾아서 제거
+	auto it = m_WaitCheckPawnList.find(stPawn);
+	if (it != m_WaitCheckPawnList.end())
+	{
+		m_WaitCheckPawnList.erase(it);
+	}
 }
 
 SHPTR<UPawn> UPicking::GetPickingPawn()
@@ -80,22 +96,19 @@ const PICKINGDESC UPicking::GetPickDesc()
 	bool bFoundValidPick = false;
 	for (auto& iter : m_WaitCheckPawnList)
 	{
-		_float3 vLocalRayDir, vLocalRayPos;
-		_float4x4 WorldInv = iter.spPawn->GetTransform()->GetWorldMatrixInv();
-
-		vLocalRayPos = _float3::TransformCoord(m_vRayPos, WorldInv);
-		vLocalRayDir = _float3::TransformNormal(m_vRayDir, WorldInv);
-		vLocalRayDir.Normalize();
-
 		_float3 v3Pos = _float3(0.f, 0.f, 0.f);
-		_float fDist = 0.f;
-
-	/*	if(PickingCollider())*/
-		if (true == PickingMesh(iter.spPawn, iter.spVIBuffer, &fDist, &v3Pos))
+		_float ftoColliderDist = 0.f;
+		if (true == PickingCollider(m_vRayPos, m_vRayDir, iter.spPawn, &ftoColliderDist))
 		{
-			AddPickingObject(PICKINGDESC(iter.spPawn, v3Pos, fDist, true));
 			bFoundValidPick = true;
+			_float ftoMeshDist = 0.f;
+			if (true == PickingMesh(m_vRayPos, m_vRayDir, iter.spPawn, iter.spVIBuffer, &ftoMeshDist, &v3Pos))
+			{
+				bFoundValidPick = true;
+				AddPickingObject(PICKINGDESC(iter.spPawn, v3Pos, ftoMeshDist, true));
+			}
 		}
+		
 	}
 
 #ifdef _USE_DEBUGGING
@@ -135,9 +148,16 @@ const PICKINGDESC UPicking::GetPickDesc()
 	return m_stPickingDesc;
 }
 
-_bool UPicking::PickingMesh(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer,
+_bool UPicking::PickingMesh(const _float3& _RayPos, const _float3& _RayDir, CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer,
 	_float* _pDist, _float3* _pOut)
 {
+	_float3 vLocalRayDir, vLocalRayPos;
+	_float4x4 WorldInv = _spPawn->GetTransform()->GetWorldMatrixInv();
+
+	vLocalRayPos = _float3::TransformCoord(_RayPos, WorldInv);
+	vLocalRayDir = _float3::TransformNormal(_RayDir, WorldInv);
+	vLocalRayDir.Normalize();
+
 	_uint iNumFaces = _spVIBuffer->GetIndexCnt();
 	const VECTOR<_float3>& pVerticesPos = *_spVIBuffer->GetVertexPos().get();
 
@@ -155,11 +175,11 @@ _bool UPicking::PickingMesh(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVI
 			_float3 v2 = pVerticesPos[iIndices++];
 			_float3 v3 = pVerticesPos[iIndices++];
 
-	/*		if (true == IsPickingCheck(vLocalRayPos, vLocalRayDir, v1, v2, v3, _spPawn->GetTransform()->GetWorldMatrix(),
+			if (true == IsPickingCheck(vLocalRayPos, vLocalRayDir, v1, v2, v3, _spPawn->GetTransform()->GetWorldMatrix(),
 				_pDist, _pOut))
 			{
 				return true;
-			}*/
+			}
 		}
 	}
 	else
@@ -174,11 +194,11 @@ _bool UPicking::PickingMesh(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVI
 
 			_float fDist = 0.f;
 			_float3 v3Pos = _float3(0.f, 0.f, 0.f);
-			//if (true == IsPickingCheck(vLocalRayPos, vLocalRayDir, v1, v2, v3, _spPawn->GetTransform()->GetWorldMatrix(),
-			//	_pDist, _pOut))
-			//{
-			//	return true;
-			//}
+			if (true == IsPickingCheck(vLocalRayPos, vLocalRayDir, v1, v2, v3, _spPawn->GetTransform()->GetWorldMatrix(),
+				_pDist, _pOut))
+			{
+				return true;
+			}
 		}
 	}
 	
@@ -214,17 +234,45 @@ _bool UPicking::PickingOnGrid(CSHPTRREF<UGrid> _spGrid, _float* _pDist, _float3*
 	return false;
 }
 
-_bool UPicking::PickingCollider(CSHPTRREF<UPawn> _spPawn, const _float3& _vOrigin, const _float3& _vDirection, _float* _pDist)
+_bool UPicking::PickingCollider(const _float3& _RayPos, const _float3& _RayDir, CSHPTRREF<UPawn> _spPawn, _float* _pDist)
 {
+	_float3 vLocalRayDir, vLocalRayPos;
+
 	COLLIDERCONTAINER PawnColliderList = _spPawn->GetColliderContainer();
 	SHPTR<UCollider> PawnCollider;
+
+	_float closestDist = std::numeric_limits<_float>::infinity();
+	_bool hasCollision = false;
+
 	for (auto& iter : PawnColliderList)
 	{
 		PawnCollider = iter.second;
-		if (PawnCollider->IsCollisionWithRay(_vOrigin, _vDirection, _pDist))
-			return true;
+
+		_float4x4 WorldInv = _spPawn->GetTransform()->GetWorldMatrixInv();
+
+		vLocalRayPos = _float3::TransformCoord(_RayPos, WorldInv);
+		vLocalRayDir = _RayDir;
+		vLocalRayDir.Normalize();
+
+		_float dist;
+		if (PawnCollider->IsCollisionWithRay(_RayPos, vLocalRayDir, &dist))
+		{
+			hasCollision = true;
+			if (dist < closestDist)
+			{
+				closestDist = dist;
+			}
+		}
 	}
-	return false;
+	if (hasCollision)
+	{
+		*_pDist = closestDist;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 _bool UPicking::IsPickingCheck(const _float3& _vLocalRay, const _float3& _vDirRay, const _float3& _vPos1,

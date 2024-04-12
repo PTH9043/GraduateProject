@@ -126,6 +126,9 @@ HRESULT TAssimpMeshContainer::ReadyVertices(aiMesh* _pMesh, CSHPTRREF<TAssimpMod
 	VECTOR<_float3> pVerticesPos;
 	pVerticesPos.resize(iNumVertices);
 
+	m_vMinVertex = _float3(FLT_MAX, FLT_MAX, FLT_MAX);
+	m_vMaxVertex = _float3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+
 	for (_uint i = 0; i < iNumVertices; ++i) {
 		// Position
 		::memcpy(&pVertices[i].vPosition, &_pMesh->mVertices[i], sizeof(_float3));
@@ -142,6 +145,15 @@ HRESULT TAssimpMeshContainer::ReadyVertices(aiMesh* _pMesh, CSHPTRREF<TAssimpMod
 			if (nullptr != _pMesh->mTextureCoords[j])
 				::memcpy(&pVertices[i].vTexUV[j], &_pMesh->mTextureCoords[j][i], sizeof(_float2));
 		}
+
+		// 최소 버텍스와 최대 버텍스를 갱신.
+		m_vMinVertex.x = min(m_vMinVertex.x, pVertices[i].vPosition.x);
+		m_vMinVertex.y = min(m_vMinVertex.y, pVertices[i].vPosition.y);
+		m_vMinVertex.z = min(m_vMinVertex.z, pVertices[i].vPosition.z);
+
+		m_vMaxVertex.x = max(m_vMaxVertex.x, pVertices[i].vPosition.x);
+		m_vMaxVertex.y = max(m_vMaxVertex.y, pVertices[i].vPosition.y);
+		m_vMaxVertex.z = max(m_vMaxVertex.z, pVertices[i].vPosition.z);
 	}
 
 	m_iNumBones = _pMesh->mNumBones;
@@ -173,6 +185,9 @@ HRESULT TAssimpMeshContainer::ReadyAnimVertices(aiMesh* _pMesh, CSHPTRREF<TAssim
 	VECTOR<_float3> pVerticesPos;
 	pVerticesPos.resize(iNumVertices);
 
+	m_vMinVertex = _float3(FLT_MAX, FLT_MAX, FLT_MAX);
+	m_vMaxVertex = _float3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+
 	for (_uint i = 0; i < iNumVertices; ++i)
 	{
 		memcpy(&pVertices[i].vPosition, &_pMesh->mVertices[i], sizeof(_float3));
@@ -186,6 +201,16 @@ HRESULT TAssimpMeshContainer::ReadyAnimVertices(aiMesh* _pMesh, CSHPTRREF<TAssim
 			if (nullptr != _pMesh->mTextureCoords[j])
 				::memcpy(&pVertices[i].vTexUV[j], &_pMesh->mTextureCoords[j][i], sizeof(_float2));
 		}
+
+		// 최소 버텍스와 최대 버텍스를 갱신.
+		m_vMinVertex.x = min(m_vMinVertex.x, pVertices[i].vPosition.x);
+		m_vMinVertex.y = min(m_vMinVertex.y, pVertices[i].vPosition.y);
+		m_vMinVertex.z = min(m_vMinVertex.z, pVertices[i].vPosition.z);
+
+		m_vMaxVertex.x = max(m_vMaxVertex.x, pVertices[i].vPosition.x);
+		m_vMaxVertex.y = max(m_vMaxVertex.y, pVertices[i].vPosition.y);
+		m_vMaxVertex.z = max(m_vMaxVertex.z, pVertices[i].vPosition.z);
+
 	}
 
 	m_iNumBones = _pMesh->mNumBones;

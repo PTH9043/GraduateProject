@@ -54,13 +54,13 @@ void URegion::tagCubeObjs::Rebalance()
 void URegion::tagCubeObjs::AddCubesRenderGroup()
 {
 	if (nullptr != spCube1)
-		spCube1->AddRenderGroup(RENDERID::RI_NONALPHA_MIDDLE);
+		spCube1->AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
 
 	if (nullptr != spCube2)
-		spCube2->AddRenderGroup(RENDERID::RI_NONALPHA_MIDDLE);
+		spCube2->AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
 
 	if (nullptr != spCube3)
-		spCube3->AddRenderGroup(RENDERID::RI_NONALPHA_MIDDLE);
+		spCube3->AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
 }
 
 HRESULT URegion::AddRegionRenderGroup()

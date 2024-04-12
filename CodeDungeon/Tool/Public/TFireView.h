@@ -35,34 +35,35 @@ private:
 	void FireAlphaTextureSetting();
 	void FireScalingSetting();
 	void FirePosSetting();
-//private:
-//	//Multiple Particle Setting Functions
-//	void MultipleParticleView();
-//	void ResizeMultipleParticleVector(_uint _resizeAmount);
-//
-//	void MultipleParticleCountSetting();
-//	void MultipleParticleTimeSetting();
-//	void MultipleParticleTexSetting();
-//	void DefaultMultipleParticleSetting();
-//	void AutomaticMultipleParticleSetting();
-//
-//	void LoadMultipleParticleResource();
-//	void ReleaseMultipleParticleResource();
-//
-//	void SetMultipleParticle(SHPTR<UParticle> _spParticle, int index) { m_MultipleParticle[index] = _spParticle; }
-//	_uint GetMultipleParticleSize() { return m_iMultipleParticleSize; }
-//	_uint GetMultipleParticleCurActiveSize() { return m_iCurActiveMultipleParticle; }
+private:
+	//Multiple Particle Setting Functions
+	void MultipleParticleView();
+	void ResizeMultipleParticleVector(_uint _resizeAmount);
+	void MultipleParticleTexSetting();
+	/*void MultipleParticleCountSetting();
+	void MultipleParticleTimeSetting();
 
-//private:
-//	using PARTICLES = VECTOR<SHPTR<UParticle>>;
-//	using ANIMPARTICLES = VECTOR<SHPTR<UAnimatedParticle>>;
-//	using PARTICLEPARAMS = VECTOR<PARTICLEPARAM*>;
-//	using PARTICLEANIMPARAMS = VECTOR< ANIMATEDPARTICLEPARAM*>;
-//	using PARTICLETYPES = VECTOR<ComputeParticleType*>;
+	void DefaultMultipleParticleSetting();
+	void AutomaticMultipleParticleSetting();*/
+
+	void LoadMultipleParticleResource();
+	void ReleaseMultipleParticleResource();
+
+	void SetMultipleParticle(SHPTR<UParticle> _spParticle, int index) { m_MultipleParticle[index] = _spParticle; }
+	_uint GetMultipleParticleSize() { return m_iMultipleParticleSize; }
+	_uint GetMultipleParticleCurActiveSize() { return m_iCurActiveMultipleParticle; }
+
+private:
+	using PARTICLES = VECTOR<SHPTR<UParticle>>;
+	using ANIMPARTICLES = VECTOR<SHPTR<UAnimatedParticle>>;
+	using PARTICLEPARAMS = VECTOR<PARTICLEPARAM*>;
+	using PARTICLEANIMPARAMS = VECTOR< ANIMATEDPARTICLEPARAM*>;
+	using PARTICLETYPES = VECTOR<ComputeParticleType*>;
 
 private:
 	MAINDESC													m_stMainDesc;
 	DOCKDESC												m_stFireView;
+	DOCKDESC												m_stMultiParticleView;
 
 
 	VECTOR<SHPTR<TImGuiView>>			m_CloseImGuies;
@@ -72,13 +73,13 @@ private:
 	_bool															m_isInitSetting;
 
 
-	/*_bool														m_isResetParticle;
+	_bool														m_isResetParticle;
 
 	_int m_iMultipleParticleSize;
 	PARTICLES m_MultipleParticle;
 	PARTICLEPARAMS m_MultipleParticleParam;
 	PARTICLETYPES m_MultipleParticleType;
-	_int m_iCurActiveMultipleParticle;*/
+	_int m_iCurActiveMultipleParticle;
 	
 	
 	SHPTR <UFire> m_stFire;

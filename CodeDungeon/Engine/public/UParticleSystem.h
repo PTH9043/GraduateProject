@@ -45,6 +45,9 @@ public:
 	_float* GetCreateInterval() {
 		return &m_fCreateInterval;
 	}
+	void SetUAVBUFFERPLUS(_bool _Is) {
+		IS_UAVBUFFERPLUS = _Is;
+	}
 #ifdef _USE_IMGUI
 public:
 	virtual void ShowObjectInfo() override;
@@ -64,6 +67,7 @@ private:
 	SHPTR< UShaderConstantBuffer>				m_spComputeShaderTypeConstantBuffer;
 	SHPTR< UShaderConstantBuffer>				m_spGraphicsShaderParticleConstantBuffer;
 	SHPTR<UShaderStructedBuffer>				m_spParticleStructedBuffer;
+	SHPTR<UShaderStructedBuffer>				m_spParticleStructedBufferPlus;
 	SHPTR<UShaderStructedBuffer>				m_spComputeShaderStructedBuffer;
 	// ComputeShader
 	SHPTR<UComputeShader>						m_spComputeShader;
@@ -75,6 +79,8 @@ private:
 	_ushort										m_sComputeIndex;
 	_uint										m_iParticleAddAmount;
 	_float										m_fCreateInterval;
+
+	_bool						IS_UAVBUFFERPLUS = false;
 };
 
 END

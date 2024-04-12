@@ -35,6 +35,7 @@ protected:
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy) override;
 private:
 	SHPTR<UAnimModel>				m_spModel;
+
 };
 
 END

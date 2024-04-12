@@ -31,6 +31,7 @@
 #define PROTO_RES_LIGHTPOINTSHADER L"Proto_Res_LightPointShader"
 #define PROTO_RES_LIGHTSPOTSHADER L"Proto_Res_LightSpotShader"
 #define PROTO_RES_PARTICLE2DSHADER L"Proto_Res_Particle2DShader"
+#define PROTO_RES_PARTICLEPLUS2DSHADER L"Proto_Res_ParticlePlus2DShader"
 #define PROTO_RES_WATERSHADER L"Proto_Res_WaterShader"
 #define PROTO_RES_EQUIPMENTSHADER L"Proto_Res_EquipmentShader"
 #define PROTO_RES_2DUISHADER L"Proto_Res_2DUIShader"
@@ -47,6 +48,7 @@
 #define PROTO_RES_COMPUTEPARTICLE2DSHADER L"Proto_Res_ComputeParticle2DShader"
 #define PROTO_RES_COMPUTEBLOODEFFECT2DSHADER L"Proto_Res_ComputeBloodEffect2DShader"
 #define PROTO_RES_COMPUTEROTATIONEFFECT2DSHADER L"Proto_Res_ComputeRotationEffect2DShader"
+#define PROTO_RES_COMPUTEEMITPARTICLE2DSHADER L"Proto_Res_ComputeEmitParticle2DShader"
 
 // Particle 
 #define PROTO_RES_PARTICLESYSTEM L"Proto_Res_ParitlceSystem"

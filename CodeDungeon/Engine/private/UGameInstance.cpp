@@ -920,6 +920,10 @@ void UGameInstance::AddPickingObject(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuff
 {
 	m_spPicking->AddPickingObject(_spPawn, _spVIBuffer);
 }
+void UGameInstance::DeletePickingObject(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer)
+{
+	m_spPicking->DeletePickingObject(_spPawn, _spVIBuffer);
+}
 void UGameInstance::AddPickingGrid(const MAINGRID& _stGrid)
 {
 	m_spPicking->AddPickingGrid(_stGrid);
@@ -932,10 +936,10 @@ const PICKINGDESC UGameInstance::GetPickDesc()
 {
 	return m_spPicking->GetPickDesc();
 }
-_bool UGameInstance::PickingMesh(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer,
+_bool UGameInstance::PickingMesh(const _float3& _RayPos, const _float3& _RayDir, CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer,
 	_float* _pDist, _float3* _pOut)
 {
-	return m_spPicking->PickingMesh(_spPawn, _spVIBuffer, _pDist, _pOut);
+	return m_spPicking->PickingMesh(_RayPos, _RayDir, _spPawn, _spVIBuffer, _pDist, _pOut);
 }
 
 /*
@@ -1041,7 +1045,7 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 			CreateGraphicsShader(PROTO_RES_MODELSHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"Model", VTXMODEL_DECLARATION::Element, VTXMODEL_DECLARATION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN },
-					RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
+					RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM,DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
 					DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT
 					}));
 
@@ -1103,6 +1107,13 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 					RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE, BLEND_TYPE::ALPHA_BLEND,
 					D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST));
 
+			CreateGraphicsShader(PROTO_RES_PARTICLEPLUS2DSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"2DParticlePlus", VTXPOINT_DELCARTION::Element, VTXPOINT_DELCARTION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN, GS_MAIN },
+					RENDERFORMATS{ DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_B8G8R8A8_UNORM,	DXGI_FORMAT_R16G16B16A16_FLOAT },
+					RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE, BLEND_TYPE::ALPHA_BLEND,
+					D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST));
+
 			CreateGraphicsShader(PROTO_RES_2DANIMATEPARTICLESHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"2DAnimateParticle", VTXPOINT_DELCARTION::Element, VTXPOINT_DELCARTION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN, GS_MAIN },
@@ -1113,7 +1124,7 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 			CreateGraphicsShader(PROTO_RES_2DFIRESHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"2DFire", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN },
-					RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE, BLEND_TYPE::ALPHA_BLEND
+					RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::LESS_EQUAL, BLEND_TYPE::ALPHA_BLEND
 					));
 
 			CreateGraphicsShader(PROTO_RES_2DFOGSHADER, CLONETYPE::CLONE_STATIC,
@@ -1135,9 +1146,9 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 			CreateGraphicsShader(PROTO_RES_DEBUGGINGDEFAULTSHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"DebugDefaultObject", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN },
-					RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
+					RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R8G8B8A8_UNORM,
 					DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT },
-					RASTERIZER_TYPE::CULL_NONE, DEPTH_STENCIL_TYPE::LESS, BLEND_TYPE::ALPHA_BLEND));
+					RASTERIZER_TYPE::CULL_NONE, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE, BLEND_TYPE::ALPHA_BLEND));
 		}
 		{
 			CreateGraphicsShader(PROTO_RES_RECTSHADER, CLONETYPE::CLONE_STATIC,
@@ -1179,6 +1190,9 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 		
 		CreateComputeShader(PROTO_RES_COMPUTEROTATIONEFFECT2DSHADER, CLONETYPE::CLONE_STATIC,
 			SHADERDESC{ L"Compute2DRotationEffect" }); 
+
+		CreateComputeShader(PROTO_RES_COMPUTEEMITPARTICLE2DSHADER, CLONETYPE::CLONE_STATIC,
+			SHADERDESC{ L"Compute2DEmitParticle" });
 
 		CreateComputeShader(PROTO_RES_COMPUTEBLOODEFFECT2DSHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC{ L"Compute2DBloodEffect" });
@@ -1294,6 +1308,8 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 			std::vector<RTDESC> vecRts{
 				RTDESC{ RTOBJID::NONALPHA_DIFFUSE_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM,
 					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 1.f, 0.f } },
+					RTDESC{RTOBJID::NONALPHA_SPECULAR_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM,
+					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 1.f, 0.f } },
 					RTDESC{ RTOBJID::NONALPHA_NORMAL_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
 						GraphicDesc->iWinCX, GraphicDesc->iWinCY, {1.f, 1.f, 1.f, 1.f}},
 					RTDESC{ RTOBJID::NONALPHA_DEPTH_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
@@ -1385,18 +1401,19 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_DIFFUSE_DEFFERED,
 		_float2(100.f, 320.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
-
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_SPECULAR_DEFFERED,
+		_float2(100.f, 430.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 
 
 
 
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_SHADE_DEFFERED,
-		_float2(100.f, 430.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
+		_float2(100.f, 540.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_SPECULAR_DEFFERED,
-		_float2(100.f, 540.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_AMBIENT_DEFFERED,
 		_float2(100.f, 650.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_AMBIENT_DEFFERED,
+		_float2(100.f, 760.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 #endif
 	return S_OK;
 }

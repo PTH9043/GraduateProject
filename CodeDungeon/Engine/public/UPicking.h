@@ -29,6 +29,7 @@ struct WAITCHECKPAWN {
 	SHPTR<UPawn>			spPawn{ nullptr };
 	SHPTR<UVIBuffer>		spVIBuffer{ nullptr };
 
+
 	_bool operator == (const WAITCHECKPAWN& _stPawn) const
 	{
 		if (spPawn == _stPawn.spPawn && spVIBuffer == _stPawn.spVIBuffer)
@@ -80,13 +81,13 @@ public:
 	HRESULT ReadyPickingDesc(CSHPTRREF<GRAPHICDESC> _spGraphicDesc);
 	void CastRayInWorldSpace(UGameInstance* _pGameInstance);
 	void AddPickingObject(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer);
+	void DeletePickingObject(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer);
 	void AddPickingGrid(const MAINGRID& _stGrid);
 	SHPTR<UPawn> GetPickingPawn();
 	const PICKINGDESC GetPickDesc();
-	_bool PickingMesh(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer,
-		_float* _pDist, _float3* _pOut);
+	_bool PickingMesh(const _float3& _RayPos, const _float3& _RayDir, CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer, _float* _pDist, _float3* _pOut);
 	_bool PickingOnGrid(CSHPTRREF<UGrid> _spGrid, _float* _pDist, _float3* _pOut);
-	_bool PickingCollider(CSHPTRREF<UPawn> _spPawn, const _float3& _vOrigin, const _float3& _vDirection, _float* _pDist);
+	_bool PickingCollider(const _float3& _RayPos, const _float3& _RayDir, CSHPTRREF<UPawn> _spPawn, _float* _pDist);
 private:
 	_bool IsPickingCheck(const _float3& _vLocalRay, const _float3& _vDirRay, const _float3& _vPos1,
 		const _float3& _vPos2, const _float3& _vPos3, const _float4x4& _mWorldMatrix, _float* _pDist, _float3* _pOut);

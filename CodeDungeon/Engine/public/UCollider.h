@@ -31,6 +31,7 @@ public:
 	const _float4x4& GetTransformMatrix() const { return m_mTransformMatrix; }
 
 	void SetScale(const _float3& _vScale);
+	void SetScaleToFitModel(const _float3& minVertex, const _float3& maxVertex);
 	void SetTranslate(const _float3& _vTranslate);
 	void SetTransform(const _float3& _vPos, const _float4& _vQuaternion);
 	void SetTransform(CSHPTRREF< UTransform> _spTransform);

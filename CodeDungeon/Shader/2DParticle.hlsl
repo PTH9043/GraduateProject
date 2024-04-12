@@ -44,7 +44,7 @@ struct PARTICLE
 
 // All Particle
 
-cbuffer ALLPARTICLEBUFFER : register(b14)
+cbuffer ALLPARTICLEBUFFER : register(b13)
 {
     GROBALPARTICLEINFO g_GrobalParticleInfo;
 };
