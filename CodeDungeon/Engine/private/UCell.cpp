@@ -70,7 +70,7 @@ HRESULT UCell::NativeConstruct(ARRAY<_float3, POINT_END>& _Points, const _uint _
 #ifdef _USE_DEBUGGING
 void UCell::AddCellRenderGroup()
 {
-	m_spCellPawn->AddRenderGroup(RENDERID::RI_NONALPHA_MIDDLE);
+	m_spCellPawn->AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
 }
 #endif
 

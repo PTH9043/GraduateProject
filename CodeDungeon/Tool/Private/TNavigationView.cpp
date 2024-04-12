@@ -100,7 +100,7 @@ void TNavigationView::LateTickActive(const _double& _dTimeDetla)
 	}
 
 	for (_uint i = 0; i < SEL_END; i++)
-		m_spCubePosArr[i]->AddRenderer(RENDERID::RI_NONALPHA_MIDDLE);
+		m_spCubePosArr[i]->AddRenderer(RENDERID::RI_NONALPHA_LAST);
 }
 
 void TNavigationView::RenderActive()

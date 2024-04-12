@@ -116,7 +116,7 @@ void TModelView::LateTickActive(const _double& _dTimeDetla)
 		if(m_bColliderActive)
 		{
 			for (auto& Colliders : m_spSelectedModel->GetColliderContainer())
-				Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_MIDDLE);
+				Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
 		}
 	}
 

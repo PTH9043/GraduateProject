@@ -221,7 +221,7 @@ _bool UPicking::PickingOnGrid(CSHPTRREF<UGrid> _spGrid, _float* _pDist, _float3*
 	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
 	_float3 vCamPos = pGameInstance->GetMainCamPosition();
 
-	if (spGridCollider->IsCollisionWithRay(m_vRayPos, m_vRayDir, &fDist))
+	if (spGridCollider->IsCollisionWithRay(vLocalRayPos, vLocalRayDir, &fDist))
 	{
 		_float3 v3Pos = vLocalRayPos + vLocalRayDir * fDist;
 		v3Pos = XMVector3TransformCoord(v3Pos, _spGrid->GetTransform()->GetWorldMatrix());
