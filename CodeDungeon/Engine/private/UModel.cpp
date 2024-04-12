@@ -283,7 +283,7 @@ HRESULT UModel::CreateMeshContainers(void* _pData)
 
 HRESULT UModel::CreateMaterial(void* _pData, const MATERIALINFOS& _vecMaterialInfo)
 {
-	MODELDESC* tDesc = static_cast<MODELDESC*>(_pData);
+ 	MODELDESC* tDesc = static_cast<MODELDESC*>(_pData);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	if (nullptr != tDesc) {
 		m_MaterialContainer.resize(tDesc->MatrialData.size());
@@ -420,9 +420,8 @@ void UModel::LoadMaterial(REF_IN std::ifstream& _ifRead, REF_IN UNORMAP<_uint, V
 			}
 			_uomapMaterials.insert(std::pair<_uint, VECTOR<_wstring>>(first, rtVec));
 		}
-
 		_vecMaterialInfos.resize(SIZE);
-		_ifRead.read((_char*)&_vecMaterialInfos[0], sizeof(MODELMATERIALINFO) * TEXTYPE::TextureType_UNKNOWN);
+		_ifRead.read((_char*)&_vecMaterialInfos[0], sizeof(MODELMATERIALINFO) * SIZE);
 	}
 }
 
