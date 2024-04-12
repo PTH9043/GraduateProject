@@ -213,10 +213,11 @@ void TFireView::FireAlphaTextureSetting() {
 void TFireView::FireScalingSetting() {
 
 	static float Scale = 50.f;
-	ImGui::SliderFloat("Scale", &Scale, 1.f, 100.f, "%.2f");
-
-	_float3 ScaleFloat3 = _float3(Scale, Scale, Scale);
-	m_stFire->GetTransform()->SetScale(ScaleFloat3);
+	if (true == ImGui::SliderFloat("Scale", &Scale, 1.f, 100.f, "%.2f"))
+	{
+		_float3 ScaleFloat3 = _float3(Scale, Scale, 1.f);
+		m_stFire->GetTransform()->SetScale(ScaleFloat3);
+	}
 }
 
 void TFireView::FirePosSetting() {

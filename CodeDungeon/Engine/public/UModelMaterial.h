@@ -44,16 +44,15 @@ public: /* get set */
 	_bool IsEmpty(TEXTYPE _TexType) const { return m_MaterialTexContainer[_TexType] == nullptr; }
 private:
 	// Material Draw Number 
-	static _int																s_AllMaterialDrawLength;
+	static _int									s_AllMaterialDrawLength;
 	// 넘버링을 주기 위한 컨테이너
-	static VECTOR<_int>											s_RemainMaterialDrawNumber;
+	static VECTOR<_int>				s_RemainMaterialDrawNumber;
 	// 머터리얼 
 	_int												m_iMaterialIndex;
 
 	BINDTEXTURECONTAINER		m_BindTextureContainer;
 	MATERIALTEXCONTAINER		m_MaterialTexContainer;
 	MATERIALINFOCONTAINER	m_MaterialInfoContainer;
-
 };
 
 
