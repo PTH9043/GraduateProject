@@ -60,6 +60,7 @@ void UPicking::CastRayInWorldSpace(UGameInstance* _pGameInstance)
 
 	m_vRayPos = _float3::TransformCoord(m_vRayPos, mViewMatrixInv);
 	m_vRayDir = _float3::TransformNormal(m_vRayDir, mViewMatrixInv);
+	m_vRayDir.Normalize();
 }
 
 void UPicking::AddPickingObject(CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer)
@@ -95,24 +96,19 @@ const PICKINGDESC UPicking::GetPickDesc()
 	bool bFoundValidPick = false;
 	for (auto& iter : m_WaitCheckPawnList)
 	{
-		_float3 vLocalRayDir, vLocalRayPos;
-		_float4x4 WorldInv = iter.spPawn->GetTransform()->GetWorldMatrixInv();
-
-		vLocalRayPos = _float3::TransformCoord(m_vRayPos, WorldInv);
-		vLocalRayDir = _float3::TransformNormal(m_vRayDir, WorldInv);
-		vLocalRayDir.Normalize();
-
 		_float3 v3Pos = _float3(0.f, 0.f, 0.f);
 		_float ftoColliderDist = 0.f;
-		if (true == PickingCollider(vLocalRayPos, vLocalRayDir, iter.spPawn, &ftoColliderDist))
+		if (true == PickingCollider(m_vRayPos, m_vRayDir, iter.spPawn, &ftoColliderDist))
 		{
 			bFoundValidPick = true;
 			_float ftoMeshDist = 0.f;
-			if (true == PickingMesh(vLocalRayPos, vLocalRayDir, iter.spPawn, iter.spVIBuffer, &ftoMeshDist, &v3Pos))
+			if (true == PickingMesh(m_vRayPos, m_vRayDir, iter.spPawn, iter.spVIBuffer, &ftoMeshDist, &v3Pos))
 			{
+				bFoundValidPick = true;
 				AddPickingObject(PICKINGDESC(iter.spPawn, v3Pos, ftoMeshDist, true));
 			}
 		}
+		
 	}
 
 #ifdef _USE_DEBUGGING
@@ -155,6 +151,13 @@ const PICKINGDESC UPicking::GetPickDesc()
 _bool UPicking::PickingMesh(const _float3& _RayPos, const _float3& _RayDir, CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer,
 	_float* _pDist, _float3* _pOut)
 {
+	_float3 vLocalRayDir, vLocalRayPos;
+	_float4x4 WorldInv = _spPawn->GetTransform()->GetWorldMatrixInv();
+
+	vLocalRayPos = _float3::TransformCoord(_RayPos, WorldInv);
+	vLocalRayDir = _float3::TransformNormal(_RayDir, WorldInv);
+	vLocalRayDir.Normalize();
+
 	_uint iNumFaces = _spVIBuffer->GetIndexCnt();
 	const VECTOR<_float3>& pVerticesPos = *_spVIBuffer->GetVertexPos().get();
 
@@ -172,7 +175,7 @@ _bool UPicking::PickingMesh(const _float3& _RayPos, const _float3& _RayDir, CSHP
 			_float3 v2 = pVerticesPos[iIndices++];
 			_float3 v3 = pVerticesPos[iIndices++];
 
-			if (true == IsPickingCheck(_RayPos, _RayDir, v1, v2, v3, _spPawn->GetTransform()->GetWorldMatrix(),
+			if (true == IsPickingCheck(vLocalRayPos, vLocalRayDir, v1, v2, v3, _spPawn->GetTransform()->GetWorldMatrix(),
 				_pDist, _pOut))
 			{
 				return true;
@@ -191,7 +194,7 @@ _bool UPicking::PickingMesh(const _float3& _RayPos, const _float3& _RayDir, CSHP
 
 			_float fDist = 0.f;
 			_float3 v3Pos = _float3(0.f, 0.f, 0.f);
-			if (true == IsPickingCheck(_RayPos, _RayDir, v1, v2, v3, _spPawn->GetTransform()->GetWorldMatrix(),
+			if (true == IsPickingCheck(vLocalRayPos, vLocalRayDir, v1, v2, v3, _spPawn->GetTransform()->GetWorldMatrix(),
 				_pDist, _pOut))
 			{
 				return true;
@@ -218,7 +221,7 @@ _bool UPicking::PickingOnGrid(CSHPTRREF<UGrid> _spGrid, _float* _pDist, _float3*
 	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
 	_float3 vCamPos = pGameInstance->GetMainCamPosition();
 
-	if (spGridCollider->IsCollisionWithRay(vLocalRayPos, vLocalRayDir, &fDist))
+	if (spGridCollider->IsCollisionWithRay(m_vRayPos, m_vRayDir, &fDist))
 	{
 		_float3 v3Pos = vLocalRayPos + vLocalRayDir * fDist;
 		v3Pos = XMVector3TransformCoord(v3Pos, _spGrid->GetTransform()->GetWorldMatrix());
@@ -233,17 +236,26 @@ _bool UPicking::PickingOnGrid(CSHPTRREF<UGrid> _spGrid, _float* _pDist, _float3*
 
 _bool UPicking::PickingCollider(const _float3& _RayPos, const _float3& _RayDir, CSHPTRREF<UPawn> _spPawn, _float* _pDist)
 {
+	_float3 vLocalRayDir, vLocalRayPos;
+
 	COLLIDERCONTAINER PawnColliderList = _spPawn->GetColliderContainer();
 	SHPTR<UCollider> PawnCollider;
-	
+
 	_float closestDist = std::numeric_limits<_float>::infinity();
 	_bool hasCollision = false;
 
 	for (auto& iter : PawnColliderList)
 	{
 		PawnCollider = iter.second;
+
+		_float4x4 WorldInv = _spPawn->GetTransform()->GetWorldMatrixInv();
+
+		vLocalRayPos = _float3::TransformCoord(_RayPos, WorldInv);
+		vLocalRayDir = _RayDir;
+		vLocalRayDir.Normalize();
+
 		_float dist;
-		if (PawnCollider->IsCollisionWithRay(_RayPos, _RayDir, &dist))
+		if (PawnCollider->IsCollisionWithRay(_RayPos, vLocalRayDir, &dist))
 		{
 			hasCollision = true;
 			if (dist < closestDist)
@@ -252,7 +264,6 @@ _bool UPicking::PickingCollider(const _float3& _RayPos, const _float3& _RayDir, 
 			}
 		}
 	}
-
 	if (hasCollision)
 	{
 		*_pDist = closestDist;

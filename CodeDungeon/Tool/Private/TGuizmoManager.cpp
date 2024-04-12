@@ -128,7 +128,7 @@ void TGuizmoManager::EditTransformViaGuizmo()
 	ConvertFloatArrayToXMFLOAT4x4(World, m_stGuizmoDesc.mtWorld);
 	m_stGuizmoDesc.spSelectedActor->GetTransform()->SetNewWorldMtx(m_stGuizmoDesc.mtWorld);
 	for (auto& Collider : m_stGuizmoDesc.spSelectedActor->GetColliderContainer())
-		Collider.second->SetTransform(m_stGuizmoDesc.mtWorld);
+		Collider.second->SetTransform(m_stGuizmoDesc.spSelectedActor->GetTransform());
 
 		
 }

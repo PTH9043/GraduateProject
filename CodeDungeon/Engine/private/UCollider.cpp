@@ -100,7 +100,7 @@ void UCollider::SetScale(const _float3& _vScale)
 
 void UCollider::SetScaleToFitModel(const _float3& minVertex, const _float3& maxVertex)
 {
-	_float3 size = maxVertex - minVertex;
+	_float3 size = (maxVertex - minVertex) * 0.5f;
 	_float3 center = (maxVertex + minVertex) * 0.5f;
 
 	switch (m_eType)
@@ -108,16 +108,16 @@ void UCollider::SetScaleToFitModel(const _float3& minVertex, const _float3& maxV
 	case TYPE_AABB:
 		m_spAABB_Original->Center = center;
 		m_spAABB_Original->Extents = size;
-		m_vScale = size;
+		m_vScale = size * 2;
 		break;
 	case TYPE_OBB:
 		m_spOBB_Original->Center = center;
 		m_spOBB_Original->Extents = size;
-		m_vScale = size;
+		m_vScale = size * 2;
 		break;
 	case TYPE_SPHERE:
 		m_spSphere_Original->Radius = (size).x;
-		m_vScale = { (size).x, (size).x, (size).x };
+		m_vScale = { (size* 2).x, (size * 2).x, (size * 2).x };
 		break;
 	}
 }
@@ -169,17 +169,22 @@ void UCollider::SetTransform(CSHPTRREF<UTransform> _spTransform)
 	case TYPE_AABB:
 		m_mTransformMatrix = _float4x4::Identity;
 		m_mTransformMatrix.Set_Pos(_spTransform->GetPos());
+		m_mTransformMatrix.MatrixSetScaling(_spTransform->GetScale());
 		m_spAABB_Original->Transform(*m_spAABB.get(), m_mTransformMatrix);
 		break;
 	case TYPE_OBB:
 		m_mTransformMatrix = XMMatrixRotationQuaternion(_spTransform->GetRotation());
 		m_mTransformMatrix.Set_Pos(_spTransform->GetPos());
+		m_mTransformMatrix.MatrixSetScaling(_spTransform->GetScale());
 		m_spOBB_Original->Transform(*m_spOBB.get(), m_mTransformMatrix);
+		m_vScale = _float3(m_spOBB->Extents) * 2;
 		break;
 	case TYPE_SPHERE:
 		m_mTransformMatrix = XMMatrixRotationQuaternion(_spTransform->GetRotation());
 		m_mTransformMatrix.Set_Pos(_spTransform->GetPos());
+		m_mTransformMatrix.MatrixSetScaling(_spTransform->GetScale());
 		m_spSphere_Original->Transform(*m_spSphere.get(), m_mTransformMatrix);
+		m_vScale = _float3((m_spSphere->Radius, m_spSphere->Radius, m_spSphere->Radius)) * 2;
 		break;
 	}
 }
@@ -191,17 +196,23 @@ void UCollider::SetTransform(const _float4x4& _Matrix)
 	case TYPE_AABB:
 		m_mTransformMatrix = _float4x4::Identity;
 		m_mTransformMatrix.Set_Pos(_Matrix.Get_Pos());
+		m_mTransformMatrix.MatrixSetScaling(_Matrix.Get_Scaling(_Matrix));
 		m_spAABB_Original->Transform(*m_spAABB.get(), m_mTransformMatrix);
+		m_vScale = _float3(m_spOBB->Extents) * 2;
 		break;
 	case TYPE_OBB:
-		m_mTransformMatrix = _Matrix;
+		m_mTransformMatrix = XMMatrixRotationQuaternion(DirectX::XMQuaternionRotationMatrix(_Matrix));
+		m_mTransformMatrix.Set_Pos(_Matrix.Get_Pos());
+		m_mTransformMatrix.MatrixSetScaling(_Matrix.Get_Scaling(_Matrix));
 		m_spOBB_Original->Transform(*m_spOBB.get(), m_mTransformMatrix);
-		m_vScale = _float3(m_spOBB->Extents);
+		m_vScale = _float3(m_spOBB->Extents) * 2;
 		break;
 	case TYPE_SPHERE:
-		m_mTransformMatrix = _Matrix;
+		m_mTransformMatrix = XMMatrixRotationQuaternion(DirectX::XMQuaternionRotationMatrix(_Matrix));
+		m_mTransformMatrix.Set_Pos(_Matrix.Get_Pos());
+		m_mTransformMatrix.MatrixSetScaling(_Matrix.Get_Scaling(_Matrix));
 		m_spSphere_Original->Transform(*m_spSphere.get(), m_mTransformMatrix);
-		m_vScale = _float3((m_spSphere->Radius, m_spSphere->Radius, m_spSphere->Radius));
+		m_vScale = _float3(m_spOBB->Extents) * 2;
 		break;
 	}
 }
@@ -361,6 +372,29 @@ _bool UCollider::IsCollisionWithRay(const _float3& _vOrigin, const _float3& _vDi
 	break;
 	}
 	return m_isCollision;
+}
+
+void CalculateBoundingBoxCorners(const XMFLOAT3& center, const XMFLOAT3& extents, XMFLOAT3 corners[8]) {
+	// 바운딩 박스의 중심 좌표
+	XMVECTOR centerVector = XMLoadFloat3(&center);
+
+	// 바운딩 박스의 크기의 절반
+	XMVECTOR extentsVector = XMLoadFloat3(&extents);
+
+	// 바운딩 박스의 높이, 너비, 깊이의 절반값
+	float halfWidth = XMVectorGetX(extentsVector);
+	float halfHeight = XMVectorGetY(extentsVector);
+	float halfDepth = XMVectorGetZ(extentsVector);
+
+	// 8개의 꼭지점을 계산
+	corners[0] = XMFLOAT3(center.x - halfWidth, center.y - halfHeight, center.z - halfDepth);
+	corners[1] = XMFLOAT3(center.x + halfWidth, center.y - halfHeight, center.z - halfDepth);
+	corners[2] = XMFLOAT3(center.x - halfWidth, center.y + halfHeight, center.z - halfDepth);
+	corners[3] = XMFLOAT3(center.x + halfWidth, center.y + halfHeight, center.z - halfDepth);
+	corners[4] = XMFLOAT3(center.x - halfWidth, center.y - halfHeight, center.z + halfDepth);
+	corners[5] = XMFLOAT3(center.x + halfWidth, center.y - halfHeight, center.z + halfDepth);
+	corners[6] = XMFLOAT3(center.x - halfWidth, center.y + halfHeight, center.z + halfDepth);
+	corners[7] = XMFLOAT3(center.x + halfWidth, center.y + halfHeight, center.z + halfDepth);
 }
 
 #ifdef _USE_DEBUGGING
