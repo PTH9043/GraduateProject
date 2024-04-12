@@ -355,6 +355,9 @@
     <Filter Include="06.Component\MapLayout">
       <UniqueIdentifier>{d0a4a055-d6ec-4027-bcd7-cc08aebddc44}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06.Component\ModelMaterial">
+      <UniqueIdentifier>{41ddb949-cf9a-4b1c-a746-0302a98af7c0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -695,6 +698,9 @@
     </ClCompile>
     <ClCompile Include="..\private\UTransform.cpp">
       <Filter>06.Component\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UModelMaterial.cpp">
+      <Filter>06.Component\ModelMaterial</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1069,6 +1075,9 @@
     </ClInclude>
     <ClInclude Include="..\public\UTransform.h">
       <Filter>06.Component\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UModelMaterial.h">
+      <Filter>06.Component\ModelMaterial</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

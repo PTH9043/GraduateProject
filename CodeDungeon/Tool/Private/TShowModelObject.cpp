@@ -1,5 +1,7 @@
 #include "ToolDefines.h"
 #include "TShowModelObject.h"
+#include "UGameInstance.h"
+#include "UCollider.h"
 #include "UModel.h"
 #include "UTransform.h"
 #include "UShaderConstantBuffer.h"
@@ -31,10 +33,26 @@ HRESULT TShowModelObject::NativeConstructClone(const VOIDDATAS& _vecDatas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_vecDatas), E_FAIL);
 
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	m_spShaderTexCheckBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::MODELCHECKBUF, sizeof(HasTex));
+	UCollider::COLLIDERDESC tDesc;
+	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
+	tDesc.vScale = _float3(1.f, 1.f, 1.f);
+	SHPTR<UCollider> Collider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
 
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution<float> dis(0.0f, 1.0f);
+
+	_float3 randomFloat(dis(gen), dis(gen), dis(gen));
+
+	Collider->ChangeColliderColor(randomFloat);
+	_wstring mainColliderTag = L"Main";
+	AddColliderInContainer(mainColliderTag, Collider);
 
 	AddShader(PROTO_RES_MODELSHADER, RES_SHADER);
+
+	
 	return S_OK;
 }
 

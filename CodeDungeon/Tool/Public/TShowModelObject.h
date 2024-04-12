@@ -25,6 +25,7 @@ public:
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;
 
 	void SetShowModel(CSHPTRREF<UModel> _spModel) { m_spModel = _spModel; }
+	CSHPTRREF<UModel> GetShowModel() { return m_spModel; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
