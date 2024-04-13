@@ -3,7 +3,7 @@
 #include "UResource.h"
 #include "UCommand.h"
 
-UResourceManager::UResourceManager()
+UResourceManager::UResourceManager() 
 {
 }
 

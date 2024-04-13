@@ -54,6 +54,7 @@
     <ClInclude Include="..\public\UFog.h" />
     <ClInclude Include="..\public\UGrid.h" />
     <ClInclude Include="..\public\UMapLayout.h" />
+    <ClInclude Include="..\public\UMaterialManager.h" />
     <ClInclude Include="..\public\UModelMaterial.h" />
     <ClInclude Include="..\public\USound.h" />
     <ClInclude Include="..\public\CustomMemory.h" />
@@ -165,6 +166,7 @@
     <ClCompile Include="..\private\UFog.cpp" />
     <ClCompile Include="..\private\UGrid.cpp" />
     <ClCompile Include="..\private\UMapLayout.cpp" />
+    <ClCompile Include="..\private\UMaterialManager.cpp" />
     <ClCompile Include="..\private\UModelMaterial.cpp" />
     <ClCompile Include="..\private\USound.cpp" />
     <ClCompile Include="..\private\CustomMemory.cpp" />

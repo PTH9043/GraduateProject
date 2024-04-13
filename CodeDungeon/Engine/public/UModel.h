@@ -8,6 +8,7 @@ class UShader;
 class UCommand;
 class URootBoneNode;
 class UModelMaterial;
+class UShaderConstantBuffer;
 /*
 @ Date: 2024-02-04, Writer: 박태현
 @ Explain
@@ -68,10 +69,7 @@ public:
 	 // 모델을 그리는 함수
 	virtual HRESULT Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader, CSHPTRREF<UCommand> _spCommand);
 protected:
-	// Set
-	void SetMeshContainers(const _uint _iMeshContainers) { this->m_iMeshContainerCnt = _iMeshContainers; }
-	void SetBoneNodesCnt(const _uint _iBoneNodesCnt) { this->m_iBoneNodeCnt = _iBoneNodesCnt; }
-	void SetMaterialsCnt(const _uint _iMaterialCnt) { this->m_iMaterialCnt = _iMaterialCnt; }
+	void ModelMaterialIndexToBindShader(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader);
 
 	HRESULT CreateBoneNode(void* _pData, const _wstring& _wstrBoneNodeName = L"");
 	HRESULT CreateMeshContainers(void* _pData);
@@ -83,23 +81,30 @@ protected:
 	void LoadBoneData(REF_IN std::ifstream& _ifRead, REF_IN VECTOR<BONENODEDESC>& _vecBones);
 	void LoadMaterial(REF_IN std::ifstream& _ifRead, REF_IN UNORMAP<_uint, VECTOR<_wstring>>& _uomapMaterials, REF_IN MATERIALINFOS& _vecMaterialInfos);
 	void BringModelName(const _wstring& _wstrPath);
+protected: /* get set*/
+	void SetMeshContainers(const _uint _iMeshContainers) { this->m_iMeshContainerCnt = _iMeshContainers; }
+	void SetBoneNodesCnt(const _uint _iBoneNodesCnt) { this->m_iBoneNodeCnt = _iBoneNodesCnt; }
+	void SetMaterialsCnt(const _uint _iMaterialCnt) { this->m_iMaterialCnt = _iMaterialCnt; }
 private:
 	// MeshContainer
-	MESHCONTAINERS					m_MeshContainer;
-	_uint											m_iMeshContainerCnt;
+	MESHCONTAINERS									m_MeshContainer;
+	_uint															m_iMeshContainerCnt;
 	// BoneNodes
-	BONENODES								m_BoneNodeContainer;
-	_uint											m_iBoneNodeCnt;
-	SHPTR<URootBoneNode>		m_spRootBoneNode;
+	BONENODES												m_BoneNodeContainer;
+	_uint															m_iBoneNodeCnt;
+	SHPTR<URootBoneNode>						m_spRootBoneNode;
 	// Material
-	MATERIERS								m_MaterialContainer;
-	_uint											m_iMaterialCnt;
+	MATERIERS												m_MaterialContainer;
+	_uint															m_iMaterialCnt;
 	// Paths 
-	SHPTR<FILEGROUP>				m_spFileGroup;
-	SHPTR<FILEDATA>					m_spFileData;
+	SHPTR<FILEGROUP>								m_spFileGroup;
+	SHPTR<FILEDATA>									m_spFileData;
 
-	TYPE											m_eType;
-	_wstring										m_wstrModelName;
+	TYPE															m_eType;
+	_wstring														m_wstrModelName;
+
+	MODELDATAPARAM								m_ModelDataParam;
+	SHPTR<UShaderConstantBuffer>		m_spModelDataConstantBuffer;
 };
 
 END

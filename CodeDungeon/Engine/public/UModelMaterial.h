@@ -10,7 +10,6 @@ class UShader;
 
 using BINDTEXTURECONTAINER = UNORMAP<SRV_REGISTER, SHPTR<UTexture>>;
 using MATERIALTEXCONTAINER = VECTOR<SHPTR<UTexGroup>>;
-using MATERIALINFOCONTAINER = VECTOR<MODELMATERIALINFO>;
 /*
 @ Date: 2024-04-10, Writer: นฺลยว๖
 @ Explain
@@ -19,7 +18,7 @@ using MATERIALINFOCONTAINER = VECTOR<MODELMATERIALINFO>;
 class UModelMaterial final : public UComponent {
 public:
 	struct DESC {
-		MATERIALINFOCONTAINER	MaterialInfoContainer;
+		MODELMATERIALINFO			MaterialInfo;
 		MATERIALTEXCONTAINER		MaterialTexContainer;
 	};
 public:
@@ -39,7 +38,7 @@ public:
 	void RegisterBindTextureContainer(const SRV_REGISTER _srvRegister, TEXTYPE _TexType, _int _TextureOrder = 0);
 	void RegisterBindTextureContainer(const SRV_REGISTER _srvRegister, TEXTYPE _TexType, const _wstring& _wstrTextureName);
 public: /* get set */
-	const MODELMATERIALINFO GetMaterialInfo(TEXTYPE _TexType) const { return m_MaterialInfoContainer[_TexType]; }
+	const MODELMATERIALINFO& GetMaterialInfo() const  { return m_MaterialInfo; }
 	const _int GetMaterialIndex() const { return m_iMaterialIndex; }
 	_bool IsEmpty(TEXTYPE _TexType) const { return m_MaterialTexContainer[_TexType] == nullptr; }
 private:
@@ -52,7 +51,7 @@ private:
 
 	BINDTEXTURECONTAINER		m_BindTextureContainer;
 	MATERIALTEXCONTAINER		m_MaterialTexContainer;
-	MATERIALINFOCONTAINER	m_MaterialInfoContainer;
+	MODELMATERIALINFO			m_MaterialInfo;
 };
 
 

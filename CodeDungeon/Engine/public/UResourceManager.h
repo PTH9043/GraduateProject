@@ -5,6 +5,7 @@ BEGIN(Engine)
 class UResource;
 class UShader;
 class UCommand;
+class URenderer;
 
 class UResourceManager : public UBase {
 public:
@@ -30,8 +31,8 @@ private:
 	using PROTOTYPEARR = ARRAY<PROTOTYPE, CLONE_MAX_SIZE>;
 	using PIPELINECONTAINER = UNORMAP<_wstring, ComPtr<Dx12PipelineState>>;
 
-	PROTOTYPEARR			m_arrPrototypes;
-	PIPELINECONTAINER	m_PipeLineContainer;
+	PROTOTYPEARR				m_arrPrototypes;
+	PIPELINECONTAINER		m_PipeLineContainer;
 };
 
 END

@@ -9,6 +9,12 @@ struct BONEMATRIX
     float4x4 BoneMatrix[512];
 };
 
+cbuffer MODELDATAPARAM : register(b10)
+{
+    int g_iMaterialIndex;
+    float3 PaddingValue;
+};
+
 cbuffer ANIMATIONPARAM : register(b11)
 {
     bool g_isOutLineExist = false;
@@ -142,11 +148,10 @@ struct PS_IN
 struct PS_OUT
 {
     float4 vDiffuse : SV_TARGET0;
-    float4 vNormal : SV_TARGET1;
-    float4 vDepth : SV_TARGET2;
-    float4 vPosition : SV_Target3;
-    //float4 vEdgeGlow : SV_TARGET3;
-    //float4 vMotionBlur : SV_TARGET4;
+    float4 vSpecular : SV_TARGET1;
+    float4 vNormal : SV_TARGET2;
+    float4 vDepth : SV_TARGET3;
+    float4 vPosition : SV_Target4;
 };
 
 /* 픽셀의 색을 결정한다. */
@@ -155,19 +160,24 @@ PS_OUT PS_Main(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
-    Out.vDiffuse = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV0);
+    VIEWPROJINFO tMainViewProj = GetViewProjInfo();
+    // Out Color    
     
-    vector vNormalDesc = g_Texture1.Sample(g_Sampler_Normal, In.vTexUV0);
+    Out.vDiffuse = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV0);
+    Out.vSpecular = g_Texture1.Sample(g_Sampler_Normal, In.vTexUV0);
+    
+    if (Out.vDiffuse.a <= 0.05)
+        discard;
+
+    vector vNormalDesc = g_Texture2.Sample(g_Sampler_Normal, In.vTexUV0);
     float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
     
     float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
     vNormal = mul(vNormal, WorldMatrix);
-   
-   
-    VIEWPROJINFO tMainViewProj = GetViewProjInfo();
     
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 1.f);
-    Out.vDepth = float4(In.vProjPos.w / tMainViewProj.fCamFar, In.vProjPos.z / In.vProjPos.w, 1.f, In.vPosition.w);
+    Out.vNormal = normalize(float4(vNormal, 0.f));
+    Out.vDepth = float4(In.vProjPos.w / tMainViewProj.fCamFar, In.vProjPos.z / In.vProjPos.w, g_iMaterialIndex, In.vPosition.w);
     Out.vPosition = In.vWorldPos;
  
     

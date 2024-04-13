@@ -13,27 +13,44 @@ struct VIEWPROJINFO
     float       fCamFar;
     float3     vCamPosition;
 };
-
-struct GROBALINFO
+    // 태현 추가
+struct MODELMATERIALINFO
 {
-    float       fDeltaTime;
-    float3     fPadding;
+    float4 vDiffuse;
+    float4 vAmbient;
+    float4 vSpecular;
+    float4 vEmissive;
+    float4 vTransparent;
+    float4 vReflective;
+    float fShininess;
+    float fOpacity;
+    float fTransparencyFactor;
+    float fBumpScaling;
+    float fReflectivity;
+};
+
+    // 태현 추가
+struct MATERIALGROBALINFO
+{
+		// Model MaterialInfo
+    MODELMATERIALINFO stModelMaterialInfoGroup[1000];
 };
 
 cbuffer VIEWPROJ_PARAMS : register(b0)
 {
     VIEWPROJINFO g_ViewProjInfoArr[10];
     bool g_isObjectMotionBlur;
+    float fGrobalDeltaTime;
     bool g_ViewProjBoolPadding1;
     bool g_ViewProjBoolPadding2;
     bool g_ViewProjBoolPadding3;
     // Padding Value
-    float3 g_ViewProjPaddings;
+    float2 g_ViewProjPaddings;
 };
-
+    // 태현 추가
 cbuffer GROBALINFO_PARAMS : register(b1)
 {
-    GROBALINFO g_GrobalInfo;
+    MATERIALGROBALINFO g_MaterialGrobalInfo;
 }
 
 cbuffer TRANSFORM_PARAMS : register(b3)

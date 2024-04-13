@@ -14,27 +14,33 @@ namespace Engine {
 
 	typedef struct tagViewProjParam {
 		ARRAY<VIEWPROJMATRIX, MAX_CAM_SIZE>	arrViewProjParams{};
+		_float																			 fGrobalDeltaTime{ 0 };
 		_bool																			isObjectMotionBlur{ false };
 		_bool																			isViewProjBoolPadding1{ false };
 		_bool																			isViewProjBoolPadding2{ false };
 		_bool																			isViewProjBoolPadding3{ false };
 		// Padding Value
-		_float3																		vViewProjPaddings{ 0.f, 0.f, 0.f };
+		_float2																		vViewProjPaddings{ 0.f, 0.f };
 	}VIEWPROJPARAM;
 
 #pragma endregion VIEWPROJ
 
 #pragma region GROBADATA
 
-	struct GLOBALINFO
+	/*
+	@ Date: 2024-04-10, Writer: 박태현
+	@ Explain
+	-  머터리얼을 담아놓은 Param
+	*/
+	struct MATERIALGROBALINFO
 	{
-		float		  fDeltaTime{ 0 };
-		_float3     vPadding;
+		// Model MaterialInfo
+		MODELMATERIALINFO		stModelMaterialInfoGroup[MAX_MATERIALPARAM_CNT];
 	};
 
 	struct GLOBALPARAM
 	{
-		GLOBALINFO		stGlobalInfo;
+		MATERIALGROBALINFO		stMaterialGrobalInfo;
 	};
 
 #pragma endregion GLOBALDATA
@@ -171,6 +177,16 @@ namespace Engine {
 		LIGHTCONTROL					tLightControl{};
 	}LIGHTCONTROLPARAM;
 #pragma endregion LIGHT
+
+#pragma region MODELDATAPARAM
+
+	struct MODELDATAPARAM {
+
+		_uint					iMaterialIndex;
+		_float3				PaddingValue;
+	};
+
+#pragma endregion MODELDATAPARAM
 
 #pragma region ANIMATIONPARAM
 

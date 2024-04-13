@@ -28,7 +28,7 @@ public:
 	void FrustomTick();
 	_bool IsFrustomContains(const _float3& _vPos, const _float _fRadius, const CAMID& _iCamID = MAIN_CAMERA_ID);
 
-	void UpdateViewProjMatrix();
+	void UpdateViewProjMatrix(const _float _fGrobalDeltaTime);
 	void BindViewProjMatrix(CSHPTRREF<UCommand> _spCommand);
 
 	const _float4x4 GetMainCamViewMatrix() const;
