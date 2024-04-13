@@ -20,7 +20,7 @@ void UMaterialManager::CopyToMaterialShaderParam(REF_IN GLOBALPARAM& _GrobalPara
 
     for (auto& iter : m_MaterialContainer)
     {
-        ::memcpy(&_GrobalParam.stMaterialGrobalInfo.stModelMaterialInfoGroup,
+        ::memcpy(&_GrobalParam.stMaterialGrobalInfo.stModelMaterialInfoGroup[iter.first],
             &iter.second.lock()->GetMaterialInfo(), GetTypeSize<MODELMATERIALINFO>());
     }
 
