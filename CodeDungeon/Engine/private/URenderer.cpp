@@ -474,7 +474,6 @@ SHPTR<UShader> URenderer::FrameReadyDrawLast(const _wstring& _wstrShaderName)
 void URenderer::BindGrobalBuffer()
 {
     SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-    RETURN_CHECK(false == spGameInstance->IsMaterialContainerInfoChange(), ;);
     spGameInstance->CopyToMaterialShaderParam(REF_OUT m_stGlobalParam);
     // Setting Grobal Data
     m_spGlobalBuffer->SettingGlobalData(m_spCastingCommand, &m_stGlobalParam, GetTypeSize<GLOBALPARAM>());

@@ -33,7 +33,7 @@ struct MODELMATERIALINFO
 struct MATERIALGROBALINFO
 {
 		// Model MaterialInfo
-    MODELMATERIALINFO stModelMaterialInfoGroup[1000];
+    MODELMATERIALINFO stModelMaterialInfoGroup[500];
 };
 
 cbuffer VIEWPROJ_PARAMS : register(b0)
