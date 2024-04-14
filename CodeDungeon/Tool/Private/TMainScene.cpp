@@ -41,7 +41,7 @@ HRESULT TMainScene::LoadSceneData()
 	}
 	{
 		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL,LIGHTVERSION::TYPE_ORIGINAL, {0.5f, 0.5f, 0.5f, 1.f}, {0.15f, 0.15f,0.15f, 1.f}, {0.3f, 0.3f, 0.3f, 1.f}, {0.f, -1.f, 0.f,}, {0.f, 10000.f, 0.f}, 0.f, 0.f ,
-			1.f, 0.2f });
+			1.f, 200.f });
 
 		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_FLASHLIGHT,LIGHTVERSION::TYPE_ORIGINAL, {0.7f, 0.7f, 0.7f, 0.f}, {0.1f, 0.1f, 0.1f, 1.f}, {0.1f, 0.1f, 0.1f, 1.f}, {0.f, 0.f, 1.f,}
 			, m_spMainCamera->GetTransform()->GetPos(), 150.f, 60.f ,

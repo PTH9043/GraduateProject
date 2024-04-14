@@ -217,9 +217,8 @@ HRESULT UModel::Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader, CS
 	RETURN_CHECK(nullptr == _spShader, E_FAIL);
 	RETURN_CHECK(GetMeshContainerCnt() <= _iMeshIndex, E_FAIL);
 	RETURN_CHECK(nullptr == GetMeshContainers()[_iMeshIndex], E_FAIL);
-	ModelMaterialIndexToBindShader(_iMeshIndex, _spShader);
-	// BindSrvBuffer
 	CSHPTRREF<UMeshContainer> spMeshContainer{ GetMeshContainers()[_iMeshIndex] };
+	ModelMaterialIndexToBindShader(spMeshContainer->GetMaterialIndex(), _spShader);
 	spMeshContainer->Render(_spShader, _spCommand);
 	return S_OK;
 }
