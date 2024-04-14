@@ -19,7 +19,7 @@ class UPawn;
 class URenderTargetGroup;
 
 
-class URenderer : public UComponent{
+class URenderer final : public UComponent{
 	using PAWNLIST = LIST<SHPTR<UPawn>>;
 	using DRAWINGRENDERCONTAINER = UNORMAP<_wstring, PAWNLIST>;
 	using SHADERODERS = UNORMAP<_wstring, SHPTR<UShader>>;
@@ -100,8 +100,9 @@ private:
 
 	void BindGrobalBuffer();
 private:
-	GLOBALPARAM																			m_stGlobalParam;
+	GLOBALPARAM																				m_stGlobalParam;
 	SHPTR< UGlobalConstantBuffer>											m_spGlobalBuffer;
+	_float																								m_fGrobalDeltaTime;
 	// Deffered Transform Param		
 	TRANSFORMPARAM																	 m_stFinalRenderTransformParam;
 	SHPTR<UShaderConstantBuffer>											m_spTransformConstantBuffer;

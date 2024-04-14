@@ -22,8 +22,9 @@ namespace Engine {
 		TextureType_METALNESS = 15,
 		TextureType_DIFFUSE_ROUGHTNESS = 16,
 		TextureType_AMBIENT_OCCLUSION = 17,
-		TextureType_UNKNOWN = 18
+		TextureType_END = 18
 	};
+
 
 	enum SOUNDTYPE : _int {
 		SOUND_BACKGROUND, SOUND_GAME, SOUND_END
@@ -143,6 +144,7 @@ namespace Engine {
 		, TRANSFORM = B3
 		, LIGHTCONTROL = B4
 		
+		, MODELDATA = B10
 		, ANIMMODEL = B11
 		, BONEMATRIX = B12
 		, PREVBONEMATRIX = B13
@@ -345,5 +347,9 @@ namespace Engine {
 		MAX_BUFFER_LENGTH = 512,
 		MAX_PROCESSBUF_LENGTH = MAX_BUFFER_LENGTH * 5,
 		MAX_CHANNEL_CNT = 32,
+		// 머터리얼 파람의 숫자를 정하는 Enum 
+		MAX_MATERIALPARAM_CNT = 500,
+		MAX_ASSIMP_MATERIAL_TEXTURE_CNT = TEXTYPE::TextureType_END,
+
 	};
 }

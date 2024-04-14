@@ -9,6 +9,12 @@ cbuffer HasNormalBuffer : register(b7)
     int HasBuffer[4];
 };
 
+cbuffer MODELDATAPARAM : register(b10)
+{
+    int g_iMaterialIndex;
+    float3 PaddingValue;
+};
+
 
 struct VS_IN
 {
@@ -118,7 +124,7 @@ PS_OUT PS_Main(PS_IN In)
     }
    
 
-    Out.vDepth = float4(In.vProjPos.w / tMainViewProj.fCamFar, In.vProjPos.z / In.vProjPos.w, 1.f, In.vPosition.w);
+    Out.vDepth = float4(In.vProjPos.w / tMainViewProj.fCamFar, In.vProjPos.z / In.vProjPos.w, g_iMaterialIndex, In.vPosition.w);
     Out.vPosition = In.vWorldPos;
    
     return Out;

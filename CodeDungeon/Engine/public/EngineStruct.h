@@ -519,7 +519,7 @@ namespace Engine {
 	typedef struct tagModelMatrial
 	{
 		// Texture
-		ARRAY<SHPTR<class UTexGroup>, TEXTYPE::TextureType_UNKNOWN>  arrMaterialTexture{ nullptr };
+		ARRAY<SHPTR<class UTexGroup>, MAX_ASSIMP_MATERIAL_TEXTURE_CNT>  arrMaterialTexture{ nullptr };
 	}MODELMATRIALDESC;
 
 #pragma endregion MODEL

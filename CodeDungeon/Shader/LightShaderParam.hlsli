@@ -1,6 +1,8 @@
 #ifndef _LIGHTSHADERPARAM_HLSLI_
 #define _LIGHTSHADERPARAM_HLSLI_
 
+#include "ShaderParams.hlsli"
+
 struct LIGHTINFO
 {
     float4      vDiffuse;
@@ -61,8 +63,6 @@ cbuffer LIGHTBUFFER : register(b2)
     LIGHTPARAM g_tLightParam;
 };
 
-
-
 cbuffer LIGHTCONTROLPARAM : register(b4)
 {
     LIGHTINFO                       g_tLightInfo;
@@ -72,16 +72,6 @@ cbuffer LIGHTCONTROLPARAM : register(b4)
 float4 g_vMaterialSpecular = float4(1.f, 1.f, 1.f, 1.f);
 float4 g_vMaterialAmbient = float4(1.f, 1.f, 1.f, 1.f);
 float g_vGlobalAmbient = float4(0.2f, 0.2f, 0.2f, 1.0f);
-
-SamplerState g_Sampler_Normal : register(s0);
-SamplerState g_Sampler_Clamp : register(s1);
-
-// 14 ~ 15 3DTexture
-Texture2D g_Texture0 : register(t0);
-Texture2D g_Texture1 : register(t1);
-Texture2D g_Texture2 : register(t2);
-Texture2D g_Texture3 : register(t3);
-Texture2D g_Texture4 : register(t4);
 
 
 #endif // _LIGHTSHADERPARAM_HLSLI_

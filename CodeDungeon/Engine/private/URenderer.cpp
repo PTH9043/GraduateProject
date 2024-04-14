@@ -26,6 +26,7 @@ URenderer::URenderer(CSHPTRREF <UDevice> _spDevice, CSHPTRREF<UCommand> _spComma
     CSHPTRREF<UComputeManager> _spComputeManager) :
     UComponent(_spDevice),
     m_spTransformConstantBuffer{ nullptr },
+    m_fGrobalDeltaTime{0},
     m_spDefferedCamera{ nullptr },
     m_stFinalRenderTransformParam{},
     m_spGraphicDevice{ _spGraphicDevice },
@@ -50,6 +51,7 @@ HRESULT URenderer::NativeConstruct()
     SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
     {
         spGameInstance->GetGlobalConstantBuffer(GLOBAL_GLOBALDATA, m_spGlobalBuffer);
+        spGameInstance->CopyToMaterialShaderParam(REF_OUT m_stGlobalParam);
     }
     // Rendering
     {
@@ -151,12 +153,12 @@ HRESULT URenderer::AddDebugRenderGroup(const DEBUGRENDERID _eID, CSHPTRREF<UShad
 
 void URenderer::Tick(const _double& _dTimeDelta)
 {
-    m_stGlobalParam.stGlobalInfo.fDeltaTime += static_cast<_float>(_dTimeDelta);
+    m_fGrobalDeltaTime += static_cast<_float>(_dTimeDelta);
 }
 
 HRESULT URenderer::Render()
 {
-    m_spPipeLine->UpdateViewProjMatrix();
+    m_spPipeLine->UpdateViewProjMatrix(m_fGrobalDeltaTime);
     m_spPipeLine->BindViewProjMatrix(m_spCastingCommand);
     BindGrobalBuffer();
     // ============== Bind Static Buffer =============
@@ -471,6 +473,8 @@ SHPTR<UShader> URenderer::FrameReadyDrawLast(const _wstring& _wstrShaderName)
 
 void URenderer::BindGrobalBuffer()
 {
+    SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+    spGameInstance->CopyToMaterialShaderParam(REF_OUT m_stGlobalParam);
     // Setting Grobal Data
     m_spGlobalBuffer->SettingGlobalData(m_spCastingCommand, &m_stGlobalParam, GetTypeSize<GLOBALPARAM>());
 }

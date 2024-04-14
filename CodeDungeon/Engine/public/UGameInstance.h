@@ -25,6 +25,7 @@ class UThreadManager;
 class UNetworkManager;
 class UAudioSystemManager;
 class UCharacterManager;
+class UMaterialManager;
 
 class URenderer;
 
@@ -60,6 +61,7 @@ class UStage;
 
 class UGrid;
 class UPawn;
+class UModelMaterial;
 
 struct PICKINGDESC;
 struct WAITCHECKACTOR;
@@ -168,7 +170,6 @@ public: /* ResourceManager*/
 
 	void AddPipeLineState(const _wstring& _wstrName, const ComPtr<Dx12PipelineState>& _cpPipeLineState);
 	void SettingPipeLineState(const _wstring& _wstrName, CSHPTRREF<UCommand> _spCommand);
-
 public: /* SceneManager*/
 	void OutLightControlInfo(LIGHTPARAM& _stLightControl);
 	void ChangeLightCamIndex(const CAMID& _iID);
@@ -273,6 +274,12 @@ public: /* NetworkManager */
 public: /* CharacterManager*/
 	CSHPTRREF<UCharacter> GetCurrPlayer() const;
 	void ReigsterCurrentPlayer(CSHPTRREF<UCharacter> _spCurrentPlayer);
+
+public: /* Material Manager*/
+	void AddModelMaterial(const _uint _MaterialIndex, CSHPTRREF<UModelMaterial> _spModelMaterial);
+	void  CopyToMaterialShaderParam(REF_IN GLOBALPARAM& _GrobalParam);
+	void RemoveModelMaterial(const _uint _MaterialIndex);
+	const _bool IsMaterialContainerInfoChange() const;
 	/*
 	@ Date: 2024-03-08, Writer: ÀÌ¼ºÇö
 	@ Explain
@@ -293,7 +300,6 @@ private: /* Ready Datas */
 	HRESULT ReadyComp(const OUTPUTDATA& _stData);
 	HRESULT ReadyActor(const OUTPUTDATA& _stData);
 	HRESULT ReadyRenderTarget(const OUTPUTDATA& _stData);
-
 
 
 private:
@@ -317,6 +323,7 @@ private:
 	SHPTR< UAudioSystemManager>		m_spAudioSystemManager;
 	SHPTR< UNetworkManager>				m_spNetworkManager;
 	SHPTR<UCharacterManager>				m_spCharacterManager;
+	SHPTR< UMaterialManager>					m_spMaterialManager;
 
 	SHPTR<URenderer>								m_spRenderer;
 

@@ -3,26 +3,30 @@
 #include "UMethod.h"
 #include "UShader.h"
 #include "UTexGroup.h"
+#include "UGameInstance.h"
 
-// Material의 번호
-_int													UModelMaterial::s_AllMaterialDrawLength;
+// Material Draw Number 
+ _int									UModelMaterial::s_AllMaterialDrawLength;
 // 넘버링을 주기 위한 컨테이너
- VECTOR<_int>								UModelMaterial::s_RemainMaterialDrawNumber;
+ VECTOR<_int>				UModelMaterial::s_RemainMaterialDrawNumber;
 
 UModelMaterial::UModelMaterial(CSHPTRREF<UDevice> _spDevice, const DESC& _MaterialDesc) :
-	UComponent(_spDevice), m_MaterialInfoContainer{ _MaterialDesc.MaterialInfoContainer },  
+	UComponent(_spDevice), m_MaterialInfo{ _MaterialDesc.MaterialInfo },
 	m_MaterialTexContainer{ _MaterialDesc.MaterialTexContainer }, m_BindTextureContainer{}, m_iMaterialIndex{0}
 {
 }
 
 UModelMaterial::UModelMaterial(const UModelMaterial& _rhs) : 
-	UComponent(_rhs), m_MaterialInfoContainer{ _rhs.m_MaterialInfoContainer },
+	UComponent(_rhs), m_MaterialInfo{ _rhs.m_MaterialInfo },
 	m_MaterialTexContainer{ _rhs.m_MaterialTexContainer }, m_BindTextureContainer{}, m_iMaterialIndex{ 0 }
 { 
 }
 
 void UModelMaterial::Free()
 {
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	spGameInstance->RemoveModelMaterial(m_iMaterialIndex);
+
 	s_RemainMaterialDrawNumber.push_back(m_iMaterialIndex);
 }
 
@@ -39,6 +43,10 @@ HRESULT UModelMaterial::NativeConstruct()
 		m_iMaterialIndex = s_AllMaterialDrawLength;
 		s_AllMaterialDrawLength++;
 	}
+
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	spGameInstance->AddModelMaterial(m_iMaterialIndex, ThisShared<UModelMaterial>());
+
 	return __super::NativeConstruct();
 }
 

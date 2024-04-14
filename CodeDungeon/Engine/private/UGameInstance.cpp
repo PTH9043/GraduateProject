@@ -17,6 +17,7 @@
 #include "UNetworkManager.h"
 #include "UAudioSystemManager.h"
 #include "UCharacterManager.h"
+#include "UMaterialManager.h"
 
 #include "URenderer.h"
 
@@ -92,6 +93,7 @@ UGameInstance::UGameInstance() :
 	m_spAudioSystemManager{ Create<UAudioSystemManager>() },
 	m_spNetworkManager{Create<UNetworkManager>()},
 	m_spCharacterManager{Create<UCharacterManager>()},
+	m_spMaterialManager{ Create<UMaterialManager>()},
 	m_spRenderer{ nullptr }
 	//m_spGraphicRenderObject{ nullptr }
 {
@@ -103,13 +105,13 @@ UGameInstance::~UGameInstance()
 
 void UGameInstance::Free()
 {
+	m_isGamming = false;
 	//ClearOnceTypeData();
 	m_spRenderer->ClearAllData();
 	m_spRenderer.reset();
 	//m_spGraphicRenderObject.reset();
-
-	//m_isGamming = false;
 	//m_spRandomManager.reset();
+	m_spMaterialManager.reset();
 	m_spCharacterManager.reset();
 	m_spNetworkManager.reset();
 	m_spAudioSystemManager.reset();
@@ -911,6 +913,36 @@ void UGameInstance::ReigsterCurrentPlayer(CSHPTRREF<UCharacter> _spCurrentPlayer
 /*
 ==================================================
 CharacterManager
+==================================================
+MaterialManager
+==================================================
+*/
+
+void UGameInstance::AddModelMaterial(const _uint _MaterialIndex, CSHPTRREF<UModelMaterial> _spModelMaterial)
+{
+	m_spMaterialManager->AddModelMaterial(_MaterialIndex, _spModelMaterial);
+}
+
+void UGameInstance::CopyToMaterialShaderParam(REF_IN GLOBALPARAM& _GrobalParam)
+{
+	m_spMaterialManager->CopyToMaterialShaderParam(REF_OUT _GrobalParam);
+}
+
+void UGameInstance::RemoveModelMaterial(const _uint _MaterialIndex)
+{
+	RETURN_CHECK(false == m_isGamming, ;);
+
+	m_spMaterialManager->RemoveModelMaterial(_MaterialIndex);
+}
+
+const _bool UGameInstance::IsMaterialContainerInfoChange() const
+{
+	return m_spMaterialManager->IsMaterialContainerInfoChange();
+}
+
+/*
+==================================================
+MaterialManager
 ==================================================
 Picking
 ==================================================

@@ -10,7 +10,6 @@ class UShader;
 
 using BINDTEXTURECONTAINER = UNORMAP<SRV_REGISTER, SHPTR<UTexture>>;
 using MATERIALTEXCONTAINER = VECTOR<SHPTR<UTexGroup>>;
-using MATERIALINFOCONTAINER = VECTOR<MODELMATERIALINFO>;
 /*
 @ Date: 2024-04-10, Writer: 박태현
 @ Explain
@@ -19,7 +18,7 @@ using MATERIALINFOCONTAINER = VECTOR<MODELMATERIALINFO>;
 class UModelMaterial final : public UComponent {
 public:
 	struct DESC {
-		MATERIALINFOCONTAINER	MaterialInfoContainer;
+		MODELMATERIALINFO			MaterialInfo;
 		MATERIALTEXCONTAINER		MaterialTexContainer;
 	};
 public:
@@ -39,21 +38,20 @@ public:
 	void RegisterBindTextureContainer(const SRV_REGISTER _srvRegister, TEXTYPE _TexType, _int _TextureOrder = 0);
 	void RegisterBindTextureContainer(const SRV_REGISTER _srvRegister, TEXTYPE _TexType, const _wstring& _wstrTextureName);
 public: /* get set */
-	const MODELMATERIALINFO GetMaterialInfo(TEXTYPE _TexType) const { return m_MaterialInfoContainer[_TexType]; }
+	const MODELMATERIALINFO& GetMaterialInfo() const  { return m_MaterialInfo; }
 	const _int GetMaterialIndex() const { return m_iMaterialIndex; }
 	_bool IsEmpty(TEXTYPE _TexType) const { return m_MaterialTexContainer[_TexType] == nullptr; }
 private:
 	// Material Draw Number 
-	static _int																s_AllMaterialDrawLength;
+	static _int									s_AllMaterialDrawLength;
 	// 넘버링을 주기 위한 컨테이너
-	static VECTOR<_int>											s_RemainMaterialDrawNumber;
+	static VECTOR<_int>				s_RemainMaterialDrawNumber;
 	// 머터리얼 
 	_int												m_iMaterialIndex;
 
 	BINDTEXTURECONTAINER		m_BindTextureContainer;
 	MATERIALTEXCONTAINER		m_MaterialTexContainer;
-	MATERIALINFOCONTAINER	m_MaterialInfoContainer;
-
+	MODELMATERIALINFO			m_MaterialInfo;
 };
 
 

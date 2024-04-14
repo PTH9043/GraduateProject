@@ -358,6 +358,9 @@
     <Filter Include="06.Component\ModelMaterial">
       <UniqueIdentifier>{41ddb949-cf9a-4b1c-a746-0302a98af7c0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Manager\MaterialManager">
+      <UniqueIdentifier>{6a40f9e3-f716-49ae-96ca-95f6fd36f1de}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -701,6 +704,9 @@
     </ClCompile>
     <ClCompile Include="..\private\UModelMaterial.cpp">
       <Filter>06.Component\ModelMaterial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UMaterialManager.cpp">
+      <Filter>01.Manager\MaterialManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1078,6 +1084,9 @@
     </ClInclude>
     <ClInclude Include="..\public\UModelMaterial.h">
       <Filter>06.Component\ModelMaterial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UMaterialManager.h">
+      <Filter>01.Manager\MaterialManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

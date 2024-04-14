@@ -78,6 +78,8 @@ PS_OUT PS_Main(PS_In Input)
     float4 vViewNormal = mul(vNormal, g_tLightParam.mViewMatrix);
     vViewNormal = normalize(vViewNormal);
     LIGHTCOLOR tLightColor = (LIGHTCOLOR) 0.f;
+        // 태현 추가
+    MODELMATERIALINFO ModelMaterialDataInfo = g_MaterialGrobalInfo.stModelMaterialInfoGroup[vDepth.z];
     
     if (g_tLightInfo.eLightVersion == 0)
     {
@@ -95,8 +97,10 @@ PS_OUT PS_Main(PS_In Input)
         Out.vShade = tLightColor.vDiffuse;
         Out.vSpecular = tLightColor.vSpecular;
     }
-  
-
+      // 태현 추가
+    Out.vAmbient *= ModelMaterialDataInfo.vAmbient;
+    Out.vShade *= ModelMaterialDataInfo.vReflective;
+    Out.vSpecular *= ModelMaterialDataInfo.vSpecular;
 	return Out;
 }
 

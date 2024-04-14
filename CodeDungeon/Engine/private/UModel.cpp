@@ -9,6 +9,7 @@
 #include "UTexture.h"
 #include "URootBoneNode.h"
 #include "UModelMaterial.h"
+#include "UShaderConstantBuffer.h"
 
 UModel::UModel(CSHPTRREF<UDevice> _spDevice, const TYPE& _eType) :
 	UResource(_spDevice),
@@ -21,7 +22,9 @@ UModel::UModel(CSHPTRREF<UDevice> _spDevice, const TYPE& _eType) :
 	m_spFileGroup{ nullptr },
 	m_spFileData{ nullptr },
 	m_eType{ _eType },
-	m_wstrModelName{L""}
+	m_wstrModelName{L""},
+	m_ModelDataParam{},
+	m_spModelDataConstantBuffer{nullptr}
 {
 }
 
@@ -36,7 +39,9 @@ UModel::UModel(const UModel& _rhs) :
 	m_spFileGroup{ _rhs.m_spFileGroup },
 	m_spFileData{ _rhs.m_spFileData },
 	m_eType{ _rhs.m_eType },
-	m_wstrModelName{ L"" }
+	m_wstrModelName{ L"" },
+	m_ModelDataParam{},
+	m_spModelDataConstantBuffer{ nullptr }
 {
 }
 
@@ -153,6 +158,9 @@ HRESULT UModel::NativeConstruct(const _wstring& _wstrModelFolder, const _wstring
 HRESULT UModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_vecDatas), E_FAIL);
+	// Create Model ConstantBuffer 
+	m_spModelDataConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::MODELDATA, 
+		GetTypeSize<MODELDATAPARAM>());
 
 	MESHCONTAINERS MeshContainers{};
 	BONENODES BoneNodes{};
@@ -209,10 +217,18 @@ HRESULT UModel::Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader, CS
 	RETURN_CHECK(nullptr == _spShader, E_FAIL);
 	RETURN_CHECK(GetMeshContainerCnt() <= _iMeshIndex, E_FAIL);
 	RETURN_CHECK(nullptr == GetMeshContainers()[_iMeshIndex], E_FAIL);
+	ModelMaterialIndexToBindShader(_iMeshIndex, _spShader);
 	// BindSrvBuffer
 	CSHPTRREF<UMeshContainer> spMeshContainer{ GetMeshContainers()[_iMeshIndex] };
 	spMeshContainer->Render(_spShader, _spCommand);
 	return S_OK;
+}
+
+void UModel::ModelMaterialIndexToBindShader(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader)
+{
+	CSHPTRREF<UModelMaterial> spModelMaterial = GetMaterials()[_iMeshIndex];
+	m_ModelDataParam.iMaterialIndex = spModelMaterial->GetMaterialIndex();
+	_spShader->BindCBVBuffer(m_spModelDataConstantBuffer, &m_ModelDataParam, GetTypeSize<MODELDATAPARAM>());
 }
 
 HRESULT UModel::CreateBoneNode(void* _pData, const _wstring& _wstrBoneNodeName)
@@ -283,14 +299,15 @@ HRESULT UModel::CreateMeshContainers(void* _pData)
 
 HRESULT UModel::CreateMaterial(void* _pData, const MATERIALINFOS& _vecMaterialInfo)
 {
-	MODELDESC* tDesc = static_cast<MODELDESC*>(_pData);
+ 	MODELDESC* tDesc = static_cast<MODELDESC*>(_pData);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	if (nullptr != tDesc) {
 		m_MaterialContainer.resize(tDesc->MatrialData.size());
+		_int MaterialIndex{ 0 };
 		for (auto& iter : tDesc->MatrialData) {
 			VECTOR<SHPTR<UTexGroup>> vecMaterialTexGroup;
-			vecMaterialTexGroup.resize(TEXTYPE::TextureType_UNKNOWN);
-			for (_uint i = 0; i < TEXTYPE::TextureType_UNKNOWN; ++i)
+			vecMaterialTexGroup.resize(TEXTYPE::TextureType_END);
+			for (_uint i = 0; i < TEXTYPE::TextureType_END; ++i)
 			{
 				if (iter.second[i] != L"NULL")
 				{
@@ -298,7 +315,7 @@ HRESULT UModel::CreateMaterial(void* _pData, const MATERIALINFOS& _vecMaterialIn
 				}
 			}
 			UModelMaterial::DESC Desc;
-			Desc.MaterialInfoContainer = _vecMaterialInfo;
+			Desc.MaterialInfo = _vecMaterialInfo[MaterialIndex++];
 			Desc.MaterialTexContainer = vecMaterialTexGroup;
 			// MaterialContainer 
 			m_MaterialContainer[iter.first] = CreateConstructorToNative<UModelMaterial>(GetDevice(), Desc);
@@ -314,7 +331,7 @@ void UModel::LoadToData(const _wstring& _wstrPath)
 	ThreadMiliRelax(10);
 	MODELDESC tDesc;
 
-	MATERIALINFOS		vecMaterialInfo(TEXTYPE::TextureType_UNKNOWN);
+	MATERIALINFOS		vecMaterialInfo(TEXTYPE::TextureType_END);
 	{
 		BringModelName(_wstrPath);
 		// MESH
@@ -420,9 +437,8 @@ void UModel::LoadMaterial(REF_IN std::ifstream& _ifRead, REF_IN UNORMAP<_uint, V
 			}
 			_uomapMaterials.insert(std::pair<_uint, VECTOR<_wstring>>(first, rtVec));
 		}
-
 		_vecMaterialInfos.resize(SIZE);
-		_ifRead.read((_char*)&_vecMaterialInfos[0], sizeof(MODELMATERIALINFO) * TEXTYPE::TextureType_UNKNOWN);
+		_ifRead.read((_char*)&_vecMaterialInfos[0], sizeof(MODELMATERIALINFO) * SIZE);
 	}
 }
 

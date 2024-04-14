@@ -92,7 +92,7 @@ _bool UPipeLine::IsFrustomContains(const _float3& _vPos, const _float _fRadius, 
 	return m_arrFrustoms[_iCamID]->IsContains(_vPos, _fRadius);
 }
 
-void UPipeLine::UpdateViewProjMatrix()
+void UPipeLine::UpdateViewProjMatrix(const _float _fGrobalDeltaTime)
 {
 	// 글로벌 버퍼인 ViewProj에 값을 모아서 전달한다. 
 	for (_uint i = 0; i < m_arrCameras.size(); ++i)
@@ -102,6 +102,8 @@ void UPipeLine::UpdateViewProjMatrix()
 			m_arrCameras[i]->BindMatrix(m_stViewProjParam.arrViewProjParams[i]);
 		}
 	}
+
+	m_stViewProjParam.fGrobalDeltaTime = _fGrobalDeltaTime;
 }
 
 void UPipeLine::BindViewProjMatrix(CSHPTRREF<UCommand> _spCommand)
