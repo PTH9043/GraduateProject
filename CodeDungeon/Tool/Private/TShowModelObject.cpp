@@ -51,7 +51,7 @@ HRESULT TShowModelObject::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	AddColliderInContainer(mainColliderTag, Collider);
 
 	AddShader(PROTO_RES_MODELSHADER, RES_SHADER);
-
+	GetTransform()->SetScale(_float3(0.05f, 0.05f, 0.05f));
 	
 	return S_OK;
 }
