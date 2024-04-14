@@ -543,7 +543,7 @@ HRESULT TAssimpModel::CreateModel(const _wstring& _wstrPath)
 	_uint iFlag = 0;
 	if (TYPE::NONANIM == m_eModelType)
 		iFlag = aiProcess_PreTransformVertices | aiProcess_ConvertToLeftHanded | aiProcess_GenSmoothNormals | aiProcess_Triangulate 
-		| aiProcess_CalcTangentSpace | aiProcess_FixInfacingNormals | aiProcess_FlipUVs;
+		| aiProcess_CalcTangentSpace | aiProcess_FlipUVs;
 	else
 		iFlag = aiProcess_ConvertToLeftHanded | aiProcess_GenNormals | aiProcess_Triangulate | aiProcess_CalcTangentSpace;
 
