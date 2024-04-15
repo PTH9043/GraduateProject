@@ -77,9 +77,9 @@ PS_OUT PS_Main(PS_In Input)
     Out.vSpecular = tLightColor.vSpecular;
     
         // 태현 추가
-    Out.vAmbient *= ModelMaterialDataInfo.vAmbient;
-    Out.vShade *= ModelMaterialDataInfo.vReflective;
-    Out.vSpecular *= ModelMaterialDataInfo.vSpecular;
+   Out.vAmbient *= ModelMaterialDataInfo.vAmbient;
+  Out.vShade *= ModelMaterialDataInfo.vDiffuse;
+   Out.vSpecular *= ModelMaterialDataInfo.vSpecular;
     
     //float4 vNormal = g_Texture0.Sample(g_Sampler_Normal, Input.vTexUV);
     //float4 vDepth = g_Texture1.Sample(g_Sampler_Normal, Input.vTexUV);
