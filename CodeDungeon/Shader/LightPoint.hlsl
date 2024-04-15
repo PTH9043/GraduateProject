@@ -99,7 +99,7 @@ PS_OUT PS_Main(PS_In Input)
     }
       // 태현 추가
     Out.vAmbient *= ModelMaterialDataInfo.vAmbient;
-    Out.vShade *= ModelMaterialDataInfo.vReflective;
+    Out.vShade *= ModelMaterialDataInfo.vDiffuse;
     Out.vSpecular *= ModelMaterialDataInfo.vSpecular;
 	return Out;
 }
