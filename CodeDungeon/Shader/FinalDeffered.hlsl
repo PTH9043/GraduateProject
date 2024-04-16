@@ -40,11 +40,11 @@ PS_OUT PS_Main(PS_In Input)
 {
     PS_OUT Out = (PS_OUT) 0;
 
-    Out.vColor = g_Texture0.Sample(g_Sampler_Normal, Input.vTexUV);
+    Out.vColor = g_Texture0.Sample(g_Sampler_Normal, Input.vTexUV);//BlendDeffered °á°ú¹°
     if (Out.vColor.a == 0)
         discard;
     
-    Out.vColor += g_Texture1.Sample(g_Sampler_Normal, Input.vTexUV);
+    Out.vColor += g_Texture1.Sample(g_Sampler_Normal, Input.vTexUV); //AlphaDeffered
     //Out.vColor += g_Texture2.Sample(g_Sampler_Normal, Input.vTexUV);
     return Out;
 }

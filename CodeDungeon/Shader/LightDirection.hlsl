@@ -70,47 +70,12 @@ PS_OUT PS_Main(PS_In Input)
     else
     {
        
-        tLightColor = LightingInWorld(vPosition.xyz, vNormal.xyz);
+        tLightColor = LightingInWorld(vPosition.xyz, vNormal.xyz, ModelMaterialDataInfo);
     }
     Out.vAmbient = tLightColor.vAmbient;
     Out.vShade = tLightColor.vDiffuse;
     Out.vSpecular = tLightColor.vSpecular;
     
-        // 태현 추가
-   Out.vAmbient *= ModelMaterialDataInfo.vAmbient;
-  Out.vShade *= ModelMaterialDataInfo.vDiffuse;
-   Out.vSpecular *= ModelMaterialDataInfo.vSpecular;
-    
-    //float4 vNormal = g_Texture0.Sample(g_Sampler_Normal, Input.vTexUV);
-    //float4 vDepth = g_Texture1.Sample(g_Sampler_Normal, Input.vTexUV);
-    //float4 vPosition = g_Texture2.Sample(g_Sampler_Normal, Input.vTexUV);
-   
-    //if(vDepth.w == 0.f)
-    //{
-    //    Out.vAmbient = float4(1.f, 1.f, 1.f, 1.f);
-    //    Out.vShade = float4(0.f, 0.f, 0.f, 0.f);
-    //    Out.vSpecular = float4(0.f, 0.f, 0.f, 0.f);
-    //    return Out;
-    //}
-
-    //float4 vViewPosition = mul(vPosition, g_tLightParam.mViewMatrix);
-    //float4 vViewNormal = mul(vNormal, g_tLightParam.mViewMatrix);
-    //vViewNormal = normalize(vViewNormal);
-    //LIGHTCOLOR tLightColor = (LIGHTCOLOR) 0.f;
-  
-    //if (g_tLightInfo.eLightVersion == 0)
-    //{
-    //    //tLightColor = CalculateLightColorInViewSpace(vViewNormal.xyz, vViewPosition.xyz);
-    //    tLightColor = CalculateLightColorInWorldSpace(vNormal.xyz, vPosition.xyz);
-    //}
-    //else
-    //{
-        
-    //    tLightColor = Lighting(vPosition.xyz, vNormal.xyz);
-    //}
-    //Out.vAmbient = tLightColor.vAmbient;
-    //Out.vShade = tLightColor.vDiffuse;
-    //Out.vSpecular = tLightColor.vSpecular;
     return Out;
 }
 

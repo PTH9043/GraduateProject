@@ -46,12 +46,12 @@ struct VS_OUT
 
 VS_OUT VS_Main(VS_IN In)
 {
-    VS_OUT Out = (VS_OUT) 0;
+    VS_OUT Out = (VS_OUT)0;
     Out.vPosition = Compute_FinalMatrix(In.vPosition);
-    
+
     vector vNormal = mul(float4(In.vNormal, 0.f), g_WorldMatrix);
     vector vTangent = mul(float4(In.vTangent, 0.f), g_WorldMatrix);
-    
+
     Out.vNormal = normalize(vNormal);
     Out.vTangent = normalize(vTangent);
     Out.vBinormal = normalize(vector(cross(Out.vNormal.xyz, Out.vTangent.xyz), 0.f));
@@ -91,17 +91,17 @@ struct PS_OUT
 
 PS_OUT PS_Main(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT) 0;
-    
+    PS_OUT Out = (PS_OUT)0;
+
     VIEWPROJINFO tMainViewProj = GetViewProjInfo();
     // Out Color    
-    
+
     if (HasBuffer[0])
         Out.vDiffuse = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV0);
     if (HasBuffer[1])
         Out.vSpecular = g_Texture1.Sample(g_Sampler_Normal, In.vTexUV0);
-  
-    
+
+
     if (Out.vDiffuse.a <= 0.05)
         discard;
 
@@ -110,11 +110,11 @@ PS_OUT PS_Main(PS_IN In)
         vector vNormalDesc = g_Texture2.Sample(g_Sampler_Normal, In.vTexUV0);
         float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
 
-    
-    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
-    vNormal = mul(vNormal, WorldMatrix);
-    
-    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 1.f);
+
+        float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+        vNormal = mul(vNormal, WorldMatrix);
+
+        Out.vNormal = float4(vNormal * 0.5f + 0.5f, 1.f);
 
         Out.vNormal = normalize(float4(vNormal, 0.f));
     }
@@ -122,11 +122,11 @@ PS_OUT PS_Main(PS_IN In)
     {
         Out.vNormal = In.vNormal;
     }
-   
+
 
     Out.vDepth = float4(In.vProjPos.w / tMainViewProj.fCamFar, In.vProjPos.z / In.vProjPos.w, g_iMaterialIndex, In.vPosition.w);
     Out.vPosition = In.vWorldPos;
-   
+
     return Out;
 }
 

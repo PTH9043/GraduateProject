@@ -147,7 +147,7 @@ namespace Engine {
 			: eLightType(_eLightInfo), eLightVersion(_eLightVersion), vDiffuse(_vDiffuse), vAmbient(_vAmbient), vSpecular(_vSpecular)
 			, vDirection(_vDirection), vPosition(_vPosition),
 			fRange(_fRangle), fAngle(_fAngle), fLightPower(_fLightPower), fSpecularPowValue( _fSpecularPowValue)
-			,fFallOff(_fFallOff), fPhi(fPhi), fTheta(fTheta), vAttenuation(vAttenuation)
+			,fFallOff(_fFallOff), fPhi(_fPhi), fTheta(_fTheta), vAttenuation(_vAttenuation)
 		{}
 		_float4				vDiffuse = _float4(0.f, 0.f, 0.f, 0.f);
 		_float4				vAmbient = _float4(0.f, 0.f, 0.f, 0.f);
