@@ -40,7 +40,7 @@ namespace Engine {
 
 	struct GLOBALPARAM
 	{
-		MATERIALGROBALINFO		stMaterialGrobalInfo;
+		//MATERIALGROBALINFO		stMaterialGrobalInfo;
 	};
 
 #pragma endregion GLOBALDATA
@@ -140,13 +140,13 @@ namespace Engine {
 	{
 		tagLightInfo() = default;
 		tagLightInfo(const LIGHTTYPE& _eLightInfo,const LIGHTVERSION& _eLightVersion, const _float4& _vDiffuse, const _float4& _vAmbient, const _float4& _vSpecular,
-			const _float3& _vDirection, const _float3& _vPosition, const _float& _fRangle, const _float& _fAngle = 0.f,
+			const _float3& _vDirection, const _float3& _vPosition, const _float& _fRange, const _float& _fAngle = 0.f,
 			const _float _fLightPower = 1.f, const _float _fSpecularPowValue = 1.f
 		,const _float _fFallOff=0.f,const _float _fPhi=0.f,const _float _fTheta=0.f
 			,const _float3 _vAttenuation=_float3(0,0,0))
 			: eLightType(_eLightInfo), eLightVersion(_eLightVersion), vDiffuse(_vDiffuse), vAmbient(_vAmbient), vSpecular(_vSpecular)
 			, vDirection(_vDirection), vPosition(_vPosition),
-			fRange(_fRangle), fAngle(_fAngle), fLightPower(_fLightPower), fSpecularPowValue( _fSpecularPowValue)
+			fRange(_fRange), fAngle(_fAngle), fLightPower(_fLightPower), fSpecularPowValue( _fSpecularPowValue)
 			,fFallOff(_fFallOff), fPhi(_fPhi), fTheta(_fTheta), vAttenuation(_vAttenuation)
 		{}
 		_float4				vDiffuse = _float4(0.f, 0.f, 0.f, 0.f);

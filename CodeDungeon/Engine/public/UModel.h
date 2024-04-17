@@ -69,7 +69,7 @@ public:
 	 // 모델을 그리는 함수
 	virtual HRESULT Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader, CSHPTRREF<UCommand> _spCommand);
 protected:
-	void ModelMaterialIndexToBindShader(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader);
+	//void ModelMaterialIndexToBindShader(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader);
 
 	HRESULT CreateBoneNode(void* _pData, const _wstring& _wstrBoneNodeName = L"");
 	HRESULT CreateMeshContainers(void* _pData);
@@ -103,8 +103,8 @@ private:
 	TYPE															m_eType;
 	_wstring														m_wstrModelName;
 
-	MODELDATAPARAM								m_ModelDataParam;
-	SHPTR<UShaderConstantBuffer>		m_spModelDataConstantBuffer;
+	//MODELDATAPARAM								m_ModelDataParam;
+	//SHPTR<UShaderConstantBuffer>		m_spModelDataConstantBuffer;
 };
 
 END

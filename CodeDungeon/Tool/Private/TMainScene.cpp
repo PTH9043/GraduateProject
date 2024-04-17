@@ -40,25 +40,59 @@ HRESULT TMainScene::LoadSceneData()
 		m_spMainCamera->GetTransform()->SetPos({ 0.f, 10.f, -100.f });
 	}
 	{
-		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL,LIGHTVERSION::TYPE_ORIGINAL, {0.5f, 0.5f, 0.5f, 1.f}, {0.15f, 0.15f,0.15f, 1.f}, {0.3f, 0.3f, 0.3f, 1.f}, {0.f, -1.f, 0.f,}, {0.f, 100.f, 0.f}, 0.f, 0.f ,
+		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL,LIGHTVERSION::TYPE_YONGBBA, {0.5f, 0.5f, 0.5f, 1.f}, {0.15f, 0.15f,0.15f, 1.f}, {0.3f, 0.3f, 0.3f, 1.f}, {0.f, -1.f, 0.f,}, {0.f, 100.f, 0.f}, 0.f, 0.f ,
 			1.f, 20.f });
+		/*
+		* 현재 머티리얼은 Diffuse는 밝은 회색으로 개성있게 나와 곱해도 무방. Ambient, Specular추출정보 대부분 검은색이라, 조명의 Ambient Specular을 곱하면 무시되는 수준이라 적용안하는게 좋아보임.
+		* 
+		1. Directional Light
+		태현 : 필요인자 vDiffuse , vAmbient, vSpecular, fLightPower,fSpecularPowValue
+		용빠 : 필요인자 vDiffuse, vAmbient, vSpecular
+		
+		2.SpotLight
+		태현: 필요인자 vDiffuse , vAmbient, vSpecular,vDirection, vPosition, fLightPower, fRange,fAngle, fLightPower, fSpecularPowValue
+		용빠: 필요인자 vDiffuse , vAmbient, vSpecular,vDirection, vPosition, fRange,fSpecularPowValue, fFallOff,fPhi,fTheta, 업데이트 버전(vAttenuation 불필요) 전버전: 필요
 
+		2.PointLight
+		태현: 필요인자 vDiffuse , vAmbient, vSpecular,vDirection, vPosition, fLightPower, fRange,fAngle, fLightPower, fSpecularPowValue
+		용빠: 필요인자 vDiffuse , vAmbient, vSpecular, vPosition, fRange, vAttenuation 
+
+		*/
 		//현재 용빠 라이팅이나 태현이 라이팅이나 Directional Light는 Material적용해도, Directional은 Ambient를 그대로 혼합, 용빠는 Specular는 Material이 0으로 결과가 0으로 추출되어
 		// 태현이는 Specular 0을 곱하여 결국 똑같이 나온다. 용빠꺼는 LightPower적용은안되어있다. 또한 용빠는 현재 월드공간에서 계산하며, 태현이는 뷰공간에서 계산한다.
 
 		//Diffuse Light는 확산조명으로 보통 물체의 매끄럽지 않은 표면, 거친 표면에서 일어남.
 		//확산 표면은 물체의 표면에서 모든 방향으로 균일하게 빛을 반사한다고 가정.
-		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_SPOT,LIGHTVERSION::TYPE_YONGBBA, {0.3f, 0.3f, 0.3f, 0.f}, {0.2f, 0.f, 0.f, 1.f}, {0.f, 0.f, 0.f, 1.f}, {0.f, 0.f, 1.f,}
+		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_SPOT,LIGHTVERSION::TYPE_YONGBBA, {0.3f, 0.3f, 0.3f, 0.f}, {0.2f, 0.f, 0.f, 1.f}, {1.f, 0.5f, 0.2f, 1.f}, {0.f, 0.f, 1.f,}
 			, m_spMainCamera->GetTransform()->GetPos(), 100.f, 60.f ,
-			100.f, 1.f, 8.0f,(float)cos(DirectX::XMConvertToRadians(30.f)),(float)cos(DirectX::XMConvertToRadians(15.f)),_float3(1.0f, 0.01f, 0.0001f) });
+			100.f, 32.f, 8.0f,(float)cos(DirectX::XMConvertToRadians(30.f)),(float)cos(DirectX::XMConvertToRadians(15.f)),_float3(1.0f, 0.01f, 0.0001f) });
+		
+		/*
+		* SpecularPowValue가 클수록 국소범위 줄어듬 더 좁은면적에서 반사. 권장 32 . 1로갈수록 Specular범위 커짐.
+		자연스러운 조명:
 
+		Ambient: 0.2 ~ 0.4 사이의 값. 이 값은 장면 전체의 조명 수준을 조절합니다.
+		Diffuse: 0.6 ~ 0.8 사이의 값. 이 값은 직접적인 조명의 강도를 결정합니다.
+		Specular: 0.3 ~ 0.5 사이의 값. 이 값은 하이라이트의 강도를 조절합니다.
+		강렬한 조명:
+		
+		Ambient: 0.1 ~ 0.3 사이의 값. 낮은 값으로 조명을 더 직접적이고 대비감 있게 만듭니다.
+		Diffuse: 0.8 ~ 1.0 사이의 값. 높은 값으로 표면에 직접적으로 닿는 빛의 강도를 높입니다.
+		Specular: 0.5 ~ 0.7 사이의 값. 높은 값으로 하이라이트를 강조합니다.
+		부드러운 조명:
+		
+		Ambient: 0.4 ~ 0.6 사이의 값. 높은 값으로 조명을 부드럽게 만듭니다.
+		Diffuse: 0.5 ~ 0.7 사이의 값. 중간 정도의 값으로 조명의 강도를 적당하게 유지합니다.
+		Specular: 0.2 ~ 0.4 사이의 값. 낮은 값으로 하이라이트를 부드럽게 유지합니다.
+		*/
 		/*AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL, {1.f, 1.f, 1.f, 1.f}, {0.05f, 0.05f, 0.05f, 0.05f}, {1.f, 1.f, 1.f, 1.f}, {0.f, -1.f, -1.f,},
 			{0.f, 100.f, 0.f}, 0.f, 0.f, 1.f, 200.f },
 			LIGHTCONTROL{ RIMLIGHT{} });*/
 		
 		
-		/*AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_POINT, {1.f, 0.f, 0.f, 1.f}, {0.f, 0.f, 0.f, 1.f}, {0.f, 0.f, 0.f, 1.f}, {0.f, 0.f, 1.f,}, m_spMainCamera->GetTransform()->GetPos(), 0.f, 0.f ,
-			1.f, 2.f });*/
+		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_POINT,LIGHTVERSION::TYPE_YONGBBA, {1.f, 0.f, 0.f, 1.f}, {0.f, 1.f, 0.f, 1.f}, {0.f, 0.f, 1.f, 1.f}, {0.f, 0.f, 1.f,},
+			_float3(0,0,0), 30.f, 0.f ,
+			1.f, 32.f,0.f,0.f,0.f,_float3(1.f,0.01f,0.0001f)});
 		/*AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_FLASHLIGHT, {1.f, 0.f, 0.f, 1.f}, {1.f, 0.f, 0.f, 1.f}, {1.f, 0.f, 0.f, 1.f}, {0.f, 0.f, 1.f,}, {0.f, 50.f, -100.f}, 60.f, 60.f ,
 			1.f, 2.f });*/
 	}
@@ -99,6 +133,18 @@ void TMainScene::Tick(const _double& _dTimeDelta)
 		DirLight->SetLightVersion(LIGHTVERSION::TYPE_ORIGINAL);
 	if (pGameInstance->GetDIKeyPressing(DIK_5))
 		DirLight->SetLightVersion(LIGHTVERSION::TYPE_YONGBBA);
+
+
+	SHPTR<ULight> PointLight;
+	OutLight(LIGHTTYPE::TYPE_POINT, 0, PointLight);
+	if (pGameInstance->GetDIKeyPressing(DIK_6))
+		PointLight->SetLightVersion(LIGHTVERSION::TYPE_ORIGINAL);
+	if (pGameInstance->GetDIKeyPressing(DIK_7))
+		PointLight->SetLightVersion(LIGHTVERSION::TYPE_YONGBBA);
+	if (pGameInstance->GetDIKeyPressing(DIK_8))
+		PointLight->SetLightVersion(LIGHTVERSION::TYPE_END);
+	_float3 pos = m_spMainCamera->GetTransform()->GetPos();
+	PointLight->SetLightPos(_float3(pos.x,pos.y, pos.z));
 }
 
 void TMainScene::LateTick(const _double& _dTimeDelta)

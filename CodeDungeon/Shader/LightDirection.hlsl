@@ -60,7 +60,7 @@ PS_OUT PS_Main(PS_In Input)
     LIGHTCOLOR tLightColor = (LIGHTCOLOR) 0.f;
 
     // 태현 추가
-    MODELMATERIALINFO ModelMaterialDataInfo = g_MaterialGrobalInfo.stModelMaterialInfoGroup[vDepth.z];
+   // MODELMATERIALINFO ModelMaterialDataInfo = g_MaterialGrobalInfo.stModelMaterialInfoGroup[vDepth.z];
     
     if (g_tLightInfo.eLightVersion == 0)
     {
@@ -70,7 +70,7 @@ PS_OUT PS_Main(PS_In Input)
     else
     {
        
-        tLightColor = LightingInWorld(vPosition.xyz, vNormal.xyz, ModelMaterialDataInfo);
+        tLightColor = LightingInWorld(vPosition.xyz, vNormal.xyz);
     }
     Out.vAmbient = tLightColor.vAmbient;
     Out.vShade = tLightColor.vDiffuse;
