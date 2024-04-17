@@ -20,7 +20,7 @@ HRESULT UShaderBufferManager::ReadyShaderBufferManager(CSHPTRREF<UDevice> _spDev
 	{
 		RETURN_CHECK_FAILED(CreateShaderConstantBuffer(_spDevice, PREALLOCATED_TRANSFORM, CBV_REGISTER::TRANSFORM, sizeof(TRANSFORMPARAM), 50000), E_FAIL);
 	}
-	RETURN_CHECK_FAILED(CreateGlobalConstantBuffer(_spDevice, GLOBAL_GLOBALDATA, CBV_REGISTER::GLOBALDATA, sizeof(GLOBALPARAM)), E_FAIL);
+	//RETURN_CHECK_FAILED(CreateGlobalConstantBuffer(_spDevice, GLOBAL_GLOBALDATA, CBV_REGISTER::GLOBALDATA, sizeof(GLOBALPARAM)), E_FAIL);
 	return S_OK;
 }
 

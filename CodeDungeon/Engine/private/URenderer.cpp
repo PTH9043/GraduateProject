@@ -49,10 +49,10 @@ void URenderer::Free()
 HRESULT URenderer::NativeConstruct()
 {
     SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-    {
+  /*  {
         spGameInstance->GetGlobalConstantBuffer(GLOBAL_GLOBALDATA, m_spGlobalBuffer);
         spGameInstance->CopyToMaterialShaderParam(REF_OUT m_stGlobalParam);
-    }
+    }*/
     // Rendering
     {
         m_spVIBufferPlane = static_pointer_cast<UVIBufferRect>(spGameInstance->CloneResource(PROTO_RES_VIBUFFERRECT));
@@ -474,7 +474,7 @@ SHPTR<UShader> URenderer::FrameReadyDrawLast(const _wstring& _wstrShaderName)
 void URenderer::BindGrobalBuffer()
 {
     SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-    spGameInstance->CopyToMaterialShaderParam(REF_OUT m_stGlobalParam);
-    // Setting Grobal Data
-    m_spGlobalBuffer->SettingGlobalData(m_spCastingCommand, &m_stGlobalParam, GetTypeSize<GLOBALPARAM>());
+    //spGameInstance->CopyToMaterialShaderParam(REF_OUT m_stGlobalParam);
+    //// Setting Grobal Data
+    //m_spGlobalBuffer->SettingGlobalData(m_spCastingCommand, &m_stGlobalParam, GetTypeSize<GLOBALPARAM>());
 }

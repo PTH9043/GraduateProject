@@ -16,7 +16,7 @@ void UMaterialManager::AddModelMaterial(const _uint _MaterialIndex, CSHPTRREF<UM
 
 void UMaterialManager::CopyToMaterialShaderParam(REF_IN GLOBALPARAM& _GrobalParam)
 {
-    RETURN_CHECK(false == m_isMaterialContainerInfoChange, ;);
+   /* RETURN_CHECK(false == m_isMaterialContainerInfoChange, ;);
 
     for (auto& iter : m_MaterialContainer)
     {
@@ -24,7 +24,7 @@ void UMaterialManager::CopyToMaterialShaderParam(REF_IN GLOBALPARAM& _GrobalPara
             &iter.second.lock()->GetMaterialInfo(), GetTypeSize<MODELMATERIALINFO>());
     }
 
-    m_isMaterialContainerInfoChange = false;
+    m_isMaterialContainerInfoChange = false;*/
 }
 
 void UMaterialManager::RemoveModelMaterial(const _uint _MaterialIndex)

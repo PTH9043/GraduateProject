@@ -22,9 +22,7 @@ UModel::UModel(CSHPTRREF<UDevice> _spDevice, const TYPE& _eType) :
 	m_spFileGroup{ nullptr },
 	m_spFileData{ nullptr },
 	m_eType{ _eType },
-	m_wstrModelName{L""},
-	m_ModelDataParam{},
-	m_spModelDataConstantBuffer{nullptr}
+	m_wstrModelName{L""}
 {
 }
 
@@ -39,9 +37,7 @@ UModel::UModel(const UModel& _rhs) :
 	m_spFileGroup{ _rhs.m_spFileGroup },
 	m_spFileData{ _rhs.m_spFileData },
 	m_eType{ _rhs.m_eType },
-	m_wstrModelName{ L"" },
-	m_ModelDataParam{},
-	m_spModelDataConstantBuffer{ nullptr }
+	m_wstrModelName{ L"" }
 {
 }
 
@@ -159,8 +155,8 @@ HRESULT UModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_vecDatas), E_FAIL);
 	// Create Model ConstantBuffer 
-	m_spModelDataConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::MODELDATA, 
-		GetTypeSize<MODELDATAPARAM>());
+	/*m_spModelDataConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::MODELDATA, 
+		GetTypeSize<MODELDATAPARAM>());*/
 
 	MESHCONTAINERS MeshContainers{};
 	BONENODES BoneNodes{};
@@ -218,17 +214,16 @@ HRESULT UModel::Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader, CS
 	RETURN_CHECK(GetMeshContainerCnt() <= _iMeshIndex, E_FAIL);
 	RETURN_CHECK(nullptr == GetMeshContainers()[_iMeshIndex], E_FAIL);
 	CSHPTRREF<UMeshContainer> spMeshContainer{ GetMeshContainers()[_iMeshIndex] };
-	ModelMaterialIndexToBindShader(spMeshContainer->GetMaterialIndex(), _spShader);
 	spMeshContainer->Render(_spShader, _spCommand);
 	return S_OK;
 }
 
-void UModel::ModelMaterialIndexToBindShader(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader)
-{
-	CSHPTRREF<UModelMaterial> spModelMaterial = GetMaterials()[_iMeshIndex];
-	m_ModelDataParam.iMaterialIndex = spModelMaterial->GetMaterialIndex();
-	_spShader->BindCBVBuffer(m_spModelDataConstantBuffer, &m_ModelDataParam, GetTypeSize<MODELDATAPARAM>());
-}
+//void UModel::ModelMaterialIndexToBindShader(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader)
+//{
+//	CSHPTRREF<UModelMaterial> spModelMaterial = GetMaterials()[_iMeshIndex];
+//	m_ModelDataParam.iMaterialIndex = spModelMaterial->GetMaterialIndex();
+//	_spShader->BindCBVBuffer(m_spModelDataConstantBuffer, &m_ModelDataParam, GetTypeSize<MODELDATAPARAM>());
+//}
 
 HRESULT UModel::CreateBoneNode(void* _pData, const _wstring& _wstrBoneNodeName)
 {

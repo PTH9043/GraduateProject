@@ -14,27 +14,27 @@ struct VIEWPROJINFO
     float3     vCamPosition;
 };
     // 태현 추가
-struct MODELMATERIALINFO
-{
-    float4 vDiffuse;
-    float4 vAmbient;
-    float4 vSpecular;
-    float4 vEmissive;
-    float4 vTransparent;
-    float4 vReflective;
-    float fShininess;
-    float fOpacity;
-    float fTransparencyFactor;
-    float fBumpScaling;
-    float fReflectivity;
-};
-
-    // 태현 추가
-struct MATERIALGROBALINFO
-{
-		// Model MaterialInfo
-    MODELMATERIALINFO stModelMaterialInfoGroup[500];
-};
+//struct MODELMATERIALINFO
+//{
+//    float4 vDiffuse;
+//    float4 vAmbient;
+//    float4 vSpecular;
+//    float4 vEmissive;
+//    float4 vTransparent;
+//    float4 vReflective;
+//    float fShininess;
+//    float fOpacity;
+//    float fTransparencyFactor;
+//    float fBumpScaling;
+//    float fReflectivity;
+//};
+//
+//    // 태현 추가
+//struct MATERIALGROBALINFO
+//{
+//		// Model MaterialInfo
+//    MODELMATERIALINFO stModelMaterialInfoGroup[500];
+//};
 
 cbuffer VIEWPROJ_PARAMS : register(b0)
 {
@@ -50,7 +50,7 @@ cbuffer VIEWPROJ_PARAMS : register(b0)
     // 태현 추가
 cbuffer GROBALINFO_PARAMS : register(b1)
 {
-    MATERIALGROBALINFO g_MaterialGrobalInfo;
+    
 }
 
 cbuffer TRANSFORM_PARAMS : register(b3)
