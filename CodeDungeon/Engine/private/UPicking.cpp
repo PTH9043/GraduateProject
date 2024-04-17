@@ -111,22 +111,22 @@ const PICKINGDESC UPicking::GetPickDesc()
 		
 	}
 
-#ifdef _USE_DEBUGGING
-	//만약 유의미한 픽킹이 진행이 안되었을 시
-	//그리드 위의 좌표를 반환 (y = 0의 좌표)
-	if (!bFoundValidPick)
-	{
-		_float3 v3Pos = _float3(0.f, 0.f, 0.f);
-		_float fDist = 0.f;
-		if (true == PickingOnGrid(m_spMainGrid.spGrid, &fDist, &v3Pos))
-		{
-			m_stPickingDesc = PICKINGDESC(m_spMainGrid.spGrid, v3Pos, fDist, true);
-			return m_stPickingDesc;
-		}
-		else
-			return PICKINGDESC{nullptr, v3Pos, fDist, false};
-	}
-#endif
+//#ifdef _USE_DEBUGGING
+//	//만약 유의미한 픽킹이 진행이 안되었을 시
+//	//그리드 위의 좌표를 반환 (y = 0의 좌표)
+//	if (!bFoundValidPick)
+//	{
+//		_float3 v3Pos = _float3(0.f, 0.f, 0.f);
+//		_float fDist = 0.f;
+//		if (true == PickingOnGrid(m_spMainGrid.spGrid, &fDist, &v3Pos))
+//		{
+//			m_stPickingDesc = PICKINGDESC(m_spMainGrid.spGrid, v3Pos, fDist, true);
+//			return m_stPickingDesc;
+//		}
+//		else
+//			return PICKINGDESC{nullptr, v3Pos, fDist, false};
+//	}
+//#endif
 
 	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
 	_float3 vCamPos = pGameInstance->GetMainCamPosition();
@@ -165,6 +165,10 @@ _bool UPicking::PickingMesh(const _float3& _RayPos, const _float3& _RayDir, CSHP
 	DXGI_FORMAT eFormat = _spVIBuffer->GetIndexFormat();
 
 	_uint iSize = 0;
+	_bool bHit = false;
+	_float fMinDist = FLT_MAX;
+	_float3 vClosestHit;
+
 	if (DXGI_FORMAT_R16_UINT == eFormat)
 	{
 		iSize = sizeof(INDICIES16);
@@ -175,10 +179,17 @@ _bool UPicking::PickingMesh(const _float3& _RayPos, const _float3& _RayDir, CSHP
 			_float3 v2 = pVerticesPos[iIndices++];
 			_float3 v3 = pVerticesPos[iIndices++];
 
+			_float fDist = 0.f;
+			_float3 vHitPos = _float3(0.f, 0.f, 0.f);
 			if (true == IsPickingCheck(vLocalRayPos, vLocalRayDir, v1, v2, v3, _spPawn->GetTransform()->GetWorldMatrix(),
-				_pDist, _pOut))
+				&fDist, &vHitPos))
 			{
-				return true;
+				bHit = true;
+				if (fDist < fMinDist)
+				{
+					fMinDist = fDist;
+					vClosestHit = vHitPos;
+				}
 			}
 		}
 	}
@@ -193,15 +204,27 @@ _bool UPicking::PickingMesh(const _float3& _RayPos, const _float3& _RayDir, CSHP
 			_float3 v3 = pVerticesPos[iIndices++];
 
 			_float fDist = 0.f;
-			_float3 v3Pos = _float3(0.f, 0.f, 0.f);
+			_float3 vHitPos = _float3(0.f, 0.f, 0.f);
 			if (true == IsPickingCheck(vLocalRayPos, vLocalRayDir, v1, v2, v3, _spPawn->GetTransform()->GetWorldMatrix(),
-				_pDist, _pOut))
+				&fDist, &vHitPos))
 			{
-				return true;
+				bHit = true;
+				if (fDist < fMinDist)
+				{
+					fMinDist = fDist;
+					vClosestHit = vHitPos;
+				}
 			}
 		}
 	}
-	
+
+	if (bHit)
+	{
+		*_pDist = fMinDist;
+		*_pOut = vClosestHit;
+		return true;
+	}
+
 	return false;
 }
 
