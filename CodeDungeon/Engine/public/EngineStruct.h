@@ -403,22 +403,8 @@ namespace Engine {
 	-  머터리얼 값들을 추출하기 위한 구조체이다. 
 	*/
 	struct MODELMATERIALINFO {
-
 		_float4			vDiffuse;
-		_float4			vAmbient;
-		_float4			vSpecular;
-		_float4			vEmissive;
-		_float4			vTransparent;
-		_float4			vReflective;
-		_float				fShininess;
-		_float				fOpacity;
-		_float				fTransparencyFactor;
-		_float				fBumpScaling;
-		_float				fReflectivity;
-
-		MODELMATERIALINFO() : vDiffuse{}, vAmbient{}, vSpecular{}, vEmissive{}, vTransparent{}, 
-			vReflective{}, fShininess{ 0 }, fOpacity{ 0 }, fTransparencyFactor{ 0 }, fBumpScaling{ 0 }, 
-			fReflectivity{ 0 }
+		MODELMATERIALINFO() : vDiffuse{}
 		{}
 	};
 

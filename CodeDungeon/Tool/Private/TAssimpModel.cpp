@@ -643,24 +643,6 @@ HRESULT TAssimpModel::CreateMaterials(CSHPTRREF<FILEGROUP> _spFileGroup)
 			MaterialInfo.vDiffuse = _float4{ color.r, color.g, color.b, color.a };
 		}
 
-		if (AI_SUCCESS == pAiMaterial->Get(AI_MATKEY_COLOR_SPECULAR, color)) {
-			MaterialInfo.vSpecular = _float4{ color.r, color.g, color.b, color.a };
-		}
-
-		if (AI_SUCCESS == pAiMaterial->Get(AI_MATKEY_COLOR_AMBIENT, color)) {
-			MaterialInfo.vAmbient = _float4{ color.r, color.g, color.b, color.a };
-		}
-
-		if (AI_SUCCESS == pAiMaterial->Get(AI_MATKEY_COLOR_EMISSIVE, color)) {
-			MaterialInfo.vEmissive = _float4{ color.r, color.g, color.b, color.a };
-		}
-
-		pAiMaterial->Get(AI_MATKEY_SHININESS, MaterialInfo.fShininess);
-		pAiMaterial->Get(AI_MATKEY_OPACITY, MaterialInfo.fOpacity);
-		pAiMaterial->Get(AI_MATKEY_TRANSPARENCYFACTOR, MaterialInfo.fTransparencyFactor);
-		pAiMaterial->Get(AI_MATKEY_BUMPSCALING, MaterialInfo.fBumpScaling);
-		pAiMaterial->Get(AI_MATKEY_REFLECTIVITY, MaterialInfo.fReflectivity);
-
 		_uint iCnt{ 0 };
 		SHPTR<MODELMATRIALDESC> pModelMaterial = std::make_shared<MODELMATRIALDESC>();
 		for (_uint j = 0; j < AI_TEXTURE_TYPE_MAX; ++j) {

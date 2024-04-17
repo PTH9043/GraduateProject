@@ -217,14 +217,6 @@ HRESULT UModel::Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader, CS
 	spMeshContainer->Render(_spShader, _spCommand);
 	return S_OK;
 }
-
-//void UModel::ModelMaterialIndexToBindShader(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader)
-//{
-//	CSHPTRREF<UModelMaterial> spModelMaterial = GetMaterials()[_iMeshIndex];
-//	m_ModelDataParam.iMaterialIndex = spModelMaterial->GetMaterialIndex();
-//	_spShader->BindCBVBuffer(m_spModelDataConstantBuffer, &m_ModelDataParam, GetTypeSize<MODELDATAPARAM>());
-//}
-
 HRESULT UModel::CreateBoneNode(void* _pData, const _wstring& _wstrBoneNodeName)
 {
 	MODELDESC* tDesc = static_cast<MODELDESC*>(_pData);
