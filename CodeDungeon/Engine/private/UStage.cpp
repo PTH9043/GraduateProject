@@ -105,6 +105,15 @@ HRESULT UStage::SetColor(const _uint& _iCellIndex)
 	return S_OK;
 }
 
+HRESULT UStage::FlushDeleteCells()
+{
+	for (auto& iter : (*m_spRegionList.get()))
+		if(iter->IsDeletion())
+			iter->FlushDeleteCells();
+	return S_OK;
+
+}
+
 _bool UStage::Load(const _wstring& _wstrPath)
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
@@ -218,6 +227,7 @@ HRESULT UStage::Delete_Region(_uint& _iIndex)
 		{
 			if (_iIndex < m_spRegionList->size())
 			{
+				(m_spRegionList->begin() + _iIndex)->reset();
 				m_spRegionList->erase(m_spRegionList->begin() + _iIndex);
 			}
 		}

@@ -36,6 +36,7 @@ public:
 	const _float3& GetCenterPos() const { return m_vCenterPos; }
 	const _int& GetIndex() const { return m_iIndex; }
 	const _float3& GetColor() const{ return m_f3Color; }
+	CSHPTRREF<UDefaultCell> GetCellPawn() { return m_spCellPawn; }
 
 	void SetPoint(const POINT& _ePoint, const _float3& _vPoint) { m_arrPoints[_ePoint] = _vPoint; }
 	void SetCenterPos(const _float3& _vCenterPos) { this->m_vCenterPos = _vCenterPos; }

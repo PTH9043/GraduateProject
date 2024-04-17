@@ -27,6 +27,7 @@ void UDefaultCell::SetVIBuffer(ARRAY<_float3, 3>& _Points)
 
 void UDefaultCell::Free()
 {
+
 }
 
 HRESULT UDefaultCell::NativeConstruct()
@@ -43,9 +44,9 @@ HRESULT UDefaultCell::NativeConstructClone(const VOIDDATAS& _vecDatas)
 
 	m_spVIBuffer = UMethod::ConvertTemplate_Index<SHPTR<UVIBufferCell>>(_vecDatas, 0);
 	
-	AddShader(PROTO_RES_GRIDSHADER);
+	AddShader(PROTO_RES_DEBUGGINGWIREFRAMESHADER);
 
-	m_spDebuggingConstantBuffer = CreateNative< UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::B3, DEBUGPARAM_SIZE, 1);
+	m_spDebuggingConstantBuffer = CreateNative< UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::B14, DEBUGPARAM_SIZE, 1);
 	m_stDebuggParam.g_DebugColor = { 0.f, 1.f, 0.f, 1.f };
 
 	return S_OK;
@@ -61,10 +62,7 @@ void UDefaultCell::TickActive(const _double& _dTimeDelta)
 }
 
 void UDefaultCell::LateTickActive(const _double& _dTimeDelta)
-{
-#ifdef _USE_DEBUGGING
-	AddDebugRenderGroup(DEBUG_RI_ETC);
-#endif 
+{ 
 }
 
 HRESULT UDefaultCell::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)

@@ -46,6 +46,7 @@ public:
 	HRESULT ClearCell();
 	HRESULT SetColor();
 	HRESULT DeleteLatestCell();
+	void FlushDeleteCells();
 
 	_bool Load(const _wstring& _wstrPath);
 	_bool Save(const _wstring& _wstrPath);
@@ -59,7 +60,7 @@ public:
 	// Add Neighbor Region
 	void Add_NeighborRegion(SHPTR<URegion>& _pRegion);
 
-
+	const _bool& IsDeletion() const { return m_bDeletionEnabled; }
 private:
 	_float3				m_f3Color;
 protected:
@@ -67,9 +68,12 @@ protected:
 	_uint	m_iIndex = 0;
 	LIST<SHPTR<URegion>>	m_NeighborRegion;
 
+	SET<SHPTR<UCell>> m_DeleteCellsList;
+	_bool m_bDeletionEnabled;
 
 #ifdef _USE_DEBUGGING
 	LIST<CUBOBJS>	m_CubeObjList;
+	SET<SHPTR<UDefaultDebugging>> m_DeleteCubesList;
 #endif
 };
 

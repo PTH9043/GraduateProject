@@ -27,6 +27,7 @@ m_spCellPawn{ nullptr }
 
 void UCell::Free()
 {
+	
 }
 
 HRESULT UCell::NativeConstruct()
@@ -58,7 +59,7 @@ HRESULT UCell::NativeConstruct(ARRAY<_float3, POINT_END>& _Points, const _uint _
 
 #ifdef _USE_DEBUGGING
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	m_spCellPawn = static_pointer_cast<UDefaultCell>(spGameInstance->CloneActorAddAndNotInLayer(
+	m_spCellPawn = static_pointer_cast<UDefaultCell>(spGameInstance->CloneActorAdd(
 		PROTO_ACTOR_DEUBGGINGDEFAULTCELL, { &m_spCellVIBuffer }));
 	m_f3Color = _float3(0.6f, 0.f, 0.f);
 	m_spCellPawn->SetColor(m_f3Color);
@@ -70,7 +71,7 @@ HRESULT UCell::NativeConstruct(ARRAY<_float3, POINT_END>& _Points, const _uint _
 #ifdef _USE_DEBUGGING
 void UCell::AddCellRenderGroup()
 {
-	m_spCellPawn->AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
+	m_spCellPawn->AddRenderer(RENDERID::RI_NONALPHA_LAST);
 }
 #endif
 

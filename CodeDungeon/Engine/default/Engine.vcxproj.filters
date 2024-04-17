@@ -1170,5 +1170,8 @@
     <FxCompile Include="..\..\Shader\LightPoint.hlsl">
       <Filter>98.ShaderFile\Common\Light</Filter>
     </FxCompile>
+    <FxCompile Include="..\..\Shader\DebugCell.hlsl">
+      <Filter>98.ShaderFile\Debug</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

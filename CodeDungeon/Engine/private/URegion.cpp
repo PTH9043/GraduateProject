@@ -7,6 +7,7 @@
 #include "UCollider.h"
 #include "UNavigation.h"
 #include "UMethod.h"
+#include "UDefaultCell.h"
 
 void URegion::tagCubeObjs::Create(SHPTRREF<UCell> _pCell)
 {
@@ -19,15 +20,15 @@ void URegion::tagCubeObjs::Create(SHPTRREF<UCell> _pCell)
 	VOIDDATAS vecDatas;
 	vecDatas.push_back(&eDebugType);
 
-	spCube1 = static_pointer_cast<UDefaultDebugging>(spGameInstance->CloneActorAddAndNotInLayer(
+	spCube1 = static_pointer_cast<UDefaultDebugging>(spGameInstance->CloneActorAdd(
 		PROTO_ACTOR_DEUBGGINGDEFAULTOBJECT, vecDatas));;
 	spCube1->GetTransform()->SetPos(_pCell->GetPoint(UCell::POINT_A));
 	spCube1->SetColor(_float3(0.6f, 0.0f, 0.0f));
-	spCube2 = static_pointer_cast<UDefaultDebugging>(spGameInstance->CloneActorAddAndNotInLayer(
+	spCube2 = static_pointer_cast<UDefaultDebugging>(spGameInstance->CloneActorAdd(
 		PROTO_ACTOR_DEUBGGINGDEFAULTOBJECT, vecDatas));;
 	spCube2->GetTransform()->SetPos(_pCell->GetPoint(UCell::POINT_B));
 	spCube2->SetColor(_float3(0.6f, 0.0f, 0.0f));
-	spCube3 = static_pointer_cast<UDefaultDebugging>(spGameInstance->CloneActorAddAndNotInLayer(
+	spCube3 = static_pointer_cast<UDefaultDebugging>(spGameInstance->CloneActorAdd(
 		PROTO_ACTOR_DEUBGGINGDEFAULTOBJECT, vecDatas));;
 	spCube3->GetTransform()->SetPos(_pCell->GetPoint(UCell::POINT_C));
 	spCube3->SetColor(_float3(0.6f, 0.0f, 0.0f));
@@ -82,9 +83,12 @@ URegion::URegion(CSHPTRREF<UDevice> _spDevice)
 	m_f3Color{0.6f, 0.f, 0.f},
 	m_spNavigation{ nullptr },
 	m_iIndex{ 0 },
-	m_NeighborRegion{}
+	m_NeighborRegion{},
+	m_DeleteCellsList{nullptr},
+	m_bDeletionEnabled{false},
 #ifdef _USE_DEBUGGING
-	, m_CubeObjList{}
+	m_CubeObjList{},
+	m_DeleteCubesList{ nullptr }
 #endif
 {
 }
@@ -94,9 +98,12 @@ URegion::URegion(const URegion& _rhs)
 	m_f3Color{ 0.6f, 0.f, 0.f },
 	m_spNavigation{ nullptr },
 	m_iIndex{ 0 },
-	m_NeighborRegion{}
+	m_NeighborRegion{},
+	m_DeleteCellsList{ nullptr },
+	m_bDeletionEnabled{ false },
 #ifdef _USE_DEBUGGING
-	, m_CubeObjList{}
+	m_CubeObjList{},
+	m_DeleteCubesList{nullptr}
 #endif
 {
 }
@@ -209,18 +216,13 @@ HRESULT URegion::ModifyCells()
 
 HRESULT URegion::ShowCells()
 {
-	RETURN_CHECK_FAILED(nullptr == m_spNavigation, E_FAIL)
+	RETURN_CHECK_FAILED(nullptr == m_spNavigation, E_FAIL);
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	if (ImGui::TreeNodeEx("Region_Show_Cells", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		SHPTR<CELLCONTAINER> pCells = m_spNavigation->GetCells();
 		_uint iIndex = 0;
-
-		if (ImGui::Button("Delete_ALL")) 
-		{
-			m_CubeObjList.clear();
-			pCells->clear();
-		}
 
 		for (CELLCONTAINER::iterator it = pCells->begin(); it != pCells->end(); ++it)
 		{
@@ -246,18 +248,18 @@ HRESULT URegion::ShowCells()
 
 				if (ImGui::Button("Delete"))
 				{
-#ifdef _USE_DEBUGGING
 					for (LIST<CUBOBJS>::iterator v = m_CubeObjList.begin(); v != m_CubeObjList.end(); ++v)
 					{
 						if ((*v).spCell == (*it))
 						{
-							(*it).reset();
-							m_CubeObjList.erase(v);
+							m_DeleteCubesList.insert((*v).spCube1);
+							m_DeleteCubesList.insert((*v).spCube2);
+							m_DeleteCubesList.insert((*v).spCube3);
 							break;
 						}
 					}
-#endif
-					pCells->erase(it);
+					m_DeleteCellsList.insert((*it));
+					m_bDeletionEnabled = true;
 					ImGui::TreePop();
 					break;
 				}
@@ -310,6 +312,7 @@ HRESULT URegion::SetColor()
 HRESULT URegion::DeleteLatestCell()
 {
 	SHPTR<CELLCONTAINER> pCells = m_spNavigation->GetCells();
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	if (!pCells->empty()) {
 		CELLCONTAINER::iterator it = --pCells->end();
@@ -318,14 +321,56 @@ HRESULT URegion::DeleteLatestCell()
 		{
 			if ((*v).spCell == (*it))
 			{
-				(*v).spCell.reset();
-				m_CubeObjList.erase(v);
+				m_DeleteCubesList.insert((*v).spCube1);
+				m_DeleteCubesList.insert((*v).spCube2);
+				m_DeleteCubesList.insert((*v).spCube3);
 				break;
 			}
 		}
-		pCells->erase(it);
+		m_DeleteCellsList.insert((*it));
+		m_bDeletionEnabled = true;
 	}
 	return S_OK;
+}
+
+void URegion::FlushDeleteCells()
+{
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	SHPTR<CELLCONTAINER> pCells = m_spNavigation->GetCells();
+
+	for (LIST<CUBOBJS>::iterator v = m_CubeObjList.begin(); v != m_CubeObjList.end();)
+	{
+		if (m_DeleteCubesList.find(v->spCube1) != m_DeleteCubesList.end()
+			|| m_DeleteCubesList.find(v->spCube2) != m_DeleteCubesList.end()
+			|| m_DeleteCubesList.find(v->spCube3) != m_DeleteCubesList.end())
+		{
+			spGameInstance->RemoveActor(v->spCube1);
+			spGameInstance->RemoveActor(v->spCube2);
+			spGameInstance->RemoveActor(v->spCube3);
+
+			v->spCube1.reset();
+			v->spCube2.reset();
+			v->spCube3.reset();
+			v = m_CubeObjList.erase(v);
+		}
+		else
+			++v;
+	}
+	m_DeleteCubesList.clear();
+
+	for (CELLCONTAINER::iterator iter = pCells->begin(); iter != pCells->end();)
+	{
+		if (m_DeleteCellsList.find((*iter)) != m_DeleteCellsList.end())
+		{
+			spGameInstance->RemoveActor((*iter)->GetCellPawn());
+			(*iter).reset();
+			iter = pCells->erase(iter);
+		}
+		else
+			++iter;
+	}
+	m_DeleteCellsList.clear();
+	m_bDeletionEnabled = false;
 }
 
 _bool URegion::Load(const _wstring& _wstrPath)

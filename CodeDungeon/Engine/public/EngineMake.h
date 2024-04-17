@@ -112,6 +112,7 @@
 #define LAYER_PARTICLE L"LayerParticle"
 #define LAYER_MIRROR L"LayerMirror"
 #define LAYER_SCREENRENDEROBJ L"LayerScreenRenderObj"
+#define LAYER_DEBUG L"Layer_Debug"
 
 #pragma endregion LAYER
 
