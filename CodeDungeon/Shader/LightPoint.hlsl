@@ -53,13 +53,15 @@ PS_OUT PS_Main(PS_In Input)
    //vNormal = normalize(vector(vNormal.xyz * 2.f - 1.f, 0.f));
     float4 vDepth = g_Texture1.Sample(g_Sampler_Normal, Input.vTexUV);
     float4 vPosition = g_Texture2.Sample(g_Sampler_Normal, Input.vTexUV);
-
+    vNormal = normalize(vector(vNormal.xyz * 2.f - 1.f, 0.f));
     float4 vViewPosition = mul(vPosition, g_tLightParam.mViewMatrix);
     float4 vViewNormal = mul(vNormal, g_tLightParam.mViewMatrix);
     vViewNormal = normalize(vViewNormal);
+  
+
     LIGHTCOLOR tLightColor = (LIGHTCOLOR) 0.f;
         // 태현 추가
-    MODELMATERIALINFO ModelMaterialDataInfo = g_MaterialGrobalInfo.stModelMaterialInfoGroup[vDepth.z];
+   // MODELMATERIALINFO ModelMaterialDataInfo = g_MaterialGrobalInfo.stModelMaterialInfoGroup[vDepth.z];
     
     if (g_tLightInfo.eLightVersion == 0)
     {
@@ -72,16 +74,16 @@ PS_OUT PS_Main(PS_In Input)
     }
     else if(g_tLightInfo.eLightVersion == 1)
     {
-        vNormal = normalize(vector(vNormal.xyz * 2.f - 1.f, 0.f));
-        tLightColor = LightingInWorld(vPosition.xyz, vNormal.xyz, ModelMaterialDataInfo);       
-        
-        tLightColor = LightingInView(vViewPosition.xyz, vViewNormal.xyz, ModelMaterialDataInfo);
+     
+       // tLightColor = LightingInView(vViewPosition.xyz, vViewNormal.xyz);
+        tLightColor = LightingInWorld(vPosition.xyz, vNormal.xyz); //용빠 월드
+
         Out.vAmbient = tLightColor.vAmbient;
         Out.vShade = tLightColor.vDiffuse;
         Out.vSpecular = tLightColor.vSpecular;
-    }else{//정배
+    }else{
 
-        tLightColor = LightingInWorld(vPosition.xyz, vNormal.xyz, ModelMaterialDataInfo); //용빠 월드
+        tLightColor = LightingInWorld2(vPosition.xyz, vNormal.xyz); //테스트용 빛 : 감쇠적용x specular전역
         Out.vAmbient = tLightColor.vAmbient;
         Out.vShade = tLightColor.vDiffuse;
         Out.vSpecular = tLightColor.vSpecular;
