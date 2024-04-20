@@ -162,7 +162,9 @@
     <ClInclude Include="..\Public\CClientApp.h" />
     <ClInclude Include="..\Public\ClientDefines.h" />
     <ClInclude Include="..\Public\ClientProto.h" />
-    <ClInclude Include="..\Public\UNetworkClientController.h" />
+    <ClInclude Include="..\Public\CMainScene.h" />
+    <ClInclude Include="..\Public\CNetworkClientController.h" />
+    <ClInclude Include="..\Public\CProtoMaker.h" />
     <ClInclude Include="CodeDungeon.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -170,7 +172,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\CClientApp.cpp" />
-    <ClCompile Include="..\Private\UNetworkClientController.cpp" />
+    <ClCompile Include="..\Private\CMainScene.cpp" />
+    <ClCompile Include="..\Private\CNetworkClientController.cpp" />
+    <ClCompile Include="..\Private\CProtoMaker.cpp" />
     <ClCompile Include="CodeDungeon.cpp" />
   </ItemGroup>
   <ItemGroup>

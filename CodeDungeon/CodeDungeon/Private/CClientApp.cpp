@@ -2,7 +2,8 @@
 #include "CClientApp.h"
 #include "UGameInstance.h"
 #include "UTimer.h"
-#include "UNetworkClientController.h"
+#include "CNetworkClientController.h"
+#include "CProtoMaker.h"
 
 CClientApp::CClientApp() :
 	m_iTickCount{ 0 },
@@ -38,6 +39,7 @@ HRESULT CClientApp::NativeConstruct(const HINSTANCE& _hInst, const _uint& _iCmdS
 	m_spTickTimer = m_spGameInstance->CreateTimerAdd(TICK_TIMER);
 	m_spRenderTimer = m_spGameInstance->CreateTimerAdd(RENDER_TIMER);
 	m_spRenderDeltaTimer = m_spGameInstance->CreateTimerAdd(RENDER_DELETATIMER);
+
 	// 클라이언트 스레드 등록
 	m_spGameInstance->RegisterFuncToRegister(ClientThread, this);
 	// 네트워크 스레드 등록
@@ -70,7 +72,9 @@ void CClientApp::Render()
 	}
 	OUTPUTDATA stOutputData;
 	RETURN_CHECK_FAILED(m_spGameInstance->ReadyInstance(stGraphicDesc, stOutputData), ;);
-	//RETURN_CHECK_FAILED(m_spGameInstance->LoadFirstFilder(FIRST_RESOURCE_FOLDER), ;);
+	RETURN_CHECK_FAILED(m_spGameInstance->LoadFirstFolder(FIRST_RESOURCE_FOLDER), ;);
+
+	CProtoMaker::CreateProtoData(m_spGameInstance, stOutputData.wpDevice.lock(), stOutputData.wpGpuCmd.lock());
 
 	MSG msg{};
 	ZeroMemory(&msg, sizeof(MSG));
