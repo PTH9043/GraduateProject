@@ -16,6 +16,12 @@
     <Filter Include="01.Scene">
       <UniqueIdentifier>{c6cadfa5-92bb-4b82-9d86-ceaed19852ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Scene\MainScene">
+      <UniqueIdentifier>{85ce25c6-8eab-4e65-b924-cb53f184f799}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Proto">
+      <UniqueIdentifier>{e090c57f-1917-4666-871f-7a48cd38e90d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ClientDefines.h">
@@ -39,8 +45,14 @@
     <ClInclude Include="..\Public\CClientApp.h">
       <Filter>00.ClientApp</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UNetworkClientController.h">
+    <ClInclude Include="..\Public\CNetworkClientController.h">
       <Filter>20.Server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CMainScene.h">
+      <Filter>01.Scene\MainScene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CProtoMaker.h">
+      <Filter>97.Proto</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -58,8 +70,14 @@
     <ClCompile Include="..\Private\CClientApp.cpp">
       <Filter>00.ClientApp</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UNetworkClientController.cpp">
+    <ClCompile Include="..\Private\CNetworkClientController.cpp">
       <Filter>20.Server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CMainScene.cpp">
+      <Filter>01.Scene\MainScene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CProtoMaker.cpp">
+      <Filter>97.Proto</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
