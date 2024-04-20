@@ -13,6 +13,9 @@
     <Filter Include="20.Server">
       <UniqueIdentifier>{5d4f5c49-410f-4489-8243-1375700409cf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Scene">
+      <UniqueIdentifier>{c6cadfa5-92bb-4b82-9d86-ceaed19852ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ClientDefines.h">
