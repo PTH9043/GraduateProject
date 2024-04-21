@@ -73,7 +73,7 @@ void DirectionalShadow(in float4 vWorldPos, out float4 vShadow)
     {
         // Dpeth Info
         vector vLightDepth = g_Texture1.Sample(g_Sampler_Clamp, uv);
-        float lightDepth = vLightDepth.r * g_tLightParam.fCamFar;
+        float lightDepth = vLightDepth.r * g_ViewProjInfoArr[g_CamID].fCamFar;
         if (currentDepth - g_tLightControl.fShadowDepth > lightDepth)
         {
             vShadow = g_tLightControl.vShadowColor;
@@ -83,7 +83,7 @@ void DirectionalShadow(in float4 vWorldPos, out float4 vShadow)
 
 float RimLight(in float4 vWorldPos, in float4 vNormal)
 {
-    float4 vCamLook = normalize(float4(vWorldPos.xyz - g_tLightParam.vLightCamPos.xyz, 0.f));
+    float4 vCamLook = normalize(float4(vWorldPos.xyz - g_ViewProjInfoArr[g_CamID].vCamPosition.xyz, 0.f));
     float4 vLightDir = normalize(g_tLightInfo.vDirection);
     vLightDir.w = 0.f;
     float fLightDensity = dot(vCamLook * -1.f, normalize(vNormal));
@@ -120,8 +120,8 @@ void PointShade(in float4 vNormalDesc, in float4 vWorldPos, out float4 vShade)
 void PointSpecular(in float4 vNormalDesc, in float4 vWorldPos, in float fPower, out float4 vSpecular)
 {
     float4 vReflect = normalize(reflect(normalize(g_tLightInfo.vDirection), vNormalDesc));
-    float4 vCamLook = normalize(float4(vWorldPos.xyz - g_tLightParam.vLightCamPos.xyz, 0.f));
-    float4 vLook = vWorldPos - float4(g_tLightParam.vLightCamPos, 1.f);
+    float4 vCamLook = normalize(float4(vWorldPos.xyz - g_ViewProjInfoArr[g_CamID].vCamPosition.xyz, 0.f));
+    float4 vLook = vWorldPos - float4(g_ViewProjInfoArr[g_CamID].vCamPosition, 1.f);
     
     vSpecular = g_tLightInfo.vSpecular * g_vMaterialSpecular * pow(saturate(dot(normalize(vLook * -1.f), vReflect)), fPower);
     vSpecular.a = 1.f;
@@ -143,14 +143,14 @@ LIGHTCOLOR CalculateLightColorInViewSpace(float3 vViewNormal, float3 vViewPos)
         // Directional Light
         //viewLightDir = normalize(mul(float4(g_tLightInfo.vDirection.xyz, 0.f), g_tLightParam.mViewMatrix).xyz);
         //diffuseRatio = saturate(dot(-viewLightDir, vViewNormal));
-        float3 vToLight = -normalize(mul(float4(g_tLightInfo.vDirection.xyz, 0.f), g_tLightParam.mViewMatrix).xyz);
+        float3 vToLight = -normalize(mul(float4(g_tLightInfo.vDirection.xyz, 0.f), g_ViewProjInfoArr[g_CamID].mViewMatrix).xyz);
         diffuseRatio = dot(vToLight, vViewNormal);
         
     }
     else if (g_tLightInfo.eLightType == 1)
     {
         // Spot Light
-        float3 viewLightPos = mul(float4(g_tLightInfo.vPosition.xyz, 1.f), g_tLightParam.mViewMatrix).xyz;
+        float3 viewLightPos = mul(float4(g_tLightInfo.vPosition.xyz, 1.f), g_ViewProjInfoArr[g_CamID].mViewMatrix).xyz;
         float3 viewLightVec = vViewPos - viewLightPos;
         viewLightDir = normalize(viewLightVec);
         diffuseRatio = saturate(dot(-viewLightDir, vViewNormal));
@@ -166,7 +166,7 @@ LIGHTCOLOR CalculateLightColorInViewSpace(float3 vViewNormal, float3 vViewPos)
     else if (g_tLightInfo.eLightType == 2)
     {
         // Spot Light
-        float3 viewLightPos = mul(float4(g_tLightInfo.vPosition.xyz, 1.f), g_tLightParam.mViewMatrix).xyz;
+        float3 viewLightPos = mul(float4(g_tLightInfo.vPosition.xyz, 1.f), g_ViewProjInfoArr[g_CamID].mViewMatrix).xyz;
         float3 viewLightVec = vViewPos - viewLightPos;
         viewLightDir = normalize(viewLightVec);
         diffuseRatio = saturate(dot(-viewLightDir, vViewNormal));
@@ -180,7 +180,7 @@ LIGHTCOLOR CalculateLightColorInViewSpace(float3 vViewNormal, float3 vViewPos)
             float halfAngle = (spotAngle) / 2;
 
             float3 viewLightVec = vViewPos - viewLightPos;
-            float3 viewCenterLightDir = normalize(mul(float4(g_tLightInfo.vDirection.xyz, 0.f), g_tLightParam.mViewMatrix).xyz);
+            float3 viewCenterLightDir = normalize(mul(float4(g_tLightInfo.vDirection.xyz, 0.f), g_ViewProjInfoArr[g_CamID].mViewMatrix).xyz);
 
             float centerDist = dot(viewLightVec, viewCenterLightDir);
 
@@ -200,12 +200,12 @@ LIGHTCOLOR CalculateLightColorInViewSpace(float3 vViewNormal, float3 vViewPos)
     }
     else if (g_tLightInfo.eLightType == 3)
     {
-        float3 viewLightPos = mul(float4(g_tLightInfo.vPosition.xyz, 1.f), g_tLightParam.mViewMatrix).xyz;
+        float3 viewLightPos = mul(float4(g_tLightInfo.vPosition.xyz, 1.f), g_ViewProjInfoArr[g_CamID].mViewMatrix).xyz;
         float3 viewLightVec = vViewPos - viewLightPos;
         viewLightDir = normalize(viewLightVec);
         diffuseRatio = saturate(dot(-viewLightDir, vViewNormal));
 
-        float3 viewDirection = normalize(mul(float4(g_tLightInfo.vDirection.xyz, 0.f), g_tLightParam.mViewMatrix).xyz);
+        float3 viewDirection = normalize(mul(float4(g_tLightInfo.vDirection.xyz, 0.f), g_ViewProjInfoArr[g_CamID].mViewMatrix).xyz);
 
         // Calculate the angle between the light direction and the view direction
         float angle = acos(dot(viewLightDir, viewDirection));
@@ -586,7 +586,7 @@ LIGHTCOLOR ViewDirectionalLight(float3 vNormal, float3 vToCamera)
 {
 
     LIGHTCOLOR color = (LIGHTCOLOR)0.f;
-    float3 LightDir = normalize(mul(float4(g_tLightInfo.vDirection.xyz, 0.f), g_tLightParam.mViewMatrix).xyz);
+    float3 LightDir = normalize(mul(float4(g_tLightInfo.vDirection.xyz, 0.f), g_ViewProjInfoArr[g_CamID].mViewMatrix).xyz);
 
     // float3 vToLight = -g_tLightInfo.vDirection;
     float3 vToLight = -LightDir;
@@ -618,7 +618,7 @@ LIGHTCOLOR ViewSpotLight(float3 vPosition, float3 vNormal, float3 vToCamera)
     if (vPosition.x == 0 && vPosition.y == 0 && vPosition.z == 0)return((LIGHTCOLOR)0.f);
 
     LIGHTCOLOR color = (LIGHTCOLOR)0.f;
-    float3 viewLightPos = mul(float4(g_tLightInfo.vPosition.xyz, 1.f), g_tLightParam.mViewMatrix).xyz;
+    float3 viewLightPos = mul(float4(g_tLightInfo.vPosition.xyz, 1.f), g_ViewProjInfoArr[g_CamID].mViewMatrix).xyz;
     float3 vToLight = viewLightPos - vPosition;
 
     float fDistance = length(vToLight);
@@ -635,7 +635,7 @@ LIGHTCOLOR ViewSpotLight(float3 vPosition, float3 vNormal, float3 vToCamera)
             fSpecularFactor = pow(max(dot(vHalf, vNormal), 0.0f), g_tLightInfo.fSpecularPowValue);
         }
 
-        float3 LightDir = normalize(mul(float4(g_tLightInfo.vDirection.xyz, 0.f), g_tLightParam.mViewMatrix).xyz);
+        float3 LightDir = normalize(mul(float4(g_tLightInfo.vDirection.xyz, 0.f), g_ViewProjInfoArr[g_CamID].mViewMatrix).xyz);
 
         
         float fAlpha = max(dot(-vToLight, LightDir), 0.0f);
@@ -665,7 +665,7 @@ LIGHTCOLOR LightingInWorld(float3 vWorldPosition, float3 vWorldNormal)
    // float3 vCameraPosition = float3(g_tLightParam.vLightCamPos.x, g_tLightParam.vLightCamPos.y, g_tLightParam.vLightCamPos.z);
     float3 vToCamera = normalize(g_ViewProjInfoArr[MAIN_CAM_ID].vCamPosition - vWorldPosition);
    
-    float4 vCameraViewPosition = mul(float4(g_tLightParam.vLightCamPos, 1.0f), g_tLightParam.mViewMatrix);
+    float4 vCameraViewPosition = mul(float4(g_ViewProjInfoArr[g_CamID].vCamPosition, 1.0f), g_ViewProjInfoArr[g_CamID].mViewMatrix);
     float3 vViewToCamera = normalize(vCameraViewPosition.xyz - vWorldPosition);
 
       
@@ -712,7 +712,7 @@ LIGHTCOLOR LightingInWorld2(float3 vWorldPosition, float3 vWorldNormal)
     // float3 vCameraPosition = float3(g_tLightParam.vLightCamPos.x, g_tLightParam.vLightCamPos.y, g_tLightParam.vLightCamPos.z);
     float3 vToCamera = normalize(g_ViewProjInfoArr[MAIN_CAM_ID].vCamPosition - vWorldPosition);
 
-    float4 vCameraViewPosition = mul(float4(g_tLightParam.vLightCamPos, 1.0f), g_tLightParam.mViewMatrix);
+    float4 vCameraViewPosition = mul(float4(g_ViewProjInfoArr[g_CamID].vCamPosition, 1.0f), g_ViewProjInfoArr[g_CamID].mViewMatrix);
     float3 vViewToCamera = normalize(vCameraViewPosition.xyz - vWorldPosition);
 
 
@@ -759,7 +759,7 @@ LIGHTCOLOR LightingInView(float3 vViewPosition, float3 vViewNormal)
     LIGHTCOLOR color = (LIGHTCOLOR)0.f;
   
 
-    float4 vCameraViewPosition = mul(float4(g_tLightParam.vLightCamPos, 1.0f), g_tLightParam.mViewMatrix);
+    float4 vCameraViewPosition = mul(float4(g_ViewProjInfoArr[g_CamID].vCamPosition, 1.0f), g_ViewProjInfoArr[g_CamID].mViewMatrix);
     float3 vViewToCamera = normalize(vCameraViewPosition.xyz - vViewPosition);
 
 

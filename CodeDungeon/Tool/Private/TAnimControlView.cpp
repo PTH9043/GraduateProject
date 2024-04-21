@@ -154,7 +154,7 @@ void TAnimControlView::AnimModelSelectView()
 			if (nullptr != m_spSelectAnimFileData)
 			{
 
-				m_spSelectAnimFileFolder = m_spSelectAnimFileData->wpFolder.lock();
+				//m_spSelectAnimFileFolder = m_spSelectAnimFileData->wpFolder.lock();
 				m_spShowAnimModel = CreateConstructorNative<UAnimModel>(GetDevice(), m_spSelectAnimFileData->wstrfilePath);
 				m_spAnimControlModel->SetShowModel(m_spShowAnimModel, m_spSelectAnimFileFolder);
 
@@ -374,11 +374,11 @@ void TAnimControlView::AnimSectionShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTable
 					ChangeDesc->dNextAnimTimeAcc = static_cast<_double>(Time);
 				}					
 
-				{
+			/*	{
 					ImGui::TableNextColumn();
 					ImGui::SetNextItemWidth(-FLT_MIN);
 					ImGui::InputFloat(ChangeT + Index, &SectionDesc->fAnimChangeTime);
-				}
+				}*/
 				if (ImGui::IsItemClicked())
 					SelectRemoveItem = iIndex;
 				++iIndex;
@@ -482,7 +482,7 @@ void TAnimControlView::AnimOccursShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableF
 				{
 					ImGui::TableNextColumn();
 					ImGui::SetNextItemWidth(-FLT_MIN);
-					ImGui::InputFloat(ChangeT + Index, &OccursDesc->fAnimChangeTime);
+					//ImGui::InputFloat(ChangeT + Index, &OccursDesc->fAnimChangeTime);
 				}
 				if (ImGui::IsItemClicked())
 					SelectRemoveItem = iIndex;

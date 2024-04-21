@@ -15,6 +15,7 @@
 
 URenderTargetManager::URenderTargetManager() :
     m_spDepthStencilTexture{ nullptr },
+    m_spShadowDepthStencilTexture{ nullptr },
     m_spDevice{ nullptr },
     m_spGraphicDesc{ nullptr },
     m_eDepthFormat{ DXGI_FORMAT_D32_FLOAT }
@@ -65,6 +66,38 @@ HRESULT URenderTargetManager::AddRenderTargetGroup(const RTGROUPID& _eGroupID, c
 
     SHPTR<URenderTargetGroup> pRtGroups = CreateNative<URenderTargetGroup>
         (m_spDevice, rtGroups, m_spDepthStencilTexture);
+
+    m_RenderTargetGroups.insert(std::pair<RTGROUPID, SHPTR<URenderTargetGroup>>(_eGroupID, pRtGroups));
+    return S_OK;
+}
+
+HRESULT URenderTargetManager::AddRenderTargetGroupWithNewDepthStencilBuffer(const RTGROUPID& _eGroupID, const std::vector<RTDESC>& _rtVec)
+{
+
+    RTDESC stRtDesc{ RTOBJID::SHADOW_DEPTH_FOURBYFOUR, m_eDepthFormat,
+           m_spGraphicDesc->iWinCX*4, m_spGraphicDesc->iWinCY*4, _float4(0.f, 0.f, 0.f, 1.f),
+           D3D12_HEAP_TYPE_DEFAULT,
+           D3D12_HEAP_FLAG_NONE, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL };
+    // Create DepthStencilDesc
+    m_spShadowDepthStencilTexture = CreateNative<UTexture>(m_spDevice, stRtDesc);
+
+    auto find = m_RenderTargetGroups.find(_eGroupID);
+    if (find != m_RenderTargetGroups.end())
+        return E_FAIL;
+
+    VECTOR<RENDERTARGET> rtGroups{};
+    rtGroups.reserve(_rtVec.size());
+
+    for (const RTDESC& iter : _rtVec) {
+        RENDERTARGET tTarget{ };
+        tTarget.pTexture = CreateNative<UTexture>(m_spDevice, iter);
+        tTarget.SetColor(iter.vClear);
+        tTarget.stRtDesc = iter;
+        rtGroups.push_back(tTarget);
+    }
+
+    SHPTR<URenderTargetGroup> pRtGroups = CreateNative<URenderTargetGroup>
+        (m_spDevice, rtGroups, m_spShadowDepthStencilTexture);
 
     m_RenderTargetGroups.insert(std::pair<RTGROUPID, SHPTR<URenderTargetGroup>>(_eGroupID, pRtGroups));
     return S_OK;

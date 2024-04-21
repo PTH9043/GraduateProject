@@ -33,6 +33,7 @@
 #include "UComputeCommand.h"
 
 #include "UDefferedCamera.h"
+#include "UShadowCamera.h"
 #include "UDefaultCube.h"
 #include "UDefaultDebugging.h"
 #include "UDefaultCell.h"
@@ -1095,6 +1096,12 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 					DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT
 					} ));
 
+			CreateGraphicsShader(PROTO_RES_SHADOWSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"Shadow", VTXSHADOWINPUT_DECLARATION::Element, VTXSHADOWINPUT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN },
+					RENDERFORMATS{ DXGI_FORMAT_D32_FLOAT
+					}));
+
 			CreateGraphicsShader(PROTO_RES_NOCULL_ANIMMODELSHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"AnimModel", VTXANIMMODEL_DECLARATION::Element, VTXANIMMODEL_DECLARATION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN },
@@ -1253,6 +1260,10 @@ HRESULT UGameInstance::ReadyComp(const OUTPUTDATA& _stData)
 			_stData.wpDevice.lock(), LAYER_CAM, CLONETYPE::CLONE_STATIC));
 	}
 	{
+		AddPrototype(PROTO_ACTOR_SHADOWCAMERA, CreateConstructorToNative<UShadowCamera>(
+			_stData.wpDevice.lock(), LAYER_CAM, CLONETYPE::CLONE_STATIC));
+	}
+	{
 		m_spRenderer = CreateConstructorToNative<URenderer>(_stData.wpDevice.lock(), _stData.wpGpuCmd.lock(), m_spGraphicDevice,
 			m_spPipeLine, m_spSceneManager, m_spRenderTargetManager, nullptr);
 		AddPrototype(PROTO_COMP_RENDERER, m_spRenderer);
@@ -1343,6 +1354,16 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 			// Add RenderTargetGroup
 			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::LIGHTSHADE_DEFFERED, vecRts);
 		}
+
+		{
+			std::vector<RTDESC> vecRts{
+				RTDESC{ RTOBJID::SHADOW_DEPTH_FOURBYFOUR, DXGI_FORMAT::DXGI_FORMAT_R32_FLOAT,
+					GraphicDesc->iWinCX*4, GraphicDesc->iWinCY*4, { 1.f,1.f, 1.f, 1.f } } 
+			};
+			// Add RenderTargetGroup
+			m_spRenderTargetManager->AddRenderTargetGroupWithNewDepthStencilBuffer(RTGROUPID::SHADOW_MAP, vecRts);
+		}
+
 		// NonAlpha_Deffered 
 		{
 			std::vector<RTDESC> vecRts{
@@ -1441,8 +1462,9 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_DIFFUSE_DEFFERED,
 		_float2(100.f, 320.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_SPECULAR_DEFFERED,
-		_float2(100.f, 430.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
+	
+	/*m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::SHADOW_MAP, RTOBJID::SHADOW_DEPTH_FOURBYFOUR,
+		_float2(100.f, 430.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());*/
 
 
 

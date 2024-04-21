@@ -112,7 +112,13 @@ namespace Engine {
 		static const unsigned int							iNumElement = 1;
 		static D3D12_INPUT_ELEMENT_DESC		Element[iNumElement];
 	}VTXSKYBOX_DECLARATION;
+#pragma region SHADOW
+	typedef struct tagVertexShadow_Declaration {
+		static const unsigned int							iNumElement = 1;
+		static D3D12_INPUT_ELEMENT_DESC		Element[iNumElement];
+	}VTXSHADOWINPUT_DECLARATION;
 
+#pragma endregion SHADOW
 #pragma endregion CUBE
 
 	typedef struct  tagVertexModel

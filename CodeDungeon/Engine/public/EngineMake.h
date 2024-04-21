@@ -15,6 +15,7 @@
 #define PROTO_RES_DEBUG2DTARGETSHADER L"Proto_Res_Debug2DTargetShader"
 #define PROTO_RES_DEBUGGINGDEFAULTSHADER L"Proto_Res_DebuggingDefaultShader"
 #define PROTO_RES_DEBUGGINGWIREFRAMESHADER L"Proto_Res_DebuggingWireframeShader"
+#define PROTO_RES_SHADOWSHADER L"Proto_Res_ShadowShader"
 #define PROTO_RES_GRIDSHADER L"Proto_Res_GridShader"
 #define PROTO_RES_RECTSHADER L"Proto_Res_RectShader"
 #define PROTO_RES_FINALDEFFEREDSHADER L"Proto_Res_FinalDefferedShader"
@@ -72,6 +73,7 @@
 
 // Actor 
 #define PROTO_ACTOR_DEFFEREDCAMERA L"Proto_Actor_DefferedCamera"
+#define PROTO_ACTOR_SHADOWCAMERA L"Proto_Actor_ShadowCamera"
 #define PROTO_RES_MIRRORCAMERA L"Proto_Actor_MirrorCamera"
 #define PROTO_ACTOR_DEFAULTCUBE L"Proto_Actor_DefaultCube"
 #define PROTO_ACTOR_DEFAULTSPHERE L"Proto_Actor_DefaultSphere"

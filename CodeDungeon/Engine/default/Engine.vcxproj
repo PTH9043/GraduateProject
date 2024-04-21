@@ -56,6 +56,7 @@
     <ClInclude Include="..\public\UMapLayout.h" />
     <ClInclude Include="..\public\UMaterialManager.h" />
     <ClInclude Include="..\public\UModelMaterial.h" />
+    <ClInclude Include="..\public\UShadowCamera.h" />
     <ClInclude Include="..\public\USound.h" />
     <ClInclude Include="..\public\CustomMemory.h" />
     <ClInclude Include="..\public\CustomString.h" />
@@ -168,6 +169,7 @@
     <ClCompile Include="..\private\UMapLayout.cpp" />
     <ClCompile Include="..\private\UMaterialManager.cpp" />
     <ClCompile Include="..\private\UModelMaterial.cpp" />
+    <ClCompile Include="..\private\UShadowCamera.cpp" />
     <ClCompile Include="..\private\USound.cpp" />
     <ClCompile Include="..\private\CustomMemory.cpp" />
     <ClCompile Include="..\private\CustomString.cpp" />
@@ -311,6 +313,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\Shader\ScreenRenderObj.hlsl" />
+    <FxCompile Include="..\..\Shader\Shadow.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Shader\ComputeFunc.hlsli" />

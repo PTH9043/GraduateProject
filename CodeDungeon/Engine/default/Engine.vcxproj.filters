@@ -708,6 +708,9 @@
     <ClCompile Include="..\private\UMaterialManager.cpp">
       <Filter>01.Manager\MaterialManager</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\UShadowCamera.cpp">
+      <Filter>05.Actor\02.Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\EngineDefine.h">
@@ -1088,6 +1091,9 @@
     <ClInclude Include="..\public\UMaterialManager.h">
       <Filter>01.Manager\MaterialManager</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\UShadowCamera.h">
+      <Filter>05.Actor\02.Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Shader\ShaderGrobalFunc.hlsli">
@@ -1172,6 +1178,9 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\DebugCell.hlsl">
       <Filter>98.ShaderFile\Debug</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\Shadow.hlsl">
+      <Filter>98.ShaderFile\Common\Light</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
