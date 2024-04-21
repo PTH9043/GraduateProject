@@ -134,6 +134,7 @@ void TAnimControlView::AnimModelSelectView()
 	ImGui::Begin(m_stAnimModelSelectDesc.strName.c_str(), GetOpenPointer(), m_stAnimModelSelectDesc.imgWindowFlags);
 	{
 		ImGui::Text("AnimModelSelect");
+		static _wstring wstrSelectFolderName{ L"" };
 		if (ImGui::BeginListBox("AnimModel List", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
 		{
 			using ANIMFILEDATA = std::pair < _string, SHPTR<FILEDATA>>;
@@ -142,6 +143,7 @@ void TAnimControlView::AnimModelSelectView()
 				if (ImGui::Selectable(AnimModel.first.c_str()))
 				{
 					m_spSelectAnimFileData = AnimModel.second;
+					wstrSelectFolderName = UMethod::ConvertSToW(AnimModel.first);
 				 }
 			}
 			ImGui::EndListBox();
@@ -151,15 +153,16 @@ void TAnimControlView::AnimModelSelectView()
 			// Select Folder 
 			if (nullptr != m_spSelectAnimFileData)
 			{
+
+				m_spSelectAnimFileFolder = m_spSelectAnimFileData->wpFolder.lock();
 				m_spShowAnimModel = CreateConstructorNative<UAnimModel>(GetDevice(), m_spSelectAnimFileData->wstrfilePath);
 				m_spAnimControlModel->SetShowModel(m_spShowAnimModel, m_spSelectAnimFileFolder);
 
-				_int iIndex{ 0 };
 				for (auto& iter : m_spAnimControlModel->GetAnimationClips())
 				{
-					s_AnimTags[iIndex++] = iter.first.c_str();
+					s_AnimTags[iter.second] = iter.first.c_str();
 				}
-				m_AnimMaxTagCount = iIndex;
+				m_AnimMaxTagCount = static_cast<_int>(m_spAnimControlModel->GetAnimationClips().size());
 			}
 		}
 		if (nullptr == m_spSelectAnimFileData)
@@ -285,8 +288,19 @@ void TAnimControlView::AnimSectionShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTable
 {
 	if (ImGui::TreeNodeEx("AnimChangesBetweenShow", ImGuiTreeNodeFlags_Bullet))
 	{
+		static _int SelectRemoveItem{ -1 };
+
+		if (true == ImGui::Button("Remove##1"))
+		{
+			if (-1 != SelectRemoveItem)
+			{
+				_spAnim->RemoveAnimEvent(ANIMEVENTTYPE::ANIMEVENT_ANIMCHANGESBETWEEN, SelectRemoveItem);
+				SelectRemoveItem = -1;
+			}
+		}
+
 		ImGui::SetNextItemWidth(-FLT_MIN);
-		if (ImGui::BeginTable("AnimChangesBetween", 6, _flags, ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 20), 0.0f))
+		if (ImGui::BeginTable("AnimChangesBetween", 8, _flags, ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 20), 0.0f))
 		{
 			ImGui::TableSetupColumn("InputTrigger", ImGuiTableColumnFlags_WidthStretch);
 			ImGui::TableSetupColumn("StartT", ImGuiTableColumnFlags_WidthStretch);
@@ -294,6 +308,7 @@ void TAnimControlView::AnimSectionShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTable
 			ImGui::TableSetupColumn("NextAnim", ImGuiTableColumnFlags_WidthStretch);
 			ImGui::TableSetupColumn("SupV", ImGuiTableColumnFlags_WidthStretch);
 			ImGui::TableSetupColumn("NextTA", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupColumn("ChangeT", ImGuiTableColumnFlags_WidthStretch);
 			ImGui::TableSetupScrollFreeze(0, 1); // Make row always visible
 			ImGui::TableHeadersRow();
 
@@ -304,22 +319,12 @@ void TAnimControlView::AnimSectionShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTable
 			static _string NextAnim = "##NextAnim";
 			static _string SupV = "##SupV";
 			static _string NextAnimTimeAcc = "##NextAnimTimeAcc";
-			static _int SelectRemoveItem{ -1 };
-
-			if (true == ImGui::Button("Remove##1"))
-			{
-				if (-1 != SelectRemoveItem)
-				{
-					_spAnim->RemoveAnimEvent(ANIMEVENTTYPE::ANIMEVENT_ANIMCHANGESBETWEEN, SelectRemoveItem);
-					SelectRemoveItem = -1;
-				}
-			}
-
+			static _string ChangeT = "##ChangeT";
 			_int iIndex{ 0 };
 			_float Duration = static_cast<_float>(_spAnim->GetDuration());
 			for (auto& iter : _AnimEvent)
 			{
-				 _string Index = _string::to_string(iIndex++);
+				 _string Index = _string::to_string(iIndex);
 				 ANIMEVENTSECTIONDESC* SectionDesc = remove_const<ANIMEVENTSECTIONDESC*, ANIMEVENTDESC*>(iter->OutAnimEventDesc());
 				 ANIMCHANGEDESC* ChangeDesc = remove_const<ANIMCHANGEDESC*, ANIMOTHEREVENTDESC*>(iter->OutOtherEventDesc());
 
@@ -367,6 +372,12 @@ void TAnimControlView::AnimSectionShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTable
 					_float Time = static_cast<_float>(ChangeDesc->dNextAnimTimeAcc);
 					ImGui::InputFloat(NextAnimTimeAcc + Index, &Time);
 					ChangeDesc->dNextAnimTimeAcc = static_cast<_double>(Time);
+				}					
+
+				{
+					ImGui::TableNextColumn();
+					ImGui::SetNextItemWidth(-FLT_MIN);
+					ImGui::InputFloat(ChangeT + Index, &SectionDesc->fAnimChangeTime);
 				}
 				if (ImGui::IsItemClicked())
 					SelectRemoveItem = iIndex;
@@ -384,7 +395,7 @@ void TAnimControlView::AnimOccursShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableF
 	if (ImGui::TreeNodeEx("AnimOccursTimePassShow", ImGuiTreeNodeFlags_Bullet))
 	{
 		ImGui::SetNextItemWidth(-FLT_MIN);
-		if (ImGui::BeginTable("AnimOccursTimePass", 5, _flags, ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 20), 0.0f))
+		if (ImGui::BeginTable("AnimOccursTimePass", 6, _flags, ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 20), 0.0f))
 		{
 			ImGui::TableSetupColumn("InputTrigger", ImGuiTableColumnFlags_WidthStretch);
 			ImGui::TableSetupColumn("Over", ImGuiTableColumnFlags_WidthStretch);
@@ -401,6 +412,7 @@ void TAnimControlView::AnimOccursShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableF
 			static _string NextAnim = "##NextAnim2";
 			static _string SupV = "##SupV2";
 			static _string NextAnimTimeAcc = "##NextAnimTimeAcc2";
+			static _string ChangeT = "##ChangeT2";
 			static _int SelectRemoveItem{ -1 };
 
 			if (true == ImGui::Button("Remove##2"))
@@ -458,6 +470,19 @@ void TAnimControlView::AnimOccursShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableF
 					_float Time = static_cast<_float>(ChangeDesc->dNextAnimTimeAcc);
 					ImGui::InputFloat(NextAnimTimeAcc + Index, &Time);
 					ChangeDesc->dNextAnimTimeAcc = static_cast<_double>(Time);
+				}
+
+				{
+					ImGui::TableNextColumn();
+					ImGui::SetNextItemWidth(-FLT_MIN);
+					_float Time = static_cast<_float>(ChangeDesc->dNextAnimTimeAcc);
+					ImGui::InputFloat(NextAnimTimeAcc + Index, &Time);
+					ChangeDesc->dNextAnimTimeAcc = static_cast<_double>(Time);
+				}
+				{
+					ImGui::TableNextColumn();
+					ImGui::SetNextItemWidth(-FLT_MIN);
+					ImGui::InputFloat(ChangeT + Index, &OccursDesc->fAnimChangeTime);
 				}
 				if (ImGui::IsItemClicked())
 					SelectRemoveItem = iIndex;

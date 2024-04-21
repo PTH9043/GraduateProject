@@ -161,8 +161,8 @@ namespace Engine {
 		, FIRENOISEBUFFER = B13
 		, FIREDISTORTION = B14
 		, FOGBUFFER = B14
-		, MODELCHECKBUF = B7,
-
+		, MODELCHECKBUF = B7
+		, CONTROLMODELMATRIXPARAM = B8
 	};
 
 	enum class SRV_REGISTER : unsigned short {

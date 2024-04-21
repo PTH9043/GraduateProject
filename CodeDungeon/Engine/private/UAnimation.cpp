@@ -232,9 +232,10 @@ void UAnimation::SaveAnimSectionData(const _wstring& _wstrPath)
 void UAnimation::SaveAnimSectionPathIsFolder(const _wstring& _wstrPath)
 {
 	_wstring str = _wstrPath;
-	str.append(L"\\AnimSection\\");
+	str.append(L"\\AnimSection");
 	if (0 != _wmkdir(str))
 	{
+		str.append(L"\\");
 		str.append(m_wstrName);
 		str.append(DEFAULT_OUTFOLDEREXTENSION);
 		SaveAnimSectionData(str);
@@ -298,9 +299,10 @@ void UAnimation::SaveAnimEventData(const _wstring& _wstrPath)
 void UAnimation::SaveAnimEventPathIsFolder(const _wstring& _wstrPath)
 {
 	_wstring str = _wstrPath;
-	str.append(L"\\AnimEvent\\");
+	str.append(L"\\AnimEvent");
 	if (0 != _wmkdir(str))
 	{
+		str.append(L"\\");
 		str.append(m_wstrName);
 		str.append(DEFAULT_OUTFOLDEREXTENSION);
 		SaveAnimEventData(str);

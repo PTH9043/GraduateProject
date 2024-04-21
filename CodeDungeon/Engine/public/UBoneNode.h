@@ -37,6 +37,10 @@ protected:
 protected:
 	void RemoveCombineMatrixData();
 	void ComputeCombinedMatrix();
+
+protected: /* get set*/
+	void SetDepths(const _float _fDepths) { m_fDepths = _fDepths; }
+	void SetName(const _wstring& _wstrName) { m_wstrName = _wstrName; }
 private:
 	// 뼈의 가장 기본이 되는 것의 이름 (중요한 것)
 	static	_wstring					BASE_BONENODE_NAME;

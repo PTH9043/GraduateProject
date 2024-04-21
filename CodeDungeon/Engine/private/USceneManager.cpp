@@ -78,6 +78,7 @@ void USceneManager::RenderLight(CSHPTRREF<UPipeLine> _spPipeLine, CSHPTRREF<URen
 	const TRANSFORMPARAM& _stDefferendParam)
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
 	SHPTR<UCommand> spCmdList = static_pointer_cast<UCommand>(spGameInstance->GetGpuCommand());
 	{
 		SHPTR<URenderTargetGroup> spRenderTargetGroup{ _spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::LIGHTSHADE_DEFFERED) };

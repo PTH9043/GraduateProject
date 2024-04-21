@@ -9,6 +9,11 @@ cbuffer HasNormalBuffer : register(b7)
     int HasBuffer[4];
 };
 
+cbuffer ControlModelMatrix : register(b8)
+{
+    float4x4 g_PivotMatrix;
+};
+
 //cbuffer MODELDATAPARAM : register(b10)
 //{
 //    int g_iMaterialIndex;
@@ -47,6 +52,7 @@ struct VS_OUT
 VS_OUT VS_Main(VS_IN In)
 {
     VS_OUT Out = (VS_OUT)0;
+  //  Out.vPosition = mul(float4(In.vPosition, 1.f), g_PivotMatrix);
     Out.vPosition = Compute_FinalMatrix(In.vPosition);
 
     vector vNormal = mul(float4(In.vNormal, 0.f), g_WorldMatrix);

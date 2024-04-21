@@ -49,9 +49,12 @@ _bool UAnimSectionEvent::EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, cons
 {
 	if (m_AnimSectionDesc.IsAnimEventActive(_dTimeAcc))
 	{
-		if (true == m_AnimSectionDesc.wstrEventTrigger.empty() || m_AnimSectionDesc.wstrEventTrigger == _wstrInputTrigger)
+		if (!lstrcmp(m_AnimSectionDesc.wstrEventTrigger.c_str(), _wstrInputTrigger.c_str()) || !lstrcmp(m_AnimSectionDesc.wstrEventTrigger.c_str(), L""))
 		{
-			EventSituation(_pPawn, _pAnimModel, _dTimeDelta);
+			if (m_AnimSectionDesc.fAnimChangeTime <= _dTimeAcc)
+			{
+				EventSituation(_pPawn, _pAnimModel, _dTimeDelta);
+			}
 		}
 		return true;
 	}
@@ -105,10 +108,13 @@ _bool UAnimOccurEvent::EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const 
 	{
 		if (false == m_AnimOccurDesc.isActiveEvent)
 		{
-			if (true == m_AnimOccurDesc.wstrEventTrigger.empty() || m_AnimOccurDesc.wstrEventTrigger == _wstrInputTrigger)
+			if (!lstrcmp(m_AnimOccurDesc.wstrEventTrigger.c_str(), _wstrInputTrigger.c_str()) || !lstrcmp(m_AnimOccurDesc.wstrEventTrigger.c_str(), L""))
 			{
-				EventSituation(_pPawn, _pAnimModel, _dTimeDelta);
-				m_AnimOccurDesc.isActiveEvent = true;
+				if (m_AnimOccurDesc.fAnimChangeTime <= _dTimeAcc)
+				{
+					EventSituation(_pPawn, _pAnimModel, _dTimeDelta);
+					m_AnimOccurDesc.isActiveEvent = true;
+				}
 			}
 		}
 		return true;

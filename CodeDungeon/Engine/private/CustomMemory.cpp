@@ -73,6 +73,7 @@ namespace Engine {
 		if (AllocateSize > MAX_ALLOC_SIZE)
 		{
 			Header = reinterpret_cast<UMemoryHeader*>(::malloc(AllocateSize));
+			::memset(Header, 0, AllocateSize);
 		}
 		else
 		{
@@ -93,6 +94,7 @@ namespace Engine {
 		}
 		else
 		{
+			::memset(Header, 0, AllocSize);
 			m_PoolTable[AllocSize]->Push(Header);
 		}
 	}

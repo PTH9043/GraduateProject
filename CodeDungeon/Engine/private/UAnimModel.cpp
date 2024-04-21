@@ -132,6 +132,11 @@ void UAnimModel::TickAnimChangeTransform(CSHPTRREF<UTransform> _spTransform, con
 	assert(_spTransform && m_spCurAnimation);
 	TickAnimation(_dTimeDelta);
 
+	if (true == m_spCurAnimation->IsFinishAnim())
+	{
+		GetRootBoneNode()->ResetRootBoneInfo();
+	}
+
 	if (false == m_spCurAnimation->IsSupplySituation())
 	{
 		if (false == m_spCurAnimation->IsFinishAnim())
@@ -141,10 +146,6 @@ void UAnimModel::TickAnimChangeTransform(CSHPTRREF<UTransform> _spTransform, con
 
 			_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), _spTransform->GetWorldMatrix());
 			_spTransform->SetPos(Position);
-		}
-		else
-		{
-			GetRootBoneNode()->ResetRootBoneInfo();
 		}
 	}
 }
@@ -175,6 +176,7 @@ HRESULT UAnimModel::Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader
 	_spShader->BindCBVBuffer(m_spBoneMatrixShaderConstantBuffer, m_vecSetupBonMatrix[_iMeshIndex].data(), GetTypeSize<BONEMATRIXPARAM>());
 	// 애니메이션 세팅
 	_spShader->BindCBVBuffer(m_spAnimShaderConstantBuffer, &m_stAnimParam, GetTypeSize<ANIMATIONPARAM>());
+	BindPivotMatrix(_spShader);
 	spMeshContainer->Render(_spShader, _spCommand);
 	return S_OK;
 }
@@ -279,7 +281,8 @@ void UAnimModel::LoadToData(const _wstring& _wstrPath)
 		wstrPath = wstrPath.substr(0, iFindIndex);
 
 		_wstring RootBoneNodeName{L""};
-		if (tDesc.Animes.size() > 0)
+		size_t AnimSize = tDesc.Animes.size();
+		if (AnimSize > 0)
 		{
 			RootBoneNodeName = tDesc.Animes[0].Channels[0].wstrBoneName;
 		}

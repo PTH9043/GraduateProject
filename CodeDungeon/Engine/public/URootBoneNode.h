@@ -25,6 +25,9 @@ public: /* Get Set */
 	const _float3& GetMoveRootBoneAngle() const { return m_vMoveRootBoneAngle; }
 public:
 	virtual void Free() override;
+	using UBoneNode::NativeConstruct;
+	HRESULT NativeConstruct(const _wstring& _wstrBoneName);
+
 	virtual void UpdateCombinedMatrix() override;
 	void OnRootBoneNode();
 	void OffRootBoneNode();

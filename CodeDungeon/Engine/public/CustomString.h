@@ -179,14 +179,11 @@ namespace Engine
 
         char& operator[](unsigned long long  index) { return STRING<TChar>::operator[](index); }
 
-        bool operator ==(const TString& _str) { return this->contains(_str.c_str()); }
-        bool operator !=(const TString& _str) { return false == this->contains(_str.c_str()); }
+        bool operator ==(const TChar* _str) { return this->compare(_str) == 0; }
+        bool operator !=(const TChar* _str) { return this->compare(_str) != 0; }
 
-        bool operator ==(const TChar* _str) { return this->contains(_str); }
-        bool operator !=(const TChar* _str) { return false == this->contains(_str); }
-
-        bool operator ==(const CUSSTRING& _str) { return this->contains(_str.c_str()); }
-        bool operator !=(const CUSSTRING& _str) { return false == this->contains(_str.c_str()); }
+        bool operator ==(const CUSSTRING& _str) { return this->compare(_str) == 0; }
+        bool operator !=(const CUSSTRING& _str) { return this->compare(_str) != 0; }
 
         template<class T> 
         static CUSSTRING to_string(T index) {

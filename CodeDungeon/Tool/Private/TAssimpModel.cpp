@@ -488,7 +488,7 @@ void TAssimpModel::LoadAnimation(const _wstring& _wstrPath)
 				ifRead.read((_char*)&Animation.stExtraData.dDuration, sizeof(_double));
 				ifRead.read((_char*)&Animation.stExtraData.dTickPerSeconds, sizeof(_double));
 				UMethod::ReadStringUnity(ifRead, Animation.wstrName);
-				_uint iChannelSize{ 0 };
+				_int iChannelSize{ 0 };
 				ifRead.read((_char*)&iChannelSize, sizeof(_int));
 				Animation.Channels.resize(iChannelSize);
 				for (auto& Channel : Animation.Channels)

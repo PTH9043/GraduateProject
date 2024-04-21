@@ -239,6 +239,8 @@ namespace Engine {
 		_wstring											wstrfileName{ L"" };
 		_wstring											wstrfilePath{ L"" };
 		_ushort											sindex{ 0 };
+
+		WKPTR<struct tagFileGroup>	wpFolder;
 	}FILEDATA;
 
 	typedef struct  tagFileGroup
@@ -550,8 +552,9 @@ namespace Engine {
 	public:
 		_bool							isActiveEvent;
 		_wstring						wstrEventTrigger;
+		_float							fAnimChangeTime;
 
-		ANIMEVENTDESC() : wstrEventTrigger{ L"" }, isActiveEvent{ false } { wstrEventTrigger.resize(MAX_BUFFER_LENGTH); }
+		ANIMEVENTDESC() : wstrEventTrigger{ L"" }, isActiveEvent{ false }, fAnimChangeTime{ 0 } { wstrEventTrigger.resize(MAX_BUFFER_LENGTH); }
 	};
 
 

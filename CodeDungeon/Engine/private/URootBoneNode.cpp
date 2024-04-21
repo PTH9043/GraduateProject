@@ -30,8 +30,16 @@ void URootBoneNode::Free()
 {
 }
 
+HRESULT URootBoneNode::NativeConstruct(const _wstring& _wstrBoneName)
+{
+	SetDepths(-1.f);
+	SetName(_wstrBoneName);
+	return S_OK;
+}
+
 void URootBoneNode::UpdateCombinedMatrix()
 {
+
 	m_RootBoneNodeFunc(this);
 }
 

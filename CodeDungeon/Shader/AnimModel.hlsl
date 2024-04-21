@@ -15,6 +15,11 @@ struct BONEMATRIX
 //    float3 PaddingValue;
 //};
 
+cbuffer ControlModelMatrix : register(b8)
+{
+    float4x4 g_PivotMatrix;
+};
+
 cbuffer ANIMATIONPARAM : register(b11)
 {
     bool g_isOutLineExist = false;

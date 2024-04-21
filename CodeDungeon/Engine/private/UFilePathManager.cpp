@@ -110,6 +110,7 @@ HRESULT UFilePathManager::LoadUpperFolder(const _wstring& _wstrFirstFolderName,
 			spFileData->wstrfileName = iter->path().filename();
 			spFileData->wstrfilePath = iter->path();
 			spFileData->sindex = sIndex;
+			spFileData->wpFolder = _spFileGroup;
 			_spFileGroup->AddFileData(spFileData->wstrfileName, spFileData);
 		}
 		else if (fs::is_directory(iter->status()))

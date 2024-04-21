@@ -57,11 +57,14 @@ public:
 	// 해당 PATH로 모델 로드
 	 HRESULT NativeConstruct(const _wstring& _wstrPath);
 	 // 해당 폴더와 파일 데이터로 로드
-	 HRESULT NativeConstruct(CSHPTRREF<FILEGROUP> _spFileGroup, CSHPTRREF<FILEDATA> _spFileData);
+	 HRESULT NativeConstruct(CSHPTRREF<FILEGROUP> _spFileGroup, CSHPTRREF<FILEDATA> _spFileData,
+		 const _float4x4& _PivotMatrix = _float4x4::Identity);
 	 // PATH를 입력하고 파일 이름을 입력하면 찾아서 온다. 
-	 HRESULT NativeConstruct(const PATHS& _vecPaths, const _wstring& _wstrFileName);
+	 HRESULT NativeConstruct(const PATHS& _vecPaths, const _wstring& _wstrFileName,
+		 const _float4x4& _PivotMatrix = _float4x4::Identity);
 	 // 모델의 폴더 이름, 파일 이름을 입력하면 찾아서 모델 로드
-	 HRESULT NativeConstruct(const _wstring& _wstrModelFolder, const _wstring& _wstrFileName);
+	 HRESULT NativeConstruct(const _wstring& _wstrModelFolder, const _wstring& _wstrFileName,
+		 const _float4x4& _PivotMatrix = _float4x4::Identity);
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;
 	// 모델에 텍스처를 바인드 하는 함수
 	 HRESULT BindTexture(const _uint _iMeshIndex,  const SRV_REGISTER _eRegister,
@@ -79,10 +82,16 @@ protected:
 	void LoadBoneData(REF_IN std::ifstream& _ifRead, REF_IN VECTOR<BONENODEDESC>& _vecBones);
 	void LoadMaterial(REF_IN std::ifstream& _ifRead, REF_IN UNORMAP<_uint, VECTOR<_wstring>>& _uomapMaterials, REF_IN MATERIALINFOS& _vecMaterialInfos);
 	void BringModelName(const _wstring& _wstrPath);
+
+	void BindPivotMatrix(CSHPTRREF<UShader> _spShader);
 protected: /* get set*/
 	void SetMeshContainers(const _uint _iMeshContainers) { this->m_iMeshContainerCnt = _iMeshContainers; }
 	void SetBoneNodesCnt(const _uint _iBoneNodesCnt) { this->m_iBoneNodeCnt = _iBoneNodesCnt; }
 	void SetMaterialsCnt(const _uint _iMaterialCnt) { this->m_iMaterialCnt = _iMaterialCnt; }
+
+	const _float4x4& GetPivotMatrix() const { return m_ControlModelMatrix.PivotMatrix; }
+private:
+	void CreateRootBoneToOrder(MODELDESC* _pDesc, _int _BoneOrder = 0);
 private:
 	// MeshContainer
 	MESHCONTAINERS									m_MeshContainer;
@@ -100,9 +109,8 @@ private:
 
 	TYPE															m_eType;
 	_wstring														m_wstrModelName;
-
-	//MODELDATAPARAM								m_ModelDataParam;
-	//SHPTR<UShaderConstantBuffer>		m_spModelDataConstantBuffer;
+	CONTROLMODELMATRIXPARAM						m_ControlModelMatrix;
+	SHPTR<UShaderConstantBuffer>		m_spControlModelShaderConstantBuffer;
 };
 
 END

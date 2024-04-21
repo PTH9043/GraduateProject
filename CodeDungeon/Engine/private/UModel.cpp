@@ -22,7 +22,8 @@ UModel::UModel(CSHPTRREF<UDevice> _spDevice, const TYPE& _eType) :
 	m_spFileGroup{ nullptr },
 	m_spFileData{ nullptr },
 	m_eType{ _eType },
-	m_wstrModelName{L""}
+	m_wstrModelName{L""}, 
+	m_spControlModelShaderConstantBuffer{nullptr}
 {
 }
 
@@ -37,7 +38,8 @@ UModel::UModel(const UModel& _rhs) :
 	m_spFileGroup{ _rhs.m_spFileGroup },
 	m_spFileData{ _rhs.m_spFileData },
 	m_eType{ _rhs.m_eType },
-	m_wstrModelName{ L"" }
+	m_wstrModelName{ L"" },
+	m_spControlModelShaderConstantBuffer{nullptr}
 {
 }
 
@@ -118,16 +120,19 @@ HRESULT UModel::NativeConstruct(const _wstring& _wstrPath)
 	return S_OK;
 }
 
-HRESULT UModel::NativeConstruct(CSHPTRREF<FILEGROUP> _spFileGroup, CSHPTRREF<FILEDATA> _spFileData)
+HRESULT UModel::NativeConstruct(CSHPTRREF<FILEGROUP> _spFileGroup, CSHPTRREF<FILEDATA> _spFileData,
+	const _float4x4& _PivotMatrix)
 {
 	RETURN_CHECK_FAILED(NativeConstruct(), E_FAIL);
 	RETURN_CHECK(nullptr == _spFileGroup || nullptr == _spFileData, E_FAIL);
 	m_spFileGroup = _spFileGroup; m_spFileData = _spFileData;
 	LoadToData(m_spFileData->wstrfilePath);
+	m_ControlModelMatrix.PivotMatrix = _PivotMatrix;
 	return S_OK;
 }
 
-HRESULT UModel::NativeConstruct(const PATHS& _vecPaths, const _wstring& _wstrFileName)
+HRESULT UModel::NativeConstruct(const PATHS& _vecPaths, const _wstring& _wstrFileName,
+	const _float4x4& _PivotMatrix)
 {
 	RETURN_CHECK_FAILED(NativeConstruct(), E_FAIL);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
@@ -136,10 +141,12 @@ HRESULT UModel::NativeConstruct(const PATHS& _vecPaths, const _wstring& _wstrFil
 	m_spFileData = m_spFileGroup->FindData(_wstrFileName);
 	RETURN_CHECK(nullptr == m_spFileData, E_FAIL);
 	LoadToData(m_spFileData->wstrfilePath);
+	m_ControlModelMatrix.PivotMatrix = _PivotMatrix;
 	return S_OK;
 }
 
-HRESULT UModel::NativeConstruct(const _wstring& _wstrModelFolder, const _wstring& _wstrFileName)
+HRESULT UModel::NativeConstruct(const _wstring& _wstrModelFolder, const _wstring& _wstrFileName,
+	const _float4x4& _PivotMatrix)
 {
 	RETURN_CHECK_FAILED(NativeConstruct(), E_FAIL);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
@@ -148,6 +155,7 @@ HRESULT UModel::NativeConstruct(const _wstring& _wstrModelFolder, const _wstring
 	m_spFileData = m_spFileGroup->FindData(_wstrFileName);
 	RETURN_CHECK(nullptr == m_spFileData, E_FAIL);
 	LoadToData(m_spFileData->wstrfilePath);
+	m_ControlModelMatrix.PivotMatrix = _PivotMatrix;
 	return S_OK;
 }
 
@@ -157,6 +165,9 @@ HRESULT UModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	// Create Model ConstantBuffer 
 	/*m_spModelDataConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::MODELDATA, 
 		GetTypeSize<MODELDATAPARAM>());*/
+
+	m_spControlModelShaderConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::CONTROLMODELMATRIXPARAM,
+		GetTypeSize<CONTROLMODELMATRIXPARAM>());
 
 	MESHCONTAINERS MeshContainers{};
 	BONENODES BoneNodes{};
@@ -214,9 +225,11 @@ HRESULT UModel::Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader, CS
 	RETURN_CHECK(GetMeshContainerCnt() <= _iMeshIndex, E_FAIL);
 	RETURN_CHECK(nullptr == GetMeshContainers()[_iMeshIndex], E_FAIL);
 	CSHPTRREF<UMeshContainer> spMeshContainer{ GetMeshContainers()[_iMeshIndex] };
+	BindPivotMatrix(_spShader);
 	spMeshContainer->Render(_spShader, _spCommand);
 	return S_OK;
 }
+
 HRESULT UModel::CreateBoneNode(void* _pData, const _wstring& _wstrBoneNodeName)
 {
 	MODELDESC* tDesc = static_cast<MODELDESC*>(_pData);
@@ -225,35 +238,54 @@ HRESULT UModel::CreateBoneNode(void* _pData, const _wstring& _wstrBoneNodeName)
 
 	if (true == _wstrBoneNodeName.empty())
 	{
-		_int Index{ 0 };
-		for (auto& iter : tDesc->BNodeDatas) {
-			SHPTR<UBoneNode> spBoneNode{ nullptr };
-			if (0 == Index++)
-			{
-				m_spRootBoneNode = CreateNative<URootBoneNode>(iter);
-				spBoneNode = m_spRootBoneNode;
-			}
-			else
-			{
-				spBoneNode = CreateNative<UBoneNode>(iter);
-			}
-			m_BoneNodeContainer.push_back(spBoneNode);
-		}
+		CreateRootBoneToOrder(tDesc);
 	}
 	else
 	{
-		for (auto& iter : tDesc->BNodeDatas) {
-			SHPTR<UBoneNode> spBoneNode{ nullptr };
-			if (iter.wstrName == _wstrBoneNodeName)
-			{
-				m_spRootBoneNode = CreateNative<URootBoneNode>(iter);
-				m_spRootBoneNode->OnRootBoneNode();
-				spBoneNode = m_spRootBoneNode;
-			}
-			else
-				spBoneNode = CreateNative<UBoneNode>(iter);
+		// 만약 애니메이션 뼈가 존재한다면
+		_bool isFind = tDesc->BNodeDatas.end()!= (std::find_if(tDesc->BNodeDatas.begin(), tDesc->BNodeDatas.end(), [&](const BONENODEDESC& _Desc)	{
+				return _wstrBoneNodeName == _Desc.wstrName;
+			}));
 
-			m_BoneNodeContainer.push_back(spBoneNode);
+		if (true == isFind)
+		{
+			for (auto& iter : tDesc->BNodeDatas) {
+				SHPTR<UBoneNode> spBoneNode{ nullptr };
+				if (iter.wstrName == _wstrBoneNodeName)
+				{
+					m_spRootBoneNode = CreateNative<URootBoneNode>(iter);
+					m_spRootBoneNode->OnRootBoneNode();
+					spBoneNode = m_spRootBoneNode;
+				}
+				else
+					spBoneNode = CreateNative<UBoneNode>(iter);
+
+				m_BoneNodeContainer.push_back(spBoneNode);
+			}
+		}
+		else
+		{
+			// 아예 하나 새로운 루트 본을 만든다.  
+			{
+				m_spRootBoneNode = CreateNative<URootBoneNode>(_wstrBoneNodeName);
+				m_BoneNodeContainer.push_back(m_spRootBoneNode);
+			}
+			_int Index{ 0 };
+			// 루트본에 대한 처리를 한다. 
+			for (auto& iter : tDesc->BNodeDatas) {
+				SHPTR<UBoneNode> spBoneNode{ nullptr };
+				if (0 == Index++)
+				{
+					// 맨 첫번째와 연결해줌으로써 루트본을 사용할 수 있도록 만든다. 
+					iter.wstrParentsName = _wstrBoneNodeName;
+					spBoneNode = CreateNative<UBoneNode>(iter);
+				}
+				else
+				{
+					spBoneNode = CreateNative<UBoneNode>(iter);
+				}
+				m_BoneNodeContainer.push_back(spBoneNode);
+			}
 		}
 	}
 
@@ -431,5 +463,28 @@ void UModel::LoadMaterial(REF_IN std::ifstream& _ifRead, REF_IN UNORMAP<_uint, V
 void UModel::BringModelName(const _wstring& _wstrPath)
 {
 	m_wstrModelName = _wstrPath.substr(_wstrPath.find_last_of(L"\\") + 1, _wstrPath.find_last_of(L"."));
+}
+
+void UModel::BindPivotMatrix(CSHPTRREF<UShader> _spShader)
+{
+	_spShader->BindCBVBuffer(m_spControlModelShaderConstantBuffer, &m_ControlModelMatrix, GetTypeSize<CONTROLMODELMATRIXPARAM>());
+}
+
+void UModel::CreateRootBoneToOrder(MODELDESC* _pDesc, _int _BoneOrder)
+{
+	_int Index{ 0 };
+	for (auto& iter : _pDesc->BNodeDatas) {
+		SHPTR<UBoneNode> spBoneNode{ nullptr };
+		if (_BoneOrder == Index++)
+		{
+			m_spRootBoneNode = CreateNative<URootBoneNode>(iter);
+			spBoneNode = m_spRootBoneNode;
+		}
+		else
+		{
+			spBoneNode = CreateNative<UBoneNode>(iter);
+		}
+		m_BoneNodeContainer.push_back(spBoneNode);
+	}
 }
 

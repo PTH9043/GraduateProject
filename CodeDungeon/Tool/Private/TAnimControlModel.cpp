@@ -90,6 +90,7 @@ void TAnimControlModel::SelectAnimation()
 	}
 	static _char InputAnim[MAX_BUFFER_LENGTH];
 	ImGui::SetNextItemWidth(-FLT_MIN);
+
 	if (true == ImGui::InputText("InputAnim", InputAnim, MAX_BUFFER_LENGTH))
 	{
 		m_FindAnimClips.clear();
@@ -101,6 +102,21 @@ void TAnimControlModel::SelectAnimation()
 			}
 		}
 	}
+	else
+	{
+		if (m_AnimationClips.empty())
+		{
+			if (!strcmp(InputAnim, ""))
+			{
+				for (auto& AnimClips : m_AnimationClips)
+				{
+					m_FindAnimClips.emplace(MakePair(AnimClips.first, AnimClips.second));
+				}
+			}
+		}
+	}
+
+
 	ImGui::SetNextItemWidth(-FLT_MIN);
 	if (ImGui::BeginListBox("Select AnimationControl", ImVec2(-FLT_MIN, 8 * ImGui::GetTextLineHeightWithSpacing())))
 	{
@@ -143,7 +159,7 @@ void TAnimControlModel::ModifyAnimation()
 			{
 				m_spModel->OnShowOriginAnimation();
 			}
-			ImGui::SliderFloat("TotalFastValue", &m_fTotalAnimFastvalue, 0, 100);
+			ImGui::InputFloat("TotalFastValue", &m_fTotalAnimFastvalue, 0.01f);
 			isClicked = ImGui::SliderFloat("DeltaTime", &m_fAnimTimeAcc, 0.f, AnimDuration);
 			// Input Trigger
 			{
@@ -211,17 +227,17 @@ void TAnimControlModel::ModifyAnimation()
 							static _string Start = "##S";
 							static _string End = "##E";
 							static _string Fast = "##F";
-							_string Index = _string::to_string(iIndex++);
+							_string Index =std::to_string(iIndex++);
 
 							ImGui::TableNextColumn();
 							ImGui::SetNextItemWidth(-FLT_MIN);
-							ImGui::DragFloat(Start + Index, &iter.fStartSpot, 0.01f, 0.f, AnimDuration);
+							ImGui::DragFloat((Start + Index).c_str(), &iter.fStartSpot, 0.01f, 0.f, AnimDuration);
 							ImGui::TableNextColumn();
 							ImGui::SetNextItemWidth(-FLT_MIN);
-							ImGui::DragFloat(End + Index, &iter.fEndSpot, 0.01f, 0.f, AnimDuration);
+							ImGui::DragFloat((End + Index).c_str(), &iter.fEndSpot, 0.01f, 0.f, AnimDuration);
 							ImGui::TableNextColumn();
 							ImGui::SetNextItemWidth(-FLT_MIN);
-							ImGui::DragFloat(Fast + Index, &iter.fFastValue, 0.01f, 0.f, AnimDuration);
+							ImGui::DragFloat((Fast + Index).c_str(), &iter.fFastValue, 0.01f, 0.f, AnimDuration);
 							ImGui::TableNextRow();
 						}
 						ImGui::EndTable();

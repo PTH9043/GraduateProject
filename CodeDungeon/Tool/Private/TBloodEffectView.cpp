@@ -265,7 +265,7 @@ void TBloodEffectView::MultipleParticleTexSetting()
 		TEXNAMES m_TextureNames = m_MultipleParticle[0]->GetTextureGroup()->GetTextureNames();
 		for (auto& Texture : m_TextureNames)
 		{
-			if (ImGui::Selectable(UMethod::ConvertWToS(Texture.first)))
+			if (ImGui::Selectable(UMethod::ConvertWToS(Texture.first).c_str()))
 			{
 				m_MultipleParticle[0]->SetTexture(Texture.second);
 			}
