@@ -104,7 +104,7 @@ void TAnimControlModel::SelectAnimation()
 	}
 	else
 	{
-		if (m_AnimationClips.empty())
+		if (m_FindAnimClips.empty())
 		{
 			if (!strcmp(InputAnim, ""))
 			{

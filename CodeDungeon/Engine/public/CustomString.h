@@ -179,11 +179,51 @@ namespace Engine
 
         char& operator[](unsigned long long  index) { return STRING<TChar>::operator[](index); }
 
-        bool operator ==(const TChar* _str) { return this->compare(_str) == 0; }
-        bool operator !=(const TChar* _str) { return this->compare(_str) != 0; }
+        bool operator ==(const TChar* _str)
+        {
+            if constexpr (std::is_same<TChar, char>())
+            {
+                return 0 == strcmp(_str, this->c_str());
+            }
+            else
+            {
+                return 0 == lstrcmp(_str, this->c_str());
+            }
+        }
+        bool operator !=(const TChar* _str) 
+        {
+            if constexpr (std::is_same<TChar, char>())
+            {
+                return 0 != strcmp(_str, this->c_str());
+            }
+            else
+            {
+                return 0 != lstrcmp(_str, this->c_str());
+            }
+        }
 
-        bool operator ==(const CUSSTRING& _str) { return this->compare(_str) == 0; }
-        bool operator !=(const CUSSTRING& _str) { return this->compare(_str) != 0; }
+        bool operator ==(const CUSSTRING& _str) 
+        {
+            if constexpr (std::is_same<TChar, char>())
+            {
+                return 0 == strcmp(_str.c_str(), this->c_str());
+            }
+            else
+            {
+                return 0 == lstrcmp(_str.c_str(), this->c_str());
+            }
+        }
+        bool operator !=(const CUSSTRING& _str) 
+        {
+            if constexpr (std::is_same<TChar, char>())
+            {
+                return 0 != strcmp(_str->c_str(), this->c_str());
+            }
+            else
+            {
+                return 0 != lstrcmp(_str->c_str(), this->c_str());
+            }
+        }
 
         template<class T> 
         static CUSSTRING to_string(T index) {

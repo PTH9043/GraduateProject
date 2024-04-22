@@ -47,13 +47,21 @@ UAnimSectionEvent::UAnimSectionEvent(const ANIMEVENTSECTIONDESC& _AnimEventDesc,
 _bool UAnimSectionEvent::EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc,
 	const _wstring& _wstrInputTrigger)
 {
-	if (m_AnimSectionDesc.IsAnimEventActive(_dTimeAcc))
+	if (m_AnimSectionDesc.IsAnimEventActive(_dTimeAcc) || true  == m_AnimSectionDesc.isAnimChangeActive)
 	{
-		if (!lstrcmp(m_AnimSectionDesc.wstrEventTrigger.c_str(), _wstrInputTrigger.c_str()) || !lstrcmp(m_AnimSectionDesc.wstrEventTrigger.c_str(), L""))
+		if ((!lstrcmp(m_AnimSectionDesc.wstrEventTrigger.c_str(), _wstrInputTrigger.c_str())
+			|| !lstrcmp(m_AnimSectionDesc.wstrEventTrigger.c_str(), L"")) 
+			// 현재 ChangeTime은 만족 안하면서 트리거는 활성화되었을 때
+			|| true == m_AnimSectionDesc.isAnimChangeActive)
 		{
 			if (m_AnimSectionDesc.fAnimChangeTime <= _dTimeAcc)
 			{
 				EventSituation(_pPawn, _pAnimModel, _dTimeDelta);
+				m_AnimSectionDesc.isAnimChangeActive = false;
+			}
+			else
+			{
+				m_AnimSectionDesc.isAnimChangeActive = true;
 			}
 		}
 		return true;
@@ -104,16 +112,23 @@ UAnimOccurEvent::UAnimOccurEvent(const ANIMOCURRESDESC& _AnimEventDesc, ANIMEVEN
 _bool UAnimOccurEvent::EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc,
 	const _wstring& _wstrInputTrigger)
 {
-	if (m_AnimOccurDesc.IsAnimOcurrs(_dTimeAcc))
+	if (m_AnimOccurDesc.IsAnimOcurrs(_dTimeAcc) || true == m_AnimOccurDesc.isAnimChangeActive)
 	{
 		if (false == m_AnimOccurDesc.isActiveEvent)
 		{
-			if (!lstrcmp(m_AnimOccurDesc.wstrEventTrigger.c_str(), _wstrInputTrigger.c_str()) || !lstrcmp(m_AnimOccurDesc.wstrEventTrigger.c_str(), L""))
+			if (!lstrcmp(m_AnimOccurDesc.wstrEventTrigger.c_str(), _wstrInputTrigger.c_str()) || !lstrcmp(m_AnimOccurDesc.wstrEventTrigger.c_str(), L"")
+				// 현재 ChangeTime은 만족 안하면서 트리거는 활성화되었을 때
+				|| true == m_AnimOccurDesc.isAnimChangeActive)
 			{
 				if (m_AnimOccurDesc.fAnimChangeTime <= _dTimeAcc)
 				{
 					EventSituation(_pPawn, _pAnimModel, _dTimeDelta);
 					m_AnimOccurDesc.isActiveEvent = true;
+					m_AnimOccurDesc.isAnimChangeActive = false;
+				}
+				else
+				{
+					m_AnimOccurDesc.isAnimChangeActive = true;
 				}
 			}
 		}
