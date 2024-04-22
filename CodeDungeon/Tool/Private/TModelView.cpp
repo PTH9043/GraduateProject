@@ -396,6 +396,7 @@ void TModelView::ClearCurrentModel()
 			GetGameInstance()->RemoveActor(showModel.second);
 			showModel.second.reset();
 			m_ShowModelsContainer.erase(showModel.first);
+			break;
 		}
 	}
 	m_spSelectedModel.reset();
@@ -410,6 +411,7 @@ void TModelView::ClearCurrentAnimModel()
 			GetGameInstance()->RemoveActor(showModel.second);
 			showModel.second.reset();
 			m_ShowAnimModelsContainer.erase(showModel.first);
+			break;
 		}
 	}
 	m_spSelectedModel.reset();
