@@ -16,10 +16,12 @@ UActor::UActor(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer,
 	m_isActive{ true },
 	m_isTickActive{ true },
 	m_isRenderActive{ true },
+	m_isShadowRenderActive{ false },
 	m_pAwakeTick{ &UActor::AwakeTickActive },
 	m_pTick{ &UActor::TickActive },
 	m_pLateTick{ &UActor::LateTickActive },
 	m_pRender{ &UActor::RenderActive },
+	m_pShadowRender{ &UActor::RenderShadowActive },
 	m_eBackingType{ _eBackingType },
 	m_eUseCollType{ _eCollType }
 {
@@ -32,10 +34,12 @@ UActor::UActor(const UActor& _rhs)
 	m_isActive{ true },
 	m_isTickActive{ true },
 	m_isRenderActive{ true },
+	m_isShadowRenderActive{ false },
 	m_pAwakeTick{ &UActor::AwakeTickActive },
 	m_pTick{ &UActor::TickActive },
 	m_pLateTick{ &UActor::LateTickActive },
 	m_pRender{ &UActor::RenderActive },
+	m_pShadowRender{ &UActor::RenderShadowActive },
 	m_Components{},
 	m_Resources{},
 	m_wpParentsActor{},
@@ -93,6 +97,24 @@ void UActor::SetRenderActive(const _bool _isActvie)
 	m_isRenderActive = _isActvie;
 }
 
+void UActor::SetShadowRenderActive(const _bool _isActvie)
+{
+	if (true == _isActvie)
+	{
+		m_pAwakeTick = &UActor::AwakeTickActive;
+		m_pTick = &UActor::TickActive;
+		m_pLateTick = &UActor::LateTickActive;
+		m_pShadowRender = &UActor::RenderShadowActive;
+	}
+	else
+	{
+		m_pAwakeTick = &UActor::AwakeTickNonActive;
+		m_pTick = &UActor::TickNonActive;
+		m_pLateTick = &UActor::LateTickNonActive;
+		m_pShadowRender = &UActor::RenderShadowNonActive;
+	}
+	m_isShadowRenderActive = _isActvie;
+}
 void UActor::SetParentsActor(CSHPTRREF<UActor> _spActor)
 {
 	RETURN_CHECK(nullptr == _spActor, ;);
@@ -147,6 +169,10 @@ void UActor::LateTickActive(const _double& _dTimeDelta)
 }
 
 HRESULT UActor::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
+{
+	return S_OK;
+}
+HRESULT UActor::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
 	return S_OK;
 }

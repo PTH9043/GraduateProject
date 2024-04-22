@@ -80,7 +80,10 @@ HRESULT UCamera::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDe
 {
 	return S_OK;
 }
-
+HRESULT UCamera::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
+{
+	return S_OK;
+}
 HRESULT UCamera::MakeProjMatrix(const CAMPROJ& _stCamProj)
 {
 	_float fWidth = static_cast<_float>(_stCamProj.fWidth);

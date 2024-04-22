@@ -53,6 +53,7 @@ HRESULT UFog::NativeConstructClone(const VOIDDATAS& _convecDatas)
 		m_stFogBuffer.fFogColor = fogColor;
 
 		AddShader(stParticleDesc.wstrFogShader);
+		AddShadowShader(PROTO_RES_SHADOWSHADER);
 
 		SetActive(false);
 	}
@@ -76,6 +77,7 @@ void UFog::TickActive(const _double& _dTimeDelta)
 void UFog::LateTickActive(const _double& _dTimeDelta)
 {
 	AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
+	AddShadowRenderGroup(RENDERID::RI_SHADOW);
 }
 
 HRESULT UFog::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
@@ -92,6 +94,18 @@ HRESULT UFog::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescr
 
 
 	m_spVIBufferCube->Render(GetShader(), _spCommand);
+	return S_OK;
+}
+
+HRESULT UFog::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
+{
+	__super::RenderShadowActive(_spCommand, _spTableDescriptor);
+
+	GetTransform()->BindTransformData(GetShadowShader());
+
+
+
+	m_spVIBufferCube->Render(GetShadowShader(), _spCommand);
 	return S_OK;
 }
 

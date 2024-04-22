@@ -8,7 +8,8 @@
 UPawn::UPawn(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType, const BACKINGTYPE _eBackingType) :
 	UActor(_spDevice, _wstrLayer, _eCloneType, _eBackingType, USECOLLISIONTYPE::ACTIVE),
 	m_spRenderer{ nullptr },
-	m_spShader{ nullptr }
+	m_spShader{ nullptr },
+	m_spShadowShader{ nullptr }
 #ifdef _USE_DEBUGGING
 	, m_isDebugRenderingType{ false }
 #endif 
@@ -18,7 +19,8 @@ UPawn::UPawn(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLO
 UPawn::UPawn(const UPawn& _rhs) :
 	UActor(_rhs),
 	m_spRenderer{ nullptr },
-	m_spShader{ nullptr }
+	m_spShader{ nullptr },
+	m_spShadowShader{ nullptr }
 #ifdef _USE_DEBUGGING
 	, m_isDebugRenderingType{ false }
 #endif 
@@ -29,7 +31,9 @@ CSHPTRREF<UShader> UPawn::GetShader() const {
 	return m_spShader;
 }
 
-
+CSHPTRREF<UShader> UPawn::GetShadowShader() const {
+	return m_spShadowShader;
+}
 void UPawn::Free()
 {
 }
@@ -78,7 +82,10 @@ void UPawn::AddRenderGroup(const RENDERID _iRenderID)
 {
 	m_spRenderer->AddRenderGroup(_iRenderID, GetShader(), ThisShared<UPawn>());
 }
-
+void UPawn::AddShadowRenderGroup(const RENDERID _iRenderID)
+{
+	m_spRenderer->AddRenderGroup(_iRenderID, GetShadowShader(), ThisShared<UPawn>());
+}
 void UPawn::TickActive(const _double& _dTimeDelta)
 {
 }
@@ -91,6 +98,13 @@ HRESULT UPawn::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDesc
 {
 	// Settings 
 	GetShader()->SetTableDescriptor(_spTableDescriptor);
+	return S_OK;
+}
+
+HRESULT UPawn::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
+{
+	// Settings 
+	GetShadowShader()->SetTableDescriptor(_spTableDescriptor);
 	return S_OK;
 }
 
@@ -118,7 +132,10 @@ void UPawn::AddShader(const _wstring& _wstrProtoTag, const _wstring& _wstrTag, c
 {
 	m_spShader = AddResource<UShader>(_wstrProtoTag, _wstrTag, _vecDatas);
 }
-
+void UPawn::AddShadowShader(const _wstring& _wstrProtoTag, const _wstring& _wstrTag, const VOIDDATAS& _vecDatas)
+{
+	m_spShadowShader = AddResource<UShader>(_wstrProtoTag, _wstrTag, _vecDatas);
+}
 #ifdef _USE_DEBUGGING
 void UPawn::AddDebugRenderGroup(const DEBUGRENDERID _iRenderID)
 {

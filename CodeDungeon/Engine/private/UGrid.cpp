@@ -75,6 +75,13 @@ HRESULT UGrid::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDesc
 	return S_OK;
 }
 
+HRESULT UGrid::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
+{
+	__super::RenderShadowActive(_spCommand, _spTableDescriptor);
+	
+	return S_OK;
+}
+
 void UGrid::Collision(CSHPTRREF<UPawn> _pEnemy)
 {
 

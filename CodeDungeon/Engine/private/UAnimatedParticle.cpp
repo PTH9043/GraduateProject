@@ -77,6 +77,11 @@ HRESULT UAnimatedParticle::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRRE
 	return __super::RenderActive(_spCommand, _spTableDescriptor);
 }
 
+HRESULT UAnimatedParticle::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
+{
+	return __super::RenderShadowActive(_spCommand, _spTableDescriptor);
+}
+
 void UAnimatedParticle::BindShaderBuffer()
 {
 	m_AnimParticleParam.mAnimateMatrix = m_mTextureAnimation.Transpose();

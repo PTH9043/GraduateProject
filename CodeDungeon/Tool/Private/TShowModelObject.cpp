@@ -51,6 +51,7 @@ HRESULT TShowModelObject::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	AddColliderInContainer(mainColliderTag, Collider);
 
 	AddShader(PROTO_RES_MODELSHADER, RES_SHADER);
+	AddShadowShader(PROTO_RES_SHADOWSHADER, RES_SHADER);
 	GetTransform()->SetScale(_float3(0.05f, 0.05f, 0.05f));
 	
 	return S_OK;
@@ -66,6 +67,7 @@ void TShowModelObject::LateTickActive(const _double& _dTimeDelta)
 	if (nullptr != m_spModel)
 	{
 		AddRenderGroup(RI_NONALPHA_MIDDLE);
+		AddShadowRenderGroup(RI_SHADOW);
 	}
 }
 
@@ -111,7 +113,23 @@ HRESULT TShowModelObject::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF
 	}
 	return S_OK;
 }
+HRESULT TShowModelObject::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
+{
+	if (nullptr != m_spModel)
+	{
+		__super::RenderShadowActive(_spCommand, _spTableDescriptor);
 
+		for (_uint i = 0; i < m_spModel->GetMeshContainerCnt(); ++i)
+		{
+			// Bind Transform 
+			GetTransform()->BindTransformData(GetShadowShader());
+
+			// Render
+			m_spModel->Render(i, GetShadowShader(), _spCommand);
+		}
+	}
+	return S_OK;
+}
 void TShowModelObject::Collision(CSHPTRREF<UPawn> _pEnemy)
 {
 

@@ -314,6 +314,26 @@ HRESULT TAnimControlModel::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRRE
 	return S_OK;
 }
 
+HRESULT TAnimControlModel::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
+{
+	//if (nullptr != m_spModel)
+	//{
+	//	__super::RenderShadowActive(_spCommand, _spTableDescriptor);
+
+	//	for (_uint i = 0; i < m_spModel->GetMeshContainerCnt(); ++i)
+	//	{
+	//		// Bind Transform 
+	//		GetTransform()->BindTransformData(GetShader());
+
+	//		m_spModel->BindTexture(i, SRV_REGISTER::T0, TEXTYPE::TextureType_DIFFUSE, GetShader());
+	//		m_spModel->BindTexture(i, SRV_REGISTER::T1, TEXTYPE::TextureType_NORMALS, GetShader());
+	//		// Render
+	//		m_spModel->Render(i, GetShader(), _spCommand);
+	//	}
+	//}
+	return S_OK;
+}
+
 void TAnimControlModel::Collision(CSHPTRREF<UPawn> _pEnemy)
 {
 }

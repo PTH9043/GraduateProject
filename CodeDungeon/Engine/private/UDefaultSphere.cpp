@@ -54,6 +54,12 @@ HRESULT UDefaultSphere::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<U
 	return S_OK;
 }
 
+HRESULT UDefaultSphere::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
+{
+	__super::RenderShadowActive(_spCommand, _spTableDescriptor);
+	return S_OK;
+}
+
 void UDefaultSphere::Collision(CSHPTRREF<UPawn> _pEnemy)
 {
 }

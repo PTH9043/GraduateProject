@@ -15,7 +15,7 @@
 
 USceneManager::USceneManager() :
 	m_c_iLightParamSize{ (_uint)sizeof(LIGHTPARAM) },
-	m_iLightCamIndex{ 0 },
+	m_iLightCamIndex{ 2 },
 	m_stLightParam{},
 	m_spLightGlobalBuffer{ nullptr },
 	m_spCurScene{ nullptr }

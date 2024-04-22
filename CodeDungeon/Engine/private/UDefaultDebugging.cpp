@@ -89,7 +89,13 @@ HRESULT UDefaultDebugging::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRRE
 	m_spVIBuffer->Render(GetShader(), _spCommand);
 	return S_OK;
 }
-
+HRESULT UDefaultDebugging::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
+{
+	// Settings 
+	__super::RenderShadowActive(_spCommand, _spTableDescriptor);
+	
+	return S_OK;
+}
 void UDefaultDebugging::Collision(CSHPTRREF<UPawn> _pEnemy)
 {
 }

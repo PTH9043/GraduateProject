@@ -1099,7 +1099,7 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 			CreateGraphicsShader(PROTO_RES_SHADOWSHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"Shadow", VTXSHADOWINPUT_DECLARATION::Element, VTXSHADOWINPUT_DECLARATION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN },
-					RENDERFORMATS{ DXGI_FORMAT_D32_FLOAT
+					RENDERFORMATS{ DXGI_FORMAT_R32_FLOAT
 					}));
 
 			CreateGraphicsShader(PROTO_RES_NOCULL_ANIMMODELSHADER, CLONETYPE::CLONE_STATIC,
@@ -1358,7 +1358,7 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 		{
 			std::vector<RTDESC> vecRts{
 				RTDESC{ RTOBJID::SHADOW_DEPTH_FOURBYFOUR, DXGI_FORMAT::DXGI_FORMAT_R32_FLOAT,
-					GraphicDesc->iWinCX*4, GraphicDesc->iWinCY*4, { 1.f,1.f, 1.f, 1.f } } 
+					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f,0.f, 0.f, 0.f } } 
 			};
 			// Add RenderTargetGroup
 			m_spRenderTargetManager->AddRenderTargetGroupWithNewDepthStencilBuffer(RTGROUPID::SHADOW_MAP, vecRts);
@@ -1463,8 +1463,8 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_DIFFUSE_DEFFERED,
 		_float2(100.f, 320.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 	
-	/*m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::SHADOW_MAP, RTOBJID::SHADOW_DEPTH_FOURBYFOUR,
-		_float2(100.f, 430.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());*/
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::SHADOW_MAP, RTOBJID::SHADOW_DEPTH_FOURBYFOUR,
+		_float2(100.f, 430.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 
 
 
