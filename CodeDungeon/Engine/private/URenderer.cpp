@@ -84,7 +84,7 @@ HRESULT URenderer::NativeConstruct()
             tDesc.stCamProj = UCamera::CAMPROJ(UCamera::PROJECTION_TYPE::PERSPECTIVE, _float3(0.f, 0.f, 0.f),
                 _float3(0.f, 0.f, 0.f),
                 DirectX::XMConvertToRadians(60.0f), spGameInstance->GetD3DViewport().Width,
-                spGameInstance->GetD3DViewport().Height,10.0f,1000.f,1.f);
+                spGameInstance->GetD3DViewport().Height,10.0f,3000.f,1.f);
             tDesc.stCamValue = UCamera::CAMVALUE(5.f, DirectX::XMConvertToRadians(90.f));
             tDesc.eCamType = CAMERATYPE::SHADOWLIGHT;
 
@@ -112,6 +112,10 @@ HRESULT URenderer::NativeConstruct()
             m_spDefferedCamera = static_pointer_cast<UDefferedCamera>(spGameInstance->CloneActorAdd(
                 PROTO_ACTOR_DEFFEREDCAMERA, vecDatas));
         }
+
+        m_spShadowCamera->GetTransform()->SetPos(_float3(0, 2000, 0));
+        m_spShadowCamera->GetTransform()->LookAt(_float3(0, 0, 0));
+
         m_stFinalRenderTransformParam.iCamIndex = m_spDefferedCamera->GetCamID();
             
         // 이미 만들어진 Shader ConstnatBuffer를 가져옴
