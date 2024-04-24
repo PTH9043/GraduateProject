@@ -113,7 +113,7 @@ HRESULT URenderer::NativeConstruct()
                 PROTO_ACTOR_DEFFEREDCAMERA, vecDatas));
         }
 
-        m_spShadowCamera->GetTransform()->SetPos(_float3(0, 2000, 0));
+        m_spShadowCamera->GetTransform()->SetPos(_float3(0, 500, 0));
         m_spShadowCamera->GetTransform()->LookAt(_float3(0, 0, 0));
 
         m_stFinalRenderTransformParam.iCamIndex = m_spDefferedCamera->GetCamID();

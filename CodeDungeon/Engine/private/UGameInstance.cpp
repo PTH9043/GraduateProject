@@ -1358,7 +1358,7 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 		{
 			std::vector<RTDESC> vecRts{
 				RTDESC{ RTOBJID::SHADOW_DEPTH_FOURBYFOUR, DXGI_FORMAT::DXGI_FORMAT_R32_FLOAT,
-					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f,0.f, 0.f, 0.f } } 
+					GraphicDesc->iWinCX, GraphicDesc->iWinCY, {0.f,0.f, 0.f, 0.f}}
 			};
 			// Add RenderTargetGroup
 			m_spRenderTargetManager->AddRenderTargetGroupWithNewDepthStencilBuffer(RTGROUPID::SHADOW_MAP, vecRts);
