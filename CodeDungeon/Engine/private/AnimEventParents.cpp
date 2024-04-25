@@ -1,6 +1,8 @@
 #include "EngineDefine.h"
 #include "AnimEventParents.h"
 #include "UMethod.h"
+#include "UAnimModel.h"
+#include "UAnimation.h"
 
 UAnimEvent::UAnimEvent(ANIMEVENTTYPE _AnimEventType, ANIMEVENTCATEGORY _AnimEventCategory) :
 	m_AnimEventType{ _AnimEventType },
@@ -54,14 +56,25 @@ _bool UAnimSectionEvent::EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, cons
 			// 현재 ChangeTime은 만족 안하면서 트리거는 활성화되었을 때
 			|| true == m_AnimSectionDesc.isAnimChangeActive)
 		{
-			if (m_AnimSectionDesc.fAnimChangeTime <= _dTimeAcc)
+			if (true == m_AnimSectionDesc.isEnableLastLerp)
 			{
-				EventSituation(_pPawn, _pAnimModel, _dTimeDelta);
-				m_AnimSectionDesc.isAnimChangeActive = false;
+				// 애니메이션이 마지막일 때
+				if (_pAnimModel->GetCurrentAnimation()->IsFinishAnim())
+				{
+					EventSituation(_pPawn, _pAnimModel, _dTimeDelta);
+				}
 			}
 			else
 			{
-				m_AnimSectionDesc.isAnimChangeActive = true;
+				if (m_AnimSectionDesc.fAnimChangeTime <= _dTimeAcc)
+				{
+					EventSituation(_pPawn, _pAnimModel, _dTimeDelta);
+					m_AnimSectionDesc.isAnimChangeActive = false;
+				}
+				else
+				{
+					m_AnimSectionDesc.isAnimChangeActive = true;
+				}
 			}
 		}
 		return true;
@@ -120,15 +133,29 @@ _bool UAnimOccurEvent::EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const 
 				// 현재 ChangeTime은 만족 안하면서 트리거는 활성화되었을 때
 				|| true == m_AnimOccurDesc.isAnimChangeActive)
 			{
-				if (m_AnimOccurDesc.fAnimChangeTime <= _dTimeAcc)
+				// Enable Lerp가 되면 맨 마지막 얘와 다음 애니메이션 첫 번째 노드와 이음 
+				if (true == m_AnimOccurDesc.isEnableLastLerp)
 				{
-					EventSituation(_pPawn, _pAnimModel, _dTimeDelta);
-					m_AnimOccurDesc.isActiveEvent = true;
-					m_AnimOccurDesc.isAnimChangeActive = false;
+					// 애니메이션이 마지막일 때
+					if (_pAnimModel->GetCurrentAnimation()->IsFinishAnim())
+					{
+						EventSituation(_pPawn, _pAnimModel, _dTimeDelta);
+						m_AnimOccurDesc.isActiveEvent = true;
+						m_AnimOccurDesc.isAnimChangeActive = false;
+					}
 				}
 				else
 				{
-					m_AnimOccurDesc.isAnimChangeActive = true;
+					if (m_AnimOccurDesc.fAnimChangeTime <= _dTimeAcc)
+					{
+						EventSituation(_pPawn, _pAnimModel, _dTimeDelta);
+						m_AnimOccurDesc.isActiveEvent = true;
+						m_AnimOccurDesc.isAnimChangeActive = false;
+					}
+					else
+					{
+						m_AnimOccurDesc.isAnimChangeActive = true;
+					}
 				}
 			}
 		}

@@ -95,6 +95,8 @@ HRESULT UCamera::MakeProjMatrix(const CAMPROJ& _stCamProj)
 			_stCamProj.fFar);
 		break;
 	}
+
+
 	return S_OK;
 }
 

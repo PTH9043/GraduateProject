@@ -90,7 +90,7 @@ HRESULT UScreenRenderObj::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	spGameInstance->ChangeRenderCamera(m_iRegisterCamID);	
-
+	// Shad
 	GetRenderer()->RenderOtherCamera();
 
 	m_spScreenRenderTargetGroup->WaitResourceToTarget(_spCommand);

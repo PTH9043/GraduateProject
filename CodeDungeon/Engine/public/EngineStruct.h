@@ -559,9 +559,11 @@ namespace Engine {
 		_bool							isActiveEvent;
 		_wstring						wstrEventTrigger;
 		_float							fAnimChangeTime;
+		_bool							isEnableLastLerp;
 		_bool							isAnimChangeActive;
 
-		ANIMEVENTDESC() : wstrEventTrigger{ L"" }, isActiveEvent{ false }, fAnimChangeTime{ 0 }, isAnimChangeActive{false}
+		ANIMEVENTDESC() : wstrEventTrigger{ L"" }, isActiveEvent{ false }, fAnimChangeTime{ 0 }, isAnimChangeActive{false},
+			isEnableLastLerp{false}
 		{ wstrEventTrigger.resize(MAX_BUFFER_LENGTH); }
 	};
 
