@@ -16,6 +16,7 @@ public:
 public:
 	//	CSHPTRREF<URenderer> GetRenderer() const;
 		CSHPTRREF<UShader> GetShader() const;
+		CSHPTRREF<UShader> GetShadowShader() const;
 
 		const 	VECTOR<_uint>& GetRenderingDatas() const { return m_vecRenderingDatas; }
 	#ifdef _USE_DEBUGGING
@@ -31,6 +32,7 @@ public:
 		bool IsHit(CSHPTRREF<UPawn> _spEnemy);
 
 		void AddRenderGroup(const RENDERID _iRenderID);
+		void AddShadowRenderGroup(const RENDERID _iRenderID);
 protected: /* get set*/
 	// Get Renderer
 	CSHPTRREF<URenderer> GetRenderer() const { return m_spRenderer; }
@@ -40,6 +42,7 @@ protected:
 		virtual void TickActive(const _double& _dTimeDelta) override PURE;
 		virtual void LateTickActive(const _double& _dTimeDelta) override PURE;
 		virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override PURE;
+		virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override PURE;
 		// Damaged
 		virtual void Collision(CSHPTRREF<UPawn> _pEnemy) PURE;
 		// Add Collider
@@ -47,6 +50,7 @@ protected:
 		void AddColliderInContainer(const _wstring& _wstrTag, CSHPTRREF<UCollider> _spCollider);
 		// Add Shader
 		void AddShader(const _wstring& _wstrProtoTag, const _wstring& _wstrTag = RES_SHADER, const VOIDDATAS& _vecDatas = VOIDDATAS{});
+		void AddShadowShader(const _wstring& _wstrProtoTag, const _wstring& _wstrTag = RES_SHADER, const VOIDDATAS& _vecDatas = VOIDDATAS{});
 	#ifdef _USE_DEBUGGING
 		void AddDebugRenderGroup(const DEBUGRENDERID _iRenderID);
 	#endif
@@ -57,6 +61,7 @@ protected:
 	private:
 		SHPTR<URenderer>		m_spRenderer;
 		SHPTR<UShader>			m_spShader;
+		SHPTR<UShader>			m_spShadowShader;
 
 		COLLIDERCONTAINER		m_ColliderContainer;
 	#ifdef _USE_DEBUGGING

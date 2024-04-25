@@ -8,9 +8,11 @@ class UComponent;
 class UPipeLine;
 class USceneManager;
 class UVIBufferRect;
+class UVIBufferCube;
 class URenderTargetManager;
 class URenderHandler;
 class UDefferedCamera;
+class UShadowCamera;
 class UShaderConstantBuffer;
 class UGraphicDevice;
 class UGlobalConstantBuffer;
@@ -66,7 +68,7 @@ private:
 	// Priority
 	void RenderPriority();
 	// Shadow
-	void	RenderShadowLight();
+	void	RenderShadowDepth();
 	// NonAlpha
 	void RenderNonAlphaBlend();
 	// Render Lights
@@ -93,6 +95,7 @@ private:
 	SHPTR<UShader> FindShader(const _wstring& _wstrProto);
 	// Draw Just Object
 	void RenderObject(const _wstring& _wstrShaderName, PAWNLIST& _PawnList);
+	void RenderShadowObject(const _wstring& _wstrShaderName, PAWNLIST& _PawnList);
 	
 
 	SHPTR<UShader> FrameReadyDrawFinalRenderTarget(const _wstring& _wstrShaderName, const RTGROUPID _eGroupID);
@@ -107,6 +110,7 @@ private:
 	TRANSFORMPARAM																	 m_stFinalRenderTransformParam;
 	SHPTR<UShaderConstantBuffer>											m_spTransformConstantBuffer;
 	SHPTR<UDefferedCamera>														m_spDefferedCamera;
+	SHPTR<UShadowCamera>														m_spShadowCamera;
 	// Actives 																							 
 	ARRAY<DRAWINGRENDERCONTAINER, RI_END>					m_arrActiveDrawRenderList;
 	//Shader Container 																		   

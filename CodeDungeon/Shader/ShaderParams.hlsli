@@ -76,8 +76,8 @@ Texture2D g_Texture7 : register(t7);
 Texture2D g_Texture8 : register(t8);
 TextureCube g_Texture9 : register(t9);
 
-int MAIN_CAM_ID = 0;
-int DEFFERED_CAM_ID = 1;
-int SHADOWLIGHT_CAM_ID = 2;
+const int MAIN_CAM_ID = 0;
+const int DEFFERED_CAM_ID = 1;
+const int SHADOWLIGHT_CAM_ID = 2;
  
 #endif // _SHADERPARAM_HLSLI_

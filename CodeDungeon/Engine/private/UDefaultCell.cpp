@@ -74,6 +74,13 @@ HRESULT UDefaultCell::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTa
 	m_spVIBuffer->Render(GetShader(), _spCommand);
 	return S_OK;
 }
+HRESULT UDefaultCell::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
+{
+	// Settings 
+	__super::RenderShadowActive(_spCommand, _spTableDescriptor);
+	
+	return S_OK;
+}
 
 void UDefaultCell::Collision(CSHPTRREF<UPawn> _pEnemy)
 {

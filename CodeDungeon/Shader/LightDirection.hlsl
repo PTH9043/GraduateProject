@@ -55,8 +55,8 @@ PS_OUT PS_Main(PS_In Input)
     float4 vViewPosition = mul(vPosition, g_ViewProjInfoArr[g_CamID].mViewMatrix);
     float4 vViewNormal = mul(vNormal, g_ViewProjInfoArr[g_CamID].mViewMatrix);
     
-    if (vViewPosition.z <= 0.f)
-        clip(-1);
+    //if (vViewPosition.z <= 0.f)
+    //    clip(-1);
     LIGHTCOLOR tLightColor = (LIGHTCOLOR) 0.f;
 
     // 태현 추가
@@ -72,6 +72,35 @@ PS_OUT PS_Main(PS_In Input)
        
         tLightColor = LightingInWorld(vPosition.xyz, vNormal.xyz);
     }
+    
+    if (length(tLightColor.vDiffuse) != 0)
+    {
+       
+
+       
+        float4 shadowViewPos = mul(vPosition, g_ViewProjInfoArr[2].mViewMatrix);
+        float4 shadowClipPos = mul(shadowViewPos, g_ViewProjInfoArr[2].mProjMatrix);
+        float depth = shadowClipPos.z / shadowClipPos.w;
+
+        // x [-1 ~ 1] -> u [0 ~ 1]
+        // y [1 ~ -1] -> v [0 ~ 1]
+        float2 uv = shadowClipPos.xy / shadowClipPos.w;
+        uv.y = -uv.y;
+        uv = uv * 0.5 + 0.5;
+
+        if (0 < uv.x && uv.x < 1 && 0 < uv.y && uv.y < 1)
+        {
+            float shadowDepth = g_Texture3.Sample(g_Sampler_Normal, uv).x;
+            if (shadowDepth > 0 && depth > shadowDepth + 0.00001f)
+            {
+                tLightColor.vDiffuse *= 0.5f;
+                tLightColor.vSpecular = (float4) 0.f;
+                tLightColor.vAmbient = (float4) 0.f;
+            }
+        }
+    }
+    
+    
     Out.vAmbient = tLightColor.vAmbient;
     Out.vShade = tLightColor.vDiffuse;
     Out.vSpecular = tLightColor.vSpecular;

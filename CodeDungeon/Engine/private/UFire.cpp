@@ -117,7 +117,12 @@ HRESULT UFire::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDesc
 	m_spVIBufferRect->Render(GetShader(), _spCommand);
 	return S_OK;
 }
+HRESULT UFire::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
+{
+	__super::RenderShadowActive(_spCommand, _spTableDescriptor);
 
+	return S_OK;
+}
 void UFire::BindShaderBuffer()
 {
 	GetShader()->BindCBVBuffer(m_spShaderFireNoiseBuffer, &m_stFireNoiseBuffer, sizeof(FIRENOISEBUFFER));

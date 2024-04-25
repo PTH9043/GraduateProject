@@ -76,6 +76,13 @@ HRESULT TTestObject::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTab
 	return S_OK;
 }
 
+HRESULT TTestObject::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
+{
+	__super::RenderShadowActive(_spCommand, _spTableDescriptor);
+
+	return S_OK;
+}
+
 void TTestObject::Collision(CSHPTRREF<UPawn> _pEnemy)
 {
 

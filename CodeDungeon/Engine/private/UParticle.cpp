@@ -93,6 +93,12 @@ HRESULT UParticle::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTable
 	m_spVIBufferPoint->Render(GetShader(), _spCommand, m_spParticleSystem->GetMaxParticleCnt());
 	return S_OK;
 }
+HRESULT UParticle::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
+{
+	__super::RenderShadowActive(_spCommand, _spTableDescriptor);
+	return S_OK;
+}
+
 
 void UParticle::BindShaderBuffer()
 {

@@ -12,6 +12,7 @@
 #include "URenderTargetGroup.h"
 #include "UTransform.h"
 #include "UDefferedCamera.h"
+#include "UShadowCamera.h"
 #include "URenderTargetManager.h"
 #include "UGlobalConstantBuffer.h"
 #include "UGpuCommand.h"
@@ -28,6 +29,7 @@ URenderer::URenderer(CSHPTRREF <UDevice> _spDevice, CSHPTRREF<UCommand> _spComma
     m_spTransformConstantBuffer{ nullptr },
     m_fGrobalDeltaTime{0},
     m_spDefferedCamera{ nullptr },
+    m_spShadowCamera{ nullptr },
     m_stFinalRenderTransformParam{},
     m_spGraphicDevice{ _spGraphicDevice },
     m_spPipeLine{ _spPipeLine }, m_spSceneManager{ _spSceneManager },
@@ -77,6 +79,24 @@ HRESULT URenderer::NativeConstruct()
         m_stFinalRenderTransformParam.mWorldMatrix = m_stFinalRenderTransformParam.mWorldMatrix.Transpose();
         {
 
+            // Create Shadow Camera (깊이 추출용 카메라)
+            UCamera::CAMDESC tDesc;
+            tDesc.stCamProj = UCamera::CAMPROJ(UCamera::PROJECTION_TYPE::PERSPECTIVE, _float3(0.f, 0.f, 0.f),
+                _float3(0.f, 0.f, 0.f),
+                DirectX::XMConvertToRadians(60.0f), spGameInstance->GetD3DViewport().Width,
+                spGameInstance->GetD3DViewport().Height,10.0f,3000.f,1.f);
+            tDesc.stCamValue = UCamera::CAMVALUE(5.f, DirectX::XMConvertToRadians(90.f));
+            tDesc.eCamType = CAMERATYPE::SHADOWLIGHT;
+
+            VOIDDATAS vecDatas;
+            vecDatas.push_back(&tDesc);
+
+            m_spShadowCamera = static_pointer_cast<UShadowCamera>(spGameInstance->CloneActorAdd(
+                PROTO_ACTOR_SHADOWCAMERA, vecDatas));
+     
+        }
+        {
+
             // Create Deffered Camera (디퍼드용 카메라)
             UCamera::CAMDESC tDesc;
             tDesc.stCamProj = UCamera::CAMPROJ(UCamera::PROJECTION_TYPE::ORTHOGRAPHIC, _float3(0.f, 0.f, 0.f),
@@ -92,6 +112,10 @@ HRESULT URenderer::NativeConstruct()
             m_spDefferedCamera = static_pointer_cast<UDefferedCamera>(spGameInstance->CloneActorAdd(
                 PROTO_ACTOR_DEFFEREDCAMERA, vecDatas));
         }
+
+        m_spShadowCamera->GetTransform()->SetPos(_float3(0, 500, 0));
+        m_spShadowCamera->GetTransform()->LookAt(_float3(0, 0, 0));
+
         m_stFinalRenderTransformParam.iCamIndex = m_spDefferedCamera->GetCamID();
             
         // 이미 만들어진 Shader ConstnatBuffer를 가져옴
@@ -166,7 +190,7 @@ HRESULT URenderer::Render()
     // Render 
   //  RenderRTs();
     RenderPriority();
-    RenderShadowLight();
+    RenderShadowDepth();
     RenderNonAlphaBlend();
     RenderLights();
     RenderNonLight();
@@ -206,6 +230,7 @@ void URenderer::ClearAllData()
     m_ShaderObjects.clear();
     m_spTransformConstantBuffer.reset();
     m_spDefferedCamera.reset();
+    m_spShadowCamera.reset();
 
     m_spGraphicDevice.reset();
     m_spPipeLine.reset();
@@ -263,12 +288,22 @@ void URenderer::RenderRTs()
 
 void URenderer::RenderPriority()
 {
-
+   
 }
 
-void URenderer::RenderShadowLight()
+void URenderer::RenderShadowDepth()
 {
-
+    SHPTR<URenderTargetGroup> spRenderTargetGroup{ m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::SHADOW_MAP) };
+    {
+        spRenderTargetGroup->WaitResourceToTarget(m_spCastingCommand);
+        spRenderTargetGroup->ClearRenderTargetView(m_spCastingCommand);
+        spRenderTargetGroup->OmSetRenderTargets(m_spCastingCommand);
+    }
+    for (auto& iter : m_arrActiveDrawRenderList[RENDERID::RI_SHADOW])
+    {
+        RenderShadowObject(iter.first, iter.second);
+    }
+    spRenderTargetGroup->WaitTargetToResource(m_spCastingCommand);
 }
 
 void URenderer::RenderNonAlphaBlend()
@@ -451,6 +486,18 @@ void URenderer::RenderObject(const _wstring& _wstrShaderName, PAWNLIST& _PawnLis
     for (auto& iter : _PawnList)
     {
         iter->Render(m_spCastingCommand, m_spGraphicDevice->GetTableDescriptor());
+    }
+}
+
+void URenderer::RenderShadowObject(const _wstring& _wstrShaderName, PAWNLIST& _PawnList)
+{
+    SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+    // Pipelinestate setting
+    spGameInstance->SettingPipeLineState(_wstrShaderName, m_spCastingCommand);
+    // Shadr 필요한 Pawn끼리 list 쭉 그려
+    for (auto& iter : _PawnList)
+    {
+        iter->RenderShadow(m_spCastingCommand, m_spGraphicDevice->GetTableDescriptor());
     }
 }
 

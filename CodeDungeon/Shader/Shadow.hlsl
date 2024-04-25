@@ -2,6 +2,7 @@
 #define _SHADOW_HLSL_
 
 #include "ShaderGrobalFunc.hlsli"
+#include "LightShaderParam.hlsli"
 
 struct VS_IN
 {
@@ -21,15 +22,32 @@ VS_OUT VS_Main(VS_IN In)
     VS_OUT Out = (VS_OUT) 0.f;
 
   
-    Out.vPosition = Compute_FinalMatrix(Out.vPosition);
-    Out.vclipPos = Out.vPosition;
+    float4 Position = float4(In.vPosition, 1.f);
+
+    Position = mul(Position, g_WorldMatrix);
+    Position = mul(Position, g_ViewProjInfoArr[2].mViewMatrix);
+    Position = mul(Position, g_ViewProjInfoArr[2].mProjMatrix);
+    //Position = mul(Position, g_tLightParam.mViewMatrix);
+    //Position = mul(Position, g_tLightParam.mProjMatrix);
+   
+    Out.vPosition = Position;
+  
 
     return Out;
 }
 
-float4 PS_Main(VS_OUT In) : SV_Target
+struct PS_OUT
 {
-    return float4(In.vclipPos.z / In.vclipPos.w, 0.f, 0.f, 0.f);
+    float4 vColor : SV_TARGET0;
+};
+
+
+PS_OUT PS_Main(VS_OUT In) 
+{
+    PS_OUT Out = (PS_OUT) 0;
+    Out.vColor = float4(In.vPosition.z, 0, 0, 0);
+    return Out;
+
 }
 
 

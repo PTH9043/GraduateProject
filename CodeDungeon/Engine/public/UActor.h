@@ -19,6 +19,7 @@ public:
 	void SetActive(const _bool  _isActvie);
 	void SetTickActive(const _bool _isActvie);
 	void SetRenderActive(const _bool _isActvie);
+	void SetShadowRenderActive(const _bool _isActvie);
 	void SetParentsActor(CSHPTRREF<UActor> _spActor);
 	const _bool IsActive() const { return m_isActive; }
 	const _bool IsTickActive() const { return m_isTickActive; }
@@ -43,6 +44,7 @@ public:
 	void Tick(const _double& _dTimeDelta) { (this->*m_pTick)(_dTimeDelta); }
 	void LateTick(const _double& _dTimeDelta) { (this->*m_pLateTick)(_dTimeDelta); }
 	HRESULT Render(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) { return (this->*m_pRender)(_spCommand, _spTableDescriptor); }
+	HRESULT RenderShadow(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) { return (this->*m_pShadowRender)(_spCommand, _spTableDescriptor); }
 
 
 protected:
@@ -50,6 +52,7 @@ protected:
 	void TickNonActive(const _double& _dTimeDelta) {}
 	void LateTickNonActive(const _double& _dTimeDelta) {}
 	HRESULT RenderNonActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) { return S_OK; }
+	HRESULT RenderShadowNonActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) { return S_OK; }
 
 	template<class T>
 	SHPTR<T> AddResource(const _wstring& _wstrProtoTag, const _wstring& _wstrTag,
@@ -72,6 +75,7 @@ protected:
 	virtual void TickActive(const _double& _dTimeDelta) PURE;
 	virtual void LateTickActive(const _double& _dTimeDelta) PURE;
 	virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) PURE;
+	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) PURE;
 
 private:
 	HRESULT ReadyTransform();
@@ -99,11 +103,13 @@ private:
 	_bool														m_isActive;
 	_bool														m_isTickActive;
 	_bool														m_isRenderActive;
+	_bool														m_isShadowRenderActive;
 	// Active And NonActive Methods
 	void															(UActor::* m_pAwakeTick)(const _double&);
 	void															(UActor::* m_pTick)(const _double&);
 	void															(UActor::* m_pLateTick)(const _double&);
 	HRESULT												(UActor::* m_pRender)(CSHPTRREF<UCommand>, CSHPTRREF<UTableDescriptor>);
+	HRESULT												(UActor::* m_pShadowRender)(CSHPTRREF<UCommand>, CSHPTRREF<UTableDescriptor>);
 
 	// Backing Type
 	BACKINGTYPE										m_eBackingType;

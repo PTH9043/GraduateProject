@@ -119,6 +119,11 @@ HRESULT UCharacter::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTabl
 	return S_OK;
 }
 
+HRESULT UCharacter::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
+{
+	return S_OK;
+}
+
 void UCharacter::Collision(CSHPTRREF<UPawn> _pEnemy)
 {
 }

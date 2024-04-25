@@ -45,6 +45,7 @@ protected:
 	virtual void TickActive(const _double& _dTimeDelta) PURE;
 	virtual void LateTickActive(const _double& _dTimeDelta) PURE;
 	virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) PURE;
+	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) PURE;
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy) PURE;
 private:
 
