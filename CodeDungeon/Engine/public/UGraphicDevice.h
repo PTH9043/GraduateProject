@@ -54,6 +54,10 @@ public:
 	// Clear BackBuffer View
 	HRESULT MainRenderBegin();
 	HRESULT MainRenderEnd();
+
+	//4-27 Ãß°¡
+	void SetTemporaryViewPort(D3D12_VIEWPORT _viewport,D3D12_RECT _rect);
+	void SetDefaultViewPort();
 private:
 	void ResizeViewPort();
 private:

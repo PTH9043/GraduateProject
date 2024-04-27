@@ -239,6 +239,16 @@ HRESULT UGameInstance::OnWindowResize(const _uint& _iWinSizeX, const _uint& _iWi
 	return S_OK;
 }
 
+void UGameInstance::SetDefaultViewPort()
+{
+	m_spGraphicDevice->SetDefaultViewPort();
+}
+
+void UGameInstance::SetTemporaryViewPort(D3D12_VIEWPORT _viewport, D3D12_RECT _rect)
+{
+	m_spGraphicDevice->SetTemporaryViewPort(_viewport, _rect);
+}
+
 void UGameInstance::ClearOnceTypeData()
 {
 	m_spRenderer->ClearRenderingData();
@@ -1358,7 +1368,7 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 		{
 			std::vector<RTDESC> vecRts{
 				RTDESC{ RTOBJID::SHADOW_DEPTH_FOURBYFOUR, DXGI_FORMAT::DXGI_FORMAT_R32_FLOAT,
-					GraphicDesc->iWinCX, GraphicDesc->iWinCY, {0.f,0.f, 0.f, 0.f}}
+					GraphicDesc->iWinCX*4, GraphicDesc->iWinCY*4, {0.f,0.f, 0.f, 0.f}}
 			};
 			// Add RenderTargetGroup
 			m_spRenderTargetManager->AddRenderTargetGroupWithNewDepthStencilBuffer(RTGROUPID::SHADOW_MAP, vecRts);

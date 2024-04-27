@@ -402,6 +402,10 @@ namespace Engine {
 
 #pragma endregion RENDERTARGET
 
+#pragma region SHADOW
+	
+#pragma endregion SHADOW
+
 
 #pragma region MODEL
 
