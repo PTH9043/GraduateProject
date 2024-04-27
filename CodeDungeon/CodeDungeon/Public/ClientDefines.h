@@ -5,11 +5,11 @@
 #define _SILENCE_ALL_CXX23_DEPRECATION_WARNINGS
 
 #include "EngineDefine.h"
-#include "ProtocolBuffer.h"
+//#include "ProtocolBuffer.h"
 
 #ifdef _DEBUG
 #pragma comment(lib, "EngineD.lib")
-#pragma comment(lib, "ProtocolBufferD")
+//#pragma comment(lib, "ProtocolBufferD")
 #else
 #pragma comment(lib, "Engine.lib")
 #pragma comment(lib, "ProtocolBuffer")
@@ -46,3 +46,6 @@ namespace Client
 static const char* IP_ADDRESS{ "127.0.0.1" };
 
 using namespace Client;
+
+using FOLDERPAIR = std::pair<_wstring, SHPTR<FILEGROUP>>;
+using FILEPAIR = std::pair<_wstring, SHPTR<FILEDATA>>;

@@ -38,7 +38,7 @@ public:
 	HRESULT SetColor(const _uint& _iCellIndex);
 	HRESULT FlushDeleteCells();
 
-	_bool Load(const _wstring& _wstrPath);
+	_bool Load();
 	_bool Save(const _wstring& _wstrPath);
 
 	HRESULT CreateRegion();

@@ -10,6 +10,7 @@ class UGpuCommand;
 END
 
 BEGIN(Client)
+class CDataManager;
 
 class CClientApp final : public UBase {
 public:
@@ -52,6 +53,7 @@ private:
 
 	_bool												m_isTickThread;
 
+	SHPTR<CDataManager>  m_spDataManager;
 };
 
 END

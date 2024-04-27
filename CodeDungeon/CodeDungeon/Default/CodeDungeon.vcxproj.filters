@@ -22,6 +22,30 @@
     <Filter Include="97.Proto">
       <UniqueIdentifier>{e090c57f-1917-4666-871f-7a48cd38e90d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Camera">
+      <UniqueIdentifier>{e6285eec-562a-4b9c-93b8-37fe04699a24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Camera\MainCam">
+      <UniqueIdentifier>{b81b5b43-6d49-47eb-a3e3-a4768a4bf6bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Objects">
+      <UniqueIdentifier>{c96c525d-c5ca-481e-9244-7042d8a7b985}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.DataManager">
+      <UniqueIdentifier>{56833de1-230e-4865-b804-4ae6b5960b56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.DataManager\ModelManager">
+      <UniqueIdentifier>{997b2e9d-0c23-492e-8d22-0471076a83f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Objects\ModelObjects">
+      <UniqueIdentifier>{5e5fb12b-5aaf-42dd-9274-d11e93e770da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Objects\ModelObjects\Map">
+      <UniqueIdentifier>{ca64ec19-5e4a-46e5-90fe-e6c88e0d0d7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Objects\ModelObjects\Map\Rooms">
+      <UniqueIdentifier>{783c0105-2ccc-4d69-94cd-c94ed23468a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ClientDefines.h">
@@ -54,6 +78,24 @@
     <ClInclude Include="..\Public\CProtoMaker.h">
       <Filter>97.Proto</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CMainCamera.h">
+      <Filter>04.Camera\MainCam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CRooms.h">
+      <Filter>05.Objects\ModelObjects\Map\Rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CDataManager.h">
+      <Filter>06.DataManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CModelManager.h">
+      <Filter>06.DataManager\ModelManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CMap.h">
+      <Filter>05.Objects\ModelObjects\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CModelObjects.h">
+      <Filter>05.Objects\ModelObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -78,6 +120,24 @@
     </ClCompile>
     <ClCompile Include="..\Private\CProtoMaker.cpp">
       <Filter>97.Proto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CMainCamera.cpp">
+      <Filter>04.Camera\MainCam</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CRooms.cpp">
+      <Filter>05.Objects\ModelObjects\Map\Rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CDataManager.cpp">
+      <Filter>06.DataManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CModelManager.cpp">
+      <Filter>06.DataManager\ModelManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CMap.cpp">
+      <Filter>05.Objects\ModelObjects\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CModelObjects.cpp">
+      <Filter>05.Objects\ModelObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

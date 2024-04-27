@@ -13,16 +13,16 @@ HRESULT CNetworkClientController::NativeConstruct(const _string& _strIPAddress, 
 
 void CNetworkClientController::NativePacket()
 {
-	__super::NativePacket();
-	CS_LOGIN Login;
-	Login.set_time_test(CurrentMilliseconds());
-	Login.set_user_name("Hello");
-	SendProtoData(Login, TAG_CS_LOGIN);
+	//__super::NativePacket();
+	//CS_LOGIN Login;
+	//Login.set_time_test(CurrentMilliseconds());
+	//Login.set_user_name("Hello");
+	//SendProtoData(Login, TAG_CS_LOGIN);
 }
 
 void CNetworkClientController::ProcessPacket(_char* _pPacket, PACKETHEAD _PacketHead)
 {
-	switch (_PacketHead.PacketType)
+	/*switch (_PacketHead.PacketType)
 	{
 	case TAG_SERVER::TAG_SC_LOGIN:
 	{
@@ -38,7 +38,7 @@ void CNetworkClientController::ProcessPacket(_char* _pPacket, PACKETHEAD _Packet
 		}
 	}
 	break;
-	}
+	}*/
 }
 
 void CNetworkClientController::Free()

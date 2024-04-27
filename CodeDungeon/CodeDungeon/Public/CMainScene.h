@@ -3,6 +3,9 @@
 
 BEGIN(Client)
 
+class CMainCamera;
+class CMap;
+
 class CMainScene final : public UScene{
 public:
 	CMainScene(CSHPTRREF<UDevice> _spDevice);
@@ -15,7 +18,9 @@ public:
 	virtual void Tick(const _double& _dTimeDelta) override;
 	virtual void LateTick(const _double& _dTimeDelta) override;
 private:
-
+	// Main
+	SHPTR<CMainCamera>			m_spMainCamera;
+	SHPTR<CMap>					m_spMap;
 };
 
 END
