@@ -54,9 +54,11 @@ void UScene::RenderLights()
 {
     SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
     SHPTR<URenderTargetGroup> spGroup{ spGameInstance->FindRenderTargetGroup(RTGROUPID::NONALPHA_DEFFERED) };
+    SHPTR<URenderTargetGroup> spShadowDepthGroup{ spGameInstance->FindRenderTargetGroup(RTGROUPID::SHADOW_MAP) };
     SHPTR<UCommand> spCmdList = static_pointer_cast<UCommand>(spGameInstance->GetGpuCommand());
     SHPTR<UTableDescriptor> spTableDescriptor= spGameInstance->GetTableDescriptor();
     RETURN_CHECK(nullptr == spGroup, ;);
+    RETURN_CHECK(nullptr == spShadowDepthGroup, ;);
 
     for (const std::pair<LIGHTTYPE, SHPTR<UShader>>& LightPair : m_LightShaders)
     {
@@ -74,6 +76,7 @@ void UScene::RenderLights()
         LightPair.second->BindSRVBuffer(SRV_REGISTER::T0, spGroup->GetRenderTargetTexture(RTOBJID::NONALPHA_NORMAL_DEFFERED));
         LightPair.second->BindSRVBuffer(SRV_REGISTER::T1, spGroup->GetRenderTargetTexture(RTOBJID::NONALPHA_DEPTH_DEFFERED));
         LightPair.second->BindSRVBuffer(SRV_REGISTER::T2, spGroup->GetRenderTargetTexture(RTOBJID::NONALPHA_POSITION_DEFFERED));
+        LightPair.second->BindSRVBuffer(SRV_REGISTER::T3, spShadowDepthGroup->GetRenderTargetTexture(RTOBJID::SHADOW_DEPTH_FOURBYFOUR));
 
         // Draw Light
         //04-09 ¼öÁ¤

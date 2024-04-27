@@ -25,8 +25,8 @@ VS_OUT VS_Main(VS_IN In)
     float4 Position = float4(In.vPosition, 1.f);
 
     Position = mul(Position, g_WorldMatrix);
-    Position = mul(Position, g_ViewProjInfoArr[0].mViewMatrix);
-    Position = mul(Position, g_ViewProjInfoArr[0].mProjMatrix);
+    Position = mul(Position, g_ViewProjInfoArr[2].mViewMatrix);
+    Position = mul(Position, g_ViewProjInfoArr[2].mProjMatrix);
     //Position = mul(Position, g_tLightParam.mViewMatrix);
     //Position = mul(Position, g_tLightParam.mProjMatrix);
    

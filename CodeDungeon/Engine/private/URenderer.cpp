@@ -83,8 +83,8 @@ HRESULT URenderer::NativeConstruct()
             UCamera::CAMDESC tDesc;
             tDesc.stCamProj = UCamera::CAMPROJ(UCamera::PROJECTION_TYPE::PERSPECTIVE, _float3(0.f, 0.f, 0.f),
                 _float3(0.f, 0.f, 0.f),
-                DirectX::XMConvertToRadians(60.0f), spGameInstance->GetD3DViewport().Width,
-                spGameInstance->GetD3DViewport().Height,10.0f,1000.f,1.f);
+                DirectX::XMConvertToRadians(60.0f), spGameInstance->GetD3DViewport().Width*4,
+                spGameInstance->GetD3DViewport().Height*4,10.0f,1000.f,1.f);
             tDesc.stCamValue = UCamera::CAMVALUE(5.f, DirectX::XMConvertToRadians(90.f));
             tDesc.eCamType = CAMERATYPE::SHADOWLIGHT;
 
@@ -93,7 +93,8 @@ HRESULT URenderer::NativeConstruct()
 
             m_spShadowCamera = static_pointer_cast<UShadowCamera>(spGameInstance->CloneActorAdd(
                 PROTO_ACTOR_SHADOWCAMERA, vecDatas));
-     
+            m_spShadowCamera->SetShadowCamViewportInfo(0.0f, 0.0f, spGameInstance->GetD3DViewport().Width * 4, spGameInstance->GetD3DViewport().Height * 4, 0.0f, 1.0f);
+            m_spShadowCamera->SetShadowCamRectInfo(0, 0, spGameInstance->GetD3DViewport().Width * 4, spGameInstance->GetD3DViewport().Height * 4);
         }
         {
 
@@ -112,6 +113,10 @@ HRESULT URenderer::NativeConstruct()
             m_spDefferedCamera = static_pointer_cast<UDefferedCamera>(spGameInstance->CloneActorAdd(
                 PROTO_ACTOR_DEFFEREDCAMERA, vecDatas));
         }
+
+        m_spShadowCamera->GetTransform()->SetPos(_float3(0, 500, 0));
+        m_spShadowCamera->GetTransform()->LookAt(_float3(0, 0, 0));
+
         m_stFinalRenderTransformParam.iCamIndex = m_spDefferedCamera->GetCamID();
             
         // 이미 만들어진 Shader ConstnatBuffer를 가져옴
@@ -289,17 +294,24 @@ void URenderer::RenderPriority()
 
 void URenderer::RenderShadowDepth()
 {
+    SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+  
+   
     SHPTR<URenderTargetGroup> spRenderTargetGroup{ m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::SHADOW_MAP) };
     {
         spRenderTargetGroup->WaitResourceToTarget(m_spCastingCommand);
         spRenderTargetGroup->ClearRenderTargetView(m_spCastingCommand);
         spRenderTargetGroup->OmSetRenderTargets(m_spCastingCommand);
     }
+  spGameInstance->SetTemporaryViewPort(m_spShadowCamera->GetShadowCamViewPort(), m_spShadowCamera->GetShadowCamRect());
+
     for (auto& iter : m_arrActiveDrawRenderList[RENDERID::RI_SHADOW])
     {
         RenderShadowObject(iter.first, iter.second);
     }
     spRenderTargetGroup->WaitTargetToResource(m_spCastingCommand);
+
+   spGameInstance->SetDefaultViewPort();
 }
 
 void URenderer::RenderNonAlphaBlend()

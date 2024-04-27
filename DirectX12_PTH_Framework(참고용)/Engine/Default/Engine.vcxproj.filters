@@ -73,9 +73,6 @@
     <Filter Include="97.Needs\Delgate">
       <UniqueIdentifier>{d983f0b9-ca90-4a7f-ba13-68c872fd76a9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="98.ShaderFile">
-      <UniqueIdentifier>{e915a629-ed7d-43f8-be62-d58f05ae2343}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Manager\FilePath">
       <UniqueIdentifier>{298e353b-df7f-4b27-9062-ca9b6bd56ddd}</UniqueIdentifier>
     </Filter>
@@ -84,9 +81,6 @@
     </Filter>
     <Filter Include="01.Manager\RenderTargetManager">
       <UniqueIdentifier>{d8b7e417-38a1-478e-931e-9a47f1a54d79}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="98.ShaderFile\Light">
-      <UniqueIdentifier>{fd44ef3a-baf3-4612-9695-cf61074acfb8}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.DxClass\Command">
       <UniqueIdentifier>{b8d46898-ce4c-41f8-8005-f3d94dba9484}</UniqueIdentifier>
@@ -319,6 +313,21 @@
     <Filter Include="96.Super\Object">
       <UniqueIdentifier>{a7ebef0f-47ba-4832-8aea-d3334fd90f81}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Actor\01.Pawn\Mirror">
+      <UniqueIdentifier>{6c2da52e-3d51-40ef-96c3-01ffea533ee3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\01.Pawn\WorldRenderObj">
+      <UniqueIdentifier>{5d64b373-9feb-4924-a7d9-2b7b83879c54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\02.Camera\MirrorCamera">
+      <UniqueIdentifier>{f6364d69-c712-4903-b1b3-ba1c2bf3cb99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.ShaderFile">
+      <UniqueIdentifier>{e915a629-ed7d-43f8-be62-d58f05ae2343}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.ShaderFile\Light">
+      <UniqueIdentifier>{fd44ef3a-baf3-4612-9695-cf61074acfb8}</UniqueIdentifier>
+    </Filter>
     <Filter Include="98.ShaderFile\Common">
       <UniqueIdentifier>{6bffd06f-72ef-44b7-9b0f-b716ecb1a3e2}</UniqueIdentifier>
     </Filter>
@@ -345,15 +354,6 @@
     </Filter>
     <Filter Include="98.ShaderFile\Common\Tess">
       <UniqueIdentifier>{24b5d662-5720-4e61-be01-42bddd43353e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05.Actor\01.Pawn\Mirror">
-      <UniqueIdentifier>{6c2da52e-3d51-40ef-96c3-01ffea533ee3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05.Actor\01.Pawn\WorldRenderObj">
-      <UniqueIdentifier>{5d64b373-9feb-4924-a7d9-2b7b83879c54}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05.Actor\02.Camera\MirrorCamera">
-      <UniqueIdentifier>{f6364d69-c712-4903-b1b3-ba1c2bf3cb99}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
