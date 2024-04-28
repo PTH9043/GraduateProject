@@ -4,6 +4,8 @@
 #include "UTimer.h"
 #include "CNetworkClientController.h"
 #include "CProtoMaker.h"
+#include "CMainScene.h"
+#include "CDataManager.h"
 
 CClientApp::CClientApp() :
 	m_iTickCount{ 0 },
@@ -21,7 +23,8 @@ CClientApp::CClientApp() :
 	TICK_TIMER{ L"TICK_TIMER" },
 	RENDER_TIMER{ L"RENDER_TIMER" },
 	RENDER_DELETATIMER{ L"RENDER_DELTATIMER" },
-	m_isTickThread{ true }
+	m_isTickThread{ true },
+	m_spDataManager{nullptr}
 {
 }
 
@@ -34,6 +37,7 @@ HRESULT CClientApp::NativeConstruct(const HINSTANCE& _hInst, const _uint& _iCmdS
 	m_hInst = _hInst;
 	m_iCmdShow = _iCmdShow;
 	m_spGameInstance = GET_INSTANCE(UGameInstance);
+	m_spDataManager = Create<CDataManager>();
 
 	m_spDeltaTimer = m_spGameInstance->CreateTimerAdd(DELTA_TIMER);
 	m_spTickTimer = m_spGameInstance->CreateTimerAdd(TICK_TIMER);
@@ -75,6 +79,10 @@ void CClientApp::Render()
 	RETURN_CHECK_FAILED(m_spGameInstance->LoadFirstFolder(FIRST_RESOURCE_FOLDER), ;);
 
 	CProtoMaker::CreateProtoData(m_spGameInstance, stOutputData.wpDevice.lock(), stOutputData.wpGpuCmd.lock());
+	m_spDataManager->Load_Data();
+
+	// Register 
+	m_spGameInstance->RegisterScene(CreateConstructorNative<CMainScene>(stOutputData.wpDevice.lock()));
 
 	MSG msg{};
 	ZeroMemory(&msg, sizeof(MSG));

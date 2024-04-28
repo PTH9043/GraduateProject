@@ -13,12 +13,12 @@ void UStageManager::Free()
 {
 }
 
-_bool UStageManager::Load(const _wstring& _wstrPath)
+_bool UStageManager::Load()
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	m_spStage.reset();
 	m_spStage = CreateConstructorNative<UStage>(spGameInstance->GetDevice());
-	m_spStage->Load(_wstrPath);
+	m_spStage->Load();
 	m_spStage->AddArroundRegion();
 
 	return true;

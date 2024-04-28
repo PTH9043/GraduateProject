@@ -114,7 +114,7 @@ HRESULT UStage::FlushDeleteCells()
 
 }
 
-_bool UStage::Load(const _wstring& _wstrPath)
+_bool UStage::Load()
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 

@@ -102,6 +102,9 @@ public:
 public:
 	HRESULT	OnWindowResize(const _uint& _iWinSizeX, const _uint& _iWinSizeY, const GRAPHICDESC::WINMODE _eWindowMode);
 	// Clear Once Type data 
+	//4-27 Ãß°¡
+	void SetDefaultViewPort();
+	void SetTemporaryViewPort(D3D12_VIEWPORT _viewport, D3D12_RECT _rect);
 	void ClearOnceTypeData();
 public:
 	CSHPTRREF<UDevice>			GetDevice() const;

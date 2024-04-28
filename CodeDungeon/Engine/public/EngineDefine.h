@@ -133,3 +133,4 @@ namespace Engine {
 using namespace Engine;
 
 #define INVALID_MINUS_STAGEVALUE -1
+

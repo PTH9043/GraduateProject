@@ -173,6 +173,18 @@ HRESULT UGraphicDevice::MainRenderEnd()
 	return S_OK;
 }
 
+void UGraphicDevice::SetTemporaryViewPort(D3D12_VIEWPORT _viewport, D3D12_RECT _rect) {
+	ComPtr<Dx12GraphicsCommandList> pGraphicCmdList = m_spGpuCommand->GetGpuCmdList();
+	pGraphicCmdList->RSSetViewports(1, &_viewport);
+	pGraphicCmdList->RSSetScissorRects(1, &_rect);
+}
+
+void UGraphicDevice::SetDefaultViewPort() {
+	ComPtr<Dx12GraphicsCommandList> pGraphicCmdList = m_spGpuCommand->GetGpuCmdList();
+	pGraphicCmdList->RSSetViewports(1, &m_stD3DViewport);
+	pGraphicCmdList->RSSetScissorRects(1, &m_stD3DWindowSizeRect);
+}
+
 void UGraphicDevice::ResizeViewPort()
 {
 	// CreateViewPort

@@ -277,7 +277,7 @@ void TNavigationView::LoadRegionsFromFile()
 
 			if (ImGui::Button("Yes", ImVec2(120, 0)))
 			{
-				m_spStageManager->Load(FIRST_RESOURCE_FOLDER);
+				m_spStageManager->Load();
 				ImGui::CloseCurrentPopup(); 
 				showConfirmationDialog = false; 
 				m_bOnWindow = false;

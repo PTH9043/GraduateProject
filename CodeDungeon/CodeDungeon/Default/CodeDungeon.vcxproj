@@ -160,11 +160,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\CClientApp.h" />
+    <ClInclude Include="..\Public\CDataManager.h" />
     <ClInclude Include="..\Public\ClientDefines.h" />
     <ClInclude Include="..\Public\ClientProto.h" />
+    <ClInclude Include="..\Public\CMainCamera.h" />
     <ClInclude Include="..\Public\CMainScene.h" />
+    <ClInclude Include="..\Public\CMap.h" />
+    <ClInclude Include="..\Public\CModelManager.h" />
+    <ClInclude Include="..\Public\CModelObjects.h" />
     <ClInclude Include="..\Public\CNetworkClientController.h" />
     <ClInclude Include="..\Public\CProtoMaker.h" />
+    <ClInclude Include="..\Public\CRooms.h" />
     <ClInclude Include="CodeDungeon.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -172,9 +178,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\CClientApp.cpp" />
+    <ClCompile Include="..\Private\CDataManager.cpp" />
+    <ClCompile Include="..\Private\CMainCamera.cpp" />
     <ClCompile Include="..\Private\CMainScene.cpp" />
+    <ClCompile Include="..\Private\CMap.cpp" />
+    <ClCompile Include="..\Private\CModelManager.cpp" />
+    <ClCompile Include="..\Private\CModelObjects.cpp" />
     <ClCompile Include="..\Private\CNetworkClientController.cpp" />
     <ClCompile Include="..\Private\CProtoMaker.cpp" />
+    <ClCompile Include="..\Private\CRooms.cpp" />
     <ClCompile Include="CodeDungeon.cpp" />
   </ItemGroup>
   <ItemGroup>
