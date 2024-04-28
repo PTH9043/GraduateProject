@@ -6,6 +6,8 @@
 #include "USound.h"
 #include "UCharacter.h"
 #include "UPawn.h"
+#include "UAnimModel.h"
+#include "UAnimation.h"
 
 UAnimOccursTimePassEvent::UAnimOccursTimePassEvent() : 
 	UAnimOccurEvent(ANIMEVENTTYPE::ANIMEVENT_ANIMOCCURSTIMEPASS)
@@ -23,10 +25,27 @@ const ANIMOTHEREVENTDESC*  UAnimOccursTimePassEvent::OutOtherEventDesc()
 	return &m_AnimChangeDesc;
 }
 
-void UAnimOccursTimePassEvent::EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta)
+void UAnimOccursTimePassEvent::EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc)
 {
-	_pAnimModel->SetSupplyLerpValue(m_AnimChangeDesc.fSupplyAnimValue);
-	_pAnimModel->ChangeAnimation(m_AnimChangeDesc.iNextAnimIndex, m_AnimChangeDesc.dNextAnimTimeAcc);
+	// 만약 EnableLastLerp가 켜져 있지 않다면
+	if (false == m_AnimChangeDesc.isEnableLastSettingAnim)
+	{
+		// 바꿔야 하는 구간에 바꾼다. 
+		if (m_AnimChangeDesc.fAnimChangeTime <= _dTimeAcc)
+		{
+			_pAnimModel->SetSupplyLerpValue(m_AnimChangeDesc.fSupplyAnimValue);
+			_pAnimModel->ChangeAnimation(m_AnimChangeDesc.iNextAnimIndex, m_AnimChangeDesc.dNextAnimTimeAcc);
+		}
+	}
+	// 켜저 있다면
+	else
+	{
+		// 만약
+		if (_pAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= m_AnimChangeDesc.fLastProgressValue)
+		{
+			_pAnimModel->SetAnimation(m_AnimChangeDesc.iNextAnimIndex);
+		}
+	}
 }
 
 void UAnimOccursTimePassEvent::SaveEvent(std::ofstream& _save)
@@ -69,7 +88,7 @@ const ANIMOTHEREVENTDESC* UAnimSoundEvent::OutOtherEventDesc()
 	return &m_AnimSoundDesc;
 }
 
-void UAnimSoundEvent::EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta)
+void UAnimSoundEvent::EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc)
 {
 	if (nullptr == m_spSound)
 	{

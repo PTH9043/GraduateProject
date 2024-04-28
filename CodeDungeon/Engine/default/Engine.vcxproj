@@ -47,9 +47,11 @@
     <ClInclude Include="..\public\ImGui\imstb_truetype.h" />
     <ClInclude Include="..\public\ImGui\ImZoomSlider.h" />
     <ClInclude Include="..\public\UAnimatedParticle.h" />
+    <ClInclude Include="..\public\UCombatCollGroupComp.h" />
     <ClInclude Include="..\public\UCharacter.h" />
     <ClInclude Include="..\public\UCharacterManager.h" />
     <ClInclude Include="..\public\UController.h" />
+    <ClInclude Include="..\public\UEquipment.h" />
     <ClInclude Include="..\public\UFire.h" />
     <ClInclude Include="..\public\UFog.h" />
     <ClInclude Include="..\public\UGrid.h" />
@@ -160,9 +162,11 @@
     <ClCompile Include="..\private\AnimSectionEvents.cpp" />
     <ClCompile Include="..\private\EngineStruct.cpp" />
     <ClCompile Include="..\private\UAnimatedParticle.cpp" />
+    <ClCompile Include="..\private\UCombatCollGroupComp.cpp" />
     <ClCompile Include="..\private\UCharacter.cpp" />
     <ClCompile Include="..\private\UCharacterManager.cpp" />
     <ClCompile Include="..\private\UController.cpp" />
+    <ClCompile Include="..\private\UEquipment.cpp" />
     <ClCompile Include="..\private\UFire.cpp" />
     <ClCompile Include="..\private\UFog.cpp" />
     <ClCompile Include="..\private\UGrid.cpp" />

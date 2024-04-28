@@ -41,7 +41,7 @@ void TMainCamera::TickActive(const _double& _dTimeDelta)
 
 void TMainCamera::LateTickActive(const _double& _dTimeDelta)
 {
-    if (true == m_isMoveState)
+   // if (true == m_isMoveState)
     {
         SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
 

@@ -132,22 +132,23 @@ void UAnimModel::TickAnimChangeTransform(CSHPTRREF<UTransform> _spTransform, con
 	assert(_spTransform && m_spCurAnimation);
 	TickAnimation(_dTimeDelta);
 
-	if (true == m_spCurAnimation->IsFinishAnim())
+	RETURN_CHECK(false == m_spCurAnimation->IsApplyRootBoneMove(), ;);
+
+	if (true == m_spCurAnimation->IsInitializeAnimationMovement())
 	{
 		GetRootBoneNode()->ResetRootBoneInfo();
+		return;
 	}
+	
+	// 애니메이션 Supply, FinishAnim 상태인지 체크
+	RETURN_CHECK(true == m_spCurAnimation->IsSupplySituation(), ;);
+	RETURN_CHECK(true == m_spCurAnimation->IsFinishAnim(), ;);
 
-	if (false == m_spCurAnimation->IsSupplySituation())
-	{
-		if (false == m_spCurAnimation->IsFinishAnim())
-		{
-			_float3 vLook = GetRootBoneNode()->GetMoveRootBoneAngle();
-			_spTransform->RotateTurn(vLook);
+	//_float3 vLook = GetRootBoneNode()->GetMoveRootBoneAngle();
+	//_spTransform->RotateTurn(vLook);
 
-			_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), _spTransform->GetWorldMatrix());
-			_spTransform->SetPos(Position);
-		}
-	}
+	_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), _spTransform->GetWorldMatrix());
+	_spTransform->SetPos(Position);
 }
 
 void UAnimModel::TickAnimToTimAccChangeTransform(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta, const _double& _TimeAcc)
@@ -155,8 +156,17 @@ void UAnimModel::TickAnimToTimAccChangeTransform(CSHPTRREF<UTransform> _spTransf
 	assert(_spTransform && m_spCurAnimation);
 	UpdateCurAnimationToTimeAcc(_TimeAcc);
 
-	_float3 vLook = GetRootBoneNode()->GetMoveRootBoneAngle();
-	_spTransform->RotateTurn(vLook);
+	RETURN_CHECK(false == m_spCurAnimation->IsApplyRootBoneMove(), ;);
+	
+	// 만약 루트 본 노드가 Apply 되지 않았다면
+	if (true == m_spCurAnimation->IsInitializeAnimationMovement())
+	{
+		GetRootBoneNode()->ResetRootBoneInfo();
+		return;
+	}
+
+	//_float3 vLook = GetRootBoneNode()->GetMoveRootBoneAngle();
+	//_spTransform->RotateTurn(vLook);
 
 	_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), _spTransform->GetWorldMatrix());
 	_spTransform->SetPos(Position);

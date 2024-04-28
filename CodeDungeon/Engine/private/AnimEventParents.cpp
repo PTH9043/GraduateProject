@@ -52,30 +52,9 @@ _bool UAnimSectionEvent::EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, cons
 	if (m_AnimSectionDesc.IsAnimEventActive(_dTimeAcc) || true  == m_AnimSectionDesc.isAnimChangeActive)
 	{
 		if ((!lstrcmp(m_AnimSectionDesc.wstrEventTrigger.c_str(), _wstrInputTrigger.c_str())
-			|| !lstrcmp(m_AnimSectionDesc.wstrEventTrigger.c_str(), L"")) 
-			// 현재 ChangeTime은 만족 안하면서 트리거는 활성화되었을 때
-			|| true == m_AnimSectionDesc.isAnimChangeActive)
+			|| !lstrcmp(m_AnimSectionDesc.wstrEventTrigger.c_str(), L"")))
 		{
-			if (true == m_AnimSectionDesc.isEnableLastLerp)
-			{
-				// 애니메이션이 마지막일 때
-				if (_pAnimModel->GetCurrentAnimation()->IsFinishAnim())
-				{
-					EventSituation(_pPawn, _pAnimModel, _dTimeDelta);
-				}
-			}
-			else
-			{
-				if (m_AnimSectionDesc.fAnimChangeTime <= _dTimeAcc)
-				{
-					EventSituation(_pPawn, _pAnimModel, _dTimeDelta);
-					m_AnimSectionDesc.isAnimChangeActive = false;
-				}
-				else
-				{
-					m_AnimSectionDesc.isAnimChangeActive = true;
-				}
-			}
+			EventSituation(_pPawn, _pAnimModel, _dTimeDelta, _dTimeAcc);
 		}
 		return true;
 	}
@@ -129,34 +108,11 @@ _bool UAnimOccurEvent::EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const 
 	{
 		if (false == m_AnimOccurDesc.isActiveEvent)
 		{
-			if (!lstrcmp(m_AnimOccurDesc.wstrEventTrigger.c_str(), _wstrInputTrigger.c_str()) || !lstrcmp(m_AnimOccurDesc.wstrEventTrigger.c_str(), L"")
-				// 현재 ChangeTime은 만족 안하면서 트리거는 활성화되었을 때
-				|| true == m_AnimOccurDesc.isAnimChangeActive)
+			if (!lstrcmp(m_AnimOccurDesc.wstrEventTrigger.c_str(), _wstrInputTrigger.c_str()) || !lstrcmp(m_AnimOccurDesc.wstrEventTrigger.c_str(), L""))
 			{
 				// Enable Lerp가 되면 맨 마지막 얘와 다음 애니메이션 첫 번째 노드와 이음 
-				if (true == m_AnimOccurDesc.isEnableLastLerp)
-				{
-					// 애니메이션이 마지막일 때
-					if (_pAnimModel->GetCurrentAnimation()->IsFinishAnim())
-					{
-						EventSituation(_pPawn, _pAnimModel, _dTimeDelta);
-						m_AnimOccurDesc.isActiveEvent = true;
-						m_AnimOccurDesc.isAnimChangeActive = false;
-					}
-				}
-				else
-				{
-					if (m_AnimOccurDesc.fAnimChangeTime <= _dTimeAcc)
-					{
-						EventSituation(_pPawn, _pAnimModel, _dTimeDelta);
-						m_AnimOccurDesc.isActiveEvent = true;
-						m_AnimOccurDesc.isAnimChangeActive = false;
-					}
-					else
-					{
-						m_AnimOccurDesc.isAnimChangeActive = true;
-					}
-				}
+				EventSituation(_pPawn, _pAnimModel, _dTimeDelta, _dTimeAcc);
+				m_AnimOccurDesc.isActiveEvent = true;
 			}
 		}
 		return true;
@@ -179,7 +135,7 @@ void UAnimOccurEvent::LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstrea
 {
 	__super::LoadEvent(_spAnimModel, _load);
 	UMethod::ReadString(_load, m_AnimOccurDesc.wstrEventTrigger);
-	&_load.read((_char*)&m_AnimOccurDesc.dAnimOccursTime, sizeof(_double));
+	_load.read((_char*)&m_AnimOccurDesc.dAnimOccursTime, sizeof(_double));
 }
 
 void UAnimOccurEvent::Free()

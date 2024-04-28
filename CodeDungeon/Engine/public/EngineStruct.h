@@ -558,20 +558,16 @@ namespace Engine {
 	public:
 		_bool							isActiveEvent;
 		_wstring						wstrEventTrigger;
-		_float							fAnimChangeTime;
-		_bool							isEnableLastLerp;
 		_bool							isAnimChangeActive;
 
-		ANIMEVENTDESC() : wstrEventTrigger{ L"" }, isActiveEvent{ false }, fAnimChangeTime{ 0 }, isAnimChangeActive{false},
-			isEnableLastLerp{false}
+		ANIMEVENTDESC() : wstrEventTrigger{ L"" }, isActiveEvent{ false }, isAnimChangeActive { false }
 		{ wstrEventTrigger.resize(MAX_BUFFER_LENGTH); }
 	};
-
-
 	/*
 	@ Date: 2024-02-10, Writer: 박태현
 	@ Explain
 	- 애니메이션 Event를 위한 구간을 정의하는 구조체
+	- 애니메이션 Event와 ChangeDesc를 상속 받아서 그 값들을 사용한다.
 	*/
 	struct ANIMEVENTSECTIONDESC : public ANIMEVENTDESC {
 		_double dStartTime;
@@ -585,6 +581,7 @@ namespace Engine {
 	@ Date: 2024-02-10, Writer: 박태현
 	@ Explain
 	- 애니메이션 Event가 발생된 지점을 정의하는 구조체
+	- 애니메이션 Event와 ChangeDesc를 상속 받아서 그 값들을 사용한다.
 	*/
 	struct ANIMOCURRESDESC : public ANIMEVENTDESC {
 		_double		dAnimOccursTime;
@@ -610,11 +607,17 @@ namespace Engine {
 		_int				iNextAnimIndex;
 		_float			fSupplyAnimValue;
 		_double		dNextAnimTimeAcc;
+		_float			fAnimChangeTime;
+		_float			fLastProgressValue;
+		_bool			isEnableLastSettingAnim;
 
-		ANIMCHANGEDESC() : iNextAnimIndex{ 0 }, fSupplyAnimValue{ 1.f }, dNextAnimTimeAcc{ 0.0 } {}
-		ANIMCHANGEDESC(const _int _NextAnimIndex, const _float& _SupplyAnimValue, 
-			const _double& _dNextAnimTimeAcc) :
-			iNextAnimIndex{ _NextAnimIndex }, fSupplyAnimValue{ _SupplyAnimValue }, dNextAnimTimeAcc{ _dNextAnimTimeAcc } {}
+		ANIMCHANGEDESC() : iNextAnimIndex{ 0 }, fSupplyAnimValue{ 1.f }, dNextAnimTimeAcc{ 0.0 },
+			fAnimChangeTime{ 0 }, fLastProgressValue{ 1.f }, isEnableLastSettingAnim{ false }
+		{}
+		ANIMCHANGEDESC(const _int _NextAnimIndex, const _float& _SupplyAnimValue, const _double& _dNextAnimTimeAcc) :
+			iNextAnimIndex{ _NextAnimIndex }, fSupplyAnimValue{ _SupplyAnimValue }, dNextAnimTimeAcc{ _dNextAnimTimeAcc } ,
+			fAnimChangeTime{ 0 }, fLastProgressValue{ 1.f }, isEnableLastSettingAnim{ false }
+		{}
 	};
 	/*
 	@ Date: 2024-02-21, Writer: 박태현

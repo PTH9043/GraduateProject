@@ -17,7 +17,9 @@ UAnimation::UAnimation() :
 	m_isSupplySituation{ false },
 	m_fSupplySituationValue{ 0 },
 	m_fTotalAnimationFastValue{1.f},
-	m_isFinishAnimation{false}
+	m_isFinishAnimation{false},
+	m_dAnimationProgressRate{0.f},
+	m_isApplyRootBoneMove{true}
 {
 }
 
@@ -32,7 +34,9 @@ UAnimation::UAnimation(const UAnimation& _rhs) :
 	m_isSupplySituation{ false },
 	m_fSupplySituationValue{ 0 },
 	m_fTotalAnimationFastValue{ 1.f },
-	m_isFinishAnimation{ false }
+	m_isFinishAnimation{ false },
+	m_dAnimationProgressRate{ 0.f },
+	m_isApplyRootBoneMove{ true }
 {
 }
 
@@ -99,6 +103,7 @@ void UAnimation::UpdateBoneMatrices(const _double& _dTimeDelta)
 	if (m_dTimeAcc >= m_dDuration)
 	{
 		m_dTimeAcc = 0.0;
+		m_dAnimationProgressRate = 0.f;
 		m_isSupplySituation = false;
 		m_isFinishAnimation = true;
 	}
@@ -108,6 +113,7 @@ void UAnimation::UpdateBoneMatrices(const _double& _dTimeDelta)
 		{
 			iter->UpdateTransformMatrix(m_dTimeAcc, this);
 		}
+		m_dAnimationProgressRate = m_dTimeAcc / m_dDuration;
 		m_isFinishAnimation = false;
 	}
 }
@@ -269,6 +275,7 @@ void UAnimation::SaveAnimEventData(const _wstring& _wstrPath)
 	std::ofstream Saves{ _wstrPath, std::ios::binary };
 	RETURN_CHECK(!Saves, ;);
 
+	Saves.write((_char*)&m_isApplyRootBoneMove, sizeof(_bool));
 	// Anim Event save 
 	{
 		// Container Size Save 
@@ -313,6 +320,8 @@ void UAnimation::LoadAnimEventData(CSHPTRREF<UAnimModel> _spAnimModel, const _ws
 {
 	std::ifstream Read{ _wstrPath, std::ios::binary };
 	RETURN_CHECK(!Read, ;);
+
+	Read.read((_char*)&m_isApplyRootBoneMove, sizeof(_bool));
 	// Anim Event Load
 	{
 		_uint iSize{ 0 };

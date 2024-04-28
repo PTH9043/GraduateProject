@@ -30,7 +30,7 @@ public:
 	virtual void LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) PURE;
 protected:
 	// Event 상황일 때를 정의
-	virtual void EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta) PURE;
+	virtual void EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc) PURE;
 private:
 	virtual void Free() PURE;
 private:
@@ -62,7 +62,7 @@ protected: /* get set*/
 	const ANIMEVENTSECTIONDESC& GetAnimSectionDesc() const { return m_AnimSectionDesc; }
 protected:
 	// Event 상황일 때를 정의
-	virtual void EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta) PURE;
+	virtual void EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc) PURE;
 	virtual void SaveEvent( std::ofstream& _save) PURE;
 	virtual void LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) PURE;
 private:
@@ -95,7 +95,7 @@ protected: /* get set*/
 	const ANIMOCURRESDESC& GetAnimOccursDesc() const { return m_AnimOccurDesc; }
 protected:
 	// Event 상황일 때를 정의
-	virtual void EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta) PURE;
+	virtual void EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc) PURE;
 	virtual void SaveEvent(std::ofstream& _save) PURE;
 	virtual void LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) PURE;
 private:

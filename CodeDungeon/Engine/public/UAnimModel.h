@@ -96,6 +96,7 @@ private:
 	_uint															m_iNextAnimIndex;
 	_float															m_fSupplyLerpValue;
 	_bool															m_isChangeAnim;
+	
 };
 
 END
