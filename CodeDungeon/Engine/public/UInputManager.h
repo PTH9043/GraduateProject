@@ -22,6 +22,7 @@ public:
 
 	void AddKeyMethod( _ubyte _bFirstKeyID, const _wstring& _wstrSecondsKeyName, const KEYACTIONFUNC& _keyMethod);
 	void DeleteKeyMethod( _ubyte _bFirstKeyID, const _wstring& _wstrSecondsKeyName);
+
 	_bool GetDIKeyDown( _ubyte _bKeyID);
 	_bool GetDIKeyUp( _ubyte _bKeyID);
 	_bool GetDIKeyPressing(const _ubyte& _bKeyID);

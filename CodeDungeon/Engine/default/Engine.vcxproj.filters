@@ -367,6 +367,9 @@
     <Filter Include="06.Component\Battle">
       <UniqueIdentifier>{7d70bf76-39be-4ef4-bd47-8b24bbced0d6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06.Component\Controller\InputController">
+      <UniqueIdentifier>{c529b1d4-5e06-430b-ae99-27b1bc65fad3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -722,6 +725,9 @@
     </ClCompile>
     <ClCompile Include="..\private\UCombatCollGroupComp.cpp">
       <Filter>06.Component\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UPlayerController.cpp">
+      <Filter>06.Component\Controller\InputController</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1111,6 +1117,9 @@
     </ClInclude>
     <ClInclude Include="..\public\UCombatCollGroupComp.h">
       <Filter>06.Component\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UPlayerController.h">
+      <Filter>06.Component\Controller\InputController</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -93,8 +93,10 @@ HRESULT URenderer::NativeConstruct()
 
             m_spShadowCamera = static_pointer_cast<UShadowCamera>(spGameInstance->CloneActorAdd(
                 PROTO_ACTOR_SHADOWCAMERA, vecDatas));
-            m_spShadowCamera->SetShadowCamViewportInfo(0.0f, 0.0f, spGameInstance->GetD3DViewport().Width * 4, spGameInstance->GetD3DViewport().Height * 4, 0.0f, 1.0f);
-            m_spShadowCamera->SetShadowCamRectInfo(0, 0, spGameInstance->GetD3DViewport().Width * 4, spGameInstance->GetD3DViewport().Height * 4);
+            m_spShadowCamera->SetShadowCamViewportInfo(0, 0, static_cast<long>(spGameInstance->GetD3DViewport().Width * 4.f),
+                static_cast<long>(spGameInstance->GetD3DViewport().Height * 4.f), 0.0f, 1.0f);
+            m_spShadowCamera->SetShadowCamRectInfo(0, 0, static_cast<long>(spGameInstance->GetD3DViewport().Width * 4.f),
+                static_cast<long>(spGameInstance->GetD3DViewport().Height * 4.f));
         }
         {
 

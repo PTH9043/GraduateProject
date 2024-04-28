@@ -27,7 +27,6 @@ m_spCellPawn{ nullptr }
 
 void UCell::Free()
 {
-	
 }
 
 HRESULT UCell::NativeConstruct()

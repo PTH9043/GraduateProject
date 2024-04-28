@@ -132,23 +132,19 @@ void UAnimModel::TickAnimChangeTransform(CSHPTRREF<UTransform> _spTransform, con
 	assert(_spTransform && m_spCurAnimation);
 	TickAnimation(_dTimeDelta);
 
-	RETURN_CHECK(false == m_spCurAnimation->IsApplyRootBoneMove(), ;);
+	RETURN_CHECK(true == m_spCurAnimation->IsSupplySituation(), ;);
 
-	if (true == m_spCurAnimation->IsInitializeAnimationMovement())
+	if (true == m_spCurAnimation->IsFinishAnim())
 	{
 		GetRootBoneNode()->ResetRootBoneInfo();
 		return;
 	}
-	
-	// 애니메이션 Supply, FinishAnim 상태인지 체크
-	RETURN_CHECK(true == m_spCurAnimation->IsSupplySituation(), ;);
-	RETURN_CHECK(true == m_spCurAnimation->IsFinishAnim(), ;);
 
-	//_float3 vLook = GetRootBoneNode()->GetMoveRootBoneAngle();
-	//_spTransform->RotateTurn(vLook);
-
-	_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), _spTransform->GetWorldMatrix());
-	_spTransform->SetPos(Position);
+	if (true == m_spCurAnimation->IsApplyRootBoneMove())
+	{
+		_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), _spTransform->GetWorldMatrix());
+		_spTransform->SetPos(Position);
+	}
 }
 
 void UAnimModel::TickAnimToTimAccChangeTransform(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta, const _double& _TimeAcc)
@@ -156,20 +152,11 @@ void UAnimModel::TickAnimToTimAccChangeTransform(CSHPTRREF<UTransform> _spTransf
 	assert(_spTransform && m_spCurAnimation);
 	UpdateCurAnimationToTimeAcc(_TimeAcc);
 
-	RETURN_CHECK(false == m_spCurAnimation->IsApplyRootBoneMove(), ;);
-	
-	// 만약 루트 본 노드가 Apply 되지 않았다면
-	if (true == m_spCurAnimation->IsInitializeAnimationMovement())
+	if (true == m_spCurAnimation->IsApplyRootBoneMove())
 	{
-		GetRootBoneNode()->ResetRootBoneInfo();
-		return;
+		_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), _spTransform->GetWorldMatrix());
+		_spTransform->SetPos(Position);
 	}
-
-	//_float3 vLook = GetRootBoneNode()->GetMoveRootBoneAngle();
-	//_spTransform->RotateTurn(vLook);
-
-	_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), _spTransform->GetWorldMatrix());
-	_spTransform->SetPos(Position);
 }
 
 HRESULT UAnimModel::Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader, CSHPTRREF<UCommand> _spCommand)

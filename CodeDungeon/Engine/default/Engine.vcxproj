@@ -55,6 +55,7 @@
     <ClInclude Include="..\public\UFire.h" />
     <ClInclude Include="..\public\UFog.h" />
     <ClInclude Include="..\public\UGrid.h" />
+    <ClInclude Include="..\public\UPlayerController.h" />
     <ClInclude Include="..\public\UMapLayout.h" />
     <ClInclude Include="..\public\UMaterialManager.h" />
     <ClInclude Include="..\public\UModelMaterial.h" />
@@ -170,6 +171,7 @@
     <ClCompile Include="..\private\UFire.cpp" />
     <ClCompile Include="..\private\UFog.cpp" />
     <ClCompile Include="..\private\UGrid.cpp" />
+    <ClCompile Include="..\private\UPlayerController.cpp" />
     <ClCompile Include="..\private\UMapLayout.cpp" />
     <ClCompile Include="..\private\UMaterialManager.cpp" />
     <ClCompile Include="..\private\UModelMaterial.cpp" />

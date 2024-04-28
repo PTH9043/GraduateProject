@@ -2,6 +2,8 @@
 
 namespace Engine {
 
+
+
 	enum TEXTYPE : unsigned short
 	{
 		TextureType_NONE = 0,
@@ -358,6 +360,5 @@ namespace Engine {
 		// 머터리얼 파람의 숫자를 정하는 Enum 
 		MAX_MATERIALPARAM_CNT = 500,
 		MAX_ASSIMP_MATERIAL_TEXTURE_CNT = TEXTYPE::TextureType_END,
-
 	};
 }

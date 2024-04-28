@@ -4,12 +4,21 @@
 
 BEGIN(Engine)
 class UTransform;
+class UAnimModel;
+class UController;
 /*
 @ Date: 2024-02-25, Writer: 박태현
 @ Explain
 -  사용자가 움직이거나 AI가 움직일 때 사용하는 클래스이다. 
 */
 class UCharacter abstract : public UPawn {
+public:
+	enum{
+		CHARACTERDESCORDER = 0
+	};
+	struct CHARACTERDESC {
+		_wstring		wstrAnimModelProtoData;
+	};
 public:
 	UCharacter(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType);
 	UCharacter(const UCharacter& _rhs);
@@ -41,6 +50,8 @@ public:
 	_float OtherCharacterDirToLookConverter(CSHPTRREF<UTransform> _spOtherTransform);
 	// 다른 캐릭터를 바라보는 자기 자신의 Look Direction
 	_float3 OtherCharacterDirToLookVectorF3(CSHPTRREF<UTransform> _spOtherTransform);
+public: /* get set */
+	CSHPTRREF<UAnimModel> GetAnimModel() const { return m_spAnimModel; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) PURE;
 	virtual void LateTickActive(const _double& _dTimeDelta) PURE;
@@ -48,7 +59,10 @@ protected:
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) PURE;
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy) PURE;
 private:
-
+	// AnimationModel
+	SHPTR< UAnimModel>		m_spAnimModel;
+	// Controller
+	SHPTR<UController>			m_spController;
 };
 
 END

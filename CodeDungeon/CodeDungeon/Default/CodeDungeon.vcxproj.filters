@@ -46,6 +46,12 @@
     <Filter Include="05.Objects\ModelObjects\Map\Rooms">
       <UniqueIdentifier>{783c0105-2ccc-4d69-94cd-c94ed23468a9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Objects\Character">
+      <UniqueIdentifier>{f17d528d-508f-457e-9367-cba79070f001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Objects\Character\Player">
+      <UniqueIdentifier>{044695c8-b7ca-4aa5-8a99-8eec36e8a334}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ClientDefines.h">

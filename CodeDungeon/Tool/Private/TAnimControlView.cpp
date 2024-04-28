@@ -276,8 +276,8 @@ void TAnimControlView::MakeAnimEvent()
 					break;
 				case ANIMEVENT_OBJACTIVE:
 					break;
-				case ANIMEVENT_ANIMOCCURSTIMEPASS:
-					AnimOccursShow(m_spSelectAnim, flags, iter.second);
+				//case ANIMEVENT_ANIMOCCURSTIMEPASS:
+				//	AnimOccursShow(m_spSelectAnim, flags, iter.second);
 					break;
 				case ANIMEVENT_SOUND:
 					AnimSoundShow(m_spSelectAnim, flags, iter.second);
@@ -411,124 +411,6 @@ void TAnimControlView::AnimSectionShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTable
 						ImGui::InputFloat(EnableLastValue + Index, &ChangeDesc->fLastProgressValue, 0.01f);
 					}
 				}
-				if (ImGui::IsItemClicked())
-					SelectRemoveItem = iIndex;
-				++iIndex;
-				ImGui::TableNextRow();
-			}
-			ImGui::EndTable();
-		}
-		ImGui::TreePop();
-	}
-}
-
-void TAnimControlView::AnimOccursShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFlags _flags, const VECTOR<SHPTR<UAnimEvent>>& _AnimEvent)
-{
-	if (ImGui::TreeNodeEx("AnimOccursTimePassShow", ImGuiTreeNodeFlags_Bullet))
-	{
-		ImGui::SetNextItemWidth(-FLT_MIN);
-		if (ImGui::BeginTable("AnimOccursTimePass", 8, _flags, ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 20), 0.0f))
-		{
-			ImGui::TableSetupColumn("InputTrigger", ImGuiTableColumnFlags_WidthStretch);
-			ImGui::TableSetupColumn("Over", ImGuiTableColumnFlags_WidthStretch);
-			ImGui::TableSetupColumn("NextAnim", ImGuiTableColumnFlags_WidthStretch);
-			ImGui::TableSetupColumn("SupV", ImGuiTableColumnFlags_WidthStretch);
-			ImGui::TableSetupColumn("NextTA", ImGuiTableColumnFlags_WidthStretch);
-			ImGui::TableSetupColumn("LastSetting", ImGuiTableColumnFlags_WidthStretch);
-			ImGui::TableSetupColumn("LastValue", ImGuiTableColumnFlags_WidthStretch);
-			ImGui::TableSetupScrollFreeze(0, 1); // Make row always visible
-			ImGui::TableHeadersRow();
-
-			static _float fNextTimeAcc{ 0.f };
-
-			static _string InputTrigger = "##InputTrigger2";
-			static _string OverT = "##OverT2";
-			static _string NextAnim = "##NextAnim2";
-			static _string SupV = "##SupV2";
-			static _string NextAnimTimeAcc = "##NextAnimTimeAcc2";
-			static _string ChangeT = "##ChangeT2";
-			static _string EnableLastSettingAnim2 = "##EnableLastSettingAnim2";
-			static _string EnableLastValue2 = "##EnableLastSettingValue2";
-			static _int SelectRemoveItem{ -1 };
-
-			if (true == ImGui::Button("Remove##2"))
-			{
-				if (-1 != SelectRemoveItem)
-				{
-					_spAnim->RemoveAnimEvent(ANIMEVENTTYPE::ANIMEVENT_ANIMOCCURSTIMEPASS, SelectRemoveItem);
-					SelectRemoveItem = -1;
-				}
-			}
-
-			_int iIndex{ 0 };
-			_float Duration = static_cast<_float>(_spAnim->GetDuration());
-			for (auto& iter : _AnimEvent)
-			{
-				_string Index = _string::to_string(iIndex);
-
-				ANIMOCURRESDESC* OccursDesc = remove_const<ANIMOCURRESDESC*, ANIMEVENTDESC*>(iter->OutAnimEventDesc());
-				ANIMCHANGEDESC* ChangeDesc = remove_const<ANIMCHANGEDESC*, ANIMOTHEREVENTDESC*>(iter->OutOtherEventDesc());
-
-				_int iSelectAnim = ChangeDesc->iNextAnimIndex;
-				{
-					ImGui::TableNextColumn();
-					ImGui::SetNextItemWidth(-FLT_MIN);
-					_string str = UMethod::ConvertWToS(OccursDesc->wstrEventTrigger);
-					if (true == ImGui::InputText(InputTrigger + Index, &str[0], MAX_BUFFER_LENGTH))
-					{
-						OccursDesc->wstrEventTrigger = UMethod::ConvertSToW(str);
-					}
-				}
-				{
-					ImGui::TableNextColumn();
-					ImGui::SetNextItemWidth(-FLT_MIN);
-					_float Time = static_cast<_float>(OccursDesc->dAnimOccursTime);
-					ImGui::InputFloat(OverT + Index, &Time, 0.0f, Duration);
-					OccursDesc->dAnimOccursTime = static_cast<_double>(Time);
-				}
-				{
-					ImGui::TableNextColumn();
-					ImGui::SetNextItemWidth(-FLT_MIN);
-					if (true == ImGui::Combo(NextAnim + Index, &iSelectAnim, &s_AnimTags[0], m_AnimMaxTagCount))
-					{
-						ChangeDesc->iNextAnimIndex = m_spAnimControlModel->GetAnimationClips().find(s_AnimTags[iSelectAnim])->second;
-						fNextTimeAcc = static_cast<_float>(m_spShowAnimModel->GetAnimations()[ChangeDesc->iNextAnimIndex]->GetTimeAcc());
-					}
-				}
-				// Supply Anim Value
-				{
-					ImGui::TableNextColumn();
-					ImGui::SetNextItemWidth(-FLT_MIN);
-					ImGui::InputFloat(SupV + Index, &ChangeDesc->fSupplyAnimValue);
-				}
-				// NextAnimTimeAcc
-				{
-					ImGui::TableNextColumn();
-					ImGui::SetNextItemWidth(-FLT_MIN);
-					_float Time = static_cast<_float>(ChangeDesc->dNextAnimTimeAcc);
-					ImGui::InputFloat(NextAnimTimeAcc + Index, &Time);
-					ChangeDesc->dNextAnimTimeAcc = static_cast<_double>(Time);
-				}
-				// Change Anim Time
-				{
-					ImGui::TableNextColumn();
-					ImGui::SetNextItemWidth(-FLT_MIN);
-					ImGui::InputFloat(ChangeT + Index, &ChangeDesc->fAnimChangeTime);
-				}
-				// Last Setting Anim Info
-				{
-					{
-						ImGui::TableNextColumn();
-						ImGui::SetNextItemWidth(-FLT_MIN);
-						ImGui::Checkbox(EnableLastSettingAnim2 + Index, &ChangeDesc->isEnableLastSettingAnim);
-					}
-					{
-						ImGui::TableNextColumn();
-						ImGui::SetNextItemWidth(-FLT_MIN);
-						ImGui::InputFloat(EnableLastValue2 + Index, &ChangeDesc->fLastProgressValue, 0.01f);
-					}
-				}
-
 				if (ImGui::IsItemClicked())
 					SelectRemoveItem = iIndex;
 				++iIndex;
@@ -804,3 +686,127 @@ void TAnimControlView::AnimSoundShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFl
 		ImGui::TreePop();
 	}
 }
+
+
+/*
+* Æó±â
+* 
+void TAnimControlView::AnimOccursShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFlags _flags, const VECTOR<SHPTR<UAnimEvent>>& _AnimEvent)
+{
+	if (ImGui::TreeNodeEx("AnimOccursTimePassShow", ImGuiTreeNodeFlags_Bullet))
+	{
+		ImGui::SetNextItemWidth(-FLT_MIN);
+		if (ImGui::BeginTable("AnimOccursTimePass", 8, _flags, ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 20), 0.0f))
+		{
+			ImGui::TableSetupColumn("InputTrigger", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupColumn("Over", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupColumn("NextAnim", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupColumn("SupV", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupColumn("NextTA", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupColumn("LastSetting", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupColumn("LastValue", ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupScrollFreeze(0, 1); // Make row always visible
+			ImGui::TableHeadersRow();
+
+			static _float fNextTimeAcc{ 0.f };
+
+			static _string InputTrigger = "##InputTrigger2";
+			static _string OverT = "##OverT2";
+			static _string NextAnim = "##NextAnim2";
+			static _string SupV = "##SupV2";
+			static _string NextAnimTimeAcc = "##NextAnimTimeAcc2";
+			static _string ChangeT = "##ChangeT2";
+			static _string EnableLastSettingAnim2 = "##EnableLastSettingAnim2";
+			static _string EnableLastValue2 = "##EnableLastSettingValue2";
+			static _int SelectRemoveItem{ -1 };
+
+			if (true == ImGui::Button("Remove##2"))
+			{
+				if (-1 != SelectRemoveItem)
+				{
+					_spAnim->RemoveAnimEvent(ANIMEVENTTYPE::ANIMEVENT_ANIMOCCURSTIMEPASS, SelectRemoveItem);
+					SelectRemoveItem = -1;
+				}
+			}
+
+			_int iIndex{ 0 };
+			_float Duration = static_cast<_float>(_spAnim->GetDuration());
+			for (auto& iter : _AnimEvent)
+			{
+				_string Index = _string::to_string(iIndex);
+
+				ANIMOCURRESDESC* OccursDesc = remove_const<ANIMOCURRESDESC*, ANIMEVENTDESC*>(iter->OutAnimEventDesc());
+				ANIMCHANGEDESC* ChangeDesc = remove_const<ANIMCHANGEDESC*, ANIMOTHEREVENTDESC*>(iter->OutOtherEventDesc());
+
+				_int iSelectAnim = ChangeDesc->iNextAnimIndex;
+				{
+					ImGui::TableNextColumn();
+					ImGui::SetNextItemWidth(-FLT_MIN);
+					_string str = UMethod::ConvertWToS(OccursDesc->wstrEventTrigger);
+					if (true == ImGui::InputText(InputTrigger + Index, &str[0], MAX_BUFFER_LENGTH))
+					{
+						OccursDesc->wstrEventTrigger = UMethod::ConvertSToW(str);
+					}
+				}
+				{
+					ImGui::TableNextColumn();
+					ImGui::SetNextItemWidth(-FLT_MIN);
+					_float Time = static_cast<_float>(OccursDesc->dAnimOccursTime);
+					ImGui::InputFloat(OverT + Index, &Time, 0.0f, Duration);
+					OccursDesc->dAnimOccursTime = static_cast<_double>(Time);
+				}
+				{
+					ImGui::TableNextColumn();
+					ImGui::SetNextItemWidth(-FLT_MIN);
+					if (true == ImGui::Combo(NextAnim + Index, &iSelectAnim, &s_AnimTags[0], m_AnimMaxTagCount))
+					{
+						ChangeDesc->iNextAnimIndex = m_spAnimControlModel->GetAnimationClips().find(s_AnimTags[iSelectAnim])->second;
+						fNextTimeAcc = static_cast<_float>(m_spShowAnimModel->GetAnimations()[ChangeDesc->iNextAnimIndex]->GetTimeAcc());
+					}
+				}
+				// Supply Anim Value
+				{
+					ImGui::TableNextColumn();
+					ImGui::SetNextItemWidth(-FLT_MIN);
+					ImGui::InputFloat(SupV + Index, &ChangeDesc->fSupplyAnimValue);
+				}
+				// NextAnimTimeAcc
+				{
+					ImGui::TableNextColumn();
+					ImGui::SetNextItemWidth(-FLT_MIN);
+					_float Time = static_cast<_float>(ChangeDesc->dNextAnimTimeAcc);
+					ImGui::InputFloat(NextAnimTimeAcc + Index, &Time);
+					ChangeDesc->dNextAnimTimeAcc = static_cast<_double>(Time);
+				}
+				// Change Anim Time
+				{
+					ImGui::TableNextColumn();
+					ImGui::SetNextItemWidth(-FLT_MIN);
+					ImGui::InputFloat(ChangeT + Index, &ChangeDesc->fAnimChangeTime);
+				}
+				// Last Setting Anim Info
+				{
+					{
+						ImGui::TableNextColumn();
+						ImGui::SetNextItemWidth(-FLT_MIN);
+						ImGui::Checkbox(EnableLastSettingAnim2 + Index, &ChangeDesc->isEnableLastSettingAnim);
+					}
+					{
+						ImGui::TableNextColumn();
+						ImGui::SetNextItemWidth(-FLT_MIN);
+						ImGui::InputFloat(EnableLastValue2 + Index, &ChangeDesc->fLastProgressValue, 0.01f);
+					}
+				}
+
+				if (ImGui::IsItemClicked())
+					SelectRemoveItem = iIndex;
+				++iIndex;
+				ImGui::TableNextRow();
+			}
+			ImGui::EndTable();
+		}
+		ImGui::TreePop();
+	}
+}
+
+*/

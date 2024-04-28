@@ -58,7 +58,7 @@ public:
 
 	void ClearNeightborRegion() { m_NeighborRegion.clear(); }
 	// Add Neighbor Region
-	void Add_NeighborRegion(SHPTR<URegion>& _pRegion);
+	void Add_NeighborRegion(CSHPTRREF<URegion> _pRegion);
 
 	const _bool& IsDeletion() const { return m_bDeletionEnabled; }
 private:
@@ -66,7 +66,7 @@ private:
 protected:
 	SHPTR<UNavigation>	m_spNavigation;
 	_uint	m_iIndex = 0;
-	LIST<SHPTR<URegion>>	m_NeighborRegion;
+	LIST<WKPTR<URegion>>	m_NeighborRegion;
 
 	SET<SHPTR<UCell>> m_DeleteCellsList;
 	_bool m_bDeletionEnabled;

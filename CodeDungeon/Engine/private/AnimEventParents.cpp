@@ -49,13 +49,21 @@ UAnimSectionEvent::UAnimSectionEvent(const ANIMEVENTSECTIONDESC& _AnimEventDesc,
 _bool UAnimSectionEvent::EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc,
 	const _wstring& _wstrInputTrigger)
 {
-	if (m_AnimSectionDesc.IsAnimEventActive(_dTimeAcc) || true  == m_AnimSectionDesc.isAnimChangeActive)
+	if (false == m_AnimSectionDesc.isAnimChangeActive)
 	{
-		if ((!lstrcmp(m_AnimSectionDesc.wstrEventTrigger.c_str(), _wstrInputTrigger.c_str())
-			|| !lstrcmp(m_AnimSectionDesc.wstrEventTrigger.c_str(), L"")))
+		if (m_AnimSectionDesc.IsAnimEventActive(_dTimeAcc))
 		{
-			EventSituation(_pPawn, _pAnimModel, _dTimeDelta, _dTimeAcc);
+			if ((!lstrcmp(m_AnimSectionDesc.wstrEventTrigger.c_str(), _wstrInputTrigger.c_str())
+				|| !lstrcmp(m_AnimSectionDesc.wstrEventTrigger.c_str(), L"")))
+			{
+				m_AnimSectionDesc.isAnimChangeActive = true;
+				return true;
+			}
 		}
+	}
+	else
+	{
+		EventSituation(_pPawn, _pAnimModel, _dTimeDelta, _dTimeAcc);
 		return true;
 	}
 	return false;
@@ -76,6 +84,13 @@ void UAnimSectionEvent::LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstr
 	UMethod::ReadString(_load, m_AnimSectionDesc.wstrEventTrigger);
 	_load.read((_char*)&m_AnimSectionDesc.dStartTime, sizeof(_double));
 	_load.read((_char*)&m_AnimSectionDesc.dEndTime, sizeof(_double));
+}
+
+void UAnimSectionEvent::ResetEventData(UAnimModel* _pAnimModel)
+{
+	m_AnimSectionDesc.isActiveEvent = false;
+	m_AnimSectionDesc.isAnimChangeActive = false;
+	_pAnimModel->GetCurrentAnimation()->ResetAnimChangeEventNode();
 }
 
 void UAnimSectionEvent::Free()
@@ -108,17 +123,20 @@ _bool UAnimOccurEvent::EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const 
 	{
 		if (false == m_AnimOccurDesc.isActiveEvent)
 		{
-			if (!lstrcmp(m_AnimOccurDesc.wstrEventTrigger.c_str(), _wstrInputTrigger.c_str()) || !lstrcmp(m_AnimOccurDesc.wstrEventTrigger.c_str(), L""))
+			if (!lstrcmp(m_AnimOccurDesc.wstrEventTrigger.c_str(), _wstrInputTrigger.c_str()) || 
+				!lstrcmp(m_AnimOccurDesc.wstrEventTrigger.c_str(), L""))
 			{
 				// Enable Lerp가 되면 맨 마지막 얘와 다음 애니메이션 첫 번째 노드와 이음 
 				EventSituation(_pPawn, _pAnimModel, _dTimeDelta, _dTimeAcc);
 				m_AnimOccurDesc.isActiveEvent = true;
+				m_AnimOccurDesc.isAnimChangeActive = true;
 			}
 		}
 		return true;
 	}
 	else
 	{
+		m_AnimOccurDesc.isAnimChangeActive = false;
 		m_AnimOccurDesc.isActiveEvent = false;
 	}
 	return false;

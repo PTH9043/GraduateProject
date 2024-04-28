@@ -56,6 +56,9 @@
     <Filter Include="90.ShowModel">
       <UniqueIdentifier>{5fbdec0a-1c2f-4284-ad66-7fbd4092c90c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="90.ShowModel\Anim">
+      <UniqueIdentifier>{b5957300-6878-4226-bf9b-8378f74cd042}</UniqueIdentifier>
+    </Filter>
     <Filter Include="90.ShowModel\Model">
       <UniqueIdentifier>{2faa2d8d-82f0-4422-b94f-5ee6bb8c311b}</UniqueIdentifier>
     </Filter>
@@ -97,9 +100,6 @@
     </Filter>
     <Filter Include="91.GuizmoManager">
       <UniqueIdentifier>{cb1408c4-57f9-4a13-8033-3b803b012428}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="90.ShowModel\Anim">
-      <UniqueIdentifier>{b5957300-6878-4226-bf9b-8378f74cd042}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

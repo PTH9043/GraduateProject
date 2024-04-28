@@ -97,7 +97,7 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 
 void CMainScene::LateTick(const _double& _dTimeDelta)
 {
-	m_spMap->GetStageManager()->GetStage()->AddRenderAll();
+	//m_spMap->GetStageManager()->GetStage()->AddRenderAll();
 }
 
 END

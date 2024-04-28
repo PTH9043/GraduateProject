@@ -435,7 +435,7 @@ void URegion::Control_Collider()
 	}
 }
 
-void URegion::Add_NeighborRegion(SHPTR<URegion>& _pRegion)
+void URegion::Add_NeighborRegion(CSHPTRREF<URegion> _pRegion)
 {
 	if (nullptr == _pRegion || nullptr == m_spNavigation)
 		return;
@@ -446,7 +446,7 @@ void URegion::Add_NeighborRegion(SHPTR<URegion>& _pRegion)
 	{
 		for (auto& iter : m_NeighborRegion)
 		{
-			if (iter == _pRegion)
+			if (iter.lock() == _pRegion)
 				return;
 		}
 		m_NeighborRegion.push_back(_pRegion);

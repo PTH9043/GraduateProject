@@ -65,6 +65,8 @@ protected:
 	virtual void EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc) PURE;
 	virtual void SaveEvent( std::ofstream& _save) PURE;
 	virtual void LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) PURE;
+protected:
+	void ResetEventData(UAnimModel* _pAnimModel);
 private:
 	virtual void Free() PURE;
 private:

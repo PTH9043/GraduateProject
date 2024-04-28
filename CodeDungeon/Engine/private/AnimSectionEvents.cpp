@@ -33,6 +33,8 @@ void UAnimChangeBetweenEvent::EventSituation(UPawn* _pPawn, UAnimModel* _pAnimMo
 		// 바꿔야 하는 구간에 바꾼다. 
 		if (m_AnimChangeDesc.fAnimChangeTime <= _dTimeAcc)
 		{
+			ResetEventData(_pAnimModel);
+			// 현재 event 비활성화
 			_pAnimModel->SetSupplyLerpValue(m_AnimChangeDesc.fSupplyAnimValue);
 			_pAnimModel->ChangeAnimation(m_AnimChangeDesc.iNextAnimIndex, m_AnimChangeDesc.dNextAnimTimeAcc);
 		}
@@ -43,6 +45,7 @@ void UAnimChangeBetweenEvent::EventSituation(UPawn* _pPawn, UAnimModel* _pAnimMo
 		// 만약
 		if (_pAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= m_AnimChangeDesc.fLastProgressValue)
 		{
+			ResetEventData(_pAnimModel);
 			_pAnimModel->SetAnimation(m_AnimChangeDesc.iNextAnimIndex);
 		}
 	}

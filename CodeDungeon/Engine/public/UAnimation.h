@@ -57,6 +57,8 @@ public:
 	void RemoveAnimEvent(CSHPTRREF<UAnimEvent> _spAnimEvent);
 	// Remove Event
 	void RemoveAnimEvent(ANIMEVENTTYPE _AnimEventType, _int _RemoveEvent);
+	// 애니메이션 이벤트 노드를 제거
+	void ResetAnimChangeEventNode() { m_spActiveAnimChangeEvent = nullptr; }
 	// Save Sections
 	void SaveAnimSectionData(const _wstring& _wstrPath);
 	void SaveAnimSectionPathIsFolder(const _wstring& _wstrPath);
@@ -86,6 +88,7 @@ private:
 	_double									m_dAnimationProgressRate;
 	// Animation Event 
 	ANIMEVENTCONTAINER		m_AnimEventContainer;
+	SHPTR< UAnimEvent>		m_spActiveAnimChangeEvent;
 	// IS ApplyRootBone 
 	_bool										m_isApplyRootBoneMove;
 };

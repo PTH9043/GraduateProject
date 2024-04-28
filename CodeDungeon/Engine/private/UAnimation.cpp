@@ -19,7 +19,8 @@ UAnimation::UAnimation() :
 	m_fTotalAnimationFastValue{1.f},
 	m_isFinishAnimation{false},
 	m_dAnimationProgressRate{0.f},
-	m_isApplyRootBoneMove{true}
+	m_isApplyRootBoneMove{true},
+	m_spActiveAnimChangeEvent{nullptr}
 {
 }
 
@@ -36,7 +37,8 @@ UAnimation::UAnimation(const UAnimation& _rhs) :
 	m_fTotalAnimationFastValue{ 1.f },
 	m_isFinishAnimation{ false },
 	m_dAnimationProgressRate{ 0.f },
-	m_isApplyRootBoneMove{ true }
+	m_isApplyRootBoneMove{ true },
+	m_spActiveAnimChangeEvent{ nullptr }
 {
 }
 
@@ -149,12 +151,51 @@ void UAnimation::UpdateNextAnimTransformMatrices(const _double& _dTimeDelta, con
 
 void UAnimation::TickAnimEvent(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _TimeDelta, const _wstring& _wstrInputTrigger)
 {
-	for (auto& iter : m_AnimEventContainer)
+	// 만약 ActiveAnimChagneEvent가 활성화되지 않았다면, 활성화할때까지 찾아라
+	if (nullptr == m_spActiveAnimChangeEvent)
 	{
-		for (auto& Event : iter.second)
+		for (auto& Event : m_AnimEventContainer[ANIMEVENTTYPE::ANIMEVENT_ANIMCHANGESBETWEEN])
 		{
-			Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, m_dTimeAcc, _wstrInputTrigger);
+			if (true == Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, m_dTimeAcc, _wstrInputTrigger))
+			{
+				m_spActiveAnimChangeEvent = Event;
+			}
 		}
+	}
+	else
+	{
+		// 이벤트 활성화
+		m_spActiveAnimChangeEvent->EventCheck(_pPawn, _pAnimModel, _TimeDelta, m_dTimeAcc, _wstrInputTrigger);
+	}
+	// Collider Event 
+	for (auto& Event : m_AnimEventContainer[ANIMEVENTTYPE::ANIMEVENT_COLLIDER])
+	{
+		Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, m_dTimeAcc, _wstrInputTrigger);
+	}
+	// Sound
+	for (auto& Event : m_AnimEventContainer[ANIMEVENTTYPE::ANIMEVENT_SOUND])
+	{
+		Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, m_dTimeAcc, _wstrInputTrigger);
+	}
+	// Effect
+	for (auto& Event : m_AnimEventContainer[ANIMEVENTTYPE::ANIMEVENT_EFFECT])
+	{
+		Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, m_dTimeAcc, _wstrInputTrigger);
+	}
+	// Camera
+	for (auto& Event : m_AnimEventContainer[ANIMEVENTTYPE::ANIMEVENT_CAMERA])
+	{
+		Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, m_dTimeAcc, _wstrInputTrigger);
+	}
+	// OBJ Active
+	for (auto& Event : m_AnimEventContainer[ANIMEVENTTYPE::ANIMEVENT_OBJACTIVE])
+	{
+		Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, m_dTimeAcc, _wstrInputTrigger);
+	}
+	// Collider
+	for (auto& Event : m_AnimEventContainer[ANIMEVENTTYPE::ANIMEVENT_COLLIDER])
+	{
+		Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, m_dTimeAcc, _wstrInputTrigger);
 	}
 }
 

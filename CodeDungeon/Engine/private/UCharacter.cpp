@@ -1,6 +1,9 @@
 #include "EngineDefine.h"
 #include "UCharacter.h"
 #include "UTransform.h"
+#include "UAnimModel.h"
+#include "UMethod.h"
+#include "UGameInstance.h"
 
 UCharacter::UCharacter(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, 
 	const CLONETYPE& _eCloneType) : 
@@ -23,7 +26,16 @@ HRESULT UCharacter::NativeConstruct()
 
 HRESULT UCharacter::NativeConstructClone(const VOIDDATAS& _Datas)
 {
-	return __super::NativeConstructClone(_Datas);
+	RETURN_CHECK(__super::NativeConstructClone(_Datas), E_FAIL);
+
+	CHARACTERDESC* pCharacterDesc = UMethod::ConvertTemplate_Index<CHARACTERDESC*>(_Datas, CHARACTERDESCORDER);
+	assert(nullptr != pCharacterDesc);
+
+	// 현재 애니메이션 모델을 받아온다. 
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	m_spAnimModel = std::static_pointer_cast<UAnimModel>(spGameInstance->CloneResource(pCharacterDesc->wstrAnimModelProtoData));
+
+	return S_OK;
 }
 
 _float UCharacter::OtherCharacterToDistance(CSHPTRREF<UActor> _spOtherActor)
