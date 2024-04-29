@@ -370,6 +370,9 @@
     <Filter Include="06.Component\Controller\InputController">
       <UniqueIdentifier>{c529b1d4-5e06-430b-ae99-27b1bc65fad3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06.Component\Controller\InputController\KeyboardController">
+      <UniqueIdentifier>{88248fa5-77f0-4f27-a87e-383516910554}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
