@@ -51,34 +51,37 @@ void CMap::LoadRooms()
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	SHPTR<FILEGROUP> MapFolder = spGameInstance->FindFolder(L"Map");
 
-	SHPTR<FILEGROUP> ConvertFolder = MapFolder->FindGroup(L"Convert");
-	if (nullptr != ConvertFolder && 0 <= ConvertFolder->FileDataList.size())
+	for (const FOLDERPAIR& Folder : MapFolder->UnderFileGroupList)
 	{
-		for (const FILEPAIR& File : ConvertFolder->FileDataList)
+		SHPTR<FILEGROUP> ConvertFolder = Folder.second->FindGroup(L"Convert");
+		if (nullptr != ConvertFolder && 0 <= ConvertFolder->FileDataList.size())
 		{
-			_wstring ModelProtoTag = L"Proto_Res_Model_";
-			_wstring FileName = File.second->wstrfileName;
-			size_t pos = FileName.find(L"_FBX.bin");
-			if (pos != _wstring::npos)
-				FileName.erase(pos, FileName.length());
-			ModelProtoTag.append(FileName);
+			for (const FILEPAIR& File : ConvertFolder->FileDataList)
+			{
+				_wstring ModelProtoTag = L"Proto_Res_Model_";
+				_wstring FileName = File.second->wstrfileName;
+				size_t pos = FileName.find(L"_FBX.bin");
+				if (pos != _wstring::npos)
+					FileName.erase(pos, FileName.length());
+				ModelProtoTag.append(FileName);
 
-			CRooms::ROOMDESC tDesc;
-			tDesc._wsRoomName = FileName;
+				CRooms::ROOMDESC tDesc;
+				tDesc._wsRoomName = FileName;
 
-			SHPTR<CRooms> _Room = std::static_pointer_cast<CRooms>(spGameInstance->CloneActorAdd(PROTO_ACTOR_ROOM, { &tDesc }));
-			_Room->SetModel(ModelProtoTag);
+				SHPTR<CRooms> _Room = std::static_pointer_cast<CRooms>(spGameInstance->CloneActorAdd(PROTO_ACTOR_ROOM, { &tDesc }));
+				_Room->SetModel(ModelProtoTag);
 
-			m_spRoomContainer->emplace(FileName, _Room);
+				m_spRoomContainer->emplace(FileName, _Room);
 
-			pos = ModelProtoTag.find(FileName);
-			if (pos != _wstring::npos)
-				ModelProtoTag.erase(pos, FileName.length());
+				pos = ModelProtoTag.find(FileName);
+				if (pos != _wstring::npos)
+					ModelProtoTag.erase(pos, FileName.length());
+			}
 		}
-	}
-	else
-	{
-		return;
+		else
+		{
+			return;
+		}
 	}
 }
 

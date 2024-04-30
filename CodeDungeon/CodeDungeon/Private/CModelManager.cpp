@@ -18,13 +18,16 @@ HRESULT CModelManager::CreateModelProtos(CSHPTRREF<UGameInstance> _spGameInstanc
 {
 	SHPTR<FILEGROUP> ModelFolder = _spGameInstance->FindFolder(L"Model");
 
-	for (const FOLDERPAIR& Folder : ModelFolder->UnderFileGroupList)
+	//for (const FOLDERPAIR& Folder : ModelFolder->UnderFileGroupList)
+	//{
+	//	AddModelProtosFromFile(_spGameInstance, _spDevice, Folder.second);
+	//}
+
+	SHPTR<FILEGROUP> MapFolder = _spGameInstance->FindFolder(L"Map");
+	for (const FOLDERPAIR& Folder : MapFolder->UnderFileGroupList)
 	{
 		AddModelProtosFromFile(_spGameInstance, _spDevice, Folder.second);
 	}
-
-	SHPTR<FILEGROUP> MapFolder = _spGameInstance->FindFolder(L"Map");
-	AddModelProtosFromFile(_spGameInstance, _spDevice, MapFolder);
 
 	return S_OK;
 }

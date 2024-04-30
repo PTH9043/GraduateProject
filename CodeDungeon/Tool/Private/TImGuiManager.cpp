@@ -18,6 +18,7 @@
 #include "TFireView.h"
 #include "TFogView.h"
 #include "TNavigationView.h"
+#include "TMapView.h"
 
 
 IMPLEMENT_SINGLETON(TImGuiManager)
@@ -196,5 +197,13 @@ HRESULT TImGuiManager::ReadyImGuiClass()
 		m_spMainView->InsertImGuiView(spNavigationView);
 
 	}
+
+	//{
+	//	SHPTR<TMapView> spMapView = CreateConstructorNative<TMapView>(m_spDevice);
+	//	spMapView->CloseImGui();
+	//	m_ImGuiObjectContainer.insert(MakePair(IMGTAG::MAPTOOL, spMapView));
+	//	m_spMainView->InsertImGuiView(spMapView);
+
+	//}
 	return S_OK;
 }

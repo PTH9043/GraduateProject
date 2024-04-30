@@ -30,6 +30,8 @@ protected:
 	void RenderActive() override;
 private:
 	void MapView();
+	void LoadMapDatas();
+	void LoadRooms();
 
 private:
 	MAINDESC												m_stMainDesc;
@@ -38,8 +40,8 @@ private:
 	_double													m_dShowDeltaTime;
 	_bool													m_isInitSetting;
 
-	MAPMODELCONTAINER										m_umMapModelContainer;
-	SHOWMAPMODELCONTAINER									m_umShowMapModelContainer;
+	SHPTR<MAPMODELCONTAINER>								m_spMapModelContainer;
+	SHPTR<SHOWMAPMODELCONTAINER>							m_spShowMapModelContainer;
 
 };
 

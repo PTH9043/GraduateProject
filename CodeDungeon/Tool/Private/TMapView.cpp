@@ -83,3 +83,44 @@ void TMapView::MapView()
 
 
 }
+
+void TMapView::LoadMapDatas()
+{
+	if (ImGui::TreeNodeEx("Add ShowModel", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+
+
+
+	}
+}
+
+void TMapView::LoadRooms()
+{
+	//SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	//SHPTR<FILEGROUP> MapFolder = spGameInstance->FindFolder(L"Map");
+
+	//SHPTR<FILEGROUP> ConvertFolder = MapFolder->FindGroup(L"Convert");
+	//if (nullptr != ConvertFolder && 0 <= ConvertFolder->FileDataList.size())
+	//{
+	//	for (const FILEPAIR& File : ConvertFolder->FileDataList)
+	//	{
+	//		_wstring FileName = File.second->wstrfileName;
+	//		size_t pos = FileName.find(L"_FBX.bin");
+	//		if (pos != _wstring::npos)
+	//			FileName.erase(pos, FileName.length());
+
+	//		SHPTR<TShowModelObject> _Room = std::static_pointer_cast<TShowModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWMODELOBJECT));
+	//		_Room->SetShowModel(ModelProtoTag);
+
+	//		m_spMapModelContainer->emplace(FileName, _Room);
+
+	//		pos = ModelProtoTag.find(FileName);
+	//		if (pos != _wstring::npos)
+	//			ModelProtoTag.erase(pos, FileName.length());
+	//	}
+	//}
+	//else
+	//{
+	//	return;
+	//}
+}
