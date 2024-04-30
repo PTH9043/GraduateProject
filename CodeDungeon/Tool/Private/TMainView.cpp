@@ -2,6 +2,8 @@
 #include "TMainView.h"
 #include "UGameInstance.h"
 #include "UTexture.h"
+#include "TMainScene.h"
+#include "UGrid.h"
 
 TMainView::TMainView(CSHPTRREF<UDevice> _spDevice) :
     TImGuiView(_spDevice, "MainView"),
@@ -9,7 +11,8 @@ TMainView::TMainView(CSHPTRREF<UDevice> _spDevice) :
     m_stDebuggingView{},
     m_OpenImGuies{},
     m_dShowDeltaTime{ 0.0 },
-    m_isDockBuilding{ false }
+    m_isDockBuilding{ false },
+    m_bGridActive{true}
 {
 }
 
@@ -114,6 +117,15 @@ void TMainView::RenderMenu()
         {
             ImGui::Text("Camera Rotation Key - Mouse R Btn");
             ImGui::Text("Camera ZoomIn ZoomOut Key - Mouse Scroll Btn");
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Grid"))
+        {
+            if (ImGui::MenuItem("Active Grid", nullptr, &m_bGridActive))
+            {
+                static_pointer_cast<TMainScene>(GetGameInstance()->GetCurScene())->GetGrid()->SetActive(m_bGridActive);
+            }
             ImGui::EndMenu();
         }
 

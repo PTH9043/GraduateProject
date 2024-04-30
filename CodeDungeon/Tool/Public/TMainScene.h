@@ -24,11 +24,11 @@ public:
 	virtual void Tick(const _double& _dTimeDelta) override;
 	virtual void LateTick(const _double& _dTimeDelta) override;
 
-	SHPTR<UGrid>		GetGrid() { return		m_spTestObject; }
+	SHPTR<UGrid>		GetGrid() { return		m_spGrid; }
 private:
 	// Main
 	SHPTR<TMainCamera>			m_spMainCamera;
-	SHPTR<UGrid>				m_spTestObject;
+	SHPTR<UGrid>				m_spGrid;
 
 
 };
