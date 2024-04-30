@@ -61,9 +61,6 @@ private:
 private:
 	using MODELS = UNORMAP<_string, SHPTR<UModel>>;
 	using ANIMMODEL = UNORMAP<_string, SHPTR<UAnimModel>>;
-	using FILEGROUPS = UNORMAP<_string, SHPTR<FILEGROUP>>;
-	using FOLDERPAIR = std::pair<_wstring, SHPTR<FILEGROUP>>;
-	using FILEPAIR = std::pair<_wstring, SHPTR<FILEDATA>>;
 	using SHOWMODELS = UNORMAP<_string, SHPTR<TShowModelObject>>;
 	using SHOWANIMEMODELS = UNORMAP<_string, SHPTR<TShowAnimModelObject>>;
 
