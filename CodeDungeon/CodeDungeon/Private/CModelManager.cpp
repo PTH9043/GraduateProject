@@ -22,6 +22,10 @@ HRESULT CModelManager::CreateModelProtos(CSHPTRREF<UGameInstance> _spGameInstanc
 	{
 		AddModelProtosFromFile(_spGameInstance, _spDevice, Folder.second);
 	}
+
+	SHPTR<FILEGROUP> MapFolder = _spGameInstance->FindFolder(L"Map");
+	AddModelProtosFromFile(_spGameInstance, _spDevice, MapFolder);
+
 	return S_OK;
 }
 

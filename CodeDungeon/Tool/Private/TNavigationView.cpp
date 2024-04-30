@@ -340,6 +340,7 @@ void TNavigationView::NavigationView()
 				if(spGameInstance->IsMouseInWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT) && !m_bOnWindow)
 					ModifyNavigation(m_spStageManager->GetStage()->GetRegion(m_iRegionIndex));
 				m_spStageManager->GetStage()->Control_Collider(m_iRegionIndex);
+				m_spStageManager->GetStage()->SetRegionName(m_iRegionIndex);
 				m_spStageManager->GetStage()->SetColor(m_iRegionIndex);
 				m_spStageManager->GetStage()->ModifyCells(m_iRegionIndex);
 				m_spStageManager->GetStage()->ShowCells(m_iRegionIndex);
