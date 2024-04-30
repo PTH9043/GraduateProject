@@ -5,6 +5,8 @@
 #include "URegion.h"
 #include "UTransform.h"
 #include "UDefaultCube.h"
+#include <locale>
+#include <codecvt>
 
 UStage::UStage(CSHPTRREF<UDevice> _spDevice)
 	: UComponent(_spDevice),
@@ -201,11 +203,15 @@ _int UStage::SelectRegion()
 	if (ImGui::TreeNodeEx("Select_Region", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		_uint iRegionNum = 0;
-		for (REGIONLIST::iterator it = m_spRegionList->begin(); it != m_spRegionList->end(); ++it)
+		for (SHPTR<URegion> it : (*m_spRegionList.get()))
 		{
-			char pName[MAX_PATH] = { "Region " };
-			sprintf_s(pName, "%d", iRegionNum);
-			if (ImGui::Selectable(pName))
+			_wstring nameWstr = it->Get_Name();
+			// Convert wstring to UTF-8 string using MultiByteToWideChar
+			int utf8Length = WideCharToMultiByte(CP_UTF8, 0, nameWstr.c_str(), -1, NULL, 0, NULL, NULL);
+			std::string name(utf8Length, 0);
+			WideCharToMultiByte(CP_UTF8, 0, nameWstr.c_str(), -1, &name[0], utf8Length, NULL, NULL);
+
+			if (ImGui::Selectable(name.c_str()))
 			{
 				iIndex = iRegionNum;
 			}
