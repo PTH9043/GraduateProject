@@ -22,8 +22,7 @@ UModel::UModel(CSHPTRREF<UDevice> _spDevice, const TYPE& _eType) :
 	m_spFileGroup{ nullptr },
 	m_spFileData{ nullptr },
 	m_eType{ _eType },
-	m_wstrModelName{L""}, 
-	m_spControlModelShaderConstantBuffer{nullptr}
+	m_wstrModelName{L""}
 {
 }
 
@@ -38,8 +37,7 @@ UModel::UModel(const UModel& _rhs) :
 	m_spFileGroup{ _rhs.m_spFileGroup },
 	m_spFileData{ _rhs.m_spFileData },
 	m_eType{ _rhs.m_eType },
-	m_wstrModelName{ L"" },
-	m_spControlModelShaderConstantBuffer{nullptr}
+	m_wstrModelName{ L"" }
 {
 }
 
@@ -127,7 +125,7 @@ HRESULT UModel::NativeConstruct(CSHPTRREF<FILEGROUP> _spFileGroup, CSHPTRREF<FIL
 	RETURN_CHECK(nullptr == _spFileGroup || nullptr == _spFileData, E_FAIL);
 	m_spFileGroup = _spFileGroup; m_spFileData = _spFileData;
 	LoadToData(m_spFileData->wstrfilePath);
-	m_ControlModelMatrix.PivotMatrix = _PivotMatrix;
+	m_mPivotMatrix = _PivotMatrix;
 	return S_OK;
 }
 
@@ -141,7 +139,7 @@ HRESULT UModel::NativeConstruct(const PATHS& _vecPaths, const _wstring& _wstrFil
 	m_spFileData = m_spFileGroup->FindData(_wstrFileName);
 	RETURN_CHECK(nullptr == m_spFileData, E_FAIL);
 	LoadToData(m_spFileData->wstrfilePath);
-	m_ControlModelMatrix.PivotMatrix = _PivotMatrix;
+	m_mPivotMatrix = _PivotMatrix;
 	return S_OK;
 }
 
@@ -155,7 +153,7 @@ HRESULT UModel::NativeConstruct(const _wstring& _wstrModelFolder, const _wstring
 	m_spFileData = m_spFileGroup->FindData(_wstrFileName);
 	RETURN_CHECK(nullptr == m_spFileData, E_FAIL);
 	LoadToData(m_spFileData->wstrfilePath);
-	m_ControlModelMatrix.PivotMatrix = _PivotMatrix;
+	m_mPivotMatrix = _PivotMatrix;
 	return S_OK;
 }
 
@@ -165,9 +163,6 @@ HRESULT UModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	// Create Model ConstantBuffer 
 	/*m_spModelDataConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::MODELDATA, 
 		GetTypeSize<MODELDATAPARAM>());*/
-
-	m_spControlModelShaderConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::CONTROLMODELMATRIXPARAM,
-		GetTypeSize<CONTROLMODELMATRIXPARAM>());
 
 	MESHCONTAINERS MeshContainers{};
 	BONENODES BoneNodes{};
@@ -227,7 +222,6 @@ HRESULT UModel::Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader, CS
 	RETURN_CHECK(GetMeshContainerCnt() <= _iMeshIndex, E_FAIL);
 	RETURN_CHECK(nullptr == GetMeshContainers()[_iMeshIndex], E_FAIL);
 	CSHPTRREF<UMeshContainer> spMeshContainer{ GetMeshContainers()[_iMeshIndex] };
-	BindPivotMatrix(_spShader);
 	spMeshContainer->Render(_spShader, _spCommand);
 	return S_OK;
 }
@@ -465,11 +459,6 @@ void UModel::LoadMaterial(REF_IN std::ifstream& _ifRead, REF_IN UNORMAP<_uint, V
 void UModel::BringModelName(const _wstring& _wstrPath)
 {
 	m_wstrModelName = _wstrPath.substr(_wstrPath.find_last_of(L"\\") + 1, _wstrPath.find_last_of(L"."));
-}
-
-void UModel::BindPivotMatrix(CSHPTRREF<UShader> _spShader)
-{
-	_spShader->BindCBVBuffer(m_spControlModelShaderConstantBuffer, &m_ControlModelMatrix, GetTypeSize<CONTROLMODELMATRIXPARAM>());
 }
 
 void UModel::CreateRootBoneToOrder(MODELDESC* _pDesc, _int _BoneOrder)

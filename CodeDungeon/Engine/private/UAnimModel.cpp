@@ -139,13 +139,10 @@ void UAnimModel::TickAnimChangeTransform(CSHPTRREF<UTransform> _spTransform, con
 	assert(_spTransform && m_spCurAnimation);
 	TickAnimation(_dTimeDelta);
 
-
-
 	RETURN_CHECK(true == m_spCurAnimation->IsSupplySituation(), ;);
 
 	if (true == m_spCurAnimation->IsFinishAnim())
 	{
-		m_spCurAnimation->ResetAnimChangeEventNode();
 		GetRootBoneNode()->ResetRootBoneInfo();
 		return;
 	}
@@ -183,7 +180,6 @@ HRESULT UAnimModel::Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader
 	_spShader->BindCBVBuffer(m_spBoneMatrixShaderConstantBuffer, m_vecSetupBonMatrix[_iMeshIndex].data(), GetTypeSize<BONEMATRIXPARAM>());
 	// 애니메이션 세팅
 	_spShader->BindCBVBuffer(m_spAnimShaderConstantBuffer, &m_stAnimParam, GetTypeSize<ANIMATIONPARAM>());
-	BindPivotMatrix(_spShader);
 	spMeshContainer->Render(_spShader, _spCommand);
 	return S_OK;
 }

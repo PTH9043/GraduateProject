@@ -82,14 +82,12 @@ protected:
 	void LoadBoneData(REF_IN std::ifstream& _ifRead, REF_IN VECTOR<BONENODEDESC>& _vecBones);
 	void LoadMaterial(REF_IN std::ifstream& _ifRead, REF_IN UNORMAP<_uint, VECTOR<_wstring>>& _uomapMaterials, REF_IN MATERIALINFOS& _vecMaterialInfos);
 	void BringModelName(const _wstring& _wstrPath);
-
-	void BindPivotMatrix(CSHPTRREF<UShader> _spShader);
 protected: /* get set*/
 	void SetMeshContainers(const _uint _iMeshContainers) { this->m_iMeshContainerCnt = _iMeshContainers; }
 	void SetBoneNodesCnt(const _uint _iBoneNodesCnt) { this->m_iBoneNodeCnt = _iBoneNodesCnt; }
 	void SetMaterialsCnt(const _uint _iMaterialCnt) { this->m_iMaterialCnt = _iMaterialCnt; }
 
-	const _float4x4& GetPivotMatrix() const { return m_ControlModelMatrix.PivotMatrix; }
+	const _float4x4& GetPivotMatrix() const { return m_mPivotMatrix; }
 private:
 	void CreateRootBoneToOrder(MODELDESC* _pDesc, _int _BoneOrder = 0);
 private:
@@ -109,8 +107,7 @@ private:
 
 	TYPE															m_eType;
 	_wstring														m_wstrModelName;
-	CONTROLMODELMATRIXPARAM						m_ControlModelMatrix;
-	SHPTR<UShaderConstantBuffer>		m_spControlModelShaderConstantBuffer;
+	_float4x4													m_mPivotMatrix;
 };
 
 END

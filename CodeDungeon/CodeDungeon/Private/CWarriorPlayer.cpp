@@ -32,8 +32,8 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 
 	SHPTR<CMainCamera> spMainCamera = std::static_pointer_cast<CMainCamera>(GetFollowCamera());
 	spMainCamera->SetMoveState(false);
-	GetTransform()->SetScale({ 0.01, 0.01, 0.01 });
-	GetAnimModel()->SetAnimation(L"idle_01");
+	GetTransform()->SetScale({ 0.01f, 0.01f, 0.01f });
+	GetAnimModel()->SetAnimation(L"idle01");
 	return S_OK;
 }
 
@@ -41,9 +41,9 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
 
-	//RETURN_CHECK(CWarriorAnimController::ANIM_IDLE == GetAnimationController()->GetAnimState(), ;);
+	RETURN_CHECK(CWarriorAnimController::ANIM_IDLE == GetAnimationController()->GetAnimState(), ;);
 
-//	if (CWarriorAnimController::ANIM_MOVE == GetAnimationController()->GetAnimState())
+	if (CWarriorAnimController::ANIM_MOVE == GetAnimationController()->GetAnimState())
 	{
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 		if (spGameInstance->GetDIKeyPressing(DIK_W))

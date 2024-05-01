@@ -133,9 +133,8 @@ void UCharacter::TickActive(const _double& _dTimeDelta)
 {
 	// 이전 위치 저장
 	m_vPrevPos = GetTransform()->GetPos();
-
+	GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
 	m_spAnimationController->Tick(_dTimeDelta);
-	m_spAnimModel->TickAnimation(_dTimeDelta);
 }
 
 void UCharacter::LateTickActive(const _double& _dTimeDelta)

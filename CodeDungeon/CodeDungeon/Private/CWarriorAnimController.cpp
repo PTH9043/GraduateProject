@@ -35,7 +35,9 @@ HRESULT CWarriorAnimController::NativeConstructClone(const VOIDDATAS& _tDatas)
 
 void CWarriorAnimController::Tick(const _double& _dTimeDelta)
 {
-	m_wstrTrigger.clear();
+	/* Reset */
+	m_wstrTrigger = L"";
+	SetAnimState(-1);
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	SHPTR<UAnimModel> spAnimModel = GetOwnerCharacter()->GetAnimModel();
