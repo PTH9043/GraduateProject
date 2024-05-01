@@ -132,6 +132,8 @@ void UAnimModel::TickAnimChangeTransform(CSHPTRREF<UTransform> _spTransform, con
 	assert(_spTransform && m_spCurAnimation);
 	TickAnimation(_dTimeDelta);
 
+
+
 	RETURN_CHECK(true == m_spCurAnimation->IsSupplySituation(), ;);
 
 	if (true == m_spCurAnimation->IsFinishAnim())

@@ -4,14 +4,16 @@
 #include "UAnimModel.h"
 #include "UMethod.h"
 #include "UGameInstance.h"
+#include "UAnimationController.h"
 
 UCharacter::UCharacter(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, 
 	const CLONETYPE& _eCloneType) : 
-	UPawn(_spDevice, _wstrLayer, _eCloneType, BACKINGTYPE::DYNAMIC)
+	UPawn(_spDevice, _wstrLayer, _eCloneType, BACKINGTYPE::DYNAMIC),
+	m_vPrevPos{}
 {
 }
 
-UCharacter::UCharacter(const UCharacter& _rhs) : UPawn(_rhs)
+UCharacter::UCharacter(const UCharacter& _rhs) : UPawn(_rhs), m_vPrevPos{}
 {
 }
 
@@ -26,15 +28,24 @@ HRESULT UCharacter::NativeConstruct()
 
 HRESULT UCharacter::NativeConstructClone(const VOIDDATAS& _Datas)
 {
-	RETURN_CHECK(__super::NativeConstructClone(_Datas), E_FAIL);
+	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);
+	assert(_Datas.size() > 0);
 
-	CHARACTERDESC* pCharacterDesc = UMethod::ConvertTemplate_Index<CHARACTERDESC*>(_Datas, CHARACTERDESCORDER);
-	assert(nullptr != pCharacterDesc);
+	CHARACTERDESC CharacterDesc = UMethod::ConvertTemplate_Index<CHARACTERDESC>(_Datas, CHARACTERDESCORDER);
+	assert(false == CharacterDesc.wstrAnimControllerProtoData.empty());
 
-	// 현재 애니메이션 모델을 받아온다. 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	m_spAnimModel = std::static_pointer_cast<UAnimModel>(spGameInstance->CloneResource(pCharacterDesc->wstrAnimModelProtoData));
-
+	// 현재 애니메이션 모델을 받아온다. 
+	{
+		m_spAnimModel = std::static_pointer_cast<UAnimModel>(spGameInstance->CloneResource(CharacterDesc.wstrAnimModelProtoData));
+	}
+	// Controller
+	{
+		UAnimationController::CONTROLLERDESC ControllerDesc{ ThisShared<UCharacter>() };
+		m_spAnimationController = std::static_pointer_cast<UAnimationController>(spGameInstance->CloneComp(CharacterDesc.wstrAnimControllerProtoData, 
+			{ &ControllerDesc }));
+	}
+	AddShader(PROTO_RES_ANIMMODELSHADER, RES_SHADER);
 	return S_OK;
 }
 
@@ -120,6 +131,11 @@ _float3 UCharacter::OtherCharacterDirToLookVectorF3(CSHPTRREF<UTransform> _spOth
 
 void UCharacter::TickActive(const _double& _dTimeDelta)
 {
+	// 이전 위치 저장
+	m_vPrevPos = GetTransform()->GetPos();
+
+	m_spAnimationController->Tick(_dTimeDelta);
+	m_spAnimModel->TickAnimation(_dTimeDelta);
 }
 
 void UCharacter::LateTickActive(const _double& _dTimeDelta)
@@ -128,6 +144,21 @@ void UCharacter::LateTickActive(const _double& _dTimeDelta)
 
 HRESULT UCharacter::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
+	if (nullptr != m_spAnimModel)
+	{
+		__super::RenderActive(_spCommand, _spTableDescriptor);
+
+		for (_uint i = 0; i < m_spAnimModel->GetMeshContainerCnt(); ++i)
+		{
+			// Bind Transform 
+			GetTransform()->BindTransformData(GetShader());
+
+			m_spAnimModel->BindTexture(i, SRV_REGISTER::T0, TEXTYPE::TextureType_DIFFUSE, GetShader());
+			m_spAnimModel->BindTexture(i, SRV_REGISTER::T1, TEXTYPE::TextureType_NORMALS, GetShader());
+			// Render
+			m_spAnimModel->Render(i, GetShader(), _spCommand);
+		}
+	}
 	return S_OK;
 }
 

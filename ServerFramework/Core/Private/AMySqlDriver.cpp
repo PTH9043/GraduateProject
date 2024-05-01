@@ -53,7 +53,7 @@ namespace Core {
 
 	_bool AMySqlDriver::ExcuteQueryMessage(SQLTABLETYPE _TableType, SQLQUERYTYPE _sqlQueryType, const _string& _strQueryData)
 	{
-
+		return false;
 	}
 
 	void AMySqlDriver::BindParam(SQLTABLETYPE _TableType, _int _ParamIndex, _bool _Value)

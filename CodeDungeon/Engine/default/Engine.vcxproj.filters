@@ -367,11 +367,14 @@
     <Filter Include="06.Component\Battle">
       <UniqueIdentifier>{7d70bf76-39be-4ef4-bd47-8b24bbced0d6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06.Component\Controller\InputController">
-      <UniqueIdentifier>{c529b1d4-5e06-430b-ae99-27b1bc65fad3}</UniqueIdentifier>
+    <Filter Include="05.Actor\01.Pawn\Character\Player">
+      <UniqueIdentifier>{2a33b868-2b2e-449c-936a-59b7bee1a2eb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06.Component\Controller\InputController\KeyboardController">
-      <UniqueIdentifier>{88248fa5-77f0-4f27-a87e-383516910554}</UniqueIdentifier>
+    <Filter Include="08.PlayerJob">
+      <UniqueIdentifier>{e12dabc0-b8f0-4e63-ac1b-7c82f5526fb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component\Controller\Input">
+      <UniqueIdentifier>{c529b1d4-5e06-430b-ae99-27b1bc65fad3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -729,8 +732,14 @@
     <ClCompile Include="..\private\UCombatCollGroupComp.cpp">
       <Filter>06.Component\Battle</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\UPlayerController.cpp">
-      <Filter>06.Component\Controller\InputController</Filter>
+    <ClCompile Include="..\private\UPlayer.cpp">
+      <Filter>05.Actor\01.Pawn\Character\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UPlayerJob.cpp">
+      <Filter>08.PlayerJob</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UAnimationController.cpp">
+      <Filter>06.Component\Controller\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1121,8 +1130,14 @@
     <ClInclude Include="..\public\UCombatCollGroupComp.h">
       <Filter>06.Component\Battle</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\UPlayerController.h">
-      <Filter>06.Component\Controller\InputController</Filter>
+    <ClInclude Include="..\public\UPlayer.h">
+      <Filter>05.Actor\01.Pawn\Character\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UPlayerJob.h">
+      <Filter>08.PlayerJob</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UAnimationController.h">
+      <Filter>06.Component\Controller\Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

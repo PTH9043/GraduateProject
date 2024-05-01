@@ -27,7 +27,11 @@ namespace Engine {
 		TextureType_END = 18
 	};
 
-
+	/*
+	@ Date: 2024-05-01 Writer: 박태현
+	@ Explain
+	- . Sound의 종류를 정의한다. 
+	*/
 	enum SOUNDTYPE : _int {
 		SOUND_BACKGROUND, SOUND_GAME, SOUND_END
 	};
@@ -360,5 +364,7 @@ namespace Engine {
 		// 머터리얼 파람의 숫자를 정하는 Enum 
 		MAX_MATERIALPARAM_CNT = 500,
 		MAX_ASSIMP_MATERIAL_TEXTURE_CNT = TEXTYPE::TextureType_END,
+		MAX_MOUSEBTN_CNT = DIMOUSEBUTTON::DIMB_END,
+
 	};
 }

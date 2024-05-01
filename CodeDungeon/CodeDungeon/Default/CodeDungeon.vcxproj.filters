@@ -31,12 +31,6 @@
     <Filter Include="05.Objects">
       <UniqueIdentifier>{c96c525d-c5ca-481e-9244-7042d8a7b985}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06.DataManager">
-      <UniqueIdentifier>{56833de1-230e-4865-b804-4ae6b5960b56}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="06.DataManager\ModelManager">
-      <UniqueIdentifier>{997b2e9d-0c23-492e-8d22-0471076a83f8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="05.Objects\ModelObjects">
       <UniqueIdentifier>{5e5fb12b-5aaf-42dd-9274-d11e93e770da}</UniqueIdentifier>
     </Filter>
@@ -49,8 +43,20 @@
     <Filter Include="05.Objects\Character">
       <UniqueIdentifier>{f17d528d-508f-457e-9367-cba79070f001}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.Objects\Character\Player">
-      <UniqueIdentifier>{044695c8-b7ca-4aa5-8a99-8eec36e8a334}</UniqueIdentifier>
+    <Filter Include="05.Objects\Character\WarriorPlayer">
+      <UniqueIdentifier>{fa8eff8b-5b3b-4859-90ec-629d5124286f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="11.DataManager">
+      <UniqueIdentifier>{56833de1-230e-4865-b804-4ae6b5960b56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="11.DataManager\ModelManager">
+      <UniqueIdentifier>{997b2e9d-0c23-492e-8d22-0471076a83f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp">
+      <UniqueIdentifier>{34ca669c-6ae7-451f-8b72-65ea605e1694}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller">
+      <UniqueIdentifier>{4ea4b5fc-9281-41f6-8aa8-c95243cc1db3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -91,16 +97,22 @@
       <Filter>05.Objects\ModelObjects\Map\Rooms</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CDataManager.h">
-      <Filter>06.DataManager</Filter>
+      <Filter>11.DataManager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CModelManager.h">
-      <Filter>06.DataManager\ModelManager</Filter>
+      <Filter>11.DataManager\ModelManager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CMap.h">
       <Filter>05.Objects\ModelObjects\Map</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CModelObjects.h">
       <Filter>05.Objects\ModelObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CWarriorPlayer.h">
+      <Filter>05.Objects\Character\WarriorPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CWarriorAnimController.h">
+      <Filter>06.Comp\Controller</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -134,16 +146,22 @@
       <Filter>05.Objects\ModelObjects\Map\Rooms</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CDataManager.cpp">
-      <Filter>06.DataManager</Filter>
+      <Filter>11.DataManager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CModelManager.cpp">
-      <Filter>06.DataManager\ModelManager</Filter>
+      <Filter>11.DataManager\ModelManager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CMap.cpp">
       <Filter>05.Objects\ModelObjects\Map</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CModelObjects.cpp">
       <Filter>05.Objects\ModelObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CWarriorPlayer.cpp">
+      <Filter>05.Objects\Character\WarriorPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CWarriorAnimController.cpp">
+      <Filter>06.Comp\Controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

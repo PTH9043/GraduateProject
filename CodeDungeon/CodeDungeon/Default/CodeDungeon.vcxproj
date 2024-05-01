@@ -171,6 +171,8 @@
     <ClInclude Include="..\Public\CNetworkClientController.h" />
     <ClInclude Include="..\Public\CProtoMaker.h" />
     <ClInclude Include="..\Public\CRooms.h" />
+    <ClInclude Include="..\Public\CWarriorPlayer.h" />
+    <ClInclude Include="..\Public\CWarriorAnimController.h" />
     <ClInclude Include="CodeDungeon.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -187,6 +189,8 @@
     <ClCompile Include="..\Private\CNetworkClientController.cpp" />
     <ClCompile Include="..\Private\CProtoMaker.cpp" />
     <ClCompile Include="..\Private\CRooms.cpp" />
+    <ClCompile Include="..\Private\CWarriorPlayer.cpp" />
+    <ClCompile Include="..\Private\CWarriorAnimController.cpp" />
     <ClCompile Include="CodeDungeon.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -71,7 +71,7 @@ void URootBoneNode::UpdateMoveBonePos()
 
 	m_vPrevRootBoneAngle = m_vCurRootBoneAngle;
 	m_vCurRootBoneAngle = m_OutMatrix.vRot;
-	m_vMoveRootBoneAngle = m_vCurRootBoneAngle - m_vPrevRootBoneAngle;
+	m_vMoveRootBoneAngle = m_vCurRootBoneAngle;
 
 	m_vPrevRootBonePos = m_vCurRootBonePos;
 	m_vCurRootBonePos = GetCombineMatrixPos();

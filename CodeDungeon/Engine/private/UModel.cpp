@@ -185,7 +185,8 @@ HRESULT UModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	VOIDDATAS tDatas;
 	// Insert Data
 	{
-		tDatas.push_back(this);
+		UModel* pModel = this;
+		tDatas.push_back(&pModel);
 	}
 
 	for (auto& iter : m_MeshContainer) {

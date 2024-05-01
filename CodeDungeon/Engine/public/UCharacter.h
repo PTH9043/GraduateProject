@@ -5,7 +5,7 @@
 BEGIN(Engine)
 class UTransform;
 class UAnimModel;
-class UController;
+class UAnimationController;
 /*
 @ Date: 2024-02-25, Writer: 박태현
 @ Explain
@@ -18,6 +18,10 @@ public:
 	};
 	struct CHARACTERDESC {
 		_wstring		wstrAnimModelProtoData;
+		_wstring		wstrAnimControllerProtoData;
+		CHARACTERDESC() :wstrAnimModelProtoData{L" "}, wstrAnimControllerProtoData{L" "}{ }
+		CHARACTERDESC(const _wstring& _wstrAnimModelProtoData, const _wstring& _wstrAnimControllerProtoData) : 
+			wstrAnimModelProtoData{ _wstrAnimModelProtoData }, wstrAnimControllerProtoData{ _wstrAnimControllerProtoData } {}
 	};
 public:
 	UCharacter(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType);
@@ -58,11 +62,16 @@ protected:
 	virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) PURE;
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) PURE;
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy) PURE;
+protected: /* get set */
+	CSHPTRREF<UAnimationController> GetAnimationController() const { return m_spAnimationController; }
+	const _float3& GetPrevPos() const { return m_vPrevPos; }
 private:
 	// AnimationModel
-	SHPTR< UAnimModel>		m_spAnimModel;
-	// Controller
-	SHPTR<UController>			m_spController;
+	SHPTR< UAnimModel>						m_spAnimModel;
+
+	SHPTR<UAnimationController>		m_spAnimationController;
+	// 이전 위치 저장
+	_float3													m_vPrevPos;
 };
 
 END
