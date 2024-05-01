@@ -99,15 +99,9 @@ HRESULT TMainScene::LoadSceneData()
 
 	{
 		_float GridScale = 7.0f;
-		m_spTestObject = std::static_pointer_cast<UGrid>(spGameInstance->CloneActorAdd(PROTO_ACTOR_GRID));
-		m_spTestObject->GetTransform()->SetScale({ GridScale, 1.0f, GridScale });
-		m_spTestObject->GetTransform()->SetPos({ -(float)HALF_GRID_SIZE * GridScale, 0.f, -(float)HALF_GRID_SIZE * GridScale });
-		
-		MAINGRID stGrid;
-		stGrid.spGrid = m_spTestObject;
-
-		spGameInstance->AddPickingGrid(stGrid);
-
+		m_spGrid = std::static_pointer_cast<UGrid>(spGameInstance->CloneActorAdd(PROTO_ACTOR_GRID));
+		m_spGrid->GetTransform()->SetScale({ GridScale, 1.0f, GridScale });
+		m_spGrid->GetTransform()->SetPos({ -(float)HALF_GRID_SIZE * GridScale, 0.f, -(float)HALF_GRID_SIZE * GridScale });
 	}
 
 	return S_OK;

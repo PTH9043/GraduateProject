@@ -5,6 +5,8 @@
 #include "URegion.h"
 #include "UTransform.h"
 #include "UDefaultCube.h"
+#include <locale>
+#include <codecvt>
 
 UStage::UStage(CSHPTRREF<UDevice> _spDevice)
 	: UComponent(_spDevice),
@@ -105,6 +107,15 @@ HRESULT UStage::SetColor(const _uint& _iCellIndex)
 	return S_OK;
 }
 
+HRESULT UStage::SetRegionName(const _uint& _iCellIndex)
+{
+	if (_iCellIndex >= m_spRegionList->size())
+		return E_FAIL;
+
+	(*m_spRegionList.get())[_iCellIndex]->SetName();
+	return S_OK;
+}
+
 HRESULT UStage::FlushDeleteCells()
 {
 	for (auto& iter : (*m_spRegionList.get()))
@@ -129,6 +140,7 @@ _bool UStage::Load()
 		if (nullptr != pRegion)
 		{
 			pRegion->Load(File.second->wstrfilePath);
+			pRegion->SetName(File.first);
 			m_spRegionList->push_back(pRegion);
 		}
 	}
@@ -139,20 +151,18 @@ _bool UStage::Save(const _wstring& _wstrPath)
 {
 	_wstring str;
 	str.assign(_wstrPath.begin(), _wstrPath.end());
-	str.append(L"\\Navigation\\Navi_Region");
+	str.append(L"\\Navigation\\");
 
-	_uint iRegionNum = 0;
 	for (auto& iter : (*m_spRegionList.get()))
 	{		
-		_wstring numStr = std::to_wstring(iRegionNum);
-		str.append(numStr);
+		_wstring RegionNameStr = iter->Get_Name();
+		str.append(RegionNameStr);
 		iter->Save(str);
 
 		// numStr을 다시 제거
-		size_t pos = str.find(numStr);
+		size_t pos = str.find(RegionNameStr);
 		if (pos != _wstring::npos)
-			str.erase(pos, numStr.length());
-		iRegionNum++;
+			str.erase(pos, RegionNameStr.length());
 	}
 	return true;
 }
@@ -193,11 +203,15 @@ _int UStage::SelectRegion()
 	if (ImGui::TreeNodeEx("Select_Region", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		_uint iRegionNum = 0;
-		for (REGIONLIST::iterator it = m_spRegionList->begin(); it != m_spRegionList->end(); ++it)
+		for (SHPTR<URegion> it : (*m_spRegionList.get()))
 		{
-			char pName[MAX_PATH] = { "Region " };
-			sprintf_s(pName, "%d", iRegionNum);
-			if (ImGui::Selectable(pName))
+			_wstring nameWstr = it->Get_Name();
+			// Convert wstring to UTF-8 string using MultiByteToWideChar
+			int utf8Length = WideCharToMultiByte(CP_UTF8, 0, nameWstr.c_str(), -1, NULL, 0, NULL, NULL);
+			std::string name(utf8Length, 0);
+			WideCharToMultiByte(CP_UTF8, 0, nameWstr.c_str(), -1, &name[0], utf8Length, NULL, NULL);
+
+			if (ImGui::Selectable(name.c_str()))
 			{
 				iIndex = iRegionNum;
 			}

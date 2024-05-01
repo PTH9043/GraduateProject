@@ -86,6 +86,8 @@ URegion::URegion(CSHPTRREF<UDevice> _spDevice)
 	m_NeighborRegion{},
 	m_DeleteCellsList{nullptr},
 	m_bDeletionEnabled{false},
+	m_wsRegionName{},
+	m_bEditName{false},
 #ifdef _USE_DEBUGGING
 	m_CubeObjList{},
 	m_DeleteCubesList{ nullptr }
@@ -101,6 +103,8 @@ URegion::URegion(const URegion& _rhs)
 	m_NeighborRegion{},
 	m_DeleteCellsList{ nullptr },
 	m_bDeletionEnabled{ false },
+	m_wsRegionName{},
+	m_bEditName{false},
 #ifdef _USE_DEBUGGING
 	m_CubeObjList{},
 	m_DeleteCubesList{nullptr}
@@ -279,7 +283,7 @@ HRESULT URegion::ClearCell()
 
 HRESULT URegion::SetColor()
 {
-	RETURN_CHECK_FAILED(nullptr == m_spNavigation, E_FAIL)
+	RETURN_CHECK(nullptr == m_spNavigation, E_FAIL)
 
 	if (ImGui::TreeNodeEx("Edit_Region_Color", ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -306,6 +310,39 @@ HRESULT URegion::SetColor()
 		ImGui::TreePop();
 	}
 
+	return S_OK;
+}
+
+HRESULT URegion::SetName()
+{
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	RETURN_CHECK(nullptr == m_spNavigation, E_FAIL);
+		
+	if (ImGui::TreeNodeEx("Edit_Region_Name", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::BeginGroup();
+		ImGui::EndGroup();
+		ImGui::SameLine();
+		ImGui::PushItemWidth(200);
+		// _wstringÀ» Ãâ·Â
+		ImGui::Text("Region Name: %ls", m_wsRegionName.c_str());
+
+		ImGui::Checkbox("Edit Region Name", &m_bEditName);
+		if (m_bEditName)
+		{
+			static char regionNameBuffer[256];
+			ImGui::InputText("##RegionName", regionNameBuffer, IM_ARRAYSIZE(regionNameBuffer));
+			ImGui::SameLine();
+			if (ImGui::Button("Confirm"))
+			{
+				m_wsRegionName = regionNameBuffer;
+				m_bEditName = false; // Exit edit mode
+			}
+		}
+	
+		ImGui::PopItemWidth();
+		ImGui::TreePop();
+	}
 	return S_OK;
 }
 

@@ -4,7 +4,7 @@
 BEGIN(Engine)
 class UNavigation;
 class UCell;
-//class UCollider;
+class UCollider;
 class URenderer;
 class UDefaultDebugging;
 
@@ -38,6 +38,7 @@ public:
 public:
 	SHPTR<UNavigation> GetNavigation() { return m_spNavigation; }
 	const _uint& Get_Index() const { return m_iIndex; }
+	const _wstring& Get_Name() const { return m_wsRegionName; }
 	void Set_Index(const _uint& _iIndex) { this->m_iIndex = _iIndex; }
 
 	HRESULT AddCell(SHPTR<UCell>& _pCell);
@@ -45,6 +46,11 @@ public:
 	HRESULT ShowCells();
 	HRESULT ClearCell();
 	HRESULT SetColor();
+	HRESULT SetName();
+	void SetName(const _wstring& _regionName)
+	{
+		m_wsRegionName = _regionName;
+	}
 	HRESULT DeleteLatestCell();
 	void FlushDeleteCells();
 
@@ -70,6 +76,9 @@ protected:
 
 	SET<SHPTR<UCell>> m_DeleteCellsList;
 	_bool m_bDeletionEnabled;
+
+	_wstring m_wsRegionName;
+	_bool m_bEditName;
 
 #ifdef _USE_DEBUGGING
 	LIST<CUBOBJS>	m_CubeObjList;

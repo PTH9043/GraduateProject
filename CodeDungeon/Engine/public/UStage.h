@@ -36,6 +36,7 @@ public:
 	HRESULT ShowCells(const _uint& _iCellIndex);
 	HRESULT ClearCell(const _uint& _iCellIndex);
 	HRESULT SetColor(const _uint& _iCellIndex);
+	HRESULT SetRegionName(const _uint& _iCellIndex);
 	HRESULT FlushDeleteCells();
 
 	_bool Load();
