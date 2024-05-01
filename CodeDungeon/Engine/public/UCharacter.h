@@ -17,11 +17,11 @@ public:
 		CHARACTERDESCORDER = 0
 	};
 	struct CHARACTERDESC {
-		_wstring		wstrAnimModelProtoData;
+		_wstring		wstrAnimModelPathData;
 		_wstring		wstrAnimControllerProtoData;
-		CHARACTERDESC() :wstrAnimModelProtoData{L" "}, wstrAnimControllerProtoData{L" "}{ }
-		CHARACTERDESC(const _wstring& _wstrAnimModelProtoData, const _wstring& _wstrAnimControllerProtoData) : 
-			wstrAnimModelProtoData{ _wstrAnimModelProtoData }, wstrAnimControllerProtoData{ _wstrAnimControllerProtoData } {}
+		CHARACTERDESC() :wstrAnimModelPathData{L" "}, wstrAnimControllerProtoData{L" "}{ }
+		CHARACTERDESC(const _wstring& _wstrAnimModelPathData, const _wstring& _wstrAnimControllerProtoData) :
+			wstrAnimModelPathData{ _wstrAnimModelPathData }, wstrAnimControllerProtoData{ _wstrAnimControllerProtoData } {}
 	};
 public:
 	UCharacter(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType);

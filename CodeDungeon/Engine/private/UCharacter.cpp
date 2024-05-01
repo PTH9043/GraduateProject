@@ -37,7 +37,7 @@ HRESULT UCharacter::NativeConstructClone(const VOIDDATAS& _Datas)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	// 현재 애니메이션 모델을 받아온다. 
 	{
-		m_spAnimModel = std::static_pointer_cast<UAnimModel>(spGameInstance->CloneResource(CharacterDesc.wstrAnimModelProtoData));
+		m_spAnimModel = CreateConstructorNative<UAnimModel>(GetDevice(), CharacterDesc.wstrAnimModelPathData);
 	}
 	// Controller
 	{

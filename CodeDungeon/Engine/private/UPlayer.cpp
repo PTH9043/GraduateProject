@@ -7,6 +7,7 @@
 #include "UStage.h"
 #include "URegion.h"
 #include "UNavigation.h"
+#include "UAnimationController.h"
 
 UPlayer::UPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UCharacter(_spDevice, _wstrLayer, _eCloneType)
@@ -39,19 +40,20 @@ HRESULT UPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	m_spFollowCamera = PlayerDesc.spFollowCamera;
 	assert(nullptr != m_spFollowCamera);
 
-	m_wpCurRegion = PlayerDesc.spStageManager->GetStage()->GetRegion(0);
+	m_wpCurRegion = PlayerDesc.spStageManager->GetStage()->GetRegion(5);
 	assert(nullptr != m_wpCurRegion.lock());
 
 	SHPTR<URegion> spCurRegion = m_wpCurRegion.lock();
 	SHPTR<UNavigation> spNavigation = spCurRegion->GetNavigation();
 
-	SHPTR<UCell> spCell = spNavigation->FindCell(GetTransform()->GetPos());
+	SHPTR<UCell> spCell = spNavigation->FindCell({_float3{-199.f, -80.f, 150.f}});
 	GetTransform()->SetPos(spCell->GetCenterPos());
 	return S_OK;
 }
 
 void UPlayer::TickActive(const _double& _dTimeDelta)
 {
+	GetAnimationController()->Tick(_dTimeDelta);
 	__super::TickActive(_dTimeDelta);
 }
 
@@ -64,14 +66,15 @@ void UPlayer::LateTickActive(const _double& _dTimeDelta)
 		SHPTR<UNavigation> spNavigation = spCurRegion->GetNavigation();
 
 		SHPTR<UCell> spCell{ nullptr };
-		if (false == spNavigation->IsMove(GetTransform()->GetPos(), REF_OUT spCell))
+		_float3 vPosition{ GetTransform()->GetPos() };
+		if (true == spNavigation->IsMove(vPosition, REF_OUT spCell))
 		{
-			GetTransform()->SetPos(GetPrevPos());
+	//		GetTransform()->SetPos(vPosition);
 		}
 	}
 	// Camera 
 	{
-		_float3 vPosition = DirectX::XMVector3Transform(_float3(0.f, 10.f, -10.f), GetTransform()->GetWorldMatrix());
+		_float3 vPosition = DirectX::XMVector3Transform(_float3(0.f, 1000.f, -1000.f), GetTransform()->GetWorldMatrix());
 		m_spFollowCamera->GetTransform()->SetPos(vPosition);
 		m_spFollowCamera->GetTransform()->LookAt(GetTransform()->GetPos());
 	}

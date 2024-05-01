@@ -5,6 +5,7 @@
 #include "URenderer.h"
 #include "CMainCamera.h"
 #include "UTransform.h"
+#include "UAnimModel.h"
 
 CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UPlayer(_spDevice, _wstrLayer, _eCloneType)
@@ -31,6 +32,8 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 
 	SHPTR<CMainCamera> spMainCamera = std::static_pointer_cast<CMainCamera>(GetFollowCamera());
 	spMainCamera->SetMoveState(false);
+	GetTransform()->SetScale({ 0.01, 0.01, 0.01 });
+	GetAnimModel()->SetAnimation(L"idle_01");
 	return S_OK;
 }
 
@@ -38,9 +41,9 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
 
-	RETURN_CHECK(CWarriorAnimController::ANIM_IDLE == GetAnimationController()->GetAnimState(), ;);
+	//RETURN_CHECK(CWarriorAnimController::ANIM_IDLE == GetAnimationController()->GetAnimState(), ;);
 
-	if (CWarriorAnimController::ANIM_MOVE == GetAnimationController()->GetAnimState())
+//	if (CWarriorAnimController::ANIM_MOVE == GetAnimationController()->GetAnimState())
 	{
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 		if (spGameInstance->GetDIKeyPressing(DIK_W))
@@ -63,6 +66,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 {
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
+	__super::LateTickActive(_dTimeDelta);
 }
 
 HRESULT CWarriorPlayer::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)

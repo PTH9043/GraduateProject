@@ -15,6 +15,7 @@ public:
 	struct CONTROLLERDESC {
 		SHPTR<UCharacter> spCharacter;
 
+		CONTROLLERDESC() : spCharacter{nullptr}{}
 		CONTROLLERDESC(CSHPTRREF<UCharacter> _spCharacter) : spCharacter{_spCharacter} {}
 	};
 public:

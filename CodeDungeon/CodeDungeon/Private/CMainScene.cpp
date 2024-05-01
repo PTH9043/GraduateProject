@@ -62,12 +62,12 @@ HRESULT CMainScene::LoadSceneData()
 				1.f, 32.f,0.f,0.f,0.f,_float3(1.f,0.01f,0.0001f) });
 	}
 
-	//{
-	//	CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_WARRIORANIMCONTROLLER };
-	//	CWarriorPlayer::PLAYERDESC PlayerDesc{m_spMainCamera, m_spMap->GetStageManager() };
-	//	m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
-	//	PROTO_ACTOR_WARRIORPLAYER, {&CharDesc, &PlayerDesc }));
-	//}
+	{
+		CWarriorPlayer::CHARACTERDESC CharDesc{ L"..\\..\\Resource\\AnimModel\\Player\\Convert\\FemalePlayer_FBX.bin", PROTO_COMP_WARRIORANIMCONTROLLER };
+		CWarriorPlayer::PLAYERDESC PlayerDesc{m_spMainCamera, m_spMap->GetStageManager() };
+		m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
+		PROTO_ACTOR_WARRIORPLAYER, {&CharDesc, &PlayerDesc }));
+	}
 	return S_OK;
 }
 

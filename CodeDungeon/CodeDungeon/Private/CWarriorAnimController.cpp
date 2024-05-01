@@ -35,6 +35,8 @@ HRESULT CWarriorAnimController::NativeConstructClone(const VOIDDATAS& _tDatas)
 
 void CWarriorAnimController::Tick(const _double& _dTimeDelta)
 {
+	m_wstrTrigger.clear();
+
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	SHPTR<UAnimModel> spAnimModel = GetOwnerCharacter()->GetAnimModel();
 
@@ -51,14 +53,16 @@ void CWarriorAnimController::Tick(const _double& _dTimeDelta)
 
 	if (true == isMove)
 	{
-		m_wstrTrigger = L"MOVE";
+		m_wstrTrigger = L"WALKF";
 		SetAnimState(ANIM_MOVE);
 	}
 
 	isIdle = !isMove;
 	if (true == isIdle)
+	{
 		m_wstrTrigger = L"IDLE";
+		SetAnimState(ANIM_IDLE);
+	}
 	// TickEvent
 	spAnimModel->TickEvent(GetOwnerCharacter().get(), m_wstrTrigger, _dTimeDelta);
-	SetAnimState(ANIM_IDLE);
 }

@@ -82,6 +82,13 @@ HRESULT UAnimModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 		// 애니메이션이 nullptr일 때, Animation 0으로 초기화 
 		SetAnimation(0);
 	}
+	// BondMatrix
+	m_vecSetupBonMatrix.resize(GetMeshContainerCnt());
+	for (_uint i = 0; i < GetMeshContainerCnt(); ++i)
+	{
+		for (auto& iter : m_vecSetupBonMatrix[i])
+			iter = _float4x4::Identity;
+	}
 
 	RETURN_CHECK_FAILED(CreateShaderConstantBuffer(), E_FAIL);
 	return S_OK;
@@ -138,6 +145,7 @@ void UAnimModel::TickAnimChangeTransform(CSHPTRREF<UTransform> _spTransform, con
 
 	if (true == m_spCurAnimation->IsFinishAnim())
 	{
+		m_spCurAnimation->ResetAnimChangeEventNode();
 		GetRootBoneNode()->ResetRootBoneInfo();
 		return;
 	}

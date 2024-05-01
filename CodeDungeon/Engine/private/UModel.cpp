@@ -195,6 +195,7 @@ HRESULT UModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	m_MeshContainer.clear();
 	m_MeshContainer = MeshContainers;
 
+	ThreadMiliRelax(10);
 	return S_OK;
 }
 

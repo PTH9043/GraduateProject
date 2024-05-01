@@ -58,7 +58,8 @@ HRESULT UMeshContainer::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	VECTOR<SHPTR<UBoneNode>> BoneModels{};
 
 	for (auto& BoneNode : m_BoneNodeContainer) {
-		SHPTR<UBoneNode> pBoneNode = pModel->FindBoneNode(BoneNode->GetName());
+		_wstring wstrBoneName = BoneNode->GetName();
+		SHPTR<UBoneNode> pBoneNode = pModel->FindBoneNode(wstrBoneName);
 		BoneModels.push_back(pBoneNode);
 	}
 

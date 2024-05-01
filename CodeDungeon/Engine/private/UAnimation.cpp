@@ -108,6 +108,7 @@ void UAnimation::UpdateBoneMatrices(const _double& _dTimeDelta)
 		m_dAnimationProgressRate = 0.f;
 		m_isSupplySituation = false;
 		m_isFinishAnimation = true;
+		ResetAnimChangeEventNode();
 	}
 	else
 	{
@@ -137,6 +138,7 @@ void UAnimation::UpdateNextAnimTransformMatrices(const _double& _dTimeDelta, con
 	{
 		m_fSupplySituationValue = 0.001f;
 		m_isSupplySituation = false;
+		ResetAnimChangeEventNode();
 	}
 	else
 	{
