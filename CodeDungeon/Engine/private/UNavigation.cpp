@@ -6,6 +6,7 @@
 #include "UGpuCommand.h"
 #include "UMethod.h"
 #include "UCollider.h"
+#include "UCell.h"
 #include <fstream>
 
 UNavigation::UNavigation(CSHPTRREF<UDevice> _spDevice)
@@ -134,7 +135,9 @@ _bool UNavigation::IsMove(const _float3& _vPosition, SHPTR<UCell>& _spCell)
 	_float3 vLine{};
 	_int iNeighBorIndex{ -1 };
 	if (true == (*m_spCellContainer.get())[m_iCurIndex]->IsIn(_vPosition, iNeighBorIndex, vLine)) {
-		m_spCurCell = _spCell = (*m_spCellContainer.get())[m_iCurIndex];
+		m_spCurCell = (*m_spCellContainer.get())[m_iCurIndex];
+		_spCell = m_spCurCell;
+		return true;
 	}
 	else {
 		if (0 <= iNeighBorIndex) {
@@ -152,7 +155,6 @@ _bool UNavigation::IsMove(const _float3& _vPosition, SHPTR<UCell>& _spCell)
 					return false;
 				}
 			}
-			m_spCurCell = _spCell = (*m_spCellContainer.get())[m_iCurIndex];
 			return true;
 		}
 	}
@@ -204,15 +206,23 @@ _bool UNavigation::Load(const _wstring& _wstrPath)
 	m_spCellContainer->clear();
 	_int iCellIndex = 0;
 	for (_uint i = 0; i < numCells; ++i) {
-		ARRAY<_float3, 3> vPos;
+		 UCell::CELLDECS tDesc;
 		_float3 f3Color;
+
 		load.read(reinterpret_cast<char*>(&f3Color), sizeof(f3Color));
-		load.read(reinterpret_cast<char*>(&vPos), sizeof(vPos));
-		SHPTR<UCell> NewCell = CreateConstructorNative<UCell>(spGameInstance->GetDevice(), vPos, ++iCellIndex);
+		load.read(reinterpret_cast<char*>(&tDesc.vPoints), sizeof(tDesc.vPoints));
+		load.read(reinterpret_cast<char*>(&tDesc.vNormal), sizeof(tDesc.vNormal));
+		load.read(reinterpret_cast<char*>(&tDesc.vLine), sizeof(tDesc.vLine));
+		load.read(reinterpret_cast<char*>(&tDesc.iNeighbor), sizeof(tDesc.iNeighbor));
+		load.read(reinterpret_cast<char*>(&tDesc.iIndex), sizeof(tDesc.iIndex));
+
+		SHPTR<UCell> NewCell = CreateConstructorNative<UCell>(spGameInstance->GetDevice(), tDesc);
 		NewCell->ChangeCellColor(f3Color);
 		AddCell(NewCell);
-		
 	}
+
+	RETURN_CHECK_FAILED(ReadyNeighbor(), false);
+
 	return true;
 }
 
@@ -226,10 +236,12 @@ _bool UNavigation::Save(const _wstring& _wstrPath)
 
 	for (SHPTR<UCell> cellPtr : *m_spCellContainer) {
 		UCell& cell = *cellPtr;
-		_float3 CellColor = cell.GetColor();
-
-		save.write(reinterpret_cast<const char*>(&CellColor), sizeof(_float3));
-		save.write(reinterpret_cast<const char*>(&(cell.GetPoints())), sizeof(cell.GetPoints()));
+		save.write(reinterpret_cast<const char*>(&cell.GetColor()), sizeof(_float3));
+		save.write(reinterpret_cast<const char*>(&cell.GetPoints()), sizeof(cell.GetPoints()));
+		save.write(reinterpret_cast<const char*>(&cell.GetNormal()), sizeof(cell.GetNormal()));
+		save.write(reinterpret_cast<const char*>(&cell.GetLines()), sizeof(cell.GetLines()));
+		save.write(reinterpret_cast<const char*>(&cell.GetNeighbor()), sizeof(cell.GetNeighbor()));
+		save.write(reinterpret_cast<const char*>(&cell.GetIndex()), sizeof(cell.GetIndex()));
 	}
 	return true;
 }

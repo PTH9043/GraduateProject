@@ -67,6 +67,42 @@ HRESULT UCell::NativeConstruct(ARRAY<_float3, POINT_END>& _Points, const _uint _
 	return S_OK;
 }
 
+HRESULT UCell::NativeConstruct(const CELLDECS& _tCellDesc)
+{
+	for (_uint i = 0; i < POINT_END; ++i)
+	{
+		m_arrPoints[i] = _tCellDesc.vPoints[i];
+		m_arrNormals[i] = _tCellDesc.vNormal[i];
+	}
+	for (_uint i = 0; i < LINE_END; ++i)
+	{
+		m_arrLines[i] = _tCellDesc.vLine[i];
+		m_arrNeighbors[i] = _tCellDesc.iNeighbor[i];
+	}
+	m_iIndex = _tCellDesc.iIndex;
+
+	ResortPoints();
+#ifdef _USE_DEBUGGING
+	m_spCellVIBuffer = CreateConstructorNative<UVIBufferCell>(GetDevice(), m_arrPoints);
+	RETURN_CHECK(nullptr == m_spCellVIBuffer, E_FAIL);
+#endif
+	_float3 vCenterPos{};
+	for (auto& iter : m_arrPoints) {
+		m_vCenterPos += iter;
+	}
+	m_vCenterPos /= 3.f;
+
+#ifdef _USE_DEBUGGING
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	m_spCellPawn = static_pointer_cast<UDefaultCell>(spGameInstance->CloneActorAdd(
+		PROTO_ACTOR_DEUBGGINGDEFAULTCELL, { &m_spCellVIBuffer }));
+	m_f3Color = _float3(0.6f, 0.f, 0.f);
+	m_spCellPawn->SetColor(m_f3Color);
+#endif
+
+	return S_OK;
+}
+
 #ifdef _USE_DEBUGGING
 void UCell::AddCellRenderGroup()
 {

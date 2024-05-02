@@ -32,7 +32,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 
 	SHPTR<CMainCamera> spMainCamera = std::static_pointer_cast<CMainCamera>(GetFollowCamera());
 	spMainCamera->SetMoveState(false);
-	GetTransform()->SetScale({ 0.01f, 0.01f, 0.01f });
+	GetTransform()->SetScale({ 0.1f, 0.1f, 0.1f });
 	GetAnimModel()->SetAnimation(L"idle01");
 	return S_OK;
 }
@@ -47,13 +47,13 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	{
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 		if (spGameInstance->GetDIKeyPressing(DIK_W))
-			GetTransform()->MoveForward(_dTimeDelta, 10);
+			GetTransform()->MoveForward(_dTimeDelta, 100);
 		if (spGameInstance->GetDIKeyPressing(DIK_A))
-			GetTransform()->MoveLeft(_dTimeDelta, 10);
+			GetTransform()->MoveLeft(_dTimeDelta, 100);
 		if (spGameInstance->GetDIKeyPressing(DIK_D))
-			GetTransform()->MoveRight(_dTimeDelta, 10);
+			GetTransform()->MoveRight(_dTimeDelta, 100);
 		if (spGameInstance->GetDIKeyPressing(DIK_S))
-			GetTransform()->MoveBack(_dTimeDelta, 10);
+			GetTransform()->MoveBack(_dTimeDelta, 100);
 
 		_long		MouseMove = 0;
 

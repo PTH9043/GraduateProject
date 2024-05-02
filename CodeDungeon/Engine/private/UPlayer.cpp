@@ -40,13 +40,13 @@ HRESULT UPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	m_spFollowCamera = PlayerDesc.spFollowCamera;
 	assert(nullptr != m_spFollowCamera);
 
-	m_wpCurRegion = PlayerDesc.spStageManager->GetStage()->GetRegion(5);
+	m_wpCurRegion = PlayerDesc.spStageManager->GetStage()->GetRegion(0);
 	assert(nullptr != m_wpCurRegion.lock());
 
 	SHPTR<URegion> spCurRegion = m_wpCurRegion.lock();
 	SHPTR<UNavigation> spNavigation = spCurRegion->GetNavigation();
 
-	SHPTR<UCell> spCell = spNavigation->FindCell({_float3{-199.f, -80.f, 150.f}});
+	SHPTR<UCell> spCell = spNavigation->FindCell({_float3{-167.f, -80.54f, 133.f}});
 	GetTransform()->SetPos(spCell->GetCenterPos());
 	return S_OK;
 }
@@ -54,6 +54,7 @@ HRESULT UPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 void UPlayer::TickActive(const _double& _dTimeDelta)
 {
 	GetAnimationController()->Tick(_dTimeDelta);
+
 	__super::TickActive(_dTimeDelta);
 }
 
@@ -64,12 +65,12 @@ void UPlayer::LateTickActive(const _double& _dTimeDelta)
 	{
 		SHPTR<URegion> spCurRegion = m_wpCurRegion.lock();
 		SHPTR<UNavigation> spNavigation = spCurRegion->GetNavigation();
-
-		SHPTR<UCell> spCell{ nullptr };
 		_float3 vPosition{ GetTransform()->GetPos() };
-		if (true == spNavigation->IsMove(vPosition, REF_OUT spCell))
+		SHPTR<UCell> spCell{};
+
+		if (false == spNavigation->IsMove(vPosition, REF_OUT spCell))
 		{
-	//		GetTransform()->SetPos(vPosition);
+			GetTransform()->SetPos(GetPrevPos());
 		}
 	}
 	// Camera 

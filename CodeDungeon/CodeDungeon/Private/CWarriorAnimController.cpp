@@ -55,7 +55,8 @@ void CWarriorAnimController::Tick(const _double& _dTimeDelta)
 
 	if (true == isMove)
 	{
-		m_wstrTrigger = L"WALKF";
+		//m_wstrTrigger = L"WALKF";
+		m_wstrTrigger = L"IDLE";
 		SetAnimState(ANIM_MOVE);
 	}
 
