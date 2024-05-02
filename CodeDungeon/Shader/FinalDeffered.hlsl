@@ -3,6 +3,12 @@
 
 #include "ShaderGrobalFunc.hlsli"
 
+cbuffer FogBuffer : register(b14)
+{
+    bool IsFogOn;
+};
+
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -40,13 +46,36 @@ PS_OUT PS_Main(PS_In Input)
 {
     PS_OUT Out = (PS_OUT) 0;
 
-    Out.vColor = g_Texture0.Sample(g_Sampler_Normal, Input.vTexUV);//BlendDeffered 결과물
-    if (Out.vColor.a == 0)
-        discard;
+    Out.vColor = g_Texture0.Sample(g_Sampler_Normal, Input.vTexUV); //BlendDeffered 결과물
+    //if (Out.vColor.a == 0)
+    //    discard;
     
     Out.vColor += g_Texture1.Sample(g_Sampler_Normal, Input.vTexUV); //AlphaDeffered
-    //Out.vColor += g_Texture2.Sample(g_Sampler_Normal, Input.vTexUV);
+   
+    if (IsFogOn)
+    {
+        float3 vPosition = g_Texture2.Sample(g_Sampler_Normal, Input.vTexUV); //Position
+        float3 vViewPixelPosition = mul(float4(vPosition, 1.0f), g_ViewProjInfoArr[g_CamID].mViewMatrix);
+
+        float4 vCameraViewPosition = mul(float4(g_ViewProjInfoArr[0].vCamPosition, 1.0f), g_ViewProjInfoArr[g_CamID].mViewMatrix);
+  
+        float dx = vViewPixelPosition.x - vCameraViewPosition.x;
+        float dy = vViewPixelPosition.y - vCameraViewPosition.y;
+        float dz = vViewPixelPosition.z - vCameraViewPosition.z;
+        float fDistanceToCamera = sqrt(dx * dx + dy * dy + dz * dz);
+   
+        //float camDistance = (vCameraViewPosition.z);
+        float fogStart = 30.0f;
+        float fogEnd = 150.0f + fogStart;
+   
+        float FogFactor = saturate((fogEnd - fDistanceToCamera) / (fogEnd - fogStart));
+  
+        Out.vColor = lerp(float4(0.15f, 0.15f, 0.15f, 1.0f), Out.vColor, FogFactor);                
+    }
+ 
+
     return Out;
 }
+
 
 #endif // _DEFFERED_HLSL_

@@ -63,6 +63,8 @@ public:
 	// Render Other Camera
 	void RenderOtherCamera();
 	void BindDefferedTransform(SHPTR<UShader> _spShader);
+	void TurnOnFog() { m_bTurnFog = true; }
+	void TurnOffFog() { m_bTurnFog = false; }
 private:
 	void RenderRTs();
 	// Priority
@@ -124,6 +126,9 @@ private:
 	SHPTR<UCommand>																	m_spCastingCommand;
 	SHPTR<UVIBufferRect>																m_spVIBufferPlane;
 	_short																								m_sNonAlphaBlendIndex;
+
+	_bool																	m_bTurnFog;
+	SHPTR<UShaderConstantBuffer>											m_spFogConstantBuffer;
 #ifdef _USE_DEBUGGING																	
 	 ARRAY<DRAWINGRENDERCONTAINER, DEBUG_RI_END>	 m_arrDrawDebugRenderList;
 	RENDERDEBUGGING																	m_stRenderDebugging;

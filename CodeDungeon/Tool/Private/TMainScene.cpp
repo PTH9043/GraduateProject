@@ -63,7 +63,7 @@ HRESULT TMainScene::LoadSceneData()
 
 		//Diffuse Light는 확산조명으로 보통 물체의 매끄럽지 않은 표면, 거친 표면에서 일어남.
 		//확산 표면은 물체의 표면에서 모든 방향으로 균일하게 빛을 반사한다고 가정.
-		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_SPOT,LIGHTVERSION::TYPE_YONGBBA, {0.3f, 0.3f, 0.3f, 0.f}, {0.2f, 0.f, 0.f, 1.f}, {1.f, 0.5f, 0.2f, 1.f}, {0.f, 0.f, 1.f,}
+		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_SPOT,LIGHTVERSION::TYPE_YONGBBA, {0.3f, 0.3f, 0.3f, 0.f}, {0.15f, 0.125f, 0.11f, 1.f}, {1.f, 0.5f, 0.2f, 1.f}, {0.f, 0.f, 1.f,}
 			, m_spMainCamera->GetTransform()->GetPos(), 100.f, 60.f ,
 			100.f, 32.f, 8.0f,(float)cos(DirectX::XMConvertToRadians(30.f)),(float)cos(DirectX::XMConvertToRadians(15.f)),_float3(1.0f, 0.01f, 0.0001f) });
 		

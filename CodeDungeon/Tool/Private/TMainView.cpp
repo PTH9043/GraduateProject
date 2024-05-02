@@ -12,7 +12,8 @@ TMainView::TMainView(CSHPTRREF<UDevice> _spDevice) :
     m_OpenImGuies{},
     m_dShowDeltaTime{ 0.0 },
     m_isDockBuilding{ false },
-    m_bGridActive{true}
+    m_bGridActive{true},
+    m_bFogActive{true}
 {
 }
 
@@ -66,6 +67,8 @@ void TMainView::LateTickActive(const _double& _dTimeDetla)
 
 void TMainView::RenderActive()
 {
+    SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+    
     ImGuiViewport* pViewPort = ImGui::GetMainViewport();
     ImGui::SetNextWindowPos(pViewPort->WorkPos, ImGuiCond_Appearing);
     ImGui::SetNextWindowSize(pViewPort->WorkSize, ImGuiCond_Appearing);
@@ -74,6 +77,7 @@ void TMainView::RenderActive()
         // Basic info
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", m_dShowDeltaTime, 1.f / m_dShowDeltaTime);
         ImGui::Text("Application Delta %1f", m_dShowDeltaTime);
+        ImGui::Text("Main Cam Pos (%1f,%1f,%1f) ", spGameInstance->GetCameraPosition(0).x, spGameInstance->GetCameraPosition(0).y, spGameInstance->GetCameraPosition(0).z);
 
         m_stMainDesc.iDockSpaceID = ImGui::GetID(GetName().c_str());
         ImGui::DockSpace(m_stMainDesc.iDockSpaceID, ImVec2{ 0, 0 }, m_stMainDesc.imgDockNodeFlags);
@@ -90,6 +94,8 @@ void TMainView::RenderActive()
 
 void TMainView::RenderMenu()
 {
+
+    SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
     ImGui::BeginMainMenuBar();
     {
         if (ImGui::BeginMenu("Tools"))
@@ -125,6 +131,18 @@ void TMainView::RenderMenu()
             if (ImGui::MenuItem("Active Grid", nullptr, &m_bGridActive))
             {
                 static_pointer_cast<TMainScene>(GetGameInstance()->GetCurScene())->GetGrid()->SetActive(m_bGridActive);
+            }
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Fog"))
+        {
+            if (ImGui::MenuItem("Active Fog", nullptr, &m_bFogActive))
+            {
+                if (m_bFogActive)
+                    spGameInstance->TurnOnFog();
+                else
+                    spGameInstance->TurnOffFog();
             }
             ImGui::EndMenu();
         }

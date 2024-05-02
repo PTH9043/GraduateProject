@@ -39,6 +39,7 @@ private:
 	_double														m_dShowDeltaTime;
 	_bool															m_isDockBuilding;
 	_bool														m_bGridActive;
+	_bool														m_bFogActive;
 
 };
 

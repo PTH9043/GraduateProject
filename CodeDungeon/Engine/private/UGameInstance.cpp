@@ -950,10 +950,26 @@ const _bool UGameInstance::IsMaterialContainerInfoChange() const
 {
 	return m_spMaterialManager->IsMaterialContainerInfoChange();
 }
-
 /*
 ==================================================
 MaterialManager
+==================================================
+Renderer Fog Setting
+==================================================
+*/
+
+void UGameInstance::TurnOnFog() {
+	if (m_spRenderer != nullptr)m_spRenderer->TurnOnFog();
+}
+
+void UGameInstance::TurnOffFog() {
+	if (m_spRenderer != nullptr)m_spRenderer->TurnOffFog();
+}
+
+
+/*
+==================================================
+Renderer Fog Setting
 ==================================================
 Picking
 ==================================================

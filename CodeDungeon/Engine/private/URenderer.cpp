@@ -37,6 +37,8 @@ URenderer::URenderer(CSHPTRREF <UDevice> _spDevice, CSHPTRREF<UCommand> _spComma
     m_spComputeManager{ _spComputeManager },
     m_spVIBufferPlane{ nullptr },
     m_sNonAlphaBlendIndex{ 0 },
+    m_bTurnFog{0},
+    m_spFogConstantBuffer{nullptr},
     m_spCastingCommand{ static_pointer_cast<UCommand>(_spGraphicDevice->GetGpuCommand()) }
 #ifdef _USE_DEBUGGING
     , m_stRenderDebugging{}
@@ -115,7 +117,9 @@ HRESULT URenderer::NativeConstruct()
             m_spDefferedCamera = static_pointer_cast<UDefferedCamera>(spGameInstance->CloneActorAdd(
                 PROTO_ACTOR_DEFFEREDCAMERA, vecDatas));
         }
-
+        {
+            m_spFogConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::FOGBOOL, static_cast<_int>(sizeof(_bool)));
+        }
         m_spShadowCamera->GetTransform()->SetPos(_float3(0, 500, 0));
         m_spShadowCamera->GetTransform()->LookAt(_float3(0, 0, 0));
 
@@ -456,6 +460,12 @@ void URenderer::RenderEnd()
         spDefferedShader->BindSRVBuffer(SRV_REGISTER::T1, m_spRenderTargetManager->
             FindRenderTargetTexture(RTGROUPID::ALPHA_DEFFERED,
                 RTOBJID::ALPHA_DIFFUSE_DEFFERED));
+        spDefferedShader->BindSRVBuffer(SRV_REGISTER::T2, m_spRenderTargetManager->
+            FindRenderTargetTexture(RTGROUPID::NONALPHA_DEFFERED,
+                RTOBJID::NONALPHA_POSITION_DEFFERED));
+        {
+            spDefferedShader->BindCBVBuffer(m_spFogConstantBuffer, &m_bTurnFog, sizeof(_bool));
+        }
         //  Diffuse Texture 가져와서 Bind 
    /*     spDefferedShader->BindSRVBuffer(SRV_REGISTER::T2, m_spRenderTargetManager->
             FindRenderTargetTexture(RTGROUPID::UI2D_DEFFERED,

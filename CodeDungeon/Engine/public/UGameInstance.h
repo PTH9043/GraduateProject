@@ -304,7 +304,9 @@ private: /* Ready Datas */
 	HRESULT ReadyActor(const OUTPUTDATA& _stData);
 	HRESULT ReadyRenderTarget(const OUTPUTDATA& _stData);
 
-
+public: //Renderer Fog Bool
+	void TurnOnFog();
+	void TurnOffFog();
 private:
 	_bool															m_isGamming;
 	
