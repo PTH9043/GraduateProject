@@ -47,6 +47,7 @@ public:
 	virtual  HRESULT NativeConstruct() override;
 	// Points
 	HRESULT NativeConstruct(ARRAY<_float3, POINT_END>& _Points, const _uint _iIndex);
+	HRESULT NativeConstruct(const CELLDECS& _tCellDesc);
 	void AddCellRenderGroup();
 public:
 	_bool IsIn(const _float3& _vPos, _int& _iNeightborIndex, _float3& _vLine);

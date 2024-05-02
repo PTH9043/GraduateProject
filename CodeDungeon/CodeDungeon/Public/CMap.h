@@ -30,6 +30,7 @@ public:
 	_bool LoadNavigation();
 	
 	CSHPTRREF<UStageManager> GetStageManager() { return m_spStageManager;}
+	CSHPTRREF<ROOMCONTAINER> GetRooms() { return m_spRoomContainer; }
 private:
 	SHPTR<ROOMCONTAINER>			m_spRoomContainer;
 	SHPTR<UStageManager>			m_spStageManager;

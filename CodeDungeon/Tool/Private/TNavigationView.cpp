@@ -190,7 +190,7 @@ void TNavigationView::ModifyNavigation(CSHPTRREF<URegion> _spRegion)
 				if((_uint)m_vecPosList.size() == 3)
 				{
 					ARRAY<_float3, 3> vPos = { m_vecPosList[SEL_1], m_vecPosList[SEL_2], m_vecPosList[SEL_3] };
-					SHPTR<UCell> NewCell = CreateConstructorNative<UCell>(spGameInstance->GetDevice(), vPos, ++m_iCellIndex);
+					SHPTR<UCell> NewCell = CreateConstructorNative<UCell>(spGameInstance->GetDevice(), vPos, m_iCellIndex++);
 					_spRegion->AddCell(NewCell);
 					m_vecPosList.clear();
 					m_iSelIndex = SEL_1;

@@ -13,6 +13,7 @@
 #include "UMeshContainer.h"
 #include "UCollider.h"
 
+
 TMapView::TMapView(CSHPTRREF<UDevice> _spDevice) :
 	TImGuiView(_spDevice, "MapView"),
 	m_stMainDesc{},
@@ -20,6 +21,7 @@ TMapView::TMapView(CSHPTRREF<UDevice> _spDevice) :
 
 	m_dShowDeltaTime{},
 	m_isInitSetting{},
+	m_bRenderColliders{false},
 
 	m_MapModelContainer{},
 	m_ShowMapModelContainer{},
@@ -75,6 +77,15 @@ void TMapView::LateTickActive(const _double& _dTimeDetla)
 			SHPTR<UVIBuffer> spVIbuffer = static_pointer_cast<UVIBuffer>(Mesh);
 			SHPTR<UPawn> pawnModel = static_pointer_cast<UPawn>(ShowModel.second);
 			GetGameInstance()->AddPickingObject(pawnModel, spVIbuffer);
+		}
+	}
+
+	if (m_bRenderColliders)
+	{
+		for (auto& ShowModel : m_ShowMapModelContainer)
+		{
+			for (auto& Colliders : ShowModel.second->GetColliderContainer())
+				Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
 		}
 	}
 }
@@ -274,6 +285,8 @@ void TMapView::ShowModelList()
 		else
 			ImGui::Text("Selected Model: None, Select Current Model");
 
+		ImGui::Checkbox("Render_Colliders", &m_bRenderColliders);
+			
 		ImGui::TreePop();
 
 	}

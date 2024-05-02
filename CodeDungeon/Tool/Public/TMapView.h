@@ -48,6 +48,7 @@ private:
 
 	_double													m_dShowDeltaTime;
 	_bool													m_isInitSetting;
+	_bool													m_bRenderColliders;
 
 	MAPMODELCONTAINER									m_MapModelContainer;
 	SHOWMAPMODELCONTAINER								m_ShowMapModelContainer;
