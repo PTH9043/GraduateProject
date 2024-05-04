@@ -1438,42 +1438,7 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 		}
 
 
-		// NonAlpha_Deffered 
-		{
-			std::vector<RTDESC> vecRts{
-				RTDESC{ RTOBJID::SCREENNONA_DIFFUSE_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM,
-					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 1.f, 0.f } },
-					RTDESC{ RTOBJID::SCREENNONA_NOMRAL_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
-						GraphicDesc->iWinCX, GraphicDesc->iWinCY, {1.f, 1.f, 1.f, 1.f}},
-					RTDESC{ RTOBJID::SCREENNONA_DEPTH_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
-							GraphicDesc->iWinCX, GraphicDesc->iWinCY, {1.f, 1.f, 1.f, 1.f}},
-					RTDESC{ RTOBJID::SCREENNONA_POSITION_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
-							GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f } }
-			};
-			// Add RenderTargetGroup
-			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::SCREEN_NONALPHA_DEFFERED, vecRts);
-		}
-		// Alpha Deffered
-		{
-			std::vector<RTDESC> vecRts{
-				RTDESC{ RTOBJID::SCREENALPHA_DIFFUSE_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM,
-					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f } },
-					RTDESC{ RTOBJID::SCREENALPHA_GLOW_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM,
-						GraphicDesc->iWinCX, GraphicDesc->iWinCY, {0.f, 0.f, 0.f, 0.f} },
-					RTDESC{ RTOBJID::SCREENALPHA_GLOW_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R16G16B16A16_FLOAT,
-							GraphicDesc->iWinCX, GraphicDesc->iWinCY, {0.f, 0.f, 0.f, 0.f} }
-			};
-			// Add 
-			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::SCREEN_ALPHA_DEFFERED, vecRts);
-		}
-		{
-			std::vector<RTDESC> vecRts{
-				RTDESC{ RTOBJID::SCREENBLEND_SCREEN_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
-					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f } }
-			};
-			// Add RenderTargetGroup
-			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::SCREEN_BLEND_DEFFERED, vecRts);
-		}
+		
 	}
 
 #ifdef _USE_DEBUGGING
