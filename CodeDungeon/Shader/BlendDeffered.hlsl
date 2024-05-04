@@ -51,10 +51,12 @@ PS_OUT PS_Main(PS_In In)
     vector vSpecularDesc = g_Texture2.Sample(g_Sampler_Normal, In.vTexUV);
     vector vAmbientDesc = g_Texture3.Sample(g_Sampler_Normal, In.vTexUV);
 
-   
-
-   // vector vColor = vDiffuseDesc * (vShadeDesc + vAmbientDesc + vSpecularDesc);
-    vector vColor = lerp(vDiffuseDesc, (vShadeDesc + vAmbientDesc + vSpecularDesc), 0.5f);
+    vector LightCol = (vShadeDesc + vAmbientDesc + vSpecularDesc);
+    LightCol = clamp(LightCol, 0, 1);
+    
+    vector vColor = vDiffuseDesc * LightCol;
+    
+    //vector vColor = lerp(vDiffuseDesc, (vShadeDesc + vAmbientDesc + vSpecularDesc), 0.5f);
     
     Out.vColor = vColor;
  

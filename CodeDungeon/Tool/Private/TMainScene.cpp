@@ -85,14 +85,14 @@ HRESULT TMainScene::LoadSceneData()
 		Diffuse: 0.5 ~ 0.7 사이의 값. 중간 정도의 값으로 조명의 강도를 적당하게 유지합니다.
 		Specular: 0.2 ~ 0.4 사이의 값. 낮은 값으로 하이라이트를 부드럽게 유지합니다.
 		*/
-		/*AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL, {1.f, 1.f, 1.f, 1.f}, {0.05f, 0.05f, 0.05f, 0.05f}, {1.f, 1.f, 1.f, 1.f}, {0.f, -1.f, -1.f,},
-			{0.f, 100.f, 0.f}, 0.f, 0.f, 1.f, 200.f },
-			LIGHTCONTROL{ RIMLIGHT{} });*/
+	
 		
 		
 		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_POINT,LIGHTVERSION::TYPE_YONGBBA, {1.f, 0.f, 0.f, 1.f}, {0.f, 1.f, 0.f, 1.f}, {0.f, 0.f, 1.f, 1.f}, {0.f, 0.f, 1.f,},
 			_float3(0,0,0), 30.f, 0.f ,
 			1.f, 32.f,0.f,0.f,0.f,_float3(1.f,0.01f,0.0001f)});
+		
+		
 		/*AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_FLASHLIGHT, {1.f, 0.f, 0.f, 1.f}, {1.f, 0.f, 0.f, 1.f}, {1.f, 0.f, 0.f, 1.f}, {0.f, 0.f, 1.f,}, {0.f, 50.f, -100.f}, 60.f, 60.f ,
 			1.f, 2.f });*/
 	}
