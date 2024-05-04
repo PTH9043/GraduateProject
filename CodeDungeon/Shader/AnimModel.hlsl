@@ -15,11 +15,6 @@ struct BONEMATRIX
 //    float3 PaddingValue;
 //};
 
-cbuffer ControlModelMatrix : register(b8)
-{
-    float4x4 g_PivotMatrix;
-};
-
 cbuffer ANIMATIONPARAM : register(b11)
 {
     bool g_isOutLineExist = false;
@@ -85,8 +80,7 @@ VS_OUT VS_Main(VS_IN In)
    // vector vPosition = (float4(In.vPosition, 1.f));
     
     vPosition = Compute_FinalMatrix(vPosition);
-    
-    
+   
 
     vector vNormal = mul(float4(In.vNormal, 0.f), BoneMatrix);
     vector vTangent = mul(float4(In.vTangent, 0.f), BoneMatrix);

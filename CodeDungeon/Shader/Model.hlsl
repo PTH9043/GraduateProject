@@ -9,17 +9,11 @@ cbuffer HasNormalBuffer : register(b7)
     int HasBuffer[4];
 };
 
-cbuffer ControlModelMatrix : register(b8)
-{
-    float4x4 g_PivotMatrix;
-};
-
 //cbuffer MODELDATAPARAM : register(b10)
 //{
 //    int g_iMaterialIndex;
 //    float3 PaddingValue;
 //};
-
 
 struct VS_IN
 {

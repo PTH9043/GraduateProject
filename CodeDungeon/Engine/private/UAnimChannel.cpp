@@ -36,7 +36,11 @@ UAnimChannel::UAnimChannel(const UAnimChannel& _rhs) :
 SHPTR<UAnimChannel> UAnimChannel::Clone(CSHPTRREF<UAnimModel> _spAnimModel)
 {
 	SHPTR<UAnimChannel> pChannel{ CloneThis<UAnimChannel>(*this) };
-	pChannel->m_spBoneNode = _spAnimModel->FindBoneNode(m_spBoneNode->GetName());
+	if (nullptr == m_spBoneNode)
+	{
+		int a = 0;
+	}
+	pChannel->m_spBoneNode = _spAnimModel->FindBoneNode(m_wstrBoneName);
 	return pChannel;
 }
 

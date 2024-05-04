@@ -17,9 +17,9 @@ UBoneNode::UBoneNode() :
 }
 
 UBoneNode::UBoneNode(const UBoneNode& _rhs) :
-	m_mOffsetMatrix{ _float4x4::Identity },
-	m_mTransformMatrix{ _float4x4::Identity },
-	m_mCombineTransformMatirx{ _float4x4::Identity },
+	m_mOffsetMatrix{ _rhs.m_mOffsetMatrix },
+	m_mTransformMatrix{ _rhs.m_mTransformMatrix },
+	m_mCombineTransformMatirx{ _rhs.m_mCombineTransformMatirx },
 	m_spParentsNode{ nullptr },
 	m_wstrName{ _rhs.m_wstrName },
 	m_wstrParetnsName{ _rhs.m_wstrParetnsName },

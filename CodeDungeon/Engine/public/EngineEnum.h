@@ -172,7 +172,7 @@ namespace Engine {
 		, FOGBUFFER = B14
 		, FOGBOOL = B14
 		, MODELCHECKBUF = B7
-		, CONTROLMODELMATRIXPARAM = B8
+		, MODELPIVOTMATRIX = B8
 	};
 
 	enum class SRV_REGISTER : unsigned short {

@@ -65,8 +65,9 @@ HRESULT CMainScene::LoadSceneData()
 	}
 
 	{
-		CWarriorPlayer::CHARACTERDESC CharDesc{ L"..\\..\\Resource\\AnimModel\\Player\\Convert\\FemalePlayer_FBX.bin", PROTO_COMP_WARRIORANIMCONTROLLER };
-		CWarriorPlayer::PLAYERDESC PlayerDesc{m_spMainCamera, m_spMap->GetStageManager() };
+		CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_WARRIORANIMCONTROLLER, 
+			m_spMap->GetStageManager() };
+		CWarriorPlayer::PLAYERDESC PlayerDesc{m_spMainCamera };
 		m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
 		PROTO_ACTOR_WARRIORPLAYER, {&CharDesc, &PlayerDesc }));
 	}
