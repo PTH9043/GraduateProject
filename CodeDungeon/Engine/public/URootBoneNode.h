@@ -24,6 +24,7 @@ public: /* Get Set */
 	const _float3& GetPrevRootBoneAngle() const { return m_vPrevRootBoneAngle; }
 	const _float3& GetMoveRootBoneAngle() const { return m_vMoveRootBoneAngle; }
 public:
+	virtual SHPTR<UBoneNode> Clone() { return { CloneThis<URootBoneNode>(*this) }; }
 	virtual void Free() override;
 	using UBoneNode::NativeConstruct;
 	HRESULT NativeConstruct(const _wstring& _wstrBoneName);

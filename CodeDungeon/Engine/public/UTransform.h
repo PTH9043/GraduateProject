@@ -23,6 +23,7 @@ public:
 	const _float4x4& GetChangeMatrix() { TransformUpdate();   return m_mChangeWorldMatrix; }
 	// Get Parents Local Matrix
 	const _float4x4 GetParentsMatrix();
+	const _float4x4& GetScaleMatrix() const { return m_mScaleMatrix; }
 
 	const _float3& GetRight() const { return *((_float3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_RIGHT][0]); }
 	const _float3& GetUp() const { return *((_float3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_UP][0]); }
@@ -109,19 +110,20 @@ public:
 #endif
 private:
 	// Shader 
-	SHPTR<UShaderConstantBuffer>	m_TransformBuffer{ nullptr };
+	SHPTR<UShaderConstantBuffer>	m_TransformBuffer;
 	TRANSFORMPARAM							m_stTransformParam{};
 	// Needs Value 
-	_float4x4												m_mWorldMatrix{ _float4x4::Identity };
-	_float4x4												m_mChangeWorldMatrix{ _float4x4::Identity };
-	_quaternion											m_vQuaternion{ _float4::Zero };
-	_float3													m_vScale{ _float3::Zero };
+	_float4x4												m_mWorldMatrix;
+	_float4x4												m_mChangeWorldMatrix;
+	_quaternion											m_vQuaternion;
+	_float3													m_vScale;
+	_float4x4												m_mScaleMatrix;
 	// Parents Location
-	_bool														m_isNotApplyRotate{ false };
-	_bool														m_isNotApplyPos{ false };
-	_bool														m_isNotApplyScale{ false };
+	_bool														m_isNotApplyRotate;
+	_bool														m_isNotApplyPos;
+	_bool														m_isNotApplyScale;
 
-	SHPTR<UTransform>							m_spParentsTransform{nullptr};
+	SHPTR<UTransform>							m_spParentsTransform;
 };
 
 END
