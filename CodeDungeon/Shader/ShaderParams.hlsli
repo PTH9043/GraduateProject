@@ -63,6 +63,7 @@ cbuffer TRANSFORM_PARAMS : register(b3)
 
 SamplerState g_Sampler_Normal : register(s0);
 SamplerState g_Sampler_Clamp : register(s1);
+SamplerComparisonState g_Sampler_Border : register(s2);
 
 // 14 ~ 15 3DTexture
 Texture2D g_Texture0 : register(t0);

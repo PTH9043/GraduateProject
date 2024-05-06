@@ -35,6 +35,19 @@ void URootSignature::NativeSampler()
 			D3D12_TEXTURE_ADDRESS_MODE_CLAMP, // V 축 주소 모드
 			D3D12_TEXTURE_ADDRESS_MODE_CLAMP  // W 축 주소 모드
 		);
+		m_arrSamplerDescs[S2].Filter = D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
+		m_arrSamplerDescs[S2].AddressU = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+		m_arrSamplerDescs[S2].AddressV = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+		m_arrSamplerDescs[S2].AddressW = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+		m_arrSamplerDescs[S2].MipLODBias = 0.0f;
+		m_arrSamplerDescs[S2].MaxAnisotropy = 1;
+		m_arrSamplerDescs[S2].ComparisonFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL; //D3D12_COMPARISON_FUNC_LESS
+		m_arrSamplerDescs[S2].BorderColor = D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE; // D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK;
+		m_arrSamplerDescs[S2].MinLOD = 0;
+		m_arrSamplerDescs[S2].MaxLOD = D3D12_FLOAT32_MAX;
+		m_arrSamplerDescs[S2].ShaderRegister = 2;
+		m_arrSamplerDescs[S2].RegisterSpace = 0;
+		m_arrSamplerDescs[S2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	}
 
 	for (auto& iter : m_arrSamplerDescs)
