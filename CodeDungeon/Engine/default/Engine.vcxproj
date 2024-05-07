@@ -294,6 +294,7 @@
     <FxCompile Include="..\..\Shader\2DFire.hlsl" />
     <FxCompile Include="..\..\Shader\2DFog.hlsl" />
     <FxCompile Include="..\..\Shader\2DParticle.hlsl" />
+    <FxCompile Include="..\..\Shader\2DParticlePlus.hlsl" />
     <FxCompile Include="..\..\Shader\3DNormalCube.hlsl" />
     <FxCompile Include="..\..\Shader\AnimModel.hlsl" />
     <FxCompile Include="..\..\Shader\BlendDeffered.hlsl">

@@ -82,6 +82,33 @@ PS_OUT PS_Main(PS_In Input)
      
     }
    
+    //if (length(tLightColor.vDiffuse) != 0)
+    //{
+       
+
+       
+    //    float4 shadowViewPos = mul(vWorldPosition, g_ViewProjInfoArr[2].mViewMatrix);
+    //    float4 shadowClipPos = mul(shadowViewPos, g_ViewProjInfoArr[2].mProjMatrix);
+    //    float depth = shadowClipPos.z / shadowClipPos.w;
+
+    //    // x [-1 ~ 1] -> u [0 ~ 1]
+    //    // y [1 ~ -1] -> v [0 ~ 1]
+    //    float2 uv = shadowClipPos.xy / shadowClipPos.w;
+    //    uv.y = -uv.y;
+    //    uv = uv * 0.5 + 0.5;
+
+    //    if (0 < uv.x && uv.x < 1 && 0 < uv.y && uv.y < 1)
+    //    {
+    //        float shadowDepth = g_Texture3.Sample(g_Sampler_Normal, uv).x;
+    //        if (shadowDepth > 0 && depth > shadowDepth + 0.00001f)
+    //        {
+    //            tLightColor.vDiffuse *= 0.5f;
+    //            tLightColor.vSpecular = (float4) 0.f;
+    //            tLightColor.vAmbient = (float4) 0.f;
+    //        }
+    //    }
+    //}
+    
     if (length(vWorldPosition) == 0)
     {
         Out.vAmbient = float4(1.0, 1.0, 1.0, 1);

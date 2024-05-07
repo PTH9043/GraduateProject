@@ -35,16 +35,17 @@ private:
 	void FireAlphaTextureSetting();
 	void FireScalingSetting();
 	void FirePosSetting();
+	void FireDistortionSetting();
 private:
 	//Multiple Particle Setting Functions
 	void MultipleParticleView();
 	void ResizeMultipleParticleVector(_uint _resizeAmount);
 	void MultipleParticleTexSetting();
-	/*void MultipleParticleCountSetting();
+	void MultipleParticleCountSetting();
 	void MultipleParticleTimeSetting();
 
 	void DefaultMultipleParticleSetting();
-	void AutomaticMultipleParticleSetting();*/
+	void AutomaticMultipleParticleSetting();
 
 	void LoadMultipleParticleResource();
 	void ReleaseMultipleParticleResource();
@@ -83,7 +84,8 @@ private:
 	
 	
 	SHPTR <UFire> m_stFire;
-
+	FIRENOISEBUFFER*					m_stFireNoiseBuffer;
+	FIREDISTORTIONBUFFER*		m_stFireDistortionBuffer;
 
 
 };
