@@ -6,6 +6,8 @@ BEGIN(Engine)
 class UTransform;
 class UAnimModel;
 class UAnimationController;
+class UStageManager;
+class URegion;
 /*
 @ Date: 2024-02-25, Writer: 박태현
 @ Explain
@@ -17,11 +19,16 @@ public:
 		CHARACTERDESCORDER = 0
 	};
 	struct CHARACTERDESC {
-		_wstring		wstrAnimModelPathData;
+		_wstring		wstrAnimModelProtoData;
 		_wstring		wstrAnimControllerProtoData;
-		CHARACTERDESC() :wstrAnimModelPathData{L" "}, wstrAnimControllerProtoData{L" "}{ }
-		CHARACTERDESC(const _wstring& _wstrAnimModelPathData, const _wstring& _wstrAnimControllerProtoData) :
-			wstrAnimModelPathData{ _wstrAnimModelPathData }, wstrAnimControllerProtoData{ _wstrAnimControllerProtoData } {}
+
+		SHPTR< UStageManager>	spStageManager;
+
+		CHARACTERDESC() :wstrAnimModelProtoData{L" "}, wstrAnimControllerProtoData{L" "}, spStageManager{nullptr}
+		{ }
+		CHARACTERDESC(const _wstring& _wstrAnimModelPathData, const _wstring& _wstrAnimControllerProtoData, 
+			CSHPTRREF<UStageManager> _spStageManager) :
+			wstrAnimModelProtoData{ _wstrAnimModelPathData }, wstrAnimControllerProtoData{ _wstrAnimControllerProtoData }, spStageManager{ _spStageManager } {}
 	};
 public:
 	UCharacter(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType);
@@ -56,6 +63,7 @@ public:
 	_float3 OtherCharacterDirToLookVectorF3(CSHPTRREF<UTransform> _spOtherTransform);
 public: /* get set */
 	CSHPTRREF<UAnimModel> GetAnimModel() const { return m_spAnimModel; }
+	SHPTR<URegion> GetCurrentRegion() const { return m_wpCurRegion.lock(); }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) PURE;
 	virtual void LateTickActive(const _double& _dTimeDelta) PURE;
@@ -72,6 +80,8 @@ private:
 	SHPTR<UAnimationController>		m_spAnimationController;
 	// 이전 위치 저장
 	_float3													m_vPrevPos;
+	// 현재 스테이지
+	WKPTR<URegion>								m_wpCurRegion;
 };
 
 END

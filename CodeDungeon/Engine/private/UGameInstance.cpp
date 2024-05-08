@@ -728,6 +728,10 @@ const _float3& UGameInstance::GetCameraPosition(const CAMID& _iID)
 {
 	return m_spPipeLine->GetCameraPosition(_iID);
 }
+const SHPTR<UTransform>& UGameInstance::GetMainCameraTransform()
+{
+	return m_spPipeLine->GetMainCamTransform();
+}
 
 const _float UGameInstance::GetCamFar(const CAMID& _iID)
 {
@@ -1168,21 +1172,21 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 			CreateGraphicsShader(PROTO_RES_PARTICLE2DSHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"2DParticle", VTXPOINT_DELCARTION::Element, VTXPOINT_DELCARTION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN, GS_MAIN },
-					RENDERFORMATS{ DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_B8G8R8A8_UNORM,	DXGI_FORMAT_R16G16B16A16_FLOAT },
+					
 					RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE, BLEND_TYPE::ALPHA_BLEND,
 					D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST));
 
 			CreateGraphicsShader(PROTO_RES_PARTICLEPLUS2DSHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"2DParticlePlus", VTXPOINT_DELCARTION::Element, VTXPOINT_DELCARTION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN, GS_MAIN },
-					RENDERFORMATS{ DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_B8G8R8A8_UNORM,	DXGI_FORMAT_R16G16B16A16_FLOAT },
+				
 					RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE, BLEND_TYPE::ALPHA_BLEND,
 					D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST));
 
 			CreateGraphicsShader(PROTO_RES_2DANIMATEPARTICLESHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"2DAnimateParticle", VTXPOINT_DELCARTION::Element, VTXPOINT_DELCARTION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN, GS_MAIN },
-					RENDERFORMATS{ DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_B8G8R8A8_UNORM,	DXGI_FORMAT_R16G16B16A16_FLOAT },
+					
 					RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE, BLEND_TYPE::ALPHA_BLEND,
 					D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST));
 
@@ -1386,6 +1390,7 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 				RTDESC{ RTOBJID::SHADOW_DEPTH_FOURBYFOUR, DXGI_FORMAT::DXGI_FORMAT_R32_FLOAT,
 					GraphicDesc->iWinCX*4, GraphicDesc->iWinCY*4, {0.f,0.f, 0.f, 0.f}}
 			};
+			//16384x16384
 			// Add RenderTargetGroup
 			m_spRenderTargetManager->AddRenderTargetGroupWithNewDepthStencilBuffer(RTGROUPID::SHADOW_MAP, vecRts);
 		}
@@ -1438,42 +1443,7 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 		}
 
 
-		// NonAlpha_Deffered 
-		{
-			std::vector<RTDESC> vecRts{
-				RTDESC{ RTOBJID::SCREENNONA_DIFFUSE_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM,
-					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 1.f, 0.f } },
-					RTDESC{ RTOBJID::SCREENNONA_NOMRAL_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
-						GraphicDesc->iWinCX, GraphicDesc->iWinCY, {1.f, 1.f, 1.f, 1.f}},
-					RTDESC{ RTOBJID::SCREENNONA_DEPTH_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
-							GraphicDesc->iWinCX, GraphicDesc->iWinCY, {1.f, 1.f, 1.f, 1.f}},
-					RTDESC{ RTOBJID::SCREENNONA_POSITION_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
-							GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f } }
-			};
-			// Add RenderTargetGroup
-			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::SCREEN_NONALPHA_DEFFERED, vecRts);
-		}
-		// Alpha Deffered
-		{
-			std::vector<RTDESC> vecRts{
-				RTDESC{ RTOBJID::SCREENALPHA_DIFFUSE_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM,
-					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f } },
-					RTDESC{ RTOBJID::SCREENALPHA_GLOW_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM,
-						GraphicDesc->iWinCX, GraphicDesc->iWinCY, {0.f, 0.f, 0.f, 0.f} },
-					RTDESC{ RTOBJID::SCREENALPHA_GLOW_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R16G16B16A16_FLOAT,
-							GraphicDesc->iWinCX, GraphicDesc->iWinCY, {0.f, 0.f, 0.f, 0.f} }
-			};
-			// Add 
-			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::SCREEN_ALPHA_DEFFERED, vecRts);
-		}
-		{
-			std::vector<RTDESC> vecRts{
-				RTDESC{ RTOBJID::SCREENBLEND_SCREEN_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
-					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f } }
-			};
-			// Add RenderTargetGroup
-			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::SCREEN_BLEND_DEFFERED, vecRts);
-		}
+		
 	}
 
 #ifdef _USE_DEBUGGING

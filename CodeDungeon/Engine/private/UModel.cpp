@@ -22,7 +22,8 @@ UModel::UModel(CSHPTRREF<UDevice> _spDevice, const TYPE& _eType) :
 	m_spFileGroup{ nullptr },
 	m_spFileData{ nullptr },
 	m_eType{ _eType },
-	m_wstrModelName{L""}
+	m_wstrModelName{L""},
+	m_spRootBoneNode{nullptr}
 {
 }
 
@@ -37,7 +38,8 @@ UModel::UModel(const UModel& _rhs) :
 	m_spFileGroup{ _rhs.m_spFileGroup },
 	m_spFileData{ _rhs.m_spFileData },
 	m_eType{ _rhs.m_eType },
-	m_wstrModelName{ L"" }
+	m_wstrModelName{ L"" },
+	m_spRootBoneNode{ _rhs.m_spRootBoneNode}
 {
 }
 
@@ -118,19 +120,16 @@ HRESULT UModel::NativeConstruct(const _wstring& _wstrPath)
 	return S_OK;
 }
 
-HRESULT UModel::NativeConstruct(CSHPTRREF<FILEGROUP> _spFileGroup, CSHPTRREF<FILEDATA> _spFileData,
-	const _float4x4& _PivotMatrix)
+HRESULT UModel::NativeConstruct(CSHPTRREF<FILEGROUP> _spFileGroup, CSHPTRREF<FILEDATA> _spFileData)
 {
 	RETURN_CHECK_FAILED(NativeConstruct(), E_FAIL);
 	RETURN_CHECK(nullptr == _spFileGroup || nullptr == _spFileData, E_FAIL);
 	m_spFileGroup = _spFileGroup; m_spFileData = _spFileData;
 	LoadToData(m_spFileData->wstrfilePath);
-	m_mPivotMatrix = _PivotMatrix;
 	return S_OK;
 }
 
-HRESULT UModel::NativeConstruct(const PATHS& _vecPaths, const _wstring& _wstrFileName,
-	const _float4x4& _PivotMatrix)
+HRESULT UModel::NativeConstruct(const PATHS& _vecPaths, const _wstring& _wstrFileName)
 {
 	RETURN_CHECK_FAILED(NativeConstruct(), E_FAIL);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
@@ -139,12 +138,10 @@ HRESULT UModel::NativeConstruct(const PATHS& _vecPaths, const _wstring& _wstrFil
 	m_spFileData = m_spFileGroup->FindData(_wstrFileName);
 	RETURN_CHECK(nullptr == m_spFileData, E_FAIL);
 	LoadToData(m_spFileData->wstrfilePath);
-	m_mPivotMatrix = _PivotMatrix;
 	return S_OK;
 }
 
-HRESULT UModel::NativeConstruct(const _wstring& _wstrModelFolder, const _wstring& _wstrFileName,
-	const _float4x4& _PivotMatrix)
+HRESULT UModel::NativeConstruct(const _wstring& _wstrModelFolder, const _wstring& _wstrFileName)
 {
 	RETURN_CHECK_FAILED(NativeConstruct(), E_FAIL);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
@@ -153,7 +150,6 @@ HRESULT UModel::NativeConstruct(const _wstring& _wstrModelFolder, const _wstring
 	m_spFileData = m_spFileGroup->FindData(_wstrFileName);
 	RETURN_CHECK(nullptr == m_spFileData, E_FAIL);
 	LoadToData(m_spFileData->wstrfilePath);
-	m_mPivotMatrix = _PivotMatrix;
 	return S_OK;
 }
 
@@ -172,7 +168,8 @@ HRESULT UModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	}
 	m_BoneNodeContainer.clear();
 	m_BoneNodeContainer = BoneNodes;
-	// Bone Nodes
+
+	m_spRootBoneNode = std::static_pointer_cast<URootBoneNode>(FindBoneNode(m_spRootBoneNode->GetName()));
 	for (auto& iter : m_BoneNodeContainer) {
 		iter->FindParents(ThisShared<UModel>());
 	}
@@ -189,7 +186,6 @@ HRESULT UModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	}
 	m_MeshContainer.clear();
 	m_MeshContainer = MeshContainers;
-
 	ThreadMiliRelax(10);
 	return S_OK;
 }

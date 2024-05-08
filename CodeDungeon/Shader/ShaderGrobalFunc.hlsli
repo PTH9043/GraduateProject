@@ -28,6 +28,7 @@ float4 Compute_FinalMatrix(float3 vPosition)
 	return Out;
 }
 
+
 VIEWPROJINFO GetViewProjInfo()
 {
     return g_ViewProjInfoArr[g_CamID];

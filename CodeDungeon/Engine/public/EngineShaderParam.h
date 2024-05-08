@@ -212,7 +212,7 @@ namespace Engine {
 		ARRAY<_float4x4, MAX_BONE_SIZE>		arrBoneMatrix;
 	}BONEMATRIXPARAM;
 
-	struct CONTROLMODELMATRIXPARAM {
+	struct MODELPIVOTMATRIX {
 		_float4x4	PivotMatrix;
 	};
 

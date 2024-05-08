@@ -5,6 +5,11 @@
 #include "UMethod.h"
 #include "UGameInstance.h"
 #include "UAnimationController.h"
+#include "UStageManager.h"
+#include "URegion.h"
+#include "UNavigation.h"
+#include "UStage.h"
+#include "UCell.h"
 
 UCharacter::UCharacter(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, 
 	const CLONETYPE& _eCloneType) : 
@@ -37,13 +42,24 @@ HRESULT UCharacter::NativeConstructClone(const VOIDDATAS& _Datas)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	// 현재 애니메이션 모델을 받아온다. 
 	{
-		m_spAnimModel = CreateConstructorNative<UAnimModel>(GetDevice(), CharacterDesc.wstrAnimModelPathData);
+		m_spAnimModel = std::static_pointer_cast<UAnimModel>(spGameInstance->CloneResource(CharacterDesc.wstrAnimModelProtoData));
+//		m_spAnimModel = CreateConstructorNative<UAnimModel>(GetDevice(), CharacterDesc.wstrAnimModelProtoData);
 	}
 	// Controller
 	{
 		UAnimationController::CONTROLLERDESC ControllerDesc{ ThisShared<UCharacter>() };
 		m_spAnimationController = std::static_pointer_cast<UAnimationController>(spGameInstance->CloneComp(CharacterDesc.wstrAnimControllerProtoData, 
 			{ &ControllerDesc }));
+	}
+	{
+		m_wpCurRegion = CharacterDesc.spStageManager->GetStage()->GetRegion(0);
+		assert(nullptr != m_wpCurRegion.lock());
+
+		SHPTR<URegion> spCurRegion = m_wpCurRegion.lock();
+		SHPTR<UNavigation> spNavigation = spCurRegion->GetNavigation();
+
+		SHPTR<UCell> spCell = spNavigation->FindCell({ _float3{-167.f, -80.54f, 133.f} });
+		GetTransform()->SetPos(spCell->GetCenterPos());
 	}
 	AddShader(PROTO_RES_ANIMMODELSHADER, RES_SHADER);
 	return S_OK;
@@ -139,6 +155,18 @@ void UCharacter::TickActive(const _double& _dTimeDelta)
 
 void UCharacter::LateTickActive(const _double& _dTimeDelta)
 {
+	// Region 
+	{
+		SHPTR<URegion> spCurRegion = m_wpCurRegion.lock();
+		SHPTR<UNavigation> spNavigation = spCurRegion->GetNavigation();
+		_float3 vPosition{ GetTransform()->GetPos() };
+		SHPTR<UCell> spCell{};
+
+		if (false == spNavigation->IsMove(vPosition, REF_OUT spCell))
+		{
+			GetTransform()->SetPos(GetPrevPos());
+		}
+	}
 }
 
 HRESULT UCharacter::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)

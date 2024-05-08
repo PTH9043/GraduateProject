@@ -3,10 +3,6 @@
 #include "UMethod.h"
 #include "UTransform.h"
 #include "UCamera.h"
-#include "UStageManager.h"
-#include "UStage.h"
-#include "URegion.h"
-#include "UNavigation.h"
 #include "UAnimationController.h"
 
 UPlayer::UPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
@@ -39,15 +35,6 @@ HRESULT UPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 
 	m_spFollowCamera = PlayerDesc.spFollowCamera;
 	assert(nullptr != m_spFollowCamera);
-
-	m_wpCurRegion = PlayerDesc.spStageManager->GetStage()->GetRegion(0);
-	assert(nullptr != m_wpCurRegion.lock());
-
-	SHPTR<URegion> spCurRegion = m_wpCurRegion.lock();
-	SHPTR<UNavigation> spNavigation = spCurRegion->GetNavigation();
-
-	SHPTR<UCell> spCell = spNavigation->FindCell({_float3{-167.f, -80.54f, 133.f}});
-	GetTransform()->SetPos(spCell->GetCenterPos());
 	return S_OK;
 }
 
@@ -61,24 +48,6 @@ void UPlayer::TickActive(const _double& _dTimeDelta)
 void UPlayer::LateTickActive(const _double& _dTimeDelta)
 {
 	__super::LateTickActive(_dTimeDelta);
-	// Region 
-	{
-		SHPTR<URegion> spCurRegion = m_wpCurRegion.lock();
-		SHPTR<UNavigation> spNavigation = spCurRegion->GetNavigation();
-		_float3 vPosition{ GetTransform()->GetPos() };
-		SHPTR<UCell> spCell{};
-
-		if (false == spNavigation->IsMove(vPosition, REF_OUT spCell))
-		{
-			GetTransform()->SetPos(GetPrevPos());
-		}
-	}
-	// Camera 
-	{
-		_float3 vPosition = DirectX::XMVector3Transform(_float3(0.f, 1000.f, -1000.f), GetTransform()->GetWorldMatrix());
-		m_spFollowCamera->GetTransform()->SetPos(vPosition);
-		m_spFollowCamera->GetTransform()->LookAt(GetTransform()->GetPos());
-	}
 }
 
 HRESULT UPlayer::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
@@ -93,5 +62,12 @@ HRESULT UPlayer::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UT
 
 void UPlayer::Collision(CSHPTRREF<UPawn> _pEnemy)
 {
+}
+
+void UPlayer::FollowCameraMove(const _float3& _vPlayerToDistancePosition)
+{
+	_float3 vPosition = DirectX::XMVector3Transform(_vPlayerToDistancePosition, GetTransform()->GetWorldMatrix());
+	m_spFollowCamera->GetTransform()->SetPos(vPosition);
+	m_spFollowCamera->GetTransform()->LookAt(GetTransform()->GetPos());
 }
 

@@ -86,7 +86,7 @@ HRESULT URenderer::NativeConstruct()
             tDesc.stCamProj = UCamera::CAMPROJ(UCamera::PROJECTION_TYPE::PERSPECTIVE, _float3(0.f, 0.f, 0.f),
                 _float3(0.f, 0.f, 0.f),
                 DirectX::XMConvertToRadians(60.0f), spGameInstance->GetD3DViewport().Width*4,
-                spGameInstance->GetD3DViewport().Height*4,10.0f,1000.f,1.f);
+                spGameInstance->GetD3DViewport().Height*4,10.0f,500.f,1.f);
             tDesc.stCamValue = UCamera::CAMVALUE(5.f, DirectX::XMConvertToRadians(90.f));
             tDesc.eCamType = CAMERATYPE::SHADOWLIGHT;
 
@@ -95,10 +95,10 @@ HRESULT URenderer::NativeConstruct()
 
             m_spShadowCamera = static_pointer_cast<UShadowCamera>(spGameInstance->CloneActorAdd(
                 PROTO_ACTOR_SHADOWCAMERA, vecDatas));
-            m_spShadowCamera->SetShadowCamViewportInfo(0, 0, static_cast<long>(spGameInstance->GetD3DViewport().Width * 4.f),
-                static_cast<long>(spGameInstance->GetD3DViewport().Height * 4.f), 0.0f, 1.0f);
-            m_spShadowCamera->SetShadowCamRectInfo(0, 0, static_cast<long>(spGameInstance->GetD3DViewport().Width * 4.f),
-                static_cast<long>(spGameInstance->GetD3DViewport().Height * 4.f));
+            m_spShadowCamera->SetShadowCamViewportInfo(0, 0, static_cast<long>(spGameInstance->GetD3DViewport().Width *4),
+                static_cast<long>(spGameInstance->GetD3DViewport().Height * 4), 0.0f, 1.0f);
+            m_spShadowCamera->SetShadowCamRectInfo(0, 0, static_cast<long>(spGameInstance->GetD3DViewport().Width * 4),
+                static_cast<long>(spGameInstance->GetD3DViewport().Height * 4));
         }
         {
 
@@ -120,7 +120,7 @@ HRESULT URenderer::NativeConstruct()
         {
             m_spFogConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::FOGBOOL, static_cast<_int>(sizeof(_bool)));
         }
-        m_spShadowCamera->GetTransform()->SetPos(_float3(0, 500, 0));
+        m_spShadowCamera->GetTransform()->SetPos(_float3(0, 300, 0));
         m_spShadowCamera->GetTransform()->LookAt(_float3(0, 0, 0));
 
         m_stFinalRenderTransformParam.iCamIndex = m_spDefferedCamera->GetCamID();
@@ -184,7 +184,14 @@ HRESULT URenderer::AddDebugRenderGroup(const DEBUGRENDERID _eID, CSHPTRREF<UShad
 
 void URenderer::Tick(const _double& _dTimeDelta)
 {
+
+    SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
     m_fGrobalDeltaTime += static_cast<_float>(_dTimeDelta);
+
+        /*SHPTR<UTransform> MainTransform=    spGameInstance->GetMainCameraTransform();
+        m_spShadowCamera->GetTransform()->SetLook(MainTransform->GetLook());
+        _float3 MainPos = spGameInstance->GetMainCamPosition()-10*MainTransform->GetLook();
+        m_spShadowCamera->GetTransform()->SetPos(MainPos);*/
 }
 
 HRESULT URenderer::Render()
@@ -460,6 +467,7 @@ void URenderer::RenderEnd()
         spDefferedShader->BindSRVBuffer(SRV_REGISTER::T1, m_spRenderTargetManager->
             FindRenderTargetTexture(RTGROUPID::ALPHA_DEFFERED,
                 RTOBJID::ALPHA_DIFFUSE_DEFFERED));
+
         spDefferedShader->BindSRVBuffer(SRV_REGISTER::T2, m_spRenderTargetManager->
             FindRenderTargetTexture(RTGROUPID::NONALPHA_DEFFERED,
                 RTOBJID::NONALPHA_POSITION_DEFFERED));

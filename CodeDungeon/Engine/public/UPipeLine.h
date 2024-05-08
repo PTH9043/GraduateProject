@@ -9,6 +9,7 @@ class UGraphicDevice;
 class UFrustomCulling;
 class UCommand;
 class URenderer;
+class UTransform;
 
 class UPipeLine : public UBase {
 	using CAMERAARR = ARRAY<SHPTR<UCamera>, MAX_CAM_SIZE>;
@@ -36,6 +37,7 @@ public:
 	const _float4x4 GetMainCamWorldMatrix() const;
 	const _float4x4& GetMainCamProjMatrix() const;
 	const _float3& GetMainCamPosition();
+	const SHPTR<UTransform>& GetMainCamTransform();
 	const _float4x4 GetCamViewMatrix(const CAMID& _iID) const;
 	const _float4x4& GetCamProjMatrix(const CAMID& _iID) const;
 	const _float3& GetCameraPosition(const CAMID& _iID);

@@ -38,14 +38,14 @@ VS_OUT VS_Main(VS_IN In)
 
 struct PS_OUT
 {
-    float4 vColor : SV_TARGET0;
+    float vColor : SV_TARGET0;
 };
 
 
 PS_OUT PS_Main(VS_OUT In) 
 {
     PS_OUT Out = (PS_OUT) 0;
-    Out.vColor = float4(In.vPosition.z, 0, 0, 0);
+    Out.vColor = In.vPosition.z;
     return Out;
 
 }

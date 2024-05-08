@@ -77,14 +77,15 @@ void UFire::Update(const _double& _dTimeDelta)
 	if (m_stFireNoiseBuffer.fFrameTime > 1000.f) {
 		m_stFireNoiseBuffer.fFrameTime = 0.f;
 	}*/
-	m_stFireNoiseBuffer.fScales = scales;
-	m_stFireNoiseBuffer.fScrollSpeeds = scrollSpeeds;
-	m_stFireDistortionBuffer.fDistortion1 = distortion1;
-	m_stFireDistortionBuffer.fDistortion2 = distortion2;
-	m_stFireDistortionBuffer.fDistortion3 = distortion3;
 
-	m_stFireDistortionBuffer.fDistortionScale = distortionScale;
-	m_stFireDistortionBuffer.fDistortionBias = distortionBias;
+	//m_stFireNoiseBuffer.fScales = scales;
+	//m_stFireNoiseBuffer.fScrollSpeeds = scrollSpeeds;
+	//m_stFireDistortionBuffer.fDistortion1 = distortion1;
+	//m_stFireDistortionBuffer.fDistortion2 = distortion2;
+	//m_stFireDistortionBuffer.fDistortion3 = distortion3;
+
+	//m_stFireDistortionBuffer.fDistortionScale = distortionScale;
+	//m_stFireDistortionBuffer.fDistortionBias = distortionBias;
 }
 
 

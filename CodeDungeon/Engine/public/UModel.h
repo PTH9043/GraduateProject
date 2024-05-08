@@ -57,14 +57,11 @@ public:
 	// 해당 PATH로 모델 로드
 	 HRESULT NativeConstruct(const _wstring& _wstrPath);
 	 // 해당 폴더와 파일 데이터로 로드
-	 HRESULT NativeConstruct(CSHPTRREF<FILEGROUP> _spFileGroup, CSHPTRREF<FILEDATA> _spFileData,
-		 const _float4x4& _PivotMatrix = _float4x4::Identity);
+	 HRESULT NativeConstruct(CSHPTRREF<FILEGROUP> _spFileGroup, CSHPTRREF<FILEDATA> _spFileData);
 	 // PATH를 입력하고 파일 이름을 입력하면 찾아서 온다. 
-	 HRESULT NativeConstruct(const PATHS& _vecPaths, const _wstring& _wstrFileName,
-		 const _float4x4& _PivotMatrix = _float4x4::Identity);
+	 HRESULT NativeConstruct(const PATHS& _vecPaths, const _wstring& _wstrFileName);
 	 // 모델의 폴더 이름, 파일 이름을 입력하면 찾아서 모델 로드
-	 HRESULT NativeConstruct(const _wstring& _wstrModelFolder, const _wstring& _wstrFileName,
-		 const _float4x4& _PivotMatrix = _float4x4::Identity);
+	 HRESULT NativeConstruct(const _wstring& _wstrModelFolder, const _wstring& _wstrFileName);
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;
 	// 모델에 텍스처를 바인드 하는 함수
 	 HRESULT BindTexture(const _uint _iMeshIndex,  const SRV_REGISTER _eRegister,
@@ -86,8 +83,6 @@ protected: /* get set*/
 	void SetMeshContainers(const _uint _iMeshContainers) { this->m_iMeshContainerCnt = _iMeshContainers; }
 	void SetBoneNodesCnt(const _uint _iBoneNodesCnt) { this->m_iBoneNodeCnt = _iBoneNodesCnt; }
 	void SetMaterialsCnt(const _uint _iMaterialCnt) { this->m_iMaterialCnt = _iMaterialCnt; }
-
-	const _float4x4& GetPivotMatrix() const { return m_mPivotMatrix; }
 private:
 	void CreateRootBoneToOrder(MODELDESC* _pDesc, _int _BoneOrder = 0);
 private:
@@ -107,7 +102,6 @@ private:
 
 	TYPE															m_eType;
 	_wstring														m_wstrModelName;
-	_float4x4													m_mPivotMatrix;
 };
 
 END

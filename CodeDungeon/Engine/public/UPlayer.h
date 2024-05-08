@@ -17,12 +17,11 @@ public:
 	struct PLAYERDESC 
 	{
 		SHPTR<UCamera> spFollowCamera;
-		SHPTR< UStageManager>	spStageManager;
 
-		PLAYERDESC() :	spFollowCamera{ nullptr }, spStageManager{ nullptr }
+		PLAYERDESC() :	spFollowCamera{ nullptr }
 		{}
-		PLAYERDESC(CSHPTRREF<UCamera> _spFollowCamera, CSHPTRREF<UStageManager> _spStageManager) :
-			spFollowCamera{ _spFollowCamera }, spStageManager{_spStageManager}
+		PLAYERDESC(CSHPTRREF<UCamera> _spFollowCamera) :
+			spFollowCamera{ _spFollowCamera }
 		{}
 	};
 
@@ -46,12 +45,11 @@ protected:
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) PURE;
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy) PURE;
 
+	void FollowCameraMove(const _float3& _vPlayerToDistancePosition);
 protected: /* get set */
 	CSHPTRREF<UCamera> GetFollowCamera() const { return m_spFollowCamera; }
 private:
 	SHPTR<UCamera>		m_spFollowCamera;
-	// 현재 스테이지
-	WKPTR<URegion>		m_wpCurRegion;
 };
 
 END

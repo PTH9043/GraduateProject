@@ -40,8 +40,10 @@ PS_OUT PS_Main(PS_In Input)
 {
     PS_OUT Out = (PS_OUT) 0;
 
+    if (length(g_TransformPadding)!=0)
+    Out.vColor = g_Texture0.Sample(g_Sampler_Normal, Input.vTexUV).r; //ShadowMap 휜색으로 만들기 위해
+    else
     Out.vColor = g_Texture0.Sample(g_Sampler_Normal, Input.vTexUV);
-
     if (IsColorUp(Out.vColor, 0.95f))
     {
         discard;

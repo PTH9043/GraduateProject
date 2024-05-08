@@ -18,11 +18,9 @@ HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, C
 
 HRESULT CProtoMaker::CreateMainSceneProtoData(CSHPTRREF<UGameInstance> _spGameInstance, CSHPTRREF<UDevice> _spDevice, CSHPTRREF<UCommand> _spCommand)
 {
-	_spGameInstance->AddPrototype(PROTO_COMP_WARRIORANIMCONTROLLER, 
-		CreateConstructorToNative<CWarriorAnimController>(_spDevice));
+	_spGameInstance->AddPrototype(PROTO_COMP_WARRIORANIMCONTROLLER, CreateConstructorToNative<CWarriorAnimController>(_spDevice));
 	
-	_spGameInstance->AddPrototype(PROTO_RES_FEMAILPLAYERANIMMODEL,
-		CLONETYPE::CLONE_STATIC, 
-		CreateConstructorNative<UAnimModel>(_spDevice, L"..\\..\\Resource\\AnimModel\\Player\\Convert\\FemalePlayer_FBX.bin"));
+	_spGameInstance->AddPrototype(PROTO_RES_FEMAILPLAYERANIMMODEL,CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
+		_spDevice, L"..\\..\\Resource\\AnimModel\\Player\\Convert\\FemalePlayer_FBX.bin"));
 	return S_OK;
 }
