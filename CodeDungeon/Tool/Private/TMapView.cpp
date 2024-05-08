@@ -176,7 +176,7 @@ void TMapView::LoadAssimpModelDatas(CSHPTRREF<FILEGROUP> _spFolder)
 
 void TMapView::LoadMapModels()
 {
-	if (ImGui::Button("ConvertModels"))
+	if (ImGui::Button("ConvertMap"))
 	{
 		SHPTR<FILEGROUP> MapFolder = GetGameInstance()->FindFolder(L"Map");
 		// Folders 

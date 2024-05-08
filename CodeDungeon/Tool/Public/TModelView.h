@@ -19,6 +19,8 @@ class TGuizmoManager;
 */
 class TModelView final : public TImGuiView {
 public:
+	using MODELPAIR = std::pair < _string, SHPTR<UModel>>;
+	using ANIMMODELPAIR = std::pair < _string, SHPTR<UAnimModel>>;
 	TModelView(CSHPTRREF<UDevice> _spDevice);
 	NO_COPY(TModelView)
 	DESTRUCTOR(TModelView)
@@ -51,13 +53,20 @@ private:
 	void ResetAnimModels();
 
 	void EditModel();
+
+	void AddModelstoMapLayout();
+	void SaveCurrentMapLayouts();
+	void LoadMapLayoutsFromFile();
+
 	void ClearCurrentModel();
+	void ClearAllShowModels();
 	void ClearCurrentAnimModel();
 
 	void MouseInput();
+	void KeyboardInput();
 
 	HRESULT CopyCurrentModel();
-	HRESULT PasteCopiedModel();
+
 private:
 	using MODELS = UNORMAP<_string, SHPTR<UModel>>;
 	using ANIMMODEL = UNORMAP<_string, SHPTR<UAnimModel>>;
@@ -106,6 +115,10 @@ private:
 	_uint												m_iCopiedModelSuffix;
 
 	SHPTR<UMapLayout>									m_spMapLayout;
+	_bool												m_bshowLayoutAddPopup;
+	_bool												m_bLayoutSavePopup;
+	_bool												m_bLayoutLoadPopup;
+	_bool												m_bErrorPopup;
 };
 
 END

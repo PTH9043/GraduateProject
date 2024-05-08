@@ -3,25 +3,17 @@
 
 BEGIN(Engine)
 class UPawn;
-
-enum MapObjectType {
-	ROOM,
-	DECORATION,
-	INTERACTION,
-	OBJECTEND
-};
-
-typedef struct TransformDesc {
-	MapObjectType eType{};
-	_float3 vPos{ 0, 0, 0 };
-	_quaternion vRotate{ 0 ,0 ,0, 0};
-	_float3 vScale{ 0, 0, 0 };
-}TFDESC;
-
-using MAPOBJECTSCONTAINER = UNORMAP<_string, TFDESC>; //<오브젝트 이름, 데이터>
+class UTransform;
 
 class UMapLayout : public UComponent {
 public:
+	typedef struct ObjectDesc {
+		_string		_sModelName{};
+		_float4x4		_mWorldMatrix{ _float4x4::Identity };
+
+	}OBJDESC;
+	using MAPOBJECTS = VECTOR<OBJDESC>;
+	using MAPOBJECTSCONTAINER = UNORMAP<_string, MAPOBJECTS>; //<방 이름, 데이터>
 
 public:
 	UMapLayout(CSHPTRREF <UDevice> _spDevice);
@@ -34,14 +26,15 @@ public:
 	HRESULT NativeConstructClone(const VOIDDATAS& _tDatas) override;
 
 	_bool Save(const _wstring& _wstrPath);
-	_bool Load(const _wstring& _wstrPath);
+	_bool Load();
 	
-	void AddtoMapContainer(const _string& _ObjName, TFDESC& _ObjData);
-	void ConfigModelTFData(CSHPTRREF<UPawn> _Pawn, TFDESC* _TFData, MapObjectType _Type);
+	void AddtoMapContainer(const _string& _RoomName, MAPOBJECTS& _ObjData);
+
+	CSHPTRREF<MAPOBJECTSCONTAINER> GetMapObjectsContainer() { return m_spMapObjectsContainer;};
+
 private:
 
 	SHPTR<MAPOBJECTSCONTAINER> m_spMapObjectsContainer;
-
 
 
 };

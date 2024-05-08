@@ -9,7 +9,6 @@ class UCell;
 class UCollider;
 
 using REGIONLIST = VECTOR<SHPTR<URegion>>;
-using FILEPAIR = std::pair<_wstring, SHPTR<FILEDATA>>;
 
 class UStage : public UComponent
 {

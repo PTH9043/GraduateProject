@@ -131,6 +131,9 @@ namespace Engine {
 #define DEFAULT_OUTFOLDEREXTENSION		Engine::DXVALUE::g_OutFolderExtension
 
 using namespace Engine;
+using FILEGROUPS = UNORMAP<_string, SHPTR<FILEGROUP>>;
+using FOLDERPAIR = std::pair<_wstring, SHPTR<FILEGROUP>>;
+using FILEPAIR = std::pair<_wstring, SHPTR<FILEDATA>>;
 
 #define INVALID_MINUS_STAGEVALUE -1
 

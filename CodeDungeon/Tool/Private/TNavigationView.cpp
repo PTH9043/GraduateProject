@@ -80,8 +80,8 @@ HRESULT TNavigationView::ReleaseResource()
 
 void TNavigationView::TickActive(const _double& _dTimeDelta)
 {
-	//if (nullptr != m_spStageManager->GetStage())
-		///m_spStageManager->GetStage()->FlushDeleteCells();
+	if (nullptr != m_spStageManager->GetStage())
+		m_spStageManager->GetStage()->FlushDeleteCells();
 }
 
 void TNavigationView::LateTickActive(const _double& _dTimeDetla)

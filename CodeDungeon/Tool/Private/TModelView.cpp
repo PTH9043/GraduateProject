@@ -19,6 +19,7 @@
 #include "UMeshContainer.h"
 #include "UCollider.h"
 
+
 TModelView::TModelView(CSHPTRREF<UDevice> _spDevice) :
 	TImGuiView(_spDevice, "ModelView"),
 	m_stMainDesc{},
@@ -50,7 +51,11 @@ TModelView::TModelView(CSHPTRREF<UDevice> _spDevice) :
 	m_spCopiedModel{nullptr},
 	m_iCopiedModelSuffix{0},
 	m_CopiedModelName{},
-	m_spMapLayout{nullptr}
+	m_spMapLayout{nullptr},
+	m_bshowLayoutAddPopup{false},
+	m_bLayoutSavePopup{false},
+	m_bLayoutLoadPopup{false},
+	m_bErrorPopup{}
 {
 }
 
@@ -160,6 +165,8 @@ void TModelView::RenderActive()
 		ShowModels();
 		ShowAnimMoldels();
 		MouseInput();
+		KeyboardInput();
+		AddModelstoMapLayout();
 		EditModel();
 	}
 	ImGui::End();
@@ -218,7 +225,6 @@ void TModelView::ShowModelList()
 	{
 		if (ImGui::BeginListBox("Model List to Add", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
 		{
-			using MODELPAIR = std::pair < _string, SHPTR<UModel>>;
 			for (const MODELPAIR& Model : m_ModelsContainer)
 			{
 				_bool isTrue{ false };
@@ -270,12 +276,215 @@ void TModelView::ShowModelList()
 			}
 			ImGui::EndListBox();
 		}
-		if (ImGui::Button("Clear Current ShowModels"))
-			ClearCurrentModel();
-		ImGui::TreePop();
+		if (ImGui::Button("Clear All ShowModels"))
+			ClearAllShowModels();
 
+		if (ImGui::Button("Add Current ShowModels to MapLayout"))
+		{
+			m_bshowLayoutAddPopup = true;
+			ImGui::OpenPopup("Add to MapLayouts");
+		}
+		AddModelstoMapLayout();
+
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNodeEx("MapLayouts", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (ImGui::Button("Save"))
+		{
+			m_bLayoutSavePopup = true;
+			ImGui::OpenPopup("Save MapLayouts");
+		}
+		SaveCurrentMapLayouts();
+		ImGui::SameLine();
+
+		if (ImGui::Button("Load"))
+		{
+			m_bLayoutLoadPopup = true;
+			ImGui::OpenPopup("Load MapLayouts");
+		}
+		LoadMapLayoutsFromFile();
+
+		if (ImGui::BeginListBox("MapLayouts", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+		{
+			for (const auto& maplayouts : (*m_spMapLayout->GetMapObjectsContainer().get()))
+			{
+				_bool isTrue{ false };
+				if (ImGui::Selectable(maplayouts.first.c_str(), &isTrue))
+				{
+					if (m_ModelsContainer.size() > 0)
+					{
+						/*ClearAllShowModels();*/
+						for (const auto& layoutObjects : maplayouts.second)
+						{
+							auto it = m_ModelsContainer.find(layoutObjects._sModelName);
+
+							////numStr를 활용하여 중복된 모델 구분
+							_string uniqueName = it->first;
+							//_string numStr = std::to_string(m_iModelSuffix);
+							//while (m_ShowModelsContainer.find(uniqueName) != m_ShowModelsContainer.end())
+							//	uniqueName.append(numStr);
+
+							//ShowModel을 컨테이너에 추가
+							SHPTR<TShowModelObject> newModel = std::static_pointer_cast<TShowModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWMODELOBJECT));
+							newModel->SetShowModel(it->second);
+							newModel->GetTransform()->SetNewWorldMtx(layoutObjects._mWorldMatrix);
+
+							for (auto& Containers : newModel->GetColliderContainer())
+							{
+								Containers.second->SetTranslate(newModel->GetShowModel()->GetCenterPos());
+								Containers.second->SetScaleToFitModel(newModel->GetShowModel()->GetMinVertexPos(), newModel->GetShowModel()->GetMaxVertexPos());
+								Containers.second->SetTransform(newModel->GetTransform());
+							}
+
+							m_ShowModelsContainer.emplace(uniqueName, newModel);
+
+							//// numStr을 다시 제거
+							//size_t pos = uniqueName.find(numStr);
+							//if (pos != _wstring::npos)
+							//	uniqueName.erase(pos, numStr.length());
+							//m_iModelSuffix++;
+						}
+					}
+					else
+					{
+						m_bErrorPopup = true;
+						ImGui::OpenPopup("Error Message");
+						if (m_bErrorPopup && ImGui::BeginPopupModal("Error Message", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+						{
+							ImGui::Text("Please load models by pressing Convert button above before loading Maplayout!");
+							if (ImGui::Button("Ok", ImVec2(120, 0)))
+							{
+								ImGui::CloseCurrentPopup();
+								m_bErrorPopup = false;
+							}
+							ImGui::EndPopup();
+						}
+					}
+				}
+			}
+			ImGui::EndListBox();
+		}
+
+		ImGui::TreePop();
 	}
 }
+
+void TModelView::LoadMapLayoutsFromFile()
+{
+	if (m_bLayoutLoadPopup && ImGui::BeginPopupModal("Load MapLayouts", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::Text("Your current Maplayouts can be deleted. Continue?");
+		if (ImGui::Button("Ok", ImVec2(120, 0)))
+		{
+			if(m_spMapLayout->Load())
+			{
+				ImGui::CloseCurrentPopup();
+				m_bLayoutLoadPopup = false;
+			}
+			else
+			{
+				ImGui::Text("Load Failed");
+				if (ImGui::Button("Ok", ImVec2(120, 0)))
+				{
+					ImGui::CloseCurrentPopup();
+					m_bLayoutLoadPopup = false;
+				}
+			}
+		}
+		ImGui::SameLine();
+
+		if (ImGui::Button("No", ImVec2(120, 0)))
+		{
+			ImGui::CloseCurrentPopup();
+			m_bLayoutLoadPopup = false;
+		}
+		ImGui::EndPopup();
+	}
+}
+
+void TModelView::SaveCurrentMapLayouts()
+{
+	if (m_bLayoutSavePopup && ImGui::BeginPopupModal("Save MapLayouts", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		if ((*m_spMapLayout->GetMapObjectsContainer().get()).size() > 0)
+		{
+			if(m_spMapLayout->Save(FIRST_RESOURCE_FOLDER))
+			{
+				ImGui::Text("Save Complete");
+				if (ImGui::Button("Ok", ImVec2(120, 0)))
+				{
+					ImGui::CloseCurrentPopup();
+					m_bLayoutSavePopup = false;
+				}
+			}
+		}
+		else
+		{
+			ImGui::Text("Save Failed");
+			if (ImGui::Button("Ok", ImVec2(120, 0)))
+			{
+				ImGui::CloseCurrentPopup();
+				m_bLayoutSavePopup = false;
+			}
+		}
+		ImGui::EndPopup();
+	}
+}
+
+
+void TModelView::AddModelstoMapLayout()
+{
+	static char nameBuffer[256] = "";
+
+	if (m_bshowLayoutAddPopup &&ImGui::BeginPopupModal("Add to MapLayouts", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		if(m_ShowModelsContainer.size() > 0)
+		{
+			ImGui::Text("Enter a name for the Models to be placed in:");
+			ImGui::InputText("##Name", nameBuffer, sizeof(nameBuffer));
+			if (ImGui::Button("Add", ImVec2(120, 0)))
+			{
+				if (nameBuffer[0] != '\0')
+				{
+					VECTOR<UMapLayout::OBJDESC> ObjDataVector{};
+					for (auto& Model : m_ShowModelsContainer)
+					{
+						UMapLayout::OBJDESC objDesc{};
+						objDesc._sModelName = UMethod::ConvertWToS(Model.second->GetShowModel()->GetModelName());
+						objDesc._mWorldMatrix = Model.second->GetTransform()->GetWorldMatrix();
+						ObjDataVector.push_back(objDesc);
+					}
+					m_spMapLayout->AddtoMapContainer(nameBuffer, ObjDataVector);
+					ImGui::OpenPopup("Successfully Added");
+				}
+				ImGui::CloseCurrentPopup();
+				m_bshowLayoutAddPopup = false;
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Cancel", ImVec2(120, 0)))
+			{
+				ImGui::CloseCurrentPopup();
+				m_bshowLayoutAddPopup = false;
+			}
+		}
+		else
+		{
+			ImGui::Text("There are no models to add!");
+			if (ImGui::Button("Ok", ImVec2(120, 0)))
+			{
+				ImGui::CloseCurrentPopup();
+				m_bshowLayoutAddPopup = false;
+			}
+		}
+
+		ImGui::EndPopup();
+	}
+}
+
+
 
 void TModelView::ShowAnimModelList()
 {
@@ -283,7 +492,6 @@ void TModelView::ShowAnimModelList()
 	{
 		if (ImGui::BeginListBox("AnimModel List", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
 		{
-			using ANIMMODELPAIR = std::pair < _string, SHPTR<UAnimModel>>;
 			for (const ANIMMODELPAIR& Model : m_AnimModelContainer)
 			{
 				_bool isTrue{ false };
@@ -336,7 +544,15 @@ void TModelView::ShowAnimModelList()
 			ImGui::EndListBox();
 		}
 		if (ImGui::Button("Clear Current AnimShowModels"))
-			ClearCurrentAnimModel();
+		{
+			for (auto& showModel : m_ShowModelsContainer)
+			{
+				GetGameInstance()->RemoveActor(showModel.second);
+				showModel.second.reset();
+				m_ShowModelsContainer.erase(showModel.first);
+			}
+			m_spSelectedModel.reset();
+		}
 		ImGui::TreePop();
 	}
 
@@ -380,6 +596,7 @@ void TModelView::EditModel()
 			ImGui::Text("Selected Model: %s", m_SelectedModelName.c_str());
 			m_spGuizmoManager->EditTransformViaGuizmo();
 			ImGui::Checkbox("Show Collider", &m_bColliderActive);
+
 		}
 		else
 			ImGui::Text("Selected Model: None, Select Current Model to edit transform");
@@ -389,29 +606,51 @@ void TModelView::EditModel()
 
 void TModelView::ClearCurrentModel()
 {
-	for (auto& showModel : m_ShowModelsContainer)
+	auto it = m_ShowModelsContainer.begin();
+	while (it != m_ShowModelsContainer.end())
 	{
-		if (showModel.second == m_spSelectedModel)
-		{	
-			GetGameInstance()->RemoveActor(showModel.second);
-			showModel.second.reset();
-			m_ShowModelsContainer.erase(showModel.first);
+		if (it->second == m_spSelectedModel)
+		{
+			GetGameInstance()->RemoveActor(it->second);
+			it->second.reset();
+			it = m_ShowModelsContainer.erase(it);
 			break;
+		}
+		else
+		{
+			++it;
 		}
 	}
 	m_spSelectedModel.reset();
 }
 
+void TModelView::ClearAllShowModels()
+{
+	auto it = m_ShowModelsContainer.begin();
+	while (it != m_ShowModelsContainer.end())
+	{
+		GetGameInstance()->RemoveActor(it->second);
+		it->second.reset();
+		it = m_ShowModelsContainer.erase(it);
+	}
+}
+
+
 void TModelView::ClearCurrentAnimModel()
 {
-	for (auto& showModel : m_ShowAnimModelsContainer)
+	auto it = m_ShowAnimModelsContainer.begin();
+	while (it != m_ShowAnimModelsContainer.end())
 	{
-		if (showModel.second == m_spSelectedModel)
+		if (it->second == m_spSelectedModel)
 		{
-			GetGameInstance()->RemoveActor(showModel.second);
-			showModel.second.reset();
-			m_ShowAnimModelsContainer.erase(showModel.first);
+			GetGameInstance()->RemoveActor(it->second);
+			it->second.reset();
+			it = m_ShowAnimModelsContainer.erase(it);
 			break;
+		}
+		else
+		{
+			++it;
 		}
 	}
 	m_spSelectedModel.reset();
@@ -435,6 +674,7 @@ void TModelView::MouseInput()
 	if (!tDesc.bPickingSuccess)
 		return;
 
+
 	for (auto& ShowModel : m_ShowModelsContainer)
 	{
 		if (ShowModel.second == tDesc.spPawn)
@@ -456,6 +696,15 @@ void TModelView::MouseInput()
 			return;
 		}
 	}
+
+}
+
+void TModelView::KeyboardInput()
+{
+	if (GetGameInstance()->GetDIKeyDown(DIK_C))
+		CopyCurrentModel();
+	if(GetGameInstance()->GetDIKeyDown(DIK_DELETE))
+		ClearCurrentModel();
 }
 
 HRESULT TModelView::CopyCurrentModel()
@@ -464,38 +713,62 @@ HRESULT TModelView::CopyCurrentModel()
 
 	if (m_spCopiedModel != nullptr)
 		m_spCopiedModel.reset();
-	m_spCopiedModel = m_spSelectedModel;
-
-	return S_OK;
-}
-
-HRESULT TModelView::PasteCopiedModel()
-{
-	RETURN_CHECK(m_spCopiedModel == nullptr, E_FAIL)
-
-	if (m_spCopiedModel != m_spSelectedModel)
+	
+	if(!m_bSelectedhasAnim)
 	{
-		m_CopiedModelName = m_SelectedModelName;
-		m_iCopiedModelSuffix = 0;
+		m_spCopiedModel = std::static_pointer_cast<TShowModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWMODELOBJECT));
+		SHPTR<TShowModelObject> _CopiedModel = std::static_pointer_cast<TShowModelObject>(m_spCopiedModel);
+
+		_CopiedModel->SetShowModel(std::static_pointer_cast<TShowModelObject>(m_spSelectedModel)->GetShowModel());
+		
+		for (auto& Containers : m_spCopiedModel->GetColliderContainer())
+		{
+			Containers.second->SetTranslate(_CopiedModel->GetShowModel()->GetCenterPos());
+			Containers.second->SetScaleToFitModel(_CopiedModel->GetShowModel()->GetMinVertexPos(), _CopiedModel->GetShowModel()->GetMaxVertexPos());
+			Containers.second->SetTransform(_CopiedModel->GetTransform());
+		}
+	}
+	else
+	{
+		m_spCopiedModel = std::static_pointer_cast<TShowAnimModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWANIMMODELOBJECT));
+		SHPTR<TShowAnimModelObject> _CopiedModel = std::static_pointer_cast<TShowAnimModelObject>(m_spCopiedModel);
+		_CopiedModel->SetShowModel(std::static_pointer_cast<TShowAnimModelObject>(m_spSelectedModel)->GetAnimModel());
+
+		for (auto& Containers : m_spCopiedModel->GetColliderContainer())
+		{
+			Containers.second->SetTranslate(_CopiedModel->GetAnimModel()->GetCenterPos());
+			Containers.second->SetScaleToFitModel(_CopiedModel->GetAnimModel()->GetMinVertexPos(), _CopiedModel->GetAnimModel()->GetMaxVertexPos());
+			Containers.second->SetTransform(_CopiedModel->GetTransform());
+		}
 	}
 
+	m_spCopiedModel->GetTransform()->SetNewWorldMtx(m_spSelectedModel->GetTransform()->GetWorldMatrix());
+	
+	m_CopiedModelName = m_SelectedModelName;
+	
 	_string numStr = std::to_string(m_iCopiedModelSuffix);
-	_string cloneName = m_CopiedModelName;
-	cloneName.append("_Clone");
-	cloneName.append(numStr);
+
+	if (m_CopiedModelName.find("_Clone") == std::string::npos) {
+		m_CopiedModelName.append("_Clone");
+		m_CopiedModelName.append(numStr);
+	}
+	else {
+		m_CopiedModelName.append(numStr);
+	}
 	m_iCopiedModelSuffix++;
 
 	if (m_bSelectedhasAnim)
-		m_ShowAnimModelsContainer.emplace(cloneName, dynamic_pointer_cast<TShowAnimModelObject>(m_spCopiedModel));
+		m_ShowAnimModelsContainer.emplace(m_CopiedModelName, dynamic_pointer_cast<TShowAnimModelObject>(m_spCopiedModel));
 	else
-		m_ShowModelsContainer.emplace(cloneName, dynamic_pointer_cast<TShowModelObject>(m_spCopiedModel));
+		m_ShowModelsContainer.emplace(m_CopiedModelName, dynamic_pointer_cast<TShowModelObject>(m_spCopiedModel));
 
-	size_t pos = cloneName.find(numStr);
+	size_t pos = m_CopiedModelName.find(numStr);
 	if (pos != _wstring::npos)
-		cloneName.erase(pos, numStr.length());
+		m_CopiedModelName.erase(pos, numStr.length());
 
 	return S_OK;
 }
+
 
 void TModelView::ConvertModels()
 {
