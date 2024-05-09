@@ -28,6 +28,8 @@ TModelView::TModelView(CSHPTRREF<UDevice> _spDevice) :
 	m_stTransformEditorDesc{},
 	m_ModelsContainer{},
 	m_AnimModelContainer{},
+	m_DeleteModelsContainer{},
+	m_DeleteAnimModelsContainer{},
 	m_spModelFileFolder{ nullptr },
 	m_spAnimModelFileFolder{ nullptr },
 	m_vModelScale{},
@@ -46,10 +48,7 @@ TModelView::TModelView(CSHPTRREF<UDevice> _spDevice) :
 	m_ShowModelsContainer{},
 	m_spSelectedModel{nullptr},
 	m_SelectedModelName{},
-	m_iModelSuffix{ 0 },
-	m_iAnimModelSuffix{ 0 },
 	m_spCopiedModel{nullptr},
-	m_iCopiedModelSuffix{0},
 	m_CopiedModelName{},
 	m_spMapLayout{nullptr},
 	m_bshowLayoutAddPopup{false},
@@ -103,6 +102,9 @@ HRESULT TModelView::ReleaseResource()
 	m_spShowAnimModelObject.reset();
 	m_spSelectedModel.reset();
 
+	m_DeleteModelsContainer.clear();
+	m_DeleteAnimModelsContainer.clear();
+
 	GetGameInstance()->RemoveActor(m_spShowModelObject);
 	GetGameInstance()->RemoveActor(m_spShowAnimModelObject);
 
@@ -112,6 +114,28 @@ HRESULT TModelView::ReleaseResource()
 
 void TModelView::TickActive(const _double& _dTimeDelta)
 {
+	for (auto& model : m_DeleteModelsContainer)
+	{
+		auto it = m_ShowModelsContainer.find(model);
+
+		if (it != m_ShowModelsContainer.end())
+		{
+			m_ShowModelsContainer.erase(it);
+		}
+	}
+	m_DeleteModelsContainer.clear();
+
+	for (auto& model : m_DeleteAnimModelsContainer)
+	{
+		auto it = m_ShowAnimModelsContainer.find(model);
+
+		if (it != m_ShowAnimModelsContainer.end())
+		{
+			m_ShowAnimModelsContainer.erase(it);
+		}
+	}
+	m_DeleteAnimModelsContainer.clear();
+
 }
 
 void TModelView::LateTickActive(const _double& _dTimeDetla)
@@ -230,11 +254,16 @@ void TModelView::ShowModelList()
 				_bool isTrue{ false };
 				if (ImGui::Selectable(Model.first.c_str(), &isTrue))
 				{
-					//numStr를 활용하여 중복된 모델 구분
-					_string uniqueName = Model.first;
-					_string numStr = std::to_string(m_iModelSuffix);
-					while (m_ShowModelsContainer.find(uniqueName) != m_ShowModelsContainer.end())				
-						uniqueName.append(numStr);
+					_string ModelName = Model.first;
+					_string uniqueName = ModelName;
+					int counter = 1;
+
+					// 중복된 이름 처리
+					while (m_ShowModelsContainer.find(uniqueName) != m_ShowModelsContainer.end())
+					{
+						uniqueName = ModelName + "_" + std::to_string(counter);
+						counter++;
+					}
 
 					//ShowModel을 컨테이너에 추가
 					SHPTR<TShowModelObject> newModel = std::static_pointer_cast<TShowModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWMODELOBJECT));
@@ -248,12 +277,6 @@ void TModelView::ShowModelList()
 					}
 
 					m_ShowModelsContainer.emplace(uniqueName, newModel);
-
-					// numStr을 다시 제거
-					size_t pos = uniqueName.find(numStr);
-					if (pos != _wstring::npos)
-						uniqueName.erase(pos, numStr.length());
-					m_iModelSuffix++;
 				}
 			}
 			ImGui::EndListBox();
@@ -319,11 +342,17 @@ void TModelView::ShowModelList()
 						{
 							auto it = m_ModelsContainer.find(layoutObjects._sModelName);
 
-							////numStr를 활용하여 중복된 모델 구분
-							_string uniqueName = it->first;
-							//_string numStr = std::to_string(m_iModelSuffix);
-							//while (m_ShowModelsContainer.find(uniqueName) != m_ShowModelsContainer.end())
-							//	uniqueName.append(numStr);
+							_string ModelName = it->first;
+							_string uniqueName = ModelName;
+							int counter = 1;
+
+							// 중복된 이름 처리
+							while (m_ShowModelsContainer.find(uniqueName) != m_ShowModelsContainer.end())
+							{
+								uniqueName = ModelName + "_" + std::to_string(counter);
+								counter++;
+							}
+
 
 							//ShowModel을 컨테이너에 추가
 							SHPTR<TShowModelObject> newModel = std::static_pointer_cast<TShowModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWMODELOBJECT));
@@ -338,12 +367,6 @@ void TModelView::ShowModelList()
 							}
 
 							m_ShowModelsContainer.emplace(uniqueName, newModel);
-
-							//// numStr을 다시 제거
-							//size_t pos = uniqueName.find(numStr);
-							//if (pos != _wstring::npos)
-							//	uniqueName.erase(pos, numStr.length());
-							//m_iModelSuffix++;
 						}
 					}
 					else
@@ -497,12 +520,16 @@ void TModelView::ShowAnimModelList()
 				_bool isTrue{ false };
 				if (ImGui::Selectable(Model.first.c_str(), &isTrue, ImGuiTreeNodeFlags_Selected))
 				{
-					//numStr를 활용하여 중복된 모델 구분
-					_string uniqueName = Model.first;
-					_string numStr = std::to_string(m_iAnimModelSuffix);
-					while (m_ShowAnimModelsContainer.find(uniqueName) != m_ShowAnimModelsContainer.end())
-						uniqueName.append(numStr);
+					_string ModelName = Model.first;
+					_string uniqueName = ModelName;
+					int counter = 1;
 
+					// 중복된 이름 처리
+					while (m_ShowAnimModelsContainer.find(uniqueName) != m_ShowAnimModelsContainer.end())
+					{
+						uniqueName = ModelName + "_" + std::to_string(counter);
+						counter++;
+					}
 					//ShowModel을 컨테이너에 추가
 					SHPTR<TShowAnimModelObject> newAnimModel = std::static_pointer_cast<TShowAnimModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWANIMMODELOBJECT));
 					newAnimModel->SetShowModel(Model.second);
@@ -516,11 +543,6 @@ void TModelView::ShowAnimModelList()
 
 					m_ShowAnimModelsContainer.emplace(uniqueName, newAnimModel);
 
-					// numStr을 다시 제거
-					size_t pos = uniqueName.find(numStr);
-					if (pos != _wstring::npos)
-						uniqueName.erase(pos, numStr.length());
-					m_iAnimModelSuffix++;
 				}
 			}
 			ImGui::EndListBox();
@@ -612,8 +634,7 @@ void TModelView::ClearCurrentModel()
 		if (it->second == m_spSelectedModel)
 		{
 			GetGameInstance()->RemoveActor(it->second);
-			it->second.reset();
-			it = m_ShowModelsContainer.erase(it);
+			m_DeleteModelsContainer.push_back(it->first);
 			break;
 		}
 		else
@@ -630,9 +651,11 @@ void TModelView::ClearAllShowModels()
 	while (it != m_ShowModelsContainer.end())
 	{
 		GetGameInstance()->RemoveActor(it->second);
-		it->second.reset();
-		it = m_ShowModelsContainer.erase(it);
+		m_DeleteModelsContainer.push_back(it->first);
+		it++;
 	}
+	if (m_spSelectedModel != nullptr)
+		m_spSelectedModel.reset();
 }
 
 
@@ -644,8 +667,7 @@ void TModelView::ClearCurrentAnimModel()
 		if (it->second == m_spSelectedModel)
 		{
 			GetGameInstance()->RemoveActor(it->second);
-			it->second.reset();
-			it = m_ShowAnimModelsContainer.erase(it);
+			m_DeleteAnimModelsContainer.push_back(it->first);
 			break;
 		}
 		else
@@ -711,16 +733,16 @@ HRESULT TModelView::CopyCurrentModel()
 {
 	RETURN_CHECK(m_spSelectedModel == nullptr, E_FAIL)
 
-	if (m_spCopiedModel != nullptr)
-		m_spCopiedModel.reset();
-	
-	if(!m_bSelectedhasAnim)
+		if (m_spCopiedModel != nullptr)
+			m_spCopiedModel.reset();
+
+	if (!m_bSelectedhasAnim)
 	{
 		m_spCopiedModel = std::static_pointer_cast<TShowModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWMODELOBJECT));
 		SHPTR<TShowModelObject> _CopiedModel = std::static_pointer_cast<TShowModelObject>(m_spCopiedModel);
 
 		_CopiedModel->SetShowModel(std::static_pointer_cast<TShowModelObject>(m_spSelectedModel)->GetShowModel());
-		
+
 		for (auto& Containers : m_spCopiedModel->GetColliderContainer())
 		{
 			Containers.second->SetTranslate(_CopiedModel->GetShowModel()->GetCenterPos());
@@ -743,31 +765,26 @@ HRESULT TModelView::CopyCurrentModel()
 	}
 
 	m_spCopiedModel->GetTransform()->SetNewWorldMtx(m_spSelectedModel->GetTransform()->GetWorldMatrix());
-	
-	m_CopiedModelName = m_SelectedModelName;
-	
-	_string numStr = std::to_string(m_iCopiedModelSuffix);
 
-	if (m_CopiedModelName.find("_Clone") == std::string::npos) {
-		m_CopiedModelName.append("_Clone");
-		m_CopiedModelName.append(numStr);
+	m_CopiedModelName = m_SelectedModelName;
+
+	int count = 1;
+
+	// 중복된 이름 처리
+	while (m_ShowModelsContainer.find(m_CopiedModelName) != m_ShowModelsContainer.end() || m_ShowAnimModelsContainer.find(m_CopiedModelName) != m_ShowAnimModelsContainer.end())
+	{
+		m_CopiedModelName = m_SelectedModelName + "_Clone" + std::to_string(count);
+		++count;
 	}
-	else {
-		m_CopiedModelName.append(numStr);
-	}
-	m_iCopiedModelSuffix++;
 
 	if (m_bSelectedhasAnim)
-		m_ShowAnimModelsContainer.emplace(m_CopiedModelName, dynamic_pointer_cast<TShowAnimModelObject>(m_spCopiedModel));
+		m_ShowAnimModelsContainer.emplace(m_CopiedModelName, std::dynamic_pointer_cast<TShowAnimModelObject>(m_spCopiedModel));
 	else
-		m_ShowModelsContainer.emplace(m_CopiedModelName, dynamic_pointer_cast<TShowModelObject>(m_spCopiedModel));
-
-	size_t pos = m_CopiedModelName.find(numStr);
-	if (pos != _wstring::npos)
-		m_CopiedModelName.erase(pos, numStr.length());
+		m_ShowModelsContainer.emplace(m_CopiedModelName, std::dynamic_pointer_cast<TShowModelObject>(m_spCopiedModel));
 
 	return S_OK;
 }
+
 
 
 void TModelView::ConvertModels()

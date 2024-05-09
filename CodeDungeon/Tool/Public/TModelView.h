@@ -73,6 +73,9 @@ private:
 	using SHOWMODELS = UNORMAP<_string, SHPTR<TShowModelObject>>;
 	using SHOWANIMEMODELS = UNORMAP<_string, SHPTR<TShowAnimModelObject>>;
 
+	using DELETEMODELS = VECTOR<_string>;
+	using DELETEANIMMODELS = VECTOR<_string>;
+
 	MAINDESC											m_stMainDesc;
 	DOCKDESC											m_stModelDockDesc;
 	DOCKDESC											m_stAnimModelDockDesc;
@@ -82,6 +85,9 @@ private:
 	ANIMMODEL											m_AnimModelContainer;
 	SHOWMODELS											m_ShowModelsContainer;
 	SHOWANIMEMODELS										m_ShowAnimModelsContainer;
+
+	DELETEMODELS										m_DeleteModelsContainer;
+	DELETEANIMMODELS									m_DeleteAnimModelsContainer;
 
 	SHPTR<FILEGROUP>									m_spModelFileFolder;
 	SHPTR<FILEGROUP>									m_spAnimModelFileFolder;
@@ -110,15 +116,12 @@ private:
 	_bool												m_bSelectedhasAnim;
 	_bool												m_bColliderActive;
 
-	_uint												m_iModelSuffix;
-	_uint												m_iAnimModelSuffix;
-	_uint												m_iCopiedModelSuffix;
-
 	SHPTR<UMapLayout>									m_spMapLayout;
 	_bool												m_bshowLayoutAddPopup;
 	_bool												m_bLayoutSavePopup;
 	_bool												m_bLayoutLoadPopup;
 	_bool												m_bErrorPopup;
+
 };
 
 END

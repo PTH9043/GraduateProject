@@ -56,7 +56,7 @@ void UTransform::SetScale(const _float3& _vScale)
 	if (_vScale == m_vScale)
 		return;
 
-	m_mScaleMatrix = m_mScaleMatrix.MatrixSetScaling(_vScale);
+	m_mWorldMatrix = m_mWorldMatrix.MatrixSetScaling(_vScale);
 	m_vScale = _vScale;
 }
 
@@ -117,10 +117,10 @@ void UTransform::TransformUpdate()
 		{
 			Matrix.MatrixSetRotationFix(_float3::Zero);
 		}
-		m_mChangeWorldMatrix = m_mScaleMatrix * m_mWorldMatrix * Matrix;
+		m_mChangeWorldMatrix = m_mWorldMatrix * Matrix;
 	}
 	else {
-		m_mChangeWorldMatrix = m_mScaleMatrix * m_mWorldMatrix ;
+		m_mChangeWorldMatrix = m_mWorldMatrix ;
 	}
 }
 
