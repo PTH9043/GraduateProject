@@ -14,10 +14,20 @@ UAnimOccursTimePassEvent::UAnimOccursTimePassEvent() :
 {
 }
 
+UAnimOccursTimePassEvent::UAnimOccursTimePassEvent(const UAnimOccursTimePassEvent& _rhs) :
+	UAnimOccurEvent(_rhs), m_AnimChangeDesc{_rhs.m_AnimChangeDesc}
+{
+}
+
 UAnimOccursTimePassEvent::UAnimOccursTimePassEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) :
 	UAnimOccurEvent(ANIMEVENTTYPE::ANIMEVENT_ANIMOCCURSTIMEPASS)
 {
 	LoadEvent(_spAnimModel, _load);
+}
+
+SHPTR<UAnimEvent> UAnimOccursTimePassEvent::Clone()
+{
+	return std::move(CloneThis<UAnimOccursTimePassEvent>(*this));
 }
 
 const ANIMOTHEREVENTDESC*  UAnimOccursTimePassEvent::OutOtherEventDesc()
@@ -77,10 +87,20 @@ UAnimSoundEvent::UAnimSoundEvent() :
 {
 }
 
+UAnimSoundEvent::UAnimSoundEvent(const UAnimSoundEvent& _rhs) : 
+	UAnimOccurEvent(_rhs), m_AnimSoundDesc{_rhs.m_AnimSoundDesc}
+{
+}
+
 UAnimSoundEvent::UAnimSoundEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) :
 	UAnimOccurEvent(ANIMEVENTTYPE::ANIMEVENT_SOUND), m_spSound{ nullptr }
 {
 	LoadEvent(_spAnimModel, _load);
+}
+
+SHPTR<UAnimEvent> UAnimSoundEvent::Clone()
+{
+	return SHPTR<UAnimEvent>();
 }
 
 const ANIMOTHEREVENTDESC* UAnimSoundEvent::OutOtherEventDesc()

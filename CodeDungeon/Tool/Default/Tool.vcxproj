@@ -188,6 +188,7 @@
     <ClInclude Include="..\Public\TGuizmoManager.h" />
     <ClInclude Include="..\Public\TImGuiManager.h" />
     <ClInclude Include="..\Public\TImGuiView.h" />
+    <ClInclude Include="..\Public\TItemView.h" />
     <ClInclude Include="..\Public\TMainCamera.h" />
     <ClInclude Include="..\Public\TMainScene.h" />
     <ClInclude Include="..\Public\TMainView.h" />
@@ -229,6 +230,7 @@
     <ClCompile Include="..\Private\TGuizmoManager.cpp" />
     <ClCompile Include="..\Private\TImGuiManager.cpp" />
     <ClCompile Include="..\Private\TImGuiView.cpp" />
+    <ClCompile Include="..\Private\TItemView.cpp" />
     <ClCompile Include="..\Private\TMainCamera.cpp" />
     <ClCompile Include="..\Private\TMainScene.cpp" />
     <ClCompile Include="..\Private\TMainView.cpp" />

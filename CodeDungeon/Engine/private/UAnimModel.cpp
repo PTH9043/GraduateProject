@@ -31,7 +31,8 @@ UAnimModel::UAnimModel(CSHPTRREF<UDevice> _spDevice) :
 	m_iCurAnimIndex{ 0 },
 	m_iNextAnimIndex{ 0 },
 	m_fSupplyLerpValue{ 0.f },
-	m_isChangeAnim{ false }
+	m_isChangeAnim{ false },
+	m_mPivotMatrix{_float4x4::Identity}
 {
 }
 
@@ -49,7 +50,8 @@ UAnimModel::UAnimModel(const UAnimModel& _rhs) :
 	m_iCurAnimIndex{ 0 },
 	m_iNextAnimIndex{ 0 },
 	m_fSupplyLerpValue{ 0.f },
-	m_isChangeAnim{ false }
+	m_isChangeAnim{ false },
+	m_mPivotMatrix{_rhs.m_mPivotMatrix}
 {
 
 }
@@ -61,6 +63,30 @@ void UAnimModel::Free()
 HRESULT UAnimModel::NativeConstruct()
 {
 	return __super::NativeConstruct();
+}
+
+HRESULT UAnimModel::NativeConstruct(const _wstring& _wstrPath, const _float4x4& _PivotMatrix)
+{
+	m_mPivotMatrix = _PivotMatrix;
+	return NativeConstruct(_wstrPath);
+}
+
+HRESULT UAnimModel::NativeConstruct(CSHPTRREF<FILEGROUP> _spFileGroup, CSHPTRREF<FILEDATA> _spFileData, const _float4x4& _PivotMatrix)
+{
+	m_mPivotMatrix = _PivotMatrix;
+	return NativeConstruct(_spFileGroup, _spFileData);
+}
+
+HRESULT UAnimModel::NativeConstruct(const PATHS& _vecPaths, const _wstring& _wstrFileName, const _float4x4& _PivotMatrix)
+{
+	m_mPivotMatrix = _PivotMatrix;
+	return NativeConstruct(_vecPaths, _wstrFileName);
+}
+
+HRESULT UAnimModel::NativeConstruct(const _wstring& _wstrModelFolder, const _wstring& _wstrFileName, const _float4x4& _PivotMatrix)
+{
+	m_mPivotMatrix = _PivotMatrix;
+	return NativeConstruct(_wstrModelFolder, _wstrFileName);
 }
 
 HRESULT UAnimModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
@@ -89,7 +115,7 @@ HRESULT UAnimModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 		for (auto& iter : m_vecSetupBonMatrix[i])
 			iter = _float4x4::Identity;
 	}
-
+	GetRootBoneNode()->OnRootBoneNode();
 	RETURN_CHECK_FAILED(CreateShaderConstantBuffer(), E_FAIL);
 	return S_OK;
 }
@@ -149,7 +175,7 @@ void UAnimModel::TickAnimChangeTransform(CSHPTRREF<UTransform> _spTransform, con
 
 	if (true == m_spCurAnimation->IsApplyRootBoneMove())
 	{
-		_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), _spTransform->GetChangeMatrix());
+		_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), m_mPivotMatrix * _spTransform->GetWorldMatrix());
 		_spTransform->SetPos(Position);
 	}
 }
@@ -161,7 +187,7 @@ void UAnimModel::TickAnimToTimAccChangeTransform(CSHPTRREF<UTransform> _spTransf
 
 	if (true == m_spCurAnimation->IsApplyRootBoneMove())
 	{
-		_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), _spTransform->GetWorldMatrix());
+		_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), m_mPivotMatrix *  _spTransform->GetWorldMatrix());
 		_spTransform->SetPos(Position);
 	}
 }
@@ -174,7 +200,7 @@ HRESULT UAnimModel::Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader
 	CSHPTRREF<UMeshContainer> spMeshContainer{ GetMeshContainers()[_iMeshIndex] };
 	// 이전 본 값 세팅
 	_spShader->BindCBVBuffer(m_spPrevBoneMatrixShaderConstantBuffer, m_vecSetupBonMatrix[_iMeshIndex].data(), GetTypeSize<BONEMATRIXPARAM>());
-	spMeshContainer->SetUpBoneMatrix(m_vecSetupBonMatrix[_iMeshIndex]);
+	spMeshContainer->SetUpBoneMatrix(m_vecSetupBonMatrix[_iMeshIndex], m_mPivotMatrix);
 	// 현재 본 값 세팅
 	_spShader->BindCBVBuffer(m_spBoneMatrixShaderConstantBuffer, m_vecSetupBonMatrix[_iMeshIndex].data(), GetTypeSize<BONEMATRIXPARAM>());
 	// 애니메이션 세팅

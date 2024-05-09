@@ -24,6 +24,7 @@ public:
 	HRESULT NativeConstruct(void* _pData, CSHPTRREF<UModel> _spModel);
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;
 	HRESULT SetUpBoneMatrix(ARRAY<_float4x4, MAX_BONE_SIZE>& _arrBones);
+	HRESULT SetUpBoneMatrix(ARRAY<_float4x4, MAX_BONE_SIZE>& _arrBones, const _float4x4& _PivotMatrix);
 private:
 	HRESULT ReadyVertices(void* _pData, CSHPTRREF<UModel> _spModel);
 	HRESULT ReadyAnimVertices(void* _pData, CSHPTRREF<UModel> _spModel);

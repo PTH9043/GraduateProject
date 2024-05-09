@@ -20,7 +20,8 @@ UAnimation::UAnimation() :
 	m_isFinishAnimation{false},
 	m_dAnimationProgressRate{0.f},
 	m_isApplyRootBoneMove{true},
-	m_spActiveAnimChangeEvent{nullptr}
+	m_spActiveAnimChangeEvent{nullptr},
+	m_AnimEventContainer{}
 {
 }
 
@@ -34,11 +35,12 @@ UAnimation::UAnimation(const UAnimation& _rhs) :
 	m_dTimeAcc{ 0.0 },
 	m_isSupplySituation{ false },
 	m_fSupplySituationValue{ 0 },
-	m_fTotalAnimationFastValue{ 1.f },
+	m_fTotalAnimationFastValue{ _rhs.m_fTotalAnimationFastValue },
 	m_isFinishAnimation{ false },
 	m_dAnimationProgressRate{ 0.f },
-	m_isApplyRootBoneMove{ true },
-	m_spActiveAnimChangeEvent{ nullptr }
+	m_isApplyRootBoneMove{ _rhs.m_isApplyRootBoneMove },
+	m_spActiveAnimChangeEvent{ nullptr },
+	m_AnimEventContainer{}
 {
 }
 
@@ -65,8 +67,23 @@ SHPTR<UAnimation> UAnimation::Clone(CSHPTRREF<UAnimModel> _spAnimModel)
 {
 	SHPTR<UAnimation> pAnimation = CloneThis<UAnimation>(*this);
 
+	if (false == pAnimation->IsApplyRootBoneMove())
+	{
+		int a = 0;
+	}
+
 	for (auto& iter : m_Channels)
 		pAnimation->m_Channels.push_back(iter->Clone(_spAnimModel));
+
+	for (auto& iter : m_AnimEventContainer)
+	{
+		VECTOR<SHPTR<UAnimEvent>> AnimEvents;
+		for (auto& value : iter.second)
+		{
+			AnimEvents.push_back(value->Clone());
+		}
+		pAnimation->m_AnimEventContainer.emplace(MakePair(iter.first, AnimEvents));
+	}
 
 	return pAnimation;
 }
@@ -138,7 +155,6 @@ void UAnimation::UpdateNextAnimTransformMatrices(const _double& _dTimeDelta, con
 	{
 		m_fSupplySituationValue = 0.001f;
 		m_isSupplySituation = false;
-		ResetAnimChangeEventNode();
 	}
 	else
 	{
@@ -161,6 +177,7 @@ void UAnimation::TickAnimEvent(UPawn* _pPawn, UAnimModel* _pAnimModel, const _do
 			if (true == Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, m_dTimeAcc, _wstrInputTrigger))
 			{
 				m_spActiveAnimChangeEvent = Event;
+				break;
 			}
 		}
 	}

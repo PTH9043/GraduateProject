@@ -28,12 +28,17 @@ public:
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _tDatas) override PURE;
 	// Tick
 	virtual void Tick(const _double& _dTimeDelta) override PURE;
+protected:
+	void ClearTrigger() { this->m_wstrTrigger.clear(); }
 public: /* get set*/
 	const _int GetAnimState() const { return m_iAnimState;  }
+	const _wstring& GetTrigger() const { return m_wstrTrigger; }
 protected: /* get set  */
 	void SetAnimState(const _int _iAnimState) { this->m_iAnimState = _iAnimState; }
+	void SetTrigger(const _wstring& _wstrTrigger) { this->m_wstrTrigger = _wstrTrigger; }
 private:
-	_int			m_iAnimState;
+	_int				m_iAnimState;
+	_wstring		m_wstrTrigger;
 };
 
 END

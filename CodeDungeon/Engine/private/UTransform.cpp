@@ -17,13 +17,23 @@ UTransform::UTransform(CSHPTRREF<UDevice> _spDevice) :
 	m_isNotApplyRotate{ false },
 	m_isNotApplyPos{ false },
 	m_isNotApplyScale{ false },
-	m_spParentsTransform{ nullptr },
-	m_mScaleMatrix{_float4x4::Identity}
+	m_spParentsTransform{ nullptr }
 {
 }
 
 UTransform::UTransform(const UTransform& _rhs) :
-	UComponent(_rhs)
+	UComponent(_rhs),
+	// Shader 
+	m_TransformBuffer{ nullptr },
+	m_stTransformParam{},
+	m_mWorldMatrix{ _float4x4::Identity },
+	m_mChangeWorldMatrix{ _float4x4::Identity },
+	m_vQuaternion{ _float4::Zero },
+	m_vScale{ 1.f, 1.f, 1.f },
+	m_isNotApplyRotate{ false },
+	m_isNotApplyPos{ false },
+	m_isNotApplyScale{ false },
+	m_spParentsTransform{ nullptr }
 {
 }
 
@@ -56,14 +66,14 @@ void UTransform::SetScale(const _float3& _vScale)
 	if (_vScale == m_vScale)
 		return;
 
-	m_mScaleMatrix = m_mScaleMatrix.MatrixSetScaling(_vScale);
+	m_mWorldMatrix = m_mWorldMatrix.MatrixSetScaling(_vScale);
 	m_vScale = _vScale;
 }
 
 const _float4x4 UTransform::GetParentsMatrix()
 {
 	if (nullptr == m_spParentsTransform)
-		return GetWorldMatrix();
+		return m_mChangeWorldMatrix;
 
 	return _float4x4();
 }
@@ -117,10 +127,10 @@ void UTransform::TransformUpdate()
 		{
 			Matrix.MatrixSetRotationFix(_float3::Zero);
 		}
-		m_mChangeWorldMatrix = m_mScaleMatrix * m_mWorldMatrix * Matrix;
+		m_mChangeWorldMatrix = m_mWorldMatrix * Matrix;
 	}
 	else {
-		m_mChangeWorldMatrix = m_mScaleMatrix * m_mWorldMatrix ;
+		m_mChangeWorldMatrix = m_mWorldMatrix ;
 	}
 }
 

@@ -36,6 +36,8 @@ protected:
 	SHPTR<UCharacter> GetOwnerCharacter() { return m_wpOwnerCharacter.lock();  }
 private:
 	WKPTR<UCharacter>					m_wpOwnerCharacter;
+
+
 };
 
 END

@@ -40,8 +40,6 @@ HRESULT UPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 
 void UPlayer::TickActive(const _double& _dTimeDelta)
 {
-	GetAnimationController()->Tick(_dTimeDelta);
-
 	__super::TickActive(_dTimeDelta);
 }
 
