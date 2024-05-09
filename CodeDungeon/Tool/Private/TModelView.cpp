@@ -54,7 +54,8 @@ TModelView::TModelView(CSHPTRREF<UDevice> _spDevice) :
 	m_bshowLayoutAddPopup{false},
 	m_bLayoutSavePopup{false},
 	m_bLayoutLoadPopup{false},
-	m_bErrorPopup{}
+	m_bErrorPopup{},
+	m_bEditPosByPicking{false}
 {
 }
 
@@ -388,6 +389,62 @@ void TModelView::ShowModelList()
 			}
 			ImGui::EndListBox();
 		}
+		if (ImGui::Button("Add All Maplayouts"))
+		{
+			for (const auto& maplayouts : (*m_spMapLayout->GetMapObjectsContainer().get()))
+			{
+				if (m_ModelsContainer.size() > 0)
+				{
+					/*ClearAllShowModels();*/
+					for (const auto& layoutObjects : maplayouts.second)
+					{
+						auto it = m_ModelsContainer.find(layoutObjects._sModelName);
+
+						_string ModelName = it->first;
+						_string uniqueName = ModelName;
+						int counter = 1;
+
+						// 중복된 이름 처리
+						while (m_ShowModelsContainer.find(uniqueName) != m_ShowModelsContainer.end())
+						{
+							uniqueName = ModelName + "_" + std::to_string(counter);
+							counter++;
+						}
+
+
+						//ShowModel을 컨테이너에 추가
+						SHPTR<TShowModelObject> newModel = std::static_pointer_cast<TShowModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWMODELOBJECT));
+						newModel->SetShowModel(it->second);
+						newModel->GetTransform()->SetNewWorldMtx(layoutObjects._mWorldMatrix);
+
+						for (auto& Containers : newModel->GetColliderContainer())
+						{
+							Containers.second->SetTranslate(newModel->GetShowModel()->GetCenterPos());
+							Containers.second->SetScaleToFitModel(newModel->GetShowModel()->GetMinVertexPos(), newModel->GetShowModel()->GetMaxVertexPos());
+							Containers.second->SetTransform(newModel->GetTransform());
+						}
+
+						m_ShowModelsContainer.emplace(uniqueName, newModel);
+					}
+				}
+				else
+				{
+					m_bErrorPopup = true;
+					ImGui::OpenPopup("Error Message");
+					if (m_bErrorPopup && ImGui::BeginPopupModal("Error Message", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+					{
+						ImGui::Text("Please load models by pressing Convert button above before loading Maplayout!");
+						if (ImGui::Button("Ok", ImVec2(120, 0)))
+						{
+							ImGui::CloseCurrentPopup();
+							m_bErrorPopup = false;
+						}
+						ImGui::EndPopup();
+					}
+				}
+			}
+		}
+
 
 		ImGui::TreePop();
 	}
@@ -618,6 +675,7 @@ void TModelView::EditModel()
 			ImGui::Text("Selected Model: %s", m_SelectedModelName.c_str());
 			m_spGuizmoManager->EditTransformViaGuizmo();
 			ImGui::Checkbox("Show Collider", &m_bColliderActive);
+			ImGui::Checkbox("Edit Position by Picking", &m_bEditPosByPicking);
 
 		}
 		else
@@ -696,26 +754,35 @@ void TModelView::MouseInput()
 	if (!tDesc.bPickingSuccess)
 		return;
 
-
-	for (auto& ShowModel : m_ShowModelsContainer)
+	if(!m_bEditPosByPicking)
 	{
-		if (ShowModel.second == tDesc.spPawn)
+		for (auto& ShowModel : m_ShowModelsContainer)
 		{
-			m_spSelectedModel = tDesc.spPawn;
-			m_SelectedModelName = ShowModel.first;
-			m_bSelectedhasAnim = false;
-			return;
+			if (ShowModel.second == tDesc.spPawn)
+			{
+				m_spSelectedModel = tDesc.spPawn;
+				m_SelectedModelName = ShowModel.first;
+				m_bSelectedhasAnim = false;
+				return;
+			}
+		}
+
+		for (auto& ShowModel : m_ShowAnimModelsContainer)
+		{
+			if (ShowModel.second == tDesc.spPawn)
+			{
+				m_spSelectedModel = tDesc.spPawn;
+				m_SelectedModelName = ShowModel.first;
+				m_bSelectedhasAnim = true;
+				return;
+			}
 		}
 	}
-
-	for (auto& ShowModel : m_ShowAnimModelsContainer)
+	else
 	{
-		if (ShowModel.second == tDesc.spPawn)
+		if (m_spSelectedModel != nullptr)
 		{
-			m_spSelectedModel = tDesc.spPawn;
-			m_SelectedModelName = ShowModel.first;
-			m_bSelectedhasAnim = true;
-			return;
+			m_spSelectedModel->GetTransform()->SetPos(tDesc.vPickPos);
 		}
 	}
 
@@ -723,8 +790,9 @@ void TModelView::MouseInput()
 
 void TModelView::KeyboardInput()
 {
-	if (GetGameInstance()->GetDIKeyDown(DIK_C))
-		CopyCurrentModel();
+	if (GetGameInstance()->GetDIKeyPressing(DIK_LCONTROL))
+		if (GetGameInstance()->GetDIKeyDown(DIK_C))
+			CopyCurrentModel();
 	if(GetGameInstance()->GetDIKeyDown(DIK_DELETE))
 		ClearCurrentModel();
 }
@@ -781,6 +849,9 @@ HRESULT TModelView::CopyCurrentModel()
 		m_ShowAnimModelsContainer.emplace(m_CopiedModelName, std::dynamic_pointer_cast<TShowAnimModelObject>(m_spCopiedModel));
 	else
 		m_ShowModelsContainer.emplace(m_CopiedModelName, std::dynamic_pointer_cast<TShowModelObject>(m_spCopiedModel));
+
+	m_spSelectedModel = m_spCopiedModel;
+
 
 	return S_OK;
 }
