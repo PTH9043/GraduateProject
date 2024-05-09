@@ -93,7 +93,9 @@ void UFire::TickActive(const _double& _dTimeDelta)
 {
 
 	Update(_dTimeDelta);
-
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	GetTransform()->LookAt(-spGameInstance->GetCameraPosition(MAIN_CAMERA_ID));
+	
 }
 
 void UFire::LateTickActive(const _double& _dTimeDelta)
