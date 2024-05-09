@@ -26,6 +26,12 @@ m_OutMatrix{}
 {
 }
 
+SHPTR<UBoneNode> URootBoneNode::Clone()
+{
+	SHPTR<URootBoneNode> spRootBoneNode = { CloneThis<URootBoneNode>(*this) };
+	return spRootBoneNode;
+}
+
 void URootBoneNode::Free()
 {
 }

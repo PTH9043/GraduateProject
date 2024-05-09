@@ -6,12 +6,12 @@
 #include "UCharacter.h"
 
 CWarriorAnimController::CWarriorAnimController(CSHPTRREF<UDevice> _spDevice) 
-	: UAnimationController(_spDevice), m_wstrTrigger{L""}
+	: UAnimationController(_spDevice)
 {
 }
 
 CWarriorAnimController::CWarriorAnimController(const CWarriorAnimController& _rhs) : 
-	UAnimationController(_rhs), m_wstrTrigger{ L"" }
+	UAnimationController(_rhs)
 {
 }
 
@@ -35,12 +35,11 @@ HRESULT CWarriorAnimController::NativeConstructClone(const VOIDDATAS& _tDatas)
 
 void CWarriorAnimController::Tick(const _double& _dTimeDelta)
 {
+	ClearTrigger();
 	/* Reset */
-	m_wstrTrigger = L"";
 	SetAnimState(-1);
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	SHPTR<UAnimModel> spAnimModel = GetOwnerCharacter()->GetAnimModel();
 
 	_bool isIdle = false;
 	_bool isMove = false;
@@ -53,19 +52,27 @@ void CWarriorAnimController::Tick(const _double& _dTimeDelta)
 		isMove = isW || isA || isS || isD;
 	}
 
-	if (true == isMove)
-	{
-		//m_wstrTrigger = L"WALKF";
-		m_wstrTrigger = L"WALKF";
-		SetAnimState(ANIM_MOVE);
-	}
+	_bool isAttack = spGameInstance->GetDIMBtnPressing(DIMOUSEBUTTON::DIMB_L);
 
-	isIdle = !isMove;
+	isIdle = !isMove && !isAttack;
 	if (true == isIdle)
 	{
-		m_wstrTrigger = L"IDLE";
+		SetTrigger(L"IDLE");
 		SetAnimState(ANIM_IDLE);
+		return;
 	}
-	// TickEvent
-	spAnimModel->TickEvent(GetOwnerCharacter().get(), m_wstrTrigger, _dTimeDelta);
+
+	if (true == isMove)
+	{
+		SetTrigger(L"WALKF");
+		SetAnimState(ANIM_MOVE);
+		return;
+	}
+
+	if (true == isAttack)
+	{
+		SetTrigger(L"ATTACK01");
+		SetAnimState(ANIM_ATTACK);
+		return;
+	}
 }

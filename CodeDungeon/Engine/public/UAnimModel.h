@@ -39,6 +39,15 @@ public:
 	virtual void Free() override;
 	virtual HRESULT NativeConstruct() override;
 	using UModel::NativeConstruct;
+	// 해당 PATH로 모델 로드
+	HRESULT NativeConstruct(const _wstring& _wstrPath, const _float4x4& _PivotMatrix);
+	// 해당 폴더와 파일 데이터로 로드
+	HRESULT NativeConstruct(CSHPTRREF<FILEGROUP> _spFileGroup, CSHPTRREF<FILEDATA> _spFileData, const _float4x4& _PivotMatrix);
+	// PATH를 입력하고 파일 이름을 입력하면 찾아서 온다. 
+	HRESULT NativeConstruct(const PATHS& _vecPaths, const _wstring& _wstrFileName, const _float4x4& _PivotMatrix);
+	// 모델의 폴더 이름, 파일 이름을 입력하면 찾아서 모델 로드
+	HRESULT NativeConstruct(const _wstring& _wstrModelFolder, const _wstring& _wstrFileName, const _float4x4& _PivotMatrix);
+
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;
 	// Tick Event 
 	void TickEvent(UPawn* _pPawn, const _wstring& _wstrInputTrigger, const _double& _TimeDelta);
@@ -96,7 +105,7 @@ private:
 	_uint															m_iNextAnimIndex;
 	_float															m_fSupplyLerpValue;
 	_bool															m_isChangeAnim;
-	
+	_float4x4													m_mPivotMatrix;
 };
 
 END

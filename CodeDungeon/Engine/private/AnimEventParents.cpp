@@ -10,6 +10,12 @@ UAnimEvent::UAnimEvent(ANIMEVENTTYPE _AnimEventType, ANIMEVENTCATEGORY _AnimEven
 {
 }
 
+UAnimEvent::UAnimEvent(const UAnimEvent& _rhs) : 
+	m_AnimEventCategory{m_AnimEventCategory}, 
+	m_AnimEventType{_rhs.m_AnimEventType}
+{
+}
+
 void UAnimEvent::SaveEvent( std::ofstream& _save)
 {
 	_save.write((_char*)&m_AnimEventType, sizeof(ANIMEVENTTYPE));
@@ -39,6 +45,11 @@ UAnimSectionEvent::UAnimSectionEvent(ANIMEVENTTYPE _AnimEventType) :
 
 }
 
+UAnimSectionEvent::UAnimSectionEvent(const UAnimSectionEvent& _rhs) : 
+	UAnimEvent(_rhs), m_AnimSectionDesc{ _rhs.m_AnimSectionDesc}
+{
+}
+
 UAnimSectionEvent::UAnimSectionEvent(const ANIMEVENTSECTIONDESC& _AnimEventDesc, ANIMEVENTTYPE _AnimEventType) :
 	m_AnimSectionDesc{ _AnimEventDesc }, UAnimEvent(_AnimEventType, ANIMEVENTCATEGORY::CATEGROY_SECTION)
 {
@@ -57,6 +68,7 @@ _bool UAnimSectionEvent::EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, cons
 				|| !lstrcmp(m_AnimSectionDesc.wstrEventTrigger.c_str(), L"")))
 			{
 				m_AnimSectionDesc.isAnimChangeActive = true;
+				EventSituation(_pPawn, _pAnimModel, _dTimeDelta, _dTimeAcc);
 				return true;
 			}
 		}
@@ -107,6 +119,11 @@ AnimOccurEvent
 
 UAnimOccurEvent::UAnimOccurEvent(ANIMEVENTTYPE _AnimEventType) :
 	UAnimEvent(_AnimEventType, ANIMEVENTCATEGORY::CATEGROY_SECTION), m_AnimOccurDesc{}
+{
+}
+
+UAnimOccurEvent::UAnimOccurEvent(const UAnimOccurEvent& _rhs) :
+	UAnimEvent(_rhs), m_AnimOccurDesc{ _rhs.m_AnimOccurDesc }
 {
 }
 

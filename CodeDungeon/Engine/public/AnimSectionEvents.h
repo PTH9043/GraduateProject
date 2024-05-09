@@ -13,8 +13,11 @@ class UBoneNode;
 class UAnimChangeBetweenEvent final : public UAnimSectionEvent{
 public:
 	UAnimChangeBetweenEvent();
+	UAnimChangeBetweenEvent(const UAnimChangeBetweenEvent& _rhs);
 	UAnimChangeBetweenEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load);
 	DESTRUCTOR(UAnimChangeBetweenEvent)
+public:
+	virtual SHPTR<UAnimEvent> Clone() override;
 public:
 	// UAnimSectionEvent을(를) 통해 상속됨
 	virtual const ANIMOTHEREVENTDESC*  OutOtherEventDesc() override;
@@ -46,10 +49,13 @@ AnimColliderEvent
 class UAnimColliderEvent final : public UAnimSectionEvent {
 public:
 	UAnimColliderEvent();
+	UAnimColliderEvent(const UAnimColliderEvent& _rhs);
 	UAnimColliderEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load);
 	DESTRUCTOR(UAnimColliderEvent)
 public:
-	virtual _bool EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc,
+	virtual SHPTR<UAnimEvent> Clone() override;
+public:
+	virtual _bool EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc, 
 		const _wstring& _wstrInputTrigger) override;
 	// UAnimSectionEvent을(를) 통해 상속됨
 	virtual const  ANIMOTHEREVENTDESC*  OutOtherEventDesc() override;

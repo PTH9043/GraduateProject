@@ -20,10 +20,10 @@ public:
 	const _float4x4 GetWorldMatrixTP() { TransformUpdate();  return XMMatrixTranspose(XMLoadFloat4x4(&m_mChangeWorldMatrix)); }
 	const _float4x4 GetWorldMatrixInv() { TransformUpdate();   return XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_mChangeWorldMatrix)); }
 	const _float4x4& GetWorldMatrix() const { return m_mWorldMatrix; }
+
 	const _float4x4& GetChangeMatrix() { TransformUpdate();   return m_mChangeWorldMatrix; }
 	// Get Parents Local Matrix
 	const _float4x4 GetParentsMatrix();
-	const _float4x4& GetScaleMatrix() const { return m_mScaleMatrix; }
 
 	const _float3& GetRight() const { return *((_float3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_RIGHT][0]); }
 	const _float3& GetUp() const { return *((_float3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_UP][0]); }
@@ -118,7 +118,6 @@ private:
 	_float4x4												m_mChangeWorldMatrix;
 	_quaternion											m_vQuaternion;
 	_float3													m_vScale;
-	_float4x4												m_mScaleMatrix;
 	// Parents Location
 	_bool														m_isNotApplyRotate;
 	_bool														m_isNotApplyPos;

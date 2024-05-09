@@ -13,9 +13,11 @@ class UCharacter;
 class UAnimOccursTimePassEvent final : public UAnimOccurEvent {
 public:
 	UAnimOccursTimePassEvent();
+	UAnimOccursTimePassEvent(const UAnimOccursTimePassEvent& _rhs);
 	UAnimOccursTimePassEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load);
 	DESTRUCTOR(UAnimOccursTimePassEvent)
 public:
+	virtual SHPTR<UAnimEvent> Clone() override;
 	// UAnimSectionEvent을(를) 통해 상속됨
 	virtual const ANIMOTHEREVENTDESC*  OutOtherEventDesc() override;
 protected:
@@ -41,9 +43,11 @@ AnomSoundEvent
 class UAnimSoundEvent final : public UAnimOccurEvent {
 public:
 	UAnimSoundEvent();
+	UAnimSoundEvent(const UAnimSoundEvent& _rhs);
 	UAnimSoundEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load);
 	DESTRUCTOR(UAnimSoundEvent)
 public:
+	virtual SHPTR<UAnimEvent> Clone() override;
 	// UAnimSectionEvent을(를) 통해 상속됨
 	virtual const ANIMOTHEREVENTDESC* OutOtherEventDesc() override;
 protected:

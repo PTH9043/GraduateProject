@@ -14,10 +14,13 @@ class UPawn;
 class UAnimEvent abstract : public UBase {
 protected:
 	UAnimEvent(ANIMEVENTTYPE _AnimEventType, ANIMEVENTCATEGORY _AnimEventCategory);
+	UAnimEvent(const UAnimEvent& _rhs);
 	DESTRUCTOR(UAnimEvent)
 public:
 	const ANIMEVENTTYPE GetAnimEventType() const { return m_AnimEventType; }
 	const ANIMEVENTCATEGORY GetAnimEventCategory() const { return m_AnimEventCategory; }
+public:
+	virtual SHPTR<UAnimEvent> Clone() PURE;
 public:
 	virtual _bool EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc,
 		const _wstring& _wstrInputTrigger) PURE;
@@ -52,8 +55,11 @@ AnimSectionEvent
 class UAnimSectionEvent abstract : public UAnimEvent {
 protected:
 	UAnimSectionEvent(ANIMEVENTTYPE _AnimEventType);
+	UAnimSectionEvent(const UAnimSectionEvent& _rhs);
 	UAnimSectionEvent(const ANIMEVENTSECTIONDESC& _AnimEventDesc, ANIMEVENTTYPE _AnimEventType);
 	DESTRUCTOR(UAnimSectionEvent)
+public:
+	virtual SHPTR<UAnimEvent> Clone() PURE;
 public:
 	virtual _bool EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc,
 		const _wstring& _wstrInputTrigger) override;
@@ -87,9 +93,11 @@ AnimOccurEvent
 class UAnimOccurEvent abstract : public UAnimEvent {
 protected:
 	UAnimOccurEvent(ANIMEVENTTYPE _AnimEventType);
+	UAnimOccurEvent(const UAnimOccurEvent& _rhs);
 	UAnimOccurEvent(const ANIMOCURRESDESC& _AnimEventDesc,  ANIMEVENTTYPE _AnimEvent);
 	DESTRUCTOR(UAnimOccurEvent)
 public:
+	virtual SHPTR<UAnimEvent> Clone() PURE;
 	virtual _bool EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc,
 		const _wstring& _wstrInputTrigger) override;
 	virtual const ANIMEVENTDESC*  OutAnimEventDesc() override { return &m_AnimOccurDesc; }

@@ -33,40 +33,55 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SHPTR<CMainCamera> spMainCamera = std::static_pointer_cast<CMainCamera>(GetFollowCamera());
 	spMainCamera->SetMoveState(false);
 	GetAnimModel()->SetAnimation(L"idle01");
+	//GetTransform()->RotateFix(_float3{ 0.f, DirectX::XMConvertToRadians(180.f), 0.f });
+	//GetTransform()->SetScale({ 0.1f, 0.1f, 0.1f });
 	return S_OK;
 }
 
 void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
+	GetAnimationController()->Tick(_dTimeDelta);
+
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-
-	_long		MouseMove = 0;
-
-	if (MouseMove = spGameInstance->GetDIMMoveState(DIMOUSEMOVE::DIMM_X))
-		GetTransform()->RotateTurn(_float3(0.f, 1.f, 0.f), MouseMove * 5.f, _dTimeDelta);
-
-	RETURN_CHECK(CWarriorAnimController::ANIM_IDLE == GetAnimationController()->GetAnimState(), ;);
-
+	// Rotation 
+	{
+		_long		MouseMove = 0;
+		if (MouseMove = spGameInstance->GetDIMMoveState(DIMOUSEMOVE::DIMM_X))
+		{
+			GetTransform()->RotateTurn(_float3(0.f, 1.f, 0.f), MouseMove * 5.f, _dTimeDelta);
+		}
+	}
+	// Move
 	if (CWarriorAnimController::ANIM_MOVE == GetAnimationController()->GetAnimState())
 	{
 		if (spGameInstance->GetDIKeyPressing(DIK_W))
-			GetTransform()->MoveForward(_dTimeDelta, 100);
+		{
+			GetTransform()->MoveForward(_dTimeDelta, 10);
+		}
 		if (spGameInstance->GetDIKeyPressing(DIK_A))
-			GetTransform()->MoveLeft(_dTimeDelta, 100);
+		{
+			GetTransform()->MoveLeft(_dTimeDelta, 10);
+		}
 		if (spGameInstance->GetDIKeyPressing(DIK_D))
-			GetTransform()->MoveRight(_dTimeDelta, 100);
+		{
+			GetTransform()->MoveRight(_dTimeDelta, 10);
+		}
 		if (spGameInstance->GetDIKeyPressing(DIK_S))
-			GetTransform()->MoveBack(_dTimeDelta, 100);
-
+		{
+			GetTransform()->MoveBack(_dTimeDelta, 10);
+		}
 	}
+
+	GetAnimModel()->TickEvent(this, GetAnimationController()->GetTrigger(), _dTimeDelta);
+	GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
 }
 
 void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 {
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
 	__super::LateTickActive(_dTimeDelta);
-	FollowCameraMove(_float3{500.f, 500.f, 500.f});
+	FollowCameraMove(_float3{0.f, 40.f, -40.f});
 }
 
 HRESULT CWarriorPlayer::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)

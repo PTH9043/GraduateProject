@@ -25,7 +25,6 @@ public:
 	virtual void Tick(const _double& _dTimeDelta) override;
 private:
 	WKPTR< CWarriorPlayer>			m_wpWarriorPlayer;
-	_wstring											m_wstrTrigger;
 };
 
 END

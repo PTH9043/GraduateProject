@@ -170,6 +170,9 @@ HRESULT UModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	m_BoneNodeContainer = BoneNodes;
 
 	m_spRootBoneNode = std::static_pointer_cast<URootBoneNode>(FindBoneNode(m_spRootBoneNode->GetName()));
+	std::sort(m_BoneNodeContainer.begin(), m_BoneNodeContainer.end(), [&](SHPTR<UBoneNode>& p1, SHPTR<UBoneNode>& p2) {
+		return p1->GetDepth() < p2->GetDepth();
+		});
 	for (auto& iter : m_BoneNodeContainer) {
 		iter->FindParents(ThisShared<UModel>());
 	}

@@ -14,10 +14,20 @@ UAnimChangeBetweenEvent::UAnimChangeBetweenEvent() :
 {
 }
 
+UAnimChangeBetweenEvent::UAnimChangeBetweenEvent(const UAnimChangeBetweenEvent& _rhs) : 
+	UAnimSectionEvent(_rhs), m_AnimChangeDesc{_rhs.m_AnimChangeDesc }
+{
+}
+
 UAnimChangeBetweenEvent::UAnimChangeBetweenEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) :
 	UAnimSectionEvent(ANIMEVENTTYPE::ANIMEVENT_ANIMCHANGESBETWEEN)
 { 
 	LoadEvent(_spAnimModel, _load);
+}
+
+SHPTR<UAnimEvent> UAnimChangeBetweenEvent::Clone()
+{
+	return std::move(CloneThis<UAnimChangeBetweenEvent>(*this));
 }
 
 const ANIMOTHEREVENTDESC*  UAnimChangeBetweenEvent::OutOtherEventDesc()
@@ -81,11 +91,22 @@ UAnimColliderEvent::UAnimColliderEvent() :
 
 }
 
+UAnimColliderEvent::UAnimColliderEvent(const UAnimColliderEvent& _rhs) :
+	UAnimSectionEvent(_rhs), m_AnimColliderDesc{ _rhs.m_AnimColliderDesc }
+{
+}
+
 UAnimColliderEvent::UAnimColliderEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) :
 	UAnimSectionEvent(ANIMEVENTTYPE::ANIMEVENT_COLLIDER), m_AnimColliderDesc{}
 {
 	LoadEvent(_spAnimModel, _load);
 }
+
+SHPTR<UAnimEvent> UAnimColliderEvent::Clone()
+{
+	return std::move(CloneThis<UAnimColliderEvent>(*this));
+}
+
 
 _bool UAnimColliderEvent::EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc, const _wstring& _wstrInputTrigger)
 {
