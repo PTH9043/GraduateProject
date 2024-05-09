@@ -176,7 +176,7 @@ void TMapView::LoadAssimpModelDatas(CSHPTRREF<FILEGROUP> _spFolder)
 
 void TMapView::LoadMapModels()
 {
-	if (ImGui::Button("ConvertModels"))
+	if (ImGui::Button("ConvertMap"))
 	{
 		SHPTR<FILEGROUP> MapFolder = GetGameInstance()->FindFolder(L"Map");
 		// Folders 
@@ -310,7 +310,7 @@ void TMapView::ClearCurrentModel()
 
 void TMapView::MouseInput()
 {
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	/*SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	_float2 MousePos = spGameInstance->GetMousePosition();
 
 	if (MousePos.x <= 0 || MousePos.x >= WINDOW_WIDTH)
@@ -334,5 +334,5 @@ void TMapView::MouseInput()
 			m_SelectedModelName = ShowModel.first;
 			return;
 		}
-	}
+	}*/
 }

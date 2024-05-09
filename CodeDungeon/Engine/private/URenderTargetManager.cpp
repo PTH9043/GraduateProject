@@ -227,7 +227,7 @@ void URenderTargetManager::CreateDepthStencilTexture()
     m_spDepthStencilTexture = CreateNative<UTexture>(m_spDevice, stRt1Desc);
 
     RTDESC stRt2Desc{ RTOBJID::NONALPHA_DIFFUSE_DEFFERED, m_eDepthFormat,
-           m_spGraphicDesc->iWinCX*12, m_spGraphicDesc->iWinCY*12, _float4(0.f, 0.f, 0.f, 1.f),
+           m_spGraphicDesc->iWinCX*4, m_spGraphicDesc->iWinCY*4, _float4(0.f, 0.f, 0.f, 1.f),
            D3D12_HEAP_TYPE_DEFAULT,
            D3D12_HEAP_FLAG_NONE, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL };
     m_spShadowDepthStencilTexture = CreateNative<UTexture>(m_spDevice, stRt2Desc);

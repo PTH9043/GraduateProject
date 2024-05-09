@@ -80,13 +80,6 @@ void TGuizmoManager::EditTransformViaGuizmo()
 
 	CalculateGuizmoDatas();
 
-	if (ImGui::IsKeyPressed(ImGuiKey_T))
-		mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
-	if (ImGui::IsKeyPressed(ImGuiKey_E))
-		mCurrentGizmoOperation = ImGuizmo::ROTATE;
-	if (ImGui::IsKeyPressed(ImGuiKey_R))
-		mCurrentGizmoOperation = ImGuizmo::SCALE;
-
 	if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
 		mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
 	ImGui::SameLine();

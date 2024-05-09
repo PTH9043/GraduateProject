@@ -136,6 +136,13 @@ const _float3& UPipeLine::GetMainCamPosition()
 	return m_spMainCamera->GetTransform()->GetPos();
 }
 
+const SHPTR<UTransform>& UPipeLine::GetMainCamTransform()
+{
+	RETURN_CHECK(nullptr == m_spMainCamera, nullptr);
+	return m_spMainCamera->GetTransform();
+}
+
+
 const _float4x4 UPipeLine::GetCamViewMatrix(const CAMID& _iID) const
 {
 	RETURN_CHECK(m_arrCameras.size() <= _iID, _float4x4::Identity);

@@ -106,7 +106,8 @@ HRESULT TFireView::LoadResource()
 	}
 	ResizeMultipleParticleVector(1);
 	LoadMultipleParticleResource();
-
+	m_stFireNoiseBuffer=m_stFire->GetFireNoiseBuffer();
+	m_stFireDistortionBuffer=m_stFire->GetFireDistortionBuffer();
 	return S_OK;
 }
 
@@ -216,19 +217,102 @@ void TFireView::MultipleParticleView()
 			}
 
 			MultipleParticleTexSetting();
-			/*	MultipleParticleCountSetting();
+				MultipleParticleCountSetting();
 				MultipleParticleTimeSetting();
-				MultipleParticleTexSetting();
+				
 				DefaultMultipleParticleSetting();
-				AutomaticMultipleParticleSetting();*/
+				AutomaticMultipleParticleSetting();
 		}
 	}
 	ImGui::End();
 }
 
 
+void TFireView::MultipleParticleCountSetting()
+{
+	//파티클 한 사이클 생성 갯수.
+	if (ImGui::CollapsingHeader("Multiple Particle Count Setting", ImGuiTreeNodeFlags_DefaultOpen)) {
+
+		_uint increment = 1;
+		ImGui::InputScalar("Enter Create Amount\n Min:1  Max :1000", ImGuiDataType_U32, m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount(), &increment, &increment);
+		if (*m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount() < 1) {
+			*m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount() = 1;
+		}
+		else if (*m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount() > 1000) {
+			*m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount() = 1000;
+		}
+	}
+
+}
 
 
+
+void TFireView::MultipleParticleTimeSetting()
+{
+	//파티클의 생성 시간 정하기
+	if (ImGui::CollapsingHeader("Multiple Particle Create Time Interval", ImGuiTreeNodeFlags_DefaultOpen)) {
+
+		ImGui::InputFloat("Enter Time Interval\n Min:0.f  Max :6.f", m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval(), 0.1f, 1.0f, "%.2f", ImGuiInputTextFlags_CharsDecimal);
+		if (*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() <= 0) {
+			*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() = 0.1f;
+		}
+		else if (*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() > 6) {
+			*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() = 6;
+		}
+	}
+}
+
+
+
+void TFireView::DefaultMultipleParticleSetting()
+{
+	_bool Default = false;
+	if (ImGui::Selectable("Set Multiple Particle Type : Default", Default)) {
+		m_MultipleParticleType[0]->fParticleType = PARTICLE_TYPE_DEFAULT;
+		ImGui::OpenPopup("Default Particle");
+	}
+
+	if (ImGui::BeginPopup("Default Particle")) {
+		ImGui::SeparatorText("Particle Settings");
+		ImGui::SeparatorText("Current Particle Type : Default");
+
+		ImGui::SliderFloat("EndScale", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fEndScaleParticle, 1.f, 40.f, "%.2f");
+		ImGui::SliderFloat("StartScale", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fStartScaleParticle, 1.f, 20.f, "%.2f");
+		ImGui::SliderFloat("MaxLifeTime", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fMaxLifeTime, 3.f, 10.f, "%.2f");
+		ImGui::SliderFloat("MinLifeTime", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fMinLifeTime, 0.f, 5.f, "%.2f");
+		ImGui::SliderFloat("MaxSpeed", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fMaxSpeed, 10.f, 100.f, "%.2f");
+		ImGui::SliderFloat("MinSpeed", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fMinSpeed, 10.f, 100.f, "%.2f");
+		ImGui::SliderFloat("DirectionX", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fParticleDirection.x, -1.f, 1.f, "%.2f");
+		ImGui::SliderFloat("DirectionY", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fParticleDirection.y, -1.f, 1.f, "%.2f");
+		ImGui::SliderFloat("DirectionZ", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fParticleDirection.z, -1.f, 1.f, "%.2f");
+		ImGui::SliderFloat("Thickness", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fParticleThickness, 0.f, 50.f, "%.2f");
+		ImGui::EndPopup();
+	}
+}
+
+void TFireView::AutomaticMultipleParticleSetting()
+{
+	_bool Automatic = false;
+	if (ImGui::Selectable("Set Multiple Particle Type : Automatic", Automatic)) {
+		m_MultipleParticleType[0]->fParticleType = PARTICLE_TYPE_AUTO;
+		ImGui::OpenPopup("Automatic Particle");
+	}
+
+
+
+	if (ImGui::BeginPopup("Automatic Particle")) {
+		ImGui::SeparatorText("Particle Settings");
+		ImGui::SeparatorText("Current Particle Type : Automatic");
+
+		ImGui::SliderFloat("EndScale", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fEndScaleParticle, 1.f, 40.f, "%.2f");
+		ImGui::SliderFloat("StartScale", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fStartScaleParticle, 1.f, 20.f, "%.2f");
+		ImGui::SliderFloat("MaxSpeed", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fMaxSpeed, 10.f, 100.f, "%.2f");
+		ImGui::SliderFloat("MinSpeed", &m_MultipleParticleParam[0]->stGlobalParticleInfo.fMinSpeed, 10.f, 100.f, "%.2f");
+
+
+		ImGui::EndPopup();
+	}
+}
 
 
 
@@ -304,6 +388,7 @@ void TFireView::FireView()
 			FireAlphaTextureSetting();
 			FireScalingSetting();
 			FirePosSetting();
+			FireDistortionSetting();
 		}
 	}
 	ImGui::End();
@@ -367,10 +452,12 @@ void TFireView::FireAlphaTextureSetting() {
 
 void TFireView::FireScalingSetting() {
 
-	static float Scale = 50.f;
-	ImGui::SliderFloat("Scale", &Scale, 1.f, 100.f, "%.2f");
+	static float ScaleX = 50.f;
+	static float ScaleY = 50.f;
+	ImGui::SliderFloat("ScaleX", &ScaleX, 1.f, 100.f, "%.2f");
+	ImGui::SliderFloat("ScaleY", &ScaleY, 1.f, 100.f, "%.2f");
 
-	_float3 ScaleFloat3 = _float3(Scale, Scale, 1);
+	_float3 ScaleFloat3 = _float3(ScaleX, ScaleY, 1);
 	m_stFire->GetTransform()->SetScale(ScaleFloat3);
 }
 
@@ -385,4 +472,68 @@ void TFireView::FirePosSetting() {
 	ImGui::InputFloat("Input Fire Position Z", &posZ);
 
 	m_stFire->GetTransform()->SetPos(_float3(posX, posY, posZ));
+}
+
+
+
+void TFireView::FireDistortionSetting() {
+
+	static _float fDistortion1X = 0.1;
+	static _float fDistortion1Y = 0.2f;
+	
+	ImGui::InputFloat("Input Fire Distortion1.X",  &fDistortion1X);
+	ImGui::InputFloat("IInput Fire Distortion1.Y", &fDistortion1Y);
+	m_stFireDistortionBuffer->fDistortion1.x = fDistortion1X;
+	m_stFireDistortionBuffer->fDistortion1.y = fDistortion1Y;
+
+	static _float fDistortion2X = 0.1f;
+	static _float fDistortion2Y = 0.3f;
+
+	ImGui::InputFloat("Input Fire Distortion2.X",  &fDistortion2X);
+	ImGui::InputFloat("IInput Fire Distortion2.Y", &fDistortion2Y);
+
+	m_stFireDistortionBuffer->fDistortion2.x = fDistortion2X;
+	m_stFireDistortionBuffer->fDistortion2.y = fDistortion2Y;
+
+	static _float fDistortion3X = 0.1f;
+	static _float fDistortion3Y = 0.1f;
+
+	ImGui::InputFloat("Input Fire Distortion3.X",  &fDistortion3X);
+	ImGui::InputFloat("IInput Fire Distortion3.Y", &fDistortion3Y);
+
+	m_stFireDistortionBuffer->fDistortion3.x = fDistortion3X;
+	m_stFireDistortionBuffer->fDistortion3.y = fDistortion3Y;
+
+	static _float fDistortionScale = 0.8f;
+	static _float fDistortionBias = 0.5f;
+
+	ImGui::InputFloat("Input Fire Distortion Scale",&m_stFireDistortionBuffer->fDistortionScale);
+	ImGui::InputFloat("Input Fire Distortion Bias", &m_stFireDistortionBuffer->fDistortionBias);
+	
+	m_stFireDistortionBuffer->fDistortionScale = fDistortionScale;
+	m_stFireDistortionBuffer->fDistortionBias = fDistortionBias;
+
+	static _float fScrollSpeedsx =1.3;
+	static _float fScrollSpeedsy =2.1;
+	static _float fScrollSpeedsz =2.3;
+
+	ImGui::InputFloat("Input Fire ScrollSpeeds.x",  &fScrollSpeedsx);
+	ImGui::InputFloat("IInput Fire ScrollSpeeds.y", &fScrollSpeedsy);
+	ImGui::InputFloat("IInput Fire ScrollSpeeds.z", &fScrollSpeedsz);
+	
+	m_stFireNoiseBuffer->fScrollSpeeds.x  =fScrollSpeedsx;
+	m_stFireNoiseBuffer->fScrollSpeeds.y  =fScrollSpeedsy;
+	m_stFireNoiseBuffer->fScrollSpeeds.z  =fScrollSpeedsz;
+
+	static _float fScalesx = 1;
+	static _float fScalesy = 2;
+	static _float fScalesz = 3;
+
+	ImGui::InputFloat("IInput Fire Scales.x", &fScalesx);
+	ImGui::InputFloat("IInput Fire Scales.y", &fScalesy);
+	ImGui::InputFloat("IInput Fire Scales.z", &fScalesz);
+	m_stFireNoiseBuffer->fScales.x =fScalesx ;
+	m_stFireNoiseBuffer->fScales.y =fScalesy ;
+	m_stFireNoiseBuffer->fScales.z =fScalesz ;
+
 }

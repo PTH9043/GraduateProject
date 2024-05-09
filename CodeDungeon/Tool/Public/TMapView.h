@@ -30,16 +30,12 @@ protected:
 	void RenderActive() override;
 
 private:
-
 	void DockBuildInitSetting();
 	void MapView();
 	void LoadAssimpModelDatas(CSHPTRREF<FILEGROUP> _spFolder);
 	void LoadMapModels();
-
 	void ShowModelList();
-
 	void ClearCurrentModel();
-
 	void MouseInput();
 
 private:

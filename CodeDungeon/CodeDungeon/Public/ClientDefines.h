@@ -47,5 +47,3 @@ static const char* IP_ADDRESS{ "127.0.0.1" };
 
 using namespace Client;
 
-using FOLDERPAIR = std::pair<_wstring, SHPTR<FILEGROUP>>;
-using FILEPAIR = std::pair<_wstring, SHPTR<FILEDATA>>;

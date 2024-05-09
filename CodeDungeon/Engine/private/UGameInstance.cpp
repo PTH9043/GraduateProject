@@ -728,6 +728,10 @@ const _float3& UGameInstance::GetCameraPosition(const CAMID& _iID)
 {
 	return m_spPipeLine->GetCameraPosition(_iID);
 }
+const SHPTR<UTransform>& UGameInstance::GetMainCameraTransform()
+{
+	return m_spPipeLine->GetMainCamTransform();
+}
 
 const _float UGameInstance::GetCamFar(const CAMID& _iID)
 {
@@ -1168,21 +1172,21 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 			CreateGraphicsShader(PROTO_RES_PARTICLE2DSHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"2DParticle", VTXPOINT_DELCARTION::Element, VTXPOINT_DELCARTION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN, GS_MAIN },
-					RENDERFORMATS{ DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_B8G8R8A8_UNORM,	DXGI_FORMAT_R16G16B16A16_FLOAT },
+					
 					RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE, BLEND_TYPE::ALPHA_BLEND,
 					D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST));
 
 			CreateGraphicsShader(PROTO_RES_PARTICLEPLUS2DSHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"2DParticlePlus", VTXPOINT_DELCARTION::Element, VTXPOINT_DELCARTION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN, GS_MAIN },
-					RENDERFORMATS{ DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_B8G8R8A8_UNORM,	DXGI_FORMAT_R16G16B16A16_FLOAT },
+				
 					RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE, BLEND_TYPE::ALPHA_BLEND,
 					D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST));
 
 			CreateGraphicsShader(PROTO_RES_2DANIMATEPARTICLESHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"2DAnimateParticle", VTXPOINT_DELCARTION::Element, VTXPOINT_DELCARTION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN, GS_MAIN },
-					RENDERFORMATS{ DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_B8G8R8A8_UNORM,	DXGI_FORMAT_R16G16B16A16_FLOAT },
+					
 					RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE, BLEND_TYPE::ALPHA_BLEND,
 					D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST));
 
@@ -1384,7 +1388,7 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 		{
 			std::vector<RTDESC> vecRts{
 				RTDESC{ RTOBJID::SHADOW_DEPTH_FOURBYFOUR, DXGI_FORMAT::DXGI_FORMAT_R32_FLOAT,
-					GraphicDesc->iWinCX*12, GraphicDesc->iWinCY*12, {0.f,0.f, 0.f, 0.f}}
+					GraphicDesc->iWinCX*4, GraphicDesc->iWinCY*4, {0.f,0.f, 0.f, 0.f}}
 			};
 			//16384x16384
 			// Add RenderTargetGroup
@@ -1455,10 +1459,9 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_DIFFUSE_DEFFERED,
 		_float2(100.f, 320.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 	
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::SHADOW_MAP, RTOBJID::SHADOW_DEPTH_FOURBYFOUR,
+	
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_DEPTH_DEFFERED,
 		_float2(100.f, 430.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
-
-
 
 
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_SHADE_DEFFERED,
@@ -1468,6 +1471,10 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 		_float2(100.f, 650.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_AMBIENT_DEFFERED,
 		_float2(100.f, 760.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
+
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::SHADOW_MAP, RTOBJID::SHADOW_DEPTH_FOURBYFOUR,
+		_float2(100.f, 870.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
+
 #endif
 	return S_OK;
 }

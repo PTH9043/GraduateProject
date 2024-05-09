@@ -9,7 +9,7 @@ class URootSignature : public  UBase {
 public:
 	enum SAMPLERTYPE
 	{
-		S0, S1, S_END
+		S0, S1, S2, S_END
 	};
 	using SAMPLERS = ARRAY< D3D12_STATIC_SAMPLER_DESC, S_END>;
 public:

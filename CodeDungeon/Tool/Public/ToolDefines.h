@@ -51,8 +51,6 @@ namespace Tool
 #include "ToolMaker.h"
 
 using namespace Tool;
-using FILEGROUPS = UNORMAP<_string, SHPTR<FILEGROUP>>;
-using FOLDERPAIR = std::pair<_wstring, SHPTR<FILEGROUP>>;
-using FILEPAIR = std::pair<_wstring, SHPTR<FILEDATA>>;
+
 
 #endif

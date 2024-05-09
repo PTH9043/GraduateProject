@@ -19,6 +19,8 @@ class TGuizmoManager;
 */
 class TModelView final : public TImGuiView {
 public:
+	using MODELPAIR = std::pair < _string, SHPTR<UModel>>;
+	using ANIMMODELPAIR = std::pair < _string, SHPTR<UAnimModel>>;
 	TModelView(CSHPTRREF<UDevice> _spDevice);
 	NO_COPY(TModelView)
 	DESTRUCTOR(TModelView)
@@ -51,18 +53,28 @@ private:
 	void ResetAnimModels();
 
 	void EditModel();
+
+	void AddModelstoMapLayout();
+	void SaveCurrentMapLayouts();
+	void LoadMapLayoutsFromFile();
+
 	void ClearCurrentModel();
+	void ClearAllShowModels();
 	void ClearCurrentAnimModel();
 
 	void MouseInput();
+	void KeyboardInput();
 
 	HRESULT CopyCurrentModel();
-	HRESULT PasteCopiedModel();
+
 private:
 	using MODELS = UNORMAP<_string, SHPTR<UModel>>;
 	using ANIMMODEL = UNORMAP<_string, SHPTR<UAnimModel>>;
 	using SHOWMODELS = UNORMAP<_string, SHPTR<TShowModelObject>>;
 	using SHOWANIMEMODELS = UNORMAP<_string, SHPTR<TShowAnimModelObject>>;
+
+	using DELETEMODELS = VECTOR<_string>;
+	using DELETEANIMMODELS = VECTOR<_string>;
 
 	MAINDESC											m_stMainDesc;
 	DOCKDESC											m_stModelDockDesc;
@@ -73,6 +85,9 @@ private:
 	ANIMMODEL											m_AnimModelContainer;
 	SHOWMODELS											m_ShowModelsContainer;
 	SHOWANIMEMODELS										m_ShowAnimModelsContainer;
+
+	DELETEMODELS										m_DeleteModelsContainer;
+	DELETEANIMMODELS									m_DeleteAnimModelsContainer;
 
 	SHPTR<FILEGROUP>									m_spModelFileFolder;
 	SHPTR<FILEGROUP>									m_spAnimModelFileFolder;
@@ -101,11 +116,13 @@ private:
 	_bool												m_bSelectedhasAnim;
 	_bool												m_bColliderActive;
 
-	_uint												m_iModelSuffix;
-	_uint												m_iAnimModelSuffix;
-	_uint												m_iCopiedModelSuffix;
-
 	SHPTR<UMapLayout>									m_spMapLayout;
+	_bool												m_bshowLayoutAddPopup;
+	_bool												m_bLayoutSavePopup;
+	_bool												m_bLayoutLoadPopup;
+	_bool												m_bErrorPopup;
+	_bool												m_bEditPosByPicking;
+
 };
 
 END

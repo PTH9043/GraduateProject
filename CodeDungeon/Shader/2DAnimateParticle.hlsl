@@ -169,8 +169,6 @@ void GS_Main(point VS_OUT input[1], inout TriangleStream<GS_OUT> outputStream)
 struct PS_OUT
 {
     float4 vColor : SV_TARGET0;
-    float4 vGlow : SV_TARGET1;
-    float4 vBlur : SV_TARGET2;
 };
 
 PS_OUT PS_Main(GS_OUT In)

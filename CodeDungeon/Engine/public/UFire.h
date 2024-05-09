@@ -51,6 +51,10 @@ public:
 	void SetNoiseTexture(_uint _index);
 	void SetAlphaTexture(const _wstring& TexName);
 	void SetAlphaTexture(_uint _index);
+
+	FIRENOISEBUFFER* GetFireNoiseBuffer() { return &m_stFireNoiseBuffer; }
+	FIREDISTORTIONBUFFER* GetFireDistortionBuffer() { return &m_stFireDistortionBuffer; }
+
 #endif
 protected:
 	SHPTR<UTexGroup>				m_spFireColorTexGroup;
