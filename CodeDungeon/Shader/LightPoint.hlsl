@@ -69,17 +69,14 @@ PS_OUT PS_Main(PS_In Input)
         tLightColor = CalculateLightColorInWorldSpace(vWorldNormal.xyz, vWorldPosition.xyz); //태현이꺼
      
     }
-    else if(g_tLightInfo.eLightVersion == 1)
+    
+    if(g_tLightInfo.eLightVersion == 1)
     {
      
        // tLightColor = LightingInView(vViewPosition.xyz, vViewNormal.xyz);
         tLightColor = LightingInWorld(vWorldPosition.xyz, vWorldNormal.xyz); //용빠 월드
 
        
-    }else{
-
-        tLightColor = LightingInWorld2(vWorldPosition.xyz, vWorldNormal.xyz); //테스트용 빛 : 감쇠적용x specular전역
-     
     }
    
     //if (length(tLightColor.vDiffuse) != 0)

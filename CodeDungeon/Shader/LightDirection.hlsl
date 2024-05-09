@@ -108,7 +108,7 @@ PS_OUT PS_Main(PS_In Input)
        
         float4 shadowViewPos = mul(vWorldPosition, g_ViewProjInfoArr[2].mViewMatrix);
         float4 shadowClipPos = mul(shadowViewPos, g_ViewProjInfoArr[2].mProjMatrix);
-        float depth = shadowClipPos.z / shadowClipPos.w-0.0001f;
+        float depth = shadowClipPos.z / shadowClipPos.w - 0.0001f;
         
         if (depth < 0.0f || depth > 1.0f)
         {
@@ -139,7 +139,7 @@ PS_OUT PS_Main(PS_In Input)
         {
             percentLit += g_Texture3.SampleCmpLevelZero(g_Sampler_Border, uv.xy + offsets[j], depth).r;
         }
-        percentLit= percentLit / 9.0f;
+        percentLit = percentLit / 9.0f;
         
         //if (percentLit < 0.33f)
         //    percentLit = 0.33f;

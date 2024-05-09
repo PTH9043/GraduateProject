@@ -423,42 +423,6 @@ LIGHTCOLOR PointLight(float3 vPosition, float3 vNormal, float3 vToCamera) {
     return (LIGHTCOLOR)0.f;
 }
 
-LIGHTCOLOR PointLight2(float3 vPosition, float3 vNormal, float3 vToCamera)
-{
-
-    LIGHTCOLOR color = (LIGHTCOLOR) 0.f;
-    
-    float3 vToLight = g_tLightInfo.vPosition.xyz - vPosition;
-    float fDistance = length(vToLight);
-    if (fDistance <= g_tLightInfo.fRange)
-    {
-        float fSpecularFactor = 0.0f;
-        vToLight /= fDistance;
-        float fDiffuseFactor = dot(vToLight, vNormal);
-        if (fDiffuseFactor > 0.0f)
-        {
-
-            float3 vHalf = normalize(vToCamera + vToLight);
-
-            fSpecularFactor = pow(max(dot(vHalf, vNormal), 0.0f), g_tLightInfo.fSpecularPowValue);
-
-
-        }
-        float fAttenuationFactor = 1.0f / dot(g_tLightInfo.vAttenuation, float3(1.0f, fDistance, fDistance * fDistance));
-		
-        
-        color.vAmbient = g_tLightInfo.vAmbient * fAttenuationFactor; 
-
-        color.vDiffuse = g_tLightInfo.vDiffuse * fDiffuseFactor * fAttenuationFactor;
-
-        color.vSpecular = g_tLightInfo.vSpecular * fSpecularFactor * fAttenuationFactor; 
-    
-        return color;
-    }
-    return ((LIGHTCOLOR) 0.f);
-}
-
-
 
 
 LIGHTCOLOR SpotLight(float3 vPosition, float3 vNormal, float3 vToCamera)
@@ -523,140 +487,12 @@ LIGHTCOLOR SpotLight(float3 vPosition, float3 vNormal, float3 vToCamera)
 }
 
 
-//현재 두개간 다른건 attenuation거리, specular계산
-LIGHTCOLOR SpotLight2(float3 vPosition, float3 vNormal, float3 vToCamera)
-{
-    if (vPosition.x == 0 && vPosition.y == 0 && vPosition.z == 0) {
-        return (LIGHTCOLOR)0.f;
-    }
 
-    LIGHTCOLOR color = (LIGHTCOLOR)0.f;
-    float3 vToLight = g_tLightInfo.vPosition.xyz - vPosition;
-    float fDistance = length(vToLight);
-
-    // 스팟라이트 범위 내에 있을 때만 계산
-    if (fDistance <= g_tLightInfo.fRange) {
-        float fSpecularFactor = 0.0f;
-        vToLight /= fDistance;
-        float fDiffuseFactor = dot(vToLight, vNormal);
-
-        if (fDiffuseFactor > 0.0f) {
-
-            float3 vHalf = normalize(vToCamera + vToLight);
-
-            fSpecularFactor = pow(max(dot(vHalf, vNormal), 0.0f), 25);
-
-
-        }
-
-        float3 LightDir = normalize(g_tLightInfo.vDirection.xyz);
-        float fAlpha = max(dot(-vToLight, LightDir), 0.0f);
-        float fSpotFactor = pow(max(((fAlpha - g_tLightInfo.fPhi) / (g_tLightInfo.fTheta - g_tLightInfo.fPhi)), 0.0f), g_tLightInfo.fFallOff);
-
-        // 감쇠 시작 거리를 스팟라이트 최대 범위보다 약간 작은 값으로 설정
-        float fStartAttenuationDistance = g_tLightInfo.fRange * 0.8f;
-
-        // 감쇠 계수 계산
-        float fAttenuationFactor = 1.0f;
-        if (fDistance > fStartAttenuationDistance) {
-            float normalizedDistance = (fDistance - fStartAttenuationDistance) / (g_tLightInfo.fRange - fStartAttenuationDistance);
-            fAttenuationFactor = 1.0f - normalizedDistance;
-            if (fAttenuationFactor < 0.0f) {
-                fAttenuationFactor = 0.0f;
-            }
-        }
-
-        // color 계산
-        color.vAmbient = g_tLightInfo.vAmbient * fAttenuationFactor * fSpotFactor;
-        color.vDiffuse = g_tLightInfo.vDiffuse * fDiffuseFactor * fSpotFactor * fAttenuationFactor;
-        color.vSpecular = g_tLightInfo.vSpecular * fAttenuationFactor * fSpotFactor * fSpecularFactor;
-
-        return color;
-    }
-
-    // 스팟라이트 범위 밖의 픽셀에 대한 반환 값
-    return (LIGHTCOLOR)0.f;
-}
 
 
 //==============================================
 
 
-LIGHTCOLOR ViewDirectionalLight(float3 vNormal, float3 vToCamera)
-{
-
-    LIGHTCOLOR color = (LIGHTCOLOR)0.f;
-    float3 LightDir = normalize(mul(float4(g_tLightInfo.vDirection.xyz, 0.f), g_ViewProjInfoArr[g_CamID].mViewMatrix).xyz);
-
-    // float3 vToLight = -g_tLightInfo.vDirection;
-    float3 vToLight = -LightDir;
-    float fDiffuseFactor = dot(vToLight, vNormal);
-    float fSpecularFactor = 0.0f;
-
-    if (fDiffuseFactor > 0.0f)
-    {
-     
-            float3 vHalf = normalize(vToCamera + vToLight);
-
-            fSpecularFactor = pow(max(dot(vHalf, vNormal), 0.0f), g_tLightInfo.fSpecularPowValue);
-
-    }
-
-    color.vAmbient = g_tLightInfo.vAmbient ;
-    color.vDiffuse = g_tLightInfo.vDiffuse * fDiffuseFactor ;
-    color.vSpecular = g_tLightInfo.vSpecular * fSpecularFactor;
-
-
-    return color;
-
-}
-
-
-
-LIGHTCOLOR ViewSpotLight(float3 vPosition, float3 vNormal, float3 vToCamera)
-{
-    if (vPosition.x == 0 && vPosition.y == 0 && vPosition.z == 0)return((LIGHTCOLOR)0.f);
-
-    LIGHTCOLOR color = (LIGHTCOLOR)0.f;
-    float3 viewLightPos = mul(float4(g_tLightInfo.vPosition.xyz, 1.f), g_ViewProjInfoArr[g_CamID].mViewMatrix).xyz;
-    float3 vToLight = viewLightPos - vPosition;
-
-    float fDistance = length(vToLight);
-    if (fDistance <= g_tLightInfo.fRange)
-    {
-        float fSpecularFactor = 0.0f;
-        vToLight /= fDistance;
-        float fDiffuseFactor = dot(vToLight, vNormal);
-
-        if (fDiffuseFactor > 0.0f)
-        {
-            float3 vHalf = normalize(vToCamera + vToLight);
-
-            fSpecularFactor = pow(max(dot(vHalf, vNormal), 0.0f), g_tLightInfo.fSpecularPowValue);
-        }
-
-        float3 LightDir = normalize(mul(float4(g_tLightInfo.vDirection.xyz, 0.f), g_ViewProjInfoArr[g_CamID].mViewMatrix).xyz);
-
-        
-        float fAlpha = max(dot(-vToLight, LightDir), 0.0f);
-        float fSpotFactor = pow(max(((fAlpha - g_tLightInfo.fPhi) / (g_tLightInfo.fTheta - g_tLightInfo.fPhi)), 0.0f), g_tLightInfo.fFallOff);
-
-        float fAttenuationFactor = 1.0f / dot(g_tLightInfo.vAttenuation, float3(1.0f, fDistance, fDistance * fDistance));
-
-
-        color.vAmbient = g_tLightInfo.vAmbient * fAttenuationFactor * fSpotFactor;
-
-
-        color.vDiffuse = g_tLightInfo.vDiffuse * fDiffuseFactor * fSpotFactor * fAttenuationFactor;
-
-        color.vSpecular = g_tLightInfo.vSpecular * fAttenuationFactor * fSpotFactor * fSpecularFactor;
-        return color;
-
-    }
-
-    return ((LIGHTCOLOR)0.f); //조명 밖 픽셀 시.
-
-}
 
 LIGHTCOLOR LightingInWorld(float3 vWorldPosition, float3 vWorldNormal)
 {
@@ -705,100 +541,8 @@ LIGHTCOLOR LightingInWorld(float3 vWorldPosition, float3 vWorldNormal)
     
     return (color);
 }
-LIGHTCOLOR LightingInWorld2(float3 vWorldPosition, float3 vWorldNormal)
-{
 
-    LIGHTCOLOR color = (LIGHTCOLOR)0.f;
-    // float3 vCameraPosition = float3(g_tLightParam.vLightCamPos.x, g_tLightParam.vLightCamPos.y, g_tLightParam.vLightCamPos.z);
-    float3 vToCamera = normalize(g_ViewProjInfoArr[MAIN_CAM_ID].vCamPosition - vWorldPosition);
-
-    float4 vCameraViewPosition = mul(float4(g_ViewProjInfoArr[g_CamID].vCamPosition, 1.0f), g_ViewProjInfoArr[g_CamID].mViewMatrix);
-    float3 vViewToCamera = normalize(vCameraViewPosition.xyz - vWorldPosition);
-
-
-    if (g_tLightInfo.eLightType == DIRECTIONAL_LIGHT)
-    {
-
-        color.vDiffuse += DirectionalLight(vWorldNormal, vToCamera).vDiffuse;
-
-        color.vAmbient += DirectionalLight(vWorldNormal, vToCamera).vAmbient;
-
-        color.vSpecular += DirectionalLight(vWorldNormal, vToCamera).vSpecular;
-
-    }
-    else if (g_tLightInfo.eLightType == POINT_LIGHT)
-    {
-        color.vDiffuse += PointLight2(vWorldPosition, vWorldNormal, vToCamera).vDiffuse;
-
-        color.vAmbient += PointLight2(vWorldPosition, vWorldNormal, vToCamera).vAmbient;
-
-        color.vSpecular += PointLight2(vWorldPosition, vWorldNormal, vToCamera).vSpecular;
-
-    }
-    else if (g_tLightInfo.eLightType == SPOT_LIGHT)
-    {
-        color.vDiffuse += SpotLight2(vWorldPosition, vWorldNormal, vToCamera).vDiffuse;
-
-        color.vAmbient += SpotLight2(vWorldPosition, vWorldNormal, vToCamera).vAmbient;
-
-        color.vSpecular += SpotLight2(vWorldPosition, vWorldNormal, vToCamera).vSpecular;
-    }
-
-
-    color.vAmbient += g_vGlobalAmbient ;
-    //  color.vDiffuse = saturate(color.vDiffuse * g_tLightInfo.fLightPower);
-
-    color.vDiffuse.a = 1.f;
-
-    return (color);
-}
-
-LIGHTCOLOR LightingInView(float3 vViewPosition, float3 vViewNormal)
-{
-
-    LIGHTCOLOR color = (LIGHTCOLOR)0.f;
-  
-
-    float4 vCameraViewPosition = mul(float4(g_ViewProjInfoArr[g_CamID].vCamPosition, 1.0f), g_ViewProjInfoArr[g_CamID].mViewMatrix);
-    float3 vViewToCamera = normalize(vCameraViewPosition.xyz - vViewPosition);
-
-
-    if (g_tLightInfo.eLightType == DIRECTIONAL_LIGHT)
-    {
-
-        color.vDiffuse += ViewDirectionalLight(vViewNormal, vViewToCamera).vDiffuse;
-
-        color.vAmbient += ViewDirectionalLight(vViewNormal, vViewToCamera).vAmbient;
-
-        color.vSpecular += ViewDirectionalLight(vViewNormal, vViewToCamera).vSpecular;
-
-    }
-    //else if (g_tLightInfo.eLightType == POINT_LIGHT)
-    //{
-    //    color.vDiffuse += PointLight(vViewPosition,vViewNormal, vToCamera).vDiffuse;
-
-    //    color.vAmbient += PointLight(vViewPosition,vViewNormal, vToCamera).vAmbient;
-
-    //    color.vSpecular += PointLight(vViewPosition,vViewNormal, vToCamera).vSpecular;
-
-    //}
-    else if (g_tLightInfo.eLightType == SPOT_LIGHT)
-    {
-        color.vDiffuse += ViewSpotLight(vViewPosition, vViewNormal, vViewToCamera).vDiffuse;
-
-        color.vAmbient += ViewSpotLight(vViewPosition, vViewNormal, vViewToCamera).vAmbient;
-
-        color.vSpecular += ViewSpotLight(vViewPosition, vViewNormal, vViewToCamera).vSpecular;
-    }
-
-
-    color.vAmbient += g_vGlobalAmbient;
-    //  color.vDiffuse = saturate(color.vDiffuse * g_tLightInfo.fLightPower);
-
-    color.vDiffuse.a = 1.f;
-
-    return (color);
-}
+     
 
 
 

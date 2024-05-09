@@ -124,12 +124,12 @@ void TMainScene::Tick(const _double& _dTimeDelta)
 	//if (pGameInstance->GetDIKeyPressing(DIK_3))
 	//	SpotLight->SetLightVersion(LIGHTVERSION::TYPE_END);
 
-	//SHPTR<ULight> DirLight;
-	//OutLight(LIGHTTYPE::TYPE_DIRECTIONAL, 0, DirLight);
-	//if (pGameInstance->GetDIKeyPressing(DIK_4))
-	//	DirLight->SetLightVersion(LIGHTVERSION::TYPE_ORIGINAL);
-	//if (pGameInstance->GetDIKeyPressing(DIK_5))
-	//	DirLight->SetLightVersion(LIGHTVERSION::TYPE_YONGBBA);
+	SHPTR<ULight> DirLight;
+	OutLight(LIGHTTYPE::TYPE_DIRECTIONAL, 0, DirLight);
+	if (pGameInstance->GetDIKeyPressing(DIK_4))
+		DirLight->SetLightVersion(LIGHTVERSION::TYPE_ORIGINAL);
+	if (pGameInstance->GetDIKeyPressing(DIK_5))
+		DirLight->SetLightVersion(LIGHTVERSION::TYPE_YONGBBA);
 
 
 	SHPTR<ULight> PointLight;
@@ -138,8 +138,6 @@ void TMainScene::Tick(const _double& _dTimeDelta)
 		PointLight->SetLightVersion(LIGHTVERSION::TYPE_ORIGINAL);
 	if (pGameInstance->GetDIKeyPressing(DIK_7))
 		PointLight->SetLightVersion(LIGHTVERSION::TYPE_YONGBBA);
-	if (pGameInstance->GetDIKeyPressing(DIK_8))
-		PointLight->SetLightVersion(LIGHTVERSION::TYPE_END);
 	_float3 pos = m_spMainCamera->GetTransform()->GetPos();
 	_float3 Look = m_spMainCamera->GetTransform()->GetLook();
 	PointLight->SetLightPos(_float3(-546, -32, 131));
