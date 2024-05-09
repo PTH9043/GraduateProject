@@ -95,6 +95,7 @@ public:
 	void RotateTurn(const _float4& _vQuaternion);
 	void RotateTurn(const _float3& _vAngle);
 	void LookAt(const _float3& _vTargetPos);
+	void LookAtWithFixedUp(const _float3& _vTargetPos);
 	// Compute Distance
 	const _float ComputeDistance(const _float3& _vPos);
 	const _float ComputeDistanceSq(const _float3& _vPos);
