@@ -124,12 +124,12 @@ void TMainScene::Tick(const _double& _dTimeDelta)
 	//if (pGameInstance->GetDIKeyPressing(DIK_3))
 	//	SpotLight->SetLightVersion(LIGHTVERSION::TYPE_END);
 
-	//SHPTR<ULight> DirLight;
-	//OutLight(LIGHTTYPE::TYPE_DIRECTIONAL, 0, DirLight);
-	//if (pGameInstance->GetDIKeyPressing(DIK_4))
-	//	DirLight->SetLightVersion(LIGHTVERSION::TYPE_ORIGINAL);
-	//if (pGameInstance->GetDIKeyPressing(DIK_5))
-	//	DirLight->SetLightVersion(LIGHTVERSION::TYPE_YONGBBA);
+	SHPTR<ULight> DirLight;
+	OutLight(LIGHTTYPE::TYPE_DIRECTIONAL, 0, DirLight);
+	if (pGameInstance->GetDIKeyPressing(DIK_4))
+		DirLight->SetLightVersion(LIGHTVERSION::TYPE_ORIGINAL);
+	if (pGameInstance->GetDIKeyPressing(DIK_5))
+		DirLight->SetLightVersion(LIGHTVERSION::TYPE_YONGBBA);
 
 
 	SHPTR<ULight> PointLight;

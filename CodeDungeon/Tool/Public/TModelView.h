@@ -121,6 +121,7 @@ private:
 	_bool												m_bLayoutSavePopup;
 	_bool												m_bLayoutLoadPopup;
 	_bool												m_bErrorPopup;
+	_bool												m_bEditPosByPicking;
 
 };
 
