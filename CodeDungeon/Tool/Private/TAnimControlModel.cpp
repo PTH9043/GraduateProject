@@ -7,6 +7,7 @@
 #include "UAnimation.h"
 #include "UTexGroup.h"
 #include "TEquipModel.h"
+#include "UGameInstance.h"
 
 TAnimControlModel::TAnimControlModel(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer,
 	const CLONETYPE& _eCloneType) : 
@@ -84,13 +85,16 @@ void TAnimControlModel::ShowAnimModify()
 
 void TAnimControlModel::MakeEquip(CSHPTRREF<UModel> _spEquipModel, const EQUIPTYPE _EquipType, const _wstring& _wstrBoneNodeName)
 {
-	TEquipModel::DESC desc;
-	desc.eEquipType = _EquipType;
-	desc.spModel = _spEquipModel;
-	desc.spOwner = ThisShared< UCharacter>();
-	desc.wstrBoneNodeName = _wstrBoneNodeName;
+	//SHPTR<UGameI
+	//TEquipModel::DESC desc;
+	//desc.eEquipType = _EquipType;
+	//desc.spModel = _spEquipModel;
+	//desc.spOwner = ThisShared< UCharacter>();
+	//desc.wstrBoneNodeName = _wstrBoneNodeName;
 
+	//SHPTR<TEquipModel> spEquipModel = 
 
+	//m_EquipContainer.push_back()
 }
 
 void TAnimControlModel::SelectAnimation()

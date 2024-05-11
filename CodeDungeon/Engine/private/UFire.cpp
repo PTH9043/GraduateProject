@@ -92,10 +92,12 @@ void UFire::Update(const _double& _dTimeDelta)
 void UFire::TickActive(const _double& _dTimeDelta)
 {
 
-	Update(_dTimeDelta);
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	GetTransform()->LookAt(-spGameInstance->GetCameraPosition(MAIN_CAMERA_ID));
-	
+	Update(_dTimeDelta); {
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		_float3 MainCamPos = spGameInstance->GetMainCameraTransform()->GetPos();
+		GetTransform()->LookAtWithFixedUp(_float3(MainCamPos));
+
+	}
 }
 
 void UFire::LateTickActive(const _double& _dTimeDelta)

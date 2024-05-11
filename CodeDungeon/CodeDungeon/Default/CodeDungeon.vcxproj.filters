@@ -58,6 +58,9 @@
     <Filter Include="06.Comp\Controller">
       <UniqueIdentifier>{4ea4b5fc-9281-41f6-8aa8-c95243cc1db3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Objects\ModelObjects\Map\StaticObjects">
+      <UniqueIdentifier>{0baf0576-c976-43a1-b37c-609f41e33825}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ClientDefines.h">
@@ -114,6 +117,9 @@
     <ClInclude Include="..\Public\CWarriorAnimController.h">
       <Filter>06.Comp\Controller</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CTorch.h">
+      <Filter>05.Objects\ModelObjects\Map\StaticObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -162,6 +168,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\CWarriorAnimController.cpp">
       <Filter>06.Comp\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CTorch.cpp">
+      <Filter>05.Objects\ModelObjects\Map\StaticObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

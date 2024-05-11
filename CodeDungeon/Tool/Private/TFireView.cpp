@@ -452,8 +452,8 @@ void TFireView::FireAlphaTextureSetting() {
 
 void TFireView::FireScalingSetting() {
 
-	static float ScaleX = 50.f;
-	static float ScaleY = 50.f;
+	static float ScaleX = 3.f;
+	static float ScaleY = 6.65f;
 	ImGui::SliderFloat("ScaleX", &ScaleX, 1.f, 100.f, "%.2f");
 	ImGui::SliderFloat("ScaleY", &ScaleY, 1.f, 100.f, "%.2f");
 
@@ -463,9 +463,9 @@ void TFireView::FireScalingSetting() {
 
 void TFireView::FirePosSetting() {
 
-	static _float posX = 0;
-	static _float posY = 0;
-	static _float posZ = 0;
+	static _float posX = -555.2f;
+	static _float posY = -32.310f;
+	static _float posZ = 149.3f;
 
 	ImGui::InputFloat("Input Fire Position X", &posX);
 	ImGui::InputFloat("Input Fire Position Y", &posY);

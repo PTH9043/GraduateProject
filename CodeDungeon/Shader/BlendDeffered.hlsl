@@ -56,6 +56,8 @@ PS_OUT PS_Main(PS_In In)
     
     vector vColor = vDiffuseDesc * LightCol;
     
+    //vector vColor = vDiffuseDesc;
+    
     //vector vColor = lerp(vDiffuseDesc, (vShadeDesc + vAmbientDesc + vSpecularDesc), 0.5f);
     
     Out.vColor = vColor;

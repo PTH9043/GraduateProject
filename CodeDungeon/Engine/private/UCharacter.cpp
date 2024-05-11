@@ -160,10 +160,11 @@ void UCharacter::LateTickActive(const _double& _dTimeDelta)
 		_float3 vPosition{ GetTransform()->GetPos() };
 		SHPTR<UCell> spCell{};
 
-		if (false == spNavigation->IsMove(vPosition, REF_OUT spCell))
+		/*if (false == spNavigation->IsMove(vPosition, REF_OUT spCell))
 		{
 			GetTransform()->SetPos(GetPrevPos());
-		}
+		}*/
+	
 	}
 }
 

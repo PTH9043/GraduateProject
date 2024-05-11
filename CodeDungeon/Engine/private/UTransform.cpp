@@ -389,6 +389,22 @@ void UTransform::LookAt(const _float3& _vTargetPos)
 	SetLook(DirectX::XMVector3TransformNormal(_float3::Forward * m_vScale.z, RotationMatrix));
 }
 
+void UTransform::LookAtWithFixedUp(const _float3& _vTargetPos)
+{
+
+	_float3 FixedUp = _float3(0, 1, 0);
+	_float3 MyPosition = GetPos();
+	_float3 vLook = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(_vTargetPos, MyPosition));
+	_float3 vRight = DirectX::XMVector3Normalize(XMVector3Cross(vLook, FixedUp));
+	
+
+	SetRight(vRight* m_vScale.x);
+	SetUp(FixedUp* m_vScale.y);
+	SetLook(vLook* m_vScale.z);
+
+
+}
+
 const _float UTransform::ComputeDistance(const _float3& _vPos)
 {
 	return _float3::Length(GetPos() - _vPos);

@@ -80,7 +80,7 @@ void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 {
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
 	__super::LateTickActive(_dTimeDelta);
-	FollowCameraMove(_float3{0.f, 40.f, -40.f});
+	FollowCameraMove(_float3{0.f, 200.f, -40.f});
 }
 
 HRESULT CWarriorPlayer::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
