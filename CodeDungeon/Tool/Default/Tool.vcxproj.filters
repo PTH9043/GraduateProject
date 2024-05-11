@@ -101,8 +101,8 @@
     <Filter Include="91.GuizmoManager">
       <UniqueIdentifier>{cb1408c4-57f9-4a13-8033-3b803b012428}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.ImGui\ItemView">
-      <UniqueIdentifier>{9cfd6740-f5a9-47c2-b739-4d2f9831674f}</UniqueIdentifier>
+    <Filter Include="90.ShowModel\EquipModel">
+      <UniqueIdentifier>{686548e4-cf48-48af-a915-26ef59c85f72}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -250,8 +250,8 @@
     <ClInclude Include="..\Public\TGuizmoManager.h">
       <Filter>91.GuizmoManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\TItemView.h">
-      <Filter>03.ImGui\ItemView</Filter>
+    <ClInclude Include="..\Public\TEquipModel.h">
+      <Filter>90.ShowModel\EquipModel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -378,8 +378,8 @@
     <ClCompile Include="..\Private\TGuizmoManager.cpp">
       <Filter>91.GuizmoManager</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\TItemView.cpp">
-      <Filter>03.ImGui\ItemView</Filter>
+    <ClCompile Include="..\Private\TEquipModel.cpp">
+      <Filter>90.ShowModel\EquipModel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

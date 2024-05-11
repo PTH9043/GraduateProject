@@ -37,7 +37,7 @@ public:
 	const _float4x4 GetMainCamWorldMatrix() const;
 	const _float4x4& GetMainCamProjMatrix() const;
 	const _float3& GetMainCamPosition();
-	const SHPTR<UTransform>& GetMainCamTransform();
+	SHPTR<UTransform> GetMainCamTransform();
 	const _float4x4 GetCamViewMatrix(const CAMID& _iID) const;
 	const _float4x4& GetCamProjMatrix(const CAMID& _iID) const;
 	const _float3& GetCameraPosition(const CAMID& _iID);

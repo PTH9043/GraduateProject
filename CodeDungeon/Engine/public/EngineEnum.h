@@ -2,7 +2,25 @@
 
 namespace Engine {
 
+	enum ITEMTYPE : int
+	{
+		ITEM_EQUIP, 
+		ITEM_POSITION, 
+		ITEM_OBJECT, 
+		ITEM_MONEY,
+		ITEM_END
+	};
 
+	enum EQUIPTYPE : int
+	{
+		EQUIP_BOOTS, 
+		EQUIP_GLOVES,
+		EQUIP_HOOD,
+		EQUIP_LOWER,
+		EQUIP_MAIJTLE,
+		
+		EQUIP_END
+	};
 
 	enum TEXTYPE : unsigned short
 	{
@@ -315,7 +333,7 @@ namespace Engine {
 		LIGHT_SRV_REGISTER_END = 5,
 
 		SCENE_STATIC_VALUE = 0,
-
+		MAX_HAS_TEX = 4, 
 
 
 		// Clone Max Size
@@ -349,6 +367,4 @@ namespace Engine {
 		MAX_MOUSEBTN_CNT = DIMOUSEBUTTON::DIMB_END,
 
 	};
-
-
 }

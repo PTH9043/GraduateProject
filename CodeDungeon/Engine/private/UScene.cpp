@@ -106,47 +106,38 @@ HRESULT UScene::AddLight(const LIGHTINFO& _stLightInfo, const LIGHTCONTROL& _stL
 
 void UScene::OutLight(const LIGHTTYPE& _eLightType, const _uint _iIndex, SHPTR<ULight>& _spLight)
 {
-    if (_eLightType <= LIGHTTYPE::LIGHT_END && _eLightType >= LIGHTTYPE::TYPE_DIRECTIONAL)
-    {
-        if (_iIndex >= m_LightGroup[_eLightType].size())
-            return;
+    if (_iIndex >= m_LightGroup[_eLightType].size())
+        return;
 
-        LIGHTCONTAINER::iterator it = m_LightGroup[_eLightType].begin();
+    LIGHTCONTAINER::iterator it = m_LightGroup[_eLightType].begin();
 
-        it = it + _iIndex;
-        if (it != m_LightGroup[_eLightType].end())
-            _spLight = (*it);
-    }
+    it = it + _iIndex;
+    if (it != m_LightGroup[_eLightType].end())
+        _spLight = (*it);
 }
 
 HRESULT UScene::ActiveLIght(const LIGHTTYPE& _eLightType, const _uint& _iIndex, const _bool& _isActive)
 {
-    if (_eLightType <= LIGHTTYPE::LIGHT_END && _eLightType >= LIGHTTYPE::TYPE_DIRECTIONAL)
-    {
-        RETURN_CHECK(_iIndex >= m_LightGroup[_eLightType].size(), E_FAIL);
+    RETURN_CHECK(_iIndex >= m_LightGroup[_eLightType].size(), E_FAIL);
 
-        LIGHTCONTAINER::iterator it = m_LightGroup[_eLightType].begin();
+    LIGHTCONTAINER::iterator it = m_LightGroup[_eLightType].begin();
 
-        it = it + _iIndex;
-        if (it != m_LightGroup[_eLightType].end())
-            (*it)->SetActive(_isActive);
-    }
+    it = it + _iIndex;
+    if (it != m_LightGroup[_eLightType].end())
+        (*it)->SetActive(_isActive);
     return S_OK;
 }
 
 HRESULT UScene::DeleteLight(const LIGHTTYPE& _eLightType, const _uint& _iIndex)
 {
-    if (_eLightType <= LIGHTTYPE::LIGHT_END && _eLightType >= LIGHTTYPE::TYPE_DIRECTIONAL)
+    RETURN_CHECK(_iIndex >= m_LightGroup[_eLightType].size(), E_FAIL);
+
+    LIGHTCONTAINER::iterator it = m_LightGroup[_eLightType].begin();
+
+    it = it + _iIndex;
+    if (it != m_LightGroup[_eLightType].end())
     {
-        RETURN_CHECK(_iIndex >= m_LightGroup[_eLightType].size(), E_FAIL);
-
-        LIGHTCONTAINER::iterator it = m_LightGroup[_eLightType].begin();
-
-        it = it + _iIndex;
-        if (it != m_LightGroup[_eLightType].end())
-        {
-            m_LightGroup[_eLightType].erase(it);
-        }
+        m_LightGroup[_eLightType].erase(it);
     }
     return S_OK;
 }

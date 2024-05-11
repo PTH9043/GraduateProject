@@ -88,6 +88,7 @@
 #define PROTO_ACTOR_FOG L"Proto_Actor_Fog"
 #define PROTO_ACTOR_MIRROR L"Proto_Actor_Mirror"
 #define PROTO_ACTOR_SCREENRENDEROBJ L"Proto_Actor_ScreenRenderObj"
+#define PROTO_ACTOR_EQUIPMENT L"Proto_Actor_Equipment"
 
 // Texture
 
@@ -115,6 +116,7 @@
 #define LAYER_MIRROR L"LayerMirror"
 #define LAYER_SCREENRENDEROBJ L"LayerScreenRenderObj"
 #define LAYER_DEBUG L"Layer_Debug"
+#define LAYER_ITEM L"Layer_Item"
 
 #pragma endregion LAYER
 

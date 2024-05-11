@@ -653,4 +653,29 @@ namespace Engine {
 	};
 #pragma endregion ANIMEVENTTYPE
 
+
+#pragma region EQUIPMENTINFO
+
+	struct ITEMINFO
+	{
+		// 지불해야할 돈
+		_int		PayGold;
+
+		ITEMINFO() : PayGold{0} {}
+		ITEMINFO(const _int _PayGold) : PayGold{_PayGold}{}
+	};
+
+	struct EQUIPMENTINFO : public ITEMINFO
+	{
+		_int		IncreaseHP;
+		_int		IncreaseAtk;
+		_int		IncreaseSpeed;
+
+		EQUIPMENTINFO() : IncreaseHP{ 0 }, IncreaseAtk{ 0 }, IncreaseSpeed{ 0 } { }
+		EQUIPMENTINFO(const _int _PayGold, const _int _IncreaseHp, const _int _IncreaseAtk, 
+			const _int _IncreaseSpeed) : ITEMINFO(_PayGold), IncreaseHP{_IncreaseHp}, IncreaseAtk{_IncreaseAtk}, 
+			IncreaseSpeed{_IncreaseSpeed} {}
+	};
+#pragma endregion EQUIPMENTINFO
+
 }

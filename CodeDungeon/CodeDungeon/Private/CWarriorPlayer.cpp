@@ -73,7 +73,6 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		}
 	}
 
-	GetAnimModel()->TickEvent(this, GetAnimationController()->GetTrigger(), _dTimeDelta);
 	GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
 }
 

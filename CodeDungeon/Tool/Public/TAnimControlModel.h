@@ -1,6 +1,6 @@
 #pragma once
 
-#include "UPawn.h"
+#include "UCharacter.h"
 
 BEGIN(Engine)
 class UAnimModel;
@@ -10,6 +10,10 @@ END
 BEGIN(Tool)
 
 using ANIMMATIONCLIPS = UNORMAP<_string, _int>;
+
+class TEquipModel;
+
+using EQUIPCONTAINER = VECTOR<SHPTR< TEquipModel>>;
 
 // Animation ColumID 
 enum ANIM_TABLE {
@@ -23,7 +27,7 @@ enum ANIM_TABLE {
 @ Explain
 - Animation 데이터들을 Modify하고 Animation과 Animation을 이어주는 Tool을 만들기 위해 필요한 객체
 */
-class TAnimControlModel final : public UPawn {
+class TAnimControlModel final : public UCharacter {
 public:
 	TAnimControlModel(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType);
 	TAnimControlModel(const TAnimControlModel& _rhs);
@@ -40,6 +44,8 @@ public:
 	void ReleaseShowModel();
 	void SetShowModel(CSHPTRREF<UAnimModel> _spModel, CSHPTRREF<FILEGROUP> _spFileFolder);
 	void ShowAnimModify();
+
+	void MakeEquip(CSHPTRREF<UModel> _spEquipModel, const EQUIPTYPE _EquipType, const _wstring& _wstrBoneNodeName);
 protected:
 	void SelectAnimation();
 	void ModifyAnimation();
@@ -64,6 +70,7 @@ private:
 	// Input Trigger
 	_wstring												m_wstrInputTrigger;
 	_wstring												m_wstrImguiModifyInputTrigger;
+	EQUIPCONTAINER							m_EquipContainer;
 };
 
 END
