@@ -1,5 +1,6 @@
 #include "ClientDefines.h"
 #include "UGameInstance.h"
+#include "CMap.h"
 #include "UCollider.h"
 #include "UModel.h"
 #include "UTransform.h"
@@ -7,16 +8,24 @@
 #include "UShader.h"
 #include "UModelMaterial.h"
 #include "CRooms.h"
-#include "CMap.h"
 #include "UStageManager.h"
+#include "UMapLayout.h"
+#include "CTorch.h"
+#include "CModelObjects.h"
+
+
 
 CMap::CMap(CSHPTRREF<UDevice> _spDevice) : UComponent(_spDevice),
-m_spRoomContainer{}
+m_spRoomContainer{},
+m_spMapLayout{ nullptr },
+m_iLightCount{ 0 }
 {
 }
 
 CMap::CMap(const CMap& _rhs) : UComponent(_rhs),
-m_spRoomContainer{}
+m_spRoomContainer{},
+m_spMapLayout{ nullptr },
+m_iLightCount{0}
 {
 }
 
@@ -37,6 +46,8 @@ HRESULT CMap::NativeConstruct()
 
 	m_spStageManager = Create<UStageManager>();
 	m_spRoomContainer = Create<ROOMCONTAINER>();
+	m_spMapLayout = CreateConstructorNativeNotMsg<UMapLayout>(spGameInstance->GetDevice());
+	m_spStaticObjContainer = Create<STATICOBJCONTAINER>();
 
 	return S_OK;
 }
@@ -60,9 +71,6 @@ void CMap::LoadRooms()
 			{
 				_wstring ModelProtoTag = L"Proto_Res_Model_";
 				_wstring FileName = File.second->wstrfileName;
-				size_t pos = FileName.find(L"_FBX.bin");
-				if (pos != _wstring::npos)
-					FileName.erase(pos, FileName.length());
 				ModelProtoTag.append(FileName);
 
 				CRooms::ROOMDESC tDesc;
@@ -72,10 +80,6 @@ void CMap::LoadRooms()
 				_Room->SetModel(ModelProtoTag);
 
 				m_spRoomContainer->emplace(FileName, _Room);
-
-				pos = ModelProtoTag.find(FileName);
-				if (pos != _wstring::npos)
-					ModelProtoTag.erase(pos, FileName.length());
 			}
 		}
 		else
@@ -88,4 +92,22 @@ void CMap::LoadRooms()
 _bool CMap::LoadNavigation()
 {
 	return m_spStageManager->Load();
+}
+
+void CMap::LoadStaticObjects()
+{
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	m_spMapLayout->Load();
+	for (auto& it : (*m_spMapLayout->GetMapObjectsContainer().get()))
+	{
+		for (auto& vecit : it.second)
+		{
+			if(vecit._sModelName == "Torch_FBX.bin")
+			{		
+				SHPTR<CTorch> _Torch = std::static_pointer_cast<CTorch>(spGameInstance->CloneActorAdd(PROTO_ACTOR_TORCH));
+				_Torch->GetTransform()->SetNewWorldMtx(vecit._mWorldMatrix);
+				m_spStaticObjContainer->emplace(vecit._sModelName, _Torch);
+			}
+		}
+	}
 }

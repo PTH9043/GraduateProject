@@ -18,10 +18,10 @@ HRESULT CModelManager::CreateModelProtos(CSHPTRREF<UGameInstance> _spGameInstanc
 {
 	SHPTR<FILEGROUP> ModelFolder = _spGameInstance->FindFolder(L"Model");
 
-	//for (const FOLDERPAIR& Folder : ModelFolder->UnderFileGroupList)
-	//{
-	//	AddModelProtosFromFile(_spGameInstance, _spDevice, Folder.second);
-	//}
+	for (const FOLDERPAIR& Folder : ModelFolder->UnderFileGroupList)
+	{
+		AddModelProtosFromFile(_spGameInstance, _spDevice, Folder.second);
+	}
 
 	SHPTR<FILEGROUP> MapFolder = _spGameInstance->FindFolder(L"Map");
 	for (const FOLDERPAIR& Folder : MapFolder->UnderFileGroupList)
@@ -42,16 +42,9 @@ HRESULT CModelManager::AddModelProtosFromFile(CSHPTRREF<UGameInstance> _spGameIn
 			_wstring ProtoTag = L"Proto_Res_Model_";
 			_wstring FileName = File.second->wstrfileName;
 
-			size_t pos = FileName.find(L"_FBX.bin");
-			if (pos != _wstring::npos)
-				FileName.erase(pos, FileName.length());
-
 			ProtoTag.append(FileName);
 			_spGameInstance->AddPrototype(ProtoTag, CLONETYPE::CLONE_STATIC,
 				CreateConstructorNative<UModel>(_spDevice, File.second->wstrfilePath));
-			pos = ProtoTag.find(FileName);
-			if (pos != _wstring::npos)
-				ProtoTag.erase(pos, FileName.length());
 		}
 	}
 	else
