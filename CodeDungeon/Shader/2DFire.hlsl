@@ -73,6 +73,14 @@ struct PS_OUT
 };
 
 
+float3 ToneMapping(float3 hdrColor)
+{
+    const float gamma = 2.2;
+    float3 result = float3(1.0, 1, 1) - exp(-hdrColor * 3.f); //5.f=exposure
+    result = pow(result, 1.0 / gamma);
+    return result;
+}
+
 PS_OUT PS_Main(VS_OUT In)
 {
     PS_OUT Out = (PS_OUT)0;
@@ -91,39 +99,46 @@ PS_OUT PS_Main(VS_OUT In)
     noise2 = g_Texture1.Sample(g_Sampler_Normal, In.vTexCoords2);
     noise3 = g_Texture1.Sample(g_Sampler_Normal, In.vTexCoords3);
 
-    // (0, 1) 범위에서 (-1, +1) 범위로 노이즈를 이동합니다.
     noise1 = (noise1 - 0.5f) * 2.0f;
     noise2 = (noise2 - 0.5f) * 2.0f;
     noise3 = (noise3 - 0.5f) * 2.0f;
 
-    // 3 개의 서로 다른 왜곡 x와 y 값으로 세 개의 노이즈 x와 y 좌표를 왜곡합니다.
+   
     noise1.xy = noise1.xy * fDistortion1.xy;
     noise2.xy = noise2.xy * fDistortion2.xy;
     noise3.xy = noise3.xy * fDistortion3.xy;
 
-    // 세 가지 왜곡 된 노이즈 결과를 모두 하나의 노이즈 결과로 결합합니다.
     finalNoise = noise1 + noise2 + noise3;
 
-    // 왜곡 스케일 및 바이어스 값에 의해 입력 텍스처 Y 좌표를 왜곡합니다.
-    // 위쪽 효과에서 불꽃이 깜박 거리는 텍스처를 위로 움직이면 섭동이 강해집니다.
+   
     perturb = ((1.0f - In.vTexCoord.y) * fDistortionScale) + fDistortionBias;
 
-    // 이제 화재 색상 텍스처를 샘플링하는 데 사용할 교란되고 왜곡 된 텍스처 샘플링 좌표를 만듭니다.
+  
     noiseCoords.xy = (finalNoise.xy * perturb) + In.vTexCoord.xy;
 
-    // 섭동되고 왜곡 된 텍스처 샘플링 좌표를 사용하여 화재 텍스처에서 색상을 샘플링합니다.
-    // 화스랩 상태를 감싸는 대신 클램프 샘플 상태를 사용하여 화염을 감싸는 것을 방지합니다.
+
     fireColor = g_Texture0.Sample(g_Sampler_Clamp, noiseCoords.xy);
 
-    // 교란되고 왜곡 된 텍스처 샘플링 좌표를 사용하여 알파 텍스처에서 알파 값을 샘플링합니다.
-    // 이것은 불의 투명도에 사용됩니다.
-    // 화스랩 상태를 감싸는 대신 클램프 샘플 상태를 사용하여 화염을 감싸는 것을 방지합니다.
+  
     alphaColor = g_Texture2.Sample(g_Sampler_Clamp, noiseCoords.xy);
 
-    // 화재의 알파 블렌딩을 불안정하고 왜곡 된 알파 텍스처 값으로 설정합니다.
     fireColor.a = alphaColor;
+        // 색상 값 정규화
+    float3 normalizedColor = fireColor.rgb / max(max(fireColor.r, fireColor.g), fireColor.b);
+    // 밝기 증폭
+    normalizedColor *= 2.0f;
+    // 색상 값 클램핑
+    normalizedColor = saturate(normalizedColor);
+    // 원래 범위로 되돌리기
+    
+   
+    float4 AmpColor = float4(normalizedColor * max(max(fireColor.r, fireColor.g), fireColor.b), fireColor.a);
+
+    float4 ToneColor = float4(ToneMapping(fireColor.xyz), fireColor.a);
+    Out.vColor = AmpColor;
+  
  
-    Out.vColor = fireColor;
+   // Out.vColor = fireColor;
     
     return Out;
 }

@@ -18,7 +18,7 @@ TFireView::TFireView(CSHPTRREF<UDevice> _spDevice) :
 	m_stMultiParticleView{},
 	m_isInitSetting{ false }, m_MultipleParticle{ nullptr }, m_MultipleParticleParam{ nullptr }, m_MultipleParticleType{ nullptr }
 	, m_iMultipleParticleSize{ 0 }, m_iCurActiveMultipleParticle{ 0 }
-	
+
 {
 }
 
@@ -106,8 +106,8 @@ HRESULT TFireView::LoadResource()
 	}
 	ResizeMultipleParticleVector(1);
 	LoadMultipleParticleResource();
-	m_stFireNoiseBuffer=m_stFire->GetFireNoiseBuffer();
-	m_stFireDistortionBuffer=m_stFire->GetFireDistortionBuffer();
+	m_stFireNoiseBuffer = m_stFire->GetFireNoiseBuffer();
+	m_stFireDistortionBuffer = m_stFire->GetFireDistortionBuffer();
 	return S_OK;
 }
 
@@ -217,11 +217,11 @@ void TFireView::MultipleParticleView()
 			}
 
 			MultipleParticleTexSetting();
-				MultipleParticleCountSetting();
-				MultipleParticleTimeSetting();
-				
-				DefaultMultipleParticleSetting();
-				AutomaticMultipleParticleSetting();
+			MultipleParticleCountSetting();
+			MultipleParticleTimeSetting();
+
+			DefaultMultipleParticleSetting();
+			AutomaticMultipleParticleSetting();
 		}
 	}
 	ImGui::End();
@@ -368,10 +368,10 @@ void TFireView::FireView()
 	{
 		if (ImGui::CollapsingHeader("Fire Settings", ImGuiTreeNodeFlags_DefaultOpen)) {
 			ImGui::Text("Fire View");
-			
+
 
 			if (true == ImGui::Button("Start Fire")) {
-			
+
 
 				m_stFire->SetActive(true);
 
@@ -452,8 +452,10 @@ void TFireView::FireAlphaTextureSetting() {
 
 void TFireView::FireScalingSetting() {
 
-	static float ScaleX = 3.f;
-	static float ScaleY = 6.65f;
+	/*static float ScaleX = 3.f;
+	static float ScaleY = 6.65f;*/
+	static float ScaleX = 50.f;
+	static float ScaleY = 50.f;
 	ImGui::SliderFloat("ScaleX", &ScaleX, 1.f, 100.f, "%.2f");
 	ImGui::SliderFloat("ScaleY", &ScaleY, 1.f, 100.f, "%.2f");
 
@@ -463,9 +465,12 @@ void TFireView::FireScalingSetting() {
 
 void TFireView::FirePosSetting() {
 
-	static _float posX = -555.2f;
+	/*static _float posX = -555.2f;
 	static _float posY = -32.310f;
-	static _float posZ = 149.3f;
+	static _float posZ = 149.3f;*/
+	static _float posX = 0.f;
+	static _float posY = 0.f;
+	static _float posZ = 0.f;
 
 	ImGui::InputFloat("Input Fire Position X", &posX);
 	ImGui::InputFloat("Input Fire Position Y", &posY);
@@ -480,8 +485,8 @@ void TFireView::FireDistortionSetting() {
 
 	static _float fDistortion1X = 0.1;
 	static _float fDistortion1Y = 0.2f;
-	
-	ImGui::InputFloat("Input Fire Distortion1.X",  &fDistortion1X);
+
+	ImGui::InputFloat("Input Fire Distortion1.X", &fDistortion1X);
 	ImGui::InputFloat("IInput Fire Distortion1.Y", &fDistortion1Y);
 	m_stFireDistortionBuffer->fDistortion1.x = fDistortion1X;
 	m_stFireDistortionBuffer->fDistortion1.y = fDistortion1Y;
@@ -489,7 +494,7 @@ void TFireView::FireDistortionSetting() {
 	static _float fDistortion2X = 0.1f;
 	static _float fDistortion2Y = 0.3f;
 
-	ImGui::InputFloat("Input Fire Distortion2.X",  &fDistortion2X);
+	ImGui::InputFloat("Input Fire Distortion2.X", &fDistortion2X);
 	ImGui::InputFloat("IInput Fire Distortion2.Y", &fDistortion2Y);
 
 	m_stFireDistortionBuffer->fDistortion2.x = fDistortion2X;
@@ -498,7 +503,7 @@ void TFireView::FireDistortionSetting() {
 	static _float fDistortion3X = 0.1f;
 	static _float fDistortion3Y = 0.1f;
 
-	ImGui::InputFloat("Input Fire Distortion3.X",  &fDistortion3X);
+	ImGui::InputFloat("Input Fire Distortion3.X", &fDistortion3X);
 	ImGui::InputFloat("IInput Fire Distortion3.Y", &fDistortion3Y);
 
 	m_stFireDistortionBuffer->fDistortion3.x = fDistortion3X;
@@ -507,23 +512,23 @@ void TFireView::FireDistortionSetting() {
 	static _float fDistortionScale = 0.8f;
 	static _float fDistortionBias = 0.5f;
 
-	ImGui::InputFloat("Input Fire Distortion Scale",&m_stFireDistortionBuffer->fDistortionScale);
+	ImGui::InputFloat("Input Fire Distortion Scale", &m_stFireDistortionBuffer->fDistortionScale);
 	ImGui::InputFloat("Input Fire Distortion Bias", &m_stFireDistortionBuffer->fDistortionBias);
-	
+
 	m_stFireDistortionBuffer->fDistortionScale = fDistortionScale;
 	m_stFireDistortionBuffer->fDistortionBias = fDistortionBias;
 
-	static _float fScrollSpeedsx =1.3;
-	static _float fScrollSpeedsy =2.1;
-	static _float fScrollSpeedsz =2.3;
+	static _float fScrollSpeedsx = 1.3;
+	static _float fScrollSpeedsy = 2.1;
+	static _float fScrollSpeedsz = 2.3;
 
-	ImGui::InputFloat("Input Fire ScrollSpeeds.x",  &fScrollSpeedsx);
+	ImGui::InputFloat("Input Fire ScrollSpeeds.x", &fScrollSpeedsx);
 	ImGui::InputFloat("IInput Fire ScrollSpeeds.y", &fScrollSpeedsy);
 	ImGui::InputFloat("IInput Fire ScrollSpeeds.z", &fScrollSpeedsz);
-	
-	m_stFireNoiseBuffer->fScrollSpeeds.x  =fScrollSpeedsx;
-	m_stFireNoiseBuffer->fScrollSpeeds.y  =fScrollSpeedsy;
-	m_stFireNoiseBuffer->fScrollSpeeds.z  =fScrollSpeedsz;
+
+	m_stFireNoiseBuffer->fScrollSpeeds.x = fScrollSpeedsx;
+	m_stFireNoiseBuffer->fScrollSpeeds.y = fScrollSpeedsy;
+	m_stFireNoiseBuffer->fScrollSpeeds.z = fScrollSpeedsz;
 
 	static _float fScalesx = 1;
 	static _float fScalesy = 2;
@@ -532,8 +537,8 @@ void TFireView::FireDistortionSetting() {
 	ImGui::InputFloat("IInput Fire Scales.x", &fScalesx);
 	ImGui::InputFloat("IInput Fire Scales.y", &fScalesy);
 	ImGui::InputFloat("IInput Fire Scales.z", &fScalesz);
-	m_stFireNoiseBuffer->fScales.x =fScalesx ;
-	m_stFireNoiseBuffer->fScales.y =fScalesy ;
-	m_stFireNoiseBuffer->fScales.z =fScalesz ;
+	m_stFireNoiseBuffer->fScales.x = fScalesx;
+	m_stFireNoiseBuffer->fScales.y = fScalesy;
+	m_stFireNoiseBuffer->fScales.z = fScalesz;
 
 }
