@@ -98,6 +98,7 @@ void CMap::LoadStaticObjects()
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	m_spMapLayout->Load();
+	OBJCONTAINER _TorchVec;
 	for (auto& it : (*m_spMapLayout->GetMapObjectsContainer().get()))
 	{
 		for (auto& vecit : it.second)
@@ -106,8 +107,9 @@ void CMap::LoadStaticObjects()
 			{		
 				SHPTR<CTorch> _Torch = std::static_pointer_cast<CTorch>(spGameInstance->CloneActorAdd(PROTO_ACTOR_TORCH));
 				_Torch->GetTransform()->SetNewWorldMtx(vecit._mWorldMatrix);
-				m_spStaticObjContainer->emplace(vecit._sModelName, _Torch);
+				_TorchVec.push_back(_Torch);
 			}
 		}
 	}
+	m_spStaticObjContainer->emplace("Torch_FBX.bin", _TorchVec);
 }

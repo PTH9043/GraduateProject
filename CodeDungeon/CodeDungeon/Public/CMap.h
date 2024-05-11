@@ -17,7 +17,8 @@ class CRooms;
 class CModelObjects;
 
 using ROOMCONTAINER = UNORMAP<_wstring, SHPTR<CRooms>>;
-using STATICOBJCONTAINER = std::multimap<_wstring, SHPTR<CModelObjects>>;
+using OBJCONTAINER = VECTOR<SHPTR<CModelObjects>>;
+using STATICOBJCONTAINER = UNORMAP<_wstring, OBJCONTAINER>;
 class CMap : public UComponent
 {
 public:
