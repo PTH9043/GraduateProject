@@ -65,18 +65,12 @@ PS_OUT PS_Main(PS_In Input)
     
     if (g_tLightInfo.eLightVersion == 0)
     {
-        
         tLightColor = CalculateLightColorInWorldSpace(vWorldNormal.xyz, vWorldPosition.xyz); //태현이꺼
-     
     }
-    
     if(g_tLightInfo.eLightVersion == 1)
     {
-     
        // tLightColor = LightingInView(vViewPosition.xyz, vViewNormal.xyz);
         tLightColor = LightingInWorld(vWorldPosition.xyz, vWorldNormal.xyz); //용빠 월드
-
-       
     }
    
     //if (length(tLightColor.vDiffuse) != 0)
@@ -106,19 +100,9 @@ PS_OUT PS_Main(PS_In Input)
     //    }
     //}
     
-    if (length(vWorldPosition) == 0)
-    {
-        Out.vAmbient = float4(1.0, 1.0, 1.0, 1);
-        Out.vShade = float4(1.0, 1.0, 1.0, 1);
-        Out.vSpecular = float4(1.0, 1.0, 1.0, 1); //BlendDeffered에서 이 세가지 출력을 더하여 각 요소 1보다 크면 1로 고정하여 DiffuseDesc원본색 하도록
-    }
-    else
-    {
-        Out.vAmbient = tLightColor.vAmbient;
-        Out.vShade = tLightColor.vDiffuse;
-        Out.vSpecular = tLightColor.vSpecular;
-    }
-
+    Out.vAmbient = tLightColor.vAmbient;
+    Out.vShade = tLightColor.vDiffuse;
+    Out.vSpecular = tLightColor.vSpecular;
   
 	return Out;
 }

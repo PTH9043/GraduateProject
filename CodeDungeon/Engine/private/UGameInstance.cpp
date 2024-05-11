@@ -728,7 +728,7 @@ const _float3& UGameInstance::GetCameraPosition(const CAMID& _iID)
 {
 	return m_spPipeLine->GetCameraPosition(_iID);
 }
-const SHPTR<UTransform>& UGameInstance::GetMainCameraTransform()
+ SHPTR<UTransform> UGameInstance::GetMainCameraTransform()
 {
 	return m_spPipeLine->GetMainCamTransform();
 }

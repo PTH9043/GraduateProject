@@ -221,7 +221,7 @@ public: /* PipeLine */
 	const _float4x4 GetCamViewMatrix(const CAMID& _iID) const;
 	const _float4x4& GetCamProjMatrix(const CAMID& _iID) const;
 	const _float3& GetCameraPosition(const CAMID& _iID);
-	const SHPTR<UTransform>& GetMainCameraTransform();
+	SHPTR<UTransform> GetMainCameraTransform();
 	const _float GetCamFar(const CAMID& _iID);
 
 	void ChangeRenderCamera(CSHPTRREF<UCamera> _spCamera);

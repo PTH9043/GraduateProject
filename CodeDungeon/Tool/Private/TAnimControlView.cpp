@@ -44,6 +44,10 @@ HRESULT TAnimControlView::NativeConstruct()
 		ImGuiWindowFlags_AlwaysVerticalScrollbar,
 		ImGuiDockNodeFlags_CentralNode);
 
+	m_stItemViewDesc = DOCKDESC("ItemViewDesc", ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_HorizontalScrollbar |
+		ImGuiWindowFlags_AlwaysVerticalScrollbar,
+		ImGuiDockNodeFlags_CentralNode);
+
 	m_spAnimControlModel = std::static_pointer_cast<TAnimControlModel>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_ANIMCONTROLMODELOBJECT));
 
 
@@ -53,28 +57,47 @@ HRESULT TAnimControlView::NativeConstruct()
 HRESULT TAnimControlView::LoadResource()
 {
 	SHPTR<FILEGROUP> AnimModels  = GetGameInstance()->FindFolder(L"AnimModel");
-
-	for (auto& iter : AnimModels->UnderFileGroupList)
+	// Animation 
 	{
-		// FBX에서 Convert 라는 하위 폴더를 찾는다. 
-		SHPTR<FILEGROUP> spConvert = iter.second->FindGroup(L"Convert");
-		if (nullptr == spConvert)
-			continue;
-		m_spSelectAnimFileFolder = spConvert;
-		for (auto& FileData : spConvert->FileDataList)
+		for (auto& iter : AnimModels->UnderFileGroupList)
 		{
-			m_AnimFileContainer.insert(MakePair(UMethod::ConvertWToS(FileData.first), FileData.second));
+			// FBX에서 Convert 라는 하위 폴더를 찾는다. 
+			SHPTR<FILEGROUP> spConvert = iter.second->FindGroup(L"Convert");
+			if (nullptr == spConvert)
+				continue;
+			m_spSelectAnimFileFolder = spConvert;
+			for (auto& FileData : spConvert->FileDataList)
+			{
+				m_AnimFileContainer.insert(MakePair(UMethod::ConvertWToS(FileData.first), FileData.second));
+			}
+		}
+
+		SHPTR<UGameInstance> spGameInstance = GetGameInstance();
+		SHPTR<UAudioSystem> spAudioSystem = spGameInstance->GetAudioSystem(SOUND_GAME);
+		m_FindSoundNames.clear();
+		// 미리 넣어두기 
+		for (auto& Sound : spAudioSystem->GetSoundOrders())
+		{
+			m_FindSoundNames.push_back(UMethod::ConvertWToS(Sound.first));
+		}
+	}
+	SHPTR<FILEGROUP> ItemModels = GetGameInstance()->FindFolder(L"Equip");
+	// Model
+	{
+		for (auto& iter : ItemModels->UnderFileGroupList)
+		{
+			// FBX에서 Convert 라는 하위 폴더를 찾는다. 
+			SHPTR<FILEGROUP> spConvert = iter.second->FindGroup(L"Convert");
+			if (nullptr == spConvert)
+				continue;
+			m_spSelectAnimFileFolder = spConvert;
+			for (auto& FileData : spConvert->FileDataList)
+			{
+				m_EquipFileContainer.insert(MakePair(UMethod::ConvertWToS(FileData.first), FileData.second));
+			}
 		}
 	}
 
-	SHPTR<UGameInstance> spGameInstance = GetGameInstance();
-	SHPTR<UAudioSystem> spAudioSystem = spGameInstance->GetAudioSystem(SOUND_GAME);
-	m_FindSoundNames.clear();
-	// 미리 넣어두기 
-	for (auto& Sound : spAudioSystem->GetSoundOrders())
-	{
-		m_FindSoundNames.push_back(UMethod::ConvertWToS(Sound.first));
-	}
     return S_OK;
 }
 
@@ -84,6 +107,7 @@ HRESULT TAnimControlView::ReleaseResource()
 	m_AnimFileContainer.clear();
 	m_spAnimControlModel->SetActive(false);
 	m_FindSoundNames.clear();
+	m_EquipFileContainer.clear();
     return S_OK;
 }
 
@@ -107,6 +131,7 @@ void TAnimControlView::RenderActive()
 		ImGui::DockSpace(m_stMainDesc.iDockSpaceID, ImVec2{}, m_stMainDesc.imgDockNodeFlags);
 		AnimModelSelectView();
 		AnimModifyView();
+		EquipView();
 	}
 	ImGui::End();
 }
@@ -121,9 +146,12 @@ void TAnimControlView::DockBuildInitSetting()
 		// Docking Build 
 	    m_stAnimModelSelectDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Up, 0.2f, NULL, &dock_main_id);
 		m_stAnimModifyDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.8f, NULL, &dock_main_id);
+		m_stItemViewDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id,
+			ImGuiDir_Down, 0.2f, &m_stAnimModelSelectDesc.iDockSpaceID, &dock_main_id);
 		// DockBuild
 		ImGui::DockBuilderDockWindow(m_stAnimModelSelectDesc.strName.c_str(), m_stAnimModelSelectDesc.iDockSpaceID);
 		ImGui::DockBuilderDockWindow(m_stAnimModifyDesc.strName.c_str(), m_stAnimModifyDesc.iDockSpaceID);
+		ImGui::DockBuilderDockWindow(m_stItemViewDesc.strName.c_str(), m_stItemViewDesc.iDockSpaceID);
 		ImGui::DockBuilderFinish(m_stMainDesc.iDockSpaceID);
 	}
 	m_isInitSetting = true;
@@ -179,6 +207,16 @@ void TAnimControlView::AnimModifyView()
 		// select Animation
 		m_spAnimControlModel->ShowAnimModify();
 		MakeAnimEvent();
+	}
+	ImGui::End();
+}
+
+void TAnimControlView::EquipView()
+{
+	ImGui::Begin(m_stItemViewDesc.strName.c_str(), GetOpenPointer(), m_stItemViewDesc.imgWindowFlags);
+	{
+
+
 	}
 	ImGui::End();
 }

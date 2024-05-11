@@ -149,24 +149,24 @@ namespace Engine {
 			fRange(_fRange), fAngle(_fAngle), fLightPower(_fLightPower), fSpecularPowValue( _fSpecularPowValue)
 			,fFallOff(_fFallOff), fPhi(_fPhi), fTheta(_fTheta), vAttenuation(_vAttenuation)
 		{}
-		_float4				vDiffuse = _float4(0.f, 0.f, 0.f, 0.f);
-		_float4				vAmbient = _float4(0.f, 0.f, 0.f, 0.f);
-		_float4				vSpecular = _float4(0.f, 0.f, 0.f, 0.f);
-		_float4				vDirection = _float4(0.f, 0.f, 0.f, 0.f);
-		_float4				vPosition = _float4(0.f, 0.f, 0.f, 0.f);
+		_float4					vDiffuse = _float4(0.f, 0.f, 0.f, 0.f);
+		_float4					vAmbient = _float4(0.f, 0.f, 0.f, 0.f);
+		_float4					vSpecular = _float4(0.f, 0.f, 0.f, 0.f);
+		_float4					vDirection = _float4(0.f, 0.f, 0.f, 0.f);
+		_float4					vPosition = _float4(0.f, 0.f, 0.f, 0.f);
 		// 4 =====================
-		LIGHTTYPE		eLightType = LIGHTTYPE::LIGHT_END;
+		LIGHTTYPE			eLightType = LIGHTTYPE::LIGHT_END;
 		LIGHTVERSION    eLightVersion = LIGHTVERSION::TYPE_ORIGINAL;
-		_float					fRange = 0.f;
-		_float					fAngle{ 0.f };
-		_float					fLightPower{ 1.f };
+		_float						fRange = 0.f;
+		_float						fAngle{ 0.f };
+		_float						fLightPower{ 1.f };
 		// 4 =====================
-		_float					fSpecularPowValue{ 1.f };
+		_float						fSpecularPowValue{ 1.f };
 		//2024-4-8 서정원 용빠 조명을 위한 추가
-		_float			fFallOff=5.0f;
-		_float			fPhi= 0.f;//Phi 가 더 커야함
-		_float			fTheta=0.f;
-		_float3			vAttenuation=_float3(1.0f,0.001f,0.0001f);
+		_float						fFallOff=5.0f;
+		_float						fPhi= 0.f;//Phi 가 더 커야함
+		_float						fTheta=0.f;
+		_float3					vAttenuation=_float3(1.0f,0.001f,0.0001f);
 		
 
 	}LIGHTINFO;

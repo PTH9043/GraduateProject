@@ -183,12 +183,12 @@
     <ClInclude Include="..\Public\TAssimpModel.h" />
     <ClInclude Include="..\Public\TBloodEffectView.h" />
     <ClInclude Include="..\Public\TCameraView.h" />
+    <ClInclude Include="..\Public\TEquipModel.h" />
     <ClInclude Include="..\Public\TFireView.h" />
     <ClInclude Include="..\Public\TFogView.h" />
     <ClInclude Include="..\Public\TGuizmoManager.h" />
     <ClInclude Include="..\Public\TImGuiManager.h" />
     <ClInclude Include="..\Public\TImGuiView.h" />
-    <ClInclude Include="..\Public\TItemView.h" />
     <ClInclude Include="..\Public\TMainCamera.h" />
     <ClInclude Include="..\Public\TMainScene.h" />
     <ClInclude Include="..\Public\TMainView.h" />
@@ -225,12 +225,12 @@
     <ClCompile Include="..\Private\TAssimpModel.cpp" />
     <ClCompile Include="..\Private\TBloodEffectView.cpp" />
     <ClCompile Include="..\Private\TCameraView.cpp" />
+    <ClCompile Include="..\Private\TEquipModel.cpp" />
     <ClCompile Include="..\Private\TFireView.cpp" />
     <ClCompile Include="..\Private\TFogView.cpp" />
     <ClCompile Include="..\Private\TGuizmoManager.cpp" />
     <ClCompile Include="..\Private\TImGuiManager.cpp" />
     <ClCompile Include="..\Private\TImGuiView.cpp" />
-    <ClCompile Include="..\Private\TItemView.cpp" />
     <ClCompile Include="..\Private\TMainCamera.cpp" />
     <ClCompile Include="..\Private\TMainScene.cpp" />
     <ClCompile Include="..\Private\TMainView.cpp" />

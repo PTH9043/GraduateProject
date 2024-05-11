@@ -35,9 +35,13 @@ HRESULT CWarriorAnimController::NativeConstructClone(const VOIDDATAS& _tDatas)
 
 void CWarriorAnimController::Tick(const _double& _dTimeDelta)
 {
+	// Reset Trigger
 	ClearTrigger();
 	/* Reset */
 	SetAnimState(-1);
+
+	SHPTR< CWarriorPlayer> spWarriorPlayer = m_wpWarriorPlayer.lock();
+	SHPTR<UAnimModel> spAnimModel = spWarriorPlayer->GetAnimModel();
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
@@ -59,20 +63,19 @@ void CWarriorAnimController::Tick(const _double& _dTimeDelta)
 	{
 		SetTrigger(L"IDLE");
 		SetAnimState(ANIM_IDLE);
-		return;
 	}
 
 	if (true == isMove)
 	{
 		SetTrigger(L"WALKF");
 		SetAnimState(ANIM_MOVE);
-		return;
 	}
 
 	if (true == isAttack)
 	{
 		SetTrigger(L"ATTACK01");
 		SetAnimState(ANIM_ATTACK);
-		return;
 	}
+
+	spAnimModel->TickEvent(spWarriorPlayer.get(), GetTrigger(), _dTimeDelta);
 }

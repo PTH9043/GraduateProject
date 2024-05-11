@@ -5,11 +5,16 @@
 BEGIN(Engine)
 class UAnimModel;
 class UAnimation;
+class UModel;
 END
 
 BEGIN(Tool)
 
 using ANIMMATIONCLIPS = UNORMAP<_string, _int>;
+
+class TEquipModel;
+
+using EQUIPCONTAINER = VECTOR<SHPTR< TEquipModel>>;
 
 // Animation ColumID 
 enum ANIM_TABLE {
@@ -40,6 +45,8 @@ public:
 	void ReleaseShowModel();
 	void SetShowModel(CSHPTRREF<UAnimModel> _spModel, CSHPTRREF<FILEGROUP> _spFileFolder);
 	void ShowAnimModify();
+
+	void MakeEquip(CSHPTRREF<UModel> _spEquipModel, const EQUIPTYPE _EquipType, const _wstring& _wstrBoneNodeName);
 protected:
 	void SelectAnimation();
 	void ModifyAnimation();
@@ -64,6 +71,7 @@ private:
 	// Input Trigger
 	_wstring												m_wstrInputTrigger;
 	_wstring												m_wstrImguiModifyInputTrigger;
+	EQUIPCONTAINER							m_EquipContainer;
 };
 
 END

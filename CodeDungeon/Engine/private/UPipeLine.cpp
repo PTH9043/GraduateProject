@@ -136,7 +136,7 @@ const _float3& UPipeLine::GetMainCamPosition()
 	return m_spMainCamera->GetTransform()->GetPos();
 }
 
-const SHPTR<UTransform>& UPipeLine::GetMainCamTransform()
+ SHPTR<UTransform>UPipeLine::GetMainCamTransform()
 {
 	RETURN_CHECK(nullptr == m_spMainCamera, nullptr);
 	return m_spMainCamera->GetTransform();

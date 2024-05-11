@@ -361,9 +361,6 @@
     <Filter Include="01.Manager\MaterialManager">
       <UniqueIdentifier>{6a40f9e3-f716-49ae-96ca-95f6fd36f1de}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.Actor\01.Pawn\Equipment">
-      <UniqueIdentifier>{f17c3ad0-5f98-4db3-aece-0a5050820827}</UniqueIdentifier>
-    </Filter>
     <Filter Include="06.Component\Battle">
       <UniqueIdentifier>{7d70bf76-39be-4ef4-bd47-8b24bbced0d6}</UniqueIdentifier>
     </Filter>
@@ -375,6 +372,12 @@
     </Filter>
     <Filter Include="06.Component\Controller\Input">
       <UniqueIdentifier>{c529b1d4-5e06-430b-ae99-27b1bc65fad3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\01.Pawn\Item">
+      <UniqueIdentifier>{e3ae5dd9-2913-4ef1-9713-b30f8a7e30db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\01.Pawn\Item\Equip">
+      <UniqueIdentifier>{353774c7-46a5-453e-90da-1632ce265f21}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -726,9 +729,6 @@
     <ClCompile Include="..\private\UShadowCamera.cpp">
       <Filter>05.Actor\02.Camera</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\UEquipment.cpp">
-      <Filter>05.Actor\01.Pawn\Equipment</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\UCombatCollGroupComp.cpp">
       <Filter>06.Component\Battle</Filter>
     </ClCompile>
@@ -740,6 +740,12 @@
     </ClCompile>
     <ClCompile Include="..\private\UAnimationController.cpp">
       <Filter>06.Component\Controller\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UItem.cpp">
+      <Filter>05.Actor\01.Pawn\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UEquipment.cpp">
+      <Filter>05.Actor\01.Pawn\Item\Equip</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1124,9 +1130,6 @@
     <ClInclude Include="..\public\UShadowCamera.h">
       <Filter>05.Actor\02.Camera</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\UEquipment.h">
-      <Filter>05.Actor\01.Pawn\Equipment</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\UCombatCollGroupComp.h">
       <Filter>06.Component\Battle</Filter>
     </ClInclude>
@@ -1138,6 +1141,12 @@
     </ClInclude>
     <ClInclude Include="..\public\UAnimationController.h">
       <Filter>06.Component\Controller\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UItem.h">
+      <Filter>05.Actor\01.Pawn\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UEquipment.h">
+      <Filter>05.Actor\01.Pawn\Item\Equip</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

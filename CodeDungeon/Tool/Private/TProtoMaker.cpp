@@ -10,6 +10,7 @@
 #include "TMainCamera.h"
 #include "TAnimControlModel.h"
 #include "UTexGroup.h"
+#include "TEquipModel.h"
 
 HRESULT TProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance,
 	CSHPTRREF<UDevice> _spDevice, CSHPTRREF<UCommand> _spCommand)
@@ -20,7 +21,8 @@ HRESULT TProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance,
 	_spGameInstance->AddPrototype(PROTO_ACTOR_SHOWMODELOBJECT, CreateConstructorToNative<TShowModelObject>(_spDevice, LAYER_SHOWMODELL, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_SHOWANIMMODELOBJECT, CreateConstructorToNative<TShowAnimModelObject>(_spDevice, LAYER_SHOWMODELL, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_ANIMCONTROLMODELOBJECT, CreateConstructorToNative<TAnimControlModel>(_spDevice, LAYER_SHOWMODELL, CLONETYPE::CLONE_STATIC));
-	
+	_spGameInstance->AddPrototype(PROTO_ACTOR_EQUIPMENT, CreateConstructorToNative<TEquipModel>(_spDevice, LAYER_ITEM, CLONETYPE::CLONE_STATIC));
+
 	_spGameInstance->AddPrototype(PROTO_RES_PARTICLETEXTUREGROUP, CLONETYPE::CLONE_STATIC,
 		CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\Particle", true));
 

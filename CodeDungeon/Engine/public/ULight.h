@@ -46,8 +46,6 @@ public:
 	void OutLightInfo(LIGHTINFO& _stLightInfo);
 	void OutLightControl(LIGHTCONTROL& _stLightControl);
 private:
-	static constexpr _uint								LIGHTCONTROL_SIZE{ sizeof(LIGHTCONTROLPARAM) };
-
 	SHPTR<UShaderConstantBuffer>		m_spLightConstantBuffer;
 	LIGHTCONTROLPARAM							m_stLightParam;
 	_bool															m_isActive{ false };
