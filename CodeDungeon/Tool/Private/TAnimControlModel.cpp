@@ -11,7 +11,7 @@
 
 TAnimControlModel::TAnimControlModel(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer,
 	const CLONETYPE& _eCloneType) : 
-	UCharacter(_spDevice, _wstrLayer, _eCloneType), m_spModel{nullptr}, m_spModelFolder{nullptr}, m_spCurAnimation{nullptr},
+	UPawn(_spDevice, _wstrLayer, _eCloneType), m_spModel{nullptr}, m_spModelFolder{nullptr}, m_spCurAnimation{nullptr},
 	m_isAnimationStop{false}, m_fAnimTimeAcc{0.f}, m_fTotalAnimFastvalue{1.f},
 	m_isAnimEventActive{false},
 	m_wstrImguiModifyInputTrigger{L""}, 
@@ -20,7 +20,7 @@ TAnimControlModel::TAnimControlModel(CSHPTRREF<UDevice> _spDevice, const _wstrin
 }
 
 TAnimControlModel::TAnimControlModel(const TAnimControlModel& _rhs) : 
-	UCharacter(_rhs),
+	UPawn(_rhs),
 m_spModel{ nullptr }, m_spModelFolder{ nullptr }, m_spCurAnimation{ nullptr }, 
 m_isAnimationStop{ false }, m_fAnimTimeAcc{ 0.f }, m_fTotalAnimFastvalue{ 1.f },
 m_isAnimEventActive{ false },

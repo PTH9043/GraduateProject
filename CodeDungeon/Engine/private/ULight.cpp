@@ -21,22 +21,15 @@ void ULight::Free()
 
 HRESULT ULight::NativeConstruct()
 {
-	if (m_stLightParam.tLightInfo.eLightType == LIGHTTYPE::TYPE_POINT)
-		m_stLightParam.tLightInfo.vDirection = _float4::Zero;
-
 	m_isActive = true;
-
-	m_spLightConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::LIGHTCONTROL, LIGHTCONTROL_SIZE);
+	m_spLightConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::LIGHTCONTROL, GetTypeSize<LIGHTCONTROLPARAM>());
 	return S_OK;
 }
 
 void ULight::Render(SHPTR<UCommand> spCmdList,CSHPTRREF<UVIBufferRect> _spVIBufferRect, CSHPTRREF<UShader> _spShader)
 {
-	
 	RETURN_CHECK(nullptr == _spShader || nullptr == _spVIBufferRect, ;);
-
-	_spShader->BindCBVBuffer(m_spLightConstantBuffer, &m_stLightParam, LIGHTCONTROL_SIZE);
-
+	_spShader->BindCBVBuffer(m_spLightConstantBuffer, &m_stLightParam, GetTypeSize<LIGHTCONTROLPARAM>());
 	_spVIBufferRect->Render(_spShader, spCmdList);
 }
 

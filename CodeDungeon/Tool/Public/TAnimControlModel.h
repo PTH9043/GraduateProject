@@ -1,10 +1,11 @@
 #pragma once
 
-#include "UCharacter.h"
+#include "UPawn.h"
 
 BEGIN(Engine)
 class UAnimModel;
 class UAnimation;
+class UModel;
 END
 
 BEGIN(Tool)
@@ -27,7 +28,7 @@ enum ANIM_TABLE {
 @ Explain
 - Animation 데이터들을 Modify하고 Animation과 Animation을 이어주는 Tool을 만들기 위해 필요한 객체
 */
-class TAnimControlModel final : public UCharacter {
+class TAnimControlModel final : public UPawn {
 public:
 	TAnimControlModel(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType);
 	TAnimControlModel(const TAnimControlModel& _rhs);

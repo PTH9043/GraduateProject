@@ -94,7 +94,6 @@ HRESULT UScene::AddLight(const LIGHTINFO& _stLightInfo, const LIGHTCONTROL& _stL
     const LIGHTGROUP::iterator& it = m_LightGroup.find(_stLightInfo.eLightType);
     if (it == m_LightGroup.end()) {
         LIGHTCONTAINER LightContainer{  };
-        LightContainer.reserve(10);
         LightContainer.push_back(pLight);
         m_LightGroup.insert(std::make_pair(_stLightInfo.eLightType, LightContainer));
     }
