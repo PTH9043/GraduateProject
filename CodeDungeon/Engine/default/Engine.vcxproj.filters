@@ -379,6 +379,12 @@
     <Filter Include="05.Actor\01.Pawn\Item\Equip">
       <UniqueIdentifier>{353774c7-46a5-453e-90da-1632ce265f21}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Actor\01.Pawn\Item\Equip\DefensiveGear">
+      <UniqueIdentifier>{f0ebd480-b8a2-4af4-9d88-c65dfefd095b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\01.Pawn\Item\Equip\Weapon">
+      <UniqueIdentifier>{81050a8c-9197-4b9d-a2ea-d0278812c476}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -746,6 +752,12 @@
     </ClCompile>
     <ClCompile Include="..\private\UEquipment.cpp">
       <Filter>05.Actor\01.Pawn\Item\Equip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UWeapon.cpp">
+      <Filter>05.Actor\01.Pawn\Item\Equip\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UDefensiveGear.cpp">
+      <Filter>05.Actor\01.Pawn\Item\Equip\DefensiveGear</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1148,6 +1160,12 @@
     <ClInclude Include="..\public\UEquipment.h">
       <Filter>05.Actor\01.Pawn\Item\Equip</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\UWeapon.h">
+      <Filter>05.Actor\01.Pawn\Item\Equip\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UDefensiveGear.h">
+      <Filter>05.Actor\01.Pawn\Item\Equip\DefensiveGear</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Shader\ShaderGrobalFunc.hlsli">
@@ -1238,6 +1256,9 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\2DParticlePlus.hlsl">
       <Filter>98.ShaderFile\Common\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\Equipment.hlsl">
+      <Filter>98.ShaderFile\Common\NonAlpha</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
