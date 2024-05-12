@@ -6,13 +6,13 @@ class ULight;
 class ULoader;
 class UShader;
 class UVIBufferRect;
-
 class UShaderConstantBuffer;
 
 
 using LIGHTCONTAINER = VECTOR<SHPTR<ULight>>;
 using LIGHTGROUP = UNORMAP<LIGHTTYPE, LIGHTCONTAINER>;
 using LIGHTSHADERS = UNORMAP<LIGHTTYPE, SHPTR<UShader>>;
+using LIGHTPARAMVECTOR = VECTOR<LIGHTINFO>;
 
 class UScene abstract : public UObject {
 public:
@@ -34,7 +34,11 @@ public:
 	// Render 
 	void RenderLights();
 
-	HRESULT AddLight(const LIGHTINFO& _stLightInfo, const LIGHTCONTROL& _stLightControl = LIGHTCONTROL{});
+	LIGHTCONTAINER& GetLightContainer() {return m_AllLightContainer; }
+	void SetLightNums(_uint _uNum) { MAX_LIGHT_NUMS = _uNum; }
+	_uint GetCurLightNums() {return CUR_LIGHT_NUMS; }
+
+	HRESULT AddLight(const LIGHTINFO& _stLightInfo);
 	void OutLight(const LIGHTTYPE& _eLightType, const _uint _iIndex, SHPTR<ULight>& _spLight);
 	// Active
 	HRESULT ActiveLIght(const LIGHTTYPE& _eLightType, const _uint& _iIndex, const _bool& _isActive);
@@ -47,12 +51,19 @@ protected:
 private:
 	SHPTR<ULoader>			m_spLoader;
 
-	LIGHTSHADERS				m_LightShaders;
+	//LIGHTSHADERS				m_LightShaders;
 	SHPTR<UVIBufferRect>	m_spVIBufferPlane;
 	
+	SHPTR<UShader> m_LightingShader;
 
 	_ushort								m_sSceneID;
 	LIGHTGROUP						m_LightGroup;
+	LIGHTCONTAINER						m_AllLightContainer;
+	_uint						MAX_LIGHT_NUMS;
+	_uint						CUR_LIGHT_NUMS;
+	LIGHTPARAMS m_stLightParams;//건네는용도
+	LIGHTPARAMVECTOR m_stLightParamVector; //
+	SHPTR<UShaderConstantBuffer>		m_spLightConstantBuffer;
 };
 
 

@@ -3,6 +3,7 @@
 
 #include "ShaderParams.hlsli"
 
+#define MAX_LIGHTS 50
 struct LIGHTINFO
 {
     float4      vDiffuse;
@@ -12,14 +13,15 @@ struct LIGHTINFO
     float4      vPosition;
     
     int            eLightType;
-    int         eLightVersion;
+    int     eLightActive;
     float         fRange;
     float         fAngle;
-    float         fLightPower;
     
+    float         fLightPower;  
     float         fSpecularPowValue;
     float fFallOff;
     float fPhi;
+    
     float fTheta;
     float3 vAttenuation;
 };
@@ -31,19 +33,7 @@ struct LIGHTCOLOR
     float4 vSpecular;
 };
 
-struct LIGHTCONTROL
-{
-     // Single Light Cam Index
-    float fShadowDepth;
-    float fRimLightPower;
-    float fRimMin;
-    float fRimMax;
-    
-    float3 vAttenent;
-    float fPadding;
-    
-    float4 vShadowColor;
-};
+
 
 struct LIGHTPARAM
 {
@@ -65,14 +55,11 @@ cbuffer LIGHTBUFFER : register(b2)
 
 cbuffer LIGHTCONTROLPARAM : register(b4)
 {
-    LIGHTINFO                       g_tLightInfo;
-    LIGHTCONTROL              g_tLightControl;
+    LIGHTINFO                       g_tLightInfo[MAX_LIGHTS];
+    int nLights;
 };
 
-cbuffer LIGHTARRAYPARAM : register(b4)
-{
-    
-}
+
 
 float4 g_vMaterialSpecular = float4(1.f, 1.f, 1.f, 1.f);
 float4 g_vMaterialAmbient = float4(1.f, 1.f, 1.f, 1.f);

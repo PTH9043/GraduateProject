@@ -59,19 +59,10 @@ PS_OUT PS_Main(PS_In Input)
     //    clip(-1);
     LIGHTCOLOR tLightColor = (LIGHTCOLOR) 0.f;
 
-    // 태현 추가
-   // MODELMATERIALINFO ModelMaterialDataInfo = g_MaterialGrobalInfo.stModelMaterialInfoGroup[vDepth.z];
+ 
+   
+    tLightColor = LightingInWorld(vWorldPosition.xyz, vWorldNormal.xyz);
     
-    if (g_tLightInfo.eLightVersion == 0)
-    {
-        tLightColor = CalculateLightColorInViewSpace(vViewNormal.xyz, vViewPosition.xyz);
-     //   tLightColor = CalculateLightColorInWorldSpace(vNormal.xyz, vWorldPosition.xyz);
-    }
-    else
-    {
-       
-        tLightColor = LightingInWorld(vWorldPosition.xyz, vWorldNormal.xyz);
-    }
     
     //if (length(tLightColor.vDiffuse) != 0)
     //{

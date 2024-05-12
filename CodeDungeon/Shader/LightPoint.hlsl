@@ -60,18 +60,9 @@ PS_OUT PS_Main(PS_In Input)
   
 
     LIGHTCOLOR tLightColor = (LIGHTCOLOR) 0.f;
-        // 태현 추가
-   // MODELMATERIALINFO ModelMaterialDataInfo = g_MaterialGrobalInfo.stModelMaterialInfoGroup[vDepth.z];
+ 
+    tLightColor = LightingInWorld(vWorldPosition.xyz, vWorldNormal.xyz); //용빠 월드
     
-    if (g_tLightInfo.eLightVersion == 0)
-    {
-        tLightColor = CalculateLightColorInWorldSpace(vWorldNormal.xyz, vWorldPosition.xyz); //태현이꺼
-    }
-    if(g_tLightInfo.eLightVersion == 1)
-    {
-       // tLightColor = LightingInView(vViewPosition.xyz, vViewNormal.xyz);
-        tLightColor = LightingInWorld(vWorldPosition.xyz, vWorldNormal.xyz); //용빠 월드
-    }
    
     //if (length(tLightColor.vDiffuse) != 0)
     //{
@@ -99,11 +90,49 @@ PS_OUT PS_Main(PS_In Input)
     //        }
     //    }
     //}
+  
     
     Out.vAmbient = tLightColor.vAmbient;
     Out.vShade = tLightColor.vDiffuse;
     Out.vSpecular = tLightColor.vSpecular;
-  
+    
+    
+    float deltaTimeRepeat = frac(fGrobalDeltaTime);
+// 범위가 sin 함수를 사용하여 매 프레임마다 변하도록 설정됩니다.
+    float radius = 72 + 30 * sin(fGrobalDeltaTime);
+    float radiusSqrt = sqrt(radius); // 미리 계산
+
+// 감쇠 시작 거리를 조정합니다.
+    float attenuationDistance = radiusSqrt * 0.45f;
+
+[unroll(MAX_LIGHTS)]
+    for (int i = 0; i < nLights; i++)
+    {
+        if (g_tLightInfo[i].eLightType == POINT_LIGHT)
+        {
+            float3 vToLight = g_tLightInfo[i].vPosition - vWorldPosition;
+            float fDistance = length(vToLight);
+
+        
+            float fAttenuationFactor = 1.0f;
+            if (fDistance > attenuationDistance)
+            {
+                float normalizedDistance = (fDistance - attenuationDistance) / (radiusSqrt - attenuationDistance);
+                fAttenuationFactor = 1.0f - normalizedDistance;
+
+            
+                fAttenuationFactor = max(fAttenuationFactor, 0.0f);
+            }
+
+        
+            if (fDistance <= radiusSqrt)
+            {
+                Out.vAmbient += g_tLightInfo[i].vAmbient * fAttenuationFactor;
+                Out.vShade += g_tLightInfo[i].vDiffuse * fAttenuationFactor;
+                Out.vSpecular += g_tLightInfo[i].vSpecular * fAttenuationFactor;
+            }
+        }
+    }
 	return Out;
 }
 
