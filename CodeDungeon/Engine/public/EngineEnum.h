@@ -13,13 +13,24 @@ namespace Engine {
 
 	enum EQUIPTYPE : int
 	{
-		EQUIP_BOOTS, 
-		EQUIP_GLOVES,
-		EQUIP_HOOD,
-		EQUIP_LOWER,
-		EQUIP_MAIJTLE,
+		EQUIP_WEAPON,
+		EQUIP_DEFENSIVEGEAR,
 		
 		EQUIP_END
+	};
+
+	enum WEAPONTYPE : int
+	{
+		WEAPON_SWORD, 
+		WEAPON_BOW, 
+		WEAPON_END
+	};
+
+	enum DEFENSIVEGEARTYPE : int
+	{
+		DFGEAR_BOOTS = WEAPON_END,
+		
+		DFGEAR_END
 	};
 
 	enum TEXTYPE : unsigned short

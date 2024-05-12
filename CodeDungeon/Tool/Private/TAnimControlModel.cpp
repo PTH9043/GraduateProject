@@ -8,6 +8,7 @@
 #include "UTexGroup.h"
 #include "TEquipModel.h"
 #include "UGameInstance.h"
+#include "UBoneNode.h"
 
 TAnimControlModel::TAnimControlModel(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer,
 	const CLONETYPE& _eCloneType) : 
@@ -15,7 +16,9 @@ TAnimControlModel::TAnimControlModel(CSHPTRREF<UDevice> _spDevice, const _wstrin
 	m_isAnimationStop{false}, m_fAnimTimeAcc{0.f}, m_fTotalAnimFastvalue{1.f},
 	m_isAnimEventActive{false},
 	m_wstrImguiModifyInputTrigger{L""}, 
-	m_wstrInputTrigger{L""}
+	m_wstrInputTrigger{L""},
+	m_spSelectedEquipModel{nullptr},
+	m_isSelectedEquipModel{false}
 {
 }
 
@@ -25,7 +28,9 @@ m_spModel{ nullptr }, m_spModelFolder{ nullptr }, m_spCurAnimation{ nullptr },
 m_isAnimationStop{ false }, m_fAnimTimeAcc{ 0.f }, m_fTotalAnimFastvalue{ 1.f },
 m_isAnimEventActive{ false },
 m_wstrImguiModifyInputTrigger{ L"" },
-m_wstrInputTrigger{ L"" }
+m_wstrInputTrigger{ L"" },
+m_spSelectedEquipModel{ nullptr },
+m_isSelectedEquipModel{ false }
 {
 }
 
@@ -68,6 +73,10 @@ void TAnimControlModel::SetShowModel(CSHPTRREF<UAnimModel> _spModel, CSHPTRREF<F
 		m_AnimationClips.insert(MakePair(UMethod::ConvertWToS(iter.first), iter.second));
 		m_FindAnimClips.insert(MakePair(UMethod::ConvertWToS(iter.first), iter.second));
 	}
+	for (auto& iter : m_spModel->GetBoneNodes())
+	{
+		m_FindBoneNodeContainer.push_back(iter);
+	}
 	m_isAnimationStop = false;
 	m_fAnimTimeAcc = 0.f;
 	m_fTotalAnimFastvalue = 0.f;
@@ -83,18 +92,99 @@ void TAnimControlModel::ShowAnimModify()
 	ModifyAnimation();
 }
 
-void TAnimControlModel::MakeEquip(CSHPTRREF<UModel> _spEquipModel, const EQUIPTYPE _EquipType, const _wstring& _wstrBoneNodeName)
+void TAnimControlModel::SelectBoneNodeName(OUT _wstring& _wstrBoneNameName)
 {
-	//SHPTR<UGameI
-	//TEquipModel::DESC desc;
-	//desc.eEquipType = _EquipType;
-	//desc.spModel = _spEquipModel;
-	//desc.spOwner = ThisShared< UCharacter>();
-	//desc.wstrBoneNodeName = _wstrBoneNodeName;
+	static _char InputBoneName[MAX_BUFFER_LENGTH];
+	if (true == ImGui::InputText("InputBoneNode", InputBoneName, MAX_BUFFER_LENGTH))
+	{
+		m_FindBoneNodeContainer.clear();
+		for (auto& iter : m_spModel->GetBoneNodes())
+		{
+			_string str = UMethod::ConvertWToS(iter->GetName());
+			if (true == UMethod::Is_Same_Text(str, InputBoneName))
+			{
+				m_FindBoneNodeContainer.push_back(iter);
+			}
+		}
+	}
+	else
+	{
+		if (m_FindBoneNodeContainer.empty())
+		{
+			if (!strcmp(InputBoneName, ""))
+			{
+				for (auto& iter : m_spModel->GetBoneNodes())
+				{
+					m_FindBoneNodeContainer.push_back(iter);
+				}
+			}
+		}
+	}
 
-	//SHPTR<TEquipModel> spEquipModel = 
+	if (ImGui::BeginListBox("BoneNodeName", ImVec2(-FLT_MIN, 8 * ImGui::GetTextLineHeightWithSpacing())))
+	{
+		for (auto& BoneNode : m_FindBoneNodeContainer)
+		{
+			_bool isTrue{ false };
+			_string str = UMethod::ConvertWToS(BoneNode->GetName());
+			if (ImGui::Selectable(str.c_str(), &isTrue))
+			{
+				if (true == m_isSelectedEquipModel)
+				{
+					if (nullptr != m_spSelectedEquipModel)
+					{
+						m_spSelectedEquipModel->ChangeBoneNode(BoneNode);
+					}
+				}
+				else
+				{
+					_wstrBoneNameName = BoneNode->GetName();
+				}
+			}
+		}
+		ImGui::EndListBox();
+	}
 
-	//m_EquipContainer.push_back()
+	if (false == _wstrBoneNameName.empty())
+	{
+		ImGui::Text(UMethod::ConvertWToS(_wstrBoneNameName));
+	}
+	else
+	{
+		ImGui::Text("Don't Selected BoneNode");
+	}
+}
+
+void TAnimControlModel::SelectEquip()
+{
+	if (ImGui::BeginListBox("Equip", ImVec2(-FLT_MIN, 8 * ImGui::GetTextLineHeightWithSpacing())))
+	{
+		static _string EQUIP{ "Equip_" };
+		_int iIndex{ 0 };
+		for (auto& iter : m_EquipModelContainer)
+		{
+			_string str = EQUIP + _string::to_string(iIndex++);
+			if (ImGui::Selectable(str.c_str()))
+			{
+				m_spSelectedEquipModel = iter;
+			}
+		}
+		ImGui::EndListBox();
+	}
+
+	ImGui::Checkbox("EquipSelected", &m_isSelectedEquipModel);
+}
+
+void TAnimControlModel::MakeEquip(CSHPTRREF<UModel> _spEquipModel, const EQUIPTYPE _EquipType, 
+	const _wstring& _wstrBoneNodeName, _int _iWeaponOrShieldJudgeValue)
+{
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	TEquipModel::EQDESC desc;
+
+	SHPTR<TEquipModel> spEquipModel = std::static_pointer_cast<TEquipModel>(spGameInstance->CloneActorAdd(PROTO_ACTOR_EQUIPMENT));
+	spEquipModel->ChangeOwner(ThisShared<UPawn>());
+	spEquipModel->UpdateBoneNode(_EquipType, m_spModel, _spEquipModel, _wstrBoneNodeName, _iWeaponOrShieldJudgeValue);
+	m_EquipModelContainer.push_back(spEquipModel);
 }
 
 void TAnimControlModel::SelectAnimation()

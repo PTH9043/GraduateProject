@@ -43,7 +43,7 @@ void UItem::LateTickActive(const _double& _dTimeDelta)
 
 HRESULT UItem::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
-	return S_OK;
+	return __super::RenderActive(_spCommand, _spTableDescriptor);
 }
 
 HRESULT UItem::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)

@@ -6,15 +6,14 @@ BEGIN(Engine)
 class UAnimModel;
 class UAnimation;
 class UModel;
+class UBoneNode;
 END
 
 BEGIN(Tool)
+class TEquipModel;
 
 using ANIMMATIONCLIPS = UNORMAP<_string, _int>;
 
-class TEquipModel;
-
-using EQUIPCONTAINER = VECTOR<SHPTR< TEquipModel>>;
 
 // Animation ColumID 
 enum ANIM_TABLE {
@@ -33,9 +32,6 @@ public:
 	TAnimControlModel(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType);
 	TAnimControlModel(const TAnimControlModel& _rhs);
 	DESTRUCTOR(TAnimControlModel)
-public: /* get set*/
-	CSHPTRREF<UAnimModel> GetAnimModel() const { return m_spModel; }
-	const ANIMMATIONCLIPS& GetAnimationClips() const { return m_AnimationClips; }
 public:
 	// UPawn을(를) 통해 상속됨
 	CLONE_MACRO(TAnimControlModel, "TAnimControlModel::Clone To Failed")
@@ -45,8 +41,15 @@ public:
 	void ReleaseShowModel();
 	void SetShowModel(CSHPTRREF<UAnimModel> _spModel, CSHPTRREF<FILEGROUP> _spFileFolder);
 	void ShowAnimModify();
+	void SelectBoneNodeName(OUT _wstring& _wstrBoneNameName);
+	void SelectEquip();
 
-	void MakeEquip(CSHPTRREF<UModel> _spEquipModel, const EQUIPTYPE _EquipType, const _wstring& _wstrBoneNodeName);
+	void MakeEquip(CSHPTRREF<UModel> _spEquipModel, const EQUIPTYPE _EquipType,
+		const _wstring& _wstrBoneNodeName, _int _iWeaponOrShieldJudgeValue);
+public: /* get set*/
+	CSHPTRREF<UAnimModel> GetAnimModel() const { return m_spModel; }
+	const ANIMMATIONCLIPS& GetAnimationClips() const { return m_AnimationClips; }
+	const _bool IsSelectedEquipModel() const { return m_isSelectedEquipModel; }
 protected:
 	void SelectAnimation();
 	void ModifyAnimation();
@@ -57,21 +60,26 @@ protected:
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy) override;
 private:
-	SHPTR<UAnimModel>					m_spModel;
-	SHPTR<FILEGROUP>						m_spModelFolder;
-	SHPTR<UAnimation>						m_spCurAnimation;
-	ANIMMATIONCLIPS							m_AnimationClips;
-	ANIMMATIONCLIPS							m_FindAnimClips;
+	SHPTR<UAnimModel>						m_spModel;
+	SHPTR<FILEGROUP>							m_spModelFolder;
+	SHPTR<UAnimation>							m_spCurAnimation;
+	ANIMMATIONCLIPS								m_AnimationClips;
+	ANIMMATIONCLIPS								m_FindAnimClips;
 
-	VECTOR<ANIMFASTSECTION>		m_AnimFastSections;
-	_bool													m_isAnimationStop;
-	_float													m_fAnimTimeAcc;
-	_float													m_fTotalAnimFastvalue;
-	_bool													m_isAnimEventActive;
+	VECTOR<ANIMFASTSECTION>			m_AnimFastSections;
+	_bool														m_isAnimationStop;
+	_float														m_fAnimTimeAcc;
+	_float														m_fTotalAnimFastvalue;
+	_bool														m_isAnimEventActive;
 	// Input Trigger
-	_wstring												m_wstrInputTrigger;
-	_wstring												m_wstrImguiModifyInputTrigger;
-	EQUIPCONTAINER							m_EquipContainer;
+	_wstring													m_wstrInputTrigger;
+	_wstring													m_wstrImguiModifyInputTrigger;
+
+	_wstring													m_wstrInputBoneNodeName;
+	LIST<SHPTR<UBoneNode>>				m_FindBoneNodeContainer;
+	VECTOR<SHPTR<TEquipModel>>	m_EquipModelContainer;
+	SHPTR<TEquipModel>						m_spSelectedEquipModel;
+	_bool														m_isSelectedEquipModel;
 };
 
 END

@@ -10,54 +10,37 @@
 #include "UAnimModel.h"
 #include "URootBoneNode.h"
 
-void UEquipment::DESC::Load(const _wstring& _wstrPath)
-{
-	std::ifstream read{ _wstrPath, std::ios_base::binary };
-	read.read((_char*)&eEquipType, sizeof(EQUIPTYPE));
-	read.read((_char*)&EquipmentInfo, sizeof(EQUIPMENTINFO));
-	UMethod::ReadString(read, wstrBoneNodeName);
-}
-
-void UEquipment::DESC::Save(const _wstring& _wstrPath)
-{
-	std::ofstream write{ _wstrPath, std::ios_base::binary };
-	write.write((_char*)&eEquipType, sizeof(EQUIPTYPE));
-	write.write((_char*)&EquipmentInfo, sizeof(EQUIPMENTINFO));
-	UMethod::SaveString(write, wstrBoneNodeName);
-}
-
 /*
-=========================================
-UEquipment::Struct  DESC
 =========================================
 UEquipment::Class
 =========================================
 */
 
 UEquipment::UEquipment(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, 
-	const CLONETYPE& _eCloneType) : 
+	const CLONETYPE& _eCloneType, const EQUIPTYPE _eEquipType) :
 	UItem(_spDevice, _wstrLayer, _eCloneType, BACKINGTYPE::DYNAMIC, ITEMTYPE::ITEM_EQUIP),
+	m_eEquipType{_eEquipType},
 	m_spEquipModel{nullptr},
-	m_wpOwner{},
 	m_EquipmentInfo{},
 	m_spEquipBoneNode{ nullptr },
 	m_SockMatrixParam{ _float4x4::Identity },
 	m_spSocketMatrixBuffer{ nullptr },
 	m_spTexCheckBuffer{nullptr},
-	m_HasTexContainer{}
+	m_HasTexContainer{},
+	m_TargetModelPivot{_float4x4::Identity}
 {
 }
 
 UEquipment::UEquipment(const UEquipment& _rhs) : 
 	UItem(_rhs),
 	m_spEquipModel{ nullptr },
-	m_wpOwner{},
 	m_EquipmentInfo{},
 	m_spEquipBoneNode{ nullptr },
 	m_SockMatrixParam{ _float4x4::Identity },
 	m_spSocketMatrixBuffer{ nullptr },
 	m_spTexCheckBuffer{ nullptr },
-	m_HasTexContainer{}
+	m_HasTexContainer{},
+	m_TargetModelPivot{ _float4x4::Identity }
 {
 }
 
@@ -76,41 +59,46 @@ HRESULT UEquipment::NativeConstructClone(const VOIDDATAS& _Datas)
 	if (FAILED(__super::NativeConstructClone(_Datas)))
 		return E_FAIL;
 
-	assert(_Datas.size() > 1);
-	UEquipment::DESC desc = UMethod::ConvertTemplate_Index<UEquipment::DESC>(_Datas, FIRST);
-	m_wpOwner = desc.spOwner;
-	m_spEquipModel = desc.spModel;
-	::memcpy(&m_EquipmentInfo, &desc.EquipmentInfo, sizeof(EQUIPMENTINFO));
-
-	SHPTR<UCharacter> spCharacter = m_wpOwner.lock();
-	// Find Root Bone Node 
-	if (nullptr != spCharacter)
+	// 해당 VOIDDATAS에 존재할 때
+	if (_Datas.size() >= 1)
 	{
-		m_spEquipBoneNode = spCharacter->GetAnimModel()->FindBoneNode(desc.wstrBoneNodeName);
-	}
-	if (nullptr != m_spEquipModel)
-	{
-		_uint ModelBufferSize = m_spEquipModel->GetMeshContainerCnt();
+		UEquipment::EQDESC desc = UMethod::ConvertTemplate_Index<UEquipment::EQDESC>(_Datas, FIRST);
+		m_spEquipModel = desc.spEquipModel;
+		::memcpy(&m_EquipmentInfo, &desc.EquipmentInfo, sizeof(EQUIPMENTINFO));
 
-		m_spSocketMatrixBuffer = CreateNative< UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::SOCKETMATRIX, GetTypeSize<SOCKETMATRIXPARAM>(), ModelBufferSize);
-		m_spTexCheckBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::MODELCHECKBUF, GetTypeSize< HASBUFFERCONTAINER>(), ModelBufferSize);
+		SHPTR<UCharacter> spCharacter = desc.spOwner;
+		// Find Root Bone Node 
+		if (nullptr != spCharacter)
+		{
+			m_spEquipBoneNode = spCharacter->GetAnimModel()->FindBoneNode(desc.wstrBoneNodeName);
+		}
+		if (nullptr != m_spEquipModel)
+		{
+			_uint ModelBufferSize = m_spEquipModel->GetMeshContainerCnt();
+
+			m_spSocketMatrixBuffer = CreateNative< UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::SOCKETMATRIX, GetTypeSize<SOCKETMATRIXPARAM>(), ModelBufferSize);
+			m_spTexCheckBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::MODELCHECKBUF, GetTypeSize< HASBUFFERCONTAINER>(), ModelBufferSize);
+		}
+		m_wpOwner = spCharacter;
 	}
+	// Add Shader
+	AddShader(PROTO_RES_EQUIPMENTSHADER);
 	return S_OK;
-}
-
-void UEquipment::BindBoneNode(const _wstring& _wstrBoneNode)
-{
-	SHPTR<UCharacter> spCharacter = m_wpOwner.lock();
-	m_spEquipBoneNode = spCharacter->GetAnimModel()->FindBoneNode(_wstrBoneNode);
 }
 
 void UEquipment::TickActive(const _double& _dTimeDelta)
 {
 	if (nullptr != m_spEquipBoneNode)
 	{
+		SHPTR<UPawn> spPawn = m_wpOwner.lock();
+		SHPTR<UTransform> spTransform = spPawn->GetTransform();
+
 		// Get CombineMatrix
-		m_SockMatrixParam.SocketMatrix = m_spEquipBoneNode->GetCombineMatrix();
+		m_SockMatrixParam.SocketMatrix =  spTransform->GetWorldMatrix() * m_spEquipBoneNode->GetCombineMatrix();
+		m_SockMatrixParam.SocketMatrix = m_SockMatrixParam.SocketMatrix.Transpose();
 	}
+
+//	m_SockMatrixParam.SocketMatrix = _float4x4::Identity;
 }
 
 void UEquipment::LateTickActive(const _double& _dTimeDelta)
@@ -158,4 +146,35 @@ void UEquipment::BindShaderBuffer()
 {
 	GetShader()->BindCBVBuffer(m_spSocketMatrixBuffer, &m_SockMatrixParam, GetTypeSize<SOCKETMATRIXPARAM>());
 	GetShader()->BindCBVBuffer(m_spTexCheckBuffer, &m_HasTexContainer, GetTypeSize< HASBUFFERCONTAINER>());
+}
+
+void UEquipment::UpdateBoneNode(CSHPTRREF<UAnimModel> _spAnimModel, const _wstring& _wstrBoneNode)
+{
+	RETURN_CHECK(nullptr == _spAnimModel, ;);
+	m_spEquipBoneNode = _spAnimModel->FindBoneNode(_wstrBoneNode);
+	m_TargetModelPivot = _spAnimModel->GetPivotMatirx();
+
+	if (nullptr == m_spSocketMatrixBuffer)
+	{
+		_uint ModelBufferSize = m_spEquipModel->GetMeshContainerCnt();
+		m_spSocketMatrixBuffer = CreateNative< UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::SOCKETMATRIX, GetTypeSize<SOCKETMATRIXPARAM>(), ModelBufferSize);
+		m_spTexCheckBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::MODELCHECKBUF, GetTypeSize< HASBUFFERCONTAINER>(), ModelBufferSize);
+	}
+}
+
+
+void UEquipment::UpdateBoneNode(CSHPTRREF<UCharacter> _spCharacter, const _wstring& _wstrBoneNode)
+{
+	RETURN_CHECK(nullptr == _spCharacter, ;);
+	SHPTR<UAnimModel> spAnimModel = _spCharacter->GetAnimModel();
+	RETURN_CHECK(nullptr == spAnimModel, ;);
+	m_spEquipBoneNode = spAnimModel->FindBoneNode(_wstrBoneNode);
+	m_TargetModelPivot = spAnimModel->GetPivotMatirx();
+
+	if (nullptr == m_spSocketMatrixBuffer)
+	{
+		_uint ModelBufferSize = m_spEquipModel->GetMeshContainerCnt();
+		m_spSocketMatrixBuffer = CreateNative< UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::SOCKETMATRIX, GetTypeSize<SOCKETMATRIXPARAM>(), ModelBufferSize);
+		m_spTexCheckBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::MODELCHECKBUF, GetTypeSize< HASBUFFERCONTAINER>(), ModelBufferSize);
+	}
 }
