@@ -58,7 +58,7 @@ HRESULT UCharacter::NativeConstructClone(const VOIDDATAS& _Datas)
 		SHPTR<URegion> spCurRegion = m_wpCurRegion.lock();
 		SHPTR<UNavigation> spNavigation = spCurRegion->GetNavigation();
 
-		SHPTR<UCell> spCell = spNavigation->FindCell({ _float3{-167.f, -80.54f, 133.f} });
+		SHPTR<UCell> spCell = spNavigation->FindCell(703);
 		GetTransform()->SetPos(spCell->GetCenterPos());
 	}
 	AddShader(PROTO_RES_ANIMMODELSHADER, RES_SHADER);
@@ -160,10 +160,11 @@ void UCharacter::LateTickActive(const _double& _dTimeDelta)
 		_float3 vPosition{ GetTransform()->GetPos() };
 		SHPTR<UCell> spCell{};
 
-		/*if (false == spNavigation->IsMove(vPosition, REF_OUT spCell))
+		spNavigation->ComputeHeight(GetTransform());
+		if (false == spNavigation->IsMove(vPosition, REF_OUT spCell))
 		{
 			GetTransform()->SetPos(GetPrevPos());
-		}*/
+		}
 	
 	}
 }

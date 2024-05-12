@@ -6,6 +6,8 @@ BEGIN(Engine)
 class UStageManager;
 class URegion;
 class UDefaultDebugging;
+class UCell;
+
 END
 
 BEGIN(Tool)
@@ -61,10 +63,12 @@ private:
 	_bool													m_bRenderWireFrame;
 	_bool													m_bNavigationDebugColor;
 	_bool													m_bOnWindow;
+	_bool													m_bPickOnCell;
 
 	_uint													m_iCreateRegionIndex;
 	_uint													m_iRegionIndex;
 	_uint													m_iCellIndex;
 
+	SHPTR<UCell>											m_spSelectedCell;
 };
 END

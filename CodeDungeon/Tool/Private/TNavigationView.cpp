@@ -12,6 +12,9 @@
 #include "UCell.h"
 #include "TMainScene.h"
 #include "UGrid.h"
+#include "UPawn.h"
+#include "UDefaultCell.h"
+#include "UVIBufferCell.h"
 
 TNavigationView::TNavigationView(CSHPTRREF<UDevice> _spDevice) :
 	TImGuiView(_spDevice, "NavigationView"),
@@ -30,7 +33,9 @@ TNavigationView::TNavigationView(CSHPTRREF<UDevice> _spDevice) :
 	m_iSelIndex{ SEL_1 },
 	m_bSelEnd{ false },
 	m_iCellIndex{ 0 },
-	m_bOnWindow{false}
+	m_bOnWindow{false},
+	m_bPickOnCell{ false },
+	m_spSelectedCell{nullptr}
 {
 }
 
@@ -82,6 +87,26 @@ void TNavigationView::TickActive(const _double& _dTimeDelta)
 {
 	if (nullptr != m_spStageManager->GetStage())
 		m_spStageManager->GetStage()->FlushDeleteCells();
+
+	if(m_bPickOnCell)
+	{
+		if (nullptr != m_spStageManager->GetStage())
+		{
+			for (auto& Regions : *m_spStageManager->GetStage()->GetRegionList())
+			{
+				CELLCONTAINER Cells = *Regions->GetNavigation()->GetCells();
+				for (auto& cell : Cells)
+				{
+
+					SHPTR<UPawn> cellPawn = static_pointer_cast<UPawn>(cell->GetCellPawn());
+					SHPTR<UVIBuffer> cellVIBuffer = static_pointer_cast<UVIBuffer>(cell->GetCellVIBuffer());
+
+					GetGameInstance()->AddPickingObject(cellPawn, cellVIBuffer);
+				}
+			}
+		}
+	}
+
 }
 
 void TNavigationView::LateTickActive(const _double& _dTimeDetla)
@@ -119,6 +144,7 @@ void TNavigationView::RenderActive()
 	ImGui::End(); 
 }
 
+
 void TNavigationView::RenderMenu()
 {
 }
@@ -151,61 +177,68 @@ void TNavigationView::ModifyNavigation(CSHPTRREF<URegion> _spRegion)
 	{
 		if (MousePos.y > 0 && MousePos.y < WINDOW_HEIGHT)
 		{
-			_float3 v3Pos;
 			if (true == spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_L))
 			{
+				_float3 v3Pos;
 				SHPTR<UNavigation> _spNav = _spRegion->GetNavigation();
 				PICKINGDESC tDesc = spGameInstance->GetPickDesc();
-
-				if (!tDesc.bPickingSuccess)
-					return;
-	
-				v3Pos = tDesc.vPickPos;
 				CELLCONTAINER Cells;
-
 				if (nullptr != _spNav)
 					Cells = *_spNav->GetCells();
+				REGIONLIST Regions = (*m_spStageManager->GetStage()->GetRegionList());
+				if (!tDesc.bPickingSuccess)
+					return;
+				v3Pos = tDesc.vPickPos;
 
-				for (auto& iter : Cells)
+				if (!m_bPickOnCell)
 				{
-					for (_uint i = 0; i < UCell::POINT_END; ++i)
+					m_iCellIndex = Cells.size();
+					for (auto& iter : Cells)
 					{
-						_float3 Point = iter->GetPoint((UCell::POINT)i);
-
-						if (v3Pos.y >= Point.y - 3.0f && v3Pos.y <= Point.y + 3.0f)
 						{
-							if (v3Pos.x >= Point.x - 3.f && v3Pos.x <= Point.x + 3.f)
+							for (_uint i = 0; i < UCell::POINT_END; ++i)
 							{
-								if (v3Pos.z >= Point.z - 3.f && v3Pos.z <= Point.z + 3.f)
+								_float3 Point = iter->GetPoint((UCell::POINT)i);
+
+								if (v3Pos.y >= Point.y - 3.0f && v3Pos.y <= Point.y + 3.0f)
 								{
-									v3Pos = Point;
+									if (v3Pos.x >= Point.x - 3.f && v3Pos.x <= Point.x + 3.f)
+									{
+										if (v3Pos.z >= Point.z - 3.f && v3Pos.z <= Point.z + 3.f)
+										{
+											v3Pos = Point;
+										}
+									}
 								}
 							}
 						}
 					}
+					m_vecPosList.push_back(v3Pos);
+
+					m_spCubePosArr[m_iSelIndex++]->GetTransform()->SetPos(XMLoadFloat3(&v3Pos));
+					if ((_uint)m_vecPosList.size() == 3)
+					{
+						ARRAY<_float3, 3> vPos = { m_vecPosList[SEL_1], m_vecPosList[SEL_2], m_vecPosList[SEL_3] };
+						SHPTR<UCell> NewCell = CreateConstructorNative<UCell>(spGameInstance->GetDevice(), vPos, m_iCellIndex);
+						_spRegion->AddCell(NewCell);
+						m_vecPosList.clear();
+						m_iSelIndex = SEL_1;
+						for (int i = 0; i < 3; i++)
+							m_spCubePosArr[i]->GetTransform()->SetPos(_float3(0.f, 0.f, 0.f));
+					}
 				}
-				m_vecPosList.push_back(v3Pos);
-
-				m_spCubePosArr[m_iSelIndex++]->GetTransform()->SetPos(XMLoadFloat3(&v3Pos));
-				if((_uint)m_vecPosList.size() == 3)
+				else
 				{
-					ARRAY<_float3, 3> vPos = { m_vecPosList[SEL_1], m_vecPosList[SEL_2], m_vecPosList[SEL_3] };
-					SHPTR<UCell> NewCell = CreateConstructorNative<UCell>(spGameInstance->GetDevice(), vPos, m_iCellIndex++);
-					_spRegion->AddCell(NewCell);
-					m_vecPosList.clear();
-					m_iSelIndex = SEL_1;
-					for (int i = 0; i < 3; i++)
-						m_spCubePosArr[i]->GetTransform()->SetPos(_float3(0.f, 0.f, 0.f));
-				}				
+					m_spSelectedCell = _spNav->FindCell(v3Pos);
+				}
 			}
-
 			// Rollback if backspace key is pressed
 			else if (spGameInstance->GetDIKeyDown(DIK_BACK))
 			{
 				if (!m_vecPosList.empty())
 				{
-					m_vecPosList.pop_back(); 
-					m_iSelIndex--; 
+					m_vecPosList.pop_back();
+					m_iSelIndex--;
 					if (m_iSelIndex < SEL_1)
 						m_iSelIndex = SEL_1;
 					m_spCubePosArr[m_iSelIndex]->GetTransform()->SetPos(_float3(0.f, 0.f, 0.f));
@@ -325,7 +358,7 @@ void TNavigationView::NavigationView()
 		if (true == m_bNavigationModify)
 		{
 			ImGui::Checkbox("Render_All_Regions", &m_bAllRender);
-
+		
 			LoadRegionsFromFile();
 
 			m_spStageManager->GetStage()->CreateRegion();
@@ -337,6 +370,29 @@ void TNavigationView::NavigationView()
 				_uint iSelect = m_spStageManager->GetStage()->SelectRegion();
 				if (INVALID_MINUS_STAGEVALUE != iSelect)
 					m_iRegionIndex = iSelect;
+
+				ImGui::Checkbox("Pick_On_Cell", &m_bPickOnCell);
+				if(m_bPickOnCell)
+				{
+					if (ImGui::TreeNodeEx("Selected Cell", ImGuiTreeNodeFlags_DefaultOpen))
+					{
+						if (m_spSelectedCell == nullptr)
+						{
+							ImGui::Text("Select Cell by picking");
+						}
+						else
+						{
+							ImGui::Text("Selected Cell Index: %d", m_spSelectedCell->GetIndex());
+							if (ImGui::Button("Delete"))
+							{
+								m_spStageManager->GetStage()->GetRegion(m_iRegionIndex)->DeleteCell(m_spSelectedCell->GetIndex());
+								m_spSelectedCell.reset();
+							}
+						}
+						ImGui::TreePop();
+					}
+				}
+
 				if(spGameInstance->IsMouseInWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT) && !m_bOnWindow)
 					ModifyNavigation(m_spStageManager->GetStage()->GetRegion(m_iRegionIndex));
 				m_spStageManager->GetStage()->Control_Collider(m_iRegionIndex);

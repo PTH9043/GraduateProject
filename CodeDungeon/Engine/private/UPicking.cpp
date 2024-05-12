@@ -98,7 +98,20 @@ const PICKINGDESC UPicking::GetPickDesc()
 	{
 		_float3 v3Pos = _float3(0.f, 0.f, 0.f);
 		_float ftoColliderDist = 0.f;
-		if (true == PickingCollider(m_vRayPos, m_vRayDir, iter.spPawn, &ftoColliderDist))
+		if(iter.spPawn->GetColliderContainer().size() > 0)
+		{
+			if (true == PickingCollider(m_vRayPos, m_vRayDir, iter.spPawn, &ftoColliderDist))
+			{
+				bFoundValidPick = true;
+				_float ftoMeshDist = 0.f;
+				if (true == PickingMesh(m_vRayPos, m_vRayDir, iter.spPawn, iter.spVIBuffer, &ftoMeshDist, &v3Pos))
+				{
+					bFoundValidPick = true;
+					AddPickingObject(PICKINGDESC(iter.spPawn, v3Pos, ftoMeshDist, true));
+				}
+			}
+		}
+		else
 		{
 			bFoundValidPick = true;
 			_float ftoMeshDist = 0.f;

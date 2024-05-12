@@ -81,13 +81,13 @@ HRESULT CMainScene::LoadSceneData()
 				100.f, 32.f, 8.0f,(float)cos(DirectX::XMConvertToRadians(30.f)),(float)cos(DirectX::XMConvertToRadians(15.f)),_float3(1.0f, 0.01f, 0.0001f) });
 	}
 
-	//{
-	//	CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_WARRIORANIMCONTROLLER, 
-	//		m_spMap->GetStageManager() };
-	//	CWarriorPlayer::PLAYERDESC PlayerDesc{m_spMainCamera };
-	//	m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
-	//	PROTO_ACTOR_WARRIORPLAYER, {&CharDesc, &PlayerDesc }));
-	//}
+	{
+		CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_WARRIORANIMCONTROLLER, 
+			m_spMap->GetStageManager() };
+		CWarriorPlayer::PLAYERDESC PlayerDesc{m_spMainCamera };
+		m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
+		PROTO_ACTOR_WARRIORPLAYER, {&CharDesc, &PlayerDesc }));
+	}
 	return S_OK;
 }
 
@@ -130,9 +130,9 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 
 void CMainScene::LateTick(const _double& _dTimeDelta)
 {
-	m_spMap->GetStageManager()->GetStage()->AddRender(0);
-	if (nullptr != m_spMap->GetStageManager()->GetStage())
-		m_spMap->GetStageManager()->GetStage()->UpdateRegion();
+	//m_spMap->GetStageManager()->GetStage()->AddRender(0);
+	//if (nullptr != m_spMap->GetStageManager()->GetStage())
+	//	m_spMap->GetStageManager()->GetStage()->UpdateRegion();
 }
 
 END

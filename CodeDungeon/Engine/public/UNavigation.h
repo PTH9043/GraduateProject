@@ -31,6 +31,7 @@ public:
 	_bool IsMove(const _float3& _vPosition, SHPTR<UCell>& _spCell);
 	// Find
 	SHPTR<UCell> FindCell(const _float3& _vPosition);
+	SHPTR<UCell> FindCell(const _int& _iIndex);
 	// Is Collision
 	_bool IsCollision(SHPTR<UCollider>& _pCollider);
 	// Insert Cell
@@ -45,7 +46,6 @@ public:
 	// Get Collider
 	SHPTR<UCollider> GetCollider() { return m_spCollider; }
 	SHPTR<UCell> GetCurCell() { return m_spCurCell; }
-private:
 	// Ready Neighbor
 	HRESULT ReadyNeighbor();
 private:
