@@ -102,7 +102,7 @@ void UFire::TickActive(const _double& _dTimeDelta)
 
 void UFire::LateTickActive(const _double& _dTimeDelta)
 {
-	AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
+	AddRenderGroup(RENDERID::RI_NONALPHA_MIDDLE);
 }
 
 HRESULT UFire::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
