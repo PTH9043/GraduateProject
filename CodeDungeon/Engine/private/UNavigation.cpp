@@ -231,7 +231,6 @@ _bool UNavigation::Load(const _wstring& _wstrPath)
 		load.read(reinterpret_cast<char*>(&tDesc.iIndex), sizeof(tDesc.iIndex));
 
 		SHPTR<UCell> NewCell = CreateConstructorNative<UCell>(spGameInstance->GetDevice(), tDesc);
-		NewCell->ChangeCellColor(f3Color);
 		AddCell(NewCell);
 	}
 

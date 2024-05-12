@@ -393,8 +393,5 @@ void UCollider::AddRenderer(RENDERID _eID)
 		m_spDebugDrawPawn->AddRenderer(_eID);
 	}
 }
-void UCollider::ChangeColliderColor(const _float3& _vColor)
-{
-	m_spDebugDrawPawn->SetColor(_vColor);
-}
+
 #endif

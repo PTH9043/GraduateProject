@@ -12,6 +12,7 @@
 #include "UCollider.h"
 #include "UAudioSystem.h"
 #include "USound.h"
+#include "UModel.h"
 
 
 const _char* TAnimControlView::s_AnimTags[1000]{};
@@ -24,7 +25,11 @@ TAnimControlView::TAnimControlView(CSHPTRREF<UDevice> _spDevice) :
 	m_iSelectAnimEvent{1},
 	m_spSelectAnim{nullptr},
 	m_AnimMaxTagCount{0},
-	m_strSelectAnimationName{"NO_SELECTED"}
+	m_strSelectAnimationName{"NO_SELECTED"},
+	m_eEquipType{EQUIPTYPE::EQUIP_END},
+	m_iWeaponOrShieldValue{0},
+	m_spSelectEquipModelData{nullptr},
+	m_strSelectedEquipModelData{""}
 {
 	
 }
@@ -44,7 +49,7 @@ HRESULT TAnimControlView::NativeConstruct()
 		ImGuiWindowFlags_AlwaysVerticalScrollbar,
 		ImGuiDockNodeFlags_CentralNode);
 
-	m_stItemViewDesc = DOCKDESC("ItemViewDesc", ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_HorizontalScrollbar |
+	m_stEquipViewDesc = DOCKDESC("EquipViewDesc", ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_HorizontalScrollbar |
 		ImGuiWindowFlags_AlwaysVerticalScrollbar,
 		ImGuiDockNodeFlags_CentralNode);
 
@@ -87,13 +92,13 @@ HRESULT TAnimControlView::LoadResource()
 		for (auto& iter : ItemModels->UnderFileGroupList)
 		{
 			// FBX에서 Convert 라는 하위 폴더를 찾는다. 
-			SHPTR<FILEGROUP> spConvert = iter.second->FindGroup(L"Convert");
-			if (nullptr == spConvert)
+			if (iter.second->wstrFolderName != L"Convert")
 				continue;
-			m_spSelectAnimFileFolder = spConvert;
-			for (auto& FileData : spConvert->FileDataList)
+
+			for (auto& FileData : iter.second->FileDataList)
 			{
-				m_EquipFileContainer.insert(MakePair(UMethod::ConvertWToS(FileData.first), FileData.second));
+				SHPTR<UModel> spModel = CreateConstructorNative<UModel>(GetDevice(), FileData.second->wstrfilePath);
+				m_EquipModelContainer.insert(MakePair(UMethod::ConvertWToS(FileData.first), spModel));
 			}
 		}
 	}
@@ -107,7 +112,7 @@ HRESULT TAnimControlView::ReleaseResource()
 	m_AnimFileContainer.clear();
 	m_spAnimControlModel->SetActive(false);
 	m_FindSoundNames.clear();
-	m_EquipFileContainer.clear();
+	m_EquipModelContainer.clear();
     return S_OK;
 }
 
@@ -146,12 +151,12 @@ void TAnimControlView::DockBuildInitSetting()
 		// Docking Build 
 	    m_stAnimModelSelectDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Up, 0.2f, NULL, &dock_main_id);
 		m_stAnimModifyDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.8f, NULL, &dock_main_id);
-		m_stItemViewDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id,
-			ImGuiDir_Down, 0.2f, &m_stAnimModelSelectDesc.iDockSpaceID, &dock_main_id);
+		m_stEquipViewDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id,
+			ImGuiDir_Up, 0.2f, &m_stAnimModelSelectDesc.iDockSpaceID, &dock_main_id);
 		// DockBuild
 		ImGui::DockBuilderDockWindow(m_stAnimModelSelectDesc.strName.c_str(), m_stAnimModelSelectDesc.iDockSpaceID);
 		ImGui::DockBuilderDockWindow(m_stAnimModifyDesc.strName.c_str(), m_stAnimModifyDesc.iDockSpaceID);
-		ImGui::DockBuilderDockWindow(m_stItemViewDesc.strName.c_str(), m_stItemViewDesc.iDockSpaceID);
+		ImGui::DockBuilderDockWindow(m_stEquipViewDesc.strName.c_str(), m_stEquipViewDesc.iDockSpaceID);
 		ImGui::DockBuilderFinish(m_stMainDesc.iDockSpaceID);
 	}
 	m_isInitSetting = true;
@@ -213,20 +218,97 @@ void TAnimControlView::AnimModifyView()
 
 void TAnimControlView::EquipView()
 {
-	ImGui::Begin(m_stItemViewDesc.strName.c_str(), GetOpenPointer(), m_stItemViewDesc.imgWindowFlags);
+	ImGui::Begin(m_stEquipViewDesc.strName.c_str(), GetOpenPointer(), m_stEquipViewDesc.imgWindowFlags);
 	{
+		if (nullptr != m_spAnimControlModel->GetAnimModel())
+		{
+			_int EquipmentType = static_cast<_int>(m_eEquipType);
+			_int iWeaponOrShieldValue = m_iWeaponOrShieldValue;
+			static const _char* EquipType[]{ "Weapon", "DefensiveGear" };
+			static const _char* WEAPONANDDEFENSIVEGEAR[]{ "SWORD", "BOW", "BOOTS" };
 
+			if (true == ImGui::Combo("EquipType", &EquipmentType, EquipType, EQUIPTYPE::EQUIP_END))
+			{
+				m_eEquipType = static_cast<EQUIPTYPE>(EquipmentType);
+			}
+			if (true == ImGui::Combo("WeaponOrDefensiveGear", &iWeaponOrShieldValue, WEAPONANDDEFENSIVEGEAR, DEFENSIVEGEARTYPE::DFGEAR_END))
+			{
+				m_iWeaponOrShieldValue = iWeaponOrShieldValue;
+			}
 
+			m_spAnimControlModel->SelectBoneNodeName(OUT m_wstrBoneNodeName);
+
+			if (nullptr != m_spAnimControlModel->GetAnimModel())
+			{
+				if (ImGui::BeginListBox("Equip List", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+				{
+					for (auto& iter : m_EquipModelContainer)
+					{
+						if (ImGui::Selectable(iter.first.c_str()))
+						{
+							m_spSelectEquipModelData = iter.second;
+							m_strSelectedEquipModelData = iter.first;
+						}
+					}
+					ImGui::EndListBox();
+				}
+
+				if (nullptr != m_spSelectEquipModelData)
+				{
+					ImGui::Text(m_strSelectedEquipModelData);
+				}
+				else
+				{
+					ImGui::Text("Don't Selected EquipModelData");
+				}
+
+				if (false == m_spAnimControlModel->IsSelectedEquipModel())
+				{
+					if (true == ImGui::Button("MakeEquip"))
+					{
+						if (nullptr != m_spSelectEquipModelData)
+						{
+							m_spAnimControlModel->MakeEquip(m_spSelectEquipModelData, m_eEquipType, m_wstrBoneNodeName, m_iWeaponOrShieldValue);
+						}
+					}
+				}
+				else
+				{
+					ImGui::Text("Dont Selected Equip CheckBox");
+				}
+
+				m_spAnimControlModel->SelectEquip();
+
+				if (true == ImGui::Button("SaveEquip"))
+				{
+
+				}
+				ImGui::SameLine();
+				if (true == ImGui::Button("LoadEquip"))
+				{
+
+				}
+			}
+			else
+			{
+				ImGui::Text("Plz Create To AnimModel");
+			}
+		}
+		else
+		{
+			ImGui::Text("Plz Create To AnimModel");
+		}
 	}
 	ImGui::End();
 }
+
 
 void TAnimControlView::MakeAnimEvent()
 {
 	RETURN_CHECK(nullptr == m_spShowAnimModel, ;);
 
 	static const _char* ANIMTYPETAG[]{ "EFFECT", "SOUND", 
-		"COLLIDER", "CAMERA", "OBJACTIVE", "ANIMCAHNGEBETWEEN", "ANIMOCCURSTIMEPASS"};
+		"COLLIDER", "CAMERA", "OBJACTIVE", "ANIMCAHNGEBETWEEN"};
 
 	SHPTR<UAnimation> spCurAnimation = m_spShowAnimModel->GetCurrentAnimation();
 

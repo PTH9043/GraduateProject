@@ -3,11 +3,6 @@
 
 #include "ShaderGrobalFunc.hlsli"
 
-cbuffer DEBUGGING : register(b14)
-{
-    float4 g_vDebugColor;
-    
-};
 
 struct VS_IN
 {
@@ -50,7 +45,7 @@ PS_OUT PS_Main(PS_In Input)
 {
     PS_OUT Out = (PS_OUT) 0;
 
-    Out.vDiffuse = g_vDebugColor;
+    Out.vDiffuse =  float4(1.f, 0.f, 0.f, 1.f);;
     Out.vNormal = float4(1.f, 1.f, 1.f, 1.f);
     return Out;
 }

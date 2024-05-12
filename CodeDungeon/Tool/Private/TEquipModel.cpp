@@ -4,12 +4,18 @@
 
 TEquipModel::TEquipModel(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, 
 	const CLONETYPE& _eCloneType) : 
-	UEquipment(_spDevice, _wstrLayer, _eCloneType)
+	UEquipment(_spDevice, _wstrLayer, _eCloneType, EQUIP_END),
+	m_iWeaponOrShieldValue{ 0 },
+	m_wstrBoneNodeName{ L"" },
+	m_wstrModelName{ L"" }
 {
 }
 
 TEquipModel::TEquipModel(const TEquipModel& _rhs) :
-	UEquipment(_rhs)
+	UEquipment(_rhs), 
+	m_iWeaponOrShieldValue{ 0 },
+	m_wstrBoneNodeName{ L"" },
+	m_wstrModelName{ L"" }
 {
 }
 
@@ -26,6 +32,39 @@ HRESULT TEquipModel::NativeConstructClone(const VOIDDATAS& _Datas)
 {
 	return __super::NativeConstructClone(_Datas);
 }
+
+void TEquipModel::UpdateBoneNode(const EQUIPTYPE _eEquipType, CSHPTRREF<UAnimModel> _spAnimModel, CSHPTRREF<UModel> _spEquipModel,
+	const _wstring& _wstrBoneNode, const _int _iWeaponOrShieldValue)
+{
+	SetEquipType(_eEquipType);
+	m_iWeaponOrShieldValue = _iWeaponOrShieldValue;
+	m_wstrBoneNodeName = _wstrBoneNode;
+	SetEquipModel(_spEquipModel);
+	UpdateBoneNode(_spAnimModel, _wstrBoneNode);
+}
+
+void TEquipModel::UpdateBoneNode(const EQUIPTYPE _eEquipType, CSHPTRREF<UCharacter> _spCharacter, CSHPTRREF<UModel> _spEquipModel
+	, const _wstring& _wstrBoneNode, const _int _iWeaponOrShieldValue)
+{
+	SetEquipType(_eEquipType);
+	m_iWeaponOrShieldValue = _iWeaponOrShieldValue;
+	m_wstrBoneNodeName = _wstrBoneNode;
+	SetEquipModel(_spEquipModel);
+	UpdateBoneNode(_spCharacter, _wstrBoneNode);
+}
+
+void TEquipModel::ChangeBoneNode(CSHPTRREF<UBoneNode> _spBoneNode)
+{
+	RETURN_CHECK(nullptr == _spBoneNode, ;);
+	SetEquipBoneNode(_spBoneNode);
+}
+
+void TEquipModel::ChangeOwner(CSHPTRREF<UPawn> _spOwner)
+{
+	RETURN_CHECK(nullptr == _spOwner, ;);
+	SetOwner(_spOwner);
+}
+
 
 void TEquipModel::TickActive(const _double& _dTimeDelta)
 {

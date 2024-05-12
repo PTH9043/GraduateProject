@@ -23,15 +23,15 @@ void URegion::tagCubeObjs::Create(SHPTRREF<UCell> _pCell)
 	spCube1 = static_pointer_cast<UDefaultDebugging>(spGameInstance->CloneActorAdd(
 		PROTO_ACTOR_DEUBGGINGDEFAULTOBJECT, vecDatas));;
 	spCube1->GetTransform()->SetPos(_pCell->GetPoint(UCell::POINT_A));
-	spCube1->SetColor(_float3(0.6f, 0.0f, 0.0f));
+	
 	spCube2 = static_pointer_cast<UDefaultDebugging>(spGameInstance->CloneActorAdd(
 		PROTO_ACTOR_DEUBGGINGDEFAULTOBJECT, vecDatas));;
 	spCube2->GetTransform()->SetPos(_pCell->GetPoint(UCell::POINT_B));
-	spCube2->SetColor(_float3(0.6f, 0.0f, 0.0f));
+	
 	spCube3 = static_pointer_cast<UDefaultDebugging>(spGameInstance->CloneActorAdd(
 		PROTO_ACTOR_DEUBGGINGDEFAULTOBJECT, vecDatas));;
 	spCube3->GetTransform()->SetPos(_pCell->GetPoint(UCell::POINT_C));
-	spCube3->SetColor(_float3(0.6f, 0.0f, 0.0f));
+	
 
 	spCell = _pCell;
 #endif
@@ -292,20 +292,7 @@ HRESULT URegion::SetColor()
 		ImGui::SameLine();
 		ImGui::PushItemWidth(200);
 		ImGui::ColorEdit4("##Pick_Region_Color", (float*)&m_f3Color,
-			ImGuiColorEditFlags_None | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_NoSidePreview);
-		if (ImGui::Button("Change"))
-		{
-			for (SHPTR<UCell> iter : *m_spNavigation->GetCells())
-			{
-				iter->ChangeCellColor(m_f3Color);
-			}
-			for (LIST<CUBOBJS>::iterator v = m_CubeObjList.begin(); v != m_CubeObjList.end(); ++v)
-			{
-				v->spCube1->SetColor(m_f3Color);
-				v->spCube2->SetColor(m_f3Color);
-				v->spCube3->SetColor(m_f3Color);
-			}
-		}
+			ImGuiColorEditFlags_None | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_NoSidePreview);	
 		ImGui::PopItemWidth();
 		ImGui::TreePop();
 	}
@@ -456,10 +443,7 @@ _bool URegion::Load(const _wstring& _wstrPath)
 	for (SHPTR<UCell> iter : *m_spNavigation->GetCells())
 	{
 		CUBOBJS tObjs;
-		tObjs.Create(iter);
-		tObjs.spCube1->SetColor(iter->GetColor());
-		tObjs.spCube2->SetColor(iter->GetColor());
-		tObjs.spCube3->SetColor(iter->GetColor());
+		tObjs.Create(iter);		
 		m_CubeObjList.push_back(tObjs);
 	}
 #endif

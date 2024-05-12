@@ -28,6 +28,32 @@ float4 Compute_FinalMatrix(float3 vPosition)
 	return Out;
 }
 
+float4 Compute_FinalMatrix_Socket(float4 vPosition, float4x4 _SocketMatrix)
+{
+    float4 Out = vPosition;
+    
+    matrix matWS, matWSV, matWSVP;
+    matWS = mul(g_WorldMatrix, _SocketMatrix);
+    matWSV = mul(matWS, g_ViewProjInfoArr[g_CamID].mViewMatrix);
+    matWSVP = mul(matWSV, g_ViewProjInfoArr[g_CamID].mProjMatrix);
+
+    Out = mul(Out, matWSVP);
+    return Out;
+}
+
+float4 Compute_FinalMatrix_Socket(float3 vPosition, float4x4 _SocketMatrix)
+{
+    float4 Out = float4(vPosition, 1.f);
+
+    matrix matWS, matWSV, matWSVP;
+    matWS = mul(g_WorldMatrix, _SocketMatrix);
+    matWSV = mul(matWS, g_ViewProjInfoArr[g_CamID].mViewMatrix);
+    matWSVP = mul(matWSV, g_ViewProjInfoArr[g_CamID].mProjMatrix);
+
+    Out = mul(Out, matWSVP);
+    return Out;
+}
+
 
 VIEWPROJINFO GetViewProjInfo()
 {

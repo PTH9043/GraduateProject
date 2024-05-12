@@ -122,7 +122,7 @@ _bool UAnimColliderEvent::EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, con
 			m_AnimColliderDesc.spCollider->SetTransform(spTransform->GetWorldMatrix());
 		}
 		m_AnimColliderDesc.spCollider->AddRenderer(RENDERID::RI_NONALPHA_LAST);
-		m_AnimColliderDesc.spCollider->ChangeColliderColor(_float3{ 0.f, 1.f, 1.f });
+		
 	}
 #endif
 	return __super::EventCheck(_pPawn, _pAnimModel, _dTimeAcc, _dTimeAcc, _wstrInputTrigger);
@@ -136,9 +136,7 @@ const ANIMOTHEREVENTDESC*  UAnimColliderEvent::OutOtherEventDesc()
 void UAnimColliderEvent::EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc)
 {
 #ifdef _USE_DEBUGGING
-	if (nullptr != m_AnimColliderDesc.spCollider) {
-		m_AnimColliderDesc.spCollider->ChangeColliderColor(_float3{ 1.f, 1.f, 0.f });
-	}
+	
 #endif
 }
 

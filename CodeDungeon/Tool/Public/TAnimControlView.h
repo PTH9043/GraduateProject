@@ -6,6 +6,7 @@ BEGIN(Engine)
 class UAnimModel;
 class UAnimation;
 class UAnimEvent;
+class UModel;
 END
 
 BEGIN(Tool)
@@ -14,7 +15,7 @@ class TAnimControlModel;
 class TEquipModel;
 
 using ANIMFILECONTAINER = UNORMAP<_string, SHPTR<FILEDATA>>;
-using ITEMFILECONTAINER = UNORMAP<_string, SHPTR<FILEDATA>>;
+using ITEMMODELCONTAINER = UNORMAP<_string, SHPTR<UModel>>;
 
 /*
 @ Date: 2024-02-04, Writer: นฺลยว๖
@@ -53,7 +54,7 @@ private:
 	MAINDESC												m_stMainDesc;
 	DOCKDESC											m_stAnimModelSelectDesc;
 	DOCKDESC											m_stAnimModifyDesc;
-	DOCKDESC											m_stItemViewDesc;
+	DOCKDESC											m_stEquipViewDesc;
 	_bool														m_isInitSetting;
 
 	SHPTR<TAnimControlModel>			m_spAnimControlModel;
@@ -71,8 +72,12 @@ private:
 
 	LIST<_string>										m_FindSoundNames;
 
-	ITEMFILECONTAINER							m_EquipFileContainer;
+	ITEMMODELCONTAINER						m_EquipModelContainer;
+	SHPTR<UModel>									m_spSelectEquipModelData;
+	_string													m_strSelectedEquipModelData;
 	EQUIPTYPE											m_eEquipType;
+	_int															m_iWeaponOrShieldValue;
+	_wstring													m_wstrBoneNodeName;
 };
 
 END

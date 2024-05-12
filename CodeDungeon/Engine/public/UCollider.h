@@ -51,7 +51,7 @@ public:
 
 #ifdef _USE_DEBUGGING
 	void AddRenderer(RENDERID _eID);
-	void ChangeColliderColor(const _float3& _vColor);
+
 #endif
 private:
 	SHPTR<DirectX::BoundingBox>					m_spAABB_Original;

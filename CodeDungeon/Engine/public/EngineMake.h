@@ -43,6 +43,7 @@
 #define PROTO_RES_ENVIRONMENTMAPPING L"Proto_Res_EnvironmentMappingShader"
 #define PROTO_RES_MIRRORSHADER L"Proto_Res_MirrorShader"
 #define PROTO_RES_SCREENRENDERONBJSHADER L"Proto_Res_ScreenRenderObjShader"
+#define PROTO_RES_EQUIPMENTSHADER L"Proto_Res_EquipmentShader"
 
 /* Compute Shader*/
 #define PROTO_RES_COMPUTEANIMATIONSHADER L"Proto_Res_ConputeAnimatonShader"

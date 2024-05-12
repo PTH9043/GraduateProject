@@ -59,7 +59,7 @@ public:
 	void ReBuffer();
 
 #ifdef _USE_DEBUGGING
-	void ChangeCellColor(const _float3& _vColor);
+	
 	void ReRender();
 #endif
 private:
