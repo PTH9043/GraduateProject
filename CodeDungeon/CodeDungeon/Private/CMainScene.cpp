@@ -7,6 +7,9 @@
 #include "CMap.h"
 #include "UStageManager.h"
 #include "UStage.h"
+#include "UFire.h"
+#include "UTexGroup.h"
+#include "UTexture.h"
 #include "CWarriorPlayer.h"
 #include "CProtoMaker.h"
 #include "UGpuCommand.h"
@@ -14,6 +17,8 @@
 #include "UCollider.h"
 #include "UMethod.h"
 #include "CTorch.h"
+
+
 
 BEGIN(Client)
 
@@ -82,7 +87,20 @@ HRESULT CMainScene::LoadSceneData()
 			100.f, 32.f, 8.0f,(float)cos(DirectX::XMConvertToRadians(30.f)),(float)cos(DirectX::XMConvertToRadians(15.f)),_float3(1.0f, 0.01f, 0.0001f) });
 		*/
 	}
+	{
+		
+			SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+			UFire::FIREDESC tFireDesc;
+			tFireDesc.wstrFireShader = PROTO_RES_2DFIRESHADER;
+			m_stFire = std::static_pointer_cast<UFire>(spGameInstance->CloneActorAdd(PROTO_ACTOR_FIRE, { &tFireDesc }));
+		
+			m_stFire->SetActive(true);
 
+	}
+	{
+		m_stFireNoiseBuffer = m_stFire->GetFireNoiseBuffer();
+		m_stFireDistortionBuffer = m_stFire->GetFireDistortionBuffer();
+	}
 	//{
 	//	CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_WARRIORANIMCONTROLLER, 
 	//		m_spMap->GetStageManager() };
@@ -118,6 +136,14 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 	//_float3 pos = m_spMainCamera->GetTransform()->GetPos();
 	//PointLight->SetLightPos(_float3(pos.x, pos.y, pos.z));
 
+
+	m_stFire->GetTransform()->SetPos(_float3(-555.2f, -32.310f, 149.3f));
+	static float ScaleX = 3.f;
+	static float ScaleY = 6.65f;
+	_float3 ScaleFloat3 = _float3(ScaleX, ScaleY, 1);
+	m_stFire->GetTransform()->SetScale(ScaleFloat3);
+	
+
 	SHPTR<ULight> DirLight;
 	OutLight(LIGHTTYPE::TYPE_DIRECTIONAL, 0, DirLight);
 	
@@ -129,9 +155,7 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 
 void CMainScene::LateTick(const _double& _dTimeDelta)
 {
-	m_spMap->GetStageManager()->GetStage()->AddRender(0);
-	if (nullptr != m_spMap->GetStageManager()->GetStage())
-		m_spMap->GetStageManager()->GetStage()->UpdateRegion();
+	
 }
 
 END
