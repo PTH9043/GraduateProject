@@ -52,19 +52,19 @@ void TFireView::LoadMultipleParticleResource()
 		{
 			UParticle::PARTICLEDESC tDesc;
 			tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEEMITPARTICLE2DSHADER;
-			tDesc.wstrParticleShader = PROTO_RES_PARTICLEPLUS2DSHADER;
+			tDesc.wstrParticleShader = PROTO_RES_PARTICLEFLARE2DSHADER;
 
 
 			tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
 			//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 5.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 5.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 2.5f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.3f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 10.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 15.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 1000;
-			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 5.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 0.25f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 0.5f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.5f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.6f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 1.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 0.5f;
+			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 200;
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 0.5f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.1f, 0.f);
 			m_MultipleParticle[i] = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
 		}
@@ -74,7 +74,7 @@ void TFireView::LoadMultipleParticleResource()
 		m_MultipleParticleType[0] = m_MultipleParticle[0]->GetParticleSystem()->GetParticleTypeParam();
 		m_MultipleParticleType[0]->fParticleType = PARTICLE_TYPE_DEFAULT;
 		m_MultipleParticleType[0]->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
-		m_MultipleParticle[0]->SetTexture(L"RedDot"); // y값 증가 x 원
+		m_MultipleParticle[0]->SetTexture(L"Particle"); // y값 증가 x 원
 	}
 	{
 		//m_MultipleParticleParam[1] = m_MultipleParticle[1]->GetParticleSystem()->GetParticleParam();
@@ -85,9 +85,10 @@ void TFireView::LoadMultipleParticleResource()
 	}
 
 
-	*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() = 0.05f;
+	*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() = 0.15f;
 	*m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount() = 1;
 	m_MultipleParticle[0]->GetParticleSystem()->SetUAVBUFFERPLUS(true);
+	
 	//*m_MultipleParticle[1]->GetParticleSystem()->GetCreateInterval() = 0.05f;
 	//*m_MultipleParticle[1]->GetParticleSystem()->GetAddParticleAmount() = 1;
 	//m_MultipleParticle[1]->GetParticleSystem()->SetUAVBUFFERPLUS(true);
@@ -374,7 +375,8 @@ void TFireView::FireView()
 
 
 				m_stFire->SetActive(true);
-
+				_float3 firepos = m_stFire->GetTransform()->GetPos();
+				m_MultipleParticle[0]->GetTransform()->SetPos(_float3(firepos.x, firepos.y-3.f, firepos.z));
 			}
 
 			if (true == ImGui::Button("Stop Fire"))

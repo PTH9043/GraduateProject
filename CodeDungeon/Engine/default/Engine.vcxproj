@@ -296,7 +296,7 @@
     <FxCompile Include="..\..\Shader\2DFire.hlsl" />
     <FxCompile Include="..\..\Shader\2DFog.hlsl" />
     <FxCompile Include="..\..\Shader\2DParticle.hlsl" />
-    <FxCompile Include="..\..\Shader\2DParticlePlus.hlsl" />
+    <FxCompile Include="..\..\Shader\2DParticleFlare.hlsl" />
     <FxCompile Include="..\..\Shader\3DNormalCube.hlsl" />
     <FxCompile Include="..\..\Shader\AnimModel.hlsl" />
     <FxCompile Include="..\..\Shader\BlendDeffered.hlsl">
@@ -304,6 +304,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\Shader\Compute2DBloodEffect.hlsl" />
+    <FxCompile Include="..\..\Shader\Compute2DEmitParticle.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DParticle.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DRotationEffect.hlsl" />
     <FxCompile Include="..\..\Shader\ComputeAnimation.hlsl" />

@@ -108,6 +108,7 @@ void CMap::LoadStaticObjects()
 				SHPTR<CTorch> _Torch = std::static_pointer_cast<CTorch>(spGameInstance->CloneActorAdd(PROTO_ACTOR_TORCH));
 				_Torch->GetTransform()->SetNewWorldMtx(vecit._mWorldMatrix);
 				_TorchVec.push_back(_Torch);
+				
 			}
 		}
 	}

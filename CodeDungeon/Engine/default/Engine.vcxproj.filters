@@ -1236,7 +1236,10 @@
     <FxCompile Include="..\..\Shader\Shadow.hlsl">
       <Filter>98.ShaderFile\Common\Light</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\Shader\2DParticlePlus.hlsl">
+    <FxCompile Include="..\..\Shader\2DParticleFlare.hlsl">
+      <Filter>98.ShaderFile\Common\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\Compute2DEmitParticle.hlsl">
       <Filter>98.ShaderFile\Common\Particle</Filter>
     </FxCompile>
   </ItemGroup>

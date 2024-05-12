@@ -8,6 +8,7 @@
 #include "UAnimModel.h"
 #include "CWarriorPlayer.h"
 #include "CTorch.h"
+#include "UTexGroup.h"
 
 HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, CSHPTRREF<UDevice> _spDevice, CSHPTRREF<UCommand> _spCommand)
 {
@@ -15,6 +16,21 @@ HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, C
 	_spGameInstance->AddPrototype(PROTO_ACTOR_ROOM, CreateConstructorToNative<CRooms>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_TORCH, CreateConstructorToNative<CTorch>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_WARRIORPLAYER, CreateConstructorToNative<CWarriorPlayer>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
+	
+	_spGameInstance->AddPrototype(PROTO_RES_PARTICLETEXTUREGROUP, CLONETYPE::CLONE_STATIC,
+		CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\Particle", true));
+
+	_spGameInstance->AddPrototype(PROTO_RES_ANIMPARTICLETEXTUREGROUP, CLONETYPE::CLONE_STATIC,
+		CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\AnimParticle", true));
+
+	_spGameInstance->AddPrototype(PROTO_RES_FIRECOLORTEXTUREGROUP, CLONETYPE::CLONE_STATIC,
+		CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\Fire\\Color", true));
+
+	_spGameInstance->AddPrototype(PROTO_RES_FIRENOISETEXTUREGROUP, CLONETYPE::CLONE_STATIC,
+		CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\Fire\\Noise", true));
+
+	_spGameInstance->AddPrototype(PROTO_RES_FIREALPHATEXTUREGROUP, CLONETYPE::CLONE_STATIC,
+		CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\Fire\\Alpha", true));
 	return S_OK;
 }
 
@@ -26,5 +42,7 @@ HRESULT CProtoMaker::CreateMainSceneProtoData(CSHPTRREF<UGameInstance> _spGameIn
 
 	_spGameInstance->AddPrototype(PROTO_RES_FEMAILPLAYERANIMMODEL,CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
 		_spDevice, L"..\\..\\Resource\\AnimModel\\Player\\Convert\\FemalePlayer_FBX.bin", Matrix));
+
+	
 	return S_OK;
 }
