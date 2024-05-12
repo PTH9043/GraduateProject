@@ -86,7 +86,7 @@ URegion::URegion(CSHPTRREF<UDevice> _spDevice)
 	m_NeighborRegion{},
 	m_DeleteCellsList{nullptr},
 	m_bDeletionEnabled{false},
-	m_wsRegionName{},
+	m_wsRegionName{ "name" },
 	m_bEditName{false},
 #ifdef _USE_DEBUGGING
 	m_CubeObjList{},
@@ -103,7 +103,7 @@ URegion::URegion(const URegion& _rhs)
 	m_NeighborRegion{},
 	m_DeleteCellsList{ nullptr },
 	m_bDeletionEnabled{ false },
-	m_wsRegionName{},
+	m_wsRegionName{"name"},
 	m_bEditName{false},
 #ifdef _USE_DEBUGGING
 	m_CubeObjList{},
@@ -357,6 +357,37 @@ HRESULT URegion::DeleteLatestCell()
 	return S_OK;
 }
 
+HRESULT URegion::DeleteCell(const _uint& _iIndex)
+{
+	SHPTR<CELLCONTAINER> pCells = m_spNavigation->GetCells();
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+	if (_iIndex < pCells->size())
+	{
+		CELLCONTAINER::iterator it = pCells->begin();
+		std::advance(it, _iIndex);
+
+		for (LIST<CUBOBJS>::iterator v = m_CubeObjList.begin(); v != m_CubeObjList.end(); ++v)
+		{
+			if ((*v).spCell == (*it))
+			{
+				m_DeleteCubesList.insert((*v).spCube1);
+				m_DeleteCubesList.insert((*v).spCube2);
+				m_DeleteCubesList.insert((*v).spCube3);
+				break;
+			}
+		}
+		m_DeleteCellsList.insert((*it));
+		m_bDeletionEnabled = true;
+		return S_OK;
+	}
+	else
+	{
+		return E_INVALIDARG;
+	}
+}
+
+
 void URegion::FlushDeleteCells()
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
@@ -382,6 +413,7 @@ void URegion::FlushDeleteCells()
 	}
 	m_DeleteCubesList.clear();
 
+	int i = 0;
 	for (CELLCONTAINER::iterator iter = pCells->begin(); iter != pCells->end();)
 	{
 		if (m_DeleteCellsList.find((*iter)) != m_DeleteCellsList.end())
@@ -391,8 +423,14 @@ void URegion::FlushDeleteCells()
 			iter = pCells->erase(iter);
 		}
 		else
+		{
+			//¼¿µéÀÇ ÀÎµ¦½º Àç¼³Á¤
+			(*iter)->SetIndex(i++);
 			++iter;
+		}
 	}
+	m_spNavigation->ReadyNeighbor();
+
 	m_DeleteCellsList.clear();
 	m_bDeletionEnabled = false;
 }

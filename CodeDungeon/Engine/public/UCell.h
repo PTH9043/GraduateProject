@@ -37,10 +37,12 @@ public:
 	const _int& GetIndex() const { return m_iIndex; }
 	const _float3& GetColor() const{ return m_f3Color; }
 	CSHPTRREF<UDefaultCell> GetCellPawn() { return m_spCellPawn; }
+	CSHPTRREF<UVIBufferCell> GetCellVIBuffer() { return m_spCellVIBuffer; }
 
 	void SetPoint(const POINT& _ePoint, const _float3& _vPoint) { m_arrPoints[_ePoint] = _vPoint; }
 	void SetCenterPos(const _float3& _vCenterPos) { this->m_vCenterPos = _vCenterPos; }
 	void SetNeighbor(const LINE& _eLine, const _uint& _iIndex) { m_arrNeighbors[_eLine] = _iIndex; }
+	void SetIndex(const _uint& _index) { m_iIndex = _index; }
 public:
 	virtual void Free() override;
 	using	UObject::NativeConstruct;

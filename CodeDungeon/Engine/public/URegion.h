@@ -52,6 +52,7 @@ public:
 		m_wsRegionName = _regionName;
 	}
 	HRESULT DeleteLatestCell();
+	HRESULT DeleteCell(const _uint& _iIndex);
 	void FlushDeleteCells();
 
 	_bool Load(const _wstring& _wstrPath);

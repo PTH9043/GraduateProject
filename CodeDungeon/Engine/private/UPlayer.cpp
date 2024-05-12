@@ -62,10 +62,35 @@ void UPlayer::Collision(CSHPTRREF<UPawn> _pEnemy)
 {
 }
 
-void UPlayer::FollowCameraMove(const _float3& _vPlayerToDistancePosition)
+void UPlayer::FollowCameraMove(const _float3& _vPlayerToDistancePosition, const _double& _TimeElapsed)
 {
-	_float3 vPosition = DirectX::XMVector3Transform(_vPlayerToDistancePosition, GetTransform()->GetWorldMatrix());
-	m_spFollowCamera->GetTransform()->SetPos(vPosition);
-	m_spFollowCamera->GetTransform()->LookAt(GetTransform()->GetPos());
+    // 카메라의 목표 위치를 계산.
+    _float3 vTargetPosition = DirectX::XMVector3Transform(_vPlayerToDistancePosition, GetTransform()->GetWorldMatrix());
+
+    // 카메라의 현재 위치.
+    _float3 vCurrentPosition = m_spFollowCamera->GetTransform()->GetPos();
+
+    // 카메라의 이동 방향을 계산.
+    _float3 vDirection = vTargetPosition - vCurrentPosition;
+    _float3 f3Distance = DirectX::XMVector3Length(vDirection);
+    _float fDistance = f3Distance.x;
+    _float fTimeLag = 0.15f;
+
+    vDirection.Normalize();
+    // 딜레이를 적용한 거리를 계산.
+    float fTimeLagScale = (fTimeLag) ? _TimeElapsed * (1.0f / fTimeLag) : 1.0f;
+    float fAdjustedDistance = fDistance * fTimeLagScale;
+
+    // 카메라 이동 거리를 제한.
+    if (fAdjustedDistance > fDistance) fAdjustedDistance = fDistance;
+    if (fDistance < 0.01f) fAdjustedDistance = fDistance;
+
+    // 적용된 이동 거리에 따라 카메라를 이동.
+    if (fAdjustedDistance > 0)
+    {
+        _float3 vNewPosition = vCurrentPosition + vDirection * fAdjustedDistance;;
+        m_spFollowCamera->GetTransform()->SetPos(vNewPosition);
+    }
+    m_spFollowCamera->GetTransform()->LookAt(_float3(GetTransform()->GetPos().x, GetTransform()->GetPos().y + 7.f, GetTransform()->GetPos().z));
 }
 

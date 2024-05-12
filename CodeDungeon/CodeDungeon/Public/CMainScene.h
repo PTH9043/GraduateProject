@@ -25,12 +25,14 @@ public:
 private:
 	// Main
 	SHPTR<CMainCamera>			m_spMainCamera;
+
 	SHPTR<CMap>							m_spMap;
 	SHPTR< CWarriorPlayer>		m_spWarriorPlayer;
 
 	SHPTR <UFire> m_stFire;
 	FIRENOISEBUFFER* m_stFireNoiseBuffer;
 	FIREDISTORTIONBUFFER* m_stFireDistortionBuffer;
+
 };
 
 END

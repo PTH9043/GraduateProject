@@ -34,7 +34,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	spMainCamera->SetMoveState(false);
 	GetAnimModel()->SetAnimation(L"idle01");
 	//GetTransform()->RotateFix(_float3{ 0.f, DirectX::XMConvertToRadians(180.f), 0.f });
-	//GetTransform()->SetScale({ 0.1f, 0.1f, 0.1f });
+	GetTransform()->SetScale({ 0.5f, 0.5f, 0.5f });
 	return S_OK;
 }
 
@@ -57,19 +57,19 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	{
 		if (spGameInstance->GetDIKeyPressing(DIK_W))
 		{
-			GetTransform()->MoveForward(_dTimeDelta, 10);
+			GetTransform()->MoveForward(_dTimeDelta, 50);
 		}
 		if (spGameInstance->GetDIKeyPressing(DIK_A))
 		{
-			GetTransform()->MoveLeft(_dTimeDelta, 10);
+			GetTransform()->MoveLeft(_dTimeDelta, 50);
 		}
 		if (spGameInstance->GetDIKeyPressing(DIK_D))
 		{
-			GetTransform()->MoveRight(_dTimeDelta, 10);
+			GetTransform()->MoveRight(_dTimeDelta, 50);
 		}
 		if (spGameInstance->GetDIKeyPressing(DIK_S))
 		{
-			GetTransform()->MoveBack(_dTimeDelta, 10);
+			GetTransform()->MoveBack(_dTimeDelta, 50);
 		}
 	}
 
@@ -80,7 +80,7 @@ void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 {
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
 	__super::LateTickActive(_dTimeDelta);
-	FollowCameraMove(_float3{0.f, 200.f, -40.f});
+	FollowCameraMove(_float3{0.f, 20.f, -40.f}, _dTimeDelta);
 }
 
 HRESULT CWarriorPlayer::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)

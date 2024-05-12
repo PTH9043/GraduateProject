@@ -54,9 +54,9 @@ PS_OUT PS_Main(PS_In In)
     vector LightCol = (vShadeDesc + vAmbientDesc + vSpecularDesc);
    // LightCol = clamp(LightCol, 0, 1);
     
-    vector vColor = vDiffuseDesc * LightCol;
+    //vector vColor = vDiffuseDesc * LightCol;
     
-    //vector vColor = vDiffuseDesc;
+    vector vColor = vDiffuseDesc * LightCol;
     
     //vector vColor = lerp(vDiffuseDesc, (vShadeDesc + vAmbientDesc + vSpecularDesc), 0.5f);
     

@@ -3,7 +3,7 @@
 
 #include "ShaderParams.hlsli"
 
-#define MAX_LIGHTS 50
+#define MAX_LIGHTS 100
 struct LIGHTINFO
 {
     float4      vDiffuse;

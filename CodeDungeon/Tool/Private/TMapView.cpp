@@ -28,7 +28,9 @@ TMapView::TMapView(CSHPTRREF<UDevice> _spDevice) :
 	m_iModelSuffix{},
 
 	m_spSelectedModel{ nullptr },
-	m_SelectedModelName{}
+	m_SelectedModelName{},
+	m_DeleteModelsContainer{},
+	m_bAddtoPicking{false}
 {
 }
 
@@ -64,19 +66,32 @@ HRESULT TMapView::ReleaseResource()
 
 void TMapView::TickActive(const _double& _dTimeDelta)
 {
+	//for (auto& model : m_DeleteModelsContainer)
+	//{
+	//	auto it = m_ShowMapModelContainer.find(model);
+
+	//	if (it != m_ShowMapModelContainer.end())
+	//	{
+	//		m_ShowMapModelContainer.erase(it);
+	//	}
+	//}
+	//m_DeleteModelsContainer.clear();
 }
 
 void TMapView::LateTickActive(const _double& _dTimeDetla)
 {
-	for (auto& ShowModel : m_ShowMapModelContainer)
+	if(m_bAddtoPicking)
 	{
-		//픽킹이 가능하도록 픽킹목록에 추가
-		SHPTR<UModel> spModel = ShowModel.second->GetShowModel();
-		for (auto& Mesh : spModel->GetMeshContainers())
+		for (auto& ShowModel : m_ShowMapModelContainer)
 		{
-			SHPTR<UVIBuffer> spVIbuffer = static_pointer_cast<UVIBuffer>(Mesh);
-			SHPTR<UPawn> pawnModel = static_pointer_cast<UPawn>(ShowModel.second);
-			GetGameInstance()->AddPickingObject(pawnModel, spVIbuffer);
+			//픽킹이 가능하도록 픽킹목록에 추가
+			SHPTR<UModel> spModel = ShowModel.second->GetShowModel();
+			for (auto& Mesh : spModel->GetMeshContainers())
+			{
+				SHPTR<UVIBuffer> spVIbuffer = static_pointer_cast<UVIBuffer>(Mesh);
+				SHPTR<UPawn> pawnModel = static_pointer_cast<UPawn>(ShowModel.second);
+				GetGameInstance()->AddPickingObject(pawnModel, spVIbuffer);
+			}
 		}
 	}
 
@@ -275,8 +290,12 @@ void TMapView::ShowModelList()
 			}
 			ImGui::EndListBox();
 		}
-		if (ImGui::Button("Clear Current ShowModels"))
+		ImGui::Checkbox("Add Maps To Picking", &m_bAddtoPicking);
+			
+		/*if (ImGui::Button("Clear Current ShowModels"))
 			ClearCurrentModel();
+		if (ImGui::Button("Clear All"))
+			ClearAllShowModels();*/
 
 		if (m_spSelectedModel != nullptr)
 		{
@@ -292,47 +311,66 @@ void TMapView::ShowModelList()
 	}
 }
 
-void TMapView::ClearCurrentModel()
-{
-	for (auto& showModel : m_ShowMapModelContainer)
-	{
-		if (showModel.second == m_spSelectedModel)
-		{
-			GetGameInstance()->RemoveActor(showModel.second);
-			showModel.second.reset();
-			m_ShowMapModelContainer.erase(showModel.first);
-			break;
-		}
-	}
-	m_spSelectedModel.reset();
-}
-
+//void TMapView::ClearCurrentModel()
+//{
+//	auto it = m_ShowMapModelContainer.begin();
+//	while (it != m_ShowMapModelContainer.end())
+//	{
+//		if (it->second == m_spSelectedModel)
+//		{
+//			GetGameInstance()->RemoveActor(it->second);
+//			m_DeleteModelsContainer.push_back(it->first);
+//			break;
+//		}
+//		else
+//		{
+//			++it;
+//		}
+//	}
+//	m_spSelectedModel.reset();
+//}
+//
+//void TMapView::ClearAllShowModels()
+//{
+//	auto it = m_ShowMapModelContainer.begin();
+//	while (it != m_ShowMapModelContainer.end())
+//	{
+//		GetGameInstance()->RemoveActor(it->second);
+//		m_DeleteModelsContainer.push_back(it->first);
+//		it++;
+//	}
+//	if (m_spSelectedModel != nullptr)
+//		m_spSelectedModel.reset();
+//}
 
 void TMapView::MouseInput()
 {
-	/*SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	_float2 MousePos = spGameInstance->GetMousePosition();
-
-	if (MousePos.x <= 0 || MousePos.x >= WINDOW_WIDTH)
-		return;
-
-	if (MousePos.y <= 0 || MousePos.y >= WINDOW_HEIGHT)
-		return;
-
-	if (!spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_L))
-		return;
-
-	PICKINGDESC tDesc = spGameInstance->GetPickDesc();
-	if (!tDesc.bPickingSuccess)
-		return;
-
-	for (auto& ShowModel : m_ShowMapModelContainer)
+	if(m_bAddtoPicking)
 	{
-		if (ShowModel.second == tDesc.spPawn)
-		{
-			m_spSelectedModel = tDesc.spPawn;
-			m_SelectedModelName = ShowModel.first;
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		_float2 MousePos = spGameInstance->GetMousePosition();
+
+		if (MousePos.x <= 0 || MousePos.x >= WINDOW_WIDTH)
 			return;
+
+		if (MousePos.y <= 0 || MousePos.y >= WINDOW_HEIGHT)
+			return;
+
+		if (!spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_L))
+			return;
+
+		PICKINGDESC tDesc = spGameInstance->GetPickDesc();
+		if (!tDesc.bPickingSuccess)
+			return;
+
+		for (auto& ShowModel : m_ShowMapModelContainer)
+		{
+			if (ShowModel.second == tDesc.spPawn)
+			{
+				m_spSelectedModel = tDesc.spPawn;
+				m_SelectedModelName = ShowModel.first;
+				return;
+			}
 		}
-	}*/
+	}
 }

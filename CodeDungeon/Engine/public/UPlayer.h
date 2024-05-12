@@ -45,7 +45,8 @@ protected:
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) PURE;
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy) PURE;
 
-	void FollowCameraMove(const _float3& _vPlayerToDistancePosition);
+	void FollowCameraMove(const _float3& _vPlayerToDistancePosition, const _double& _TimeElapsed);
+
 protected: /* get set */
 	CSHPTRREF<UCamera> GetFollowCamera() const { return m_spFollowCamera; }
 private:

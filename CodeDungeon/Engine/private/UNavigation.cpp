@@ -175,6 +175,20 @@ SHPTR<UCell> UNavigation::FindCell(const _float3& _vPosition)
 	return nullptr;
 }
 
+SHPTR<UCell> UNavigation::FindCell(const _int& _iIndex)
+{
+	RETURN_CHECK(nullptr == m_spCellContainer, nullptr);
+	_int iNeighborIndex{ 0 };
+	_float3 vLine{};
+	for (auto& iter : (*m_spCellContainer.get())) {
+		if (iter->GetIndex() == _iIndex) {
+			m_iCurIndex = _iIndex;
+			return iter;
+		}
+	}
+	return nullptr;
+}
+
 _bool UNavigation::IsCollision(SHPTR<UCollider>& _pCollider)
 {
 	if (nullptr == _pCollider || nullptr == m_spCollider)
@@ -229,6 +243,7 @@ _bool UNavigation::Save(const _wstring& _wstrPath)
 {
 	std::ofstream save{ _wstrPath, std::ios::binary };
 	RETURN_CHECK(save.fail(), false);
+	RETURN_CHECK_FAILED(ReadyNeighbor(), false); 
 
 	_uint numCells = static_cast<_uint>(m_spCellContainer->size());
 	save.write(reinterpret_cast<const char*>(&numCells), sizeof(_uint));

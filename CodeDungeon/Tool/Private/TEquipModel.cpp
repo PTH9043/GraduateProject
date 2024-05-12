@@ -1,5 +1,6 @@
 #include "ToolDefines.h"
 #include "TEquipModel.h"
+#include "UEquipment.h"
 
 TEquipModel::TEquipModel(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, 
 	const CLONETYPE& _eCloneType) : 
