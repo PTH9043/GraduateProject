@@ -40,7 +40,7 @@ HRESULT TMainScene::LoadSceneData()
 		m_spMainCamera->GetTransform()->SetPos({ 0.f, 10.f, -100.f });
 	}
 	{
-		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL,LIGHTVERSION::TYPE_YONGBBA, {0.5f, 0.5f, 0.5f, 1.f}, {0.15f, 0.15f,0.15f, 1.f}, {0.3f, 0.3f, 0.3f, 1.f}, {0.f, -1.f, 0.f,}, {0.f, 100.f, 0.f}, 0.f, 0.f ,
+		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 1.f}, {0.2f, 0.2f,0.2f, 1.f}, {0.15f, 0.15f, 0.15f, 1.f}, {0.f, -1.f, 0.f,}, {0.f, 100.f, 0.f}, 0.f, 0.f ,
 			1.f, 20.f });
 		/*
 		* 현재 머티리얼은 Diffuse는 밝은 회색으로 개성있게 나와 곱해도 무방. Ambient, Specular추출정보 대부분 검은색이라, 조명의 Ambient Specular을 곱하면 무시되는 수준이라 적용안하는게 좋아보임.
@@ -63,10 +63,10 @@ HRESULT TMainScene::LoadSceneData()
 
 		//Diffuse Light는 확산조명으로 보통 물체의 매끄럽지 않은 표면, 거친 표면에서 일어남.
 		//확산 표면은 물체의 표면에서 모든 방향으로 균일하게 빛을 반사한다고 가정.
-		//AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_SPOT,LIGHTVERSION::TYPE_YONGBBA, {0.3f, 0.3f, 0.3f, 0.f}, {0.15f, 0.125f, 0.11f, 1.f}, {1.f, 0.5f, 0.2f, 1.f}, {0.f, 0.f, 1.f,}
-		//	, m_spMainCamera->GetTransform()->GetPos(), 100.f, 60.f ,
-		//	100.f, 32.f, 8.0f,(float)cos(DirectX::XMConvertToRadians(30.f)),(float)cos(DirectX::XMConvertToRadians(15.f)),_float3(1.0f, 0.01f, 0.0001f) });
-		//
+	/*	AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_SPOT,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 0.f}, {0.15f, 0.125f, 0.11f, 1.f}, {1.f, 0.5f, 0.2f, 1.f}, {0.f, 0.f, 1.f,}
+			, m_spMainCamera->GetTransform()->GetPos(), 100.f, 60.f ,
+			100.f, 32.f, 8.0f,(float)cos(DirectX::XMConvertToRadians(30.f)),(float)cos(DirectX::XMConvertToRadians(15.f)),_float3(1.0f, 0.01f, 0.0001f) });
+		*/
 		/*
 		* SpecularPowValue가 클수록 국소범위 줄어듬 더 좁은면적에서 반사. 권장 32 . 1로갈수록 Specular범위 커짐.
 		자연스러운 조명:
@@ -88,11 +88,15 @@ HRESULT TMainScene::LoadSceneData()
 	
 		
 		
-		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_POINT,LIGHTVERSION::TYPE_YONGBBA, {0.3f, 0.3f, 0.3f, 1.f}, {0.4f, 0.2f, 0.08f, 1.f}, {0.15f, 0.125f, 0.11f, 1.f}, {0.f, 0.f, 1.f,},
-			_float3(0,0,0), 40.f, 0.f ,
+		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_POINT,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 1.f}, {0.4f, 0.2f, 0.08f, 1.f}, {0.8f, 0.4f, 0.16f, 1.f}, {0.f, 0.f, 1.f,},
+			_float3(-555.183f,-32.f,149.312f), 40.f, 0.f ,
 			1.f, 32.f,0.f,0.f,0.f,_float3(1.f,0.01f,0.0001f)});
+
+		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_POINT,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 1.f}, {0.4f, 0.2f, 0.08f, 1.f}, {0.15f, 0.125f, 0.11f, 1.f}, {0.f, 0.f, 1.f,},
+		_float3(50,0,0), 40.f, 0.f ,
+		1.f, 32.f,0.f,0.f,0.f,_float3(1.f,0.01f,0.0001f) });
 		
-	/*	AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_POINT,LIGHTVERSION::TYPE_YONGBBA, {0.3f, 0.3f, 0.3f, 1.f}, {0.2f, 0.1f, 0.04f, 1.f}, {0.15f, 0.125f, 0.11f, 1.f}, {0.f, 0.f, 1.f,},
+	/*	AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_POINT,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 1.f}, {0.2f, 0.1f, 0.04f, 1.f}, {0.15f, 0.125f, 0.11f, 1.f}, {0.f, 0.f, 1.f,},
 			_float3(0,0,0), 20.f, 0.f ,
 			1.f, 32.f,0.f,0.f,0.f,_float3(1.f,0.01f,0.0001f) });*/
 		
@@ -112,19 +116,14 @@ HRESULT TMainScene::LoadSceneData()
 
 void TMainScene::Tick(const _double& _dTimeDelta)
 {
-	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
-	//SHPTR<ULight> SpotLight;
-	//OutLight(LIGHTTYPE::TYPE_SPOT, 0, SpotLight);
-	//SpotLight->SetLightPos(m_spMainCamera->GetTransform()->GetPos());
-	//SpotLight->SetDirection(m_spMainCamera->GetTransform()->GetLook());
-	//if (pGameInstance->GetDIKeyPressing(DIK_1))
-	//	SpotLight->SetLightVersion(LIGHTVERSION::TYPE_ORIGINAL);
-	//if (pGameInstance->GetDIKeyPressing(DIK_2))
-	//	SpotLight->SetLightVersion(LIGHTVERSION::TYPE_YONGBBA);
-	//if (pGameInstance->GetDIKeyPressing(DIK_3))
-	//	SpotLight->SetLightVersion(LIGHTVERSION::TYPE_END);
+	/*SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
+	SHPTR<ULight> SpotLight;
+	OutLight(LIGHTTYPE::TYPE_SPOT, 0, SpotLight);
+	SpotLight->SetLightPos(m_spMainCamera->GetTransform()->GetPos());
+	SpotLight->SetDirection(m_spMainCamera->GetTransform()->GetLook());*/
 
-	SHPTR<ULight> DirLight;
+
+	/*SHPTR<ULight> DirLight;
 	OutLight(LIGHTTYPE::TYPE_DIRECTIONAL, 0, DirLight);
 	if (pGameInstance->GetDIKeyPressing(DIK_4))
 		DirLight->SetLightVersion(LIGHTVERSION::TYPE_ORIGINAL);
@@ -140,7 +139,7 @@ void TMainScene::Tick(const _double& _dTimeDelta)
 		PointLight->SetLightVersion(LIGHTVERSION::TYPE_YONGBBA);
 	_float3 pos = m_spMainCamera->GetTransform()->GetPos();
 	_float3 Look = m_spMainCamera->GetTransform()->GetLook();
-	PointLight->SetLightPos(_float3(-546, -32, 131));
+	PointLight->SetLightPos(_float3(-546, -32, 131));*/
 
 	/*SHPTR<ULight> PointLight2;
 	OutLight(LIGHTTYPE::TYPE_POINT, 1, PointLight2);

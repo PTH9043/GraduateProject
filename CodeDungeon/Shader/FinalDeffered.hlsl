@@ -70,7 +70,7 @@ PS_OUT PS_Main(PS_In Input)
    
         float FogFactor = saturate((fogEnd - fDistanceToCamera) / (fogEnd - fogStart));
   
-        Out.vColor = lerp(float4(0.15f, 0.15f, 0.15f, 1.0f), Out.vColor, FogFactor);                
+        Out.vColor = lerp(float4(0.12f, 0.12f, 0.12f, 1.0f), Out.vColor, FogFactor);                
     }
  
     

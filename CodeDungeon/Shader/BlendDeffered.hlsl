@@ -52,7 +52,7 @@ PS_OUT PS_Main(PS_In In)
     vector vAmbientDesc = g_Texture3.Sample(g_Sampler_Normal, In.vTexUV);
 
     vector LightCol = (vShadeDesc + vAmbientDesc + vSpecularDesc);
-    LightCol = clamp(LightCol, 0, 1);
+   // LightCol = clamp(LightCol, 0, 1);
     
     vector vColor = vDiffuseDesc * LightCol;
     

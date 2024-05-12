@@ -101,26 +101,6 @@ namespace Engine {
 		_float         fSpecularPower{ 0 };
 	};
 
-	struct LIGHTCONTROL
-	{
-		LIGHTCONTROL() = default;
-		LIGHTCONTROL(const RIMLIGHT& _stRimLight, const _float3& _vAttenuation = { 1.f, 0.1f, 0.01f }) :
-			fRimLightPower{ _stRimLight.fRimLightPower }, fRimMin{ _stRimLight.fRimMin },
-			fRimMax{ _stRimLight.fRimMax }, vAttenuation{ _vAttenuation }
-		{}
-
-		// ============= 4================
-		_float			fShadowDepth = 1.f;
-		// RimLight
-		_float			fRimLightPower = 10.f;
-		_float			fRimMin = 0.f;
-		_float			fRimMax = 0.3f;
-		// ============= 8	================
-		_float3		vAttenuation{ 1.f, 0.1f, 0.01f };
-		_float			fPadding2{ 0.f };
-		// Shadow 
-		_float4		vShadowColor = _float4(0.5f, 0.5f, 0.5f, 1.f);
-	};
 
 	typedef struct tagLightParam
 	{
@@ -139,12 +119,12 @@ namespace Engine {
 	typedef struct tagLightInfo
 	{
 		tagLightInfo() = default;
-		tagLightInfo(const LIGHTTYPE& _eLightInfo,const LIGHTVERSION& _eLightVersion, const _float4& _vDiffuse, const _float4& _vAmbient, const _float4& _vSpecular,
+		tagLightInfo(const LIGHTTYPE& _eLightInfo,const LIGHTACTIVE& _eLightActive, const _float4& _vDiffuse, const _float4& _vAmbient, const _float4& _vSpecular,
 			const _float3& _vDirection, const _float3& _vPosition, const _float& _fRange, const _float& _fAngle = 0.f,
 			const _float _fLightPower = 1.f, const _float _fSpecularPowValue = 1.f
 		,const _float _fFallOff=0.f,const _float _fPhi=0.f,const _float _fTheta=0.f
 			,const _float3 _vAttenuation=_float3(0,0,0))
-			: eLightType(_eLightInfo), eLightVersion(_eLightVersion), vDiffuse(_vDiffuse), vAmbient(_vAmbient), vSpecular(_vSpecular)
+			: eLightType(_eLightInfo), eLightActive(_eLightActive), vDiffuse(_vDiffuse), vAmbient(_vAmbient), vSpecular(_vSpecular)
 			, vDirection(_vDirection), vPosition(_vPosition),
 			fRange(_fRange), fAngle(_fAngle), fLightPower(_fLightPower), fSpecularPowValue( _fSpecularPowValue)
 			,fFallOff(_fFallOff), fPhi(_fPhi), fTheta(_fTheta), vAttenuation(_vAttenuation)
@@ -156,7 +136,7 @@ namespace Engine {
 		_float4					vPosition = _float4(0.f, 0.f, 0.f, 0.f);
 		// 4 =====================
 		LIGHTTYPE			eLightType = LIGHTTYPE::LIGHT_END;
-		LIGHTVERSION    eLightVersion = LIGHTVERSION::TYPE_ORIGINAL;
+		LIGHTACTIVE    eLightActive = LIGHTACTIVE::ISACTIVE;
 		_float						fRange = 0.f;
 		_float						fAngle{ 0.f };
 		_float						fLightPower{ 1.f };
@@ -171,11 +151,15 @@ namespace Engine {
 
 	}LIGHTINFO;
 
-	typedef struct tagLightConstrolParam
+	typedef struct tagLightControlParam
 	{
-		LIGHTINFO								tLightInfo{ };
-		LIGHTCONTROL					tLightControl{};
+		LIGHTINFO								tLightInfo;
 	}LIGHTCONTROLPARAM;
+
+	typedef struct tagLightsControlParam {
+		ARRAY<LIGHTINFO, MAX_LIGHTS> tLightInfos;
+		_uint    nLights;
+	}LIGHTPARAMS;
 #pragma endregion LIGHT
 
 #pragma region MODELDATAPARAM
