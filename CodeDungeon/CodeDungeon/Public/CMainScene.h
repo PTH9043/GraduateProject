@@ -21,8 +21,8 @@ public:
 private:
 	// Main
 	SHPTR<CMainCamera>			m_spMainCamera;
-	SHPTR<CMap>							m_spMap;
-	SHPTR< CWarriorPlayer>		m_spWarriorPlayer;
+	SHPTR<CMap>					m_spMap;
+	SHPTR<CWarriorPlayer>		m_spWarriorPlayer;
 };
 
 END
