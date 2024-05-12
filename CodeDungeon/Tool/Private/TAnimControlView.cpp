@@ -278,6 +278,16 @@ void TAnimControlView::EquipView()
 				}
 
 				m_spAnimControlModel->SelectEquip();
+
+				if (true == ImGui::Button("SaveEquip"))
+				{
+
+				}
+				ImGui::SameLine();
+				if (true == ImGui::Button("LoadEquip"))
+				{
+
+				}
 			}
 			else
 			{
