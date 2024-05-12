@@ -9,13 +9,13 @@
 
 UDefaultCell::UDefaultCell(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UPawn(_spDevice, _wstrLayer, _eCloneType, BACKINGTYPE::NON),
-	m_spVIBuffer{ nullptr }, m_spDebuggingConstantBuffer{ nullptr }
+	m_spVIBuffer{ nullptr }
 {
 }
 
 UDefaultCell::UDefaultCell(const UDefaultCell& _rhs)
 	: UPawn(_rhs),
-	m_spVIBuffer{ nullptr }, m_spDebuggingConstantBuffer{ nullptr }
+	m_spVIBuffer{ nullptr }
 {
 }
 
@@ -46,7 +46,6 @@ HRESULT UDefaultCell::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	
 	AddShader(PROTO_RES_DEBUGGINGWIREFRAMESHADER);
 
-	m_spDebuggingConstantBuffer = CreateNative< UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::B14, DEBUGPARAM_SIZE, 1);
 	m_stDebuggParam.g_DebugColor = { 0.f, 1.f, 0.f, 1.f };
 
 	return S_OK;
@@ -69,7 +68,6 @@ HRESULT UDefaultCell::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTa
 {
 	// Settings 
 	__super::RenderActive(_spCommand, _spTableDescriptor);
-	GetShader()->BindCBVBuffer(m_spDebuggingConstantBuffer, &m_stDebuggParam, DEBUGPARAM_SIZE);
 	GetTransform()->BindTransformData(GetShader());
 	m_spVIBuffer->Render(GetShader(), _spCommand);
 	return S_OK;

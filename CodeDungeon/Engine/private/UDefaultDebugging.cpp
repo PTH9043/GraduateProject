@@ -9,26 +9,17 @@
 
 UDefaultDebugging::UDefaultDebugging(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UPawn(_spDevice, _wstrLayer, _eCloneType, BACKINGTYPE::NON),
-	m_spVIBuffer{ nullptr }, m_spDebuggingConstantBuffer{ nullptr },
+	m_spVIBuffer{ nullptr },
 	m_eDebugType{ DEBUGTYPE::DEBUG_END }
 {
 }
 
 UDefaultDebugging::UDefaultDebugging(const UDefaultDebugging& _rhs)
 	: UPawn(_rhs),
-	m_spVIBuffer{ nullptr }, m_spDebuggingConstantBuffer{ nullptr }, m_eDebugType{ DEBUGTYPE::DEBUG_END }
+	m_spVIBuffer{ nullptr }, m_eDebugType{ DEBUGTYPE::DEBUG_END }
 {
 }
 
-void UDefaultDebugging::SetColor(const _float4& _vColor)
-{
-	m_stDebuggParam.vDebugging = _vColor;
-}
-
-void UDefaultDebugging::SetColor(const _float3& _vColor)
-{
-	::memcpy(&m_stDebuggParam.vDebugging, &_vColor, sizeof(_float3));
-}
 
 void UDefaultDebugging::Free()
 {
@@ -59,7 +50,6 @@ HRESULT UDefaultDebugging::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	}
 	AddShader(PROTO_RES_DEBUGGINGDEFAULTSHADER);
 
-	m_spDebuggingConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::B14, DEBUGPARAM_SIZE);
 	m_stDebuggParam.vDebugging.w = 0.5f;
 	return S_OK;
 }
@@ -84,7 +74,7 @@ HRESULT UDefaultDebugging::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRRE
 {
 	// Settings 
 	__super::RenderActive(_spCommand, _spTableDescriptor);
-	GetShader()->BindCBVBuffer(m_spDebuggingConstantBuffer, &m_stDebuggParam, DEBUGPARAM_SIZE);
+
 	GetTransform()->BindTransformData(GetShader());
 	m_spVIBuffer->Render(GetShader(), _spCommand);
 	return S_OK;
