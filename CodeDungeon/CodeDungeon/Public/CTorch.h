@@ -4,6 +4,9 @@
 BEGIN(Engine)
 class UModel;
 class UShaderConstantBuffer;
+class UFire;
+class UParticle;
+class UParticleSystem;
 END
 
 BEGIN(Client)
@@ -14,6 +17,11 @@ BEGIN(Client)
 */
 class CTorch final : public CModelObjects{
 public:
+	struct TORCHDESC
+	{
+		_float4x4		_Worldm{};
+	};
+
 	CTorch(CSHPTRREF<UDevice> _spDevice,
 		const _wstring& _wstrLayer, const CLONETYPE& _eCloneType);
 	CTorch(const CTorch& _rhs);
@@ -25,6 +33,13 @@ public:
 
 private:
 
+	SHPTR<UFire>					m_spFire;
+	FIRENOISEBUFFER*				m_stFireNoiseBuffer;
+	FIREDISTORTIONBUFFER*			m_stFireDistortionBuffer;
+
+	SHPTR<UParticle>		m_spParticle;
+	PARTICLEPARAM* m_stParticleParam;
+	ComputeParticleType* m_stParticleType;
 
 };
 

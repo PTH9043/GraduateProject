@@ -37,14 +37,6 @@ HRESULT TShowAnimModelObject::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	tDesc.vScale = _float3(1.f, 1.f, 1.f);
 	SHPTR<UCollider> Collider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
 
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::uniform_real_distribution<float> dis(0.5f, 1.0f);
-
-	_float3 randomFloat(dis(gen), dis(gen), dis(gen));
-
-	Collider->ChangeColliderColor(randomFloat);
-
 	_wstring mainColliderTag = L"Main";
 	AddColliderInContainer(mainColliderTag, Collider);
 	AddShader(PROTO_RES_ANIMMODELSHADER, RES_SHADER);

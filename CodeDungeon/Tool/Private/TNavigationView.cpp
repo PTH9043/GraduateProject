@@ -66,7 +66,6 @@ HRESULT TNavigationView::NativeConstruct()
 		m_spCubePosArr[i] = static_pointer_cast<UDefaultDebugging>(spGameInstance->CloneActorAddAndNotInLayer(
 			PROTO_ACTOR_DEUBGGINGDEFAULTOBJECT, vecDatas));
 		m_spCubePosArr[i]->GetTransform()->SetPos(_float3(0.f, 0.f, 0.f));
-		m_spCubePosArr[i]->SetColor(_float4(1.0f, 1.0f, 1.0f, 0.5f));
 	}
 #endif
 

@@ -52,15 +52,15 @@ VS_OUT VS_Main(VS_IN In)
 
     // 첫 번째 스케일 및 위쪽 스크롤링 속도 값을 사용하여 첫 번째 노이즈 텍스처에 대한 텍스처 좌표를 계산합니다.
     Out.vTexCoords1 = (In.vTexCoord * fScales.x);
-    Out.vTexCoords1.y = Out.vTexCoords1.y + (fFrameTime * fScrollSpeeds.x);
+    Out.vTexCoords1.y = Out.vTexCoords1.y + (fGrobalDeltaTime * fScrollSpeeds.x);
 
     // 두 번째 스케일 및 위쪽 스크롤링 속도 값을 사용하여 두 번째 노이즈 텍스처의 텍스처 좌표를 계산합니다.
     Out.vTexCoords2 = (In.vTexCoord * fScales.y);
-    Out.vTexCoords2.y = Out.vTexCoords2.y + (fFrameTime * fScrollSpeeds.y);
+    Out.vTexCoords2.y = Out.vTexCoords2.y + (fGrobalDeltaTime * fScrollSpeeds.y);
 
     // 세 번째 스케일 및 위쪽 스크롤링 속도 값을 사용하여 세 번째 노이즈 텍스처의 텍스처 좌표를 계산합니다.
     Out.vTexCoords3 = (In.vTexCoord * fScales.z);
-    Out.vTexCoords3.y = Out.vTexCoords3.y + (fFrameTime * fScrollSpeeds.z);
+    Out.vTexCoords3.y = Out.vTexCoords3.y + (fGrobalDeltaTime * fScrollSpeeds.z);
 
 
     return Out;
