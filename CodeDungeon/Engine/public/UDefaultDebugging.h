@@ -24,6 +24,8 @@ public:
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;
 
 	void AddRenderer(RENDERID _eRenderID);
+	void SetColor(const _float3& _vChangeColor);
+	void SetColor(const _float4& _vChangeColor);
 protected:
 	// Tick, LateTick, Render
 	virtual void TickActive(const _double& _dTimeDelta) override;

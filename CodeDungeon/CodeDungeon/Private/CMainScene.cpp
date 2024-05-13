@@ -73,7 +73,7 @@ HRESULT CMainScene::LoadSceneData()
 				while (torch_it != obj.second.end())
 				{
 					AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_POINT,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 1.f}, {0.4f, 0.2f, 0.08f, 1.f}, {0.8f, 0.4f, 0.16f, 1.f}, {0.f, 0.f, 1.f,},
-					torch_it->get()->GetTransform()->GetPos(), 40.f, 0.f ,
+						_float3(torch_it->get()->GetTransform()->GetPos().x,torch_it->get()->GetTransform()->GetPos().y + 4,torch_it->get()->GetTransform()->GetPos().z), 40.f, 0.f ,
 					1.f, 32.f,0.f,0.f,0.f,_float3(1.f,0.01f,0.0001f) });
 					m_spMap->AddLightCount();
 					torch_it++;

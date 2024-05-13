@@ -48,8 +48,8 @@ public:
 	- collider와 ray의 충돌처리를 위한 함수
 	*/
 	_bool IsCollisionWithRay(const _float3& _vOrigin, const _float3& _vDirection, _float* _pDist);
-
 #ifdef _USE_DEBUGGING
+	void ChangeColliderColor(const _float3& _vChange);
 	void AddRenderer(RENDERID _eID);
 
 #endif

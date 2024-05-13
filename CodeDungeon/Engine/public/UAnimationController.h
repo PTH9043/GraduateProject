@@ -36,6 +36,8 @@ public: /* get set*/
 protected: /* get set  */
 	void SetAnimState(const _int _iAnimState) { this->m_iAnimState = _iAnimState; }
 	void SetTrigger(const _wstring& _wstrTrigger) { this->m_wstrTrigger = _wstrTrigger; }
+
+	void UpdateState(CSHPTRREF<UAnimModel> _spAnimModel, const _int _iAnimState, const _wstring& _wstrTrigger);
 private:
 	_int				m_iAnimState;
 	_wstring		m_wstrTrigger;

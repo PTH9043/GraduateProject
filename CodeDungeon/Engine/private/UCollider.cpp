@@ -370,6 +370,13 @@ _bool UCollider::IsCollisionWithRay(const _float3& _vOrigin, const _float3& _vDi
 }
 
 #ifdef _USE_DEBUGGING
+void UCollider::ChangeColliderColor(const _float3& _vChange)
+{
+	RETURN_CHECK(nullptr == m_spDebugDrawPawn, ;);
+	m_spDebugDrawPawn->SetColor(_vChange);
+}
+
+
 void UCollider::AddRenderer(RENDERID _eID)
 {
 	if (nullptr != m_spDebugDrawPawn)

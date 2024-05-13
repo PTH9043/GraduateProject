@@ -59,6 +59,7 @@ public:
 	void ChangeAnimation(const _wstring& _wstrAnimName, const _double& _dNextTimeAcc);
 	void OnShowOriginAnimation();
 	void OnAdjustTransformToAnimation();
+	void ResetCurAnimEvent();
 public: /* get set */
 	ANIMATIONS& GetAnimations() { return m_vecAnimations; }
 	const ANIMATIONPARAM& GetAnimParam() const { return m_stAnimParam; }
@@ -69,6 +70,7 @@ public: /* get set */
 	const _int GetCurrentAnimIndex() const { return m_iCurAnimIndex; }
 	const _int GetNetAnimIndex() const { return m_iNextAnimIndex; }
 	_bool IsChangeAnimation() const { return m_isChangeAnim; }
+	_bool IsChangedAnimation() const { return m_spNextAnimation == nullptr; }
 
 	const _float4x4& GetPivotMatirx() const { return m_mPivotMatrix; }
 

@@ -59,6 +59,16 @@ void UDefaultDebugging::AddRenderer(RENDERID _eRenderID)
 	AddRenderGroup(_eRenderID);
 }
 
+void UDefaultDebugging::SetColor(const _float3& _vChangeColor)
+{
+	m_stDebuggParam.vDebugging = _vChangeColor;
+}
+
+void UDefaultDebugging::SetColor(const _float4& _vChangeColor)
+{
+	m_stDebuggParam.vDebugging = _vChangeColor;
+}
+
 void UDefaultDebugging::TickActive(const _double& _dTimeDelta)
 {
 }
