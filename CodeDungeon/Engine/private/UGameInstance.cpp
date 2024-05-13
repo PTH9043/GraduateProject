@@ -1199,7 +1199,9 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 
 			CreateGraphicsShader(PROTO_RES_2DFIRESHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"2DFire", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
-					SHADERLIST{ VS_MAIN, PS_MAIN },
+					SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM,DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
+					DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT
+					},
 					RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::LESS_EQUAL, BLEND_TYPE::ALPHA_BLEND
 					));
 
@@ -1414,7 +1416,10 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 					RTDESC{ RTOBJID::NONALPHA_DEPTH_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
 							GraphicDesc->iWinCX, GraphicDesc->iWinCY, {1.f, 1.f, 1.f, 1.f}},
 					RTDESC{ RTOBJID::NONALPHA_POSITION_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
-							GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f } }
+							GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f }},
+							RTDESC{ RTOBJID::NONALPHA_GLOW_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R16G16B16A16_FLOAT,
+					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 1.f, 0.f } //GLow 영역을 픽셀단위로 텍스쳐에 식별색상(ex.빨간색)으로 출력하여 그 해당 영역 조명에서 쎄게받게하던지.
+			}
 			};
 			// Add RenderTargetGroup
 			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::NONALPHA_DEFFERED, vecRts);
@@ -1467,7 +1472,7 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 		_float2(100.f, 320.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 	
 	
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_DEPTH_DEFFERED,
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_GLOW_DEFFERED,
 		_float2(100.f, 430.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 
 

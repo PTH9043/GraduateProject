@@ -467,12 +467,12 @@ void TFireView::FireScalingSetting() {
 
 void TFireView::FirePosSetting() {
 
-	//static _float posX = -555.2f;
-	//static _float posY = -32.310f;
-	//static _float posZ = 149.3f;
-	static _float posX = 0.f;
+	static _float posX = -555.2f;
+	static _float posY = -32.310f;
+	static _float posZ = 149.3f;
+	/*static _float posX = 0.f;
 	static _float posY = 0.f;
-	static _float posZ = 0.f;
+	static _float posZ = 0.f;*/
 
 	ImGui::InputFloat("Input Fire Position X", &posX);
 	ImGui::InputFloat("Input Fire Position Y", &posY);

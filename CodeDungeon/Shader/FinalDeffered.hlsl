@@ -55,6 +55,7 @@ PS_OUT PS_Main(PS_In Input)
     if (IsFogOn)
     {
         float3 vPosition = g_Texture2.Sample(g_Sampler_Normal, Input.vTexUV); //Position
+        float4 vGlow = g_Texture3.Sample(g_Sampler_Normal, Input.vTexUV); //Glow
         float3 vViewPixelPosition = mul(float4(vPosition, 1.0f), g_ViewProjInfoArr[g_CamID].mViewMatrix);
 
         float4 vCameraViewPosition = mul(float4(g_ViewProjInfoArr[0].vCamPosition, 1.0f), g_ViewProjInfoArr[g_CamID].mViewMatrix);
@@ -69,9 +70,12 @@ PS_OUT PS_Main(PS_In Input)
         float fogEnd = 150.0f + fogStart;
    
         float FogFactor = saturate((fogEnd - fDistanceToCamera) / (fogEnd - fogStart));
-  
-        Out.vColor = lerp(float4(0.12f, 0.12f, 0.12f, 1.0f), Out.vColor, FogFactor);                
-    }
+        if(vGlow.a!=1.f)
+        Out.vColor = lerp(float4(0.18f, 0.18f, 0.18f, 1.0f), Out.vColor, FogFactor);
+        else
+            Out.vColor = lerp(float4(0.2f, 0.15f, 0.04f, 1.f), Out.vColor, FogFactor);
+        //Glow인 애들은 알파값이 1로 기록하여 안개를 덜받도록.
+        }
  
     
 
