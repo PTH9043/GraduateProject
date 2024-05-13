@@ -1,8 +1,6 @@
 #pragma once
 #include "UScene.h"
 BEGIN(Engine)
-class UFire;
-class UParticle;
 END
 BEGIN(Client)
 
@@ -28,10 +26,6 @@ private:
 
 	SHPTR<CMap>							m_spMap;
 	SHPTR< CWarriorPlayer>		m_spWarriorPlayer;
-
-	SHPTR<UFire> m_stFire;
-	FIRENOISEBUFFER* m_stFireNoiseBuffer;
-	FIREDISTORTIONBUFFER* m_stFireDistortionBuffer;
 
 };
 

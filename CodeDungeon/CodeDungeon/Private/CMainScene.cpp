@@ -7,7 +7,6 @@
 #include "CMap.h"
 #include "UStageManager.h"
 #include "UStage.h"
-#include "UFire.h"
 #include "UTexGroup.h"
 #include "UTexture.h"
 #include "CWarriorPlayer.h"
@@ -65,6 +64,7 @@ HRESULT CMainScene::LoadSceneData()
 	1.f, 20.f });
 
 
+		//횃불의 조명 추가
 		for (auto& obj : (*m_spMap->GetStaticObjs().get()))
 		{
 			int count = 0;
@@ -104,27 +104,7 @@ HRESULT CMainScene::LoadSceneData()
 void CMainScene::Tick(const _double& _dTimeDelta)
 {
 	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
-	//SHPTR<ULight> SpotLight;
-	//OutLight(LIGHTTYPE::TYPE_SPOT, 0, SpotLight);
-	//SpotLight->SetLightPos(m_spMainCamera->GetTransform()->GetPos());
-	//SpotLight->SetDirection(m_spMainCamera->GetTransform()->GetLook());
-	//if (pGameInstance->GetDIKeyPressing(DIK_1))
-	//	SpotLight->SetLightVersion(LIGHTVERSION::TYPE_ORIGINAL);
-	//if (pGameInstance->GetDIKeyPressing(DIK_2))
-	//	SpotLight->SetLightVersion(LIGHTVERSION::TYPE_YONGBBA);
-	//if (pGameInstance->GetDIKeyPressing(DIK_3))
-	//	SpotLight->SetLightVersion(LIGHTVERSION::TYPE_END);
 
-	//SHPTR<ULight> PointLight;
-	//OutLight(LIGHTTYPE::TYPE_POINT, 0, PointLight);
-	//if (pGameInstance->GetDIKeyPressing(DIK_6))
-	//	PointLight->SetLightVersion(LIGHTVERSION::TYPE_ORIGINAL);
-	//if (pGameInstance->GetDIKeyPressing(DIK_7))
-	//	PointLight->SetLightVersion(LIGHTVERSION::TYPE_YONGBBA);
-	//if (pGameInstance->GetDIKeyPressing(DIK_8))
-	//	PointLight->SetLightVersion(LIGHTVERSION::TYPE_END);
-	//_float3 pos = m_spMainCamera->GetTransform()->GetPos();
-	//PointLight->SetLightPos(_float3(pos.x, pos.y, pos.z));
 
 	SHPTR<ULight> DirLight;
 	OutLight(LIGHTTYPE::TYPE_DIRECTIONAL, 0, DirLight);
