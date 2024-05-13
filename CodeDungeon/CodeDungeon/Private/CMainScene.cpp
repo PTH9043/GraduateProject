@@ -81,14 +81,6 @@ HRESULT CMainScene::LoadSceneData()
 				}
 			}
 		}
-
-		//AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_POINT,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 1.f}, {0.4f, 0.2f, 0.08f, 1.f}, {0.8f, 0.4f, 0.16f, 1.f}, {0.f, 0.f, 1.f,},
-		//	_float3(-555.183f,-32.f,149.312f), 40.f, 0.f ,
-		//	1.f, 32.f,0.f,0.f,0.f,_float3(1.f,0.01f,0.0001f) });
-
-		//AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_POINT,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 1.f}, {0.4f, 0.2f, 0.08f, 1.f}, {0.15f, 0.125f, 0.11f, 1.f}, {0.f, 0.f, 1.f,},
-		//_float3(50,0,0), 40.f, 0.f ,
-		//1.f, 32.f,0.f,0.f,0.f,_float3(1.f,0.01f,0.0001f) });
 	}
 	{
 
@@ -97,27 +89,13 @@ HRESULT CMainScene::LoadSceneData()
 			100.f, 32.f, 8.0f,(float)cos(DirectX::XMConvertToRadians(30.f)),(float)cos(DirectX::XMConvertToRadians(15.f)),_float3(1.0f, 0.01f, 0.0001f) });
 		*/
 	}
-	{
-		
-			SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-			UFire::FIREDESC tFireDesc;
-			tFireDesc.wstrFireShader = PROTO_RES_2DFIRESHADER;
-			m_stFire = std::static_pointer_cast<UFire>(spGameInstance->CloneActorAdd(PROTO_ACTOR_FIRE, { &tFireDesc }));
-		
-			m_stFire->SetActive(true);
-
-	}
-	{
-		m_stFireNoiseBuffer = m_stFire->GetFireNoiseBuffer();
-		m_stFireDistortionBuffer = m_stFire->GetFireDistortionBuffer();
-	}
 
 	{
-		CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_WARRIORANIMCONTROLLER, 
+	/*	CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_WARRIORANIMCONTROLLER, 
 			m_spMap->GetStageManager() };
 		CWarriorPlayer::PLAYERDESC PlayerDesc{m_spMainCamera };
 		m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
-		PROTO_ACTOR_WARRIORPLAYER, {&CharDesc, &PlayerDesc }));
+		PROTO_ACTOR_WARRIORPLAYER, {&CharDesc, &PlayerDesc }));*/
 	}
 
 	return S_OK;
@@ -148,21 +126,12 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 	//_float3 pos = m_spMainCamera->GetTransform()->GetPos();
 	//PointLight->SetLightPos(_float3(pos.x, pos.y, pos.z));
 
-
-	m_stFire->GetTransform()->SetPos(_float3(-555.2f, -32.310f, 149.3f));
-	static float ScaleX = 3.f;
-	static float ScaleY = 6.65f;
-	_float3 ScaleFloat3 = _float3(ScaleX, ScaleY, 1);
-	m_stFire->GetTransform()->SetScale(ScaleFloat3);
-	
-
 	SHPTR<ULight> DirLight;
 	OutLight(LIGHTTYPE::TYPE_DIRECTIONAL, 0, DirLight);
 	
 
 	SHPTR<ULight> PointLight;
 	OutLight(LIGHTTYPE::TYPE_POINT, 0, PointLight);
-
 }
 
 void CMainScene::LateTick(const _double& _dTimeDelta)

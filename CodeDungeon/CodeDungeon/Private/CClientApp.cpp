@@ -17,7 +17,7 @@ CClientApp::CClientApp() :
 	m_spRenderDeltaTimer{ nullptr },
 	m_spRenderTimer{ nullptr },
 	m_dDeltaTime{ 0 },
-	TICK_DOUBLE{ 1 / 60.f },
+	TICK_DOUBLE{ 1 / 180.f },
 	m_dShowTickFPS{ 0.0 },
 	DELTA_TIMER{ L"DELTA_TIMER" },
 	TICK_TIMER{ L"TICK_TIMER" },
@@ -39,10 +39,7 @@ HRESULT CClientApp::NativeConstruct(const HINSTANCE& _hInst, const _uint& _iCmdS
 	m_spGameInstance = GET_INSTANCE(UGameInstance);
 	m_spDataManager = Create<CDataManager>();
 
-	m_spDeltaTimer = m_spGameInstance->CreateTimerAdd(DELTA_TIMER);
-	m_spTickTimer = m_spGameInstance->CreateTimerAdd(TICK_TIMER);
-	m_spRenderTimer = m_spGameInstance->CreateTimerAdd(RENDER_TIMER);
-	m_spRenderDeltaTimer = m_spGameInstance->CreateTimerAdd(RENDER_DELETATIMER);
+	
 
 	// 클라이언트 스레드 등록
 	m_spGameInstance->RegisterFuncToRegister(ClientThread, this);
@@ -83,6 +80,11 @@ void CClientApp::Render()
 
 	// Register 
 	m_spGameInstance->RegisterScene(CreateConstructorNative<CMainScene>(stOutputData.wpDevice.lock()));
+
+	m_spDeltaTimer = m_spGameInstance->CreateTimerAdd(DELTA_TIMER);
+	m_spTickTimer = m_spGameInstance->CreateTimerAdd(TICK_TIMER);
+	m_spRenderTimer = m_spGameInstance->CreateTimerAdd(RENDER_TIMER);
+	m_spRenderDeltaTimer = m_spGameInstance->CreateTimerAdd(RENDER_DELETATIMER);
 
 	MSG msg{};
 	ZeroMemory(&msg, sizeof(MSG));

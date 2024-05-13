@@ -45,22 +45,35 @@ HRESULT UFire::NativeConstructClone(const VOIDDATAS& _convecDatas)
 	if (_convecDatas.size() > 0)
 	{
 		FIREDESC stParticleDesc = UMethod::ConvertTemplate_Index<FIREDESC>(_convecDatas, 0);
-		m_spShaderFireNoiseBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::FIRENOISEBUFFER, 
+		m_spShaderFireNoiseBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::FIRENOISEBUFFER,
 			static_cast<_uint>(sizeof(FIRENOISEBUFFER)));
-		m_spShaderDistortionBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::FIREDISTORTION, 
+		m_spShaderDistortionBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::FIREDISTORTION,
 			static_cast<_uint>(sizeof(FIREDISTORTIONBUFFER)));
 
 		if (m_spFireColorTexGroup == nullptr)m_spFireColorTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_FIRECOLORTEXTUREGROUP));
 		if (m_spFireNoiseTexGroup == nullptr)m_spFireNoiseTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_FIRENOISETEXTUREGROUP));
 		if (m_spFireAlphaTexGroup == nullptr)m_spFireAlphaTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_FIREALPHATEXTUREGROUP));
 		m_spVIBufferRect = static_pointer_cast<UVIBufferRect>(spGameInstance->CloneResource(PROTO_RES_VIBUFFERRECT));
-		
-	
+
+
 
 		AddShader(stParticleDesc.wstrFireShader);
-		
+
 		SetActive(false);
 	}
+	{
+		m_stFireNoiseBuffer.fScales = scales;
+		m_stFireNoiseBuffer.fScrollSpeeds = scrollSpeeds;
+		m_stFireDistortionBuffer.fDistortion1 = distortion1;
+		m_stFireDistortionBuffer.fDistortion2 = distortion2;
+		m_stFireDistortionBuffer.fDistortion3 = distortion3;
+
+		m_stFireDistortionBuffer.fDistortionScale = distortionScale;
+		m_stFireDistortionBuffer.fDistortionBias = distortionBias;
+	}
+	SetColorTexture(L"Sun");
+	SetNoiseTexture(L"noise01");
+
 	return S_OK;
 }
 
@@ -73,26 +86,15 @@ void UFire::Update(const _double& _dTimeDelta)
 		frameTime = 0.0f;
 	}
 	m_stFireNoiseBuffer.fFrameTime = frameTime;
-	/*m_stFireNoiseBuffer.fFrameTime += static_cast<_float>(_dTimeDelta);
-	if (m_stFireNoiseBuffer.fFrameTime > 1000.f) {
-		m_stFireNoiseBuffer.fFrameTime = 0.f;
-	}*/
 
-	//m_stFireNoiseBuffer.fScales = scales;
-	//m_stFireNoiseBuffer.fScrollSpeeds = scrollSpeeds;
-	//m_stFireDistortionBuffer.fDistortion1 = distortion1;
-	//m_stFireDistortionBuffer.fDistortion2 = distortion2;
-	//m_stFireDistortionBuffer.fDistortion3 = distortion3;
-
-	//m_stFireDistortionBuffer.fDistortionScale = distortionScale;
-	//m_stFireDistortionBuffer.fDistortionBias = distortionBias;
 }
 
 
 void UFire::TickActive(const _double& _dTimeDelta)
 {
 
-	Update(_dTimeDelta); {
+	Update(_dTimeDelta);
+	{
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 		_float3 MainCamPos = spGameInstance->GetMainCameraTransform()->GetPos();
 		GetTransform()->LookAtWithFixedUp(_float3(MainCamPos));
@@ -102,7 +104,7 @@ void UFire::TickActive(const _double& _dTimeDelta)
 
 void UFire::LateTickActive(const _double& _dTimeDelta)
 {
-	AddRenderGroup(RENDERID::RI_NONALPHA_MIDDLE);
+	AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
 }
 
 HRESULT UFire::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)

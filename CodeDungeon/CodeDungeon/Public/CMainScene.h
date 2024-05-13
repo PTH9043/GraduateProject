@@ -29,7 +29,7 @@ private:
 	SHPTR<CMap>							m_spMap;
 	SHPTR< CWarriorPlayer>		m_spWarriorPlayer;
 
-	SHPTR <UFire> m_stFire;
+	SHPTR<UFire> m_stFire;
 	FIRENOISEBUFFER* m_stFireNoiseBuffer;
 	FIREDISTORTIONBUFFER* m_stFireDistortionBuffer;
 

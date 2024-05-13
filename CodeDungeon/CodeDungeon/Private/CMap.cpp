@@ -105,8 +105,9 @@ void CMap::LoadStaticObjects()
 		{
 			if(vecit._sModelName == "Torch_FBX.bin")
 			{		
-				SHPTR<CTorch> _Torch = std::static_pointer_cast<CTorch>(spGameInstance->CloneActorAdd(PROTO_ACTOR_TORCH));
-				_Torch->GetTransform()->SetNewWorldMtx(vecit._mWorldMatrix);
+				CTorch::TORCHDESC torchDesc;
+				torchDesc._Worldm = vecit._mWorldMatrix;
+				SHPTR<CTorch> _Torch = std::static_pointer_cast<CTorch>(spGameInstance->CloneActorAdd(PROTO_ACTOR_TORCH, {&torchDesc}));
 				_TorchVec.push_back(_Torch);
 				
 			}
