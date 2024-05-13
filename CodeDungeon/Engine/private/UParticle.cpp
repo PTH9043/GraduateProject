@@ -119,18 +119,17 @@ _bool UParticle::Load(const _wstring& _wstrPath)
 }
 
 
-
-#ifdef _USE_IMGUI
-
 void UParticle::SetTexture(const _wstring& TexName)
 {
-	TextureIndex = m_spTexGroup->GetTextureIndex(TexName);	
+	TextureIndex = m_spTexGroup->GetTextureIndex(TexName);
 }
 
 void UParticle::SetTexture(_uint _index)
 {
 	TextureIndex = _index;
 }
+
+#ifdef _USE_IMGUI
 
 void UParticle::ShowObjectInfo()
 {

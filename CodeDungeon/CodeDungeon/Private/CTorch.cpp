@@ -92,8 +92,9 @@ HRESULT CTorch::NativeConstructClone(const VOIDDATAS& _vecDatas)
 		m_spParticle->SetTexture(L"Particle");
 	}
 	m_spParticle->GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, GetTransform()->GetPos().y + 2.5f, GetTransform()->GetPos().z));
+	m_spParticle->SetActive(true);
 
 	m_spFire->SetActive(true);
-	m_spParticle->SetActive(true);
+	
 	return S_OK;
 }

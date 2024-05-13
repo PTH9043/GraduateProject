@@ -48,10 +48,11 @@ protected:
 public:
 	CSHPTRREF<UTexGroup> GetTextureGroup() const { return m_spTexGroup; }
 	CSHPTRREF<UParticleSystem> GetParticleSystem() const { return m_spParticleSystem; }
-#ifdef _USE_IMGUI
-public:
 	void SetTexture(const _wstring& TexName);
 	void SetTexture(_uint _index);
+#ifdef _USE_IMGUI
+public:
+
 	virtual void ShowObjectInfo() override;
 
 #endif
