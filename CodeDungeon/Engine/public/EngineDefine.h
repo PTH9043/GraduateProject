@@ -136,3 +136,4 @@ using FILEPAIR = std::pair<_wstring, SHPTR<FILEDATA>>;
 
 #define INVALID_MINUS_STAGEVALUE -1
 
+#define _USE_IMGUI

@@ -405,6 +405,39 @@ void UTransform::LookAtWithFixedUp(const _float3& _vTargetPos)
 
 }
 
+void UTransform::LookAtWithFixedUp(const _float3& _vTargetPos, float DeltaTime, float RotationSpeed)
+{
+	_float3 FixedUp = _float3(0, 1, 0);
+	_float3 MyPosition = GetPos();
+	_float3 vLook = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(_vTargetPos, MyPosition));
+	_float3 vRight = DirectX::XMVector3Normalize(XMVector3Cross(vLook, FixedUp));
+
+	// 현재 객체의 시선 방향과 목표 방향 사이의 각도를 구합니다.
+	 
+	float AngleBetween = acosf(GetLook().Dot(vLook));
+
+	// 회전 속도에 시간을 곱하여 회전할 각도를 계산합니다.
+	float RotationAngle = RotationSpeed * DeltaTime;
+
+	// 회전할 각도가 실제 각도보다 작거나 같으면 바로 목표 방향을 향하도록 설정합니다.
+	if (RotationAngle >= AngleBetween)
+	{
+		SetRight(vRight * m_vScale.x);
+		SetUp(FixedUp * m_vScale.y);
+		SetLook(vLook * m_vScale.z);
+	}
+	else
+	{
+		// 선형 보간(Lerp)을 사용하여 현재 각도에서 목표 각도로 부드럽게 회전합니다.
+		_float3 NewLook = DirectX::XMVector3Normalize(DirectX::XMVectorLerp(GetLook(), vLook, DeltaTime));
+		_float3 NewRight = DirectX::XMVector3Normalize(XMVector3Cross(NewLook, FixedUp));
+
+		SetRight(NewRight * m_vScale.x);
+		SetUp(FixedUp * m_vScale.y);
+		SetLook(NewLook * m_vScale.z);
+	}
+}
+
 const _float UTransform::ComputeDistance(const _float3& _vPos)
 {
 	return _float3::Length(GetPos() - _vPos);
