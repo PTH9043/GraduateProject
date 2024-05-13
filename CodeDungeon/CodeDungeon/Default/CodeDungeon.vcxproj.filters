@@ -61,6 +61,9 @@
     <Filter Include="05.Objects\ModelObjects\Map\StaticObjects">
       <UniqueIdentifier>{0baf0576-c976-43a1-b37c-609f41e33825}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Objects\Character\Mob">
+      <UniqueIdentifier>{30c56fa7-f7be-40cc-a4e6-d9bb2330a1e5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ClientDefines.h">
@@ -120,6 +123,12 @@
     <ClInclude Include="..\Public\CTorch.h">
       <Filter>05.Objects\ModelObjects\Map\StaticObjects</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CMummy.h">
+      <Filter>05.Objects\Character\Mob</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CMummyAnimController.h">
+      <Filter>06.Comp\Controller</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -171,6 +180,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\CTorch.cpp">
       <Filter>05.Objects\ModelObjects\Map\StaticObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CMummy.cpp">
+      <Filter>05.Objects\Character\Mob</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CMummyAnimController.cpp">
+      <Filter>06.Comp\Controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

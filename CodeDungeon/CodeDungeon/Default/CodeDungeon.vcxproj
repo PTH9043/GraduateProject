@@ -168,6 +168,8 @@
     <ClInclude Include="..\Public\CMap.h" />
     <ClInclude Include="..\Public\CModelManager.h" />
     <ClInclude Include="..\Public\CModelObjects.h" />
+    <ClInclude Include="..\Public\CMummy.h" />
+    <ClInclude Include="..\Public\CMummyAnimController.h" />
     <ClInclude Include="..\Public\CNetworkClientController.h" />
     <ClInclude Include="..\Public\CProtoMaker.h" />
     <ClInclude Include="..\Public\CRooms.h" />
@@ -187,6 +189,8 @@
     <ClCompile Include="..\Private\CMap.cpp" />
     <ClCompile Include="..\Private\CModelManager.cpp" />
     <ClCompile Include="..\Private\CModelObjects.cpp" />
+    <ClCompile Include="..\Private\CMummy.cpp" />
+    <ClCompile Include="..\Private\CMummyAnimController.cpp" />
     <ClCompile Include="..\Private\CNetworkClientController.cpp" />
     <ClCompile Include="..\Private\CProtoMaker.cpp" />
     <ClCompile Include="..\Private\CRooms.cpp" />

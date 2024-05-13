@@ -33,10 +33,8 @@ public:
 	HRESULT NativeConstructClone(const VOIDDATAS& _tDatas) override;
 
 	void LoadRooms();
-	_bool LoadNavigation();
 	void LoadStaticObjects();
 	
-	CSHPTRREF<UStageManager> GetStageManager() { return m_spStageManager;}
 	CSHPTRREF<ROOMCONTAINER> GetRooms() { return m_spRoomContainer; }
 	CSHPTRREF<STATICOBJCONTAINER> GetStaticObjs() { return m_spStaticObjContainer;}
 
@@ -44,7 +42,6 @@ public:
 	const _uint GetLightCount() { return m_iLightCount; }
 private:
 	SHPTR<ROOMCONTAINER>			m_spRoomContainer;
-	SHPTR<UStageManager>			m_spStageManager;
 	SHPTR<UMapLayout>				m_spMapLayout;
 	SHPTR<STATICOBJCONTAINER>		m_spStaticObjContainer;
 	_uint							m_iLightCount;

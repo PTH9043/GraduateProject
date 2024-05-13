@@ -152,14 +152,6 @@ _bool UFire::Load(const _wstring& _wstrPath)
 }
 
 
-
-#ifdef _USE_IMGUI
-
-
-void UFire::ShowObjectInfo()
-{
-
-}
 void UFire::SetColorTexture(const _wstring& TexName)
 {
 	ColorTextureIndex = m_spFireColorTexGroup->GetTextureIndex(TexName);
@@ -188,6 +180,14 @@ void UFire::SetAlphaTexture(const _wstring& TexName)
 void UFire::SetAlphaTexture(_uint _index)
 {
 	AlphaTextureIndex = _index;
+}
+
+#ifdef _USE_IMGUI
+
+
+void UFire::ShowObjectInfo()
+{
+
 }
 
 #endif 

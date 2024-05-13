@@ -308,7 +308,7 @@ void TAnimControlView::MakeAnimEvent()
 	RETURN_CHECK(nullptr == m_spShowAnimModel, ;);
 
 	static const _char* ANIMTYPETAG[]{ "EFFECT", "SOUND", 
-		"COLLIDER", "CAMERA", "OBJACTIVE", "ANIMCAHNGEBETWEEN"};
+		"COLLIDER", "CAMERA", "OBJACTIVE", "ANIMCAHNGEBETWEEN", "END"};
 
 	SHPTR<UAnimation> spCurAnimation = m_spShowAnimModel->GetCurrentAnimation();
 

@@ -24,12 +24,12 @@ public:
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;
 	
-	virtual HRESULT AddRender(const _uint& _iIndex);
-	void AddRenderAll();
-
 	CSHPTRREF<REGIONLIST> GetRegionList() { return m_spRegionList; }
 	SHPTR<URegion> GetRegion(const _uint& _iIndex);
 
+#ifdef _USE_IMGUI
+	virtual HRESULT AddRender(const _uint& _iIndex);
+	void AddRenderAll();
 	HRESULT AddCell(const _uint& _iCellIndex, SHPTR<UCell>& _pCell);
 	HRESULT ModifyCells(const _uint& _iCellIndex);
 	HRESULT ShowCells(const _uint& _iCellIndex);
@@ -37,21 +37,16 @@ public:
 	HRESULT SetColor(const _uint& _iCellIndex);
 	HRESULT SetRegionName(const _uint& _iCellIndex);
 	HRESULT FlushDeleteCells();
-
-	_bool Load();
-	_bool Save(const _wstring& _wstrPath);
-
 	HRESULT CreateRegion();
 	_int SelectRegion();
 	void Control_Collider(const _uint& _iIndex);
 	HRESULT Delete_Region(_uint& _iIndex);
-
 	// Is Collision
 	_bool Is_Collision(SHPTR<UCollider>& _pCollider, SHPTR<URegion>* _ppOut = nullptr);
-	// Is Picking
-	_bool Is_Picking(const _uint& _iIndex = 0);
-	// ModelPicking
-	_bool Is_ModelPicking(const _uint& _iIndex = 0);
+
+#endif
+	_bool Load();
+	_bool Save(const _wstring& _wstrPath);
 
 	// Update Region
 	void UpdateRegion();

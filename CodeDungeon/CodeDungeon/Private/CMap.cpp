@@ -44,7 +44,6 @@ HRESULT CMap::NativeConstruct()
 	RETURN_CHECK_FAILED(__super::NativeConstruct(), E_FAIL);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
-	m_spStageManager = Create<UStageManager>();
 	m_spRoomContainer = Create<ROOMCONTAINER>();
 	m_spMapLayout = CreateConstructorNativeNotMsg<UMapLayout>(spGameInstance->GetDevice());
 	m_spStaticObjContainer = Create<STATICOBJCONTAINER>();
@@ -87,11 +86,6 @@ void CMap::LoadRooms()
 			return;
 		}
 	}
-}
-
-_bool CMap::LoadNavigation()
-{
-	return m_spStageManager->Load();
 }
 
 void CMap::LoadStaticObjects()

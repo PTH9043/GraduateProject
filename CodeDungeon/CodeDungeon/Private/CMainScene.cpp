@@ -16,7 +16,7 @@
 #include "UCollider.h"
 #include "UMethod.h"
 #include "CTorch.h"
-
+#include "CMummy.h"
 
 
 BEGIN(Client)
@@ -55,7 +55,6 @@ HRESULT CMainScene::LoadSceneData()
 	{
 		m_spMap = CreateConstructorNative<CMap>(spGameInstance->GetDevice());
 		m_spMap->LoadRooms();
-		m_spMap->LoadNavigation();
 		m_spMap->LoadStaticObjects();
 
 		spGameInstance->TurnOnFog();
@@ -83,19 +82,17 @@ HRESULT CMainScene::LoadSceneData()
 		}
 	}
 	{
+		CMummy::CHARACTERDESC CharDesc{PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_MUMMYANIMCONTROLLER};
 
-		/*	AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_SPOT,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 0.f}, {0.15f, 0.125f, 0.11f, 1.f}, {1.f, 0.5f, 0.2f, 1.f}, {0.f, 0.f, 1.f,}
-			, m_spMainCamera->GetTransform()->GetPos(), 100.f, 60.f ,
-			100.f, 32.f, 8.0f,(float)cos(DirectX::XMConvertToRadians(30.f)),(float)cos(DirectX::XMConvertToRadians(15.f)),_float3(1.0f, 0.01f, 0.0001f) });
-		*/
+		m_spMummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(
+			PROTO_ACTOR_MUMMY, { &CharDesc }));
 	}
 
 	{
-	/*	CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_WARRIORANIMCONTROLLER, 
-			m_spMap->GetStageManager() };
+		CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_WARRIORANIMCONTROLLER};
 		CWarriorPlayer::PLAYERDESC PlayerDesc{m_spMainCamera };
 		m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
-		PROTO_ACTOR_WARRIORPLAYER, {&CharDesc, &PlayerDesc }));*/
+		PROTO_ACTOR_WARRIORPLAYER, {&CharDesc, &PlayerDesc }));
 	}
 
 	return S_OK;

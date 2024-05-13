@@ -7,11 +7,12 @@
 @ Explain
 - 모델, 네비게이션 등 데이터를 관리하고 로드하는 매니저 객체
 */
-
+BEGIN(ENGINE)
+class UStageManager;
+END
 BEGIN(Client)
 
 class CModelManager;
-class CNavigationManager;
 
 class CDataManager final : public UBase
 {
@@ -28,7 +29,7 @@ public:
 
 private:
 	SHPTR<CModelManager>		m_spModelManager;
-	SHPTR<CNavigationManager>	m_spNaviManager;
+	SHPTR<UStageManager>		m_spStageManager;
 };
 
 END

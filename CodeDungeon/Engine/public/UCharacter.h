@@ -6,8 +6,7 @@ BEGIN(Engine)
 class UTransform;
 class UAnimModel;
 class UAnimationController;
-class UStageManager;
-class URegion;
+class UNavigation;
 /*
 @ Date: 2024-02-25, Writer: 박태현
 @ Explain
@@ -22,13 +21,10 @@ public:
 		_wstring		wstrAnimModelProtoData;
 		_wstring		wstrAnimControllerProtoData;
 
-		SHPTR< UStageManager>	spStageManager;
-
-		CHARACTERDESC() :wstrAnimModelProtoData{L" "}, wstrAnimControllerProtoData{L" "}, spStageManager{nullptr}
+		CHARACTERDESC() :wstrAnimModelProtoData{L" "}, wstrAnimControllerProtoData{L" "}
 		{ }
-		CHARACTERDESC(const _wstring& _wstrAnimModelPathData, const _wstring& _wstrAnimControllerProtoData, 
-			CSHPTRREF<UStageManager> _spStageManager) :
-			wstrAnimModelProtoData{ _wstrAnimModelPathData }, wstrAnimControllerProtoData{ _wstrAnimControllerProtoData }, spStageManager{ _spStageManager } {}
+		CHARACTERDESC(const _wstring& _wstrAnimModelPathData, const _wstring& _wstrAnimControllerProtoData) :
+			wstrAnimModelProtoData{ _wstrAnimModelPathData }, wstrAnimControllerProtoData{ _wstrAnimControllerProtoData }{}
 	};
 public:
 	UCharacter(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType);
@@ -63,7 +59,7 @@ public:
 	_float3 OtherCharacterDirToLookVectorF3(CSHPTRREF<UTransform> _spOtherTransform);
 public: /* get set */
 	CSHPTRREF<UAnimModel> GetAnimModel() const { return m_spAnimModel; }
-	SHPTR<URegion> GetCurrentRegion() const { return m_wpCurRegion.lock(); }
+	SHPTR<UNavigation> GetCurrentNavi() const { return m_wpCurNavi; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) PURE;
 	virtual void LateTickActive(const _double& _dTimeDelta) PURE;
@@ -75,13 +71,13 @@ protected: /* get set */
 	const _float3& GetPrevPos() const { return m_vPrevPos; }
 private:
 	// AnimationModel
-	SHPTR< UAnimModel>						m_spAnimModel;
+	SHPTR< UAnimModel>				m_spAnimModel;
 
 	SHPTR<UAnimationController>		m_spAnimationController;
 	// 이전 위치 저장
-	_float3													m_vPrevPos;
+	_float3							m_vPrevPos;
 	// 현재 스테이지
-	WKPTR<URegion>								m_wpCurRegion;
+	SHPTR<UNavigation>				m_wpCurNavi;
 };
 
 END

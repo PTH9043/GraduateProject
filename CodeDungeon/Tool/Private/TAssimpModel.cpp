@@ -515,7 +515,7 @@ void TAssimpModel::LoadAnimation(const _wstring& _wstrPath)
 						ifRead.read((_char*)&KeyFrame.vPosition.z, sizeof(_float)); 
 						KeyFrame.vPosition.w = 1.f;
 
-						KeyFrame.vPosition.z *= -1;
+		/*				KeyFrame.vPosition.z *= 1.f;*/
 					}
 				}
 			}

@@ -6,6 +6,9 @@
 #include "CMainCamera.h"
 #include "UTransform.h"
 #include "UAnimModel.h"
+#include "URegion.h"
+#include "UNavigation.h"
+#include "UCell.h"
 
 CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UPlayer(_spDevice, _wstrLayer, _eCloneType)
@@ -29,6 +32,11 @@ HRESULT CWarriorPlayer::NativeConstruct()
 HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);
+
+	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
+	SHPTR<UCell> spCell = spNavigation->FindCell(703);
+
+	GetTransform()->SetPos(spCell->GetCenterPos());
 
 	SHPTR<CMainCamera> spMainCamera = std::static_pointer_cast<CMainCamera>(GetFollowCamera());
 	spMainCamera->SetMoveState(false);

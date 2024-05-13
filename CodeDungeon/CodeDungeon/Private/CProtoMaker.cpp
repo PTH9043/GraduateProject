@@ -5,10 +5,13 @@
 #include "CRooms.h"
 #include "UAnimModel.h"
 #include "CWarriorAnimController.h"
+#include "CMummyAnimController.h"
 #include "UAnimModel.h"
 #include "CWarriorPlayer.h"
+#include "CMummy.h"
 #include "CTorch.h"
 #include "UTexGroup.h"
+
 
 HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, CSHPTRREF<UDevice> _spDevice, CSHPTRREF<UCommand> _spCommand)
 {
@@ -16,7 +19,8 @@ HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, C
 	_spGameInstance->AddPrototype(PROTO_ACTOR_ROOM, CreateConstructorToNative<CRooms>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_TORCH, CreateConstructorToNative<CTorch>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_WARRIORPLAYER, CreateConstructorToNative<CWarriorPlayer>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
-	
+	_spGameInstance->AddPrototype(PROTO_ACTOR_MUMMY, CreateConstructorToNative<CMummy>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
+
 	_spGameInstance->AddPrototype(PROTO_RES_PARTICLETEXTUREGROUP, CLONETYPE::CLONE_STATIC,
 		CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\Particle", true));
 
@@ -37,11 +41,15 @@ HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, C
 HRESULT CProtoMaker::CreateMainSceneProtoData(CSHPTRREF<UGameInstance> _spGameInstance, CSHPTRREF<UDevice> _spDevice, CSHPTRREF<UCommand> _spCommand)
 {
 	_spGameInstance->AddPrototype(PROTO_COMP_WARRIORANIMCONTROLLER, CreateConstructorToNative<CWarriorAnimController>(_spDevice));
-	
+	_spGameInstance->AddPrototype(PROTO_COMP_MUMMYANIMCONTROLLER, CreateConstructorToNative<CMummyAnimController>(_spDevice));
+
 	_float4x4 Matrix = _float4x4::CreateScale(0.1f) /** _float4x4::CreateRotationY(DirectX::XMConvertToRadians(180.f))*/;
 
 	_spGameInstance->AddPrototype(PROTO_RES_FEMAILPLAYERANIMMODEL,CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
 		_spDevice, L"..\\..\\Resource\\AnimModel\\Player\\Convert\\FemalePlayer_FBX.bin", Matrix));
+	_spGameInstance->AddPrototype(PROTO_RES_MUMMYANIMMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
+		_spDevice, L"..\\..\\Resource\\AnimModel\\Mummy\\Convert\\Mummy_DEMO_1_FBX.bin", Matrix));
+
 
 	
 	return S_OK;

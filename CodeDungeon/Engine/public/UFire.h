@@ -40,11 +40,7 @@ public:
 	CSHPTRREF<UTexGroup> GetColorTextureGroup() const { return m_spFireColorTexGroup; }
 	CSHPTRREF<UTexGroup> GetNoiseTextureGroup() const { return m_spFireNoiseTexGroup; }
 	CSHPTRREF<UTexGroup> GetAlphaTextureGroup() const { return m_spFireAlphaTexGroup; }
-	
-#ifdef _USE_IMGUI
-public:
 
-	virtual void ShowObjectInfo() override;
 	void SetColorTexture(const _wstring& TexName);
 	void SetColorTexture(_uint _index);
 	void SetNoiseTexture(const _wstring& TexName);
@@ -54,7 +50,9 @@ public:
 
 	FIRENOISEBUFFER* GetFireNoiseBuffer() { return &m_stFireNoiseBuffer; }
 	FIREDISTORTIONBUFFER* GetFireDistortionBuffer() { return &m_stFireDistortionBuffer; }
-
+#ifdef _USE_IMGUI
+public:
+	virtual void ShowObjectInfo() override;
 #endif
 protected:
 	SHPTR<UTexGroup>				m_spFireColorTexGroup;

@@ -45,7 +45,7 @@ HRESULT UCell::NativeConstruct(ARRAY<_float3, POINT_END>& _Points, const _uint _
 	m_iIndex = _iIndex;
 	ResortPoints();
 
-#ifdef _USE_DEBUGGING
+#ifdef _USE_IMGUI
 	m_spCellVIBuffer = CreateConstructorNative<UVIBufferCell>(GetDevice(), m_arrPoints);
 	RETURN_CHECK(nullptr == m_spCellVIBuffer, E_FAIL);
 #endif
@@ -56,7 +56,7 @@ HRESULT UCell::NativeConstruct(ARRAY<_float3, POINT_END>& _Points, const _uint _
 	}
 	m_vCenterPos /= 3.f;
 
-#ifdef _USE_DEBUGGING
+#ifdef _USE_IMGUI
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	m_spCellPawn = static_pointer_cast<UDefaultCell>(spGameInstance->CloneActorAdd(
 		PROTO_ACTOR_DEUBGGINGDEFAULTCELL, { &m_spCellVIBuffer }));
@@ -81,7 +81,7 @@ HRESULT UCell::NativeConstruct(const CELLDECS& _tCellDesc)
 	m_iIndex = _tCellDesc.iIndex;
 
 	ResortPoints();
-#ifdef _USE_DEBUGGING
+#ifdef _USE_IMGUI
 	m_spCellVIBuffer = CreateConstructorNative<UVIBufferCell>(GetDevice(), m_arrPoints);
 	RETURN_CHECK(nullptr == m_spCellVIBuffer, E_FAIL);
 #endif
@@ -91,17 +91,16 @@ HRESULT UCell::NativeConstruct(const CELLDECS& _tCellDesc)
 	}
 	m_vCenterPos /= 3.f;
 
-#ifdef _USE_DEBUGGING
+#ifdef _USE_IMGUI
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	m_spCellPawn = static_pointer_cast<UDefaultCell>(spGameInstance->CloneActorAdd(
 		PROTO_ACTOR_DEUBGGINGDEFAULTCELL, { &m_spCellVIBuffer }));
-
 #endif
 
 	return S_OK;
 }
 
-#ifdef _USE_DEBUGGING
+#ifdef _USE_IMGUI
 void UCell::AddCellRenderGroup()
 {
 	m_spCellPawn->AddRenderer(RENDERID::RI_NONALPHA_LAST);

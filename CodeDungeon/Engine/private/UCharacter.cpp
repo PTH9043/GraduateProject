@@ -52,14 +52,10 @@ HRESULT UCharacter::NativeConstructClone(const VOIDDATAS& _Datas)
 			{ &ControllerDesc }));
 	}
 	{
-		m_wpCurRegion = CharacterDesc.spStageManager->GetStage()->GetRegion(0);
-		assert(nullptr != m_wpCurRegion.lock());
-
-		SHPTR<URegion> spCurRegion = m_wpCurRegion.lock();
-		SHPTR<UNavigation> spNavigation = spCurRegion->GetNavigation();
-
-		SHPTR<UCell> spCell = spNavigation->FindCell(703);
-		GetTransform()->SetPos(spCell->GetCenterPos());
+		UNavigation::NAVDESC navDesc;
+		navDesc.iCurIndex = 703;
+		m_wpCurNavi = std::static_pointer_cast<UNavigation>(spGameInstance->CloneComp(PROTO_NAVI_INTERIOR, {&navDesc }));
+		assert(nullptr != m_wpCurNavi);
 	}
 	AddShader(PROTO_RES_ANIMMODELSHADER, RES_SHADER);
 	return S_OK;
@@ -155,8 +151,7 @@ void UCharacter::LateTickActive(const _double& _dTimeDelta)
 {
 	// Region 
 	{
-		SHPTR<URegion> spCurRegion = m_wpCurRegion.lock();
-		SHPTR<UNavigation> spNavigation = spCurRegion->GetNavigation();
+		SHPTR<UNavigation> spNavigation = m_wpCurNavi;
 		_float3 vPosition{ GetTransform()->GetPos() };
 		SHPTR<UCell> spCell{};
 

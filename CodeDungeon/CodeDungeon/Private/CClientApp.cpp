@@ -37,9 +37,6 @@ HRESULT CClientApp::NativeConstruct(const HINSTANCE& _hInst, const _uint& _iCmdS
 	m_hInst = _hInst;
 	m_iCmdShow = _iCmdShow;
 	m_spGameInstance = GET_INSTANCE(UGameInstance);
-	m_spDataManager = Create<CDataManager>();
-
-	
 
 	// 클라이언트 스레드 등록
 	m_spGameInstance->RegisterFuncToRegister(ClientThread, this);
@@ -75,6 +72,7 @@ void CClientApp::Render()
 	RETURN_CHECK_FAILED(m_spGameInstance->ReadyInstance(stGraphicDesc, stOutputData), ;);
 	RETURN_CHECK_FAILED(m_spGameInstance->LoadFirstFolder(FIRST_RESOURCE_FOLDER), ;);
 
+	m_spDataManager = CreateNative<CDataManager>();
 	CProtoMaker::CreateProtoData(m_spGameInstance, stOutputData.wpDevice.lock(), stOutputData.wpGpuCmd.lock());
 	m_spDataManager->Load_Data();
 

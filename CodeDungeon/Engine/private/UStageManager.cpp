@@ -19,7 +19,6 @@ _bool UStageManager::Load()
 	m_spStage.reset();
 	m_spStage = CreateConstructorNative<UStage>(spGameInstance->GetDevice());
 	m_spStage->Load();
-	m_spStage->AddArroundRegion();
 
 	return true;
 }

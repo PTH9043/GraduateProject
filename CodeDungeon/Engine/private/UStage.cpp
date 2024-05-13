@@ -40,6 +40,14 @@ HRESULT UStage::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	return S_OK;
 }
 
+SHPTR<URegion> UStage::GetRegion(const _uint& _iIndex)
+{
+	RETURN_CHECK(_iIndex >= m_spRegionList->size(), nullptr)
+		return (*m_spRegionList.get())[_iIndex];
+}
+
+
+#ifdef _USE_IMGUI
 HRESULT UStage::AddRender(const _uint& _iIndex)
 {
 	if (_iIndex >= m_spRegionList->size())
@@ -55,12 +63,6 @@ void UStage::AddRenderAll()
 		iter->AddRegionRenderGroup();
 }
 
-SHPTR<URegion> UStage::GetRegion(const _uint& _iIndex)
-{
-	RETURN_CHECK(_iIndex >= m_spRegionList->size(), nullptr)
-	return (*m_spRegionList.get())[_iIndex];
-}
-
 HRESULT UStage::AddCell(const _uint& _iCellIndex, SHPTR<UCell>& _pCell)
 {
 	if (_iCellIndex >= m_spRegionList->size())
@@ -69,7 +71,6 @@ HRESULT UStage::AddCell(const _uint& _iCellIndex, SHPTR<UCell>& _pCell)
 	(*m_spRegionList.get())[_iCellIndex]->AddCell(_pCell);
 	return S_OK;
 }
-
 
 HRESULT UStage::ModifyCells(const _uint& _iCellIndex)
 {
@@ -123,48 +124,6 @@ HRESULT UStage::FlushDeleteCells()
 			iter->FlushDeleteCells();
 	return S_OK;
 
-}
-
-_bool UStage::Load()
-{
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-
-	m_spRegionList.reset();
-	m_spRegionList = Create<REGIONLIST>();
-
-	SHPTR<FILEGROUP> NaviFolder = spGameInstance->FindFolder(L"Navigation");
-	// Folders 
-	for (const FILEPAIR& File : NaviFolder->FileDataList)
-	{
-		SHPTR<URegion> pRegion = CreateConstructorNative<URegion>(GetDevice());
-		if (nullptr != pRegion)
-		{
-			pRegion->Load(File.second->wstrfilePath);
-			pRegion->SetName(File.first);
-			m_spRegionList->push_back(pRegion);
-		}
-	}
-	return true;
-}
-
-_bool UStage::Save(const _wstring& _wstrPath)
-{
-	_wstring str;
-	str.assign(_wstrPath.begin(), _wstrPath.end());
-	str.append(L"\\Navigation\\");
-
-	for (auto& iter : (*m_spRegionList.get()))
-	{		
-		_wstring RegionNameStr = iter->Get_Name();
-		str.append(RegionNameStr);
-		iter->Save(str);
-
-		// numStr을 다시 제거
-		size_t pos = str.find(RegionNameStr);
-		if (pos != _wstring::npos)
-			str.erase(pos, RegionNameStr.length());
-	}
-	return true;
 }
 
 HRESULT UStage::CreateRegion()
@@ -262,16 +221,50 @@ _bool UStage::Is_Collision(SHPTR<UCollider>& _pCollider, SHPTR<URegion>* _ppOut)
 	}
 	return false;
 }
+#endif
 
-_bool UStage::Is_Picking(const _uint& _iIndex)
+_bool UStage::Load()
 {
-	return _bool();
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+	m_spRegionList.reset();
+	m_spRegionList = Create<REGIONLIST>();
+
+	SHPTR<FILEGROUP> NaviFolder = spGameInstance->FindFolder(L"Navigation");
+	// Folders 
+	for (const FILEPAIR& File : NaviFolder->FileDataList)
+	{
+		SHPTR<URegion> pRegion = CreateConstructorNative<URegion>(GetDevice());
+		if (nullptr != pRegion)
+		{
+			pRegion->Load(File.second->wstrfilePath);
+			pRegion->SetName(File.first);
+			m_spRegionList->push_back(pRegion);
+		}
+	}
+	return true;
 }
 
-_bool UStage::Is_ModelPicking(const _uint& _iIndex)
+_bool UStage::Save(const _wstring& _wstrPath)
 {
-	return _bool();
+	_wstring str;
+	str.assign(_wstrPath.begin(), _wstrPath.end());
+	str.append(L"\\Navigation\\");
+
+	for (auto& iter : (*m_spRegionList.get()))
+	{
+		_wstring RegionNameStr = iter->Get_Name();
+		str.append(RegionNameStr);
+		iter->Save(str);
+
+		// numStr을 다시 제거
+		size_t pos = str.find(RegionNameStr);
+		if (pos != _wstring::npos)
+			str.erase(pos, RegionNameStr.length());
+	}
+	return true;
 }
+
 
 void UStage::UpdateRegion()
 {

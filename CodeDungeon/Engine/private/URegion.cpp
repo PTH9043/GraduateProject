@@ -9,9 +9,9 @@
 #include "UMethod.h"
 #include "UDefaultCell.h"
 
+#ifdef _USE_IMGUI
 void URegion::tagCubeObjs::Create(SHPTRREF<UCell> _pCell)
 {
-#ifdef _USE_DEBUGGING
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	UDefaultDebugging::DEBUGTYPE eDebugType{ UDefaultDebugging::DEBUGTYPE::DEBUG_END };
 	eDebugType = UDefaultDebugging::DEBUGTYPE::DEBUG_CUBE;
@@ -34,7 +34,6 @@ void URegion::tagCubeObjs::Create(SHPTRREF<UCell> _pCell)
 	
 
 	spCell = _pCell;
-#endif
 }
 
 void URegion::tagCubeObjs::Rebalance()
@@ -77,6 +76,7 @@ HRESULT URegion::AddRegionRenderGroup()
 	}
 	return S_OK;
 }
+#endif
 
 URegion::URegion(CSHPTRREF<UDevice> _spDevice)
 	: UComponent(_spDevice),
@@ -87,9 +87,9 @@ URegion::URegion(CSHPTRREF<UDevice> _spDevice)
 	m_DeleteCellsList{nullptr},
 	m_bDeletionEnabled{false},
 	m_wsRegionName{ "name" },
-	m_bEditName{false},
-#ifdef _USE_DEBUGGING
-	m_CubeObjList{},
+	m_bEditName{false}
+#ifdef _USE_IMGUI
+	,m_CubeObjList{},
 	m_DeleteCubesList{ nullptr }
 #endif
 {
@@ -104,9 +104,9 @@ URegion::URegion(const URegion& _rhs)
 	m_DeleteCellsList{ nullptr },
 	m_bDeletionEnabled{ false },
 	m_wsRegionName{"name"},
-	m_bEditName{false},
-#ifdef _USE_DEBUGGING
-	m_CubeObjList{},
+	m_bEditName{false}
+#ifdef _USE_IMGUI
+	,m_CubeObjList{},
 	m_DeleteCubesList{nullptr}
 #endif
 {
@@ -128,16 +128,20 @@ HRESULT URegion::NativeConstruct()
 HRESULT URegion::NativeConstructClone(const VOIDDATAS& _vecDatas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_vecDatas), E_FAIL);
+	
+
 
 	return S_OK;
 }
 
+
+#ifdef _USE_IMGUI
 HRESULT URegion::AddCell(SHPTR<UCell>& _pCell)
 {
 	if (nullptr != m_spNavigation)
 	{
 		m_spNavigation->AddCell(_pCell);
-#ifdef _USE_DEBUGGING
+#ifdef _USE_IMGUI
 		CUBOBJS tObjs;
 		tObjs.Create(_pCell);
 		m_CubeObjList.push_back(tObjs);
@@ -434,12 +438,13 @@ void URegion::FlushDeleteCells()
 	m_DeleteCellsList.clear();
 	m_bDeletionEnabled = false;
 }
+#endif
 
 _bool URegion::Load(const _wstring& _wstrPath)
 {
 	RETURN_CHECK(nullptr == m_spNavigation, false)
 	m_spNavigation->Load(_wstrPath);
-#ifdef _USE_DEBUGGING
+#ifdef _USE_IMGUI
 	for (SHPTR<UCell> iter : *m_spNavigation->GetCells())
 	{
 		CUBOBJS tObjs;
@@ -464,7 +469,7 @@ _bool URegion::Is_Collision(SHPTR<UCollider>& _pCollider)
 
 	return m_spNavigation->IsCollision(_pCollider);
 }
-
+#ifdef _USE_IMGUI
 void URegion::Control_Collider()
 {
 	if (nullptr == m_spNavigation)
@@ -493,7 +498,7 @@ void URegion::Control_Collider()
 		}
 	}
 }
-
+#endif
 void URegion::Add_NeighborRegion(CSHPTRREF<URegion> _pRegion)
 {
 	if (nullptr == _pRegion || nullptr == m_spNavigation)

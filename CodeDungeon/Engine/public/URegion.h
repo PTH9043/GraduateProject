@@ -11,7 +11,7 @@ class UDefaultDebugging;
 class URegion : public UComponent
 {
 public:
-#ifdef _USE_DEBUGGING
+#ifdef _USE_IMGUI
 	typedef struct tagCubeObjs
 	{
 		SHPTR<UCell> spCell;
@@ -23,8 +23,8 @@ public:
 		void Rebalance();
 		void AddCubesRenderGroup();
 	}CUBOBJS;
-#endif
 	HRESULT AddRegionRenderGroup();
+#endif
 	URegion(CSHPTRREF<UDevice> _spDevice);
 	URegion(const URegion& _rhs);
 	DESTRUCTOR(URegion)
@@ -40,28 +40,28 @@ public:
 	const _uint& Get_Index() const { return m_iIndex; }
 	const _wstring& Get_Name() const { return m_wsRegionName; }
 	void Set_Index(const _uint& _iIndex) { this->m_iIndex = _iIndex; }
-
+	void SetName(const _wstring& _regionName)
+	{
+		m_wsRegionName = _regionName;
+	}
+#ifdef _USE_IMGUI
 	HRESULT AddCell(SHPTR<UCell>& _pCell);
 	HRESULT ModifyCells();
 	HRESULT ShowCells();
 	HRESULT ClearCell();
 	HRESULT SetColor();
 	HRESULT SetName();
-	void SetName(const _wstring& _regionName)
-	{
-		m_wsRegionName = _regionName;
-	}
 	HRESULT DeleteLatestCell();
 	HRESULT DeleteCell(const _uint& _iIndex);
 	void FlushDeleteCells();
+	void Control_Collider();
 
+#endif
 	_bool Load(const _wstring& _wstrPath);
 	_bool Save(const _wstring& _wstrPath);
 
 	// Is Collision
 	_bool Is_Collision(SHPTR<UCollider>& _pCollider);
-	// Control Collider
-	void Control_Collider();
 
 	void ClearNeightborRegion() { m_NeighborRegion.clear(); }
 	// Add Neighbor Region
@@ -81,7 +81,7 @@ protected:
 	_wstring m_wsRegionName;
 	_bool m_bEditName;
 
-#ifdef _USE_DEBUGGING
+#ifdef _USE_IMGUI
 	LIST<CUBOBJS>	m_CubeObjList;
 	SET<SHPTR<UDefaultDebugging>> m_DeleteCubesList;
 #endif

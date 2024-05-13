@@ -7,6 +7,7 @@ BEGIN(Client)
 class CMainCamera;
 class CMap;
 class CWarriorPlayer;
+class CMummy;
 
 
 class CMainScene final : public UScene{
@@ -26,6 +27,7 @@ private:
 
 	SHPTR<CMap>							m_spMap;
 	SHPTR< CWarriorPlayer>		m_spWarriorPlayer;
+	SHPTR<CMummy>				m_spMummy;
 
 };
 
