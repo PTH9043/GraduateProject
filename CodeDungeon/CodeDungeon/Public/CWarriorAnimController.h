@@ -3,12 +3,18 @@
 
 BEGIN(Client)
 class CWarriorPlayer;
+class UAnimation;
 /*
 @ Date: 2024-04-30, Writer: 박태현
 @ Explain
 -  Warrior를 조종하는 클래스
 */
 class CWarriorAnimController final : public UAnimationController {
+public:
+	enum WARRIOR_STATE {
+		ANIM_WALKBACK = COMMONSTATE::ANIM_RUN,
+		ANIM_RUNBACK,
+	};
 public:
 	CWarriorAnimController(CSHPTRREF<UDevice> _spDevice);
 	CWarriorAnimController(const CWarriorAnimController& _rhs);
@@ -25,6 +31,7 @@ public:
 	virtual void Tick(const _double& _dTimeDelta) override;
 private:
 	WKPTR< CWarriorPlayer>			m_wpWarriorPlayer;
+	_bool												m_isComboStack;
 };
 
 END

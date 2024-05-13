@@ -265,6 +265,11 @@ void UAnimModel::OnAdjustTransformToAnimation()
 		spRootBoneNode->OnRootBoneNode();
 }
 
+void UAnimModel::ResetCurAnimEvent()
+{
+	m_spCurAnimation->ResetAnimChangeEventNode();
+}
+
 HRESULT UAnimModel::CreateAnimation(const  VECTOR<ANIMDESC>& _convecAnimDesc, const _wstring& _wstrPath)
 {
 	m_vecAnimations.reserve(_convecAnimDesc.size());

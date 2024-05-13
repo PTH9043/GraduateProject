@@ -1,6 +1,10 @@
 #pragma once
 #include "UPlayer.h"
 
+BEGIN(Engine)
+class UGameInstance;
+END
+
 BEGIN(Client)
 /*
 @ Date: 2024-04-30, Writer: นฺลยว๖
@@ -25,7 +29,10 @@ protected:
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy) override;
 private:
-	
+	void TranslateStateMoveAndRunF(CSHPTRREF<UGameInstance> _spGameInstance, const _double& _dTimeDelta, const _float _fSpeed);
+private:
+	_float				m_fMoveSpeed;
+	_float				m_fRunSpeed;
 };
 
 END

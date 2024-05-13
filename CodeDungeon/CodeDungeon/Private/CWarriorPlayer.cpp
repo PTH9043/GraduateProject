@@ -8,12 +8,16 @@
 #include "UAnimModel.h"
 
 CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
-	: UPlayer(_spDevice, _wstrLayer, _eCloneType)
+	: UPlayer(_spDevice, _wstrLayer, _eCloneType),
+	m_fMoveSpeed{50.f},
+	m_fRunSpeed{100.f}
 {
 }
 
 CWarriorPlayer::CWarriorPlayer(const CWarriorPlayer& _rhs) : 
-	UPlayer(_rhs)
+	UPlayer(_rhs),
+	m_fMoveSpeed{ 50.f },
+	m_fRunSpeed{ 100.f }
 {
 }
 
@@ -42,6 +46,9 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
 	GetAnimationController()->Tick(_dTimeDelta);
+	GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
+
+	_int AnimState = GetAnimationController()->GetAnimState();
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	// Rotation 
@@ -53,27 +60,31 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		}
 	}
 	// Move
-	if (CWarriorAnimController::ANIM_MOVE == GetAnimationController()->GetAnimState())
+	if (CWarriorAnimController::ANIM_MOVE == AnimState)
 	{
-		if (spGameInstance->GetDIKeyPressing(DIK_W))
-		{
-			GetTransform()->MoveForward(_dTimeDelta, 50);
-		}
-		if (spGameInstance->GetDIKeyPressing(DIK_A))
-		{
-			GetTransform()->MoveLeft(_dTimeDelta, 50);
-		}
-		if (spGameInstance->GetDIKeyPressing(DIK_D))
-		{
-			GetTransform()->MoveRight(_dTimeDelta, 50);
-		}
+		TranslateStateMoveAndRunF(spGameInstance, _dTimeDelta, m_fMoveSpeed);
+	}
+
+	if (CWarriorAnimController::ANIM_RUN == AnimState)
+	{
+		TranslateStateMoveAndRunF(spGameInstance, _dTimeDelta, m_fRunSpeed);
+	}
+
+	if (CWarriorAnimController::ANIM_WALKBACK == AnimState)
+	{
 		if (spGameInstance->GetDIKeyPressing(DIK_S))
 		{
-			GetTransform()->MoveBack(_dTimeDelta, 50);
+			GetTransform()->MoveBack(_dTimeDelta, m_fMoveSpeed);
 		}
 	}
 
-	GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
+	if (CWarriorAnimController::ANIM_RUNBACK == AnimState)
+	{
+		if (spGameInstance->GetDIKeyPressing(DIK_S))
+		{
+			GetTransform()->MoveBack(_dTimeDelta, m_fRunSpeed);
+		}
+	}
 }
 
 void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
@@ -95,5 +106,13 @@ HRESULT CWarriorPlayer::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPT
 
 void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy)
 {
+}
+
+void CWarriorPlayer::TranslateStateMoveAndRunF(CSHPTRREF<UGameInstance> _spGameInstance, const _double& _dTimeDelta, const _float _fSpeed)
+{
+	if (_spGameInstance->GetDIKeyPressing(DIK_W))
+	{
+		GetTransform()->MoveForward(_dTimeDelta, _fSpeed);
+	}
 }
 

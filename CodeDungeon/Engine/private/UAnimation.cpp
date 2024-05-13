@@ -155,7 +155,6 @@ void UAnimation::UpdateNextAnimTransformMatrices(const _double& _dTimeDelta, con
 	{
 		m_fSupplySituationValue = 0.001f;
 		m_isSupplySituation = false;
-		ResetAnimChangeEventNode();
 	}
 	else
 	{

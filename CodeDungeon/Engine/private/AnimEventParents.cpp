@@ -76,7 +76,7 @@ _bool UAnimSectionEvent::EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, cons
 	else
 	{
 		EventSituation(_pPawn, _pAnimModel, _dTimeDelta, _dTimeAcc);
-		return true;
+		return false;
 	}
 	return false;
 }

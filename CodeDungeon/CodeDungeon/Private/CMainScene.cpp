@@ -149,7 +149,7 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 	//PointLight->SetLightPos(_float3(pos.x, pos.y, pos.z));
 
 
-	m_stFire->GetTransform()->SetPos(_float3(-555.2f, -32.310f, 149.3f));
+	m_stFire->GetTransform()->SetPos(_float3(-0.f, -0.f, 0.f));
 	static float ScaleX = 3.f;
 	static float ScaleY = 6.65f;
 	_float3 ScaleFloat3 = _float3(ScaleX, ScaleY, 1);

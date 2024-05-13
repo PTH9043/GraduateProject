@@ -46,7 +46,9 @@ HRESULT TShowModelObject::NativeConstructClone(const VOIDDATAS& _vecDatas)
 
 	_float3 randomFloat(dis(gen), dis(gen), dis(gen));
 
+#ifdef _USE_DEBUGGING
 	Collider->ChangeColliderColor(randomFloat);
+#endif
 	_wstring mainColliderTag = L"Main";
 	AddColliderInContainer(mainColliderTag, Collider);
 

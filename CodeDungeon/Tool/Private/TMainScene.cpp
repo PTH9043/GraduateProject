@@ -40,7 +40,7 @@ HRESULT TMainScene::LoadSceneData()
 		m_spMainCamera->GetTransform()->SetPos({ 0.f, 10.f, -100.f });
 	}
 	{
-		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 1.f}, {0.2f, 0.2f,0.2f, 1.f}, {0.15f, 0.15f, 0.15f, 1.f}, {0.f, -1.f, 0.f,}, {0.f, 100.f, 0.f}, 0.f, 0.f ,
+		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL,LIGHTACTIVE::ISACTIVE, {1.f, 1.f, 1.f, 1.f}, {0.2f, 0.2f,0.2f, 1.f}, {0.15f, 0.15f, 0.15f, 1.f}, {0.f, -1.f, 0.f,}, {0.f, 100.f, 0.f}, 0.f, 0.f ,
 			1.f, 20.f });
 		/*
 		* 현재 머티리얼은 Diffuse는 밝은 회색으로 개성있게 나와 곱해도 무방. Ambient, Specular추출정보 대부분 검은색이라, 조명의 Ambient Specular을 곱하면 무시되는 수준이라 적용안하는게 좋아보임.
