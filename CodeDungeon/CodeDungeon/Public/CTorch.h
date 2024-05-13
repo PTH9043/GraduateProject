@@ -5,6 +5,8 @@ BEGIN(Engine)
 class UModel;
 class UShaderConstantBuffer;
 class UFire;
+class UParticle;
+class UParticleSystem;
 END
 
 BEGIN(Client)
@@ -34,6 +36,11 @@ private:
 	SHPTR<UFire>					m_spFire;
 	FIRENOISEBUFFER*				m_stFireNoiseBuffer;
 	FIREDISTORTIONBUFFER*			m_stFireDistortionBuffer;
+
+	SHPTR<UParticle>		m_spParticle;
+	PARTICLEPARAM* m_stParticleParam;
+	ComputeParticleType* m_stParticleType;
+
 };
 
 END
