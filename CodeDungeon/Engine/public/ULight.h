@@ -20,7 +20,7 @@ public:
 	const LIGHTTYPE GetLightType() const { return m_stLightParam.tLightInfo.eLightType; }
 	// set 
 	void SetLightType(const LIGHTTYPE _eLightType) { this->m_stLightParam.tLightInfo.eLightType = _eLightType; }
-	void SetActive(const LIGHTACTIVE& _bIsActive) { this->m_stLightParam.tLightInfo.eLightActive = _bIsActive; }
+	void SetActive(const LIGHTACTIVE& _bIsActive) { this->m_stLightParam.tLightInfo.eLightActive = _bIsActive; m_isActive = static_cast<_bool>(_bIsActive);}
 	void SetActive(const _bool& _bIsActive) { m_isActive = _bIsActive; }
 	// Set Diffuse Ambient Specular
 	void SetDiffuse(const _float3& _vDiffuse) { this->m_stLightParam.tLightInfo.vDiffuse = _vDiffuse; }

@@ -74,7 +74,7 @@ void UPlayer::FollowCameraMove(const _float3& _vPlayerToDistancePosition, const 
     _float3 vDirection = vTargetPosition - vCurrentPosition;
     _float3 f3Distance = DirectX::XMVector3Length(vDirection);
     _float fDistance = f3Distance.x;
-    _float fTimeLag = 0.15f;
+    _float fTimeLag = 0.05f;
 
     vDirection.Normalize();
     // 딜레이를 적용한 거리를 계산.
@@ -92,5 +92,7 @@ void UPlayer::FollowCameraMove(const _float3& _vPlayerToDistancePosition, const 
         m_spFollowCamera->GetTransform()->SetPos(vNewPosition);
     }
     m_spFollowCamera->GetTransform()->LookAt(_float3(GetTransform()->GetPos().x, GetTransform()->GetPos().y + 7.f, GetTransform()->GetPos().z));
+
+
 }
 

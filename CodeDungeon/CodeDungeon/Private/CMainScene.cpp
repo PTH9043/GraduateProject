@@ -3,7 +3,11 @@
 #include "UGameInstance.h"
 #include "CMainCamera.h"
 #include "ULight.h"
+#include "UFire.h"
 #include "UTransform.h"
+#include "ULight.h"
+#include "UParticle.h"
+#include "UParticleSystem.h"
 #include "CMap.h"
 #include "UStageManager.h"
 #include "UStage.h"
@@ -100,7 +104,55 @@ HRESULT CMainScene::LoadSceneData()
 
 void CMainScene::Tick(const _double& _dTimeDelta)
 {
+	_float3 PlayerPos = m_spWarriorPlayer->GetTransform()->GetPos();
 	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
+	
+	for (auto& obj : (*m_spMap->GetStaticObjs().get()))
+	{
+		int count = 0;
+		if (UMethod::ConvertWToS(obj.first) == "Torch_FBX.bin")
+		{
+			auto torch_it = obj.second.begin();
+			while (torch_it != obj.second.end())
+			{
+				_float3 torchPos = torch_it->get()->GetTransform()->GetPos();
+				_float3 distance = torchPos - PlayerPos;
+				float distanceSq = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
+				CTorch* pTorch = dynamic_cast<CTorch*>(torch_it->get());
+			
+				
+				if (distanceSq <= 180 *180)
+				{
+					torch_it->get()->SetActive(true);
+					ActiveLIght(LIGHTTYPE::TYPE_POINT, count, LIGHTACTIVE::ISACTIVE);
+					// dynamic_cast를 사용하여 자식 클래스로 캐스팅
+					
+					if (pTorch != nullptr)
+					{
+						// 자식 클래스로 캐스팅된 경우에만 GetParticle 함수 호출 가능
+						pTorch->GetParticle()->SetActive(true);
+						pTorch->GetFire()->SetActive(true);
+					}
+				}
+				else {
+					torch_it->get()->SetActive(false);
+					ActiveLIght(LIGHTTYPE::TYPE_POINT, count, LIGHTACTIVE::NONACTIVE);
+					if (pTorch != nullptr)
+					{
+						// 자식 클래스로 캐스팅된 경우에만 GetParticle 함수 호출 가능
+						pTorch->GetParticle()->SetActive(false);
+						pTorch->GetFire()->SetActive(false);
+					}
+				}
+				torch_it++;
+				count++;
+			}
+		}
+	}
+
+
+
+	
 
 
 	SHPTR<ULight> DirLight;

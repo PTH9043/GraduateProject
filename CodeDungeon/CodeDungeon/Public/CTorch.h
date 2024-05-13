@@ -31,6 +31,9 @@ public:
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;
 
+	SHPTR<UFire>& GetFire() { return m_spFire; }
+	SHPTR<UParticle>& GetParticle() { return m_spParticle; }
+
 private:
 
 	SHPTR<UFire>					m_spFire;
