@@ -84,11 +84,11 @@ URegion::URegion(CSHPTRREF<UDevice> _spDevice)
 	m_spNavigation{ nullptr },
 	m_iIndex{ 0 },
 	m_NeighborRegion{},
-	m_DeleteCellsList{nullptr},
-	m_bDeletionEnabled{false},
 	m_wsRegionName{ "name" },
 	m_bEditName{false}
-#ifdef _USE_IMGUI
+#ifdef _EDIT_NAVI
+	,m_DeleteCellsList{ nullptr },
+	m_bDeletionEnabled{ false },
 	,m_CubeObjList{},
 	m_DeleteCubesList{ nullptr }
 #endif
@@ -101,11 +101,11 @@ URegion::URegion(const URegion& _rhs)
 	m_spNavigation{ nullptr },
 	m_iIndex{ 0 },
 	m_NeighborRegion{},
-	m_DeleteCellsList{ nullptr },
-	m_bDeletionEnabled{ false },
 	m_wsRegionName{"name"},
 	m_bEditName{false}
-#ifdef _USE_IMGUI
+#ifdef _EDIT_NAVI
+	,m_DeleteCellsList{ nullptr },
+	m_bDeletionEnabled{ false },
 	,m_CubeObjList{},
 	m_DeleteCubesList{nullptr}
 #endif

@@ -17,9 +17,9 @@ m_arrNeighbors{ -1, -1, -1 },
 m_vCenterPos{},
 m_iIndex{ 0 },
 m_vPlane{},
-m_f3Color{},
+m_f3Color{}
 #ifdef _EDIT_NAVI
-m_spCellVIBuffer{ nullptr },
+,m_spCellVIBuffer{ nullptr },
 m_spCellPawn{ nullptr }
 #endif
 {

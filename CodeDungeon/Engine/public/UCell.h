@@ -1,6 +1,6 @@
 #pragma once
 #include "UObject.h"
-#define _EDIT_NAVI
+//#define _EDIT_NAVI
 
 BEGIN(Engine)
 class UDefaultCell;
@@ -52,11 +52,12 @@ public:
 	_bool IsComparePoints(const _float3& _vPointA, const _float3& _vPointB);
 	_bool IsComparePoint(CSHPTRREF<UCell> _pCell);
 	const _float ComputeHeight(const _float3& _vPosition);
-	
+	const _float3& GetColor() const { return m_f3Color; }
+
 #ifdef _EDIT_NAVI
 	CSHPTRREF<UDefaultCell> GetCellPawn() { return m_spCellPawn; }
 	CSHPTRREF<UVIBufferCell> GetCellVIBuffer() { return m_spCellVIBuffer; }
-	const _float3& GetColor() const { return m_f3Color; }
+
 	void ReBuffer();
 	void ReRender();
 	void AddCellRenderGroup();
