@@ -161,9 +161,8 @@ void UCharacter::LateTickActive(const _double& _dTimeDelta)
 			// 움직이려는 위치가 셀 밖에 있는 경우 가장 가까운 선 위의 점으로 조정
   		    _float3 closestPoint = spNavigation->ClampPositionToCell(vPosition);
 
-		
-
 			GetTransform()->SetPos(closestPoint);
+			
 		}
 	}
 }

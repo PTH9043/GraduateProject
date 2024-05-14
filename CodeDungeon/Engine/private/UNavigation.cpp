@@ -295,12 +295,12 @@ _float3 UNavigation::ClampPositionToCell(const _float3& position)
 				if(NeighborIndex != -1)
 				{
 					SHPTR<UCell> neighbor = FindCell(NeighborIndex);
-					for (auto& points2 : neighbor->GetPoints())
+					for (auto& points2 : neighbor->GetPoints())								
 					{
 						if (closestPointOnEdges == points2)
 						{
 							m_spCurCell = neighbor;
-							break;
+							return closestPointOnEdges;
 						}
 
 					}
