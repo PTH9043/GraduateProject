@@ -379,6 +379,12 @@
     <Filter Include="05.Actor\01.Pawn\Item\Equip">
       <UniqueIdentifier>{353774c7-46a5-453e-90da-1632ce265f21}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.DxClass\Command\Render">
+      <UniqueIdentifier>{00d8aaee-0be5-4d40-8da7-75d8480beac8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Manager\CommandManager">
+      <UniqueIdentifier>{4d076d5d-2275-40e0-b8bc-96d308a65c34}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -747,6 +753,10 @@
     <ClCompile Include="..\private\UEquipment.cpp">
       <Filter>05.Actor\01.Pawn\Item\Equip</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\URenderCommand.cpp">
+      <Filter>02.DxClass\Command\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UCommandManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\EngineDefine.h">
@@ -1148,6 +1158,10 @@
     <ClInclude Include="..\public\UEquipment.h">
       <Filter>05.Actor\01.Pawn\Item\Equip</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\URenderCommand.h">
+      <Filter>02.DxClass\Command\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UCommandManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Shader\ShaderGrobalFunc.hlsli">
