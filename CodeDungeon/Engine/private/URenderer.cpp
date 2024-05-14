@@ -382,12 +382,16 @@ void URenderer::RenderBlend()
     {
         SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::NONALPHA_DEFFERED);
         spShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::NONALPHA_DIFFUSE_DEFFERED));
+        spShader->BindSRVBuffer(SRV_REGISTER::T4, spNonAlpha->GetRenderTargetTexture(RTOBJID::NONALPHA_GLOW_DEFFERED));
     }
     {
         SHPTR<URenderTargetGroup> spLightGroup = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::LIGHTSHADE_DEFFERED);
         spShader->BindSRVBuffer(SRV_REGISTER::T1, spLightGroup->GetRenderTargetTexture(RTOBJID::LIGHTSHADE_SHADE_DEFFERED));
         spShader->BindSRVBuffer(SRV_REGISTER::T2, spLightGroup->GetRenderTargetTexture(RTOBJID::LIGHTSHADE_SPECULAR_DEFFERED));
         spShader->BindSRVBuffer(SRV_REGISTER::T3, spLightGroup->GetRenderTargetTexture(RTOBJID::LIGHTSHADE_AMBIENT_DEFFERED));
+    }
+    {
+
     }
     m_spVIBufferPlane->Render(spShader, m_spCastingCommand);
     spRenderTargetGroup->WaitTargetToResource(m_spCastingCommand);
@@ -471,6 +475,10 @@ void URenderer::RenderEnd()
         spDefferedShader->BindSRVBuffer(SRV_REGISTER::T2, m_spRenderTargetManager->
             FindRenderTargetTexture(RTGROUPID::NONALPHA_DEFFERED,
                 RTOBJID::NONALPHA_POSITION_DEFFERED));
+        spDefferedShader->BindSRVBuffer(SRV_REGISTER::T3, m_spRenderTargetManager->
+            FindRenderTargetTexture(RTGROUPID::NONALPHA_DEFFERED,
+                RTOBJID::NONALPHA_GLOW_DEFFERED));
+      
         {
             spDefferedShader->BindCBVBuffer(m_spFogConstantBuffer, &m_bTurnFog, sizeof(_bool));
         }

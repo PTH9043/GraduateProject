@@ -1,7 +1,6 @@
 #pragma once
-
 #include "UObject.h"
-
+//#define _EDIT_NAVI
 
 BEGIN(Engine)
 class UDefaultCell;
@@ -35,9 +34,6 @@ public:
 	const ARRAY<_int, LINE_END>& GetNeighbor() const { return m_arrNeighbors; }
 	const _float3& GetCenterPos() const { return m_vCenterPos; }
 	const _int& GetIndex() const { return m_iIndex; }
-	const _float3& GetColor() const{ return m_f3Color; }
-	CSHPTRREF<UDefaultCell> GetCellPawn() { return m_spCellPawn; }
-	CSHPTRREF<UVIBufferCell> GetCellVIBuffer() { return m_spCellVIBuffer; }
 
 	void SetPoint(const POINT& _ePoint, const _float3& _vPoint) { m_arrPoints[_ePoint] = _vPoint; }
 	void SetCenterPos(const _float3& _vCenterPos) { this->m_vCenterPos = _vCenterPos; }
@@ -50,17 +46,21 @@ public:
 	// Points
 	HRESULT NativeConstruct(ARRAY<_float3, POINT_END>& _Points, const _uint _iIndex);
 	HRESULT NativeConstruct(const CELLDECS& _tCellDesc);
-	void AddCellRenderGroup();
+
 public:
 	_bool IsIn(const _float3& _vPos, _int& _iNeightborIndex, _float3& _vLine);
 	_bool IsComparePoints(const _float3& _vPointA, const _float3& _vPointB);
 	_bool IsComparePoint(CSHPTRREF<UCell> _pCell);
 	const _float ComputeHeight(const _float3& _vPosition);
-	void ReBuffer();
+	const _float3& GetColor() const { return m_f3Color; }
 
-#ifdef _USE_DEBUGGING
-	
+#ifdef _EDIT_NAVI
+	CSHPTRREF<UDefaultCell> GetCellPawn() { return m_spCellPawn; }
+	CSHPTRREF<UVIBufferCell> GetCellVIBuffer() { return m_spCellVIBuffer; }
+
+	void ReBuffer();
 	void ReRender();
+	void AddCellRenderGroup();
 #endif
 private:
 	// CrossResult
@@ -84,7 +84,7 @@ private:
 	_float4							m_vPlane;
 	// Color
 	_float3							m_f3Color;
-#ifdef _USE_DEBUGGING
+#ifdef _EDIT_NAVI
 private:
 	SHPTR<UVIBufferCell> m_spCellVIBuffer;
 	SHPTR<UDefaultCell> m_spCellPawn;

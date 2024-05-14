@@ -15,6 +15,10 @@ public:
 	CMainScene(CSHPTRREF<UDevice> _spDevice);
 	NO_COPY(CMainScene)
 	DESTRUCTOR(CMainScene)
+private:
+	//기능 함수들 일시
+	void TurnLightsOnRange();
+	void TurnRoomsOnRange();
 public:
 	// UScene을(를) 통해 상속됨
 	virtual void Free() override;

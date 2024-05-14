@@ -167,6 +167,18 @@ HRESULT UScene::ActiveLIght(const LIGHTTYPE& _eLightType, const _uint& _iIndex, 
     return S_OK;
 }
 
+HRESULT UScene::ActiveLIght(const LIGHTTYPE& _eLightType, const _uint& _iIndex, const LIGHTACTIVE& _isActive)
+{
+    RETURN_CHECK(_iIndex >= m_LightGroup[_eLightType].size(), E_FAIL);
+
+    LIGHTCONTAINER::iterator it = m_LightGroup[_eLightType].begin();
+
+    it = it + _iIndex;
+    if (it != m_LightGroup[_eLightType].end())
+        (*it)->SetActive(_isActive);
+    return S_OK;
+}
+
 HRESULT UScene::DeleteLight(const LIGHTTYPE& _eLightType, const _uint& _iIndex)
 {
     RETURN_CHECK(_iIndex >= m_LightGroup[_eLightType].size(), E_FAIL);

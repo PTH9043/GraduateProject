@@ -50,8 +50,6 @@ namespace Tool
 
 #include "ToolMaker.h"
 
-#define _USE_IMGUI
-
 using namespace Tool;
 
 

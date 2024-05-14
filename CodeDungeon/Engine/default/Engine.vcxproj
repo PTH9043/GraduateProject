@@ -315,6 +315,7 @@
     <FxCompile Include="..\..\Shader\Debug2DTarget.hlsl" />
     <FxCompile Include="..\..\Shader\DebugCell.hlsl" />
     <FxCompile Include="..\..\Shader\DebugDefaultObject.hlsl" />
+    <FxCompile Include="..\..\Shader\DebugDefaultObjectWhite.hlsl" />
     <FxCompile Include="..\..\Shader\FinalDeffered.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>

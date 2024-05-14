@@ -26,11 +26,13 @@ public:
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;
 
+
+	const _float3& GetRoomCenterPos() const { return m_vRoomCenterPos; }
 protected:
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy) override;
 private:
 	_wstring	m_wsRoomTag;
-
+	_float3     m_vRoomCenterPos;
 
 };
 

@@ -105,34 +105,40 @@ PS_OUT PS_Main(PS_In Input)
 // 감쇠 시작 거리를 조정합니다.
     float attenuationDistance = radiusSqrt * 0.45f;
 
-[unroll(MAX_LIGHTS)]
+    [unroll(MAX_LIGHTS)]
     for (int i = 0; i < nLights; i++)
     {
-        if (g_tLightInfo[i].eLightType == POINT_LIGHT)
+        if (g_tLightInfo[i].eLightActive)
         {
-            float3 vToLight = g_tLightInfo[i].vPosition - vWorldPosition;
-            float fDistance = length(vToLight);
+            if (g_tLightInfo[i].eLightType == POINT_LIGHT)
+            {
+                float3 vToLight = g_tLightInfo[i].vPosition - vWorldPosition;
+                float fDistance = length(vToLight);
 
         
-            float fAttenuationFactor = 1.0f;
-            if (fDistance > attenuationDistance)
-            {
-                float normalizedDistance = (fDistance - attenuationDistance) / (radiusSqrt - attenuationDistance);
-                fAttenuationFactor = 1.0f - normalizedDistance;
+                float fAttenuationFactor = 1.0f;
+                if (fDistance > attenuationDistance)
+                {
+                    float normalizedDistance = (fDistance - attenuationDistance) / (radiusSqrt - attenuationDistance);
+                    fAttenuationFactor = 1.0f - normalizedDistance;
 
             
-                fAttenuationFactor = max(fAttenuationFactor, 0.0f);
-            }
+                    fAttenuationFactor = max(fAttenuationFactor, 0.0f);
+                }
 
         
-            if (fDistance <= radiusSqrt)
-            {
-                Out.vAmbient += g_tLightInfo[i].vAmbient * fAttenuationFactor;
-                Out.vShade += g_tLightInfo[i].vDiffuse * fAttenuationFactor;
-                Out.vSpecular += g_tLightInfo[i].vSpecular * fAttenuationFactor;
+                if (fDistance <= radiusSqrt)
+                {
+                    Out.vAmbient += g_tLightInfo[i].vAmbient * fAttenuationFactor;
+                    Out.vShade += g_tLightInfo[i].vDiffuse * fAttenuationFactor;
+                    Out.vSpecular += g_tLightInfo[i].vSpecular * fAttenuationFactor;
+                }
             }
         }
     }
+    
+    
+    
 	return Out;
 }
 

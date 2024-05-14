@@ -4,7 +4,7 @@
 #include "URenderer.h"
 #include "UGameInstance.h"
 #include "UTransform.h"
-#ifdef _USE_DEBUGGING
+#ifdef _EDIT_NAVI
 #include "UDefaultCell.h"
 #endif
 
@@ -17,9 +17,9 @@ m_arrNeighbors{ -1, -1, -1 },
 m_vCenterPos{},
 m_iIndex{ 0 },
 m_vPlane{},
-m_f3Color{},
-#ifdef _USE_DEBUGGING
-m_spCellVIBuffer{ nullptr },
+m_f3Color{}
+#ifdef _EDIT_NAVI
+,m_spCellVIBuffer{ nullptr },
 m_spCellPawn{ nullptr }
 #endif
 {
@@ -45,7 +45,7 @@ HRESULT UCell::NativeConstruct(ARRAY<_float3, POINT_END>& _Points, const _uint _
 	m_iIndex = _iIndex;
 	ResortPoints();
 
-#ifdef _USE_IMGUI
+#ifdef _EDIT_NAVI
 	m_spCellVIBuffer = CreateConstructorNative<UVIBufferCell>(GetDevice(), m_arrPoints);
 	RETURN_CHECK(nullptr == m_spCellVIBuffer, E_FAIL);
 #endif
@@ -56,7 +56,7 @@ HRESULT UCell::NativeConstruct(ARRAY<_float3, POINT_END>& _Points, const _uint _
 	}
 	m_vCenterPos /= 3.f;
 
-#ifdef _USE_IMGUI
+#ifdef _EDIT_NAVI
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	m_spCellPawn = static_pointer_cast<UDefaultCell>(spGameInstance->CloneActorAdd(
 		PROTO_ACTOR_DEUBGGINGDEFAULTCELL, { &m_spCellVIBuffer }));
@@ -81,17 +81,19 @@ HRESULT UCell::NativeConstruct(const CELLDECS& _tCellDesc)
 	m_iIndex = _tCellDesc.iIndex;
 
 	ResortPoints();
-#ifdef _USE_IMGUI
+
+#ifdef _EDIT_NAVI
 	m_spCellVIBuffer = CreateConstructorNative<UVIBufferCell>(GetDevice(), m_arrPoints);
 	RETURN_CHECK(nullptr == m_spCellVIBuffer, E_FAIL);
 #endif
+
 	_float3 vCenterPos{};
 	for (auto& iter : m_arrPoints) {
 		m_vCenterPos += iter;
 	}
 	m_vCenterPos /= 3.f;
 
-#ifdef _USE_IMGUI
+#ifdef _EDIT_NAVI
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	m_spCellPawn = static_pointer_cast<UDefaultCell>(spGameInstance->CloneActorAdd(
 		PROTO_ACTOR_DEUBGGINGDEFAULTCELL, { &m_spCellVIBuffer }));
@@ -100,10 +102,24 @@ HRESULT UCell::NativeConstruct(const CELLDECS& _tCellDesc)
 	return S_OK;
 }
 
-#ifdef _USE_IMGUI
+#ifdef _EDIT_NAVI
 void UCell::AddCellRenderGroup()
 {
 	m_spCellPawn->AddRenderer(RENDERID::RI_NONALPHA_LAST);
+}
+
+void UCell::ReBuffer()
+{
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	m_spCellVIBuffer.reset();
+	m_spCellVIBuffer = CreateConstructorNative<UVIBufferCell>(spGameInstance->GetDevice(), m_arrPoints);
+}
+
+void UCell::ReRender()
+{
+	RETURN_CHECK(nullptr == m_spCellPawn, ;);
+	m_spCellPawn->GetVIBuffer().reset();
+	m_spCellPawn->SetVIBuffer(m_arrPoints);
 }
 #endif
 
@@ -190,13 +206,6 @@ const _float UCell::ComputeHeight(const _float3& _vPosition)
 	return _float3(DirectX::XMPlaneDotCoord(m_vPlane, _vPosition)).y + _vPosition.y;
 }
 
-void UCell::ReBuffer()
-{
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	m_spCellVIBuffer.reset();
-	m_spCellVIBuffer = CreateConstructorNative<UVIBufferCell>(spGameInstance->GetDevice(), m_arrPoints);
-}
-
 void UCell::CalculateCrossResult(ARRAY<_float3, POINT_END>& _arrPointsEnd)
 {
 	_float3 p1{ m_arrPoints[POINT_A].x, 0.f, m_arrPoints[POINT_A].z };
@@ -258,13 +267,3 @@ void UCell::MakeLineAndNormal()
 	m_vPlane = DirectX::XMPlaneFromPoints(m_arrPoints[POINT_B], m_arrPoints[POINT_A], m_arrPoints[POINT_C]);
 }
 
-#ifdef _USE_DEBUGGING
-
-
-void UCell::ReRender()
-{
-	RETURN_CHECK(nullptr == m_spCellPawn, ;);
-	m_spCellPawn->GetVIBuffer().reset();
-	m_spCellPawn->SetVIBuffer(m_arrPoints);
-}
-#endif

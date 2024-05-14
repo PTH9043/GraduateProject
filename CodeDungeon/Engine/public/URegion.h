@@ -1,5 +1,6 @@
 #pragma once
 #include "UComponent.h"
+#include "UCell.h"
 
 BEGIN(Engine)
 class UNavigation;
@@ -11,7 +12,7 @@ class UDefaultDebugging;
 class URegion : public UComponent
 {
 public:
-#ifdef _USE_IMGUI
+#ifdef _EDIT_NAVI
 	typedef struct tagCubeObjs
 	{
 		SHPTR<UCell> spCell;
@@ -44,18 +45,17 @@ public:
 	{
 		m_wsRegionName = _regionName;
 	}
-#ifdef _USE_IMGUI
+#ifdef _EDIT_NAVI
 	HRESULT AddCell(SHPTR<UCell>& _pCell);
-	HRESULT ModifyCells();
 	HRESULT ShowCells();
+	HRESULT RearrageCells();
 	HRESULT ClearCell();
 	HRESULT SetColor();
 	HRESULT SetName();
 	HRESULT DeleteLatestCell();
 	HRESULT DeleteCell(const _uint& _iIndex);
 	void FlushDeleteCells();
-	void Control_Collider();
-
+	const _bool& IsDeletion() const { return m_bDeletionEnabled; }
 #endif
 	_bool Load(const _wstring& _wstrPath);
 	_bool Save(const _wstring& _wstrPath);
@@ -67,21 +67,20 @@ public:
 	// Add Neighbor Region
 	void Add_NeighborRegion(CSHPTRREF<URegion> _pRegion);
 
-	const _bool& IsDeletion() const { return m_bDeletionEnabled; }
+
 private:
 	_float3				m_f3Color;
 protected:
 	SHPTR<UNavigation>	m_spNavigation;
 	_uint	m_iIndex = 0;
 	LIST<WKPTR<URegion>>	m_NeighborRegion;
-
-	SET<SHPTR<UCell>> m_DeleteCellsList;
-	_bool m_bDeletionEnabled;
-
 	_wstring m_wsRegionName;
 	_bool m_bEditName;
 
-#ifdef _USE_IMGUI
+#ifdef _EDIT_NAVI
+	SET<SHPTR<UCell>> m_DeleteCellsList;
+	_bool m_bDeletionEnabled;
+
 	LIST<CUBOBJS>	m_CubeObjList;
 	SET<SHPTR<UDefaultDebugging>> m_DeleteCubesList;
 #endif

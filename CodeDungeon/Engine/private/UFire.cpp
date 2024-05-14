@@ -55,8 +55,6 @@ HRESULT UFire::NativeConstructClone(const VOIDDATAS& _convecDatas)
 		if (m_spFireAlphaTexGroup == nullptr)m_spFireAlphaTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_FIREALPHATEXTUREGROUP));
 		m_spVIBufferRect = static_pointer_cast<UVIBufferRect>(spGameInstance->CloneResource(PROTO_RES_VIBUFFERRECT));
 
-
-
 		AddShader(stParticleDesc.wstrFireShader);
 
 		SetActive(false);
@@ -92,18 +90,23 @@ void UFire::Update(const _double& _dTimeDelta)
 
 void UFire::TickActive(const _double& _dTimeDelta)
 {
+	if (IsActive()) {
+		Update(_dTimeDelta);
 
-	Update(_dTimeDelta);
-	{
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		_float3 MainCamPos = spGameInstance->GetMainCameraTransform()->GetPos();
-		GetTransform()->LookAtWithFixedUp(_float3(MainCamPos));
+		{
+			SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+			_float3 MainCamPos = spGameInstance->GetMainCameraTransform()->GetPos();
+			//GetTransform()->LookAtWithFixedUp(_float3(MainCamPos));
+			GetTransform()->LookAtWithFixedUp(_float3(MainCamPos), _dTimeDelta, 1.5f);
 
+		}
 	}
+	
 }
 
 void UFire::LateTickActive(const _double& _dTimeDelta)
 {
+	if(IsActive())
 	AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
 }
 

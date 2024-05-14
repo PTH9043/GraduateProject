@@ -42,6 +42,7 @@ public:
 	void OutLight(const LIGHTTYPE& _eLightType, const _uint _iIndex, SHPTR<ULight>& _spLight);
 	// Active
 	HRESULT ActiveLIght(const LIGHTTYPE& _eLightType, const _uint& _iIndex, const _bool& _isActive);
+	HRESULT ActiveLIght(const LIGHTTYPE& _eLightType, const _uint& _iIndex, const LIGHTACTIVE& _isActive);
 	// Delete
 	HRESULT DeleteLight(const LIGHTTYPE& _eLightType, const _uint& _iIndex);
 	// Clear

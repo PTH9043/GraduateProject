@@ -44,6 +44,8 @@ static const char* CLONETYPE_ONCE_STRING{ "CLONETYPE_ONCE" };
 #define _USE_ATOMIC
 // Use Debugging Values
 #define _USE_DEBUGGING
+#define _USE_IMGUI
+
 #pragma comment(lib, "WS2_32.lib")
 #pragma comment(lib, "MSWSock.lib")
 

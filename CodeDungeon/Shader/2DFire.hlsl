@@ -70,20 +70,22 @@ VS_OUT VS_Main(VS_IN In)
 struct PS_OUT
 {
     float4 vColor : SV_TARGET0;
+    float4 vSpecular : SV_TARGET1;
+    float4 vNormal : SV_TARGET2;
+    float4 vDepth : SV_TARGET3;
+    float4 vPosition : SV_Target4;
+    float4 vGlow : SV_Target5;
 };
 
 
-float3 ToneMapping(float3 hdrColor)
+float Rand(float2 co)//0.5~1.0
 {
-    const float gamma = 2.2;
-    float3 result = float3(1.0, 1, 1) - exp(-hdrColor * 3.f); //5.f=exposure
-    result = pow(result, 1.0 / gamma);
-    return result;
+    return 0.5 + (frac(sin(dot(co.xy, float2(12.9898, 78.233))) * 43758.5453)) * 0.5;
 }
 
 PS_OUT PS_Main(VS_OUT In)
 {
-    PS_OUT Out = (PS_OUT)0;
+    PS_OUT Out = (PS_OUT) 0;
 
     float4 noise1;
     float4 noise2;
@@ -123,22 +125,42 @@ PS_OUT PS_Main(VS_OUT In)
     alphaColor = g_Texture2.Sample(g_Sampler_Clamp, noiseCoords.xy);
 
     fireColor.a = alphaColor;
-        // 색상 값 정규화
+       
     float3 normalizedColor = fireColor.rgb / max(max(fireColor.r, fireColor.g), fireColor.b);
-    // 밝기 증폭
-    normalizedColor *= 2.0f;
-    // 색상 값 클램핑
+    normalizedColor *= 3.0f; 
     normalizedColor = saturate(normalizedColor);
-    // 원래 범위로 되돌리기
-    
-   
-    float4 AmpColor = float4(normalizedColor * max(max(fireColor.r, fireColor.g), fireColor.b), fireColor.a);
+     float4 AmpColor = float4(normalizedColor * max(max(fireColor.r, fireColor.g), fireColor.b), fireColor.a);
 
-    float4 ToneColor = float4(ToneMapping(fireColor.xyz), fireColor.a);
-    Out.vColor = AmpColor;
-  
+   
+    float4 HighColor = float4(fireColor.r * Rand(noise1.xy), fireColor.g * Rand(noise2.xy), fireColor.b * Rand(noise3.xy), fireColor.a);
+    float brightness = dot(HighColor.rgb, float3(0.2126, 0.7152, 0.0722));
+   
+    if (fireColor.a > 0.3)
+    {
+        
+        if (brightness < 0.2f)
+        {
+            Out.vGlow = 0;
+        }
+        if (brightness <0.4f)
+        {
+            Out.vGlow = float4(fireColor.xyz, 1);
+            
+        }
+        else
+        {
+            Out.vGlow = float4(AmpColor.xyz, 1);
+        }
+    }
+    
  
-   // Out.vColor = fireColor;
+    Out.vColor = fireColor;
+   
+
+    //if (fireColor.a > 0.3)
+    //    Out.vGlow = float4(1, 0, 0, 1);
+ 
+ 
     
     return Out;
 }

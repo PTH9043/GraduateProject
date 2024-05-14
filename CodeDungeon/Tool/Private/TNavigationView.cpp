@@ -56,7 +56,7 @@ HRESULT TNavigationView::NativeConstruct()
 
 #ifdef _USE_DEBUGGING
 	UDefaultDebugging::DEBUGTYPE eDebugType{ UDefaultDebugging::DEBUGTYPE::DEBUG_END };
-	eDebugType = UDefaultDebugging::DEBUGTYPE::DEBUG_CUBE;
+	eDebugType = UDefaultDebugging::DEBUGTYPE::DEBUG_CUBE_WHITE;
 	// Clone Actor
 
 	VOIDDATAS vecDatas;
@@ -199,11 +199,12 @@ void TNavigationView::ModifyNavigation(CSHPTRREF<URegion> _spRegion)
 							{
 								_float3 Point = iter->GetPoint((UCell::POINT)i);
 
-								if (v3Pos.y >= Point.y - 3.0f && v3Pos.y <= Point.y + 3.0f)
+								_float approxNum = 1.5f;
+								if (v3Pos.y >= Point.y - approxNum && v3Pos.y <= Point.y + approxNum)
 								{
-									if (v3Pos.x >= Point.x - 3.f && v3Pos.x <= Point.x + 3.f)
+									if (v3Pos.x >= Point.x - approxNum && v3Pos.x <= Point.x + approxNum)
 									{
-										if (v3Pos.z >= Point.z - 3.f && v3Pos.z <= Point.z + 3.f)
+										if (v3Pos.z >= Point.z - approxNum && v3Pos.z <= Point.z + approxNum)
 										{
 											v3Pos = Point;
 										}
@@ -394,10 +395,9 @@ void TNavigationView::NavigationView()
 
 				if(spGameInstance->IsMouseInWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT) && !m_bOnWindow)
 					ModifyNavigation(m_spStageManager->GetStage()->GetRegion(m_iRegionIndex));
-				m_spStageManager->GetStage()->Control_Collider(m_iRegionIndex);
 				m_spStageManager->GetStage()->SetRegionName(m_iRegionIndex);
+				m_spStageManager->GetStage()->RearrangeCells(m_iRegionIndex);
 				m_spStageManager->GetStage()->SetColor(m_iRegionIndex);
-				m_spStageManager->GetStage()->ModifyCells(m_iRegionIndex);
 				m_spStageManager->GetStage()->ShowCells(m_iRegionIndex);
 				m_spStageManager->GetStage()->Delete_Region(m_iRegionIndex);
 			}

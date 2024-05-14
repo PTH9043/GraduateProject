@@ -26,6 +26,7 @@ public:
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;
 
 	void SetModel(const _wstring& _ProtoModelName);
+	CSHPTRREF<UModel> GetModel(){ return m_spModel; }
 	void CalculateAndSetCollider();
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
