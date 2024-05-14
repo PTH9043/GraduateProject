@@ -70,6 +70,10 @@ VS_OUT VS_Main(VS_IN In)
 struct PS_OUT
 {
     float4 vColor : SV_TARGET0;
+    float4 vSpecular : SV_TARGET1;
+    float4 vNormal : SV_TARGET2;
+    float4 vDepth : SV_TARGET3;
+    float4 vPosition : SV_Target4;
     float4 vGlow : SV_Target5;
 };
 
