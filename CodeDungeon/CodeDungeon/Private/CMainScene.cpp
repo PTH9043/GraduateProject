@@ -34,7 +34,7 @@ CMainScene::CMainScene(CSHPTRREF<UDevice> _spDevice) :
 
 void CMainScene::TurnLightsOnRange()
 {
-	_float3 PlayerPos = m_spWarriorPlayer->GetTransform()->GetPos();
+	_float3 PlayerPos = m_spMainCamera->GetTransform()->GetPos();
 	for (auto& obj : (*m_spMap->GetStaticObjs().get()))
 	{
 		int count = 0;
@@ -75,6 +75,25 @@ void CMainScene::TurnLightsOnRange()
 				torch_it++;
 				count++;
 			}
+		}
+	}
+}
+
+void CMainScene::TurnRoomsOnRange()
+{
+	_float3 PlayerPos = m_spMainCamera->GetTransform()->GetPos();
+	for (auto& Rooms : (*m_spMap->GetRooms().get()))
+	{
+		_float3 roomPos = Rooms.second->GetRoomCenterPos();
+		_float3 distance = roomPos - PlayerPos;
+		float distanceSq = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
+		if (distanceSq <= 400 * 400)
+		{
+			Rooms.second->SetActive(true);
+		}
+		else
+		{
+			Rooms.second->SetActive(false);
 		}
 	}
 }
@@ -154,10 +173,7 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 	
 	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
 	TurnLightsOnRange();
-
-
-
-	
+	TurnRoomsOnRange();
 
 
 	SHPTR<ULight> DirLight;

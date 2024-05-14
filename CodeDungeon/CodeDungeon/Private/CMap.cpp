@@ -68,16 +68,12 @@ void CMap::LoadRooms()
 		{
 			for (const FILEPAIR& File : ConvertFolder->FileDataList)
 			{
-				_wstring ModelProtoTag = L"Proto_Res_Model_";
 				_wstring FileName = File.second->wstrfileName;
-				ModelProtoTag.append(FileName);
 
 				CRooms::ROOMDESC tDesc;
 				tDesc._wsRoomName = FileName;
 
 				SHPTR<CRooms> _Room = std::static_pointer_cast<CRooms>(spGameInstance->CloneActorAdd(PROTO_ACTOR_ROOM, { &tDesc }));
-				_Room->SetModel(ModelProtoTag);
-
 				m_spRoomContainer->emplace(FileName, _Room);
 			}
 		}
@@ -102,8 +98,7 @@ void CMap::LoadStaticObjects()
 				CTorch::TORCHDESC torchDesc;
 				torchDesc._Worldm = vecit._mWorldMatrix;
 				SHPTR<CTorch> _Torch = std::static_pointer_cast<CTorch>(spGameInstance->CloneActorAdd(PROTO_ACTOR_TORCH, {&torchDesc}));
-				_TorchVec.push_back(_Torch);
-				
+				_TorchVec.push_back(_Torch);		
 			}
 		}
 	}
