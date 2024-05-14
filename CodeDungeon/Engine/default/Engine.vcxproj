@@ -50,6 +50,7 @@
     <ClInclude Include="..\public\UCombatCollGroupComp.h" />
     <ClInclude Include="..\public\UCharacter.h" />
     <ClInclude Include="..\public\UCharacterManager.h" />
+    <ClInclude Include="..\public\UCommandManager.h" />
     <ClInclude Include="..\public\UController.h" />
     <ClInclude Include="..\public\UEquipment.h" />
     <ClInclude Include="..\public\UFire.h" />
@@ -62,6 +63,7 @@
     <ClInclude Include="..\public\UMaterialManager.h" />
     <ClInclude Include="..\public\UModelMaterial.h" />
     <ClInclude Include="..\public\UPlayerJob.h" />
+    <ClInclude Include="..\public\URenderCommand.h" />
     <ClInclude Include="..\public\UShadowCamera.h" />
     <ClInclude Include="..\public\USound.h" />
     <ClInclude Include="..\public\CustomMemory.h" />
@@ -169,6 +171,7 @@
     <ClCompile Include="..\private\UCombatCollGroupComp.cpp" />
     <ClCompile Include="..\private\UCharacter.cpp" />
     <ClCompile Include="..\private\UCharacterManager.cpp" />
+    <ClCompile Include="..\private\UCommandManager.cpp" />
     <ClCompile Include="..\private\UController.cpp" />
     <ClCompile Include="..\private\UEquipment.cpp" />
     <ClCompile Include="..\private\UFire.cpp" />
@@ -181,6 +184,7 @@
     <ClCompile Include="..\private\UMaterialManager.cpp" />
     <ClCompile Include="..\private\UModelMaterial.cpp" />
     <ClCompile Include="..\private\UPlayerJob.cpp" />
+    <ClCompile Include="..\private\URenderCommand.cpp" />
     <ClCompile Include="..\private\UShadowCamera.cpp" />
     <ClCompile Include="..\private\USound.cpp" />
     <ClCompile Include="..\private\CustomMemory.cpp" />
