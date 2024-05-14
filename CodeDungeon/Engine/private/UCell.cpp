@@ -264,6 +264,54 @@ void UCell::MakeLineAndNormal()
 	m_arrNormals[LINE_BC] = _float3(m_arrLines[LINE_BC].z * -1.f, 0.f, m_arrLines[LINE_BC].x);
 	m_arrNormals[LINE_CA] = _float3(m_arrLines[LINE_CA].z * -1.f, 0.f, m_arrLines[LINE_CA].x);
 
+	m_arrNormals[LINE_AB].Normalize();
+	m_arrNormals[LINE_BC].Normalize();
+	m_arrNormals[LINE_CA].Normalize();
 	m_vPlane = DirectX::XMPlaneFromPoints(m_arrPoints[POINT_B], m_arrPoints[POINT_A], m_arrPoints[POINT_C]);
+}
+
+_float3 UCell::GetClosestPointOnEdges(const _float3& position) const
+{
+	_float3 closestPoint = position;
+	_float minDistanceSquared = FLT_MAX;
+
+	// 각 변에 대해 가장 가까운 점을 찾음
+	for (size_t i = 0; i < LINE_END; ++i) {
+		_float3 pointOnEdge = ClosestPointOnLine(m_arrPoints[i], m_arrPoints[(i + 1) % LINE_END], position);
+		_float distanceSquared = DirectX::PTH::Vector3::DistanceSquared(position, pointOnEdge);
+		if (distanceSquared < minDistanceSquared) {
+			minDistanceSquared = distanceSquared;
+			closestPoint = pointOnEdge;
+		}
+	}
+
+	return closestPoint;
+}
+
+_float3 UCell::ClosestPointOnLine(const _float3& lineStart, const _float3& lineEnd, const _float3& point) const
+{
+	// 라인 시작점부터 끝점까지의 벡터
+	_float3 lineDirection = lineEnd - lineStart;
+
+	// 라인 시작점부터 입력된 점까지의 벡터
+	_float3 pointToLineStart = point - lineStart;
+
+	// 라인 방향과 입력된 점까지의 벡터 사이의 내적 값
+	float t = DirectX::PTH::Vector3::Dot(pointToLineStart, lineDirection) / DirectX::PTH::Vector3::Dot(lineDirection, lineDirection);
+
+	// t 값을 사용하여 입력된 점에서 가장 가까운 점을 계산
+	_float3 closestPoint = lineStart + lineDirection * t;
+
+
+	if (t > 1.0f) {
+		closestPoint = lineEnd;
+	}
+
+	else if (t < 0.0f) {
+		closestPoint = lineStart;
+	}
+
+
+	return closestPoint;
 }
 

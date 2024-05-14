@@ -11,16 +11,12 @@
 #include "UCell.h"
 
 CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
-	: UPlayer(_spDevice, _wstrLayer, _eCloneType),
-	m_fMoveSpeed{50.f},
-	m_fRunSpeed{100.f}
+	: UPlayer(_spDevice, _wstrLayer, _eCloneType)
 {
 }
 
 CWarriorPlayer::CWarriorPlayer(const CWarriorPlayer& _rhs) : 
-	UPlayer(_rhs),
-	m_fMoveSpeed{ 50.f },
-	m_fRunSpeed{ 100.f }
+	UPlayer(_rhs)
 {
 }
 
@@ -47,6 +43,9 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	GetAnimModel()->SetAnimation(L"idle01");
 	//GetTransform()->RotateFix(_float3{ 0.f, DirectX::XMConvertToRadians(180.f), 0.f });
 	GetTransform()->SetScale({ 0.5f, 0.5f, 0.5f });
+	SetMovingSpeed(50.f);
+	SetRunningSpeed(100.f);
+	SetRunState(false);
 	return S_OK;
 }
 
@@ -70,19 +69,22 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	// Move
 	if (CWarriorAnimController::ANIM_MOVE == AnimState)
 	{
-		TranslateStateMoveAndRunF(spGameInstance, _dTimeDelta, m_fMoveSpeed);
+		TranslateStateMoveAndRunF(spGameInstance, _dTimeDelta, GetMovingSpeed());
+		SetRunState(false);
 	}
 
 	if (CWarriorAnimController::ANIM_RUN == AnimState)
 	{
-		TranslateStateMoveAndRunF(spGameInstance, _dTimeDelta, m_fRunSpeed);
+		TranslateStateMoveAndRunF(spGameInstance, _dTimeDelta, GetRunningSpeed());
+		SetRunState(true);
 	}
 
 	if (CWarriorAnimController::ANIM_WALKBACK == AnimState)
 	{
 		if (spGameInstance->GetDIKeyPressing(DIK_S))
 		{
-			GetTransform()->MoveBack(_dTimeDelta, m_fMoveSpeed);
+			GetTransform()->MoveBack(_dTimeDelta, GetMovingSpeed());
+			SetRunState(false);
 		}
 	}
 
@@ -90,7 +92,8 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	{
 		if (spGameInstance->GetDIKeyPressing(DIK_S))
 		{
-			GetTransform()->MoveBack(_dTimeDelta, m_fRunSpeed);
+			GetTransform()->MoveBack(_dTimeDelta, GetRunningSpeed());
+			SetRunState(true);
 		}
 	}
 }

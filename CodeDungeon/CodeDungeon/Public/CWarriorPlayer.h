@@ -31,8 +31,7 @@ protected:
 private:
 	void TranslateStateMoveAndRunF(CSHPTRREF<UGameInstance> _spGameInstance, const _double& _dTimeDelta, const _float _fSpeed);
 private:
-	_float				m_fMoveSpeed;
-	_float				m_fRunSpeed;
+
 };
 
 END

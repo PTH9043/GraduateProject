@@ -54,6 +54,9 @@ public:
 	const _float ComputeHeight(const _float3& _vPosition);
 	const _float3& GetColor() const { return m_f3Color; }
 
+	_float3 GetClosestPointOnEdges(const _float3& position) const;
+	_float3 ClosestPointOnLine(const _float3& lineStart, const _float3& lineEnd, const _float3& point) const;
+
 #ifdef _EDIT_NAVI
 	CSHPTRREF<UDefaultCell> GetCellPawn() { return m_spCellPawn; }
 	CSHPTRREF<UVIBufferCell> GetCellVIBuffer() { return m_spCellVIBuffer; }
@@ -67,6 +70,7 @@ private:
 	void CalculateCrossResult(ARRAY<_float3, POINT_END>& _arrPointsEnd);
 	void ResortPoints();
 	void MakeLineAndNormal();
+	
 private:
 	// Points
 	ARRAY<_float3, POINT_END>		m_arrPoints;

@@ -58,7 +58,7 @@ void CMainScene::TurnLightsOnRange()
 					if (pTorch != nullptr)
 					{
 						// 자식 클래스로 캐스팅된 경우에만 GetParticle 함수 호출 가능
-						pTorch->GetParticle()->SetActive(true);
+						/*pTorch->GetParticle()->SetActive(true);*/
 						pTorch->GetFire()->SetActive(true);
 					}
 				}
@@ -68,7 +68,7 @@ void CMainScene::TurnLightsOnRange()
 					if (pTorch != nullptr)
 					{
 						// 자식 클래스로 캐스팅된 경우에만 GetParticle 함수 호출 가능
-						pTorch->GetParticle()->SetActive(false);
+					/*	pTorch->GetParticle()->SetActive(false);*/
 						pTorch->GetFire()->SetActive(false);
 					}
 				}
@@ -152,10 +152,10 @@ HRESULT CMainScene::LoadSceneData()
 		}
 	}
 	{
-		CMummy::CHARACTERDESC CharDesc{PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_MUMMYANIMCONTROLLER};
+		//CMummy::CHARACTERDESC CharDesc{PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_MUMMYANIMCONTROLLER};
 
-		m_spMummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(
-			PROTO_ACTOR_MUMMY, { &CharDesc }));
+		//m_spMummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(
+		//	PROTO_ACTOR_MUMMY, { &CharDesc }));
 	}
 
 	{

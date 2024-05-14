@@ -279,3 +279,35 @@ HRESULT UNavigation::ReadyNeighbor()
 
 	return S_OK;
 }
+
+_float3 UNavigation::ClampPositionToCell(const _float3& position)
+{
+	// 현재 셀 내부에 있는 경우, 가장 가까운 선 위의 점을 찾아서 반환
+	_float3 closestPointOnEdges = m_spCurCell->GetClosestPointOnEdges(position);
+
+	//현재 셀의 끝점에 도달하면 이웃 셀으로 변경
+	for (auto& points : m_spCurCell->GetPoints())
+	{
+		if (closestPointOnEdges == points)
+		{
+			for (auto& NeighborIndex : m_spCurCell->GetNeighbor())
+			{
+				if(NeighborIndex != -1)
+				{
+					SHPTR<UCell> neighbor = FindCell(NeighborIndex);
+					for (auto& points2 : neighbor->GetPoints())
+					{
+						if (closestPointOnEdges == points2)
+						{
+							m_spCurCell = neighbor;
+							break;
+						}
+
+					}
+				}
+			}
+
+		}
+	}
+	return closestPointOnEdges;
+}

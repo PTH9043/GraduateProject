@@ -58,40 +58,40 @@ HRESULT CTorch::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	m_stFireNoiseBuffer = m_spFire->GetFireNoiseBuffer();
 	m_stFireDistortionBuffer = m_spFire->GetFireDistortionBuffer();
 	
-	{
-		UParticle::PARTICLEDESC tDesc;
-		tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEEMITPARTICLE2DSHADER;
-		tDesc.wstrParticleShader = PROTO_RES_PARTICLEFLARE2DSHADER;
+	//{
+	//	UParticle::PARTICLEDESC tDesc;
+	//	tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEEMITPARTICLE2DSHADER;
+	//	tDesc.wstrParticleShader = PROTO_RES_PARTICLEFLARE2DSHADER;
 
-		tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
-		//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
-		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 0.25f;
-		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 0.5f;
-		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.5f;
-		tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.6f;
-		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 1.f;
-		tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 0.5f;
-		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 200;
-		tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 0.5f;
-		tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.1f, 0.f);
-		m_spParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
-	}
-	{
-		m_stParticleParam = m_spParticle->GetParticleSystem()->GetParticleParam();
-		m_stParticleType =  m_spParticle->GetParticleSystem()->GetParticleTypeParam();
-		m_stParticleType->fParticleType = PARTICLE_TYPE_DEFAULT;
-		m_stParticleType->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
-		m_spParticle->SetTexture(L"Particle"); // y값 증가 x 원
-	}
-	{
-		*m_spParticle->GetParticleSystem()->GetCreateInterval() = 0.15f;
-		*m_spParticle->GetParticleSystem()->GetAddParticleAmount() = 1;
-		m_spParticle->GetParticleSystem()->SetUAVBUFFERPLUS(true);
+	//	tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
+	//	//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
+	//	tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 0.25f;
+	//	tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 0.5f;
+	//	tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.5f;
+	//	tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.6f;
+	//	tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 1.f;
+	//	tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 0.5f;
+	//	tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 200;
+	//	tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 0.5f;
+	//	tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.1f, 0.f);
+	//	m_spParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
+	//}
+	//{
+	//	m_stParticleParam = m_spParticle->GetParticleSystem()->GetParticleParam();
+	//	m_stParticleType =  m_spParticle->GetParticleSystem()->GetParticleTypeParam();
+	//	m_stParticleType->fParticleType = PARTICLE_TYPE_DEFAULT;
+	//	m_stParticleType->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
+	//	m_spParticle->SetTexture(L"Particle"); // y값 증가 x 원
+	//}
+	//{
+	//	*m_spParticle->GetParticleSystem()->GetCreateInterval() = 0.15f;
+	//	*m_spParticle->GetParticleSystem()->GetAddParticleAmount() = 1;
+	//	m_spParticle->GetParticleSystem()->SetUAVBUFFERPLUS(true);
 
-		m_spParticle->SetTexture(L"Particle");
-	}
-	m_spParticle->GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, GetTransform()->GetPos().y + 2.5f, GetTransform()->GetPos().z));
-	m_spParticle->SetActive(true);
+	//	m_spParticle->SetTexture(L"Particle");
+	//}
+	//m_spParticle->GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, GetTransform()->GetPos().y + 2.5f, GetTransform()->GetPos().z));
+	//m_spParticle->SetActive(true);
 
 	m_spFire->SetActive(true);
 	

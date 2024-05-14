@@ -69,6 +69,13 @@ protected:
 protected: /* get set */
 	CSHPTRREF<UAnimationController> GetAnimationController() const { return m_spAnimationController; }
 	const _float3& GetPrevPos() const { return m_vPrevPos; }
+	const _float GetMovingSpeed() const { return m_fMoveSpeed; }
+	const _float GetRunningSpeed() const { return m_fRunSpeed; }
+
+	void SetMovingSpeed(const float& _newSpeed) { m_fMoveSpeed = _newSpeed; }
+	void SetRunningSpeed(const float& _newSpeed) { m_fRunSpeed = _newSpeed; }
+
+	void SetRunState(_bool _runState) { m_bIsRunning = _runState; }
 private:
 	// AnimationModel
 	SHPTR< UAnimModel>				m_spAnimModel;
@@ -78,6 +85,12 @@ private:
 	_float3							m_vPrevPos;
 	// 현재 스테이지
 	SHPTR<UNavigation>				m_wpCurNavi;
+
+
+	//이동 속도
+	_float							m_fMoveSpeed;
+	_float							m_fRunSpeed;
+	_bool							m_bIsRunning;
 };
 
 END

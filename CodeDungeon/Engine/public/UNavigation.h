@@ -48,6 +48,15 @@ public:
 	SHPTR<UCell> GetCurCell() { return m_spCurCell; }
 	// Ready Neighbor
 	HRESULT ReadyNeighbor();
+
+	/*
+	@ Date: 2024-05-14, Writer: 이성현
+	@ Explain
+	-  슬라이딩 벡터 계산 함수.
+	*/
+	_float3 ClampPositionToCell(const _float3& position);
+
+
 private:
 	SHPTR<CELLCONTAINER>		m_spCellContainer;
 	SHPTR<UCell>				m_spCurCell;
