@@ -2,6 +2,7 @@
 
 #include "UComponent.h"
 #include <map>
+#include "UCell.h"
 
 BEGIN(Engine)
 class URegion;
@@ -27,11 +28,11 @@ public:
 	CSHPTRREF<REGIONLIST> GetRegionList() { return m_spRegionList; }
 	SHPTR<URegion> GetRegion(const _uint& _iIndex);
 
-#ifdef _USE_IMGUI
+#ifdef _EDIT_NAVI
 	virtual HRESULT AddRender(const _uint& _iIndex);
 	void AddRenderAll();
 	HRESULT AddCell(const _uint& _iCellIndex, SHPTR<UCell>& _pCell);
-	HRESULT ModifyCells(const _uint& _iCellIndex);
+	HRESULT RearrangeCells(const _uint& _iCellIndex);
 	HRESULT ShowCells(const _uint& _iCellIndex);
 	HRESULT ClearCell(const _uint& _iCellIndex);
 	HRESULT SetColor(const _uint& _iCellIndex);
@@ -39,7 +40,6 @@ public:
 	HRESULT FlushDeleteCells();
 	HRESULT CreateRegion();
 	_int SelectRegion();
-	void Control_Collider(const _uint& _iIndex);
 	HRESULT Delete_Region(_uint& _iIndex);
 	// Is Collision
 	_bool Is_Collision(SHPTR<UCollider>& _pCollider, SHPTR<URegion>* _ppOut = nullptr);

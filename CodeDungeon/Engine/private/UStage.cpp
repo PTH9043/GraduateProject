@@ -47,7 +47,7 @@ SHPTR<URegion> UStage::GetRegion(const _uint& _iIndex)
 }
 
 
-#ifdef _USE_IMGUI
+#ifdef _EDIT_NAVI
 HRESULT UStage::AddRender(const _uint& _iIndex)
 {
 	if (_iIndex >= m_spRegionList->size())
@@ -72,12 +72,12 @@ HRESULT UStage::AddCell(const _uint& _iCellIndex, SHPTR<UCell>& _pCell)
 	return S_OK;
 }
 
-HRESULT UStage::ModifyCells(const _uint& _iCellIndex)
+HRESULT UStage::RearrangeCells(const _uint& _iCellIndex)
 {
 	if (_iCellIndex >= m_spRegionList->size())
 		return E_FAIL;
 
-	(*m_spRegionList.get())[_iCellIndex]->ModifyCells();
+	(*m_spRegionList.get())[_iCellIndex]->RearrageCells();
 	return S_OK;
 }
 
@@ -183,14 +183,7 @@ _int UStage::SelectRegion()
 	return iIndex;
 }
 
-void UStage::Control_Collider(const _uint& _iIndex)
-{
-	if (_iIndex >= m_spRegionList->size())
-		return;
 
-	(*m_spRegionList.get())[_iIndex]->Control_Collider();
-	return;
-}
 
 HRESULT UStage::Delete_Region(_uint& _iIndex)
 {

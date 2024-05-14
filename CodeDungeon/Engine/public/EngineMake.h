@@ -14,6 +14,7 @@
 /* Graphics Shader */
 #define PROTO_RES_DEBUG2DTARGETSHADER L"Proto_Res_Debug2DTargetShader"
 #define PROTO_RES_DEBUGGINGDEFAULTSHADER L"Proto_Res_DebuggingDefaultShader"
+#define PROTO_RES_DEBUGGINGDEFAULTWHITESHADER L"Proto_Res_DebuggingDefaultWhiteShader"
 #define PROTO_RES_DEBUGGINGWIREFRAMESHADER L"Proto_Res_DebuggingWireframeShader"
 #define PROTO_RES_SHADOWSHADER L"Proto_Res_ShadowShader"
 #define PROTO_RES_GRIDSHADER L"Proto_Res_GridShader"

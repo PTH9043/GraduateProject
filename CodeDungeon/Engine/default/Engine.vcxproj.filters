@@ -1242,5 +1242,8 @@
     <FxCompile Include="..\..\Shader\Compute2DEmitParticle.hlsl">
       <Filter>98.ShaderFile\Common\Particle</Filter>
     </FxCompile>
+    <FxCompile Include="..\..\Shader\DebugDefaultObjectWhite.hlsl">
+      <Filter>98.ShaderFile\Debug</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

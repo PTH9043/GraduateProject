@@ -43,12 +43,19 @@ HRESULT UDefaultDebugging::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	if (DEBUGTYPE::DEBUG_CUBE == m_eDebugType)
 	{
 		m_spVIBuffer = static_pointer_cast<UVIBuffer>(spGameInstnace->CloneResource(PROTO_RES_VIBUFFERCUBE));
+		AddShader(PROTO_RES_DEBUGGINGDEFAULTSHADER);
 	}
-	else
+	else if(DEBUGTYPE::DEBUG_SPHERE == m_eDebugType)
 	{
 		m_spVIBuffer = static_pointer_cast<UVIBuffer>(spGameInstnace->CloneResource(PROTO_RES_VIBUFFERSPHERE));
+		AddShader(PROTO_RES_DEBUGGINGDEFAULTSHADER);
 	}
-	AddShader(PROTO_RES_DEBUGGINGDEFAULTSHADER);
+	else if (DEBUGTYPE::DEBUG_CUBE_WHITE == m_eDebugType)
+	{
+		m_spVIBuffer = static_pointer_cast<UVIBuffer>(spGameInstnace->CloneResource(PROTO_RES_VIBUFFERCUBE));
+		AddShader(PROTO_RES_DEBUGGINGDEFAULTWHITESHADER);
+	}
+	
 
 	m_stDebuggParam.vDebugging.w = 0.5f;
 	return S_OK;

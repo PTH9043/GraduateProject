@@ -55,8 +55,6 @@ HRESULT UFire::NativeConstructClone(const VOIDDATAS& _convecDatas)
 		if (m_spFireAlphaTexGroup == nullptr)m_spFireAlphaTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_FIREALPHATEXTUREGROUP));
 		m_spVIBufferRect = static_pointer_cast<UVIBufferRect>(spGameInstance->CloneResource(PROTO_RES_VIBUFFERRECT));
 
-
-
 		AddShader(stParticleDesc.wstrFireShader);
 
 		SetActive(false);

@@ -35,13 +35,6 @@ HRESULT UNavigation::NativeConstruct()
 
 	m_spCellContainer = Create<CELLCONTAINER>();
 
-	UCollider::COLLIDERDESC tDesc;
-
-	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
-	tDesc.vScale = _float3(0.f, 0.f, 0.f);
-
-	m_spCollider = std::static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_ABBCOLLIDER, { &tDesc}));
-
 	RETURN_CHECK_FAILED(ReadyNeighbor(), E_FAIL);
 
 	return S_OK;

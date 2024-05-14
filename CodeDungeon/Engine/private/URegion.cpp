@@ -9,7 +9,7 @@
 #include "UMethod.h"
 #include "UDefaultCell.h"
 
-#ifdef _USE_IMGUI
+#ifdef _EDIT_NAVI
 void URegion::tagCubeObjs::Create(SHPTRREF<UCell> _pCell)
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
@@ -135,13 +135,13 @@ HRESULT URegion::NativeConstructClone(const VOIDDATAS& _vecDatas)
 }
 
 
-#ifdef _USE_IMGUI
+#ifdef _EDIT_NAVI
 HRESULT URegion::AddCell(SHPTR<UCell>& _pCell)
 {
 	if (nullptr != m_spNavigation)
 	{
 		m_spNavigation->AddCell(_pCell);
-#ifdef _USE_IMGUI
+#ifdef _EDIT_NAVI
 		CUBOBJS tObjs;
 		tObjs.Create(_pCell);
 		m_CubeObjList.push_back(tObjs);
@@ -150,77 +150,6 @@ HRESULT URegion::AddCell(SHPTR<UCell>& _pCell)
 	return S_OK;
 }
 
-HRESULT URegion::ModifyCells()
-{
-	RETURN_CHECK_FAILED(nullptr == m_spNavigation, E_FAIL);
-
-	if (ImGui::TreeNodeEx("Region_Modfiy_Cells", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		SHPTR<CELLCONTAINER> pCells = m_spNavigation->GetCells();
-		if (ImGui::Button("ReRender"))
-		{
-			for (CELLCONTAINER::iterator it = pCells->begin(); it != pCells->end(); ++it)
-			{
-				(*it)->ReRender();
-			}
-		}
-		for (CELLCONTAINER::iterator it = pCells->begin(); it != pCells->end(); ++it)
-		{
-			char TEXT[MAX_PATH] = {};
-			sprintf_s(TEXT, "Cell: %d", (*it)->GetIndex());
-			if (ImGui::TreeNodeEx(TEXT, ImGuiTreeNodeFlags_DefaultOpen))
-			{
-#ifdef _USE_DEBUGGING
-				_bool bTrue1 = false, bTrue2 = false, bTrue3 = false;
-#endif
-				_float3 v3Pos1, v3Pos2, v3Pos3;
-				{
-					v3Pos1 = (*it)->GetPoint(UCell::POINT_A);
-					_float PosArr[3] = { v3Pos1.x, v3Pos1.y, v3Pos1.z };
-#ifdef _USE_DEBUGGING
-					bTrue1 = ImGui::InputFloat3("P1", PosArr, "%.2f");
-#else
-					ImGui::InputFloat3("P1", PosArr, "%.2f");
-#endif
-					v3Pos1 = _float3(PosArr[0], PosArr[1], PosArr[2]);
-					(*it)->SetPoint(UCell::POINT_A, v3Pos1);
-				}
-				{
-					v3Pos2 = (*it)->GetPoint(UCell::POINT_B);
-					_float PosArr[3] = { v3Pos2.x, v3Pos2.y, v3Pos2.z };
-#ifdef _USE_DEBUGGING
-					bTrue2 = ImGui::InputFloat3("P2", PosArr, "%.2f");
-#else
-					ImGui::InputFloat3("P2", PosArr, "%.2f");
-#endif
-					v3Pos2 = _float3(PosArr[0], PosArr[1], PosArr[2]);
-					(*it)->SetPoint(UCell::POINT_B, v3Pos2);
-				}
-				{
-					v3Pos3 = (*it)->GetPoint(UCell::POINT_C);
-					_float PosArr[3] = { v3Pos3.x, v3Pos3.y, v3Pos3.z };
-#ifdef _USE_DEBUGGING
-					bTrue3 = ImGui::InputFloat3("P3", PosArr, "%.2f");
-#else
-					ImGui::InputFloat3("P3", PosArr, "%.2f");
-#endif
-					v3Pos3 = _float3(PosArr[0], PosArr[1], PosArr[2]);
-					(*it)->SetPoint(UCell::POINT_C, v3Pos3);
-				}
-#ifdef _USE_DEBUGGING
-				if (true == bTrue1 || true == bTrue2 || true == bTrue3)
-				{
-					for (auto& iter : m_CubeObjList)
-						iter.Rebalance();
-				}
-#endif
-				ImGui::TreePop();
-			}
-		}
-		ImGui::TreePop();
-	}
-	return S_OK;
-}
 
 HRESULT URegion::ShowCells()
 {
@@ -275,6 +204,26 @@ HRESULT URegion::ShowCells()
 			}
 		}
 		ImGui::TreePop();
+	}
+	return S_OK;
+}
+
+HRESULT URegion::RearrageCells()
+{
+	RETURN_CHECK_FAILED(nullptr == m_spNavigation, E_FAIL);
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+	if (ImGui::Button("Rearrange_Cells"))
+	{
+		SHPTR<CELLCONTAINER> pCells = m_spNavigation->GetCells();
+		int i = 0;
+		for (CELLCONTAINER::iterator iter = pCells->begin(); iter != pCells->end();)
+		{
+			//¼¿µéÀÇ ÀÎµ¦½º Àç¼³Á¤
+			(*iter)->SetIndex(i++);
+			++iter;
+		}
+		m_spNavigation->ReadyNeighbor();
 	}
 	return S_OK;
 }
@@ -444,7 +393,7 @@ _bool URegion::Load(const _wstring& _wstrPath)
 {
 	RETURN_CHECK(nullptr == m_spNavigation, false)
 	m_spNavigation->Load(_wstrPath);
-#ifdef _USE_IMGUI
+#ifdef _EDIT_NAVI
 	for (SHPTR<UCell> iter : *m_spNavigation->GetCells())
 	{
 		CUBOBJS tObjs;
@@ -469,36 +418,8 @@ _bool URegion::Is_Collision(SHPTR<UCollider>& _pCollider)
 
 	return m_spNavigation->IsCollision(_pCollider);
 }
-#ifdef _USE_IMGUI
-void URegion::Control_Collider()
-{
-	if (nullptr == m_spNavigation)
-		return;
 
-	if (nullptr != m_spNavigation->GetCollider())
-	{
-		if (ImGui::TreeNodeEx("ControlCollider", ImGuiTreeNodeFlags_DefaultOpen))
-		{
-			UCollider::COLLIDERDESC tCollData;
-			tCollData.vScale = m_spNavigation->GetCollider()->GetScale();
-			tCollData.vTranslation = m_spNavigation->GetCollider()->GetTranslate();
 
-			_float Translate[3] = { tCollData.vTranslation.x,  tCollData.vTranslation.y, tCollData.vTranslation.z };
-			_float CollSclae[3] = { tCollData.vScale.x ,  tCollData.vScale.y , tCollData.vScale.z };
-
-			if (ImGui::InputFloat3("FindT", Translate, "%.4f"))
-			{
-				m_spNavigation->GetCollider()->SetTranslate(_float3(Translate[0], Translate[1], Translate[2]));
-			}
-			if (ImGui::InputFloat3("TindS", CollSclae, "%.4f"))
-			{
-				m_spNavigation->GetCollider()->SetScale(_float3(CollSclae[0], CollSclae[1], CollSclae[2]));
-			}
-			ImGui::TreePop();
-		}
-	}
-}
-#endif
 void URegion::Add_NeighborRegion(CSHPTRREF<URegion> _pRegion)
 {
 	if (nullptr == _pRegion || nullptr == m_spNavigation)
