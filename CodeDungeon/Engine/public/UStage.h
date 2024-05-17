@@ -48,6 +48,8 @@ public:
 	_bool Load();
 	_bool Save(const _wstring& _wstrPath);
 
+	HRESULT SetCellJumpState(const _uint& _iCellIndex);
+
 	// Update Region
 	void UpdateRegion();
 	// Add Arround Region

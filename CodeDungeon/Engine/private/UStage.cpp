@@ -258,6 +258,15 @@ _bool UStage::Save(const _wstring& _wstrPath)
 	return true;
 }
 
+HRESULT UStage::SetCellJumpState(const _uint& _iCellIndex)
+{
+	if (_iCellIndex >= m_spRegionList->size())
+		return E_FAIL;
+
+	//(*m_spRegionList.get())[_iCellIndex]->SetCellJumpState();
+	return S_OK;
+}
+
 
 void UStage::UpdateRegion()
 {

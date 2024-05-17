@@ -152,10 +152,10 @@ HRESULT CMainScene::LoadSceneData()
 		}
 	}
 	{
-		//CMummy::CHARACTERDESC CharDesc{PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_MUMMYANIMCONTROLLER};
+		CMummy::CHARACTERDESC CharDesc{PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_MUMMYANIMCONTROLLER};
 
-		//m_spMummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(
-		//	PROTO_ACTOR_MUMMY, { &CharDesc }));
+		m_spMummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(
+			PROTO_ACTOR_MUMMY, { &CharDesc }));
 	}
 
 	{

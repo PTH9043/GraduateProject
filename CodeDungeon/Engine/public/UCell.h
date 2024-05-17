@@ -57,6 +57,8 @@ public:
 	_float3 GetClosestPointOnEdges(const _float3& position) const;
 	_float3 ClosestPointOnLine(const _float3& lineStart, const _float3& lineEnd, const _float3& point) const;
 
+	const _bool GetJumpableState() const { return m_bisJumpable; }
+	void SetJumpableState(_bool& _isJump) { m_bisJumpable = _isJump; }
 #ifdef _EDIT_NAVI
 	CSHPTRREF<UDefaultCell> GetCellPawn() { return m_spCellPawn; }
 	CSHPTRREF<UVIBufferCell> GetCellVIBuffer() { return m_spCellVIBuffer; }
@@ -88,6 +90,8 @@ private:
 	_float4							m_vPlane;
 	// Color
 	_float3							m_f3Color;
+
+	_bool							m_bisJumpable;
 #ifdef _EDIT_NAVI
 private:
 	SHPTR<UVIBufferCell> m_spCellVIBuffer;
