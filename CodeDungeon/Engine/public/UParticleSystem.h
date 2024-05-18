@@ -25,7 +25,7 @@ public:
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _convecDatas) override;
 public:
 	void Update(const _double& _dTimeDelta);
-	void Render();
+	void Render(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor);
 	void BindShaderParams(CSHPTRREF<UShader> _spShader);
 	// Bind Compute shader
 	void SettingComputeShader(const _wstring& _wstrProtoName);

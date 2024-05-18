@@ -49,7 +49,7 @@ void CMainScene::TurnLightsOnRange()
 				CTorch* pTorch = dynamic_cast<CTorch*>(torch_it->get());
 
 
-				if (distanceSq <= 180 * 180)
+				if (distanceSq <= 200 * 200)
 				{
 					torch_it->get()->SetActive(true);
 					ActiveLIght(LIGHTTYPE::TYPE_POINT, count, LIGHTACTIVE::ISACTIVE);

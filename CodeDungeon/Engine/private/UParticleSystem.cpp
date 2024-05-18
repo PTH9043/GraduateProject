@@ -114,7 +114,7 @@ void UParticleSystem::Update(const _double& _dTimeDelta)
 	}
 }
 
-void UParticleSystem::Render()
+void UParticleSystem::Render(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
 	m_spComputeShader->SetTableDescriptor(m_spComputeTableDescriptor);
 	m_spComputeShader->BeginSettingDatas(m_spComputeCommand);

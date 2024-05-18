@@ -70,12 +70,21 @@ PS_OUT PS_Main(PS_In Input)
         float fogEnd = 150.0f + fogStart;
    
         float FogFactor = saturate((fogEnd - fDistanceToCamera) / (fogEnd - fogStart));
-        if(vGlow.a!=1.f)
-        Out.vColor = lerp(float4(0.18f, 0.18f, 0.18f, 1.0f), Out.vColor, FogFactor);
-        else
-            Out.vColor = lerp(float4(0.2f, 0.15f, 0.04f, 1.f), Out.vColor, FogFactor);
-        //Glow인 애들은 알파값이 1로 기록하여 안개를 덜받도록.
+        float FogFactor2 = 1 / pow(2.781828, (fDistanceToCamera * 0.0015) * (fDistanceToCamera * 0.0015));
+        if (vGlow.a != 1.f)
+        {
+            Out.vColor = lerp(float4(0.21f, 0.21f, 0.21f, 1.0f), Out.vColor, FogFactor);
         }
+         else
+        {
+            if (fDistanceToCamera > 60)
+                Out.vColor = lerp(float4(0.2f, 0.15f, 0.04f, 1.f), Out.vColor, FogFactor);
+            else
+                Out.vColor = lerp(float4(0.2f, 0.15f, 0.04f, 1.f), Out.vColor, FogFactor2);
+            //Out.vColor = lerp(float4(0.2f, 0.15f, 0.04f, 1.f), Out.vColor, FogFactor2);
+        }
+               //Glow인 애들은 알파값이 1로 기록하여 안개를 덜받도록.
+     }
  
     
 
