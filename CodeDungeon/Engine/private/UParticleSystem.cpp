@@ -59,7 +59,9 @@ HRESULT UParticleSystem::NativeConstructClone(const VOIDDATAS& _vecDatas)
 			m_stParticleParam = UMethod::ConvertTemplate_Index<PARTICLEPARAM>(_vecDatas, 0);
 		}
 	}
+	if (IS_UAVBUFFERPLUS) {
 
+	}
 	m_spComputeShaderParticleConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::ALLPARTICLEBUFFER, PARTICLEPARAM_SIZE);
 	m_spGraphicsShaderParticleConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::ALLPARTICLEBUFFER, PARTICLEPARAM_SIZE);
 	m_spComputeShaderTypeConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::PARTICLETYPEBUFFER, PARTICLETYPEPARAM_SIZE);
@@ -70,14 +72,9 @@ HRESULT UParticleSystem::NativeConstructClone(const VOIDDATAS& _vecDatas)
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	{
-		ComPtr<Dx12CommandQueue> cpCommandQueue = UMethod::CreateCommandQueue(GetDevice()->GetDV(), D3D12_COMMAND_LIST_TYPE_COMPUTE);
-
-		/*	for (auto& iter : m_arrComputeCommands)
-			{
-				iter = CreateNative<UComputeCommand>(GetDevice(), cpCommandQueue);
-			}*/
-		m_spComputeCommand = CreateNative<UComputeCommand>(GetDevice(), cpCommandQueue);
-		m_spComputeTableDescriptor = CreateNative<UTableDescriptor>(GetDevice(), 1);
+		m_spComputeCommand = spGameInstance->GetComputeCommand();
+		//m_spComputeTableDescriptor = CreateNative<UTableDescriptor>(GetDevice(), 1);
+		m_spComputeTableDescriptor = spGameInstance->GetComputeTableDescriptor();
 	}
 	return S_OK;
 }
@@ -120,12 +117,13 @@ void UParticleSystem::Render(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDes
 	m_spComputeShader->BeginSettingDatas(m_spComputeCommand);
 
 	m_spComputeShader->BindCBVBuffer(m_spComputeShaderParticleConstantBuffer, &m_stParticleParam, PARTICLEPARAM_SIZE);
-	m_spComputeShader->BindCBVBuffer(m_spComputeShaderTypeConstantBuffer, &m_stParticleType, PARTICLETYPEPARAM_SIZE);
+	
 	if (IS_UAVBUFFERPLUS) {
 		m_spComputeShader->BindUAVBuffer(UAV_REGISTER::PARTICLEWRITEDATA, m_spParticleStructedBufferPlus);		
 	}
 	else {
 		m_spComputeShader->BindUAVBuffer(UAV_REGISTER::PARTICLEWRITEDATA, m_spParticleStructedBuffer);
+		m_spComputeShader->BindCBVBuffer(m_spComputeShaderTypeConstantBuffer, &m_stParticleType, PARTICLETYPEPARAM_SIZE);
 	}
 	
 	
@@ -143,8 +141,10 @@ void UParticleSystem::BindShaderParams(CSHPTRREF<UShader> _spShader)
 	}	
 	else {
 		_spShader->BindSRVBuffer(SRV_REGISTER::T14, m_spParticleStructedBuffer);
+		_spShader->BindCBVBuffer(m_spGraphicsShaderParticleConstantBuffer, &m_stParticleParam, PARTICLEPARAM_SIZE);
 	}
-	_spShader->BindCBVBuffer(m_spGraphicsShaderParticleConstantBuffer, &m_stParticleParam, PARTICLEPARAM_SIZE);
+	
+	//그래픽스 쪽에서 이걸 scale팩터만 써서 그걸 PARTICLEPLUS의 padding을 scaleFactor로 사용
 }
 
 void UParticleSystem::SettingComputeShader(const _wstring& _wstrProtoName)

@@ -326,10 +326,21 @@ CSHPTRREF<UGpuCommand> UGameInstance::GetGpuCommand() const
 	return m_spGraphicDevice->GetGpuCommand();
 }
 
+CSHPTRREF<UComputeCommand> UGameInstance::GetComputeCommand() const
+{
+	return m_spGraphicDevice->GetComputeCommand();
+}
+
 CSHPTRREF<UTableDescriptor> UGameInstance::GetTableDescriptor() const
 {
 	return m_spGraphicDevice->GetTableDescriptor();
 }
+
+CSHPTRREF<UTableDescriptor> UGameInstance::GetComputeTableDescriptor() const
+{
+	return m_spGraphicDevice->GetComputeTableDescriptor();
+}
+
 
 CSHPTRREF<URootSignature> UGameInstance::GetRootSignature() const
 {

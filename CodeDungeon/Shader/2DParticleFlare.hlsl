@@ -4,31 +4,31 @@
 #include "ShaderGrobalFunc.hlsli"
 
 
-struct GROBALPARTICLEINFO
-{
-    int iMaxCount;
-    int iAddCount;
-    int fFrameNumber;
-    float fDeltaTime;
-    // ==============
-    float fAccTime;
-    float fMinLifeTime;
-    float fMaxLifeTime;
-    float fMinSpeed;
-    // ===============
-    float fMaxSpeed;
-    float fStartScaleParticle;
-    float fEndScaleParticle;
-    float		fParticleThickness;
-    //===========
-    float3     fParticleDirection;
-    float		fTextureWidth;
-    //================
-    float4		fParticlePosition;
-    //================
-    float		fTextureHeight;
-    float3 fPadding;
-};
+//struct GROBALPARTICLEINFO
+//{
+//    int iMaxCount;
+//    int iAddCount;
+//    int fFrameNumber;
+//    float fDeltaTime;
+//    // ==============
+//    float fAccTime;
+//    float fMinLifeTime;
+//    float fMaxLifeTime;
+//    float fMinSpeed;
+//    // ===============
+//    float fMaxSpeed;
+//    float fStartScaleParticle;
+//    float fEndScaleParticle;
+//    float		fParticleThickness;
+//    //===========
+//    float3     fParticleDirection;
+//    float		fTextureWidth;
+//    //================
+//    float4		fParticlePosition;
+//    //================
+//    float		fTextureHeight;
+//    float3 fPadding;
+//};
 
 struct PARTICLEPLUS
 {
@@ -39,7 +39,7 @@ struct PARTICLEPLUS
     float fLifeTime;
     // ==============
     int iAlive;
-    float3 padding;
+    float3 fScaleFactor; //padding을 StartScale과 EndScale로 활용
     //============
     float fStartTime;
     float fAmp;
@@ -49,10 +49,10 @@ struct PARTICLEPLUS
 
 // All Particle
 
-cbuffer ALLPARTICLEBUFFER : register(b13)
-{
-    GROBALPARTICLEINFO g_GrobalParticleInfo;
-};
+//cbuffer ALLPARTICLEBUFFER : register(b13)
+//{
+//    GROBALPARTICLEINFO g_GrobalParticleInfo;
+//};
 
 StructuredBuffer<PARTICLEPLUS> g_ParticleData : register(t14);
 
@@ -117,8 +117,10 @@ void GS_Main(point VS_OUT input[1], inout TriangleStream<GS_OUT> outputStream)
         return;
 
     float ratio = g_ParticleData[id].fCurTime / g_ParticleData[id].fLifeTime;
-    float scale = ((g_GrobalParticleInfo.fEndScaleParticle - g_GrobalParticleInfo.fStartScaleParticle) * ratio +
-    g_GrobalParticleInfo.fStartScaleParticle) / 2.f;
+    float scale = ((g_ParticleData[id].fScaleFactor.y - g_ParticleData[id].fScaleFactor.x) * ratio +
+   g_ParticleData[id].fScaleFactor.x) / 2.f;
+    //float scale = ((g_GrobalParticleInfo.fEndScaleParticle - g_GrobalParticleInfo.fStartScaleParticle) * ratio +
+    //g_GrobalParticleInfo.fStartScaleParticle) / 2.f;
 
     // View Space
     output[0].vPosition = Vertex.vViewPos + float4(-scale*0.5, scale*1.5, 0.f, 0.f);

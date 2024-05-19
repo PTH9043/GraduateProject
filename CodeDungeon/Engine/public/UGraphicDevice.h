@@ -15,6 +15,7 @@ class URootSignature;
 class UTableDescriptor;
 class UComputeRootSignature;
 
+
 class UGraphicDevice : public UBase {
 public:
 	UGraphicDevice();
@@ -24,7 +25,9 @@ public:
 	CSHPTRREF<USwapChain> GetSwapChain() const { return m_spSwapChain; }
 	CSHPTRREF<UDevice>			GetDevice() const { return m_spDevice; }
 	CSHPTRREF<UGpuCommand>		GetGpuCommand() const { return m_spGpuCommand; }
+	CSHPTRREF<UComputeCommand>		GetComputeCommand() const { return m_spComputeCommand; }
 	CSHPTRREF<UTableDescriptor>	GetTableDescriptor() const { return m_spTableDescriptor; }
+	CSHPTRREF<UTableDescriptor>	GetComputeTableDescriptor() const { return m_spComputeTableDescriptor; }
 	CSHPTRREF<URootSignature>	GetRootSignature() const { return m_spRootSignature; }
 	CSHPTRREF<UComputeRootSignature>	GetComputeRootSignature() const { return m_spComputeRootSignature; }
 
@@ -64,7 +67,9 @@ private:
 	// DxClass
 	SHPTR<UDevice>												m_spDevice;
 	SHPTR<UGpuCommand>								m_spGpuCommand;
+	SHPTR<UComputeCommand>								m_spComputeCommand;
 	SHPTR<UTableDescriptor>							m_spTableDescriptor;
+	SHPTR<UTableDescriptor>							m_spComputeTableDescriptor;
 	SHPTR<URootSignature>								m_spRootSignature;
 	SHPTR<UComputeRootSignature>				m_spComputeRootSignature;
 	SHPTR<USwapChain>										m_spSwapChain;

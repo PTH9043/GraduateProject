@@ -88,7 +88,6 @@ HRESULT UParticle::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTable
 	// bind Srv Buffer 
 	
 	GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTexGroup->GetTexture(TextureIndex));
-	
 
 	m_spVIBufferPoint->Render(GetShader(), _spCommand, m_spParticleSystem->GetMaxParticleCnt());
 	return S_OK;

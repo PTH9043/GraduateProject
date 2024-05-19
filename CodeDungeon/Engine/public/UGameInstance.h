@@ -46,6 +46,7 @@ class UScene;
 class ULight;
 class UTableDescriptor;
 class UGpuCommand;
+class UComputeCommand;
 
 class UActorGroup;
 class UCommand;
@@ -109,7 +110,9 @@ public:
 public:
 	CSHPTRREF<UDevice>			GetDevice() const;
 	CSHPTRREF<UGpuCommand>		GetGpuCommand() const;
+	CSHPTRREF<UComputeCommand>		GetComputeCommand() const;
 	CSHPTRREF<UTableDescriptor>	GetTableDescriptor() const;
+	CSHPTRREF<UTableDescriptor>	GetComputeTableDescriptor() const;
 	CSHPTRREF<URootSignature>	GetRootSignature() const;
 
 public: /*  GraphicDevice */

@@ -77,7 +77,7 @@ PS_OUT PS_Main(PS_In Input)
         }
          else
         {
-            if (fDistanceToCamera > 60)
+            if (fDistanceToCamera > 60)//ÀÌ¸י 
                 Out.vColor = lerp(float4(0.2f, 0.15f, 0.04f, 1.f), Out.vColor, FogFactor);
             else
                 Out.vColor = lerp(float4(0.2f, 0.15f, 0.04f, 1.f), Out.vColor, FogFactor2);

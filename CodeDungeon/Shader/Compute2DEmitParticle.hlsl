@@ -29,11 +29,11 @@ struct GROBALPARTICLEINFO
     float3 fPadding;
 };
 
-struct ComputeParticleType {
-    int fParticleType;
-    int fParticleLifeTimeType;
-    float2 fPadding;
-};
+//struct ComputeParticleType {
+//    int fParticleType;
+//    int fParticleLifeTimeType;
+//    float2 fPadding;
+//};
 
 struct PARTICLEPLUS
 {
@@ -44,7 +44,7 @@ struct PARTICLEPLUS
     float fLifeTime;
     // ==============
     int iAlive;
-    float3 padding;
+    float3 fScaleFactor; //Scale .x,.y¸¦ StartScale, EndScale·Î
     //============
     float fStartTime;
     float fAmp;
@@ -65,10 +65,10 @@ cbuffer ALLPARTICLEBUFFER : register(b13)
     GROBALPARTICLEINFO g_GrobalParticleInfo;
 };
 
-cbuffer PARTICLETYPEBUFFER : register(b14)
-{
-    ComputeParticleType g_ParticleType;
-}
+//cbuffer PARTICLETYPEBUFFER : register(b14)
+//{
+//    ComputeParticleType g_ParticleType;
+//}
 
 RWStructuredBuffer<PARTICLEPLUS> g_ParticleWritedata : register(u0);
 RWStructuredBuffer<COMPUTESHARED> g_SharedData : register(u1);
@@ -80,7 +80,7 @@ const float c_PI = 3.141592;
 // g_int_0  : Particle Max Count
 // g_int_1  : AddCount
 // g_vec4_0 : MinLifeTime / MaxLifeTime / MinSpeed / MaxSpeed
-[numthreads(1024, 1, 1)]
+[numthreads(116, 1, 1)]
 void CS_Main(int3 threadIndex : SV_DispatchThreadID)
 {
     if (threadIndex.x >= g_GrobalParticleInfo.iMaxCount)
@@ -141,6 +141,8 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
                 g_ParticleWritedata[threadIndex.x].fLifeTime = 1.2;
                 g_ParticleWritedata[threadIndex.x].fAmp =dir.x;
                 g_ParticleWritedata[threadIndex.x].fPeriod =noise.y*2;
+            g_ParticleWritedata[threadIndex.x].fScaleFactor.x = r3-0.2;
+            g_ParticleWritedata[threadIndex.x].fScaleFactor.y = r2 -0.5;
                 
             
            
@@ -207,12 +209,6 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
 }
 
 
-
-void FlareEffect()
-{
-   // float time =
-
-}
 
 
 #endif // _COMPUTE2DPARTICLE_

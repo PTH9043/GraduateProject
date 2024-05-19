@@ -1,6 +1,7 @@
 #include "EngineDefine.h"
 #include "UDevice.h"
 #include "UGpuCommand.h"
+#include "UComputeCommand.h"
 #include "USwapChain.h"
 #include "URootSignature.h"
 #include "UComputeRootSignature.h"
@@ -45,6 +46,17 @@ HRESULT UGraphicDevice::ReadyGraphicDevice(const GRAPHICDESC& _stGraphicsDesc, O
 		RETURN_CHECK_DXOBJECT(m_spDevice->GetDV()->CreateCommandQueue(&GraphicsCommandQueue,
 			IID_PPV_ARGS(&m_cpCommandQueue)), E_FAIL);
 		m_spGpuCommand = CreateNative<UGpuCommand>(m_spDevice, m_cpCommandQueue);
+
+	}
+	{
+		ComPtr<Dx12CommandQueue> cpCommandQueue;
+		D3D12_COMMAND_QUEUE_DESC ComputeCommandQueue{};
+		ComputeCommandQueue.Type = D3D12_COMMAND_LIST_TYPE_COMPUTE;
+		ComputeCommandQueue.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+		RETURN_CHECK_DXOBJECT(m_spDevice->GetDV()->CreateCommandQueue(&ComputeCommandQueue,
+			IID_PPV_ARGS(&cpCommandQueue)), E_FAIL);
+		m_spComputeCommand = CreateNative<UComputeCommand>(m_spDevice, cpCommandQueue);
+
 	}
 	// CheckMssa
 	{
@@ -88,6 +100,10 @@ HRESULT UGraphicDevice::ReadyGraphicDevice(const GRAPHICDESC& _stGraphicsDesc, O
 		const _uint MAX_GRAPHIC_TABLES = 1'5000;
 		m_spTableDescriptor = CreateNative<UTableDescriptor>(m_spDevice, MAX_GRAPHIC_TABLES,
 			CBV_REGISTER_END + SRV_REGISTER_END, GRAPHICS_CONSTANT_BUFFER_VALUE);
+	}
+	{
+		const _uint MAX_COMPUTE_TABLES = 100;
+		m_spComputeTableDescriptor = CreateNative<UTableDescriptor>(m_spDevice, MAX_COMPUTE_TABLES);
 	}
 	_stOutDesc.wpDevice = GetDevice();
 	_stOutDesc.wpGpuCmd = GetGpuCommand();
