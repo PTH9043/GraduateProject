@@ -67,8 +67,8 @@ HRESULT CTorch::NativeConstructClone(const VOIDDATAS& _vecDatas)
 		//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 0.25f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 0.5f;
-		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.5f;
-		tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.6f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.8f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.9f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 1.f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 0.5f;
 		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 200;
@@ -89,10 +89,10 @@ HRESULT CTorch::NativeConstructClone(const VOIDDATAS& _vecDatas)
 		m_spParticle->GetParticleSystem()->SetUAVBUFFERPLUS(true);
 
 	}
-	m_spParticle->GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, GetTransform()->GetPos().y + 2.5f, GetTransform()->GetPos().z));
+	m_spParticle->GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, GetTransform()->GetPos().y + 3.f, GetTransform()->GetPos().z));
 	m_spParticle->SetActive(false);
 
-	m_spFire->SetActive(true);
+	m_spFire->SetActive(false);
 	
 	return S_OK;
 }

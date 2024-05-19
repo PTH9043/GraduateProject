@@ -48,7 +48,12 @@ void CMainScene::TurnLightsOnRange()
 				float distanceSq = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
 				CTorch* pTorch = dynamic_cast<CTorch*>(torch_it->get());
 
-
+				if (distanceSq <= 120 * 120) {
+					pTorch->GetParticle()->SetActive(true);
+				}
+				else {
+					pTorch->GetParticle()->SetActive(false);
+				}
 				if (distanceSq <= 200 * 200)
 				{
 					torch_it->get()->SetActive(true);
@@ -58,7 +63,7 @@ void CMainScene::TurnLightsOnRange()
 					if (pTorch != nullptr)
 					{
 						// 자식 클래스로 캐스팅된 경우에만 GetParticle 함수 호출 가능
-						pTorch->GetParticle()->SetActive(true);
+						
 						pTorch->GetFire()->SetActive(true);
 					}
 				}
@@ -68,7 +73,7 @@ void CMainScene::TurnLightsOnRange()
 					if (pTorch != nullptr)
 					{
 						// 자식 클래스로 캐스팅된 경우에만 GetParticle 함수 호출 가능
-						pTorch->GetParticle()->SetActive(false);
+						
 						pTorch->GetFire()->SetActive(false);
 					}
 				}

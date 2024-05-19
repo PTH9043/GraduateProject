@@ -138,9 +138,9 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
                 g_ParticleWritedata[threadIndex.x].vWorldPos = float3(0.0, 0.0, 0);
                 g_ParticleWritedata[threadIndex.x].vWorldDir = float3(0.0, 0.5, 0);
                 g_ParticleWritedata[threadIndex.x].fStartTime = 0.4 * noise4;
-                g_ParticleWritedata[threadIndex.x].fLifeTime = 1.2;
-                g_ParticleWritedata[threadIndex.x].fAmp =dir.x;
-                g_ParticleWritedata[threadIndex.x].fPeriod =noise.y*2;
+                g_ParticleWritedata[threadIndex.x].fLifeTime = 1.6;
+            g_ParticleWritedata[threadIndex.x].fAmp = noise.x+0.3;
+                g_ParticleWritedata[threadIndex.x].fPeriod =noise.y*2.5;
             g_ParticleWritedata[threadIndex.x].fScaleFactor.x = r3-0.2;
             g_ParticleWritedata[threadIndex.x].fScaleFactor.y = r2 -0.5;
                 
@@ -159,8 +159,17 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
         //g_ParticleWritedata[threadIndex.x].fCurTime += 0.016f; //이게 훨씬 빨리 올라감
         float t = g_ParticleWritedata[threadIndex.x].fCurTime;
        
-        
-              
+        float r1 = Rand(float2(threadIndex.x, threadIndex.x));
+    
+        float r3 = Rand(float2(threadIndex.x * 3, threadIndex.x * 3));
+        float3 noise =
+        {
+            2 * r1 - 1,
+              0,
+                2 * r3 - 1
+        };
+        float3 dir = (noise - 0.5f) * 2.f;
+           
     
             if (g_ParticleWritedata[threadIndex.x].fCurTime < 0)
             {
@@ -172,21 +181,14 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
             {
             g_ParticleWritedata[threadIndex.x].paddingplus = 1;
             newPosition = float3(0, 0, 0);
-               // g_ParticleWritedata[threadIndex.x].vWorldPos = float3(0, 0, 0);
-                //t = g_ParticleWritedata[threadIndex.x].fLifeTime * frac(t / g_ParticleWritedata[threadIndex.x].fLifeTime);
-            float3 newDir = float3(-g_ParticleWritedata[threadIndex.x].vWorldDir.y, g_ParticleWritedata[threadIndex.x].vWorldDir.x, g_ParticleWritedata[threadIndex.x].vWorldDir.y);
+            
+           
+           float3 newDir = float3(-g_ParticleWritedata[threadIndex.x].vWorldDir.y, g_ParticleWritedata[threadIndex.x].vWorldDir.x, g_ParticleWritedata[threadIndex.x].vWorldDir.y);
                 newDir = normalize(newDir);
-                //newPosition.xy = newPosition.xy + g_ParticleWritedata[threadIndex.x].vWorldDir.xy * t;
-                //newPosition.xy = newPosition.xy + g_ParticleWritedata[threadIndex.x].vWorldDir.xy + newDir.xy * (t) * sin(t * c_PI * g_ParticleWritedata[threadIndex.x].fPeriod) * g_ParticleWritedata[threadIndex.x].fAmp;
-                
-                //g_ParticleWritedata[threadIndex.x].vWorldPos.x = g_ParticleWritedata[threadIndex.x].vWorldPos.x + g_ParticleWritedata[threadIndex.x].vWorldDir.x * t;
-                //g_ParticleWritedata[threadIndex.x].vWorldPos.y = g_ParticleWritedata[threadIndex.x].vWorldPos.y + g_ParticleWritedata[threadIndex.x].vWorldDir.y + sin(t * c_PI * 1000) * 1000;
-                
-                //Period는 sin곡선의 주기이므로 커질수록 sin곡선을 그만큼 더 그림.
-                //Amp는 폭으로 sin곡선의 높이를 바꾸는것.
+               
               
                 newPosition.xyz = newPosition.xyz+g_ParticleWritedata[threadIndex.x].vWorldDir.xyz * t*10;
-            newPosition.xyz = newPosition.xyz + newDir.xyz*sin(t * g_ParticleWritedata[threadIndex.x].fPeriod) * g_ParticleWritedata[threadIndex.x].fAmp*5;
+            newPosition.xyz = newPosition.xyz + dir.xyz * sin(t * g_ParticleWritedata[threadIndex.x].fPeriod) * g_ParticleWritedata[threadIndex.x].fAmp * 2;
 
               
             }
