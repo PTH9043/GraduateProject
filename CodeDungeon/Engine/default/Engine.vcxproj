@@ -307,6 +307,8 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </FxCompile>
+    <FxCompile Include="..\..\Shader\Bloom.hlsl" />
+    <FxCompile Include="..\..\Shader\Hdr.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DBloodEffect.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DEmitParticle.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DParticle.hlsl" />
@@ -321,6 +323,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\Shader\Grid.hlsl" />
+    <FxCompile Include="..\..\Shader\HorizontalBlur.hlsl" />
     <FxCompile Include="..\..\Shader\LightDirection.hlsl" />
     <FxCompile Include="..\..\Shader\LightPoint.hlsl" />
     <FxCompile Include="..\..\Shader\Model.hlsl" />
@@ -333,6 +336,7 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\ScreenRenderObj.hlsl" />
     <FxCompile Include="..\..\Shader\Shadow.hlsl" />
+    <FxCompile Include="..\..\Shader\VerticalBlur.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Shader\ComputeFunc.hlsli" />

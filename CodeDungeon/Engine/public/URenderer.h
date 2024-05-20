@@ -89,6 +89,9 @@ private:
 	void Render2DUI();
 	// HDR
 	void RenderHDR();
+	// Bloom, Blur
+	void RenderBlur();
+	void RenderBloom();
 	// Render End 
 	void RenderEnd();
 #ifdef _USE_DEBUGGING

@@ -123,7 +123,11 @@ void GS_Main(point VS_OUT input[1], inout TriangleStream<GS_OUT> outputStream)
     //g_GrobalParticleInfo.fStartScaleParticle) / 2.f;
 
     // View Space
-    output[0].vPosition = Vertex.vViewPos + float4(-scale*0.5, scale*1.5, 0.f, 0.f);
+    //output[0].vPosition = Vertex.vViewPos + float4(-scale*5.5, scale*5.5, 0.f, 0.f);
+    //output[1].vPosition = Vertex.vViewPos + float4(scale * 5.5, scale * 5.5, 0.f, 0.f);
+    //output[2].vPosition = Vertex.vViewPos + float4(scale * 5.5, -scale * 5.5, 0.f, 0.f);
+    //output[3].vPosition = Vertex.vViewPos + float4(-scale * 5.5, -scale * 5.5, 0.f, 0.f); 
+    output[0].vPosition = Vertex.vViewPos + float4(-scale * 0.5, scale * 1.5, 0.f, 0.f);
     output[1].vPosition = Vertex.vViewPos + float4(scale * 0.5, scale * 1.5, 0.f, 0.f);
     output[2].vPosition = Vertex.vViewPos + float4(scale * 0.5, -scale * 1.5, 0.f, 0.f);
     output[3].vPosition = Vertex.vViewPos + float4(-scale * 0.5, -scale * 1.5, 0.f, 0.f);

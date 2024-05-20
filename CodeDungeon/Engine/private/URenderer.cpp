@@ -69,6 +69,18 @@ HRESULT URenderer::NativeConstruct()
 
             m_ShaderObjects.insert(std::pair<_wstring, SHPTR<UShader>>(PROTO_RES_BLENDDEFFEREDSHADER, static_pointer_cast<UShader>(
                 spGameInstance->CloneResource(PROTO_RES_BLENDDEFFEREDSHADER))));
+
+            m_ShaderObjects.insert(std::pair<_wstring, SHPTR<UShader>>(PROTO_RES_HDRSHADER, static_pointer_cast<UShader>(
+                spGameInstance->CloneResource(PROTO_RES_HDRSHADER))));
+           
+            m_ShaderObjects.insert(std::pair<_wstring, SHPTR<UShader>>(PROTO_RES_VERTICALBLURSHADER, static_pointer_cast<UShader>(
+                spGameInstance->CloneResource(PROTO_RES_VERTICALBLURSHADER))));
+
+            m_ShaderObjects.insert(std::pair<_wstring, SHPTR<UShader>>(PROTO_RES_HORIZONTALBLURSHADER, static_pointer_cast<UShader>(
+                spGameInstance->CloneResource(PROTO_RES_HORIZONTALBLURSHADER))));
+            
+            m_ShaderObjects.insert(std::pair<_wstring, SHPTR<UShader>>(PROTO_RES_BLOOMSHADER, static_pointer_cast<UShader>(
+                spGameInstance->CloneResource(PROTO_RES_BLOOMSHADER))));
 #ifdef _USE_DEBUGGING
             m_ShaderObjects.insert(std::pair<_wstring, SHPTR<UShader>>(PROTO_RES_DEBUG2DTARGETSHADER, static_pointer_cast<UShader>(
                 spGameInstance->CloneResource(PROTO_RES_DEBUG2DTARGETSHADER))));
@@ -214,6 +226,8 @@ HRESULT URenderer::Render()
     Render2DUI();
     Render3DUI();
     RenderHDR();
+    RenderBlur();
+    RenderBloom();
     RenderEnd();
 
 #ifdef _USE_DEBUGGING
@@ -449,7 +463,100 @@ void URenderer::Render2DUI()
 
 void URenderer::RenderHDR()
 {
+    SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
+    // Set Render Tareget
+    SHPTR<URenderTargetGroup> spRenderTargetGroup{ m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::HDR) };
+    spRenderTargetGroup->WaitResourceToTarget(m_spCastingCommand);
+    spRenderTargetGroup->ClearRenderTargetView(m_spCastingCommand);
+    spRenderTargetGroup->OmSetRenderTargets(m_spCastingCommand);
+    // Bind Shader 
+    SHPTR<UShader> spShader = FindShader(PROTO_RES_HDRSHADER);
+    spShader->SettingPipeLineState(m_spCastingCommand);
+    spShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
+    spShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+    {
+        SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLEND_DEFFERED);
+        spShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::BLEND_SCREEN_DEFFERED));
+    }
+   
+    m_spVIBufferPlane->Render(spShader, m_spCastingCommand);
+    spRenderTargetGroup->WaitTargetToResource(m_spCastingCommand);
+
+}
+
+void URenderer::RenderBlur()
+{
+    SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+    // Set Render Tareget
+    SHPTR<URenderTargetGroup> spRenderTargetGroup{ m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLUR) };
+    spRenderTargetGroup->WaitResourceToTarget(m_spCastingCommand);
+    spRenderTargetGroup->ClearRenderTargetView(m_spCastingCommand);
+    spRenderTargetGroup->OmSetRenderTargets(m_spCastingCommand);
+    // Bind Shader 
+    SHPTR<UShader> spVerticalShader = FindShader(PROTO_RES_VERTICALBLURSHADER);
+    spVerticalShader->SettingPipeLineState(m_spCastingCommand);
+    spVerticalShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
+    spVerticalShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+    {
+        SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLEND_DEFFERED);
+        spVerticalShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::BLEND_SCREEN_DEFFERED));
+    }
+
+    m_spVIBufferPlane->Render(spVerticalShader, m_spCastingCommand);
+    spRenderTargetGroup->WaitTargetToResource(m_spCastingCommand);
+
+  /*  spRenderTargetGroup->WaitResourceToTarget(m_spCastingCommand);
+    spRenderTargetGroup->ClearRenderTargetView(m_spCastingCommand);
+    spRenderTargetGroup->OmSetRenderTargets(m_spCastingCommand);
+
+    SHPTR<UShader> spHorizontalShader = FindShader(PROTO_RES_HORIZONTALBLURSHADER);
+    spHorizontalShader->SettingPipeLineState(m_spCastingCommand);
+    spHorizontalShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
+    spHorizontalShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+    {
+        SHPTR<URenderTargetGroup> spBlur= m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLUR);
+        spHorizontalShader->BindSRVBuffer(SRV_REGISTER::T0, spBlur->GetRenderTargetTexture(RTOBJID::BLUR));
+    }
+
+    m_spVIBufferPlane->Render(spHorizontalShader, m_spCastingCommand);
+
+    spRenderTargetGroup->WaitTargetToResource(m_spCastingCommand);*/
+
+
+
+}
+
+void URenderer::RenderBloom()
+{
+    SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+    // Set Render Tareget
+    SHPTR<URenderTargetGroup> spRenderTargetGroup{ m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLOOM) };
+    spRenderTargetGroup->WaitResourceToTarget(m_spCastingCommand);
+    spRenderTargetGroup->ClearRenderTargetView(m_spCastingCommand);
+    spRenderTargetGroup->OmSetRenderTargets(m_spCastingCommand);
+    // Bind Shader 
+    SHPTR<UShader> spShader = FindShader(PROTO_RES_BLOOMSHADER);
+    spShader->SettingPipeLineState(m_spCastingCommand);
+    spShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
+    spShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+    {
+        SHPTR<URenderTargetGroup> spHDR = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::HDR);
+        spShader->BindSRVBuffer(SRV_REGISTER::T0, spHDR->GetRenderTargetTexture(RTOBJID::HDR));
+    }
+    {
+        SHPTR<URenderTargetGroup> spBlur = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLUR);
+        spShader->BindSRVBuffer(SRV_REGISTER::T1, spBlur->GetRenderTargetTexture(RTOBJID::BLUR));
+    }
+    {
+        SHPTR<URenderTargetGroup> spBlur = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLEND_DEFFERED);
+        spShader->BindSRVBuffer(SRV_REGISTER::T2, spBlur->GetRenderTargetTexture(RTOBJID::BLEND_SCREEN_DEFFERED));
+    }
+
+    m_spVIBufferPlane->Render(spShader, m_spCastingCommand);
+    spRenderTargetGroup->WaitTargetToResource(m_spCastingCommand);
 }
 
 
@@ -465,8 +572,8 @@ void URenderer::RenderEnd()
         spDefferedShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
         //  Diffuse Texture 가져와서 Bind 
         spDefferedShader->BindSRVBuffer(SRV_REGISTER::T0, m_spRenderTargetManager->
-            FindRenderTargetTexture(RTGROUPID::BLEND_DEFFERED,
-                RTOBJID::BLEND_SCREEN_DEFFERED));
+            FindRenderTargetTexture(RTGROUPID::BLOOM,
+                RTOBJID::BLOOM));
         //  Diffuse Texture 가져와서 Bind 
         spDefferedShader->BindSRVBuffer(SRV_REGISTER::T1, m_spRenderTargetManager->
             FindRenderTargetTexture(RTGROUPID::ALPHA_DEFFERED,

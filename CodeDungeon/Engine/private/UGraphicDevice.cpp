@@ -102,7 +102,7 @@ HRESULT UGraphicDevice::ReadyGraphicDevice(const GRAPHICDESC& _stGraphicsDesc, O
 			CBV_REGISTER_END + SRV_REGISTER_END, GRAPHICS_CONSTANT_BUFFER_VALUE);
 	}
 	{
-		const _uint MAX_COMPUTE_TABLES = 100;
+		const _uint MAX_COMPUTE_TABLES = 300;
 		m_spComputeTableDescriptor = CreateNative<UTableDescriptor>(m_spDevice, MAX_COMPUTE_TABLES);
 	}
 	_stOutDesc.wpDevice = GetDevice();
