@@ -760,6 +760,9 @@
       <Filter>02.DxClass\Command\Render</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UCommandManager.cpp" />
+    <ClCompile Include="..\private\USmallDefferedCamera.cpp">
+      <Filter>05.Actor\02.Camera\DefferedCamera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\EngineDefine.h">
@@ -1165,6 +1168,9 @@
       <Filter>02.DxClass\Command\Render</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UCommandManager.h" />
+    <ClInclude Include="..\public\USmallDefferedCamera.h">
+      <Filter>05.Actor\02.Camera\DefferedCamera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Shader\ShaderGrobalFunc.hlsli">
@@ -1272,6 +1278,12 @@
       <Filter>98.ShaderFile\Common\HdrBloomBlur</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Shader\Bloom.hlsl">
+      <Filter>98.ShaderFile\Common\HdrBloomBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\DownSampling.hlsl">
+      <Filter>98.ShaderFile\Common\HdrBloomBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\UpSampling.hlsl">
       <Filter>98.ShaderFile\Common\HdrBloomBlur</Filter>
     </FxCompile>
   </ItemGroup>

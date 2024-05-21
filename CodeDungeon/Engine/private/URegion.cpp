@@ -89,7 +89,7 @@ URegion::URegion(CSHPTRREF<UDevice> _spDevice)
 #ifdef _EDIT_NAVI
 	,m_DeleteCellsList{ nullptr },
 	m_bDeletionEnabled{ false },
-	,m_CubeObjList{},
+	m_CubeObjList{},
 	m_DeleteCubesList{ nullptr }
 #endif
 {
@@ -105,7 +105,7 @@ URegion::URegion(const URegion& _rhs)
 	m_bEditName{false}
 #ifdef _EDIT_NAVI
 	,m_DeleteCellsList{ nullptr },
-	m_bDeletionEnabled{ false },
+	m_bDeletionEnabled{ false }
 	,m_CubeObjList{},
 	m_DeleteCubesList{nullptr}
 #endif

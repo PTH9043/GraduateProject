@@ -58,6 +58,7 @@ TextureCube g_Texture9 : register(t9);
 
 static const int MAIN_CAM_ID = 0;
 static const int DEFFERED_CAM_ID = 1;
-static const int SHADOWLIGHT_CAM_ID = 2;
+static const int SMALL_DEFFERED_CAM_ID = 2;
+static const int SHADOWLIGHT_CAM_ID = 3;
  
 #endif // _SHADERPARAM_HLSLI_

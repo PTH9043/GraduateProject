@@ -65,6 +65,7 @@
     <ClInclude Include="..\public\UPlayerJob.h" />
     <ClInclude Include="..\public\URenderCommand.h" />
     <ClInclude Include="..\public\UShadowCamera.h" />
+    <ClInclude Include="..\public\USmallDefferedCamera.h" />
     <ClInclude Include="..\public\USound.h" />
     <ClInclude Include="..\public\CustomMemory.h" />
     <ClInclude Include="..\public\CustomString.h" />
@@ -186,6 +187,7 @@
     <ClCompile Include="..\private\UPlayerJob.cpp" />
     <ClCompile Include="..\private\URenderCommand.cpp" />
     <ClCompile Include="..\private\UShadowCamera.cpp" />
+    <ClCompile Include="..\private\USmallDefferedCamera.cpp" />
     <ClCompile Include="..\private\USound.cpp" />
     <ClCompile Include="..\private\CustomMemory.cpp" />
     <ClCompile Include="..\private\CustomString.cpp" />
@@ -308,6 +310,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\Shader\Bloom.hlsl" />
+    <FxCompile Include="..\..\Shader\DownSampling.hlsl" />
     <FxCompile Include="..\..\Shader\Hdr.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DBloodEffect.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DEmitParticle.hlsl" />
@@ -336,6 +339,7 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\ScreenRenderObj.hlsl" />
     <FxCompile Include="..\..\Shader\Shadow.hlsl" />
+    <FxCompile Include="..\..\Shader\UpSampling.hlsl" />
     <FxCompile Include="..\..\Shader\VerticalBlur.hlsl" />
   </ItemGroup>
   <ItemGroup>

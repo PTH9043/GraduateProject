@@ -39,7 +39,7 @@ void UPipeLine::RegisterCameraInPipeline(CSHPTRREF<UCamera> _spCamera, CAMID& _i
 	_uint ID = GetID(_eCamType);
 	RETURN_CHECK(m_arrCameras.size() <= ID, ;);
 
-	if (MAIN_CAMERA_ID == ID || DEFFERED_CAMERA_ID == ID || SHADOWLIGHT_CAMERA_ID == ID)
+	if (MAIN_CAMERA_ID == ID || DEFFERED_CAMERA_ID == ID || SMALL_DEFFERED_CAMERA_ID == ID || SHADOWLIGHT_CAMERA_ID == ID)
 	{
 		// Main 카메라가 존재하면 바꾼다. 
 		if (nullptr != m_arrCameras[MAIN_CAMERA_ID])
