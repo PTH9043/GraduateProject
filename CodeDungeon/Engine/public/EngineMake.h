@@ -39,6 +39,7 @@
 #define PROTO_RES_LIGHTPOINTSHADER L"Proto_Res_LightPointShader"
 #define PROTO_RES_LIGHTSPOTSHADER L"Proto_Res_LightSpotShader"
 #define PROTO_RES_PARTICLE2DSHADER L"Proto_Res_Particle2DShader"
+#define PROTO_RES_PARTICLEBLOOD2DSHADER L"Proto_Res_ParticleBlood2DShader"
 #define PROTO_RES_PARTICLEFLARE2DSHADER L"Proto_Res_ParticleFlare2DShader"
 #define PROTO_RES_WATERSHADER L"Proto_Res_WaterShader"
 #define PROTO_RES_EQUIPMENTSHADER L"Proto_Res_EquipmentShader"

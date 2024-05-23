@@ -388,6 +388,18 @@
     <Filter Include="98.ShaderFile\Common\HdrBloomBlur">
       <UniqueIdentifier>{5ef97c52-d6c8-4703-9de2-c9dd896bf7ae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98.ShaderFile\Common\Particle\Blood">
+      <UniqueIdentifier>{a330dd0a-0030-477b-961a-5dba8f853aed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.ShaderFile\Common\Particle\Flare">
+      <UniqueIdentifier>{e545ef2d-ad8d-49ae-b96e-5ea3b8bef3d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.ShaderFile\Common\Particle\Original">
+      <UniqueIdentifier>{4cb87c57-efae-41d9-a93e-18aea1ae0ca9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.ShaderFile\Common\Particle\Animate">
+      <UniqueIdentifier>{61f62721-37c6-4962-a824-e9ebae19d886}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -1220,25 +1232,10 @@
     <FxCompile Include="..\..\Shader\Grid.hlsl">
       <Filter>98.ShaderFile\Common\NonAlpha</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\Shader\2DParticle.hlsl">
-      <Filter>98.ShaderFile\Common\Particle</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\Shader\Compute2DParticle.hlsl">
-      <Filter>98.ShaderFile\Common\Particle</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\Shader\2DAnimateParticle.hlsl">
-      <Filter>98.ShaderFile\Common\Particle</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\Shader\ComputeAnimation.hlsl">
-      <Filter>98.ShaderFile\Common\Particle</Filter>
-    </FxCompile>
     <FxCompile Include="..\..\Shader\3DNormalCube.hlsl">
       <Filter>98.ShaderFile\Common\NonAlpha</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Shader\Compute2DRotationEffect.hlsl">
-      <Filter>98.ShaderFile\Common\Particle</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\Shader\Compute2DBloodEffect.hlsl">
       <Filter>98.ShaderFile\Common\Particle</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Shader\2DFire.hlsl">
@@ -1258,12 +1255,6 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\Shadow.hlsl">
       <Filter>98.ShaderFile\Common\Light</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\Shader\2DParticleFlare.hlsl">
-      <Filter>98.ShaderFile\Common\Particle</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\Shader\Compute2DEmitParticle.hlsl">
-      <Filter>98.ShaderFile\Common\Particle</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Shader\DebugDefaultObjectWhite.hlsl">
       <Filter>98.ShaderFile\Debug</Filter>
@@ -1285,6 +1276,30 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\UpSampling.hlsl">
       <Filter>98.ShaderFile\Common\HdrBloomBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\2DParticleBlood.hlsl">
+      <Filter>98.ShaderFile\Common\Particle\Blood</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\Compute2DBloodEffect.hlsl">
+      <Filter>98.ShaderFile\Common\Particle\Blood</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\2DParticleFlare.hlsl">
+      <Filter>98.ShaderFile\Common\Particle\Flare</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\Compute2DEmitParticle.hlsl">
+      <Filter>98.ShaderFile\Common\Particle\Flare</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\2DParticle.hlsl">
+      <Filter>98.ShaderFile\Common\Particle\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\Compute2DParticle.hlsl">
+      <Filter>98.ShaderFile\Common\Particle\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\2DAnimateParticle.hlsl">
+      <Filter>98.ShaderFile\Common\Particle\Animate</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\ComputeAnimation.hlsl">
+      <Filter>98.ShaderFile\Common\Particle\Animate</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

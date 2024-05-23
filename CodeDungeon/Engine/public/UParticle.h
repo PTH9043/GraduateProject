@@ -48,7 +48,9 @@ protected:
 public:
 	CSHPTRREF<UTexGroup> GetTextureGroup() const { return m_spTexGroup; }
 	CSHPTRREF<UParticleSystem> GetParticleSystem() const { return m_spParticleSystem; }
+	void SetParticleType(PARTICLE_KIND _type) { m_spParticleSystem->SetParticleType(_type); }
 	void SetTexture(const _wstring& TexName);
+	void SetBloodTexture(_uint Index, const _wstring& TexName);
 	void SetTexture(_uint _index);
 #ifdef _USE_IMGUI
 public:
@@ -64,6 +66,10 @@ protected:
 	TEXTUREINDEXCONTAINER	m_TextureIndexContainer;
 	CUSTIMER									m_LifeTimer;
 	_uint TextureIndex;
+
+	
+	ARRAY<_uint, 8> BloodTextureIndices;
+	
 };
 
 END

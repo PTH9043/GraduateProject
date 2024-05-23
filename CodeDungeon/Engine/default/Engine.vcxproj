@@ -302,6 +302,7 @@
     <FxCompile Include="..\..\Shader\2DFire.hlsl" />
     <FxCompile Include="..\..\Shader\2DFog.hlsl" />
     <FxCompile Include="..\..\Shader\2DParticle.hlsl" />
+    <FxCompile Include="..\..\Shader\2DParticleBlood.hlsl" />
     <FxCompile Include="..\..\Shader\2DParticleFlare.hlsl" />
     <FxCompile Include="..\..\Shader\3DNormalCube.hlsl" />
     <FxCompile Include="..\..\Shader\AnimModel.hlsl" />
