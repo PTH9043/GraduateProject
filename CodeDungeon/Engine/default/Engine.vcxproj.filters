@@ -385,6 +385,9 @@
     <Filter Include="01.Manager\CommandManager">
       <UniqueIdentifier>{4d076d5d-2275-40e0-b8bc-96d308a65c34}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98.ShaderFile\Common\HdrBloomBlur">
+      <UniqueIdentifier>{5ef97c52-d6c8-4703-9de2-c9dd896bf7ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -757,6 +760,9 @@
       <Filter>02.DxClass\Command\Render</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UCommandManager.cpp" />
+    <ClCompile Include="..\private\USmallDefferedCamera.cpp">
+      <Filter>05.Actor\02.Camera\DefferedCamera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\EngineDefine.h">
@@ -1162,6 +1168,9 @@
       <Filter>02.DxClass\Command\Render</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UCommandManager.h" />
+    <ClInclude Include="..\public\USmallDefferedCamera.h">
+      <Filter>05.Actor\02.Camera\DefferedCamera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Shader\ShaderGrobalFunc.hlsli">
@@ -1258,6 +1267,24 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\DebugDefaultObjectWhite.hlsl">
       <Filter>98.ShaderFile\Debug</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\Hdr.hlsl">
+      <Filter>98.ShaderFile\Common\HdrBloomBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\HorizontalBlur.hlsl">
+      <Filter>98.ShaderFile\Common\HdrBloomBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\VerticalBlur.hlsl">
+      <Filter>98.ShaderFile\Common\HdrBloomBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\Bloom.hlsl">
+      <Filter>98.ShaderFile\Common\HdrBloomBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\DownSampling.hlsl">
+      <Filter>98.ShaderFile\Common\HdrBloomBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\UpSampling.hlsl">
+      <Filter>98.ShaderFile\Common\HdrBloomBlur</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

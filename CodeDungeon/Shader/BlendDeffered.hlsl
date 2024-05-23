@@ -69,7 +69,9 @@ PS_OUT PS_Main(PS_In In)
     if (vGlowDesc.a == 1)
     {
        // vColor = float4(ToneMapping(vDiffuseDesc.xyz), vDiffuseDesc.a);
-        vColor.xyz = vDiffuseDesc.xyz * ToneMapping(vGlowDesc.xyz);
+       // vColor.xyz = vDiffuseDesc.xyz * ToneMapping(vGlowDesc.xyz);
+        vColor.xyz = vGlowDesc.xyz;
+        //ToneMapping(vGlowDesc.xyz);
     }
     else
     {

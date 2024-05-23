@@ -21,6 +21,12 @@
 #define PROTO_RES_RECTSHADER L"Proto_Res_RectShader"
 #define PROTO_RES_FINALDEFFEREDSHADER L"Proto_Res_FinalDefferedShader"
 #define PROTO_RES_BLENDDEFFEREDSHADER L"Proto_Res_BlendDefferedShader"
+#define PROTO_RES_BLOOMSHADER L"Proto_Res_BloomShader"
+#define PROTO_RES_HORIZONTALBLURSHADER L"Proto_Res_HorizontalBlurShader"
+#define PROTO_RES_VERTICALBLURSHADER L"Proto_Res_VerticalBlurShader"
+#define PROTO_RES_DOWNSAMPLINGSHADER L"Proto_Res_DownSamplingShader"
+#define PROTO_RES_UPSAMPLINGSHADER L"Proto_Res_UpSamplingShader"
+#define PROTO_RES_HDRSHADER L"Proto_Res_HdrShader"
 #define PROTO_RES_INSTANCERECTSHADER L"Proto_Res_InstanceRectShader"
 #define PROTO_RES_DEFAULTOBJECTSHADER L"Proto_Res_DefaultObjectShader"
 #define PROTO_RES_ANIMMODELSHADER L"Proto_Res_AnimModelShader"
@@ -75,6 +81,7 @@
 
 // Actor 
 #define PROTO_ACTOR_DEFFEREDCAMERA L"Proto_Actor_DefferedCamera"
+#define PROTO_ACTOR_SMALL_DEFFEREDCAMERA L"Proto_Actor_SmallDefferedCamera"
 #define PROTO_ACTOR_SHADOWCAMERA L"Proto_Actor_ShadowCamera"
 #define PROTO_RES_MIRRORCAMERA L"Proto_Actor_MirrorCamera"
 #define PROTO_ACTOR_DEFAULTCUBE L"Proto_Actor_DefaultCube"

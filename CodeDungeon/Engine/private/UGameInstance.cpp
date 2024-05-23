@@ -33,6 +33,7 @@
 #include "UComputeCommand.h"
 
 #include "UDefferedCamera.h"
+#include "USmallDefferedCamera.h"
 #include "UShadowCamera.h"
 #include "UDefaultCube.h"
 #include "UDefaultDebugging.h"
@@ -1086,6 +1087,42 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 					DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
 					DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
 
+			CreateGraphicsShader(PROTO_RES_HDRSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"Hdr", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{
+					DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
+					DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
+
+			CreateGraphicsShader(PROTO_RES_HORIZONTALBLURSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"HorizontalBlur", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{
+					DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
+					DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
+			CreateGraphicsShader(PROTO_RES_VERTICALBLURSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"VerticalBlur", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{
+					DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
+					DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
+
+			CreateGraphicsShader(PROTO_RES_DOWNSAMPLINGSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"DownSampling", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{
+					DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
+					DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
+
+			CreateGraphicsShader(PROTO_RES_UPSAMPLINGSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"UpSampling", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{
+					DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
+					DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
+
+
+			CreateGraphicsShader(PROTO_RES_BLOOMSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"Bloom", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{
+					DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
+					DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
+
 			CreateGraphicsShader(PROTO_RES_DEBUG2DTARGETSHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"Debug2DTarget", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN }, RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
@@ -1316,6 +1353,10 @@ HRESULT UGameInstance::ReadyComp(const OUTPUTDATA& _stData)
 			_stData.wpDevice.lock(), LAYER_CAM, CLONETYPE::CLONE_STATIC));
 	}
 	{
+		AddPrototype(PROTO_ACTOR_SMALL_DEFFEREDCAMERA, CreateConstructorToNative<USmallDefferedCamera>(
+			_stData.wpDevice.lock(), LAYER_CAM, CLONETYPE::CLONE_STATIC));
+	}
+	{
 		AddPrototype(PROTO_ACTOR_SHADOWCAMERA, CreateConstructorToNative<UShadowCamera>(
 			_stData.wpDevice.lock(), LAYER_CAM, CLONETYPE::CLONE_STATIC));
 	}
@@ -1454,6 +1495,58 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 			// Add 
 			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::ALPHA_DEFFERED, vecRts);
 		}
+
+		{
+			std::vector<RTDESC> vecRts{
+				RTDESC{ RTOBJID::BLOOM, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
+					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f }  }
+			};
+			// Add 
+			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::BLOOM, vecRts);
+		}
+		{
+			std::vector<RTDESC> vecRts{
+				RTDESC{ RTOBJID::BLUR, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
+					GraphicDesc->iWinCX/2, GraphicDesc->iWinCY/2, { 0.f, 0.f, 0.f, 0.f }  }
+			};
+			// Add 
+			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::BLUR, vecRts);
+		}
+
+		{
+			std::vector<RTDESC> vecRts{
+				RTDESC{ RTOBJID::DOWNSAMPLE, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
+					GraphicDesc->iWinCX / 2, GraphicDesc->iWinCY / 2, { 0.f, 0.f, 0.f, 0.f }  }
+			};
+			// Add 
+			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::DOWNSAMPLE, vecRts);
+		}
+		{
+			std::vector<RTDESC> vecRts{
+				RTDESC{ RTOBJID::UPSAMPLE, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
+					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f }  }
+			};
+			// Add 
+			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::UPSAMPLE, vecRts);
+		}
+		{
+			std::vector<RTDESC> vecRts{
+				RTDESC{ RTOBJID::BLUR_RESULT, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
+					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f }  }
+			};
+			// Add 
+			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::BLUR_RESULT, vecRts);
+		}
+
+
+		{
+			std::vector<RTDESC> vecRts{
+				RTDESC{ RTOBJID::HDR, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
+					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f }  }
+			};
+			// Add 
+			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::HDR, vecRts);
+		}
 		{
 			std::vector<RTDESC> vecRts{
 				RTDESC{ RTOBJID::UI2D_SCREEN_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
@@ -1493,16 +1586,25 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 		_float2(100.f, 430.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_SHADE_DEFFERED,
+	/*m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_SHADE_DEFFERED,
 		_float2(100.f, 540.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_SPECULAR_DEFFERED,
 		_float2(100.f, 650.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_AMBIENT_DEFFERED,
-		_float2(100.f, 760.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
+		_float2(100.f, 760.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());*/
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::SHADOW_MAP, RTOBJID::SHADOW_DEPTH_FOURBYFOUR,
-		_float2(100.f, 870.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
+
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::HDR, RTOBJID::HDR,
+		_float2(200.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
+
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::UPSAMPLE, RTOBJID::UPSAMPLE,
+		_float2(500.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
+
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::BLOOM, RTOBJID::BLOOM,
+		_float2(800.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
+
+	
 
 #endif
 	return S_OK;

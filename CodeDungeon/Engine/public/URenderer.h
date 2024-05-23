@@ -12,6 +12,7 @@ class UVIBufferCube;
 class URenderTargetManager;
 class URenderHandler;
 class UDefferedCamera;
+class USmallDefferedCamera;
 class UShadowCamera;
 class UShaderConstantBuffer;
 class UGraphicDevice;
@@ -89,6 +90,12 @@ private:
 	void Render2DUI();
 	// HDR
 	void RenderHDR();
+	// Bloom, Blur
+	void RenderHorizontalBlur();
+	void RenderVerticalBlur();
+	void RenderBloom();
+	void DownSample();
+	void UpSample();
 	// Render End 
 	void RenderEnd();
 #ifdef _USE_DEBUGGING
@@ -110,8 +117,10 @@ private:
 	_float																								m_fGrobalDeltaTime;
 	// Deffered Transform Param		
 	TRANSFORMPARAM																	 m_stFinalRenderTransformParam;
+	TRANSFORMPARAM																	 m_stSmallRenderTransformParam;
 	SHPTR<UShaderConstantBuffer>											m_spTransformConstantBuffer;
 	SHPTR<UDefferedCamera>														m_spDefferedCamera;
+	SHPTR<USmallDefferedCamera>														m_spSmallDefferedCamera;
 	SHPTR<UShadowCamera>														m_spShadowCamera;
 	// Actives 																							 
 	ARRAY<DRAWINGRENDERCONTAINER, RI_END>					m_arrActiveDrawRenderList;
