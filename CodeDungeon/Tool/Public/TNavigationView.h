@@ -68,6 +68,8 @@ private:
 	_uint													m_iCreateRegionIndex;
 	_uint													m_iRegionIndex;
 	_uint													m_iCellIndex;
+	_int													m_iWillRenderCellIndexBegin;
+	_int													m_iWillRenderCellIndexEnd;
 
 	SHPTR<UCell>											m_spSelectedCell;
 };

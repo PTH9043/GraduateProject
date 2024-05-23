@@ -35,7 +35,9 @@ TNavigationView::TNavigationView(CSHPTRREF<UDevice> _spDevice) :
 	m_iCellIndex{ 0 },
 	m_bOnWindow{false},
 	m_bPickOnCell{ false },
-	m_spSelectedCell{nullptr}
+	m_spSelectedCell{nullptr}, 
+	m_iWillRenderCellIndexBegin{0},
+	m_iWillRenderCellIndexEnd{ 0 }
 {
 }
 
@@ -116,12 +118,12 @@ void TNavigationView::LateTickActive(const _double& _dTimeDetla)
 	if (false == m_bAllRender)
 	{
 		if (nullptr != m_spStageManager->GetStage())
-			m_spStageManager->GetStage()->AddRender(m_iRegionIndex);
+			m_spStageManager->GetStage()->AddRender(m_iRegionIndex, m_iWillRenderCellIndexBegin, m_iWillRenderCellIndexEnd);
 	}
 	else
 	{
 		if (nullptr != m_spStageManager->GetStage())
-			m_spStageManager->GetStage()->AddRenderAll();
+			m_spStageManager->GetStage()->AddRenderAll(m_iRegionIndex);
 	}
 
 	for (_uint i = 0; i < SEL_END; i++)
@@ -191,7 +193,7 @@ void TNavigationView::ModifyNavigation(CSHPTRREF<URegion> _spRegion)
 
 				if (!m_bPickOnCell)
 				{
-					m_iCellIndex = Cells.size();
+					m_iCellIndex = static_cast<_uint>(Cells.size());
 					for (auto& iter : Cells)
 					{
 						{
@@ -358,7 +360,14 @@ void TNavigationView::NavigationView()
 		if (true == m_bNavigationModify)
 		{
 			ImGui::Checkbox("Render_All_Regions", &m_bAllRender);
-		
+
+			if(!m_bAllRender)
+			{
+				ImGui::InputInt("Render Begin", &m_iWillRenderCellIndexBegin);
+				ImGui::InputInt("Render End", &m_iWillRenderCellIndexEnd);
+			}
+
+
 			LoadRegionsFromFile();
 
 			m_spStageManager->GetStage()->CreateRegion();
@@ -382,11 +391,29 @@ void TNavigationView::NavigationView()
 						}
 						else
 						{
-							ImGui::Text("Selected Cell Index: %d", m_spSelectedCell->GetIndex());
+							CSHPTR<CELLCONTAINER> cellsContainer = m_spStageManager->GetStage()->GetRegion(m_iRegionIndex)->GetNavigation()->GetCells();
+							const std::vector<SHPTR<UCell>>& cells = *cellsContainer;
+							CSHPTR<UCell> cell = cells[m_spSelectedCell->GetIndex()];
+							int selectedIndex = m_spSelectedCell->GetIndex();
+
+							ImGui::Text("Selected Cell Index: %d", selectedIndex);
+							ImGui::Text("Selected Cell Jumpable : %s", cell->GetJumpableState() ? "true" : "false");
 							if (ImGui::Button("Delete"))
 							{
-								m_spStageManager->GetStage()->GetRegion(m_iRegionIndex)->DeleteCell(m_spSelectedCell->GetIndex());
+								m_spStageManager->GetStage()->GetRegion(m_iRegionIndex)->DeleteCell(selectedIndex);
 								m_spSelectedCell.reset();
+							}
+							if (ImGui::Button("Set Jumpable"))
+							{
+								if (selectedIndex >= 0 && selectedIndex < cells.size()) {
+									cell->SetJumpableState(true);
+								}
+							}
+							if (ImGui::Button("Unset Jumpable"))
+							{
+								if (selectedIndex >= 0 && selectedIndex < cells.size()) {
+									cell->SetJumpableState(false);
+								}
 							}
 						}
 						ImGui::TreePop();

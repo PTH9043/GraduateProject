@@ -1,6 +1,6 @@
 #pragma once
 #include "UObject.h"
-//#define _EDIT_NAVI
+#define _EDIT_NAVI
 
 BEGIN(Engine)
 class UDefaultCell;
@@ -58,7 +58,7 @@ public:
 	_float3 ClosestPointOnLine(const _float3& lineStart, const _float3& lineEnd, const _float3& point) const;
 
 	const _bool GetJumpableState() const { return m_bisJumpable; }
-	void SetJumpableState(_bool& _isJump) { m_bisJumpable = _isJump; }
+	void SetJumpableState(_bool _isJump) { m_bisJumpable = _isJump; }
 #ifdef _EDIT_NAVI
 	CSHPTRREF<UDefaultCell> GetCellPawn() { return m_spCellPawn; }
 	CSHPTRREF<UVIBufferCell> GetCellVIBuffer() { return m_spCellVIBuffer; }

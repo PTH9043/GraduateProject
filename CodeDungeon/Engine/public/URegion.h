@@ -24,7 +24,8 @@ public:
 		void Rebalance();
 		void AddCubesRenderGroup();
 	}CUBOBJS;
-	HRESULT AddRegionRenderGroup();
+	HRESULT AddAllCellsRenderGroup();
+	HRESULT AddCellsRenderGroup(_int& begin, _int& end);
 #endif
 	URegion(CSHPTRREF<UDevice> _spDevice);
 	URegion(const URegion& _rhs);
@@ -49,6 +50,7 @@ public:
 	HRESULT AddCell(SHPTR<UCell>& _pCell);
 	HRESULT ShowCells();
 	HRESULT RearrageCells();
+	HRESULT RearrangeCellsByHeight();
 	HRESULT ClearCell();
 	HRESULT SetColor();
 	HRESULT SetName();

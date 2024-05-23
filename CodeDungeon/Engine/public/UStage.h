@@ -28,9 +28,10 @@ public:
 	CSHPTRREF<REGIONLIST> GetRegionList() { return m_spRegionList; }
 	SHPTR<URegion> GetRegion(const _uint& _iIndex);
 
+
 #ifdef _EDIT_NAVI
-	virtual HRESULT AddRender(const _uint& _iIndex);
-	void AddRenderAll();
+	HRESULT AddRender(const _uint& _iIndex, _int& begin, _int& end);
+	HRESULT AddRenderAll(const _uint& _iIndex);
 	HRESULT AddCell(const _uint& _iCellIndex, SHPTR<UCell>& _pCell);
 	HRESULT RearrangeCells(const _uint& _iCellIndex);
 	HRESULT ShowCells(const _uint& _iCellIndex);

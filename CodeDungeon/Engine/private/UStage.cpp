@@ -48,19 +48,22 @@ SHPTR<URegion> UStage::GetRegion(const _uint& _iIndex)
 
 
 #ifdef _EDIT_NAVI
-HRESULT UStage::AddRender(const _uint& _iIndex)
+HRESULT UStage::AddRender(const _uint& _iIndex, _int& begin, _int& end)
 {
 	if (_iIndex >= m_spRegionList->size())
 		return E_FAIL;
 
-	(*m_spRegionList.get())[_iIndex]->AddRegionRenderGroup();
+	(*m_spRegionList.get())[_iIndex]->AddCellsRenderGroup(begin, end);
 	return S_OK;
 }
 
-void UStage::AddRenderAll()
+HRESULT UStage::AddRenderAll(const _uint& _iIndex)
 {
-	for (auto& iter : (*m_spRegionList.get()))
-		iter->AddRegionRenderGroup();
+	if (_iIndex >= m_spRegionList->size())
+		return E_FAIL;
+
+	(*m_spRegionList.get())[_iIndex]->AddAllCellsRenderGroup();
+	return S_OK;
 }
 
 HRESULT UStage::AddCell(const _uint& _iCellIndex, SHPTR<UCell>& _pCell)

@@ -63,7 +63,7 @@ void URegion::tagCubeObjs::AddCubesRenderGroup()
 		spCube3->AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
 }
 
-HRESULT URegion::AddRegionRenderGroup()
+HRESULT URegion::AddAllCellsRenderGroup()
 {
 	for (auto& iter : m_CubeObjList)
 		iter.AddCubesRenderGroup();
@@ -78,6 +78,32 @@ HRESULT URegion::AddRegionRenderGroup()
 }
 #endif
 
+HRESULT URegion::AddCellsRenderGroup(_int& begin, _int& end)
+{
+	RETURN_CHECK_FAILED(nullptr == m_spNavigation, E_FAIL);
+
+	auto cells = m_spNavigation->GetCells();
+	if (!cells) {
+		return E_FAIL;
+	}
+	_int cellCount = static_cast<_int>(cells->size());
+	if (begin >= cellCount || end >= cellCount || begin > end) {
+		return E_INVALIDARG;
+	}
+
+	auto cubeIter = m_CubeObjList.begin();
+	std::advance(cubeIter, begin);
+	for (_int i = begin; i <= end; ++i, ++cubeIter) {
+		cubeIter->AddCubesRenderGroup();
+	}
+
+	for (_int i = begin; i <= end; ++i) {
+		(*cells)[i]->AddCellRenderGroup();
+	}
+
+	return S_OK;
+}
+
 URegion::URegion(CSHPTRREF<UDevice> _spDevice)
 	: UComponent(_spDevice),
 	m_f3Color{0.6f, 0.f, 0.f},
@@ -88,7 +114,7 @@ URegion::URegion(CSHPTRREF<UDevice> _spDevice)
 	m_bEditName{false}
 #ifdef _EDIT_NAVI
 	,m_DeleteCellsList{ nullptr },
-	m_bDeletionEnabled{ false },
+	m_bDeletionEnabled{ false }
 	,m_CubeObjList{},
 	m_DeleteCubesList{ nullptr }
 #endif
@@ -105,7 +131,7 @@ URegion::URegion(const URegion& _rhs)
 	m_bEditName{false}
 #ifdef _EDIT_NAVI
 	,m_DeleteCellsList{ nullptr },
-	m_bDeletionEnabled{ false },
+	m_bDeletionEnabled{ false }
 	,m_CubeObjList{},
 	m_DeleteCubesList{nullptr}
 #endif
@@ -223,6 +249,32 @@ HRESULT URegion::RearrageCells()
 			(*iter)->SetIndex(i++);
 			++iter;
 		}
+		m_spNavigation->ReadyNeighbor();
+	}
+	return S_OK;
+}
+
+HRESULT URegion::RearrangeCellsByHeight()
+{
+	RETURN_CHECK_FAILED(nullptr == m_spNavigation, E_FAIL);
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+
+	if (ImGui::Button("Rearrange_Cells_By_Height"))
+	{
+		SHPTR<CELLCONTAINER> pCells = m_spNavigation->GetCells();
+		int i = 0;
+		//y값에 따른 셀들 재정렬
+		sort(pCells->begin(), pCells->end(), [](SHPTR<UCell>& a, SHPTR<UCell>& b) {
+			return a->GetCenterPos().y < b->GetCenterPos().y;
+			});
+		for (CELLCONTAINER::iterator iter = pCells->begin(); iter != pCells->end();)
+		{
+			//셀들의 인덱스 재설정
+			(*iter)->SetIndex(i++);
+			++iter;
+		}
+
 		m_spNavigation->ReadyNeighbor();
 	}
 	return S_OK;
