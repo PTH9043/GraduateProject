@@ -45,8 +45,12 @@ public:
 	_float* GetCreateInterval() {
 		return &m_fCreateInterval;
 	}
-	void SetUAVBUFFERPLUS(_bool _Is) {
-		IS_UAVBUFFERPLUS = _Is;
+	
+	void SetParticleType(PARTICLE_KIND _type) {
+		m_curParticleType = _type;
+	}
+	PARTICLE_KIND GetParticleType() {
+		return m_curParticleType;
 	}
 #ifdef _USE_IMGUI
 public:
@@ -80,7 +84,7 @@ private:
 	_uint										m_iParticleAddAmount;
 	_float										m_fCreateInterval;
 
-	_bool						IS_UAVBUFFERPLUS = false;
+	PARTICLE_KIND		m_curParticleType;
 };
 
 END

@@ -73,7 +73,21 @@ void UParticle::TickActive(const _double& _dTimeDelta)
 
 void UParticle::LateTickActive(const _double& _dTimeDelta)
 {
-	AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
+	switch (m_spParticleSystem->GetParticleType()) {
+	case PARTICLE_ORIGINAL:
+		AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
+	break;
+	case PARTICLE_FLARE:
+		AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
+		break;
+	case PARTICLE_BLOOD:
+		AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
+		break;
+	default:
+		break;
+
+	}
+	
 }
 
 HRESULT UParticle::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
@@ -86,8 +100,28 @@ HRESULT UParticle::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTable
 	// Bind Particle System Buffer
 	m_spParticleSystem->BindShaderParams(GetShader());
 	// bind Srv Buffer 
+	switch (m_spParticleSystem->GetParticleType()) {
+	case PARTICLE_ORIGINAL:
+		GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTexGroup->GetTexture(TextureIndex)); 
+		break;
+	case PARTICLE_FLARE:
+		GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTexGroup->GetTexture(TextureIndex));
+		break;
+	case PARTICLE_BLOOD:
+		GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTexGroup->GetTexture(BloodTextureIndices[0]));
+		GetShader()->BindSRVBuffer(SRV_REGISTER::T1, m_spTexGroup->GetTexture(BloodTextureIndices[1]));
+		GetShader()->BindSRVBuffer(SRV_REGISTER::T2, m_spTexGroup->GetTexture(BloodTextureIndices[2]));
+		GetShader()->BindSRVBuffer(SRV_REGISTER::T3, m_spTexGroup->GetTexture(BloodTextureIndices[3]));
+		GetShader()->BindSRVBuffer(SRV_REGISTER::T4, m_spTexGroup->GetTexture(BloodTextureIndices[4]));
+		GetShader()->BindSRVBuffer(SRV_REGISTER::T5, m_spTexGroup->GetTexture(BloodTextureIndices[5]));
+		GetShader()->BindSRVBuffer(SRV_REGISTER::T6, m_spTexGroup->GetTexture(BloodTextureIndices[6]));
+		GetShader()->BindSRVBuffer(SRV_REGISTER::T7, m_spTexGroup->GetTexture(BloodTextureIndices[7]));
+		break;
+	default:
+		break;
+
+	}
 	
-	GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTexGroup->GetTexture(TextureIndex));
 
 	m_spVIBufferPoint->Render(GetShader(), _spCommand, m_spParticleSystem->GetMaxParticleCnt());
 	return S_OK;
@@ -121,6 +155,12 @@ _bool UParticle::Load(const _wstring& _wstrPath)
 void UParticle::SetTexture(const _wstring& TexName)
 {
 	TextureIndex = m_spTexGroup->GetTextureIndex(TexName);
+}
+
+void UParticle::SetBloodTexture(_uint Index, const _wstring& TexName)
+{
+	if(Index<BloodTextureIndices.size())
+	BloodTextureIndices[Index] =m_spTexGroup->GetTextureIndex(TexName);
 }
 
 void UParticle::SetTexture(_uint _index)

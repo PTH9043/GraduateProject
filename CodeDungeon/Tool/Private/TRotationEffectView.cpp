@@ -72,6 +72,7 @@ void TRotationEffectView::LoadMultipleParticleResource()
 			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 100 ;
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 5.f ;
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.1f, 0.f);
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_ORIGINAL;
 			m_MultipleParticle[i] = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
 		}
 	}

@@ -58,20 +58,21 @@ void TBloodEffectView::LoadMultipleParticleResource()
 		{
 			UParticle::PARTICLEDESC tDesc;
 			tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEBLOODEFFECT2DSHADER;
-			tDesc.wstrParticleShader = PROTO_RES_PARTICLE2DSHADER;
+			tDesc.wstrParticleShader = PROTO_RES_PARTICLEBLOOD2DSHADER;
 
 
 			tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
 			//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 5.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 0.2f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 5.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 2.5f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 0.7;
 			tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.3f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 10.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 15.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 40.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 40.f;
 			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 100;
-			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 5.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.1f, 0.f);
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 15.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.f, 0.f);
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_BLOOD;
 			m_MultipleParticle[i] = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
 		}
 	}
@@ -80,28 +81,45 @@ void TBloodEffectView::LoadMultipleParticleResource()
 		m_MultipleParticleType[0] = m_MultipleParticle[0]->GetParticleSystem()->GetParticleTypeParam();
 		m_MultipleParticleType[0]->fParticleType = PARTICLE_TYPE_DEFAULT;
 		m_MultipleParticleType[0]->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
-		m_MultipleParticle[0]->SetTexture(L"RedDot"); // y값 증가 x 원
+		m_MultipleParticle[0]->SetBloodTexture(0,L"blood"); // y값 증가 x 원
+		m_MultipleParticle[0]->SetBloodTexture(1,L"blood1"); // y값 증가 x 원
+		m_MultipleParticle[0]->SetBloodTexture(2,L"blood2"); // y값 증가 x 원
+		m_MultipleParticle[0]->SetBloodTexture(3,L"blood3"); // y값 증가 x 원
+		m_MultipleParticle[0]->SetBloodTexture(4,L"blood4"); // y값 증가 x 원
+		m_MultipleParticle[0]->SetBloodTexture(5,L"blood5"); // y값 증가 x 원
+		m_MultipleParticle[0]->SetBloodTexture(6,L"blood6"); // y값 증가 x 원
+		m_MultipleParticle[0]->SetBloodTexture(7,L"blood7"); // y값 증가 x 원
+		m_MultipleParticle[0]->SetParticleType(PARTICLE_BLOOD);
+		
 	}
-	{
-		m_MultipleParticleParam[1] = m_MultipleParticle[1]->GetParticleSystem()->GetParticleParam();
-		m_MultipleParticleType[1] = m_MultipleParticle[1]->GetParticleSystem()->GetParticleTypeParam();
-		m_MultipleParticleType[1]->fParticleType = PARTICLE_TYPE_AUTO;
-		m_MultipleParticleType[1]->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
-		m_MultipleParticle[1]->SetTexture(L"RedDot");// y값 증가 O 원
-	}
+	//{
+	//	m_MultipleParticleParam[1] = m_MultipleParticle[1]->GetParticleSystem()->GetParticleParam();
+	//	m_MultipleParticleType[1] = m_MultipleParticle[1]->GetParticleSystem()->GetParticleTypeParam();
+	//	m_MultipleParticleType[1]->fParticleType = PARTICLE_TYPE_AUTO;
+	//	m_MultipleParticleType[1]->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
+	//	m_MultipleParticle[1]->SetBloodTexture(0, L"blood"); // y값 증가 x 원
+	//	m_MultipleParticle[1]->SetBloodTexture(1, L"blood1"); // y값 증가 x 원
+	//	m_MultipleParticle[1]->SetBloodTexture(2, L"blood2"); // y값 증가 x 원
+	//	m_MultipleParticle[1]->SetBloodTexture(3, L"blood3"); // y값 증가 x 원
+	//	m_MultipleParticle[1]->SetBloodTexture(4, L"blood4"); // y값 증가 x 원
+	//	m_MultipleParticle[1]->SetBloodTexture(5, L"blood5"); // y값 증가 x 원
+	//	m_MultipleParticle[1]->SetBloodTexture(6, L"blood6"); // y값 증가 x 원
+	//	m_MultipleParticle[1]->SetBloodTexture(7, L"blood7"); // y값 증가 x 원
+	//	m_MultipleParticle[1]->SetParticleType(PARTICLE_BLOOD);
+	//}
 
 
-	*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() = 0.05f;
-	*m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount() = 1;
-	*m_MultipleParticle[1]->GetParticleSystem()->GetCreateInterval() = 0.05f;
-	*m_MultipleParticle[1]->GetParticleSystem()->GetAddParticleAmount() = 1;
+	*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() = 1.55f;
+	*m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount() = 100;
+	/**m_MultipleParticle[1]->GetParticleSystem()->GetCreateInterval() = 1.05f;
+	*m_MultipleParticle[1]->GetParticleSystem()->GetAddParticleAmount() = 100;*/
 }
 
 
 HRESULT TBloodEffectView::LoadResource()
 {
 
-	ResizeMultipleParticleVector(2);
+	ResizeMultipleParticleVector(1);
 	LoadMultipleParticleResource();
 
 	return S_OK;

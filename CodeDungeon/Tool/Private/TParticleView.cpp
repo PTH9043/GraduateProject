@@ -93,6 +93,7 @@ void TParticleView::LoadSingleParticleResource()
 			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 1000;
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 25.f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.5f, 0.5f, 0.5f);
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_ORIGINAL;
 			m_SingleParticle[i] = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
 		}
 		m_SingleParticleParam[i] = m_SingleParticle[i]->GetParticleSystem()->GetParticleParam();
@@ -124,6 +125,8 @@ void TParticleView::LoadMultipleParticleResource()
 			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 100 * (i + 1);
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 5.f * (i + 1);
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.f, 0.1f);
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_ORIGINAL;
+			
 			m_MultipleParticle[i] = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
 		}
 		m_MultipleParticleParam[i] = m_MultipleParticle[i]->GetParticleSystem()->GetParticleParam();
@@ -157,6 +160,7 @@ void TParticleView::LoadAnimParticleResource()
 			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 1000;
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 25.f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.0f, 0.0f, 0.1f);
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_ORIGINAL;
 
 			UAnimatedParticle::ANIMPARTICLEDESC tAnimDesc;
 			tAnimDesc.vTextureSize = _float2{8.f, 8.f };
@@ -667,8 +671,16 @@ void TParticleView::AnimParticleTexSetting()
 						m_AnimParticle[0]->SetTextureRowsAndCols(8.f, 4.f);
 					}
 					else if (Texture.second == 0) {
-						m_AnimParticle[0]->SetNextAnimTimer(0.025f);
+						m_AnimParticle[0]->SetNextAnimTimer(0.25f);
 						m_AnimParticle[0]->SetTextureRowsAndCols(3.f, 3.f);
+					}
+					else if (Texture.second == 7 || Texture.second == 8) {
+						m_AnimParticle[0]->SetNextAnimTimer(0.25f);
+						m_AnimParticle[0]->SetTextureRowsAndCols(2, 2);
+					}
+					else {
+						m_AnimParticle[0]->SetNextAnimTimer(0.055f);
+						m_AnimParticle[0]->SetTextureRowsAndCols(5, 5);
 					}
 
 					m_AnimParticle[0]->SetTexture(Texture.second);

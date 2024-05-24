@@ -165,9 +165,42 @@ struct PS_OUT
 PS_OUT PS_Main(GS_OUT In) 
 {
     PS_OUT Out = (PS_OUT) 0;
+    if (fmod(In.iInstanceID, 8) == 0)
+    {
+        Out.vColor = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV);
+    }
+    else if (fmod(In.iInstanceID, 8) == 1)
+    {
+        Out.vColor = g_Texture1.Sample(g_Sampler_Normal, In.vTexUV);
+    }
+    else if(fmod(In.iInstanceID, 8) == 2)
+    {
+        Out.vColor = g_Texture2.Sample(g_Sampler_Normal, In.vTexUV);
+    }
+    else if(fmod(In.iInstanceID, 8) == 3)
+    {
+        Out.vColor = g_Texture3.Sample(g_Sampler_Normal, In.vTexUV);
+    }
+    else if(fmod(In.iInstanceID, 8) == 4)
+    {
+        Out.vColor = g_Texture4.Sample(g_Sampler_Normal, In.vTexUV);
+    }
+    else if(fmod(In.iInstanceID, 8) == 5)
+    {
+        Out.vColor = g_Texture5.Sample(g_Sampler_Normal, In.vTexUV);
+    }
+    else if (fmod(In.iInstanceID, 8) == 6)
+    {
+        Out.vColor = g_Texture6.Sample(g_Sampler_Normal, In.vTexUV);
+    }
+    else if (fmod(In.iInstanceID, 8) == 7)
+    {
+        Out.vColor = g_Texture7.Sample(g_Sampler_Normal, In.vTexUV);
+    }
     
-    Out.vColor = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV);
-    return Out;
+    if (Out.vColor.a < 0.2)
+        discard;
+        return Out;
 }
 
 #endif 

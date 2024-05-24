@@ -66,6 +66,7 @@ void TFireView::LoadMultipleParticleResource()
 			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 200;
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 0.5f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.1f, 0.f);
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_FLARE;
 			m_MultipleParticle[i] = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
 		}
 	}
@@ -87,7 +88,7 @@ void TFireView::LoadMultipleParticleResource()
 
 	*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() = 0.15f;
 	*m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount() = 1;
-	m_MultipleParticle[0]->GetParticleSystem()->SetUAVBUFFERPLUS(true);
+	m_MultipleParticle[0]->SetParticleType(PARTICLE_FLARE);
 	
 	//*m_MultipleParticle[1]->GetParticleSystem()->GetCreateInterval() = 0.05f;
 	//*m_MultipleParticle[1]->GetParticleSystem()->GetAddParticleAmount() = 1;

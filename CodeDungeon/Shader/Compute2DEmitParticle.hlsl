@@ -26,7 +26,8 @@ struct GROBALPARTICLEINFO
     float4		fParticlePosition;
     //================
     float		fTextureHeight;
-    float3 fPadding;
+    int fParticleKind;
+    float2 fPadding;
 };
 
 //struct ComputeParticleType {
