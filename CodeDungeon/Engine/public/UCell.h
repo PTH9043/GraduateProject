@@ -1,6 +1,6 @@
 #pragma once
 #include "UObject.h"
-#define _EDIT_NAVI
+//#define _EDIT_NAVI
 
 BEGIN(Engine)
 class UDefaultCell;
@@ -19,6 +19,7 @@ public:
 		ARRAY<_float3, LINE_END>	vNormal{};
 		ARRAY<_int, LINE_END>		iNeighbor{-1, -1, -1};
 		_int						iIndex{ -1 };
+		_bool						bisJumpable{ false };
 	}CELLDECS;
 
 public:
@@ -57,7 +58,7 @@ public:
 	_float3 GetClosestPointOnEdges(const _float3& position) const;
 	_float3 ClosestPointOnLine(const _float3& lineStart, const _float3& lineEnd, const _float3& point) const;
 
-	const _bool GetJumpableState() const { return m_bisJumpable; }
+	const _bool& GetJumpableState() const { return m_bisJumpable; }
 	void SetJumpableState(_bool _isJump) { m_bisJumpable = _isJump; }
 #ifdef _EDIT_NAVI
 	CSHPTRREF<UDefaultCell> GetCellPawn() { return m_spCellPawn; }

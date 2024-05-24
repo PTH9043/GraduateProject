@@ -4,6 +4,8 @@
 #include "UTransform.h"
 #include "UCamera.h"
 #include "UAnimationController.h"
+#include "UCell.h"
+#include "UNavigation.h"
 
 UPlayer::UPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UCharacter(_spDevice, _wstrLayer, _eCloneType)
@@ -46,6 +48,32 @@ void UPlayer::TickActive(const _double& _dTimeDelta)
 void UPlayer::LateTickActive(const _double& _dTimeDelta)
 {
 	__super::LateTickActive(_dTimeDelta);
+	// Region 
+	{
+		SHPTR<UNavigation> spNavigation = GetCurrentNavi();
+		_float3 vPosition{ GetTransform()->GetPos() };
+		SHPTR<UCell> spCell{};
+
+		if (false == spNavigation->IsMove(vPosition, REF_OUT spCell))
+		{
+			//점프가 가능한 셀일 경우
+			if (!spCell->GetJumpableState())
+			{
+				// 움직이려는 위치가 셀 밖에 있는 경우 가장 가까운 선 위의 점으로 조정
+				_float3 closestPoint = spNavigation->ClampPositionToCell(vPosition);
+				GetTransform()->SetPos(closestPoint);
+			}
+			else
+			{
+				GetTransform()->SetPos(_float3(vPosition.x, vPosition.y - 0.1f, vPosition.z));
+			}
+		}
+		else
+		{
+			spNavigation->ComputeHeight(GetTransform());
+		}
+	}
+
 }
 
 HRESULT UPlayer::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)

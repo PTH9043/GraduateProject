@@ -1595,14 +1595,14 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 		_float2(100.f, 760.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());*/
 
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::HDR, RTOBJID::HDR,
-		_float2(200.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
+	//m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::HDR, RTOBJID::HDR,
+	//	_float2(200.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::UPSAMPLE, RTOBJID::UPSAMPLE,
-		_float2(500.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
+	//m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::UPSAMPLE, RTOBJID::UPSAMPLE,
+	//	_float2(500.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::BLOOM, RTOBJID::BLOOM,
-		_float2(800.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
+	//m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::BLOOM, RTOBJID::BLOOM,
+	//	_float2(800.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
 	
 
