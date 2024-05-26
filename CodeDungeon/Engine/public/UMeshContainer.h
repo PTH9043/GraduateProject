@@ -4,6 +4,7 @@
 BEGIN(Engine)
 class UModel;
 class UBoneNode;
+class UMeshShowController;
 /*
 @ Date: 2024-02-04, Writer: นฺลยว๖
 @ Explain
@@ -25,6 +26,10 @@ public:
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;
 	HRESULT SetUpBoneMatrix(ARRAY<_float4x4, MAX_BONE_SIZE>& _arrBones);
 	HRESULT SetUpBoneMatrix(ARRAY<_float4x4, MAX_BONE_SIZE>& _arrBones, const _float4x4& _PivotMatrix);
+	void RenderAnimModel(CSHPTRREF<UMeshShowController> _spMeshShowController, 
+		CSHPTRREF<UShader> _spShader, CSHPTRREF<UCommand> _spCommands, const _uint _iMeshIndex, const _uint& _iInstanceCnt = 1);
+public: /* get set */
+	void SetMaterialShowEnable(CSHPTRREF<UMeshShowController> _spMeshShowController);
 private:
 	HRESULT ReadyVertices(void* _pData, CSHPTRREF<UModel> _spModel);
 	HRESULT ReadyAnimVertices(void* _pData, CSHPTRREF<UModel> _spModel);
@@ -38,6 +43,7 @@ private:
 private:
 	using BONENODES = VECTOR<SHPTR<UBoneNode>>;
 	_uint							m_iMaterialIndex;
+	_bool							m_isMaterialShowEnable;
 	_uint							m_iNumBones;
 	_uint							m_iNumBuffers;
 	_wstring						m_wstrName;

@@ -347,6 +347,7 @@ void UModel::LoadToData(const _wstring& _wstrPath)
 	MATERIALINFOS		vecMaterialInfo(TEXTYPE::TextureType_END);
 	{
 		BringModelName(_wstrPath);
+
 		// MESH
 		LoadMeshData(REF_OUT read, REF_OUT tDesc.Meshes);
 		// BoneNode

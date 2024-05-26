@@ -14,6 +14,7 @@
 #include "UTransform.h"
 #include "URootBoneNode.h"
 #include "UModelMaterial.h"
+#include "UMeshShowController.h"
 
 namespace fs = std::filesystem;
 UAnimModel::UAnimModel(CSHPTRREF<UDevice> _spDevice) :
@@ -32,7 +33,8 @@ UAnimModel::UAnimModel(CSHPTRREF<UDevice> _spDevice) :
 	m_iNextAnimIndex{ 0 },
 	m_fSupplyLerpValue{ 0.f },
 	m_isChangeAnim{ false },
-	m_mPivotMatrix{_float4x4::Identity}
+	m_mPivotMatrix{_float4x4::Identity},
+	m_spMeshShowController{nullptr}
 {
 }
 
@@ -51,7 +53,8 @@ UAnimModel::UAnimModel(const UAnimModel& _rhs) :
 	m_iNextAnimIndex{ 0 },
 	m_fSupplyLerpValue{ 0.f },
 	m_isChangeAnim{ false },
-	m_mPivotMatrix{_rhs.m_mPivotMatrix}
+	m_mPivotMatrix{_rhs.m_mPivotMatrix},
+	m_spMeshShowController{ nullptr }
 {
 
 }
@@ -117,6 +120,10 @@ HRESULT UAnimModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	}
 	GetRootBoneNode()->OnRootBoneNode();
 	RETURN_CHECK_FAILED(CreateShaderConstantBuffer(), E_FAIL);
+	{
+		UMeshShowController::DESC tDesc{ GetMeshContainers() };
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	}
 	return S_OK;
 }
 
@@ -205,7 +212,7 @@ HRESULT UAnimModel::Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader
 	_spShader->BindCBVBuffer(m_spBoneMatrixShaderConstantBuffer, m_vecSetupBonMatrix[_iMeshIndex].data(), GetTypeSize<BONEMATRIXPARAM>());
 	// 애니메이션 세팅
 	_spShader->BindCBVBuffer(m_spAnimShaderConstantBuffer, &m_stAnimParam, GetTypeSize<ANIMATIONPARAM>());
-	spMeshContainer->Render(_spShader, _spCommand);
+	spMeshContainer->RenderAnimModel(m_spMeshShowController, _spShader, _spCommand, _iMeshIndex);
 	return S_OK;
 }
 

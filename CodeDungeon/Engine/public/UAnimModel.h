@@ -7,6 +7,7 @@ class UAnimation;
 class UTexture;
 class UTransform;
 class UPawn;
+class UMeshShowController;
 /*
 @ Date: 2024-02-04, Writer: นฺลยว๖
 @ Explain
@@ -66,6 +67,7 @@ public: /* get set */
 	const ANIMSTRINGS& GetAnimStrings() const { return m_AnimNamesGroup; }
 	CSHPTRREF<UAnimation> GetCurrentAnimation() const { return m_spCurAnimation; }
 	CSHPTRREF<UAnimation> GetNextAnimation() const { return m_spNextAnimation; }
+	CSHPTRREF<UMeshShowController> GetMeshShowController() const { return m_spMeshShowController; }
 	const _float GetSupplyLerpValue() const { return m_fSupplyLerpValue; }
 	const _int GetCurrentAnimIndex() const { return m_iCurAnimIndex; }
 	const _int GetNetAnimIndex() const { return m_iNextAnimIndex; }
@@ -110,6 +112,8 @@ private:
 	_float															m_fSupplyLerpValue;
 	_bool															m_isChangeAnim;
 	_float4x4													m_mPivotMatrix;
+
+	SHPTR<UMeshShowController>			m_spMeshShowController;
 };
 
 END

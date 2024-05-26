@@ -3,6 +3,7 @@
 #include "UBoneNode.h"
 #include "UModel.h"
 #include "UMethod.h"
+#include "UMeshShowController.h"
 
 UMeshContainer::UMeshContainer(CSHPTRREF<UDevice> _spDevice)
 	: UVIBuffer(_spDevice, VISPACE_TYPE::SPACE_3D, VIINSTANCE_TYPE::SINGLE),
@@ -10,7 +11,8 @@ UMeshContainer::UMeshContainer(CSHPTRREF<UDevice> _spDevice)
 	m_iNumBones{ 0 },
 	m_iNumBuffers{ 0 },
 	m_BoneNodeContainer{  },
-	m_wstrName{ L"" }
+	m_wstrName{ L"" },
+	m_isMaterialShowEnable{false}
 {
 }
 
@@ -20,7 +22,8 @@ UMeshContainer::UMeshContainer(const UMeshContainer& _rhs) :
 	m_iNumBones{ _rhs.m_iNumBones },
 	m_iNumBuffers{ _rhs.m_iNumBuffers },
 	m_BoneNodeContainer{ _rhs.m_BoneNodeContainer },
-	m_wstrName{ _rhs.m_wstrName }
+	m_wstrName{ _rhs.m_wstrName },
+	m_isMaterialShowEnable{ false }
 {
 }
 
@@ -90,6 +93,19 @@ HRESULT UMeshContainer::SetUpBoneMatrix(ARRAY<_float4x4, MAX_BONE_SIZE>& _arrBon
 		_arrBones[i] = _arrBones[i].Transpose();
 	}
 	return S_OK;
+}
+
+void UMeshContainer::RenderAnimModel(CSHPTRREF<UMeshShowController> _spMeshShowController,
+	CSHPTRREF<UShader> _spShader, CSHPTRREF<UCommand> _spCommands, const _uint _iMeshIndex, const _uint& _iInstanceCnt)
+{
+	assert(nullptr != _spMeshShowController);
+	RETURN_CHECK(false == _spMeshShowController->IsShowEnable(_iMeshIndex), ;);
+	__super::Render(_spShader, _spCommands, _iInstanceCnt);
+}
+
+void UMeshContainer::SetMaterialShowEnable(CSHPTRREF<UMeshShowController> _spMeshShowController)
+{
+	assert(nullptr != _spMeshShowController);
 }
 
 HRESULT UMeshContainer::ReadyVertices(void* _pData, CSHPTRREF<UModel> _spModel)
