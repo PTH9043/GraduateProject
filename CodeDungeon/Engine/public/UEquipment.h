@@ -48,6 +48,9 @@ public:
 	virtual void Free() override;
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _Datas) override;
+public: /* get set */
+	const _float4x4& GetTargetModelPivot() const { return m_TargetModelPivot; }
+	void SetTargetModelPivot(const _float4x4& _mTargetModePivot) { this->m_TargetModelPivot = _mTargetModePivot; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;

@@ -9,7 +9,7 @@ UMeshFilter::UMeshFilter(CSHPTRREF<UDevice> _spDevice) :
 }
 
 UMeshFilter::UMeshFilter(const UMeshFilter& _rhs) : 
-	UController(_rhs)
+	UController(_rhs), m_MeshFilterInfoContainer{ _rhs.m_MeshFilterInfoContainer }
 {
 }
 
@@ -18,14 +18,27 @@ HRESULT UMeshFilter::NativeConstruct()
 	return __super::NativeConstruct();
 }
 
-HRESULT UMeshFilter::NativeConstruct(const _wstring& _wstrPath)
+HRESULT UMeshFilter::NativeConstruct(const _wstring& _wstrPath, const MESHCONTAINERS& _meshContainer)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstruct(), E_FAIL);
-	_wstring wstrPath = _wstrPath;
-	wstrPath.append(L"\\MeshShow");
-	if (0 != _wmkdir(wstrPath))
+	_wstring str = _wstrPath;
+	str.append(L"\\Filter");
+	if (0 != _wmkdir(str))
 	{
-		Load(wstrPath);
+		str.append(L"\\");
+		str.append(L"MeshFilter");
+		str.append(DEFAULT_OUTFOLDEREXTENSION);
+		if (false == Load(str))
+		{
+			m_MeshFilterInfoContainer.reserve(_meshContainer.size());
+			for (auto& iter : _meshContainer)
+			{
+				MESHFILTERINFO MeshFilterInfo;
+				MeshFilterInfo.iCurMeshIndex = iter->GetMeshIndex();
+				MeshFilterInfo.iMeshGroupIndex = 0;
+				m_MeshFilterInfoContainer.push_back(MeshFilterInfo);
+			}
+		}
 	}
 	return S_OK;
 }
@@ -33,19 +46,6 @@ HRESULT UMeshFilter::NativeConstruct(const _wstring& _wstrPath)
 HRESULT UMeshFilter::NativeConstructClone(const VOIDDATAS& _tDatas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_tDatas), E_FAIL);
-	// Data에 구조체가 존재하지 않으면
-	assert(_tDatas.size() >= 1);
-	DESC desc = UMethod::ConvertTemplate_Index<DESC>(_tDatas, 0);
-	// MeshContainer가 비어있으면 리턴
-	assert(desc.MeshContainer.size() >= 1);
-	// Material Container에 집어넣기
-	for (auto& iter : desc.MeshContainer)
-	{
-		// 만약 MeshContainer가 비어있다면 리턴
-		assert(iter != nullptr);
-		m_OwnerMeshContainer.insert(MakePair(iter->GetMaterialIndex(), iter));
-	}
-	m_MeshFilterInfoContainer.resize(desc.MeshContainer.size());
 	return S_OK;
 }
 
@@ -55,17 +55,35 @@ void UMeshFilter::Tick(const _double& _dTimeDelta)
 
 _bool UMeshFilter::IsShowEnable(const _int _iMeshIndex)
 {
-	const auto& iter = m_OwnerMeshContainer.find(_iMeshIndex);
-	RETURN_CHECK(m_OwnerMeshContainer.end() == iter, false);
-	return m_MeshFilterInfoContainer[iter->first].isMeshFilterEnable;
+	return m_MeshFilterInfoContainer[_iMeshIndex].isMeshFilterEnable;
 }
 
-void UMeshFilter::Load(const _wstring& _wstrPath)
+void UMeshFilter::GroupEnable(const _int _iGroupIndex)
+{
+	for (auto& iter : m_MeshFilterInfoContainer)
+	{
+		if (iter.iCurMeshIndex == _iGroupIndex)
+			iter.isMeshFilterEnable = true;
+	}
+}
+
+void UMeshFilter::GroupDisable(const _int _iGroupIndex)
+{
+	for (auto& iter : m_MeshFilterInfoContainer)
+	{
+		if (iter.iCurMeshIndex == _iGroupIndex)
+			iter.isMeshFilterEnable = false;
+	}
+}
+
+_bool UMeshFilter::Load(const _wstring& _wstrPath)
 {
 	std::ifstream read{ _wstrPath, std::ios::binary };
 	// 읽기가 실패했을 경우
-	assert(!read);
-
+	if (false == read.is_open())
+	{
+		return false;
+	}
 	_int size = 0;
 	read.read((_char*)&size, sizeof(_int));
 	m_MeshFilterInfoContainer.resize(size);
@@ -73,18 +91,28 @@ void UMeshFilter::Load(const _wstring& _wstrPath)
 	{
 		read.read((_char*)&m_MeshFilterInfoContainer[i], sizeof(MESHFILTERINFO));
 	}
+	return true;
 }
 
 void UMeshFilter::Save(const _wstring& _wstrPath)
 {
-	std::ofstream save{ _wstrPath, std::ios::binary };
-	assert(!save);
-
-	_int size = static_cast<_int>(m_OwnerMeshContainer.size());
-	save.write((_char*)&size, sizeof(_int));
-	for (_int i = 0; i < size; ++i)
+	_wstring str = _wstrPath;
+	str.append(L"\\Filter");
+	if (0 != _wmkdir(str))
 	{
-		save.write((_char*)&m_MeshFilterInfoContainer[i], sizeof(MESHFILTERINFO));
+		str.append(L"\\");
+		str.append(L"MeshFilter");
+		str.append(DEFAULT_OUTFOLDEREXTENSION);
+
+		std::ofstream save{ str, std::ios::binary };
+		assert(!save);
+
+		_int size = static_cast<_int>(m_MeshFilterInfoContainer.size());
+		save.write((_char*)&size, sizeof(_int));
+		for (_int i = 0; i < size; ++i)
+		{
+			save.write((_char*)&m_MeshFilterInfoContainer[i], sizeof(MESHFILTERINFO));
+		}
 	}
 }
 

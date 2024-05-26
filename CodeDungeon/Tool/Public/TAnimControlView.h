@@ -43,6 +43,7 @@ private:
 	void AnimModelSelectView();
 	void AnimModifyView();
 	void EquipView();
+	void MeshFilterView();
 private:
 	void MakeAnimEvent();
 
@@ -54,6 +55,7 @@ private:
 	DOCKDESC											m_stAnimModelSelectDesc;
 	DOCKDESC											m_stAnimModifyDesc;
 	DOCKDESC											m_stEquipViewDesc;
+	DOCKDESC											m_stAnimMeshFilterDesc;
 	_bool														m_isInitSetting;
 
 	SHPTR<TAnimControlModel>			m_spAnimControlModel;

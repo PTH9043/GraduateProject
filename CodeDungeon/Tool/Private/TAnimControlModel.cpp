@@ -48,7 +48,7 @@ HRESULT TAnimControlModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_vecDatas), E_FAIL);
 	AddShader(PROTO_RES_ANIMMODELSHADER, RES_SHADER);
-	GetTransform()->SetScale({ 0.05f, 0.05f, 0.05f });
+//	GetTransform()->SetScale({ 0.05f, 0.05f, 0.05f });
 	m_wstrImguiModifyInputTrigger.resize(MAX_BUFFER_LENGTH);
 	return S_OK;
 }
@@ -173,6 +173,14 @@ void TAnimControlModel::SelectEquip()
 	}
 
 	ImGui::Checkbox("EquipSelected", &m_isSelectedEquipModel);
+
+	if (nullptr != m_spSelectedEquipModel)
+	{
+		_float4x4 mTargetPivotMatrix = m_spSelectedEquipModel->GetTargetModelPivot();
+		_float3 vScale = mTargetPivotMatrix.Get_Scaling();
+		ImGui::InputFloat3("EquipPivot", &vScale.x);
+		m_spSelectedEquipModel->SetTargetModelPivot(mTargetPivotMatrix);
+	}
 }
 
 void TAnimControlModel::MakeEquip(CSHPTRREF<UModel> _spEquipModel, const EQUIPTYPE _EquipType, 

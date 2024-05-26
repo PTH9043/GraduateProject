@@ -12,7 +12,8 @@ UMeshContainer::UMeshContainer(CSHPTRREF<UDevice> _spDevice)
 	m_iNumBuffers{ 0 },
 	m_BoneNodeContainer{  },
 	m_wstrName{ L"" },
-	m_isMaterialShowEnable{false}
+	m_isMaterialShowEnable{false},
+	m_iMeshIndex{0}
 {
 }
 
@@ -23,7 +24,8 @@ UMeshContainer::UMeshContainer(const UMeshContainer& _rhs) :
 	m_iNumBuffers{ _rhs.m_iNumBuffers },
 	m_BoneNodeContainer{ _rhs.m_BoneNodeContainer },
 	m_wstrName{ _rhs.m_wstrName },
-	m_isMaterialShowEnable{ false }
+	m_isMaterialShowEnable{ false },
+	m_iMeshIndex{ _rhs.m_iMaterialIndex }
 {
 }
 
@@ -37,7 +39,7 @@ HRESULT UMeshContainer::NativeConstruct()
 	return __super::NativeConstruct();
 }
 
-HRESULT UMeshContainer::NativeConstruct(void* _pData, CSHPTRREF<UModel> _spModel)
+HRESULT UMeshContainer::NativeConstruct(void* _pData, CSHPTRREF<UModel> _spModel, const _int _iMeshIndex)
 {
 	RETURN_CHECK_FAILED(NativeConstruct(), E_FAIL);
 
@@ -50,6 +52,7 @@ HRESULT UMeshContainer::NativeConstruct(void* _pData, CSHPTRREF<UModel> _spModel
 		RETURN_CHECK_FAILED(ReadyVertices(_pData, _spModel), E_FAIL);
 	}
 	RETURN_CHECK_FAILED(ReadyIndicies(_pData), E_FAIL);
+	m_iMeshIndex = _iMeshIndex;
 	return S_OK;
 }
 

@@ -67,7 +67,7 @@ public: /* get set */
 	const ANIMSTRINGS& GetAnimStrings() const { return m_AnimNamesGroup; }
 	CSHPTRREF<UAnimation> GetCurrentAnimation() const { return m_spCurAnimation; }
 	CSHPTRREF<UAnimation> GetNextAnimation() const { return m_spNextAnimation; }
-	CSHPTRREF<UMeshFilter> GetMeshShowController() const { return m_spMeshShowController; }
+	CSHPTRREF<UMeshFilter> GetMeshFilter() const { return m_spMeshFilterController; }
 	const _float GetSupplyLerpValue() const { return m_fSupplyLerpValue; }
 	const _int GetCurrentAnimIndex() const { return m_iCurAnimIndex; }
 	const _int GetNetAnimIndex() const { return m_iNextAnimIndex; }
@@ -113,7 +113,7 @@ private:
 	_bool															m_isChangeAnim;
 	_float4x4													m_mPivotMatrix;
 
-	SHPTR<UMeshFilter>			m_spMeshShowController;
+	SHPTR<UMeshFilter>								m_spMeshFilterController;								
 };
 
 END

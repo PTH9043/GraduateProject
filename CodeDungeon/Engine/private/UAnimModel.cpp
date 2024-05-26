@@ -34,7 +34,7 @@ UAnimModel::UAnimModel(CSHPTRREF<UDevice> _spDevice) :
 	m_fSupplyLerpValue{ 0.f },
 	m_isChangeAnim{ false },
 	m_mPivotMatrix{_float4x4::Identity},
-	m_spMeshShowController{nullptr}
+	m_spMeshFilterController{nullptr}
 {
 }
 
@@ -54,7 +54,7 @@ UAnimModel::UAnimModel(const UAnimModel& _rhs) :
 	m_fSupplyLerpValue{ 0.f },
 	m_isChangeAnim{ false },
 	m_mPivotMatrix{_rhs.m_mPivotMatrix},
-	m_spMeshShowController{ nullptr }
+	m_spMeshFilterController{ _rhs.m_spMeshFilterController }
 {
 
 }
@@ -96,8 +96,10 @@ HRESULT UAnimModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_vecDatas), E_FAIL);
 
-	SHPTR<UAnimModel> spAnimModel = ThisShared<UAnimModel>();
+	UMeshFilter::DESC desc{ GetMeshContainers() };
+	m_spMeshFilterController = std::static_pointer_cast<UMeshFilter>(m_spMeshFilterController->Clone({ &desc }));
 
+	SHPTR<UAnimModel> spAnimModel = ThisShared<UAnimModel>();
 	ANIMATIONS vecAnims;
 	vecAnims.reserve(m_vecAnimations.size());
 	for (auto& iter : m_vecAnimations)
@@ -212,7 +214,7 @@ HRESULT UAnimModel::Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader
 	_spShader->BindCBVBuffer(m_spBoneMatrixShaderConstantBuffer, m_vecSetupBonMatrix[_iMeshIndex].data(), GetTypeSize<BONEMATRIXPARAM>());
 	// 애니메이션 세팅
 	_spShader->BindCBVBuffer(m_spAnimShaderConstantBuffer, &m_stAnimParam, GetTypeSize<ANIMATIONPARAM>());
-	spMeshContainer->RenderAnimModel(m_spMeshShowController, _spShader, _spCommand, _iMeshIndex);
+	spMeshContainer->RenderAnimModel(m_spMeshFilterController, _spShader, _spCommand, _iMeshIndex);
 	return S_OK;
 }
 
@@ -341,6 +343,9 @@ void UAnimModel::LoadToData(const _wstring& _wstrPath)
 
 		CreateShaderConstantBuffer();
 		SetAnimation(0);
+
+		// Create MeshFilter 
+		m_spMeshFilterController = CreateConstructorNative<UMeshFilter>(GetDevice(), wstrPath, GetMeshContainers());
 	}
 }
 

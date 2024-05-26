@@ -299,10 +299,11 @@ HRESULT UModel::CreateMeshContainers(void* _pData)
 {
 	MODELDESC* tDesc = static_cast<MODELDESC*>(_pData);
 
+	_int iMeshIndex{ 0 };
 	for (auto& iter : tDesc->Meshes)
 	{
 		SHPTR<UMeshContainer> pMeshContainer{ CreateConstructorNative<UMeshContainer>(
-		GetDevice(),  (void*)&iter, ThisShared<UModel>()) };
+		GetDevice(),  (void*)&iter, ThisShared<UModel>(), iMeshIndex++) };
 
 		m_MeshContainer.push_back(pMeshContainer);
 	}
