@@ -94,7 +94,8 @@ void UEquipment::TickActive(const _double& _dTimeDelta)
 		SHPTR<UTransform> spTransform = spPawn->GetTransform();
 
 		// Get CombineMatrix
-		m_SockMatrixParam.SocketMatrix =  spTransform->GetWorldMatrix() * m_spEquipBoneNode->GetCombineMatrix();
+		m_SockMatrixParam.SocketMatrix =  spTransform->GetWorldMatrix() * m_spEquipBoneNode->GetCombineMatrix() * 
+			m_TargetModelPivot;
 		m_SockMatrixParam.SocketMatrix = m_SockMatrixParam.SocketMatrix.Transpose();
 	}
 

@@ -175,7 +175,6 @@ HRESULT CMainScene::LoadSceneData()
 
 void CMainScene::Tick(const _double& _dTimeDelta)
 {
-	
 	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
 	TurnLightsOnRange();
 	TurnRoomsOnRange();

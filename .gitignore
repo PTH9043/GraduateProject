@@ -20,3 +20,6 @@ ProtocolBufferD.lib
 Engine.lib
 EngineD.lib
 
+CodeDungeon/Resource/AnimModel/Player/Anim/F_Human.bin
+CodeDungeon/Resource/AnimModel/Player/Anim/FemalePlayer.bin
+CodeDungeon/Resource/AnimModel/Player/Convert/F_Human_FBX.bin

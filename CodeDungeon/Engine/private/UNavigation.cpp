@@ -222,6 +222,7 @@ _bool UNavigation::Load(const _wstring& _wstrPath)
 		load.read(reinterpret_cast<char*>(&tDesc.vLine), sizeof(tDesc.vLine));
 		load.read(reinterpret_cast<char*>(&tDesc.iNeighbor), sizeof(tDesc.iNeighbor));
 		load.read(reinterpret_cast<char*>(&tDesc.iIndex), sizeof(tDesc.iIndex));
+		load.read(reinterpret_cast<char*>(&tDesc.bisJumpable), sizeof(tDesc.bisJumpable));
 
 		SHPTR<UCell> NewCell = CreateConstructorNative<UCell>(spGameInstance->GetDevice(), tDesc);
 		AddCell(NewCell);
@@ -249,6 +250,7 @@ _bool UNavigation::Save(const _wstring& _wstrPath)
 		save.write(reinterpret_cast<const char*>(&cell.GetLines()), sizeof(cell.GetLines()));
 		save.write(reinterpret_cast<const char*>(&cell.GetNeighbor()), sizeof(cell.GetNeighbor()));
 		save.write(reinterpret_cast<const char*>(&cell.GetIndex()), sizeof(cell.GetIndex()));
+		save.write(reinterpret_cast<const char*>(&cell.GetJumpableState()), sizeof(cell.GetJumpableState()));
 	}
 	return true;
 }

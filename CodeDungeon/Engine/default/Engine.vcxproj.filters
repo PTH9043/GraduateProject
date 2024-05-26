@@ -400,6 +400,21 @@
     <Filter Include="98.ShaderFile\Common\Particle\Animate">
       <UniqueIdentifier>{61f62721-37c6-4962-a824-e9ebae19d886}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06.Component\MeshFilter">
+      <UniqueIdentifier>{3f88704d-1300-4917-9cd1-6720fadc8544}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Needs\Axis">
+      <UniqueIdentifier>{68210971-72e2-4253-8c55-07d568f6f798}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\02.Camera\LightCamera">
+      <UniqueIdentifier>{9cc2be41-00f5-4313-b0e9-bf566c3061ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\01.Pawn\Item\Equip\Weapon">
+      <UniqueIdentifier>{c5cf7c8c-64b5-451c-90b9-e8841ca88449}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\01.Pawn\Item\Equip\NewFilter1">
+      <UniqueIdentifier>{361b8236-ad3c-4587-b0c4-96e161645e27}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -771,9 +786,23 @@
     <ClCompile Include="..\private\URenderCommand.cpp">
       <Filter>02.DxClass\Command\Render</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\UCommandManager.cpp" />
     <ClCompile Include="..\private\USmallDefferedCamera.cpp">
       <Filter>05.Actor\02.Camera\DefferedCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UMeshFilter.cpp">
+      <Filter>06.Component\MeshFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UAxis.cpp">
+      <Filter>97.Needs\Axis</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ULightCamera.cpp">
+      <Filter>05.Actor\02.Camera\LightCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UWeapon.cpp">
+      <Filter>05.Actor\01.Pawn\Item\Equip\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UDefensiveGear.cpp">
+      <Filter>05.Actor\01.Pawn\Item\Equip\NewFilter1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1179,9 +1208,23 @@
     <ClInclude Include="..\public\URenderCommand.h">
       <Filter>02.DxClass\Command\Render</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\UCommandManager.h" />
     <ClInclude Include="..\public\USmallDefferedCamera.h">
       <Filter>05.Actor\02.Camera\DefferedCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UMeshFilter.h">
+      <Filter>06.Component\MeshFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UAxis.h">
+      <Filter>97.Needs\Axis</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ULightCamera.h">
+      <Filter>05.Actor\02.Camera\LightCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UWeapon.h">
+      <Filter>05.Actor\01.Pawn\Item\Equip\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UDefensiveGear.h">
+      <Filter>05.Actor\01.Pawn\Item\Equip\NewFilter1</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

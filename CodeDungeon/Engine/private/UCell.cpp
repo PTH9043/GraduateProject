@@ -80,6 +80,7 @@ HRESULT UCell::NativeConstruct(const CELLDECS& _tCellDesc)
 		m_arrNeighbors[i] = _tCellDesc.iNeighbor[i];
 	}
 	m_iIndex = _tCellDesc.iIndex;
+	m_bisJumpable = _tCellDesc.bisJumpable;
 
 	ResortPoints();
 

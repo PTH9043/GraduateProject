@@ -3,6 +3,7 @@
 #include "UCharacter.h"
 #include "UAnimModel.h"
 #include "UAnimation.h"
+#include "UMethod.h"
 
 UAnimationController::UAnimationController(CSHPTRREF<UDevice> _spDevice)
 	: UController(_spDevice), m_iAnimState{0}
@@ -26,6 +27,15 @@ HRESULT UAnimationController::NativeConstruct()
 HRESULT UAnimationController::NativeConstructClone(const VOIDDATAS& _tDatas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_tDatas), E_FAIL);
+
+	assert(_tDatas.size() > 0);
+
+	ANIMCONTROLLERDESC Desc = UMethod::ConvertTemplate_Index<ANIMCONTROLLERDESC>(_tDatas, 0);
+	assert(nullptr != Desc.spCharacter);
+
+	m_wpOwnerCharacter = Desc.spCharacter;
+	return S_OK;
+
 	return S_OK;
 }
 

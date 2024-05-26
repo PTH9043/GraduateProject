@@ -4,6 +4,7 @@
 BEGIN(Engine)
 class UModel;
 class UBoneNode;
+class UMeshFilter;
 /*
 @ Date: 2024-02-04, Writer: นฺลยว๖
 @ Explain
@@ -21,10 +22,17 @@ public:
 	CLONE_MACRO(UMeshContainer, "UMeshContainer::Clone To Failed")
 	virtual void Free() override;
 	virtual HRESULT NativeConstruct() override;
-	HRESULT NativeConstruct(void* _pData, CSHPTRREF<UModel> _spModel);
+	HRESULT NativeConstruct(void* _pData, CSHPTRREF<UModel> _spModel, const _int _iMeshIndex);
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;
 	HRESULT SetUpBoneMatrix(ARRAY<_float4x4, MAX_BONE_SIZE>& _arrBones);
 	HRESULT SetUpBoneMatrix(ARRAY<_float4x4, MAX_BONE_SIZE>& _arrBones, const _float4x4& _PivotMatrix);
+	void RenderAnimModel(CSHPTRREF<UMeshFilter> _spMeshShowController, 
+		CSHPTRREF<UShader> _spShader, CSHPTRREF<UCommand> _spCommands, const _uint _iMeshIndex, const _uint& _iInstanceCnt = 1);
+public: /* get set */
+	void SetMaterialShowEnable(CSHPTRREF<UMeshFilter> _spMeshShowController);
+
+	const _uint GetMeshIndex() const { return m_iMeshIndex; }
+	const _wstring& GetMeshName() const { return m_wstrName; }
 private:
 	HRESULT ReadyVertices(void* _pData, CSHPTRREF<UModel> _spModel);
 	HRESULT ReadyAnimVertices(void* _pData, CSHPTRREF<UModel> _spModel);
@@ -38,6 +46,8 @@ private:
 private:
 	using BONENODES = VECTOR<SHPTR<UBoneNode>>;
 	_uint							m_iMaterialIndex;
+	_uint							m_iMeshIndex;
+	_bool							m_isMaterialShowEnable;
 	_uint							m_iNumBones;
 	_uint							m_iNumBuffers;
 	_wstring						m_wstrName;

@@ -47,7 +47,7 @@ HRESULT UCharacter::NativeConstructClone(const VOIDDATAS& _Datas)
 	}
 	// Controller
 	{
-		UAnimationController::CONTROLLERDESC ControllerDesc{ ThisShared<UCharacter>() };
+		UAnimationController::ANIMCONTROLLERDESC ControllerDesc{ ThisShared<UCharacter>() };
 		m_spAnimationController = std::static_pointer_cast<UAnimationController>(spGameInstance->CloneComp(CharacterDesc.wstrAnimControllerProtoData, 
 			{ &ControllerDesc }));
 	}
@@ -149,22 +149,7 @@ void UCharacter::TickActive(const _double& _dTimeDelta)
 
 void UCharacter::LateTickActive(const _double& _dTimeDelta)
 {
-	// Region 
-	{
-		SHPTR<UNavigation> spNavigation = m_wpCurNavi;
-		_float3 vPosition{ GetTransform()->GetPos() };
-		SHPTR<UCell> spCell{};
-
-		spNavigation->ComputeHeight(GetTransform());
-		if (false == spNavigation->IsMove(vPosition, REF_OUT spCell))
-		{
-			// 움직이려는 위치가 셀 밖에 있는 경우 가장 가까운 선 위의 점으로 조정
-  		    _float3 closestPoint = spNavigation->ClampPositionToCell(vPosition);
-
-			GetTransform()->SetPos(closestPoint);
-			
-		}
-	}
+	
 }
 
 HRESULT UCharacter::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
