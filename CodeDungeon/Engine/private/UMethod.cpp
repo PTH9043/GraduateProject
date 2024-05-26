@@ -446,6 +446,11 @@ void Engine::UMethod::ChangeDepthStencilInfo(const DEPTH_STENCIL_TYPE& _eType, D
 		_tDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
 		_tDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 		break;
+	case DEPTH_STENCIL_TYPE::LESS_EQUAL_NO_WRITE:
+		_tDesc.DepthEnable = TRUE;
+		_tDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+		_tDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+		break;
 	}
 }
 

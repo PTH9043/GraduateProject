@@ -45,7 +45,7 @@ struct PS_OUT
 PS_OUT PS_Main(VS_OUT In) 
 {
     PS_OUT Out = (PS_OUT) 0;
-    Out.vColor = In.vPosition.z;
+    Out.vColor = (In.vPosition.z);
     return Out;
 
 }
