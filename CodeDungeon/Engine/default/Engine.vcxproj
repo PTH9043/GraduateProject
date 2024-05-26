@@ -47,17 +47,20 @@
     <ClInclude Include="..\public\ImGui\imstb_truetype.h" />
     <ClInclude Include="..\public\ImGui\ImZoomSlider.h" />
     <ClInclude Include="..\public\UAnimatedParticle.h" />
+    <ClInclude Include="..\public\UAxis.h" />
     <ClInclude Include="..\public\UCombatCollGroupComp.h" />
     <ClInclude Include="..\public\UCharacter.h" />
     <ClInclude Include="..\public\UCharacterManager.h" />
-    <ClInclude Include="..\public\UCommandManager.h" />
     <ClInclude Include="..\public\UController.h" />
+    <ClInclude Include="..\public\UDefensiveGear.h" />
     <ClInclude Include="..\public\UEquipment.h" />
     <ClInclude Include="..\public\UFire.h" />
     <ClInclude Include="..\public\UFog.h" />
     <ClInclude Include="..\public\UGrid.h" />
     <ClInclude Include="..\public\UAnimationController.h" />
     <ClInclude Include="..\public\UItem.h" />
+    <ClInclude Include="..\public\ULightCamera.h" />
+    <ClInclude Include="..\public\UMeshFilter.h" />
     <ClInclude Include="..\public\UPlayer.h" />
     <ClInclude Include="..\public\UMapLayout.h" />
     <ClInclude Include="..\public\UMaterialManager.h" />
@@ -161,6 +164,7 @@
     <ClInclude Include="..\public\UVIBufferPoint.h" />
     <ClInclude Include="..\public\UVIBufferRect.h" />
     <ClInclude Include="..\public\UVIBufferSphere.h" />
+    <ClInclude Include="..\public\UWeapon.h" />
     <ClInclude Include="..\public\UWorkThread.h" />
   </ItemGroup>
   <ItemGroup>
@@ -169,17 +173,20 @@
     <ClCompile Include="..\private\AnimSectionEvents.cpp" />
     <ClCompile Include="..\private\EngineStruct.cpp" />
     <ClCompile Include="..\private\UAnimatedParticle.cpp" />
+    <ClCompile Include="..\private\UAxis.cpp" />
     <ClCompile Include="..\private\UCombatCollGroupComp.cpp" />
     <ClCompile Include="..\private\UCharacter.cpp" />
     <ClCompile Include="..\private\UCharacterManager.cpp" />
-    <ClCompile Include="..\private\UCommandManager.cpp" />
     <ClCompile Include="..\private\UController.cpp" />
+    <ClCompile Include="..\private\UDefensiveGear.cpp" />
     <ClCompile Include="..\private\UEquipment.cpp" />
     <ClCompile Include="..\private\UFire.cpp" />
     <ClCompile Include="..\private\UFog.cpp" />
     <ClCompile Include="..\private\UGrid.cpp" />
     <ClCompile Include="..\private\UAnimationController.cpp" />
     <ClCompile Include="..\private\UItem.cpp" />
+    <ClCompile Include="..\private\ULightCamera.cpp" />
+    <ClCompile Include="..\private\UMeshFilter.cpp" />
     <ClCompile Include="..\private\UPlayer.cpp" />
     <ClCompile Include="..\private\UMapLayout.cpp" />
     <ClCompile Include="..\private\UMaterialManager.cpp" />
@@ -283,6 +290,7 @@
     <ClCompile Include="..\private\UVIBufferPoint.cpp" />
     <ClCompile Include="..\private\UVIBufferRect.cpp" />
     <ClCompile Include="..\private\UVIBufferSphere.cpp" />
+    <ClCompile Include="..\private\UWeapon.cpp" />
     <ClCompile Include="..\private\UWorkThread.cpp" />
     <ClCompile Include="..\public\ImGui\GraphEditor.cpp" />
     <ClCompile Include="..\public\ImGui\ImCurveEdit.cpp" />

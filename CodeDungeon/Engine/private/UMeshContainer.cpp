@@ -3,7 +3,7 @@
 #include "UBoneNode.h"
 #include "UModel.h"
 #include "UMethod.h"
-#include "UMeshShowController.h"
+#include "UMeshFilter.h"
 
 UMeshContainer::UMeshContainer(CSHPTRREF<UDevice> _spDevice)
 	: UVIBuffer(_spDevice, VISPACE_TYPE::SPACE_3D, VIINSTANCE_TYPE::SINGLE),
@@ -95,7 +95,7 @@ HRESULT UMeshContainer::SetUpBoneMatrix(ARRAY<_float4x4, MAX_BONE_SIZE>& _arrBon
 	return S_OK;
 }
 
-void UMeshContainer::RenderAnimModel(CSHPTRREF<UMeshShowController> _spMeshShowController,
+void UMeshContainer::RenderAnimModel(CSHPTRREF<UMeshFilter> _spMeshShowController,
 	CSHPTRREF<UShader> _spShader, CSHPTRREF<UCommand> _spCommands, const _uint _iMeshIndex, const _uint& _iInstanceCnt)
 {
 	assert(nullptr != _spMeshShowController);
@@ -103,7 +103,7 @@ void UMeshContainer::RenderAnimModel(CSHPTRREF<UMeshShowController> _spMeshShowC
 	__super::Render(_spShader, _spCommands, _iInstanceCnt);
 }
 
-void UMeshContainer::SetMaterialShowEnable(CSHPTRREF<UMeshShowController> _spMeshShowController)
+void UMeshContainer::SetMaterialShowEnable(CSHPTRREF<UMeshFilter> _spMeshShowController)
 {
 	assert(nullptr != _spMeshShowController);
 }

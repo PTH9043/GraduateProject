@@ -14,7 +14,7 @@
 #include "UTransform.h"
 #include "URootBoneNode.h"
 #include "UModelMaterial.h"
-#include "UMeshShowController.h"
+#include "UMeshFilter.h"
 
 namespace fs = std::filesystem;
 UAnimModel::UAnimModel(CSHPTRREF<UDevice> _spDevice) :
@@ -121,7 +121,7 @@ HRESULT UAnimModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	GetRootBoneNode()->OnRootBoneNode();
 	RETURN_CHECK_FAILED(CreateShaderConstantBuffer(), E_FAIL);
 	{
-		UMeshShowController::DESC tDesc{ GetMeshContainers() };
+		UMeshFilter::DESC tDesc{ GetMeshContainers() };
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	}
 	return S_OK;
