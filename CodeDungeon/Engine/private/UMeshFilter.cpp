@@ -86,6 +86,9 @@ _bool UMeshFilter::Load(const _wstring& _wstrPath)
 	}
 	_int size = 0;
 	read.read((_char*)&size, sizeof(_int));
+	if (0 == size)
+		return false;
+
 	m_MeshFilterInfoContainer.resize(size);
 	for (_int i = 0; i < size; ++i)
 	{
@@ -105,7 +108,7 @@ void UMeshFilter::Save(const _wstring& _wstrPath)
 		str.append(DEFAULT_OUTFOLDEREXTENSION);
 
 		std::ofstream save{ str, std::ios::binary };
-		assert(!save);
+		assert(save);
 
 		_int size = static_cast<_int>(m_MeshFilterInfoContainer.size());
 		save.write((_char*)&size, sizeof(_int));
