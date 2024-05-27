@@ -162,6 +162,7 @@ namespace Engine {
 		NO_DEPTH_TEST, // 깊이 테스트(X) + 깊이 기록(O)
 		NO_DEPTH_TEST_NO_WRITE, // 깊이 테스트(X) + 깊이 기록(X)
 		LESS_NO_WRITE, // 깊이 테스트(O) + 깊이 기록(X)
+		LESS_EQUAL_NO_WRITE, // 깊이 테스트(O) + 깊이 기록(X)
 	};
 
 	enum class BLEND_TYPE : unsigned short {

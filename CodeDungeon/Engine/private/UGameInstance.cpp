@@ -1228,6 +1228,13 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 				SHADERDESC(L"2DParticle", VTXPOINT_DELCARTION::Element, VTXPOINT_DELCARTION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN, GS_MAIN },
 					
+					RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::LESS_NO_WRITE, BLEND_TYPE::ALPHA_BLEND,
+					D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST));
+
+			CreateGraphicsShader(PROTO_RES_PARTICLEBLOOD2DSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"2DParticleBlood", VTXPOINT_DELCARTION::Element, VTXPOINT_DELCARTION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN, GS_MAIN },
+
 					RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE, BLEND_TYPE::ALPHA_BLEND,
 					D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST));
 
@@ -1586,23 +1593,26 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 		_float2(100.f, 430.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 
 
-	/*m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_SHADE_DEFFERED,
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_SHADE_DEFFERED,
 		_float2(100.f, 540.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_SPECULAR_DEFFERED,
 		_float2(100.f, 650.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_AMBIENT_DEFFERED,
-		_float2(100.f, 760.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());*/
+		_float2(100.f, 760.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 
 
-	//m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::HDR, RTOBJID::HDR,
-	//	_float2(200.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::HDR, RTOBJID::HDR,
+		_float2(100.f, 870.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 
-	//m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::UPSAMPLE, RTOBJID::UPSAMPLE,
-	//	_float2(500.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_DEPTH_DEFFERED,
+		_float2(500.f, 980.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 
-	//m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::BLOOM, RTOBJID::BLOOM,
-	//	_float2(800.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
+	/*m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::UPSAMPLE, RTOBJID::UPSAMPLE,
+		_float2(500.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
+
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::BLOOM, RTOBJID::BLOOM,
+		_float2(800.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());*/
 
 	
 
