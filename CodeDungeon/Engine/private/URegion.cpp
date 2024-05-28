@@ -238,47 +238,18 @@ HRESULT URegion::RearrageCells()
 {
 	RETURN_CHECK_FAILED(nullptr == m_spNavigation, E_FAIL);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-
-	if (ImGui::Button("Rearrange_Cells"))
+	SHPTR<CELLCONTAINER> pCells = m_spNavigation->GetCells();
+	int i = 0;
+	for (CELLCONTAINER::iterator iter = pCells->begin(); iter != pCells->end();)
 	{
-		SHPTR<CELLCONTAINER> pCells = m_spNavigation->GetCells();
-		int i = 0;
-		for (CELLCONTAINER::iterator iter = pCells->begin(); iter != pCells->end();)
-		{
-			//¼¿µéÀÇ ÀÎµ¦½º Àç¼³Á¤
-			(*iter)->SetIndex(i++);
-			++iter;
-		}
-		m_spNavigation->ReadyNeighbor();
+		//¼¿µéÀÇ ÀÎµ¦½º Àç¼³Á¤
+		(*iter)->SetIndex(i++);
+		++iter;
 	}
+	m_spNavigation->ReadyNeighbor();
 	return S_OK;
 }
 
-HRESULT URegion::RearrangeCellsByHeight()
-{
-	RETURN_CHECK_FAILED(nullptr == m_spNavigation, E_FAIL);
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-
-
-	if (ImGui::Button("Rearrange_Cells_By_Height"))
-	{
-		SHPTR<CELLCONTAINER> pCells = m_spNavigation->GetCells();
-		int i = 0;
-
-		sort(pCells->begin(), pCells->end(), [](SHPTR<UCell>& a, SHPTR<UCell>& b) {
-			return a->GetCenterPos().y < b->GetCenterPos().y;
-			});
-		for (CELLCONTAINER::iterator iter = pCells->begin(); iter != pCells->end();)
-		{
-
-			(*iter)->SetIndex(i++);
-			++iter;
-		}
-
-		m_spNavigation->ReadyNeighbor();
-	}
-	return S_OK;
-}
 
 HRESULT URegion::ClearCell()
 {
@@ -429,11 +400,10 @@ void URegion::FlushDeleteCells()
 		}
 		else
 		{
-			//¼¿µéÀÇ ÀÎµ¦½º Àç¼³Á¤
-			(*iter)->SetIndex(i++);
-			++iter;
+			iter++;
 		}
 	}
+	RearrageCells();
 	m_spNavigation->ReadyNeighbor();
 
 	m_DeleteCellsList.clear();

@@ -1,6 +1,6 @@
 #pragma once
 #include "UObject.h"
-//#define _EDIT_NAVI
+#define _EDIT_NAVI
 
 BEGIN(Engine)
 class UDefaultCell;
@@ -57,6 +57,8 @@ public:
 
 	_float3 GetClosestPointOnEdges(const _float3& position) const;
 	_float3 ClosestPointOnLine(const _float3& lineStart, const _float3& lineEnd, const _float3& point) const;
+
+	_float GetHeightAtXZ(const _float& x, const _float& z) const;
 
 	const _bool& GetJumpableState() const { return m_bisJumpable; }
 	void SetJumpableState(_bool _isJump) { m_bisJumpable = _isJump; }

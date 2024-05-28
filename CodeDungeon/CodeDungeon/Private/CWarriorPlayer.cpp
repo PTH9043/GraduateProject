@@ -67,19 +67,19 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		}
 	}
 	// Move
-	if (CWarriorAnimController::ANIM_MOVE == AnimState)
+	if (CWarriorAnimController::ANIM_MOVE == AnimState || CWarriorAnimController::ANIM_JUMP_FRONT == AnimState)
 	{
 		TranslateStateMoveAndRunF(spGameInstance, _dTimeDelta, GetMovingSpeed());
 		SetRunState(false);
 	}
 
-	if (CWarriorAnimController::ANIM_RUN == AnimState)
+	if (CWarriorAnimController::ANIM_RUN == AnimState || CWarriorAnimController::ANIM_JUMP_FRONT_RUN == AnimState)
 	{
 		TranslateStateMoveAndRunF(spGameInstance, _dTimeDelta, GetRunningSpeed());
 		SetRunState(true);
 	}
 
-	if (CWarriorAnimController::ANIM_WALKBACK == AnimState)
+	if (CWarriorAnimController::ANIM_WALKBACK == AnimState || CWarriorAnimController::ANIM_JUMP_BACK == AnimState)
 	{
 		if (spGameInstance->GetDIKeyPressing(DIK_S))
 		{
@@ -88,7 +88,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		}
 	}
 
-	if (CWarriorAnimController::ANIM_RUNBACK == AnimState)
+	if (CWarriorAnimController::ANIM_RUNBACK == AnimState || CWarriorAnimController::ANIM_JUMP_BACK_RUN == AnimState)
 	{
 		if (spGameInstance->GetDIKeyPressing(DIK_S))
 		{
@@ -96,6 +96,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 			SetRunState(true);
 		}
 	}
+
 }
 
 void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)

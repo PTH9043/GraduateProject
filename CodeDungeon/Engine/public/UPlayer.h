@@ -38,6 +38,13 @@ public:
 	virtual void Free() PURE;
 	virtual HRESULT NativeConstruct() PURE;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _Datas) PURE;
+
+	const _bool& GetJumpingState() { return m_bisJumping; }
+	void SetJumpingState(const _bool& _jumpstate) { m_bisJumping = _jumpstate; }
+
+	const _bool& GetFallingState() { return m_bisFalling; }
+	void SetFallingState(const _bool& _fallstate) { m_bisFalling = _fallstate; }
+
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) PURE;
 	virtual void LateTickActive(const _double& _dTimeDelta) PURE;
@@ -47,10 +54,14 @@ protected:
 
 	void FollowCameraMove(const _float3& _vPlayerToDistancePosition, const _double& _TimeElapsed);
 
+
+
 protected: /* get set */
 	CSHPTRREF<UCamera> GetFollowCamera() const { return m_spFollowCamera; }
 private:
 	SHPTR<UCamera>		m_spFollowCamera;
+	_bool				m_bisJumping;
+	_bool				m_bisFalling;
 };
 
 END
