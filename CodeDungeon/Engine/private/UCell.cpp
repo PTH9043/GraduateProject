@@ -128,18 +128,41 @@ void UCell::ReRender()
 _bool UCell::IsIn(const _float3& _vPos, _int& _iNeightborIndex, _float3& _vLine)
 {
 	for (_uint i = 0; i < LINE_END; ++i) {
-		_float3 vDir = (_vPos - m_arrPoints[i]);
-		vDir.Normalize();
+		// 변에 대한 점, 법선 벡터, 변을 구성하는 두 점을 가져옵니다.
+		_float3 vPointA, vPointB;
+		_float3 vNormal = m_arrNormals[i];
+		_float3 vLine = m_arrLines[i];
 
-		_float Dot = vDir.Dot(m_arrNormals[i]);
-		if (0 < Dot) {
+		switch (i) {
+		case LINE_AB:
+			vPointA = m_arrPoints[POINT_A];
+			vPointB = m_arrPoints[POINT_B];
+			break;
+		case LINE_BC:
+			vPointA = m_arrPoints[POINT_B];
+			vPointB = m_arrPoints[POINT_C];
+			break;
+		case LINE_CA:
+			vPointA = m_arrPoints[POINT_C];
+			vPointB = m_arrPoints[POINT_A];
+			break;
+		}
+
+		// 점 _vPos와 변의 점들로부터 벡터를 만듭니다.
+		_float3 vDir = _vPos - vPointA;
+
+		// 평면 방정식을 사용하여 점이 변의 어느 쪽에 있는지 확인합니다.
+		float dotProduct = vDir.Dot(vNormal);
+		if (dotProduct > 0) {
 			_iNeightborIndex = m_arrNeighbors[i];
-			_vLine = m_arrLines[i];
+			_vLine = vLine;
 			return false;
 		}
 	}
+
 	return true;
 }
+
 
 _bool UCell::IsComparePoints(const _float3& _vPointA, const _float3& _vPointB)
 {
@@ -207,6 +230,7 @@ const _float UCell::ComputeHeight(const _float3& _vPosition)
 {
 	return _float3(DirectX::XMPlaneDotCoord(m_vPlane, _vPosition)).y + _vPosition.y;
 }
+
 
 void UCell::CalculateCrossResult(ARRAY<_float3, POINT_END>& _arrPointsEnd)
 {
@@ -317,3 +341,20 @@ _float3 UCell::ClosestPointOnLine(const _float3& lineStart, const _float3& lineE
 	return closestPoint;
 }
 
+_float UCell::GetHeightAtXZ(const _float& x, const _float& z) const {
+
+	// Points of the triangle
+	_float3 P1 = m_arrPoints[POINT_A];
+	_float3 P2 = m_arrPoints[POINT_B];
+	_float3 P3 = m_arrPoints[POINT_C];
+
+	// Calculate the plane equation coefficients
+	_float A = (P2.y - P1.y) * (P3.z - P1.z) - (P2.z - P1.z) * (P3.y - P1.y);
+	_float B = (P2.z - P1.z) * (P3.x - P1.x) - (P2.x - P1.x) * (P3.z - P1.z);
+	_float C = (P2.x - P1.x) * (P3.y - P1.y) - (P2.y - P1.y) * (P3.x - P1.x);
+	_float D = -(A * P1.x + B * P1.y + C * P1.z);
+
+	_float y = -(A * x + C * z + D) / B;
+
+	return y;
+}

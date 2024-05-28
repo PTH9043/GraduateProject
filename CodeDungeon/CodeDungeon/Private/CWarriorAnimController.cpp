@@ -61,6 +61,16 @@ void CWarriorAnimController::Tick(const _double& _dTimeDelta)
 
 	_bool isAttack = spGameInstance->GetDIMBtnPressing(DIMOUSEBUTTON::DIMB_L);
 	_bool isCombo = spGameInstance->GetDIMBtnPressing(DIMOUSEBUTTON::DIMB_R);
+	
+	//플레이어가 이미 점프하고 있거나 떨어지고 있지 않을 때 스페이스를 누르면 점프모드 돌입
+	if (spGameInstance->GetDIKeyDown(DIK_SPACE))
+	{
+		if(!spWarriorPlayer->GetJumpingState() && !spWarriorPlayer->GetFallingState())
+		{
+			spWarriorPlayer->SetJumpingState(true);
+		}
+	}
+
 
 	if (false == isMoveFront && false == isMoveBack && false == isAttack && false == isCombo)
 	{
@@ -130,6 +140,25 @@ void CWarriorAnimController::Tick(const _double& _dTimeDelta)
 		{
 			UpdateState(spAnimModel, ANIM_COMBO, L"COMBO04");
 			m_isComboStack = true;
+		}
+	}
+
+
+	if (spWarriorPlayer->GetJumpingState() ||  spWarriorPlayer->GetFallingState())
+	{
+		if(isMoveFront)
+		{
+			if(!isRunshift)
+				UpdateState(spAnimModel, ANIM_JUMP_FRONT, L"IDLE");
+			else
+				UpdateState(spAnimModel, ANIM_JUMP_FRONT_RUN, L"IDLE");
+		}
+		else if (isMoveBack)
+		{
+			if (!isRunshift)
+				UpdateState(spAnimModel, ANIM_JUMP_BACK, L"IDLE");
+			else
+				UpdateState(spAnimModel, ANIM_JUMP_BACK_RUN, L"IDLE");
 		}
 	}
 

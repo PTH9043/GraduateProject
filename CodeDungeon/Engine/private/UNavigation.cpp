@@ -34,6 +34,7 @@ HRESULT UNavigation::NativeConstruct()
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	m_spCellContainer = Create<CELLCONTAINER>();
+	m_spCellContainer->reserve(10000);
 
 	RETURN_CHECK_FAILED(ReadyNeighbor(), E_FAIL);
 
@@ -159,14 +160,29 @@ SHPTR<UCell> UNavigation::FindCell(const _float3& _vPosition)
 	RETURN_CHECK(nullptr == m_spCellContainer, nullptr);
 	_int iNeighborIndex{ 0 };
 	_float3 vLine{};
+	_bool success = false;
+	SHPTR<UCell> closestCell{};
+	float minYDiff = -1.0f; // -1.0f를 초기값으로 설정하여 첫 번째 유효한 셀의 y 차이로 초기화
+
 	for (auto& iter : (*m_spCellContainer.get())) {
 		if (true == iter->IsIn(_vPosition, iNeighborIndex, vLine)) {
-			m_iCurIndex = iter->GetIndex();
-			return iter;
+			float yDiff = std::abs(_vPosition.y - iter->GetCenterPos().y);
+			if (minYDiff == -1.0f || yDiff < minYDiff) { // 처음으로 유효한 값을 만났거나 현재의 y 차이가 최소값보다 작은 경우
+				minYDiff = yDiff;
+				m_iCurIndex = iter->GetIndex();
+				success = true;
+				closestCell = iter;
+			}
 		}
 	}
-	return nullptr;
+
+	if (success)
+		return closestCell;
+	else
+		return nullptr;
 }
+
+
 
 SHPTR<UCell> UNavigation::FindCell(const _int& _iIndex)
 {
@@ -198,7 +214,7 @@ void UNavigation::AddCell(SHPTR<UCell>& _spCell)
 	if (nullptr == m_spCellContainer)
 		return;
 
-	m_spCellContainer->push_back(_spCell);
+	m_spCellContainer->emplace_back(_spCell);
 }
 
 _bool UNavigation::Load(const _wstring& _wstrPath)
@@ -212,6 +228,7 @@ _bool UNavigation::Load(const _wstring& _wstrPath)
 
 	m_spCellContainer->clear();
 	_int iCellIndex = 0;
+	_int test = 0;
 	for (_uint i = 0; i < numCells; ++i) {
 		 UCell::CELLDECS tDesc;
 		_float3 f3Color;
@@ -221,11 +238,12 @@ _bool UNavigation::Load(const _wstring& _wstrPath)
 		load.read(reinterpret_cast<char*>(&tDesc.vNormal), sizeof(tDesc.vNormal));
 		load.read(reinterpret_cast<char*>(&tDesc.vLine), sizeof(tDesc.vLine));
 		load.read(reinterpret_cast<char*>(&tDesc.iNeighbor), sizeof(tDesc.iNeighbor));
-		load.read(reinterpret_cast<char*>(&tDesc.iIndex), sizeof(tDesc.iIndex));
+		load.read(reinterpret_cast<char*>(&tDesc.iIndex), sizeof(_int));
 		load.read(reinterpret_cast<char*>(&tDesc.bisJumpable), sizeof(tDesc.bisJumpable));
 
 		SHPTR<UCell> NewCell = CreateConstructorNative<UCell>(spGameInstance->GetDevice(), tDesc);
 		AddCell(NewCell);
+		iCellIndex++;
 	}
 
 	RETURN_CHECK_FAILED(ReadyNeighbor(), false);
@@ -242,6 +260,7 @@ _bool UNavigation::Save(const _wstring& _wstrPath)
 	_uint numCells = static_cast<_uint>(m_spCellContainer->size());
 	save.write(reinterpret_cast<const char*>(&numCells), sizeof(_uint));
 
+	int i = 0;
 	for (SHPTR<UCell> cellPtr : *m_spCellContainer) {
 		UCell& cell = *cellPtr;
 		save.write(reinterpret_cast<const char*>(&cell.GetColor()), sizeof(_float3));

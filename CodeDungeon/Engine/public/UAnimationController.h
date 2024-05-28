@@ -12,7 +12,7 @@ class UAnimationController abstract : public UController {
 public: 
 	enum COMMONSTATE
 	{
-		ANIM_IDLE, ANIM_MOVE, ANIM_ATTACK, ANIM_COMBO, ANIM_RUN
+		ANIM_IDLE, ANIM_MOVE, ANIM_ATTACK, ANIM_COMBO, ANIM_RUN, ANIM_JUMP_FRONT, ANIM_JUMP_BACK, ANIM_JUMP_FRONT_RUN, ANIM_JUMP_BACK_RUN
 	};
 public:
 	UAnimationController(CSHPTRREF<UDevice> _spDevice);
