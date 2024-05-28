@@ -47,7 +47,7 @@ HRESULT UCharacter::NativeConstructClone(const VOIDDATAS& _Datas)
 	}
 	// Controller
 	{
-		UAnimationController::CONTROLLERDESC ControllerDesc{ ThisShared<UCharacter>() };
+		UAnimationController::ANIMCONTROLLERDESC ControllerDesc{ ThisShared<UCharacter>() };
 		m_spAnimationController = std::static_pointer_cast<UAnimationController>(spGameInstance->CloneComp(CharacterDesc.wstrAnimControllerProtoData, 
 			{ &ControllerDesc }));
 	}

@@ -8,6 +8,7 @@
 #include "UGameInstance.h"
 #include "UTransform.h"
 #include "UVIBufferPoint.h"
+#include "URenderTargetGroup.h"
 
 UParticle::UParticle(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer,
 	const CLONETYPE& _eCloneType)
@@ -92,6 +93,9 @@ void UParticle::LateTickActive(const _double& _dTimeDelta)
 
 HRESULT UParticle::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+SHPTR<URenderTargetGroup> spShadowDepthGroup{ spGameInstance->FindRenderTargetGroup(RTGROUPID::NONALPHA_DEFFERED) };
+
 	__super::RenderActive(_spCommand, _spTableDescriptor);
 	m_spParticleSystem->Render(_spCommand, _spTableDescriptor);
 	BindShaderBuffer();
@@ -103,7 +107,9 @@ HRESULT UParticle::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTable
 	switch (m_spParticleSystem->GetParticleType()) {
 	case PARTICLE_ORIGINAL:
 		GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTexGroup->GetTexture(TextureIndex)); 
+		GetShader()->BindSRVBuffer(SRV_REGISTER::T1, spShadowDepthGroup->GetRenderTargetTexture(RTOBJID::NONALPHA_DEPTH_DEFFERED));
 		break;
+
 	case PARTICLE_FLARE:
 		GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTexGroup->GetTexture(TextureIndex));
 		break;

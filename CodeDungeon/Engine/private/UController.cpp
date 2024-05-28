@@ -17,11 +17,5 @@ HRESULT UController::NativeConstruct()
 
 HRESULT UController::NativeConstructClone(const VOIDDATAS& _tDatas)
 {
-	assert(_tDatas.size() > 0);
-
-	CONTROLLERDESC Desc = UMethod::ConvertTemplate_Index<CONTROLLERDESC>(_tDatas, 0);
-	assert(nullptr != Desc.spCharacter);
-
-	m_wpOwnerCharacter = Desc.spCharacter;
 	return S_OK;
 }

@@ -2,7 +2,7 @@
 #define _2DPARTICLE_
 
 #include "ShaderGrobalFunc.hlsli"
-
+#include "LightShaderParam.hlsli"
 
 struct GROBALPARTICLEINFO
 {
@@ -96,6 +96,9 @@ struct GS_OUT
     float2 vTexUV : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
     uint iInstanceID : SV_InstanceID;
+    float2 vScreenTex : TEXCOORD2; // 화면 좌표 추가
+    float vDepth : TEXCOORD3; // 깊이 값 추가
+
 };
 
 [maxvertexcount(6)]
@@ -143,7 +146,11 @@ void GS_Main(point VS_OUT input[1], inout TriangleStream<GS_OUT> outputStream)
     output[1].iInstanceID = id;
     output[2].iInstanceID = id;
     output[3].iInstanceID = id;
-
+    for (int i = 0; i < 4; ++i)
+    {
+        output[i].vScreenTex = output[i].vPosition.xy / output[i].vPosition.w;
+        output[i].vDepth=output[i].vPosition.z/ output[i].vPosition.w;
+    }
     // 삼각형 두 개 실행
     outputStream.Append(output[0]);
     outputStream.Append(output[1]);
@@ -166,7 +173,50 @@ PS_OUT PS_Main(GS_OUT In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
+//    float2 ScreenTex;
+//    ScreenTex.x = (In.vScreenTex.x) * 0.5 + 0.5f;
+//    ScreenTex.y = (In.vScreenTex.y) * -0.5 + 0.5f;
+
+//    vector vDepthDesc = g_Texture1.Sample(g_Sampler_Normal, ScreenTex);
+
+//    float fViewZ = vDepthDesc.x * GetViewProjInfo().fCamFar;
+
+//// 깊이 차이 계산
+//    float depthDifference = fViewZ - In.vPosition.w;
+
+//// 깊이 차이에 기반하여 부드럽게 알파 값을 조정
+//    float fDistance = saturate(depthDifference * 0.1); // 스케일링 팩터 0.1, 필요시 조정
+
+//// 텍스처 샘플링
+//    Out.vColor = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV);
+
+//// 최소 알파 값을 유지하여 전체적으로 파티클이 보이도록 함
+//    float minAlpha = 0.2; // 최소 알파 값, 필요시 조정
+//    Out.vColor.a *= max(fDistance, minAlpha);
+    
+
+    
+    float2 ScreenTex;
+    ScreenTex.x = (In.vScreenTex.x) * 0.5 + 0.5f;
+    ScreenTex.y = (In.vScreenTex.y) * -0.5 + 0.5f;
+
+    vector vDepthDesc = g_Texture1.Sample(g_Sampler_Normal, ScreenTex);
+
+    float fViewZ = vDepthDesc.x * GetViewProjInfo().fCamFar;
+
+// 깊이 차이 계산
+    float depthDifference = abs(fViewZ - In.vPosition.w);
+
+// 깊이 차이에 기반하여 부드럽게 알파 값을 조정
+    float fDistance = smoothstep(0.0, 1.0, depthDifference*0.05); // 0.0과 0.1은 필요시 조정
+
+// 텍스처 샘플링
     Out.vColor = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV);
+
+// 최소 알파 값을 유지하여 전체적으로 파티클이 보이도록 함
+    float minAlpha = 0.2; // 최소 알파 값, 필요시 조정
+    Out.vColor.a *= fDistance;
+
     return Out;
 }
 

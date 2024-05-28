@@ -43,11 +43,11 @@ private:
 	void AnimModelSelectView();
 	void AnimModifyView();
 	void EquipView();
+	void MeshFilterView();
 private:
 	void MakeAnimEvent();
 
 	void AnimSectionShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFlags _flags,  const VECTOR<SHPTR<UAnimEvent>>& _AnimEvent);
-//	void AnimOccursShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFlags _flags, const VECTOR<SHPTR<UAnimEvent>>& _AnimEvent);
 	void AnimColliderShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFlags _flags, const VECTOR<SHPTR<UAnimEvent>>& _AnimEvent);
 	void AnimSoundShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFlags _flags, const VECTOR<SHPTR<UAnimEvent>>& _AnimEvent);
 private:
@@ -55,6 +55,7 @@ private:
 	DOCKDESC											m_stAnimModelSelectDesc;
 	DOCKDESC											m_stAnimModifyDesc;
 	DOCKDESC											m_stEquipViewDesc;
+	DOCKDESC											m_stAnimMeshFilterDesc;
 	_bool														m_isInitSetting;
 
 	SHPTR<TAnimControlModel>			m_spAnimControlModel;

@@ -3,6 +3,7 @@
 
 BEGIN(Engine)
 class UAnimModel;
+class UCharacter;
 /*
 @ Date: 2024-04-28, Writer: นฺลยว๖
 @ Explain
@@ -10,6 +11,13 @@ class UAnimModel;
 */
 class UAnimationController abstract : public UController {
 public: 
+	struct ANIMCONTROLLERDESC {
+		SHPTR<UCharacter> spCharacter;
+
+		ANIMCONTROLLERDESC() : spCharacter{ nullptr } {}
+		ANIMCONTROLLERDESC(CSHPTRREF<UCharacter> _spCharacter) : spCharacter{ _spCharacter } {}
+	};
+
 	enum COMMONSTATE
 	{
 		ANIM_IDLE, ANIM_MOVE, ANIM_ATTACK, ANIM_COMBO, ANIM_RUN, ANIM_JUMP_FRONT, ANIM_JUMP_BACK, ANIM_JUMP_FRONT_RUN, ANIM_JUMP_BACK_RUN
@@ -33,14 +41,17 @@ protected:
 public: /* get set*/
 	const _int GetAnimState() const { return m_iAnimState;  }
 	const _wstring& GetTrigger() const { return m_wstrTrigger; }
+protected:
+	SHPTR<UCharacter> GetOwnerCharacter() { return m_wpOwnerCharacter.lock(); }
 protected: /* get set  */
 	void SetAnimState(const _int _iAnimState) { this->m_iAnimState = _iAnimState; }
 	void SetTrigger(const _wstring& _wstrTrigger) { this->m_wstrTrigger = _wstrTrigger; }
 
 	void UpdateState(CSHPTRREF<UAnimModel> _spAnimModel, const _int _iAnimState, const _wstring& _wstrTrigger);
 private:
-	_int				m_iAnimState;
-	_wstring		m_wstrTrigger;
+	_int											m_iAnimState;
+	_wstring									m_wstrTrigger;
+	WKPTR<UCharacter>			m_wpOwnerCharacter;
 };
 
 END

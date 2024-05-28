@@ -13,7 +13,8 @@
 #include "UAudioSystem.h"
 #include "USound.h"
 #include "UModel.h"
-
+#include "UMeshFilter.h"
+#include "UMeshContainer.h"
 
 const _char* TAnimControlView::s_AnimTags[1000]{};
 
@@ -53,8 +54,11 @@ HRESULT TAnimControlView::NativeConstruct()
 		ImGuiWindowFlags_AlwaysVerticalScrollbar,
 		ImGuiDockNodeFlags_CentralNode);
 
-	m_spAnimControlModel = std::static_pointer_cast<TAnimControlModel>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_ANIMCONTROLMODELOBJECT));
+	m_stAnimMeshFilterDesc = DOCKDESC("AniMMeshFilterDesc", ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_HorizontalScrollbar |
+		ImGuiWindowFlags_AlwaysVerticalScrollbar,
+		ImGuiDockNodeFlags_CentralNode);
 
+	m_spAnimControlModel = std::static_pointer_cast<TAnimControlModel>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_ANIMCONTROLMODELOBJECT));
 
     return S_OK;
 }
@@ -137,6 +141,7 @@ void TAnimControlView::RenderActive()
 		AnimModelSelectView();
 		AnimModifyView();
 		EquipView();
+		MeshFilterView();
 	}
 	ImGui::End();
 }
@@ -151,12 +156,17 @@ void TAnimControlView::DockBuildInitSetting()
 		// Docking Build 
 	    m_stAnimModelSelectDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Up, 0.2f, NULL, &dock_main_id);
 		m_stAnimModifyDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.8f, NULL, &dock_main_id);
-		m_stEquipViewDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id,
-			ImGuiDir_Up, 0.2f, &m_stAnimModelSelectDesc.iDockSpaceID, &dock_main_id);
+
+		m_stEquipViewDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(m_stAnimModelSelectDesc.iDockSpaceID,
+			ImGuiDir_Up, 0.2f, &m_stAnimModelSelectDesc.iDockSpaceID, & dock_main_id);
+
+		m_stAnimMeshFilterDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(m_stAnimModifyDesc.iDockSpaceID,
+			ImGuiDir_Up, 0.2f, &m_stAnimModifyDesc.iDockSpaceID, &dock_main_id);
 		// DockBuild
 		ImGui::DockBuilderDockWindow(m_stAnimModelSelectDesc.strName.c_str(), m_stAnimModelSelectDesc.iDockSpaceID);
 		ImGui::DockBuilderDockWindow(m_stAnimModifyDesc.strName.c_str(), m_stAnimModifyDesc.iDockSpaceID);
 		ImGui::DockBuilderDockWindow(m_stEquipViewDesc.strName.c_str(), m_stEquipViewDesc.iDockSpaceID);
+		ImGui::DockBuilderDockWindow(m_stAnimMeshFilterDesc.strName.c_str(), m_stAnimMeshFilterDesc.iDockSpaceID);
 		ImGui::DockBuilderFinish(m_stMainDesc.iDockSpaceID);
 	}
 	m_isInitSetting = true;
@@ -302,6 +312,42 @@ void TAnimControlView::EquipView()
 	ImGui::End();
 }
 
+void TAnimControlView::MeshFilterView()
+{
+	ImGui::Begin(m_stAnimMeshFilterDesc.strName.c_str(), GetOpenPointer(), m_stAnimMeshFilterDesc.imgWindowFlags);
+	{
+		static _string MESHEnable{ "MeshEnable##" };
+		static _string MESHGROUP{ "MeshGroup##" };
+
+		if (nullptr != m_spShowAnimModel)
+		{
+			SHPTR<UMeshFilter> spMeshFilter = m_spShowAnimModel->GetMeshFilter();
+			if (nullptr != spMeshFilter)
+			{
+				_uint i = 0;
+				for (auto& iter : spMeshFilter->GetMeshFilterInfoContainer())
+				{
+					_string str = UMethod::ConvertWToS(m_spShowAnimModel->GetMeshContainers()[iter.iCurMeshIndex]->GetMeshName());
+					if (ImGui::TreeNodeEx(str))
+					{
+						ImGui::Checkbox(MESHEnable + i, &iter.isMeshFilterEnable);
+						ImGui::InputInt(MESHGROUP + i, &iter.iMeshGroupIndex);
+						ImGui::TreePop();
+					}
+				}
+				if (ImGui::Button("SaveMeshFilter"))
+				{
+					spMeshFilter->Save(m_spSelectAnimFileFolder->wstrPath);
+				}
+			}
+		}
+		else
+		{
+			ImGui::Text("Plz Create To AnimModel");
+		}
+	}
+	ImGui::End();
+}
 
 void TAnimControlView::MakeAnimEvent()
 {
