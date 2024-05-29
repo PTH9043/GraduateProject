@@ -8,12 +8,18 @@
 #include "UNavigation.h"
 
 UPlayer::UPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
-	: UCharacter(_spDevice, _wstrLayer, _eCloneType)
+	: UCharacter(_spDevice, _wstrLayer, _eCloneType),
+	m_spFollowCamera{nullptr},
+	m_bisJumping{false},
+	m_bisFalling{false}
 {
 }
 
 UPlayer::UPlayer(const UPlayer& _rhs) : 
-	UCharacter(_rhs)
+	UCharacter(_rhs),
+	m_spFollowCamera{ nullptr },
+	m_bisJumping{ false },
+	m_bisFalling{ false }
 {
 }
 
@@ -53,22 +59,73 @@ void UPlayer::LateTickActive(const _double& _dTimeDelta)
 		SHPTR<UNavigation> spNavigation = GetCurrentNavi();
 		_float3 vPosition{ GetTransform()->GetPos() };
 		SHPTR<UCell> spCell{};
+		_double speed = _dTimeDelta * 3.f;
 
+		//예외처리. 전방으로 점프하면서 떨어질 때 아래가 낭떠러지면 두 상태가 전부 true가 되면서 얼어붙음.
+		//이를 방지하기 위해 둘 다 true일 때 falling을 false로 함으로써 점프를 마저 하도록 처리. 
+		if (m_bisJumping && m_bisFalling)
+		{
+			m_bisFalling = false;
+		}
+
+		//기본 중력 낙하. 중력이 활성화되야만 실행
+		//점프하여 올라가고 있을 땐 비활성화
+		if(!m_bisJumping && m_bisFalling)
+		{
+			GetTransform()->GravityFall(speed);
+			vPosition = GetTransform()->GetPos();
+		}
+
+		//점프를 하고 있다면 점프 움직임 수행
+		if(!m_bisFalling && m_bisJumping)
+		{
+			GetTransform()->JumpMovement(speed);
+			vPosition = GetTransform()->GetPos();
+		}
+		if (GetTransform()->GetJumpVelocity().y < 0.f) //최대 높이까지 점프했다면 
+		{
+			//점프(상승) 해제, 낙하 수행
+			m_bisJumping = false;
+			m_bisFalling = true;
+			GetTransform()->DisableJump();
+		}
+
+		//셀의 끝에 다다랐을 때
 		if (false == spNavigation->IsMove(vPosition, REF_OUT spCell))
 		{
-			//점프가 가능한 셀일 경우
-			if (!spCell->GetJumpableState())
+			//낭떠러지 셀이 아닐 경우
+			if (!spNavigation->GetCurCell()->GetJumpableState())
 			{
-				// 움직이려는 위치가 셀 밖에 있는 경우 가장 가까운 선 위의 점으로 조정
+				// 움직이려는 위치가 셀 밖에 있는 경우 현재 셀의 가장 가까운 선 위의 점으로 조정
+				// 슬라이딩 벡터의 효과를 낼 수 있음
 				_float3 closestPoint = spNavigation->ClampPositionToCell(vPosition);
-				GetTransform()->SetPos(closestPoint);
+				GetTransform()->SetPos(_float3(closestPoint.x, vPosition.y, closestPoint.z));
+				vPosition = GetTransform()->GetPos();
 			}
+			//낭떠러지 셀인 경우
 			else
 			{
-				GetTransform()->SetPos(_float3(vPosition.x, vPosition.y - 0.1f, vPosition.z));
+				//낭떠러지 셀에서 밖으로 갔을 때, 중력 활성화(낙하)
+				m_bisFalling = true;			
 			}
 		}
-		else
+		//공중에서도 발 아래의 셀 검색, 셀이 존재하면 현재 셀로 만듦.
+		SHPTR<UCell> newCurCell = spNavigation->FindCell(vPosition);
+
+		if(newCurCell != nullptr)
+		{
+			//현재 셀보다 아래로 떨어지면
+			_float curCellCenterY = newCurCell->GetHeightAtXZ(vPosition.x, vPosition.z);
+			if (vPosition.y < curCellCenterY)
+			{
+				//낙하 종료vPosition
+				m_bisFalling = false;
+				GetTransform()->DisableGravity();
+			}
+		}
+
+		//떨어지고 있지 않을 때, 그리고 점프하여 올라가고 있지 않을 때 셀 위의 높이를 탐
+		if (!m_bisFalling && !m_bisJumping)
 		{
 			spNavigation->ComputeHeight(GetTransform());
 		}
@@ -106,8 +163,8 @@ void UPlayer::FollowCameraMove(const _float3& _vPlayerToDistancePosition, const 
 
     vDirection.Normalize();
     // 딜레이를 적용한 거리를 계산.
-    float fTimeLagScale = (fTimeLag) ? _TimeElapsed * (1.0f / fTimeLag) : 1.0f;
-    float fAdjustedDistance = fDistance * fTimeLagScale;
+	_float fTimeLagScale = (fTimeLag) ? static_cast<_float>(_TimeElapsed) * (1.0f / fTimeLag) : 1.0f;
+	_float fAdjustedDistance = fDistance * fTimeLagScale;
 
     // 카메라 이동 거리를 제한.
     if (fAdjustedDistance > fDistance) fAdjustedDistance = fDistance;

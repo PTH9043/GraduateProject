@@ -45,8 +45,11 @@ HRESULT CProtoMaker::CreateMainSceneProtoData(CSHPTRREF<UGameInstance> _spGameIn
 
 	_float4x4 Matrix = _float4x4::CreateScale(0.1f) /** _float4x4::CreateRotationY(DirectX::XMConvertToRadians(180.f))*/;
 
+	Matrix = _float4x4::CreateScale(10.f);
 	_spGameInstance->AddPrototype(PROTO_RES_FEMAILPLAYERANIMMODEL,CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
 		_spDevice, L"..\\..\\Resource\\AnimModel\\Player\\Convert\\F_Human_FBX.bin", Matrix));
+
+	Matrix = _float4x4::CreateScale(0.1f);
 	_spGameInstance->AddPrototype(PROTO_RES_MUMMYANIMMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
 		_spDevice, L"..\\..\\Resource\\AnimModel\\Mummy\\Convert\\Mummy_DEMO_1_FBX.bin", Matrix));
 

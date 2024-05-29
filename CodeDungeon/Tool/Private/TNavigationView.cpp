@@ -391,16 +391,19 @@ void TNavigationView::NavigationView()
 						}
 						else
 						{
-							CSHPTR<CELLCONTAINER> cellsContainer = m_spStageManager->GetStage()->GetRegion(m_iRegionIndex)->GetNavigation()->GetCells();
+							auto stage = m_spStageManager->GetStage();
+							auto region = stage->GetRegion(m_iRegionIndex);
+							auto navigation = region->GetNavigation();
+							auto cellsContainer = navigation->GetCells();
 							const std::vector<SHPTR<UCell>>& cells = *cellsContainer;
-							CSHPTR<UCell> cell = cells[m_spSelectedCell->GetIndex()];
 							int selectedIndex = m_spSelectedCell->GetIndex();
+							auto cell = cells[selectedIndex];
 
 							ImGui::Text("Selected Cell Index: %d", selectedIndex);
 							ImGui::Text("Selected Cell Jumpable : %s", cell->GetJumpableState() ? "true" : "false");
 							if (ImGui::Button("Delete"))
 							{
-								m_spStageManager->GetStage()->GetRegion(m_iRegionIndex)->DeleteCell(selectedIndex);
+								region->DeleteCell(selectedIndex);
 								m_spSelectedCell.reset();
 							}
 							if (ImGui::Button("Set Jumpable"))
@@ -423,7 +426,10 @@ void TNavigationView::NavigationView()
 				if(spGameInstance->IsMouseInWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT) && !m_bOnWindow)
 					ModifyNavigation(m_spStageManager->GetStage()->GetRegion(m_iRegionIndex));
 				m_spStageManager->GetStage()->SetRegionName(m_iRegionIndex);
-				m_spStageManager->GetStage()->RearrangeCells(m_iRegionIndex);
+				if (ImGui::Button("Rearrange_Cells"))
+				{
+					m_spStageManager->GetStage()->RearrangeCells(m_iRegionIndex);
+				}
 				m_spStageManager->GetStage()->SetColor(m_iRegionIndex);
 				m_spStageManager->GetStage()->ShowCells(m_iRegionIndex);
 				m_spStageManager->GetStage()->Delete_Region(m_iRegionIndex);

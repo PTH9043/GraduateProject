@@ -34,7 +34,7 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);
 
 	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-	SHPTR<UCell> spCell = spNavigation->FindCell(703);
+	SHPTR<UCell> spCell = spNavigation->FindCell(500);
 
 	GetTransform()->SetPos(spCell->GetCenterPos());
 

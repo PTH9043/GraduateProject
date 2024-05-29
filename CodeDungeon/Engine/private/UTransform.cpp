@@ -17,7 +17,10 @@ UTransform::UTransform(CSHPTRREF<UDevice> _spDevice) :
 	m_isNotApplyRotate{ false },
 	m_isNotApplyPos{ false },
 	m_isNotApplyScale{ false },
-	m_spParentsTransform{ nullptr }
+	m_spParentsTransform{ nullptr },
+	m_vVelocity{ 0.0f, 0.0f, 0.0f },
+	m_vJumpvelocity{ 0.0f, 12.f, 0.0f},
+	m_vGravity{ 0.0f, -9.81f, 0.0f }
 {
 }
 
@@ -33,7 +36,10 @@ UTransform::UTransform(const UTransform& _rhs) :
 	m_isNotApplyRotate{ false },
 	m_isNotApplyPos{ false },
 	m_isNotApplyScale{ false },
-	m_spParentsTransform{ nullptr }
+	m_spParentsTransform{ nullptr },
+	m_vVelocity{ _rhs.m_vVelocity }, 
+	m_vJumpvelocity{ 0.0f, 12.f, 0.0f },
+	m_vGravity{ 0.0f, -9.81f, 0.0f }
 {
 }
 
@@ -478,6 +484,32 @@ HRESULT UTransform::BindTransformData(CSHPTRREF<UShader> _spShader, CAMID _Rende
 	m_stTransformParam.mPrevWorldMatrix = m_stTransformParam.mWorldMatrix;
 	m_stTransformParam.mWorldMatrix = m_mChangeWorldMatrix.Transpose();
 	return _spShader->BindCBVBuffer(m_TransformBuffer, &m_stTransformParam, GetTypeSize<TRANSFORMPARAM>());
+}
+
+void UTransform::DisableGravity()
+{
+	m_vVelocity = _float3(0.0f, 0.0f, 0.0f);
+}
+
+void UTransform::DisableJump()
+{
+	m_vJumpvelocity = _float3(0.0f, 12.f, 0.0f);
+}
+
+void UTransform::JumpMovement(const _double& _deltaTime)
+{
+	m_vJumpvelocity += m_vGravity * static_cast<_float>(_deltaTime);
+	_float3 vPosition = GetPos();
+	vPosition += m_vJumpvelocity * static_cast<_float>(_deltaTime);
+	SetPos(vPosition);
+}
+
+void UTransform::GravityFall(const _double& _deltaTime)
+{
+	m_vVelocity += m_vGravity * static_cast<_float>(_deltaTime);
+	_float3 vPosition = GetPos();
+	vPosition += m_vVelocity * static_cast<_float>(_deltaTime);
+	SetPos(vPosition);
 }
 
 #ifdef _USE_IMGUI

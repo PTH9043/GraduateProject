@@ -39,6 +39,8 @@ public:
 
 	const SHPTR<UTransform>& GetParentsTransform() const { return m_spParentsTransform; }
 
+	const _float3& GetJumpVelocity() const { return m_vJumpvelocity; }
+
 	void SetScale(const _float3& _vScale);
 	void SetParent(CSHPTRREF<UTransform> _spTransform);
 
@@ -106,6 +108,12 @@ public:
 	HRESULT BindTransformData(CSHPTRREF< UShader> _spShader, const _float4x4& _mTransform);
 	// Shader 파일을 불러와서 바인드 하는 함수
 	HRESULT BindTransformData(CSHPTRREF<UShader> _spShader, CAMID _RenderCamID);
+
+	void GravityFall(const _double& _deltaTime);
+	void DisableGravity();
+
+	void DisableJump();
+	void JumpMovement(const _double& _deltaTime);
 #ifdef _USE_IMGUI
 public:
 	virtual void ShowObjectInfo() override;
@@ -125,6 +133,13 @@ private:
 	_bool														m_isNotApplyScale;
 
 	SHPTR<UTransform>							m_spParentsTransform;
+
+
+	//2024-05-24 이성현 중력 구현
+    _float3 m_vVelocity; 
+	const _float3 m_vGravity;
+
+	_float3 m_vJumpvelocity;
 };
 
 END
