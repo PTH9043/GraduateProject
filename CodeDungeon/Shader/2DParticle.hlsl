@@ -8,26 +8,33 @@ struct GROBALPARTICLEINFO
 {
     int iMaxCount;
     int iAddCount;
-    int fFrameNumber;
     float fDeltaTime;
-    // ==============
     float fAccTime;
+    // ==============
+  
     float fMinLifeTime;
     float fMaxLifeTime;
     float fMinSpeed;
-    // ===============
     float fMaxSpeed;
+    // ===============
+   
     float fStartScaleParticle;
     float fEndScaleParticle;
-    float		fParticleThickness;
-    //===========
-    float3     fParticleDirection;
-    float		fTextureWidth;
+    float fParticleThickness;
+    int fParticleKind;
+    //===============
+    float3 fParticleDirection;
+    float fAnimSizeX;
+    float fAnimSizeY;
+    float fNextAnimTime;
+    //=================
+   
     //================
-    float4		fParticlePosition;
+    float3 fParticlePosition;
     //================
-    float		fTextureHeight;
     float3 fPadding;
+    
+    
 };
 
 struct PARTICLE
@@ -39,7 +46,8 @@ struct PARTICLE
     float fLifeTime;
     // ==============
     int iAlive;
-    float3 padding;
+    float2 vAnimUV;
+    float padding;
 };
 
 // All Particle
@@ -97,7 +105,7 @@ struct GS_OUT
     float4 vWorldPos : TEXCOORD1;
     uint iInstanceID : SV_InstanceID;
     float2 vScreenTex : TEXCOORD2; // 화면 좌표 추가
-    float vDepth : TEXCOORD3; // 깊이 값 추가
+    
 
 };
 
@@ -149,7 +157,6 @@ void GS_Main(point VS_OUT input[1], inout TriangleStream<GS_OUT> outputStream)
     for (int i = 0; i < 4; ++i)
     {
         output[i].vScreenTex = output[i].vPosition.xy / output[i].vPosition.w;
-        output[i].vDepth=output[i].vPosition.z/ output[i].vPosition.w;
     }
     // 삼각형 두 개 실행
     outputStream.Append(output[0]);

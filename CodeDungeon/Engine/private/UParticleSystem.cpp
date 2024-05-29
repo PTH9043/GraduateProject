@@ -15,28 +15,27 @@
 
 UParticleSystem::UParticleSystem(CSHPTRREF<UDevice> _spDevice) :
 	UResource(_spDevice),
-	m_iMaxParitcleCnt{ 1000 },
+	m_iMaxParitcleCnt{ 500 },
 	m_stParticleParam{},
 	m_spComputeShaderParticleConstantBuffer{ nullptr },
 	m_spParticleStructedBuffer{ nullptr },
 	m_spComputeShaderStructedBuffer{ nullptr },
 	m_spComputeShader{ nullptr },
 	m_spComputeCommand{ nullptr },
-	m_sComputeIndex{ 0 }, m_iParticleAddAmount{10}, m_fCreateInterval{2.5f}, 
-	m_curParticleType{ PARTICLE_ORIGINAL}
+	m_sComputeIndex{ 0 }, m_iParticleAddAmount{10}, m_fCreateInterval{2.5f}
 {
 }
 
 UParticleSystem::UParticleSystem(const UParticleSystem& _rhs) :
 	UResource(_rhs),
-	m_iMaxParitcleCnt{ 1000 },
+	m_iMaxParitcleCnt{ 500 },
 	m_stParticleParam{},
 	m_spComputeShaderParticleConstantBuffer{ nullptr },
 	m_spParticleStructedBuffer{ nullptr },
 	m_spComputeShaderStructedBuffer{ nullptr },
 	m_spComputeShader{ nullptr },
 	m_spComputeCommand{ nullptr },
-	m_sComputeIndex{ 0 }, m_iParticleAddAmount{ 10 }, m_fCreateInterval{ 2.5f },  m_curParticleType{ PARTICLE_ORIGINAL }
+	m_sComputeIndex{ 0 }, m_iParticleAddAmount{ 10 }, m_fCreateInterval{ 2.5f }
 {
 }
 
@@ -73,6 +72,11 @@ HRESULT UParticleSystem::NativeConstructClone(const VOIDDATAS& _vecDatas)
 		m_spParticleStructedBuffer = CreateNative<UShaderStructedBuffer>(GetDevice(), sizeof(PARTICLE), m_iMaxParitcleCnt);
 
 		break;
+	case PARTICLE_FOOTPRINT:
+		m_spComputeShaderTypeConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::PARTICLETYPEBUFFER, PARTICLETYPEPARAM_SIZE);
+		m_spParticleStructedBuffer = CreateNative<UShaderStructedBuffer>(GetDevice(), sizeof(PARTICLE), m_iMaxParitcleCnt);
+		break;
+	
 	default:
 		break;
 	}
@@ -101,7 +105,7 @@ void UParticleSystem::Update(const _double& _dTimeDelta)
 		
 		}
 		else {
-			m_stParticleParam.stGlobalParticleInfo.fParticlePosition = _float4(0, 0, 0, 1);
+			m_stParticleParam.stGlobalParticleInfo.fParticlePosition = _float3(0, 0, 0);
 		}
 
 		m_stParticleParam.stGlobalParticleInfo.fDeltaTime = static_cast<_float>(_dTimeDelta);
@@ -113,7 +117,7 @@ void UParticleSystem::Update(const _double& _dTimeDelta)
 			m_stParticleParam.stGlobalParticleInfo.fAccTime = m_stParticleParam.stGlobalParticleInfo.fAccTime - m_fCreateInterval;
 
 
-			m_stParticleParam.stGlobalParticleInfo.fParticlePosition = _float4(float(vdist(gen)), float(vdist(gen)), float(vdist(gen)), float(cdist(gen)));
+			m_stParticleParam.stGlobalParticleInfo.fParticlePosition = _float3(float(vdist(gen)), float(vdist(gen)), float(vdist(gen)));
 			add = m_iParticleAddAmount;
 			//m_iParticleAddAmount는 createInterval시간동안 만들 개수량.
 		}
@@ -126,9 +130,8 @@ void UParticleSystem::Render(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDes
 	m_spComputeShader->SetTableDescriptor(m_spComputeTableDescriptor);
 	m_spComputeShader->BeginSettingDatas(m_spComputeCommand);
 
-	m_spComputeShader->BindCBVBuffer(m_spComputeShaderParticleConstantBuffer, &m_stParticleParam, PARTICLEPARAM_SIZE);
-	
-	switch (m_curParticleType) {
+
+	switch (m_stParticleParam.stGlobalParticleInfo.fParticleKind) {
 	case PARTICLE_ORIGINAL:
 		m_spComputeShader->BindUAVBuffer(UAV_REGISTER::PARTICLEWRITEDATA, m_spParticleStructedBuffer);
 		m_spComputeShader->BindCBVBuffer(m_spComputeShaderTypeConstantBuffer, &m_stParticleType, PARTICLETYPEPARAM_SIZE);
@@ -141,11 +144,16 @@ void UParticleSystem::Render(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDes
 		m_spComputeShader->BindCBVBuffer(m_spComputeShaderTypeConstantBuffer, &m_stParticleType, PARTICLETYPEPARAM_SIZE);
 
 		break;
+	case PARTICLE_FOOTPRINT:
+		m_spComputeShader->BindUAVBuffer(UAV_REGISTER::PARTICLEWRITEDATA, m_spParticleStructedBuffer);
+		m_spComputeShader->BindCBVBuffer(m_spComputeShaderTypeConstantBuffer, &m_stParticleType, PARTICLETYPEPARAM_SIZE);
+		break;
 	default :
 		break;
 
-	}
-		
+	}	
+	m_spComputeShader->BindCBVBuffer(m_spComputeShaderParticleConstantBuffer, &m_stParticleParam, PARTICLEPARAM_SIZE);
+
 	m_spComputeShader->BindUAVBuffer(UAV_REGISTER::SHRAEDDATA, m_spComputeShaderStructedBuffer);
 	m_spComputeShader->CommitLocalShaderDatas(m_spComputeCommand, 1, 1, 1);
 	//m_sComputeIndex = (m_sComputeIndex + 1) % m_arrComputeCommands.size();
@@ -154,7 +162,7 @@ void UParticleSystem::Render(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDes
 void UParticleSystem::BindShaderParams(CSHPTRREF<UShader> _spShader)
 {
 	RETURN_CHECK(nullptr == _spShader, ;);
-	switch (m_curParticleType) {
+	switch (m_stParticleParam.stGlobalParticleInfo.fParticleKind) {
 	case PARTICLE_ORIGINAL:
 		_spShader->BindSRVBuffer(SRV_REGISTER::T14, m_spParticleStructedBuffer);
 		_spShader->BindCBVBuffer(m_spGraphicsShaderParticleConstantBuffer, &m_stParticleParam, PARTICLEPARAM_SIZE);
@@ -166,6 +174,10 @@ void UParticleSystem::BindShaderParams(CSHPTRREF<UShader> _spShader)
 		_spShader->BindSRVBuffer(SRV_REGISTER::T14, m_spParticleStructedBuffer);
 		_spShader->BindCBVBuffer(m_spGraphicsShaderParticleConstantBuffer, &m_stParticleParam, PARTICLEPARAM_SIZE);
 
+		break;
+	case PARTICLE_FOOTPRINT:
+		_spShader->BindSRVBuffer(SRV_REGISTER::T14, m_spParticleStructedBuffer);
+		_spShader->BindCBVBuffer(m_spGraphicsShaderParticleConstantBuffer, &m_stParticleParam, PARTICLEPARAM_SIZE);
 		break;
 	default:
 		break;

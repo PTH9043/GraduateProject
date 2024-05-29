@@ -60,7 +60,7 @@
 #include "UFire.h"
 #include "UFog.h"
 #include "UCollider.h"
-#include "UAnimatedParticle.h"
+
 //#include "UMirror.h"
 //#include "UScreenRenderObj.h"
 //#include "UMirrorCamera.h"
@@ -1231,6 +1231,13 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 					RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::LESS_NO_WRITE, BLEND_TYPE::ALPHA_BLEND,
 					D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST));
 
+			CreateGraphicsShader(PROTO_RES_PARTICLEFOOTPRINT2DSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"2DParticleFootPrint", VTXPOINT_DELCARTION::Element, VTXPOINT_DELCARTION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN, GS_MAIN },
+
+					RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::LESS_NO_WRITE, BLEND_TYPE::ALPHA_BLEND,
+					D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST));
+
 			CreateGraphicsShader(PROTO_RES_PARTICLEBLOOD2DSHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"2DParticleBlood", VTXPOINT_DELCARTION::Element, VTXPOINT_DELCARTION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN, GS_MAIN },
@@ -1249,7 +1256,7 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 				SHADERDESC(L"2DAnimateParticle", VTXPOINT_DELCARTION::Element, VTXPOINT_DELCARTION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN, GS_MAIN },
 					
-					RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE, BLEND_TYPE::ALPHA_BLEND,
+					RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::LESS_NO_WRITE, BLEND_TYPE::ALPHA_BLEND,
 					D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST));
 
 			CreateGraphicsShader(PROTO_RES_2DFIRESHADER, CLONETYPE::CLONE_STATIC,
@@ -1338,6 +1345,9 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 		CreateComputeShader(PROTO_RES_COMPUTEROTATIONEFFECT2DSHADER, CLONETYPE::CLONE_STATIC,
 			SHADERDESC{ L"Compute2DRotationEffect" }); 
 
+		CreateComputeShader(PROTO_RES_COMPUTEFOOTPRINT2DSHADER, CLONETYPE::CLONE_STATIC,
+			SHADERDESC{ L"Compute2DFootPrint" });
+
 		CreateComputeShader(PROTO_RES_COMPUTEEMITPARTICLE2DSHADER, CLONETYPE::CLONE_STATIC,
 			SHADERDESC{ L"Compute2DEmitParticle" });
 
@@ -1407,9 +1417,6 @@ HRESULT UGameInstance::ReadyActor(const OUTPUTDATA& _stData)
 	AddPrototype(PROTO_ACTOR_PARTICLE, CreateConstructorToNative<UParticle>(
 		_stData.wpDevice.lock(), LAYER_PARTICLE, CLONETYPE::CLONE_ONCE));
 
-	AddPrototype(PROTO_ACTOR_ANIMATEPARTICLE, CreateConstructorToNative<UAnimatedParticle>(
-		_stData.wpDevice.lock(), LAYER_PARTICLE, CLONETYPE::CLONE_ONCE));
-
 	AddPrototype(PROTO_ACTOR_FIRE, CreateConstructorToNative<UFire>(
 		_stData.wpDevice.lock(), LAYER_DEFAULT, CLONETYPE::CLONE_ONCE));
 
@@ -1425,8 +1432,7 @@ HRESULT UGameInstance::ReadyActor(const OUTPUTDATA& _stData)
 		AddPrototype(PROTO_ACTOR_PARTICLE, CreateConstructorToNative<UParticle>(
 			_stData.wpDevice.lock(), LAYER_PARTICLE, CLONETYPE::CLONE_ONCE));
 
-		AddPrototype(PROTO_ACTOR_ANIMATEPARTICLE, CreateConstructorToNative<UAnimatedParticle>(
-			_stData.wpDevice.lock(), LAYER_PARTICLE, CLONETYPE::CLONE_ONCE));
+
 
 		AddPrototype(PROTO_ACTOR_MIRROR, CreateConstructorToNative<UMirror>(
 			_stData.wpDevice.lock(), LAYER_MIRROR, CLONETYPE::CLONE_ONCE));

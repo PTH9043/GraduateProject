@@ -39,6 +39,7 @@
 #define PROTO_RES_LIGHTPOINTSHADER L"Proto_Res_LightPointShader"
 #define PROTO_RES_LIGHTSPOTSHADER L"Proto_Res_LightSpotShader"
 #define PROTO_RES_PARTICLE2DSHADER L"Proto_Res_Particle2DShader"
+#define PROTO_RES_PARTICLEFOOTPRINT2DSHADER L"Proto_Res_ParticleFootPrint2DShader"
 #define PROTO_RES_PARTICLEBLOOD2DSHADER L"Proto_Res_ParticleBlood2DShader"
 #define PROTO_RES_PARTICLEFLARE2DSHADER L"Proto_Res_ParticleFlare2DShader"
 #define PROTO_RES_WATERSHADER L"Proto_Res_WaterShader"
@@ -58,6 +59,7 @@
 #define PROTO_RES_COMPUTEPARTICLE2DSHADER L"Proto_Res_ComputeParticle2DShader"
 #define PROTO_RES_COMPUTEBLOODEFFECT2DSHADER L"Proto_Res_ComputeBloodEffect2DShader"
 #define PROTO_RES_COMPUTEROTATIONEFFECT2DSHADER L"Proto_Res_ComputeRotationEffect2DShader"
+#define PROTO_RES_COMPUTEFOOTPRINT2DSHADER L"Proto_Res_ComputeFootPrint2DShader"
 #define PROTO_RES_COMPUTEEMITPARTICLE2DSHADER L"Proto_Res_ComputeEmitParticle2DShader"
 
 // Particle 
@@ -93,7 +95,6 @@
 #define PROTO_ACTOR_TERRAIN L"Proto_Actor_Terrain"
 #define PROTO_ACTOR_SKYBOX L"Proto_Actor_SkyBox"
 #define PROTO_ACTOR_PARTICLE L"Proto_Actor_Particle"
-#define PROTO_ACTOR_ANIMATEPARTICLE L"Proto_Actor_AnimateParticle"
 #define PROTO_ACTOR_FIRE L"Proto_Actor_Fire"
 #define PROTO_ACTOR_FOG L"Proto_Actor_Fog"
 #define PROTO_ACTOR_MIRROR L"Proto_Actor_Mirror"

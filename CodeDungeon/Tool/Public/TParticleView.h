@@ -4,7 +4,6 @@
 
 BEGIN(Engine)
 class UParticle;
-class UAnimatedParticle;
 class UFire;
 END
 
@@ -77,14 +76,10 @@ private:
 	void LoadAnimParticleResource();
 	void ReleaseAnimParticleResource();
 
-	void SetAnimParticle(SHPTR<UAnimatedParticle> _spParticle, int index) { m_AnimParticle[index] = _spParticle; }
-	_uint GetAnimParticleSize() { return m_iAnimParticleSize; }
 
 private:
 	using PARTICLES = VECTOR<SHPTR<UParticle>>;
-	using ANIMPARTICLES = VECTOR<SHPTR<UAnimatedParticle>>;
 	using PARTICLEPARAMS = VECTOR<PARTICLEPARAM*>;
-	using PARTICLEANIMPARAMS = VECTOR< ANIMATEDPARTICLEPARAM*>;
 	using PARTICLETYPES = VECTOR<ComputeParticleType*>;
 	
 private:
@@ -114,9 +109,8 @@ private:
 	_int m_iCurActiveMultipleParticle;
 
 	_int m_iAnimParticleSize;
-	ANIMPARTICLES m_AnimParticle;
+	PARTICLES m_AnimParticle;
 	PARTICLEPARAMS m_AnimParticleParam;
-	PARTICLEANIMPARAMS m_AnimParticleAnimParam;
 	PARTICLETYPES m_AnimParticleType;
 
 	

@@ -48,9 +48,8 @@ private:
 
 private:
 	using PARTICLES = VECTOR<SHPTR<UParticle>>;
-	using ANIMPARTICLES = VECTOR<SHPTR<UAnimatedParticle>>;
+
 	using PARTICLEPARAMS = VECTOR<PARTICLEPARAM*>;
-	using PARTICLEANIMPARAMS = VECTOR< ANIMATEDPARTICLEPARAM*>;
 	using PARTICLETYPES = VECTOR<ComputeParticleType*>;
 
 private:

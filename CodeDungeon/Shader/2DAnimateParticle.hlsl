@@ -8,27 +8,33 @@ struct GROBALPARTICLEINFO
 {
     int iMaxCount;
     int iAddCount;
-    int fFrameNumber;
     float fDeltaTime;
-    // ==============
     float fAccTime;
+    // ==============
+  
     float fMinLifeTime;
     float fMaxLifeTime;
     float fMinSpeed;
-    // ===============
     float fMaxSpeed;
+    // ===============
+   
     float fStartScaleParticle;
     float fEndScaleParticle;
-    float		fParticleThickness;
-    //===========
-    float3     fParticleDirection;
-    float		fTextureWidth;
-    //================
-    float4		fParticlePosition;
-    //================
-    float		fTextureHeight;
+    float fParticleThickness;
     int fParticleKind;
-    float2 fPadding;
+    //===============
+    float3 fParticleDirection;
+    float fAnimSizeX;
+    float fAnimSizeY;
+    float fNextAnimTime;
+    //=================
+   
+    //================
+    float3 fParticlePosition;
+    //================
+    float3 fPadding;
+    
+    
 };
 
 struct PARTICLE
@@ -40,13 +46,10 @@ struct PARTICLE
     float fLifeTime;
     // ==============
     int iAlive;
-    float3 padding;
+    float2 vAnimUV;
+    float padding;
 };
 
-cbuffer ANIMPARTICLEBUFFER : register(b12)
-{
-    matrix g_mAnimTextureMatrix;
-};
 
 
 // All Particle
@@ -140,16 +143,17 @@ void GS_Main(point VS_OUT input[1], inout TriangleStream<GS_OUT> outputStream)
     output[2].vPosition = mul(output[2].vPosition, stViewProjInfo.mProjMatrix);
     output[3].vPosition = mul(output[3].vPosition, stViewProjInfo.mProjMatrix);
 
-    output[0].vTexUV = float2(0.f, 0.f);
-    output[1].vTexUV = float2(1.f, 0.f);
-    output[2].vTexUV = float2(1.f, 1.f);
-    output[3].vTexUV = float2(0.f, 1.f);
     
-    output[0].vTexUV = mul(float3(output[0].vTexUV, 1.0f), (float3x3) (g_mAnimTextureMatrix)).xy;
-    output[1].vTexUV = mul(float3(output[1].vTexUV, 1.0f), (float3x3) (g_mAnimTextureMatrix)).xy;
-    output[2].vTexUV = mul(float3(output[2].vTexUV, 1.0f), (float3x3) (g_mAnimTextureMatrix)).xy;
-    output[3].vTexUV = mul(float3(output[3].vTexUV, 1.0f), (float3x3) (g_mAnimTextureMatrix)).xy;
+    float2 texSize = float2(g_GrobalParticleInfo.fAnimSizeX, g_GrobalParticleInfo.fAnimSizeY);
+  
+    float2 uvStep = float2(1.0f / texSize.x, 1.0f / texSize.y);
+    float2 uvOffset = float2(g_ParticleData[id].vAnimUV.x * uvStep.x, g_ParticleData[id].vAnimUV.y * uvStep.y);
 
+    output[0].vTexUV = float2(0.f, 0.f) * uvStep + uvOffset;
+    output[1].vTexUV = float2(1.f, 0.f) * uvStep + uvOffset;
+    output[2].vTexUV = float2(1.f, 1.f) * uvStep + uvOffset;
+    output[3].vTexUV = float2(0.f, 1.f) * uvStep + uvOffset;
+    
     output[0].iInstanceID = id;
     output[1].iInstanceID = id;
     output[2].iInstanceID = id;

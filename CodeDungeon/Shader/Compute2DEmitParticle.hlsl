@@ -7,27 +7,33 @@ struct GROBALPARTICLEINFO
 {
     int iMaxCount;
     int iAddCount;
-    int fFrameNumber;
     float fDeltaTime;
-    // ==============
     float fAccTime;
+    // ==============
+  
     float fMinLifeTime;
     float fMaxLifeTime;
     float fMinSpeed;
-    // ===============
     float fMaxSpeed;
+    // ===============
+   
     float fStartScaleParticle;
     float fEndScaleParticle;
-    float		fParticleThickness;
-    //===========
-    float3     fParticleDirection;
-    float		fTextureWidth;
-    //================
-    float4		fParticlePosition;
-    //================
-    float		fTextureHeight;
+    float fParticleThickness;
     int fParticleKind;
-    float2 fPadding;
+    //===============
+    float3 fParticleDirection;
+    float fAnimSizeX;
+    float fAnimSizeY;
+    float fNextAnimTime;
+    //=================
+   
+    //================
+    float3 fParticlePosition;
+    //================
+    float3 fPadding;
+    
+    
 };
 
 //struct ComputeParticleType {
