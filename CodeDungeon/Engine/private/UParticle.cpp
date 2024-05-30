@@ -42,9 +42,16 @@ HRESULT UParticle::NativeConstructClone(const VOIDDATAS& _convecDatas)
 		PARTICLEDESC stParticleDesc = UMethod::ConvertTemplate_Index<PARTICLEDESC>(_convecDatas, 0);
 
 		m_spParticleSystem = static_pointer_cast<UParticleSystem>(spGameInstance->CloneResource(PROTO_RES_PARTICLESYSTEM, { &stParticleDesc.ParticleParam }));
+		if (m_spTexGroup == nullptr) {
+			if (stParticleDesc.ParticleParam.stGlobalParticleInfo.fParticleKind == PARTICLE_FOOTPRINT) {
+				m_spTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_ANIMPARTICLETEXTUREGROUP));
+			}
+			else {
+				m_spTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_PARTICLETEXTUREGROUP));
+			}
+		}
 		
-		if(m_spTexGroup==nullptr)m_spTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_PARTICLETEXTUREGROUP));
-		m_spVIBufferPoint = static_pointer_cast<UVIBufferPoint>(spGameInstance->CloneResource(PROTO_RES_VIBUFFERPOINT));
+			m_spVIBufferPoint = static_pointer_cast<UVIBufferPoint>(spGameInstance->CloneResource(PROTO_RES_VIBUFFERPOINT));
 
 		m_spParticleSystem->SettingComputeShader(stParticleDesc.wstrParticleComputeShader);
 		AddShader(stParticleDesc.wstrParticleShader);
@@ -82,6 +89,9 @@ void UParticle::LateTickActive(const _double& _dTimeDelta)
 		AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
 		break;
 	case PARTICLE_BLOOD:
+		AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
+		break;
+	case PARTICLE_FOOTPRINT:
 		AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
 		break;
 	default:
@@ -122,6 +132,10 @@ SHPTR<URenderTargetGroup> spShadowDepthGroup{ spGameInstance->FindRenderTargetGr
 		GetShader()->BindSRVBuffer(SRV_REGISTER::T5, m_spTexGroup->GetTexture(BloodTextureIndices[5]));
 		GetShader()->BindSRVBuffer(SRV_REGISTER::T6, m_spTexGroup->GetTexture(BloodTextureIndices[6]));
 		GetShader()->BindSRVBuffer(SRV_REGISTER::T7, m_spTexGroup->GetTexture(BloodTextureIndices[7]));
+		break;
+	case PARTICLE_FOOTPRINT:
+		GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTexGroup->GetTexture(TextureIndex));
+		GetShader()->BindSRVBuffer(SRV_REGISTER::T1, spShadowDepthGroup->GetRenderTargetTexture(RTOBJID::NONALPHA_DEPTH_DEFFERED));
 		break;
 	default:
 		break;
@@ -172,6 +186,27 @@ void UParticle::SetBloodTexture(_uint Index, const _wstring& TexName)
 void UParticle::SetTexture(_uint _index)
 {
 	TextureIndex = _index;
+}
+
+void UParticle::SetParticleType(PARTICLE_KIND _type) {
+	if (m_spParticleSystem != nullptr)
+		m_spParticleSystem->GetParticleParam()->stGlobalParticleInfo.fParticleKind = _type;
+
+}
+
+void UParticle::SetNextAnimTimer(_float _fSetTime)
+{
+	if (m_spParticleSystem != nullptr)
+		m_spParticleSystem->GetParticleParam()->stGlobalParticleInfo.fNextAnimTime = _fSetTime;
+}
+
+void UParticle::SetTextureRowsAndCols(_float _fRows, _float _fCols)
+{
+	if (m_spParticleSystem != nullptr) {
+		m_spParticleSystem->GetParticleParam()->stGlobalParticleInfo.fAnimSizeX = _fRows;
+		m_spParticleSystem->GetParticleParam()->stGlobalParticleInfo.fAnimSizeY = _fCols;
+	}
+		
 }
 
 #ifdef _USE_IMGUI

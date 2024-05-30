@@ -48,10 +48,13 @@ protected:
 public:
 	CSHPTRREF<UTexGroup> GetTextureGroup() const { return m_spTexGroup; }
 	CSHPTRREF<UParticleSystem> GetParticleSystem() const { return m_spParticleSystem; }
-	void SetParticleType(PARTICLE_KIND _type) { m_spParticleSystem->SetParticleType(_type); }
+	void SetParticleType(PARTICLE_KIND _type); 
 	void SetTexture(const _wstring& TexName);
 	void SetBloodTexture(_uint Index, const _wstring& TexName);
 	void SetTexture(_uint _index);
+public:
+	void SetNextAnimTimer(_float _fSetTime);
+	void SetTextureRowsAndCols(_float _fRows, _float _fCols);
 #ifdef _USE_IMGUI
 public:
 

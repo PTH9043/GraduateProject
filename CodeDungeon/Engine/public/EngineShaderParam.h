@@ -207,41 +207,47 @@ namespace Engine {
 	struct GLOBALPARTICLEINFO
 	{
 		GLOBALPARTICLEINFO() : iMaxCount{ 0 }, iAddCount{ 0 },
-			iFrameNumber{ 0 }, fDeltaTime{ 0 }, fAccTime{ 0 },
+			 fDeltaTime{ 0 }, fAccTime{ 0 },
 			fMinLifeTime{ 0 }, fMaxLifeTime{ 0 }, fMinSpeed{ 0 },
-			fMaxSpeed{ 0 }, fStartScaleParticle{ 0 }, fEndScaleParticle{ 0 }, fParticleThickness{ 0 }, fParticleDirection{ _float3(0,0,0) }, fParticlePosition{ _float4(0,0,0,1) }, fTextureWidth{ 0 }, fTextureHeight{ 0 }, fParticleKind{0},
-			fPadding { _float2( 0, 0) }
+			fMaxSpeed{ 0 }, fStartScaleParticle{ 0 }, fEndScaleParticle{ 0 }, fParticleThickness{ 0 }, fParticleKind{ 0 },
+			fParticleDirection{ _float3(0,0,0) }, fAnimSizeX{ 0 }, fAnimSizeY{ 0 }, fNextAnimTime{ 0 }, fParticlePosition{ _float3(0,0,0) }	, fPadding{ _float3(0,0,0) }
 		{}
 
 		_uint		iMaxCount;
 		_uint		iAddCount;
-		_uint		iFrameNumber;
 		_float		fDeltaTime;
-		// ==============
 		_float		fAccTime;
+		// ==============
+		
 		_float		fMinLifeTime;
 		_float		fMaxLifeTime;
 		_float		fMinSpeed;
-		// ===============
 		_float		 fMaxSpeed;
+		// ===============
+		
 		_float		fStartScaleParticle;
 		_float		fEndScaleParticle;
 		_float		fParticleThickness;
-		//================
+		_uint		fParticleKind;
+
 		_float3     fParticleDirection;
-		_float		fTextureWidth;
+		_float     fAnimSizeX;
 		//================
-		_float4		fParticlePosition;
-		//================
-		_float		fTextureHeight;	
-		_uint		fParticleKind;	
-		_float2		fPadding;
+		
+		
+		_float      fAnimSizeY;
+		_float   fNextAnimTime;
+		
+		_float3	fParticlePosition;
+		_float3 fPadding;
+		
+		
 		
 	};
 
 	struct PARTICLE
 	{
-		PARTICLE() : vWorldPos{ 0, 0, 0 }, fCurTime{ 0 }, vWorldDir{ 0, 0, 0 }, fLifeTime{ 0 }, iAlive{ 0 }, padding{ 0, 0, 0 }
+		PARTICLE() : vWorldPos{ 0, 0, 0 }, fCurTime{ 0 }, vWorldDir{ 0, 0, 0 }, fLifeTime{ 0 }, iAlive{ 0 }, vAnimUV{ 0,0 }, vPadding { 0 }
 		{}
 		_float3		vWorldPos;
 		_float			fCurTime;
@@ -250,12 +256,24 @@ namespace Engine {
 		_float			fLifeTime;
 		// ==============
 		_uint			iAlive;
-		_float3		padding;
+		_float2  vAnimUV;
+		_float  vPadding;
+		
 	};
 
-	struct PARTICLEPLUS : public PARTICLE
+	struct PARTICLEPLUS 
 	{
-		PARTICLEPLUS():fStartTime{0},fAmp{0},fPeriod{0},PlusPadding{0}{}
+		PARTICLEPLUS():vWorldPos{ 0, 0, 0 }, fCurTime{ 0 }, vWorldDir{ 0, 0, 0 }, fLifeTime{ 0 }, iAlive{ 0 }, fScaleFactor{ 0,0,0 }
+		,fStartTime{0},fAmp{0},fPeriod{0},PlusPadding{0}{}
+		_float3		vWorldPos;
+		_float			fCurTime;
+		// ===============
+		_float3		vWorldDir;
+		_float			fLifeTime;
+		// ==============
+		_uint			iAlive;
+		_float3 fScaleFactor;
+		//===============
 		_float fStartTime;
 		_float fAmp;
 		_float fPeriod;
@@ -274,11 +292,6 @@ namespace Engine {
 		GLOBALPARTICLEINFO stGlobalParticleInfo{};
 	}PARTICLEPARAM;
 
-	struct ANIMATEDPARTICLEPARAM
-	{
-		_float4x4						mAnimateMatrix{};
-	};
-	;
 
 	struct COMPUTESHADERINFO
 	{

@@ -7,28 +7,35 @@ struct GROBALPARTICLEINFO
 {
     int iMaxCount;
     int iAddCount;
-    int fFrameNumber;
     float fDeltaTime;
-    // ==============
     float fAccTime;
+    // ==============
+  
     float fMinLifeTime;
     float fMaxLifeTime;
     float fMinSpeed;
-    // ===============
     float fMaxSpeed;
+    // ===============
+   
     float fStartScaleParticle;
     float fEndScaleParticle;
-    float		fParticleThickness;
-    //===========
-    float3     fParticleDirection;
-    float		fTextureWidth;
-    //================
-    float4		fParticlePosition;
-    //================
-    float		fTextureHeight;
+    float fParticleThickness;
     int fParticleKind;
-    float2 fPadding;
+    //===============
+    float3 fParticleDirection;
+    float fAnimSizeX;
+    float fAnimSizeY;
+    float fNextAnimTime;
+    //=================
+   
+    //================
+    float3 fParticlePosition;
+    //================
+    float3 fPadding;
+    
+    
 };
+
 
 struct ComputeParticleType {
     int fParticleType;
@@ -45,7 +52,8 @@ struct PARTICLE
     float fLifeTime;
     // ==============
     int iAlive;
-    float3 padding;
+    float2 vAnimUV;
+    float padding;
 };
 
 struct COMPUTESHARED
@@ -133,6 +141,7 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
             }
             else if (g_ParticleType.fParticleType == 1) {//1이면 버퍼로 받은 위치값으로.
                 g_ParticleWritedata[threadIndex.x].vWorldPos = g_GrobalParticleInfo.fParticlePosition;
+
                 g_ParticleWritedata[threadIndex.x].vWorldDir = normalize(dir);
             }
 

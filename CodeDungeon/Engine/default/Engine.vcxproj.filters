@@ -415,6 +415,9 @@
     <Filter Include="05.Actor\01.Pawn\Item\Equip\NewFilter1">
       <UniqueIdentifier>{361b8236-ad3c-4587-b0c4-96e161645e27}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98.ShaderFile\Common\Particle\FootPrint">
+      <UniqueIdentifier>{d5ff3202-cf55-409f-b962-639a4bf20bc7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -722,9 +725,6 @@
     </ClCompile>
     <ClCompile Include="..\private\UStageManager.cpp">
       <Filter>01.Manager\StageManager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\UAnimatedParticle.cpp">
-      <Filter>05.Actor\01.Pawn\Particle</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UGrid.cpp">
       <Filter>05.Actor\01.Pawn\Default\Grid</Filter>
@@ -1142,9 +1142,6 @@
     <ClInclude Include="..\public\UStageManager.h">
       <Filter>01.Manager\StageManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\UAnimatedParticle.h">
-      <Filter>05.Actor\01.Pawn\Particle</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\UGrid.h">
       <Filter>05.Actor\01.Pawn\Default\Grid</Filter>
     </ClInclude>
@@ -1343,6 +1340,12 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\ComputeAnimation.hlsl">
       <Filter>98.ShaderFile\Common\Particle\Animate</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\2DParticleFootPrint.hlsl">
+      <Filter>98.ShaderFile\Common\Particle\FootPrint</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\Compute2DFootPrint.hlsl">
+      <Filter>98.ShaderFile\Common\Particle\FootPrint</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

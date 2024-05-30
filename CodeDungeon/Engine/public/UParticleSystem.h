@@ -46,12 +46,11 @@ public:
 		return &m_fCreateInterval;
 	}
 	
-	void SetParticleType(PARTICLE_KIND _type) {
-		m_curParticleType = _type;
+
+	_uint GetParticleType() {
+		return m_stParticleParam.stGlobalParticleInfo.fParticleKind;
 	}
-	PARTICLE_KIND GetParticleType() {
-		return m_curParticleType;
-	}
+	
 #ifdef _USE_IMGUI
 public:
 	virtual void ShowObjectInfo() override;
@@ -84,7 +83,7 @@ private:
 	_uint										m_iParticleAddAmount;
 	_float										m_fCreateInterval;
 
-	PARTICLE_KIND		m_curParticleType;
+	
 };
 
 END

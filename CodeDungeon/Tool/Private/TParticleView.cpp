@@ -2,7 +2,7 @@
 #include "TParticleView.h"
 #include "UParticle.h"
 #include "UParticleSystem.h"
-#include "UAnimatedParticle.h"
+
 #include "UGameInstance.h"
 #include "UTexGroup.h"
 
@@ -79,18 +79,18 @@ void TParticleView::LoadSingleParticleResource()
 		{
 			UParticle::PARTICLEDESC tDesc;
 			tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEPARTICLE2DSHADER;
-			tDesc.wstrParticleShader = PROTO_RES_PARTICLE2DSHADER;
+			tDesc.wstrParticleShader = PROTO_RES_PARTICLEFOOTPRINT2DSHADER;
 
 
 			tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
 			//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 1.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 10.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 0.8f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.3f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 50.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 100.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 1000;
+			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 5.1f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 1.1f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 0.5f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.1f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 10.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 10.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 100;
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 25.f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.5f, 0.5f, 0.5f);
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_ORIGINAL;
@@ -100,7 +100,7 @@ void TParticleView::LoadSingleParticleResource()
 		m_SingleParticleType[i] = m_SingleParticle[i]->GetParticleSystem()->GetParticleTypeParam();
 		m_SingleParticleType[i]->fParticleType = PARTICLE_TYPE_AUTO;
 		m_SingleParticleType[i]->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT; 
-		
+		m_SingleParticle[i]->SetParticleType(PARTICLE_ORIGINAL);
 	}
 }
 
@@ -145,7 +145,7 @@ void TParticleView::LoadAnimParticleResource()
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 		{
 			UParticle::PARTICLEDESC tDesc;
-			tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEPARTICLE2DSHADER;
+			tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEFOOTPRINT2DSHADER;
 			tDesc.wstrParticleShader = PROTO_RES_2DANIMATEPARTICLESHADER;
 		
 
@@ -153,19 +153,21 @@ void TParticleView::LoadAnimParticleResource()
 			//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 10.f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 30.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 5.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 1.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 50.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 100.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 1000;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 2.0f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 1.1f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 5.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 5.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 10;
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 25.f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.0f, 0.0f, 0.1f);
-			tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_ORIGINAL;
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_FOOTPRINT;
+		
+			tDesc.ParticleParam.stGlobalParticleInfo.fAnimSizeX = 5;
+			tDesc.ParticleParam.stGlobalParticleInfo.fAnimSizeY = 5;
+			tDesc.ParticleParam.stGlobalParticleInfo.fNextAnimTime = 0.025;
 
-			UAnimatedParticle::ANIMPARTICLEDESC tAnimDesc;
-			tAnimDesc.vTextureSize = _float2{8.f, 8.f };
-			tAnimDesc.fNextAnimTime = 0.025f;
-			m_AnimParticle[i] = std::static_pointer_cast<UAnimatedParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_ANIMATEPARTICLE, { &tDesc,&tAnimDesc }));
+	
+			m_AnimParticle[i] = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
 		}
 		m_AnimParticleParam[i] = m_AnimParticle[i]->GetParticleSystem()->GetParticleParam();
 		m_AnimParticleType[i] = m_AnimParticle[i]->GetParticleSystem()->GetParticleTypeParam();
@@ -173,7 +175,7 @@ void TParticleView::LoadAnimParticleResource()
 
 		m_AnimParticleType[i]->fParticleType = PARTICLE_TYPE_DEFAULT;		
 		m_AnimParticleType[i]->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;		
-		
+		m_AnimParticle[i]->SetParticleType(PARTICLE_FOOTPRINT);
 	}
 
 }
@@ -659,27 +661,27 @@ void TParticleView::AnimParticleTexSetting()
 				if (ImGui::Selectable(UMethod::ConvertWToS(Texture.first)))
 				{
 					if (Texture.second == 1 || Texture.second == 2 || Texture.second == 5 || Texture.second == 6) {
-						m_AnimParticle[0]->SetNextAnimTimer(0.025f);
+						m_AnimParticle[0]->SetNextAnimTimer(0.03125f);
 						m_AnimParticle[0]->SetTextureRowsAndCols(8.f, 8.f);
 					}
 					else if (Texture.second == 3) {
-						m_AnimParticle[0]->SetNextAnimTimer(0.025f);
+						m_AnimParticle[0]->SetNextAnimTimer(0.055f);
 						m_AnimParticle[0]->SetTextureRowsAndCols(6.f, 6.f);
 					}
 					else if (Texture.second == 4) {
-						m_AnimParticle[0]->SetNextAnimTimer(0.025f);
+						m_AnimParticle[0]->SetNextAnimTimer(0.625f);
 						m_AnimParticle[0]->SetTextureRowsAndCols(8.f, 4.f);
 					}
 					else if (Texture.second == 0) {
-						m_AnimParticle[0]->SetNextAnimTimer(0.25f);
+						m_AnimParticle[0]->SetNextAnimTimer(0.22f);
 						m_AnimParticle[0]->SetTextureRowsAndCols(3.f, 3.f);
 					}
 					else if (Texture.second == 7 || Texture.second == 8) {
-						m_AnimParticle[0]->SetNextAnimTimer(0.25f);
+						m_AnimParticle[0]->SetNextAnimTimer(0.5f);
 						m_AnimParticle[0]->SetTextureRowsAndCols(2, 2);
 					}
 					else {
-						m_AnimParticle[0]->SetNextAnimTimer(0.055f);
+						m_AnimParticle[0]->SetNextAnimTimer(0.08f);
 						m_AnimParticle[0]->SetTextureRowsAndCols(5, 5);
 					}
 

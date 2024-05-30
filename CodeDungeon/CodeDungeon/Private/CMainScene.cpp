@@ -163,12 +163,12 @@ HRESULT CMainScene::LoadSceneData()
 			PROTO_ACTOR_MUMMY, { &CharDesc }));
 	}
 
-	{
+	/*{
 		CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_WARRIORANIMCONTROLLER};
 		CWarriorPlayer::PLAYERDESC PlayerDesc{m_spMainCamera };
 		m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
 		PROTO_ACTOR_WARRIORPLAYER, {&CharDesc, &PlayerDesc }));
-	}
+	}*/
 
 	return S_OK;
 }
