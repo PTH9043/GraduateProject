@@ -39,14 +39,16 @@ public:
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;
 	// Tick Event 
 	void TickEvent(UPawn* _pPawn, const _wstring& _wstrInputTrigger, const _double& _TimeDelta);
+	// Tick Event 
+	void TickEventToRatio(UPawn* _pPawn, const _wstring& _wstrInputTrigger, const _double& _dRatio, const _double& _TimeDelta);
 	// 애니메이션을 timedelta의 흐름에 따라서 제어하는 함수 (TimeDelta는 현재 게임에서 흐르는 시간)
 	void TickAnimation(const _double& _dTimeDelta);
 	// 애니메이션을 timeAcc에 따라서 제어하는 함수 (TimAcc는 애니메이션 제어도)
-	void UpdateCurAnimationToTimeAcc(const _double& _dTimeAcc);
+	void UpdateCurAnimationToRatio(const _double& _dRatio);
 	// 애니메이션을 Tick하면서 Event도 Tick하는 함수
 	void TickAnimChangeTransform(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta);
 	// 현재 애니메이션을 TimAcc 값에 따라서 제어하는 함수 Evnet도 TimeAcc에 따라 제어한다. 
-	void TickAnimToTimAccChangeTransform(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta, const _double& _TimeAc);
+	void TickAnimToTimeAccChangeTransform(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta, const _double& _TimeAc);
 	// 애니메이션을 렌더하는 함수
 	virtual HRESULT Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader, CSHPTRREF<UCommand> _spCommand) override;
 	// Set Animation

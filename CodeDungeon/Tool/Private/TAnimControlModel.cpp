@@ -384,7 +384,7 @@ void TAnimControlModel::TickActive(const _double& _dTimeDelta)
 			}
 			else
 			{
-				m_spModel->UpdateCurAnimationToTimeAcc(static_cast<_double>(m_fAnimTimeAcc));
+				m_spModel->UpdateCurAnimationToRatio(static_cast<_double>(m_fAnimTimeAcc));
 			}
 		}
 		else
@@ -396,7 +396,7 @@ void TAnimControlModel::TickActive(const _double& _dTimeDelta)
 			}
 			else
 			{
-				m_spModel->TickAnimToTimAccChangeTransform(GetTransform(), _dTimeDelta, static_cast<_double>(m_fAnimTimeAcc));
+				m_spModel->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, static_cast<_double>(m_fAnimTimeAcc));
 				m_spModel->TickEvent(this, m_wstrInputTrigger, _dTimeDelta);
 			}
 			m_wstrInputTrigger = L"";

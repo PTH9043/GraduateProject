@@ -134,6 +134,11 @@ void UAnimModel::TickEvent(UPawn* _pPawn, const _wstring& _wstrInputTrigger, con
 	m_spCurAnimation->TickAnimEvent(_pPawn, this, _TimeDelta, _wstrInputTrigger);
 }
 
+void UAnimModel::TickEventToRatio(UPawn* _pPawn, const _wstring& _wstrInputTrigger, const _double& _dRatio, const _double& _TimeDelta)
+{
+	m_spCurAnimation->TickAnimEvent(_pPawn, this, _TimeDelta, _dRatio, _wstrInputTrigger);
+}
+
 void UAnimModel::TickAnimation(const _double& _dTimeDelta)
 {
 	if (nullptr != m_spNextAnimation)
@@ -159,9 +164,9 @@ void UAnimModel::TickAnimation(const _double& _dTimeDelta)
 	}
 }
 
-void UAnimModel::UpdateCurAnimationToTimeAcc(const _double& _dTimeAcc)
+void UAnimModel::UpdateCurAnimationToRatio(const _double& _dRatio)
 {
-	m_spCurAnimation->UpdateboneMatricesToRatio(_dTimeAcc);
+	m_spCurAnimation->UpdateboneMatricesToRatio(_dRatio);
 	/* 부모로부터 자식뼈에게 누적시켜 전달한다.(CombinedTransformationMatrix) */
 	{
 		for (auto& BoneNode : GetBoneNodes())
@@ -189,10 +194,10 @@ void UAnimModel::TickAnimChangeTransform(CSHPTRREF<UTransform> _spTransform, con
 	}
 }
 
-void UAnimModel::TickAnimToTimAccChangeTransform(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta, const _double& _TimeAcc)
+void UAnimModel::TickAnimToTimeAccChangeTransform(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta, const _double& _TimeAcc)
 {
 	assert(_spTransform && m_spCurAnimation);
-	UpdateCurAnimationToTimeAcc(_TimeAcc);
+	UpdateCurAnimationToRatio(_TimeAcc);
 
 	if (true == m_spCurAnimation->IsApplyRootBoneMove())
 	{
