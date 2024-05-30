@@ -45,11 +45,12 @@ public:
 	// 애니메이션과 연결된 뼈 정보들을 업데이트
 	void UpdateBoneMatrices(const _double& _dTimeDelta);
 	// TimeAcc로 애니메이션과 연결된 뼈 정보들을 업데이트
-	void UpdateboneMatricesToTimeAcc( const _double& _TimeAcc);
+	void UpdateboneMatricesToRatio( const _double& _Ratio);
 	// 다음 애니메이션으로 변경
 	void UpdateNextAnimTransformMatrices(const _double& _dTimeDelta, const _float _fSupplyValue, CSHPTRREF<UAnimation> _spAnimation);
 	// Animation Event Tick 
 	void TickAnimEvent(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _TimeDelta, const _wstring& _wstrInputTrigger);
+	void TickAnimEvent(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _TimeDelta,  const _double& _Ratio, const _wstring& _wstrInputTrigger);
 	void ResetData();
 	// 애니메이션 이벤트를 집어넣는 함수
 	void InsertAnimEvent(ANIMEVENTTYPE _AnimEventType, CSHPTRREF<UAnimEvent> _spAnimEvent);
@@ -69,6 +70,8 @@ public:
 	void SaveAnimEventPathIsFolder(const _wstring& _wstrPath);
 	void LoadAnimEventData(CSHPTRREF<UAnimModel> _spAnimModel, const _wstring& _wstrPath);
 	void LoadAnimEventDataPathIsFolder(CSHPTRREF<UAnimModel> _spAnimModel, const _wstring& _wstrPath);
+
+	void CopyAnimEvent(ANIMEVENTTYPE _eType , CSHPTRREF<UAnimation> _spAnimation);
 private:
 	SHPTR<UAnimEvent> CreateAnimEvent(CSHPTRREF<UAnimModel> _spAnimModel, ANIMEVENTTYPE _AnimEventType, std::ifstream& _read);
 private:

@@ -138,9 +138,9 @@ void UAnimation::UpdateBoneMatrices(const _double& _dTimeDelta)
 	}
 }
 
-void UAnimation::UpdateboneMatricesToTimeAcc(const _double& _TimeAcc)
+void UAnimation::UpdateboneMatricesToRatio(const _double& _Ratio)
 {
-	m_dTimeAcc = _TimeAcc;
+	m_dTimeAcc = _Ratio;
 	for (auto& iter : m_Channels)
 	{
 		iter->UpdateTransformMatrix(m_dTimeAcc, this);
@@ -169,12 +169,17 @@ void UAnimation::UpdateNextAnimTransformMatrices(const _double& _dTimeDelta, con
 
 void UAnimation::TickAnimEvent(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _TimeDelta, const _wstring& _wstrInputTrigger)
 {
+	TickAnimEvent(_pPawn, _pAnimModel, _TimeDelta, m_dTimeAcc, _wstrInputTrigger);
+}
+
+void UAnimation::TickAnimEvent(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _TimeDelta, const _double& _Ratio, const _wstring& _wstrInputTrigger)
+{
 	// 만약 ActiveAnimChagneEvent가 활성화되지 않았다면, 활성화할때까지 찾아라
 	if (nullptr == m_spActiveAnimChangeEvent)
 	{
 		for (auto& Event : m_AnimEventContainer[ANIMEVENTTYPE::ANIMEVENT_ANIMCHANGESBETWEEN])
 		{
-			if (true == Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, m_dTimeAcc, _wstrInputTrigger))
+			if (true == Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, _Ratio, _wstrInputTrigger))
 			{
 				m_spActiveAnimChangeEvent = Event;
 				break;
@@ -184,37 +189,37 @@ void UAnimation::TickAnimEvent(UPawn* _pPawn, UAnimModel* _pAnimModel, const _do
 	else
 	{
 		// 이벤트 활성화
-		m_spActiveAnimChangeEvent->EventCheck(_pPawn, _pAnimModel, _TimeDelta, m_dTimeAcc, _wstrInputTrigger);
+		m_spActiveAnimChangeEvent->EventCheck(_pPawn, _pAnimModel, _TimeDelta, _Ratio, _wstrInputTrigger);
 	}
 	// Collider Event 
 	for (auto& Event : m_AnimEventContainer[ANIMEVENTTYPE::ANIMEVENT_COLLIDER])
 	{
-		Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, m_dTimeAcc, _wstrInputTrigger);
+		Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, _Ratio, _wstrInputTrigger);
 	}
 	// Sound
 	for (auto& Event : m_AnimEventContainer[ANIMEVENTTYPE::ANIMEVENT_SOUND])
 	{
-		Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, m_dTimeAcc, _wstrInputTrigger);
+		Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, _Ratio, _wstrInputTrigger);
 	}
 	// Effect
 	for (auto& Event : m_AnimEventContainer[ANIMEVENTTYPE::ANIMEVENT_EFFECT])
 	{
-		Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, m_dTimeAcc, _wstrInputTrigger);
+		Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, _Ratio, _wstrInputTrigger);
 	}
 	// Camera
 	for (auto& Event : m_AnimEventContainer[ANIMEVENTTYPE::ANIMEVENT_CAMERA])
 	{
-		Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, m_dTimeAcc, _wstrInputTrigger);
+		Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, _Ratio, _wstrInputTrigger);
 	}
 	// OBJ Active
 	for (auto& Event : m_AnimEventContainer[ANIMEVENTTYPE::ANIMEVENT_OBJACTIVE])
 	{
-		Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, m_dTimeAcc, _wstrInputTrigger);
+		Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, _Ratio, _wstrInputTrigger);
 	}
 	// Collider
 	for (auto& Event : m_AnimEventContainer[ANIMEVENTTYPE::ANIMEVENT_COLLIDER])
 	{
-		Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, m_dTimeAcc, _wstrInputTrigger);
+		Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, _Ratio, _wstrInputTrigger);
 	}
 }
 
@@ -423,6 +428,17 @@ void UAnimation::LoadAnimEventDataPathIsFolder(CSHPTRREF<UAnimModel> _spAnimMode
 	LoadAnimEventData(_spAnimModel, str);
 }
 
+void UAnimation::CopyAnimEvent(ANIMEVENTTYPE _eType, CSHPTRREF<UAnimation> _spAnimation)
+{
+	assert(nullptr != _spAnimation);
+	m_spActiveAnimChangeEvent = nullptr;
+	m_AnimEventContainer[_eType].clear();
+
+	for (auto& iter : _spAnimation->m_AnimEventContainer[_eType])
+	{
+		m_AnimEventContainer[_eType].push_back(iter->Clone());
+	}
+}
 
 SHPTR<UAnimEvent> UAnimation::CreateAnimEvent(CSHPTRREF<UAnimModel> _spAnimModel, ANIMEVENTTYPE _AnimEventType, std::ifstream& _read)
 {

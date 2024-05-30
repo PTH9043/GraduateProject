@@ -88,6 +88,7 @@ void UAnimSectionEvent::SaveEvent( std::ofstream& _save)
 	UMethod::SaveString(_save, m_AnimSectionDesc.wstrEventTrigger);
 	_save.write((_char*)&m_AnimSectionDesc.dStartTime, sizeof(_double));
 	_save.write((_char*)&m_AnimSectionDesc.dEndTime, sizeof(_double));
+	_save.write((_char*)&m_AnimSectionDesc.dStopTime, sizeof(_double));
 }
 
 void UAnimSectionEvent::LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load)
@@ -96,6 +97,7 @@ void UAnimSectionEvent::LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstr
 	UMethod::ReadString(_load, m_AnimSectionDesc.wstrEventTrigger);
 	_load.read((_char*)&m_AnimSectionDesc.dStartTime, sizeof(_double));
 	_load.read((_char*)&m_AnimSectionDesc.dEndTime, sizeof(_double));
+	_load.read((_char*)&m_AnimSectionDesc.dStopTime, sizeof(_double));
 }
 
 void UAnimSectionEvent::ResetEventData(UAnimModel* _pAnimModel)

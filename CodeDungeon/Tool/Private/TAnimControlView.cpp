@@ -415,8 +415,10 @@ void TAnimControlView::MakeAnimEvent()
 		ImGui::SameLine();
 		if (ImGui::Button("AnimEventSave"))
 		{
-			if (nullptr != spCurAnimation)
-				spCurAnimation->SaveAnimEventPathIsFolder(m_spSelectAnimFileFolder->wstrPath);
+			for (auto& iter : m_spShowAnimModel->GetAnimations())
+			{
+				iter->SaveAnimEventPathIsFolder(m_spSelectAnimFileFolder->wstrPath);
+			}
 		}
 
 		if (nullptr != m_spSelectAnim)
@@ -464,6 +466,7 @@ void TAnimControlView::AnimSectionShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTable
 	if (ImGui::TreeNodeEx("AnimChangesBetweenShow", ImGuiTreeNodeFlags_Bullet))
 	{
 		static _int SelectRemoveItem{ -1 };
+		static _int iSelectAnim;
 
 		if (true == ImGui::Button("Remove##1"))
 		{
@@ -473,10 +476,18 @@ void TAnimControlView::AnimSectionShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTable
 				SelectRemoveItem = -1;
 			}
 		}
+		ImGui::SameLine();
+		ImGui::Combo("NeedCopy", &iSelectAnim, &s_AnimTags[0], m_AnimMaxTagCount);
+		ImGui::SameLine();
+		if (true == ImGui::Button("Copy"))
+		{
+			m_spSelectAnim->CopyAnimEvent(ANIMEVENT_ANIMCHANGESBETWEEN, m_spShowAnimModel->GetAnimations()[iSelectAnim]);
+		}
 
 		ImGui::SetNextItemWidth(-FLT_MIN);
-		if (ImGui::BeginTable("AnimChangesBetween", 9, _flags, ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 20), 0.0f))
+		if (ImGui::BeginTable("AnimChangesBetween", 10, _flags, ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 20), 0.0f))
 		{
+			ImGui::TableSetupColumn("Sel", ImGuiTableColumnFlags_WidthStretch);
 			ImGui::TableSetupColumn("InputTrigger", ImGuiTableColumnFlags_WidthStretch);
 			ImGui::TableSetupColumn("StartT", ImGuiTableColumnFlags_WidthStretch);
 			ImGui::TableSetupColumn("EndT", ImGuiTableColumnFlags_WidthStretch);
@@ -490,6 +501,7 @@ void TAnimControlView::AnimSectionShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTable
 			ImGui::TableHeadersRow();
 
 			static _float fNextTimeAcc{ 0.f };
+			static _string Btn = "Sel##BTN";
 			static _string InputTrigger = "##InputTrigger";
 			static _string StartT = "##StartT";
 			static _string EndT = "##EndT";
@@ -506,6 +518,15 @@ void TAnimControlView::AnimSectionShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTable
 				 _string Index = _string::to_string(iIndex);
 				 ANIMEVENTSECTIONDESC* SectionDesc = remove_const<ANIMEVENTSECTIONDESC*, ANIMEVENTDESC*>(iter->OutAnimEventDesc());
 				 ANIMCHANGEDESC* ChangeDesc = remove_const<ANIMCHANGEDESC*, ANIMOTHEREVENTDESC*>(iter->OutOtherEventDesc());
+
+				 {
+					 ImGui::TableNextColumn();
+					 ImGui::SetNextItemWidth(-FLT_MIN);
+					 if (true == ImGui::Button(Btn + Index))
+					 {
+						 SelectRemoveItem = iIndex;
+					 }
+				 }
 
 				 _int iSelectAnim = ChangeDesc->iNextAnimIndex;
 				 {
@@ -577,8 +598,6 @@ void TAnimControlView::AnimSectionShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTable
 						ImGui::InputFloat(EnableLastValue + Index, &ChangeDesc->fLastProgressValue, 0.01f);
 					}
 				}
-				if (ImGui::IsItemClicked())
-					SelectRemoveItem = iIndex;
 				++iIndex;
 				ImGui::TableNextRow();
 			}

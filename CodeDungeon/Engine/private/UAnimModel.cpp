@@ -161,7 +161,7 @@ void UAnimModel::TickAnimation(const _double& _dTimeDelta)
 
 void UAnimModel::UpdateCurAnimationToTimeAcc(const _double& _dTimeAcc)
 {
-	m_spCurAnimation->UpdateboneMatricesToTimeAcc(_dTimeAcc);
+	m_spCurAnimation->UpdateboneMatricesToRatio(_dTimeAcc);
 	/* 부모로부터 자식뼈에게 누적시켜 전달한다.(CombinedTransformationMatrix) */
 	{
 		for (auto& BoneNode : GetBoneNodes())

@@ -37,6 +37,8 @@ const ANIMOTHEREVENTDESC*  UAnimChangeBetweenEvent::OutOtherEventDesc()
 
 void UAnimChangeBetweenEvent::EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc)
 {
+	RETURN_CHECK(_pAnimModel->GetCurrentAnimIndex() == m_AnimChangeDesc.iNextAnimIndex, ;);
+
 	// 만약 EnableLastLerp가 켜져 있지 않다면
 	if (false == m_AnimChangeDesc.isEnableLastSettingAnim)
 	{

@@ -576,8 +576,9 @@ namespace Engine {
 	struct ANIMEVENTSECTIONDESC : public ANIMEVENTDESC {
 		_double dStartTime;
 		_double dEndTime;
+		_double dStopTime;
 
-		ANIMEVENTSECTIONDESC() : dStartTime{0.0}, dEndTime{0.0} {}
+		ANIMEVENTSECTIONDESC() : dStartTime{ 0.0 }, dEndTime{ 0.0 }, dStopTime{ 0.0 }  {}
 
 		_bool IsAnimEventActive(const _double& _dTimeAcc) const;
 	};

@@ -55,6 +55,9 @@ void UMeshFilter::Tick(const _double& _dTimeDelta)
 
 _bool UMeshFilter::IsShowEnable(const _int _iMeshIndex)
 {
+	if (false == m_MeshFilterInfoContainer.size())
+		return true;
+
 	return m_MeshFilterInfoContainer[_iMeshIndex].isMeshFilterEnable;
 }
 

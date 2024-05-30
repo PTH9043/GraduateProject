@@ -322,8 +322,11 @@ void TAnimControlModel::ModifyAnimation()
 					ImGui::SameLine();
 					if (ImGui::Button("Save FastSection"))
 					{
-						m_spCurAnimation->UpdateAnimFastSections(m_fTotalAnimFastvalue, m_AnimFastSections);
-						m_spCurAnimation->SaveAnimSectionPathIsFolder(m_spModelFolder->wstrPath);
+						for (auto& iter : m_spModel->GetAnimations())
+						{
+							iter->UpdateAnimFastSections(m_fTotalAnimFastvalue, m_AnimFastSections);
+							iter->SaveAnimSectionPathIsFolder(m_spModelFolder->wstrPath);
+						}
 					}
 					// Options
 					static ImGuiTableFlags flags = ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Sortable | ImGuiTableFlags_SortMulti
