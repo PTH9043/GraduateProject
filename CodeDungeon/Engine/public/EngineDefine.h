@@ -45,7 +45,7 @@ static const char* CLONETYPE_ONCE_STRING{ "CLONETYPE_ONCE" };
 // Use Debugging Values
 #define _USE_DEBUGGING
 #define _USE_IMGUI
-#define _EDIT_NAVI
+//#define _EDIT_NAVI
 
 #pragma comment(lib, "WS2_32.lib")
 #pragma comment(lib, "MSWSock.lib")
