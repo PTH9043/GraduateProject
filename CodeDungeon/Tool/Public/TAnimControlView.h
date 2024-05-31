@@ -50,6 +50,8 @@ private:
 	void AnimSectionShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFlags _flags,  const VECTOR<SHPTR<UAnimEvent>>& _AnimEvent);
 	void AnimColliderShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFlags _flags, const VECTOR<SHPTR<UAnimEvent>>& _AnimEvent);
 	void AnimSoundShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFlags _flags, const VECTOR<SHPTR<UAnimEvent>>& _AnimEvent);
+	
+	void FindEquipModel(CSHPTRREF<FILEGROUP> _spFileGroup);
 private:
 	MAINDESC												m_stMainDesc;
 	DOCKDESC											m_stAnimModelSelectDesc;
@@ -75,7 +77,7 @@ private:
 
 	ITEMMODELCONTAINER						m_EquipModelContainer;
 	SHPTR<UModel>									m_spSelectEquipModelData;
-	_string													m_strSelectedEquipModelData;
+	_string													m_strSelectedEquipModelName;
 	EQUIPTYPE											m_eEquipType;
 	_int															m_iWeaponOrShieldValue;
 	_wstring													m_wstrBoneNodeName;

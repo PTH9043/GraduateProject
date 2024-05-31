@@ -176,10 +176,19 @@ void TAnimControlModel::SelectEquip()
 
 	if (nullptr != m_spSelectedEquipModel)
 	{
-		_float4x4 mTargetPivotMatrix = m_spSelectedEquipModel->GetTargetModelPivot();
+		_float4x4 mTargetPivotMatrix = m_spSelectedEquipModel->GetPivotMatrix();
+		_float3 vPosition = mTargetPivotMatrix.Get_Pos();
 		_float3 vScale = mTargetPivotMatrix.Get_Scaling();
-		ImGui::InputFloat3("EquipPivot", &vScale.x);
-		m_spSelectedEquipModel->SetTargetModelPivot(mTargetPivotMatrix);
+		
+		if (true == ImGui::DragFloat3("EquipPos", &vPosition.x, 0.01f))
+		{
+			mTargetPivotMatrix.Set_Pos(vPosition);
+		}
+		if (true == ImGui::DragFloat3("EquipScale", &vScale.x, 0.01f))
+		{
+			mTargetPivotMatrix = mTargetPivotMatrix.MatrixSetScaling(vScale);
+		}
+		m_spSelectedEquipModel->SetPivotMatrix(mTargetPivotMatrix);
 	}
 }
 

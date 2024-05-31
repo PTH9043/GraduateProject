@@ -96,6 +96,8 @@ namespace Engine
 		static void ChangeDepthStencilInfo(const DEPTH_STENCIL_TYPE& _eType, D3D12_DEPTH_STENCIL_DESC& _tDesc);
 
 		static ComPtr<Dx12CommandQueue> CreateCommandQueue(const ComPtr<Dx12Device>& _cpDevice, const D3D12_COMMAND_LIST_TYPE& _eType);
+		static _wstring MakeFolderAndReturnPath(const _wstring& _wstrPath, const _wstring& _wstrFolderName);
+		static _wstring MakePath(const _wstring& _wstrPath, const _wstring& _wstrFolderName);
 	};
 
 	template<typename T>

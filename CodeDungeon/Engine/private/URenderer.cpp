@@ -589,8 +589,8 @@ void URenderer::RenderHorizontalBlur()
     D3D12_RECT _rect;
     _rect.left = 0;
     _rect.top = 0;
-    _rect.right = spGameInstance->GetD3DViewport().Width/2 ;
-    _rect.bottom = spGameInstance->GetD3DViewport().Height/2;
+    _rect.right = static_cast<LONG>(spGameInstance->GetD3DViewport().Width /2);
+    _rect.bottom = static_cast<LONG>(spGameInstance->GetD3DViewport().Height / 2);
   
     spGameInstance->SetTemporaryViewPort(_viewPort, _rect);
 

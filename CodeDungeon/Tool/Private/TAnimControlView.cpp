@@ -15,6 +15,7 @@
 #include "UModel.h"
 #include "UMeshFilter.h"
 #include "UMeshContainer.h"
+#include "TEquipModel.h"
 
 const _char* TAnimControlView::s_AnimTags[1000]{};
 
@@ -30,7 +31,7 @@ TAnimControlView::TAnimControlView(CSHPTRREF<UDevice> _spDevice) :
 	m_eEquipType{EQUIPTYPE::EQUIP_END},
 	m_iWeaponOrShieldValue{0},
 	m_spSelectEquipModelData{nullptr},
-	m_strSelectedEquipModelData{""}
+	m_strSelectedEquipModelName{""}
 {
 	
 }
@@ -93,18 +94,7 @@ HRESULT TAnimControlView::LoadResource()
 	SHPTR<FILEGROUP> ItemModels = GetGameInstance()->FindFolder(L"Equip");
 	// Model
 	{
-		for (auto& iter : ItemModels->UnderFileGroupList)
-		{
-			// FBX에서 Convert 라는 하위 폴더를 찾는다. 
-			if (iter.second->wstrFolderName != L"Convert")
-				continue;
-
-			for (auto& FileData : iter.second->FileDataList)
-			{
-				SHPTR<UModel> spModel = CreateConstructorNative<UModel>(GetDevice(), FileData.second->wstrfilePath);
-				m_EquipModelContainer.insert(MakePair(UMethod::ConvertWToS(FileData.first), spModel));
-			}
-		}
+		FindEquipModel(ItemModels);
 	}
 
     return S_OK;
@@ -257,7 +247,7 @@ void TAnimControlView::EquipView()
 						if (ImGui::Selectable(iter.first.c_str()))
 						{
 							m_spSelectEquipModelData = iter.second;
-							m_strSelectedEquipModelData = iter.first;
+							m_strSelectedEquipModelName = iter.first;
 						}
 					}
 					ImGui::EndListBox();
@@ -265,7 +255,7 @@ void TAnimControlView::EquipView()
 
 				if (nullptr != m_spSelectEquipModelData)
 				{
-					ImGui::Text(m_strSelectedEquipModelData);
+					ImGui::Text(m_strSelectedEquipModelName);
 				}
 				else
 				{
@@ -291,12 +281,13 @@ void TAnimControlView::EquipView()
 
 				if (true == ImGui::Button("SaveEquip"))
 				{
-
+					m_spAnimControlModel->GetSelectedEquipModel()->SaveEquipDesc(m_spSelectEquipModelData->GetFileGroup()->wstrPath);
 				}
 				ImGui::SameLine();
 				if (true == ImGui::Button("LoadEquip"))
 				{
-
+					TEquipModel::EQDESC Desc(m_spSelectEquipModelData, m_spSelectEquipModelData->GetFileGroup()->wstrPath);
+					m_spAnimControlModel->GetSelectedEquipModel()->ChangeEquipDescInfo(Desc);
 				}
 			}
 			else
@@ -869,6 +860,27 @@ void TAnimControlView::AnimSoundShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFl
 			}
 		}
 		ImGui::TreePop();
+	}
+}
+
+void TAnimControlView::FindEquipModel(CSHPTRREF<FILEGROUP> _spFileGroup)
+{
+	RETURN_CHECK(nullptr == _spFileGroup, ;);
+
+	for (auto& iter : _spFileGroup->UnderFileGroupList)
+	{
+		// FBX에서 Convert 라는 하위 폴더를 찾는다. 
+		if (iter.second->wstrFolderName != L"Convert")
+		{
+			FindEquipModel(iter.second);
+			continue;
+		}
+
+		for (auto& FileData : iter.second->FileDataList)
+		{
+			SHPTR<UModel> spModel = CreateConstructorNative<UModel>(GetDevice(), iter.second, FileData.second);
+			m_EquipModelContainer.insert(MakePair(UMethod::ConvertWToS(FileData.first), spModel));
+		}
 	}
 }
 

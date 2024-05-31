@@ -466,3 +466,22 @@ ComPtr<Dx12CommandQueue> Engine::UMethod::CreateCommandQueue(const ComPtr<Dx12De
 
 	return cpCommandQueue;
 }
+
+_wstring Engine::UMethod::MakeFolderAndReturnPath(const _wstring& _wstrPath, const _wstring& _wstrFolderName)
+{
+	_wstring str = MakePath(_wstrPath, _wstrFolderName);
+	if (0 != _wmkdir(str))
+	{
+		str.append(L"\\");
+		return str;
+	}
+	return L"FAILED";
+}
+
+_wstring Engine::UMethod::MakePath(const _wstring& _wstrPath, const _wstring& _wstrFolderName)
+{
+	_wstring str = _wstrPath;
+	str.append(L"\\");
+	str += _wstrFolderName;
+	return str;
+}

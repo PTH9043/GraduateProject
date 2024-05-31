@@ -324,7 +324,7 @@ void UAnimModel::LoadToData(const _wstring& _wstrPath)
 		LoadAnimationData(read, tDesc.Animes);
 
 		_wstring wstrPath = _wstrPath.c_str();
-		_uint iFindIndex{ static_cast<_uint>(wstrPath.find_last_of(L"\\"))};
+		_uint iFindIndex{ static_cast<_uint>(wstrPath.find_last_of(L"\\")) };
 		wstrPath = wstrPath.substr(0, iFindIndex);
 
 		_wstring RootBoneNodeName{L""};

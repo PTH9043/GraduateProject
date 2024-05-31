@@ -25,16 +25,29 @@ public:
 		EQUIPMENTINFO			EquipmentInfo;
 		_wstring							wstrBoneNodeName;
 		_int									iWeaponOrShieldValue;
+		_float4x4						mPivotMatrix;
 
 		EQDESC() :spOwner{nullptr}, spEquipModel{nullptr},
 			EquipmentInfo{}, wstrBoneNodeName{ L"" }, iWeaponOrShieldValue{ 0 } { }
-		EQDESC(CSHPTRREF<UCharacter> _spOwner, CSHPTRREF<UModel> _spModel,
+
+		EQDESC(CSHPTRREF<UModel> _spEquipModel, const _wstring& _wstrEquipDescPath);
+
+		EQDESC(CSHPTRREF<UCharacter> _spOwner, CSHPTRREF<UModel> _spEquipModel,
 			const EQUIPMENTINFO& _EquipmentInfo, const _wstring& _wstrBoneNodeName, 
-			const _int _iWeaponOrShieldValue) :
-			spOwner{ _spOwner }, spEquipModel{_spModel},
+			const _int _iWeaponOrShieldValue, const _float4x4& _PivotMatrix = _float4x4::Identity) :
+			spOwner{ _spOwner }, spEquipModel{ _spEquipModel },
 			EquipmentInfo{ _EquipmentInfo }, wstrBoneNodeName{ _wstrBoneNodeName }, 
-			iWeaponOrShieldValue{ _iWeaponOrShieldValue }
+			iWeaponOrShieldValue{ _iWeaponOrShieldValue }, mPivotMatrix{_PivotMatrix}
 		{}
+		EQDESC(const EQUIPMENTINFO& _EquipmentInfo, const _wstring& _wstrBoneNodeName,
+			const _int _iWeaponOrShieldValue, const _float4x4& _PivotMatrix = _float4x4::Identity) :
+			spOwner{ nullptr }, spEquipModel{ nullptr },
+			EquipmentInfo{ _EquipmentInfo }, wstrBoneNodeName{ _wstrBoneNodeName },
+			iWeaponOrShieldValue{ _iWeaponOrShieldValue }, mPivotMatrix{ _PivotMatrix }
+		{}
+		
+		void Save(const _wstring& _wstrPath);
+		void Load(const _wstring& _wstrPath);
 	};
 	enum ORDER{ FIRST = 0 };
 public:
@@ -48,9 +61,12 @@ public:
 	virtual void Free() override;
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _Datas) override;
+
+	void SaveEquipDesc(const _wstring& _wstrPath);
+	void ChangeEquipDescInfo(const EQDESC& _desc);
 public: /* get set */
-	const _float4x4& GetTargetModelPivot() const { return m_TargetModelPivot; }
-	void SetTargetModelPivot(const _float4x4& _mTargetModePivot) { this->m_TargetModelPivot = _mTargetModePivot; }
+	const _float4x4& GetPivotMatrix() const { return m_PivotMatrix; }
+	void SetPivotMatrix(const _float4x4& _mTargetModePivot) { this->m_PivotMatrix = _mTargetModePivot; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
@@ -85,7 +101,7 @@ private:
 	SHPTR<UShaderConstantBuffer>		m_spTexCheckBuffer;
 	// MaxHasTex
 	HASBUFFERCONTAINER							m_HasTexContainer;
-	_float4x4													m_TargetModelPivot;
+	_float4x4													m_PivotMatrix;
 };
 
 END

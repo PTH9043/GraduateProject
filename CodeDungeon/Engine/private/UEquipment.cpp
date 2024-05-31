@@ -9,8 +9,54 @@
 #include "UCharacter.h"
 #include "UAnimModel.h"
 #include "URootBoneNode.h"
+#include "UMethod.h"
 
 /*
+		SHPTR<UCharacter>	spOwner;
+		SHPTR<UModel>			spEquipModel;
+		EQUIPMENTINFO			EquipmentInfo;
+		_wstring							wstrBoneNodeName;
+		_int									iWeaponOrShieldValue;
+		_float4x4						mPivotMatrix;
+*/
+
+UEquipment::EQDESC::EQDESC(CSHPTRREF<UModel> _spEquipModel, const _wstring& _wstrEquipDescPath) :
+	spEquipModel{_spEquipModel}
+{
+	assert(nullptr != spOwner && nullptr != _spEquipModel);
+	
+	Load(_wstrEquipDescPath);
+}
+
+void UEquipment::EQDESC::Save(const _wstring& _wstrPath)
+{
+	std::ofstream Save{ _wstrPath, std::ios::binary };
+	assert(Save.is_open());
+
+	Save.write((_char*)&EquipmentInfo, sizeof(EQUIPMENTINFO));
+	UMethod::SaveString(Save, wstrBoneNodeName);
+	Save.write((_char*)&iWeaponOrShieldValue, sizeof(_int));
+	Save.write((_char*)&mPivotMatrix, sizeof(_float4x4));
+}
+
+void UEquipment::EQDESC::Load(const _wstring& _wstrPath)
+{
+	_wstring str = UMethod::MakePath(_wstrPath, L"EquipDesc");
+	str += spEquipModel->GetModelName();
+	str += DEFAULT_OUTFOLDEREXTENSION;
+
+	std::ifstream Read{ str, std::ios::binary };
+	assert(Read.is_open());
+
+	Read.read((_char*)&EquipmentInfo, sizeof(EQUIPMENTINFO));
+	UMethod::ReadString(Read, wstrBoneNodeName);
+	Read.read((_char*)&iWeaponOrShieldValue, sizeof(_int));
+	Read.read((_char*)&mPivotMatrix, sizeof(_float4x4));
+}
+
+/*
+=========================================
+UEquipment::EQDESC
 =========================================
 UEquipment::Class
 =========================================
@@ -27,7 +73,7 @@ UEquipment::UEquipment(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer,
 	m_spSocketMatrixBuffer{ nullptr },
 	m_spTexCheckBuffer{nullptr},
 	m_HasTexContainer{},
-	m_TargetModelPivot{_float4x4::Identity}
+	m_PivotMatrix{_float4x4::Identity}
 {
 }
 
@@ -40,7 +86,7 @@ UEquipment::UEquipment(const UEquipment& _rhs) :
 	m_spSocketMatrixBuffer{ nullptr },
 	m_spTexCheckBuffer{ nullptr },
 	m_HasTexContainer{},
-	m_TargetModelPivot{ _float4x4::Identity }
+	m_PivotMatrix{ _float4x4::Identity }
 {
 }
 
@@ -65,8 +111,9 @@ HRESULT UEquipment::NativeConstructClone(const VOIDDATAS& _Datas)
 		UEquipment::EQDESC desc = UMethod::ConvertTemplate_Index<UEquipment::EQDESC>(_Datas, FIRST);
 		m_spEquipModel = desc.spEquipModel;
 		::memcpy(&m_EquipmentInfo, &desc.EquipmentInfo, sizeof(EQUIPMENTINFO));
-
+		m_PivotMatrix = desc.mPivotMatrix;
 		SHPTR<UCharacter> spCharacter = desc.spOwner;
+		m_eEquipType = static_cast<EQUIPTYPE>(desc.iWeaponOrShieldValue);
 		// Find Root Bone Node 
 		if (nullptr != spCharacter)
 		{
@@ -86,6 +133,25 @@ HRESULT UEquipment::NativeConstructClone(const VOIDDATAS& _Datas)
 	return S_OK;
 }
 
+void UEquipment::SaveEquipDesc(const _wstring& _wstrPath)
+{
+	assert(nullptr != m_spEquipModel);
+	EQDESC desc{ m_EquipmentInfo, m_spEquipBoneNode->GetName(), m_eEquipType, m_PivotMatrix };
+
+	_wstring str = UMethod::MakeFolderAndReturnPath(_wstrPath, L"EquipDesc");
+	str += m_spEquipModel->GetModelName();
+	str += DEFAULT_OUTFOLDEREXTENSION;
+	desc.Save(str);
+}
+
+void UEquipment::ChangeEquipDescInfo(const EQDESC& _desc)
+{
+	m_spEquipModel = _desc.spEquipModel;
+	::memcpy(&m_EquipmentInfo, &_desc.EquipmentInfo, sizeof(EQUIPMENTINFO));
+	m_PivotMatrix = _desc.mPivotMatrix;
+	m_eEquipType = static_cast<EQUIPTYPE>(_desc.iWeaponOrShieldValue);
+}
+
 void UEquipment::TickActive(const _double& _dTimeDelta)
 {
 	if (nullptr != m_spEquipBoneNode)
@@ -94,8 +160,7 @@ void UEquipment::TickActive(const _double& _dTimeDelta)
 		SHPTR<UTransform> spTransform = spPawn->GetTransform();
 
 		// Get CombineMatrix
-		m_SockMatrixParam.SocketMatrix =  spTransform->GetWorldMatrix() * m_spEquipBoneNode->GetCombineMatrix() * 
-			m_TargetModelPivot;
+		m_SockMatrixParam.SocketMatrix =  spTransform->GetWorldMatrix() * m_PivotMatrix * m_spEquipBoneNode->GetCombineMatrix();
 		m_SockMatrixParam.SocketMatrix = m_SockMatrixParam.SocketMatrix.Transpose();
 	}
 
@@ -153,7 +218,7 @@ void UEquipment::UpdateBoneNode(CSHPTRREF<UAnimModel> _spAnimModel, const _wstri
 {
 	RETURN_CHECK(nullptr == _spAnimModel, ;);
 	m_spEquipBoneNode = _spAnimModel->FindBoneNode(_wstrBoneNode);
-	m_TargetModelPivot = _spAnimModel->GetPivotMatirx();
+	m_PivotMatrix = _spAnimModel->GetPivotMatirx();
 
 	if (nullptr == m_spSocketMatrixBuffer)
 	{
@@ -170,7 +235,7 @@ void UEquipment::UpdateBoneNode(CSHPTRREF<UCharacter> _spCharacter, const _wstri
 	SHPTR<UAnimModel> spAnimModel = _spCharacter->GetAnimModel();
 	RETURN_CHECK(nullptr == spAnimModel, ;);
 	m_spEquipBoneNode = spAnimModel->FindBoneNode(_wstrBoneNode);
-	m_TargetModelPivot = spAnimModel->GetPivotMatirx();
+	m_PivotMatrix = spAnimModel->GetPivotMatirx();
 
 	if (nullptr == m_spSocketMatrixBuffer)
 	{

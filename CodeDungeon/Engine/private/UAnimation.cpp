@@ -306,8 +306,13 @@ void UAnimation::SaveAnimSectionPathIsFolder(const _wstring& _wstrPath)
 	str.append(L"\\AnimSection");
 	if (0 != _wmkdir(str))
 	{
+		_wstring name = m_wstrName;
+
+		int index = name.find(L"|");
+		name = name.substr(index + 1, name.length());
+
 		str.append(L"\\");
-		str.append(m_wstrName);
+		str.append(name);
 		str.append(DEFAULT_OUTFOLDEREXTENSION);
 		SaveAnimSectionData(str);
 	}

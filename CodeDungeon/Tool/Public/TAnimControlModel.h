@@ -50,6 +50,7 @@ public: /* get set*/
 	CSHPTRREF<UAnimModel> GetAnimModel() const { return m_spModel; }
 	const ANIMMATIONCLIPS& GetAnimationClips() const { return m_AnimationClips; }
 	const _bool IsSelectedEquipModel() const { return m_isSelectedEquipModel; }
+	CSHPTRREF<TEquipModel> GetSelectedEquipModel() const { return m_spSelectedEquipModel; }
 protected:
 	void SelectAnimation();
 	void ModifyAnimation();
