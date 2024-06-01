@@ -396,11 +396,13 @@ void TNavigationView::NavigationView()
 							auto navigation = region->GetNavigation();
 							auto cellsContainer = navigation->GetCells();
 							const std::vector<SHPTR<UCell>>& cells = *cellsContainer;
-							int selectedIndex = m_spSelectedCell->GetIndex();
+							_int selectedIndex = m_spSelectedCell->GetIndex();
+							ARRAY<_int, 3> selectedNeighbors = m_spSelectedCell->GetNeighbor();
 							auto cell = cells[selectedIndex];
 
 							ImGui::Text("Selected Cell Index: %d", selectedIndex);
 							ImGui::Text("Selected Cell Jumpable : %s", cell->GetJumpableState() ? "true" : "false");
+							ImGui::Text("Selected Cell Neighbors : %d, %d, %d", selectedNeighbors[0], selectedNeighbors[1], selectedNeighbors[2]);
 							if (ImGui::Button("Delete"))
 							{
 								region->DeleteCell(selectedIndex);

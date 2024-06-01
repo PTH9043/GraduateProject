@@ -46,6 +46,7 @@ public:
 	// Get Collider
 	SHPTR<UCollider> GetCollider() { return m_spCollider; }
 	SHPTR<UCell> GetCurCell() { return m_spCurCell; }
+	void SetCurCell(CSHPTRREF<UCell> newCell) { m_spCurCell = newCell; SetCurIndex(newCell->GetIndex()); }
 	// Ready Neighbor
 	HRESULT ReadyNeighbor();
 
