@@ -5,6 +5,7 @@
 #include "UAnimModel.h"
 #include "UCharacter.h"
 #include "UAnimation.h"
+#include "UTransform.h"
 
 CWarriorAnimController::CWarriorAnimController(CSHPTRREF<UDevice> _spDevice) 
 	: UAnimationController(_spDevice), m_isComboStack{false}
@@ -63,14 +64,13 @@ void CWarriorAnimController::Tick(const _double& _dTimeDelta)
 	_bool isCombo = spGameInstance->GetDIMBtnPressing(DIMOUSEBUTTON::DIMB_R);
 	
 	//플레이어가 이미 점프하고 있거나 떨어지고 있지 않을 때 스페이스를 누르면 점프모드 돌입
-	if (spGameInstance->GetDIKeyDown(DIK_SPACE))
+	if (!isAttack && !isCombo && spGameInstance->GetDIKeyDown(DIK_SPACE))
 	{
 		if(!spWarriorPlayer->GetJumpingState() && !spWarriorPlayer->GetFallingState())
 		{
 			spWarriorPlayer->SetJumpingState(true);
 		}
 	}
-
 
 	if (false == isMoveFront && false == isMoveBack && false == isAttack && false == isCombo)
 	{
@@ -88,10 +88,20 @@ void CWarriorAnimController::Tick(const _double& _dTimeDelta)
 		if (false == isRunshift)
 		{
 			UpdateState(spAnimModel, ANIM_MOVE, L"WALKF");
+			if (spWarriorPlayer->GetJumpingState() || spWarriorPlayer->GetFallingState())
+			{
+				UpdateState(spAnimModel, ANIM_JUMP, L"JUMP");
+					spWarriorPlayer->GetTransform()->MoveForward(_dTimeDelta, 10.f);
+			}				
 		}
 		else
 		{
 			UpdateState(spAnimModel, ANIM_RUN, L"RUNF");
+			if (spWarriorPlayer->GetJumpingState() || spWarriorPlayer->GetFallingState())
+			{
+				UpdateState(spAnimModel, ANIM_JUMP, L"JUMP");
+				spWarriorPlayer->GetTransform()->MoveForward(_dTimeDelta, 30.f);
+			}				
 		}
 		m_isComboStack = false;
 	}
@@ -101,13 +111,30 @@ void CWarriorAnimController::Tick(const _double& _dTimeDelta)
 		spAnimModel->ResetCurAnimEvent();
 		if (false == isRunshift)
 		{
-			UpdateState(spAnimModel, ANIM_WALKBACK, L"WALKB");
+			if (spWarriorPlayer->GetJumpingState() || spWarriorPlayer->GetFallingState())
+			{
+				UpdateState(spAnimModel, ANIM_JUMP, L"JUMP");
+				spWarriorPlayer->GetTransform()->MoveBack(_dTimeDelta, 10.f);
+			}
+			else
+				UpdateState(spAnimModel, ANIM_WALKBACK, L"WALKB");
 		}
 		else
 		{
-			UpdateState(spAnimModel, ANIM_RUNBACK, L"RUNB");
+			if (spWarriorPlayer->GetJumpingState() || spWarriorPlayer->GetFallingState())
+			{
+				UpdateState(spAnimModel, ANIM_JUMP, L"JUMP");
+				spWarriorPlayer->GetTransform()->MoveBack(_dTimeDelta, 30.f);
+			}
+			else
+				UpdateState(spAnimModel, ANIM_RUNBACK, L"RUNB");
 		}
 		m_isComboStack = false;
+	}
+
+	if (spWarriorPlayer->GetJumpingState() || spWarriorPlayer->GetFallingState())
+	{
+		UpdateState(spAnimModel, ANIM_JUMP, L"JUMP");
 	}
 
 	if (true == isAttack)
@@ -140,25 +167,6 @@ void CWarriorAnimController::Tick(const _double& _dTimeDelta)
 		{
 			UpdateState(spAnimModel, ANIM_COMBO, L"COMBO04");
 			m_isComboStack = true;
-		}
-	}
-
-
-	if (spWarriorPlayer->GetJumpingState() ||  spWarriorPlayer->GetFallingState())
-	{
-		if(isMoveFront)
-		{
-			if(!isRunshift)
-				UpdateState(spAnimModel, ANIM_JUMP_FRONT, L"IDLE");
-			else
-				UpdateState(spAnimModel, ANIM_JUMP_FRONT_RUN, L"IDLE");
-		}
-		else if (isMoveBack)
-		{
-			if (!isRunshift)
-				UpdateState(spAnimModel, ANIM_JUMP_BACK, L"IDLE");
-			else
-				UpdateState(spAnimModel, ANIM_JUMP_BACK_RUN, L"IDLE");
 		}
 	}
 

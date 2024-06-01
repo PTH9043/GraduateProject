@@ -58,7 +58,8 @@ void UPlayer::LateTickActive(const _double& _dTimeDelta)
 	{
 		SHPTR<UNavigation> spNavigation = GetCurrentNavi();
 		_float3 vPosition{ GetTransform()->GetPos() };
-		SHPTR<UCell> spCell{};
+		SHPTR<UCell> PrevCell = spNavigation->GetCurCell();
+		SHPTR<UCell> newCell{};
 		_double speed = _dTimeDelta * 3.f;
 
 		//예외처리. 전방으로 점프하면서 떨어질 때 아래가 낭떠러지면 두 상태가 전부 true가 되면서 얼어붙음.
@@ -90,8 +91,9 @@ void UPlayer::LateTickActive(const _double& _dTimeDelta)
 			GetTransform()->DisableJump();
 		}
 
+
 		//셀의 끝에 다다랐을 때
-		if (false == spNavigation->IsMove(vPosition, REF_OUT spCell))
+		if (false == spNavigation->IsMove(vPosition, REF_OUT newCell))
 		{
 			//낭떠러지 셀이 아닐 경우
 			if (!spNavigation->GetCurCell()->GetJumpableState())
@@ -106,21 +108,22 @@ void UPlayer::LateTickActive(const _double& _dTimeDelta)
 			else
 			{
 				//낭떠러지 셀에서 밖으로 갔을 때, 중력 활성화(낙하)
+				newCell = spNavigation->FindCell(vPosition);
 				m_bisFalling = true;			
 			}
 		}
-		//공중에서도 발 아래의 셀 검색, 셀이 존재하면 현재 셀로 만듦.
-		SHPTR<UCell> newCurCell = spNavigation->FindCell(vPosition);
 
-		if(newCurCell != nullptr)
+		if(m_bisFalling && spNavigation->GetCurCell() != nullptr)
 		{
 			//현재 셀보다 아래로 떨어지면
-			_float curCellCenterY = newCurCell->GetHeightAtXZ(vPosition.x, vPosition.z);
+			_float curCellCenterY = spNavigation->GetCurCell()->GetHeightAtXZ(vPosition.x, vPosition.z);
 			if (vPosition.y < curCellCenterY)
 			{
 				//낙하 종료vPosition
 				m_bisFalling = false;
 				GetTransform()->DisableGravity();
+				GetTransform()->SetPos(_float3(vPosition.x, curCellCenterY, vPosition.z));
+				vPosition = GetTransform()->GetPos();
 			}
 		}
 
@@ -128,7 +131,16 @@ void UPlayer::LateTickActive(const _double& _dTimeDelta)
 		if (!m_bisFalling && !m_bisJumping)
 		{
 			spNavigation->ComputeHeight(GetTransform());
+			if (std::abs(GetPrevPos().y - GetTransform()->GetPos().y) > 30.f)
+			{
+				if (!PrevCell->GetJumpableState())
+				{
+					GetTransform()->SetPos(GetPrevPos());
+					spNavigation->SetCurCell(PrevCell);
+				}
+			}
 		}
+	
 	}
 
 }
