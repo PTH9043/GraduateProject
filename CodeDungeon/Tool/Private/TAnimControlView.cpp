@@ -710,12 +710,12 @@ void TAnimControlView::AnimColliderShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTabl
 					// 7 Show Pos
 					{
 						_float3 vCurPos = ChangeDesc->spCollider->GetCurPos();
-						ImGui::InputFloat3(ReadColliderPos + Index, &vCurPos.x, "%.3f", ImGuiInputTextFlags_ReadOnly);
+						ImGui::DragFloat(ReadColliderPos + Index, &vCurPos.x, ImGuiInputTextFlags_ReadOnly, 0, 0);
 					}
 					// 8 
 					{
 						_float3 vTranslate = ChangeDesc->spCollider->GetTranslate();
-						if (true == ImGui::InputFloat3(TranslateCollider + Index, &vTranslate.x)) {
+						if (true == ImGui::DragFloat(TranslateCollider + Index, &vTranslate.x, ImGuiInputTextFlags_ReadOnly, 0, 0)) {
 							ChangeDesc->spCollider->SetTranslate(vTranslate);
 						}
 					}
