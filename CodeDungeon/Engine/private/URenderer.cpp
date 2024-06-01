@@ -599,8 +599,8 @@ void URenderer::RenderHorizontalBlur()
     spHorizontalShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
     spHorizontalShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stSmallRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
     {
-        SHPTR<URenderTargetGroup> spBlur = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::HDR);
-        spHorizontalShader->BindSRVBuffer(SRV_REGISTER::T0, spBlur->GetRenderTargetTexture(RTOBJID::HDR));
+        SHPTR<URenderTargetGroup> spBlur = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::NONALPHA_DEFFERED);
+        spHorizontalShader->BindSRVBuffer(SRV_REGISTER::T0, spBlur->GetRenderTargetTexture(RTOBJID::NONALPHA_GLOW_DEFFERED));
     }
 
     m_spVIBufferPlane->Render(spHorizontalShader, m_spCastingCommand);

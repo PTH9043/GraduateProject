@@ -1489,7 +1489,7 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 					RTDESC{ RTOBJID::NONALPHA_POSITION_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
 							GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f }},
 							RTDESC{ RTOBJID::NONALPHA_GLOW_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R16G16B16A16_FLOAT,
-					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 1.f, 0.f } //GLow 영역을 픽셀단위로 텍스쳐에 식별색상(ex.빨간색)으로 출력하여 그 해당 영역 조명에서 쎄게받게하던지.
+					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f } //GLow 영역을 픽셀단위로 텍스쳐에 식별색상(ex.빨간색)으로 출력하여 그 해당 영역 조명에서 쎄게받게하던지.
 			}
 			};
 			// Add RenderTargetGroup
@@ -1611,8 +1611,7 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::HDR, RTOBJID::HDR,
 		_float2(100.f, 870.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_DEPTH_DEFFERED,
-		_float2(500.f, 980.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
+	
 
 	/*m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::UPSAMPLE, RTOBJID::UPSAMPLE,
 		_float2(500.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());

@@ -135,6 +135,7 @@ PS_OUT PS_Main(VS_OUT In)
     float4 HighColor = float4(fireColor.r * Rand(noise1.xy), fireColor.g * Rand(noise2.xy), fireColor.b * Rand(noise3.xy), fireColor.a);
     float brightness = dot(HighColor.rgb, float3(0.2126, 0.7152, 0.0722));
    
+    Out.vGlow = float4(0, 0, 0, 0);
     if (fireColor.a > 0.3)
     {
         
