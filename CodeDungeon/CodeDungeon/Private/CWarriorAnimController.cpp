@@ -8,12 +8,12 @@
 #include "UTransform.h"
 
 CWarriorAnimController::CWarriorAnimController(CSHPTRREF<UDevice> _spDevice) 
-	: UAnimationController(_spDevice), m_isComboStack{false}
+	: UAnimationController(_spDevice), m_iWComboStack{ 0 }, m_iSComboStack{ 0 }, m_dTimeElapsed{0}
 {
 }
 
 CWarriorAnimController::CWarriorAnimController(const CWarriorAnimController& _rhs) : 
-	UAnimationController(_rhs), m_isComboStack{ false }
+	UAnimationController(_rhs), m_iWComboStack{ 0 }, m_iSComboStack{ 0 }, m_dTimeElapsed{0}
 {
 }
 
@@ -37,138 +37,126 @@ HRESULT CWarriorAnimController::NativeConstructClone(const VOIDDATAS& _tDatas)
 
 void CWarriorAnimController::Tick(const _double& _dTimeDelta)
 {
-	// Reset Trigger
-	ClearTrigger();
+    ClearTrigger();
 
-	SetAnimState(-1);
+    SetAnimState(-1);
 
-	SHPTR< CWarriorPlayer> spWarriorPlayer = m_wpWarriorPlayer.lock();
-	SHPTR<UAnimModel> spAnimModel = spWarriorPlayer->GetAnimModel();
+    SHPTR<CWarriorPlayer> spWarriorPlayer = m_wpWarriorPlayer.lock();
+    SHPTR<UAnimModel> spAnimModel = spWarriorPlayer->GetAnimModel();
+    SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+    _bool isRunshift = spGameInstance->GetDIKeyPressing(DIK_LSHIFT);
+    _bool isMoveFront = spGameInstance->GetDIKeyPressing(DIK_W);
+    _bool isMoveBack = spGameInstance->GetDIKeyPressing(DIK_S);
+    _bool isMoveLeft = spGameInstance->GetDIKeyPressing(DIK_A);
+    _bool isMoveRight = spGameInstance->GetDIKeyPressing(DIK_D);
 
-	_bool isIdle = false;
-	_bool isRunshift = spGameInstance->GetDIKeyPressing(DIK_LSHIFT);
-	_bool isMoveFront = false;
-	{
-		_bool isW = spGameInstance->GetDIKeyPressing(DIK_W);
-		_bool isA = spGameInstance->GetDIKeyPressing(DIK_A);
-		_bool isS = spGameInstance->GetDIKeyPressing(DIK_D);
+    _bool isWAttack = spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_L);
+    _bool isSAttack = spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_R);
+    _bool isRAttack = spGameInstance->GetDIKeyDown(DIK_Q);
 
-		isMoveFront = isW || isA || isS;
-	}
+    _bool isAttack = isWAttack || isRAttack || isSAttack;
+    _bool isCombo = spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_R);
 
-	_bool isMoveBack = spGameInstance->GetDIKeyPressing(DIK_S);
+    _bool isRoll = spGameInstance->GetDIKeyDown(DIK_C);
 
-	_bool isAttack = spGameInstance->GetDIMBtnPressing(DIMOUSEBUTTON::DIMB_L);
-	_bool isCombo = spGameInstance->GetDIMBtnPressing(DIMOUSEBUTTON::DIMB_R);
-	
-	//플레이어가 이미 점프하고 있거나 떨어지고 있지 않을 때 스페이스를 누르면 점프모드 돌입
-	if (!isAttack && !isCombo && spGameInstance->GetDIKeyDown(DIK_SPACE))
-	{
-		if(!spWarriorPlayer->GetJumpingState() && !spWarriorPlayer->GetFallingState())
-		{
-			spWarriorPlayer->SetJumpingState(true);
-		}
-	}
+    if (!isAttack && !isCombo && !isMoveBack && spGameInstance->GetDIKeyDown(DIK_SPACE)) {
+        if (!spWarriorPlayer->GetJumpingState() && !spWarriorPlayer->GetFallingState()) {
+            spWarriorPlayer->SetJumpingState(true);
+        }
+    }
 
-	if (false == isMoveFront && false == isMoveBack && false == isAttack && false == isCombo)
-	{
-		UpdateState(spAnimModel, ANIM_IDLE, L"IDLE");
-		m_isComboStack = false;
-	}
-	else if (ANIM_ATTACK == GetAnimState())
-	{
-		UpdateState(spAnimModel, ANIM_IDLE, L"IDLE");
-		return;
-	}
+    if (!isMoveFront && !isMoveBack && !isMoveLeft && !isMoveRight && !isAttack && !isCombo) {
+        UpdateState(spAnimModel, ANIM_IDLE, L"IDLE");
+    }
+    else if (GetAnimState() == ANIM_ATTACK) {
+        UpdateState(spAnimModel, ANIM_IDLE, L"IDLE");
+        return;
+    }
 
-	if (true == isMoveFront)
-	{
-		if (false == isRunshift)
-		{
-			UpdateState(spAnimModel, ANIM_MOVE, L"WALKF");
-			if (spWarriorPlayer->GetJumpingState() || spWarriorPlayer->GetFallingState())
-			{
-				UpdateState(spAnimModel, ANIM_JUMP, L"JUMP");
-					spWarriorPlayer->GetTransform()->MoveForward(_dTimeDelta, 10.f);
-			}				
-		}
-		else
-		{
-			UpdateState(spAnimModel, ANIM_RUN, L"RUNF");
-			if (spWarriorPlayer->GetJumpingState() || spWarriorPlayer->GetFallingState())
-			{
-				UpdateState(spAnimModel, ANIM_JUMP, L"JUMP");
-				spWarriorPlayer->GetTransform()->MoveForward(_dTimeDelta, 30.f);
-			}				
-		}
-		m_isComboStack = false;
-	}
+    auto updateMovement = [&](const wchar_t* walkAnim, const wchar_t* runAnim, _bool isMove) {
+        if (isMove) {
+            if (!isRunshift) {
+                UpdateState(spAnimModel, ANIM_MOVE, walkAnim);
+            }
+            else {
+                UpdateState(spAnimModel, ANIM_MOVE, runAnim);
+            }
+        }
+        };
 
-	if (true == isMoveBack)
-	{
-		spAnimModel->ResetCurAnimEvent();
-		if (false == isRunshift)
-		{
-			if (spWarriorPlayer->GetJumpingState() || spWarriorPlayer->GetFallingState())
-			{
-				UpdateState(spAnimModel, ANIM_JUMP, L"JUMP");
-				spWarriorPlayer->GetTransform()->MoveBack(_dTimeDelta, 10.f);
-			}
-			else
-				UpdateState(spAnimModel, ANIM_WALKBACK, L"WALKB");
-		}
-		else
-		{
-			if (spWarriorPlayer->GetJumpingState() || spWarriorPlayer->GetFallingState())
-			{
-				UpdateState(spAnimModel, ANIM_JUMP, L"JUMP");
-				spWarriorPlayer->GetTransform()->MoveBack(_dTimeDelta, 30.f);
-			}
-			else
-				UpdateState(spAnimModel, ANIM_RUNBACK, L"RUNB");
-		}
-		m_isComboStack = false;
-	}
+    updateMovement(L"WALKF", L"RUNF", isMoveFront);
+    updateMovement(L"WALKB", L"RUNB", isMoveBack);
+    updateMovement(L"WALKL", L"RUNL", isMoveLeft);
+    updateMovement(L"WALKR", L"RUNR", isMoveRight);
 
-	if (spWarriorPlayer->GetJumpingState() || spWarriorPlayer->GetFallingState())
-	{
-		UpdateState(spAnimModel, ANIM_JUMP, L"JUMP");
-	}
+    if (isMoveFront && isMoveLeft) updateMovement(L"WALKFL", L"RUNFL", true);
+    if (isMoveFront && isMoveRight) updateMovement(L"WALKFR", L"RUNFR", true);
+    if (isMoveBack && isMoveLeft) updateMovement(L"WALKBL", L"RUNBL", true);
+    if (isMoveBack && isMoveRight) updateMovement(L"WALKBR", L"RUNBR", true);
 
-	if (true == isAttack)
-	{
-		_int iRan = rand() % 3;
-		if (0 == iRan)
-		{
-			UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK01");
-		}
-		else if (1 == iRan)
-		{
-			UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK02");
-		}
-		else  
-		{
-			UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK04");
-		}
+    if (spWarriorPlayer->GetJumpingState() || spWarriorPlayer->GetFallingState()) {
+        UpdateState(spAnimModel, ANIM_JUMP, L"JUMP");
+        m_iWComboStack = 0;
+        m_iSComboStack = 0;
+        spWarriorPlayer->GetTransform()->MoveForward(_dTimeDelta, isRunshift ? 30.f : 10.f);
+    }
 
-		m_isComboStack = false;
-	}
+    if (isAttack) {
+        const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
+        if (isWAttack) {
+            if (CurAnimName == L"combo02_1")
+                m_iWComboStack = 2;
+            else if (CurAnimName == L"combo02_2")
+                m_iWComboStack = 3;
+            else
+                m_iWComboStack = 1;
 
-	if (true == isCombo)
-	{
-		spAnimModel->ResetCurAnimEvent();
-		if (true == m_isComboStack)
-		{
-			UpdateState(spAnimModel, ANIM_COMBO, L"NEXT");
-		}
-		else
-		{
-			UpdateState(spAnimModel, ANIM_COMBO, L"COMBO04");
-			m_isComboStack = true;
-		}
-	}
+            switch (m_iWComboStack) {
+            case 1: UpdateState(spAnimModel, ANIM_ATTACK, L"WATTACK1"); break;
+            case 2: UpdateState(spAnimModel, ANIM_ATTACK, L"WATTACK2"); break;
+            case 3: UpdateState(spAnimModel, ANIM_ATTACK, L"WATTACK3"); break;
+            }
+        }
+        else if (isSAttack) {
+            if (CurAnimName == L"combo06_1")
+                m_iSComboStack = 2;
+            else if (CurAnimName == L"combo06_2")
+                m_iSComboStack = 3;
+            else
+                m_iSComboStack = 1;
 
-	spAnimModel->TickEvent(spWarriorPlayer.get(), GetTrigger(), _dTimeDelta);
+            switch (m_iSComboStack) {
+            case 1: UpdateState(spAnimModel, ANIM_ATTACK, L"SATTACK1"); break;
+            case 2: UpdateState(spAnimModel, ANIM_ATTACK, L"SATTACK2"); break;
+            case 3: UpdateState(spAnimModel, ANIM_ATTACK, L"SATTACK3"); break;
+            }
+        }
+        else if (isRAttack) {
+            UpdateState(spAnimModel, ANIM_ATTACK, L"RATTACK");
+            m_iWComboStack = 0;
+            m_iSComboStack = 0;
+        }
+    }
+
+    if (isRoll) {
+        if (isMoveFront) {
+            UpdateState(spAnimModel, ANIM_ROLL, L"ROLL_F");
+        }
+        else if (isMoveBack) {
+            UpdateState(spAnimModel, ANIM_ROLL, L"ROLL_B");
+        }
+        else if (isMoveLeft) {
+            UpdateState(spAnimModel, ANIM_ROLL, L"ROLL_L");
+        }
+        else if (isMoveRight) {
+            UpdateState(spAnimModel, ANIM_ROLL, L"ROLL_R");
+        }
+        else {
+            UpdateState(spAnimModel, ANIM_ROLL, L"ROLL_F"); 
+        }
+    }
+
+    spAnimModel->TickEvent(spWarriorPlayer.get(), GetTrigger(), _dTimeDelta);
 }
+
