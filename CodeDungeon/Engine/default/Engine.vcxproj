@@ -46,6 +46,7 @@
     <ClInclude Include="..\public\ImGui\imstb_textedit.h" />
     <ClInclude Include="..\public\ImGui\imstb_truetype.h" />
     <ClInclude Include="..\public\ImGui\ImZoomSlider.h" />
+    <ClInclude Include="..\public\MathLib\CusMath.h" />
     <ClInclude Include="..\public\UAxis.h" />
     <ClInclude Include="..\public\UCombatCollGroupComp.h" />
     <ClInclude Include="..\public\UCharacter.h" />
@@ -302,6 +303,7 @@
     <ClCompile Include="..\public\ImGui\imgui_tables.cpp" />
     <ClCompile Include="..\public\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="..\public\ImGui\ImSequencer.cpp" />
+    <ClCompile Include="..\public\MathLib\CusMath.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Shader\2DAnimateParticle.hlsl" />
@@ -357,6 +359,7 @@
     <None Include="..\..\Shader\LightShaderParam.hlsli" />
     <None Include="..\..\Shader\ShaderGrobalFunc.hlsli" />
     <None Include="..\..\Shader\ShaderParams.hlsli" />
+    <None Include="..\public\MathLib\CusMath.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

@@ -12,11 +12,9 @@
 #ifdef _DEBUG
 #pragma comment (lib, "DirectXTKd12")
 #pragma comment (lib, "fmodL_vc")
-#pragma comment (lib, "PTHLib_Debug")
 #else
 #pragma comment (lib, "DirectXTK12")
 #pragma comment (lib, "fmod_vc")
-#pragma comment (lib, "PTHLib")
 #endif
 
 #pragma comment (lib, "libxl")
