@@ -90,24 +90,35 @@ HRESULT UNavigation::NativeConstructClone(const VOIDDATAS& _vecDatas)
 
 const _float UNavigation::ComputeHeight(const _float3& _vPosition)
 {
-	RETURN_CHECK(nullptr == m_spCellContainer, false);
+	RETURN_CHECK(nullptr == m_spCellContainer, _vPosition.y);
 
 	if (nullptr != m_spCurCell) {
 		return m_spCurCell->ComputeHeight(_vPosition);
 	}
 	else {
 		_float3 vLine{};
+		SHPTR<UCell> closestCell{};
+		float minYDiff = -1.0f;
+
 		for (auto& iter : *m_spCellContainer.get()) {
 			if (true == iter->IsIn(_vPosition, m_iCurIndex, vLine)) {
-				m_spCurCell = iter;
-				break;
+				float yDiff = std::abs(_vPosition.y - iter->GetCenterPos().y);
+				if (minYDiff == -1.0f || yDiff < minYDiff) {
+					minYDiff = yDiff;
+					closestCell = iter;
+				}
 			}
 		}
-		RETURN_CHECK(nullptr == m_spCurCell, _vPosition.y);
-		return m_spCurCell->ComputeHeight(_vPosition);
+
+		if (nullptr != closestCell) {
+			m_spCurCell = closestCell;
+			return m_spCurCell->ComputeHeight(_vPosition);
+		}
 	}
+
 	return _vPosition.y;
 }
+
 
 void UNavigation::ComputeHeight(CSHPTRREF<UTransform> _spTransform)
 {
@@ -136,24 +147,42 @@ _bool UNavigation::IsMove(const _float3& _vPosition, SHPTR<UCell>& _spCell)
 	else {
 		if (0 <= iNeighBorIndex) {
 			_uint iValue{ 0 };
+			float minYDiff = -1.0f; // y 차이를 고려하기 위한 초기값
+			SHPTR<UCell> closestCell{};
+			bool found = false;
+
 			while (true) {
 				RETURN_CHECK(-1 == iNeighBorIndex, false);
 
 				if (true == (*m_spCellContainer.get())[iNeighBorIndex]->IsIn(_vPosition, iNeighBorIndex, vLine)) {
-					m_iCurIndex = iNeighBorIndex;
-					break;
+					float yDiff = std::abs(_vPosition.y - (*m_spCellContainer.get())[iNeighBorIndex]->GetCenterPos().y);
+					if (minYDiff == -1.0f || yDiff < minYDiff) {
+						minYDiff = yDiff;
+						closestCell = (*m_spCellContainer.get())[iNeighBorIndex];
+						found = true;
+					}
 				}
 				++iValue;
 				if (iValue >= 10) {
-					FindCell(_vPosition);
-					return false;
+					break;
 				}
 			}
-			return true;
+
+			if (found) {
+				m_iCurIndex = closestCell->GetIndex();
+				m_spCurCell = closestCell;
+				_spCell = m_spCurCell;
+				return true;
+			}
+			else {
+				FindCell(_vPosition);
+				return false;
+			}
 		}
 	}
 	return false;
 }
+
 
 SHPTR<UCell> UNavigation::FindCell(const _float3& _vPosition)
 {
@@ -166,12 +195,15 @@ SHPTR<UCell> UNavigation::FindCell(const _float3& _vPosition)
 
 	for (auto& iter : (*m_spCellContainer.get())) {
 		if (true == iter->IsIn(_vPosition, iNeighborIndex, vLine)) {
-			float yDiff = std::abs(_vPosition.y - iter->GetCenterPos().y);
+			float yDiff = _vPosition.y - iter->GetHeightAtXZ(_vPosition.x, _vPosition.z);
+			if (yDiff < 0)
+				continue;
 			if (minYDiff == -1.0f || yDiff < minYDiff) { // 처음으로 유효한 값을 만났거나 현재의 y 차이가 최소값보다 작은 경우
 				minYDiff = yDiff;
 				m_iCurIndex = iter->GetIndex();
 				success = true;
 				closestCell = iter;
+				m_spCurCell = closestCell;
 			}
 		}
 	}

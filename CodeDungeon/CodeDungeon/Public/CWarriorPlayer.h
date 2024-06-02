@@ -8,6 +8,7 @@ class UParticleSystem;
 END
 
 BEGIN(Client)
+class CSword;
 /*
 @ Date: 2024-04-30, Writer: นฺลยว๖
 @ Explain
@@ -34,9 +35,13 @@ protected:
 private:
 	void TranslateStateMoveAndRunF(CSHPTRREF<UGameInstance> _spGameInstance, const _double& _dTimeDelta, const _float _fSpeed);
 private:
+
 	SHPTR<UParticle>		m_spParticle;
 	PARTICLEPARAM* m_stParticleParam;
 	ComputeParticleType* m_stParticleType;
+
+	SHPTR<CSword>	m_spSword;
+
 };
 
 END

@@ -12,11 +12,9 @@
 #ifdef _DEBUG
 #pragma comment (lib, "DirectXTKd12")
 #pragma comment (lib, "fmodL_vc")
-#pragma comment (lib, "PTHLib_Debug")
 #else
 #pragma comment (lib, "DirectXTK12")
 #pragma comment (lib, "fmod_vc")
-#pragma comment (lib, "PTHLib")
 #endif
 
 #pragma comment (lib, "libxl")
@@ -45,7 +43,7 @@ static const char* CLONETYPE_ONCE_STRING{ "CLONETYPE_ONCE" };
 // Use Debugging Values
 #define _USE_DEBUGGING
 #define _USE_IMGUI
-//#define _EDIT_NAVI
+#define _EDIT_NAVI
 
 #pragma comment(lib, "WS2_32.lib")
 #pragma comment(lib, "MSWSock.lib")

@@ -20,7 +20,7 @@ public:
 
 	enum COMMONSTATE
 	{
-		ANIM_IDLE, ANIM_MOVE, ANIM_ATTACK, ANIM_COMBO, ANIM_RUN, ANIM_JUMP_FRONT, ANIM_JUMP_BACK, ANIM_JUMP_FRONT_RUN, ANIM_JUMP_BACK_RUN
+		ANIM_IDLE, ANIM_MOVE, ANIM_ATTACK, ANIM_ROLL, ANIM_RUN, ANIM_JUMP
 	};
 public:
 	UAnimationController(CSHPTRREF<UDevice> _spDevice);
@@ -49,7 +49,7 @@ protected: /* get set  */
 
 	void UpdateState(CSHPTRREF<UAnimModel> _spAnimModel, const _int _iAnimState, const _wstring& _wstrTrigger);
 private:
-	_int											m_iAnimState;
+	_int										m_iAnimState;
 	_wstring									m_wstrTrigger;
 	WKPTR<UCharacter>			m_wpOwnerCharacter;
 };

@@ -172,7 +172,6 @@ HRESULT URenderer::NativeConstruct()
         spGameInstance->GetPreAllocatedConstantBuffer(PREALLOCATED_TRANSFORM, m_spTransformConstantBuffer);
     }
     // Initailize 
-    \
         return S_OK;
 }
 

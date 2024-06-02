@@ -13,7 +13,7 @@
 #include "UParticleSystem.h"
 
 CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
-	: UPlayer(_spDevice, _wstrLayer, _eCloneType)
+	: UPlayer(_spDevice, _wstrLayer, _eCloneType), m_spSword{nullptr}
 {
 }
 
@@ -49,6 +49,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetRunningSpeed(100.f);
 	SetRunState(false);
 
+
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	{
 
@@ -83,6 +84,12 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 		*m_spParticle->GetParticleSystem()->GetAddParticleAmount() = 4;
 		m_spParticle->SetParticleType(PARTICLE_FOOTPRINT);
 		m_spParticle->SetActive(false);
+	}
+
+	{
+	//	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	//	m_spSword = std::static_pointer_cast<CSword>(spGameInstance->CloneActorAdd(PROTO_ACTOR_LONGSWORD, ));
+
 	}
 	return S_OK;
 }
@@ -125,6 +132,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 			GetTransform()->RotateTurn(_float3(0.f, 1.f, 0.f), MouseMove * 5.f, _dTimeDelta);
 		}
 	}
+
 	// Move
 	if (CWarriorAnimController::ANIM_MOVE == AnimState || CWarriorAnimController::ANIM_JUMP_FRONT == AnimState)
 	{
@@ -141,25 +149,38 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		SetRunState(true);
 	}
 	
-	
 
-	if (CWarriorAnimController::ANIM_WALKBACK == AnimState || CWarriorAnimController::ANIM_JUMP_BACK == AnimState)
-	{
-		if (spGameInstance->GetDIKeyPressing(DIK_S))
-		{
-		//	GetTransform()->MoveBack(_dTimeDelta, GetMovingSpeed());
-			SetRunState(false);
-		}
-	}
+	//// Move
+	//if (CWarriorAnimController::ANIM_MOVE == AnimState)
+	//{
+	//	//TranslateStateMoveAndRunF(spGameInstance, _dTimeDelta, GetMovingSpeed());
+	//	SetRunState(false);
+	//}
 
-	if (CWarriorAnimController::ANIM_RUNBACK == AnimState || CWarriorAnimController::ANIM_JUMP_BACK_RUN == AnimState)
-	{
-		if (spGameInstance->GetDIKeyPressing(DIK_S))
-		{
-		//	GetTransform()->MoveBack(_dTimeDelta, GetRunningSpeed());
-			SetRunState(true);
-		}
-	}
+	//if (CWarriorAnimController::ANIM_RUN == AnimState)
+	//{
+	//	//TranslateStateMoveAndRunF(spGameInstance, _dTimeDelta, GetRunningSpeed());
+	//	SetRunState(true);
+	//}
+
+
+	//if (CWarriorAnimController::ANIM_WALKBACK == AnimState)
+	//{
+	//	if (spGameInstance->GetDIKeyPressing(DIK_S))
+	//	{
+	//		//GetTransform()->MoveBack(_dTimeDelta, GetMovingSpeed());
+	//		SetRunState(false);
+	//	}
+	//}
+
+	//if (CWarriorAnimController::ANIM_RUNBACK == AnimState)
+	//{
+	//	if (spGameInstance->GetDIKeyPressing(DIK_S))
+	//	{
+	//		//GetTransform()->MoveBack(_dTimeDelta, GetRunningSpeed());
+	//		SetRunState(true);
+	//	}
+	//}
 
 }
 

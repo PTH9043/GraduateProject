@@ -164,6 +164,7 @@ _bool UCell::IsIn(const _float3& _vPos, _int& _iNeightborIndex, _float3& _vLine)
 }
 
 
+
 _bool UCell::IsComparePoints(const _float3& _vPointA, const _float3& _vPointB)
 {
 	if (DirectX::XMVector3Equal(XMLoadFloat3(&m_arrPoints[POINT_A]), _vPointA))

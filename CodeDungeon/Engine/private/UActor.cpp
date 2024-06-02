@@ -115,6 +115,7 @@ void UActor::SetShadowRenderActive(const _bool _isActvie)
 	}
 	m_isShadowRenderActive = _isActvie;
 }
+
 void UActor::SetParentsActor(CSHPTRREF<UActor> _spActor)
 {
 	RETURN_CHECK(nullptr == _spActor, ;);

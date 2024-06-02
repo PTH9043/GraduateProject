@@ -54,6 +54,8 @@ public:
 	// Set Animation
 	void SetAnimation(const _uint& _iAnimIndex);
 	void SetAnimation(const _wstring& _wstrAnimName);
+	void SetAnimation(const _uint& _iAnimIndex, const _double& _dNextTimeAcc);
+	void SetAnimation(const _wstring& _wstrAnimName, const _double& _dNextTimeAcc);
 	// Change Animation
 	void ChangeAnimation(const _uint& _iAnimIndex);
 	void ChangeAnimation(const _wstring& _wstrAnimName);
