@@ -635,8 +635,11 @@ namespace Engine {
 		SHPTR<class UCollider>			spCollider;
 		SHPTR<class UBoneNode>	spBoneNode;
 
+		_float3										vColliderScale;
+		_float3										vColliderTranslation;
+
 		ANIMCOLLIDERDESC() :  iColliderType{ 0 },
-			spCollider{ nullptr }, spBoneNode{ nullptr } {}
+			spCollider{ nullptr }, spBoneNode{ nullptr }, vColliderScale{ 1, 1, 1}, vColliderTranslation{ 1, 1, 1 } {}
 	};
 	/*
 	@ Date: 2024-02-21, Writer: นฺลยว๖

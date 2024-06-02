@@ -17,7 +17,7 @@ public:
 	UAnimOccursTimePassEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load);
 	DESTRUCTOR(UAnimOccursTimePassEvent)
 public:
-	virtual SHPTR<UAnimEvent> Clone() override;
+	virtual SHPTR<UAnimEvent> Clone(UAnimModel* _pAnimModel = nullptr) override;
 	// UAnimSectionEvent을(를) 통해 상속됨
 	virtual const ANIMOTHEREVENTDESC*  OutOtherEventDesc() override;
 protected:
@@ -47,7 +47,7 @@ public:
 	UAnimSoundEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load);
 	DESTRUCTOR(UAnimSoundEvent)
 public:
-	virtual SHPTR<UAnimEvent> Clone() override;
+	virtual SHPTR<UAnimEvent> Clone(UAnimModel* _pAnimModel = nullptr) override;
 	// UAnimSectionEvent을(를) 통해 상속됨
 	virtual const ANIMOTHEREVENTDESC* OutOtherEventDesc() override;
 protected:

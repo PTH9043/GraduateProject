@@ -26,8 +26,10 @@ class UNetworkManager;
 class UAudioSystemManager;
 class UCharacterManager;
 class UMaterialManager;
+class UAnimEventManager;
 
 class URenderer;
+class UCollider;
 
 class URootSignature;
 class UShaderConstantBuffer;

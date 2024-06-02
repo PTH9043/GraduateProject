@@ -76,10 +76,7 @@ namespace Engine
             return *this;
         }
 
-        CustomString& operator =(const TString& _str)  {
-            STRING<TChar>::operator=(_str);
-            return *this;
-        }
+
 
         CustomString& operator =(const TChar* _str) {
             STRING<TChar>::operator=(_str);

@@ -63,6 +63,7 @@ static const char* CLONETYPE_ONCE_STRING{ "CLONETYPE_ONCE" };
 #include <DirectXTK/GraphicsMemory.h>
 #include <DirectXTK/SpriteFont.h>
 #include <DirectXTK/DescriptorHeap.h>
+#include <DirectXTK/ResourceUploadBatch.h>
 #include "DirectXTK/d3dx12.h"
 
 

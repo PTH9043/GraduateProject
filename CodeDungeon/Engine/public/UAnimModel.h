@@ -8,6 +8,7 @@ class UTexture;
 class UTransform;
 class UPawn;
 class UMeshFilter;
+class UCollider;
 /*
 @ Date: 2024-02-04, Writer: 박태현
 @ Explain
@@ -15,6 +16,7 @@ class UMeshFilter;
 애니메이션 정보도 들고 있어서 애니메이션을 실행할 수 있다.
 */
 class  UAnimModel : public UModel{
+	using ANIMEVENTCOLLIDERCONTAINER = UNORMAP<_int, SHPTR<UCollider>>;
 	using ANIMATIONS = VECTOR<SHPTR<UAnimation>>;
 	using SETUPBONEMATRIXES = ARRAY<_float4x4, MAX_BONE_SIZE>;
 	using ANIMSTRINGS = UNORMAP<_wstring, _uint>;
@@ -49,6 +51,10 @@ public:
 	void TickAnimChangeTransform(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta);
 	// 현재 애니메이션을 TimAcc 값에 따라서 제어하는 함수 Evnet도 TimeAcc에 따라 제어한다. 
 	void TickAnimToTimeAccChangeTransform(CSHPTRREF<UTransform> _spTransform, const _double& _dTimeDelta, const _double& _TimeAc);
+	// RootBone 노드의 Transform을 적용하는 함수
+	void ApplyRootBoneTransform(CSHPTRREF<UTransform> _spTransform);
+	// RootBone 노드의 Transform을 적용하는 함수
+	void ApplyRootBoneMatrix(_float4x4& _matrix);
 	// 애니메이션을 렌더하는 함수
 	virtual HRESULT Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader, CSHPTRREF<UCommand> _spCommand) override;
 	// Set Animation
@@ -65,6 +71,9 @@ public:
 	void OnShowOriginAnimation();
 	void OnAdjustTransformToAnimation();
 	void ResetCurAnimEvent();
+
+	SHPTR<UCollider> BringAttackCollider(_int _iColliderType);
+	_bool IsCollisionAttackCollider(CSHPTRREF<UCollider> _spEnemyCollider);
 public: /* get set */
 	ANIMATIONS& GetAnimations() { return m_vecAnimations; }
 	const ANIMATIONPARAM& GetAnimParam() const { return m_stAnimParam; }
@@ -82,6 +91,7 @@ public: /* get set */
 
 	void SetSupplyLerpValue(const _float _fSupplyLerpValue) { this->m_fSupplyLerpValue = _fSupplyLerpValue; }
 	void SetAnimParam(const ANIMATIONPARAM& _stAnimParam) { this->m_stAnimParam = _stAnimParam; }
+	void UpdateAttackData(const _bool _isCanAttackSituation, CSHPTRREF<UCollider> _spCollider);
 private:
 	// CreateAnimation
 	HRESULT CreateAnimation(const VECTOR<ANIMDESC>& _convecAnimDesc, const _wstring& _wstrPath);
@@ -117,7 +127,10 @@ private:
 	_bool															m_isChangeAnim;
 	_float4x4													m_mPivotMatrix;
 
-	SHPTR<UMeshFilter>								m_spMeshFilterController;								
+	SHPTR<UMeshFilter>								m_spMeshFilterController;
+	ANIMEVENTCOLLIDERCONTAINER		m_AnimEventColliderContainer;
+	_bool															m_isCanAttackSituation;
+	SHPTR<UCollider>									m_spAttackCollisionCollider;
 };
 
 END

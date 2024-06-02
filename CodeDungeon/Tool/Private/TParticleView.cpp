@@ -163,7 +163,7 @@ void TParticleView::LoadAnimParticleResource()
 			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 100;
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 25.f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.0f, 0.0f, 0.1f);
-			tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_ANIM;
+		//	tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_ANIM;
 		
 			tDesc.ParticleParam.stGlobalParticleInfo.fAnimSizeX = 5;
 			tDesc.ParticleParam.stGlobalParticleInfo.fAnimSizeY = 5;
@@ -178,7 +178,7 @@ void TParticleView::LoadAnimParticleResource()
 
 		m_AnimParticleType[i]->fParticleType = PARTICLE_TYPE_DEFAULT;		
 		m_AnimParticleType[i]->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;		
-		m_AnimParticle[i]->SetParticleType(PARTICLE_ANIM);
+	//	m_AnimParticle[i]->SetParticleType(PARTICLE_ANIM);
 	}
 
 }
