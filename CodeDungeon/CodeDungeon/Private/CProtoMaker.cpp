@@ -6,12 +6,14 @@
 #include "UAnimModel.h"
 #include "CWarriorAnimController.h"
 #include "CMummyAnimController.h"
+#include "CSarcophagusAnimController.h"
 #include "UAnimModel.h"
 #include "CWarriorPlayer.h"
 #include "CMummy.h"
 #include "CTorch.h"
 #include "UTexGroup.h"
 #include "CSword.h"
+#include "CSarcophagus.h"
 
 
 HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, CSHPTRREF<UDevice> _spDevice, CSHPTRREF<UCommand> _spCommand)
@@ -21,6 +23,8 @@ HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, C
 	_spGameInstance->AddPrototype(PROTO_ACTOR_TORCH, CreateConstructorToNative<CTorch>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_WARRIORPLAYER, CreateConstructorToNative<CWarriorPlayer>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_MUMMY, CreateConstructorToNative<CMummy>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
+	_spGameInstance->AddPrototype(PROTO_ACTOR_SARCOPHAGUSLYING, CreateConstructorToNative<CSarcophagus>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
+	_spGameInstance->AddPrototype(PROTO_ACTOR_SARCOPHAGUSSTANDING, CreateConstructorToNative<CSarcophagus>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_RES_LONGSWORDMODEL, CreateConstructorToNative< CSword>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 
 
@@ -46,7 +50,9 @@ HRESULT CProtoMaker::CreateMainSceneProtoData(CSHPTRREF<UGameInstance> _spGameIn
 {
 	_spGameInstance->AddPrototype(PROTO_COMP_WARRIORANIMCONTROLLER, CreateConstructorToNative<CWarriorAnimController>(_spDevice));
 	_spGameInstance->AddPrototype(PROTO_COMP_MUMMYANIMCONTROLLER, CreateConstructorToNative<CMummyAnimController>(_spDevice));
-	
+	_spGameInstance->AddPrototype(PROTO_COMP_SARCOPHAGUSANIMCONTROLLER, CreateConstructorToNative<CSarcophagusAnimController>(_spDevice));
+
+
 	_float4x4 Matrix = _float4x4::CreateScale(0.1f) /** _float4x4::CreateRotationY(DirectX::XMConvertToRadians(180.f))*/;
 
 	Matrix = _float4x4::CreateScale(10.f);
@@ -56,6 +62,15 @@ HRESULT CProtoMaker::CreateMainSceneProtoData(CSHPTRREF<UGameInstance> _spGameIn
 	Matrix = _float4x4::CreateScale(0.1f);
 	_spGameInstance->AddPrototype(PROTO_RES_MUMMYANIMMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
 		_spDevice, L"..\\..\\Resource\\AnimModel\\Mummy\\Convert\\Mummy_DEMO_1_FBX.bin", Matrix));
+
+	Matrix = _float4x4::CreateScale(0.1f);
+	_spGameInstance->AddPrototype(PROTO_RES_SARCOPHAGUSLYINGANIMMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
+		_spDevice, L"..\\..\\Resource\\AnimModel\\Sarcophagus\\Convert\\SarcophagusLaying_FBX.bin", Matrix));
+
+	Matrix = _float4x4::CreateScale(0.1f);
+	_spGameInstance->AddPrototype(PROTO_RES_SARCOPHAGUSSTANDINGANIMMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
+		_spDevice, L"..\\..\\Resource\\AnimModel\\Sarcophagus\\Convert\\SarcophagusStanding_FBX.bin", Matrix));
+
 
 	_spGameInstance->AddPrototype(PROTO_RES_LONGSWORDMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UModel>(
 		_spDevice, L"..\\..\\Resource\\Model\\Sword\\Convert\\sword_FBX.bin"));

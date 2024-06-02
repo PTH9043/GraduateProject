@@ -21,6 +21,8 @@
 #include "UMethod.h"
 #include "CTorch.h"
 #include "CMummy.h"
+#include "CSarcophagus.h"
+#include "UAnimModel.h"
 
 
 BEGIN(Client)
@@ -156,19 +158,40 @@ HRESULT CMainScene::LoadSceneData()
 			}
 		}
 	}
+
+	//플레이어 생성
+	{
+		CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_WARRIORANIMCONTROLLER };
+		CWarriorPlayer::PLAYERDESC PlayerDesc{ m_spMainCamera };
+		m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
+			PROTO_ACTOR_WARRIORPLAYER, { &CharDesc, &PlayerDesc }));
+	}
+
+	//미라 생성
 	{
 		CMummy::CHARACTERDESC CharDesc{PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_MUMMYANIMCONTROLLER};
-
 		m_spMummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(
 			PROTO_ACTOR_MUMMY, { &CharDesc }));
+		m_spMummy->SetMummyType(CMummy::MUMMYTYPE::TYPE_LYING);
+		m_spMummy->GetAnimModel()->SetAnimation(L"staticLaying");
+		m_spMummy->SetTargetPlayer(m_spWarriorPlayer);
+		m_spMummy->SetMobPlacement(120);
 	}
 
+	//미라 관 생성
 	{
-		CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_WARRIORANIMCONTROLLER};
-		CWarriorPlayer::PLAYERDESC PlayerDesc{m_spMainCamera };
-		m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
-		PROTO_ACTOR_WARRIORPLAYER, {&CharDesc, &PlayerDesc }));
+		CSarcophagus::CHARACTERDESC CharDesc{ PROTO_RES_SARCOPHAGUSLYINGANIMMODEL, PROTO_COMP_SARCOPHAGUSANIMCONTROLLER };
+		m_spSarcophagus = std::static_pointer_cast<CSarcophagus>(spGameInstance->CloneActorAdd(
+			PROTO_ACTOR_SARCOPHAGUSLYING, { &CharDesc }));
+		m_spSarcophagus->SetSarcophagusType(CSarcophagus::SARCOTYPE::TYPE_LYING);
+		m_spSarcophagus->GetTransform()->SetNewWorldMtx(m_spMummy->GetTransform()->GetWorldMatrix());
+		m_spSarcophagus->GetAnimModel()->SetAnimation(0);
+		m_spSarcophagus->SetTargetPlayer(m_spWarriorPlayer);
+		//미라 위치조정
+		m_spMummy->GetTransform()->TranslateDir((m_spMummy->GetTransform()->GetLook()), 1, 10);
 	}
+
+	
 
 	return S_OK;
 }

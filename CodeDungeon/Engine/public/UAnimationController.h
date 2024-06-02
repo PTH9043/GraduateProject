@@ -20,7 +20,7 @@ public:
 
 	enum COMMONSTATE
 	{
-		ANIM_IDLE, ANIM_MOVE, ANIM_ATTACK, ANIM_ROLL, ANIM_RUN, ANIM_JUMP
+		ANIM_IDLE, ANIM_MOVE, ANIM_ATTACK, ANIM_DEATH, ANIM_HIT
 	};
 public:
 	UAnimationController(CSHPTRREF<UDevice> _spDevice);

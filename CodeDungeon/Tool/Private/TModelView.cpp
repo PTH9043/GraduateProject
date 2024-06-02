@@ -422,6 +422,7 @@ void TModelView::ShowModelList()
 							Containers.second->SetTranslate(newModel->GetShowModel()->GetCenterPos());
 							Containers.second->SetScaleToFitModel(newModel->GetShowModel()->GetMinVertexPos(), newModel->GetShowModel()->GetMaxVertexPos());
 							Containers.second->SetTransform(newModel->GetTransform());
+					
 						}
 
 						m_ShowModelsContainer.emplace(uniqueName, newModel);
@@ -596,6 +597,7 @@ void TModelView::ShowAnimModelList()
 						Containers.second->SetTranslate(newAnimModel->GetAnimModel()->GetCenterPos());
 						Containers.second->SetScaleToFitModel(newAnimModel->GetAnimModel()->GetMinVertexPos(), newAnimModel->GetAnimModel()->GetMaxVertexPos());
 						Containers.second->SetTransform(newAnimModel->GetTransform());
+
 					}
 
 					m_ShowAnimModelsContainer.emplace(uniqueName, newAnimModel);

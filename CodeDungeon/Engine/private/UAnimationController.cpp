@@ -53,19 +53,6 @@ void UAnimationController::UpdateState(CSHPTRREF<UAnimModel> _spAnimModel, const
 	}
 
 	m_wstrTrigger = _wstrTrigger;
-	if (_spAnimModel->GetCurrentAnimation()->GetAnimName() != L"attack01" &&
-		_spAnimModel->GetCurrentAnimation()->GetAnimName() != L"attack02" && 
-		_spAnimModel->GetCurrentAnimation()->GetAnimName() != L"attack04" && 
-		_spAnimModel->GetCurrentAnimation()->GetAnimName() != L"attack05" &&
-		_spAnimModel->GetCurrentAnimation()->GetAnimName() != L"combo04"&& 
-		_spAnimModel->GetCurrentAnimation()->GetAnimName() != L"combo04_1" &&
-		_spAnimModel->GetCurrentAnimation()->GetAnimName() != L"combo04_2")
-	{
-		m_iAnimState = _iAnimState;
-	}
-	else
-	{
-		m_iAnimState = ANIM_ATTACK;
-	}
+	m_iAnimState = _iAnimState;
 }
 

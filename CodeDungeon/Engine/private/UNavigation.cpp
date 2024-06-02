@@ -196,8 +196,6 @@ SHPTR<UCell> UNavigation::FindCell(const _float3& _vPosition)
 	for (auto& iter : (*m_spCellContainer.get())) {
 		if (true == iter->IsIn(_vPosition, iNeighborIndex, vLine)) {
 			float yDiff = _vPosition.y - iter->GetHeightAtXZ(_vPosition.x, _vPosition.z);
-			if (yDiff < 0)
-				continue;
 			if (minYDiff == -1.0f || yDiff < minYDiff) { // 처음으로 유효한 값을 만났거나 현재의 y 차이가 최소값보다 작은 경우
 				minYDiff = yDiff;
 				m_iCurIndex = iter->GetIndex();
@@ -214,7 +212,31 @@ SHPTR<UCell> UNavigation::FindCell(const _float3& _vPosition)
 		return nullptr;
 }
 
+SHPTR<UCell> UNavigation::FindCellWithoutUpdate(const _float3& _vPosition)
+{
+	RETURN_CHECK(nullptr == m_spCellContainer, nullptr);
+	_int iNeighborIndex{ 0 };
+	_float3 vLine{};
+	_bool success = false;
+	SHPTR<UCell> closestCell{};
+	float minYDiff = -1.0f; // -1.0f를 초기값으로 설정하여 첫 번째 유효한 셀의 y 차이로 초기화
 
+	for (auto& iter : (*m_spCellContainer.get())) {
+		if (true == iter->IsIn(_vPosition, iNeighborIndex, vLine)) {
+			float yDiff = _vPosition.y - iter->GetHeightAtXZ(_vPosition.x, _vPosition.z);
+			if (minYDiff == -1.0f || yDiff < minYDiff) { // 처음으로 유효한 값을 만났거나 현재의 y 차이가 최소값보다 작은 경우
+				minYDiff = yDiff;
+				success = true;
+				closestCell = iter;
+			}
+		}
+	}
+
+	if (success)
+		return closestCell;
+	else
+		return nullptr;
+}
 
 SHPTR<UCell> UNavigation::FindCell(const _int& _iIndex)
 {
@@ -224,6 +246,19 @@ SHPTR<UCell> UNavigation::FindCell(const _int& _iIndex)
 	for (auto& iter : (*m_spCellContainer.get())) {
 		if (iter->GetIndex() == _iIndex) {
 			m_iCurIndex = _iIndex;
+			return iter;
+		}
+	}
+	return nullptr;
+}
+
+SHPTR<UCell> UNavigation::FindCellWithoutUpdate(const _int& _iIndex)
+{
+	RETURN_CHECK(nullptr == m_spCellContainer, nullptr);
+	_int iNeighborIndex{ 0 };
+	_float3 vLine{};
+	for (auto& iter : (*m_spCellContainer.get())) {
+		if (iter->GetIndex() == _iIndex) {
 			return iter;
 		}
 	}
@@ -364,3 +399,105 @@ _float3 UNavigation::ClampPositionToCell(const _float3& position)
 	}
 	return closestPointOnEdges;
 }
+
+_float UNavigation::Heuristic(const _float3& a, const _float3& b)
+{
+	_float3 delta = { abs(b.x - a.x), abs(b.y - a.y), abs(b.z - a.z) };
+	return delta.x + delta.y + delta.z;
+}
+
+UNavigation::PathFindingState UNavigation::StartPathFinding(const _float3& start, CSHPTRREF<UCell> _destCell)
+{
+	PathFindingState state;
+	state.endCell = _destCell;
+
+	SHPTR<UCell> startCell = FindCellWithoutUpdate(start);
+	state.openSet.push({ startCell, 0, Heuristic(start, _destCell->GetCenterPos()), 0, nullptr });
+	state.costSoFar[startCell] = 0;
+
+	return state;
+}
+
+bool UNavigation::StepPathFinding(PathFindingState& state)
+{
+	if (state.openSet.empty()) {
+		return true; // 경로를 찾지 못함
+	}
+
+	CellPathNode current = state.openSet.top();
+	state.openSet.pop();
+
+	if (current.cell == state.endCell) {
+		// 경로를 추적하여 반환
+		state.pathFound = true;
+		for (SHPTR<UCell> c = state.endCell; c != nullptr; c = state.cameFrom[c]) {
+			state.path.push_back(c);
+		}
+		std::reverse(state.path.begin(), state.path.end());
+		return true; // 경로 찾음
+	}
+
+	for (int neighborIndex : current.cell->GetNeighbor()) {
+		if (neighborIndex == -1) continue;
+		SHPTR<UCell> neighbor = FindCellWithoutUpdate(neighborIndex);
+
+		_float newCost = state.costSoFar[current.cell] + Heuristic(current.cell->GetCenterPos(), neighbor->GetCenterPos());
+		if (state.costSoFar.find(neighbor) == state.costSoFar.end() || newCost < state.costSoFar[neighbor]) {
+			state.costSoFar[neighbor] = newCost;
+			_float priority = newCost + Heuristic(neighbor->GetCenterPos(), state.endCell->GetCenterPos());
+			state.openSet.push({ neighbor, newCost, Heuristic(neighbor->GetCenterPos(), state.endCell->GetCenterPos()), priority, current.cell });
+			state.cameFrom[neighbor] = current.cell;
+		}
+	}
+
+	return false; // 아직 경로를 찾지 못함
+}
+
+
+VECTOR<_float3> UNavigation::OptimizePath(const VECTOR<SHPTR<UCell>>& path, const _float3& start, const _float3& end) {
+	VECTOR<_float3> optimizedPath;
+
+	// 시작점 추가
+	optimizedPath.push_back(start);
+
+	// 중간점 추가
+	for (const auto& cell : path) {
+		optimizedPath.push_back(cell->GetCenterPos());
+	}
+
+	// 끝점 추가
+	optimizedPath.push_back(end);
+
+	// 경로 최적화 (단순화)
+	VECTOR<_float3> straightPath;
+	_float3 lastPoint = start;
+	straightPath.push_back(lastPoint);
+
+	for (size_t i = 1; i < optimizedPath.size() - 1; ++i) {
+		if (!LineTest(lastPoint, optimizedPath[i + 1])) {
+			straightPath.push_back(optimizedPath[i]);
+			lastPoint = optimizedPath[i];
+		}
+	}
+
+	straightPath.push_back(end);
+	return straightPath;
+}
+
+bool UNavigation::LineTest(const _float3& start, const _float3& end) {
+
+	_float3 direction = end - start;
+	_float distance = direction.Length();
+	direction.Normalize();
+
+	_float3 currentPos = start;
+	for (float t = 0; t < distance; t += 1.0f) {
+		currentPos = start + direction * t;
+		SHPTR<UCell> TestCell = FindCellWithoutUpdate(currentPos);
+		if (!TestCell) {
+			return false;
+		}
+	}
+	return true;
+}
+

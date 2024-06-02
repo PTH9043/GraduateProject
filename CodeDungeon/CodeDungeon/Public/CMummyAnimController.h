@@ -14,6 +14,11 @@ public:
 	CMummyAnimController(CSHPTRREF<UDevice> _spDevice);
 	CMummyAnimController(const CMummyAnimController& _rhs);
 	virtual ~CMummyAnimController() = default;
+
+	enum MUMMYSTATE
+	{
+		ANIM_SLEEP = 6, ANIM_AWAKE = 7, ANIM_TAUNT = 8
+	};
 public:
 	virtual void Free() override;
 	CLONE_MACRO(CMummyAnimController, "CMummyAnimController::Clone To Failed")

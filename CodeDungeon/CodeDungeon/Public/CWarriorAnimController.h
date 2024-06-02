@@ -12,8 +12,7 @@ class UAnimation;
 class CWarriorAnimController final : public UAnimationController {
 public:
 	enum WARRIOR_STATE {
-		ANIM_WALKBACK = COMMONSTATE::ANIM_RUN,
-		ANIM_RUNBACK,
+		ANIM_ROLL = 6, ANIM_RUN = 7, ANIM_JUMP = 8
 	};
 public:
 	CWarriorAnimController(CSHPTRREF<UDevice> _spDevice);

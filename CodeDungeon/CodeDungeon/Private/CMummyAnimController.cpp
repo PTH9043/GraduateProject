@@ -4,6 +4,7 @@
 #include "UGameInstance.h"
 #include "UAnimModel.h"
 #include "UCharacter.h"
+#include "UAnimation.h"
 
 CMummyAnimController::CMummyAnimController(CSHPTRREF<UDevice> _spDevice)
 	: UAnimationController(_spDevice)
@@ -35,21 +36,47 @@ HRESULT CMummyAnimController::NativeConstructClone(const VOIDDATAS& _tDatas)
 
 void CMummyAnimController::Tick(const _double& _dTimeDelta)
 {
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
 	// Reset Trigger
 	ClearTrigger();
 	/* Reset */
 	SetAnimState(-1);
 
+	static _bool AttackMode = false;
+	static _bool TauntMode = false;
+
 	SHPTR< CMummy> spMummy = m_wpMummyMob.lock();
 	SHPTR<UAnimModel> spAnimModel = spMummy->GetAnimModel();
+	const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
 
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	_float DistanceFromPlayer = spMummy->GetDistanceFromPlayer();
+	_bool FoundPlayer = spMummy->GetFoundTargetState();
+	_bool idle = true;
 
-	_bool isIdle = false;
-	_bool isMove = false;
+	if (FoundPlayer && !AttackMode && !TauntMode)
+	{
+		UpdateState(spAnimModel, ANIM_AWAKE, L"WAKEUP");
+	}
 
-	SetTrigger(L"IDLE");
-	SetAnimState(ANIM_IDLE);
+	if (CurAnimName == L"openLaying" || CurAnimName == L"openStanding")
+		TauntMode = true;
+
+	if (TauntMode)
+	{
+		UpdateState(spAnimModel, ANIM_TAUNT, L"TAUNT");
+	}
+
+	if (CurAnimName == L"taunt")
+		AttackMode = true;
+
+	if (AttackMode)
+	{
+		if(idle)
+			UpdateState(spAnimModel, ANIM_IDLE, L"IDLE");
+	}
+
+
 
 	spAnimModel->TickEvent(spMummy.get(), GetTrigger(), _dTimeDelta);
 

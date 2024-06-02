@@ -67,6 +67,21 @@
     <Filter Include="05.Objects\Sword">
       <UniqueIdentifier>{eb6c9e65-4ba8-4b07-8410-31a799c24c73}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Objects\Character\Mob\Mummy">
+      <UniqueIdentifier>{5663ec90-eafd-425b-ab17-4fd180f0b2ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Objects\Character\Mob\Mummy\Sarcophagus">
+      <UniqueIdentifier>{31bb1955-26f5-4600-a91e-f2f0c691126d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\Mummy">
+      <UniqueIdentifier>{d8d4649f-7429-418e-9892-1d154660c603}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\WarriorPlayer">
+      <UniqueIdentifier>{8e65972a-1a9b-4fbc-b8bf-becdde15900f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\Mummy\Sarcophagus">
+      <UniqueIdentifier>{7cb8b3b7-4d4b-4879-a8fc-22626d27452c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ClientDefines.h">
@@ -120,20 +135,29 @@
     <ClInclude Include="..\Public\CWarriorPlayer.h">
       <Filter>05.Objects\Character\WarriorPlayer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CWarriorAnimController.h">
-      <Filter>06.Comp\Controller</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\CTorch.h">
       <Filter>05.Objects\ModelObjects\Map\StaticObjects</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CMummy.h">
-      <Filter>05.Objects\Character\Mob</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\CMummyAnimController.h">
-      <Filter>06.Comp\Controller</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\CSword.h">
       <Filter>05.Objects\Sword</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CMummy.h">
+      <Filter>05.Objects\Character\Mob\Mummy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CSarcophagus.h">
+      <Filter>05.Objects\Character\Mob\Mummy\Sarcophagus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CMummyAnimController.h">
+      <Filter>06.Comp\Controller\Mummy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CWarriorAnimController.h">
+      <Filter>06.Comp\Controller\WarriorPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CSarcophagusAnimController.h">
+      <Filter>06.Comp\Controller\Mummy\Sarcophagus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CMob.h">
+      <Filter>05.Objects\Character\Mob</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -181,20 +205,29 @@
     <ClCompile Include="..\Private\CWarriorPlayer.cpp">
       <Filter>05.Objects\Character\WarriorPlayer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CWarriorAnimController.cpp">
-      <Filter>06.Comp\Controller</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\CTorch.cpp">
       <Filter>05.Objects\ModelObjects\Map\StaticObjects</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CMummy.cpp">
-      <Filter>05.Objects\Character\Mob</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\CMummyAnimController.cpp">
-      <Filter>06.Comp\Controller</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\CSword.cpp">
       <Filter>05.Objects\Sword</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CMummy.cpp">
+      <Filter>05.Objects\Character\Mob\Mummy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CSarcophagus.cpp">
+      <Filter>05.Objects\Character\Mob\Mummy\Sarcophagus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CMummyAnimController.cpp">
+      <Filter>06.Comp\Controller\Mummy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CWarriorAnimController.cpp">
+      <Filter>06.Comp\Controller\WarriorPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CSarcophagusAnimController.cpp">
+      <Filter>06.Comp\Controller\Mummy\Sarcophagus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CMob.cpp">
+      <Filter>05.Objects\Character\Mob</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

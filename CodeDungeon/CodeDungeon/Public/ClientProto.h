@@ -6,12 +6,19 @@
 
 #define PROTO_ACTOR_WARRIORPLAYER L"Proto_Actor_WarriorPlayer"
 #define PROTO_ACTOR_MUMMY L"Proto_Actor_Mummy"
+#define PROTO_ACTOR_SARCOPHAGUSLYING L"Proto_Actor_SarcophagusLying"
+#define PROTO_ACTOR_SARCOPHAGUSSTANDING L"Proto_Actor_SarcophagusStanding"
+
 #define PROTO_ACTOR_LONGSWORD L"Proto_Actor_LongSword"
 
 #define PROTO_RES_FEMAILPLAYERANIMMODEL L"Proto_Res_FemailPlayerAnimModel"
 #define PROTO_RES_MUMMYANIMMODEL L"Proto_Res_MummyAnimModel"
+#define PROTO_RES_SARCOPHAGUSLYINGANIMMODEL L"Proto_Res_SarcophagusLyingAnimModel"
+#define PROTO_RES_SARCOPHAGUSSTANDINGANIMMODEL L"Proto_Res_SarcophagusStandingAnimModel"
+
 #define PROTO_RES_LONGSWORDMODEL L"Proto_Res_LongSwordModel"
 
 #define PROTO_COMP_WARRIORANIMCONTROLLER L"Proto_Comp_WarriorAniMController"
 #define PROTO_COMP_MUMMYANIMCONTROLLER L"Proto_Comp_MummyAniMController"
+#define PROTO_COMP_SARCOPHAGUSANIMCONTROLLER L"Proto_Comp_SarcophagusAniMController"
 

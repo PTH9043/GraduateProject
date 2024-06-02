@@ -166,6 +166,7 @@
     <ClInclude Include="..\Public\CMainCamera.h" />
     <ClInclude Include="..\Public\CMainScene.h" />
     <ClInclude Include="..\Public\CMap.h" />
+    <ClInclude Include="..\Public\CMob.h" />
     <ClInclude Include="..\Public\CModelManager.h" />
     <ClInclude Include="..\Public\CModelObjects.h" />
     <ClInclude Include="..\Public\CMummy.h" />
@@ -173,6 +174,8 @@
     <ClInclude Include="..\Public\CNetworkClientController.h" />
     <ClInclude Include="..\Public\CProtoMaker.h" />
     <ClInclude Include="..\Public\CRooms.h" />
+    <ClInclude Include="..\Public\CSarcophagus.h" />
+    <ClInclude Include="..\Public\CSarcophagusAnimController.h" />
     <ClInclude Include="..\Public\CSword.h" />
     <ClInclude Include="..\Public\CTorch.h" />
     <ClInclude Include="..\Public\CWarriorPlayer.h" />
@@ -188,6 +191,7 @@
     <ClCompile Include="..\Private\CMainCamera.cpp" />
     <ClCompile Include="..\Private\CMainScene.cpp" />
     <ClCompile Include="..\Private\CMap.cpp" />
+    <ClCompile Include="..\Private\CMob.cpp" />
     <ClCompile Include="..\Private\CModelManager.cpp" />
     <ClCompile Include="..\Private\CModelObjects.cpp" />
     <ClCompile Include="..\Private\CMummy.cpp" />
@@ -195,6 +199,8 @@
     <ClCompile Include="..\Private\CNetworkClientController.cpp" />
     <ClCompile Include="..\Private\CProtoMaker.cpp" />
     <ClCompile Include="..\Private\CRooms.cpp" />
+    <ClCompile Include="..\Private\CSarcophagus.cpp" />
+    <ClCompile Include="..\Private\CSarcophagusAnimController.cpp" />
     <ClCompile Include="..\Private\CSword.cpp" />
     <ClCompile Include="..\Private\CTorch.cpp" />
     <ClCompile Include="..\Private\CWarriorPlayer.cpp" />

@@ -38,7 +38,6 @@ HRESULT CWarriorAnimController::NativeConstructClone(const VOIDDATAS& _tDatas)
 void CWarriorAnimController::Tick(const _double& _dTimeDelta)
 {
     ClearTrigger();
-
     SetAnimState(-1);
 
     SHPTR<CWarriorPlayer> spWarriorPlayer = m_wpWarriorPlayer.lock();

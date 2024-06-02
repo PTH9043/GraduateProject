@@ -8,6 +8,7 @@ class CMainCamera;
 class CMap;
 class CWarriorPlayer;
 class CMummy;
+class CSarcophagus;
 
 
 class CMainScene final : public UScene{
@@ -30,8 +31,9 @@ private:
 	SHPTR<CMainCamera>			m_spMainCamera;
 
 	SHPTR<CMap>							m_spMap;
-	SHPTR< CWarriorPlayer>		m_spWarriorPlayer;
+	SHPTR<CWarriorPlayer>		m_spWarriorPlayer;
 	SHPTR<CMummy>				m_spMummy;
+	SHPTR<CSarcophagus>			m_spSarcophagus;
 
 };
 

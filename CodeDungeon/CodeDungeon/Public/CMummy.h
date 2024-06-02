@@ -1,5 +1,6 @@
 #pragma once
-#include "UPlayer.h"
+#include "CMob.h"
+
 
 BEGIN(Client)
 /*
@@ -7,10 +8,13 @@ BEGIN(Client)
 @ Explain
 -  미라 몬스터 클래스.
 */
-class CMummy final : public UCharacter {
+class CMummy final : public CMob {
 public:
 	CMummy(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType);
 	CMummy(const CMummy& _rhs);
+	enum MUMMYTYPE {
+		TYPE_STANDING, TYPE_LYING, TYPE_END
+	};
 	DESTRUCTOR(CMummy)
 public:
 	// UPlayer을(를) 통해 상속됨
@@ -18,13 +22,18 @@ public:
 		virtual void Free() override;
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _Datas) override;
+
+	void SetMummyType(MUMMYTYPE _type) { m_MummyType = _type; }
+	MUMMYTYPE GetMummyType() { return m_MummyType; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
 	virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy) override;
+
 private:
+	MUMMYTYPE m_MummyType;
 
 };
 
