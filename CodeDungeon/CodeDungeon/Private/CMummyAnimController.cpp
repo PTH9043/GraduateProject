@@ -52,7 +52,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
 
 	_float DistanceFromPlayer = spMummy->GetDistanceFromPlayer();
 	_bool FoundPlayer = spMummy->GetFoundTargetState();
-	_bool idle = true;
+	_bool Move = false;
 
 	if (FoundPlayer && !AttackMode && !TauntMode)
 	{
@@ -72,8 +72,21 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
 
 	if (AttackMode)
 	{
-		if(idle)
-			UpdateState(spAnimModel, ANIM_IDLE, L"IDLE");
+		if(DistanceFromPlayer > 15.f)
+			UpdateState(spAnimModel, ANIM_MOVE, L"WALKF");
+		else
+		{
+			int randomAttack = rand() % 2;
+			if (randomAttack == 0)
+			{
+				UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK01");
+			}
+			else
+			{
+				UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK02");
+			}
+		}
+			
 	}
 
 

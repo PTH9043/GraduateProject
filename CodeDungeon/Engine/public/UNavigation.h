@@ -88,7 +88,7 @@ public:
 	*/
 	_float Heuristic(const _float3& a, const _float3& b);
 
-	UNavigation::PathFindingState StartPathFinding(const _float3& start, CSHPTRREF<UCell> _destCell);
+	UNavigation::PathFindingState StartPathFinding(const _float3& start, const _float3& end, CSHPTRREF<UCell> _startCell, CSHPTRREF<UCell> _destCell);
 
 	bool StepPathFinding(PathFindingState& state);
 

@@ -37,6 +37,7 @@ public:
 	void SetTargetPlayer(CSHPTRREF<UPlayer> _targetPlayer) { m_spTargetPlayer = _targetPlayer; }
 	const _bool& GetFoundTargetState() { return m_bFoundTarget; }
 	const _float& GetDistanceFromPlayer() { return m_fDistancefromNearestPlayer; }
+	const _float3& GetTargetPos() { return m_f3TargetPos; }
 	void SetMobPlacement(_int _CellIndex);
 	void MoveAlongPath(const VECTOR<_float3>& path, size_t& currentPathIndex, const _double& _dTimeDelta);
 
@@ -44,6 +45,7 @@ private:
 	_float			m_fDistancefromNearestPlayer;
 	_bool			m_bFoundTarget;
 	SHPTR<UPlayer> m_spTargetPlayer;
+	_float3        m_f3TargetPos;
 };
 
 END

@@ -43,7 +43,9 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 	GetAnimationController()->Tick(_dTimeDelta);
 	_int CurAnimState = GetAnimationController()->GetAnimState();
 	_float3 CurrentMobPos = GetTransform()->GetPos();
-	SHPTR<UCell> CurrentPlayerCell = GetTargetPlayer()->GetCurrentNavi()->GetCurCell ();
+	_float3 CurrentPlayerPos = GetTargetPlayer()->GetTransform()->GetPos();
+	SHPTR<UCell> CurrentMobCell = GetCurrentNavi()->GetCurCell();
+	SHPTR<UCell> CurrentPlayerCell = GetTargetPlayer()->GetCurrentNavi()->GetCurCell();
 
 	static _double timeAccumulator = 0.0;
 	static UNavigation::PathFindingState pathFindingState;
@@ -51,33 +53,40 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 	static VECTOR<_float3> path;
 	static size_t currentPathIndex = 0;
 
-	timeAccumulator += _dTimeDelta;
-
-	if (GetFoundTargetState() && timeAccumulator >= 2.0)
+	if(CurAnimState == UAnimationController::ANIM_MOVE)
 	{
-		SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-		pathFindingState = spNavigation->StartPathFinding(CurrentMobPos, CurrentPlayerCell);
-		isPathFinding = true;
-		timeAccumulator = 0.0;
-	}
-
-	if (isPathFinding)
-	{
-		SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-		if (spNavigation->StepPathFinding(pathFindingState))
+		timeAccumulator += _dTimeDelta;
+		if (GetFoundTargetState() && timeAccumulator >= 2.0)
 		{
-			isPathFinding = false;
-			if (pathFindingState.pathFound)
+			SHPTR<UNavigation> spNavigation = GetCurrentNavi();
+			pathFindingState = spNavigation->StartPathFinding(CurrentMobPos, CurrentPlayerPos, CurrentMobCell, CurrentPlayerCell);
+			isPathFinding = true;
+			timeAccumulator = 0.0;
+		}
+		if (isPathFinding)
+		{
+			SHPTR<UNavigation> spNavigation = GetCurrentNavi();
+			if (spNavigation->StepPathFinding(pathFindingState))
 			{
-				path = spNavigation->OptimizePath(pathFindingState.path, CurrentMobPos, CurrentPlayerCell->GetCenterPos());
-				currentPathIndex = 0; // 경로를 재설정하면 인덱스를 초기화합니다
+				isPathFinding = false;
+				if (pathFindingState.pathFound)
+				{
+					path = spNavigation->OptimizePath(pathFindingState.path, CurrentMobPos, CurrentPlayerPos);
+					currentPathIndex = 0; // 경로를 재설정하면 인덱스를 초기화합니다
+				}
 			}
 		}
+		if (GetFoundTargetState() && !path.empty())
+		{
+			MoveAlongPath(path, currentPathIndex, _dTimeDelta);
+			_float3 direction = CurrentMobPos - GetTargetPos();
+			GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
+		}
 	}
-
-	if (GetFoundTargetState() && !path.empty())
+	else
 	{
-		MoveAlongPath(path, currentPathIndex, _dTimeDelta);
+		_float3 direction = CurrentMobPos - CurrentPlayerPos;
+		GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
 	}
 
 
@@ -87,6 +96,9 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 	}
 	else
 		GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
+
+	_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
+	GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
 }
 
 void CMummy::LateTickActive(const _double& _dTimeDelta)

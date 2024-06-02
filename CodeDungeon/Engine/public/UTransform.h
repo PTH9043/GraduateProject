@@ -96,6 +96,12 @@ public:
 	void RotateTurn(const _float3& _vAxis, const _float& _fAngle);
 	void RotateTurn(const _float4& _vQuaternion);
 	void RotateTurn(const _float3& _vAngle);
+
+	void SetDirection(const _float3& direction);
+	void SetDirection(const _float3& targetDirection, float deltaTime, float rotationSpeed);
+	void SetDirectionFixedUp(const _float3& direction);
+	void SetDirectionFixedUp(const _float3& targetDirection, float deltaTime, float rotationSpeed);
+
 	void LookAt(const _float3& _vTargetPos);
 	void LookAtWithFixedUp(const _float3& _vTargetPos);
 	void LookAtWithFixedUp(const _float3& _vTargetPos, float DeltaTime, float RotationSpeed);

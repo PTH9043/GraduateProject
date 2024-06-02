@@ -406,13 +406,13 @@ _float UNavigation::Heuristic(const _float3& a, const _float3& b)
 	return delta.x + delta.y + delta.z;
 }
 
-UNavigation::PathFindingState UNavigation::StartPathFinding(const _float3& start, CSHPTRREF<UCell> _destCell)
+UNavigation::PathFindingState UNavigation::StartPathFinding(const _float3& start, const _float3& end, CSHPTRREF<UCell> _startCell, CSHPTRREF<UCell> _destCell)
 {
 	PathFindingState state;
 	state.endCell = _destCell;
 
-	SHPTR<UCell> startCell = FindCellWithoutUpdate(start);
-	state.openSet.push({ startCell, 0, Heuristic(start, _destCell->GetCenterPos()), 0, nullptr });
+	SHPTR<UCell> startCell = _startCell;
+	state.openSet.push({ startCell, 0, Heuristic(start, end), 0, nullptr});
 	state.costSoFar[startCell] = 0;
 
 	return state;
@@ -453,23 +453,24 @@ bool UNavigation::StepPathFinding(PathFindingState& state)
 	return false; // 아직 경로를 찾지 못함
 }
 
-
-VECTOR<_float3> UNavigation::OptimizePath(const VECTOR<SHPTR<UCell>>& path, const _float3& start, const _float3& end) {
+VECTOR<_float3> UNavigation::OptimizePath(const VECTOR<SHPTR<UCell>>& path, const _float3& start, const _float3& end)
+{
 	VECTOR<_float3> optimizedPath;
+	optimizedPath.reserve(path.size() + 2);
 
-	// 시작점 추가
 	optimizedPath.push_back(start);
 
-	// 중간점 추가
 	for (const auto& cell : path) {
 		optimizedPath.push_back(cell->GetCenterPos());
 	}
 
-	// 끝점 추가
+	// Add end point
 	optimizedPath.push_back(end);
 
-	// 경로 최적화 (단순화)
+	// Simplify the path
 	VECTOR<_float3> straightPath;
+	straightPath.reserve(optimizedPath.size()); 
+
 	_float3 lastPoint = start;
 	straightPath.push_back(lastPoint);
 

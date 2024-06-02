@@ -371,6 +371,116 @@ void UTransform::RotateTurn(const _float3& _vAngle)
 	SetLook(DirectX::XMVector3TransformNormal(GetLook(), RotationMatrix));
 }
 
+void UTransform::SetDirection(const _float3& direction)
+{
+	_float3 vPosition = GetPos();
+	_float4 vLook = XMVector3Normalize(direction);
+
+	_float4 vRight = DirectX::XMVector3Normalize(XMVector3Cross(_float3::Up, vLook));
+	_float4 vUp = DirectX::XMVector3Normalize(XMVector3Cross(vLook, vRight));
+
+	// Calculate the rotation matrix
+	_float4x4 rotationMatrix(
+		vRight,
+		vUp,
+		vLook,
+		_float4(0.0f, 0.0f, 0.0f, 1.0f)
+	);
+
+	m_vQuaternion = DirectX::XMQuaternionRotationMatrix(rotationMatrix);
+	_float4x4 RotationMatrix = DirectX::XMMatrixRotationQuaternion(m_vQuaternion);
+
+	SetRight(DirectX::XMVector3TransformNormal(_float3::Right * m_vScale.x, RotationMatrix));
+	SetUp(DirectX::XMVector3TransformNormal(_float3::Up * m_vScale.y, RotationMatrix));
+	SetLook(DirectX::XMVector3TransformNormal(_float3::Forward * m_vScale.z, RotationMatrix));
+}
+
+void UTransform::SetDirection(const _float3& targetDirection, float deltaTime, float rotationSpeed)
+{
+	_float3 vCurrentLook = GetLook();
+	_float4 vTargetLook = XMVector3Normalize(targetDirection);
+
+	// Compute the lerp factor based on delta time and rotation speed
+	float lerpFactor = rotationSpeed * deltaTime;
+	lerpFactor = std::clamp(lerpFactor, 0.0f, 1.0f);
+
+	_float3 n = DirectX::XMVectorLerp(vCurrentLook, vTargetLook, lerpFactor);
+	_float4 vLook = XMVector3Normalize(n);
+
+	_float4 vRight = DirectX::XMVector3Normalize(XMVector3Cross(_float3::Up, vLook));
+	_float4 vUp = DirectX::XMVector3Normalize(XMVector3Cross(vLook, vRight));
+
+
+	_float4x4 rotationMatrix(
+		vRight,
+		vUp,
+		vLook,
+		_float4(0.0f, 0.0f, 0.0f, 1.0f)
+	);
+
+	m_vQuaternion = DirectX::XMQuaternionRotationMatrix(rotationMatrix);
+	_float4x4 RotationMatrix = DirectX::XMMatrixRotationQuaternion(m_vQuaternion);
+
+	SetRight(DirectX::XMVector3TransformNormal(_float3::Right * m_vScale.x, RotationMatrix));
+	SetUp(DirectX::XMVector3TransformNormal(_float3::Up * m_vScale.y, RotationMatrix));
+	SetLook(DirectX::XMVector3TransformNormal(_float3::Forward * m_vScale.z, RotationMatrix));
+}
+
+void UTransform::SetDirectionFixedUp(const _float3& direction)
+{
+	_float3 FixedUp = _float3(0, 1, 0);
+	_float3 vPosition = GetPos();
+	_float4 vLook = XMVector3Normalize(direction);
+	_float4 vUp = DirectX::XMVector3Normalize(FixedUp);
+	_float4 vRight = DirectX::XMVector3Normalize(XMVector3Cross(vUp, vLook));
+
+	_float4x4 rotationMatrix(
+		vRight,
+		vUp,
+		vLook,
+		_float4(0.0f, 0.0f, 0.0f, 1.0f)
+	);
+
+	m_vQuaternion = DirectX::XMQuaternionRotationMatrix(rotationMatrix);
+	_float4x4 RotationMatrix = DirectX::XMMatrixRotationQuaternion(m_vQuaternion);
+
+	SetRight(DirectX::XMVector3TransformNormal(_float3::Right * m_vScale.x, RotationMatrix));
+	SetUp(DirectX::XMVector3TransformNormal(_float3::Up * m_vScale.y, RotationMatrix));
+	SetLook(DirectX::XMVector3TransformNormal(_float3::Forward * m_vScale.z, RotationMatrix));
+}
+
+void UTransform::SetDirectionFixedUp(const _float3& targetDirection, float deltaTime, float rotationSpeed)
+{
+	_float3 FixedUp = _float3(0, 1, 0);
+	_float3 vCurrentLook = GetLook();
+	_float4 vTargetLook = XMVector3Normalize(targetDirection);
+
+	float lerpFactor = rotationSpeed * deltaTime;
+	lerpFactor = std::clamp(lerpFactor, 0.0f, 1.0f);
+
+	_float3 n = DirectX::XMVectorLerp(vCurrentLook, vTargetLook, lerpFactor);
+	_float4 vLook = XMVector3Normalize(n);
+
+	_float4 vUp = DirectX::XMVector3Normalize(FixedUp);
+
+	_float4 vRight = DirectX::XMVector3Normalize(XMVector3Cross(vUp, vLook));
+
+	_float4x4 rotationMatrix(
+		vRight,
+		vUp,
+		vLook,
+		_float4(0.0f, 0.0f, 0.0f, 1.0f)
+	);
+
+	m_vQuaternion = DirectX::XMQuaternionRotationMatrix(rotationMatrix);
+	_float4x4 RotationMatrix = DirectX::XMMatrixRotationQuaternion(m_vQuaternion);
+
+	SetRight(DirectX::XMVector3TransformNormal(_float3::Right * m_vScale.x, RotationMatrix));
+	SetUp(DirectX::XMVector3TransformNormal(_float3::Up * m_vScale.y, RotationMatrix));
+	SetLook(DirectX::XMVector3TransformNormal(_float3::Forward * m_vScale.z, RotationMatrix));
+}
+
+
 void UTransform::LookAt(const _float3& _vTargetPos)
 {
 	_float3 vPosition = GetPos();
@@ -397,7 +507,6 @@ void UTransform::LookAt(const _float3& _vTargetPos)
 
 void UTransform::LookAtWithFixedUp(const _float3& _vTargetPos)
 {
-
 	_float3 FixedUp = _float3(0, 1, 0);
 	_float3 MyPosition = GetPos();
 	_float3 vLook = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(_vTargetPos, MyPosition));
@@ -407,8 +516,6 @@ void UTransform::LookAtWithFixedUp(const _float3& _vTargetPos)
 	SetRight(vRight* m_vScale.x);
 	SetUp(FixedUp* m_vScale.y);
 	SetLook(vLook* m_vScale.z);
-
-
 }
 
 void UTransform::LookAtWithFixedUp(const _float3& _vTargetPos, float DeltaTime, float RotationSpeed)

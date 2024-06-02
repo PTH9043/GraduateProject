@@ -12,6 +12,7 @@
 #include "UMethod.h"
 #include "CMob.h"
 
+
 CMob::CMob(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UCharacter(_spDevice, _wstrLayer, _eCloneType),
 	m_spTargetPlayer{ nullptr },
@@ -48,6 +49,7 @@ HRESULT CMob::NativeConstructClone(const VOIDDATAS& _Datas)
 void CMob::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
+	GetCurrentNavi()->FindCell(GetTransform()->GetPos());
 	if(m_spTargetPlayer)
 	{
 		_float3 CurrentMobPos = GetTransform()->GetPos();
@@ -122,16 +124,11 @@ void CMob::MoveAlongPath(const VECTOR<_float3>& path, size_t& currentPathIndex, 
     _float distance = direction.Length();
     direction.Normalize();
 
-    // 이동 속도 설정 (예: 초당 10 유닛)
-    _float speed = 10.0f;
-    _float3 newPosition = currentPosition + direction * static_cast<_float>(speed * _dTimeDelta);
-
     // 목표 위치에 도달했는지 확인
-    if ((targetPosition - newPosition).Length() < 1.0f)
+    if (distance < 1.0f)
     {
-        newPosition = targetPosition;
+		currentPosition = targetPosition;
         currentPathIndex++;
     }
-
-    GetTransform()->SetPos(newPosition);
+	m_f3TargetPos = targetPosition;
 }
