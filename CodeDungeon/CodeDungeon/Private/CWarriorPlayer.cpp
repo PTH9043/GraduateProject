@@ -9,6 +9,8 @@
 #include "URegion.h"
 #include "UNavigation.h"
 #include "UCell.h"
+#include "UParticle.h"
+#include "UParticleSystem.h"
 
 CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UPlayer(_spDevice, _wstrLayer, _eCloneType)
@@ -46,6 +48,42 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetMovingSpeed(50.f);
 	SetRunningSpeed(100.f);
 	SetRunState(false);
+
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	{
+
+		UParticle::PARTICLEDESC tDesc;
+		tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEFOOTPRINT2DSHADER;
+		tDesc.wstrParticleShader = PROTO_RES_PARTICLEFOOTPRINT2DSHADER;
+
+
+		tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
+		//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle =7.5f;// 6.5f
+		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle =4.5f; //3.1f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 2.0f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.1f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 1.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 1.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 50;
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 1.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = -GetTransform()->GetLook();
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticlePosition = GetTransform()->GetPos();
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_FOOTPRINT;
+		m_spParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
+	}
+	m_stParticleParam = m_spParticle->GetParticleSystem()->GetParticleParam();
+	m_stParticleType = m_spParticle->GetParticleSystem()->GetParticleTypeParam();
+	m_stParticleType->fParticleType = PARTICLE_TYPE_AUTO;
+	m_stParticleType->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
+	m_spParticle->SetTexture(L"Sand"); //Dust3 ÂøÁö ¸ð¼Ç
+	
+	{
+		*m_spParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
+		*m_spParticle->GetParticleSystem()->GetAddParticleAmount() = 4;
+		m_spParticle->SetParticleType(PARTICLE_FOOTPRINT);
+		m_spParticle->SetActive(false);
+	}
 	return S_OK;
 }
 
@@ -55,9 +93,30 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	GetAnimationController()->Tick(_dTimeDelta);
 	GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
 
+	m_spParticle->SetActive(true);
+
 	_int AnimState = GetAnimationController()->GetAnimState();
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+	if (AnimState == CWarriorAnimController::ANIM_RUN) {//|| AnimState == CWarriorAnimController::ANIM_ATTACK|| AnimState == CWarriorAnimController::ANIM_COMBO
+		*m_spParticle->GetParticleSystem()->GetAddParticleAmount() =4;
+		*m_spParticle->GetParticleSystem()->GetCreateInterval() = 0.355f;
+		_float3 pos = GetTransform()->GetPos() + GetTransform()->GetRight();
+		pos.y += 1.6;
+
+		_float3 Look = GetTransform()->GetLook();
+		_float3 Right = 1.2 * GetTransform()->GetRight();
+		//pos -= 3 * Look;
+		m_spParticle->SetPosition(pos);
+		m_spParticle->SetDirection(Right);
+	}
+	else {
+		
+		*m_spParticle->GetParticleSystem()->GetAddParticleAmount() = 0;
+		*m_spParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
+		//m_spParticle->SetActive(false);
+	}
 	// Rotation 
 	{
 		_long		MouseMove = 0;
@@ -69,15 +128,20 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	// Move
 	if (CWarriorAnimController::ANIM_MOVE == AnimState || CWarriorAnimController::ANIM_JUMP_FRONT == AnimState)
 	{
+		
 		//TranslateStateMoveAndRunF(spGameInstance, _dTimeDelta, GetMovingSpeed());
 		SetRunState(false);
 	}
+	
 
 	if (CWarriorAnimController::ANIM_RUN == AnimState || CWarriorAnimController::ANIM_JUMP_FRONT_RUN == AnimState)
 	{
+		
 		//TranslateStateMoveAndRunF(spGameInstance, _dTimeDelta, GetRunningSpeed());
 		SetRunState(true);
 	}
+	
+	
 
 	if (CWarriorAnimController::ANIM_WALKBACK == AnimState || CWarriorAnimController::ANIM_JUMP_BACK == AnimState)
 	{

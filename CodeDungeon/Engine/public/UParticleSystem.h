@@ -82,7 +82,7 @@ private:
 	_ushort										m_sComputeIndex;
 	_uint										m_iParticleAddAmount;
 	_float										m_fCreateInterval;
-
+	_bool			m_fOffsetFactor;
 	
 };
 

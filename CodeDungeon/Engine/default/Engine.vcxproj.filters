@@ -418,6 +418,9 @@
     <Filter Include="98.ShaderFile\Common\Particle\FootPrint">
       <UniqueIdentifier>{d5ff3202-cf55-409f-b962-639a4bf20bc7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Actor\Trail">
+      <UniqueIdentifier>{95bb4918-4363-4a4d-938e-40ef03a836ad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -803,6 +806,9 @@
     </ClCompile>
     <ClCompile Include="..\private\UDefensiveGear.cpp">
       <Filter>05.Actor\01.Pawn\Item\Equip\NewFilter1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UTrail.cpp">
+      <Filter>05.Actor\Trail</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1222,6 +1228,9 @@
     </ClInclude>
     <ClInclude Include="..\public\UDefensiveGear.h">
       <Filter>05.Actor\01.Pawn\Item\Equip\NewFilter1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UTrail.h">
+      <Filter>05.Actor\Trail</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -24,16 +24,13 @@ struct GROBALPARTICLEINFO
     //===============
     float3 fParticleDirection;
     float fAnimSizeX;
+    
+     //================
     float fAnimSizeY;
-    float fNextAnimTime;
-    //=================
-   
-    //================
     float3 fParticlePosition;
-    //================
+    //=================       
+    float fNextAnimTime;
     float3 fPadding;
-    
-    
 };
 
 
@@ -173,11 +170,18 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
             g_ParticleWritedata[threadIndex.x].iAlive = 0;
             return;
         }
-
+        float frameTime = floor(g_ParticleWritedata[threadIndex.x].fCurTime / g_GrobalParticleInfo.fNextAnimTime);
+        int frameX = (int) fmod(frameTime, g_GrobalParticleInfo.fAnimSizeX);
+        int frameY = (int) fmod((frameTime / g_GrobalParticleInfo.fAnimSizeX), g_GrobalParticleInfo.fAnimSizeY);
+        g_ParticleWritedata[threadIndex.x].vAnimUV = float2(frameX, frameY);
+        
+        
         float ratio = g_ParticleWritedata[threadIndex.x].fCurTime / g_ParticleWritedata[threadIndex.x].fLifeTime;
         float speed = (g_GrobalParticleInfo.fMaxSpeed - g_GrobalParticleInfo.fMinSpeed) * ratio + g_GrobalParticleInfo.fMinSpeed;
         g_ParticleWritedata[threadIndex.x].vWorldPos += g_ParticleWritedata[threadIndex.x].vWorldDir * speed * g_GrobalParticleInfo.fDeltaTime;
-    }
+   
+        
+        }
    
 }
 

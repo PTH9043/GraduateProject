@@ -12,7 +12,7 @@
 //#pragma comment(lib, "ProtocolBufferD")
 #else
 #pragma comment(lib, "Engine.lib")
-#pragma comment(lib, "ProtocolBuffer")
+//#pragma comment(lib, "ProtocolBuffer")
 #endif
 
 

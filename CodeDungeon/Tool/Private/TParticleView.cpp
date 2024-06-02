@@ -5,6 +5,7 @@
 
 #include "UGameInstance.h"
 #include "UTexGroup.h"
+#include "UTransform.h"
 
 #include "UTexture.h"
 #include "UMethod.h"
@@ -77,11 +78,12 @@ void TParticleView::LoadSingleParticleResource()
 	for (int i = 0; i < m_iSingleParticleSize; i++) {
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 		{
+			
 			UParticle::PARTICLEDESC tDesc;
-			tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEPARTICLE2DSHADER;
+			tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEFOOTPRINT2DSHADER;
 			tDesc.wstrParticleShader = PROTO_RES_PARTICLEFOOTPRINT2DSHADER;
 
-
+			
 			tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
 			//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 5.1f;
@@ -92,15 +94,16 @@ void TParticleView::LoadSingleParticleResource()
 			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 10.f;
 			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 100;
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 25.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.5f, 0.5f, 0.5f);
-			tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_ORIGINAL;
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(10.f, 0.f, 0.f);
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticlePosition = _float3(10.f, 0.f, 0.f);
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_FOOTPRINT;
 			m_SingleParticle[i] = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
 		}
 		m_SingleParticleParam[i] = m_SingleParticle[i]->GetParticleSystem()->GetParticleParam();
 		m_SingleParticleType[i] = m_SingleParticle[i]->GetParticleSystem()->GetParticleTypeParam();
 		m_SingleParticleType[i]->fParticleType = PARTICLE_TYPE_AUTO;
 		m_SingleParticleType[i]->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT; 
-		m_SingleParticle[i]->SetParticleType(PARTICLE_ORIGINAL);
+		m_SingleParticle[i]->SetParticleType(PARTICLE_FOOTPRINT);
 	}
 }
 
@@ -145,7 +148,7 @@ void TParticleView::LoadAnimParticleResource()
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 		{
 			UParticle::PARTICLEDESC tDesc;
-			tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEFOOTPRINT2DSHADER;
+			tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEPARTICLE2DSHADER;
 			tDesc.wstrParticleShader = PROTO_RES_2DANIMATEPARTICLESHADER;
 		
 
@@ -157,10 +160,10 @@ void TParticleView::LoadAnimParticleResource()
 			tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 1.1f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 5.f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 5.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 10;
+			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 100;
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 25.f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.0f, 0.0f, 0.1f);
-			tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_FOOTPRINT;
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_ANIM;
 		
 			tDesc.ParticleParam.stGlobalParticleInfo.fAnimSizeX = 5;
 			tDesc.ParticleParam.stGlobalParticleInfo.fAnimSizeY = 5;
@@ -175,7 +178,7 @@ void TParticleView::LoadAnimParticleResource()
 
 		m_AnimParticleType[i]->fParticleType = PARTICLE_TYPE_DEFAULT;		
 		m_AnimParticleType[i]->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;		
-		m_AnimParticle[i]->SetParticleType(PARTICLE_FOOTPRINT);
+		m_AnimParticle[i]->SetParticleType(PARTICLE_ANIM);
 	}
 
 }
@@ -400,18 +403,25 @@ void TParticleView::DefaultSingleParticleSetting()
 		ImGui::SeparatorText("Particle Settings");
 		ImGui::SeparatorText("Current Particle Type : Default");
 
-		ImGui::SliderFloat("EndScale", &m_SingleParticleParam[0]->stGlobalParticleInfo.fEndScaleParticle, 1.f, 40.f, "%.2f");
-		ImGui::SliderFloat("StartScale", &m_SingleParticleParam[0]->stGlobalParticleInfo.fStartScaleParticle, 1.f, 20.f, "%.2f");
+		ImGui::SliderFloat("EndScale", &m_SingleParticleParam[0]->stGlobalParticleInfo.fEndScaleParticle, 0.f, 40.f, "%.2f");
+		ImGui::SliderFloat("StartScale", &m_SingleParticleParam[0]->stGlobalParticleInfo.fStartScaleParticle, 0.f, 20.f, "%.2f");
 		ImGui::SliderFloat("MaxLifeTime", &m_SingleParticleParam[0]->stGlobalParticleInfo.fMaxLifeTime, 1.f, 10.f, "%.2f");
-		ImGui::SliderFloat("MinLifeTime", &m_SingleParticleParam[0]->stGlobalParticleInfo.fMinLifeTime, 0.f, 5.f, "%.2f");
-		ImGui::SliderFloat("MaxSpeed", &m_SingleParticleParam[0]->stGlobalParticleInfo.fMaxSpeed, 10.f, 100.f, "%.2f");
-		ImGui::SliderFloat("MinSpeed", &m_SingleParticleParam[0]->stGlobalParticleInfo.fMinSpeed, 10.f, 100.f, "%.2f");
-		ImGui::SliderFloat("DirectionX", &m_SingleParticleParam[0]->stGlobalParticleInfo.fParticleDirection.x, -1.f, 1.f, "%.2f");
-		ImGui::SliderFloat("DirectionY", &m_SingleParticleParam[0]->stGlobalParticleInfo.fParticleDirection.y, -1.f, 1.f, "%.2f");
-		ImGui::SliderFloat("DirectionZ", &m_SingleParticleParam[0]->stGlobalParticleInfo.fParticleDirection.z, -1.f, 1.f, "%.2f");
-		ImGui::SliderFloat("Thickness", &m_SingleParticleParam[0]->stGlobalParticleInfo.fParticleThickness, 0.f, 50.f, "%.2f");
+		ImGui::SliderFloat("MinLifeTime", &m_SingleParticleParam[0]->stGlobalParticleInfo.fMinLifeTime, 0.1f, 5.f, "%.2f");
+		ImGui::SliderFloat("MaxSpeed", &m_SingleParticleParam[0]->stGlobalParticleInfo.fMaxSpeed, 1.f, 100.f, "%.2f");
+		ImGui::SliderFloat("MinSpeed", &m_SingleParticleParam[0]->stGlobalParticleInfo.fMinSpeed, 1.f, 100.f, "%.2f");
 		ImGui::EndPopup();
 	}
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	
+	_float3 MainLook = spGameInstance->GetMainCameraTransform()->GetLook();
+	_float3 MainPos = spGameInstance->GetMainCameraTransform()->GetPos();
+	
+
+		m_SingleParticleParam[0]->stGlobalParticleInfo.fParticlePosition = _float3(10,0,0);
+			//_float3(MainPos.x+10, MainPos.y, MainPos.z);
+		//m_SingleParticleParam[0]->stGlobalParticleInfo.fParticleDirection = _float3(0,0,-0.1);
+		
+	
 }
 
 void TParticleView::AutomaticSingleParticleSetting()

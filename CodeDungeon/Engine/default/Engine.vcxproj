@@ -153,6 +153,7 @@
     <ClInclude Include="..\public\UThreadManager.h" />
     <ClInclude Include="..\public\UTimer.h" />
     <ClInclude Include="..\public\UTimerManager.h" />
+    <ClInclude Include="..\public\UTrail.h" />
     <ClInclude Include="..\public\UTransform.h" />
     <ClInclude Include="..\public\UUserInterface.h" />
     <ClInclude Include="..\public\UVIBuffer.h" />
@@ -278,6 +279,7 @@
     <ClCompile Include="..\private\UThreadManager.cpp" />
     <ClCompile Include="..\private\UTimer.cpp" />
     <ClCompile Include="..\private\UTimerManager.cpp" />
+    <ClCompile Include="..\private\UTrail.cpp" />
     <ClCompile Include="..\private\UTransform.cpp" />
     <ClCompile Include="..\private\UUserInterface.cpp" />
     <ClCompile Include="..\private\UVIBuffer.cpp" />

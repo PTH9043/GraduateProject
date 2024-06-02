@@ -3,6 +3,8 @@
 
 BEGIN(Engine)
 class UGameInstance;
+class UParticle;
+class UParticleSystem;
 END
 
 BEGIN(Client)
@@ -22,6 +24,7 @@ public:
 	virtual void Free() override;
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _Datas) override;
+	SHPTR<UParticle>& GetParticle() { return m_spParticle; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
@@ -31,7 +34,9 @@ protected:
 private:
 	void TranslateStateMoveAndRunF(CSHPTRREF<UGameInstance> _spGameInstance, const _double& _dTimeDelta, const _float _fSpeed);
 private:
-
+	SHPTR<UParticle>		m_spParticle;
+	PARTICLEPARAM* m_stParticleParam;
+	ComputeParticleType* m_stParticleType;
 };
 
 END

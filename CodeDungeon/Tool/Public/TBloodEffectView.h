@@ -4,7 +4,6 @@
 
 BEGIN(Engine)
 class UParticle;
-class UAnimatedParticle;
 END
 
 BEGIN(Tool)

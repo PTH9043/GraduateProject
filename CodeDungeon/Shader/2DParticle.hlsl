@@ -25,16 +25,13 @@ struct GROBALPARTICLEINFO
     //===============
     float3 fParticleDirection;
     float fAnimSizeX;
+    
+     //================
     float fAnimSizeY;
-    float fNextAnimTime;
-    //=================
-   
-    //================
     float3 fParticlePosition;
-    //================
+    //=================       
+    float fNextAnimTime;
     float3 fPadding;
-    
-    
 };
 
 struct PARTICLE

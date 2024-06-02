@@ -210,7 +210,7 @@ namespace Engine {
 			 fDeltaTime{ 0 }, fAccTime{ 0 },
 			fMinLifeTime{ 0 }, fMaxLifeTime{ 0 }, fMinSpeed{ 0 },
 			fMaxSpeed{ 0 }, fStartScaleParticle{ 0 }, fEndScaleParticle{ 0 }, fParticleThickness{ 0 }, fParticleKind{ 0 },
-			fParticleDirection{ _float3(0,0,0) }, fAnimSizeX{ 0 }, fAnimSizeY{ 0 }, fNextAnimTime{ 0 }, fParticlePosition{ _float3(0,0,0) }	, fPadding{ _float3(0,0,0) }
+			fParticleDirection{ _float3(0,0,0) }, fAnimSizeX{ 0 }, fAnimSizeY{ 0 }, fParticlePosition{ _float3(0,0,0) }, fNextAnimTime{ 0 }	, fPadding{ _float3(0,0,0) }
 		{}
 
 		_uint		iMaxCount;
@@ -236,9 +236,9 @@ namespace Engine {
 		
 		
 		_float      fAnimSizeY;
-		_float   fNextAnimTime;
-		
 		_float3	fParticlePosition;
+		
+		_float   fNextAnimTime;
 		_float3 fPadding;
 		
 		

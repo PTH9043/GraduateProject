@@ -2,7 +2,6 @@
 #include "TFireView.h"
 #include "UParticle.h"
 #include "UParticleSystem.h"
-#include "UAnimatedParticle.h"
 #include "UGameInstance.h"
 #include "UTexGroup.h"
 #include "UTexture.h"
