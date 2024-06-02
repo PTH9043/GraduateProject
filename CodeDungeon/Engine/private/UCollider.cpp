@@ -193,7 +193,7 @@ void UCollider::SetTransform(const _float4x4& _Matrix)
 		m_mTransformMatrix.Set_Pos(_Matrix.Get_Pos());
 				m_mTransformMatrix.MatrixSetScaling(_Matrix.Get_Scaling(_Matrix));
 		m_spAABB_Original->Transform(*m_spAABB.get(), m_mTransformMatrix);
-		m_vScale = _float3(m_spOBB->Extents) * 2;
+		m_vScale = _float3(m_spAABB->Extents) * 2;
 		break;
 	case TYPE_OBB:
 		m_mTransformMatrix = XMMatrixRotationQuaternion(DirectX::XMQuaternionRotationMatrix(_Matrix));
@@ -207,7 +207,7 @@ void UCollider::SetTransform(const _float4x4& _Matrix)
 		m_mTransformMatrix.Set_Pos(_Matrix.Get_Pos());
 		m_mTransformMatrix.MatrixSetScaling(_Matrix.Get_Scaling(_Matrix));
 		m_spSphere_Original->Transform(*m_spSphere.get(), m_mTransformMatrix);
-		m_vScale = _float3(m_spOBB->Extents) * 2;
+		m_vScale = _float3(m_spSphere->Radius) * 2;
 		break;
 	}
 }

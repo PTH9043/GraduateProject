@@ -25,6 +25,7 @@ public:
 
 	void SetTransformMatrix(const _float4x4& _mTranformMatrix) { this->m_mTransformMatrix = _mTranformMatrix; }
 	void SetOffsetmatrix(const _float4x4& _mOffsetMatrix) { this->m_mOffsetMatrix = _mOffsetMatrix; }
+
 public:
 	virtual SHPTR<UBoneNode> Clone();
 	virtual void Free() override;

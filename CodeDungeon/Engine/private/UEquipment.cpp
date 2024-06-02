@@ -23,7 +23,7 @@
 UEquipment::EQDESC::EQDESC(CSHPTRREF<UModel> _spEquipModel, const _wstring& _wstrEquipDescPath) :
 	spEquipModel{_spEquipModel}
 {
-	assert(nullptr != spOwner && nullptr != _spEquipModel);
+	assert(nullptr != _spEquipModel);
 	
 	Load(_wstrEquipDescPath);
 }
@@ -42,8 +42,8 @@ void UEquipment::EQDESC::Save(const _wstring& _wstrPath)
 void UEquipment::EQDESC::Load(const _wstring& _wstrPath)
 {
 	_wstring str = UMethod::MakePath(_wstrPath, L"EquipDesc");
+	str += L"\\";
 	str += spEquipModel->GetModelName();
-	str += DEFAULT_OUTFOLDEREXTENSION;
 
 	std::ifstream Read{ str, std::ios::binary };
 	assert(Read.is_open());
@@ -160,7 +160,7 @@ void UEquipment::TickActive(const _double& _dTimeDelta)
 		SHPTR<UTransform> spTransform = spPawn->GetTransform();
 
 		// Get CombineMatrix
-		m_SockMatrixParam.SocketMatrix =  spTransform->GetWorldMatrix() * m_PivotMatrix * m_spEquipBoneNode->GetCombineMatrix();
+		m_SockMatrixParam.SocketMatrix =  spTransform->GetWorldMatrix() * m_spEquipBoneNode->GetCombineMatrix() * m_PivotMatrix;
 		m_SockMatrixParam.SocketMatrix = m_SockMatrixParam.SocketMatrix.Transpose();
 	}
 

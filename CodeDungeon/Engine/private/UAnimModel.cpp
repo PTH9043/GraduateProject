@@ -237,6 +237,20 @@ void UAnimModel::SetAnimation(const _wstring& _wstrAnimName)
 	SettingCurAnimSituation();
 }
 
+void UAnimModel::SetAnimation(const _uint& _iAnimIndex, const _double& _dNextTimeAcc)
+{
+	SetAnimation(_iAnimIndex);
+	// Change Time Acc
+	m_spCurAnimation->UpdateTimeAccToChannelIndex(_dNextTimeAcc);
+}
+
+void UAnimModel::SetAnimation(const _wstring& _wstrAnimName, const _double& _dNextTimeAcc)
+{
+	SetAnimation(_wstrAnimName);
+	// Change Time Acc
+	m_spCurAnimation->UpdateTimeAccToChannelIndex(_dNextTimeAcc);
+}
+
 void UAnimModel::ChangeAnimation(const _uint& _iAnimIndex)
 {
 	ChangeAnimation(_iAnimIndex, 0.0);
@@ -260,7 +274,7 @@ void UAnimModel::ChangeAnimation(const _wstring& _wstrAnimName, const _double& _
 {
 	ChangeAnimIndex(_wstrAnimName, m_iCurAnimIndex);
 	// 현재 애니메이션이 세팅되는 상황일 때의 함수 실행
-	SettingCurAnimSituation();
+	SettingNextAnimSituation();
 	// Change Time Acc
 	m_spNextAnimation->UpdateTimeAccToChannelIndex(_dNextTimeAcc);
 }
