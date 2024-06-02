@@ -35,10 +35,10 @@ public:
 	const _uint GetTextureIndex(const _wstring& _wstrTextureName);
 private:
 	HRESULT LoadTexture(const _wstring& _wstrPath, const _bool& _isUnderLoadFolder, const _bool _isAllLoadFolder
-	, const TEXTURECREATETYPE _eTextureCreateType);
+	, const TEXTURECREATETYPE _eTextureCreateType, DirectX::ResourceUploadBatch* _pResourceUploader);
 	void LoadFolder(const _wstring& _wstrPath, const _bool& _isUnderLoadFolder, const _bool _isAllLoadFolder,
-		const TEXTURECREATETYPE _eTextureCreateType);
-	void CreateTexture(const _wstring& _wstrPath, const TEXTURECREATETYPE _eTextureCreateType);
+		const TEXTURECREATETYPE _eTextureCreateType, DirectX::ResourceUploadBatch* _pResourceUploader);
+	void CreateTexture(const _wstring& _wstrPath, const TEXTURECREATETYPE _eTextureCreateType, DirectX::ResourceUploadBatch* _pResourceUploader);
 
 private:
 	TEXTURECONTAINER		m_vecTextureContainer;

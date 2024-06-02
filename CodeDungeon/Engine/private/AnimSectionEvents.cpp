@@ -10,7 +10,8 @@
 #include "UAnimation.h"
 
 UAnimChangeBetweenEvent::UAnimChangeBetweenEvent() : 
-	UAnimSectionEvent(ANIMEVENTTYPE::ANIMEVENT_ANIMCHANGESBETWEEN)
+	UAnimSectionEvent(ANIMEVENTTYPE::ANIMEVENT_ANIMCHANGESBETWEEN), 
+	m_AnimChangeDesc{}
 {
 }
 
@@ -25,7 +26,7 @@ UAnimChangeBetweenEvent::UAnimChangeBetweenEvent(CSHPTRREF<UAnimModel> _spAnimMo
 	LoadEvent(_spAnimModel, _load);
 }
 
-SHPTR<UAnimEvent> UAnimChangeBetweenEvent::Clone()
+SHPTR<UAnimEvent> UAnimChangeBetweenEvent::Clone(UAnimModel* _pAnimModel)
 {
 	return std::move(CloneThis<UAnimChangeBetweenEvent>(*this));
 }
@@ -96,6 +97,7 @@ UAnimColliderEvent::UAnimColliderEvent() :
 UAnimColliderEvent::UAnimColliderEvent(const UAnimColliderEvent& _rhs) :
 	UAnimSectionEvent(_rhs), m_AnimColliderDesc{ _rhs.m_AnimColliderDesc }
 {
+
 }
 
 UAnimColliderEvent::UAnimColliderEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) :
@@ -104,9 +106,14 @@ UAnimColliderEvent::UAnimColliderEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::
 	LoadEvent(_spAnimModel, _load);
 }
 
-SHPTR<UAnimEvent> UAnimColliderEvent::Clone()
+SHPTR<UAnimEvent> UAnimColliderEvent::Clone(UAnimModel* _pAnimModel)
 {
-	return std::move(CloneThis<UAnimColliderEvent>(*this));
+	SHPTR<UAnimColliderEvent> spAnimEvent = CloneThis<UAnimColliderEvent>(*this);
+	if (nullptr != _pAnimModel)
+	{
+		spAnimEvent->m_AnimColliderDesc.spCollider = _pAnimModel->BringAttackCollider(m_AnimColliderDesc.iColliderType);
+	}
+	return std::move(spAnimEvent);
 }
 
 
@@ -116,6 +123,10 @@ _bool UAnimColliderEvent::EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, con
 	if (nullptr != m_AnimColliderDesc.spCollider)
 	{
 		SHPTR<UTransform> spTransform = _pPawn->GetTransform();
+
+		m_AnimColliderDesc.spCollider->SetTranslate(m_AnimColliderDesc.vColliderTranslation);
+		m_AnimColliderDesc.spCollider->SetScale(m_AnimColliderDesc.vColliderScale);
+
 		if (nullptr != m_AnimColliderDesc.spBoneNode){
 			m_AnimColliderDesc.spCollider->SetTransform(m_AnimColliderDesc.spBoneNode->GetCombineMatrix() * spTransform->GetWorldMatrix());
 		}
@@ -124,10 +135,15 @@ _bool UAnimColliderEvent::EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, con
 			m_AnimColliderDesc.spCollider->SetTransform(spTransform->GetWorldMatrix());
 		}
 		m_AnimColliderDesc.spCollider->AddRenderer(RENDERID::RI_NONALPHA_LAST);
-		
 	}
 #endif
-	return __super::EventCheck(_pPawn, _pAnimModel, _dTimeAcc, _dTimeAcc, _wstrInputTrigger);
+	if (GetAnimSectionDesc().IsAnimEventActive(_dTimeAcc))
+	{
+		EventSituation(_pPawn, _pAnimModel, _dTimeDelta, _dTimeAcc);
+		return true;
+	}
+	_pAnimModel->UpdateAttackData( false, m_AnimColliderDesc.spCollider);
+	return false;
 }
 
 const ANIMOTHEREVENTDESC*  UAnimColliderEvent::OutOtherEventDesc()
@@ -137,14 +153,12 @@ const ANIMOTHEREVENTDESC*  UAnimColliderEvent::OutOtherEventDesc()
 
 void UAnimColliderEvent::EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc)
 {
-#ifdef _USE_DEBUGGING
-	
-#endif
+	_pAnimModel->UpdateAttackData(true, m_AnimColliderDesc.spCollider);
 }
 
 void UAnimColliderEvent::SaveEvent(std::ofstream& _save)
 {
-	assert(nullptr != m_AnimColliderDesc.spCollider);
+	RETURN_CHECK(nullptr == m_AnimColliderDesc.spCollider, ;);
 
 	__super::SaveEvent(_save);
 	if (nullptr == m_AnimColliderDesc.spBoneNode)
@@ -171,22 +185,9 @@ void UAnimColliderEvent::LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifst
 	UCollider::COLLIDERDESC Desc;
 	_load.read((_char*)&Desc, sizeof(UCollider::COLLIDERDESC));
 
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	m_AnimColliderDesc.vColliderScale = Desc.vScale;
+	m_AnimColliderDesc.vColliderTranslation = Desc.vTranslation;
 	m_AnimColliderDesc.spBoneNode = _spAnimModel->FindBoneNode(wstrBoneName);
-	switch (m_AnimColliderDesc.iColliderType)
-	{
-	case UCollider::TYPE_AABB:
-		m_AnimColliderDesc.spCollider = std::static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_ABBCOLLIDER, VOIDDATAS{ &Desc }));
-		break;
-	case UCollider::TYPE_OBB:
-		m_AnimColliderDesc.spCollider = std::static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, VOIDDATAS{ &Desc }));
-		break;
-	case UCollider::TYPE_SPHERE:
-		m_AnimColliderDesc.spCollider = std::static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_SPHERECOLLIDER, VOIDDATAS{ &Desc }));
-		break;
-	}
-
-	assert( nullptr != m_AnimColliderDesc.spCollider);
 }
 
 void UAnimColliderEvent::Free()

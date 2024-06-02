@@ -10,6 +10,8 @@
 #include "UAnimModel.h"
 #include "URootBoneNode.h"
 #include "UMethod.h"
+#include "URootBoneNode.h"
+#include "UAnimModel.h"
 
 /*
 		SHPTR<UCharacter>	spOwner;
@@ -24,7 +26,18 @@ UEquipment::EQDESC::EQDESC(CSHPTRREF<UModel> _spEquipModel, const _wstring& _wst
 	spEquipModel{_spEquipModel}
 {
 	assert(nullptr != _spEquipModel);
-	
+
+	_wstring str = UMethod::MakePath(_wstrEquipDescPath, L"EquipDesc");
+	str += L"\\";
+	str += spEquipModel->GetModelName();
+
+	Load(str);
+}
+
+UEquipment::EQDESC::EQDESC(CSHPTRREF<UModel> _spEquipModel, SHPTR<UCharacter> _spOwner, const _wstring& _wstrEquipDescPath) :
+	spOwner{_spOwner},
+	spEquipModel{ _spEquipModel }
+{
 	Load(_wstrEquipDescPath);
 }
 
@@ -41,11 +54,7 @@ void UEquipment::EQDESC::Save(const _wstring& _wstrPath)
 
 void UEquipment::EQDESC::Load(const _wstring& _wstrPath)
 {
-	_wstring str = UMethod::MakePath(_wstrPath, L"EquipDesc");
-	str += L"\\";
-	str += spEquipModel->GetModelName();
-
-	std::ifstream Read{ str, std::ios::binary };
+	std::ifstream Read{ _wstrPath, std::ios::binary };
 	assert(Read.is_open());
 
 	Read.read((_char*)&EquipmentInfo, sizeof(EQUIPMENTINFO));
@@ -118,6 +127,7 @@ HRESULT UEquipment::NativeConstructClone(const VOIDDATAS& _Datas)
 		if (nullptr != spCharacter)
 		{
 			m_spEquipBoneNode = spCharacter->GetAnimModel()->FindBoneNode(desc.wstrBoneNodeName);
+			m_spCharacterAnimModel = spCharacter->GetAnimModel();
 		}
 		if (nullptr != m_spEquipModel)
 		{
@@ -153,21 +163,23 @@ void UEquipment::ChangeEquipDescInfo(const EQDESC& _desc)
 
 void UEquipment::TickActive(const _double& _dTimeDelta)
 {
-	if (nullptr != m_spEquipBoneNode)
-	{
-		SHPTR<UPawn> spPawn = m_wpOwner.lock();
-		SHPTR<UTransform> spTransform = spPawn->GetTransform();
-
-		// Get CombineMatrix
-		m_SockMatrixParam.SocketMatrix =  spTransform->GetWorldMatrix() * m_spEquipBoneNode->GetCombineMatrix() * m_PivotMatrix;
-		m_SockMatrixParam.SocketMatrix = m_SockMatrixParam.SocketMatrix.Transpose();
-	}
-
 //	m_SockMatrixParam.SocketMatrix = _float4x4::Identity;
 }
 
 void UEquipment::LateTickActive(const _double& _dTimeDelta)
 {
+	if (nullptr != m_spEquipBoneNode)
+	{
+		SHPTR<UPawn> spPawn = m_wpOwner.lock();
+		SHPTR<UTransform> spTransform = spPawn->GetTransform();
+
+		_float4x4 spEquipBonematrix = m_spEquipBoneNode->GetCombineMatrix();
+		spEquipBonematrix.Set_Pos(spEquipBonematrix.Get_Pos() + spTransform->GetPos());
+		// Get CombineMatrix
+		m_SockMatrixParam.SocketMatrix = spEquipBonematrix;
+		m_SockMatrixParam.SocketMatrix = m_SockMatrixParam.SocketMatrix.Transpose();
+	}
+
 	if (nullptr != m_spEquipModel)
 	{
 		AddRenderGroup(RI_NONALPHA_MIDDLE);
@@ -224,6 +236,7 @@ void UEquipment::UpdateBoneNode(CSHPTRREF<UAnimModel> _spAnimModel, const _wstri
 		_uint ModelBufferSize = m_spEquipModel->GetMeshContainerCnt();
 		m_spSocketMatrixBuffer = CreateNative< UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::SOCKETMATRIX, GetTypeSize<SOCKETMATRIXPARAM>(), ModelBufferSize);
 		m_spTexCheckBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::MODELCHECKBUF, GetTypeSize< HASBUFFERCONTAINER>(), ModelBufferSize);
+		m_spCharacterAnimModel = _spAnimModel;
 	}
 }
 
@@ -235,6 +248,7 @@ void UEquipment::UpdateBoneNode(CSHPTRREF<UCharacter> _spCharacter, const _wstri
 	RETURN_CHECK(nullptr == spAnimModel, ;);
 	m_spEquipBoneNode = spAnimModel->FindBoneNode(_wstrBoneNode);
 	m_PivotMatrix = spAnimModel->GetPivotMatirx();
+	m_spCharacterAnimModel = spAnimModel;
 
 	if (nullptr == m_spSocketMatrixBuffer)
 	{

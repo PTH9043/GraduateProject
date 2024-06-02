@@ -966,6 +966,7 @@ const _bool UGameInstance::IsMaterialContainerInfoChange() const
 {
 	return m_spMaterialManager->IsMaterialContainerInfoChange();
 }
+
 /*
 ==================================================
 MaterialManager

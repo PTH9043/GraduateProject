@@ -15,6 +15,7 @@
 #include "URootBoneNode.h"
 #include "UModelMaterial.h"
 #include "UMeshFilter.h"
+#include "UCollider.h"
 
 namespace fs = std::filesystem;
 UAnimModel::UAnimModel(CSHPTRREF<UDevice> _spDevice) :
@@ -34,7 +35,9 @@ UAnimModel::UAnimModel(CSHPTRREF<UDevice> _spDevice) :
 	m_fSupplyLerpValue{ 0.f },
 	m_isChangeAnim{ false },
 	m_mPivotMatrix{_float4x4::Identity},
-	m_spMeshFilterController{nullptr}
+	m_spMeshFilterController{nullptr},
+	m_isCanAttackSituation{false},
+	m_spAttackCollisionCollider{nullptr}
 {
 }
 
@@ -95,7 +98,19 @@ HRESULT UAnimModel::NativeConstruct(const _wstring& _wstrModelFolder, const _wst
 HRESULT UAnimModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_vecDatas), E_FAIL);
+	{
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
+		UCollider::COLLIDERDESC Desc{};
+		m_AnimEventColliderContainer.insert(MakePair(UCollider::TYPE_AABB,
+			std::static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_ABBCOLLIDER, { &Desc }))));
+
+		m_AnimEventColliderContainer.insert(MakePair(UCollider::TYPE_OBB,
+			std::static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &Desc }))));
+
+		m_AnimEventColliderContainer.insert(MakePair(UCollider::TYPE_SPHERE,
+			std::static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_SPHERECOLLIDER, { &Desc }))));
+	}
 	UMeshFilter::DESC desc{ GetMeshContainers() };
 	m_spMeshFilterController = std::static_pointer_cast<UMeshFilter>(m_spMeshFilterController->Clone({ &desc }));
 
@@ -124,7 +139,6 @@ HRESULT UAnimModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	RETURN_CHECK_FAILED(CreateShaderConstantBuffer(), E_FAIL);
 	{
 		UMeshFilter::DESC tDesc{ GetMeshContainers() };
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	}
 	return S_OK;
 }
@@ -203,6 +217,25 @@ void UAnimModel::TickAnimToTimeAccChangeTransform(CSHPTRREF<UTransform> _spTrans
 	{
 		_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), m_mPivotMatrix *  _spTransform->GetWorldMatrix());
 		_spTransform->SetPos(Position);
+	}
+}
+
+void UAnimModel::ApplyRootBoneTransform(CSHPTRREF<UTransform> _spTransform)
+{
+	assert(nullptr != _spTransform);
+	if (true == m_spCurAnimation->IsApplyRootBoneMove())
+	{
+		_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), m_mPivotMatrix * _spTransform->GetWorldMatrix());
+		_spTransform->SetPos(Position);
+	}
+}
+
+void UAnimModel::ApplyRootBoneMatrix(_float4x4& _matrix)
+{
+	if (true == m_spCurAnimation->IsApplyRootBoneMove())
+	{
+		_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), m_mPivotMatrix * _matrix);
+		_matrix.Set_Pos(Position);
 	}
 }
 
@@ -296,6 +329,25 @@ void UAnimModel::OnAdjustTransformToAnimation()
 void UAnimModel::ResetCurAnimEvent()
 {
 	m_spCurAnimation->ResetAnimChangeEventNode();
+}
+
+SHPTR<UCollider> UAnimModel::BringAttackCollider(_int _iColliderType)
+{
+	const auto& iter = m_AnimEventColliderContainer.find(_iColliderType);
+	RETURN_CHECK(m_AnimEventColliderContainer.end() == iter, nullptr);
+	return iter->second;
+}
+
+_bool UAnimModel::IsCollisionAttackCollider(CSHPTRREF<UCollider> _spEnemyCollider)
+{
+	RETURN_CHECK(false == m_isCanAttackSituation, false);
+	return m_spAttackCollisionCollider->IsCollision(_spEnemyCollider);
+}
+
+void UAnimModel::UpdateAttackData(const _bool _isCanAttackSituation, CSHPTRREF<UCollider> _spCollider)
+{
+	m_isCanAttackSituation = _isCanAttackSituation;
+	m_spAttackCollisionCollider = _spCollider;
 }
 
 HRESULT UAnimModel::CreateAnimation(const  VECTOR<ANIMDESC>& _convecAnimDesc, const _wstring& _wstrPath)

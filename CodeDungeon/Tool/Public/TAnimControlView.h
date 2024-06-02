@@ -7,6 +7,7 @@ class UAnimModel;
 class UAnimation;
 class UAnimEvent;
 class UModel;
+class UCollider;
 END
 
 BEGIN(Tool)
@@ -23,6 +24,7 @@ using ITEMMODELCONTAINER = UNORMAP<_string, SHPTR<UModel>>;
 - Imgui Animation Tool
 */
 class TAnimControlView final : public TImGuiView {
+	using ANIMEVENTCOLLIDERCONTAINER = UNORMAP<_int, SHPTR<UCollider>>;
 public:
 	TAnimControlView(CSHPTRREF<UDevice> _spDevice);
 	NO_COPY(TAnimControlView)
@@ -81,6 +83,8 @@ private:
 	EQUIPTYPE											m_eEquipType;
 	_int															m_iWeaponOrShieldValue;
 	_wstring													m_wstrBoneNodeName;
+
+	ANIMEVENTCOLLIDERCONTAINER	m_AnimEventColliderContainer;
 };
 
 END

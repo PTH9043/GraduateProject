@@ -61,6 +61,16 @@ HRESULT TAnimControlView::NativeConstruct()
 
 	m_spAnimControlModel = std::static_pointer_cast<TAnimControlModel>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_ANIMCONTROLMODELOBJECT));
 
+	UCollider::COLLIDERDESC Desc{};
+	m_AnimEventColliderContainer.insert(MakePair(UCollider::TYPE_AABB,
+		std::static_pointer_cast<UCollider>(GetGameInstance()->CloneComp(PROTO_COMP_ABBCOLLIDER, {&Desc}))));
+
+	m_AnimEventColliderContainer.insert(MakePair(UCollider::TYPE_OBB,
+		std::static_pointer_cast<UCollider>(GetGameInstance()->CloneComp(PROTO_COMP_OBBCOLLIDER, { &Desc }))));
+
+	m_AnimEventColliderContainer.insert(MakePair(UCollider::TYPE_SPHERE,
+		std::static_pointer_cast<UCollider>(GetGameInstance()->CloneComp(PROTO_COMP_SPHERECOLLIDER, { &Desc }))));
+
     return S_OK;
 }
 
@@ -96,6 +106,7 @@ HRESULT TAnimControlView::LoadResource()
 	{
 		FindEquipModel(ItemModels);
 	}
+
 
     return S_OK;
 }
@@ -195,6 +206,22 @@ void TAnimControlView::AnimModelSelectView()
 					s_AnimTags[iter.second] = iter.first.c_str();
 				}
 				m_AnimMaxTagCount = static_cast<_int>(m_spAnimControlModel->GetAnimationClips().size());
+
+
+				for (auto& Animation : m_spShowAnimModel->GetAnimations())
+				{
+					for (auto& iter : Animation->GetAnimEventContainer())
+					{
+						if (iter.first == ANIMEVENT_COLLIDER)
+						{
+							for (auto& Event : iter.second)
+							{
+								ANIMCOLLIDERDESC* ChangeDesc = remove_const<ANIMCOLLIDERDESC*, ANIMOTHEREVENTDESC*>(Event->OutOtherEventDesc());
+								ChangeDesc->spCollider = m_AnimEventColliderContainer.find(ChangeDesc->iColliderType)->second;
+							}
+						}
+					}
+				}
 			}
 		}
 		if (nullptr == m_spSelectAnimFileData)
@@ -385,7 +412,12 @@ void TAnimControlView::MakeAnimEvent()
 					spAnimEvent = Create< UAnimChangeBetweenEvent>();
 					break;
 				case ANIMEVENT_COLLIDER:
+					// 0번을 선택하여 채워줌
+				{
 					spAnimEvent = Create<UAnimColliderEvent>();
+					ANIMCOLLIDERDESC* ChangeDesc = remove_const<ANIMCOLLIDERDESC*, ANIMOTHEREVENTDESC*>(spAnimEvent->OutOtherEventDesc());
+					ChangeDesc->spCollider = m_AnimEventColliderContainer.find(0)->second;
+				}
 					break;
 				case ANIMEVENT_EFFECT:
 
@@ -608,14 +640,23 @@ void TAnimControlView::AnimColliderShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTabl
 	static _string EndT = "End";
 	static _string Collider = "##Collider3";
 	static _string BoneNodeStr = "##BoneNode3";
-	static _string CreateColliderButton = "Create";
+	static _string CreateColliderButton = "Select";
 	static _string ReadColliderPos = "CollPos";
 	static _string TranslateCollider  = "Translater";
 	static _string ScaleCollider = "Scale";
 	static _string Remove{ "Remove" };
 	static _int SelectRemoveItem{ -1 };
+	static _int iSelectAnim;
+
 	if (ImGui::TreeNodeEx("AnimColliderShow", ImGuiTreeNodeFlags_Bullet))
 	{
+		ImGui::Combo("NeedCopy", &iSelectAnim, &s_AnimTags[0], m_AnimMaxTagCount);
+		ImGui::SameLine();
+		if (true == ImGui::Button("Copy"))
+		{
+			m_spSelectAnim->CopyAnimEvent(ANIMEVENTTYPE::ANIMEVENT_COLLIDER, m_spShowAnimModel->GetAnimations()[iSelectAnim]);
+		}
+
 		_int iIndex{ 0 };
 		_float Duration = static_cast<_float>(_spAnim->GetDuration());
 		for (auto& iter : _AnimEvent)
@@ -690,19 +731,7 @@ void TAnimControlView::AnimColliderShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTabl
 					ImGui::SetNextItemWidth(100);
 					if (true == ImGui::Button(CreateColliderButton + Index))
 					{
-						UCollider::COLLIDERDESC Desc{ _float3{1.f, 1.f, 1.f}, _float3{0.f, 0.f, 0.f} };
-						switch (ChangeDesc->iColliderType)
-						{
-						case UCollider::TYPE_AABB:
-							ChangeDesc->spCollider = std::static_pointer_cast<UCollider>(GetGameInstance()->CloneComp(PROTO_COMP_ABBCOLLIDER, VOIDDATAS{ &Desc }));
-							break;
-						case UCollider::TYPE_OBB:
-							ChangeDesc->spCollider = std::static_pointer_cast<UCollider>(GetGameInstance()->CloneComp(PROTO_COMP_OBBCOLLIDER, VOIDDATAS{ &Desc }));
-							break;
-						case UCollider::TYPE_SPHERE:
-							ChangeDesc->spCollider = std::static_pointer_cast<UCollider>(GetGameInstance()->CloneComp(PROTO_COMP_SPHERECOLLIDER, VOIDDATAS{ &Desc }));
-							break;
-						}
+						ChangeDesc->spCollider = m_AnimEventColliderContainer.find(ChangeDesc->iColliderType)->second;
 					}
 				}
 				if (nullptr != ChangeDesc->spCollider)
@@ -715,25 +744,19 @@ void TAnimControlView::AnimColliderShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTabl
 					}
 					// 8 
 					{
-						_float3 vTranslate = ChangeDesc->spCollider->GetTranslate();
-						ImGui::DragFloat3(TranslateCollider + Index, &vTranslate.x, 0.01f);
-						ChangeDesc->spCollider->SetTranslate(vTranslate);
+						ImGui::DragFloat3(TranslateCollider + Index, &ChangeDesc->vColliderTranslation.x, 0.01f);
+					//	ChangeDesc->spCollider->SetTranslate(vTranslate);
 					}
 					// 9
 					{
-						_float3 vScale = ChangeDesc->spCollider->GetScale();
 						switch (ChangeDesc->iColliderType)
 						{
 						case UCollider::TYPE_SPHERE:
-							if (true == ImGui::InputFloat(ScaleCollider + Index, &vScale.x)){
-								ChangeDesc->spCollider->SetScale(vScale);
-							}
+							ImGui::InputFloat(ScaleCollider + Index, &ChangeDesc->vColliderScale.x);
 							break;
 						case UCollider::TYPE_OBB:
 						case UCollider::TYPE_AABB:
-							if (true == ImGui::InputFloat3(ScaleCollider + Index, &vScale.x)) {
-								ChangeDesc->spCollider->SetScale(vScale);
-							}
+							ImGui::InputFloat3(ScaleCollider + Index, &ChangeDesc->vColliderScale.x);
 							break;
 						}
 					}

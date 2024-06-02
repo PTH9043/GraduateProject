@@ -25,7 +25,7 @@ UAnimOccursTimePassEvent::UAnimOccursTimePassEvent(CSHPTRREF<UAnimModel> _spAnim
 	LoadEvent(_spAnimModel, _load);
 }
 
-SHPTR<UAnimEvent> UAnimOccursTimePassEvent::Clone()
+SHPTR<UAnimEvent> UAnimOccursTimePassEvent::Clone(UAnimModel* _pAnimModel)
 {
 	return std::move(CloneThis<UAnimOccursTimePassEvent>(*this));
 }
@@ -98,7 +98,7 @@ UAnimSoundEvent::UAnimSoundEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstre
 	LoadEvent(_spAnimModel, _load);
 }
 
-SHPTR<UAnimEvent> UAnimSoundEvent::Clone()
+SHPTR<UAnimEvent> UAnimSoundEvent::Clone(UAnimModel* _pAnimModel)
 {
 	return SHPTR<UAnimEvent>();
 }

@@ -80,7 +80,7 @@ SHPTR<UAnimation> UAnimation::Clone(CSHPTRREF<UAnimModel> _spAnimModel)
 		VECTOR<SHPTR<UAnimEvent>> AnimEvents;
 		for (auto& value : iter.second)
 		{
-			AnimEvents.push_back(value->Clone());
+			AnimEvents.push_back(value->Clone(_spAnimModel.get()));
 		}
 		pAnimation->m_AnimEventContainer.emplace(MakePair(iter.first, AnimEvents));
 	}

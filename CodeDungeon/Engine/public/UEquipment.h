@@ -10,6 +10,7 @@ class UBoneNode;
 class UShaderConstantBuffer;
 class UModel;
 class UAnimModel;
+class URootBoneNode;
 /*
 @ Date: 2024-04-27, Writer: 박태현
 @ Explain
@@ -31,6 +32,8 @@ public:
 			EquipmentInfo{}, wstrBoneNodeName{ L"" }, iWeaponOrShieldValue{ 0 } { }
 
 		EQDESC(CSHPTRREF<UModel> _spEquipModel, const _wstring& _wstrEquipDescPath);
+
+		EQDESC(CSHPTRREF<UModel> _spEquipModel, SHPTR<UCharacter> _spOwner, const _wstring& _wstrEquipDescPath);
 
 		EQDESC(CSHPTRREF<UCharacter> _spOwner, CSHPTRREF<UModel> _spEquipModel,
 			const EQUIPMENTINFO& _EquipmentInfo, const _wstring& _wstrBoneNodeName, 
@@ -81,6 +84,7 @@ protected: /* get set */
 	const EQUIPMENTINFO& GetEquipmentInfo() const { return m_EquipmentInfo; }
 	CSHPTRREF<UModel> GetEquipModel() const { return m_spEquipModel; }
 	CSHPTRREF<UBoneNode> GetEquipBoneNode() const { return m_spEquipBoneNode; }
+	CSHPTRREF<UAnimModel> GetOwnerCharAnimModel() const { return m_spCharacterAnimModel; }
 	EQUIPTYPE GetEquipType() const { return m_eEquipType; }
 	SHPTR<UPawn> GetOwner() const { return m_wpOwner.lock(); }
 
@@ -89,6 +93,7 @@ protected: /* get set */
 	void SetEquipType(const EQUIPTYPE& _eEquipType) { this->m_eEquipType = _eEquipType; }
 	void SetEquipBoneNode(CSHPTRREF<UBoneNode> _spBoneNode) { this->m_spEquipBoneNode = _spBoneNode; }
 	void SetOwner(CSHPTRREF<UPawn> _spPawn) { this->m_wpOwner = _spPawn; }
+	void SetSocketMatrix(const _float4x4& _matrix) { m_SockMatrixParam.SocketMatrix = _matrix; }
 private:
 	EQUIPTYPE												m_eEquipType;
 	WKPTR<UPawn>										m_wpOwner;
@@ -96,6 +101,9 @@ private:
 	EQUIPMENTINFO										m_EquipmentInfo;
 	// 장착되는 본 노드
 	SHPTR<UBoneNode>								m_spEquipBoneNode;
+	SHPTR<UAnimModel>							m_spCharacterAnimModel;
+
+
 	SOCKETMATRIXPARAM							m_SockMatrixParam;
 	SHPTR< UShaderConstantBuffer>		m_spSocketMatrixBuffer;
 	SHPTR<UShaderConstantBuffer>		m_spTexCheckBuffer;

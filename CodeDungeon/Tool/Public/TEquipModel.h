@@ -23,6 +23,8 @@ public:
 		const _int _iWeaponOrShieldValue);
 	void ChangeBoneNode(CSHPTRREF<UBoneNode> _spBoneNode);
 	void ChangeOwner(CSHPTRREF<UPawn> _spOwner);
+
+	void SetEventActive(const _bool _isEventActive) { this->m_isEventActive = _isEventActive; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
@@ -33,6 +35,7 @@ protected:
 	_int									m_iWeaponOrShieldValue;
 	_wstring							m_wstrBoneNodeName;
 	_wstring							m_wstrModelName;
+	_bool								m_isEventActive;
 };
 
 END

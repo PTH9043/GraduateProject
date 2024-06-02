@@ -1,13 +1,17 @@
 #include "ToolDefines.h"
 #include "TEquipModel.h"
 #include "UEquipment.h"
+#include "UAnimModel.h"
+#include "UTransform.h"
+#include "UBoneNode.h"
 
 TEquipModel::TEquipModel(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, 
 	const CLONETYPE& _eCloneType) : 
 	UEquipment(_spDevice, _wstrLayer, _eCloneType, EQUIP_END),
 	m_iWeaponOrShieldValue{ 0 },
 	m_wstrBoneNodeName{ L"" },
-	m_wstrModelName{ L"" }
+	m_wstrModelName{ L"" },
+	m_isEventActive{false}
 {
 }
 
@@ -15,7 +19,8 @@ TEquipModel::TEquipModel(const TEquipModel& _rhs) :
 	UEquipment(_rhs), 
 	m_iWeaponOrShieldValue{ 0 },
 	m_wstrBoneNodeName{ L"" },
-	m_wstrModelName{ L"" }
+	m_wstrModelName{ L"" },
+	m_isEventActive{ false }
 {
 }
 

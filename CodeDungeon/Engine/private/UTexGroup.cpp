@@ -3,6 +3,8 @@
 #include "UTexGroup.h"
 #include "UTexture.h"
 #include "UGameInstance.h"
+#include "UDevice.h"
+#include "UGpuCommand.h"
 
 namespace fs = std::filesystem;
 
@@ -54,7 +56,20 @@ HRESULT UTexGroup::NativeConstruct(const _wstring& _wstrPath, const _bool& _isUn
 	const _bool _isAllLoadFolder, const TEXTURECREATETYPE _eTextureCreateType)
 {
 	RETURN_CHECK_FAILED(NativeConstruct(), E_FAIL);
-	return LoadTexture(_wstrPath, _isUnderLoadFolder, _isAllLoadFolder, _eTextureCreateType);
+
+	// Resource 업로드 준비
+	DirectX::ResourceUploadBatch ResoureceUpLoad{ GetDevice()->GetDV().Get()};
+	ResoureceUpLoad.Begin();
+
+	LoadTexture(_wstrPath, _isUnderLoadFolder, _isAllLoadFolder, _eTextureCreateType, &ResoureceUpLoad);
+
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+	auto uploadResourcesFinished = ResoureceUpLoad.End(spGameInstance->GetGpuCommand()->GetCmdQue().Get());
+	// Wait for the upload thread to terminate
+	uploadResourcesFinished.wait();
+
+	return S_OK;
 }
 
 HRESULT UTexGroup::NativeConstructClone(const VOIDDATAS& _datas)
@@ -102,15 +117,15 @@ const _uint UTexGroup::GetTextureIndex(const _wstring& _wstrTextureName)
 }
 
 HRESULT UTexGroup::LoadTexture(const _wstring& _wstrPath, const _bool& _isUnderLoadFolder,
-	const _bool _isAllLoadFolder, const TEXTURECREATETYPE _eTextureCreateType)
+	const _bool _isAllLoadFolder, const TEXTURECREATETYPE _eTextureCreateType, DirectX::ResourceUploadBatch* _pResourceUploader)
 {
 	if (false == _isUnderLoadFolder)
 	{
-		CreateTexture(_wstrPath, _eTextureCreateType);
+		CreateTexture(_wstrPath, _eTextureCreateType, _pResourceUploader);
 	}
 	else
 	{
-		LoadFolder(_wstrPath, _isUnderLoadFolder, _isAllLoadFolder, _eTextureCreateType);
+		LoadFolder(_wstrPath, _isUnderLoadFolder, _isAllLoadFolder, _eTextureCreateType, _pResourceUploader);
 	}
 
 	RETURN_CHECK(m_TextureNames.size() <= 0, E_FAIL);
@@ -118,7 +133,7 @@ HRESULT UTexGroup::LoadTexture(const _wstring& _wstrPath, const _bool& _isUnderL
 }
 
 void UTexGroup::LoadFolder(const _wstring& _wstrPath, const _bool& _isUnderLoadFolder,
-	const _bool _isAllLoadFolder, const TEXTURECREATETYPE _eTextureCreateType)
+	const _bool _isAllLoadFolder, const TEXTURECREATETYPE _eTextureCreateType, DirectX::ResourceUploadBatch* _pResourceUploader)
 {
 	fs::directory_iterator end;
 	for (fs::directory_iterator iter(_wstrPath); iter != end; ++iter)
@@ -126,18 +141,19 @@ void UTexGroup::LoadFolder(const _wstring& _wstrPath, const _bool& _isUnderLoadF
 		// RegularFile
 		if (fs::is_regular_file(iter->status()))
 		{
-			CreateTexture(iter->path(), _eTextureCreateType);
+			CreateTexture(iter->path(), _eTextureCreateType, _pResourceUploader);
 		}
 		else if (true == _isAllLoadFolder && fs::is_directory(iter->status()))
 		{
-			LoadFolder(iter->path(), _isUnderLoadFolder, _isAllLoadFolder, _eTextureCreateType);
+			LoadFolder(iter->path(), _isUnderLoadFolder, _isAllLoadFolder, _eTextureCreateType, _pResourceUploader);
 		}
 	}
 }
 
-void UTexGroup::CreateTexture(const _wstring& _wstrPath, const TEXTURECREATETYPE _eTextureCreateType)
+void UTexGroup::CreateTexture(const _wstring& _wstrPath, const TEXTURECREATETYPE _eTextureCreateType, 
+	DirectX::ResourceUploadBatch* _pResourceUploader)
 {
-	SHPTR<UTexture> pTexture = CreateNativeNotMsg<UTexture>(GetDevice(), _wstrPath, _eTextureCreateType);
+	SHPTR<UTexture> pTexture = CreateNativeNotMsg<UTexture>(GetDevice(), _wstrPath, _eTextureCreateType, _pResourceUploader);
 	if (nullptr != pTexture)
 	{
 		_wstring wstrPath = _wstrPath;

@@ -2,7 +2,6 @@
 #include "UDevice.h"
 #include "UGameInstance.h"
 #include "UGpuCommand.h"
-#include <DirectXTK/ResourceUploadBatch.h>
 #include <DirectXTK/DDSTextureLoader.h>
 #include <DirectXTK/WICTextureLoader.h>
 #include "UTexture.h"
@@ -30,42 +29,31 @@ void UTexture::Free()
 	m_DescriptorHeaps.clear();
 }
 
-HRESULT UTexture::NativeConstruct(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrPath, const TEXTURECREATETYPE _eTextureType)
+HRESULT UTexture::NativeConstruct(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrPath, const TEXTURECREATETYPE _eTextureType
+	, DirectX::ResourceUploadBatch* _pResourceUploader)
 {
 	RETURN_CHECK(nullptr == _spDevice, E_FAIL);
 
 	// Create Texture
 	{
 		{
-			// Resource 업로드 준비
-			DirectX::ResourceUploadBatch ResoureceUpLoad{ _spDevice->GetDV().Get() };
-			ResoureceUpLoad.Begin();
-
 			// 끝점을 가져와서 확장자에 따라서 텍스쳐 로드하기 
 			_wstring ext = fs::path(_wstrPath).extension();
 			// 텍스쳐 로드
 			_wstring dds{ L".dds" };
 			_wstring DDS{ L".DDS" };
-			_wstring tga{ L".tga" };
-			_wstring TGA{ L".TGA" };
 			Dx12Device* pDevice = _spDevice->GetDV().Get();
 
-			if (ext == dds || ext == DDS || ext == tga || ext == TGA)
+			if (ext == L".dds" || ext == L".DDS")
 			{
-				RETURN_CHECK_FAILED(DirectX::CreateDDSTextureFromFile(pDevice, ResoureceUpLoad,
+				RETURN_CHECK_FAILED(DirectX::CreateDDSTextureFromFile(pDevice, *_pResourceUploader,
 					_wstrPath.c_str(), &m_cpTexture), E_FAIL);
 			}
 			else // png, jpg, jpeg, bmp
 			{
-				RETURN_CHECK_FAILED(DirectX::CreateWICTextureFromFile(pDevice, ResoureceUpLoad,
+				RETURN_CHECK_FAILED(DirectX::CreateWICTextureFromFile(pDevice, *_pResourceUploader,
 					_wstrPath.c_str(), &m_cpTexture), E_FAIL);
 			}
-
-			SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-
-			auto uploadResourcesFinished = ResoureceUpLoad.End(spGameInstance->GetGpuCommand()->GetCmdQue().Get());
-			// Wait for the upload thread to terminate
-			uploadResourcesFinished.wait();
 		}
 		auto TextureDesc = m_cpTexture->GetDesc();
 		m_eDXTextureFormat = TextureDesc.Format;
