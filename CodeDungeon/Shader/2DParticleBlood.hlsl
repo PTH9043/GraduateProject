@@ -45,7 +45,7 @@ struct PARTICLE
     // ==============
     int iAlive;
     float2 vAnimUV;
-    float padding;
+    float fTransparency; //¿ø·¡ padding
 };
 
 // All Particle
@@ -203,8 +203,9 @@ PS_OUT PS_Main(GS_OUT In)
     {
         Out.vColor = g_Texture7.Sample(g_Sampler_Normal, In.vTexUV);
     }
-    
-    if (Out.vColor.a < 0.2)
+    float particleTransparency = g_ParticleData[In.iInstanceID].fTransparency;
+    Out.vColor.a *= particleTransparency;
+    if (Out.vColor.a < 0.1)
         discard;
         return Out;
 }

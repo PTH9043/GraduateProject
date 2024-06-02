@@ -62,15 +62,16 @@ void TBloodEffectView::LoadMultipleParticleResource()
 
 			tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
 			//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 0.2f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 5.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 0.7;
+			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 3.5f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 0.5f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.;
 			tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.3f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 40.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 40.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 7;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 5;
 			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 100;
-			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 15.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.f, 0.f);
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 1.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.f, 0.1f);
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticlePosition = _float3(0.f, 0.f, 0.f);
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_BLOOD;
 			m_MultipleParticle[i] = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
 		}
@@ -108,8 +109,8 @@ void TBloodEffectView::LoadMultipleParticleResource()
 	//}
 
 
-	*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() = 1.55f;
-	*m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount() = 100;
+	*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() = 1.15f;
+	*m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount() = 50;
 	/**m_MultipleParticle[1]->GetParticleSystem()->GetCreateInterval() = 1.05f;
 	*m_MultipleParticle[1]->GetParticleSystem()->GetAddParticleAmount() = 100;*/
 }

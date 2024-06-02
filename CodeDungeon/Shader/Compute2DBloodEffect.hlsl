@@ -50,7 +50,7 @@ struct PARTICLE
     // ==============
     int iAlive;
     float2 vAnimUV;
-    float padding;
+    float fTransparency; //원래 padding
 };
 
 struct COMPUTESHARED
@@ -73,6 +73,8 @@ cbuffer PARTICLETYPEBUFFER : register(b14)
 
 RWStructuredBuffer<PARTICLE> g_ParticleWritedata : register(u0);
 RWStructuredBuffer<COMPUTESHARED> g_SharedData : register(u1);
+
+float3 g_Gravity = float3(0.0, -9.8, 0.0);
 
 // CS_Main
 // g_vec2_1 : DeltaTime / AccTime
@@ -120,7 +122,7 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
             float RRr1 = Rand(float2(x, g_GrobalParticleInfo.fDeltaTime));
             float r2 = Rand(float2(x * g_GrobalParticleInfo.fAccTime, g_GrobalParticleInfo.fAccTime));
             float r3 = Rand(float2(x * g_GrobalParticleInfo.fAccTime * g_GrobalParticleInfo.fAccTime, g_GrobalParticleInfo.fAccTime * g_GrobalParticleInfo.fAccTime));
-
+         
             // [0.5~1] -> [0~1]
             float3 noise =
             {
@@ -130,19 +132,22 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
             };
 
             // [0~1] -> [-1~1]
-            float3 dir = (noise - 0.5f) * 2.f;
+            float3 dir;
+            dir.xz= (noise.xz - 0.5f) * 2.f;
+            dir.y = noise.y;
             float offset = (noise - 0.5f) * 2.f;
   
            
-                g_ParticleWritedata[threadIndex.x].vWorldPos = (noise.xyz - 0.5f) * g_GrobalParticleInfo.fParticleThickness;
-            g_ParticleWritedata[threadIndex.x].vWorldDir = normalize(dir.xyz * dir.y);
+            g_ParticleWritedata[threadIndex.x].vWorldPos = g_GrobalParticleInfo.fParticlePosition+(noise.xyz - 0.5f);
+            g_ParticleWritedata[threadIndex.x].vWorldDir= normalize(dir);
+           
          
 
          
-             g_ParticleWritedata[threadIndex.x].fLifeTime = ((g_GrobalParticleInfo.fMaxLifeTime - g_GrobalParticleInfo.fMinLifeTime) * noise.x)
-            + g_GrobalParticleInfo.fMinLifeTime;
+             g_ParticleWritedata[threadIndex.x].fLifeTime = ((g_GrobalParticleInfo.fMaxLifeTime - g_GrobalParticleInfo.fMinLifeTime) )
+            + g_GrobalParticleInfo.fMinLifeTime - Rand(float2(((float) threadIndex.x / (float) g_GrobalParticleInfo.iMaxCount) + g_GrobalParticleInfo.fAccTime * g_GrobalParticleInfo.fAccTime * g_GrobalParticleInfo.fAccTime, g_GrobalParticleInfo.fAccTime * g_GrobalParticleInfo.fAccTime) / 4);
           
-          
+            g_ParticleWritedata[threadIndex.x].fTransparency = 1.f;
             g_ParticleWritedata[threadIndex.x].fCurTime = 0.f;
         }
     }
@@ -158,7 +163,22 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
 
         float ratio = g_ParticleWritedata[threadIndex.x].fCurTime / g_ParticleWritedata[threadIndex.x].fLifeTime;
         float speed = (g_GrobalParticleInfo.fMaxSpeed - g_GrobalParticleInfo.fMinSpeed) * ratio + g_GrobalParticleInfo.fMinSpeed;
-        g_ParticleWritedata[threadIndex.x].vWorldPos += g_ParticleWritedata[threadIndex.x].vWorldDir * speed * g_GrobalParticleInfo.fDeltaTime;
+        if (ratio < 0.5f)
+        {
+            // 생명 주기의 절반 이전: 위로 튀는 효과
+           
+            g_ParticleWritedata[threadIndex.x].vWorldPos += g_ParticleWritedata[threadIndex.x].vWorldDir * speed * g_GrobalParticleInfo.fDeltaTime;
+        }
+        else
+        {
+            // 생명 주기의 절반 이후: 중력의 영향을 받아 아래로 떨어짐
+            float3 gravityEffect = g_Gravity * 10.0f; // 중력 효과를 대폭 강화
+     
+            g_ParticleWritedata[threadIndex.x].vWorldPos += gravityEffect ;
+           
+        } 
+        g_ParticleWritedata[threadIndex.x].fTransparency = (1.0f - ratio);
+        
     }
    
 }
