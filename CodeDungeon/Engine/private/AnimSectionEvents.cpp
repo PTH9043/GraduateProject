@@ -58,7 +58,7 @@ void UAnimChangeBetweenEvent::EventSituation(UPawn* _pPawn, UAnimModel* _pAnimMo
 		if (_pAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= m_AnimChangeDesc.fLastProgressValue)
 		{
 			ResetEventData(_pAnimModel);
-			_pAnimModel->SetAnimation(m_AnimChangeDesc.iNextAnimIndex);
+			_pAnimModel->SetAnimation(m_AnimChangeDesc.iNextAnimIndex, m_AnimChangeDesc.dNextAnimTimeAcc);
 		}
 	}
 }
