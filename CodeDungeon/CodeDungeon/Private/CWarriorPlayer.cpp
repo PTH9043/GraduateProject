@@ -49,8 +49,8 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 
 
 	{
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		m_spSword = std::static_pointer_cast<CSword>(spGameInstance->CloneActorAdd(PROTO_ACTOR_LONGSWORD, ));
+	//	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	//	m_spSword = std::static_pointer_cast<CSword>(spGameInstance->CloneActorAdd(PROTO_ACTOR_LONGSWORD, ));
 	}
 	return S_OK;
 }
