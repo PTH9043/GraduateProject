@@ -64,6 +64,9 @@
     <Filter Include="05.Objects\Character\Mob">
       <UniqueIdentifier>{30c56fa7-f7be-40cc-a4e6-d9bb2330a1e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Objects\Sword">
+      <UniqueIdentifier>{eb6c9e65-4ba8-4b07-8410-31a799c24c73}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ClientDefines.h">
@@ -129,6 +132,9 @@
     <ClInclude Include="..\Public\CMummyAnimController.h">
       <Filter>06.Comp\Controller</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CSword.h">
+      <Filter>05.Objects\Sword</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -186,6 +192,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\CMummyAnimController.cpp">
       <Filter>06.Comp\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CSword.cpp">
+      <Filter>05.Objects\Sword</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

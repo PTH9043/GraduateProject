@@ -11,7 +11,8 @@ BEGIN(Engine)
 
 class UWeapon : public UEquipment {
 public:
-	UWeapon(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType);
+	UWeapon(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType, 
+		WEAPONTYPE _eWeaponType);
 	UWeapon(const UWeapon& _rhs);
 	DESTRUCTOR(UWeapon)
 public:
@@ -28,7 +29,6 @@ protected:
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy) override;
 private:
 	WEAPONTYPE					m_eWeaponType;
-
 };
 
 

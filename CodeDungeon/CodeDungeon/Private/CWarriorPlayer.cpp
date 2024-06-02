@@ -11,7 +11,7 @@
 #include "UCell.h"
 
 CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
-	: UPlayer(_spDevice, _wstrLayer, _eCloneType)
+	: UPlayer(_spDevice, _wstrLayer, _eCloneType), m_spSword{nullptr}
 {
 }
 
@@ -46,6 +46,12 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetMovingSpeed(50.f);
 	SetRunningSpeed(100.f);
 	SetRunState(false);
+
+
+	{
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		m_spSword = std::static_pointer_cast<CSword>(spGameInstance->CloneActorAdd(PROTO_ACTOR_LONGSWORD, ));
+	}
 	return S_OK;
 }
 

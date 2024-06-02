@@ -4,9 +4,9 @@
 BEGIN(Engine)
 
 UWeapon::UWeapon(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, 
-	const CLONETYPE& _eCloneType) : 
+	const CLONETYPE& _eCloneType, WEAPONTYPE _eWeaponType) :
 	UEquipment(_spDevice, _wstrLayer, _eCloneType, EQUIP_WEAPON),
-	m_eWeaponType{WEAPONTYPE::WEAPON_END }
+	m_eWeaponType{ _eWeaponType }
 {
 }
 

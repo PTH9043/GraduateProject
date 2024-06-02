@@ -140,7 +140,6 @@ void UEquipment::SaveEquipDesc(const _wstring& _wstrPath)
 
 	_wstring str = UMethod::MakeFolderAndReturnPath(_wstrPath, L"EquipDesc");
 	str += m_spEquipModel->GetModelName();
-	str += DEFAULT_OUTFOLDEREXTENSION;
 	desc.Save(str);
 }
 
