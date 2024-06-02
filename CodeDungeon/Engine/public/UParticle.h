@@ -50,6 +50,8 @@ public:
 	CSHPTRREF<UParticleSystem> GetParticleSystem() const { return m_spParticleSystem; }
 	void SetParticleType(PARTICLE_KIND _type); 
 	void SetTexture(const _wstring& TexName);
+	void SetPosition(_float3 Pos);
+	void SetDirection(_float3 Dir);
 	void SetBloodTexture(_uint Index, const _wstring& TexName);
 	void SetTexture(_uint _index);
 public:

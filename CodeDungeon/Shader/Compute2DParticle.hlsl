@@ -24,16 +24,13 @@ struct GROBALPARTICLEINFO
     //===============
     float3 fParticleDirection;
     float fAnimSizeX;
+    
+     //================
     float fAnimSizeY;
-    float fNextAnimTime;
-    //=================
-   
-    //================
     float3 fParticlePosition;
-    //================
+    //=================       
+    float fNextAnimTime;
     float3 fPadding;
-    
-    
 };
 
 
@@ -136,7 +133,7 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
            
             //
             if (g_ParticleType.fParticleType == 0) {//0이면 일반
-                g_ParticleWritedata[threadIndex.x].vWorldPos = (noise.xyz - 0.5f) * g_GrobalParticleInfo.fParticleThickness;
+                g_ParticleWritedata[threadIndex.x].vWorldPos = (noise.xyz - 0.5f);// * g_GrobalParticleInfo.fParticleThickness;
                 g_ParticleWritedata[threadIndex.x].vWorldDir = normalize(g_GrobalParticleInfo.fParticleDirection);
             }
             else if (g_ParticleType.fParticleType == 1) {//1이면 버퍼로 받은 위치값으로.
@@ -173,11 +170,18 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
             g_ParticleWritedata[threadIndex.x].iAlive = 0;
             return;
         }
-
+        float frameTime = floor(g_ParticleWritedata[threadIndex.x].fCurTime / g_GrobalParticleInfo.fNextAnimTime);
+        int frameX = (int) fmod(frameTime, g_GrobalParticleInfo.fAnimSizeX);
+        int frameY = (int) fmod((frameTime / g_GrobalParticleInfo.fAnimSizeX), g_GrobalParticleInfo.fAnimSizeY);
+        g_ParticleWritedata[threadIndex.x].vAnimUV = float2(frameX, frameY);
+        
+        
         float ratio = g_ParticleWritedata[threadIndex.x].fCurTime / g_ParticleWritedata[threadIndex.x].fLifeTime;
         float speed = (g_GrobalParticleInfo.fMaxSpeed - g_GrobalParticleInfo.fMinSpeed) * ratio + g_GrobalParticleInfo.fMinSpeed;
         g_ParticleWritedata[threadIndex.x].vWorldPos += g_ParticleWritedata[threadIndex.x].vWorldDir * speed * g_GrobalParticleInfo.fDeltaTime;
-    }
+   
+        
+        }
    
 }
 

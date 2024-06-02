@@ -97,12 +97,12 @@ HRESULT UGraphicDevice::ReadyGraphicDevice(const GRAPHICDESC& _stGraphicsDesc, O
 	}
 	//Create TableDescriptor
 	{
-		const _uint MAX_GRAPHIC_TABLES = 1'5000;
+		const _uint MAX_GRAPHIC_TABLES = 1'0000;
 		m_spTableDescriptor = CreateNative<UTableDescriptor>(m_spDevice, MAX_GRAPHIC_TABLES,
 			CBV_REGISTER_END + SRV_REGISTER_END, GRAPHICS_CONSTANT_BUFFER_VALUE);
 	}
 	{
-		const _uint MAX_COMPUTE_TABLES = 300;
+		const _uint MAX_COMPUTE_TABLES = 1500;
 		m_spComputeTableDescriptor = CreateNative<UTableDescriptor>(m_spDevice, MAX_COMPUTE_TABLES);
 	}
 	_stOutDesc.wpDevice = GetDevice();

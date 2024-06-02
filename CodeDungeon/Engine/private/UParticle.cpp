@@ -43,7 +43,7 @@ HRESULT UParticle::NativeConstructClone(const VOIDDATAS& _convecDatas)
 
 		m_spParticleSystem = static_pointer_cast<UParticleSystem>(spGameInstance->CloneResource(PROTO_RES_PARTICLESYSTEM, { &stParticleDesc.ParticleParam }));
 		if (m_spTexGroup == nullptr) {
-			if (stParticleDesc.ParticleParam.stGlobalParticleInfo.fParticleKind == PARTICLE_FOOTPRINT) {
+			if (stParticleDesc.ParticleParam.stGlobalParticleInfo.fParticleKind == PARTICLE_ANIM) {
 				m_spTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_ANIMPARTICLETEXTUREGROUP));
 			}
 			else {
@@ -94,6 +94,9 @@ void UParticle::LateTickActive(const _double& _dTimeDelta)
 	case PARTICLE_FOOTPRINT:
 		AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
 		break;
+	case PARTICLE_ANIM:
+		AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
+		break;
 	default:
 		break;
 
@@ -137,6 +140,10 @@ SHPTR<URenderTargetGroup> spShadowDepthGroup{ spGameInstance->FindRenderTargetGr
 		GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTexGroup->GetTexture(TextureIndex));
 		GetShader()->BindSRVBuffer(SRV_REGISTER::T1, spShadowDepthGroup->GetRenderTargetTexture(RTOBJID::NONALPHA_DEPTH_DEFFERED));
 		break;
+	case PARTICLE_ANIM:
+		GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTexGroup->GetTexture(TextureIndex));
+		GetShader()->BindSRVBuffer(SRV_REGISTER::T1, spShadowDepthGroup->GetRenderTargetTexture(RTOBJID::NONALPHA_DEPTH_DEFFERED));
+		break;
 	default:
 		break;
 
@@ -175,6 +182,18 @@ _bool UParticle::Load(const _wstring& _wstrPath)
 void UParticle::SetTexture(const _wstring& TexName)
 {
 	TextureIndex = m_spTexGroup->GetTextureIndex(TexName);
+}
+
+void UParticle::SetPosition(_float3 Pos)
+{
+	if (m_spParticleSystem != nullptr)
+		m_spParticleSystem->GetParticleParam()->stGlobalParticleInfo.fParticlePosition = Pos;
+}
+
+void UParticle::SetDirection(_float3 Dir)
+{
+	if (m_spParticleSystem != nullptr)
+		m_spParticleSystem->GetParticleParam()->stGlobalParticleInfo.fParticleDirection = Dir;
 }
 
 void UParticle::SetBloodTexture(_uint Index, const _wstring& TexName)

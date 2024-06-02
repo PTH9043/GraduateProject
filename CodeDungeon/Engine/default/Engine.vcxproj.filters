@@ -418,8 +418,8 @@
     <Filter Include="98.ShaderFile\Common\Particle\FootPrint">
       <UniqueIdentifier>{d5ff3202-cf55-409f-b962-639a4bf20bc7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99.Default\Math">
-      <UniqueIdentifier>{08ad57e2-39ab-454e-81ae-5ef70bcc5c9c}</UniqueIdentifier>
+    <Filter Include="05.Actor\Trail">
+      <UniqueIdentifier>{95bb4918-4363-4a4d-938e-40ef03a836ad}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -807,8 +807,8 @@
     <ClCompile Include="..\private\UDefensiveGear.cpp">
       <Filter>05.Actor\01.Pawn\Item\Equip\NewFilter1</Filter>
     </ClCompile>
-    <ClCompile Include="..\public\MathLib\CusMath.cpp">
-      <Filter>99.Default\Math</Filter>
+    <ClCompile Include="..\private\UTrail.cpp">
+      <Filter>05.Actor\Trail</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1229,8 +1229,8 @@
     <ClInclude Include="..\public\UDefensiveGear.h">
       <Filter>05.Actor\01.Pawn\Item\Equip\NewFilter1</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\MathLib\CusMath.h">
-      <Filter>99.Default\Math</Filter>
+    <ClInclude Include="..\public\UTrail.h">
+      <Filter>05.Actor\Trail</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1248,9 +1248,6 @@
     </None>
     <None Include="..\..\Shader\LightShaderFunc.hlsli">
       <Filter>98.ShaderFile\Common\Light\Original</Filter>
-    </None>
-    <None Include="..\public\MathLib\CusMath.inl">
-      <Filter>99.Default\Math</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

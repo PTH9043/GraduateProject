@@ -25,17 +25,15 @@ struct GROBALPARTICLEINFO
     //===============
     float3 fParticleDirection;
     float fAnimSizeX;
+    
+     //================
     float fAnimSizeY;
-    float fNextAnimTime;
-    //=================
-   
-    //================
     float3 fParticlePosition;
-    //================
+    //=================       
+    float fNextAnimTime;
     float3 fPadding;
-    
-    
 };
+
 
 struct PARTICLE
 {
@@ -47,7 +45,7 @@ struct PARTICLE
     // ==============
     int iAlive;
     float2 vAnimUV;
-    float padding;
+    float fTransparency;//원래 padding
 };
 
 // All Particle
@@ -121,42 +119,56 @@ void GS_Main(point VS_OUT input[1], inout TriangleStream<GS_OUT> outputStream)
     if (0 == g_ParticleData[id].iAlive)
         return;
 
-    float ratio = g_ParticleData[id].fCurTime / g_ParticleData[id].fLifeTime;
+    float ratio = g_ParticleData[id].fCurTime / g_ParticleData[id].fLifeTime;//0~1
     float scale = ((g_GrobalParticleInfo.fEndScaleParticle - g_GrobalParticleInfo.fStartScaleParticle) * ratio +
     g_GrobalParticleInfo.fStartScaleParticle) / 2.f;
 
+    // 시간에 따른 회전 각도 계산
+    float rotationAngle = g_ParticleData[id].fCurTime ;
+    float cosAngle = cos(rotationAngle);
+    float sinAngle = sin(rotationAngle);
+
+    float ScaleFactor = scale * (0.9 - ratio)/2;//1~0
+    
     // View Space
-    output[0].vPosition = Vertex.vViewPos + float4(-scale, scale, 0.f, 0.f);
-    output[1].vPosition = Vertex.vViewPos + float4(scale, scale, 0.f, 0.f);
-    output[2].vPosition = Vertex.vViewPos + float4(scale, -scale, 0.f, 0.f);
-    output[3].vPosition = Vertex.vViewPos + float4(-scale, -scale, 0.f, 0.f);
-    
-    output[0].vWorldPos = Vertex.vWorldPos + float4(-scale, scale, 0.f, 0.f);
-    output[1].vWorldPos = Vertex.vWorldPos + float4(scale, scale, 0.f, 0.f);
-    output[2].vWorldPos = Vertex.vWorldPos + float4(scale, -scale, 0.f, 0.f);
-    output[3].vWorldPos = Vertex.vWorldPos + float4(-scale, -scale, 0.f, 0.f);
+    float4 positions[4] =
+    {
+        float4(-scale, scale, 0.f, 0.f),
+        float4(scale, scale, 0.f, 0.f),
+        float4(scale, -scale, 0.f, 0.f),
+        float4(-scale, -scale, 0.f, 0.f)
+        
+       //float4(-(scale + ScaleFactor), (scale - ScaleFactor), 0.f, 0.f),
+       //float4((scale + ScaleFactor), (scale - ScaleFactor), 0.f, 0.f),
+       //float4((scale + ScaleFactor), -(scale - ScaleFactor), 0.f, 0.f),
+       //float4(-(scale + ScaleFactor), -(scale - ScaleFactor), 0.f, 0.f)
+    };
 
-    VIEWPROJINFO stViewProjInfo = GetViewProjInfo();
-    
-    // Projection Space
-    output[0].vPosition = mul(output[0].vPosition, stViewProjInfo.mProjMatrix);
-    output[1].vPosition = mul(output[1].vPosition, stViewProjInfo.mProjMatrix);
-    output[2].vPosition = mul(output[2].vPosition, stViewProjInfo.mProjMatrix);
-    output[3].vPosition = mul(output[3].vPosition, stViewProjInfo.mProjMatrix);
+    float2 texCoords[4] =
+    {
+        float2(0.f, 0.f),
+        float2(1.f, 0.f),
+        float2(1.f, 1.f),
+        float2(0.f, 1.f)
+    };
 
-    output[0].vTexUV = float2(0.f, 0.f);
-    output[1].vTexUV = float2(1.f, 0.f);
-    output[2].vTexUV = float2(1.f, 1.f);
-    output[3].vTexUV = float2(0.f, 1.f);
-
-    output[0].iInstanceID = id;
-    output[1].iInstanceID = id;
-    output[2].iInstanceID = id;
-    output[3].iInstanceID = id;
     for (int i = 0; i < 4; ++i)
     {
-        output[i].vScreenTex = output[i].vPosition.xy / output[i].vPosition.w;
+        float x = positions[i].x;
+        float y = positions[i].y;
+      //positions[i].x = x * cosAngle - y * sinAngle;
+      //positions[i].y = x * sinAngle + y * cosAngle;
 
+        output[i].vPosition = Vertex.vViewPos + positions[i];
+        output[i].vWorldPos = Vertex.vWorldPos + positions[i];
+
+        // Projection Space
+        VIEWPROJINFO stViewProjInfo = GetViewProjInfo();
+        output[i].vPosition = mul(output[i].vPosition, stViewProjInfo.mProjMatrix);
+
+        output[i].vTexUV = texCoords[i];
+        output[i].iInstanceID = id;
+        output[i].vScreenTex = output[i].vPosition.xy / output[i].vPosition.w;
     }
     // 삼각형 두 개 실행
     outputStream.Append(output[0]);
@@ -219,11 +231,14 @@ PS_OUT PS_Main(GS_OUT In)
 
 // 텍스처 샘플링
     Out.vColor = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV);
-
+    Out.vColor.rgb *= 1.25;
 // 최소 알파 값을 유지하여 전체적으로 파티클이 보이도록 함
     float minAlpha = 0.2; // 최소 알파 값, 필요시 조정
     Out.vColor.a *= fDistance;
 
+    
+    float particleTransparency = g_ParticleData[In.iInstanceID].fTransparency;
+    Out.vColor.a *= particleTransparency;
     return Out;
 }
 

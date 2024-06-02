@@ -24,17 +24,15 @@ struct GROBALPARTICLEINFO
     //===============
     float3 fParticleDirection;
     float fAnimSizeX;
+    
+     //================
     float fAnimSizeY;
-    float fNextAnimTime;
-    //=================
-   
-    //================
     float3 fParticlePosition;
-    //================
+    //=================       
+    float fNextAnimTime;
     float3 fPadding;
-    
-    
 };
+
 
 struct ComputeParticleType {
     int fParticleType;
@@ -51,8 +49,8 @@ struct PARTICLE
     float fLifeTime;
     // ==============
     int iAlive;
-    float2 vAnimUV;
-    float padding;
+    float2 vAnimUV;     //원래 vAnimUV
+    float fTransparency; //원래 padding
 };
 
 struct COMPUTESHARED
@@ -68,13 +66,12 @@ cbuffer ALLPARTICLEBUFFER : register(b13)
     GROBALPARTICLEINFO g_GrobalParticleInfo;
 };
 
-cbuffer PARTICLETYPEBUFFER : register(b14)
-{
-    ComputeParticleType g_ParticleType;
-}
 
 RWStructuredBuffer<PARTICLE> g_ParticleWritedata : register(u0);
 RWStructuredBuffer<COMPUTESHARED> g_SharedData : register(u1);
+
+float3 g_UpForce = float3(0.0, 5.8, 0.0);
+float3 g_Wind = float3(2.0, 0.0, 0.0); // 오른쪽으로 바람
 
 // CS_Main
 // g_vec2_1 : DeltaTime / AccTime
@@ -116,15 +113,36 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
         // 랜덤 부분 간단하게 추출 Noise TexTexture 이용
         if (g_ParticleWritedata[threadIndex.x].iAlive == 1)
         {
-           
+            float x = ((float) threadIndex.x / (float) g_GrobalParticleInfo.iMaxCount) + g_GrobalParticleInfo.fAccTime;
+
             // [0~1] -> [-1~1]
-          
-          
-            g_ParticleWritedata[threadIndex.x].vWorldPos = g_GrobalParticleInfo.fParticlePosition;
-            g_ParticleWritedata[threadIndex.x].vWorldDir = normalize(g_GrobalParticleInfo.fParticleDirection);
+            float r1 = Rand(float2(x, g_GrobalParticleInfo.fAccTime));
+            float r2 = Rand(float2(x * g_GrobalParticleInfo.fAccTime, g_GrobalParticleInfo.fAccTime));
+            float r3 = Rand(float2(x * g_GrobalParticleInfo.fAccTime * g_GrobalParticleInfo.fAccTime, g_GrobalParticleInfo.fAccTime * g_GrobalParticleInfo.fAccTime));
+           
+            float3 noise =
+            {
+                (2 * r1 - 1),
+                 0,
+                0
+            };
+            //if (fmod(threadIndex.x, 2) == 1)
+            //{
+            //    g_ParticleWritedata[threadIndex.x].vWorldPos = g_GrobalParticleInfo.fParticleDirection +g_GrobalParticleInfo.fParticleThickness* float3(1, 0, 0);
+      
+            //}
+            //else
+            //{
+            //    g_ParticleWritedata[threadIndex.x].vWorldPos = g_GrobalParticleInfo.fParticleDirection + g_GrobalParticleInfo.fParticleThickness * float3(1, 0, 0);
+     
+            //}
+            g_ParticleWritedata[threadIndex.x].vWorldPos = g_GrobalParticleInfo.fParticlePosition + g_GrobalParticleInfo.fParticleThickness * g_GrobalParticleInfo.fParticleDirection;
+     
+            g_ParticleWritedata[threadIndex.x].vWorldDir = float3(0, 0, -0.1);
             g_ParticleWritedata[threadIndex.x].fLifeTime = g_GrobalParticleInfo.fMaxLifeTime;
           
             g_ParticleWritedata[threadIndex.x].fCurTime = 0.f;
+            g_ParticleWritedata[threadIndex.x].fTransparency = 1.f;
         }
     }
     else
@@ -136,133 +154,31 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
             g_ParticleWritedata[threadIndex.x].iAlive = 0;
             return;
         }
+        float3 externalForces = g_UpForce * g_GrobalParticleInfo.fDeltaTime; // +g_Wind * g_GrobalParticleInfo.fDeltaTime;
+       
+        g_ParticleWritedata[threadIndex.x].vWorldDir += externalForces;
+        g_ParticleWritedata[threadIndex.x].vWorldDir = normalize(g_ParticleWritedata[threadIndex.x].vWorldDir);
+
 
         float ratio = g_ParticleWritedata[threadIndex.x].fCurTime / g_ParticleWritedata[threadIndex.x].fLifeTime;
         float speed = (g_GrobalParticleInfo.fMaxSpeed - g_GrobalParticleInfo.fMinSpeed) * ratio + g_GrobalParticleInfo.fMinSpeed;
         g_ParticleWritedata[threadIndex.x].vWorldPos += g_ParticleWritedata[threadIndex.x].vWorldDir * speed * g_GrobalParticleInfo.fDeltaTime;
    
-        float frameTime = floor(g_ParticleWritedata[threadIndex.x].fCurTime / g_GrobalParticleInfo.fNextAnimTime);
-        int frameX = (int) fmod(frameTime, g_GrobalParticleInfo.fAnimSizeX);
-        int frameY = (int) fmod((frameTime / g_GrobalParticleInfo.fAnimSizeX), g_GrobalParticleInfo.fAnimSizeY);
-        g_ParticleWritedata[threadIndex.x].vAnimUV = float2(frameX, frameY);
+        //if (ratio < 0.5f)
+        //{
+        //    g_ParticleWritedata[threadIndex.x].fTransparency = ratio * 2.0f; // 0 ~ 1
+        //}
+        //else
+        //{
+        //    g_ParticleWritedata[threadIndex.x].fTransparency = (1.0f - ratio) * 2.0f; // 1 ~ 0
+        //}
+        g_ParticleWritedata[threadIndex.x].fTransparency = (1.0f - ratio);
+
     }
    
 }
 
 
-//float3x3 RotationMatrix(float3 axis, float angle)
-//{
-//    axis = normalize(axis);
-//    float s = sin(angle);
-//    float c = cos(angle);
-//    float oc = 1.0f - c;
-//
-//    float3x3 rotationMatrix;
-//    rotationMatrix[0] = float3(
-//        oc * axis.x * axis.x + c,
-//        oc * axis.x * axis.y - axis.z * s,
-//        oc * axis.x * axis.z + axis.y * s
-//        );
-//    rotationMatrix[1] = float3(
-//        oc * axis.x * axis.y + axis.z * s,
-//        oc * axis.y * axis.y + c,
-//        oc * axis.y * axis.z - axis.x * s
-//        );
-//    rotationMatrix[2] = float3(
-//        oc * axis.x * axis.z - axis.y * s,
-//        oc * axis.y * axis.z + axis.x * s,
-//        oc * axis.z * axis.z + c
-//        );
-//
-//    return rotationMatrix;
-//}
-//
-//void RotateAroundAxis(float3 axis, float angle, inout float3 position)
-//{
-//    float3x3 rotationMatrix = RotationMatrix(axis, angle);
-//    position = mul(rotationMatrix, position);
-//}
-//
-//[numthreads(1024, 1, 1)]
-//void CS_Main(int3 threadIndex : SV_DispatchThreadID)
-//{
-//    if (threadIndex.x >= g_GrobalParticleInfo.iMaxCount)
-//        return;
-//    
-//    g_SharedData[0].iAddCount = g_GrobalParticleInfo.iAddCount;
-//    // 모두 한 번 기다리는 것
-//    GroupMemoryBarrierWithGroupSync();
-//
-//    if (g_ParticleWritedata[threadIndex.x].iAlive == 0)
-//    {      
-//        while (true)
-//        {
-//            int remaining = g_SharedData[0].iAddCount;
-//            if (remaining <= 0)
-//                break;
-//
-//            int expected = remaining;
-//            int desired = remaining - 1;
-//            int originalValue;
-//            // Atomic 같은 느낌 한 번에 한 번만 실행된다. 
-//            // 1인자와 2인자가 같으면 desire을 다르면 OriginValue를 넣어준다. 
-//            InterlockedCompareExchange(g_SharedData[0].iAddCount, expected, desired, originalValue);
-//
-//            if (originalValue == expected)
-//            {
-//                g_ParticleWritedata[threadIndex.x].iAlive = 1;
-//                break;
-//            }
-//        }
-//
-//        // 랜덤 부분 간단하게 추출 Noise TexTexture 이용
-//        if (g_ParticleWritedata[threadIndex.x].iAlive == 1)
-//        {
-//            float x = ((float) threadIndex.x / (float) g_GrobalParticleInfo.iMaxCount) + g_GrobalParticleInfo.fAccTime;
-//
-//            float r1 = Rand(float2(x, g_GrobalParticleInfo.fAccTime));
-//            float r2 = Rand(float2(x * g_GrobalParticleInfo.fAccTime, g_GrobalParticleInfo.fAccTime));
-//            float r3 = Rand(float2(x * g_GrobalParticleInfo.fAccTime * g_GrobalParticleInfo.fAccTime, g_GrobalParticleInfo.fAccTime * g_GrobalParticleInfo.fAccTime));
-//
-//            // [0.5~1] -> [0~1]
-//            float3 noise =
-//            {
-//                2 * r1 - 1,
-//                2 * r2 - 1,
-//                2 * r3 - 1
-//            };
-//
-//            // [0~1] -> [-1~1]
-//            float3 dir = (noise - 0.5f) * 2.f;
-//           
-//            g_ParticleWritedata[threadIndex.x].vWorldDir = normalize(g_GrobalParticleInfo.fParticleDirection);
-//            g_ParticleWritedata[threadIndex.x].vWorldPos = (noise.xyz - 0.5f) * g_GrobalParticleInfo.fParticleThickness;
-//            g_ParticleWritedata[threadIndex.x].fLifeTime = ((g_GrobalParticleInfo.fMaxLifeTime - g_GrobalParticleInfo.fMinLifeTime) * noise.x)
-//            + g_GrobalParticleInfo.fMinLifeTime;
-//            g_ParticleWritedata[threadIndex.x].fCurTime = 0.f;
-//        }
-//    }
-//    else
-//    {
-//        float rotationAngle = 10 * g_GrobalParticleInfo.fDeltaTime;
-//
-//        // 주어진 축 주위로 파티클을 회전시킵니다.
-//        RotateAroundAxis(g_ParticleWritedata[threadIndex.x].vWorldDir, rotationAngle, g_ParticleWritedata[threadIndex.x].vWorldPos);
-//
-//        // 회전된 이동 방향을 사용하여 파티클을 이동시킵니다.
-//        float ratio = g_ParticleWritedata[threadIndex.x].fCurTime / g_ParticleWritedata[threadIndex.x].fLifeTime;
-//        float speed = (g_GrobalParticleInfo.fMaxSpeed - g_GrobalParticleInfo.fMinSpeed) * ratio + g_GrobalParticleInfo.fMinSpeed;
-//        g_ParticleWritedata[threadIndex.x].vWorldPos += g_ParticleWritedata[threadIndex.x].vWorldDir * 5 * g_GrobalParticleInfo.fDeltaTime;
-//
-//        // 파티클의 수명이 다 되었을 경우 파티클을 제거합니다.
-//        if (g_ParticleWritedata[threadIndex.x].fLifeTime < g_ParticleWritedata[threadIndex.x].fCurTime)
-//        {
-//            g_ParticleWritedata[threadIndex.x].iAlive = 0;
-//            return;
-//        }
-//    }
-//   
-//}
 
 
 #endif // _COMPUTE2DPARTICLE_
