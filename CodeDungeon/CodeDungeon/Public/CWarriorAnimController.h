@@ -31,7 +31,9 @@ public:
 	virtual void Tick(const _double& _dTimeDelta) override;
 private:
 	WKPTR< CWarriorPlayer>			m_wpWarriorPlayer;
-	_bool												m_isComboStack;
+	_int							m_iWComboStack;
+	_int							m_iSComboStack;
+	_double							m_dTimeElapsed;
 };
 
 END
