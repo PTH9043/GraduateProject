@@ -222,6 +222,19 @@ HRESULT CWarriorPlayer::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPT
 
 void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy)
 {
+	PAWNTYPE ePawnType = _pEnemy->GetPawnType();
+	if (PAWNTYPE::PAWN_CHAR == ePawnType)
+	{
+		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
+
+		for (auto& iter : GetColliderContainer())
+		{
+			if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
+			{
+				int a = 0;
+			}
+		}
+	}
 }
 
 void CWarriorPlayer::TranslateStateMoveAndRunF(CSHPTRREF<UGameInstance> _spGameInstance, const _double& _dTimeDelta, const _float _fSpeed)

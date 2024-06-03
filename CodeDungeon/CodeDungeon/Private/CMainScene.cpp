@@ -222,6 +222,11 @@ void CMainScene::CollisionTick(const _double& _dTimeDelta)
 	{
 
 	}
+
+	if (true == m_spWarriorPlayer->IsHit(m_spMummy))
+	{
+
+	}
 }
 
 END

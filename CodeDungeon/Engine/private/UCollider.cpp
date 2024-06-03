@@ -398,7 +398,7 @@ void UCollider::AddRenderer(RENDERID _eID)
 			break;
 		case TYPE_SPHERE:
 			m_spDebugDrawPawn->GetTransform()->SetPos(m_spSphere->Center);
-			m_spDebugDrawPawn->GetTransform()->SetScale(m_vModelScale);
+			m_spDebugDrawPawn->GetTransform()->SetScale(m_vCurScale);
 			break;
 		}
 		m_spDebugDrawPawn->AddRenderer(_eID);

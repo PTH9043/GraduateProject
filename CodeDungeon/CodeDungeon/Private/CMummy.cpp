@@ -157,22 +157,11 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy)
 	{
 		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
 
-		for (auto& iter : pCharacter->GetColliderContainer())
-		{
-			for (auto& Monster : GetColliderContainer())
-			{
-				if (true == Monster.second->IsCollision(iter.second))
-				{
-					GetTransform()->SetPos(GetPrevPos());
-				}
-			}
-		}
-
 		for(auto& iter : GetColliderContainer())
 		{
 			if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
 			{
-
+				int a = 0;
 			}
 		}
 	}
