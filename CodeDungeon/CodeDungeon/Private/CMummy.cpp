@@ -53,7 +53,7 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 		tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.3f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 7;
 		tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 5;
-		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 300;
+		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 400;
 		tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 1.f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.f, 0.1f);
 		tDesc.ParticleParam.stGlobalParticleInfo.fParticlePosition = _float3(0.f, 0.f, 0.f);
@@ -75,7 +75,7 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 		m_spParticle->SetBloodTexture(7, L"blood7"); // y값 증가 x 원
 		m_spParticle->SetParticleType(PARTICLE_BLOOD);
 		*m_spParticle->GetParticleSystem()->GetCreateInterval() = 0.85f;
-		*m_spParticle->GetParticleSystem()->GetAddParticleAmount() = 20;
+		*m_spParticle->GetParticleSystem()->GetAddParticleAmount() = 5;
 	}
 
 
@@ -156,14 +156,7 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 	}
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	
-	if (spGameInstance->GetDIKeyDown(DIK_1)) {
-		m_spParticle->SetActive(true);
-		m_spParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
-	}
-	else {
-		//m_spParticle->SetActive(false);
-
-	}
+	
 
 	if(CurAnimState == UAnimationController::ANIM_IDLE)
 	{
@@ -223,9 +216,14 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy)
 			if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
 			{
 				SetHitstate(true);
+				m_spParticle->SetActive(true);
+				m_spParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+
 			}
-			else
+			else {
 				SetHitstate(false);
+			}
+				
 
 			for(auto& iter2 : pCharacter->GetColliderContainer())
 			{
