@@ -132,11 +132,11 @@ _bool UAnimColliderEvent::EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, con
 		m_AnimColliderDesc.spCollider->SetScale(m_AnimColliderDesc.vColliderScale);
 
 		if (nullptr != m_AnimColliderDesc.spBoneNode){
-			m_AnimColliderDesc.spCollider->SetTransform(m_AnimColliderDesc.spBoneNode->GetCombineMatrix() * _pAnimModel->GetPivotMatirx()  * spTransform->GetWorldMatrix());
+			m_AnimColliderDesc.spCollider->SetTransform(m_AnimColliderDesc.spBoneNode->GetCombineMatrix() * _pAnimModel->GetPivotMatirx() *  spTransform->GetWorldMatrix());
 		}
 		else
 		{
-			m_AnimColliderDesc.spCollider->SetTransform(spTransform->GetWorldMatrix());
+			m_AnimColliderDesc.spCollider->SetTransform(_pAnimModel->GetPivotMatirx() * spTransform->GetWorldMatrix());
 		}
 		m_AnimColliderDesc.spCollider->AddRenderer(RENDERID::RI_NONALPHA_LAST);
 	}

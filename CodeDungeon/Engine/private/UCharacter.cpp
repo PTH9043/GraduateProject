@@ -60,20 +60,6 @@ HRESULT UCharacter::NativeConstructClone(const VOIDDATAS& _Datas)
 	}
 	AddShader(PROTO_RES_ANIMMODELSHADER, RES_SHADER);
 
-	UCollider::COLLIDERDESC tDesc;
-	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
-	tDesc.vScale = _float3(1.f, 1.f, 1.f);
-	SHPTR<UCollider> Collider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
-	_wstring mainColliderTag = L"Main";
-
-	Collider->SetTranslate(m_spAnimModel->GetCenterPos());
-	Collider->SetScaleToFitModel(m_spAnimModel->GetMinVertexPos(), m_spAnimModel->GetMaxVertexPos());
-	Collider->SetTransform(GetTransform());
-
-	AddColliderInContainer(mainColliderTag, Collider);
-	AddShader(PROTO_RES_ANIMMODELSHADER, RES_SHADER);
-
-
 	return S_OK;
 }
 
@@ -159,7 +145,6 @@ _float3 UCharacter::OtherCharacterDirToLookVectorF3(CSHPTRREF<UTransform> _spOth
 
 void UCharacter::TickActive(const _double& _dTimeDelta)
 {
-
 	// 이전 위치 저장
 	m_vPrevPos = GetTransform()->GetPos();
 
@@ -198,7 +183,10 @@ HRESULT UCharacter::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF
 
 void UCharacter::Collision(CSHPTRREF<UPawn> _pEnemy)
 {
+}
 
-
+HRESULT UCharacter::MakeCollider(const _float3& _vTranslate, const _float3& _vScale, const _int _ColliderType)
+{
+	return E_NOTIMPL;
 }
 

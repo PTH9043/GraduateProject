@@ -38,6 +38,7 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
 	{
 		UParticle::PARTICLEDESC tDesc;
 		tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEBLOODEFFECT2DSHADER;
@@ -76,6 +77,17 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 		*m_spParticle->GetParticleSystem()->GetCreateInterval() = 0.85f;
 		*m_spParticle->GetParticleSystem()->GetAddParticleAmount() = 20;
 	}
+
+
+	UCollider::COLLIDERDESC tDesc;
+	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
+	tDesc.vScale = _float3(0, 0, 0);
+	SHPTR<UCollider> Collider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
+	_wstring mainColliderTag = L"Main";
+
+	AddColliderInContainer(mainColliderTag, Collider);
+
+
 	return S_OK;
 }
 
@@ -178,6 +190,13 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 
 void CMummy::LateTickActive(const _double& _dTimeDelta)
 {
+	for (auto& Colliders : GetColliderContainer())
+	{
+		Colliders.second->SetTransform(GetTransform()->GetWorldMatrix());
+		Colliders.second->SetScale(_float3(3, 15, 3));
+		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
+	}
+
 	__super::LateTickActive(_dTimeDelta);
 }
 
@@ -198,22 +217,11 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy)
 	{
 		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
 
-		for (auto& iter : pCharacter->GetColliderContainer())
-		{
-			for (auto& Monster : GetColliderContainer())
-			{
-				if (true == Monster.second->IsCollision(iter.second))
-				{
-					GetTransform()->SetPos(GetPrevPos());
-				}
-			}
-		}
-
 		for(auto& iter : GetColliderContainer())
 		{
 			if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
 			{
-
+				int a = 0;
 			}
 		}
 	}

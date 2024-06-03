@@ -12,6 +12,7 @@
 #include "UParticle.h"
 #include "UParticleSystem.h"
 #include "CSword.h"
+#include "UCollider.h"
 
 CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UPlayer(_spDevice, _wstrLayer, _eCloneType), m_spSword{nullptr}
@@ -35,6 +36,7 @@ HRESULT CWarriorPlayer::NativeConstruct()
 HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
 	SHPTR<UCell> spCell = spNavigation->FindCell(133);
@@ -50,8 +52,14 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetRunningSpeed(100.f);
 	SetRunState(false);
 
+	UCollider::COLLIDERDESC tDesc;
+	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
+	tDesc.vScale = _float3(0, 0, 0);
+	SHPTR<UCollider> Collider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
+	_wstring mainColliderTag = L"Main";
 
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	AddColliderInContainer(mainColliderTag, Collider);
+
 	{
 
 		UParticle::PARTICLEDESC tDesc;
@@ -99,6 +107,8 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
+
+
 	GetAnimationController()->Tick(_dTimeDelta);
 	GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
 
@@ -183,11 +193,18 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	//		SetRunState(true);
 	//	}
 	//}
-	UpdateCollision();
+
 }
 
 void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 {
+	for (auto& Colliders : GetColliderContainer())
+	{
+		Colliders.second->SetTransform(GetTransform()->GetWorldMatrix());
+		Colliders.second->SetScale(_float3(3, 15, 3));
+		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
+	}
+
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
 	__super::LateTickActive(_dTimeDelta);
 	FollowCameraMove(_float3{0.f, 20.f, -40.f}, _dTimeDelta);
@@ -205,6 +222,19 @@ HRESULT CWarriorPlayer::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPT
 
 void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy)
 {
+	PAWNTYPE ePawnType = _pEnemy->GetPawnType();
+	if (PAWNTYPE::PAWN_CHAR == ePawnType)
+	{
+		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
+
+		for (auto& iter : GetColliderContainer())
+		{
+			if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
+			{
+				int a = 0;
+			}
+		}
+	}
 }
 
 void CWarriorPlayer::TranslateStateMoveAndRunF(CSHPTRREF<UGameInstance> _spGameInstance, const _double& _dTimeDelta, const _float _fSpeed)
