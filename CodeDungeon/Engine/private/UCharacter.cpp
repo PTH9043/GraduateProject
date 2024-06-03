@@ -159,6 +159,7 @@ _float3 UCharacter::OtherCharacterDirToLookVectorF3(CSHPTRREF<UTransform> _spOth
 
 void UCharacter::TickActive(const _double& _dTimeDelta)
 {
+
 	// 이전 위치 저장
 	m_vPrevPos = GetTransform()->GetPos();
 }
@@ -195,5 +196,7 @@ HRESULT UCharacter::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF
 
 void UCharacter::Collision(CSHPTRREF<UPawn> _pEnemy)
 {
+
+
 }
 

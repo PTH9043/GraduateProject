@@ -83,16 +83,30 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 			GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
 		}
 	}
-	else
+	else if(CurAnimState == UAnimationController::ANIM_ATTACK)
 	{
 		_float3 direction = CurrentMobPos - CurrentPlayerPos;
 		GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
 	}
+	else if(CurAnimState == UAnimationController::ANIM_HIT)
+	{
+		GetTransform()->TranslateDir((GetTransform()->GetLook()), 1, 1);
+	}
+	
 
 
 	if(CurAnimState == UAnimationController::ANIM_IDLE)
 	{
 		GetAnimModel()->TickAnimation(_dTimeDelta);
+	}
+	else if (CurAnimState == UAnimationController::ANIM_DEATH)
+	{
+		static _double elapsedTime = 0;
+		_double DeathAnimSpeed = 20;
+		elapsedTime += _dTimeDelta * DeathAnimSpeed;
+		_double DeathTimeArcOpenEnd = 50;
+		if (elapsedTime < DeathTimeArcOpenEnd)
+			GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, elapsedTime);
 	}
 	else
 		GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
