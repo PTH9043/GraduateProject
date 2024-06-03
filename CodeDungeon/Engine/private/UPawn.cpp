@@ -4,9 +4,10 @@
 #include "URenderer.h"
 #include "UGameInstance.h"
 #include "UCollider.h"
+#include "UTransform.h"
 
-UPawn::UPawn(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType, const BACKINGTYPE _eBackingType) :
-	UActor(_spDevice, _wstrLayer, _eCloneType, _eBackingType, USECOLLISIONTYPE::ACTIVE),
+UPawn::UPawn(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType, const BACKINGTYPE _eBackingType, PAWNTYPE _ePawnType) :
+	UActor(_spDevice, _wstrLayer, _eCloneType, _eBackingType, USECOLLISIONTYPE::ACTIVE), m_ePawnType{_ePawnType},
 	m_spRenderer{ nullptr },
 	m_spShader{ nullptr },
 	m_spShadowShader{ nullptr }
@@ -88,6 +89,7 @@ void UPawn::AddShadowRenderGroup(const RENDERID _iRenderID)
 }
 void UPawn::TickActive(const _double& _dTimeDelta)
 {
+
 }
 
 void UPawn::LateTickActive(const _double& _dTimeDelta)
@@ -136,6 +138,15 @@ void UPawn::AddShadowShader(const _wstring& _wstrProtoTag, const _wstring& _wstr
 {
 	m_spShadowShader = AddResource<UShader>(_wstrProtoTag, _wstrTag, _vecDatas);
 }
+
+void UPawn::UpdateCollision()
+{
+	for (auto& iter : m_ColliderContainer)
+	{
+		iter.second->SetTransform(GetTransform()->GetWorldMatrix());
+	}
+}
+
 #ifdef _USE_DEBUGGING
 void UPawn::AddDebugRenderGroup(const DEBUGRENDERID _iRenderID)
 {

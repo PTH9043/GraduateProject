@@ -14,7 +14,7 @@
 
 UCharacter::UCharacter(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, 
 	const CLONETYPE& _eCloneType) : 
-	UPawn(_spDevice, _wstrLayer, _eCloneType, BACKINGTYPE::DYNAMIC),
+	UPawn(_spDevice, _wstrLayer, _eCloneType, BACKINGTYPE::DYNAMIC, PAWNTYPE::PAWN_CHAR),
 	m_vPrevPos{}
 {
 }
@@ -145,9 +145,10 @@ _float3 UCharacter::OtherCharacterDirToLookVectorF3(CSHPTRREF<UTransform> _spOth
 
 void UCharacter::TickActive(const _double& _dTimeDelta)
 {
-
 	// 이전 위치 저장
 	m_vPrevPos = GetTransform()->GetPos();
+
+	__super::TickActive(_dTimeDelta);
 }
 
 void UCharacter::LateTickActive(const _double& _dTimeDelta)
@@ -182,7 +183,10 @@ HRESULT UCharacter::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF
 
 void UCharacter::Collision(CSHPTRREF<UPawn> _pEnemy)
 {
+}
 
-
+HRESULT UCharacter::MakeCollider(const _float3& _vTranslate, const _float3& _vScale, const _int _ColliderType)
+{
+	return E_NOTIMPL;
 }
 

@@ -216,4 +216,12 @@ void CMainScene::LateTick(const _double& _dTimeDelta)
 
 }
 
+void CMainScene::CollisionTick(const _double& _dTimeDelta)
+{
+	if (true == m_spMummy->IsHit(m_spWarriorPlayer))
+	{
+
+	}
+}
+
 END

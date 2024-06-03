@@ -20,7 +20,8 @@ UCollider::UCollider(CSHPTRREF<UDevice> _pDevice,
 	m_spSphere{ nullptr },
 	m_isCollision{ false },
 	m_mTransformMatrix{ _float4x4::Identity },
-	m_vScale{ 0.f, 0.f, 0.f },
+	m_vCurScale{ 0.f, 0.f, 0.f },
+	m_vModelScale{ 0.f, 0.f, 0.f },
 	m_vTranslate{ 0.f, 0.f, 0.f },
 	m_vPos{ 0.f, 0.f, 0.f }
 #ifdef _USE_DEBUGGING
@@ -39,7 +40,8 @@ UCollider::UCollider(const UCollider& _rhs) :
 	m_spSphere{ nullptr },
 	m_mTransformMatrix{ _float4x4::Identity },
 	m_isCollision{ false },
-	m_vScale{ 0.f, 0.f, 0.f },
+	m_vCurScale{ 0.f, 0.f, 0.f },
+	m_vModelScale{0.f, 0.f, 0.f},
 	m_vTranslate{ 0.f, 0.f, 0.f },
 	m_vPos{ 0.f, 0.f, 0.f }
 #ifdef _USE_DEBUGGING
@@ -71,7 +73,7 @@ const _float3& UCollider::GetCurPos()
 
 const _float3& UCollider::GetScale()
 {
-	return m_vScale;
+	return m_vCurScale;
 }
 
 const _float3& UCollider::GetTranslate()
@@ -85,17 +87,18 @@ void UCollider::SetScale(const _float3& _vScale)
 	{
 	case TYPE_AABB:
 		m_spAABB_Original->Extents = _vScale;
-		m_vScale = _vScale;
+		m_vCurScale = _vScale;
 		break;
 	case TYPE_OBB:
 		m_spOBB_Original->Extents = _vScale;
-		m_vScale = _vScale;
+		m_vCurScale = _vScale;
 		break;
 	case TYPE_SPHERE:
 		m_spSphere_Original->Radius = _vScale.x;
-		m_vScale = { _vScale.x, _vScale.x, _vScale.x };
+		m_vCurScale = { _vScale.x, _vScale.x, _vScale.x };
 		break;
 	}
+	m_vModelScale = m_vCurScale;
 }
 
 void UCollider::SetScaleToFitModel(const _float3& minVertex, const _float3& maxVertex)
@@ -108,16 +111,16 @@ void UCollider::SetScaleToFitModel(const _float3& minVertex, const _float3& maxV
 	case TYPE_AABB:
 		m_spAABB_Original->Center = center;
 		m_spAABB_Original->Extents = size;
-		m_vScale = size * 2;
+		m_vModelScale = size * 2;
 		break;
 	case TYPE_OBB:
 		m_spOBB_Original->Center = center;
 		m_spOBB_Original->Extents = size;
-		m_vScale = size * 2;
+		m_vModelScale = size * 2;
 		break;
 	case TYPE_SPHERE:
 		m_spSphere_Original->Radius = (size).x;
-		m_vScale = { (size* 2).x, (size * 2).x, (size * 2).x };
+		m_vModelScale = { (size* 2).x, (size * 2).x, (size * 2).x };
 		break;
 	}
 }
@@ -174,12 +177,12 @@ void UCollider::SetTransform(CSHPTRREF<UTransform> _spTransform)
 	case TYPE_OBB:
 		m_mTransformMatrix = _spTransform->GetWorldMatrix();
 		m_spOBB_Original->Transform(*m_spOBB.get(), m_mTransformMatrix);
-		m_vScale = _float3(m_spOBB->Extents) * 2;
+		m_vModelScale = _float3(m_spOBB->Extents) * 2;
 		break;
 	case TYPE_SPHERE:
 		m_mTransformMatrix = _spTransform->GetWorldMatrix();
 		m_spSphere_Original->Transform(*m_spSphere.get(), m_mTransformMatrix);
-		m_vScale = _float3((m_spSphere->Radius, m_spSphere->Radius, m_spSphere->Radius)) * 2;
+		m_vModelScale = _float3((m_spSphere->Radius, m_spSphere->Radius, m_spSphere->Radius)) * 2;
 		break;
 	}
 }
@@ -193,21 +196,21 @@ void UCollider::SetTransform(const _float4x4& _Matrix)
 		m_mTransformMatrix.Set_Pos(_Matrix.Get_Pos());
 				m_mTransformMatrix.MatrixSetScaling(_Matrix.Get_Scaling(_Matrix));
 		m_spAABB_Original->Transform(*m_spAABB.get(), m_mTransformMatrix);
-		m_vScale = _float3(m_spAABB->Extents) * 2;
+		m_vModelScale = _float3(m_spAABB->Extents) * 2;
 		break;
 	case TYPE_OBB:
 		m_mTransformMatrix = XMMatrixRotationQuaternion(DirectX::XMQuaternionRotationMatrix(_Matrix));
 		m_mTransformMatrix.Set_Pos(_Matrix.Get_Pos());
 		m_mTransformMatrix.MatrixSetScaling(_Matrix.Get_Scaling(_Matrix));
 		m_spOBB_Original->Transform(*m_spOBB.get(), m_mTransformMatrix);
-		m_vScale = _float3(m_spOBB->Extents) * 2;
+		m_vModelScale = _float3(m_spOBB->Extents) * 2;
 		break;
 	case TYPE_SPHERE:
 		m_mTransformMatrix = XMMatrixRotationQuaternion(DirectX::XMQuaternionRotationMatrix(_Matrix));
 		m_mTransformMatrix.Set_Pos(_Matrix.Get_Pos());
 		m_mTransformMatrix.MatrixSetScaling(_Matrix.Get_Scaling(_Matrix));
 		m_spSphere_Original->Transform(*m_spSphere.get(), m_mTransformMatrix);
-		m_vScale = _float3(m_spSphere->Radius) * 2;
+		m_vModelScale = _float3(m_spSphere->Radius) * 2;
 		break;
 	}
 }
@@ -257,22 +260,23 @@ HRESULT UCollider::NativeConstructClone(const VOIDDATAS& _tDatas)
 	case TYPE_AABB:
 		m_spAABB_Original->Center = ColliderDesc.vTranslation;
 		m_spAABB_Original->Extents = _float3(ColliderDesc.vScale.x, ColliderDesc.vScale.y, ColliderDesc.vScale.z);
-		m_vScale = ColliderDesc.vScale;
+		m_vCurScale = ColliderDesc.vScale;
 		m_spAABB = std::make_shared<DirectX::BoundingBox>(*m_spAABB_Original.get());
 		break;
 	case TYPE_OBB:
 		m_spOBB_Original->Center = ColliderDesc.vTranslation;
 		m_spOBB_Original->Extents = _float3(ColliderDesc.vScale.x, ColliderDesc.vScale.y, ColliderDesc.vScale.z);
-		m_vScale = ColliderDesc.vScale;
+		m_vCurScale = ColliderDesc.vScale;
 		m_spOBB = std::make_shared<DirectX::BoundingOrientedBox>(*m_spOBB_Original.get());
 		break;
 	case TYPE_SPHERE:
 		m_spSphere_Original->Center = ColliderDesc.vTranslation;
 		m_spSphere_Original->Radius = ColliderDesc.vScale.x;
-		m_vScale = { ColliderDesc.vScale.x, ColliderDesc.vScale.x, ColliderDesc.vScale.x };
+		m_vCurScale = { ColliderDesc.vScale.x, ColliderDesc.vScale.x, ColliderDesc.vScale.x };
 		m_spSphere = std::make_shared<DirectX::BoundingSphere>(*m_spSphere_Original.get());
 		break;
 	}
+	m_vModelScale = m_vCurScale;
 
 #ifdef _USE_DEBUGGING
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
@@ -385,16 +389,16 @@ void UCollider::AddRenderer(RENDERID _eID)
 		{
 		case TYPE_AABB:
 			m_spDebugDrawPawn->GetTransform()->SetPos(m_spAABB->Center);
-			m_spDebugDrawPawn->GetTransform()->SetScale(m_vScale);
+			m_spDebugDrawPawn->GetTransform()->SetScale(m_vModelScale);
 			break;
 		case TYPE_OBB:
 			m_spDebugDrawPawn->GetTransform()->SetPos(m_spOBB->Center);
-			m_spDebugDrawPawn->GetTransform()->SetScale(m_vScale);
+			m_spDebugDrawPawn->GetTransform()->SetScale(m_vModelScale);
 			m_spDebugDrawPawn->GetTransform()->RotateFix(m_spOBB->Orientation);
 			break;
 		case TYPE_SPHERE:
 			m_spDebugDrawPawn->GetTransform()->SetPos(m_spSphere->Center);
-			m_spDebugDrawPawn->GetTransform()->SetScale(m_vScale);
+			m_spDebugDrawPawn->GetTransform()->SetScale(m_vModelScale);
 			break;
 		}
 		m_spDebugDrawPawn->AddRenderer(_eID);

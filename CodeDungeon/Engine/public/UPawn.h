@@ -10,7 +10,8 @@ using COLLIDERCONTAINER = UNORMAP<_wstring, SHPTR<UCollider>>;
 
 class UPawn  abstract : public UActor{
 public:
-	UPawn(CSHPTRREF<UDevice> _spDevice,  const _wstring & _wstrLayer, const CLONETYPE & _eCloneType, const BACKINGTYPE _eBackingType = BACKINGTYPE::STATIC);
+	UPawn(CSHPTRREF<UDevice> _spDevice,  const _wstring & _wstrLayer, const CLONETYPE & _eCloneType, const BACKINGTYPE _eBackingType = BACKINGTYPE::STATIC,
+		PAWNTYPE _ePawnType = PAWNTYPE::PAWN_ECT);
 	UPawn(const UPawn& _rhs);
 	DESTRUCTOR(UPawn)
 public:
@@ -33,10 +34,8 @@ public:
 
 		void AddRenderGroup(const RENDERID _iRenderID);
 		void AddShadowRenderGroup(const RENDERID _iRenderID);
-protected: /* get set*/
-	// Get Renderer
-	CSHPTRREF<URenderer> GetRenderer() const { return m_spRenderer; }
-
+public: /* get set*/
+	const PAWNTYPE GetPawnType() const { return m_ePawnType; }
 protected:
 		// Tick, LateTick, Render
 		virtual void TickActive(const _double& _dTimeDelta) override PURE;
@@ -51,6 +50,8 @@ protected:
 		// Add Shader
 		void AddShader(const _wstring& _wstrProtoTag, const _wstring& _wstrTag = RES_SHADER, const VOIDDATAS& _vecDatas = VOIDDATAS{});
 		void AddShadowShader(const _wstring& _wstrProtoTag, const _wstring& _wstrTag = RES_SHADER, const VOIDDATAS& _vecDatas = VOIDDATAS{});
+
+		void UpdateCollision();
 	#ifdef _USE_DEBUGGING
 		void AddDebugRenderGroup(const DEBUGRENDERID _iRenderID);
 	#endif
@@ -58,7 +59,10 @@ protected:
 	public:
 		virtual void ShowObjectInfo() override;
 	#endif
-	private:
+protected: /* get set*/
+	// Get Renderer
+	CSHPTRREF<URenderer> GetRenderer() const { return m_spRenderer; }
+private:
 		SHPTR<URenderer>		m_spRenderer;
 		SHPTR<UShader>			m_spShader;
 		SHPTR<UShader>			m_spShadowShader;
@@ -68,6 +72,7 @@ protected:
 		VECTOR<_uint>				m_vecRenderingDatas;
 		_bool									m_isDebugRenderingType;
 	#endif 
+		PAWNTYPE						m_ePawnType;
 };
 
 END

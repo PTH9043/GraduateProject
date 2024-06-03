@@ -11,6 +11,7 @@
 #include "UCell.h"
 #include "UParticle.h"
 #include "UParticleSystem.h"
+#include "CSword.h"
 #include "UCollider.h"
 
 CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
@@ -95,8 +96,9 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	}
 
 	{
-	//	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	//	m_spSword = std::static_pointer_cast<CSword>(spGameInstance->CloneActorAdd(PROTO_ACTOR_LONGSWORD, ));
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		CSword::EQDESC Desc(std::static_pointer_cast<UModel>(spGameInstance->CloneResource(PROTO_RES_LONGSWORDMODEL)), ThisShared<UCharacter>(), L"..\\..\\Resource\\Model\\Item\\Equip\\Sword\\Convert\\EquipDesc\\sword_FBX.bin");
+		m_spSword = std::static_pointer_cast<CSword>(spGameInstance->CloneActorAdd(PROTO_ACTOR_LONGSWORD, {&Desc}));
 
 	}
 	return S_OK;
@@ -191,7 +193,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	//		SetRunState(true);
 	//	}
 	//}
-
+	UpdateCollision();
 }
 
 void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)

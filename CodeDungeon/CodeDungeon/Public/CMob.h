@@ -42,10 +42,10 @@ public:
 	void MoveAlongPath(const VECTOR<_float3>& path, size_t& currentPathIndex, const _double& _dTimeDelta);
 
 private:
-	_float			m_fDistancefromNearestPlayer;
-	_bool			m_bFoundTarget;
-	SHPTR<UPlayer> m_spTargetPlayer;
-	_float3        m_f3TargetPos;
+	_float								m_fDistancefromNearestPlayer;
+	_bool								m_bFoundTarget;
+	SHPTR<UPlayer>			m_spTargetPlayer;
+	_float3							 m_f3TargetPos;
 };
 
 END
