@@ -189,7 +189,7 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 void CMummy::LateTickActive(const _double& _dTimeDelta)
 {
 	if (GetCollisionState())
-		GetTransform()->SetPos(GetTransform()->GetPos() + GetTransform()->GetLook() * 0.3);
+		GetTransform()->SetPos(GetTransform()->GetPos() + GetTransform()->GetLook() * 5 * _dTimeDelta);
 
 	__super::LateTickActive(_dTimeDelta);
 }

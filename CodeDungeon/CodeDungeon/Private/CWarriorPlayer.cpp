@@ -146,7 +146,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 			GetTransform()->RotateTurn(_float3(0.f, 1.f, 0.f), MouseMove * 5.f, _dTimeDelta);
 		}
 
-		SetCursorPos(1000, 400);
+		//SetCursorPos(1000, 400);
 	}
 
 	for (auto& Colliders : GetColliderContainer())
@@ -208,7 +208,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 {
 	if (GetCollisionState())
-		GetTransform()->SetPos(GetTransform()->GetPos() - GetTransform()->GetLook() * 0.2);
+		GetTransform()->SetPos(GetTransform()->GetPos() - GetTransform()->GetLook() * 10 * _dTimeDelta);
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
 	__super::LateTickActive(_dTimeDelta);
 	FollowCameraMove(_float3{0.f, 20.f, -40.f}, _dTimeDelta);

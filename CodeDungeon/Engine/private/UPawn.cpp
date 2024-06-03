@@ -21,7 +21,8 @@ UPawn::UPawn(const UPawn& _rhs) :
 	UActor(_rhs),
 	m_spRenderer{ nullptr },
 	m_spShader{ nullptr },
-	m_spShadowShader{ nullptr }
+	m_spShadowShader{ nullptr },
+	m_ePawnType{ _rhs.m_ePawnType }
 #ifdef _USE_DEBUGGING
 	, m_isDebugRenderingType{ false }
 #endif 
