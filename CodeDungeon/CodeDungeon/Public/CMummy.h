@@ -35,6 +35,7 @@ protected:
 private:
 	MUMMYTYPE m_MummyType;
 
+	
 };
 
 END

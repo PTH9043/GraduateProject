@@ -58,6 +58,7 @@ void CWarriorAnimController::Tick(const _double& _dTimeDelta)
     _bool isCombo = spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_R);
 
     _bool isRoll = spGameInstance->GetDIKeyDown(DIK_C);
+    _bool isHit = spWarriorPlayer->GetHitState();
 
     if (!isAttack && !isCombo && !isMoveBack && spGameInstance->GetDIKeyDown(DIK_SPACE)) {
         if (!spWarriorPlayer->GetJumpingState() && !spWarriorPlayer->GetFallingState()) {
@@ -154,6 +155,11 @@ void CWarriorAnimController::Tick(const _double& _dTimeDelta)
         else {
             UpdateState(spAnimModel, ANIM_ROLL, L"ROLL_F"); 
         }
+    }
+
+    if (isHit)
+    {
+        UpdateState(spAnimModel, ANIM_HIT, L"HIT_BACK");
     }
 
     spAnimModel->TickEvent(spWarriorPlayer.get(), GetTrigger(), _dTimeDelta);

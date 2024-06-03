@@ -56,8 +56,8 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
 	_bool Move = false;
 
 	_float AttackRange = 15.f;
-	_bool Hit = spGameInstance->GetDIKeyDown(DIK_1);
-	_bool Death = spGameInstance->GetDIKeyDown(DIK_2);
+	_bool Hit = spMummy->GetHitState();
+	_bool Death = spGameInstance->GetDIKeyDown(DIK_9);
 
 	if (CurAnimName == L"death")
 		Death = true;
@@ -80,18 +80,21 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
 
 	if (AttackMode)
 	{
-		if(DistanceFromPlayer > AttackRange)
-			UpdateState(spAnimModel, ANIM_MOVE, L"WALKF");
-		else
+		if(!Hit)
 		{
-			int randomAttack = rand() % 2;
-			if (randomAttack == 0)
-			{
-				UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK01");
-			}
+			if (DistanceFromPlayer > AttackRange)
+				UpdateState(spAnimModel, ANIM_MOVE, L"WALKF");
 			else
 			{
-				UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK02");
+				int randomAttack = rand() % 2;
+				if (randomAttack == 0)
+				{
+					UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK01");
+				}
+				else
+				{
+					UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK02");
+				}
 			}
 		}
 			

@@ -175,7 +175,7 @@ HRESULT CMainScene::LoadSceneData()
 		m_spMummy->SetMummyType(CMummy::MUMMYTYPE::TYPE_LYING);
 		m_spMummy->GetAnimModel()->SetAnimation(L"staticLaying");
 		m_spMummy->SetTargetPlayer(m_spWarriorPlayer);
-		m_spMummy->SetMobPlacement(120);
+		m_spMummy->SetMobPlacement(588);
 	}
 
 	//미라 관 생성

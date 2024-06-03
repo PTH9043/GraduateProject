@@ -61,6 +61,12 @@ public: /* get set */
 	CSHPTRREF<UAnimModel> GetAnimModel() const { return m_spAnimModel; }
 	SHPTR<UNavigation> GetCurrentNavi() const { return m_wpCurNavi; }
 	CSHPTRREF<UCollider> GetHitCollider() const { return m_spHitCollider; }
+
+	const _bool& GetHitState() const { return m_bisHit; }
+	void SetHitstate(_bool _newState) { m_bisHit = _newState; }
+
+	const _bool& GetCollisionState() const { return m_bisCollision; }
+	void SetCollisionState(_bool _newState) { m_bisCollision = _newState; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) PURE;
 	virtual void LateTickActive(const _double& _dTimeDelta) PURE;
@@ -94,6 +100,8 @@ private:
 	_float							m_fMoveSpeed;
 	_float							m_fRunSpeed;
 	_bool							m_bIsRunning;
+	_bool							m_bisHit;
+	_bool							m_bisCollision;
 };
 
 END

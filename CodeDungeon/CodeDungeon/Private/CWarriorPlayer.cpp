@@ -39,7 +39,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-	SHPTR<UCell> spCell = spNavigation->FindCell(133);
+	SHPTR<UCell> spCell = spNavigation->FindCell(741);
 
 	GetTransform()->SetPos(spCell->GetCenterPos());
 
@@ -145,6 +145,11 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		}
 	}
 
+	for (auto& Colliders : GetColliderContainer())
+	{
+		Colliders.second->SetScale(_float3(3, 15, 3));
+	}
+	UpdateCollision();
 	//// Move
 	//if (CWarriorAnimController::ANIM_MOVE == AnimState || CWarriorAnimController::ANIM_JUMP_FRONT == AnimState)
 	//{
@@ -198,13 +203,8 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 
 void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 {
-	for (auto& Colliders : GetColliderContainer())
-	{
-		Colliders.second->SetTransform(GetTransform()->GetWorldMatrix());
-		Colliders.second->SetScale(_float3(3, 15, 3));
-		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
-	}
-
+	if (GetCollisionState())
+		GetTransform()->SetPos(GetTransform()->GetPos() - GetTransform()->GetLook() * 0.2);
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
 	__super::LateTickActive(_dTimeDelta);
 	FollowCameraMove(_float3{0.f, 20.f, -40.f}, _dTimeDelta);
@@ -231,7 +231,17 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy)
 		{
 			if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
 			{
-				int a = 0;
+				SetHitstate(true);
+			}
+			else
+				SetHitstate(false);
+
+			for (auto& iter2 : pCharacter->GetColliderContainer())
+			{
+				if (iter.second->IsCollision(iter2.second))
+					SetCollisionState(true);
+				else
+					SetCollisionState(false);
 			}
 		}
 	}

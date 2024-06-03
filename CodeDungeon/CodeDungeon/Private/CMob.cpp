@@ -86,7 +86,7 @@ void CMob::SearchForPlayers()
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	
-	float activationRange = 300.0f;
+	float activationRange = 40.0f;
 	
 	if (m_fDistancefromNearestPlayer < activationRange)
 		m_bFoundTarget = true;

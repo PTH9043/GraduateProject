@@ -125,17 +125,19 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 	_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
 	GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
 
+
+	for (auto& Colliders : GetColliderContainer())
+	{
+		Colliders.second->SetScale(_float3(3, 15, 3));
+	}
+
 	UpdateCollision();
 }
 
 void CMummy::LateTickActive(const _double& _dTimeDelta)
 {
-	for (auto& Colliders : GetColliderContainer())
-	{
-		Colliders.second->SetTransform(GetTransform()->GetWorldMatrix());
-		Colliders.second->SetScale(_float3(3, 15, 3));
-		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
-	}
+	if (GetCollisionState())
+		GetTransform()->SetPos(GetTransform()->GetPos() + GetTransform()->GetLook() * 0.3);
 
 	__super::LateTickActive(_dTimeDelta);
 }
@@ -161,7 +163,17 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy)
 		{
 			if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
 			{
-				int a = 0;
+				SetHitstate(true);
+			}
+			else
+				SetHitstate(false);
+
+			for(auto& iter2 : pCharacter->GetColliderContainer())
+			{
+				if (iter.second->IsCollision(iter2.second))
+					SetCollisionState(true);
+				else
+					SetCollisionState(false);
 			}
 		}
 	}
