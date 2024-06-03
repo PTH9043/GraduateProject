@@ -138,11 +138,15 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	}
 	// Rotation 
 	{
+		POINT ptCursorPos;
+		ShowCursor(FALSE);
 		_long		MouseMove = 0;
 		if (MouseMove = spGameInstance->GetDIMMoveState(DIMOUSEMOVE::DIMM_X))
 		{
 			GetTransform()->RotateTurn(_float3(0.f, 1.f, 0.f), MouseMove * 5.f, _dTimeDelta);
 		}
+
+		SetCursorPos(1000, 400);
 	}
 
 	for (auto& Colliders : GetColliderContainer())
