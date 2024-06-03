@@ -13,13 +13,13 @@
 UParticle::UParticle(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer,
 	const CLONETYPE& _eCloneType)
 	: UPawn(_spDevice, _wstrLayer, _eCloneType, BACKINGTYPE::NON),
-	m_spTexGroup{ nullptr }, m_spParticleSystem{ nullptr }, m_spVIBufferPoint{ nullptr },TextureIndex{0}
+	m_spTexGroup{ nullptr }, m_spParticleSystem{ nullptr }, m_spVIBufferPoint{ nullptr },TextureIndex{0}, m_LifeTime0{0}, m_LifeTime1{ 0 }
 {
 }
 
 UParticle::UParticle(const UParticle& _rhs) :
 	UPawn(_rhs),
-	m_spTexGroup{ nullptr }, m_spParticleSystem{ nullptr }, m_spVIBufferPoint{ nullptr }, TextureIndex{ 0 }
+	m_spTexGroup{ nullptr }, m_spParticleSystem{ nullptr }, m_spVIBufferPoint{ nullptr }, TextureIndex{ 0 }, m_LifeTime0{0}, m_LifeTime1{ 0 }
 {
 }
 
@@ -74,8 +74,42 @@ void UParticle::TickActive(const _double& _dTimeDelta)
 	{
 		SetActive(false);
 		m_LifeTimer.ResetTimer();
-	}*/
+	}*/switch (m_spParticleSystem->GetParticleType()) {
+	case PARTICLE_ORIGINAL:
+		break;
+	case PARTICLE_FLARE:
+		break;
+	case PARTICLE_BLOOD:
+		//if (m_spParticleSystem->GetAddParticleAmount() != 0) {
+		//	//m_LifeTime0 += _dTimeDelta;
+		//	if (m_spParticleSystem->GetParticleParam()->stGlobalParticleInfo.fAccTime >= *m_spParticleSystem->GetCreateInterval()) {
+		//		m_spParticleSystem->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0;
+		//	//	*m_spParticleSystem->GetAddParticleAmount() = 0;
+		//	}
+		//}
+		/*if (m_spParticleSystem->GetAddParticleAmount() == 0) {
+			
+			m_LifeTime1 += _dTimeDelta;
+		
+			_float maxLifeTime = m_spParticleSystem->GetParticleParam()->stGlobalParticleInfo.fMaxLifeTime;
+			_float minLifeTime = m_spParticleSystem->GetParticleParam()->stGlobalParticleInfo.fMinLifeTime;
+			if (m_LifeTime1 > (maxLifeTime - minLifeTime) + minLifeTime - 0.5) {
+				m_LifeTime1 = 0;
+				SetActive(false);
+			}
+		}*/
+		break;
+	case PARTICLE_FOOTPRINT:
+		
+		break;
+	case PARTICLE_ANIM:
+		
+		break;
+	default:
+		break;
 
+	}
+	
 	m_spParticleSystem->Update(_dTimeDelta);
 }
 
@@ -149,7 +183,7 @@ SHPTR<URenderTargetGroup> spShadowDepthGroup{ spGameInstance->FindRenderTargetGr
 
 	}
 	
-
+	
 	m_spVIBufferPoint->Render(GetShader(), _spCommand, m_spParticleSystem->GetMaxParticleCnt());
 	return S_OK;
 }

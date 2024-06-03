@@ -59,6 +59,7 @@ HRESULT UParticleSystem::NativeConstructClone(const VOIDDATAS& _vecDatas)
 			m_stParticleParam = UMethod::ConvertTemplate_Index<PARTICLEPARAM>(_vecDatas, 0);
 		}
 	}
+	
 	switch (m_stParticleParam.stGlobalParticleInfo.fParticleKind) {
 	case PARTICLE_ORIGINAL:
 		m_spComputeShaderTypeConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::PARTICLETYPEBUFFER, PARTICLETYPEPARAM_SIZE);
@@ -106,13 +107,20 @@ void UParticleSystem::Update(const _double& _dTimeDelta)
 	
 		switch (m_stParticleParam.stGlobalParticleInfo.fParticleKind) {
 		case PARTICLE_ORIGINAL:
-		case PARTICLE_FLARE:		
-		case PARTICLE_BLOOD:
+		case PARTICLE_FLARE:				
 		case PARTICLE_ANIM:
 			if (m_fCreateInterval < m_stParticleParam.stGlobalParticleInfo.fAccTime)
 			{
 				m_stParticleParam.stGlobalParticleInfo.fAccTime = m_stParticleParam.stGlobalParticleInfo.fAccTime - m_fCreateInterval;
 				add = m_iParticleAddAmount;
+			}
+			m_stParticleParam.stGlobalParticleInfo.iAddCount = add;
+			break;
+		case PARTICLE_BLOOD:
+			add = m_iParticleAddAmount;
+			if (m_fCreateInterval < m_stParticleParam.stGlobalParticleInfo.fAccTime)
+			{
+				add = 0;
 			}
 			m_stParticleParam.stGlobalParticleInfo.iAddCount = add;
 			break;

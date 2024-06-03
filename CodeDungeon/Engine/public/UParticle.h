@@ -72,7 +72,8 @@ protected:
 	CUSTIMER									m_LifeTimer;
 	_uint TextureIndex;
 
-	
+	_float m_LifeTime0 = 0;
+	_float m_LifeTime1 = 0;
 	ARRAY<_uint, 8> BloodTextureIndices;
 	
 };
