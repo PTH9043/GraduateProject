@@ -60,12 +60,15 @@ public:
 public: /* get set */
 	CSHPTRREF<UAnimModel> GetAnimModel() const { return m_spAnimModel; }
 	SHPTR<UNavigation> GetCurrentNavi() const { return m_wpCurNavi; }
+	CSHPTRREF<UCollider> GetHitCollider() const { return m_spHitCollider; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) PURE;
 	virtual void LateTickActive(const _double& _dTimeDelta) PURE;
 	virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) PURE;
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) PURE;
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy) PURE;
+
+	virtual HRESULT MakeCollider(const _float3& _vTranslate, const _float3& _vScale, const _int _ColliderType);
 protected: /* get set */
 	CSHPTRREF<UAnimationController> GetAnimationController() const { return m_spAnimationController; }
 	const _float3& GetPrevPos() const { return m_vPrevPos; }
@@ -82,10 +85,10 @@ private:
 
 	SHPTR<UAnimationController>		m_spAnimationController;
 	// 이전 위치 저장
-	_float3							m_vPrevPos;
+	_float3								m_vPrevPos;
 	// 현재 스테이지
-	SHPTR<UNavigation>				m_wpCurNavi;
-
+	SHPTR<UNavigation>		m_wpCurNavi;
+	SHPTR<UCollider>			m_spHitCollider;
 
 	//이동 속도
 	_float							m_fMoveSpeed;

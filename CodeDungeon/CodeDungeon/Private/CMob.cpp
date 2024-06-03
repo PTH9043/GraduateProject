@@ -11,7 +11,7 @@
 #include "UCell.h"
 #include "UMethod.h"
 #include "CMob.h"
-
+#include "UCollider.h"
 
 CMob::CMob(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UCharacter(_spDevice, _wstrLayer, _eCloneType),
@@ -42,8 +42,8 @@ HRESULT CMob::NativeConstructClone(const VOIDDATAS& _Datas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);	
 	GetTransform()->SetScale({ 0.5f, 0.5f, 0.5f });
+	
 	return S_OK;
-
 }
 
 void CMob::TickActive(const _double& _dTimeDelta)
