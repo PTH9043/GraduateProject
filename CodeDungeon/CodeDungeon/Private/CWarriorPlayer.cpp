@@ -118,7 +118,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
-	if (spGameInstance->GetDIKeyPressing(DIK_LSHIFT)&& spGameInstance->GetDIKeyPressing(DIK_W)) {//|| AnimState == CWarriorAnimController::ANIM_ATTACK|| AnimState == CWarriorAnimController::ANIM_COMBO
+	if (spGameInstance->GetDIKeyPressing(DIK_LSHIFT)&& spGameInstance->GetDIKeyPressing(DIK_W)&&!spGameInstance->GetDIKeyPressing(DIK_SPACE)) {//|| AnimState == CWarriorAnimController::ANIM_ATTACK|| AnimState == CWarriorAnimController::ANIM_COMBO
 		*m_spParticle->GetParticleSystem()->GetAddParticleAmount() =4;
 		*m_spParticle->GetParticleSystem()->GetCreateInterval() = 0.355f;
 		_float3 pos = GetTransform()->GetPos() + GetTransform()->GetRight();

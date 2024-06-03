@@ -64,7 +64,7 @@ void TBloodEffectView::LoadMultipleParticleResource()
 			//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 3.5f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 0.5f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.3f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 7;
 			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 5;
@@ -109,7 +109,7 @@ void TBloodEffectView::LoadMultipleParticleResource()
 	//}
 
 
-	*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() = 1.15f;
+	*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() = 0.5f;
 	*m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount() = 50;
 	/**m_MultipleParticle[1]->GetParticleSystem()->GetCreateInterval() = 1.05f;
 	*m_MultipleParticle[1]->GetParticleSystem()->GetAddParticleAmount() = 100;*/
@@ -219,14 +219,23 @@ void TBloodEffectView::MultipleParticleView()
 				//_uint increment = 1;
 				/*ImGui::InputScalar("Enter Create Amount\n Min:0  Max :5", ImGuiDataType_U32, &m_iCurActiveMultipleParticle, &increment, &increment);
 				if (m_iCurActiveMultipleParticle >= m_iMultipleParticleSize) m_iCurActiveMultipleParticle = m_iMultipleParticleSize;*/
-				for (int i = 0; i < m_iMultipleParticleSize; i++) m_MultipleParticle[i]->SetActive(true);
+				for (int i = 0; i < m_iMultipleParticleSize; i++)
+				{
+					m_MultipleParticle[i]->SetActive(true);
+					m_MultipleParticle[i]->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+					//m_MultipleParticle[i]->SetActive(true);
+				}
+				//
 
 			}
 
 			if (true == ImGui::Button("Stop Multiple Particle"))
 			{
-				for (int i = 0; i < m_iMultipleParticleSize; i++)
+				for (int i = 0; i < m_iMultipleParticleSize; i++) {
 					m_MultipleParticle[i]->SetActive(false);
+					//*m_MultipleParticle[i]->GetParticleSystem()->GetAddParticleAmount() = 0;
+				}
+					
 			}
 
 			MultipleParticleTexSetting();
@@ -243,17 +252,17 @@ void TBloodEffectView::MultipleParticleView()
 void TBloodEffectView::MultipleParticleCountSetting()
 {
 	//파티클 한 사이클 생성 갯수.
-	if (ImGui::CollapsingHeader("Multiple Particle Count Setting", ImGuiTreeNodeFlags_DefaultOpen)) {
+	//if (ImGui::CollapsingHeader("Multiple Particle Count Setting", ImGuiTreeNodeFlags_DefaultOpen)) {
 
-		_uint increment = 1;
-		ImGui::InputScalar("Enter Create Amount\n Min:1  Max :1000", ImGuiDataType_U32, m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount(), &increment, &increment);
-		if (*m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount() < 1) {
-			*m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount() = 1;
-		}
-		else if (*m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount() > 1000) {
-			*m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount() = 1000;
-		}
-	}
+	//	_uint increment = 1;
+	//	ImGui::InputScalar("Enter Create Amount\n Min:1  Max :1000", ImGuiDataType_U32, m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount(), &increment, &increment);
+	//	if (*m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount() < 1) {
+	//		*m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount() = 1;
+	//	}
+	//	else if (*m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount() > 1000) {
+	//		*m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount() = 1000;
+	//	}
+	//}
 
 }
 
