@@ -15,7 +15,7 @@
 
 UParticleSystem::UParticleSystem(CSHPTRREF<UDevice> _spDevice) :
 	UResource(_spDevice),
-	m_iMaxParitcleCnt{ 200 },
+	m_iMaxParitcleCnt{ 400 },
 	m_stParticleParam{},
 	m_spComputeShaderParticleConstantBuffer{ nullptr },
 	m_spParticleStructedBuffer{ nullptr },
@@ -28,7 +28,7 @@ UParticleSystem::UParticleSystem(CSHPTRREF<UDevice> _spDevice) :
 
 UParticleSystem::UParticleSystem(const UParticleSystem& _rhs) :
 	UResource(_rhs),
-	m_iMaxParitcleCnt{ 200 },
+	m_iMaxParitcleCnt{ 400 },
 	m_stParticleParam{},
 	m_spComputeShaderParticleConstantBuffer{ nullptr },
 	m_spParticleStructedBuffer{ nullptr },
