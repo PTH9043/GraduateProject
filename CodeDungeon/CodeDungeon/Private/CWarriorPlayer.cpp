@@ -11,6 +11,7 @@
 #include "UCell.h"
 #include "UParticle.h"
 #include "UParticleSystem.h"
+#include "UCollider.h"
 
 CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UPlayer(_spDevice, _wstrLayer, _eCloneType), m_spSword{nullptr}
@@ -34,6 +35,7 @@ HRESULT CWarriorPlayer::NativeConstruct()
 HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
 	SHPTR<UCell> spCell = spNavigation->FindCell(133);
@@ -49,8 +51,14 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetRunningSpeed(100.f);
 	SetRunState(false);
 
+	UCollider::COLLIDERDESC tDesc;
+	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
+	tDesc.vScale = _float3(0, 0, 0);
+	SHPTR<UCollider> Collider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
+	_wstring mainColliderTag = L"Main";
 
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	AddColliderInContainer(mainColliderTag, Collider);
+
 	{
 
 		UParticle::PARTICLEDESC tDesc;
@@ -97,6 +105,8 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
+
+
 	GetAnimationController()->Tick(_dTimeDelta);
 	GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
 
@@ -186,6 +196,13 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 
 void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 {
+	for (auto& Colliders : GetColliderContainer())
+	{
+		Colliders.second->SetTransform(GetTransform()->GetWorldMatrix());
+		Colliders.second->SetScale(_float3(3, 15, 3));
+		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
+	}
+
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
 	__super::LateTickActive(_dTimeDelta);
 	FollowCameraMove(_float3{0.f, 20.f, -40.f}, _dTimeDelta);

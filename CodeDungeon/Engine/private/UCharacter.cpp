@@ -60,20 +60,6 @@ HRESULT UCharacter::NativeConstructClone(const VOIDDATAS& _Datas)
 	}
 	AddShader(PROTO_RES_ANIMMODELSHADER, RES_SHADER);
 
-	UCollider::COLLIDERDESC tDesc;
-	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
-	tDesc.vScale = _float3(1.f, 1.f, 1.f);
-	SHPTR<UCollider> Collider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
-	_wstring mainColliderTag = L"Main";
-
-	Collider->SetTranslate(m_spAnimModel->GetCenterPos());
-	Collider->SetScaleToFitModel(m_spAnimModel->GetMinVertexPos(), m_spAnimModel->GetMaxVertexPos());
-	Collider->SetTransform(GetTransform());
-
-	AddColliderInContainer(mainColliderTag, Collider);
-	AddShader(PROTO_RES_ANIMMODELSHADER, RES_SHADER);
-
-
 	return S_OK;
 }
 

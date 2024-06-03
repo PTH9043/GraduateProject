@@ -11,6 +11,7 @@
 #include "UCell.h"
 #include "UMethod.h"
 #include "UPlayer.h"
+#include "UCollider.h"
 
 CMummy::CMummy(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: CMob(_spDevice, _wstrLayer, _eCloneType), m_MummyType{}
@@ -34,6 +35,16 @@ HRESULT CMummy::NativeConstruct()
 HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+	UCollider::COLLIDERDESC tDesc;
+	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
+	tDesc.vScale = _float3(0, 0, 0);
+	SHPTR<UCollider> Collider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
+	_wstring mainColliderTag = L"Main";
+
+	AddColliderInContainer(mainColliderTag, Collider);
+
 	return S_OK;
 }
 
@@ -117,6 +128,13 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 
 void CMummy::LateTickActive(const _double& _dTimeDelta)
 {
+	for (auto& Colliders : GetColliderContainer())
+	{
+		Colliders.second->SetTransform(GetTransform()->GetWorldMatrix());
+		Colliders.second->SetScale(_float3(3, 15, 3));
+		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
+	}
+
 	__super::LateTickActive(_dTimeDelta);
 }
 
