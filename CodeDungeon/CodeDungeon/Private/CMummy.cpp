@@ -11,6 +11,7 @@
 #include "UCell.h"
 #include "UMethod.h"
 #include "UPlayer.h"
+#include "UCollider.h"
 
 CMummy::CMummy(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: CMob(_spDevice, _wstrLayer, _eCloneType), m_MummyType{}
@@ -99,6 +100,8 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 
 	_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
 	GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
+
+	UpdateCollision();
 }
 
 void CMummy::LateTickActive(const _double& _dTimeDelta)
@@ -118,6 +121,30 @@ HRESULT CMummy::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTa
 
 void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy)
 {
+	PAWNTYPE ePawnType = _pEnemy->GetPawnType();
+	if (PAWNTYPE::PAWN_CHAR == ePawnType)
+	{
+		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
+
+		for (auto& iter : pCharacter->GetColliderContainer())
+		{
+			for (auto& Monster : GetColliderContainer())
+			{
+				if (true == Monster.second->IsCollision(iter.second))
+				{
+					GetTransform()->SetPos(GetPrevPos());
+				}
+			}
+		}
+
+		for(auto& iter : GetColliderContainer())
+		{
+			if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
+			{
+
+			}
+		}
+	}
 }
 
 

@@ -2,6 +2,13 @@
 
 namespace Engine {
 
+	enum PAWNTYPE : int
+	{
+		PAWN_CHAR,
+		PAWN_ITEM,
+		PAWN_ECT
+	};
+
 	enum ITEMTYPE : int
 	{
 		ITEM_EQUIP, 

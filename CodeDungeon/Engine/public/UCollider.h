@@ -66,7 +66,8 @@ private:
 	_bool																m_isCollision;
 	_float4x4														m_mTransformMatrix;
 
-	_float3															m_vScale;
+	_float3															m_vModelScale;
+	_float3															m_vCurScale;
 	_float3															m_vTranslate;
 	_float3															m_vPos;
 

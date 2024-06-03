@@ -25,7 +25,7 @@ HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, C
 	_spGameInstance->AddPrototype(PROTO_ACTOR_MUMMY, CreateConstructorToNative<CMummy>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_SARCOPHAGUSLYING, CreateConstructorToNative<CSarcophagus>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_SARCOPHAGUSSTANDING, CreateConstructorToNative<CSarcophagus>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
-	_spGameInstance->AddPrototype(PROTO_RES_LONGSWORDMODEL, CreateConstructorToNative< CSword>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
+	_spGameInstance->AddPrototype(PROTO_ACTOR_LONGSWORD, CreateConstructorToNative< CSword>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 
 
 	_spGameInstance->AddPrototype(PROTO_RES_PARTICLETEXTUREGROUP, CLONETYPE::CLONE_STATIC,
@@ -73,7 +73,7 @@ HRESULT CProtoMaker::CreateMainSceneProtoData(CSHPTRREF<UGameInstance> _spGameIn
 
 
 	_spGameInstance->AddPrototype(PROTO_RES_LONGSWORDMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UModel>(
-		_spDevice, L"..\\..\\Resource\\Model\\Sword\\Convert\\sword_FBX.bin"));
+		_spDevice, L"..\\..\\Resource\\Model\\Item\\Equip\\Sword\\Convert\\sword_FBX.bin"));
 
 	return S_OK;
 }

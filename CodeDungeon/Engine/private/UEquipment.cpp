@@ -173,11 +173,9 @@ void UEquipment::LateTickActive(const _double& _dTimeDelta)
 		SHPTR<UPawn> spPawn = m_wpOwner.lock();
 		SHPTR<UTransform> spTransform = spPawn->GetTransform();
 
-		_float4x4 spEquipBonematrix = m_spEquipBoneNode->GetCombineMatrix();
-		spEquipBonematrix.Set_Pos(spEquipBonematrix.Get_Pos() + spTransform->GetPos());
 		// Get CombineMatrix
-		m_SockMatrixParam.SocketMatrix = spEquipBonematrix;
-		m_SockMatrixParam.SocketMatrix = m_SockMatrixParam.SocketMatrix.Transpose();
+		m_SockMatrixParam.SocketMatrix = m_spEquipBoneNode->GetCombineMatrix() * m_spCharacterAnimModel->GetPivotMatirx() * spTransform->GetWorldMatrix();
+		m_SockMatrixParam.SocketMatrix =  m_SockMatrixParam.SocketMatrix.Transpose();
 	}
 
 	if (nullptr != m_spEquipModel)

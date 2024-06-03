@@ -341,6 +341,7 @@ SHPTR<UCollider> UAnimModel::BringAttackCollider(_int _iColliderType)
 _bool UAnimModel::IsCollisionAttackCollider(CSHPTRREF<UCollider> _spEnemyCollider)
 {
 	RETURN_CHECK(false == m_isCanAttackSituation, false);
+	RETURN_CHECK(nullptr == m_spAttackCollisionCollider, false);
 	return m_spAttackCollisionCollider->IsCollision(_spEnemyCollider);
 }
 
