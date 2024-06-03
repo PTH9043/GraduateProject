@@ -5,6 +5,7 @@
 #include "UAnimModel.h"
 #include "UCharacter.h"
 #include "UAnimation.h"
+#include "UTransform.h"
 
 CMummyAnimController::CMummyAnimController(CSHPTRREF<UDevice> _spDevice)
 	: UAnimationController(_spDevice)
@@ -54,6 +55,13 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
 	_bool FoundPlayer = spMummy->GetFoundTargetState();
 	_bool Move = false;
 
+	_float AttackRange = 15.f;
+	_bool Hit = spGameInstance->GetDIKeyDown(DIK_1);
+	_bool Death = spGameInstance->GetDIKeyDown(DIK_2);
+
+	if (CurAnimName == L"death")
+		Death = true;
+
 	if (FoundPlayer && !AttackMode && !TauntMode)
 	{
 		UpdateState(spAnimModel, ANIM_AWAKE, L"WAKEUP");
@@ -72,7 +80,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
 
 	if (AttackMode)
 	{
-		if(DistanceFromPlayer > 15.f)
+		if(DistanceFromPlayer > AttackRange)
 			UpdateState(spAnimModel, ANIM_MOVE, L"WALKF");
 		else
 		{
@@ -89,6 +97,15 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
 			
 	}
 
+	if(Hit)
+	{
+		UpdateState(spAnimModel, ANIM_HIT, L"HIT");
+	}
+
+	if (Death)
+	{
+		UpdateState(spAnimModel, ANIM_DEATH, L"DEAD");
+	}
 
 
 	spAnimModel->TickEvent(spMummy.get(), GetTrigger(), _dTimeDelta);
