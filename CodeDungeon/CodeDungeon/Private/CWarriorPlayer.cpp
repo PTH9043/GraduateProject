@@ -193,7 +193,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	//		SetRunState(true);
 	//	}
 	//}
-	UpdateCollision();
+
 }
 
 void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
