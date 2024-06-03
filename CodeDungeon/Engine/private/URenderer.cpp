@@ -264,10 +264,14 @@ HRESULT URenderer::Render()
     RenderEnd();
 
 #ifdef _USE_DEBUGGING
-    RenderDebug();
-
-    m_spRenderTargetManager->RenderDebugObjects(FrameReadyDrawLast(PROTO_RES_DEBUG2DTARGETSHADER), m_spVIBufferPlane,
-        m_spCastingCommand, SRV_REGISTER::T0);
+    
+    SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+    if (spGameInstance->GetDIKeyPressing(DIK_F1)) {
+        RenderDebug();
+        m_spRenderTargetManager->RenderDebugObjects(FrameReadyDrawLast(PROTO_RES_DEBUG2DTARGETSHADER), m_spVIBufferPlane,
+            m_spCastingCommand, SRV_REGISTER::T0);
+    }
+    
 #endif
     return S_OK;
 }
@@ -708,6 +712,7 @@ void URenderer::RenderEnd()
 #ifdef _USE_DEBUGGING
 void URenderer::RenderDebug()
 {
+
     // Render Debugging
     for (auto& Debugging : m_arrDrawDebugRenderList)
     {
