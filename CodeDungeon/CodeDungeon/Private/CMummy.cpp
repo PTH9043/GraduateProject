@@ -152,7 +152,6 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 	}
 	else if(CurAnimState == UAnimationController::ANIM_HIT)
 	{
-		
 		GetTransform()->TranslateDir((GetTransform()->GetLook()), 1, 1);
 	}
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);

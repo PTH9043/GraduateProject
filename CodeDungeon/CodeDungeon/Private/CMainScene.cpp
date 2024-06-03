@@ -209,6 +209,9 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 
 	SHPTR<ULight> PointLight;
 	OutLight(LIGHTTYPE::TYPE_POINT, 0, PointLight);
+
+	if(pGameInstance->GetDIKeyDown(DIK_ESCAPE))
+		::PostQuitMessage(0);
 }
 
 void CMainScene::LateTick(const _double& _dTimeDelta)

@@ -1596,8 +1596,8 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_DIFFUSE_DEFFERED,
 		_float2(100.f, 320.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
-	
-	
+
+
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_GLOW_DEFFERED,
 		_float2(100.f, 430.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 
