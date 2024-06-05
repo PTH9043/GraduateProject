@@ -8,20 +8,22 @@ float y = 2;
 float z = 3;
 }
 
-message SC_CHECKLOGIN{
+message CHARDATA
+{
+	float power = 1;
+	float defensive = 2;
+}
+
+message SC_CLIENTCONNECT{
 	int64 id = 1;
+	CHARDATA charData = 2;
+	POSITION startPos = 3;
 }
 
 message SC_POS {
 	int64 id = 1;
 	POSITION pos = 2;
 	int64 move_time = 3;
-}
-
-message SC_PUT_OBJECT {
-	int64 id = 1;
-	POSITION pos = 2;
-	int32 o_type = 3;
 }
 
 message SC_REMOVE_OBJECT {
@@ -41,8 +43,9 @@ message CS_LOGIN {
 }
 
 message CS_MOVE {
-	Direction dir = 1;
-	int64 move_time = 2;
+	int64 id = 1;
+	POSITION pos = 2;
+	int64 move_time = 3;
 }
 
 message CS_LOGOUT{

@@ -1,6 +1,7 @@
 #include "ServerDefines.h"
 #include "CPlayerSession.h"
 #include "ACoreInstance.h"
+#include "AServerService.h"
 
 namespace Server {
 
@@ -54,9 +55,6 @@ namespace Server {
 
 	void CPlayerSession::Disconnect()
 	{
-		// Remove Object 조합 
-		SC_REMOVE_OBJECT scRemoveObject = PROTOFUNC::CreateScRemoveObject(GetSessionID());
-		SendProtoData(scRemoveObject, TAG_SC_LOGOUT);
 		__super::Disconnect();
 	}
 
@@ -64,6 +62,9 @@ namespace Server {
 
 	_bool CPlayerSession::ProcessPacket(_char* _pPacket, const Core::PACKETHEAD& _PacketHead)
 	{
+		static thread_local BUFFER Buffer;
+		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+
 		switch (_PacketHead.PacketType)
 		{
 		case TAG_CS::TAG_CS_LOGIN:
@@ -74,19 +75,32 @@ namespace Server {
 			std::cout << Login.user_name() << std::endl;
 		}
 		{
-			SC_CHECKLOGIN scCheckLogin;
-			scCheckLogin.set_id(GetSessionID());
-			SendProtoData(scCheckLogin, TAG_SC_LOGIN);
+			PACKETHEAD PacketHead;
+			SC_CHECKLOGIN checkLogin;
+			// 플레이어의 로그인이 확인되면 로그인 데이터를 넘겨준다. 
+			checkLogin.set_id(GetSessionID());
+			// ProtoData를 Combine 해준다. 
+			CombineProto(REF_OUT Buffer, REF_OUT PacketHead, REF_OUT checkLogin, TAG_SC_LOGIN);
+			spCoreInstance->BroadCastMessage(&Buffer[0], PacketHead);
 		}
 		break;
+		// Logout 
 		case TAG_CS::TAG_CS_LOGOUT:
 		{
+			PACKETHEAD PacketHead;
 			CS_LOGOUT logout;
-			logout.ParseFromArray(_pPacket, static_cast<_int>(_PacketHead.PacketSize));
-			std::cout << _PacketHead.PacketSize << "\n";
-	//		SHPTR<UService> spService = GetService();
-		//	spService->LeaveService(logout.id());
+			logout.set_id(GetSessionID());
+			// ProtoData를 Combine 해준다. 
+			CombineProto(REF_OUT Buffer, REF_OUT PacketHead, REF_OUT logout, TAG_SC_LOGIN);
+			spCoreInstance->BroadCastMessage(&Buffer[0], PacketHead);
+			Disconnect();
 			return false;
+		}
+		break;
+		case TAG_CS::TAG_CS_MOVE:
+		{
+			CS_MOVE move;
+			
 		}
 		break;
 		}

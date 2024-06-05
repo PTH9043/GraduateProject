@@ -138,7 +138,7 @@ _bool UAnimColliderEvent::EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, con
 		{
 			m_AnimColliderDesc.spCollider->SetTransform(_pAnimModel->GetPivotMatirx() * spTransform->GetWorldMatrix());
 		}
-	/*	m_AnimColliderDesc.spCollider->AddRenderer(RENDERID::RI_NONALPHA_LAST);*/
+		m_AnimColliderDesc.spCollider->AddRenderer(RENDERID::RI_NONALPHA_LAST);
 	}
 #endif
 	if (GetAnimSectionDesc().IsAnimEventActive(_dTimeAcc))

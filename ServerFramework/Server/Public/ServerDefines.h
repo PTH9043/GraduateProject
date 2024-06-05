@@ -6,7 +6,6 @@
 
 #include "CoreDefines.h"
 #include "ProtocolBuffer.h"
-#include "CoreSqlDefines.h"
 
 #ifdef _DEBUG
 #pragma comment(lib, "ProtocolBufferD")

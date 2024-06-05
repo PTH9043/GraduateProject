@@ -146,7 +146,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 			GetTransform()->RotateTurn(_float3(0.f, 1.f, 0.f), MouseMove * 5.f, _dTimeDelta);
 		}
 
-		//SetCursorPos(1000, 400);
+		SetCursorPos(1000, 400);
 	}
 
 	for (auto& Colliders : GetColliderContainer())

@@ -421,6 +421,9 @@
     <Filter Include="05.Actor\Trail">
       <UniqueIdentifier>{95bb4918-4363-4a4d-938e-40ef03a836ad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="99.Default\math">
+      <UniqueIdentifier>{6686b16f-8e93-4cf3-aba4-01cf6164c38c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -809,6 +812,9 @@
     </ClCompile>
     <ClCompile Include="..\private\UTrail.cpp">
       <Filter>05.Actor\Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\public\MathLib\CusMath.cpp">
+      <Filter>99.Default\math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1232,6 +1238,9 @@
     <ClInclude Include="..\public\UTrail.h">
       <Filter>05.Actor\Trail</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\MathLib\CusMath.h">
+      <Filter>99.Default\math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Shader\ShaderGrobalFunc.hlsli">
@@ -1248,6 +1257,9 @@
     </None>
     <None Include="..\..\Shader\LightShaderFunc.hlsli">
       <Filter>98.ShaderFile\Common\Light\Original</Filter>
+    </None>
+    <None Include="..\public\MathLib\CusMath.inl">
+      <Filter>99.Default\math</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
