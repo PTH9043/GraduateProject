@@ -60,7 +60,7 @@ public:
 	_bool IsCollision(SHPTR<UCollider>& _pCollider);
 	// Insert Cell
 	void AddCell(SHPTR<UCell>& _spCell);
-	// SaveLoada
+	// SaveLoad
 	_bool Load(const _wstring& _wstrPath);
 	_bool Save(const _wstring& _wstrPath);
 
@@ -68,8 +68,10 @@ public:
 	const _int& GetCurIndex() const { return m_iCurIndex; }
 	void SetCurIndex(const _int& _iIndex) { m_iCurIndex = _iIndex; }
 	// Get Collider
-	SHPTR<UCollider> GetCollider() { return m_spCollider; }
-	SHPTR<UCell> GetCurCell() { return m_spCurCell; }
+	CSHPTRREF<UCollider> GetCollider() { return m_spCollider; }
+	CSHPTRREF<UCell> GetCurCell() { return m_spCurCell; }
+	CSHPTRREF<UCell> GetPrevCell() { return m_spPrevCell; }
+
 	void SetCurCell(CSHPTRREF<UCell> newCell) { m_spCurCell = newCell; SetCurIndex(newCell->GetIndex()); }
 	// Ready Neighbor
 	HRESULT ReadyNeighbor();
@@ -87,17 +89,16 @@ public:
 	-  A* 알고리즘
 	*/
 	_float Heuristic(const _float3& a, const _float3& b);
-
 	UNavigation::PathFindingState StartPathFinding(const _float3& start, const _float3& end, CSHPTRREF<UCell> _startCell, CSHPTRREF<UCell> _destCell);
-
 	bool StepPathFinding(PathFindingState& state);
-
 	VECTOR<_float3> OptimizePath(const VECTOR<SHPTR<UCell>>& path, const _float3& start, const _float3& end);
 	bool LineTest(const _float3& start, const _float3& end);
 
 private:
 	SHPTR<CELLCONTAINER>		m_spCellContainer;
 	SHPTR<UCell>				m_spCurCell;
+	SHPTR<UCell>				m_spPrevCell;
+	_int						m_iPrevIndex;
 	_int						m_iCurIndex;
 	SHPTR<UCollider>			m_spCollider;
 

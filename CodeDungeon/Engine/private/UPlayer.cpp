@@ -108,6 +108,7 @@ void UPlayer::LateTickActive(const _double& _dTimeDelta)
 			else
 			{
 				//낭떠러지 셀에서 밖으로 갔을 때, 중력 활성화(낙하)
+				//공중에서 발 아래의 셀을 찾고, 현재 셀로 설정함
 				newCell = spNavigation->FindCell(vPosition);
 				m_bisFalling = true;			
 			}
@@ -140,9 +141,7 @@ void UPlayer::LateTickActive(const _double& _dTimeDelta)
 				}
 			}
 		}
-	
 	}
-
 }
 
 HRESULT UPlayer::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
