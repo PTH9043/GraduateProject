@@ -312,6 +312,7 @@
     <FxCompile Include="..\..\Shader\2DFire.hlsl" />
     <FxCompile Include="..\..\Shader\2DFog.hlsl" />
     <FxCompile Include="..\..\Shader\2DParticle.hlsl" />
+    <FxCompile Include="..\..\Shader\2DParticleAttack.hlsl" />
     <FxCompile Include="..\..\Shader\2DParticleBlood.hlsl" />
     <FxCompile Include="..\..\Shader\2DParticleFlare.hlsl" />
     <FxCompile Include="..\..\Shader\2DParticleFootPrint.hlsl" />
@@ -322,6 +323,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\Shader\Bloom.hlsl" />
+    <FxCompile Include="..\..\Shader\Compute2DAttackEffect.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DFootPrint.hlsl" />
     <FxCompile Include="..\..\Shader\DownSampling.hlsl" />
     <FxCompile Include="..\..\Shader\Hdr.hlsl" />

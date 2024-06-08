@@ -20,6 +20,7 @@ VS_OUT VS_Main(VS_IN In)
     VS_OUT Out = (VS_OUT) 0;
 
     Out.vPosition = Compute_FinalMatrix(In.vPosition);
+    
     Out.vTexUV = In.vTexUV;
 
     return Out;
@@ -41,7 +42,7 @@ PS_OUT PS_Main(PS_In In)
     PS_OUT Out = (PS_OUT) 0;
 
     // 입력 텍스처 좌표를 그대로 사용하여 샘플링합니다.
-    float4 texColor = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV*0.5);
+    float4 texColor = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV ); //In.vTexUV*0.5
 
     Out.vColor = texColor;
     

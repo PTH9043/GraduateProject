@@ -421,6 +421,9 @@
     <Filter Include="05.Actor\Trail">
       <UniqueIdentifier>{95bb4918-4363-4a4d-938e-40ef03a836ad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98.ShaderFile\Common\Particle\Attack">
+      <UniqueIdentifier>{221a4e1c-6eda-4f3f-97f7-e54cee192a8a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -810,6 +813,7 @@
     <ClCompile Include="..\private\UTrail.cpp">
       <Filter>05.Actor\Trail</Filter>
     </ClCompile>
+    <ClCompile Include="..\public\MathLib\CusMath.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\EngineDefine.h">
@@ -1232,6 +1236,7 @@
     <ClInclude Include="..\public\UTrail.h">
       <Filter>05.Actor\Trail</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\MathLib\CusMath.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Shader\ShaderGrobalFunc.hlsli">
@@ -1249,6 +1254,7 @@
     <None Include="..\..\Shader\LightShaderFunc.hlsli">
       <Filter>98.ShaderFile\Common\Light\Original</Filter>
     </None>
+    <None Include="..\public\MathLib\CusMath.inl" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Shader\Rect.hlsl">
@@ -1355,6 +1361,12 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\Compute2DFootPrint.hlsl">
       <Filter>98.ShaderFile\Common\Particle\FootPrint</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\2DParticleAttack.hlsl">
+      <Filter>98.ShaderFile\Common\Particle\Attack</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\Compute2DAttackEffect.hlsl">
+      <Filter>98.ShaderFile\Common\Particle\Attack</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

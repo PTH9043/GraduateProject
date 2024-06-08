@@ -1248,6 +1248,15 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 					RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::LESS_EQUAL_NO_WRITE, BLEND_TYPE::ALPHA_BLEND,
 					D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST));
 
+			CreateGraphicsShader(PROTO_RES_PARTICLEATTACK2DSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"2DParticleAttack", VTXPOINT_DELCARTION::Element, VTXPOINT_DELCARTION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN, GS_MAIN },
+					RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM,DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
+					DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R16G16B16A16_FLOAT
+					},
+					RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::LESS_EQUAL_NO_WRITE, BLEND_TYPE::ALPHA_BLEND,
+					D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST));
+
 			CreateGraphicsShader(PROTO_RES_PARTICLEFLARE2DSHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"2DParticleFlare", VTXPOINT_DELCARTION::Element, VTXPOINT_DELCARTION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN, GS_MAIN },
@@ -1356,6 +1365,9 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 
 		CreateComputeShader(PROTO_RES_COMPUTEBLOODEFFECT2DSHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC{ L"Compute2DBloodEffect" });
+
+		CreateComputeShader(PROTO_RES_COMPUTEATTACKEFFECT2DSHADER, CLONETYPE::CLONE_STATIC,
+			SHADERDESC{ L"Compute2DAttackEffect" });
 	}
 
 	// Particle System 
@@ -1523,7 +1535,7 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 		{
 			std::vector<RTDESC> vecRts{
 				RTDESC{ RTOBJID::BLUR, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
-					GraphicDesc->iWinCX/2, GraphicDesc->iWinCY/2, { 0.f, 0.f, 0.f, 0.f }  }
+					GraphicDesc->iWinCX / 2, GraphicDesc->iWinCY / 2, { 0.f, 0.f, 0.f, 0.f }  }
 			};
 			// Add 
 			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::BLUR, vecRts);
@@ -1548,7 +1560,7 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 		{
 			std::vector<RTDESC> vecRts{
 				RTDESC{ RTOBJID::BLUR_RESULT, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
-					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f }  }
+					GraphicDesc->iWinCX / 2, GraphicDesc->iWinCY / 2, { 0.f, 0.f, 0.f, 0.f }  }
 			};
 			// Add 
 			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::BLUR_RESULT, vecRts);
@@ -1616,13 +1628,14 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 
 	
 
-	/*m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::UPSAMPLE, RTOBJID::UPSAMPLE,
-		_float2(500.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
-
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::BLOOM, RTOBJID::BLOOM,
-		_float2(800.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());*/
+		_float2(300.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
-	
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::BLUR_RESULT, RTOBJID::BLUR_RESULT,
+		_float2(605.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
+
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::BLUR, RTOBJID::BLUR,
+		_float2(910.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
 #endif
 	return S_OK;

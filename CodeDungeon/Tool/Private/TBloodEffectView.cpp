@@ -110,7 +110,7 @@ void TBloodEffectView::LoadMultipleParticleResource()
 
 
 	*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() = 0.5f;
-	*m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount() = 50;
+	*m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount() = 10;
 	/**m_MultipleParticle[1]->GetParticleSystem()->GetCreateInterval() = 1.05f;
 	*m_MultipleParticle[1]->GetParticleSystem()->GetAddParticleAmount() = 100;*/
 }
