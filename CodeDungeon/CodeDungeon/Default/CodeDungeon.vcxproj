@@ -163,6 +163,7 @@
     <ClInclude Include="..\Public\CDataManager.h" />
     <ClInclude Include="..\Public\ClientDefines.h" />
     <ClInclude Include="..\Public\ClientProto.h" />
+    <ClInclude Include="..\Public\CLogoScene.h" />
     <ClInclude Include="..\Public\CMainCamera.h" />
     <ClInclude Include="..\Public\CMainScene.h" />
     <ClInclude Include="..\Public\CMap.h" />
@@ -188,6 +189,7 @@
   <ItemGroup>
     <ClCompile Include="..\Private\CClientApp.cpp" />
     <ClCompile Include="..\Private\CDataManager.cpp" />
+    <ClCompile Include="..\Private\CLogoScene.cpp" />
     <ClCompile Include="..\Private\CMainCamera.cpp" />
     <ClCompile Include="..\Private\CMainScene.cpp" />
     <ClCompile Include="..\Private\CMap.cpp" />

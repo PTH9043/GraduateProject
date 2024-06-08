@@ -60,7 +60,6 @@ namespace Core {
 				iter->second->Disconnect();
 				iter->second.reset();
 			}
-	//		m_SessionContainer.unsafe_erase(iter);
 		}
 	}
 

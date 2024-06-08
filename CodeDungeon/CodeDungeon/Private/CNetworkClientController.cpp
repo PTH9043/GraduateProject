@@ -13,32 +13,33 @@ HRESULT CNetworkClientController::NativeConstruct(const _string& _strIPAddress, 
 
 void CNetworkClientController::NativePacket()
 {
-	//__super::NativePacket();
-	//CS_LOGIN Login;
-	//Login.set_time_test(CurrentMilliseconds());
-	//Login.set_user_name("Hello");
-	//SendProtoData(Login, TAG_CS_LOGIN);
+	__super::NativePacket();
 }
 
 void CNetworkClientController::ProcessPacket(_char* _pPacket, PACKETHEAD _PacketHead)
 {
-	/*switch (_PacketHead.PacketType)
-	{
-	case TAG_SERVER::TAG_SC_LOGIN:
-	{
-		{
-			SC_CHECKLOGIN Login;
-			Login.ParseFromArray(_pPacket, static_cast<_int>(_PacketHead.PacketSize));
-		}
-		{
-			CS_LOGIN Login;
-			Login.set_time_test(CurrentMilliseconds());
-			Login.set_user_name("Hello");
-			SendProtoData<CS_LOGIN>(Login, TAG_CS_LOGIN);
-		}
-	}
-	break;
-	}*/
+	//switch (_PacketHead.PacketType)
+	//{
+	//case TAG_SERVER::TAG_SC_LOGIN:
+	//{
+	//	{
+	//		SC_CHECKLOGIN Login;
+	//		Login.ParseFromArray(_pPacket, static_cast<_int>(_PacketHead.PacketSize));
+	//	}
+	//	{
+	//		CS_LOGIN Login;
+	//		Login.set_time_test(CurrentMilliseconds());
+	//		Login.set_user_name("Hello");
+	//		SendProtoData<CS_LOGIN>(Login, TAG_CS_LOGIN);
+	//	}
+	//}
+	//break;
+	//case TAG_SERVER::TAG_SC_MOVE:
+	//{
+
+	//}
+	//break;
+	//}
 }
 
 void CNetworkClientController::Free()

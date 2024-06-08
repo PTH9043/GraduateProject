@@ -640,6 +640,9 @@ namespace Engine {
 
 		ANIMCOLLIDERDESC() :  iColliderType{ 0 },
 			spCollider{ nullptr }, spBoneNode{ nullptr }, vColliderScale{ 1, 1, 1}, vColliderTranslation{ 1, 1, 1 } {}
+		ANIMCOLLIDERDESC(const _int _iColliderType, const _float3& _vColliderScale, const _float3& _vColliderTranslation) : 
+			iColliderType{_iColliderType}, vColliderScale{_vColliderScale}, vColliderTranslation{_vColliderTranslation}, spBoneNode{nullptr}, spCollider{nullptr}
+		{}
 	};
 	/*
 	@ Date: 2024-02-21, Writer: นฺลยว๖

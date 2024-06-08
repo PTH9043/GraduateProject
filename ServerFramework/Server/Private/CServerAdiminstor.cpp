@@ -31,15 +31,10 @@ namespace Server
 				SESSIONID id = GiveID();
 				Core::SHPTR<Core::ACoreInstance> spCoreInstance = GetCoreInstance();
 
-				Core::SHPTR<Core::ASession> spSession =
-					Core::Create<CPlayerSession>(spCoreInstance, std::move(TcpSocket), id);
+				Core::SHPTR<Core::ASession> spSession = Core::Create<CPlayerSession>(spCoreInstance, std::move(TcpSocket), id);
 
 				// Insert 
 				InsertSession(id, spSession);
-
-#ifdef USE_DEBUG
-		//		std::cout << "Accept Success [" << id << "]\n";
-#endif 
 				spSession->Start();
 			}
 			Connect();

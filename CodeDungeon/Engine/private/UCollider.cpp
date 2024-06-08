@@ -189,27 +189,19 @@ void UCollider::SetTransform(CSHPTRREF<UTransform> _spTransform)
 
 void UCollider::SetTransform(const _float4x4& _Matrix)
 {
+	_float4x4 Matrix = m_mTransformMatrix * _Matrix;
 	switch (m_eType)
 	{
 	case TYPE_AABB:
-		m_mTransformMatrix = _float4x4::Identity;
-		m_mTransformMatrix.Set_Pos(_Matrix.Get_Pos());
-				m_mTransformMatrix.MatrixSetScaling(_Matrix.Get_Scaling(_Matrix));
-		m_spAABB_Original->Transform(*m_spAABB.get(), m_mTransformMatrix);
+		m_spAABB_Original->Transform(*m_spAABB.get(), Matrix);
 		m_vModelScale = _float3(m_spAABB->Extents) * 2;
 		break;
 	case TYPE_OBB:
-		m_mTransformMatrix = XMMatrixRotationQuaternion(DirectX::XMQuaternionRotationMatrix(_Matrix));
-		m_mTransformMatrix.Set_Pos(_Matrix.Get_Pos());
-		m_mTransformMatrix.MatrixSetScaling(_Matrix.Get_Scaling(_Matrix));
-		m_spOBB_Original->Transform(*m_spOBB.get(), m_mTransformMatrix);
+		m_spOBB_Original->Transform(*m_spOBB.get(), Matrix);
 		m_vModelScale = _float3(m_spOBB->Extents) * 2;
 		break;
 	case TYPE_SPHERE:
-		m_mTransformMatrix = XMMatrixRotationQuaternion(DirectX::XMQuaternionRotationMatrix(_Matrix));
-		m_mTransformMatrix.Set_Pos(_Matrix.Get_Pos());
-		m_mTransformMatrix.MatrixSetScaling(_Matrix.Get_Scaling(_Matrix));
-		m_spSphere_Original->Transform(*m_spSphere.get(), m_mTransformMatrix);
+		m_spSphere_Original->Transform(*m_spSphere.get(), Matrix);
 		m_vModelScale = _float3(m_spSphere->Radius) * 2;
 		break;
 	}

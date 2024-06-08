@@ -82,6 +82,9 @@
     <Filter Include="06.Comp\Controller\Mummy\Sarcophagus">
       <UniqueIdentifier>{7cb8b3b7-4d4b-4879-a8fc-22626d27452c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Scene\Logo">
+      <UniqueIdentifier>{015198a0-1235-4fa2-8256-779fd2151a27}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ClientDefines.h">
@@ -159,6 +162,9 @@
     <ClInclude Include="..\Public\CMob.h">
       <Filter>05.Objects\Character\Mob</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CLogoScene.h">
+      <Filter>01.Scene\Logo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -228,6 +234,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\CMob.cpp">
       <Filter>05.Objects\Character\Mob</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CLogoScene.cpp">
+      <Filter>01.Scene\Logo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

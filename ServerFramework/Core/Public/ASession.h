@@ -51,12 +51,11 @@ public:
 	*/
 	template<class T>
 	requires CheckProtoType<T>
-	void SendProtoData(const T& _data, short _tag)
+	void SendProtoData(BUFFER& _buffer, const T& _data, short _tag)
 	{
-		static thread_local BUFFER Buffer;
 		Core::PACKETHEAD PacketHead;
-		CombineProto<T>(REF_OUT Buffer, REF_OUT PacketHead, _data, _tag);
-		WriteData(&Buffer[0], PacketHead);
+		CombineProto<T>(REF_OUT _buffer, REF_OUT PacketHead, _data, _tag);
+		WriteData(&_buffer[0], PacketHead);
 	}
 public: /*Get Set */
 	const SESSIONID GetSessionID() const { return m_SessionID; }
