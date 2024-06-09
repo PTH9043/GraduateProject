@@ -546,7 +546,13 @@ HRESULT TAssimpModel::CreateModel(const _wstring& _wstrPath)
 		iFlag = aiProcess_PreTransformVertices | aiProcess_ConvertToLeftHanded | aiProcess_GenSmoothNormals | aiProcess_Triangulate 
 		| aiProcess_CalcTangentSpace | aiProcess_FlipUVs;
 	else
-		iFlag = aiProcess_ConvertToLeftHanded | aiProcess_GenNormals | aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_OptimizeMeshes;
+		iFlag = aiProcess_ConvertToLeftHanded | aiProcess_GenNormals | aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices |
+		aiProcess_ImproveCacheLocality |
+		aiProcess_RemoveRedundantMaterials |
+		aiProcess_FindDegenerates |
+		aiProcess_FindInvalidData |
+		aiProcess_OptimizeMeshes |
+		aiProcess_OptimizeGraph;
 
 	// Read Improter 
 	m_spImporter = std::make_shared<Assimp::Importer>();
@@ -658,7 +664,7 @@ HRESULT TAssimpModel::CreateMaterials(CSHPTRREF<FILEGROUP> _spFileGroup)
 			fs::path ps{ strTexturePath.data };
 
 			_wstring strRealName = ps.filename();
-			_wstring strName = strRealName.substr(0, strRealName.find(L"."));
+			_wstring strName = strRealName.substr(0, strRealName.find_last_of(L"."));
 			_wstring strLoadName = strName + L".dds";
 
 			_wstring Path = wstrPath;

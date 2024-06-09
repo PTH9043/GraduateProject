@@ -37,6 +37,12 @@ void UNetworkBaseController::SendTcpPacket(_char* _pPacket, _short _PacketType, 
 	UServerMethods::SendTcpPacket(m_ClientTcpSocket, pOverExp);
 }
 
+void UNetworkBaseController::AddActorToNetworkContainer(_int _NetworkID, CSHPTRREF<UActor> _spActor)
+{
+	assert(nullptr != _spActor);
+	m_NetworkActorContainer.insert(MakePair(_NetworkID, _spActor));
+}
+
 void UNetworkBaseController::ServerTick()
 {
 	DWORD num_bytes;

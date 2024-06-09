@@ -1,35 +1,5 @@
 syntax = "proto3";
 
-
-
-message POSITION {
-float x = 1;
-float y = 2;
-float z = 3;
-}
-
-message CHARDATA
-{
-	float power = 1;
-	float defensive = 2;
-}
-
-message SC_CLIENTCONNECT{
-	int64 id = 1;
-	CHARDATA charData = 2;
-	POSITION startPos = 3;
-}
-
-message SC_POS {
-	int64 id = 1;
-	POSITION pos = 2;
-	int64 move_time = 3;
-}
-
-message SC_REMOVE_OBJECT {
-	int64 id = 1;
-}
-
 enum Direction{
 	UP = 0;
 	DOWN = 1;
@@ -37,17 +7,74 @@ enum Direction{
 	RIGHT = 3;
 }
 
-message CS_LOGIN {
-	bytes user_name = 1;
-	int64 time_test = 2;
+message POSITION {
+float x = 1;
+float y = 2;
+float z = 3;
 }
 
-message CS_MOVE {
-	int64 id = 1;
-	POSITION pos = 2;
-	int64 move_time = 3;
+message CHARDATA {
+	float power = 1;
+	float defensive = 2;
 }
 
-message CS_LOGOUT{
+
+/*
+======================================
+Server
+======================================
+*/
+
+/*
+ 클라이언트가 접속에 성공했다는 것
+*/
+message SC_CONNECTSUCCESS{
+	// id 
 	int64 id = 1;
+	// 캐릭터 정보
+	CHARDATA charData =2;
+	// 시작 위치
+	POSITION startPos = 3;
+	// 캐릭터 타입
+	int64 type = 4;
 }
+
+/*
+클라이언트에서 움직이는 것이 실패했을 때
+*/
+message SC_MOVEFAILED
+{
+	int64 id = 1;
+	POSITION prevPos = 3;
+}
+
+/*
+ 몬스터가 움직여야 하는 위치
+*/
+message SC_MONSTERMOVE 
+{
+	int64 id = 1;
+	POSITION movePos = 2;
+}
+
+/*
+======================================
+Client
+======================================
+*/
+
+// 움직였을 때 전송하는 함수 
+message CS_MOVE 
+{
+	int64 id = 1;
+	POSITION movePos = 2;
+}
+
+// 공격했을 때 보내는 함수
+message CS_ATTACK
+{
+	int64 id = 1;
+	POSITION attackPos = 2;
+	float damage = 3;
+}
+

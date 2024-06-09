@@ -7,6 +7,7 @@ class UTransform;
 class UResource;
 class UCommand;
 class UTableDescriptor;
+class UProcessedData;
 
 class UActor abstract : public UCloneObject {
 public:
@@ -40,12 +41,15 @@ public:
 	virtual HRESULT NativeConstruct() override PURE;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _stDatas) override PURE;
 
+	// 네트워크 정보를 받아오는 함수
+	virtual void ReceiveNetworkProcessData(const UProcessedData& _ProcessData);
+
 	void AwakeTick(const _double& _dTimeDelta) { (this->*m_pAwakeTick)(_dTimeDelta); }
 	void Tick(const _double& _dTimeDelta) { (this->*m_pTick)(_dTimeDelta); }
 	void LateTick(const _double& _dTimeDelta) { (this->*m_pLateTick)(_dTimeDelta); }
 	HRESULT Render(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) { return (this->*m_pRender)(_spCommand, _spTableDescriptor); }
 	HRESULT RenderShadow(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) { return (this->*m_pShadowRender)(_spCommand, _spTableDescriptor); }
-
+public: /* get set */
 
 protected:
 	void AwakeTickNonActive(const _double& _dTimeDelta) {}
@@ -114,6 +118,8 @@ private:
 	// Backing Type
 	BACKINGTYPE										m_eBackingType;
 	USECOLLISIONTYPE							m_eUseCollType;
+	// 현재 사용되고 있는지 확인
+	_bool														m_isUsedThisMemory;
 };
 
 END

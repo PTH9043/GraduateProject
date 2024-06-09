@@ -156,6 +156,10 @@ HRESULT UActor::NativeConstructClone(const VOIDDATAS& _stDatas)
 	return ReadyTransform();
 }
 
+void UActor::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
+{
+}
+
 void UActor::AwakeTickActive(const _double& _dTimeDelta)
 {
 

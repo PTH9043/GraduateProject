@@ -5,6 +5,7 @@
 
 BEGIN(Engine)
 class UNetworkBaseController;
+class UActor;
 
 /*
 @ Date: 2024-02-03,  Writer: นฺลยว๖
@@ -27,6 +28,8 @@ private:
 private:
 	SHPTR<UNetworkBaseController>		m_spNetworkBaseController;
 	CONQUEUE<UProcessedData>				m_ProcessedDataContainer;
+
+
 };
 
 END

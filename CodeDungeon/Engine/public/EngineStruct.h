@@ -685,4 +685,31 @@ namespace Engine {
 	};
 #pragma endregion EQUIPMENTINFO
 
+#pragma region CHARDATA 
+
+
+	struct CHARDATA
+	{
+		_float fPower;
+		_float fDefensive;
+
+		CHARDATA(_float _fPower, _float _fDefensive) : fPower{_fPower}, fDefensive{_fDefensive}{}
+	};
+
+	/*
+	CharData 
+	*/
+	struct NETWORKRECEIVEINITDATA
+	{
+		_int					iNetworkID;
+		CHARDATA	charData;
+		_float3			vStartPos;
+		_int					iType;
+
+		NETWORKRECEIVEINITDATA(const _int _iNetworkID, CHARDATA _charData, const _float3& _vStartPos, 
+			const _int _iType) :
+			iNetworkID{_iNetworkID}, charData{_charData}, vStartPos{_vStartPos},  iType{_iType} {}
+	};
+
+#pragma endregion CHARDATA
 }

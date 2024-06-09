@@ -4,8 +4,10 @@
 
 BEGIN(Engine)
 
-using TOTALBUFFER = ARRAY<_char, MAX_PROCESSBUF_LENGTH>;
+class UActor;
 
+using TOTALBUFFER = ARRAY<_char, MAX_PROCESSBUF_LENGTH>;
+using NETWORKACTORCONTAINER = UNORMAP<_int, SHPTR<UActor>>;
 /*
 @ Date: 2024-02-03,  Writer: 박태현
 @ Explain
@@ -18,6 +20,8 @@ public:
 public:
 	virtual HRESULT NativeConstruct(const _string& _strIPAddress, const _int _PortNumber) PURE;
 	void SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize);
+	// 현재 NetworkContainer에 Actor를 추가하는 함수
+	void AddActorToNetworkContainer(_int _NetworkID, CSHPTRREF<UActor> _spActor);
 protected:
 	void ServerTick();
 	virtual void NativePacket() PURE;
@@ -58,6 +62,9 @@ private:
 	_llong													m_RemainBufferLength;
 
 	SHPTR< UNetworkAddress>			m_spNetworkAddress;
+	NETWORKACTORCONTAINER		m_NetworkActorContainer;
+
+	
 };
 
 END
