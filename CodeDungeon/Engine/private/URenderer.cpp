@@ -525,25 +525,25 @@ void URenderer::RenderHDR()
 
 void URenderer::DownSample()
 {
-    SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+    //SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
-    // Set Render Tareget
-    SHPTR<URenderTargetGroup> spRenderTargetGroup{ m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::DOWNSAMPLE) };
-    spRenderTargetGroup->WaitResourceToTarget(m_spCastingCommand);
-    spRenderTargetGroup->ClearRenderTargetView(m_spCastingCommand);
-    spRenderTargetGroup->OmSetRenderTargets(m_spCastingCommand);
-    // Bind Shader 
-    SHPTR<UShader> spDownSamplingShader = FindShader(PROTO_RES_DOWNSAMPLINGSHADER);
-    spDownSamplingShader->SettingPipeLineState(m_spCastingCommand);
-    spDownSamplingShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
-    spDownSamplingShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stSmallRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
-    {
-        SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLEND_DEFFERED);
-        spDownSamplingShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::BLEND_SCREEN_DEFFERED));
-    }
+    //// Set Render Tareget
+    //SHPTR<URenderTargetGroup> spRenderTargetGroup{ m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::DOWNSAMPLE) };
+    //spRenderTargetGroup->WaitResourceToTarget(m_spCastingCommand);
+    //spRenderTargetGroup->ClearRenderTargetView(m_spCastingCommand);
+    //spRenderTargetGroup->OmSetRenderTargets(m_spCastingCommand);
+    //// Bind Shader 
+    //SHPTR<UShader> spDownSamplingShader = FindShader(PROTO_RES_DOWNSAMPLINGSHADER);
+    //spDownSamplingShader->SettingPipeLineState(m_spCastingCommand);
+    //spDownSamplingShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
+    //spDownSamplingShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stSmallRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+    //{
+    //    SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLEND_DEFFERED);
+    //    spDownSamplingShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::BLEND_SCREEN_DEFFERED));
+    //}
 
-    m_spVIBufferPlane->Render(spDownSamplingShader, m_spCastingCommand);
-    spRenderTargetGroup->WaitTargetToResource(m_spCastingCommand);
+    //m_spVIBufferPlane->Render(spDownSamplingShader, m_spCastingCommand);
+    //spRenderTargetGroup->WaitTargetToResource(m_spCastingCommand);
 
 
 }

@@ -29,9 +29,7 @@ public:
 	void BindShaderParams(CSHPTRREF<UShader> _spShader);
 	// Bind Compute shader
 	void SettingComputeShader(const _wstring& _wstrProtoName);
-	// SaveLoada
-	_bool Load(const _wstring& _wstrPath);
-	_bool Save(const _wstring& _wstrPath);
+
 public:
 	PARTICLEPARAM* GetParticleParam() {
 		return &m_stParticleParam;
@@ -51,10 +49,7 @@ public:
 		return m_stParticleParam.stGlobalParticleInfo.fParticleKind;
 	}
 	
-#ifdef _USE_IMGUI
-public:
-	virtual void ShowObjectInfo() override;
-#endif 
+
 private:
 	// static 
 	static constexpr _uint										PARTICLEPARAM_SIZE{sizeof(PARTICLEPARAM)};

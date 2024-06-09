@@ -62,22 +62,33 @@ HRESULT UParticleSystem::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	
 	switch (m_stParticleParam.stGlobalParticleInfo.fParticleKind) {
 	case PARTICLE_ORIGINAL:
+		m_iMaxParitcleCnt = 1024;
 		m_spComputeShaderTypeConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::PARTICLETYPEBUFFER, PARTICLETYPEPARAM_SIZE);
 		m_spParticleStructedBuffer = CreateNative<UShaderStructedBuffer>(GetDevice(), sizeof(PARTICLE), m_iMaxParitcleCnt);
 		break;
 	case PARTICLE_FLARE:
+		m_iMaxParitcleCnt = 116;
 		m_spParticleStructedBufferPlus = CreateNative<UShaderStructedBuffer>(GetDevice(), sizeof(PARTICLEPLUS), m_iMaxParitcleCnt);
 		break;
 	case PARTICLE_BLOOD:
+		m_iMaxParitcleCnt = 512;
+		m_spComputeShaderTypeConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::PARTICLETYPEBUFFER, PARTICLETYPEPARAM_SIZE);
+		m_spParticleStructedBuffer = CreateNative<UShaderStructedBuffer>(GetDevice(), sizeof(PARTICLE), m_iMaxParitcleCnt);
+
+		break;
+	case PARTICLE_ATTACK:
+		m_iMaxParitcleCnt = 10;
 		m_spComputeShaderTypeConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::PARTICLETYPEBUFFER, PARTICLETYPEPARAM_SIZE);
 		m_spParticleStructedBuffer = CreateNative<UShaderStructedBuffer>(GetDevice(), sizeof(PARTICLE), m_iMaxParitcleCnt);
 
 		break;
 	case PARTICLE_FOOTPRINT:
+		m_iMaxParitcleCnt = 50;
 		m_spComputeShaderTypeConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::PARTICLETYPEBUFFER, PARTICLETYPEPARAM_SIZE);
 		m_spParticleStructedBuffer = CreateNative<UShaderStructedBuffer>(GetDevice(), sizeof(PARTICLE), m_iMaxParitcleCnt);
 		break;
 	case PARTICLE_ANIM:
+		m_iMaxParitcleCnt = 1024;
 		m_spComputeShaderTypeConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::PARTICLETYPEBUFFER, PARTICLETYPEPARAM_SIZE);
 		m_spParticleStructedBuffer = CreateNative<UShaderStructedBuffer>(GetDevice(), sizeof(PARTICLE), m_iMaxParitcleCnt);
 		break;
@@ -122,6 +133,16 @@ void UParticleSystem::Update(const _double& _dTimeDelta)
 			{
 				add = 0;
 			}
+			m_stParticleParam.stGlobalParticleInfo.iAddCount = add;
+			break;
+		case PARTICLE_ATTACK:
+			add = m_iParticleAddAmount;
+			/*
+			if (m_fCreateInterval < m_stParticleParam.stGlobalParticleInfo.fAccTime)
+			{
+				add = 0;
+			}
+			*/
 			m_stParticleParam.stGlobalParticleInfo.iAddCount = add;
 			break;
 		case PARTICLE_FOOTPRINT:
@@ -170,6 +191,11 @@ void UParticleSystem::Render(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDes
 		m_spComputeShader->BindCBVBuffer(m_spComputeShaderTypeConstantBuffer, &m_stParticleType, PARTICLETYPEPARAM_SIZE);
 
 		break;
+	case PARTICLE_ATTACK:
+		m_spComputeShader->BindUAVBuffer(UAV_REGISTER::PARTICLEWRITEDATA, m_spParticleStructedBuffer);
+		m_spComputeShader->BindCBVBuffer(m_spComputeShaderTypeConstantBuffer, &m_stParticleType, PARTICLETYPEPARAM_SIZE);
+
+		break;
 	case PARTICLE_FOOTPRINT:
 		m_spComputeShader->BindUAVBuffer(UAV_REGISTER::PARTICLEWRITEDATA, m_spParticleStructedBuffer);
 		m_spComputeShader->BindCBVBuffer(m_spComputeShaderTypeConstantBuffer, &m_stParticleType, PARTICLETYPEPARAM_SIZE);
@@ -205,6 +231,11 @@ void UParticleSystem::BindShaderParams(CSHPTRREF<UShader> _spShader)
 		_spShader->BindCBVBuffer(m_spGraphicsShaderParticleConstantBuffer, &m_stParticleParam, PARTICLEPARAM_SIZE);
 
 		break;
+	case PARTICLE_ATTACK:
+		_spShader->BindSRVBuffer(SRV_REGISTER::T14, m_spParticleStructedBuffer);
+		_spShader->BindCBVBuffer(m_spGraphicsShaderParticleConstantBuffer, &m_stParticleParam, PARTICLEPARAM_SIZE);
+
+		break;
 	case PARTICLE_FOOTPRINT:
 		_spShader->BindSRVBuffer(SRV_REGISTER::T14, m_spParticleStructedBuffer);
 		_spShader->BindCBVBuffer(m_spGraphicsShaderParticleConstantBuffer, &m_stParticleParam, PARTICLEPARAM_SIZE);
@@ -234,43 +265,3 @@ void UParticleSystem::SettingComputeShader(const _wstring& _wstrProtoName)
 	}
 }
 
-_bool UParticleSystem::Load(const _wstring& _wstrPath)
-{
-	/*std::ifstream load{ _wstrPath, std::ios::binary };
-	RETURN_CHECK(!load, false);
-
-	_wstring wstrProtoName;
-	UMethod::ReadString(load, wstrProtoName);
-	load.read((_char*)&m_stParticleParam, sizeof(PARTICLEPARAM));
-
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	m_spComputeShader = dynamic_pointer_cast<UComputeShader>(spGameInstance->CloneResource(wstrProtoName));
-	RETURN_CHECK(nullptr == m_spComputeShader, false);*/
-	return true;
-}
-
-_bool UParticleSystem::Save(const _wstring& _wstrPath)
-{
-	//std::ofstream save{ _wstrPath, std::ios::binary };
-	//RETURN_CHECK(!save, false);
-
-	//PARTICLEPARAM stParam;
-	//::memcpy(&stParam, &m_stParticleParam, sizeof(PARTICLEPARAM));
-	//SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	//_wstring _wstrProto{ L"" };
-	//spGameInstance->FindResourceProtoTag(static_pointer_cast<UResource>(m_spComputeShader), _wstrProto);
-	//// Not Find 
-	//RETURN_CHECK(L"" == _wstrProto, false);
-
-	//UMethod::SaveString(save, _wstrProto);
-	//save.write((char*)&stParam, sizeof(PARTICLEPARAM));
-	return true;
-}
-
-#ifdef _USE_IMGUI
-// Particle System 
-void UParticleSystem::ShowObjectInfo()
-{
-
-}
-#endif 

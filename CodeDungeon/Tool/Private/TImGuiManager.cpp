@@ -190,13 +190,13 @@ HRESULT TImGuiManager::ReadyImGuiClass()
 		m_ImGuiObjectContainer.insert(std::make_pair(IMGTAG::FOGTOOL, spFogView));
 		m_spMainView->InsertImGuiView(spFogView);
 	}
-	{
+	/*{
 		SHPTR<TNavigationView> spNavigationView = CreateConstructorNative<TNavigationView>(m_spDevice);
 		spNavigationView->CloseImGui();
 		m_ImGuiObjectContainer.insert(MakePair(IMGTAG::NAVITOOL, spNavigationView));
 		m_spMainView->InsertImGuiView(spNavigationView);
 
-	}
+	}*/
 	{
 		SHPTR<TMapView> spMapView = CreateConstructorNative<TMapView>(m_spDevice);
 		spMapView->CloseImGui();
