@@ -546,13 +546,7 @@ HRESULT TAssimpModel::CreateModel(const _wstring& _wstrPath)
 		iFlag = aiProcess_PreTransformVertices | aiProcess_ConvertToLeftHanded | aiProcess_GenSmoothNormals | aiProcess_Triangulate 
 		| aiProcess_CalcTangentSpace | aiProcess_FlipUVs;
 	else
-		iFlag = aiProcess_ConvertToLeftHanded | aiProcess_GenNormals | aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices |
-		aiProcess_ImproveCacheLocality |
-		aiProcess_RemoveRedundantMaterials |
-		aiProcess_FindDegenerates |
-		aiProcess_FindInvalidData |
-		aiProcess_OptimizeMeshes |
-		aiProcess_OptimizeGraph;
+		iFlag = aiProcess_ConvertToLeftHanded | aiProcess_GenNormals | aiProcess_Triangulate | aiProcess_CalcTangentSpace;
 
 	// Read Improter 
 	m_spImporter = std::make_shared<Assimp::Importer>();

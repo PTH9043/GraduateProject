@@ -20,6 +20,7 @@ public:
 	const _float4x4& GetOffsetMatrix() const { return m_mOffsetMatrix; }
 	const _float4x4& GetTransformMatrix() const { return m_mTransformMatrix; }
 	const _float4x4& GetCombineMatrix() const { return m_mCombineTransformMatirx; }
+	const _float4x4& GetFinalTranformMatrix() const { return m_mFinalTransformMatrix; }
 	const _float GetDepth() const { return m_fDepths; }
 	const _wstring& GetName() const { return m_wstrName; }
 
@@ -31,13 +32,13 @@ public:
 	virtual void Free() override;
 	HRESULT NativeConstruct(const BONENODEDESC& _stBoneNodeDesc);
 	void FindParents(CSHPTRREF<UModel> _spModel);
-	virtual void UpdateCombinedMatrix();
+	virtual void UpdateCombinedMatrix(const _float4x4& _mPivotMatrix);
 protected:
 	const _float3& GetCombineMatrixLook() const { return *((_float3*)&m_mCombineTransformMatirx.m[DirectX::PTH::MATROW_LOOK][0]); }
 	const _float3& GetCombineMatrixPos() const { return *((_float3*)&m_mCombineTransformMatirx.m[DirectX::PTH::MATROW_POS][0]); }
 protected:
 	void RemoveCombineMatrixData();
-	void ComputeCombinedMatrix();
+	void ComputeCombinedMatrix(const _float4x4& _mPivotMatrix);
 
 protected: /* get set*/
 	void SetDepths(const _float _fDepths) { m_fDepths = _fDepths; }
@@ -49,6 +50,7 @@ private:
 	_float4x4							m_mOffsetMatrix;
 	_float4x4							m_mTransformMatrix;
 	_float4x4							m_mCombineTransformMatirx;
+	_float4x4							m_mFinalTransformMatrix;
 	//ParentsNode
 	SHPTR<UBoneNode>		m_spParentsNode;
 	_wstring								m_wstrName{};

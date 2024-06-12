@@ -12,7 +12,8 @@ UBoneNode::UBoneNode() :
 	m_spParentsNode{ nullptr },
 	m_wstrName{ L"" },
 	m_wstrParetnsName{ L"" },
-	m_fDepths{ 0.f }
+	m_fDepths{ 0.f },
+	m_mFinalTransformMatrix{_float4x4::Identity}
 {
 }
 
@@ -23,7 +24,8 @@ UBoneNode::UBoneNode(const UBoneNode& _rhs) :
 	m_spParentsNode{ nullptr },
 	m_wstrName{ _rhs.m_wstrName },
 	m_wstrParetnsName{ _rhs.m_wstrParetnsName },
-	m_fDepths{ _rhs.m_fDepths }
+	m_fDepths{ _rhs.m_fDepths },
+	m_mFinalTransformMatrix{ _float4x4::Identity }
 {
 }
 
@@ -52,9 +54,9 @@ void UBoneNode::FindParents(CSHPTRREF<UModel> _spModel)
 	m_spParentsNode = _spModel->FindBoneNode(m_wstrParetnsName);
 }
 
-void UBoneNode::UpdateCombinedMatrix()
+void UBoneNode::UpdateCombinedMatrix(const _float4x4& _mPivotMatrix)
 {
-	ComputeCombinedMatrix();
+	ComputeCombinedMatrix(_mPivotMatrix);
 }
 
 void UBoneNode::RemoveCombineMatrixData()
@@ -63,7 +65,7 @@ void UBoneNode::RemoveCombineMatrixData()
 	m_mCombineTransformMatirx = m_mCombineTransformMatirx.MatrixSetRotationFix(_float3::Zero);
 }
 
-void UBoneNode::ComputeCombinedMatrix()
+void UBoneNode::ComputeCombinedMatrix(const _float4x4& _mPivotMatrix)
 {
 	if (nullptr != m_spParentsNode)
 	{
@@ -73,4 +75,7 @@ void UBoneNode::ComputeCombinedMatrix()
 	{
 		m_mCombineTransformMatirx = m_mTransformMatrix;
 	}
+
+	m_mFinalTransformMatrix = m_mOffsetMatrix * m_mCombineTransformMatirx * _mPivotMatrix;
+	m_mFinalTransformMatrix = m_mFinalTransformMatrix.Transpose();
 }

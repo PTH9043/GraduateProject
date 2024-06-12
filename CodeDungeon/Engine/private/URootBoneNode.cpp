@@ -43,10 +43,9 @@ HRESULT URootBoneNode::NativeConstruct(const _wstring& _wstrBoneName)
 	return S_OK;
 }
 
-void URootBoneNode::UpdateCombinedMatrix()
+void URootBoneNode::UpdateCombinedMatrix(const _float4x4& _mPivotMatrix)
 {
-
-	m_RootBoneNodeFunc(this);
+	m_RootBoneNodeFunc(this, _mPivotMatrix);
 }
 
 void URootBoneNode::OnRootBoneNode()
@@ -85,13 +84,13 @@ void URootBoneNode::UpdateMoveBonePos()
 	RemoveCombineMatrixData();
 }
 
-void URootBoneNode::UpdateRootBoneUpdateFunc(URootBoneNode* _spRootBoneNode)
+void URootBoneNode::UpdateRootBoneUpdateFunc(URootBoneNode* _spRootBoneNode, const _float4x4& _mPivotMatrix)
 {
-	_spRootBoneNode->ComputeCombinedMatrix();
+	_spRootBoneNode->ComputeCombinedMatrix(_mPivotMatrix);
 	_spRootBoneNode->UpdateMoveBonePos();
 }
 
-void URootBoneNode::UpdateBasicBoneUpdateFunc(URootBoneNode* _spRootBoneNode)
+void URootBoneNode::UpdateBasicBoneUpdateFunc(URootBoneNode* _spRootBoneNode, const _float4x4& _mPivotMatrix)
 {
-	_spRootBoneNode->ComputeCombinedMatrix();
+	_spRootBoneNode->ComputeCombinedMatrix(_mPivotMatrix);
 }

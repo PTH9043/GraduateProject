@@ -10,7 +10,7 @@ class UTransform;
 - 애니메이션의 움직임을 실제 Transform으로 가져오기 위한 RootBone클래스이다. 
 */
 class URootBoneNode final : public UBoneNode {
-	using ROOTBONEUPDATEFUNC = std::function<void(URootBoneNode*)>;
+	using ROOTBONEUPDATEFUNC = std::function<void(URootBoneNode*, const _float4x4&)>;
 public:
 	URootBoneNode();
 	URootBoneNode(const URootBoneNode& _rhs);
@@ -29,14 +29,14 @@ public:
 	using UBoneNode::NativeConstruct;
 	HRESULT NativeConstruct(const _wstring& _wstrBoneName);
 
-	virtual void UpdateCombinedMatrix() override;
+	virtual void UpdateCombinedMatrix(const _float4x4& _mPivotMatrix) override;
 	void OnRootBoneNode();
 	void OffRootBoneNode();
 	void ResetRootBoneInfo();
 private:
 	void UpdateMoveBonePos();
-	static void UpdateRootBoneUpdateFunc(URootBoneNode* _spRootBoneNode);
-	static void UpdateBasicBoneUpdateFunc(URootBoneNode* _spRootBoneNode);
+	static void UpdateRootBoneUpdateFunc(URootBoneNode* _spRootBoneNode, const _float4x4& _mPivotMatrix);
+	static void UpdateBasicBoneUpdateFunc(URootBoneNode* _spRootBoneNode, const _float4x4& _mPivotMatrix);
 private:
 	_float3										m_vCurRootBonePos;
 	_float3										m_vPrevRootBonePos;

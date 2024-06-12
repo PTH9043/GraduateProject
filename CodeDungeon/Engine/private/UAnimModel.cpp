@@ -174,7 +174,7 @@ void UAnimModel::TickAnimation(const _double& _dTimeDelta)
 	/* 부모로부터 자식뼈에게 누적시켜 전달한다.(CombinedTransformationMatrix) */
 	{
 		for (auto& BoneNode : GetBoneNodes())
-			BoneNode->UpdateCombinedMatrix();
+			BoneNode->UpdateCombinedMatrix(m_mPivotMatrix);
 	}
 }
 
@@ -184,7 +184,7 @@ void UAnimModel::UpdateCurAnimationToRatio(const _double& _dRatio)
 	/* 부모로부터 자식뼈에게 누적시켜 전달한다.(CombinedTransformationMatrix) */
 	{
 		for (auto& BoneNode : GetBoneNodes())
-			BoneNode->UpdateCombinedMatrix();
+			BoneNode->UpdateCombinedMatrix(m_mPivotMatrix);
 	}
 }
 
@@ -247,7 +247,7 @@ HRESULT UAnimModel::Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader
 	CSHPTRREF<UMeshContainer> spMeshContainer{ GetMeshContainers()[_iMeshIndex] };
 	// 이전 본 값 세팅
 	_spShader->BindCBVBuffer(m_spPrevBoneMatrixShaderConstantBuffer, m_vecSetupBonMatrix[_iMeshIndex].data(), GetTypeSize<BONEMATRIXPARAM>());
-	spMeshContainer->SetUpBoneMatrix(m_vecSetupBonMatrix[_iMeshIndex], m_mPivotMatrix);
+	spMeshContainer->SetUpBoneMatrix(m_vecSetupBonMatrix[_iMeshIndex]);
 	// 현재 본 값 세팅
 	_spShader->BindCBVBuffer(m_spBoneMatrixShaderConstantBuffer, m_vecSetupBonMatrix[_iMeshIndex].data(), GetTypeSize<BONEMATRIXPARAM>());
 	// 애니메이션 세팅

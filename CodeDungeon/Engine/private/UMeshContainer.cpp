@@ -78,22 +78,7 @@ HRESULT UMeshContainer::SetUpBoneMatrix(ARRAY<_float4x4, MAX_BONE_SIZE>& _arrBon
 {
 	for (_uint i = 0; i < m_BoneNodeContainer.size(); ++i)
 	{
-		_arrBones[i] = m_BoneNodeContainer[i]->GetOffsetMatrix() *
-			 m_BoneNodeContainer[i]->GetCombineMatrix();
-
-		_arrBones[i] = _arrBones[i].Transpose();
-	}
-	return S_OK;
-}
-
-HRESULT UMeshContainer::SetUpBoneMatrix(ARRAY<_float4x4, MAX_BONE_SIZE>& _arrBones, const _float4x4& _PivotMatrix)
-{
-	for (_uint i = 0; i < m_BoneNodeContainer.size(); ++i)
-	{
-		_arrBones[i] = m_BoneNodeContainer[i]->GetOffsetMatrix() *
-			m_BoneNodeContainer[i]->GetCombineMatrix() * _PivotMatrix;
-
-		_arrBones[i] = _arrBones[i].Transpose();
+		_arrBones[i] = m_BoneNodeContainer[i]->GetFinalTranformMatrix();
 	}
 	return S_OK;
 }
