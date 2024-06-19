@@ -424,6 +424,12 @@
     <Filter Include="98.ShaderFile\Common\Particle\Attack">
       <UniqueIdentifier>{221a4e1c-6eda-4f3f-97f7-e54cee192a8a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="07.Resource\VIBuffer\Trail">
+      <UniqueIdentifier>{cebd3a68-bab7-4404-8cdd-08729171ff12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.ShaderFile\Common\Trail">
+      <UniqueIdentifier>{90ca5135-faf0-4327-bc67-9f9123439717}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -814,6 +820,9 @@
       <Filter>05.Actor\Trail</Filter>
     </ClCompile>
     <ClCompile Include="..\public\MathLib\CusMath.cpp" />
+    <ClCompile Include="..\private\UVIBufferTrail.cpp">
+      <Filter>07.Resource\VIBuffer\Trail</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\EngineDefine.h">
@@ -1237,6 +1246,9 @@
       <Filter>05.Actor\Trail</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MathLib\CusMath.h" />
+    <ClInclude Include="..\public\UVIBufferTrail.h">
+      <Filter>07.Resource\VIBuffer\Trail</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Shader\ShaderGrobalFunc.hlsli">
@@ -1367,6 +1379,9 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\Compute2DAttackEffect.hlsl">
       <Filter>98.ShaderFile\Common\Particle\Attack</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\Trail.hlsl">
+      <Filter>98.ShaderFile\Common\Trail</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

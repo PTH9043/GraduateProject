@@ -49,6 +49,7 @@
 #include "UVIBufferCube.h"
 #include "UVIBufferPlane.h"
 #include "UVIBufferGrid.h"
+#include "UVIBufferTrail.h"
 //#include "UVIBufferSkyBox.h"
 
 #include "UParticleSystem.h"
@@ -60,6 +61,7 @@
 #include "UFire.h"
 #include "UFog.h"
 #include "UCollider.h"
+#include "UTrail.h"
 
 //#include "UMirror.h"
 //#include "UScreenRenderObj.h"
@@ -1048,6 +1050,9 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 		AddPrototype(PROTO_RES_VIBUFFERGRID, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferGrid>(
 			_stData.wpDevice.lock(), VIBUFFERTYPE::GENERIC));
 
+		AddPrototype(PROTO_RES_VIBUFFERTRAIL, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferTrail>(
+			_stData.wpDevice.lock(), VIBUFFERTYPE::GENERIC));
+
 		AddPrototype(PROTO_RES_VIBUFFERNORMALGRID, CLONETYPE::CLONE_STATIC, CreateConstructorToNative<UVIBufferGrid>(
 			_stData.wpDevice.lock(), VIBUFFERTYPE::NORMAL));
 
@@ -1093,6 +1098,11 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 					SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{
 					DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
 					DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
+
+			CreateGraphicsShader(PROTO_RES_TRAILSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"Trail", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }, RASTERIZER_TYPE::CULL_BACK,
+					DEPTH_STENCIL_TYPE::LESS_NO_WRITE));
 
 			CreateGraphicsShader(PROTO_RES_HORIZONTALBLURSHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"HorizontalBlur", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
@@ -1194,6 +1204,9 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 					RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
 					DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT
 					}));
+
+
+
 
 			CreateGraphicsShader(PROTO_RES_NORMALOBJECTSHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"NormalObject", VTXNORMAL_DECLARATION::Element, VTXNORMAL_DECLARATION::iNumElement,
@@ -1432,6 +1445,9 @@ HRESULT UGameInstance::ReadyActor(const OUTPUTDATA& _stData)
 	AddPrototype(PROTO_ACTOR_PARTICLE, CreateConstructorToNative<UParticle>(
 		_stData.wpDevice.lock(), LAYER_PARTICLE, CLONETYPE::CLONE_ONCE));
 
+	AddPrototype(PROTO_ACTOR_TRAIL, CreateConstructorToNative<UTrail>(
+		_stData.wpDevice.lock(), LAYER_PARTICLE, CLONETYPE::CLONE_ONCE));
+
 	AddPrototype(PROTO_ACTOR_FIRE, CreateConstructorToNative<UFire>(
 		_stData.wpDevice.lock(), LAYER_DEFAULT, CLONETYPE::CLONE_ONCE));
 
@@ -1628,7 +1644,7 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 
 	
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::BLOOM, RTOBJID::BLOOM,
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::ALPHA_DEFFERED, RTOBJID::ALPHA_DIFFUSE_DEFFERED,
 		_float2(300.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::BLUR_RESULT, RTOBJID::BLUR_RESULT,

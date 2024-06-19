@@ -103,6 +103,7 @@ void CWarriorAnimController::Tick(const _double& _dTimeDelta)
     }
 
     if (isAttack) {
+        spWarriorPlayer->IfAttack(true);
         const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
         if (isWAttack) {
             if (CurAnimName == L"combo02_1")
@@ -137,6 +138,9 @@ void CWarriorAnimController::Tick(const _double& _dTimeDelta)
             m_iWComboStack = 0;
             m_iSComboStack = 0;
         }
+    }
+    else {
+        spWarriorPlayer->IfAttack(false);
     }
 
     if (isRoll) {

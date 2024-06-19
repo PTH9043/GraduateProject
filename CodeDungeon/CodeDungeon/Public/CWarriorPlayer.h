@@ -5,6 +5,7 @@ BEGIN(Engine)
 class UGameInstance;
 class UParticle;
 class UParticleSystem;
+class UTrail;
 END
 
 BEGIN(Client)
@@ -26,6 +27,8 @@ public:
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _Datas) override;
 	SHPTR<UParticle>& GetParticle() { return m_spParticle; }
+
+	void IfAttack(_bool is) { isAttack = is; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
@@ -41,7 +44,8 @@ private:
 	ComputeParticleType* m_stParticleType;
 
 	SHPTR<CSword>	m_spSword;
-
+	SHPTR<UTrail> m_spTrail;
+	_bool isAttack;
 };
 
 END

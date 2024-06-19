@@ -165,6 +165,7 @@
     <ClInclude Include="..\public\UVIBufferPoint.h" />
     <ClInclude Include="..\public\UVIBufferRect.h" />
     <ClInclude Include="..\public\UVIBufferSphere.h" />
+    <ClInclude Include="..\public\UVIBufferTrail.h" />
     <ClInclude Include="..\public\UWeapon.h" />
     <ClInclude Include="..\public\UWorkThread.h" />
   </ItemGroup>
@@ -291,6 +292,7 @@
     <ClCompile Include="..\private\UVIBufferPoint.cpp" />
     <ClCompile Include="..\private\UVIBufferRect.cpp" />
     <ClCompile Include="..\private\UVIBufferSphere.cpp" />
+    <ClCompile Include="..\private\UVIBufferTrail.cpp" />
     <ClCompile Include="..\private\UWeapon.cpp" />
     <ClCompile Include="..\private\UWorkThread.cpp" />
     <ClCompile Include="..\public\ImGui\GraphEditor.cpp" />
@@ -354,6 +356,7 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\ScreenRenderObj.hlsl" />
     <FxCompile Include="..\..\Shader\Shadow.hlsl" />
+    <FxCompile Include="..\..\Shader\Trail.hlsl" />
     <FxCompile Include="..\..\Shader\UpSampling.hlsl" />
     <FxCompile Include="..\..\Shader\VerticalBlur.hlsl" />
   </ItemGroup>

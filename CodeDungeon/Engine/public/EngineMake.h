@@ -27,6 +27,7 @@
 #define PROTO_RES_DOWNSAMPLINGSHADER L"Proto_Res_DownSamplingShader"
 #define PROTO_RES_UPSAMPLINGSHADER L"Proto_Res_UpSamplingShader"
 #define PROTO_RES_HDRSHADER L"Proto_Res_HdrShader"
+#define PROTO_RES_TRAILSHADER L"Proto_Res_TrailShader"
 #define PROTO_RES_INSTANCERECTSHADER L"Proto_Res_InstanceRectShader"
 #define PROTO_RES_DEFAULTOBJECTSHADER L"Proto_Res_DefaultObjectShader"
 #define PROTO_RES_ANIMMODELSHADER L"Proto_Res_AnimModelShader"
@@ -81,6 +82,7 @@
 #define PROTO_RES_VIBUFFERPLANE L"Proto_Res_VIBufferPlane"
 #define PROTO_RES_VIBUFFERNORMALPLANE L"Proto_Res_VIBufferNormalPlane"
 #define PROTO_RES_VIBUFFERGRID L"Proto_Res_VIBufferGrid"
+#define PROTO_RES_VIBUFFERTRAIL L"Proto_Res_VIBufferTrail"
 #define PROTO_RES_VIBUFFERNORMALGRID L"Proto_Res_VIBufferNormalGrid"
 #define PROTO_RES_VIBUFFERSKYBOX L"Proto_Res_VIBufferSkyBox"
 
@@ -97,6 +99,7 @@
 #define PROTO_ACTOR_TERRAIN L"Proto_Actor_Terrain"
 #define PROTO_ACTOR_SKYBOX L"Proto_Actor_SkyBox"
 #define PROTO_ACTOR_PARTICLE L"Proto_Actor_Particle"
+#define PROTO_ACTOR_TRAIL L"Proto_Actor_Trail"
 #define PROTO_ACTOR_FIRE L"Proto_Actor_Fire"
 #define PROTO_ACTOR_FOG L"Proto_Actor_Fog"
 #define PROTO_ACTOR_MIRROR L"Proto_Actor_Mirror"
@@ -111,6 +114,7 @@
 #define PROTO_RES_FIRENOISETEXTUREGROUP L"Proto_Res_FireNoiseTextureGroup"
 #define PROTO_RES_FIREALPHATEXTUREGROUP L"Proto_Res_FireAlphaTextureGroup"
 #define PROTO_RES_FOGTEXTUREGROUP L"Proto_Res_FogTextureGroup"
+#define PROTO_RES_TRAILTEXTUREGROUP L"Proto_Res_TrailTextureGroup"
 
 
 // material 
