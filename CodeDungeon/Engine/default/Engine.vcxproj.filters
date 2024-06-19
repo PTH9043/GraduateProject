@@ -211,9 +211,6 @@
     <Filter Include="95.Super\Base">
       <UniqueIdentifier>{9f88f402-6580-4c6d-9e57-26991de1c9fc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Manager\NetworkManager">
-      <UniqueIdentifier>{86cb24b7-9ef5-4892-9a87-debaf5c9a572}</UniqueIdentifier>
-    </Filter>
     <Filter Include="20.Network">
       <UniqueIdentifier>{558750bb-ac4b-4610-aa42-d72cfef50944}</UniqueIdentifier>
     </Filter>
@@ -424,6 +421,9 @@
     <Filter Include="98.ShaderFile\Common\Particle\Attack">
       <UniqueIdentifier>{221a4e1c-6eda-4f3f-97f7-e54cee192a8a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.Needs\Math">
+      <UniqueIdentifier>{37214680-7313-493c-b20c-2d1c83232598}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -614,9 +614,6 @@
     </ClCompile>
     <ClCompile Include="..\private\CustomMemory.cpp">
       <Filter>97.Needs\MemoryPool</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\UNetworkManager.cpp">
-      <Filter>01.Manager\NetworkManager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UThreadManager.cpp">
       <Filter>01.Manager\ThreadManager</Filter>
@@ -813,7 +810,9 @@
     <ClCompile Include="..\private\UTrail.cpp">
       <Filter>05.Actor\Trail</Filter>
     </ClCompile>
-    <ClCompile Include="..\public\MathLib\CusMath.cpp" />
+    <ClCompile Include="..\public\MathLib\CusMath.cpp">
+      <Filter>97.Needs\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\EngineDefine.h">
@@ -1029,9 +1028,6 @@
     <ClInclude Include="..\public\CustomMemory.h">
       <Filter>97.Needs\MemoryPool</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\UNetworkManager.h">
-      <Filter>01.Manager\NetworkManager</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\UThreadManager.h">
       <Filter>01.Manager\ThreadManager</Filter>
     </ClInclude>
@@ -1236,7 +1232,9 @@
     <ClInclude Include="..\public\UTrail.h">
       <Filter>05.Actor\Trail</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\MathLib\CusMath.h" />
+    <ClInclude Include="..\public\MathLib\CusMath.h">
+      <Filter>97.Needs\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Shader\ShaderGrobalFunc.hlsli">
@@ -1254,7 +1252,9 @@
     <None Include="..\..\Shader\LightShaderFunc.hlsli">
       <Filter>98.ShaderFile\Common\Light\Original</Filter>
     </None>
-    <None Include="..\public\MathLib\CusMath.inl" />
+    <None Include="..\public\MathLib\CusMath.inl">
+      <Filter>97.Needs\Math</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Shader\Rect.hlsl">

@@ -19,12 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\CMonsterObject.h" />
     <ClInclude Include="..\Public\CServerAdiminstor.h" />
     <ClInclude Include="..\Public\CServerApp.h" />
     <ClInclude Include="..\Public\ServerDefines.h" />
     <ClInclude Include="..\Public\CPlayerSession.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\CMonsterObject.cpp" />
     <ClCompile Include="..\Private\CServerAdiminstor.cpp" />
     <ClCompile Include="..\Private\CServerApp.cpp" />
     <ClCompile Include="..\Private\CPlayerSession.cpp" />
@@ -91,11 +93,11 @@
     <OutDir>..\Bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>..\Bin\</OutDir>
+    <OutDir>..\Bin\debug\</OutDir>
     <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>..\Bin\</OutDir>
+    <OutDir>..\Bin\release\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

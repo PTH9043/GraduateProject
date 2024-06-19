@@ -4,8 +4,9 @@
 
 BEGIN(Engine)
 class UCharacter;
+class UPawn;
 
-using PLAYERLIST = VECTOR<SHPTR<UCharacter>>;
+using COLLISIONPAWNLIST = SET<SHPTR<UPawn>>;
 /*
 @ Date: 2024-02-25, Writer: นฺลยว๖
 @ Explain
@@ -19,13 +20,17 @@ public:
 public:
 	CSHPTRREF<UCharacter> GetCurrPlayer() const { return m_spCurrentPlayer; }
 
-	void ReigsterCurrentPlayer(CSHPTRREF<UCharacter> _spCurrentPlayer);
+	void RegisterCurrentPlayer(CSHPTRREF<UCharacter> _spCurrentPlayer);
+	void AddCollisionPawnList(CSHPTRREF<UPawn> _spPawn);
+	void RemoveCollisionPawn(CSHPTRREF<UPawn> _spPawn);
+	
+	void TickCollider();
+	void ClearData();
 private:
 	virtual void Free() override;
 private:
 	SHPTR<UCharacter>		m_spCurrentPlayer;
-
-	
+	COLLISIONPAWNLIST		m_CollisionPawnList;
 };
 
 END

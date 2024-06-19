@@ -27,7 +27,6 @@ public:
 	void RegisterScene(CSHPTRREF<UScene> _spScene);
 	void Tick(const _double& _dTimeDelta);
 	void LateTick(const _double& _dTimeDelta);
-	void CollisionTick(const _double& _dTimeDelta);
 
 	void OutLightControlInfo(LIGHTPARAM& _stLightControl);
 	void ChangeLightCamIndex(const CAMID& _iID);

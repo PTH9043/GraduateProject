@@ -36,13 +36,13 @@ HRESULT UPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);
 	// VOIDDATAS에 CharacterDesc 0번, PlayerDesc 1번에 값을 채워야한다. 
-	assert(_Datas.size() > 1);
 
-	PLAYERDESC PlayerDesc = UMethod::ConvertTemplate_Index<PLAYERDESC>(_Datas, PLAYERDESCORDER);
-	assert(nullptr != PlayerDesc.spFollowCamera);
+	if (_Datas.size() >= 2)
+	{
+		PLAYERDESC PlayerDesc = UMethod::ConvertTemplate_Index<PLAYERDESC>(_Datas, PLAYERDESCORDER);
+		m_spFollowCamera = PlayerDesc.spFollowCamera;
+	}
 
-	m_spFollowCamera = PlayerDesc.spFollowCamera;
-	assert(nullptr != m_spFollowCamera);
 	return S_OK;
 }
 

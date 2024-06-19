@@ -5,9 +5,11 @@
 BEGIN(Engine)
 
 class UActor;
+class UProcessedData;
 
 using TOTALBUFFER = ARRAY<_char, MAX_PROCESSBUF_LENGTH>;
 using NETWORKACTORCONTAINER = UNORMAP<_int, SHPTR<UActor>>;
+using NETWORKINITDATACONTAINER = UNORMAP<_int, NETWORKRECEIVEINITDATA>;
 /*
 @ Date: 2024-02-03,  Writer: 박태현
 @ Explain
@@ -20,11 +22,15 @@ public:
 public:
 	virtual HRESULT NativeConstruct(const _string& _strIPAddress, const _int _PortNumber) PURE;
 	void SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize);
-	// 현재 NetworkContainer에 Actor를 추가하는 함수
-	void AddActorToNetworkContainer(_int _NetworkID, CSHPTRREF<UActor> _spActor);
+	virtual void MakeActors() PURE;
+	void AddNetworkInitData(_int _NetworkID, const NETWORKRECEIVEINITDATA& _NetworkInitData);
+	SHPTR<UActor> FindNetworkActor(const _int _NetworkID);
+public: /* get set */
+	const _llong GetNetworkOwnerID() const { return m_llNetworkOwnerID; }
 protected:
 	void ServerTick();
 	virtual void NativePacket() PURE;
+	void ActorProcessesNetworkData(_int _NetworkID, const UProcessedData& _ProcessedData);
 	void CombineRecvPacket(UOverExp* _pOverExp, _llong _numBytes);
 	virtual void ProcessPacket(_char* _pPacket, PACKETHEAD _PacketHead) PURE;
 	void RecvTcpPacket();
@@ -46,6 +52,10 @@ protected: /* get set */
 	const SOCKET& GetClientTcpSocket() const { return m_ClientTcpSocket; }
 	const SOCKET& GetClientUdpSocket() const { return m_ClientUdpSocket; }
 	CSHPTRREF<UNetworkAddress> GetNetworkAddress() const { return m_spNetworkAddress; }
+	const NETWORKACTORCONTAINER& GetNetworkActorContainer() const { return m_NetworkActorContainer; }
+	const NETWORKINITDATACONTAINER& GetNetworkInitDataContainer() const { return m_NetworkInitDataContainer; }
+
+	void SetNetworkOwnerID(const _llong& _llNetworkOwnerID) { this->m_llNetworkOwnerID = _llNetworkOwnerID; }
 private:
 	static void ServerThread(void* _pData);
 private:
@@ -60,11 +70,11 @@ private:
 
 	TOTALBUFFER									m_TcpTotalBuffer;
 	_llong													m_RemainBufferLength;
+	_llong													m_llNetworkOwnerID;
 
 	SHPTR< UNetworkAddress>			m_spNetworkAddress;
 	NETWORKACTORCONTAINER		m_NetworkActorContainer;
-
-	
+	NETWORKINITDATACONTAINER	m_NetworkInitDataContainer;
 };
 
 END

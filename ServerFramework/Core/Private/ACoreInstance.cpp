@@ -4,7 +4,9 @@
 #include "ARandomManager.h"
 #include "ASpaceManager.h"
 #include "AService.h"
-
+#include "ANavigation.h"
+#include "APathFinder.h"
+#include "AMySqlDriver.h"
 namespace Core
 {
 	ACoreInstance::ACoreInstance() :
@@ -20,6 +22,20 @@ namespace Core
 	{
 		RETURN_CHECK(nullptr == _spService, ;);
 		m_spService = _spService;
+		m_spMySqlDriver = CreateInitConstructor<AMySqlDriver>(ThisShared<ACoreInstance>(), "tcp://127.0.0.1:3306", 
+			"root", "Qkrxogus0652!");
+		// Navigation Ready 
+		for (auto& Navigation : m_NavigationWorkBench)
+		{
+			Navigation = CreateInitNative<ANavigation>("..\\..\\Resource\\Navigation\\interior.bin");
+		}
+		// PathFinder Ready
+		for (_int i = 0; i < TLS::MAX_WORKTHREAD; ++i)
+		{
+			m_PathFinderWorkBench[i] = CreateInitNative<APathFinder>(*m_NavigationWorkBench[i]->GetCells().get());
+		}
+
+		//m_spPathFinder = CreateInitNative<APathFinder>(*m_spNavigation->GetCells().get());
 	}
 
 	_bool ACoreInstance::Start()
@@ -40,6 +56,18 @@ namespace Core
 		spService->BroadCastMessage(_pPacket, _PacketHead);
 	}
 
+	void ACoreInstance::BroadCastMessageExcludingSession(const SESSIONID _SessionID, _char* _pPacket, const PACKETHEAD& _PacketHead)
+	{
+		SHPTR<AService> spService = m_spService;
+		spService->BroadCastMessageExcludingSession(_SessionID, _pPacket, _PacketHead);
+	}
+
+	void ACoreInstance::DirectSendMessage(const SESSIONID _SessionID, _char* _pPacket, const PACKETHEAD& _PacketHead)
+	{
+		SHPTR<AService> spService = m_spService;
+		spService->DirectSendMessage(_SessionID, _pPacket, _PacketHead);
+	}
+
 	void ACoreInstance::LeaveService(const SESSIONID _SessionID)
 	{
 		SHPTR<AService> spService = m_spService;
@@ -52,11 +80,25 @@ namespace Core
 		spService->InsertSession(_SessionID, _spSession);
 	}
 
+	const SESSIONCONTAINER& ACoreInstance::GetSessionContainer() const
+	{
+		SHPTR<AService> spService = m_spService;
+		ASSERT_CRASH(nullptr != spService);
+		return spService->GetSessionContainer();
+	}
+
+	const GAMEOBJECTCONTAINER& ACoreInstance::GetGameObjectContainer() const
+	{
+		SHPTR<AService> spService = m_spService;
+		ASSERT_CRASH(nullptr != spService);
+		return spService->GetGameObjectContainer();
+	}
+
 	/*
 	-----------------------------
-	CoreInstance
+	ACoreInstance
 	-----------------------------
-	UThreadManager
+	AThreadManager
 	-----------------------------
 	*/
 
@@ -73,9 +115,9 @@ namespace Core
 
 	/*
 	-----------------------------
-	UThreadManager
+	AThreadManager
 	-----------------------------
-	URandomManager
+	ARandomManager
 	-----------------------------
 	*/
 
@@ -94,9 +136,9 @@ namespace Core
 
 	/*
 	-----------------------------
-	URandomManager
+	ARandomManager
 	-----------------------------
-	USpaceManager
+	ASpaceManager
 	-----------------------------
 	*/
 
@@ -104,6 +146,104 @@ namespace Core
 	{
 		SHPTR<ASpaceManager> spSpaceManager = m_spSpaceManager;
 		spSpaceManager->BuildGameSpace(_SpaceInfo);
+	}
+
+	/*
+	-----------------------------
+	ASpaceManager
+	-----------------------------
+	AMySqlDriver
+	-----------------------------
+	*/
+
+	_bool ACoreInstance::ExcuteQueryMessage(SQLTABLETYPE _TableType, SQLQUERYTYPE _sqlQueryType, const _string& _strQueryData)
+	{
+		SHPTR<AMySqlDriver> spMySqlDriver = m_spMySqlDriver;
+		return spMySqlDriver->ExcuteQueryMessage(_TableType, _sqlQueryType, _strQueryData);
+	}
+
+	void ACoreInstance::BindParam(SQLTABLETYPE _TableType, _int _ParamIndex, _bool _Value)
+	{
+		SHPTR<AMySqlDriver> spMySqlDriver = m_spMySqlDriver;
+		spMySqlDriver->BindParam(_TableType, _ParamIndex, _Value);
+	}
+
+	void ACoreInstance::BindParam(SQLTABLETYPE _TableType, _int _ParamIndex, _float _Value)
+	{
+		SHPTR<AMySqlDriver> spMySqlDriver = m_spMySqlDriver;
+		spMySqlDriver->BindParam(_TableType, _ParamIndex, _Value);
+	}
+
+	void ACoreInstance::BindParam(SQLTABLETYPE _TableType, _int _ParamIndex, _double _Value)
+	{
+		SHPTR<AMySqlDriver> spMySqlDriver = m_spMySqlDriver;
+		spMySqlDriver->BindParam(_TableType, _ParamIndex, _Value);
+	}
+
+	void ACoreInstance::BindParam(SQLTABLETYPE _TableType, _int _ParamIndex, _short _Value)
+	{
+		SHPTR<AMySqlDriver> spMySqlDriver = m_spMySqlDriver;
+		spMySqlDriver->BindParam(_TableType, _ParamIndex, _Value);
+	}
+
+	void ACoreInstance::BindParam(SQLTABLETYPE _TableType, _int _ParamIndex, _int _Value)
+	{
+		SHPTR<AMySqlDriver> spMySqlDriver = m_spMySqlDriver;
+		spMySqlDriver->BindParam(_TableType, _ParamIndex, _Value);
+	}
+
+	void ACoreInstance::BindParam(SQLTABLETYPE _TableType, _int _ParamIndex, _llong _Value)
+	{
+		SHPTR<AMySqlDriver> spMySqlDriver = m_spMySqlDriver;
+		spMySqlDriver->BindParam(_TableType, _ParamIndex, _Value);
+	}
+
+	void ACoreInstance::BindParam(SQLTABLETYPE _TableType, _int _ParamIndex, const _string& _Value)
+	{
+		SHPTR<AMySqlDriver> spMySqlDriver = m_spMySqlDriver;
+		spMySqlDriver->BindParam(_TableType, _ParamIndex, _Value);
+	}
+
+	/*
+	-----------------------------
+	AMySqlDriver
+	-----------------------------
+	ANavigation
+	-----------------------------
+	*/
+
+	const _float ACoreInstance::ComputeHeight(const Vector3& _vPosition)
+	{
+		return m_NavigationWorkBench[TLS::g_ThreadID]->ComputeHeight(_vPosition);
+	}
+
+	void ACoreInstance::ComputeHeight(CSHPTRREF<ATransform> _spTransform)
+	{
+		m_NavigationWorkBench[TLS::g_ThreadID]->ComputeHeight(_spTransform);
+	}
+
+	_bool ACoreInstance::IsMove(Vector3 _vPosition, SHPTR<ACell>& _spCell)
+	{
+		return m_NavigationWorkBench[TLS::g_ThreadID]->IsMove(_vPosition, _spCell);
+	}
+
+	/*
+	--------------------------------------
+	ANavigation
+	--------------------------------------
+	APathFinder
+	--------------------------------------
+	*/
+
+	void ACoreInstance::FindPath(Vector3 _vStartPos, Vector3 _vEndPos)
+	{
+		m_PathFinderWorkBench[TLS::g_ThreadID]->FindPath(m_NavigationWorkBench[TLS::g_ThreadID], _vStartPos, _vEndPos);
+	}
+
+	LIST<Vector3>& ACoreInstance::GetBestList()
+	{
+		ASSERT_CRASH(nullptr != m_PathFinderWorkBench[TLS::g_ThreadID])
+		return m_PathFinderWorkBench[TLS::g_ThreadID]->GetBestList();
 	}
 
 	void ACoreInstance::Free()

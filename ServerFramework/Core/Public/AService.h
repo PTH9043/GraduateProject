@@ -4,6 +4,7 @@
 #include "ACoreObject.h"
 
 BEGIN(Core)
+class AGameObject;
 class ASession;
 /*
 @ Date: 2024-01-06, Writer: 박태현
@@ -11,6 +12,9 @@ class ASession;
 - PlayerSession 생성, 괸리 및 AWS 연결 관리
 */
 class CORE_DLL AService abstract : public ACoreObject {
+public:
+	using SESSIONCONTAINER = CONUNORMAP<SESSIONID, SHPTR<ASession>>;
+	using GAMEOBJECTCONTAINER = CONUNORMAP<SESSIONID, SHPTR<AGameObject>>;
 public:
 	AService(OBJCON_CONSTRUCTOR, SERVICETYPE _Type);
 	DESTRUCTOR(AService)
@@ -20,13 +24,24 @@ public:
 	virtual _bool Start() PURE;
 public:
 	// ID를 통해서 SessionID
-	virtual SHPTR<ASession> FindSession(const SESSIONID _SessionID) PURE;
+	SHPTR<ASession> FindSession(const SESSIONID _SessionID) ;
+	// ID를 통해서 GameObject를 찾아온다. 
+	SHPTR<AGameObject> FindGameObject(const SESSIONID _SessionID);
 	// 전체 서버 참여자에게 메시지를 보내는 함수이다. 
-	virtual void BroadCastMessage(_char* _pPacket, const PACKETHEAD& _PacketHead) PURE;
+	void BroadCastMessage(_char* _pPacket, const PACKETHEAD& _PacketHead) ;
+	// 해당 Session ID를 제외한 전체 서버 참여자에게 메시지를 보내는 함수
+	void BroadCastMessageExcludingSession(const SESSIONID _SessionID, _char* _pPacket, const PACKETHEAD& _PacketHead) ;
+	// Direct로 메시지 보내는 함수
+	void DirectSendMessage(const SESSIONID _SessionID, _char* _pPacket, const PACKETHEAD& _PacketHead) ;
 	// Session의 TCP Socket 연결만 끊고 Insert나 기타 다른 함수들을 정의해서 Socket들 제거
-	virtual void LeaveService(const SESSIONID _SessionID) PURE;
+	void LeaveService(const SESSIONID _SessionID) ;
 	// Session을 Container에 저장하는 함수이다. 
-	virtual void InsertSession(SESSIONID _SessionID, SHPTR<ASession> _spSession) PURE;
+	void InsertSession(SESSIONID _SessionID, SHPTR<ASession> _spSession) ;
+	// GameObject를 집어넣는 함수
+	void InsertGameObject(SESSIONID _SessionID, SHPTR<AGameObject> _spGameObject);
+public: /* get set */
+	const SESSIONCONTAINER& GetSessionContainer() const { return m_SessionContainer; }
+	const GAMEOBJECTCONTAINER& GetGameObjectContainer() const { return m_GameObjectContainer; }
 protected:
 	virtual void Connect() PURE;
 	virtual SESSIONID GiveID();
@@ -38,14 +53,17 @@ protected: /* Get Set */
 private:
 	virtual void Free() override;
 private:
-	SERVICETYPE					m_ServiceType;
-	ATOMIC<SESSIONID>		m_IDIssuance;
-	ATOMIC<_llong>				m_CurrentSessionCount;
+	SERVICETYPE						m_ServiceType;
+	ATOMIC<SESSIONID>			m_IDIssuance;
+	ATOMIC<_llong>					m_CurrentSessionCount;
 	// Boost/Asio Context
-	IOContext							m_IOContext;
-	TCPSOCKET						m_TcpSocket;
+	IOContext								m_IOContext;
+	TCPSOCKET							m_TcpSocket;
 	// Lock
-	MUTEX								m_Lock;
+	MUTEX									m_Lock;
+	// Session Conatiner
+	SESSIONCONTAINER			m_SessionContainer;
+	GAMEOBJECTCONTAINER	m_GameObjectContainer;
 };
 
 END

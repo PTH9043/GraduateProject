@@ -19,11 +19,6 @@ public:
 	virtual _bool NativeConstruct() PURE;
 	virtual _bool Start() override;
 public:
-	virtual SHPTR<ASession> FindSession(const SESSIONID _SessionID) override;
-	virtual void BroadCastMessage(_char* _pPacket, const PACKETHEAD& _PacketHead) override;
-	virtual void LeaveService(const SESSIONID _SessionID) override;
-	virtual void InsertSession(SESSIONID _SessionID, SHPTR<ASession> _spSession) override;
-
 	static void RunningThread(void* _pService);
 
 	_bool IsRunningThread() const { return m_isRunningThread; }
@@ -34,14 +29,10 @@ protected:
 	virtual SESSIONID GiveID() override;
 	// 연결이 끊어진 소켓들을 제거하여 메모리 확보
 	void RemoveDisconnectSockets();
-protected: /* get set */
-	SESSIONCONTAINER& GetSessionContainer() { return m_SessionContainer; }
 private:
 	virtual void Free() PURE;
 private:
 	ATOMIC<_bool>							m_isRunningThread;
-	// Session Conatiner
-	SESSIONCONTAINER					m_SessionContainer;
 	CONQUEUE<SESSIONID>			m_RemainIDQueue;
 };
 

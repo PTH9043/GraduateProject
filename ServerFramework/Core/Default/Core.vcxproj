@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\AGameObject.h" />
     <ClInclude Include="..\Public\Allocator.h" />
     <ClInclude Include="..\Public\AMySqlConnector.h" />
     <ClInclude Include="..\Public\AMySqlDriver.h" />
@@ -42,7 +43,7 @@
     <ClInclude Include="..\Public\LockFree.h" />
     <ClInclude Include="..\Public\Memory.h" />
     <ClInclude Include="..\Public\SmartPointer.h" />
-    <ClInclude Include="..\Public\UAABBCollider.h" />
+    <ClInclude Include="..\Public\AAABBCollider.h" />
     <ClInclude Include="..\Public\ACoreApp.h" />
     <ClInclude Include="..\Public\ACell.h" />
     <ClInclude Include="..\Public\AStressClientService.h" />
@@ -71,6 +72,7 @@
     <ClInclude Include="..\Public\ATransform.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\AGameObject.cpp" />
     <ClCompile Include="..\Private\Allocator.cpp" />
     <ClCompile Include="..\Private\AMySqlConnector.cpp" />
     <ClCompile Include="..\Private\AMySqlDriver.cpp" />
@@ -83,7 +85,7 @@
     <ClCompile Include="..\Private\LockFree.cpp" />
     <ClCompile Include="..\Private\Memory.cpp" />
     <ClCompile Include="..\Private\SmartPointer.cpp" />
-    <ClCompile Include="..\Private\UAABBCollider.cpp" />
+    <ClCompile Include="..\Private\AAABBCollider.cpp" />
     <ClCompile Include="..\Private\ACoreApp.cpp" />
     <ClCompile Include="..\Private\ACell.cpp" />
     <ClCompile Include="..\Private\AStressClientService.cpp" />
@@ -214,6 +216,7 @@
       <PreprocessorDefinitions>_SILENCE_ALL_CXX23_DEPRECATION_WARNINGS;CORE_EXPORTS;_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -256,6 +259,7 @@
       <PreprocessorDefinitions>_SILENCE_ALL_CXX23_DEPRECATION_WARNINGS;CORE_EXPORTS;_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

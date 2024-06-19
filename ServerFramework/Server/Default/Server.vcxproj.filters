@@ -22,6 +22,9 @@
     <Filter Include="03.Session\Player">
       <UniqueIdentifier>{fdbc3898-3fdd-429b-8d81-5c07c9bc6fd6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.Session\Monster">
+      <UniqueIdentifier>{01034477-172e-4fe5-99d8-30cd68b9e117}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -36,6 +39,9 @@
     <ClCompile Include="..\Private\CPlayerSession.cpp">
       <Filter>03.Session\Player</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\CMonsterObject.cpp">
+      <Filter>03.Session\Monster</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\CServerApp.h">
@@ -49,6 +55,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\CPlayerSession.h">
       <Filter>03.Session\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CMonsterObject.h">
+      <Filter>03.Session\Monster</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

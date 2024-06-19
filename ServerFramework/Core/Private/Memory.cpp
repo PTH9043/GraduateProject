@@ -93,7 +93,7 @@ namespace Core
 		// 메모리 최대 크기를 꺼내오면 일반 할당 
 		if (AllocateSize > MAX_ALLOC_SIZE)
 		{
-			Header = reinterpret_cast<MEMORYHEADER*>(::malloc(_Size));
+			Header = reinterpret_cast<MEMORYHEADER*>(::malloc(AllocateSize));
 		}
 		else
 		{
@@ -120,6 +120,7 @@ namespace Core
 		}
 		else
 		{
+			::memset(Header, 0, AllocSize);
 			m_PoolTable[AllocSize]->Push(Header);
 		}
 #endif

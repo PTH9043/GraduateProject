@@ -15,11 +15,12 @@
 UCharacter::UCharacter(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, 
 	const CLONETYPE& _eCloneType) : 
 	UPawn(_spDevice, _wstrLayer, _eCloneType, BACKINGTYPE::DYNAMIC, PAWNTYPE::PAWN_CHAR),
-	m_vPrevPos{}, m_bisHit{false}
+	m_spAnimModel{ nullptr }, m_spAnimationController{ nullptr }, m_vPrevPos{}, 	m_spCurNavi{nullptr }, m_spHitCollider{nullptr}, 
+	m_fMoveSpeed{0.f}, m_fRunSpeed{0.f}, m_bIsRunning{false}, m_bisHit{false}, m_bisCollision{false}
 {
 }
 
-UCharacter::UCharacter(const UCharacter& _rhs) : UPawn(_rhs), m_vPrevPos{}, m_bisHit{ false }
+UCharacter::UCharacter(const UCharacter& _rhs) : UPawn(_rhs), m_vPrevPos{}, m_bisHit{ false }, m_bisCollision{ false }
 {
 }
 
@@ -55,8 +56,8 @@ HRESULT UCharacter::NativeConstructClone(const VOIDDATAS& _Datas)
 	{
 		UNavigation::NAVDESC navDesc;
 		navDesc.iCurIndex = 703;
-		m_wpCurNavi = std::static_pointer_cast<UNavigation>(spGameInstance->CloneComp(PROTO_NAVI_INTERIOR, {&navDesc }));
-		assert(nullptr != m_wpCurNavi);
+		m_spCurNavi = std::static_pointer_cast<UNavigation>(spGameInstance->CloneComp(PROTO_NAVI_INTERIOR, {&navDesc }));
+		assert(nullptr != m_spCurNavi);
 	}
 	AddShader(PROTO_RES_ANIMMODELSHADER, RES_SHADER);
 

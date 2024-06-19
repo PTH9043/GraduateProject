@@ -52,12 +52,6 @@ HRESULT UScene::NativeConstruct()
     return S_OK;
 }
 
-
-void UScene::CollisionTick(const _double& _dTimeDelta)
-{
-
-}
-
 void UScene::RenderLights()
 {
     SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);

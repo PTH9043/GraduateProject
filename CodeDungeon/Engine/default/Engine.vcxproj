@@ -103,7 +103,6 @@
     <ClInclude Include="..\public\UModel.h" />
     <ClInclude Include="..\public\UNavigation.h" />
     <ClInclude Include="..\public\UNetworkBaseController.h" />
-    <ClInclude Include="..\public\UNetworkManager.h" />
     <ClInclude Include="..\public\UParticle.h" />
     <ClInclude Include="..\public\UParticleSystem.h" />
     <ClInclude Include="..\public\UPawn.h" />
@@ -229,7 +228,6 @@
     <ClCompile Include="..\private\UModel.cpp" />
     <ClCompile Include="..\private\UNavigation.cpp" />
     <ClCompile Include="..\private\UNetworkBaseController.cpp" />
-    <ClCompile Include="..\private\UNetworkManager.cpp" />
     <ClCompile Include="..\private\UParticle.cpp" />
     <ClCompile Include="..\private\UParticleSystem.cpp" />
     <ClCompile Include="..\private\UPawn.cpp" />

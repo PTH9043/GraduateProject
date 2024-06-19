@@ -1,8 +1,5 @@
 #include "CoreDefines.h"
 #include "ASession.h"
-#include "UAABBCollider.h"
-#include "AOBBCollider.h"
-#include "ASphereCollider.h"
 #include "ATransform.h"
 #include "ASpace.h"
 #include "ACoreInstance.h"
@@ -10,10 +7,8 @@
 namespace Core
 {
 	ASession::ASession(OBJCON_CONSTRUCTOR, MOVE TCPSOCKET _TcpSocket, SESSIONID _ID, SESSIONTYPE _SessionType) :
-		ACoreObject(OBJCON_CONDATA),
-		m_TcpSocket(std::move(_TcpSocket)), m_SessionType(_SessionType), m_SessionID(_ID), m_SpaceIndex{0}, m_CurBuffuerLocation{0},
-		m_isConnected{true},
-		 m_spTransform{nullptr},	m_spCollider{nullptr}
+		AGameObject(OBJCON_CONDATA, _ID, _SessionType),
+		m_TcpSocket(std::move(_TcpSocket)), m_CurBuffuerLocation{0},	m_isConnected{true}
 	{
 		MemoryInitialization(m_SendBuffer.data(), MAX_BUFFER_LENGTH);
 		MemoryInitialization(m_RecvBuffer.data(), MAX_BUFFER_LENGTH);
@@ -22,12 +17,11 @@ namespace Core
 
 	_bool ASession::Start()
 	{
-		m_spTransform = Create<ATransform>();
-		ReadData();
+		RecvData();
 		return true;
 	}
 
-	void ASession::ReadData()
+	void ASession::RecvData()
 	{
 		RETURN_CHECK(false == m_isConnected, ;);
 		m_TcpSocket.async_read_some(Asio::buffer(m_RecvBuffer),
@@ -41,20 +35,20 @@ namespace Core
 						return;
 					}
 					PacketCombine(&m_RecvBuffer[0], _Size);
-					ReadData();
+					RecvData();
 				}
 				else
 				{
 #ifdef USE_DEBUG
 					if (_error.value() == boost::asio::error::operation_aborted) return;
-					std::cout << "Receive Error on Session[" << m_SessionID << "] EC[" << _error << "]\n";
+					std::cout << "Receive Error on Session[" << GetSessionID() << "] EC[" << _error << "]\n";
 #endif
 					Leave();
 				}
 			});
 	}
 
-	_bool ASession::WriteData(_char* _pPacket, const PACKETHEAD& _PacketHead)
+	_bool ASession::SendData(_char* _pPacket, const PACKETHEAD& _PacketHead)
 	{
 		RETURN_CHECK(false == m_isConnected, false);
 		return true;
@@ -66,12 +60,6 @@ namespace Core
 	}
 
 	void ASession::ConnectTcpSocket(){ }
-
-	void ASession::BringSpaceIndex(SHPTR<ASpace> _spSpace)
-	{
-		RETURN_CHECK(nullptr == _spSpace, ;);
-		m_SpaceIndex = _spSpace->GetSpaceIndex();
-	}
 
 	/*
 	@ Data: 2024-01-13, Writer : นฺลยว๖
@@ -130,22 +118,7 @@ namespace Core
 	void ASession::Leave()
 	{
 		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
-		spCoreInstance->LeaveService(m_SessionID);
-	}
-
-	void ASession::CreateCollider(COLLIDERTYPE _ColliderType, const Vector3& _vCenter, const Vector3& _vScale)
-	{
-		switch (_ColliderType) {
-		case COLLIDERTYPE::OBB:
-			m_spCollider = Create<AOBBCollider>(_vCenter, _vScale);
-			break;
-		case COLLIDERTYPE::AABB:
-			m_spCollider = Create<UAABBCollider>(_vCenter, _vScale);
-			break;
-		case COLLIDERTYPE::SPHERE:
-			m_spCollider = Create<ASphereCollider>(_vCenter, _vScale);
-			break;
-		}
+		spCoreInstance->LeaveService(GetSessionID());
 	}
 
 	void ASession::Free()

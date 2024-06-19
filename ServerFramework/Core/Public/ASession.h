@@ -1,7 +1,7 @@
 #ifndef _SERVERFRAMEWORK_CORE_PUBLIC_ASESSION_H
 #define _SERVERFRAMEWORK_CORE_PUBLIC_ASESSION_H
 
-#include "ACoreObject.h"
+#include "AGameObject.h"
 
 
 BEGIN(Core)
@@ -16,7 +16,7 @@ class ASpace;
 - 클라이언트와 통신하기 위한 Session 클래스이고 가상함수로 Server 솔루션에서 해당 클래스를 부모로 자식 클래스를 
 정의해주어야 한다.
 */
-class CORE_DLL ASession abstract : public ACoreObject  {
+class CORE_DLL ASession abstract : public AGameObject {
 public:
 	using BUFFER = ARRAY<_char, MAX_BUFFER_LENGTH>;
 	using TOTALBUFFER = ARRAY<_char, MAX_PROCESSBUF_LENGTH>;
@@ -26,9 +26,9 @@ public:
 public: 
 	virtual _bool Start() PURE;
 	// 클라이언트에서 전송된 버퍼를 읽는 함수
-	virtual void ReadData() PURE;
+	virtual void RecvData() PURE;
 	// 클라이언트에게 버퍼를 조합하여 전송하는 함수
-	virtual _bool WriteData(_char* _pPacket, const PACKETHEAD& _PacketHead) PURE;
+	virtual _bool SendData(_char* _pPacket, const PACKETHEAD& _PacketHead) PURE;
 	virtual void Disconnect() PURE;
 	virtual void ConnectTcpSocket() PURE;
 
@@ -55,43 +55,27 @@ public:
 	{
 		Core::PACKETHEAD PacketHead;
 		CombineProto<T>(REF_OUT _buffer, REF_OUT PacketHead, _data, _tag);
-		WriteData(&_buffer[0], PacketHead);
+		SendData(&_buffer[0], PacketHead);
 	}
 public: /*Get Set */
-	const SESSIONID GetSessionID() const { return m_SessionID; }
-	const SESSIONTYPE GetSessionType() const { return m_SessionType; }
-	const _int GetSpaceID() const { return m_SpaceIndex; }
 	TCPSOCKET& GetTcpSocket(REF_RETURN) { return m_TcpSocket; }
-	SHPTR<ATransform> GetTransform() const { return m_spTransform; }
-	SHPTR<ACollider> GetCollider() const { return m_spCollider; }
 	const _bool IsConnected() const { return m_isConnected.load(); }
-
-	void BringSpaceIndex(SHPTR<ASpace> _spSpace);
 protected:
 	void PacketCombine(_char* _pPacket, _llong _Size);
 	virtual _bool ProcessPacket(_char* _pPacket, const PACKETHEAD& _PacketHead) PURE;
 	void CombineSendBuffer(_char* _pPacket, const PACKETHEAD& _PacketHead);
 	void Leave();
-
-	void CreateCollider(COLLIDERTYPE _ColliderType, const Vector3& _vCenter, const Vector3& _vScale);
-
 	BUFFER& GetSendBuff(REF_RETURN) { return m_SendBuffer; }
 private:
 	virtual void Free() override;
 
 private:
-	SESSIONID						m_SessionID;
-	SESSIONTYPE				m_SessionType;
-	_int									m_SpaceIndex;
 	TCPSOCKET					m_TcpSocket;
 	_llong								m_CurBuffuerLocation;
 	// Buffer 모음
 	TOTALBUFFER				m_TotalBuffer;
 	BUFFER							m_SendBuffer;
 	BUFFER							m_RecvBuffer;
-
-	SHPTR<ATransform> m_spTransform;
-	SHPTR<ACollider>		m_spCollider;
 
 	ATOMIC<_bool>			m_isConnected;
 };

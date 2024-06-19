@@ -1,7 +1,7 @@
 #include "CoreDefines.h"
 #include "ASpace.h"
 #include "ASession.h"
-#include "UAABBCollider.h"
+#include "AAABBCollider.h"
 
 namespace Core {
 
@@ -14,7 +14,7 @@ namespace Core {
 	_bool ASpace::NativeConstruct(const SPACEINFO& _SpaceInfo, SHPTR<ASpace> _spParents)
 	{
 		m_wpParents = _spParents;
-		m_spCollider = Create<UAABBCollider>(_SpaceInfo.vCenter, _SpaceInfo.vExtents);
+		m_spCollider = Create<AAABBCollider>(_SpaceInfo.vCenter, _SpaceInfo.vExtents);
 		m_DepthLevel = _SpaceInfo.Depths;
 		m_SpaceIndex = _SpaceInfo.Index;
 		return true;
@@ -28,7 +28,7 @@ namespace Core {
 	void ASpace::BroadCastMessage(_char* _pPacket, const PACKETHEAD& _PacketHead)
 	{
 		for (auto& iter : m_SessionContainer) {
-			iter->WriteData(_pPacket, _PacketHead);
+			iter->SendData(_pPacket, _PacketHead);
 		}
 	}
 

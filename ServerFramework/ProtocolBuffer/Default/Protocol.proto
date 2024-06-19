@@ -7,7 +7,7 @@ enum Direction{
 	RIGHT = 3;
 }
 
-message POSITION {
+message VECTOR3 {
 float x = 1;
 float y = 2;
 float z = 3;
@@ -16,8 +16,16 @@ float z = 3;
 message CHARDATA {
 	float power = 1;
 	float defensive = 2;
+	float hp = 3;
 }
 
+message EQINFO
+{
+	float gold = 1;
+	float increasePower = 2;
+	float increaseDefensive = 3;
+	float increaseHp = 4;
+}
 
 /*
 ======================================
@@ -34,9 +42,20 @@ message SC_CONNECTSUCCESS{
 	// 캐릭터 정보
 	CHARDATA charData =2;
 	// 시작 위치
-	POSITION startPos = 3;
+	int64 cellIndex = 3;
+	// 콜라이더 사이즈
+	VECTOR3 colliderSize = 4;
 	// 캐릭터 타입
-	int64 type = 4;
+	int64 type = 5;
+}
+
+// 다른 클라이언트가 로그인 했을 때 
+message SC_OTHERCLIENTLOGIN 
+{
+	int64 id = 1;
+	int64 cellIndex = 2;
+	// 캐릭터 타입
+	int64 type = 3;
 }
 
 /*
@@ -45,17 +64,29 @@ message SC_CONNECTSUCCESS{
 message SC_MOVEFAILED
 {
 	int64 id = 1;
-	POSITION prevPos = 3;
+	VECTOR3 prevPos = 3;
 }
 
 /*
- 몬스터가 움직여야 하는 위치
+다른 녀석들이 움직였음
 */
-message SC_MONSTERMOVE 
+message SC_OTHERMOVE 
 {
 	int64 id = 1;
-	POSITION movePos = 2;
+	VECTOR3 movePos = 2;
 }
+
+/*
+다른 녀석들이 시야에 보인다. 
+*/
+
+ message SC_VIEWINRANGE
+ {
+	int64 id = 1;
+	VECTOR3 position = 2;
+	int64 cellindex = 3;
+	int64 type = 4;
+ }
 
 /*
 ======================================
@@ -63,18 +94,29 @@ Client
 ======================================
 */
 
+// Client가 로그인 했음을 다른 클라이언트에게 알린다. 
+message CS_LOGIN 
+{
+	int64 id = 1;
+}
+
 // 움직였을 때 전송하는 함수 
 message CS_MOVE 
 {
 	int64 id = 1;
-	POSITION movePos = 2;
+	VECTOR3 movePos = 2;
 }
 
 // 공격했을 때 보내는 함수
 message CS_ATTACK
 {
 	int64 id = 1;
-	POSITION attackPos = 2;
+	VECTOR3 attackPos = 2;
 	float damage = 3;
 }
 
+// 연결 해제
+message CS_DISCONNECT 
+{
+	int64 id = 1;
+}

@@ -666,34 +666,36 @@ namespace Engine {
 	struct ITEMINFO
 	{
 		// 지불해야할 돈
-		_int		PayGold;
+		_float		fPayGold;
 
-		ITEMINFO() : PayGold{0} {}
-		ITEMINFO(const _int _PayGold) : PayGold{_PayGold}{}
+		ITEMINFO() : fPayGold{0} {}
+		ITEMINFO(const _float _fPayGold) : fPayGold{ _fPayGold }{}
 	};
 
 	struct EQUIPMENTINFO : public ITEMINFO
 	{
-		_int		IncreaseHP;
-		_int		IncreaseAtk;
-		_int		IncreaseSpeed;
+		_float fIncreasePower;
+		_float fIncreaseDefensive;
+		_float fIncreaseHp ;
 
-		EQUIPMENTINFO() : IncreaseHP{ 0 }, IncreaseAtk{ 0 }, IncreaseSpeed{ 0 } { }
-		EQUIPMENTINFO(const _int _PayGold, const _int _IncreaseHp, const _int _IncreaseAtk, 
-			const _int _IncreaseSpeed) : ITEMINFO(_PayGold), IncreaseHP{_IncreaseHp}, IncreaseAtk{_IncreaseAtk}, 
-			IncreaseSpeed{_IncreaseSpeed} {}
+		EQUIPMENTINFO() : fIncreasePower{ 0 }, fIncreaseDefensive{ 0 }, fIncreaseHp{ 0 } { }
+		EQUIPMENTINFO(const _float _fPayGold, const _float _fIncreasePower, const _float _fIncreaseDefensive, const _float _fIncreaseHp)
+			: ITEMINFO(_fPayGold), fIncreasePower{_fIncreasePower}, fIncreaseDefensive{_fIncreaseDefensive}, fIncreaseHp{_fIncreaseHp}
+		{}
 	};
 #pragma endregion EQUIPMENTINFO
 
 #pragma region CHARDATA 
 
 
-	struct CHARDATA
+	struct CHARSTATUS
 	{
 		_float fPower;
 		_float fDefensive;
+		_float fHp;
 
-		CHARDATA(_float _fPower, _float _fDefensive) : fPower{_fPower}, fDefensive{_fDefensive}{}
+		CHARSTATUS() : fPower{0}, fDefensive{0}, fHp{0} {}
+		CHARSTATUS(_float _fPower, _float _fDefensive, _float _fHp) : fPower{ _fPower }, fDefensive{ _fDefensive }, fHp{ _fHp } {}
 	};
 
 	/*
@@ -701,14 +703,18 @@ namespace Engine {
 	*/
 	struct NETWORKRECEIVEINITDATA
 	{
-		_int					iNetworkID;
-		CHARDATA	charData;
-		_float3			vStartPos;
-		_int					iType;
+		_int								iNetworkID;
+		CHARSTATUS			charStatus;
+		_int								iCellIndex;
+		_float3						vColliderSize;
+		_int								iType;
 
-		NETWORKRECEIVEINITDATA(const _int _iNetworkID, CHARDATA _charData, const _float3& _vStartPos, 
-			const _int _iType) :
-			iNetworkID{_iNetworkID}, charData{_charData}, vStartPos{_vStartPos},  iType{_iType} {}
+		NETWORKRECEIVEINITDATA() : iNetworkID{ 0 }, charStatus{ }, iCellIndex{ 0 },
+			vColliderSize{ }, iType{ 0 } {}
+		NETWORKRECEIVEINITDATA(const _int _iNetworkID, const CHARSTATUS& _charStatus, const _int _iCellIndex,
+			const _float3& _vColliderSize,  const _int _iType) :
+			iNetworkID{ _iNetworkID }, charStatus{ _charStatus }, iCellIndex{ _iCellIndex },
+			vColliderSize{ _vColliderSize },  iType {_iType} {}
 	};
 
 #pragma endregion CHARDATA

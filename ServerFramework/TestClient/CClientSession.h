@@ -12,9 +12,9 @@ public:
 public:
 	virtual _bool Start() override;
 	// 클라이언트에서 전송된 버퍼를 읽는 함수
-	virtual void ReadData() override;
+	virtual void RecvData() override;
 	// 클라이언트에게 버퍼를 조합하여 전송하는 함수
-	virtual _bool WriteData(_char* _pPacket, const Core::PACKETHEAD& _PacketHead) override;
+	virtual _bool SendData(_char* _pPacket, const Core::PACKETHEAD& _PacketHead) override;
 	virtual void Disconnect() override;
 	virtual void ConnectTcpSocket() override;
 

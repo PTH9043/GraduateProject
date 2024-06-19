@@ -10,7 +10,7 @@ namespace Core
 #ifdef USE_DEBUG
 	CORE_DLL UDeadLockProfiler*			g_pDeadLockProfiler = nullptr;
 #endif
-
+	CORE_DLL  ACoreApp*						 g_RegisterApp = nullptr;
 	CORE_DLL  AMemoryAdiminstor*	g_pMemoryAdminster = nullptr;
 	CORE_DLL	 ALogger*							g_pLogger = nullptr;
 
@@ -44,8 +44,6 @@ namespace Core
 #endif
 			delete g_pMemoryAdminster;
 			delete g_pLogger;
-
-			ThreadMiliRelax(5000);
 		}
 
 	private:

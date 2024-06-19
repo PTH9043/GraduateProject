@@ -266,4 +266,11 @@ void ClassName::DestoryInstance(){  m_pInstance.reset(); }
 #define USING_WEAK_PTR(name)	using name##Ref = WKPTR<class name>;
 
 
+/*
+@ Date: 2024-06-19, Writer: 박태현
+@ Explain: ProtocolBuffer를 할당하기 위한 객체.
+*/
+#define PROTOALLOC(Type, Name) Type* Name = new Type();
+
+
 #endif // _SERVERFRAMEWORK_CORE_PUBLIC_COREMACRO_H

@@ -6,6 +6,7 @@
 #include "CProtoMaker.h"
 #include "CMainScene.h"
 #include "CDataManager.h"
+#include "CLogoScene.h"
 
 CClientApp::CClientApp() :
 	m_iTickCount{ 0 },
@@ -41,7 +42,7 @@ HRESULT CClientApp::NativeConstruct(const HINSTANCE& _hInst, const _uint& _iCmdS
 	// 클라이언트 스레드 등록
 	m_spGameInstance->RegisterFuncToRegister(ClientThread, this);
 	// 네트워크 스레드 등록 
-	m_spGameInstance->StartNetwork(CreateNative<CNetworkClientController>(IP_ADDRESS, TCP_PORT_NUM));
+	//m_spGameInstance->StartNetwork(CreateNative<CNetworkClientController>(IP_ADDRESS, TCP_PORT_NUM));
 	return S_OK;
 }
 
@@ -77,7 +78,7 @@ void CClientApp::Render()
 	m_spDataManager->Load_Data();
 
 	// Register 
-	m_spGameInstance->RegisterScene(CreateConstructorNative<CMainScene>(stOutputData.wpDevice.lock()));
+	m_spGameInstance->RegisterScene(CreateConstructorNative<CLogoScene>(stOutputData.wpDevice.lock()));
 
 	m_spDeltaTimer = m_spGameInstance->CreateTimerAdd(DELTA_TIMER);
 	m_spTickTimer = m_spGameInstance->CreateTimerAdd(TICK_TIMER);

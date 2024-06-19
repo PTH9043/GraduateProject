@@ -1,5 +1,7 @@
 #include "ClientDefines.h"
 #include "CLogoScene.h"
+#include "UGameInstance.h"
+#include "CMainScene.h"
 
 BEGIN(Client)
 
@@ -19,15 +21,12 @@ HRESULT CLogoScene::LoadSceneData()
 
 void CLogoScene::Tick(const _double& _dTimeDelta)
 {
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	spGameInstance->RegisterScene(CreateConstructorNative<CMainScene>(GetDevice()));
 }
 
 void CLogoScene::LateTick(const _double& _dTimeDelta)
 {
 }
-
-void CLogoScene::CollisionTick(const _double& _dTimeDelta)
-{
-}
-
 
 END

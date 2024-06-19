@@ -12,12 +12,12 @@ _bool CClientSession::Start()
 	return __super::Start();
 }
 
-void CClientSession::ReadData()
+void CClientSession::RecvData()
 {
-	__super::ReadData();
+	__super::RecvData();
 }
 
-_bool CClientSession::WriteData(_char* _pPacket, const Core::PACKETHEAD& _PacketHead)
+_bool CClientSession::SendData(_char* _pPacket, const Core::PACKETHEAD& _PacketHead)
 {
 	CombineSendBuffer(_pPacket, _PacketHead);
 	_bool result{ true };

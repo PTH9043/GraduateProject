@@ -17,11 +17,8 @@ namespace Core {
 		m_MaxCellCount = static_cast<_int>(_Cells.size());
 		m_ParentsCellNodes.resize(m_MaxCellCount);
 		// value 
-		for (_int i = 0; i < TLS::MAX_THREAD; ++i)
-		{
-			m_CheckOpens.resize(m_MaxCellCount);
-			m_DistanceWeights.resize(m_MaxCellCount);
-		}
+		m_CheckOpens.resize(m_MaxCellCount);
+		m_DistanceWeights.resize(m_MaxCellCount);
 		return true;
 	}
 
@@ -49,25 +46,27 @@ namespace Core {
 				m_VisitedListes.pop_front();
 			}
 
-			for (auto& CheckCell : pCell->GetNeighborCelles())
+			for (auto& CheckCell : pCell->GetNeighborCells())
 			{
-				_int CheckIndex = CheckCell->GetIndex();
+				SHPTR<ACell> spCheckCell = CheckCell.lock();
+
+				_int CheckIndex = spCheckCell->GetIndex();
 				if (VISITED_VALUE == m_CheckOpens[CheckIndex])
 					continue;
 
-				m_ParentsCellNodes[CheckIndex] = CheckCell;
-				if (_spEndCell.get()  == CheckCell)
+				m_ParentsCellNodes[CheckIndex] = spCheckCell.get();
+				if (_spEndCell == spCheckCell)
 				{
-					MakeBestRoutine(_spStartCell.get(), CheckCell);
+					MakeBestRoutine(_spStartCell.get(), spCheckCell.get());
 					return;
 				}
 				// 코스트를 구함 
 				_float Cost = ComputeDistCost(_spStartCell->GetCenterPos(), _spEndCell->GetCenterPos(), 
-					CheckCell->GetCenterPos(), pCell->GetCenterPos());
+					spCheckCell->GetCenterPos(), pCell->GetCenterPos());
 				// CheckOpen 
-				m_CheckOpens[CheckCell->GetIndex()] = VISITED_VALUE;
+				m_CheckOpens[spCheckCell->GetIndex()] = VISITED_VALUE;
 				// 방문한 노드에 집어 넣는다. 
-				m_VisitedListes.push_back(CheckCell);
+				m_VisitedListes.push_back(spCheckCell.get());
 			}
 			if (0 < m_VisitedListes.size())
 			{
@@ -91,10 +90,11 @@ namespace Core {
 	void APathFinder::MakeBestRoutine(ACell* _pStartCell, ACell* _pEndCell)
 	{
 		ACell* pCell = _pEndCell;
+		m_BestListes.clear();
 		while (true)
 		{
 			RETURN_CHECK(nullptr == pCell, ;);
-			m_BestListes.push_back(pCell);
+			m_BestListes.push_back(pCell->GetCenterPos());
 			_int index = pCell->GetIndex();
 			pCell = m_ParentsCellNodes[index];
 			RETURN_CHECK(_pStartCell == pCell, ;);

@@ -59,7 +59,7 @@ public:
 	_float3 OtherCharacterDirToLookVectorF3(CSHPTRREF<UTransform> _spOtherTransform);
 public: /* get set */
 	CSHPTRREF<UAnimModel> GetAnimModel() const { return m_spAnimModel; }
-	SHPTR<UNavigation> GetCurrentNavi() const { return m_wpCurNavi; }
+	SHPTR<UNavigation> GetCurrentNavi() const { return m_spCurNavi; }
 	CSHPTRREF<UCollider> GetHitCollider() const { return m_spHitCollider; }
 
 	const _bool& GetHitState() const { return m_bisHit; }
@@ -93,7 +93,7 @@ private:
 	// 이전 위치 저장
 	_float3								m_vPrevPos;
 	// 현재 스테이지
-	SHPTR<UNavigation>		m_wpCurNavi;
+	SHPTR<UNavigation>		m_spCurNavi;
 	SHPTR<UCollider>			m_spHitCollider;
 
 	//이동 속도

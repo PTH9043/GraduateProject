@@ -5,13 +5,14 @@
 #include "ASqlLoginTable.h"
 
 namespace Core {
-	AMySqlDriver::AMySqlDriver(OBJCON_CONSTRUCTOR) :
-		ACoreObject(OBJCON_CONDATA), m_pDriver{ nullptr }, m_MySqlConnectContainer{}
+	AMySqlDriver::AMySqlDriver(OBJCON_CONSTRUCTOR, const _string& _strAddress, 
+		const _string& _strName, const _string& _strPassward) :
+		ACoreObject(OBJCON_CONDATA), m_pDriver{ nullptr }, m_MySqlConnectContainer{}, 
+		m_strAddress{_strAddress}, m_strSqlName {_strName}, m_strPassword{ _strPassward }
 	{
 	}
 
-	_bool AMySqlDriver::NativeConstruct(const _string& _strAddress, const _string& _strName, 
-		const _string& _strPassward)
+	_bool AMySqlDriver::NativeConstruct()
 	{
 		// Connect My Sql 
 		m_pDriver = sql::mysql::get_driver_instance();
@@ -19,7 +20,7 @@ namespace Core {
 		// 실제 데이터베이스가 존재하는지 확인 
 		{
 			// 데이터베이스 서버에 연결한다. 
-			std::unique_ptr<sql::Connection> Conn(m_pDriver->connect(_strAddress.c_str(), _strName.c_str(), _strPassward.c_str()));
+			std::unique_ptr<sql::Connection> Conn(m_pDriver->connect(m_strAddress.c_str(), m_strSqlName.c_str(), m_strPassword.c_str()));
 			// Statement 객체를 생성
 			std::unique_ptr<sql::Statement> Stmt(Conn->createStatement());
 			// Query문 작성 
@@ -41,7 +42,7 @@ namespace Core {
 		_int i = 0; 
 		for (auto& iter : m_MySqlConnectContainer)
 		{
-			iter = CreateInitNative<AMySqlConnector>(m_pDriver, _strAddress, _strName, _strPassward, i++);
+			iter = CreateInitNative<AMySqlConnector>(m_pDriver, m_strAddress, m_strSqlName, m_strPassword, i++);
 			assert(nullptr != iter);
 
 		}

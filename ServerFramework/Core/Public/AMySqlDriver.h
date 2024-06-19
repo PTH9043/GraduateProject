@@ -18,11 +18,11 @@ public:
 	using SQLARRAY = ARRAY<SHPTR<AMySqlConnector>, TLS::MAX_WORKTHREAD>;
 	using SQLTABLE = ARRAY<SHPTR<AMySqlTable>, MAX_SQLTABLE_LENGTH>;
 public:
-	AMySqlDriver(OBJCON_CONSTRUCTOR);
+	AMySqlDriver(OBJCON_CONSTRUCTOR, const _string& _strAddress, const _string& _strName, const _string& _strPassward);
 	NO_COPY(AMySqlDriver)
 	DESTRUCTOR(AMySqlDriver)
 public:
-	_bool	NativeConstruct(const _string& _strAddress, const _string& _strName, const _string& _strPassward);
+	_bool	NativeConstruct();
 
 	// ExcuteQueryMessage
 	_bool ExcuteQueryMessage(SQLTABLETYPE _TableType, SQLQUERYTYPE _sqlQueryType, const _string& _strQueryData);
@@ -34,6 +34,10 @@ public:
 	void BindParam(SQLTABLETYPE _TableType, _int _ParamIndex, _int _Value);
 	void BindParam(SQLTABLETYPE _TableType, _int _ParamIndex, _llong _Value);
 	void BindParam(SQLTABLETYPE _TableType, _int _ParamIndex, const _string& _Value);
+public: /* get set*/
+	const _string& GetAddress() const { return m_strAddress; }
+	const _string& GetSqlName() const { return m_strSqlName; }
+	const _string& GetPassword() const { return m_strPassword; }
 protected:
 
 private:
@@ -42,6 +46,9 @@ private:
 	sql::mysql::MySQL_Driver*	 m_pDriver;
 	SQLARRAY									 m_MySqlConnectContainer;
 	SQLTABLE									 m_MySqlTableContainer;
+	_string										 m_strAddress;
+	_string										 m_strSqlName;
+	_string										 m_strPassword;
 };
 
 END

@@ -30,7 +30,6 @@ public:
 
 	virtual void Tick(const _double& _dTimeDelta) PURE;
 	virtual void LateTick(const _double& _dTimeDelta)PURE;
-	virtual void CollisionTick(const _double& _dTimeDelta);
 	// Render 
 	void RenderLights();
 

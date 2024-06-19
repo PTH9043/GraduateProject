@@ -19,13 +19,6 @@ public:
 public:
 	virtual _bool NativeConstruct() PURE;
 	virtual _bool Start() override;
-public:
-	/* AWS */
-	virtual SHPTR<ASession> FindSession(const SESSIONID _SessionID) override;
-	virtual void BroadCastMessage(_char* _pPacket, const PACKETHEAD& _PacketHead) override;
-	// 여기서는 Session 자체를 제거
-	virtual void LeaveService(const SESSIONID _SessionID) override;
-	virtual void InsertSession(SESSIONID _SessionID, SHPTR<ASession> _spSession) override;
 protected:
 	// Thread에 집어넣을 함수
 	static void ThreadFunc(void* _spService);
@@ -36,8 +29,6 @@ private:
 private:
 	// Tcps
 	TCPACCEPTOR							m_TcpAcceptor;
-	// Session Conatiner
-	SESSIONCONTAINER				m_SessionContainer;
 	// Navigation
 	SHPTR<ANavigation>				m_spNavigation;
 };

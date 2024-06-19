@@ -81,6 +81,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <set>
 #include <list>
 #include <regex>
 #include <corecrt_wstring.h>

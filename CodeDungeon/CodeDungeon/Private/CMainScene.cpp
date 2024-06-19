@@ -113,22 +113,9 @@ HRESULT CMainScene::LoadSceneData()
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	CProtoMaker::CreateMainSceneProtoData(spGameInstance, GetDevice(), std::static_pointer_cast<UCommand>(spGameInstance->GetGpuCommand()));
-	// Main Camera Load 
-	{
-		UCamera::CAMDESC tDesc;
-		tDesc.stCamProj = UCamera::CAMPROJ(UCamera::PROJECTION_TYPE::PERSPECTIVE, _float3(0.f, 0.f, 0.f),
-			_float3(0.f, 0.f, 1.f),
-			DirectX::XMConvertToRadians(60.0f), WINDOW_WIDTH, WINDOW_HEIGHT, 0.2f, 1000.f);
-		tDesc.stCamValue = UCamera::CAMVALUE(20.f, DirectX::XMConvertToRadians(90.f));
-		tDesc.eCamType = CAMERATYPE::MAIN;
-		// Actor Add Main Camera
-
-		VOIDDATAS vecDatas;
-		vecDatas.push_back(&tDesc);
-
-		m_spMainCamera = std::static_pointer_cast<CMainCamera>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MAINCAMERA, vecDatas));
-		m_spMainCamera->GetTransform()->SetPos({ 0.f, 10.f, -100.f });
-	}
+#ifdef _ENABLE_PROTOBUFF
+	spGameInstance->MakeActors();
+#endif
 	{
 		m_spMap = CreateConstructorNative<CMap>(spGameInstance->GetDevice());
 		m_spMap->LoadRooms();
@@ -159,12 +146,31 @@ HRESULT CMainScene::LoadSceneData()
 		}
 	}
 
-	//플레이어 생성
+	////플레이어 생성
 	{
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		// Main Camera Load 
+		{
+			UCamera::CAMDESC tDesc;
+			tDesc.stCamProj = UCamera::CAMPROJ(UCamera::PROJECTION_TYPE::PERSPECTIVE, _float3(0.f, 0.f, 0.f),
+				_float3(0.f, 0.f, 1.f),
+				DirectX::XMConvertToRadians(60.0f), WINDOW_WIDTH, WINDOW_HEIGHT, 0.2f, 1000.f);
+			tDesc.stCamValue = UCamera::CAMVALUE(20.f, DirectX::XMConvertToRadians(90.f));
+			tDesc.eCamType = CAMERATYPE::MAIN;
+			// Actor Add Main Camera
+
+			VOIDDATAS vecDatas;
+			vecDatas.push_back(&tDesc);
+
+			m_spMainCamera = std::static_pointer_cast<CMainCamera>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MAINCAMERA, vecDatas));
+			m_spMainCamera->GetTransform()->SetPos({ 0.f, 10.f, -100.f });
+
 		CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_WARRIORANIMCONTROLLER };
 		CWarriorPlayer::PLAYERDESC PlayerDesc{ m_spMainCamera };
 		m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
 			PROTO_ACTOR_WARRIORPLAYER, { &CharDesc, &PlayerDesc }));
+	//	spGameInstance->RegisterCurrentPlayer(m_spWarriorPlayer);
+		}
 	}
 
 	//미라 생성
@@ -176,6 +182,7 @@ HRESULT CMainScene::LoadSceneData()
 		m_spMummy->GetAnimModel()->SetAnimation(L"staticLaying");
 		m_spMummy->SetTargetPlayer(m_spWarriorPlayer);
 		m_spMummy->SetMobPlacement(588);
+	//	spGameInstance->AddCollisionPawnList(m_spMummy);
 	}
 
 	//미라 관 생성
@@ -190,8 +197,6 @@ HRESULT CMainScene::LoadSceneData()
 		//미라 위치조정
 		m_spMummy->GetTransform()->TranslateDir((m_spMummy->GetTransform()->GetLook()), 1, 10);
 	}
-
-	
 
 	return S_OK;
 }
@@ -217,19 +222,6 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 void CMainScene::LateTick(const _double& _dTimeDelta)
 {
 
-}
-
-void CMainScene::CollisionTick(const _double& _dTimeDelta)
-{
-	if (true == m_spMummy->IsHit(m_spWarriorPlayer))
-	{
-
-	}
-
-	if (true == m_spWarriorPlayer->IsHit(m_spMummy))
-	{
-
-	}
 }
 
 END
