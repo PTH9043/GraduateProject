@@ -101,6 +101,7 @@ HRESULT UVIBuffer::CreateVtxBuffer(const _uint& _iVertexCnt, const _uint& _iBuff
 	m_stD3DVertexBufferView.StrideInBytes = _iBufferSize;
 	m_ePrimitiveTopology = _eTopology;
 
+	
 	m_spPosVector = std::make_shared<CPOSVECTOR>(_vecPosVector);
 	m_iVertexCnt = _iVertexCnt;
 
@@ -108,6 +109,28 @@ HRESULT UVIBuffer::CreateVtxBuffer(const _uint& _iVertexCnt, const _uint& _iBuff
 	{
 		ComputeMinMaxPosition();
 	}
+
+	return S_OK;
+}
+
+HRESULT UVIBuffer::CreateVtxBuffer(const _uint& _iVertexCnt, const _uint& _iBufferSize, const void* _pVertexData, const D3D_PRIMITIVE_TOPOLOGY& _eTopology)
+{
+	const _uint BUFFER_SIZE = _iVertexCnt * _iBufferSize;
+
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	SHPTR<UGpuCommand> spGpuCommand = spGameInstance->GetGpuCommand();
+
+	RETURN_CHECK_FAILED(UMethod::CreateBufferResource(GetDevice()->GetDV(),
+		spGpuCommand->GetResCmdList().Get(), BUFFER_SIZE, _pVertexData,
+		m_cpVertexGpuBuffer, m_cpVertexUploadBuffer, D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER), E_FAIL);
+
+	// 자원 동기화
+	spGpuCommand->WaitForGpuResourceUpload();
+
+	m_stD3DVertexBufferView.BufferLocation = m_cpVertexGpuBuffer->GetGPUVirtualAddress();
+	m_stD3DVertexBufferView.SizeInBytes = BUFFER_SIZE;
+	m_stD3DVertexBufferView.StrideInBytes = _iBufferSize;
+	m_ePrimitiveTopology = _eTopology;
 
 	return S_OK;
 }

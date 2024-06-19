@@ -13,6 +13,8 @@
 #include "UParticleSystem.h"
 #include "CSword.h"
 #include "UCollider.h"
+#include "UTrail.h"
+#include "UVIBufferTrail.h"
 
 CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UPlayer(_spDevice, _wstrLayer, _eCloneType), m_spSword{nullptr}
@@ -101,13 +103,30 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 		m_spSword = std::static_pointer_cast<CSword>(spGameInstance->CloneActorAdd(PROTO_ACTOR_LONGSWORD, {&Desc}));
 
 	}
+	{
+		UVIBufferTrail::TrailVertexCnt tDesc;
+		tDesc.iMaxVertexCount = 100;
+		m_spTrail = std::static_pointer_cast<UTrail>(spGameInstance->CloneActorAdd(PROTO_ACTOR_TRAIL, { &tDesc }));
+		m_spTrail->SetActive(true);
+	}
 	return S_OK;
 }
 
 void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
+	
 
+	_float3 pos = GetTransform()->GetPos();
+	
+	pos.z += 5;
+	_float3 pos1 = GetTransform()->GetPos();
+	pos1.z += 5;
+	pos1.y += 5;
+	
+	
+	m_spTrail->SetRenderingTrail(isAttack);
+	m_spTrail->AddTrail(pos, pos1);
 
 	GetAnimationController()->Tick(_dTimeDelta);
 	GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);

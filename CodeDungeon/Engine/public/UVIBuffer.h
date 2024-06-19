@@ -49,6 +49,10 @@ protected:
 	const ComPtr<Dx12Resource>& GetVertexGpuBuffer() const { return m_cpVertexGpuBuffer; }
 	const ComPtr<Dx12Resource>& GetIndexGpuBuffer() const { return m_cpIndexGpuBuffer; }
 
+	void SetVertexBufferViewSizeInBytes(UINT _size) {
+		m_stD3DVertexBufferView.SizeInBytes = _size;
+	}
+
 	void SetInstanceType(const VIINSTANCE_TYPE& _eInstanceType) { this->m_eVIInstanceType = _eInstanceType; }
 	void SetMinPosition(const _float3& _vMinPosition) { this->m_vMinVertex = _vMinPosition; }
 	void SetMaxPosition(const _float3& _vMaxPosition) { this->m_vMaxVertex = _vMaxPosition; }
@@ -56,6 +60,9 @@ protected:
 
 	HRESULT CreateVtxBuffer(const _uint& _iVertexCnt, const _uint& _iBufferSize, const void* _pVertexData,
 		const D3D_PRIMITIVE_TOPOLOGY& _eTopology, const POSVECTOR& _vecPosVector, const _bool _isComputeMinMaxPositon = true);
+
+	HRESULT CreateVtxBuffer(const _uint& _iVertexCnt, const _uint& _iBufferSize, const void* _pVertexData,
+		const D3D_PRIMITIVE_TOPOLOGY& _eTopology);
 
 	HRESULT CreateIndexBuffer(const _uint& _iIndexCnt, const _uint& _iBufferSize,
 		const void* _pIndexData, const DXGI_FORMAT& _eIndexFormat, const _uint _iIndexMultiple = 3);
