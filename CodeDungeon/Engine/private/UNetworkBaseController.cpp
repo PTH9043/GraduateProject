@@ -57,6 +57,10 @@ SHPTR<UActor> UNetworkBaseController::FindNetworkActor(const _int _NetworkID)
 	return iter->second;
 }
 
+void UNetworkBaseController::InsertNetworkQuery(const UProcessedData& _data)
+{
+}
+
 void UNetworkBaseController::ServerTick()
 {
 	DWORD num_bytes;

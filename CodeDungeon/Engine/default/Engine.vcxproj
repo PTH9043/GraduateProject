@@ -58,6 +58,7 @@
     <ClInclude Include="..\public\UFog.h" />
     <ClInclude Include="..\public\UGrid.h" />
     <ClInclude Include="..\public\UAnimationController.h" />
+    <ClInclude Include="..\public\UInputReceiver.h" />
     <ClInclude Include="..\public\UItem.h" />
     <ClInclude Include="..\public\ULightCamera.h" />
     <ClInclude Include="..\public\UMeshFilter.h" />
@@ -184,6 +185,7 @@
     <ClCompile Include="..\private\UFog.cpp" />
     <ClCompile Include="..\private\UGrid.cpp" />
     <ClCompile Include="..\private\UAnimationController.cpp" />
+    <ClCompile Include="..\private\UInputReceiver.cpp" />
     <ClCompile Include="..\private\UItem.cpp" />
     <ClCompile Include="..\private\ULightCamera.cpp" />
     <ClCompile Include="..\private\UMeshFilter.cpp" />

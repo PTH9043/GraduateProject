@@ -430,6 +430,12 @@
     <Filter Include="98.ShaderFile\Common\Trail">
       <UniqueIdentifier>{90ca5135-faf0-4327-bc67-9f9123439717}</UniqueIdentifier>
     </Filter>
+    <Filter Include="99.Default\Math">
+      <UniqueIdentifier>{f8396fb7-7c86-4dd6-a3db-ac218cf9eb42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component\Input">
+      <UniqueIdentifier>{66c229d0-027b-4124-b00b-5daacd01f105}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -620,9 +626,6 @@
     </ClCompile>
     <ClCompile Include="..\private\CustomMemory.cpp">
       <Filter>97.Needs\MemoryPool</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\UNetworkManager.cpp">
-      <Filter>01.Manager\NetworkManager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UThreadManager.cpp">
       <Filter>01.Manager\ThreadManager</Filter>
@@ -819,9 +822,14 @@
     <ClCompile Include="..\private\UTrail.cpp">
       <Filter>05.Actor\Trail</Filter>
     </ClCompile>
-    <ClCompile Include="..\public\MathLib\CusMath.cpp" />
     <ClCompile Include="..\private\UVIBufferTrail.cpp">
       <Filter>07.Resource\VIBuffer\Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\public\MathLib\CusMath.cpp">
+      <Filter>99.Default\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UInputReceiver.cpp">
+      <Filter>06.Component\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1038,9 +1046,6 @@
     <ClInclude Include="..\public\CustomMemory.h">
       <Filter>97.Needs\MemoryPool</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\UNetworkManager.h">
-      <Filter>01.Manager\NetworkManager</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\UThreadManager.h">
       <Filter>01.Manager\ThreadManager</Filter>
     </ClInclude>
@@ -1245,9 +1250,14 @@
     <ClInclude Include="..\public\UTrail.h">
       <Filter>05.Actor\Trail</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\MathLib\CusMath.h" />
     <ClInclude Include="..\public\UVIBufferTrail.h">
       <Filter>07.Resource\VIBuffer\Trail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MathLib\CusMath.h">
+      <Filter>99.Default\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UInputReceiver.h">
+      <Filter>06.Component\Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1266,7 +1276,9 @@
     <None Include="..\..\Shader\LightShaderFunc.hlsli">
       <Filter>98.ShaderFile\Common\Light\Original</Filter>
     </None>
-    <None Include="..\public\MathLib\CusMath.inl" />
+    <None Include="..\public\MathLib\CusMath.inl">
+      <Filter>99.Default\Math</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Shader\Rect.hlsl">

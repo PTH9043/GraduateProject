@@ -13,12 +13,6 @@ float y = 2;
 float z = 3;
 }
 
-message CHARDATA {
-	float power = 1;
-	float defensive = 2;
-	float hp = 3;
-}
-
 message EQINFO
 {
 	float gold = 1;
@@ -39,14 +33,10 @@ Server
 message SC_CONNECTSUCCESS{
 	// id 
 	int64 id = 1;
-	// 캐릭터 정보
-	CHARDATA charData =2;
 	// 시작 위치
-	int64 cellIndex = 3;
-	// 콜라이더 사이즈
-	VECTOR3 colliderSize = 4;
+	int64 cellIndex = 2;
 	// 캐릭터 타입
-	int64 type = 5;
+	int64 type = 4;
 }
 
 // 다른 클라이언트가 로그인 했을 때 
@@ -68,9 +58,19 @@ message SC_MOVEFAILED
 }
 
 /*
+Char의 State를 정의한다. 
+*/
+message SC_CHARSTATE 
+{
+	int64 id = 1;
+	int64 type = 2;
+	string trigger = 3;
+}
+
+/*
 다른 녀석들이 움직였음
 */
-message SC_OTHERMOVE 
+message SC_MOVESTATE 
 {
 	int64 id = 1;
 	VECTOR3 movePos = 2;
@@ -106,6 +106,17 @@ message CS_MOVE
 	int64 id = 1;
 	VECTOR3 movePos = 2;
 }
+
+/*
+Char의 State를 정의한다. 
+*/
+message CS_CHARSTATE 
+{
+	int64	id = 1;
+	int64	type = 2;
+	string trigger = 3;
+}
+
 
 // 공격했을 때 보내는 함수
 message CS_ATTACK

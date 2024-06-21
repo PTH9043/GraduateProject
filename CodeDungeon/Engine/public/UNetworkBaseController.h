@@ -1,15 +1,18 @@
 #pragma once
 
 #include "ServerUtility.h"
+#include "UProcessedData.h"
 
 BEGIN(Engine)
 
 class UActor;
-class UProcessedData;
 
 using TOTALBUFFER = ARRAY<_char, MAX_PROCESSBUF_LENGTH>;
 using NETWORKACTORCONTAINER = UNORMAP<_int, SHPTR<UActor>>;
 using NETWORKINITDATACONTAINER = UNORMAP<_int, NETWORKRECEIVEINITDATA>;
+using NETWORKQUERY = CONQUEUE<UProcessedData>;
+
+
 /*
 @ Date: 2024-02-03,  Writer: นฺลยว๖
 @ Explain
@@ -25,6 +28,7 @@ public:
 	virtual void MakeActors() PURE;
 	void AddNetworkInitData(_int _NetworkID, const NETWORKRECEIVEINITDATA& _NetworkInitData);
 	SHPTR<UActor> FindNetworkActor(const _int _NetworkID);
+	void InsertNetworkQuery(const UProcessedData& _data);
 public: /* get set */
 	const _llong GetNetworkOwnerID() const { return m_llNetworkOwnerID; }
 protected:
@@ -75,6 +79,7 @@ private:
 	SHPTR< UNetworkAddress>			m_spNetworkAddress;
 	NETWORKACTORCONTAINER		m_NetworkActorContainer;
 	NETWORKINITDATACONTAINER	m_NetworkInitDataContainer;
+	NETWORKQUERY								m_NetworkQuery;
 };
 
 END

@@ -85,6 +85,15 @@
     <Filter Include="01.Scene\Logo">
       <UniqueIdentifier>{015198a0-1235-4fa2-8256-779fd2151a27}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Objects\Character\NetworkPlayer">
+      <UniqueIdentifier>{8b5bdeca-c709-4094-b007-93bcc699a17e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\InputReceiver">
+      <UniqueIdentifier>{270451a1-31b5-48ec-881c-83eabad4ba96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\InputReceiver\User">
+      <UniqueIdentifier>{3bb90b74-6005-45ee-90ae-fbdf7f47f560}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ClientDefines.h">
@@ -165,8 +174,8 @@
     <ClInclude Include="..\Public\CLogoScene.h">
       <Filter>01.Scene\Logo</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CIronBars.h">
-      <Filter>05.Objects\ModelObjects\Map\StaticObjects</Filter>
+    <ClInclude Include="..\Public\UUsserInputReceiver.h">
+      <Filter>06.Comp\InputReceiver</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -241,8 +250,8 @@
     <ClCompile Include="..\Private\CLogoScene.cpp">
       <Filter>01.Scene\Logo</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CIronBars.cpp">
-      <Filter>05.Objects\ModelObjects\Map\StaticObjects</Filter>
+    <ClCompile Include="..\Private\UUsserInputReceiver.cpp">
+      <Filter>06.Comp\InputReceiver</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

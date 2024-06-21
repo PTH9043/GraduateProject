@@ -286,6 +286,9 @@ namespace Engine {
 		template<class T>
 		static void ReleaseBuffer(const T* obj)
 		{
+			if (nullptr == obj)
+				return;
+
 			UPoolAllocator::Release(obj);
 		}
 		/*

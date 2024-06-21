@@ -266,6 +266,7 @@ public: /* NetworkManager */
 	void MakeActors();
 	void SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize);
 	SHPTR<UActor> FindNetworkActor(const _int _NetworkID);
+	void InsertNetworkQuery(const UProcessedData& _data);
 	void NetworkEnd();
 	/*
 	@ Date: 2024-02-04, Writer: นฺลยว๖
@@ -285,6 +286,7 @@ public: /* CharacterManager*/
 	void RegisterCurrentPlayer(CSHPTRREF<UCharacter> _spCurrentPlayer);
 	void AddCollisionPawnList(CSHPTRREF<UPawn> _spPawn);
 	void RemoveCollisionPawn(CSHPTRREF<UPawn> _spPawn);
+
 public: /* Material Manager*/
 	void AddModelMaterial(const _uint _MaterialIndex, CSHPTRREF<UModelMaterial> _spModelMaterial);
 	void  CopyToMaterialShaderParam(REF_IN GLOBALPARAM& _GrobalParam);

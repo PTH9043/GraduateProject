@@ -8,14 +8,6 @@ PROTOFUNC::PROTOCOL_MEMORY_LEAK_REMOVER::~PROTOCOL_MEMORY_LEAK_REMOVER()
 	google::protobuf::ShutdownProtobufLibrary();
 }
 
-void PROTOFUNC::MakeCharData(CHARDATA* _pOut, float _power, float _defensive, float _hp)
-{
-	assert(nullptr != _pOut);
-	_pOut->set_power(_power);
-	_pOut->set_defensive(_defensive);
-	_pOut->set_hp(_hp);
-}
-
 void PROTOFUNC::MakeVector3(VECTOR3* _pOut, float _x, float _y, float _z)
 {
 	assert(nullptr != _pOut);
@@ -36,14 +28,11 @@ void PROTOFUNC::MakeEqInfo(EQINFO* _pOut, float _gold, float _increasePower, flo
 /* =========== SC =============== */
 // Server To Client 
 
-void PROTOFUNC::MakeScConnectSuccess(SC_CONNECTSUCCESS* _pOut, LLONG _id, CHARDATA* _pCharData,
-	int _cellIndex, VECTOR3* _pSize, int _type)
+void PROTOFUNC::MakeScConnectSuccess(SC_CONNECTSUCCESS* _pOut, LLONG _id, int _cellIndex,  int _type)
 {
 	assert(nullptr != _pOut);
 	_pOut->set_id(_id);
-	_pOut->set_allocated_chardata(_pCharData);
 	_pOut->set_cellindex(_cellIndex);
-	_pOut->set_allocated_collidersize(_pSize);
 	_pOut->set_type(_type);
 }
 
@@ -62,7 +51,15 @@ void PROTOFUNC::MakeScMoveFailed(SC_MOVEFAILED* _pOut, LLONG _id, VECTOR3* _pPre
 	_pOut->set_allocated_prevpos(_pPrevPos);
 }
 
-void PROTOFUNC::MakeScOtherMove(SC_OTHERMOVE* _pOut, LLONG _id, VECTOR3* _pMovePos)
+void PROTOFUNC::MakeScCharState(SC_CHARSTATE* _pOut, LLONG _id, int _type, const char* _msg)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_id);
+	_pOut->set_type(_type);
+	_pOut->set_trigger(_msg);
+}
+
+void PROTOFUNC::MakeScMoveState(SC_MOVESTATE* _pOut, LLONG _id, VECTOR3* _pMovePos)
 {
 	assert(nullptr != _pOut);
 	_pOut->set_id(_id);
@@ -92,6 +89,14 @@ void PROTOFUNC::MakeCsMove(CS_MOVE* _pOut, LLONG _id, VECTOR3* _pMovePos)
 	assert(nullptr != _pOut);
 	_pOut->set_id(_id);
 	_pOut->set_allocated_movepos(_pMovePos);
+}
+
+void PROTOFUNC::MakeCsCharState(CS_CHARSTATE* _pOut, LLONG _id, int _type, const char* _msg)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_id);
+	_pOut->set_type(_type);
+	_pOut->set_trigger(_msg);
 }
 
 void PROTOFUNC::MakeCsAttack(CS_ATTACK* _pOut, LLONG _id, float _damage, VECTOR3* _pMovePos)

@@ -685,37 +685,19 @@ namespace Engine {
 	};
 #pragma endregion EQUIPMENTINFO
 
-#pragma region CHARDATA 
-
-
-	struct CHARSTATUS
-	{
-		_float fPower;
-		_float fDefensive;
-		_float fHp;
-
-		CHARSTATUS() : fPower{0}, fDefensive{0}, fHp{0} {}
-		CHARSTATUS(_float _fPower, _float _fDefensive, _float _fHp) : fPower{ _fPower }, fDefensive{ _fDefensive }, fHp{ _fHp } {}
-	};
-
+#pragma region NETWORKDATA 
 	/*
-	CharData 
+	NETWORKDATA
 	*/
 	struct NETWORKRECEIVEINITDATA
 	{
 		_int								iNetworkID;
-		CHARSTATUS			charStatus;
 		_int								iCellIndex;
-		_float3						vColliderSize;
 		_int								iType;
 
-		NETWORKRECEIVEINITDATA() : iNetworkID{ 0 }, charStatus{ }, iCellIndex{ 0 },
-			vColliderSize{ }, iType{ 0 } {}
-		NETWORKRECEIVEINITDATA(const _int _iNetworkID, const CHARSTATUS& _charStatus, const _int _iCellIndex,
-			const _float3& _vColliderSize,  const _int _iType) :
-			iNetworkID{ _iNetworkID }, charStatus{ _charStatus }, iCellIndex{ _iCellIndex },
-			vColliderSize{ _vColliderSize },  iType {_iType} {}
+		NETWORKRECEIVEINITDATA() : iNetworkID{ 0 }, iCellIndex{ 0 }, iType{ 0 } {}
+		NETWORKRECEIVEINITDATA(const _int _iNetworkID, const _int _iCellIndex, const _int _iType) :
+			iNetworkID{ _iNetworkID }, iCellIndex{ _iCellIndex },  iType {_iType} {}
 	};
-
-#pragma endregion CHARDATA
+#pragma endregion NETWORKDATA
 }

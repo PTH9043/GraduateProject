@@ -161,7 +161,6 @@
   <ItemGroup>
     <ClInclude Include="..\Public\CClientApp.h" />
     <ClInclude Include="..\Public\CDataManager.h" />
-    <ClInclude Include="..\Public\CIronBars.h" />
     <ClInclude Include="..\Public\ClientDefines.h" />
     <ClInclude Include="..\Public\ClientProto.h" />
     <ClInclude Include="..\Public\CLogoScene.h" />
@@ -182,6 +181,7 @@
     <ClInclude Include="..\Public\CTorch.h" />
     <ClInclude Include="..\Public\CWarriorPlayer.h" />
     <ClInclude Include="..\Public\CWarriorAnimController.h" />
+    <ClInclude Include="..\Public\UUsserInputReceiver.h" />
     <ClInclude Include="CodeDungeon.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -190,7 +190,6 @@
   <ItemGroup>
     <ClCompile Include="..\Private\CClientApp.cpp" />
     <ClCompile Include="..\Private\CDataManager.cpp" />
-    <ClCompile Include="..\Private\CIronBars.cpp" />
     <ClCompile Include="..\Private\CLogoScene.cpp" />
     <ClCompile Include="..\Private\CMainCamera.cpp" />
     <ClCompile Include="..\Private\CMainScene.cpp" />
@@ -209,6 +208,7 @@
     <ClCompile Include="..\Private\CTorch.cpp" />
     <ClCompile Include="..\Private\CWarriorPlayer.cpp" />
     <ClCompile Include="..\Private\CWarriorAnimController.cpp" />
+    <ClCompile Include="..\Private\UUsserInputReceiver.cpp" />
     <ClCompile Include="CodeDungeon.cpp" />
   </ItemGroup>
   <ItemGroup>

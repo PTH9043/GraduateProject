@@ -52,7 +52,14 @@ void CNetworkClientController::MakeActors()
 		break;
 		case TAG_CHAR::TAG_OTHERPLAYER:
 		{
+			SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+			{
+				CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_WARRIORANIMCONTROLLER };
+				SHPTR<CWarriorPlayer> spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
+					PROTO_ACTOR_WARRIORPLAYER, { &CharDesc }));
 
+				spGameInstance->RegisterCurrentPlayer(spWarriorPlayer);
+			}
 		}
 		break;
 		}
@@ -75,16 +82,9 @@ void CNetworkClientController::ProcessPacket(_char* _pPacket, PACKETHEAD _Packet
 		{
 			SC_CONNECTSUCCESS scConnectSuccess;
 			scConnectSuccess.ParseFromArray(_pPacket, _PacketHead.PacketSize);
-			CHARDATA charData;
-			VECTOR3 collidersize;
-			::memcpy(&charData, &scConnectSuccess.chardata(), sizeof(CHARDATA));
-			::memcpy(&collidersize, &scConnectSuccess.collidersize(), sizeof(VECTOR3));
 			{
-				CHARSTATUS status(charData.power(), charData.defensive(), charData.hp());
-				_float3 vScale(collidersize.x(), collidersize.y(), collidersize.z());
-
 				NETWORKRECEIVEINITDATA networkRecvInitData(scConnectSuccess.id(),
-					status, scConnectSuccess.cellindex(), vScale, scConnectSuccess.type());
+					scConnectSuccess.cellindex(), scConnectSuccess.type());
 				// newwork Init Data Ãß°¡
 				AddNetworkInitData(networkRecvInitData.iNetworkID, networkRecvInitData);
 			}
@@ -96,7 +96,13 @@ void CNetworkClientController::ProcessPacket(_char* _pPacket, PACKETHEAD _Packet
 		break; 
 		case TAG_SC::TAG_SC_OTHERCLIENTLOGIN:
 		{
-
+			SC_OTHERCLIENTLOGIN csOtherClientLogin;
+			csOtherClientLogin.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+			{
+				NETWORKRECEIVEINITDATA networkRecvInitData(csOtherClientLogin.id(),
+					csOtherClientLogin.cellindex(), csOtherClientLogin.type());
+				AddNetworkInitData(networkRecvInitData.iNetworkID, networkRecvInitData);
+			}
 		}
 		break;
 	}

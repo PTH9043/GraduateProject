@@ -68,8 +68,7 @@ void UTrail::Update(const _double& _dTimeDelta)
 	if (!m_bRender)
 		return;
 
-	m_fTime -= _dTimeDelta;
-
+	m_fTime -= static_cast<_float>(_dTimeDelta);
 }
 void UTrail::TickActive(const _double& _dTimeDelta)
 {
@@ -148,11 +147,8 @@ void UTrail::SetColor(_float4 _col)
 	m_vCurTrailColor = _col;
 }
 
-
-
 void UTrail::LateTickActive(const _double& _dTimeDelta)
 {
-	
 	AddRenderGroup(RENDERID::RI_ALPHA);
 }
 
@@ -212,16 +208,9 @@ HRESULT UTrail::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDes
 
 			iLineIndex++;
 		}
-		m_spVIBufferTrail->SetVertices(Vertices, iVertexCount);
+		m_spVIBufferTrail->SetVertices(Vertices, static_cast<_int>(iVertexCount));
 		m_spVIBufferTrail->Render(GetShader(), _spCommand);
 	}
-		
-
-	
-	
-	
-	
-
 	return S_OK;
 }
 

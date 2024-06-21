@@ -926,6 +926,11 @@ SHPTR<UActor> UGameInstance::FindNetworkActor(const _int _NetworkID)
 	return m_spNetworkBaseController->FindNetworkActor(_NetworkID);
 }
 
+void UGameInstance::InsertNetworkQuery(const UProcessedData& _data)
+{
+	m_spNetworkBaseController->InsertNetworkQuery(_data);
+}
+
 void UGameInstance::NetworkEnd()
 {
 	m_spNetworkBaseController.reset();

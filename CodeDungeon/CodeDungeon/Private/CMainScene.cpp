@@ -147,7 +147,7 @@ HRESULT CMainScene::LoadSceneData()
 			}
 		}
 	}
-
+#ifndef _ENABLE_PROTOBUFF
 	////�÷��̾� ����
 	{
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
@@ -171,7 +171,7 @@ HRESULT CMainScene::LoadSceneData()
 		CWarriorPlayer::PLAYERDESC PlayerDesc{ m_spMainCamera };
 		m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
 			PROTO_ACTOR_WARRIORPLAYER, { &CharDesc, &PlayerDesc }));
-	//	spGameInstance->RegisterCurrentPlayer(m_spWarriorPlayer);
+		spGameInstance->RegisterCurrentPlayer(m_spWarriorPlayer);
 		}
 	}
 
@@ -184,7 +184,7 @@ HRESULT CMainScene::LoadSceneData()
 		m_spMummy->GetAnimModel()->SetAnimation(L"staticLaying");
 		m_spMummy->SetTargetPlayer(m_spWarriorPlayer);
 		m_spMummy->SetMobPlacement(588);
-	//	spGameInstance->AddCollisionPawnList(m_spMummy);
+		spGameInstance->AddCollisionPawnList(m_spMummy);
 	}
 
 	//�̶� �� ����
@@ -199,7 +199,7 @@ HRESULT CMainScene::LoadSceneData()
 		//�̶� ��ġ����
 		m_spMummy->GetTransform()->TranslateDir((m_spMummy->GetTransform()->GetLook()), 1, 10);
 	}
-
+#endif
 	return S_OK;
 }
 

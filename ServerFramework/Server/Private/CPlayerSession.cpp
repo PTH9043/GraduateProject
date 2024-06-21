@@ -18,12 +18,8 @@ namespace Server {
 		__super::Start();
 
 		SC_CONNECTSUCCESS scConnectSuccess;
-		PROTOALLOC(CHARDATA, charData);
-		PROTOALLOC(VECTOR3, scale);
 		{
-			PROTOFUNC::MakeVector3(OUT scale, 1, 1, 1);
-			PROTOFUNC::MakeCharData(OUT charData, GetCharStatus().fPower, GetCharStatus().fDefensive, GetCharStatus().fHp);
-			PROTOFUNC::MakeScConnectSuccess(OUT & scConnectSuccess, GetSessionID(), IN charData, m_iStartCellIndex, IN scale, TAG_MAINPLAYER);
+			PROTOFUNC::MakeScConnectSuccess(OUT & scConnectSuccess, GetSessionID(), m_iStartCellIndex, TAG_MAINPLAYER);
 		}
 		CombineProto(REF_OUT m_CopyBuffer, REF_OUT m_CopyPacketHead, scConnectSuccess, TAG_SC::TAG_SC_CONNECTSUCCESS);
 		SendData(&m_CopyBuffer[0], m_CopyPacketHead);
@@ -96,36 +92,36 @@ namespace Server {
 					spCoreInstance->BroadCastMessageExcludingSession(Login.id(), &m_CopyBuffer[0], m_CopyPacketHead);
 				}
 				// Login Packet을 조합하고 메시지를 보낸다. 
-				//{
-				//	const GAMEOBJECTCONTAINER& GameObjectContainer = spCoreInstance->GetGameObjectContainer();
-				//	SC_VIEWINRANGE scViewInRange;
-				//	// GameObject
-				//	SET<AGameObject*> GameObjectList;
-				//	{
-				//		// 시야처리 
-				//		for (auto& iter : GameObjectContainer)
-				//		{
-				//			GameObjectList.insert(iter.second.get());
-				//		}
-				//		SC_VIEWINRANGE scViewRange;
-				//		PROTOALLOC(VECTOR3, position);
-				//		// 해당 녀석들이 있다고 보낸다. 
-				//		for (auto& iter : GameObjectList)
-				//		{
-				//			if (Login.id() == iter->GetSessionID())
-				//				continue;
+				{
+					const GAMEOBJECTCONTAINER& GameObjectContainer = spCoreInstance->GetGameObjectContainer();
+					SC_VIEWINRANGE scViewInRange;
+					// GameObject
+					SET<AGameObject*> GameObjectList;
+					{
+						// 시야처리 
+						for (auto& iter : GameObjectContainer)
+						{
+							GameObjectList.insert(iter.second.get());
+						}
+						SC_VIEWINRANGE scViewRange;
+						PROTOALLOC(VECTOR3, position);
+						// 해당 녀석들이 있다고 보낸다. 
+						for (auto& iter : GameObjectList)
+						{
+							if (Login.id() == iter->GetSessionID())
+								continue;
 
-				//			_int GameObjectID = GetGameObjectType() == TAG_CHAR::TAG_MAINPLAYER ? TAG_CHAR::TAG_OTHERPLAYER : GetGameObjectType();
+							_int GameObjectID = GetGameObjectType() == TAG_CHAR::TAG_MAINPLAYER ? TAG_CHAR::TAG_OTHERPLAYER : GetGameObjectType();
 
-				//			SHPTR<ATransform> spTransform = iter->GetTransform();
-				//			Vector3 vPosition = spTransform->GetPos();
-				//			PROTOFUNC::MakeVector3(OUT  position, vPosition.x, vPosition.y, vPosition.z);
-				//			PROTOFUNC::MakeScViewInRange(OUT &scViewRange, iter->GetSessionID(), IN position, iter->GetCellIndex(), GameObjectID);
-				//			CombineProto(REF_OUT m_CopyBuffer, REF_OUT m_CopyPacketHead, scViewInRange, TAG_SC::TAG_SC_VIEWINRANGE);
-				//			spCoreInstance->DirectSendMessage(iter->GetSessionID(), &m_CopyBuffer[0], m_CopyPacketHead);
-				//		}
-				//	}
-				//}
+							SHPTR<ATransform> spTransform = iter->GetTransform();
+							Vector3 vPosition = spTransform->GetPos();
+							PROTOFUNC::MakeVector3(OUT  position, vPosition.x, vPosition.y, vPosition.z);
+							PROTOFUNC::MakeScViewInRange(OUT &scViewRange, iter->GetSessionID(), IN position, iter->GetCellIndex(), GameObjectID);
+							CombineProto(REF_OUT m_CopyBuffer, REF_OUT m_CopyPacketHead, scViewInRange, TAG_SC::TAG_SC_VIEWINRANGE);
+							spCoreInstance->DirectSendMessage(iter->GetSessionID(), &m_CopyBuffer[0], m_CopyPacketHead);
+						}
+					}
+				}
 			}
 			break;
 			case TAG_CS::TAG_CS_MOVE:
