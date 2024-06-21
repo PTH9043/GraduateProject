@@ -6,6 +6,7 @@ namespace Engine {
 	{
 		PAWN_CHAR,
 		PAWN_ITEM,
+		PAWN_STATICOBJ,
 		PAWN_ECT
 	};
 

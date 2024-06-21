@@ -36,11 +36,6 @@ HRESULT CModelObjects::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	m_spShaderTexCheckBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::MODELCHECKBUF, static_cast<_int>(sizeof(HasTex)));
 
-	UCollider::COLLIDERDESC tDesc;
-	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
-	tDesc.vScale = _float3(1.f, 1.f, 1.f);
-	SHPTR<UCollider> Collider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
-
 	AddShader(PROTO_RES_MODELSHADER, RES_SHADER);
 	AddShadowShader(PROTO_RES_SHADOWSHADER, RES_SHADER);
 	GetTransform()->SetScale(_float3(0.05f, 0.05f, 0.05f));
@@ -55,11 +50,6 @@ void CModelObjects::SetModel(const _wstring& _ProtoModelName)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	m_spModel = static_pointer_cast<UModel>(spGameInstance->CloneResource(_ProtoModelName));
 
-	for (auto& Containers : GetColliderContainer())
-	{
-		Containers.second->SetTranslate(m_spModel->GetCenterPos());
-		Containers.second->SetScaleToFitModel(m_spModel->GetMinVertexPos(), m_spModel->GetMaxVertexPos());
-	}
 }
 
 void CModelObjects::CalculateAndSetCollider()
@@ -68,11 +58,6 @@ void CModelObjects::CalculateAndSetCollider()
 
 void CModelObjects::TickActive(const _double& _dTimeDelta)
 {
-	for (auto& Containers : GetColliderContainer())
-	{
-		Containers.second->SetTranslate(m_spModel->GetCenterPos());
-		Containers.second->SetTransform(GetTransform());
-	}
 }
 
 void CModelObjects::LateTickActive(const _double& _dTimeDelta)
@@ -82,6 +67,7 @@ void CModelObjects::LateTickActive(const _double& _dTimeDelta)
 		AddRenderGroup(RI_NONALPHA_MIDDLE);
 		AddShadowRenderGroup(RI_SHADOW);
 	}
+	
 }
 
 HRESULT CModelObjects::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)

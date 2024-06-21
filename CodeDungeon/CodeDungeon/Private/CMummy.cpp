@@ -93,10 +93,8 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 
 void CMummy::TickActive(const _double& _dTimeDelta)
 {
-
-	
 	_float3 pos = GetTransform()->GetPos();
-	pos.y +=3.5;
+	pos.y +=5;
 	m_spParticle->SetPosition(pos);
 
 	__super::TickActive(_dTimeDelta);
@@ -117,7 +115,7 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 	{
 		
 		timeAccumulator += _dTimeDelta;
-		if (GetFoundTargetState() && timeAccumulator >= 2.0)
+		if (GetFoundTargetState() && timeAccumulator >= 1.0)
 		{
 			SHPTR<UNavigation> spNavigation = GetCurrentNavi();
 			pathFindingState = spNavigation->StartPathFinding(CurrentMobPos, CurrentPlayerPos, CurrentMobCell, CurrentPlayerCell);
@@ -174,13 +172,10 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 	else
 		GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
 
-	_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
-	GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
-
 
 	for (auto& Colliders : GetColliderContainer())
 	{
-		Colliders.second->SetScale(_float3(3, 15, 3));
+		Colliders.second->SetScale(_float3(3, 20, 3));
 	}
 
 	UpdateCollision();

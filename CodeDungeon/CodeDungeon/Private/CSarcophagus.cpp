@@ -57,7 +57,6 @@ void CSarcophagus::TickActive(const _double& _dTimeDelta)
 void CSarcophagus::LateTickActive(const _double& _dTimeDelta)
 {
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
-	__super::LateTickActive(_dTimeDelta);
 }
 
 HRESULT CSarcophagus::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)

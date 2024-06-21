@@ -62,8 +62,8 @@ private:
 	SHPTR<DirectX::BoundingOrientedBox>	m_spOBB;
 	SHPTR<DirectX::BoundingSphere>				m_spSphere;
 
-	TYPE																m_eType;
-	_bool																m_isCollision;
+	TYPE															m_eType;
+	_bool															m_isCollision;
 	_float4x4														m_mTransformMatrix;
 
 	_float3															m_vModelScale;

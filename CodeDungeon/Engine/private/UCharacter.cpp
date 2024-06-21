@@ -42,7 +42,7 @@ HRESULT UCharacter::NativeConstructClone(const VOIDDATAS& _Datas)
 	assert(false == CharacterDesc.wstrAnimControllerProtoData.empty());
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	// ÇöÀç ¾Ö´Ï¸ÞÀÌ¼Ç ¸ðµ¨À» ¹Þ¾Æ¿Â´Ù. 
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿Â´ï¿½. 
 	{
 		m_spAnimModel = std::static_pointer_cast<UAnimModel>(spGameInstance->CloneResource(CharacterDesc.wstrAnimModelProtoData));
 //		m_spAnimModel = CreateConstructorNative<UAnimModel>(GetDevice(), CharacterDesc.wstrAnimModelProtoData);
@@ -146,7 +146,7 @@ _float3 UCharacter::OtherCharacterDirToLookVectorF3(CSHPTRREF<UTransform> _spOth
 
 void UCharacter::TickActive(const _double& _dTimeDelta)
 {
-	// ÀÌÀü À§Ä¡ ÀúÀå
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
 	m_vPrevPos = GetTransform()->GetPos();
 
 	__super::TickActive(_dTimeDelta);
@@ -155,7 +155,11 @@ void UCharacter::TickActive(const _double& _dTimeDelta)
 void UCharacter::LateTickActive(const _double& _dTimeDelta)
 {
 	__super::LateTickActive(_dTimeDelta);
+	m_f3MovedDirection = GetTransform()->GetPos() - m_vPrevPos;
+	m_f3MovedDirection.Normalize();
 
+	if (!m_f3MovedDirection.Length() == 0.0f)
+		m_f3LastMovedDirection = m_f3MovedDirection;
 }
 
 HRESULT UCharacter::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)

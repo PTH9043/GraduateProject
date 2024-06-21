@@ -55,7 +55,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
 	_bool FoundPlayer = spMummy->GetFoundTargetState();
 	_bool Move = false;
 
-	_float AttackRange = 15.f;
+	_float AttackRange = 10.f;
 	_bool Hit = spMummy->GetHitState();
 	_bool Death = spGameInstance->GetDIKeyDown(DIK_9);
 

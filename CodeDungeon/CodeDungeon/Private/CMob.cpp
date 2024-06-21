@@ -41,7 +41,7 @@ HRESULT CMob::NativeConstruct()
 HRESULT CMob::NativeConstructClone(const VOIDDATAS& _Datas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);	
-	GetTransform()->SetScale({ 0.5f, 0.5f, 0.5f });
+	GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
 	
 	return S_OK;
 }
@@ -49,7 +49,6 @@ HRESULT CMob::NativeConstructClone(const VOIDDATAS& _Datas)
 void CMob::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
-	GetCurrentNavi()->FindCell(GetTransform()->GetPos());
 	if(m_spTargetPlayer)
 	{
 		_float3 CurrentMobPos = GetTransform()->GetPos();
@@ -65,6 +64,19 @@ void CMob::TickActive(const _double& _dTimeDelta)
 void CMob::LateTickActive(const _double& _dTimeDelta)
 {
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
+	_float3 vPosition{ GetTransform()->GetPos() };
+	SHPTR<UCell> newCell{};
+
+	if (false == GetCurrentNavi()->IsMove(vPosition, REF_OUT newCell))
+	{
+		_float3 closestPoint = GetCurrentNavi()->ClampPositionToCell(vPosition);
+		GetTransform()->SetPos(_float3(closestPoint.x, vPosition.y, closestPoint.z));
+		vPosition = GetTransform()->GetPos();
+	}
+
+	_float newHeight = GetCurrentNavi()->ComputeHeight(vPosition);
+	GetTransform()->SetPos(_float3(vPosition.x, newHeight, vPosition.z));
+
 	__super::LateTickActive(_dTimeDelta);
 }
 

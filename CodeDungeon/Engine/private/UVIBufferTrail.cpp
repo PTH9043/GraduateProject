@@ -13,7 +13,7 @@ UVIBufferTrail::UVIBufferTrail(const UVIBufferTrail& _rhs) :
 
 void UVIBufferTrail::Free()
 {
-	GetVertexGpuBuffer()->Unmap(0, nullptr);
+	/*GetVertexGpuBuffer()->Unmap(0, nullptr);*/
 }
 
 HRESULT UVIBufferTrail::NativeConstruct()

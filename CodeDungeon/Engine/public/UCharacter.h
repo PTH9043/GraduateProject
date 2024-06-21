@@ -85,6 +85,9 @@ protected: /* get set */
 	void SetRunningSpeed(const float& _newSpeed) { m_fRunSpeed = _newSpeed; }
 
 	void SetRunState(_bool _runState) { m_bIsRunning = _runState; }
+
+	const _float3& GetMovingDirection() const { return m_f3MovedDirection; }
+	const _float3& GetLastMovingDirection() const { return m_f3LastMovedDirection; }
 private:
 	// AnimationModel
 	SHPTR< UAnimModel>				m_spAnimModel;
@@ -102,6 +105,10 @@ private:
 	_bool							m_bIsRunning;
 	_bool							m_bisHit;
 	_bool							m_bisCollision;
+
+	//이동한 방향
+	_float3							m_f3MovedDirection;
+	_float3							m_f3LastMovedDirection;
 };
 
 END

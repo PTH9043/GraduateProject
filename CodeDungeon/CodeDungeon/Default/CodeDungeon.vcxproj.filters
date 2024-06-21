@@ -165,6 +165,9 @@
     <ClInclude Include="..\Public\CLogoScene.h">
       <Filter>01.Scene\Logo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CIronBars.h">
+      <Filter>05.Objects\ModelObjects\Map\StaticObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -237,6 +240,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\CLogoScene.cpp">
       <Filter>01.Scene\Logo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CIronBars.cpp">
+      <Filter>05.Objects\ModelObjects\Map\StaticObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

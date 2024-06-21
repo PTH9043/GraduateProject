@@ -15,6 +15,7 @@
 #include "UCollider.h"
 #include "UTrail.h"
 #include "UVIBufferTrail.h"
+#include "CModelObjects.h"
 
 CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UPlayer(_spDevice, _wstrLayer, _eCloneType), m_spSword{nullptr}
@@ -88,7 +89,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	m_stParticleType = m_spParticle->GetParticleSystem()->GetParticleTypeParam();
 	m_stParticleType->fParticleType = PARTICLE_TYPE_AUTO;
 	m_stParticleType->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
-	m_spParticle->SetTexture(L"Sand"); //Dust3 ÂøÁö ¸ð¼Ç
+	m_spParticle->SetTexture(L"Sand"); //Dust3 ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 	
 	{
 		*m_spParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
@@ -173,65 +174,23 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		Colliders.second->SetScale(_float3(3, 15, 3));
 	}
 	UpdateCollision();
-	//// Move
-	//if (CWarriorAnimController::ANIM_MOVE == AnimState || CWarriorAnimController::ANIM_JUMP_FRONT == AnimState)
-	//{
-	//	
-	//	//TranslateStateMoveAndRunF(spGameInstance, _dTimeDelta, GetMovingSpeed());
-	//	SetRunState(false);
-	//}
-	//
-
-	//if (CWarriorAnimController::ANIM_RUN == AnimState || CWarriorAnimController::ANIM_JUMP_FRONT_RUN == AnimState)
-	//{
-	//	
-	//	//TranslateStateMoveAndRunF(spGameInstance, _dTimeDelta, GetRunningSpeed());
-	//	SetRunState(true);
-	//}
-	//
-
-	//// Move
-	//if (CWarriorAnimController::ANIM_MOVE == AnimState)
-	//{
-	//	//TranslateStateMoveAndRunF(spGameInstance, _dTimeDelta, GetMovingSpeed());
-	//	SetRunState(false);
-	//}
-
-	//if (CWarriorAnimController::ANIM_RUN == AnimState)
-	//{
-	//	//TranslateStateMoveAndRunF(spGameInstance, _dTimeDelta, GetRunningSpeed());
-	//	SetRunState(true);
-	//}
-
-
-	//if (CWarriorAnimController::ANIM_WALKBACK == AnimState)
-	//{
-	//	if (spGameInstance->GetDIKeyPressing(DIK_S))
-	//	{
-	//		//GetTransform()->MoveBack(_dTimeDelta, GetMovingSpeed());
-	//		SetRunState(false);
-	//	}
-	//}
-
-	//if (CWarriorAnimController::ANIM_RUNBACK == AnimState)
-	//{
-	//	if (spGameInstance->GetDIKeyPressing(DIK_S))
-	//	{
-	//		//GetTransform()->MoveBack(_dTimeDelta, GetRunningSpeed());
-	//		SetRunState(true);
-	//	}
-	//}
-
 }
 
 void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 {
-	if (GetCollisionState())
-		GetTransform()->SetPos(GetTransform()->GetPos() - GetTransform()->GetLook() * 10 * _dTimeDelta);
-	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
 	__super::LateTickActive(_dTimeDelta);
-	FollowCameraMove(_float3{0.f, 20.f, -40.f}, _dTimeDelta);
+	_float3 direction(0.0f, 0.0f, 0.0f);
+
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+	if (GetCollisionState())
+	{
+		GetTransform()->SetPos(GetPrevPos());
+	}
+	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
+	FollowCameraMove(_float3{ 0.f, 20.f, -40.f }, _dTimeDelta);
 }
+
 
 HRESULT CWarriorPlayer::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
@@ -246,10 +205,10 @@ HRESULT CWarriorPlayer::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPT
 void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy)
 {
 	PAWNTYPE ePawnType = _pEnemy->GetPawnType();
+	
 	if (PAWNTYPE::PAWN_CHAR == ePawnType)
 	{
 		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
-
 		for (auto& iter : GetColliderContainer())
 		{
 			if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
@@ -264,9 +223,26 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy)
 				if (iter.second->IsCollision(iter2.second))
 					SetCollisionState(true);
 				else
-					SetCollisionState(false);
+					if (!GetCollisionState())
+						SetCollisionState(false);
 			}
 		}
+	}
+	else if (PAWNTYPE::PAWN_STATICOBJ == ePawnType)
+	{
+		CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
+		for (auto& iter : GetColliderContainer())
+		{
+			for (auto& iter2 : pModelObject->GetColliderContainer())
+			{
+				if (iter.second->IsCollision(iter2.second))
+					SetCollisionState(true);
+				else
+					if(!GetCollisionState())
+						SetCollisionState(false);
+			}
+		}
+
 	}
 }
 

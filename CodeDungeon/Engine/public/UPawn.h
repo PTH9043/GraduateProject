@@ -35,7 +35,8 @@ public:
 		void AddRenderGroup(const RENDERID _iRenderID);
 		void AddShadowRenderGroup(const RENDERID _iRenderID);
 public: /* get set*/
-	const PAWNTYPE GetPawnType() const { return m_ePawnType; }
+		void SetPawnType(PAWNTYPE _newType) { m_ePawnType = _newType; }
+		const PAWNTYPE GetPawnType() const { return m_ePawnType; }
 protected:
 		// Tick, LateTick, Render
 		virtual void TickActive(const _double& _dTimeDelta) override PURE;
