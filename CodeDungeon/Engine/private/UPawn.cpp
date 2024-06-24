@@ -58,7 +58,7 @@ HRESULT UPawn::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	return S_OK;
 }
 
-bool UPawn::IsHit(CSHPTRREF<UPawn> _spEnemy)
+bool UPawn::IsHit(CSHPTRREF<UPawn> _spEnemy, const _double& _dTimeDelta)
 {
 	assert(nullptr != _spEnemy);
 	RETURN_CHECK(0 >= m_ColliderContainer.size(), false);
@@ -72,10 +72,10 @@ bool UPawn::IsHit(CSHPTRREF<UPawn> _spEnemy)
 			continue;
 		}
 
-		isTrue |= Collider->second->IsCollision(iter.second);
+		isTrue = Collider->second->IsCollision(iter.second);
 	}
 	if (true == isTrue)
-		Collision(_spEnemy);
+		Collision(_spEnemy, _dTimeDelta);
 
 	return isTrue;
 }
@@ -112,7 +112,7 @@ HRESULT UPawn::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTab
 }
 
 
-void UPawn::Collision(CSHPTRREF<UPawn> _pEnemy)
+void UPawn::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 
 }

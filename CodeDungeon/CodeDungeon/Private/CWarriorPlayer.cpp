@@ -18,12 +18,28 @@
 #include "CModelObjects.h"
 
 CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
-	: UPlayer(_spDevice, _wstrLayer, _eCloneType), m_spSword{nullptr}
+	: UPlayer(_spDevice, _wstrLayer, _eCloneType), 
+	m_spSword{ nullptr }, 
+	m_bisCollisionWithObj{ false }, 
+	isAttack{ false }, 
+	m_stParticleType{}, 
+	m_stParticleParam{},
+	m_spParticle{nullptr},
+	m_spTrail{nullptr},
+	m_f3CollidedNormal{}
 {
 }
 
 CWarriorPlayer::CWarriorPlayer(const CWarriorPlayer& _rhs) : 
-	UPlayer(_rhs)
+	UPlayer(_rhs), 
+	m_spSword{ nullptr },
+	m_bisCollisionWithObj{ false },
+	isAttack{ false },
+	m_stParticleType{},
+	m_stParticleParam{},
+	m_spParticle{ nullptr },
+	m_spTrail{ nullptr },
+	m_f3CollidedNormal{}
 {
 }
 
@@ -166,7 +182,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 			GetTransform()->RotateTurn(_float3(0.f, 1.f, 0.f), MouseMove * 5.f, _dTimeDelta);
 		}
 
-		SetCursorPos(1000, 400);
+		/*SetCursorPos(1000, 400);*/
 	}
 
 	for (auto& Colliders : GetColliderContainer())
@@ -183,10 +199,6 @@ void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
-	if (GetCollisionState())
-	{
-		GetTransform()->SetPos(GetPrevPos());
-	}
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
 	FollowCameraMove(_float3{ 0.f, 20.f, -40.f }, _dTimeDelta);
 }
@@ -202,10 +214,11 @@ HRESULT CWarriorPlayer::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPT
 	return S_OK;
 }
 
-void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy)
+void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	PAWNTYPE ePawnType = _pEnemy->GetPawnType();
-	
+
 	if (PAWNTYPE::PAWN_CHAR == ePawnType)
 	{
 		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
@@ -218,14 +231,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy)
 			else
 				SetHitstate(false);
 
-			for (auto& iter2 : pCharacter->GetColliderContainer())
-			{
-				if (iter.second->IsCollision(iter2.second))
-					SetCollisionState(true);
-				else
-					if (!GetCollisionState())
-						SetCollisionState(false);
-			}
+			GetTransform()->SetPos(GetTransform()->GetPos() - GetTransform()->GetLook() * 5 * _dTimeDelta);
 		}
 	}
 	else if (PAWNTYPE::PAWN_STATICOBJ == ePawnType)
@@ -235,15 +241,31 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy)
 		{
 			for (auto& iter2 : pModelObject->GetColliderContainer())
 			{
-				if (iter.second->IsCollision(iter2.second))
-					SetCollisionState(true);
-				else
-					if(!GetCollisionState())
-						SetCollisionState(false);
+				m_f3CollidedNormal = iter.second->GetOBBCollisionNormal(iter2.second);
+
+				if (m_f3CollidedNormal != _float3::Zero) // 충돌이 발생한 경우
+				{
+					_float3 currentPosition = GetTransform()->GetPos();
+					_float3 movementDirection = currentPosition - GetPrevPos();
+					float dotProduct = DirectX::XMVector3Dot(XMLoadFloat3(&movementDirection), XMLoadFloat3(&m_f3CollidedNormal)).m128_f32[0];
+					_float3 slidingVector = movementDirection - m_f3CollidedNormal * dotProduct;
+
+					// 속도 결정
+					_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 50.0f : 10.0f;
+
+					// 충돌 보정 및 슬라이딩 벡터 적용
+					
+					_float3 newPosition = GetPrevPos() + slidingVector * speed * _dTimeDelta;
+
+					// 위치 업데이트
+					GetTransform()->SetPos(newPosition);
+				}
 			}
 		}
-
 	}
+
+
+
 }
 
 void CWarriorPlayer::TranslateStateMoveAndRunF(CSHPTRREF<UGameInstance> _spGameInstance, const _double& _dTimeDelta, const _float _fSpeed)

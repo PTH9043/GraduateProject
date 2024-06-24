@@ -174,8 +174,8 @@
     <ClInclude Include="..\Public\CLogoScene.h">
       <Filter>01.Scene\Logo</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UUsserInputReceiver.h">
-      <Filter>06.Comp\InputReceiver</Filter>
+    <ClInclude Include="..\Public\CIronBars.h">
+      <Filter>05.Objects\ModelObjects\Map\StaticObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -250,8 +250,8 @@
     <ClCompile Include="..\Private\CLogoScene.cpp">
       <Filter>01.Scene\Logo</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UUsserInputReceiver.cpp">
-      <Filter>06.Comp\InputReceiver</Filter>
+    <ClCompile Include="..\Private\CIronBars.cpp">
+      <Filter>05.Objects\ModelObjects\Map\StaticObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

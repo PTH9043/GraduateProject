@@ -129,7 +129,7 @@ HRESULT CMainScene::LoadSceneData()
 	1.f, 20.f });
 
 
-		//ȶ���� ���� �߰�
+		
 		for (auto& obj : (*m_spMap->GetStaticObjs().get()))
 		{
 			int count = 0;
@@ -148,7 +148,6 @@ HRESULT CMainScene::LoadSceneData()
 		}
 	}
 #ifndef _ENABLE_PROTOBUFF
-	////�÷��̾� ����
 	{
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 		// Main Camera Load 
@@ -167,15 +166,14 @@ HRESULT CMainScene::LoadSceneData()
 			m_spMainCamera = std::static_pointer_cast<CMainCamera>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MAINCAMERA, vecDatas));
 			m_spMainCamera->GetTransform()->SetPos({ 0.f, 10.f, -100.f });
 
-		CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_WARRIORANIMCONTROLLER };
-		CWarriorPlayer::PLAYERDESC PlayerDesc{ m_spMainCamera };
-		m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
-			PROTO_ACTOR_WARRIORPLAYER, { &CharDesc, &PlayerDesc }));
-		spGameInstance->RegisterCurrentPlayer(m_spWarriorPlayer);
+			CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_WARRIORANIMCONTROLLER };
+			CWarriorPlayer::PLAYERDESC PlayerDesc{ m_spMainCamera };
+			m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
+				PROTO_ACTOR_WARRIORPLAYER, { &CharDesc, &PlayerDesc }));
+			spGameInstance->RegisterCurrentPlayer(m_spWarriorPlayer);
 		}
 	}
 
-	//�̶� ����
 	{
 		CMummy::CHARACTERDESC CharDesc{PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_MUMMYANIMCONTROLLER};
 		m_spMummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(
@@ -187,7 +185,6 @@ HRESULT CMainScene::LoadSceneData()
 		spGameInstance->AddCollisionPawnList(m_spMummy);
 	}
 
-	//�̶� �� ����
 	{
 		CSarcophagus::CHARACTERDESC CharDesc{ PROTO_RES_SARCOPHAGUSLYINGANIMMODEL, PROTO_COMP_SARCOPHAGUSANIMCONTROLLER };
 		m_spSarcophagus = std::static_pointer_cast<CSarcophagus>(spGameInstance->CloneActorAdd(
@@ -228,30 +225,6 @@ void CMainScene::LateTick(const _double& _dTimeDelta)
 
 void CMainScene::CollisionTick(const _double& _dTimeDelta)
 {
-	m_spWarriorPlayer->SetCollisionState(false);
-
-	if (true == m_spMummy->IsHit(m_spWarriorPlayer))
-	{
-
-	}
-
-	if (true == m_spWarriorPlayer->IsHit(m_spMummy))
-	{
-
-	}
-
-	auto& staticObjs = *(m_spMap->GetStaticObjs().get());
-	auto barsIt = staticObjs.find(L"Bars_FBX.bin");
-
-	if (barsIt != staticObjs.end())
-	{
-		for (auto& bar : barsIt->second)
-		{
-			SHPTR<CIronBars> pBars = std::static_pointer_cast<CIronBars>(bar);
-			if (m_spWarriorPlayer->IsHit(pBars))
-			{
-			}
-		}
-	}
+	
 }
 END

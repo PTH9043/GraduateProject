@@ -29,7 +29,7 @@ public:
 
 	const _float3& GetRoomCenterPos() const { return m_vRoomCenterPos; }
 protected:
-	virtual void Collision(CSHPTRREF<UPawn> _pEnemy) override;
+	virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) override;
 private:
 	_wstring	m_wsRoomTag;
 	_float3     m_vRoomCenterPos;

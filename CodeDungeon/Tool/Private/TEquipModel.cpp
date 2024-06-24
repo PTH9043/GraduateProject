@@ -94,6 +94,6 @@ HRESULT TEquipModel::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRRE
 	return S_OK;
 }
 
-void TEquipModel::Collision(CSHPTRREF<UPawn> _pEnemy)
+void TEquipModel::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }

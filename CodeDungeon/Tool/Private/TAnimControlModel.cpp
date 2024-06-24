@@ -458,6 +458,6 @@ HRESULT TAnimControlModel::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CS
 	return S_OK;
 }
 
-void TAnimControlModel::Collision(CSHPTRREF<UPawn> _pEnemy)
+void TAnimControlModel::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }

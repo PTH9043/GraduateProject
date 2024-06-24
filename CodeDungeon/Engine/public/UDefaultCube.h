@@ -28,7 +28,7 @@ protected:
 	virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
 	// Damaged
-	virtual void Collision(CSHPTRREF<UPawn> _pEnemy) override;
+	virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) override;
 private:
 	static const _uint									CUBEPARAM_SIZE{sizeof(NORMALCUBEPARAM)};
 	// Cube

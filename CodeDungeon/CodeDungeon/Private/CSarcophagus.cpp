@@ -69,6 +69,6 @@ HRESULT CSarcophagus::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRR
 	return S_OK;
 }
 
-void CSarcophagus::Collision(CSHPTRREF<UPawn> _pEnemy)
+void CSarcophagus::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }

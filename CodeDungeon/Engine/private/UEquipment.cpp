@@ -213,9 +213,10 @@ HRESULT UEquipment::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF
 	return S_OK;
 }
 
-void UEquipment::Collision(CSHPTRREF<UPawn> _pEnemy)
+void UEquipment::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }
+
 
 void UEquipment::BindShaderBuffer()
 {

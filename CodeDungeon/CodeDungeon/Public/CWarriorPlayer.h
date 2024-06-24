@@ -29,12 +29,16 @@ public:
 	SHPTR<UParticle>& GetParticle() { return m_spParticle; }
 
 	void IfAttack(_bool is) { isAttack = is; }
+
+	const _bool& GetOBJCollisionState() const { return m_bisCollisionWithObj; }
+	void SetOBJCollisionState(_bool _newState) { m_bisCollisionWithObj = _newState; }
+
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
 	virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
-	virtual void Collision(CSHPTRREF<UPawn> _pEnemy) override;
+	virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) override;
 private:
 	void TranslateStateMoveAndRunF(CSHPTRREF<UGameInstance> _spGameInstance, const _double& _dTimeDelta, const _float _fSpeed);
 private:
@@ -44,8 +48,11 @@ private:
 	ComputeParticleType* m_stParticleType;
 
 	SHPTR<CSword>	m_spSword;
-	SHPTR<UTrail> m_spTrail;
+	SHPTR<UTrail>	m_spTrail;
 	_bool isAttack;
+	_bool m_bisCollisionWithObj;
+
+	_float3 m_f3CollidedNormal;
 };
 
 END

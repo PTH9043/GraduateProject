@@ -51,7 +51,7 @@ HRESULT UItem::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTab
 	return S_OK;
 }
 
-void UItem::Collision(CSHPTRREF<UPawn> _pEnemy)
+void UItem::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }
 

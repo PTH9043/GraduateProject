@@ -131,6 +131,7 @@ HRESULT CModelObjects::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTR
 	return S_OK;
 }
 
-void CModelObjects::Collision(CSHPTRREF<UPawn> _pEnemy)
+void CModelObjects::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }
+

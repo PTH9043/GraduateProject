@@ -108,6 +108,7 @@ void CMap::LoadStaticObjects()
 				BarsDesc._Worldm = vecit._mWorldMatrix;
 				SHPTR<CIronBars> _IronBars = std::static_pointer_cast<CIronBars>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IRONBARS, { &BarsDesc }));
 				_BarsVec.push_back(_IronBars);
+				spGameInstance->AddCollisionPawnList(_IronBars);
 			}
 		}
 	}

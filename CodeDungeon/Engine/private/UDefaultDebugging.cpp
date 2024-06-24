@@ -103,6 +103,6 @@ HRESULT UDefaultDebugging::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CS
 	
 	return S_OK;
 }
-void UDefaultDebugging::Collision(CSHPTRREF<UPawn> _pEnemy)
+void UDefaultDebugging::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }

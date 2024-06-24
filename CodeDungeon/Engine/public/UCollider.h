@@ -48,6 +48,20 @@ public:
 	- collider와 ray의 충돌처리를 위한 함수
 	*/
 	_bool IsCollisionWithRay(const _float3& _vOrigin, const _float3& _vDirection, _float* _pDist);
+
+
+	/*
+	@ Date: 2024-06-11, Writer: 이성현
+	@ Explain
+	- 콜라이더 노말 추가
+	*/
+	void SetOBBNormals(const _float4x4& transformMatrix);
+
+	_float3 CalculateOBBCollisionNormal(const DirectX::BoundingOrientedBox& box1, const DirectX::BoundingOrientedBox& box2) const;
+	
+	_float3 GetOBBCollisionNormal(CSHPTRREF<UCollider> _pCollider);
+	
+
 #ifdef _USE_DEBUGGING
 	void ChangeColliderColor(const _float3& _vChange);
 	void AddRenderer(RENDERID _eID);
@@ -70,6 +84,8 @@ private:
 	_float3															m_vCurScale;
 	_float3															m_vTranslate;
 	_float3															m_vPos;
+
+	ARRAY<_float3, 6>												m_f3ObbNormals;
 
 #ifdef _USE_DEBUGGING
 	SHPTR<UDefaultDebugging>					m_spDebugDrawPawn;

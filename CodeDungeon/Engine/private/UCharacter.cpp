@@ -42,12 +42,10 @@ HRESULT UCharacter::NativeConstructClone(const VOIDDATAS& _Datas)
 	assert(false == CharacterDesc.wstrAnimControllerProtoData.empty());
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	// ���� �ִϸ��̼� ���� �޾ƿ´�. 
+ 
 	{
 		m_spAnimModel = std::static_pointer_cast<UAnimModel>(spGameInstance->CloneResource(CharacterDesc.wstrAnimModelProtoData));
-//		m_spAnimModel = CreateConstructorNative<UAnimModel>(GetDevice(), CharacterDesc.wstrAnimModelProtoData);
 	}
-	// Controller
 	{
 		UAnimationController::ANIMCONTROLLERDESC ControllerDesc{ ThisShared<UCharacter>() };
 		m_spAnimationController = std::static_pointer_cast<UAnimationController>(spGameInstance->CloneComp(CharacterDesc.wstrAnimControllerProtoData, 
@@ -187,7 +185,7 @@ HRESULT UCharacter::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF
 	return S_OK;
 }
 
-void UCharacter::Collision(CSHPTRREF<UPawn> _pEnemy)
+void UCharacter::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }
 

@@ -17,7 +17,7 @@ public:
 		virtual void Free() override;
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;
-	virtual void Collision(CSHPTRREF<UPawn> _pEnemy) override;
+	virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) override;
 protected:
 	// Tick, LateTick, Render
 	virtual void TickActive(const _double& _dTimeDelta) override;

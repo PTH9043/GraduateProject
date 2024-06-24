@@ -81,6 +81,7 @@ HRESULT CIronBars::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<
 	return S_OK;
 }
 
-void CIronBars::Collision(CSHPTRREF<UPawn> _pEnemy)
+void CIronBars::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }
+

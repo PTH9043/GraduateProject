@@ -97,6 +97,6 @@ HRESULT TShowAnimModelObject::RenderShadowActive(CSHPTRREF<UCommand> _spCommand,
 	return S_OK;
 }
 
-void TShowAnimModelObject::Collision(CSHPTRREF<UPawn> _pEnemy)
+void TShowAnimModelObject::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }

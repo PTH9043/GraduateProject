@@ -60,6 +60,6 @@ HRESULT UDefaultSphere::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPT
 	return S_OK;
 }
 
-void UDefaultSphere::Collision(CSHPTRREF<UPawn> _pEnemy)
+void UDefaultSphere::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }

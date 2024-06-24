@@ -139,7 +139,7 @@ void UFire::BindShaderBuffer()
 
 }
 
-void UFire::Collision(CSHPTRREF<UPawn> _pEnemy)
+void UFire::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }
 

@@ -188,7 +188,7 @@ void TModelView::RenderActive()
 		// Show Model
 		ImGui::NewLine();
 		ShowModels();
-		ShowAnimMoldels();
+	/*	ShowAnimMoldels();*/
 		MouseInput();
 		KeyboardInput();
 		AddModelstoMapLayout();

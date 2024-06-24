@@ -116,7 +116,7 @@ void UFog::BindShaderBuffer()
 
 }
 
-void UFog::Collision(CSHPTRREF<UPawn> _pEnemy)
+void UFog::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }
 

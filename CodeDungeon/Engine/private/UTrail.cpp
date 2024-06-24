@@ -31,7 +31,7 @@ void UTrail::Free()
 {
 }
 
-void UTrail::Collision(CSHPTRREF<UPawn> _pEnemy)
+void UTrail::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }
 
