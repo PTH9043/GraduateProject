@@ -11,7 +11,8 @@ UPlayer::UPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const
 	: UCharacter(_spDevice, _wstrLayer, _eCloneType),
 	m_spFollowCamera{nullptr},
 	m_bisJumping{false},
-	m_bisFalling{false}
+	m_bisFalling{false},
+	m_MouseMove{0}
 {
 }
 
@@ -19,7 +20,8 @@ UPlayer::UPlayer(const UPlayer& _rhs) :
 	UCharacter(_rhs),
 	m_spFollowCamera{ nullptr },
 	m_bisJumping{ false },
-	m_bisFalling{ false }
+	m_bisFalling{ false },
+	m_MouseMove{ 0 }
 {
 }
 

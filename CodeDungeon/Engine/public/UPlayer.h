@@ -44,7 +44,10 @@ public:
 
 	const _bool& GetFallingState() { return m_bisFalling; }
 	void SetFallingState(const _bool& _fallstate) { m_bisFalling = _fallstate; }
+public: /* get set*/
+	_llong GetMouseMove() const { return m_MouseMove; }
 
+	void SetMouseMove(_llong _MouseMove) { this->m_MouseMove = _MouseMove; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) PURE;
 	virtual void LateTickActive(const _double& _dTimeDelta) PURE;
@@ -53,15 +56,13 @@ protected:
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy) PURE;
 
 	void FollowCameraMove(const _float3& _vPlayerToDistancePosition, const _double& _TimeElapsed);
-
-
-
 protected: /* get set */
 	CSHPTRREF<UCamera> GetFollowCamera() const { return m_spFollowCamera; }
 private:
 	SHPTR<UCamera>		m_spFollowCamera;
-	_bool				m_bisJumping;
-	_bool				m_bisFalling;
+	_bool								m_bisJumping;
+	_bool								m_bisFalling;
+	_llong								m_MouseMove;
 };
 
 END

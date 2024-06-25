@@ -191,6 +191,11 @@ void UGameInstance::OtherFrame(const _double& _dTimeDelta, const WPARAM& _wParam
 
 void UGameInstance::AwakeTick()
 {
+	if (nullptr != m_spNetworkBaseController)
+	{
+		m_spNetworkBaseController->ProcessedNetworkQuery();
+	}
+
 	m_spInputManager->KeyTick();
 	m_spInputManager->MouseTick();
 	m_spPicking->CastRayInWorldSpace(this);
@@ -477,6 +482,11 @@ _bool UGameInstance::IsMouseInWindowSize(const float _Width, const float _Height
 		}
 	}
 	return false;
+}
+
+_bool UGameInstance::IsMouseInWindowSize()
+{
+	return m_spInputManager->IsMouseInWindowSize();
 }
 
 /*
@@ -908,10 +918,10 @@ void UGameInstance::StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBas
 	m_spNetworkBaseController = _spNetworkBaseController;
 }
 
-void UGameInstance::MakeActors()
+void UGameInstance::MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer)
 {
 	assert(nullptr != m_spNetworkBaseController);
-	m_spNetworkBaseController->MakeActors();
+	m_spNetworkBaseController->MakeActors(_actorContainer);
 }
 
 void UGameInstance::SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize)
@@ -920,20 +930,33 @@ void UGameInstance::SendTcpPacket(_char* _pPacket, _short _PacketType, _short _P
 	m_spNetworkBaseController->SendTcpPacket(_pPacket, _PacketType, _PacketSize);
 }
 
+void UGameInstance::SendProcessPacket(UProcessedData&& _ProcessData)
+{
+	assert(nullptr != m_spNetworkBaseController);
+	m_spNetworkBaseController->SendProcessPacket(std::move(_ProcessData));
+}
+
 SHPTR<UActor> UGameInstance::FindNetworkActor(const _int _NetworkID)
 {
 	assert(nullptr != m_spNetworkBaseController);
 	return m_spNetworkBaseController->FindNetworkActor(_NetworkID);
 }
 
-void UGameInstance::InsertNetworkQuery(const UProcessedData& _data)
-{
-	m_spNetworkBaseController->InsertNetworkQuery(_data);
-}
-
 void UGameInstance::NetworkEnd()
 {
 	m_spNetworkBaseController.reset();
+}
+
+void UGameInstance::SetSceneIDToNetController(const _int _iSceneID)
+{
+	assert(nullptr != m_spNetworkBaseController);
+	m_spNetworkBaseController->SetSceneID(_iSceneID);
+}
+
+const _llong UGameInstance::GetNetworkOwnerID() const
+{
+	assert(nullptr != m_spNetworkBaseController);
+	return m_spNetworkBaseController->GetNetworkOwnerID();
 }
 
 /*

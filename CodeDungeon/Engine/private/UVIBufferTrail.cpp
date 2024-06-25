@@ -1,6 +1,9 @@
 #include "EngineDefine.h"
 #include "UVIBufferTrail.h"
 #include "UMethod.h"
+#include "UCommand.h"
+#include "UShader.h"
+
 UVIBufferTrail::UVIBufferTrail(CSHPTRREF<UDevice> _spDevice, const VIBUFFERTYPE _eBufferType)
 	: UVIBuffer(_spDevice, VISPACE_TYPE::SPACE_2D, VIINSTANCE_TYPE::SINGLE, _eBufferType)
 {
@@ -25,7 +28,6 @@ HRESULT UVIBufferTrail::NativeConstruct()
 HRESULT UVIBufferTrail::NativeConstructClone(const VOIDDATAS& _vecDatas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_vecDatas), E_FAIL);
-
 	{
 		if (_vecDatas.size() > 0)
 		{
@@ -34,12 +36,9 @@ HRESULT UVIBufferTrail::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	}
 	RETURN_CHECK_FAILED(CreateVtxBuffer(m_tTrailMaxCountDesc.iMaxVertexCount, sizeof(VTXDEFAULT), nullptr,
 				D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST), E_FAIL);
-	
-	
+
 	HRESULT hr = GetVertexGpuBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&m_pBufferDataBegin));
-
 	//RETURN_CHECK_FAILED(__super::NativeConstructClone(_vecDatas), E_FAIL);
-
 	//{
 	//	if (_vecDatas.size() > 0)
 	//	{
@@ -110,13 +109,21 @@ HRESULT UVIBufferTrail::NativeConstructClone(const VOIDDATAS& _vecDatas)
 
 }
 
+HRESULT UVIBufferTrail::Render(CSHPTRREF<UShader> _spShader, CSHPTRREF<UCommand> _spCommand, const _uint& _iInstanceCnt)
+{
+	RETURN_CHECK(nullptr == _spShader || nullptr == _spCommand, E_FAIL);
+	_spShader->CommitLocalShaderDatas(_spCommand);
+
+
+	return S_OK;
+}
+
 
 
 void UVIBufferTrail::SetVertices(VECTOR<VTXDEFAULT>& pVertices, _int iVertexCount) {
 
 	SetVertexBufferViewSizeInBytes(sizeof(VTXDEFAULT) * iVertexCount);
 	memcpy(m_pBufferDataBegin, pVertices.data(), sizeof(VTXDEFAULT) * iVertexCount);
-
 }
 
 

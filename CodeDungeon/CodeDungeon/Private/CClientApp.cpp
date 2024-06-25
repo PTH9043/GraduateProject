@@ -41,8 +41,10 @@ HRESULT CClientApp::NativeConstruct(const HINSTANCE& _hInst, const _uint& _iCmdS
 
 	// 클라이언트 스레드 등록
 	m_spGameInstance->RegisterFuncToRegister(ClientThread, this);
+#if _ENABLE_PROTOBUFF
 	// 네트워크 스레드 등록 
 	m_spGameInstance->StartNetwork(CreateNative<CNetworkClientController>(IP_ADDRESS, TCP_PORT_NUM));
+#endif
 	return S_OK;
 }
 

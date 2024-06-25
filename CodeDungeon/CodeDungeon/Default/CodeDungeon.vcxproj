@@ -159,8 +159,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Private\CDataManager.h" />
     <ClInclude Include="..\Public\CClientApp.h" />
     <ClInclude Include="..\Public\CDataManager.h" />
+    <ClInclude Include="..\Public\CIronBars.h" />
     <ClInclude Include="..\Public\ClientDefines.h" />
     <ClInclude Include="..\Public\ClientProto.h" />
     <ClInclude Include="..\Public\CLogoScene.h" />
@@ -173,6 +175,7 @@
     <ClInclude Include="..\Public\CMummy.h" />
     <ClInclude Include="..\Public\CMummyAnimController.h" />
     <ClInclude Include="..\Public\CNetworkClientController.h" />
+    <ClInclude Include="..\Public\CNetworkWarriorPlayerController.h" />
     <ClInclude Include="..\Public\CProtoMaker.h" />
     <ClInclude Include="..\Public\CRooms.h" />
     <ClInclude Include="..\Public\CSarcophagus.h" />
@@ -180,8 +183,7 @@
     <ClInclude Include="..\Public\CSword.h" />
     <ClInclude Include="..\Public\CTorch.h" />
     <ClInclude Include="..\Public\CWarriorPlayer.h" />
-    <ClInclude Include="..\Public\CWarriorAnimController.h" />
-    <ClInclude Include="..\Public\UUsserInputReceiver.h" />
+    <ClInclude Include="..\Public\CUserWarriorAnimController.h" />
     <ClInclude Include="CodeDungeon.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -190,6 +192,7 @@
   <ItemGroup>
     <ClCompile Include="..\Private\CClientApp.cpp" />
     <ClCompile Include="..\Private\CDataManager.cpp" />
+    <ClCompile Include="..\Private\CIronBars.cpp" />
     <ClCompile Include="..\Private\CLogoScene.cpp" />
     <ClCompile Include="..\Private\CMainCamera.cpp" />
     <ClCompile Include="..\Private\CMainScene.cpp" />
@@ -200,6 +203,7 @@
     <ClCompile Include="..\Private\CMummy.cpp" />
     <ClCompile Include="..\Private\CMummyAnimController.cpp" />
     <ClCompile Include="..\Private\CNetworkClientController.cpp" />
+    <ClCompile Include="..\Private\CNetworkWarriorPlayerController.cpp" />
     <ClCompile Include="..\Private\CProtoMaker.cpp" />
     <ClCompile Include="..\Private\CRooms.cpp" />
     <ClCompile Include="..\Private\CSarcophagus.cpp" />
@@ -207,8 +211,7 @@
     <ClCompile Include="..\Private\CSword.cpp" />
     <ClCompile Include="..\Private\CTorch.cpp" />
     <ClCompile Include="..\Private\CWarriorPlayer.cpp" />
-    <ClCompile Include="..\Private\CWarriorAnimController.cpp" />
-    <ClCompile Include="..\Private\UUsserInputReceiver.cpp" />
+    <ClCompile Include="..\Private\CUserWarriorAnimController.cpp" />
     <ClCompile Include="CodeDungeon.cpp" />
   </ItemGroup>
   <ItemGroup>

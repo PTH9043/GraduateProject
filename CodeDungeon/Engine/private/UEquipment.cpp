@@ -175,6 +175,8 @@ void UEquipment::LateTickActive(const _double& _dTimeDelta)
 
 		// Get CombineMatrix
 		m_SockMatrixParam.SocketMatrix = m_spEquipBoneNode->GetCombineMatrix() * m_spCharacterAnimModel->GetPivotMatirx() * spTransform->GetWorldMatrix();
+		
+		m_CurrentMatrix = GetTransform()->GetWorldMatrix() * m_SockMatrixParam.SocketMatrix;
 		m_SockMatrixParam.SocketMatrix =  m_SockMatrixParam.SocketMatrix.Transpose();
 	}
 
