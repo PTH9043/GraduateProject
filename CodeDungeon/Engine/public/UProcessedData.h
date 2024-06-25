@@ -10,22 +10,44 @@ BEGIN(Engine)
 */
 class UProcessedData {
 public:
-	UProcessedData(void * _pData, size_t _Size, _int _DataType);
+	UProcessedData();
+	UProcessedData(const _int _NetworkID, void * _pData, size_t _Size, _int _DataType);
 	UProcessedData(const UProcessedData& _rhs);
 	UProcessedData(UProcessedData&& _rhs) noexcept;
+	// Send
+	template<class T>
+		requires CheckProtoType<T>
+	UProcessedData(const T& _data, short _tag) : m_DataType{ _tag },
+		m_isMake{ true }, m_DataSize{ sizeof(T) }, m_iNetworkID{ 0 }
+	{
+		m_pData = Make::AllocBuffer<_char>(m_DataSize);
+		_data.SerializePartialToArray((void*)&m_pData[0], static_cast<int>(_data.ByteSizeLong()));
+	}
+	// Recv
+	template<class T>
+		requires CheckProtoType<T>
+	UProcessedData(const _int _NetworkID, const T& _data, short _tag) : m_DataType{ _tag }, 
+		m_isMake{ true }, m_DataSize{ sizeof(T) }, m_iNetworkID{ _NetworkID }
+	{
+		m_pData = Make::AllocBuffer<_char>(m_DataSize);
+		_data.SerializePartialToArray((void*)&m_pData[0], static_cast<int>(_data.ByteSizeLong()));
+	}
 	~UProcessedData();
 
 	UProcessedData& operator=(const UProcessedData& _other) = delete;
 	UProcessedData& operator=(UProcessedData&& _other) noexcept;
-
 	template<class T>
 	T* ConvertData() { return reinterpret_cast<T*>(m_pData); }
 public: /* get Set */
+	_int GetDataID() const { return m_iNetworkID; }
 	_int GetDataType() const { return m_DataType; }
+	_int GetDataSize() const { return m_DataSize; }
 	_char* GetData() const { return m_pData; }
 private:
+	_int								m_iNetworkID;
 	_char*							m_pData;                     
 	_int								m_DataType;
+	_int								m_DataSize;
 	// 이렇게 안하면 데이터가 삭제되는 현상이 생김, 그렇다고 해당 클래스를 할당하기는 싫음
 	mutable _bool			m_isMake;
 };

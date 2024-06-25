@@ -4,7 +4,8 @@
 
 BEGIN(Engine)
 class UCharacter;
-
+class UInputReceiver;
+class UProcessedData;
 /*
 @ Date: 2024-04-28, Writer: 박태현
 @ Explain
@@ -25,8 +26,9 @@ public:
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _tDatas) override PURE;
 	// Tick
 	virtual void Tick(const _double& _dTimeDelta) PURE;
-private:
-
+	// 네트워크 정보를 받아오는 함수
+	virtual void ReceiveNetworkProcessData(void* _pData);
+protected: /* get set */
 };
 
 END

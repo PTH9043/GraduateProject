@@ -20,27 +20,31 @@ PROTOBUF_PRAGMA_INIT_SEG
 namespace _pb = ::google::protobuf;
 namespace _pbi = ::google::protobuf::internal;
 namespace _fl = ::google::protobuf::internal::field_layout;
-static const ::_pb::EnumDescriptor* file_level_enum_descriptors_Tag_2eproto[3];
+static const ::_pb::EnumDescriptor* file_level_enum_descriptors_Tag_2eproto[4];
 static constexpr const ::_pb::ServiceDescriptor**
     file_level_service_descriptors_Tag_2eproto = nullptr;
 const ::uint32_t TableStruct_Tag_2eproto::offsets[1] = {};
 static constexpr ::_pbi::MigrationSchema* schemas = nullptr;
 static constexpr ::_pb::Message* const* file_default_instances = nullptr;
 const char descriptor_table_protodef_Tag_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-    "\n\tTag.proto*Q\n\006TAG_CS\022\020\n\014TAG_CS_LOGIN\020\000\022"
+    "\n\tTag.proto*i\n\006TAG_CS\022\020\n\014TAG_CS_LOGIN\020\000\022"
     "\017\n\013TAG_CS_MOVE\020\001\022\021\n\rTAG_CS_ATTACK\020\002\022\021\n\rT"
-    "AG_CS_LOGOUT\020\003*\205\001\n\006TAG_SC\022\031\n\025TAG_SC_CONN"
-    "ECTSUCCESS\020\000\022\033\n\027TAG_SC_OTHERCLIENTLOGIN\020"
-    "\001\022\025\n\021TAG_SC_MOVEFAILED\020\002\022\024\n\020TAG_SC_OTHER"
-    "MOVE\020\003\022\026\n\022TAG_SC_VIEWINRANGE\020\004*B\n\010TAG_CH"
-    "AR\022\022\n\016TAG_MAINPLAYER\020\000\022\023\n\017TAG_OTHERPLAYE"
-    "R\020\001\022\r\n\tTAG_MUMMY\020\002b\006proto3"
+    "AG_CS_LOGOUT\020\003\022\026\n\022TAG_CS_PLAYERSTATE\020\004*\263"
+    "\001\n\006TAG_SC\022\031\n\025TAG_SC_CONNECTSUCCESS\020\000\022\033\n\027"
+    "TAG_SC_OTHERCLIENTLOGIN\020\001\022\025\n\021TAG_SC_MOVE"
+    "FAILED\020\002\022\024\n\020TAG_SC_OTHERMOVE\020\003\022\026\n\022TAG_SC"
+    "_VIEWINRANGE\020\004\022\026\n\022TAG_SC_PLAYERSTATE\020\005\022\024"
+    "\n\020TAG_SC_MOVESTATE\020\006*B\n\010TAG_CHAR\022\022\n\016TAG_"
+    "MAINPLAYER\020\000\022\023\n\017TAG_OTHERPLAYER\020\001\022\r\n\tTAG"
+    "_MUMMY\020\002*C\n\016TAG_PLAYERTYPE\022\017\n\013TAG_WARRIO"
+    "R\020\000\022\016\n\nTAG_ARCHOR\020\001\022\020\n\014TAG_MAGICAIN\020\002b\006p"
+    "roto3"
 };
 static ::absl::once_flag descriptor_table_Tag_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Tag_2eproto = {
     false,
     false,
-    306,
+    445,
     descriptor_table_protodef_Tag_2eproto,
     "Tag.proto",
     &descriptor_table_Tag_2eproto_once,
@@ -77,18 +81,18 @@ const ::google::protobuf::EnumDescriptor* TAG_CS_descriptor() {
   return file_level_enum_descriptors_Tag_2eproto[0];
 }
 PROTOBUF_CONSTINIT const uint32_t TAG_CS_internal_data_[] = {
-    262144u, 0u, };
+    327680u, 0u, };
 bool TAG_CS_IsValid(int value) {
-  return 0 <= value && value <= 3;
+  return 0 <= value && value <= 4;
 }
 const ::google::protobuf::EnumDescriptor* TAG_SC_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&descriptor_table_Tag_2eproto);
   return file_level_enum_descriptors_Tag_2eproto[1];
 }
 PROTOBUF_CONSTINIT const uint32_t TAG_SC_internal_data_[] = {
-    327680u, 0u, };
+    458752u, 0u, };
 bool TAG_SC_IsValid(int value) {
-  return 0 <= value && value <= 4;
+  return 0 <= value && value <= 6;
 }
 const ::google::protobuf::EnumDescriptor* TAG_CHAR_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&descriptor_table_Tag_2eproto);
@@ -97,6 +101,15 @@ const ::google::protobuf::EnumDescriptor* TAG_CHAR_descriptor() {
 PROTOBUF_CONSTINIT const uint32_t TAG_CHAR_internal_data_[] = {
     196608u, 0u, };
 bool TAG_CHAR_IsValid(int value) {
+  return 0 <= value && value <= 2;
+}
+const ::google::protobuf::EnumDescriptor* TAG_PLAYERTYPE_descriptor() {
+  ::google::protobuf::internal::AssignDescriptors(&descriptor_table_Tag_2eproto);
+  return file_level_enum_descriptors_Tag_2eproto[3];
+}
+PROTOBUF_CONSTINIT const uint32_t TAG_PLAYERTYPE_internal_data_[] = {
+    196608u, 0u, };
+bool TAG_PLAYERTYPE_IsValid(int value) {
   return 0 <= value && value <= 2;
 }
 // @@protoc_insertion_point(namespace_scope)

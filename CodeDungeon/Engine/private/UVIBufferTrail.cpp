@@ -37,7 +37,6 @@ HRESULT UVIBufferTrail::NativeConstruct()
 	HRESULT hr = m_cpVertexGpuBuffer->Map(0, nullptr, reinterpret_cast<void**>(&m_pBufferDataBegin));
 
 	//RETURN_CHECK_FAILED(__super::NativeConstructClone(_vecDatas), E_FAIL);
-
 	//{
 	//	if (_vecDatas.size() > 0)
 	//	{
@@ -46,7 +45,7 @@ HRESULT UVIBufferTrail::NativeConstruct()
 	//}
 
 	//{
-	//	// Vertex °³¼ö
+	//	// Vertex ï¿½ï¿½ï¿½ï¿½
 	//	const _uint VERTEX_CNT = 102;
 	//	
 	//	{
@@ -72,7 +71,7 @@ HRESULT UVIBufferTrail::NativeConstruct()
 	//				Vertecies[i + 1].vTexUV = _float2(0.f, 1.f);
 	//			}
 	//		}
-	//		// Position º¹Á¦
+	//		// Position ï¿½ï¿½ï¿½ï¿½
 	//		for (_uint i = 0; i < VERTEX_CNT; ++i)
 	//			VertexPos[i] = Vertecies[i].vPosition;
 
@@ -83,9 +82,9 @@ HRESULT UVIBufferTrail::NativeConstruct()
 	//}
 	//// Index
 	//{
-	//	// Index °³¼ö
+	//	// Index ï¿½ï¿½ï¿½ï¿½
 	//	const _uint INDICES_CNT = 100;
-	//	// ¸ñ·Ï
+	//	// ï¿½ï¿½ï¿½
 	//	INDICIES16* pIndices = Make::AllocBuffer<INDICIES16>(INDICES_CNT);
 	//	ZeroMemory(pIndices, sizeof(INDICIES16) * INDICES_CNT);
 	//	for (_uint i = 0; i < INDICES_CNT; i += 2)
@@ -148,12 +147,12 @@ void UVIBufferTrail::SetVertices(VECTOR<VTXDEFAULT>& pVertices, _int iVertexCoun
 			throw std::runtime_error("Failed to map GPU buffer.");
 		}*/
 
-		// µ¥ÀÌÅÍ º¹»ç
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		memcpy(m_pBufferDataBegin, pVertices.data(), sizeof(VTXDEFAULT) * iVertexCount);
 
 	
 
-		// ±âÅ¸ ¸â¹ö º¯¼ö ¼³Á¤
+		// ï¿½ï¿½Å¸ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		m_stD3DVertexBufferView.SizeInBytes = sizeof(VTXDEFAULT) * iVertexCount;
 		m_iVertexCnt = iVertexCount;
 	}

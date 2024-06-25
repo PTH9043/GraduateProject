@@ -39,10 +39,10 @@ HRESULT CClientApp::NativeConstruct(const HINSTANCE& _hInst, const _uint& _iCmdS
 	m_iCmdShow = _iCmdShow;
 	m_spGameInstance = GET_INSTANCE(UGameInstance);
 
-	// Å¬¶óÀÌ¾ðÆ® ½º·¹µå µî·Ï
 	m_spGameInstance->RegisterFuncToRegister(ClientThread, this);
-	// ³×Æ®¿öÅ© ½º·¹µå µî·Ï 
-	//m_spGameInstance->StartNetwork(CreateNative<CNetworkClientController>(IP_ADDRESS, TCP_PORT_NUM));
+#if _ENABLE_PROTOBUFF
+	m_spGameInstance->StartNetwork(CreateNative<CNetworkClientController>(IP_ADDRESS, TCP_PORT_NUM));
+#endif
 	return S_OK;
 }
 
@@ -88,7 +88,7 @@ void CClientApp::Render()
 	MSG msg{};
 	ZeroMemory(&msg, sizeof(MSG));
 
-	// ±âº» ¸Þ½ÃÁö ·çÇÁÀÔ´Ï´Ù:
+	// ï¿½âº» ï¿½Þ½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½:
 	while (m_isTickThread)
 	{
 		// if PeekMeesage

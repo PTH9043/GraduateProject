@@ -35,6 +35,59 @@ namespace Client
 		SCENE_LOGO, SCENE_STAGE1, SCENE_STAGE2, SCENE_END
 	};
 
+	enum WARRIORPLAYERSTATE
+	{
+		RUNSHIFT = 0,
+		MOVEFRONT,
+		MOVEBACK,
+		MOVELEFT,
+		MOVERIGHT,
+		WATTACK,
+		SATTACK,
+		RATTACK,
+		COMBO,
+		ROLL,
+		HIT,
+		JUMP,
+		RUNNING,
+		MAX_WARRIORSTATE_CNT,
+	};
+
+	struct NETWORKWARRIORINPUTDESC
+	{
+		_bool		runshift;
+		_bool		moveFront;
+		_bool		moveBack;
+		_bool		moveLeft;
+		_bool		moveRight;
+		_bool		WAttack;
+		_bool		SAttack;
+		_bool		RAttack;
+		_bool		combo;
+		_bool		Roll;
+		_bool		Hit;
+		_bool		Jump;
+		_bool		warriorPlayerJumpState;
+		_bool		warriorPlayerFallingState;
+		_bool		runningState;
+
+		NETWORKWARRIORINPUTDESC() :
+			runshift{ false }, moveFront{ false }, moveBack{ false }, moveLeft{ false }
+			, moveRight{ false }, WAttack{ false }, SAttack{ false }, RAttack{ false }, combo{ false }
+			, Roll{ false }, Hit{ false }, Jump{ false }, warriorPlayerJumpState{ false },
+			warriorPlayerFallingState{ false }, runningState{ false }
+		{}
+		NETWORKWARRIORINPUTDESC(_bool _isRunShift, _bool _isMoveFront, _bool _isMoveBack,
+			_bool _isMoveLeft, _bool _isMoveRight, _bool _isWAttack, _bool _isSAttack, _bool _isRAttack,
+			_bool _isCombo, _bool _isRoll, _bool _isHit, _bool _isJump, _bool _isWarriorPlayerJumpState,
+			_bool _isWarriorPlayerFaillingState, _bool _isRunningState) :
+			runshift{ _isRunShift }, moveFront{ _isMoveFront }, moveBack{ _isMoveBack }, moveLeft{ _isMoveLeft }
+			, moveRight{ _isMoveRight }, WAttack{ _isWAttack }, SAttack{ _isSAttack }, RAttack{ _isRAttack }, combo{ _isCombo }
+			, Roll{ _isRoll }, Hit{ _isHit }, Jump{ _isJump }, warriorPlayerJumpState{ _isWarriorPlayerJumpState },
+			warriorPlayerFallingState{ _isWarriorPlayerFaillingState }, runningState{ _isRunningState }
+		{}
+	};
+
 #define WINDOW_WIDTH					Client::DXVALUE::g_iWindowWidth
 #define WINDOW_HEIGHT					Client::DXVALUE::g_iWindowHeight
 

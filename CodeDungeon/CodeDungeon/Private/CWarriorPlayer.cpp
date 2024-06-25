@@ -1,6 +1,6 @@
 #include "ClientDefines.h"
 #include "CWarriorPlayer.h"
-#include "CWarriorAnimController.h"
+#include "CUserWarriorAnimController.h"
 #include "UGameInstance.h"
 #include "URenderer.h"
 #include "CMainCamera.h"
@@ -16,6 +16,8 @@
 #include "UTrail.h"
 #include "UVIBufferTrail.h"
 #include "CModelObjects.h"
+#include "UProcessedData.h"
+
 
 CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UPlayer(_spDevice, _wstrLayer, _eCloneType), 
@@ -63,7 +65,10 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	GetTransform()->SetPos(spCell->GetCenterPos());
 
 	SHPTR<CMainCamera> spMainCamera = std::static_pointer_cast<CMainCamera>(GetFollowCamera());
-	spMainCamera->SetMoveState(false);
+	if (nullptr != spMainCamera)
+	{
+		spMainCamera->SetMoveState(false);
+	}
 	GetAnimModel()->SetAnimation(L"idle01");
 	//GetTransform()->RotateFix(_float3{ 0.f, DirectX::XMConvertToRadians(180.f), 0.f });
 	GetTransform()->SetScale({ 0.5f, 0.5f, 0.5f });
@@ -78,9 +83,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	_wstring mainColliderTag = L"Main";
 
 	AddColliderInContainer(mainColliderTag, Collider);
-
 	{
-
 		UParticle::PARTICLEDESC tDesc;
 		tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEFOOTPRINT2DSHADER;
 		tDesc.wstrParticleShader = PROTO_RES_PARTICLEFOOTPRINT2DSHADER;
@@ -105,7 +108,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	m_stParticleType = m_spParticle->GetParticleSystem()->GetParticleTypeParam();
 	m_stParticleType->fParticleType = PARTICLE_TYPE_AUTO;
 	m_stParticleType->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
-	m_spParticle->SetTexture(L"Sand"); //Dust3 ���� ���
+	m_spParticle->SetTexture(L"Sand");// DUST 
 	
 	{
 		*m_spParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
@@ -127,22 +130,42 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 		m_spTrail->SetActive(true);
 		m_spTrail->SetColor(_float4(65.f / 255.f, 150.f / 255.f, 43.f / 255.f, 0.f));
 	}
+
+	for (auto& Colliders : GetColliderContainer())
+	{
+		Colliders.second->SetScale(_float3(3, 15, 3));
+	}
 	return S_OK;
+}
+
+void CWarriorPlayer::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
+{
+#ifdef _ENABLE_PROTOBUFF
+
+	SC_PLAYERSTATE* pPlayerData = reinterpret_cast<SC_PLAYERSTATE*>(_ProcessData.GetData());
+
+	IfAttack(pPlayerData->ifattack());
+	SetJumpingState(pPlayerData->jumpingstate());
+
+	GetAnimationController()->ReceiveNetworkProcessData(&pPlayerData);
+#endif
 }
 
 void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 {
+
 	__super::TickActive(_dTimeDelta);
-	
-	
 
-		
-	
-	
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-
-
-	GetAnimationController()->Tick(_dTimeDelta);
+	if (true == spGameInstance->IsMouseInWindowSize())
+	{
+		GetAnimationController()->Tick(_dTimeDelta);
+		_long		MouseMove = GetMouseMove();
+		if (MouseMove)
+		{
+			GetTransform()->RotateTurn(_float3(0.f, 1.f, 0.f), MouseMove * 5.f, _dTimeDelta);
+		}
+	}
 	GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
 
 
@@ -150,12 +173,11 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	SHPTR<UCollider> ps = GetAnimModel()->BringAttackCollider(UCollider::TYPE_OBB);
 	SHPTR<DirectX::BoundingOrientedBox> OBB = ps->GetOBB();
 	
-	_float3 pos= ps->GetCurPos() - OBB->Extents;
-	_float3 pos1= ps->GetCurPos() + OBB->Extents;
 	_float3 plusPoint=ps->GetHeightAdjustedPointFromCenter(OBB,false);
 	_float3 minusPoint=ps->GetHeightAdjustedPointFromCenter(OBB,true);
 	
 	_float4x4 AnimTransform = ps->GetTransformMatrix();
+
 	if (ps) {
 		m_spTrail->SetRenderingTrail(isAttack);
 
@@ -164,43 +186,30 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	}
 
 
+
 	m_spParticle->SetActive(true);
 
-	
-
-	
-
-	if (spGameInstance->GetDIKeyPressing(DIK_LSHIFT)&& spGameInstance->GetDIKeyPressing(DIK_W)&&!spGameInstance->GetDIKeyPressing(DIK_SPACE)) {//|| AnimState == CWarriorAnimController::ANIM_ATTACK|| AnimState == CWarriorAnimController::ANIM_COMBO
+	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_RUN)  {//|| AnimState == CWarriorAnimController::ANIM_ATTACK|| AnimState == CWarriorAnimController::ANIM_COMBO
 		*m_spParticle->GetParticleSystem()->GetAddParticleAmount() =4;
 		*m_spParticle->GetParticleSystem()->GetCreateInterval() = 0.355f;
 		_float3 pos = GetTransform()->GetPos() + GetTransform()->GetRight();
 		pos.y += 1.6;
-
 		_float3 Look = GetTransform()->GetLook();
 		_float3 Right = 1.2 * GetTransform()->GetRight();
 		//pos -= 3 * Look;
 		m_spParticle->SetPosition(pos);
 		m_spParticle->SetDirection(Right);
 	}
-	else {
-		
+	else {	
 		*m_spParticle->GetParticleSystem()->GetAddParticleAmount() = 0;
 		*m_spParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
-		//m_spParticle->SetActive(false);
 	}
 	// Rotation 
 	{
 		POINT ptCursorPos;
-		ShowCursor(FALSE);
-		_long		MouseMove = 0;
-		if (MouseMove = spGameInstance->GetDIMMoveState(DIMOUSEMOVE::DIMM_X))
-		{
-			GetTransform()->RotateTurn(_float3(0.f, 1.f, 0.f), MouseMove * 5.f, _dTimeDelta);
-		}
-
-		/*SetCursorPos(1000, 400);*/
+	//	ShowCursor(FALSE);
+	//SetCursorPos(1000, 400);
 	}
-
 	for (auto& Colliders : GetColliderContainer())
 	{
 		Colliders.second->SetScale(_float3(3, 15, 3));
@@ -214,7 +223,10 @@ void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 	_float3 direction(0.0f, 0.0f, 0.0f);
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-
+	if (GetCollisionState())
+	{
+//		GetTransform()->SetPos(GetPrevPos());
+	}
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
 	FollowCameraMove(_float3{ 0.f, 20.f, -40.f }, _dTimeDelta);
 }

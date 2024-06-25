@@ -4,7 +4,8 @@
 #include "CMainCamera.h"
 #include "CRooms.h"
 #include "UAnimModel.h"
-#include "CWarriorAnimController.h"
+#include "CUserWarriorAnimController.h"
+#include "CNetworkWarriorPlayerController.h"
 #include "CMummyAnimController.h"
 #include "CSarcophagusAnimController.h"
 #include "UAnimModel.h"
@@ -15,7 +16,6 @@
 #include "CSword.h"
 #include "CSarcophagus.h"
 #include "CIronBars.h"
-
 
 HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, CSHPTRREF<UDevice> _spDevice, CSHPTRREF<UCommand> _spCommand)
 {
@@ -48,16 +48,16 @@ HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, C
 	_spGameInstance->AddPrototype(PROTO_RES_FIREALPHATEXTUREGROUP, CLONETYPE::CLONE_STATIC,
 		CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\Fire\\Alpha", true));
 
+
+	_spGameInstance->AddPrototype(PROTO_COMP_USERWARRIORANIMCONTROLLER, CreateConstructorToNative<CUserWarriorAnimController>(_spDevice));
+	_spGameInstance->AddPrototype(PROTO_COMP_NETWORKWARRIORANIMCONTROLLER, CreateConstructorNative<CNetworkWarriorPlayerController>(_spDevice));
+	_spGameInstance->AddPrototype(PROTO_COMP_MUMMYANIMCONTROLLER, CreateConstructorToNative<CMummyAnimController>(_spDevice));
+	_spGameInstance->AddPrototype(PROTO_COMP_SARCOPHAGUSANIMCONTROLLER, CreateConstructorToNative<CSarcophagusAnimController>(_spDevice));
 	return S_OK;
 }
 
 HRESULT CProtoMaker::CreateMainSceneProtoData(CSHPTRREF<UGameInstance> _spGameInstance, CSHPTRREF<UDevice> _spDevice, CSHPTRREF<UCommand> _spCommand)
 {
-	_spGameInstance->AddPrototype(PROTO_COMP_WARRIORANIMCONTROLLER, CreateConstructorToNative<CWarriorAnimController>(_spDevice));
-	_spGameInstance->AddPrototype(PROTO_COMP_MUMMYANIMCONTROLLER, CreateConstructorToNative<CMummyAnimController>(_spDevice));
-	_spGameInstance->AddPrototype(PROTO_COMP_SARCOPHAGUSANIMCONTROLLER, CreateConstructorToNative<CSarcophagusAnimController>(_spDevice));
-
-
 	_float4x4 Matrix = _float4x4::CreateScale(0.1f) /** _float4x4::CreateRotationY(DirectX::XMConvertToRadians(180.f))*/;
 
 	Matrix = _float4x4::CreateScale(10.f);

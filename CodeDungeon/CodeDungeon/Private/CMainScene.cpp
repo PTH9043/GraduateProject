@@ -62,12 +62,8 @@ void CMainScene::TurnLightsOnRange()
 				{
 					torch_it->get()->SetActive(true);
 					ActiveLIght(LIGHTTYPE::TYPE_POINT, count, LIGHTACTIVE::ISACTIVE);
-					// dynamic_cast�� ����Ͽ� �ڽ� Ŭ������ ĳ����
-
 					if (pTorch != nullptr)
 					{
-						// �ڽ� Ŭ������ ĳ���õ� ��쿡�� GetParticle �Լ� ȣ�� ����
-						
 						pTorch->GetFire()->SetActive(true);
 					}
 				}
@@ -75,9 +71,7 @@ void CMainScene::TurnLightsOnRange()
 					torch_it->get()->SetActive(false);
 					ActiveLIght(LIGHTTYPE::TYPE_POINT, count, LIGHTACTIVE::NONACTIVE);
 					if (pTorch != nullptr)
-					{
-						// �ڽ� Ŭ������ ĳ���õ� ��쿡�� GetParticle �Լ� ȣ�� ����
-						
+					{			
 						pTorch->GetFire()->SetActive(false);
 					}
 				}
@@ -116,7 +110,21 @@ HRESULT CMainScene::LoadSceneData()
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	CProtoMaker::CreateMainSceneProtoData(spGameInstance, GetDevice(), std::static_pointer_cast<UCommand>(spGameInstance->GetGpuCommand()));
 #ifdef _ENABLE_PROTOBUFF
-	spGameInstance->MakeActors();
+	UCamera::CAMDESC tDesc;
+	tDesc.stCamProj = UCamera::CAMPROJ(UCamera::PROJECTION_TYPE::PERSPECTIVE, _float3(0.f, 0.f, 0.f),
+		_float3(0.f, 0.f, 1.f),
+		DirectX::XMConvertToRadians(60.0f), WINDOW_WIDTH, WINDOW_HEIGHT, 0.2f, 1000.f);
+	tDesc.stCamValue = UCamera::CAMVALUE(20.f, DirectX::XMConvertToRadians(90.f));
+	tDesc.eCamType = CAMERATYPE::MAIN;
+	// Actor Add Main Camera
+
+	VOIDDATAS vecDatas;
+	vecDatas.push_back(&tDesc);
+
+	m_spMainCamera = std::static_pointer_cast<CMainCamera>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MAINCAMERA, vecDatas));
+	m_spMainCamera->GetTransform()->SetPos({ 0.f, 10.f, -100.f });
+
+	spGameInstance->MakeActors({ m_spMainCamera });
 #endif
 	{
 		m_spMap = CreateConstructorNative<CMap>(spGameInstance->GetDevice());
@@ -166,7 +174,7 @@ HRESULT CMainScene::LoadSceneData()
 			m_spMainCamera = std::static_pointer_cast<CMainCamera>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MAINCAMERA, vecDatas));
 			m_spMainCamera->GetTransform()->SetPos({ 0.f, 10.f, -100.f });
 
-			CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_WARRIORANIMCONTROLLER };
+			CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_USERWARRIORANIMCONTROLLER };
 			CWarriorPlayer::PLAYERDESC PlayerDesc{ m_spMainCamera };
 			m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
 				PROTO_ACTOR_WARRIORPLAYER, { &CharDesc, &PlayerDesc }));

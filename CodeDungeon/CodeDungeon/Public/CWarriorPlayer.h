@@ -11,9 +11,8 @@ END
 BEGIN(Client)
 class CSword;
 /*
-@ Date: 2024-04-30, Writer: 박태현
+@ Date: 2024-04-30, Writer: 
 @ Explain
--  사용자가 직접 조종하는 클래스이다.
 */
 class CWarriorPlayer final : public UPlayer {
 public:
@@ -21,11 +20,12 @@ public:
 	CWarriorPlayer(const CWarriorPlayer& _rhs);
 	DESTRUCTOR(CWarriorPlayer)
 public:
-	// UPlayer을(를) 통해 상속됨
 	CLONE_MACRO(CWarriorPlayer, "CWarriorPlayer::CloneToFailed")
 	virtual void Free() override;
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _Datas) override;
+	virtual void ReceiveNetworkProcessData(const UProcessedData& _ProcessData);
+public: /* Get Set */
 	SHPTR<UParticle>& GetParticle() { return m_spParticle; }
 
 	void IfAttack(_bool is) { isAttack = is; }
@@ -42,16 +42,15 @@ protected:
 private:
 	void TranslateStateMoveAndRunF(CSHPTRREF<UGameInstance> _spGameInstance, const _double& _dTimeDelta, const _float _fSpeed);
 private:
+	SHPTR<UParticle>										m_spParticle;
+	PARTICLEPARAM*										m_stParticleParam;
+	ComputeParticleType*								m_stParticleType;
 
-	SHPTR<UParticle>		m_spParticle;
-	PARTICLEPARAM* m_stParticleParam;
-	ComputeParticleType* m_stParticleType;
+	SHPTR<CSword>											m_spSword;
+	SHPTR<UTrail>												m_spTrail;
+	_bool																isAttack;
 
-	SHPTR<CSword>	m_spSword;
-	SHPTR<UTrail>	m_spTrail;
-	_bool isAttack;
 	_bool m_bisCollisionWithObj;
-
 	_float3 m_f3CollidedNormal;
 };
 

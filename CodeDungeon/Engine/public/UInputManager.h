@@ -32,10 +32,10 @@ public:
 	_long GetDIMMoveState(_ubyte _eMouseMove) { return *((_long*)&m_eMouseState + _eMouseMove); }
 	// Get Mouse Position
 	_float2 GetMousePosition();
-private:
-	RECT GetClientAsRect();
 
 	_bool	IsMouseInWindowSize();
+private:
+	RECT GetClientAsRect();
 private:
 	using	KEYARR = ARRAY<_ubyte, MAX_KEYSIZE>;
 	using	KEYMETHODS = UNORMAP<_wstring, KEYACTIONFUNC>;

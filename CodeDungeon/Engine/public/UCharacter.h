@@ -20,11 +20,14 @@ public:
 	struct CHARACTERDESC {
 		_wstring		wstrAnimModelProtoData;
 		_wstring		wstrAnimControllerProtoData;
+		_bool			isNetworkConnected;
 
-		CHARACTERDESC() :wstrAnimModelProtoData{L" "}, wstrAnimControllerProtoData{L" "}
+		CHARACTERDESC() :wstrAnimModelProtoData{L" "}, wstrAnimControllerProtoData{L" "}, isNetworkConnected{false}
 		{ }
-		CHARACTERDESC(const _wstring& _wstrAnimModelPathData, const _wstring& _wstrAnimControllerProtoData) :
-			wstrAnimModelProtoData{ _wstrAnimModelPathData }, wstrAnimControllerProtoData{ _wstrAnimControllerProtoData }{}
+		CHARACTERDESC(const _wstring& _wstrAnimModelPathData, const _wstring& _wstrAnimControllerProtoData, 
+			const _bool _isNetworkConnected = false) :
+			wstrAnimModelProtoData{ _wstrAnimModelPathData }, wstrAnimControllerProtoData{ _wstrAnimControllerProtoData }, 
+			isNetworkConnected{ _isNetworkConnected } {}
 	};
 public:
 	UCharacter(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType);
@@ -61,6 +64,8 @@ public: /* get set */
 	CSHPTRREF<UAnimModel> GetAnimModel() const { return m_spAnimModel; }
 	SHPTR<UNavigation> GetCurrentNavi() const { return m_spCurNavi; }
 	CSHPTRREF<UCollider> GetHitCollider() const { return m_spHitCollider; }
+	// 해당하는 오브젝트가 Network와 연결되어있는지 확인하는 변수
+	const _bool IsNetworkConnected() const { return m_isNetworkConnected; }
 
 	const _bool& GetHitState() const { return m_bisHit; }
 	void SetHitstate(_bool _newState) { m_bisHit = _newState; }
@@ -90,25 +95,27 @@ protected: /* get set */
 	const _float3& GetLastMovingDirection() const { return m_f3LastMovedDirection; }
 private:
 	// AnimationModel
-	SHPTR< UAnimModel>				m_spAnimModel;
+	SHPTR< UAnimModel>					m_spAnimModel;
 
-	SHPTR<UAnimationController>		m_spAnimationController;
+	SHPTR<UAnimationController>	m_spAnimationController;
 	// 이전 위치 저장
-	_float3								m_vPrevPos;
+	_float3												m_vPrevPos;
 	// 현재 스테이지
-	SHPTR<UNavigation>		m_spCurNavi;
-	SHPTR<UCollider>			m_spHitCollider;
+	SHPTR<UNavigation>						m_spCurNavi;
+	SHPTR<UCollider>							m_spHitCollider;
 
 	//이동 속도
-	_float							m_fMoveSpeed;
-	_float							m_fRunSpeed;
-	_bool							m_bIsRunning;
-	_bool							m_bisHit;
-	_bool							m_bisCollision;
+	_float													m_fMoveSpeed;
+	_float													m_fRunSpeed;
+	_bool													m_bIsRunning;
+	_bool													m_bisHit;
+	_bool													m_bisCollision;
 
 	//이동한 방향
-	_float3							m_f3MovedDirection;
-	_float3							m_f3LastMovedDirection;
+	_float3												m_f3MovedDirection;
+	_float3												m_f3LastMovedDirection;
+	// 해당하는 오브젝트가 Network Object인지 확인하는 변수
+	_bool													m_isNetworkConnected;
 };
 
 END

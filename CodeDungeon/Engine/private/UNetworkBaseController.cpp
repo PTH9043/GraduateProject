@@ -2,6 +2,7 @@
 #include "UNetworkBaseController.h"
 #include "UGameInstance.h"
 #include "UActor.h"
+#include "UProcessedData.h"
 
 UNetworkBaseController::UNetworkBaseController() : 
 	m_isNetworkTickRunning{true},
@@ -13,7 +14,8 @@ UNetworkBaseController::UNetworkBaseController() :
 	m_llNetworkOwnerID{0},
 	m_TcpTotalBuffer{},
 	m_RemainBufferLength{0},
-	m_spNetworkAddress{nullptr}
+	m_spNetworkAddress{nullptr},
+	m_iSceneID{0}
 {
 }
 
@@ -39,7 +41,7 @@ void UNetworkBaseController::SendTcpPacket(_char* _pPacket, _short _PacketType, 
 	UServerMethods::SendTcpPacket(m_ClientTcpSocket, pOverExp);
 }
 
-void UNetworkBaseController::MakeActors()
+void UNetworkBaseController::MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer)
 {
 	m_NetworkInitDataContainer.clear();
 }
@@ -50,6 +52,8 @@ void UNetworkBaseController::AddNetworkInitData(_int _NetworkID, const NETWORKRE
 	m_NetworkInitDataContainer.insert(MakePair(_NetworkID, _NetworkInitData));
 }
 
+void UNetworkBaseController::CreateNetworkActor(_int _NetworkID, const NETWORKRECEIVEINITDATA& _networkInitData){}
+
 SHPTR<UActor> UNetworkBaseController::FindNetworkActor(const _int _NetworkID)
 {
 	const auto& iter = m_NetworkActorContainer.find(_NetworkID);
@@ -57,8 +61,31 @@ SHPTR<UActor> UNetworkBaseController::FindNetworkActor(const _int _NetworkID)
 	return iter->second;
 }
 
-void UNetworkBaseController::InsertNetworkQuery(const UProcessedData& _data)
+void UNetworkBaseController::InsertNetworkActorContainer(_int _NetworkID, CSHPTRREF<UActor> _spActor)
 {
+	assert(nullptr != _spActor);
+	m_NetworkActorContainer.insert(MakePair(_NetworkID, _spActor));
+}
+
+void UNetworkBaseController::SendProcessPacket(const UProcessedData& _ProcceedData)
+{
+	// Send Tcp Packet
+	SendTcpPacket(&_ProcceedData.GetData()[0], _ProcceedData.GetDataType(), _ProcceedData.GetDataSize());
+}
+
+void UNetworkBaseController::ProcessedNetworkQuery()
+{
+	while (!m_NetworkQuery.empty())
+	{
+		UProcessedData data;
+		m_NetworkQuery.try_pop(data);
+		
+		SHPTR<UActor> spActor = FindNetworkActor(data.GetDataID());
+		if (nullptr != spActor)
+		{
+			spActor->ReceiveNetworkProcessData(data);
+		}
+	}
 }
 
 void UNetworkBaseController::ServerTick()
@@ -101,12 +128,9 @@ void UNetworkBaseController::NativePacket()
 	RecvTcpPacket();
 }
 
-void UNetworkBaseController::ActorProcessesNetworkData(_int _NetworkID, const UProcessedData& _ProcessedData)
+void UNetworkBaseController::InsertProcessedDataInQuery(const UProcessedData& _ProcessedData)
 {
-	const auto& iter = m_NetworkActorContainer.find(_NetworkID);
-	RETURN_CHECK(m_NetworkActorContainer.end() == iter, ;);
-	// Send Message
-	iter->second->ReceiveNetworkProcessData(_ProcessedData);
+	m_NetworkQuery.push(_ProcessedData);
 }
 
 void UNetworkBaseController::CombineRecvPacket(UOverExp* _pOverExp, _llong _numBytes)
@@ -119,14 +143,14 @@ void UNetworkBaseController::CombineRecvPacket(UOverExp* _pOverExp, _llong _numB
 	while (m_RemainBufferLength > 0)
 	{
 		PACKETHEAD Head;
-		::memcpy(&Head, &m_TcpTotalBuffer[0], PACKETHEAD_SIZE);
+		::memcpy(&Head, pBuffer, PACKETHEAD_SIZE);
 		short CurrentPacketSize = Head.PacketSize + PACKETHEAD_SIZE;
 		if ((m_RemainBufferLength - CurrentPacketSize) < 0)
 		{
 			::memmove(&m_TcpTotalBuffer[0], pBuffer, MAX_PROCESSBUF_LENGTH - MoveBufferValue);
 			return;
 		}
-		ProcessPacket(&pBuffer[MoveBufferValue], Head);
+		ProcessPacket(&pBuffer[PACKETHEAD_SIZE], Head);
 		m_RemainBufferLength -= CurrentPacketSize;
 		pBuffer += CurrentPacketSize;
 		MoveBufferValue += CurrentPacketSize;
