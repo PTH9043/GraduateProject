@@ -26,6 +26,8 @@ public:/*Get Set */
 	const _int GetGameObjectType() const { return m_GameObjectType; }
 	const _int GetCellIndex() const { return m_CellIndex; }
 	const _bool IsJumpable() const { return m_isJumpable; }
+	const _float GetMoveSpeed() const { return m_fMoveSpeed; }
+	const _float GetRunSpeed() const { return m_fRunSpeed; }
 
 	void SetJumpable(const _bool _isJumpable) { this->m_isJumpable = _isJumpable; }
 protected: /* Get Set */
@@ -35,6 +37,8 @@ protected: /* Get Set */
 	void SetCharStatus(const CHARSTATUS& _charStatus) { ::memcpy(&m_CharStatus, &_charStatus, sizeof(CHARSTATUS)); }
 	void SetGameObjectType(const _int _GameObjectType) { this->m_GameObjectType = _GameObjectType; }
 	void SetCellIndex(const _int _CellIndex) { this->m_CellIndex = _CellIndex; }
+	void SetMoveSpeed(const _float _fMoveSpeed) { this->m_fMoveSpeed = _fMoveSpeed; }
+	void SetRunSpeed(const _float _fRunSpeed) { this->m_fRunSpeed = _fRunSpeed; }
 private:
 	virtual void Free() override;
 private:
@@ -48,6 +52,9 @@ private:
 
 	SHPTR<ATransform>		m_spTransform;
 	SHPTR<ACollider>			m_spCollider;
+
+	_float									m_fMoveSpeed;
+	_float									m_fRunSpeed;
 };
 
 

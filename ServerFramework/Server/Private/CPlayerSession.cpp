@@ -7,7 +7,8 @@
 namespace Server {
 
 	CPlayerSession::CPlayerSession(SESSION_CONSTRUCTOR)
-		: Core::ASession(SESSION_CONDATA(Core::SESSIONTYPE::PLAYER)), m_iStartCellIndex{ 741 }
+		: Core::ASession(SESSION_CONDATA(Core::SESSIONTYPE::PLAYER)), m_iStartCellIndex{ 741 },
+		m_iWComboStack {0},	m_iSComboStack{0}
 	{
 		::memset(&m_CopyBuffer[0], 0, sizeof(BUFFER));
 		::memset(&m_CopyPacketHead, 0, sizeof(PACKETHEAD));
@@ -24,6 +25,8 @@ namespace Server {
 		CombineProto(REF_OUT m_CopyBuffer, REF_OUT m_CopyPacketHead, scConnectSuccess, TAG_SC::TAG_SC_CONNECTSUCCESS);
 		SendData(&m_CopyBuffer[0], m_CopyPacketHead);
 		SetGameObjectType(TAG_CHAR::TAG_MAINPLAYER);
+		SetMoveSpeed(10.f);
+		SetRunSpeed(30.f);
 		return true;
 	}
 
@@ -83,13 +86,27 @@ namespace Server {
 				// 현재 받아온 패킷을 재해석 한다. 
 				CS_LOGIN Login;
 				Login.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+				std::cout << "Session ID Login Success [" << Login.id() << "]\n";
 				{
 					// Make Sc Login 
 					SC_OTHERCLIENTLOGIN scOtherLogin;
 					// 다른 클라이언트들에게 해당 플레이어가 접속했음을 알림
 					PROTOFUNC::MakeScOtherClientLogin(OUT  &scOtherLogin, Login.id(), m_iStartCellIndex, TAG_CHAR::TAG_OTHERPLAYER);
 					CombineProto(REF_OUT m_CopyBuffer, REF_OUT m_CopyPacketHead, scOtherLogin, TAG_SC::TAG_SC_OTHERCLIENTLOGIN);
-					spCoreInstance->BroadCastMessageExcludingSession(Login.id(), &m_CopyBuffer[0], m_CopyPacketHead);
+					spCoreInstance->BroadCastMessageExcludingSession(GetSessionID(), &m_CopyBuffer[0], m_CopyPacketHead);
+
+					for (auto& iter : spCoreInstance->GetSessionContainer())
+					{
+						if (iter.first == GetSessionID())
+							continue;
+
+						if (nullptr == iter.second)
+							continue;
+
+						PROTOFUNC::MakeScOtherClientLogin(OUT & scOtherLogin, iter.first, m_iStartCellIndex, TAG_CHAR::TAG_OTHERPLAYER);
+						CombineProto(REF_OUT m_CopyBuffer, REF_OUT m_CopyPacketHead, scOtherLogin, TAG_SC::TAG_SC_OTHERCLIENTLOGIN);
+						SendData(&m_CopyBuffer[0], m_CopyPacketHead);
+					}
 				}
 				// Login Packet을 조합하고 메시지를 보낸다. 
 				{
@@ -111,7 +128,7 @@ namespace Server {
 							if (Login.id() == iter->GetSessionID())
 								continue;
 
-							_int GameObjectID = GetGameObjectType() == TAG_CHAR::TAG_MAINPLAYER ? TAG_CHAR::TAG_OTHERPLAYER : GetGameObjectType();
+							_int GameObjectID = GetGameObjectType();
 
 							SHPTR<ATransform> spTransform = iter->GetTransform();
 							Vector3 vPosition = spTransform->GetPos();
@@ -129,6 +146,18 @@ namespace Server {
 				CS_MOVE csMove;
 				csMove.ParseFromArray(_pPacket, _PacketHead.PacketSize);
 
+
+			}
+			break;
+			case TAG_CS::TAG_CS_PLAYERSTATE:
+			{
+				CS_PLAYERSTATE csPlayerState;
+				csPlayerState.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+
+				SC_PLAYERSTATE scPlayerState;
+				PROTOFUNC::MakeScPlayerState(OUT & scPlayerState, GetSessionID(),
+					csPlayerState.ifattack(), csPlayerState.jumpingstate(), csPlayerState.animstate(),
+					csPlayerState.movespeed(), csPlayerState.triggername().c_str());
 
 			}
 			break;

@@ -12,7 +12,7 @@ using NETWORKACTORCONTAINER = UNORMAP<_int, SHPTR<UActor>>;
 using NETWORKINITDATACONTAINER = UNORMAP<_int, NETWORKRECEIVEINITDATA>;
 using NETWORKQUERY = CONQUEUE<UProcessedData>;
 
-
+class UActor;
 /*
 @ Date: 2024-02-03,  Writer: นฺลยว๖
 @ Explain
@@ -25,16 +25,21 @@ public:
 public:
 	virtual HRESULT NativeConstruct(const _string& _strIPAddress, const _int _PortNumber) PURE;
 	void SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize);
-	virtual void MakeActors() PURE;
+	virtual void MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer) PURE;
 	void AddNetworkInitData(_int _NetworkID, const NETWORKRECEIVEINITDATA& _NetworkInitData);
+	virtual void CreateNetworkActor(_int _NetworkID, const NETWORKRECEIVEINITDATA& _networkInitData) PURE;
 	SHPTR<UActor> FindNetworkActor(const _int _NetworkID);
-	void InsertNetworkQuery(const UProcessedData& _data);
+	void InsertNetworkActorContainer(_int _NetworkID, CSHPTRREF<UActor> _spActor);
+	void SendProcessPacket(const UProcessedData& _ProcceedData);
+	void ProcessedNetworkQuery();
 public: /* get set */
+	void SetSceneID(const _int _iSceneID) { this->m_iSceneID = _iSceneID; }
+
 	const _llong GetNetworkOwnerID() const { return m_llNetworkOwnerID; }
 protected:
 	void ServerTick();
 	virtual void NativePacket() PURE;
-	void ActorProcessesNetworkData(_int _NetworkID, const UProcessedData& _ProcessedData);
+	void InsertProcessedDataInQuery(const UProcessedData& _ProcessedData);
 	void CombineRecvPacket(UOverExp* _pOverExp, _llong _numBytes);
 	virtual void ProcessPacket(_char* _pPacket, PACKETHEAD _PacketHead) PURE;
 	void RecvTcpPacket();
@@ -58,6 +63,7 @@ protected: /* get set */
 	CSHPTRREF<UNetworkAddress> GetNetworkAddress() const { return m_spNetworkAddress; }
 	const NETWORKACTORCONTAINER& GetNetworkActorContainer() const { return m_NetworkActorContainer; }
 	const NETWORKINITDATACONTAINER& GetNetworkInitDataContainer() const { return m_NetworkInitDataContainer; }
+	const _int GetSceneID() const { return m_iSceneID; }
 
 	void SetNetworkOwnerID(const _llong& _llNetworkOwnerID) { this->m_llNetworkOwnerID = _llNetworkOwnerID; }
 private:
@@ -80,6 +86,7 @@ private:
 	NETWORKACTORCONTAINER		m_NetworkActorContainer;
 	NETWORKINITDATACONTAINER	m_NetworkInitDataContainer;
 	NETWORKQUERY								m_NetworkQuery;
+	_int														m_iSceneID;
 };
 
 END

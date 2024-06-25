@@ -14,8 +14,7 @@ HRESULT CNetworkClientController::NativeConstruct(const _string& _strIPAddress, 
 	RETURN_CHECK_FAILED(__super::NativeConstruct(_strIPAddress, _PortNumber), E_FAIL);
 	return S_OK;
 }
-
-void CNetworkClientController::MakeActors()
+void CNetworkClientController::MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer)
 {
 #ifdef _ENABLE_PROTOBUFF
 	for (auto& CharInitData : GetNetworkInitDataContainer())
@@ -27,26 +26,13 @@ void CNetworkClientController::MakeActors()
 			SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 			// Main Camera Load 
 			{
-				UCamera::CAMDESC tDesc;
-				tDesc.stCamProj = UCamera::CAMPROJ(UCamera::PROJECTION_TYPE::PERSPECTIVE, _float3(0.f, 0.f, 0.f),
-					_float3(0.f, 0.f, 1.f),
-					DirectX::XMConvertToRadians(60.0f), WINDOW_WIDTH, WINDOW_HEIGHT, 0.2f, 1000.f);
-				tDesc.stCamValue = UCamera::CAMVALUE(20.f, DirectX::XMConvertToRadians(90.f));
-				tDesc.eCamType = CAMERATYPE::MAIN;
-				// Actor Add Main Camera
-
-				VOIDDATAS vecDatas;
-				vecDatas.push_back(&tDesc);
-
-				SHPTR<CMainCamera> spMainCamera = std::static_pointer_cast<CMainCamera>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MAINCAMERA, vecDatas));
-				spMainCamera->GetTransform()->SetPos({ 0.f, 10.f, -100.f });
-
-				CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_WARRIORANIMCONTROLLER };
-				CWarriorPlayer::PLAYERDESC PlayerDesc{ spMainCamera };
+				CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_USERWARRIORANIMCONTROLLER };
+				CWarriorPlayer::PLAYERDESC PlayerDesc{ std::static_pointer_cast<UCamera>(_actorContainer[MAINCAMERA_ACTORS_ID])};
 				SHPTR<CWarriorPlayer> spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
 					PROTO_ACTOR_WARRIORPLAYER, { &CharDesc, &PlayerDesc }));
 
 				spGameInstance->RegisterCurrentPlayer(spWarriorPlayer);
+				InsertNetworkActorContainer(CharInitData.first, spWarriorPlayer);
 			}
 		}
 		break;
@@ -54,17 +40,40 @@ void CNetworkClientController::MakeActors()
 		{
 			SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 			{
-				CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_WARRIORANIMCONTROLLER };
+				CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_NETWORKWARRIORANIMCONTROLLER, true };
 				SHPTR<CWarriorPlayer> spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
 					PROTO_ACTOR_WARRIORPLAYER, { &CharDesc }));
 
-				spGameInstance->RegisterCurrentPlayer(spWarriorPlayer);
+				spGameInstance->AddCollisionPawnList(spWarriorPlayer);
+				InsertNetworkActorContainer(CharInitData.first, spWarriorPlayer);
 			}
 		}
 		break;
 		}
 	}
-	__super::MakeActors();
+	__super::MakeActors(_actorContainer);
+#endif
+}
+
+void CNetworkClientController::CreateNetworkActor(_int _NetworkID, const NETWORKRECEIVEINITDATA& _networkInitData)
+{
+#ifdef _ENABLE_PROTOBUFF
+	switch (_networkInitData.iType)
+	{
+	case TAG_CHAR::TAG_OTHERPLAYER:
+	{
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		{
+			CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_NETWORKWARRIORANIMCONTROLLER, true };
+			SHPTR<CWarriorPlayer> spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
+				PROTO_ACTOR_WARRIORPLAYER, { &CharDesc }));
+
+			spGameInstance->AddCollisionPawnList(spWarriorPlayer);
+			InsertNetworkActorContainer(_NetworkID, spWarriorPlayer);
+		}
+	}
+	break;
+	}
 #endif
 }
 
@@ -88,9 +97,10 @@ void CNetworkClientController::ProcessPacket(_char* _pPacket, PACKETHEAD _Packet
 				// newwork Init Data 추가
 				AddNetworkInitData(networkRecvInitData.iNetworkID, networkRecvInitData);
 			}
+			OutputDebugString(_wstring::to_string(scConnectSuccess.id()));
 			// 로그인에 성공했다는 패킷 보내기
 			CS_LOGIN csLogin;
-			PROTOFUNC::MakeCsLogin(OUT & csLogin, scConnectSuccess.id());
+			PROTOFUNC::MakeCsLogin(OUT & csLogin, GetNetworkOwnerID());
 			SendProtoData(csLogin, TAG_CS::TAG_CS_LOGIN);
 		}
 		break; 
@@ -101,8 +111,24 @@ void CNetworkClientController::ProcessPacket(_char* _pPacket, PACKETHEAD _Packet
 			{
 				NETWORKRECEIVEINITDATA networkRecvInitData(csOtherClientLogin.id(),
 					csOtherClientLogin.cellindex(), csOtherClientLogin.type());
-				AddNetworkInitData(networkRecvInitData.iNetworkID, networkRecvInitData);
+				switch (GetSceneID())
+				{
+				case SCENE_LOGO:
+					AddNetworkInitData(networkRecvInitData.iNetworkID, networkRecvInitData);
+					break;
+				case SCENE_STAGE1:
+					CreateNetworkActor(networkRecvInitData.iNetworkID, networkRecvInitData);
+					break;
+				}
 			}
+		}
+		break;
+		case TAG_SC::TAG_SC_PLAYERSTATE:
+		{
+			SC_PLAYERSTATE scPlayerState;
+			scPlayerState.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+			//// 해당하는 ID에 데이터 전달
+			InsertProcessedDataInQuery(UProcessedData(scPlayerState.id(), scPlayerState, TAG_SC_PLAYERSTATE));
 		}
 		break;
 	}

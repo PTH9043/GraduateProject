@@ -17,6 +17,7 @@ namespace Core
 
 	_bool ASession::Start()
 	{
+		__super::Start();
 		RecvData();
 		return true;
 	}
@@ -56,6 +57,9 @@ namespace Core
 
 	void ASession::Disconnect()
 	{
+#ifdef USE_DEBUG
+		std::cout << "DisConnected" << std::endl;
+#endif
 		m_isConnected = false;
 	}
 

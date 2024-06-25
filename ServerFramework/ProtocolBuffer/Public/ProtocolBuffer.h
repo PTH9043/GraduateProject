@@ -28,7 +28,8 @@ namespace PROTOFUNC
 	void MakeScConnectSuccess(SC_CONNECTSUCCESS* _pOut, LLONG _id,  int _cellIndex,  int _type);
 	void MakeScOtherClientLogin(SC_OTHERCLIENTLOGIN* _pOut, LLONG _id, int _cellIndex, int _type);
 	void MakeScMoveFailed(SC_MOVEFAILED* _pOut, LLONG _id, VECTOR3* _pPrevPos);
-	void MakeScCharState(SC_CHARSTATE* _pOut, LLONG _id, int _type, const char* _msg);
+	void MakeScPlayerState(SC_PLAYERSTATE* _pOut, LLONG _id, bool _ifattack, bool _jumpingstate,
+		bool _animstate, bool _movespeed, const char* _triggername);
 	void MakeScMoveState(SC_MOVESTATE* _pOut, LLONG _id, VECTOR3* _pMovePos);
 	void MakeScViewInRange(SC_VIEWINRANGE* _pOut, LLONG _id, VECTOR3* _pPos, int _cellIndex, int _type);
 
@@ -38,7 +39,8 @@ namespace PROTOFUNC
 
 	void MakeCsLogin(CS_LOGIN* _pOut, LLONG _id);
 	void MakeCsMove(CS_MOVE* _pOut, LLONG _id, VECTOR3* _pMovePos);
-	void MakeCsCharState(CS_CHARSTATE* _pOut, LLONG _id, int _type, const char* _msg);
+	void MakeCsPlayerState(CS_PLAYERSTATE* _pOut, LLONG _id, bool _ifattack, bool _jumpingstate,
+		bool _animstate, bool _movespeed, const char* _triggername);
 	void MakeCsAttack(CS_ATTACK* _pOut, LLONG _id, float _damage, VECTOR3* _pMovePos);
 	void MakeCsDisconnect(CS_DISCONNECT* _pOut, LLONG _id);
 

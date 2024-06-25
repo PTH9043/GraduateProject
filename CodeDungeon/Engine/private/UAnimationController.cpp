@@ -41,7 +41,10 @@ HRESULT UAnimationController::NativeConstructClone(const VOIDDATAS& _tDatas)
 
 void UAnimationController::Tick(const _double& _dTimeDelta)
 {
+}
 
+void UAnimationController::ReceiveNetworkProcessData(void* _pData)
+{
 }
 
 void UAnimationController::UpdateState(CSHPTRREF<UAnimModel> _spAnimModel, const _int _iAnimState, const _wstring& _wstrTrigger)

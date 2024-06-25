@@ -57,14 +57,14 @@ message SC_MOVEFAILED
 	VECTOR3 prevPos = 3;
 }
 
-/*
-Char의 State를 정의한다. 
-*/
-message SC_CHARSTATE 
+message SC_PLAYERSTATE
 {
-	int64 id = 1;
-	int64 type = 2;
-	string trigger = 3;
+	int64			id = 1;
+	bool				ifattack = 2;
+	bool				jumpingstate = 3;
+	int64			animstate = 4;
+	int64			movespeed = 5;
+	string			triggername = 6;
 }
 
 /*
@@ -74,6 +74,7 @@ message SC_MOVESTATE
 {
 	int64 id = 1;
 	VECTOR3 movePos = 2;
+	VECTOR3 rotate = 3;
 }
 
 /*
@@ -105,16 +106,20 @@ message CS_MOVE
 {
 	int64 id = 1;
 	VECTOR3 movePos = 2;
+	VECTOR3 rotate = 3;
 }
 
 /*
-Char의 State를 정의한다. 
+WarriorPlayerState
 */
-message CS_CHARSTATE 
+message CS_PLAYERSTATE
 {
-	int64	id = 1;
-	int64	type = 2;
-	string trigger = 3;
+	int64			id = 1;
+	bool				ifattack = 2;
+	bool				jumpingstate = 3;
+	int64			animstate = 4;
+	int64			movespeed = 5;
+	string			triggername = 6;
 }
 
 
@@ -131,3 +136,4 @@ message CS_DISCONNECT
 {
 	int64 id = 1;
 }
+

@@ -949,7 +949,7 @@ void UGameInstance::NetworkEnd()
 
 void UGameInstance::SetSceneIDToNetController(const _int _iSceneID)
 {
-	assert(nullptr != m_spNetworkBaseController);
+	RETURN_CHECK(nullptr == m_spNetworkBaseController, ;);
 	m_spNetworkBaseController->SetSceneID(_iSceneID);
 }
 

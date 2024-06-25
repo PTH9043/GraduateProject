@@ -41,6 +41,7 @@ void USceneManager::RegisterScene(CSHPTRREF<UScene> _spScene)
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	spGameInstance->ClearOnceTypeData();
+	spGameInstance->SetSceneIDToNetController(_spScene->GetSceneID());
 
 	m_spCurScene = _spScene;
 	m_spCurScene->LoadSceneData();

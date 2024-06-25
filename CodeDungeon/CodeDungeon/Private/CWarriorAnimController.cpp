@@ -1,5 +1,5 @@
 #include "ClientDefines.h"
-#include "CWarriorAnimController.h"
+#include "CUserWarriorAnimController.h"
 #include "CWarriorPlayer.h"
 #include "UGameInstance.h"
 #include "UAnimModel.h"

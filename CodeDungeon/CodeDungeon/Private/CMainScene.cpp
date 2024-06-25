@@ -174,7 +174,7 @@ HRESULT CMainScene::LoadSceneData()
 			m_spMainCamera = std::static_pointer_cast<CMainCamera>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MAINCAMERA, vecDatas));
 			m_spMainCamera->GetTransform()->SetPos({ 0.f, 10.f, -100.f });
 
-			CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_WARRIORANIMCONTROLLER };
+			CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_USERWARRIORANIMCONTROLLER };
 			CWarriorPlayer::PLAYERDESC PlayerDesc{ m_spMainCamera };
 			m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
 				PROTO_ACTOR_WARRIORPLAYER, { &CharDesc, &PlayerDesc }));

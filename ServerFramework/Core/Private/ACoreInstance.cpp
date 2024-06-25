@@ -22,15 +22,15 @@ namespace Core
 	{
 		RETURN_CHECK(nullptr == _spService, ;);
 		m_spService = _spService;
-		m_spMySqlDriver = CreateInitConstructor<AMySqlDriver>(ThisShared<ACoreInstance>(), "tcp://127.0.0.1:3306", 
-			"root", "Qkrxogus0652!");
+	//	m_spMySqlDriver = CreateInitConstructor<AMySqlDriver>(ThisShared<ACoreInstance>(), "tcp://127.0.0.1:3306", 
+	//		"root", "Qkrxogus0652!");
 		// Navigation Ready 
 		for (auto& Navigation : m_NavigationWorkBench)
 		{
 			Navigation = CreateInitNative<ANavigation>("..\\..\\Resource\\Navigation\\interior.bin");
 		}
 		// PathFinder Ready
-		for (_int i = 0; i < TLS::MAX_WORKTHREAD; ++i)
+		for (_int i = 0; i < TLS::MAX_THREAD; ++i)
 		{
 			m_PathFinderWorkBench[i] = CreateInitNative<APathFinder>(*m_NavigationWorkBench[i]->GetCells().get());
 		}

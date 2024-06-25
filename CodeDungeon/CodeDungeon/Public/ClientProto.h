@@ -20,7 +20,7 @@
 
 #define PROTO_RES_LONGSWORDMODEL L"Proto_Res_LongSwordModel"
 
-#define PROTO_COMP_WARRIORANIMCONTROLLER L"Proto_Comp_WarriorAniMController"
+#define PROTO_COMP_USERWARRIORANIMCONTROLLER L"Proto_Comp_UserWarriorAnimController"
 #define PROTO_COMP_MUMMYANIMCONTROLLER L"Proto_Comp_MummyAniMController"
 #define PROTO_COMP_SARCOPHAGUSANIMCONTROLLER L"Proto_Comp_SarcophagusAniMController"
-
+#define PROTO_COMP_NETWORKWARRIORANIMCONTROLLER L"Proto_Comp_NetworkWarriorAnimController"

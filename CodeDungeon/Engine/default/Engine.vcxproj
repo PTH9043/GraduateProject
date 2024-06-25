@@ -328,6 +328,7 @@
     <FxCompile Include="..\..\Shader\Compute2DAttackEffect.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DFootPrint.hlsl" />
     <FxCompile Include="..\..\Shader\DownSampling.hlsl" />
+    <FxCompile Include="..\..\Shader\Equipment.hlsl" />
     <FxCompile Include="..\..\Shader\Hdr.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DBloodEffect.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DEmitParticle.hlsl" />

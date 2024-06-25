@@ -34,6 +34,8 @@ private:
 	_int						m_iStartCellIndex;
 	BUFFER				m_CopyBuffer;
 	PACKETHEAD	m_CopyPacketHead;
+	_int						m_iWComboStack;
+	_int						m_iSComboStack;
 };
 
 

@@ -152,6 +152,7 @@ public: /* InputManager*/
 	_long GetDIMMoveState(_ubyte _eMouseMove);
 	_float2 GetMousePosition();
 	_bool IsMouseInWindowSize(const float _Width, const float _Height);
+	_bool IsMouseInWindowSize();
 public: /* ThreadManager */
 	// 스레드에 THREADFUNC 함수를 등록
 	void RegisterFuncToRegister(const THREADFUNC& _CallBack, void* _pData);
@@ -263,11 +264,13 @@ public: /* AudioSystemManager*/
 	SHPTR<USound> BringSound(const _wstring& _wstrSoundName);
 public: /* NetworkManager */
 	void StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController);
-	void MakeActors();
+	void MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer);
 	void SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize);
+	void SendProcessPacket(UProcessedData&& _ProcessData);
 	SHPTR<UActor> FindNetworkActor(const _int _NetworkID);
-	void InsertNetworkQuery(const UProcessedData& _data);
 	void NetworkEnd();
+	void SetSceneIDToNetController(const _int _iSceneID);
+	const _llong GetNetworkOwnerID() const;
 	/*
 	@ Date: 2024-02-04, Writer: 박태현
 	@ Explain

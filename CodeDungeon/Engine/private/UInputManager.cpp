@@ -167,15 +167,6 @@ _float2 UInputManager::GetMousePosition()
     return _float2(_float(pt.x), _float(pt.y));
 }
 
-RECT UInputManager::GetClientAsRect()
-{
-    RECT rcDest;
-    GetClientRect(m_spGraphicDesc->hWnd, &rcDest);
-    ClientToScreen(m_spGraphicDesc->hWnd, reinterpret_cast<POINT*>(&rcDest.left));
-    ClientToScreen(m_spGraphicDesc->hWnd, reinterpret_cast<POINT*>(&rcDest.right));
-    return rcDest;
-}
-
 _bool UInputManager::IsMouseInWindowSize()
 {
     _float2 vMosuePos = GetMousePosition();
@@ -187,4 +178,13 @@ _bool UInputManager::IsMouseInWindowSize()
         }
     }
     return false;
+}
+
+RECT UInputManager::GetClientAsRect()
+{
+    RECT rcDest;
+    GetClientRect(m_spGraphicDesc->hWnd, &rcDest);
+    ClientToScreen(m_spGraphicDesc->hWnd, reinterpret_cast<POINT*>(&rcDest.left));
+    ClientToScreen(m_spGraphicDesc->hWnd, reinterpret_cast<POINT*>(&rcDest.right));
+    return rcDest;
 }

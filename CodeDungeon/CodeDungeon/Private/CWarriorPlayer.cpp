@@ -154,15 +154,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 {
 
 	__super::TickActive(_dTimeDelta);
-	
-	_float3 pos = GetTransform()->GetPos();
-	pos.z += 5;
-	_float3 pos1 = GetTransform()->GetPos();
-	pos1.z += 5;
-	pos1.y += 5;
-	
-//	m_spTrail->SetRenderingTrail(isAttack);
-//	m_spTrail->AddTrail(pos, pos1);
+
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	if (true == spGameInstance->IsMouseInWindowSize())
 	{
@@ -180,8 +172,6 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	SHPTR<UCollider> ps = GetAnimModel()->BringAttackCollider(UCollider::TYPE_OBB);
 	SHPTR<DirectX::BoundingOrientedBox> OBB = ps->GetOBB();
 	
-	_float3 pos= ps->GetCurPos() - OBB->Extents;
-	_float3 pos1= ps->GetCurPos() + OBB->Extents;
 	_float3 plusPoint=ps->GetHeightAdjustedPointFromCenter(OBB,false);
 	_float3 minusPoint=ps->GetHeightAdjustedPointFromCenter(OBB,true);
 	
@@ -196,7 +186,6 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		*m_spParticle->GetParticleSystem()->GetCreateInterval() = 0.355f;
 		_float3 pos = GetTransform()->GetPos() + GetTransform()->GetRight();
 		pos.y += 1.6;
-
 		_float3 Look = GetTransform()->GetLook();
 		_float3 Right = 1.2 * GetTransform()->GetRight();
 		//pos -= 3 * Look;

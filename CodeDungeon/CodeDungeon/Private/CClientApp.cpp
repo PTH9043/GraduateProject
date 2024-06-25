@@ -39,10 +39,8 @@ HRESULT CClientApp::NativeConstruct(const HINSTANCE& _hInst, const _uint& _iCmdS
 	m_iCmdShow = _iCmdShow;
 	m_spGameInstance = GET_INSTANCE(UGameInstance);
 
-	// Ŭ���̾�Ʈ ������ ���
 	m_spGameInstance->RegisterFuncToRegister(ClientThread, this);
 #if _ENABLE_PROTOBUFF
-	// ��Ʈ��ũ ������ ��� 
 	m_spGameInstance->StartNetwork(CreateNative<CNetworkClientController>(IP_ADDRESS, TCP_PORT_NUM));
 #endif
 	return S_OK;

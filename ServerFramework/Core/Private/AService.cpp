@@ -37,6 +37,9 @@ namespace Core {
 		RETURN_CHECK(0 >= m_SessionContainer.size(), ;);
 		for (auto& iter : m_SessionContainer)
 		{
+			if (nullptr == iter.second)
+				continue;
+
 			iter.second->SendData(_pPacket, _PacketHead);
 		}
 	}
@@ -48,6 +51,10 @@ namespace Core {
 		{
 			if (iter.first == _SessionID)
 				continue;
+
+			if (nullptr == iter.second)
+				continue;
+
 
 			iter.second->SendData(_pPacket, _PacketHead);
 		}
@@ -64,7 +71,7 @@ namespace Core {
 	{
 		const auto& iter = m_SessionContainer.find(_SessionID);
 		RETURN_CHECK(iter == m_SessionContainer.end(), ;);
-		const auto& Object = m_GameObjectContainer.find(_SessionID);
+		RETURN_CHECK(nullptr == iter->second, ;);
 		// Disconnect
 		{
 			std::atomic_thread_fence(std::memory_order_seq_cst);
@@ -73,7 +80,6 @@ namespace Core {
 				// Session »èÁ¦
 				iter->second->Disconnect();
 				iter->second.reset();
-				Object->second.reset();
 			}
 		}
 	}
@@ -83,7 +89,6 @@ namespace Core {
 		SHPTR<ASession> spSession = FindSession(_SessionID);
 		RETURN_CHECK(nullptr == _spSession && nullptr != spSession, ;);
 		m_SessionContainer.insert(MakePair(_SessionID, _spSession));
-		m_GameObjectContainer.insert(MakePair(_SessionID, _spSession));
 	}
 
 	void AService::InsertGameObject(SESSIONID _SessionID, SHPTR<AGameObject> _spGameObject)

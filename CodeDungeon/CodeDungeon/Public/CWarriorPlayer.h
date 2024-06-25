@@ -11,9 +11,8 @@ END
 BEGIN(Client)
 class CSword;
 /*
-@ Date: 2024-04-30, Writer: ������
+@ Date: 2024-04-30, Writer: 
 @ Explain
--  ����ڰ� ���� �����ϴ� Ŭ�����̴�.
 */
 class CWarriorPlayer final : public UPlayer {
 public:
@@ -21,12 +20,10 @@ public:
 	CWarriorPlayer(const CWarriorPlayer& _rhs);
 	DESTRUCTOR(CWarriorPlayer)
 public:
-	// UPlayer��(��) ���� ��ӵ�
 	CLONE_MACRO(CWarriorPlayer, "CWarriorPlayer::CloneToFailed")
 	virtual void Free() override;
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _Datas) override;
-	// ��Ʈ��ũ ������ �޾ƿ��� �Լ�
 	virtual void ReceiveNetworkProcessData(const UProcessedData& _ProcessData);
 public: /* Get Set */
 	SHPTR<UParticle>& GetParticle() { return m_spParticle; }
@@ -53,10 +50,7 @@ private:
 	SHPTR<UTrail>												m_spTrail;
 	_bool																isAttack;
 
-	SHPTR<CSword>	m_spSword;
-	SHPTR<UTrail>	m_spTrail;
 	_bool m_bisCollisionWithObj;
-
 	_float3 m_f3CollidedNormal;
 };
 

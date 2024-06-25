@@ -4,6 +4,7 @@
 BEGIN(Engine)
 class UAnimModel;
 class UCharacter;
+class UProcessedData;
 /*
 @ Date: 2024-04-28, Writer: 박태현
 @ Explain
@@ -36,15 +37,18 @@ public:
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _tDatas) override PURE;
 	// Tick
 	virtual void Tick(const _double& _dTimeDelta) override PURE;
+	// 네트워크 정보를 받아오는 함수
+	virtual void ReceiveNetworkProcessData(void* _pData);
 protected:
 	void ClearTrigger() { this->m_wstrTrigger.clear(); }
 public: /* get set*/
 	const _int GetAnimState() const { return m_iAnimState;  }
 	const _wstring& GetTrigger() const { return m_wstrTrigger; }
+
+	void SetAnimState(const _int _iAnimState) { this->m_iAnimState = _iAnimState; }
 protected:
 	SHPTR<UCharacter> GetOwnerCharacter() { return m_wpOwnerCharacter.lock(); }
 protected: /* get set  */
-	void SetAnimState(const _int _iAnimState) { this->m_iAnimState = _iAnimState; }
 	void SetTrigger(const _wstring& _wstrTrigger) { this->m_wstrTrigger = _wstrTrigger; }
 
 	void UpdateState(CSHPTRREF<UAnimModel> _spAnimModel, const _int _iAnimState, const _wstring& _wstrTrigger);

@@ -412,9 +412,6 @@
     <Filter Include="05.Actor\01.Pawn\Item\Equip\Weapon">
       <UniqueIdentifier>{c5cf7c8c-64b5-451c-90b9-e8841ca88449}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.Actor\01.Pawn\Item\Equip\NewFilter1">
-      <UniqueIdentifier>{361b8236-ad3c-4587-b0c4-96e161645e27}</UniqueIdentifier>
-    </Filter>
     <Filter Include="98.ShaderFile\Common\Particle\FootPrint">
       <UniqueIdentifier>{d5ff3202-cf55-409f-b962-639a4bf20bc7}</UniqueIdentifier>
     </Filter>
@@ -435,6 +432,9 @@
     </Filter>
     <Filter Include="06.Component\Input">
       <UniqueIdentifier>{66c229d0-027b-4124-b00b-5daacd01f105}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\01.Pawn\Item\Equip\Defensive">
+      <UniqueIdentifier>{361b8236-ad3c-4587-b0c4-96e161645e27}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -817,7 +817,7 @@
       <Filter>05.Actor\01.Pawn\Item\Equip\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UDefensiveGear.cpp">
-      <Filter>05.Actor\01.Pawn\Item\Equip\NewFilter1</Filter>
+      <Filter>05.Actor\01.Pawn\Item\Equip\Defensive</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UTrail.cpp">
       <Filter>05.Actor\Trail</Filter>
@@ -1245,7 +1245,7 @@
       <Filter>05.Actor\01.Pawn\Item\Equip\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UDefensiveGear.h">
-      <Filter>05.Actor\01.Pawn\Item\Equip\NewFilter1</Filter>
+      <Filter>05.Actor\01.Pawn\Item\Equip\Defensive</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UTrail.h">
       <Filter>05.Actor\Trail</Filter>
@@ -1394,6 +1394,9 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\Trail.hlsl">
       <Filter>98.ShaderFile\Common\Trail</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\Equipment.hlsl">
+      <Filter>98.ShaderFile\Common\NonAlpha</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
