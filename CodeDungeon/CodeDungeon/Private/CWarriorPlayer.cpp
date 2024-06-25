@@ -47,6 +47,11 @@ CWarriorPlayer::CWarriorPlayer(const CWarriorPlayer& _rhs) :
 
 void CWarriorPlayer::Free()
 {
+#ifdef _ENABLE_PROTOBUFF
+
+
+
+#endif
 }
 
 HRESULT CWarriorPlayer::NativeConstruct()
@@ -142,12 +147,20 @@ void CWarriorPlayer::ReceiveNetworkProcessData(const UProcessedData& _ProcessDat
 {
 #ifdef _ENABLE_PROTOBUFF
 
-	SC_PLAYERSTATE* pPlayerData = reinterpret_cast<SC_PLAYERSTATE*>(_ProcessData.GetData());
+	switch (_ProcessData.GetDataType())
+	{
+	case TAG_SC_PLAYERSTATE:
+	{
+		SC_PLAYERSTATE pPlayerData;
+		pPlayerData.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
 
-	IfAttack(pPlayerData->ifattack());
-	SetJumpingState(pPlayerData->jumpingstate());
+		IfAttack(pPlayerData.ifattack());
+		SetJumpingState(pPlayerData.jumpingstate());
 
-	GetAnimationController()->ReceiveNetworkProcessData(&pPlayerData);
+		GetAnimationController()->ReceiveNetworkProcessData(&pPlayerData);
+	}
+	break;
+	}
 #endif
 }
 
@@ -213,10 +226,6 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		POINT ptCursorPos;
 	//	ShowCursor(FALSE);
 	//SetCursorPos(1000, 400);
-	}
-	for (auto& Colliders : GetColliderContainer())
-	{
-		Colliders.second->SetScale(_float3(3, 15, 3));
 	}
 	UpdateCollision();
 }

@@ -24,6 +24,7 @@ protected:
 private:
 	virtual void Free() override;
 private:
+	_string m_strTriggerName;
 };
 
 END

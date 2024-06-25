@@ -157,8 +157,12 @@ namespace Server {
 				SC_PLAYERSTATE scPlayerState;
 				PROTOFUNC::MakeScPlayerState(OUT & scPlayerState, GetSessionID(),
 					csPlayerState.ifattack(), csPlayerState.jumpingstate(), csPlayerState.animstate(),
-					csPlayerState.movespeed(), csPlayerState.triggername().c_str());
+					csPlayerState.movespeed(), csPlayerState.triggername());
 
+				CombineProto(REF_OUT m_CopyBuffer, REF_OUT m_CopyPacketHead, scPlayerState, TAG_SC::TAG_SC_PLAYERSTATE);
+				m_CopyPacketHead.PacketSize += scPlayerState.triggername().size();
+
+				spCoreInstance->BroadCastMessage(&m_CopyBuffer[0], m_CopyPacketHead);
 			}
 			break;
 		}

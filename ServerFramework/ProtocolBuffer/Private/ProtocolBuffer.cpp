@@ -63,6 +63,17 @@ void PROTOFUNC::MakeScPlayerState(SC_PLAYERSTATE* _pOut, LLONG _id, bool _ifatta
 	_pOut->set_triggername(_triggername);
 }
 
+void PROTOFUNC::MakeScPlayerState(SC_PLAYERSTATE* _pOut, LLONG _id, bool _ifattack, bool _jumpingstate, bool _animstate, bool _movespeed, std::string _strTriggerName)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_id);
+	_pOut->set_ifattack(_ifattack);
+	_pOut->set_jumpingstate(_jumpingstate);
+	_pOut->set_animstate(_animstate);
+	_pOut->set_movespeed(_movespeed);
+	_pOut->set_triggername(_strTriggerName);
+}
+
 void PROTOFUNC::MakeScMoveState(SC_MOVESTATE* _pOut, LLONG _id, VECTOR3* _pMovePos)
 {
 	assert(nullptr != _pOut);
@@ -105,6 +116,18 @@ void PROTOFUNC::MakeCsPlayerState(CS_PLAYERSTATE* _pOut, LLONG _id, bool _ifatta
 	_pOut->set_animstate(_animstate);
 	_pOut->set_movespeed(_movespeed);
 	_pOut->set_triggername(_triggername);
+}
+
+void PROTOFUNC::MakeCsPlayerState(CS_PLAYERSTATE* _pOut, LLONG _id, bool _ifattack, 
+	bool _jumpingstate, bool _animstate, bool _movespeed, std::string _strTriggerName)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_id);
+	_pOut->set_ifattack(_ifattack);
+	_pOut->set_jumpingstate(_jumpingstate);
+	_pOut->set_animstate(_animstate);
+	_pOut->set_movespeed(_movespeed);
+	_pOut->set_triggername(_strTriggerName);
 }
 
 void PROTOFUNC::MakeCsAttack(CS_ATTACK* _pOut, LLONG _id, float _damage, VECTOR3* _pMovePos)

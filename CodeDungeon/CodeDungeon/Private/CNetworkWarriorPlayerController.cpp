@@ -42,16 +42,23 @@ HRESULT CNetworkWarriorPlayerController::NativeConstructClone(const VOIDDATAS& _
 
 void CNetworkWarriorPlayerController::Tick(const _double& _dTimeDelta)
 {
-
+	SHPTR<CWarriorPlayer> spWarriorPlayer = m_wpWarriorPlayer.lock();
+	// Jump or fall state
+	if (spWarriorPlayer->GetJumpingState() || spWarriorPlayer->GetFallingState()) {
+		spWarriorPlayer->GetTransform()->MoveForward(_dTimeDelta, ANIM_RUN == GetAnimState() ? 30.f : 10.f);
+	}
 }
 
 void CNetworkWarriorPlayerController::ReceiveNetworkProcessData(void* _pData)
 {
 #ifdef _ENABLE_PROTOBUFF
 
-	SC_PLAYERSTATE* pPlayerData = reinterpret_cast<SC_PLAYERSTATE*>(_pData);
+	SC_PLAYERSTATE* pPlayerData = static_cast<SC_PLAYERSTATE*>(_pData);
 
-	SetTrigger(UMethod::ConvertSToW(pPlayerData->triggername()));
+	if (!pPlayerData->triggername().empty())
+	{
+		SetTrigger(UMethod::ConvertSToW(pPlayerData->triggername()));
+	}
 	SetAnimState(pPlayerData->animstate());
 
 #endif
