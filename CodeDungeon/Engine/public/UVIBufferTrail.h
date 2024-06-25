@@ -26,7 +26,7 @@ public:
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;
 	//HRESULT Update(_double TimeDelta, _float4x4 WorldMatrix, _bool bUpdate, _bool& bShow);
-	
+	virtual HRESULT Render(CSHPTRREF<UShader> _spShader, CSHPTRREF<UCommand> _spCommands, const _uint& _VerticesCnt = 0)override;
 private:
 	//TRAILBUFFERDESC m_tTrailBifferDesc;
 	TRAILVTXCOUNT m_tTrailMaxCountDesc;
@@ -35,7 +35,7 @@ private:
 	_uint m_iCatmullRomIndex[4]{};
 	_uint m_iCatmullRomCount = 4;
 	_double m_EndTime = 0.3, m_EndTimeAcc = 0.0;
-	VTXDEFAULT* m_pBufferDataBegin;
+	UINT8* m_pBufferDataBegin;
 private:
 	_float4x4 m_StartMatrix, m_EndMatrix;
 public:

@@ -1,43 +1,41 @@
 #include "EngineDefine.h"
 #include "UVIBufferTrail.h"
 #include "UMethod.h"
-#include "UCommand.h"
 #include "UShader.h"
+#include "UGpuCommand.h"
 
 UVIBufferTrail::UVIBufferTrail(CSHPTRREF<UDevice> _spDevice, const VIBUFFERTYPE _eBufferType)
-	: UVIBuffer(_spDevice, VISPACE_TYPE::SPACE_2D, VIINSTANCE_TYPE::SINGLE, _eBufferType)
+	: UVIBuffer(_spDevice, VISPACE_TYPE::SPACE_2D, VIINSTANCE_TYPE::SINGLE, _eBufferType), m_pBufferDataBegin{nullptr}
 {
 }
 
 UVIBufferTrail::UVIBufferTrail(const UVIBufferTrail& _rhs) :
-	UVIBuffer(_rhs)
+	UVIBuffer(_rhs), m_pBufferDataBegin{ nullptr }
 {
 }
 
 void UVIBufferTrail::Free()
 {
-	/*GetVertexGpuBuffer()->Unmap(0, nullptr);*/
+
+	//GetVertexGpuBuffer()->Unmap(0, nullptr);
+
+
 }
 
 HRESULT UVIBufferTrail::NativeConstruct()
 {
 	RETURN_CHECK_FAILED(__super::NativeConstruct(), E_FAIL);	
-	return S_OK;
-}
+	
+	RETURN_CHECK_FAILED(CreateVtxBufferWithNoData(25, sizeof(VTXDEFAULT), nullptr,
+				D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER), E_FAIL);
+	//RETURN_CHECK_FAILED(CreateVtxBuffer(100, sizeof(VTXDEFAULT), nullptr,
+	//	D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST), E_FAIL);
 
-HRESULT UVIBufferTrail::NativeConstructClone(const VOIDDATAS& _vecDatas)
-{
-	RETURN_CHECK_FAILED(__super::NativeConstructClone(_vecDatas), E_FAIL);
-	{
-		if (_vecDatas.size() > 0)
-		{
-			m_tTrailMaxCountDesc = UMethod::ConvertTemplate_Index<TRAILVTXCOUNT>(_vecDatas, 0);
-		}
-	}
-	RETURN_CHECK_FAILED(CreateVtxBuffer(m_tTrailMaxCountDesc.iMaxVertexCount, sizeof(VTXDEFAULT), nullptr,
-				D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST), E_FAIL);
+	m_stD3DVertexBufferView.BufferLocation = m_cpVertexGpuBuffer->GetGPUVirtualAddress();
+	m_stD3DVertexBufferView.StrideInBytes = sizeof(VTXDEFAULT);
+	m_stD3DVertexBufferView.SizeInBytes = sizeof(VTXDEFAULT) * 25;
+	HRESULT hr = m_cpVertexGpuBuffer->Map(0, nullptr, reinterpret_cast<void**>(&m_pBufferDataBegin));
 
-	HRESULT hr = GetVertexGpuBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&m_pBufferDataBegin));
 	//RETURN_CHECK_FAILED(__super::NativeConstructClone(_vecDatas), E_FAIL);
 	//{
 	//	if (_vecDatas.size() > 0)
@@ -47,7 +45,7 @@ HRESULT UVIBufferTrail::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	//}
 
 	//{
-	//	// Vertex °³¼ö
+	//	// Vertex ï¿½ï¿½ï¿½ï¿½
 	//	const _uint VERTEX_CNT = 102;
 	//	
 	//	{
@@ -73,7 +71,7 @@ HRESULT UVIBufferTrail::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	//				Vertecies[i + 1].vTexUV = _float2(0.f, 1.f);
 	//			}
 	//		}
-	//		// Position º¹Á¦
+	//		// Position ï¿½ï¿½ï¿½ï¿½
 	//		for (_uint i = 0; i < VERTEX_CNT; ++i)
 	//			VertexPos[i] = Vertecies[i].vPosition;
 
@@ -84,9 +82,9 @@ HRESULT UVIBufferTrail::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	//}
 	//// Index
 	//{
-	//	// Index °³¼ö
+	//	// Index ï¿½ï¿½ï¿½ï¿½
 	//	const _uint INDICES_CNT = 100;
-	//	// ¸ñ·Ï
+	//	// ï¿½ï¿½ï¿½
 	//	INDICIES16* pIndices = Make::AllocBuffer<INDICIES16>(INDICES_CNT);
 	//	ZeroMemory(pIndices, sizeof(INDICIES16) * INDICES_CNT);
 	//	for (_uint i = 0; i < INDICES_CNT; i += 2)
@@ -105,16 +103,32 @@ HRESULT UVIBufferTrail::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	//HRESULT hr = GetVertexGpuBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&m_pBufferDataBegin));
 
 	return S_OK;
+}
+
+HRESULT UVIBufferTrail::NativeConstructClone(const VOIDDATAS& _vecDatas)
+{
+	RETURN_CHECK_FAILED(__super::NativeConstructClone(_vecDatas), E_FAIL);
+
+	
+	return S_OK;
 
 
 }
 
-HRESULT UVIBufferTrail::Render(CSHPTRREF<UShader> _spShader, CSHPTRREF<UCommand> _spCommand, const _uint& _iInstanceCnt)
+HRESULT UVIBufferTrail::Render(CSHPTRREF<UShader> _spShader, CSHPTRREF<UCommand> _spCommand, const _uint& _VerticesCnt)
 {
 	RETURN_CHECK(nullptr == _spShader || nullptr == _spCommand, E_FAIL);
 	_spShader->CommitLocalShaderDatas(_spCommand);
-
-
+	const ComPtr<Dx12GraphicsCommandList>& pGraphicCmdList = _spCommand->GetGpuCmdList();
+	pGraphicCmdList->IASetPrimitiveTopology(m_ePrimitiveTopology);
+	// Vertex
+	{
+		pGraphicCmdList->IASetVertexBuffers(0, 1, &m_stD3DVertexBufferView);
+	}
+	
+	pGraphicCmdList->DrawInstanced(_VerticesCnt, 1, 0, 0);
+	
+	
 	return S_OK;
 }
 
@@ -122,8 +136,27 @@ HRESULT UVIBufferTrail::Render(CSHPTRREF<UShader> _spShader, CSHPTRREF<UCommand>
 
 void UVIBufferTrail::SetVertices(VECTOR<VTXDEFAULT>& pVertices, _int iVertexCount) {
 
-	SetVertexBufferViewSizeInBytes(sizeof(VTXDEFAULT) * iVertexCount);
-	memcpy(m_pBufferDataBegin, pVertices.data(), sizeof(VTXDEFAULT) * iVertexCount);
+	//m_stD3DVertexBufferView.SizeInBytes = sizeof(VTXDEFAULT) * iVertexCount;
+	//m_iVertexCnt = iVertexCount;
+	//memcpy(m_pBufferDataBegin, pVertices.data(), sizeof(VTXDEFAULT) * iVertexCount);
+	
+	if (GetVertexGpuBuffer() != nullptr) {
+		
+		
+		/*if (FAILED(hr) || m_pBufferDataBegin == nullptr) {
+			throw std::runtime_error("Failed to map GPU buffer.");
+		}*/
+
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+		memcpy(m_pBufferDataBegin, pVertices.data(), sizeof(VTXDEFAULT) * iVertexCount);
+
+	
+
+		// ï¿½ï¿½Å¸ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+		m_stD3DVertexBufferView.SizeInBytes = sizeof(VTXDEFAULT) * iVertexCount;
+		m_iVertexCnt = iVertexCount;
+	}
+	
 }
 
 

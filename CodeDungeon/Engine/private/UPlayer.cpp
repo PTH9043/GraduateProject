@@ -156,7 +156,7 @@ HRESULT UPlayer::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UT
 	return S_OK;
 }
 
-void UPlayer::Collision(CSHPTRREF<UPawn> _pEnemy)
+void UPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }
 

@@ -31,7 +31,7 @@ void UTrail::Free()
 {
 }
 
-void UTrail::Collision(CSHPTRREF<UPawn> _pEnemy)
+void UTrail::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }
 
@@ -56,9 +56,9 @@ HRESULT UTrail::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	// Add Shader 
 	AddShader(PROTO_RES_TRAILSHADER);
 
-	m_fCreateTime = 0.001f;
-	m_iMaxCount = 100;
-	m_iDivide = 8;
+	m_fCreateTime = 0.0001f;
+	m_iMaxCount = 25;
+	m_iDivide = 1;
 	m_fTime = m_fCreateTime + 1.f;
 	return S_OK;
 }
@@ -149,15 +149,17 @@ void UTrail::SetColor(_float4 _col)
 
 void UTrail::LateTickActive(const _double& _dTimeDelta)
 {
-	AddRenderGroup(RENDERID::RI_ALPHA);
+
+	AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
+
 }
 
 HRESULT UTrail::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
 	__super::RenderActive(_spCommand, _spTableDescriptor);
 	GetTransform()->BindTransformData(GetShader());
-	GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTrailTexGroup->GetTexture(L"Trail"));
-	GetShader()->BindSRVBuffer(SRV_REGISTER::T1, m_spTrailTexGroup->GetTexture(L"Dissolve2"));
+	GetShader()->BindSRVBuffer(SRV_REGISTER::T1, m_spTrailTexGroup->GetTexture(L"Trail"));
+	GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTrailTexGroup->GetTexture(L"Dissolve2"));
 
 
 	if (m_bRender) {
@@ -208,9 +210,14 @@ HRESULT UTrail::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDes
 
 			iLineIndex++;
 		}
-		m_spVIBufferTrail->SetVertices(Vertices, static_cast<_int>(iVertexCount));
-		m_spVIBufferTrail->Render(GetShader(), _spCommand);
+
+		m_spVIBufferTrail->SetVertices(Vertices, iVertexCount);
+		m_spVIBufferTrail->Render(GetShader(), _spCommand, iVertexCount);
 	}
+	
+
+	}
+
 	return S_OK;
 }
 

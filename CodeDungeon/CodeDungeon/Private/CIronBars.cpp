@@ -65,8 +65,8 @@ void CIronBars::TickActive(const _double& _dTimeDelta)
 void CIronBars::LateTickActive(const _double& _dTimeDelta)
 {
 	__super::LateTickActive(_dTimeDelta);
-	for (auto& Colliders : GetColliderContainer())
-		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
+	//for (auto& Colliders : GetColliderContainer())
+	//	Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
 }
 
 HRESULT CIronBars::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
@@ -81,6 +81,7 @@ HRESULT CIronBars::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<
 	return S_OK;
 }
 
-void CIronBars::Collision(CSHPTRREF<UPawn> _pEnemy)
+void CIronBars::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }
+

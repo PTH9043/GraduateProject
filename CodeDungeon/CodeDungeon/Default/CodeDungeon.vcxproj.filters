@@ -180,6 +180,7 @@
     <ClInclude Include="..\Private\CDataManager.h" />
     <ClInclude Include="..\Public\CNetworkWarriorPlayerController.h">
       <Filter>06.Comp\Controller\WarriorPlayer\Network</Filter>
+      <Filter>05.Objects\ModelObjects\Map\StaticObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -259,6 +260,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\CNetworkWarriorPlayerController.cpp">
       <Filter>06.Comp\Controller\WarriorPlayer\Network</Filter>
+      <Filter>05.Objects\ModelObjects\Map\StaticObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

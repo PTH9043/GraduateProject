@@ -184,6 +184,7 @@
     <ClInclude Include="..\Public\CTorch.h" />
     <ClInclude Include="..\Public\CWarriorPlayer.h" />
     <ClInclude Include="..\Public\CUserWarriorAnimController.h" />
+    <ClInclude Include="..\Public\CWarriorAnimController.h" />
     <ClInclude Include="CodeDungeon.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -212,6 +213,7 @@
     <ClCompile Include="..\Private\CTorch.cpp" />
     <ClCompile Include="..\Private\CWarriorPlayer.cpp" />
     <ClCompile Include="..\Private\CUserWarriorAnimController.cpp" />
+    <ClCompile Include="..\Private\CWarriorAnimController.cpp" />
     <ClCompile Include="CodeDungeon.cpp" />
   </ItemGroup>
   <ItemGroup>

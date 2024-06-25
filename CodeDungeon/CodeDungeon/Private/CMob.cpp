@@ -90,9 +90,10 @@ HRESULT CMob::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTabl
 	return S_OK;
 }
 
-void CMob::Collision(CSHPTRREF<UPawn> _pEnemy)
+void CMob::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }
+
 
 void CMob::SearchForPlayers()
 {

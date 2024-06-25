@@ -85,7 +85,7 @@ HRESULT UVIBuffer::CreateVtxBuffer(const _uint& _iVertexCnt, const _uint& _iBuff
 	const D3D_PRIMITIVE_TOPOLOGY& _eTopology, const POSVECTOR& _vecPosVector, const _bool _isComputeMinMaxPositon)
 {
 	const _uint BUFFER_SIZE = _iVertexCnt * _iBufferSize;
-
+	//const _uint BUFFER_SIZE = ((_iBufferSize * _iVertexCnt + 255) & ~255);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	SHPTR<UGpuCommand> spGpuCommand = spGameInstance->GetGpuCommand();
 
@@ -112,11 +112,11 @@ HRESULT UVIBuffer::CreateVtxBuffer(const _uint& _iVertexCnt, const _uint& _iBuff
 
 	return S_OK;
 }
-
-HRESULT UVIBuffer::CreateVtxBuffer(const _uint& _iVertexCnt, const _uint& _iBufferSize, const void* _pVertexData, const D3D_PRIMITIVE_TOPOLOGY& _eTopology)
+HRESULT UVIBuffer::CreateVtxBuffer(const _uint& _iVertexCnt, const _uint& _iBufferSize, const void* _pVertexData,
+	const D3D_PRIMITIVE_TOPOLOGY& _eTopology)
 {
 	const _uint BUFFER_SIZE = _iVertexCnt * _iBufferSize;
-
+	//const _uint BUFFER_SIZE = ((_iBufferSize * _iVertexCnt + 255) & ~255);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	SHPTR<UGpuCommand> spGpuCommand = spGameInstance->GetGpuCommand();
 
@@ -130,6 +130,30 @@ HRESULT UVIBuffer::CreateVtxBuffer(const _uint& _iVertexCnt, const _uint& _iBuff
 	m_stD3DVertexBufferView.BufferLocation = m_cpVertexGpuBuffer->GetGPUVirtualAddress();
 	m_stD3DVertexBufferView.SizeInBytes = BUFFER_SIZE;
 	m_stD3DVertexBufferView.StrideInBytes = _iBufferSize;
+	m_ePrimitiveTopology = _eTopology;
+
+
+
+
+	return S_OK;
+}
+HRESULT UVIBuffer::CreateVtxBufferWithNoData(const _uint& _iVertexCnt, const _uint& _iBufferSize, const void* _pVertexData,
+	const D3D_PRIMITIVE_TOPOLOGY& _eTopology, const  D3D12_HEAP_TYPE& d3dHeapType, const D3D12_RESOURCE_STATES& d3dResourceStates)
+{
+	//const _uint BUFFER_SIZE = _iVertexCnt * _iBufferSize;
+	const _uint BUFFER_SIZE = ((_iBufferSize * _iVertexCnt + 255) & ~255);
+
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	SHPTR<UGpuCommand> spGpuCommand = spGameInstance->GetGpuCommand();
+
+	RETURN_CHECK_FAILED(UMethod::CreateTextureResource(GetDevice()->GetDV(),
+		spGpuCommand->GetResCmdList().Get(), BUFFER_SIZE, _pVertexData,
+		m_cpVertexGpuBuffer, nullptr, d3dHeapType, d3dResourceStates), E_FAIL);
+
+	// 자원 동기화
+	spGpuCommand->WaitForGpuResourceUpload();
+
+
 	m_ePrimitiveTopology = _eTopology;
 
 	return S_OK;

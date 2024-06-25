@@ -199,14 +199,14 @@ HRESULT CMummy::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTa
 	return S_OK;
 }
 
-void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy)
+void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 	PAWNTYPE ePawnType = _pEnemy->GetPawnType();
 	if (PAWNTYPE::PAWN_CHAR == ePawnType)
 	{
 		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
 
-		for(auto& iter : GetColliderContainer())
+		for (auto& iter : GetColliderContainer())
 		{
 			if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
 			{
@@ -218,9 +218,9 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy)
 			else {
 				SetHitstate(false);
 			}
-				
 
-			for(auto& iter2 : pCharacter->GetColliderContainer())
+
+			for (auto& iter2 : pCharacter->GetColliderContainer())
 			{
 				if (iter.second->IsCollision(iter2.second))
 					SetCollisionState(true);
@@ -230,5 +230,6 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy)
 		}
 	}
 }
+
 
 

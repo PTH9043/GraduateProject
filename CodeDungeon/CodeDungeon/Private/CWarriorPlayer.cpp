@@ -20,12 +20,28 @@
 
 
 CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
-	: UPlayer(_spDevice, _wstrLayer, _eCloneType), m_spSword{nullptr}
+	: UPlayer(_spDevice, _wstrLayer, _eCloneType), 
+	m_spSword{ nullptr }, 
+	m_bisCollisionWithObj{ false }, 
+	isAttack{ false }, 
+	m_stParticleType{}, 
+	m_stParticleParam{},
+	m_spParticle{nullptr},
+	m_spTrail{nullptr},
+	m_f3CollidedNormal{}
 {
 }
 
 CWarriorPlayer::CWarriorPlayer(const CWarriorPlayer& _rhs) : 
-	UPlayer(_rhs)
+	UPlayer(_rhs), 
+	m_spSword{ nullptr },
+	m_bisCollisionWithObj{ false },
+	isAttack{ false },
+	m_stParticleType{},
+	m_stParticleParam{},
+	m_spParticle{ nullptr },
+	m_spTrail{ nullptr },
+	m_f3CollidedNormal{}
 {
 }
 
@@ -147,7 +163,6 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	
 //	m_spTrail->SetRenderingTrail(isAttack);
 //	m_spTrail->AddTrail(pos, pos1);
-
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	if (true == spGameInstance->IsMouseInWindowSize())
 	{
@@ -160,11 +175,24 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	}
 	GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
 
-	m_spParticle->SetActive(true);
 
 	_int AnimState = GetAnimationController()->GetAnimState();
+	SHPTR<UCollider> ps = GetAnimModel()->BringAttackCollider(UCollider::TYPE_OBB);
+	SHPTR<DirectX::BoundingOrientedBox> OBB = ps->GetOBB();
+	
+	_float3 pos= ps->GetCurPos() - OBB->Extents;
+	_float3 pos1= ps->GetCurPos() + OBB->Extents;
+	_float3 plusPoint=ps->GetHeightAdjustedPointFromCenter(OBB,false);
+	_float3 minusPoint=ps->GetHeightAdjustedPointFromCenter(OBB,true);
+	
+	_float4x4 AnimTransform = ps->GetTransformMatrix();
 
-	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_RUN) {
+	m_spTrail->SetRenderingTrail(isAttack);
+	m_spTrail->AddTrail(plusPoint, minusPoint);
+	m_spParticle->SetActive(true);
+
+	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_RUN)  {//|| AnimState == CWarriorAnimController::ANIM_ATTACK|| AnimState == CWarriorAnimController::ANIM_COMBO
+		*m_spParticle->GetParticleSystem()->GetAddParticleAmount() =4;
 		*m_spParticle->GetParticleSystem()->GetCreateInterval() = 0.355f;
 		_float3 pos = GetTransform()->GetPos() + GetTransform()->GetRight();
 		pos.y += 1.6;
@@ -183,8 +211,11 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	{
 		POINT ptCursorPos;
 	//	ShowCursor(FALSE);
-
-		//SetCursorPos(1000, 400);
+	//SetCursorPos(1000, 400);
+	}
+	for (auto& Colliders : GetColliderContainer())
+	{
+		Colliders.second->SetScale(_float3(3, 15, 3));
 	}
 	UpdateCollision();
 }
@@ -195,7 +226,6 @@ void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 	_float3 direction(0.0f, 0.0f, 0.0f);
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-
 	if (GetCollisionState())
 	{
 //		GetTransform()->SetPos(GetPrevPos());
@@ -207,6 +237,7 @@ void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 
 HRESULT CWarriorPlayer::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
+	
 	return __super::RenderActive(_spCommand, _spTableDescriptor);
 }
 
@@ -215,10 +246,11 @@ HRESULT CWarriorPlayer::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPT
 	return S_OK;
 }
 
-void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy)
+void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	PAWNTYPE ePawnType = _pEnemy->GetPawnType();
-	
+
 	if (PAWNTYPE::PAWN_CHAR == ePawnType)
 	{
 		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
@@ -231,14 +263,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy)
 			else
 				SetHitstate(false);
 
-			for (auto& iter2 : pCharacter->GetColliderContainer())
-			{
-				if (iter.second->IsCollision(iter2.second))
-					SetCollisionState(true);
-				else
-					if (!GetCollisionState())
-						SetCollisionState(false);
-			}
+			GetTransform()->SetPos(GetTransform()->GetPos() - GetTransform()->GetLook() * 5 * _dTimeDelta);
 		}
 	}
 	else if (PAWNTYPE::PAWN_STATICOBJ == ePawnType)
@@ -248,14 +273,26 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy)
 		{
 			for (auto& iter2 : pModelObject->GetColliderContainer())
 			{
-				if (iter.second->IsCollision(iter2.second))
-					SetCollisionState(true);
-				else
-					if(!GetCollisionState())
-						SetCollisionState(false);
+				m_f3CollidedNormal = iter.second->GetOBBCollisionNormal(iter2.second);
+
+				if (m_f3CollidedNormal != _float3::Zero) // 충돌이 발생한 경우
+				{
+					_float3 currentPosition = GetTransform()->GetPos();
+					_float3 movementDirection = currentPosition - GetPrevPos();
+					float dotProduct = DirectX::XMVector3Dot(XMLoadFloat3(&movementDirection), XMLoadFloat3(&m_f3CollidedNormal)).m128_f32[0];
+					_float3 slidingVector = movementDirection - m_f3CollidedNormal * dotProduct;
+
+					// 속도 결정
+					_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 50.0f : 10.0f;
+
+					// 충돌 보정 및 슬라이딩 벡터 적용
+					_float3 newPosition = GetPrevPos() + slidingVector * speed * _dTimeDelta;
+
+					// 위치 업데이트
+					GetTransform()->SetPos(newPosition);
+				}
 			}
 		}
-
 	}
 }
 

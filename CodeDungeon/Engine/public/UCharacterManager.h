@@ -23,8 +23,8 @@ public:
 	void RegisterCurrentPlayer(CSHPTRREF<UCharacter> _spCurrentPlayer);
 	void AddCollisionPawnList(CSHPTRREF<UPawn> _spPawn);
 	void RemoveCollisionPawn(CSHPTRREF<UPawn> _spPawn);
-	
-	void TickCollider();
+
+	void TickCollider(const _double& _dTimeDelta);
 	void ClearData();
 private:
 	virtual void Free() override;

@@ -80,6 +80,6 @@ HRESULT UDefaultCell::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRR
 	return S_OK;
 }
 
-void UDefaultCell::Collision(CSHPTRREF<UPawn> _pEnemy)
+void UDefaultCell::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }

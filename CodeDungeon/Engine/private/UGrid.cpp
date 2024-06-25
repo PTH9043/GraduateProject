@@ -82,7 +82,7 @@ HRESULT UGrid::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTab
 	return S_OK;
 }
 
-void UGrid::Collision(CSHPTRREF<UPawn> _pEnemy)
+void UGrid::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 
 }

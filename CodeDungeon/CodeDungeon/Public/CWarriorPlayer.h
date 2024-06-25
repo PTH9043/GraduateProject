@@ -11,9 +11,9 @@ END
 BEGIN(Client)
 class CSword;
 /*
-@ Date: 2024-04-30, Writer: ¹ÚÅÂÇö
+@ Date: 2024-04-30, Writer: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 @ Explain
--  »ç¿ëÀÚ°¡ Á÷Á¢ Á¶Á¾ÇÏ´Â Å¬·¡½ºÀÌ´Ù.
+-  ï¿½ï¿½ï¿½ï¿½Ú°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½.
 */
 class CWarriorPlayer final : public UPlayer {
 public:
@@ -21,23 +21,27 @@ public:
 	CWarriorPlayer(const CWarriorPlayer& _rhs);
 	DESTRUCTOR(CWarriorPlayer)
 public:
-	// UPlayerÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+	// UPlayerï¿½ï¿½(ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Óµï¿½
 	CLONE_MACRO(CWarriorPlayer, "CWarriorPlayer::CloneToFailed")
 	virtual void Free() override;
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _Datas) override;
-	// ³×Æ®¿öÅ© Á¤º¸¸¦ ¹Þ¾Æ¿À´Â ÇÔ¼ö
+	// ï¿½ï¿½Æ®ï¿½ï¿½Å© ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
 	virtual void ReceiveNetworkProcessData(const UProcessedData& _ProcessData);
 public: /* Get Set */
 	SHPTR<UParticle>& GetParticle() { return m_spParticle; }
 
 	void IfAttack(_bool is) { isAttack = is; }
+
+	const _bool& GetOBJCollisionState() const { return m_bisCollisionWithObj; }
+	void SetOBJCollisionState(_bool _newState) { m_bisCollisionWithObj = _newState; }
+
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
 	virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
-	virtual void Collision(CSHPTRREF<UPawn> _pEnemy) override;
+	virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) override;
 private:
 	void TranslateStateMoveAndRunF(CSHPTRREF<UGameInstance> _spGameInstance, const _double& _dTimeDelta, const _float _fSpeed);
 private:
@@ -49,6 +53,11 @@ private:
 	SHPTR<UTrail>												m_spTrail;
 	_bool																isAttack;
 
+	SHPTR<CSword>	m_spSword;
+	SHPTR<UTrail>	m_spTrail;
+	_bool m_bisCollisionWithObj;
+
+	_float3 m_f3CollidedNormal;
 };
 
 END

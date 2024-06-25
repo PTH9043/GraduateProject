@@ -24,7 +24,7 @@ void UCharacterManager::RemoveCollisionPawn(CSHPTRREF<UPawn> _spPawn)
 	m_CollisionPawnList.erase(_spPawn);
 }
 
-void UCharacterManager::TickCollider()
+void UCharacterManager::TickCollider(const _double& _dTimeDelta)
 {
 	for (auto& Pawn : m_CollisionPawnList)
 	{
@@ -33,7 +33,7 @@ void UCharacterManager::TickCollider()
 			if (Pawn == Coll)
 				continue;
 
-			Pawn->IsHit(Coll);
+			Pawn->IsHit(Coll, _dTimeDelta);
 		}
 	}
 }

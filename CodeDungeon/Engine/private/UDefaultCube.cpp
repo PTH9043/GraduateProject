@@ -78,7 +78,7 @@ HRESULT UDefaultCube::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRR
 	return S_OK;
 }
 
-void UDefaultCube::Collision(CSHPTRREF<UPawn> _pEnemy)
+void UDefaultCube::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 
 }

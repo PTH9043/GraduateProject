@@ -291,7 +291,6 @@ namespace Engine {
 		{
 			if (nullptr == obj)
 				return;
-
 			UPoolAllocator::Release(obj);
 		}
 		/*

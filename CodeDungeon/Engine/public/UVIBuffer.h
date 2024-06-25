@@ -41,7 +41,7 @@ public:
 	virtual void Free() override;
 	virtual HRESULT NativeConstruct() override PURE;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _stDatas) override PURE;
-	HRESULT Render(CSHPTRREF<UShader> _spShader, CSHPTRREF<UCommand> _spCommands, const _uint& _iInstanceCnt = 1);
+	virtual HRESULT Render(CSHPTRREF<UShader> _spShader, CSHPTRREF<UCommand> _spCommands, const _uint& _iInstanceCnt = 1);
 protected:
 	/* Get Set */
 	const D3D12_VERTEX_BUFFER_VIEW& GetVertexBufferView() const { return m_stD3DVertexBufferView; }
@@ -49,9 +49,6 @@ protected:
 	const ComPtr<Dx12Resource>& GetVertexGpuBuffer() const { return m_cpVertexGpuBuffer; }
 	const ComPtr<Dx12Resource>& GetIndexGpuBuffer() const { return m_cpIndexGpuBuffer; }
 
-	void SetVertexBufferViewSizeInBytes(UINT _size) {
-		m_stD3DVertexBufferView.SizeInBytes = _size;
-	}
 
 	void SetInstanceType(const VIINSTANCE_TYPE& _eInstanceType) { this->m_eVIInstanceType = _eInstanceType; }
 	void SetMinPosition(const _float3& _vMinPosition) { this->m_vMinVertex = _vMinPosition; }
@@ -60,9 +57,11 @@ protected:
 
 	HRESULT CreateVtxBuffer(const _uint& _iVertexCnt, const _uint& _iBufferSize, const void* _pVertexData,
 		const D3D_PRIMITIVE_TOPOLOGY& _eTopology, const POSVECTOR& _vecPosVector, const _bool _isComputeMinMaxPositon = true);
-
 	HRESULT CreateVtxBuffer(const _uint& _iVertexCnt, const _uint& _iBufferSize, const void* _pVertexData,
 		const D3D_PRIMITIVE_TOPOLOGY& _eTopology);
+
+	HRESULT CreateVtxBufferWithNoData(const _uint& _iVertexCnt, const _uint& _iBufferSize, const void* _pVertexData,
+		const D3D_PRIMITIVE_TOPOLOGY& _eTopology, const  D3D12_HEAP_TYPE& d3dHeapType, const D3D12_RESOURCE_STATES& d3dResourceStates);
 
 	HRESULT CreateIndexBuffer(const _uint& _iIndexCnt, const _uint& _iBufferSize,
 		const void* _pIndexData, const DXGI_FORMAT& _eIndexFormat, const _uint _iIndexMultiple = 3);
@@ -70,7 +69,7 @@ protected:
 	virtual void BindVertexAndIndex(const ComPtr<Dx12GraphicsCommandList>& _cpGraphicCmdList, const _uint& _iInstanceCnt);
 private:
 	void ComputeMinMaxPosition();
-private:
+protected:
 	// Pos Indecies
 	std::shared_ptr<CPOSVECTOR>	m_spPosVector;
 	const void* m_pIndices;

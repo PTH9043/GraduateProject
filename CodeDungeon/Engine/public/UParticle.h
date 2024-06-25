@@ -41,7 +41,7 @@ protected:
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
 	virtual void BindShaderBuffer();
 	// Damaged
-	virtual void Collision(CSHPTRREF<UPawn> _pEnemy) override;
+	virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) override;
 	// Save Load
 	virtual _bool Save(const _wstring& _wstrPath);
 	virtual _bool Load(const _wstring& _wstrPath);

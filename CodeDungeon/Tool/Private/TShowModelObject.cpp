@@ -132,7 +132,7 @@ HRESULT TShowModelObject::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSH
 	}
 	return S_OK;
 }
-void TShowModelObject::Collision(CSHPTRREF<UPawn> _pEnemy)
+void TShowModelObject::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 
 }

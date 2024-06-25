@@ -39,9 +39,11 @@ private:
 	void DockBuildInitSetting();
 
 	void ShowModels();
-	void ShowAnimMoldels();
+	void ShowAnimModels();
 	// Show Model List
 	void ShowModelList();
+	void LoadObjectLayoutsFromFile();
+	void LoadMobsLayoutsFromFile();
 	void ShowAnimModelList();
 
 	void ConvertModels();
@@ -54,9 +56,12 @@ private:
 
 	void EditModel();
 
+	void AddModelstoMobsLayout();
+
 	void AddModelstoMapLayout();
+
 	void SaveCurrentMapLayouts();
-	void LoadMapLayoutsFromFile();
+	void SaveCurrentMobsLayouts();
 
 	void ClearCurrentModel();
 	void ClearAllShowModels();
