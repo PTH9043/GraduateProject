@@ -57,8 +57,8 @@ HRESULT UTrail::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	AddShader(PROTO_RES_TRAILSHADER);
 
 	m_fCreateTime = 0.0001f;
-	m_iMaxCount = 25;
-	m_iDivide = 1;
+	m_iMaxCount = 12;
+	m_iDivide = 8;
 	m_fTime = m_fCreateTime + 1.f;
 	return S_OK;
 }
@@ -157,9 +157,11 @@ void UTrail::LateTickActive(const _double& _dTimeDelta)
 HRESULT UTrail::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
 	__super::RenderActive(_spCommand, _spTableDescriptor);
+
+	GetShader()->BindCBVBuffer(m_spTrailColorBuffer, &m_vCurTrailColor, static_cast<_int>(sizeof(_float4)));
 	GetTransform()->BindTransformData(GetShader());
-	GetShader()->BindSRVBuffer(SRV_REGISTER::T1, m_spTrailTexGroup->GetTexture(L"Trail"));
-	GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTrailTexGroup->GetTexture(L"Dissolve2"));
+	GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTrailTexGroup->GetTexture(L"Trail"));
+	GetShader()->BindSRVBuffer(SRV_REGISTER::T1, m_spTrailTexGroup->GetTexture(L"Dissolve"));
 
 
 	if (m_bRender) {
@@ -197,8 +199,8 @@ HRESULT UTrail::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDes
 			xmf2UV[0] = { fRatio,			0.f };
 			//xmf2UV[1] = { fRatio,			1.f };
 			//xmf2UV[2] = { fNextRatio / 1.f, 1.f };
-			xmf2UV[1] = { fRatio,			(fRatio / 1.f) };
-			xmf2UV[2] = { fNextRatio / 1.f, (fNextRatio / 1.f) };
+			xmf2UV[1] = { fRatio,		(fRatio / 1.f) };//(fRatio / 1.f)
+			xmf2UV[2] = { fNextRatio / 1.f, (fNextRatio / 1.f) };// (fNextRatio / 1.f)
 			xmf2UV[3] = { fNextRatio / 1.f, 0.f };
 
 			Vertices[i++] = VTXDEFAULT(xmf3Pos[2], xmf2UV[2]);	//xmf3Bottom2,
@@ -214,6 +216,7 @@ HRESULT UTrail::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDes
 		m_spVIBufferTrail->SetVertices(Vertices, iVertexCount);
 		m_spVIBufferTrail->Render(GetShader(), _spCommand, iVertexCount);
 	}
+
 	return S_OK;
 }
 

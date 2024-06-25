@@ -133,6 +133,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 		tDesc.iMaxVertexCount = 100;
 		m_spTrail = std::static_pointer_cast<UTrail>(spGameInstance->CloneActorAdd(PROTO_ACTOR_TRAIL, { &tDesc }));
 		m_spTrail->SetActive(true);
+		m_spTrail->SetColor(_float4(65.f / 255.f, 150.f / 255.f, 43.f / 255.f, 0.f));
 	}
 
 	for (auto& Colliders : GetColliderContainer())
@@ -190,8 +191,15 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	
 	_float4x4 AnimTransform = ps->GetTransformMatrix();
 
-	m_spTrail->SetRenderingTrail(isAttack);
-	m_spTrail->AddTrail(plusPoint, minusPoint);
+	if (ps) {
+		m_spTrail->SetRenderingTrail(isAttack);
+
+
+		m_spTrail->AddTrail(plusPoint, minusPoint);
+	}
+
+
+
 	m_spParticle->SetActive(true);
 
 	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_RUN)  {//|| AnimState == CWarriorAnimController::ANIM_ATTACK|| AnimState == CWarriorAnimController::ANIM_COMBO
