@@ -31,7 +31,7 @@ void UTrail::Free()
 {
 }
 
-void UTrail::Collision(CSHPTRREF<UPawn> _pEnemy)
+void UTrail::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }
 
@@ -68,8 +68,7 @@ void UTrail::Update(const _double& _dTimeDelta)
 	if (!m_bRender)
 		return;
 
-	m_fTime -= _dTimeDelta;
-
+	m_fTime -= static_cast<_float>(_dTimeDelta);
 }
 void UTrail::TickActive(const _double& _dTimeDelta)
 {
@@ -148,12 +147,11 @@ void UTrail::SetColor(_float4 _col)
 	m_vCurTrailColor = _col;
 }
 
-
-
 void UTrail::LateTickActive(const _double& _dTimeDelta)
 {
-	
+
 	AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
+
 }
 
 HRESULT UTrail::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
@@ -212,14 +210,13 @@ HRESULT UTrail::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDes
 
 			iLineIndex++;
 		}
+
 		m_spVIBufferTrail->SetVertices(Vertices, iVertexCount);
 		m_spVIBufferTrail->Render(GetShader(), _spCommand, iVertexCount);
 	}
 	
-	
 
-	
-	
+	}
 
 	return S_OK;
 }

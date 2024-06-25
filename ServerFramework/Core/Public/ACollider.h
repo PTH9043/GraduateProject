@@ -29,6 +29,7 @@ public: /* get set*/
 
 protected:
 	void UpdateChangeValue(const _matrix& _ChangeMatrix, const Vector3& _vChangeScale);
+	void UpdateChangeValue(const Vector3& _vChangePos, const Vector3& _vChangeScale);
 private:
 	virtual void Free() PURE;
 private:

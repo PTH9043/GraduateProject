@@ -48,7 +48,7 @@ HRESULT UDefensiveGear::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPT
 	return E_NOTIMPL;
 }
 
-void UDefensiveGear::Collision(CSHPTRREF<UPawn> _pEnemy)
+void UDefensiveGear::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }
 

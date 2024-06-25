@@ -57,7 +57,8 @@ HRESULT CRooms::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	return S_OK;
 }
 
-void CRooms::Collision(CSHPTRREF<UPawn> _pEnemy)
+void CRooms::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
-	
 }
+
+

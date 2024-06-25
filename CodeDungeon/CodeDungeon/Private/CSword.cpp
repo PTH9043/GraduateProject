@@ -48,6 +48,6 @@ HRESULT CSword::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTa
 	return E_NOTIMPL;
 }
 
-void CSword::Collision(CSHPTRREF<UPawn> _pEnemy)
+void CSword::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }

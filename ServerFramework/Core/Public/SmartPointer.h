@@ -837,7 +837,7 @@ namespace Core
 	};
 
 	template<typename T>
-	class  AEnableSharedFromThis {
+	class AEnableSharedFromThis {
 		friend  class ASharedPtr<T>;
 		friend  class ARefCounter<T>;
 	protected:

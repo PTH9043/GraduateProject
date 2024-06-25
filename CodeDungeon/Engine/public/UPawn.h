@@ -29,13 +29,14 @@ public:
 		virtual void Free() override PURE;
 		virtual HRESULT NativeConstruct() override PURE;
 		virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override PURE;
+		bool IsHit(CSHPTRREF<UPawn> _spEnemy, const _double& _dTimeDelta);
 		// Hit 
-		bool IsHit(CSHPTRREF<UPawn> _spEnemy);
 
 		void AddRenderGroup(const RENDERID _iRenderID);
 		void AddShadowRenderGroup(const RENDERID _iRenderID);
 public: /* get set*/
-	const PAWNTYPE GetPawnType() const { return m_ePawnType; }
+		void SetPawnType(PAWNTYPE _newType) { m_ePawnType = _newType; }
+		const PAWNTYPE GetPawnType() const { return m_ePawnType; }
 protected:
 		// Tick, LateTick, Render
 		virtual void TickActive(const _double& _dTimeDelta) override PURE;
@@ -43,7 +44,7 @@ protected:
 		virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override PURE;
 		virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override PURE;
 		// Damaged
-		virtual void Collision(CSHPTRREF<UPawn> _pEnemy) PURE;
+		virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) PURE;
 		// Add Collider
 		void AddColliderInContainer(const _wstring& _wstrTag ,const _wstring& _wstrColliderProto, const _float3& _vColliderPos, const _float3& _vColliderScale);
 		void AddColliderInContainer(const _wstring& _wstrTag, CSHPTRREF<UCollider> _spCollider);

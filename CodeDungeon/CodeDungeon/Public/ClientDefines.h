@@ -9,10 +9,14 @@
 
 #ifdef _DEBUG
 #pragma comment(lib, "EngineD.lib")
-//#pragma comment(lib, "ProtocolBufferD")
+#ifdef _ENABLE_PROTOBUFF
+#pragma comment(lib, "ProtocolBufferD")
+#endif
 #else
 #pragma comment(lib, "Engine.lib")
-//#pragma comment(lib, "ProtocolBuffer")
+#ifdef _ENABLE_PROTOBUFF
+#pragma comment(lib, "ProtocolBuffer")
+#endif
 #endif
 
 

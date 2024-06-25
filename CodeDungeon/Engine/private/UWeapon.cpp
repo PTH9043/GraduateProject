@@ -52,7 +52,7 @@ HRESULT UWeapon::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UT
 	return E_NOTIMPL;
 }
 
-void UWeapon::Collision(CSHPTRREF<UPawn> _pEnemy)
+void UWeapon::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }
 

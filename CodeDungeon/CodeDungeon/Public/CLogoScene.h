@@ -17,7 +17,6 @@ public:
 	virtual HRESULT LoadSceneData() override;
 	virtual void Tick(const _double& _dTimeDelta) override;
 	virtual void LateTick(const _double& _dTimeDelta) override;
-	virtual void CollisionTick(const _double& _dTimeDelta) override;
 private:
 
 };

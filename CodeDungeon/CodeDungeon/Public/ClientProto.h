@@ -3,6 +3,8 @@
 #define PROTO_ACTOR_MAINCAMERA L"Proto_Actor_MainCamera"
 #define PROTO_ACTOR_ROOM L"Proto_Actor_Room"
 #define PROTO_ACTOR_TORCH L"Proto_Actor_Torch"
+#define PROTO_ACTOR_IRONBARS L"Proto_Actor_IronBars"
+
 
 #define PROTO_ACTOR_WARRIORPLAYER L"Proto_Actor_WarriorPlayer"
 #define PROTO_ACTOR_MUMMY L"Proto_Actor_Mummy"

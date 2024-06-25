@@ -315,9 +315,11 @@ namespace Core
 				return (0 != (next & CHECK_MARKING));
 			}
 
-			T& operator ->() {
-				return value;
-			}
+			const T& operator ->() const { return value; }
+			T& operator ->() { return value; }
+
+			const T& operator*() const { return value; }
+			T& operator*() { return value; }
 		};
 
 		template<class T>
@@ -327,6 +329,7 @@ namespace Core
 				m_Head.SetNext(&m_Tail);
 			}
 			~LockFreeList() {	Clear();}
+
 			void Initialize(int _currThreadNum, int _remainCount) {
 				m_EBRController.Initialize(_currThreadNum, _remainCount);
 			}
@@ -335,7 +338,7 @@ namespace Core
 				while (m_Head.GetNext() != &m_Tail) {
 					LFNODE<T>* temp = m_Head.GetNext();
 					m_Head.next = temp->next;
-					delete temp;
+				    
 				}
 			}
 		
@@ -348,7 +351,8 @@ namespace Core
 					Find(_value, prev, curr);
 					if (last != prev) {
 						m_EBRController.end_op();
-						delete newNode;
+						UPoolAllocator::Release(newNode);
+				//		delete newNode;
 						return false;
 					}
 					newNode->SetNext(curr);
@@ -361,7 +365,7 @@ namespace Core
 				return false;
 			}
 			bool Remove(T _value) {
-				LFNODE<T> prev{ nullptr }, * curr{ nullptr };
+				LFNODE<T> *prev{ nullptr }, * curr{ nullptr };
 				LFNODE<T>* last = &m_Tail;
 				m_EBRController.start_op();
 				while (true) {
@@ -400,8 +404,11 @@ namespace Core
 				return ret;
 			}
 
+			auto begin() const { return &m_Head; }
+			auto end() const { return &m_Tail; }
+
 			auto begin() { return &m_Head; }
-			auto end() { return &m_Tail; }
+			auto end()  { return &m_Tail; }
 		private:
 			void Find(T _value, LFNODE<T>*& _prev, LFNODE<T>*& _curr)
 			{

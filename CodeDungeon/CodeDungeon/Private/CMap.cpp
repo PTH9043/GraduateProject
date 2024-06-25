@@ -11,6 +11,7 @@
 #include "UStageManager.h"
 #include "UMapLayout.h"
 #include "CTorch.h"
+#include "CIronBars.h"
 #include "CModelObjects.h"
 
 
@@ -53,7 +54,7 @@ HRESULT CMap::NativeConstruct()
 
 HRESULT CMap::NativeConstructClone(const VOIDDATAS& _tDatas)
 {
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 void CMap::LoadRooms()
@@ -87,8 +88,9 @@ void CMap::LoadRooms()
 void CMap::LoadStaticObjects()
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	m_spMapLayout->Load();
+	m_spMapLayout->LoadMapObjects();
 	OBJCONTAINER _TorchVec;
+	OBJCONTAINER _BarsVec;
 	for (auto& it : (*m_spMapLayout->GetMapObjectsContainer().get()))
 	{
 		for (auto& vecit : it.second)
@@ -100,7 +102,16 @@ void CMap::LoadStaticObjects()
 				SHPTR<CTorch> _Torch = std::static_pointer_cast<CTorch>(spGameInstance->CloneActorAdd(PROTO_ACTOR_TORCH, {&torchDesc}));
 				_TorchVec.push_back(_Torch);		
 			}
+			if (vecit._sModelName == "Bars_FBX.bin")
+			{
+				CIronBars::IRONBARSDESC BarsDesc;
+				BarsDesc._Worldm = vecit._mWorldMatrix;
+				SHPTR<CIronBars> _IronBars = std::static_pointer_cast<CIronBars>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IRONBARS, { &BarsDesc }));
+				_BarsVec.push_back(_IronBars);
+				spGameInstance->AddCollisionPawnList(_IronBars);
+			}
 		}
 	}
 	m_spStaticObjContainer->emplace("Torch_FBX.bin", _TorchVec);
+	m_spStaticObjContainer->emplace("Bars_FBX.bin", _BarsVec);
 }

@@ -23,7 +23,8 @@ UCollider::UCollider(CSHPTRREF<UDevice> _pDevice,
 	m_vCurScale{ 0.f, 0.f, 0.f },
 	m_vModelScale{ 0.f, 0.f, 0.f },
 	m_vTranslate{ 0.f, 0.f, 0.f },
-	m_vPos{ 0.f, 0.f, 0.f }
+	m_vPos{ 0.f, 0.f, 0.f },
+	m_f3ObbNormals{}
 #ifdef _USE_DEBUGGING
 	, m_spDebugDrawPawn{ nullptr }
 #endif
@@ -43,7 +44,8 @@ UCollider::UCollider(const UCollider& _rhs) :
 	m_vCurScale{ 0.f, 0.f, 0.f },
 	m_vModelScale{0.f, 0.f, 0.f},
 	m_vTranslate{ 0.f, 0.f, 0.f },
-	m_vPos{ 0.f, 0.f, 0.f }
+	m_vPos{ 0.f, 0.f, 0.f },
+	m_f3ObbNormals{}
 #ifdef _USE_DEBUGGING
 	, m_spDebugDrawPawn{ nullptr }
 #endif
@@ -155,6 +157,7 @@ void UCollider::SetTransform(const _float3& _vPos, const _float4& _vQuaternion)
 		m_mTransformMatrix = XMMatrixRotationQuaternion(_vQuaternion);
 		m_mTransformMatrix.Set_Pos(_vPos);
 		m_spOBB_Original->Transform(*m_spOBB.get(), m_mTransformMatrix);
+		SetOBBNormals(m_mTransformMatrix);
 		break;
 	case TYPE_SPHERE:
 		m_mTransformMatrix = XMMatrixRotationQuaternion(_vQuaternion);
@@ -178,6 +181,7 @@ void UCollider::SetTransform(CSHPTRREF<UTransform> _spTransform)
 		m_mTransformMatrix = _spTransform->GetWorldMatrix();
 		m_spOBB_Original->Transform(*m_spOBB.get(), m_mTransformMatrix);
 		m_vModelScale = _float3(m_spOBB->Extents) * 2;
+		SetOBBNormals(m_mTransformMatrix);
 		break;
 	case TYPE_SPHERE:
 		m_mTransformMatrix = _spTransform->GetWorldMatrix();
@@ -199,6 +203,7 @@ void UCollider::SetTransform(const _float4x4& _Matrix)
 	case TYPE_OBB:
 		m_spOBB_Original->Transform(*m_spOBB.get(), Matrix);
 		m_vModelScale = _float3(m_spOBB->Extents) * 2;
+		SetOBBNormals(Matrix);
 		break;
 	case TYPE_SPHERE:
 		m_spSphere_Original->Transform(*m_spSphere.get(), Matrix);
@@ -362,7 +367,154 @@ _bool UCollider::IsCollisionWithRay(const _float3& _vOrigin, const _float3& _vDi
 	}
 	break;
 	}
+
 	return m_isCollision;
+}
+
+//_float3 UCollider::GetAABBCollisionNormal(const BoundingBox& box1, const BoundingBox& box2) const
+//{
+//	XMVECTOR Center1 = XMLoadFloat3(&box1.Center);
+//	XMVECTOR Extents1 = XMLoadFloat3(&box1.Extents);
+//
+//	XMVECTOR Center2 = XMLoadFloat3(&box2.Center);
+//	XMVECTOR Extents2 = XMLoadFloat3(&box2.Extents);
+//
+//	XMVECTOR Min1 = XMVectorSubtract(Center1, Extents1);
+//	XMVECTOR Max1 = XMVectorAdd(Center1, Extents1);
+//
+//	XMVECTOR Min2 = XMVectorSubtract(Center2, Extents2);
+//	XMVECTOR Max2 = XMVectorAdd(Center2, Extents2);
+//
+//	XMVECTOR overlap = XMVectorMin(XMVectorSubtract(Max1, Min2), XMVectorSubtract(Max2, Min1));
+//	overlap = XMVectorMin(overlap, XMVectorSplatOne()); // Ensure overlap is within bounds
+//
+//	XMFLOAT3 overlapValues;
+//	XMStoreFloat3(&overlapValues, overlap);
+//
+//	_float3 collisionNormal = _float3::Zero;
+//	if (overlapValues.x < overlapValues.y && overlapValues.x < overlapValues.z)
+//	{
+//		collisionNormal = { 1.0f, 0.0f, 0.0f };
+//	}
+//	else if (overlapValues.y < overlapValues.x && overlapValues.y < overlapValues.z)
+//	{
+//		collisionNormal = { 0.0f, 1.0f, 0.0f };
+//	}
+//	else
+//	{
+//		collisionNormal = { 0.0f, 0.0f, 1.0f };
+//	}
+//
+//	return collisionNormal;
+//}
+
+void UCollider::SetOBBNormals(const _float4x4& transformMatrix)
+{
+	_float3 right = XMVector3TransformNormal(_float3(1.0f, 0.0f, 0.0f), transformMatrix);
+	_float3 up = XMVector3TransformNormal(_float3(0.0f, 1.0f, 0.0f), transformMatrix);
+	_float3 forward = XMVector3TransformNormal(_float3(0.0f, 0.0f, 1.0f), transformMatrix);
+
+	m_f3ObbNormals[0] = right;
+	m_f3ObbNormals[1] = -right;
+	m_f3ObbNormals[2] = up;
+	m_f3ObbNormals[3] = -up;
+	m_f3ObbNormals[4] = forward;
+	m_f3ObbNormals[5] = -forward;
+}
+
+_float3 UCollider::CalculateOBBCollisionNormal(const DirectX::BoundingOrientedBox& box1, const DirectX::BoundingOrientedBox& box2) const
+{
+	XMVECTOR Axes[15];
+	XMVECTOR Center1 = XMLoadFloat3(&box1.Center);
+	XMVECTOR Center2 = XMLoadFloat3(&box2.Center);
+	XMVECTOR Extents1 = XMLoadFloat3(&box1.Extents);
+	XMVECTOR Extents2 = XMLoadFloat3(&box2.Extents);
+
+	XMFLOAT4 quaternion1 = box1.Orientation;
+	XMFLOAT4 quaternion2 = box2.Orientation;
+
+	XMMATRIX Rot1 = XMMatrixRotationQuaternion(XMLoadFloat4(&quaternion1));
+	XMMATRIX Rot2 = XMMatrixRotationQuaternion(XMLoadFloat4(&quaternion2));
+
+	// OBB 1과 OBB 2의 회전 행렬에서 축을 추출합니다.
+	for (int i = 0; i < 3; ++i)
+	{
+		Axes[i] = Rot1.r[i];
+		Axes[i + 3] = Rot2.r[i];
+	}
+
+	// 모든 축의 외적을 계산하여 충돌 가능한 축을 찾습니다.
+	for (int i = 0; i < 3; ++i)
+	{
+		for (int j = 0; j < 3; ++j)
+		{
+			Axes[6 + i * 3 + j] = XMVector3Cross(Axes[i], Axes[3 + j]);
+		}
+	}
+
+	float minPenetration = FLT_MAX;  // 최소 침투값을 초기화합니다.
+	_float3 bestAxis = _float3::Zero;  // 최적 축을 초기화합니다.
+
+	// 모든 축에 대해 충돌 테스트를 수행합니다.
+	for (int i = 0; i < 15; ++i)
+	{
+		XMVECTOR axis = Axes[i];  // 현재 축을 가져옵니다.
+
+		// 축의 길이가 0이 아니면 정규화합니다.
+		if (!XMVector3Equal(axis, XMVectorZero()))
+		{
+			axis = XMVector3Normalize(axis);  // 축을 정규화합니다.
+
+			// 각 OBB의 축영(projection)을 계산합니다.
+			float projection1 = fabs(XMVectorGetX(XMVector3Dot(axis, Rot1.r[0])) * XMVectorGetX(Extents1)) +
+				fabs(XMVectorGetX(XMVector3Dot(axis, Rot1.r[1])) * XMVectorGetY(Extents1)) +
+				fabs(XMVectorGetX(XMVector3Dot(axis, Rot1.r[2])) * XMVectorGetZ(Extents1));
+
+			float projection2 = fabs(XMVectorGetX(XMVector3Dot(axis, Rot2.r[0])) * XMVectorGetX(Extents2)) +
+				fabs(XMVectorGetX(XMVector3Dot(axis, Rot2.r[1])) * XMVectorGetY(Extents2)) +
+				fabs(XMVectorGetX(XMVector3Dot(axis, Rot2.r[2])) * XMVectorGetZ(Extents2));
+
+			// 두 OBB의 중심점 사이의 거리를 계산합니다.
+			float dot1 = XMVectorGetX(XMVector3Dot(Center1, axis));
+			float dot2 = XMVectorGetX(XMVector3Dot(Center2, axis));
+			float distance = fabs(dot1 - dot2);
+
+			// 축영과 중심점 사이의 거리를 비교하여 겹침 여부를 확인합니다.
+			float penetration = projection1 + projection2 - distance;
+
+			if (penetration < 0.0f)
+			{
+				return _float3::Zero; // 충돌이 없는 경우
+			}
+
+			// 최소 오버랩 축을 찾습니다.
+			if (penetration < minPenetration)
+			{
+				minPenetration = penetration;
+				bestAxis = _float3(XMVectorGetX(axis), XMVectorGetY(axis), XMVectorGetZ(axis));
+			}
+		}
+	}
+
+	return bestAxis;  // 최적 축을 반환합니다.
+}
+
+
+_float3 UCollider::GetOBBCollisionNormal(CSHPTRREF<UCollider> _pCollider)
+{
+	_float3 collisionNormal = _float3::Zero;
+
+	switch (m_eType)
+	{
+	case TYPE_OBB:
+	{
+		if (TYPE_OBB == _pCollider->m_eType)
+			collisionNormal = CalculateOBBCollisionNormal(*m_spOBB, *_pCollider->m_spOBB);
+	}
+	break;
+	}
+
+	return collisionNormal;
 }
 
 #ifdef _USE_DEBUGGING
@@ -396,6 +548,7 @@ void UCollider::AddRenderer(RENDERID _eID)
 		m_spDebugDrawPawn->AddRenderer(_eID);
 	}
 }
+
 
 void UCollider::GetBoundingOrientedBoxCorners(const CSHPTRREF<DirectX::BoundingOrientedBox> box, _float3* Corners)
 {
@@ -478,4 +631,5 @@ _float3 UCollider::GetHeightAdjustedPointFromCenter(const std::shared_ptr<Boundi
 
 	return result;
 }
+
 #endif

@@ -22,7 +22,7 @@ class UPicking;
 class UFilePathManager;
 class URandomManager;
 class UThreadManager;
-class UNetworkManager;
+class UNetworkBaseController;
 class UAudioSystemManager;
 class UCharacterManager;
 class UMaterialManager;
@@ -262,10 +262,11 @@ public: /* AudioSystemManager*/
 	SHPTR<USound> BringSound(const _int _Index);
 	SHPTR<USound> BringSound(const _wstring& _wstrSoundName);
 public: /* NetworkManager */
-	HRESULT StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController);
-	void InsertProcessedDataToContainer(void* _pData, size_t _Size, _int _DataType);
-	void PopProcessedData(POINTER_IN UProcessedData* _pData);
+	void StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController);
+	void MakeActors();
 	void SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize);
+	SHPTR<UActor> FindNetworkActor(const _int _NetworkID);
+	void InsertNetworkQuery(const UProcessedData& _data);
 	void NetworkEnd();
 	/*
 	@ Date: 2024-02-04, Writer: นฺลยว๖
@@ -282,7 +283,9 @@ public: /* NetworkManager */
 	}
 public: /* CharacterManager*/
 	CSHPTRREF<UCharacter> GetCurrPlayer() const;
-	void ReigsterCurrentPlayer(CSHPTRREF<UCharacter> _spCurrentPlayer);
+	void RegisterCurrentPlayer(CSHPTRREF<UCharacter> _spCurrentPlayer);
+	void AddCollisionPawnList(CSHPTRREF<UPawn> _spPawn);
+	void RemoveCollisionPawn(CSHPTRREF<UPawn> _spPawn);
 
 public: /* Material Manager*/
 	void AddModelMaterial(const _uint _MaterialIndex, CSHPTRREF<UModelMaterial> _spModelMaterial);
@@ -332,7 +335,7 @@ private:
 	SHPTR<UPipeLine>									m_spPipeLine;
 	SHPTR<UFilePathManager>					m_spFilePathManager;
 	SHPTR< UAudioSystemManager>		m_spAudioSystemManager;
-	SHPTR< UNetworkManager>				m_spNetworkManager;
+	SHPTR< UNetworkBaseController>		m_spNetworkBaseController;
 	SHPTR<UCharacterManager>				m_spCharacterManager;
 	SHPTR< UMaterialManager>					m_spMaterialManager;
 

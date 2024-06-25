@@ -15,11 +15,12 @@
 UCharacter::UCharacter(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, 
 	const CLONETYPE& _eCloneType) : 
 	UPawn(_spDevice, _wstrLayer, _eCloneType, BACKINGTYPE::DYNAMIC, PAWNTYPE::PAWN_CHAR),
-	m_vPrevPos{}, m_bisHit{false}
+	m_spAnimModel{ nullptr }, m_spAnimationController{ nullptr }, m_vPrevPos{}, 	m_spCurNavi{nullptr }, m_spHitCollider{nullptr}, 
+	m_fMoveSpeed{0.f}, m_fRunSpeed{0.f}, m_bIsRunning{false}, m_bisHit{false}, m_bisCollision{false}
 {
 }
 
-UCharacter::UCharacter(const UCharacter& _rhs) : UPawn(_rhs), m_vPrevPos{}, m_bisHit{ false }
+UCharacter::UCharacter(const UCharacter& _rhs) : UPawn(_rhs), m_vPrevPos{}, m_bisHit{ false }, m_bisCollision{ false }
 {
 }
 
@@ -41,12 +42,10 @@ HRESULT UCharacter::NativeConstructClone(const VOIDDATAS& _Datas)
 	assert(false == CharacterDesc.wstrAnimControllerProtoData.empty());
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	// ÇöÀç ¾Ö´Ï¸ÞÀÌ¼Ç ¸ðµ¨À» ¹Þ¾Æ¿Â´Ù. 
+ 
 	{
 		m_spAnimModel = std::static_pointer_cast<UAnimModel>(spGameInstance->CloneResource(CharacterDesc.wstrAnimModelProtoData));
-//		m_spAnimModel = CreateConstructorNative<UAnimModel>(GetDevice(), CharacterDesc.wstrAnimModelProtoData);
 	}
-	// Controller
 	{
 		UAnimationController::ANIMCONTROLLERDESC ControllerDesc{ ThisShared<UCharacter>() };
 		m_spAnimationController = std::static_pointer_cast<UAnimationController>(spGameInstance->CloneComp(CharacterDesc.wstrAnimControllerProtoData, 
@@ -55,8 +54,8 @@ HRESULT UCharacter::NativeConstructClone(const VOIDDATAS& _Datas)
 	{
 		UNavigation::NAVDESC navDesc;
 		navDesc.iCurIndex = 703;
-		m_wpCurNavi = std::static_pointer_cast<UNavigation>(spGameInstance->CloneComp(PROTO_NAVI_INTERIOR, {&navDesc }));
-		assert(nullptr != m_wpCurNavi);
+		m_spCurNavi = std::static_pointer_cast<UNavigation>(spGameInstance->CloneComp(PROTO_NAVI_INTERIOR, {&navDesc }));
+		assert(nullptr != m_spCurNavi);
 	}
 	AddShader(PROTO_RES_ANIMMODELSHADER, RES_SHADER);
 
@@ -145,7 +144,7 @@ _float3 UCharacter::OtherCharacterDirToLookVectorF3(CSHPTRREF<UTransform> _spOth
 
 void UCharacter::TickActive(const _double& _dTimeDelta)
 {
-	// ÀÌÀü À§Ä¡ ÀúÀå
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
 	m_vPrevPos = GetTransform()->GetPos();
 
 	__super::TickActive(_dTimeDelta);
@@ -154,7 +153,11 @@ void UCharacter::TickActive(const _double& _dTimeDelta)
 void UCharacter::LateTickActive(const _double& _dTimeDelta)
 {
 	__super::LateTickActive(_dTimeDelta);
+	m_f3MovedDirection = GetTransform()->GetPos() - m_vPrevPos;
+	m_f3MovedDirection.Normalize();
 
+	if (!m_f3MovedDirection.Length() == 0.0f)
+		m_f3LastMovedDirection = m_f3MovedDirection;
 }
 
 HRESULT UCharacter::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
@@ -182,7 +185,7 @@ HRESULT UCharacter::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF
 	return S_OK;
 }
 
-void UCharacter::Collision(CSHPTRREF<UPawn> _pEnemy)
+void UCharacter::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }
 

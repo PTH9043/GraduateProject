@@ -18,13 +18,79 @@ namespace Core {
 		return true;
 	}
 
+	SHPTR<ASession> AService::FindSession(const SESSIONID _SessionID)
+	{
+		const auto& iter = m_SessionContainer.find(_SessionID);
+		RETURN_CHECK(m_SessionContainer.end() == iter, nullptr);
+		return iter->second;
+	}
+
+	SHPTR<AGameObject> AService::FindGameObject(const SESSIONID _SessionID)
+	{
+		const auto& iter = m_GameObjectContainer.find(_SessionID);
+		RETURN_CHECK(m_GameObjectContainer.end() == iter, nullptr);
+		return iter->second;
+	}
+
+	void AService::BroadCastMessage(_char* _pPacket, const PACKETHEAD& _PacketHead)
+	{
+		RETURN_CHECK(0 >= m_SessionContainer.size(), ;);
+		for (auto& iter : m_SessionContainer)
+		{
+			iter.second->SendData(_pPacket, _PacketHead);
+		}
+	}
+
+	void AService::BroadCastMessageExcludingSession(const SESSIONID _SessionID, _char* _pPacket, const PACKETHEAD& _PacketHead)
+	{
+		RETURN_CHECK(0 >= m_SessionContainer.size(), ;);
+		for (auto& iter : m_SessionContainer)
+		{
+			if (iter.first == _SessionID)
+				continue;
+
+			iter.second->SendData(_pPacket, _PacketHead);
+		}
+	}
+
+	void AService::DirectSendMessage(const SESSIONID _SessionID, _char* _pPacket, const PACKETHEAD& _PacketHead)
+	{
+		SHPTR<ASession> spSession = FindSession(_SessionID);
+		RETURN_CHECK(nullptr == spSession, ;);
+		spSession->SendData(_pPacket, _PacketHead);
+	}
 
 	void AService::LeaveService(const SESSIONID _SessionID)
 	{
+		const auto& iter = m_SessionContainer.find(_SessionID);
+		RETURN_CHECK(iter == m_SessionContainer.end(), ;);
+		const auto& Object = m_GameObjectContainer.find(_SessionID);
+		// Disconnect
+		{
+			std::atomic_thread_fence(std::memory_order_seq_cst);
+			if (iter->second)
+			{
+				// Session »èÁ¦
+				iter->second->Disconnect();
+				iter->second.reset();
+				Object->second.reset();
+			}
+		}
 	}
 
 	void AService::InsertSession(SESSIONID _SessionID, SHPTR<ASession> _spSession)
 	{
+		SHPTR<ASession> spSession = FindSession(_SessionID);
+		RETURN_CHECK(nullptr == _spSession && nullptr != spSession, ;);
+		m_SessionContainer.insert(MakePair(_SessionID, _spSession));
+		m_GameObjectContainer.insert(MakePair(_SessionID, _spSession));
+	}
+
+	void AService::InsertGameObject(SESSIONID _SessionID, SHPTR<AGameObject> _spGameObject)
+	{
+		SHPTR<AGameObject> spObject = FindGameObject(_SessionID);
+		RETURN_CHECK(nullptr == spObject && nullptr != spObject, ;);
+		m_GameObjectContainer.insert(MakePair(_SessionID, _spGameObject));
 	}
 
 	SESSIONID AService::GiveID()
@@ -34,6 +100,10 @@ namespace Core {
 
 	void AService::Free()
 	{
+		for (auto& iter : m_SessionContainer)
+		{
+			iter.second->Disconnect();
+		}
 		m_TcpSocket.close();
 		m_IOContext.stop();
 	}

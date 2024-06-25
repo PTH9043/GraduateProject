@@ -44,7 +44,7 @@ namespace Core {
 	{
 		for (auto& iter : m_SessionContainer)
 		{
-			iter.second->WriteData(_pPacket, _PacketHead);
+			iter.second->SendData(_pPacket, _PacketHead);
 		}
 	}
 

@@ -4,7 +4,7 @@
 namespace Core
 {
 	// 맨 마지막에 삭제되어야하는 App
-	static class ACoreApp* g_RegisterApp;
+	CORE_DLL extern class  ACoreApp* g_RegisterApp;
 
 #ifdef USE_DEBUG
 	CORE_DLL		extern class UDeadLockProfiler*		g_pDeadLockProfiler;

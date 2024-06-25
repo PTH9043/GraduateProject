@@ -2,25 +2,37 @@
 #include "CPlayerSession.h"
 #include "ACoreInstance.h"
 #include "AServerService.h"
+#include "ATransform.h"
 
 namespace Server {
 
 	CPlayerSession::CPlayerSession(SESSION_CONSTRUCTOR)
-		: Core::ASession(SESSION_CONDATA(Core::SESSIONTYPE::PLAYER))
+		: Core::ASession(SESSION_CONDATA(Core::SESSIONTYPE::PLAYER)), m_iStartCellIndex{ 741 }
 	{
+		::memset(&m_CopyBuffer[0], 0, sizeof(BUFFER));
+		::memset(&m_CopyPacketHead, 0, sizeof(PACKETHEAD));
 	}
 
 	_bool CPlayerSession::Start()
 	{
-		return __super::Start();
+		__super::Start();
+
+		SC_CONNECTSUCCESS scConnectSuccess;
+		{
+			PROTOFUNC::MakeScConnectSuccess(OUT & scConnectSuccess, GetSessionID(), m_iStartCellIndex, TAG_MAINPLAYER);
+		}
+		CombineProto(REF_OUT m_CopyBuffer, REF_OUT m_CopyPacketHead, scConnectSuccess, TAG_SC::TAG_SC_CONNECTSUCCESS);
+		SendData(&m_CopyBuffer[0], m_CopyPacketHead);
+		SetGameObjectType(TAG_CHAR::TAG_MAINPLAYER);
+		return true;
 	}
 
-	void CPlayerSession::ReadData()
+	void CPlayerSession::RecvData()
 	{
-		__super::ReadData();
+		__super::RecvData();
 	}
 
-	_bool CPlayerSession::WriteData(_char* _pPacket, const Core::PACKETHEAD& _PacketHead)
+	_bool CPlayerSession::SendData(_char* _pPacket, const Core::PACKETHEAD& _PacketHead)
 	{
 		RETURN_CHECK(false == IsConnected() , false);
 
@@ -62,47 +74,64 @@ namespace Server {
 
 	_bool CPlayerSession::ProcessPacket(_char* _pPacket, const Core::PACKETHEAD& _PacketHead)
 	{
-		static thread_local BUFFER Buffer;
 		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
 
 		switch (_PacketHead.PacketType)
 		{
-		case TAG_CS::TAG_CS_LOGIN:
-		{
-			CS_LOGIN Login;
-			Login.ParseFromArray(_pPacket, static_cast<_int>(_PacketHead.PacketSize));
-			_llong value = CurrentMilliseconds() - Login.time_test();
-			std::cout << Login.user_name() << std::endl;
-		}
-		{
-			PACKETHEAD PacketHead;
-			SC_CHECKLOGIN checkLogin;
-			// 플레이어의 로그인이 확인되면 로그인 데이터를 넘겨준다. 
-			checkLogin.set_id(GetSessionID());
-			// ProtoData를 Combine 해준다. 
-			CombineProto(REF_OUT Buffer, REF_OUT PacketHead, REF_OUT checkLogin, TAG_SC_LOGIN);
-			spCoreInstance->BroadCastMessage(&Buffer[0], PacketHead);
-		}
-		break;
-		// Logout 
-		case TAG_CS::TAG_CS_LOGOUT:
-		{
-			PACKETHEAD PacketHead;
-			CS_LOGOUT logout;
-			logout.set_id(GetSessionID());
-			// ProtoData를 Combine 해준다. 
-			CombineProto(REF_OUT Buffer, REF_OUT PacketHead, REF_OUT logout, TAG_SC_LOGIN);
-			spCoreInstance->BroadCastMessage(&Buffer[0], PacketHead);
-			Disconnect();
-			return false;
-		}
-		break;
-		case TAG_CS::TAG_CS_MOVE:
-		{
-			CS_MOVE move;
-			
-		}
-		break;
+			case TAG_CS::TAG_CS_LOGIN:
+			{
+				// 현재 받아온 패킷을 재해석 한다. 
+				CS_LOGIN Login;
+				Login.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+				{
+					// Make Sc Login 
+					SC_OTHERCLIENTLOGIN scOtherLogin;
+					// 다른 클라이언트들에게 해당 플레이어가 접속했음을 알림
+					PROTOFUNC::MakeScOtherClientLogin(OUT  &scOtherLogin, Login.id(), m_iStartCellIndex, TAG_CHAR::TAG_OTHERPLAYER);
+					CombineProto(REF_OUT m_CopyBuffer, REF_OUT m_CopyPacketHead, scOtherLogin, TAG_SC::TAG_SC_OTHERCLIENTLOGIN);
+					spCoreInstance->BroadCastMessageExcludingSession(Login.id(), &m_CopyBuffer[0], m_CopyPacketHead);
+				}
+				// Login Packet을 조합하고 메시지를 보낸다. 
+				{
+					const GAMEOBJECTCONTAINER& GameObjectContainer = spCoreInstance->GetGameObjectContainer();
+					SC_VIEWINRANGE scViewInRange;
+					// GameObject
+					SET<AGameObject*> GameObjectList;
+					{
+						// 시야처리 
+						for (auto& iter : GameObjectContainer)
+						{
+							GameObjectList.insert(iter.second.get());
+						}
+						SC_VIEWINRANGE scViewRange;
+						PROTOALLOC(VECTOR3, position);
+						// 해당 녀석들이 있다고 보낸다. 
+						for (auto& iter : GameObjectList)
+						{
+							if (Login.id() == iter->GetSessionID())
+								continue;
+
+							_int GameObjectID = GetGameObjectType() == TAG_CHAR::TAG_MAINPLAYER ? TAG_CHAR::TAG_OTHERPLAYER : GetGameObjectType();
+
+							SHPTR<ATransform> spTransform = iter->GetTransform();
+							Vector3 vPosition = spTransform->GetPos();
+							PROTOFUNC::MakeVector3(OUT  position, vPosition.x, vPosition.y, vPosition.z);
+							PROTOFUNC::MakeScViewInRange(OUT &scViewRange, iter->GetSessionID(), IN position, iter->GetCellIndex(), GameObjectID);
+							CombineProto(REF_OUT m_CopyBuffer, REF_OUT m_CopyPacketHead, scViewInRange, TAG_SC::TAG_SC_VIEWINRANGE);
+							spCoreInstance->DirectSendMessage(iter->GetSessionID(), &m_CopyBuffer[0], m_CopyPacketHead);
+						}
+					}
+				}
+			}
+			break;
+			case TAG_CS::TAG_CS_MOVE:
+			{
+				CS_MOVE csMove;
+				csMove.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+
+
+			}
+			break;
 		}
 		return true;
 	}

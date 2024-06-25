@@ -118,6 +118,9 @@ namespace Core
 	template<class Type>
 	using LIST = std::list<Type, USTLAllocator<Type>>;
 
+	template<class Type, class Pred = std::less<Type>>
+	using SET = std::set<Type, Pred, USTLAllocator<Type>>;
+
 	using string = CustomString<char, std::string>;
 	using wstring = CustomString<_tchar, std::wstring>;
 

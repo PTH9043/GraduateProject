@@ -24,7 +24,7 @@ public:
 	void FindPath(SHPTR<ANavigation> _spNavigation,
 		Vector3 _vStartPos, Vector3 _vEndPos);
 public: /* Get Set */
-	LIST<ACell*> GetBestList() const { return m_BestListes; }
+	LIST<Vector3>& GetBestList() { return m_BestListes; }
 private:
 	void MakeRoutine(SHPTR<ACell> _spStartCell, SHPTR<ACell> _spEndCell);
 	void MakeBestRoutine(ACell* _pStartCell, ACell* _pEndCell);
@@ -46,7 +46,7 @@ private:
 	VECTOR<_float>				m_DistanceWeights;
 	// List
 	LIST<ACell*>						m_VisitedListes;
-	LIST<ACell*>						m_BestListes;
+	LIST<Vector3>					m_BestListes;
 };
 
 END

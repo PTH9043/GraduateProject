@@ -11,31 +11,97 @@ BEGIN(Core)
  Index 같은 경우 공용 값이 아니므로 datarace가 일어날 일이 존재하지 않는다. 그래서 atomic을 쓰지 않는다.
 */
 class ACell;
+class ATransform;
+class ACollider;
 using CELLCONTAINER = VECTOR<SHPTR<ACell>>;
 
 class CORE_DLL ANavigation final : public ACoreBase {
+public:
+	typedef struct tagNavDesc {
+		_uint iCurIndex{ 0 };
+	}NAVDESC;
+
+	struct CellPathNode {
+		SHPTR<ACell> cell;
+		_float cost;
+		_float heuristic;
+		_float totalCost;
+		SHPTR<ACell> parent;
+
+		bool operator>(const CellPathNode& other) const {
+			return totalCost > other.totalCost;
+		}
+	};
+
+	struct PathFindingState {
+		std::priority_queue<CellPathNode, VECTOR<CellPathNode>, std::greater<CellPathNode>> openSet;
+		std::unordered_map<SHPTR<ACell>, _float> costSoFar;
+		std::unordered_map<SHPTR<ACell>, SHPTR<ACell>> cameFrom;
+		SHPTR<ACell> endCell;
+		bool pathFound = false;
+		VECTOR<SHPTR<ACell>> path;
+	};
 public:
 	ANavigation();
 	NO_COPY(ANavigation)
 	DESTRUCTOR(ANavigation)
 public:
 	_bool NativeConstruct(const _string& _Paths);
-	// 객체의 Y값이 해당 Cell 바로 위로 만드는 함수 
-	const _float ComputeHeight(const Vector3 _vPosition, REF_IN  _int& _Index);
-	// 네비게이션의 범위를 벗어나는지 확인하는 함수
-	_bool IsCheckOverNavigationArea(const Vector3 _vPosition, REF_IN _int& _Index);
-	// Cell을 찾아 리턴하는 함수
-	SHPTR<ACell>	FindCell(const Vector3 _vPosition, REF_IN _int& _Index);
-	SHPTR<ACell> FindCell(const Vector3 _vPosition);
-private:
-	void ReadyNeighbor();
+	// Compute Height
+	const _float  ComputeHeight(const Vector3& _vPosition);
+	void ComputeHeight(CSHPTRREF<ATransform> _spTransform);
+	// Move
+	_bool IsMove(const Vector3& _vPosition, SHPTR<ACell>& _spCell);
+	// Find
+	SHPTR<ACell> FindCell(const Vector3& _vPosition);
+	SHPTR<ACell> FindCellWithoutUpdate(const Vector3& _vPosition);
+	SHPTR<ACell> FindCell(const _int& _iIndex);
+	SHPTR<ACell> FindCellWithoutUpdate(const _int& _iIndex);
+	// Is Collision
+	_bool IsCollision(SHPTR<ACollider>& _pCollider);
+	// Insert Cell
+	void AddCell(SHPTR<ACell>& _spCell);
+	// SaveLoad
+	_bool Load(const _string& _wstrPath);
+
+	CSHPTR<CELLCONTAINER> GetCells() const { return m_spCellContainer; }
+	const _int& GetCurIndex() const { return m_iCurIndex; }
+	void SetCurIndex(const _int& _iIndex) { m_iCurIndex = _iIndex; }
+	// Get Collider
+	CSHPTRREF<ACollider> GetCollider() { return m_spCollider; }
+	CSHPTRREF<ACell> GetCurCell() { return m_spCurCell; }
+	CSHPTRREF<ACell> GetPrevCell() { return m_spPrevCell; }
+
+	void SetCurCell(CSHPTRREF<ACell> newCell);
+	// Ready Neighbor
+	_bool ReadyNeighbor();
+
+	/*
+	@ Date: 2024-05-14, Writer: 이성현
+	@ Explain
+	-  슬라이딩 벡터 계산 함수.
+	*/
+	Vector3 ClampPositionToCell(const Vector3& position);
+
+	/*
+	@ Date: 2024-06-03, Writer: 이성현
+	@ Explain
+	-  A* 알고리즘
+	*/
+	_float Heuristic(const Vector3& a, const Vector3& b);
+	ANavigation::PathFindingState StartPathFinding(const Vector3& start, const Vector3& end, CSHPTRREF<ACell> _startCell, CSHPTRREF<ACell> _destCell);
+	bool StepPathFinding(PathFindingState& state);
+	VECTOR<Vector3> OptimizePath(const VECTOR<SHPTR<ACell>>& path, const Vector3& start, const Vector3& end);
+	bool LineTest(const Vector3& start, const Vector3& end);
 private:
 	virtual void Free() override;
 private:
-	static constexpr	_int		FINDCELL_CNT{ 10 };
-	// MaxCellCount 
-	_int										m_MaxCellCount;
-	CELLCONTAINER				m_CellContainer;
+	SHPTR<CELLCONTAINER>		m_spCellContainer;
+	SHPTR<ACell>							m_spCurCell;
+	SHPTR<ACell>							m_spPrevCell;
+	_int												m_iPrevIndex;
+	_int												m_iCurIndex;
+	SHPTR<ACollider>					m_spCollider;
 };
 
 END

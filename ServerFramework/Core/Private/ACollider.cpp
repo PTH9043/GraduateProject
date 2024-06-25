@@ -27,6 +27,12 @@ namespace Core {
 		m_vChangeScale = _vChangeScale;
 	}
 
+	void ACollider::UpdateChangeValue(const Vector3& _vChangePos, const Vector3& _vChangeScale)
+	{
+		m_mChangeMatrix.SetPos(_vChangePos);
+		m_vChangeScale = _vChangeScale;
+	}
+
 	void ACollider::Free()
 	{
 	}

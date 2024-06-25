@@ -116,31 +116,22 @@ namespace Core {
 		template<class Other>
 		USTLAllocator(const USTLAllocator<Other>&) {}
 
-		T* allocate(size_t _size) {
-			const size_t size = _size * sizeof(T);
+		T* allocate(size_t count)
+		{
+			const size_t size = count * sizeof(T);
 			return static_cast<T*>(UPoolAllocator::Alloc(size));
 		}
-
-		void deallocate(T* _Ptr, size_t _size) {
-			UPoolAllocator::Release(_Ptr);
+		void deallocate(T* ptr, size_t count)
+		{
+			UPoolAllocator::Release(ptr);
 		}
 
-	private:
-		// 다른 형식의 Allocator가 같은 종류로 간주되게 함
-		template <class U>
-		friend class USTLAllocator;
+		template<typename U>
+		bool operator==(const USTLAllocator<U>&) { return true; }
+
+		template<typename U>
+		bool operator!=(const USTLAllocator<U>&) { return false; }
 	};
-
-	template <class T1, class T2>
-	bool operator==(const USTLAllocator<T1>&, const USTLAllocator<T2>&) noexcept {
-		return true;
-	}
-
-	template <class T1, class T2>
-	bool operator!=(const USTLAllocator<T1>&, const USTLAllocator<T2>&) noexcept {
-		return false;
-	}
-
 
 	/*
 	----------------------------------------

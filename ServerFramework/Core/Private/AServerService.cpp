@@ -32,43 +32,6 @@ namespace Core {
 		return true;
 	}
 
-	SHPTR<ASession> UServerService::FindSession(const SESSIONID _SessionID)
-	{
-		const auto& iter = m_SessionContainer.find(_SessionID);
-		RETURN_CHECK(iter == m_SessionContainer.end(), nullptr);
-		return iter->second;
-	}
-
-	void UServerService::BroadCastMessage(_char* _pPacket, const PACKETHEAD& _PacketHead)
-	{
-		RETURN_CHECK(0 >= m_SessionContainer.size(), ;);
-		for (auto& iter : m_SessionContainer)
-		{
-			iter.second->WriteData(_pPacket, _PacketHead);
-		}
-	}
-
-	void UServerService::LeaveService(const SESSIONID _SessionID)
-	{
-		const auto& iter = m_SessionContainer.find(_SessionID);
-		RETURN_CHECK(iter == m_SessionContainer.end(), ;);
-		// Disconnect
-		{
-			std::atomic_thread_fence(std::memory_order_seq_cst);
-			if (iter->second)
-			{
-				iter->second->Disconnect();
-				iter->second.reset();
-			}
-		}
-	}
-
-	void UServerService::InsertSession(SESSIONID _SessionID, SHPTR<ASession> _spSession)
-	{
-		RETURN_CHECK(nullptr == _spSession, ;);
-		m_SessionContainer.insert(MakePair(_SessionID, _spSession));
-	}
-
 	void UServerService::ThreadFunc(void* _spService)
 	{
 		RETURN_CHECK(nullptr == _spService, ;);
@@ -81,10 +44,6 @@ namespace Core {
 
 	void UServerService::Free()
 	{
-		for (auto& iter : m_SessionContainer)
-		{
-			iter.second->Disconnect();
-		}
 		m_TcpAcceptor.close();
 	}
 }

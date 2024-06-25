@@ -3,6 +3,7 @@
 
 
 BEGIN(Client)
+class CMainCamera;
 
 class CNetworkClientController final : public UNetworkBaseController{
 public:
@@ -11,6 +12,7 @@ public:
 	DESTRUCTOR(CNetworkClientController)
 public:
 	virtual HRESULT NativeConstruct(const _string& _strIPAddress, const _int _PortNumber) override;
+	virtual void MakeActors() override;
 protected:
 	virtual void NativePacket() override;
 	virtual void ProcessPacket(_char* _pPacket, PACKETHEAD _PacketHead) override;

@@ -97,8 +97,7 @@ void UFire::TickActive(const _double& _dTimeDelta)
 			SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 			_float3 MainCamPos = spGameInstance->GetMainCameraTransform()->GetPos();
 			//GetTransform()->LookAtWithFixedUp(_float3(MainCamPos));
-			GetTransform()->LookAtWithFixedUp(_float3(MainCamPos), _dTimeDelta, 1.5f);
-
+			GetTransform()->LookAtWithFixedUp(_float3(MainCamPos), static_cast<_float>(_dTimeDelta), 1.5f);
 		}
 	}
 	
@@ -140,7 +139,7 @@ void UFire::BindShaderBuffer()
 
 }
 
-void UFire::Collision(CSHPTRREF<UPawn> _pEnemy)
+void UFire::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }
 

@@ -1,6 +1,7 @@
 #include "EngineDefine.h"
 #include "UNetworkBaseController.h"
 #include "UGameInstance.h"
+#include "UActor.h"
 
 UNetworkBaseController::UNetworkBaseController() : 
 	m_isNetworkTickRunning{true},
@@ -9,6 +10,7 @@ UNetworkBaseController::UNetworkBaseController() :
 	m_ClientTcpSocket{NULL}, 
 	m_ClientUdpSocket{NULL},
 	m_WsaData{},
+	m_llNetworkOwnerID{0},
 	m_TcpTotalBuffer{},
 	m_RemainBufferLength{0},
 	m_spNetworkAddress{nullptr}
@@ -37,10 +39,26 @@ void UNetworkBaseController::SendTcpPacket(_char* _pPacket, _short _PacketType, 
 	UServerMethods::SendTcpPacket(m_ClientTcpSocket, pOverExp);
 }
 
-void UNetworkBaseController::AddActorToNetworkContainer(_int _NetworkID, CSHPTRREF<UActor> _spActor)
+void UNetworkBaseController::MakeActors()
 {
-	assert(nullptr != _spActor);
-	m_NetworkActorContainer.insert(MakePair(_NetworkID, _spActor));
+	m_NetworkInitDataContainer.clear();
+}
+
+void UNetworkBaseController::AddNetworkInitData(_int _NetworkID, const NETWORKRECEIVEINITDATA& _NetworkInitData)
+{
+	// Insert To Data 
+	m_NetworkInitDataContainer.insert(MakePair(_NetworkID, _NetworkInitData));
+}
+
+SHPTR<UActor> UNetworkBaseController::FindNetworkActor(const _int _NetworkID)
+{
+	const auto& iter = m_NetworkActorContainer.find(_NetworkID);
+	RETURN_CHECK(m_NetworkActorContainer.end() == iter, nullptr);
+	return iter->second;
+}
+
+void UNetworkBaseController::InsertNetworkQuery(const UProcessedData& _data)
+{
 }
 
 void UNetworkBaseController::ServerTick()
@@ -81,6 +99,14 @@ void UNetworkBaseController::ServerTick()
 void UNetworkBaseController::NativePacket()
 {
 	RecvTcpPacket();
+}
+
+void UNetworkBaseController::ActorProcessesNetworkData(_int _NetworkID, const UProcessedData& _ProcessedData)
+{
+	const auto& iter = m_NetworkActorContainer.find(_NetworkID);
+	RETURN_CHECK(m_NetworkActorContainer.end() == iter, ;);
+	// Send Message
+	iter->second->ReceiveNetworkProcessData(_ProcessedData);
 }
 
 void UNetworkBaseController::CombineRecvPacket(UOverExp* _pOverExp, _llong _numBytes)

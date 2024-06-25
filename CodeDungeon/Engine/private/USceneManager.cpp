@@ -58,12 +58,6 @@ void USceneManager::LateTick(const _double& _dTimeDelta)
 	m_spCurScene->LateTick(_dTimeDelta);
 }
 
-void USceneManager::CollisionTick(const _double& _dTimeDelta)
-{
-	RETURN_CHECK(nullptr == m_spCurScene, ;);
-	m_spCurScene->CollisionTick(_dTimeDelta);
-}
-
 void USceneManager::OutLightControlInfo(LIGHTPARAM& _stLightControl)
 {
 	_stLightControl = m_stLightParam;

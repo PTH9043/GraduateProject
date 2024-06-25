@@ -23,6 +23,8 @@
 #include "CMummy.h"
 #include "CSarcophagus.h"
 #include "UAnimModel.h"
+#include "CIronBars.h"
+#include "CModelObjects.h"
 
 
 BEGIN(Client)
@@ -60,11 +62,11 @@ void CMainScene::TurnLightsOnRange()
 				{
 					torch_it->get()->SetActive(true);
 					ActiveLIght(LIGHTTYPE::TYPE_POINT, count, LIGHTACTIVE::ISACTIVE);
-					// dynamic_cast¸¦ »ç¿ëÇÏ¿© ÀÚ½Ä Å¬·¡½º·Î Ä³½ºÆÃ
+					// dynamic_castï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½Ú½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä³ï¿½ï¿½ï¿½ï¿½
 
 					if (pTorch != nullptr)
 					{
-						// ÀÚ½Ä Å¬·¡½º·Î Ä³½ºÆÃµÈ °æ¿ì¿¡¸¸ GetParticle ÇÔ¼ö È£Ãâ °¡´É
+						// ï¿½Ú½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä³ï¿½ï¿½ï¿½Ãµï¿½ ï¿½ï¿½ì¿¡ï¿½ï¿½ GetParticle ï¿½Ô¼ï¿½ È£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 						
 						pTorch->GetFire()->SetActive(true);
 					}
@@ -74,7 +76,7 @@ void CMainScene::TurnLightsOnRange()
 					ActiveLIght(LIGHTTYPE::TYPE_POINT, count, LIGHTACTIVE::NONACTIVE);
 					if (pTorch != nullptr)
 					{
-						// ÀÚ½Ä Å¬·¡½º·Î Ä³½ºÆÃµÈ °æ¿ì¿¡¸¸ GetParticle ÇÔ¼ö È£Ãâ °¡´É
+						// ï¿½Ú½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä³ï¿½ï¿½ï¿½Ãµï¿½ ï¿½ï¿½ì¿¡ï¿½ï¿½ GetParticle ï¿½Ô¼ï¿½ È£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 						
 						pTorch->GetFire()->SetActive(false);
 					}
@@ -113,22 +115,9 @@ HRESULT CMainScene::LoadSceneData()
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	CProtoMaker::CreateMainSceneProtoData(spGameInstance, GetDevice(), std::static_pointer_cast<UCommand>(spGameInstance->GetGpuCommand()));
-	// Main Camera Load 
-	{
-		UCamera::CAMDESC tDesc;
-		tDesc.stCamProj = UCamera::CAMPROJ(UCamera::PROJECTION_TYPE::PERSPECTIVE, _float3(0.f, 0.f, 0.f),
-			_float3(0.f, 0.f, 1.f),
-			DirectX::XMConvertToRadians(60.0f), WINDOW_WIDTH, WINDOW_HEIGHT, 0.2f, 1000.f);
-		tDesc.stCamValue = UCamera::CAMVALUE(20.f, DirectX::XMConvertToRadians(90.f));
-		tDesc.eCamType = CAMERATYPE::MAIN;
-		// Actor Add Main Camera
-
-		VOIDDATAS vecDatas;
-		vecDatas.push_back(&tDesc);
-
-		m_spMainCamera = std::static_pointer_cast<CMainCamera>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MAINCAMERA, vecDatas));
-		m_spMainCamera->GetTransform()->SetPos({ 0.f, 10.f, -100.f });
-	}
+#ifdef _ENABLE_PROTOBUFF
+	spGameInstance->MakeActors();
+#endif
 	{
 		m_spMap = CreateConstructorNative<CMap>(spGameInstance->GetDevice());
 		m_spMap->LoadRooms();
@@ -140,7 +129,7 @@ HRESULT CMainScene::LoadSceneData()
 	1.f, 20.f });
 
 
-		//È¶ºÒÀÇ Á¶¸í Ãß°¡
+		
 		for (auto& obj : (*m_spMap->GetStaticObjs().get()))
 		{
 			int count = 0;
@@ -158,16 +147,33 @@ HRESULT CMainScene::LoadSceneData()
 			}
 		}
 	}
-
-	//ÇÃ·¹ÀÌ¾î »ý¼º
+#ifndef _ENABLE_PROTOBUFF
 	{
-		CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_WARRIORANIMCONTROLLER };
-		CWarriorPlayer::PLAYERDESC PlayerDesc{ m_spMainCamera };
-		m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
-			PROTO_ACTOR_WARRIORPLAYER, { &CharDesc, &PlayerDesc }));
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		// Main Camera Load 
+		{
+			UCamera::CAMDESC tDesc;
+			tDesc.stCamProj = UCamera::CAMPROJ(UCamera::PROJECTION_TYPE::PERSPECTIVE, _float3(0.f, 0.f, 0.f),
+				_float3(0.f, 0.f, 1.f),
+				DirectX::XMConvertToRadians(60.0f), WINDOW_WIDTH, WINDOW_HEIGHT, 0.2f, 1000.f);
+			tDesc.stCamValue = UCamera::CAMVALUE(20.f, DirectX::XMConvertToRadians(90.f));
+			tDesc.eCamType = CAMERATYPE::MAIN;
+			// Actor Add Main Camera
+
+			VOIDDATAS vecDatas;
+			vecDatas.push_back(&tDesc);
+
+			m_spMainCamera = std::static_pointer_cast<CMainCamera>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MAINCAMERA, vecDatas));
+			m_spMainCamera->GetTransform()->SetPos({ 0.f, 10.f, -100.f });
+
+			CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_WARRIORANIMCONTROLLER };
+			CWarriorPlayer::PLAYERDESC PlayerDesc{ m_spMainCamera };
+			m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
+				PROTO_ACTOR_WARRIORPLAYER, { &CharDesc, &PlayerDesc }));
+			spGameInstance->RegisterCurrentPlayer(m_spWarriorPlayer);
+		}
 	}
 
-	//¹Ì¶ó »ý¼º
 	{
 		CMummy::CHARACTERDESC CharDesc{PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_MUMMYANIMCONTROLLER};
 		m_spMummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(
@@ -176,9 +182,9 @@ HRESULT CMainScene::LoadSceneData()
 		m_spMummy->GetAnimModel()->SetAnimation(L"staticLaying");
 		m_spMummy->SetTargetPlayer(m_spWarriorPlayer);
 		m_spMummy->SetMobPlacement(588);
+		spGameInstance->AddCollisionPawnList(m_spMummy);
 	}
 
-	//¹Ì¶ó °ü »ý¼º
 	{
 		CSarcophagus::CHARACTERDESC CharDesc{ PROTO_RES_SARCOPHAGUSLYINGANIMMODEL, PROTO_COMP_SARCOPHAGUSANIMCONTROLLER };
 		m_spSarcophagus = std::static_pointer_cast<CSarcophagus>(spGameInstance->CloneActorAdd(
@@ -187,12 +193,10 @@ HRESULT CMainScene::LoadSceneData()
 		m_spSarcophagus->GetTransform()->SetNewWorldMtx(m_spMummy->GetTransform()->GetWorldMatrix());
 		m_spSarcophagus->GetAnimModel()->SetAnimation(0);
 		m_spSarcophagus->SetTargetPlayer(m_spWarriorPlayer);
-		//¹Ì¶ó À§Ä¡Á¶Á¤
+		//ï¿½Ì¶ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½
 		m_spMummy->GetTransform()->TranslateDir((m_spMummy->GetTransform()->GetLook()), 1, 10);
 	}
-
-	
-
+#endif
 	return S_OK;
 }
 
@@ -221,15 +225,6 @@ void CMainScene::LateTick(const _double& _dTimeDelta)
 
 void CMainScene::CollisionTick(const _double& _dTimeDelta)
 {
-	if (true == m_spMummy->IsHit(m_spWarriorPlayer))
-	{
-
-	}
-
-	if (true == m_spWarriorPlayer->IsHit(m_spMummy))
-	{
-
-	}
+	
 }
-
 END

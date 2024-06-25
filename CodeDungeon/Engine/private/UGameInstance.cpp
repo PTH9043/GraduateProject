@@ -14,7 +14,7 @@
 #include "UPipeLine.h"
 #include "URenderTargetManager.h"
 #include "UFilePathManager.h"
-#include "UNetworkManager.h"
+#include "UNetworkBaseController.h"
 #include "UAudioSystemManager.h"
 #include "UCharacterManager.h"
 #include "UMaterialManager.h"
@@ -71,6 +71,7 @@
 #include "UPicking.h"
 #include "UGrid.h"
 #include "UModelMaterial.h"
+#include "UPawn.h"
 
 IMPLEMENT_SINGLETON(UGameInstance);
 
@@ -95,7 +96,6 @@ UGameInstance::UGameInstance() :
 	m_spFilePathManager{ Create<UFilePathManager>() },
 	//m_spRandomManager{ Create<URandomManager>() },
 	m_spAudioSystemManager{ Create<UAudioSystemManager>() },
-	m_spNetworkManager{Create<UNetworkManager>()},
 	m_spCharacterManager{Create<UCharacterManager>()},
 	m_spMaterialManager{ Create<UMaterialManager>()},
 	m_spRenderer{ nullptr }
@@ -117,7 +117,7 @@ void UGameInstance::Free()
 	//m_spRandomManager.reset();
 	m_spMaterialManager.reset();
 	m_spCharacterManager.reset();
-	m_spNetworkManager.reset();
+	m_spNetworkBaseController.reset();
 	m_spAudioSystemManager.reset();
 	m_spFilePathManager.reset();
 	m_spPicking.reset();
@@ -210,7 +210,7 @@ void UGameInstance::LateTick(const _double& _dTimeDelta)
 	m_spSceneManager->LateTick(_dTimeDelta);
 	m_spActorManager->LateTick(_dTimeDelta);
 
-	m_spSceneManager->CollisionTick(_dTimeDelta);
+	m_spCharacterManager->TickCollider(_dTimeDelta);
 }
 
 void UGameInstance::RenderBegin()
@@ -258,6 +258,7 @@ void UGameInstance::ClearOnceTypeData()
 	m_spActorManager->ClearOnceTypeData();
 	m_spResourceManager->ClearOnceTypeData();
 	m_spPipeLine->ClearOneTypeCamera();
+	m_spCharacterManager->ClearData();
 }
 
 
@@ -538,6 +539,12 @@ SHPTR<UActor> UGameInstance::CloneActorAddAndNotInLayer(const _wstring& _wstrPro
 void UGameInstance::RemoveActor(CSHPTRREF<UActor> _spActor)
 {
 	m_spActorManager->RemoveActor(_spActor);
+	// Collision pawn 안에 있는 녀석 지우기
+	SHPTR<UPawn> spPawn = std::dynamic_pointer_cast<UPawn>(_spActor);
+	if (nullptr != spPawn)
+	{
+		m_spCharacterManager->RemoveCollisionPawn(spPawn);
+	}
 }
 
 /*
@@ -896,29 +903,37 @@ NetworkManager
 */
 
 
-HRESULT UGameInstance::StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController)
+void UGameInstance::StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController)
 {
-	return m_spNetworkManager->StartNetwork(_spNetworkBaseController);
+	m_spNetworkBaseController = _spNetworkBaseController;
 }
 
-void UGameInstance::InsertProcessedDataToContainer(void* _pData, size_t _Size, _int _DataType)
+void UGameInstance::MakeActors()
 {
-	m_spNetworkManager->InsertProcessedDataToContainer(_pData, _Size, _DataType);
-}
-
-void UGameInstance::PopProcessedData(POINTER_IN UProcessedData* _pData)
-{
-	m_spNetworkManager->PopProcessedData(_pData);
+	assert(nullptr != m_spNetworkBaseController);
+	m_spNetworkBaseController->MakeActors();
 }
 
 void UGameInstance::SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize)
 {
-	m_spNetworkManager->SendTcpPacket(_pPacket, _PacketType, _PacketSize);
+	assert(nullptr != m_spNetworkBaseController);
+	m_spNetworkBaseController->SendTcpPacket(_pPacket, _PacketType, _PacketSize);
+}
+
+SHPTR<UActor> UGameInstance::FindNetworkActor(const _int _NetworkID)
+{
+	assert(nullptr != m_spNetworkBaseController);
+	return m_spNetworkBaseController->FindNetworkActor(_NetworkID);
+}
+
+void UGameInstance::InsertNetworkQuery(const UProcessedData& _data)
+{
+	m_spNetworkBaseController->InsertNetworkQuery(_data);
 }
 
 void UGameInstance::NetworkEnd()
 {
-	m_spNetworkManager.reset();
+	m_spNetworkBaseController.reset();
 }
 
 /*
@@ -934,9 +949,19 @@ CSHPTRREF<UCharacter> UGameInstance::GetCurrPlayer() const
 	return m_spCharacterManager->GetCurrPlayer();
 }
 
-void UGameInstance::ReigsterCurrentPlayer(CSHPTRREF<UCharacter> _spCurrentPlayer)
+void UGameInstance::RegisterCurrentPlayer(CSHPTRREF<UCharacter> _spCurrentPlayer)
 {
-	m_spCharacterManager->ReigsterCurrentPlayer(_spCurrentPlayer);
+	m_spCharacterManager->RegisterCurrentPlayer(_spCurrentPlayer);
+}
+
+void UGameInstance::AddCollisionPawnList(CSHPTRREF<UPawn> _spPawn)
+{
+	m_spCharacterManager->AddCollisionPawnList(_spPawn);
+}
+
+void UGameInstance::RemoveCollisionPawn(CSHPTRREF<UPawn> _spPawn)
+{
+	m_spCharacterManager->RemoveCollisionPawn(_spPawn);
 }
 
 /*

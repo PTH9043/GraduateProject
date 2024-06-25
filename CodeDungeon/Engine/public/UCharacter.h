@@ -59,7 +59,7 @@ public:
 	_float3 OtherCharacterDirToLookVectorF3(CSHPTRREF<UTransform> _spOtherTransform);
 public: /* get set */
 	CSHPTRREF<UAnimModel> GetAnimModel() const { return m_spAnimModel; }
-	SHPTR<UNavigation> GetCurrentNavi() const { return m_wpCurNavi; }
+	SHPTR<UNavigation> GetCurrentNavi() const { return m_spCurNavi; }
 	CSHPTRREF<UCollider> GetHitCollider() const { return m_spHitCollider; }
 
 	const _bool& GetHitState() const { return m_bisHit; }
@@ -72,7 +72,7 @@ protected:
 	virtual void LateTickActive(const _double& _dTimeDelta) PURE;
 	virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) PURE;
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) PURE;
-	virtual void Collision(CSHPTRREF<UPawn> _pEnemy) PURE;
+	virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) PURE;
 
 	virtual HRESULT MakeCollider(const _float3& _vTranslate, const _float3& _vScale, const _int _ColliderType);
 protected: /* get set */
@@ -85,6 +85,9 @@ protected: /* get set */
 	void SetRunningSpeed(const float& _newSpeed) { m_fRunSpeed = _newSpeed; }
 
 	void SetRunState(_bool _runState) { m_bIsRunning = _runState; }
+
+	const _float3& GetMovingDirection() const { return m_f3MovedDirection; }
+	const _float3& GetLastMovingDirection() const { return m_f3LastMovedDirection; }
 private:
 	// AnimationModel
 	SHPTR< UAnimModel>				m_spAnimModel;
@@ -93,7 +96,7 @@ private:
 	// 이전 위치 저장
 	_float3								m_vPrevPos;
 	// 현재 스테이지
-	SHPTR<UNavigation>		m_wpCurNavi;
+	SHPTR<UNavigation>		m_spCurNavi;
 	SHPTR<UCollider>			m_spHitCollider;
 
 	//이동 속도
@@ -102,6 +105,10 @@ private:
 	_bool							m_bIsRunning;
 	_bool							m_bisHit;
 	_bool							m_bisCollision;
+
+	//이동한 방향
+	_float3							m_f3MovedDirection;
+	_float3							m_f3LastMovedDirection;
 };
 
 END

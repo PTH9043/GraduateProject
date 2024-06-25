@@ -208,7 +208,7 @@ void UParticle::BindShaderBuffer()
 {
 }
 
-void UParticle::Collision(CSHPTRREF<UPawn> _pEnemy)
+void UParticle::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }
 

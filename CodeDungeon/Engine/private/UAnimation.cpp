@@ -308,7 +308,7 @@ void UAnimation::SaveAnimSectionPathIsFolder(const _wstring& _wstrPath)
 	{
 		_wstring name = m_wstrName;
 
-		int index = name.find(L"|");
+		size_t index = name.find(L"|");
 		name = name.substr(index + 1, name.length());
 
 		str.append(L"\\");

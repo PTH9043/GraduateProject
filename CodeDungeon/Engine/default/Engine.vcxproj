@@ -58,6 +58,7 @@
     <ClInclude Include="..\public\UFog.h" />
     <ClInclude Include="..\public\UGrid.h" />
     <ClInclude Include="..\public\UAnimationController.h" />
+    <ClInclude Include="..\public\UInputReceiver.h" />
     <ClInclude Include="..\public\UItem.h" />
     <ClInclude Include="..\public\ULightCamera.h" />
     <ClInclude Include="..\public\UMeshFilter.h" />
@@ -103,7 +104,6 @@
     <ClInclude Include="..\public\UModel.h" />
     <ClInclude Include="..\public\UNavigation.h" />
     <ClInclude Include="..\public\UNetworkBaseController.h" />
-    <ClInclude Include="..\public\UNetworkManager.h" />
     <ClInclude Include="..\public\UParticle.h" />
     <ClInclude Include="..\public\UParticleSystem.h" />
     <ClInclude Include="..\public\UPawn.h" />
@@ -185,6 +185,7 @@
     <ClCompile Include="..\private\UFog.cpp" />
     <ClCompile Include="..\private\UGrid.cpp" />
     <ClCompile Include="..\private\UAnimationController.cpp" />
+    <ClCompile Include="..\private\UInputReceiver.cpp" />
     <ClCompile Include="..\private\UItem.cpp" />
     <ClCompile Include="..\private\ULightCamera.cpp" />
     <ClCompile Include="..\private\UMeshFilter.cpp" />
@@ -230,7 +231,6 @@
     <ClCompile Include="..\private\UModel.cpp" />
     <ClCompile Include="..\private\UNavigation.cpp" />
     <ClCompile Include="..\private\UNetworkBaseController.cpp" />
-    <ClCompile Include="..\private\UNetworkManager.cpp" />
     <ClCompile Include="..\private\UParticle.cpp" />
     <ClCompile Include="..\private\UParticleSystem.cpp" />
     <ClCompile Include="..\private\UPawn.cpp" />

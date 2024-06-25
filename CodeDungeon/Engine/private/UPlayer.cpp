@@ -36,13 +36,13 @@ HRESULT UPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);
 	// VOIDDATAS에 CharacterDesc 0번, PlayerDesc 1번에 값을 채워야한다. 
-	assert(_Datas.size() > 1);
 
-	PLAYERDESC PlayerDesc = UMethod::ConvertTemplate_Index<PLAYERDESC>(_Datas, PLAYERDESCORDER);
-	assert(nullptr != PlayerDesc.spFollowCamera);
+	if (_Datas.size() >= 2)
+	{
+		PLAYERDESC PlayerDesc = UMethod::ConvertTemplate_Index<PLAYERDESC>(_Datas, PLAYERDESCORDER);
+		m_spFollowCamera = PlayerDesc.spFollowCamera;
+	}
 
-	m_spFollowCamera = PlayerDesc.spFollowCamera;
-	assert(nullptr != m_spFollowCamera);
 	return S_OK;
 }
 
@@ -154,12 +154,13 @@ HRESULT UPlayer::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UT
 	return S_OK;
 }
 
-void UPlayer::Collision(CSHPTRREF<UPawn> _pEnemy)
+void UPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }
 
 void UPlayer::FollowCameraMove(const _float3& _vPlayerToDistancePosition, const _double& _TimeElapsed)
 {
+	RETURN_CHECK(nullptr == m_spFollowCamera, ;);
     // 카메라의 목표 위치를 계산.
     _float3 vTargetPosition = DirectX::XMVector3Transform(_vPlayerToDistancePosition, GetTransform()->GetWorldMatrix());
 
