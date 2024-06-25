@@ -125,8 +125,10 @@ void CNetworkClientController::ProcessPacket(_char* _pPacket, PACKETHEAD _Packet
 		break;
 		case TAG_SC::TAG_SC_PLAYERSTATE:
 		{
+
 			SC_PLAYERSTATE scPlayerState;
 			scPlayerState.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+
 			//// 해당하는 ID에 데이터 전달
 			InsertProcessedDataInQuery(UProcessedData(scPlayerState.id(), scPlayerState, TAG_SC_PLAYERSTATE));
 		}

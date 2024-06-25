@@ -64,7 +64,7 @@ message SC_PLAYERSTATE
 	bool				jumpingstate = 3;
 	int64			animstate = 4;
 	int64			movespeed = 5;
-	string			triggername = 6;
+	byte			triggername = 6;
 }
 
 /*

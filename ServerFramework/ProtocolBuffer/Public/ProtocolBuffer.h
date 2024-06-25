@@ -30,6 +30,8 @@ namespace PROTOFUNC
 	void MakeScMoveFailed(SC_MOVEFAILED* _pOut, LLONG _id, VECTOR3* _pPrevPos);
 	void MakeScPlayerState(SC_PLAYERSTATE* _pOut, LLONG _id, bool _ifattack, bool _jumpingstate,
 		bool _animstate, bool _movespeed, const char* _triggername);
+	void MakeScPlayerState(SC_PLAYERSTATE* _pOut, LLONG _id, bool _ifattack, bool _jumpingstate,
+		bool _animstate, bool _movespeed, std::string _strTriggerName);
 	void MakeScMoveState(SC_MOVESTATE* _pOut, LLONG _id, VECTOR3* _pMovePos);
 	void MakeScViewInRange(SC_VIEWINRANGE* _pOut, LLONG _id, VECTOR3* _pPos, int _cellIndex, int _type);
 
@@ -41,6 +43,8 @@ namespace PROTOFUNC
 	void MakeCsMove(CS_MOVE* _pOut, LLONG _id, VECTOR3* _pMovePos);
 	void MakeCsPlayerState(CS_PLAYERSTATE* _pOut, LLONG _id, bool _ifattack, bool _jumpingstate,
 		bool _animstate, bool _movespeed, const char* _triggername);
+	void MakeCsPlayerState(CS_PLAYERSTATE* _pOut, LLONG _id, bool _ifattack, bool _jumpingstate,
+		bool _animstate, bool _movespeed, std::string _strTriggerName);
 	void MakeCsAttack(CS_ATTACK* _pOut, LLONG _id, float _damage, VECTOR3* _pMovePos);
 	void MakeCsDisconnect(CS_DISCONNECT* _pOut, LLONG _id);
 

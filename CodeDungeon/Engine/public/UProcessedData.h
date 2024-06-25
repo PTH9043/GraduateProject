@@ -32,6 +32,12 @@ public:
 		m_pData = Make::AllocBuffer<_char>(m_DataSize);
 		_data.SerializePartialToArray((void*)&m_pData[0], static_cast<int>(_data.ByteSizeLong()));
 	}
+	// Recv
+	template<class T>
+		requires CheckProtoType<T>
+	UProcessedData(const _int _NetworkID, T* _data, short _tag) : m_pData{ reinterpret_cast<_char*>(_data)}, m_DataType { _tag },
+		m_isMake{ true }, m_DataSize{ sizeof(T) }, m_iNetworkID{ _NetworkID } { }
+
 	~UProcessedData();
 
 	UProcessedData& operator=(const UProcessedData& _other) = delete;
