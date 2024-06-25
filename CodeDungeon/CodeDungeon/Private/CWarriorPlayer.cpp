@@ -116,26 +116,39 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
 	
+	
 
-	_float3 pos = GetTransform()->GetPos();
-	
-	pos.z += 5;
-	_float3 pos1 = GetTransform()->GetPos();
-	pos1.z += 5;
-	pos1.y += 5;
+		
 	
 	
-	m_spTrail->SetRenderingTrail(isAttack);
-	m_spTrail->AddTrail(pos, pos1);
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
 
 	GetAnimationController()->Tick(_dTimeDelta);
 	GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
 
-	m_spParticle->SetActive(true);
 
 	_int AnimState = GetAnimationController()->GetAnimState();
+	SHPTR<UCollider> ps = GetAnimModel()->BringAttackCollider(UCollider::TYPE_OBB);
+	SHPTR<DirectX::BoundingOrientedBox> OBB = ps->GetOBB();
+	
+	_float3 pos= ps->GetCurPos() - OBB->Extents;
+	_float3 pos1= ps->GetCurPos() + OBB->Extents;
+	_float3 plusPoint=ps->GetHeightAdjustedPointFromCenter(OBB,false);
+	_float3 minusPoint=ps->GetHeightAdjustedPointFromCenter(OBB,true);
+	
+	_float4x4 AnimTransform = ps->GetTransformMatrix();
 
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	m_spTrail->SetRenderingTrail(isAttack);
+
+
+	m_spTrail->AddTrail(plusPoint, minusPoint);
+
+	m_spParticle->SetActive(true);
+
+	
+
+	
 
 	if (spGameInstance->GetDIKeyPressing(DIK_LSHIFT)&& spGameInstance->GetDIKeyPressing(DIK_W)&&!spGameInstance->GetDIKeyPressing(DIK_SPACE)) {//|| AnimState == CWarriorAnimController::ANIM_ATTACK|| AnimState == CWarriorAnimController::ANIM_COMBO
 		*m_spParticle->GetParticleSystem()->GetAddParticleAmount() =4;
@@ -235,6 +248,7 @@ void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 
 HRESULT CWarriorPlayer::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
+	
 	return __super::RenderActive(_spCommand, _spTableDescriptor);
 }
 

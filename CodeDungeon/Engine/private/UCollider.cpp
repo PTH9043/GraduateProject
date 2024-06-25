@@ -397,4 +397,85 @@ void UCollider::AddRenderer(RENDERID _eID)
 	}
 }
 
+void UCollider::GetBoundingOrientedBoxCorners(const CSHPTRREF<DirectX::BoundingOrientedBox> box, _float3* Corners)
+{
+	static const XMVECTOR cornerOffsets[BoundingOrientedBox::CORNER_COUNT] =
+	{
+		XMVectorSet(-1.f, -1.f, -1.f, 0.f),
+		XMVectorSet(1.f, -1.f, -1.f, 0.f),
+		XMVectorSet(1.f, 1.f, -1.f, 0.f),
+		XMVectorSet(-1.f, 1.f, -1.f, 0.f),
+		XMVectorSet(-1.f, -1.f, 1.f, 0.f),
+		XMVectorSet(1.f, -1.f, 1.f, 0.f),
+		XMVectorSet(1.f, 1.f, 1.f, 0.f),
+		XMVectorSet(-1.f, 1.f, 1.f, 0.f)
+	};
+
+	XMVECTOR center = XMLoadFloat3(&box->Center);
+	XMVECTOR extents = XMLoadFloat3(&box->Extents);
+	XMVECTOR orientation = XMLoadFloat4(&box->Orientation);
+	XMMATRIX rotationMatrix = XMMatrixRotationQuaternion(orientation);
+
+	for (size_t i = 0; i < BoundingOrientedBox::CORNER_COUNT; ++i)
+	{
+		XMVECTOR localCorner = XMVectorMultiply(cornerOffsets[i], extents);
+		XMVECTOR rotatedCorner = XMVector3Transform(localCorner, rotationMatrix);
+		XMVECTOR worldCorner = XMVectorAdd(rotatedCorner, center);
+		XMStoreFloat3(&Corners[i], worldCorner);
+	}
+}
+
+_float3 UCollider::GetFurthestPointFromBoundingOrientedBoxCenter(const CSHPTRREF<DirectX::BoundingOrientedBox> box)
+{
+	_float3 corners[BoundingOrientedBox::CORNER_COUNT];
+	GetBoundingOrientedBoxCorners(box, corners);
+
+	_float3 furthestPoint = corners[0];
+	float maxDistanceSquared = 0.0f;
+	_float3 center = XMLoadFloat3(&box->Center);
+
+	for (size_t i = 0; i < BoundingOrientedBox::CORNER_COUNT; ++i)
+	{
+		XMVECTOR corner = XMLoadFloat3(&corners[i]);
+		XMVECTOR distanceVector = XMVectorSubtract(corner, center);
+		float distanceSquared = XMVectorGetX(XMVector3LengthSq(distanceVector));
+
+		if (distanceSquared > maxDistanceSquared)
+		{
+			maxDistanceSquared = distanceSquared;
+			furthestPoint = corners[i];
+		}
+	}
+	return furthestPoint;
+}
+
+
+_float3 UCollider::GetHeightAdjustedPointFromCenter(const std::shared_ptr<BoundingOrientedBox>& box, _bool minus)
+{
+	XMVECTOR center = XMLoadFloat3(&box->Center);
+	XMVECTOR extents = XMLoadFloat3(&box->Extents);
+	XMVECTOR orientation = XMLoadFloat4(&box->Orientation);
+
+	// Adjust the point in the y direction by the extent in the y direction
+	XMVECTOR yOffset;
+	if (minus) {
+		yOffset = XMVectorSet(0.0f, XMVectorGetY(-extents), 0.0f, 0.0f);
+	}
+	else {
+		yOffset = XMVectorSet(0.0f, XMVectorGetY(extents), 0.0f, 0.0f);
+	}
+	
+
+	// Apply the rotation to the yOffset
+	XMMATRIX rotationMatrix = XMMatrixRotationQuaternion(orientation);
+	XMVECTOR rotatedYOffset = XMVector3Transform(yOffset, rotationMatrix);
+
+	// Calculate the new point
+	XMVECTOR adjustedPoint = XMVectorAdd(center, rotatedYOffset);
+
+	_float3 result;
+	XMStoreFloat3(&result, adjustedPoint);
+
+	return result;
+}
 #endif

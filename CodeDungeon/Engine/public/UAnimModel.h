@@ -73,6 +73,9 @@ public:
 	void ResetCurAnimEvent();
 
 	SHPTR<UCollider> BringAttackCollider(_int _iColliderType);
+	SHPTR<UCollider> GetAttackCollider() {
+		return m_spAttackCollisionCollider;
+	}
 	_bool IsCollisionAttackCollider(CSHPTRREF<UCollider> _spEnemyCollider);
 public: /* get set */
 	ANIMATIONS& GetAnimations() { return m_vecAnimations; }

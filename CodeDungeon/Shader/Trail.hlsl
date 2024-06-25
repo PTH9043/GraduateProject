@@ -40,6 +40,11 @@ struct PS_In
 struct PS_OUT
 {
     float4 vColor : SV_TARGET0;
+    float4 vSpecular : SV_TARGET1;
+    float4 vNormal : SV_TARGET2;
+    float4 vDepth : SV_TARGET3;
+    float4 vPosition : SV_Target4;
+    float4 vGlow : SV_Target5;
 };
 
 PS_OUT PS_Main(PS_In In)
@@ -50,12 +55,14 @@ PS_OUT PS_Main(PS_In In)
     
     float4 cColor = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV + (cDistortion.r * 2.f));
     
-    cColor.a = In.vTexUV.y;
+    cColor.a = In.vTexUV.y*0.5;
 	
-   // float4 cMulColor = { 1.f / 255.f, 165.f / 255.f, 172.f / 255.f, 0.f };
-  //  cColor += cMulColor;
-    cColor += gf4Color;
-    Out.vColor = cColor;
+   float4 cMulColor = { 1.f / 255.f, 165.f / 255.f, 172.f / 255.f, 0.f };
+    cColor += cMulColor;
+   // cColor += gf4Color;
+    
+    Out.vColor =cColor;
+    Out.vGlow = float4(cColor.r, cColor.g, cColor.b, 0.5f);
     
     return Out;
 }

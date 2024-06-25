@@ -50,7 +50,7 @@ PS_OUT PS_Main(PS_In Input)
     //if (Out.vColor.a == 0)
     //    discard;
     
-    Out.vColor += g_Texture1.Sample(g_Sampler_Normal, Input.vTexUV); //AlphaDeffered
+   
    
     if (IsFogOn)
     {
@@ -71,22 +71,31 @@ PS_OUT PS_Main(PS_In Input)
    
         float FogFactor = saturate((fogEnd - fDistanceToCamera) / (fogEnd - fogStart));
         float FogFactor2 = 1 / pow(2.781828, (fDistanceToCamera * 0.0015) * (fDistanceToCamera * 0.0015));
-        if (vGlow.a != 1.f)
+        
+        if (vGlow.a != 0.5f)//trail을 0.5로 하여 안개 안받도록
         {
-            Out.vColor = lerp(float4(0.21f, 0.21f, 0.21f, 1.0f), Out.vColor, FogFactor);
-        }
-         else
-        {
-            if (fDistanceToCamera > 60)//이면 
-                Out.vColor = lerp(float4(0.2f, 0.15f, 0.04f, 1.f), Out.vColor, FogFactor);
+            if (vGlow.a != 1.f)
+            {
+                Out.vColor = lerp(float4(0.21f, 0.21f, 0.21f, 1.0f), Out.vColor, FogFactor);
+            }
             else
-                Out.vColor = lerp(float4(0.2f, 0.15f, 0.04f, 1.f), Out.vColor, FogFactor2);
+            {
+                if (fDistanceToCamera > 60)//이면 
+                    Out.vColor = lerp(float4(0.2f, 0.15f, 0.04f, 1.f), Out.vColor, FogFactor);
+                else
+                    Out.vColor = lerp(float4(0.2f, 0.15f, 0.04f, 1.f), Out.vColor, FogFactor2);
             //Out.vColor = lerp(float4(0.2f, 0.15f, 0.04f, 1.f), Out.vColor, FogFactor2);
-        }
+            }
                //Glow인 애들은 알파값이 1로 기록하여 안개를 덜받도록.
+        }
+        else
+        {
+            Out.vColor = lerp(vGlow, Out.vColor, FogFactor);
+        }
+      
      }
  
-    
+    Out.vColor += g_Texture1.Sample(g_Sampler_Normal, Input.vTexUV); //AlphaDeffered
 
     return Out;
 }

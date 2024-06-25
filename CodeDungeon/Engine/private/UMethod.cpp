@@ -291,6 +291,162 @@ HRESULT UMethod::CreateBufferResource(const ComPtr<Dx12Device>& _pDevice,
 	}
 	return S_OK;
 }
+//HRESULT UMethod::CreateTextureResource(const ComPtr<Dx12Device>& _pDevice, const ComPtr<Dx12GraphicsCommandList>& _pGpuCmd, const _uint& _iBufferSize, const void* _pData, ComPtr<Dx12Resource>& _pBuffer, ComPtr<Dx12Resource> _pUpLoad, const D3D12_HEAP_TYPE& _d3dHeapType, const D3D12_RESOURCE_STATES _d3dResourceStates)
+//{
+//	D3D12_HEAP_PROPERTIES d3dHeapPropertiesDesc{};
+//	::ZeroMemory(&d3dHeapPropertiesDesc, sizeof(D3D12_HEAP_PROPERTIES));
+//	d3dHeapPropertiesDesc.Type = _d3dHeapType;
+//	d3dHeapPropertiesDesc.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+//	d3dHeapPropertiesDesc.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+//	d3dHeapPropertiesDesc.CreationNodeMask = 1;
+//	d3dHeapPropertiesDesc.VisibleNodeMask = 1;
+//
+//	D3D12_RESOURCE_DESC d3dResourceDesc;
+//	::ZeroMemory(&d3dResourceDesc, sizeof(D3D12_RESOURCE_DESC));
+//	d3dResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+//	d3dResourceDesc.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
+//	d3dResourceDesc.Width = _iBufferSize;
+//	d3dResourceDesc.Height = 1;
+//	d3dResourceDesc.DepthOrArraySize = 1;
+//	d3dResourceDesc.MipLevels = 1;
+//	d3dResourceDesc.Format = DXGI_FORMAT_UNKNOWN;
+//	d3dResourceDesc.SampleDesc.Count = 1;
+//	d3dResourceDesc.SampleDesc.Quality = 0;
+//	d3dResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+//	d3dResourceDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+//
+//	HRESULT hResult = _pDevice->CreateCommittedResource(&d3dHeapPropertiesDesc, D3D12_HEAP_FLAG_NONE, &d3dResourceDesc, _d3dResourceStates, NULL, IID_PPV_ARGS(_pBuffer.GetAddressOf()));
+//	if (FAILED(hResult)) {
+//		return hResult;
+//	}
+//
+//	if (_d3dHeapType == D3D12_HEAP_TYPE_UPLOAD && _pData) {
+//		D3D12_RANGE d3dReadRange = { 0, 0 };
+//		UINT8* pBufferDataBegin = nullptr;
+//		hResult = _pBuffer->Map(0, &d3dReadRange, reinterpret_cast<void**>(&pBufferDataBegin));
+//		if (FAILED(hResult)) {
+//			return hResult;
+//		}
+//		memcpy(pBufferDataBegin, _pData, _iBufferSize);
+//		_pBuffer->Unmap(0, nullptr);
+//	}
+//
+//	return S_OK;
+//}
+
+HRESULT UMethod::CreateTextureResource(const ComPtr<Dx12Device>& _pDevice, const ComPtr<Dx12GraphicsCommandList>& _pGpuCmd, const _uint& _iBufferSize, const void* _pData, ComPtr<Dx12Resource>& _pBuffer, ComPtr<Dx12Resource> _pUpLoad, const D3D12_HEAP_TYPE& _d3dHeapType, const D3D12_RESOURCE_STATES _d3dResourceStates)
+{
+	D3D12_HEAP_PROPERTIES d3dHeapPropertiesDesc{ };
+	::ZeroMemory(&d3dHeapPropertiesDesc, sizeof(D3D12_HEAP_PROPERTIES));
+	d3dHeapPropertiesDesc.Type = _d3dHeapType;
+	d3dHeapPropertiesDesc.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+	d3dHeapPropertiesDesc.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+	d3dHeapPropertiesDesc.CreationNodeMask = 1;
+	d3dHeapPropertiesDesc.VisibleNodeMask = 1;
+
+	D3D12_RESOURCE_DESC d3dResourceDesc;
+	::ZeroMemory(&d3dResourceDesc, sizeof(D3D12_RESOURCE_DESC));
+	d3dResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	d3dResourceDesc.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
+	d3dResourceDesc.Width = _iBufferSize;
+	d3dResourceDesc.Height = 1;
+	d3dResourceDesc.DepthOrArraySize = 1;
+	d3dResourceDesc.MipLevels = 1;
+	d3dResourceDesc.Format = DXGI_FORMAT_UNKNOWN;
+	d3dResourceDesc.SampleDesc.Count = 1;
+	d3dResourceDesc.SampleDesc.Quality = 0;
+	d3dResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+	d3dResourceDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+	
+	switch (_d3dHeapType)
+	{
+	case D3D12_HEAP_TYPE_DEFAULT:
+	{
+		D3D12_RESOURCE_STATES d3dResourceInitialStates = (_pUpLoad && _pData) ? D3D12_RESOURCE_STATE_COPY_DEST : _d3dResourceStates;
+		HRESULT hResult = _pDevice->CreateCommittedResource(&d3dHeapPropertiesDesc, D3D12_HEAP_FLAG_NONE, &d3dResourceDesc, d3dResourceInitialStates, NULL, IID_PPV_ARGS(_pBuffer.GetAddressOf()));
+		if (_pUpLoad &&_pData)
+		{
+			d3dHeapPropertiesDesc.Type = D3D12_HEAP_TYPE_UPLOAD;
+
+			d3dResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+			d3dResourceDesc.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
+			d3dResourceDesc.Width = _iBufferSize;
+			d3dResourceDesc.Height = 1;
+			d3dResourceDesc.DepthOrArraySize = 1;
+			d3dResourceDesc.MipLevels = 1;
+			d3dResourceDesc.Format = DXGI_FORMAT_UNKNOWN;
+			d3dResourceDesc.SampleDesc.Count = 1;
+			d3dResourceDesc.SampleDesc.Quality = 0;
+			d3dResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+			d3dResourceDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+			hResult = _pDevice->CreateCommittedResource(&d3dHeapPropertiesDesc, D3D12_HEAP_FLAG_NONE, &d3dResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, NULL, IID_PPV_ARGS(_pUpLoad.GetAddressOf()));
+#ifdef _WITH_MAPPING
+			D3D12_RANGE d3dReadRange = { 0, 0 };
+			UINT8* pBufferDataBegin = NULL;
+			(*ppd3dUploadBuffer)->Map(0, &d3dReadRange, (void**)&pBufferDataBegin);
+			memcpy(pBufferDataBegin, pData, nBytes);
+			(*ppd3dUploadBuffer)->Unmap(0, NULL);
+
+			pd3dCommandList->CopyResource(pd3dBuffer, *ppd3dUploadBuffer);
+#else
+			D3D12_SUBRESOURCE_DATA d3dSubResourceData;
+			::ZeroMemory(&d3dSubResourceData, sizeof(D3D12_SUBRESOURCE_DATA));
+			d3dSubResourceData.pData = _pData;
+			d3dSubResourceData.SlicePitch = d3dSubResourceData.RowPitch = _iBufferSize;
+			D3D12_PLACED_SUBRESOURCE_FOOTPRINT pnd3dLayouts[1];
+			UINT pnRows[1];
+			UINT64 pnRowSizesInBytes[1];
+
+			UINT64 nRequiredSize = 0;
+			D3D12_RESOURCE_DESC d3dResourceDesc = _pBuffer->GetDesc();
+			_pDevice->GetCopyableFootprints(&d3dResourceDesc, 0, 1, 0, pnd3dLayouts, pnRows, pnRowSizesInBytes, &nRequiredSize);
+
+			//UpdateSubresources(_pGpuCmd, _pBuffer, _pUpLoad, 0, 1, nRequiredSize, pnd3dLayouts, pnRows, pnRowSizesInBytes, &d3dSubResourceData);
+
+			
+#endif
+			D3D12_RESOURCE_BARRIER d3dResourceBarrier;
+			::ZeroMemory(&d3dResourceBarrier, sizeof(D3D12_RESOURCE_BARRIER));
+			d3dResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+			d3dResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+			d3dResourceBarrier.Transition.pResource = _pBuffer.Get();
+			d3dResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
+			d3dResourceBarrier.Transition.StateAfter = _d3dResourceStates;
+			d3dResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+			_pGpuCmd->ResourceBarrier(1, &d3dResourceBarrier);
+		}
+		break;
+	}
+	case D3D12_HEAP_TYPE_UPLOAD:
+	{
+		HRESULT hResult = _pDevice->CreateCommittedResource(&d3dHeapPropertiesDesc, D3D12_HEAP_FLAG_NONE, &d3dResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, NULL, IID_PPV_ARGS(_pBuffer.GetAddressOf()));
+		if (_pData)
+		{
+			D3D12_RANGE d3dReadRange = { 0, 0 };
+			UINT8* pBufferDataBegin = NULL;
+			_pBuffer->Map(0, &d3dReadRange, (void**)&pBufferDataBegin);
+			memcpy(pBufferDataBegin, _pData, _iBufferSize);
+			_pBuffer->Unmap(0, NULL);
+		}
+		break;
+	}
+	case D3D12_HEAP_TYPE_READBACK:
+	{
+		
+		HRESULT hResult = _pDevice->CreateCommittedResource(&d3dHeapPropertiesDesc, D3D12_HEAP_FLAG_NONE, &d3dResourceDesc, D3D12_RESOURCE_STATE_COPY_DEST, NULL, IID_PPV_ARGS(_pBuffer.GetAddressOf()));
+		if (_pData)
+		{
+			D3D12_RANGE d3dReadRange = { 0, 0 };
+			UINT8* pBufferDataBegin = NULL;
+			_pBuffer->Map(0, &d3dReadRange, (void**)&pBufferDataBegin);
+			memcpy(pBufferDataBegin, _pData, _iBufferSize);
+			_pBuffer->Unmap(0, NULL);
+		}
+		break;
+	}
+	}
+	return S_OK;
+}
 
 _uint UMethod::CalcConstantBufferByteSize(const _uint& _iByteSize)
 {

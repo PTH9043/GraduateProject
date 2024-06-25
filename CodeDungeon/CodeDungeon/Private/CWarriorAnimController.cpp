@@ -103,7 +103,7 @@ void CWarriorAnimController::Tick(const _double& _dTimeDelta)
     }
 
     if (isAttack) {
-        spWarriorPlayer->IfAttack(true);
+        //spWarriorPlayer->IfAttack(true);
         const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
         if (isWAttack) {
             if (CurAnimName == L"combo02_1")
@@ -139,9 +139,7 @@ void CWarriorAnimController::Tick(const _double& _dTimeDelta)
             m_iSComboStack = 0;
         }
     }
-    else {
-        spWarriorPlayer->IfAttack(false);
-    }
+   
 
     if (isRoll) {
         if (isMoveFront) {
@@ -165,6 +163,18 @@ void CWarriorAnimController::Tick(const _double& _dTimeDelta)
     {
         UpdateState(spAnimModel, ANIM_HIT, L"HIT_BACK");
     }
+    {
+        const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
+        if (CurAnimName == L"combo06_1"|| CurAnimName == L"combo06_2" || CurAnimName == L"combo06_3" || CurAnimName == L"combo02_1" || CurAnimName == L"combo02_2" || CurAnimName == L"combo02_3") {
+            spWarriorPlayer->IfAttack(true);
+        }
+        else {
+            spWarriorPlayer->IfAttack(false);
+        }
+    }
+ 
+    
+   
 
     spAnimModel->TickEvent(spWarriorPlayer.get(), GetTrigger(), _dTimeDelta);
 }

@@ -66,15 +66,19 @@ PS_OUT PS_Main(PS_In In)
     //vector vColor = vDiffuseDesc * LightCol;
     
         vector vColor;
-    if (vGlowDesc.a == 1)
+    if (vGlowDesc.a == 1)//fire
     {
        // vColor = float4(ToneMapping(vDiffuseDesc.xyz), vDiffuseDesc.a);
        // vColor.xyz = vDiffuseDesc.xyz * ToneMapping(vGlowDesc.xyz);
         vColor.xyz = vGlowDesc.xyz;
         //ToneMapping(vGlowDesc.xyz);
     }
-    else
+    else if (vGlowDesc.a == 0.5f)//trail
     {
+        vColor = vDiffuseDesc;
+
+    }
+    else{
         vColor = vDiffuseDesc * LightCol;
     }
        

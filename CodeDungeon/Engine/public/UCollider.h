@@ -53,6 +53,11 @@ public:
 	void AddRenderer(RENDERID _eID);
 
 #endif
+	void GetBoundingOrientedBoxCorners(const CSHPTRREF<DirectX::BoundingOrientedBox> box, _float3* Corners);
+	_float3 GetFurthestPointFromBoundingOrientedBoxCenter(const CSHPTRREF<DirectX::BoundingOrientedBox> box);
+	_float3 GetHeightAdjustedPointFromCenter(const CSHPTRREF<DirectX::BoundingOrientedBox> box,_bool minus);
+
+	const SHPTR<DirectX::BoundingOrientedBox>& GetOBB() { return m_spOBB; }
 private:
 	SHPTR<DirectX::BoundingBox>					m_spAABB_Original;
 	SHPTR<DirectX::BoundingOrientedBox>	m_spOBB_Original;

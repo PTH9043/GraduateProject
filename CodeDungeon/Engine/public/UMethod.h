@@ -40,6 +40,11 @@ namespace Engine
 			const D3D12_HEAP_TYPE& _d3dHeapType = D3D12_HEAP_TYPE_UPLOAD,
 			const D3D12_RESOURCE_STATES _d3dResourceStates = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
 
+		static HRESULT CreateTextureResource(const ComPtr<Dx12Device>& _pDevice, const ComPtr<Dx12GraphicsCommandList>& _pGpuCmd,
+			const _uint& _iBufferSize, const void* _pData, ComPtr<Dx12Resource>& _pBuffer, ComPtr<Dx12Resource> _pUpLoad,
+			const D3D12_HEAP_TYPE& _d3dHeapType = D3D12_HEAP_TYPE_UPLOAD,
+			const D3D12_RESOURCE_STATES _d3dResourceStates = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+
 		static _uint CalcConstantBufferByteSize(const _uint& _iByteSize);
 		// Shader 파일을 Binary로 읽어서 리턴
 		static ComPtr<DxBlob> LoadBinary(const _wstring& _strFileName);
