@@ -26,7 +26,7 @@ HRESULT UMapLayout::NativeConstruct()
 {
 	RETURN_CHECK_FAILED(__super::NativeConstruct(), E_FAIL);
 	m_spMapObjectsContainer = Create<MAPOBJECTSCONTAINER>();
-
+	m_spMapMobsContainer = Create<MAPMOBSCONTAINER>();
 
 	return S_OK;
 }
@@ -103,8 +103,7 @@ _bool UMapLayout::SaveMapMobs(const _wstring& _wstrPath)
 	return true;
 }
 
-
-_bool UMapLayout::Load()
+_bool UMapLayout::LoadMapObjects()
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
@@ -125,7 +124,7 @@ _bool UMapLayout::Load()
 
 			size_t vectorSize;
 			load.read(reinterpret_cast<char*>(&vectorSize), sizeof(size_t));
-	
+
 			MAPOBJECTS objDatas;
 
 			for (size_t i = 0; i < vectorSize; ++i) {
@@ -150,6 +149,56 @@ _bool UMapLayout::Load()
 		}
 	}
 
-    return true;
+	return true;
 }
+
+_bool UMapLayout::LoadMapMobs()
+{
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+	SHPTR<FILEGROUP> MapLayoutFolder = spGameInstance->FindFolder(L"MobsLayouts");
+	if (m_spMapMobsContainer->size() > 0)
+		m_spMapMobsContainer->clear();
+
+	if (nullptr != MapLayoutFolder && 0 <= MapLayoutFolder->FileDataList.size())
+	{
+		for (const FILEPAIR& File : MapLayoutFolder->FileDataList)
+		{
+			_wstring filePath = File.second->wstrfilePath;
+			std::ifstream load{ filePath, std::ios::binary };
+			if (load.fail()) {
+				return false;
+			}
+			_string roomName = UMethod::ConvertWToS(File.first);
+
+			size_t vectorSize;
+			load.read(reinterpret_cast<char*>(&vectorSize), sizeof(size_t));
+
+			MAPMOBS objDatas;
+
+			for (size_t i = 0; i < vectorSize; ++i) {
+				size_t objNameSize;
+				load.read(reinterpret_cast<char*>(&objNameSize), sizeof(size_t));
+
+				_string objName;
+				objName.resize(objNameSize);
+				load.read(&objName[0], objNameSize);
+
+				_float4x4 worldMatrix;
+				load.read(reinterpret_cast<char*>(&worldMatrix), sizeof(_float4x4));
+
+				MOBDESC obj;
+				obj._sAnimModelName = objName;
+				obj._mWorldMatrix = worldMatrix;
+				objDatas.push_back(obj);
+			}
+
+			load.close();
+			m_spMapMobsContainer->emplace(roomName, objDatas);
+		}
+	}
+
+	return true;
+}
+
 

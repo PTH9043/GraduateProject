@@ -34,7 +34,9 @@ public:
 
 	_bool SaveMapObjects(const _wstring& _wstrPath);
 	_bool SaveMapMobs(const _wstring& _wstrPath);
-	_bool Load();
+	_bool LoadMapObjects();
+	_bool LoadMapMobs();
+
 	
 	void AddtoMapContainer(const _string& _RoomName, MAPOBJECTS& _ObjData);
 	void AddtoMobsContainer(const _string& _MobName, MAPMOBS& MobData);

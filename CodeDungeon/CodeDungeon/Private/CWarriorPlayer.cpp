@@ -254,7 +254,6 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 					_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 50.0f : 10.0f;
 
 					// 충돌 보정 및 슬라이딩 벡터 적용
-					
 					_float3 newPosition = GetPrevPos() + slidingVector * speed * _dTimeDelta;
 
 					// 위치 업데이트
@@ -263,9 +262,6 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 			}
 		}
 	}
-
-
-
 }
 
 void CWarriorPlayer::TranslateStateMoveAndRunF(CSHPTRREF<UGameInstance> _spGameInstance, const _double& _dTimeDelta, const _float _fSpeed)

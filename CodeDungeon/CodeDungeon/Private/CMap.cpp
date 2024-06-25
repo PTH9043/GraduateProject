@@ -88,7 +88,7 @@ void CMap::LoadRooms()
 void CMap::LoadStaticObjects()
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	m_spMapLayout->Load();
+	m_spMapLayout->LoadMapObjects();
 	OBJCONTAINER _TorchVec;
 	OBJCONTAINER _BarsVec;
 	for (auto& it : (*m_spMapLayout->GetMapObjectsContainer().get()))
