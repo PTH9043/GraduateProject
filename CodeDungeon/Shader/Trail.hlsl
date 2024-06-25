@@ -57,9 +57,9 @@ PS_OUT PS_Main(PS_In In)
     
     cColor.a = In.vTexUV.y*0.5;
 	
-   float4 cMulColor = { 1.f / 255.f, 165.f / 255.f, 172.f / 255.f, 0.f };
-    cColor += cMulColor;
-   // cColor += gf4Color;
+   //float4 cMulColor = { 1.f / 255.f, 165.f / 255.f, 172.f / 255.f, 0.f };
+   // cColor += cMulColor;
+    cColor += gf4Color;
     
     Out.vColor =cColor;
     Out.vGlow = float4(cColor.r, cColor.g, cColor.b, 0.5f);
