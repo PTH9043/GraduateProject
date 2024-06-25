@@ -26,6 +26,9 @@ public:
 	virtual void Free() override;
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _Datas) override;
+	// 네트워크 정보를 받아오는 함수
+	virtual void ReceiveNetworkProcessData(const UProcessedData& _ProcessData);
+public: /* Get Set */
 	SHPTR<UParticle>& GetParticle() { return m_spParticle; }
 
 	void IfAttack(_bool is) { isAttack = is; }
@@ -38,14 +41,14 @@ protected:
 private:
 	void TranslateStateMoveAndRunF(CSHPTRREF<UGameInstance> _spGameInstance, const _double& _dTimeDelta, const _float _fSpeed);
 private:
+	SHPTR<UParticle>										m_spParticle;
+	PARTICLEPARAM*										m_stParticleParam;
+	ComputeParticleType*								m_stParticleType;
 
-	SHPTR<UParticle>		m_spParticle;
-	PARTICLEPARAM* m_stParticleParam;
-	ComputeParticleType* m_stParticleType;
+	SHPTR<CSword>											m_spSword;
+	SHPTR<UTrail>												m_spTrail;
+	_bool																isAttack;
 
-	SHPTR<CSword>	m_spSword;
-	SHPTR<UTrail> m_spTrail;
-	_bool isAttack;
 };
 
 END
