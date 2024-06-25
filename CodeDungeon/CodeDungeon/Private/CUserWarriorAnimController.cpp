@@ -113,7 +113,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
 
     // Attack handling
     if (isAttack) {
-        spWarriorPlayer->IfAttack(true);
+     
         const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
         if (isWAttack) {
             if (CurAnimName == L"combo02_1") m_iWComboStack = 2;
@@ -143,9 +143,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
             m_iSComboStack = 0;
         }
     }
-    else {
-        spWarriorPlayer->IfAttack(false);
-    }
+   
 
     // Roll handling
     if (isRoll) {
@@ -159,6 +157,17 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     // Hit state
     if (isHit) {
         UpdateState(spAnimModel, ANIM_HIT, L"HIT_BACK");
+    }
+
+
+    {
+        const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
+        if (CurAnimName == L"combo06_1" || CurAnimName == L"combo06_2" || CurAnimName == L"combo06_3" || CurAnimName == L"combo02_1" || CurAnimName == L"combo02_2" || CurAnimName == L"combo02_3") {
+            spWarriorPlayer->IfAttack(true);
+        }
+        else {
+            spWarriorPlayer->IfAttack(false);
+    }
     }
 
     spWarriorPlayer->SetMouseMove(spGameInstance->GetDIMMoveState(DIMM_X));

@@ -166,25 +166,29 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 			GetTransform()->RotateTurn(_float3(0.f, 1.f, 0.f), MouseMove * 5.f, _dTimeDelta);
 		}
 	}
-	GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
+	
 
 
 	_int AnimState = GetAnimationController()->GetAnimState();
 	SHPTR<UCollider> ps = GetAnimModel()->BringAttackCollider(UCollider::TYPE_OBB);
-	SHPTR<DirectX::BoundingOrientedBox> OBB = ps->GetOBB();
-	
-	_float3 plusPoint=ps->GetHeightAdjustedPointFromCenter(OBB,false);
-	_float3 minusPoint=ps->GetHeightAdjustedPointFromCenter(OBB,true);
-	
-	_float4x4 AnimTransform = ps->GetTransformMatrix();
 
 	if (ps) {
+		SHPTR<DirectX::BoundingOrientedBox> OBB = ps->GetOBB();
+
+		_float3 plusPoint = ps->GetHeightAdjustedPointFromCenter(OBB, false);
+		_float3 minusPoint = ps->GetHeightAdjustedPointFromCenter(OBB, true);
+
+		_float4x4 AnimTransform = ps->GetTransformMatrix();
+
+
 		m_spTrail->SetRenderingTrail(isAttack);
 
 
 		m_spTrail->AddTrail(plusPoint, minusPoint);
 	}
-
+	
+	
+	GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
 
 
 	m_spParticle->SetActive(true);

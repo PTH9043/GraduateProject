@@ -151,6 +151,8 @@ void CWarriorAnimController::Tick(const _double& _dTimeDelta)
     if (isHit) {
         UpdateState(spAnimModel, ANIM_HIT, L"HIT_BACK");
     }
+    
+    
     {
         const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
         if (CurAnimName == L"combo06_1"|| CurAnimName == L"combo06_2" || CurAnimName == L"combo06_3" || CurAnimName == L"combo02_1" || CurAnimName == L"combo02_2" || CurAnimName == L"combo02_3") {
