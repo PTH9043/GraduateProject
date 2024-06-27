@@ -58,6 +58,7 @@ void CIronBars::TickActive(const _double& _dTimeDelta)
 		Containers.second->SetTranslate(GetModel()->GetCenterPos());
 		Containers.second->SetScaleToFitModel(GetModel()->GetMinVertexPos(), GetModel()->GetMaxVertexPos());
 		Containers.second->SetTransform(GetTransform());
+
 	}
 }
 

@@ -81,6 +81,8 @@ protected:
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) PURE;
 
 	virtual HRESULT MakeCollider(const _float3& _vTranslate, const _float3& _vScale, const _int _ColliderType);
+	void ApplySlidingMovement(const _float3& _collidedNormal, _float _speed, _float _deltaTime);
+
 protected: /* get set */
 	CSHPTRREF<UAnimationController> GetAnimationController() const { return m_spAnimationController; }
 	const _float3& GetPrevPos() const { return m_vPrevPos; }

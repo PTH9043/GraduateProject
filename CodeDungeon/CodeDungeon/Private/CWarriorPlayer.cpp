@@ -17,6 +17,7 @@
 #include "UVIBufferTrail.h"
 #include "CModelObjects.h"
 #include "UProcessedData.h"
+#include "UAnimation.h"
 
 
 CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
@@ -88,6 +89,16 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	_wstring mainColliderTag = L"Main";
 
 	AddColliderInContainer(mainColliderTag, Collider);
+
+	SHPTR<UCollider> forStaticCollider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
+	_wstring forStaticColliderTag = L"ForStaticCollision";
+
+	AddColliderInContainer(forStaticColliderTag, forStaticCollider);
+	
+	SHPTR<UCollider> forMobsCollider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
+	_wstring forMobsColliderTag = L"ForMobsCollision";
+
+	AddColliderInContainer(forMobsColliderTag, forMobsCollider);
 	{
 		UParticle::PARTICLEDESC tDesc;
 		tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEFOOTPRINT2DSHADER;
@@ -138,7 +149,18 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 
 	for (auto& Colliders : GetColliderContainer())
 	{
-		Colliders.second->SetScale(_float3(3, 15, 3));
+		if (Colliders.first == L"Main")
+			Colliders.second->SetScale(_float3(5, 15, 5));
+		else if(Colliders.first == L"ForStaticCollision")
+		{
+			Colliders.second->SetScale(_float3(4, 15, 4));
+			Colliders.second->SetTranslate(_float3(0, 4, 0));
+		}
+		else if (Colliders.first == L"ForMobsCollision")
+		{
+			Colliders.second->SetScale(_float3(3, 15, 3));
+		}
+
 	}
 	return S_OK;
 }
@@ -200,7 +222,6 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		m_spTrail->AddTrail(plusPoint, minusPoint);
 	}
 	
-	
 	GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
 
 
@@ -225,7 +246,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	{
 		POINT ptCursorPos;
 	//	ShowCursor(FALSE);
-	//SetCursorPos(1000, 400);
+	/*SetCursorPos(1000, 400);*/
 	}
 	UpdateCollision();
 }
@@ -236,12 +257,13 @@ void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 	_float3 direction(0.0f, 0.0f, 0.0f);
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	if (GetCollisionState())
-	{
-//		GetTransform()->SetPos(GetPrevPos());
-	}
+
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
 	FollowCameraMove(_float3{ 0.f, 20.f, -40.f }, _dTimeDelta);
+
+	//for (auto& Colliders : GetColliderContainer())
+	//	if(Colliders.first == L"ForMobsCollision")
+	//		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
 }
 
 
@@ -270,14 +292,17 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
 		for (auto& iter : GetColliderContainer())
 		{
-			if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
+			if(iter.first == L"ForMobsCollision")
 			{
-				SetHitstate(true);
-			}
-			else
-				SetHitstate(false);
+				if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
+				{
+					SetHitstate(true);
+				}
+				else
+					SetHitstate(false);
 
-			GetTransform()->SetPos(GetTransform()->GetPos() - GetTransform()->GetLook() * 5 * _dTimeDelta);
+				GetTransform()->SetPos(GetTransform()->GetPos() - GetTransform()->GetLook() * 5 * _dTimeDelta);
+			}
 		}
 	}
 	else if (PAWNTYPE::PAWN_STATICOBJ == ePawnType)
@@ -285,25 +310,25 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 		CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
 		for (auto& iter : GetColliderContainer())
 		{
-			for (auto& iter2 : pModelObject->GetColliderContainer())
+			if(iter.first == L"ForStaticCollision")
 			{
-				m_f3CollidedNormal = iter.second->GetOBBCollisionNormal(iter2.second);
-
-				if (m_f3CollidedNormal != _float3::Zero) // 충돌이 발생한 경우
+				for (auto& iter2 : pModelObject->GetColliderContainer())
 				{
-					_float3 currentPosition = GetTransform()->GetPos();
-					_float3 movementDirection = currentPosition - GetPrevPos();
-					float dotProduct = DirectX::XMVector3Dot(XMLoadFloat3(&movementDirection), XMLoadFloat3(&m_f3CollidedNormal)).m128_f32[0];
-					_float3 slidingVector = movementDirection - m_f3CollidedNormal * dotProduct;
+					m_f3CollidedNormal = iter.second->GetCollisionNormal(iter2.second);
 
-					// 속도 결정
-					_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 50.0f : 10.0f;
+					if (m_f3CollidedNormal != _float3::Zero) // 충돌이 발생한 경우
+					{
+						SetOBJCollisionState(true);
+						// 속도 결정
+						_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 50.0f : 20.0f;
 
-					// 충돌 보정 및 슬라이딩 벡터 적용
-					_float3 newPosition = GetPrevPos() + slidingVector * speed * _dTimeDelta;
+						ApplySlidingMovement(m_f3CollidedNormal, speed,  _dTimeDelta);
 
-					// 위치 업데이트
-					GetTransform()->SetPos(newPosition);
+					}
+					else
+					{
+						SetOBJCollisionState(false);
+					}
 				}
 			}
 		}
@@ -317,4 +342,3 @@ void CWarriorPlayer::TranslateStateMoveAndRunF(CSHPTRREF<UGameInstance> _spGameI
 		GetTransform()->MoveForward(_dTimeDelta, _fSpeed);
 	}
 }
-

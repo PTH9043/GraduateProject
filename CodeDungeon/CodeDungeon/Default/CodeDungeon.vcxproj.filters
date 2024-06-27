@@ -85,14 +85,23 @@
     <Filter Include="01.Scene\Logo">
       <UniqueIdentifier>{015198a0-1235-4fa2-8256-779fd2151a27}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.Objects\ModelObjects\Map\Ironbars">
-      <UniqueIdentifier>{f8f0498b-d9ea-4010-a95b-2724ebabb8f0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="06.Comp\Controller\WarriorPlayer\User">
       <UniqueIdentifier>{28019f93-f266-458d-b80d-44906ae9e0a1}</UniqueIdentifier>
     </Filter>
     <Filter Include="06.Comp\Controller\WarriorPlayer\Network">
       <UniqueIdentifier>{735716c5-05aa-4508-87a1-47c9ac944ad1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Objects\Character\Mob\ItemChest">
+      <UniqueIdentifier>{eebb04af-b87a-4a58-9d81-ff49a6d27511}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\Chest">
+      <UniqueIdentifier>{1e1c8903-9b1f-41c8-9252-457c36619fa3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Objects\ModelObjects\Map\StaticObjects\Ironbars">
+      <UniqueIdentifier>{f8f0498b-d9ea-4010-a95b-2724ebabb8f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Objects\ModelObjects\Map\StaticObjects\Torch">
+      <UniqueIdentifier>{c62b57e0-9fcf-4186-924d-c05e87282c1a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -147,9 +156,6 @@
     <ClInclude Include="..\Public\CWarriorPlayer.h">
       <Filter>05.Objects\Character\WarriorPlayer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CTorch.h">
-      <Filter>05.Objects\ModelObjects\Map\StaticObjects</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\CSword.h">
       <Filter>05.Objects\Sword</Filter>
     </ClInclude>
@@ -172,13 +178,22 @@
       <Filter>01.Scene\Logo</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CIronBars.h">
-      <Filter>05.Objects\ModelObjects\Map\Ironbars</Filter>
+      <Filter>05.Objects\ModelObjects\Map\StaticObjects\Ironbars</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CUserWarriorAnimController.h">
       <Filter>06.Comp\Controller\WarriorPlayer\User</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CNetworkWarriorPlayerController.h">
       <Filter>06.Comp\Controller\WarriorPlayer\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CItemChest.h">
+      <Filter>05.Objects\Character\Mob\ItemChest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CItemChestAnimController.h">
+      <Filter>06.Comp\Controller\Chest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CTorch.h">
+      <Filter>05.Objects\ModelObjects\Map\StaticObjects\Torch</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -226,9 +241,6 @@
     <ClCompile Include="..\Private\CWarriorPlayer.cpp">
       <Filter>05.Objects\Character\WarriorPlayer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CTorch.cpp">
-      <Filter>05.Objects\ModelObjects\Map\StaticObjects</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\CSword.cpp">
       <Filter>05.Objects\Sword</Filter>
     </ClCompile>
@@ -251,13 +263,22 @@
       <Filter>01.Scene\Logo</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CIronBars.cpp">
-      <Filter>05.Objects\ModelObjects\Map\Ironbars</Filter>
+      <Filter>05.Objects\ModelObjects\Map\StaticObjects\Ironbars</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CUserWarriorAnimController.cpp">
       <Filter>06.Comp\Controller\WarriorPlayer\User</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CNetworkWarriorPlayerController.cpp">
       <Filter>06.Comp\Controller\WarriorPlayer\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CItemChest.cpp">
+      <Filter>05.Objects\Character\Mob\ItemChest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CItemChestAnimController.cpp">
+      <Filter>06.Comp\Controller\Chest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CTorch.cpp">
+      <Filter>05.Objects\ModelObjects\Map\StaticObjects\Torch</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -172,15 +172,13 @@ PS_OUT PS_Main(PS_IN In)
 
     //vector vNormalDesc = g_Texture2.Sample(g_Sampler_Normal, In.vTexUV0);
     //float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
-    
+
     //float3 N = normalize(In.vNormal);
     //float3 T = normalize(In.vTangent);
     //float3 B = normalize(In.vBinormal);
     //float3x3 TBN = float3x3(T, B, N);
     //vNormal = mul(vNormal, TBN);
-    
-    //Out.vNormal = float4(vNormal * 0.5f + 0.5f, 1.f);
-    //Out.vNormal = normalize(float4(vNormal, 0.f));
+
     
     
    Out.vNormal = float4(float3(In.vNormal.xyz) * 0.5f + 0.5f, 1.f);

@@ -15,10 +15,15 @@ END
 BEGIN(Client)
 class CRooms;
 class CModelObjects;
+class CMob;
 
 using ROOMCONTAINER = UNORMAP<_wstring, SHPTR<CRooms>>;
 using OBJCONTAINER = VECTOR<SHPTR<CModelObjects>>;
+using MOBCONTAINER = VECTOR<SHPTR<CMob>>;
+
 using STATICOBJCONTAINER = UNORMAP<_wstring, OBJCONTAINER>;
+using MOBSCONTAINER = UNORMAP<_wstring, MOBCONTAINER>;
+
 class CMap : public UComponent
 {
 public:
@@ -34,6 +39,7 @@ public:
 
 	void LoadRooms();
 	void LoadStaticObjects();
+	void LoadMobs();
 	
 	CSHPTRREF<ROOMCONTAINER> GetRooms() { return m_spRoomContainer; }
 	CSHPTRREF<STATICOBJCONTAINER> GetStaticObjs() { return m_spStaticObjContainer;}
@@ -45,6 +51,8 @@ private:
 	SHPTR<UMapLayout>				m_spMapLayout;
 	SHPTR<STATICOBJCONTAINER>		m_spStaticObjContainer;
 	_uint							m_iLightCount;
+
+	SHPTR<MOBSCONTAINER>			m_spMobsContainer;
 
 };
 END
