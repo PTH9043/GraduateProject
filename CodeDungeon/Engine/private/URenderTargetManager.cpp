@@ -16,6 +16,7 @@
 URenderTargetManager::URenderTargetManager() :
     m_spDepthStencilTexture{ nullptr },
     m_spShadowDepthStencilTexture{ nullptr },
+    m_spOutlineDepthStencilTexture{ nullptr },
     m_spDevice{ nullptr },
     m_spGraphicDesc{ nullptr },
     m_eDepthFormat{ DXGI_FORMAT_D32_FLOAT }
@@ -92,6 +93,30 @@ HRESULT URenderTargetManager::AddRenderTargetGroupWithNewDepthStencilBuffer(cons
 
     SHPTR<URenderTargetGroup> pRtGroups = CreateNative<URenderTargetGroup>
         (m_spDevice, rtGroups, m_spShadowDepthStencilTexture);
+
+    m_RenderTargetGroups.insert(std::pair<RTGROUPID, SHPTR<URenderTargetGroup>>(_eGroupID, pRtGroups));
+    return S_OK;
+}
+
+HRESULT URenderTargetManager::AddRenderTargetGroupOutlineDepthStencilBuffer(const RTGROUPID& _eGroupID, const std::vector<RTDESC>& _rtVec)
+{
+    auto find = m_RenderTargetGroups.find(_eGroupID);
+    if (find != m_RenderTargetGroups.end())
+        return E_FAIL;
+
+    VECTOR<RENDERTARGET> rtGroups{};
+    rtGroups.reserve(_rtVec.size());
+
+    for (const RTDESC& iter : _rtVec) {
+        RENDERTARGET tTarget{ };
+        tTarget.pTexture = CreateNative<UTexture>(m_spDevice, iter);
+        tTarget.SetColor(iter.vClear);
+        tTarget.stRtDesc = iter;
+        rtGroups.push_back(tTarget);
+    }
+
+    SHPTR<URenderTargetGroup> pRtGroups = CreateNative<URenderTargetGroup>
+        (m_spDevice, rtGroups, m_spOutlineDepthStencilTexture);
 
     m_RenderTargetGroups.insert(std::pair<RTGROUPID, SHPTR<URenderTargetGroup>>(_eGroupID, pRtGroups));
     return S_OK;
@@ -231,6 +256,12 @@ void URenderTargetManager::CreateDepthStencilTexture()
            D3D12_HEAP_TYPE_DEFAULT,
            D3D12_HEAP_FLAG_NONE, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL };
     m_spShadowDepthStencilTexture = CreateNative<UTexture>(m_spDevice, stRt2Desc);
+
+    RTDESC stRt3Desc{ RTOBJID::DEPTH_RECORD, m_eDepthFormat,
+           m_spGraphicDesc->iWinCX , m_spGraphicDesc->iWinCY , _float4(0.f, 0.f, 0.f, 1.f),
+           D3D12_HEAP_TYPE_DEFAULT,
+           D3D12_HEAP_FLAG_NONE, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL };
+    m_spOutlineDepthStencilTexture = CreateNative<UTexture>(m_spDevice, stRt3Desc);
 }
 
 void URenderTargetManager::CreateDefaultRenderTargets(CSHPTRREF<UGraphicDevice> _spGraphicDevice)

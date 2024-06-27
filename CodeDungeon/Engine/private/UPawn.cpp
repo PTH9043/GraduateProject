@@ -10,7 +10,9 @@ UPawn::UPawn(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLO
 	UActor(_spDevice, _wstrLayer, _eCloneType, _eBackingType, USECOLLISIONTYPE::ACTIVE), m_ePawnType{_ePawnType},
 	m_spRenderer{ nullptr },
 	m_spShader{ nullptr },
-	m_spShadowShader{ nullptr }
+	m_spShadowShader{ nullptr },
+	m_spOutlineShader{ nullptr },
+	m_spNorPosShader{ nullptr }
 #ifdef _USE_DEBUGGING
 	, m_isDebugRenderingType{ false }
 #endif 
@@ -22,6 +24,8 @@ UPawn::UPawn(const UPawn& _rhs) :
 	m_spRenderer{ nullptr },
 	m_spShader{ nullptr },
 	m_spShadowShader{ nullptr },
+	m_spOutlineShader{ nullptr },
+	m_spNorPosShader{ nullptr },
 	m_ePawnType{ _rhs.m_ePawnType }
 #ifdef _USE_DEBUGGING
 	, m_isDebugRenderingType{ false }
@@ -35,6 +39,13 @@ CSHPTRREF<UShader> UPawn::GetShader() const {
 
 CSHPTRREF<UShader> UPawn::GetShadowShader() const {
 	return m_spShadowShader;
+}
+CSHPTRREF<UShader> UPawn::GetOutlineShader() const {
+	return m_spOutlineShader;
+}
+
+CSHPTRREF<UShader> UPawn::GetNorPosShader() const {
+	return m_spNorPosShader;
 }
 void UPawn::Free()
 {
@@ -84,10 +95,22 @@ void UPawn::AddRenderGroup(const RENDERID _iRenderID)
 {
 	m_spRenderer->AddRenderGroup(_iRenderID, GetShader(), ThisShared<UPawn>());
 }
+
 void UPawn::AddShadowRenderGroup(const RENDERID _iRenderID)
 {
 	m_spRenderer->AddRenderGroup(_iRenderID, GetShadowShader(), ThisShared<UPawn>());
 }
+
+void UPawn::AddOutlineRenderGroup(const RENDERID _iRenderID)
+{
+	m_spRenderer->AddRenderGroup(_iRenderID, GetOutlineShader(), ThisShared<UPawn>());
+}
+
+void UPawn::AddNorPosRenderGroup(const RENDERID _iRenderID)
+{
+	m_spRenderer->AddRenderGroup(_iRenderID, GetNorPosShader(), ThisShared<UPawn>());
+}
+
 void UPawn::TickActive(const _double& _dTimeDelta)
 {
 
@@ -108,6 +131,19 @@ HRESULT UPawn::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTab
 {
 	// Settings 
 	GetShadowShader()->SetTableDescriptor(_spTableDescriptor);
+	return S_OK;
+}
+
+HRESULT UPawn::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor,_bool pass)
+{
+	// Settings 
+	if (pass) {
+		GetOutlineShader()->SetTableDescriptor(_spTableDescriptor);
+	}
+	else {
+		GetNorPosShader()->SetTableDescriptor(_spTableDescriptor);
+	}
+	
 	return S_OK;
 }
 
@@ -139,6 +175,17 @@ void UPawn::AddShadowShader(const _wstring& _wstrProtoTag, const _wstring& _wstr
 {
 	m_spShadowShader = AddResource<UShader>(_wstrProtoTag, _wstrTag, _vecDatas);
 }
+
+void UPawn::AddOutlineShader(const _wstring& _wstrProtoTag, const _wstring& _wstrTag, const VOIDDATAS& _vecDatas)
+{
+	m_spOutlineShader = AddResource<UShader>(_wstrProtoTag, _wstrTag, _vecDatas);
+}
+
+void UPawn::AddNorPosShader(const _wstring& _wstrProtoTag, const _wstring& _wstrTag, const VOIDDATAS& _vecDatas)
+{
+	m_spNorPosShader = AddResource<UShader>(_wstrProtoTag, _wstrTag, _vecDatas);
+}
+
 
 void UPawn::UpdateCollision()
 {

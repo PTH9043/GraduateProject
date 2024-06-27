@@ -26,17 +26,23 @@ public:
 
 	void SetShowModel(CSHPTRREF<UModel> _spModel) { m_spModel = _spModel; }
 	CSHPTRREF<UModel> GetShowModel() { return m_spModel; }
-
+	void SetOutline(_bool draw) {
+		m_bOutline = draw;}
+	_bool GetIfDraw() {
+		return m_bOutline;
+	}
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
 	virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescripto) override;
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescripto) override;
+	virtual HRESULT RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescripto, _bool _pass = true) override;
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) override;
 private:
 	SHPTR<UModel>										m_spModel;
 	SHPTR<UShaderConstantBuffer>		m_spShaderTexCheckBuffer;
 	int HasTex[4]{};
+	_bool m_bOutline{ 0 };
 };
 
 END

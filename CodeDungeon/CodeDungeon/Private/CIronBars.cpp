@@ -81,6 +81,11 @@ HRESULT CIronBars::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<
 	__super::RenderShadowActive(_spCommand, _spTableDescriptor);
 	return S_OK;
 }
+HRESULT CIronBars::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)
+{
+	__super::RenderOutlineActive(_spCommand, _spTableDescriptor,_pass);
+	return S_OK;
+}
 
 void CIronBars::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {

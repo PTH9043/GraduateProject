@@ -91,9 +91,12 @@ HRESULT TEquipModel::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTab
 
 HRESULT TEquipModel::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
-	return S_OK;
+	return __super::RenderShadowActive(_spCommand, _spTableDescriptor);
 }
-
+HRESULT TEquipModel::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)
+{
+	return __super::RenderOutlineActive(_spCommand, _spTableDescriptor,_pass);
+}
 void TEquipModel::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }

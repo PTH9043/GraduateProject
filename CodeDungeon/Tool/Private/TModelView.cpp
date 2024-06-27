@@ -271,7 +271,7 @@ void TModelView::ShowModelList()
 					//ShowModel을 컨테이너에 추가
 					SHPTR<TShowModelObject> newModel = std::static_pointer_cast<TShowModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWMODELOBJECT));
 					newModel->SetShowModel(Model.second);
-
+					newModel->SetOutline(true);
 					for (auto& Containers : newModel->GetColliderContainer())
 					{
 						Containers.second->SetTranslate(newModel->GetShowModel()->GetCenterPos());
@@ -361,7 +361,7 @@ void TModelView::ShowModelList()
 							SHPTR<TShowModelObject> newModel = std::static_pointer_cast<TShowModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWMODELOBJECT));
 							newModel->SetShowModel(it->second);
 							newModel->GetTransform()->SetNewWorldMtx(layoutObjects._mWorldMatrix);
-
+							newModel->SetOutline(true);
 							for (auto& Containers : newModel->GetColliderContainer())
 							{
 								Containers.second->SetTranslate(newModel->GetShowModel()->GetCenterPos());
@@ -418,7 +418,7 @@ void TModelView::ShowModelList()
 						SHPTR<TShowModelObject> newModel = std::static_pointer_cast<TShowModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWMODELOBJECT));
 						newModel->SetShowModel(it->second);
 						newModel->GetTransform()->SetNewWorldMtx(layoutObjects._mWorldMatrix);
-
+						newModel->SetOutline(true);
 						for (auto& Containers : newModel->GetColliderContainer())
 						{
 							Containers.second->SetTranslate(newModel->GetShowModel()->GetCenterPos());

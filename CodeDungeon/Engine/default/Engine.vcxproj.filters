@@ -436,6 +436,9 @@
     <Filter Include="05.Actor\01.Pawn\Item\Equip\Defensive">
       <UniqueIdentifier>{361b8236-ad3c-4587-b0c4-96e161645e27}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98.ShaderFile\Outline">
+      <UniqueIdentifier>{2a53e5f9-6b0e-4792-a8ee-802911b68873}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -1397,6 +1400,12 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\Equipment.hlsl">
       <Filter>98.ShaderFile\Common\NonAlpha</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\NorPos.hlsl">
+      <Filter>98.ShaderFile\Outline</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\DepthRecord.hlsl">
+      <Filter>98.ShaderFile\Outline</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

@@ -49,9 +49,12 @@ HRESULT UWeapon::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDe
 
 HRESULT UWeapon::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
-	return E_NOTIMPL;
+	return __super::RenderShadowActive(_spCommand, _spTableDescriptor);
 }
-
+HRESULT UWeapon::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)
+{
+	return __super::RenderOutlineActive(_spCommand, _spTableDescriptor,_pass);
+}
 void UWeapon::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }

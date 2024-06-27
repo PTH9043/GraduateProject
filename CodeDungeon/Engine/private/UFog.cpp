@@ -109,6 +109,11 @@ HRESULT UFog::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTabl
 	return S_OK;
 }
 
+HRESULT UFog::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)
+{
+	return __super::RenderOutlineActive(_spCommand, _spTableDescriptor,_pass);
+}
+
 void UFog::BindShaderBuffer()
 {
 	GetShader()->BindCBVBuffer(m_spShaderFogBuffer, &m_stFogBuffer, sizeof(FOGBUFFER));
