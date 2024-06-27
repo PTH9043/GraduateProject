@@ -170,16 +170,21 @@ PS_OUT PS_Main(PS_IN In)
     if (Out.vDiffuse.a <= 0.05)
         discard;
 
-    vector vNormalDesc = g_Texture2.Sample(g_Sampler_Normal, In.vTexUV0);
-    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
+    //vector vNormalDesc = g_Texture2.Sample(g_Sampler_Normal, In.vTexUV0);
+    //float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
     
-    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
-    vNormal = mul(vNormal, WorldMatrix);
+    //float3 N = normalize(In.vNormal);
+    //float3 T = normalize(In.vTangent);
+    //float3 B = normalize(In.vBinormal);
+    //float3x3 TBN = float3x3(T, B, N);
+    //vNormal = mul(vNormal, TBN);
     
-    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 1.f);
-    Out.vNormal = normalize(float4(vNormal, 0.f));
+    //Out.vNormal = float4(vNormal * 0.5f + 0.5f, 1.f);
+    //Out.vNormal = normalize(float4(vNormal, 0.f));
     
-    Out.vNormal = In.vNormal;
+    
+   Out.vNormal = float4(float3(In.vNormal.xyz) * 0.5f + 0.5f, 1.f);
+  
     Out.vDepth = float4(In.vProjPos.w / tMainViewProj.fCamFar, In.vProjPos.z / In.vProjPos.w, 1.f, In.vPosition.w);
     Out.vPosition = In.vWorldPos;
  
