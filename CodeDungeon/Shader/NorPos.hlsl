@@ -40,7 +40,7 @@ struct PS_OUT
 PS_OUT PS_Main(VS_OUT In) 
 {
     PS_OUT Out = (PS_OUT) 0;
-    Out.vColor.xyz = float3(1, 0, 0);
+    Out.vColor.xyz = float3(204, 255, 0);
     Out.vColor.w = In.vPosition.z / In.vPosition.w;
     return Out;
 

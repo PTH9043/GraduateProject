@@ -40,7 +40,6 @@ public:
 public:
 	HRESULT		AddRenderTargetGroup(const RTGROUPID& _eGroupID, const std::vector<RTDESC>& _rtVec);
 	HRESULT		AddRenderTargetGroupWithNewDepthStencilBuffer(const RTGROUPID& _eGroupID, const std::vector<RTDESC>& _rtVec);
-	HRESULT		AddRenderTargetGroupOutlineDepthStencilBuffer(const RTGROUPID& _eGroupID, const std::vector<RTDESC>& _rtVec);
 	void					RemoveRenderTargetGroup(const RTGROUPID _eGroupID);
 	// OMSetRenderTarget 
 	void					OmSetRenderTargets(CSHPTRREF<UCommand> _spCommand, const RTGROUPID& _eGroupID, const _uint _index, const _uint _iOffset);
@@ -79,7 +78,7 @@ private:
 	// DepthStencilTexture
 	SHPTR<UTexture>								m_spDepthStencilTexture;
 	SHPTR<UTexture>								m_spShadowDepthStencilTexture;
-	SHPTR<UTexture>								m_spOutlineDepthStencilTexture;
+	
 	//Graphics
 	SHPTR<GRAPHICDESC>						m_spGraphicDesc;
 	DXGI_FORMAT										m_eDepthFormat;
