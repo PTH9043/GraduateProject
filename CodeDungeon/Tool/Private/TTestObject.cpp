@@ -82,7 +82,12 @@ HRESULT TTestObject::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRRE
 
 	return S_OK;
 }
+HRESULT TTestObject::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)
+{
+	__super::RenderOutlineActive(_spCommand, _spTableDescriptor,_pass);
 
+	return S_OK;
+}
 void TTestObject::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 

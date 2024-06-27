@@ -253,7 +253,11 @@ HRESULT CWarriorPlayer::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<U
 
 HRESULT CWarriorPlayer::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
-	return S_OK;
+	return __super::RenderShadowActive(_spCommand, _spTableDescriptor);
+}
+HRESULT CWarriorPlayer::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor,_bool _pass)
+{
+	return __super::RenderOutlineActive(_spCommand, _spTableDescriptor,_pass);
 }
 
 void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)

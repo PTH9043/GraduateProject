@@ -70,6 +70,8 @@ private:
 	void RenderRTs();
 	// Priority
 	void RenderPriority();
+	//Pos+Normal for Outline
+	void RenderPosNormal();
 	// Shadow
 	void	RenderShadowDepth();
 	// NonAlpha
@@ -105,6 +107,7 @@ private:
 	// Draw Just Object
 	void RenderObject(const _wstring& _wstrShaderName, PAWNLIST& _PawnList);
 	void RenderShadowObject(const _wstring& _wstrShaderName, PAWNLIST& _PawnList);
+	void RenderOutlineObject(const _wstring& _wstrShaderName, PAWNLIST& _PawnList, _bool _pass);
 	
 
 	SHPTR<UShader> FrameReadyDrawFinalRenderTarget(const _wstring& _wstrShaderName, const RTGROUPID _eGroupID);

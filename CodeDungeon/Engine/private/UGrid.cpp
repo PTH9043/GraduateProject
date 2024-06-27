@@ -82,6 +82,11 @@ HRESULT UGrid::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTab
 	return S_OK;
 }
 
+HRESULT UGrid::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)
+{
+	return __super::RenderOutlineActive(_spCommand, _spTableDescriptor,_pass);
+}
+
 void UGrid::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 

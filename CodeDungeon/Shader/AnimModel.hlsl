@@ -97,6 +97,8 @@ VS_OUT VS_Main(VS_IN In)
     Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
     Out.vProjPos = Out.vPosition;
     
+   
+    
     if (true == g_isObjectMotionBlur)
     {
         matrix PrevBoneMatrix = (g_PrevBoneMatrix.BoneMatrix[In.vBlendIndex.x] * In.vBlendWeight.x) +
@@ -176,6 +178,8 @@ PS_OUT PS_Main(PS_IN In)
     
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 1.f);
     Out.vNormal = normalize(float4(vNormal, 0.f));
+    
+    Out.vNormal = In.vNormal;
     Out.vDepth = float4(In.vProjPos.w / tMainViewProj.fCamFar, In.vProjPos.z / In.vProjPos.w, 1.f, In.vPosition.w);
     Out.vPosition = In.vWorldPos;
  

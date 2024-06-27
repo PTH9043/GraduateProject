@@ -48,8 +48,14 @@ HRESULT UItem::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDesc
 
 HRESULT UItem::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
-	return S_OK;
+	return __super::RenderShadowActive(_spCommand, _spTableDescriptor);
 }
+
+HRESULT UItem::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)
+{
+	return __super::RenderOutlineActive(_spCommand, _spTableDescriptor,_pass);
+}
+
 
 void UItem::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {

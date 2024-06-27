@@ -45,7 +45,12 @@ HRESULT UDefensiveGear::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<U
 
 HRESULT UDefensiveGear::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
-	return E_NOTIMPL;
+	return __super::RenderShadowActive(_spCommand, _spTableDescriptor);
+}
+
+HRESULT UDefensiveGear::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)
+{
+	return __super::RenderOutlineActive(_spCommand, _spTableDescriptor,_pass);
 }
 
 void UDefensiveGear::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)

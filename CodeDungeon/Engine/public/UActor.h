@@ -21,6 +21,7 @@ public:
 	void SetTickActive(const _bool _isActvie);
 	void SetRenderActive(const _bool _isActvie);
 	void SetShadowRenderActive(const _bool _isActvie);
+	void SetOutlineRenderActive(const _bool _isActvie);
 	void SetParentsActor(CSHPTRREF<UActor> _spActor);
 	const _bool IsActive() const { return m_isActive; }
 	const _bool IsTickActive() const { return m_isTickActive; }
@@ -49,6 +50,7 @@ public:
 	void LateTick(const _double& _dTimeDelta) { (this->*m_pLateTick)(_dTimeDelta); }
 	HRESULT Render(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) { return (this->*m_pRender)(_spCommand, _spTableDescriptor); }
 	HRESULT RenderShadow(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) { return (this->*m_pShadowRender)(_spCommand, _spTableDescriptor); }
+	HRESULT RenderOutline(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor,_bool _pass) { return (this->*m_pOutlineRender)(_spCommand, _spTableDescriptor, _pass); }
 public: /* get set */
 
 protected:
@@ -57,6 +59,7 @@ protected:
 	void LateTickNonActive(const _double& _dTimeDelta) {}
 	HRESULT RenderNonActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) { return S_OK; }
 	HRESULT RenderShadowNonActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) { return S_OK; }
+	HRESULT RenderOutlineNonActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor,_bool _pass) { return S_OK; }
 
 	template<class T>
 	SHPTR<T> AddResource(const _wstring& _wstrProtoTag, const _wstring& _wstrTag,
@@ -80,6 +83,7 @@ protected:
 	virtual void LateTickActive(const _double& _dTimeDelta) PURE;
 	virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) PURE;
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) PURE;
+	virtual HRESULT RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor,_bool _pass=true) PURE;
 
 private:
 	HRESULT ReadyTransform();
@@ -108,12 +112,14 @@ private:
 	_bool														m_isTickActive;
 	_bool														m_isRenderActive;
 	_bool														m_isShadowRenderActive;
+	_bool														m_isOutlineRenderActive;
 	// Active And NonActive Methods
 	void															(UActor::* m_pAwakeTick)(const _double&);
 	void															(UActor::* m_pTick)(const _double&);
 	void															(UActor::* m_pLateTick)(const _double&);
 	HRESULT												(UActor::* m_pRender)(CSHPTRREF<UCommand>, CSHPTRREF<UTableDescriptor>);
 	HRESULT												(UActor::* m_pShadowRender)(CSHPTRREF<UCommand>, CSHPTRREF<UTableDescriptor>);
+	HRESULT												(UActor::* m_pOutlineRender)(CSHPTRREF<UCommand>, CSHPTRREF<UTableDescriptor>,_bool);
 
 	// Backing Type
 	BACKINGTYPE										m_eBackingType;
