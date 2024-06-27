@@ -195,3 +195,23 @@ HRESULT UCharacter::MakeCollider(const _float3& _vTranslate, const _float3& _vSc
 	return E_NOTIMPL;
 }
 
+void UCharacter::ApplySlidingMovement(const _float3& _collidedNormal, _float _speed,  _float _deltaTime)
+{
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+	_float3 currentPosition = GetTransform()->GetPos();
+	_float3 movementDirection = currentPosition - GetPrevPos();
+	
+	float dotProduct = DirectX::XMVector3Dot(XMLoadFloat3(&movementDirection), XMLoadFloat3(&_collidedNormal)).m128_f32[0];
+
+	_float3 slidingVector = movementDirection - _collidedNormal * dotProduct;
+
+	_float3 offset = _collidedNormal * 0.01f;
+
+	// 충돌 보정 및 슬라이딩 벡터 적용
+	_float3 newPosition = GetPrevPos() + (slidingVector * _speed * _deltaTime) ;
+
+	// 위치 업데이트
+	GetTransform()->SetPos(newPosition);
+}
+

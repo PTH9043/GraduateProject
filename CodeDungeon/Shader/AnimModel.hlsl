@@ -37,21 +37,21 @@ cbuffer PREVBONEMATRIXPARAM : register(b13)
 struct VS_IN
 {
     float3 vPosition : POSITION;
-	float3 vNormal : NORMAL;
-	float2 vTexUV0 : TEXCOORD0;
-	float2 vTexUV1 : TEXCOORD1;
-	float2 vTexUV2 : TEXCOORD2;
-	float2 vTexUV3 : TEXCOORD3;
-	float2 vTexUV4 : TEXCOORD4;
-	float3 vTangent : TANGENT;
-	uint4 vBlendIndex : BLENDINDEX; /* 현재 정점에 영향ㅇ르 주는 뼈의 인덱스(메시커넽이너에 영햐을 주는 뼈들 중), 최대 4개. */
-	float4 vBlendWeight : BLENDWEIGHT; /* 위에서 사용되고 있는 인덱스번째 뼈의 영향비율(최대 1) . */
+    float3 vNormal : NORMAL;
+    float2 vTexUV0 : TEXCOORD0;
+    float2 vTexUV1 : TEXCOORD1;
+    float2 vTexUV2 : TEXCOORD2;
+    float2 vTexUV3 : TEXCOORD3;
+    float2 vTexUV4 : TEXCOORD4;
+    float3 vTangent : TANGENT;
+    uint4 vBlendIndex : BLENDINDEX; /* 현재 정점에 영향ㅇ르 주는 뼈의 인덱스(메시커넽이너에 영햐을 주는 뼈들 중), 최대 4개. */
+    float4 vBlendWeight : BLENDWEIGHT; /* 위에서 사용되고 있는 인덱스번째 뼈의 영향비율(최대 1) . */
 };
 
 struct VS_OUT
 {
-	float4 vPosition : SV_POSITION;
-	float4 vNormal : NORMAL;
+    float4 vPosition : SV_POSITION;
+    float4 vNormal : NORMAL;
     float4 vTangent : TANGENT;
     float4 vBinormal : BINORMAL;
     float2 vTexUV0 : TEXCOORD0;
@@ -59,14 +59,14 @@ struct VS_OUT
     float2 vTexUV2 : TEXCOORD2;
     float2 vTexUV3 : TEXCOORD3;
     float2 vTexUV4 : TEXCOORD4;
-	float4 vWorldPos : TEXCOORD5;
-	float4 vProjPos : TEXCOORD6;
-	float4 vVelocity : TEXCOORD7;
+    float4 vWorldPos : TEXCOORD5;
+    float4 vProjPos : TEXCOORD6;
+    float4 vVelocity : TEXCOORD7;
 };
 
 VS_OUT VS_Main(VS_IN In)
 {
-	VS_OUT Out = (VS_OUT) 0;
+    VS_OUT Out = (VS_OUT) 0;
 
     float fWeightW = 1.f - (In.vBlendWeight.x + In.vBlendWeight.y + In.vBlendWeight.z);
     
@@ -97,6 +97,8 @@ VS_OUT VS_Main(VS_IN In)
     Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
     Out.vProjPos = Out.vPosition;
     
+   
+    
     if (true == g_isObjectMotionBlur)
     {
         matrix PrevBoneMatrix = (g_PrevBoneMatrix.BoneMatrix[In.vBlendIndex.x] * In.vBlendWeight.x) +
@@ -125,7 +127,7 @@ VS_OUT VS_Main(VS_IN In)
         Out.vVelocity.xy = velocity;
         Out.vVelocity.zw = Out.vPosition.zw;
     }
-	return Out;
+    return Out;
 }
 
 struct PS_IN
@@ -168,14 +170,16 @@ PS_OUT PS_Main(PS_IN In)
     if (Out.vDiffuse.a <= 0.05)
         discard;
 
-    vector vNormalDesc = g_Texture2.Sample(g_Sampler_Normal, In.vTexUV0);
-    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
+    //vector vNormalDesc = g_Texture2.Sample(g_Sampler_Normal, In.vTexUV0);
+    //float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
     
-    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
-    vNormal = mul(vNormal, WorldMatrix);
+    //float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    //vNormal = mul(vNormal, WorldMatrix);
     
-    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 1.f);
-    Out.vNormal = normalize(float4(vNormal, 0.f));
+    //Out.vNormal = float4(vNormal * 0.5f + 0.5f, 1.f);
+    //Out.vNormal = normalize(float4(vNormal, 0.f));
+    
+    Out.vNormal = In.vNormal;
     Out.vDepth = float4(In.vProjPos.w / tMainViewProj.fCamFar, In.vProjPos.z / In.vProjPos.w, 1.f, In.vPosition.w);
     Out.vPosition = In.vWorldPos;
  
