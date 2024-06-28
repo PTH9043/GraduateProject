@@ -60,6 +60,11 @@ HRESULT UDefaultSphere::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPT
 	return S_OK;
 }
 
+HRESULT UDefaultSphere::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)
+{
+	return __super::RenderOutlineActive(_spCommand, _spTableDescriptor,_pass);
+}
+
 void UDefaultSphere::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }

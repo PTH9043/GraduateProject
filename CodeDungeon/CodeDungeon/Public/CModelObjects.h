@@ -28,11 +28,14 @@ public:
 	void SetModel(const _wstring& _ProtoModelName);
 	CSHPTRREF<UModel> GetModel(){ return m_spModel; }
 	void CalculateAndSetCollider();
+	void SetOutline(_bool _draw) { m_bDrawOutline = _draw; }
+	const _bool& GetOutlineState()const { return m_bDrawOutline; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
 	virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
+	virtual HRESULT RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass = true) override;
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) override;
 private:
 	SHPTR<UModel>								m_spModel;
@@ -40,6 +43,7 @@ private:
 	int HasTex[4]{};
 
 	SHPTR<UCollider>			m_spCollider;
+	_bool		m_bDrawOutline;
 };
 
 END

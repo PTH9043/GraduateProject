@@ -18,6 +18,8 @@ public:
 	//	CSHPTRREF<URenderer> GetRenderer() const;
 		CSHPTRREF<UShader> GetShader() const;
 		CSHPTRREF<UShader> GetShadowShader() const;
+		CSHPTRREF<UShader> GetNorPosShader() const;
+		CSHPTRREF<UShader> GetOutlineShader() const;
 
 		const 	VECTOR<_uint>& GetRenderingDatas() const { return m_vecRenderingDatas; }
 	#ifdef _USE_DEBUGGING
@@ -34,6 +36,8 @@ public:
 
 		void AddRenderGroup(const RENDERID _iRenderID);
 		void AddShadowRenderGroup(const RENDERID _iRenderID);
+		void AddOutlineRenderGroup(const RENDERID _iRenderID);
+		void AddNorPosRenderGroup(const RENDERID _iRenderID);
 public: /* get set*/
 		void SetPawnType(PAWNTYPE _newType) { m_ePawnType = _newType; }
 		const PAWNTYPE GetPawnType() const { return m_ePawnType; }
@@ -43,6 +47,7 @@ protected:
 		virtual void LateTickActive(const _double& _dTimeDelta) override PURE;
 		virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override PURE;
 		virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override PURE;
+		virtual HRESULT RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor,_bool _pass = true) override PURE;
 		// Damaged
 		virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) PURE;
 		// Add Collider
@@ -51,6 +56,8 @@ protected:
 		// Add Shader
 		void AddShader(const _wstring& _wstrProtoTag, const _wstring& _wstrTag = RES_SHADER, const VOIDDATAS& _vecDatas = VOIDDATAS{});
 		void AddShadowShader(const _wstring& _wstrProtoTag, const _wstring& _wstrTag = RES_SHADER, const VOIDDATAS& _vecDatas = VOIDDATAS{});
+		void AddOutlineShader(const _wstring& _wstrProtoTag, const _wstring& _wstrTag = RES_SHADER, const VOIDDATAS& _vecDatas = VOIDDATAS{});
+		void AddNorPosShader(const _wstring& _wstrProtoTag, const _wstring& _wstrTag = RES_SHADER, const VOIDDATAS& _vecDatas = VOIDDATAS{});
 
 		void UpdateCollision();
 	#ifdef _USE_DEBUGGING
@@ -67,6 +74,8 @@ private:
 		SHPTR<URenderer>		m_spRenderer;
 		SHPTR<UShader>			m_spShader;
 		SHPTR<UShader>			m_spShadowShader;
+		SHPTR<UShader>			m_spNorPosShader;
+		SHPTR<UShader>			m_spOutlineShader;
 
 		COLLIDERCONTAINER		m_ColliderContainer;
 	#ifdef _USE_DEBUGGING

@@ -47,6 +47,8 @@ HRESULT CIronBars::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	AddColliderInContainer(mainColliderTag, Collider);
 
 	SetPawnType(PAWNTYPE::PAWN_STATICOBJ);
+
+	SetOutline(true);
 	return S_OK;
 }
 
@@ -58,6 +60,7 @@ void CIronBars::TickActive(const _double& _dTimeDelta)
 		Containers.second->SetTranslate(GetModel()->GetCenterPos());
 		Containers.second->SetScaleToFitModel(GetModel()->GetMinVertexPos(), GetModel()->GetMaxVertexPos());
 		Containers.second->SetTransform(GetTransform());
+
 	}
 }
 
@@ -78,6 +81,11 @@ HRESULT CIronBars::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTable
 HRESULT CIronBars::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
 	__super::RenderShadowActive(_spCommand, _spTableDescriptor);
+	return S_OK;
+}
+HRESULT CIronBars::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)
+{
+	__super::RenderOutlineActive(_spCommand, _spTableDescriptor,_pass);
 	return S_OK;
 }
 

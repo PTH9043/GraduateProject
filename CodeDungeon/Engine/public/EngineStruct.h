@@ -119,6 +119,15 @@ namespace Engine {
 	}VTXSHADOWINPUT_DECLARATION;
 
 #pragma endregion SHADOW
+
+#pragma region NORPOS
+	typedef struct tagVertexNorPos_Declaration {
+		static const unsigned int							iNumElement = 2;
+		static D3D12_INPUT_ELEMENT_DESC		Element[iNumElement];
+	}VTXNORPOSINPUT_DECLARATION;
+
+#pragma endregion NORPOS
+
 #pragma endregion CUBE
 
 	typedef struct  tagVertexModel

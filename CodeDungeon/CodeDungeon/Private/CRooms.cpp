@@ -52,7 +52,7 @@ HRESULT CRooms::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	AddColliderInContainer(mainColliderTag, Collider);
 
 	m_vRoomCenterPos = Collider->GetCurPos();
-
+	SetOutline(false);
 
 	return S_OK;
 }

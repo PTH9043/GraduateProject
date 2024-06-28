@@ -72,14 +72,20 @@ public: /* get set */
 
 	const _bool& GetCollisionState() const { return m_bisCollision; }
 	void SetCollisionState(_bool _newState) { m_bisCollision = _newState; }
+
+	void SetOutline(_bool _Draw) { m_DrawOutline = _Draw; }
+	const _bool& GetOutlineState()const { return m_DrawOutline; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) PURE;
 	virtual void LateTickActive(const _double& _dTimeDelta) PURE;
 	virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) PURE;
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) PURE;
+	virtual HRESULT RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass = true) override;
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) PURE;
 
 	virtual HRESULT MakeCollider(const _float3& _vTranslate, const _float3& _vScale, const _int _ColliderType);
+	void ApplySlidingMovement(const _float3& _collidedNormal, _float _speed, _float _deltaTime);
+
 protected: /* get set */
 	CSHPTRREF<UAnimationController> GetAnimationController() const { return m_spAnimationController; }
 	const _float3& GetPrevPos() const { return m_vPrevPos; }
@@ -116,6 +122,8 @@ private:
 	_float3												m_f3LastMovedDirection;
 	// 해당하는 오브젝트가 Network Object인지 확인하는 변수
 	_bool													m_isNetworkConnected;
+
+	_bool			m_DrawOutline=false;
 };
 
 END

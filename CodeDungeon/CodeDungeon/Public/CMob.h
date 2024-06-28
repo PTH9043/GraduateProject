@@ -27,6 +27,7 @@ protected:
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
 	virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
+	virtual HRESULT RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass = true) override;
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) override;
 private:
 	void SearchForPlayers();
@@ -40,7 +41,7 @@ public:
 	const _float3& GetTargetPos() { return m_f3TargetPos; }
 	void SetMobPlacement(_int _CellIndex);
 	void MoveAlongPath(const VECTOR<_float3>& path, size_t& currentPathIndex, const _double& _dTimeDelta);
-
+	
 private:
 	_float								m_fDistancefromNearestPlayer;
 	_bool								m_bFoundTarget;

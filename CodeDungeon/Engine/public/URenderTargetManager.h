@@ -78,6 +78,7 @@ private:
 	// DepthStencilTexture
 	SHPTR<UTexture>								m_spDepthStencilTexture;
 	SHPTR<UTexture>								m_spShadowDepthStencilTexture;
+	
 	//Graphics
 	SHPTR<GRAPHICDESC>						m_spGraphicDesc;
 	DXGI_FORMAT										m_eDepthFormat;

@@ -24,6 +24,7 @@ UModel::UModel(CSHPTRREF<UDevice> _spDevice, const TYPE& _eType) :
 	m_eType{ _eType },
 	m_wstrModelName{L""},
 	m_spRootBoneNode{nullptr}
+
 {
 }
 

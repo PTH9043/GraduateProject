@@ -438,6 +438,8 @@
     </Filter>
     <Filter Include="20.Network\NetworkQueryProcessing">
       <UniqueIdentifier>{25550299-81de-4892-a2c7-0d4baecc81e0}</UniqueIdentifier>
+    <Filter Include="98.ShaderFile\Outline">
+      <UniqueIdentifier>{2a53e5f9-6b0e-4792-a8ee-802911b68873}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1406,6 +1408,18 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\Equipment.hlsl">
       <Filter>98.ShaderFile\Common\NonAlpha</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\NorPos.hlsl">
+      <Filter>98.ShaderFile\Outline</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\DepthRecord.hlsl">
+      <Filter>98.ShaderFile\Outline</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\AnimDepthRecord.hlsl">
+      <Filter>98.ShaderFile\Outline</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\AnimNorPos.hlsl">
+      <Filter>98.ShaderFile\Outline</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

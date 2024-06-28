@@ -66,9 +66,12 @@ HRESULT UPlayer::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDe
 
 HRESULT UPlayer::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
-	return S_OK;
+	return __super::RenderShadowActive(_spCommand, _spTableDescriptor);
 }
-
+HRESULT UPlayer::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)
+{
+	return __super::RenderOutlineActive(_spCommand, _spTableDescriptor,_pass);
+}
 void UPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }

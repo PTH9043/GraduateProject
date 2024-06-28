@@ -87,7 +87,11 @@ HRESULT CMob::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescr
 
 HRESULT CMob::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
-	return S_OK;
+	return __super::RenderShadowActive(_spCommand, _spTableDescriptor);
+}
+HRESULT CMob::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)
+{
+	return __super::RenderOutlineActive(_spCommand, _spTableDescriptor,_pass);
 }
 
 void CMob::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
@@ -145,3 +149,4 @@ void CMob::MoveAlongPath(const VECTOR<_float3>& path, size_t& currentPathIndex, 
     }
 	m_f3TargetPos = targetPosition;
 }
+

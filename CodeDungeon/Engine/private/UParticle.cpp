@@ -197,10 +197,16 @@ SHPTR<URenderTargetGroup> spShadowDepthGroup{ spGameInstance->FindRenderTargetGr
 	m_spVIBufferPoint->Render(GetShader(), _spCommand, m_spParticleSystem->GetMaxParticleCnt());
 	return S_OK;
 }
+
 HRESULT UParticle::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
 	__super::RenderShadowActive(_spCommand, _spTableDescriptor);
 	return S_OK;
+}
+
+HRESULT UParticle::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)
+{
+	return __super::RenderOutlineActive(_spCommand, _spTableDescriptor,_pass);
 }
 
 

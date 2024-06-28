@@ -84,6 +84,7 @@ protected:
 	virtual void LateTickActive(const _double& _dTimeDelta) PURE;
 	virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
+	virtual HRESULT RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass = true) override;
 private:
 	// Make ProjMatrix
 	HRESULT MakeProjMatrix(const CAMPROJ& _stCamProj);

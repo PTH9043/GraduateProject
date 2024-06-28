@@ -40,6 +40,8 @@ HRESULT TShowAnimModelObject::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	_wstring mainColliderTag = L"Main";
 	AddColliderInContainer(mainColliderTag, Collider);
 	AddShader(PROTO_RES_ANIMMODELSHADER, RES_SHADER);
+	AddOutlineShader(PROTO_RES_ANIMDEPTHRECORDSHADER, RES_SHADER);
+	AddNorPosShader(PROTO_RES_ANIMNORPOSSHADER, RES_SHADER);
 	GetTransform()->SetScale(_float3(0.05f, 0.05f, 0.05f));
 	return S_OK;
 }
@@ -55,6 +57,8 @@ void TShowAnimModelObject::LateTickActive(const _double& _dTimeDelta)
 	if (nullptr != m_spModel)
 	{
 		AddRenderGroup(RI_NONALPHA_MIDDLE);
+		AddOutlineRenderGroup(RI_DEPTHRECORD);
+		AddNorPosRenderGroup(RI_NORPOS);
 	}
 }
 
@@ -96,7 +100,36 @@ HRESULT TShowAnimModelObject::RenderShadowActive(CSHPTRREF<UCommand> _spCommand,
 	//}
 	return S_OK;
 }
+HRESULT TShowAnimModelObject::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)
+{
+	if (nullptr != m_spModel)
+	{
+		__super::RenderOutlineActive(_spCommand, _spTableDescriptor, true);
 
+		for (_uint i = 0; i < m_spModel->GetMeshContainerCnt(); ++i)
+		{
+			// Bind Transform 
+			GetTransform()->BindTransformData(GetOutlineShader());
+
+			// Render
+			m_spModel->Render(i, GetOutlineShader(), _spCommand);
+		}
+	}
+	if (nullptr != m_spModel)
+	{
+		__super::RenderOutlineActive(_spCommand, _spTableDescriptor, false);
+
+		for (_uint i = 0; i < m_spModel->GetMeshContainerCnt(); ++i)
+		{
+			// Bind Transform 
+			GetTransform()->BindTransformData(GetNorPosShader());
+
+			// Render
+			m_spModel->Render(i, GetNorPosShader(), _spCommand);
+		}
+	}
+	return S_OK;
+}
 void TShowAnimModelObject::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }

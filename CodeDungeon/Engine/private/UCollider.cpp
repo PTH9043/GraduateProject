@@ -186,7 +186,7 @@ void UCollider::SetTransform(CSHPTRREF<UTransform> _spTransform)
 	case TYPE_SPHERE:
 		m_mTransformMatrix = _spTransform->GetWorldMatrix();
 		m_spSphere_Original->Transform(*m_spSphere.get(), m_mTransformMatrix);
-		m_vModelScale = _float3((m_spSphere->Radius, m_spSphere->Radius, m_spSphere->Radius)) * 2;
+		m_vModelScale = _float3((m_spSphere->Radius, m_spSphere->Radius, m_spSphere->Radius));
 		break;
 	}
 }
@@ -207,7 +207,7 @@ void UCollider::SetTransform(const _float4x4& _Matrix)
 		break;
 	case TYPE_SPHERE:
 		m_spSphere_Original->Transform(*m_spSphere.get(), Matrix);
-		m_vModelScale = _float3(m_spSphere->Radius) * 2;
+		m_vModelScale = _float3(m_spSphere->Radius);
 		break;
 	}
 }
@@ -499,19 +499,62 @@ _float3 UCollider::CalculateOBBCollisionNormal(const DirectX::BoundingOrientedBo
 	return bestAxis;  // 최적 축을 반환합니다.
 }
 
+_float3 UCollider::CalculateOBBSphereCollisionNormal(const DirectX::BoundingOrientedBox& box, const DirectX::BoundingSphere& sphere) const
+{
+	XMVECTOR sphereCenter = XMLoadFloat3(&sphere.Center);
+	float sphereRadius = sphere.Radius;
 
-_float3 UCollider::GetOBBCollisionNormal(CSHPTRREF<UCollider> _pCollider)
+	XMVECTOR boxCenter = XMLoadFloat3(&box.Center);
+	XMVECTOR boxExtents = XMLoadFloat3(&box.Extents);
+	XMFLOAT4 boxOrientation = box.Orientation;
+	XMVECTOR quaternion = XMLoadFloat4(&boxOrientation);
+
+	// OBB의 축을 구합니다.
+	XMVECTOR boxAxisX = XMVector3Rotate(XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f), quaternion);
+	XMVECTOR boxAxisY = XMVector3Rotate(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), quaternion);
+	XMVECTOR boxAxisZ = XMVector3Rotate(XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), quaternion);
+
+	// 구체의 중심을 OBB의 로컬 좌표계로 변환
+	XMVECTOR localSphereCenter = XMVector3InverseRotate(sphereCenter - boxCenter, quaternion);
+
+	// OBB의 각 축에 대해 구체의 중심과의 거리 계산
+	XMVECTOR closestPoint = localSphereCenter;
+	closestPoint = XMVectorClamp(closestPoint, -boxExtents, boxExtents);
+
+	// 로컬 좌표계에서 가장 가까운 점을 다시 월드 좌표계로 변환
+	closestPoint = XMVector3Rotate(closestPoint, quaternion) + boxCenter;
+
+	// 구체의 중심과 가장 가까운 점 사이의 거리 계산
+	XMVECTOR delta = closestPoint - sphereCenter;
+	float distance = XMVectorGetX(XMVector3Length(delta));
+
+	// 충돌 여부 판단
+	if (distance > sphereRadius)
+	{
+		return _float3::Zero; // 충돌이 없는 경우
+	}
+
+	// 충돌이 발생한 경우 충돌 노멀 계산
+	XMVECTOR collisionNormal = XMVector3Normalize(delta);
+
+	return _float3(XMVectorGetX(collisionNormal), XMVectorGetY(collisionNormal), XMVectorGetZ(collisionNormal));
+}
+
+
+
+_float3 UCollider::GetCollisionNormal(CSHPTRREF<UCollider> _pCollider)
 {
 	_float3 collisionNormal = _float3::Zero;
-
 	switch (m_eType)
 	{
+	case TYPE_AABB:
+		break;
 	case TYPE_OBB:
-	{
-		if (TYPE_OBB == _pCollider->m_eType)
-			collisionNormal = CalculateOBBCollisionNormal(*m_spOBB, *_pCollider->m_spOBB);
-	}
-	break;
+		collisionNormal = CalculateOBBCollisionNormal(*_pCollider->m_spOBB,  *m_spOBB);
+		break;
+	case TYPE_SPHERE:
+		collisionNormal = CalculateOBBSphereCollisionNormal(*_pCollider->m_spOBB, *m_spSphere);
+		break;
 	}
 
 	return collisionNormal;
@@ -542,7 +585,7 @@ void UCollider::AddRenderer(RENDERID _eID)
 			break;
 		case TYPE_SPHERE:
 			m_spDebugDrawPawn->GetTransform()->SetPos(m_spSphere->Center);
-			m_spDebugDrawPawn->GetTransform()->SetScale(m_vCurScale);
+			m_spDebugDrawPawn->GetTransform()->SetScale(m_vModelScale);
 			break;
 		}
 		m_spDebugDrawPawn->AddRenderer(_eID);

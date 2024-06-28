@@ -90,6 +90,8 @@ HRESULT URenderer::NativeConstruct()
                
             m_ShaderObjects.insert(std::pair<_wstring, SHPTR<UShader>>(PROTO_RES_UPSAMPLINGSHADER, static_pointer_cast<UShader>(
                 spGameInstance->CloneResource(PROTO_RES_UPSAMPLINGSHADER))));
+
+        
 #ifdef _USE_DEBUGGING
             m_ShaderObjects.insert(std::pair<_wstring, SHPTR<UShader>>(PROTO_RES_DEBUG2DTARGETSHADER, static_pointer_cast<UShader>(
                 spGameInstance->CloneResource(PROTO_RES_DEBUG2DTARGETSHADER))));
@@ -246,6 +248,7 @@ HRESULT URenderer::Render()
     // Render 
   //  RenderRTs();
     RenderPriority();
+    RenderPosNormal();
     RenderShadowDepth();
     RenderNonAlphaBlend();
     RenderLights();
@@ -356,6 +359,40 @@ void URenderer::RenderPriority()
    
 }
 
+void URenderer::RenderPosNormal()
+{
+    SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+
+    SHPTR<URenderTargetGroup> spRenderTargetGroup{ m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::OUTLINE_POS_NOR) };
+    {
+        spRenderTargetGroup->WaitResourceToTarget(m_spCastingCommand);
+        spRenderTargetGroup->ClearRenderTargetView(m_spCastingCommand);
+        spRenderTargetGroup->OmSetRenderTargets(m_spCastingCommand);
+    }
+  
+    for (auto& iter : m_arrActiveDrawRenderList[RENDERID::RI_NORPOS])
+    {
+        RenderOutlineObject(iter.first, iter.second,false); //false가 NorPos true가 depth
+    }
+    spRenderTargetGroup->WaitTargetToResource(m_spCastingCommand);
+
+    SHPTR<URenderTargetGroup> spRenderTargetGroup1{ m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::DEPTH_RECORD) };
+    {
+        spRenderTargetGroup1->WaitResourceToTarget(m_spCastingCommand);
+        spRenderTargetGroup1->ClearRenderTargetView(m_spCastingCommand);
+        spRenderTargetGroup1->OmSetRenderTargets(m_spCastingCommand);
+    }
+
+    for (auto& iter : m_arrActiveDrawRenderList[RENDERID::RI_DEPTHRECORD])
+    {
+        RenderOutlineObject(iter.first, iter.second, true); //false가 NorPos true가 depth
+    }
+    spRenderTargetGroup1->WaitTargetToResource(m_spCastingCommand);
+
+    
+}
+
 void URenderer::RenderShadowDepth()
 {
     SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
@@ -448,6 +485,7 @@ void URenderer::RenderBlend()
     spRenderTargetGroup->WaitTargetToResource(m_spCastingCommand);
   
 }
+
 
 void URenderer::RenderNonLight()
 {
@@ -696,7 +734,12 @@ void URenderer::RenderEnd()
         spDefferedShader->BindSRVBuffer(SRV_REGISTER::T3, m_spRenderTargetManager->
             FindRenderTargetTexture(RTGROUPID::NONALPHA_DEFFERED,
                 RTOBJID::NONALPHA_GLOW_DEFFERED));
-      
+        spDefferedShader->BindSRVBuffer(SRV_REGISTER::T4, m_spRenderTargetManager->
+            FindRenderTargetTexture(RTGROUPID::DEPTH_RECORD,
+                RTOBJID::DEPTH_RECORD));
+        spDefferedShader->BindSRVBuffer(SRV_REGISTER::T5, m_spRenderTargetManager->
+            FindRenderTargetTexture(RTGROUPID::OUTLINE_POS_NOR,
+                RTOBJID::OUTLINE_DEPTH_POS));
         {
             spDefferedShader->BindCBVBuffer(m_spFogConstantBuffer, &m_bTurnFog, sizeof(_bool));
         }
@@ -754,6 +797,19 @@ void URenderer::RenderShadowObject(const _wstring& _wstrShaderName, PAWNLIST& _P
     {
         iter->RenderShadow(m_spCastingCommand, m_spGraphicDevice->GetTableDescriptor());
     }
+}
+
+void URenderer::RenderOutlineObject(const _wstring& _wstrShaderName, PAWNLIST& _PawnList,_bool _pass)
+{
+    SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+    // Pipelinestate setting
+    spGameInstance->SettingPipeLineState(_wstrShaderName, m_spCastingCommand);
+    // Shadr 필요한 Pawn끼리 list 쭉 그려
+    for (auto& iter : _PawnList)
+    {
+        iter->RenderOutline(m_spCastingCommand, m_spGraphicDevice->GetTableDescriptor(), _pass);
+    }
+   
 }
 
 

@@ -97,6 +97,8 @@ HRESULT URenderTargetManager::AddRenderTargetGroupWithNewDepthStencilBuffer(cons
     return S_OK;
 }
 
+
+
 void URenderTargetManager::RemoveRenderTargetGroup(const RTGROUPID _eGroupID)
 {
     const RTGROUPS::iterator& it = m_RenderTargetGroups.find(_eGroupID);
@@ -231,6 +233,7 @@ void URenderTargetManager::CreateDepthStencilTexture()
            D3D12_HEAP_TYPE_DEFAULT,
            D3D12_HEAP_FLAG_NONE, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL };
     m_spShadowDepthStencilTexture = CreateNative<UTexture>(m_spDevice, stRt2Desc);
+
 }
 
 void URenderTargetManager::CreateDefaultRenderTargets(CSHPTRREF<UGraphicDevice> _spGraphicDevice)

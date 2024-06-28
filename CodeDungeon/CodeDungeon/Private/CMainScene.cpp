@@ -130,14 +130,13 @@ HRESULT CMainScene::LoadSceneData()
 		m_spMap = CreateConstructorNative<CMap>(spGameInstance->GetDevice());
 		m_spMap->LoadRooms();
 		m_spMap->LoadStaticObjects();
-		
+		m_spMap->LoadMobs();
+
 		spGameInstance->TurnOnFog();
 
 		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 1.f}, {0.3f, 0.3f,0.3f, 1.f}, {0.15f, 0.15f, 0.15f, 1.f}, {0.f, -1.f, 0.f,}, {0.f, 100.f, 0.f}, 0.f, 0.f ,
 	1.f, 20.f });
 
-
-		
 		for (auto& obj : (*m_spMap->GetStaticObjs().get()))
 		{
 			int count = 0;

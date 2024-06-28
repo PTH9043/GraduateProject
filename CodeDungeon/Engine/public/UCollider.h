@@ -56,9 +56,11 @@ public:
 	*/
 	void SetOBBNormals(const _float4x4& transformMatrix);
 	_float3 CalculateOBBCollisionNormal(const DirectX::BoundingOrientedBox& box1, const DirectX::BoundingOrientedBox& box2) const;
-	_float3 GetOBBCollisionNormal(CSHPTRREF<UCollider> _pCollider);
-	
+	_float3 CalculateOBBSphereCollisionNormal(const DirectX::BoundingOrientedBox& box, const DirectX::BoundingSphere& sphere) const;
+	_float3 GetCollisionNormal(CSHPTRREF<UCollider> _pCollider);
+
 #ifdef _USE_DEBUGGING
+
 	void ChangeColliderColor(const _float3& _vChange);
 	void AddRenderer(RENDERID _eID);
 

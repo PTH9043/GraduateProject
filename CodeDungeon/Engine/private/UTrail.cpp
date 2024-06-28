@@ -57,7 +57,7 @@ HRESULT UTrail::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	AddShader(PROTO_RES_TRAILSHADER);
 
 	m_fCreateTime = 0.0001f;
-	m_iMaxCount = 8;
+	m_iMaxCount = 8;//8,9,10,12
 	m_iDivide = 8;
 	m_fTime = m_fCreateTime + 1.f;
 	return S_OK;
@@ -225,5 +225,10 @@ HRESULT UTrail::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTa
 	__super::RenderShadowActive(_spCommand, _spTableDescriptor);
 
 	return S_OK;
+}
+
+HRESULT UTrail::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)
+{
+	return __super::RenderOutlineActive(_spCommand, _spTableDescriptor,_pass);
 }
 

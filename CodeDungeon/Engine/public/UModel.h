@@ -50,6 +50,8 @@ public:
 	_float3 GetMinVertexPos();
 	_float3 GetCenterPos();
 
+
+	
 public:
 	CLONE_MACRO(UModel, "UModel::Clone To Failed")
 	virtual void Free() override;
@@ -102,6 +104,8 @@ private:
 
 	TYPE															m_eType;
 	_wstring														m_wstrModelName;
+
+
 };
 
 END

@@ -78,6 +78,12 @@ HRESULT UDefaultCube::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRR
 	return S_OK;
 }
 
+HRESULT UDefaultCube::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)
+{
+	return __super::RenderOutlineActive(_spCommand, _spTableDescriptor,_pass);
+	
+}
+
 void UDefaultCube::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 

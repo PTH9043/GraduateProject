@@ -1252,6 +1252,28 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 					RENDERFORMATS{ DXGI_FORMAT_R32_FLOAT
 					}));
 
+			CreateGraphicsShader(PROTO_RES_NORPOSSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"NorPos", VTXNORPOSINPUT_DECLARATION::Element, VTXNORPOSINPUT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN },
+					RENDERFORMATS{ DXGI_FORMAT_R32G32B32A32_FLOAT
+					}));
+			CreateGraphicsShader(PROTO_RES_DEPTHRECORDSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"DepthRecord", VTXSHADOWINPUT_DECLARATION::Element, VTXSHADOWINPUT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN },
+					RENDERFORMATS{ DXGI_FORMAT_R32G32B32A32_FLOAT
+					}));
+
+			CreateGraphicsShader(PROTO_RES_ANIMNORPOSSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"AnimNorPos", VTXANIMMODEL_DECLARATION::Element, VTXANIMMODEL_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN },
+					RENDERFORMATS{ DXGI_FORMAT_R32G32B32A32_FLOAT
+					}));
+			CreateGraphicsShader(PROTO_RES_ANIMDEPTHRECORDSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"AnimDepthRecord", VTXANIMMODEL_DECLARATION::Element, VTXANIMMODEL_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN },
+					RENDERFORMATS{ DXGI_FORMAT_R32G32B32A32_FLOAT
+					}));
+
 			CreateGraphicsShader(PROTO_RES_NOCULL_ANIMMODELSHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"AnimModel", VTXANIMMODEL_DECLARATION::Element, VTXANIMMODEL_DECLARATION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN },
@@ -1567,6 +1589,24 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 			m_spRenderTargetManager->AddRenderTargetGroupWithNewDepthStencilBuffer(RTGROUPID::SHADOW_MAP, vecRts);
 		}
 
+		{
+			std::vector<RTDESC> vecRts{
+				RTDESC{ RTOBJID::OUTLINE_DEPTH_POS, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
+					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f } }
+			};
+			// Add RenderTargetGroup
+			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::OUTLINE_POS_NOR, vecRts);
+		}
+
+		{
+			std::vector<RTDESC> vecRts{
+				RTDESC{ RTOBJID::DEPTH_RECORD, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
+					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 1.f, 1.f, 1.f, 1.f } }
+			};
+			// Add RenderTargetGroup
+			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::DEPTH_RECORD, vecRts);
+		}
+
 		// NonAlpha_Deffered 
 		{
 			std::vector<RTDESC> vecRts{
@@ -1705,13 +1745,13 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 
 	
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::ALPHA_DEFFERED, RTOBJID::ALPHA_DIFFUSE_DEFFERED,
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::DEPTH_RECORD, RTOBJID::DEPTH_RECORD,
 		_float2(300.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::BLUR_RESULT, RTOBJID::BLUR_RESULT,
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::OUTLINE_POS_NOR, RTOBJID::OUTLINE_DEPTH_POS,
 		_float2(605.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::BLUR, RTOBJID::BLUR,
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_DEPTH_DEFFERED,
 		_float2(910.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
 #endif

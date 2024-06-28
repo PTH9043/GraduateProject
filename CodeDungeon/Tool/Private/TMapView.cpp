@@ -223,7 +223,7 @@ void TMapView::ShowModelList()
 					//ShowModel을 컨테이너에 추가
 					SHPTR<TShowModelObject> newModel = std::static_pointer_cast<TShowModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWMODELOBJECT));
 					newModel->SetShowModel(Model.second);
-
+					
 					for (auto& Containers : newModel->GetColliderContainer())
 					{
 						Containers.second->SetTranslate(newModel->GetShowModel()->GetCenterPos());

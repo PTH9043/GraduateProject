@@ -4,7 +4,7 @@
 #define PROTO_ACTOR_ROOM L"Proto_Actor_Room"
 #define PROTO_ACTOR_TORCH L"Proto_Actor_Torch"
 #define PROTO_ACTOR_IRONBARS L"Proto_Actor_IronBars"
-
+#define PROTO_ACTOR_CHEST L"Proto_Actor_Chest"
 
 #define PROTO_ACTOR_WARRIORPLAYER L"Proto_Actor_WarriorPlayer"
 #define PROTO_ACTOR_MUMMY L"Proto_Actor_Mummy"
@@ -17,10 +17,13 @@
 #define PROTO_RES_MUMMYANIMMODEL L"Proto_Res_MummyAnimModel"
 #define PROTO_RES_SARCOPHAGUSLYINGANIMMODEL L"Proto_Res_SarcophagusLyingAnimModel"
 #define PROTO_RES_SARCOPHAGUSSTANDINGANIMMODEL L"Proto_Res_SarcophagusStandingAnimModel"
+#define PROTO_RES_CHESTANIMMODEL L"Proto_Res_ChestAnimModel"
+
 
 #define PROTO_RES_LONGSWORDMODEL L"Proto_Res_LongSwordModel"
 
 #define PROTO_COMP_USERWARRIORANIMCONTROLLER L"Proto_Comp_UserWarriorAnimController"
 #define PROTO_COMP_MUMMYANIMCONTROLLER L"Proto_Comp_MummyAniMController"
 #define PROTO_COMP_SARCOPHAGUSANIMCONTROLLER L"Proto_Comp_SarcophagusAniMController"
+#define PROTO_COMP_CHESTANIMCONTROLLER  L"Proto_Comp_ChestAniMController"
 #define PROTO_COMP_NETWORKWARRIORANIMCONTROLLER L"Proto_Comp_NetworkWarriorAnimController"
