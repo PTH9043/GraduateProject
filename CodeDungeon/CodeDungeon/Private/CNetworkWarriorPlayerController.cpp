@@ -10,12 +10,12 @@
 #include "UMethod.h"
 
 CNetworkWarriorPlayerController::CNetworkWarriorPlayerController(CSHPTRREF<UDevice> _spDevice)
-	: UAnimationController(_spDevice), m_JumpSpeed{0}, m_RecvAnimDuration{0}
+	: UAnimationController(_spDevice), m_JumpSpeed{0}, m_dRecvAnimDuration{0}
 {
 }
 
 CNetworkWarriorPlayerController::CNetworkWarriorPlayerController(const CNetworkWarriorPlayerController& _rhs) :
-	UAnimationController(_rhs), m_RecvAnimDuration{ 0 }
+	UAnimationController(_rhs), m_dRecvAnimDuration{ 0 }
 {
 }
 
@@ -50,7 +50,7 @@ void CNetworkWarriorPlayerController::Tick(const _double& _dTimeDelta)
 		spWarriorPlayer->GetTransform()->MoveForward(_dTimeDelta, static_cast<_float>(m_JumpSpeed));
 	}
 	// Tick eve
-	spAnimModel->TickEventToRatio(spWarriorPlayer.get(), GetTrigger(), _dTimeDelta);
+	spAnimModel->TickEventToRatio(spWarriorPlayer.get(), GetTrigger(),m_dRecvAnimDuration, _dTimeDelta);
 
 }
 

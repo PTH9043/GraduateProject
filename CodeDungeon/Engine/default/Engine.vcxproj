@@ -321,9 +321,7 @@
     <FxCompile Include="..\..\Shader\2DParticleFlare.hlsl" />
     <FxCompile Include="..\..\Shader\2DParticleFootPrint.hlsl" />
     <FxCompile Include="..\..\Shader\3DNormalCube.hlsl" />
-    <FxCompile Include="..\..\Shader\AnimDepthRecord.hlsl" />
     <FxCompile Include="..\..\Shader\AnimModel.hlsl" />
-    <FxCompile Include="..\..\Shader\AnimNorPos.hlsl" />
     <FxCompile Include="..\..\Shader\BlendDeffered.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>

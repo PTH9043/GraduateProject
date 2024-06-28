@@ -175,6 +175,7 @@
     <ClInclude Include="..\Public\CModelObjects.h" />
     <ClInclude Include="..\Public\CMummy.h" />
     <ClInclude Include="..\Public\CMummyAnimController.h" />
+    <ClInclude Include="..\Public\CNavigationManager.h" />
     <ClInclude Include="..\Public\CNetworkClientController.h" />
     <ClInclude Include="..\Public\CNetworkQueryProcessor.h" />
     <ClInclude Include="..\Public\CNetworkWarriorPlayerController.h" />
@@ -206,6 +207,7 @@
     <ClCompile Include="..\Private\CModelObjects.cpp" />
     <ClCompile Include="..\Private\CMummy.cpp" />
     <ClCompile Include="..\Private\CMummyAnimController.cpp" />
+    <ClCompile Include="..\Private\CNavigationManager.cpp" />
     <ClCompile Include="..\Private\CNetworkClientController.cpp" />
     <ClCompile Include="..\Private\CNetworkQueryProcessor.cpp" />
     <ClCompile Include="..\Private\CNetworkWarriorPlayerController.cpp" />

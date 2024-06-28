@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="99.Default">
@@ -91,11 +91,6 @@
     <Filter Include="06.Comp\Controller\WarriorPlayer\Network">
       <UniqueIdentifier>{735716c5-05aa-4508-87a1-47c9ac944ad1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="20.Server\Controller">
-      <UniqueIdentifier>{1747198a-ebd0-435a-a985-ad8d0d51bad5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="20.Server\Proccessor">
-      <UniqueIdentifier>{c16424d6-273d-4066-81c1-a5ab11d6d04b}</UniqueIdentifier>
     <Filter Include="05.Objects\Character\Mob\ItemChest">
       <UniqueIdentifier>{eebb04af-b87a-4a58-9d81-ff49a6d27511}</UniqueIdentifier>
     </Filter>
@@ -107,6 +102,15 @@
     </Filter>
     <Filter Include="05.Objects\ModelObjects\Map\StaticObjects\Torch">
       <UniqueIdentifier>{c62b57e0-9fcf-4186-924d-c05e87282c1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="12.NavigationManager">
+      <UniqueIdentifier>{7f384494-a96d-43c6-8e68-97b1019739b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="20.Server\Controller">
+      <UniqueIdentifier>{905061dc-5702-4185-a1ee-7675ff181f6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="20.Server\Query">
+      <UniqueIdentifier>{2d63f30f-8770-4a82-b8c1-bb5e23d23348}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -188,11 +192,6 @@
     <ClInclude Include="..\Public\CNetworkWarriorPlayerController.h">
       <Filter>06.Comp\Controller\WarriorPlayer\Network</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CNetworkClientController.h">
-      <Filter>20.Server\Controller</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\CNetworkQueryProcessor.h">
-      <Filter>20.Server\Proccessor</Filter>
     <ClInclude Include="..\Public\CItemChest.h">
       <Filter>05.Objects\Character\Mob\ItemChest</Filter>
     </ClInclude>
@@ -201,6 +200,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\CTorch.h">
       <Filter>05.Objects\ModelObjects\Map\StaticObjects\Torch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CNavigationManager.h">
+      <Filter>12.NavigationManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CNetworkClientController.h">
+      <Filter>20.Server\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CNetworkQueryProcessor.h">
+      <Filter>20.Server\Query</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -275,11 +283,6 @@
     <ClCompile Include="..\Private\CNetworkWarriorPlayerController.cpp">
       <Filter>06.Comp\Controller\WarriorPlayer\Network</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CNetworkClientController.cpp">
-      <Filter>20.Server\Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\CNetworkQueryProcessor.cpp">
-      <Filter>20.Server\Proccessor</Filter>
     <ClCompile Include="..\Private\CItemChest.cpp">
       <Filter>05.Objects\Character\Mob\ItemChest</Filter>
     </ClCompile>
@@ -288,6 +291,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\CTorch.cpp">
       <Filter>05.Objects\ModelObjects\Map\StaticObjects\Torch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CNetworkClientController.cpp">
+      <Filter>20.Server\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CNavigationManager.cpp">
+      <Filter>12.NavigationManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CNetworkQueryProcessor.cpp">
+      <Filter>20.Server\Query</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
