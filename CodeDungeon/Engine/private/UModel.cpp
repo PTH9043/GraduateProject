@@ -23,8 +23,8 @@ UModel::UModel(CSHPTRREF<UDevice> _spDevice, const TYPE& _eType) :
 	m_spFileData{ nullptr },
 	m_eType{ _eType },
 	m_wstrModelName{L""},
-	m_spRootBoneNode{nullptr},
-	m_bDrawOutline{false}
+	m_spRootBoneNode{nullptr}
+
 {
 }
 
@@ -40,8 +40,7 @@ UModel::UModel(const UModel& _rhs) :
 	m_spFileData{ _rhs.m_spFileData },
 	m_eType{ _rhs.m_eType },
 	m_wstrModelName{ L"" },
-	m_spRootBoneNode{ _rhs.m_spRootBoneNode},
-	m_bDrawOutline{ false }
+	m_spRootBoneNode{ _rhs.m_spRootBoneNode}
 {
 }
 

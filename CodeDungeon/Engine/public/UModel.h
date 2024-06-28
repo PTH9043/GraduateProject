@@ -51,8 +51,7 @@ public:
 	_float3 GetCenterPos();
 
 
-	void DrawOutline(_bool _DrawOutline) { m_bDrawOutline = _DrawOutline; }
-	_bool GetIfDrawOutline() { return m_bDrawOutline; }
+	
 public:
 	CLONE_MACRO(UModel, "UModel::Clone To Failed")
 	virtual void Free() override;
@@ -106,7 +105,7 @@ private:
 	TYPE															m_eType;
 	_wstring														m_wstrModelName;
 
-	_bool								m_bDrawOutline;
+
 };
 
 END

@@ -86,8 +86,8 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 	_wstring mainColliderTag = L"Main";
 
 	AddColliderInContainer(mainColliderTag, Collider);
-
-
+	SetOutline(true);
+	
 	return S_OK;
 }
 

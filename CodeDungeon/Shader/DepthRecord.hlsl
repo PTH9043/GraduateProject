@@ -38,6 +38,7 @@ PS_OUT PS_Main(VS_OUT In)
 {
     PS_OUT Out = (PS_OUT) 0;
     Out.vColor = float4(In.vPosition.w / GetViewProjInfo().fCamFar, In.vPosition.z / In.vPosition.w, 1.f, In.vPosition.w);
+    //Out.vColor = float4(0,0,0,0);
     return Out;
 
 }

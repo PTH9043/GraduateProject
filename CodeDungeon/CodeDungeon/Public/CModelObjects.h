@@ -28,6 +28,8 @@ public:
 	void SetModel(const _wstring& _ProtoModelName);
 	CSHPTRREF<UModel> GetModel(){ return m_spModel; }
 	void CalculateAndSetCollider();
+	void SetOutline(_bool _draw) { m_bDrawOutline = _draw; }
+	const _bool& GetOutlineState()const { return m_bDrawOutline; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
@@ -41,6 +43,7 @@ private:
 	int HasTex[4]{};
 
 	SHPTR<UCollider>			m_spCollider;
+	_bool		m_bDrawOutline;
 };
 
 END

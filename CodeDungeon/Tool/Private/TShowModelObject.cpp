@@ -121,7 +121,7 @@ HRESULT TShowModelObject::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF
 }
 HRESULT TShowModelObject::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
-	if (nullptr != m_spModel&&m_spModel->GetIfDrawOutline())
+	if (nullptr != m_spModel)
 	{
 		__super::RenderShadowActive(_spCommand, _spTableDescriptor);
 

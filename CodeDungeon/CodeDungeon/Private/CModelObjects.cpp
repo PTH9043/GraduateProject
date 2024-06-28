@@ -10,13 +10,13 @@
 
 CModelObjects::CModelObjects(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UPawn(_spDevice, _wstrLayer, _eCloneType),
-	m_spModel{ nullptr }, m_spCollider{nullptr}
+	m_spModel{ nullptr }, m_spCollider{nullptr}, m_bDrawOutline{false}
 {
 }
 
 CModelObjects::CModelObjects(const CModelObjects& _rhs) :
 	UPawn(_rhs),
-	m_spModel{ nullptr }, m_spCollider{ nullptr }
+	m_spModel{ nullptr }, m_spCollider{ nullptr }, m_bDrawOutline{false}
 {
 }
 
@@ -68,8 +68,14 @@ void CModelObjects::LateTickActive(const _double& _dTimeDelta)
 	{
 		AddRenderGroup(RI_NONALPHA_MIDDLE);
 		AddShadowRenderGroup(RI_SHADOW);
-		AddOutlineRenderGroup(RI_DEPTHRECORD);
-		AddOutlineRenderGroup(RI_NORPOS);
+	
+		if (m_bDrawOutline) {
+			AddOutlineRenderGroup(RI_DEPTHRECORD);
+			AddNorPosRenderGroup(RI_NORPOS);
+		}
+			
+		
+		
 	}
 	
 }
@@ -119,19 +125,19 @@ HRESULT CModelObjects::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UT
 
 HRESULT CModelObjects::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
-	if (nullptr != m_spModel)
-	{
-		__super::RenderShadowActive(_spCommand, _spTableDescriptor);
+	//if (nullptr != m_spModel)
+	//{
+	//	__super::RenderShadowActive(_spCommand, _spTableDescriptor);
 
-		for (_uint i = 0; i < m_spModel->GetMeshContainerCnt(); ++i)
-		{
-			// Bind Transform 
-			GetTransform()->BindTransformData(GetShadowShader());
+	//	for (_uint i = 0; i < m_spModel->GetMeshContainerCnt(); ++i)
+	//	{
+	//		// Bind Transform 
+	//		GetTransform()->BindTransformData(GetShadowShader());
 
-			// Render
-			m_spModel->Render(i, GetShadowShader(), _spCommand);
-		}
-	}
+	//		// Render
+	//		m_spModel->Render(i, GetShadowShader(), _spCommand);
+	//	}
+	//}
 	return S_OK;
 }
 HRESULT CModelObjects::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)
@@ -139,32 +145,32 @@ HRESULT CModelObjects::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPT
 	
 		
 
-		//if (nullptr != m_spModel)
-		//{
-		//	__super::RenderOutlineActive(_spCommand, _spTableDescriptor, true);
+		if (nullptr != m_spModel&&m_bDrawOutline)
+		{
+			__super::RenderOutlineActive(_spCommand, _spTableDescriptor, true);
 
-		//	for (_uint i = 0; i < m_spModel->GetMeshContainerCnt(); ++i)
-		//	{
-		//		// Bind Transform 
-		//		GetTransform()->BindTransformData(GetOutlineShader());
+			for (_uint i = 0; i < m_spModel->GetMeshContainerCnt(); ++i)
+			{
+				// Bind Transform 
+				GetTransform()->BindTransformData(GetOutlineShader());
 
-		//		// Render
-		//		m_spModel->Render(i, GetOutlineShader(), _spCommand);
-		//	}
-		//}
-		//if (nullptr != m_spModel)
-		//{
-		//	__super::RenderOutlineActive(_spCommand, _spTableDescriptor, false);
+				// Render
+				m_spModel->Render(i, GetOutlineShader(), _spCommand);
+			}
+		}
+		if (nullptr != m_spModel && m_bDrawOutline)
+		{
+			__super::RenderOutlineActive(_spCommand, _spTableDescriptor, false);
 
-		//	for (_uint i = 0; i < m_spModel->GetMeshContainerCnt(); ++i)
-		//	{
-		//		// Bind Transform 
-		//		GetTransform()->BindTransformData(GetNorPosShader());
+			for (_uint i = 0; i < m_spModel->GetMeshContainerCnt(); ++i)
+			{
+				// Bind Transform 
+				GetTransform()->BindTransformData(GetNorPosShader());
 
-		//		// Render
-		//		m_spModel->Render(i, GetNorPosShader(), _spCommand);
-		//	}
-		//}
+				// Render
+				m_spModel->Render(i, GetNorPosShader(), _spCommand);
+			}
+		}
 	return S_OK;
 }
 void CModelObjects::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)

@@ -162,6 +162,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 		}
 
 	}
+	
 	return S_OK;
 }
 

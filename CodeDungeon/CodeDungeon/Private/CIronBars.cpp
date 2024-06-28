@@ -47,6 +47,8 @@ HRESULT CIronBars::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	AddColliderInContainer(mainColliderTag, Collider);
 
 	SetPawnType(PAWNTYPE::PAWN_STATICOBJ);
+
+	SetOutline(true);
 	return S_OK;
 }
 

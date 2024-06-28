@@ -16,12 +16,12 @@ UCharacter::UCharacter(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer,
 	const CLONETYPE& _eCloneType) : 
 	UPawn(_spDevice, _wstrLayer, _eCloneType, BACKINGTYPE::DYNAMIC, PAWNTYPE::PAWN_CHAR),
 	m_spAnimModel{ nullptr }, m_spAnimationController{ nullptr }, m_vPrevPos{}, 	m_spCurNavi{nullptr }, m_spHitCollider{nullptr}, 
-	m_fMoveSpeed{0.f}, m_fRunSpeed{0.f}, m_bIsRunning{false}, m_bisHit{false}, m_bisCollision{false},
+	m_fMoveSpeed{0.f}, m_fRunSpeed{0.f}, m_bIsRunning{false}, m_bisHit{false}, m_bisCollision{false}, m_DrawOutline{false},
 	m_isNetworkConnected{false}
 {
 }
 
-UCharacter::UCharacter(const UCharacter& _rhs) : UPawn(_rhs), m_vPrevPos{}, m_bisHit{ false }, m_bisCollision{ false }
+UCharacter::UCharacter(const UCharacter& _rhs) : UPawn(_rhs), m_vPrevPos{}, m_bisHit{ false }, m_bisCollision{ false }, m_DrawOutline{ false }
 {
 }
 
@@ -59,7 +59,8 @@ HRESULT UCharacter::NativeConstructClone(const VOIDDATAS& _Datas)
 		assert(nullptr != m_spCurNavi);
 	}
 	AddShader(PROTO_RES_ANIMMODELSHADER, RES_SHADER);
-
+	AddOutlineShader(PROTO_RES_ANIMDEPTHRECORDSHADER, RES_SHADER);
+	AddNorPosShader(PROTO_RES_ANIMNORPOSSHADER, RES_SHADER);
 	return S_OK;
 }
 
@@ -153,6 +154,11 @@ void UCharacter::TickActive(const _double& _dTimeDelta)
 
 void UCharacter::LateTickActive(const _double& _dTimeDelta)
 {
+	if (m_DrawOutline) {
+		AddOutlineRenderGroup(RI_DEPTHRECORD);
+		AddNorPosRenderGroup(RI_NORPOS);
+	}
+	
 	__super::LateTickActive(_dTimeDelta);
 	m_f3MovedDirection = GetTransform()->GetPos() - m_vPrevPos;
 	m_f3MovedDirection.Normalize();
@@ -188,7 +194,33 @@ HRESULT UCharacter::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF
 
 HRESULT UCharacter::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)
 {
-	return __super::RenderOutlineActive(_spCommand, _spTableDescriptor,_pass);
+	if (nullptr != m_spAnimModel&& m_DrawOutline)
+	{
+		__super::RenderOutlineActive(_spCommand, _spTableDescriptor, true);
+
+		for (_uint i = 0; i < m_spAnimModel->GetMeshContainerCnt(); ++i)
+		{
+			// Bind Transform 
+			GetTransform()->BindTransformData(GetOutlineShader());
+
+			// Render
+			m_spAnimModel->Render(i, GetOutlineShader(), _spCommand);
+		}
+	}
+	if (nullptr != m_spAnimModel&& m_DrawOutline)
+	{
+		__super::RenderOutlineActive(_spCommand, _spTableDescriptor, false);
+
+		for (_uint i = 0; i < m_spAnimModel->GetMeshContainerCnt(); ++i)
+		{
+			// Bind Transform 
+			GetTransform()->BindTransformData(GetNorPosShader());
+
+			// Render
+			m_spAnimModel->Render(i, GetNorPosShader(), _spCommand);
+		}
+	}
+	return S_OK;
 }
 
 void UCharacter::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)

@@ -40,8 +40,8 @@ HRESULT TShowAnimModelObject::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	_wstring mainColliderTag = L"Main";
 	AddColliderInContainer(mainColliderTag, Collider);
 	AddShader(PROTO_RES_ANIMMODELSHADER, RES_SHADER);
-	AddOutlineShader(PROTO_RES_DEPTHRECORDSHADER, RES_SHADER);
-	AddNorPosShader(PROTO_RES_NORPOSSHADER, RES_SHADER);
+	AddOutlineShader(PROTO_RES_ANIMDEPTHRECORDSHADER, RES_SHADER);
+	AddNorPosShader(PROTO_RES_ANIMNORPOSSHADER, RES_SHADER);
 	GetTransform()->SetScale(_float3(0.05f, 0.05f, 0.05f));
 	return S_OK;
 }

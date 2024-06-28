@@ -19,6 +19,8 @@
 #define PROTO_RES_SHADOWSHADER L"Proto_Res_ShadowShader"
 #define PROTO_RES_DEPTHRECORDSHADER L"Proto_Res_DepthRecordShader"
 #define PROTO_RES_NORPOSSHADER L"Proto_Res_NorPosShader"
+#define PROTO_RES_ANIMNORPOSSHADER L"Proto_Res_AnimNorPosShader"
+#define PROTO_RES_ANIMDEPTHRECORDSHADER L"Proto_Res_AnimDepthRecordShader"
 #define PROTO_RES_GRIDSHADER L"Proto_Res_GridShader"
 #define PROTO_RES_RECTSHADER L"Proto_Res_RectShader"
 #define PROTO_RES_FINALDEFFEREDSHADER L"Proto_Res_FinalDefferedShader"

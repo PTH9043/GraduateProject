@@ -149,3 +149,4 @@ void CMob::MoveAlongPath(const VECTOR<_float3>& path, size_t& currentPathIndex, 
     }
 	m_f3TargetPos = targetPosition;
 }
+

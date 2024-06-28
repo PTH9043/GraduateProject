@@ -139,7 +139,7 @@ void CMap::LoadMobs()
 				CItemChest::CHARACTERDESC chestDesc{ PROTO_RES_CHESTANIMMODEL, PROTO_COMP_CHESTANIMCONTROLLER };;
 				SHPTR<CItemChest> _Chest = std::static_pointer_cast<CItemChest>(spGameInstance->CloneActorAdd(PROTO_ACTOR_CHEST, { &chestDesc }));
 				_Chest->GetTransform()->SetNewWorldMtx(vecit._mWorldMatrix);
-				_Chest->GetTransform()->SetScale(_float3(10.0f, 10.0f, 10.0f));
+				_Chest->GetTransform()->SetScale(_float3(10.0f, 10.0f, 10.0f));			
 				_ChestVec.push_back(_Chest);
 				spGameInstance->AddCollisionPawnList(_Chest);
 			}
