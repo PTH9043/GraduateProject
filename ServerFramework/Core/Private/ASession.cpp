@@ -113,7 +113,7 @@ namespace Core
 	*/
 	void ASession::CombineSendBuffer( _char* _pPacket, const PACKETHEAD& _PacketHead)
 	{
-		ZeroMemory(&m_SendBuffer[0], MAX_BUFFER_LENGTH);
+		::memset(&m_SendBuffer[0], 0, MAX_BUFFER_LENGTH);
 		memcpy(&m_SendBuffer[0], &_PacketHead, PACKETHEAD_SIZE);
 		// [0 ~ 1] : PACKETSIZE		[2 ~ 3] : PACKETTYPE		[4 ~ ] Remain... 
 		memcpy(&m_SendBuffer[PACKETHEAD_SIZE], _pPacket, _PacketHead.PacketSize);

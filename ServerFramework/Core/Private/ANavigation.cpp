@@ -122,6 +122,12 @@ namespace Core {
 		return false;
 	}
 
+	_bool ANavigation::IsMove(_int _iCurOnCellIndex, const Vector3& _vPosition, SHPTR<ACell>& _spCell)
+	{
+		m_iCurIndex = _iCurOnCellIndex;
+		return IsMove(_vPosition, _spCell);
+	}
+
 	SHPTR<ACell> ANavigation::FindCell(const Vector3& _vPosition) {
 		RETURN_CHECK(nullptr == m_spCellContainer, nullptr);
 		_int iNeighborIndex{ 0 };
@@ -319,15 +325,18 @@ namespace Core {
 				if (pSourCell == pDestCell)
 					continue;
 
-				if (true == pDestCell->UpdateNeighbor(pSourCell, ACell::POINT_A, ACell::POINT_B, ACell::LINE_AB)) {
+				if (true == pDestCell->IsComparePoints(pSourCell->GetPoint(ACell::POINT_A), pSourCell->GetPoint(ACell::POINT_B))) {
+					pSourCell->SetNeighbor(ACell::LINE_AB, pDestCell);
 					continue;
 				}
 
-				if (true == pDestCell->UpdateNeighbor(pSourCell, ACell::POINT_B, ACell::POINT_C, ACell::LINE_BC)) {
+				if (true == pDestCell->IsComparePoints(pSourCell->GetPoint(ACell::POINT_B), pSourCell->GetPoint(ACell::POINT_C))) {
+					pSourCell->SetNeighbor(ACell::LINE_BC, pDestCell);
 					continue;
 				}
 
-				pDestCell->UpdateNeighbor(pSourCell, ACell::POINT_C, ACell::POINT_A, ACell::LINE_CA);
+				if (true == pDestCell->IsComparePoints(pSourCell->GetPoint(ACell::POINT_C), pSourCell->GetPoint(ACell::POINT_A)))
+					pSourCell->SetNeighbor(ACell::LINE_CA, pDestCell);
 			}
 		}
 

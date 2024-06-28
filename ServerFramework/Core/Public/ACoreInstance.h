@@ -78,6 +78,17 @@ public: /* Navigation*/
 	void ComputeHeight(CSHPTRREF<ATransform> _spTransform);
 	// Move
 	_bool IsMove(Vector3 _vPosition, SHPTR<ACell>& _spCell);
+	// Move
+	_bool IsMove(Vector3 _vPosition);
+	// Move
+	_bool IsMove(_int _iCurOnCellIndex, Vector3 _vPosition, SHPTR<ACell>& _spCell);
+	// Move
+	_bool IsMove(_int _iCurOnCellIndex, Vector3 _vPosition);
+	// Find
+	SHPTR<ACell> FindCell(const Vector3& _vPosition);
+	SHPTR<ACell> FindCellWithoutUpdate(const Vector3& _vPosition);
+	SHPTR<ACell> FindCell(const _int& _iIndex);
+	SHPTR<ACell> FindCellWithoutUpdate(const _int& _iIndex);
 public: /* PathFinder */
 	// Find Path
 	void FindPath(Vector3 _vStartPos, Vector3 _vEndPos);

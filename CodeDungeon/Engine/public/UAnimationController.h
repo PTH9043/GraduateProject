@@ -46,11 +46,10 @@ public: /* get set*/
 	const _wstring& GetTrigger() const { return m_wstrTrigger; }
 
 	void SetAnimState(const _int _iAnimState) { this->m_iAnimState = _iAnimState; }
+	void SetTrigger(const _wstring& _wstrTrigger) { this->m_wstrTrigger = _wstrTrigger; }
 protected:
 	SHPTR<UCharacter> GetOwnerCharacter() { return m_wpOwnerCharacter.lock(); }
 protected: /* get set  */
-	void SetTrigger(const _wstring& _wstrTrigger) { this->m_wstrTrigger = _wstrTrigger; }
-
 	void UpdateState(CSHPTRREF<UAnimModel> _spAnimModel, const _int _iAnimState, const _wstring& _wstrTrigger);
 private:
 	_int										m_iAnimState;

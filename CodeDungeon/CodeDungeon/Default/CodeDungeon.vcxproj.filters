@@ -94,6 +94,12 @@
     <Filter Include="06.Comp\Controller\WarriorPlayer\Network">
       <UniqueIdentifier>{735716c5-05aa-4508-87a1-47c9ac944ad1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="20.Server\Controller">
+      <UniqueIdentifier>{1747198a-ebd0-435a-a985-ad8d0d51bad5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="20.Server\Proccessor">
+      <UniqueIdentifier>{c16424d6-273d-4066-81c1-a5ab11d6d04b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ClientDefines.h">
@@ -116,9 +122,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\CClientApp.h">
       <Filter>00.ClientApp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\CNetworkClientController.h">
-      <Filter>20.Server</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CMainScene.h">
       <Filter>01.Scene\MainScene</Filter>
@@ -180,6 +183,12 @@
     <ClInclude Include="..\Public\CNetworkWarriorPlayerController.h">
       <Filter>06.Comp\Controller\WarriorPlayer\Network</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CNetworkClientController.h">
+      <Filter>20.Server\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CNetworkQueryProcessor.h">
+      <Filter>20.Server\Proccessor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -195,9 +204,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\CClientApp.cpp">
       <Filter>00.ClientApp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\CNetworkClientController.cpp">
-      <Filter>20.Server</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CMainScene.cpp">
       <Filter>01.Scene\MainScene</Filter>
@@ -258,6 +264,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\CNetworkWarriorPlayerController.cpp">
       <Filter>06.Comp\Controller\WarriorPlayer\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CNetworkClientController.cpp">
+      <Filter>20.Server\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CNetworkQueryProcessor.cpp">
+      <Filter>20.Server\Proccessor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

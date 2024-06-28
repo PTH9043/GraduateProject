@@ -7,6 +7,7 @@
 #include "CMainScene.h"
 #include "CDataManager.h"
 #include "CLogoScene.h"
+#include "CNetworkQueryProcessor.h"
 
 CClientApp::CClientApp() :
 	m_iTickCount{ 0 },
@@ -41,7 +42,10 @@ HRESULT CClientApp::NativeConstruct(const HINSTANCE& _hInst, const _uint& _iCmdS
 
 	m_spGameInstance->RegisterFuncToRegister(ClientThread, this);
 #ifdef _ENABLE_PROTOBUFF
-	m_spGameInstance->StartNetwork(CreateNative<CNetworkClientController>(IP_ADDRESS, TCP_PORT_NUM));
+	SHPTR<CNetworkClientController> spNetworkClientController = CreateNative<CNetworkClientController>(IP_ADDRESS, TCP_PORT_NUM);
+	SHPTR<CNetworkQueryProcessor> spNetworkQueryProccesor = Create<CNetworkQueryProcessor>(spNetworkClientController);
+	spNetworkClientController->SetNetworkQueryProcessing(spNetworkQueryProccesor);
+	m_spGameInstance->StartNetwork(spNetworkClientController, spNetworkQueryProccesor);
 #endif
 	return S_OK;
 }

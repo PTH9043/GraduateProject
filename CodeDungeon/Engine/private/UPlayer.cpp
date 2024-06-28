@@ -56,94 +56,7 @@ void UPlayer::TickActive(const _double& _dTimeDelta)
 void UPlayer::LateTickActive(const _double& _dTimeDelta)
 {
 	__super::LateTickActive(_dTimeDelta);
-	// Region 
-	{
-		SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-		_float3 vPosition{ GetTransform()->GetPos() };
-		SHPTR<UCell> PrevCell = spNavigation->GetCurCell();
-		SHPTR<UCell> newCell{};
-		_double speed = _dTimeDelta * 3.f;
 
-		//예외처리. 전방으로 점프하면서 떨어질 때 아래가 낭떠러지면 두 상태가 전부 true가 되면서 얼어붙음.
-		//이를 방지하기 위해 둘 다 true일 때 falling을 false로 함으로써 점프를 마저 하도록 처리. 
-		if (m_bisJumping && m_bisFalling)
-		{
-			m_bisFalling = false;
-		}
-
-		//기본 중력 낙하. 중력이 활성화되야만 실행
-		//점프하여 올라가고 있을 땐 비활성화
-		if(!m_bisJumping && m_bisFalling)
-		{
-			GetTransform()->GravityFall(speed);
-			vPosition = GetTransform()->GetPos();
-		}
-
-		//점프를 하고 있다면 점프 움직임 수행
-		if(!m_bisFalling && m_bisJumping)
-		{
-			GetTransform()->JumpMovement(speed);
-			vPosition = GetTransform()->GetPos();
-		}
-		if (GetTransform()->GetJumpVelocity().y < 0.f) //최대 높이까지 점프했다면 
-		{
-			//점프(상승) 해제, 낙하 수행
-			m_bisJumping = false;
-			m_bisFalling = true;
-			GetTransform()->DisableJump();
-		}
-
-
-		//셀의 끝에 다다랐을 때
-		if (false == spNavigation->IsMove(vPosition, REF_OUT newCell))
-		{
-			//낭떠러지 셀이 아닐 경우
-			if (!spNavigation->GetCurCell()->GetJumpableState())
-			{
-				// 움직이려는 위치가 셀 밖에 있는 경우 현재 셀의 가장 가까운 선 위의 점으로 조정
-				// 슬라이딩 벡터의 효과를 낼 수 있음
-				_float3 closestPoint = spNavigation->ClampPositionToCell(vPosition);
-				GetTransform()->SetPos(_float3(closestPoint.x, vPosition.y, closestPoint.z));
-				vPosition = GetTransform()->GetPos();
-			}
-			//낭떠러지 셀인 경우
-			else
-			{
-				//낭떠러지 셀에서 밖으로 갔을 때, 중력 활성화(낙하)
-				//공중에서 발 아래의 셀을 찾고, 현재 셀로 설정함
-				newCell = spNavigation->FindCell(vPosition);
-				m_bisFalling = true;			
-			}
-		}
-
-		if(m_bisFalling && spNavigation->GetCurCell() != nullptr)
-		{
-			//현재 셀보다 아래로 떨어지면
-			_float curCellCenterY = spNavigation->GetCurCell()->GetHeightAtXZ(vPosition.x, vPosition.z);
-			if (vPosition.y < curCellCenterY)
-			{
-				//낙하 종료vPosition
-				m_bisFalling = false;
-				GetTransform()->DisableGravity();
-				GetTransform()->SetPos(_float3(vPosition.x, curCellCenterY, vPosition.z));
-				vPosition = GetTransform()->GetPos();
-			}
-		}
-
-		//떨어지고 있지 않을 때, 그리고 점프하여 올라가고 있지 않을 때 셀 위의 높이를 탐
-		if (!m_bisFalling && !m_bisJumping)
-		{
-			spNavigation->ComputeHeight(GetTransform());
-			if (std::abs(GetPrevPos().y - GetTransform()->GetPos().y) > 30.f)
-			{
-				if (!PrevCell->GetJumpableState())
-				{
-					GetTransform()->SetPos(GetPrevPos());
-					spNavigation->SetCurCell(PrevCell);
-				}
-			}
-		}
-	}
 }
 
 HRESULT UPlayer::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
@@ -193,5 +106,98 @@ void UPlayer::FollowCameraMove(const _float3& _vPlayerToDistancePosition, const 
     m_spFollowCamera->GetTransform()->LookAt(_float3(GetTransform()->GetPos().x, GetTransform()->GetPos().y + 7.f, GetTransform()->GetPos().z));
 
 
+}
+
+void UPlayer::JumpState(const _double& _dTimeDelta)
+{
+	RETURN_CHECK(true == IsNetworkConnected(), ;);
+	// Region 
+	{
+		SHPTR<UNavigation> spNavigation = GetCurrentNavi();
+		_float3 vPosition{ GetTransform()->GetPos() };
+		SHPTR<UCell> PrevCell = spNavigation->GetCurCell();
+		SHPTR<UCell> newCell{};
+		_double speed = _dTimeDelta * 3.f;
+
+		//예외처리. 전방으로 점프하면서 떨어질 때 아래가 낭떠러지면 두 상태가 전부 true가 되면서 얼어붙음.
+		//이를 방지하기 위해 둘 다 true일 때 falling을 false로 함으로써 점프를 마저 하도록 처리. 
+		if (m_bisJumping && m_bisFalling)
+		{
+			m_bisFalling = false;
+		}
+
+		//기본 중력 낙하. 중력이 활성화되야만 실행
+		//점프하여 올라가고 있을 땐 비활성화
+		if (!m_bisJumping && m_bisFalling)
+		{
+			GetTransform()->GravityFall(speed);
+			vPosition = GetTransform()->GetPos();
+		}
+
+		//점프를 하고 있다면 점프 움직임 수행
+		if (!m_bisFalling && m_bisJumping)
+		{
+			GetTransform()->JumpMovement(speed);
+			vPosition = GetTransform()->GetPos();
+		}
+		if (GetTransform()->GetJumpVelocity().y < 0.f) //최대 높이까지 점프했다면 
+		{
+			//점프(상승) 해제, 낙하 수행
+			m_bisJumping = false;
+			m_bisFalling = true;
+			GetTransform()->DisableJump();
+		}
+
+
+		//셀의 끝에 다다랐을 때
+		if (false == spNavigation->IsMove(vPosition, REF_OUT newCell))
+		{
+			//낭떠러지 셀이 아닐 경우
+			if (!spNavigation->GetCurCell()->GetJumpableState())
+			{
+				// 움직이려는 위치가 셀 밖에 있는 경우 현재 셀의 가장 가까운 선 위의 점으로 조정
+				// 슬라이딩 벡터의 효과를 낼 수 있음
+				_float3 closestPoint = spNavigation->ClampPositionToCell(vPosition);
+				GetTransform()->SetPos(_float3(closestPoint.x, vPosition.y, closestPoint.z));
+				vPosition = GetTransform()->GetPos();
+			}
+			//낭떠러지 셀인 경우
+			else
+			{
+				//낭떠러지 셀에서 밖으로 갔을 때, 중력 활성화(낙하)
+				//공중에서 발 아래의 셀을 찾고, 현재 셀로 설정함
+				newCell = spNavigation->FindCell(vPosition);
+				m_bisFalling = true;
+			}
+		}
+
+		if (m_bisFalling && spNavigation->GetCurCell() != nullptr)
+		{
+			//현재 셀보다 아래로 떨어지면
+			_float curCellCenterY = spNavigation->GetCurCell()->GetHeightAtXZ(vPosition.x, vPosition.z);
+			if (vPosition.y < curCellCenterY)
+			{
+				//낙하 종료vPosition
+				m_bisFalling = false;
+				GetTransform()->DisableGravity();
+				GetTransform()->SetPos(_float3(vPosition.x, curCellCenterY, vPosition.z));
+				vPosition = GetTransform()->GetPos();
+			}
+		}
+
+		//떨어지고 있지 않을 때, 그리고 점프하여 올라가고 있지 않을 때 셀 위의 높이를 탐
+		if (!m_bisFalling && !m_bisJumping)
+		{
+			spNavigation->ComputeHeight(GetTransform());
+			if (std::abs(GetPrevPos().y - GetTransform()->GetPos().y) > 30.f)
+			{
+				if (!PrevCell->GetJumpableState())
+				{
+					GetTransform()->SetPos(GetPrevPos());
+					spNavigation->SetCurCell(PrevCell);
+				}
+			}
+		}
+	}
 }
 

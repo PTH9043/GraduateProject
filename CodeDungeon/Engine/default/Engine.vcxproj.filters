@@ -436,6 +436,9 @@
     <Filter Include="05.Actor\01.Pawn\Item\Equip\Defensive">
       <UniqueIdentifier>{361b8236-ad3c-4587-b0c4-96e161645e27}</UniqueIdentifier>
     </Filter>
+    <Filter Include="20.Network\NetworkQueryProcessing">
+      <UniqueIdentifier>{25550299-81de-4892-a2c7-0d4baecc81e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -830,6 +833,9 @@
     </ClCompile>
     <ClCompile Include="..\private\UInputReceiver.cpp">
       <Filter>06.Component\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UNetworkQueryProcessing.cpp">
+      <Filter>20.Network\NetworkQueryProcessing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1258,6 +1264,9 @@
     </ClInclude>
     <ClInclude Include="..\public\UInputReceiver.h">
       <Filter>06.Component\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UNetworkQueryProcessing.h">
+      <Filter>20.Network\NetworkQueryProcessing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

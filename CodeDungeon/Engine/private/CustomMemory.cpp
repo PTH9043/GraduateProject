@@ -73,13 +73,13 @@ namespace Engine {
 		if (AllocateSize > MAX_ALLOC_SIZE)
 		{
 			Header = reinterpret_cast<UMemoryHeader*>(::malloc(AllocateSize));
-			::memset(Header, 0, AllocateSize);
 		}
 		else
 		{
 			// 메모리 풀에서 꺼내온다. 
 			Header = m_PoolTable[AllocateSize]->Pop();
 		}
+		::memset(Header, 0, AllocateSize);
 		return UMemoryHeader::AttachHeader(Header, AllocateSize);
 	}
 

@@ -10,9 +10,9 @@ class UActor;
 using TOTALBUFFER = ARRAY<_char, MAX_PROCESSBUF_LENGTH>;
 using NETWORKACTORCONTAINER = UNORMAP<_int, SHPTR<UActor>>;
 using NETWORKINITDATACONTAINER = UNORMAP<_int, NETWORKRECEIVEINITDATA>;
-using NETWORKQUERY = CONQUEUE<UProcessedData>;
 
 class UActor;
+class UNetworkQueryProcessing;
 /*
 @ Date: 2024-02-03,  Writer: ¹ÚÅÂÇö
 @ Explain
@@ -27,19 +27,22 @@ public:
 	void SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize);
 	virtual void MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer) PURE;
 	void AddNetworkInitData(_int _NetworkID, const NETWORKRECEIVEINITDATA& _NetworkInitData);
-	virtual void CreateNetworkActor(_int _NetworkID, const NETWORKRECEIVEINITDATA& _networkInitData) PURE;
+	void AddCreatedNetworkActor(_int _NetworkID, CSHPTRREF<UActor> _spActor);
+
+	void InsertNetworkInitDataInQuery(const NETWORKRECEIVEINITDATA& _networkInitData);
 	SHPTR<UActor> FindNetworkActor(const _int _NetworkID);
-	void InsertNetworkActorContainer(_int _NetworkID, CSHPTRREF<UActor> _spActor);
 	void SendProcessPacket(const UProcessedData& _ProcceedData);
-	void ProcessedNetworkQuery();
+	void InsertNetworkProcessInQuery(UProcessedData&& _data);
 public: /* get set */
 	void SetSceneID(const _int _iSceneID) { this->m_iSceneID = _iSceneID; }
+	void SetNetworkQueryProcessing(CSHPTRREF<UNetworkQueryProcessing> _spNetworkQueryProcessing) { this->m_spNetworkQueryProcessing = _spNetworkQueryProcessing; }
 
 	const _llong GetNetworkOwnerID() const { return m_llNetworkOwnerID; }
+	const NETWORKACTORCONTAINER& GetNetworkActorContainer() const { return m_NetworkActorContainer; }
+	SHPTR<UNetworkQueryProcessing> GetNetworkQueryProcessing() { return m_spNetworkQueryProcessing.load(); }
 protected:
 	void ServerTick();
 	virtual void NativePacket() PURE;
-	void InsertProcessedDataInQuery(const UProcessedData& _ProcessedData);
 	void CombineRecvPacket(UOverExp* _pOverExp, _llong _numBytes);
 	virtual void ProcessPacket(_char* _pPacket, PACKETHEAD _PacketHead) PURE;
 	void RecvTcpPacket();
@@ -61,7 +64,6 @@ protected: /* get set */
 	const SOCKET& GetClientTcpSocket() const { return m_ClientTcpSocket; }
 	const SOCKET& GetClientUdpSocket() const { return m_ClientUdpSocket; }
 	CSHPTRREF<UNetworkAddress> GetNetworkAddress() const { return m_spNetworkAddress; }
-	const NETWORKACTORCONTAINER& GetNetworkActorContainer() const { return m_NetworkActorContainer; }
 	const NETWORKINITDATACONTAINER& GetNetworkInitDataContainer() const { return m_NetworkInitDataContainer; }
 	const _int GetSceneID() const { return m_iSceneID; }
 
@@ -71,22 +73,23 @@ private:
 private:
 	virtual void Free() override;
 private:
-	_bool													m_isNetworkTickRunning;
-	HANDLE												m_IocpHandle;
-	UOverExp											m_RecvTcpOverExp;
-	SOCKET												m_ClientTcpSocket;
-	SOCKET												m_ClientUdpSocket;
-	WSADATA											m_WsaData{};
+	_bool																							m_isNetworkTickRunning;
+	HANDLE																						m_IocpHandle;
+	UOverExp																					m_RecvTcpOverExp;
+	SOCKET																						m_ClientTcpSocket;
+	SOCKET																						m_ClientUdpSocket;
+	WSADATA																					m_WsaData{};
 
-	TOTALBUFFER									m_TcpTotalBuffer;
-	_llong													m_RemainBufferLength;
-	_llong													m_llNetworkOwnerID;
+	TOTALBUFFER																			m_TcpTotalBuffer;
+	_llong																							m_CurrentBufferLength;
+	_llong																							m_RemainBufferLength;
+	_llong																							m_llNetworkOwnerID;
 
-	SHPTR< UNetworkAddress>			m_spNetworkAddress;
-	NETWORKACTORCONTAINER		m_NetworkActorContainer;
-	NETWORKINITDATACONTAINER	m_NetworkInitDataContainer;
-	NETWORKQUERY								m_NetworkQuery;
-	_int														m_iSceneID;
-};
+	SHPTR< UNetworkAddress>													m_spNetworkAddress;
+	NETWORKACTORCONTAINER												m_NetworkActorContainer;
+	NETWORKINITDATACONTAINER											m_NetworkInitDataContainer;
+	std::atomic<SHPTR<UNetworkQueryProcessing>>			m_spNetworkQueryProcessing;
+	_int																								m_iSceneID;
+};	
 
 END

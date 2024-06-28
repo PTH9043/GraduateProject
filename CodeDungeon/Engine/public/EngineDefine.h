@@ -124,6 +124,9 @@ namespace Engine {
 		static constexpr _uint				 g_maxRegisterCnt{ REGISTER_CNT };
 		static const _tchar*					 g_OutFolderExtension{ L".bin" };
 	}
+
+	// Thread Local ID
+	static thread_local int						g_threadID = 0;
 }
 
 #define BASIC_SCALE												Engine::DXVALUE::g_BasicScale

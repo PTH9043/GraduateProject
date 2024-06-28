@@ -20,7 +20,8 @@ UTransform::UTransform(CSHPTRREF<UDevice> _spDevice) :
 	m_spParentsTransform{ nullptr },
 	m_vVelocity{ 0.0f, 0.0f, 0.0f },
 	m_vJumpvelocity{ 0.0f, 12.f, 0.0f},
-	m_vGravity{ 0.0f, -9.81f, 0.0f }
+	m_vGravity{ 0.0f, -9.81f, 0.0f },
+	m_vCurrentRotationQut{}
 {
 }
 
@@ -39,7 +40,8 @@ UTransform::UTransform(const UTransform& _rhs) :
 	m_spParentsTransform{ nullptr },
 	m_vVelocity{ _rhs.m_vVelocity }, 
 	m_vJumpvelocity{ 0.0f, 12.f, 0.0f },
-	m_vGravity{ 0.0f, -9.81f, 0.0f }
+	m_vGravity{ 0.0f, -9.81f, 0.0f },
+	m_vCurrentRotationQut{}
 {
 }
 
@@ -297,6 +299,8 @@ void UTransform::RotateFix(const _float3& _vStandardAngle, const _float _fTurnAn
 	SetRight(DirectX::XMVector3TransformNormal(_float3{ 1.f, 0.f, 0.f } *m_vScale.x, RotationMatrix));
 	SetUp(DirectX::XMVector3TransformNormal(_float3{ 0.f, 1.f, 0.f } *m_vScale.y, RotationMatrix));
 	SetLook(DirectX::XMVector3TransformNormal(_float3{ 0.f, 0.f, 1.f } *m_vScale.z, RotationMatrix));
+
+	m_vCurrentRotationQut = DirectX::XMQuaternionRotationMatrix(GetWorldMatrix());
 }
 
 void UTransform::RotateFix(const _float3& _vAngle)
@@ -312,6 +316,8 @@ void UTransform::RotateFix(const _float3& _vAngle)
 	SetRight(DirectX::XMVector3TransformNormal(_float3{ 1.f, 0.f, 0.f } *m_vScale.x, RotationMatrix));
 	SetUp(DirectX::XMVector3TransformNormal(_float3{ 0.f, 1.f, 0.f } *m_vScale.y, RotationMatrix));
 	SetLook(DirectX::XMVector3TransformNormal(_float3{ 0.f, 0.f, 1.f } *m_vScale.z, RotationMatrix));
+
+	m_vCurrentRotationQut = DirectX::XMQuaternionRotationMatrix(GetWorldMatrix());
 }
 
 void UTransform::RotateFix(const _float4& _vQuaternion)
@@ -323,6 +329,8 @@ void UTransform::RotateFix(const _float4& _vQuaternion)
 	SetRight(DirectX::XMVector3TransformNormal(_float3{ 1.f, 0.f, 0.f } *m_vScale.x, RotationMatrix));
 	SetUp(DirectX::XMVector3TransformNormal(_float3{ 0.f, 1.f, 0.f } *m_vScale.y, RotationMatrix));
 	SetLook(DirectX::XMVector3TransformNormal(_float3{ 0.f, 0.f, 1.f } *m_vScale.z, RotationMatrix));
+
+	m_vCurrentRotationQut = DirectX::XMQuaternionRotationMatrix(GetWorldMatrix());
 }
 
 void UTransform::RotateTurn(const _float3& _vAxis, const _float& _fAngleSpeed, const _double& _dTimeDelta)
@@ -333,6 +341,8 @@ void UTransform::RotateTurn(const _float3& _vAxis, const _float& _fAngleSpeed, c
 	SetRight(DirectX::XMVector3TransformNormal(GetRight(), RotationMatrix));
 	SetUp(DirectX::XMVector3TransformNormal(GetUp(), RotationMatrix));
 	SetLook(DirectX::XMVector3TransformNormal(GetLook(), RotationMatrix));
+
+	m_vCurrentRotationQut = DirectX::XMQuaternionRotationMatrix(GetWorldMatrix());
 }
 
 void UTransform::RotateTurn(const _float3& _vAxis, const _float& _fAngle)
@@ -343,6 +353,8 @@ void UTransform::RotateTurn(const _float3& _vAxis, const _float& _fAngle)
 	SetRight(DirectX::XMVector3TransformNormal(GetRight(), RotationMatrix));
 	SetUp(DirectX::XMVector3TransformNormal(GetUp(), RotationMatrix));
 	SetLook(DirectX::XMVector3TransformNormal(GetLook(), RotationMatrix));
+
+	m_vCurrentRotationQut = DirectX::XMQuaternionRotationMatrix(GetWorldMatrix());
 }
 
 void UTransform::RotateTurn(const _float4& _vQuaternion)
@@ -354,6 +366,8 @@ void UTransform::RotateTurn(const _float4& _vQuaternion)
 	SetRight(DirectX::XMVector3TransformNormal(GetRight(), RotationMatrix));
 	SetUp(DirectX::XMVector3TransformNormal(GetUp(), RotationMatrix));
 	SetLook(DirectX::XMVector3TransformNormal(GetLook(), RotationMatrix));
+
+	m_vCurrentRotationQut = DirectX::XMQuaternionRotationMatrix(GetWorldMatrix());
 }
 
 void UTransform::RotateTurn(const _float3& _vAngle)
@@ -369,6 +383,8 @@ void UTransform::RotateTurn(const _float3& _vAngle)
 	SetRight(DirectX::XMVector3TransformNormal(GetRight(), RotationMatrix));
 	SetUp(DirectX::XMVector3TransformNormal(GetUp(), RotationMatrix));
 	SetLook(DirectX::XMVector3TransformNormal(GetLook(), RotationMatrix));
+
+	m_vCurrentRotationQut = DirectX::XMQuaternionRotationMatrix(GetWorldMatrix());
 }
 
 void UTransform::SetDirection(const _float3& direction)
@@ -393,6 +409,8 @@ void UTransform::SetDirection(const _float3& direction)
 	SetRight(DirectX::XMVector3TransformNormal(_float3::Right * m_vScale.x, RotationMatrix));
 	SetUp(DirectX::XMVector3TransformNormal(_float3::Up * m_vScale.y, RotationMatrix));
 	SetLook(DirectX::XMVector3TransformNormal(_float3::Forward * m_vScale.z, RotationMatrix));
+
+	m_vCurrentRotationQut = DirectX::XMQuaternionRotationMatrix(GetWorldMatrix());
 }
 
 void UTransform::SetDirection(const _float3& targetDirection, float deltaTime, float rotationSpeed)
@@ -424,6 +442,8 @@ void UTransform::SetDirection(const _float3& targetDirection, float deltaTime, f
 	SetRight(DirectX::XMVector3TransformNormal(_float3::Right * m_vScale.x, RotationMatrix));
 	SetUp(DirectX::XMVector3TransformNormal(_float3::Up * m_vScale.y, RotationMatrix));
 	SetLook(DirectX::XMVector3TransformNormal(_float3::Forward * m_vScale.z, RotationMatrix));
+
+	m_vCurrentRotationQut = DirectX::XMQuaternionRotationMatrix(GetWorldMatrix());
 }
 
 void UTransform::SetDirectionFixedUp(const _float3& direction)
@@ -447,6 +467,8 @@ void UTransform::SetDirectionFixedUp(const _float3& direction)
 	SetRight(DirectX::XMVector3TransformNormal(_float3::Right * m_vScale.x, RotationMatrix));
 	SetUp(DirectX::XMVector3TransformNormal(_float3::Up * m_vScale.y, RotationMatrix));
 	SetLook(DirectX::XMVector3TransformNormal(_float3::Forward * m_vScale.z, RotationMatrix));
+
+	m_vCurrentRotationQut = DirectX::XMQuaternionRotationMatrix(GetWorldMatrix());
 }
 
 void UTransform::SetDirectionFixedUp(const _float3& targetDirection, float deltaTime, float rotationSpeed)
@@ -478,6 +500,8 @@ void UTransform::SetDirectionFixedUp(const _float3& targetDirection, float delta
 	SetRight(DirectX::XMVector3TransformNormal(_float3::Right * m_vScale.x, RotationMatrix));
 	SetUp(DirectX::XMVector3TransformNormal(_float3::Up * m_vScale.y, RotationMatrix));
 	SetLook(DirectX::XMVector3TransformNormal(_float3::Forward * m_vScale.z, RotationMatrix));
+
+	m_vCurrentRotationQut = DirectX::XMQuaternionRotationMatrix(GetWorldMatrix());
 }
 
 
@@ -503,6 +527,8 @@ void UTransform::LookAt(const _float3& _vTargetPos)
 	SetRight(DirectX::XMVector3TransformNormal(_float3::Right * m_vScale.x, RotationMatrix));
 	SetUp(DirectX::XMVector3TransformNormal(_float3::Up * m_vScale.y, RotationMatrix));
 	SetLook(DirectX::XMVector3TransformNormal(_float3::Forward * m_vScale.z, RotationMatrix));
+
+	m_vCurrentRotationQut = DirectX::XMQuaternionRotationMatrix(GetWorldMatrix());
 }
 
 void UTransform::LookAtWithFixedUp(const _float3& _vTargetPos)
@@ -516,6 +542,8 @@ void UTransform::LookAtWithFixedUp(const _float3& _vTargetPos)
 	SetRight(vRight* m_vScale.x);
 	SetUp(FixedUp* m_vScale.y);
 	SetLook(vLook* m_vScale.z);
+
+	m_vCurrentRotationQut = DirectX::XMQuaternionRotationMatrix(GetWorldMatrix());
 }
 
 void UTransform::LookAtWithFixedUp(const _float3& _vTargetPos, float DeltaTime, float RotationSpeed)
@@ -549,6 +577,8 @@ void UTransform::LookAtWithFixedUp(const _float3& _vTargetPos, float DeltaTime, 
 		SetUp(FixedUp * m_vScale.y);
 		SetLook(NewLook * m_vScale.z);
 	}
+
+	m_vCurrentRotationQut = DirectX::XMQuaternionRotationMatrix(GetWorldMatrix());
 }
 
 const _float UTransform::ComputeDistance(const _float3& _vPos)
@@ -609,6 +639,13 @@ void UTransform::JumpMovement(const _double& _deltaTime)
 	_float3 vPosition = GetPos();
 	vPosition += m_vJumpvelocity * static_cast<_float>(_deltaTime);
 	SetPos(vPosition);
+}
+
+_float3 UTransform::GetRotationValue()
+{
+	static DirectX::PTH::OUTMATRIX matrix;
+	matrix = m_mWorldMatrix.Get_OutMatrix();
+	return matrix.vRot;
 }
 
 void UTransform::GravityFall(const _double& _deltaTime)

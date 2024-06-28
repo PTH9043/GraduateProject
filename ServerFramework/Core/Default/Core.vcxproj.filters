@@ -142,6 +142,12 @@
     <Filter Include="03.Network\AGameObject\Session">
       <UniqueIdentifier>{113fff01-053a-454f-832b-fb5e44a5bd28}</UniqueIdentifier>
     </Filter>
+    <Filter Include="08.Animation">
+      <UniqueIdentifier>{99d09ad4-3f47-40f1-8629-d64e1ef74042}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="08.Animation\Event">
+      <UniqueIdentifier>{68732115-3168-41e7-aea6-b5ccf54b3dae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ACoreBase.h">
@@ -297,6 +303,12 @@
     <ClInclude Include="..\Public\AGameObject.h">
       <Filter>03.Network\AGameObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\AAnimEvent.h">
+      <Filter>08.Animation\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AAnimation.h">
+      <Filter>08.Animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\ACoreBase.cpp">
@@ -418,6 +430,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\AGameObject.cpp">
       <Filter>03.Network\AGameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AAnimEvent.cpp">
+      <Filter>08.Animation\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AAnimation.cpp">
+      <Filter>08.Animation</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

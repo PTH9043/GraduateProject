@@ -18,6 +18,7 @@
 #include "UAudioSystemManager.h"
 #include "UCharacterManager.h"
 #include "UMaterialManager.h"
+#include "UNetworkQueryProcessing.h"
 
 #include "URenderer.h"
 
@@ -109,6 +110,8 @@ UGameInstance::~UGameInstance()
 
 void UGameInstance::Free()
 {
+	m_spNetworkQueryProcessing.reset();
+	m_spNetworkBaseController.reset();
 	m_isGamming = false;
 	//ClearOnceTypeData();
 	m_spRenderer->ClearAllData();
@@ -191,9 +194,10 @@ void UGameInstance::OtherFrame(const _double& _dTimeDelta, const WPARAM& _wParam
 
 void UGameInstance::AwakeTick()
 {
-	if (nullptr != m_spNetworkBaseController)
+	if (nullptr != m_spNetworkQueryProcessing)
 	{
-		m_spNetworkBaseController->ProcessedNetworkQuery();
+		m_spNetworkQueryProcessing->ProcessNetworkInitData();
+		m_spNetworkQueryProcessing->ProcessQueryData();
 	}
 
 	m_spInputManager->KeyTick();
@@ -205,6 +209,10 @@ void UGameInstance::AwakeTick()
 
 void UGameInstance::Tick(const _double& _dTimeDelta)
 {
+	if (nullptr != m_spNetworkQueryProcessing)
+	{
+		m_spNetworkQueryProcessing->ProcessQueryData();
+	}
 	m_spRenderer->Tick(_dTimeDelta);
 	m_spSceneManager->Tick(_dTimeDelta);
 	m_spActorManager->Tick(_dTimeDelta);
@@ -212,9 +220,12 @@ void UGameInstance::Tick(const _double& _dTimeDelta)
 
 void UGameInstance::LateTick(const _double& _dTimeDelta)
 {
+	if (nullptr != m_spNetworkQueryProcessing)
+	{
+		m_spNetworkQueryProcessing->ProcessQueryData();
+	}
 	m_spSceneManager->LateTick(_dTimeDelta);
 	m_spActorManager->LateTick(_dTimeDelta);
-
 	m_spCharacterManager->TickCollider(_dTimeDelta);
 }
 
@@ -912,10 +923,10 @@ NetworkManager
 ==================================================
 */
 
-
-void UGameInstance::StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController)
+void UGameInstance::StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController, CSHPTRREF<UNetworkQueryProcessing> _spNetworkQueryProcessing)
 {
 	m_spNetworkBaseController = _spNetworkBaseController;
+	m_spNetworkQueryProcessing = _spNetworkQueryProcessing;
 }
 
 void UGameInstance::MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer)

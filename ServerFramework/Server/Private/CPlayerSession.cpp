@@ -3,6 +3,7 @@
 #include "ACoreInstance.h"
 #include "AServerService.h"
 #include "ATransform.h"
+#include "ACell.h"
 
 namespace Server {
 
@@ -23,10 +24,14 @@ namespace Server {
 			PROTOFUNC::MakeScConnectSuccess(OUT & scConnectSuccess, GetSessionID(), m_iStartCellIndex, TAG_MAINPLAYER);
 		}
 		CombineProto(REF_OUT m_CopyBuffer, REF_OUT m_CopyPacketHead, scConnectSuccess, TAG_SC::TAG_SC_CONNECTSUCCESS);
+
 		SendData(&m_CopyBuffer[0], m_CopyPacketHead);
 		SetGameObjectType(TAG_CHAR::TAG_MAINPLAYER);
 		SetMoveSpeed(10.f);
 		SetRunSpeed(30.f);
+		SetCurOnCellIndex(m_iStartCellIndex);
+		SHPTR<ACell> spCell = GetCoreInstance()->FindCell(m_iStartCellIndex);
+		GetTransform()->SetPos(spCell->GetCenterPos());
 		return true;
 	}
 
@@ -91,7 +96,7 @@ namespace Server {
 					// Make Sc Login 
 					SC_OTHERCLIENTLOGIN scOtherLogin;
 					// 다른 클라이언트들에게 해당 플레이어가 접속했음을 알림
-					PROTOFUNC::MakeScOtherClientLogin(OUT  &scOtherLogin, Login.id(), m_iStartCellIndex, TAG_CHAR::TAG_OTHERPLAYER);
+					PROTOFUNC::MakeScOtherClientLogin(OUT  &scOtherLogin, GetSessionID(), m_iStartCellIndex, TAG_CHAR::TAG_OTHERPLAYER);
 					CombineProto(REF_OUT m_CopyBuffer, REF_OUT m_CopyPacketHead, scOtherLogin, TAG_SC::TAG_SC_OTHERCLIENTLOGIN);
 					spCoreInstance->BroadCastMessageExcludingSession(GetSessionID(), &m_CopyBuffer[0], m_CopyPacketHead);
 
@@ -143,26 +148,53 @@ namespace Server {
 			break;
 			case TAG_CS::TAG_CS_MOVE:
 			{
-				CS_MOVE csMove;
+				CHARMOVE csMove;
 				csMove.ParseFromArray(_pPacket, _PacketHead.PacketSize);
-
-
+				Vector3 vPos = Vector3(csMove.movex(), csMove.movey(), csMove.movez());
+				Vector4 vRotate = Vector4(csMove.rotatex(), csMove.rotatey(), csMove.rotatez(), csMove.rotatew());
+				SHPTR<ACell> spCurrentCell{ nullptr };
+				_bool IsMove = false;
+				if (csMove.id() == GetSessionID())
+				{
+					IsMove = spCoreInstance->IsMove(GetCurOnCellIndex(), vPos, REF_OUT spCurrentCell);
+					if (true == IsMove)
+					{
+						GetTransform()->SetPos(vPos);
+						GetTransform()->RotateFix(vRotate);
+						SetCurOnCellIndex(spCurrentCell->GetIndex());
+					}
+					else
+					{
+						vPos = GetTransform()->GetPos();
+					}
+				}
+				VECTOR3 vPosition;
+				VECTOR4 vRotation;
+				PROTOFUNC::MakeVector3(OUT & vPosition, vPos.x, vPos.y, vPos.z);
+				PROTOFUNC::MakeVector4(OUT & vRotation, vRotate.x, vRotate.y, vRotate.z, vRotate.w);
+				if(false == IsMove)
+				{
+					SELFPLAYERMOVE selfPlayerMove;
+					PROTOFUNC::MakeSelfPlayerMove(OUT & selfPlayerMove,  GetSessionID(), vPosition);
+					SendProtoData(m_CopyBuffer, selfPlayerMove, TAG_SC::TAG_SC_SELFPLAYERMOVE);
+				}
+				{
+					PROTOFUNC::MakeCharMove(OUT & csMove, GetSessionID(), vPosition, vRotation, csMove.jumpingstate());
+					CombineProto(REF_OUT m_CopyBuffer, REF_OUT m_CopyPacketHead, csMove, TAG_SC::TAG_SC_CHARMOVE);
+					spCoreInstance->BroadCastMessageExcludingSession(GetSessionID(), &m_CopyBuffer[0], m_CopyPacketHead);
+				}
 			}
 			break;
 			case TAG_CS::TAG_CS_PLAYERSTATE:
 			{
-				CS_PLAYERSTATE csPlayerState;
-				csPlayerState.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+				PLAYERSTATE PlayerState;
+				PlayerState.ParseFromArray(_pPacket, _PacketHead.PacketSize);
 
-				SC_PLAYERSTATE scPlayerState;
-				PROTOFUNC::MakeScPlayerState(OUT & scPlayerState, GetSessionID(),
-					csPlayerState.ifattack(), csPlayerState.jumpingstate(), csPlayerState.animstate(),
-					csPlayerState.movespeed(), csPlayerState.triggername());
-
-				CombineProto(REF_OUT m_CopyBuffer, REF_OUT m_CopyPacketHead, scPlayerState, TAG_SC::TAG_SC_PLAYERSTATE);
-				m_CopyPacketHead.PacketSize += scPlayerState.triggername().size();
-
-				spCoreInstance->BroadCastMessage(&m_CopyBuffer[0], m_CopyPacketHead);
+				CombineProto(REF_OUT m_CopyBuffer, REF_OUT m_CopyPacketHead, PlayerState, TAG_SC::TAG_SC_PLAYERSTATE);
+				m_CopyPacketHead.PacketSize = _PacketHead.PacketSize;
+		//		std::cout << PlayerState.triggername() << "\n";
+				spCoreInstance->BroadCastMessageExcludingSession(PlayerState.id(), &m_CopyBuffer[0], m_CopyPacketHead);
+	//		spCoreInstance->BroadCastMessage(&m_CopyBuffer[0], m_CopyPacketHead);
 			}
 			break;
 		}

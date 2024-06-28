@@ -32,8 +32,8 @@ public:
 	_bool NativeConstruct(const ARRAY<Vector3, POINT_END>& _Points, const _int _iIndex);
 	_bool NativeConstruct(const CELLDECS& _tCellDesc);
 	_bool IsIn(const Vector3& _vPos, REF_IN _int& _NeighborIndex);
-	_bool UpdateNeighbor(SHPTR<ACell> _spCell, POINT _Point1, POINT _Point2, LINE _Line);
-	_bool IsCompareCell(SHPTR<ACell> _spCell, POINT _Point1, POINT _Point2);
+	_bool IsComparePoints(const Vector3& _vPointA, const Vector3& _vPointB);
+	_bool IsComparePoint(CSHPTRREF<ACell> _pCell);
 	_float ComputeHeight(const Vector3& _vPosition);
 
 	Vector3 GetClosestPointOnEdges(const Vector3& position) const;
@@ -56,6 +56,8 @@ public: /* Get Set */
 	// Index Return
 	const ARRAY<_int, LINE_END>& GetNeightborIndexes() const { return m_arrNeighbors; }
 	const ARRAY<WKPTR<ACell>, POINT_END>& GetNeighborCells() const { return m_arrNeighborCells; }
+
+	void SetNeighbor(const LINE& _eLine, SHPTR<ACell> _spCell);
 private:
 	void ResortPoints();
 	void CalculateCrossResult(ARRAY<Vector3, POINT_END>& _Crosses);

@@ -17,6 +17,7 @@
 #include "UVIBufferTrail.h"
 #include "CModelObjects.h"
 #include "UProcessedData.h"
+#include "UMethod.h"
 
 
 CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
@@ -47,11 +48,6 @@ CWarriorPlayer::CWarriorPlayer(const CWarriorPlayer& _rhs) :
 
 void CWarriorPlayer::Free()
 {
-#ifdef _ENABLE_PROTOBUFF
-
-
-
-#endif
 }
 
 HRESULT CWarriorPlayer::NativeConstruct()
@@ -151,13 +147,26 @@ void CWarriorPlayer::ReceiveNetworkProcessData(const UProcessedData& _ProcessDat
 	{
 	case TAG_SC_PLAYERSTATE:
 	{
-		SC_PLAYERSTATE pPlayerData;
-		pPlayerData.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
-
-		IfAttack(pPlayerData.ifattack());
-		SetJumpingState(pPlayerData.jumpingstate());
-
-		GetAnimationController()->ReceiveNetworkProcessData(&pPlayerData);
+		PLAYERSTATE PlayerState;
+		PlayerState.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
+		IfAttack(PlayerState.ifattack());
+		GetAnimationController()->ReceiveNetworkProcessData(&PlayerState);
+	}
+	break;
+	case TAG_SC_SELFPLAYERMOVE:
+	{
+		SELFPLAYERMOVE selfPlayerMove;
+		selfPlayerMove.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
+		// SelfPlayer 
+		GetTransform()->SetPos(_float3{ selfPlayerMove.movex(), selfPlayerMove.movey(), selfPlayerMove.movez() });
+	}
+	break;
+	case TAG_SC_CHARMOVE:
+	{
+		CHARMOVE charMove;
+		charMove.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
+	//	GetTransform()->SetPos(_float3{ charMove.movex(),	charMove.movey(), charMove.movez() });
+		GetTransform()->RotateFix(_float4{ charMove.rotatex(), charMove.rotatey(),charMove.rotatez(), charMove.rotatew()});
 	}
 	break;
 	}
@@ -166,44 +175,26 @@ void CWarriorPlayer::ReceiveNetworkProcessData(const UProcessedData& _ProcessDat
 
 void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 {
-
 	__super::TickActive(_dTimeDelta);
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	if (true == spGameInstance->IsMouseInWindowSize())
+	GetAnimationController()->Tick(_dTimeDelta);
+	_long		MouseMove = GetMouseMove();
+	if (MouseMove)
 	{
-		GetAnimationController()->Tick(_dTimeDelta);
-		_long		MouseMove = GetMouseMove();
-		if (MouseMove)
-		{
-			GetTransform()->RotateTurn(_float3(0.f, 1.f, 0.f), MouseMove * 5.f, _dTimeDelta);
-		}
+		GetTransform()->RotateTurn(_float3(0.f, 1.f, 0.f), MouseMove * 5.f, _dTimeDelta);
 	}
-	
-
-
 	_int AnimState = GetAnimationController()->GetAnimState();
 	SHPTR<UCollider> ps = GetAnimModel()->BringAttackCollider(UCollider::TYPE_OBB);
-
 	if (ps) {
 		SHPTR<DirectX::BoundingOrientedBox> OBB = ps->GetOBB();
 
 		_float3 plusPoint = ps->GetHeightAdjustedPointFromCenter(OBB, false);
 		_float3 minusPoint = ps->GetHeightAdjustedPointFromCenter(OBB, true);
-
 		_float4x4 AnimTransform = ps->GetTransformMatrix();
-
-
 		m_spTrail->SetRenderingTrail(isAttack);
-
-
 		m_spTrail->AddTrail(plusPoint, minusPoint);
 	}
-	
-	
-	GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
-
-
 	m_spParticle->SetActive(true);
 
 	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_RUN)  {//|| AnimState == CWarriorAnimController::ANIM_ATTACK|| AnimState == CWarriorAnimController::ANIM_COMBO
@@ -228,6 +219,22 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	//SetCursorPos(1000, 400);
 	}
 	UpdateCollision();
+	JumpState(_dTimeDelta);
+
+#ifdef _ENABLE_PROTOBUFF
+	_float3 vCharacterPos = GetTransform()->GetPos();
+	_float4 vRotation = GetTransform()->GetRotation();
+	VECTOR3 vMove;
+	VECTOR4 vRotate;
+	{
+		PROTOFUNC::MakeVector3(OUT & vMove, vCharacterPos.x, vCharacterPos.y, vCharacterPos.z);
+		PROTOFUNC::MakeVector4(OUT & vRotate, vRotation.x, vRotation.y, vRotation.z, vRotation.w);
+	}
+	CHARMOVE charMove;
+	PROTOFUNC::MakeCharMove(OUT & charMove, spGameInstance->GetNetworkOwnerID(),
+		vMove, vRotate, GetJumpingState());
+	spGameInstance->SendProcessPacket(UProcessedData(charMove, TAG_CS_MOVE));
+#endif
 }
 
 void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
@@ -236,10 +243,6 @@ void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 	_float3 direction(0.0f, 0.0f, 0.0f);
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	if (GetCollisionState())
-	{
-//		GetTransform()->SetPos(GetPrevPos());
-	}
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
 	FollowCameraMove(_float3{ 0.f, 20.f, -40.f }, _dTimeDelta);
 }

@@ -52,7 +52,6 @@ UOverExp
 class UOverExp {
 public:
 	UOverExp(COMP_TYPE _type = OP_TCP_RECV);
-	UOverExp(_char* _Packet, const int _Size, COMP_TYPE _type = OP_TCP_SEND);
 	UOverExp(_char* _pPacket, _short _PacketType, _short _PacketSize, COMP_TYPE _type = OP_TCP_SEND);
 public:
 	void RecvReset(COMP_TYPE _type = OP_TCP_RECV);

@@ -13,12 +13,77 @@ float y = 2;
 float z = 3;
 }
 
+message VECTOR4
+{
+	float x = 1;
+	float y = 2;
+	float z = 3;
+	float w = 4;
+}
+
 message EQINFO
 {
 	float gold = 1;
 	float increasePower = 2;
 	float increaseDefensive = 3;
 	float increaseHp = 4;
+}
+
+ /*
+WarriorPlayerState
+*/
+message PLAYERSTATE
+{
+	int64			id = 1;
+	bool				ifattack = 2;
+	int64			animstate = 3;
+	int64			movespeed = 4;
+	double		animationTime = 5;
+	int64			animationIndex = 6;
+}
+
+message PLAYERANIMSTATE
+{
+	int64			id = 1;
+	int64			animstate = 2;
+	bool				ifattack = 3;
+	bool				isRunshift = 4;
+    bool				isMoveFront = 5;
+    bool				isMoveBack = 6;
+    bool				isMoveLeft = 7;
+    bool				isMoveRight = 8;
+    bool				isWAttack = 9;
+    bool				isSAttack = 10;
+    bool				isRAttack = 11;
+    bool				isCombo = 12;
+    bool				isRoll = 13;
+    bool				isHit = 14;
+    bool				isJump = 15;
+	int64			wComboStack = 16;
+	int64			sComboStack = 17;
+}
+
+// 자기 자신이 움직였을 때의 패킷
+message SELFPLAYERMOVE
+{
+	int64 id = 1;
+	float moveX = 2;
+	float moveY = 3;
+	float moveZ = 4;
+}
+
+// 움직였을 때 전송하는 함수 
+message CHARMOVE
+{
+	int64 id = 1;
+	float moveX = 2;
+	float moveY = 3;
+	float moveZ = 4;
+	float rotateX = 5;
+	float rotateY = 6;
+	float rotateZ = 7;
+	float rotateW = 8;
+	bool  jumpingState = 9;
 }
 
 /*
@@ -57,26 +122,6 @@ message SC_MOVEFAILED
 	VECTOR3 prevPos = 3;
 }
 
-message SC_PLAYERSTATE
-{
-	int64			id = 1;
-	bool				ifattack = 2;
-	bool				jumpingstate = 3;
-	int64			animstate = 4;
-	int64			movespeed = 5;
-	byte			triggername = 6;
-}
-
-/*
-다른 녀석들이 움직였음
-*/
-message SC_MOVESTATE 
-{
-	int64 id = 1;
-	VECTOR3 movePos = 2;
-	VECTOR3 rotate = 3;
-}
-
 /*
 다른 녀석들이 시야에 보인다. 
 */
@@ -88,7 +133,6 @@ message SC_MOVESTATE
 	int64 cellindex = 3;
 	int64 type = 4;
  }
-
 /*
 ======================================
 Client
@@ -100,28 +144,6 @@ message CS_LOGIN
 {
 	int64 id = 1;
 }
-
-// 움직였을 때 전송하는 함수 
-message CS_MOVE 
-{
-	int64 id = 1;
-	VECTOR3 movePos = 2;
-	VECTOR3 rotate = 3;
-}
-
-/*
-WarriorPlayerState
-*/
-message CS_PLAYERSTATE
-{
-	int64			id = 1;
-	bool				ifattack = 2;
-	bool				jumpingstate = 3;
-	int64			animstate = 4;
-	int64			movespeed = 5;
-	string			triggername = 6;
-}
-
 
 // 공격했을 때 보내는 함수
 message CS_ATTACK

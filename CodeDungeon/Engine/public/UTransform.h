@@ -16,7 +16,7 @@ public:
 	const _float GetXAngle() const;
 	const _float GetYAngle() const;
 	const _float GetZAngle() const;
-	const _quaternion& GetRotation() const { return m_vQuaternion; }
+	const _quaternion& GetRotation() const { return m_vCurrentRotationQut; }
 	const _float4x4 GetWorldMatrixTP() { TransformUpdate();  return XMMatrixTranspose(XMLoadFloat4x4(&m_mChangeWorldMatrix)); }
 	const _float4x4 GetWorldMatrixInv() { TransformUpdate();   return XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_mChangeWorldMatrix)); }
 	const _float4x4& GetWorldMatrix() const { return m_mWorldMatrix; }
@@ -120,6 +120,7 @@ public:
 
 	void DisableJump();
 	void JumpMovement(const _double& _deltaTime);
+	_float3 GetRotationValue();
 #ifdef _USE_IMGUI
 public:
 	virtual void ShowObjectInfo() override;
@@ -132,6 +133,7 @@ private:
 	_float4x4												m_mWorldMatrix;
 	_float4x4												m_mChangeWorldMatrix;
 	_quaternion											m_vQuaternion;
+	_quaternion											m_vCurrentRotationQut;
 	_float3													m_vScale;
 	// Parents Location
 	_bool														m_isNotApplyRotate;
@@ -144,7 +146,6 @@ private:
 	//2024-05-24 이성현 중력 구현
     _float3 m_vVelocity; 
 	const _float3 m_vGravity;
-
 	_float3 m_vJumpvelocity;
 };
 

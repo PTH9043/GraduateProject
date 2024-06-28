@@ -27,6 +27,7 @@ class UAudioSystemManager;
 class UCharacterManager;
 class UMaterialManager;
 class UAnimEventManager;
+class UNetworkQueryProcessing;
 
 class URenderer;
 class UCollider;
@@ -263,7 +264,7 @@ public: /* AudioSystemManager*/
 	SHPTR<USound> BringSound(const _int _Index);
 	SHPTR<USound> BringSound(const _wstring& _wstrSoundName);
 public: /* NetworkManager */
-	void StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController);
+	void StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController, CSHPTRREF<UNetworkQueryProcessing> _spNetworkQueryProcessing);
 	void MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer);
 	void SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize);
 	void SendProcessPacket(UProcessedData&& _ProcessData);
@@ -343,6 +344,7 @@ private:
 	SHPTR< UMaterialManager>					m_spMaterialManager;
 
 	SHPTR<URenderer>								m_spRenderer;
+	SHPTR< UNetworkQueryProcessing> m_spNetworkQueryProcessing;
 
 	//SHPTR< UFontManager>						m_spFontMananger;
 	//SHPTR<UComputeManager>				m_spComputeManager;

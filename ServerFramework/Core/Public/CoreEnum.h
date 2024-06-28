@@ -87,14 +87,38 @@ namespace Core
 	enum class COLLIDERTYPE {
 		AABB, OBB, SPHERE, COLL_END
 	};
-
-
 	enum {
 		MAX_BUFFER_LENGTH = 512,
 		MAX_PROCESSBUF_LENGTH = MAX_BUFFER_LENGTH * 5,
 		MAX_OCTREENODE_LENGTH = 8,
 		MAX_SQLSTRING_LENGTH = 200,
 		MAX_SQLTABLE_LENGTH = (_int)(SQLTABLETYPE::TABLE_END),
+	};
+
+	/*
+@ Date: 2024-02-10, Writer: 박태현
+@ Explain
+- . 애니메이션 카테고리를 정의한다.
+*/
+	enum class ANIMEVENTCATEGORY : _int {
+		CATEGROY_SECTION,
+		CATEGROY_OCCUR,
+		CATEGROY_END
+	};
+	/*
+	@ Date: 2024-02-10, Writer: 박태현
+	@ Explain
+	- 애니메이션 Event를 위해 필요한 객체를 정의함
+	*/
+	enum ANIMEVENTTYPE : _int {
+		ANIMEVENT_EFFECT,     // 이펙트 발생 			
+		ANIMEVENT_SOUND,     // 소리 발생 
+		ANIMEVENT_COLLIDER,	  // 콜라이더 발생
+		ANIMEVENT_CAMERA,    // 카메라 따라다님
+		ANIMEVENT_OBJACTIVE, // OBJ활성화
+		ANIMEVENT_ANIMCHANGESBETWEEN,
+		ANIMEVENT_ANIMOCCURSTIMEPASS,
+		ANIMEVENT_END
 	};
 }
 

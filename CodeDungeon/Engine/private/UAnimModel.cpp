@@ -37,7 +37,8 @@ UAnimModel::UAnimModel(CSHPTRREF<UDevice> _spDevice) :
 	m_mPivotMatrix{_float4x4::Identity},
 	m_spMeshFilterController{nullptr},
 	m_isCanAttackSituation{false},
-	m_spAttackCollisionCollider{nullptr}
+	m_spAttackCollisionCollider{nullptr},
+	m_isNotApplyAnimPosition{false}
 {
 }
 
@@ -57,7 +58,8 @@ UAnimModel::UAnimModel(const UAnimModel& _rhs) :
 	m_fSupplyLerpValue{ 0.f },
 	m_isChangeAnim{ false },
 	m_mPivotMatrix{_rhs.m_mPivotMatrix},
-	m_spMeshFilterController{ _rhs.m_spMeshFilterController }
+	m_spMeshFilterController{ _rhs.m_spMeshFilterController },
+	m_isNotApplyAnimPosition{ false }
 {
 
 }
@@ -201,7 +203,7 @@ void UAnimModel::TickAnimChangeTransform(CSHPTRREF<UTransform> _spTransform, con
 		return;
 	}
 
-	if (true == m_spCurAnimation->IsApplyRootBoneMove())
+	if (false == m_isNotApplyAnimPosition && true == m_spCurAnimation->IsApplyRootBoneMove())
 	{
 		_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), m_mPivotMatrix * _spTransform->GetWorldMatrix());
 		_spTransform->SetPos(Position);
@@ -213,7 +215,7 @@ void UAnimModel::TickAnimToTimeAccChangeTransform(CSHPTRREF<UTransform> _spTrans
 	assert(_spTransform && m_spCurAnimation);
 	UpdateCurAnimationToRatio(_TimeAcc);
 
-	if (true == m_spCurAnimation->IsApplyRootBoneMove())
+	if (false == m_isNotApplyAnimPosition && true == m_spCurAnimation->IsApplyRootBoneMove())
 	{
 		_float3 Position = _float3::TransformCoord(GetRootBoneNode()->GetMoveRootBonePos(), m_mPivotMatrix *  _spTransform->GetWorldMatrix());
 		_spTransform->SetPos(Position);

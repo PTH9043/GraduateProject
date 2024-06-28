@@ -30,7 +30,7 @@
 BEGIN(Client)
 
 CMainScene::CMainScene(CSHPTRREF<UDevice> _spDevice) : 
-	UScene(_spDevice, (_uint)SCENE::SCENE_LOGO),
+	UScene(_spDevice, SCENE::SCENE_STAGE1),
 	m_spMainCamera{ nullptr },
 	m_spMap{nullptr}
 {

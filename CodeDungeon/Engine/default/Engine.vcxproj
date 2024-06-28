@@ -62,6 +62,7 @@
     <ClInclude Include="..\public\UItem.h" />
     <ClInclude Include="..\public\ULightCamera.h" />
     <ClInclude Include="..\public\UMeshFilter.h" />
+    <ClInclude Include="..\public\UNetworkQueryProcessing.h" />
     <ClInclude Include="..\public\UPlayer.h" />
     <ClInclude Include="..\public\UMapLayout.h" />
     <ClInclude Include="..\public\UMaterialManager.h" />
@@ -189,6 +190,7 @@
     <ClCompile Include="..\private\UItem.cpp" />
     <ClCompile Include="..\private\ULightCamera.cpp" />
     <ClCompile Include="..\private\UMeshFilter.cpp" />
+    <ClCompile Include="..\private\UNetworkQueryProcessing.cpp" />
     <ClCompile Include="..\private\UPlayer.cpp" />
     <ClCompile Include="..\private\UMapLayout.cpp" />
     <ClCompile Include="..\private\UMaterialManager.cpp" />

@@ -38,11 +38,11 @@ public:
 	- ProtocolBuffer를 조합하기 위한 함수이다. 
 	*/
 	template<class T>
-	void CombineProto(REF_IN BUFFER& _Buffer, REF_IN PACKETHEAD& _PacketHead, const T& _data, short _tag)
+	void CombineProto(REF_IN BUFFER& _Buffer, REF_IN PACKETHEAD& _PacketHead, const T& _data, _int _tag)
 	{
 		_data.SerializePartialToArray((void*)&_Buffer[0], static_cast<int>(_data.ByteSizeLong()));
-		short size = static_cast<short>(_data.ByteSizeLong());
-		_PacketHead = PACKETHEAD{ size, _tag };
+		_PacketHead.PacketSize = static_cast<short>(_data.ByteSizeLong());
+		_PacketHead.PacketType = static_cast<short>(_tag);
 	}
 	/*
 	@ Date: 2024-01-05, Writer: 박태현

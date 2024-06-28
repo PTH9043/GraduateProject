@@ -52,6 +52,7 @@ public:
 	void ComputeHeight(CSHPTRREF<ATransform> _spTransform);
 	// Move
 	_bool IsMove(const Vector3& _vPosition, SHPTR<ACell>& _spCell);
+	_bool IsMove(_int _iCurOnCellIndex, const Vector3& _vPosition, SHPTR<ACell>& _spCell);
 	// Find
 	SHPTR<ACell> FindCell(const Vector3& _vPosition);
 	SHPTR<ACell> FindCellWithoutUpdate(const Vector3& _vPosition);

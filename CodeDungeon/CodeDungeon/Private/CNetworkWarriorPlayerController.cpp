@@ -10,12 +10,12 @@
 #include "UMethod.h"
 
 CNetworkWarriorPlayerController::CNetworkWarriorPlayerController(CSHPTRREF<UDevice> _spDevice)
-	: UAnimationController(_spDevice), m_JumpSpeed{0}
+	: UAnimationController(_spDevice), m_JumpSpeed{0}, m_RecvAnimDuration{0}
 {
 }
 
 CNetworkWarriorPlayerController::CNetworkWarriorPlayerController(const CNetworkWarriorPlayerController& _rhs) :
-	UAnimationController(_rhs)
+	UAnimationController(_rhs), m_RecvAnimDuration{ 0 }
 {
 }
 
@@ -36,6 +36,7 @@ HRESULT CNetworkWarriorPlayerController::NativeConstructClone(const VOIDDATAS& _
 
 	SHPTR<UCharacter> spCharacter = GetOwnerCharacter();
 	m_wpWarriorPlayer = std::dynamic_pointer_cast<CWarriorPlayer>(spCharacter);
+	spCharacter->GetAnimModel()->NotApplyAnimPositionEnable();
 
 	return S_OK;
 }
@@ -43,23 +44,27 @@ HRESULT CNetworkWarriorPlayerController::NativeConstructClone(const VOIDDATAS& _
 void CNetworkWarriorPlayerController::Tick(const _double& _dTimeDelta)
 {
 	SHPTR<CWarriorPlayer> spWarriorPlayer = m_wpWarriorPlayer.lock();
+	SHPTR<UAnimModel> spAnimModel = spWarriorPlayer->GetAnimModel();
 	// Jump or fall state
 	if (spWarriorPlayer->GetJumpingState() || spWarriorPlayer->GetFallingState()) {
-		spWarriorPlayer->GetTransform()->MoveForward(_dTimeDelta, ANIM_RUN == GetAnimState() ? 30.f : 10.f);
+		spWarriorPlayer->GetTransform()->MoveForward(_dTimeDelta, static_cast<_float>(m_JumpSpeed));
 	}
+	// Tick eve
+	spAnimModel->TickEventToRatio(spWarriorPlayer.get(), GetTrigger(), _dTimeDelta);
+
 }
 
 void CNetworkWarriorPlayerController::ReceiveNetworkProcessData(void* _pData)
 {
 #ifdef _ENABLE_PROTOBUFF
+	SHPTR<CWarriorPlayer> spWarriorPlayer = m_wpWarriorPlayer.lock();
+	SHPTR<UAnimModel> spAnimModel = spWarriorPlayer->GetAnimModel();
 
-	SC_PLAYERSTATE* pPlayerData = static_cast<SC_PLAYERSTATE*>(_pData);
 
-	if (!pPlayerData->triggername().empty())
-	{
-		SetTrigger(UMethod::ConvertSToW(pPlayerData->triggername()));
-	}
+	PLAYERSTATE* pPlayerData = static_cast<PLAYERSTATE*>(_pData);
+	m_JumpSpeed = pPlayerData->movespeed();
+	_wstring trigger = UMethod::ConvertSToW(pPlayerData->triggername());
+	SetTrigger(trigger);
 	SetAnimState(pPlayerData->animstate());
-
 #endif
 }

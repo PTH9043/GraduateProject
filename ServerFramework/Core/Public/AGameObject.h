@@ -28,6 +28,7 @@ public:/*Get Set */
 	const _bool IsJumpable() const { return m_isJumpable; }
 	const _float GetMoveSpeed() const { return m_fMoveSpeed; }
 	const _float GetRunSpeed() const { return m_fRunSpeed; }
+	const _int GetCurOnCellIndex() const { return m_iCurOnCellIndex; }
 
 	void SetJumpable(const _bool _isJumpable) { this->m_isJumpable = _isJumpable; }
 protected: /* Get Set */
@@ -39,6 +40,7 @@ protected: /* Get Set */
 	void SetCellIndex(const _int _CellIndex) { this->m_CellIndex = _CellIndex; }
 	void SetMoveSpeed(const _float _fMoveSpeed) { this->m_fMoveSpeed = _fMoveSpeed; }
 	void SetRunSpeed(const _float _fRunSpeed) { this->m_fRunSpeed = _fRunSpeed; }
+	void SetCurOnCellIndex(const _int _iCurOnCellIndex) { this->m_iCurOnCellIndex = _iCurOnCellIndex; }
 private:
 	virtual void Free() override;
 private:
@@ -52,6 +54,8 @@ private:
 
 	SHPTR<ATransform>		m_spTransform;
 	SHPTR<ACollider>			m_spCollider;
+	// 현재 셀 위에 있는 인덱스
+	_int										m_iCurOnCellIndex;
 
 	_float									m_fMoveSpeed;
 	_float									m_fRunSpeed;

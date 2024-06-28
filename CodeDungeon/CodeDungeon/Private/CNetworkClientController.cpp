@@ -4,6 +4,8 @@
 #include "CMainCamera.h"
 #include "UGameInstance.h"
 #include "UTransform.h"
+#include "CNetworkQueryProcessor.h"
+#include "UMethod.h"
 
 CNetworkClientController::CNetworkClientController()
 {
@@ -14,6 +16,7 @@ HRESULT CNetworkClientController::NativeConstruct(const _string& _strIPAddress, 
 	RETURN_CHECK_FAILED(__super::NativeConstruct(_strIPAddress, _PortNumber), E_FAIL);
 	return S_OK;
 }
+
 void CNetworkClientController::MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer)
 {
 #ifdef _ENABLE_PROTOBUFF
@@ -32,7 +35,7 @@ void CNetworkClientController::MakeActors(const VECTOR<SHPTR<UActor>>& _actorCon
 					PROTO_ACTOR_WARRIORPLAYER, { &CharDesc, &PlayerDesc }));
 
 				spGameInstance->RegisterCurrentPlayer(spWarriorPlayer);
-				InsertNetworkActorContainer(CharInitData.first, spWarriorPlayer);
+				AddCreatedNetworkActor(CharInitData.first, spWarriorPlayer);
 			}
 		}
 		break;
@@ -45,35 +48,13 @@ void CNetworkClientController::MakeActors(const VECTOR<SHPTR<UActor>>& _actorCon
 					PROTO_ACTOR_WARRIORPLAYER, { &CharDesc }));
 
 				spGameInstance->AddCollisionPawnList(spWarriorPlayer);
-				InsertNetworkActorContainer(CharInitData.first, spWarriorPlayer);
+				AddCreatedNetworkActor(CharInitData.first, spWarriorPlayer);
 			}
 		}
 		break;
 		}
 	}
 	__super::MakeActors(_actorContainer);
-#endif
-}
-
-void CNetworkClientController::CreateNetworkActor(_int _NetworkID, const NETWORKRECEIVEINITDATA& _networkInitData)
-{
-#ifdef _ENABLE_PROTOBUFF
-	switch (_networkInitData.iType)
-	{
-	case TAG_CHAR::TAG_OTHERPLAYER:
-	{
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		{
-			CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_NETWORKWARRIORANIMCONTROLLER, true };
-			SHPTR<CWarriorPlayer> spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
-				PROTO_ACTOR_WARRIORPLAYER, { &CharDesc }));
-
-			spGameInstance->AddCollisionPawnList(spWarriorPlayer);
-			InsertNetworkActorContainer(_NetworkID, spWarriorPlayer);
-		}
-	}
-	break;
-	}
 #endif
 }
 
@@ -85,6 +66,8 @@ void CNetworkClientController::NativePacket()
 void CNetworkClientController::ProcessPacket(_char* _pPacket, PACKETHEAD _PacketHead)
 {
 #ifdef _ENABLE_PROTOBUFF
+	size_t value = GetNetworkActorContainer().size();
+
 	switch (_PacketHead.PacketType)
 	{
 		case TAG_SC::TAG_SC_CONNECTSUCCESS:
@@ -117,7 +100,7 @@ void CNetworkClientController::ProcessPacket(_char* _pPacket, PACKETHEAD _Packet
 					AddNetworkInitData(networkRecvInitData.iNetworkID, networkRecvInitData);
 					break;
 				case SCENE_STAGE1:
-					CreateNetworkActor(networkRecvInitData.iNetworkID, networkRecvInitData);
+					InsertNetworkInitDataInQuery(networkRecvInitData);
 					break;
 				}
 			}
@@ -125,12 +108,29 @@ void CNetworkClientController::ProcessPacket(_char* _pPacket, PACKETHEAD _Packet
 		break;
 		case TAG_SC::TAG_SC_PLAYERSTATE:
 		{
-
-			SC_PLAYERSTATE scPlayerState;
-			scPlayerState.ParseFromArray(_pPacket, _PacketHead.PacketSize);
-
+			PLAYERSTATE PlayerState;
+			PlayerState.ParseFromArray(_pPacket, _PacketHead.PacketSize);
 			//// 해당하는 ID에 데이터 전달
-			InsertProcessedDataInQuery(UProcessedData(scPlayerState.id(), scPlayerState, TAG_SC_PLAYERSTATE));
+			InsertNetworkProcessInQuery(std::move(UProcessedData(PlayerState.id(), PlayerState, TAG_SC_PLAYERSTATE,
+				_PacketHead.PacketSize)));
+		}
+		break;
+		case TAG_SC::TAG_SC_CHARMOVE:
+		{
+			CHARMOVE charMove;
+			charMove.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+			//// 해당하는 ID에 데이터 전달
+			InsertNetworkProcessInQuery(std::move(UProcessedData(charMove.id(), charMove,
+				TAG_SC_CHARMOVE, _PacketHead.PacketSize)));
+		}
+		break;
+		case TAG_SC::TAG_SC_SELFPLAYERMOVE:
+		{
+			SELFPLAYERMOVE selfPlayerMove;
+			selfPlayerMove.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+			//// 해당하는 ID에 데이터 전달
+			InsertNetworkProcessInQuery(std::move(UProcessedData(selfPlayerMove.id(), selfPlayerMove,
+				TAG_SC_SELFPLAYERMOVE, _PacketHead.PacketSize)));
 		}
 		break;
 	}

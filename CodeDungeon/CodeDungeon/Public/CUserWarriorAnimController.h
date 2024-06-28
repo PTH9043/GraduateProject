@@ -20,7 +20,7 @@ public:
 	virtual ~CUserWarriorAnimController() = default;
 public:
 	virtual void Free() override;
-	CLONE_MACRO(CUserWarriorAnimController, "CWarriorAnimController::Clone To Failed")
+	CLONE_MACRO(CUserWarriorAnimController, "CUserWarriorAnimController::Clone To Failed")
 public:
 	// Native Construct 
 	virtual HRESULT NativeConstruct() override;

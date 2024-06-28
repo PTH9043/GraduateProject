@@ -3,7 +3,13 @@
 
 namespace Core {
 
-	ATransform::ATransform() : m_mWorldMatrix{_matrix::Identity}, m_Rotation{}, m_vScale{}
+	ATransform::ATransform() : 
+		m_mWorldMatrix{_matrix::Identity}, 
+		m_Rotation{}, 
+		m_vScale{1.f, 1.f, 1.f},
+		m_vVelocity{ 0.0f, 0.0f, 0.0f },
+		m_vJumpvelocity{ 0.0f, 12.f, 0.0f },
+		m_vGravity{ 0.0f, -9.81f, 0.0f }
 	{
 	}
 
@@ -107,6 +113,7 @@ namespace Core {
 		m_mWorldMatrix.LookAt(_vTargetPos);
 	}
 
+
 	const _float ATransform::ComputeDistance(const Vector3 _vPos)
 	{
 		return m_mWorldMatrix.ComputeDistance(_vPos);
@@ -115,6 +122,32 @@ namespace Core {
 	const _float ATransform::ComputeDistanceSq(const Vector3 _vPos)
 	{
 		return m_mWorldMatrix.ComputeDistanceSq(_vPos);
+	}
+
+	void ATransform::GravityFall(const _double& _deltaTime)
+	{
+		m_vVelocity += m_vGravity * static_cast<_float>(_deltaTime);
+		Vector3 vPosition = GetPos();
+		vPosition += m_vVelocity * static_cast<_float>(_deltaTime);
+		SetPos(vPosition);
+	}
+
+	void ATransform::DisableGravity()
+	{
+		m_vVelocity = Vector3(0.0f, 0.0f, 0.0f);
+	}
+
+	void ATransform::DisableJump()
+	{
+		m_vJumpvelocity = Vector3(0.0f, 12.f, 0.0f);
+	}
+
+	void ATransform::JumpMovement(const _double& _deltaTime)
+	{
+		m_vJumpvelocity += m_vGravity * static_cast<_float>(_deltaTime);
+		Vector3 vPosition = GetPos();
+		vPosition += m_vJumpvelocity * static_cast<_float>(_deltaTime);
+		SetPos(vPosition);
 	}
 
 

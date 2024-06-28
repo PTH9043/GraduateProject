@@ -59,50 +59,100 @@ namespace Core {
 	*/
 	_bool ACell::IsIn(const Vector3& _vPos, REF_IN _int& _NeighborIndex)
 	{
-		for (_int i = 0; i < POINT_END; ++i){
-			Vector3 vPoints = m_arrPoints[i];
-			Vector3 vDir = glm::normalize((_vPos - vPoints));
-
+		for (_uint i = 0; i < LINE_END; ++i) {
+			// 변에 대한 점, 법선 벡터, 변을 구성하는 두 점을 가져옵니다.
+			Vector3 vPointA, vPointB;
 			Vector3 vNormal = m_arrNormals[i];
-			_float D = glm::dot(vDir, vNormal);
-			if (0 < D){
+			Vector3 vLine = m_arrLines[i];
+
+			switch (i) {
+			case LINE_AB:
+				vPointA = m_arrPoints[POINT_A];
+				vPointB = m_arrPoints[POINT_B];
+				break;
+			case LINE_BC:
+				vPointA = m_arrPoints[POINT_B];
+				vPointB = m_arrPoints[POINT_C];
+				break;
+			case LINE_CA:
+				vPointA = m_arrPoints[POINT_C];
+				vPointB = m_arrPoints[POINT_A];
+				break;
+			}
+
+			// 점 _vPos와 변의 점들로부터 벡터를 만듭니다.
+			Vector3 vDir = _vPos - vPointA;
+
+			// 평면 방정식을 사용하여 점이 변의 어느 쪽에 있는지 확인합니다.
+			float dotProduct = glm::dot(vDir, vNormal); 
+			if (dotProduct > 0) {
 				_NeighborIndex = m_arrNeighbors[i];
 				return false;
 			}
 		}
+
 		return true;
 	}
 
-	_bool ACell::UpdateNeighbor(SHPTR<ACell> _spCell, POINT _Point1, POINT _Point2, LINE _Line)
+	_bool ACell::IsComparePoints(const Vector3& _vPointA, const Vector3& _vPointB)
 	{
-		if (true == IsCompareCell(_spCell, _Point1, _Point2))
+		if (m_arrPoints[POINT_A] == _vPointA)
 		{
-			// 이웃을 등록한다. 
-			_spCell->m_arrNeighbors[_Line] = m_iIndex;
-			_spCell->m_arrNeighborCells[_Line] = ThisShared<ACell>();
-			return true;
+			RETURN_CHECK(m_arrPoints[POINT_B] == _vPointB, true);
+			RETURN_CHECK(m_arrPoints[POINT_C] == _vPointB, true);
+		}
+
+		if (m_arrPoints[POINT_B] == _vPointA)
+		{
+			RETURN_CHECK(m_arrPoints[POINT_C] == _vPointB, true);
+			RETURN_CHECK(m_arrPoints[POINT_A] == _vPointB, true);
+		}
+
+		if (m_arrPoints[POINT_C] == _vPointA)
+		{
+			RETURN_CHECK(m_arrPoints[POINT_A] == _vPointB, true);
+			RETURN_CHECK(m_arrPoints[POINT_B] == _vPointB, true);
 		}
 		return false;
 	}
 
-	_bool ACell::IsCompareCell(SHPTR<ACell> _spCell, POINT _Point1, POINT _Point2)
+	_bool ACell::IsComparePoint(CSHPTRREF<ACell> _pCell)
 	{
-		if (m_arrPoints[POINT_A] == _spCell->m_arrPoints[_Point1])
-		{
-			RETURN_CHECK(m_arrPoints[POINT_B] == _spCell->m_arrPoints[_Point2], true);
-			RETURN_CHECK(m_arrPoints[POINT_C] == _spCell->m_arrPoints[_Point2], true);
+		RETURN_CHECK(nullptr == _pCell, false);
+		for (_uint i = 0; i < POINT_END; ++i) {
+			if (m_arrPoints[i] == _pCell->GetPoint(POINT_A))
+			{
+				for (_uint j = 0; j < POINT_END; ++j) {
+					if (i == j)
+						continue;
+
+					RETURN_CHECK(m_arrPoints[j] == _pCell->GetPoint(POINT_B), true);
+					RETURN_CHECK(m_arrPoints[j] == _pCell->GetPoint(POINT_C), true);
+				}
+			}
+			if (m_arrPoints[i] == _pCell->GetPoint(POINT_B))
+			{
+				for (_uint j = 0; j < POINT_END; ++j) {
+					if (i == j)
+						continue;
+
+					RETURN_CHECK(m_arrPoints[j] == _pCell->GetPoint(POINT_A), true);
+					RETURN_CHECK(m_arrPoints[j] == _pCell->GetPoint(POINT_C), true);
+				}
+			}
+			if (m_arrPoints[i] == _pCell->GetPoint(POINT_C))
+			{
+				for (_uint j = 0; j < POINT_END; ++j) {
+					if (i == j)
+						continue;
+
+					RETURN_CHECK(m_arrPoints[j] == _pCell->GetPoint(POINT_B), true);
+					RETURN_CHECK(m_arrPoints[j] == _pCell->GetPoint(POINT_C), true);
+				}
+			}
+
 		}
-		if (m_arrPoints[POINT_B] == _spCell->m_arrPoints[_Point1])
-		{
-			RETURN_CHECK(m_arrPoints[POINT_A] == _spCell->m_arrPoints[_Point2], true);
-			RETURN_CHECK(m_arrPoints[POINT_C] == _spCell->m_arrPoints[_Point2], true);
-		}
-		if (m_arrPoints[POINT_C] == _spCell->m_arrPoints[_Point1])
-		{
-			RETURN_CHECK(m_arrPoints[POINT_A] == _spCell->m_arrPoints[_Point2], true);
-			RETURN_CHECK(m_arrPoints[POINT_B] == _spCell->m_arrPoints[_Point2], true);
-		}
-		return true;
+		return false;
 	}
 
 	_float ACell::ComputeHeight(const Vector3& _vPosition)
@@ -169,10 +219,10 @@ namespace Core {
 		return y;
 	}
 
-	SHPTR<ACell> ACell::FindNeighborCell(const _int _iIndex)
+	void ACell::SetNeighbor(const LINE& _eLine,  SHPTR<ACell> _spCell)
 	{
-		RETURN_CHECK(_iIndex >= POINT_END, nullptr);
-		return m_arrNeighborCells[_iIndex].lock();
+		m_arrNeighbors[_eLine] = _spCell->GetIndex();
+		m_arrNeighborCells[_eLine] = _spCell;
 	}
 
 	void ACell::ResortPoints()

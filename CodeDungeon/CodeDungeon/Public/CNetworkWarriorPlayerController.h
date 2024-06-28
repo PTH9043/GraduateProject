@@ -29,6 +29,7 @@ public:
 private:
 	WKPTR< CWarriorPlayer>			m_wpWarriorPlayer;
 	_int													m_JumpSpeed;
+	_double											m_RecvAnimDuration;
 };
 
 END

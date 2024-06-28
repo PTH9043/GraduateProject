@@ -227,6 +227,43 @@ namespace Core
 		return m_NavigationWorkBench[TLS::g_ThreadID]->IsMove(_vPosition, _spCell);
 	}
 
+	_bool ACoreInstance::IsMove(Vector3 _vPosition)
+	{
+		SHPTR<ACell> spCell;
+		return m_NavigationWorkBench[TLS::g_ThreadID]->IsMove(_vPosition, spCell);
+	}
+
+	_bool ACoreInstance::IsMove(_int _iCurOnCellIndex, Vector3 _vPosition, SHPTR<ACell>& _spCell)
+	{
+		return m_NavigationWorkBench[TLS::g_ThreadID]->IsMove(_iCurOnCellIndex, _vPosition, _spCell);
+	}
+
+	_bool ACoreInstance::IsMove(_int _iCurOnCellIndex, Vector3 _vPosition)
+	{
+		SHPTR<ACell> spCell;
+		return m_NavigationWorkBench[TLS::g_ThreadID]->IsMove(_iCurOnCellIndex, _vPosition, spCell);
+	}
+
+	SHPTR<ACell> ACoreInstance::FindCell(const Vector3& _vPosition)
+	{
+		return m_NavigationWorkBench[TLS::g_ThreadID]->FindCell(_vPosition);
+	}
+
+	SHPTR<ACell> ACoreInstance::FindCellWithoutUpdate(const Vector3& _vPosition)
+	{
+		return m_NavigationWorkBench[TLS::g_ThreadID]->FindCellWithoutUpdate(_vPosition);
+	}
+
+	SHPTR<ACell> ACoreInstance::FindCell(const _int& _iIndex)
+	{
+		return m_NavigationWorkBench[TLS::g_ThreadID]->FindCell(_iIndex);
+	}
+
+	SHPTR<ACell> ACoreInstance::FindCellWithoutUpdate(const _int& _iIndex)
+	{
+		return m_NavigationWorkBench[TLS::g_ThreadID]->FindCellWithoutUpdate(_iIndex);
+	}
+
 	/*
 	--------------------------------------
 	ANavigation

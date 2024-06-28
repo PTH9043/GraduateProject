@@ -11,61 +11,85 @@ BEGIN(Engine)
 class UProcessedData {
 public:
 	UProcessedData();
-	UProcessedData(const _int _NetworkID, void * _pData, size_t _Size, _int _DataType);
+	UProcessedData(const _int _NetworkID, void* _pData, size_t _Size, _int _DataType);
 	UProcessedData(const UProcessedData& _rhs);
 	UProcessedData(UProcessedData&& _rhs) noexcept;
 	// Send
 	template<class T>
 		requires CheckProtoType<T>
 	UProcessedData(const T& _data, short _tag) : m_DataType{ _tag },
-		m_isMake{ true }, m_DataSize{ sizeof(T) }, m_iNetworkID{ 0 }
+		 m_DataSize{ 0 }, m_iNetworkID{ 0 }
 	{
-		m_pData = Make::AllocBuffer<_char>(m_DataSize);
+		m_pData = Make::AllocBuffer<_char>(MAX_BUFFER_LENGTH);
+		::memset(m_pData, 0, MAX_BUFFER_LENGTH);
+		_data.SerializePartialToArray((void*)&m_pData[0], static_cast<int>(_data.ByteSizeLong()));
+		m_DataSize = static_cast<_int>(_data.ByteSizeLong());
+	}
+	// Recv
+	template<class T>
+		requires CheckProtoType<T>
+	UProcessedData(const _int _NetworkID, const T& _data, short _tag) : m_DataType{ _tag },
+		m_DataSize{ 0 }, m_iNetworkID{ _NetworkID }
+	{
+		m_pData = Make::AllocBuffer<_char>(MAX_BUFFER_LENGTH);
+		::memset(m_pData, 0, MAX_BUFFER_LENGTH);
+		_data.SerializePartialToArray((void*)&m_pData[0], static_cast<int>(_data.ByteSizeLong()));
+		m_DataSize = static_cast<_int>(_data.ByteSizeLong());
+	}
+
+	// Send
+	template<class T>
+		requires CheckProtoType<T>
+	UProcessedData(const T& _data, short _tag, const size_t _DataSize) : m_DataType{ _tag },
+		 m_DataSize{ static_cast<_int>(_DataSize) }, m_iNetworkID{ 0 }
+	{
+		m_pData = Make::AllocBuffer<_char>(MAX_BUFFER_LENGTH);
+		::memset(m_pData, 0, MAX_BUFFER_LENGTH);
 		_data.SerializePartialToArray((void*)&m_pData[0], static_cast<int>(_data.ByteSizeLong()));
 	}
 	// Recv
 	template<class T>
 		requires CheckProtoType<T>
-	UProcessedData(const _int _NetworkID, const T& _data, short _tag) : m_DataType{ _tag }, 
-		m_isMake{ true }, m_DataSize{ sizeof(T) }, m_iNetworkID{ _NetworkID }
+	UProcessedData(const _int _NetworkID, const T& _data, short _tag, const size_t _DataSize) : m_DataType{ _tag },
+		 m_DataSize{ static_cast<_int>(_DataSize) }, m_iNetworkID{ _NetworkID }
 	{
-		m_pData = Make::AllocBuffer<_char>(m_DataSize);
+		m_pData = Make::AllocBuffer<_char>(MAX_BUFFER_LENGTH);
+		::memset(m_pData, 0, MAX_BUFFER_LENGTH);
 		_data.SerializePartialToArray((void*)&m_pData[0], static_cast<int>(_data.ByteSizeLong()));
 	}
+
 	// Recv
 	template<class T>
 		requires CheckProtoType<T>
-	UProcessedData(const _int _NetworkID, T* _data, short _tag) : m_pData{ reinterpret_cast<_char*>(_data)}, m_DataType { _tag },
-		m_isMake{ true }, m_DataSize{ sizeof(T) }, m_iNetworkID{ _NetworkID } { }
+	UProcessedData(const _int _NetworkID, T* _data, short _tag) : m_pData{ reinterpret_cast<_char*>(_data) }, m_DataType{ _tag },
+		m_DataSize{ static_cast<_int>( sizeof(T)) }, m_iNetworkID{ _NetworkID } { }
 
 	~UProcessedData();
 
-	UProcessedData& operator=(const UProcessedData& _other) = delete;
+	UProcessedData& operator=(const UProcessedData& _other) noexcept;
 	UProcessedData& operator=(UProcessedData&& _other) noexcept;
 	template<class T>
 	T* ConvertData() { return reinterpret_cast<T*>(m_pData); }
 public: /* get Set */
-	_int GetDataID() const { return m_iNetworkID; }
+	_int GetDataID() const { return m_iNetworkID.load(); }
 	_int GetDataType() const { return m_DataType; }
 	_int GetDataSize() const { return m_DataSize; }
 	_char* GetData() const { return m_pData; }
 private:
-	_int								m_iNetworkID;
-	_char*							m_pData;                     
-	_int								m_DataType;
-	_int								m_DataSize;
-	// 이렇게 안하면 데이터가 삭제되는 현상이 생김, 그렇다고 해당 클래스를 할당하기는 싫음
-	mutable _bool			m_isMake;
+	std::atomic_int			m_iNetworkID;
+	mutable _char*			m_pData;
+	std::atomic_int			m_DataType;
+	std::atomic_int			m_DataSize;
 };
 
 END
 
 namespace std {
-/*
-@ Date: 2024-02-03,  Writer: 박태현
-@ Explain
-- HASH opeartor() 연산에 대한 UProcessedData 재정의, concurrent_ 컨테이너에 사용하기 위함
-*/
+	/*
+	@ Date: 2024-02-03,  Writer: 박태현
+	@ Explain
+	- HASH opeartor() 연산에 대한 UProcessedData 재정의, concurrent_ 컨테이너에 사용하기 위함
+	*/
 	template <>
 	struct std::hash<Engine::UProcessedData> {
 		size_t operator()(Engine::UProcessedData&& ptr) const {

@@ -3,6 +3,7 @@
 #include "UGameInstance.h"
 #include "UActor.h"
 #include "UProcessedData.h"
+#include "UNetworkQueryProcessing.h"
 
 UNetworkBaseController::UNetworkBaseController() : 
 	m_isNetworkTickRunning{true},
@@ -52,7 +53,16 @@ void UNetworkBaseController::AddNetworkInitData(_int _NetworkID, const NETWORKRE
 	m_NetworkInitDataContainer.insert(MakePair(_NetworkID, _NetworkInitData));
 }
 
-void UNetworkBaseController::CreateNetworkActor(_int _NetworkID, const NETWORKRECEIVEINITDATA& _networkInitData){}
+void UNetworkBaseController::AddCreatedNetworkActor(_int _NetworkID, CSHPTRREF<UActor> _spActor)
+{
+	assert(nullptr != _spActor);
+	m_NetworkActorContainer.insert(MakePair(_NetworkID, _spActor));
+}
+
+void UNetworkBaseController::InsertNetworkInitDataInQuery(const NETWORKRECEIVEINITDATA& _networkInitData)
+{
+	GetNetworkQueryProcessing()->InsertNetworkInitData(_networkInitData);
+}
 
 SHPTR<UActor> UNetworkBaseController::FindNetworkActor(const _int _NetworkID)
 {
@@ -60,32 +70,15 @@ SHPTR<UActor> UNetworkBaseController::FindNetworkActor(const _int _NetworkID)
 	RETURN_CHECK(m_NetworkActorContainer.end() == iter, nullptr);
 	return iter->second;
 }
-
-void UNetworkBaseController::InsertNetworkActorContainer(_int _NetworkID, CSHPTRREF<UActor> _spActor)
-{
-	assert(nullptr != _spActor);
-	m_NetworkActorContainer.insert(MakePair(_NetworkID, _spActor));
-}
-
 void UNetworkBaseController::SendProcessPacket(const UProcessedData& _ProcceedData)
 {
 	// Send Tcp Packet
 	SendTcpPacket(&_ProcceedData.GetData()[0], _ProcceedData.GetDataType(), _ProcceedData.GetDataSize());
 }
 
-void UNetworkBaseController::ProcessedNetworkQuery()
+void UNetworkBaseController::InsertNetworkProcessInQuery(UProcessedData&& _data)
 {
-	while (!m_NetworkQuery.empty())
-	{
-		UProcessedData data;
-		m_NetworkQuery.try_pop(data);
-		
-		SHPTR<UActor> spActor = FindNetworkActor(data.GetDataID());
-		if (nullptr != spActor)
-		{
-			spActor->ReceiveNetworkProcessData(data);
-		}
-	}
+	GetNetworkQueryProcessing()->InsertQueryData(std::move(_data));
 }
 
 void UNetworkBaseController::ServerTick()
@@ -128,35 +121,34 @@ void UNetworkBaseController::NativePacket()
 	RecvTcpPacket();
 }
 
-void UNetworkBaseController::InsertProcessedDataInQuery(const UProcessedData& _ProcessedData)
-{
-	m_NetworkQuery.push(_ProcessedData);
-}
-
 void UNetworkBaseController::CombineRecvPacket(UOverExp* _pOverExp, _llong _numBytes)
 {
-	// Total Buffer에 값을 복사 
-	::memcpy(&m_TcpTotalBuffer[m_RemainBufferLength], _pOverExp->GetBufferAddress(), _numBytes);
-	m_RemainBufferLength += _numBytes;
-	char* pBuffer = &m_TcpTotalBuffer[0];
-	_llong MoveBufferValue = 0;
-	while (m_RemainBufferLength > 0)
+	// 버퍼를 조합한다. 
 	{
-		PACKETHEAD Head;
-		::memcpy(&Head, pBuffer, PACKETHEAD_SIZE);
-		short CurrentPacketSize = Head.PacketSize + PACKETHEAD_SIZE;
-		if ((m_RemainBufferLength - CurrentPacketSize) < 0)
-		{
-			::memmove(&m_TcpTotalBuffer[0], pBuffer, MAX_PROCESSBUF_LENGTH - MoveBufferValue);
-			return;
-		}
-		ProcessPacket(&pBuffer[PACKETHEAD_SIZE], Head);
-		m_RemainBufferLength -= CurrentPacketSize;
-		pBuffer += CurrentPacketSize;
-		MoveBufferValue += CurrentPacketSize;
+		::memcpy(&m_TcpTotalBuffer[m_RemainBufferLength], _pOverExp->GetBufferAddress(0), _numBytes);
 	}
-	m_RemainBufferLength = 0;
-	ZeroMemory(&m_TcpTotalBuffer[0], MAX_PROCESSBUF_LENGTH);
+	short moveBuffer{ 0 };
+	char* pBufferMove = &m_TcpTotalBuffer[0];
+	// 만약 BufferLocation이 존재할 때
+	while (_numBytes != 0)
+	{
+		// PacketSize를 구한다. 
+		PACKETHEAD PacketHead;
+		memcpy(&PacketHead, pBufferMove, PACKETHEAD_SIZE);
+		short CurrPacket = PacketHead.PacketSize + PACKETHEAD_SIZE;
+		// 패킷의 현재 위치가 음수가 되는 경우면 
+		if ((_numBytes - CurrPacket) < 0)
+		{
+			::memcpy(&m_TcpTotalBuffer[0], pBufferMove, _numBytes);
+			m_CurrentBufferLength = _numBytes;
+			break;
+		}
+		ProcessPacket(&pBufferMove[PACKETHEAD_SIZE], PacketHead);
+		// Buffer의 위치를 옮긴다. 
+		_numBytes -= CurrPacket;
+		pBufferMove += CurrPacket;
+		moveBuffer += CurrPacket;
+	}
 }
 
 void UNetworkBaseController::RecvTcpPacket()
@@ -169,6 +161,7 @@ void UNetworkBaseController::ServerThread(void* _pData)
 	UNetworkBaseController* pNetworkBaseController = static_cast<UNetworkBaseController*>(_pData);
 	RETURN_CHECK(nullptr == pNetworkBaseController, ;);
 	pNetworkBaseController->NativePacket();
+	g_threadID = 1;
 	while (pNetworkBaseController->m_isNetworkTickRunning)
 	{
 		pNetworkBaseController->ServerTick();

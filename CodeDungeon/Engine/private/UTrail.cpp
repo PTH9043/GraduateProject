@@ -213,8 +213,8 @@ HRESULT UTrail::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDes
 			iLineIndex++;
 		}
 
-		m_spVIBufferTrail->SetVertices(Vertices, iVertexCount);
-		m_spVIBufferTrail->Render(GetShader(), _spCommand, iVertexCount);
+		m_spVIBufferTrail->SetVertices(Vertices, static_cast<_int>(iVertexCount));
+		m_spVIBufferTrail->Render(GetShader(), _spCommand, static_cast<_int>(iVertexCount));
 	}
 
 	return S_OK;

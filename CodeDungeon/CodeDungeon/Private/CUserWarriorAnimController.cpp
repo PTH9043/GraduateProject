@@ -171,16 +171,19 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     }
 
     spWarriorPlayer->SetMouseMove(spGameInstance->GetDIMMoveState(DIMM_X));
+    // Tick eve
+    spAnimModel->TickEvent(spWarriorPlayer.get(), GetTrigger(), _dTimeDelta);
+    spAnimModel->TickAnimChangeTransform(spWarriorPlayer->GetTransform(), _dTimeDelta);
 
 #ifdef _ENABLE_PROTOBUFF
     _int NetworkID = spGameInstance->GetNetworkOwnerID();
-    CS_PLAYERSTATE csPlayerState;
-    PROTOFUNC::MakeCsPlayerState(OUT & csPlayerState, NetworkID, isAttack, spWarriorPlayer->GetJumpingState(),
-        GetAnimState(), isRunshift, UMethod::ConvertWToS(GetTrigger()).c_str());
-    spGameInstance->SendProcessPacket(UProcessedData(NetworkID, csPlayerState, TAG_CS_PLAYERSTATE));
+    PLAYERSTATE csPlayerState;
+    _string str = UMethod::ConvertWToS(GetTrigger());
+    PROTOFUNC::MakePlayerState(OUT& csPlayerState, NetworkID, isAttack,
+        GetAnimState(), isRunshift ? 30.f : 10.f, spAnimModel->GetCurrentAnimation()->GetDuration(), str);
+    size_t value = (size_t)(str.length() * 1.5 + csPlayerState.ByteSizeLong());
+    spGameInstance->SendProcessPacket(UProcessedData(csPlayerState, TAG_CS_PLAYERSTATE, value));
 #endif
-    // Tick eve
-    spAnimModel->TickEvent(spWarriorPlayer.get(), GetTrigger(), _dTimeDelta);
 }
 
 void CUserWarriorAnimController::ReceiveNetworkProcessData(void* _pData)

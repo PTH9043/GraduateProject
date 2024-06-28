@@ -50,12 +50,22 @@ public:
 	// Compute Distance
 	const _float ComputeDistance(const Vector3 _vPos);
 	const _float ComputeDistanceSq(const Vector3 _vPos);
+	void GravityFall(const _double& _deltaTime);
+	void DisableGravity();
+
+	void DisableJump();
+	void JumpMovement(const _double& _deltaTime);
 private:
 	virtual void Free() override;
 private:
 	_matrix				m_mWorldMatrix;
 	Vector3				m_vScale;
 	_quaternion		m_Rotation;
+
+	//2024-05-24 이성현 중력 구현
+	Vector3				m_vVelocity;
+	const Vector3	m_vGravity;
+	Vector3				m_vJumpvelocity;
 };
 
 END

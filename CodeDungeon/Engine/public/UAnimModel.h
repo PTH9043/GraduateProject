@@ -95,6 +95,7 @@ public: /* get set */
 	void SetSupplyLerpValue(const _float _fSupplyLerpValue) { this->m_fSupplyLerpValue = _fSupplyLerpValue; }
 	void SetAnimParam(const ANIMATIONPARAM& _stAnimParam) { this->m_stAnimParam = _stAnimParam; }
 	void UpdateAttackData(const _bool _isCanAttackSituation, CSHPTRREF<UCollider> _spCollider);
+	void NotApplyAnimPositionEnable() { this->m_isNotApplyAnimPosition = true; }
 private:
 	// CreateAnimation
 	HRESULT CreateAnimation(const VECTOR<ANIMDESC>& _convecAnimDesc, const _wstring& _wstrPath);
@@ -133,6 +134,7 @@ private:
 	SHPTR<UMeshFilter>								m_spMeshFilterController;
 	ANIMEVENTCOLLIDERCONTAINER		m_AnimEventColliderContainer;
 	_bool															m_isCanAttackSituation;
+	_bool															m_isNotApplyAnimPosition;
 	SHPTR<UCollider>									m_spAttackCollisionCollider;
 };
 

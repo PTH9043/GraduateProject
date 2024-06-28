@@ -56,6 +56,7 @@ protected:
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) PURE;
 
 	void FollowCameraMove(const _float3& _vPlayerToDistancePosition, const _double& _TimeElapsed);
+	void JumpState(const _double& _dTimeDelta);
 protected: /* get set */
 	CSHPTRREF<UCamera> GetFollowCamera() const { return m_spFollowCamera; }
 private:

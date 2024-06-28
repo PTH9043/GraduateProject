@@ -20,7 +20,20 @@ namespace PROTOFUNC
 	using LLONG =  long long;
 
 	void MakeVector3(VECTOR3* _pOut, float _x, float _y, float _z);
+	void MakeVector4(VECTOR4* _pOut, float _x, float _y, float _z, float _w);
 	void MakeEqInfo(EQINFO* _pOut,  float _gold, float _increasePower, float _increaseDefensive, float _increaseHp);
+	void MakePlayerState(PLAYERSTATE* _pOut, LLONG _id, bool _ifattack, bool _animstate, bool _movespeed, 
+		double _animDuration, int _curAnimIndex);
+	void MakePlayerState(PLAYERSTATE* _pOut, LLONG _id, bool _ifattack,  bool _animstate, bool _movespeed,
+		double _animDuration, int _curAnimIndex);
+	
+	void MakePlayerAnimState(PLAYERANIMSTATE* _pOut, LLONG _id, int	animstate, bool ifattack,
+	bool	 isRunshift, bool	isMoveFront, bool isMoveBack, bool isMoveLeft, bool	isMoveRight,
+	bool	 isWAttack ,bool	isSAttack, bool	isRAttack, bool	isCombo, bool	isRoll, bool	 isHit,
+	bool	 isJump, int wComboStack, int	sComboStack);
+	
+	void MakeSelfPlayerMove(SELFPLAYERMOVE* _pOut, LLONG _id, const VECTOR3& _move);
+	void MakeCharMove(CHARMOVE* _pOut, LLONG _id, const VECTOR3&  _move, const VECTOR4& _rotate, bool _jumpingstate);
 
 	/* =========== SC =============== */
 	// Server To Client 
@@ -28,23 +41,12 @@ namespace PROTOFUNC
 	void MakeScConnectSuccess(SC_CONNECTSUCCESS* _pOut, LLONG _id,  int _cellIndex,  int _type);
 	void MakeScOtherClientLogin(SC_OTHERCLIENTLOGIN* _pOut, LLONG _id, int _cellIndex, int _type);
 	void MakeScMoveFailed(SC_MOVEFAILED* _pOut, LLONG _id, VECTOR3* _pPrevPos);
-	void MakeScPlayerState(SC_PLAYERSTATE* _pOut, LLONG _id, bool _ifattack, bool _jumpingstate,
-		bool _animstate, bool _movespeed, const char* _triggername);
-	void MakeScPlayerState(SC_PLAYERSTATE* _pOut, LLONG _id, bool _ifattack, bool _jumpingstate,
-		bool _animstate, bool _movespeed, std::string _strTriggerName);
-	void MakeScMoveState(SC_MOVESTATE* _pOut, LLONG _id, VECTOR3* _pMovePos);
 	void MakeScViewInRange(SC_VIEWINRANGE* _pOut, LLONG _id, VECTOR3* _pPos, int _cellIndex, int _type);
-
 
 	/* =========== CS =============== */
 	// Client To Server 
 
 	void MakeCsLogin(CS_LOGIN* _pOut, LLONG _id);
-	void MakeCsMove(CS_MOVE* _pOut, LLONG _id, VECTOR3* _pMovePos);
-	void MakeCsPlayerState(CS_PLAYERSTATE* _pOut, LLONG _id, bool _ifattack, bool _jumpingstate,
-		bool _animstate, bool _movespeed, const char* _triggername);
-	void MakeCsPlayerState(CS_PLAYERSTATE* _pOut, LLONG _id, bool _ifattack, bool _jumpingstate,
-		bool _animstate, bool _movespeed, std::string _strTriggerName);
 	void MakeCsAttack(CS_ATTACK* _pOut, LLONG _id, float _damage, VECTOR3* _pMovePos);
 	void MakeCsDisconnect(CS_DISCONNECT* _pOut, LLONG _id);
 

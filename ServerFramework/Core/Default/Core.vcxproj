@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\AAnimation.h" />
+    <ClInclude Include="..\Public\AAnimEvent.h" />
     <ClInclude Include="..\Public\AGameObject.h" />
     <ClInclude Include="..\Public\Allocator.h" />
     <ClInclude Include="..\Public\AMySqlConnector.h" />
@@ -72,6 +74,8 @@
     <ClInclude Include="..\Public\ATransform.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\AAnimation.cpp" />
+    <ClCompile Include="..\Private\AAnimEvent.cpp" />
     <ClCompile Include="..\Private\AGameObject.cpp" />
     <ClCompile Include="..\Private\Allocator.cpp" />
     <ClCompile Include="..\Private\AMySqlConnector.cpp" />
