@@ -206,12 +206,13 @@ PS_OUT PS_Main(GS_OUT In)
   //  Out.vColor.a *= fDistance;
 
     
-
-    //float particleTransparency = g_ParticleData[In.iInstanceID].fTransparency;
-    //Out.vColor.a *= particleTransparency;
+    
+    float particleTransparency = g_ParticleData[In.iInstanceID].fCurTime / g_ParticleData[In.iInstanceID].fLifeTime;
+    Out.vColor.a *= particleTransparency;
     //if (Out.vColor.a < 0.1)
     //    discard;
     Out.vGlow = Out.vColor;
+  
         return Out;
 }
 

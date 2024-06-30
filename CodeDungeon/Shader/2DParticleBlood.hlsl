@@ -213,6 +213,7 @@ PS_OUT PS_Main(GS_OUT In)
     if (Out.vColor.a < 0.1)
         discard;
     Out.vGlow = Out.vColor;
+   
         return Out;
 }
 
