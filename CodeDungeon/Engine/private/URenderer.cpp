@@ -87,6 +87,9 @@ HRESULT URenderer::NativeConstruct()
 
             m_ShaderObjects.insert(std::pair<_wstring, SHPTR<UShader>>(PROTO_RES_DOWNSAMPLINGSHADER, static_pointer_cast<UShader>(
                 spGameInstance->CloneResource(PROTO_RES_DOWNSAMPLINGSHADER))));
+
+            m_ShaderObjects.insert(std::pair<_wstring, SHPTR<UShader>>(PROTO_RES_DOWNSAMPLINGTWOSHADER, static_pointer_cast<UShader>(
+                spGameInstance->CloneResource(PROTO_RES_DOWNSAMPLINGTWOSHADER))));
                
             m_ShaderObjects.insert(std::pair<_wstring, SHPTR<UShader>>(PROTO_RES_UPSAMPLINGSHADER, static_pointer_cast<UShader>(
                 spGameInstance->CloneResource(PROTO_RES_UPSAMPLINGSHADER))));
@@ -259,13 +262,14 @@ HRESULT URenderer::Render()
     Render2DUI();
     Render3DUI();
     RenderHDR();
-   //DownSample();
-    RenderHorizontalBlur();
-    RenderVerticalBlur();
+   DownSample();
+   DownSample2();
+   //RenderHorizontalBlur();
+   //RenderVerticalBlur();
    UpSample();
     RenderBloom();
     RenderEnd();
-
+    //원상복구하려면 Blur두개 키고 DownSample 2개를 꺼야함. 그리고 Upsample입력 텍스쳐를 BlurResult로
 #ifdef _USE_DEBUGGING
     
     SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
@@ -563,28 +567,54 @@ void URenderer::RenderHDR()
 
 void URenderer::DownSample()
 {
-    //SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+    SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
-    //// Set Render Tareget
-    //SHPTR<URenderTargetGroup> spRenderTargetGroup{ m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::DOWNSAMPLE) };
-    //spRenderTargetGroup->WaitResourceToTarget(m_spCastingCommand);
-    //spRenderTargetGroup->ClearRenderTargetView(m_spCastingCommand);
-    //spRenderTargetGroup->OmSetRenderTargets(m_spCastingCommand);
-    //// Bind Shader 
-    //SHPTR<UShader> spDownSamplingShader = FindShader(PROTO_RES_DOWNSAMPLINGSHADER);
-    //spDownSamplingShader->SettingPipeLineState(m_spCastingCommand);
-    //spDownSamplingShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
-    //spDownSamplingShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stSmallRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
-    //{
-    //    SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLEND_DEFFERED);
-    //    spDownSamplingShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::BLEND_SCREEN_DEFFERED));
-    //}
+    // Set Render Tareget
+    SHPTR<URenderTargetGroup> spRenderTargetGroup{ m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::DOWNSAMPLE) };
+    spRenderTargetGroup->WaitResourceToTarget(m_spCastingCommand);
+    spRenderTargetGroup->ClearRenderTargetView(m_spCastingCommand);
+    spRenderTargetGroup->OmSetRenderTargets(m_spCastingCommand);
+    // Bind Shader 
+    SHPTR<UShader> spDownSamplingShader = FindShader(PROTO_RES_DOWNSAMPLINGSHADER);
+    spDownSamplingShader->SettingPipeLineState(m_spCastingCommand);
+    spDownSamplingShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
+    spDownSamplingShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stSmallRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+    {
+        SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::NONALPHA_DEFFERED);
+        spDownSamplingShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::NONALPHA_GLOW_DEFFERED));
+    }
 
-    //m_spVIBufferPlane->Render(spDownSamplingShader, m_spCastingCommand);
-    //spRenderTargetGroup->WaitTargetToResource(m_spCastingCommand);
+    m_spVIBufferPlane->Render(spDownSamplingShader, m_spCastingCommand);
+    spRenderTargetGroup->WaitTargetToResource(m_spCastingCommand);
 
 
 }
+
+void URenderer::DownSample2()
+{
+    SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+    // Set Render Tareget
+    SHPTR<URenderTargetGroup> spRenderTargetGroup{ m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::DOWNSAMPLETWO) };
+    spRenderTargetGroup->WaitResourceToTarget(m_spCastingCommand);
+    spRenderTargetGroup->ClearRenderTargetView(m_spCastingCommand);
+    spRenderTargetGroup->OmSetRenderTargets(m_spCastingCommand);
+    // Bind Shader 
+    SHPTR<UShader> spDownSamplingShader = FindShader(PROTO_RES_DOWNSAMPLINGTWOSHADER);
+    spDownSamplingShader->SettingPipeLineState(m_spCastingCommand);
+    spDownSamplingShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
+    spDownSamplingShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stSmallRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+    {
+        SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::DOWNSAMPLE);
+        spDownSamplingShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::DOWNSAMPLE));
+    }
+
+    m_spVIBufferPlane->Render(spDownSamplingShader, m_spCastingCommand);
+    spRenderTargetGroup->WaitTargetToResource(m_spCastingCommand);
+
+
+}
+
 
 void URenderer::UpSample()
 {
@@ -601,8 +631,10 @@ void URenderer::UpSample()
     spUpSamplingShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
     spUpSamplingShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
     {
-        SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLUR_RESULT);
-        spUpSamplingShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::BLUR_RESULT));
+        //SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLUR_RESULT);
+        //spUpSamplingShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::BLUR_RESULT));  
+        SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::DOWNSAMPLETWO);
+        spUpSamplingShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::DOWNSAMPLETWO));
     }
 
     m_spVIBufferPlane->Render(spUpSamplingShader, m_spCastingCommand);

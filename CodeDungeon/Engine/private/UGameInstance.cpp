@@ -1182,6 +1182,12 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 					DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
 					DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
 
+			CreateGraphicsShader(PROTO_RES_DOWNSAMPLINGTWOSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"DownSamplingTwo", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{
+					DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
+					DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
+
 			CreateGraphicsShader(PROTO_RES_UPSAMPLINGSHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"UpSampling", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{
@@ -1660,8 +1666,16 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 
 		{
 			std::vector<RTDESC> vecRts{
+				RTDESC{ RTOBJID::DOWNSAMPLETWO, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
+					GraphicDesc->iWinCX / 24, GraphicDesc->iWinCY / 24, { 0.f, 0.f, 0.f, 0.f }  }
+			};
+			// Add 
+			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::DOWNSAMPLETWO, vecRts);
+		}
+		{
+			std::vector<RTDESC> vecRts{
 				RTDESC{ RTOBJID::DOWNSAMPLE, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
-					GraphicDesc->iWinCX / 2, GraphicDesc->iWinCY / 2, { 0.f, 0.f, 0.f, 0.f }  }
+					GraphicDesc->iWinCX / 4, GraphicDesc->iWinCY / 4, { 0.f, 0.f, 0.f, 0.f }  }
 			};
 			// Add 
 			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::DOWNSAMPLE, vecRts);
@@ -1745,15 +1759,22 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 
 	
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::DEPTH_RECORD, RTOBJID::DEPTH_RECORD,
+	//m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::DEPTH_RECORD, RTOBJID::DEPTH_RECORD,
+	//	_float2(300.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
+
+	//m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::OUTLINE_POS_NOR, RTOBJID::OUTLINE_DEPTH_POS,
+	//	_float2(605.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
+
+	//m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_DEPTH_DEFFERED,
+	//	_float2(910.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::DOWNSAMPLETWO, RTOBJID::DOWNSAMPLETWO,
 		_float2(300.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::OUTLINE_POS_NOR, RTOBJID::OUTLINE_DEPTH_POS,
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::UPSAMPLE, RTOBJID::UPSAMPLE,
 		_float2(605.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_DEPTH_DEFFERED,
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::HDR, RTOBJID::HDR,
 		_float2(910.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
-
 #endif
 	return S_OK;
 }

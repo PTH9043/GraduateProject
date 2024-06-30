@@ -97,6 +97,7 @@ private:
 	void RenderVerticalBlur();
 	void RenderBloom();
 	void DownSample();
+	void DownSample2();
 	void UpSample();
 	// Render End 
 	void RenderEnd();
