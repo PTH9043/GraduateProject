@@ -145,9 +145,9 @@ HRESULT CModelObjects::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPT
 	
 		
 
-		if (nullptr != m_spModel&&m_bDrawOutline)
+		if (nullptr != m_spModel&&m_bDrawOutline && _pass)
 		{
-			__super::RenderOutlineActive(_spCommand, _spTableDescriptor, true);
+			__super::RenderOutlineActive(_spCommand, _spTableDescriptor, _pass);
 
 			for (_uint i = 0; i < m_spModel->GetMeshContainerCnt(); ++i)
 			{
@@ -158,9 +158,9 @@ HRESULT CModelObjects::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPT
 				m_spModel->Render(i, GetOutlineShader(), _spCommand);
 			}
 		}
-		if (nullptr != m_spModel && m_bDrawOutline)
+		if (nullptr != m_spModel && m_bDrawOutline && !_pass)
 		{
-			__super::RenderOutlineActive(_spCommand, _spTableDescriptor, false);
+			__super::RenderOutlineActive(_spCommand, _spTableDescriptor, _pass);
 
 			for (_uint i = 0; i < m_spModel->GetMeshContainerCnt(); ++i)
 			{

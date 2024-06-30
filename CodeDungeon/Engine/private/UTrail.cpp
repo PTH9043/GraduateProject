@@ -57,7 +57,7 @@ HRESULT UTrail::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	AddShader(PROTO_RES_TRAILSHADER);
 
 	m_fCreateTime = 0.0001f;
-	m_iMaxCount = 8;//8,9,10,12
+	m_iMaxCount = 10;//8,9,10,12
 	m_iDivide = 8;
 	m_fTime = m_fCreateTime + 1.f;
 	return S_OK;

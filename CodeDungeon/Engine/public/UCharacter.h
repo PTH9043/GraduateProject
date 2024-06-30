@@ -74,6 +74,7 @@ public: /* get set */
 	void SetCollisionState(_bool _newState) { m_bisCollision = _newState; }
 
 	void SetOutline(_bool _Draw) { m_DrawOutline = _Draw; }
+	void SetifPlayer(_bool _isPlayer) { m_isPlayer = _isPlayer; }
 	const _bool& GetOutlineState()const { return m_DrawOutline; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) PURE;
@@ -124,6 +125,7 @@ private:
 	_bool													m_isNetworkConnected;
 
 	_bool			m_DrawOutline=false;
+	_bool			m_isPlayer=false;
 };
 
 END

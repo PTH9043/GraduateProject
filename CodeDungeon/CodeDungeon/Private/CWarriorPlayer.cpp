@@ -158,6 +158,8 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 		}
 
 	}
+	SetOutline(true);
+	SetifPlayer(true);
 	
 	return S_OK;
 }
