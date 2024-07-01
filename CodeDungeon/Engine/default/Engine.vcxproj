@@ -321,7 +321,9 @@
     <FxCompile Include="..\..\Shader\2DParticleFlare.hlsl" />
     <FxCompile Include="..\..\Shader\2DParticleFootPrint.hlsl" />
     <FxCompile Include="..\..\Shader\3DNormalCube.hlsl" />
+    <FxCompile Include="..\..\Shader\AnimDepthRecord.hlsl" />
     <FxCompile Include="..\..\Shader\AnimModel.hlsl" />
+    <FxCompile Include="..\..\Shader\AnimNorPos.hlsl" />
     <FxCompile Include="..\..\Shader\BlendDeffered.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -331,6 +333,7 @@
     <FxCompile Include="..\..\Shader\Compute2DFootPrint.hlsl" />
     <FxCompile Include="..\..\Shader\DepthRecord.hlsl" />
     <FxCompile Include="..\..\Shader\DownSampling.hlsl" />
+    <FxCompile Include="..\..\Shader\DownSamplingTwo.hlsl" />
     <FxCompile Include="..\..\Shader\Equipment.hlsl" />
     <FxCompile Include="..\..\Shader\Hdr.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DBloodEffect.hlsl" />

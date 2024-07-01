@@ -132,10 +132,15 @@ void GS_Main(point VS_OUT input[1], inout TriangleStream<GS_OUT> outputStream)
     //output[1].vPosition = Vertex.vViewPos + float4(scale * 5.5, scale * 5.5, 0.f, 0.f);
     //output[2].vPosition = Vertex.vViewPos + float4(scale * 5.5, -scale * 5.5, 0.f, 0.f);
     //output[3].vPosition = Vertex.vViewPos + float4(-scale * 5.5, -scale * 5.5, 0.f, 0.f); 
-    output[0].vPosition = Vertex.vViewPos + float4(-scale * 0.5, scale * 1.5, 0.f, 0.f);
-    output[1].vPosition = Vertex.vViewPos + float4(scale * 0.5, scale * 1.5, 0.f, 0.f);
-    output[2].vPosition = Vertex.vViewPos + float4(scale * 0.5, -scale * 1.5, 0.f, 0.f);
-    output[3].vPosition = Vertex.vViewPos + float4(-scale * 0.5, -scale * 1.5, 0.f, 0.f);
+    
+    //output[0].vPosition = Vertex.vViewPos + float4(-scale * 0.5, scale * 1.5, 0.f, 0.f);
+    //output[1].vPosition = Vertex.vViewPos + float4(scale * 0.5, scale * 1.5, 0.f, 0.f);
+    //output[2].vPosition = Vertex.vViewPos + float4(scale * 0.5, -scale * 1.5, 0.f, 0.f);
+    //output[3].vPosition = Vertex.vViewPos + float4(-scale * 0.5, -scale * 1.5, 0.f, 0.f);
+    output[0].vPosition = Vertex.vViewPos + float4(-scale * 0.75f, scale * 2.5, 0.f, 0.f);
+    output[1].vPosition = Vertex.vViewPos + float4(scale * 0.75f, scale * 2.5, 0.f, 0.f);
+    output[2].vPosition = Vertex.vViewPos + float4(scale * 0.75f, -scale * 2.5, 0.f, 0.f);
+    output[3].vPosition = Vertex.vViewPos + float4(-scale * 0.75f, -scale * 2.5, 0.f, 0.f);
     
     output[0].vWorldPos = Vertex.vWorldPos + float4(-scale, scale, 0.f, 0.f);
     output[1].vWorldPos = Vertex.vWorldPos + float4(scale, scale, 0.f, 0.f);
@@ -175,7 +180,11 @@ void GS_Main(point VS_OUT input[1], inout TriangleStream<GS_OUT> outputStream)
 struct PS_OUT
 {
     float4 vColor : SV_TARGET0;
-
+    float4 vSpecular : SV_TARGET1;
+    float4 vNormal : SV_TARGET2;
+    float4 vDepth : SV_TARGET3;
+    float4 vPosition : SV_Target4;
+    float4 vGlow : SV_Target5;
 };
 
 
@@ -183,6 +192,8 @@ PS_OUT PS_Main(GS_OUT In)
 {
     PS_OUT Out = (PS_OUT) 0;
     Out.vColor = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV);
+    Out.vGlow = Out.vColor;
+    
     return Out;
 }
 

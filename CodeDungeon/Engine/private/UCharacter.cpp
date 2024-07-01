@@ -17,11 +17,11 @@ UCharacter::UCharacter(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer,
 	UPawn(_spDevice, _wstrLayer, _eCloneType, BACKINGTYPE::DYNAMIC, PAWNTYPE::PAWN_CHAR),
 	m_spAnimModel{ nullptr }, m_spAnimationController{ nullptr }, m_vPrevPos{}, 	m_spCurNavi{nullptr }, m_spHitCollider{nullptr}, 
 	m_fMoveSpeed{0.f}, m_fRunSpeed{0.f}, m_bIsRunning{false}, m_bisHit{false}, m_bisCollision{false}, m_DrawOutline{false},
-	m_isNetworkConnected{false}
+	m_isNetworkConnected{false}, m_isPlayer{false}
 {
 }
 
-UCharacter::UCharacter(const UCharacter& _rhs) : UPawn(_rhs), m_vPrevPos{}, m_bisHit{ false }, m_bisCollision{ false }, m_DrawOutline{ false }
+UCharacter::UCharacter(const UCharacter& _rhs) : UPawn(_rhs), m_vPrevPos{}, m_bisHit{ false }, m_bisCollision{ false }, m_DrawOutline{ false }, m_isPlayer{ false }
 {
 }
 
@@ -194,9 +194,9 @@ HRESULT UCharacter::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF
 
 HRESULT UCharacter::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)
 {
-	if (nullptr != m_spAnimModel&& m_DrawOutline)
+	if (nullptr != m_spAnimModel&& m_DrawOutline&&_pass)
 	{
-		__super::RenderOutlineActive(_spCommand, _spTableDescriptor, true);
+		__super::RenderOutlineActive(_spCommand, _spTableDescriptor, _pass);
 
 		for (_uint i = 0; i < m_spAnimModel->GetMeshContainerCnt(); ++i)
 		{
@@ -207,9 +207,10 @@ HRESULT UCharacter::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRRE
 			m_spAnimModel->Render(i, GetOutlineShader(), _spCommand);
 		}
 	}
-	if (nullptr != m_spAnimModel&& m_DrawOutline)
+	if (nullptr != m_spAnimModel&& m_DrawOutline&&!_pass&&!m_isPlayer)
 	{
-		__super::RenderOutlineActive(_spCommand, _spTableDescriptor, false);
+
+		__super::RenderOutlineActive(_spCommand, _spTableDescriptor, _pass);
 
 		for (_uint i = 0; i < m_spAnimModel->GetMeshContainerCnt(); ++i)
 		{

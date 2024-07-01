@@ -29,6 +29,7 @@
 #define PROTO_RES_HORIZONTALBLURSHADER L"Proto_Res_HorizontalBlurShader"
 #define PROTO_RES_VERTICALBLURSHADER L"Proto_Res_VerticalBlurShader"
 #define PROTO_RES_DOWNSAMPLINGSHADER L"Proto_Res_DownSamplingShader"
+#define PROTO_RES_DOWNSAMPLINGTWOSHADER L"Proto_Res_DownSamplingTwoShader"
 #define PROTO_RES_UPSAMPLINGSHADER L"Proto_Res_UpSamplingShader"
 #define PROTO_RES_HDRSHADER L"Proto_Res_HdrShader"
 #define PROTO_RES_TRAILSHADER L"Proto_Res_TrailShader"

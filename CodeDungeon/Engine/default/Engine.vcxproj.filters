@@ -1416,5 +1416,14 @@
     <FxCompile Include="..\..\Shader\DepthRecord.hlsl">
       <Filter>98.ShaderFile\Outline</Filter>
     </FxCompile>
+    <FxCompile Include="..\..\Shader\AnimDepthRecord.hlsl">
+      <Filter>98.ShaderFile\Outline</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\AnimNorPos.hlsl">
+      <Filter>98.ShaderFile\Outline</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\DownSamplingTwo.hlsl">
+      <Filter>98.ShaderFile\Common\HdrBloomBlur</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
