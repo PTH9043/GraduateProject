@@ -41,13 +41,11 @@
 #define _STOMP
 
 #ifdef _DEBUG
-#pragma comment (lib, "PthMathD")
 #pragma comment (lib, "redis++_staticd")
 #pragma comment (lib, "hiredisd")
 #pragma comment(lib, "mysqlcppconn_debug")
 #pragma comment(lib, "mysqlcppconn8_debug")
 #else
-#pragma comment (lib, "PthMath")
 #pragma comment (lib, "redis++_static")
 #pragma comment (lib, "hiredis")
 #pragma comment(lib, "mysqlcppconn")
@@ -94,14 +92,11 @@
 #include <tuple>
 #include <variant>
 
-
 extern "C" {
 #include <lua/lua.h>
 #include <lua/lualib.h>
 #include <lua/lauxlib.h>
 }
-
-#include "PthMath/PthMath.h"
 
 namespace Asio = boost::asio;
 
@@ -110,6 +105,7 @@ namespace Asio = boost::asio;
 #include "Allocator.h"
 #include "CustomString.h"
 
+#include "MathLib/CusMath.h"
 #include "CoreTypedef.h"
 #include "CoreTypecast.h"
 #include "CoreMacro.h"
@@ -126,5 +122,7 @@ namespace Asio = boost::asio;
 #include "DBDataGroup.h"
 
 #include "LockFree.h"
+
+using namespace DirectX;
 
 #endif 

@@ -1,8 +1,6 @@
 #include "CoreDefines.h"
 #include "AGameObject.h"
-#include "AAABBCollider.h"
-#include "AOBBCollider.h"
-#include "ASphereCollider.h"
+#include "ACollider.h"
 #include "ATransform.h"
 #include "ASpace.h"
 #include "ACoreInstance.h"
@@ -23,18 +21,7 @@ namespace Core
 
 	void AGameObject::CreateColliderAndTransform(const COLLIDERINFO& _ColliderInfo, const Vector3& _vPos)
 	{
-		switch (_ColliderInfo.ColliderType) {
-		case COLLIDERTYPE::OBB:
-			m_spCollider = Create<AOBBCollider>(_ColliderInfo.vPos, _ColliderInfo.vScale);
-			break;
-		case COLLIDERTYPE::AABB:
-			m_spCollider = Create<AAABBCollider>(_ColliderInfo.vPos, _ColliderInfo.vScale);
-			break;
-		case COLLIDERTYPE::SPHERE:
-			m_spCollider = Create<ASphereCollider>(_ColliderInfo.vPos, _ColliderInfo.vScale);
-			break;
-		}
-		m_spTransform = Create<ATransform>();
+		m_spCollider = Create<ACollider>((ACollider::TYPE)_ColliderInfo.iColliderType, ACollider::COLLIDERDESC{ _ColliderInfo.vPos, _ColliderInfo.vScale });
 		m_spTransform->SetPos(_vPos);
 	}
 

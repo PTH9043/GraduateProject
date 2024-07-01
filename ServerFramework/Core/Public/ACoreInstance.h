@@ -16,6 +16,7 @@ class ANavigation;
 class APathFinder;
 class ATransform;
 class ACell;
+class AJobTimer;
 
 using NAVIGATIONWORKBENCH = ARRAY<SHPTR<ANavigation>, TLS::MAX_THREAD>;
 using PATHFINDERWORKBENCH = ARRAY<SHPTR<APathFinder>, TLS::MAX_THREAD>;
@@ -55,6 +56,7 @@ public: /* Service */
 	 const GAMEOBJECTCONTAINER& GetGameObjectContainer() const;
 public: /* ThreadManager */
 	void RegisterFunc(const THREADFUNC& _CallBack, void* _Data);
+	void RegisterJob(CSHPTRREF<AJobTimer> _spJobTimer);
 	void Join();
 public: /* RandomManager */
 	_int		ReturnRadomNumber(const _int _iMinNum, const _int _iMaxNum);
@@ -74,21 +76,7 @@ public: /* MySqlDriver */
 	void BindParam(SQLTABLETYPE _TableType, _int _ParamIndex, const _string& _Value);
 public: /* Navigation*/
 	// Compute Height
-	const _float  ComputeHeight(const Vector3& _vPosition);
-	void ComputeHeight(CSHPTRREF<ATransform> _spTransform);
-	// Move
-	_bool IsMove(Vector3 _vPosition, SHPTR<ACell>& _spCell);
-	// Move
-	_bool IsMove(Vector3 _vPosition);
-	// Move
-	_bool IsMove(_int _iCurOnCellIndex, Vector3 _vPosition, SHPTR<ACell>& _spCell);
-	// Move
-	_bool IsMove(_int _iCurOnCellIndex, Vector3 _vPosition);
-	// Find
-	SHPTR<ACell> FindCell(const Vector3& _vPosition);
-	SHPTR<ACell> FindCellWithoutUpdate(const Vector3& _vPosition);
-	SHPTR<ACell> FindCell(const _int& _iIndex);
-	SHPTR<ACell> FindCellWithoutUpdate(const _int& _iIndex);
+	SHPTR<ANavigation> GetNavigation() const { return m_NavigationWorkBench[TLS::g_ThreadID]; }
 public: /* PathFinder */
 	// Find Path
 	void FindPath(Vector3 _vStartPos, Vector3 _vEndPos);

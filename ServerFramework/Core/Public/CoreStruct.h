@@ -22,7 +22,7 @@ namespace Core {
 	@ Explain: 콜라이더에 대한 정보 정의 
 	*/
 	struct COLLIDERINFO {
-		COLLIDERTYPE		ColliderType;
+		_int							iColliderType;
 		Vector3					vPos;
 		Vector3					vScale;
 	};

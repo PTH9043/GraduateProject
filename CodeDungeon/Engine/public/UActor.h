@@ -52,7 +52,8 @@ public:
 	HRESULT RenderShadow(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) { return (this->*m_pShadowRender)(_spCommand, _spTableDescriptor); }
 	HRESULT RenderOutline(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor,_bool _pass) { return (this->*m_pOutlineRender)(_spCommand, _spTableDescriptor, _pass); }
 public: /* get set */
-
+	void SetNetworkID(const _int _iNetworkID) { this->m_iNetworkID = _iNetworkID; }
+	const _int GetNetworkID() const { return m_iNetworkID; }
 protected:
 	void AwakeTickNonActive(const _double& _dTimeDelta) {}
 	void TickNonActive(const _double& _dTimeDelta) {}
@@ -126,6 +127,7 @@ private:
 	USECOLLISIONTYPE							m_eUseCollType;
 	// 현재 사용되고 있는지 확인
 	_bool														m_isUsedThisMemory;
+	_int															m_iNetworkID;
 };
 
 END

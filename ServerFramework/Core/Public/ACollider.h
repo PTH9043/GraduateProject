@@ -4,42 +4,82 @@
 #include "ACoreBase.h"
 
 BEGIN(Core)
-
+class ATransform;
 /*
 @ Date: 2023-01-18, Writer: 박태현
 @ Explain
 - 객체의 충돌처리를 하기 위한 클래스이다. 
 */
-class CORE_DLL ACollider abstract : public ACoreBase {
+class CORE_DLL ACollider final : public ACoreBase {
 public:
-	enum { AXIS_CNT = 3 };
-public:
-	ACollider(COLLIDERTYPE _ColliderType,  const Vector3 _vOriPos, const Vector3 _vOriScale);
+	enum TYPE { TYPE_AABB, TYPE_OBB, TYPE_SPHERE, TYPE_END };
+	struct COLLIDERDESC
+	{
+		Vector3		vScale;
+		Vector3		vTranslation;
+
+		COLLIDERDESC() : vScale{}, vTranslation{} {}
+		COLLIDERDESC(const Vector3& _vScale, const Vector3& _vTranslation) : vScale{ _vScale }, vTranslation{ _vTranslation } {}
+	};
+
+	ACollider(const TYPE& _eType, const COLLIDERDESC& _CollisionDesc);
 	DESTRUCTOR(ACollider)
 public:
-	virtual void Tick(const _matrix	_WorldMatrix) PURE;
-	virtual _bool IsCollision(SHPTR<ACollider> _spCollider) PURE;
-public: /* get set*/
-	const Vector3 GetOriginPosition() const { return m_vOriginPosition; }
-	const Vector3 GetOriginScale() const { return m_vScale; }
-	_matrix  GetChangeMatrix() const { return m_mChangeMatrix;  }
-	const Vector3 GetChangeScale() const { return m_vChangeScale; }
+	const Vector3& GetCurPos();
+	const Vector3& GetScale();
+	const Vector3& GetTranslate();
+	const _float4x4& GetTransformMatrix() const { return m_mTransformMatrix; }
 
-	const COLLIDERTYPE GetColliderType() const { return m_ColliderType; }
+	void SetScale(const Vector3& _vScale);
+	void SetScaleToFitModel(const Vector3& minVertex, const Vector3& maxVertex);
+	void SetTranslate(const Vector3& _vTranslate);
+	void SetTransform(const Vector3& _vPos, const Vector4& _vQuaternion);
+	void SetTransform(CSHPTRREF< ATransform> _spTransform);
+	void SetTransform(const _float4x4& _Matrix);
+	// UComponent을(를) 통해 상속됨
+	virtual void Free() override;
+	_bool IsCollision(CSHPTRREF<ACollider> _pCollider);
+	/*
+	@ Date: 2024-03-11, Writer: 이성현
+	@ Explain
+	- collider와 ray의 충돌처리를 위한 함수
+	*/
+	_bool IsCollisionWithRay(const Vector3& _vOrigin, const Vector3& _vDirection, _float* _pDist);
 
-protected:
-	void UpdateChangeValue(const _matrix& _ChangeMatrix, const Vector3& _vChangeScale);
-	void UpdateChangeValue(const Vector3& _vChangePos, const Vector3& _vChangeScale);
+	/*
+	@ Date: 2024-06-11, Writer: 이성현
+	@ Explain
+	- 콜라이더 노말 추가
+	*/
+	void SetOBBNormals(const _float4x4& transformMatrix);
+	Vector3 CalculateOBBCollisionNormal(const DirectX::BoundingOrientedBox& box1, const DirectX::BoundingOrientedBox& box2) const;
+	Vector3 CalculateOBBSphereCollisionNormal(const DirectX::BoundingOrientedBox& box, const DirectX::BoundingSphere& sphere) const;
+	Vector3 GetCollisionNormal(CSHPTRREF<ACollider> _pCollider);
+
+	void GetBoundingOrientedBoxCorners(const CSHPTRREF<DirectX::BoundingOrientedBox> box, Vector3* Corners);
+	Vector3 GetFurthestPointFromBoundingOrientedBoxCenter(const CSHPTRREF<DirectX::BoundingOrientedBox> box);
+	Vector3 GetHeightAdjustedPointFromCenter(const CSHPTRREF<DirectX::BoundingOrientedBox> box, _bool minus);
+
+	const SHPTR<DirectX::BoundingOrientedBox>& GetOBB() { return m_spOBB; }
 private:
-	virtual void Free() PURE;
-private:
-	COLLIDERTYPE		m_ColliderType;
-	// Origin 
-	Vector3					m_vOriginPosition;
-	Vector3					m_vScale;
-	// Change 
-	_matrix					m_mChangeMatrix;
-	Vector3					m_vChangeScale;
+	SHPTR<DirectX::BoundingBox>						m_spAABB_Original;
+	SHPTR<DirectX::BoundingOrientedBox>		m_spOBB_Original;
+	SHPTR<DirectX::BoundingSphere>					m_spSphere_Original;
+
+	SHPTR<DirectX::BoundingBox>						m_spAABB;
+	SHPTR<DirectX::BoundingOrientedBox>		m_spOBB;
+	SHPTR<DirectX::BoundingSphere>					m_spSphere;
+
+	TYPE																		m_eType;
+	_bool																		m_isCollision;
+	_float4x4																m_mTransformMatrix;
+
+	Vector3																	m_vModelScale;
+	Vector3																	m_vCurScale;
+	Vector3																	m_vTranslate;
+	Vector3																	m_vPos;
+
+	ARRAY<Vector3, 6>												m_vObbNormals;
 };
 
 END

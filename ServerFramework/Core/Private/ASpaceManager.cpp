@@ -33,7 +33,7 @@ namespace Core {
 		for (_int i = 0; i < 2; ++i) {
 			for (_int j = 0; j < 2; ++j) {
 				for (_int k = 0; k < 2; ++k) {
-					Vector3 vChildCenter = _SpaceInfo.vCenter + Vector3(i, j, k) * vHalfExtents;
+					Vector3 vChildCenter = _SpaceInfo.vCenter + Vector3((_float)i, (_float)j, (_float)k) * vHalfExtents;
 					// SPACE INFO
 					SPACEINFO SpaceInfo{ vChildCenter, vHalfExtents, _SpaceInfo.Depths - 1, static_cast<_int>(m_SpaceContainer.size())};
 					SHPTR<ASpace> spSpace = _spParents->MakeChild(i * 4 + j * 2 + k, SpaceInfo);

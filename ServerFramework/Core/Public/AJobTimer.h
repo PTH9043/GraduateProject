@@ -13,18 +13,17 @@ BEGIN(Core)
 */
 class AJobTimer abstract : public ACoreObject {
 public:
-	AJobTimer(OBJCON_CONSTRUCTOR);
+	AJobTimer(OBJCON_CONSTRUCTOR, Asio::io_service& _service, _int _millisecondsTimer);
 	DESTRUCTOR(AJobTimer)
 public:
-	static void TimerThread(void* _pJobTimer);
-	 void RunTimer();
-	void TurnOffRunningThread() { m_isRunningThread = false; }
+	void RegisterAsio();
+	 void TimerThread(const boost::system::error_code& _error);
 protected:
 	virtual void TickTimer() PURE;
 private:
 	virtual void Free() override;
 private:
-	_bool	m_isRunningThread;
+	Asio::deadline_timer	m_DeadLineTimer;
 };
 
 END

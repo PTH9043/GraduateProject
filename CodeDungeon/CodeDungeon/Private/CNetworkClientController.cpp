@@ -79,6 +79,9 @@ void CNetworkClientController::ProcessPacket(_char* _pPacket, PACKETHEAD _Packet
 					scConnectSuccess.cellindex(), scConnectSuccess.type());
 				// newwork Init Data 추가
 				AddNetworkInitData(networkRecvInitData.iNetworkID, networkRecvInitData);
+
+				SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+				SetNetworkOwnerID(scConnectSuccess.id());
 			}
 			OutputDebugString(_wstring::to_string(scConnectSuccess.id()));
 			// 로그인에 성공했다는 패킷 보내기

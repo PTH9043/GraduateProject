@@ -25,7 +25,8 @@ UActor::UActor(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer,
 	m_pShadowRender{ &UActor::RenderShadowActive },
 	m_pOutlineRender{ &UActor::RenderOutlineActive },
 	m_eBackingType{ _eBackingType },
-	m_eUseCollType{ _eCollType }
+	m_eUseCollType{ _eCollType },
+	m_iNetworkID{0}
 {
 	ReadyCloneType(_wstrLayer, _eCloneType);
 }
@@ -48,7 +49,8 @@ UActor::UActor(const UActor& _rhs)
 	m_Resources{},
 	m_wpParentsActor{},
 	m_eBackingType{ _rhs.m_eBackingType },
-	m_eUseCollType{ _rhs.m_eUseCollType }
+	m_eUseCollType{ _rhs.m_eUseCollType },
+	m_iNetworkID{ 0 }
 {
 }
 
@@ -173,6 +175,7 @@ HRESULT UActor::NativeConstructClone(const VOIDDATAS& _stDatas)
 
 void UActor::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 {
+
 }
 
 void UActor::AwakeTickActive(const _double& _dTimeDelta)

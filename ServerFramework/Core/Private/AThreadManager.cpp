@@ -18,18 +18,14 @@ namespace Core
 		LOCKGUARD<MUTEX> Lock{ m_Mutex };
 		m_ThreadContainer.emplace_back(ThreadJoin, _CallBack, _Data, m_CurThreadNum++);
 	}
-	/*
-	@ Date: 2024-01-23
-	@ Writer: 박태현
-	*/
-	void AThreadManager::RegisterJobTimer(SHPTR<AJobTimer> _spJobTImer)
-	{
-		RETURN_CHECK(m_CurThreadNum >= TLS::MAX_THREAD, ;);
 
-		LOCKGUARD<MUTEX> Lock{ m_Mutex };
-		m_ThreadContainer.emplace_back(ThreadJoin, AJobTimer::TimerThread, _spJobTImer.get(), m_CurThreadNum++);
-		m_JobTimerContainer.push_back(_spJobTImer);
+	void AThreadManager::RegisterJob(CSHPTRREF<AJobTimer> _spJobTimer)
+	{
+		assert(nullptr != _spJobTimer);
+		_spJobTimer->RegisterAsio();
+		m_JobThreadContainer.emplace_back(_spJobTimer);
 	}
+
 	/*
 	@ Date: 2023-12-26
 	@ Writer: 박태현
@@ -77,11 +73,7 @@ namespace Core
 
 	void AThreadManager::Free()
 	{
-		for (auto& iter : m_JobTimerContainer)
-		{
-			iter->TurnOffRunningThread();
-		}
-		m_JobTimerContainer.clear();
+		m_JobThreadContainer.clear();
 		m_ThreadContainer.clear();
 	}
 }

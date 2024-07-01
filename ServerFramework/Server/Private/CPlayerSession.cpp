@@ -4,12 +4,13 @@
 #include "AServerService.h"
 #include "ATransform.h"
 #include "ACell.h"
+#include "ANavigation.h"
 
 namespace Server {
 
 	CPlayerSession::CPlayerSession(SESSION_CONSTRUCTOR)
 		: Core::ASession(SESSION_CONDATA(Core::SESSIONTYPE::PLAYER)), m_iStartCellIndex{ 741 },
-		m_iWComboStack {0},	m_iSComboStack{0}
+		m_iWComboStack{ 0 }, m_iSComboStack{ 0 }
 	{
 		::memset(&m_CopyBuffer[0], 0, sizeof(BUFFER));
 		::memset(&m_CopyPacketHead, 0, sizeof(PACKETHEAD));
@@ -30,7 +31,10 @@ namespace Server {
 		SetMoveSpeed(10.f);
 		SetRunSpeed(30.f);
 		SetCurOnCellIndex(m_iStartCellIndex);
-		SHPTR<ACell> spCell = GetCoreInstance()->FindCell(m_iStartCellIndex);
+
+		SHPTR<ANavigation> spNavigation = GetCoreInstance()->GetNavigation();
+
+		SHPTR<ACell> spCell = spNavigation->FindCell(m_iStartCellIndex);
 		GetTransform()->SetPos(spCell->GetCenterPos());
 		return true;
 	}
@@ -83,6 +87,8 @@ namespace Server {
 	_bool CPlayerSession::ProcessPacket(_char* _pPacket, const Core::PACKETHEAD& _PacketHead)
 	{
 		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+		_int SessionID = GetSessionID();
+		::memset(&m_CopyBuffer[0], 0, MAX_BUFFER_LENGTH);
 
 		switch (_PacketHead.PacketType)
 		{
@@ -91,18 +97,18 @@ namespace Server {
 				// 현재 받아온 패킷을 재해석 한다. 
 				CS_LOGIN Login;
 				Login.ParseFromArray(_pPacket, _PacketHead.PacketSize);
-				std::cout << "Session ID Login Success [" << Login.id() << "]\n";
+				std::cout << "Session ID Login Success Login [" << Login.id() << "]\nCurSession [" << SessionID << "]\n";
 				{
 					// Make Sc Login 
 					SC_OTHERCLIENTLOGIN scOtherLogin;
 					// 다른 클라이언트들에게 해당 플레이어가 접속했음을 알림
-					PROTOFUNC::MakeScOtherClientLogin(OUT  &scOtherLogin, GetSessionID(), m_iStartCellIndex, TAG_CHAR::TAG_OTHERPLAYER);
+					PROTOFUNC::MakeScOtherClientLogin(OUT  &scOtherLogin, SessionID, m_iStartCellIndex, TAG_CHAR::TAG_OTHERPLAYER);
 					CombineProto(REF_OUT m_CopyBuffer, REF_OUT m_CopyPacketHead, scOtherLogin, TAG_SC::TAG_SC_OTHERCLIENTLOGIN);
-					spCoreInstance->BroadCastMessageExcludingSession(GetSessionID(), &m_CopyBuffer[0], m_CopyPacketHead);
+					spCoreInstance->BroadCastMessageExcludingSession(SessionID, &m_CopyBuffer[0], m_CopyPacketHead);
 
 					for (auto& iter : spCoreInstance->GetSessionContainer())
 					{
-						if (iter.first == GetSessionID())
+						if (iter.first == SessionID)
 							continue;
 
 						if (nullptr == iter.second)
@@ -148,40 +154,46 @@ namespace Server {
 			break;
 			case TAG_CS::TAG_CS_MOVE:
 			{
+				SHPTR<ANavigation> spNavigation = spCoreInstance->GetNavigation();
+
+				VECTOR3			vSendPosition;
+				VECTOR3			vSendRotate;
+				Vector3				vPosition;
+				Vector3				vRotate;
+
 				CHARMOVE csMove;
 				csMove.ParseFromArray(_pPacket, _PacketHead.PacketSize);
-				Vector3 vPos = Vector3(csMove.movex(), csMove.movey(), csMove.movez());
-				Vector4 vRotate = Vector4(csMove.rotatex(), csMove.rotatey(), csMove.rotatez(), csMove.rotatew());
-				SHPTR<ACell> spCurrentCell{ nullptr };
-				_bool IsMove = false;
-				if (csMove.id() == GetSessionID())
 				{
-					IsMove = spCoreInstance->IsMove(GetCurOnCellIndex(), vPos, REF_OUT spCurrentCell);
-					if (true == IsMove)
-					{
-						GetTransform()->SetPos(vPos);
-						GetTransform()->RotateFix(vRotate);
-						SetCurOnCellIndex(spCurrentCell->GetIndex());
-					}
-					else
-					{
-						vPos = GetTransform()->GetPos();
-					}
+					vPosition = Vector3(csMove.movex(), csMove.movey(), csMove.movez());
+					vRotate = Vector3(csMove.rotatex(), csMove.rotatey(), csMove.rotatez());
 				}
-				VECTOR3 vPosition;
-				VECTOR4 vRotation;
-				PROTOFUNC::MakeVector3(OUT & vPosition, vPos.x, vPos.y, vPos.z);
-				PROTOFUNC::MakeVector4(OUT & vRotation, vRotate.x, vRotate.y, vRotate.z, vRotate.w);
+				_bool IsMove = false;
+				SHPTR<ACell> spCurrentCell{ nullptr };
+				IsMove = spNavigation->IsMove(GetCurOnCellIndex(), vPosition, REF_OUT spCurrentCell);
+				if (true == IsMove)
+				{
+					GetTransform()->SetPos(vPosition);
+					SetCurOnCellIndex(spCurrentCell->GetIndex());
+				}
+				else
+				{
+					vPosition = GetTransform()->GetPos();
+				}
+
+				PROTOFUNC::MakeVector3(OUT & vSendPosition, vPosition.x, vPosition.y, vPosition.z);
+				PROTOFUNC::MakeVector3(OUT & vSendRotate, vRotate.x, vRotate.y, vRotate.z);
+
 				if(false == IsMove)
 				{
 					SELFPLAYERMOVE selfPlayerMove;
-					PROTOFUNC::MakeSelfPlayerMove(OUT & selfPlayerMove,  GetSessionID(), vPosition);
+					PROTOFUNC::MakeSelfPlayerMove(OUT & selfPlayerMove,  GetSessionID(), vSendPosition);
+					PROTOFUNC::MakeCharMove(OUT & csMove, SessionID, vSendPosition, vSendRotate);
 					SendProtoData(m_CopyBuffer, selfPlayerMove, TAG_SC::TAG_SC_SELFPLAYERMOVE);
 				}
 				{
-					PROTOFUNC::MakeCharMove(OUT & csMove, GetSessionID(), vPosition, vRotation, csMove.jumpingstate());
 					CombineProto(REF_OUT m_CopyBuffer, REF_OUT m_CopyPacketHead, csMove, TAG_SC::TAG_SC_CHARMOVE);
-					spCoreInstance->BroadCastMessageExcludingSession(GetSessionID(), &m_CopyBuffer[0], m_CopyPacketHead);
+					spCoreInstance->BroadCastMessageExcludingSession(SessionID, &m_CopyBuffer[0], m_CopyPacketHead);
+		//			spCoreInstance->BroadCastMessage(&m_CopyBuffer[0], m_CopyPacketHead);
 				}
 			}
 			break;
@@ -193,7 +205,7 @@ namespace Server {
 				CombineProto(REF_OUT m_CopyBuffer, REF_OUT m_CopyPacketHead, PlayerState, TAG_SC::TAG_SC_PLAYERSTATE);
 				m_CopyPacketHead.PacketSize = _PacketHead.PacketSize;
 		//		std::cout << PlayerState.triggername() << "\n";
-				spCoreInstance->BroadCastMessageExcludingSession(PlayerState.id(), &m_CopyBuffer[0], m_CopyPacketHead);
+			spCoreInstance->BroadCastMessageExcludingSession(PlayerState.id(), &m_CopyBuffer[0], m_CopyPacketHead);
 	//		spCoreInstance->BroadCastMessage(&m_CopyBuffer[0], m_CopyPacketHead);
 			}
 			break;

@@ -94,15 +94,6 @@
     <Filter Include="06.Component\Transform">
       <UniqueIdentifier>{df148501-a305-4c30-8e17-32b87f6ba81e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06.Component\Collider\AABB">
-      <UniqueIdentifier>{6ef0db1e-a080-4038-a65a-6898e05ce38e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="06.Component\Collider\OBB">
-      <UniqueIdentifier>{c8496f06-affb-4fb3-b90d-aa91227c8a14}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="06.Component\Collider\Sphere">
-      <UniqueIdentifier>{f35c2d33-b97a-4b5e-9d51-312972ff4ace}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Manager\SpaceManager">
       <UniqueIdentifier>{d9f58a22-f13a-4cc0-ade8-6846179eaa09}</UniqueIdentifier>
     </Filter>
@@ -147,6 +138,9 @@
     </Filter>
     <Filter Include="08.Animation\Event">
       <UniqueIdentifier>{68732115-3168-41e7-aea6-b5ccf54b3dae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Utility\Math">
+      <UniqueIdentifier>{1e6b352a-b1ed-457d-8e9d-fa258638a1ec}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -261,15 +255,6 @@
     <ClInclude Include="..\Public\ATransform.h">
       <Filter>06.Component\Transform</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\AAABBCollider.h">
-      <Filter>06.Component\Collider\AABB</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\AOBBCollider.h">
-      <Filter>06.Component\Collider\OBB</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\ASphereCollider.h">
-      <Filter>06.Component\Collider\Sphere</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\ASpaceManager.h">
       <Filter>02.Manager\SpaceManager</Filter>
     </ClInclude>
@@ -308,6 +293,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\AAnimation.h">
       <Filter>08.Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MathLib\CusMath.h">
+      <Filter>97.Utility\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -392,15 +380,6 @@
     <ClCompile Include="..\Private\ATransform.cpp">
       <Filter>06.Component\Transform</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\AAABBCollider.cpp">
-      <Filter>06.Component\Collider\AABB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\AOBBCollider.cpp">
-      <Filter>06.Component\Collider\OBB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\ASphereCollider.cpp">
-      <Filter>06.Component\Collider\Sphere</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\ASpaceManager.cpp">
       <Filter>02.Manager\SpaceManager</Filter>
     </ClCompile>
@@ -437,5 +416,13 @@
     <ClCompile Include="..\Private\AAnimation.cpp">
       <Filter>08.Animation</Filter>
     </ClCompile>
+    <ClCompile Include="..\Public\MathLib\CusMath.cpp">
+      <Filter>97.Utility\Math</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Public\MathLib\CusMath.inl">
+      <Filter>97.Utility\Math</Filter>
+    </None>
   </ItemGroup>
 </Project>

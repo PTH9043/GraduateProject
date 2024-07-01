@@ -43,9 +43,9 @@
     <ClInclude Include="..\Public\DBDataGroup.h" />
     <ClInclude Include="..\Public\Lock.h" />
     <ClInclude Include="..\Public\LockFree.h" />
+    <ClInclude Include="..\Public\MathLib\CusMath.h" />
     <ClInclude Include="..\Public\Memory.h" />
     <ClInclude Include="..\Public\SmartPointer.h" />
-    <ClInclude Include="..\Public\AAABBCollider.h" />
     <ClInclude Include="..\Public\ACoreApp.h" />
     <ClInclude Include="..\Public\ACell.h" />
     <ClInclude Include="..\Public\AStressClientService.h" />
@@ -54,7 +54,6 @@
     <ClInclude Include="..\Public\ALogger.h" />
     <ClInclude Include="..\Public\ALuaLoader.h" />
     <ClInclude Include="..\Public\ANavigation.h" />
-    <ClInclude Include="..\Public\AOBBCollider.h" />
     <ClInclude Include="..\Public\APathFinder.h" />
     <ClInclude Include="..\Public\ARandomManager.h" />
     <ClInclude Include="..\Public\ARoom.h" />
@@ -69,7 +68,6 @@
     <ClInclude Include="..\Public\ASession.h" />
     <ClInclude Include="..\Public\ASpace.h" />
     <ClInclude Include="..\Public\ASpaceManager.h" />
-    <ClInclude Include="..\Public\ASphereCollider.h" />
     <ClInclude Include="..\Public\AThreadManager.h" />
     <ClInclude Include="..\Public\ATransform.h" />
   </ItemGroup>
@@ -89,7 +87,6 @@
     <ClCompile Include="..\Private\LockFree.cpp" />
     <ClCompile Include="..\Private\Memory.cpp" />
     <ClCompile Include="..\Private\SmartPointer.cpp" />
-    <ClCompile Include="..\Private\AAABBCollider.cpp" />
     <ClCompile Include="..\Private\ACoreApp.cpp" />
     <ClCompile Include="..\Private\ACell.cpp" />
     <ClCompile Include="..\Private\AStressClientService.cpp" />
@@ -98,7 +95,6 @@
     <ClCompile Include="..\Private\ALogger.cpp" />
     <ClCompile Include="..\Private\ALuaLoader.cpp" />
     <ClCompile Include="..\Private\ANavigation.cpp" />
-    <ClCompile Include="..\Private\AOBBCollider.cpp" />
     <ClCompile Include="..\Private\APathFinder.cpp" />
     <ClCompile Include="..\Private\ARandomManager.cpp" />
     <ClCompile Include="..\Private\ARoom.cpp" />
@@ -113,9 +109,12 @@
     <ClCompile Include="..\Private\ASession.cpp" />
     <ClCompile Include="..\Private\ASpace.cpp" />
     <ClCompile Include="..\Private\ASpaceManager.cpp" />
-    <ClCompile Include="..\Private\ASphereCollider.cpp" />
     <ClCompile Include="..\Private\AThreadManager.cpp" />
     <ClCompile Include="..\Private\ATransform.cpp" />
+    <ClCompile Include="..\Public\MathLib\CusMath.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Public\MathLib\CusMath.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

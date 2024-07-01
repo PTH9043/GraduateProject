@@ -18,7 +18,7 @@ public:
 	template<class T>
 		requires CheckProtoType<T>
 	UProcessedData(const T& _data, short _tag) : m_DataType{ _tag },
-		 m_DataSize{ 0 }, m_iNetworkID{ 0 }
+		 m_DataSize{ 0 }, m_iNetworkID{ -1 }
 	{
 		m_pData = Make::AllocBuffer<_char>(MAX_BUFFER_LENGTH);
 		::memset(m_pData, 0, MAX_BUFFER_LENGTH);
@@ -41,7 +41,7 @@ public:
 	template<class T>
 		requires CheckProtoType<T>
 	UProcessedData(const T& _data, short _tag, const size_t _DataSize) : m_DataType{ _tag },
-		 m_DataSize{ static_cast<_int>(_DataSize) }, m_iNetworkID{ 0 }
+		 m_DataSize{ static_cast<_int>(_DataSize) }, m_iNetworkID{ -1 }
 	{
 		m_pData = Make::AllocBuffer<_char>(MAX_BUFFER_LENGTH);
 		::memset(m_pData, 0, MAX_BUFFER_LENGTH);

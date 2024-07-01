@@ -124,7 +124,7 @@ namespace Core {
 		_float PosYF = vCostF.y; _float PosGF = vCostG.y; _float PosTF = vCostT.y;
 		vCostF.y = 0; vCostG.y = 0; vCostT.y = 0;
 		/* Weight */
-		return glm::length2(vCostF) + glm::length2(vCostG) + glm::length2(vCostT) + PosYF + PosGF + PosTF;
+		return Vector3::LengthSquared(vCostF) + Vector3::LengthSquared(vCostG) + Vector3::LengthSquared(vCostT) + PosYF + PosGF + PosTF;
 	}
 
 	void APathFinder::Free()
