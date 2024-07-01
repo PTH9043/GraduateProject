@@ -209,10 +209,6 @@ void UGameInstance::AwakeTick()
 
 void UGameInstance::Tick(const _double& _dTimeDelta)
 {
-	if (nullptr != m_spNetworkQueryProcessing)
-	{
-		m_spNetworkQueryProcessing->ProcessQueryData();
-	}
 	m_spRenderer->Tick(_dTimeDelta);
 	m_spSceneManager->Tick(_dTimeDelta);
 	m_spActorManager->Tick(_dTimeDelta);
@@ -220,13 +216,9 @@ void UGameInstance::Tick(const _double& _dTimeDelta)
 
 void UGameInstance::LateTick(const _double& _dTimeDelta)
 {
-	if (nullptr != m_spNetworkQueryProcessing)
-	{
-		m_spNetworkQueryProcessing->ProcessQueryData();
-	}
 	m_spSceneManager->LateTick(_dTimeDelta);
 	m_spActorManager->LateTick(_dTimeDelta);
-	m_spCharacterManager->TickCollider(_dTimeDelta);
+//	m_spCharacterManager->TickCollider(_dTimeDelta);
 }
 
 void UGameInstance::RenderBegin()

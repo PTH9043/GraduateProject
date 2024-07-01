@@ -166,6 +166,9 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 
 void CWarriorPlayer::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 {
+//	if (_ProcessData.GetDataID() != GetNetworkID())
+//		return;
+
 #ifdef _ENABLE_PROTOBUFF
 
 	switch (_ProcessData.GetDataType())
@@ -190,8 +193,8 @@ void CWarriorPlayer::ReceiveNetworkProcessData(const UProcessedData& _ProcessDat
 	{
 		CHARMOVE charMove;
 		charMove.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
-	//	GetTransform()->SetPos(_float3{ charMove.movex(),	charMove.movey(), charMove.movez() });
-		GetTransform()->RotateFix(_float4{ charMove.rotatex(), charMove.rotatey(),charMove.rotatez(), charMove.rotatew()});
+		GetTransform()->SetPos(_float3{ charMove.movex(), charMove.movey(), charMove.movez() });
+		GetTransform()->RotateFix(_float3{ charMove.rotatex(), charMove.rotatey(), charMove.rotatez() });
 	}
 	break;
 	}
@@ -204,11 +207,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	GetAnimationController()->Tick(_dTimeDelta);
-	_long		MouseMove = GetMouseMove();
-	if (MouseMove)
-	{
-		GetTransform()->RotateTurn(_float3(0.f, 1.f, 0.f), MouseMove * 5.f, _dTimeDelta);
-	}
+
 	_int AnimState = GetAnimationController()->GetAnimState();
 	SHPTR<UCollider> ps = GetAnimModel()->BringAttackCollider(UCollider::TYPE_OBB);
 	if (ps) {
@@ -221,7 +220,9 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		m_spTrail->AddTrail(plusPoint, minusPoint);
 	}
 	
+
 	//GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
+
 	m_spParticle->SetActive(true);
 
 	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_RUN)  {//|| AnimState == CWarriorAnimController::ANIM_ATTACK|| AnimState == CWarriorAnimController::ANIM_COMBO
@@ -247,20 +248,8 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	}
 	UpdateCollision();
 	JumpState(_dTimeDelta);
-
 #ifdef _ENABLE_PROTOBUFF
-	_float3 vCharacterPos = GetTransform()->GetPos();
-	_float4 vRotation = GetTransform()->GetRotation();
-	VECTOR3 vMove;
-	VECTOR4 vRotate;
-	{
-		PROTOFUNC::MakeVector3(OUT & vMove, vCharacterPos.x, vCharacterPos.y, vCharacterPos.z);
-		PROTOFUNC::MakeVector4(OUT & vRotate, vRotation.x, vRotation.y, vRotation.z, vRotation.w);
-	}
-	CHARMOVE charMove;
-	PROTOFUNC::MakeCharMove(OUT & charMove, spGameInstance->GetNetworkOwnerID(),
-		vMove, vRotate, GetJumpingState());
-	spGameInstance->SendProcessPacket(UProcessedData(charMove, TAG_CS_MOVE));
+	SendMoveData(spGameInstance);
 #endif
 }
 
@@ -299,53 +288,73 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	PAWNTYPE ePawnType = _pEnemy->GetPawnType();
 
-	if (PAWNTYPE::PAWN_CHAR == ePawnType)
-	{
-		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
-		for (auto& iter : GetColliderContainer())
-		{
-			if(iter.first == L"ForMobsCollision")
-			{
-				if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
-				{
-					SetHitstate(true);
-				}
-				else
-					SetHitstate(false);
+	//if (PAWNTYPE::PAWN_CHAR == ePawnType)
+	//{
+	//	UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
+	//	for (auto& iter : GetColliderContainer())
+	//	{
+	//		if(iter.first == L"ForMobsCollision")
+	//		{
+	//			if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
+	//			{
+	//				SetHitstate(true);
+	//			}
+	//			else
+	//				SetHitstate(false);
 
-				GetTransform()->SetPos(GetTransform()->GetPos() - GetTransform()->GetLook() * 5 * _dTimeDelta);
-			}
-		}
-	}
-	else if (PAWNTYPE::PAWN_STATICOBJ == ePawnType)
-	{
-		CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
-		for (auto& iter : GetColliderContainer())
-		{
-			if(iter.first == L"ForStaticCollision")
-			{
-				for (auto& iter2 : pModelObject->GetColliderContainer())
-				{
-					m_f3CollidedNormal = iter.second->GetCollisionNormal(iter2.second);
+	//			GetTransform()->SetPos(GetTransform()->GetPos() - GetTransform()->GetLook() * 5 * _dTimeDelta);
+	//		}
+	//	}
+	//}
+	//else if (PAWNTYPE::PAWN_STATICOBJ == ePawnType)
+	//{
+	//	CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
+	//	for (auto& iter : GetColliderContainer())
+	//	{
+	//		if(iter.first == L"ForStaticCollision")
+	//		{
+	//			for (auto& iter2 : pModelObject->GetColliderContainer())
+	//			{
+	//				m_f3CollidedNormal = iter.second->GetCollisionNormal(iter2.second);
 
-					if (m_f3CollidedNormal != _float3::Zero) // 충돌이 발생한 경우
-					{
-						SetOBJCollisionState(true);
-						// 속도 결정
-						_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 50.0f : 20.0f;
+	//				if (m_f3CollidedNormal != _float3::Zero) // 충돌이 발생한 경우
+	//				{
+	//					SetOBJCollisionState(true);
+	//					// 속도 결정
+	//					_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 50.0f : 20.0f;
 
-						ApplySlidingMovement(m_f3CollidedNormal, speed,  _dTimeDelta);
+	//					ApplySlidingMovement(m_f3CollidedNormal, speed,  _dTimeDelta);
 
-					}
-					else
-					{
-						SetOBJCollisionState(false);
-					}
-				}
-			}
-		}
-	}
+	//				}
+	//				else
+	//				{
+	//					SetOBJCollisionState(false);
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 }
+
+#ifdef _ENABLE_PROTOBUFF
+void CWarriorPlayer::SendMoveData(CSHPTRREF<UGameInstance> spGameInstance)
+{
+	RETURN_CHECK(true == IsNetworkConnected(), ;);
+
+	_float3 vCharacterPos = GetTransform()->GetPos();
+	_float3 vCharRotate = GetTransform()->GetRotationValue();
+
+	VECTOR3 vMove;
+	VECTOR3 vRotate; 
+	{
+		PROTOFUNC::MakeVector3(OUT & vMove, vCharacterPos.x, vCharacterPos.y, vCharacterPos.z);
+		PROTOFUNC::MakeVector3(OUT & vRotate, vCharRotate.x, vCharRotate.y, vCharRotate.z);
+	}
+	CHARMOVE charMove;
+	PROTOFUNC::MakeCharMove(OUT & charMove, spGameInstance->GetNetworkOwnerID(), vMove, vRotate);
+	spGameInstance->SendProcessPacket(std::move(UProcessedData(charMove, TAG_CS_MOVE)));
+}
+#endif
 
 void CWarriorPlayer::TranslateStateMoveAndRunF(CSHPTRREF<UGameInstance> _spGameInstance, const _double& _dTimeDelta, const _float _fSpeed)
 {

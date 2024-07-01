@@ -56,6 +56,7 @@ void UNetworkBaseController::AddNetworkInitData(_int _NetworkID, const NETWORKRE
 void UNetworkBaseController::AddCreatedNetworkActor(_int _NetworkID, CSHPTRREF<UActor> _spActor)
 {
 	assert(nullptr != _spActor);
+	_spActor->SetNetworkID(_NetworkID);
 	m_NetworkActorContainer.insert(MakePair(_NetworkID, _spActor));
 }
 
@@ -140,7 +141,7 @@ void UNetworkBaseController::CombineRecvPacket(UOverExp* _pOverExp, _llong _numB
 		if ((_numBytes - CurrPacket) < 0)
 		{
 			::memcpy(&m_TcpTotalBuffer[0], pBufferMove, _numBytes);
-			m_CurrentBufferLength = _numBytes;
+			m_RemainBufferLength = _numBytes;
 			break;
 		}
 		ProcessPacket(&pBufferMove[PACKETHEAD_SIZE], PacketHead);

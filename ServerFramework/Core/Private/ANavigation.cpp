@@ -462,8 +462,8 @@ namespace Core {
 
 	bool ANavigation::LineTest(const Vector3& start, const Vector3& end) {
 		Vector3 direction = end - start;
-		_float distance = static_cast<_float>(direction.length());
-		direction = glm::normalize(direction);
+		_float distance = static_cast<_float>(direction.Length());
+		direction.Normalize();
 
 		Vector3 currentPos = start;
 		SHPTR<ACell> currentCell = FindCellWithoutUpdate(currentPos);

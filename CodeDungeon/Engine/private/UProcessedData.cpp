@@ -2,7 +2,7 @@
 #include "UProcessedData.h"
 
 UProcessedData::UProcessedData() : m_pData{ nullptr },
-m_DataType{ 0 }, m_DataSize{ 0 }, m_iNetworkID{0}
+m_DataType{ 0 }, m_DataSize{ 0 }, m_iNetworkID{ -1 }
 {
 }
 

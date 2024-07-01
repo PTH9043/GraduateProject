@@ -84,7 +84,7 @@ namespace Core {
 			Vector3 vDir = _vPos - vPointA;
 
 			// 평면 방정식을 사용하여 점이 변의 어느 쪽에 있는지 확인합니다.
-			float dotProduct = glm::dot(vDir, vNormal); 
+			float dotProduct = vDir.Dot(vNormal);
 			if (dotProduct > 0) {
 				_NeighborIndex = m_arrNeighbors[i];
 				return false;
@@ -157,8 +157,7 @@ namespace Core {
 
 	_float ACell::ComputeHeight(const Vector3& _vPosition)
 	{
-		Vector4 vPlane = m_vPlane;
-		return PTH::PlaneDotCoord(vPlane, _vPosition) + _vPosition.y;
+		return Vector3(DirectX::XMPlaneDotCoord(m_vPlane, _vPosition)).y + _vPosition.y;
 	}
 
 	Vector3 ACell::GetClosestPointOnEdges(const Vector3& position) const
@@ -169,7 +168,7 @@ namespace Core {
 		// 각 변에 대해 가장 가까운 점을 찾음
 		for (size_t i = 0; i < LINE_END; ++i) {
 			Vector3 pointOnEdge = ClosestPointOnLine(m_arrPoints[i], m_arrPoints[(i + 1) % LINE_END], position);
-			_float distanceSquared =  glm::distance2(position, pointOnEdge);
+			_float distanceSquared = DirectX::PTH::Vector3::DistanceSquared(position, pointOnEdge);
 			if (distanceSquared < minDistanceSquared) {
 				minDistanceSquared = distanceSquared;
 				closestPoint = pointOnEdge;
@@ -187,7 +186,7 @@ namespace Core {
 		Vector3 pointToLineStart = point - lineStart;
 
 		// 라인 방향과 입력된 점까지의 벡터 사이의 내적 값
-		float t = glm::dot(pointToLineStart, lineDirection) / glm::dot(lineDirection, lineDirection);
+		float t = DirectX::PTH::Vector3::Dot(pointToLineStart, lineDirection) / DirectX::PTH::Vector3::Dot(lineDirection, lineDirection);
 
 		// t 값을 사용하여 입력된 점에서 가장 가까운 점을 계산
 		Vector3 closestPoint = lineStart + lineDirection * t;
@@ -252,14 +251,21 @@ namespace Core {
 	void ACell::CalculateCrossResult(ARRAY<Vector3, POINT_END>& _Crosses)
 	{
 		// LINE 
-		Vector3 L1 = m_arrPoints[POINT_B] - m_arrPoints[POINT_A];
-		Vector3 L2 = m_arrPoints[POINT_C] - m_arrPoints[POINT_B];
-		Vector3 L3 = m_arrPoints[POINT_A] - m_arrPoints[POINT_C];
-		L1.y = 0; L2.y = 0; L3.y = 0;
-		// CROSS
-		_Crosses[POINT_A] = glm::cross(L1, L2);
-		_Crosses[POINT_B] = glm::cross(L2, L3);
-		_Crosses[POINT_C] = glm::cross(L3, L1);
+		Vector3 p1{ m_arrPoints[POINT_A].x, 0.f, m_arrPoints[POINT_A].z };
+		Vector3 p2{ m_arrPoints[POINT_B].x, 0.f, m_arrPoints[POINT_B].z };
+		Vector3 p3{ m_arrPoints[POINT_C].x, 0.f, m_arrPoints[POINT_C].z };
+
+		Vector3 L1 = p2 - p1;
+		Vector3 L2 = p3 - p2;
+		Vector3 L3 = p1 - p3;
+
+		Vector3 vCross1 = DirectX::XMVector3Cross(L1, L2);
+		Vector3 vCross2 = DirectX::XMVector3Cross(L2, L3);
+		Vector3 vCross3 = DirectX::XMVector3Cross(L3, L1);
+
+		_Crosses[POINT_A] = vCross1;
+		_Crosses[POINT_B] = vCross2;
+		_Crosses[POINT_C] = vCross3;
 	}
 
 	void ACell::MakeLineAndNormal()
@@ -272,7 +278,11 @@ namespace Core {
 		m_arrNormals[LINE_BC] = Vector3(m_arrLines[LINE_BC].z * -1.f, 0.f, m_arrLines[LINE_BC].x);
 		m_arrNormals[LINE_CA] = Vector3(m_arrLines[LINE_CA].z * -1.f, 0.f, m_arrLines[LINE_CA].x);
 
-		m_vPlane = PTH::PlaneFromPoints(m_arrPoints[POINT_A], m_arrPoints[POINT_B], m_arrPoints[POINT_C]);
+		m_arrNormals[LINE_AB].Normalize();
+		m_arrNormals[LINE_BC].Normalize();
+		m_arrNormals[LINE_CA].Normalize();
+
+		m_vPlane = DirectX::XMPlaneFromPoints(m_arrPoints[POINT_B], m_arrPoints[POINT_A], m_arrPoints[POINT_C]);
 	}
 
 	void ACell::Free()

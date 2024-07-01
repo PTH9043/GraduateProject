@@ -21,7 +21,7 @@ public:
 	using BUFFER = ARRAY<_char, MAX_BUFFER_LENGTH>;
 	using TOTALBUFFER = ARRAY<_char, MAX_PROCESSBUF_LENGTH>;
 public:
-	ASession(OBJCON_CONSTRUCTOR, MOVE TCPSOCKET _TcpSocket, SESSIONID _ID, SESSIONTYPE _SessionType);
+	ASession(OBJCON_CONSTRUCTOR, TCPSOCKET _TcpSocket, SESSIONID _ID, SESSIONTYPE _SessionType);
 	DESTRUCTOR(ASession)
 public: 
 	virtual _bool Start() PURE;

@@ -24,7 +24,7 @@ public:
 
 public:
 	void RegisterFunc(const THREADFUNC& _CallBack, void* _Data);
-	void RegisterJobTimer(SHPTR<AJobTimer> _spJobTImer);
+	void RegisterJob(CSHPTRREF<AJobTimer> _spJobTimer);
 	void Join();
 	void Detach();
 private:
@@ -37,7 +37,7 @@ private:
 private:
 	MUTEX								m_Mutex;
 	THRAEDVECTOR				m_ThreadContainer;
-	JOBTIMERCONTAINER		m_JobTimerContainer;
+	JOBTIMERCONTAINER		m_JobThreadContainer;
 	// Thread Num
 	std::atomic< _uint>			m_CurThreadNum;
 };

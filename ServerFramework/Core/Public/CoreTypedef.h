@@ -40,19 +40,22 @@ namespace Core
 	/*
 	GLM (OpenGl용 수학 라이브러리)
 	*/
-	using Vector2 = PTH::Vector2;
-	using Vector3 = PTH::Vector3;
-	using Vector4 = PTH::Vector4;
+	using Vector2 = DirectX::PTH::Vector2;
+	using Vector3 = DirectX::PTH::Vector3;
+	using Vector4 = DirectX::PTH::Vector4;
 
-	using _int2 = glm::int2;
-	using _int3 = glm::int3;
-	using _int4 = glm::int4;
+	using _int2 = DirectX::XMINT2;
+	using _int3 = DirectX::XMINT3;
+	using _int4 = DirectX::XMINT4;
 
-	using _matrix = PTH::Matrix;
-	using _quaternion = PTH::Quaternion;
+	using _float4x4 = DirectX::PTH::Matrix;
+	using _quaternion = DirectX::PTH::Quaternion;
 
 	using _wstring = CustomString<wchar_t, std::wstring>;
 	using _string = CustomString<char, std::string>;
+
+	using _xmvector = DirectX::XMVECTOR;
+	using _xmmatrix = DirectX::XMMATRIX;
 
 	template<class T>
 	using _atomic = std::atomic<T>;

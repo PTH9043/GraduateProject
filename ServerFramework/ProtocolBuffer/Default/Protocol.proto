@@ -76,14 +76,14 @@ message SELFPLAYERMOVE
 message CHARMOVE
 {
 	int64 id = 1;
+	// Move
 	float moveX = 2;
 	float moveY = 3;
 	float moveZ = 4;
+	// Rotate
 	float rotateX = 5;
 	float rotateY = 6;
 	float rotateZ = 7;
-	float rotateW = 8;
-	bool  jumpingState = 9;
 }
 
 /*

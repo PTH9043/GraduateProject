@@ -80,10 +80,13 @@ namespace Engine {
 
 #pragma region CUSTOM
 	template<class T>
-	using LIST = std::list<T, UStlAllocator<T>>;
+	using LIST = std::list<T>;
 
 	template<class T>
 	using VECTOR = std::vector<T, UStlAllocator<T>>;
+
+	template<class Type, class Other, class Less = std::less<Type>>
+	using MAP = std::map<Type, Other, Less, UStlAllocator<std::pair<const Type, Other>>>;
 
 	template<class Type, class Other, class HASH = std::hash<Type>, class KEYEQ = std::equal_to<Type>>
 	using UNORMAP = std::unordered_map<Type, Other, HASH, KEYEQ, UStlAllocator<std::pair<const Type, Other>>>;

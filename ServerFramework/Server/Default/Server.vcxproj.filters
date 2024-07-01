@@ -25,6 +25,9 @@
     <Filter Include="03.Session\Monster">
       <UniqueIdentifier>{01034477-172e-4fe5-99d8-30cd68b9e117}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Network\JobTimer">
+      <UniqueIdentifier>{fb6a57da-c2ae-4834-ad4e-4bfef13a6f49}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -39,8 +42,11 @@
     <ClCompile Include="..\Private\CPlayerSession.cpp">
       <Filter>03.Session\Player</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CMonsterObject.cpp">
+    <ClCompile Include="..\Private\CMummy.cpp">
       <Filter>03.Session\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CMonsterJobTimer.cpp">
+      <Filter>02.Network\JobTimer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -56,8 +62,11 @@
     <ClInclude Include="..\Public\CPlayerSession.h">
       <Filter>03.Session\Player</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CMonsterObject.h">
+    <ClInclude Include="..\Public\CMummy.h">
       <Filter>03.Session\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CMonsterJobTimer.h">
+      <Filter>02.Network\JobTimer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

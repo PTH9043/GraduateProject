@@ -38,10 +38,10 @@ protected:
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) override;
 
 private:
-	MUMMYTYPE m_MummyType;
-	SHPTR<UParticle>		m_spParticle;
-	PARTICLEPARAM* m_stParticleParam;
-	ComputeParticleType* m_stParticleType;
+	MUMMYTYPE					m_MummyType;
+	SHPTR<UParticle>			m_spParticle;
+	PARTICLEPARAM*			m_stParticleParam;
+	ComputeParticleType*	m_stParticleType;
 
 	
 };

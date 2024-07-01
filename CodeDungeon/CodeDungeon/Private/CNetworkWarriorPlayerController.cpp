@@ -49,9 +49,7 @@ void CNetworkWarriorPlayerController::Tick(const _double& _dTimeDelta)
 	if (spWarriorPlayer->GetJumpingState() || spWarriorPlayer->GetFallingState()) {
 		spWarriorPlayer->GetTransform()->MoveForward(_dTimeDelta, static_cast<_float>(m_JumpSpeed));
 	}
-	// Tick eve
-	spAnimModel->TickEventToRatio(spWarriorPlayer.get(), GetTrigger(),m_dRecvAnimDuration, _dTimeDelta);
-
+	spAnimModel->TickAnimation(_dTimeDelta);
 }
 
 void CNetworkWarriorPlayerController::ReceiveNetworkProcessData(void* _pData)
@@ -59,12 +57,14 @@ void CNetworkWarriorPlayerController::ReceiveNetworkProcessData(void* _pData)
 #ifdef _ENABLE_PROTOBUFF
 	SHPTR<CWarriorPlayer> spWarriorPlayer = m_wpWarriorPlayer.lock();
 	SHPTR<UAnimModel> spAnimModel = spWarriorPlayer->GetAnimModel();
+	{
+		PLAYERSTATE* pPlayerData = static_cast<PLAYERSTATE*>(_pData);
+		m_JumpSpeed = pPlayerData->movespeed();
+		m_dRecvAnimDuration = pPlayerData->animationtime();
+		SetAnimState(pPlayerData->animstate());
 
-
-	PLAYERSTATE* pPlayerData = static_cast<PLAYERSTATE*>(_pData);
-	m_JumpSpeed = pPlayerData->movespeed();
-	_wstring trigger = UMethod::ConvertSToW(pPlayerData->triggername());
-	SetTrigger(trigger);
-	SetAnimState(pPlayerData->animstate());
+		if (pPlayerData->animationindex() != spAnimModel->GetCurrentAnimIndex())
+			spAnimModel->SetAnimation(pPlayerData->animationindex());
+	}
 #endif
 }
