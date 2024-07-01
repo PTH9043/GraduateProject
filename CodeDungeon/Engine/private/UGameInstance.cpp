@@ -1668,7 +1668,7 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 		{
 			std::vector<RTDESC> vecRts{
 				RTDESC{ RTOBJID::DOWNSAMPLETWO, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
-					GraphicDesc->iWinCX / 24, GraphicDesc->iWinCY / 24, { 0.f, 0.f, 0.f, 0.f }  }
+					GraphicDesc->iWinCX / 16, GraphicDesc->iWinCY / 16, { 0.f, 0.f, 0.f, 0.f }  }
 			};
 			// Add 
 			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::DOWNSAMPLETWO, vecRts);
