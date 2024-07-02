@@ -218,7 +218,7 @@ void UGameInstance::LateTick(const _double& _dTimeDelta)
 {
 	m_spSceneManager->LateTick(_dTimeDelta);
 	m_spActorManager->LateTick(_dTimeDelta);
-//	m_spCharacterManager->TickCollider(_dTimeDelta);
+	m_spCharacterManager->TickCollider(_dTimeDelta);
 }
 
 void UGameInstance::RenderBegin()
