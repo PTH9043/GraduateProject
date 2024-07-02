@@ -220,6 +220,9 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		m_spTrail->AddTrail(plusPoint, minusPoint);
 	}
 	
+
+	//GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
+
 	m_spParticle->SetActive(true);
 
 	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_RUN)  {//|| AnimState == CWarriorAnimController::ANIM_ATTACK|| AnimState == CWarriorAnimController::ANIM_COMBO
