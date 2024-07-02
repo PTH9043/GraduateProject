@@ -83,7 +83,7 @@ bool UPawn::IsHit(CSHPTRREF<UPawn> _spEnemy, const _double& _dTimeDelta)
 			continue;
 		}
 
-		isTrue = Collider->second->IsCollision(iter.second);
+		isTrue |= Collider->second->IsCollision(iter.second);
 	}
 	if (true == isTrue)
 		Collision(_spEnemy, _dTimeDelta);

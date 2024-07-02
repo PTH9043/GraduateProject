@@ -37,80 +37,113 @@ HRESULT CMummyAnimController::NativeConstructClone(const VOIDDATAS& _tDatas)
 
 void CMummyAnimController::Tick(const _double& _dTimeDelta)
 {
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+    SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
-	// Reset Trigger
-	ClearTrigger();
-	/* Reset */
-	SetAnimState(-1);
+    // Reset Trigger
+    ClearTrigger();
+    /* Reset */
+    SetAnimState(-1);
 
-	static _bool AttackMode = false;
-	static _bool TauntMode = false;
-
-	SHPTR< CMummy> spMummy = m_wpMummyMob.lock();
-	SHPTR<UAnimModel> spAnimModel = spMummy->GetAnimModel();
-	const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
-
-	_float DistanceFromPlayer = spMummy->GetDistanceFromPlayer();
-	_bool FoundPlayer = spMummy->GetFoundTargetState();
-	_bool Move = false;
-
-	_float AttackRange = 10.f;
-	_bool Hit = spMummy->GetHitState();
-	_bool Death = spGameInstance->GetDIKeyDown(DIK_9);
-
-	if (CurAnimName == L"death")
-		Death = true;
-
-	if (FoundPlayer && !AttackMode && !TauntMode)
-	{
-		UpdateState(spAnimModel, ANIM_AWAKE, L"WAKEUP");
-	}
-
-	if (CurAnimName == L"openLaying" || CurAnimName == L"openStanding")
-		TauntMode = true;
-
-	if (TauntMode)
-	{
-		UpdateState(spAnimModel, ANIM_TAUNT, L"TAUNT");
-	}
-
-	if (CurAnimName == L"taunt")
-		AttackMode = true;
-
-	if (AttackMode)
-	{
-		if(!Hit)
-		{
-			if (DistanceFromPlayer > AttackRange)
-				UpdateState(spAnimModel, ANIM_MOVE, L"WALKF");
-			else
-			{
-				int randomAttack = rand() % 2;
-				if (randomAttack == 0)
-				{
-					UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK01");
-				}
-				else
-				{
-					UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK02");
-				}
-			}
-		}
-			
-	}
-
-	if(Hit)
-	{
-		UpdateState(spAnimModel, ANIM_HIT, L"HIT");
-	}
-
-	if (Death)
-	{
-		UpdateState(spAnimModel, ANIM_DEATH, L"DEAD");
-	}
+    static _bool AttackMode = false;
+    static _bool TauntMode = false;
+    static _bool hitExecuted = false; // Track if hit animation has been played
+    static _double lastHitTime = 0;   // Track the time when hit animation was last executed
+    static _double lastAttackTime = 0;
+    static _bool startlastHitTime = false;
+    static _bool lastAttackWasFirst = false;
 
 
-	spAnimModel->TickEvent(spMummy.get(), GetTrigger(), _dTimeDelta);
+    SHPTR<CMummy> spMummy = m_wpMummyMob.lock();
+    SHPTR<UAnimModel> spAnimModel = spMummy->GetAnimModel();
+    const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
 
+    _float DistanceFromPlayer = spMummy->GetDistanceFromPlayer();
+    _bool FoundPlayer = spMummy->GetFoundTargetState();
+    _bool Move = false;
+
+    _float AttackRange = 13.f;
+    _bool Hit = spMummy->GetHitState();
+    _bool Death = spGameInstance->GetDIKeyDown(DIK_9);
+
+    if (CurAnimName == L"death")
+        Death = true;
+
+    if (FoundPlayer && !AttackMode && !TauntMode)
+    {
+        UpdateState(spAnimModel, ANIM_AWAKE, L"WAKEUP");
+    }
+
+    if (CurAnimName == L"openLaying" || CurAnimName == L"openStanding")
+        TauntMode = true;
+
+    // Check if hit animation can be executed (2 seconds cooldown)
+    if (Hit && !hitExecuted && (lastHitTime == 0.0))
+    {
+        UpdateState(spAnimModel, ANIM_HIT, L"HIT");
+        hitExecuted = true; // Set the flag to indicate hit animation played
+        startlastHitTime = true;
+    }
+    
+    if(lastHitTime > 3.0)
+    {
+        startlastHitTime = false;
+        lastHitTime = 0;
+    }
+
+    if (startlastHitTime)
+        lastHitTime += _dTimeDelta;
+
+    // Reset hitExecuted flag if the current animation is not HIT
+    if (spAnimModel->GetCurrentAnimation()->GetAnimName() != L"HIT")
+    {
+        hitExecuted = false;
+    }
+
+
+    if (TauntMode)
+    {
+        UpdateState(spAnimModel, ANIM_TAUNT, L"TAUNT");
+    }
+
+    if (CurAnimName == L"taunt")
+    {
+        AttackMode = true;
+        TauntMode = false;
+    }
+
+    if (AttackMode)
+    {
+        if (!Hit)
+        {
+            lastAttackTime += _dTimeDelta;
+            if (lastAttackTime > 3.0)
+            {
+                lastAttackWasFirst = !lastAttackWasFirst;
+                lastAttackTime = 0;
+            }
+
+            if (DistanceFromPlayer > AttackRange)
+                UpdateState(spAnimModel, ANIM_MOVE, L"WALKF");
+            else
+            {
+                if (lastAttackWasFirst)
+                {
+                    UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK02");
+                }
+                else
+                {
+                    UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK01");
+                }
+            }
+        }
+    }
+
+
+
+    if (Death)
+    {
+        UpdateState(spAnimModel, ANIM_DEATH, L"DEAD");
+    }
+
+    spAnimModel->TickEvent(spMummy.get(), GetTrigger(), _dTimeDelta);
 }

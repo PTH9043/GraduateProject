@@ -50,7 +50,6 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
     // Input checks
- // Input checks
     _bool isRunshift = spGameInstance->GetDIKeyPressing(DIK_LSHIFT);
     _bool isMoveFront = spGameInstance->GetDIKeyPressing(DIK_W);
     _bool isMoveBack = spGameInstance->GetDIKeyPressing(DIK_S);
@@ -64,6 +63,9 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     _bool isRoll = spGameInstance->GetDIKeyDown(DIK_C);
     _bool isHit = spWarriorPlayer->GetHitState();
     _bool isJump = spGameInstance->GetDIKeyDown(DIK_SPACE);
+
+    // Track hit state
+    static _bool hitExecuted = false;
 
     // Jumping logic
     if (!isAttack && !isCombo && !isMoveBack && isJump) {
@@ -112,8 +114,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     }
 
     // Attack handling
-    if (isAttack) {
-     
+    if (isAttack && !isHit) {
         const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
         if (isWAttack) {
             if (CurAnimName == L"combo02_1") m_iWComboStack = 2;
@@ -143,7 +144,6 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
             m_iSComboStack = 0;
         }
     }
-   
 
     // Roll handling
     if (isRoll) {
@@ -155,19 +155,23 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     }
 
     // Hit state
-    if (isHit) {
+    if (isHit && !hitExecuted) {
         UpdateState(spAnimModel, ANIM_HIT, L"HIT_BACK");
+        hitExecuted = true; // Set the flag to indicate hit animation played
     }
 
-
-    {
-        const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
-        if (CurAnimName == L"combo06_1" || CurAnimName == L"combo06_2" || CurAnimName == L"combo06_3" || CurAnimName == L"combo02_1" || CurAnimName == L"combo02_2" || CurAnimName == L"combo02_3") {
-            spWarriorPlayer->IfAttack(true);
-        }
-        else {
-            spWarriorPlayer->IfAttack(false);
+    // Reset hitExecuted flag if the current animation is not HIT
+    if (spAnimModel->GetCurrentAnimation()->GetAnimName() != L"HIT_BACK") {
+        hitExecuted = false;
     }
+
+    // Combo attack state
+    const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
+    if (CurAnimName == L"combo06_1" || CurAnimName == L"combo06_2" || CurAnimName == L"combo06_3" || CurAnimName == L"combo02_1" || CurAnimName == L"combo02_2" || CurAnimName == L"combo02_3") {
+        spWarriorPlayer->IfAttack(true);
+    }
+    else {
+        spWarriorPlayer->IfAttack(false);
     }
 
     spWarriorPlayer->SetMouseMove(spGameInstance->GetDIMMoveState(DIMM_X));
@@ -179,12 +183,13 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     _int NetworkID = spGameInstance->GetNetworkOwnerID();
     PLAYERSTATE csPlayerState;
     _string str = UMethod::ConvertWToS(GetTrigger());
-    PROTOFUNC::MakePlayerState(OUT& csPlayerState, NetworkID, isAttack,
+    PROTOFUNC::MakePlayerState(OUT & csPlayerState, NetworkID, isAttack,
         GetAnimState(), isRunshift ? 30.f : 10.f, spAnimModel->GetCurrentAnimation()->GetDuration(), str);
     size_t value = (size_t)(str.length() * 1.5 + csPlayerState.ByteSizeLong());
     spGameInstance->SendProcessPacket(UProcessedData(csPlayerState, TAG_CS_PLAYERSTATE, value));
 #endif
 }
+
 
 void CUserWarriorAnimController::ReceiveNetworkProcessData(void* _pData)
 {

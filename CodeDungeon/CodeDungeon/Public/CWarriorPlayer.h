@@ -52,7 +52,6 @@ private:
 	_bool																isAttack;
 
 	_bool m_bisCollisionWithObj;
-	_float3 m_f3CollidedNormal;
 };
 
 END

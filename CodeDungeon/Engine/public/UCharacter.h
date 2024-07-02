@@ -100,6 +100,9 @@ protected: /* get set */
 
 	const _float3& GetMovingDirection() const { return m_f3MovedDirection; }
 	const _float3& GetLastMovingDirection() const { return m_f3LastMovedDirection; }
+
+	const _float3& GetCollidedNormal() const { return m_f3CollidedNormal; }
+	void SetCollidedNormal(const _float3& _f3Normal) { m_f3CollidedNormal = _f3Normal; }
 private:
 	// AnimationModel
 	SHPTR< UAnimModel>					m_spAnimModel;
@@ -126,6 +129,8 @@ private:
 
 	_bool			m_DrawOutline=false;
 	_bool			m_isPlayer=false;
+
+	_float3			m_f3CollidedNormal;
 };
 
 END
