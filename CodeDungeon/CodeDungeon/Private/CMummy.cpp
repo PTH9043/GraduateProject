@@ -144,7 +144,6 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 	}
 	else if(CurAnimState == UAnimationController::ANIM_ATTACK)
 	{
-		
 		_float3 direction = CurrentMobPos - CurrentPlayerPos;
 		GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
 	}

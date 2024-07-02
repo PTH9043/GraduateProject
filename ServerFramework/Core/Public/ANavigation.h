@@ -73,6 +73,8 @@ public:
 	CSHPTRREF<ACell> GetCurCell() { return m_spCurCell; }
 	CSHPTRREF<ACell> GetPrevCell() { return m_spPrevCell; }
 
+	SHPTR<ACell> GetCell(const _int _index) { return (*m_spCellContainer.get())[_index]; }
+
 	void SetCurCell(CSHPTRREF<ACell> newCell);
 	// Ready Neighbor
 	_bool ReadyNeighbor();

@@ -22,7 +22,7 @@ namespace Core
 	void AThreadManager::RegisterJob(CSHPTRREF<AJobTimer> _spJobTimer)
 	{
 		assert(nullptr != _spJobTimer);
-		_spJobTimer->RegisterAsio();
+		_spJobTimer->RegisterTimer();
 		m_JobThreadContainer.emplace_back(_spJobTimer);
 	}
 

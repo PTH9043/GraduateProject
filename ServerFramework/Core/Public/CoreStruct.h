@@ -186,6 +186,25 @@ namespace Core {
 		ANIMSOUNDDESC() : wstrSoundName{ L"" }, vSoundVelocity{}, fMinSoundDistance{ 0.f }, fMaxSoundDistance{ 1.f } {}
 
 	};
+
+	struct TIMEREVENT {
+		_int					iObjID;
+		_int					iTargetID;
+		TIMEPOINT		WakeUpTime;
+		EVENT_TYPE eEventType;
+
+		TIMEREVENT() : iObjID{ 0 }, iTargetID{ 0 }, WakeUpTime{ TIMEPOINT::min()}, eEventType{EV_END} {}
+		TIMEREVENT(_int _iObjID, _int _iTargetID, EVENT_TYPE _eEventType) 
+			: iObjID{_iObjID}, iTargetID{_iTargetID}, WakeUpTime{ std::chrono::system_clock::now() }, eEventType{_eEventType}
+		{}
+
+		constexpr bool operator < (const TIMEREVENT& L) const
+		{
+			return (WakeUpTime > L.WakeUpTime);
+		}
+	};
+
+
 #pragma endregion ANIMEVENTTYPE
 }
 #endif // _SERVERFRAMEWORK_CORE_PUBLIC_CORESTRUCT_H

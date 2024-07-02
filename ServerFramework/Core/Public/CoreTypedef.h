@@ -129,6 +129,8 @@ namespace Core
 
 	using IOContext = boost::asio::io_context;
 
+	using TIMEPOINT = std::chrono::system_clock::time_point;
+
 	using SendReceiveFunc = std::function<void(const boost::system::error_code& _error, std::size_t _Size)>;
 	using AcceptFunc = std::function<void(const boost::system::error_code& _error)>;
 

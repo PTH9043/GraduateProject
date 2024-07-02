@@ -29,11 +29,6 @@ namespace Core
 		{
 			Navigation = CreateInitNative<ANavigation>("..\\..\\Resource\\Navigation\\interior.bin");
 		}
-		// PathFinder Ready
-		for (_int i = 0; i < TLS::MAX_THREAD; ++i)
-		{
-			m_PathFinderWorkBench[i] = CreateInitNative<APathFinder>(*m_NavigationWorkBench[i]->GetCells().get());
-		}
 
 		//m_spPathFinder = CreateInitNative<APathFinder>(*m_spNavigation->GetCells().get());
 	}
@@ -207,33 +202,6 @@ namespace Core
 	{
 		SHPTR<AMySqlDriver> spMySqlDriver = m_spMySqlDriver;
 		spMySqlDriver->BindParam(_TableType, _ParamIndex, _Value);
-	}
-
-	/*
-	-----------------------------
-	AMySqlDriver
-	-----------------------------
-	ANavigation
-	-----------------------------
-	*/
-
-	/*
-	--------------------------------------
-	ANavigation
-	--------------------------------------
-	APathFinder
-	--------------------------------------
-	*/
-
-	void ACoreInstance::FindPath(Vector3 _vStartPos, Vector3 _vEndPos)
-	{
-		m_PathFinderWorkBench[TLS::g_ThreadID]->FindPath(m_NavigationWorkBench[TLS::g_ThreadID], _vStartPos, _vEndPos);
-	}
-
-	LIST<Vector3>& ACoreInstance::GetBestList()
-	{
-		ASSERT_CRASH(nullptr != m_PathFinderWorkBench[TLS::g_ThreadID])
-		return m_PathFinderWorkBench[TLS::g_ThreadID]->GetBestList();
 	}
 
 	void ACoreInstance::Free()

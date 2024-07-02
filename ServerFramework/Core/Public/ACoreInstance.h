@@ -18,8 +18,7 @@ class ATransform;
 class ACell;
 class AJobTimer;
 
-using NAVIGATIONWORKBENCH = ARRAY<SHPTR<ANavigation>, TLS::MAX_THREAD>;
-using PATHFINDERWORKBENCH = ARRAY<SHPTR<APathFinder>, TLS::MAX_THREAD>;
+using NAVIGATIONWORKBENCH = ARRAY<SHPTR<ANavigation>, TLS::MAX_WORKTHREAD + EXTRA_NAV_COUNT>;
 
 using SESSIONCONTAINER = CONUNORMAP<SESSIONID, SHPTR<ASession>>;
 using GAMEOBJECTCONTAINER = CONUNORMAP<SESSIONID, SHPTR<AGameObject>>;
@@ -76,11 +75,7 @@ public: /* MySqlDriver */
 	void BindParam(SQLTABLETYPE _TableType, _int _ParamIndex, const _string& _Value);
 public: /* Navigation*/
 	// Compute Height
-	SHPTR<ANavigation> GetNavigation() const { return m_NavigationWorkBench[TLS::g_ThreadID]; }
-public: /* PathFinder */
-	// Find Path
-	void FindPath(Vector3 _vStartPos, Vector3 _vEndPos);
-	LIST<Vector3>& GetBestList();
+	SHPTR<ANavigation> GetNavigation(_int _index = TLS::g_ThreadID) const { return m_NavigationWorkBench[_index]; }
 private:
 	virtual void Free() override;
 private:
@@ -92,7 +87,6 @@ private:
 	SHPTR< AMySqlDriver>				m_spMySqlDriver;
 
 	NAVIGATIONWORKBENCH			m_NavigationWorkBench;
-	PATHFINDERWORKBENCH			m_PathFinderWorkBench;
 };
 
 END

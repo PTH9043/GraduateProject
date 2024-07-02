@@ -262,6 +262,7 @@ namespace Core
 		str += _p2;
 		return std::move(str);
 	}
+
 #pragma endregion FUNCTION
 }
 
