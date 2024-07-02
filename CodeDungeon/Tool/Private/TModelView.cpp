@@ -771,6 +771,7 @@ void TModelView::LoadAnimModelData(CSHPTRREF<FILEGROUP> _spFolder)
 {
 	RETURN_CHECK(nullptr == _spFolder, ;);
 	RETURN_CHECK(_spFolder->wstrFolderName == L"Anim", ;);
+	RETURN_CHECK(_spFolder->wstrFolderName == L"AnimFBX", ;);
 
 	SHPTR<FILEGROUP> UnityFBXFolder = _spFolder->FindGroup(L"UnityFBX");
 	if (nullptr != UnityFBXFolder)
