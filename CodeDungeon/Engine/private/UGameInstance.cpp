@@ -209,10 +209,6 @@ void UGameInstance::AwakeTick()
 
 void UGameInstance::Tick(const _double& _dTimeDelta)
 {
-	if (nullptr != m_spNetworkQueryProcessing)
-	{
-		m_spNetworkQueryProcessing->ProcessQueryData();
-	}
 	m_spRenderer->Tick(_dTimeDelta);
 	m_spSceneManager->Tick(_dTimeDelta);
 	m_spActorManager->Tick(_dTimeDelta);
@@ -220,13 +216,9 @@ void UGameInstance::Tick(const _double& _dTimeDelta)
 
 void UGameInstance::LateTick(const _double& _dTimeDelta)
 {
-	if (nullptr != m_spNetworkQueryProcessing)
-	{
-		m_spNetworkQueryProcessing->ProcessQueryData();
-	}
 	m_spSceneManager->LateTick(_dTimeDelta);
 	m_spActorManager->LateTick(_dTimeDelta);
-	m_spCharacterManager->TickCollider(_dTimeDelta);
+//	m_spCharacterManager->TickCollider(_dTimeDelta);
 }
 
 void UGameInstance::RenderBegin()
@@ -1668,7 +1660,7 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 		{
 			std::vector<RTDESC> vecRts{
 				RTDESC{ RTOBJID::DOWNSAMPLETWO, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
-					GraphicDesc->iWinCX / 24, GraphicDesc->iWinCY / 24, { 0.f, 0.f, 0.f, 0.f }  }
+					GraphicDesc->iWinCX / 16, GraphicDesc->iWinCY / 16, { 0.f, 0.f, 0.f, 0.f }  }
 			};
 			// Add 
 			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::DOWNSAMPLETWO, vecRts);

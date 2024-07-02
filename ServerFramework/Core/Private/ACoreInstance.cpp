@@ -29,11 +29,6 @@ namespace Core
 		{
 			Navigation = CreateInitNative<ANavigation>("..\\..\\Resource\\Navigation\\interior.bin");
 		}
-		// PathFinder Ready
-		for (_int i = 0; i < TLS::MAX_THREAD; ++i)
-		{
-			m_PathFinderWorkBench[i] = CreateInitNative<APathFinder>(*m_NavigationWorkBench[i]->GetCells().get());
-		}
 
 		//m_spPathFinder = CreateInitNative<APathFinder>(*m_spNavigation->GetCells().get());
 	}
@@ -105,6 +100,11 @@ namespace Core
 	void ACoreInstance::RegisterFunc(const THREADFUNC& _CallBack, void* _Data)
 	{
 		m_spThreadManager->RegisterFunc(_CallBack, _Data);
+	}
+
+	void ACoreInstance::RegisterJob(CSHPTRREF<AJobTimer> _spJobTimer)
+	{
+		m_spThreadManager->RegisterJob(_spJobTimer);
 	}
 
 	void ACoreInstance::Join()
@@ -202,85 +202,6 @@ namespace Core
 	{
 		SHPTR<AMySqlDriver> spMySqlDriver = m_spMySqlDriver;
 		spMySqlDriver->BindParam(_TableType, _ParamIndex, _Value);
-	}
-
-	/*
-	-----------------------------
-	AMySqlDriver
-	-----------------------------
-	ANavigation
-	-----------------------------
-	*/
-
-	const _float ACoreInstance::ComputeHeight(const Vector3& _vPosition)
-	{
-		return m_NavigationWorkBench[TLS::g_ThreadID]->ComputeHeight(_vPosition);
-	}
-
-	void ACoreInstance::ComputeHeight(CSHPTRREF<ATransform> _spTransform)
-	{
-		m_NavigationWorkBench[TLS::g_ThreadID]->ComputeHeight(_spTransform);
-	}
-
-	_bool ACoreInstance::IsMove(Vector3 _vPosition, SHPTR<ACell>& _spCell)
-	{
-		return m_NavigationWorkBench[TLS::g_ThreadID]->IsMove(_vPosition, _spCell);
-	}
-
-	_bool ACoreInstance::IsMove(Vector3 _vPosition)
-	{
-		SHPTR<ACell> spCell;
-		return m_NavigationWorkBench[TLS::g_ThreadID]->IsMove(_vPosition, spCell);
-	}
-
-	_bool ACoreInstance::IsMove(_int _iCurOnCellIndex, Vector3 _vPosition, SHPTR<ACell>& _spCell)
-	{
-		return m_NavigationWorkBench[TLS::g_ThreadID]->IsMove(_iCurOnCellIndex, _vPosition, _spCell);
-	}
-
-	_bool ACoreInstance::IsMove(_int _iCurOnCellIndex, Vector3 _vPosition)
-	{
-		SHPTR<ACell> spCell;
-		return m_NavigationWorkBench[TLS::g_ThreadID]->IsMove(_iCurOnCellIndex, _vPosition, spCell);
-	}
-
-	SHPTR<ACell> ACoreInstance::FindCell(const Vector3& _vPosition)
-	{
-		return m_NavigationWorkBench[TLS::g_ThreadID]->FindCell(_vPosition);
-	}
-
-	SHPTR<ACell> ACoreInstance::FindCellWithoutUpdate(const Vector3& _vPosition)
-	{
-		return m_NavigationWorkBench[TLS::g_ThreadID]->FindCellWithoutUpdate(_vPosition);
-	}
-
-	SHPTR<ACell> ACoreInstance::FindCell(const _int& _iIndex)
-	{
-		return m_NavigationWorkBench[TLS::g_ThreadID]->FindCell(_iIndex);
-	}
-
-	SHPTR<ACell> ACoreInstance::FindCellWithoutUpdate(const _int& _iIndex)
-	{
-		return m_NavigationWorkBench[TLS::g_ThreadID]->FindCellWithoutUpdate(_iIndex);
-	}
-
-	/*
-	--------------------------------------
-	ANavigation
-	--------------------------------------
-	APathFinder
-	--------------------------------------
-	*/
-
-	void ACoreInstance::FindPath(Vector3 _vStartPos, Vector3 _vEndPos)
-	{
-		m_PathFinderWorkBench[TLS::g_ThreadID]->FindPath(m_NavigationWorkBench[TLS::g_ThreadID], _vStartPos, _vEndPos);
-	}
-
-	LIST<Vector3>& ACoreInstance::GetBestList()
-	{
-		ASSERT_CRASH(nullptr != m_PathFinderWorkBench[TLS::g_ThreadID])
-		return m_PathFinderWorkBench[TLS::g_ThreadID]->GetBestList();
 	}
 
 	void ACoreInstance::Free()

@@ -1,26 +1,37 @@
 #include "CoreDefines.h"
 #include "AJobTimer.h"
+#include <functional>
 
 namespace Core {
-	AJobTimer::AJobTimer(OBJCON_CONSTRUCTOR) :
-		ACoreObject(OBJCON_CONDATA), m_isRunningThread{true}
+	AJobTimer::AJobTimer(OBJCON_CONSTRUCTOR, Asio::io_service& _service) :
+		ACoreObject(OBJCON_CONDATA),
+		m_SteadyEvent{_service }
 	{
 	}
 
-	void AJobTimer::TimerThread(void* _pJobTimer)
+	void AJobTimer::RegisterTimer(_int _RegisterTimer)
 	{
-		RETURN_CHECK(nullptr == _pJobTimer, ;);
-		AJobTimer* pJobTimer = static_cast<AJobTimer*>(_pJobTimer);
-		pJobTimer->RunTimer();
+		m_SteadyEvent.expires_from_now(std::chrono::milliseconds(_RegisterTimer));
+		// 타이머의 비동기 대기 설정
+		m_SteadyEvent.async_wait(std::bind(&AJobTimer::TimerThread, this, std::placeholders::_1));
 	}
 
-	void AJobTimer::RunTimer()
+	void AJobTimer::TimerThread(const boost::system::error_code& _error)
 	{
-		while (m_isRunningThread) 
+		TIMEREVENT TimerEvent;
+		auto CurrentTime = std::chrono::system_clock::now();
+
+		if (true == m_TimerEventQueue.try_pop(TimerEvent))
 		{
-			TickTimer();
+			if (TimerEvent.WakeUpTime > CurrentTime) {
+				auto MTime = TimerEvent.WakeUpTime - CurrentTime;
+				std::this_thread::sleep_for(MTime);
+			}
+			TickTimer(TimerEvent);
 		}
+		RegisterTimer(1);
 	}
+
 
 	void AJobTimer::Free()
 	{

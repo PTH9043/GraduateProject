@@ -46,18 +46,6 @@ void PROTOFUNC::MakePlayerState(PLAYERSTATE* _pOut, LLONG _id, bool _ifattack, b
 	_pOut->set_animationindex(_curAnimIndex);
 }
 
-void PROTOFUNC::MakePlayerState(PLAYERSTATE* _pOut, LLONG _id, bool _ifattack,
-	 bool _animstate, bool _movespeed, double _animDuration, int _curAnimIndex)
-{
-	assert(nullptr != _pOut);
-	_pOut->set_id(_id);
-	_pOut->set_ifattack(_ifattack);
-	_pOut->set_animstate(_animstate);
-	_pOut->set_movespeed(_movespeed);
-	_pOut->set_animationtime(_animDuration);
-	_pOut->set_animationindex(_curAnimIndex);
-}
-
 void PROTOFUNC::MakePlayerAnimState(PLAYERANIMSTATE* _pOut, LLONG _id, int animstate, bool ifattack,
 	bool isRunshift, bool isMoveFront, bool isMoveBack, bool isMoveLeft, bool isMoveRight, bool isWAttack, 
 	bool isSAttack, bool isRAttack, bool isCombo, bool isRoll, bool isHit, bool isJump, int wComboStack, int sComboStack)
@@ -91,20 +79,17 @@ void PROTOFUNC::MakeSelfPlayerMove(SELFPLAYERMOVE* _pOut, LLONG _id, const VECTO
 	_pOut->set_movez(_move.z());
 }
 
-void PROTOFUNC::MakeCharMove(CHARMOVE* _pOut, LLONG _id, const VECTOR3& _move, 
-	const VECTOR4& _rotate, bool _jumpingstate)
+void PROTOFUNC::MakeCharMove(CHARMOVE* _pOut, LLONG _id, const VECTOR3& _move, const VECTOR3& _rotate)
 {
 	assert(nullptr != _pOut);
 	_pOut->set_id(_id);
 	_pOut->set_movex(_move.x());
 	_pOut->set_movey(_move.y());
 	_pOut->set_movez(_move.z());
-
+	// rotate
 	_pOut->set_rotatex(_rotate.x());
 	_pOut->set_rotatey(_rotate.y());
 	_pOut->set_rotatez(_rotate.z());
-	_pOut->set_rotatew(_rotate.w());
-	_pOut->set_jumpingstate(_jumpingstate);
 }
 
 /* =========== SC =============== */

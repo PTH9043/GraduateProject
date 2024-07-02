@@ -33,9 +33,6 @@ namespace Server
 				Core::SHPTR<Core::ASession> spSession = Core::Create<CPlayerSession>(spCoreInstance, std::move(TcpSocket), id);
 				// Insert 
 				InsertSession(id, spSession);
-
-				std::cout << "[" << id << "], Session ID Connected\n";
-
 				spSession->Start();
 			}
 			Connect();

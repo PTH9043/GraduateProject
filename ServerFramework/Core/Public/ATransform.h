@@ -5,67 +5,125 @@
 
 BEGIN(Core)
 
-/*
-@ Date: 2023-01-18, Writer: 박태현
-@ Explain
-- 객체의 위치를 정의하기 위한 클래스이다. 
-*/
-class CORE_DLL ATransform final : public ACoreBase {
+class CORE_DLL ATransform : public ACoreBase {
 public:
 	ATransform();
-	NO_COPY(ATransform)
 	DESTRUCTOR(ATransform)
 public:
-	const Vector3 GetScale() const { return m_vScale; }
+	const Vector3& GetScale() { return m_vScale; }
 	const Vector3 GetAngles() const;
-	const _float	GetXAngle() const;
-	const _float	GetYAngle() const;
-	const _float	GetZAngle() const;
+	const _float GetXAngle() const;
+	const _float GetYAngle() const;
+	const _float GetZAngle() const;
+	const _float4x4 GetWorldMatrixTP() { TransformUpdate();  return XMMatrixTranspose(XMLoadFloat4x4(&m_mChangeWorldMatrix)); }
+	const _float4x4 GetWorldMatrixInv() { TransformUpdate();   return XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_mChangeWorldMatrix)); }
+	const _float4x4& GetWorldMatrix() const { return m_mWorldMatrix; }
 
-	const _matrix GetWorldMatrix() const { return m_mWorldMatrix; }
-	const _matrix GetWorldMatrixTP() const { return m_mWorldMatrix.Transpose(); }
-	const _matrix GetWorldMatrixInverse() const { return m_mWorldMatrix.Invert(); }
+	const _float4x4& GetChangeMatrix() { TransformUpdate();   return m_mChangeWorldMatrix; }
+	// Get Parents Local Matrix
+	const _float4x4 GetParentsMatrix();
 
-	const Vector3 GetRight() const {return m_mWorldMatrix.GetRight();}
-	const Vector3 GetUp() const { return m_mWorldMatrix.GetUp(); }
-	const Vector3 GetLook() const { return m_mWorldMatrix.GetLook(); }
-	const Vector3 GetLeft() const { return m_mWorldMatrix.GetLeft(); }
-	const Vector3 GetDown() const { return m_mWorldMatrix.GetDown(); }
-	const Vector3 GetBack() const { return m_mWorldMatrix.GetBack(); }
-	const Vector3 GetPos() const { return m_mWorldMatrix.GetPos(); }
+	const Vector3& GetRight() const { return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_RIGHT][0]); }
+	const Vector3& GetUp() const { return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_UP][0]); }
+	const Vector3& GetLook() const { return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_LOOK][0]); }
+	const Vector3& GetPos() const { return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_POS][0]); }
 
-	void SetScale(const Vector3 _vScale);
+	const Vector3& GetChangeRight() const { return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_RIGHT][0]); }
+	const Vector3& GetChangeUp() const { return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_UP][0]); }
+	const Vector3& GetChangeLook() const { return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_LOOK][0]); }
+	const Vector3& GetChangePos() const { return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_POS][0]); }
 
-	void SetRight(const Vector3 _vec) { m_mWorldMatrix.SetRight(_vec); }
-	void SetUp(const Vector3 _vec) { m_mWorldMatrix.SetUp(_vec); }
-	void SetLook(const Vector3 _vec) { m_mWorldMatrix.SetLook(_vec); }
-	void SetPos(const Vector3 _vec) { m_mWorldMatrix.SetPos(_vec); }
+	const SHPTR<ATransform>& GetParentsTransform() const { return m_spParentsTransform; }
 
-	void RotateFix(const Vector3 _vStandardAngle, const _float _TurnAnge);
+	const Vector3& GetJumpVelocity() const { return m_vJumpvelocity; }
+
+	void SetScale(const Vector3& _vScale);
+	void SetParent(CSHPTRREF<ATransform> _spTransform);
+
+	void SetRight(const Vector3& _vRight) { m_mWorldMatrix.Set_Right(_vRight); }
+	void SetUp(const Vector3& _vUp) { m_mWorldMatrix.Set_Up(_vUp); }
+	void SetLook(const Vector3& _vLook) { m_mWorldMatrix.Set_Look(_vLook); }
+	void SetPos(const Vector3& _vPos) { m_mWorldMatrix.Set_Pos(_vPos); }
+
+	void SetNotApplyRotate(const _bool _isActive) { this->m_isNotApplyRotate = _isActive; }
+	void SetNotApplyPos(const _bool _isActive) { this->m_isNotApplyPos = _isActive; }
+	void SetNotApplyScale(const _bool _isActive) { this->m_isNotApplyScale = _isActive; }
+	void SetParentsTransform(CSHPTRREF<ATransform> _spTransform) { this->m_spParentsTransform = _spTransform; }
+	void SetNewWorldMtx(const _float4x4& _newworldMtx);
+public:
+	virtual void Free() override;
+public:
+	void TransformUpdate();
+	// Move 
+	void MoveForward(const _double& _dTimeDelta, const _float& _fSpeed);
+	void MoveBack(const _double& _dTimeDelta, const _float& _fSpeed);
+	void MoveLeft(const _double& _dTimeDelta, const _float& _fSpeed);
+	void MoveRight(const _double& _dTimeDelta, const _float& _fSpeed);
+	// Move Not Y
+	void MoveForwardNotY(const _double& _dTimeDelta, const _float& _fSpeed);
+	void MoveBackNotY(const _double& _dTimeDelta, const _float& _fSpeed);
+	void MoveLeftNotY(const _double& _dTimeDelta, const _float& _fSpeed);
+	void MoveRightNotY(const _double& _dTimeDelta, const _float& _fSpeed);
+	void MovePos(const Vector3& _vPos);
+	void TranslatePos(const Vector3& _vPos, const _double& _dTimeDelta, const _float& _fSpeed,
+		const _float& _fLimitDistance = 0.1f);
+	void TranslateDir(const Vector3& _vDir, const _double& _dTimeDelta, const _float& _fSpeed);
+	void TranslateTrans(CSHPTRREF<ATransform> _pTransform, const _double& _dTimeDelta, const _float& _fSpeed,
+		const _float& _fLimitDistance = 0.1f);
+	// Translate To Pos Not Y
+	void TranslatePosNotY(const Vector3& _vPos, const _double& _dTimeDelta, const _float& _fSpeed,
+		const _float& _fLimitDistance = 0.1f);
+	void TranslateDirNotY(const Vector3& _vDir, const _double& _dTimeDelta, const _float& _fSpeed);
+	void TranslateTransNotY(CSHPTRREF<ATransform> _pTransform, const _double& _dTimeDelta, const _float& _fSpeed,
+		const _float& _fLimitDistance = 0.1f);
+
+	void RotateFix(const Vector3& _vStandardAngle, const _float _fTurnAnge);
 	// Just Angle
-	void RotateFix(const Vector3 _vAngle);
-	void RotateTurn(const Vector3 _vAxis, const _float _Angle);
-	void RotateTurn(const Vector3 _vAngle);
-	void LookAt(const Vector3 _vTargetPos);
+	void RotateFix(const Vector3& _vAngle);
+	void RotateFixNotApplyRadians(const Vector3& _vStandardAngle, const _float _fTurnAnge);
+	void RotateFixNotApplyRadians(const Vector3& _vAngle);
+	// Quaternion
+	void RotateFix(const Vector4& _vQuaternion);
+	void RotateTurn(const Vector3& _vAxis, const _float& _fAngleSpeed, const _double& _dTimeDelta);
+	void RotateTurn(const Vector3& _vAxis, const _float& _fAngle);
+	void RotateTurn(const Vector4& _vQuaternion);
+	void RotateTurn(const Vector3& _vAngle);
+
+	void SetDirection(const Vector3& direction);
+	void SetDirection(const Vector3& targetDirection, float deltaTime, float rotationSpeed);
+	void SetDirectionFixedUp(const Vector3& direction);
+	void SetDirectionFixedUp(const Vector3& targetDirection, float deltaTime, float rotationSpeed);
+
+	void LookAt(const Vector3& _vTargetPos);
+	void LookAtWithFixedUp(const Vector3& _vTargetPos);
+	void LookAtWithFixedUp(const Vector3& _vTargetPos, float DeltaTime, float RotationSpeed);
 	// Compute Distance
-	const _float ComputeDistance(const Vector3 _vPos);
-	const _float ComputeDistanceSq(const Vector3 _vPos);
+	const _float ComputeDistance(const Vector3& _vPos);
+	const _float ComputeDistanceSq(const Vector3& _vPos);
+
 	void GravityFall(const _double& _deltaTime);
 	void DisableGravity();
 
 	void DisableJump();
 	void JumpMovement(const _double& _deltaTime);
+	Vector3 GetRotationValue();
 private:
-	virtual void Free() override;
-private:
-	_matrix				m_mWorldMatrix;
-	Vector3				m_vScale;
-	_quaternion		m_Rotation;
+	// Needs Value 
+	_float4x4												m_mWorldMatrix;
+	_float4x4												m_mChangeWorldMatrix;
+	_quaternion											m_vQuaternion;
+	Vector3													m_vScale;
+	// Parents Location
+	_bool														m_isNotApplyRotate;
+	_bool														m_isNotApplyPos;
+	_bool														m_isNotApplyScale;
+
+	SHPTR<ATransform>							m_spParentsTransform;
 
 	//2024-05-24 이성현 중력 구현
-	Vector3				m_vVelocity;
-	const Vector3	m_vGravity;
-	Vector3				m_vJumpvelocity;
+	Vector3 m_vVelocity;
+	const Vector3 m_vGravity;
+	Vector3 m_vJumpvelocity;
 };
 
 END

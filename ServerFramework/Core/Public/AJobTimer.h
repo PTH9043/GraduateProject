@@ -5,6 +5,8 @@
 
 BEGIN(Core)
 
+using TIMEREVENTQUEUE = CONPRIORITYQUEUE<TIMEREVENT>;
+
 /*
 @ Date: 2024-01-23, Writer: นฺลยว๖
 @ Explain
@@ -13,18 +15,18 @@ BEGIN(Core)
 */
 class AJobTimer abstract : public ACoreObject {
 public:
-	AJobTimer(OBJCON_CONSTRUCTOR);
+	AJobTimer(OBJCON_CONSTRUCTOR, Asio::io_service& _service);
 	DESTRUCTOR(AJobTimer)
 public:
-	static void TimerThread(void* _pJobTimer);
-	 void RunTimer();
-	void TurnOffRunningThread() { m_isRunningThread = false; }
+	void RegisterTimer(_int _RegisterTimer);
+	 void TimerThread(const boost::system::error_code& _error);
 protected:
-	virtual void TickTimer() PURE;
+	virtual void TickTimer(const TIMEREVENT& _TimerEvent) PURE;
 private:
 	virtual void Free() override;
 private:
-	_bool	m_isRunningThread;
+	Asio::steady_timer 			m_SteadyEvent;
+	TIMEREVENTQUEUE		m_TimerEventQueue;
 };
 
 END

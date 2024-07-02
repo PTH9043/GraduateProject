@@ -42,27 +42,6 @@ message PLAYERSTATE
 	int64			animationIndex = 6;
 }
 
-message PLAYERANIMSTATE
-{
-	int64			id = 1;
-	int64			animstate = 2;
-	bool				ifattack = 3;
-	bool				isRunshift = 4;
-    bool				isMoveFront = 5;
-    bool				isMoveBack = 6;
-    bool				isMoveLeft = 7;
-    bool				isMoveRight = 8;
-    bool				isWAttack = 9;
-    bool				isSAttack = 10;
-    bool				isRAttack = 11;
-    bool				isCombo = 12;
-    bool				isRoll = 13;
-    bool				isHit = 14;
-    bool				isJump = 15;
-	int64			wComboStack = 16;
-	int64			sComboStack = 17;
-}
-
 // 자기 자신이 움직였을 때의 패킷
 message SELFPLAYERMOVE
 {
@@ -76,14 +55,19 @@ message SELFPLAYERMOVE
 message CHARMOVE
 {
 	int64 id = 1;
+	// Move
 	float moveX = 2;
 	float moveY = 3;
 	float moveZ = 4;
+	// Rotate
 	float rotateX = 5;
 	float rotateY = 6;
 	float rotateZ = 7;
-	float rotateW = 8;
-	bool  jumpingState = 9;
+}
+
+message MONSTERSTATE
+{
+	int64 id = 1;
 }
 
 /*

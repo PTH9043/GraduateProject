@@ -14,8 +14,24 @@ public:
 	DESTRUCTOR(AGameObject)
 public:
 	virtual _bool Start() PURE;
+	virtual void Tick();
 	void CreateColliderAndTransform(const COLLIDERINFO& _ColliderInfo, const Vector3& _vPos);
 	void BringSpaceIndex(SHPTR<ASpace> _spSpace);
+	void Placement(_int _CellIndex);
+
+	// 다른 캐릭터와의 거리 산출 
+	_float OtherCharacterToDistance(SHPTR<ATransform> _spOtherTransform);
+	// 다른 캐릭터를 바라보는 자기 자신의 Look Angle 
+	_float OtherCharacterDirToLook(SHPTR<ATransform> _spOtherTransform);
+	// 다른 캐릭터를 기준으로 바라보는 자기 자신의 Right Angle 
+	_float OhterCharacterDirToRight(SHPTR<ATransform> _spOtherTransform);
+	// 다른 캐릭터를 바라보는 자기 자신의 Look Angle ( 180 ~ -180 )
+	_float OtherCharacterDirToLookConverter(SHPTR<ATransform> _spOtherTransform);
+	// 다른 캐릭터를 바라보는 자기 자신의 Look Direction
+	Vector3 OtherCharacterDirToLookVectorF3(SHPTR<ATransform> _spOtherTransform);
+
+	_bool IsCanSee(Vector3 _OtherPos);
+	_bool IsCanSee(SHPTR<ATransform> _spTransform);
 public:/*Get Set */
 	const SESSIONID& GetSessionID() const { return m_SessionID; }
 	const SESSIONTYPE& GetSessionType() const { return m_SessionType; }
@@ -31,6 +47,8 @@ public:/*Get Set */
 	const _int GetCurOnCellIndex() const { return m_iCurOnCellIndex; }
 
 	void SetJumpable(const _bool _isJumpable) { this->m_isJumpable = _isJumpable; }
+protected:
+	virtual _bool ProcessPacket(_char* _pPacket, const PACKETHEAD& _PacketHead) PURE;
 protected: /* Get Set */
 	void SetSessionID(const SESSIONID& _SessionID) { this->m_SessionID = _SessionID; }
 	void SetSessionType(const SESSIONTYPE& _SessionType) { this->m_SessionType = _SessionType; }
@@ -44,6 +62,8 @@ protected: /* Get Set */
 private:
 	virtual void Free() override;
 private:
+	static	const _int				SEE_RANGE{ 100 };
+
 	SESSIONID							m_SessionID;
 	SESSIONTYPE					m_SessionType;
 	_int										m_SpaceIndex;
@@ -59,6 +79,7 @@ private:
 
 	_float									m_fMoveSpeed;
 	_float									m_fRunSpeed;
+	_bool									m_isActive;
 };
 
 

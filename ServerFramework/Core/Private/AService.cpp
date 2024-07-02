@@ -9,7 +9,7 @@ namespace Core {
 		m_IOContext{TLS::MAX_THREAD},
 		m_TcpSocket{ m_IOContext },
 		m_CurrentSessionCount{0},
-		m_IDIssuance{0}
+		m_IDIssuance{1}
 	{
 	}
 
