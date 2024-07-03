@@ -58,6 +58,7 @@
     <ClInclude Include="..\public\UFog.h" />
     <ClInclude Include="..\public\UGrid.h" />
     <ClInclude Include="..\public\UAnimationController.h" />
+    <ClInclude Include="..\public\UGuard.h" />
     <ClInclude Include="..\public\UInputReceiver.h" />
     <ClInclude Include="..\public\UItem.h" />
     <ClInclude Include="..\public\ULightCamera.h" />
@@ -186,6 +187,7 @@
     <ClCompile Include="..\private\UFog.cpp" />
     <ClCompile Include="..\private\UGrid.cpp" />
     <ClCompile Include="..\private\UAnimationController.cpp" />
+    <ClCompile Include="..\private\UGuard.cpp" />
     <ClCompile Include="..\private\UInputReceiver.cpp" />
     <ClCompile Include="..\private\UItem.cpp" />
     <ClCompile Include="..\private\ULightCamera.cpp" />
@@ -335,6 +337,7 @@
     <FxCompile Include="..\..\Shader\DownSampling.hlsl" />
     <FxCompile Include="..\..\Shader\DownSamplingTwo.hlsl" />
     <FxCompile Include="..\..\Shader\Equipment.hlsl" />
+    <FxCompile Include="..\..\Shader\Guard.hlsl" />
     <FxCompile Include="..\..\Shader\Hdr.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DBloodEffect.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DEmitParticle.hlsl" />

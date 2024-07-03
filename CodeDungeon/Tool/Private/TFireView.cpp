@@ -8,6 +8,7 @@
 #include "UMethod.h"
 #include "UTransform.h"
 #include "UFire.h"
+#include "UGuard.h"
 
 
 TFireView::TFireView(CSHPTRREF<UDevice> _spDevice) :
@@ -105,6 +106,9 @@ HRESULT TFireView::LoadResource()
 		tFireDesc.wstrFireShader = PROTO_RES_2DFIRESHADER;
 		m_stFire = std::static_pointer_cast<UFire>(spGameInstance->CloneActorAdd(PROTO_ACTOR_FIRE, { &tFireDesc }));
 	}
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	m_stGuard = std::static_pointer_cast<UGuard>(spGameInstance->CloneActorAdd(PROTO_ACTOR_GUARD));
+
 	ResizeMultipleParticleVector(1);
 	LoadMultipleParticleResource();
 	m_stFireNoiseBuffer = m_stFire->GetFireNoiseBuffer();
@@ -375,6 +379,7 @@ void TFireView::FireView()
 
 
 				m_stFire->SetActive(true);
+				m_stGuard->SetActive(true);
 				_float3 firepos = m_stFire->GetTransform()->GetPos();
 				m_MultipleParticle[0]->GetTransform()->SetPos(_float3(firepos.x, firepos.y-3.f, firepos.z));
 			}
@@ -383,11 +388,15 @@ void TFireView::FireView()
 			{
 
 				m_stFire->SetActive(false);
+				m_stGuard->SetActive(false);
 			}
 
 			FireColorTextureSetting();
 			FireNoiseTextureSetting();
 			FireAlphaTextureSetting();
+			
+			TextureSetting();
+			
 			FireScalingSetting();
 			FirePosSetting();
 			FireDistortionSetting();
@@ -413,6 +422,26 @@ void TFireView::FireColorTextureSetting() {
 		ImGui::EndListBox();
 	}
 }
+
+void TFireView::TextureSetting()
+{
+	ImGui::Text("Guard Color Texture Select");
+	if (ImGui::BeginListBox("Guard Noise Texture List", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+	{
+
+		using TEXNAMES = UNORMAP<_wstring, _uint>;
+		TEXNAMES m_TextureNames = m_stGuard->GetTextureGroup()->GetTextureNames();
+		for (auto& Texture : m_TextureNames)
+		{
+			if (ImGui::Selectable(UMethod::ConvertWToS(Texture.first)))
+			{
+				m_stGuard->SetColorTexture(Texture.second);
+			}
+		}
+		ImGui::EndListBox();
+	}
+}
+
 
 void TFireView::FireNoiseTextureSetting() {
 	ImGui::Text("Fire Noise Texture Select");
@@ -458,8 +487,8 @@ void TFireView::FireScalingSetting() {
 	static float ScaleY = 6.65f;
 	//static float ScaleX = 50.f;
 	//static float ScaleY = 50.f;
-	ImGui::SliderFloat("ScaleX", &ScaleX, 1.f, 100.f, "%.2f");
-	ImGui::SliderFloat("ScaleY", &ScaleY, 1.f, 100.f, "%.2f");
+	ImGui::SliderFloat("ScaleX", &ScaleX, 1.f, 300, "%.2f");
+	ImGui::SliderFloat("ScaleY", &ScaleY, 1.f, 300, "%.2f");
 
 	_float3 ScaleFloat3 = _float3(ScaleX, ScaleY, 1);
 	m_stFire->GetTransform()->SetScale(ScaleFloat3);

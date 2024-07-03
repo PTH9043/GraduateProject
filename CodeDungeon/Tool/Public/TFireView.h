@@ -5,6 +5,7 @@
 BEGIN(Engine)
 class UParticle;
 class UFire;
+class UGuard;
 END
 
 BEGIN(Tool)
@@ -30,6 +31,9 @@ private:
 	void DockBuildInitSetting();
 	void FireView();
 	void FireColorTextureSetting();
+	void TextureSetting();
+	
+
 	void FireNoiseTextureSetting();
 	void FireAlphaTextureSetting();
 	void FireScalingSetting();
@@ -84,6 +88,7 @@ private:
 	FIRENOISEBUFFER*					m_stFireNoiseBuffer;
 	FIREDISTORTIONBUFFER*		m_stFireDistortionBuffer;
 
+	SHPTR<UGuard> m_stGuard;
 
 };
 

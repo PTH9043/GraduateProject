@@ -4,6 +4,7 @@
 #include "CMainCamera.h"
 #include "ULight.h"
 #include "UFire.h"
+#include "UGuard.h"
 #include "UTransform.h"
 #include "ULight.h"
 #include "UParticle.h"
@@ -202,6 +203,12 @@ HRESULT CMainScene::LoadSceneData()
 		m_spSarcophagus->SetTargetPlayer(m_spWarriorPlayer);
 		//�̶� ��ġ����
 		m_spMummy->GetTransform()->TranslateDir((m_spMummy->GetTransform()->GetLook()), 1, 10);
+	}
+	{
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		m_stGuard = std::static_pointer_cast<UGuard>(spGameInstance->CloneActorAdd(PROTO_ACTOR_GUARD));
+		m_stGuard->SetActive(true);
+		m_stGuard->SetColorTexture(L"asdf");
 	}
 #endif
 	return S_OK;
