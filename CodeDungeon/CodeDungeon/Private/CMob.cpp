@@ -111,12 +111,7 @@ void CMob::SearchForPlayers()
 
 void CMob::CalculateDistanceBetweenPlayers(const _float3& _CurrentPlayerPos, const _float3& _CurrentMobPos)
 {
-	_float distance = sqrt(
-		pow(_CurrentPlayerPos.x - _CurrentMobPos.x, 2) +
-		pow(_CurrentPlayerPos.y - _CurrentMobPos.y, 2) +
-		pow(_CurrentPlayerPos.z - _CurrentMobPos.z, 2)
-	);
-	m_fDistancefromNearestPlayer = distance;
+	m_fDistancefromNearestPlayer = _float3::Distance(_CurrentMobPos, _CurrentPlayerPos);
 }
 
 void CMob::SetMobPlacement(_int _CellIndex)

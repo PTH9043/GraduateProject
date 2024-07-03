@@ -32,10 +32,12 @@ HRESULT TGuizmoManager::CalculateGuizmoDatas()
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	m_stGuizmoDesc.vPosition = m_stGuizmoDesc.spSelectedActor->GetTransform()->GetPos();
-	//m_stGuizmoDesc.vRotation = _float3(
-	//	m_stGuizmoDesc.spSelectedActor->GetTransform()->GetRotation().x, 
-	//	m_stGuizmoDesc.spSelectedActor->GetTransform()->GetRotation().y, 
-	//	m_stGuizmoDesc.spSelectedActor->GetTransform()->GetRotation().z);
+
+	m_stGuizmoDesc.vRotation = _float3(
+		m_stGuizmoDesc.spSelectedActor->GetTransform()->GetRotationValue().x,
+		m_stGuizmoDesc.spSelectedActor->GetTransform()->GetRotationValue().y,
+		m_stGuizmoDesc.spSelectedActor->GetTransform()->GetRotationValue().z);
+
 	m_stGuizmoDesc.vScale = m_stGuizmoDesc.spSelectedActor->GetTransform()->GetScale();
 
 	_float4x4 worldmat = m_stGuizmoDesc.spSelectedActor->GetTransform()->GetWorldMatrix();

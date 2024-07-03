@@ -11,8 +11,6 @@ class CMob : public UCharacter {
 public:
 	CMob(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType);
 	CMob(const CMob& _rhs);
-
-
 	DESTRUCTOR(CMob)
 public:
 	// UPlayer을(를) 통해 상속됨

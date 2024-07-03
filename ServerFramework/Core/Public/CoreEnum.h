@@ -117,6 +117,24 @@ namespace Core
 		ANIMEVENT_ANIMOCCURSTIMEPASS,
 		ANIMEVENT_END
 	};
+
+	enum EVENT_TYPE 
+	{ 
+		// MOB
+		EV_MOB_RANDOM_MOVE, 
+		EV_MOB_FIND, 
+		EV_MOB_ATTACK,
+		// DB
+		EV_DB_CHNAGE,
+		EV_DB_GET, 
+		EV_DB_DELETE,
+		EV_END };
+
+	enum
+	{
+		ASTAR_NAV_INDEX = TLS::MAX_WORKTHREAD,
+		EXTRA_NAV_COUNT = 1,
+	};
 }
 
 

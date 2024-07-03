@@ -14,6 +14,8 @@
 #include "UCollider.h"
 #include "UParticle.h"
 #include "UParticleSystem.h"
+#include "CModelObjects.h"
+#include "UAnimation.h"
 
 CMummy::CMummy(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: CMob(_spDevice, _wstrLayer, _eCloneType), m_MummyType{}
@@ -86,6 +88,12 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 	_wstring mainColliderTag = L"Main";
 
 	AddColliderInContainer(mainColliderTag, Collider);
+	for (auto& Colliders : GetColliderContainer())
+	{
+		Colliders.second->SetScale(_float3(1, 8, 1));
+		Colliders.second->SetTranslate(_float3(0, 10, 0));
+	}
+
 	SetOutline(true);
 	
 	return S_OK;
@@ -113,7 +121,6 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 
 	if(CurAnimState == UAnimationController::ANIM_MOVE)
 	{
-		
 		timeAccumulator += _dTimeDelta;
 		if (GetFoundTargetState() && timeAccumulator >= 1.0)
 		{
@@ -141,26 +148,21 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 			_float3 direction = CurrentMobPos - GetTargetPos();
 			GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
 		}
+
 	}
 	else if(CurAnimState == UAnimationController::ANIM_ATTACK)
 	{
-		
 		_float3 direction = CurrentMobPos - CurrentPlayerPos;
 		GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
 	}
 	else if(CurAnimState == UAnimationController::ANIM_HIT)
 	{
-		GetTransform()->TranslateDir((GetTransform()->GetLook()), 1, 1);
+		GetTransform()->TranslateDir((GetTransform()->GetLook()), _dTimeDelta, 1);
 	}
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	
 	
-
-	if(CurAnimState == UAnimationController::ANIM_IDLE)
-	{
-		GetAnimModel()->TickAnimation(_dTimeDelta);
-	}
-	else if (CurAnimState == UAnimationController::ANIM_DEATH)
+	if (CurAnimState == UAnimationController::ANIM_DEATH)
 	{
 		static _double elapsedTime = 0;
 		_double DeathAnimSpeed = 20;
@@ -169,24 +171,19 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 		if (elapsedTime < DeathTimeArcOpenEnd)
 			GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, elapsedTime);
 	}
-	else
+	else 
 		GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
-
-
-	for (auto& Colliders : GetColliderContainer())
-	{
-		Colliders.second->SetScale(_float3(3, 20, 3));
-	}
+	
 
 	UpdateCollision();
 }
 
 void CMummy::LateTickActive(const _double& _dTimeDelta)
 {
-	if (GetCollisionState())
-		GetTransform()->SetPos(GetTransform()->GetPos() + GetTransform()->GetLook() * 5 * _dTimeDelta);
-
 	__super::LateTickActive(_dTimeDelta);
+	//for (auto& Colliders : GetColliderContainer())
+	//	if(Colliders.first == L"Main")
+	//		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
 }
 
 HRESULT CMummy::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
@@ -198,13 +195,19 @@ HRESULT CMummy::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTa
 {
 	return __super::RenderShadowActive(_spCommand, _spTableDescriptor);
 }
+
 HRESULT CMummy::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)
 {
 	return __super::RenderOutlineActive(_spCommand, _spTableDescriptor,_pass);
 }
+
 void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
+	SetHitstate(false);
+	SetCollisionState(false);
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	PAWNTYPE ePawnType = _pEnemy->GetPawnType();
+	const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
 	if (PAWNTYPE::PAWN_CHAR == ePawnType)
 	{
 		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
@@ -213,9 +216,12 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 		{
 			if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
 			{
-				SetHitstate(true);
-				m_spParticle->SetActive(true);
-				m_spParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+				if(CurAnimName != L"openLaying" &&  L"openStanding" && L"taunt" && L"death")
+				{
+					SetHitstate(true);
+					m_spParticle->SetActive(true);
+					m_spParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+				}
 
 			}
 			else {
@@ -225,10 +231,39 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 
 			for (auto& iter2 : pCharacter->GetColliderContainer())
 			{
+				_float3 direction = _pEnemy->GetTransform()->GetPos() - GetTransform()->GetPos();
+				direction.Normalize();
 				if (iter.second->IsCollision(iter2.second))
-					SetCollisionState(true);
+				{
+					SetCollisionState(true);	
+					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
+				}
 				else
 					SetCollisionState(false);
+			}
+		}
+	}
+	else if (PAWNTYPE::PAWN_STATICOBJ == ePawnType)
+	{
+		CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
+		for (auto& iter : GetColliderContainer())
+		{
+			for (auto& iter2 : pModelObject->GetColliderContainer())
+			{
+				SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
+
+				if (GetCollidedNormal() != _float3::Zero) // 충돌이 발생한 경우
+				{
+					// 속도 결정
+					_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 50.0f : 20.0f;
+
+					ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
+
+				}
+				else
+				{
+
+				}
 			}
 		}
 	}

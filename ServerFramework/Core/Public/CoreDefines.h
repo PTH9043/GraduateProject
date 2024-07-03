@@ -73,7 +73,6 @@
 #include <array>
 #include <concepts>
 #include <chrono>
-#include<concepts>
 #include <random>
 #include <queue>
 #include <string>
@@ -89,8 +88,6 @@
 #include <mysql/cppconn/exception.h>
 #include <mysql/cppconn/resultset.h>
 #include <mysql/cppconn/statement.h>
-#include <tuple>
-#include <variant>
 
 extern "C" {
 #include <lua/lua.h>
