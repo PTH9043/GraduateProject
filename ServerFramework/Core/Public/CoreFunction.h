@@ -65,6 +65,19 @@ namespace Core
 		constexpr static _int ZEROMEMORY{ 0 };
 		std::memset(_pData, ZEROMEMORY, _bufferSize);
 	}
+
+	/*
+	@ Date: 2024-01-05,  Writer: 박태현
+	@ Explain
+	- 메모리를 초기화하기 위한 함수, Window함수인 ZeroMemory를 쓰지 않기 위함이다.
+	*/
+	template<class T>
+	static void MemoryInitialization(T& _Data)
+	{
+		constexpr static _int ZEROMEMORY{ 0 };
+		std::memset(&_Data, ZEROMEMORY, sizeof(T));
+	}
+
 	/*
 	@ Date: 2024-01-05,  Writer: 박태현
 	@ Explain
@@ -125,7 +138,7 @@ namespace Core
 	- std::make_pair를 쓰기 싫어서 사용하는 함수
 	*/
 	template<class T1, class T2>
-	static std::pair<T1, T2> MakePair(T1& _t1, T2& _t2) { return std::move(std::pair<T1, T2>(_t1, _t2)); }
+	static std::pair<T1, T2> MakePair(const T1& _t1, const T2& _t2) { return std::move(std::pair<T1, T2>(_t1, _t2)); }
 
 	/*
 	@ Date: 2024-02-04,  Writer: 박태현
@@ -261,6 +274,62 @@ namespace Core
 		_string str(_p1);
 		str += _p2;
 		return std::move(str);
+	}
+	/*
+	@ Date: 2024-07-03, Writer: 박태현
+	@ Explain
+	- wstring을 그냥 string으로 변환하는 함수
+	*/
+	static _string ConvertWToS(const _wstring& var)
+	{
+		_string str;
+		size_t size;
+		str.resize(var.size());
+		wcstombs_s(&size, &str[0], str.size() + 1, var.c_str(), var.size());
+		return std::move(str);
+	}
+	/*
+	@ Date: 2024-07-03, Writer: 박태현
+	@ Explain
+	- wstring을 그냥 string으로 변환하는 함수
+	*/
+	static _wstring ConvertSToW(const _string& var)
+	{
+		_wstring wstr;
+		size_t size;
+		wstr.resize(var.size());
+		mbstowcs_s(&size, wstr.data(), wstr.size() + 1, var.c_str(), var.size());
+		return std::move(wstr);
+	}
+	/*
+	@ Date: 2024-07-03, Writer: 박태현
+	@ Explain
+	- string을 읽는 함수 
+	*/
+	static void ReadString(std::ifstream& _if, _wstring& _wstr) 
+	{
+		_int size = 0;
+		_if.read((_char*)&size, sizeof(int));
+		_char* pText = AllocBuffer<_char>(size);
+		::memset(pText, 0, static_cast<size_t>(size));
+		_if.read((_char*)pText, size);
+		_wstr = ConvertSToW(pText);
+		ReleaseBuffer(pText);
+	}
+	/*
+	@ Date: 2024-07-03, Writer: 박태현
+	@ Explain
+	- string을 읽는 함수
+	*/
+	static void ReadString(std::ifstream& _if, _string& _str)
+	{
+		_int size = 0;
+		_if.read((_char*)&size, sizeof(int));
+		_char* pText = AllocBuffer<_char>(size);
+		::memset(pText, 0, static_cast<size_t>(size));
+		_if.read((_char*)pText, size);
+		_str = pText;
+		ReleaseBuffer(pText);
 	}
 
 #pragma endregion FUNCTION

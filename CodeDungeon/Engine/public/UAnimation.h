@@ -41,7 +41,7 @@ public:
 public:
 	SHPTR<UAnimation> Clone(CSHPTRREF<UAnimModel> _spAnimModel);
 	virtual void Free() override;
-	HRESULT NativeConstruct(CSHPTRREF<UAnimModel> _spAnimModel, const ANIMDESC& _stAnimDesc);
+	HRESULT NativeConstruct(CSHPTRREF<UAnimModel> _spAnimModel, const ANIMDESC& _stAnimDesc, _int _AnimIndex);
 	// 애니메이션과 연결된 뼈 정보들을 업데이트
 	void UpdateBoneMatrices(const _double& _dTimeDelta);
 	// TimeAcc로 애니메이션과 연결된 뼈 정보들을 업데이트
@@ -72,6 +72,8 @@ public:
 	void LoadAnimEventDataPathIsFolder(CSHPTRREF<UAnimModel> _spAnimModel, const _wstring& _wstrPath);
 
 	void CopyAnimEvent(ANIMEVENTTYPE _eType , CSHPTRREF<UAnimation> _spAnimation);
+
+	void SaveAnimToServerData(std::ofstream& _save);
 private:
 	SHPTR<UAnimEvent> CreateAnimEvent(CSHPTRREF<UAnimModel> _spAnimModel, ANIMEVENTTYPE _AnimEventType, std::ifstream& _read);
 private:
@@ -89,6 +91,7 @@ private:
 	ANIMFASTSECTIONS			m_AnimFastSections;
 	_float										m_fTotalAnimationFastValue;
 	_double									m_dAnimationProgressRate;
+	_int											m_iAnimIndex;
 	// Animation Event 
 	ANIMEVENTCONTAINER		m_AnimEventContainer;
 	SHPTR< UAnimEvent>		m_spActiveAnimChangeEvent;

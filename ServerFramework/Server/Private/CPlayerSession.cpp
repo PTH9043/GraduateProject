@@ -5,6 +5,7 @@
 #include "ATransform.h"
 #include "ACell.h"
 #include "ANavigation.h"
+#include "AMonster.h"
 
 namespace Server {
 
@@ -121,10 +122,10 @@ namespace Server {
 				}
 				// Login Packet을 조합하고 메시지를 보낸다. 
 				{
-					const GAMEOBJECTCONTAINER& GameObjectContainer = spCoreInstance->GetGameObjectContainer();
+					const MOBOBJCONTAINER& GameObjectContainer = spCoreInstance->GetMobObjContainer();
 					SC_VIEWINRANGE scViewInRange;
 					// GameObject
-					SET<AGameObject*> GameObjectList;
+					SET<AMonster*> GameObjectList;
 					{
 						// 시야처리 
 						for (auto& iter : GameObjectContainer)
@@ -201,12 +202,8 @@ namespace Server {
 			{
 				PLAYERSTATE PlayerState;
 				PlayerState.ParseFromArray(_pPacket, _PacketHead.PacketSize);
-
 				CombineProto(REF_OUT m_CopyBuffer, REF_OUT m_CopyPacketHead, PlayerState, TAG_SC::TAG_SC_PLAYERSTATE);
-				m_CopyPacketHead.PacketSize = _PacketHead.PacketSize;
-		//		std::cout << PlayerState.triggername() << "\n";
-			spCoreInstance->BroadCastMessageExcludingSession(PlayerState.id(), &m_CopyBuffer[0], m_CopyPacketHead);
-	//		spCoreInstance->BroadCastMessage(&m_CopyBuffer[0], m_CopyPacketHead);
+				spCoreInstance->BroadCastMessageExcludingSession(PlayerState.id(), &m_CopyBuffer[0], m_CopyPacketHead);
 			}
 			break;
 		}

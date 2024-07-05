@@ -994,6 +994,7 @@ void TModelView::AddModelstoMobsLayout()
 		ImGui::EndPopup();
 	}
 }
+
 void TModelView::AddModelstoMapLayout()
 {
 	static char nameBuffer[256] = "";

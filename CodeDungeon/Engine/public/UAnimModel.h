@@ -73,10 +73,10 @@ public:
 	void ResetCurAnimEvent();
 
 	SHPTR<UCollider> BringAttackCollider(_int _iColliderType);
-	SHPTR<UCollider> GetAttackCollider() {
-		return m_spAttackCollisionCollider;
-	}
+	SHPTR<UCollider> GetAttackCollider() { return m_spAttackCollisionCollider;}
 	_bool IsCollisionAttackCollider(CSHPTRREF<UCollider> _spEnemyCollider);
+
+	void OutAnimationDataToServer(const _wstring& _wstrPath);
 public: /* get set */
 	ANIMATIONS& GetAnimations() { return m_vecAnimations; }
 	const ANIMATIONPARAM& GetAnimParam() const { return m_stAnimParam; }
@@ -89,6 +89,7 @@ public: /* get set */
 	const _int GetNetAnimIndex() const { return m_iNextAnimIndex; }
 	_bool IsChangeAnimation() const { return m_isChangeAnim; }
 	_bool IsChangedAnimation() const { return m_spNextAnimation == nullptr; }
+	_bool IsNotApplyAnimPosition() const { return m_isNotApplyAnimPosition; }
 
 	const _float4x4& GetPivotMatirx() const { return m_mPivotMatrix; }
 

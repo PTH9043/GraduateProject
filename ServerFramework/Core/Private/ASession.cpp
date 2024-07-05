@@ -7,7 +7,7 @@
 namespace Core
 {
 	ASession::ASession(OBJCON_CONSTRUCTOR, TCPSOCKET _TcpSocket, SESSIONID _ID, SESSIONTYPE _SessionType) :
-		AGameObject(OBJCON_CONDATA, _ID, _SessionType),
+		APawn(OBJCON_CONDATA, _ID, _SessionType),
 		m_TcpSocket(std::move(_TcpSocket)), m_CurBuffuerLocation{0},	m_isConnected{true}
 	{
 		MemoryInitialization(m_SendBuffer.data(), MAX_BUFFER_LENGTH);

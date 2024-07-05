@@ -24,14 +24,9 @@ namespace PROTOFUNC
 	void MakeEqInfo(EQINFO* _pOut,  float _gold, float _increasePower, float _increaseDefensive, float _increaseHp);
 	void MakePlayerState(PLAYERSTATE* _pOut, LLONG _id, bool _ifattack, bool _animstate, bool _movespeed, 
 		double _animDuration, int _curAnimIndex);
-	
-	void MakePlayerAnimState(PLAYERANIMSTATE* _pOut, LLONG _id, int	animstate, bool ifattack,
-	bool	 isRunshift, bool	isMoveFront, bool isMoveBack, bool isMoveLeft, bool	isMoveRight,
-	bool	 isWAttack ,bool	isSAttack, bool	isRAttack, bool	isCombo, bool	isRoll, bool	 isHit,
-	bool	 isJump, int wComboStack, int	sComboStack);
-	
 	void MakeSelfPlayerMove(SELFPLAYERMOVE* _pOut, LLONG _id, const VECTOR3& _move);
 	void MakeCharMove(CHARMOVE* _pOut, LLONG _id, const VECTOR3&  _move, const VECTOR3& _rotate);
+	void MakeMonsterState(MONSTERSTATE* _pOut, LLONG _id, double _animDuration, int _curAnimIndex);
 
 	/* =========== SC =============== */
 	// Server To Client 

@@ -3,9 +3,9 @@
 #include <functional>
 
 namespace Core {
-	AJobTimer::AJobTimer(OBJCON_CONSTRUCTOR, Asio::io_service& _service) :
+	AJobTimer::AJobTimer(OBJCON_CONSTRUCTOR, Asio::io_context& _context) :
 		ACoreObject(OBJCON_CONDATA),
-		m_SteadyEvent{_service }
+		m_SteadyEvent{ _context }
 	{
 	}
 
@@ -30,6 +30,11 @@ namespace Core {
 			TickTimer(TimerEvent);
 		}
 		RegisterTimer(1);
+	}
+
+	void AJobTimer::InsertTimerEvent(TIMEREVENT _TimerEvent)
+	{
+		m_TimerEventQueue.push(_TimerEvent);
 	}
 
 

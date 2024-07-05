@@ -224,9 +224,21 @@ void TAnimControlView::AnimModelSelectView()
 				}
 			}
 		}
+	
 		if (nullptr == m_spSelectAnimFileData)
 		{
 			ImGui::Text("Plz Select AnimationModel");
+		}
+		else
+		{
+			if (nullptr != m_spAnimControlModel)
+			{
+				ImGui::SameLine();
+				if (true == ImGui::Button("Save Server Anim Data"))
+				{
+					m_spShowAnimModel->OutAnimationDataToServer(m_spSelectAnimFileFolder->wstrPath);
+				}
+			}
 		}
 	}
 	ImGui::End();

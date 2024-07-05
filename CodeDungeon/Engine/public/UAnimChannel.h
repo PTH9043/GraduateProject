@@ -28,6 +28,7 @@ public:
 	void ComputeCurKeyFrames(const _double& _dTimeAcc);
 	void ComputeCurKeyFrames(const _double& _dTimeAcc, _uint& _iCurKeyFrame);
 	void ResetCurKeyFrames() { this->m_iCurrentKeyFrames = 0; }
+	void SaveServerData(std::ofstream& _Saves);
 private:
 	static  constexpr inline _float4	ZERO_VALUE{ 0.f, 0.f, 0.f, 1.f };
 
@@ -35,7 +36,7 @@ private:
 	_uint												m_iNumKeyMaxRealSize{ 0 };
 	SHPTR<UBoneNode>					m_spBoneNode;
 	_uint												m_iCurrentKeyFrames;
-	VECTOR<KEYFRAME>		m_vecKeyFrames;
+	VECTOR<KEYFRAME>				m_vecKeyFrames;
 	_double											m_dCurTimeAcc;
 	// 사용하는 것들
 	_float3											m_vScale;

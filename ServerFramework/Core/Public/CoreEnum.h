@@ -118,21 +118,29 @@ namespace Core
 		ANIMEVENT_END
 	};
 
-	enum EVENT_TYPE 
+	enum EVENT_TYPE : _int
 	{ 
 		// MOB
-		EV_MOB_RANDOM_MOVE, 
+		EV_MOB_ACTIVE,
 		EV_MOB_FIND, 
 		EV_MOB_ATTACK,
+		EV_MOB_DAMAGED, 
+		EV_MOB_DEAD,
 		// DB
 		EV_DB_CHNAGE,
 		EV_DB_GET, 
 		EV_DB_DELETE,
-		EV_END };
+		EV_END 
+	};
+
+	enum MONSTERSTATE : _int
+	{
+		MOB_STAY, MOB_ATTACK, MOB_MOVE, MOB_FIND, MOB_DEAD, MOB_END
+	};
 
 	enum
 	{
-		ASTAR_NAV_INDEX = TLS::MAX_WORKTHREAD,
+		ASTAR_NAV_INDEX = 16,
 		EXTRA_NAV_COUNT = 1,
 	};
 }

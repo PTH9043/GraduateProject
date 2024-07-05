@@ -46,30 +46,6 @@ void PROTOFUNC::MakePlayerState(PLAYERSTATE* _pOut, LLONG _id, bool _ifattack, b
 	_pOut->set_animationindex(_curAnimIndex);
 }
 
-void PROTOFUNC::MakePlayerAnimState(PLAYERANIMSTATE* _pOut, LLONG _id, int animstate, bool ifattack,
-	bool isRunshift, bool isMoveFront, bool isMoveBack, bool isMoveLeft, bool isMoveRight, bool isWAttack, 
-	bool isSAttack, bool isRAttack, bool isCombo, bool isRoll, bool isHit, bool isJump, int wComboStack, int sComboStack)
-{
-	assert(nullptr != _pOut);
-	_pOut->set_id(_id);
-	_pOut->set_animstate(animstate);
-	_pOut->set_ifattack(ifattack);
-	_pOut->set_isrunshift(isRunshift);
-	_pOut->set_ismovefront(isMoveFront);
-	_pOut->set_ismoveback(isMoveBack);
-	_pOut->set_ismoveleft(isMoveLeft);
-	_pOut->set_ismoveright(isMoveRight);
-	_pOut->set_iswattack(isWAttack);
-	_pOut->set_issattack(isSAttack);
-	_pOut->set_israttack(isRAttack);
-	_pOut->set_iscombo(isCombo);
-	_pOut->set_isroll(isRoll);
-	_pOut->set_ishit(isHit);
-	_pOut->set_isjump(isJump);
-	_pOut->set_wcombostack(wComboStack);
-	_pOut->set_scombostack(sComboStack);
-}
-
 void PROTOFUNC::MakeSelfPlayerMove(SELFPLAYERMOVE* _pOut, LLONG _id, const VECTOR3& _move)
 {
 	assert(nullptr != _pOut);
@@ -90,6 +66,14 @@ void PROTOFUNC::MakeCharMove(CHARMOVE* _pOut, LLONG _id, const VECTOR3& _move, c
 	_pOut->set_rotatex(_rotate.x());
 	_pOut->set_rotatey(_rotate.y());
 	_pOut->set_rotatez(_rotate.z());
+}
+
+void PROTOFUNC::MakeMonsterState(MONSTERSTATE* _pOut, LLONG _id, double _animDuration, int _curAnimIndex)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_id);
+//	_pOut->set_animduration(_animDuration);
+//	_pOut->set_curanimindex(_curAnimIndex);
 }
 
 /* =========== SC =============== */

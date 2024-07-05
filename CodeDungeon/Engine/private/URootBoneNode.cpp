@@ -11,6 +11,7 @@ URootBoneNode::URootBoneNode() :
 	m_vMoveRootBoneAngle{},
 	m_OutMatrix{}
 {
+	SetRootBoneNode(true);
 }
 
 URootBoneNode::URootBoneNode(const URootBoneNode& _rhs) : 

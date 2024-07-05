@@ -55,6 +55,7 @@ namespace Core {
 		if (_vScale == m_vScale)
 			return;
 
+		std::atomic_thread_fence(std::memory_order_seq_cst);
 		m_mWorldMatrix = m_mWorldMatrix.MatrixSetScaling(_vScale);
 		m_vScale = _vScale;
 	}
@@ -78,6 +79,7 @@ namespace Core {
 
 	void ATransform::TransformUpdate()
 	{
+		READ_LOCK(m_WorldMatrixLock);
 		if (nullptr != m_spParentsTransform) {
 
 			_float4x4 Matrix = m_spParentsTransform->GetParentsMatrix();
@@ -250,6 +252,8 @@ namespace Core {
 
 	void ATransform::RotateFix(const Vector3& _vStandardAngle, const _float _fTurnAnge)
 	{
+		std::atomic_thread_fence(std::memory_order_seq_cst);
+
 		m_vQuaternion = _quaternion::CreateFromAxisAngle(_vStandardAngle, DirectX::XMConvertToRadians(_fTurnAnge));
 
 		_float4x4 RotationMatrix = _float4x4::CreateFromQuaternion(m_vQuaternion);
@@ -261,6 +265,8 @@ namespace Core {
 
 	void ATransform::RotateFix(const Vector3& _vAngle)
 	{
+		std::atomic_thread_fence(std::memory_order_seq_cst);
+
 		Vector3 vAngle;
 		vAngle.x = DirectX::XMConvertToRadians(_vAngle.x);
 		vAngle.y = DirectX::XMConvertToRadians(_vAngle.y);
@@ -276,6 +282,8 @@ namespace Core {
 
 	void ATransform::RotateFixNotApplyRadians(const Vector3& _vStandardAngle, const _float _fTurnAnge)
 	{
+		std::atomic_thread_fence(std::memory_order_seq_cst);
+
 		m_vQuaternion = _quaternion::CreateFromAxisAngle(_vStandardAngle, _fTurnAnge);
 
 		_float4x4 RotationMatrix = _float4x4::CreateFromQuaternion(m_vQuaternion);
@@ -287,6 +295,8 @@ namespace Core {
 
 	void ATransform::RotateFixNotApplyRadians(const Vector3& _vAngle)
 	{
+		std::atomic_thread_fence(std::memory_order_seq_cst);
+
 		m_vQuaternion = _quaternion::CreateFromYawPitchRoll(_vAngle);
 
 		_float4x4 RotationMatrix = _float4x4::CreateFromQuaternion(m_vQuaternion);
@@ -298,6 +308,8 @@ namespace Core {
 
 	void ATransform::RotateFix(const Vector4& _vQuaternion)
 	{
+		std::atomic_thread_fence(std::memory_order_seq_cst);
+
 		m_vQuaternion = _vQuaternion;
 
 		_float4x4 RotationMatrix = _float4x4::CreateFromQuaternion(m_vQuaternion);
@@ -309,6 +321,8 @@ namespace Core {
 
 	void ATransform::RotateTurn(const Vector3& _vAxis, const _float& _fAngleSpeed, const _double& _dTimeDelta)
 	{
+		std::atomic_thread_fence(std::memory_order_seq_cst);
+
 		m_vQuaternion = DirectX::XMQuaternionRotationAxis(_vAxis, (_float)(DirectX::XMConvertToRadians(_fAngleSpeed) * _dTimeDelta));
 		_float4x4 RotationMatrix = DirectX::XMMatrixRotationQuaternion(m_vQuaternion);
 
@@ -319,6 +333,8 @@ namespace Core {
 
 	void ATransform::RotateTurn(const Vector3& _vAxis, const _float& _fAngle)
 	{
+		std::atomic_thread_fence(std::memory_order_seq_cst);
+
 		m_vQuaternion = DirectX::XMQuaternionRotationAxis(_vAxis, (_float)(DirectX::XMConvertToRadians(_fAngle)));
 		_float4x4 RotationMatrix = DirectX::XMMatrixRotationQuaternion(m_vQuaternion);
 
@@ -329,6 +345,8 @@ namespace Core {
 
 	void ATransform::RotateTurn(const Vector4& _vQuaternion)
 	{
+		std::atomic_thread_fence(std::memory_order_seq_cst);
+
 		m_vQuaternion = _vQuaternion;
 
 		_float4x4 RotationMatrix = _float4x4::CreateFromQuaternion(m_vQuaternion);
@@ -355,6 +373,8 @@ namespace Core {
 
 	void ATransform::SetDirection(const Vector3& direction)
 	{
+		std::atomic_thread_fence(std::memory_order_seq_cst);
+
 		Vector3 vPosition = GetPos();
 		Vector4 vLook = XMVector3Normalize(direction);
 
@@ -379,6 +399,8 @@ namespace Core {
 
 	void ATransform::SetDirection(const Vector3& targetDirection, float deltaTime, float rotationSpeed)
 	{
+		std::atomic_thread_fence(std::memory_order_seq_cst);
+
 		Vector3 vCurrentLook = GetLook();
 		Vector4 vTargetLook = XMVector3Normalize(targetDirection);
 
@@ -410,6 +432,8 @@ namespace Core {
 
 	void ATransform::SetDirectionFixedUp(const Vector3& direction)
 	{
+		std::atomic_thread_fence(std::memory_order_seq_cst);
+
 		Vector3 FixedUp = Vector3(0, 1, 0);
 		Vector3 vPosition = GetPos();
 		Vector4 vLook = XMVector3Normalize(direction);
@@ -433,6 +457,8 @@ namespace Core {
 
 	void ATransform::SetDirectionFixedUp(const Vector3& targetDirection, float deltaTime, float rotationSpeed)
 	{
+		std::atomic_thread_fence(std::memory_order_seq_cst);
+
 		Vector3 FixedUp = Vector3(0, 1, 0);
 		Vector3 vCurrentLook = GetLook();
 		Vector4 vTargetLook = XMVector3Normalize(targetDirection);
@@ -464,6 +490,8 @@ namespace Core {
 
 	void ATransform::LookAt(const Vector3& _vTargetPos)
 	{
+		std::atomic_thread_fence(std::memory_order_seq_cst);
+
 		Vector3 vPosition = GetPos();
 		Vector4 vLook = XMVector3Normalize(_vTargetPos - vPosition);
 
@@ -488,6 +516,8 @@ namespace Core {
 
 	void ATransform::LookAtWithFixedUp(const Vector3& _vTargetPos)
 	{
+		std::atomic_thread_fence(std::memory_order_seq_cst);
+
 		Vector3 FixedUp = Vector3(0, 1, 0);
 		Vector3 MyPosition = GetPos();
 		Vector3 vLook = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(_vTargetPos, MyPosition));
@@ -501,6 +531,8 @@ namespace Core {
 
 	void ATransform::LookAtWithFixedUp(const Vector3& _vTargetPos, float DeltaTime, float RotationSpeed)
 	{
+		std::atomic_thread_fence(std::memory_order_seq_cst);
+
 		Vector3 FixedUp = Vector3(0, 1, 0);
 		Vector3 MyPosition = GetPos();
 		Vector3 vLook = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(_vTargetPos, MyPosition));
@@ -544,6 +576,8 @@ namespace Core {
 
 	void ATransform::GravityFall(const _double& _deltaTime)
 	{
+		std::atomic_thread_fence(std::memory_order_seq_cst);
+
 		m_vVelocity += m_vGravity * static_cast<_float>(_deltaTime);
 		Vector3 vPosition = GetPos();
 		vPosition += m_vVelocity * static_cast<_float>(_deltaTime);

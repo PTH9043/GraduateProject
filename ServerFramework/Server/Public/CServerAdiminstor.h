@@ -9,7 +9,7 @@ BEGIN(Server)
 @ Explain
 - Server를 관리하는 관리자 클래스이다. 플레이어 세션들을 총괄
 */
-class  CServerAdiminstor final : public Core::UServerService{
+class  CServerAdiminstor final : public Core::AServerService{
 public:
 	CServerAdiminstor(OBJCON_CONSTRUCTOR, const _string& _strNavigationPath = "");
 	NO_COPY(CServerAdiminstor)

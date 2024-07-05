@@ -68,6 +68,8 @@ message CHARMOVE
 message MONSTERSTATE
 {
 	int64 id = 1;
+	double animationTime = 2;
+	int64 animationIndex = 3;
 }
 
 /*

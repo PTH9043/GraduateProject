@@ -3,10 +3,12 @@
 #include "AThreadManager.h"
 #include "ARandomManager.h"
 #include "ASpaceManager.h"
-#include "AService.h"
 #include "ANavigation.h"
 #include "APathFinder.h"
 #include "AMySqlDriver.h"
+#include "AServerService.h"
+#include "APawn.h"
+
 namespace Core
 {
 	ACoreInstance::ACoreInstance() :
@@ -22,15 +24,16 @@ namespace Core
 	{
 		RETURN_CHECK(nullptr == _spService, ;);
 		m_spService = _spService;
+		m_spThreadManager->CreateMainLoop(ThisShared<ACoreInstance>(), m_spService->GetIOContext());
+
 	//	m_spMySqlDriver = CreateInitConstructor<AMySqlDriver>(ThisShared<ACoreInstance>(), "tcp://127.0.0.1:3306", 
 	//		"root", "Qkrxogus0652!");
+
 		// Navigation Ready 
 		for (auto& Navigation : m_NavigationWorkBench)
 		{
 			Navigation = CreateInitNative<ANavigation>("..\\..\\Resource\\Navigation\\interior.bin");
 		}
-
-		//m_spPathFinder = CreateInitNative<APathFinder>(*m_spNavigation->GetCells().get());
 	}
 
 	_bool ACoreInstance::Start()
@@ -43,6 +46,12 @@ namespace Core
 	{
 		SHPTR<AService> spService = m_spService;
 		return spService->FindSession(_SessionID);
+	}
+
+	SHPTR<AMonster> ACoreInstance::FindMobObject(const SESSIONID _SessionID)
+	{
+		SHPTR<AService> spService = m_spService;
+		return spService->FindMobObject(_SessionID);
 	}
 
 	void ACoreInstance::BroadCastMessage(_char* _pPacket, const PACKETHEAD& _PacketHead)
@@ -75,6 +84,12 @@ namespace Core
 		spService->InsertSession(_SessionID, _spSession);
 	}
 
+	void ACoreInstance::InsertMobObject(SESSIONID _SessionID, SHPTR<AMonster> _spMobObject)
+	{
+		SHPTR<AService> spService = m_spService;
+		spService->InsertMobObject(_SessionID, _spMobObject);
+	}
+
 	const SESSIONCONTAINER& ACoreInstance::GetSessionContainer() const
 	{
 		SHPTR<AService> spService = m_spService;
@@ -82,11 +97,16 @@ namespace Core
 		return spService->GetSessionContainer();
 	}
 
-	const GAMEOBJECTCONTAINER& ACoreInstance::GetGameObjectContainer() const
+	const MOBOBJCONTAINER& ACoreInstance::GetMobObjContainer() const
 	{
 		SHPTR<AService> spService = m_spService;
 		ASSERT_CRASH(nullptr != spService);
-		return spService->GetGameObjectContainer();
+		return spService->GetMobObjContainer();
+	}
+
+	SHPTR<AServerService> ACoreInstance::GetServerService()
+	{
+		return Core::dynamic_shared_cast<AServerService>(m_spService);
 	}
 
 	/*
@@ -102,9 +122,14 @@ namespace Core
 		m_spThreadManager->RegisterFunc(_CallBack, _Data);
 	}
 
-	void ACoreInstance::RegisterJob(CSHPTRREF<AJobTimer> _spJobTimer)
+	void ACoreInstance::RegisterJob(_int _jobType, CSHPTRREF<AJobTimer> _spJobTimer)
 	{
-		m_spThreadManager->RegisterJob(_spJobTimer);
+		m_spThreadManager->RegisterJob(_jobType, _spJobTimer);
+	}
+
+	SHPTR<AJobTimer> ACoreInstance::FindJobTimer(_int _JobTimer)
+	{
+		return m_spThreadManager->FindJobTimer(_JobTimer);
 	}
 
 	void ACoreInstance::Join()

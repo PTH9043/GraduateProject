@@ -76,12 +76,12 @@ namespace Core {
 	struct ANIMEVENTDESC abstract {
 	public:
 		_bool							isActiveEvent;
-		_wstring						wstrEventTrigger;
+		_string						strEventTrigger;
 		_bool							isAnimChangeActive;
 
-		ANIMEVENTDESC() : wstrEventTrigger{ L"" }, isActiveEvent{ false }, isAnimChangeActive{ false }
+		ANIMEVENTDESC() : strEventTrigger{ "" }, isActiveEvent{ false }, isAnimChangeActive{ false }
 		{
-			wstrEventTrigger.resize(MAX_BUFFER_LENGTH);
+			strEventTrigger.resize(MAX_BUFFER_LENGTH);
 		}
 	};
 	/*
@@ -160,8 +160,8 @@ namespace Core {
 	struct ANIMCOLLIDERDESC : public ANIMOTHEREVENTDESC {
 		_int												iColliderType;
 
-		SHPTR<class UCollider>			spCollider;
-		SHPTR<class UBoneNode>	spBoneNode;
+		SHPTR<class ACollider>			spCollider;
+		SHPTR<class ABoneNode>	spBoneNode;
 
 		Vector3										vColliderScale;
 		Vector3										vColliderTranslation;
@@ -178,24 +178,34 @@ namespace Core {
 	-  애니메이션 특정 구역에 Collider를 붙이기 위한 구조체이다.
 	*/
 	struct ANIMSOUNDDESC : public ANIMOTHEREVENTDESC {
-		_wstring				wstrSoundName;
+		_string				strSoundName;
 		Vector3				vSoundVelocity;
 		_float					fMinSoundDistance;
 		_float					fMaxSoundDistance;
 
-		ANIMSOUNDDESC() : wstrSoundName{ L"" }, vSoundVelocity{}, fMinSoundDistance{ 0.f }, fMaxSoundDistance{ 1.f } {}
+		ANIMSOUNDDESC() : strSoundName{ "" }, vSoundVelocity{}, fMinSoundDistance{ 0.f }, fMaxSoundDistance{ 1.f } {}
 
 	};
 
+	// Key Frame
+	typedef struct tagKeyFrame
+	{
+		_double		dTime{ 0.0 };
+
+		Vector3	vScale;
+		Vector4	vRotation;
+		Vector4	vPosition;
+	}KEYFRAME;
+
 	struct TIMEREVENT {
-		_int					iObjID;
-		_int					iTargetID;
+		_llong					llObjID;
+		_llong					llTargetID;
 		TIMEPOINT		WakeUpTime;
 		EVENT_TYPE eEventType;
 
-		TIMEREVENT() : iObjID{ 0 }, iTargetID{ 0 }, WakeUpTime{ TIMEPOINT::min()}, eEventType{EV_END} {}
-		TIMEREVENT(_int _iObjID, _int _iTargetID, EVENT_TYPE _eEventType) 
-			: iObjID{_iObjID}, iTargetID{_iTargetID}, WakeUpTime{ std::chrono::system_clock::now() }, eEventType{_eEventType}
+		TIMEREVENT() : llObjID{ 0 }, llTargetID{ 0 }, WakeUpTime{ TIMEPOINT::min()}, eEventType{EV_END} {}
+		TIMEREVENT(const _llong _llObjID, const _llong _llTargetID, EVENT_TYPE _eEventType)
+			: llObjID{ _llObjID }, llTargetID{ _llTargetID }, WakeUpTime{ std::chrono::system_clock::now() }, eEventType{_eEventType}
 		{}
 
 		constexpr bool operator < (const TIMEREVENT& L) const
@@ -203,7 +213,6 @@ namespace Core {
 			return (WakeUpTime > L.WakeUpTime);
 		}
 	};
-
 
 #pragma endregion ANIMEVENTTYPE
 }

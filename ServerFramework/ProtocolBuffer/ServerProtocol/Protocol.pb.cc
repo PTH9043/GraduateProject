@@ -152,40 +152,26 @@ struct PLAYERSTATEDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PLAYERSTATEDefaultTypeInternal _PLAYERSTATE_default_instance_;
 
-inline constexpr PLAYERANIMSTATE::Impl_::Impl_(
+inline constexpr MONSTERSTATE::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : id_{::int64_t{0}},
-        animstate_{::int64_t{0}},
-        ifattack_{false},
-        isrunshift_{false},
-        ismovefront_{false},
-        ismoveback_{false},
-        ismoveleft_{false},
-        ismoveright_{false},
-        iswattack_{false},
-        issattack_{false},
-        israttack_{false},
-        iscombo_{false},
-        isroll_{false},
-        ishit_{false},
-        isjump_{false},
-        wcombostack_{::int64_t{0}},
-        scombostack_{::int64_t{0}},
+        animationtime_{0},
+        animationindex_{::int64_t{0}},
         _cached_size_{0} {}
 
 template <typename>
-PROTOBUF_CONSTEXPR PLAYERANIMSTATE::PLAYERANIMSTATE(::_pbi::ConstantInitialized)
+PROTOBUF_CONSTEXPR MONSTERSTATE::MONSTERSTATE(::_pbi::ConstantInitialized)
     : _impl_(::_pbi::ConstantInitialized()) {}
-struct PLAYERANIMSTATEDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR PLAYERANIMSTATEDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~PLAYERANIMSTATEDefaultTypeInternal() {}
+struct MONSTERSTATEDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR MONSTERSTATEDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~MONSTERSTATEDefaultTypeInternal() {}
   union {
-    PLAYERANIMSTATE _instance;
+    MONSTERSTATE _instance;
   };
 };
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PLAYERANIMSTATEDefaultTypeInternal _PLAYERANIMSTATE_default_instance_;
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 MONSTERSTATEDefaultTypeInternal _MONSTERSTATE_default_instance_;
 
 inline constexpr EQINFO::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
@@ -390,31 +376,6 @@ const ::uint32_t TableStruct_Protocol_2eproto::offsets[] PROTOBUF_SECTION_VARIAB
     PROTOBUF_FIELD_OFFSET(::PLAYERSTATE, _impl_.animationtime_),
     PROTOBUF_FIELD_OFFSET(::PLAYERSTATE, _impl_.animationindex_),
     ~0u,  // no _has_bits_
-    PROTOBUF_FIELD_OFFSET(::PLAYERANIMSTATE, _internal_metadata_),
-    ~0u,  // no _extensions_
-    ~0u,  // no _oneof_case_
-    ~0u,  // no _weak_field_map_
-    ~0u,  // no _inlined_string_donated_
-    ~0u,  // no _split_
-    ~0u,  // no sizeof(Split)
-    PROTOBUF_FIELD_OFFSET(::PLAYERANIMSTATE, _impl_.id_),
-    PROTOBUF_FIELD_OFFSET(::PLAYERANIMSTATE, _impl_.animstate_),
-    PROTOBUF_FIELD_OFFSET(::PLAYERANIMSTATE, _impl_.ifattack_),
-    PROTOBUF_FIELD_OFFSET(::PLAYERANIMSTATE, _impl_.isrunshift_),
-    PROTOBUF_FIELD_OFFSET(::PLAYERANIMSTATE, _impl_.ismovefront_),
-    PROTOBUF_FIELD_OFFSET(::PLAYERANIMSTATE, _impl_.ismoveback_),
-    PROTOBUF_FIELD_OFFSET(::PLAYERANIMSTATE, _impl_.ismoveleft_),
-    PROTOBUF_FIELD_OFFSET(::PLAYERANIMSTATE, _impl_.ismoveright_),
-    PROTOBUF_FIELD_OFFSET(::PLAYERANIMSTATE, _impl_.iswattack_),
-    PROTOBUF_FIELD_OFFSET(::PLAYERANIMSTATE, _impl_.issattack_),
-    PROTOBUF_FIELD_OFFSET(::PLAYERANIMSTATE, _impl_.israttack_),
-    PROTOBUF_FIELD_OFFSET(::PLAYERANIMSTATE, _impl_.iscombo_),
-    PROTOBUF_FIELD_OFFSET(::PLAYERANIMSTATE, _impl_.isroll_),
-    PROTOBUF_FIELD_OFFSET(::PLAYERANIMSTATE, _impl_.ishit_),
-    PROTOBUF_FIELD_OFFSET(::PLAYERANIMSTATE, _impl_.isjump_),
-    PROTOBUF_FIELD_OFFSET(::PLAYERANIMSTATE, _impl_.wcombostack_),
-    PROTOBUF_FIELD_OFFSET(::PLAYERANIMSTATE, _impl_.scombostack_),
-    ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::SELFPLAYERMOVE, _internal_metadata_),
     ~0u,  // no _extensions_
     ~0u,  // no _oneof_case_
@@ -441,6 +402,17 @@ const ::uint32_t TableStruct_Protocol_2eproto::offsets[] PROTOBUF_SECTION_VARIAB
     PROTOBUF_FIELD_OFFSET(::CHARMOVE, _impl_.rotatex_),
     PROTOBUF_FIELD_OFFSET(::CHARMOVE, _impl_.rotatey_),
     PROTOBUF_FIELD_OFFSET(::CHARMOVE, _impl_.rotatez_),
+    ~0u,  // no _has_bits_
+    PROTOBUF_FIELD_OFFSET(::MONSTERSTATE, _internal_metadata_),
+    ~0u,  // no _extensions_
+    ~0u,  // no _oneof_case_
+    ~0u,  // no _weak_field_map_
+    ~0u,  // no _inlined_string_donated_
+    ~0u,  // no _split_
+    ~0u,  // no sizeof(Split)
+    PROTOBUF_FIELD_OFFSET(::MONSTERSTATE, _impl_.id_),
+    PROTOBUF_FIELD_OFFSET(::MONSTERSTATE, _impl_.animationtime_),
+    PROTOBUF_FIELD_OFFSET(::MONSTERSTATE, _impl_.animationindex_),
     ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::SC_CONNECTSUCCESS, _internal_metadata_),
     ~0u,  // no _extensions_
@@ -531,16 +503,16 @@ static const ::_pbi::MigrationSchema
         {11, -1, -1, sizeof(::VECTOR4)},
         {23, -1, -1, sizeof(::EQINFO)},
         {35, -1, -1, sizeof(::PLAYERSTATE)},
-        {49, -1, -1, sizeof(::PLAYERANIMSTATE)},
-        {74, -1, -1, sizeof(::SELFPLAYERMOVE)},
-        {86, -1, -1, sizeof(::CHARMOVE)},
-        {101, -1, -1, sizeof(::SC_CONNECTSUCCESS)},
-        {112, -1, -1, sizeof(::SC_OTHERCLIENTLOGIN)},
-        {123, 133, -1, sizeof(::SC_MOVEFAILED)},
-        {135, 147, -1, sizeof(::SC_VIEWINRANGE)},
-        {151, -1, -1, sizeof(::CS_LOGIN)},
-        {160, 171, -1, sizeof(::CS_ATTACK)},
-        {174, -1, -1, sizeof(::CS_DISCONNECT)},
+        {49, -1, -1, sizeof(::SELFPLAYERMOVE)},
+        {61, -1, -1, sizeof(::CHARMOVE)},
+        {76, -1, -1, sizeof(::MONSTERSTATE)},
+        {87, -1, -1, sizeof(::SC_CONNECTSUCCESS)},
+        {98, -1, -1, sizeof(::SC_OTHERCLIENTLOGIN)},
+        {109, 119, -1, sizeof(::SC_MOVEFAILED)},
+        {121, 133, -1, sizeof(::SC_VIEWINRANGE)},
+        {137, -1, -1, sizeof(::CS_LOGIN)},
+        {146, 157, -1, sizeof(::CS_ATTACK)},
+        {160, -1, -1, sizeof(::CS_DISCONNECT)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -548,9 +520,9 @@ static const ::_pb::Message* const file_default_instances[] = {
     &::_VECTOR4_default_instance_._instance,
     &::_EQINFO_default_instance_._instance,
     &::_PLAYERSTATE_default_instance_._instance,
-    &::_PLAYERANIMSTATE_default_instance_._instance,
     &::_SELFPLAYERMOVE_default_instance_._instance,
     &::_CHARMOVE_default_instance_._instance,
+    &::_MONSTERSTATE_default_instance_._instance,
     &::_SC_CONNECTSUCCESS_default_instance_._instance,
     &::_SC_OTHERCLIENTLOGIN_default_instance_._instance,
     &::_SC_MOVEFAILED_default_instance_._instance,
@@ -568,38 +540,31 @@ const char descriptor_table_protodef_Protocol_2eproto[] PROTOBUF_SECTION_VARIABL
     "eHp\030\004 \001(\002\"\200\001\n\013PLAYERSTATE\022\n\n\002id\030\001 \001(\003\022\020\n"
     "\010ifattack\030\002 \001(\010\022\021\n\tanimstate\030\003 \001(\003\022\021\n\tmo"
     "vespeed\030\004 \001(\003\022\025\n\ranimationTime\030\005 \001(\001\022\026\n\016"
-    "animationIndex\030\006 \001(\003\"\313\002\n\017PLAYERANIMSTATE"
-    "\022\n\n\002id\030\001 \001(\003\022\021\n\tanimstate\030\002 \001(\003\022\020\n\010ifatt"
-    "ack\030\003 \001(\010\022\022\n\nisRunshift\030\004 \001(\010\022\023\n\013isMoveF"
-    "ront\030\005 \001(\010\022\022\n\nisMoveBack\030\006 \001(\010\022\022\n\nisMove"
-    "Left\030\007 \001(\010\022\023\n\013isMoveRight\030\010 \001(\010\022\021\n\tisWAt"
-    "tack\030\t \001(\010\022\021\n\tisSAttack\030\n \001(\010\022\021\n\tisRAtta"
-    "ck\030\013 \001(\010\022\017\n\007isCombo\030\014 \001(\010\022\016\n\006isRoll\030\r \001("
-    "\010\022\r\n\005isHit\030\016 \001(\010\022\016\n\006isJump\030\017 \001(\010\022\023\n\013wCom"
-    "boStack\030\020 \001(\003\022\023\n\013sComboStack\030\021 \001(\003\"I\n\016SE"
-    "LFPLAYERMOVE\022\n\n\002id\030\001 \001(\003\022\r\n\005moveX\030\002 \001(\002\022"
-    "\r\n\005moveY\030\003 \001(\002\022\r\n\005moveZ\030\004 \001(\002\"v\n\010CHARMOV"
-    "E\022\n\n\002id\030\001 \001(\003\022\r\n\005moveX\030\002 \001(\002\022\r\n\005moveY\030\003 "
-    "\001(\002\022\r\n\005moveZ\030\004 \001(\002\022\017\n\007rotateX\030\005 \001(\002\022\017\n\007r"
-    "otateY\030\006 \001(\002\022\017\n\007rotateZ\030\007 \001(\002\"@\n\021SC_CONN"
-    "ECTSUCCESS\022\n\n\002id\030\001 \001(\003\022\021\n\tcellIndex\030\002 \001("
-    "\003\022\014\n\004type\030\004 \001(\003\"B\n\023SC_OTHERCLIENTLOGIN\022\n"
-    "\n\002id\030\001 \001(\003\022\021\n\tcellIndex\030\002 \001(\003\022\014\n\004type\030\003 "
-    "\001(\003\"6\n\rSC_MOVEFAILED\022\n\n\002id\030\001 \001(\003\022\031\n\007prev"
-    "Pos\030\003 \001(\0132\010.VECTOR3\"Y\n\016SC_VIEWINRANGE\022\n\n"
-    "\002id\030\001 \001(\003\022\032\n\010position\030\002 \001(\0132\010.VECTOR3\022\021\n"
-    "\tcellindex\030\003 \001(\003\022\014\n\004type\030\004 \001(\003\"\026\n\010CS_LOG"
-    "IN\022\n\n\002id\030\001 \001(\003\"D\n\tCS_ATTACK\022\n\n\002id\030\001 \001(\003\022"
-    "\033\n\tattackPos\030\002 \001(\0132\010.VECTOR3\022\016\n\006damage\030\003"
-    " \001(\002\"\033\n\rCS_DISCONNECT\022\n\n\002id\030\001 \001(\003*2\n\tDir"
-    "ection\022\006\n\002UP\020\000\022\010\n\004DOWN\020\001\022\010\n\004LEFT\020\002\022\t\n\005RI"
-    "GHT\020\003b\006proto3"
+    "animationIndex\030\006 \001(\003\"I\n\016SELFPLAYERMOVE\022\n"
+    "\n\002id\030\001 \001(\003\022\r\n\005moveX\030\002 \001(\002\022\r\n\005moveY\030\003 \001(\002"
+    "\022\r\n\005moveZ\030\004 \001(\002\"v\n\010CHARMOVE\022\n\n\002id\030\001 \001(\003\022"
+    "\r\n\005moveX\030\002 \001(\002\022\r\n\005moveY\030\003 \001(\002\022\r\n\005moveZ\030\004"
+    " \001(\002\022\017\n\007rotateX\030\005 \001(\002\022\017\n\007rotateY\030\006 \001(\002\022\017"
+    "\n\007rotateZ\030\007 \001(\002\"I\n\014MONSTERSTATE\022\n\n\002id\030\001 "
+    "\001(\003\022\025\n\ranimationTime\030\002 \001(\001\022\026\n\016animationI"
+    "ndex\030\003 \001(\003\"@\n\021SC_CONNECTSUCCESS\022\n\n\002id\030\001 "
+    "\001(\003\022\021\n\tcellIndex\030\002 \001(\003\022\014\n\004type\030\004 \001(\003\"B\n\023"
+    "SC_OTHERCLIENTLOGIN\022\n\n\002id\030\001 \001(\003\022\021\n\tcellI"
+    "ndex\030\002 \001(\003\022\014\n\004type\030\003 \001(\003\"6\n\rSC_MOVEFAILE"
+    "D\022\n\n\002id\030\001 \001(\003\022\031\n\007prevPos\030\003 \001(\0132\010.VECTOR3"
+    "\"Y\n\016SC_VIEWINRANGE\022\n\n\002id\030\001 \001(\003\022\032\n\010positi"
+    "on\030\002 \001(\0132\010.VECTOR3\022\021\n\tcellindex\030\003 \001(\003\022\014\n"
+    "\004type\030\004 \001(\003\"\026\n\010CS_LOGIN\022\n\n\002id\030\001 \001(\003\"D\n\tC"
+    "S_ATTACK\022\n\n\002id\030\001 \001(\003\022\033\n\tattackPos\030\002 \001(\0132"
+    "\010.VECTOR3\022\016\n\006damage\030\003 \001(\002\"\033\n\rCS_DISCONNE"
+    "CT\022\n\n\002id\030\001 \001(\003*2\n\tDirection\022\006\n\002UP\020\000\022\010\n\004D"
+    "OWN\020\001\022\010\n\004LEFT\020\002\022\t\n\005RIGHT\020\003b\006proto3"
 };
 static ::absl::once_flag descriptor_table_Protocol_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Protocol_2eproto = {
     false,
     false,
-    1333,
+    1074,
     descriptor_table_protodef_Protocol_2eproto,
     "Protocol.proto",
     &descriptor_table_Protocol_2eproto_once,
@@ -1826,542 +1791,6 @@ void PLAYERSTATE::InternalSwap(PLAYERSTATE* PROTOBUF_RESTRICT other) {
 }
 // ===================================================================
 
-class PLAYERANIMSTATE::_Internal {
- public:
-};
-
-PLAYERANIMSTATE::PLAYERANIMSTATE(::google::protobuf::Arena* arena)
-    : ::google::protobuf::Message(arena) {
-  SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:PLAYERANIMSTATE)
-}
-PLAYERANIMSTATE::PLAYERANIMSTATE(
-    ::google::protobuf::Arena* arena, const PLAYERANIMSTATE& from)
-    : PLAYERANIMSTATE(arena) {
-  MergeFrom(from);
-}
-inline PROTOBUF_NDEBUG_INLINE PLAYERANIMSTATE::Impl_::Impl_(
-    ::google::protobuf::internal::InternalVisibility visibility,
-    ::google::protobuf::Arena* arena)
-      : _cached_size_{0} {}
-
-inline void PLAYERANIMSTATE::SharedCtor(::_pb::Arena* arena) {
-  new (&_impl_) Impl_(internal_visibility(), arena);
-  ::memset(reinterpret_cast<char *>(&_impl_) +
-               offsetof(Impl_, id_),
-           0,
-           offsetof(Impl_, scombostack_) -
-               offsetof(Impl_, id_) +
-               sizeof(Impl_::scombostack_));
-}
-PLAYERANIMSTATE::~PLAYERANIMSTATE() {
-  // @@protoc_insertion_point(destructor:PLAYERANIMSTATE)
-  _internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
-  SharedDtor();
-}
-inline void PLAYERANIMSTATE::SharedDtor() {
-  ABSL_DCHECK(GetArena() == nullptr);
-  _impl_.~Impl_();
-}
-
-PROTOBUF_NOINLINE void PLAYERANIMSTATE::Clear() {
-// @@protoc_insertion_point(message_clear_start:PLAYERANIMSTATE)
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ::uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  ::memset(&_impl_.id_, 0, static_cast<::size_t>(
-      reinterpret_cast<char*>(&_impl_.scombostack_) -
-      reinterpret_cast<char*>(&_impl_.id_)) + sizeof(_impl_.scombostack_));
-  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
-}
-
-const char* PLAYERANIMSTATE::_InternalParse(
-    const char* ptr, ::_pbi::ParseContext* ctx) {
-  ptr = ::_pbi::TcParser::ParseLoop(this, ptr, ctx, &_table_.header);
-  return ptr;
-}
-
-
-PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<5, 17, 0, 0, 2> PLAYERANIMSTATE::_table_ = {
-  {
-    0,  // no _has_bits_
-    0, // no _extensions_
-    17, 248,  // max_field_number, fast_idx_mask
-    offsetof(decltype(_table_), field_lookup_table),
-    4294836224,  // skipmap
-    offsetof(decltype(_table_), field_entries),
-    17,  // num_field_entries
-    0,  // num_aux_entries
-    offsetof(decltype(_table_), field_names),  // no aux_entries
-    &_PLAYERANIMSTATE_default_instance_._instance,
-    ::_pbi::TcParser::GenericFallback,  // fallback
-  }, {{
-    {::_pbi::TcParser::MiniParse, {}},
-    // int64 id = 1;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(PLAYERANIMSTATE, _impl_.id_), 63>(),
-     {8, 63, 0, PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.id_)}},
-    // int64 animstate = 2;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(PLAYERANIMSTATE, _impl_.animstate_), 63>(),
-     {16, 63, 0, PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.animstate_)}},
-    // bool ifattack = 3;
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(PLAYERANIMSTATE, _impl_.ifattack_), 63>(),
-     {24, 63, 0, PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.ifattack_)}},
-    // bool isRunshift = 4;
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(PLAYERANIMSTATE, _impl_.isrunshift_), 63>(),
-     {32, 63, 0, PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.isrunshift_)}},
-    // bool isMoveFront = 5;
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(PLAYERANIMSTATE, _impl_.ismovefront_), 63>(),
-     {40, 63, 0, PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.ismovefront_)}},
-    // bool isMoveBack = 6;
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(PLAYERANIMSTATE, _impl_.ismoveback_), 63>(),
-     {48, 63, 0, PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.ismoveback_)}},
-    // bool isMoveLeft = 7;
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(PLAYERANIMSTATE, _impl_.ismoveleft_), 63>(),
-     {56, 63, 0, PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.ismoveleft_)}},
-    // bool isMoveRight = 8;
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(PLAYERANIMSTATE, _impl_.ismoveright_), 63>(),
-     {64, 63, 0, PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.ismoveright_)}},
-    // bool isWAttack = 9;
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(PLAYERANIMSTATE, _impl_.iswattack_), 63>(),
-     {72, 63, 0, PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.iswattack_)}},
-    // bool isSAttack = 10;
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(PLAYERANIMSTATE, _impl_.issattack_), 63>(),
-     {80, 63, 0, PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.issattack_)}},
-    // bool isRAttack = 11;
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(PLAYERANIMSTATE, _impl_.israttack_), 63>(),
-     {88, 63, 0, PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.israttack_)}},
-    // bool isCombo = 12;
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(PLAYERANIMSTATE, _impl_.iscombo_), 63>(),
-     {96, 63, 0, PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.iscombo_)}},
-    // bool isRoll = 13;
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(PLAYERANIMSTATE, _impl_.isroll_), 63>(),
-     {104, 63, 0, PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.isroll_)}},
-    // bool isHit = 14;
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(PLAYERANIMSTATE, _impl_.ishit_), 63>(),
-     {112, 63, 0, PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.ishit_)}},
-    // bool isJump = 15;
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(PLAYERANIMSTATE, _impl_.isjump_), 63>(),
-     {120, 63, 0, PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.isjump_)}},
-    // int64 wComboStack = 16;
-    {::_pbi::TcParser::FastV64S2,
-     {384, 63, 0, PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.wcombostack_)}},
-    // int64 sComboStack = 17;
-    {::_pbi::TcParser::FastV64S2,
-     {392, 63, 0, PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.scombostack_)}},
-    {::_pbi::TcParser::MiniParse, {}},
-    {::_pbi::TcParser::MiniParse, {}},
-    {::_pbi::TcParser::MiniParse, {}},
-    {::_pbi::TcParser::MiniParse, {}},
-    {::_pbi::TcParser::MiniParse, {}},
-    {::_pbi::TcParser::MiniParse, {}},
-    {::_pbi::TcParser::MiniParse, {}},
-    {::_pbi::TcParser::MiniParse, {}},
-    {::_pbi::TcParser::MiniParse, {}},
-    {::_pbi::TcParser::MiniParse, {}},
-    {::_pbi::TcParser::MiniParse, {}},
-    {::_pbi::TcParser::MiniParse, {}},
-    {::_pbi::TcParser::MiniParse, {}},
-    {::_pbi::TcParser::MiniParse, {}},
-  }}, {{
-    65535, 65535
-  }}, {{
-    // int64 id = 1;
-    {PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.id_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
-    // int64 animstate = 2;
-    {PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.animstate_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
-    // bool ifattack = 3;
-    {PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.ifattack_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kBool)},
-    // bool isRunshift = 4;
-    {PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.isrunshift_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kBool)},
-    // bool isMoveFront = 5;
-    {PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.ismovefront_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kBool)},
-    // bool isMoveBack = 6;
-    {PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.ismoveback_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kBool)},
-    // bool isMoveLeft = 7;
-    {PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.ismoveleft_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kBool)},
-    // bool isMoveRight = 8;
-    {PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.ismoveright_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kBool)},
-    // bool isWAttack = 9;
-    {PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.iswattack_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kBool)},
-    // bool isSAttack = 10;
-    {PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.issattack_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kBool)},
-    // bool isRAttack = 11;
-    {PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.israttack_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kBool)},
-    // bool isCombo = 12;
-    {PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.iscombo_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kBool)},
-    // bool isRoll = 13;
-    {PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.isroll_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kBool)},
-    // bool isHit = 14;
-    {PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.ishit_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kBool)},
-    // bool isJump = 15;
-    {PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.isjump_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kBool)},
-    // int64 wComboStack = 16;
-    {PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.wcombostack_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
-    // int64 sComboStack = 17;
-    {PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.scombostack_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
-  }},
-  // no aux_entries
-  {{
-  }},
-};
-
-::uint8_t* PLAYERANIMSTATE::_InternalSerialize(
-    ::uint8_t* target,
-    ::google::protobuf::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:PLAYERANIMSTATE)
-  ::uint32_t cached_has_bits = 0;
-  (void)cached_has_bits;
-
-  // int64 id = 1;
-  if (this->_internal_id() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::
-        WriteInt64ToArrayWithField<1>(
-            stream, this->_internal_id(), target);
-  }
-
-  // int64 animstate = 2;
-  if (this->_internal_animstate() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::
-        WriteInt64ToArrayWithField<2>(
-            stream, this->_internal_animstate(), target);
-  }
-
-  // bool ifattack = 3;
-  if (this->_internal_ifattack() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteBoolToArray(
-        3, this->_internal_ifattack(), target);
-  }
-
-  // bool isRunshift = 4;
-  if (this->_internal_isrunshift() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteBoolToArray(
-        4, this->_internal_isrunshift(), target);
-  }
-
-  // bool isMoveFront = 5;
-  if (this->_internal_ismovefront() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteBoolToArray(
-        5, this->_internal_ismovefront(), target);
-  }
-
-  // bool isMoveBack = 6;
-  if (this->_internal_ismoveback() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteBoolToArray(
-        6, this->_internal_ismoveback(), target);
-  }
-
-  // bool isMoveLeft = 7;
-  if (this->_internal_ismoveleft() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteBoolToArray(
-        7, this->_internal_ismoveleft(), target);
-  }
-
-  // bool isMoveRight = 8;
-  if (this->_internal_ismoveright() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteBoolToArray(
-        8, this->_internal_ismoveright(), target);
-  }
-
-  // bool isWAttack = 9;
-  if (this->_internal_iswattack() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteBoolToArray(
-        9, this->_internal_iswattack(), target);
-  }
-
-  // bool isSAttack = 10;
-  if (this->_internal_issattack() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteBoolToArray(
-        10, this->_internal_issattack(), target);
-  }
-
-  // bool isRAttack = 11;
-  if (this->_internal_israttack() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteBoolToArray(
-        11, this->_internal_israttack(), target);
-  }
-
-  // bool isCombo = 12;
-  if (this->_internal_iscombo() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteBoolToArray(
-        12, this->_internal_iscombo(), target);
-  }
-
-  // bool isRoll = 13;
-  if (this->_internal_isroll() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteBoolToArray(
-        13, this->_internal_isroll(), target);
-  }
-
-  // bool isHit = 14;
-  if (this->_internal_ishit() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteBoolToArray(
-        14, this->_internal_ishit(), target);
-  }
-
-  // bool isJump = 15;
-  if (this->_internal_isjump() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteBoolToArray(
-        15, this->_internal_isjump(), target);
-  }
-
-  // int64 wComboStack = 16;
-  if (this->_internal_wcombostack() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt64ToArray(
-        16, this->_internal_wcombostack(), target);
-  }
-
-  // int64 sComboStack = 17;
-  if (this->_internal_scombostack() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt64ToArray(
-        17, this->_internal_scombostack(), target);
-  }
-
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target =
-        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
-            _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:PLAYERANIMSTATE)
-  return target;
-}
-
-::size_t PLAYERANIMSTATE::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:PLAYERANIMSTATE)
-  ::size_t total_size = 0;
-
-  ::uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  // int64 id = 1;
-  if (this->_internal_id() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
-        this->_internal_id());
-  }
-
-  // int64 animstate = 2;
-  if (this->_internal_animstate() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
-        this->_internal_animstate());
-  }
-
-  // bool ifattack = 3;
-  if (this->_internal_ifattack() != 0) {
-    total_size += 2;
-  }
-
-  // bool isRunshift = 4;
-  if (this->_internal_isrunshift() != 0) {
-    total_size += 2;
-  }
-
-  // bool isMoveFront = 5;
-  if (this->_internal_ismovefront() != 0) {
-    total_size += 2;
-  }
-
-  // bool isMoveBack = 6;
-  if (this->_internal_ismoveback() != 0) {
-    total_size += 2;
-  }
-
-  // bool isMoveLeft = 7;
-  if (this->_internal_ismoveleft() != 0) {
-    total_size += 2;
-  }
-
-  // bool isMoveRight = 8;
-  if (this->_internal_ismoveright() != 0) {
-    total_size += 2;
-  }
-
-  // bool isWAttack = 9;
-  if (this->_internal_iswattack() != 0) {
-    total_size += 2;
-  }
-
-  // bool isSAttack = 10;
-  if (this->_internal_issattack() != 0) {
-    total_size += 2;
-  }
-
-  // bool isRAttack = 11;
-  if (this->_internal_israttack() != 0) {
-    total_size += 2;
-  }
-
-  // bool isCombo = 12;
-  if (this->_internal_iscombo() != 0) {
-    total_size += 2;
-  }
-
-  // bool isRoll = 13;
-  if (this->_internal_isroll() != 0) {
-    total_size += 2;
-  }
-
-  // bool isHit = 14;
-  if (this->_internal_ishit() != 0) {
-    total_size += 2;
-  }
-
-  // bool isJump = 15;
-  if (this->_internal_isjump() != 0) {
-    total_size += 2;
-  }
-
-  // int64 wComboStack = 16;
-  if (this->_internal_wcombostack() != 0) {
-    total_size += 2 + ::_pbi::WireFormatLite::Int64Size(
-                                    this->_internal_wcombostack());
-  }
-
-  // int64 sComboStack = 17;
-  if (this->_internal_scombostack() != 0) {
-    total_size += 2 + ::_pbi::WireFormatLite::Int64Size(
-                                    this->_internal_scombostack());
-  }
-
-  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
-}
-
-const ::google::protobuf::Message::ClassData PLAYERANIMSTATE::_class_data_ = {
-    PLAYERANIMSTATE::MergeImpl,
-    nullptr,  // OnDemandRegisterArenaDtor
-};
-const ::google::protobuf::Message::ClassData* PLAYERANIMSTATE::GetClassData() const {
-  return &_class_data_;
-}
-
-void PLAYERANIMSTATE::MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg) {
-  auto* const _this = static_cast<PLAYERANIMSTATE*>(&to_msg);
-  auto& from = static_cast<const PLAYERANIMSTATE&>(from_msg);
-  // @@protoc_insertion_point(class_specific_merge_from_start:PLAYERANIMSTATE)
-  ABSL_DCHECK_NE(&from, _this);
-  ::uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  if (from._internal_id() != 0) {
-    _this->_internal_set_id(from._internal_id());
-  }
-  if (from._internal_animstate() != 0) {
-    _this->_internal_set_animstate(from._internal_animstate());
-  }
-  if (from._internal_ifattack() != 0) {
-    _this->_internal_set_ifattack(from._internal_ifattack());
-  }
-  if (from._internal_isrunshift() != 0) {
-    _this->_internal_set_isrunshift(from._internal_isrunshift());
-  }
-  if (from._internal_ismovefront() != 0) {
-    _this->_internal_set_ismovefront(from._internal_ismovefront());
-  }
-  if (from._internal_ismoveback() != 0) {
-    _this->_internal_set_ismoveback(from._internal_ismoveback());
-  }
-  if (from._internal_ismoveleft() != 0) {
-    _this->_internal_set_ismoveleft(from._internal_ismoveleft());
-  }
-  if (from._internal_ismoveright() != 0) {
-    _this->_internal_set_ismoveright(from._internal_ismoveright());
-  }
-  if (from._internal_iswattack() != 0) {
-    _this->_internal_set_iswattack(from._internal_iswattack());
-  }
-  if (from._internal_issattack() != 0) {
-    _this->_internal_set_issattack(from._internal_issattack());
-  }
-  if (from._internal_israttack() != 0) {
-    _this->_internal_set_israttack(from._internal_israttack());
-  }
-  if (from._internal_iscombo() != 0) {
-    _this->_internal_set_iscombo(from._internal_iscombo());
-  }
-  if (from._internal_isroll() != 0) {
-    _this->_internal_set_isroll(from._internal_isroll());
-  }
-  if (from._internal_ishit() != 0) {
-    _this->_internal_set_ishit(from._internal_ishit());
-  }
-  if (from._internal_isjump() != 0) {
-    _this->_internal_set_isjump(from._internal_isjump());
-  }
-  if (from._internal_wcombostack() != 0) {
-    _this->_internal_set_wcombostack(from._internal_wcombostack());
-  }
-  if (from._internal_scombostack() != 0) {
-    _this->_internal_set_scombostack(from._internal_scombostack());
-  }
-  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
-}
-
-void PLAYERANIMSTATE::CopyFrom(const PLAYERANIMSTATE& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:PLAYERANIMSTATE)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-PROTOBUF_NOINLINE bool PLAYERANIMSTATE::IsInitialized() const {
-  return true;
-}
-
-::_pbi::CachedSize* PLAYERANIMSTATE::AccessCachedSize() const {
-  return &_impl_._cached_size_;
-}
-void PLAYERANIMSTATE::InternalSwap(PLAYERANIMSTATE* PROTOBUF_RESTRICT other) {
-  using std::swap;
-  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.scombostack_)
-      + sizeof(PLAYERANIMSTATE::_impl_.scombostack_)
-      - PROTOBUF_FIELD_OFFSET(PLAYERANIMSTATE, _impl_.id_)>(
-          reinterpret_cast<char*>(&_impl_.id_),
-          reinterpret_cast<char*>(&other->_impl_.id_));
-}
-
-::google::protobuf::Metadata PLAYERANIMSTATE::GetMetadata() const {
-  return ::_pbi::AssignDescriptors(
-      &descriptor_table_Protocol_2eproto_getter, &descriptor_table_Protocol_2eproto_once,
-      file_level_metadata_Protocol_2eproto[4]);
-}
-// ===================================================================
-
 class SELFPLAYERMOVE::_Internal {
  public:
 };
@@ -2648,7 +2077,7 @@ void SELFPLAYERMOVE::InternalSwap(SELFPLAYERMOVE* PROTOBUF_RESTRICT other) {
 ::google::protobuf::Metadata SELFPLAYERMOVE::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_Protocol_2eproto_getter, &descriptor_table_Protocol_2eproto_once,
-      file_level_metadata_Protocol_2eproto[5]);
+      file_level_metadata_Protocol_2eproto[4]);
 }
 // ===================================================================
 
@@ -3045,6 +2474,247 @@ void CHARMOVE::InternalSwap(CHARMOVE* PROTOBUF_RESTRICT other) {
 }
 
 ::google::protobuf::Metadata CHARMOVE::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_Protocol_2eproto_getter, &descriptor_table_Protocol_2eproto_once,
+      file_level_metadata_Protocol_2eproto[5]);
+}
+// ===================================================================
+
+class MONSTERSTATE::_Internal {
+ public:
+};
+
+MONSTERSTATE::MONSTERSTATE(::google::protobuf::Arena* arena)
+    : ::google::protobuf::Message(arena) {
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:MONSTERSTATE)
+}
+MONSTERSTATE::MONSTERSTATE(
+    ::google::protobuf::Arena* arena, const MONSTERSTATE& from)
+    : MONSTERSTATE(arena) {
+  MergeFrom(from);
+}
+inline PROTOBUF_NDEBUG_INLINE MONSTERSTATE::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility,
+    ::google::protobuf::Arena* arena)
+      : _cached_size_{0} {}
+
+inline void MONSTERSTATE::SharedCtor(::_pb::Arena* arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  ::memset(reinterpret_cast<char *>(&_impl_) +
+               offsetof(Impl_, id_),
+           0,
+           offsetof(Impl_, animationindex_) -
+               offsetof(Impl_, id_) +
+               sizeof(Impl_::animationindex_));
+}
+MONSTERSTATE::~MONSTERSTATE() {
+  // @@protoc_insertion_point(destructor:MONSTERSTATE)
+  _internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  SharedDtor();
+}
+inline void MONSTERSTATE::SharedDtor() {
+  ABSL_DCHECK(GetArena() == nullptr);
+  _impl_.~Impl_();
+}
+
+PROTOBUF_NOINLINE void MONSTERSTATE::Clear() {
+// @@protoc_insertion_point(message_clear_start:MONSTERSTATE)
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  ::memset(&_impl_.id_, 0, static_cast<::size_t>(
+      reinterpret_cast<char*>(&_impl_.animationindex_) -
+      reinterpret_cast<char*>(&_impl_.id_)) + sizeof(_impl_.animationindex_));
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+const char* MONSTERSTATE::_InternalParse(
+    const char* ptr, ::_pbi::ParseContext* ctx) {
+  ptr = ::_pbi::TcParser::ParseLoop(this, ptr, ctx, &_table_.header);
+  return ptr;
+}
+
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<2, 3, 0, 0, 2> MONSTERSTATE::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    3, 24,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967288,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    3,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    &_MONSTERSTATE_default_instance_._instance,
+    ::_pbi::TcParser::GenericFallback,  // fallback
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+    // int64 id = 1;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(MONSTERSTATE, _impl_.id_), 63>(),
+     {8, 63, 0, PROTOBUF_FIELD_OFFSET(MONSTERSTATE, _impl_.id_)}},
+    // double animationTime = 2;
+    {::_pbi::TcParser::FastF64S1,
+     {17, 63, 0, PROTOBUF_FIELD_OFFSET(MONSTERSTATE, _impl_.animationtime_)}},
+    // int64 animationIndex = 3;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(MONSTERSTATE, _impl_.animationindex_), 63>(),
+     {24, 63, 0, PROTOBUF_FIELD_OFFSET(MONSTERSTATE, _impl_.animationindex_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // int64 id = 1;
+    {PROTOBUF_FIELD_OFFSET(MONSTERSTATE, _impl_.id_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
+    // double animationTime = 2;
+    {PROTOBUF_FIELD_OFFSET(MONSTERSTATE, _impl_.animationtime_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kDouble)},
+    // int64 animationIndex = 3;
+    {PROTOBUF_FIELD_OFFSET(MONSTERSTATE, _impl_.animationindex_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
+  }},
+  // no aux_entries
+  {{
+  }},
+};
+
+::uint8_t* MONSTERSTATE::_InternalSerialize(
+    ::uint8_t* target,
+    ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:MONSTERSTATE)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  // int64 id = 1;
+  if (this->_internal_id() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::
+        WriteInt64ToArrayWithField<1>(
+            stream, this->_internal_id(), target);
+  }
+
+  // double animationTime = 2;
+  static_assert(sizeof(::uint64_t) == sizeof(double),
+                "Code assumes ::uint64_t and double are the same size.");
+  double tmp_animationtime = this->_internal_animationtime();
+  ::uint64_t raw_animationtime;
+  memcpy(&raw_animationtime, &tmp_animationtime, sizeof(tmp_animationtime));
+  if (raw_animationtime != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(
+        2, this->_internal_animationtime(), target);
+  }
+
+  // int64 animationIndex = 3;
+  if (this->_internal_animationindex() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::
+        WriteInt64ToArrayWithField<3>(
+            stream, this->_internal_animationindex(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:MONSTERSTATE)
+  return target;
+}
+
+::size_t MONSTERSTATE::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:MONSTERSTATE)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // int64 id = 1;
+  if (this->_internal_id() != 0) {
+    total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
+        this->_internal_id());
+  }
+
+  // double animationTime = 2;
+  static_assert(sizeof(::uint64_t) == sizeof(double),
+                "Code assumes ::uint64_t and double are the same size.");
+  double tmp_animationtime = this->_internal_animationtime();
+  ::uint64_t raw_animationtime;
+  memcpy(&raw_animationtime, &tmp_animationtime, sizeof(tmp_animationtime));
+  if (raw_animationtime != 0) {
+    total_size += 9;
+  }
+
+  // int64 animationIndex = 3;
+  if (this->_internal_animationindex() != 0) {
+    total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
+        this->_internal_animationindex());
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
+}
+
+const ::google::protobuf::Message::ClassData MONSTERSTATE::_class_data_ = {
+    MONSTERSTATE::MergeImpl,
+    nullptr,  // OnDemandRegisterArenaDtor
+};
+const ::google::protobuf::Message::ClassData* MONSTERSTATE::GetClassData() const {
+  return &_class_data_;
+}
+
+void MONSTERSTATE::MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg) {
+  auto* const _this = static_cast<MONSTERSTATE*>(&to_msg);
+  auto& from = static_cast<const MONSTERSTATE&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:MONSTERSTATE)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from._internal_id() != 0) {
+    _this->_internal_set_id(from._internal_id());
+  }
+  static_assert(sizeof(::uint64_t) == sizeof(double),
+                "Code assumes ::uint64_t and double are the same size.");
+  double tmp_animationtime = from._internal_animationtime();
+  ::uint64_t raw_animationtime;
+  memcpy(&raw_animationtime, &tmp_animationtime, sizeof(tmp_animationtime));
+  if (raw_animationtime != 0) {
+    _this->_internal_set_animationtime(from._internal_animationtime());
+  }
+  if (from._internal_animationindex() != 0) {
+    _this->_internal_set_animationindex(from._internal_animationindex());
+  }
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void MONSTERSTATE::CopyFrom(const MONSTERSTATE& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:MONSTERSTATE)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+PROTOBUF_NOINLINE bool MONSTERSTATE::IsInitialized() const {
+  return true;
+}
+
+::_pbi::CachedSize* MONSTERSTATE::AccessCachedSize() const {
+  return &_impl_._cached_size_;
+}
+void MONSTERSTATE::InternalSwap(MONSTERSTATE* PROTOBUF_RESTRICT other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(MONSTERSTATE, _impl_.animationindex_)
+      + sizeof(MONSTERSTATE::_impl_.animationindex_)
+      - PROTOBUF_FIELD_OFFSET(MONSTERSTATE, _impl_.id_)>(
+          reinterpret_cast<char*>(&_impl_.id_),
+          reinterpret_cast<char*>(&other->_impl_.id_));
+}
+
+::google::protobuf::Metadata MONSTERSTATE::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_Protocol_2eproto_getter, &descriptor_table_Protocol_2eproto_once,
       file_level_metadata_Protocol_2eproto[6]);

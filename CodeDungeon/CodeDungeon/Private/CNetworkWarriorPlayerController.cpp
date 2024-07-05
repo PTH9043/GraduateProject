@@ -49,6 +49,8 @@ void CNetworkWarriorPlayerController::Tick(const _double& _dTimeDelta)
 	if (spWarriorPlayer->GetJumpingState() || spWarriorPlayer->GetFallingState()) {
 		spWarriorPlayer->GetTransform()->MoveForward(_dTimeDelta, static_cast<_float>(m_JumpSpeed));
 	}
+
+	spAnimModel->TickEventToRatio(spWarriorPlayer.get(), L"", m_dRecvAnimDuration, _dTimeDelta);
 	spAnimModel->TickAnimation(_dTimeDelta);
 }
 

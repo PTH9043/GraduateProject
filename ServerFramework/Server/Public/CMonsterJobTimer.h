@@ -6,10 +6,10 @@ BEGIN(Server)
 
 class CMonsterJobTimer final : public AJobTimer {
 public:
-	CMonsterJobTimer(OBJCON_CONSTRUCTOR, Asio::io_service& _service, _int _millisecondsTimer);
+	CMonsterJobTimer(OBJCON_CONSTRUCTOR, Asio::io_context& _context);
 	DESTRUCTOR(CMonsterJobTimer)
 protected:
-	virtual void TickTimer() override;
+	virtual void TickTimer(const TIMEREVENT& _TimerEvent) override;
 private:
 	virtual void Free() override;
 private:

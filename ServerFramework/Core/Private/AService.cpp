@@ -25,10 +25,10 @@ namespace Core {
 		return iter->second;
 	}
 
-	SHPTR<AGameObject> AService::FindGameObject(const SESSIONID _SessionID)
+	SHPTR<AMonster> AService::FindMobObject(const SESSIONID _SessionID)
 	{
-		const auto& iter = m_GameObjectContainer.find(_SessionID);
-		RETURN_CHECK(m_GameObjectContainer.end() == iter, nullptr);
+		const auto& iter = m_MobObjContainer.find(_SessionID);
+		RETURN_CHECK(m_MobObjContainer.end() == iter, nullptr);
 		return iter->second;
 	}
 
@@ -91,11 +91,11 @@ namespace Core {
 		m_SessionContainer.insert(MakePair(_SessionID, _spSession));
 	}
 
-	void AService::InsertGameObject(SESSIONID _SessionID, SHPTR<AGameObject> _spGameObject)
+	void AService::InsertMobObject(SESSIONID _SessionID, SHPTR<AMonster> _spMobObject)
 	{
-		SHPTR<AGameObject> spObject = FindGameObject(_SessionID);
+		SHPTR<AMonster> spObject = FindMobObject(_SessionID);
 		RETURN_CHECK(nullptr == spObject && nullptr != spObject, ;);
-		m_GameObjectContainer.insert(MakePair(_SessionID, _spGameObject));
+		m_MobObjContainer.insert(MakePair(_SessionID, _spMobObject));
 	}
 
 	SESSIONID AService::GiveID()

@@ -1,6 +1,7 @@
 #include "CoreDefines.h"
 #include "AThreadManager.h"
 #include "AJobTimer.h"
+#include "AMainLoop.h"
 
 namespace Core
 {
@@ -11,6 +12,11 @@ namespace Core
 	@ Date: 2023-12-26
 	@ Writer: นฺลยว๖
 	*/
+	void AThreadManager::CreateMainLoop(SHPTR<ACoreInstance> _spCoreinstance, Asio::io_service& _service)
+	{
+		m_spMainLoop = Create<AMainLoop>(_spCoreinstance, _service);
+	}
+
 	void AThreadManager::RegisterFunc(const THREADFUNC& _CallBack, void* _Data)
 	{
 		RETURN_CHECK(m_CurThreadNum >= TLS::MAX_THREAD, ;);
@@ -19,11 +25,17 @@ namespace Core
 		m_ThreadContainer.emplace_back(ThreadJoin, _CallBack, _Data, m_CurThreadNum++);
 	}
 
-	void AThreadManager::RegisterJob(CSHPTRREF<AJobTimer> _spJobTimer)
+	void AThreadManager::RegisterJob(_int _jobType, CSHPTRREF<AJobTimer> _spJobTimer)
 	{
 		assert(nullptr != _spJobTimer);
-		_spJobTimer->RegisterTimer();
-		m_JobThreadContainer.emplace_back(_spJobTimer);
+		m_JobThreadContainer.emplace(MakePair(_jobType, _spJobTimer));
+	}
+
+	SHPTR<AJobTimer> AThreadManager::FindJobTimer(_int _JobTimer)
+	{
+		const auto& iter = m_JobThreadContainer.find(_JobTimer);
+		RETURN_CHECK(m_JobThreadContainer.end() == iter, nullptr);
+		return iter->second;
 	}
 
 	/*
@@ -32,6 +44,11 @@ namespace Core
 	*/
 	void AThreadManager::Join()
 	{
+		for (auto& iter : m_JobThreadContainer)
+		{
+			iter.second->RegisterTimer(1);
+		}
+
 		for (auto& iter : m_ThreadContainer)
 		{
 			iter.join();

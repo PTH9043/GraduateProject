@@ -6,7 +6,7 @@
 
 namespace Core {
 
-	UServerService::UServerService(OBJCON_CONSTRUCTOR, const _string& _strNavigationPath) :
+	AServerService::AServerService(OBJCON_CONSTRUCTOR, const _string& _strNavigationPath) :
 		AService(OBJCON_CONDATA, SERVICETYPE::SERVER), 
 		m_TcpAcceptor{ GetIOContext(),Asio::ip::tcp::endpoint(Asio::ip::tcp::v4(),TCP_PORT_NUM) }, 
 		m_spNavigation{nullptr}
@@ -14,25 +14,25 @@ namespace Core {
 
 	}
 
-	_bool UServerService::NativeConstruct()
+	_bool AServerService::NativeConstruct()
 	{
 		return true;
 	}
 
-	_bool UServerService::Start()
+	_bool AServerService::Start()
 	{
 		__super::Start();
 		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
 
 		for (_uint i = 0; i < TLS::MAX_WORKTHREAD; ++i)
 		{
-			spCoreInstance->RegisterFunc(UServerService::ThreadFunc, GetIOConectPointer());
+			spCoreInstance->RegisterFunc(AServerService::ThreadFunc, GetIOConectPointer());
 		}
 		spCoreInstance->Join();
 		return true;
 	}
 
-	void UServerService::ThreadFunc(void* _spService)
+	void AServerService::ThreadFunc(void* _spService)
 	{
 		RETURN_CHECK(nullptr == _spService, ;);
 
@@ -42,7 +42,7 @@ namespace Core {
 		pService->run();
 	}
 
-	void UServerService::Free()
+	void AServerService::Free()
 	{
 		m_TcpAcceptor.close();
 	}

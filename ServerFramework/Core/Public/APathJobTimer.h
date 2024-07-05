@@ -9,7 +9,7 @@ class APathFinder;
 
 class APathJobTimer : public AJobTimer {
 public:
-	APathJobTimer(OBJCON_CONSTRUCTOR, Asio::io_service& _service);
+	APathJobTimer(OBJCON_CONSTRUCTOR, Asio::io_context& _context);
 	DESTRUCTOR(APathJobTimer)
 public:
 protected:

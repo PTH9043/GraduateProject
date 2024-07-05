@@ -15,13 +15,16 @@ using TIMEREVENTQUEUE = CONPRIORITYQUEUE<TIMEREVENT>;
 */
 class AJobTimer abstract : public ACoreObject {
 public:
-	AJobTimer(OBJCON_CONSTRUCTOR, Asio::io_service& _service);
+	AJobTimer(OBJCON_CONSTRUCTOR, Asio::io_context& _context);
 	DESTRUCTOR(AJobTimer)
 public:
 	void RegisterTimer(_int _RegisterTimer);
-	 void TimerThread(const boost::system::error_code& _error);
+	void TimerThread(const boost::system::error_code& _error);
+	void InsertTimerEvent(TIMEREVENT _TimerEvent);
 protected:
 	virtual void TickTimer(const TIMEREVENT& _TimerEvent) PURE;
+protected: /* get set*/
+	Asio::steady_timer& GetSteadyEvent() { return m_SteadyEvent; }
 private:
 	virtual void Free() override;
 private:

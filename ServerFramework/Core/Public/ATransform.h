@@ -4,7 +4,12 @@
 #include "ACoreBase.h"
 
 BEGIN(Core)
-
+/*
+@ Date: 2024-07-03
+@ Writer: 박태현
+@ Explain
+- 실제 게임에서 오브젝트가 사용하는 Transform
+*/
 class CORE_DLL ATransform : public ACoreBase {
 public:
 	ATransform();
@@ -15,40 +20,40 @@ public:
 	const _float GetXAngle() const;
 	const _float GetYAngle() const;
 	const _float GetZAngle() const;
-	const _float4x4 GetWorldMatrixTP() { TransformUpdate();  return XMMatrixTranspose(XMLoadFloat4x4(&m_mChangeWorldMatrix)); }
-	const _float4x4 GetWorldMatrixInv() { TransformUpdate();   return XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_mChangeWorldMatrix)); }
-	const _float4x4& GetWorldMatrix() const { return m_mWorldMatrix; }
+	const _float4x4 GetWorldMatrixTP() { TransformUpdate(); return XMMatrixTranspose(XMLoadFloat4x4(&m_mChangeWorldMatrix)); }
+	const _float4x4 GetWorldMatrixInv() { TransformUpdate();  return XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_mChangeWorldMatrix)); }
+	const _float4x4& GetWorldMatrix() const { READ_LOCK(m_WorldMatrixLock); return m_mWorldMatrix; }
 
 	const _float4x4& GetChangeMatrix() { TransformUpdate();   return m_mChangeWorldMatrix; }
 	// Get Parents Local Matrix
 	const _float4x4 GetParentsMatrix();
 
-	const Vector3& GetRight() const { return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_RIGHT][0]); }
-	const Vector3& GetUp() const { return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_UP][0]); }
-	const Vector3& GetLook() const { return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_LOOK][0]); }
-	const Vector3& GetPos() const { return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_POS][0]); }
+	const Vector3& GetRight() const { READ_LOCK(m_WorldMatrixLock); return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_RIGHT][0]); }
+	const Vector3& GetUp() const { READ_LOCK(m_WorldMatrixLock); return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_UP][0]); }
+	const Vector3& GetLook() const { READ_LOCK(m_WorldMatrixLock); return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_LOOK][0]); }
+	const Vector3& GetPos() const { READ_LOCK(m_WorldMatrixLock); return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_POS][0]); }
 
-	const Vector3& GetChangeRight() const { return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_RIGHT][0]); }
-	const Vector3& GetChangeUp() const { return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_UP][0]); }
-	const Vector3& GetChangeLook() const { return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_LOOK][0]); }
-	const Vector3& GetChangePos() const { return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_POS][0]); }
+	const Vector3& GetChangeRight() const { READ_LOCK(m_ChangeMatrixLock); return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_RIGHT][0]); }
+	const Vector3& GetChangeUp() const { READ_LOCK(m_ChangeMatrixLock);  return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_UP][0]); }
+	const Vector3& GetChangeLook() const { READ_LOCK(m_ChangeMatrixLock);  return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_LOOK][0]); }
+	const Vector3& GetChangePos() const { READ_LOCK(m_ChangeMatrixLock); return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_POS][0]); }
 
 	const SHPTR<ATransform>& GetParentsTransform() const { return m_spParentsTransform; }
 
-	const Vector3& GetJumpVelocity() const { return m_vJumpvelocity; }
+	const Vector3 GetJumpVelocity() const { return m_vJumpvelocity; }
 
 	void SetScale(const Vector3& _vScale);
 	void SetParent(CSHPTRREF<ATransform> _spTransform);
 
-	void SetRight(const Vector3& _vRight) { m_mWorldMatrix.Set_Right(_vRight); }
-	void SetUp(const Vector3& _vUp) { m_mWorldMatrix.Set_Up(_vUp); }
-	void SetLook(const Vector3& _vLook) { m_mWorldMatrix.Set_Look(_vLook); }
-	void SetPos(const Vector3& _vPos) { m_mWorldMatrix.Set_Pos(_vPos); }
+	void SetRight(const Vector3& _vRight) { WRITE_LOCK(m_WorldMatrixLock); m_mWorldMatrix.Set_Right(_vRight); }
+	void SetUp(const Vector3& _vUp) { WRITE_LOCK(m_WorldMatrixLock); m_mWorldMatrix.Set_Up(_vUp); }
+	void SetLook(const Vector3& _vLook) { WRITE_LOCK(m_WorldMatrixLock); m_mWorldMatrix.Set_Look(_vLook); }
+	void SetPos(const Vector3& _vPos) { WRITE_LOCK(m_WorldMatrixLock); m_mWorldMatrix.Set_Pos(_vPos); }
 
-	void SetNotApplyRotate(const _bool _isActive) { this->m_isNotApplyRotate = _isActive; }
-	void SetNotApplyPos(const _bool _isActive) { this->m_isNotApplyPos = _isActive; }
+	void SetNotApplyRotate(const _bool _isActive) {this->m_isNotApplyRotate = _isActive; }
+	void SetNotApplyPos(const _bool _isActive) {  this->m_isNotApplyPos = _isActive; }
 	void SetNotApplyScale(const _bool _isActive) { this->m_isNotApplyScale = _isActive; }
-	void SetParentsTransform(CSHPTRREF<ATransform> _spTransform) { this->m_spParentsTransform = _spTransform; }
+	void SetParentsTransform(CSHPTRREF<ATransform> _spTransform) {  this->m_spParentsTransform = _spTransform; }
 	void SetNewWorldMtx(const _float4x4& _newworldMtx);
 public:
 	virtual void Free() override;
@@ -119,6 +124,9 @@ private:
 	_bool														m_isNotApplyScale;
 
 	SHPTR<ATransform>							m_spParentsTransform;
+
+	USE_LOCK												m_WorldMatrixLock;
+	USE_LOCK												m_ChangeMatrixLock;
 
 	//2024-05-24 이성현 중력 구현
 	Vector3 m_vVelocity;

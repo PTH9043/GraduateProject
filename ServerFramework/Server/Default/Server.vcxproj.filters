@@ -25,7 +25,10 @@
     <Filter Include="03.Session\Monster">
       <UniqueIdentifier>{01034477-172e-4fe5-99d8-30cd68b9e117}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Network\JobTimer">
+    <Filter Include="02.Network\Timer">
+      <UniqueIdentifier>{d8599901-690b-4de0-a434-a98974f5b5aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Network\Timer\MobTimer">
       <UniqueIdentifier>{fb6a57da-c2ae-4834-ad4e-4bfef13a6f49}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -46,7 +49,7 @@
       <Filter>03.Session\Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CMonsterJobTimer.cpp">
-      <Filter>02.Network\JobTimer</Filter>
+      <Filter>02.Network\Timer\MobTimer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -66,7 +69,7 @@
       <Filter>03.Session\Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CMonsterJobTimer.h">
-      <Filter>02.Network\JobTimer</Filter>
+      <Filter>02.Network\Timer\MobTimer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

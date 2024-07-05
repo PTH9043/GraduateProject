@@ -4,7 +4,7 @@
 #include "ACoreObject.h"
 
 BEGIN(Core)
-class AGameObject;
+class AMonster;
 class ASession;
 /*
 @ Date: 2024-01-06, Writer: 박태현
@@ -14,7 +14,7 @@ class ASession;
 class CORE_DLL AService abstract : public ACoreObject {
 public:
 	using SESSIONCONTAINER = CONUNORMAP<SESSIONID, SHPTR<ASession>>;
-	using GAMEOBJECTCONTAINER = CONUNORMAP<SESSIONID, SHPTR<AGameObject>>;
+	using MOBOBJCONTAINER = CONUNORMAP<SESSIONID, SHPTR<AMonster>>;
 public:
 	AService(OBJCON_CONSTRUCTOR, SERVICETYPE _Type);
 	DESTRUCTOR(AService)
@@ -26,7 +26,7 @@ public:
 	// ID를 통해서 SessionID
 	SHPTR<ASession> FindSession(const SESSIONID _SessionID) ;
 	// ID를 통해서 GameObject를 찾아온다. 
-	SHPTR<AGameObject> FindGameObject(const SESSIONID _SessionID);
+	SHPTR<AMonster> FindMobObject(const SESSIONID _SessionID);
 	// 전체 서버 참여자에게 메시지를 보내는 함수이다. 
 	void BroadCastMessage(_char* _pPacket, const PACKETHEAD& _PacketHead) ;
 	// 해당 Session ID를 제외한 전체 서버 참여자에게 메시지를 보내는 함수
@@ -38,15 +38,15 @@ public:
 	// Session을 Container에 저장하는 함수이다. 
 	void InsertSession(SESSIONID _SessionID, SHPTR<ASession> _spSession) ;
 	// GameObject를 집어넣는 함수
-	void InsertGameObject(SESSIONID _SessionID, SHPTR<AGameObject> _spGameObject);
+	void InsertMobObject(SESSIONID _SessionID, SHPTR<AMonster> _spMobObject);
 public: /* get set */
 	const SESSIONCONTAINER& GetSessionContainer() const { return m_SessionContainer; }
-	const GAMEOBJECTCONTAINER& GetGameObjectContainer() const { return m_GameObjectContainer; }
+	const MOBOBJCONTAINER& GetMobObjContainer() const { return m_MobObjContainer; }
+	IOContext& GetIOContext(REF_RETURN) { return m_IOContext; }
 protected:
 	virtual void Connect() PURE;
 	virtual SESSIONID GiveID();
 protected: /* Get Set */
-	IOContext& GetIOContext(REF_RETURN) { return m_IOContext; }
 	TCPSOCKET& GetTcpSocket(REF_RETURN) { return m_TcpSocket; }
 	MUTEX& GetLock(REF_RETURN) { return m_Lock; }
 	IOContext* GetIOConectPointer() { return &m_IOContext; }
@@ -63,7 +63,7 @@ private:
 	MUTEX									m_Lock;
 	// Session Conatiner
 	SESSIONCONTAINER			m_SessionContainer;
-	GAMEOBJECTCONTAINER	m_GameObjectContainer;
+	MOBOBJCONTAINER			m_MobObjContainer;
 };
 
 END

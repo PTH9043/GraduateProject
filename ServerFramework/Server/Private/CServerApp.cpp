@@ -3,7 +3,6 @@
 #include "ACoreInstance.h"
 #include "CServerAdiminstor.h"
 
-
 namespace Server
 {
 	CServerApp::CServerApp() 
@@ -14,6 +13,7 @@ namespace Server
 	_bool CServerApp::Start()
 	{
 		GetCoreInstance()->ReadyCoreInstance(CreateServiceObject<CServerAdiminstor>());
+
 		std::cout << "Start Server!\n";
 		try
 		{

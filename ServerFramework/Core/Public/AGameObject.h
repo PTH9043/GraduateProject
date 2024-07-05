@@ -8,13 +8,17 @@ class ATransform;
 class ACollider;
 class ASpace;
 
+/*
+@ Date: 2024-07-04, Writer: 박태현
+@ Explain
+- 서버에 필요한 Object를 정의한다. 
+*/
 class CORE_DLL AGameObject abstract : public ACoreObject {
 public:
 	AGameObject(OBJCON_CONSTRUCTOR, SESSIONID _ID, SESSIONTYPE _SessionType);
 	DESTRUCTOR(AGameObject)
 public:
 	virtual _bool Start() PURE;
-	virtual void Tick();
 	void CreateColliderAndTransform(const COLLIDERINFO& _ColliderInfo, const Vector3& _vPos);
 	void BringSpaceIndex(SHPTR<ASpace> _spSpace);
 	void Placement(_int _CellIndex);
@@ -45,10 +49,11 @@ public:/*Get Set */
 	const _float GetMoveSpeed() const { return m_fMoveSpeed; }
 	const _float GetRunSpeed() const { return m_fRunSpeed; }
 	const _int GetCurOnCellIndex() const { return m_iCurOnCellIndex; }
+	const _bool IsActive() const { return m_isActive; }
 
 	void SetJumpable(const _bool _isJumpable) { this->m_isJumpable = _isJumpable; }
-protected:
-	virtual _bool ProcessPacket(_char* _pPacket, const PACKETHEAD& _PacketHead) PURE;
+	virtual void SetActiveWeak(const _bool _isActive);
+	virtual void SetActiveStrong(const _bool _isActive);
 protected: /* Get Set */
 	void SetSessionID(const SESSIONID& _SessionID) { this->m_SessionID = _SessionID; }
 	void SetSessionType(const SESSIONTYPE& _SessionType) { this->m_SessionType = _SessionType; }
@@ -79,7 +84,7 @@ private:
 
 	_float									m_fMoveSpeed;
 	_float									m_fRunSpeed;
-	_bool									m_isActive;
+	ATOMIC<_bool>				m_isActive;
 };
 
 

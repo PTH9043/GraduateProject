@@ -1,6 +1,7 @@
 #include "EngineDefine.h"
 #include "UBoneNode.h"
 #include "UModel.h"
+#include "UMethod.h"
 
 _wstring					UBoneNode::BASE_BONENODE_NAME{ L"" };
 
@@ -13,7 +14,8 @@ UBoneNode::UBoneNode() :
 	m_wstrName{ L"" },
 	m_wstrParetnsName{ L"" },
 	m_fDepths{ 0.f },
-	m_mFinalTransformMatrix{_float4x4::Identity}
+	m_mFinalTransformMatrix{_float4x4::Identity},
+	m_isRootBoneNode{false}
 {
 }
 
@@ -25,7 +27,8 @@ UBoneNode::UBoneNode(const UBoneNode& _rhs) :
 	m_wstrName{ _rhs.m_wstrName },
 	m_wstrParetnsName{ _rhs.m_wstrParetnsName },
 	m_fDepths{ _rhs.m_fDepths },
-	m_mFinalTransformMatrix{ _float4x4::Identity }
+	m_mFinalTransformMatrix{ _float4x4::Identity },
+	m_isRootBoneNode{ _rhs.m_isRootBoneNode }
 {
 }
 
@@ -57,6 +60,14 @@ void UBoneNode::FindParents(CSHPTRREF<UModel> _spModel)
 void UBoneNode::UpdateCombinedMatrix(const _float4x4& _mPivotMatrix)
 {
 	ComputeCombinedMatrix(_mPivotMatrix);
+}
+
+void UBoneNode::SaveServerData(std::ofstream& _Saves)
+{
+	_Saves.write((_char*)&m_mOffsetMatrix, sizeof(_float4x4));
+	UMethod::SaveString(_Saves, UMethod::ConvertWToS(m_wstrName));
+	UMethod::SaveString(_Saves, UMethod::ConvertWToS(m_wstrParetnsName));
+	_Saves.write((_char*)&m_fDepths, sizeof(_float));
 }
 
 void UBoneNode::RemoveCombineMatrixData()

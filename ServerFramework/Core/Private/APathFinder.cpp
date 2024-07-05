@@ -3,6 +3,7 @@
 #include "ANavigation.h"
 #include "ACell.h"
 #include "ANavigation.h"
+#include "ATransform.h"
 
 namespace Core {
 
@@ -12,25 +13,57 @@ namespace Core {
 	{
 	}
 
-	_bool APathFinder::NativeConstruct(SHPTR<ANavigation> _spNavigation, const VECTOR<SHPTR<ACell>>& _Cells)
+	_bool APathFinder::NativeConstruct(SHPTR<ANavigation> _spNavigation)
 	{
 		m_spNavigation = _spNavigation;
 		// Cells
-		m_MaxCellCount = static_cast<_int>(_Cells.size());
+		m_MaxCellCount = static_cast<_int>(_spNavigation->GetCells()->size());
 		// value 
 		m_CheckOpens.resize(m_MaxCellCount);
 		m_DistanceWeights.resize(m_MaxCellCount);
 		return true;
 	}
 
-	SHPTR<ACell> APathFinder::FindPath(Vector3 _vStartPos, Vector3 _vEndPos)
+	LIST<SHPTR<ACell>> APathFinder::FindPath(Vector3 _vStartPos, Vector3 _vEndPos)
 	{
 		Release();
 		SHPTR<ACell> spStartCell = m_spNavigation->FindCell(_vStartPos);
 		SHPTR<ACell> spEndCell = m_spNavigation->FindCell(_vEndPos);
-		RETURN_CHECK(nullptr == spStartCell || nullptr == spEndCell, ;);
+		RETURN_CHECK(nullptr == spStartCell || nullptr == spEndCell, LIST<SHPTR<ACell>>{});
 		MakeRoutine(spStartCell, spEndCell);
-		return m_SavePathList.front();
+		m_SavePathList = OptimizePath(m_SavePathList, spStartCell, spEndCell);
+		return m_SavePathList;
+	}
+
+	LIST<SHPTR<ACell>> APathFinder::FindPath(SHPTR<ATransform> _spStartTr, SHPTR<ATransform> _spEndTr)
+	{
+		return FindPath(_spStartTr->GetPos(), _spEndTr->GetPos());
+	}
+
+	LIST<SHPTR<ACell>> APathFinder::OptimizePath(const LIST<SHPTR<ACell>>& _path, SHPTR<ACell> _start, SHPTR<ACell> _end)
+	{
+		VECTOR<SHPTR<ACell>> optimizedPath;
+		optimizedPath.reserve(_path.size() + 2);
+
+		optimizedPath.push_back(_start);
+		for (const auto& cell : _path) {
+			optimizedPath.push_back(cell);
+		}
+		// Add end point
+		optimizedPath.push_back(_end);
+
+		// Simplify the path
+		LIST<SHPTR<ACell>> straightPath;
+		SHPTR<ACell> lastPoint = _start;
+		straightPath.push_back(lastPoint);
+		for (size_t i = 1; i < optimizedPath.size() - 1; ++i) {
+			if (!LineTest(lastPoint->GetCenterPos(), optimizedPath[i + 1]->GetCenterPos())) {
+				straightPath.push_back(optimizedPath[i]);
+				lastPoint = optimizedPath[i];
+			}
+		}
+		straightPath.push_back(_end);
+		return straightPath;
 	}
 
 	void APathFinder::MakeRoutine(SHPTR<ACell> _spStartCell, SHPTR<ACell> _spEndCell)
@@ -92,6 +125,7 @@ namespace Core {
 		MemoryInitialization(&m_CheckOpens[0], m_MaxCellCount);
 		MemoryInitialization(&m_DistanceWeights[0], m_MaxCellCount);
 
+		m_SavePathList.clear();
 		m_VisitedListes.clear();
 	}
 

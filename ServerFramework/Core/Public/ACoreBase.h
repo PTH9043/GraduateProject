@@ -14,7 +14,7 @@ protected:
 	ACoreBase(const ACoreBase& _rhs);
 	virtual ~ACoreBase();
 
-protected:
+public:
 	/*
 	@ Explain
 	- 자기 자신의 WEAKPTR을 캐스팅 하기 위한 함수들이다. 
