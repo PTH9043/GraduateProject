@@ -8,6 +8,7 @@
 #include "UAnimModel.h"
 #include "CMummyAnimController.h"
 #include "UMethod.h"
+#include "UCollider.h"
 
 CSarcophagus::CSarcophagus(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: CMob(_spDevice, _wstrLayer, _eCloneType), m_SarcophagusType{}
@@ -32,6 +33,22 @@ HRESULT CSarcophagus::NativeConstructClone(const VOIDDATAS& _Datas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);
 
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	SetPawnType(PAWNTYPE::PAWN_STATICOBJ);
+
+	/*UCollider::COLLIDERDESC tDesc;
+	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
+	tDesc.vScale = _float3(1.f, 1.f, 1.f);
+	SHPTR<UCollider> Collider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
+	_wstring mainColliderTag = L"Main";
+	AddColliderInContainer(mainColliderTag, Collider);
+
+	for (auto& Containers : GetColliderContainer())
+	{
+		Containers.second->SetTranslate(GetAnimModel()->GetCenterPos());
+		Containers.second->SetScaleToFitModel(GetAnimModel()->GetMinVertexPos(), GetAnimModel()->GetMaxVertexPos());
+	}*/
+
 	return S_OK;
 }
 
@@ -42,6 +59,11 @@ void CSarcophagus::TickActive(const _double& _dTimeDelta)
 	_double SarcophagusOpeningSpeed = 20;
 	_double SarcophagusTimeArcOpenStart = 50;
 	_double SarcophagusTimeArcOpenEnd = 50;
+
+	for (auto& Containers : GetColliderContainer())
+	{
+		Containers.second->SetTransform(GetTransform());
+	}
 
 	GetAnimationController()->Tick(_dTimeDelta);
 
@@ -57,6 +79,7 @@ void CSarcophagus::TickActive(const _double& _dTimeDelta)
 void CSarcophagus::LateTickActive(const _double& _dTimeDelta)
 {
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
+
 }
 
 HRESULT CSarcophagus::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)

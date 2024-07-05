@@ -5,6 +5,7 @@ namespace Engine {
 	enum PAWNTYPE : int
 	{
 		PAWN_CHAR,
+		PAWN_PLAYER,
 		PAWN_ITEM,
 		PAWN_STATICOBJ,
 		PAWN_ECT

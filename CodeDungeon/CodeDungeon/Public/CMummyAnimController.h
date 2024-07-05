@@ -31,6 +31,16 @@ public:
 	virtual void Tick(const _double& _dTimeDelta) override;
 private:
 	WKPTR< CMummy>			m_wpMummyMob;
+
+	_bool					m_bAttackMode;
+	_bool					m_bTauntMode;
+	_double					m_dlastHitTime;
+	_double					m_dlastAttackTime;
+	_bool					m_bstartlastHitTime;
+	_bool					m_blastAttackWasFirst;
+	_double					m_dIdleTimer;
+	_bool					m_bFoundPlayerFirsttime;
+
 };
 
 END

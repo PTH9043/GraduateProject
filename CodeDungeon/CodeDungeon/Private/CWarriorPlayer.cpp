@@ -142,7 +142,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	}
 	SetOutline(true);
 	SetifPlayer(true);
-	
+
 	return S_OK;
 }
 
@@ -265,8 +265,6 @@ HRESULT CWarriorPlayer::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHP
 
 void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
-	SetHitstate(false);
-	SetOBJCollisionState(false);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	PAWNTYPE ePawnType = _pEnemy->GetPawnType();
 
@@ -283,8 +281,6 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 				SetHitstate(true);
 				GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
 			}
-			else
-				SetHitstate(false);
 
 			for (auto& iter2 : pCharacter->GetColliderContainer())
 			{

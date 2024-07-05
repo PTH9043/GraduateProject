@@ -150,17 +150,17 @@ void TModelView::LateTickActive(const _double& _dTimeDetla)
 		}
 	}
 
-	for (auto& ShowModel : m_ShowModelsContainer)
-	{
-		//픽킹이 가능하도록 픽킹목록에 추가
-		SHPTR<UModel> spModel = ShowModel.second->GetShowModel();
-		for (auto& Mesh : spModel->GetMeshContainers())
-		{
-			SHPTR<UVIBuffer> spVIbuffer = static_pointer_cast<UVIBuffer>(Mesh);
-			SHPTR<UPawn> pawnModel = static_pointer_cast<UPawn>(ShowModel.second);
-			GetGameInstance()->AddPickingObject(pawnModel, spVIbuffer);
-		}
-	}
+	//for (auto& ShowModel : m_ShowModelsContainer)
+	//{
+	//	//픽킹이 가능하도록 픽킹목록에 추가
+	//	SHPTR<UModel> spModel = ShowModel.second->GetShowModel();
+	//	for (auto& Mesh : spModel->GetMeshContainers())
+	//	{
+	//		SHPTR<UVIBuffer> spVIbuffer = static_pointer_cast<UVIBuffer>(Mesh);
+	//		SHPTR<UPawn> pawnModel = static_pointer_cast<UPawn>(ShowModel.second);
+	//		GetGameInstance()->AddPickingObject(pawnModel, spVIbuffer);
+	//	}
+	//}
 
 	//for (auto& ShowAnimModel : m_ShowAnimModelsContainer)
 	//{
@@ -632,7 +632,10 @@ void TModelView::KeyboardInput()
 		if (GetGameInstance()->GetDIKeyDown(DIK_C))
 			CopyCurrentModel();
 	if (GetGameInstance()->GetDIKeyDown(DIK_DELETE))
-		ClearCurrentModel();
+		if (!m_bSelectedhasAnim)
+			ClearCurrentModel();
+		else
+			ClearCurrentAnimModel();
 }
 
 HRESULT TModelView::CopyCurrentModel()
@@ -963,6 +966,7 @@ void TModelView::AddModelstoMobsLayout()
 					{
 						UMapLayout::MOBDESC objDesc{};
 						objDesc._sAnimModelName = UMethod::ConvertWToS(Model.second->GetAnimModel()->GetModelName());
+						objDesc._sAnimName = UMethod::ConvertWToS(Model.second->GetAnimModel()->GetCurrentAnimation()->GetAnimName());
 						objDesc._mWorldMatrix = Model.second->GetTransform()->GetWorldMatrix();
 						ObjDataVector.push_back(objDesc);
 					}
@@ -1104,18 +1108,7 @@ void TModelView::ShowAnimModelList()
 
 		if (ImGui::Button("Clear Current AnimShowModels"))
 		{
-			std::vector<_string> toRemove;
-			for (auto& showModel : m_ShowModelsContainer)
-			{
-				GetGameInstance()->RemoveActor(showModel.second);
-				showModel.second.reset();
-				toRemove.push_back(showModel.first);
-			}
-			for (const auto& key : toRemove)
-			{
-				m_ShowModelsContainer.erase(key);
-			}
-			m_spSelectedModel.reset();
+			ClearCurrentAnimModel();
 		}
 
 		if (ImGui::Button("Add Current AnimShowModels to MapLayout"))
@@ -1172,6 +1165,7 @@ void TModelView::ShowAnimModelList()
 								auto newModel = std::static_pointer_cast<TShowAnimModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWANIMMODELOBJECT));
 								newModel->SetShowModel(it->second);
 								newModel->GetTransform()->SetNewWorldMtx(layoutObjects._mWorldMatrix);
+								newModel->GetAnimModel()->SetAnimation(UMethod::ConvertSToW(layoutObjects._sAnimName));
 
 								for (auto& Containers : newModel->GetColliderContainer())
 								{
@@ -1228,6 +1222,7 @@ void TModelView::ShowAnimModelList()
 							auto newModel = std::static_pointer_cast<TShowAnimModelObject>(GetGameInstance()->CloneActorAdd(PROTO_ACTOR_SHOWANIMMODELOBJECT));
 							newModel->SetShowModel(it->second);
 							newModel->GetTransform()->SetNewWorldMtx(layoutObjects._mWorldMatrix);
+							newModel->GetAnimModel()->SetAnimation(UMethod::ConvertSToW(layoutObjects._sAnimName));
 
 							for (auto& Containers : newModel->GetColliderContainer())
 							{

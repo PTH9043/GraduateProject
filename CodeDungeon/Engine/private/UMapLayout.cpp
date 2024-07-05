@@ -94,8 +94,12 @@ _bool UMapLayout::SaveMapMobs(const _wstring& _wstrPath)
 		for (int i = 0; i < vectorSize; i++)
 		{
 			size_t objnameSize = pair.second[i]._sAnimModelName.size();
+			size_t animnameSize = pair.second[i]._sAnimName.size();
+
 			save.write(reinterpret_cast<const char*>(&objnameSize), sizeof(size_t));
+			save.write(reinterpret_cast<const char*>(&animnameSize), sizeof(size_t));
 			save.write(pair.second[i]._sAnimModelName.c_str(), objnameSize);
+			save.write(pair.second[i]._sAnimName.c_str(), animnameSize);
 			save.write(reinterpret_cast<const char*>(&pair.second[i]._mWorldMatrix), sizeof(_float4x4));
 		}
 		save.close();
@@ -180,15 +184,23 @@ _bool UMapLayout::LoadMapMobs()
 				size_t objNameSize;
 				load.read(reinterpret_cast<char*>(&objNameSize), sizeof(size_t));
 
+				size_t objAnimNameSize;
+				load.read(reinterpret_cast<char*>(&objAnimNameSize), sizeof(size_t));
+
 				_string objName;
 				objName.resize(objNameSize);
 				load.read(&objName[0], objNameSize);
+
+				_string animName;
+				animName.resize(objAnimNameSize);
+				load.read(&animName[0], objAnimNameSize);
 
 				_float4x4 worldMatrix;
 				load.read(reinterpret_cast<char*>(&worldMatrix), sizeof(_float4x4));
 
 				MOBDESC obj;
 				obj._sAnimModelName = objName;
+				obj._sAnimName = animName;
 				obj._mWorldMatrix = worldMatrix;
 				objDatas.push_back(obj);
 			}

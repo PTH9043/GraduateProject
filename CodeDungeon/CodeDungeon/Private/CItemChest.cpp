@@ -42,7 +42,7 @@ HRESULT CItemChest::NativeConstructClone(const VOIDDATAS& _Datas)
 	SHPTR<UCollider> Collider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
 	_wstring mainColliderTag = L"Main";
 	AddColliderInContainer(mainColliderTag, Collider);
-
+	GetAnimModel()->SetAnimation(L"ature|ArmatureAction");
 	for (auto& Containers : GetColliderContainer())
 	{
 		Containers.second->SetTranslate(GetAnimModel()->GetCenterPos());
@@ -55,12 +55,16 @@ HRESULT CItemChest::NativeConstructClone(const VOIDDATAS& _Datas)
 void CItemChest::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+	static _double elapsedTime = 0;
+	_double ItemChestOpeningSpeed = 20;
+	_double ItemChestTimeArcOpenEnd = 50;
 	GetAnimationController()->Tick(_dTimeDelta);
 	for (auto& Containers : GetColliderContainer())
 	{
 		Containers.second->SetTransform(GetTransform());
 	}
-
 
 }
 

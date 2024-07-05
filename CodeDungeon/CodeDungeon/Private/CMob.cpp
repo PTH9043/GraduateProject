@@ -15,17 +15,23 @@
 
 CMob::CMob(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UCharacter(_spDevice, _wstrLayer, _eCloneType),
-	m_spTargetPlayer{ nullptr },
+	m_fDistancefromNearestPlayer{ 0 },
 	m_bFoundTarget{ false },
-	m_fDistancefromNearestPlayer{ 0 }
+	m_spTargetPlayer{ nullptr },
+	m_f3TargetPos{},
+	m_dtimeAccumulator{ 0 },
+	m_delapsedTime{ 0 }
 {
 }
 
 CMob::CMob(const CMob& _rhs)
 	: UCharacter(_rhs), 
-	m_spTargetPlayer{ nullptr }, 
-	m_bFoundTarget{ false }, 
-	m_fDistancefromNearestPlayer{ 0 }
+	m_fDistancefromNearestPlayer{ 0 },
+	m_bFoundTarget{ false },
+	m_spTargetPlayer{ nullptr },
+	m_f3TargetPos{},
+	m_dtimeAccumulator{ 0 },
+	m_delapsedTime{ 0 }
 {
 }
 
@@ -42,7 +48,8 @@ HRESULT CMob::NativeConstructClone(const VOIDDATAS& _Datas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);	
 	GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
-	
+
+
 	return S_OK;
 }
 
@@ -55,8 +62,7 @@ void CMob::TickActive(const _double& _dTimeDelta)
 		_float3 CurrentPlayerPos = m_spTargetPlayer->GetTransform()->GetPos();
 
 		CalculateDistanceBetweenPlayers(CurrentPlayerPos, CurrentMobPos);
-		if(!m_bFoundTarget)
-			SearchForPlayers();
+		SearchForPlayers();
 	}
 			
 }
@@ -104,9 +110,12 @@ void CMob::SearchForPlayers()
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	
 	float activationRange = 40.0f;
+	float deactivationRange = 80.f;
 	
 	if (m_fDistancefromNearestPlayer < activationRange)
 		m_bFoundTarget = true;
+	else if(m_fDistancefromNearestPlayer >= deactivationRange)
+		m_bFoundTarget = false;
 }
 
 void CMob::CalculateDistanceBetweenPlayers(const _float3& _CurrentPlayerPos, const _float3& _CurrentMobPos)
@@ -130,7 +139,7 @@ void CMob::MoveAlongPath(const VECTOR<_float3>& path, size_t& currentPathIndex, 
         return;
 
     _float3 currentPosition = GetTransform()->GetPos();
-    _float3 targetPosition = path[currentPathIndex];
+	_float3 targetPosition = (path)[currentPathIndex];
 
     _float3 direction = targetPosition - currentPosition;
     _float distance = direction.Length();

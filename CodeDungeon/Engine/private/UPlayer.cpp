@@ -36,6 +36,7 @@ HRESULT UPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);
 	// VOIDDATAS에 CharacterDesc 0번, PlayerDesc 1번에 값을 채워야한다. 
+	SetPawnType(PAWN_PLAYER);
 
 	if (_Datas.size() >= 2)
 	{

@@ -15,7 +15,11 @@
 #include "CModelObjects.h"
 #include "CMob.h"
 #include "CItemChest.h"
-
+#include "CMummy.h"
+#include "UAnimModel.h"
+#include "UMethod.h"
+#include "UNavigation.h"
+#include "CWarriorPlayer.h"
 
 CMap::CMap(CSHPTRREF<UDevice> _spDevice) : UComponent(_spDevice),
 m_spRoomContainer{nullptr},
@@ -123,7 +127,7 @@ void CMap::LoadStaticObjects()
 	m_spStaticObjContainer->emplace("Bars_FBX.bin", _BarsVec);
 }
 
-void CMap::LoadMobs()
+void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	m_spMapLayout->LoadMapMobs();
@@ -139,13 +143,30 @@ void CMap::LoadMobs()
 				CItemChest::CHARACTERDESC chestDesc{ PROTO_RES_CHESTANIMMODEL, PROTO_COMP_CHESTANIMCONTROLLER };;
 				SHPTR<CItemChest> _Chest = std::static_pointer_cast<CItemChest>(spGameInstance->CloneActorAdd(PROTO_ACTOR_CHEST, { &chestDesc }));
 				_Chest->GetTransform()->SetNewWorldMtx(vecit._mWorldMatrix);
-				_Chest->GetTransform()->SetScale(_float3(10.0f, 10.0f, 10.0f));			
 				_ChestVec.push_back(_Chest);
 				spGameInstance->AddCollisionPawnList(_Chest);
 			}
+			if (vecit._sAnimModelName == "Mummy_DEMO_1_FBX.bin")
+			{
+				CMummy::CHARACTERDESC CharDesc{ PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_MUMMYANIMCONTROLLER };
+
+				SHPTR<CMummy> _Mummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(
+					PROTO_ACTOR_MUMMY, { &CharDesc }));
+				_Mummy->GetTransform()->SetPos(vecit._mWorldMatrix.Get_Pos());
+				_Mummy->GetTransform()->SetDirection(-vecit._mWorldMatrix.Get_Look());
+				_Mummy->GetAnimModel()->SetAnimation(UMethod::ConvertSToW(vecit._sAnimName));
+				if (vecit._sAnimName == "staticLaying")
+					_Mummy->SetMummyType(CMummy::MUMMYTYPE::TYPE_LYING);
+				else
+					_Mummy->SetMummyType(CMummy::MUMMYTYPE::TYPE_STANDING);
+				_Mummy->SetTargetPlayer(_spPlayer);
+				_Mummy->GetCurrentNavi()->FindCell(_Mummy->GetTransform()->GetPos());
+				spGameInstance->AddCollisionPawnList(_Mummy);
+			}
+
 		}
 	}
 
 	m_spMobsContainer->emplace("Chest_FBX.bin", _ChestVec);
-
 }
+

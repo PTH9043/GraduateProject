@@ -94,6 +94,8 @@ public:
 	VECTOR<_float3> OptimizePath(const VECTOR<SHPTR<UCell>>& path, const _float3& start, const _float3& end);
 	bool LineTest(const _float3& start, const _float3& end);
 
+	SHPTR<UCell> ChooseRandomNeighborCell(int iterations);
+
 private:
 	SHPTR<CELLCONTAINER>		m_spCellContainer;
 	SHPTR<UCell>				m_spCurCell;
