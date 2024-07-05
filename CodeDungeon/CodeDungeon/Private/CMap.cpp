@@ -134,6 +134,7 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 	m_spMapLayout->LoadMapMobs();
 
 	MOBCONTAINER _ChestVec;
+	MOBCONTAINER _MummyVec;
 
 	for (auto& it : (*m_spMapLayout->GetMapMobsContainer().get()))
 	{
@@ -157,7 +158,9 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 				_Mummy->GetTransform()->SetDirection(-vecit._mWorldMatrix.Get_Look());
 				_Mummy->GetAnimModel()->SetAnimation(UMethod::ConvertSToW(vecit._sAnimName));
 				if (vecit._sAnimName == "staticLaying")
-					_Mummy->SetMummyType(CMummy::MUMMYTYPE::TYPE_LYING);
+				{
+					_Mummy->SetMummyType(CMummy::MUMMYTYPE::TYPE_LYING);			
+				}
 				else
 					_Mummy->SetMummyType(CMummy::MUMMYTYPE::TYPE_STANDING);
 				_Mummy->SetTargetPlayer(_spPlayer);
@@ -184,10 +187,15 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 				_Sarcophagus->GetTransform()->SetNewWorldMtx(_Mummy->GetTransform()->GetWorldMatrix());
 				_Sarcophagus->GetAnimModel()->SetAnimation(0);
 				_Sarcophagus->SetTargetPlayer(_spPlayer);
+				_Mummy->GetTransform()->TranslateDir((_Mummy->GetTransform()->GetLook()), 1, 12);
+
+				_MummyVec.push_back(_Mummy);
+				_MummyVec.push_back(_Sarcophagus);
 			}
 		}
 	}
 
 	m_spMobsContainer->emplace("Chest_FBX.bin", _ChestVec);
+	m_spMobsContainer->emplace("Mummy_DEMO_1_FBX.bin", _MummyVec);
 }
 

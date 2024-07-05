@@ -37,6 +37,31 @@ CMainScene::CMainScene(CSHPTRREF<UDevice> _spDevice) :
 {
 }
 
+void CMainScene::TurnMobsOnRange()
+{
+	_float3 PlayerPos = m_spMainCamera->GetTransform()->GetPos();
+	for (auto& mob : (*m_spMap->GetMobs().get()))
+	{
+		auto mob_it = mob.second.begin();
+		while (mob_it != mob.second.end())
+		{
+			_float3 mobPos = mob_it->get()->GetTransform()->GetPos();
+			_float3 distance = mobPos - PlayerPos;
+			float distanceSq = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
+			
+			if (distanceSq <= 200 * 200)
+			{
+				mob_it->get()->SetActive(true);
+			}
+			else {
+				mob_it->get()->SetActive(false);
+			}
+			mob_it++;
+		}
+	}
+
+
+}
 void CMainScene::TurnLightsOnRange()
 {
 	_float3 PlayerPos = m_spMainCamera->GetTransform()->GetPos();
@@ -219,6 +244,7 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
 	TurnLightsOnRange();
 	TurnRoomsOnRange();
+	TurnMobsOnRange();
 
 
 	SHPTR<ULight> DirLight;
