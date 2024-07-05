@@ -22,10 +22,6 @@ namespace Core
 		return true;
 	}
 
-	void AGameObject::Tick()
-	{
-	}
-
 	void AGameObject::CreateColliderAndTransform(const COLLIDERINFO& _ColliderInfo, const Vector3& _vPos)
 	{
 		m_spCollider = Create<ACollider>((ACollider::TYPE)_ColliderInfo.iColliderType,
@@ -114,6 +110,26 @@ namespace Core
 		return IsCanSee(_spTransform->GetPos());
 	}
 
+
+	void AGameObject::SetActiveWeak(const _bool _isActive)
+	{
+		bool isActive = m_isActive.load();
+		if (m_isActive.compare_exchange_strong(isActive, _isActive))
+			return;
+	}
+
+	void AGameObject::SetActiveStrong(const _bool _isActive)
+	{
+		if (IsActive() == _isActive)
+			return;
+
+		while (true)
+		{
+			bool isActive = m_isActive.load();
+			if (m_isActive.compare_exchange_strong(isActive, _isActive))
+				break;
+		}
+	}
 
 	void AGameObject::Free()
 	{

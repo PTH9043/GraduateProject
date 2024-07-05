@@ -347,6 +347,46 @@ _bool UAnimModel::IsCollisionAttackCollider(CSHPTRREF<UCollider> _spEnemyCollide
 	return m_spAttackCollisionCollider->IsCollision(_spEnemyCollider);
 }
 
+void UAnimModel::OutAnimationDataToServer(const _wstring& _wstrPath)
+{
+	_wstring str = _wstrPath;
+	str.append(L"\\ServerAnim");
+	if (0 != _wmkdir(str))
+	{
+		str.append(L"\\");
+		str.append(GetModelName());
+
+		std::ofstream Saves{ str, std::ios::binary };
+		RETURN_CHECK(!Saves, ;);
+
+		size_t boneNodeCnt = GetBoneNodes().size();
+		size_t AnimCnt = GetAnimations().size();
+		Saves.write((_char*)&boneNodeCnt, sizeof(size_t));
+		Saves.write((_char*)&AnimCnt, sizeof(size_t));
+
+		_int i = 0; 
+		for (auto& iter : GetBoneNodes())
+		{
+			if (true == iter->IsRootBoneNode())
+			{
+				Saves.write((_char*)&i, sizeof(_int));
+				break;
+			}
+			++i;
+		}
+
+		for (auto& iter : GetBoneNodes())
+		{
+			iter->SaveServerData(Saves);
+		}
+
+		for (auto& iter : m_vecAnimations)
+		{
+			iter->SaveAnimToServerData(Saves);
+		}
+	}
+}
+
 void UAnimModel::UpdateAttackData(const _bool _isCanAttackSituation, CSHPTRREF<UCollider> _spCollider)
 {
 	m_isCanAttackSituation = _isCanAttackSituation;
@@ -362,7 +402,7 @@ HRESULT UAnimModel::CreateAnimation(const  VECTOR<ANIMDESC>& _convecAnimDesc, co
 
 	for (auto& iter : _convecAnimDesc)
 	{
-		SHPTR<UAnimation> spAnimation{ CreateNative<UAnimation>(ThisShared<UAnimModel>(), iter) };
+		SHPTR<UAnimation> spAnimation{ CreateNative<UAnimation>(ThisShared<UAnimModel>(), iter, iIndex) };
 		RETURN_CHECK(nullptr == spAnimation, E_FAIL);
 
 		m_vecAnimations.push_back(spAnimation);

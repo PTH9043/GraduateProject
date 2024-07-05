@@ -17,11 +17,13 @@ class APathFinder;
 class ATransform;
 class ACell;
 class AJobTimer;
+class AMonster;
+class AServerService;
 
 using NAVIGATIONWORKBENCH = ARRAY<SHPTR<ANavigation>, TLS::MAX_WORKTHREAD + EXTRA_NAV_COUNT>;
 
 using SESSIONCONTAINER = CONUNORMAP<SESSIONID, SHPTR<ASession>>;
-using GAMEOBJECTCONTAINER = CONUNORMAP<SESSIONID, SHPTR<AGameObject>>;
+using MOBOBJCONTAINER = CONUNORMAP<SESSIONID, SHPTR<AMonster>>;
 /*
 @ Date: 2024-01-23
 @ Writer: 박태현
@@ -40,6 +42,8 @@ public:
 public: /* Service */
 	// ID를 통해서 SessionID
 	 SHPTR<ASession> FindSession(const SESSIONID _SessionID);
+	 // ID를 통해서 GameObject를 찾아온다. 
+	 SHPTR<AMonster> FindMobObject(const SESSIONID _SessionID);
 	// 전체 서버 참여자에게 메시지를 보내는 함수이다. 
 	 void BroadCastMessage(_char* _pPacket, const PACKETHEAD& _PacketHead);
 	 // 해당 Session ID를 제외한 전체 서버 참여자에게 메시지를 보내는 함수
@@ -50,12 +54,17 @@ public: /* Service */
 	 void LeaveService(const SESSIONID _SessionID);
 	// Session을 Container에 저장하는 함수이다. 
 	 void InsertSession(SESSIONID _SessionID, SHPTR<ASession> _spSession);
+	 // GameObject를 집어넣는 함수
+	 void InsertMobObject(SESSIONID _SessionID, SHPTR<AMonster> _spMobObject);
 	 // Get 
 	 const SESSIONCONTAINER& GetSessionContainer() const;
-	 const GAMEOBJECTCONTAINER& GetGameObjectContainer() const;
+	 const MOBOBJCONTAINER& GetMobObjContainer() const;
+
+	 SHPTR<AServerService> GetServerService();
 public: /* ThreadManager */
 	void RegisterFunc(const THREADFUNC& _CallBack, void* _Data);
-	void RegisterJob(CSHPTRREF<AJobTimer> _spJobTimer);
+	void RegisterJob(_int _jobType, CSHPTRREF<AJobTimer> _spJobTimer);
+	SHPTR<AJobTimer> FindJobTimer(_int _JobTimer);
 	void Join();
 public: /* RandomManager */
 	_int		ReturnRadomNumber(const _int _iMinNum, const _int _iMaxNum);

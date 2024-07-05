@@ -4,6 +4,7 @@
 #include "UAnimModel.h"
 #include "UAnimation.h"
 #include "UGameInstance.h"
+#include "UMethod.h"
 
 UAnimChannel::UAnimChannel() :
 	UBase(),
@@ -159,4 +160,13 @@ void UAnimChannel::ComputeCurKeyFrames(const _double& _dTimeAcc, _uint& _iCurKey
 		}
 	}
 	m_dCurTimeAcc = _dTimeAcc;
+}
+
+void UAnimChannel::SaveServerData(std::ofstream& _Saves)
+{
+	UMethod::SaveString(_Saves, UMethod::ConvertWToS(m_wstrBoneName));
+
+	size_t KeyFrameSize = m_vecKeyFrames.size();
+	_Saves.write((_char*)&KeyFrameSize, sizeof(size_t));
+	_Saves.write((_char*)&m_vecKeyFrames[0], sizeof(KEYFRAME) * m_vecKeyFrames.size());
 }

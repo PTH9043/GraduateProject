@@ -398,6 +398,7 @@ namespace Core
 		template<class T2>
 		bool operator !=(const ASharedPtr<T2>& _rhs) const { return m_RefCounter != _rhs.m_RefCounter; }
 
+
 		ASharedPtr<T>* operator&() { return this; }
 
 		T* get() const { if (nullptr == m_RefCounter) return nullptr; return m_RefCounter->get(); }
@@ -887,16 +888,19 @@ namespace Core
 	ASharedPtr<T> static_shared_cast(const ASharedPtr<U>& _rhs)
 	{
 		ARefCounter<T>* RefCounter = reinterpret_cast<ARefCounter<T>*>(_rhs.AddShared());
-		RefCounter->SetShared(static_cast<T*>(_rhs.m_RefCounter->m_Ptr));
+		RefCounter->SetShared(static_cast<T*>(_rhs.m_RefCounter->get()));
 		return ASharedPtr<T> {RefCounter};
 	}
 
 	template<class T, class U>
-		requires std::is_base_of_v<T, U> || std::is_base_of_v<U, T>
 	ASharedPtr<T> dynamic_shared_cast(const ASharedPtr<U>& _rhs)
 	{
 		ARefCounter<T>* RefCounter = reinterpret_cast<ARefCounter<T>*>(_rhs.AddShared());
-		RefCounter->SetShared(TypeCast<U*>(_rhs.m_RefCounter->m_Ptr));
+
+		T* ptr = dynamic_cast<T*>(_rhs.m_RefCounter->get());
+		RETURN_CHECK(nullptr == ptr, nullptr)
+
+		RefCounter->SetShared(ptr);
 		return ASharedPtr<T> {RefCounter};
 	}
 
@@ -977,6 +981,18 @@ namespace std
 	struct less<Core::ASharedPtr<T>> {
 		bool operator()(const Core::ASharedPtr<T>& lhs, Core::ASharedPtr<T>& rhs) const {
 			return lhs.get() < rhs.get();
+		}
+	};
+
+	/*
+	@ Date: 2023-12-26,  Writer: 박태현
+	@ Explain
+	- less 연산에 대한 SharedPtr 재정의, concurrent_ 컨테이너에 사용하기 위함
+	*/
+	template <typename T>
+	struct less_equal<Core::ASharedPtr<T>> {
+		bool operator()(const Core::ASharedPtr<T>& lhs, Core::ASharedPtr<T>& rhs) const {
+			return lhs.get() <= rhs.get();
 		}
 	};
 }

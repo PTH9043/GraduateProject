@@ -2,22 +2,29 @@
 #include "CServerAdiminstor.h"
 #include "CPlayerSession.h"
 #include "ACoreInstance.h"
+#include "CMonsterJobTimer.h"
+#include "APathJobTimer.h"
+#include "CMummy.h"
 
 namespace Server
 {
 	CServerAdiminstor::CServerAdiminstor(OBJCON_CONSTRUCTOR, const _string& _strNavigationPath) :
-		Core::UServerService(OBJCON_CONDATA, _strNavigationPath)
+		Core::AServerService(OBJCON_CONDATA, _strNavigationPath)
 	{
 	}
 
 	bool CServerAdiminstor::NativeConstruct()
 	{
+		GetCoreInstance()->RegisterJob(TIMERTYPE::TIMER_MOB, Create<CMonsterJobTimer>(GetCoreInstance(), GetIOContext()));
+		GetCoreInstance()->RegisterJob(TIMERTYPE::TIMER_ASTAR, Create<APathJobTimer>(GetCoreInstance(), GetIOContext()));
 		Connect();
 		return __super::NativeConstruct();
 	}
 
 	bool CServerAdiminstor::Start()
 	{
+		SHPTR<CMummy> spMummy = Create<CMummy>(GetCoreInstance(), GiveID());
+
 		return __super::Start();
 	}
 

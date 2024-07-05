@@ -71,9 +71,9 @@ extern CS_LOGINDefaultTypeInternal _CS_LOGIN_default_instance_;
 class EQINFO;
 struct EQINFODefaultTypeInternal;
 extern EQINFODefaultTypeInternal _EQINFO_default_instance_;
-class PLAYERANIMSTATE;
-struct PLAYERANIMSTATEDefaultTypeInternal;
-extern PLAYERANIMSTATEDefaultTypeInternal _PLAYERANIMSTATE_default_instance_;
+class MONSTERSTATE;
+struct MONSTERSTATEDefaultTypeInternal;
+extern MONSTERSTATEDefaultTypeInternal _MONSTERSTATE_default_instance_;
 class PLAYERSTATE;
 struct PLAYERSTATEDefaultTypeInternal;
 extern PLAYERSTATEDefaultTypeInternal _PLAYERSTATE_default_instance_;
@@ -613,7 +613,7 @@ class SELFPLAYERMOVE final :
                &_SELFPLAYERMOVE_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    4;
 
   friend void swap(SELFPLAYERMOVE& a, SELFPLAYERMOVE& b) {
     a.Swap(&b);
@@ -1398,26 +1398,26 @@ class PLAYERSTATE final :
   friend struct ::TableStruct_Protocol_2eproto;
 };// -------------------------------------------------------------------
 
-class PLAYERANIMSTATE final :
-    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:PLAYERANIMSTATE) */ {
+class MONSTERSTATE final :
+    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:MONSTERSTATE) */ {
  public:
-  inline PLAYERANIMSTATE() : PLAYERANIMSTATE(nullptr) {}
-  ~PLAYERANIMSTATE() override;
+  inline MONSTERSTATE() : MONSTERSTATE(nullptr) {}
+  ~MONSTERSTATE() override;
   template<typename = void>
-  explicit PROTOBUF_CONSTEXPR PLAYERANIMSTATE(::google::protobuf::internal::ConstantInitialized);
+  explicit PROTOBUF_CONSTEXPR MONSTERSTATE(::google::protobuf::internal::ConstantInitialized);
 
-  inline PLAYERANIMSTATE(const PLAYERANIMSTATE& from)
-      : PLAYERANIMSTATE(nullptr, from) {}
-  PLAYERANIMSTATE(PLAYERANIMSTATE&& from) noexcept
-    : PLAYERANIMSTATE() {
+  inline MONSTERSTATE(const MONSTERSTATE& from)
+      : MONSTERSTATE(nullptr, from) {}
+  MONSTERSTATE(MONSTERSTATE&& from) noexcept
+    : MONSTERSTATE() {
     *this = ::std::move(from);
   }
 
-  inline PLAYERANIMSTATE& operator=(const PLAYERANIMSTATE& from) {
+  inline MONSTERSTATE& operator=(const MONSTERSTATE& from) {
     CopyFrom(from);
     return *this;
   }
-  inline PLAYERANIMSTATE& operator=(PLAYERANIMSTATE&& from) noexcept {
+  inline MONSTERSTATE& operator=(MONSTERSTATE&& from) noexcept {
     if (this == &from) return *this;
     if (GetArena() == from.GetArena()
   #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
@@ -1449,20 +1449,20 @@ class PLAYERANIMSTATE final :
   static const ::google::protobuf::Reflection* GetReflection() {
     return default_instance().GetMetadata().reflection;
   }
-  static const PLAYERANIMSTATE& default_instance() {
+  static const MONSTERSTATE& default_instance() {
     return *internal_default_instance();
   }
-  static inline const PLAYERANIMSTATE* internal_default_instance() {
-    return reinterpret_cast<const PLAYERANIMSTATE*>(
-               &_PLAYERANIMSTATE_default_instance_);
+  static inline const MONSTERSTATE* internal_default_instance() {
+    return reinterpret_cast<const MONSTERSTATE*>(
+               &_MONSTERSTATE_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    6;
 
-  friend void swap(PLAYERANIMSTATE& a, PLAYERANIMSTATE& b) {
+  friend void swap(MONSTERSTATE& a, MONSTERSTATE& b) {
     a.Swap(&b);
   }
-  inline void Swap(PLAYERANIMSTATE* other) {
+  inline void Swap(MONSTERSTATE* other) {
     if (other == this) return;
   #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
     if (GetArena() != nullptr &&
@@ -1475,7 +1475,7 @@ class PLAYERANIMSTATE final :
       ::google::protobuf::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(PLAYERANIMSTATE* other) {
+  void UnsafeArenaSwap(MONSTERSTATE* other) {
     if (other == this) return;
     ABSL_DCHECK(GetArena() == other->GetArena());
     InternalSwap(other);
@@ -1483,14 +1483,14 @@ class PLAYERANIMSTATE final :
 
   // implements Message ----------------------------------------------
 
-  PLAYERANIMSTATE* New(::google::protobuf::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<PLAYERANIMSTATE>(arena);
+  MONSTERSTATE* New(::google::protobuf::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<MONSTERSTATE>(arena);
   }
   using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const PLAYERANIMSTATE& from);
+  void CopyFrom(const MONSTERSTATE& from);
   using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom( const PLAYERANIMSTATE& from) {
-    PLAYERANIMSTATE::MergeImpl(*this, from);
+  void MergeFrom( const MONSTERSTATE& from) {
+    MONSTERSTATE::MergeImpl(*this, from);
   }
   private:
   static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
@@ -1508,16 +1508,16 @@ class PLAYERANIMSTATE final :
   ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
   void SharedCtor(::google::protobuf::Arena* arena);
   void SharedDtor();
-  void InternalSwap(PLAYERANIMSTATE* other);
+  void InternalSwap(MONSTERSTATE* other);
 
   private:
   friend class ::google::protobuf::internal::AnyMetadata;
   static ::absl::string_view FullMessageName() {
-    return "PLAYERANIMSTATE";
+    return "MONSTERSTATE";
   }
   protected:
-  explicit PLAYERANIMSTATE(::google::protobuf::Arena* arena);
-  PLAYERANIMSTATE(::google::protobuf::Arena* arena, const PLAYERANIMSTATE& from);
+  explicit MONSTERSTATE(::google::protobuf::Arena* arena);
+  MONSTERSTATE(::google::protobuf::Arena* arena, const MONSTERSTATE& from);
   public:
 
   static const ClassData _class_data_;
@@ -1531,22 +1531,8 @@ class PLAYERANIMSTATE final :
 
   enum : int {
     kIdFieldNumber = 1,
-    kAnimstateFieldNumber = 2,
-    kIfattackFieldNumber = 3,
-    kIsRunshiftFieldNumber = 4,
-    kIsMoveFrontFieldNumber = 5,
-    kIsMoveBackFieldNumber = 6,
-    kIsMoveLeftFieldNumber = 7,
-    kIsMoveRightFieldNumber = 8,
-    kIsWAttackFieldNumber = 9,
-    kIsSAttackFieldNumber = 10,
-    kIsRAttackFieldNumber = 11,
-    kIsComboFieldNumber = 12,
-    kIsRollFieldNumber = 13,
-    kIsHitFieldNumber = 14,
-    kIsJumpFieldNumber = 15,
-    kWComboStackFieldNumber = 16,
-    kSComboStackFieldNumber = 17,
+    kAnimationTimeFieldNumber = 2,
+    kAnimationIndexFieldNumber = 3,
   };
   // int64 id = 1;
   void clear_id() ;
@@ -1558,173 +1544,33 @@ class PLAYERANIMSTATE final :
   void _internal_set_id(::int64_t value);
 
   public:
-  // int64 animstate = 2;
-  void clear_animstate() ;
-  ::int64_t animstate() const;
-  void set_animstate(::int64_t value);
+  // double animationTime = 2;
+  void clear_animationtime() ;
+  double animationtime() const;
+  void set_animationtime(double value);
 
   private:
-  ::int64_t _internal_animstate() const;
-  void _internal_set_animstate(::int64_t value);
+  double _internal_animationtime() const;
+  void _internal_set_animationtime(double value);
 
   public:
-  // bool ifattack = 3;
-  void clear_ifattack() ;
-  bool ifattack() const;
-  void set_ifattack(bool value);
+  // int64 animationIndex = 3;
+  void clear_animationindex() ;
+  ::int64_t animationindex() const;
+  void set_animationindex(::int64_t value);
 
   private:
-  bool _internal_ifattack() const;
-  void _internal_set_ifattack(bool value);
+  ::int64_t _internal_animationindex() const;
+  void _internal_set_animationindex(::int64_t value);
 
   public:
-  // bool isRunshift = 4;
-  void clear_isrunshift() ;
-  bool isrunshift() const;
-  void set_isrunshift(bool value);
-
-  private:
-  bool _internal_isrunshift() const;
-  void _internal_set_isrunshift(bool value);
-
-  public:
-  // bool isMoveFront = 5;
-  void clear_ismovefront() ;
-  bool ismovefront() const;
-  void set_ismovefront(bool value);
-
-  private:
-  bool _internal_ismovefront() const;
-  void _internal_set_ismovefront(bool value);
-
-  public:
-  // bool isMoveBack = 6;
-  void clear_ismoveback() ;
-  bool ismoveback() const;
-  void set_ismoveback(bool value);
-
-  private:
-  bool _internal_ismoveback() const;
-  void _internal_set_ismoveback(bool value);
-
-  public:
-  // bool isMoveLeft = 7;
-  void clear_ismoveleft() ;
-  bool ismoveleft() const;
-  void set_ismoveleft(bool value);
-
-  private:
-  bool _internal_ismoveleft() const;
-  void _internal_set_ismoveleft(bool value);
-
-  public:
-  // bool isMoveRight = 8;
-  void clear_ismoveright() ;
-  bool ismoveright() const;
-  void set_ismoveright(bool value);
-
-  private:
-  bool _internal_ismoveright() const;
-  void _internal_set_ismoveright(bool value);
-
-  public:
-  // bool isWAttack = 9;
-  void clear_iswattack() ;
-  bool iswattack() const;
-  void set_iswattack(bool value);
-
-  private:
-  bool _internal_iswattack() const;
-  void _internal_set_iswattack(bool value);
-
-  public:
-  // bool isSAttack = 10;
-  void clear_issattack() ;
-  bool issattack() const;
-  void set_issattack(bool value);
-
-  private:
-  bool _internal_issattack() const;
-  void _internal_set_issattack(bool value);
-
-  public:
-  // bool isRAttack = 11;
-  void clear_israttack() ;
-  bool israttack() const;
-  void set_israttack(bool value);
-
-  private:
-  bool _internal_israttack() const;
-  void _internal_set_israttack(bool value);
-
-  public:
-  // bool isCombo = 12;
-  void clear_iscombo() ;
-  bool iscombo() const;
-  void set_iscombo(bool value);
-
-  private:
-  bool _internal_iscombo() const;
-  void _internal_set_iscombo(bool value);
-
-  public:
-  // bool isRoll = 13;
-  void clear_isroll() ;
-  bool isroll() const;
-  void set_isroll(bool value);
-
-  private:
-  bool _internal_isroll() const;
-  void _internal_set_isroll(bool value);
-
-  public:
-  // bool isHit = 14;
-  void clear_ishit() ;
-  bool ishit() const;
-  void set_ishit(bool value);
-
-  private:
-  bool _internal_ishit() const;
-  void _internal_set_ishit(bool value);
-
-  public:
-  // bool isJump = 15;
-  void clear_isjump() ;
-  bool isjump() const;
-  void set_isjump(bool value);
-
-  private:
-  bool _internal_isjump() const;
-  void _internal_set_isjump(bool value);
-
-  public:
-  // int64 wComboStack = 16;
-  void clear_wcombostack() ;
-  ::int64_t wcombostack() const;
-  void set_wcombostack(::int64_t value);
-
-  private:
-  ::int64_t _internal_wcombostack() const;
-  void _internal_set_wcombostack(::int64_t value);
-
-  public:
-  // int64 sComboStack = 17;
-  void clear_scombostack() ;
-  ::int64_t scombostack() const;
-  void set_scombostack(::int64_t value);
-
-  private:
-  ::int64_t _internal_scombostack() const;
-  void _internal_set_scombostack(::int64_t value);
-
-  public:
-  // @@protoc_insertion_point(class_scope:PLAYERANIMSTATE)
+  // @@protoc_insertion_point(class_scope:MONSTERSTATE)
  private:
   class _Internal;
 
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      5, 17, 0,
+      2, 3, 0,
       0, 2>
       _table_;
   friend class ::google::protobuf::MessageLite;
@@ -1742,22 +1588,8 @@ class PLAYERANIMSTATE final :
         inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                               ::google::protobuf::Arena* arena, const Impl_& from);
     ::int64_t id_;
-    ::int64_t animstate_;
-    bool ifattack_;
-    bool isrunshift_;
-    bool ismovefront_;
-    bool ismoveback_;
-    bool ismoveleft_;
-    bool ismoveright_;
-    bool iswattack_;
-    bool issattack_;
-    bool israttack_;
-    bool iscombo_;
-    bool isroll_;
-    bool ishit_;
-    bool isjump_;
-    ::int64_t wcombostack_;
-    ::int64_t scombostack_;
+    double animationtime_;
+    ::int64_t animationindex_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -2385,7 +2217,7 @@ class CHARMOVE final :
                &_CHARMOVE_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    5;
 
   friend void swap(CHARMOVE& a, CHARMOVE& b) {
     a.Swap(&b);
@@ -3609,401 +3441,6 @@ inline void PLAYERSTATE::_internal_set_animationindex(::int64_t value) {
 
 // -------------------------------------------------------------------
 
-// PLAYERANIMSTATE
-
-// int64 id = 1;
-inline void PLAYERANIMSTATE::clear_id() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.id_ = ::int64_t{0};
-}
-inline ::int64_t PLAYERANIMSTATE::id() const {
-  // @@protoc_insertion_point(field_get:PLAYERANIMSTATE.id)
-  return _internal_id();
-}
-inline void PLAYERANIMSTATE::set_id(::int64_t value) {
-  _internal_set_id(value);
-  // @@protoc_insertion_point(field_set:PLAYERANIMSTATE.id)
-}
-inline ::int64_t PLAYERANIMSTATE::_internal_id() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.id_;
-}
-inline void PLAYERANIMSTATE::_internal_set_id(::int64_t value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.id_ = value;
-}
-
-// int64 animstate = 2;
-inline void PLAYERANIMSTATE::clear_animstate() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.animstate_ = ::int64_t{0};
-}
-inline ::int64_t PLAYERANIMSTATE::animstate() const {
-  // @@protoc_insertion_point(field_get:PLAYERANIMSTATE.animstate)
-  return _internal_animstate();
-}
-inline void PLAYERANIMSTATE::set_animstate(::int64_t value) {
-  _internal_set_animstate(value);
-  // @@protoc_insertion_point(field_set:PLAYERANIMSTATE.animstate)
-}
-inline ::int64_t PLAYERANIMSTATE::_internal_animstate() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.animstate_;
-}
-inline void PLAYERANIMSTATE::_internal_set_animstate(::int64_t value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.animstate_ = value;
-}
-
-// bool ifattack = 3;
-inline void PLAYERANIMSTATE::clear_ifattack() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.ifattack_ = false;
-}
-inline bool PLAYERANIMSTATE::ifattack() const {
-  // @@protoc_insertion_point(field_get:PLAYERANIMSTATE.ifattack)
-  return _internal_ifattack();
-}
-inline void PLAYERANIMSTATE::set_ifattack(bool value) {
-  _internal_set_ifattack(value);
-  // @@protoc_insertion_point(field_set:PLAYERANIMSTATE.ifattack)
-}
-inline bool PLAYERANIMSTATE::_internal_ifattack() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.ifattack_;
-}
-inline void PLAYERANIMSTATE::_internal_set_ifattack(bool value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.ifattack_ = value;
-}
-
-// bool isRunshift = 4;
-inline void PLAYERANIMSTATE::clear_isrunshift() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.isrunshift_ = false;
-}
-inline bool PLAYERANIMSTATE::isrunshift() const {
-  // @@protoc_insertion_point(field_get:PLAYERANIMSTATE.isRunshift)
-  return _internal_isrunshift();
-}
-inline void PLAYERANIMSTATE::set_isrunshift(bool value) {
-  _internal_set_isrunshift(value);
-  // @@protoc_insertion_point(field_set:PLAYERANIMSTATE.isRunshift)
-}
-inline bool PLAYERANIMSTATE::_internal_isrunshift() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.isrunshift_;
-}
-inline void PLAYERANIMSTATE::_internal_set_isrunshift(bool value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.isrunshift_ = value;
-}
-
-// bool isMoveFront = 5;
-inline void PLAYERANIMSTATE::clear_ismovefront() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.ismovefront_ = false;
-}
-inline bool PLAYERANIMSTATE::ismovefront() const {
-  // @@protoc_insertion_point(field_get:PLAYERANIMSTATE.isMoveFront)
-  return _internal_ismovefront();
-}
-inline void PLAYERANIMSTATE::set_ismovefront(bool value) {
-  _internal_set_ismovefront(value);
-  // @@protoc_insertion_point(field_set:PLAYERANIMSTATE.isMoveFront)
-}
-inline bool PLAYERANIMSTATE::_internal_ismovefront() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.ismovefront_;
-}
-inline void PLAYERANIMSTATE::_internal_set_ismovefront(bool value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.ismovefront_ = value;
-}
-
-// bool isMoveBack = 6;
-inline void PLAYERANIMSTATE::clear_ismoveback() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.ismoveback_ = false;
-}
-inline bool PLAYERANIMSTATE::ismoveback() const {
-  // @@protoc_insertion_point(field_get:PLAYERANIMSTATE.isMoveBack)
-  return _internal_ismoveback();
-}
-inline void PLAYERANIMSTATE::set_ismoveback(bool value) {
-  _internal_set_ismoveback(value);
-  // @@protoc_insertion_point(field_set:PLAYERANIMSTATE.isMoveBack)
-}
-inline bool PLAYERANIMSTATE::_internal_ismoveback() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.ismoveback_;
-}
-inline void PLAYERANIMSTATE::_internal_set_ismoveback(bool value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.ismoveback_ = value;
-}
-
-// bool isMoveLeft = 7;
-inline void PLAYERANIMSTATE::clear_ismoveleft() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.ismoveleft_ = false;
-}
-inline bool PLAYERANIMSTATE::ismoveleft() const {
-  // @@protoc_insertion_point(field_get:PLAYERANIMSTATE.isMoveLeft)
-  return _internal_ismoveleft();
-}
-inline void PLAYERANIMSTATE::set_ismoveleft(bool value) {
-  _internal_set_ismoveleft(value);
-  // @@protoc_insertion_point(field_set:PLAYERANIMSTATE.isMoveLeft)
-}
-inline bool PLAYERANIMSTATE::_internal_ismoveleft() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.ismoveleft_;
-}
-inline void PLAYERANIMSTATE::_internal_set_ismoveleft(bool value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.ismoveleft_ = value;
-}
-
-// bool isMoveRight = 8;
-inline void PLAYERANIMSTATE::clear_ismoveright() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.ismoveright_ = false;
-}
-inline bool PLAYERANIMSTATE::ismoveright() const {
-  // @@protoc_insertion_point(field_get:PLAYERANIMSTATE.isMoveRight)
-  return _internal_ismoveright();
-}
-inline void PLAYERANIMSTATE::set_ismoveright(bool value) {
-  _internal_set_ismoveright(value);
-  // @@protoc_insertion_point(field_set:PLAYERANIMSTATE.isMoveRight)
-}
-inline bool PLAYERANIMSTATE::_internal_ismoveright() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.ismoveright_;
-}
-inline void PLAYERANIMSTATE::_internal_set_ismoveright(bool value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.ismoveright_ = value;
-}
-
-// bool isWAttack = 9;
-inline void PLAYERANIMSTATE::clear_iswattack() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.iswattack_ = false;
-}
-inline bool PLAYERANIMSTATE::iswattack() const {
-  // @@protoc_insertion_point(field_get:PLAYERANIMSTATE.isWAttack)
-  return _internal_iswattack();
-}
-inline void PLAYERANIMSTATE::set_iswattack(bool value) {
-  _internal_set_iswattack(value);
-  // @@protoc_insertion_point(field_set:PLAYERANIMSTATE.isWAttack)
-}
-inline bool PLAYERANIMSTATE::_internal_iswattack() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.iswattack_;
-}
-inline void PLAYERANIMSTATE::_internal_set_iswattack(bool value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.iswattack_ = value;
-}
-
-// bool isSAttack = 10;
-inline void PLAYERANIMSTATE::clear_issattack() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.issattack_ = false;
-}
-inline bool PLAYERANIMSTATE::issattack() const {
-  // @@protoc_insertion_point(field_get:PLAYERANIMSTATE.isSAttack)
-  return _internal_issattack();
-}
-inline void PLAYERANIMSTATE::set_issattack(bool value) {
-  _internal_set_issattack(value);
-  // @@protoc_insertion_point(field_set:PLAYERANIMSTATE.isSAttack)
-}
-inline bool PLAYERANIMSTATE::_internal_issattack() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.issattack_;
-}
-inline void PLAYERANIMSTATE::_internal_set_issattack(bool value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.issattack_ = value;
-}
-
-// bool isRAttack = 11;
-inline void PLAYERANIMSTATE::clear_israttack() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.israttack_ = false;
-}
-inline bool PLAYERANIMSTATE::israttack() const {
-  // @@protoc_insertion_point(field_get:PLAYERANIMSTATE.isRAttack)
-  return _internal_israttack();
-}
-inline void PLAYERANIMSTATE::set_israttack(bool value) {
-  _internal_set_israttack(value);
-  // @@protoc_insertion_point(field_set:PLAYERANIMSTATE.isRAttack)
-}
-inline bool PLAYERANIMSTATE::_internal_israttack() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.israttack_;
-}
-inline void PLAYERANIMSTATE::_internal_set_israttack(bool value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.israttack_ = value;
-}
-
-// bool isCombo = 12;
-inline void PLAYERANIMSTATE::clear_iscombo() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.iscombo_ = false;
-}
-inline bool PLAYERANIMSTATE::iscombo() const {
-  // @@protoc_insertion_point(field_get:PLAYERANIMSTATE.isCombo)
-  return _internal_iscombo();
-}
-inline void PLAYERANIMSTATE::set_iscombo(bool value) {
-  _internal_set_iscombo(value);
-  // @@protoc_insertion_point(field_set:PLAYERANIMSTATE.isCombo)
-}
-inline bool PLAYERANIMSTATE::_internal_iscombo() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.iscombo_;
-}
-inline void PLAYERANIMSTATE::_internal_set_iscombo(bool value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.iscombo_ = value;
-}
-
-// bool isRoll = 13;
-inline void PLAYERANIMSTATE::clear_isroll() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.isroll_ = false;
-}
-inline bool PLAYERANIMSTATE::isroll() const {
-  // @@protoc_insertion_point(field_get:PLAYERANIMSTATE.isRoll)
-  return _internal_isroll();
-}
-inline void PLAYERANIMSTATE::set_isroll(bool value) {
-  _internal_set_isroll(value);
-  // @@protoc_insertion_point(field_set:PLAYERANIMSTATE.isRoll)
-}
-inline bool PLAYERANIMSTATE::_internal_isroll() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.isroll_;
-}
-inline void PLAYERANIMSTATE::_internal_set_isroll(bool value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.isroll_ = value;
-}
-
-// bool isHit = 14;
-inline void PLAYERANIMSTATE::clear_ishit() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.ishit_ = false;
-}
-inline bool PLAYERANIMSTATE::ishit() const {
-  // @@protoc_insertion_point(field_get:PLAYERANIMSTATE.isHit)
-  return _internal_ishit();
-}
-inline void PLAYERANIMSTATE::set_ishit(bool value) {
-  _internal_set_ishit(value);
-  // @@protoc_insertion_point(field_set:PLAYERANIMSTATE.isHit)
-}
-inline bool PLAYERANIMSTATE::_internal_ishit() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.ishit_;
-}
-inline void PLAYERANIMSTATE::_internal_set_ishit(bool value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.ishit_ = value;
-}
-
-// bool isJump = 15;
-inline void PLAYERANIMSTATE::clear_isjump() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.isjump_ = false;
-}
-inline bool PLAYERANIMSTATE::isjump() const {
-  // @@protoc_insertion_point(field_get:PLAYERANIMSTATE.isJump)
-  return _internal_isjump();
-}
-inline void PLAYERANIMSTATE::set_isjump(bool value) {
-  _internal_set_isjump(value);
-  // @@protoc_insertion_point(field_set:PLAYERANIMSTATE.isJump)
-}
-inline bool PLAYERANIMSTATE::_internal_isjump() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.isjump_;
-}
-inline void PLAYERANIMSTATE::_internal_set_isjump(bool value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.isjump_ = value;
-}
-
-// int64 wComboStack = 16;
-inline void PLAYERANIMSTATE::clear_wcombostack() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.wcombostack_ = ::int64_t{0};
-}
-inline ::int64_t PLAYERANIMSTATE::wcombostack() const {
-  // @@protoc_insertion_point(field_get:PLAYERANIMSTATE.wComboStack)
-  return _internal_wcombostack();
-}
-inline void PLAYERANIMSTATE::set_wcombostack(::int64_t value) {
-  _internal_set_wcombostack(value);
-  // @@protoc_insertion_point(field_set:PLAYERANIMSTATE.wComboStack)
-}
-inline ::int64_t PLAYERANIMSTATE::_internal_wcombostack() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.wcombostack_;
-}
-inline void PLAYERANIMSTATE::_internal_set_wcombostack(::int64_t value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.wcombostack_ = value;
-}
-
-// int64 sComboStack = 17;
-inline void PLAYERANIMSTATE::clear_scombostack() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.scombostack_ = ::int64_t{0};
-}
-inline ::int64_t PLAYERANIMSTATE::scombostack() const {
-  // @@protoc_insertion_point(field_get:PLAYERANIMSTATE.sComboStack)
-  return _internal_scombostack();
-}
-inline void PLAYERANIMSTATE::set_scombostack(::int64_t value) {
-  _internal_set_scombostack(value);
-  // @@protoc_insertion_point(field_set:PLAYERANIMSTATE.sComboStack)
-}
-inline ::int64_t PLAYERANIMSTATE::_internal_scombostack() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.scombostack_;
-}
-inline void PLAYERANIMSTATE::_internal_set_scombostack(::int64_t value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.scombostack_ = value;
-}
-
-// -------------------------------------------------------------------
-
 // SELFPLAYERMOVE
 
 // int64 id = 1;
@@ -4261,6 +3698,79 @@ inline void CHARMOVE::_internal_set_rotatez(float value) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   ;
   _impl_.rotatez_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// MONSTERSTATE
+
+// int64 id = 1;
+inline void MONSTERSTATE::clear_id() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.id_ = ::int64_t{0};
+}
+inline ::int64_t MONSTERSTATE::id() const {
+  // @@protoc_insertion_point(field_get:MONSTERSTATE.id)
+  return _internal_id();
+}
+inline void MONSTERSTATE::set_id(::int64_t value) {
+  _internal_set_id(value);
+  // @@protoc_insertion_point(field_set:MONSTERSTATE.id)
+}
+inline ::int64_t MONSTERSTATE::_internal_id() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.id_;
+}
+inline void MONSTERSTATE::_internal_set_id(::int64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.id_ = value;
+}
+
+// double animationTime = 2;
+inline void MONSTERSTATE::clear_animationtime() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.animationtime_ = 0;
+}
+inline double MONSTERSTATE::animationtime() const {
+  // @@protoc_insertion_point(field_get:MONSTERSTATE.animationTime)
+  return _internal_animationtime();
+}
+inline void MONSTERSTATE::set_animationtime(double value) {
+  _internal_set_animationtime(value);
+  // @@protoc_insertion_point(field_set:MONSTERSTATE.animationTime)
+}
+inline double MONSTERSTATE::_internal_animationtime() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.animationtime_;
+}
+inline void MONSTERSTATE::_internal_set_animationtime(double value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.animationtime_ = value;
+}
+
+// int64 animationIndex = 3;
+inline void MONSTERSTATE::clear_animationindex() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.animationindex_ = ::int64_t{0};
+}
+inline ::int64_t MONSTERSTATE::animationindex() const {
+  // @@protoc_insertion_point(field_get:MONSTERSTATE.animationIndex)
+  return _internal_animationindex();
+}
+inline void MONSTERSTATE::set_animationindex(::int64_t value) {
+  _internal_set_animationindex(value);
+  // @@protoc_insertion_point(field_set:MONSTERSTATE.animationIndex)
+}
+inline ::int64_t MONSTERSTATE::_internal_animationindex() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.animationindex_;
+}
+inline void MONSTERSTATE::_internal_set_animationindex(::int64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.animationindex_ = value;
 }
 
 // -------------------------------------------------------------------

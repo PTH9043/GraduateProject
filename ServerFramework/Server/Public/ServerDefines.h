@@ -14,7 +14,13 @@
 #pragma comment(lib, "ProtocolBuffer")
 #pragma comment(lib, "Core")
 #endif
-namespace Core {}
+namespace Core 
+{
+	enum TIMERTYPE : _int
+	{
+		TIMER_ASTAR, TIMER_DB, TIMER_MOB, TIMER_END
+	};
+}
 
 using namespace Core;
 

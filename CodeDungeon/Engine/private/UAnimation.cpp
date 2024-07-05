@@ -5,6 +5,7 @@
 #include "UMethod.h"
 #include "AnimOccursEvents.h"
 #include "AnimSectionEvents.h"
+#include "UAnimModel.h"
 
 UAnimation::UAnimation() :
 	UBase(),
@@ -21,7 +22,8 @@ UAnimation::UAnimation() :
 	m_dAnimationProgressRate{0.f},
 	m_isApplyRootBoneMove{true},
 	m_spActiveAnimChangeEvent{nullptr},
-	m_AnimEventContainer{}
+	m_AnimEventContainer{},
+	m_iAnimIndex{0}
 {
 }
 
@@ -40,7 +42,8 @@ UAnimation::UAnimation(const UAnimation& _rhs) :
 	m_dAnimationProgressRate{ 0.f },
 	m_isApplyRootBoneMove{ _rhs.m_isApplyRootBoneMove },
 	m_spActiveAnimChangeEvent{ nullptr },
-	m_AnimEventContainer{}
+	m_AnimEventContainer{},
+	m_iAnimIndex{_rhs.m_iAnimIndex }
 {
 }
 
@@ -94,13 +97,14 @@ void UAnimation::Free()
 	m_Channels.clear();
 }
 
-HRESULT UAnimation::NativeConstruct(CSHPTRREF<UAnimModel> _spAnimModel, const ANIMDESC& _stAnimDesc)
+HRESULT UAnimation::NativeConstruct(CSHPTRREF<UAnimModel> _spAnimModel, const ANIMDESC& _stAnimDesc, _int _AnimIndex)
 {
 	m_iNumChannels = static_cast<_uint>(_stAnimDesc.Channels.size());
 	m_dDuration = _stAnimDesc.stExtraData.dDuration;
 	m_dTickPerSeconds = _stAnimDesc.stExtraData.dTickPerSeconds;
 	m_wstrName = _stAnimDesc.wstrName;
 	m_Channels.reserve(m_iNumChannels);
+	m_iAnimIndex = _AnimIndex;
 	for (auto& iter : _stAnimDesc.Channels)
 	{
 		SHPTR<UAnimChannel> pChannel{ CreateNative<UAnimChannel>(_spAnimModel, iter) };
@@ -174,22 +178,25 @@ void UAnimation::TickAnimEvent(UPawn* _pPawn, UAnimModel* _pAnimModel, const _do
 
 void UAnimation::TickAnimEvent(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _TimeDelta, const _double& _Ratio, const _wstring& _wstrInputTrigger)
 {
-	// 만약 ActiveAnimChagneEvent가 활성화되지 않았다면, 활성화할때까지 찾아라
-	if (nullptr == m_spActiveAnimChangeEvent)
+	if (false == _pAnimModel->IsNotApplyAnimPosition())
 	{
-		for (auto& Event : m_AnimEventContainer[ANIMEVENTTYPE::ANIMEVENT_ANIMCHANGESBETWEEN])
+		// 만약 ActiveAnimChagneEvent가 활성화되지 않았다면, 활성화할때까지 찾아라
+		if (nullptr == m_spActiveAnimChangeEvent)
 		{
-			if (true == Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, _Ratio, _wstrInputTrigger))
+			for (auto& Event : m_AnimEventContainer[ANIMEVENTTYPE::ANIMEVENT_ANIMCHANGESBETWEEN])
 			{
-				m_spActiveAnimChangeEvent = Event;
-				break;
+				if (true == Event->EventCheck(_pPawn, _pAnimModel, _TimeDelta, _Ratio, _wstrInputTrigger))
+				{
+					m_spActiveAnimChangeEvent = Event;
+					break;
+				}
 			}
 		}
-	}
-	else
-	{
-		// 이벤트 활성화
-		m_spActiveAnimChangeEvent->EventCheck(_pPawn, _pAnimModel, _TimeDelta, _Ratio, _wstrInputTrigger);
+		else
+		{
+			// 이벤트 활성화
+			m_spActiveAnimChangeEvent->EventCheck(_pPawn, _pAnimModel, _TimeDelta, _Ratio, _wstrInputTrigger);
+		}
 	}
 	// Collider Event 
 	for (auto& Event : m_AnimEventContainer[ANIMEVENTTYPE::ANIMEVENT_COLLIDER])
@@ -442,6 +449,24 @@ void UAnimation::CopyAnimEvent(ANIMEVENTTYPE _eType, CSHPTRREF<UAnimation> _spAn
 	for (auto& iter : _spAnimation->m_AnimEventContainer[_eType])
 	{
 		m_AnimEventContainer[_eType].push_back(iter->Clone());
+	}
+}
+
+void UAnimation::SaveAnimToServerData(std::ofstream& _save)
+{
+	UMethod::SaveString(_save, UMethod::ConvertWToS(m_wstrName));
+	_save.write((_char*)&m_dTickPerSeconds, sizeof(_double));
+	_save.write((_char*)&m_dDuration, sizeof(_double));
+	_save.write((_char*)&m_fTotalAnimationFastValue, sizeof(_float));
+	_save.write((_char*)&m_iAnimIndex, sizeof(_int));
+	_save.write((_char*)&m_isApplyRootBoneMove, sizeof(_bool));
+
+	size_t channelCnt = m_Channels.size();
+	_save.write((_char*)&channelCnt, sizeof(size_t));
+
+	for (auto& iter : m_Channels)
+	{
+		iter->SaveServerData(_save);
 	}
 }
 

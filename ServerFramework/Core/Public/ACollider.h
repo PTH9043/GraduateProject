@@ -18,7 +18,7 @@ public:
 		Vector3		vScale;
 		Vector3		vTranslation;
 
-		COLLIDERDESC() : vScale{}, vTranslation{} {}
+		COLLIDERDESC() : vScale{1.f, 1.f, 1.f}, vTranslation{0.5f, 0.5f, 0.5f} {}
 		COLLIDERDESC(const Vector3& _vScale, const Vector3& _vTranslation) : vScale{ _vScale }, vTranslation{ _vTranslation } {}
 	};
 
@@ -80,6 +80,8 @@ private:
 	Vector3																	m_vPos;
 
 	ARRAY<Vector3, 6>												m_vObbNormals;
+
+	USE_MANY_LOCKS(7)											m_ColliderLocks;
 };
 
 END

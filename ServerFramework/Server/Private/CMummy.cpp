@@ -4,21 +4,21 @@
 namespace Server
 {
 	CMummy::CMummy(OBJCON_CONSTRUCTOR,  SESSIONID _ID)
-		: AGameObject(OBJCON_CONDATA, _ID, SESSIONTYPE::MONSTER)
+		: AMonster(OBJCON_CONDATA, _ID)
 	{
 	}
 	_bool CMummy::Start()
 	{
-		return _bool();
+		CreateAnimator("..\\..\\Resource\\Anim\\Mummy\\", "Mummy_DEMO_1_FBX.bin");
+		return __super::Start();
 	}
-	void CMummy::Tick()
+
+	void CMummy::State()
 	{
 	}
-	_bool CMummy::ProcessPacket(_char* _pPacket, const PACKETHEAD& _PacketHead)
-	{
-		return _bool();
-	}
+
 	void CMummy::Free()
 	{
 	}
+
 }

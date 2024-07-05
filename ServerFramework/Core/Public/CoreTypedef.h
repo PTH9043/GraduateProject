@@ -28,7 +28,7 @@ namespace Core
 	using	ACTORID = _llong;
 	using CAMID = unsigned short;
 
-	using SESSIONID = _ullong;
+	using SESSIONID = _llong;
 	using ROOMID = _llong;
 
 	using _float = float;
@@ -128,6 +128,7 @@ namespace Core
 	using wstring = CustomString<_tchar, std::wstring>;
 
 	using IOContext = boost::asio::io_context;
+	using IOService = boost::asio::io_service;
 
 	using TIMEPOINT = std::chrono::system_clock::time_point;
 

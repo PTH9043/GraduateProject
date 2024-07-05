@@ -6,7 +6,7 @@
 BEGIN(Core)
 class ACell;
 class ANavigation;
-
+class ATransform;
 /*
 @ Date: 2023-01-15, Writer: นฺลยว๖
 @ Explain
@@ -19,9 +19,13 @@ public:
 	NO_COPY(APathFinder)
 	DESTRUCTOR(APathFinder)
 public:
-	_bool NativeConstruct(SHPTR<ANavigation> _spNavigation, const VECTOR<SHPTR<ACell>>& _Cells);
+	_bool NativeConstruct(SHPTR<ANavigation> _spNavigation);
 	// Find Path
-	SHPTR<ACell> FindPath(Vector3 _vStartPos, Vector3 _vEndPos);
+	LIST<SHPTR<ACell>> FindPath(Vector3 _vStartPos, Vector3 _vEndPos);
+	// Find Path
+	LIST<SHPTR<ACell>> FindPath(SHPTR<ATransform> _spStartTr, SHPTR<ATransform> _spEndTr);
+
+	LIST<SHPTR<ACell>> OptimizePath(const LIST<SHPTR<ACell>>& _path, SHPTR<ACell> _start, SHPTR<ACell> _end);
 private:
 	void MakeRoutine(SHPTR<ACell> _spStartCell, SHPTR<ACell> _spEndCell);
 	void Release();

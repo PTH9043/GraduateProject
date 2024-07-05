@@ -169,6 +169,42 @@ namespace Core {
 	{
 		UPoolAllocator::Release(_obj);
 	}
+
+	/*
+	@ Date: 2024-02-04,  Writer: 박태현
+	@ Explain
+	- 배열을 할당하기 위한 함수
+	*/
+	template<class T>
+	static T* AllocBuffer(size_t _number) {
+		T* p = static_cast<T*>(UPoolAllocator::Alloc(_number * sizeof(T)));
+		return p;
+	}
+	/*
+	@ Date: 2024-02-03,  Writer: 박태현
+	@ Explain
+	- 배열을 제거하기 위한 함수
+	*/
+	template<class T>
+	static void ReleaseBuffer(T* obj)
+	{
+		if (nullptr == obj)
+			return;
+
+		UPoolAllocator::Release(obj);
+	}
+	/*
+	@ Date: 2024-02-03,  Writer: 박태현
+	@ Explain
+	- const 용 배열을 제거하기 위한 함수
+	*/
+	template<class T>
+	static void ReleaseBuffer(const T* obj)
+	{
+		if (nullptr == obj)
+			return;
+		UPoolAllocator::Release(obj);
+	}
 }
 
 
