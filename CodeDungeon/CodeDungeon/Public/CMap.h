@@ -16,6 +16,7 @@ BEGIN(Client)
 class CRooms;
 class CModelObjects;
 class CMob;
+class CWarriorPlayer;
 
 using ROOMCONTAINER = UNORMAP<_wstring, SHPTR<CRooms>>;
 using OBJCONTAINER = VECTOR<SHPTR<CModelObjects>>;
@@ -39,10 +40,11 @@ public:
 
 	void LoadRooms();
 	void LoadStaticObjects();
-	void LoadMobs();
+	void LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer);
 	
 	CSHPTRREF<ROOMCONTAINER> GetRooms() { return m_spRoomContainer; }
 	CSHPTRREF<STATICOBJCONTAINER> GetStaticObjs() { return m_spStaticObjContainer;}
+	CSHPTRREF<MOBSCONTAINER> GetMobs() { return m_spMobsContainer; }
 
 	void AddLightCount() { m_iLightCount++; }
 	const _uint GetLightCount() { return m_iLightCount; }

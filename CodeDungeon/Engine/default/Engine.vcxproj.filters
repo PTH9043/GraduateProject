@@ -442,6 +442,12 @@
     <Filter Include="20.Network\NetworkQuery">
       <UniqueIdentifier>{487bf57c-27ba-41bc-80fa-ba307f3367fe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Actor\Guard">
+      <UniqueIdentifier>{2f98755e-8a2d-47b8-bec7-20f54b6a2c96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.ShaderFile\Guard">
+      <UniqueIdentifier>{5957ec3d-3796-4aef-9491-3be38623ff09}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -839,6 +845,9 @@
     </ClCompile>
     <ClCompile Include="..\private\UNetworkQueryProcessing.cpp">
       <Filter>20.Network\NetworkQuery</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UGuard.cpp">
+      <Filter>05.Actor\Guard</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1271,6 +1280,9 @@
     <ClInclude Include="..\public\UNetworkQueryProcessing.h">
       <Filter>20.Network\NetworkQuery</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\UGuard.h">
+      <Filter>05.Actor\Guard</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Shader\ShaderGrobalFunc.hlsli">
@@ -1424,6 +1436,9 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\DownSamplingTwo.hlsl">
       <Filter>98.ShaderFile\Common\HdrBloomBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\Guard.hlsl">
+      <Filter>98.ShaderFile\Guard</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

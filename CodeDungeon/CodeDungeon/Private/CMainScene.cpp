@@ -4,6 +4,7 @@
 #include "CMainCamera.h"
 #include "ULight.h"
 #include "UFire.h"
+#include "UGuard.h"
 #include "UTransform.h"
 #include "ULight.h"
 #include "UParticle.h"
@@ -36,6 +37,31 @@ CMainScene::CMainScene(CSHPTRREF<UDevice> _spDevice) :
 {
 }
 
+void CMainScene::TurnMobsOnRange()
+{
+	_float3 PlayerPos = m_spMainCamera->GetTransform()->GetPos();
+	for (auto& mob : (*m_spMap->GetMobs().get()))
+	{
+		auto mob_it = mob.second.begin();
+		while (mob_it != mob.second.end())
+		{
+			_float3 mobPos = mob_it->get()->GetTransform()->GetPos();
+			_float3 distance = mobPos - PlayerPos;
+			float distanceSq = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
+			
+			if (distanceSq <= 200 * 200)
+			{
+				mob_it->get()->SetActive(true);
+			}
+			else {
+				mob_it->get()->SetActive(false);
+			}
+			mob_it++;
+		}
+	}
+
+
+}
 void CMainScene::TurnLightsOnRange()
 {
 	_float3 PlayerPos = m_spMainCamera->GetTransform()->GetPos();
@@ -130,8 +156,6 @@ HRESULT CMainScene::LoadSceneData()
 		m_spMap = CreateConstructorNative<CMap>(spGameInstance->GetDevice());
 		m_spMap->LoadRooms();
 		m_spMap->LoadStaticObjects();
-		m_spMap->LoadMobs();
-
 		spGameInstance->TurnOnFog();
 
 		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 1.f}, {0.3f, 0.3f,0.3f, 1.f}, {0.15f, 0.15f, 0.15f, 1.f}, {0.f, -1.f, 0.f,}, {0.f, 100.f, 0.f}, 0.f, 0.f ,
@@ -181,27 +205,35 @@ HRESULT CMainScene::LoadSceneData()
 		}
 	}
 
-	{
-		CMummy::CHARACTERDESC CharDesc{PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_MUMMYANIMCONTROLLER};
-		m_spMummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(
-			PROTO_ACTOR_MUMMY, { &CharDesc }));
-		m_spMummy->SetMummyType(CMummy::MUMMYTYPE::TYPE_LYING);
-		m_spMummy->GetAnimModel()->SetAnimation(L"staticLaying");
-		m_spMummy->SetTargetPlayer(m_spWarriorPlayer);
-		m_spMummy->SetMobPlacement(588);
-		spGameInstance->AddCollisionPawnList(m_spMummy);
-	}
+	m_spMap->LoadMobs(m_spWarriorPlayer);
 
+	//{
+	//	CMummy::CHARACTERDESC CharDesc{PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_MUMMYANIMCONTROLLER};
+	//	m_spMummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(
+	//		PROTO_ACTOR_MUMMY, { &CharDesc }));
+	//	m_spMummy->SetMummyType(CMummy::MUMMYTYPE::TYPE_LYING);
+	//	m_spMummy->GetAnimModel()->SetAnimation(L"staticLaying");
+	//	m_spMummy->SetTargetPlayer(m_spWarriorPlayer);
+	//	m_spMummy->SetMobPlacement(588);
+	//	spGameInstance->AddCollisionPawnList(m_spMummy);
+	//}
+
+	//{
+	//	CSarcophagus::CHARACTERDESC CharDesc{ PROTO_RES_SARCOPHAGUSLYINGANIMMODEL, PROTO_COMP_SARCOPHAGUSANIMCONTROLLER };
+	//	m_spSarcophagus = std::static_pointer_cast<CSarcophagus>(spGameInstance->CloneActorAdd(
+	//		PROTO_ACTOR_SARCOPHAGUSLYING, { &CharDesc }));
+	//	m_spSarcophagus->SetSarcophagusType(CSarcophagus::SARCOTYPE::TYPE_LYING);
+	//	m_spSarcophagus->GetTransform()->SetNewWorldMtx(m_spMummy->GetTransform()->GetWorldMatrix());
+	//	m_spSarcophagus->GetAnimModel()->SetAnimation(0);
+	//	m_spSarcophagus->SetTargetPlayer(m_spWarriorPlayer);
+	//	//�̶� ��ġ����
+	//	m_spMummy->GetTransform()->TranslateDir((m_spMummy->GetTransform()->GetLook()), 1, 10);
+	//}
 	{
-		CSarcophagus::CHARACTERDESC CharDesc{ PROTO_RES_SARCOPHAGUSLYINGANIMMODEL, PROTO_COMP_SARCOPHAGUSANIMCONTROLLER };
-		m_spSarcophagus = std::static_pointer_cast<CSarcophagus>(spGameInstance->CloneActorAdd(
-			PROTO_ACTOR_SARCOPHAGUSLYING, { &CharDesc }));
-		m_spSarcophagus->SetSarcophagusType(CSarcophagus::SARCOTYPE::TYPE_LYING);
-		m_spSarcophagus->GetTransform()->SetNewWorldMtx(m_spMummy->GetTransform()->GetWorldMatrix());
-		m_spSarcophagus->GetAnimModel()->SetAnimation(0);
-		m_spSarcophagus->SetTargetPlayer(m_spWarriorPlayer);
-		//�̶� ��ġ����
-		m_spMummy->GetTransform()->TranslateDir((m_spMummy->GetTransform()->GetLook()), 1, 10);
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		m_stGuard = std::static_pointer_cast<UGuard>(spGameInstance->CloneActorAdd(PROTO_ACTOR_GUARD));
+		m_stGuard->SetActive(true);
+		m_stGuard->SetColorTexture(L"asdf");
 	}
 #endif
 	return S_OK;
@@ -212,6 +244,7 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
 	TurnLightsOnRange();
 	TurnRoomsOnRange();
+	TurnMobsOnRange();
 
 
 	SHPTR<ULight> DirLight;

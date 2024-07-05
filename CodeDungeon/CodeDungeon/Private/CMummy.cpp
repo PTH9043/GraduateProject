@@ -14,14 +14,24 @@
 #include "UCollider.h"
 #include "UParticle.h"
 #include "UParticleSystem.h"
+#include "CModelObjects.h"
+#include "UAnimation.h"
 
 CMummy::CMummy(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
-	: CMob(_spDevice, _wstrLayer, _eCloneType), m_MummyType{}
+	: CMob(_spDevice, _wstrLayer, _eCloneType), m_MummyType{},
+	m_PathFindingState{},
+	m_AstarPath{},
+	m_isPathFinding{ false },
+	m_currentPathIndex{ 0 }
 {
 }
 
 CMummy::CMummy(const CMummy& _rhs)
-	: CMob(_rhs), m_MummyType{}
+	: CMob(_rhs), m_MummyType{},
+	m_PathFindingState{},
+	m_AstarPath{},
+	m_isPathFinding{ false },
+	m_currentPathIndex{ 0 }
 {
 }
 
@@ -86,15 +96,21 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 	_wstring mainColliderTag = L"Main";
 
 	AddColliderInContainer(mainColliderTag, Collider);
-	SetOutline(true);
-	
+	for (auto& Colliders : GetColliderContainer())
+	{
+		Colliders.second->SetScale(_float3(1, 8, 1));
+		Colliders.second->SetTranslate(_float3(0, 10, 0));
+	}
+
+	SetHealth(100);
+
 	return S_OK;
 }
 
 void CMummy::TickActive(const _double& _dTimeDelta)
 {
 	_float3 pos = GetTransform()->GetPos();
-	pos.y +=5;
+	pos.y += 5;
 	m_spParticle->SetPosition(pos);
 
 	__super::TickActive(_dTimeDelta);
@@ -105,76 +121,108 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 	SHPTR<UCell> CurrentMobCell = GetCurrentNavi()->GetCurCell();
 	SHPTR<UCell> CurrentPlayerCell = GetTargetPlayer()->GetCurrentNavi()->GetCurCell();
 
-	static _double timeAccumulator = 0.0;
-	static UNavigation::PathFindingState pathFindingState;
-	static bool isPathFinding = false;
-	static VECTOR<_float3> path;
-	static size_t currentPathIndex = 0;
-
-	if(CurAnimState == UAnimationController::ANIM_MOVE)
+	if (CurAnimState == UAnimationController::ANIM_MOVE)
 	{
-		
-		timeAccumulator += _dTimeDelta;
-		if (GetFoundTargetState() && timeAccumulator >= 1.0)
+		AddTimeAccumulator(_dTimeDelta);
+
+		// A* for moving towards player when player is found
+		if (GetFoundTargetState())
 		{
-			SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-			pathFindingState = spNavigation->StartPathFinding(CurrentMobPos, CurrentPlayerPos, CurrentMobCell, CurrentPlayerCell);
-			isPathFinding = true;
-			timeAccumulator = 0.0;
-		}
-		if (isPathFinding)
-		{
-			SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-			if (spNavigation->StepPathFinding(pathFindingState))
+			SetOutline(true);
+			if (GetTimeAccumulator() >= 1.0)
 			{
-				isPathFinding = false;
-				if (pathFindingState.pathFound)
+				SHPTR<UNavigation> spNavigation = GetCurrentNavi();
+				m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, CurrentPlayerPos, CurrentMobCell, CurrentPlayerCell));
+				m_isPathFinding = true;
+				SetTimeAccumulator(0.0);
+			}
+			if (m_isPathFinding)
+			{
+				SHPTR<UNavigation> spNavigation = GetCurrentNavi();
+				if (spNavigation->StepPathFinding(m_PathFindingState))
 				{
-					path = spNavigation->OptimizePath(pathFindingState.path, CurrentMobPos, CurrentPlayerPos);
-					currentPathIndex = 0; // 경로를 재설정하면 인덱스를 초기화합니다
+					m_isPathFinding = false;
+					if (m_PathFindingState.pathFound)
+					{
+						m_AstarPath = (spNavigation->OptimizePath(m_PathFindingState.path, CurrentMobPos, CurrentPlayerPos));
+						m_currentPathIndex = 0; // index initialized when path is optimized
+					}
 				}
 			}
+			if (!m_AstarPath.empty())
+			{			
+				MoveAlongPath(m_AstarPath, m_currentPathIndex, _dTimeDelta);
+				_float3 direction = CurrentMobPos - GetTargetPos();
+				GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
+			}
 		}
-		if (GetFoundTargetState() && !path.empty())
+		else // patrolling when player is not found
 		{
-			MoveAlongPath(path, currentPathIndex, _dTimeDelta);
-			_float3 direction = CurrentMobPos - GetTargetPos();
-			GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
+			SetOutline(false);
+			SHPTR<UNavigation> spNavigation = GetCurrentNavi();
+			SHPTR<UCell> spNeighborCell = spNavigation->ChooseRandomNeighborCell(1);
+			if (GetTimeAccumulator() >= 2.0)
+			{
+				m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, spNeighborCell->GetCenterPos(), CurrentMobCell, spNeighborCell));
+				m_isPathFinding = true;
+				SetTimeAccumulator(0.0);
+			}
+			if (m_isPathFinding)
+			{
+				if (spNavigation->StepPathFinding(m_PathFindingState))
+				{
+					m_isPathFinding = false;
+					if (m_PathFindingState.pathFound)
+					{
+						m_AstarPath = (spNavigation->OptimizePath(m_PathFindingState.path, CurrentMobPos, spNeighborCell->GetCenterPos()));
+						m_currentPathIndex = 0; // index initialized when path is optimized
+					}
+				}
+			}
+			if (!m_AstarPath.empty())
+			{
+				MoveAlongPath(m_AstarPath, m_currentPathIndex, _dTimeDelta);
+				_float3 direction = CurrentMobPos - GetTargetPos();
+				GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
+			}
 		}
 	}
-	else if(CurAnimState == UAnimationController::ANIM_ATTACK)
+	else if (CurAnimState == UAnimationController::ANIM_ATTACK)
 	{
 		_float3 direction = CurrentMobPos - CurrentPlayerPos;
 		GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
 	}
-	else if(CurAnimState == UAnimationController::ANIM_HIT)
+	else if (CurAnimState == UAnimationController::ANIM_HIT)
 	{
-		GetTransform()->TranslateDir((GetTransform()->GetLook()), 1, 1);
+		GetTransform()->TranslateDir(GetTransform()->GetLook(), _dTimeDelta, 1);
 	}
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	
-	
 
-	if(CurAnimState == UAnimationController::ANIM_IDLE)
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+	// death animation
+	if (CurAnimState == UAnimationController::ANIM_DEATH)
+	{
+		_double DeathAnimSpeed = 20;
+		SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
+		_double DeathTimeArcOpenEnd = 50;
+		if (GetElapsedTime() < DeathTimeArcOpenEnd)
+			GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
+
+		if (GetElapsedTime() >= 100.0)
+		{
+			SetActive(false);
+			spGameInstance->RemoveCollisionPawn(ThisShared<CMob>());
+		}
+	}
+	else if (CurAnimState == UAnimationController::ANIM_IDLE)
 	{
 		GetAnimModel()->TickAnimation(_dTimeDelta);
-	}
-	else if (CurAnimState == UAnimationController::ANIM_DEATH)
-	{
-		static _double elapsedTime = 0;
-		_double DeathAnimSpeed = 20;
-		elapsedTime += _dTimeDelta * DeathAnimSpeed;
-		_double DeathTimeArcOpenEnd = 50;
-		if (elapsedTime < DeathTimeArcOpenEnd)
-			GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, elapsedTime);
+		GetTransform()->SetPos(GetTransform()->GetPos());
 	}
 	else
-		GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
-
-
-	for (auto& Colliders : GetColliderContainer())
 	{
-		Colliders.second->SetScale(_float3(3, 20, 3));
+		GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
+		SetElapsedTime(0.0);
 	}
 
 	UpdateCollision();
@@ -182,56 +230,119 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 
 void CMummy::LateTickActive(const _double& _dTimeDelta)
 {
-	if (GetCollisionState())
-		GetTransform()->SetPos(GetTransform()->GetPos() + GetTransform()->GetLook() * 5 * _dTimeDelta);
-
 	__super::LateTickActive(_dTimeDelta);
+	//for (auto& Colliders : GetColliderContainer())
+	//	if(Colliders.first == L"Main")
+	//		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
 }
 
 HRESULT CMummy::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
-	return __super::RenderActive(_spCommand, _spTableDescriptor);
+	const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
+
+	if(CurAnimName != L"staticLaying" && CurAnimName != L"staticStanding")
+	{
+		return __super::RenderActive(_spCommand, _spTableDescriptor);
+	}
 }
 
 HRESULT CMummy::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
 	return __super::RenderShadowActive(_spCommand, _spTableDescriptor);
 }
+
 HRESULT CMummy::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)
 {
 	return __super::RenderOutlineActive(_spCommand, _spTableDescriptor,_pass);
 }
+
 void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	PAWNTYPE ePawnType = _pEnemy->GetPawnType();
-	if (PAWNTYPE::PAWN_CHAR == ePawnType)
-	{
-		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
+	const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
 
-		for (auto& iter : GetColliderContainer())
+	_float3 direction = (_pEnemy->GetTransform()->GetPos() - GetTransform()->GetPos());
+	direction.Normalize();
+
+	auto handleCollisionWithPlayer = [&](UCharacter* pCharacter) {
+		for (const auto& iter : GetColliderContainer())
 		{
 			if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
 			{
-				SetHitstate(true);
-				m_spParticle->SetActive(true);
-				m_spParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
-
+				if (CurAnimName != L"openLaying" && CurAnimName != L"openStanding" &&
+					CurAnimName != L"taunt" && CurAnimName != L"death")
+				{
+				    SetHitstate(true);
+					m_spParticle->SetActive(true);
+					m_spParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+					// Decrease health on hit
+					DecreaseHealth(pCharacter->GetAttack());
+					GetTransform()->SetPos(GetTransform()->GetPos() + GetTransform()->GetLook() * 10 * _dTimeDelta);
+				}
 			}
-			else {
-				SetHitstate(false);
-			}
 
-
-			for (auto& iter2 : pCharacter->GetColliderContainer())
+			for (const auto& iter2 : pCharacter->GetColliderContainer())
 			{
 				if (iter.second->IsCollision(iter2.second))
+				{
 					SetCollisionState(true);
+					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 10 * _dTimeDelta);
+				}
 				else
+				{
 					SetCollisionState(false);
+				}
 			}
 		}
+		};
+
+	auto handleCollisionWithCharacter = [&](UCharacter* pCharacter) {
+		for (const auto& iter : GetColliderContainer())
+		{
+			for (const auto& iter2 : pCharacter->GetColliderContainer())
+			{
+				if (iter.second->IsCollision(iter2.second))
+				{
+					SetCollisionState(true);
+					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
+				}
+				else
+				{
+					SetCollisionState(false);
+				}
+			}
+		}
+		};
+
+	auto handleCollisionWithStaticObject = [&](CModelObjects* pModelObject) {
+		for (const auto& iter : GetColliderContainer())
+		{
+			for (const auto& iter2 : pModelObject->GetColliderContainer())
+			{
+				SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
+				if (GetCollidedNormal() != _float3::Zero)
+				{
+					_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 50.0f : 20.0f;
+					ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
+				}
+			}
+		}
+		};
+
+	if (ePawnType == PAWNTYPE::PAWN_PLAYER)
+	{
+		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
+		handleCollisionWithPlayer(pCharacter);
+	}
+	else if (ePawnType == PAWNTYPE::PAWN_CHAR)
+	{
+		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
+		handleCollisionWithCharacter(pCharacter);
+	}
+	else if (ePawnType == PAWNTYPE::PAWN_STATICOBJ)
+	{
+		CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
+		handleCollisionWithStaticObject(pModelObject);
 	}
 }
-
-
-

@@ -15,7 +15,12 @@
 #include "CModelObjects.h"
 #include "CMob.h"
 #include "CItemChest.h"
-
+#include "CMummy.h"
+#include "UAnimModel.h"
+#include "UMethod.h"
+#include "UNavigation.h"
+#include "CWarriorPlayer.h"
+#include "CSarcophagus.h"
 
 CMap::CMap(CSHPTRREF<UDevice> _spDevice) : UComponent(_spDevice),
 m_spRoomContainer{nullptr},
@@ -123,12 +128,13 @@ void CMap::LoadStaticObjects()
 	m_spStaticObjContainer->emplace("Bars_FBX.bin", _BarsVec);
 }
 
-void CMap::LoadMobs()
+void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	m_spMapLayout->LoadMapMobs();
 
 	MOBCONTAINER _ChestVec;
+	MOBCONTAINER _MummyVec;
 
 	for (auto& it : (*m_spMapLayout->GetMapMobsContainer().get()))
 	{
@@ -139,13 +145,57 @@ void CMap::LoadMobs()
 				CItemChest::CHARACTERDESC chestDesc{ PROTO_RES_CHESTANIMMODEL, PROTO_COMP_CHESTANIMCONTROLLER };;
 				SHPTR<CItemChest> _Chest = std::static_pointer_cast<CItemChest>(spGameInstance->CloneActorAdd(PROTO_ACTOR_CHEST, { &chestDesc }));
 				_Chest->GetTransform()->SetNewWorldMtx(vecit._mWorldMatrix);
-				_Chest->GetTransform()->SetScale(_float3(10.0f, 10.0f, 10.0f));			
 				_ChestVec.push_back(_Chest);
 				spGameInstance->AddCollisionPawnList(_Chest);
+			}
+			if (vecit._sAnimModelName == "Mummy_DEMO_1_FBX.bin")
+			{
+				CMummy::CHARACTERDESC MummyDesc{ PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_MUMMYANIMCONTROLLER };
+
+				SHPTR<CMummy> _Mummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(
+					PROTO_ACTOR_MUMMY, { &MummyDesc }));
+				_Mummy->GetTransform()->SetPos(vecit._mWorldMatrix.Get_Pos());
+				_Mummy->GetTransform()->SetDirection(-vecit._mWorldMatrix.Get_Look());
+				_Mummy->GetAnimModel()->SetAnimation(UMethod::ConvertSToW(vecit._sAnimName));
+				if (vecit._sAnimName == "staticLaying")
+				{
+					_Mummy->SetMummyType(CMummy::MUMMYTYPE::TYPE_LYING);			
+				}
+				else
+					_Mummy->SetMummyType(CMummy::MUMMYTYPE::TYPE_STANDING);
+				_Mummy->SetTargetPlayer(_spPlayer);
+				_Mummy->GetCurrentNavi()->FindCell(_Mummy->GetTransform()->GetPos());
+				spGameInstance->AddCollisionPawnList(_Mummy);
+
+
+				//sarcophagus for mummy
+				SHPTR<CSarcophagus> _Sarcophagus;
+				if (vecit._sAnimName == "staticLaying")
+				{
+					CSarcophagus::CHARACTERDESC SarcDesc{ PROTO_RES_SARCOPHAGUSLYINGANIMMODEL, PROTO_COMP_SARCOPHAGUSANIMCONTROLLER };
+					_Sarcophagus = std::static_pointer_cast<CSarcophagus>(spGameInstance->CloneActorAdd(
+						PROTO_ACTOR_SARCOPHAGUSLYING, { &SarcDesc }));
+					_Sarcophagus->SetSarcophagusType(CSarcophagus::SARCOTYPE::TYPE_LYING);
+				}
+				else
+				{
+					CSarcophagus::CHARACTERDESC SarcDesc{ PROTO_RES_SARCOPHAGUSSTANDINGANIMMODEL, PROTO_COMP_SARCOPHAGUSANIMCONTROLLER };
+					_Sarcophagus = std::static_pointer_cast<CSarcophagus>(spGameInstance->CloneActorAdd(
+						PROTO_ACTOR_SARCOPHAGUSSTANDING, { &SarcDesc }));
+					_Sarcophagus->SetSarcophagusType(CSarcophagus::SARCOTYPE::TYPE_STANDING);
+				}
+				_Sarcophagus->GetTransform()->SetNewWorldMtx(_Mummy->GetTransform()->GetWorldMatrix());
+				_Sarcophagus->GetAnimModel()->SetAnimation(0);
+				_Sarcophagus->SetTargetPlayer(_spPlayer);
+				_Mummy->GetTransform()->TranslateDir((_Mummy->GetTransform()->GetLook()), 1, 12);
+
+				_MummyVec.push_back(_Mummy);
+				_MummyVec.push_back(_Sarcophagus);
 			}
 		}
 	}
 
 	m_spMobsContainer->emplace("Chest_FBX.bin", _ChestVec);
-
+	m_spMobsContainer->emplace("Mummy_DEMO_1_FBX.bin", _MummyVec);
 }
+

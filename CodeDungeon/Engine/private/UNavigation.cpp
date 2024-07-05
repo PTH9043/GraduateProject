@@ -577,3 +577,38 @@ bool UNavigation::LineTest(const _float3& start, const _float3& end) {
 	}
 	return true;
 }
+
+SHPTR<UCell> UNavigation::ChooseRandomNeighborCell(int iterations)
+{
+	RETURN_CHECK(nullptr == m_spCurCell, nullptr);
+
+	SHPTR<UCell> currentCell = m_spCurCell;
+
+	for (int i = 0; i < iterations; ++i) {
+		const std::array<int, UCell::POINT_END>& neighbors = currentCell->GetNeighbor();
+		std::vector<int> validNeighbors;
+
+		// Collect all valid neighbor indices
+		for (int neighborIndex : neighbors) {
+			if (neighborIndex != -1) {
+				validNeighbors.push_back(neighborIndex);
+			}
+		}
+		RETURN_CHECK(validNeighbors.empty(), nullptr);
+
+		// Seed the random number generator
+		std::srand(static_cast<unsigned>(std::time(nullptr)));
+
+		// Choose a random neighbor index
+		int randomIndex = std::rand() % validNeighbors.size();
+
+		SHPTR<UCell> neighborCell = FindCell(validNeighbors[randomIndex]);
+
+		RETURN_CHECK(nullptr == neighborCell, nullptr);
+
+		// Update currentCell to the chosen neighbor
+		currentCell = neighborCell;
+	}
+
+	return currentCell;
+}

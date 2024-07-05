@@ -1,6 +1,7 @@
 #pragma once
 #include "UScene.h"
 BEGIN(Engine)
+class UGuard;
 END
 BEGIN(Client)
 
@@ -9,6 +10,7 @@ class CMap;
 class CWarriorPlayer;
 class CMummy;
 class CSarcophagus;
+
 
 
 class CMainScene final : public UScene{
@@ -20,6 +22,7 @@ private:
 	//기능 함수들 일시
 	void TurnLightsOnRange();
 	void TurnRoomsOnRange();
+	void TurnMobsOnRange();
 public:
 	// UScene을(를) 통해 상속됨
 	virtual void Free() override;
@@ -35,7 +38,7 @@ private:
 	SHPTR<CWarriorPlayer>		m_spWarriorPlayer;
 	SHPTR<CMummy>				m_spMummy;
 	SHPTR<CSarcophagus>			m_spSarcophagus;
-
+	SHPTR<UGuard> m_stGuard;
 };
 
 END

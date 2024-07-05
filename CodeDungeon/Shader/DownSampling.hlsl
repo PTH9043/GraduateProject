@@ -52,14 +52,17 @@ PS_OUT PS_Main(PS_In In)
   
     Out.vColor = HighColor;
 */
-    float2 baseUV = In.vTexUV * 4.0f;
+    
+    
+    float2 baseUV = In.vTexUV;// * 4.0f;
 
     float4 colorSum = float4(0, 0, 0, 0);
-    for (int y = 0; y < 4; ++y)
+    for (int x = 0; x < 4; ++x)
     {
-        for (int x = 0; x < 4; ++x)
+        for (int y = 0; y < 4; ++y)
         {
             float2 offsetUV = baseUV + float2(x, y) / float2(1280.0f, 1080.0f);
+       
             float4 color = g_Texture0.Sample(g_Sampler_Normal, offsetUV);
             float brightness = dot(color.rgb, float3(0.2126f, 0.7152f, 0.0722f));
             //if (brightness > 0.99)
@@ -69,9 +72,13 @@ PS_OUT PS_Main(PS_In In)
             colorSum += float4(color.rgb, 1.0);
         }
     }
-
+    
     Out.vColor = colorSum / 16.0f; // 4x4 블록의 평균값
+ 
     return Out;
+    
+  
+
 }
 
 #endif // _DOWN_SAMPLE_HLSL_

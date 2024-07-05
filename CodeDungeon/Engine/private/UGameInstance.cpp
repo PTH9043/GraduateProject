@@ -63,6 +63,7 @@
 #include "UFog.h"
 #include "UCollider.h"
 #include "UTrail.h"
+#include "UGuard.h"
 
 //#include "UMirror.h"
 //#include "UScreenRenderObj.h"
@@ -218,7 +219,7 @@ void UGameInstance::LateTick(const _double& _dTimeDelta)
 {
 	m_spSceneManager->LateTick(_dTimeDelta);
 	m_spActorManager->LateTick(_dTimeDelta);
-//	m_spCharacterManager->TickCollider(_dTimeDelta);
+	m_spCharacterManager->TickCollider(_dTimeDelta);
 }
 
 void UGameInstance::RenderBegin()
@@ -1157,6 +1158,13 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 					}, RASTERIZER_TYPE::CULL_NONE,
 					DEPTH_STENCIL_TYPE::LESS_EQUAL_NO_WRITE, BLEND_TYPE::ALPHA_BLEND));
 
+			CreateGraphicsShader(PROTO_RES_GUARDSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"Guard", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM,DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
+					DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R16G16B16A16_FLOAT
+					}, RASTERIZER_TYPE::CULL_NONE,
+					DEPTH_STENCIL_TYPE::LESS_EQUAL_NO_WRITE, BLEND_TYPE::ALPHA_BLEND));
+
 			CreateGraphicsShader(PROTO_RES_HORIZONTALBLURSHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"HorizontalBlur", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{
@@ -1528,7 +1536,10 @@ HRESULT UGameInstance::ReadyActor(const OUTPUTDATA& _stData)
 		_stData.wpDevice.lock(), LAYER_PARTICLE, CLONETYPE::CLONE_ONCE));
 
 	AddPrototype(PROTO_ACTOR_TRAIL, CreateConstructorToNative<UTrail>(
-		_stData.wpDevice.lock(), LAYER_PARTICLE, CLONETYPE::CLONE_ONCE));
+		_stData.wpDevice.lock(), LAYER_TRAIL, CLONETYPE::CLONE_ONCE));
+	
+	AddPrototype(PROTO_ACTOR_GUARD, CreateConstructorToNative<UGuard>(
+		_stData.wpDevice.lock(), LAYER_GUARD, CLONETYPE::CLONE_ONCE));
 
 	AddPrototype(PROTO_ACTOR_FIRE, CreateConstructorToNative<UFire>(
 		_stData.wpDevice.lock(), LAYER_DEFAULT, CLONETYPE::CLONE_ONCE));

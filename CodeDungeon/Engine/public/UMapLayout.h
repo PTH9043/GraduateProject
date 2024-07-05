@@ -15,9 +15,11 @@ public:
 
 	typedef struct MobsDesc {
 		_string		_sAnimModelName{};
+		_string		_sAnimName{};
 		_float4x4		_mWorldMatrix{ _float4x4::Identity };
 
 	}MOBDESC;
+	using MOBDATA = std::pair<_string, _string>;
 	using MAPOBJECTS = VECTOR<OBJDESC>;
 	using MAPMOBS = VECTOR<MOBDESC>;
 	using MAPOBJECTSCONTAINER = UNORMAP<_string, MAPOBJECTS>; //<방 이름, 데이터>

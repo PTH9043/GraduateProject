@@ -29,8 +29,7 @@ CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _ws
 	m_stParticleType{}, 
 	m_stParticleParam{},
 	m_spParticle{nullptr},
-	m_spTrail{nullptr},
-	m_f3CollidedNormal{}
+	m_spTrail{nullptr}
 {
 }
 
@@ -42,8 +41,7 @@ CWarriorPlayer::CWarriorPlayer(const CWarriorPlayer& _rhs) :
 	m_stParticleType{},
 	m_stParticleParam{},
 	m_spParticle{ nullptr },
-	m_spTrail{ nullptr },
-	m_f3CollidedNormal{}
+	m_spTrail{ nullptr }
 {
 }
 
@@ -62,7 +60,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-	SHPTR<UCell> spCell = spNavigation->FindCell(741);
+	SHPTR<UCell> spCell = spNavigation->FindCell(100);
 
 	GetTransform()->SetPos(spCell->GetCenterPos());
 
@@ -86,15 +84,6 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 
 	AddColliderInContainer(mainColliderTag, Collider);
 
-	SHPTR<UCollider> forStaticCollider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
-	_wstring forStaticColliderTag = L"ForStaticCollision";
-
-	AddColliderInContainer(forStaticColliderTag, forStaticCollider);
-	
-	SHPTR<UCollider> forMobsCollider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
-	_wstring forMobsColliderTag = L"ForMobsCollision";
-
-	AddColliderInContainer(forMobsColliderTag, forMobsCollider);
 	{
 		UParticle::PARTICLEDESC tDesc;
 		tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEFOOTPRINT2DSHADER;
@@ -146,21 +135,14 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	for (auto& Colliders : GetColliderContainer())
 	{
 		if (Colliders.first == L"Main")
-			Colliders.second->SetScale(_float3(5, 15, 5));
-		else if(Colliders.first == L"ForStaticCollision")
 		{
-			Colliders.second->SetScale(_float3(4, 15, 4));
-			Colliders.second->SetTranslate(_float3(0, 4, 0));
+			Colliders.second->SetScale(_float3(4, 10, 4));
+			Colliders.second->SetTranslate(_float3(0, 10, 0));
 		}
-		else if (Colliders.first == L"ForMobsCollision")
-		{
-			Colliders.second->SetScale(_float3(3, 15, 3));
-		}
-
 	}
 	SetOutline(true);
 	SetifPlayer(true);
-	
+
 	return S_OK;
 }
 
@@ -205,6 +187,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
 
+
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	GetAnimationController()->Tick(_dTimeDelta);
 
@@ -220,9 +203,6 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		m_spTrail->AddTrail(plusPoint, minusPoint);
 	}
 	
-
-	//GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
-
 	m_spParticle->SetActive(true);
 
 	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_RUN)  {//|| AnimState == CWarriorAnimController::ANIM_ATTACK|| AnimState == CWarriorAnimController::ANIM_COMBO
@@ -262,9 +242,9 @@ void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
 	FollowCameraMove(_float3{ 0.f, 20.f, -40.f }, _dTimeDelta);
 
-	//for (auto& Colliders : GetColliderContainer())
-	//	if(Colliders.first == L"ForMobsCollision")
-	//		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
+	/*for (auto& Colliders : GetColliderContainer())
+		if(Colliders.first == L"Main")
+			Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);*/
 }
 
 
@@ -288,52 +268,54 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	PAWNTYPE ePawnType = _pEnemy->GetPawnType();
 
-	//if (PAWNTYPE::PAWN_CHAR == ePawnType)
-	//{
-	//	UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
-	//	for (auto& iter : GetColliderContainer())
-	//	{
-	//		if(iter.first == L"ForMobsCollision")
-	//		{
-	//			if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
-	//			{
-	//				SetHitstate(true);
-	//			}
-	//			else
-	//				SetHitstate(false);
 
-	//			GetTransform()->SetPos(GetTransform()->GetPos() - GetTransform()->GetLook() * 5 * _dTimeDelta);
-	//		}
-	//	}
-	//}
-	//else if (PAWNTYPE::PAWN_STATICOBJ == ePawnType)
-	//{
-	//	CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
-	//	for (auto& iter : GetColliderContainer())
-	//	{
-	//		if(iter.first == L"ForStaticCollision")
-	//		{
-	//			for (auto& iter2 : pModelObject->GetColliderContainer())
-	//			{
-	//				m_f3CollidedNormal = iter.second->GetCollisionNormal(iter2.second);
+	if (PAWNTYPE::PAWN_CHAR == ePawnType)
+	{
+		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
+		_float3 direction = _pEnemy->GetTransform()->GetPos() - GetTransform()->GetPos();
+		direction.Normalize();
+		for (auto& iter : GetColliderContainer())
+		{
+			if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
+			{
+				SetHitstate(true);
+				GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
+			}
 
-	//				if (m_f3CollidedNormal != _float3::Zero) // 충돌이 발생한 경우
-	//				{
-	//					SetOBJCollisionState(true);
-	//					// 속도 결정
-	//					_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 50.0f : 20.0f;
+			for (auto& iter2 : pCharacter->GetColliderContainer())
+			{
+				if (iter.second->IsCollision(iter2.second))
+				{
+					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
+				}
+			}
+		}
+	}
+	else if (PAWNTYPE::PAWN_STATICOBJ == ePawnType)
+	{
+		CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
+		for (auto& iter : GetColliderContainer())
+		{
+			for (auto& iter2 : pModelObject->GetColliderContainer())
+			{
+				SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
 
-	//					ApplySlidingMovement(m_f3CollidedNormal, speed,  _dTimeDelta);
+				if (GetCollidedNormal() != _float3::Zero) // 충돌이 발생한 경우
+				{
+					SetOBJCollisionState(true);
+					// 속도 결정
+					_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 50.0f : 20.0f;
 
-	//				}
-	//				else
-	//				{
-	//					SetOBJCollisionState(false);
-	//				}
-	//			}
-	//		}
-	//	}
-	//}
+					ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
+
+				}
+				else
+				{
+					SetOBJCollisionState(false);
+				}
+			}
+		}
+	}
 }
 
 #ifdef _ENABLE_PROTOBUFF

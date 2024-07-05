@@ -574,6 +574,21 @@ void URenderer::DownSample()
     spRenderTargetGroup->WaitResourceToTarget(m_spCastingCommand);
     spRenderTargetGroup->ClearRenderTargetView(m_spCastingCommand);
     spRenderTargetGroup->OmSetRenderTargets(m_spCastingCommand);
+
+    D3D12_VIEWPORT _viewPort;
+    _viewPort.TopLeftX = 0;
+    _viewPort.TopLeftY = 0;
+    _viewPort.MinDepth = 0;
+    _viewPort.MaxDepth = 1.0;
+    _viewPort.Height = spGameInstance->GetD3DViewport().Height / 4.f;
+    _viewPort.Width = spGameInstance->GetD3DViewport().Width / 4.f;
+    D3D12_RECT _rect;
+    _rect.left = 0;
+    _rect.top = 0;
+    _rect.right = static_cast<LONG>(spGameInstance->GetD3DViewport().Width / 4);
+    _rect.bottom = static_cast<LONG>(spGameInstance->GetD3DViewport().Height / 4);
+
+    spGameInstance->SetTemporaryViewPort(_viewPort, _rect);
     // Bind Shader 
     SHPTR<UShader> spDownSamplingShader = FindShader(PROTO_RES_DOWNSAMPLINGSHADER);
     spDownSamplingShader->SettingPipeLineState(m_spCastingCommand);
@@ -586,7 +601,7 @@ void URenderer::DownSample()
 
     m_spVIBufferPlane->Render(spDownSamplingShader, m_spCastingCommand);
     spRenderTargetGroup->WaitTargetToResource(m_spCastingCommand);
-
+    spGameInstance->SetDefaultViewPort();
 
 }
 
@@ -599,6 +614,20 @@ void URenderer::DownSample2()
     spRenderTargetGroup->WaitResourceToTarget(m_spCastingCommand);
     spRenderTargetGroup->ClearRenderTargetView(m_spCastingCommand);
     spRenderTargetGroup->OmSetRenderTargets(m_spCastingCommand);
+    D3D12_VIEWPORT _viewPort;
+    _viewPort.TopLeftX = 0;
+    _viewPort.TopLeftY = 0;
+    _viewPort.MinDepth = 0;
+    _viewPort.MaxDepth = 1.0;
+    _viewPort.Height = spGameInstance->GetD3DViewport().Height / 16.f;
+    _viewPort.Width = spGameInstance->GetD3DViewport().Width / 16.f;
+    D3D12_RECT _rect;
+    _rect.left = 0;
+    _rect.top = 0;
+    _rect.right = static_cast<LONG>(spGameInstance->GetD3DViewport().Width / 16);
+    _rect.bottom = static_cast<LONG>(spGameInstance->GetD3DViewport().Height / 16);
+
+    spGameInstance->SetTemporaryViewPort(_viewPort, _rect);
     // Bind Shader 
     SHPTR<UShader> spDownSamplingShader = FindShader(PROTO_RES_DOWNSAMPLINGTWOSHADER);
     spDownSamplingShader->SettingPipeLineState(m_spCastingCommand);
@@ -611,7 +640,7 @@ void URenderer::DownSample2()
 
     m_spVIBufferPlane->Render(spDownSamplingShader, m_spCastingCommand);
     spRenderTargetGroup->WaitTargetToResource(m_spCastingCommand);
-
+    spGameInstance->SetDefaultViewPort();
 
 }
 
