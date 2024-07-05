@@ -55,11 +55,11 @@ HRESULT CSarcophagus::NativeConstructClone(const VOIDDATAS& _Datas)
 void CSarcophagus::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
-	static _double elapsedTime = 0;
+	
 	_double SarcophagusOpeningSpeed = 20;
-	_double SarcophagusTimeArcOpenStart = 50;
-	_double SarcophagusTimeArcOpenEnd = 50;
-
+	_double LyingSarcophagusTimeArcOpenStart = 50;
+	_double LyingSarcophagusTimeArcOpenEnd = 50;
+	_double StandingSarcophagusTimeArcOpenEnd = 30;
 	for (auto& Containers : GetColliderContainer())
 	{
 		Containers.second->SetTransform(GetTransform());
@@ -69,10 +69,17 @@ void CSarcophagus::TickActive(const _double& _dTimeDelta)
 
 	if(GetFoundTargetState())
 	{
-		elapsedTime += _dTimeDelta * SarcophagusOpeningSpeed;
+		SetElapsedTime(GetElapsedTime() + _dTimeDelta * SarcophagusOpeningSpeed);
 	}
-	if (elapsedTime < SarcophagusTimeArcOpenEnd)
-		GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, SarcophagusTimeArcOpenStart + elapsedTime);
+
+	if (GetSarcophagusType() == SARCOTYPE::TYPE_LYING)
+	{
+		if (GetElapsedTime() < LyingSarcophagusTimeArcOpenEnd)
+			GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, LyingSarcophagusTimeArcOpenStart + GetElapsedTime());
+	}
+	else
+		if (GetElapsedTime() < StandingSarcophagusTimeArcOpenEnd)
+			GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
 
 }
 
