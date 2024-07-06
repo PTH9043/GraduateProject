@@ -133,7 +133,6 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 		tDesc.iMaxVertexCount = 100;
 		m_spTrail = std::static_pointer_cast<UTrail>(spGameInstance->CloneActorAdd(PROTO_ACTOR_TRAIL, { &tDesc }));
 		m_spTrail->SetActive(true);
-		m_spTrail->SetColor(_float4(65.f / 255.f, 150.f / 255.f, 43.f / 255.f, 0.f));
 	}
 
 	for (auto& Colliders : GetColliderContainer())
@@ -145,7 +144,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 		}
 	}
 	SetOutline(true);
-	SetifPlayer(true);
+	SetifPlayer(true);//플레이어는 안그리도록 
 
 	return S_OK;
 }
@@ -211,11 +210,11 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	
 	m_spParticle->SetActive(true);
 
-	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_RUN)  {//|| AnimState == CWarriorAnimController::ANIM_ATTACK|| AnimState == CWarriorAnimController::ANIM_COMBO
+	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_MOVE)  {//|| AnimState == CWarriorAnimController::ANIM_ATTACK|| AnimState == CWarriorAnimController::ANIM_COMBO
 		*m_spParticle->GetParticleSystem()->GetAddParticleAmount() =4;
 		*m_spParticle->GetParticleSystem()->GetCreateInterval() = 0.355f;
 		_float3 pos = GetTransform()->GetPos() + GetTransform()->GetRight();
-		pos.y += 1.6;
+		pos.y += 1.0;
 		_float3 Look = GetTransform()->GetLook();
 		_float3 Right = 1.2 * GetTransform()->GetRight();
 		//pos -= 3 * Look;

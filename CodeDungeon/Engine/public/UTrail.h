@@ -27,8 +27,7 @@ protected:
 	virtual HRESULT RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass = true) override;
 protected:
 	SHPTR<UTexGroup>				m_spTrailTexGroup;
-	SHPTR< UShaderConstantBuffer>				m_spTrailColorBuffer;
-	_float4				m_vCurTrailColor;
+
 private:
 
 	// Cube
@@ -44,7 +43,6 @@ private:
 public:
 	void AddTrail(_float3 _top, _float3 _bottom);
 	void SetRenderingTrail(_bool isOn);
-	void SetColor(_float4 _col);
 	void Update(const _double& _dTimeDelta);
 };
 
