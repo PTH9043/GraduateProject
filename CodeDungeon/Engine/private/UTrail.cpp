@@ -10,20 +10,16 @@
 #include "UTexGroup.h"
 #include "UTexture.h"
 
-#define BLUE_COLOR4 1.f / 255.f, 165.f / 255.f, 172.f / 255.f, 0.f
-//#define BLUE_COLOR4 1.f / 255.f, 102.f / 255.f, 200.f / 255.f, 0.f
-
-#define GREEN_COLOR4 65.f / 255.f, 150.f / 255.f, 43.f / 255.f, 0.f
 
 UTrail::UTrail(CSHPTRREF<UDevice> _spDevice,
 	const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UPawn(_spDevice, _wstrLayer, _eCloneType, BACKINGTYPE::NON),
-	m_spVIBufferTrail{ nullptr }, m_spTrailColorBuffer{nullptr}, m_vCurTrailColor{_float4(BLUE_COLOR4)}, m_bRender{true}
+	m_spVIBufferTrail{ nullptr }, m_bRender{true}
 {
 }
 
 UTrail::UTrail(const UTrail& _rhs) :
-	UPawn(_rhs), m_spVIBufferTrail{ nullptr }, m_spTrailColorBuffer{nullptr},  m_vCurTrailColor{ _float4(BLUE_COLOR4) }, m_bRender{ true }
+	UPawn(_rhs), m_spVIBufferTrail{ nullptr }, m_bRender{ true }
 {
 }
 
@@ -48,7 +44,6 @@ HRESULT UTrail::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	m_spVIBufferTrail = static_pointer_cast<UVIBufferTrail>(spGameInstance->CloneResource(PROTO_RES_VIBUFFERTRAIL));
 	
-	m_spTrailColorBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::TRAILCOLOR, static_cast<_int>(sizeof(_float4)));
 
 	if (m_spTrailTexGroup == nullptr)m_spTrailTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_TRAILTEXTUREGROUP,_vecDatas));
 
@@ -142,10 +137,7 @@ void UTrail::SetRenderingTrail(_bool isOn)
 	}
 }
 
-void UTrail::SetColor(_float4 _col)
-{
-	m_vCurTrailColor = _col;
-}
+
 
 void UTrail::LateTickActive(const _double& _dTimeDelta)
 {
@@ -158,12 +150,12 @@ HRESULT UTrail::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDes
 {
 	__super::RenderActive(_spCommand, _spTableDescriptor);
 
-	GetShader()->BindCBVBuffer(m_spTrailColorBuffer, &m_vCurTrailColor, static_cast<_int>(sizeof(_float4)));
-	GetTransform()->BindTransformData(GetShader());
-	GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTrailTexGroup->GetTexture(L"Trail"));
-	GetShader()->BindSRVBuffer(SRV_REGISTER::T1, m_spTrailTexGroup->GetTexture(L"Dissolve"));
-
-
+		GetTransform()->BindTransformData(GetShader());
+	GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTrailTexGroup->GetTexture(L"Noise_Bee"));
+	GetShader()->BindSRVBuffer(SRV_REGISTER::T1, m_spTrailTexGroup->GetTexture(L"VAP1_Noise_17"));
+	GetShader()->BindSRVBuffer(SRV_REGISTER::T2, m_spTrailTexGroup->GetTexture(L"neon"));
+	
+	//GlowDiffuse 가 형광, FireRed가 용암, neon 네온색
 	if (m_bRender) {
 		size_t iCount = m_listRomPos.size();
 		if (iCount <= 1)
