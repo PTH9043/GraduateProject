@@ -170,6 +170,8 @@
     <ClInclude Include="..\Public\CMainCamera.h" />
     <ClInclude Include="..\Public\CMainScene.h" />
     <ClInclude Include="..\Public\CMap.h" />
+    <ClInclude Include="..\Public\CMinotaur.h" />
+    <ClInclude Include="..\Public\CMinotaurAnimController.h" />
     <ClInclude Include="..\Public\CMob.h" />
     <ClInclude Include="..\Public\CModelManager.h" />
     <ClInclude Include="..\Public\CModelObjects.h" />
@@ -202,6 +204,8 @@
     <ClCompile Include="..\Private\CMainCamera.cpp" />
     <ClCompile Include="..\Private\CMainScene.cpp" />
     <ClCompile Include="..\Private\CMap.cpp" />
+    <ClCompile Include="..\Private\CMinotaur.cpp" />
+    <ClCompile Include="..\Private\CMinotaurAnimController.cpp" />
     <ClCompile Include="..\Private\CMob.cpp" />
     <ClCompile Include="..\Private\CModelManager.cpp" />
     <ClCompile Include="..\Private\CModelObjects.cpp" />

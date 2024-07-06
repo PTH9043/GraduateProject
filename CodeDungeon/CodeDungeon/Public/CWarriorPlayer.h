@@ -33,6 +33,9 @@ public: /* Get Set */
 	const _bool& GetOBJCollisionState() const { return m_bisCollisionWithObj; }
 	void SetOBJCollisionState(_bool _newState) { m_bisCollisionWithObj = _newState; }
 
+	const _bool& GetKickedState() const { return m_bisKicked; }
+	void SetKickedState(_bool _newState) { m_bisKicked = _newState; }
+
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
@@ -55,6 +58,9 @@ private:
 	_bool																isAttack;
 
 	_bool m_bisCollisionWithObj;
+	_bool m_bisKicked; 
+
+	_double                         m_dElapsedTimeforKicked;
 };
 
 END

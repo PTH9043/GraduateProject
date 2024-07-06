@@ -29,7 +29,9 @@ CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _ws
 	m_stParticleType{}, 
 	m_stParticleParam{},
 	m_spParticle{nullptr},
-	m_spTrail{nullptr}
+	m_spTrail{nullptr},
+	m_bisKicked{ false },
+	m_dElapsedTimeforKicked{ 0 }
 {
 }
 
@@ -41,7 +43,9 @@ CWarriorPlayer::CWarriorPlayer(const CWarriorPlayer& _rhs) :
 	m_stParticleType{},
 	m_stParticleParam{},
 	m_spParticle{ nullptr },
-	m_spTrail{ nullptr }
+	m_spTrail{ nullptr },
+	m_bisKicked{ false },
+	m_dElapsedTimeforKicked{ 0 }
 {
 }
 
@@ -192,6 +196,8 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	GetAnimationController()->Tick(_dTimeDelta);
 
 	_int AnimState = GetAnimationController()->GetAnimState();
+	const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
+
 	SHPTR<UCollider> ps = GetAnimModel()->BringAttackCollider(UCollider::TYPE_OBB);
 	if (ps) {
 		SHPTR<DirectX::BoundingOrientedBox> OBB = ps->GetOBB();
@@ -228,6 +234,8 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	}
 	UpdateCollision();
 	JumpState(_dTimeDelta);
+
+
 #ifdef _ENABLE_PROTOBUFF
 	SendMoveData(spGameInstance);
 #endif
@@ -273,20 +281,28 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 	{
 		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
 		_float3 direction = _pEnemy->GetTransform()->GetPos() - GetTransform()->GetPos();
+		const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
+		const _wstring& EnemyCurAnimName = pCharacter->GetAnimModel()->GetCurrentAnimation()->GetAnimName();
+
 		direction.Normalize();
 		for (auto& iter : GetColliderContainer())
 		{
 			if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
 			{
-				SetHitstate(true);
-				GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
+				if (EnemyCurAnimName == L"attack4_kick" || EnemyCurAnimName == L"attack5_kick")
+					m_bisKicked = true;
+				else
+				{
+					SetHitstate(true);
+					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
+				}
 			}
 
 			for (auto& iter2 : pCharacter->GetColliderContainer())
 			{
 				if (iter.second->IsCollision(iter2.second))
 				{
-					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
+					GetTransform()->SetPos(GetTransform()->GetPos() - GetTransform()->GetLook() * 10 * _dTimeDelta);
 				}
 			}
 		}

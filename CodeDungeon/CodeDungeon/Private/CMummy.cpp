@@ -160,8 +160,8 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 		{
 			SetOutline(false);
 			SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-			SHPTR<UCell> spNeighborCell = spNavigation->ChooseRandomNeighborCell(1);
-			if (GetTimeAccumulator() >= 2.0)
+			SHPTR<UCell> spNeighborCell = spNavigation->ChooseRandomNeighborCell(3);
+			if (GetTimeAccumulator() >= 5.0)
 			{
 				m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, spNeighborCell->GetCenterPos(), CurrentMobCell, spNeighborCell));
 				m_isPathFinding = true;
@@ -287,7 +287,7 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 				if (iter.second->IsCollision(iter2.second))
 				{
 					SetCollisionState(true);
-					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 10 * _dTimeDelta);
+					GetTransform()->SetPos(GetTransform()->GetPos() + GetTransform()->GetLook() * 10 * _dTimeDelta);
 				}
 				else
 				{
