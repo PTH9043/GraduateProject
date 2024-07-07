@@ -34,12 +34,13 @@ public:
 	void SendProcessPacket(const UProcessedData& _ProcceedData);
 	void InsertNetworkProcessInQuery(UProcessedData&& _data);
 public: /* get set */
-	void SetSceneID(const _int _iSceneID) { this->m_iSceneID = _iSceneID; }
-	void SetNetworkQueryProcessing(CSHPTRREF<UNetworkQueryProcessing> _spNetworkQueryProcessing) { this->m_spNetworkQueryProcessing = _spNetworkQueryProcessing; }
-
 	const _llong GetNetworkOwnerID() const { return m_llNetworkOwnerID; }
 	const NETWORKACTORCONTAINER& GetNetworkActorContainer() const { return m_NetworkActorContainer; }
 	SHPTR<UNetworkQueryProcessing> GetNetworkQueryProcessing() { return m_spNetworkQueryProcessing.load(); }
+	const _bool IsNetworkResourceRecvSuccess() const { return m_isNetworkResourceReceiveSuccess; }
+
+	void SetSceneID(const _int _iSceneID) { this->m_iSceneID = _iSceneID; }
+	void SetNetworkQueryProcessing(CSHPTRREF<UNetworkQueryProcessing> _spNetworkQueryProcessing) { this->m_spNetworkQueryProcessing = _spNetworkQueryProcessing; }
 protected:
 	void ServerTick();
 	virtual void NativePacket() PURE;
@@ -60,6 +61,7 @@ protected:
 		short size = static_cast<short>(_data.ByteSizeLong());
 		SendTcpPacket(&Buffer[0], _tag, size);
 	}
+	void CountingMakeMonsterNum() { ++m_iRealMakeMonsterNum; }
 protected: /* get set */
 	const SOCKET& GetClientTcpSocket() const { return m_ClientTcpSocket; }
 	const SOCKET& GetClientUdpSocket() const { return m_ClientUdpSocket; }
@@ -68,6 +70,8 @@ protected: /* get set */
 	const _int GetSceneID() const { return m_iSceneID; }
 
 	void SetNetworkOwnerID(const _llong& _llNetworkOwnerID) { this->m_llNetworkOwnerID = _llNetworkOwnerID; }
+	void EnableNetworkResourceRecvSuccess() { m_isNetworkResourceReceiveSuccess = true; }
+	void SetMakeMonsterNum(_int _MonsterNum) { this->m_iMakeMonsterNum = _MonsterNum; }
 private:
 	static void ServerThread(void* _pData);
 private:
@@ -90,6 +94,9 @@ private:
 	NETWORKINITDATACONTAINER											m_NetworkInitDataContainer;
 	std::atomic<SHPTR<UNetworkQueryProcessing>>			m_spNetworkQueryProcessing;
 	_int																								m_iSceneID;
+	_bool																							m_isNetworkResourceReceiveSuccess;
+	_int																								m_iMakeMonsterNum;
+	_int																								m_iRealMakeMonsterNum;
 };	
 
 END

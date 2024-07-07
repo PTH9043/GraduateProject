@@ -16,7 +16,7 @@ namespace Core
 	{
 	}
 
-	_bool AGameObject::Start()
+	_bool AGameObject::Start(const VOIDDATAS& _ReceiveDatas)
 	{
 		m_spTransform = Create<ATransform>();
 		return true;
@@ -40,6 +40,15 @@ namespace Core
 		SHPTR<ANavigation> spNavigation = spCoreInstance->GetNavigation();
 		SHPTR<ACell> spCell = spNavigation->FindCell(_CellIndex);
 		GetTransform()->SetPos(spCell->GetCenterPos());
+	}
+
+	void AGameObject::BringCellIndextoPosition()
+	{
+		ASSERT_CRASH(nullptr != m_spTransform);
+		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+		SHPTR<ANavigation> spNavigation = spCoreInstance->GetNavigation();
+		SHPTR<ACell> spCell = spNavigation->FindCell(GetTransform()->GetPos());
+		SetCellIndex(spCell->GetIndex());
 	}
 
 	_float AGameObject::OtherCharacterToDistance(SHPTR<ATransform> _spOtherTransform)

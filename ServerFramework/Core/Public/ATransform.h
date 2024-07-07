@@ -22,21 +22,21 @@ public:
 	const _float GetZAngle() const;
 	const _float4x4 GetWorldMatrixTP() { TransformUpdate(); return XMMatrixTranspose(XMLoadFloat4x4(&m_mChangeWorldMatrix)); }
 	const _float4x4 GetWorldMatrixInv() { TransformUpdate();  return XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_mChangeWorldMatrix)); }
-	const _float4x4& GetWorldMatrix() const { READ_LOCK(m_WorldMatrixLock); return m_mWorldMatrix; }
+	const _float4x4& GetWorldMatrix() const { AReadSpinLockGuard(m_WorldSpinLock); return m_mWorldMatrix; }
 
 	const _float4x4& GetChangeMatrix() { TransformUpdate();   return m_mChangeWorldMatrix; }
 	// Get Parents Local Matrix
 	const _float4x4 GetParentsMatrix();
 
-	const Vector3& GetRight() const { READ_LOCK(m_WorldMatrixLock); return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_RIGHT][0]); }
-	const Vector3& GetUp() const { READ_LOCK(m_WorldMatrixLock); return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_UP][0]); }
-	const Vector3& GetLook() const { READ_LOCK(m_WorldMatrixLock); return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_LOOK][0]); }
-	const Vector3& GetPos() const { READ_LOCK(m_WorldMatrixLock); return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_POS][0]); }
+	const Vector3& GetRight() const { AReadSpinLockGuard(m_WorldSpinLock); return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_RIGHT][0]); }
+	const Vector3& GetUp() const { AReadSpinLockGuard(m_WorldSpinLock); return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_UP][0]); }
+	const Vector3& GetLook() const { AReadSpinLockGuard(m_WorldSpinLock); return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_LOOK][0]); }
+	const Vector3& GetPos() const { AReadSpinLockGuard(m_WorldSpinLock); return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_POS][0]); }
 
-	const Vector3& GetChangeRight() const { READ_LOCK(m_ChangeMatrixLock); return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_RIGHT][0]); }
-	const Vector3& GetChangeUp() const { READ_LOCK(m_ChangeMatrixLock);  return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_UP][0]); }
-	const Vector3& GetChangeLook() const { READ_LOCK(m_ChangeMatrixLock);  return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_LOOK][0]); }
-	const Vector3& GetChangePos() const { READ_LOCK(m_ChangeMatrixLock); return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_POS][0]); }
+	const Vector3& GetChangeRight() const { AReadSpinLockGuard(m_ChangeSpinLock); return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_RIGHT][0]); }
+	const Vector3& GetChangeUp() const { AReadSpinLockGuard(m_ChangeSpinLock);  return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_UP][0]); }
+	const Vector3& GetChangeLook() const { AReadSpinLockGuard(m_ChangeSpinLock);  return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_LOOK][0]); }
+	const Vector3& GetChangePos() const { AReadSpinLockGuard(m_ChangeSpinLock); return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_POS][0]); }
 
 	const SHPTR<ATransform>& GetParentsTransform() const { return m_spParentsTransform; }
 
@@ -45,10 +45,10 @@ public:
 	void SetScale(const Vector3& _vScale);
 	void SetParent(CSHPTRREF<ATransform> _spTransform);
 
-	void SetRight(const Vector3& _vRight) { WRITE_LOCK(m_WorldMatrixLock); m_mWorldMatrix.Set_Right(_vRight); }
-	void SetUp(const Vector3& _vUp) { WRITE_LOCK(m_WorldMatrixLock); m_mWorldMatrix.Set_Up(_vUp); }
-	void SetLook(const Vector3& _vLook) { WRITE_LOCK(m_WorldMatrixLock); m_mWorldMatrix.Set_Look(_vLook); }
-	void SetPos(const Vector3& _vPos) { WRITE_LOCK(m_WorldMatrixLock); m_mWorldMatrix.Set_Pos(_vPos); }
+	void SetRight(const Vector3& _vRight) { AWriteSpinLockGuard(m_WorldSpinLock); m_mWorldMatrix.Set_Right(_vRight); }
+	void SetUp(const Vector3& _vUp) { AWriteSpinLockGuard(m_WorldSpinLock); m_mWorldMatrix.Set_Up(_vUp); }
+	void SetLook(const Vector3& _vLook) { AWriteSpinLockGuard(m_WorldSpinLock); m_mWorldMatrix.Set_Look(_vLook); }
+	void SetPos(const Vector3& _vPos) { AWriteSpinLockGuard(m_WorldSpinLock); m_mWorldMatrix.Set_Pos(_vPos); }
 
 	void SetNotApplyRotate(const _bool _isActive) {this->m_isNotApplyRotate = _isActive; }
 	void SetNotApplyPos(const _bool _isActive) {  this->m_isNotApplyPos = _isActive; }
@@ -125,8 +125,8 @@ private:
 
 	SHPTR<ATransform>							m_spParentsTransform;
 
-	USE_LOCK												m_WorldMatrixLock;
-	USE_LOCK												m_ChangeMatrixLock;
+	AFastSpinLock										m_WorldSpinLock;
+	AFastSpinLock										m_ChangeSpinLock;
 
 	//2024-05-24 이성현 중력 구현
 	Vector3 m_vVelocity;

@@ -3519,13 +3519,7 @@ inline Matrix DirectX::PTH::Matrix::LookAt(const Vector3& _vPos)
     Set_Look(DirectX::XMVector3TransformNormal(Get_Look(), RotationMatrix));
     return *this;
 }
-inline Matrix DirectX::PTH::Matrix::LookAt(const Vector4& _vLookAt)
-{
-    using namespace DirectX;
 
-    LookAt(_vLookAt);
-    return *this;
-}
 inline void DirectX::PTH::Matrix::MoveForward(const double& _dTimeDelta, const float& _fSpeed)
 {
     Vector3 vPosition = Get_Pos();

@@ -43,7 +43,7 @@ namespace Core {
 			{
 				for (auto& iter : aliveMonster)
 				{
-					iter->AnimTick(dTimeDelta);
+					(dTimeDelta);
 				}
 			}
 		}

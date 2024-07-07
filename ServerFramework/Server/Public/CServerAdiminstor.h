@@ -21,6 +21,8 @@ protected:
 	// UServerService을(를) 통해 상속됨
 	virtual void Connect() override;
 private:
+	void CreateMobObject(void* _pData, SARCOPHAGUSTYPE _SarcophagusType);
+private:
 	void Free() override;
 };
 

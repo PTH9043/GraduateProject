@@ -27,31 +27,35 @@ const ::uint32_t TableStruct_Tag_2eproto::offsets[1] = {};
 static constexpr ::_pbi::MigrationSchema* schemas = nullptr;
 static constexpr ::_pb::Message* const* file_default_instances = nullptr;
 const char descriptor_table_protodef_Tag_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-    "\n\tTag.proto*\254\001\n\006TAG_CS\022\020\n\014TAG_SC_DUMMY\020\000"
-    "\022\020\n\014TAG_CS_LOGIN\020\001\022\017\n\013TAG_CS_MOVE\020\002\022\021\n\rT"
-    "AG_CS_ATTACK\020\003\022\021\n\rTAG_CS_LOGOUT\020\004\022\026\n\022TAG"
-    "_CS_PLAYERSTATE\020\005\022\023\n\017TAG_CS_CHARMOVE\020\006\022\032"
-    "\n\026TAG_CS_PLAYERANIMSTATE\020\007*\345\001\n\006TAG_SC\022\020\n"
-    "\014TAG_CS_DUMMY\020\000\022\031\n\025TAG_SC_CONNECTSUCCESS"
-    "\020\001\022\033\n\027TAG_SC_OTHERCLIENTLOGIN\020\002\022\025\n\021TAG_S"
-    "C_MOVEFAILED\020\003\022\023\n\017TAG_SC_CHARMOVE\020\004\022\026\n\022T"
-    "AG_SC_VIEWINRANGE\020\005\022\026\n\022TAG_SC_PLAYERSTAT"
-    "E\020\006\022\031\n\025TAG_SC_SELFPLAYERMOVE\020\007\022\032\n\026TAG_SC"
-    "_PLAYERANIMSTATE\020\010*Q\n\010TAG_CHAR\022\r\n\tTAG_DU"
-    "MMY\020\000\022\022\n\016TAG_MAINPLAYER\020\001\022\023\n\017TAG_OTHERPL"
-    "AYER\020\002\022\r\n\tTAG_MUMMY\020\003*C\n\016TAG_PLAYERTYPE\022"
-    "\017\n\013TAG_WARRIOR\020\000\022\016\n\nTAG_ARCHOR\020\001\022\020\n\014TAG_"
-    "MAGICAIN\020\002*\224\001\n\rTAG_MUMMYANIM\022\016\n\nMUMMY_ID"
-    "LE\020\000\022\016\n\nMUMMY_MOVE\020\001\022\020\n\014MUMMY_ATTACK\020\002\022\017"
-    "\n\013MUMMY_DEATH\020\003\022\r\n\tMUMMY_HIT\020\004\022\017\n\013MUMMY_"
-    "SLEEP\020\005\022\017\n\013MUMMY_AWAKE\020\006\022\017\n\013MUMMY_TAUNT\020"
-    "\007b\006proto3"
+    "\n\tTag.proto*\321\001\n\006TAG_CS\022\020\n\014TAG_CS_DUMMY\020\000"
+    "\022\020\n\014TAG_CS_LOGIN\020\001\022#\n\037TAG_CS_RESOURCE_RE"
+    "CEIVE_SUCCESS\020\002\022\017\n\013TAG_CS_MOVE\020\003\022\021\n\rTAG_"
+    "CS_ATTACK\020\004\022\021\n\rTAG_CS_LOGOUT\020\005\022\026\n\022TAG_CS"
+    "_PLAYERSTATE\020\006\022\023\n\017TAG_CS_CHARMOVE\020\007\022\032\n\026T"
+    "AG_CS_PLAYERANIMSTATE\020\010*\253\002\n\006TAG_SC\022\020\n\014TA"
+    "G_SC_DUMMY\020\000\022$\n TAG_SC_START_INFORMATION"
+    "_SUCCESS\020\001\022\031\n\025TAG_SC_CONNECTSUCCESS\020\002\022\033\n"
+    "\027TAG_SC_OTHERCLIENTLOGIN\020\003\022\036\n\032TAG_SC_MON"
+    "STERRESOURCEDATA\020\004\022\025\n\021TAG_SC_MOVEFAILED\020"
+    "\005\022\023\n\017TAG_SC_CHARMOVE\020\006\022\026\n\022TAG_SC_VIEWINR"
+    "ANGE\020\007\022\026\n\022TAG_SC_PLAYERSTATE\020\010\022\031\n\025TAG_SC"
+    "_SELFPLAYERMOVE\020\t\022\032\n\026TAG_SC_PLAYERANIMST"
+    "ATE\020\n*\213\001\n\010TAG_CHAR\022\r\n\tTAG_DUMMY\020\000\022\022\n\016TAG"
+    "_MAINPLAYER\020\001\022\023\n\017TAG_OTHERPLAYER\020\002\022\r\n\tTA"
+    "G_MUMMY\020\003\022\032\n\026TAG_SARCOPHAGUS_LAYING\020\004\022\034\n"
+    "\030TAG_SARCOPHAGUS_STANDING\020\005*C\n\016TAG_PLAYE"
+    "RTYPE\022\017\n\013TAG_WARRIOR\020\000\022\016\n\nTAG_ARCHOR\020\001\022\020"
+    "\n\014TAG_MAGICAIN\020\002*\224\001\n\rTAG_MUMMYANIM\022\016\n\nMU"
+    "MMY_IDLE\020\000\022\016\n\nMUMMY_MOVE\020\001\022\020\n\014MUMMY_ATTA"
+    "CK\020\002\022\017\n\013MUMMY_DEATH\020\003\022\r\n\tMUMMY_HIT\020\004\022\017\n\013"
+    "MUMMY_SLEEP\020\005\022\017\n\013MUMMY_AWAKE\020\006\022\017\n\013MUMMY_"
+    "TAUNT\020\007b\006proto3"
 };
 static ::absl::once_flag descriptor_table_Tag_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Tag_2eproto = {
     false,
     false,
-    729,
+    895,
     descriptor_table_protodef_Tag_2eproto,
     "Tag.proto",
     &descriptor_table_Tag_2eproto_once,
@@ -88,27 +92,27 @@ const ::google::protobuf::EnumDescriptor* TAG_CS_descriptor() {
   return file_level_enum_descriptors_Tag_2eproto[0];
 }
 PROTOBUF_CONSTINIT const uint32_t TAG_CS_internal_data_[] = {
-    524288u, 0u, };
+    589824u, 0u, };
 bool TAG_CS_IsValid(int value) {
-  return 0 <= value && value <= 7;
+  return 0 <= value && value <= 8;
 }
 const ::google::protobuf::EnumDescriptor* TAG_SC_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&descriptor_table_Tag_2eproto);
   return file_level_enum_descriptors_Tag_2eproto[1];
 }
 PROTOBUF_CONSTINIT const uint32_t TAG_SC_internal_data_[] = {
-    589824u, 0u, };
+    720896u, 0u, };
 bool TAG_SC_IsValid(int value) {
-  return 0 <= value && value <= 8;
+  return 0 <= value && value <= 10;
 }
 const ::google::protobuf::EnumDescriptor* TAG_CHAR_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&descriptor_table_Tag_2eproto);
   return file_level_enum_descriptors_Tag_2eproto[2];
 }
 PROTOBUF_CONSTINIT const uint32_t TAG_CHAR_internal_data_[] = {
-    262144u, 0u, };
+    393216u, 0u, };
 bool TAG_CHAR_IsValid(int value) {
-  return 0 <= value && value <= 3;
+  return 0 <= value && value <= 5;
 }
 const ::google::protobuf::EnumDescriptor* TAG_PLAYERTYPE_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&descriptor_table_Tag_2eproto);

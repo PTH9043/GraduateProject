@@ -18,10 +18,11 @@ public:
 	AGameObject(OBJCON_CONSTRUCTOR, SESSIONID _ID, SESSIONTYPE _SessionType);
 	DESTRUCTOR(AGameObject)
 public:
-	virtual _bool Start() PURE;
+	virtual _bool Start(const VOIDDATAS& _ReceiveDatas = {}) PURE;
 	void CreateColliderAndTransform(const COLLIDERINFO& _ColliderInfo, const Vector3& _vPos);
 	void BringSpaceIndex(SHPTR<ASpace> _spSpace);
 	void Placement(_int _CellIndex);
+	void BringCellIndextoPosition();
 
 	// 다른 캐릭터와의 거리 산출 
 	_float OtherCharacterToDistance(SHPTR<ATransform> _spOtherTransform);

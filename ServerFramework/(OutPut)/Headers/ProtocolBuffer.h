@@ -35,6 +35,9 @@ namespace PROTOFUNC
 	void MakeScOtherClientLogin(SC_OTHERCLIENTLOGIN* _pOut, LLONG _id, int _cellIndex, int _type);
 	void MakeScMoveFailed(SC_MOVEFAILED* _pOut, LLONG _id, VECTOR3* _pPrevPos);
 	void MakeScViewInRange(SC_VIEWINRANGE* _pOut, LLONG _id, VECTOR3* _pPos, int _cellIndex, int _type);
+	void MakeScStartInformationSucess(SC_START_INFORMATION_SUCCESS* _pOut, LLONG _id, int _monsterNum);
+	void MakeScMonsterResourceData(SC_MONSTERRESOURCEDATA* _pOut, LLONG _id, const VECTOR3& _vPos,
+		const VECTOR3& _vRotate, const VECTOR3& _vScale, int _animIndex, int _type);
 
 	/* =========== CS =============== */
 	// Client To Server 
@@ -42,6 +45,7 @@ namespace PROTOFUNC
 	void MakeCsLogin(CS_LOGIN* _pOut, LLONG _id);
 	void MakeCsAttack(CS_ATTACK* _pOut, LLONG _id, float _damage, VECTOR3* _pMovePos);
 	void MakeCsDisconnect(CS_DISCONNECT* _pOut, LLONG _id);
+	void MakeScResourceReceiveSuccess(CS_RESOURCE_RECEIVE_SUCCES* _pOut, LLONG _id);
 
 	class PROTOCOL_MEMORY_LEAK_REMOVER
 	{

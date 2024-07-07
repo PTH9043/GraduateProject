@@ -963,6 +963,12 @@ const _llong UGameInstance::GetNetworkOwnerID() const
 	return m_spNetworkBaseController->GetNetworkOwnerID();
 }
 
+const _bool UGameInstance::IsNetworkResourceRecvSuccess() const
+{
+	assert(nullptr != m_spNetworkBaseController);
+	return m_spNetworkBaseController->IsNetworkResourceRecvSuccess();
+}
+
 /*
 ==================================================
 NetworkManager

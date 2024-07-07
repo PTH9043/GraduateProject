@@ -5,6 +5,7 @@
 
 BEGIN(Core)
 class AService;
+class ACoreInstance;
 END
 
 BEGIN(Server)
@@ -19,7 +20,7 @@ public:
 	NO_COPY(CPlayerSession)
 	DESTRUCTOR(CPlayerSession)
 public:
-	virtual _bool Start() override;
+	virtual _bool Start(const VOIDDATAS& _ReceiveDatas = {}) override;
 	// 클라이언트에서 전송된 버퍼를 읽는 함수
 	virtual void RecvData() override;
 	// 클라이언트에게 버퍼를 조합하여 전송하는 함수
@@ -28,6 +29,10 @@ public:
 	virtual void ConnectTcpSocket() override;
 protected:
 	virtual _bool ProcessPacket(_char* _pPacket, const Core::PACKETHEAD& _PacketHead) override;
+private: 
+	void LoginState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead);
+	void MoveState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead);
+	void PlayerState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead);
 private:
 	virtual void Free() override;
 private:

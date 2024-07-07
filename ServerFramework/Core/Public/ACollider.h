@@ -80,8 +80,6 @@ private:
 	Vector3																	m_vPos;
 
 	ARRAY<Vector3, 6>												m_vObbNormals;
-
-	USE_MANY_LOCKS(7)											m_ColliderLocks;
 };
 
 END

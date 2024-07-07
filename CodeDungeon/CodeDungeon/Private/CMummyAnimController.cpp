@@ -57,6 +57,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
 
     ClearTrigger();
     SetAnimState(-1);
+#ifndef _ENABLE_PROTOBUFF
 
     SHPTR<CMummy> spMummy = m_wpMummyMob.lock();
     SHPTR<UAnimModel> spAnimModel = spMummy->GetAnimModel();
@@ -128,7 +129,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     if (Hit)
     {
         UpdateState(spAnimModel, ANIM_HIT, L"HIT");
-        spAnimModel->SetAnimation(L"gotHit");
+    //    spAnimModel->SetAnimation(L"gotHit");
         m_bstartlastHitTime = true;
         spMummy->SetHitstate(false);
     }
@@ -164,6 +165,8 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     {
         UpdateState(spAnimModel, ANIM_DEATH, L"DEAD");
     }
+
+#endif
 
     // Tick event
     spAnimModel->TickEvent(spMummy.get(), GetTrigger(), _dTimeDelta);

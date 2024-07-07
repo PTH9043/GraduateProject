@@ -24,7 +24,7 @@ public:
 	ASession(OBJCON_CONSTRUCTOR, TCPSOCKET _TcpSocket, SESSIONID _ID, SESSIONTYPE _SessionType);
 	DESTRUCTOR(ASession)
 public: 
-	virtual _bool Start() PURE;
+	virtual _bool Start(const VOIDDATAS& _ReceiveDatas = {}) PURE;
 	// 클라이언트에서 전송된 버퍼를 읽는 함수
 	virtual void RecvData() PURE;
 	// 클라이언트에게 버퍼를 조합하여 전송하는 함수

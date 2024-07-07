@@ -148,6 +148,7 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 				_ChestVec.push_back(_Chest);
 				spGameInstance->AddCollisionPawnList(_Chest);
 			}
+#ifndef _ENABLE_PROTOBUFF
 			if (vecit._sAnimModelName == "Mummy_DEMO_1_FBX.bin")
 			{
 				CMummy::CHARACTERDESC MummyDesc{ PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_MUMMYANIMCONTROLLER };
@@ -192,6 +193,7 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 				_MummyVec.push_back(_Mummy);
 				_MummyVec.push_back(_Sarcophagus);
 			}
+#endif
 		}
 	}
 

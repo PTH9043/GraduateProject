@@ -47,15 +47,26 @@ HRESULT CMob::NativeConstruct()
 HRESULT CMob::NativeConstructClone(const VOIDDATAS& _Datas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);	
+
+#ifdef _ENABLE_PROTOBUFF
+	{
+		assert(_Datas.size() >= 2);
+		MOBNETWORKDATA MobNetworkData = UMethod::ConvertTemplate_Index<MOBNETWORKDATA>(_Datas, MOBORDER);
+		GetTransform()->SetPos(MobNetworkData.vPos);
+		GetTransform()->RotateFix(MobNetworkData.vRotate);
+		GetTransform()->SetScale(MobNetworkData.vScale);
+		GetAnimModel()->SetAnimation(MobNetworkData.iAnimIndex);
+	}
+#else
 	GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
-
-
+#endif
 	return S_OK;
 }
 
 void CMob::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
+#ifndef _ENABLE_PROTOBUFF
 	if(m_spTargetPlayer)
 	{
 		_float3 CurrentMobPos = GetTransform()->GetPos();
@@ -64,7 +75,7 @@ void CMob::TickActive(const _double& _dTimeDelta)
 		CalculateDistanceBetweenPlayers(CurrentPlayerPos, CurrentMobPos);
 		SearchForPlayers();
 	}
-			
+#endif
 }
 
 void CMob::LateTickActive(const _double& _dTimeDelta)

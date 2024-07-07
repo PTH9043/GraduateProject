@@ -79,7 +79,8 @@ namespace Core {
 
 	void ATransform::TransformUpdate()
 	{
-		READ_LOCK(m_WorldMatrixLock);
+		AReadSpinLockGuard(m_WorldSpinLock);
+		AWriteSpinLockGuard(m_ChangeSpinLock);
 		if (nullptr != m_spParentsTransform) {
 
 			_float4x4 Matrix = m_spParentsTransform->GetParentsMatrix();
@@ -378,7 +379,7 @@ namespace Core {
 		Vector3 vPosition = GetPos();
 		Vector4 vLook = XMVector3Normalize(direction);
 
-		Vector4 vRight = DirectX::XMVector3Normalize(XMVector3Cross(Vector3::Up, vLook));
+		Vector4 vRight = DirectX::XMVector3Normalize(XMVector3Cross(XMLoadFloat3(&Vector3::Up), vLook));
 		Vector4 vUp = DirectX::XMVector3Normalize(XMVector3Cross(vLook, vRight));
 
 		// Calculate the rotation matrix
@@ -392,9 +393,9 @@ namespace Core {
 		m_vQuaternion = DirectX::XMQuaternionRotationMatrix(rotationMatrix);
 		_float4x4 RotationMatrix = DirectX::XMMatrixRotationQuaternion(m_vQuaternion);
 
-		SetRight(DirectX::XMVector3TransformNormal(Vector3::Right * m_vScale.x, RotationMatrix));
-		SetUp(DirectX::XMVector3TransformNormal(Vector3::Up * m_vScale.y, RotationMatrix));
-		SetLook(DirectX::XMVector3TransformNormal(Vector3::Forward * m_vScale.z, RotationMatrix));
+		SetRight(DirectX::XMVector3TransformNormal(XMLoadFloat3(&Vector3::Right) * m_vScale.x, RotationMatrix));
+		SetUp(DirectX::XMVector3TransformNormal(XMLoadFloat3(&Vector3::Up) * m_vScale.y, RotationMatrix));
+		SetLook(DirectX::XMVector3TransformNormal(XMLoadFloat3(&Vector3::Forward) * m_vScale.z, RotationMatrix));
 	}
 
 	void ATransform::SetDirection(const Vector3& targetDirection, float deltaTime, float rotationSpeed)
@@ -411,7 +412,7 @@ namespace Core {
 		Vector3 n = DirectX::XMVectorLerp(vCurrentLook, vTargetLook, lerpFactor);
 		Vector4 vLook = XMVector3Normalize(n);
 
-		Vector4 vRight = DirectX::XMVector3Normalize(XMVector3Cross(Vector3::Up, vLook));
+		Vector4 vRight = DirectX::XMVector3Normalize(XMVector3Cross(XMLoadFloat3(&Vector3::Up), vLook));
 		Vector4 vUp = DirectX::XMVector3Normalize(XMVector3Cross(vLook, vRight));
 
 
@@ -425,9 +426,9 @@ namespace Core {
 		m_vQuaternion = DirectX::XMQuaternionRotationMatrix(rotationMatrix);
 		_float4x4 RotationMatrix = DirectX::XMMatrixRotationQuaternion(m_vQuaternion);
 
-		SetRight(DirectX::XMVector3TransformNormal(Vector3::Right * m_vScale.x, RotationMatrix));
-		SetUp(DirectX::XMVector3TransformNormal(Vector3::Up * m_vScale.y, RotationMatrix));
-		SetLook(DirectX::XMVector3TransformNormal(Vector3::Forward * m_vScale.z, RotationMatrix));
+		SetRight(DirectX::XMVector3TransformNormal(XMLoadFloat3(&Vector3::Right) * m_vScale.x, RotationMatrix));
+		SetUp(DirectX::XMVector3TransformNormal(XMLoadFloat3(&Vector3::Up) * m_vScale.y, RotationMatrix));
+		SetLook(DirectX::XMVector3TransformNormal(XMLoadFloat3(&Vector3::Forward) * m_vScale.z, RotationMatrix));
 	}
 
 	void ATransform::SetDirectionFixedUp(const Vector3& direction)
@@ -450,9 +451,9 @@ namespace Core {
 		m_vQuaternion = DirectX::XMQuaternionRotationMatrix(rotationMatrix);
 		_float4x4 RotationMatrix = DirectX::XMMatrixRotationQuaternion(m_vQuaternion);
 
-		SetRight(DirectX::XMVector3TransformNormal(Vector3::Right * m_vScale.x, RotationMatrix));
-		SetUp(DirectX::XMVector3TransformNormal(Vector3::Up * m_vScale.y, RotationMatrix));
-		SetLook(DirectX::XMVector3TransformNormal(Vector3::Forward * m_vScale.z, RotationMatrix));
+		SetRight(DirectX::XMVector3TransformNormal(XMLoadFloat3(&Vector3::Right) * m_vScale.x, RotationMatrix));
+		SetUp(DirectX::XMVector3TransformNormal(XMLoadFloat3(&Vector3::Up) * m_vScale.y, RotationMatrix));
+		SetLook(DirectX::XMVector3TransformNormal(XMLoadFloat3(&Vector3::Forward) * m_vScale.z, RotationMatrix));
 	}
 
 	void ATransform::SetDirectionFixedUp(const Vector3& targetDirection, float deltaTime, float rotationSpeed)
@@ -483,9 +484,9 @@ namespace Core {
 		m_vQuaternion = DirectX::XMQuaternionRotationMatrix(rotationMatrix);
 		_float4x4 RotationMatrix = DirectX::XMMatrixRotationQuaternion(m_vQuaternion);
 
-		SetRight(DirectX::XMVector3TransformNormal(Vector3::Right * m_vScale.x, RotationMatrix));
-		SetUp(DirectX::XMVector3TransformNormal(Vector3::Up * m_vScale.y, RotationMatrix));
-		SetLook(DirectX::XMVector3TransformNormal(Vector3::Forward * m_vScale.z, RotationMatrix));
+		SetRight(DirectX::XMVector3TransformNormal(XMLoadFloat3(&Vector3::Right) * m_vScale.x, RotationMatrix));
+		SetUp(DirectX::XMVector3TransformNormal(XMLoadFloat3(&Vector3::Up) * m_vScale.y, RotationMatrix));
+		SetLook(DirectX::XMVector3TransformNormal(XMLoadFloat3(&Vector3::Forward) * m_vScale.z, RotationMatrix));
 	}
 
 	void ATransform::LookAt(const Vector3& _vTargetPos)
@@ -495,7 +496,7 @@ namespace Core {
 		Vector3 vPosition = GetPos();
 		Vector4 vLook = XMVector3Normalize(_vTargetPos - vPosition);
 
-		Vector4 vRight = DirectX::XMVector3Normalize(XMVector3Cross(Vector3::Up, vLook));
+		Vector4 vRight = DirectX::XMVector3Normalize(XMVector3Cross(XMLoadFloat3(&Vector3::Up), vLook));
 		Vector4 vUp = DirectX::XMVector3Normalize(XMVector3Cross(vLook, vRight));
 
 		// 회전 행렬 계산
@@ -509,9 +510,9 @@ namespace Core {
 		m_vQuaternion = DirectX::XMQuaternionRotationMatrix(rotationMatrix);
 		_float4x4 RotationMatrix = DirectX::XMMatrixRotationQuaternion(m_vQuaternion);
 
-		SetRight(DirectX::XMVector3TransformNormal(Vector3::Right * m_vScale.x, RotationMatrix));
-		SetUp(DirectX::XMVector3TransformNormal(Vector3::Up * m_vScale.y, RotationMatrix));
-		SetLook(DirectX::XMVector3TransformNormal(Vector3::Forward * m_vScale.z, RotationMatrix));
+		SetRight(DirectX::XMVector3TransformNormal(XMLoadFloat3(&Vector3::Right) * m_vScale.x, RotationMatrix));
+		SetUp(DirectX::XMVector3TransformNormal(XMLoadFloat3(&Vector3::Up) * m_vScale.y, RotationMatrix));
+		SetLook(DirectX::XMVector3TransformNormal(XMLoadFloat3(&Vector3::Forward) * m_vScale.z, RotationMatrix));
 	}
 
 	void ATransform::LookAtWithFixedUp(const Vector3& _vTargetPos)
@@ -604,6 +605,9 @@ namespace Core {
 
 	Vector3 ATransform::GetRotationValue()
 	{
-		return Vector3();
+		thread_local static DirectX::PTH::OUTMATRIX OutMatrix;
+		TransformUpdate();
+		OutMatrix = m_mChangeWorldMatrix.Get_OutMatrix();
+		return OutMatrix.vRot;
 	}
 }

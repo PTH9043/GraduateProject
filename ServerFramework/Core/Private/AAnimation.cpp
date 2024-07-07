@@ -14,6 +14,10 @@ namespace Core
 	{
 	}
 
+	void AAnimation::Free()
+	{
+	}
+
 	_bool AAnimation::NativeConstruct(AAnimator* _pAnimator, std::ifstream& _read)
 	{
 		ReadString(_read, m_strName);
@@ -251,10 +255,6 @@ namespace Core
 			break;
 		}
 		return std::move(spAnimEvent);
-	}
-
-	void AAnimation::Free()
-	{
 	}
 
 }

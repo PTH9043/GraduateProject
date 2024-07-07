@@ -16,7 +16,10 @@ UNetworkBaseController::UNetworkBaseController() :
 	m_TcpTotalBuffer{},
 	m_RemainBufferLength{0},
 	m_spNetworkAddress{nullptr},
-	m_iSceneID{0}
+	m_iSceneID{0},
+	m_isNetworkResourceReceiveSuccess{false}, 
+	m_iMakeMonsterNum{0},
+	m_iRealMakeMonsterNum{0}
 {
 }
 
@@ -141,7 +144,7 @@ void UNetworkBaseController::CombineRecvPacket(UOverExp* _pOverExp, _llong _numB
 		if ((_numBytes - CurrPacket) < 0)
 		{
 			::memcpy(&m_TcpTotalBuffer[0], pBufferMove, _numBytes);
-			m_RemainBufferLength = _numBytes;
+			m_RemainBufferLength += _numBytes;
 			break;
 		}
 		ProcessPacket(&pBufferMove[PACKETHEAD_SIZE], PacketHead);
@@ -150,6 +153,7 @@ void UNetworkBaseController::CombineRecvPacket(UOverExp* _pOverExp, _llong _numB
 		pBufferMove += CurrPacket;
 		moveBuffer += CurrPacket;
 	}
+	m_RemainBufferLength = 0;
 }
 
 void UNetworkBaseController::RecvTcpPacket()

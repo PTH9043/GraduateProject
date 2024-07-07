@@ -55,23 +55,19 @@ HRESULT CSarcophagus::NativeConstructClone(const VOIDDATAS& _Datas)
 void CSarcophagus::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
-	
+
 	_double SarcophagusOpeningSpeed = 20;
 	_double LyingSarcophagusTimeArcOpenStart = 50;
 	_double LyingSarcophagusTimeArcOpenEnd = 50;
 	_double StandingSarcophagusTimeArcOpenEnd = 30;
-	for (auto& Containers : GetColliderContainer())
-	{
-		Containers.second->SetTransform(GetTransform());
-	}
 
 	GetAnimationController()->Tick(_dTimeDelta);
 
-	if(GetFoundTargetState())
+#ifndef _ENABLE_PROTOBUFF
+	if (GetFoundTargetState())
 	{
 		SetElapsedTime(GetElapsedTime() + _dTimeDelta * SarcophagusOpeningSpeed);
 	}
-
 	if (GetSarcophagusType() == SARCOTYPE::TYPE_LYING)
 	{
 		if (GetElapsedTime() < LyingSarcophagusTimeArcOpenEnd)
@@ -80,13 +76,17 @@ void CSarcophagus::TickActive(const _double& _dTimeDelta)
 	else
 		if (GetElapsedTime() < StandingSarcophagusTimeArcOpenEnd)
 			GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
+#endif
 
+	for (auto& Containers : GetColliderContainer())
+	{
+		Containers.second->SetTransform(GetTransform());
+	}
 }
 
 void CSarcophagus::LateTickActive(const _double& _dTimeDelta)
 {
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
-
 }
 
 HRESULT CSarcophagus::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
@@ -98,6 +98,7 @@ HRESULT CSarcophagus::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRR
 {
 	return __super::RenderShadowActive(_spCommand, _spTableDescriptor);
 }
+
 HRESULT CSarcophagus::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)
 {
 	return __super::RenderOutlineActive(_spCommand, _spTableDescriptor,_pass);

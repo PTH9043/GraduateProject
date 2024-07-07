@@ -15,7 +15,7 @@ namespace Core
 		MemoryInitialization(m_TotalBuffer.data(), MAX_PROCESSBUF_LENGTH);
 	}
 
-	_bool ASession::Start()
+	_bool ASession::Start(const VOIDDATAS& _ReceiveDatas)
 	{
 		__super::Start();
 		RecvData();

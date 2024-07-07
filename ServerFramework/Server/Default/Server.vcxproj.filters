@@ -31,6 +31,24 @@
     <Filter Include="02.Network\Timer\MobTimer">
       <UniqueIdentifier>{fb6a57da-c2ae-4834-ad4e-4bfef13a6f49}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.Session\Monster\Mummy">
+      <UniqueIdentifier>{1b75ba95-dd13-41bf-aae7-68463e2918b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Session\Monster\Sarcophagus">
+      <UniqueIdentifier>{c83cc4ed-dea4-4893-87bc-b3d943f032f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="90.Loader">
+      <UniqueIdentifier>{b3e501cf-4932-4d39-9682-305c4e252747}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.AnimController">
+      <UniqueIdentifier>{7fda923f-8616-4b92-be59-619b8052fc8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.AnimController\Mummy">
+      <UniqueIdentifier>{15646b13-3bc0-4d7b-bb45-bc82ec3e4d13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.AnimController\Sacrophagus">
+      <UniqueIdentifier>{d2bfc898-87ac-4435-8a85-192f4eec63ad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -45,11 +63,23 @@
     <ClCompile Include="..\Private\CPlayerSession.cpp">
       <Filter>03.Session\Player</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CMummy.cpp">
-      <Filter>03.Session\Monster</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\CMonsterJobTimer.cpp">
       <Filter>02.Network\Timer\MobTimer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CMummy.cpp">
+      <Filter>03.Session\Monster\Mummy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CSarcophagus.cpp">
+      <Filter>03.Session\Monster\Sarcophagus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CMobLayoutLoader.cpp">
+      <Filter>90.Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CSacrophagusAnimController.cpp">
+      <Filter>05.AnimController\Sacrophagus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CMummyAnimController.cpp">
+      <Filter>05.AnimController\Mummy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -65,11 +95,23 @@
     <ClInclude Include="..\Public\CPlayerSession.h">
       <Filter>03.Session\Player</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CMummy.h">
-      <Filter>03.Session\Monster</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\CMonsterJobTimer.h">
       <Filter>02.Network\Timer\MobTimer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CMummy.h">
+      <Filter>03.Session\Monster\Mummy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CSarcophagus.h">
+      <Filter>03.Session\Monster\Sarcophagus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CMobLayoutLoader.h">
+      <Filter>90.Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CSacrophagusAnimController.h">
+      <Filter>05.AnimController\Sacrophagus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CMummyAnimController.h">
+      <Filter>05.AnimController\Mummy</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

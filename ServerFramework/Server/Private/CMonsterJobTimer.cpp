@@ -1,5 +1,8 @@
 #include "ServerDefines.h"
 #include "CMonsterJobTimer.h"
+#include "AMonster.h"
+#include "CPlayerSession.h"
+#include "ACoreInstance.h"
 
 namespace Server
 {
@@ -10,15 +13,12 @@ namespace Server
 
 	void CMonsterJobTimer::TickTimer(const TIMEREVENT& _TimerEvent)
 	{
-		switch (_TimerEvent.eEventType)
-		{
-		case EV_MOB_FIND:
+		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
 
-			break;
-		case EV_MOB_ATTACK:
-
-			break;
-		}
+		SHPTR<AMonster> spMonster = spCoreInstance->FindMobObject(_TimerEvent.llObjID);
+		SHPTR<ASession> spPlayer = spCoreInstance->FindSession(_TimerEvent.llTargetID);
+		
+		spMonster->State(spPlayer, _TimerEvent.eEventType);
 	}
 
 	void CMonsterJobTimer::Free()

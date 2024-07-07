@@ -22,7 +22,10 @@ HRESULT CLogoScene::LoadSceneData()
 void CLogoScene::Tick(const _double& _dTimeDelta)
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	spGameInstance->RegisterScene(CreateConstructorNative<CMainScene>(GetDevice()));
+//	if (true == spGameInstance->IsNetworkResourceRecvSuccess())
+	{
+		spGameInstance->RegisterScene(CreateConstructorNative<CMainScene>(GetDevice()));
+	}
 }
 
 void CLogoScene::LateTick(const _double& _dTimeDelta)

@@ -140,7 +140,7 @@ namespace Core
 
 	enum
 	{
-		ASTAR_NAV_INDEX = 16,
+		ASTAR_NAV_INDEX = 20,
 		EXTRA_NAV_COUNT = 1,
 	};
 }

@@ -13,6 +13,11 @@ namespace Core
 	{
 	
 	}
+	_bool AMonster::Start(const VOIDDATAS& _ReceiveDatas)
+	{
+		return __super::Start(_ReceiveDatas);
+	}
+
 	void AMonster::FindPlayer(SHPTR<ASession> _spSession, const _float _fFindDistanceValue)
 	{
 		SHPTR<ATransform> spMobTr = GetTransform();

@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="..\Public\AAnimation.h" />
     <ClInclude Include="..\Public\AAnimator.h" />
+    <ClInclude Include="..\Public\AAnimController.h" />
     <ClInclude Include="..\Public\AAnimEvent.h" />
     <ClInclude Include="..\Public\AMainLoop.h" />
     <ClInclude Include="..\Public\ABoneNode.h" />
@@ -83,6 +84,7 @@
   <ItemGroup>
     <ClCompile Include="..\Private\AAnimation.cpp" />
     <ClCompile Include="..\Private\AAnimator.cpp" />
+    <ClCompile Include="..\Private\AAnimController.cpp" />
     <ClCompile Include="..\Private\AAnimEvent.cpp" />
     <ClCompile Include="..\Private\AMainLoop.cpp" />
     <ClCompile Include="..\Private\ABoneNode.cpp" />

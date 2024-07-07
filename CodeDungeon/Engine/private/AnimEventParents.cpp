@@ -100,11 +100,10 @@ void UAnimSectionEvent::LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstr
 	_load.read((_char*)&m_AnimSectionDesc.dStopTime, sizeof(_double));
 }
 
-void UAnimSectionEvent::ResetEventData(UAnimModel* _pAnimModel)
+void UAnimSectionEvent::ResetEventData()
 {
 	m_AnimSectionDesc.isActiveEvent = false;
 	m_AnimSectionDesc.isAnimChangeActive = false;
-	_pAnimModel->GetCurrentAnimation()->ResetAnimChangeEventNode();
 }
 
 void UAnimSectionEvent::Free()
