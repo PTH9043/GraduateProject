@@ -21,6 +21,7 @@
 #include "UNavigation.h"
 #include "CWarriorPlayer.h"
 #include "CSarcophagus.h"
+#include "CMinotaur.h"
 
 CMap::CMap(CSHPTRREF<UDevice> _spDevice) : UComponent(_spDevice),
 m_spRoomContainer{nullptr},
@@ -135,6 +136,7 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 
 	MOBCONTAINER _ChestVec;
 	MOBCONTAINER _MummyVec;
+	MOBCONTAINER _MinotaurVec;
 
 	for (auto& it : (*m_spMapLayout->GetMapMobsContainer().get()))
 	{
@@ -149,7 +151,7 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 				spGameInstance->AddCollisionPawnList(_Chest);
 			}
 #ifndef _ENABLE_PROTOBUFF
-			if (vecit._sAnimModelName == "Mummy_DEMO_1_FBX.bin")
+			else if (vecit._sAnimModelName == "Mummy_DEMO_1_FBX.bin")
 			{
 				CMummy::CHARACTERDESC MummyDesc{ PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_MUMMYANIMCONTROLLER };
 
@@ -193,11 +195,25 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 				_MummyVec.push_back(_Mummy);
 				_MummyVec.push_back(_Sarcophagus);
 			}
+			else if (vecit._sAnimModelName == "minotaur_FBX.bin")
+			{
+				CMinotaur::CHARACTERDESC MinotaurDesc{ PROTO_RES_MINOTAURANIMMODEL, PROTO_COMP_MINOTAURANIMCONTROLLER };
+
+				SHPTR<CMinotaur> _Minotaur = std::static_pointer_cast<CMinotaur>(spGameInstance->CloneActorAdd(
+					PROTO_ACTOR_MINOTAUR, { &MinotaurDesc }));
+				_Minotaur->GetTransform()->SetPos(vecit._mWorldMatrix.Get_Pos());
+				_Minotaur->GetTransform()->SetDirection(-vecit._mWorldMatrix.Get_Look());
+				_Minotaur->GetAnimModel()->SetAnimation(UMethod::ConvertSToW(vecit._sAnimName));
+				_Minotaur->SetTargetPlayer(_spPlayer);
+				_Minotaur->GetCurrentNavi()->FindCell(_Minotaur->GetTransform()->GetPos());
+				spGameInstance->AddCollisionPawnList(_Minotaur);
+			}
 #endif
 		}
 	}
 
 	m_spMobsContainer->emplace("Chest_FBX.bin", _ChestVec);
 	m_spMobsContainer->emplace("Mummy_DEMO_1_FBX.bin", _MummyVec);
+	m_spMobsContainer->emplace("minotaur_FBX.bin", _MinotaurVec);
 }
 

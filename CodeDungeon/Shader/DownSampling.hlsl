@@ -52,14 +52,13 @@ PS_OUT PS_Main(PS_In In)
   
     Out.vColor = HighColor;
 */
-    
-    
-    float2 baseUV = In.vTexUV;// * 4.0f;
+    /*
+     float2 baseUV = In.vTexUV;// * 4.0f;
 
     float4 colorSum = float4(0, 0, 0, 0);
-    for (int x = 0; x < 4; ++x)
+    for (int x = -2; x < 2; ++x)
     {
-        for (int y = 0; y < 4; ++y)
+        for (int y = -2; y < 2; ++y)
         {
             float2 offsetUV = baseUV + float2(x, y) / float2(1280.0f, 1080.0f);
        
@@ -77,7 +76,42 @@ PS_OUT PS_Main(PS_In In)
  
     return Out;
     
-  
+*/
+    
+    
+
+    float2 texelSize = float2(1.0f / 1280.0f, 1.0f / 1080.0f);
+    float2 baseUV = In.vTexUV;
+
+    float4 colorSum = float4(0, 0, 0, 0);
+    int sampleCount = 0;
+
+    for (int x = -2; x < 2; ++x)
+    {
+        for (int y = -2; y < 2; ++y)
+        {
+            float2 offset = texelSize * float2(x, y);
+            float2 sampleCoord = baseUV + offset;
+
+            // Clamp sample coordinates to valid range
+            if (sampleCoord.x > 0.0f && sampleCoord.x < 1.0f && sampleCoord.y > 0.0f && sampleCoord.y < 1.0f)
+            {
+                float4 color = g_Texture0.Sample(g_Sampler_Normal, sampleCoord);
+                colorSum += color;
+                sampleCount++;
+            }
+        }
+    }
+
+    // Average the samples, handling the case where some samples are out of bounds
+    if (sampleCount > 0)
+    {
+        colorSum /= sampleCount;
+    }
+
+    Out.vColor = colorSum; // 4x4 블록의 평균값
+
+    return Out;
 
 }
 

@@ -94,6 +94,6 @@ HRESULT CTorch::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	m_spParticle->SetActive(false);
 
 	m_spFire->SetActive(false);
-	SetOutline(true);
+	/*SetOutline(true);*/
 	return S_OK;
 }

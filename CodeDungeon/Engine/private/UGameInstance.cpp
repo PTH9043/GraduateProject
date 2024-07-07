@@ -1780,10 +1780,10 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::DOWNSAMPLETWO, RTOBJID::DOWNSAMPLETWO,
 		_float2(300.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::UPSAMPLE, RTOBJID::UPSAMPLE,
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::DOWNSAMPLE, RTOBJID::DOWNSAMPLE,
 		_float2(605.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::HDR, RTOBJID::HDR,
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::UPSAMPLE, RTOBJID::UPSAMPLE,
 		_float2(910.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 #endif
 	return S_OK;

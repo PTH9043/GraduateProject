@@ -34,12 +34,6 @@
     <Filter Include="05.Objects\ModelObjects">
       <UniqueIdentifier>{5e5fb12b-5aaf-42dd-9274-d11e93e770da}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.Objects\ModelObjects\Map">
-      <UniqueIdentifier>{ca64ec19-5e4a-46e5-90fe-e6c88e0d0d7c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05.Objects\ModelObjects\Map\Rooms">
-      <UniqueIdentifier>{783c0105-2ccc-4d69-94cd-c94ed23468a9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="05.Objects\Character">
       <UniqueIdentifier>{f17d528d-508f-457e-9367-cba79070f001}</UniqueIdentifier>
     </Filter>
@@ -57,9 +51,6 @@
     </Filter>
     <Filter Include="06.Comp\Controller">
       <UniqueIdentifier>{4ea4b5fc-9281-41f6-8aa8-c95243cc1db3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05.Objects\ModelObjects\Map\StaticObjects">
-      <UniqueIdentifier>{0baf0576-c976-43a1-b37c-609f41e33825}</UniqueIdentifier>
     </Filter>
     <Filter Include="05.Objects\Character\Mob">
       <UniqueIdentifier>{30c56fa7-f7be-40cc-a4e6-d9bb2330a1e5}</UniqueIdentifier>
@@ -91,17 +82,8 @@
     <Filter Include="06.Comp\Controller\WarriorPlayer\Network">
       <UniqueIdentifier>{735716c5-05aa-4508-87a1-47c9ac944ad1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.Objects\Character\Mob\ItemChest">
-      <UniqueIdentifier>{eebb04af-b87a-4a58-9d81-ff49a6d27511}</UniqueIdentifier>
-    </Filter>
     <Filter Include="06.Comp\Controller\Chest">
       <UniqueIdentifier>{1e1c8903-9b1f-41c8-9252-457c36619fa3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05.Objects\ModelObjects\Map\StaticObjects\Ironbars">
-      <UniqueIdentifier>{f8f0498b-d9ea-4010-a95b-2724ebabb8f0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05.Objects\ModelObjects\Map\StaticObjects\Torch">
-      <UniqueIdentifier>{c62b57e0-9fcf-4186-924d-c05e87282c1a}</UniqueIdentifier>
     </Filter>
     <Filter Include="12.NavigationManager">
       <UniqueIdentifier>{7f384494-a96d-43c6-8e68-97b1019739b5}</UniqueIdentifier>
@@ -111,6 +93,30 @@
     </Filter>
     <Filter Include="20.Server\Query">
       <UniqueIdentifier>{2d63f30f-8770-4a82-b8c1-bb5e23d23348}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Objects\ModelObjects\ItemChest">
+      <UniqueIdentifier>{eebb04af-b87a-4a58-9d81-ff49a6d27511}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Objects\Character\Mob\Minotaur">
+      <UniqueIdentifier>{6c5c1ca6-90fb-4a2f-9031-c84814cdb111}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\Minotaur">
+      <UniqueIdentifier>{894a6e00-a512-431a-b630-87aa3b846df4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Map">
+      <UniqueIdentifier>{ca64ec19-5e4a-46e5-90fe-e6c88e0d0d7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Objects\ModelObjects\Rooms">
+      <UniqueIdentifier>{783c0105-2ccc-4d69-94cd-c94ed23468a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Objects\ModelObjects\StaticObjects">
+      <UniqueIdentifier>{0baf0576-c976-43a1-b37c-609f41e33825}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Objects\ModelObjects\StaticObjects\Ironbars">
+      <UniqueIdentifier>{f8f0498b-d9ea-4010-a95b-2724ebabb8f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Objects\ModelObjects\StaticObjects\Torch">
+      <UniqueIdentifier>{c62b57e0-9fcf-4186-924d-c05e87282c1a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -145,7 +151,7 @@
       <Filter>04.Camera\MainCam</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CRooms.h">
-      <Filter>05.Objects\ModelObjects\Map\Rooms</Filter>
+      <Filter>05.Objects\ModelObjects\Rooms</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CDataManager.h">
       <Filter>11.DataManager</Filter>
@@ -154,7 +160,7 @@
       <Filter>11.DataManager\ModelManager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CMap.h">
-      <Filter>05.Objects\ModelObjects\Map</Filter>
+      <Filter>06.Comp\Map</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CModelObjects.h">
       <Filter>05.Objects\ModelObjects</Filter>
@@ -184,7 +190,7 @@
       <Filter>01.Scene\Logo</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CIronBars.h">
-      <Filter>05.Objects\ModelObjects\Map\StaticObjects\Ironbars</Filter>
+      <Filter>05.Objects\ModelObjects\StaticObjects\Ironbars</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CUserWarriorAnimController.h">
       <Filter>06.Comp\Controller\WarriorPlayer\User</Filter>
@@ -193,13 +199,13 @@
       <Filter>06.Comp\Controller\WarriorPlayer\Network</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CItemChest.h">
-      <Filter>05.Objects\Character\Mob\ItemChest</Filter>
+      <Filter>05.Objects\ModelObjects\ItemChest</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CItemChestAnimController.h">
       <Filter>06.Comp\Controller\Chest</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CTorch.h">
-      <Filter>05.Objects\ModelObjects\Map\StaticObjects\Torch</Filter>
+      <Filter>05.Objects\ModelObjects\StaticObjects\Torch</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CNavigationManager.h">
       <Filter>12.NavigationManager</Filter>
@@ -209,6 +215,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\CNetworkQueryProcessor.h">
       <Filter>20.Server\Query</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CMinotaur.h">
+      <Filter>05.Objects\Character\Mob\Minotaur</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CMinotaurAnimController.h">
+      <Filter>06.Comp\Controller\Minotaur</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -236,7 +248,7 @@
       <Filter>04.Camera\MainCam</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CRooms.cpp">
-      <Filter>05.Objects\ModelObjects\Map\Rooms</Filter>
+      <Filter>05.Objects\ModelObjects\Rooms</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CDataManager.cpp">
       <Filter>11.DataManager</Filter>
@@ -245,7 +257,7 @@
       <Filter>11.DataManager\ModelManager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CMap.cpp">
-      <Filter>05.Objects\ModelObjects\Map</Filter>
+      <Filter>06.Comp\Map</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CModelObjects.cpp">
       <Filter>05.Objects\ModelObjects</Filter>
@@ -275,7 +287,7 @@
       <Filter>01.Scene\Logo</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CIronBars.cpp">
-      <Filter>05.Objects\ModelObjects\Map\StaticObjects\Ironbars</Filter>
+      <Filter>05.Objects\ModelObjects\StaticObjects\Ironbars</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CUserWarriorAnimController.cpp">
       <Filter>06.Comp\Controller\WarriorPlayer\User</Filter>
@@ -284,13 +296,13 @@
       <Filter>06.Comp\Controller\WarriorPlayer\Network</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CItemChest.cpp">
-      <Filter>05.Objects\Character\Mob\ItemChest</Filter>
+      <Filter>05.Objects\ModelObjects\ItemChest</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CItemChestAnimController.cpp">
       <Filter>06.Comp\Controller\Chest</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CTorch.cpp">
-      <Filter>05.Objects\ModelObjects\Map\StaticObjects\Torch</Filter>
+      <Filter>05.Objects\ModelObjects\StaticObjects\Torch</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CNetworkClientController.cpp">
       <Filter>20.Server\Controller</Filter>
@@ -300,6 +312,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\CNetworkQueryProcessor.cpp">
       <Filter>20.Server\Query</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CMinotaur.cpp">
+      <Filter>05.Objects\Character\Mob\Minotaur</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CMinotaurAnimController.cpp">
+      <Filter>06.Comp\Controller\Minotaur</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -51,18 +51,54 @@ PS_OUT PS_Main(PS_In In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
-    float4 cDistortion = g_Texture1.Sample(g_Sampler_Normal, In.vTexUV);
+     
+    //float4 baseColor = g_Texture3.Sample(g_Sampler_Normal, In.vTexUV);
+    //float4 noise = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV * 5.0f); // 노이즈 텍스처의 스케일 조절
+    //baseColor.rgb += noise.rgb * 0.2f; // 노이즈 강도 조절
+
+    //float2 distortion = g_Texture1.Sample(g_Sampler_Normal, In.vTexUV).rg * 0.1f; // 왜곡 강도 조절
+    //float4 distortedColor = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV + distortion);
+
+   
+    //float4 finalColor = lerp(baseColor, distortedColor, 0.5f);
+    //Out.vColor = finalColor;
+    //Out.vGlow = float4(finalColor.xyz, 0.5);
+   
+    float2 uv = In.vTexUV.xy;
+
+// 기본 트레일 텍스처 샘플링
+    float4 BaseColor = g_Texture2.Sample(g_Sampler_Normal, uv);
+
+// 노이즈 텍스처 샘플링
+    float4 NoiseColor = g_Texture0.Sample(g_Sampler_Normal, uv * 5.0f - float2(0.0f, 1.0f)); // 여기서 오프셋 타임을 대신하여 y축 이동을 적용
+
+// Emissive 강도 계산
+    float EmissiveFactor = 2.0f; // 예를 들어 고정값 사용
+    float ColorUV = min(1.0f, NoiseColor.r * 2.0f);
+
+// Emissive 색상 계산
+    float4 EmissiveColor;
+    EmissiveColor.r = lerp(0.0f, 1.0f, ColorUV);
+    EmissiveColor.g = lerp(0.0f, 1.0f, ColorUV * 0.5f);
+    EmissiveColor.b = lerp(0.0f, 1.0f, ColorUV * 0.25f);
+    EmissiveColor.a = 1.0f;
+
+    EmissiveColor.rgb *= EmissiveFactor * NoiseColor.r;
+
+// 왜곡 텍스처 샘플링 및 UV 왜곡
+    float2 distortion = g_Texture1.Sample(g_Sampler_Normal, uv).rg * 0.1f;
+    float4 DistortedColor = g_Texture2.Sample(g_Sampler_Normal, uv + distortion);
+
+// 최종 색상 계산
+    float4 finalColor = lerp(BaseColor, DistortedColor, 0.5f);
+    finalColor.rgb += EmissiveColor.rgb;
+
+    Out.vColor = finalColor;
+    Out.vGlow = float4(finalColor.rgb, 0.5f);
+
+    return Out;
     
-    float4 cColor = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV + (cDistortion.r * 2.f));
-    
-    cColor.a = In.vTexUV.y*0.5;
-	
-   //float4 cMulColor = { 1.f / 255.f, 165.f / 255.f, 172.f / 255.f, 0.f };
-   // cColor += cMulColor;
-    cColor += gf4Color;
-    
-    Out.vColor =cColor;
-    Out.vGlow = float4(cColor.r, cColor.g, cColor.b, 0.5f);
+   
     
     return Out;
 }
