@@ -56,6 +56,7 @@ PS_OUT PS_Main(PS_In In)
 
     vector vDiffuseDesc = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV);
     vector vGlowDesc = g_Texture4.Sample(g_Sampler_Normal, In.vTexUV);
+    vector vGetLightDesc = g_Texture5.Sample(g_Sampler_Normal, In.vTexUV);
     vector vShadeDesc = g_Texture1.Sample(g_Sampler_Normal, In.vTexUV);
     vector vSpecularDesc = g_Texture2.Sample(g_Sampler_Normal, In.vTexUV);
     vector vAmbientDesc = g_Texture3.Sample(g_Sampler_Normal, In.vTexUV);
@@ -65,15 +66,15 @@ PS_OUT PS_Main(PS_In In)
    
     //vector vColor = vDiffuseDesc * LightCol;
     
-        vector vColor;
-    if (vGlowDesc.a == 1)//fire
+    vector vColor;
+    if (vGlowDesc.a == 1 )//fire
     {
        // vColor = float4(ToneMapping(vDiffuseDesc.xyz), vDiffuseDesc.a);
        // vColor.xyz = vDiffuseDesc.xyz * ToneMapping(vGlowDesc.xyz);
         vColor.xyz = vGlowDesc.xyz;
         //ToneMapping(vGlowDesc.xyz);
     }
-    else if (vGlowDesc.a == 0.5f)//trail
+    else if (vGlowDesc.a == 0.5f )//trail
     {
         vColor = vDiffuseDesc;
 
@@ -81,7 +82,10 @@ PS_OUT PS_Main(PS_In In)
     else{
         vColor = vDiffuseDesc * LightCol;
     }
-       
+    if (vGetLightDesc.a == 0.5f)
+    {
+        vColor = vDiffuseDesc;
+    }
     
     //vector vColor = lerp(vDiffuseDesc, (vShadeDesc + vAmbientDesc + vSpecularDesc), 0.5f);
     

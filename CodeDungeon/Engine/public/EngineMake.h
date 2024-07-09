@@ -34,6 +34,7 @@
 #define PROTO_RES_HDRSHADER L"Proto_Res_HdrShader"
 #define PROTO_RES_TRAILSHADER L"Proto_Res_TrailShader"
 #define PROTO_RES_GUARDSHADER L"Proto_Res_GuardShader"
+#define PROTO_RES_BLOODSHADER L"Proto_Res_BloodShader"
 #define PROTO_RES_INSTANCERECTSHADER L"Proto_Res_InstanceRectShader"
 #define PROTO_RES_DEFAULTOBJECTSHADER L"Proto_Res_DefaultObjectShader"
 #define PROTO_RES_ANIMMODELSHADER L"Proto_Res_AnimModelShader"
@@ -108,6 +109,7 @@
 #define PROTO_ACTOR_PARTICLE L"Proto_Actor_Particle"
 #define PROTO_ACTOR_TRAIL L"Proto_Actor_Trail"
 #define PROTO_ACTOR_GUARD L"Proto_Actor_Guard"
+#define PROTO_ACTOR_BLOOD L"Proto_Actor_Blood"
 #define PROTO_ACTOR_FIRE L"Proto_Actor_Fire"
 #define PROTO_ACTOR_FOG L"Proto_Actor_Fog"
 #define PROTO_ACTOR_MIRROR L"Proto_Actor_Mirror"
@@ -124,7 +126,7 @@
 #define PROTO_RES_FOGTEXTUREGROUP L"Proto_Res_FogTextureGroup"
 #define PROTO_RES_TRAILTEXTUREGROUP L"Proto_Res_TrailTextureGroup"
 #define PROTO_RES_GUARDTEXTUREGROUP L"Proto_Res_GuardTextureGroup"
-
+#define PROTO_RES_BLOODTEXTUREGROUP L"Proto_Res_BloodTextureGroup"
 // material 
 
 #define PROTO_RES_MATERIAL L"Proto_Res_Material"
@@ -140,6 +142,7 @@
 #define LAYER_PARTICLE L"LayerParticle"
 #define LAYER_TRAIL L"LayerTrail"
 #define LAYER_GUARD L"LayerGuard"
+#define LAYER_BLOOD L"LayerBlood"
 #define LAYER_MIRROR L"LayerMirror"
 #define LAYER_SCREENRENDEROBJ L"LayerScreenRenderObj"
 #define LAYER_DEBUG L"Layer_Debug"

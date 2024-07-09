@@ -64,6 +64,7 @@
 #include "UCollider.h"
 #include "UTrail.h"
 #include "UGuard.h"
+#include "UBlood.h"
 
 //#include "UMirror.h"
 //#include "UScreenRenderObj.h"
@@ -1172,6 +1173,13 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 					}, RASTERIZER_TYPE::CULL_NONE,
 					DEPTH_STENCIL_TYPE::LESS_EQUAL_NO_WRITE, BLEND_TYPE::ALPHA_BLEND));
 
+			CreateGraphicsShader(PROTO_RES_BLOODSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"Blood", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM,DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
+					DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R16G16B16A16_FLOAT
+					},RASTERIZER_TYPE::CULL_NONE,
+					DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE, BLEND_TYPE::ALPHA_BLEND));
+
 			CreateGraphicsShader(PROTO_RES_HORIZONTALBLURSHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"HorizontalBlur", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{
@@ -1553,6 +1561,9 @@ HRESULT UGameInstance::ReadyActor(const OUTPUTDATA& _stData)
 	
 	AddPrototype(PROTO_ACTOR_GUARD, CreateConstructorToNative<UGuard>(
 		_stData.wpDevice.lock(), LAYER_GUARD, CLONETYPE::CLONE_ONCE));
+	
+	AddPrototype(PROTO_ACTOR_BLOOD, CreateConstructorToNative<UBlood>(
+		_stData.wpDevice.lock(), LAYER_BLOOD, CLONETYPE::CLONE_ONCE));
 
 	AddPrototype(PROTO_ACTOR_FIRE, CreateConstructorToNative<UFire>(
 		_stData.wpDevice.lock(), LAYER_DEFAULT, CLONETYPE::CLONE_ONCE));
@@ -1636,7 +1647,7 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 				RTDESC{ RTOBJID::NONALPHA_DIFFUSE_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM,
 					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 1.f, 0.f } },
 					RTDESC{RTOBJID::NONALPHA_SPECULAR_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM,
-					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 1.f, 0.f } },
+					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f } },
 					RTDESC{ RTOBJID::NONALPHA_NORMAL_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
 						GraphicDesc->iWinCX, GraphicDesc->iWinCY, {1.f, 1.f, 1.f, 1.f}},
 					RTDESC{ RTOBJID::NONALPHA_DEPTH_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
@@ -1657,7 +1668,7 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f } },
 					RTDESC{ RTOBJID::ALPHA_GLOW_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM,
 						GraphicDesc->iWinCX, GraphicDesc->iWinCY, {0.f, 0.f, 0.f, 0.f} },
-					RTDESC{ RTOBJID::ALPHA_GLOW_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R16G16B16A16_FLOAT,
+					RTDESC{ RTOBJID::ALPHA_BLUR_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R16G16B16A16_FLOAT,
 							GraphicDesc->iWinCX, GraphicDesc->iWinCY, {0.f, 0.f, 0.f, 0.f} }
 			};
 			// Add 
@@ -1787,7 +1798,7 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::DOWNSAMPLETWO, RTOBJID::DOWNSAMPLETWO,
 		_float2(300.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::DOWNSAMPLE, RTOBJID::DOWNSAMPLE,
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::SHADOW_MAP, RTOBJID::SHADOW_DEPTH_FOURBYFOUR,
 		_float2(605.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::UPSAMPLE, RTOBJID::UPSAMPLE,

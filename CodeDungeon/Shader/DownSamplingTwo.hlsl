@@ -46,20 +46,25 @@ PS_OUT PS_Main(PS_In In)
     float4 colorSum = float4(0, 0, 0, 0);
     int sampleCount = 0;
 
+    if (baseUV.x <= 0.01f || baseUV.x >= 0.99)
+    {
+        discard;
+    }
+    
     for (int x = -2; x < 2; ++x)
     {
         for (int y = -2; y < 2; ++y)
         {
             float2 offset = texelSize * float2(x, y);
-            float2 sampleCoord = baseUV + offset;
+            float2 sampleCoord;
+            
+            sampleCoord = baseUV + offset;
 
-            // Clamp sample coordinates to valid range
-            if (sampleCoord.x > 0.0f + 4.0f / 320.f && sampleCoord.x < 1.f - 4.0f / 320.f && sampleCoord.y > 0.0f + 4.0f / 270.f && sampleCoord.y < 1.f - 4.0f / 270.f)
-            {
+            
                 float4 color = g_Texture0.Sample(g_Sampler_Normal, sampleCoord);
                 colorSum += color;
                 sampleCount++;
-            }
+            
         }
     }
 
@@ -72,6 +77,10 @@ PS_OUT PS_Main(PS_In In)
     Out.vColor = colorSum; // 4x4 블록의 평균값
 
     return Out;
+    
+    
+    
+    
 //=============================================================================================================    
   
     //float2 texelSize = float2(1.0f / 320.f, 1.0f / 270.f);

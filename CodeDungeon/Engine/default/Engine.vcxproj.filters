@@ -448,6 +448,9 @@
     <Filter Include="98.ShaderFile\Guard">
       <UniqueIdentifier>{5957ec3d-3796-4aef-9491-3be38623ff09}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Actor\01.Pawn\Blood">
+      <UniqueIdentifier>{c3ad2a19-e5db-4de0-af50-76fc8be88fbd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -848,6 +851,9 @@
     </ClCompile>
     <ClCompile Include="..\private\UGuard.cpp">
       <Filter>05.Actor\Guard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UBlood.cpp">
+      <Filter>05.Actor\01.Pawn\Blood</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1283,6 +1289,9 @@
     <ClInclude Include="..\public\UGuard.h">
       <Filter>05.Actor\Guard</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\UBlood.h">
+      <Filter>05.Actor\01.Pawn\Blood</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Shader\ShaderGrobalFunc.hlsli">
@@ -1442,6 +1451,8 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\DefaultUI.hlsl">
       <Filter>98.ShaderFile\Common\NonAlpha</Filter>
+    <FxCompile Include="..\..\Shader\Blood.hlsl">
+      <Filter>98.ShaderFile\Common\Trail</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

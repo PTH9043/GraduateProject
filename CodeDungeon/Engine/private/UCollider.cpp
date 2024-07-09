@@ -655,7 +655,7 @@ _float3 UCollider::GetHeightAdjustedPointFromCenter(const std::shared_ptr<Boundi
 	// Adjust the point in the y direction by the extent in the y direction
 	XMVECTOR yOffset;
 	if (minus) {
-		yOffset = XMVectorSet(0.0f, XMVectorGetY(-extents/2), 0.0f, 0.0f);//일단 반으로 줄여놓음
+		yOffset = XMVectorSet(0.0f, XMVectorGetY(-2*extents/3.f), 0.0f, 0.0f);//일단 반으로 줄여놓음
 	}
 	else {
 		yOffset = XMVectorSet(0.0f, XMVectorGetY(extents), 0.0f, 0.0f);
