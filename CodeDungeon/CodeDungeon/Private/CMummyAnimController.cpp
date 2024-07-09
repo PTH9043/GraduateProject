@@ -16,7 +16,9 @@ CMummyAnimController::CMummyAnimController(CSHPTRREF<UDevice> _spDevice)
     m_bstartlastHitTime{ false },
     m_blastAttackWasFirst{ false },
     m_dIdleTimer{0},
-    m_bFoundPlayerFirsttime{false}
+    m_bFoundPlayerFirsttime{false},
+    m_didleRandomValueChoosingTimer{0},
+    m_iRandomValue{0}
 {
 }
 
@@ -29,7 +31,9 @@ CMummyAnimController::CMummyAnimController(const CMummyAnimController& _rhs)
     m_bstartlastHitTime{ false },
     m_blastAttackWasFirst{ false },
     m_dIdleTimer{0},
-    m_bFoundPlayerFirsttime{ false }
+    m_bFoundPlayerFirsttime{ false },
+    m_didleRandomValueChoosingTimer{ 0 },
+    m_iRandomValue{ 0 }
 {
 }
 
@@ -90,14 +94,17 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
 
         if(m_dIdleTimer == 0)
         {
-            // Generate a random number between 0 and 2 (inclusive)
-            _int randomValue = std::rand() % 3;
+            m_didleRandomValueChoosingTimer += _dTimeDelta;
+            if (m_didleRandomValueChoosingTimer > 2)
+            {
+                m_iRandomValue = std::rand() % 4;
+            }
 
-            if (randomValue == 0)
+            if (m_iRandomValue == 0)
             {
                 UpdateState(spAnimModel, ANIM_IDLE, L"IDLE");
             }
-            else if (randomValue != 0)
+            else if (m_iRandomValue != 0)
             {
                 UpdateState(spAnimModel, ANIM_MOVE, L"WALKF");
             }

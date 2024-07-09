@@ -10,12 +10,12 @@
 #include "UMethod.h"
 
 CUserWarriorAnimController::CUserWarriorAnimController(CSHPTRREF<UDevice> _spDevice) 
-	: UAnimationController(_spDevice), m_iWComboStack{ 0 }, m_iSComboStack{ 0 }, m_dTimeElapsed{0}
+	: UAnimationController(_spDevice), m_iWComboStack{ 0 }, m_iSComboStack{ 0 }
 {
 }
 
 CUserWarriorAnimController::CUserWarriorAnimController(const CUserWarriorAnimController& _rhs) : 
-	UAnimationController(_rhs), m_iWComboStack{ 0 }, m_iSComboStack{ 0 }, m_dTimeElapsed{0}
+	UAnimationController(_rhs), m_iWComboStack{ 0 }, m_iSComboStack{ 0 }
 {
 }
 
@@ -48,6 +48,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     SHPTR<CWarriorPlayer> spWarriorPlayer = m_wpWarriorPlayer.lock();
     SHPTR<UAnimModel> spAnimModel = spWarriorPlayer->GetAnimModel();
     SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+    const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
 
     // Input checks
     _bool isRunshift = spGameInstance->GetDIKeyPressing(DIK_LSHIFT);
@@ -58,16 +59,22 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     _bool isWAttack = spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_L);
     _bool isSAttack = spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_R);
     _bool isRAttack = spGameInstance->GetDIKeyDown(DIK_Q);
-    _bool isAttack = isWAttack || isRAttack || isSAttack;
-    _bool isCombo = spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_R);
+    _bool isCombo1 = spGameInstance->GetDIKeyDown(DIK_1);
+    _bool isCombo2 = spGameInstance->GetDIKeyDown(DIK_2);
+    _bool isAttack = isWAttack || isRAttack || isSAttack || isCombo1 || isCombo2;
     _bool isRoll = spGameInstance->GetDIKeyDown(DIK_C);
     _bool isHit = spWarriorPlayer->GetHitState();
     _bool isKicked = spWarriorPlayer->GetKickedState();
     _bool isJump = spGameInstance->GetDIKeyDown(DIK_SPACE);
+    _bool isRise = spWarriorPlayer->GetRiseState();
 
+    _float KickedTimeElapsed = spWarriorPlayer->GetWarriorKickedTimeElapsed();
+
+    _double KickedAnimSpeed = 20;
+    _double KickedTimeArcOpenEnd = 40;
 
     // Idle state check
-    if (!isMoveFront && !isMoveBack && !isMoveLeft && !isMoveRight && !isAttack && !isCombo) {
+    if (CurAnimName != L"rise01" || !isRoll || !isKicked || !isJump || !isRise && !isMoveFront && !isMoveBack && !isMoveLeft && !isMoveRight && !isAttack && !isCombo1 && !isCombo2) {
         UpdateState(spAnimModel, ANIM_IDLE, L"IDLE");
     }
     else if (GetAnimState() == ANIM_ATTACK) {
@@ -106,10 +113,16 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     }
 
     // Jumping logic
-    if (!isAttack && !isCombo && !isMoveBack && isJump) {
-        if (!spWarriorPlayer->GetJumpingState() && !spWarriorPlayer->GetFallingState())
+    if (!isAttack && !isMoveBack && isJump) {
+        if (CurAnimName != L"hit_head_back" && CurAnimName != L"dead01" && CurAnimName != L"rise01" && CurAnimName != L"rise02"
+            && CurAnimName != L"combo02_1" && CurAnimName != L"combo02_2" && CurAnimName != L"combo02_3"
+            && CurAnimName != L"combo06_1" && CurAnimName != L"combo06_2" && CurAnimName != L"combo06_3"
+            && CurAnimName != L"combo05" && CurAnimName != L"combo09" && CurAnimName != L"attack04")
         {
-            spWarriorPlayer->SetJumpingState(true);
+            if (!spWarriorPlayer->GetJumpingState() && !spWarriorPlayer->GetFallingState())
+            {
+                spWarriorPlayer->SetJumpingState(true);
+            }
         }
     }
 
@@ -124,8 +137,6 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
 
     // Attack handling
     if (isAttack && !isHit) {
-
-        const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
         if (isWAttack) {
             spWarriorPlayer->SetAttack(5);
             if (CurAnimName == L"combo02_1") m_iWComboStack = 2;
@@ -155,11 +166,21 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
             m_iWComboStack = 0;
             m_iSComboStack = 0;
         }
+        else if (isCombo1) {
+            UpdateState(spAnimModel, ANIM_ATTACK, L"COMBO5");
+            m_iWComboStack = 0;
+            m_iSComboStack = 0;
+        }
+        else if (isCombo2) {
+            UpdateState(spAnimModel, ANIM_ATTACK, L"COMBO9");
+            m_iWComboStack = 0;
+            m_iSComboStack = 0;
+        }
+
     }
 
     // Combo attack state
-    const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
-    if (CurAnimName == L"combo06_1" || CurAnimName == L"combo06_2" || CurAnimName == L"combo06_3" || CurAnimName == L"combo02_1" || CurAnimName == L"combo02_2" || CurAnimName == L"combo02_3") {
+    if (CurAnimName == L"attack04" || CurAnimName == L"combo09" || CurAnimName == L"combo05" || CurAnimName == L"combo06_1" || CurAnimName == L"combo06_2" || CurAnimName == L"combo06_3" || CurAnimName == L"combo02_1" || CurAnimName == L"combo02_2" || CurAnimName == L"combo02_3") {
         spWarriorPlayer->IfAttack(true);
     }
     else {
@@ -172,12 +193,19 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
         spWarriorPlayer->SetHitstate(false);
     }
 
-    // Kicked state
-    if (isKicked) {
-        UpdateState(spAnimModel, ANIM_HIT, L"GOTKICKED");
-        /*spWarriorPlayer->SetKickedState(false);*/
+    // Rise state
+    if (isRise) {
+       
+        UpdateState(spAnimModel, ANIM_MOVE, L"RISE1");
+        spAnimModel->SetAnimation(L"rise01");
     }
+    if (CurAnimName == L"rise01")
+        spWarriorPlayer->SetRiseState(false);
 
+    // Kicked state
+    if (isKicked && CurAnimName != L"rise01") {
+        UpdateState(spAnimModel, ANIM_HIT, L"GOTKICKED");
+    }
 
     if (true == spGameInstance->IsMouseInWindowSize())
     { 
@@ -196,14 +224,19 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
    spAnimModel->TickEvent(spWarriorPlayer.get(), GetTrigger(), _dTimeDelta);
 
 
-   //Kicked & Stunned
-   if (spAnimModel->GetCurrentAnimation()->GetAnimName() == L"dead01")
+   //if Kicked & Stunned
+   if (isKicked)
    {
-       _double DeathAnimSpeed = 20;
-       m_dTimeElapsed += _dTimeDelta * DeathAnimSpeed;
-       _double DeathTimeArcOpenEnd = 40;
-       if (m_dTimeElapsed < DeathTimeArcOpenEnd)
-           spAnimModel->TickAnimToTimeAccChangeTransform(spWarriorPlayer->GetTransform(), _dTimeDelta, m_dTimeElapsed);
+       spWarriorPlayer->SetWarriorKickedTimeElapsed(KickedTimeElapsed + _dTimeDelta * KickedAnimSpeed);
+       if (KickedTimeElapsed < KickedTimeArcOpenEnd)
+           spAnimModel->TickAnimToTimeAccChangeTransform(spWarriorPlayer->GetTransform(), _dTimeDelta, KickedTimeElapsed);
+       if (KickedTimeElapsed >= 50)
+           if (spGameInstance->GetDIKeyDown(DIK_SPACE))
+           {
+               KickedTimeElapsed = 0;
+               spWarriorPlayer->SetKickedState(false);
+               spWarriorPlayer->SetRiseState(true);
+           }
    }
    else
      spAnimModel->TickAnimChangeTransform(spWarriorPlayer->GetTransform(), _dTimeDelta);

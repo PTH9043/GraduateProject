@@ -31,7 +31,8 @@ CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _ws
 	m_spParticle{nullptr},
 	m_spTrail{nullptr},
 	m_bisKicked{ false },
-	m_dElapsedTimeforKicked{ 0 }
+	m_dKickedElapsed{ 0 },
+	m_bisRise{ false }
 {
 }
 
@@ -45,7 +46,8 @@ CWarriorPlayer::CWarriorPlayer(const CWarriorPlayer& _rhs) :
 	m_spParticle{ nullptr },
 	m_spTrail{ nullptr },
 	m_bisKicked{ false },
-	m_dElapsedTimeforKicked{ 0 }
+	m_dKickedElapsed{ 0 },
+	m_bisRise{ false }
 {
 }
 
@@ -231,7 +233,28 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	//	ShowCursor(FALSE);
 	/*SetCursorPos(1000, 400);*/
 	}
-	UpdateCollision();
+
+	if(CurAnimName != L"roll_back" && CurAnimName != L"roll_front"&& CurAnimName != L"roll_right"&& CurAnimName != L"roll_left"&&
+		CurAnimName != L"jumpZ0" &&  CurAnimName != L"rise01"&& CurAnimName != L"rise02")
+	{
+		for (auto& Colliders : GetColliderContainer())
+		{
+			Colliders.second->SetScale(_float3(3, 10, 3));
+			Colliders.second->SetTranslate(_float3(0, 10, 0));
+			Colliders.second->SetTransform(GetTransform()->GetWorldMatrix());
+		}
+	}
+	else
+	{
+		for (auto& Colliders : GetColliderContainer())
+		{
+			Colliders.second->SetScale(_float3(0, 0, 0));
+			Colliders.second->SetTranslate(_float3(0, 10, 0));
+			Colliders.second->SetTransform(GetTransform()->GetWorldMatrix());
+		}
+	}
+
+
 	JumpState(_dTimeDelta);
 
 
@@ -249,9 +272,9 @@ void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
 	FollowCameraMove(_float3{ 0.f, 20.f, -40.f }, _dTimeDelta);
 
-	/*for (auto& Colliders : GetColliderContainer())
+	for (auto& Colliders : GetColliderContainer())
 		if(Colliders.first == L"Main")
-			Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);*/
+			Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
 }
 
 
@@ -282,18 +305,40 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 		_float3 direction = _pEnemy->GetTransform()->GetPos() - GetTransform()->GetPos();
 		const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
 		const _wstring& EnemyCurAnimName = pCharacter->GetAnimModel()->GetCurrentAnimation()->GetAnimName();
-
+		SHPTR<CUserWarriorAnimController> spController = static_pointer_cast<CUserWarriorAnimController>(GetAnimationController());
 		direction.Normalize();
+
+		_float3 forward = GetTransform()->GetLook();
+		_float dotProduct = forward.Dot(direction);
+
 		for (auto& iter : GetColliderContainer())
 		{
 			if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
 			{
 				if (EnemyCurAnimName == L"attack4_kick" || EnemyCurAnimName == L"attack5_kick")
-					m_bisKicked = true;
+				{
+					if (CurAnimName != L"rise01" && CurAnimName != L"rise02")
+					{
+						if (m_dKickedElapsed >= 50)
+						{
+							m_dKickedElapsed = 0;
+							m_bisKicked = false;
+						}
+						else
+						{
+							GetTransform()->LookAt(pCharacter->GetTransform()->GetPos());
+							m_bisKicked = true;
+						}
+					}
+
+				}
 				else
 				{
-					SetHitstate(true);
-					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
+					if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead01" && !m_bisKicked)
+					{
+						SetHitstate(true);
+						GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
+					}
 				}
 			}
 
@@ -301,7 +346,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 			{
 				if (iter.second->IsCollision(iter2.second))
 				{
-					GetTransform()->SetPos(GetTransform()->GetPos() - GetTransform()->GetLook() * 10 * _dTimeDelta);
+					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 10 * _dTimeDelta);
 				}
 			}
 		}

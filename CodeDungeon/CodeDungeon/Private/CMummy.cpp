@@ -277,8 +277,7 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 					m_spParticle->SetActive(true);
 					m_spParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 					// Decrease health on hit
-					DecreaseHealth(pCharacter->GetAttack());
-					GetTransform()->SetPos(GetTransform()->GetPos() + GetTransform()->GetLook() * 10 * _dTimeDelta);
+					DecreaseHealth(pCharacter->GetAttack());				
 				}
 			}
 

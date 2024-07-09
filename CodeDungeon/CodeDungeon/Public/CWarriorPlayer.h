@@ -21,7 +21,7 @@ public:
 	DESTRUCTOR(CWarriorPlayer)
 public:
 	CLONE_MACRO(CWarriorPlayer, "CWarriorPlayer::CloneToFailed")
-	virtual void Free() override;
+		virtual void Free() override;
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _Datas) override;
 	virtual void ReceiveNetworkProcessData(const UProcessedData& _ProcessData);
@@ -35,6 +35,12 @@ public: /* Get Set */
 
 	const _bool& GetKickedState() const { return m_bisKicked; }
 	void SetKickedState(_bool _newState) { m_bisKicked = _newState; }
+
+	const _bool& GetRiseState() const { return m_bisRise; }
+	void SetRiseState(_bool _newState) { m_bisRise = _newState; }
+
+	const _double& GetWarriorKickedTimeElapsed() { return m_dKickedElapsed; }
+	void SetWarriorKickedTimeElapsed(_double _newTime) { m_dKickedElapsed = _newTime; }
 
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
@@ -50,18 +56,18 @@ private:
 	void TranslateStateMoveAndRunF(CSHPTRREF<UGameInstance> _spGameInstance, const _double& _dTimeDelta, const _float _fSpeed);
 private:
 	SHPTR<UParticle>										m_spParticle;
-	PARTICLEPARAM*										m_stParticleParam;
-	ComputeParticleType*								m_stParticleType;
+	PARTICLEPARAM* m_stParticleParam;
+	ComputeParticleType* m_stParticleType;
 
 	SHPTR<CSword>											m_spSword;
 	SHPTR<UTrail>												m_spTrail;
 	_bool																isAttack;
 
 	_bool m_bisCollisionWithObj;
-	_bool m_bisKicked; 
+	_bool m_bisKicked;
+	_bool m_bisRise;
 
-	_double                         m_dElapsedTimeforKicked;
+	_double											m_dKickedElapsed;
 };
-
 END
 
