@@ -70,7 +70,7 @@ void UBlood::TickActive(const _double& _dTimeDelta)
 void UBlood::LateTickActive(const _double& _dTimeDelta)
 {
 
-	AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
+	AddRenderGroup(RENDERID::RI_2DUI);
 
 }
 

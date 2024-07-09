@@ -60,8 +60,8 @@ PS_OUT PS_Main(PS_In In)
     float fTransparency = gfLeftTime / gfFullTime;
     
     Out.vColor = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV);
-    if (Out.vColor.a < 0.3f)
-        discard;
+    if (Out.vColor.a < 0.8f)
+       discard;
     Out.vColor.a *= fTransparency;
     Out.vSpecular = float4(Out.vColor.rgb, 0.5f);
     
