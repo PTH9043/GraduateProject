@@ -116,9 +116,20 @@ void CNetworkClientController::ProcessPacket(_char* _pPacket, PACKETHEAD _Packet
 			SelfPlayerMoveState(_pPacket, _PacketHead);
 		}
 		break;
+		case TAG_SC::TAG_SC_MONSTERSTATE:
+		{
+			MonsterState(_pPacket, _PacketHead);
+		}
+		break;
+		case TAG_SC::TAG_SC_MONSTERSTATEHAVEMOVE:
+		{
+
+		}
+		break;
 	}
 #endif
 }
+
 #ifdef _ENABLE_PROTOBUFF
 void CNetworkClientController::MakeMonster(const NETWORKRECEIVEINITDATA& _NetworkRecvInitData)
 {
@@ -148,7 +159,7 @@ void CNetworkClientController::MakeMonster(const NETWORKRECEIVEINITDATA& _Networ
 		{
 			CSarcophagus::CHARACTERDESC CharDesc;
 			CharDesc.isNetworkConnected = true;
-			CharDesc.wstrAnimControllerProtoData = PROTO_COMP_MUMMYANIMCONTROLLER;
+			CharDesc.wstrAnimControllerProtoData = PROTO_COMP_SARCOPHAGUSANIMCONTROLLER;
 
 			if (_NetworkRecvInitData.iType == TAG_CHAR::TAG_SARCOPHAGUS_LAYING)
 			{
@@ -273,6 +284,23 @@ void CNetworkClientController::SelfPlayerMoveState(_char* _pPacket, const PACKET
 	InsertNetworkProcessInQuery(std::move(UProcessedData(selfPlayerMove.id(), selfPlayerMove,
 		TAG_SC_SELFPLAYERMOVE, _PacketHead.PacketSize)));
 }
+
+void CNetworkClientController::MonsterState(_char* _pPacket, const PACKETHEAD& _PacketHead)
+{
+	SC_MONSTERSTATE scMonsterState;
+	scMonsterState.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+	InsertNetworkProcessInQuery(UProcessedData(scMonsterState.id(), scMonsterState,
+		TAG_SC_MONSTERSTATE, _PacketHead.PacketSize));
+}
+
+void CNetworkClientController::MonsterStateHaveMove(_char* _pPacket, const PACKETHEAD& _PacketHead)
+{
+	SC_MONSTERSTATEHAVEPOS scMonsterState;
+	scMonsterState.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+	InsertNetworkProcessInQuery(UProcessedData(scMonsterState.id(), scMonsterState,
+		TAG_SC_MONSTERSTATEHAVEMOVE, _PacketHead.PacketSize));
+}
+
 #endif
 
 void CNetworkClientController::Free()

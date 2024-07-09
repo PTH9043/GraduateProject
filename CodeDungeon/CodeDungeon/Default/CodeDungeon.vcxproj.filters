@@ -103,9 +103,6 @@
     <Filter Include="06.Comp\Controller\Minotaur">
       <UniqueIdentifier>{894a6e00-a512-431a-b630-87aa3b846df4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06.Comp\Map">
-      <UniqueIdentifier>{ca64ec19-5e4a-46e5-90fe-e6c88e0d0d7c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="05.Objects\ModelObjects\Rooms">
       <UniqueIdentifier>{783c0105-2ccc-4d69-94cd-c94ed23468a9}</UniqueIdentifier>
     </Filter>
@@ -117,6 +114,18 @@
     </Filter>
     <Filter Include="05.Objects\ModelObjects\StaticObjects\Torch">
       <UniqueIdentifier>{c62b57e0-9fcf-4186-924d-c05e87282c1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Objects\Map">
+      <UniqueIdentifier>{ca64ec19-5e4a-46e5-90fe-e6c88e0d0d7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.UI">
+      <UniqueIdentifier>{291dc451-d470-4076-9445-ecdb1f8b4afd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.UI\Background">
+      <UniqueIdentifier>{7414b15e-89e4-42df-bac3-83d809c031a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.UI\Image">
+      <UniqueIdentifier>{cc6f704a-c09b-4453-b03b-39691ba726c7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -160,7 +169,7 @@
       <Filter>11.DataManager\ModelManager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CMap.h">
-      <Filter>06.Comp\Map</Filter>
+      <Filter>05.Objects\Map</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CModelObjects.h">
       <Filter>05.Objects\ModelObjects</Filter>
@@ -222,6 +231,12 @@
     <ClInclude Include="..\Public\CMinotaurAnimController.h">
       <Filter>06.Comp\Controller\Minotaur</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CBackgroundUI.h">
+      <Filter>07.UI\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CImageUI.h">
+      <Filter>07.UI\Image</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -257,7 +272,7 @@
       <Filter>11.DataManager\ModelManager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CMap.cpp">
-      <Filter>06.Comp\Map</Filter>
+      <Filter>05.Objects\Map</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CModelObjects.cpp">
       <Filter>05.Objects\ModelObjects</Filter>
@@ -318,6 +333,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\CMinotaurAnimController.cpp">
       <Filter>06.Comp\Controller\Minotaur</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CBackgroundUI.cpp">
+      <Filter>07.UI\Background</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CImageUI.cpp">
+      <Filter>07.UI\Image</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -111,6 +111,8 @@ enum TAG_SC : int {
   TAG_SC_PLAYERSTATE = 8,
   TAG_SC_SELFPLAYERMOVE = 9,
   TAG_SC_PLAYERANIMSTATE = 10,
+  TAG_SC_MONSTERSTATEHAVEMOVE = 11,
+  TAG_SC_MONSTERSTATE = 12,
   TAG_SC_INT_MIN_SENTINEL_DO_NOT_USE_ =
       std::numeric_limits<::int32_t>::min(),
   TAG_SC_INT_MAX_SENTINEL_DO_NOT_USE_ =
@@ -120,8 +122,8 @@ enum TAG_SC : int {
 bool TAG_SC_IsValid(int value);
 extern const uint32_t TAG_SC_internal_data_[];
 constexpr TAG_SC TAG_SC_MIN = static_cast<TAG_SC>(0);
-constexpr TAG_SC TAG_SC_MAX = static_cast<TAG_SC>(10);
-constexpr int TAG_SC_ARRAYSIZE = 10 + 1;
+constexpr TAG_SC TAG_SC_MAX = static_cast<TAG_SC>(12);
+constexpr int TAG_SC_ARRAYSIZE = 12 + 1;
 const ::google::protobuf::EnumDescriptor*
 TAG_SC_descriptor();
 template <typename T>
@@ -134,7 +136,7 @@ const std::string& TAG_SC_Name(T value) {
 template <>
 inline const std::string& TAG_SC_Name(TAG_SC value) {
   return ::google::protobuf::internal::NameOfDenseEnum<TAG_SC_descriptor,
-                                                 0, 10>(
+                                                 0, 12>(
       static_cast<int>(value));
 }
 inline bool TAG_SC_Parse(absl::string_view name, TAG_SC* value) {
@@ -251,6 +253,46 @@ inline bool TAG_MUMMYANIM_Parse(absl::string_view name, TAG_MUMMYANIM* value) {
   return ::google::protobuf::internal::ParseNamedEnum<TAG_MUMMYANIM>(
       TAG_MUMMYANIM_descriptor(), name, value);
 }
+enum TAG_MOBANIM : int {
+  MOB_DISABLE_STATE = 0,
+  MOB_IDLE_STATE = 1,
+  MOB_MOVE_STATE = 2,
+  MOB_ATTACK_STATE = 3,
+  MOB_DEATH_STATE = 4,
+  MOB_HIT_STATE = 5,
+  MOB_SLEEP_STATE = 6,
+  MOB_AWAKE_STATE = 7,
+  MOB_FIND_STATE = 8,
+  TAG_MOBANIM_INT_MIN_SENTINEL_DO_NOT_USE_ =
+      std::numeric_limits<::int32_t>::min(),
+  TAG_MOBANIM_INT_MAX_SENTINEL_DO_NOT_USE_ =
+      std::numeric_limits<::int32_t>::max(),
+};
+
+bool TAG_MOBANIM_IsValid(int value);
+extern const uint32_t TAG_MOBANIM_internal_data_[];
+constexpr TAG_MOBANIM TAG_MOBANIM_MIN = static_cast<TAG_MOBANIM>(0);
+constexpr TAG_MOBANIM TAG_MOBANIM_MAX = static_cast<TAG_MOBANIM>(8);
+constexpr int TAG_MOBANIM_ARRAYSIZE = 8 + 1;
+const ::google::protobuf::EnumDescriptor*
+TAG_MOBANIM_descriptor();
+template <typename T>
+const std::string& TAG_MOBANIM_Name(T value) {
+  static_assert(std::is_same<T, TAG_MOBANIM>::value ||
+                    std::is_integral<T>::value,
+                "Incorrect type passed to TAG_MOBANIM_Name().");
+  return TAG_MOBANIM_Name(static_cast<TAG_MOBANIM>(value));
+}
+template <>
+inline const std::string& TAG_MOBANIM_Name(TAG_MOBANIM value) {
+  return ::google::protobuf::internal::NameOfDenseEnum<TAG_MOBANIM_descriptor,
+                                                 0, 8>(
+      static_cast<int>(value));
+}
+inline bool TAG_MOBANIM_Parse(absl::string_view name, TAG_MOBANIM* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<TAG_MOBANIM>(
+      TAG_MOBANIM_descriptor(), name, value);
+}
 
 // ===================================================================
 
@@ -307,6 +349,12 @@ struct is_proto_enum<::TAG_MUMMYANIM> : std::true_type {};
 template <>
 inline const EnumDescriptor* GetEnumDescriptor<::TAG_MUMMYANIM>() {
   return ::TAG_MUMMYANIM_descriptor();
+}
+template <>
+struct is_proto_enum<::TAG_MOBANIM> : std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor<::TAG_MOBANIM>() {
+  return ::TAG_MOBANIM_descriptor();
 }
 
 }  // namespace protobuf

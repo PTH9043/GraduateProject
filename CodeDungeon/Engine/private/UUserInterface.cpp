@@ -3,15 +3,16 @@
 #include "URectTransform.h"
 #include "UGameInstance.h"
 #include "UMethod.h"
+#include "UVIBufferRect.h"
 
 UUserInterface::UUserInterface(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UPawn(_spDevice, _wstrLayer, _eCloneType),
-	m_spRectTransform{ nullptr }, m_stUIDesc{}
+	m_spRectTransform{ nullptr }, m_stUIDesc{}, m_spVIBufferRect{nullptr}
 {
 }
 
 UUserInterface::UUserInterface(const UUserInterface& _rhs) :
-	UPawn(_rhs), m_spRectTransform{ nullptr }, m_stUIDesc{}
+	UPawn(_rhs), m_spRectTransform{ nullptr }, m_stUIDesc{}, m_spVIBufferRect{nullptr}
 {
 }
 
@@ -28,6 +29,8 @@ HRESULT UUserInterface::NativeConstructClone(const VOIDDATAS& _vecDatas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_vecDatas), E_FAIL);
 	RETURN_CHECK_FAILED(ReadyRectTransform(_vecDatas), E_FAIL);
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	m_spVIBufferRect = std::static_pointer_cast<UVIBufferRect>(spGameInstance->CloneResource(PROTO_RES_VIBUFFERRECT));
 	return S_OK;
 }
 
@@ -77,20 +80,22 @@ HRESULT UUserInterface::ReadyRectTransform(const VOIDDATAS& _vecDatas)
 	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
 	{
 		CSHPTRREF<GRAPHICDESC> DESC = pGameInstance->GetGraphicDesc();
-		UIDESC tDesc = UMethod::ConvertTemplate_Index<UIDESC>(_vecDatas, 0);
+		m_stUIDesc = UMethod::ConvertTemplate_Index<UIDESC>(_vecDatas, 0);
 		URectTransform::RECTDESC tRtDesc;
-		tRtDesc.fRatio = tDesc.fZBufferOrder;
-		tRtDesc.vPos = tDesc.v2Pos;
-		tRtDesc.vSize = tDesc.v2Size;
+		tRtDesc.fRatio = m_stUIDesc.fZBufferOrder;
+		tRtDesc.vPos = m_stUIDesc.v2Pos;
+		tRtDesc.vSize = m_stUIDesc.v2Size;
 		tRtDesc.ProjMatrix = DirectX::XMMatrixOrthographicLH((_float)DESC->iWinCX, (_float)DESC->iWinCY,
 			0.f, 1.f);
 		tRtDesc.pTransform = GetTransform();
-		ReadyRectTransform(&tRtDesc);
+		tRtDesc.iWindowX = (_float)DESC->iWinCX;
+		tRtDesc.iWindowY = (_float)DESC->iWinCY;
+		CreateRectTrasnform(&tRtDesc);
 	}
 	return S_OK;
 }
 
-HRESULT UUserInterface::ReadyRectTransform(void* _pDesc)
+HRESULT UUserInterface::CreateRectTrasnform(void* _pDesc)
 {
 	VOIDDATAS vecDatas;
 	vecDatas.push_back(_pDesc);

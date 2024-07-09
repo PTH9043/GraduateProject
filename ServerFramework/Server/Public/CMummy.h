@@ -7,7 +7,7 @@ BEGIN(Server)
 
 class CMummy final : public AMonster {
 public:
-	CMummy(OBJCON_CONSTRUCTOR, SESSIONID _ID, MUMMYTYPE _MummyType);
+	CMummy(OBJCON_CONSTRUCTOR, SESSIONID _ID, MUMMYTYPE _MummyType, SHPTR<AJobTimer> _spMonsterJobTimer);
 	DESTRUCTOR(CMummy)
 public:
 	virtual _bool Start(const VOIDDATAS& _ReceiveDatas = {}) override;

@@ -9,8 +9,8 @@
 
 namespace Server
 {
-	CMummy::CMummy(OBJCON_CONSTRUCTOR,  SESSIONID _ID, MUMMYTYPE _MummyType)
-		: AMonster(OBJCON_CONDATA, _ID), m_eMumyType{_MummyType}
+	CMummy::CMummy(OBJCON_CONSTRUCTOR,  SESSIONID _ID, MUMMYTYPE _MummyType, SHPTR<AJobTimer> _spMonsterJobTimer)
+		: AMonster(OBJCON_CONDATA, _ID, _spMonsterJobTimer), m_eMumyType{_MummyType}
 	{
 		SetMonsterType(TAG_CHAR::TAG_MUMMY);
 	}

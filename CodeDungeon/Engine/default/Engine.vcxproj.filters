@@ -1440,5 +1440,8 @@
     <FxCompile Include="..\..\Shader\Guard.hlsl">
       <Filter>98.ShaderFile\Guard</Filter>
     </FxCompile>
+    <FxCompile Include="..\..\Shader\DefaultUI.hlsl">
+      <Filter>98.ShaderFile\Common\NonAlpha</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

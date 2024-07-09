@@ -50,6 +50,8 @@ public:
 	const _float GetTotalAnimFastValue() const { return m_fTotalAnimationFastValue; }
 	const _double GetAnimationProgressRate() const { return m_dAnimationProgressRate; }
 	const _bool IsApplyRootBoneMove() const { return m_isApplyRootBoneMove; }
+
+	void SetDuration(const _double _dDuration) { this->m_dDuration = _dDuration; }
 protected:
 	SHPTR<AAnimEvent> CreateAnimEvent(AAnimator* _pAnimator, ANIMEVENTTYPE _AnimEventType, std::ifstream& _read);
 private:
@@ -65,7 +67,7 @@ private:
 
 	CHANNELCONTAINER			m_ChannelContainer;
 
-	_double									m_dTimeAcc;
+	ATOMIC<_double>				m_dTimeAcc;
 	_double									m_dAnimationProgressRate;
 	_bool										m_isFinishAnimation;
 	_bool										m_isSupplySituation;

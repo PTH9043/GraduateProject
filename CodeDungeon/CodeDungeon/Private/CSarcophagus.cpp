@@ -9,6 +9,7 @@
 #include "CMummyAnimController.h"
 #include "UMethod.h"
 #include "UCollider.h"
+#include "UProcessedData.h"
 
 CSarcophagus::CSarcophagus(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: CMob(_spDevice, _wstrLayer, _eCloneType), m_SarcophagusType{}
@@ -50,6 +51,33 @@ HRESULT CSarcophagus::NativeConstructClone(const VOIDDATAS& _Datas)
 	}*/
 
 	return S_OK;
+}
+
+void CSarcophagus::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
+{
+#ifdef _ENABLE_PROTOBUFF
+
+	switch (_ProcessData.GetDataType())
+	{
+	case TAG_SC_MONSTERSTATE:
+	{
+		SC_MONSTERSTATE scMonsterState;
+		scMonsterState.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
+
+		if (TAG_MOBANIM::MOB_FIND_STATE == scMonsterState.state())
+		{
+			SetFoundTargetState(true);
+		}
+		else
+		{
+			SetFoundTargetState(false);
+		}
+
+		GetAnimationController()->ReceiveNetworkProcessData(&scMonsterState);
+	}
+		break;
+	}
+#endif
 }
 
 void CSarcophagus::TickActive(const _double& _dTimeDelta)

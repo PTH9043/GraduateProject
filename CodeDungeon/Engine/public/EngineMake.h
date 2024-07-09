@@ -61,6 +61,7 @@
 #define PROTO_RES_MIRRORSHADER L"Proto_Res_MirrorShader"
 #define PROTO_RES_SCREENRENDERONBJSHADER L"Proto_Res_ScreenRenderObjShader"
 #define PROTO_RES_EQUIPMENTSHADER L"Proto_Res_EquipmentShader"
+#define PROTO_RES_DEFAULTUISHADER L"Proto_Res_DefaultUIShader"
 
 /* Compute Shader*/
 #define PROTO_RES_COMPUTEANIMATIONSHADER L"Proto_Res_ConputeAnimatonShader"
@@ -143,6 +144,7 @@
 #define LAYER_SCREENRENDEROBJ L"LayerScreenRenderObj"
 #define LAYER_DEBUG L"Layer_Debug"
 #define LAYER_ITEM L"Layer_Item"
+#define LAYER_UI L"Layer_UI"
 
 #pragma endregion LAYER
 

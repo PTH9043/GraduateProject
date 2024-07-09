@@ -68,14 +68,6 @@ void PROTOFUNC::MakeCharMove(CHARMOVE* _pOut, LLONG _id, const VECTOR3& _move, c
 	_pOut->set_rotatez(_rotate.z());
 }
 
-void PROTOFUNC::MakeMonsterState(MONSTERSTATE* _pOut, LLONG _id, double _animDuration, int _curAnimIndex)
-{
-	assert(nullptr != _pOut);
-	_pOut->set_id(_id);
-	_pOut->set_animationtime(_animDuration);
-	_pOut->set_animationindex(_curAnimIndex);
-}
-
 /* =========== SC =============== */
 // Server To Client 
 
@@ -134,6 +126,31 @@ void PROTOFUNC::MakeScMonsterResourceData(SC_MONSTERRESOURCEDATA* _pOut, LLONG _
 	_pOut->set_scalez(_vScale.z());
 	_pOut->set_animindex(_animIndex);
 	_pOut->set_type(_type);
+}
+
+void PROTOFUNC::MakeScMonsterState(SC_MONSTERSTATE* _pOut, LLONG _id, const double& _dAnimTime, int _animindex, int _state)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_id);
+	_pOut->set_animationtime(_dAnimTime);
+	_pOut->set_animationindex(_animindex);
+	_pOut->set_state(_state);
+}
+
+void PROTOFUNC::MakeScMonsterStateHavePos(SC_MONSTERSTATEHAVEPOS* _pOut, LLONG _id, const VECTOR3& _vPos, const VECTOR3& _vRotate,
+	const double& _dAnimTime, int _animindex, int _state)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_id);
+	_pOut->set_posx(_vPos.x());
+	_pOut->set_posy(_vPos.y());
+	_pOut->set_posz(_vPos.z());
+	_pOut->set_rotatex(_vRotate.x());
+	_pOut->set_rotatey(_vRotate.y());
+	_pOut->set_rotatez(_vRotate.z());
+	_pOut->set_animationtime(_dAnimTime);
+	_pOut->set_animationindex(_animindex);
+	_pOut->set_state(_state);
 }
 
 /* =========== CS =============== */

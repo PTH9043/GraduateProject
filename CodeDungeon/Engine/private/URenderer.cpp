@@ -259,8 +259,6 @@ HRESULT URenderer::Render()
     RenderBlend();
     RenderAlphaBlend();
     RenderDistortion();
-    Render2DUI();
-    Render3DUI();
     RenderHDR();
    DownSample();
    DownSample2();
@@ -269,6 +267,8 @@ HRESULT URenderer::Render()
    UpSample();
     RenderBloom();
     RenderEnd();
+    Render2DUI();
+    Render3DUI();
     //원상복구하려면 Blur두개 키고 DownSample 2개를 꺼야함. 그리고 Upsample입력 텍스쳐를 BlurResult로
 #ifdef _USE_DEBUGGING
     
@@ -528,16 +528,10 @@ void URenderer::Render3DUI()
 
 void URenderer::Render2DUI()
 {
-    // Set Render Tareget
-    SHPTR<URenderTargetGroup> spRenderTargetGroup{ m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::UI2D_DEFFERED) };
-    spRenderTargetGroup->WaitResourceToTarget(m_spCastingCommand);
-    spRenderTargetGroup->ClearRenderTargetView(m_spCastingCommand);
-    spRenderTargetGroup->OmSetRenderTargets(m_spCastingCommand);
     for (auto& iter : m_arrActiveDrawRenderList[RENDERID::RI_2DUI])
     {
         RenderObject(iter.first, iter.second);
     }
-    spRenderTargetGroup->WaitTargetToResource(m_spCastingCommand);
 }
 
 void URenderer::RenderHDR()

@@ -1,6 +1,8 @@
 #include "ServerDefines.h"
 #include "CSacrophagusAnimController.h"
 #include "APawn.h"
+#include "AAnimator.h"
+#include "AAnimation.h"
 
 namespace Server {
 
@@ -15,15 +17,31 @@ namespace Server {
 
 	void CSacrophagusAnimController::Tick(const _double& _dTimeDelta)
 	{
-		if (TAG_CHAR::TAG_SARCOPHAGUS_LAYING == m_iOwnerType)
+		SHPTR<APawn> spPawn = GetOwner();
+		SHPTR<ATransform> spTransform = spPawn->GetTransform();
+
+		if (true == IsOwnerPawnActive())
 		{
-			if (GetElapsedTime() < LyingSarcophagusTimeArcOpenEnd)
-				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, LyingSarcophagusTimeArcOpenStart + GetElapsedTime());
-		}
-		else
-		{
-			if (GetElapsedTime() < StandingSarcophagusTimeArcOpenEnd)
-				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
+			if (MOB_FIND == GetPawnState())
+			{
+				SetElapsedTime(GetElapsedTime() + _dTimeDelta);
+
+				if (TAG_CHAR::TAG_SARCOPHAGUS_LAYING == m_iOwnerType)
+				{
+					if (m_dLyingSarcophagusTimeArcOpenEnd >= GetElapsedTime())
+						GetAnimator()->TickAnimToTimeAccChangeTransform(spTransform, _dTimeDelta,
+							m_dLyingSarcophagusTimeArcOpenStart + GetElapsedTime());
+					else
+						spPawn->ActivePermanentDisable();
+				}
+				else
+				{
+					if (m_dLyingSarcophagusTimeArcOpenEnd >= GetElapsedTime())
+						GetAnimator()->UpdateCurAnimationToRatio(GetElapsedTime());
+					else
+						spPawn->ActivePermanentDisable();
+				}
+			}
 		}
 	}
 

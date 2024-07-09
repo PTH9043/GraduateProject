@@ -14,8 +14,6 @@ namespace Server {
 		: Core::ASession(SESSION_CONDATA(Core::SESSIONTYPE::PLAYER)), m_iStartCellIndex{ 100 },
 		m_iWComboStack{ 0 }, m_iSComboStack{ 0 }
 	{
-		::memset(&m_CopyBuffer[0], 0, sizeof(BUFFER));
-		::memset(&m_CopyPacketHead, 0, sizeof(PACKETHEAD));
 	}
 
 	_bool CPlayerSession::Start(const VOIDDATAS& _ReceiveDatas)
@@ -26,9 +24,9 @@ namespace Server {
 		{
 			PROTOFUNC::MakeScConnectSuccess(OUT & scConnectSuccess, GetSessionID(), m_iStartCellIndex, TAG_MAINPLAYER);
 		}
-		CombineProto(REF_OUT m_CopyBuffer, REF_OUT m_CopyPacketHead, scConnectSuccess, TAG_SC::TAG_SC_CONNECTSUCCESS);
+		CombineProto(REF_OUT GetCopyBuffer(), REF_OUT GetPacketHead(), scConnectSuccess, TAG_SC::TAG_SC_CONNECTSUCCESS);
 
-		SendData(&m_CopyBuffer[0], m_CopyPacketHead);
+		SendData(GetCopyBufferPointer(), GetPacketHead());
 		SetGameObjectType(TAG_CHAR::TAG_MAINPLAYER);
 		SetMoveSpeed(10.f);
 		SetRunSpeed(30.f);
@@ -48,7 +46,7 @@ namespace Server {
 
 	_bool CPlayerSession::SendData(_char* _pPacket, const Core::PACKETHEAD& _PacketHead)
 	{
-		RETURN_CHECK(false == IsConnected() , false);
+		RETURN_CHECK(true == IsPermanentDisable() , false);
 
 		CombineSendBuffer( _pPacket, _PacketHead);
 		_bool result{ true };
@@ -65,16 +63,6 @@ namespace Server {
 					if (nullptr != spCoreInstance)
 						spCoreInstance->LeaveService(SessionID);
 				}
-				else
-				{
-					if (false == IsConnected())
-					{
-						if (nullptr != spCoreInstance)
-						{
-							spCoreInstance->LeaveService(SessionID);
-						}
-					}
-				}
 			});
 		return result;
 	}
@@ -90,7 +78,7 @@ namespace Server {
 	{
 		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
 		_int SessionID = GetSessionID();
-		::memset(&m_CopyBuffer[0], 0, MAX_BUFFER_LENGTH);
+		::memset(GetCopyBufferPointer(), 0, MAX_BUFFER_LENGTH);
 
 		switch (_PacketHead.PacketType)
 		{
@@ -132,20 +120,20 @@ namespace Server {
 			SC_OTHERCLIENTLOGIN scOtherLogin;
 			// 다른 클라이언트들에게 해당 플레이어가 접속했음을 알림
 			PROTOFUNC::MakeScOtherClientLogin(OUT & scOtherLogin, _SessionID, m_iStartCellIndex, TAG_CHAR::TAG_OTHERPLAYER);
-			CombineProto(REF_OUT m_CopyBuffer, REF_OUT m_CopyPacketHead, scOtherLogin, TAG_SC::TAG_SC_OTHERCLIENTLOGIN);
-			_spCoreInstance->BroadCastMessageExcludingSession(_SessionID, &m_CopyBuffer[0], m_CopyPacketHead);
+			CombineProto(REF_OUT GetCopyBuffer(), REF_OUT GetPacketHead(), scOtherLogin, TAG_SC::TAG_SC_OTHERCLIENTLOGIN);
+			_spCoreInstance->BroadCastMessageExcludingSession(_SessionID, GetCopyBufferPointer(), GetPacketHead());
 
 			for (auto& iter : _spCoreInstance->GetSessionContainer())
 			{
 				if (iter.first == _SessionID)
 					continue;
 
-				if (nullptr == iter.second)
+				if (true == iter.second->IsPermanentDisable())
 					continue;
 
 				PROTOFUNC::MakeScOtherClientLogin(OUT & scOtherLogin, iter.first, m_iStartCellIndex, TAG_CHAR::TAG_OTHERPLAYER);
-				CombineProto(REF_OUT m_CopyBuffer, REF_OUT m_CopyPacketHead, scOtherLogin, TAG_SC::TAG_SC_OTHERCLIENTLOGIN);
-				SendData(&m_CopyBuffer[0], m_CopyPacketHead);
+				CombineProto(REF_OUT GetCopyBuffer(), REF_OUT GetPacketHead(), scOtherLogin, TAG_SC::TAG_SC_OTHERCLIENTLOGIN);
+				SendData(GetCopyBufferPointer(), GetPacketHead());
 			}
 		}
 		// Monster의 패킷들을 미리 보내버린다. 
@@ -157,7 +145,10 @@ namespace Server {
 			const MOBOBJCONTAINER& GameObjectContainer = _spCoreInstance->GetMobObjContainer();
 			for (auto& iter : GameObjectContainer)
 			{
-				if (nullptr == iter.second)
+				if (true == iter.second->IsActive())
+					continue;
+
+				if (true == iter.second->IsPermanentDisable())
 					continue;
 
 				SHPTR<AAnimController> spAnimController = iter.second->GetAnimController();
@@ -170,15 +161,15 @@ namespace Server {
 				PROTOFUNC::MakeScMonsterResourceData(&scMonsterResourceData, iter.first, vPos, vRotate,
 					vScale, spAnimController->GetCurAnimIndex(), iter.second->GetMonsterType());
 
-				CombineProto(REF_OUT m_CopyBuffer, REF_OUT m_CopyPacketHead, scMonsterResourceData, TAG_SC::TAG_SC_MONSTERRESOURCEDATA);
-				SendData(&m_CopyBuffer[0], m_CopyPacketHead);
+				CombineProto(REF_OUT GetCopyBuffer(), REF_OUT GetPacketHead(), scMonsterResourceData, TAG_SC::TAG_SC_MONSTERRESOURCEDATA);
+				SendData(GetCopyBufferPointer(), GetPacketHead());
 			}
 			// 모든 자원들을 보내는데 성공했으면 
 			{
 				SC_START_INFORMATION_SUCCESS		scStartInfomationSuccess;
-				PROTOFUNC::MakeScStartInformationSucess(&scStartInfomationSuccess, GetSessionID(), GameObjectContainer.size());
-				CombineProto(REF_OUT m_CopyBuffer, REF_OUT m_CopyPacketHead, scStartInfomationSuccess, TAG_SC::TAG_SC_START_INFORMATION_SUCCESS);
-				SendData(&m_CopyBuffer[0], m_CopyPacketHead);
+				PROTOFUNC::MakeScStartInformationSucess(&scStartInfomationSuccess, GetSessionID(), (_int)GameObjectContainer.size());
+				CombineProto(REF_OUT GetCopyBuffer(), REF_OUT GetPacketHead(), scStartInfomationSuccess, TAG_SC::TAG_SC_START_INFORMATION_SUCCESS);
+				SendData(GetCopyBufferPointer(), GetPacketHead());
 			}
 		}
 	}
@@ -200,31 +191,54 @@ namespace Server {
 		}
 		_bool IsMove = false;
 		SHPTR<ACell> spCurrentCell{ nullptr };
-		IsMove = spNavigation->IsMove(GetCurOnCellIndex(), vPosition, REF_OUT spCurrentCell);
-		if (true == IsMove)
+		// 네비게이션을 통해 이동할 수 없는 위치를 표시한다. 
 		{
-			GetTransform()->SetPos(vPosition);
-			SetCurOnCellIndex(spCurrentCell->GetIndex());
+			IsMove = spNavigation->IsMove(GetCurOnCellIndex(), vPosition, REF_OUT spCurrentCell);
+			if (true == IsMove)
+			{
+				GetTransform()->SetPos(vPosition);
+				SetCurOnCellIndex(spCurrentCell->GetIndex());
+			}
+			else
+			{
+				vPosition = GetTransform()->GetPos();
+			}
+			PROTOFUNC::MakeVector3(OUT & vSendPosition, vPosition.x, vPosition.y, vPosition.z);
+			PROTOFUNC::MakeVector3(OUT & vSendRotate, vRotate.x, vRotate.y, vRotate.z);
 		}
-		else
+		// 몬스터 활성화 
 		{
-			vPosition = GetTransform()->GetPos();
+			const MOBOBJCONTAINER& MobObjectContainer = _spCoreInstance->GetMobObjContainer();
+			for (auto& iter : MobObjectContainer)
+			{
+				// 영구적 비활성화
+				if (true == iter.second->IsPermanentDisable())
+					continue;
+				// 거리를 받아옴
+				_float fDistanace =  iter.second->GetTransform()->ComputeDistance(vPosition);
+				if (fDistanace <= SEE_RANGE)
+				{
+					iter.second->InsertMobJobTimer(GetSessionID());
+				}
+				else
+				{
+					iter.second->SetActiveStrong(false);
+				}
+			}
 		}
-
-		PROTOFUNC::MakeVector3(OUT & vSendPosition, vPosition.x, vPosition.y, vPosition.z);
-		PROTOFUNC::MakeVector3(OUT & vSendRotate, vRotate.x, vRotate.y, vRotate.z);
-
+		// 만약 움직일 수 없으면
 		if (false == IsMove)
 		{
+			// 이전 위치로 이동할 수 있도록 한다. 
 			SELFPLAYERMOVE selfPlayerMove;
 			PROTOFUNC::MakeSelfPlayerMove(OUT & selfPlayerMove, GetSessionID(), vSendPosition);
 			PROTOFUNC::MakeCharMove(OUT & csMove, _SessionID, vSendPosition, vSendRotate);
-			SendProtoData(m_CopyBuffer, selfPlayerMove, TAG_SC::TAG_SC_SELFPLAYERMOVE);
+			SendProtoData(REF_OUT GetCopyBuffer(), selfPlayerMove, TAG_SC::TAG_SC_SELFPLAYERMOVE);
 		}
+		//  다른 모든 클라이언트에 메시지 보낸다. 
 		{
-			CombineProto(REF_OUT m_CopyBuffer, REF_OUT m_CopyPacketHead, csMove, TAG_SC::TAG_SC_CHARMOVE);
-			_spCoreInstance->BroadCastMessageExcludingSession(_SessionID, &m_CopyBuffer[0], m_CopyPacketHead);
-			//			spCoreInstance->BroadCastMessage(&m_CopyBuffer[0], m_CopyPacketHead);
+			CombineProto(REF_OUT GetCopyBuffer(), REF_OUT GetPacketHead(), csMove, TAG_SC::TAG_SC_CHARMOVE);
+			_spCoreInstance->BroadCastMessageExcludingSession(_SessionID, GetCopyBufferPointer(), GetPacketHead());
 		}
 	}
 
@@ -232,8 +246,8 @@ namespace Server {
 	{
 		PLAYERSTATE PlayerState;
 		PlayerState.ParseFromArray(_pPacket, _PacketHead.PacketSize);
-		CombineProto(REF_OUT m_CopyBuffer, REF_OUT m_CopyPacketHead, PlayerState, TAG_SC::TAG_SC_PLAYERSTATE);
-		_spCoreInstance->BroadCastMessageExcludingSession(PlayerState.id(), &m_CopyBuffer[0], m_CopyPacketHead);
+		CombineProto(REF_OUT GetCopyBuffer(), REF_OUT GetPacketHead(), PlayerState, TAG_SC::TAG_SC_PLAYERSTATE);
+		_spCoreInstance->BroadCastMessageExcludingSession(PlayerState.id(), GetCopyBufferPointer(), GetPacketHead());
 	}
 
 	void CPlayerSession::Free()

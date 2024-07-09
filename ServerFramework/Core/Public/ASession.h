@@ -31,19 +31,6 @@ public:
 	virtual _bool SendData(_char* _pPacket, const PACKETHEAD& _PacketHead) PURE;
 	virtual void Disconnect() PURE;
 	virtual void ConnectTcpSocket() PURE;
-
-	/*
-	@ Date: 2024-01-04, Writer: 박태현
-	@ Explain
-	- ProtocolBuffer를 조합하기 위한 함수이다. 
-	*/
-	template<class T>
-	void CombineProto(REF_IN BUFFER& _Buffer, REF_IN PACKETHEAD& _PacketHead, const T& _data, _int _tag)
-	{
-		_data.SerializePartialToArray((void*)&_Buffer[0], static_cast<int>(_data.ByteSizeLong()));
-		_PacketHead.PacketSize = static_cast<short>(_data.ByteSizeLong());
-		_PacketHead.PacketType = static_cast<short>(_tag);
-	}
 	/*
 	@ Date: 2024-01-05, Writer: 박태현
 	@ Explain
@@ -59,12 +46,12 @@ public:
 	}
 public: /*Get Set */
 	TCPSOCKET& GetTcpSocket(REF_RETURN) { return m_TcpSocket; }
-	const _bool IsConnected() const { return m_isConnected.load(); }
 protected:
 	void PacketCombine(_char* _pPacket, _llong _Size);
 	virtual _bool ProcessPacket(_char* _pPacket, const PACKETHEAD& _PacketHead) PURE;
 	void CombineSendBuffer(_char* _pPacket, const PACKETHEAD& _PacketHead);
 	void Leave();
+protected: /* get set*/
 	BUFFER& GetSendBuff(REF_RETURN) { return m_SendBuffer; }
 private:
 	virtual void Free() override;
@@ -74,10 +61,9 @@ private:
 	_llong								m_CurBuffuerLocation;
 	// Buffer 모음
 	TOTALBUFFER				m_TotalBuffer;
-	BUFFER							m_SendBuffer;
 	BUFFER							m_RecvBuffer;
-
-	ATOMIC<_bool>			m_isConnected;
+	// SendBuffer
+	BUFFER							m_SendBuffer;
 };
 
 END

@@ -26,7 +26,6 @@ namespace PROTOFUNC
 		double _animDuration, int _curAnimIndex);
 	void MakeSelfPlayerMove(SELFPLAYERMOVE* _pOut, LLONG _id, const VECTOR3& _move);
 	void MakeCharMove(CHARMOVE* _pOut, LLONG _id, const VECTOR3&  _move, const VECTOR3& _rotate);
-	void MakeMonsterState(MONSTERSTATE* _pOut, LLONG _id, double _animDuration, int _curAnimIndex);
 
 	/* =========== SC =============== */
 	// Server To Client 
@@ -38,6 +37,9 @@ namespace PROTOFUNC
 	void MakeScStartInformationSucess(SC_START_INFORMATION_SUCCESS* _pOut, LLONG _id, int _monsterNum);
 	void MakeScMonsterResourceData(SC_MONSTERRESOURCEDATA* _pOut, LLONG _id, const VECTOR3& _vPos,
 		const VECTOR3& _vRotate, const VECTOR3& _vScale, int _animIndex, int _type);
+	void MakeScMonsterState(SC_MONSTERSTATE* _pOut, LLONG _id, const double& _dAnimTime, int _animindex, int _state);
+	void MakeScMonsterStateHavePos(SC_MONSTERSTATEHAVEPOS* _pOut, LLONG _id, const VECTOR3& _vPos, const VECTOR3& _vRotate, 
+		const double& _dAnimTime, int _animindex, int _state);
 
 	/* =========== CS =============== */
 	// Client To Server 

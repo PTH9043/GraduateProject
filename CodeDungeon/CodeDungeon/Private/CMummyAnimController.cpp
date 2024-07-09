@@ -57,10 +57,10 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
 
     ClearTrigger();
     SetAnimState(-1);
-#ifndef _ENABLE_PROTOBUFF
-
     SHPTR<CMummy> spMummy = m_wpMummyMob.lock();
     SHPTR<UAnimModel> spAnimModel = spMummy->GetAnimModel();
+
+#ifndef _ENABLE_PROTOBUFF
     const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
 
     _float DistanceFromPlayer = spMummy->GetDistanceFromPlayer();

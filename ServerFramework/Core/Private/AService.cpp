@@ -37,7 +37,7 @@ namespace Core {
 		RETURN_CHECK(0 >= m_SessionContainer.size(), ;);
 		for (auto& iter : m_SessionContainer)
 		{
-			if (nullptr == iter.second)
+			if (true == iter.second->IsPermanentDisable())
 				continue;
 
 			iter.second->SendData(_pPacket, _PacketHead);
@@ -52,7 +52,7 @@ namespace Core {
 			if (iter.first == _SessionID)
 				continue;
 
-			if (nullptr == iter.second)
+			if (true == iter.second->IsPermanentDisable())
 				continue;
 
 
@@ -79,7 +79,6 @@ namespace Core {
 			{
 				// Session »èÁ¦
 				iter->second->Disconnect();
-				iter->second.reset();
 			}
 		}
 	}
