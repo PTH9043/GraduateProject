@@ -42,25 +42,27 @@ HRESULT CLogoScene::LoadSceneData()
 
 void CLogoScene::Tick(const _double& _dTimeDelta)
 {
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-//	if (true == spGameInstance->IsNetworkResourceRecvSuccess())
-	{
-	//	spGameInstance->RegisterScene(CreateConstructorNative<CMainScene>(GetDevice()));
-	}
-}
-
-void CLogoScene::LateTick(const _double& _dTimeDelta)
-{
-
 	if (m_spImageUI->IsMouseOnRect())
 	{
 		// Ratio를 변경하는 함수
 		m_spOtherImageUI->UpdateRatio(0.05f);
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	//	if (true == spGameInstance->IsNetworkResourceRecvSuccess())
+
+		//if(spGameInstance->IsP)
+		{
+		//	spGameInstance->RegisterScene(CreateConstructorNative<CMainScene>(GetDevice()));
+		}
 	}
 	else
 	{
 		m_spOtherImageUI->UpdateRatio(0.2f);
 	}
+	// 다음으로 넘어가려면 아래 코드 해제
+}
+
+void CLogoScene::LateTick(const _double& _dTimeDelta)
+{
 
 	// 위치 변경
 	//m_spOtherImageUI->UpdatePos(_float2{});
