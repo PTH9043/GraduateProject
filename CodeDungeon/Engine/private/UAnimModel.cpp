@@ -274,6 +274,7 @@ void UAnimModel::SetAnimation(const _wstring& _wstrAnimName)
 
 void UAnimModel::SetAnimation(const _uint& _iAnimIndex, const _double& _dNextTimeAcc)
 {
+	ResetCurAnimEvent();
 	SetAnimation(_iAnimIndex);
 	// Change Time Acc
 	m_spCurAnimation->UpdateTimeAccToChannelIndex(_dNextTimeAcc);
@@ -298,6 +299,7 @@ void UAnimModel::ChangeAnimation(const _wstring& _wstrAnimName)
 
 void UAnimModel::ChangeAnimation(const _uint& _iAnimIndex, const _double& _dNextTimeAcc)
 {
+	ResetCurAnimEvent();
 	ChangeAnimIndex(_iAnimIndex, m_iNextAnimIndex);
 	// 다음 애니메이션이 세팅되는 상황일 때의 함수 실행
 	SettingNextAnimSituation();

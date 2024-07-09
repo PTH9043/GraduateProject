@@ -6,6 +6,7 @@ BEGIN(Engine)
 class UParticle;
 class UFire;
 class UGuard;
+class UBlood;
 END
 
 BEGIN(Tool)
@@ -89,6 +90,7 @@ private:
 	FIREDISTORTIONBUFFER*		m_stFireDistortionBuffer;
 
 	SHPTR<UGuard> m_stGuard;
+	SHPTR<UBlood> m_stBlood;
 
 };
 

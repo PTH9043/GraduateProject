@@ -14,14 +14,23 @@
 #pragma comment(lib, "ProtocolBuffer")
 #pragma comment(lib, "Core")
 #endif
-namespace Core 
+
+using namespace Core;
+
+namespace Server 
 {
-	enum TIMERTYPE : _int
+	enum TIMERTYPE : Core::_int
 	{
 		TIMER_ASTAR, TIMER_DB, TIMER_MOB, TIMER_END
 	};
-}
 
-using namespace Core;
+	enum SARCOPHAGUSTYPE {
+		SARCO_STANDING, SARCO_LAYING, SARCO_END
+	};
+
+	enum MUMMYTYPE {
+		MUMMY_STANDING, MUMMY_LAYING, MUMMY_END
+	};
+}
 
 #endif // _SERVERFRAMEWORK_SERVER_PUBLIC_SERVERDEFINES_H

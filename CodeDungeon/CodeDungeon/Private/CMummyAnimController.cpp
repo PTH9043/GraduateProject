@@ -61,9 +61,10 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
 
     ClearTrigger();
     SetAnimState(-1);
-
     SHPTR<CMummy> spMummy = m_wpMummyMob.lock();
     SHPTR<UAnimModel> spAnimModel = spMummy->GetAnimModel();
+
+#ifndef _ENABLE_PROTOBUFF
     const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
 
     _float DistanceFromPlayer = spMummy->GetDistanceFromPlayer();
@@ -135,7 +136,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     if (Hit)
     {
         UpdateState(spAnimModel, ANIM_HIT, L"HIT");
-        spAnimModel->SetAnimation(L"gotHit");
+    //    spAnimModel->SetAnimation(L"gotHit");
         m_bstartlastHitTime = true;
         spMummy->SetHitstate(false);
     }
@@ -171,6 +172,8 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     {
         UpdateState(spAnimModel, ANIM_DEATH, L"DEAD");
     }
+
+#endif
 
     // Tick event
     spAnimModel->TickEvent(spMummy.get(), GetTrigger(), _dTimeDelta);

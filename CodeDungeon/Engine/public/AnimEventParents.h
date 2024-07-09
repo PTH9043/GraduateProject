@@ -72,7 +72,7 @@ protected:
 	virtual void SaveEvent( std::ofstream& _save) PURE;
 	virtual void LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) PURE;
 protected:
-	void ResetEventData(UAnimModel* _pAnimModel);
+	void ResetEventData();
 private:
 	virtual void Free() PURE;
 private:

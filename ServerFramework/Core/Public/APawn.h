@@ -5,27 +5,24 @@
 
 BEGIN(Core)
 class AAnimator;
+class AAnimController;
 
 class CORE_DLL APawn abstract : public AGameObject {
 public:
 	APawn(OBJCON_CONSTRUCTOR, SESSIONID _ID, SESSIONTYPE _SessionType);
 	DESTRUCTOR(APawn)
-public:
-	virtual void AnimTick(const _double _dTimeDelta);
-	void CreateAnimator(const _string& _strFolderPath, const _string& _strFileName);
 public: /* get set */
-	SHPTR<AAnimator> GetAnimator() { return m_spAnimator; }
-	const _string GetAnimTrigger() const { READ_LOCK(m_TriggerLock); return  m_strAnimTrigger; }
+	SHPTR<AAnimController> GetAnimController() { return m_spAnimController; }
 
-	void SetAnimTrigger(const _string _strAnimTrigger);
+	virtual void SetActiveWeak(const _bool _isActive) override;
+	virtual void SetActiveStrong(const _bool _isActive) override;
+protected: /* get set*/
+	void SetAnimController(SHPTR<AAnimController> _spAnimController) { this->m_spAnimController = _spAnimController; }
 private:
 	virtual void Free() override;
 private:
-	USE_LOCK								m_TriggerLock;
-	// Animation Trigger
-	_string									m_strAnimTrigger;
 	// Animator
-	SHPTR< AAnimator>			m_spAnimator;
+	SHPTR< AAnimController>		m_spAnimController;
 };
 
 

@@ -127,11 +127,18 @@ namespace Core {
 		ATOMIC<_llong>	m_LockFlag;
 	};
 
-	class UReadSpinLockGuard {
+	class AReadSpinLockGuard {
 	public:
-		UReadSpinLockGuard(const AFastSpinLock& _Lock) : m_SpinLock{ _Lock } { m_SpinLock.EnterReadLock(); }
-		~UReadSpinLockGuard() { m_SpinLock.LeaveReadLock(); }
+		AReadSpinLockGuard() : m_SpinLock{} {}
+		AReadSpinLockGuard(const AFastSpinLock& _Lock) : m_SpinLock{ _Lock } { m_SpinLock.EnterReadLock(); }
+		~AReadSpinLockGuard() { m_SpinLock.LeaveReadLock(); }
 
+		AReadSpinLockGuard& operator()(const AFastSpinLock& _Lock)
+		{
+			m_SpinLock = _Lock;
+			m_SpinLock.EnterReadLock();
+			return *this;
+		}
 
 	private:
 		AFastSpinLock			m_SpinLock;
@@ -139,9 +146,16 @@ namespace Core {
 
 	class AWriteSpinLockGuard {
 	public:
+		AWriteSpinLockGuard() : m_SpinLock{}{}
 		AWriteSpinLockGuard(const AFastSpinLock& _Lock) : m_SpinLock{ _Lock } { m_SpinLock.EnterWriteLock(); }
 		~AWriteSpinLockGuard() { m_SpinLock.LeaveWriteLock(); }
 
+		AWriteSpinLockGuard& operator()(const AFastSpinLock& _Lock)
+		{
+			m_SpinLock = _Lock;
+			m_SpinLock.EnterWriteLock();
+			return *this;
+		}
 
 	private:
 		AFastSpinLock			m_SpinLock;

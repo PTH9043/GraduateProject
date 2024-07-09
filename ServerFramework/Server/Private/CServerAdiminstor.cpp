@@ -5,6 +5,8 @@
 #include "CMonsterJobTimer.h"
 #include "APathJobTimer.h"
 #include "CMummy.h"
+#include "CMobLayoutLoader.h"
+#include "CSarcophagus.h"
 
 namespace Server
 {
@@ -15,15 +17,34 @@ namespace Server
 
 	bool CServerAdiminstor::NativeConstruct()
 	{
-		GetCoreInstance()->RegisterJob(TIMERTYPE::TIMER_MOB, Create<CMonsterJobTimer>(GetCoreInstance(), GetIOContext()));
-		GetCoreInstance()->RegisterJob(TIMERTYPE::TIMER_ASTAR, Create<APathJobTimer>(GetCoreInstance(), GetIOContext()));
 		Connect();
 		return __super::NativeConstruct();
 	}
 
 	bool CServerAdiminstor::Start()
 	{
-		SHPTR<CMummy> spMummy = Create<CMummy>(GetCoreInstance(), GiveID());
+		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+		SHPTR<AJobTimer> spMonsterJobTimer = Create<CMonsterJobTimer>(GetCoreInstance(), GetIOContext());
+		spCoreInstance->RegisterJob(TIMERTYPE::TIMER_MOB, spMonsterJobTimer);
+		spCoreInstance->RegisterJob(TIMERTYPE::TIMER_ASTAR, Create<APathJobTimer>(GetCoreInstance(), GetIOContext()));
+
+		CMobLayoutLoader MummyStandingLayout("..\\..\\Resource\\MobsLayouts\\Mummy_Standing.bin");
+		// Standing
+		{
+			for (auto& iter : MummyStandingLayout.GetMobData())
+			{
+				CreateMummyAndSarphagousMob(&iter, SARCO_STANDING, spMonsterJobTimer);
+			}
+		}
+		CMobLayoutLoader MummylayingLayout("..\\..\\Resource\\MobsLayouts\\Mummy_Laying.bin");
+		// Standing
+		{
+			SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+			for (auto& iter : MummylayingLayout.GetMobData())
+			{
+				CreateMummyAndSarphagousMob(&iter, SARCO_LAYING, spMonsterJobTimer);
+			}
+		}
 
 		return __super::Start();
 	}
@@ -45,6 +66,15 @@ namespace Server
 			Connect();
 			});
 	}
+
+	void CServerAdiminstor::CreateMummyAndSarphagousMob(void* _pData, SARCOPHAGUSTYPE _SarcophagusType, SHPTR<AJobTimer> _spMonsterJobTimer)
+	{
+		SHPTR<CSarcophagus> spSarcophagus = Create<CSarcophagus>(GetCoreInstance(), GiveID(), _SarcophagusType, _spMonsterJobTimer);
+		SESSIONID MummyID = GiveID();
+		spSarcophagus->Start(VOIDDATAS{ _pData, &MummyID });
+		InsertMobObject(spSarcophagus->GetSessionID(), spSarcophagus);
+	}
+
 	void CServerAdiminstor::Free()
 	{
 	}

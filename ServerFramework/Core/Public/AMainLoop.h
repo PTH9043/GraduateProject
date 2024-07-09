@@ -4,23 +4,23 @@
 #include "ACoreObject.h"
 
 BEGIN(Core)
-class AServerService;
+class AService;
 class AGameTimer;
 
 class AMainLoop final : public ACoreObject {
 public:
-	AMainLoop(OBJCON_CONSTRUCTOR, Asio::io_context& _context);
+	AMainLoop(OBJCON_CONSTRUCTOR, Asio::io_context& _context, SHPTR<AService> _spServerService);
 	DESTRUCTOR(AMainLoop)
 public:
-	void RegisterTimer(const _double& _dTimeDelta);
+	void RegisterTimer();
 	void TimerThread(const boost::system::error_code& _error);
 private:
 	virtual void Free() override;
 private:
-	Asio::deadline_timer 				m_DeadLineEvent;
+	Asio::steady_timer 				m_SteadyTimer;
 
 	SHPTR<AGameTimer>			m_spGameTimer;
-	WKPTR< AServerService>		m_wpServerService;
+	WKPTR< AService>		m_wpServerService;
 };
 
 END

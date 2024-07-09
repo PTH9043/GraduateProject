@@ -135,7 +135,7 @@ PS_OUT PS_Main(VS_OUT In)
       //  fireColor = float4(0, 0.5, 0.5, 0.35);
    
     
-    Out.vGlow = float4(fireColor.xyz, 0.5);
+    Out.vGlow = float4(fireColor.xyz, 0.5f);
     Out.vColor = fireColor;
    
 

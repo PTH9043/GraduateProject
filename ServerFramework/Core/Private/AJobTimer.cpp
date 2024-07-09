@@ -9,6 +9,10 @@ namespace Core {
 	{
 	}
 
+	void AJobTimer::Free()
+	{
+	}
+
 	void AJobTimer::RegisterTimer(_int _RegisterTimer)
 	{
 		m_SteadyEvent.expires_from_now(std::chrono::milliseconds(_RegisterTimer));
@@ -35,10 +39,5 @@ namespace Core {
 	void AJobTimer::InsertTimerEvent(TIMEREVENT _TimerEvent)
 	{
 		m_TimerEventQueue.push(_TimerEvent);
-	}
-
-
-	void AJobTimer::Free()
-	{
 	}
 }

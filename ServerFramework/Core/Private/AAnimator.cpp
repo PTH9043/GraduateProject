@@ -54,6 +54,8 @@ namespace Core
 		m_AnimEventColliderContainer.emplace(MakePair(ACollider::TYPE_AABB, Create<ACollider>(ACollider::TYPE_AABB, Desc)));
 		m_AnimEventColliderContainer.emplace(MakePair(ACollider::TYPE_OBB, Create<ACollider>(ACollider::TYPE_OBB, Desc)));
 		m_AnimEventColliderContainer.emplace(MakePair(ACollider::TYPE_SPHERE, Create<ACollider>(ACollider::TYPE_SPHERE, Desc)));
+
+		SetAnimation(0);
 	}
 
 	AAnimator::AAnimator(const AAnimator& _rhs) : 

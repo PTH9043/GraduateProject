@@ -51,7 +51,7 @@ void CNetworkWarriorPlayerController::Tick(const _double& _dTimeDelta)
 	}
 
 	spAnimModel->TickEventToRatio(spWarriorPlayer.get(), L"", m_dRecvAnimDuration, _dTimeDelta);
-	spAnimModel->TickAnimation(_dTimeDelta);
+	spAnimModel->UpdateCurAnimationToRatio(m_dRecvAnimDuration);
 
 }
 

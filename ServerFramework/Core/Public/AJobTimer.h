@@ -13,7 +13,7 @@ using TIMEREVENTQUEUE = CONPRIORITYQUEUE<TIMEREVENT>;
 - 일을 생성하는 클래스로 해당 클래스를 통해 몬스터의 AI, 실시간으로 DB에 저장이 필요한 값들을 
 저장할 수 있다. 
 */
-class AJobTimer abstract : public ACoreObject {
+class CORE_DLL AJobTimer abstract : public ACoreObject {
 public:
 	AJobTimer(OBJCON_CONSTRUCTOR, Asio::io_context& _context);
 	DESTRUCTOR(AJobTimer)

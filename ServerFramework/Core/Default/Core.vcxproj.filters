@@ -172,6 +172,9 @@
     <Filter Include="03.Network\MainLoop">
       <UniqueIdentifier>{e253d4e7-0e53-496a-a19d-4249d1a5d434}</UniqueIdentifier>
     </Filter>
+    <Filter Include="08.Animator\Controller">
+      <UniqueIdentifier>{aa34c3b8-2935-4b16-a5e9-3cb9009fb280}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ACoreBase.h">
@@ -354,6 +357,9 @@
     <ClInclude Include="..\Public\AMainLoop.h">
       <Filter>03.Network\MainLoop</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\AAnimController.h">
+      <Filter>08.Animator\Controller</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\ACoreBase.cpp">
@@ -502,6 +508,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\AMainLoop.cpp">
       <Filter>03.Network\MainLoop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AAnimController.cpp">
+      <Filter>08.Animator\Controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

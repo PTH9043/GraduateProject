@@ -8,6 +8,7 @@ BEGIN(Core)
 class AJobTimer;
 class AMainLoop;
 class ACoreInstance;
+class AService;
 
 using THREAD = std::thread;
 using THRAEDVECTOR = VECTOR<THREAD>;
@@ -25,7 +26,7 @@ public:
 	DESTRUCTOR(AThreadManager)
 
 public:
-	void CreateMainLoop(SHPTR<ACoreInstance> _spCoreinstance, Asio::io_service& _service);
+	void CreateMainLoop(SHPTR<ACoreInstance> _spCoreinstance, Asio::io_service& _service, SHPTR< AService> _spService);
 	void RegisterFunc(const THREADFUNC& _CallBack, void* _Data);
 	void RegisterJob(_int _jobType, CSHPTRREF<AJobTimer> _spJobTimer);
 	SHPTR<AJobTimer> FindJobTimer(_int _JobTimer);

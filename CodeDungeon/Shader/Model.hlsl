@@ -98,8 +98,8 @@ PS_OUT PS_Main(PS_IN In)
 
     if (HasBuffer[0])
         Out.vDiffuse = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV0);
-    if (HasBuffer[1])
-        Out.vSpecular = g_Texture1.Sample(g_Sampler_Normal, In.vTexUV0);
+    //if (HasBuffer[1])
+    //    Out.vSpecular = g_Texture1.Sample(g_Sampler_Normal, In.vTexUV0);
 
 
     

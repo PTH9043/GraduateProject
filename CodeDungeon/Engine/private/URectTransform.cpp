@@ -34,11 +34,8 @@ HRESULT URectTransform::NativeConstructClone(const VOIDDATAS& _vecDatas)
 		m_stRectDesc = UMethod::ConvertTemplate_Index<URectTransform::RECTDESC>(_vecDatas, 0);
 		RETURN_CHECK(m_stRectDesc.pTransform == nullptr, E_FAIL);
 
-		m_stRectDesc.pTransform->SetScale(_float3(m_stRectDesc.vSize.x, m_stRectDesc.vSize.y, 1.f));
-		m_stRectDesc.pTransform->SetPos(_float3(m_stRectDesc.vPos.x - m_stRectDesc.iWindowX * 0.5f,
-			-m_stRectDesc.vPos.y + m_stRectDesc.iWindowY * 0.5f, m_stRectDesc.fRatio));
-
-		ResizeMinMax();
+	ResizeMinMax();
+	ComputeRectSize();
 	}
 	return S_OK;
 }
@@ -101,7 +98,7 @@ void URectTransform::ResizeMinMax()
 		std::swap(vMinPos.x, vMaxPos.x);
 
 	if (vMinPos.y > vMaxPos.y)
-		std::swap(vMinPos.x, vMaxPos.x);
+		std::swap(vMinPos.y, vMaxPos.y);
 
 	m_vMaxPos = vMaxPos;
 	m_vMinPos = vMinPos;

@@ -19,6 +19,10 @@ namespace Core
 		m_spPathFinder = CreateInitNative<APathFinder>(m_spNavigation);
 	}
 
+	void APathJobTimer::Free()
+	{
+	}
+
 	void APathJobTimer::TickTimer(const TIMEREVENT& _TimerEvent)
 	{
 		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
@@ -31,9 +35,5 @@ namespace Core
 
 		LIST<SHPTR<ACell>> PathList = m_spPathFinder->FindPath(spMonsterTr, spSessionTr);
 		spMonster->InsertPathList(PathList);
-	}
-
-	void APathJobTimer::Free()
-	{
 	}
 }

@@ -11,8 +11,11 @@
 #define PROTO_ACTOR_SARCOPHAGUSLYING L"Proto_Actor_SarcophagusLying"
 #define PROTO_ACTOR_SARCOPHAGUSSTANDING L"Proto_Actor_SarcophagusStanding"
 #define PROTO_ACTOR_MINOTAUR L"Proto_Actor_Minotaur"
-
 #define PROTO_ACTOR_LONGSWORD L"Proto_Actor_LongSword"
+
+#define PROTO_ACTOR_IMAGEUI L"Proto_Actor_ImageUI"
+
+#define PROTO_RES_UITEXTUREGROUP L"Proto_Res_UITextureGroup"
 
 #define PROTO_RES_FEMAILPLAYERANIMMODEL L"Proto_Res_FemailPlayerAnimModel"
 #define PROTO_RES_MUMMYANIMMODEL L"Proto_Res_MummyAnimModel"
@@ -20,11 +23,10 @@
 #define PROTO_RES_SARCOPHAGUSSTANDINGANIMMODEL L"Proto_Res_SarcophagusStandingAnimModel"
 #define PROTO_RES_CHESTANIMMODEL L"Proto_Res_ChestAnimModel"
 #define PROTO_RES_MINOTAURANIMMODEL L"Proto_Res_MinotaurAnimModel"
-
 #define PROTO_RES_LONGSWORDMODEL L"Proto_Res_LongSwordModel"
 
 #define PROTO_COMP_USERWARRIORANIMCONTROLLER L"Proto_Comp_UserWarriorAnimController"
-#define PROTO_COMP_MUMMYANIMCONTROLLER L"Proto_Comp_MummyAniMController"
+#define PROTO_COMP_MUMMYANIMCONTROLLER L"Proto_Comp_MummyAnimController"
 #define PROTO_COMP_SARCOPHAGUSANIMCONTROLLER L"Proto_Comp_SarcophagusAniMController"
 #define PROTO_COMP_CHESTANIMCONTROLLER  L"Proto_Comp_ChestAniMController"
 #define PROTO_COMP_NETWORKWARRIORANIMCONTROLLER L"Proto_Comp_NetworkWarriorAnimController"

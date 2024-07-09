@@ -1,30 +1,32 @@
 #include "CoreDefines.h"
 #include "AMainLoop.h"
-#include "AServerService.h"
+#include "AService.h"
 #include "AGameTimer.h"
 #include "ACoreInstance.h"
 #include "AMonster.h"
 #include "AAnimator.h"
+#include "AAnimController.h"
 
 namespace Core {
 
-	AMainLoop::AMainLoop(OBJCON_CONSTRUCTOR, Asio::io_context& _context) :
+	AMainLoop::AMainLoop(OBJCON_CONSTRUCTOR, Asio::io_context& _context, SHPTR<AService> _spServerService) :
 		ACoreObject(OBJCON_CONDATA), m_spGameTimer{ Create<AGameTimer>() }, 
-		m_DeadLineEvent{ _context,  boost::posix_time::microseconds(100) }
+		m_SteadyTimer{ _context }, m_wpServerService{_spServerService}
 	{
 
 	}
 
-	void AMainLoop::RegisterTimer(const _double& _dTimeDelta)
+	void AMainLoop::RegisterTimer()
 	{
+		m_SteadyTimer.expires_from_now(std::chrono::microseconds(10));
 		// 타이머의 비동기 대기 설정
-		m_DeadLineEvent.async_wait(std::bind(&AMainLoop::TimerThread, this, std::placeholders::_1));
+		m_SteadyTimer.async_wait(std::bind(&AMainLoop::TimerThread, this, std::placeholders::_1));
 	}
 
 	void AMainLoop::TimerThread(const boost::system::error_code& _error)
 	{
 		m_spGameTimer->Tick();
-		SHPTR<AServerService> spServerService = m_wpServerService.lock();
+		SHPTR<AService> spServerService = m_wpServerService.lock();
 		{
 			_double dTimeDelta = m_spGameTimer->GetDeltaTime();
 			LIST<SHPTR<AMonster>> aliveMonster;
@@ -33,6 +35,10 @@ namespace Core {
 				for (auto& iter : spServerService->GetMobObjContainer())
 				{
 					SHPTR<AMonster> spMonster = iter.second;
+
+					if (true == spMonster->IsPermanentDisable())
+						continue;
+
 					if (true == spMonster->IsActive())
 					{
 						aliveMonster.push_back(spMonster);
@@ -43,10 +49,11 @@ namespace Core {
 			{
 				for (auto& iter : aliveMonster)
 				{
-					iter->AnimTick(dTimeDelta);
+					iter->GetAnimController()->Tick(dTimeDelta);
 				}
 			}
 		}
+		RegisterTimer();
 	}
 
 	void AMainLoop::Free()

@@ -165,7 +165,7 @@ PS_OUT PS_Main(PS_IN In)
     // Out Color    
     
     Out.vDiffuse = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV0);
-    Out.vSpecular = g_Texture1.Sample(g_Sampler_Normal, In.vTexUV0);
+    //Out.vSpecular = g_Texture1.Sample(g_Sampler_Normal, In.vTexUV0);
     
     if (Out.vDiffuse.a <= 0.05)
         discard;

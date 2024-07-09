@@ -7,7 +7,7 @@ BEGIN(Core)
 class ANavigation;
 class APathFinder;
 
-class APathJobTimer : public AJobTimer {
+class CORE_DLL APathJobTimer : public AJobTimer {
 public:
 	APathJobTimer(OBJCON_CONSTRUCTOR, Asio::io_context& _context);
 	DESTRUCTOR(APathJobTimer)

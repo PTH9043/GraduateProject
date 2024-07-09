@@ -87,7 +87,8 @@ void CMap::LoadRooms()
 				CRooms::ROOMDESC tDesc;
 				tDesc._wsRoomName = FileName;
 
-				SHPTR<CRooms> _Room = std::static_pointer_cast<CRooms>(spGameInstance->CloneActorAdd(PROTO_ACTOR_ROOM, { &tDesc }));
+				SHPTR<CRooms> _Room = std::static_pointer_cast<CRooms>(spGameInstance->CloneActorAdd(
+					PROTO_ACTOR_ROOM, { &tDesc }));
 				m_spRoomContainer->emplace(FileName, _Room);
 			}
 		}
@@ -150,6 +151,7 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 				_ChestVec.push_back(_Chest);
 				spGameInstance->AddCollisionPawnList(_Chest);
 			}
+#ifndef _ENABLE_PROTOBUFF
 			else if (vecit._sAnimModelName == "Mummy_DEMO_1_FBX.bin")
 			{
 				CMummy::CHARACTERDESC MummyDesc{ PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_MUMMYANIMCONTROLLER };
@@ -207,6 +209,7 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 				_Minotaur->GetCurrentNavi()->FindCell(_Minotaur->GetTransform()->GetPos());
 				spGameInstance->AddCollisionPawnList(_Minotaur);
 			}
+#endif
 		}
 	}
 

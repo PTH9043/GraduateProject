@@ -9,6 +9,25 @@ END
 BEGIN(Client)
 class CMob : public UCharacter {
 public:
+    struct MOBNETWORKDATA
+    {
+        _int            iCellIndex;
+        _float3      vPos;
+        _float3      vRotate;
+        _float3      vScale;
+        _int            iAnimIndex;
+
+        MOBNETWORKDATA() : iCellIndex(0), vPos{}, vRotate {}, vScale{}, iAnimIndex{ 0 } {}
+
+        MOBNETWORKDATA(_int _iCellIndex, const _float3& _vPos, const _float3& _vRotate, const _float3& _vScale, _int _iAnimIndex)  : 
+            iCellIndex(_iCellIndex), vPos{_vPos}, vRotate(_vRotate), vScale{ _vScale }, iAnimIndex{ _iAnimIndex } {}
+    };
+
+    enum
+    {
+        MOBORDER = UCharacter::CHARACTERDESCORDER + 1
+    };
+public:
     CMob(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType);
     CMob(const CMob& _rhs);
     DESTRUCTOR(CMob)
@@ -34,6 +53,8 @@ public:
     CSHPTRREF<UPlayer> GetTargetPlayer() { return m_spTargetPlayer; }
     void SetTargetPlayer(CSHPTRREF<UPlayer> _targetPlayer) { m_spTargetPlayer = _targetPlayer; }
     const _bool& GetFoundTargetState() { return m_bFoundTarget; }
+    void SetFoundTargetState(_bool _isFoundTarget) { this->m_bFoundTarget = _isFoundTarget; }
+
     const _float& GetDistanceFromPlayer() { return m_fDistancefromNearestPlayer; }
     const _float3& GetTargetPos() { return m_f3TargetPos; }
     void SetMobPlacement(_int _CellIndex);

@@ -21,6 +21,19 @@ protected:
 	virtual void NativePacket() override;
 	virtual void ProcessPacket(_char* _pPacket, PACKETHEAD _PacketHead) override;
 private:
+#ifdef _ENABLE_PROTOBUFF
+	void MakeMonster(const NETWORKRECEIVEINITDATA& _NetworkRecvInitData);
+	void ConnectSuccessState(_char* _pPacket, const PACKETHEAD& _PacketHead);
+	void OtherClientLoginState(_char* _pPacket, const PACKETHEAD& _PacketHead);
+	void StartNetworkInfoSucess(_char* _pPacket, const PACKETHEAD& _PacketHead);
+	void MonsterResourceDataState(_char* _pPacket, const PACKETHEAD& _PacketHead);
+	void PlayerAnimState(_char* _pPacket, const PACKETHEAD& _PacketHead);
+	void CharMoveState(_char* _pPacket, const PACKETHEAD& _PacketHead);
+	void SelfPlayerMoveState(_char* _pPacket, const PACKETHEAD& _PacketHead);
+	void MonsterState(_char* _pPacket, const PACKETHEAD& _PacketHead);
+	void MonsterStateHaveMove(_char* _pPacket, const PACKETHEAD& _PacketHead);
+#endif
+private:
 	virtual void Free() override;
 private:
 };

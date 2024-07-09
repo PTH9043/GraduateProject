@@ -272,6 +272,7 @@ public: /* NetworkManager */
 	void NetworkEnd();
 	void SetSceneIDToNetController(const _int _iSceneID);
 	const _llong GetNetworkOwnerID() const;
+	const _bool IsNetworkResourceRecvSuccess() const;
 	/*
 	@ Date: 2024-02-04, Writer: นฺลยว๖
 	@ Explain

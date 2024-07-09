@@ -5,6 +5,7 @@ BEGIN(Engine)
 END
 
 BEGIN(Client)
+class CImageUI;
 
 class CLogoScene   final : public UScene {
 public:
@@ -18,7 +19,8 @@ public:
 	virtual void Tick(const _double& _dTimeDelta) override;
 	virtual void LateTick(const _double& _dTimeDelta) override;
 private:
-
+	SHPTR<CImageUI>			m_spImageUI;
+	SHPTR<CImageUI>			m_spOtherImageUI;
 };
 
 END

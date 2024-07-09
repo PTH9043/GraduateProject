@@ -12,11 +12,12 @@ namespace Core
 	AGameObject::AGameObject(OBJCON_CONSTRUCTOR, SESSIONID _ID, SESSIONTYPE _SessionType) : 
 		ACoreObject(OBJCON_CONDATA), m_SessionID{_ID}, m_SessionType{_SessionType}, m_SpaceIndex{0},
 		m_spTransform{ nullptr }, m_spCollider{ nullptr }, m_CellIndex{0}, m_fMoveSpeed{0.f}, m_fRunSpeed{0.f}
-		, m_isActive{false}
+		, m_isActive{false}, m_isPermanentDisable{false}, m_CopyHead{}
 	{
+		MemoryInitialization(m_CopyBuffer.data(), MAX_BUFFER_LENGTH);
 	}
 
-	_bool AGameObject::Start()
+	_bool AGameObject::Start(const VOIDDATAS& _ReceiveDatas)
 	{
 		m_spTransform = Create<ATransform>();
 		return true;
@@ -40,6 +41,15 @@ namespace Core
 		SHPTR<ANavigation> spNavigation = spCoreInstance->GetNavigation();
 		SHPTR<ACell> spCell = spNavigation->FindCell(_CellIndex);
 		GetTransform()->SetPos(spCell->GetCenterPos());
+	}
+
+	void AGameObject::BringCellIndextoPosition()
+	{
+		ASSERT_CRASH(nullptr != m_spTransform);
+		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+		SHPTR<ANavigation> spNavigation = spCoreInstance->GetNavigation();
+		SHPTR<ACell> spCell = spNavigation->FindCell(GetTransform()->GetPos());
+		SetCellIndex(spCell->GetIndex());
 	}
 
 	_float AGameObject::OtherCharacterToDistance(SHPTR<ATransform> _spOtherTransform)
@@ -129,6 +139,22 @@ namespace Core
 			if (m_isActive.compare_exchange_strong(isActive, _isActive))
 				break;
 		}
+	}
+
+	void AGameObject::ActivePermanentDisable()
+	{
+		while (true)
+		{
+			bool isActive = m_isPermanentDisable.load();
+			if (m_isPermanentDisable.compare_exchange_strong(isActive, true))
+				break;
+		}
+
+		SendLastMessage();
+	}
+
+	void AGameObject::SendLastMessage()
+	{
 	}
 
 	void AGameObject::Free()

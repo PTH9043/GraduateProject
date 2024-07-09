@@ -109,12 +109,13 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 
 void CMummy::TickActive(const _double& _dTimeDelta)
 {
+	__super::TickActive(_dTimeDelta);
+	GetAnimationController()->Tick(_dTimeDelta);
+#ifndef _ENABLE_PROTOBUFF
 	_float3 pos = GetTransform()->GetPos();
 	pos.y += 5;
 	m_spParticle->SetPosition(pos);
 
-	__super::TickActive(_dTimeDelta);
-	GetAnimationController()->Tick(_dTimeDelta);
 	_int CurAnimState = GetAnimationController()->GetAnimState();
 	_float3 CurrentMobPos = GetTransform()->GetPos();
 	_float3 CurrentPlayerPos = GetTargetPlayer()->GetTransform()->GetPos();
@@ -226,6 +227,9 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 	}
 
 	UpdateCollision();
+#else
+GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
+#endif
 }
 
 void CMummy::LateTickActive(const _double& _dTimeDelta)
@@ -242,8 +246,9 @@ HRESULT CMummy::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDes
 
 	if(CurAnimName != L"staticLaying" && CurAnimName != L"staticStanding")
 	{
-		return __super::RenderActive(_spCommand, _spTableDescriptor);
+		 __super::RenderActive(_spCommand, _spTableDescriptor);
 	}
+	return S_OK;
 }
 
 HRESULT CMummy::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)

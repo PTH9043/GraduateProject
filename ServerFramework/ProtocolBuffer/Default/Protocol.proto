@@ -65,13 +65,6 @@ message CHARMOVE
 	float rotateZ = 7;
 }
 
-message MONSTERSTATE
-{
-	int64 id = 1;
-	double animationTime = 2;
-	int64 animationIndex = 3;
-}
-
 /*
 ======================================
 Server
@@ -99,6 +92,27 @@ message SC_OTHERCLIENTLOGIN
 	int64 type = 3;
 }
 
+message SC_MONSTERRESOURCEDATA
+{
+	int64 id = 1;
+	float posX = 2;
+	float posY = 3;
+	float posZ = 4;
+	float rotateX = 5;
+	float rotateY = 6;
+	float rotateZ = 7;
+	float scaleX = 8;
+	float scaleY = 9;
+	float scaleZ = 10;
+	int64 animindex = 11;
+	int64 type = 12;
+}
+
+message SC_START_INFORMATION_SUCCESS {
+	int64 id = 1;
+	int64 monsternum = 2;
+}
+
 /*
 클라이언트에서 움직이는 것이 실패했을 때
 */
@@ -119,6 +133,30 @@ message SC_MOVEFAILED
 	int64 cellindex = 3;
 	int64 type = 4;
  }
+
+ message SC_MONSTERSTATE 
+ {
+	 int64		id = 1;
+	 double	animationTime = 2;
+	 int64		animationIndex = 3;
+	 int64     state = 4;
+ }
+
+ // Monster State 
+ message SC_MONSTERSTATEHAVEPOS
+ {
+	 int64 id = 1;
+	float	posX = 2;
+	float	posY = 3;
+	float	posZ = 4;
+	float	rotateX = 5;
+	float	rotateY = 6;
+	float	rotateZ = 7;
+	 double	animationTime = 8;
+	 int64		animationIndex = 9;
+	 int64     state = 10;
+ }
+
 /*
 ======================================
 Client
@@ -127,6 +165,11 @@ Client
 
 // Client가 로그인 했음을 다른 클라이언트에게 알린다. 
 message CS_LOGIN 
+{
+	int64 id = 1;
+}
+
+message CS_RESOURCE_RECEIVE_SUCCES 
 {
 	int64 id = 1;
 }

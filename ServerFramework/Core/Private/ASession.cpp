@@ -8,14 +8,14 @@ namespace Core
 {
 	ASession::ASession(OBJCON_CONSTRUCTOR, TCPSOCKET _TcpSocket, SESSIONID _ID, SESSIONTYPE _SessionType) :
 		APawn(OBJCON_CONDATA, _ID, _SessionType),
-		m_TcpSocket(std::move(_TcpSocket)), m_CurBuffuerLocation{0},	m_isConnected{true}
+		m_TcpSocket(std::move(_TcpSocket)), m_CurBuffuerLocation{0}
 	{
 		MemoryInitialization(m_SendBuffer.data(), MAX_BUFFER_LENGTH);
 		MemoryInitialization(m_RecvBuffer.data(), MAX_BUFFER_LENGTH);
 		MemoryInitialization(m_TotalBuffer.data(), MAX_PROCESSBUF_LENGTH);
 	}
 
-	_bool ASession::Start()
+	_bool ASession::Start(const VOIDDATAS& _ReceiveDatas)
 	{
 		__super::Start();
 		RecvData();
@@ -24,7 +24,7 @@ namespace Core
 
 	void ASession::RecvData()
 	{
-		RETURN_CHECK(false == m_isConnected, ;);
+		RETURN_CHECK(true == IsPermanentDisable(), ;);
 		m_TcpSocket.async_read_some(Asio::buffer(m_RecvBuffer),
 			[this](const boost::system::error_code& _error, std::size_t _Size)
 			{	
@@ -51,7 +51,7 @@ namespace Core
 
 	_bool ASession::SendData(_char* _pPacket, const PACKETHEAD& _PacketHead)
 	{
-		RETURN_CHECK(false == m_isConnected, false);
+		RETURN_CHECK(true == IsPermanentDisable(), false);
 		return true;
 	}
 
@@ -60,7 +60,7 @@ namespace Core
 #ifdef USE_DEBUG
 		std::cout << "DisConnected" << std::endl;
 #endif
-		m_isConnected = false;
+		ActivePermanentDisable();
 	}
 
 	void ASession::ConnectTcpSocket(){ }
@@ -113,10 +113,10 @@ namespace Core
 	*/
 	void ASession::CombineSendBuffer( _char* _pPacket, const PACKETHEAD& _PacketHead)
 	{
-		::memset(&m_SendBuffer[0], 0, MAX_BUFFER_LENGTH);
-		memcpy(&m_SendBuffer[0], &_PacketHead, PACKETHEAD_SIZE);
+		::memset(&GetSendBuff(REF_RETURN)[0], 0, MAX_BUFFER_LENGTH);
+		memcpy(&GetSendBuff(REF_RETURN)[0], &_PacketHead, PACKETHEAD_SIZE);
 		// [0 ~ 1] : PACKETSIZE		[2 ~ 3] : PACKETTYPE		[4 ~ ] Remain... 
-		memcpy(&m_SendBuffer[PACKETHEAD_SIZE], _pPacket, _PacketHead.PacketSize);
+		memcpy(&GetSendBuff(REF_RETURN)[PACKETHEAD_SIZE], _pPacket, _PacketHead.PacketSize);
 	}
 
 	void ASession::Leave()

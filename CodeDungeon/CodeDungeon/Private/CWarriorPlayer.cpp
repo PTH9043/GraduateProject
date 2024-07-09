@@ -14,6 +14,7 @@
 #include "CSword.h"
 #include "UCollider.h"
 #include "UTrail.h"
+#include "UBlood.h"
 #include "UVIBufferTrail.h"
 #include "CModelObjects.h"
 #include "UProcessedData.h"
@@ -30,6 +31,7 @@ CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _ws
 	m_stParticleParam{},
 	m_spParticle{nullptr},
 	m_spTrail{nullptr},
+	m_spBlood{nullptr},
 	m_bisKicked{ false },
 	m_dKickedElapsed{ 0 },
 	m_bisRise{ false }
@@ -45,6 +47,7 @@ CWarriorPlayer::CWarriorPlayer(const CWarriorPlayer& _rhs) :
 	m_stParticleParam{},
 	m_spParticle{ nullptr },
 	m_spTrail{ nullptr },
+	m_spBlood{ nullptr },
 	m_bisKicked{ false },
 	m_dKickedElapsed{ 0 },
 	m_bisRise{ false }
@@ -136,6 +139,10 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 		m_spTrail = std::static_pointer_cast<UTrail>(spGameInstance->CloneActorAdd(PROTO_ACTOR_TRAIL, { &tDesc }));
 		m_spTrail->SetActive(true);
 	}
+	{
+		m_spBlood = std::static_pointer_cast<UBlood>(spGameInstance->CloneActorAdd(PROTO_ACTOR_BLOOD));
+	}
+
 
 	for (auto& Colliders : GetColliderContainer())
 	{
@@ -227,6 +234,17 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		*m_spParticle->GetParticleSystem()->GetAddParticleAmount() = 0;
 		*m_spParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
 	}
+
+	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_HIT) {
+		m_spBlood->SetActive(true);
+		m_spBlood->SetTimer(1.75f);
+	}
+	if (m_spBlood->CheckTimeOver()) {
+		m_spBlood->SetActive(false);
+	}
+		
+	
+	
 	// Rotation 
 	{
 		POINT ptCursorPos;

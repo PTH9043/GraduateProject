@@ -141,7 +141,7 @@ PS_OUT PS_Main(VS_OUT In)
         
         if (brightness < 0.2f)
         {
-            Out.vGlow = 0;
+            Out.vGlow =0;
         }
         if (brightness <0.4f)
         {

@@ -14,14 +14,16 @@ class ASpace;
 - 서버에 필요한 Object를 정의한다. 
 */
 class CORE_DLL AGameObject abstract : public ACoreObject {
+	using BUFFER = ARRAY<_char, MAX_BUFFER_LENGTH>;
 public:
 	AGameObject(OBJCON_CONSTRUCTOR, SESSIONID _ID, SESSIONTYPE _SessionType);
 	DESTRUCTOR(AGameObject)
 public:
-	virtual _bool Start() PURE;
+	virtual _bool Start(const VOIDDATAS& _ReceiveDatas = {}) PURE;
 	void CreateColliderAndTransform(const COLLIDERINFO& _ColliderInfo, const Vector3& _vPos);
 	void BringSpaceIndex(SHPTR<ASpace> _spSpace);
 	void Placement(_int _CellIndex);
+	void BringCellIndextoPosition();
 
 	// 다른 캐릭터와의 거리 산출 
 	_float OtherCharacterToDistance(SHPTR<ATransform> _spOtherTransform);
@@ -50,10 +52,27 @@ public:/*Get Set */
 	const _float GetRunSpeed() const { return m_fRunSpeed; }
 	const _int GetCurOnCellIndex() const { return m_iCurOnCellIndex; }
 	const _bool IsActive() const { return m_isActive; }
+	const _bool IsPermanentDisable() const { return m_isPermanentDisable; }
 
 	void SetJumpable(const _bool _isJumpable) { this->m_isJumpable = _isJumpable; }
 	virtual void SetActiveWeak(const _bool _isActive);
 	virtual void SetActiveStrong(const _bool _isActive);
+	void ActivePermanentDisable();
+	/*
+	@ Date: 2024-01-04, Writer: 박태현
+	@ Explain
+	- ProtocolBuffer를 조합하기 위한 함수이다.
+	*/
+	template<class T>
+	void CombineProto(REF_IN BUFFER& _Buffer, REF_IN PACKETHEAD& _PacketHead, const T& _data, _int _tag)
+	{
+		_data.SerializePartialToArray((void*)&_Buffer[0], static_cast<int>(_data.ByteSizeLong()));
+		_PacketHead.PacketSize = static_cast<short>(_data.ByteSizeLong());
+		_PacketHead.PacketType = static_cast<short>(_tag);
+	}
+protected:
+	// 영구적으로 해당 오브젝트를 사용하지 않도록 결정할 경우 보낼 메시지 
+	virtual void SendLastMessage();
 protected: /* Get Set */
 	void SetSessionID(const SESSIONID& _SessionID) { this->m_SessionID = _SessionID; }
 	void SetSessionType(const SESSIONTYPE& _SessionType) { this->m_SessionType = _SessionType; }
@@ -64,11 +83,15 @@ protected: /* Get Set */
 	void SetMoveSpeed(const _float _fMoveSpeed) { this->m_fMoveSpeed = _fMoveSpeed; }
 	void SetRunSpeed(const _float _fRunSpeed) { this->m_fRunSpeed = _fRunSpeed; }
 	void SetCurOnCellIndex(const _int _iCurOnCellIndex) { this->m_iCurOnCellIndex = _iCurOnCellIndex; }
+
+	PACKETHEAD& GetPacketHead() { return m_CopyHead; }
+	BUFFER& GetCopyBuffer(REF_RETURN) { return m_CopyBuffer; }
+	_char* GetCopyBufferPointer(_int _iBufferIndex = 0) { return &m_CopyBuffer[0]; }
 private:
 	virtual void Free() override;
+public:
+	static	constexpr _int		SEE_RANGE{ 100 };
 private:
-	static	const _int				SEE_RANGE{ 100 };
-
 	SESSIONID							m_SessionID;
 	SESSIONTYPE					m_SessionType;
 	_int										m_SpaceIndex;
@@ -85,6 +108,10 @@ private:
 	_float									m_fMoveSpeed;
 	_float									m_fRunSpeed;
 	ATOMIC<_bool>				m_isActive;
+	ATOMIC<_bool>				m_isPermanentDisable;
+
+	PACKETHEAD					m_CopyHead;
+	BUFFER								m_CopyBuffer;
 };
 
 

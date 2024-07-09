@@ -19,16 +19,24 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\CMobLayoutLoader.h" />
     <ClInclude Include="..\Public\CMonsterJobTimer.h" />
     <ClInclude Include="..\Public\CMummy.h" />
+    <ClInclude Include="..\Public\CMummyAnimController.h" />
+    <ClInclude Include="..\Public\CSacrophagusAnimController.h" />
+    <ClInclude Include="..\Public\CSarcophagus.h" />
     <ClInclude Include="..\Public\CServerAdiminstor.h" />
     <ClInclude Include="..\Public\CServerApp.h" />
     <ClInclude Include="..\Public\ServerDefines.h" />
     <ClInclude Include="..\Public\CPlayerSession.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\CMobLayoutLoader.cpp" />
     <ClCompile Include="..\Private\CMonsterJobTimer.cpp" />
     <ClCompile Include="..\Private\CMummy.cpp" />
+    <ClCompile Include="..\Private\CMummyAnimController.cpp" />
+    <ClCompile Include="..\Private\CSacrophagusAnimController.cpp" />
+    <ClCompile Include="..\Private\CSarcophagus.cpp" />
     <ClCompile Include="..\Private\CServerAdiminstor.cpp" />
     <ClCompile Include="..\Private\CServerApp.cpp" />
     <ClCompile Include="..\Private\CPlayerSession.cpp" />

@@ -12,9 +12,9 @@ namespace Core
 	@ Date: 2023-12-26
 	@ Writer: นฺลยว๖
 	*/
-	void AThreadManager::CreateMainLoop(SHPTR<ACoreInstance> _spCoreinstance, Asio::io_service& _service)
+	void AThreadManager::CreateMainLoop(SHPTR<ACoreInstance> _spCoreinstance, Asio::io_service& _service, SHPTR< AService> _spService)
 	{
-		m_spMainLoop = Create<AMainLoop>(_spCoreinstance, _service);
+		m_spMainLoop = Create<AMainLoop>(_spCoreinstance, _service, _spService);
 	}
 
 	void AThreadManager::RegisterFunc(const THREADFUNC& _CallBack, void* _Data)
@@ -44,6 +44,8 @@ namespace Core
 	*/
 	void AThreadManager::Join()
 	{
+		m_spMainLoop->RegisterTimer();
+
 		for (auto& iter : m_JobThreadContainer)
 		{
 			iter.second->RegisterTimer(1);

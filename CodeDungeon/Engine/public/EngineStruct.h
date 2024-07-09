@@ -703,10 +703,16 @@ namespace Engine {
 		_int								iNetworkID;
 		_int								iCellIndex;
 		_int								iType;
+		_int								iAnimIndex;
+		_float3						vPos;
+		_float3						vRotate;
+		_float3						vScale;
 
-		NETWORKRECEIVEINITDATA() : iNetworkID{ 0 }, iCellIndex{ 0 }, iType{ 0 } {}
-		NETWORKRECEIVEINITDATA(const _int _iNetworkID, const _int _iCellIndex, const _int _iType) :
-			iNetworkID{ _iNetworkID }, iCellIndex{ _iCellIndex },  iType {_iType} {}
+		NETWORKRECEIVEINITDATA() : iNetworkID{ 0 }, iCellIndex{ 0 }, iType{ 0 }, iAnimIndex{ 0 }, vPos{}, vRotate {}, vScale{} {}
+		NETWORKRECEIVEINITDATA(const _int _iNetworkID, const _int _iCellIndex, const _int _iType, const _int _iAnimIndex = 0,
+			const _float3& _vPos = {}, const _float3& _vRotate = {}, const _float3& _vScale = {}) :
+			iNetworkID{ _iNetworkID }, iCellIndex{ _iCellIndex }, iType{ _iType }, iAnimIndex{ _iAnimIndex }, vPos{ _vPos },
+			vRotate {	_vRotate}, vScale{ _vScale } {}
 	};
 #pragma endregion NETWORKDATA
 }

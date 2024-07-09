@@ -33,6 +33,7 @@
 */
 #ifdef CORE_EXPORTS
 #define CORE_DLL   _declspec(dllexport)
+#define MATHDLL_ENABLE
 #else
 #define CORE_DLL  _declspec(dllimport)
 #endif

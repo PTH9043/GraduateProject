@@ -10,6 +10,13 @@
 
 #pragma once
 
+#ifdef MATHDLL_ENABLE
+#define MATH_DLL   _declspec(dllexport)
+#else
+#define MATH_DLL  _declspec(dllimport)
+#endif
+
+
 #include <cassert>
 #include <cstddef>
 #include <cstring>
@@ -49,7 +56,7 @@ namespace DirectX
 
         //------------------------------------------------------------------------------
         // 2D vector
-        struct Vector2 : public XMFLOAT2
+        struct MATH_DLL Vector2 : public XMFLOAT2
         {
             Vector2() noexcept : XMFLOAT2(0.f, 0.f) {}
             constexpr explicit Vector2(const float& ix) noexcept : XMFLOAT2(ix, ix) {}
@@ -184,7 +191,7 @@ namespace DirectX
 
         //------------------------------------------------------------------------------
         // 3D vector
-        struct Vector3 : public XMFLOAT3
+        struct MATH_DLL Vector3 : public XMFLOAT3
         {
             Vector3() noexcept : XMFLOAT3(0.f, 0.f, 0.f) {}
             constexpr explicit Vector3(const float& ix) noexcept : XMFLOAT3(ix, ix, ix) {}
@@ -326,7 +333,7 @@ namespace DirectX
 
         //------------------------------------------------------------------------------
         // 4D vector
-        struct Vector4 : public XMFLOAT4
+        struct MATH_DLL Vector4 : public XMFLOAT4
         {
             Vector4() noexcept : XMFLOAT4(0.f, 0.f, 0.f, 0.f) {}
             constexpr explicit Vector4(const float& ix) noexcept : XMFLOAT4(ix, ix, ix, ix) {}
@@ -475,7 +482,7 @@ namespace DirectX
 
         //------------------------------------------------------------------------------
         // 4x4 Matrix (assumes right-handed cooordinates)
-        struct Matrix : public XMFLOAT4X4
+        struct MATH_DLL Matrix : public XMFLOAT4X4
         {
             Matrix() noexcept
                 : XMFLOAT4X4(1.f, 0, 0, 0,
@@ -544,13 +551,13 @@ namespace DirectX
             Matrix operator- () const noexcept;
 
 
-            const Vector3& Get_Right() const  { return *((Vector3*)&this->m[MATROW_RIGHT][0]); }
-            const Vector3& Get_Left() const { return *((Vector3*)&this->m[MATROW_RIGHT][0]) * -1.f; }
-            const Vector3& Get_Up() const  { return *((Vector3*)&this->m[MATROW_UP][0]); }
-            const Vector3& Get_Down() const  { return *((Vector3*)&this->m[MATROW_UP][0]) * -1.f; }
-            const Vector3& Get_Look() const  { return *((Vector3*)&this->m[MATROW_LOOK][0]); }
-            const Vector3& Get_Back() const  { return *((Vector3*)&this->m[MATROW_LOOK][0]) * -1.f; }
-            const Vector3& Get_Pos() const  { return *((Vector3*)&this->m[MATROW_POS][0]); }
+            const Vector3 Get_Right() const  { return *((Vector3*)&this->m[MATROW_RIGHT][0]); }
+            const Vector3 Get_Left() const { return *((Vector3*)&this->m[MATROW_RIGHT][0]) * -1.f; }
+            const Vector3 Get_Up() const  { return *((Vector3*)&this->m[MATROW_UP][0]); }
+            const Vector3 Get_Down() const  { return *((Vector3*)&this->m[MATROW_UP][0]) * -1.f; }
+            const Vector3 Get_Look() const  { return *((Vector3*)&this->m[MATROW_LOOK][0]); }
+            const Vector3 Get_Back() const  { return *((Vector3*)&this->m[MATROW_LOOK][0]) * -1.f; }
+            const Vector3 Get_Pos() const  { return *((Vector3*)&this->m[MATROW_POS][0]); }
 
             void Set_Right(const Vector3& _vState) const  {  *(Vector3*)&this->m[MATROW_RIGHT][0] = _vState; }
             void Set_Up(const Vector3& _vState) const  {  *(Vector3*)&this->m[MATROW_UP][0] = _vState; }
@@ -648,8 +655,6 @@ namespace DirectX
             const void Combine(const OUTMATRIX& _OutMatrix)noexcept;
 
             Matrix LookAt(const Vector3& _vPos);
-            Matrix LookAt(const Vector4& _vLookAt);
-
 
             // Move 
             void MoveForward(const double& _dTimeDelta, const float& _fSpeed);
@@ -690,7 +695,7 @@ namespace DirectX
 
         //-----------------------------------------------------------------------------
         // Plane
-        struct Plane : public XMFLOAT4
+        struct MATH_DLL Plane : public XMFLOAT4
         {
             Plane() noexcept : XMFLOAT4(0.f, 1.f, 0.f, 0.f) {}
             constexpr Plane(const float& ix, const float& iy, const float& iz, const float& iw) noexcept : XMFLOAT4(ix, iy, iz, iw) {}

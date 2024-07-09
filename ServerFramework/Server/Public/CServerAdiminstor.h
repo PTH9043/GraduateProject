@@ -3,6 +3,11 @@
 
 #include "AServerService.h"
 
+BEGIN(Core)
+class AJobTimer;
+
+END
+
 BEGIN(Server)
 /*
 @ Date: 2023-01-02, Writer: 박태현
@@ -20,6 +25,8 @@ public:
 protected:
 	// UServerService을(를) 통해 상속됨
 	virtual void Connect() override;
+private:
+	void CreateMummyAndSarphagousMob(void* _pData, SARCOPHAGUSTYPE _SarcophagusType, SHPTR< AJobTimer> _spMonsterJobTimer);
 private:
 	void Free() override;
 };

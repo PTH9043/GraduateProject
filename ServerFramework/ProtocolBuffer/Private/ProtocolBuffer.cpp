@@ -68,14 +68,6 @@ void PROTOFUNC::MakeCharMove(CHARMOVE* _pOut, LLONG _id, const VECTOR3& _move, c
 	_pOut->set_rotatez(_rotate.z());
 }
 
-void PROTOFUNC::MakeMonsterState(MONSTERSTATE* _pOut, LLONG _id, double _animDuration, int _curAnimIndex)
-{
-	assert(nullptr != _pOut);
-	_pOut->set_id(_id);
-//	_pOut->set_animduration(_animDuration);
-//	_pOut->set_curanimindex(_curAnimIndex);
-}
-
 /* =========== SC =============== */
 // Server To Client 
 
@@ -111,6 +103,56 @@ void PROTOFUNC::MakeScViewInRange(SC_VIEWINRANGE* _pOut, LLONG _id, VECTOR3* _pP
 	_pOut->set_type(_type);
 }
 
+void PROTOFUNC::MakeScStartInformationSucess(SC_START_INFORMATION_SUCCESS* _pOut, LLONG _id, int _monsterNum)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_id);
+	_pOut->set_monsternum(_monsterNum);
+}
+
+void PROTOFUNC::MakeScMonsterResourceData(SC_MONSTERRESOURCEDATA* _pOut, LLONG _id, const VECTOR3& _vPos, 
+	const VECTOR3& _vRotate, const VECTOR3& _vScale, int _animIndex, int _type)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_id);
+	_pOut->set_posx(_vPos.x());
+	_pOut->set_posy(_vPos.y());
+	_pOut->set_posz(_vPos.z());
+	_pOut->set_rotatex(_vRotate.x());
+	_pOut->set_rotatey(_vRotate.y());
+	_pOut->set_rotatez(_vRotate.z());
+	_pOut->set_scalex(_vScale.x());
+	_pOut->set_scaley(_vScale.y());
+	_pOut->set_scalez(_vScale.z());
+	_pOut->set_animindex(_animIndex);
+	_pOut->set_type(_type);
+}
+
+void PROTOFUNC::MakeScMonsterState(SC_MONSTERSTATE* _pOut, LLONG _id, const double& _dAnimTime, int _animindex, int _state)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_id);
+	_pOut->set_animationtime(_dAnimTime);
+	_pOut->set_animationindex(_animindex);
+	_pOut->set_state(_state);
+}
+
+void PROTOFUNC::MakeScMonsterStateHavePos(SC_MONSTERSTATEHAVEPOS* _pOut, LLONG _id, const VECTOR3& _vPos, const VECTOR3& _vRotate,
+	const double& _dAnimTime, int _animindex, int _state)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_id);
+	_pOut->set_posx(_vPos.x());
+	_pOut->set_posy(_vPos.y());
+	_pOut->set_posz(_vPos.z());
+	_pOut->set_rotatex(_vRotate.x());
+	_pOut->set_rotatey(_vRotate.y());
+	_pOut->set_rotatez(_vRotate.z());
+	_pOut->set_animationtime(_dAnimTime);
+	_pOut->set_animationindex(_animindex);
+	_pOut->set_state(_state);
+}
+
 /* =========== CS =============== */
 // Client To Server 
 
@@ -130,6 +172,12 @@ void PROTOFUNC::MakeCsAttack(CS_ATTACK* _pOut, LLONG _id, float _damage, VECTOR3
 }
 
 void PROTOFUNC::MakeCsDisconnect(CS_DISCONNECT* _pOut, LLONG _id)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_id);
+}
+
+void PROTOFUNC::MakeScResourceReceiveSuccess(CS_RESOURCE_RECEIVE_SUCCES* _pOut, LLONG _id)
 {
 	assert(nullptr != _pOut);
 	_pOut->set_id(_id);
