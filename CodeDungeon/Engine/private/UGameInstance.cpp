@@ -1780,7 +1780,7 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::DOWNSAMPLETWO, RTOBJID::DOWNSAMPLETWO,
 		_float2(300.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::DOWNSAMPLE, RTOBJID::DOWNSAMPLE,
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::SHADOW_MAP, RTOBJID::SHADOW_DEPTH_FOURBYFOUR,
 		_float2(605.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::UPSAMPLE, RTOBJID::UPSAMPLE,

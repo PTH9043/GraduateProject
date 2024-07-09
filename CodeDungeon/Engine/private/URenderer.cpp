@@ -153,8 +153,8 @@ HRESULT URenderer::NativeConstruct()
             UCamera::CAMDESC tDesc;
             tDesc.stCamProj = UCamera::CAMPROJ(UCamera::PROJECTION_TYPE::ORTHOGRAPHIC, _float3(0.f, 0.f, 0.f),
                 _float3(0.f, 0.f, 0.f),
-                DirectX::XMConvertToRadians(60.0f), spGameInstance->GetD3DViewport().Width/2.f,
-                spGameInstance->GetD3DViewport().Height/2.f);
+                DirectX::XMConvertToRadians(60.0f), spGameInstance->GetD3DViewport().Width,
+                spGameInstance->GetD3DViewport().Height);
             tDesc.stCamValue = UCamera::CAMVALUE(5.f, DirectX::XMConvertToRadians(90.f));
             tDesc.eCamType = CAMERATYPE::SMALL_DEFFERED;
 
@@ -593,7 +593,7 @@ void URenderer::DownSample()
     SHPTR<UShader> spDownSamplingShader = FindShader(PROTO_RES_DOWNSAMPLINGSHADER);
     spDownSamplingShader->SettingPipeLineState(m_spCastingCommand);
     spDownSamplingShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
-    spDownSamplingShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stSmallRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+    spDownSamplingShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
     {
         SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::NONALPHA_DEFFERED);
         spDownSamplingShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::NONALPHA_GLOW_DEFFERED));
@@ -632,7 +632,7 @@ void URenderer::DownSample2()
     SHPTR<UShader> spDownSamplingShader = FindShader(PROTO_RES_DOWNSAMPLINGTWOSHADER);
     spDownSamplingShader->SettingPipeLineState(m_spCastingCommand);
     spDownSamplingShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
-    spDownSamplingShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stSmallRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+    spDownSamplingShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
     {
         SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::DOWNSAMPLE);
         spDownSamplingShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::DOWNSAMPLE));
@@ -699,7 +699,7 @@ void URenderer::RenderHorizontalBlur()
     SHPTR<UShader> spHorizontalShader = FindShader(PROTO_RES_HORIZONTALBLURSHADER);
     spHorizontalShader->SettingPipeLineState(m_spCastingCommand);
     spHorizontalShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
-    spHorizontalShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stSmallRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+    spHorizontalShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
     {
         SHPTR<URenderTargetGroup> spBlur = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::NONALPHA_DEFFERED);
         spHorizontalShader->BindSRVBuffer(SRV_REGISTER::T0, spBlur->GetRenderTargetTexture(RTOBJID::NONALPHA_GLOW_DEFFERED));
@@ -724,7 +724,7 @@ void URenderer::RenderVerticalBlur()
     SHPTR<UShader> spVerticalShader = FindShader(PROTO_RES_VERTICALBLURSHADER);
     spVerticalShader->SettingPipeLineState(m_spCastingCommand);
     spVerticalShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
-    spVerticalShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stSmallRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+    spVerticalShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
     {
         SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLUR);
         spVerticalShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::BLUR));
