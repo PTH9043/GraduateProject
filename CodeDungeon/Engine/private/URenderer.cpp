@@ -252,7 +252,7 @@ HRESULT URenderer::Render()
   //  RenderRTs();
     RenderPriority();
     RenderPosNormal();
-    RenderShadowDepth();
+   // RenderShadowDepth();
     RenderNonAlphaBlend();
     RenderLights();
     RenderNonLight();
@@ -475,6 +475,7 @@ void URenderer::RenderBlend()
         SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::NONALPHA_DEFFERED);
         spShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::NONALPHA_DIFFUSE_DEFFERED));
         spShader->BindSRVBuffer(SRV_REGISTER::T4, spNonAlpha->GetRenderTargetTexture(RTOBJID::NONALPHA_GLOW_DEFFERED));
+        spShader->BindSRVBuffer(SRV_REGISTER::T5, spNonAlpha->GetRenderTargetTexture(RTOBJID::NONALPHA_SPECULAR_DEFFERED));
     }
     {
         SHPTR<URenderTargetGroup> spLightGroup = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::LIGHTSHADE_DEFFERED);

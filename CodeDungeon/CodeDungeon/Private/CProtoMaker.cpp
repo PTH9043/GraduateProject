@@ -49,6 +49,9 @@ HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, C
 	
 	_spGameInstance->AddPrototype(PROTO_RES_GUARDTEXTUREGROUP, CLONETYPE::CLONE_STATIC,
 		CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\Guard", true));
+	
+	_spGameInstance->AddPrototype(PROTO_RES_BLOODTEXTUREGROUP, CLONETYPE::CLONE_STATIC,
+		CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\Blood", true));
 
 	_spGameInstance->AddPrototype(PROTO_RES_FIRENOISETEXTUREGROUP, CLONETYPE::CLONE_STATIC,
 		CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\Fire\\Noise", true));

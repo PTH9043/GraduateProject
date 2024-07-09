@@ -48,6 +48,7 @@
     <ClInclude Include="..\public\ImGui\ImZoomSlider.h" />
     <ClInclude Include="..\public\MathLib\CusMath.h" />
     <ClInclude Include="..\public\UAxis.h" />
+    <ClInclude Include="..\public\UBlood.h" />
     <ClInclude Include="..\public\UCombatCollGroupComp.h" />
     <ClInclude Include="..\public\UCharacter.h" />
     <ClInclude Include="..\public\UCharacterManager.h" />
@@ -177,6 +178,7 @@
     <ClCompile Include="..\private\AnimSectionEvents.cpp" />
     <ClCompile Include="..\private\EngineStruct.cpp" />
     <ClCompile Include="..\private\UAxis.cpp" />
+    <ClCompile Include="..\private\UBlood.cpp" />
     <ClCompile Include="..\private\UCombatCollGroupComp.cpp" />
     <ClCompile Include="..\private\UCharacter.cpp" />
     <ClCompile Include="..\private\UCharacterManager.cpp" />
@@ -330,6 +332,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </FxCompile>
+    <FxCompile Include="..\..\Shader\Blood.hlsl" />
     <FxCompile Include="..\..\Shader\Bloom.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DAttackEffect.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DFootPrint.hlsl" />
