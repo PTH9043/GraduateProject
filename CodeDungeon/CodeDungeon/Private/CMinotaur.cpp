@@ -207,6 +207,8 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 		}
 		
 	}
+	else if(CurAnimState == UAnimationController::ANIM_IDLE)
+		SetOutline(false);
 	if (CurAnimName == L"hit_1")
 	{
 		_float3 direction = CurrentMobPos - CurrentPlayerPos;

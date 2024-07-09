@@ -77,6 +77,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     {
         UpdateState(spAnimModel, ANIM_AWAKE, L"WAKEUP");
         m_bFoundPlayerFirsttime = true;
+        m_dIdleTimer = 0;
     }
     else if (!FoundPlayer && m_bFoundPlayerFirsttime)
     {
@@ -91,7 +92,10 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
             {
                 m_dIdleTimer = 0.0;
             }
+          
         }
+        else
+            m_dIdleTimer = 0;
 
         if(m_dIdleTimer == 0)
         {
@@ -114,6 +118,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     else if (FoundPlayer && m_bFoundPlayerFirsttime)
     {
         m_bTauntMode = true;
+        m_dIdleTimer = 0;
     }
 
     // Handle taunt mode state

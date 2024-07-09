@@ -90,6 +90,8 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
                 m_dIdleTimer = 0.0;
             }
         }
+        else
+            m_dIdleTimer = 0;
 
         if(m_dIdleTimer == 0)
         {

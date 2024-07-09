@@ -154,7 +154,7 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 			{			
 				MoveAlongPath(m_AstarPath, m_currentPathIndex, _dTimeDelta);
 				_float3 direction = CurrentMobPos - GetTargetPos();
-				GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
+				GetTransform()->SetDirectionFixedUp(-direction, _dTimeDelta, 5);
 			}
 		}
 		else // patrolling when player is not found
@@ -184,7 +184,7 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 			{
 				MoveAlongPath(m_AstarPath, m_currentPathIndex, _dTimeDelta);
 				_float3 direction = CurrentMobPos - GetTargetPos();
-				GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
+				GetTransform()->SetDirectionFixedUp(-direction, _dTimeDelta, 5);
 			}
 		}
 	}
@@ -193,10 +193,8 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 		_float3 direction = CurrentMobPos - CurrentPlayerPos;
 		GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
 	}
-	else if (CurAnimState == UAnimationController::ANIM_HIT)
-	{
-		GetTransform()->TranslateDir(GetTransform()->GetLook(), _dTimeDelta, 1);
-	}
+	else if (CurAnimState == UAnimationController::ANIM_IDLE)
+		SetOutline(false);
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
