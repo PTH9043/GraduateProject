@@ -24,7 +24,6 @@ namespace Core
 	{
 		RETURN_CHECK(nullptr == _spService, ;);
 		m_spService = _spService;
-		m_spThreadManager->CreateMainLoop(ThisShared<ACoreInstance>(), m_spService->GetIOContext());
 
 	//	m_spMySqlDriver = CreateInitConstructor<AMySqlDriver>(ThisShared<ACoreInstance>(), "tcp://127.0.0.1:3306", 
 	//		"root", "Qkrxogus0652!");
@@ -39,6 +38,7 @@ namespace Core
 	_bool ACoreInstance::Start()
 	{
 		SHPTR<AService> spService = m_spService;
+		m_spThreadManager->CreateMainLoop(ThisShared<ACoreInstance>(), m_spService->GetIOContext(), m_spService);
 		return spService->Start();
 	}
 

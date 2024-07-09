@@ -20,7 +20,7 @@ PROTOBUF_PRAGMA_INIT_SEG
 namespace _pb = ::google::protobuf;
 namespace _pbi = ::google::protobuf::internal;
 namespace _fl = ::google::protobuf::internal::field_layout;
-static const ::_pb::EnumDescriptor* file_level_enum_descriptors_Tag_2eproto[5];
+static const ::_pb::EnumDescriptor* file_level_enum_descriptors_Tag_2eproto[6];
 static constexpr const ::_pb::ServiceDescriptor**
     file_level_service_descriptors_Tag_2eproto = nullptr;
 const ::uint32_t TableStruct_Tag_2eproto::offsets[1] = {};
@@ -32,7 +32,7 @@ const char descriptor_table_protodef_Tag_2eproto[] PROTOBUF_SECTION_VARIABLE(pro
     "CEIVE_SUCCESS\020\002\022\017\n\013TAG_CS_MOVE\020\003\022\021\n\rTAG_"
     "CS_ATTACK\020\004\022\021\n\rTAG_CS_LOGOUT\020\005\022\026\n\022TAG_CS"
     "_PLAYERSTATE\020\006\022\023\n\017TAG_CS_CHARMOVE\020\007\022\032\n\026T"
-    "AG_CS_PLAYERANIMSTATE\020\010*\253\002\n\006TAG_SC\022\020\n\014TA"
+    "AG_CS_PLAYERANIMSTATE\020\010*\345\002\n\006TAG_SC\022\020\n\014TA"
     "G_SC_DUMMY\020\000\022$\n TAG_SC_START_INFORMATION"
     "_SUCCESS\020\001\022\031\n\025TAG_SC_CONNECTSUCCESS\020\002\022\033\n"
     "\027TAG_SC_OTHERCLIENTLOGIN\020\003\022\036\n\032TAG_SC_MON"
@@ -40,22 +40,28 @@ const char descriptor_table_protodef_Tag_2eproto[] PROTOBUF_SECTION_VARIABLE(pro
     "\005\022\023\n\017TAG_SC_CHARMOVE\020\006\022\026\n\022TAG_SC_VIEWINR"
     "ANGE\020\007\022\026\n\022TAG_SC_PLAYERSTATE\020\010\022\031\n\025TAG_SC"
     "_SELFPLAYERMOVE\020\t\022\032\n\026TAG_SC_PLAYERANIMST"
-    "ATE\020\n*\213\001\n\010TAG_CHAR\022\r\n\tTAG_DUMMY\020\000\022\022\n\016TAG"
-    "_MAINPLAYER\020\001\022\023\n\017TAG_OTHERPLAYER\020\002\022\r\n\tTA"
-    "G_MUMMY\020\003\022\032\n\026TAG_SARCOPHAGUS_LAYING\020\004\022\034\n"
-    "\030TAG_SARCOPHAGUS_STANDING\020\005*C\n\016TAG_PLAYE"
-    "RTYPE\022\017\n\013TAG_WARRIOR\020\000\022\016\n\nTAG_ARCHOR\020\001\022\020"
-    "\n\014TAG_MAGICAIN\020\002*\224\001\n\rTAG_MUMMYANIM\022\016\n\nMU"
-    "MMY_IDLE\020\000\022\016\n\nMUMMY_MOVE\020\001\022\020\n\014MUMMY_ATTA"
-    "CK\020\002\022\017\n\013MUMMY_DEATH\020\003\022\r\n\tMUMMY_HIT\020\004\022\017\n\013"
-    "MUMMY_SLEEP\020\005\022\017\n\013MUMMY_AWAKE\020\006\022\017\n\013MUMMY_"
-    "TAUNT\020\007b\006proto3"
+    "ATE\020\n\022\037\n\033TAG_SC_MONSTERSTATEHAVEMOVE\020\013\022\027"
+    "\n\023TAG_SC_MONSTERSTATE\020\014*\213\001\n\010TAG_CHAR\022\r\n\t"
+    "TAG_DUMMY\020\000\022\022\n\016TAG_MAINPLAYER\020\001\022\023\n\017TAG_O"
+    "THERPLAYER\020\002\022\r\n\tTAG_MUMMY\020\003\022\032\n\026TAG_SARCO"
+    "PHAGUS_LAYING\020\004\022\034\n\030TAG_SARCOPHAGUS_STAND"
+    "ING\020\005*C\n\016TAG_PLAYERTYPE\022\017\n\013TAG_WARRIOR\020\000"
+    "\022\016\n\nTAG_ARCHOR\020\001\022\020\n\014TAG_MAGICAIN\020\002*\224\001\n\rT"
+    "AG_MUMMYANIM\022\016\n\nMUMMY_IDLE\020\000\022\016\n\nMUMMY_MO"
+    "VE\020\001\022\020\n\014MUMMY_ATTACK\020\002\022\017\n\013MUMMY_DEATH\020\003\022"
+    "\r\n\tMUMMY_HIT\020\004\022\017\n\013MUMMY_SLEEP\020\005\022\017\n\013MUMMY"
+    "_AWAKE\020\006\022\017\n\013MUMMY_TAUNT\020\007*\310\001\n\013TAG_MOBANI"
+    "M\022\025\n\021MOB_DISABLE_STATE\020\000\022\022\n\016MOB_IDLE_STA"
+    "TE\020\001\022\022\n\016MOB_MOVE_STATE\020\002\022\024\n\020MOB_ATTACK_S"
+    "TATE\020\003\022\023\n\017MOB_DEATH_STATE\020\004\022\021\n\rMOB_HIT_S"
+    "TATE\020\005\022\023\n\017MOB_SLEEP_STATE\020\006\022\023\n\017MOB_AWAKE"
+    "_STATE\020\007\022\022\n\016MOB_FIND_STATE\020\010b\006proto3"
 };
 static ::absl::once_flag descriptor_table_Tag_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Tag_2eproto = {
     false,
     false,
-    895,
+    1156,
     descriptor_table_protodef_Tag_2eproto,
     "Tag.proto",
     &descriptor_table_Tag_2eproto_once,
@@ -101,9 +107,9 @@ const ::google::protobuf::EnumDescriptor* TAG_SC_descriptor() {
   return file_level_enum_descriptors_Tag_2eproto[1];
 }
 PROTOBUF_CONSTINIT const uint32_t TAG_SC_internal_data_[] = {
-    720896u, 0u, };
+    851968u, 0u, };
 bool TAG_SC_IsValid(int value) {
-  return 0 <= value && value <= 10;
+  return 0 <= value && value <= 12;
 }
 const ::google::protobuf::EnumDescriptor* TAG_CHAR_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&descriptor_table_Tag_2eproto);
@@ -131,6 +137,15 @@ PROTOBUF_CONSTINIT const uint32_t TAG_MUMMYANIM_internal_data_[] = {
     524288u, 0u, };
 bool TAG_MUMMYANIM_IsValid(int value) {
   return 0 <= value && value <= 7;
+}
+const ::google::protobuf::EnumDescriptor* TAG_MOBANIM_descriptor() {
+  ::google::protobuf::internal::AssignDescriptors(&descriptor_table_Tag_2eproto);
+  return file_level_enum_descriptors_Tag_2eproto[5];
+}
+PROTOBUF_CONSTINIT const uint32_t TAG_MOBANIM_internal_data_[] = {
+    589824u, 0u, };
+bool TAG_MOBANIM_IsValid(int value) {
+  return 0 <= value && value <= 8;
 }
 // @@protoc_insertion_point(namespace_scope)
 namespace google {

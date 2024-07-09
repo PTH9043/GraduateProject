@@ -1452,5 +1452,8 @@
     <FxCompile Include="..\..\Shader\Blood.hlsl">
       <Filter>98.ShaderFile\Common\Trail</Filter>
     </FxCompile>
+    <FxCompile Include="..\..\Shader\DefaultUI.hlsl">
+      <Filter>98.ShaderFile\Common\NonAlpha</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -67,7 +67,7 @@ void CNetworkQueryProcessor::MakeMonster(const NETWORKRECEIVEINITDATA& _NetworkR
 		{
 			CSarcophagus::CHARACTERDESC CharDesc;
 			CharDesc.isNetworkConnected = true;
-			CharDesc.wstrAnimControllerProtoData = PROTO_COMP_MUMMYANIMCONTROLLER;
+			CharDesc.wstrAnimControllerProtoData = PROTO_COMP_SARCOPHAGUSANIMCONTROLLER;
 
 			if (_NetworkRecvInitData.iType == TAG_CHAR::TAG_SARCOPHAGUS_LAYING)
 			{
@@ -83,6 +83,7 @@ void CNetworkQueryProcessor::MakeMonster(const NETWORKRECEIVEINITDATA& _NetworkR
 					PROTO_ACTOR_SARCOPHAGUSSTANDING, { &CharDesc, &mobDataworkData }));
 				spSarcophagus->SetSarcophagusType(CSarcophagus::TYPE_STANDING);
 			}
+			spGameInstance->AddCollisionPawnList(spSarcophagus);
 			GetNetworkBaseController()->AddCreatedNetworkActor(_NetworkRecvInitData.iNetworkID, spSarcophagus);
 		}
 	}

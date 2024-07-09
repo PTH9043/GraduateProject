@@ -20,6 +20,7 @@
 #include "CItemChest.h"
 #include "CMinotaur.h"
 #include "CMinotaurAnimController.h"
+#include "CImageUI.h"
 
 HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, CSHPTRREF<UDevice> _spDevice, CSHPTRREF<UCommand> _spCommand)
 {
@@ -34,6 +35,7 @@ HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, C
 	_spGameInstance->AddPrototype(PROTO_ACTOR_LONGSWORD, CreateConstructorToNative< CSword>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_CHEST, CreateConstructorToNative< CItemChest>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_MINOTAUR, CreateConstructorToNative< CMinotaur>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
+	_spGameInstance->AddPrototype(PROTO_ACTOR_IMAGEUI, CreateConstructorToNative<CImageUI>(_spDevice, LAYER_UI, CLONETYPE::CLONE_STATIC));
 
 	_spGameInstance->AddPrototype(PROTO_RES_PARTICLETEXTUREGROUP, CLONETYPE::CLONE_STATIC,
 		CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\Particle", true));
@@ -59,6 +61,8 @@ HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, C
 	_spGameInstance->AddPrototype(PROTO_RES_FIREALPHATEXTUREGROUP, CLONETYPE::CLONE_STATIC,
 		CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\Fire\\Alpha", true));
 
+	_spGameInstance->AddPrototype(PROTO_RES_UITEXTUREGROUP, CLONETYPE::CLONE_STATIC,
+		CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\UI\\Demo", true));
 
 	_spGameInstance->AddPrototype(PROTO_COMP_USERWARRIORANIMCONTROLLER, CreateConstructorToNative<CUserWarriorAnimController>(_spDevice));
 	_spGameInstance->AddPrototype(PROTO_COMP_NETWORKWARRIORANIMCONTROLLER, CreateConstructorNative<CNetworkWarriorPlayerController>(_spDevice));
@@ -77,7 +81,7 @@ HRESULT CProtoMaker::CreateMainSceneProtoData(CSHPTRREF<UGameInstance> _spGameIn
 	_spGameInstance->AddPrototype(PROTO_RES_FEMAILPLAYERANIMMODEL,CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
 		_spDevice, L"..\\..\\Resource\\AnimModel\\Player\\Convert\\F_Human_FBX.bin", Matrix));
 
-	Matrix = _float4x4::CreateScale(0.1f);
+	Matrix = _float4x4::CreateScale(0.1f) * _float4x4::CreateRotationY(DirectX::XMConvertToRadians(180));
 	_spGameInstance->AddPrototype(PROTO_RES_MUMMYANIMMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
 		_spDevice, L"..\\..\\Resource\\AnimModel\\Mummy\\Convert\\Mummy_DEMO_1_FBX.bin", Matrix));
 
@@ -85,15 +89,15 @@ HRESULT CProtoMaker::CreateMainSceneProtoData(CSHPTRREF<UGameInstance> _spGameIn
 	_spGameInstance->AddPrototype(PROTO_RES_MINOTAURANIMMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
 		_spDevice, L"..\\..\\Resource\\AnimModel\\MinoTaur\\Convert\\minotaur_FBX.bin", Matrix));
 
-	Matrix = _float4x4::CreateScale(0.1f);
+	Matrix = _float4x4::CreateScale(0.1f) * _float4x4::CreateRotationY(DirectX::XMConvertToRadians(180));
 	_spGameInstance->AddPrototype(PROTO_RES_SARCOPHAGUSLYINGANIMMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
 		_spDevice, L"..\\..\\Resource\\AnimModel\\Sarcophagus\\Convert\\SarcophagusLaying_FBX.bin", Matrix));
 
-	Matrix = _float4x4::CreateScale(0.1f);
+	Matrix = _float4x4::CreateScale(0.1f) * _float4x4::CreateRotationY(DirectX::XMConvertToRadians(180));
 	_spGameInstance->AddPrototype(PROTO_RES_SARCOPHAGUSSTANDINGANIMMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
 		_spDevice, L"..\\..\\Resource\\AnimModel\\Sarcophagus\\Convert\\SarcophagusStanding_FBX.bin", Matrix));
 
-
+	Matrix = _float4x4::CreateScale(0.1f);
 	_spGameInstance->AddPrototype(PROTO_RES_LONGSWORDMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UModel>(
 		_spDevice, L"..\\..\\Resource\\Model\\Item\\Equip\\Sword\\Convert\\sword_FBX.bin"));
 

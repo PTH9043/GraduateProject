@@ -3,6 +3,10 @@
 
 #include "AAnimController.h"
 
+BEGIN(Core)
+class APawn;
+END
+
 BEGIN(Server)
 
 class CSacrophagusAnimController final : public AAnimController {

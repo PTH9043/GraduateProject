@@ -24,11 +24,11 @@ namespace Client
 {
 	namespace DXVALUE
 	{
-		static const unsigned short g_iWindowWidth = 1280;
-		static const unsigned short g_iWindowHeight = 1080;
+		static unsigned short g_iWindowWidth = 1280;
+		static unsigned short g_iWindowHeight = 1080;
 
-		static const float g_iWindowHalfWidth = (float)g_iWindowWidth * 0.5f;
-		static const float g_iWindowHalfHeight = (float)g_iWindowHeight * 0.5f;
+		static float g_iWindowHalfWidth = (float)g_iWindowWidth * 0.5f;
+		static float g_iWindowHalfHeight = (float)g_iWindowHeight * 0.5f;
 	}
 
 	enum SCENE {

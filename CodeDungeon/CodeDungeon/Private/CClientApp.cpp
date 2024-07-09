@@ -66,12 +66,16 @@ void CClientApp::Render()
 
 	/* Graphic Desc */
 	GRAPHICDESC	stGraphicDesc;
+	RECT rect;
+	GetClientRect(m_hwnd, &rect);
 	{
 		stGraphicDesc.eWinMode = GRAPHICDESC::MODE_WIN;
 		stGraphicDesc.hInst = m_hInst;
 		stGraphicDesc.hWnd = m_hwnd;
-		stGraphicDesc.iWinCX = WINDOW_WIDTH;
-		stGraphicDesc.iWinCY = WINDOW_HEIGHT;
+		stGraphicDesc.iWinCX = static_cast<_int>(rect.right);
+		stGraphicDesc.iWinCY = static_cast<_int>(rect.bottom);
+		DXVALUE::g_iWindowWidth = stGraphicDesc.iWinCX;
+		DXVALUE::g_iWindowHeight = stGraphicDesc.iWinCY;
 	}
 	OUTPUTDATA stOutputData;
 	RETURN_CHECK_FAILED(m_spGameInstance->ReadyInstance(stGraphicDesc, stOutputData), ;);

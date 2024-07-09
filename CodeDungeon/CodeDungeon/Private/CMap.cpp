@@ -87,7 +87,8 @@ void CMap::LoadRooms()
 				CRooms::ROOMDESC tDesc;
 				tDesc._wsRoomName = FileName;
 
-				SHPTR<CRooms> _Room = std::static_pointer_cast<CRooms>(spGameInstance->CloneActorAdd(PROTO_ACTOR_ROOM, { &tDesc }));
+				SHPTR<CRooms> _Room = std::static_pointer_cast<CRooms>(spGameInstance->CloneActorAdd(
+					PROTO_ACTOR_ROOM, { &tDesc }));
 				m_spRoomContainer->emplace(FileName, _Room);
 			}
 		}

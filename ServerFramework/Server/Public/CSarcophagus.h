@@ -8,7 +8,7 @@ class CMummy;
 
 class CSarcophagus final : public AMonster {
 public:
-	CSarcophagus(OBJCON_CONSTRUCTOR, SESSIONID _ID, SARCOPHAGUSTYPE _eSarcophagusType);
+	CSarcophagus(OBJCON_CONSTRUCTOR, SESSIONID _ID, SARCOPHAGUSTYPE _eSarcophagusType, SHPTR<AJobTimer> _spMonsterJobTimer);
 	DESTRUCTOR(CSarcophagus)
 public:
 	virtual _bool Start(const VOIDDATAS& _ReceiveDatas = {}) override;
@@ -17,6 +17,9 @@ public: /* get set*/
 	void SetMummy(SHPTR<CMummy> _spMummy) { this->m_spMummy = _spMummy; }
 
 	SHPTR<CMummy> GetMummy() const { return m_spMummy; }
+protected:
+	// 영구적으로 해당 오브젝트를 사용하지 않도록 결정할 경우 보낼 메시지 
+	virtual void SendLastMessage() override;
 private:
 	virtual void Free() override;
 private:

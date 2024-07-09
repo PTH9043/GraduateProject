@@ -75,6 +75,7 @@
 #include "UGrid.h"
 #include "UModelMaterial.h"
 #include "UPawn.h"
+#include "URectTransform.h"
 
 IMPLEMENT_SINGLETON(UGameInstance);
 
@@ -1443,6 +1444,11 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 				SHADERDESC(L"Grid", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN }, RASTERIZER_TYPE::WIREFRAME));
 		}
+		{
+			CreateGraphicsShader(PROTO_RES_DEFAULTUISHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"DefaultUI", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }));
+		}
 
 		//// Create  Tess
 		//{
@@ -1523,8 +1529,9 @@ HRESULT UGameInstance::ReadyComp(const OUTPUTDATA& _stData)
 		AddPrototype(PROTO_COMP_ABBCOLLIDER, CreateConstructorToNativeNotMsg<UCollider>(_stData.wpDevice.lock(), UCollider::TYPE_AABB));
 		AddPrototype(PROTO_COMP_OBBCOLLIDER, CreateConstructorToNativeNotMsg<UCollider>(_stData.wpDevice.lock(), UCollider::TYPE_OBB));
 	}
-
-
+	{
+		AddPrototype(PROTO_COMP_RECTTRANSFORM, CreateConstructorToNative<URectTransform>(_stData.wpDevice.lock()));
+	}
 	return S_OK;
 }
 

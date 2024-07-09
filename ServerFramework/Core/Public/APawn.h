@@ -13,6 +13,9 @@ public:
 	DESTRUCTOR(APawn)
 public: /* get set */
 	SHPTR<AAnimController> GetAnimController() { return m_spAnimController; }
+
+	virtual void SetActiveWeak(const _bool _isActive) override;
+	virtual void SetActiveStrong(const _bool _isActive) override;
 protected: /* get set*/
 	void SetAnimController(SHPTR<AAnimController> _spAnimController) { this->m_spAnimController = _spAnimController; }
 private:

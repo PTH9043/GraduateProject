@@ -23,9 +23,6 @@ public:
 	UUserInterface(const UUserInterface& _rhs);
 	DESTRUCTOR(UUserInterface)
 public:
-	SHPTR<URectTransform> GetRectTransform() const { return m_spRectTransform; }
-	const UIDESC& GetUIDesc() const { return m_stUIDesc; }
-public:
 	virtual void Free() override PURE;
 	virtual HRESULT NativeConstruct() override PURE;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override PURE;
@@ -37,6 +34,12 @@ public:
 	void UpdateSize(const _float2& _vSize);
 	// Mouse	On	Rect
 	_bool IsMouseOnRect();
+public:
+	CSHPTRREF<URectTransform> GetRectTransform() const { return m_spRectTransform; }
+	CSHPTRREF<UVIBufferRect> GetVIBufferRect() const { return m_spVIBufferRect; }
+	const UIDESC& GetUIDesc() const { return m_stUIDesc; }
+
+	void SetImageName(const _wstring& _wstrImgName) { this->m_stUIDesc.strImgName = _wstrImgName; }
 protected:
 	// Tick, LateTick, Render
 	virtual void TickActive(const _double& _dTimeDelta) override PURE;
@@ -46,9 +49,10 @@ protected:
 	virtual HRESULT ReadyRectTransform(const VOIDDATAS& _vecDatas) PURE;
 protected:
 	// Ready Rect Transform
-	HRESULT ReadyRectTransform(void* _pDesc);
+	HRESULT CreateRectTrasnform(void* _pDesc);
 private:
 	SHPTR< URectTransform>		m_spRectTransform;
+	SHPTR< UVIBufferRect>		m_spVIBufferRect;
 	UIDESC										m_stUIDesc;
 };
 

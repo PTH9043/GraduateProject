@@ -53,6 +53,8 @@ public:
     CSHPTRREF<UPlayer> GetTargetPlayer() { return m_spTargetPlayer; }
     void SetTargetPlayer(CSHPTRREF<UPlayer> _targetPlayer) { m_spTargetPlayer = _targetPlayer; }
     const _bool& GetFoundTargetState() { return m_bFoundTarget; }
+    void SetFoundTargetState(_bool _isFoundTarget) { this->m_bFoundTarget = _isFoundTarget; }
+
     const _float& GetDistanceFromPlayer() { return m_fDistancefromNearestPlayer; }
     const _float3& GetTargetPos() { return m_f3TargetPos; }
     void SetMobPlacement(_int _CellIndex);

@@ -336,6 +336,7 @@
     <FxCompile Include="..\..\Shader\Bloom.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DAttackEffect.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DFootPrint.hlsl" />
+    <FxCompile Include="..\..\Shader\DefaultUI.hlsl" />
     <FxCompile Include="..\..\Shader\DepthRecord.hlsl" />
     <FxCompile Include="..\..\Shader\DownSampling.hlsl" />
     <FxCompile Include="..\..\Shader\DownSamplingTwo.hlsl" />

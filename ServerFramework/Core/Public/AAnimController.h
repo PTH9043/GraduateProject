@@ -43,26 +43,35 @@ public: /* get set */
 	const _int GetCurAnimIndex() const;
 	SHPTR<AAnimation> GetCurAnimation() const;
 	SHPTR<AAnimation> GetNextAnimation() const;
-	SHPTR<APawn> GetOwenr() const { return m_wpOwnerPawn.lock(); }
+	SHPTR<APawn> GetOwner() const { return m_wpOwnerPawn.lock(); }
+	_bool IsOwnerPawnActive() const { return m_isOwnerPawnActive; }
+	_int GetPawnState() const { return m_iPawnState; }
 
 	void SetSupplyLerpValue(const _float _fSupplyLerpValue);
+	void SetOwnerPawnActiveStrong(_bool _isOwnerPawnActive);
+	void SetOwnerPawnActiveWeak(_bool _isOwnerPawnActive);
+	void SetPawnState(_int _State);
 protected: /* get set */
 	SHPTR<AAnimator> GetAnimator() { return m_spAnimator; }
 	const _double GetAccumulator() const { return m_dAccumulator; }
 	const _double GetElapsedTime() const { return m_dElapsedTime; }
-	const _string& GetInputTrigger() const { READ_LOCK(m_TriggerLock) return m_strInputTrigger; }
+	const _string& GetInputTrigger() const { AReadSpinLockGuard(m_TriggerLock); return m_strInputTrigger; }
 
 	void SetAccumulator(const _double& _dAccumulator) { this->m_dAccumulator = _dAccumulator; }
 	void SetElapsedTime(const _double& _dDelapsedTime) { this->m_dElapsedTime = _dDelapsedTime; }
-	void SetInputTrigger(const _string& _inputTrigger) { WRITE_LOCK(m_TriggerLock)  this->m_strInputTrigger = _inputTrigger; }
+	void SetInputTrigger(const _string& _inputTrigger) { AWriteSpinLockGuard(m_TriggerLock);  this->m_strInputTrigger = _inputTrigger; }
+
 private:
 	virtual void Free() override;
 private:
 	_double							m_dAccumulator;
 	_double							m_dElapsedTime;
 	_string							m_strInputTrigger;
+	// Owner Pawn Active
+	ATOMIC<_bool>			m_isOwnerPawnActive;
+	ATOMIC<_int>				m_iPawnState;
 
-	USE_LOCK						m_TriggerLock;
+	AFastSpinLock				m_TriggerLock;
 	// Animator, OwenrPawn
 	SHPTR<AAnimator>	m_spAnimator;
 	WKPTR<APawn>			m_wpOwnerPawn;

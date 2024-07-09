@@ -159,8 +159,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\CBackgroundUI.h" />
     <ClInclude Include="..\Public\CClientApp.h" />
     <ClInclude Include="..\Public\CDataManager.h" />
+    <ClInclude Include="..\Public\CImageUI.h" />
     <ClInclude Include="..\Public\CIronBars.h" />
     <ClInclude Include="..\Public\CItemChest.h" />
     <ClInclude Include="..\Public\CItemChestAnimController.h" />
@@ -195,8 +197,10 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\CBackgroundUI.cpp" />
     <ClCompile Include="..\Private\CClientApp.cpp" />
     <ClCompile Include="..\Private\CDataManager.cpp" />
+    <ClCompile Include="..\Private\CImageUI.cpp" />
     <ClCompile Include="..\Private\CIronBars.cpp" />
     <ClCompile Include="..\Private\CItemChest.cpp" />
     <ClCompile Include="..\Private\CItemChestAnimController.cpp" />
