@@ -16,10 +16,7 @@ struct VS_OUT
 	float2 vTexUV : TEXCOORD0;
 };
 
-cbuffer HasNormalBuffer : register(b14)
-{
-    float4 gf4Color;
-};
+
 
 VS_OUT VS_Main(VS_IN In) //이름 VS_Main PS_Main 유지.
 {

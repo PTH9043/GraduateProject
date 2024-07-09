@@ -17,6 +17,12 @@ struct VS_OUT
 };
 
 
+cbuffer BloodTimerBuffer : register(b14)
+{
+    float gfFullTime;
+    float gfLeftTime;
+};
+
 VS_OUT VS_Main(VS_IN In) //이름 VS_Main PS_Main 유지.
 {
 	VS_OUT Out = (VS_OUT)0;
@@ -51,9 +57,12 @@ struct PS_OUT
 PS_OUT PS_Main(PS_In In)
 {
     PS_OUT Out = (PS_OUT) 0;
-
+    float fTransparency = gfLeftTime / gfFullTime;
+    
     Out.vColor = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV);
-   
+    if (Out.vColor.a < 0.3f)
+        discard;
+    Out.vColor.a *= fTransparency;
     Out.vSpecular = float4(Out.vColor.rgb, 0.5f);
     
     return Out;

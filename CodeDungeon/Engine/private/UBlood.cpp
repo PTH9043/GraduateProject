@@ -13,12 +13,12 @@
 UBlood::UBlood(CSHPTRREF<UDevice> _spDevice,
 	const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UPawn(_spDevice, _wstrLayer, _eCloneType, BACKINGTYPE::NON),
-	m_spVIBufferRect{ nullptr }
+	m_spVIBufferRect{ nullptr }, m_spTransformConstantBuffer{nullptr}, m_spTimerBuffer{nullptr}, _bloodTimer{}
 {
 }
 
  UBlood::UBlood(const UBlood& _rhs) :
-	UPawn(_rhs), m_spVIBufferRect{ nullptr } {}
+	UPawn(_rhs), m_spVIBufferRect{ nullptr }, m_spTransformConstantBuffer{ nullptr }, m_spTimerBuffer{ nullptr }, _bloodTimer{  } {}
 
 
 void UBlood::Free()
@@ -48,6 +48,7 @@ HRESULT UBlood::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	spGameInstance->GetPreAllocatedConstantBuffer(PREALLOCATED_TRANSFORM, m_spTransformConstantBuffer);
 	// Add Shader 
 	AddShader(PROTO_RES_BLOODSHADER);
+	m_spTimerBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::BLOODTIMERBUFFER, sizeof(BLOODTIMER));
 
 	//GetTransform()->SetScale(_float3(40, 35, 1));
 	m_stFinalRenderTransformParam.mWorldMatrix._11 = spGameInstance->GetD3DViewport().Width;
@@ -60,11 +61,8 @@ HRESULT UBlood::NativeConstructClone(const VOIDDATAS& _vecDatas)
 
 void UBlood::TickActive(const _double& _dTimeDelta)
 {
-	//SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	//_float3 MainCamPos = spGameInstance->GetMainCamPosition();
-	//_float3 MainCamLook = spGameInstance->GetMainCameraTransform()->GetLook();
-	//GetTransform()->SetPos(MainCamPos + MainCamLook*30);
-	//GetTransform()->LookAtWithFixedUp(_float3(MainCamPos));
+	if (_bloodTimer.m_fLeftTime > 0.f)_bloodTimer.m_fLeftTime -= _dTimeDelta;
+
 }
 
 
@@ -80,13 +78,13 @@ HRESULT UBlood::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDes
 {
 	__super::RenderActive(_spCommand, _spTableDescriptor);
 
-	//GetTransform()->BindTransformData(GetShader());
+	//GetTransform()->BindTransformData(GetShader(),1);
 	GetShader()->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
 	GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spBloodTexGroup->GetTexture(L"BloodBackgroung"));
 	
 
 
-
+	GetShader()->BindCBVBuffer(m_spTimerBuffer, &_bloodTimer, sizeof(BLOODTIMER));
 
 
 	m_spVIBufferRect->Render(GetShader(), _spCommand);
@@ -115,5 +113,22 @@ void UBlood::SetColorTexture(const _wstring& TexName)
 void UBlood::SetColorTexture(_uint _index)
 {
 	ColorTextureIndex = _index;
+}
+
+void UBlood::SetTimer(_float _setTime)
+{
+	_bloodTimer.m_fFullTime = _setTime;
+	_bloodTimer.m_fLeftTime = _setTime;
+}
+
+_bool UBlood::CheckTimeOver()
+{
+	if (_bloodTimer.m_fLeftTime <= 0.00001f) {
+		return true;
+	}
+	else {
+		return false;
+	}
+	
 }
 

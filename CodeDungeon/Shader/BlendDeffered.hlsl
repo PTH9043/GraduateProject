@@ -67,24 +67,24 @@ PS_OUT PS_Main(PS_In In)
     //vector vColor = vDiffuseDesc * LightCol;
     
     vector vColor;
-    if (vGlowDesc.a == 1 )//fire
+    if (vGetLightDesc.a == 0.5f)
     {
-       // vColor = float4(ToneMapping(vDiffuseDesc.xyz), vDiffuseDesc.a);
-       // vColor.xyz = vDiffuseDesc.xyz * ToneMapping(vGlowDesc.xyz);
-        vColor.xyz = vGlowDesc.xyz;
-        //ToneMapping(vGlowDesc.xyz);
+        vColor = vDiffuseDesc;
     }
-    else if (vGlowDesc.a == 0.5f )//trail
+    else
+    {
+       
+        
+    }
+   
+    if (vGlowDesc.a == 0.5f)//trail //가드가 0.51이고ㅓ 얘는 안개받도록
     {
         vColor = vDiffuseDesc;
 
     }
-    else{
-        vColor = vDiffuseDesc * LightCol;
-    }
-    if (vGetLightDesc.a == 0.5f)
+    else
     {
-        vColor = vDiffuseDesc;
+        vColor = vDiffuseDesc * LightCol;
     }
     
     //vector vColor = lerp(vDiffuseDesc, (vShadeDesc + vAmbientDesc + vSpecularDesc), 0.5f);

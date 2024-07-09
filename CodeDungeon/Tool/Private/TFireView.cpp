@@ -386,6 +386,7 @@ void TFireView::FireView()
 				m_stFire->SetActive(true);
 				m_stGuard->SetActive(true);
 				m_stBlood->SetActive(true);
+				m_stBlood->SetTimer(1.75f);
 				_float3 firepos = m_stFire->GetTransform()->GetPos();
 				m_MultipleParticle[0]->GetTransform()->SetPos(_float3(firepos.x, firepos.y-3.f, firepos.z));
 			}

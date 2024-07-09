@@ -802,6 +802,9 @@ void URenderer::RenderEnd()
         spDefferedShader->BindSRVBuffer(SRV_REGISTER::T5, m_spRenderTargetManager->
             FindRenderTargetTexture(RTGROUPID::OUTLINE_POS_NOR,
                 RTOBJID::OUTLINE_DEPTH_POS));
+      /*  spDefferedShader->BindSRVBuffer(SRV_REGISTER::T6, m_spRenderTargetManager->
+            FindRenderTargetTexture(RTGROUPID::NONALPHA_DEFFERED,
+                RTOBJID::NONALPHA_SPECULAR_DEFFERED));*/
         {
             spDefferedShader->BindCBVBuffer(m_spFogConstantBuffer, &m_bTurnFog, sizeof(_bool));
         }
