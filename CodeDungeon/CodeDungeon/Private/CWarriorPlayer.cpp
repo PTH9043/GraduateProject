@@ -154,6 +154,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	}
 	SetOutline(true);
 	SetifPlayer(true);//플레이어는 안그리도록 
+	SetHealth(10000);
 
 	return S_OK;
 }
@@ -290,9 +291,9 @@ void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
 	FollowCameraMove(_float3{ 0.f, 20.f, -40.f }, _dTimeDelta);
 
-	for (auto& Colliders : GetColliderContainer())
+	/*for (auto& Colliders : GetColliderContainer())
 		if(Colliders.first == L"Main")
-			Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
+			Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);*/
 }
 
 
@@ -347,18 +348,34 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							GetTransform()->LookAt(pCharacter->GetTransform()->GetPos());
 							m_bisKicked = true;
 						}
-					}
 
+						if (!GetIsHItAlreadyState())
+						{
+							DecreaseHealth(1);
+						}
+		
+						SetHitAlreadyState(true);
+					}
 				}
 				else
 				{
 					if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead01" && !m_bisKicked)
 					{
-						SetHitstate(true);
-						GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
+						if (!GetIsHItAlreadyState())
+						{
+							DecreaseHealth(1);
+						}
+
+						SetHitAlreadyState(true);
 					}
 				}
 			}
+			else
+			{
+				SetHitAlreadyState(false);
+			}
+
+		
 
 			for (auto& iter2 : pCharacter->GetColliderContainer())
 			{

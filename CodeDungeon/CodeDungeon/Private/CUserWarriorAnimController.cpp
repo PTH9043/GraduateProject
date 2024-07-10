@@ -63,7 +63,9 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     _bool isCombo2 = spGameInstance->GetDIKeyDown(DIK_2);
     _bool isAttack = isWAttack || isRAttack || isSAttack || isCombo1 || isCombo2;
     _bool isRoll = spGameInstance->GetDIKeyDown(DIK_C);
-    _bool isHit = spWarriorPlayer->GetHitState();
+    _bool Hit = false;
+    if (spWarriorPlayer->GetPrevHealth() > spWarriorPlayer->GetHealth())
+        Hit = true;
     _bool isKicked = spWarriorPlayer->GetKickedState();
     _bool isJump = spGameInstance->GetDIKeyDown(DIK_SPACE);
     _bool isRise = spWarriorPlayer->GetRiseState();
@@ -136,7 +138,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     }
 
     // Attack handling
-    if (isAttack && !isHit) {
+    if (isAttack && !Hit) {
         if (isWAttack) {
             spWarriorPlayer->SetAttack(5);
             if (CurAnimName == L"combo02_1") m_iWComboStack = 2;
@@ -188,9 +190,9 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     }
 
     // Hit state
-    if (isHit) {
+    if (Hit && !isKicked) {
         UpdateState(spAnimModel, ANIM_HIT, L"HIT_BACK");
-        spWarriorPlayer->SetHitstate(false);
+        spWarriorPlayer->SetPrevHealth(spWarriorPlayer->GetHealth());
     }
 
     // Rise state

@@ -74,7 +74,11 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
     _float DistanceFromPlayer = spMinotaur->GetDistanceFromPlayer();
   
     _bool FoundPlayer = spMinotaur->GetFoundTargetState();
-    _bool Hit = spMinotaur->GetHitState();
+    _bool Hit = false;
+
+    if (spMinotaur->GetPrevHealth() > spMinotaur->GetHealth())
+        Hit = true;
+
     _float AttackRange = 10.0f;
 
     if (!FoundPlayer)
@@ -122,7 +126,7 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
     {
         UpdateState(spAnimModel, ANIM_HIT, L"HIT");
         spAnimModel->SetAnimation(L"hit_1");
-        spMinotaur->SetHitstate(false);
+        spMinotaur->SetPrevHealth(spMinotaur->GetHealth());
     }
 
     // Handle attack mode state

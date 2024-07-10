@@ -287,20 +287,29 @@ void CMinotaur::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 		{
 			if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
 			{
-				//등을 맞았을 때에만
-				if(dotProduct < -0.5f)
+				if (!GetIsHItAlreadyState())
 				{
-					SetHitstate(true);
-					m_spParticle->SetActive(true);
-					m_spParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
-					// Decrease health on hit
-					DecreaseHealth(pCharacter->GetAttack());
+					//등을 맞았을 때에만
+					if (dotProduct < -0.5f)
+					{
+						m_spParticle->SetActive(true);
+						m_spParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+						// Decrease health on hit
+						DecreaseHealth(pCharacter->GetAttack());
+					}
+					else
+					{
+						DecreaseHealth(1);
+					}
 				}
-				else
-				{
-					DecreaseHealth(1);
-				}
+
+				SetHitAlreadyState(true);
 			}
+			else
+			{
+				SetHitAlreadyState(false);
+			}
+
 
 			for (const auto& iter2 : pCharacter->GetColliderContainer())
 			{

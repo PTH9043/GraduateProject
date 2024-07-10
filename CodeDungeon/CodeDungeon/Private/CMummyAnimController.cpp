@@ -69,7 +69,11 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
 
     _float DistanceFromPlayer = spMummy->GetDistanceFromPlayer();
     _bool FoundPlayer = spMummy->GetFoundTargetState();
-    _bool Hit = spMummy->GetHitState();
+    _bool Hit = false;
+
+    if (spMummy->GetPrevHealth() > spMummy->GetHealth())
+        Hit = true;
+
     _float AttackRange = 10.0f;
 
     // Handle found player state
@@ -141,9 +145,8 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     if (Hit)
     {
         UpdateState(spAnimModel, ANIM_HIT, L"HIT");
-    //    spAnimModel->SetAnimation(L"gotHit");
-        m_bstartlastHitTime = true;
-        spMummy->SetHitstate(false);
+        spAnimModel->SetAnimation(L"gotHit");
+        spMummy->SetPrevHealth(spMummy->GetHealth());
     }
 
     // Handle attack mode state

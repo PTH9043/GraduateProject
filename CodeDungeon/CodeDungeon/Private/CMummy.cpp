@@ -130,7 +130,7 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 		if (GetFoundTargetState())
 		{
 			SetOutline(true);
-			if (GetTimeAccumulator() >= 1.0)
+			if (GetTimeAccumulator() >= 0.5)
 			{
 				SHPTR<UNavigation> spNavigation = GetCurrentNavi();
 				m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, CurrentPlayerPos, CurrentMobCell, CurrentPlayerCell));
@@ -191,10 +191,8 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 	else if (CurAnimState == UAnimationController::ANIM_ATTACK)
 	{
 		_float3 direction = CurrentMobPos - CurrentPlayerPos;
-		GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
+		GetTransform()->SetDirectionFixedUp(-direction, _dTimeDelta, 5);
 	}
-	else if (CurAnimState == UAnimationController::ANIM_IDLE)
-		SetOutline(false);
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
@@ -215,6 +213,7 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 	}
 	else if (CurAnimState == UAnimationController::ANIM_IDLE)
 	{
+		SetOutline(false);
 		GetAnimModel()->TickAnimation(_dTimeDelta);
 		GetTransform()->SetPos(GetTransform()->GetPos());
 	}
@@ -276,12 +275,20 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 				if (CurAnimName != L"openLaying" && CurAnimName != L"openStanding" &&
 					CurAnimName != L"taunt" && CurAnimName != L"death")
 				{
-				    SetHitstate(true);
-					m_spParticle->SetActive(true);
-					m_spParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
-					// Decrease health on hit
-					DecreaseHealth(pCharacter->GetAttack());				
+					if (!GetIsHItAlreadyState())
+					{
+						m_spParticle->SetActive(true);
+						m_spParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+						// Decrease health on hit
+						DecreaseHealth(pCharacter->GetAttack());
+					}
+
+					SetHitAlreadyState(true);
 				}
+			}
+			else
+			{
+				SetHitAlreadyState(false);
 			}
 
 			for (const auto& iter2 : pCharacter->GetColliderContainer())
@@ -289,7 +296,7 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 				if (iter.second->IsCollision(iter2.second))
 				{
 					SetCollisionState(true);
-					GetTransform()->SetPos(GetTransform()->GetPos() + GetTransform()->GetLook() * 10 * _dTimeDelta);
+					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
 				}
 				else
 				{
