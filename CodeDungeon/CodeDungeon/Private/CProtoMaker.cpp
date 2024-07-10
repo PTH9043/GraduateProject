@@ -21,6 +21,8 @@
 #include "CMinotaur.h"
 #include "CMinotaurAnimController.h"
 #include "CImageUI.h"
+#include "CHarlequinn.h"
+#include "CHarlequinnAnimController.h"
 
 HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, CSHPTRREF<UDevice> _spDevice, CSHPTRREF<UCommand> _spCommand)
 {
@@ -36,6 +38,7 @@ HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, C
 	_spGameInstance->AddPrototype(PROTO_ACTOR_CHEST, CreateConstructorToNative< CItemChest>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_MINOTAUR, CreateConstructorToNative< CMinotaur>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_IMAGEUI, CreateConstructorToNative<CImageUI>(_spDevice, LAYER_UI, CLONETYPE::CLONE_STATIC));
+	_spGameInstance->AddPrototype(PROTO_ACTOR_HARLEQUINN, CreateConstructorToNative< CHarlequinn>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 
 	_spGameInstance->AddPrototype(PROTO_RES_PARTICLETEXTUREGROUP, CLONETYPE::CLONE_STATIC,
 		CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\Particle", true));
@@ -70,6 +73,7 @@ HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, C
 	_spGameInstance->AddPrototype(PROTO_COMP_SARCOPHAGUSANIMCONTROLLER, CreateConstructorToNative<CSarcophagusAnimController>(_spDevice));
 	_spGameInstance->AddPrototype(PROTO_COMP_CHESTANIMCONTROLLER, CreateConstructorToNative<CItemChestAnimController>(_spDevice));
 	_spGameInstance->AddPrototype(PROTO_COMP_MINOTAURANIMCONTROLLER, CreateConstructorToNative<CMinotaurAnimController>(_spDevice));
+	_spGameInstance->AddPrototype(PROTO_COMP_HARLEQUINNANIMCONTROLLER, CreateConstructorToNative<CHarlequinnAnimController>(_spDevice));
 	return S_OK;
 }
 
@@ -88,6 +92,10 @@ HRESULT CProtoMaker::CreateMainSceneProtoData(CSHPTRREF<UGameInstance> _spGameIn
 	Matrix = _float4x4::CreateScale(0.1f);
 	_spGameInstance->AddPrototype(PROTO_RES_MINOTAURANIMMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
 		_spDevice, L"..\\..\\Resource\\AnimModel\\MinoTaur\\Convert\\minotaur_FBX.bin", Matrix));
+
+	Matrix = _float4x4::CreateScale(0.1f);
+	_spGameInstance->AddPrototype(PROTO_RES_HARLEQUINNANIMMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
+		_spDevice, L"..\\..\\Resource\\AnimModel\\Harlequin1\\Convert\\Harlequin1_FBX.bin", Matrix));
 
 	Matrix = _float4x4::CreateScale(0.1f) * _float4x4::CreateRotationY(DirectX::XMConvertToRadians(180));
 	_spGameInstance->AddPrototype(PROTO_RES_SARCOPHAGUSLYINGANIMMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
