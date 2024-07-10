@@ -47,16 +47,16 @@ public: /* get set */
 	_bool IsOwnerPawnActive() const { return m_isOwnerPawnActive; }
 	_int GetPawnState() const { return m_iPawnState; }
 
-	void SetSupplyLerpValue(const _float _fSupplyLerpValue);
-	void SetOwnerPawnActiveStrong(_bool _isOwnerPawnActive);
-	void SetOwnerPawnActiveWeak(_bool _isOwnerPawnActive);
-	void SetPawnState(_int _State);
-protected: /* get set */
 	SHPTR<AAnimator> GetAnimator() { return m_spAnimator; }
 	const _double GetAccumulator() const { return m_dAccumulator; }
 	const _double GetElapsedTime() const { return m_dElapsedTime; }
 	const _string& GetInputTrigger() const { AReadSpinLockGuard(m_TriggerLock); return m_strInputTrigger; }
 
+	void SetSupplyLerpValue(const _float _fSupplyLerpValue);
+	void SetOwnerPawnActiveStrong(_bool _isOwnerPawnActive);
+	void SetOwnerPawnActiveWeak(_bool _isOwnerPawnActive);
+	void SetPawnState(_int _State);
+protected: /* get set */
 	void SetAccumulator(const _double& _dAccumulator) { this->m_dAccumulator = _dAccumulator; }
 	void SetElapsedTime(const _double& _dDelapsedTime) { this->m_dElapsedTime = _dDelapsedTime; }
 	void SetInputTrigger(const _string& _inputTrigger) { AWriteSpinLockGuard(m_TriggerLock);  this->m_strInputTrigger = _inputTrigger; }

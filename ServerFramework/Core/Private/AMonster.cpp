@@ -11,7 +11,8 @@ namespace Core
 	AMonster::AMonster(OBJCON_CONSTRUCTOR, SESSIONID _ID, SHPTR<AJobTimer> _spMonsterJobTimer) :
 		APawn(OBJCON_CONDATA, _ID, SESSIONTYPE::MONSTER), m_vNextPos{},
 		m_MobState{ MOB_END }, m_RoomIndex{}, m_PathList{}, m_strAnimTriggerName{""}, m_strCurAnimName{""}, 
-		m_wpMonsterJobTimer{_spMonsterJobTimer}, m_fActiveRange{0}, m_fDeactiveRange{0}, m_iMonsterType{0}
+		m_wpMonsterJobTimer{_spMonsterJobTimer}, m_isFoundPlayerFistTime{false}, m_fActiveRange{0},
+		m_fDeactiveRange{0}, m_iMonsterType{0}, m_fDistanceToPlayer{0}
 	{
 	
 	}
@@ -20,10 +21,10 @@ namespace Core
 		return __super::Start(_ReceiveDatas);
 	}
 
-	void AMonster::FindPlayer(SHPTR<ASession> _spSession)
+	_bool AMonster::IsFindPlayer(SHPTR<ASession> _spSession)
 	{
 		if (true == _spSession->IsPermanentDisable())
-			return;
+			return false;
 
 		SHPTR<ATransform> spMobTr = GetTransform();
 		SHPTR<ATransform> spPlayerTr = _spSession->GetTransform();
@@ -32,21 +33,26 @@ namespace Core
 			Vector3 vPlayerPos = spPlayerTr->GetPos();
 			Vector3 vDirection = vPlayerPos - vMobPos;
 
-			float fDistance = vDirection.LengthSquared();
-			if (fDistance <= m_fActiveRange )
+			m_fDistanceToPlayer = vDirection.LengthSquared();
+			if (m_fDistanceToPlayer <= m_fActiveRange )
 			{
 				SetMonsterState(MONSTERSTATE::MOB_FIND);
 			}
-			else if (m_fDeactiveRange >= fDistance)
+			else if (m_fDeactiveRange >= m_fDistanceToPlayer)
 			{
 				SetMonsterState(MONSTERSTATE::MOB_MOVE);
 			}
 		}
+		return false;
 	}
 
 	void AMonster::InsertMobJobTimer(_int _PlayerID)
 	{
-		SetActiveStrong(true);
+		if (true == IsPermanentDisable())
+			return;
+
+		SetActive(true);
+
 		SHPTR<AJobTimer> spJobTimer = m_wpMonsterJobTimer.lock();
 		if (nullptr != spJobTimer)
 		{
@@ -70,6 +76,20 @@ namespace Core
 		if (nullptr != GetAnimController())
 		{
 			GetAnimController()->SetPawnState(m_MobState);
+		}
+	}
+
+	void AMonster::SetFoundPlayerFirstTime(_bool _isFindFirstTime)
+	{
+		_bool isFound = IsFoundPlayerFirstTime();
+		if (_isFindFirstTime == isFound)
+			return;
+
+		while (true)
+		{
+			isFound = m_isFoundPlayerFistTime.load();
+			if (m_isFoundPlayerFistTime.compare_exchange_strong(isFound, _isFindFirstTime))
+				break;
 		}
 	}
 

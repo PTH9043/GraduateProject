@@ -17,7 +17,6 @@ namespace Server
 
 	bool CServerAdiminstor::NativeConstruct()
 	{
-		Connect();
 		return __super::NativeConstruct();
 	}
 
@@ -45,7 +44,8 @@ namespace Server
 				CreateMummyAndSarphagousMob(&iter, SARCO_LAYING, spMonsterJobTimer);
 			}
 		}
-
+		ThreadMiliRelax(100);
+		Connect();
 		return __super::Start();
 	}
 

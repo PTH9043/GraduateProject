@@ -19,7 +19,7 @@ public: /* get set*/
 	SHPTR<CMummy> GetMummy() const { return m_spMummy; }
 protected:
 	// 영구적으로 해당 오브젝트를 사용하지 않도록 결정할 경우 보낼 메시지 
-	virtual void SendLastMessage() override;
+	virtual void LastBehavior() override;
 private:
 	virtual void Free() override;
 private:

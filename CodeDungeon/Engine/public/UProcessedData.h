@@ -2,13 +2,13 @@
 
 
 BEGIN(Engine)
-
 /*
 @ Date: 2024-02-03,  Writer: 박태현
 @ Explain
 - Process를 이용해서 처리된 데이터들을 저장하는 클래스이다.
 */
 class UProcessedData {
+	using BUFFER = ARRAY<_char, MAX_BUFFER_LENGTH>;
 public:
 	UProcessedData();
 	UProcessedData(const _int _NetworkID, void* _pData, size_t _Size, _int _DataType);
@@ -20,9 +20,8 @@ public:
 	UProcessedData(const T& _data, short _tag) : m_DataType{ _tag },
 		 m_DataSize{ 0 }, m_iNetworkID{ -1 }
 	{
-		m_pData = Make::AllocBuffer<_char>(MAX_BUFFER_LENGTH);
-		::memset(m_pData, 0, MAX_BUFFER_LENGTH);
-		_data.SerializePartialToArray((void*)&m_pData[0], static_cast<int>(_data.ByteSizeLong()));
+		::memset(&m_Data[0], 0, MAX_BUFFER_LENGTH);
+		_data.SerializePartialToArray((void*)&m_Data[0], static_cast<int>(_data.ByteSizeLong()));
 		m_DataSize = static_cast<_int>(_data.ByteSizeLong());
 	}
 	// Recv
@@ -31,9 +30,8 @@ public:
 	UProcessedData(const _int _NetworkID, const T& _data, short _tag) : m_DataType{ _tag },
 		m_DataSize{ 0 }, m_iNetworkID{ _NetworkID }
 	{
-		m_pData = Make::AllocBuffer<_char>(MAX_BUFFER_LENGTH);
-		::memset(m_pData, 0, MAX_BUFFER_LENGTH);
-		_data.SerializePartialToArray((void*)&m_pData[0], static_cast<int>(_data.ByteSizeLong()));
+		::memset(&m_Data[0], 0, MAX_BUFFER_LENGTH);
+		_data.SerializePartialToArray((void*)&m_Data[0], static_cast<int>(_data.ByteSizeLong()));
 		m_DataSize = static_cast<_int>(_data.ByteSizeLong());
 	}
 
@@ -43,9 +41,8 @@ public:
 	UProcessedData(const T& _data, short _tag, const size_t _DataSize) : m_DataType{ _tag },
 		 m_DataSize{ static_cast<_int>(_DataSize) }, m_iNetworkID{ -1 }
 	{
-		m_pData = Make::AllocBuffer<_char>(MAX_BUFFER_LENGTH);
-		::memset(m_pData, 0, MAX_BUFFER_LENGTH);
-		_data.SerializePartialToArray((void*)&m_pData[0], static_cast<int>(_data.ByteSizeLong()));
+		::memset(&m_Data[0], 0, MAX_BUFFER_LENGTH);
+		_data.SerializePartialToArray((void*)&m_Data[0], static_cast<int>(_data.ByteSizeLong()));
 	}
 	// Recv
 	template<class T>
@@ -53,15 +50,14 @@ public:
 	UProcessedData(const _int _NetworkID, const T& _data, short _tag, const size_t _DataSize) : m_DataType{ _tag },
 		 m_DataSize{ static_cast<_int>(_DataSize) }, m_iNetworkID{ _NetworkID }
 	{
-		m_pData = Make::AllocBuffer<_char>(MAX_BUFFER_LENGTH);
-		::memset(m_pData, 0, MAX_BUFFER_LENGTH);
-		_data.SerializePartialToArray((void*)&m_pData[0], static_cast<int>(_data.ByteSizeLong()));
+		::memset(&m_Data[0], 0, MAX_BUFFER_LENGTH);
+		_data.SerializePartialToArray((void*)&m_Data[0], static_cast<int>(_data.ByteSizeLong()));
 	}
 
 	// Recv
 	template<class T>
 		requires CheckProtoType<T>
-	UProcessedData(const _int _NetworkID, T* _data, short _tag) : m_pData{ reinterpret_cast<_char*>(_data) }, m_DataType{ _tag },
+	UProcessedData(const _int _NetworkID, T* _data, short _tag) : m_Data{ reinterpret_cast<_char*>(_data) }, m_DataType{ _tag },
 		m_DataSize{ static_cast<_int>( sizeof(T)) }, m_iNetworkID{ _NetworkID } { }
 
 	~UProcessedData();
@@ -69,15 +65,15 @@ public:
 	UProcessedData& operator=(const UProcessedData& _other) noexcept;
 	UProcessedData& operator=(UProcessedData&& _other) noexcept;
 	template<class T>
-	T* ConvertData() { return reinterpret_cast<T*>(m_pData); }
+	T* ConvertData() { return reinterpret_cast<T*>(m_Data.data()); }
 public: /* get Set */
 	_int GetDataID() const { return m_iNetworkID.load(); }
 	_int GetDataType() const { return m_DataType; }
 	_int GetDataSize() const { return m_DataSize; }
-	_char* GetData() const { return m_pData; }
+	_char* GetData() const { return &m_Data[0]; }
 private:
 	std::atomic_int			m_iNetworkID;
-	mutable _char*			m_pData;
+	mutable BUFFER		m_Data;
 	std::atomic_int			m_DataType;
 	std::atomic_int			m_DataSize;
 };

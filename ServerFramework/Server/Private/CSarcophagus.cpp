@@ -22,7 +22,7 @@ namespace Server
 			SetMonsterType(TAG_CHAR::TAG_SARCOPHAGUS_STANDING);
 		}
 
-		UpdateFindRange(10.f, 20.f);
+		UpdateFindRange(40.f, 80.f);
 	}
 
 	_bool CSarcophagus::Start(const VOIDDATAS& _ReceiveDatas)
@@ -71,7 +71,9 @@ namespace Server
 		if (MOB_FIND == GetMonsterState())
 		{
 			_int AnimIndex = GetAnimController()->GetCurAnimIndex();
-			_double dDuration = spCurAnimation->GetTimeAcc();
+			_double dDuration = GetAnimController()->GetElapsedTime();
+
+		//	std::cout << "Sar: " << dDuration << "\n";
 
 			SC_MONSTERSTATE scMonsterState;
 			PROTOFUNC::MakeScMonsterState(&scMonsterState, GetSessionID(), dDuration, AnimIndex, MOB_FIND_STATE);
@@ -80,13 +82,11 @@ namespace Server
 		}
 	}
 
-	void CSarcophagus::SendLastMessage()
+	void CSarcophagus::LastBehavior()
 	{
-		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
-		SC_MONSTERSTATE scMonsterState;
-		PROTOFUNC::MakeScMonsterState(&scMonsterState, GetSessionID(), 0, 0, MOB_DISABLE_STATE);
-		CombineProto<SC_MONSTERSTATE>(GetCopyBuffer(), GetPacketHead(), scMonsterState, TAG_SC_MONSTERSTATE);
-		spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
+		m_spMummy->SetFoundPlayerFirstTime(true);
+
+		ActivePermanentDisable();
 	}
 
 	void CSarcophagus::Free()

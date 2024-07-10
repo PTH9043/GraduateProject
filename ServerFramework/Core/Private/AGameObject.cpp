@@ -120,40 +120,26 @@ namespace Core
 		return IsCanSee(_spTransform->GetPos());
 	}
 
-
-	void AGameObject::SetActiveWeak(const _bool _isActive)
+	void AGameObject::SetActive(const _bool _isActive)
 	{
-		bool isActive = m_isActive.load();
-		if (m_isActive.compare_exchange_strong(isActive, _isActive))
-			return;
-	}
-
-	void AGameObject::SetActiveStrong(const _bool _isActive)
-	{
-		if (IsActive() == _isActive)
-			return;
-
 		while (true)
 		{
-			bool isActive = m_isActive.load();
-			if (m_isActive.compare_exchange_strong(isActive, _isActive))
+			_bool isActive = m_isActive;
+			if (true == CAS(&m_isActive, isActive, _isActive))
 				break;
 		}
 	}
 
 	void AGameObject::ActivePermanentDisable()
 	{
-		while (true)
+		while(!m_isPermanentDisable.load())
 		{
-			bool isActive = m_isPermanentDisable.load();
-			if (m_isPermanentDisable.compare_exchange_strong(isActive, true))
-				break;
+			m_isPermanentDisable = true;
 		}
-
-		SendLastMessage();
+		LastBehavior();
 	}
 
-	void AGameObject::SendLastMessage()
+	void AGameObject::LastBehavior()
 	{
 	}
 

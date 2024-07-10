@@ -24,23 +24,30 @@ namespace Server {
 		{
 			if (MOB_FIND == GetPawnState())
 			{
-				SetElapsedTime(GetElapsedTime() + _dTimeDelta);
-
 				if (TAG_CHAR::TAG_SARCOPHAGUS_LAYING == m_iOwnerType)
 				{
 					if (m_dLyingSarcophagusTimeArcOpenEnd >= GetElapsedTime())
+					{
 						GetAnimator()->TickAnimToTimeAccChangeTransform(spTransform, _dTimeDelta,
 							m_dLyingSarcophagusTimeArcOpenStart + GetElapsedTime());
+					}
 					else
+					{
 						spPawn->ActivePermanentDisable();
+					}
 				}
 				else
 				{
-					if (m_dLyingSarcophagusTimeArcOpenEnd >= GetElapsedTime())
-						GetAnimator()->UpdateCurAnimationToRatio(GetElapsedTime());
+					if (m_dStandingSarcophagusTimeArcOpenEnd >= GetElapsedTime())
+					{
+						GetAnimator()->TickAnimation(GetElapsedTime());
+					}
 					else
+					{
 						spPawn->ActivePermanentDisable();
+					}
 				}
+				SetElapsedTime(GetElapsedTime() + _dTimeDelta * m_dSarcophagusOpeningSpeed);
 			}
 		}
 	}
