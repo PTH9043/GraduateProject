@@ -120,6 +120,9 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 	SHPTR<UCell> CurrentMobCell = GetCurrentNavi()->GetCurCell();
 	SHPTR<UCell> CurrentPlayerCell = GetTargetPlayer()->GetCurrentNavi()->GetCurCell();
 
+	_bool isRushMode = static_pointer_cast<CMinotaurAnimController>(GetAnimationController())->GetRushMode();
+	_float3 RushTargetPos = static_pointer_cast<CMinotaurAnimController>(GetAnimationController())->GetTargetPos();
+
 	_float runningSpeed = 30;
 	_float walkingSpeed = 5;
 
@@ -134,7 +137,10 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 			if (GetTimeAccumulator() >= 1.0)
 			{
 				SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-				m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, CurrentPlayerPos, CurrentMobCell, CurrentPlayerCell));
+				if(!isRushMode)
+					m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, CurrentPlayerPos, CurrentMobCell, CurrentPlayerCell));
+				else
+					m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, RushTargetPos, CurrentMobCell, spNavigation->FindCell(RushTargetPos)));
 				m_isPathFinding = true;
 				SetTimeAccumulator(0.0);
 			}
@@ -146,7 +152,10 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 					m_isPathFinding = false;
 					if (m_PathFindingState.pathFound)
 					{
-						m_AstarPath = (spNavigation->OptimizePath(m_PathFindingState.path, CurrentMobPos, CurrentPlayerPos));
+						if (!isRushMode)
+							m_AstarPath = (spNavigation->OptimizePath(m_PathFindingState.path, CurrentMobPos, CurrentPlayerPos));
+						else
+							m_AstarPath = (spNavigation->OptimizePath(m_PathFindingState.path, CurrentMobPos, RushTargetPos));
 						m_currentPathIndex = 0; // index initialized when path is optimized
 					}
 				}
@@ -158,8 +167,12 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 				GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
 			}
 
-			if(CurAnimName == L"run")
+			if(CurAnimName == L"walk_forward2")
 				GetTransform()->TranslateDir(-GetTransform()->GetLook(), _dTimeDelta, runningSpeed);
+			else if (CurAnimName == L"run")
+				GetTransform()->TranslateDir(-GetTransform()->GetLook(), _dTimeDelta, runningSpeed * 2);
+			else if (CurAnimName == L"walk_back")
+				GetTransform()->TranslateDir(GetTransform()->GetLook(), _dTimeDelta, walkingSpeed * 2);
 		}
 		else // patrolling when player is not found
 		{
@@ -194,15 +207,14 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 		}
 		
 	}
-	else if (CurAnimState == UAnimationController::ANIM_ATTACK)
+	else if(CurAnimState == UAnimationController::ANIM_IDLE)
+		SetOutline(false);
+	if (CurAnimName == L"hit_1")
 	{
 		_float3 direction = CurrentMobPos - CurrentPlayerPos;
 		GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
 	}
-	else if (CurAnimState == UAnimationController::ANIM_HIT)
-	{
-		GetTransform()->TranslateDir(GetTransform()->GetLook(), _dTimeDelta, 1);
-	}
+	
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
@@ -267,17 +279,27 @@ void CMinotaur::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 	_float3 direction = (_pEnemy->GetTransform()->GetPos() - GetTransform()->GetPos());
 	direction.Normalize();
 
+	_float3 forward = -GetTransform()->GetLook();
+	_float dotProduct = forward.Dot(direction);
+
 	auto handleCollisionWithPlayer = [&](UCharacter* pCharacter) {
 		for (const auto& iter : GetColliderContainer())
 		{
 			if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
 			{
-				SetHitstate(true);
-				m_spParticle->SetActive(true);
-				m_spParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
-				// Decrease health on hit
-				DecreaseHealth(pCharacter->GetAttack());
-				GetTransform()->SetPos(GetTransform()->GetPos() + GetTransform()->GetLook() * 10 * _dTimeDelta);
+				//등을 맞았을 때에만
+				if(dotProduct < -0.5f)
+				{
+					SetHitstate(true);
+					m_spParticle->SetActive(true);
+					m_spParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+					// Decrease health on hit
+					DecreaseHealth(pCharacter->GetAttack());
+				}
+				else
+				{
+					DecreaseHealth(1);
+				}
 			}
 
 			for (const auto& iter2 : pCharacter->GetColliderContainer())
@@ -285,7 +307,7 @@ void CMinotaur::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 				if (iter.second->IsCollision(iter2.second))
 				{
 					SetCollisionState(true);
-					GetTransform()->SetPos(GetTransform()->GetPos() + GetTransform()->GetLook() * 10 * _dTimeDelta);
+					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 10 * _dTimeDelta);
 				}
 				else
 				{

@@ -6,6 +6,8 @@
 #include "UCharacter.h"
 #include "UAnimation.h"
 #include "UTransform.h"
+#include "UPlayer.h"
+#include "CWarriorPlayer.h"
 
 CMinotaurAnimController::CMinotaurAnimController(CSHPTRREF<UDevice> _spDevice)
     : UAnimationController(_spDevice),
@@ -14,7 +16,12 @@ CMinotaurAnimController::CMinotaurAnimController(CSHPTRREF<UDevice> _spDevice)
     m_dlastAttackTime{ 0 },
     m_bstartlastHitTime{ false },
     m_blastAttackWasFirst{ false },
-    m_dIdleTimer{0}
+    m_dIdleTimer{0},
+    m_bRushMode{false},
+    m_dRushModeTimer{ 0 },
+    m_dRushAttackTimer{0},
+    m_didleRandomValueChoosingTimer{ 0 },
+    m_iRandomValue{0}
 {
 }
 
@@ -25,7 +32,12 @@ CMinotaurAnimController::CMinotaurAnimController(const CMinotaurAnimController& 
     m_dlastAttackTime{ 0 },
     m_bstartlastHitTime{ false },
     m_blastAttackWasFirst{ false },
-    m_dIdleTimer{0}
+    m_dIdleTimer{0},
+    m_bRushMode{ false },
+    m_dRushModeTimer{ 0 },
+    m_dRushAttackTimer{ 0 },
+    m_didleRandomValueChoosingTimer{ 0 },
+    m_iRandomValue{ 0 }
 {
 }
 
@@ -57,8 +69,10 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
     SHPTR<CMinotaur> spMinotaur = m_wpMinotaurMob.lock();
     SHPTR<UAnimModel> spAnimModel = spMinotaur->GetAnimModel();
     const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
-
+    const _wstring& PlayerAnimName = spMinotaur->GetTargetPlayer()->GetAnimModel()->GetCurrentAnimation()->GetAnimName();
+    _float playerKickedTime = static_pointer_cast<CWarriorPlayer>(spMinotaur->GetTargetPlayer())->GetWarriorKickedTimeElapsed();
     _float DistanceFromPlayer = spMinotaur->GetDistanceFromPlayer();
+  
     _bool FoundPlayer = spMinotaur->GetFoundTargetState();
     _bool Hit = spMinotaur->GetHitState();
     _float AttackRange = 10.0f;
@@ -76,17 +90,22 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
                 m_dIdleTimer = 0.0;
             }
         }
+        else
+            m_dIdleTimer = 0;
 
         if(m_dIdleTimer == 0)
         {
-            // Generate a random number between 0 and 3 (inclusive)
-            _int randomValue = std::rand() % 4;
+            m_didleRandomValueChoosingTimer += _dTimeDelta;
+            if(m_didleRandomValueChoosingTimer > 2)
+            {
+                m_iRandomValue = std::rand() % 4;
+            }
 
-            if (randomValue == 0)
+            if (m_iRandomValue == 0)
             {
                 UpdateState(spAnimModel, ANIM_IDLE, L"IDLE");
             }
-            else if (randomValue != 0)
+            else if (m_iRandomValue != 0)
             {
                 UpdateState(spAnimModel, ANIM_MOVE, L"WALK");
             }
@@ -94,7 +113,8 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
     }
     else
     {
-        m_bAttackMode = true;
+        if(!m_bRushMode)
+            m_bAttackMode = true;
     }
 
     // Handle hit state
@@ -102,12 +122,11 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
     {
         UpdateState(spAnimModel, ANIM_HIT, L"HIT");
         spAnimModel->SetAnimation(L"hit_1");
-        m_bstartlastHitTime = true;
         spMinotaur->SetHitstate(false);
     }
 
     // Handle attack mode state
-    if (m_bAttackMode && !Hit)
+    if (m_bAttackMode && !Hit && !m_bRushMode)
     {
         m_dlastAttackTime += _dTimeDelta;
         if (m_dlastAttackTime > 3.0)
@@ -118,11 +137,46 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
 
         if (DistanceFromPlayer > AttackRange)
         {
-            UpdateState(spAnimModel, ANIM_MOVE, L"RUN");
+            UpdateState(spAnimModel, ANIM_MOVE, L"WALK2");
         }
         else
         {
-            UpdateState(spAnimModel, m_blastAttackWasFirst ? ANIM_ATTACK : ANIM_ATTACK, m_blastAttackWasFirst ? L"ATTACK" : L"KICK_1");
+            UpdateState(spAnimModel, 
+                m_blastAttackWasFirst ? ANIM_ATTACK : ANIM_ATTACK, 
+                m_blastAttackWasFirst ? L"ATTACK" : L"KICK_1");
+        }
+
+        if (PlayerAnimName == L"dead01" && playerKickedTime > 30)
+        {
+            m_bRushMode = true;
+            m_bAttackMode = false;
+            m_f3RushTargetPos = spMinotaur->GetTargetPlayer()->GetTransform()->GetPos();
+        }
+    }
+
+    if (m_bRushMode)
+    {
+        m_dRushModeTimer += _dTimeDelta;
+        if (m_dRushModeTimer < 2.0)
+        {
+            UpdateState(spAnimModel, ANIM_MOVE, L"WALKBACK");
+        }
+        else {
+            if (_float3::Distance(spMinotaur->GetTransform()->GetPos(), m_f3RushTargetPos) > 10)
+            {
+                UpdateState(spAnimModel, ANIM_MOVE, L"RUN");
+            }
+            else
+            {
+                UpdateState(spAnimModel, ANIM_ATTACK, L"KICK_2");
+                m_dRushAttackTimer += _dTimeDelta;
+                if(m_dRushAttackTimer > 1.f)
+                {
+                    m_bRushMode = false;
+                    m_dRushModeTimer = 0;
+                    m_dRushAttackTimer = 0;
+                }
+            }
         }
     }
 

@@ -159,7 +159,7 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 				SHPTR<CMummy> _Mummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(
 					PROTO_ACTOR_MUMMY, { &MummyDesc }));
 				_Mummy->GetTransform()->SetPos(vecit._mWorldMatrix.Get_Pos());
-				_Mummy->GetTransform()->SetDirection(-vecit._mWorldMatrix.Get_Look());
+				_Mummy->GetTransform()->SetDirection(vecit._mWorldMatrix.Get_Look());
 				_Mummy->GetAnimModel()->SetAnimation(UMethod::ConvertSToW(vecit._sAnimName));
 				if (vecit._sAnimName == "staticLaying")
 				{
@@ -180,6 +180,7 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 					_Sarcophagus = std::static_pointer_cast<CSarcophagus>(spGameInstance->CloneActorAdd(
 						PROTO_ACTOR_SARCOPHAGUSLYING, { &SarcDesc }));
 					_Sarcophagus->SetSarcophagusType(CSarcophagus::SARCOTYPE::TYPE_LYING);
+					_Mummy->GetTransform()->TranslateDir((-_Mummy->GetTransform()->GetLook()), 1, 12);
 				}
 				else
 				{
@@ -191,8 +192,6 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 				_Sarcophagus->GetTransform()->SetNewWorldMtx(_Mummy->GetTransform()->GetWorldMatrix());
 				_Sarcophagus->GetAnimModel()->SetAnimation(0);
 				_Sarcophagus->SetTargetPlayer(_spPlayer);
-				_Mummy->GetTransform()->TranslateDir((_Mummy->GetTransform()->GetLook()), 1, 12);
-
 				_MummyVec.push_back(_Mummy);
 				_MummyVec.push_back(_Sarcophagus);
 			}
