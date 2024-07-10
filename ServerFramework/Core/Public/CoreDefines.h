@@ -9,7 +9,7 @@
 
 
 #define USE_DEBUG 0
-// #define USE_STOMP 0
+//#define USE_STOMP 0
 
 /*
 @ Date: 2023-12-30
@@ -89,6 +89,8 @@
 #include <mysql/cppconn/exception.h>
 #include <mysql/cppconn/resultset.h>
 #include <mysql/cppconn/statement.h>
+#include <concurrent_priority_queue.h>
+#include <concurrent_queue.h>
 
 extern "C" {
 #include <lua/lua.h>

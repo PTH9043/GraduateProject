@@ -55,8 +55,7 @@ public:/*Get Set */
 	const _bool IsPermanentDisable() const { return m_isPermanentDisable; }
 
 	void SetJumpable(const _bool _isJumpable) { this->m_isJumpable = _isJumpable; }
-	virtual void SetActiveWeak(const _bool _isActive);
-	virtual void SetActiveStrong(const _bool _isActive);
+	virtual void SetActive(const _bool _isActive);
 	void ActivePermanentDisable();
 	/*
 	@ Date: 2024-01-04, Writer: 박태현
@@ -72,7 +71,7 @@ public:/*Get Set */
 	}
 protected:
 	// 영구적으로 해당 오브젝트를 사용하지 않도록 결정할 경우 보낼 메시지 
-	virtual void SendLastMessage();
+	virtual void LastBehavior();
 protected: /* Get Set */
 	void SetSessionID(const SESSIONID& _SessionID) { this->m_SessionID = _SessionID; }
 	void SetSessionType(const SESSIONTYPE& _SessionType) { this->m_SessionType = _SessionType; }
@@ -107,7 +106,7 @@ private:
 
 	_float									m_fMoveSpeed;
 	_float									m_fRunSpeed;
-	ATOMIC<_bool>				m_isActive;
+	_bool									m_isActive;
 	ATOMIC<_bool>				m_isPermanentDisable;
 
 	PACKETHEAD					m_CopyHead;

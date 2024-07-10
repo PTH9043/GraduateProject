@@ -222,7 +222,7 @@ namespace Server {
 				}
 				else
 				{
-					iter.second->SetActiveStrong(false);
+					iter.second->SetActive(false);
 				}
 			}
 		}

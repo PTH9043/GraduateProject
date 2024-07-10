@@ -9,19 +9,9 @@ namespace Core {
 	{
 	}
 
-	void APawn::SetActiveWeak(const _bool _isActive)
+	void APawn::SetActive(const _bool _isActive)
 	{
-		__super::SetActiveWeak(_isActive);
-
-		if (nullptr != m_spAnimController)
-		{
-			m_spAnimController->SetOwnerPawnActiveWeak(_isActive);
-		}
-	}
-
-	void APawn::SetActiveStrong(const _bool _isActive)
-	{
-		__super::SetActiveStrong(_isActive);
+		__super::SetActive(_isActive);
 		if (nullptr != m_spAnimController)
 		{
 			m_spAnimController->SetOwnerPawnActiveStrong(_isActive);

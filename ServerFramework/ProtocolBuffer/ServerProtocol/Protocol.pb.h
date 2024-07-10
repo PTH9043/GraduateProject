@@ -62,6 +62,9 @@ extern CHARMOVEDefaultTypeInternal _CHARMOVE_default_instance_;
 class CS_ATTACK;
 struct CS_ATTACKDefaultTypeInternal;
 extern CS_ATTACKDefaultTypeInternal _CS_ATTACK_default_instance_;
+class CS_CHARCOLLISION;
+struct CS_CHARCOLLISIONDefaultTypeInternal;
+extern CS_CHARCOLLISIONDefaultTypeInternal _CS_CHARCOLLISION_default_instance_;
 class CS_DISCONNECT;
 struct CS_DISCONNECTDefaultTypeInternal;
 extern CS_DISCONNECTDefaultTypeInternal _CS_DISCONNECT_default_instance_;
@@ -3018,7 +3021,7 @@ class CS_DISCONNECT final :
                &_CS_DISCONNECT_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    17;
+    18;
 
   friend void swap(CS_DISCONNECT& a, CS_DISCONNECT& b) {
     a.Swap(&b);
@@ -3127,6 +3130,361 @@ class CS_DISCONNECT final :
         inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                               ::google::protobuf::Arena* arena, const Impl_& from);
     ::int64_t id_;
+    mutable ::google::protobuf::internal::CachedSize _cached_size_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_Protocol_2eproto;
+};// -------------------------------------------------------------------
+
+class CS_CHARCOLLISION final :
+    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:CS_CHARCOLLISION) */ {
+ public:
+  inline CS_CHARCOLLISION() : CS_CHARCOLLISION(nullptr) {}
+  ~CS_CHARCOLLISION() override;
+  template<typename = void>
+  explicit PROTOBUF_CONSTEXPR CS_CHARCOLLISION(::google::protobuf::internal::ConstantInitialized);
+
+  inline CS_CHARCOLLISION(const CS_CHARCOLLISION& from)
+      : CS_CHARCOLLISION(nullptr, from) {}
+  CS_CHARCOLLISION(CS_CHARCOLLISION&& from) noexcept
+    : CS_CHARCOLLISION() {
+    *this = ::std::move(from);
+  }
+
+  inline CS_CHARCOLLISION& operator=(const CS_CHARCOLLISION& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline CS_CHARCOLLISION& operator=(CS_CHARCOLLISION&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetArena() == from.GetArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const CS_CHARCOLLISION& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const CS_CHARCOLLISION* internal_default_instance() {
+    return reinterpret_cast<const CS_CHARCOLLISION*>(
+               &_CS_CHARCOLLISION_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    17;
+
+  friend void swap(CS_CHARCOLLISION& a, CS_CHARCOLLISION& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(CS_CHARCOLLISION* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() != nullptr &&
+        GetArena() == other->GetArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() == other->GetArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(CS_CHARCOLLISION* other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  CS_CHARCOLLISION* New(::google::protobuf::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<CS_CHARCOLLISION>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const CS_CHARCOLLISION& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom( const CS_CHARCOLLISION& from) {
+    CS_CHARCOLLISION::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  ::size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::google::protobuf::internal::ParseContext* ctx) final;
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target, ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
+  void SharedCtor(::google::protobuf::Arena* arena);
+  void SharedDtor();
+  void InternalSwap(CS_CHARCOLLISION* other);
+
+  private:
+  friend class ::google::protobuf::internal::AnyMetadata;
+  static ::absl::string_view FullMessageName() {
+    return "CS_CHARCOLLISION";
+  }
+  protected:
+  explicit CS_CHARCOLLISION(::google::protobuf::Arena* arena);
+  CS_CHARCOLLISION(::google::protobuf::Arena* arena, const CS_CHARCOLLISION& from);
+  public:
+
+  static const ClassData _class_data_;
+  const ::google::protobuf::Message::ClassData*GetClassData() const final;
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kIdFieldNumber = 1,
+    kTypeFieldNumber = 2,
+    kDamageFieldNumber = 3,
+    kRightxFieldNumber = 4,
+    kRightyFieldNumber = 5,
+    kRightzFieldNumber = 6,
+    kUpxFieldNumber = 7,
+    kUpyFieldNumber = 8,
+    kUpzFieldNumber = 9,
+    kForwardxFieldNumber = 10,
+    kForwardyFieldNumber = 11,
+    kForwardzFieldNumber = 12,
+    kPosxFieldNumber = 13,
+    kPosyFieldNumber = 14,
+    kCollisionTypeFieldNumber = 16,
+    kPoszFieldNumber = 15,
+  };
+  // int64 id = 1;
+  void clear_id() ;
+  ::int64_t id() const;
+  void set_id(::int64_t value);
+
+  private:
+  ::int64_t _internal_id() const;
+  void _internal_set_id(::int64_t value);
+
+  public:
+  // int64 type = 2;
+  void clear_type() ;
+  ::int64_t type() const;
+  void set_type(::int64_t value);
+
+  private:
+  ::int64_t _internal_type() const;
+  void _internal_set_type(::int64_t value);
+
+  public:
+  // float damage = 3;
+  void clear_damage() ;
+  float damage() const;
+  void set_damage(float value);
+
+  private:
+  float _internal_damage() const;
+  void _internal_set_damage(float value);
+
+  public:
+  // float rightx = 4;
+  void clear_rightx() ;
+  float rightx() const;
+  void set_rightx(float value);
+
+  private:
+  float _internal_rightx() const;
+  void _internal_set_rightx(float value);
+
+  public:
+  // float righty = 5;
+  void clear_righty() ;
+  float righty() const;
+  void set_righty(float value);
+
+  private:
+  float _internal_righty() const;
+  void _internal_set_righty(float value);
+
+  public:
+  // float rightz = 6;
+  void clear_rightz() ;
+  float rightz() const;
+  void set_rightz(float value);
+
+  private:
+  float _internal_rightz() const;
+  void _internal_set_rightz(float value);
+
+  public:
+  // float upx = 7;
+  void clear_upx() ;
+  float upx() const;
+  void set_upx(float value);
+
+  private:
+  float _internal_upx() const;
+  void _internal_set_upx(float value);
+
+  public:
+  // float upy = 8;
+  void clear_upy() ;
+  float upy() const;
+  void set_upy(float value);
+
+  private:
+  float _internal_upy() const;
+  void _internal_set_upy(float value);
+
+  public:
+  // float upz = 9;
+  void clear_upz() ;
+  float upz() const;
+  void set_upz(float value);
+
+  private:
+  float _internal_upz() const;
+  void _internal_set_upz(float value);
+
+  public:
+  // float forwardx = 10;
+  void clear_forwardx() ;
+  float forwardx() const;
+  void set_forwardx(float value);
+
+  private:
+  float _internal_forwardx() const;
+  void _internal_set_forwardx(float value);
+
+  public:
+  // float forwardy = 11;
+  void clear_forwardy() ;
+  float forwardy() const;
+  void set_forwardy(float value);
+
+  private:
+  float _internal_forwardy() const;
+  void _internal_set_forwardy(float value);
+
+  public:
+  // float forwardz = 12;
+  void clear_forwardz() ;
+  float forwardz() const;
+  void set_forwardz(float value);
+
+  private:
+  float _internal_forwardz() const;
+  void _internal_set_forwardz(float value);
+
+  public:
+  // float posx = 13;
+  void clear_posx() ;
+  float posx() const;
+  void set_posx(float value);
+
+  private:
+  float _internal_posx() const;
+  void _internal_set_posx(float value);
+
+  public:
+  // float posy = 14;
+  void clear_posy() ;
+  float posy() const;
+  void set_posy(float value);
+
+  private:
+  float _internal_posy() const;
+  void _internal_set_posy(float value);
+
+  public:
+  // int64 collisionType = 16;
+  void clear_collisiontype() ;
+  ::int64_t collisiontype() const;
+  void set_collisiontype(::int64_t value);
+
+  private:
+  ::int64_t _internal_collisiontype() const;
+  void _internal_set_collisiontype(::int64_t value);
+
+  public:
+  // float posz = 15;
+  void clear_posz() ;
+  float posz() const;
+  void set_posz(float value);
+
+  private:
+  float _internal_posz() const;
+  void _internal_set_posz(float value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:CS_CHARCOLLISION)
+ private:
+  class _Internal;
+
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      4, 16, 0,
+      0, 2>
+      _table_;
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+
+        inline explicit constexpr Impl_(
+            ::google::protobuf::internal::ConstantInitialized) noexcept;
+        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                              ::google::protobuf::Arena* arena);
+        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                              ::google::protobuf::Arena* arena, const Impl_& from);
+    ::int64_t id_;
+    ::int64_t type_;
+    float damage_;
+    float rightx_;
+    float righty_;
+    float rightz_;
+    float upx_;
+    float upy_;
+    float upz_;
+    float forwardx_;
+    float forwardy_;
+    float forwardz_;
+    float posx_;
+    float posy_;
+    ::int64_t collisiontype_;
+    float posz_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -5972,6 +6330,378 @@ inline void CS_ATTACK::_internal_set_damage(float value) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   ;
   _impl_.damage_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// CS_CHARCOLLISION
+
+// int64 id = 1;
+inline void CS_CHARCOLLISION::clear_id() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.id_ = ::int64_t{0};
+}
+inline ::int64_t CS_CHARCOLLISION::id() const {
+  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.id)
+  return _internal_id();
+}
+inline void CS_CHARCOLLISION::set_id(::int64_t value) {
+  _internal_set_id(value);
+  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.id)
+}
+inline ::int64_t CS_CHARCOLLISION::_internal_id() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.id_;
+}
+inline void CS_CHARCOLLISION::_internal_set_id(::int64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.id_ = value;
+}
+
+// int64 type = 2;
+inline void CS_CHARCOLLISION::clear_type() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.type_ = ::int64_t{0};
+}
+inline ::int64_t CS_CHARCOLLISION::type() const {
+  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.type)
+  return _internal_type();
+}
+inline void CS_CHARCOLLISION::set_type(::int64_t value) {
+  _internal_set_type(value);
+  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.type)
+}
+inline ::int64_t CS_CHARCOLLISION::_internal_type() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.type_;
+}
+inline void CS_CHARCOLLISION::_internal_set_type(::int64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.type_ = value;
+}
+
+// float damage = 3;
+inline void CS_CHARCOLLISION::clear_damage() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.damage_ = 0;
+}
+inline float CS_CHARCOLLISION::damage() const {
+  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.damage)
+  return _internal_damage();
+}
+inline void CS_CHARCOLLISION::set_damage(float value) {
+  _internal_set_damage(value);
+  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.damage)
+}
+inline float CS_CHARCOLLISION::_internal_damage() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.damage_;
+}
+inline void CS_CHARCOLLISION::_internal_set_damage(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.damage_ = value;
+}
+
+// float rightx = 4;
+inline void CS_CHARCOLLISION::clear_rightx() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.rightx_ = 0;
+}
+inline float CS_CHARCOLLISION::rightx() const {
+  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.rightx)
+  return _internal_rightx();
+}
+inline void CS_CHARCOLLISION::set_rightx(float value) {
+  _internal_set_rightx(value);
+  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.rightx)
+}
+inline float CS_CHARCOLLISION::_internal_rightx() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.rightx_;
+}
+inline void CS_CHARCOLLISION::_internal_set_rightx(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.rightx_ = value;
+}
+
+// float righty = 5;
+inline void CS_CHARCOLLISION::clear_righty() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.righty_ = 0;
+}
+inline float CS_CHARCOLLISION::righty() const {
+  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.righty)
+  return _internal_righty();
+}
+inline void CS_CHARCOLLISION::set_righty(float value) {
+  _internal_set_righty(value);
+  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.righty)
+}
+inline float CS_CHARCOLLISION::_internal_righty() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.righty_;
+}
+inline void CS_CHARCOLLISION::_internal_set_righty(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.righty_ = value;
+}
+
+// float rightz = 6;
+inline void CS_CHARCOLLISION::clear_rightz() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.rightz_ = 0;
+}
+inline float CS_CHARCOLLISION::rightz() const {
+  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.rightz)
+  return _internal_rightz();
+}
+inline void CS_CHARCOLLISION::set_rightz(float value) {
+  _internal_set_rightz(value);
+  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.rightz)
+}
+inline float CS_CHARCOLLISION::_internal_rightz() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.rightz_;
+}
+inline void CS_CHARCOLLISION::_internal_set_rightz(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.rightz_ = value;
+}
+
+// float upx = 7;
+inline void CS_CHARCOLLISION::clear_upx() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.upx_ = 0;
+}
+inline float CS_CHARCOLLISION::upx() const {
+  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.upx)
+  return _internal_upx();
+}
+inline void CS_CHARCOLLISION::set_upx(float value) {
+  _internal_set_upx(value);
+  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.upx)
+}
+inline float CS_CHARCOLLISION::_internal_upx() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.upx_;
+}
+inline void CS_CHARCOLLISION::_internal_set_upx(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.upx_ = value;
+}
+
+// float upy = 8;
+inline void CS_CHARCOLLISION::clear_upy() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.upy_ = 0;
+}
+inline float CS_CHARCOLLISION::upy() const {
+  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.upy)
+  return _internal_upy();
+}
+inline void CS_CHARCOLLISION::set_upy(float value) {
+  _internal_set_upy(value);
+  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.upy)
+}
+inline float CS_CHARCOLLISION::_internal_upy() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.upy_;
+}
+inline void CS_CHARCOLLISION::_internal_set_upy(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.upy_ = value;
+}
+
+// float upz = 9;
+inline void CS_CHARCOLLISION::clear_upz() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.upz_ = 0;
+}
+inline float CS_CHARCOLLISION::upz() const {
+  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.upz)
+  return _internal_upz();
+}
+inline void CS_CHARCOLLISION::set_upz(float value) {
+  _internal_set_upz(value);
+  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.upz)
+}
+inline float CS_CHARCOLLISION::_internal_upz() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.upz_;
+}
+inline void CS_CHARCOLLISION::_internal_set_upz(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.upz_ = value;
+}
+
+// float forwardx = 10;
+inline void CS_CHARCOLLISION::clear_forwardx() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.forwardx_ = 0;
+}
+inline float CS_CHARCOLLISION::forwardx() const {
+  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.forwardx)
+  return _internal_forwardx();
+}
+inline void CS_CHARCOLLISION::set_forwardx(float value) {
+  _internal_set_forwardx(value);
+  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.forwardx)
+}
+inline float CS_CHARCOLLISION::_internal_forwardx() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.forwardx_;
+}
+inline void CS_CHARCOLLISION::_internal_set_forwardx(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.forwardx_ = value;
+}
+
+// float forwardy = 11;
+inline void CS_CHARCOLLISION::clear_forwardy() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.forwardy_ = 0;
+}
+inline float CS_CHARCOLLISION::forwardy() const {
+  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.forwardy)
+  return _internal_forwardy();
+}
+inline void CS_CHARCOLLISION::set_forwardy(float value) {
+  _internal_set_forwardy(value);
+  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.forwardy)
+}
+inline float CS_CHARCOLLISION::_internal_forwardy() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.forwardy_;
+}
+inline void CS_CHARCOLLISION::_internal_set_forwardy(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.forwardy_ = value;
+}
+
+// float forwardz = 12;
+inline void CS_CHARCOLLISION::clear_forwardz() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.forwardz_ = 0;
+}
+inline float CS_CHARCOLLISION::forwardz() const {
+  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.forwardz)
+  return _internal_forwardz();
+}
+inline void CS_CHARCOLLISION::set_forwardz(float value) {
+  _internal_set_forwardz(value);
+  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.forwardz)
+}
+inline float CS_CHARCOLLISION::_internal_forwardz() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.forwardz_;
+}
+inline void CS_CHARCOLLISION::_internal_set_forwardz(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.forwardz_ = value;
+}
+
+// float posx = 13;
+inline void CS_CHARCOLLISION::clear_posx() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.posx_ = 0;
+}
+inline float CS_CHARCOLLISION::posx() const {
+  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.posx)
+  return _internal_posx();
+}
+inline void CS_CHARCOLLISION::set_posx(float value) {
+  _internal_set_posx(value);
+  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.posx)
+}
+inline float CS_CHARCOLLISION::_internal_posx() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.posx_;
+}
+inline void CS_CHARCOLLISION::_internal_set_posx(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.posx_ = value;
+}
+
+// float posy = 14;
+inline void CS_CHARCOLLISION::clear_posy() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.posy_ = 0;
+}
+inline float CS_CHARCOLLISION::posy() const {
+  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.posy)
+  return _internal_posy();
+}
+inline void CS_CHARCOLLISION::set_posy(float value) {
+  _internal_set_posy(value);
+  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.posy)
+}
+inline float CS_CHARCOLLISION::_internal_posy() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.posy_;
+}
+inline void CS_CHARCOLLISION::_internal_set_posy(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.posy_ = value;
+}
+
+// float posz = 15;
+inline void CS_CHARCOLLISION::clear_posz() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.posz_ = 0;
+}
+inline float CS_CHARCOLLISION::posz() const {
+  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.posz)
+  return _internal_posz();
+}
+inline void CS_CHARCOLLISION::set_posz(float value) {
+  _internal_set_posz(value);
+  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.posz)
+}
+inline float CS_CHARCOLLISION::_internal_posz() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.posz_;
+}
+inline void CS_CHARCOLLISION::_internal_set_posz(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.posz_ = value;
+}
+
+// int64 collisionType = 16;
+inline void CS_CHARCOLLISION::clear_collisiontype() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.collisiontype_ = ::int64_t{0};
+}
+inline ::int64_t CS_CHARCOLLISION::collisiontype() const {
+  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.collisionType)
+  return _internal_collisiontype();
+}
+inline void CS_CHARCOLLISION::set_collisiontype(::int64_t value) {
+  _internal_set_collisiontype(value);
+  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.collisionType)
+}
+inline ::int64_t CS_CHARCOLLISION::_internal_collisiontype() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.collisiontype_;
+}
+inline void CS_CHARCOLLISION::_internal_set_collisiontype(::int64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.collisiontype_ = value;
 }
 
 // -------------------------------------------------------------------
