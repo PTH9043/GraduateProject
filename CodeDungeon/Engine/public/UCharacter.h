@@ -7,6 +7,7 @@ class UTransform;
 class UAnimModel;
 class UAnimationController;
 class UNavigation;
+class UShaderConstantBuffer;
 /*
 @ Date: 2024-02-25, Writer: นฺลยว๖
 @ Explain
@@ -74,9 +75,11 @@ public: /* get set */
 	void SetCollisionState(_bool _newState) { m_bisCollision = _newState; }
 
 	void SetOutline(_bool _Draw) { m_DrawOutline = _Draw; }
+	void SetIfOutlineScale(_bool _Draw) { m_OutlineWithScale = _Draw; }
 	void SetifPlayer(_bool _isPlayer) { m_isPlayer = _isPlayer; }
 
 	const _bool& GetOutlineState()const { return m_DrawOutline; }
+	const _bool& GetOutlineScaleState()const { return m_OutlineWithScale; }
 
 	const _int& GetHealth() const { return m_iHealth; }
 	const _int& GetPrevHealth() const { return m_iPrevHealth; }
@@ -135,6 +138,8 @@ protected: /* get set */
 
 
 private:
+
+	SHPTR< UShaderConstantBuffer>						m_spScaleOutlineBuffer;
 	// AnimationModel
 	SHPTR< UAnimModel>					m_spAnimModel;
 
@@ -159,6 +164,7 @@ private:
 	_bool													m_isNetworkConnected;
 
 	_bool			m_DrawOutline=false;
+	_bool			m_OutlineWithScale = false;
 	_bool			m_isPlayer=false;
 
 	_float3			m_f3CollidedNormal;

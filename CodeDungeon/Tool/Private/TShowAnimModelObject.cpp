@@ -120,7 +120,7 @@ HRESULT TShowAnimModelObject::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand
 		__super::RenderOutlineActive(_spCommand, _spTableDescriptor, false);
 
 		for (_uint i = 0; i < m_spModel->GetMeshContainerCnt(); ++i)
-		{
+		{			
 			// Bind Transform 
 			GetTransform()->BindTransformData(GetNorPosShader());
 

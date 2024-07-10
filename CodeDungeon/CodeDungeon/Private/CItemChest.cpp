@@ -48,7 +48,7 @@ HRESULT CItemChest::NativeConstructClone(const VOIDDATAS& _Datas)
 		Containers.second->SetTranslate(GetAnimModel()->GetCenterPos());
 		Containers.second->SetScaleToFitModel(GetAnimModel()->GetMinVertexPos(), GetAnimModel()->GetMaxVertexPos());
 	}
-
+	
 	return S_OK;
 }
 
