@@ -47,7 +47,7 @@ HRESULT CImageUI::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableD
 {
 	__super::RenderActive(_spCommand, _spTableDescriptor);
 
-	GetTransform()->BindTransformData(GetShader());
+	GetTransform()->BindTransformData(GetShader(),1);
 	m_spUITextureGroup->SetUpTextureName(GetShader(), SRV_REGISTER::T0, GetUIDesc().strImgName);
 	GetVIBufferRect()->Render(GetShader(), _spCommand);
 	return S_OK;

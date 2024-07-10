@@ -30,9 +30,11 @@ protected:
 
 private:
 	SHPTR<UShaderConstantBuffer>											m_spTransformConstantBuffer;
+	SHPTR< UShaderConstantBuffer>						m_spTimerBuffer;
 	TRANSFORMPARAM																	 m_stFinalRenderTransformParam;
 	// Cube
 	SHPTR< UVIBufferRect>								m_spVIBufferRect;
+	BLOODTIMER _bloodTimer;
 public:
 	CSHPTRREF<UTexGroup> GetTextureGroup() const { return m_spBloodTexGroup; }
 	void SetColorTexture(const _wstring& TexName);
@@ -40,6 +42,8 @@ public:
 
 	_uint ColorTextureIndex = 0;
 
+	void SetTimer(_float _setTime);
+	_bool CheckTimeOver();
 
 };
 

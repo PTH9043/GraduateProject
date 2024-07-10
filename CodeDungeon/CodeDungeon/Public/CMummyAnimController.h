@@ -40,6 +40,8 @@ private:
 	_bool					m_blastAttackWasFirst;
 	_double					m_dIdleTimer;
 	_bool					m_bFoundPlayerFirsttime;
+	_double					m_didleRandomValueChoosingTimer;
+	_int					m_iRandomValue;
 
 };
 

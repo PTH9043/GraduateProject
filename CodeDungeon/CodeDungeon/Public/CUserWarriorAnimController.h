@@ -30,11 +30,13 @@ public:
 	virtual void Tick(const _double& _dTimeDelta) override;
 	// 네트워크 정보를 받아오는 함수
 	virtual void ReceiveNetworkProcessData(void* _pData) override;
+
+
 private:
 	WKPTR< CWarriorPlayer>			m_wpWarriorPlayer;
 	_int													m_iWComboStack;
 	_int													m_iSComboStack;
-	_double											m_dTimeElapsed;
+
 };
 
 END

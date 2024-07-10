@@ -300,7 +300,14 @@ namespace Engine {
 	};
 
 #pragma endregion PARTICLE
+#pragma region BLOOD
+	struct BLOODTIMER
+	{
+		_float m_fFullTime{};
+		_float m_fLeftTime{};
+	};
 
+#pragma endregion BLOOD
 #pragma region FIRE
 
 	struct FIRENOISEBUFFER {
