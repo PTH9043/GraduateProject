@@ -32,6 +32,11 @@ cbuffer PREVBONEMATRIXPARAM : register(b13)
     BONEMATRIX g_PrevBoneMatrix;
 };
 
+cbuffer USESCALEPARAM : register(b14)
+{
+    bool ifUseScale;
+};
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -58,10 +63,44 @@ VS_OUT VS_Main(VS_IN In)
 {
     VS_OUT Out = (VS_OUT) 0.f;
     
-    float fWeightW = 1.f - (In.vBlendWeight.x + In.vBlendWeight.y + In.vBlendWeight.z);
+   
+    
+    if (ifUseScale)
+    {
+        float fWeightW = 1.f - (In.vBlendWeight.x + In.vBlendWeight.y + In.vBlendWeight.z);
+    
+        matrix BoneMatrix = (g_BoneMatrix.BoneMatrix[In.vBlendIndex.x] * In.vBlendWeight.x) +
+                        (g_BoneMatrix.BoneMatrix[In.vBlendIndex.y] * In.vBlendWeight.y) +
+                        (g_BoneMatrix.BoneMatrix[In.vBlendIndex.z] * In.vBlendWeight.z) +
+                        (g_BoneMatrix.BoneMatrix[In.vBlendIndex.w] * fWeightW);
+    
+    // Scale matrix 정의
+        float gScale = 1.01; // 예를 들어 1.1로 설정하여 10% 확대
+        matrix scaleMatrix =
+        {
+            gScale, 0.0f, 0.0f, 0.0f,
+                           0.0f, gScale, 0.0f, 0.0f,
+                           0.0f, 0.0f, gScale, 0.0f,
+                           0.0f, 0.0f, 0.0f, 1.0f
+        };
+
+    // BoneMatrix에 scaleMatrix 곱하기
+        BoneMatrix = mul(BoneMatrix, scaleMatrix);
+    
+        vector vNormal = mul(float4(In.vNormal, 0.f), BoneMatrix);
+        vNormal = normalize(mul(vNormal, g_WorldMatrix));
+    
+        vector vPosition = mul(float4(In.vPosition, 1.f), BoneMatrix);
+        Out.vPosition = Compute_FinalMatrix(vPosition);
+    
+        return Out;
+    }
+    else
+    {
+        float fWeightW = 1.f - (In.vBlendWeight.x + In.vBlendWeight.y + In.vBlendWeight.z);
     
     
-    matrix BoneMatrix = (g_BoneMatrix.BoneMatrix[In.vBlendIndex.x] * In.vBlendWeight.x) +
+        matrix BoneMatrix = (g_BoneMatrix.BoneMatrix[In.vBlendIndex.x] * In.vBlendWeight.x) +
 		g_BoneMatrix.BoneMatrix[In.vBlendIndex.y] * In.vBlendWeight.y +
 		g_BoneMatrix.BoneMatrix[In.vBlendIndex.z] * In.vBlendWeight.z +
 		g_BoneMatrix.BoneMatrix[In.vBlendIndex.w] * fWeightW;
@@ -69,51 +108,25 @@ VS_OUT VS_Main(VS_IN In)
     
     
     
-    vector vNormal = mul(float4(In.vNormal, 0.f), BoneMatrix);
-    vNormal = normalize(mul(vNormal, g_WorldMatrix));
+        vector vNormal = mul(float4(In.vNormal, 0.f), BoneMatrix);
+        vNormal = normalize(mul(vNormal, g_WorldMatrix));
     
     
-    float gSize = 1.5;
-    In.vPosition.xyz += normalize(vNormal) * gSize;
+        float gSize = 1.5;
+        In.vPosition.xyz += normalize(vNormal) * gSize;
     
-    vector vPosition = mul(float4(In.vPosition, 1.f), BoneMatrix);
-    Out.vPosition = Compute_FinalMatrix(vPosition);
-    
-   
+        vector vPosition = mul(float4(In.vPosition, 1.f), BoneMatrix);
+        Out.vPosition = Compute_FinalMatrix(vPosition);
+        return Out;
+    }
   
 
-    return Out;
+    
     
     
     //VS_OUT Out = (VS_OUT) 0.f;
     
-    //float fWeightW = 1.f - (In.vBlendWeight.x + In.vBlendWeight.y + In.vBlendWeight.z);
-    
-    //matrix BoneMatrix = (g_BoneMatrix.BoneMatrix[In.vBlendIndex.x] * In.vBlendWeight.x) +
-    //                    (g_BoneMatrix.BoneMatrix[In.vBlendIndex.y] * In.vBlendWeight.y) +
-    //                    (g_BoneMatrix.BoneMatrix[In.vBlendIndex.z] * In.vBlendWeight.z) +
-    //                    (g_BoneMatrix.BoneMatrix[In.vBlendIndex.w] * fWeightW);
-    
-    //// Scale matrix 정의
-    //float gScale = 1.01; // 예를 들어 1.1로 설정하여 10% 확대
-    //matrix scaleMatrix =
-    //{
-    //    gScale, 0.0f, 0.0f, 0.0f,
-    //                       0.0f, gScale, 0.0f, 0.0f,
-    //                       0.0f, 0.0f, gScale, 0.0f,
-    //                       0.0f, 0.0f, 0.0f, 1.0f
-    //};
-
-    //// BoneMatrix에 scaleMatrix 곱하기
-    //BoneMatrix = mul(BoneMatrix, scaleMatrix);
-    
-    //vector vNormal = mul(float4(In.vNormal, 0.f), BoneMatrix);
-    //vNormal = normalize(mul(vNormal, g_WorldMatrix));
-    
-    //vector vPosition = mul(float4(In.vPosition, 1.f), BoneMatrix);
-    //Out.vPosition = Compute_FinalMatrix(vPosition);
-    
-    //return Out;
+   
 }
 
 struct PS_OUT

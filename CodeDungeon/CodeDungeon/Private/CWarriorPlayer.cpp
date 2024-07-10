@@ -151,7 +151,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 		}
 	}
 	SetOutline(true);
-	SetifPlayer(true);//플레이어는 안그리도록 
+	SetIfOutlineScale(true);//플레이어는 안그리도록 
 
 	return S_OK;
 }

@@ -5,9 +5,11 @@
 #include "UMethod.h"
 #include "UGameInstance.h"
 #include "UAnimationController.h"
+#include "UShaderConstantBuffer.h"
 #include "UStageManager.h"
 #include "URegion.h"
 #include "UNavigation.h"
+#include "UShader.h"
 #include "UStage.h"
 #include "UCell.h"
 #include "UCollider.h"
@@ -16,15 +18,15 @@ UCharacter::UCharacter(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer,
 	const CLONETYPE& _eCloneType) : 
 	UPawn(_spDevice, _wstrLayer, _eCloneType, BACKINGTYPE::DYNAMIC, PAWNTYPE::PAWN_CHAR),
 	m_spAnimModel{ nullptr }, m_spAnimationController{ nullptr }, m_vPrevPos{}, 	m_spCurNavi{nullptr }, m_spHitCollider{nullptr}, 
-	m_fMoveSpeed{0.f}, m_fRunSpeed{0.f}, m_bIsRunning{false}, m_bisHit{false}, m_bisCollision{false}, m_DrawOutline{false},
-	m_isNetworkConnected{false}, m_isPlayer{false}, m_f3CollidedNormal{}, m_iHealth{}
+	m_fMoveSpeed{0.f}, m_fRunSpeed{0.f}, m_bIsRunning{false}, m_bisHit{false}, m_bisCollision{false}, m_DrawOutline{false}, m_OutlineWithScale{ false },
+	m_isNetworkConnected{false}, m_isPlayer{false}, m_f3CollidedNormal{}, m_iHealth{}, m_spScaleOutlineBuffer{ nullptr }
 {
 }
 
 UCharacter::UCharacter(const UCharacter& _rhs) : UPawn(_rhs), 
 m_spAnimModel{ _rhs.m_spAnimModel }, m_spAnimationController{ _rhs.m_spAnimationController }, m_vPrevPos{}, m_spCurNavi{ _rhs.m_spCurNavi }, m_spHitCollider{ nullptr },
-m_fMoveSpeed{ 0.f }, m_fRunSpeed{ 0.f }, m_bIsRunning{ false }, m_bisHit{ false }, m_bisCollision{ false }, m_DrawOutline{ false },
-m_isNetworkConnected{ false }, m_isPlayer{ false }, m_f3CollidedNormal{}, m_iHealth{}
+m_fMoveSpeed{ 0.f }, m_fRunSpeed{ 0.f }, m_bIsRunning{ false }, m_bisHit{ false }, m_bisCollision{ false }, m_DrawOutline{ false },m_OutlineWithScale { false },
+m_isNetworkConnected{ false }, m_isPlayer{ false }, m_f3CollidedNormal{}, m_iHealth{}, m_spScaleOutlineBuffer{nullptr}
 {
 }
 
@@ -60,6 +62,9 @@ HRESULT UCharacter::NativeConstructClone(const VOIDDATAS& _Datas)
 		navDesc.iCurIndex = 703;
 		m_spCurNavi = std::static_pointer_cast<UNavigation>(spGameInstance->CloneComp(PROTO_NAVI_INTERIOR, {&navDesc }));
 		assert(nullptr != m_spCurNavi);
+	}
+	{
+		m_spScaleOutlineBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::BLOODTIMERBUFFER, sizeof(_bool));
 	}
 	AddShader(PROTO_RES_ANIMMODELSHADER, RES_SHADER);
 	AddOutlineShader(PROTO_RES_ANIMDEPTHRECORDSHADER, RES_SHADER);
@@ -215,10 +220,13 @@ HRESULT UCharacter::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRRE
 
 		__super::RenderOutlineActive(_spCommand, _spTableDescriptor, _pass);
 
+		
+		
 		for (_uint i = 0; i < m_spAnimModel->GetMeshContainerCnt(); ++i)
 		{
 			// Bind Transform 
 			GetTransform()->BindTransformData(GetNorPosShader());
+			GetNorPosShader()->BindCBVBuffer(m_spScaleOutlineBuffer, &m_OutlineWithScale, sizeof(_bool));
 
 			// Render
 			m_spAnimModel->Render(i, GetNorPosShader(), _spCommand);
