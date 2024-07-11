@@ -273,7 +273,10 @@ HRESULT CMummy::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDes
 {
 	const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
 
-	__super::RenderActive(_spCommand, _spTableDescriptor);
+	if(CurAnimName != L"staticLaying" && CurAnimName != L"staticStanding")
+	{
+		 __super::RenderActive(_spCommand, _spTableDescriptor);
+	}
 	return S_OK;
 }
 
