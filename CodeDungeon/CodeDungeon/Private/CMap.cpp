@@ -182,7 +182,8 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 					_Sarcophagus = std::static_pointer_cast<CSarcophagus>(spGameInstance->CloneActorAdd(
 						PROTO_ACTOR_SARCOPHAGUSLYING, { &SarcDesc }));
 					_Sarcophagus->SetSarcophagusType(CSarcophagus::SARCOTYPE::TYPE_LYING);
-					_Mummy->GetTransform()->TranslateDir((-_Mummy->GetTransform()->GetLook()), 1, 12);
+					_Sarcophagus->GetTransform()->SetNewWorldMtx(_Mummy->GetTransform()->GetWorldMatrix());
+					_Mummy->GetTransform()->TranslateDir((-_Mummy->GetTransform()->GetLook()), 1, 10);
 				}
 				else
 				{
@@ -190,8 +191,8 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 					_Sarcophagus = std::static_pointer_cast<CSarcophagus>(spGameInstance->CloneActorAdd(
 						PROTO_ACTOR_SARCOPHAGUSSTANDING, { &SarcDesc }));
 					_Sarcophagus->SetSarcophagusType(CSarcophagus::SARCOTYPE::TYPE_STANDING);
+					_Sarcophagus->GetTransform()->SetNewWorldMtx(_Mummy->GetTransform()->GetWorldMatrix());
 				}
-				_Sarcophagus->GetTransform()->SetNewWorldMtx(_Mummy->GetTransform()->GetWorldMatrix());
 				_Sarcophagus->GetAnimModel()->SetAnimation(0);
 				_Sarcophagus->SetTargetPlayer(_spPlayer);
 				_MummyVec.push_back(_Mummy);

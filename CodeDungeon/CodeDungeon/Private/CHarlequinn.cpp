@@ -216,6 +216,7 @@ void CHarlequinn::TickActive(const _double& _dTimeDelta)
 	}
 	else if (CurAnimState == UAnimationController::ANIM_IDLE)
 	{
+		SetOutline(false);
 		GetAnimModel()->TickAnimation(_dTimeDelta);
 		GetTransform()->SetPos(GetTransform()->GetPos());
 	}
