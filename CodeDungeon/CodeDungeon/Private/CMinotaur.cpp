@@ -226,12 +226,6 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 		_double DeathTimeArcOpenEnd = 50;
 		if (GetElapsedTime() < DeathTimeArcOpenEnd)
 			GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
-
-		if (GetElapsedTime() >= 100.0)
-		{
-			SetActive(false);
-			spGameInstance->RemoveCollisionPawn(ThisShared<CMob>());
-		}
 	}
 	else if (CurAnimState == UAnimationController::ANIM_IDLE)
 	{
@@ -253,6 +247,16 @@ void CMinotaur::LateTickActive(const _double& _dTimeDelta)
 	/*for (auto& Colliders : GetColliderContainer())
 		if(Colliders.first == L"Main")
 			Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);*/
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	_int CurAnimState = GetAnimationController()->GetAnimState();
+	if (CurAnimState == UAnimationController::ANIM_DEATH)
+	{
+		if (GetElapsedTime() >= 100.0)
+		{
+			SetActive(false);
+			spGameInstance->RemoveCollisionPawn(ThisShared<CMob>());
+		}
+	}
 }
 
 HRESULT CMinotaur::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
