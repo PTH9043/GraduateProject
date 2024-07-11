@@ -225,7 +225,7 @@ PS_OUT PS_Main(GS_OUT In)
     Out.vColor.a *= particleTransparency;
     if (Out.vColor.a < 0.1)
         discard;
-    Out.vGlow = float4(Out.vColor.rgb / 2.f, 0.5);
+    Out.vGlow = float4(Out.vColor.rgb, 0.5);
   
         return Out;
 }
