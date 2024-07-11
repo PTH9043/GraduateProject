@@ -127,6 +127,12 @@
     <Filter Include="07.UI\Image">
       <UniqueIdentifier>{cc6f704a-c09b-4453-b03b-39691ba726c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Objects\Character\Mob\Harlequinn">
+      <UniqueIdentifier>{25b897e8-6731-4480-a35a-4b69465773a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\Harlequinn">
+      <UniqueIdentifier>{4153a380-debe-4b94-91e6-e73e29016bcb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ClientDefines.h">
@@ -237,6 +243,12 @@
     <ClInclude Include="..\Public\CImageUI.h">
       <Filter>07.UI\Image</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CHarlequinn.h">
+      <Filter>05.Objects\Character\Mob\Harlequinn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CHarlequinnAnimController.h">
+      <Filter>06.Comp\Controller\Harlequinn</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -339,6 +351,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\CImageUI.cpp">
       <Filter>07.UI\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CHarlequinn.cpp">
+      <Filter>05.Objects\Character\Mob\Harlequinn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CHarlequinnAnimController.cpp">
+      <Filter>06.Comp\Controller\Harlequinn</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

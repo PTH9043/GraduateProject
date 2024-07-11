@@ -69,7 +69,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-	SHPTR<UCell> spCell = spNavigation->FindCell(100);
+	SHPTR<UCell> spCell = spNavigation->FindCell(425);
 
 	GetTransform()->SetPos(spCell->GetCenterPos());
 
@@ -152,8 +152,8 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 			Colliders.second->SetTranslate(_float3(0, 10, 0));
 		}
 	}
-	SetOutline(true);
-	SetIfOutlineScale(true);//플레이어는 안그리도록 
+	SetOutline(false);
+	SetIfOutlineScale(false);//플레이어는 안그리도록 
 	SetHealth(10000);
 
 	return S_OK;

@@ -12,6 +12,7 @@
 #define PROTO_ACTOR_SARCOPHAGUSSTANDING L"Proto_Actor_SarcophagusStanding"
 #define PROTO_ACTOR_MINOTAUR L"Proto_Actor_Minotaur"
 #define PROTO_ACTOR_LONGSWORD L"Proto_Actor_LongSword"
+#define PROTO_ACTOR_HARLEQUINN L"Proto_Actor_Harlequinn"
 
 #define PROTO_ACTOR_IMAGEUI L"Proto_Actor_ImageUI"
 
@@ -23,6 +24,7 @@
 #define PROTO_RES_SARCOPHAGUSSTANDINGANIMMODEL L"Proto_Res_SarcophagusStandingAnimModel"
 #define PROTO_RES_CHESTANIMMODEL L"Proto_Res_ChestAnimModel"
 #define PROTO_RES_MINOTAURANIMMODEL L"Proto_Res_MinotaurAnimModel"
+#define PROTO_RES_HARLEQUINNANIMMODEL L"Proto_Res_HarlequinnAnimModel"
 #define PROTO_RES_LONGSWORDMODEL L"Proto_Res_LongSwordModel"
 
 #define PROTO_COMP_USERWARRIORANIMCONTROLLER L"Proto_Comp_UserWarriorAnimController"
@@ -31,3 +33,4 @@
 #define PROTO_COMP_CHESTANIMCONTROLLER  L"Proto_Comp_ChestAniMController"
 #define PROTO_COMP_NETWORKWARRIORANIMCONTROLLER L"Proto_Comp_NetworkWarriorAnimController"
 #define PROTO_COMP_MINOTAURANIMCONTROLLER L"Proto_Comp_MinotaurAnimController"
+#define PROTO_COMP_HARLEQUINNANIMCONTROLLER L"Proto_Comp_HarlequinnAnimController"

@@ -22,6 +22,7 @@
 #include "CWarriorPlayer.h"
 #include "CSarcophagus.h"
 #include "CMinotaur.h"
+#include "CHarlequinn.h"
 
 CMap::CMap(CSHPTRREF<UDevice> _spDevice) : UComponent(_spDevice),
 m_spRoomContainer{nullptr},
@@ -138,6 +139,7 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 	MOBCONTAINER _ChestVec;
 	MOBCONTAINER _MummyVec;
 	MOBCONTAINER _MinotaurVec;
+	MOBCONTAINER _HarlequinnVec;
 
 	for (auto& it : (*m_spMapLayout->GetMapMobsContainer().get()))
 	{
@@ -202,11 +204,26 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 				SHPTR<CMinotaur> _Minotaur = std::static_pointer_cast<CMinotaur>(spGameInstance->CloneActorAdd(
 					PROTO_ACTOR_MINOTAUR, { &MinotaurDesc }));
 				_Minotaur->GetTransform()->SetPos(vecit._mWorldMatrix.Get_Pos());
-				_Minotaur->GetTransform()->SetDirection(-vecit._mWorldMatrix.Get_Look());
+				_Minotaur->GetTransform()->SetDirection(vecit._mWorldMatrix.Get_Look());
 				_Minotaur->GetAnimModel()->SetAnimation(UMethod::ConvertSToW(vecit._sAnimName));
 				_Minotaur->SetTargetPlayer(_spPlayer);
 				_Minotaur->GetCurrentNavi()->FindCell(_Minotaur->GetTransform()->GetPos());
 				spGameInstance->AddCollisionPawnList(_Minotaur);
+				_MinotaurVec.push_back(_Minotaur);
+			}
+			else if (vecit._sAnimModelName == "Harlequin1_FBX.bin")
+			{
+				CHarlequinn::CHARACTERDESC HarlequinnDesc{ PROTO_RES_HARLEQUINNANIMMODEL, PROTO_COMP_HARLEQUINNANIMCONTROLLER };
+
+				SHPTR<CHarlequinn> _Harlequinn = std::static_pointer_cast<CHarlequinn>(spGameInstance->CloneActorAdd(
+					PROTO_ACTOR_HARLEQUINN, { &HarlequinnDesc }));
+				_Harlequinn->GetTransform()->SetPos(vecit._mWorldMatrix.Get_Pos());
+				_Harlequinn->GetTransform()->SetDirection(vecit._mWorldMatrix.Get_Look());
+				_Harlequinn->GetAnimModel()->SetAnimation(UMethod::ConvertSToW(vecit._sAnimName));
+				_Harlequinn->SetTargetPlayer(_spPlayer);
+				_Harlequinn->GetCurrentNavi()->FindCell(_Harlequinn->GetTransform()->GetPos());
+				spGameInstance->AddCollisionPawnList(_Harlequinn);
+				_HarlequinnVec.push_back(_Harlequinn);
 			}
 #endif
 		}
@@ -215,5 +232,6 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 	m_spMobsContainer->emplace("Chest_FBX.bin", _ChestVec);
 	m_spMobsContainer->emplace("Mummy_DEMO_1_FBX.bin", _MummyVec);
 	m_spMobsContainer->emplace("minotaur_FBX.bin", _MinotaurVec);
+	m_spMobsContainer->emplace("Harlequin1_FBX.bin", _HarlequinnVec);
 }
 
