@@ -451,6 +451,9 @@
     <Filter Include="05.Actor\01.Pawn\Blood">
       <UniqueIdentifier>{c3ad2a19-e5db-4de0-af50-76fc8be88fbd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98.ShaderFile\Common\Particle\Slash">
+      <UniqueIdentifier>{7392c637-1c6f-42ff-80b2-4ce2835cd3fc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -1454,6 +1457,12 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\DefaultUI.hlsl">
       <Filter>98.ShaderFile\Common\NonAlpha</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\2DParticleSlash.hlsl">
+      <Filter>98.ShaderFile\Common\Particle\Slash</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\Compute2DSlash.hlsl">
+      <Filter>98.ShaderFile\Common\Particle\Slash</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

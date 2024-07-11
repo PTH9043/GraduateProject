@@ -50,6 +50,7 @@
 #define PROTO_RES_PARTICLEFOOTPRINT2DSHADER L"Proto_Res_ParticleFootPrint2DShader"
 #define PROTO_RES_PARTICLEBLOOD2DSHADER L"Proto_Res_ParticleBlood2DShader"
 #define PROTO_RES_PARTICLEATTACK2DSHADER L"Proto_Res_ParticleAttack2DShader"
+#define PROTO_RES_PARTICLESLASH2DSHADER L"Proto_Res_ParticleSlash2DShader"
 #define PROTO_RES_PARTICLEFLARE2DSHADER L"Proto_Res_ParticleFlare2DShader"
 #define PROTO_RES_WATERSHADER L"Proto_Res_WaterShader"
 #define PROTO_RES_EQUIPMENTSHADER L"Proto_Res_EquipmentShader"
@@ -71,6 +72,7 @@
 #define PROTO_RES_COMPUTEATTACKEFFECT2DSHADER L"Proto_Res_ComputeAttackEffect2DShader"
 #define PROTO_RES_COMPUTEROTATIONEFFECT2DSHADER L"Proto_Res_ComputeRotationEffect2DShader"
 #define PROTO_RES_COMPUTEFOOTPRINT2DSHADER L"Proto_Res_ComputeFootPrint2DShader"
+#define PROTO_RES_COMPUTESLASH2DSHADER L"Proto_Res_ComputeSlash2DShader"
 #define PROTO_RES_COMPUTEEMITPARTICLE2DSHADER L"Proto_Res_ComputeEmitParticle2DShader"
 
 // Particle 

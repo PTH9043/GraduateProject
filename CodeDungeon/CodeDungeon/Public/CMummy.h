@@ -26,7 +26,7 @@ public:
 		virtual void Free() override;
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _Datas) override;
-	SHPTR<UParticle>& GetParticle() { return m_spParticle; }
+	SHPTR<UParticle>& GetParticle() { return m_spBloodParticle; }
 	void SetMummyType(MUMMYTYPE _type) { m_MummyType = _type; }
 	MUMMYTYPE GetMummyType() { return m_MummyType; }
 protected:
@@ -39,7 +39,8 @@ protected:
 
 private:
 	MUMMYTYPE					m_MummyType;
-	SHPTR<UParticle>			m_spParticle;
+	SHPTR<UParticle>			m_spBloodParticle;
+	SHPTR<UParticle>			m_spSlashParticle;
 	PARTICLEPARAM*			m_stParticleParam;
 	ComputeParticleType*	m_stParticleType;
 
