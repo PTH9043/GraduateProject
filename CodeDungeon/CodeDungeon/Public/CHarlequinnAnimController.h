@@ -15,6 +15,11 @@ public:
 	CHarlequinnAnimController(const CHarlequinnAnimController& _rhs);
 	virtual ~CHarlequinnAnimController() = default;
 
+	enum HARLEQUINNSTATE
+	{
+		ANIM_TAUNT = 6
+	};
+
 public:
 	virtual void Free() override;
 	CLONE_MACRO(CHarlequinnAnimController, "CHarlequinnAnimController::Clone To Failed")
@@ -35,7 +40,7 @@ private:
 	_bool					m_bstartlastHitTime;
 	_bool					m_blastAttackWasFirst;
 	_double					m_dIdleTimer;
-
+	_bool					m_bTauntMode;
 
 	_double					m_didleRandomValueChoosingTimer;
 	_int					m_iRandomValue;

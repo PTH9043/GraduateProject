@@ -273,14 +273,14 @@ void CHarlequinn::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta
 					//등을 맞았을 때에만
 					if (dotProduct < -0.5f)
 					{
+						
+					}
+					else
+					{
 						m_spParticle->SetActive(true);
 						m_spParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 						// Decrease health on hit
 						DecreaseHealth(pCharacter->GetAttack());
-					}
-					else
-					{
-						DecreaseHealth(1);
 					}
 				}
 
