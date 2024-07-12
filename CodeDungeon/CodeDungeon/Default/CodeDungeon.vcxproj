@@ -189,6 +189,8 @@
     <ClInclude Include="..\Public\CRooms.h" />
     <ClInclude Include="..\Public\CSarcophagus.h" />
     <ClInclude Include="..\Public\CSarcophagusAnimController.h" />
+    <ClInclude Include="..\Public\CShuriken.h" />
+    <ClInclude Include="..\Public\CShurikenThrowing.h" />
     <ClInclude Include="..\Public\CSword.h" />
     <ClInclude Include="..\Public\CTorch.h" />
     <ClInclude Include="..\Public\CWarriorPlayer.h" />
@@ -227,6 +229,8 @@
     <ClCompile Include="..\Private\CRooms.cpp" />
     <ClCompile Include="..\Private\CSarcophagus.cpp" />
     <ClCompile Include="..\Private\CSarcophagusAnimController.cpp" />
+    <ClCompile Include="..\Private\CShuriken.cpp" />
+    <ClCompile Include="..\Private\CShurikenThrowing.cpp" />
     <ClCompile Include="..\Private\CSword.cpp" />
     <ClCompile Include="..\Private\CTorch.cpp" />
     <ClCompile Include="..\Private\CWarriorPlayer.cpp" />

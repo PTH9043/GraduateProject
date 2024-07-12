@@ -55,9 +55,6 @@
     <Filter Include="05.Objects\Character\Mob">
       <UniqueIdentifier>{30c56fa7-f7be-40cc-a4e6-d9bb2330a1e5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.Objects\Sword">
-      <UniqueIdentifier>{eb6c9e65-4ba8-4b07-8410-31a799c24c73}</UniqueIdentifier>
-    </Filter>
     <Filter Include="05.Objects\Character\Mob\Mummy">
       <UniqueIdentifier>{5663ec90-eafd-425b-ab17-4fd180f0b2ae}</UniqueIdentifier>
     </Filter>
@@ -133,6 +130,15 @@
     <Filter Include="06.Comp\Controller\Harlequinn">
       <UniqueIdentifier>{4153a380-debe-4b94-91e6-e73e29016bcb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Objects\ModelObjects\Weapons">
+      <UniqueIdentifier>{15e7d5ab-400e-41bb-bef7-c92b39c9707b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Objects\ModelObjects\Weapons\Shurikens">
+      <UniqueIdentifier>{33ffae41-a7fd-4978-982d-68e251d213e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Objects\ModelObjects\Weapons\Sword">
+      <UniqueIdentifier>{eb6c9e65-4ba8-4b07-8410-31a799c24c73}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ClientDefines.h">
@@ -184,7 +190,7 @@
       <Filter>05.Objects\Character\WarriorPlayer</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CSword.h">
-      <Filter>05.Objects\Sword</Filter>
+      <Filter>05.Objects\ModelObjects\Weapons\Sword</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CMummy.h">
       <Filter>05.Objects\Character\Mob\Mummy</Filter>
@@ -249,6 +255,12 @@
     <ClInclude Include="..\Public\CHarlequinnAnimController.h">
       <Filter>06.Comp\Controller\Harlequinn</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CShuriken.h">
+      <Filter>05.Objects\ModelObjects\Weapons\Shurikens</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CShurikenThrowing.h">
+      <Filter>05.Objects\ModelObjects\Weapons\Shurikens</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -293,7 +305,7 @@
       <Filter>05.Objects\Character\WarriorPlayer</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CSword.cpp">
-      <Filter>05.Objects\Sword</Filter>
+      <Filter>05.Objects\ModelObjects\Weapons\Sword</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CMummy.cpp">
       <Filter>05.Objects\Character\Mob\Mummy</Filter>
@@ -357,6 +369,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\CHarlequinnAnimController.cpp">
       <Filter>06.Comp\Controller\Harlequinn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CShuriken.cpp">
+      <Filter>05.Objects\ModelObjects\Weapons\Shurikens</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CShurikenThrowing.cpp">
+      <Filter>05.Objects\ModelObjects\Weapons\Shurikens</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -7,10 +7,12 @@ class UParticleSystem;
 END
 
 BEGIN(Client)
+class CShuriken;
+class CShurikenThrowing;
 /*
 @ Date: 2024-07-05, Writer: 이성현
 @ Explain
--  미노타우르스 몬스터 클래스.
+-  할리퀸 몬스터 클래스.
 */
 class CHarlequinn final : public CMob {
 public:
@@ -26,7 +28,13 @@ public:
 		virtual void Free() override;
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _Datas) override;
+
+	void ThrowShurikens(_int _shurikenIndex, const _double& _dTimeDelta, const _float3& _dir);
+
 	SHPTR<UParticle>& GetParticle() { return m_spParticle; }
+
+
+	CSHPTRREF<VECTOR<SHPTR<CShurikenThrowing>>> GetShurikens() { return m_spShurikensForThrowing; }
 
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
@@ -40,6 +48,9 @@ private:
 	SHPTR<UParticle>			m_spParticle;
 	PARTICLEPARAM*			m_stParticleParam;
 	ComputeParticleType*	m_stParticleType;
+
+	VECTOR<SHPTR<CShuriken>>		m_spShurikens;
+	SHPTR<VECTOR<SHPTR<CShurikenThrowing>>> m_spShurikensForThrowing;
 
 	UNavigation::PathFindingState m_PathFindingState;
 	VECTOR<_float3> m_AstarPath;

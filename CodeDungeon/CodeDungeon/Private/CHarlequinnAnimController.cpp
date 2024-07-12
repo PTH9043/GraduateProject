@@ -8,6 +8,7 @@
 #include "UTransform.h"
 #include "UPlayer.h"
 #include "CWarriorPlayer.h"
+#include "CShurikenThrowing.h"
 
 CHarlequinnAnimController::CHarlequinnAnimController(CSHPTRREF<UDevice> _spDevice)
     : UAnimationController(_spDevice),
@@ -18,8 +19,11 @@ CHarlequinnAnimController::CHarlequinnAnimController(CSHPTRREF<UDevice> _spDevic
     m_blastAttackWasFirst{ false },
     m_dIdleTimer{0},
     m_didleRandomValueChoosingTimer{ 0 },
+    m_bAttack1FirstTime{false},
     m_iRandomValue{0},
-    m_bTauntMode{false}
+    m_bTauntMode{false},
+    m_f3ThrowingPos{},
+    m_arrThrowingDir{}
 {
 }
 
@@ -32,8 +36,11 @@ CHarlequinnAnimController::CHarlequinnAnimController(const CHarlequinnAnimContro
     m_blastAttackWasFirst{ false },
     m_dIdleTimer{0},
     m_didleRandomValueChoosingTimer{ 0 },
+    m_bAttack1FirstTime{ false },
     m_iRandomValue{ 0 },
-    m_bTauntMode{ false }
+    m_bTauntMode{ false },
+    m_f3ThrowingPos{},
+    m_arrThrowingDir{}
 {
 }
 
@@ -69,6 +76,8 @@ void CHarlequinnAnimController::Tick(const _double& _dTimeDelta)
     _float playerKickedTime = static_pointer_cast<CWarriorPlayer>(spHarlequinn->GetTargetPlayer())->GetWarriorKickedTimeElapsed();
     _float DistanceFromPlayer = spHarlequinn->GetDistanceFromPlayer();
   
+    _float3 directionToPlayer = spHarlequinn->GetTransform()->GetPos() - spHarlequinn->GetTargetPlayer()->GetTransform()->GetPos();
+    
     _bool FoundPlayer = spHarlequinn->GetFoundTargetState();
     _bool Hit = false;
 
@@ -147,15 +156,65 @@ void CHarlequinnAnimController::Tick(const _double& _dTimeDelta)
              m_dlastAttackTime = 0;
          }
 
-         if (DistanceFromPlayer > AttackRange)
+         UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK1");
+       /*  if (DistanceFromPlayer > AttackRange)
          {
              UpdateState(spAnimModel, ANIM_MOVE, L"WALK");
          }
          else
          {
              UpdateState(spAnimModel, m_blastAttackWasFirst ? ANIM_ATTACK : ANIM_ATTACK, m_blastAttackWasFirst ? L"ATTACK2" : L"ATTACK1");
+         }*/
+     }
+
+     if (CurAnimName == L"Attack 1")
+     {
+         m_f3ThrowingPos = spHarlequinn->GetTransform()->GetPos();
+         m_f3ThrowingPos.y += 7.f;
+
+         spHarlequinn->GetTransform()->SetDirectionFixedUp(directionToPlayer, _dTimeDelta, 5);
+
+         if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.2 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.22)
+         {
+             if ((*spHarlequinn->GetShurikens())[0]->GetTraveledDistance() == 0)
+             {
+                 m_arrThrowingDir[0] = -spHarlequinn->GetTransform()->GetLook();
+                 (*spHarlequinn->GetShurikens())[0]->GetTransform()->SetPos(m_f3ThrowingPos);
+                 (*spHarlequinn->GetShurikens())[0]->GetTransform()->SetDirection(-spHarlequinn->GetTransform()->GetRight());            
+                 (*spHarlequinn->GetShurikens())[0]->SetThrow(true);
+             }          
+         }
+         else if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.6 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.62)
+         {
+             if ((*spHarlequinn->GetShurikens())[1]->GetTraveledDistance() == 0)
+             {
+                 m_arrThrowingDir[1] = -spHarlequinn->GetTransform()->GetLook();
+                 (*spHarlequinn->GetShurikens())[1]->GetTransform()->SetPos(m_f3ThrowingPos);
+                 (*spHarlequinn->GetShurikens())[1]->GetTransform()->SetDirection(-spHarlequinn->GetTransform()->GetRight());
+                 (*spHarlequinn->GetShurikens())[1]->SetThrow(true);
+             }
          }
      }
+
+     if ((*spHarlequinn->GetShurikens())[0]->GetTraveledDistance() > 100)
+     {
+         (*spHarlequinn->GetShurikens())[0]->SetThrow(false);
+         (*spHarlequinn->GetShurikens())[0]->SetTraveledDistance(0);
+     }
+     else
+         spHarlequinn->ThrowShurikens(0, _dTimeDelta, m_arrThrowingDir[0]);
+
+     if ((*spHarlequinn->GetShurikens())[1]->GetTraveledDistance() > 100)
+     {
+         (*spHarlequinn->GetShurikens())[1]->SetThrow(false);
+         (*spHarlequinn->GetShurikens())[1]->SetTraveledDistance(0);
+     }
+     else 
+         spHarlequinn->ThrowShurikens(1, _dTimeDelta, m_arrThrowingDir[1]);
+
+
+
+
 
      // Check for death
      if (spHarlequinn->GetHealth() <= 0)

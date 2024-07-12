@@ -4,7 +4,6 @@
 #include "UTransform.h"
 #include "UMethod.h"
 #include "CIronBars.h"
-#include "UFire.h"
 #include "UPawn.h"
 #include "UParticle.h"
 #include "UParticleSystem.h"

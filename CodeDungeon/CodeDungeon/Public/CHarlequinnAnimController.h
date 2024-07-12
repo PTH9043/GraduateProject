@@ -42,6 +42,12 @@ private:
 	_double					m_dIdleTimer;
 	_bool					m_bTauntMode;
 
+	_bool					m_bAttack1FirstTime;
+	_float3					m_f3ThrowingPos;
+
+	ARRAY<_float3, 2>		m_arrThrowingDir;
+
+
 	_double					m_didleRandomValueChoosingTimer;
 	_int					m_iRandomValue;
 };

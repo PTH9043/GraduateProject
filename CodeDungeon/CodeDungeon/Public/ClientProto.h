@@ -3,6 +3,8 @@
 #define PROTO_ACTOR_MAINCAMERA L"Proto_Actor_MainCamera"
 #define PROTO_ACTOR_ROOM L"Proto_Actor_Room"
 #define PROTO_ACTOR_TORCH L"Proto_Actor_Torch"
+#define PROTO_ACTOR_SHURIKEN L"Proto_Actor_Shuriken"
+#define PROTO_ACTOR_SHURIKENTHROWING L"Proto_Actor_ShurikenThrowing"
 #define PROTO_ACTOR_IRONBARS L"Proto_Actor_IronBars"
 #define PROTO_ACTOR_CHEST L"Proto_Actor_Chest"
 
@@ -26,6 +28,7 @@
 #define PROTO_RES_MINOTAURANIMMODEL L"Proto_Res_MinotaurAnimModel"
 #define PROTO_RES_HARLEQUINNANIMMODEL L"Proto_Res_HarlequinnAnimModel"
 #define PROTO_RES_LONGSWORDMODEL L"Proto_Res_LongSwordModel"
+#define PROTO_RES_SHURIKENMODEL L"Proto_Res_ShurikenModel"
 
 #define PROTO_COMP_USERWARRIORANIMCONTROLLER L"Proto_Comp_UserWarriorAnimController"
 #define PROTO_COMP_MUMMYANIMCONTROLLER L"Proto_Comp_MummyAnimController"

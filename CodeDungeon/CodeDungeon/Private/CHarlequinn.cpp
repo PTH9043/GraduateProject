@@ -16,13 +16,17 @@
 #include "UParticleSystem.h"
 #include "CModelObjects.h"
 #include "UAnimation.h"
+#include "CShuriken.h"
+#include "CShurikenThrowing.h"
 
 CHarlequinn::CHarlequinn(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: CMob(_spDevice, _wstrLayer, _eCloneType),
 	m_PathFindingState{},
 	m_AstarPath{},
 	m_isPathFinding{ false },
-	m_currentPathIndex{ 0 }
+	m_currentPathIndex{ 0 },
+	m_spShurikens{nullptr},
+	m_spShurikensForThrowing{nullptr}
 {
 }
 
@@ -31,7 +35,9 @@ CHarlequinn::CHarlequinn(const CHarlequinn& _rhs)
 	m_PathFindingState{},
 	m_AstarPath{},
 	m_isPathFinding{ false },
-	m_currentPathIndex{ 0 }
+	m_currentPathIndex{ 0 },
+	m_spShurikens{ nullptr },
+	m_spShurikensForThrowing{ nullptr }
 {
 }
 
@@ -86,6 +92,32 @@ HRESULT CHarlequinn::NativeConstructClone(const VOIDDATAS& _Datas)
 		*m_spParticle->GetParticleSystem()->GetAddParticleAmount() = 5;
 	}
 
+	//장식 표창
+	{
+		CShuriken::EQDESC Desc1(std::static_pointer_cast<UModel>(spGameInstance->CloneResource(PROTO_RES_SHURIKENMODEL)), ThisShared<UCharacter>(), L"..\\..\\Resource\\Model\\Item\\Equip\\Shuriken\\Convert\\EquipDesc\\Shuriken_FBX.bin");
+		CShuriken::EQDESC Desc2(std::static_pointer_cast<UModel>(spGameInstance->CloneResource(PROTO_RES_SHURIKENMODEL)), ThisShared<UCharacter>(), L"..\\..\\Resource\\Model\\Item\\Equip\\Shuriken\\Convert\\EquipDesc\\Shuriken_FBX1.bin");
+		CShuriken::EQDESC Desc3(std::static_pointer_cast<UModel>(spGameInstance->CloneResource(PROTO_RES_SHURIKENMODEL)), ThisShared<UCharacter>(), L"..\\..\\Resource\\Model\\Item\\Equip\\Shuriken\\Convert\\EquipDesc\\Shuriken_FBX2.bin");
+		CShuriken::EQDESC Desc4(std::static_pointer_cast<UModel>(spGameInstance->CloneResource(PROTO_RES_SHURIKENMODEL)), ThisShared<UCharacter>(), L"..\\..\\Resource\\Model\\Item\\Equip\\Shuriken\\Convert\\EquipDesc\\Shuriken_FBX3.bin");
+
+		SHPTR<CShuriken> Shuriken = std::static_pointer_cast<CShuriken>(spGameInstance->CloneActorAdd(PROTO_ACTOR_SHURIKEN, { &Desc1 }));
+		m_spShurikens.push_back(Shuriken);
+		Shuriken = std::static_pointer_cast<CShuriken>(spGameInstance->CloneActorAdd(PROTO_ACTOR_SHURIKEN, { &Desc2 }));
+		m_spShurikens.push_back(Shuriken);
+		Shuriken = std::static_pointer_cast<CShuriken>(spGameInstance->CloneActorAdd(PROTO_ACTOR_SHURIKEN, { &Desc3 }));
+		m_spShurikens.push_back(Shuriken);
+		Shuriken = std::static_pointer_cast<CShuriken>(spGameInstance->CloneActorAdd(PROTO_ACTOR_SHURIKEN, { &Desc4 }));
+		m_spShurikens.push_back(Shuriken);
+	}
+
+	m_spShurikensForThrowing = Create<VECTOR<SHPTR<CShurikenThrowing>>>();
+
+	CShurikenThrowing::SHURIKENDESC	Desc{};
+	Desc._Worldm = GetTransform()->GetWorldMatrix();
+	SHPTR<CShurikenThrowing> ShurikenThrowing = std::static_pointer_cast<CShurikenThrowing>(spGameInstance->CloneActorAdd(PROTO_ACTOR_SHURIKENTHROWING, { &Desc }));
+	m_spShurikensForThrowing->push_back(ShurikenThrowing);
+	ShurikenThrowing = std::static_pointer_cast<CShurikenThrowing>(spGameInstance->CloneActorAdd(PROTO_ACTOR_SHURIKENTHROWING, { &Desc }));
+	m_spShurikensForThrowing->push_back(ShurikenThrowing);
+	
 
 	UCollider::COLLIDERDESC tDesc;
 	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
@@ -103,6 +135,11 @@ HRESULT CHarlequinn::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetHealth(200);
 
 	return S_OK;
+}
+
+void CHarlequinn::ThrowShurikens(_int _shurikenIndex, const _double& _dTimeDelta, const _float3& _dir)
+{
+	(*m_spShurikensForThrowing)[_shurikenIndex]->ThrowShurikens(_dTimeDelta, _dir);
 }
 
 void CHarlequinn::TickActive(const _double& _dTimeDelta)
