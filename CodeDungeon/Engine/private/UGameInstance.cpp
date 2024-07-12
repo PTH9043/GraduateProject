@@ -1045,13 +1045,30 @@ void UGameInstance::TurnOffFog() {
 	if (m_spRenderer != nullptr)m_spRenderer->TurnOffFog();
 }
 
-void UGameInstance::TurnOnGrayScale() {
-	if (m_spRenderer != nullptr)m_spRenderer->TurnOnGrayScale();
+void UGameInstance::TurnOnDieEffect() {
+	if (m_spRenderer != nullptr)m_spRenderer->TurnOnDieEffect();
 }
 
-void UGameInstance::TurnOffGrayScale() {
-	if (m_spRenderer != nullptr)m_spRenderer->TurnOffGrayScale();
+void UGameInstance::TurnOffDieEffect() {
+	if (m_spRenderer != nullptr)m_spRenderer->TurnOffDieEffect();
 }
+
+void UGameInstance::TurnOnAbilityEffect() {
+	if (m_spRenderer != nullptr)m_spRenderer->TurnOnAbilityEffect();
+}
+
+void UGameInstance::TurnOffAbilityEffect() {
+	if (m_spRenderer != nullptr)m_spRenderer->TurnOffAbilityEffect();
+}
+
+void UGameInstance::TurnOnHitEffect() {
+	if (m_spRenderer != nullptr)m_spRenderer->TurnOnHitEffect();
+}
+
+void UGameInstance::TurnOffHitEffect() {
+	if (m_spRenderer != nullptr)m_spRenderer->TurnOffHitEffect();
+}
+
 /*
 ==================================================
 Renderer Fog Setting

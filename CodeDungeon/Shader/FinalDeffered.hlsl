@@ -6,9 +6,13 @@
 cbuffer FogBuffer : register(b14)
 {
     int IsFogOn;
-    float3 padding;
-    int IsGrayScale;
-    float3 padding2;
+    int IsDead;
+    int IsAbility;
+    int IsHit;
+    float DieTime;
+    float AbilityTime;
+    float HitTime;
+    float padding;
 };
 
 
@@ -51,27 +55,42 @@ PS_OUT PS_Main(PS_In Input)
 {
     PS_OUT Out = (PS_OUT) 0;
     float4 baseColor = g_Texture0.Sample(g_Sampler_Normal, Input.vTexUV);
-    float transitionProgress = 0.0;
-    if (!IsGrayScale)
+    float transitionProgress;
+    if (IsDead)
     {
-        transitionProgress = 0.0f;
-        Out.vColor = baseColor;
-        
-    }
-    else
-    {
-        transitionProgress += fGrobalDeltaTime / 5.0f;
-      
-        
-        
-       
+        float transitionProgress = DieTime / 1.25f;
+           
         float4 targetColor = g_Texture6.Sample(g_Sampler_Normal, Input.vTexUV);
 
         
         float blendFactor = saturate(transitionProgress);
         Out.vColor = lerp(baseColor, targetColor, blendFactor);
+        
+        
+    }
+    else if (IsAbility)
+    {
+        float transitionProgress = AbilityTime / 0.5f;
+        float4 targetColor = g_Texture7.Sample(g_Sampler_Normal, Input.vTexUV);
+        float blendFactor = saturate(transitionProgress);
+        Out.vColor = lerp(baseColor, targetColor, blendFactor);
+    }
+    else if (IsHit)
+    {
+        float transitionProgress = HitTime / 0.3f;
+        float4 targetColor = g_Texture8.Sample(g_Sampler_Normal, Input.vTexUV);
+        float blendFactor = saturate(transitionProgress);
+        Out.vColor = lerp(baseColor, targetColor, blendFactor);
+    }
+    else
+    {
+        Out.vColor = baseColor;
        
     }
+    
+   
+   
+    
    
     //if (Out.vColor.a == 0)
     //    discard;
@@ -114,14 +133,18 @@ PS_OUT PS_Main(PS_In Input)
  
     Out.vColor += g_Texture1.Sample(g_Sampler_Normal, Input.vTexUV); //AlphaDeffered
 
-    float4 outline = g_Texture5.Sample(g_Sampler_Normal, Input.vTexUV);
-    
-    float4 vDepthDesc = g_Texture4.Sample(g_Sampler_Normal, Input.vTexUV);
-   
-    if (vDepthDesc.g >= 1.f && outline.w <= 1.f)
+    if (IsAbility)
     {
-        Out.vColor.xyz += outline.xyz;
+        float4 outline = g_Texture5.Sample(g_Sampler_Normal, Input.vTexUV);
+    
+        float4 vDepthDesc = g_Texture4.Sample(g_Sampler_Normal, Input.vTexUV);
+   
+        if (vDepthDesc.g >= 1.f && outline.w <= 1.f)
+        {
+            Out.vColor.xyz += outline.xyz;
+        }
     }
+   
   
     
     return Out;

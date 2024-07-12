@@ -239,6 +239,30 @@ void URenderer::Tick(const _double& _dTimeDelta)
     SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
     m_fGrobalDeltaTime += static_cast<_float>(_dTimeDelta);
 
+    
+
+    if (m_bTurnShader.m_bTurnDie) {      
+        m_bTurnShader.m_fDieTime += _dTimeDelta;
+    }
+    else {        
+        m_bTurnShader.m_fDieTime = 0;
+    }
+
+    if (m_bTurnShader.m_bTurnAbility) {
+        m_bTurnShader.m_fAbilityTime += _dTimeDelta;
+    }
+    else {
+        m_bTurnShader.m_fAbilityTime = 0;
+    }
+
+    if (m_bTurnShader.m_bTurnHit) {
+        m_bTurnShader.m_fHitTime += _dTimeDelta;
+    }
+    else {
+        m_bTurnShader.m_fHitTime = 0;
+    }
+
+
         /*SHPTR<UTransform> MainTransform=    spGameInstance->GetMainCameraTransform();
         m_spShadowCamera->GetTransform()->SetLook(MainTransform->GetLook());
         _float3 MainPos = spGameInstance->GetMainCamPosition()-10*MainTransform->GetLook();
@@ -284,15 +308,32 @@ HRESULT URenderer::Render()
             m_spCastingCommand, SRV_REGISTER::T0);
     }
     if (spGameInstance->GetDIKeyDown(DIK_F2)) {
-        TurnShader++;
+        TurnDie++;
     }
-    if (TurnShader % 2 == 1) {
-        m_bTurnShader.m_bTurnGrayScale = true;
+    if (spGameInstance->GetDIKeyDown(DIK_F3)) {
+        TurnHit++;
+    }
+    if (spGameInstance->GetDIKeyDown(DIK_F4)) {
+        TurnAbility++;
+    }
+    if (TurnDie % 2 == 1) {
+        TurnOnDieEffect();
     }
     else {
-        m_bTurnShader.m_bTurnGrayScale = false;
+        TurnOffDieEffect();
     }
-    
+    if (TurnHit % 2 == 1) {
+        TurnOnHitEffect();
+    }
+    else {
+        TurnOffHitEffect();
+    }
+    if (TurnAbility % 2 == 1) {
+        TurnOnAbilityEffect();
+    }
+    else {
+        TurnOffAbilityEffect();
+    }
 #endif
     return S_OK;
 }
@@ -850,9 +891,15 @@ void URenderer::RenderEnd()
        
        
             spDefferedShader->BindSRVBuffer(SRV_REGISTER::T6, m_spRenderTargetManager->
+                FindRenderTargetTexture(RTGROUPID::GRAY_SCALE,
+                    RTOBJID::GRAY_SCALE)); //죽었을때
+            spDefferedShader->BindSRVBuffer(SRV_REGISTER::T7, m_spRenderTargetManager->
                 FindRenderTargetTexture(RTGROUPID::BLUR_RESULT,
-                    RTOBJID::BLUR_RESULT));
-        //UPSAMPLEGRAY쓰면 흑백 암전(아예검은색 텍스쳐여서)
+                    RTOBJID::BLUR_RESULT)); //능력 쓸때
+            spDefferedShader->BindSRVBuffer(SRV_REGISTER::T8, m_spRenderTargetManager->
+                FindRenderTargetTexture(RTGROUPID::UPSAMPLEGRAY,
+                    RTOBJID::UPSAMPLEGRAY));//실명, 맞았을 때
+        //UPSAMPLEGRAY쓰면 흑백 암전(아예검은색 텍스쳐여서) , GrayScale이 흑백, BLUR_RESULT가 여기에 블러
         
         //  Diffuse Texture 가져와서 Bind 
         spDefferedShader->BindSRVBuffer(SRV_REGISTER::T1, m_spRenderTargetManager->

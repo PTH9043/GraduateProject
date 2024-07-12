@@ -344,9 +344,13 @@ namespace Engine {
 #pragma region RENDERSHADER
 	struct DRAWSHADERBUFFER {
 		_uint m_bTurnFog{};
-		_float3 _padding;
-		_uint m_bTurnGrayScale{};
-		_float3 _padding2;
+		_uint m_bTurnDie{};
+		_uint m_bTurnAbility{};
+		_uint m_bTurnHit{};
+		_float m_fDieTime;
+		_float m_fAbilityTime;
+		_float m_fHitTime;
+		_float _padding;
 	};
 
 #pragma endregion RENDERSHADER

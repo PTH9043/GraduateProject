@@ -321,8 +321,12 @@ private: /* Ready Datas */
 public: //Renderer Fog Bool
 	void TurnOnFog();
 	void TurnOffFog();
-	void TurnOnGrayScale();
-	void TurnOffGrayScale();
+	void TurnOnDieEffect();
+	void TurnOffDieEffect();
+	void TurnOnAbilityEffect();
+	void TurnOffAbilityEffect();
+	void TurnOnHitEffect();
+	void TurnOffHitEffect();
 private:
 	_bool															m_isGamming;
 	
