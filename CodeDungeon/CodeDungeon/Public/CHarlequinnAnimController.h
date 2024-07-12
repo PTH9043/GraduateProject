@@ -45,7 +45,7 @@ private:
 	_bool					m_bAttack1FirstTime;
 	_float3					m_f3ThrowingPos;
 
-	ARRAY<_float3, 2>		m_arrThrowingDir;
+	ARRAY<_float3, 6>		m_arrThrowingDir;
 
 
 	_double					m_didleRandomValueChoosingTimer;

@@ -115,8 +115,11 @@ HRESULT CHarlequinn::NativeConstructClone(const VOIDDATAS& _Datas)
 	Desc._Worldm = GetTransform()->GetWorldMatrix();
 	SHPTR<CShurikenThrowing> ShurikenThrowing = std::static_pointer_cast<CShurikenThrowing>(spGameInstance->CloneActorAdd(PROTO_ACTOR_SHURIKENTHROWING, { &Desc }));
 	m_spShurikensForThrowing->push_back(ShurikenThrowing);
-	ShurikenThrowing = std::static_pointer_cast<CShurikenThrowing>(spGameInstance->CloneActorAdd(PROTO_ACTOR_SHURIKENTHROWING, { &Desc }));
-	m_spShurikensForThrowing->push_back(ShurikenThrowing);
+	for(int i = 0; i < 5; i++)
+	{
+		ShurikenThrowing = std::static_pointer_cast<CShurikenThrowing>(spGameInstance->CloneActorAdd(PROTO_ACTOR_SHURIKENTHROWING, { &Desc }));
+		m_spShurikensForThrowing->push_back(ShurikenThrowing);
+	}
 	
 
 	UCollider::COLLIDERDESC tDesc;

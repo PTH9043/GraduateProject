@@ -176,41 +176,108 @@ void CHarlequinnAnimController::Tick(const _double& _dTimeDelta)
 
          if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.2 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.22)
          {
-             if ((*spHarlequinn->GetShurikens())[0]->GetTraveledDistance() == 0)
+             for (int i = 0; i < 3; i++)
              {
-                 m_arrThrowingDir[0] = -spHarlequinn->GetTransform()->GetLook();
-                 (*spHarlequinn->GetShurikens())[0]->GetTransform()->SetPos(m_f3ThrowingPos);
-                 (*spHarlequinn->GetShurikens())[0]->GetTransform()->SetDirection(-spHarlequinn->GetTransform()->GetRight());            
-                 (*spHarlequinn->GetShurikens())[0]->SetThrow(true);
-             }          
+                 if ((*spHarlequinn->GetShurikens())[i]->GetTraveledDistance() == 0)
+                 {
+                     if(i == 0)
+                     {
+                         _float3 currentLookDir = -spHarlequinn->GetTransform()->GetLook();
+                         float angleRadians = DirectX::XMConvertToRadians(5);
+                         _float cosAngle = std::cos(angleRadians);
+                         _float sinAngle = std::sin(angleRadians);
+
+                         _float newX = currentLookDir.x * cosAngle + currentLookDir.z * sinAngle;
+                         _float newZ = -currentLookDir.x * sinAngle + currentLookDir.z * cosAngle;
+
+
+                         m_arrThrowingDir[i] = _float3(newX, currentLookDir.y, newZ);
+                     }
+                     else if(i == 1)
+                         m_arrThrowingDir[i] = -spHarlequinn->GetTransform()->GetLook();
+                     else if (i == 2)
+                     {
+                         _float3 currentLookDir = -spHarlequinn->GetTransform()->GetLook();
+                         float angleRadians = DirectX::XMConvertToRadians(-5);
+                         _float cosAngle = std::cos(angleRadians);
+                         _float sinAngle = std::sin(angleRadians);
+
+                         _float newX = currentLookDir.x * cosAngle + currentLookDir.z * sinAngle;
+                         _float newZ = -currentLookDir.x * sinAngle + currentLookDir.z * cosAngle;
+
+
+                         m_arrThrowingDir[i] = _float3(newX, currentLookDir.y, newZ);
+                     }
+                     
+                     (*spHarlequinn->GetShurikens())[i]->GetTransform()->SetPos(m_f3ThrowingPos);
+                     (*spHarlequinn->GetShurikens())[i]->GetTransform()->SetDirection(-spHarlequinn->GetTransform()->GetRight());
+                     (*spHarlequinn->GetShurikens())[i]->SetThrow(true);
+                 }
+             }                 
          }
          else if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.6 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.62)
          {
-             if ((*spHarlequinn->GetShurikens())[1]->GetTraveledDistance() == 0)
+             for (int i = 3; i < 6; i++)
              {
-                 m_arrThrowingDir[1] = -spHarlequinn->GetTransform()->GetLook();
-                 (*spHarlequinn->GetShurikens())[1]->GetTransform()->SetPos(m_f3ThrowingPos);
-                 (*spHarlequinn->GetShurikens())[1]->GetTransform()->SetDirection(-spHarlequinn->GetTransform()->GetRight());
-                 (*spHarlequinn->GetShurikens())[1]->SetThrow(true);
+                 if ((*spHarlequinn->GetShurikens())[i]->GetTraveledDistance() == 0)
+                 {
+                     if (i == 3)
+                     {
+                         _float3 currentLookDir = -spHarlequinn->GetTransform()->GetLook();
+                         float angleRadians = DirectX::XMConvertToRadians(5);
+                         _float cosAngle = std::cos(angleRadians);
+                         _float sinAngle = std::sin(angleRadians);
+
+                          _float newX = currentLookDir.x * cosAngle + currentLookDir.z * sinAngle;
+                          _float newZ = -currentLookDir.x * sinAngle + currentLookDir.z * cosAngle;
+        
+
+                         m_arrThrowingDir[i] = _float3(newX, currentLookDir.y ,newZ);
+                     }
+                     else if (i == 4)
+                         m_arrThrowingDir[i] = -spHarlequinn->GetTransform()->GetLook();
+                     else if (i == 5)
+                     {
+                         _float3 currentLookDir = -spHarlequinn->GetTransform()->GetLook();
+                         float angleRadians = DirectX::XMConvertToRadians(-5);
+                         _float cosAngle = std::cos(angleRadians);
+                         _float sinAngle = std::sin(angleRadians);
+
+                         _float newX = currentLookDir.x * cosAngle + currentLookDir.z * sinAngle;
+                         _float newZ = -currentLookDir.x * sinAngle + currentLookDir.z * cosAngle;
+
+
+                         m_arrThrowingDir[i] = _float3(newX, currentLookDir.y, newZ);
+                     }
+                     (*spHarlequinn->GetShurikens())[i]->GetTransform()->SetPos(m_f3ThrowingPos);
+                     (*spHarlequinn->GetShurikens())[i]->GetTransform()->SetDirection(-spHarlequinn->GetTransform()->GetRight());
+                     (*spHarlequinn->GetShurikens())[i]->SetThrow(true);
+                 }
              }
          }
      }
 
-     if ((*spHarlequinn->GetShurikens())[0]->GetTraveledDistance() > 100)
+     for (int i = 0; i < 3; i++)
      {
-         (*spHarlequinn->GetShurikens())[0]->SetThrow(false);
-         (*spHarlequinn->GetShurikens())[0]->SetTraveledDistance(0);
+         if ((*spHarlequinn->GetShurikens())[i]->GetTraveledDistance() > 100)
+         {                                   
+             (*spHarlequinn->GetShurikens())[i]->SetThrow(false);
+             (*spHarlequinn->GetShurikens())[i]->SetTraveledDistance(0);
+         }
+         else
+             spHarlequinn->ThrowShurikens(i, _dTimeDelta, m_arrThrowingDir[i]);
      }
-     else
-         spHarlequinn->ThrowShurikens(0, _dTimeDelta, m_arrThrowingDir[0]);
+     for (int i = 3; i < 6; i++)
+     {
 
-     if ((*spHarlequinn->GetShurikens())[1]->GetTraveledDistance() > 100)
-     {
-         (*spHarlequinn->GetShurikens())[1]->SetThrow(false);
-         (*spHarlequinn->GetShurikens())[1]->SetTraveledDistance(0);
+         if ((*spHarlequinn->GetShurikens())[i]->GetTraveledDistance() > 100)
+         {                                   
+             (*spHarlequinn->GetShurikens())[i]->SetThrow(false);
+             (*spHarlequinn->GetShurikens())[i]->SetTraveledDistance(0);
+         }
+         else
+             spHarlequinn->ThrowShurikens(i, _dTimeDelta, m_arrThrowingDir[i]);
      }
-     else 
-         spHarlequinn->ThrowShurikens(1, _dTimeDelta, m_arrThrowingDir[1]);
 
 
 
