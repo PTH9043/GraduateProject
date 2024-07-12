@@ -97,7 +97,7 @@ void CShurikenThrowing::TickActive(const _double& _dTimeDelta)
 		Containers.second->SetScaleToFitModel(GetModel()->GetMinVertexPos(), GetModel()->GetMaxVertexPos());
 		Containers.second->SetTransform(GetTransform());
 
-	/*	if (Containers.second) {
+		if (Containers.second) {
 			SHPTR<DirectX::BoundingOrientedBox> OBB = Containers.second->GetOBB();
 
 			_float3 plusPoint = Containers.second->GetHeightAdjustedPointFromCenter(OBB, false);
@@ -105,7 +105,7 @@ void CShurikenThrowing::TickActive(const _double& _dTimeDelta)
 			_float4x4 AnimTransform = Containers.second->GetTransformMatrix();
 			m_spTrail->SetRenderingTrail(m_bisThrown);
 			m_spTrail->AddTrail(plusPoint, minusPoint);
-		}*/
+		}
 	}
 
 
