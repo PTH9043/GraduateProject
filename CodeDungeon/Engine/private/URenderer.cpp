@@ -40,8 +40,8 @@ URenderer::URenderer(CSHPTRREF <UDevice> _spDevice, CSHPTRREF<UCommand> _spComma
     m_spComputeManager{ _spComputeManager },
     m_spVIBufferPlane{ nullptr },
     m_sNonAlphaBlendIndex{ 0 },
-    m_bTurnFog{0},
-    m_spFogConstantBuffer{nullptr},
+    m_bTurnShader{0},
+    m_spTurnShaderConstantBuffer{nullptr},
     m_spCastingCommand{ static_pointer_cast<UCommand>(_spGraphicDevice->GetGpuCommand()) }
 #ifdef _USE_DEBUGGING
     , m_stRenderDebugging{}
@@ -76,6 +76,9 @@ HRESULT URenderer::NativeConstruct()
             m_ShaderObjects.insert(std::pair<_wstring, SHPTR<UShader>>(PROTO_RES_HDRSHADER, static_pointer_cast<UShader>(
                 spGameInstance->CloneResource(PROTO_RES_HDRSHADER))));
            
+            m_ShaderObjects.insert(std::pair<_wstring, SHPTR<UShader>>(PROTO_RES_GRAYSCALESHADER, static_pointer_cast<UShader>(
+                spGameInstance->CloneResource(PROTO_RES_GRAYSCALESHADER))));
+
             m_ShaderObjects.insert(std::pair<_wstring, SHPTR<UShader>>(PROTO_RES_VERTICALBLURSHADER, static_pointer_cast<UShader>(
                 spGameInstance->CloneResource(PROTO_RES_VERTICALBLURSHADER))));
 
@@ -94,7 +97,8 @@ HRESULT URenderer::NativeConstruct()
             m_ShaderObjects.insert(std::pair<_wstring, SHPTR<UShader>>(PROTO_RES_UPSAMPLINGSHADER, static_pointer_cast<UShader>(
                 spGameInstance->CloneResource(PROTO_RES_UPSAMPLINGSHADER))));
 
-        
+            m_ShaderObjects.insert(std::pair<_wstring, SHPTR<UShader>>(PROTO_RES_UPSAMPLINGGRAYSHADER, static_pointer_cast<UShader>(
+                spGameInstance->CloneResource(PROTO_RES_UPSAMPLINGGRAYSHADER))));
 #ifdef _USE_DEBUGGING
             m_ShaderObjects.insert(std::pair<_wstring, SHPTR<UShader>>(PROTO_RES_DEBUG2DTARGETSHADER, static_pointer_cast<UShader>(
                 spGameInstance->CloneResource(PROTO_RES_DEBUG2DTARGETSHADER))));
@@ -165,7 +169,7 @@ HRESULT URenderer::NativeConstruct()
                 PROTO_ACTOR_SMALL_DEFFEREDCAMERA, vecDatas));
         }
         {
-            m_spFogConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::FOGBOOL, static_cast<_int>(sizeof(_bool)));
+            m_spTurnShaderConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::TURNSHADERBOOL, static_cast<_int>(sizeof(DRAWSHADERBUFFER)));
         }
         m_spShadowCamera->GetTransform()->SetPos(_float3(331, 500, 0));
         m_spShadowCamera->GetTransform()->LookAt(_float3(331, 0,0));
@@ -247,7 +251,7 @@ HRESULT URenderer::Render()
     m_spPipeLine->BindViewProjMatrix(m_spCastingCommand);
     BindGrobalBuffer();
     // ============== Bind Static Buffer =============
-
+  
     // Render 
   //  RenderRTs();
     RenderPriority();
@@ -260,10 +264,11 @@ HRESULT URenderer::Render()
     RenderAlphaBlend();
     RenderDistortion();
     RenderHDR();
+    RenderGrayScale();
    DownSample();
    DownSample2();
-   //RenderHorizontalBlur();
-   //RenderVerticalBlur();
+   RenderHorizontalBlur();
+   RenderVerticalBlur();
    UpSample();
     RenderBloom();
     RenderEnd();
@@ -277,6 +282,15 @@ HRESULT URenderer::Render()
         RenderDebug();
         m_spRenderTargetManager->RenderDebugObjects(FrameReadyDrawLast(PROTO_RES_DEBUG2DTARGETSHADER), m_spVIBufferPlane,
             m_spCastingCommand, SRV_REGISTER::T0);
+    }
+    if (spGameInstance->GetDIKeyDown(DIK_F2)) {
+        TurnShader++;
+    }
+    if (TurnShader % 2 == 1) {
+        m_bTurnShader.m_bTurnGrayScale = true;
+    }
+    else {
+        m_bTurnShader.m_bTurnGrayScale = false;
     }
     
 #endif
@@ -483,9 +497,14 @@ void URenderer::RenderBlend()
         spShader->BindSRVBuffer(SRV_REGISTER::T2, spLightGroup->GetRenderTargetTexture(RTOBJID::LIGHTSHADE_SPECULAR_DEFFERED));
         spShader->BindSRVBuffer(SRV_REGISTER::T3, spLightGroup->GetRenderTargetTexture(RTOBJID::LIGHTSHADE_AMBIENT_DEFFERED));
     }
-    {
-
-    }
+   /* {
+        spShader->BindSRVBuffer(SRV_REGISTER::T6, m_spRenderTargetManager->
+            FindRenderTargetTexture(RTGROUPID::DEPTH_RECORD,
+                RTOBJID::DEPTH_RECORD));
+        spShader->BindSRVBuffer(SRV_REGISTER::T7, m_spRenderTargetManager->
+            FindRenderTargetTexture(RTGROUPID::OUTLINE_POS_NOR,
+                RTOBJID::OUTLINE_DEPTH_POS));
+    }*/
     m_spVIBufferPlane->Render(spShader, m_spCastingCommand);
     spRenderTargetGroup->WaitTargetToResource(m_spCastingCommand);
   
@@ -557,6 +576,28 @@ void URenderer::RenderHDR()
     m_spVIBufferPlane->Render(spShader, m_spCastingCommand);
     spRenderTargetGroup->WaitTargetToResource(m_spCastingCommand);
 
+
+}
+
+void URenderer::RenderGrayScale()
+{
+    // Set Render Tareget
+    SHPTR<URenderTargetGroup> spRenderTargetGroup{ m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::GRAY_SCALE) };
+    spRenderTargetGroup->WaitResourceToTarget(m_spCastingCommand);
+    spRenderTargetGroup->ClearRenderTargetView(m_spCastingCommand);
+    spRenderTargetGroup->OmSetRenderTargets(m_spCastingCommand);
+    // Bind Shader 
+    SHPTR<UShader> spShader = FindShader(PROTO_RES_GRAYSCALESHADER);
+    spShader->SettingPipeLineState(m_spCastingCommand);
+    spShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
+    spShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+    {
+        SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLEND_DEFFERED);
+        spShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::BLEND_SCREEN_DEFFERED));
+    }
+
+    m_spVIBufferPlane->Render(spShader, m_spCastingCommand);
+    spRenderTargetGroup->WaitTargetToResource(m_spCastingCommand);
 
 }
 
@@ -667,6 +708,32 @@ void URenderer::UpSample()
 }
 
 
+void URenderer::UpSampleGray()
+{
+    SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+    // Set Render Tareget
+    SHPTR<URenderTargetGroup> spRenderTargetGroup{ m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::UPSAMPLEGRAY) };
+    spRenderTargetGroup->WaitResourceToTarget(m_spCastingCommand);
+    spRenderTargetGroup->ClearRenderTargetView(m_spCastingCommand);
+    spRenderTargetGroup->OmSetRenderTargets(m_spCastingCommand);
+    // Bind Shader 
+    SHPTR<UShader> spUpSamplingShader = FindShader(PROTO_RES_UPSAMPLINGGRAYSHADER);
+    spUpSamplingShader->SettingPipeLineState(m_spCastingCommand);
+    spUpSamplingShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
+    spUpSamplingShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+    {
+        //SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLUR_RESULT);
+        //spUpSamplingShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::BLUR_RESULT));  
+        SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLUR_RESULT);
+        spUpSamplingShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::BLUR_RESULT));
+    }
+
+    m_spVIBufferPlane->Render(spUpSamplingShader, m_spCastingCommand);
+    spRenderTargetGroup->WaitTargetToResource(m_spCastingCommand);
+
+}
+
 void URenderer::RenderHorizontalBlur()
 {
     SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
@@ -696,8 +763,8 @@ void URenderer::RenderHorizontalBlur()
     spHorizontalShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
     spHorizontalShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
     {
-        SHPTR<URenderTargetGroup> spBlur = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::NONALPHA_DEFFERED);
-        spHorizontalShader->BindSRVBuffer(SRV_REGISTER::T0, spBlur->GetRenderTargetTexture(RTOBJID::NONALPHA_GLOW_DEFFERED));
+        SHPTR<URenderTargetGroup> spBlur = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::GRAY_SCALE);
+        spHorizontalShader->BindSRVBuffer(SRV_REGISTER::T0, spBlur->GetRenderTargetTexture(RTOBJID::GRAY_SCALE));
     }
 
     m_spVIBufferPlane->Render(spHorizontalShader, m_spCastingCommand);
@@ -776,9 +843,17 @@ void URenderer::RenderEnd()
         spDefferedShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
         spDefferedShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
         //  Diffuse Texture 가져와서 Bind 
-        spDefferedShader->BindSRVBuffer(SRV_REGISTER::T0, m_spRenderTargetManager->
-            FindRenderTargetTexture(RTGROUPID::BLOOM,
-                RTOBJID::BLOOM));
+       
+            spDefferedShader->BindSRVBuffer(SRV_REGISTER::T0, m_spRenderTargetManager->
+                FindRenderTargetTexture(RTGROUPID::BLOOM,
+                    RTOBJID::BLOOM));
+       
+       
+            spDefferedShader->BindSRVBuffer(SRV_REGISTER::T6, m_spRenderTargetManager->
+                FindRenderTargetTexture(RTGROUPID::BLUR_RESULT,
+                    RTOBJID::BLUR_RESULT));
+        //UPSAMPLEGRAY쓰면 흑백 암전(아예검은색 텍스쳐여서)
+        
         //  Diffuse Texture 가져와서 Bind 
         spDefferedShader->BindSRVBuffer(SRV_REGISTER::T1, m_spRenderTargetManager->
             FindRenderTargetTexture(RTGROUPID::ALPHA_DEFFERED,
@@ -800,7 +875,7 @@ void URenderer::RenderEnd()
             FindRenderTargetTexture(RTGROUPID::NONALPHA_DEFFERED,
                 RTOBJID::NONALPHA_SPECULAR_DEFFERED));*/
         {
-            spDefferedShader->BindCBVBuffer(m_spFogConstantBuffer, &m_bTurnFog, sizeof(_bool));
+            spDefferedShader->BindCBVBuffer(m_spTurnShaderConstantBuffer, &m_bTurnShader, sizeof(DRAWSHADERBUFFER));
         }
         //  Diffuse Texture 가져와서 Bind 
    /*     spDefferedShader->BindSRVBuffer(SRV_REGISTER::T2, m_spRenderTargetManager->
