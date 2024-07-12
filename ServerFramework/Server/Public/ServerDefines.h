@@ -31,6 +31,15 @@ namespace Server
 	enum MUMMYTYPE {
 		MUMMY_STANDING, MUMMY_LAYING, MUMMY_END
 	};
+
+	struct MOBDATA {
+		Core::_string			strAnimModelName;
+		Core::_string			strAnimName;
+		Core::_float4x4	mWorldMatrix;
+		Core::_int				iConnectIndex;
+
+		MOBDATA() : strAnimModelName{ "" }, strAnimName{ "" }, mWorldMatrix{ Core::_float4x4::Identity }, iConnectIndex{ 0 } {}
+	};
 }
 
 #endif // _SERVERFRAMEWORK_SERVER_PUBLIC_SERVERDEFINES_H

@@ -46,7 +46,6 @@ HRESULT CClientApp::NativeConstruct(const HINSTANCE& _hInst, const _uint& _iCmdS
 	SHPTR<CNetworkQueryProcessor> spNetworkQueryProccesor = Create<CNetworkQueryProcessor>(spNetworkClientController);
 	spNetworkClientController->SetNetworkQueryProcessing(spNetworkQueryProccesor);
 	m_spGameInstance->StartNetwork(spNetworkClientController, spNetworkQueryProccesor);
-	ThreadMiliRelax(100);
 #endif
 	return S_OK;
 }
@@ -60,6 +59,7 @@ void CClientApp::ClientThread(void* _pData)
 
 void CClientApp::Render()
 {
+	ThreadMiliRelax(500);
 	if (FALSE == InitInstance(m_hInst, m_iCmdShow))
 	{
 		return;

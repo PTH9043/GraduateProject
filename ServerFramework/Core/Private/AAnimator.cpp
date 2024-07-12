@@ -69,28 +69,31 @@ namespace Core
 
 	void AAnimator::TickEvent(APawn* _pPawn, const _string& _strInputTrigger, const _double& _TimeDelta)
 	{
-		m_spCurAnimation->TickAnimEvent(_pPawn, this, _TimeDelta, _strInputTrigger);
+		SHPTR<AAnimation> spCurAnim = m_spCurAnimation;
+		spCurAnim->TickAnimEvent(_pPawn, this, _TimeDelta, _strInputTrigger);
 	}
 
 	void AAnimator::TickEventToRatio(APawn* _pPawn, const _string& _strInputTrigger, const _double& _dRatio, const _double& _TimeDelta)
 	{
-		m_spCurAnimation->TickAnimEvent(_pPawn, this, _TimeDelta, _dRatio, _strInputTrigger);
+		SHPTR<AAnimation> spCurAnim = m_spCurAnimation;
+		spCurAnim->TickAnimEvent(_pPawn, this, _TimeDelta, _dRatio, _strInputTrigger);
 	}
 
 	void AAnimator::TickAnimation(const _double& _dTimeDelta)
 	{
+		SHPTR<AAnimation> spCurAnim = m_spCurAnimation;
 		if (nullptr != m_spNextAnimation)
 		{
-			m_spCurAnimation->UpdateNextAnimTransformMatrices(_dTimeDelta, m_fSupplyLerpValue, m_spNextAnimation);
-			if (false == m_spCurAnimation->IsSupplySituation())
+			spCurAnim->UpdateNextAnimTransformMatrices(_dTimeDelta, m_fSupplyLerpValue, m_spNextAnimation);
+			if (false == spCurAnim->IsSupplySituation())
 			{
-				m_spCurAnimation = m_spNextAnimation;
+				spCurAnim = m_spNextAnimation;
 				m_spNextAnimation = nullptr;
 			}
 		}
 		else
 		{
-			m_spCurAnimation->UpdateBoneMatrices(_dTimeDelta);
+			spCurAnim->UpdateBoneMatrices(_dTimeDelta);
 		}
 
 		/* 부모로부터 자식뼈에게 누적시켜 전달한다.(CombinedTransformationMatrix) */
@@ -102,39 +105,44 @@ namespace Core
 
 	void AAnimator::TickAnimChangeTransform(CSHPTRREF<ATransform> _spTransform, const _double& _dTimeDelta)
 	{
-		ASSERT_CRASH(nullptr != _spTransform && nullptr != m_spCurAnimation);
+		SHPTR<AAnimation> spCurAnim = m_spCurAnimation;
+		ASSERT_CRASH(nullptr != _spTransform && nullptr != spCurAnim);
 		TickAnimation(_dTimeDelta);
 
-		RETURN_CHECK(true == m_spCurAnimation->IsSupplySituation(), ;);
+		RETURN_CHECK(true == spCurAnim->IsSupplySituation(), ;);
 
-		if (true == m_spCurAnimation->IsFinishAnim())
+		SHPTR<ARootBoneNode> spRootBoneNode = m_spRootBoneNode;
+		if (true == spCurAnim->IsFinishAnim())
 		{
-			m_spRootBoneNode->ResetRootBoneInfo();
+			spRootBoneNode->ResetRootBoneInfo();
 			return;
 		}
 
-		if (true == m_spCurAnimation->IsApplyRootBoneMove())
+		if (true == spCurAnim->IsApplyRootBoneMove())
 		{
-			Vector3 Position = Vector3::TransformCoord(m_spRootBoneNode->GetMoveRootBonePos(), m_PivotMatirx * _spTransform->GetWorldMatrix());
+			Vector3 Position = Vector3::TransformCoord(spRootBoneNode->GetMoveRootBonePos(), m_PivotMatirx * _spTransform->GetWorldMatrix());
 			_spTransform->SetPos(Position);
 		}
 	}
 
 	void AAnimator::TickAnimToTimeAccChangeTransform(CSHPTRREF<ATransform> _spTransform, const _double& _dTimeDelta, const _double& _TimeAcc)
 	{
-		ASSERT_CRASH(nullptr != _spTransform && nullptr != m_spCurAnimation);
+		SHPTR<AAnimation> spCurAnim = m_spCurAnimation;
+		ASSERT_CRASH(nullptr != _spTransform && nullptr != spCurAnim);
 		UpdateCurAnimationToRatio(_TimeAcc);
 
-		if (true == m_spCurAnimation->IsApplyRootBoneMove())
+		if (true == spCurAnim->IsApplyRootBoneMove())
 		{
-			Vector3 Position = Vector3::TransformCoord(m_spRootBoneNode->GetMoveRootBonePos(), m_PivotMatirx * _spTransform->GetWorldMatrix());
+			SHPTR<ARootBoneNode> spRootBoneNode = m_spRootBoneNode;
+			Vector3 Position = Vector3::TransformCoord(spRootBoneNode->GetMoveRootBonePos(), m_PivotMatirx * _spTransform->GetWorldMatrix());
 			_spTransform->SetPos(Position);
 		}
 	}
 
 	void AAnimator::UpdateCurAnimationToRatio(const _double& _dRatio)
 	{
-		m_spCurAnimation->UpdateboneMatricesToRatio(_dRatio);
+		SHPTR<AAnimation> spCurAnim = m_spCurAnimation;
+		spCurAnim->UpdateboneMatricesToRatio(_dRatio);
 		/* 부모로부터 자식뼈에게 누적시켜 전달한다.(CombinedTransformationMatrix) */
 		{
 			for (auto& BoneNode : m_BoneContainer)
@@ -157,8 +165,9 @@ namespace Core
 
 	void AAnimator::ResetCurAnimEvent()
 	{
-		if (nullptr != m_spCurAnimation)
-			m_spCurAnimation->ResetAnimChangeEventNode();
+		SHPTR<AAnimation> spCurAnim = m_spCurAnimation;
+		if (nullptr != spCurAnim)
+			spCurAnim->ResetAnimChangeEventNode();
 	}
 
 	void AAnimator::SetAnimation(const _int& _iAnimIndex)
@@ -177,16 +186,18 @@ namespace Core
 
 	void AAnimator::SetAnimation(const _int& _iAnimIndex, const _double& _dNextTimeAcc)
 	{
+		SHPTR<AAnimation> spCurAnim = m_spCurAnimation;
 		SetAnimation(_iAnimIndex);
 		// Change Time Acc
-		m_spCurAnimation->UpdateTimeAccToChannelIndex(_dNextTimeAcc);
+		spCurAnim->UpdateTimeAccToChannelIndex(_dNextTimeAcc);
 	}
 
 	void AAnimator::SetAnimation(const _string& _strAnimName, const _double& _dNextTimeAcc)
 	{
+		SHPTR<AAnimation> spCurAnim = m_spCurAnimation;
 		SetAnimation(_strAnimName);
 		// Change Time Acc
-		m_spCurAnimation->UpdateTimeAccToChannelIndex(_dNextTimeAcc);
+		spCurAnim->UpdateTimeAccToChannelIndex(_dNextTimeAcc);
 	}
 
 	void AAnimator::ChangeAnimation(const _int& _iAnimIndex)
@@ -201,35 +212,39 @@ namespace Core
 
 	void AAnimator::ChangeAnimation(const _int& _iAnimIndex, const _double& _dNextTimeAcc)
 	{
+		SHPTR<AAnimation> spNextAnim = m_spNextAnimation;
 		ChangeAnimIndex(_iAnimIndex, m_iNextAnimIndex);
 		// 다음 애니메이션이 세팅되는 상황일 때의 함수 실행
 		SettingNextAnimSituation();
 		// Change Time Acc
-		m_spNextAnimation->UpdateTimeAccToChannelIndex(_dNextTimeAcc);
+		spNextAnim->UpdateTimeAccToChannelIndex(_dNextTimeAcc);
 	}
 
 	void AAnimator::ChangeAnimation(const _string& _strAnimName, const _double& _dNextTimeAcc)
 	{
+		SHPTR<AAnimation> spNextAnim = m_spNextAnimation;
 		ChangeAnimIndex(_strAnimName, m_iCurAnimIndex);
 		// 현재 애니메이션이 세팅되는 상황일 때의 함수 실행
 		SettingNextAnimSituation();
 		// Change Time Acc
-		m_spNextAnimation->UpdateTimeAccToChannelIndex(_dNextTimeAcc);
+		spNextAnim->UpdateTimeAccToChannelIndex(_dNextTimeAcc);
 	}
 
 	SHPTR<ACollider> AAnimator::BringAttackCollider(_int _iColliderType)
 	{
+		SHPTR<ACollider> spCollider = m_spAttackCollisionCollider;
 		const auto& iter = m_AnimEventColliderContainer.find(_iColliderType);
 		RETURN_CHECK(m_AnimEventColliderContainer.end() == iter, nullptr);
-		m_spAttackCollisionCollider = iter->second;
+		spCollider = iter->second;
 		return iter->second;
 	}
 
 	_bool AAnimator::IsCollisionAttackCollider(SHPTR<ACollider> _spEnemyCollider)
 	{
+		SHPTR<ACollider> spCollider = m_spAttackCollisionCollider;
 		RETURN_CHECK(false == m_isCanAttackSituation, false);
 		RETURN_CHECK(nullptr == m_spAttackCollisionCollider, false);
-		return m_spAttackCollisionCollider->IsCollision(_spEnemyCollider);
+		return spCollider->IsCollision(_spEnemyCollider);
 	}
 
 	void AAnimator::ChangeAnimIndex(const _int& _iAnimIndex, _int& _iIndex)
@@ -264,8 +279,9 @@ namespace Core
 		m_spCurAnimation->ResetData();
 		m_spNextAnimation = nullptr;
 
-		if (nullptr != m_spRootBoneNode)
-			m_spRootBoneNode->ResetRootBoneInfo();
+		SHPTR<ARootBoneNode> spRootBoneNode = m_spRootBoneNode;
+		if (nullptr != spRootBoneNode)
+			spRootBoneNode->ResetRootBoneInfo();
 	}
 
 	void AAnimator::SettingNextAnimSituation()

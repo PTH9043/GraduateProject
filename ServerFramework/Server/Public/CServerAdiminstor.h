@@ -27,6 +27,7 @@ protected:
 	virtual void Connect() override;
 private:
 	void CreateMummyAndSarphagousMob(void* _pData, SARCOPHAGUSTYPE _SarcophagusType, SHPTR< AJobTimer> _spMonsterJobTimer);
+	void CreateChest(void* _pData, SHPTR<AJobTimer> _spMonsterJobTimer);
 private:
 	void Free() override;
 };

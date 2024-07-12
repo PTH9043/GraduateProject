@@ -22,7 +22,7 @@ namespace Server {
 
 		if (true == IsOwnerPawnActive())
 		{
-			if (MOB_FIND == GetPawnState())
+			if (MOB_FIND_STATE == GetPawnState())
 			{
 				if (TAG_CHAR::TAG_SARCOPHAGUS_LAYING == m_iOwnerType)
 				{

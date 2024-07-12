@@ -265,7 +265,7 @@ public: /* AudioSystemManager*/
 	SHPTR<USound> BringSound(const _wstring& _wstrSoundName);
 public: /* NetworkManager */
 	void StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController, CSHPTRREF<UNetworkQueryProcessing> _spNetworkQueryProcessing);
-	void MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer);
+	void MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer, void* _pMapData);
 	void SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize);
 	void SendProcessPacket(UProcessedData&& _ProcessData);
 	SHPTR<UActor> FindNetworkActor(const _int _NetworkID);

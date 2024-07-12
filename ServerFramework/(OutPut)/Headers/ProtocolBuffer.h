@@ -36,7 +36,7 @@ namespace PROTOFUNC
 	void MakeScViewInRange(SC_VIEWINRANGE* _pOut, LLONG _id, VECTOR3* _pPos, int _cellIndex, int _type);
 	void MakeScStartInformationSucess(SC_START_INFORMATION_SUCCESS* _pOut, LLONG _id, int _monsterNum);
 	void MakeScMonsterResourceData(SC_MONSTERRESOURCEDATA* _pOut, LLONG _id, const VECTOR3& _vPos,
-		const VECTOR3& _vRotate, const VECTOR3& _vScale, int _animIndex, int _type);
+		int _animIndex, int _cellIndex, int _type);
 	void MakeScMonsterState(SC_MONSTERSTATE* _pOut, LLONG _id, const double& _dAnimTime, int _animindex, int _state);
 	void MakeScMonsterStateHavePos(SC_MONSTERSTATEHAVEPOS* _pOut, LLONG _id, const VECTOR3& _vPos, const VECTOR3& _vRotate, 
 		const double& _dAnimTime, int _animindex, int _state);

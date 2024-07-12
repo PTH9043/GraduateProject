@@ -244,15 +244,6 @@ namespace Core
 		case ANIMEVENT_COLLIDER:
 			spAnimEvent = Create<AAnimColliderEvent>(_pAnimator, _read);
 			break;
-		case ANIMEVENT_EFFECT:
-
-			break;
-		case ANIMEVENT_OBJACTIVE:
-
-			break;
-		case ANIMEVENT_SOUND:
-
-			break;
 		}
 		return std::move(spAnimEvent);
 	}

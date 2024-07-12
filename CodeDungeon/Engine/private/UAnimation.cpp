@@ -454,6 +454,9 @@ void UAnimation::CopyAnimEvent(ANIMEVENTTYPE _eType, CSHPTRREF<UAnimation> _spAn
 
 void UAnimation::SaveAnimToServerData(std::ofstream& _save)
 {
+	//_int iIndex = m_wstrName.find(L"|");
+	//_wstring wstrName = m_wstrName.substr(iIndex + 1, m_wstrName.length());
+
 	UMethod::SaveString(_save, UMethod::ConvertWToS(m_wstrName));
 	_save.write((_char*)&m_dTickPerSeconds, sizeof(_double));
 	_save.write((_char*)&m_dDuration, sizeof(_double));

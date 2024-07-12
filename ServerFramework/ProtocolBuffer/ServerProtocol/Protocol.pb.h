@@ -1795,15 +1795,10 @@ class SC_MONSTERRESOURCEDATA final :
     kIdFieldNumber = 1,
     kPosXFieldNumber = 2,
     kPosYFieldNumber = 3,
+    kAnimindexFieldNumber = 5,
+    kCellIndexFieldNumber = 6,
+    kTypeFieldNumber = 7,
     kPosZFieldNumber = 4,
-    kRotateXFieldNumber = 5,
-    kRotateYFieldNumber = 6,
-    kRotateZFieldNumber = 7,
-    kScaleXFieldNumber = 8,
-    kScaleYFieldNumber = 9,
-    kAnimindexFieldNumber = 11,
-    kTypeFieldNumber = 12,
-    kScaleZFieldNumber = 10,
   };
   // int64 id = 1;
   void clear_id() ;
@@ -1835,6 +1830,36 @@ class SC_MONSTERRESOURCEDATA final :
   void _internal_set_posy(float value);
 
   public:
+  // int64 animindex = 5;
+  void clear_animindex() ;
+  ::int64_t animindex() const;
+  void set_animindex(::int64_t value);
+
+  private:
+  ::int64_t _internal_animindex() const;
+  void _internal_set_animindex(::int64_t value);
+
+  public:
+  // int64 cellIndex = 6;
+  void clear_cellindex() ;
+  ::int64_t cellindex() const;
+  void set_cellindex(::int64_t value);
+
+  private:
+  ::int64_t _internal_cellindex() const;
+  void _internal_set_cellindex(::int64_t value);
+
+  public:
+  // int64 type = 7;
+  void clear_type() ;
+  ::int64_t type() const;
+  void set_type(::int64_t value);
+
+  private:
+  ::int64_t _internal_type() const;
+  void _internal_set_type(::int64_t value);
+
+  public:
   // float posZ = 4;
   void clear_posz() ;
   float posz() const;
@@ -1845,93 +1870,13 @@ class SC_MONSTERRESOURCEDATA final :
   void _internal_set_posz(float value);
 
   public:
-  // float rotateX = 5;
-  void clear_rotatex() ;
-  float rotatex() const;
-  void set_rotatex(float value);
-
-  private:
-  float _internal_rotatex() const;
-  void _internal_set_rotatex(float value);
-
-  public:
-  // float rotateY = 6;
-  void clear_rotatey() ;
-  float rotatey() const;
-  void set_rotatey(float value);
-
-  private:
-  float _internal_rotatey() const;
-  void _internal_set_rotatey(float value);
-
-  public:
-  // float rotateZ = 7;
-  void clear_rotatez() ;
-  float rotatez() const;
-  void set_rotatez(float value);
-
-  private:
-  float _internal_rotatez() const;
-  void _internal_set_rotatez(float value);
-
-  public:
-  // float scaleX = 8;
-  void clear_scalex() ;
-  float scalex() const;
-  void set_scalex(float value);
-
-  private:
-  float _internal_scalex() const;
-  void _internal_set_scalex(float value);
-
-  public:
-  // float scaleY = 9;
-  void clear_scaley() ;
-  float scaley() const;
-  void set_scaley(float value);
-
-  private:
-  float _internal_scaley() const;
-  void _internal_set_scaley(float value);
-
-  public:
-  // int64 animindex = 11;
-  void clear_animindex() ;
-  ::int64_t animindex() const;
-  void set_animindex(::int64_t value);
-
-  private:
-  ::int64_t _internal_animindex() const;
-  void _internal_set_animindex(::int64_t value);
-
-  public:
-  // int64 type = 12;
-  void clear_type() ;
-  ::int64_t type() const;
-  void set_type(::int64_t value);
-
-  private:
-  ::int64_t _internal_type() const;
-  void _internal_set_type(::int64_t value);
-
-  public:
-  // float scaleZ = 10;
-  void clear_scalez() ;
-  float scalez() const;
-  void set_scalez(float value);
-
-  private:
-  float _internal_scalez() const;
-  void _internal_set_scalez(float value);
-
-  public:
   // @@protoc_insertion_point(class_scope:SC_MONSTERRESOURCEDATA)
  private:
   class _Internal;
 
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      4, 12, 0,
+      3, 7, 0,
       0, 2>
       _table_;
   friend class ::google::protobuf::MessageLite;
@@ -1951,15 +1896,10 @@ class SC_MONSTERRESOURCEDATA final :
     ::int64_t id_;
     float posx_;
     float posy_;
-    float posz_;
-    float rotatex_;
-    float rotatey_;
-    float rotatez_;
-    float scalex_;
-    float scaley_;
     ::int64_t animindex_;
+    ::int64_t cellindex_;
     ::int64_t type_;
-    float scalez_;
+    float posz_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -5276,145 +5216,7 @@ inline void SC_MONSTERRESOURCEDATA::_internal_set_posz(float value) {
   _impl_.posz_ = value;
 }
 
-// float rotateX = 5;
-inline void SC_MONSTERRESOURCEDATA::clear_rotatex() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.rotatex_ = 0;
-}
-inline float SC_MONSTERRESOURCEDATA::rotatex() const {
-  // @@protoc_insertion_point(field_get:SC_MONSTERRESOURCEDATA.rotateX)
-  return _internal_rotatex();
-}
-inline void SC_MONSTERRESOURCEDATA::set_rotatex(float value) {
-  _internal_set_rotatex(value);
-  // @@protoc_insertion_point(field_set:SC_MONSTERRESOURCEDATA.rotateX)
-}
-inline float SC_MONSTERRESOURCEDATA::_internal_rotatex() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.rotatex_;
-}
-inline void SC_MONSTERRESOURCEDATA::_internal_set_rotatex(float value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.rotatex_ = value;
-}
-
-// float rotateY = 6;
-inline void SC_MONSTERRESOURCEDATA::clear_rotatey() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.rotatey_ = 0;
-}
-inline float SC_MONSTERRESOURCEDATA::rotatey() const {
-  // @@protoc_insertion_point(field_get:SC_MONSTERRESOURCEDATA.rotateY)
-  return _internal_rotatey();
-}
-inline void SC_MONSTERRESOURCEDATA::set_rotatey(float value) {
-  _internal_set_rotatey(value);
-  // @@protoc_insertion_point(field_set:SC_MONSTERRESOURCEDATA.rotateY)
-}
-inline float SC_MONSTERRESOURCEDATA::_internal_rotatey() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.rotatey_;
-}
-inline void SC_MONSTERRESOURCEDATA::_internal_set_rotatey(float value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.rotatey_ = value;
-}
-
-// float rotateZ = 7;
-inline void SC_MONSTERRESOURCEDATA::clear_rotatez() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.rotatez_ = 0;
-}
-inline float SC_MONSTERRESOURCEDATA::rotatez() const {
-  // @@protoc_insertion_point(field_get:SC_MONSTERRESOURCEDATA.rotateZ)
-  return _internal_rotatez();
-}
-inline void SC_MONSTERRESOURCEDATA::set_rotatez(float value) {
-  _internal_set_rotatez(value);
-  // @@protoc_insertion_point(field_set:SC_MONSTERRESOURCEDATA.rotateZ)
-}
-inline float SC_MONSTERRESOURCEDATA::_internal_rotatez() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.rotatez_;
-}
-inline void SC_MONSTERRESOURCEDATA::_internal_set_rotatez(float value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.rotatez_ = value;
-}
-
-// float scaleX = 8;
-inline void SC_MONSTERRESOURCEDATA::clear_scalex() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.scalex_ = 0;
-}
-inline float SC_MONSTERRESOURCEDATA::scalex() const {
-  // @@protoc_insertion_point(field_get:SC_MONSTERRESOURCEDATA.scaleX)
-  return _internal_scalex();
-}
-inline void SC_MONSTERRESOURCEDATA::set_scalex(float value) {
-  _internal_set_scalex(value);
-  // @@protoc_insertion_point(field_set:SC_MONSTERRESOURCEDATA.scaleX)
-}
-inline float SC_MONSTERRESOURCEDATA::_internal_scalex() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.scalex_;
-}
-inline void SC_MONSTERRESOURCEDATA::_internal_set_scalex(float value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.scalex_ = value;
-}
-
-// float scaleY = 9;
-inline void SC_MONSTERRESOURCEDATA::clear_scaley() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.scaley_ = 0;
-}
-inline float SC_MONSTERRESOURCEDATA::scaley() const {
-  // @@protoc_insertion_point(field_get:SC_MONSTERRESOURCEDATA.scaleY)
-  return _internal_scaley();
-}
-inline void SC_MONSTERRESOURCEDATA::set_scaley(float value) {
-  _internal_set_scaley(value);
-  // @@protoc_insertion_point(field_set:SC_MONSTERRESOURCEDATA.scaleY)
-}
-inline float SC_MONSTERRESOURCEDATA::_internal_scaley() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.scaley_;
-}
-inline void SC_MONSTERRESOURCEDATA::_internal_set_scaley(float value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.scaley_ = value;
-}
-
-// float scaleZ = 10;
-inline void SC_MONSTERRESOURCEDATA::clear_scalez() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.scalez_ = 0;
-}
-inline float SC_MONSTERRESOURCEDATA::scalez() const {
-  // @@protoc_insertion_point(field_get:SC_MONSTERRESOURCEDATA.scaleZ)
-  return _internal_scalez();
-}
-inline void SC_MONSTERRESOURCEDATA::set_scalez(float value) {
-  _internal_set_scalez(value);
-  // @@protoc_insertion_point(field_set:SC_MONSTERRESOURCEDATA.scaleZ)
-}
-inline float SC_MONSTERRESOURCEDATA::_internal_scalez() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.scalez_;
-}
-inline void SC_MONSTERRESOURCEDATA::_internal_set_scalez(float value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.scalez_ = value;
-}
-
-// int64 animindex = 11;
+// int64 animindex = 5;
 inline void SC_MONSTERRESOURCEDATA::clear_animindex() {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   _impl_.animindex_ = ::int64_t{0};
@@ -5437,7 +5239,30 @@ inline void SC_MONSTERRESOURCEDATA::_internal_set_animindex(::int64_t value) {
   _impl_.animindex_ = value;
 }
 
-// int64 type = 12;
+// int64 cellIndex = 6;
+inline void SC_MONSTERRESOURCEDATA::clear_cellindex() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.cellindex_ = ::int64_t{0};
+}
+inline ::int64_t SC_MONSTERRESOURCEDATA::cellindex() const {
+  // @@protoc_insertion_point(field_get:SC_MONSTERRESOURCEDATA.cellIndex)
+  return _internal_cellindex();
+}
+inline void SC_MONSTERRESOURCEDATA::set_cellindex(::int64_t value) {
+  _internal_set_cellindex(value);
+  // @@protoc_insertion_point(field_set:SC_MONSTERRESOURCEDATA.cellIndex)
+}
+inline ::int64_t SC_MONSTERRESOURCEDATA::_internal_cellindex() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.cellindex_;
+}
+inline void SC_MONSTERRESOURCEDATA::_internal_set_cellindex(::int64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.cellindex_ = value;
+}
+
+// int64 type = 7;
 inline void SC_MONSTERRESOURCEDATA::clear_type() {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   _impl_.type_ = ::int64_t{0};

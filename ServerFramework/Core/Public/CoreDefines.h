@@ -46,11 +46,13 @@
 #pragma comment (lib, "hiredisd")
 #pragma comment(lib, "mysqlcppconn_debug")
 #pragma comment(lib, "mysqlcppconn8_debug")
+#pragma comment(lib, "ExporterMathLibD")
 #else
 #pragma comment (lib, "redis++_static")
 #pragma comment (lib, "hiredis")
 #pragma comment(lib, "mysqlcppconn")
 #pragma comment(lib, "mysqlcppconn8")
+#pragma comment(lib, "ExporterMathLib")
 #endif
 #pragma comment (lib, "libcrypto")
 #pragma comment (lib, "libssl")

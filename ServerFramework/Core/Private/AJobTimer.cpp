@@ -15,7 +15,7 @@ namespace Core {
 
 	void AJobTimer::RegisterTimer(_int _RegisterTimer)
 	{
-		m_SteadyEvent.expires_from_now(std::chrono::milliseconds(_RegisterTimer));
+		m_SteadyEvent.expires_from_now(std::chrono::microseconds(_RegisterTimer));
 		// 타이머의 비동기 대기 설정
 		m_SteadyEvent.async_wait(std::bind(&AJobTimer::TimerThread, this, std::placeholders::_1));
 	}
@@ -33,7 +33,7 @@ namespace Core {
 			}
 			TickTimer(TimerEvent);
 		}
-		RegisterTimer(1);
+		RegisterTimer(10);
 	}
 
 	void AJobTimer::InsertTimerEvent(TIMEREVENT _TimerEvent)

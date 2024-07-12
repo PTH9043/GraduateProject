@@ -151,6 +151,7 @@ enum TAG_CHAR : int {
   TAG_MUMMY = 3,
   TAG_SARCOPHAGUS_LAYING = 4,
   TAG_SARCOPHAGUS_STANDING = 5,
+  TAG_CHEST = 6,
   TAG_CHAR_INT_MIN_SENTINEL_DO_NOT_USE_ =
       std::numeric_limits<::int32_t>::min(),
   TAG_CHAR_INT_MAX_SENTINEL_DO_NOT_USE_ =
@@ -160,8 +161,8 @@ enum TAG_CHAR : int {
 bool TAG_CHAR_IsValid(int value);
 extern const uint32_t TAG_CHAR_internal_data_[];
 constexpr TAG_CHAR TAG_CHAR_MIN = static_cast<TAG_CHAR>(0);
-constexpr TAG_CHAR TAG_CHAR_MAX = static_cast<TAG_CHAR>(5);
-constexpr int TAG_CHAR_ARRAYSIZE = 5 + 1;
+constexpr TAG_CHAR TAG_CHAR_MAX = static_cast<TAG_CHAR>(6);
+constexpr int TAG_CHAR_ARRAYSIZE = 6 + 1;
 const ::google::protobuf::EnumDescriptor*
 TAG_CHAR_descriptor();
 template <typename T>
@@ -174,7 +175,7 @@ const std::string& TAG_CHAR_Name(T value) {
 template <>
 inline const std::string& TAG_CHAR_Name(TAG_CHAR value) {
   return ::google::protobuf::internal::NameOfDenseEnum<TAG_CHAR_descriptor,
-                                                 0, 5>(
+                                                 0, 6>(
       static_cast<int>(value));
 }
 inline bool TAG_CHAR_Parse(absl::string_view name, TAG_CHAR* value) {
@@ -225,6 +226,8 @@ enum TAG_MOBANIM : int {
   TAG_MOB_SLEEP_STATE = 6,
   TAG_MOB_AWAKE_STATE = 7,
   TAG_MOB_FIND_STATE = 8,
+  TAG_MOB_FIRSTFIND_STATE = 9,
+  TAG_MOB_TAUNT_STATE = 10,
   TAG_MOBANIM_INT_MIN_SENTINEL_DO_NOT_USE_ =
       std::numeric_limits<::int32_t>::min(),
   TAG_MOBANIM_INT_MAX_SENTINEL_DO_NOT_USE_ =
@@ -234,8 +237,8 @@ enum TAG_MOBANIM : int {
 bool TAG_MOBANIM_IsValid(int value);
 extern const uint32_t TAG_MOBANIM_internal_data_[];
 constexpr TAG_MOBANIM TAG_MOBANIM_MIN = static_cast<TAG_MOBANIM>(0);
-constexpr TAG_MOBANIM TAG_MOBANIM_MAX = static_cast<TAG_MOBANIM>(8);
-constexpr int TAG_MOBANIM_ARRAYSIZE = 8 + 1;
+constexpr TAG_MOBANIM TAG_MOBANIM_MAX = static_cast<TAG_MOBANIM>(10);
+constexpr int TAG_MOBANIM_ARRAYSIZE = 10 + 1;
 const ::google::protobuf::EnumDescriptor*
 TAG_MOBANIM_descriptor();
 template <typename T>
@@ -248,7 +251,7 @@ const std::string& TAG_MOBANIM_Name(T value) {
 template <>
 inline const std::string& TAG_MOBANIM_Name(TAG_MOBANIM value) {
   return ::google::protobuf::internal::NameOfDenseEnum<TAG_MOBANIM_descriptor,
-                                                 0, 8>(
+                                                 0, 10>(
       static_cast<int>(value));
 }
 inline bool TAG_MOBANIM_Parse(absl::string_view name, TAG_MOBANIM* value) {

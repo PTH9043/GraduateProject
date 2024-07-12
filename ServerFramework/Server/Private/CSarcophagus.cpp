@@ -6,12 +6,14 @@
 #include "CSacrophagusAnimController.h"
 #include "ACoreInstance.h"
 #include "AAnimation.h"
+#include "CMobLayoutLoader.h"
+#include "CMobLayOutSaver.h"
 
 namespace Server
 {
 	CSarcophagus::CSarcophagus(OBJCON_CONSTRUCTOR, SESSIONID _ID, SARCOPHAGUSTYPE _eSarcophagusType, 
 		SHPTR<AJobTimer> _spMonsterJobTimer) :
-		AMonster(OBJCON_CONDATA, _ID, _spMonsterJobTimer), m_eSarcophagusType{_eSarcophagusType}
+		AMonster(OBJCON_CONDATA, _ID, _spMonsterJobTimer), m_eSarcophagusType{_eSarcophagusType}, m_isInitStart{false}
 	{
 		if (SARCO_LAYING == m_eSarcophagusType)
 		{
@@ -29,6 +31,7 @@ namespace Server
 	{
 		__super::Start(_ReceiveDatas);
 		ASSERT_CRASH(_ReceiveDatas.size() >= 0);
+		MOBDATA* pMoveData = static_cast<MOBDATA*>(_ReceiveDatas[0]);
 		SESSIONID* pSessionID = static_cast<SESSIONID*>(_ReceiveDatas[1]);
 
 		SHPTR<CSacrophagusAnimController> spSacrophagusAnimController = nullptr;
@@ -53,40 +56,62 @@ namespace Server
 		
 		SetAnimController(spSacrophagusAnimController);
 		m_spMummy->Start({ _ReceiveDatas[0] });	
-		GetTransform()->SetNewWorldMtx(m_spMummy->GetTransform()->GetWorldMatrix());
+		GetTransform()->SetNewWorldMtx(pMoveData->mWorldMatrix);
 		GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
 		BringCellIndextoPosition();
 		GetCoreInstance()->InsertMobObject(m_spMummy->GetSessionID(), m_spMummy);
-		m_spMummy->GetTransform()->TranslateDir((m_spMummy->GetTransform()->GetLook()), 1, 12);
+
+		if (SARCO_LAYING == m_eSarcophagusType)
+			m_spMummy->GetTransform()->TranslateDir((m_spMummy->GetTransform()->GetLook()), 1, 12);
 		return S_OK;
+	}
+
+	void CSarcophagus::Tick(const _double& _dTimeDelta)
+	{
+		__super::Tick(_dTimeDelta);
+
+		if (true == IsCurrentFindPlayer())
+		{
+			if (false == m_isInitStart)
+			{
+				_int AnimIndex = GetAnimController()->GetCurAnimIndex();
+				_double dDuration = GetAnimController()->GetElapsedTime();
+
+				SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+				SHPTR<AAnimation> spCurAnimation = GetAnimController()->GetCurAnimation();
+				SHPTR<ATransform> spTransform = GetTransform();
+				SHPTR<CMummy> spMummy = GetMummy();
+
+				SC_MONSTERSTATE scMonsterState;
+				PROTOFUNC::MakeScMonsterState(&scMonsterState, GetSessionID(), dDuration, AnimIndex, TAG_MOB_FIRSTFIND_STATE);
+				CombineProto<SC_MONSTERSTATE>(GetCopyBuffer(), GetPacketHead(), scMonsterState, TAG_SC_MONSTERSTATE);
+				spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
+				m_isInitStart = true;
+
+				spMummy->SetFoundPlayerFirstTime(true);
+			}
+		}
 	}
 
 	void CSarcophagus::State(SHPTR<ASession> _spSession, _int _MonsterState)
 	{
 		FindPlayer(_spSession);
-		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
-		SHPTR<AAnimation> spCurAnimation = GetAnimController()->GetCurAnimation();
-		SHPTR<ATransform> spTransform = GetTransform();
-
-		if (MOB_FIND == GetMonsterState())
-		{
-			_int AnimIndex = GetAnimController()->GetCurAnimIndex();
-			_double dDuration = GetAnimController()->GetElapsedTime();
-
-		//	std::cout << "Sar: " << dDuration << "\n";
-
-			SC_MONSTERSTATE scMonsterState;
-			PROTOFUNC::MakeScMonsterState(&scMonsterState, GetSessionID(), dDuration, AnimIndex, MOB_FIND_STATE);
-			CombineProto<SC_MONSTERSTATE>(GetCopyBuffer(), GetPacketHead(), scMonsterState, TAG_SC_MONSTERSTATE);
-			spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
-		}
 	}
 
 	void CSarcophagus::LastBehavior()
 	{
-		m_spMummy->SetFoundPlayerFirstTime(true);
+		if (true == IsPermanentDisable())
+			return;
 
+		SHPTR<CMummy> spMummy = m_spMummy;
 		ActivePermanentDisable();
+
+		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+
+		SC_MONSTERSTATE scMonsterState;
+		PROTOFUNC::MakeScMonsterState(&scMonsterState, GetSessionID(), 0, 0, TAG_MOB_DISABLE_STATE);
+		CombineProto<SC_MONSTERSTATE>(GetCopyBuffer(), GetPacketHead(), scMonsterState, TAG_SC_MONSTERSTATE);
+		spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
 	}
 
 	void CSarcophagus::Free()

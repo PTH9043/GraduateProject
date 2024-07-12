@@ -18,7 +18,8 @@ CMummyAnimController::CMummyAnimController(CSHPTRREF<UDevice> _spDevice)
     m_dIdleTimer{0},
     m_bFoundPlayerFirsttime{false},
     m_didleRandomValueChoosingTimer{0},
-    m_iRandomValue{0}
+    m_iRandomValue{0},
+    m_dRecvAnimDuration{0}
 {
 }
 
@@ -33,7 +34,8 @@ CMummyAnimController::CMummyAnimController(const CMummyAnimController& _rhs)
     m_dIdleTimer{0},
     m_bFoundPlayerFirsttime{ false },
     m_didleRandomValueChoosingTimer{ 0 },
-    m_iRandomValue{ 0 }
+    m_iRandomValue{ 0 },
+    m_dRecvAnimDuration{ 0 }
 {
 }
 
@@ -58,12 +60,10 @@ HRESULT CMummyAnimController::NativeConstructClone(const VOIDDATAS& _tDatas)
 void CMummyAnimController::Tick(const _double& _dTimeDelta)
 {
     SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-
     ClearTrigger();
     SetAnimState(-1);
     SHPTR<CMummy> spMummy = m_wpMummyMob.lock();
     SHPTR<UAnimModel> spAnimModel = spMummy->GetAnimModel();
-
 #ifndef _ENABLE_PROTOBUFF
     const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
 
@@ -181,8 +181,24 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
         UpdateState(spAnimModel, ANIM_DEATH, L"DEAD");
     }
 
-#endif
+#else
 
+#endif
     // Tick event
     spAnimModel->TickEvent(spMummy.get(), GetTrigger(), _dTimeDelta);
+}
+
+void CMummyAnimController::ReceiveNetworkProcessData(void* _pData)
+{
+#ifdef _ENABLE_PROTOBUFF
+    SHPTR<CMummy> spSarcophagus = m_wpMummyMob.lock();
+    SHPTR<UAnimModel> spAnimModel = spSarcophagus->GetAnimModel();
+    {
+        SC_MONSTERSTATEHAVEPOS* pMonsterData = static_cast<SC_MONSTERSTATEHAVEPOS*>(_pData);
+        m_dRecvAnimDuration = pMonsterData->animationtime();
+
+        if (pMonsterData->animationindex() != spAnimModel->GetCurrentAnimIndex())
+            spAnimModel->SetAnimation(pMonsterData->animationindex());
+    }
+#endif
 }

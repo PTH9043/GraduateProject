@@ -51,7 +51,25 @@ namespace Core {
 	_bool AAnimSectionEvent::EventCheck(APawn* _pPawn, AAnimator* _pAnimator, const _double& _dTimeDelta, 
 		const _double& _dTimeAcc, const _string& _strInputTrigger)
 	{
-		return _bool();
+		if (false == m_AnimSectionDesc.isAnimChangeActive)
+		{
+			if (m_AnimSectionDesc.IsAnimEventActive(_dTimeAcc))
+			{
+				if ((!strcmp(m_AnimSectionDesc.strEventTrigger.c_str(), _strInputTrigger.c_str())
+					|| !strcmp(m_AnimSectionDesc.strEventTrigger.c_str(), "")))
+				{
+					m_AnimSectionDesc.isAnimChangeActive = true;
+					EventSituation(_pPawn, _pAnimator, _dTimeDelta, _dTimeAcc);
+					return true;
+				}
+			}
+		}
+		else
+		{
+			EventSituation(_pPawn, _pAnimator, _dTimeDelta, _dTimeAcc);
+			return false;
+		}
+		return false;
 	}
 
 	void AAnimSectionEvent::EventSituation(APawn* _pPawn, AAnimator* _pAnimator, const _double& _dTimeDelta, const _double& _dTimeAcc)

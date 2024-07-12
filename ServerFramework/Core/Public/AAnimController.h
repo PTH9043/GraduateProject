@@ -39,6 +39,7 @@ public:
 	SHPTR<ACollider> BringAttackCollider(_int _iColliderType);
 	SHPTR<ACollider> GetAttackCollider();
 	_bool IsCollisionAttackCollider(SHPTR<ACollider> _spEnemyCollider);
+	void UpdateState(const _string& _strTrigger, const _int _AnimState);
 public: /* get set */
 	const _int GetCurAnimIndex() const;
 	SHPTR<AAnimation> GetCurAnimation() const;
@@ -56,16 +57,17 @@ public: /* get set */
 	void SetOwnerPawnActiveStrong(_bool _isOwnerPawnActive);
 	void SetOwnerPawnActiveWeak(_bool _isOwnerPawnActive);
 	void SetPawnState(_int _State);
+	void SetAnimState(_int _iAnimState);
+	void SetInputTrigger(const _string& _inputTrigger) { AWriteSpinLockGuard(m_TriggerLock);  this->m_strInputTrigger = _inputTrigger; }
 protected: /* get set */
 	void SetAccumulator(const _double& _dAccumulator) { this->m_dAccumulator = _dAccumulator; }
 	void SetElapsedTime(const _double& _dDelapsedTime) { this->m_dElapsedTime = _dDelapsedTime; }
-	void SetInputTrigger(const _string& _inputTrigger) { AWriteSpinLockGuard(m_TriggerLock);  this->m_strInputTrigger = _inputTrigger; }
 
 private:
 	virtual void Free() override;
 private:
 	_double							m_dAccumulator;
-	_double							m_dElapsedTime;
+	ATOMIC<_double>		m_dElapsedTime;
 	_string							m_strInputTrigger;
 	// Owner Pawn Active
 	ATOMIC<_bool>			m_isOwnerPawnActive;
@@ -75,6 +77,8 @@ private:
 	// Animator, OwenrPawn
 	SHPTR<AAnimator>	m_spAnimator;
 	WKPTR<APawn>			m_wpOwnerPawn;
+	// Anim State
+	ATOMIC<_int>				m_iAnimState;
 };
 
 END

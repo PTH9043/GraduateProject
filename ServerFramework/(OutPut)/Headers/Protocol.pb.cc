@@ -182,15 +182,10 @@ inline constexpr SC_MONSTERRESOURCEDATA::Impl_::Impl_(
       : id_{::int64_t{0}},
         posx_{0},
         posy_{0},
-        posz_{0},
-        rotatex_{0},
-        rotatey_{0},
-        rotatez_{0},
-        scalex_{0},
-        scaley_{0},
         animindex_{::int64_t{0}},
+        cellindex_{::int64_t{0}},
         type_{::int64_t{0}},
-        scalez_{0},
+        posz_{0},
         _cached_size_{0} {}
 
 template <typename>
@@ -568,13 +563,8 @@ const ::uint32_t TableStruct_Protocol_2eproto::offsets[] PROTOBUF_SECTION_VARIAB
     PROTOBUF_FIELD_OFFSET(::SC_MONSTERRESOURCEDATA, _impl_.posx_),
     PROTOBUF_FIELD_OFFSET(::SC_MONSTERRESOURCEDATA, _impl_.posy_),
     PROTOBUF_FIELD_OFFSET(::SC_MONSTERRESOURCEDATA, _impl_.posz_),
-    PROTOBUF_FIELD_OFFSET(::SC_MONSTERRESOURCEDATA, _impl_.rotatex_),
-    PROTOBUF_FIELD_OFFSET(::SC_MONSTERRESOURCEDATA, _impl_.rotatey_),
-    PROTOBUF_FIELD_OFFSET(::SC_MONSTERRESOURCEDATA, _impl_.rotatez_),
-    PROTOBUF_FIELD_OFFSET(::SC_MONSTERRESOURCEDATA, _impl_.scalex_),
-    PROTOBUF_FIELD_OFFSET(::SC_MONSTERRESOURCEDATA, _impl_.scaley_),
-    PROTOBUF_FIELD_OFFSET(::SC_MONSTERRESOURCEDATA, _impl_.scalez_),
     PROTOBUF_FIELD_OFFSET(::SC_MONSTERRESOURCEDATA, _impl_.animindex_),
+    PROTOBUF_FIELD_OFFSET(::SC_MONSTERRESOURCEDATA, _impl_.cellindex_),
     PROTOBUF_FIELD_OFFSET(::SC_MONSTERRESOURCEDATA, _impl_.type_),
     ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::SC_START_INFORMATION_SUCCESS, _internal_metadata_),
@@ -722,16 +712,16 @@ static const ::_pbi::MigrationSchema
         {76, -1, -1, sizeof(::SC_CONNECTSUCCESS)},
         {87, -1, -1, sizeof(::SC_OTHERCLIENTLOGIN)},
         {98, -1, -1, sizeof(::SC_MONSTERRESOURCEDATA)},
-        {118, -1, -1, sizeof(::SC_START_INFORMATION_SUCCESS)},
-        {128, 138, -1, sizeof(::SC_MOVEFAILED)},
-        {140, 152, -1, sizeof(::SC_VIEWINRANGE)},
-        {156, -1, -1, sizeof(::SC_MONSTERSTATE)},
-        {168, -1, -1, sizeof(::SC_MONSTERSTATEHAVEPOS)},
-        {186, -1, -1, sizeof(::CS_LOGIN)},
-        {195, -1, -1, sizeof(::CS_RESOURCE_RECEIVE_SUCCES)},
-        {204, 215, -1, sizeof(::CS_ATTACK)},
-        {218, -1, -1, sizeof(::CS_CHARCOLLISION)},
-        {242, -1, -1, sizeof(::CS_DISCONNECT)},
+        {113, -1, -1, sizeof(::SC_START_INFORMATION_SUCCESS)},
+        {123, 133, -1, sizeof(::SC_MOVEFAILED)},
+        {135, 147, -1, sizeof(::SC_VIEWINRANGE)},
+        {151, -1, -1, sizeof(::SC_MONSTERSTATE)},
+        {163, -1, -1, sizeof(::SC_MONSTERSTATEHAVEPOS)},
+        {181, -1, -1, sizeof(::CS_LOGIN)},
+        {190, -1, -1, sizeof(::CS_RESOURCE_RECEIVE_SUCCES)},
+        {199, 210, -1, sizeof(::CS_ATTACK)},
+        {213, -1, -1, sizeof(::CS_CHARCOLLISION)},
+        {237, -1, -1, sizeof(::CS_DISCONNECT)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -772,12 +762,10 @@ const char descriptor_table_protodef_Protocol_2eproto[] PROTOBUF_SECTION_VARIABL
     "\n\007rotateZ\030\007 \001(\002\"@\n\021SC_CONNECTSUCCESS\022\n\n\002"
     "id\030\001 \001(\003\022\021\n\tcellIndex\030\002 \001(\003\022\014\n\004type\030\004 \001("
     "\003\"B\n\023SC_OTHERCLIENTLOGIN\022\n\n\002id\030\001 \001(\003\022\021\n\t"
-    "cellIndex\030\002 \001(\003\022\014\n\004type\030\003 \001(\003\"\322\001\n\026SC_MON"
+    "cellIndex\030\002 \001(\003\022\014\n\004type\030\003 \001(\003\"\202\001\n\026SC_MON"
     "STERRESOURCEDATA\022\n\n\002id\030\001 \001(\003\022\014\n\004posX\030\002 \001"
-    "(\002\022\014\n\004posY\030\003 \001(\002\022\014\n\004posZ\030\004 \001(\002\022\017\n\007rotate"
-    "X\030\005 \001(\002\022\017\n\007rotateY\030\006 \001(\002\022\017\n\007rotateZ\030\007 \001("
-    "\002\022\016\n\006scaleX\030\010 \001(\002\022\016\n\006scaleY\030\t \001(\002\022\016\n\006sca"
-    "leZ\030\n \001(\002\022\021\n\tanimindex\030\013 \001(\003\022\014\n\004type\030\014 \001"
+    "(\002\022\014\n\004posY\030\003 \001(\002\022\014\n\004posZ\030\004 \001(\002\022\021\n\tanimin"
+    "dex\030\005 \001(\003\022\021\n\tcellIndex\030\006 \001(\003\022\014\n\004type\030\007 \001"
     "(\003\">\n\034SC_START_INFORMATION_SUCCESS\022\n\n\002id"
     "\030\001 \001(\003\022\022\n\nmonsternum\030\002 \001(\003\"6\n\rSC_MOVEFAI"
     "LED\022\n\n\002id\030\001 \001(\003\022\031\n\007prevPos\030\003 \001(\0132\010.VECTO"
@@ -808,7 +796,7 @@ static ::absl::once_flag descriptor_table_Protocol_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Protocol_2eproto = {
     false,
     false,
-    1874,
+    1794,
     descriptor_table_protodef_Protocol_2eproto,
     "Protocol.proto",
     &descriptor_table_Protocol_2eproto_once,
@@ -3202,9 +3190,9 @@ inline void SC_MONSTERRESOURCEDATA::SharedCtor(::_pb::Arena* arena) {
   ::memset(reinterpret_cast<char *>(&_impl_) +
                offsetof(Impl_, id_),
            0,
-           offsetof(Impl_, scalez_) -
+           offsetof(Impl_, posz_) -
                offsetof(Impl_, id_) +
-               sizeof(Impl_::scalez_));
+               sizeof(Impl_::posz_));
 }
 SC_MONSTERRESOURCEDATA::~SC_MONSTERRESOURCEDATA() {
   // @@protoc_insertion_point(destructor:SC_MONSTERRESOURCEDATA)
@@ -3224,8 +3212,8 @@ PROTOBUF_NOINLINE void SC_MONSTERRESOURCEDATA::Clear() {
   (void) cached_has_bits;
 
   ::memset(&_impl_.id_, 0, static_cast<::size_t>(
-      reinterpret_cast<char*>(&_impl_.scalez_) -
-      reinterpret_cast<char*>(&_impl_.id_)) + sizeof(_impl_.scalez_));
+      reinterpret_cast<char*>(&_impl_.posz_) -
+      reinterpret_cast<char*>(&_impl_.id_)) + sizeof(_impl_.posz_));
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
@@ -3237,15 +3225,15 @@ const char* SC_MONSTERRESOURCEDATA::_InternalParse(
 
 
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<4, 12, 0, 0, 2> SC_MONSTERRESOURCEDATA::_table_ = {
+const ::_pbi::TcParseTable<3, 7, 0, 0, 2> SC_MONSTERRESOURCEDATA::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    12, 120,  // max_field_number, fast_idx_mask
+    7, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294963200,  // skipmap
+    4294967168,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    12,  // num_field_entries
+    7,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     &_SC_MONSTERRESOURCEDATA_default_instance_._instance,
@@ -3264,33 +3252,15 @@ const ::_pbi::TcParseTable<4, 12, 0, 0, 2> SC_MONSTERRESOURCEDATA::_table_ = {
     // float posZ = 4;
     {::_pbi::TcParser::FastF32S1,
      {37, 63, 0, PROTOBUF_FIELD_OFFSET(SC_MONSTERRESOURCEDATA, _impl_.posz_)}},
-    // float rotateX = 5;
-    {::_pbi::TcParser::FastF32S1,
-     {45, 63, 0, PROTOBUF_FIELD_OFFSET(SC_MONSTERRESOURCEDATA, _impl_.rotatex_)}},
-    // float rotateY = 6;
-    {::_pbi::TcParser::FastF32S1,
-     {53, 63, 0, PROTOBUF_FIELD_OFFSET(SC_MONSTERRESOURCEDATA, _impl_.rotatey_)}},
-    // float rotateZ = 7;
-    {::_pbi::TcParser::FastF32S1,
-     {61, 63, 0, PROTOBUF_FIELD_OFFSET(SC_MONSTERRESOURCEDATA, _impl_.rotatez_)}},
-    // float scaleX = 8;
-    {::_pbi::TcParser::FastF32S1,
-     {69, 63, 0, PROTOBUF_FIELD_OFFSET(SC_MONSTERRESOURCEDATA, _impl_.scalex_)}},
-    // float scaleY = 9;
-    {::_pbi::TcParser::FastF32S1,
-     {77, 63, 0, PROTOBUF_FIELD_OFFSET(SC_MONSTERRESOURCEDATA, _impl_.scaley_)}},
-    // float scaleZ = 10;
-    {::_pbi::TcParser::FastF32S1,
-     {85, 63, 0, PROTOBUF_FIELD_OFFSET(SC_MONSTERRESOURCEDATA, _impl_.scalez_)}},
-    // int64 animindex = 11;
+    // int64 animindex = 5;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(SC_MONSTERRESOURCEDATA, _impl_.animindex_), 63>(),
-     {88, 63, 0, PROTOBUF_FIELD_OFFSET(SC_MONSTERRESOURCEDATA, _impl_.animindex_)}},
-    // int64 type = 12;
+     {40, 63, 0, PROTOBUF_FIELD_OFFSET(SC_MONSTERRESOURCEDATA, _impl_.animindex_)}},
+    // int64 cellIndex = 6;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(SC_MONSTERRESOURCEDATA, _impl_.cellindex_), 63>(),
+     {48, 63, 0, PROTOBUF_FIELD_OFFSET(SC_MONSTERRESOURCEDATA, _impl_.cellindex_)}},
+    // int64 type = 7;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(SC_MONSTERRESOURCEDATA, _impl_.type_), 63>(),
-     {96, 63, 0, PROTOBUF_FIELD_OFFSET(SC_MONSTERRESOURCEDATA, _impl_.type_)}},
-    {::_pbi::TcParser::MiniParse, {}},
-    {::_pbi::TcParser::MiniParse, {}},
-    {::_pbi::TcParser::MiniParse, {}},
+     {56, 63, 0, PROTOBUF_FIELD_OFFSET(SC_MONSTERRESOURCEDATA, _impl_.type_)}},
   }}, {{
     65535, 65535
   }}, {{
@@ -3306,28 +3276,13 @@ const ::_pbi::TcParseTable<4, 12, 0, 0, 2> SC_MONSTERRESOURCEDATA::_table_ = {
     // float posZ = 4;
     {PROTOBUF_FIELD_OFFSET(SC_MONSTERRESOURCEDATA, _impl_.posz_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kFloat)},
-    // float rotateX = 5;
-    {PROTOBUF_FIELD_OFFSET(SC_MONSTERRESOURCEDATA, _impl_.rotatex_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kFloat)},
-    // float rotateY = 6;
-    {PROTOBUF_FIELD_OFFSET(SC_MONSTERRESOURCEDATA, _impl_.rotatey_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kFloat)},
-    // float rotateZ = 7;
-    {PROTOBUF_FIELD_OFFSET(SC_MONSTERRESOURCEDATA, _impl_.rotatez_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kFloat)},
-    // float scaleX = 8;
-    {PROTOBUF_FIELD_OFFSET(SC_MONSTERRESOURCEDATA, _impl_.scalex_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kFloat)},
-    // float scaleY = 9;
-    {PROTOBUF_FIELD_OFFSET(SC_MONSTERRESOURCEDATA, _impl_.scaley_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kFloat)},
-    // float scaleZ = 10;
-    {PROTOBUF_FIELD_OFFSET(SC_MONSTERRESOURCEDATA, _impl_.scalez_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kFloat)},
-    // int64 animindex = 11;
+    // int64 animindex = 5;
     {PROTOBUF_FIELD_OFFSET(SC_MONSTERRESOURCEDATA, _impl_.animindex_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
-    // int64 type = 12;
+    // int64 cellIndex = 6;
+    {PROTOBUF_FIELD_OFFSET(SC_MONSTERRESOURCEDATA, _impl_.cellindex_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
+    // int64 type = 7;
     {PROTOBUF_FIELD_OFFSET(SC_MONSTERRESOURCEDATA, _impl_.type_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
   }},
@@ -3386,89 +3341,24 @@ const ::_pbi::TcParseTable<4, 12, 0, 0, 2> SC_MONSTERRESOURCEDATA::_table_ = {
         4, this->_internal_posz(), target);
   }
 
-  // float rotateX = 5;
-  static_assert(sizeof(::uint32_t) == sizeof(float),
-                "Code assumes ::uint32_t and float are the same size.");
-  float tmp_rotatex = this->_internal_rotatex();
-  ::uint32_t raw_rotatex;
-  memcpy(&raw_rotatex, &tmp_rotatex, sizeof(tmp_rotatex));
-  if (raw_rotatex != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteFloatToArray(
-        5, this->_internal_rotatex(), target);
-  }
-
-  // float rotateY = 6;
-  static_assert(sizeof(::uint32_t) == sizeof(float),
-                "Code assumes ::uint32_t and float are the same size.");
-  float tmp_rotatey = this->_internal_rotatey();
-  ::uint32_t raw_rotatey;
-  memcpy(&raw_rotatey, &tmp_rotatey, sizeof(tmp_rotatey));
-  if (raw_rotatey != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteFloatToArray(
-        6, this->_internal_rotatey(), target);
-  }
-
-  // float rotateZ = 7;
-  static_assert(sizeof(::uint32_t) == sizeof(float),
-                "Code assumes ::uint32_t and float are the same size.");
-  float tmp_rotatez = this->_internal_rotatez();
-  ::uint32_t raw_rotatez;
-  memcpy(&raw_rotatez, &tmp_rotatez, sizeof(tmp_rotatez));
-  if (raw_rotatez != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteFloatToArray(
-        7, this->_internal_rotatez(), target);
-  }
-
-  // float scaleX = 8;
-  static_assert(sizeof(::uint32_t) == sizeof(float),
-                "Code assumes ::uint32_t and float are the same size.");
-  float tmp_scalex = this->_internal_scalex();
-  ::uint32_t raw_scalex;
-  memcpy(&raw_scalex, &tmp_scalex, sizeof(tmp_scalex));
-  if (raw_scalex != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteFloatToArray(
-        8, this->_internal_scalex(), target);
-  }
-
-  // float scaleY = 9;
-  static_assert(sizeof(::uint32_t) == sizeof(float),
-                "Code assumes ::uint32_t and float are the same size.");
-  float tmp_scaley = this->_internal_scaley();
-  ::uint32_t raw_scaley;
-  memcpy(&raw_scaley, &tmp_scaley, sizeof(tmp_scaley));
-  if (raw_scaley != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteFloatToArray(
-        9, this->_internal_scaley(), target);
-  }
-
-  // float scaleZ = 10;
-  static_assert(sizeof(::uint32_t) == sizeof(float),
-                "Code assumes ::uint32_t and float are the same size.");
-  float tmp_scalez = this->_internal_scalez();
-  ::uint32_t raw_scalez;
-  memcpy(&raw_scalez, &tmp_scalez, sizeof(tmp_scalez));
-  if (raw_scalez != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteFloatToArray(
-        10, this->_internal_scalez(), target);
-  }
-
-  // int64 animindex = 11;
+  // int64 animindex = 5;
   if (this->_internal_animindex() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::
-        WriteInt64ToArrayWithField<11>(
+        WriteInt64ToArrayWithField<5>(
             stream, this->_internal_animindex(), target);
   }
 
-  // int64 type = 12;
+  // int64 cellIndex = 6;
+  if (this->_internal_cellindex() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::
+        WriteInt64ToArrayWithField<6>(
+            stream, this->_internal_cellindex(), target);
+  }
+
+  // int64 type = 7;
   if (this->_internal_type() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::
-        WriteInt64ToArrayWithField<12>(
+        WriteInt64ToArrayWithField<7>(
             stream, this->_internal_type(), target);
   }
 
@@ -3515,6 +3405,24 @@ const ::_pbi::TcParseTable<4, 12, 0, 0, 2> SC_MONSTERRESOURCEDATA::_table_ = {
     total_size += 5;
   }
 
+  // int64 animindex = 5;
+  if (this->_internal_animindex() != 0) {
+    total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
+        this->_internal_animindex());
+  }
+
+  // int64 cellIndex = 6;
+  if (this->_internal_cellindex() != 0) {
+    total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
+        this->_internal_cellindex());
+  }
+
+  // int64 type = 7;
+  if (this->_internal_type() != 0) {
+    total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
+        this->_internal_type());
+  }
+
   // float posZ = 4;
   static_assert(sizeof(::uint32_t) == sizeof(float),
                 "Code assumes ::uint32_t and float are the same size.");
@@ -3522,78 +3430,6 @@ const ::_pbi::TcParseTable<4, 12, 0, 0, 2> SC_MONSTERRESOURCEDATA::_table_ = {
   ::uint32_t raw_posz;
   memcpy(&raw_posz, &tmp_posz, sizeof(tmp_posz));
   if (raw_posz != 0) {
-    total_size += 5;
-  }
-
-  // float rotateX = 5;
-  static_assert(sizeof(::uint32_t) == sizeof(float),
-                "Code assumes ::uint32_t and float are the same size.");
-  float tmp_rotatex = this->_internal_rotatex();
-  ::uint32_t raw_rotatex;
-  memcpy(&raw_rotatex, &tmp_rotatex, sizeof(tmp_rotatex));
-  if (raw_rotatex != 0) {
-    total_size += 5;
-  }
-
-  // float rotateY = 6;
-  static_assert(sizeof(::uint32_t) == sizeof(float),
-                "Code assumes ::uint32_t and float are the same size.");
-  float tmp_rotatey = this->_internal_rotatey();
-  ::uint32_t raw_rotatey;
-  memcpy(&raw_rotatey, &tmp_rotatey, sizeof(tmp_rotatey));
-  if (raw_rotatey != 0) {
-    total_size += 5;
-  }
-
-  // float rotateZ = 7;
-  static_assert(sizeof(::uint32_t) == sizeof(float),
-                "Code assumes ::uint32_t and float are the same size.");
-  float tmp_rotatez = this->_internal_rotatez();
-  ::uint32_t raw_rotatez;
-  memcpy(&raw_rotatez, &tmp_rotatez, sizeof(tmp_rotatez));
-  if (raw_rotatez != 0) {
-    total_size += 5;
-  }
-
-  // float scaleX = 8;
-  static_assert(sizeof(::uint32_t) == sizeof(float),
-                "Code assumes ::uint32_t and float are the same size.");
-  float tmp_scalex = this->_internal_scalex();
-  ::uint32_t raw_scalex;
-  memcpy(&raw_scalex, &tmp_scalex, sizeof(tmp_scalex));
-  if (raw_scalex != 0) {
-    total_size += 5;
-  }
-
-  // float scaleY = 9;
-  static_assert(sizeof(::uint32_t) == sizeof(float),
-                "Code assumes ::uint32_t and float are the same size.");
-  float tmp_scaley = this->_internal_scaley();
-  ::uint32_t raw_scaley;
-  memcpy(&raw_scaley, &tmp_scaley, sizeof(tmp_scaley));
-  if (raw_scaley != 0) {
-    total_size += 5;
-  }
-
-  // int64 animindex = 11;
-  if (this->_internal_animindex() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
-        this->_internal_animindex());
-  }
-
-  // int64 type = 12;
-  if (this->_internal_type() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
-        this->_internal_type());
-  }
-
-  // float scaleZ = 10;
-  static_assert(sizeof(::uint32_t) == sizeof(float),
-                "Code assumes ::uint32_t and float are the same size.");
-  float tmp_scalez = this->_internal_scalez();
-  ::uint32_t raw_scalez;
-  memcpy(&raw_scalez, &tmp_scalez, sizeof(tmp_scalez));
-  if (raw_scalez != 0) {
     total_size += 5;
   }
 
@@ -3635,6 +3471,15 @@ void SC_MONSTERRESOURCEDATA::MergeImpl(::google::protobuf::Message& to_msg, cons
   if (raw_posy != 0) {
     _this->_internal_set_posy(from._internal_posy());
   }
+  if (from._internal_animindex() != 0) {
+    _this->_internal_set_animindex(from._internal_animindex());
+  }
+  if (from._internal_cellindex() != 0) {
+    _this->_internal_set_cellindex(from._internal_cellindex());
+  }
+  if (from._internal_type() != 0) {
+    _this->_internal_set_type(from._internal_type());
+  }
   static_assert(sizeof(::uint32_t) == sizeof(float),
                 "Code assumes ::uint32_t and float are the same size.");
   float tmp_posz = from._internal_posz();
@@ -3642,60 +3487,6 @@ void SC_MONSTERRESOURCEDATA::MergeImpl(::google::protobuf::Message& to_msg, cons
   memcpy(&raw_posz, &tmp_posz, sizeof(tmp_posz));
   if (raw_posz != 0) {
     _this->_internal_set_posz(from._internal_posz());
-  }
-  static_assert(sizeof(::uint32_t) == sizeof(float),
-                "Code assumes ::uint32_t and float are the same size.");
-  float tmp_rotatex = from._internal_rotatex();
-  ::uint32_t raw_rotatex;
-  memcpy(&raw_rotatex, &tmp_rotatex, sizeof(tmp_rotatex));
-  if (raw_rotatex != 0) {
-    _this->_internal_set_rotatex(from._internal_rotatex());
-  }
-  static_assert(sizeof(::uint32_t) == sizeof(float),
-                "Code assumes ::uint32_t and float are the same size.");
-  float tmp_rotatey = from._internal_rotatey();
-  ::uint32_t raw_rotatey;
-  memcpy(&raw_rotatey, &tmp_rotatey, sizeof(tmp_rotatey));
-  if (raw_rotatey != 0) {
-    _this->_internal_set_rotatey(from._internal_rotatey());
-  }
-  static_assert(sizeof(::uint32_t) == sizeof(float),
-                "Code assumes ::uint32_t and float are the same size.");
-  float tmp_rotatez = from._internal_rotatez();
-  ::uint32_t raw_rotatez;
-  memcpy(&raw_rotatez, &tmp_rotatez, sizeof(tmp_rotatez));
-  if (raw_rotatez != 0) {
-    _this->_internal_set_rotatez(from._internal_rotatez());
-  }
-  static_assert(sizeof(::uint32_t) == sizeof(float),
-                "Code assumes ::uint32_t and float are the same size.");
-  float tmp_scalex = from._internal_scalex();
-  ::uint32_t raw_scalex;
-  memcpy(&raw_scalex, &tmp_scalex, sizeof(tmp_scalex));
-  if (raw_scalex != 0) {
-    _this->_internal_set_scalex(from._internal_scalex());
-  }
-  static_assert(sizeof(::uint32_t) == sizeof(float),
-                "Code assumes ::uint32_t and float are the same size.");
-  float tmp_scaley = from._internal_scaley();
-  ::uint32_t raw_scaley;
-  memcpy(&raw_scaley, &tmp_scaley, sizeof(tmp_scaley));
-  if (raw_scaley != 0) {
-    _this->_internal_set_scaley(from._internal_scaley());
-  }
-  if (from._internal_animindex() != 0) {
-    _this->_internal_set_animindex(from._internal_animindex());
-  }
-  if (from._internal_type() != 0) {
-    _this->_internal_set_type(from._internal_type());
-  }
-  static_assert(sizeof(::uint32_t) == sizeof(float),
-                "Code assumes ::uint32_t and float are the same size.");
-  float tmp_scalez = from._internal_scalez();
-  ::uint32_t raw_scalez;
-  memcpy(&raw_scalez, &tmp_scalez, sizeof(tmp_scalez));
-  if (raw_scalez != 0) {
-    _this->_internal_set_scalez(from._internal_scalez());
   }
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -3718,8 +3509,8 @@ void SC_MONSTERRESOURCEDATA::InternalSwap(SC_MONSTERRESOURCEDATA* PROTOBUF_RESTR
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(SC_MONSTERRESOURCEDATA, _impl_.scalez_)
-      + sizeof(SC_MONSTERRESOURCEDATA::_impl_.scalez_)
+      PROTOBUF_FIELD_OFFSET(SC_MONSTERRESOURCEDATA, _impl_.posz_)
+      + sizeof(SC_MONSTERRESOURCEDATA::_impl_.posz_)
       - PROTOBUF_FIELD_OFFSET(SC_MONSTERRESOURCEDATA, _impl_.id_)>(
           reinterpret_cast<char*>(&_impl_.id_),
           reinterpret_cast<char*>(&other->_impl_.id_));

@@ -113,24 +113,15 @@ namespace Core
 		std::this_thread::sleep_for(std::chrono::milliseconds(_data));
 	}
 	/*
-	@ Date: 2024-01-02,  Writer: 박태현
+	@ Date: 2023-12-26
+	@ Writer: 박태현
 	@ Explain
-	- 멀티쓰레드에서 안전하게 값을 바꾸기 위한 함수
+	- _origin의 값이 _old와 같을 때 _weak를 넣고 true 리턴
 	*/
-	template<class T, class Value>
-	static bool CAS(T* _pData, Value _expected, const Value& _value) {
-		return std::atomic_compare_exchange_strong(
-			reinterpret_cast<volatile ATOMIC<T>*>(_pData), &_expected, _value);
-	}
-	
-	/*
-	@ Date: 2024-01-02,  Writer: 박태현
-	@ Explain
-	- 멀티쓰레드에서 안전하게 값을 바꾸기 위한 함수
-	*/
-	template<class T, class Value>
-	static bool CAS(REF_IN std::atomic<T>& _Data, Value _expected, const Value& _value) {
-		return _Data.compare_exchange_strong(_expected, _value);
+	template<class T>
+	static bool CAS_VALUE(std::atomic<T>& _origin, T _old, T _weak)
+	{
+		return _origin.compare_exchange_strong(_old, _weak);
 	}
 	/*
 	@ Date: 2024-01-02,  Writer: 박태현
@@ -330,6 +321,17 @@ namespace Core
 		_if.read((_char*)pText, size);
 		_str = pText;
 		ReleaseBuffer(pText);
+	}
+
+	static void SaveString(std::ofstream& _os, const _string& _str)
+	{
+		int size = (int)_str.length() + 1;
+		_os.write((char*)&size, sizeof(int));
+		_os.write((char*)_str.c_str(), size);
+	}
+	static void SaveString(std::ofstream& _os, const _wstring& _wstr)
+	{
+		SaveString(_os, ConvertWToS(_wstr));
 	}
 
 #pragma endregion FUNCTION

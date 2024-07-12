@@ -47,20 +47,22 @@ const char descriptor_table_protodef_Tag_2eproto[] PROTOBUF_SECTION_VARIABLE(pro
     "\n\tTAG_MUMMY\020\003\022\032\n\026TAG_SARCOPHAGUS_LAYING\020"
     "\004\022\034\n\030TAG_SARCOPHAGUS_STANDING\020\005*C\n\016TAG_P"
     "LAYERTYPE\022\017\n\013TAG_WARRIOR\020\000\022\016\n\nTAG_ARCHOR"
-    "\020\001\022\020\n\014TAG_MAGICAIN\020\002*\354\001\n\013TAG_MOBANIM\022\031\n\025"
+    "\020\001\022\020\n\014TAG_MAGICAIN\020\002*\242\002\n\013TAG_MOBANIM\022\031\n\025"
     "TAG_MOB_DISABLE_STATE\020\000\022\026\n\022TAG_MOB_IDLE_"
     "STATE\020\001\022\026\n\022TAG_MOB_MOVE_STATE\020\002\022\030\n\024TAG_M"
     "OB_ATTACK_STATE\020\003\022\027\n\023TAG_MOB_DEATH_STATE"
     "\020\004\022\025\n\021TAG_MOB_HIT_STATE\020\005\022\027\n\023TAG_MOB_SLE"
     "EP_STATE\020\006\022\027\n\023TAG_MOB_AWAKE_STATE\020\007\022\026\n\022T"
-    "AG_MOB_FIND_STATE\020\010*3\n\014TAG_COLLTYPE\022\020\n\014T"
-    "AG_COLL_HIT\020\000\022\021\n\rTAG_COLL_JUST\020\001b\006proto3"
+    "AG_MOB_FIND_STATE\020\010\022\033\n\027TAG_MOB_FIRSTFIND"
+    "_STATE\020\t\022\027\n\023TAG_MOB_TAUNT_STATE\020\n*3\n\014TAG"
+    "_COLLTYPE\022\020\n\014TAG_COLL_HIT\020\000\022\021\n\rTAG_COLL_"
+    "JUST\020\001b\006proto3"
 };
 static ::absl::once_flag descriptor_table_Tag_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Tag_2eproto = {
     false,
     false,
-    1120,
+    1174,
     descriptor_table_protodef_Tag_2eproto,
     "Tag.proto",
     &descriptor_table_Tag_2eproto_once,
@@ -133,9 +135,9 @@ const ::google::protobuf::EnumDescriptor* TAG_MOBANIM_descriptor() {
   return file_level_enum_descriptors_Tag_2eproto[4];
 }
 PROTOBUF_CONSTINIT const uint32_t TAG_MOBANIM_internal_data_[] = {
-    589824u, 0u, };
+    720896u, 0u, };
 bool TAG_MOBANIM_IsValid(int value) {
-  return 0 <= value && value <= 8;
+  return 0 <= value && value <= 10;
 }
 const ::google::protobuf::EnumDescriptor* TAG_COLLTYPE_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&descriptor_table_Tag_2eproto);

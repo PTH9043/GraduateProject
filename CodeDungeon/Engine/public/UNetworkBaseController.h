@@ -25,7 +25,7 @@ public:
 public:
 	virtual HRESULT NativeConstruct(const _string& _strIPAddress, const _int _PortNumber) PURE;
 	void SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize);
-	virtual void MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer) PURE;
+	virtual void MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer, void* _pMapData) PURE;
 	void AddNetworkInitData(_int _NetworkID, const NETWORKRECEIVEINITDATA& _NetworkInitData);
 	void AddCreatedNetworkActor(_int _NetworkID, CSHPTRREF<UActor> _spActor);
 

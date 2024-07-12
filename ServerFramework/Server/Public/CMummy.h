@@ -11,11 +11,15 @@ public:
 	DESTRUCTOR(CMummy)
 public:
 	virtual _bool Start(const VOIDDATAS& _ReceiveDatas = {}) override;
+	virtual void Tick(const _double& _dTimeDelta) override;
 	virtual void State(SHPTR<ASession> _spSession, _int _MonsterState = 0) override;
 private:
 	virtual void Free() override;
 private:
-	MUMMYTYPE		m_eMumyType;
+	MUMMYTYPE					m_eMumyType;
+	_bool									m_isInitWakeUp;
+
+	std::function<void()>		m_SendProtocolFunc;
 };
 
 END

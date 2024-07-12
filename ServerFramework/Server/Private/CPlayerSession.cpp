@@ -140,26 +140,14 @@ namespace Server {
 		{
 			SC_MONSTERRESOURCEDATA scMonsterResourceData;
 			VECTOR3 vPos;
-			VECTOR3 vRotate;
-			VECTOR3 vScale;
 			const MOBOBJCONTAINER& GameObjectContainer = _spCoreInstance->GetMobObjContainer();
 			for (auto& iter : GameObjectContainer)
 			{
-				if (true == iter.second->IsActive())
-					continue;
-
-				if (true == iter.second->IsPermanentDisable())
-					continue;
-
 				SHPTR<AAnimController> spAnimController = iter.second->GetAnimController();
 				Vector3 vPosVector = iter.second->GetTransform()->GetPos();
-				Vector3 vRotateVector = iter.second->GetTransform()->GetRotationValue();
-				Vector3 vScaleVector = iter.second->GetTransform()->GetScale();
 				PROTOFUNC::MakeVector3(&vPos, vPosVector.x, vPosVector.y, vPosVector.z);
-				PROTOFUNC::MakeVector3(&vRotate, vRotateVector.x, vRotateVector.y, vRotateVector.z);
-				PROTOFUNC::MakeVector3(&vScale, vScaleVector.x, vScaleVector.y, vScaleVector.z);
-				PROTOFUNC::MakeScMonsterResourceData(&scMonsterResourceData, iter.first, vPos, vRotate,
-					vScale, spAnimController->GetCurAnimIndex(), iter.second->GetMonsterType());
+				PROTOFUNC::MakeScMonsterResourceData(&scMonsterResourceData, iter.first, vPos, 
+					spAnimController->GetCurAnimIndex(), iter.second->GetCellIndex(), iter.second->GetMonsterType());
 
 				CombineProto(REF_OUT GetCopyBuffer(), REF_OUT GetPacketHead(), scMonsterResourceData, TAG_SC::TAG_SC_MONSTERRESOURCEDATA);
 				SendData(GetCopyBufferPointer(), GetPacketHead());
@@ -214,11 +202,15 @@ namespace Server {
 				// 영구적 비활성화
 				if (true == iter.second->IsPermanentDisable())
 					continue;
+
 				// 거리를 받아옴
-				_float fDistanace =  iter.second->GetTransform()->ComputeDistance(vPosition);
-				if (fDistanace <= SEE_RANGE)
+				_float fDistanace =  iter.second->GetTransform()->ComputeDistanceSq(vPosition);
+				if (true == iter.second->IsCanSee(iter.second->GetTransform()))
 				{
-					iter.second->InsertMobJobTimer(GetSessionID());
+					if (true == iter.second->IsChangeTargetPlayer(GetSessionID(), fDistanace))
+					{
+						iter.second->InsertMobJobTimer(GetSessionID());
+					}
 				}
 				else
 				{

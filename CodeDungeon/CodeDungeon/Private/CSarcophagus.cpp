@@ -65,7 +65,7 @@ void CSarcophagus::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 		SC_MONSTERSTATE scMonsterState;
 		scMonsterState.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
 
-		if (TAG_MOBANIM::MOB_FIND_STATE == scMonsterState.state())
+		if (TAG_MOBANIM::TAG_MOB_FIRSTFIND_STATE == scMonsterState.state())
 		{
 			SetFoundTargetState(true);
 		}
@@ -92,7 +92,6 @@ void CSarcophagus::TickActive(const _double& _dTimeDelta)
 
 	GetAnimationController()->Tick(_dTimeDelta);
 
-#ifndef _ENABLE_PROTOBUFF
 	if (GetFoundTargetState())
 	{
 		SetElapsedTime(GetElapsedTime() + _dTimeDelta * SarcophagusOpeningSpeed);
@@ -105,7 +104,6 @@ void CSarcophagus::TickActive(const _double& _dTimeDelta)
 	else
 		if (GetElapsedTime() < StandingSarcophagusTimeArcOpenEnd)
 			GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
-#endif
 
 	for (auto& Containers : GetColliderContainer())
 	{

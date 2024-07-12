@@ -21,11 +21,14 @@ public:
 public:
 	_bool NativeConstruct(SHPTR<ANavigation> _spNavigation);
 	// Find Path
-	LIST<SHPTR<ACell>> FindPath(Vector3 _vStartPos, Vector3 _vEndPos);
+	LIST<Vector3> FindPath(const Vector3& _vStartPos, const Vector3& _vEndPos);
+	Vector3 FindNextPos(const Vector3& _vStartPos, const Vector3& _vEndPos);
 	// Find Path
-	LIST<SHPTR<ACell>> FindPath(SHPTR<ATransform> _spStartTr, SHPTR<ATransform> _spEndTr);
+	LIST<Vector3> FindPath(SHPTR<ATransform> _spStartTr, SHPTR<ATransform> _spEndTr);
+	Vector3 FindNextPos(SHPTR<ATransform> _spStartTr, SHPTR<ATransform> _spEndTr);
 
-	LIST<SHPTR<ACell>> OptimizePath(const LIST<SHPTR<ACell>>& _path, SHPTR<ACell> _start, SHPTR<ACell> _end);
+	LIST<Vector3> OptimizePath(const LIST<SHPTR<ACell>>& _path, SHPTR<ACell> _start, SHPTR<ACell> _end);
+	Vector3 OptimizeNextPos(const LIST<SHPTR<ACell>>& _path, SHPTR<ACell> _start, SHPTR<ACell> _end);
 private:
 	void MakeRoutine(SHPTR<ACell> _spStartCell, SHPTR<ACell> _spEndCell);
 	void Release();

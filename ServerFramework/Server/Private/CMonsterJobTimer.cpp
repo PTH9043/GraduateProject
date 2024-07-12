@@ -11,6 +11,11 @@ namespace Server
 	{
 	}
 
+	void CMonsterJobTimer::RegisterTimer(_int _RegisterTimer)
+	{
+		__super::RegisterTimer(_RegisterTimer);
+	}
+
 	void CMonsterJobTimer::TickTimer(const TIMEREVENT& _TimerEvent)
 	{
 		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
