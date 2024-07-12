@@ -1464,5 +1464,11 @@
     <FxCompile Include="..\..\Shader\Compute2DSlash.hlsl">
       <Filter>98.ShaderFile\Common\Particle\Slash</Filter>
     </FxCompile>
+    <FxCompile Include="..\..\Shader\GrayScale.hlsl">
+      <Filter>98.ShaderFile\Common\HdrBloomBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\UpSamplingGray.hlsl">
+      <Filter>98.ShaderFile\Common\HdrBloomBlur</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

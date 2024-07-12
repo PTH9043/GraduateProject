@@ -5,7 +5,10 @@
 
 cbuffer FogBuffer : register(b14)
 {
-    bool IsFogOn;
+    int IsFogOn;
+    float3 padding;
+    int IsGrayScale;
+    float3 padding2;
 };
 
 
@@ -42,11 +45,34 @@ struct PS_OUT
     float4 vColor : SV_Target0;
 };
 
+
+
 PS_OUT PS_Main(PS_In Input)
 {
     PS_OUT Out = (PS_OUT) 0;
+    float4 baseColor = g_Texture0.Sample(g_Sampler_Normal, Input.vTexUV);
+    float transitionProgress = 0.0;
+    if (!IsGrayScale)
+    {
+        transitionProgress = 0.0f;
+        Out.vColor = baseColor;
+        
+    }
+    else
+    {
+        transitionProgress += fGrobalDeltaTime / 5.0f;
+      
+        
+        
+       
+        float4 targetColor = g_Texture6.Sample(g_Sampler_Normal, Input.vTexUV);
 
-    Out.vColor = g_Texture0.Sample(g_Sampler_Normal, Input.vTexUV); //BlendDeffered °á°ú¹°
+        
+        float blendFactor = saturate(transitionProgress);
+        Out.vColor = lerp(baseColor, targetColor, blendFactor);
+       
+    }
+   
     //if (Out.vColor.a == 0)
     //    discard;
     float3 vPosition = g_Texture2.Sample(g_Sampler_Normal, Input.vTexUV); //Position

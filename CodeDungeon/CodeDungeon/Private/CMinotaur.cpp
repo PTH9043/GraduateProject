@@ -55,7 +55,7 @@ HRESULT CMinotaur::NativeConstructClone(const VOIDDATAS& _Datas)
 		tDesc.wstrParticleShader = PROTO_RES_PARTICLEBLOOD2DSHADER;
 		tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
 		//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
-		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 3.5f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 8.f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 0.5f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.;
 		tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.3f;
@@ -108,7 +108,7 @@ HRESULT CMinotaur::NativeConstructClone(const VOIDDATAS& _Datas)
 void CMinotaur::TickActive(const _double& _dTimeDelta)
 {
 	_float3 pos = GetTransform()->GetPos();
-	pos.y += 5;
+	pos.y += 7.55;
 	m_spParticle->SetPosition(pos);
 
 	__super::TickActive(_dTimeDelta);
@@ -293,11 +293,12 @@ void CMinotaur::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 			{
 				if (!GetIsHItAlreadyState())
 				{
+					m_spParticle->SetActive(true);
+					m_spParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 					//등을 맞았을 때에만
 					if (dotProduct < -0.5f)
 					{
-						m_spParticle->SetActive(true);
-						m_spParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+						
 						// Decrease health on hit
 						DecreaseHealth(pCharacter->GetAttack());
 					}

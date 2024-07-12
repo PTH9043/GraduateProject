@@ -343,6 +343,7 @@
     <FxCompile Include="..\..\Shader\DownSampling.hlsl" />
     <FxCompile Include="..\..\Shader\DownSamplingTwo.hlsl" />
     <FxCompile Include="..\..\Shader\Equipment.hlsl" />
+    <FxCompile Include="..\..\Shader\GrayScale.hlsl" />
     <FxCompile Include="..\..\Shader\Guard.hlsl" />
     <FxCompile Include="..\..\Shader\Hdr.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DBloodEffect.hlsl" />
@@ -375,6 +376,7 @@
     <FxCompile Include="..\..\Shader\Shadow.hlsl" />
     <FxCompile Include="..\..\Shader\Trail.hlsl" />
     <FxCompile Include="..\..\Shader\UpSampling.hlsl" />
+    <FxCompile Include="..\..\Shader\UpSamplingGray.hlsl" />
     <FxCompile Include="..\..\Shader\VerticalBlur.hlsl" />
   </ItemGroup>
   <ItemGroup>
