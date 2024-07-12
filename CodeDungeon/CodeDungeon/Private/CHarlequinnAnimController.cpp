@@ -72,12 +72,11 @@ HRESULT CHarlequinnAnimController::NativeConstructClone(const VOIDDATAS& _tDatas
 
 void CHarlequinnAnimController::Tick(const _double& _dTimeDelta)
 {
-    // Create random engine and distributions
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis_patrol(0, 3);  // for patrol random values
-    std::uniform_int_distribution<> dis_attack(0, 3);  // for attack random values
-    std::uniform_int_distribution<> dis_dodge(0, 1);   // for dodge random values
+    std::uniform_int_distribution<> dis_patrol(0, 3);  
+    std::uniform_int_distribution<> dis_attack(0, 3);  
+    std::uniform_int_distribution<> dis_dodge(0, 1);   
 
     SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
