@@ -8,6 +8,7 @@ namespace Engine {
 		PAWN_PLAYER,
 		PAWN_ITEM,
 		PAWN_STATICOBJ,
+		PAWN_PROJECTILE,
 		PAWN_ECT
 	};
 

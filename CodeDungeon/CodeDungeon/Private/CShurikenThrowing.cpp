@@ -57,7 +57,7 @@ HRESULT CShurikenThrowing::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	}
 
 
-	SetPawnType(PAWNTYPE::PAWN_STATICOBJ);
+	SetPawnType(PAWNTYPE::PAWN_PROJECTILE);
 
 	return S_OK;
 }
@@ -70,7 +70,7 @@ void CShurikenThrowing::ThrowShurikens(const _double& _dTimeDelta, _float3 _dir)
 		_float ActiveDistance = 100;
 
 		// 이동 속도와 회전 속도 설정
-		_float moveSpeed = 150;
+		_float moveSpeed = 250;
 		_float rotateSpeed = 720.0f; 
 
 		// 이동 및 회전 로직 (프레임 단위로)
@@ -124,11 +124,11 @@ HRESULT CShurikenThrowing::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRRE
 {
 	if (m_bisThrown)
 	{
-		SetOutline(true);
+		/*SetOutline(true);*/
 		__super::RenderActive(_spCommand, _spTableDescriptor);
 	}
 	else
-		SetOutline(false);
+		/*SetOutline(false);*/
 	return S_OK;
 }
 

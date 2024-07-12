@@ -67,12 +67,21 @@ public:
     _double GetElapsedTime() const { return m_delapsedTime; }
     void SetElapsedTime(_double _dvalue) { m_delapsedTime = _dvalue; }
 
+    _float GetActivationRange() const { return m_fActivationRange; }
+    void SetActivationRange(_float _dvalue) { m_fActivationRange = _dvalue; }
+    _float GetDeactivationRange() const { return m_fDeactivationRange; }
+    void SetDeactivationRange(_float _dvalue) { m_fDeactivationRange = _dvalue; }
+
 
 private:
     _float m_fDistancefromNearestPlayer;
     _bool m_bFoundTarget;
     SHPTR<UPlayer> m_spTargetPlayer;
     _float3 m_f3TargetPos;
+
+    _float                          m_fActivationRange;
+    _float                          m_fDeactivationRange;
+
 
     _double                         m_dtimeAccumulator;
     _double                         m_delapsedTime;

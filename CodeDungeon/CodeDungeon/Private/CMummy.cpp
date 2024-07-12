@@ -134,6 +134,8 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 	}
 
 	SetHealth(100);
+	SetActivationRange(30);
+	SetDeactivationRange(80);
 
 	return S_OK;
 }
@@ -258,6 +260,10 @@ GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
 void CMummy::LateTickActive(const _double& _dTimeDelta)
 {
 	__super::LateTickActive(_dTimeDelta);
+
+	_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
+	GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
+
 	//for (auto& Colliders : GetColliderContainer())
 	//	if(Colliders.first == L"Main")
 	//		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);

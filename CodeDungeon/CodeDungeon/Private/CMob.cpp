@@ -20,7 +20,9 @@ CMob::CMob(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONE
 	m_spTargetPlayer{ nullptr },
 	m_f3TargetPos{},
 	m_dtimeAccumulator{ 0 },
-	m_delapsedTime{ 0 }
+	m_delapsedTime{ 0 },
+	m_fActivationRange{ 0 },
+	m_fDeactivationRange{0}
 {
 }
 
@@ -31,7 +33,9 @@ CMob::CMob(const CMob& _rhs)
 	m_spTargetPlayer{ nullptr },
 	m_f3TargetPos{},
 	m_dtimeAccumulator{ 0 },
-	m_delapsedTime{ 0 }
+	m_delapsedTime{ 0 },
+	m_fActivationRange{ 0 },
+	m_fDeactivationRange{ 0 }
 {
 }
 
@@ -91,9 +95,6 @@ void CMob::LateTickActive(const _double& _dTimeDelta)
 		vPosition = GetTransform()->GetPos();
 	}
 
-	_float newHeight = GetCurrentNavi()->ComputeHeight(vPosition);
-	GetTransform()->SetPos(_float3(vPosition.x, newHeight, vPosition.z));
-
 	__super::LateTickActive(_dTimeDelta);
 }
 
@@ -119,13 +120,10 @@ void CMob::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 void CMob::SearchForPlayers()
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	
-	float activationRange = 40.0f;
-	float deactivationRange = 80.f;
-	
-	if (m_fDistancefromNearestPlayer < activationRange)
+
+	if (m_fDistancefromNearestPlayer < m_fActivationRange)
 		m_bFoundTarget = true;
-	else if(m_fDistancefromNearestPlayer >= deactivationRange)
+	else if(m_fDistancefromNearestPlayer >= m_fDeactivationRange)
 		m_bFoundTarget = false;
 }
 

@@ -101,7 +101,8 @@ HRESULT CMinotaur::NativeConstructClone(const VOIDDATAS& _Datas)
 	}
 
 	SetHealth(200);
-
+	SetActivationRange(50);
+	SetDeactivationRange(80);
 	return S_OK;
 }
 
@@ -244,6 +245,10 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 void CMinotaur::LateTickActive(const _double& _dTimeDelta)
 {
 	__super::LateTickActive(_dTimeDelta);
+
+	_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
+	GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
+
 	/*for (auto& Colliders : GetColliderContainer())
 		if(Colliders.first == L"Main")
 			Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);*/
