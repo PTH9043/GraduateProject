@@ -106,7 +106,7 @@ private:
 
 	_float									m_fMoveSpeed;
 	_float									m_fRunSpeed;
-	_bool									m_isActive;
+	ATOMIC<_bool>				m_isActive;
 	ATOMIC<_bool>				m_isPermanentDisable;
 
 	PACKETHEAD					m_CopyHead;

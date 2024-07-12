@@ -24,23 +24,37 @@ namespace Core {
 		return true;
 	}
 
-	LIST<SHPTR<ACell>> APathFinder::FindPath(Vector3 _vStartPos, Vector3 _vEndPos)
+	LIST<Vector3> APathFinder::FindPath(const Vector3& _vStartPos, const Vector3& _vEndPos)
 	{
 		Release();
 		SHPTR<ACell> spStartCell = m_spNavigation->FindCell(_vStartPos);
 		SHPTR<ACell> spEndCell = m_spNavigation->FindCell(_vEndPos);
-		RETURN_CHECK(nullptr == spStartCell || nullptr == spEndCell, LIST<SHPTR<ACell>>{});
+		RETURN_CHECK(nullptr == spStartCell || nullptr == spEndCell, LIST<Vector3>{});
 		MakeRoutine(spStartCell, spEndCell);
-		m_SavePathList = OptimizePath(m_SavePathList, spStartCell, spEndCell);
-		return m_SavePathList;
+		LIST<Vector3> pathList = OptimizePath(m_SavePathList, spStartCell, spEndCell);
+		return std::move(pathList);
 	}
 
-	LIST<SHPTR<ACell>> APathFinder::FindPath(SHPTR<ATransform> _spStartTr, SHPTR<ATransform> _spEndTr)
+	Vector3 APathFinder::FindNextPos(const Vector3& _vStartPos, const Vector3& _vEndPos)
+	{
+		SHPTR<ACell> spStartCell = m_spNavigation->FindCell(_vStartPos);
+		SHPTR<ACell> spEndCell = m_spNavigation->FindCell(_vEndPos);
+		RETURN_CHECK(nullptr == spStartCell || nullptr == spEndCell, Vector3{});
+		MakeRoutine(spStartCell, spEndCell);
+		return std::move(OptimizeNextPos(m_SavePathList, spStartCell, spEndCell));
+	}
+
+	LIST<Vector3> APathFinder::FindPath(SHPTR<ATransform> _spStartTr, SHPTR<ATransform> _spEndTr)
 	{
 		return FindPath(_spStartTr->GetPos(), _spEndTr->GetPos());
 	}
 
-	LIST<SHPTR<ACell>> APathFinder::OptimizePath(const LIST<SHPTR<ACell>>& _path, SHPTR<ACell> _start, SHPTR<ACell> _end)
+	Vector3 APathFinder::FindNextPos(SHPTR<ATransform> _spStartTr, SHPTR<ATransform> _spEndTr)
+	{
+		return FindNextPos(_spStartTr->GetPos(), _spEndTr->GetPos());
+	}
+
+	LIST<Vector3> APathFinder::OptimizePath(const LIST<SHPTR<ACell>>& _path, SHPTR<ACell> _start, SHPTR<ACell> _end)
 	{
 		VECTOR<SHPTR<ACell>> optimizedPath;
 		optimizedPath.reserve(_path.size() + 2);
@@ -53,17 +67,37 @@ namespace Core {
 		optimizedPath.push_back(_end);
 
 		// Simplify the path
-		LIST<SHPTR<ACell>> straightPath;
+		LIST<Vector3> straightPath;
 		SHPTR<ACell> lastPoint = _start;
-		straightPath.push_back(lastPoint);
 		for (size_t i = 1; i < optimizedPath.size() - 1; ++i) {
 			if (!LineTest(lastPoint->GetCenterPos(), optimizedPath[i + 1]->GetCenterPos())) {
-				straightPath.push_back(optimizedPath[i]);
+				straightPath.push_back(optimizedPath[i]->GetCenterPos());
 				lastPoint = optimizedPath[i];
 			}
 		}
-		straightPath.push_back(_end);
+		straightPath.push_back(_end->GetCenterPos());
 		return straightPath;
+	}
+
+	Vector3 APathFinder::OptimizeNextPos(const LIST<SHPTR<ACell>>& _path, SHPTR<ACell> _start, SHPTR<ACell> _end)
+	{
+		VECTOR<SHPTR<ACell>> optimizedPath;
+		optimizedPath.reserve(_path.size() + 2);
+
+		optimizedPath.push_back(_start);
+		for (const auto& cell : _path) {
+			optimizedPath.push_back(cell);
+		}
+		// Add end point
+		optimizedPath.push_back(_end);
+
+		SHPTR<ACell> lastPoint = _start;
+		for (size_t i = 1; i < optimizedPath.size() - 1; ++i) {
+			if (!LineTest(lastPoint->GetCenterPos(), optimizedPath[i + 1]->GetCenterPos())) {
+				return optimizedPath[i]->GetCenterPos();
+			}
+		}
+		return {};
 	}
 
 	void APathFinder::MakeRoutine(SHPTR<ACell> _spStartCell, SHPTR<ACell> _spEndCell)

@@ -20,7 +20,8 @@ class AJobTimer;
 class AMonster;
 class AServerService;
 
-using NAVIGATIONWORKBENCH = ARRAY<SHPTR<ANavigation>, TLS::MAX_WORKTHREAD + EXTRA_NAV_COUNT>;
+using NAVIGATIONWORKBENCH = ARRAY<SHPTR<ANavigation>, TLS::MAX_WORKTHREAD>;
+using PATHFINDERWORKBENCH = ARRAY<SHPTR<APathFinder>, TLS::MAX_WORKTHREAD>;
 
 using SESSIONCONTAINER = CONUNORMAP<SESSIONID, SHPTR<ASession>>;
 using MOBOBJCONTAINER = CONUNORMAP<SESSIONID, SHPTR<AMonster>>;
@@ -85,6 +86,7 @@ public: /* MySqlDriver */
 public: /* Navigation*/
 	// Compute Height
 	SHPTR<ANavigation> GetNavigation(_int _index = TLS::g_ThreadID) const { return m_NavigationWorkBench[_index]; }
+	SHPTR<APathFinder> GetPathFinder(_int _index = TLS::g_ThreadID) const { return m_PathFinderWorkBench[_index]; }
 private:
 	virtual void Free() override;
 private:
@@ -96,6 +98,7 @@ private:
 	SHPTR< AMySqlDriver>				m_spMySqlDriver;
 
 	NAVIGATIONWORKBENCH			m_NavigationWorkBench;
+	PATHFINDERWORKBENCH			m_PathFinderWorkBench;
 };
 
 END

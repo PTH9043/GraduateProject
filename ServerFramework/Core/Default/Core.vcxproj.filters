@@ -130,12 +130,6 @@
     <Filter Include="03.Network\AGameObject">
       <UniqueIdentifier>{6eee76c7-f955-4782-896b-71c9159bd679}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97.Utility\Math">
-      <UniqueIdentifier>{1e6b352a-b1ed-457d-8e9d-fa258638a1ec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.Network\JobTimer\AStar">
-      <UniqueIdentifier>{0855ea34-640e-4f37-85e3-17745638d07a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03.Network\AGameObject\Build">
       <UniqueIdentifier>{a09e1466-cfe9-4c97-8c55-e53b63d09ba5}</UniqueIdentifier>
     </Filter>
@@ -324,14 +318,8 @@
     <ClInclude Include="..\Public\AAnimEvent.h">
       <Filter>08.Animator\Event</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\MathLib\CusMath.h">
-      <Filter>97.Utility\Math</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\AMonster.h">
       <Filter>03.Network\AGameObject\Pawn\Monster</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\APathJobTimer.h">
-      <Filter>03.Network\JobTimer\AStar</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\AAnimation.h">
       <Filter>08.Animator\Anim</Filter>
@@ -476,14 +464,8 @@
     <ClCompile Include="..\Private\AAnimEvent.cpp">
       <Filter>08.Animator\Event</Filter>
     </ClCompile>
-    <ClCompile Include="..\Public\MathLib\CusMath.cpp">
-      <Filter>97.Utility\Math</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\AMonster.cpp">
       <Filter>03.Network\AGameObject\Pawn\Monster</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\APathJobTimer.cpp">
-      <Filter>03.Network\JobTimer\AStar</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\AAnimation.cpp">
       <Filter>08.Animator\Anim</Filter>
@@ -512,10 +494,5 @@
     <ClCompile Include="..\Private\AAnimController.cpp">
       <Filter>08.Animator\Controller</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Public\MathLib\CusMath.inl">
-      <Filter>97.Utility\Math</Filter>
-    </None>
   </ItemGroup>
 </Project>

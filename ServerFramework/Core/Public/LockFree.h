@@ -409,6 +409,22 @@ namespace Core
 
 			auto begin() { return &m_Head; }
 			auto end()  { return &m_Tail; }
+
+			_int Size() {
+				_int num = 0;
+				LFNODE<T>* curr = &m_Head;
+				LFNODE<T>* last = &m_Tail;
+				while (true) {
+					curr = curr->GetNext();
+					if (last == curr)
+					{
+						m_EBRController.end_op();
+						return num;
+					}
+					++num;
+				}
+				return num;
+			}
 		private:
 			void Find(T _value, LFNODE<T>*& _prev, LFNODE<T>*& _curr)
 			{

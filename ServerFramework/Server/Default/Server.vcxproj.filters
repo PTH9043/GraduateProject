@@ -49,6 +49,15 @@
     <Filter Include="05.AnimController\Sacrophagus">
       <UniqueIdentifier>{d2bfc898-87ac-4435-8a85-192f4eec63ad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.Session\Monster\Chest">
+      <UniqueIdentifier>{495a9a85-7b70-4dc0-a256-85e81f03b31b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="91.Saver">
+      <UniqueIdentifier>{9412cc0a-2d52-4538-a62c-0a3f0c793a78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.AnimController\Chest">
+      <UniqueIdentifier>{5d7cd28b-96ed-4c94-8b72-613be2ab66c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -81,6 +90,15 @@
     <ClCompile Include="..\Private\CMummyAnimController.cpp">
       <Filter>05.AnimController\Mummy</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\CChest.cpp">
+      <Filter>03.Session\Monster\Chest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CMobLayOutSaver.cpp">
+      <Filter>91.Saver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CChestAnimController.cpp">
+      <Filter>05.AnimController\Chest</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\CServerApp.h">
@@ -112,6 +130,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\CMummyAnimController.h">
       <Filter>05.AnimController\Mummy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CChest.h">
+      <Filter>03.Session\Monster\Chest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CMobLayOutSaver.h">
+      <Filter>91.Saver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CChestAnimController.h">
+      <Filter>05.AnimController\Chest</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

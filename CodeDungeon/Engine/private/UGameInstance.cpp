@@ -924,10 +924,10 @@ void UGameInstance::StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBas
 	m_spNetworkQueryProcessing = _spNetworkQueryProcessing;
 }
 
-void UGameInstance::MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer)
+void UGameInstance::MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer, void* _pMapData)
 {
 	assert(nullptr != m_spNetworkBaseController);
-	m_spNetworkBaseController->MakeActors(_actorContainer);
+	m_spNetworkBaseController->MakeActors(_actorContainer, _pMapData);
 }
 
 void UGameInstance::SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize)

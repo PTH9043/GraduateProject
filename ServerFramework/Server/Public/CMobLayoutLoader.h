@@ -5,14 +5,6 @@
 
 BEGIN(Server)
 
-struct MOBDATA {
-	Core::_string			strAnimModelName;
-	Core::_string			strAnimName;
-	Core::_float4x4	mWorldMatrix;
-
-	MOBDATA() : strAnimModelName{ "" }, strAnimName{ "" }, mWorldMatrix{ Core::_float4x4::Identity } {}
-};
-
 class CMobLayoutLoader {
 public:
 	CMobLayoutLoader(const _string& _strPath);

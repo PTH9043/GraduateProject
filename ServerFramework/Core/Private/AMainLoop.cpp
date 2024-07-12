@@ -49,7 +49,7 @@ namespace Core {
 			{
 				for (auto& iter : aliveMonster)
 				{
-					iter->GetAnimController()->Tick(dTimeDelta);
+					iter->Tick(dTimeDelta);
 				}
 			}
 		}

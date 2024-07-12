@@ -3,6 +3,7 @@
 #include "AAnimator.h"
 #include "APawn.h"
 #include "ATransform.h"
+#include "AAnimation.h"
 
 namespace Core {
 
@@ -10,7 +11,7 @@ namespace Core {
 		const _string& _strFolderPath, const _string& _strFileName) :
 		ACoreObject(OBJCON_CONDATA), m_spAnimator{ Create<AAnimator>(OBJCON_CONDATA,
 			_strFolderPath, _strFileName)}, m_wpOwnerPawn{_spPawn},
-		m_dAccumulator{0},m_dElapsedTime{0}, m_strInputTrigger{""}, m_iPawnState{0}
+		m_dAccumulator{0},m_dElapsedTime{0}, m_strInputTrigger{""}, m_iPawnState{0}, m_iAnimState{0}
 	{
 	}
 
@@ -93,6 +94,17 @@ namespace Core {
 		return m_spAnimator->IsCollisionAttackCollider(_spEnemyCollider);
 	}
 
+	void AAnimController::UpdateState(const _string& _strTrigger, const _int _AnimState)
+	{
+		SHPTR<AAnimator> spAnimator = GetAnimator();
+		spAnimator->ResetCurAnimEvent();
+		{
+			AWriteSpinLockGuard(m_TriggerLock);
+			m_strInputTrigger = _strTrigger;
+		}
+		m_iAnimState = _AnimState;
+	}
+
 	const _int AAnimController::GetCurAnimIndex() const
 	{
 		return m_spAnimator->GetCurAnimIndex();
@@ -144,6 +156,11 @@ namespace Core {
 			if (true == m_iPawnState.compare_exchange_strong(iPawnState, _State))
 				break;
 		}
+	}
+
+	void AAnimController::SetAnimState(_int _iAnimState)
+	{
+		m_iAnimState = _iAnimState;
 	}
 
 	void AAnimController::Free()

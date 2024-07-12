@@ -11,9 +11,9 @@
 #pragma once
 
 #ifdef MATHDLL_ENABLE
-#define MATH_DLL   _declspec(dllexport)
+#define MATH_DLL   
 #else
-#define MATH_DLL  _declspec(dllimport)
+#define MATH_DLL  
 #endif
 
 

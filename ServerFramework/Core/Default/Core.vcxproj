@@ -36,7 +36,6 @@
     <ClInclude Include="..\Public\APawn.h" />
     <ClInclude Include="..\Public\ARootBoneNode.h" />
     <ClInclude Include="..\Public\ASqlLoginTable.h" />
-    <ClInclude Include="..\Public\APathJobTimer.h" />
     <ClInclude Include="..\Public\CoreConcept.h" />
     <ClInclude Include="..\Public\CoreDefines.h" />
     <ClInclude Include="..\Public\CoreEnum.h" />
@@ -53,7 +52,6 @@
     <ClInclude Include="..\Public\DBDataGroup.h" />
     <ClInclude Include="..\Public\Lock.h" />
     <ClInclude Include="..\Public\LockFree.h" />
-    <ClInclude Include="..\Public\MathLib\CusMath.h" />
     <ClInclude Include="..\Public\Memory.h" />
     <ClInclude Include="..\Public\SmartPointer.h" />
     <ClInclude Include="..\Public\ACoreApp.h" />
@@ -99,7 +97,6 @@
     <ClCompile Include="..\Private\APawn.cpp" />
     <ClCompile Include="..\Private\ARootBoneNode.cpp" />
     <ClCompile Include="..\Private\ASqlLoginTable.cpp" />
-    <ClCompile Include="..\Private\APathJobTimer.cpp" />
     <ClCompile Include="..\Private\CoreGrobal.cpp" />
     <ClCompile Include="..\Private\CustomString.cpp" />
     <ClCompile Include="..\Private\DBDataGroup.cpp" />
@@ -131,10 +128,6 @@
     <ClCompile Include="..\Private\ASpaceManager.cpp" />
     <ClCompile Include="..\Private\AThreadManager.cpp" />
     <ClCompile Include="..\Private\ATransform.cpp" />
-    <ClCompile Include="..\Public\MathLib\CusMath.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Public\MathLib\CusMath.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -261,6 +254,7 @@
       <PreprocessorDefinitions>_SILENCE_ALL_CXX23_DEPRECATION_WARNINGS;CORE_EXPORTS;_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <StructMemberAlignment>Default</StructMemberAlignment>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -283,6 +277,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <StructMemberAlignment>Default</StructMemberAlignment>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

@@ -29,6 +29,8 @@ public:
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _tDatas) override;
 	// Tick
 	virtual void Tick(const _double& _dTimeDelta) override;
+	// 네트워크 정보를 받아오는 함수
+	virtual void ReceiveNetworkProcessData(void* _pData) override;
 private:
 	WKPTR< CMummy>			m_wpMummyMob;
 
@@ -42,6 +44,7 @@ private:
 	_bool					m_bFoundPlayerFirsttime;
 	_double					m_didleRandomValueChoosingTimer;
 	_int					m_iRandomValue;
+	_double				m_dRecvAnimDuration;
 
 };
 

@@ -49,14 +49,16 @@ HRESULT CMob::NativeConstructClone(const VOIDDATAS& _Datas)
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);	
 
 #ifdef _ENABLE_PROTOBUFF
-	{
-		assert(_Datas.size() >= 2);
-		MOBNETWORKDATA MobNetworkData = UMethod::ConvertTemplate_Index<MOBNETWORKDATA>(_Datas, MOBORDER);
-		GetTransform()->SetPos(MobNetworkData.vPos);
-		GetTransform()->RotateFix(MobNetworkData.vRotate);
-		GetTransform()->SetScale(MobNetworkData.vScale);
-		GetAnimModel()->SetAnimation(MobNetworkData.iAnimIndex);
-	}
+	//{
+	//	assert(_Datas.size() >= 2);
+	//	MOBNETWORKDATA MobNetworkData = UMethod::ConvertTemplate_Index<MOBNETWORKDATA>(_Datas, MOBORDER);
+	//	GetTransform()->SetPos(MobNetworkData.vPos);
+	//	GetTransform()->RotateFix(MobNetworkData.vRotate);
+	//	GetTransform()->SetScale(MobNetworkData.vScale);
+	//	GetAnimModel()->SetAnimation(MobNetworkData.iAnimIndex);
+	//}
+
+	GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
 #else
 	GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
 #endif

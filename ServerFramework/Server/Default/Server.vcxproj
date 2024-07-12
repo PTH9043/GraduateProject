@@ -19,8 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\CChest.h" />
+    <ClInclude Include="..\Public\CChestAnimController.h" />
     <ClInclude Include="..\Public\CMobLayoutLoader.h" />
     <ClInclude Include="..\Public\CMonsterJobTimer.h" />
+    <ClInclude Include="..\Public\CMobLayOutSaver.h" />
     <ClInclude Include="..\Public\CMummy.h" />
     <ClInclude Include="..\Public\CMummyAnimController.h" />
     <ClInclude Include="..\Public\CSacrophagusAnimController.h" />
@@ -31,8 +34,11 @@
     <ClInclude Include="..\Public\CPlayerSession.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\CChest.cpp" />
+    <ClCompile Include="..\Private\CChestAnimController.cpp" />
     <ClCompile Include="..\Private\CMobLayoutLoader.cpp" />
     <ClCompile Include="..\Private\CMonsterJobTimer.cpp" />
+    <ClCompile Include="..\Private\CMobLayOutSaver.cpp" />
     <ClCompile Include="..\Private\CMummy.cpp" />
     <ClCompile Include="..\Private\CMummyAnimController.cpp" />
     <ClCompile Include="..\Private\CSacrophagusAnimController.cpp" />

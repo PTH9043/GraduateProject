@@ -10,9 +10,10 @@ namespace Core
 {
 	AMonster::AMonster(OBJCON_CONSTRUCTOR, SESSIONID _ID, SHPTR<AJobTimer> _spMonsterJobTimer) :
 		APawn(OBJCON_CONDATA, _ID, SESSIONTYPE::MONSTER), m_vNextPos{},
-		m_MobState{ MOB_END }, m_RoomIndex{}, m_PathList{}, m_strAnimTriggerName{""}, m_strCurAnimName{""}, 
+		m_MobState{ MOB_DISABLE_STATE }, m_RoomIndex{}, m_PathList{}, m_strAnimTriggerName{""}, m_strCurAnimName{""}, 
 		m_wpMonsterJobTimer{_spMonsterJobTimer}, m_isFoundPlayerFistTime{false}, m_fActiveRange{0},
-		m_fDeactiveRange{0}, m_iMonsterType{0}, m_fDistanceToPlayer{0}
+		m_fDeactiveRange{0}, m_iMonsterType{0}, m_fDistanceToPlayer{0},
+		m_isCurrentFindPlayer{false}, m_fMoveSpeed{0}, m_CurrentTargetPlayerID{-1}
 	{
 	
 	}
@@ -21,10 +22,10 @@ namespace Core
 		return __super::Start(_ReceiveDatas);
 	}
 
-	_bool AMonster::IsFindPlayer(SHPTR<ASession> _spSession)
+	void AMonster::FindPlayer(SHPTR<ASession> _spSession)
 	{
 		if (true == _spSession->IsPermanentDisable())
-			return false;
+			return;
 
 		SHPTR<ATransform> spMobTr = GetTransform();
 		SHPTR<ATransform> spPlayerTr = _spSession->GetTransform();
@@ -34,17 +35,30 @@ namespace Core
 			Vector3 vDirection = vPlayerPos - vMobPos;
 
 			m_fDistanceToPlayer = vDirection.LengthSquared();
-			if (m_fDistanceToPlayer <= m_fActiveRange )
+			SetCurrentFindPlayer(false);
+
+			if (m_fDistanceToPlayer <= m_fAttackRange)
 			{
-				SetMonsterState(MONSTERSTATE::MOB_FIND);
+				SetMonsterState(MONSTERSTATE::MOB_ATTACK_STATE);
+			}
+			else if (m_fDistanceToPlayer <= m_fActiveRange )
+			{
+				SetMonsterState(MONSTERSTATE::MOB_FIND_STATE);
+				SetCurrentFindPlayer(true);
 			}
 			else if (m_fDeactiveRange >= m_fDistanceToPlayer)
 			{
-				SetMonsterState(MONSTERSTATE::MOB_MOVE);
+				SetMonsterState(MONSTERSTATE::MOB_MOVE_STATE);
 			}
 		}
-		return false;
 	}
+
+	void AMonster::Tick(const _double& _dTimeDelta)
+	{
+		SHPTR<AAnimController> spAnimController = GetAnimController();
+		spAnimController->Tick(_dTimeDelta);
+	}
+
 
 	void AMonster::InsertMobJobTimer(_int _PlayerID)
 	{
@@ -60,13 +74,25 @@ namespace Core
 		}
 	}
 
-	void AMonster::InsertPathList(LIST<SHPTR<ACell>>& _PathList)
+	_bool AMonster::IsChangeTargetPlayer(SESSIONID _TargetPlayerID, _float _fDistance)
 	{
-		m_PathList.Clear();
-		for (auto& iter : _PathList)
+		std::atomic_thread_fence(std::memory_order_seq_cst);
+		SESSIONID CurrentTargetPlayerID = m_CurrentTargetPlayerID;
+		_float DistanceToPlayer = m_fDistanceToPlayer;
+
+		if (CurrentTargetPlayerID == _TargetPlayerID)
+			return true;
+
+		if (-1 == CurrentTargetPlayerID)
+			return true;
+
+		if (DistanceToPlayer > _fDistance)
 		{
-			m_PathList.Insert(iter);
+			m_CurrentTargetPlayerID = _TargetPlayerID;
+			return true;
 		}
+
+		return false;
 	}
 
 	void AMonster::SetMonsterState(const MONSTERSTATE _MonsterState)
@@ -81,15 +107,17 @@ namespace Core
 
 	void AMonster::SetFoundPlayerFirstTime(_bool _isFindFirstTime)
 	{
-		_bool isFound = IsFoundPlayerFirstTime();
-		if (_isFindFirstTime == isFound)
-			return;
+		m_isFoundPlayerFistTime = _isFindFirstTime;
+	}
 
-		while (true)
+	void AMonster::InsertPathList(LIST<Vector3>&& _PathList)
+	{
+		std::atomic_thread_fence(std::memory_order_seq_cst);
+		m_PathList.clear();
+
+		for (LIST<Vector3>::reverse_iterator it = _PathList.rbegin(); it != _PathList.rend(); ++it)
 		{
-			isFound = m_isFoundPlayerFistTime.load();
-			if (m_isFoundPlayerFistTime.compare_exchange_strong(isFound, _isFindFirstTime))
-				break;
+			m_PathList.Push(*it);
 		}
 	}
 
@@ -97,6 +125,25 @@ namespace Core
 	{
 		m_fActiveRange = _fActiveRange * _fActiveRange;
 		m_fDeactiveRange = _fDeactiveRange * _fDeactiveRange;
+	}
+
+	void AMonster::MoveToNextPos(const _double& _dTimeDelta)
+	{
+		if (false == m_PathList.IsEmpty())
+		{
+			m_vNextPos = m_PathList.Pop();
+			GetTransform()->TranslatePos(m_vNextPos, _dTimeDelta, m_fMoveSpeed);
+		}
+	}
+
+	void AMonster::SetTargetPlayerID(const SESSIONID _SessionID)
+	{
+		m_CurrentTargetPlayerID = _SessionID;
+	}
+
+	void AMonster::SetCurrentFindPlayer(const _bool _isFindPlayer)
+	{
+		m_isCurrentFindPlayer = _isFindPlayer;
 	}
 
 	void AMonster::Free()

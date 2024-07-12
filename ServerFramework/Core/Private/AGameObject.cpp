@@ -122,11 +122,15 @@ namespace Core
 
 	void AGameObject::SetActive(const _bool _isActive)
 	{
+		m_isActive = _isActive;
 		while (true)
 		{
-			_bool isActive = m_isActive;
-			if (true == CAS(&m_isActive, isActive, _isActive))
+			_bool value = m_isActive.load();
+
+			if (true == CAS_VALUE(m_isActive, value, _isActive))
+			{
 				break;
+			}
 		}
 	}
 

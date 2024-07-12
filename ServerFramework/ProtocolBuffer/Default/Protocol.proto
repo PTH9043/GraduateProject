@@ -98,14 +98,9 @@ message SC_MONSTERRESOURCEDATA
 	float posX = 2;
 	float posY = 3;
 	float posZ = 4;
-	float rotateX = 5;
-	float rotateY = 6;
-	float rotateZ = 7;
-	float scaleX = 8;
-	float scaleY = 9;
-	float scaleZ = 10;
-	int64 animindex = 11;
-	int64 type = 12;
+	int64 animindex = 5;
+	int64 cellIndex = 6;
+	int64 type = 7;
 }
 
 message SC_START_INFORMATION_SUCCESS {

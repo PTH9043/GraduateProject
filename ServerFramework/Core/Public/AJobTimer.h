@@ -18,7 +18,7 @@ public:
 	AJobTimer(OBJCON_CONSTRUCTOR, Asio::io_context& _context);
 	DESTRUCTOR(AJobTimer)
 public:
-	void RegisterTimer(_int _RegisterTimer);
+	virtual void RegisterTimer(_int _RegisterTimer);
 	void TimerThread(const boost::system::error_code& _error);
 	void InsertTimerEvent(TIMEREVENT _TimerEvent);
 protected:

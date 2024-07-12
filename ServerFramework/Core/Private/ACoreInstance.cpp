@@ -33,6 +33,11 @@ namespace Core
 		{
 			Navigation = CreateInitNative<ANavigation>("..\\..\\Resource\\Navigation\\interior.bin");
 		}
+
+		for (_int i = 0; i < m_PathFinderWorkBench.size(); ++i)
+		{
+			m_PathFinderWorkBench[i] = CreateInitNative<APathFinder>(m_NavigationWorkBench[i]);
+		}
 	}
 
 	_bool ACoreInstance::Start()

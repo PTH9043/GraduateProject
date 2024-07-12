@@ -11,6 +11,7 @@ public:
 	CMonsterJobTimer(OBJCON_CONSTRUCTOR, Asio::io_context& _context);
 	DESTRUCTOR(CMonsterJobTimer)
 protected:
+	virtual void RegisterTimer(_int _RegisterTimer) override;
 	virtual void TickTimer(const TIMEREVENT& _TimerEvent) override;
 private:
 	virtual void Free() override;

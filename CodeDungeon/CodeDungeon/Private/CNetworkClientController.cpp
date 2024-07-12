@@ -8,6 +8,8 @@
 #include "UMethod.h"
 #include "CMummy.h"
 #include "CSarcophagus.h"
+#include "CMap.h"
+#include "CMob.h"
 
 CNetworkClientController::CNetworkClientController()
 {
@@ -19,9 +21,11 @@ HRESULT CNetworkClientController::NativeConstruct(const _string& _strIPAddress, 
 	return S_OK;
 }
 
-void CNetworkClientController::MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer)
+void CNetworkClientController::MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer, void* _pMapData)
 {
 #ifdef _ENABLE_PROTOBUFF
+	CMap* pMap = static_cast<CMap*>(_pMapData);
+
 	for (auto& CharInitData : GetNetworkInitDataContainer())
 	{
 		switch (CharInitData.second.iType)
@@ -57,15 +61,18 @@ void CNetworkClientController::MakeActors(const VECTOR<SHPTR<UActor>>& _actorCon
 		}
 		break;
 		case TAG_CHAR::TAG_MUMMY:
+		{
+
+		}
+		break;
 		case TAG_CHAR::TAG_SARCOPHAGUS_STANDING:
 		case TAG_CHAR::TAG_SARCOPHAGUS_LAYING:
 		{
-			MakeMonster(CharInitData.second);
 		}
 		break;
 		}
 	}
-	__super::MakeActors(_actorContainer);
+	__super::MakeActors(_actorContainer, _pMapData);
 #endif
 }
 
@@ -123,7 +130,7 @@ void CNetworkClientController::ProcessPacket(_char* _pPacket, PACKETHEAD _Packet
 		break;
 		case TAG_SC::TAG_SC_MONSTERSTATEHAVEMOVE:
 		{
-
+			MonsterStateHaveMove(_pPacket, _PacketHead);
 		}
 		break;
 	}
@@ -131,57 +138,6 @@ void CNetworkClientController::ProcessPacket(_char* _pPacket, PACKETHEAD _Packet
 }
 
 #ifdef _ENABLE_PROTOBUFF
-void CNetworkClientController::MakeMonster(const NETWORKRECEIVEINITDATA& _NetworkRecvInitData)
-{
-	CMob::MOBNETWORKDATA mobDataworkData(_NetworkRecvInitData.iCellIndex, _NetworkRecvInitData.vPos, _NetworkRecvInitData.vRotate,
-		 _NetworkRecvInitData.vScale, _NetworkRecvInitData.iAnimIndex);
-
-	switch (_NetworkRecvInitData.iType)
-	{
-	case TAG_CHAR::TAG_MUMMY:
-	{
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		{
-			CMummy::CHARACTERDESC CharDesc{ PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_MUMMYANIMCONTROLLER, true };
-
-			SHPTR<CMummy> spMummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(
-				PROTO_ACTOR_MUMMY, { &CharDesc, &mobDataworkData }));
-			spGameInstance->AddCollisionPawnList(spMummy);
-			AddCreatedNetworkActor(_NetworkRecvInitData.iNetworkID, spMummy);
-		}
-	}
-	break;
-	case TAG_CHAR::TAG_SARCOPHAGUS_STANDING:
-	case TAG_CHAR::TAG_SARCOPHAGUS_LAYING:
-	{
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		SHPTR<CSarcophagus> spSarcophagus = nullptr;
-		{
-			CSarcophagus::CHARACTERDESC CharDesc;
-			CharDesc.isNetworkConnected = true;
-			CharDesc.wstrAnimControllerProtoData = PROTO_COMP_SARCOPHAGUSANIMCONTROLLER;
-
-			if (_NetworkRecvInitData.iType == TAG_CHAR::TAG_SARCOPHAGUS_LAYING)
-			{
-				CharDesc.wstrAnimModelProtoData = PROTO_RES_SARCOPHAGUSLYINGANIMMODEL;
-				spSarcophagus = std::static_pointer_cast<CSarcophagus>(spGameInstance->CloneActorAdd(
-					PROTO_ACTOR_SARCOPHAGUSLYING, { &CharDesc, &mobDataworkData }));
-				spSarcophagus->SetSarcophagusType(CSarcophagus::TYPE_LYING);
-			}
-			else
-			{
-				CharDesc.wstrAnimModelProtoData = PROTO_RES_SARCOPHAGUSSTANDINGANIMMODEL;
-				spSarcophagus = std::static_pointer_cast<CSarcophagus>(spGameInstance->CloneActorAdd(
-					PROTO_ACTOR_SARCOPHAGUSSTANDING, { &CharDesc, &mobDataworkData }));
-				spSarcophagus->SetSarcophagusType(CSarcophagus::TYPE_STANDING);
-			}
-			AddCreatedNetworkActor(_NetworkRecvInitData.iNetworkID, spSarcophagus);
-		}
-	}
-	break;
-	}
-	CountingMakeMonsterNum();
-}
 
 void CNetworkClientController::ConnectSuccessState(_char* _pPacket, const PACKETHEAD& _PacketHead)
 {
@@ -239,22 +195,10 @@ void CNetworkClientController::MonsterResourceDataState(_char* _pPacket, const P
 	scMonsterResourceData.ParseFromArray(_pPacket, _PacketHead.PacketSize);
 
 	_float3 vPos{ scMonsterResourceData.posx(),scMonsterResourceData.posy(),scMonsterResourceData.posz() };
-	_float3 vRotate{scMonsterResourceData.rotatex(), scMonsterResourceData.rotatey(), scMonsterResourceData.rotatez()};
-	_float3 vScale{ scMonsterResourceData.scalex(), scMonsterResourceData.scaley(), scMonsterResourceData.scalez() };
 	{
 		NETWORKRECEIVEINITDATA networkRecvInitData(scMonsterResourceData.id(),
-			0, scMonsterResourceData.type(), scMonsterResourceData.animindex(), vPos, vRotate, vScale);
-		{
-			switch (GetSceneID())
-			{
-			case SCENE_LOGO:
-				AddNetworkInitData(networkRecvInitData.iNetworkID, networkRecvInitData);
-				break;
-			case SCENE_STAGE1:
-				InsertNetworkInitDataInQuery(networkRecvInitData);
-				break;
-			}
-		}
+			scMonsterResourceData.cellindex(), scMonsterResourceData.type(), scMonsterResourceData.animindex(), vPos);
+		InsertNetworkInitDataInQuery(networkRecvInitData);
 	}
 }
 
