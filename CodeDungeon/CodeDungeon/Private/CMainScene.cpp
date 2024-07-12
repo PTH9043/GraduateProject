@@ -244,7 +244,6 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
 	TurnLightsOnRange();
 	TurnRoomsOnRange();
-	TurnMobsOnRange();
 
 
 	SHPTR<ULight> DirLight;
@@ -260,7 +259,7 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 
 void CMainScene::LateTick(const _double& _dTimeDelta)
 {
-
+	TurnMobsOnRange();
 }
 
 void CMainScene::CollisionTick(const _double& _dTimeDelta)

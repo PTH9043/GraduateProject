@@ -1045,7 +1045,13 @@ void UGameInstance::TurnOffFog() {
 	if (m_spRenderer != nullptr)m_spRenderer->TurnOffFog();
 }
 
+void UGameInstance::TurnOnGrayScale() {
+	if (m_spRenderer != nullptr)m_spRenderer->TurnOnGrayScale();
+}
 
+void UGameInstance::TurnOffGrayScale() {
+	if (m_spRenderer != nullptr)m_spRenderer->TurnOffGrayScale();
+}
 /*
 ==================================================
 Renderer Fog Setting
@@ -1159,6 +1165,12 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 					DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
 					DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
 
+			CreateGraphicsShader(PROTO_RES_GRAYSCALESHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"GrayScale", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{
+					DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
+					DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
+
 			CreateGraphicsShader(PROTO_RES_TRAILSHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"Trail", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM,DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
@@ -1209,6 +1221,11 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 					DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
 					DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
 
+			CreateGraphicsShader(PROTO_RES_UPSAMPLINGGRAYSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"UpSamplingGray", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{
+					DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
+					DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
 
 			CreateGraphicsShader(PROTO_RES_BLOOMSHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"Bloom", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
@@ -1289,6 +1306,7 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 					SHADERLIST{ VS_MAIN, PS_MAIN },
 					RENDERFORMATS{ DXGI_FORMAT_R32G32B32A32_FLOAT
 					}));
+
 			CreateGraphicsShader(PROTO_RES_ANIMDEPTHRECORDSHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"AnimDepthRecord", VTXANIMMODEL_DECLARATION::Element, VTXANIMMODEL_DECLARATION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN },
@@ -1367,6 +1385,15 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 
 			CreateGraphicsShader(PROTO_RES_PARTICLEATTACK2DSHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"2DParticleAttack", VTXPOINT_DELCARTION::Element, VTXPOINT_DELCARTION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN, GS_MAIN },
+					RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM,DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
+					DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R16G16B16A16_FLOAT
+					},
+					RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::LESS_EQUAL_NO_WRITE, BLEND_TYPE::ALPHA_BLEND,
+					D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST));
+
+			CreateGraphicsShader(PROTO_RES_PARTICLESLASH2DSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"2DParticleSlash", VTXPOINT_DELCARTION::Element, VTXPOINT_DELCARTION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN, GS_MAIN },
 					RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM,DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
 					DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R16G16B16A16_FLOAT
@@ -1482,6 +1509,9 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 
 		CreateComputeShader(PROTO_RES_COMPUTEFOOTPRINT2DSHADER, CLONETYPE::CLONE_STATIC,
 			SHADERDESC{ L"Compute2DFootPrint" });
+
+		CreateComputeShader(PROTO_RES_COMPUTESLASH2DSHADER, CLONETYPE::CLONE_STATIC,
+			SHADERDESC{ L"Compute2DSlash" });
 
 		CreateComputeShader(PROTO_RES_COMPUTEEMITPARTICLE2DSHADER, CLONETYPE::CLONE_STATIC,
 			SHADERDESC{ L"Compute2DEmitParticle" });
@@ -1718,6 +1748,14 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 		}
 		{
 			std::vector<RTDESC> vecRts{
+				RTDESC{ RTOBJID::UPSAMPLEGRAY, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
+					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f }  }
+			};
+			// Add 
+			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::UPSAMPLEGRAY, vecRts);
+		}
+		{
+			std::vector<RTDESC> vecRts{
 				RTDESC{ RTOBJID::BLUR_RESULT, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
 					GraphicDesc->iWinCX / 2, GraphicDesc->iWinCY / 2, { 0.f, 0.f, 0.f, 0.f }  }
 			};
@@ -1734,6 +1772,15 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 			// Add 
 			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::HDR, vecRts);
 		}
+		{
+			std::vector<RTDESC> vecRts{
+				RTDESC{ RTOBJID::GRAY_SCALE, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
+					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f }  }
+			};
+			// Add 
+			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::GRAY_SCALE, vecRts);
+		}
+
 		{
 			std::vector<RTDESC> vecRts{
 				RTDESC{ RTOBJID::UI2D_SCREEN_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
@@ -1795,13 +1842,13 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 
 	//m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_DEPTH_DEFFERED,
 	//	_float2(910.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::DOWNSAMPLETWO, RTOBJID::DOWNSAMPLETWO,
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::GRAY_SCALE, RTOBJID::GRAY_SCALE,
 		_float2(300.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::SHADOW_MAP, RTOBJID::SHADOW_DEPTH_FOURBYFOUR,
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::BLUR_RESULT, RTOBJID::BLUR_RESULT,
 		_float2(605.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::UPSAMPLE, RTOBJID::UPSAMPLE,
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::BLOOM, RTOBJID::BLOOM,
 		_float2(910.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 #endif
 	return S_OK;

@@ -162,6 +162,8 @@
     <ClInclude Include="..\Public\CBackgroundUI.h" />
     <ClInclude Include="..\Public\CClientApp.h" />
     <ClInclude Include="..\Public\CDataManager.h" />
+    <ClInclude Include="..\Public\CHarlequinn.h" />
+    <ClInclude Include="..\Public\CHarlequinnAnimController.h" />
     <ClInclude Include="..\Public\CImageUI.h" />
     <ClInclude Include="..\Public\CIronBars.h" />
     <ClInclude Include="..\Public\CItemChest.h" />
@@ -187,6 +189,8 @@
     <ClInclude Include="..\Public\CRooms.h" />
     <ClInclude Include="..\Public\CSarcophagus.h" />
     <ClInclude Include="..\Public\CSarcophagusAnimController.h" />
+    <ClInclude Include="..\Public\CShuriken.h" />
+    <ClInclude Include="..\Public\CShurikenThrowing.h" />
     <ClInclude Include="..\Public\CSword.h" />
     <ClInclude Include="..\Public\CTorch.h" />
     <ClInclude Include="..\Public\CWarriorPlayer.h" />
@@ -200,6 +204,8 @@
     <ClCompile Include="..\Private\CBackgroundUI.cpp" />
     <ClCompile Include="..\Private\CClientApp.cpp" />
     <ClCompile Include="..\Private\CDataManager.cpp" />
+    <ClCompile Include="..\Private\CHarlequinn.cpp" />
+    <ClCompile Include="..\Private\CHarlequinnAnimController.cpp" />
     <ClCompile Include="..\Private\CImageUI.cpp" />
     <ClCompile Include="..\Private\CIronBars.cpp" />
     <ClCompile Include="..\Private\CItemChest.cpp" />
@@ -223,6 +229,8 @@
     <ClCompile Include="..\Private\CRooms.cpp" />
     <ClCompile Include="..\Private\CSarcophagus.cpp" />
     <ClCompile Include="..\Private\CSarcophagusAnimController.cpp" />
+    <ClCompile Include="..\Private\CShuriken.cpp" />
+    <ClCompile Include="..\Private\CShurikenThrowing.cpp" />
     <ClCompile Include="..\Private\CSword.cpp" />
     <ClCompile Include="..\Private\CTorch.cpp" />
     <ClCompile Include="..\Private\CWarriorPlayer.cpp" />

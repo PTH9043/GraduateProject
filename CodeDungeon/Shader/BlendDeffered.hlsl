@@ -90,6 +90,15 @@ PS_OUT PS_Main(PS_In In)
     //vector vColor = lerp(vDiffuseDesc, (vShadeDesc + vAmbientDesc + vSpecularDesc), 0.5f);
     
     Out.vColor = vColor;
+    
+    //float4 outline = g_Texture7.Sample(g_Sampler_Normal, In.vTexUV);
+    
+    //float4 vDepthDesc = g_Texture6.Sample(g_Sampler_Normal, In.vTexUV);
+   
+    //if (vDepthDesc.g >= 1.f && outline.w <= 1.f)
+    //{
+    //    Out.vColor.xyz += outline.xyz;
+    //}
  
     Out.vColor.a = vDiffuseDesc.a;
     return Out;

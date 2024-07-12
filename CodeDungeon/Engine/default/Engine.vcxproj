@@ -324,6 +324,7 @@
     <FxCompile Include="..\..\Shader\2DParticleBlood.hlsl" />
     <FxCompile Include="..\..\Shader\2DParticleFlare.hlsl" />
     <FxCompile Include="..\..\Shader\2DParticleFootPrint.hlsl" />
+    <FxCompile Include="..\..\Shader\2DParticleSlash.hlsl" />
     <FxCompile Include="..\..\Shader\3DNormalCube.hlsl" />
     <FxCompile Include="..\..\Shader\AnimDepthRecord.hlsl" />
     <FxCompile Include="..\..\Shader\AnimModel.hlsl" />
@@ -336,11 +337,13 @@
     <FxCompile Include="..\..\Shader\Bloom.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DAttackEffect.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DFootPrint.hlsl" />
+    <FxCompile Include="..\..\Shader\Compute2DSlash.hlsl" />
     <FxCompile Include="..\..\Shader\DefaultUI.hlsl" />
     <FxCompile Include="..\..\Shader\DepthRecord.hlsl" />
     <FxCompile Include="..\..\Shader\DownSampling.hlsl" />
     <FxCompile Include="..\..\Shader\DownSamplingTwo.hlsl" />
     <FxCompile Include="..\..\Shader\Equipment.hlsl" />
+    <FxCompile Include="..\..\Shader\GrayScale.hlsl" />
     <FxCompile Include="..\..\Shader\Guard.hlsl" />
     <FxCompile Include="..\..\Shader\Hdr.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DBloodEffect.hlsl" />
@@ -373,6 +376,7 @@
     <FxCompile Include="..\..\Shader\Shadow.hlsl" />
     <FxCompile Include="..\..\Shader\Trail.hlsl" />
     <FxCompile Include="..\..\Shader\UpSampling.hlsl" />
+    <FxCompile Include="..\..\Shader\UpSamplingGray.hlsl" />
     <FxCompile Include="..\..\Shader\VerticalBlur.hlsl" />
   </ItemGroup>
   <ItemGroup>

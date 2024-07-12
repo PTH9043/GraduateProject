@@ -60,7 +60,7 @@ private:
 	PARTICLEPARAM* m_stParticleParam;
 	ComputeParticleType* m_stParticleType;
 
-	SHPTR<CSword>											m_spSword;
+	SHPTR<CSword>												m_spSword;
 	SHPTR<UTrail>												m_spTrail;
 	SHPTR<UBlood>												m_spBlood;
 	_bool																isAttack;

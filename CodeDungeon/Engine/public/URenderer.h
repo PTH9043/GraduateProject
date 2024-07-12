@@ -64,8 +64,10 @@ public:
 	// Render Other Camera
 	void RenderOtherCamera();
 	void BindDefferedTransform(SHPTR<UShader> _spShader);
-	void TurnOnFog() { m_bTurnFog = true; }
-	void TurnOffFog() { m_bTurnFog = false; }
+	void TurnOnFog() { m_bTurnShader.m_bTurnFog = true; }
+	void TurnOffFog() { m_bTurnShader.m_bTurnFog = false; }
+	void TurnOnGrayScale() { m_bTurnShader.m_bTurnGrayScale = true; }
+	void TurnOffGrayScale() { m_bTurnShader.m_bTurnGrayScale = false; }
 private:
 	void RenderRTs();
 	// Priority
@@ -92,6 +94,7 @@ private:
 	void Render2DUI();
 	// HDR
 	void RenderHDR();
+	void RenderGrayScale();
 	// Bloom, Blur
 	void RenderHorizontalBlur();
 	void RenderVerticalBlur();
@@ -99,6 +102,7 @@ private:
 	void DownSample();
 	void DownSample2();
 	void UpSample();
+	void UpSampleGray();
 	// Render End 
 	void RenderEnd();
 #ifdef _USE_DEBUGGING
@@ -140,8 +144,10 @@ private:
 	SHPTR<UVIBufferRect>																m_spVIBufferPlane;
 	_short																								m_sNonAlphaBlendIndex;
 
-	_bool																	m_bTurnFog;
-	SHPTR<UShaderConstantBuffer>											m_spFogConstantBuffer;
+	DRAWSHADERBUFFER																	m_bTurnShader;
+	SHPTR<UShaderConstantBuffer>											m_spTurnShaderConstantBuffer;
+	_int TurnShader = 0;
+
 #ifdef _USE_DEBUGGING																	
 	 ARRAY<DRAWINGRENDERCONTAINER, DEBUG_RI_END>	 m_arrDrawDebugRenderList;
 	RENDERDEBUGGING																	m_stRenderDebugging;

@@ -341,6 +341,15 @@ namespace Engine {
 
 #pragma endregion FOG
 
+#pragma region RENDERSHADER
+	struct DRAWSHADERBUFFER {
+		_uint m_bTurnFog{};
+		_float3 _padding;
+		_uint m_bTurnGrayScale{};
+		_float3 _padding2;
+	};
+
+#pragma endregion RENDERSHADER
 #pragma region WATER
 
 	struct WATERIFNODESC
