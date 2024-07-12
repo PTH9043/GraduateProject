@@ -21,7 +21,7 @@ public:
 	UVIBufferTrail(const UVIBufferTrail& _rhs);
 	DESTRUCTOR(UVIBufferTrail)
 public:
-	CLONE_THIS(UVIBufferTrail)
+	CLONE_MACRO(UVIBufferTrail, "UVIBufferTrail::Clone To Failed")
 		virtual void Free() override;
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _vecDatas) override;

@@ -26,15 +26,7 @@ HRESULT UVIBufferTrail::NativeConstruct()
 {
 	RETURN_CHECK_FAILED(__super::NativeConstruct(), E_FAIL);	
 	
-	RETURN_CHECK_FAILED(CreateVtxBufferWithNoData(300, sizeof(VTXDEFAULT), nullptr,
-				D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER), E_FAIL);
-	//RETURN_CHECK_FAILED(CreateVtxBuffer(100, sizeof(VTXDEFAULT), nullptr,
-	//	D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST), E_FAIL);
-
-	m_stD3DVertexBufferView.BufferLocation = m_cpVertexGpuBuffer->GetGPUVirtualAddress();
-	m_stD3DVertexBufferView.StrideInBytes = sizeof(VTXDEFAULT);
-	m_stD3DVertexBufferView.SizeInBytes = sizeof(VTXDEFAULT) * 16;
-	HRESULT hr = m_cpVertexGpuBuffer->Map(0, nullptr, reinterpret_cast<void**>(&m_pBufferDataBegin));
+	
 
 	//RETURN_CHECK_FAILED(__super::NativeConstructClone(_vecDatas), E_FAIL);
 	//{
@@ -108,7 +100,15 @@ HRESULT UVIBufferTrail::NativeConstruct()
 HRESULT UVIBufferTrail::NativeConstructClone(const VOIDDATAS& _vecDatas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_vecDatas), E_FAIL);
+	RETURN_CHECK_FAILED(CreateVtxBufferWithNoData(300, sizeof(VTXDEFAULT), nullptr,
+		D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER), E_FAIL);
+	//RETURN_CHECK_FAILED(CreateVtxBuffer(100, sizeof(VTXDEFAULT), nullptr,
+	//	D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST), E_FAIL);
 
+	m_stD3DVertexBufferView.BufferLocation = m_cpVertexGpuBuffer->GetGPUVirtualAddress();
+	m_stD3DVertexBufferView.StrideInBytes = sizeof(VTXDEFAULT);
+	m_stD3DVertexBufferView.SizeInBytes = sizeof(VTXDEFAULT) * 16;
+	HRESULT hr = m_cpVertexGpuBuffer->Map(0, nullptr, reinterpret_cast<void**>(&m_pBufferDataBegin));
 	
 	return S_OK;
 
