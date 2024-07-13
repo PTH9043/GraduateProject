@@ -152,8 +152,8 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 			Colliders.second->SetTranslate(_float3(0, 10, 0));
 		}
 	}
-	SetOutline(true);
-	SetIfOutlineScale(true);//플레이어는 안그리도록 
+	SetOutline(false);
+	SetIfOutlineScale(false);//플레이어는 안그리도록 
 	SetHealth(10000);
 
 	return S_OK;
@@ -316,13 +316,13 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	PAWNTYPE ePawnType = _pEnemy->GetPawnType();
-
+	const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
 
 	if (PAWNTYPE::PAWN_CHAR == ePawnType)
 	{
 		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
 		_float3 direction = _pEnemy->GetTransform()->GetPos() - GetTransform()->GetPos();
-		const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
+		
 		const _wstring& EnemyCurAnimName = pCharacter->GetAnimModel()->GetCurrentAnimation()->GetAnimName();
 		SHPTR<CUserWarriorAnimController> spController = static_pointer_cast<CUserWarriorAnimController>(GetAnimationController());
 		direction.Normalize();
@@ -334,7 +334,8 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 		{
 			if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
 			{
-				if (EnemyCurAnimName == L"attack4_kick" || EnemyCurAnimName == L"attack5_kick")
+				if (EnemyCurAnimName == L"attack4_kick" || EnemyCurAnimName == L"attack5_kick"
+					|| EnemyCurAnimName == L"Attack 2" || EnemyCurAnimName == L"Attack 3" || EnemyCurAnimName == L"Jump Forward")
 				{
 					if (CurAnimName != L"rise01" && CurAnimName != L"rise02")
 					{
@@ -345,7 +346,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 						}
 						else
 						{
-							GetTransform()->LookAt(pCharacter->GetTransform()->GetPos());
+							GetTransform()->SetDirectionFixedUp(pCharacter->GetTransform()->GetLook());
 							m_bisKicked = true;
 						}
 
@@ -409,6 +410,34 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 					SetOBJCollisionState(false);
 				}
 			}
+		}
+	}
+	else if (PAWNTYPE::PAWN_PROJECTILE == ePawnType)
+	{
+		CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
+		for (auto& iter : GetColliderContainer())
+		{
+			for (auto& iter2 : pModelObject->GetColliderContainer())
+			{
+				if (iter.second->IsCollision(iter2.second))
+				{
+					if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead01" && !m_bisKicked)
+					{
+						if (!GetIsHItAlreadyState())
+						{
+							DecreaseHealth(1);
+						}
+
+						SetHitAlreadyState(true);
+					}
+				}
+				else
+				{
+					SetHitAlreadyState(false);
+				}
+
+			}
+
 		}
 	}
 }

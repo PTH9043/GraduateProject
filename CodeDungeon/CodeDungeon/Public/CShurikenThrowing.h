@@ -5,6 +5,7 @@ BEGIN(Engine)
 class UModel;
 class UShaderConstantBuffer;
 class UTrail;
+class UNavigation;
 END
 
 BEGIN(Client)
@@ -34,6 +35,8 @@ public:
 
 	const _float& GetTraveledDistance() { return m_ftraveledDistance; }
 	void SetTraveledDistance(const _float& _new) { m_ftraveledDistance = _new; }
+
+	SHPTR<UNavigation> GetCurrentNavi() const { return m_spCurNavi; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
@@ -47,6 +50,8 @@ private:
 
 	_float						m_ftraveledDistance;
 	_bool						m_bisThrown;
+
+	SHPTR<UNavigation>			m_spCurNavi;
 };
 
 END

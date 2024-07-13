@@ -159,6 +159,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\CAnubis.h" />
+    <ClInclude Include="..\Public\CAnubisAnimController.h" />
+    <ClInclude Include="..\Public\CAnubisStaff.h" />
     <ClInclude Include="..\Public\CBackgroundUI.h" />
     <ClInclude Include="..\Public\CClientApp.h" />
     <ClInclude Include="..\Public\CDataManager.h" />
@@ -201,6 +204,9 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\CAnubis.cpp" />
+    <ClCompile Include="..\Private\CAnubisAnimController.cpp" />
+    <ClCompile Include="..\Private\CAnubisStaff.cpp" />
     <ClCompile Include="..\Private\CBackgroundUI.cpp" />
     <ClCompile Include="..\Private\CClientApp.cpp" />
     <ClCompile Include="..\Private\CDataManager.cpp" />

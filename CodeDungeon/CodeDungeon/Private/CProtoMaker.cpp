@@ -25,6 +25,9 @@
 #include "CHarlequinnAnimController.h"
 #include "CShuriken.h"
 #include "CShurikenThrowing.h"
+#include "CAnubis.h"
+#include "CAnubisAnimController.h"
+#include "CAnubisStaff.h"
 
 HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, CSHPTRREF<UDevice> _spDevice, CSHPTRREF<UCommand> _spCommand)
 {
@@ -43,7 +46,8 @@ HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, C
 	_spGameInstance->AddPrototype(PROTO_ACTOR_HARLEQUINN, CreateConstructorToNative< CHarlequinn>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_SHURIKEN, CreateConstructorToNative< CShuriken>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_SHURIKENTHROWING, CreateConstructorToNative< CShurikenThrowing>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
-
+	_spGameInstance->AddPrototype(PROTO_ACTOR_ANUBIS, CreateConstructorToNative< CAnubis>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
+	_spGameInstance->AddPrototype(PROTO_ACTOR_ANUBISSTAFF, CreateConstructorToNative< CAnubisStaff>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 
 	_spGameInstance->AddPrototype(PROTO_RES_PARTICLETEXTUREGROUP, CLONETYPE::CLONE_STATIC,
 		CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\Particle", true));
@@ -79,6 +83,7 @@ HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, C
 	_spGameInstance->AddPrototype(PROTO_COMP_CHESTANIMCONTROLLER, CreateConstructorToNative<CItemChestAnimController>(_spDevice));
 	_spGameInstance->AddPrototype(PROTO_COMP_MINOTAURANIMCONTROLLER, CreateConstructorToNative<CMinotaurAnimController>(_spDevice));
 	_spGameInstance->AddPrototype(PROTO_COMP_HARLEQUINNANIMCONTROLLER, CreateConstructorToNative<CHarlequinnAnimController>(_spDevice));
+	_spGameInstance->AddPrototype(PROTO_COMP_ANUBISANIMCONTROLLER, CreateConstructorToNative<CAnubisAnimController>(_spDevice));
 	return S_OK;
 }
 
@@ -102,6 +107,10 @@ HRESULT CProtoMaker::CreateMainSceneProtoData(CSHPTRREF<UGameInstance> _spGameIn
 	_spGameInstance->AddPrototype(PROTO_RES_HARLEQUINNANIMMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
 		_spDevice, L"..\\..\\Resource\\AnimModel\\Harlequin1\\Convert\\Harlequin1_FBX.bin", Matrix));
 
+	Matrix = _float4x4::CreateScale(0.1f);
+	_spGameInstance->AddPrototype(PROTO_RES_ANUBISANIMMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
+		_spDevice, L"..\\..\\Resource\\AnimModel\\Anubis\\Convert\\Anubis_FBX.bin", Matrix));
+
 	Matrix = _float4x4::CreateScale(0.1f) * _float4x4::CreateRotationY(DirectX::XMConvertToRadians(180));
 	_spGameInstance->AddPrototype(PROTO_RES_SARCOPHAGUSLYINGANIMMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
 		_spDevice, L"..\\..\\Resource\\AnimModel\\Sarcophagus\\Convert\\SarcophagusLaying_FBX.bin", Matrix));
@@ -117,6 +126,10 @@ HRESULT CProtoMaker::CreateMainSceneProtoData(CSHPTRREF<UGameInstance> _spGameIn
 	Matrix = _float4x4::CreateScale(0.1f);
 	_spGameInstance->AddPrototype(PROTO_RES_LONGSWORDMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UModel>(
 		_spDevice, L"..\\..\\Resource\\Model\\Item\\Equip\\Sword\\Convert\\sword_FBX.bin"));
+
+	Matrix = _float4x4::CreateScale(0.1f);
+	_spGameInstance->AddPrototype(PROTO_RES_ANUBISSTAFFMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UModel>(
+		_spDevice, L"..\\..\\Resource\\Model\\Item\\Equip\\AnubisHook\\Convert\\Anubis_Staff_FBX.bin"));
 
 	Matrix = _float4x4::CreateScale(100.0f);
 	_spGameInstance->AddPrototype(PROTO_RES_CHESTANIMMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(

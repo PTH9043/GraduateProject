@@ -173,7 +173,7 @@ void CHarlequinn::TickActive(const _double& _dTimeDelta)
 		// A* for moving towards player when player is found
 		if (GetFoundTargetState())
 		{
-			SetOutline(true);
+			//SetOutline(true);
 			if (GetTimeAccumulator() >= 1.0)
 			{
 				SHPTR<UNavigation> spNavigation = GetCurrentNavi();
