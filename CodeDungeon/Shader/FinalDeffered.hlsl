@@ -54,6 +54,11 @@ struct PS_OUT
 PS_OUT PS_Main(PS_In Input)
 {
     PS_OUT Out = (PS_OUT) 0;
+    
+    
+    //float distanceFromOrigin = distance(float2(640, 540), float2(Input.vPosition.xy));
+    float distanceFromOrigin = distance(float2(640, 460), float2(Input.vPosition.xy));
+   
     float4 baseColor = g_Texture0.Sample(g_Sampler_Normal, Input.vTexUV);
     float transitionProgress;
     if (IsDead)
@@ -64,9 +69,67 @@ PS_OUT PS_Main(PS_In Input)
 
         
         float blendFactor = saturate(transitionProgress);
-        Out.vColor = lerp(baseColor, targetColor, blendFactor);
+        Out.vColor = lerp(float4(1, 0, 0, 1), targetColor, blendFactor);       
         
+    }
+    else if (IsHit)
+    {
+    
+        float4 targetColor = g_Texture8.Sample(g_Sampler_Normal, Input.vTexUV);
+        float4 outputColor;
+
+        float blendFactor;
+        float initialBlendTime = 0.3f;
+        float fadeOutStartTime = 2.3f;
+        float fadeOutEndTime = 2.8f;
+
+
+        if (HitTime <= initialBlendTime)
+        {
+            blendFactor = 0.0f; 
+        }
+        else if (HitTime <= fadeOutStartTime)
+        {
+            blendFactor = saturate((HitTime - initialBlendTime) / (fadeOutStartTime - initialBlendTime)); 
+        }
+        else if (HitTime <= fadeOutEndTime)
+        {
+            blendFactor = 1.0f - saturate((HitTime - fadeOutStartTime) / (fadeOutEndTime - fadeOutStartTime));
+        }
+        else
+        {
+            blendFactor = 0.0f; 
+        }
         
+        float initialRadius = 75.0f;
+        float finalRadius = 640.0f;
+        float currentRadius;
+
+
+        if (HitTime > initialBlendTime)
+        {
+            float normalizedBlendFactor = saturate((HitTime - initialBlendTime) / (fadeOutEndTime - initialBlendTime));
+            currentRadius = lerp(finalRadius, initialRadius, normalizedBlendFactor);
+        }
+        else
+        {
+            currentRadius = finalRadius; 
+        }
+
+
+        if (distanceFromOrigin <= currentRadius)
+        {
+            outputColor = baseColor;
+        }
+        else
+        {
+            float distanceFactor = saturate((distanceFromOrigin - currentRadius) / (finalRadius - currentRadius));
+            outputColor = lerp(baseColor, targetColor, distanceFactor);
+        }
+
+
+        Out.vColor = outputColor;
+      
     }
     else if (IsAbility)
     {
@@ -74,14 +137,7 @@ PS_OUT PS_Main(PS_In Input)
         float4 targetColor = g_Texture7.Sample(g_Sampler_Normal, Input.vTexUV);
         float blendFactor = saturate(transitionProgress);
         Out.vColor = lerp(baseColor, targetColor, blendFactor);
-    }
-    else if (IsHit)
-    {
-        float transitionProgress = HitTime / 0.3f;
-        float4 targetColor = g_Texture8.Sample(g_Sampler_Normal, Input.vTexUV);
-        float blendFactor = saturate(transitionProgress);
-        Out.vColor = lerp(baseColor, targetColor, blendFactor);
-    }
+    }  
     else
     {
         Out.vColor = baseColor;
