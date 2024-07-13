@@ -10,16 +10,17 @@
 #include "UModel.h"
 #include "UTrail.h"
 #include "UVIBufferTrail.h"
+#include "UNavigation.h"
 
 CShurikenThrowing::CShurikenThrowing(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: CModelObjects(_spDevice, _wstrLayer, _eCloneType),
-	m_ftraveledDistance{ 0 }, m_bisThrown{ false }, m_spTrail{nullptr}
+	m_ftraveledDistance{ 0 }, m_bisThrown{ false }, m_spTrail{nullptr}, m_spCurNavi{nullptr}
 {
 }
 
 CShurikenThrowing::CShurikenThrowing(const CShurikenThrowing& _rhs)
 	: CModelObjects(_rhs),
-	m_ftraveledDistance{ 0 }, m_bisThrown{ false }, m_spTrail{ nullptr }
+	m_ftraveledDistance{ 0 }, m_bisThrown{ false }, m_spTrail{ nullptr }, m_spCurNavi{ nullptr }
 {
 }
 
@@ -56,6 +57,11 @@ HRESULT CShurikenThrowing::NativeConstructClone(const VOIDDATAS& _vecDatas)
 		m_spTrail->SetActive(true);
 	}
 
+	{
+		UNavigation::NAVDESC navDesc;
+		m_spCurNavi = std::static_pointer_cast<UNavigation>(spGameInstance->CloneComp(PROTO_NAVI_INTERIOR, { &navDesc }));
+		assert(nullptr != m_spCurNavi);
+	}
 
 	SetPawnType(PAWNTYPE::PAWN_PROJECTILE);
 
@@ -81,6 +87,7 @@ void CShurikenThrowing::ThrowShurikens(const _double& _dTimeDelta, _float3 _dir)
 
 			// 수리켄 이동
 			GetTransform()->TranslateDir(_dir, _dTimeDelta, moveSpeed);
+			GetCurrentNavi()->FindCell(GetTransform()->GetPos());
 
 			// 수리켄 회전 (z축 기준)
 			GetTransform()->RotateTurn(_float3(1, 0, 0), rotateSpeed, _dTimeDelta);
@@ -96,20 +103,21 @@ void CShurikenThrowing::TickActive(const _double& _dTimeDelta)
 		Containers.second->SetTranslate(GetModel()->GetCenterPos());
 		Containers.second->SetScaleToFitModel(GetModel()->GetMinVertexPos(), GetModel()->GetMaxVertexPos());
 		Containers.second->SetTransform(GetTransform());
+		for (auto& Containers : GetColliderContainer())
+		{
+			if (Containers.second) {
+				SHPTR<DirectX::BoundingOrientedBox> OBB = Containers.second->GetOBB();
 
-		if (Containers.second) {
-			SHPTR<DirectX::BoundingOrientedBox> OBB = Containers.second->GetOBB();
-
-			_float3 plusPoint = Containers.second->GetHeightAdjustedPointFromCenter(OBB, false);
-			_float3 minusPoint = Containers.second->GetHeightAdjustedPointFromCenter(OBB, true);
-			_float4x4 AnimTransform = Containers.second->GetTransformMatrix();
-			m_spTrail->SetRenderingTrail(m_bisThrown);
-			m_spTrail->AddTrail(plusPoint, minusPoint);
+				_float3 plusPoint = Containers.second->GetHeightAdjustedPointFromCenter(OBB, false);
+				_float3 minusPoint = Containers.second->GetHeightAdjustedPointFromCenter(OBB, true);
+				_float4x4 AnimTransform = Containers.second->GetTransformMatrix();
+				m_spTrail->SetRenderingTrail(m_bisThrown);
+				m_spTrail->AddTrail(plusPoint, minusPoint);
+			}
 		}
 	}
 
-
-
+	
 }
 
 
@@ -118,6 +126,20 @@ void CShurikenThrowing::LateTickActive(const _double& _dTimeDelta)
 	__super::LateTickActive(_dTimeDelta);
 	//for (auto& Colliders : GetColliderContainer())
 	//	Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
+
+	SHPTR<UCell> newCell{};
+	_float3 vPosition{ GetTransform()->GetPos() };
+
+	if (m_bisThrown)
+	{
+		if (false == GetCurrentNavi()->IsMove(vPosition, REF_OUT newCell))
+		{
+
+			m_bisThrown = false;
+			m_ftraveledDistance = 0;
+
+		}
+	}
 }
 
 HRESULT CShurikenThrowing::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)

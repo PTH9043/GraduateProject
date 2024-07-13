@@ -139,6 +139,15 @@
     <Filter Include="05.Objects\ModelObjects\Weapons\Sword">
       <UniqueIdentifier>{eb6c9e65-4ba8-4b07-8410-31a799c24c73}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Objects\Character\Mob\Anubis">
+      <UniqueIdentifier>{fcf64ec0-1e3c-45c3-a721-df65c23b5da6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\Anubis">
+      <UniqueIdentifier>{d40f1837-17e8-4770-a84a-0446a88b1b10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Objects\ModelObjects\Weapons\AnubisStaff">
+      <UniqueIdentifier>{89acc89b-44a7-4665-b66a-3b4c74e997e8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ClientDefines.h">
@@ -261,6 +270,15 @@
     <ClInclude Include="..\Public\CShurikenThrowing.h">
       <Filter>05.Objects\ModelObjects\Weapons\Shurikens</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CAnubis.h">
+      <Filter>05.Objects\Character\Mob\Anubis</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CAnubisAnimController.h">
+      <Filter>06.Comp\Controller\Anubis</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CAnubisStaff.h">
+      <Filter>05.Objects\ModelObjects\Weapons\AnubisStaff</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -375,6 +393,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\CShurikenThrowing.cpp">
       <Filter>05.Objects\ModelObjects\Weapons\Shurikens</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CAnubis.cpp">
+      <Filter>05.Objects\Character\Mob\Anubis</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CAnubisAnimController.cpp">
+      <Filter>06.Comp\Controller\Anubis</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CAnubisStaff.cpp">
+      <Filter>05.Objects\ModelObjects\Weapons\AnubisStaff</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -7,9 +7,9 @@ END
 
 BEGIN(Client)
 /*
-@ Date: 2024-05-12, Writer: 이성현
+@ Date: 2024-07-12, Writer: 이성현
 @ Explain
-- 맵의 철장
+- 할리퀸의 무기
 */
 class CShuriken final : public UWeapon {
 public:
