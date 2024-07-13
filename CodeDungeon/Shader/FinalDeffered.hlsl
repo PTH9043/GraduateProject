@@ -76,6 +76,7 @@ PS_OUT PS_Main(PS_In Input)
     {
     
         float4 targetColor = g_Texture8.Sample(g_Sampler_Normal, Input.vTexUV);
+        targetColor += float4(0.15, 0.15, 0.15, 0);
         float4 outputColor;
 
         float blendFactor;
@@ -102,7 +103,7 @@ PS_OUT PS_Main(PS_In Input)
         }
         
         float initialRadius = 75.0f;
-        float finalRadius = 640.0f;
+        float finalRadius = 700.0f;
         float currentRadius;
 
 
