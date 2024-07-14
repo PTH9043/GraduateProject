@@ -64,6 +64,7 @@
     <ClInclude Include="..\public\UInputReceiver.h" />
     <ClInclude Include="..\public\UItem.h" />
     <ClInclude Include="..\public\ULightCamera.h" />
+    <ClInclude Include="..\public\UMat.h" />
     <ClInclude Include="..\public\UMeshFilter.h" />
     <ClInclude Include="..\public\UNetworkQueryProcessing.h" />
     <ClInclude Include="..\public\UPlayer.h" />
@@ -195,6 +196,7 @@
     <ClCompile Include="..\private\UInputReceiver.cpp" />
     <ClCompile Include="..\private\UItem.cpp" />
     <ClCompile Include="..\private\ULightCamera.cpp" />
+    <ClCompile Include="..\private\UMat.cpp" />
     <ClCompile Include="..\private\UMeshFilter.cpp" />
     <ClCompile Include="..\private\UNetworkQueryProcessing.cpp" />
     <ClCompile Include="..\private\UPlayer.cpp" />
@@ -366,6 +368,7 @@
     <FxCompile Include="..\..\Shader\HorizontalBlur.hlsl" />
     <FxCompile Include="..\..\Shader\LightDirection.hlsl" />
     <FxCompile Include="..\..\Shader\LightPoint.hlsl" />
+    <FxCompile Include="..\..\Shader\Mat.hlsl" />
     <FxCompile Include="..\..\Shader\Model.hlsl" />
     <FxCompile Include="..\..\Shader\NormalObject.hlsl" />
     <FxCompile Include="..\..\Shader\NorPos.hlsl" />

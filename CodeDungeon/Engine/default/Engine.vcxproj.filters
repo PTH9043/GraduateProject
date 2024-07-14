@@ -463,6 +463,12 @@
     <Filter Include="98.ShaderFile\Dust">
       <UniqueIdentifier>{c1034cff-f121-402c-8b99-ca77b5268a0e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Actor\Mat">
+      <UniqueIdentifier>{f43b278d-e1d1-417d-8137-b0113b4fa983}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.ShaderFile\Mat">
+      <UniqueIdentifier>{069db005-ae2a-4488-9604-b3ca4cd4ee33}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -869,6 +875,9 @@
     </ClCompile>
     <ClCompile Include="..\private\UDust.cpp">
       <Filter>05.Actor\Dust</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UMat.cpp">
+      <Filter>05.Actor\Mat</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1310,6 +1319,9 @@
     <ClInclude Include="..\public\UDust.h">
       <Filter>05.Actor\Dust</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\UMat.h">
+      <Filter>05.Actor\Mat</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Shader\ShaderGrobalFunc.hlsli">
@@ -1487,6 +1499,9 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\Dust.hlsl">
       <Filter>98.ShaderFile\Dust</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\Mat.hlsl">
+      <Filter>98.ShaderFile\Mat</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

@@ -113,7 +113,7 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 		
 		m_spSlashParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleType = PARTICLE_TYPE_DEFAULT;
 		m_spSlashParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
-		m_spSlashParticle->SetTexture(L"Slash2");
+		m_spSlashParticle->SetTexture(L"Slash3");
 		
 		m_spSlashParticle->SetParticleType(PARTICLE_SLASH);
 		*m_spSlashParticle->GetParticleSystem()->GetCreateInterval() = 0.35f;

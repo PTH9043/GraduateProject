@@ -187,7 +187,8 @@ SHPTR<URenderTargetGroup> spShadowDepthGroup{ spGameInstance->FindRenderTargetGr
 		GetShader()->BindSRVBuffer(SRV_REGISTER::T1, spShadowDepthGroup->GetRenderTargetTexture(RTOBJID::NONALPHA_DEPTH_DEFFERED));
 		break;
 	case PARTICLE_SLASH:
-		GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTexGroup->GetTexture(TextureIndex));
+		GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTexGroup->GetTexture(L"Slash3"));
+		GetShader()->BindSRVBuffer(SRV_REGISTER::T2, m_spTexGroup->GetTexture(L"Slash2"));
 		GetShader()->BindSRVBuffer(SRV_REGISTER::T1, spShadowDepthGroup->GetRenderTargetTexture(RTOBJID::NONALPHA_DEPTH_DEFFERED));
 		break;
 	case PARTICLE_FOOTPRINT:

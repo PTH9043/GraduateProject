@@ -38,6 +38,7 @@
 #define PROTO_RES_GUARDSHADER L"Proto_Res_GuardShader"
 #define PROTO_RES_BLOODSHADER L"Proto_Res_BloodShader"
 #define PROTO_RES_DUSTSHADER L"Proto_Res_DustShader"
+#define PROTO_RES_MATSHADER L"Proto_Res_MatShader"
 #define PROTO_RES_INSTANCERECTSHADER L"Proto_Res_InstanceRectShader"
 #define PROTO_RES_DEFAULTOBJECTSHADER L"Proto_Res_DefaultObjectShader"
 #define PROTO_RES_ANIMMODELSHADER L"Proto_Res_AnimModelShader"
@@ -116,6 +117,7 @@
 #define PROTO_ACTOR_GUARD L"Proto_Actor_Guard"
 #define PROTO_ACTOR_BLOOD L"Proto_Actor_Blood"
 #define PROTO_ACTOR_DUST L"Proto_Actor_Dust"
+#define PROTO_ACTOR_MAT L"Proto_Actor_Mat"
 #define PROTO_ACTOR_FIRE L"Proto_Actor_Fire"
 #define PROTO_ACTOR_FOG L"Proto_Actor_Fog"
 #define PROTO_ACTOR_MIRROR L"Proto_Actor_Mirror"
@@ -125,6 +127,7 @@
 // Texture
 
 #define PROTO_RES_PARTICLETEXTUREGROUP L"Proto_Res_ParticleTextureGroup"
+#define PROTO_RES_MATTEXTUREGROUP L"Proto_Res_MatTextureGroup"
 #define PROTO_RES_ANIMPARTICLETEXTUREGROUP L"Proto_Res_AnimParticleTextureGroup"
 #define PROTO_RES_FIRECOLORTEXTUREGROUP L"Proto_Res_FireColorTextureGroup"
 #define PROTO_RES_FIRENOISETEXTUREGROUP L"Proto_Res_FireNoiseTextureGroup"
@@ -149,6 +152,7 @@
 #define LAYER_TRAIL L"LayerTrail"
 #define LAYER_GUARD L"LayerGuard"
 #define LAYER_BLOOD L"LayerBlood"
+#define LAYER_MAT L"LayerMat"
 #define LAYER_DUST L"LayerDust"
 #define LAYER_MIRROR L"LayerMirror"
 #define LAYER_SCREENRENDEROBJ L"LayerScreenRenderObj"
