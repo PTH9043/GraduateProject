@@ -61,8 +61,8 @@ void UDust::TickActive(const _double& _dTimeDelta)
 
 	if (_bloodTimer.m_fLeftTime > 0.f) {
 		_bloodTimer.m_fLeftTime -= _dTimeDelta;
-		ScaleValue.x += 7.5 * _dTimeDelta;
-		ScaleValue.y += 5 * _dTimeDelta;
+		ScaleValue.x += 3.5 * _dTimeDelta;
+		ScaleValue.y += 2.5 * _dTimeDelta;
 	}
 	{
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);

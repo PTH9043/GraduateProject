@@ -81,9 +81,9 @@ PS_OUT PS_Main(PS_In In)
     float depthDifference = abs(fViewZ - In.vPosition.w);
 
 
-    float fDistance = smoothstep(0.0, 1.0, depthDifference * 0.1); 
+    float fDistance = smoothstep(0.0, 1.0, depthDifference * 0.05); 
     Out.vColor.rgb *= float3(0.4, 0.4, 0.4);
-   // Out.vColor.a *= fDistance ;
+    Out.vColor.a *= fDistance ;
     Out.vColor.a *= fTransparency;
     Out.vSpecular = float4(Out.vColor.rgb, 0.5f);
     

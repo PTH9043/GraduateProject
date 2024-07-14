@@ -250,7 +250,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		m_spDust->SetActive(true);
 		m_spDust->SetTimer(2.f);
 		_float3 pos = GetTransform()->GetPos();
-		
+		pos.y += 1;
 		m_spDust->GetTransform()->SetPos(pos);
 	}
 	if (m_spDust->CheckTimeOver()) {
