@@ -1503,5 +1503,8 @@
     <FxCompile Include="..\..\Shader\Mat.hlsl">
       <Filter>98.ShaderFile\Mat</Filter>
     </FxCompile>
+    <FxCompile Include="..\..\Shader\HdrTwo.hlsl">
+      <Filter>98.ShaderFile\Common\HdrBloomBlur</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -98,6 +98,7 @@ private:
 	void Render2DUI();
 	// HDR
 	void RenderHDR();
+	void RenderHDRTWO();
 	void RenderGrayScale();
 	// Bloom, Blur
 	void RenderHorizontalBlur();

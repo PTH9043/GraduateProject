@@ -60,6 +60,30 @@ PS_OUT PS_Main(PS_In Input)
     float distanceFromOrigin = distance(float2(640, 460), float2(Input.vPosition.xy));
    
     float4 baseColor = g_Texture0.Sample(g_Sampler_Normal, Input.vTexUV);
+    
+    {
+        float4 targetColor = g_Texture8.Sample(g_Sampler_Normal, Input.vTexUV);
+        targetColor += float4(0.15, 0.15, 0.15, 0);
+        float4 outputColor;
+
+        float initialRadius = 600.0f;
+        float finalRadius = 850.0f;
+        float currentRadius = initialRadius; // 2.8초 후의 반경
+
+        if (distanceFromOrigin <= currentRadius)
+        {
+            outputColor = baseColor;
+        }
+        else
+        {
+            float distanceFactor = saturate((distanceFromOrigin - currentRadius) / (finalRadius - currentRadius));
+            outputColor = lerp(baseColor, targetColor, distanceFactor);
+        }
+
+        baseColor = outputColor;
+        
+    }
+ 
     float transitionProgress;
     if (IsDead)
     {
@@ -76,34 +100,15 @@ PS_OUT PS_Main(PS_In Input)
     {
     
         float4 targetColor = g_Texture8.Sample(g_Sampler_Normal, Input.vTexUV);
-        targetColor += float4(0.15, 0.15, 0.15, 0);
+     
         float4 outputColor;
 
-        float blendFactor;
         float initialBlendTime = 0.3f;
         float fadeOutStartTime = 2.3f;
         float fadeOutEndTime = 2.8f;
-
-
-        if (HitTime <= initialBlendTime)
-        {
-            blendFactor = 0.0f; 
-        }
-        else if (HitTime <= fadeOutStartTime)
-        {
-            blendFactor = saturate((HitTime - initialBlendTime) / (fadeOutStartTime - initialBlendTime)); 
-        }
-        else if (HitTime <= fadeOutEndTime)
-        {
-            blendFactor = 1.0f - saturate((HitTime - fadeOutStartTime) / (fadeOutEndTime - fadeOutStartTime));
-        }
-        else
-        {
-            blendFactor = 0.0f; 
-        }
-        
-        float initialRadius = 75.0f;
-        float finalRadius = 700.0f;
+       
+        float initialRadius = 0.001f;
+        float finalRadius = 750.0f;
         float currentRadius;
 
 
@@ -120,12 +125,12 @@ PS_OUT PS_Main(PS_In Input)
 
         if (distanceFromOrigin <= currentRadius)
         {
-            outputColor = baseColor;
+            outputColor = targetColor;
         }
         else
         {
             float distanceFactor = saturate((distanceFromOrigin - currentRadius) / (finalRadius - currentRadius));
-            outputColor = lerp(baseColor, targetColor, distanceFactor);
+            outputColor = lerp(targetColor, baseColor, distanceFactor);
         }
 
 

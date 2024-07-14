@@ -1184,6 +1184,12 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 					DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
 					DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
 
+			CreateGraphicsShader(PROTO_RES_HDRTWOSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"HdrTwo", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{
+					DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
+					DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
+
 			CreateGraphicsShader(PROTO_RES_GRAYSCALESHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"GrayScale", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{
@@ -1812,6 +1818,15 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 			// Add 
 			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::HDR, vecRts);
 		}
+
+		{
+			std::vector<RTDESC> vecRts{
+				RTDESC{ RTOBJID::HDRTWO, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
+					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f }  }
+			};
+			// Add 
+			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::HDRTWO, vecRts);
+		}
 		{
 			std::vector<RTDESC> vecRts{
 				RTDESC{ RTOBJID::GRAY_SCALE, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
@@ -1885,10 +1900,10 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::GRAY_SCALE, RTOBJID::GRAY_SCALE,
 		_float2(300.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::BLUR_RESULT, RTOBJID::BLUR_RESULT,
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::HDR, RTOBJID::HDR,
 		_float2(605.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::BLOOM, RTOBJID::BLOOM,
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::HDRTWO, RTOBJID::HDRTWO,
 		_float2(910.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 #endif
 	return S_OK;

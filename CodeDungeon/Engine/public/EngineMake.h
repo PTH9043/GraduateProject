@@ -33,6 +33,7 @@
 #define PROTO_RES_UPSAMPLINGSHADER L"Proto_Res_UpSamplingShader"
 #define PROTO_RES_UPSAMPLINGGRAYSHADER L"Proto_Res_UpSamplingGrayShader"
 #define PROTO_RES_HDRSHADER L"Proto_Res_HdrShader"
+#define PROTO_RES_HDRTWOSHADER L"Proto_Res_HdrTwoShader"
 #define PROTO_RES_GRAYSCALESHADER L"Proto_Res_GrayScaleShader"
 #define PROTO_RES_TRAILSHADER L"Proto_Res_TrailShader"
 #define PROTO_RES_GUARDSHADER L"Proto_Res_GuardShader"
