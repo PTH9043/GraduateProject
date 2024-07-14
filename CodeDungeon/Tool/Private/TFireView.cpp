@@ -10,6 +10,7 @@
 #include "UFire.h"
 #include "UGuard.h"
 #include "UBlood.h"
+#include "UDust.h"
 
 
 TFireView::TFireView(CSHPTRREF<UDevice> _spDevice) :
@@ -112,6 +113,7 @@ HRESULT TFireView::LoadResource()
 
 	
 	m_stBlood = std::static_pointer_cast<UBlood>(spGameInstance->CloneActorAdd(PROTO_ACTOR_BLOOD));
+	m_stDust = std::static_pointer_cast<UDust>(spGameInstance->CloneActorAdd(PROTO_ACTOR_DUST));
 
 
 	ResizeMultipleParticleVector(1);
@@ -387,6 +389,10 @@ void TFireView::FireView()
 				m_stGuard->SetActive(true);
 				m_stBlood->SetActive(true);
 				m_stBlood->SetTimer(1.75f);
+			
+				m_stDust->SetActive(true);
+				m_stDust->SetTimer(2.f);
+				m_stDust->GetTransform()->SetPos(_float3(-196, -79, 132));
 				_float3 firepos = m_stFire->GetTransform()->GetPos();
 				m_MultipleParticle[0]->GetTransform()->SetPos(_float3(firepos.x, firepos.y-3.f, firepos.z));
 			}
@@ -397,6 +403,7 @@ void TFireView::FireView()
 				m_stFire->SetActive(false);
 				m_stGuard->SetActive(false);
 				m_stBlood->SetActive(false);
+				m_stDust->SetActive(false);
 			}
 
 			FireColorTextureSetting();

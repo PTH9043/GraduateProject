@@ -20,7 +20,7 @@
 #include "UProcessedData.h"
 #include "UMethod.h"
 #include "UAnimation.h"
-
+#include "UDust.h"
 
 CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UPlayer(_spDevice, _wstrLayer, _eCloneType), 
@@ -142,7 +142,9 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	{
 		m_spBlood = std::static_pointer_cast<UBlood>(spGameInstance->CloneActorAdd(PROTO_ACTOR_BLOOD));
 	}
-
+	{
+		m_spDust = std::static_pointer_cast<UDust>(spGameInstance->CloneActorAdd(PROTO_ACTOR_DUST));
+	}
 
 	for (auto& Colliders : GetColliderContainer())
 	{
@@ -244,7 +246,16 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		m_spBlood->SetActive(false);
 	}
 		
-	
+	if (spGameInstance->GetDIKeyDown(DIK_F5)) {
+		m_spDust->SetActive(true);
+		m_spDust->SetTimer(2.f);
+		_float3 pos = GetTransform()->GetPos();
+		
+		m_spDust->GetTransform()->SetPos(pos);
+	}
+	if (m_spDust->CheckTimeOver()) {
+		m_spDust->SetActive(false);
+	}
 	
 	// Rotation 
 	{

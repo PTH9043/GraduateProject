@@ -54,6 +54,7 @@
     <ClInclude Include="..\public\UCharacterManager.h" />
     <ClInclude Include="..\public\UController.h" />
     <ClInclude Include="..\public\UDefensiveGear.h" />
+    <ClInclude Include="..\public\UDust.h" />
     <ClInclude Include="..\public\UEquipment.h" />
     <ClInclude Include="..\public\UFire.h" />
     <ClInclude Include="..\public\UFog.h" />
@@ -184,6 +185,7 @@
     <ClCompile Include="..\private\UCharacterManager.cpp" />
     <ClCompile Include="..\private\UController.cpp" />
     <ClCompile Include="..\private\UDefensiveGear.cpp" />
+    <ClCompile Include="..\private\UDust.cpp" />
     <ClCompile Include="..\private\UEquipment.cpp" />
     <ClCompile Include="..\private\UFire.cpp" />
     <ClCompile Include="..\private\UFog.cpp" />
@@ -342,6 +344,7 @@
     <FxCompile Include="..\..\Shader\DepthRecord.hlsl" />
     <FxCompile Include="..\..\Shader\DownSampling.hlsl" />
     <FxCompile Include="..\..\Shader\DownSamplingTwo.hlsl" />
+    <FxCompile Include="..\..\Shader\Dust.hlsl" />
     <FxCompile Include="..\..\Shader\Equipment.hlsl" />
     <FxCompile Include="..\..\Shader\GrayScale.hlsl" />
     <FxCompile Include="..\..\Shader\Guard.hlsl" />

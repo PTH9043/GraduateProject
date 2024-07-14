@@ -44,6 +44,9 @@ public:
 
 	const _bool& GetFallingState() { return m_bisFalling; }
 	void SetFallingState(const _bool& _fallstate) { m_bisFalling = _fallstate; }
+
+	const _bool& GetFallOverState() { return m_bisFallOver; }
+	void SetFallOverState(const _bool& _fallstate) { m_bisFallOver = _fallstate; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) PURE;
 	virtual void LateTickActive(const _double& _dTimeDelta) PURE;
@@ -60,6 +63,7 @@ private:
 	SHPTR<UCamera>		m_spFollowCamera;
 	_bool								m_bisJumping;
 	_bool								m_bisFalling;
+	_bool								m_bisFallOver;
 };
 
 END

@@ -69,8 +69,8 @@ PS_OUT PS_Main(PS_In Input)
        
 
        
-    //    float4 shadowViewPos = mul(vWorldPosition, g_ViewProjInfoArr[2].mViewMatrix);
-    //    float4 shadowClipPos = mul(shadowViewPos, g_ViewProjInfoArr[2].mProjMatrix);
+    //    float4 shadowViewPos = mul(vWorldPosition, g_ViewProjInfoArr[3].mViewMatrix);
+    //    float4 shadowClipPos = mul(shadowViewPos, g_ViewProjInfoArr[3].mProjMatrix);
     //    float depth = shadowClipPos.z / shadowClipPos.w;
 
     //    // x [-1 ~ 1] -> u [0 ~ 1]

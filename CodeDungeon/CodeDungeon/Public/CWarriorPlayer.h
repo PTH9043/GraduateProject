@@ -7,6 +7,7 @@ class UParticle;
 class UParticleSystem;
 class UTrail;
 class UBlood;
+class UDust;
 END
 
 BEGIN(Client)
@@ -63,6 +64,7 @@ private:
 	SHPTR<CSword>												m_spSword;
 	SHPTR<UTrail>												m_spTrail;
 	SHPTR<UBlood>												m_spBlood;
+	SHPTR<UDust>												m_spDust;
 	_bool																isAttack;
 
 	_bool m_bisCollisionWithObj;
