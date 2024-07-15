@@ -28,7 +28,7 @@ namespace Server
 		{
 			SetMonsterType(TAG_CHAR::TAG_MUMMY_STANDING);
 		}
-		UpdateFindRange(40.f, 80.f);
+		UpdateFindRange(30.f, 80.f);
 		SetMoveSpeed(5);
 		SetAttackRange(15.f);
 	}
@@ -148,6 +148,23 @@ namespace Server
 
 		ComputeNextDir(_dTimeDelta);
 		__super::Tick(_dTimeDelta);
+	}
+
+	void CMummy::State(SHPTR<ASession> _spSession, _int _MonsterState)
+	{
+		FindPlayer(_spSession);
+
+		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+		SHPTR<AAnimController> spAnimController = GetAnimController();
+		SHPTR<AAnimator> spAnimator = spAnimController->GetAnimator();
+		SHPTR<AAnimation> spCurAnimation = spAnimator->GetCurAnimation();
+		SHPTR<ATransform> spTransform = GetTransform();
+		_string strCurAnimName = spCurAnimation->GetAnimName();
+
+		if (true == IsCurrentFindPlayer())
+		{
+			UpdateTargetPos(_spSession->GetTransform());
+		}
 
 		VECTOR3 vRotate;
 		VECTOR3 vPos;
@@ -171,23 +188,6 @@ namespace Server
 		}
 	}
 
-	void CMummy::State(SHPTR<ASession> _spSession, _int _MonsterState)
-	{
-		FindPlayer(_spSession);
-
-		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
-		SHPTR<AAnimController> spAnimController = GetAnimController();
-		SHPTR<AAnimator> spAnimator = spAnimController->GetAnimator();
-		SHPTR<AAnimation> spCurAnimation = spAnimator->GetCurAnimation();
-		SHPTR<ATransform> spTransform = GetTransform();
-		_string strCurAnimName = spCurAnimation->GetAnimName();
-
-		if (true == IsCurrentFindPlayer())
-		{
-			UpdateTargetPos(_spSession->GetTransform());
-		}
-	}
-
 	bool CMummy::IsHit(APawn* _pPawn, const _double& _dTimeDelta)
 	{
 		return false;
@@ -195,6 +195,7 @@ namespace Server
 
 	void CMummy::Collision(APawn* _pPawn, const _double& _dTimeDelta)
 	{
+
 	}
 
 	void CMummy::Free()

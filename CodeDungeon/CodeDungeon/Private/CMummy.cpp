@@ -350,9 +350,6 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 						// Decrease health on hit
 						DecreaseHealth(pCharacter->GetAttack());
 					}
-					
-
-
 					SetHitAlreadyState(true);
 				}
 			}

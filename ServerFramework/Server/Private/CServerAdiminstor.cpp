@@ -147,6 +147,7 @@ namespace Server
 				break;
 			}
 			spCoreInstance->InsertMobObject(spMonster->GetSessionID(), spMonster);
+			spCoreInstance->AddMonsterPawnList(spMonster.get());
 			spMonster->Start({ &iter });
 		}
 		IncreaseCurrentSessionCount(MobServerLayoutLoader.GetMobData().size());

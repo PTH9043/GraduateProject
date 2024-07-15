@@ -65,6 +65,15 @@ message CHARMOVE
 	float rotateZ = 7;
 }
 
+message ATKCOLLISION 
+{
+	int64 id = 1;
+	// Move
+	float collX = 2;
+	float moveY = 3;
+	float moveZ = 4;
+}
+
 /*
 ======================================
 Server
