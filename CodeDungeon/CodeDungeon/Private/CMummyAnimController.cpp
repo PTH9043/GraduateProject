@@ -18,8 +18,8 @@ CMummyAnimController::CMummyAnimController(CSHPTRREF<UDevice> _spDevice)
     m_dIdleTimer{0},
     m_bFoundPlayerFirsttime{false},
     m_didleRandomValueChoosingTimer{0},
-    m_iRandomValue{0},
-    m_dRecvAnimDuration{0}
+    m_iRandomValue{ 0 },
+    m_dRecvAnimDuration{ 0 }
 {
 }
 
@@ -60,10 +60,18 @@ HRESULT CMummyAnimController::NativeConstructClone(const VOIDDATAS& _tDatas)
 void CMummyAnimController::Tick(const _double& _dTimeDelta)
 {
     SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis_patrol(0, 3);
+    std::uniform_int_distribution<> dis_attack(0, 1);
+
+
     ClearTrigger();
     SetAnimState(-1);
     SHPTR<CMummy> spMummy = m_wpMummyMob.lock();
     SHPTR<UAnimModel> spAnimModel = spMummy->GetAnimModel();
+
 #ifndef _ENABLE_PROTOBUFF
     const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
 
@@ -106,7 +114,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
             m_didleRandomValueChoosingTimer += _dTimeDelta;
             if (m_didleRandomValueChoosingTimer > 2)
             {
-                m_iRandomValue = std::rand() % 4;
+                m_iRandomValue = dis_patrol(gen);
             }
 
             if (m_iRandomValue == 0)
@@ -180,6 +188,9 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     {
         UpdateState(spAnimModel, ANIM_DEATH, L"DEAD");
     }
+
+#endif
+
     // Tick event
     spAnimModel->TickEvent(spMummy.get(), GetTrigger(), _dTimeDelta);
 #else

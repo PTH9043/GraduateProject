@@ -36,7 +36,8 @@ HRESULT CSarcophagus::NativeConstructClone(const VOIDDATAS& _Datas)
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	SetPawnType(PAWNTYPE::PAWN_STATICOBJ);
-
+	SetActivationRange(30);
+	SetDeactivationRange(80);
 	/*UCollider::COLLIDERDESC tDesc;
 	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
 	tDesc.vScale = _float3(1.f, 1.f, 1.f);

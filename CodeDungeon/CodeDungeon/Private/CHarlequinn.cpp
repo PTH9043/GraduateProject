@@ -115,10 +115,12 @@ HRESULT CHarlequinn::NativeConstructClone(const VOIDDATAS& _Datas)
 	Desc._Worldm = GetTransform()->GetWorldMatrix();
 	SHPTR<CShurikenThrowing> ShurikenThrowing = std::static_pointer_cast<CShurikenThrowing>(spGameInstance->CloneActorAdd(PROTO_ACTOR_SHURIKENTHROWING, { &Desc }));
 	m_spShurikensForThrowing->push_back(ShurikenThrowing);
+	spGameInstance->AddCollisionPawnList(ShurikenThrowing);
 	for(int i = 0; i < 5; i++)
 	{
 		ShurikenThrowing = std::static_pointer_cast<CShurikenThrowing>(spGameInstance->CloneActorAdd(PROTO_ACTOR_SHURIKENTHROWING, { &Desc }));
 		m_spShurikensForThrowing->push_back(ShurikenThrowing);
+		spGameInstance->AddCollisionPawnList(ShurikenThrowing);
 	}
 	
 
@@ -136,6 +138,9 @@ HRESULT CHarlequinn::NativeConstructClone(const VOIDDATAS& _Datas)
 	}
 
 	SetHealth(200);
+
+	SetActivationRange(50);
+	SetDeactivationRange(100);
 
 	return S_OK;
 }
@@ -168,7 +173,7 @@ void CHarlequinn::TickActive(const _double& _dTimeDelta)
 		// A* for moving towards player when player is found
 		if (GetFoundTargetState())
 		{
-			SetOutline(true);
+			//SetOutline(true);
 			if (GetTimeAccumulator() >= 1.0)
 			{
 				SHPTR<UNavigation> spNavigation = GetCurrentNavi();
@@ -228,8 +233,7 @@ void CHarlequinn::TickActive(const _double& _dTimeDelta)
 		}
 		
 	}
-	else if(CurAnimState == UAnimationController::ANIM_IDLE)
-		SetOutline(false);
+
 	if (CurAnimName == L"Get Hit")
 	{
 		_float3 direction = CurrentMobPos - CurrentPlayerPos;
@@ -248,12 +252,6 @@ void CHarlequinn::TickActive(const _double& _dTimeDelta)
 		if (GetElapsedTime() < DeathTimeArcOpenEnd)
 			GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
 	}
-	else if (CurAnimState == UAnimationController::ANIM_IDLE)
-	{
-		SetOutline(false);
-		GetAnimModel()->TickAnimation(_dTimeDelta);
-		GetTransform()->SetPos(GetTransform()->GetPos());
-	}
 	else
 	{
 		GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
@@ -266,6 +264,16 @@ void CHarlequinn::TickActive(const _double& _dTimeDelta)
 void CHarlequinn::LateTickActive(const _double& _dTimeDelta)
 {
 	__super::LateTickActive(_dTimeDelta);
+
+	const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
+
+	if(CurAnimName != L"Jump Forward" && CurAnimName != L"Attack 4" && CurAnimName != L"Attack")
+	{
+		_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
+		GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
+	}
+
+
 	/*for (auto& Colliders : GetColliderContainer())
 		if(Colliders.first == L"Main")
 			Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);*/

@@ -63,6 +63,11 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
 {
     SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis_patrol(0, 3);
+    std::uniform_int_distribution<> dis_attack(0, 3);
+
     ClearTrigger();
     SetAnimState(-1);
 
@@ -102,7 +107,7 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
             m_didleRandomValueChoosingTimer += _dTimeDelta;
             if(m_didleRandomValueChoosingTimer > 2)
             {
-                m_iRandomValue = std::rand() % 4;
+                m_iRandomValue = dis_patrol(gen);
             }
 
             if (m_iRandomValue == 0)

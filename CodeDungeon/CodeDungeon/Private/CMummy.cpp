@@ -114,7 +114,7 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 		
 		m_spSlashParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleType = PARTICLE_TYPE_DEFAULT;
 		m_spSlashParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
-		m_spSlashParticle->SetTexture(L"Slash2");
+		m_spSlashParticle->SetTexture(L"Slash3");
 		
 		m_spSlashParticle->SetParticleType(PARTICLE_SLASH);
 		*m_spSlashParticle->GetParticleSystem()->GetCreateInterval() = 0.35f;
@@ -135,6 +135,8 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 	}
 
 	SetHealth(100);
+	SetActivationRange(30);
+	SetDeactivationRange(80);
 
 
 	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
@@ -281,6 +283,10 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 void CMummy::LateTickActive(const _double& _dTimeDelta)
 {
 	__super::LateTickActive(_dTimeDelta);
+
+	_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
+	GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
+
 	//for (auto& Colliders : GetColliderContainer())
 	//	if(Colliders.first == L"Main")
 	//		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);

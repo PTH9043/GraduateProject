@@ -65,6 +65,8 @@
 #include "UTrail.h"
 #include "UGuard.h"
 #include "UBlood.h"
+#include "UDust.h"
+#include "UMat.h"
 
 //#include "UMirror.h"
 //#include "UScreenRenderObj.h"
@@ -1055,13 +1057,30 @@ void UGameInstance::TurnOffFog() {
 	if (m_spRenderer != nullptr)m_spRenderer->TurnOffFog();
 }
 
-void UGameInstance::TurnOnGrayScale() {
-	if (m_spRenderer != nullptr)m_spRenderer->TurnOnGrayScale();
+void UGameInstance::TurnOnDieEffect() {
+	if (m_spRenderer != nullptr)m_spRenderer->TurnOnDieEffect();
 }
 
-void UGameInstance::TurnOffGrayScale() {
-	if (m_spRenderer != nullptr)m_spRenderer->TurnOffGrayScale();
+void UGameInstance::TurnOffDieEffect() {
+	if (m_spRenderer != nullptr)m_spRenderer->TurnOffDieEffect();
 }
+
+void UGameInstance::TurnOnAbilityEffect() {
+	if (m_spRenderer != nullptr)m_spRenderer->TurnOnAbilityEffect();
+}
+
+void UGameInstance::TurnOffAbilityEffect() {
+	if (m_spRenderer != nullptr)m_spRenderer->TurnOffAbilityEffect();
+}
+
+void UGameInstance::TurnOnHitEffect() {
+	if (m_spRenderer != nullptr)m_spRenderer->TurnOnHitEffect();
+}
+
+void UGameInstance::TurnOffHitEffect() {
+	if (m_spRenderer != nullptr)m_spRenderer->TurnOffHitEffect();
+}
+
 /*
 ==================================================
 Renderer Fog Setting
@@ -1175,6 +1194,12 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 					DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
 					DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
 
+			CreateGraphicsShader(PROTO_RES_HDRTWOSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"HdrTwo", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{
+					DXGI_FORMAT_R32G32B32A32_FLOAT }, RASTERIZER_TYPE::CULL_BACK,
+					DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE));
+
 			CreateGraphicsShader(PROTO_RES_GRAYSCALESHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"GrayScale", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{
@@ -1201,6 +1226,21 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 					DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R16G16B16A16_FLOAT
 					},RASTERIZER_TYPE::CULL_BACK,
 					DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE, BLEND_TYPE::ALPHA_BLEND));
+
+			CreateGraphicsShader(PROTO_RES_DUSTSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"Dust", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM,DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
+					DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R16G16B16A16_FLOAT
+					}, RASTERIZER_TYPE::CULL_BACK,
+					DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE, BLEND_TYPE::ALPHA_BLEND));
+
+			CreateGraphicsShader(PROTO_RES_MATSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"Mat", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }, RENDERFORMATS{ DXGI_FORMAT_R8G8B8A8_UNORM,DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R32G32B32A32_FLOAT,
+					DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R32G32B32A32_FLOAT,DXGI_FORMAT_R16G16B16A16_FLOAT
+					}, RASTERIZER_TYPE::CULL_BACK,
+					DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE, BLEND_TYPE::ALPHA_BLEND));
+
 
 			CreateGraphicsShader(PROTO_RES_HORIZONTALBLURSHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"HorizontalBlur", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
@@ -1605,6 +1645,12 @@ HRESULT UGameInstance::ReadyActor(const OUTPUTDATA& _stData)
 	AddPrototype(PROTO_ACTOR_BLOOD, CreateConstructorToNative<UBlood>(
 		_stData.wpDevice.lock(), LAYER_BLOOD, CLONETYPE::CLONE_ONCE));
 
+	AddPrototype(PROTO_ACTOR_DUST, CreateConstructorToNative<UDust>(
+		_stData.wpDevice.lock(), LAYER_DUST, CLONETYPE::CLONE_ONCE));
+
+	AddPrototype(PROTO_ACTOR_MAT, CreateConstructorToNative<UMat>(
+		_stData.wpDevice.lock(), LAYER_MAT, CLONETYPE::CLONE_ONCE));
+
 	AddPrototype(PROTO_ACTOR_FIRE, CreateConstructorToNative<UFire>(
 		_stData.wpDevice.lock(), LAYER_DEFAULT, CLONETYPE::CLONE_ONCE));
 
@@ -1782,6 +1828,15 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 			// Add 
 			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::HDR, vecRts);
 		}
+
+		{
+			std::vector<RTDESC> vecRts{
+				RTDESC{ RTOBJID::HDRTWO, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
+					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f }  }
+			};
+			// Add 
+			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::HDRTWO, vecRts);
+		}
 		{
 			std::vector<RTDESC> vecRts{
 				RTDESC{ RTOBJID::GRAY_SCALE, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
@@ -1855,10 +1910,10 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::GRAY_SCALE, RTOBJID::GRAY_SCALE,
 		_float2(300.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::BLUR_RESULT, RTOBJID::BLUR_RESULT,
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::HDR, RTOBJID::HDR,
 		_float2(605.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::BLOOM, RTOBJID::BLOOM,
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::HDRTWO, RTOBJID::HDRTWO,
 		_float2(910.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 #endif
 	return S_OK;

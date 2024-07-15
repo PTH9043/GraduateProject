@@ -23,6 +23,7 @@
 #include "CSarcophagus.h"
 #include "CMinotaur.h"
 #include "CHarlequinn.h"
+#include "CAnubis.h"
 
 CMap::CMap(CSHPTRREF<UDevice> _spDevice) : UComponent(_spDevice),
 m_spRoomContainer{nullptr},
@@ -140,6 +141,7 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 	MOBCONTAINER _MummyVec;
 	MOBCONTAINER _MinotaurVec;
 	MOBCONTAINER _HarlequinnVec;
+	MOBCONTAINER _AnubisVec;
 
 	for (auto& it : (*m_spMapLayout->GetMapMobsContainer().get()))
 	{
@@ -226,6 +228,19 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 				spGameInstance->AddCollisionPawnList(_Harlequinn);
 				_HarlequinnVec.push_back(_Harlequinn);
 			}
+			else if (vecit._sAnimModelName == "Anubis_FBX.bin")
+			{
+				CAnubis::CHARACTERDESC AnubisDesc{ PROTO_RES_ANUBISANIMMODEL, PROTO_COMP_ANUBISANIMCONTROLLER };
+				SHPTR<CAnubis> _Anubis = std::static_pointer_cast<CAnubis>(spGameInstance->CloneActorAdd(
+					PROTO_ACTOR_ANUBIS, { &AnubisDesc }));
+				_Anubis->GetTransform()->SetPos(vecit._mWorldMatrix.Get_Pos());
+				_Anubis->GetTransform()->SetDirection(vecit._mWorldMatrix.Get_Look());
+				_Anubis->GetAnimModel()->SetAnimation(UMethod::ConvertSToW(vecit._sAnimName));
+				_Anubis->SetTargetPlayer(_spPlayer);
+				_Anubis->GetCurrentNavi()->FindCell(_Anubis->GetTransform()->GetPos());
+				spGameInstance->AddCollisionPawnList(_Anubis);
+				_AnubisVec.push_back(_Anubis);
+			}
 #endif
 		}
 	}
@@ -234,5 +249,6 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 	m_spMobsContainer->emplace("Mummy_DEMO_1_FBX.bin", _MummyVec);
 	m_spMobsContainer->emplace("minotaur_FBX.bin", _MinotaurVec);
 	m_spMobsContainer->emplace("Harlequin1_FBX.bin", _HarlequinnVec);
+	m_spMobsContainer->emplace("Anubis_FBX.bin", _AnubisVec);
 }
 

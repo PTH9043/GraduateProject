@@ -46,6 +46,7 @@ void TImGuiView::CloseImGui()
 HRESULT TImGuiView::LoadResource()
 {
 	return S_OK;
+
 }
 
 HRESULT TImGuiView::ReleaseResource()

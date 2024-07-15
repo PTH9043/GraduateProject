@@ -47,9 +47,15 @@ private:
 
 	ARRAY<_float3, 6>		m_arrThrowingDir;
 
+	_double					m_didleRandomValueChoosingTimerforPatrol;
 
-	_double					m_didleRandomValueChoosingTimer;
-	_int					m_iRandomValue;
+	_int					m_iRandomValueforPatrol;
+	_int					m_iRandomValueforDodge;
+
+	_bool					m_bDodge;
+	_bool					m_bWillWalkUntilCloseRange;
+	_bool					m_bWillJumpToCloseRange;
+	
 };
 
 END

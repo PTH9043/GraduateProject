@@ -11,7 +11,8 @@ UPlayer::UPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const
 	: UCharacter(_spDevice, _wstrLayer, _eCloneType),
 	m_spFollowCamera{nullptr},
 	m_bisJumping{false},
-	m_bisFalling{false}
+	m_bisFalling{false},
+	m_bisFallOver{false}
 {
 }
 
@@ -19,7 +20,8 @@ UPlayer::UPlayer(const UPlayer& _rhs) :
 	UCharacter(_rhs),
 	m_spFollowCamera{ nullptr },
 	m_bisJumping{ false },
-	m_bisFalling{ false }
+	m_bisFalling{ false },
+	m_bisFallOver{ false }
 {
 }
 
@@ -145,8 +147,10 @@ void UPlayer::JumpState(const _double& _dTimeDelta)
 		if (GetTransform()->GetJumpVelocity().y < 0.f) //최대 높이까지 점프했다면 
 		{
 			//점프(상승) 해제, 낙하 수행
+		
 			m_bisJumping = false;
 			m_bisFalling = true;
+			
 			GetTransform()->DisableJump();
 		}
 
@@ -169,7 +173,9 @@ void UPlayer::JumpState(const _double& _dTimeDelta)
 				//낭떠러지 셀에서 밖으로 갔을 때, 중력 활성화(낙하)
 				//공중에서 발 아래의 셀을 찾고, 현재 셀로 설정함
 				newCell = spNavigation->FindCell(vPosition);
+				
 				m_bisFalling = true;
+				
 			}
 		}
 
@@ -185,11 +191,13 @@ void UPlayer::JumpState(const _double& _dTimeDelta)
 				GetTransform()->SetPos(_float3(vPosition.x, curCellCenterY, vPosition.z));
 				vPosition = GetTransform()->GetPos();
 			}
+			
 		}
 
 		//떨어지고 있지 않을 때, 그리고 점프하여 올라가고 있지 않을 때 셀 위의 높이를 탐
 		if (!m_bisFalling && !m_bisJumping)
 		{
+			
 			spNavigation->ComputeHeight(GetTransform());
 			if (std::abs(GetPrevPos().y - GetTransform()->GetPos().y) > 30.f)
 			{

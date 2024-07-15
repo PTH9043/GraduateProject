@@ -8,6 +8,7 @@ namespace Engine {
 		PAWN_PLAYER,
 		PAWN_ITEM,
 		PAWN_STATICOBJ,
+		PAWN_PROJECTILE,
 		PAWN_ECT
 	};
 
@@ -260,6 +261,7 @@ namespace Engine {
 		BLUR,
 		BLUR_RESULT,
 		HDR,
+		HDRTWO,
 		GRAY_SCALE,
 		UI2D_DEFFERED,
 		BLEND_DEFFERED,
@@ -285,6 +287,7 @@ namespace Engine {
 		UPSAMPLE,
 		UPSAMPLEGRAY,
 		HDR,
+		HDRTWO,
 		GRAY_SCALE,
 		BLUR_RESULT,
 

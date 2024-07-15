@@ -6,9 +6,13 @@
 cbuffer FogBuffer : register(b14)
 {
     int IsFogOn;
-    float3 padding;
-    int IsGrayScale;
-    float3 padding2;
+    int IsDead;
+    int IsAbility;
+    int IsHit;
+    float DieTime;
+    float AbilityTime;
+    float HitTime;
+    float padding;
 };
 
 
@@ -50,28 +54,105 @@ struct PS_OUT
 PS_OUT PS_Main(PS_In Input)
 {
     PS_OUT Out = (PS_OUT) 0;
+    
+    
+    //float distanceFromOrigin = distance(float2(640, 540), float2(Input.vPosition.xy));
+    float distanceFromOrigin = distance(float2(640, 460), float2(Input.vPosition.xy));
+   
     float4 baseColor = g_Texture0.Sample(g_Sampler_Normal, Input.vTexUV);
-    float transitionProgress = 0.0;
-    if (!IsGrayScale)
+    
     {
-        transitionProgress = 0.0f;
-        Out.vColor = baseColor;
+        float4 targetColor = g_Texture8.Sample(g_Sampler_Normal, Input.vTexUV);
+        targetColor += float4(0.15, 0.15, 0.15, 0);
+        float4 outputColor;
+
+        float initialRadius = 600.0f;
+        float finalRadius = 850.0f;
+        float currentRadius = initialRadius; // 2.8초 후의 반경
+
+        if (distanceFromOrigin <= currentRadius)
+        {
+            outputColor = baseColor;
+        }
+        else
+        {
+            float distanceFactor = saturate((distanceFromOrigin - currentRadius) / (finalRadius - currentRadius));
+            outputColor = lerp(baseColor, targetColor, distanceFactor);
+        }
+
+        baseColor = outputColor;
         
     }
-    else
+ 
+    float transitionProgress;
+    if (IsDead)
     {
-        transitionProgress += fGrobalDeltaTime / 5.0f;
-      
-        
-        
-       
+        float transitionProgress = DieTime / 1.25f;
+           
         float4 targetColor = g_Texture6.Sample(g_Sampler_Normal, Input.vTexUV);
 
         
         float blendFactor = saturate(transitionProgress);
+        Out.vColor = lerp(float4(1, 0, 0, 1), targetColor, blendFactor);       
+        
+    }
+    else if (IsHit)
+    {
+    
+        float4 targetColor = g_Texture8.Sample(g_Sampler_Normal, Input.vTexUV);
+     
+        float4 outputColor;
+
+        float initialBlendTime = 0.3f;
+        float fadeOutStartTime = 2.3f;
+        float fadeOutEndTime = 2.8f;
+       
+        float initialRadius = 0.001f;
+        float finalRadius = 750.0f;
+        float currentRadius;
+
+
+        if (HitTime > initialBlendTime)
+        {
+            float normalizedBlendFactor = saturate((HitTime - initialBlendTime) / (fadeOutEndTime - initialBlendTime));
+            currentRadius = lerp(finalRadius, initialRadius, normalizedBlendFactor);
+        }
+        else
+        {
+            currentRadius = finalRadius; 
+        }
+
+
+        if (distanceFromOrigin <= currentRadius)
+        {
+            outputColor = targetColor;
+        }
+        else
+        {
+            float distanceFactor = saturate((distanceFromOrigin - currentRadius) / (finalRadius - currentRadius));
+            outputColor = lerp(targetColor, baseColor, distanceFactor);
+        }
+
+
+        Out.vColor = outputColor;
+      
+    }
+    else if (IsAbility)
+    {
+        float transitionProgress = AbilityTime / 0.5f;
+        float4 targetColor = g_Texture7.Sample(g_Sampler_Normal, Input.vTexUV);
+        float blendFactor = saturate(transitionProgress);
         Out.vColor = lerp(baseColor, targetColor, blendFactor);
+    }  
+    else
+    {
+        Out.vColor = baseColor;
        
     }
+    
+   
+   
+    
    
     //if (Out.vColor.a == 0)
     //    discard;
@@ -114,14 +195,18 @@ PS_OUT PS_Main(PS_In Input)
  
     Out.vColor += g_Texture1.Sample(g_Sampler_Normal, Input.vTexUV); //AlphaDeffered
 
-    float4 outline = g_Texture5.Sample(g_Sampler_Normal, Input.vTexUV);
-    
-    float4 vDepthDesc = g_Texture4.Sample(g_Sampler_Normal, Input.vTexUV);
-   
-    if (vDepthDesc.g >= 1.f && outline.w <= 1.f)
+    if (IsAbility)
     {
-        Out.vColor.xyz += outline.xyz;
+        float4 outline = g_Texture5.Sample(g_Sampler_Normal, Input.vTexUV);
+    
+        float4 vDepthDesc = g_Texture4.Sample(g_Sampler_Normal, Input.vTexUV);
+   
+        if (vDepthDesc.g >= 1.f && outline.w <= 1.f)
+        {
+            Out.vColor.xyz += outline.xyz;
+        }
     }
+   
   
     
     return Out;

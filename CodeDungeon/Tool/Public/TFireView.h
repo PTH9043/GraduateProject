@@ -7,6 +7,8 @@ class UParticle;
 class UFire;
 class UGuard;
 class UBlood;
+class UDust;
+class UMat;
 END
 
 BEGIN(Tool)
@@ -91,6 +93,8 @@ private:
 
 	SHPTR<UGuard> m_stGuard;
 	SHPTR<UBlood> m_stBlood;
+	SHPTR<UDust> m_stDust;
+	SHPTR<UMat> m_stMat;
 
 };
 

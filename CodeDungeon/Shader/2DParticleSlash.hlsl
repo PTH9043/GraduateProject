@@ -206,22 +206,36 @@ PS_OUT PS_Main(GS_OUT In)
 
     float fViewZ = vDepthDesc.x * GetViewProjInfo().fCamFar;
 
-// 깊이 차이 계산
+
     float depthDifference = abs(fViewZ - In.vPosition.w);
 
-// 깊이 차이에 기반하여 부드럽게 알파 값을 조정
-    float fDistance = smoothstep(0.0, 1.0, depthDifference * 0.05); // 0.0과 0.1은 필요시 조정
 
-// 텍스처 샘플링
-    Out.vColor = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV);
+    float fDistance = smoothstep(0.0, 1.0, depthDifference * 0.05); // 0.0과 0.1은 필요시 조정
+   
+    float particleTransparency = g_ParticleData[In.iInstanceID].fCurTime / g_ParticleData[In.iInstanceID].fLifeTime;
+
+   
+
+   //Out.vColor = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV);
+   //Out.vColor = g_Texture2.Sample(g_Sampler_Normal, In.vTexUV);
   //  Out.vColor.rgb *= 1.25;
-// 최소 알파 값을 유지하여 전체적으로 파티클이 보이도록 함
+
   //  float minAlpha = 0.2; // 최소 알파 값, 필요시 조정
   //  Out.vColor.a *= fDistance;
 
+    if (In.iInstanceID % 2 == 0)
+    {
+        Out.vColor = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV);
+    }
+    else
+    {
+        Out.vColor = g_Texture2.Sample(g_Sampler_Normal, In.vTexUV);     
+    }
+    //float4 color0 = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV);
+    //float4 color2 = g_Texture2.Sample(g_Sampler_Normal, In.vTexUV);
+    //
+    //Out.vColor = lerp(color0, color2, particleTransparency);
     
-    
-    float particleTransparency = g_ParticleData[In.iInstanceID].fCurTime / g_ParticleData[In.iInstanceID].fLifeTime;
     Out.vColor.a *= particleTransparency;
     if (Out.vColor.a < 0.1)
         discard;

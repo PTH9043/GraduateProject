@@ -10,6 +10,8 @@
 #include "UFire.h"
 #include "UGuard.h"
 #include "UBlood.h"
+#include "UDust.h"
+#include "UMat.h"
 
 
 TFireView::TFireView(CSHPTRREF<UDevice> _spDevice) :
@@ -112,6 +114,8 @@ HRESULT TFireView::LoadResource()
 
 	
 	m_stBlood = std::static_pointer_cast<UBlood>(spGameInstance->CloneActorAdd(PROTO_ACTOR_BLOOD));
+	m_stDust = std::static_pointer_cast<UDust>(spGameInstance->CloneActorAdd(PROTO_ACTOR_DUST));
+	m_stMat = std::static_pointer_cast<UMat>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MAT));
 
 
 	ResizeMultipleParticleVector(1);
@@ -387,6 +391,15 @@ void TFireView::FireView()
 				m_stGuard->SetActive(true);
 				m_stBlood->SetActive(true);
 				m_stBlood->SetTimer(1.75f);
+			
+				m_stDust->SetActive(true);
+				m_stDust->SetTimer(2.f);
+				m_stDust->GetTransform()->SetPos(_float3(-196, -79, 132));
+
+				m_stMat->SetActive(true);
+				m_stMat->SetTimer(50.f);
+				m_stMat->GetTransform()->SetPos(_float3(-196, -79, 132));
+
 				_float3 firepos = m_stFire->GetTransform()->GetPos();
 				m_MultipleParticle[0]->GetTransform()->SetPos(_float3(firepos.x, firepos.y-3.f, firepos.z));
 			}
@@ -397,6 +410,8 @@ void TFireView::FireView()
 				m_stFire->SetActive(false);
 				m_stGuard->SetActive(false);
 				m_stBlood->SetActive(false);
+				m_stDust->SetActive(false);
+				m_stMat->SetActive(false);
 			}
 
 			FireColorTextureSetting();
@@ -444,6 +459,22 @@ void TFireView::TextureSetting()
 			if (ImGui::Selectable(UMethod::ConvertWToS(Texture.first)))
 			{
 				m_stGuard->SetColorTexture(Texture.second);
+			}
+		}
+		ImGui::EndListBox();
+	}
+
+	ImGui::Text("Mat Color Texture Select");
+	if (ImGui::BeginListBox("Mat Noise Texture List", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+	{
+
+		using TEXNAMES = UNORMAP<_wstring, _uint>;
+		TEXNAMES m_TextureNames = m_stMat->GetTextureGroup()->GetTextureNames();
+		for (auto& Texture : m_TextureNames)
+		{
+			if (ImGui::Selectable(UMethod::ConvertWToS(Texture.first)))
+			{
+				m_stMat->SetColorTexture(Texture.second);
 			}
 		}
 		ImGui::EndListBox();

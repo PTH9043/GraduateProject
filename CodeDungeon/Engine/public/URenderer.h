@@ -66,8 +66,12 @@ public:
 	void BindDefferedTransform(SHPTR<UShader> _spShader);
 	void TurnOnFog() { m_bTurnShader.m_bTurnFog = true; }
 	void TurnOffFog() { m_bTurnShader.m_bTurnFog = false; }
-	void TurnOnGrayScale() { m_bTurnShader.m_bTurnGrayScale = true; }
-	void TurnOffGrayScale() { m_bTurnShader.m_bTurnGrayScale = false; }
+	void TurnOnDieEffect() { m_bTurnShader.m_bTurnDie = true; }
+	void TurnOffDieEffect() { m_bTurnShader.m_bTurnDie = false; }
+	void TurnOnAbilityEffect() { m_bTurnShader.m_bTurnAbility = true; }
+	void TurnOffAbilityEffect() { m_bTurnShader.m_bTurnAbility = false; }
+	void TurnOnHitEffect() { m_bTurnShader.m_bTurnHit = true; }
+	void TurnOffHitEffect() { m_bTurnShader.m_bTurnHit = false; }
 private:
 	void RenderRTs();
 	// Priority
@@ -94,6 +98,7 @@ private:
 	void Render2DUI();
 	// HDR
 	void RenderHDR();
+	void RenderHDRTWO();
 	void RenderGrayScale();
 	// Bloom, Blur
 	void RenderHorizontalBlur();
@@ -146,7 +151,9 @@ private:
 
 	DRAWSHADERBUFFER																	m_bTurnShader;
 	SHPTR<UShaderConstantBuffer>											m_spTurnShaderConstantBuffer;
-	_int TurnShader = 0;
+	_int TurnDie = 0;
+	_int TurnHit = 0;
+	_int TurnAbility = 0;
 
 #ifdef _USE_DEBUGGING																	
 	 ARRAY<DRAWINGRENDERCONTAINER, DEBUG_RI_END>	 m_arrDrawDebugRenderList;

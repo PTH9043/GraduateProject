@@ -54,6 +54,7 @@
     <ClInclude Include="..\public\UCharacterManager.h" />
     <ClInclude Include="..\public\UController.h" />
     <ClInclude Include="..\public\UDefensiveGear.h" />
+    <ClInclude Include="..\public\UDust.h" />
     <ClInclude Include="..\public\UEquipment.h" />
     <ClInclude Include="..\public\UFire.h" />
     <ClInclude Include="..\public\UFog.h" />
@@ -63,6 +64,7 @@
     <ClInclude Include="..\public\UInputReceiver.h" />
     <ClInclude Include="..\public\UItem.h" />
     <ClInclude Include="..\public\ULightCamera.h" />
+    <ClInclude Include="..\public\UMat.h" />
     <ClInclude Include="..\public\UMeshFilter.h" />
     <ClInclude Include="..\public\UNetworkQueryProcessing.h" />
     <ClInclude Include="..\public\UPlayer.h" />
@@ -184,6 +186,7 @@
     <ClCompile Include="..\private\UCharacterManager.cpp" />
     <ClCompile Include="..\private\UController.cpp" />
     <ClCompile Include="..\private\UDefensiveGear.cpp" />
+    <ClCompile Include="..\private\UDust.cpp" />
     <ClCompile Include="..\private\UEquipment.cpp" />
     <ClCompile Include="..\private\UFire.cpp" />
     <ClCompile Include="..\private\UFog.cpp" />
@@ -193,6 +196,7 @@
     <ClCompile Include="..\private\UInputReceiver.cpp" />
     <ClCompile Include="..\private\UItem.cpp" />
     <ClCompile Include="..\private\ULightCamera.cpp" />
+    <ClCompile Include="..\private\UMat.cpp" />
     <ClCompile Include="..\private\UMeshFilter.cpp" />
     <ClCompile Include="..\private\UNetworkQueryProcessing.cpp" />
     <ClCompile Include="..\private\UPlayer.cpp" />
@@ -342,6 +346,7 @@
     <FxCompile Include="..\..\Shader\DepthRecord.hlsl" />
     <FxCompile Include="..\..\Shader\DownSampling.hlsl" />
     <FxCompile Include="..\..\Shader\DownSamplingTwo.hlsl" />
+    <FxCompile Include="..\..\Shader\Dust.hlsl" />
     <FxCompile Include="..\..\Shader\Equipment.hlsl" />
     <FxCompile Include="..\..\Shader\GrayScale.hlsl" />
     <FxCompile Include="..\..\Shader\Guard.hlsl" />
@@ -360,9 +365,11 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\Shader\Grid.hlsl" />
+    <FxCompile Include="..\..\Shader\HdrTwo.hlsl" />
     <FxCompile Include="..\..\Shader\HorizontalBlur.hlsl" />
     <FxCompile Include="..\..\Shader\LightDirection.hlsl" />
     <FxCompile Include="..\..\Shader\LightPoint.hlsl" />
+    <FxCompile Include="..\..\Shader\Mat.hlsl" />
     <FxCompile Include="..\..\Shader\Model.hlsl" />
     <FxCompile Include="..\..\Shader\NormalObject.hlsl" />
     <FxCompile Include="..\..\Shader\NorPos.hlsl" />
