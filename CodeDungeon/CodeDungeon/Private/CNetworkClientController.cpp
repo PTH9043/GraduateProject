@@ -10,6 +10,7 @@
 #include "CSarcophagus.h"
 #include "CMap.h"
 #include "CMob.h"
+#include "CItemChest.h"
 
 CNetworkClientController::CNetworkClientController()
 {
@@ -21,10 +22,11 @@ HRESULT CNetworkClientController::NativeConstruct(const _string& _strIPAddress, 
 	return S_OK;
 }
 
-void CNetworkClientController::MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer, void* _pMapData)
+void CNetworkClientController::MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer)
 {
 #ifdef _ENABLE_PROTOBUFF
-	CMap* pMap = static_cast<CMap*>(_pMapData);
+
+	CreateServerMobData();
 
 	for (auto& CharInitData : GetNetworkInitDataContainer())
 	{
@@ -60,19 +62,9 @@ void CNetworkClientController::MakeActors(const VECTOR<SHPTR<UActor>>& _actorCon
 			}
 		}
 		break;
-		case TAG_CHAR::TAG_MUMMY:
-		{
-
-		}
-		break;
-		case TAG_CHAR::TAG_SARCOPHAGUS_STANDING:
-		case TAG_CHAR::TAG_SARCOPHAGUS_LAYING:
-		{
-		}
-		break;
 		}
 	}
-	__super::MakeActors(_actorContainer, _pMapData);
+	__super::MakeActors(_actorContainer);
 #endif
 }
 
@@ -96,16 +88,6 @@ void CNetworkClientController::ProcessPacket(_char* _pPacket, PACKETHEAD _Packet
 		case TAG_SC::TAG_SC_OTHERCLIENTLOGIN:
 		{
 			OtherClientLoginState(_pPacket, _PacketHead);
-		}
-		break;
-		case TAG_SC::TAG_SC_START_INFORMATION_SUCCESS:
-		{
-			StartNetworkInfoSucess(_pPacket, _PacketHead);
-		}
-		break;
-		case TAG_SC::TAG_SC_MONSTERRESOURCEDATA:
-		{
-			MonsterResourceDataState(_pPacket, _PacketHead);
 		}
 		break;
 		case TAG_SC::TAG_SC_PLAYERSTATE:
@@ -138,6 +120,73 @@ void CNetworkClientController::ProcessPacket(_char* _pPacket, PACKETHEAD _Packet
 }
 
 #ifdef _ENABLE_PROTOBUFF
+
+void CNetworkClientController::CreateServerMobData()
+{
+	VECTOR<MOBSERVERDATA> MobServerData;
+	std::ifstream read{ L"..\\..\\Resource\\ServerLayout\\NetworkMobData.bin", std::ios::binary};
+	assert(false == read.fail());
+
+	size_t MobDatsSize = 0;
+	read.read((_char*)&MobDatsSize, sizeof(size_t));
+	MobServerData.reserve(MobDatsSize);
+	for (_int i = 0; i < MobDatsSize; ++i)
+	{
+		MOBSERVERDATA mobServerData;
+		read.read((_char*)&mobServerData, sizeof(MOBSERVERDATA));
+		MobServerData.emplace_back(mobServerData);
+	}
+
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+	for (auto& iter : MobServerData)
+	{
+		switch (iter.iMobType)
+		{
+		case TAG_CHAR::TAG_CHEST:
+		{
+			CItemChest::CHARACTERDESC chestDesc{ PROTO_RES_CHESTANIMMODEL, PROTO_COMP_CHESTANIMCONTROLLER };;
+			SHPTR<CItemChest> Chest = std::static_pointer_cast<CItemChest>(spGameInstance->CloneActorAdd(PROTO_ACTOR_CHEST, { &chestDesc, &iter }));
+			AddCreatedNetworkActor(iter.iMobID, Chest);
+		}
+			break;
+		case TAG_CHAR::TAG_SARCOPHAGUS_LAYING:
+		{
+			CSarcophagus::CHARACTERDESC SarcDesc{ PROTO_RES_SARCOPHAGUSLYINGANIMMODEL, PROTO_COMP_SARCOPHAGUSANIMCONTROLLER };
+			SHPTR<CSarcophagus> Saracophagus = std::static_pointer_cast<CSarcophagus>(spGameInstance->CloneActorAdd(
+				PROTO_ACTOR_SARCOPHAGUSLYING, { &SarcDesc, &iter }));
+			AddCreatedNetworkActor(iter.iMobID, Saracophagus);
+			Saracophagus->SetSarcophagusType(CSarcophagus::SARCOTYPE::TYPE_LYING);
+		}
+			break;
+		case TAG_CHAR::TAG_SARCOPHAGUS_STANDING:
+		{
+			CSarcophagus::CHARACTERDESC SarcDesc{ PROTO_RES_SARCOPHAGUSSTANDINGANIMMODEL, PROTO_COMP_SARCOPHAGUSANIMCONTROLLER };
+			SHPTR<CSarcophagus> Saracophagus = std::static_pointer_cast<CSarcophagus>(spGameInstance->CloneActorAdd(
+				PROTO_ACTOR_SARCOPHAGUSLYING, { &SarcDesc, &iter }));
+			AddCreatedNetworkActor(iter.iMobID, Saracophagus);
+			Saracophagus->SetSarcophagusType(CSarcophagus::SARCOTYPE::TYPE_STANDING);
+		}
+			break;
+		case TAG_CHAR::TAG_MUMMY_LAYING:
+		{
+			CMummy::CHARACTERDESC MummyDesc{ PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_MUMMYANIMCONTROLLER };;
+			SHPTR<CMummy> Mummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MUMMY, { &MummyDesc, &iter }));
+			AddCreatedNetworkActor(iter.iMobID, Mummy);
+			Mummy->SetMummyType(CMummy::TYPE_LYING);
+		}
+			break;
+		case TAG_CHAR::TAG_MUMMY_STANDING:
+		{
+			CMummy::CHARACTERDESC MummyDesc{ PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_MUMMYANIMCONTROLLER };;
+			SHPTR<CMummy> Mummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MUMMY, { &MummyDesc, &iter }));
+			AddCreatedNetworkActor(iter.iMobID, Mummy);
+			Mummy->SetMummyType(CMummy::TYPE_STANDING);
+		}
+			break;
+		}
+	}
+}
 
 void CNetworkClientController::ConnectSuccessState(_char* _pPacket, const PACKETHEAD& _PacketHead)
 {
@@ -174,31 +223,6 @@ void CNetworkClientController::OtherClientLoginState(_char* _pPacket, const PACK
 			InsertNetworkInitDataInQuery(networkRecvInitData);
 			break;
 		}
-	}
-}
-
-void CNetworkClientController::StartNetworkInfoSucess(_char* _pPacket, const PACKETHEAD& _PacketHead)
-{
-	SC_START_INFORMATION_SUCCESS scStartInfoNetworkSuccess;
-	scStartInfoNetworkSuccess.ParseFromArray(_pPacket, _PacketHead.PacketSize);
-
-	if (scStartInfoNetworkSuccess.id() == GetNetworkOwnerID())
-	{
-		EnableNetworkResourceRecvSuccess();
-		SetMakeMonsterNum(scStartInfoNetworkSuccess.monsternum());
-	}
-}
-
-void CNetworkClientController::MonsterResourceDataState(_char* _pPacket, const PACKETHEAD& _PacketHead)
-{
-	SC_MONSTERRESOURCEDATA scMonsterResourceData;
-	scMonsterResourceData.ParseFromArray(_pPacket, _PacketHead.PacketSize);
-
-	_float3 vPos{ scMonsterResourceData.posx(),scMonsterResourceData.posy(),scMonsterResourceData.posz() };
-	{
-		NETWORKRECEIVEINITDATA networkRecvInitData(scMonsterResourceData.id(),
-			scMonsterResourceData.cellindex(), scMonsterResourceData.type(), scMonsterResourceData.animindex(), vPos);
-		InsertNetworkInitDataInQuery(networkRecvInitData);
 	}
 }
 

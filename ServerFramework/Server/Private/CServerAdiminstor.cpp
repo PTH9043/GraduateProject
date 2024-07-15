@@ -11,6 +11,8 @@
 #include "ATransform.h"
 #include "AAnimController.h"
 
+//#define CREATED_SERVERMOBDATA
+
 namespace Server
 {
 	CServerAdiminstor::CServerAdiminstor(OBJCON_CONSTRUCTOR, const _string& _strNavigationPath) :
@@ -24,6 +26,36 @@ namespace Server
 	}
 
 	bool CServerAdiminstor::Start()
+	{
+#ifndef CREATED_SERVERMOBDATA
+		CreateServerMobResourceData();
+#else
+		CreateServerMob();
+#endif
+		ThreadMiliRelax(100);
+		Connect();
+		return __super::Start();
+	}
+
+	void CServerAdiminstor::Connect()
+	{
+		TCPACCEPTOR& TcpAcceptor = GetTcpAccepctor();
+		TCPSOCKET& TcpSocket = GetTcpSocket();
+		TcpAcceptor.async_accept(TcpSocket, [&](const boost::system::error_code& _error) {
+			if (!_error)
+			{
+				SESSIONID id = GiveID();
+				Core::SHPTR<Core::ACoreInstance> spCoreInstance = GetCoreInstance();
+				Core::SHPTR<Core::ASession> spSession = Core::Create<CPlayerSession>(spCoreInstance, std::move(TcpSocket), id);
+				// Insert 
+				InsertSession(id, spSession);
+				spSession->Start();
+			}
+			Connect();
+			});
+	}
+
+	void CServerAdiminstor::CreateServerMobResourceData()
 	{
 		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
 		SHPTR<AJobTimer> spMonsterJobTimer = Create<CMonsterJobTimer>(GetCoreInstance(), GetIOContext());
@@ -65,40 +97,59 @@ namespace Server
 			// Monster 
 			{
 				const auto& GameObjectList = spCoreInstance->GetMobObjContainer();
-				VECTOR<MOBDATA> MobData;
+				VECTOR<MOBSERVERDATA> MobData;
 				MobData.reserve(GameObjectList.size());
 
 				for (auto& iter : GameObjectList)
 				{
-					MOBDATA data;
+					MOBSERVERDATA data;
 					data.mWorldMatrix = iter.second->GetTransform()->GetWorldMatrix();
-					data.strAnimModelName = iter.second->GetAnimController()->Get
+					data.iMobID = iter.second->GetSessionID();
+					data.iMobType = iter.second->GetMonsterType();
+					data.iStartAnimIndex = iter.second->GetAnimController()->GetCurAnimIndex();
+					MobData.push_back(data);
 				}
+				CMobLayOutSaver saver("..\\..\\NetworkMobData.bin", MobData);
 			}
-		//	CMobLayOutSaver saver("..\\..\\NetworkMobData.bin", MobData);
 		}
-
-		ThreadMiliRelax(100);
-		Connect();
-		return __super::Start();
 	}
 
-	void CServerAdiminstor::Connect()
+	void CServerAdiminstor::CreateServerMob()
 	{
-		TCPACCEPTOR& TcpAcceptor = GetTcpAccepctor();
-		TCPSOCKET& TcpSocket = GetTcpSocket();
-		TcpAcceptor.async_accept(TcpSocket, [&](const boost::system::error_code& _error) {
-			if (!_error)
+		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+		SHPTR<AJobTimer> spMonsterJobTimer = Create<CMonsterJobTimer>(GetCoreInstance(), GetIOContext());
+		spCoreInstance->RegisterJob(TIMERTYPE::TIMER_MOB, spMonsterJobTimer);
+
+		CMobServerLayoutLoader MobServerLayoutLoader("..\\..\\Resource\\NetworkMobData.bin");
+		ThreadMiliRelax(100);
+		for (auto& iter : MobServerLayoutLoader.GetMobData())
+		{
+			SHPTR<AMonster> spMonster = nullptr;
+
+			switch (iter.iMobType)
 			{
-				SESSIONID id = GiveID();
-				Core::SHPTR<Core::ACoreInstance> spCoreInstance = GetCoreInstance();
-				Core::SHPTR<Core::ASession> spSession = Core::Create<CPlayerSession>(spCoreInstance, std::move(TcpSocket), id);
-				// Insert 
-				InsertSession(id, spSession);
-				spSession->Start();
+			case TAG_CHEST:
+				spMonster = Create<CChest>(GetCoreInstance(), iter.iMobID, spMonsterJobTimer);
+				break;
+			case TAG_SARCOPHAGUS_LAYING:
+				spMonster = Create<CSarcophagus>(GetCoreInstance(), iter.iMobID, SARCOPHAGUSTYPE::SARCO_LAYING,
+					spMonsterJobTimer);
+				break;
+			case TAG_SARCOPHAGUS_STANDING:
+				spMonster = Create<CSarcophagus>(GetCoreInstance(), iter.iMobID, SARCOPHAGUSTYPE::SARCO_STANDING,
+					spMonsterJobTimer);
+				break;
+			case TAG_MUMMY_LAYING:
+				spMonster = Create<CMummy>(GetCoreInstance(), iter.iMobID, MUMMYTYPE::MUMMY_LAYING, spMonsterJobTimer);
+				break;
+			case TAG_MUMMY_STANDING:
+				spMonster = Create<CMummy>(GetCoreInstance(), iter.iMobID, MUMMYTYPE::MUMMY_STANDING, spMonsterJobTimer);
+				break;
 			}
-			Connect();
-			});
+			spCoreInstance->InsertMobObject(spMonster->GetSessionID(), spMonster);
+			spMonster->Start({ &iter });
+		}
+		IncreaseCurrentSessionCount(MobServerLayoutLoader.GetMobData().size());
 	}
 
 	void CServerAdiminstor::CreateMummyAndSarphagousMob(void* _pData, SARCOPHAGUSTYPE _SarcophagusType, SHPTR<AJobTimer> _spMonsterJobTimer)

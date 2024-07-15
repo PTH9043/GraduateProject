@@ -48,7 +48,7 @@ public:
 	const _double GetDuration() const { return m_dDuration; }
 	const _double GetTimeAcc() const { return m_dTimeAcc; }
 	const _float GetTotalAnimFastValue() const { return m_fTotalAnimationFastValue; }
-	const _double GetAnimationProgressRate() const { return m_dAnimationProgressRate; }
+	const _double GetAnimationProgressRate() const { return m_dTimeAcc / m_dDuration; }
 	const _bool IsApplyRootBoneMove() const { return m_isApplyRootBoneMove; }
 
 	void SetDuration(const _double _dDuration) { this->m_dDuration = _dDuration; }

@@ -1,173 +1,8 @@
 #include "CoreDefines.h"
 #include "Lock.h"
-#include "UDeadLockProfiler.h"
 
 namespace Core
 {
-	/*
-	@ Date: 2023-12-27
-	@ Writer: 박태현
-	@	 Explain
-	- 아무도 공유하지 않을 경우 Write Lock을 걸어서 자신이 원하는 값이 실행되기를 바란다.
-	*/
-	ARWLock::ARWLock() : m_lockFlag{ 0 }, m_WriteCount{ 0 } {
-	}
-	ARWLock::ARWLock(const ARWLock& _rhs)
-	{
-		m_lockFlag.store(_rhs.m_lockFlag.load());
-		m_WriteCount.store(_rhs.m_WriteCount.load());
-	}
-	ARWLock::~ARWLock()
-	{
-	}
-	ARWLock& ARWLock::operator=(const ARWLock& _lock)
-	{
-		m_lockFlag.store(_lock.m_lockFlag.load());
-		m_WriteCount.store(_lock.m_WriteCount.load());
-		return *this;
-	}
-
-#ifdef USE_DEBUG
-	void ARWLock::WriteLock(const char* _name)
-#else
-	void RWLock::WriteLock()
-#endif
-	{
-
-#ifdef USE_DEBUG
-		g_pDeadLockProfiler->PushLock(_name);
-#endif
-
-		// 상위 16비트만 추출한다. 
-		const _llong LockThreadID = (m_lockFlag.load() & WRITE_THREAD_MASK) >> 16;
-
-		// 만약 동일한 쓰레드가 Lock을 소유하고 있으면 무조건 성공시킨다. 
-		if (LockThreadID == TLS::g_ThreadID)
-		{
-			++m_WriteCount;
-			return;
-		}
-		// 10초
-		auto BeginTime = std::chrono::high_resolution_clock::now();
-
-		// 소유권을 가져온다. 
-		const _llong Desired = ((static_cast<_llong>(TLS::g_ThreadID) << 16) & WRITE_THREAD_MASK);
-		while (true)
-		{
-			for (_uint SpinCount = 0; SpinCount < MAX_SPIN_COUNT; ++SpinCount)
-			{
-				_llong Expected = EMPTY_FLAG;
-				// Lock Flag가 EMPTY FLAG와 같다면 LockFlag의 값 Desired로 변경
-				if (m_lockFlag.compare_exchange_strong(REF_OUT Expected, Desired))
-				{
-					// Write Count 증가
-					++m_WriteCount;
-					return;
-				}
-			}
-			// 10초 이상일 경우 해당 반복문을 빠져나온다. 
-			auto EndTime = BeginTime - std::chrono::high_resolution_clock::now();
-			if (duration_cast<std::chrono::milliseconds>(EndTime).count() >= ACOUIRE_TIMEOUT_TICK)
-			{
-				CRASH("LOCK_TIMEOUT");
-			}
-
-			// 일단 해당 쓰레드는 잠시 쉬게 둔다. 
-			std::this_thread::yield();
-		}
-	}
-	/*
-	@ Date: 2023-12-27
-	@ Writer: 박태현
-	*/
-#ifdef USE_DEBUG
-	void ARWLock::WriteUnLock(const char* _name)
-#else
-	void RWLock::WriteUnLock()
-#endif
-	{
-#ifdef USE_DEBUG
-		g_pDeadLockProfiler->PopLock(_name);
-#endif
-
-		// ReadLock을 다 풀기전에 WriteLock은 불가능
-		if ((m_lockFlag.load() & READ_THREAD_MASK) != 0)
-		{
-			CRASH("INVALID_UNLOCK_ORDER");
-		}
-
-		const _uint WRITECOUNT = --m_WriteCount;
-		if (0 == WRITECOUNT)
-		{
-			m_lockFlag.store(EMPTY_FLAG);
-		}
-	}
-	/*
-	@ Date: 2023-12-27
-	@ Writer: 박태현
-	*/
-#ifdef USE_DEBUG
-	void ARWLock::ReadLock(const char* _name)
-#else 
-	void RWLock::ReadLock()
-#endif
-	{
-#ifdef USE_DEBUG
-		g_pDeadLockProfiler->PushLock(_name);
-#endif
-
-		// 상위 16비트만 추출한다. 
-		const _llong LockThreadID = (m_lockFlag.load() & READ_THREAD_MASK) >> 16;
-		// 만약 동일한 쓰레드가 Lock을 소유하고 있으면 무조건 성공시킨다. 
-		if (LockThreadID == TLS::g_ThreadID)
-		{
-			m_lockFlag.fetch_add(1);
-			return;
-		}
-		auto BeginTime = std::chrono::high_resolution_clock::now();
-		// 소유권을 가져온다. 
-		while (true)
-		{
-			for (_uint SpinCount = 0; SpinCount < MAX_SPIN_COUNT; ++SpinCount)
-			{
-				_llong Expected = (m_lockFlag.load() & READ_THREAD_MASK);
-				// Lock Flag가 EMPTY FLAG와 같다면 LockFlag의 값 Desired로 변경
-				if (m_lockFlag.compare_exchange_strong(REF_OUT Expected, Expected + 1))
-				{
-					return;
-				}
-			}
-			// 10초 이상일 경우 해당 반복문을 빠져나온다. 
-			auto EndTime = BeginTime - std::chrono::high_resolution_clock::now();
-			if (duration_cast<std::chrono::milliseconds>(EndTime).count() >= ACOUIRE_TIMEOUT_TICK)
-			{
-				CRASH("LOCK_TIMEOUT");
-			}
-
-			// 일단 해당 쓰레드는 잠시 쉬게 둔다. 
-			std::this_thread::yield();
-		}
-	}
-	/*
-	@ Date: 2023-12-27
-	@ Writer: 박태현
-	*/
-#ifdef USE_DEBUG
-	void ARWLock::ReadUnLock(const char* _name)
-#else
-	void RWLock::ReadUnLock()
-#endif
-	{
-#ifdef USE_DEBUG
-		g_pDeadLockProfiler->PopLock(_name);
-#endif
-
-		if ((m_lockFlag.fetch_sub(1) & READ_THREAD_MASK) == 0)
-		{
-			CRASH("MUTIPLE_UNLOCK");
-		}
-	}
-
 	/*
 	============================================
 	RWLock 
@@ -176,14 +11,15 @@ namespace Core
 	============================================
 	*/
 
-	AFastSpinLock::AFastSpinLock() : m_LockFlag{ 0 } { }
+	AFastSpinLock::AFastSpinLock() : m_ReadCount{ 0 }, m_WriteFlag{ false } { }
 
 	AFastSpinLock::AFastSpinLock(const AFastSpinLock& _rhs) :
-		m_LockFlag{ _rhs.m_LockFlag.load() } {}
+		m_ReadCount{ _rhs.m_ReadCount.load() }, m_WriteFlag{ _rhs.m_WriteFlag.load() } {}
 
 	AFastSpinLock& AFastSpinLock::operator=(const AFastSpinLock& _lock)
 	{
-		m_LockFlag.store(_lock.m_LockFlag, std::memory_order_seq_cst);
+		m_ReadCount.store(_lock.m_ReadCount, std::memory_order_seq_cst);
+		m_WriteFlag.store(_lock.m_WriteFlag, std::memory_order_seq_cst);
 		return *this;
 	}
 
@@ -191,44 +27,131 @@ namespace Core
 
 	void AFastSpinLock::EnterWriteLock()
 	{
-		while (true)
-		{
-			while (m_LockFlag.load(std::memory_order_relaxed) & LF_WRITE_MASK)
-				std::this_thread::yield();
+		while (true) {
+			m_WriteWaiters.fetch_add(1, std::memory_order_relaxed);
 
-			
-			if ((m_LockFlag.fetch_add(LF_WRITE_FLAG, std::memory_order_acquire) & LF_WRITE_MASK) == LF_WRITE_FLAG)
-			{
-				while (m_LockFlag.load(std::memory_order_relaxed) & LF_READ_MASK)
-					std::this_thread::yield();
-				return;
+			bool expected = false;
+			if (m_WriteFlag.compare_exchange_strong(expected, true, std::memory_order_acquire)) {
+				while (m_ReadCount.load(std::memory_order_acquire) != 0) {
+					adaptive_spin_wait();
+				}
+				m_WriteWaiters.fetch_sub(1, std::memory_order_relaxed);
+				break;
 			}
-			m_LockFlag.fetch_sub(LF_WRITE_FLAG, std::memory_order_relaxed);
+
+			m_WriteWaiters.fetch_sub(1, std::memory_order_relaxed);
+			adaptive_spin_wait();
 		}
 	}
 
 	void AFastSpinLock::LeaveWriteLock()
 	{
-		m_LockFlag.fetch_sub(LF_WRITE_FLAG, std::memory_order_relaxed);
+		m_WriteFlag.store(false, std::memory_order_release);
 	}
 
 	void AFastSpinLock::EnterReadLock()
 	{
 		while (true)
 		{
-			while (m_LockFlag.load(std::memory_order_relaxed) & LF_WRITE_MASK)
-				std::this_thread::yield();
-
-			if ((m_LockFlag.fetch_add(1, std::memory_order_acquire) & LF_WRITE_MASK) == LF_WRITE_FLAG)
-			{
-				return;
+			while (m_WriteFlag.load(std::memory_order_relaxed)) {
+				adaptive_spin_wait();
 			}
-			m_LockFlag.fetch_sub(1, std::memory_order_relaxed);
+
+			m_ReadWaiters.fetch_add(1, std::memory_order_relaxed);
+
+			if (!m_WriteFlag.load(std::memory_order_acquire)) {
+				m_ReadCount.fetch_add(1, std::memory_order_acquire);
+				m_ReadWaiters.fetch_sub(1, std::memory_order_relaxed);
+				break;
+			}
+
+			m_ReadWaiters.fetch_sub(1, std::memory_order_relaxed);
 		}
 	}
 
 	void AFastSpinLock::LeaveReadLock()
 	{
-		m_LockFlag.fetch_sub(1, std::memory_order_relaxed);
+		m_ReadCount.fetch_sub(1, std::memory_order_release);
+	}
+
+	void AFastSpinLock::adaptive_spin_wait()
+	{
+		static thread_local int spin_count = 0;
+		++spin_count;
+
+		// Exponential backoff: increasing wait time with each iteration
+		if (spin_count < 10) {
+			std::this_thread::yield();
+		}
+		else {
+			std::this_thread::sleep_for(std::chrono::nanoseconds(spin_count * 10));
+		}
+
+		if (spin_count > 1000) {
+			spin_count = 0;
+		}
+	}
+
+	/*
+	============================================
+	AFastSpinLock
+	============================================
+	AReadFastSpinLockguard
+	============================================
+	*/
+
+
+	AReadFastSpinLockguard::AReadFastSpinLockguard() : m_SpinLock{nullptr}
+	{
+	}
+	AReadFastSpinLockguard::AReadFastSpinLockguard(AFastSpinLock* _pSpinLock) : m_SpinLock{_pSpinLock}
+	{
+		m_SpinLock->EnterReadLock();
+	}
+	AReadFastSpinLockguard::AReadFastSpinLockguard(const AFastSpinLock* _pSpinLock) : m_SpinLock{ const_cast<AFastSpinLock*>(_pSpinLock) }
+	{
+		m_SpinLock->EnterReadLock();
+	}
+	AReadFastSpinLockguard::AReadFastSpinLockguard(const AReadFastSpinLockguard& _rhs) : m_SpinLock{_rhs.m_SpinLock}
+	{
+		_rhs.m_SpinLock = nullptr;
+	}
+	AReadFastSpinLockguard::~AReadFastSpinLockguard()
+	{
+		if (nullptr != m_SpinLock)
+		{
+			m_SpinLock->LeaveReadLock();
+		}
+	}
+
+	/*
+	============================================
+	AReadFastSpinLockguard
+	============================================
+	AWriteFastSpinLockguard
+	============================================
+	*/
+
+	AWriteFastSpinLockguard::AWriteFastSpinLockguard() : m_SpinLock{ nullptr }
+	{
+	}
+	AWriteFastSpinLockguard::AWriteFastSpinLockguard(AFastSpinLock* _pSpinLock) : m_SpinLock{ _pSpinLock }
+	{
+		m_SpinLock->EnterWriteLock();
+	}
+	AWriteFastSpinLockguard::AWriteFastSpinLockguard(const AFastSpinLock* _pSpinLock) : m_SpinLock{ const_cast<AFastSpinLock*>(_pSpinLock) }
+	{
+		m_SpinLock->EnterWriteLock();
+	}
+	AWriteFastSpinLockguard::AWriteFastSpinLockguard(const AWriteFastSpinLockguard& _rhs) : m_SpinLock{ _rhs.m_SpinLock }
+	{
+		_rhs.m_SpinLock = nullptr;
+	}
+	AWriteFastSpinLockguard::~AWriteFastSpinLockguard()
+	{
+		if (nullptr != m_SpinLock)
+		{
+			m_SpinLock->LeaveWriteLock();
+		}
 	}
 }

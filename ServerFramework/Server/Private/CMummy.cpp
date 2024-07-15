@@ -10,58 +10,144 @@
 #include "AAnimator.h"
 #include "AAnimController.h"
 #include "AAnimation.h"
+#include "ASession.h"
 
 namespace Server
 {
 	CMummy::CMummy(OBJCON_CONSTRUCTOR,  SESSIONID _ID, MUMMYTYPE _MummyType, SHPTR<AJobTimer> _spMonsterJobTimer)
 		: AMonster(OBJCON_CONDATA, _ID, _spMonsterJobTimer), 
-		m_eMumyType{_MummyType}, m_isInitWakeUp{false}
+		m_eMumyType{ _MummyType }, m_isAttackMode{ false }, m_isLastAttackWasFirst{ false },
+		m_IdleTimer{2}, m_IdleRandomValueChooseTimer{2}, m_AttackTimer{3},
+		m_iRandomValue{0}
 	{
-		SetMonsterType(TAG_CHAR::TAG_MUMMY);		
-		UpdateFindRange(40.f,60.f);
-		SetMoveSpeed(10);
-		SetAttackRange(20.f);
-		SetActive(false);
+		if (MUMMY_LAYING == m_eMumyType)
+		{
+			SetMonsterType(TAG_CHAR::TAG_MUMMY_LAYING);
+		}
+		else
+		{
+			SetMonsterType(TAG_CHAR::TAG_MUMMY_STANDING);
+		}
+		UpdateFindRange(40.f, 80.f);
+		SetMoveSpeed(5);
+		SetAttackRange(15.f);
 	}
 	_bool CMummy::Start(const VOIDDATAS& _ReceiveDatas)
 	{
 		__super::Start(_ReceiveDatas);
+		_float4x4 Matrix = _float4x4::CreateScale(0.1f) * _float4x4::CreateRotationY(DirectX::XMConvertToRadians(180));
 		SetAnimController(Create<CMummyAnimController>(GetCoreInstance(), ThisShared<CMummy>(),
-			"..\\..\\Resource\\Anim\\Mummy\\", "Mummy_DEMO_1_FBX.bin"));
-
-		MOBDATA* pMoveData = static_cast<MOBDATA*>(_ReceiveDatas[0]);
+			"..\\..\\Resource\\Anim\\Mummy\\", "Mummy_DEMO_1_FBX.bin", Matrix));
+#ifndef CREATED_SERVERMOBDATA
+		MOBDATA* pMobData = static_cast<MOBDATA*>(_ReceiveDatas[0]);
 		// Setting Animation 
-		GetAnimController()->SetAnimation(pMoveData->strAnimName);
-		GetTransform()->SetPos(pMoveData->mWorldMatrix.Get_Pos());
-		GetTransform()->SetDirection(pMoveData->mWorldMatrix.Get_Look());
+		GetAnimController()->SetAnimation(pMobData->strAnimName);
+		GetTransform()->SetNewWorldMtx(pMobData->mWorldMatrix);
 		GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
 		BringCellIndextoPosition();
+#else
+		MOBSERVERDATA* pMobData = static_cast<MOBSERVERDATA*>(_ReceiveDatas[0]);
+		GetAnimController()->SetAnimation(pMobData->iStartAnimIndex);
+		GetTransform()->SetNewWorldMtx(pMobData->mWorldMatrix);
+		GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
+		BringCellIndextoPosition();
+		SetSessionID(pMobData->iMobID);
+#endif
 		return true;
 	}
 
 	void CMummy::Tick(const _double& _dTimeDelta)
 	{
-		if (false == IsFoundPlayerFirstTime())
-			return;
-
-		__super::Tick(_dTimeDelta);
-	}
-
-	void CMummy::State(SHPTR<ASession> _spSession, _int _MonsterState)
-	{
-		if (false == IsFoundPlayerFirstTime())
-			return;
-
-		FindPlayer(_spSession);
-
 		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
 		SHPTR<AAnimController> spAnimController = GetAnimController();
 		SHPTR<AAnimator> spAnimator = spAnimController->GetAnimator();
 		SHPTR<AAnimation> spCurAnimation = spAnimator->GetCurAnimation();
 		SHPTR<ATransform> spTransform = GetTransform();
-		SHPTR<APathFinder> spPathFinder = spCoreInstance->GetPathFinder();
 		_string strCurAnimName = spCurAnimation->GetAnimName();
 		_bool Hit = false;
+
+		spAnimController->ClearState();
+		if (true == IsCurrentFindPlayer())
+		{
+			// wakeUp
+			if (false == IsFoundPlayerFirstTime())
+			{
+				// Tick event
+				spAnimController->UpdateState("WAKEUP", MUMMYANIMSTATE::MUMMY_ANIM_AWAKE);
+				SetMonsterState(MOB_FIRSTFIND_STATE);
+				SetFoundPlayerFirstTime(true);
+			}
+		}
+		else
+		{
+			if (strCurAnimName == "idle")
+			{
+				if (m_IdleTimer.IsOver(_dTimeDelta))
+				{
+					m_IdleTimer.ResetTimer();
+				}
+			}
+			else
+			{
+				m_IdleTimer.ResetTimer();
+			}
+
+			if (0 == m_IdleTimer.fTimer)
+			{
+				if (m_IdleRandomValueChooseTimer.IsOver(_dTimeDelta))
+				{
+					m_iRandomValue = std::rand() % 4;
+				}
+
+				if (0 == m_iRandomValue)
+				{
+					spAnimController->UpdateState("IDLE", ANIM_IDLE);
+				}
+				else
+				{
+					spAnimController->UpdateState("WALKF", ANIM_MOVE);
+				}
+			}
+		}
+
+		if (true == Hit)
+		{
+			spAnimController->UpdateState("HIT", ANIM_HIT);
+			spAnimator->SetAnimation("gotHit");
+		}
+		else
+		{
+			if (true == m_isAttackMode)
+			{
+				if (m_AttackTimer.IsOver(_dTimeDelta))
+				{
+					m_isLastAttackWasFirst = !m_isLastAttackWasFirst;
+					m_AttackTimer.ResetTimer();
+				}
+
+				if (false == IsCurrentAtkPlayer())
+				{
+					spAnimController->UpdateState("WALKF", ANIM_MOVE);
+				}
+				else
+				{
+					spAnimController->UpdateState(m_isLastAttackWasFirst ? "ATTACK02" : "ATTACK01", ANIM_ATTACK);
+				}
+			}
+		}
+	
+		if (false == m_isAttackMode)
+		{
+			if ("openLaying" == strCurAnimName || "openStanding" == strCurAnimName)
+			{
+				spAnimController->UpdateState("TAUNT", MUMMYANIMSTATE::MUMMY_ANIM_TAUNT);
+				SetMonsterState(MOB_FIND_STATE);
+				m_isAttackMode = true;
+			}
+		}
+
+		ComputeNextDir(_dTimeDelta);
+		__super::Tick(_dTimeDelta);
 
 		VECTOR3 vRotate;
 		VECTOR3 vPos;
@@ -69,24 +155,10 @@ namespace Server
 		{
 			Vector3 vRecvRotate = spTransform->GetRotationValue();
 			Vector3 vRecvPos = spTransform->GetPos();
+
 			PROTOFUNC::MakeVector3(&vRotate, vRecvRotate.x, vRecvRotate.y, vRecvRotate.z);
 			PROTOFUNC::MakeVector3(&vPos, vRecvPos.x, vRecvPos.y, vRecvPos.z);
 		}
-		// wakeUp
-		if (false == m_isInitWakeUp)
-		{
-			// Tick event
-			spAnimController->SetInputTrigger("WAKEUP");
-			SetMonsterState(MOB_FIRSTFIND_STATE);
-			m_isInitWakeUp = true; 
-		}
-
-		if ("openLaying" == strCurAnimName || "openStanding" == strCurAnimName)
-		{
-			spAnimController->SetInputTrigger("TAUNT");
-			SetMonsterState(MOB_FIND_STATE);
-		}
-
 		// Send Packet
 		SC_MONSTERSTATEHAVEPOS scMonsterStateHavePos;
 		{
@@ -97,6 +169,32 @@ namespace Server
 			CombineProto<SC_MONSTERSTATEHAVEPOS>(GetCopyBuffer(), GetPacketHead(), scMonsterStateHavePos, TAG_SC_MONSTERSTATEHAVEMOVE);
 			spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
 		}
+	}
+
+	void CMummy::State(SHPTR<ASession> _spSession, _int _MonsterState)
+	{
+		FindPlayer(_spSession);
+
+		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+		SHPTR<AAnimController> spAnimController = GetAnimController();
+		SHPTR<AAnimator> spAnimator = spAnimController->GetAnimator();
+		SHPTR<AAnimation> spCurAnimation = spAnimator->GetCurAnimation();
+		SHPTR<ATransform> spTransform = GetTransform();
+		_string strCurAnimName = spCurAnimation->GetAnimName();
+
+		if (true == IsCurrentFindPlayer())
+		{
+			UpdateTargetPos(_spSession->GetTransform());
+		}
+	}
+
+	bool CMummy::IsHit(APawn* _pPawn, const _double& _dTimeDelta)
+	{
+		return false;
+	}
+
+	void CMummy::Collision(APawn* _pPawn, const _double& _dTimeDelta)
+	{
 	}
 
 	void CMummy::Free()

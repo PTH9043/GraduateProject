@@ -76,9 +76,6 @@
     <Filter Include="04.GamePath\Navigation\Cell">
       <UniqueIdentifier>{c2cf8271-240c-4bd8-9890-e934ae83d107}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.GamePath\PathFinder">
-      <UniqueIdentifier>{142446d8-8752-433b-b597-2581a739a26a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="05.GameSpace">
       <UniqueIdentifier>{76fb96b1-d618-47cb-bd34-6fcedfab92f1}</UniqueIdentifier>
     </Filter>
@@ -168,6 +165,9 @@
     </Filter>
     <Filter Include="08.Animator\Controller">
       <UniqueIdentifier>{aa34c3b8-2935-4b16-a5e9-3cb9009fb280}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Manager\CollisionManager">
+      <UniqueIdentifier>{756e784f-9d37-43a9-8671-a88b474f452b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -270,9 +270,6 @@
     <ClInclude Include="..\Public\CoreStruct.h">
       <Filter>99.Default</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\APathFinder.h">
-      <Filter>04.GamePath\PathFinder</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\ASpace.h">
       <Filter>05.GameSpace\Space</Filter>
     </ClInclude>
@@ -348,6 +345,9 @@
     <ClInclude Include="..\Public\AAnimController.h">
       <Filter>08.Animator\Controller</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\ACollisionManager.h">
+      <Filter>02.Manager\CollisionManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\ACoreBase.cpp">
@@ -418,9 +418,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\ANavigation.cpp">
       <Filter>04.GamePath\Navigation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\APathFinder.cpp">
-      <Filter>04.GamePath\PathFinder</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ASpace.cpp">
       <Filter>05.GameSpace\Space</Filter>
@@ -493,6 +490,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\AAnimController.cpp">
       <Filter>08.Animator\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ACollisionManager.cpp">
+      <Filter>02.Manager\CollisionManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

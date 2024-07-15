@@ -59,7 +59,7 @@ namespace Core {
 
 	_bool ASpace::InsertSessionRecursively(CSHPTRREF<ASession> _spSession)
 	{
-		RETURN_CHECK(false == m_spCollider->IsCollision(_spSession->GetCollider()), false);
+//		RETURN_CHECK(false == m_spCollider->IsCollision(_spSession->GetCollider()), false);
 		// 재귀 함수로 Insert 한다. 
 		if (true == m_isChildNode) {
 			_spSession->BringSpaceIndex(ThisShared<ASpace>());

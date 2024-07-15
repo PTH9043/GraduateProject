@@ -26,6 +26,9 @@ protected:
 	// UServerService을(를) 통해 상속됨
 	virtual void Connect() override;
 private:
+	void CreateServerMobResourceData();
+	void CreateServerMob();
+
 	void CreateMummyAndSarphagousMob(void* _pData, SARCOPHAGUSTYPE _SarcophagusType, SHPTR< AJobTimer> _spMonsterJobTimer);
 	void CreateChest(void* _pData, SHPTR<AJobTimer> _spMonsterJobTimer);
 private:

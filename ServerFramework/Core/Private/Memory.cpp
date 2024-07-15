@@ -15,6 +15,7 @@ namespace Core
 		{
 			MEMORYHEADER* header;
 			m_MemoryQueue.try_pop(header);
+			std::this_thread::sleep_for(std::chrono::microseconds(1));
 			::free(header);
 		}
 	}
@@ -43,7 +44,7 @@ namespace Core
 
 		if (nullptr == Header)
 		{
-			Header = reinterpret_cast<MEMORYHEADER*>(::malloc(m_AllocateSize));
+			Header = reinterpret_cast<MEMORYHEADER*>(std::malloc(m_AllocateSize));
 		}
 		else
 		{

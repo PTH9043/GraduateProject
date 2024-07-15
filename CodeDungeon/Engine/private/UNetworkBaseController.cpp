@@ -45,7 +45,7 @@ void UNetworkBaseController::SendTcpPacket(_char* _pPacket, _short _PacketType, 
 	UServerMethods::SendTcpPacket(m_ClientTcpSocket, pOverExp);
 }
 
-void UNetworkBaseController::MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer, void* _pMapData)
+void UNetworkBaseController::MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer)
 {
 	m_NetworkInitDataContainer.clear();
 }

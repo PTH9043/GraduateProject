@@ -49,16 +49,11 @@ HRESULT CMob::NativeConstructClone(const VOIDDATAS& _Datas)
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);	
 
 #ifdef _ENABLE_PROTOBUFF
-	//{
-	//	assert(_Datas.size() >= 2);
-	//	MOBNETWORKDATA MobNetworkData = UMethod::ConvertTemplate_Index<MOBNETWORKDATA>(_Datas, MOBORDER);
-	//	GetTransform()->SetPos(MobNetworkData.vPos);
-	//	GetTransform()->RotateFix(MobNetworkData.vRotate);
-	//	GetTransform()->SetScale(MobNetworkData.vScale);
-	//	GetAnimModel()->SetAnimation(MobNetworkData.iAnimIndex);
-	//}
-
+	MOBSERVERDATA MobServerData = UMethod::ConvertTemplate_Index<MOBSERVERDATA>(_Datas, MOBORDER);
+	GetTransform()->SetNewWorldMtx(MobServerData.mWorldMatrix);
+	SetNetworkID(MobServerData.iMobID);
 	GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
+	GetAnimModel()->SetAnimation(MobServerData.iStartAnimIndex);
 #else
 	GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
 #endif
@@ -83,6 +78,8 @@ void CMob::TickActive(const _double& _dTimeDelta)
 void CMob::LateTickActive(const _double& _dTimeDelta)
 {
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
+
+#ifndef _ENABLE_PROTOBUFF
 	_float3 vPosition{ GetTransform()->GetPos() };
 	SHPTR<UCell> newCell{};
 
@@ -95,7 +92,7 @@ void CMob::LateTickActive(const _double& _dTimeDelta)
 
 	_float newHeight = GetCurrentNavi()->ComputeHeight(vPosition);
 	GetTransform()->SetPos(_float3(vPosition.x, newHeight, vPosition.z));
-
+#endif
 	__super::LateTickActive(_dTimeDelta);
 }
 

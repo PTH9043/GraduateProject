@@ -714,5 +714,15 @@ namespace Engine {
 			iNetworkID{ _iNetworkID }, iCellIndex{ _iCellIndex }, iType{ _iType }, iAnimIndex{ _iAnimIndex }, vPos{ _vPos },
 			vRotate {	_vRotate}, vScale{ _vScale } {}
 	};
+
+	struct MOBSERVERDATA
+	{
+		_int					iStartAnimIndex;
+		_int					iMobType;
+		_float4x4		mWorldMatrix;
+		_int					iMobID;
+		MOBSERVERDATA() : iStartAnimIndex{ 0 }, iMobType{ 0 }, mWorldMatrix{ _float4x4::Identity }, iMobID{ 0 } {}
+	};
+
 #pragma endregion NETWORKDATA
 }

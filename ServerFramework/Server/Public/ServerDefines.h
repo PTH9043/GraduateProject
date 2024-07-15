@@ -36,10 +36,29 @@ namespace Server
 		Core::_string			strAnimModelName;
 		Core::_string			strAnimName;
 		Core::_float4x4	mWorldMatrix;
-		Core::_int				iConnectIndex;
 
-		MOBDATA() : strAnimModelName{ "" }, strAnimName{ "" }, mWorldMatrix{ Core::_float4x4::Identity }, iConnectIndex{ 0 } {}
+		MOBDATA() : strAnimModelName{ "" }, strAnimName{ "" }, mWorldMatrix{ Core::_float4x4::Identity } {}
+	};
+
+	struct MOBSERVERDATA
+	{
+		Core::_int				iStartAnimIndex;
+		Core::_int				iMobType;
+		Core::_float4x4	mWorldMatrix;
+		Core::_int				iMobID;
+		MOBSERVERDATA() : iStartAnimIndex{ 0 }, iMobType{ 0 }, mWorldMatrix{ Core::_float4x4::Identity }, iMobID{ 0 } {}
+	};
+
+	enum COMMONSTATE
+	{
+		ANIM_IDLE, ANIM_MOVE, ANIM_ATTACK, ANIM_DEATH, ANIM_HIT
+	};
+	enum MUMMYANIMSTATE
+	{
+		MUMMY_ANIM_SLEEP = 6, MUMMY_ANIM_AWAKE = 7, MUMMY_ANIM_TAUNT = 8
 	};
 }
+
+ #define CREATED_SERVERMOBDATA
 
 #endif // _SERVERFRAMEWORK_SERVER_PUBLIC_SERVERDEFINES_H

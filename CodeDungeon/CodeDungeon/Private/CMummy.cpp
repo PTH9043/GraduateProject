@@ -16,6 +16,7 @@
 #include "UParticleSystem.h"
 #include "CModelObjects.h"
 #include "UAnimation.h"
+#include "UProcessedData.h"
 
 CMummy::CMummy(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: CMob(_spDevice, _wstrLayer, _eCloneType), m_MummyType{},
@@ -135,7 +136,30 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 
 	SetHealth(100);
 
+
+	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
+	SHPTR<UCell> spCell = spNavigation->FindCell(GetTransform()->GetPos());
+	GetTransform()->SetPos(spCell->GetCenterPos());
 	return S_OK;
+}
+
+void CMummy::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
+{
+#ifdef _ENABLE_PROTOBUFF
+
+	switch (_ProcessData.GetDataType())
+	{
+	case TAG_SC_MONSTERSTATEHAVEMOVE:
+	{
+		SC_MONSTERSTATEHAVEPOS scMonsterState;
+		scMonsterState.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
+		GetAnimationController()->ReceiveNetworkProcessData(&scMonsterState);
+		GetTransform()->SetPos({ scMonsterState.posx(), scMonsterState.posy(), scMonsterState.posz() });
+		GetTransform()->RotateFix({ scMonsterState.rotatex(), scMonsterState.rotatey(), scMonsterState.rotatez() });
+	}
+	break;
+	}
+#endif
 }
 
 void CMummy::TickActive(const _double& _dTimeDelta)
@@ -156,7 +180,7 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 
 	if (CurAnimState == UAnimationController::ANIM_MOVE)
 	{
-		AddTimeAccumulator(_dTimeDelta);
+		AddTimeAccumulatorwDSA(_dTimeDelta);
 
 		// A* for moving towards player when player is found
 		if (GetFoundTargetState())
@@ -251,7 +275,6 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 
 	UpdateCollision();
 #else
-GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
 #endif
 }
 

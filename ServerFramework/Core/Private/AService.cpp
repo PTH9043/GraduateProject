@@ -1,6 +1,8 @@
 #include "CoreDefines.h"
 #include "AService.h"
 #include "ASession.h"
+#include "ACoreInstance.h"
+#include "AMonster.h"
 
 namespace Core {
 
@@ -95,6 +97,12 @@ namespace Core {
 		SHPTR<AMonster> spObject = FindMobObject(_SessionID);
 		RETURN_CHECK(nullptr == spObject && nullptr != spObject, ;);
 		m_MobObjContainer.insert(MakePair(_SessionID, _spMobObject));
+	}
+
+	void AService::IncreaseCurrentSessionCount(_llong _Count)
+	{
+		this->m_IDIssuance += _Count;
+		this->m_CurrentSessionCount += _Count;
 	}
 
 	SESSIONID AService::GiveID()

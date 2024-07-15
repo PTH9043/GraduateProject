@@ -32,7 +32,7 @@ namespace Server {
 		SetRunSpeed(30.f);
 		SetCurOnCellIndex(m_iStartCellIndex);
 
-		SHPTR<ANavigation> spNavigation = GetCoreInstance()->GetNavigation();
+		SHPTR<ANavigation> spNavigation = GetNavigation();
 
 		SHPTR<ACell> spCell = spNavigation->FindCell(m_iStartCellIndex);
 		GetTransform()->SetPos(spCell->GetCenterPos());
@@ -73,6 +73,15 @@ namespace Server {
 	}
 
 	void CPlayerSession::ConnectTcpSocket(){}
+
+	bool CPlayerSession::IsHit(APawn* _pPawn, const _double& _dTimeDelta)
+	{
+		return false;
+	}
+
+	void CPlayerSession::Collision(APawn* _pPawn, const _double& _dTimeDelta)
+	{
+	}
 
 	_bool CPlayerSession::ProcessPacket(_char* _pPacket, const Core::PACKETHEAD& _PacketHead)
 	{
@@ -136,35 +145,35 @@ namespace Server {
 				SendData(GetCopyBufferPointer(), GetPacketHead());
 			}
 		}
-		// Monster의 패킷들을 미리 보내버린다. 
-		{
-			SC_MONSTERRESOURCEDATA scMonsterResourceData;
-			VECTOR3 vPos;
-			const MOBOBJCONTAINER& GameObjectContainer = _spCoreInstance->GetMobObjContainer();
-			for (auto& iter : GameObjectContainer)
-			{
-				SHPTR<AAnimController> spAnimController = iter.second->GetAnimController();
-				Vector3 vPosVector = iter.second->GetTransform()->GetPos();
-				PROTOFUNC::MakeVector3(&vPos, vPosVector.x, vPosVector.y, vPosVector.z);
-				PROTOFUNC::MakeScMonsterResourceData(&scMonsterResourceData, iter.first, vPos, 
-					spAnimController->GetCurAnimIndex(), iter.second->GetCellIndex(), iter.second->GetMonsterType());
+		//// Monster의 패킷들을 미리 보내버린다. 
+		//{
+		//	SC_MONSTERRESOURCEDATA scMonsterResourceData;
+		//	VECTOR3 vPos;
+		//	const MOBOBJCONTAINER& GameObjectContainer = _spCoreInstance->GetMobObjContainer();
+		//	for (auto& iter : GameObjectContainer)
+		//	{
+		//		SHPTR<AAnimController> spAnimController = iter.second->GetAnimController();
+		//		Vector3 vPosVector = iter.second->GetTransform()->GetPos();
+		//		PROTOFUNC::MakeVector3(&vPos, vPosVector.x, vPosVector.y, vPosVector.z);
+		//		PROTOFUNC::MakeScMonsterResourceData(&scMonsterResourceData, iter.first, vPos, 
+		//			spAnimController->GetCurAnimIndex(), iter.second->GetCellIndex(), iter.second->GetMonsterType());
 
-				CombineProto(REF_OUT GetCopyBuffer(), REF_OUT GetPacketHead(), scMonsterResourceData, TAG_SC::TAG_SC_MONSTERRESOURCEDATA);
-				SendData(GetCopyBufferPointer(), GetPacketHead());
-			}
-			// 모든 자원들을 보내는데 성공했으면 
-			{
-				SC_START_INFORMATION_SUCCESS		scStartInfomationSuccess;
-				PROTOFUNC::MakeScStartInformationSucess(&scStartInfomationSuccess, GetSessionID(), (_int)GameObjectContainer.size());
-				CombineProto(REF_OUT GetCopyBuffer(), REF_OUT GetPacketHead(), scStartInfomationSuccess, TAG_SC::TAG_SC_START_INFORMATION_SUCCESS);
-				SendData(GetCopyBufferPointer(), GetPacketHead());
-			}
-		}
+		//		CombineProto(REF_OUT GetCopyBuffer(), REF_OUT GetPacketHead(), scMonsterResourceData, TAG_SC::TAG_SC_MONSTERRESOURCEDATA);
+		//		SendData(GetCopyBufferPointer(), GetPacketHead());
+		//	}
+		//	// 모든 자원들을 보내는데 성공했으면 
+		//	{
+		//		SC_START_INFORMATION_SUCCESS		scStartInfomationSuccess;
+		//		PROTOFUNC::MakeScStartInformationSucess(&scStartInfomationSuccess, GetSessionID(), (_int)GameObjectContainer.size());
+		//		CombineProto(REF_OUT GetCopyBuffer(), REF_OUT GetPacketHead(), scStartInfomationSuccess, TAG_SC::TAG_SC_START_INFORMATION_SUCCESS);
+		//		SendData(GetCopyBufferPointer(), GetPacketHead());
+		//	}
+		//}
 	}
 
 	void CPlayerSession::MoveState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
 	{
-		SHPTR<ANavigation> spNavigation = _spCoreInstance->GetNavigation();
+		SHPTR<ANavigation> spNavigation = GetNavigation();
 
 		VECTOR3			vSendPosition;
 		VECTOR3			vSendRotate;
@@ -181,7 +190,7 @@ namespace Server {
 		SHPTR<ACell> spCurrentCell{ nullptr };
 		// 네비게이션을 통해 이동할 수 없는 위치를 표시한다. 
 		{
-			IsMove = spNavigation->IsMove(GetCurOnCellIndex(), vPosition, REF_OUT spCurrentCell);
+			IsMove = spNavigation->IsMove(vPosition, REF_OUT spCurrentCell);
 			if (true == IsMove)
 			{
 				GetTransform()->SetPos(vPosition);

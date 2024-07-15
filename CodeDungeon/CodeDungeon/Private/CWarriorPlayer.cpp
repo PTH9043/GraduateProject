@@ -69,7 +69,9 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-	SHPTR<UCell> spCell = spNavigation->FindCell(424);
+	int cellIndex = 424;
+	cellIndex = 100;
+	SHPTR<UCell> spCell = spNavigation->FindCell(cellIndex);
 
 	GetTransform()->SetPos(spCell->GetCenterPos());
 

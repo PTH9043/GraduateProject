@@ -7,23 +7,23 @@ BEGIN(Core)
 class ATransform;
 class ACollider;
 class ASpace;
-
+class ACollider;
 /*
 @ Date: 2024-07-04, Writer: 박태현
 @ Explain
 - 서버에 필요한 Object를 정의한다. 
 */
 class CORE_DLL AGameObject abstract : public ACoreObject {
+public:
+	using COLLIDERCONTAINER = CONVECTOR<SHPTR<ACollider>>;
 	using BUFFER = ARRAY<_char, MAX_BUFFER_LENGTH>;
 public:
 	AGameObject(OBJCON_CONSTRUCTOR, SESSIONID _ID, SESSIONTYPE _SessionType);
 	DESTRUCTOR(AGameObject)
 public:
 	virtual _bool Start(const VOIDDATAS& _ReceiveDatas = {}) PURE;
-	void CreateColliderAndTransform(const COLLIDERINFO& _ColliderInfo, const Vector3& _vPos);
+	void InsertColliderContainer(const COLLIDERINFO& _ColliderInfo);
 	void BringSpaceIndex(SHPTR<ASpace> _spSpace);
-	void Placement(_int _CellIndex);
-	void BringCellIndextoPosition();
 
 	// 다른 캐릭터와의 거리 산출 
 	_float OtherCharacterToDistance(SHPTR<ATransform> _spOtherTransform);
@@ -44,7 +44,6 @@ public:/*Get Set */
 	const _int& GetSpaceIndex() const { return m_SpaceIndex; }
 	const CHARSTATUS& GetCharStatus() const { return m_CharStatus; }
 	SHPTR<ATransform> GetTransform() const { return m_spTransform; }
-	SHPTR<ACollider> GetCollider() const { return m_spCollider; }
 	const _int GetGameObjectType() const { return m_GameObjectType; }
 	const _int GetCellIndex() const { return m_CellIndex; }
 	const _bool IsJumpable() const { return m_isJumpable; }
@@ -72,6 +71,7 @@ public:/*Get Set */
 protected:
 	// 영구적으로 해당 오브젝트를 사용하지 않도록 결정할 경우 보낼 메시지 
 	virtual void LastBehavior();
+	void RestrictPositionToNavi();
 protected: /* Get Set */
 	void SetSessionID(const SESSIONID& _SessionID) { this->m_SessionID = _SessionID; }
 	void SetSessionType(const SESSIONTYPE& _SessionType) { this->m_SessionType = _SessionType; }
@@ -86,6 +86,7 @@ protected: /* Get Set */
 	PACKETHEAD& GetPacketHead() { return m_CopyHead; }
 	BUFFER& GetCopyBuffer(REF_RETURN) { return m_CopyBuffer; }
 	_char* GetCopyBufferPointer(_int _iBufferIndex = 0) { return &m_CopyBuffer[0]; }
+	COLLIDERCONTAINER& GetColliderContainer() { return m_ColliderContainer; }
 private:
 	virtual void Free() override;
 public:
@@ -100,7 +101,6 @@ private:
 	CHARSTATUS					m_CharStatus;
 
 	SHPTR<ATransform>		m_spTransform;
-	SHPTR<ACollider>			m_spCollider;
 	// 현재 셀 위에 있는 인덱스
 	_int										m_iCurOnCellIndex;
 
@@ -111,6 +111,8 @@ private:
 
 	PACKETHEAD					m_CopyHead;
 	BUFFER								m_CopyBuffer;
+
+	COLLIDERCONTAINER		m_ColliderContainer;
 };
 
 

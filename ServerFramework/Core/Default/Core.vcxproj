@@ -23,6 +23,7 @@
     <ClInclude Include="..\Public\AAnimator.h" />
     <ClInclude Include="..\Public\AAnimController.h" />
     <ClInclude Include="..\Public\AAnimEvent.h" />
+    <ClInclude Include="..\Public\ACollisionManager.h" />
     <ClInclude Include="..\Public\AMainLoop.h" />
     <ClInclude Include="..\Public\ABoneNode.h" />
     <ClInclude Include="..\Public\AChannel.h" />
@@ -62,7 +63,6 @@
     <ClInclude Include="..\Public\ALogger.h" />
     <ClInclude Include="..\Public\ALuaLoader.h" />
     <ClInclude Include="..\Public\ANavigation.h" />
-    <ClInclude Include="..\Public\APathFinder.h" />
     <ClInclude Include="..\Public\ARandomManager.h" />
     <ClInclude Include="..\Public\ARoom.h" />
     <ClInclude Include="..\Public\ARoomManager.h" />
@@ -84,6 +84,7 @@
     <ClCompile Include="..\Private\AAnimator.cpp" />
     <ClCompile Include="..\Private\AAnimController.cpp" />
     <ClCompile Include="..\Private\AAnimEvent.cpp" />
+    <ClCompile Include="..\Private\ACollisionManager.cpp" />
     <ClCompile Include="..\Private\AMainLoop.cpp" />
     <ClCompile Include="..\Private\ABoneNode.cpp" />
     <ClCompile Include="..\Private\AChannel.cpp" />
@@ -112,7 +113,6 @@
     <ClCompile Include="..\Private\ALogger.cpp" />
     <ClCompile Include="..\Private\ALuaLoader.cpp" />
     <ClCompile Include="..\Private\ANavigation.cpp" />
-    <ClCompile Include="..\Private\APathFinder.cpp" />
     <ClCompile Include="..\Private\ARandomManager.cpp" />
     <ClCompile Include="..\Private\ARoom.cpp" />
     <ClCompile Include="..\Private\ARoomManager.cpp" />
@@ -158,7 +158,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <EnableUnitySupport>true</EnableUnitySupport>
+    <EnableUnitySupport>false</EnableUnitySupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -166,7 +166,7 @@
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <EnableUnitySupport>true</EnableUnitySupport>
+    <EnableUnitySupport>false</EnableUnitySupport>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">

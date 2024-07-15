@@ -8,8 +8,9 @@
 
 namespace Core
 {
-	AAnimator::AAnimator(SHPTR<ACoreInstance> _spCoreInstance, const _string& _strFolderPath, const _string& _strFileName) :
-		ACoreObject(_spCoreInstance),  m_iCurAnimIndex{0}, m_iNextAnimIndex{0}, m_PivotMatirx{_float4x4::Identity}, m_fSupplyLerpValue{0},
+	AAnimator::AAnimator(SHPTR<ACoreInstance> _spCoreInstance, const _string& _strFolderPath, const _string& _strFileName,
+		const _float4x4& _PivotMatrix) :
+		ACoreObject(_spCoreInstance),  m_iCurAnimIndex{0}, m_iNextAnimIndex{0}, m_PivotMatirx{ _PivotMatrix }, m_fSupplyLerpValue{0},
 	m_isCanAttackSituation{false}, m_BoneContainer{}, m_BoneSelector{}, m_AnimContainer{}, m_AnimSelector{},
 	m_spRootBoneNode{nullptr},	m_spCurAnimation{nullptr},	m_spNextAnimation{nullptr},	m_AnimEventColliderContainer{},
 		m_spAttackCollisionCollider{nullptr}
@@ -55,6 +56,7 @@ namespace Core
 		m_AnimEventColliderContainer.emplace(MakePair(ACollider::TYPE_OBB, Create<ACollider>(ACollider::TYPE_OBB, Desc)));
 		m_AnimEventColliderContainer.emplace(MakePair(ACollider::TYPE_SPHERE, Create<ACollider>(ACollider::TYPE_SPHERE, Desc)));
 
+		m_spRootBoneNode->OnRootBoneNode();
 		SetAnimation(0);
 	}
 
@@ -247,7 +249,7 @@ namespace Core
 		return spCollider->IsCollision(_spEnemyCollider);
 	}
 
-	void AAnimator::ChangeAnimIndex(const _int& _iAnimIndex, _int& _iIndex)
+	void AAnimator::ChangeAnimIndex(const _int& _iAnimIndex, ATOMIC<_int>& _iIndex)
 	{
 		if (m_AnimContainer.size() <= _iAnimIndex)
 		{
@@ -259,7 +261,7 @@ namespace Core
 		}
 	}
 
-	void AAnimator::ChangeAnimIndex(const _string& _strAnimName, _int& _iIndex)
+	void AAnimator::ChangeAnimIndex(const _string& _strAnimName, ATOMIC<_int>& _iIndex)
 	{
 		const auto& FindIterator = m_AnimSelector.find(_strAnimName);
 		if (m_AnimSelector.end() == FindIterator)

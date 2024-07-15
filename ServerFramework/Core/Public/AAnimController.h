@@ -13,7 +13,7 @@ class AAnimation;
 class CORE_DLL AAnimController abstract : public ACoreObject {
 public:
 	AAnimController(OBJCON_CONSTRUCTOR, SHPTR<APawn> _spPawn, 
-		const _string& _strFolderPath, const _string& _strFileName);
+		const _string& _strFolderPath, const _string& _strFileName, const _float4x4& _PivotMatrix = _float4x4::Identity);
 	DESTRUCTOR(AAnimController)
 public:
 	virtual void Tick(const _double& _dTimeDelta) PURE;
@@ -40,6 +40,7 @@ public:
 	SHPTR<ACollider> GetAttackCollider();
 	_bool IsCollisionAttackCollider(SHPTR<ACollider> _spEnemyCollider);
 	void UpdateState(const _string& _strTrigger, const _int _AnimState);
+	void ClearState();
 public: /* get set */
 	const _int GetCurAnimIndex() const;
 	SHPTR<AAnimation> GetCurAnimation() const;
@@ -51,14 +52,14 @@ public: /* get set */
 	SHPTR<AAnimator> GetAnimator() { return m_spAnimator; }
 	const _double GetAccumulator() const { return m_dAccumulator; }
 	const _double GetElapsedTime() const { return m_dElapsedTime; }
-	const _string& GetInputTrigger() const { AReadSpinLockGuard(m_TriggerLock); return m_strInputTrigger; }
+	const _string& GetInputTrigger() const { READ_SPINLOCK(m_TriggerLock); return m_strInputTrigger; }
 
 	void SetSupplyLerpValue(const _float _fSupplyLerpValue);
 	void SetOwnerPawnActiveStrong(_bool _isOwnerPawnActive);
 	void SetOwnerPawnActiveWeak(_bool _isOwnerPawnActive);
 	void SetPawnState(_int _State);
 	void SetAnimState(_int _iAnimState);
-	void SetInputTrigger(const _string& _inputTrigger) { AWriteSpinLockGuard(m_TriggerLock);  this->m_strInputTrigger = _inputTrigger; }
+	void SetInputTrigger(const _string& _inputTrigger) { WRITE_SPINLOCK(m_TriggerLock);  this->m_strInputTrigger = _inputTrigger; }
 protected: /* get set */
 	void SetAccumulator(const _double& _dAccumulator) { this->m_dAccumulator = _dAccumulator; }
 	void SetElapsedTime(const _double& _dDelapsedTime) { this->m_dElapsedTime = _dDelapsedTime; }

@@ -23,7 +23,8 @@ using ANIMEVENTCOLLICONTAINER = CONUNORMAP<_int, SHPTR<ACollider>>;
 */
 class CORE_DLL AAnimator final : public ACoreObject {
 public:
-	AAnimator(SHPTR<ACoreInstance> _spCoreInstance, const _string& _strFolderPath, const _string& _strFileName);
+	AAnimator(SHPTR<ACoreInstance> _spCoreInstance, const _string& _strFolderPath, const _string& _strFileName,
+	const _float4x4& _PivotMatrix = _float4x4::Identity);
 	AAnimator(const AAnimator& _rhs);
 	DESTRUCTOR(AAnimator)
 public:
@@ -67,18 +68,18 @@ public: /* get set */
 
 	void SetSupplyLerpValue(const _float _fSupplyLerpValue) { this->m_fSupplyLerpValue = _fSupplyLerpValue; }
 protected:
-	void ChangeAnimIndex(const _int& _iAnimIndex, _int& _iIndex);
-	void ChangeAnimIndex(const _string& _strAnimName, _int& _iIndex);
+	void ChangeAnimIndex(const _int& _iAnimIndex, ATOMIC<_int>& _iIndex);
+	void ChangeAnimIndex(const _string& _strAnimName, ATOMIC<_int>& _iIndex);
 	void SettingCurAnimSituation();
 	void SettingNextAnimSituation();
 private:
 	virtual void Free() override;
 private:
-	_int													m_iCurAnimIndex;
-	_int													m_iNextAnimIndex;
+	ATOMIC<_int>								m_iCurAnimIndex;
+	ATOMIC<_int>								m_iNextAnimIndex;
 	_float4x4										m_PivotMatirx;
 	_float												m_fSupplyLerpValue;
-	_bool												m_isCanAttackSituation;
+	ATOMIC<_bool>							m_isCanAttackSituation;
 
 	BONECONTAINER							m_BoneContainer;
 	SELECTOR										m_BoneSelector;

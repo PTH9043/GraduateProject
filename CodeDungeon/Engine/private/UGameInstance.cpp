@@ -212,6 +212,11 @@ void UGameInstance::AwakeTick()
 
 void UGameInstance::Tick(const _double& _dTimeDelta)
 {
+	if (nullptr != m_spNetworkQueryProcessing)
+	{
+		m_spNetworkQueryProcessing->ProcessQueryData();
+	}
+
 	m_spRenderer->Tick(_dTimeDelta);
 	m_spSceneManager->Tick(_dTimeDelta);
 	m_spActorManager->Tick(_dTimeDelta);
@@ -219,6 +224,11 @@ void UGameInstance::Tick(const _double& _dTimeDelta)
 
 void UGameInstance::LateTick(const _double& _dTimeDelta)
 {
+	if (nullptr != m_spNetworkQueryProcessing)
+	{
+		m_spNetworkQueryProcessing->ProcessQueryData();
+	}
+
 	m_spSceneManager->LateTick(_dTimeDelta);
 	m_spActorManager->LateTick(_dTimeDelta);
 	m_spCharacterManager->TickCollider(_dTimeDelta);
@@ -924,10 +934,10 @@ void UGameInstance::StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBas
 	m_spNetworkQueryProcessing = _spNetworkQueryProcessing;
 }
 
-void UGameInstance::MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer, void* _pMapData)
+void UGameInstance::MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer)
 {
 	assert(nullptr != m_spNetworkBaseController);
-	m_spNetworkBaseController->MakeActors(_actorContainer, _pMapData);
+	m_spNetworkBaseController->MakeActors(_actorContainer);
 }
 
 void UGameInstance::SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize)

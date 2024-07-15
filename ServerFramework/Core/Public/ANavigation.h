@@ -20,30 +20,9 @@ public:
 	typedef struct tagNavDesc {
 		_uint iCurIndex{ 0 };
 	}NAVDESC;
-
-	struct CellPathNode {
-		SHPTR<ACell> cell;
-		_float cost;
-		_float heuristic;
-		_float totalCost;
-		SHPTR<ACell> parent;
-
-		bool operator>(const CellPathNode& other) const {
-			return totalCost > other.totalCost;
-		}
-	};
-
-	struct PathFindingState {
-		std::priority_queue<CellPathNode, VECTOR<CellPathNode>, std::greater<CellPathNode>> openSet;
-		std::unordered_map<SHPTR<ACell>, _float> costSoFar;
-		std::unordered_map<SHPTR<ACell>, SHPTR<ACell>> cameFrom;
-		SHPTR<ACell> endCell;
-		bool pathFound = false;
-		VECTOR<SHPTR<ACell>> path;
-	};
 public:
 	ANavigation();
-	NO_COPY(ANavigation)
+	ANavigation(const ANavigation& _rhs);
 	DESTRUCTOR(ANavigation)
 public:
 	_bool NativeConstruct(const _string& _Paths);
@@ -65,7 +44,7 @@ public:
 	// SaveLoad
 	_bool Load(const _string& _wstrPath);
 
-	CSHPTR<CELLCONTAINER> GetCells() const { return m_spCellContainer; }
+	CELLCONTAINER GetCells() const { return m_CellContainer; }
 	const _int& GetCurIndex() const { return m_iCurIndex; }
 	void SetCurIndex(const _int& _iIndex) { m_iCurIndex = _iIndex; }
 	// Get Collider
@@ -73,7 +52,7 @@ public:
 	CSHPTRREF<ACell> GetCurCell() { return m_spCurCell; }
 	CSHPTRREF<ACell> GetPrevCell() { return m_spPrevCell; }
 
-	SHPTR<ACell> GetCell(const _int _index) { return (*m_spCellContainer.get())[_index]; }
+	SHPTR<ACell> GetCell(const _int _index) { return m_CellContainer[_index]; }
 
 	void SetCurCell(CSHPTRREF<ACell> newCell);
 	// Ready Neighbor
@@ -92,14 +71,17 @@ public:
 	-  A* 알고리즘
 	*/
 	_float Heuristic(const Vector3& a, const Vector3& b);
-	ANavigation::PathFindingState StartPathFinding(const Vector3& start, const Vector3& end, CSHPTRREF<ACell> _startCell, CSHPTRREF<ACell> _destCell);
+	VECTOR<Vector3> ComputePath(PathFindingState& _PathFindingState);
+	PathFindingState StartPathFinding(SHPTR<ATransform> _spStartTr, SHPTR<ATransform> _spEndTr);
+	PathFindingState StartPathFinding(const Vector3 start, const Vector3 end);
+	PathFindingState StartPathFinding(const Vector3& start, const Vector3& end, CSHPTRREF<ACell> _startCell, CSHPTRREF<ACell> _endCell);
 	bool StepPathFinding(PathFindingState& state);
 	VECTOR<Vector3> OptimizePath(const VECTOR<SHPTR<ACell>>& path, const Vector3& start, const Vector3& end);
 	bool LineTest(const Vector3& start, const Vector3& end);
 private:
 	virtual void Free() override;
 private:
-	SHPTR<CELLCONTAINER>		m_spCellContainer;
+	CELLCONTAINER						m_CellContainer;
 	SHPTR<ACell>							m_spCurCell;
 	SHPTR<ACell>							m_spPrevCell;
 	_int												m_iPrevIndex;

@@ -26,7 +26,7 @@ public:
 	}CELLDECS;
 public:
 	ACell();
-	NO_COPY(ACell)
+	ACell(const ACell& _rhs);
 	DESTRUCTOR(ACell)
 public:
 	_bool NativeConstruct(const ARRAY<Vector3, POINT_END>& _Points, const _int _iIndex);
@@ -40,8 +40,6 @@ public:
 	Vector3 ClosestPointOnLine(const Vector3& lineStart, const Vector3& lineEnd, const Vector3& point) const;
 
 	_float GetHeightAtXZ(const _float& x, const _float& z) const;
-
-	SHPTR<ACell> FindNeighborCell(const _int _iIndex);
 public: /* Get Set */
 	const Vector3& GetPoint(const POINT& _ePoint) const { return m_arrPoints[_ePoint]; }
 	const Vector3& GetLine(const LINE& _eLine) const { return m_arrLines[_eLine]; }
@@ -55,7 +53,6 @@ public: /* Get Set */
 
 	// Index Return
 	const ARRAY<_int, LINE_END>& GetNeightborIndexes() const { return m_arrNeighbors; }
-	const ARRAY<WKPTR<ACell>, POINT_END>& GetNeighborCells() const { return m_arrNeighborCells; }
 
 	void SetNeighbor(const LINE& _eLine, SHPTR<ACell> _spCell);
 private:
@@ -73,8 +70,6 @@ private:
 	ARRAY<Vector3, LINE_END>						m_arrNormals;
 	// Neighbor
 	ARRAY<_int, LINE_END>								m_arrNeighbors;
-	// Cells
-	ARRAY<WKPTR<ACell>, POINT_END>		m_arrNeighborCells;
 	// CenterPos
 	Vector3															m_vCenterPos;
 	// Index

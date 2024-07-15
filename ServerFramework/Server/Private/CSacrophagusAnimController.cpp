@@ -7,8 +7,8 @@
 namespace Server {
 
 	CSacrophagusAnimController::CSacrophagusAnimController(OBJCON_CONSTRUCTOR, SHPTR<APawn> _spPawn, 
-		const _string& _strFolderPath, const _string& _strFileName) : 
-		AAnimController(OBJCON_CONDATA, _spPawn, _strFolderPath, _strFileName),
+		const _string& _strFolderPath, const _string& _strFileName, const _float4x4& _PivotMatrix) :
+		AAnimController(OBJCON_CONDATA, _spPawn, _strFolderPath, _strFileName, _PivotMatrix),
 		m_iOwnerType{ 0 }, m_dSarcophagusOpeningSpeed {20}, m_dLyingSarcophagusTimeArcOpenStart{ 50 },
 		m_dLyingSarcophagusTimeArcOpenEnd{ 50 }, m_dStandingSarcophagusTimeArcOpenEnd{ 30 }
 	{

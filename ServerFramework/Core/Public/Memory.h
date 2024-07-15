@@ -45,7 +45,7 @@ namespace Core {
 	- 메모리들을 저장하는 클래스
 	*/
 	class CORE_DLL AMemoryPool {
-		using MEMORYQUEUE = CONPRIORITYQUEUE<MEMORYHEADER*>;
+		using MEMORYQUEUE = CONQUEUE<MEMORYHEADER*>;
 	public:
 		AMemoryPool(const _ullong& _AllocateSize);
 		~AMemoryPool();

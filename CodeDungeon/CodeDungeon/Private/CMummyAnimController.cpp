@@ -180,12 +180,11 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     {
         UpdateState(spAnimModel, ANIM_DEATH, L"DEAD");
     }
-
-#else
-
-#endif
     // Tick event
     spAnimModel->TickEvent(spMummy.get(), GetTrigger(), _dTimeDelta);
+#else
+spAnimModel->TickAnimChangeTransform(spMummy->GetTransform(), _dTimeDelta);
+#endif
 }
 
 void CMummyAnimController::ReceiveNetworkProcessData(void* _pData)
@@ -198,7 +197,9 @@ void CMummyAnimController::ReceiveNetworkProcessData(void* _pData)
         m_dRecvAnimDuration = pMonsterData->animationtime();
 
         if (pMonsterData->animationindex() != spAnimModel->GetCurrentAnimIndex())
+        {
             spAnimModel->SetAnimation(pMonsterData->animationindex());
+        }
     }
 #endif
 }

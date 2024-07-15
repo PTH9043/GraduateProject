@@ -5,17 +5,21 @@
 #include "ACoreInstance.h"
 #include "AJobTimer.h"
 #include "AAnimController.h"
+#include "ANavigation.h"
 
 namespace Core
 {
 	AMonster::AMonster(OBJCON_CONSTRUCTOR, SESSIONID _ID, SHPTR<AJobTimer> _spMonsterJobTimer) :
-		APawn(OBJCON_CONDATA, _ID, SESSIONTYPE::MONSTER), m_vNextPos{},
+		APawn(OBJCON_CONDATA, _ID, SESSIONTYPE::MONSTER), m_vNextPos{}, 
 		m_MobState{ MOB_DISABLE_STATE }, m_RoomIndex{}, m_PathList{}, m_strAnimTriggerName{""}, m_strCurAnimName{""}, 
 		m_wpMonsterJobTimer{_spMonsterJobTimer}, m_isFoundPlayerFistTime{false}, m_fActiveRange{0},
 		m_fDeactiveRange{0}, m_iMonsterType{0}, m_fDistanceToPlayer{0},
-		m_isCurrentFindPlayer{false}, m_fMoveSpeed{0}, m_CurrentTargetPlayerID{-1}
+		m_isCurrentAtkPlayer{ false }, m_isCurrentFindPlayer { false}, m_isCurrentJustMove{ false },
+		m_fMoveSpeed { 0 }, m_CurrentTargetPlayerID{ -1 }, m_FindNextPosTimer{0.5, std::memory_order_seq_cst},
+		m_TargetPosLock{},  m_iNextPathIndex{0}, m_vTargetPos{}, m_isPathFinding{false}
 	{
-	
+		m_FindNextPosTimer.fTimer = 100.f;
+		m_FindNextPosTimer.isPass = true;
 	}
 	_bool AMonster::Start(const VOIDDATAS& _ReceiveDatas)
 	{
@@ -35,20 +39,21 @@ namespace Core
 			Vector3 vDirection = vPlayerPos - vMobPos;
 
 			m_fDistanceToPlayer = vDirection.LengthSquared();
-			SetCurrentFindPlayer(false);
 
 			if (m_fDistanceToPlayer <= m_fAttackRange)
 			{
 				SetMonsterState(MONSTERSTATE::MOB_ATTACK_STATE);
+				UpdateSelfStateToPlayerDistance(true, false, false);
 			}
 			else if (m_fDistanceToPlayer <= m_fActiveRange )
 			{
 				SetMonsterState(MONSTERSTATE::MOB_FIND_STATE);
-				SetCurrentFindPlayer(true);
+				UpdateSelfStateToPlayerDistance(false, true, false);
 			}
 			else if (m_fDeactiveRange >= m_fDistanceToPlayer)
 			{
 				SetMonsterState(MONSTERSTATE::MOB_MOVE_STATE);
+				UpdateSelfStateToPlayerDistance(false, false, true);
 			}
 		}
 	}
@@ -57,6 +62,7 @@ namespace Core
 	{
 		SHPTR<AAnimController> spAnimController = GetAnimController();
 		spAnimController->Tick(_dTimeDelta);
+		RestrictPositionToNavi();
 	}
 
 
@@ -86,12 +92,15 @@ namespace Core
 		if (-1 == CurrentTargetPlayerID)
 			return true;
 
-		if (DistanceToPlayer > _fDistance)
+		// 현재 감지하고 있는 플레이어가 인지 범위를 벗어나야 한다. 
+		if (m_fDeactiveRange >= DistanceToPlayer)
 		{
-			m_CurrentTargetPlayerID = _TargetPlayerID;
-			return true;
+			if (DistanceToPlayer > _fDistance)
+			{
+				m_CurrentTargetPlayerID = _TargetPlayerID;
+				return true;
+			}
 		}
-
 		return false;
 	}
 
@@ -110,14 +119,78 @@ namespace Core
 		m_isFoundPlayerFistTime = _isFindFirstTime;
 	}
 
-	void AMonster::InsertPathList(LIST<Vector3>&& _PathList)
+	void AMonster::ComputeNextDir(const _double _dTimeDelta)
 	{
-		std::atomic_thread_fence(std::memory_order_seq_cst);
-		m_PathList.clear();
-
-		for (LIST<Vector3>::reverse_iterator it = _PathList.rbegin(); it != _PathList.rend(); ++it)
+		SHPTR<ANavigation> spNavigation = GetNavigation();
+		SHPTR<ATransform> spSelfTr = GetTransform();
+		Vector3 vPos = spSelfTr->GetPos();
+		Vector3 vTargetPos;
+		const static _float ROTATEVALUE = 5;
 		{
-			m_PathList.Push(*it);
+			READ_SPINLOCK(m_TargetPosLock);
+			vTargetPos = m_vTargetPos;
+		}
+
+		if (true == m_isCurrentFindPlayer)
+		{
+			// Find Path
+			{
+				if (m_FindNextPosTimer.IsOver(_dTimeDelta))
+				{
+					m_PathFindState = spNavigation->StartPathFinding(vPos, vTargetPos);
+					m_FindNextPosTimer.ResetTimer();
+					m_isPathFinding = true;
+				}
+
+				if (true == m_isPathFinding)
+				{
+					m_isRecvPathFindState = spNavigation->StepPathFinding(m_PathFindState);
+					if (true == m_PathFindState.isPathFound && true == m_isRecvPathFindState)
+					{
+						m_PathList = std::move(spNavigation->ComputePath(m_PathFindState));
+						m_iNextPathIndex = 0;
+					}
+					m_isPathFinding = false;
+				}
+			}
+
+			_float fDistance = spSelfTr->ComputeDistanceSq(m_vNextPos);
+			if (true == m_PathList.empty() || m_PathList.size() <= m_iNextPathIndex)
+			{
+				Vector3 vDirection = vTargetPos - spSelfTr->GetPos();
+				vDirection.Normalize();
+				GetTransform()->SetDirectionFixedUp(vDirection, (_float)_dTimeDelta, ROTATEVALUE);
+			}
+			else
+			{
+				if (m_PathList.size() > m_iNextPathIndex)
+				{
+					m_vNextPos = m_PathList[m_iNextPathIndex];
+				}
+
+				if (spSelfTr->ComputeDistanceSq(m_vNextPos) <= 10)
+				{
+					m_iNextPathIndex++;
+					return;
+				}
+				Vector3 vDirection = m_vNextPos - spSelfTr->GetPos();
+				vDirection.Normalize();
+				GetTransform()->SetDirectionFixedUp(vDirection, (_float)_dTimeDelta, ROTATEVALUE);
+			}
+		}
+		else if (true == m_isCurrentAtkPlayer)
+		{
+			Vector3 vDirection = vTargetPos - spSelfTr->GetPos();
+			vDirection.Normalize();
+			GetTransform()->SetDirectionFixedUp(vDirection, (_float)_dTimeDelta, ROTATEVALUE);
+		}
+	}
+
+	void AMonster::UpdateTargetPos(SHPTR<ATransform> _ArriveTr)
+	{
+		{
+			WRITE_SPINLOCK(m_TargetPosLock);
+			m_vTargetPos = _ArriveTr->GetPos();
 		}
 	}
 
@@ -127,23 +200,11 @@ namespace Core
 		m_fDeactiveRange = _fDeactiveRange * _fDeactiveRange;
 	}
 
-	void AMonster::MoveToNextPos(const _double& _dTimeDelta)
+	void AMonster::UpdateSelfStateToPlayerDistance(_bool _isCurAtkPlayer, _bool _isCurFindPlayer, _bool _isCurJustMove)
 	{
-		if (false == m_PathList.IsEmpty())
-		{
-			m_vNextPos = m_PathList.Pop();
-			GetTransform()->TranslatePos(m_vNextPos, _dTimeDelta, m_fMoveSpeed);
-		}
-	}
-
-	void AMonster::SetTargetPlayerID(const SESSIONID _SessionID)
-	{
-		m_CurrentTargetPlayerID = _SessionID;
-	}
-
-	void AMonster::SetCurrentFindPlayer(const _bool _isFindPlayer)
-	{
-		m_isCurrentFindPlayer = _isFindPlayer;
+		m_isCurrentAtkPlayer = _isCurAtkPlayer;
+		m_isCurrentFindPlayer = _isCurFindPlayer;
+		m_isCurrentJustMove = _isCurJustMove;
 	}
 
 	void AMonster::Free()

@@ -214,6 +214,85 @@ namespace Core {
 		}
 	};
 
+	typedef struct  tagCusTimer
+	{
+		tagCusTimer() = default;
+		tagCusTimer(const _float& _fStandardTime, std::memory_order _memoryOrder = std::memory_order_relaxed)
+			: fStandardTime(_fStandardTime), MemoryOrder{_memoryOrder}
+		{
+			fTimer = 0.f;
+			isPass = false;
+		}
+
+		_bool IsOver(const _double& _dTimeDelta)
+		{
+			if (fTimer.load(MemoryOrder) >= fStandardTime)
+			{
+				isPass.store(true, MemoryOrder);
+				return true;
+			}
+			fTimer.fetch_add((_float)_dTimeDelta, MemoryOrder);
+			return false;
+		}
+
+		_bool IsOver()
+		{
+			if (fTimer.load(MemoryOrder) >= fStandardTime)
+			{
+				return true;
+			}
+			return false;
+		}
+
+		void ResetTimer()
+		{
+			fTimer.store(0.f, MemoryOrder);
+			isPass.store(false, MemoryOrder);
+		}
+
+		_bool IsPass() { return isPass; }
+		void SetStandardTime(_float _StandardTime) { fStandardTime = _StandardTime; }
+		// Timer
+		std::atomic<_float>		fTimer = 0.f;
+		_float								fStandardTime = 0.f;
+		std::atomic<_bool>		isPass{ false };
+	private:
+		std::memory_order		MemoryOrder;
+	}CUSTIMER;
+
 #pragma endregion ANIMEVENTTYPE
+
+	typedef struct tagNavDesc {
+		_uint iCurIndex{ 0 };
+	}NAVDESC;
+
+	struct CellPathNode {
+		SHPTR<class ACell> cell;
+		_float cost;
+		_float heuristic;
+		_float totalCost;
+		SHPTR<class ACell> parent;
+
+		bool operator>(const CellPathNode& other) const {
+			return totalCost > other.totalCost;
+		}
+	};
+
+	struct PathFindingState {
+		using PATHFINDER = std::priority_queue<CellPathNode, VECTOR<CellPathNode>, std::greater<CellPathNode>>;
+		using COSTFAR = std::unordered_map<SHPTR<class ACell>, _float>;
+		using CAMEFROM = std::unordered_map<SHPTR<class ACell>, SHPTR<class ACell>>;
+
+		PATHFINDER openSet;
+		COSTFAR costSoFar;
+		CAMEFROM cameFrom;
+		SHPTR<class ACell> endCell;
+		_bool isPathFound = false;
+		VECTOR<SHPTR<class ACell>> path;
+
+		Vector3	vStartPos;
+		Vector3  vEndPos;
+	};
+
 }
 #endif // _SERVERFRAMEWORK_CORE_PUBLIC_CORESTRUCT_H

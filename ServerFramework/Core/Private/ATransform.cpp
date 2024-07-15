@@ -79,8 +79,8 @@ namespace Core {
 
 	void ATransform::TransformUpdate()
 	{
-		AReadSpinLockGuard(m_WorldSpinLock);
-		AWriteSpinLockGuard(m_ChangeSpinLock);
+		READ_SPINLOCK(m_WorldSpinLock);
+		WRITE_SPINLOCK(m_ChangeSpinLock);
 		if (nullptr != m_spParentsTransform) {
 
 			_float4x4 Matrix = m_spParentsTransform->GetParentsMatrix();

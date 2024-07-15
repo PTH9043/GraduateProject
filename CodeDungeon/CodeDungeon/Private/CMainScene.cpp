@@ -150,7 +150,7 @@ HRESULT CMainScene::LoadSceneData()
 	m_spMainCamera = std::static_pointer_cast<CMainCamera>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MAINCAMERA, vecDatas));
 	m_spMainCamera->GetTransform()->SetPos({ 0.f, 10.f, -100.f });
 
-	spGameInstance->MakeActors({ m_spMainCamera }, nullptr);
+	spGameInstance->MakeActors({ m_spMainCamera });
 #endif
 	{
 		m_spMap = CreateConstructorNative<CMap>(spGameInstance->GetDevice());

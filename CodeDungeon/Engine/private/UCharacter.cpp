@@ -52,6 +52,10 @@ HRESULT UCharacter::NativeConstructClone(const VOIDDATAS& _Datas)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	{
 		m_spAnimModel = std::static_pointer_cast<UAnimModel>(spGameInstance->CloneResource(CharacterDesc.wstrAnimModelProtoData));
+		if (true == m_isNetworkConnected)
+		{
+			m_spAnimModel->NotApplyAnimPositionEnable();
+		}
 	}
 	{
 		UAnimationController::ANIMCONTROLLERDESC ControllerDesc{ ThisShared<UCharacter>() };

@@ -19,6 +19,8 @@ class ACell;
 class AJobTimer;
 class AMonster;
 class AServerService;
+class ACollisionManager;
+class APawn;
 
 using NAVIGATIONWORKBENCH = ARRAY<SHPTR<ANavigation>, TLS::MAX_WORKTHREAD>;
 using PATHFINDERWORKBENCH = ARRAY<SHPTR<APathFinder>, TLS::MAX_WORKTHREAD>;
@@ -83,10 +85,12 @@ public: /* MySqlDriver */
 	void BindParam(SQLTABLETYPE _TableType, _int _ParamIndex, _int _Value);
 	void BindParam(SQLTABLETYPE _TableType, _int _ParamIndex, _llong _Value);
 	void BindParam(SQLTABLETYPE _TableType, _int _ParamIndex, const _string& _Value);
-public: /* Navigation*/
-	// Compute Height
-	SHPTR<ANavigation> GetNavigation(_int _index = TLS::g_ThreadID) const { return m_NavigationWorkBench[_index]; }
-	SHPTR<APathFinder> GetPathFinder(_int _index = TLS::g_ThreadID) const { return m_PathFinderWorkBench[_index]; }
+public:
+	void AddMonsterPawnList(APawn* _pPawn);
+	void CollisionSituation(const _double _dTimeDelta);
+	void CollisionSituationToPlayer(ASession* _pSession, const _double _dTimeDelta);
+public:
+	SHPTR<ANavigation> CloneNavi();
 private:
 	virtual void Free() override;
 private:
@@ -96,9 +100,8 @@ private:
 	SHPTR<ARandomManager>		m_spRandomManager;
 	SHPTR<ASpaceManager>			m_spSpaceManager;
 	SHPTR< AMySqlDriver>				m_spMySqlDriver;
-
-	NAVIGATIONWORKBENCH			m_NavigationWorkBench;
-	PATHFINDERWORKBENCH			m_PathFinderWorkBench;
+	SHPTR<ANavigation>					m_spNavigation;
+	SHPTR<ACollisionManager>		m_spCollisionManager;
 };
 
 END

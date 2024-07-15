@@ -115,7 +115,8 @@ namespace Core
 
 	void AAnimation::TickAnimEvent(APawn* _pPawn, AAnimator* _pAnimator, const _double& _TimeDelta,
 		const _double& _Ratio, const _string& _strInputTrigger)
-	{// 만약 ActiveAnimChagneEvent가 활성화되지 않았다면, 활성화할때까지 찾아라
+	{
+		// 만약 ActiveAnimChagneEvent가 활성화되지 않았다면, 활성화할때까지 찾아라
 		if (nullptr == m_spActiveAnimChangeEvent)
 		{
 			for (auto& Event : m_AnimEventContainer[ANIMEVENTTYPE::ANIMEVENT_ANIMCHANGESBETWEEN])
@@ -170,6 +171,7 @@ namespace Core
 
 	void AAnimation::ResetAnimChangeEventNode()
 	{
+		m_spActiveAnimChangeEvent = nullptr;
 	}
 
 	void AAnimation::LoadAnimSectionData(const _string& _strFolderPath)

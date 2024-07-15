@@ -8,7 +8,7 @@
 namespace Core {
 
 	ANavigation::ANavigation() :
-		m_spCellContainer{ Create<CELLCONTAINER>() },
+		m_CellContainer{  },
 		m_spCurCell{ nullptr },
 		m_iCurIndex{ 0 },
 		m_spPrevCell{ nullptr },
@@ -16,9 +16,22 @@ namespace Core {
 	{
 	}
 
+	ANavigation::ANavigation(const ANavigation& _rhs) : 
+		m_CellContainer{  }, m_spCurCell{ nullptr },
+		m_iCurIndex{ 0 },
+		m_spPrevCell{ nullptr },
+		m_iPrevIndex{ 0 }
+	{
+		m_CellContainer.reserve(_rhs.m_CellContainer.size());
+		for (auto& iter : _rhs.m_CellContainer)
+		{
+			m_CellContainer.push_back(Create<ACell>(*iter.get()));
+		}
+	}
+
 	void ANavigation::Free()
 	{
-		m_spCellContainer.reset();
+		m_CellContainer.clear();
 	}
 
 	_bool ANavigation::NativeConstruct(const _string& _Paths)
@@ -28,7 +41,7 @@ namespace Core {
 
 	const _float ANavigation::ComputeHeight(const Vector3& _vPosition)
 	{
-		RETURN_CHECK(nullptr == m_spCellContainer, _vPosition.y);
+		RETURN_CHECK(0 == m_CellContainer.size(), _vPosition.y);
 
 		if (nullptr != m_spCurCell) {
 			return m_spCurCell->ComputeHeight(_vPosition);
@@ -38,7 +51,7 @@ namespace Core {
 			SHPTR<ACell> closestCell{};
 			float minYDiff = -1.0f;
 
-			for (auto& iter : *m_spCellContainer.get()) {
+			for (auto& iter : m_CellContainer) {
 				if (true == iter->IsIn(_vPosition, m_iCurIndex)) {
 					float yDiff = std::abs(_vPosition.y - iter->GetCenterPos().y);
 					if (minYDiff == -1.0f || yDiff < minYDiff) {
@@ -69,15 +82,15 @@ namespace Core {
 	}
 
 	_bool ANavigation::IsMove(const Vector3& _vPosition, SHPTR<ACell>& _spCell) {
-		RETURN_CHECK(nullptr == m_spCellContainer, false);
+		RETURN_CHECK(0 == m_CellContainer.size(), _vPosition.y);
 
-		if (-1 == m_iCurIndex || m_iCurIndex >= (*m_spCellContainer.get()).size()) {
+		if (-1 == m_iCurIndex || m_iCurIndex >= (m_CellContainer).size()) {
 			return false;
 		}
 		_int iNeighBorIndex{ -1 };
-		if (true == (*m_spCellContainer.get())[m_iCurIndex]->IsIn(_vPosition, iNeighBorIndex)) {
+		if (true == m_CellContainer[m_iCurIndex]->IsIn(_vPosition, iNeighBorIndex)) {
 			m_spPrevCell = m_spCurCell;
-			m_spCurCell = (*m_spCellContainer.get())[m_iCurIndex];
+			m_spCurCell = m_CellContainer[m_iCurIndex];
 			_spCell = m_spCurCell;
 			return true;
 		}
@@ -91,11 +104,11 @@ namespace Core {
 				while (true) {
 					RETURN_CHECK(-1 == iNeighBorIndex, false);
 
-					if (true == (*m_spCellContainer.get())[iNeighBorIndex]->IsIn(_vPosition, iNeighBorIndex)) {
-						float yDiff = std::abs(_vPosition.y - (*m_spCellContainer.get())[iNeighBorIndex]->GetCenterPos().y);
+					if (true == m_CellContainer[iNeighBorIndex]->IsIn(_vPosition, iNeighBorIndex)) {
+						float yDiff = std::abs(_vPosition.y - m_CellContainer[iNeighBorIndex]->GetCenterPos().y);
 						if (minYDiff == -1.0f || yDiff < minYDiff) {
 							minYDiff = yDiff;
-							closestCell = (*m_spCellContainer.get())[iNeighBorIndex];
+							closestCell = m_CellContainer[iNeighBorIndex];
 							found = true;
 						}
 					}
@@ -129,7 +142,8 @@ namespace Core {
 	}
 
 	SHPTR<ACell> ANavigation::FindCell(const Vector3& _vPosition) {
-		RETURN_CHECK(nullptr == m_spCellContainer, nullptr);
+		RETURN_CHECK(0 == m_CellContainer.size(), nullptr);
+
 		_int iNeighborIndex{ 0 };
 		Vector3 vLine{};
 		_bool success = false;
@@ -140,12 +154,12 @@ namespace Core {
 		_int lowerBound = m_iCurIndex - range;
 		_int upperBound = m_iCurIndex + range;
 
-		while (lowerBound >= 0 || upperBound < m_spCellContainer->size()) {
+		while (lowerBound >= 0 || upperBound < m_CellContainer.size()) {
 			if (lowerBound < 0) lowerBound = 0;
-			if (upperBound > m_spCellContainer->size()) upperBound = static_cast<_int>(m_spCellContainer->size());
+			if (upperBound > m_CellContainer.size()) upperBound = static_cast<_int>(m_CellContainer.size());
 
 			for (_int i = lowerBound; i < upperBound; ++i) {
-				auto& iter = m_spCellContainer->at(i);
+				auto& iter = m_CellContainer.at(i);
 				if (true == iter->IsIn(_vPosition, iNeighborIndex)) {
 					float yDiff = _vPosition.y - iter->GetHeightAtXZ(_vPosition.x, _vPosition.z);
 					if (minYDiff == -1.0f || yDiff < minYDiff) {
@@ -171,7 +185,7 @@ namespace Core {
 	}
 
 	SHPTR<ACell> ANavigation::FindCellWithoutUpdate(const Vector3& _vPosition) {
-		RETURN_CHECK(nullptr == m_spCellContainer, nullptr);
+		RETURN_CHECK(0 == m_CellContainer.size(), nullptr);
 		_int iNeighborIndex{ 0 };
 		Vector3 vLine{};
 		_bool success = false;
@@ -182,12 +196,12 @@ namespace Core {
 		_int lowerBound = m_iCurIndex - range;
 		_int upperBound = m_iCurIndex + range;
 
-		while (lowerBound >= 0 || upperBound < m_spCellContainer->size()) {
+		while (lowerBound >= 0 || upperBound < m_CellContainer.size()) {
 			if (lowerBound < 0) lowerBound = 0;
-			if (upperBound > m_spCellContainer->size()) upperBound = static_cast<_int>(m_spCellContainer->size());
+			if (upperBound > m_CellContainer.size()) upperBound = static_cast<_int>(m_CellContainer.size());
 
 			for (_int i = lowerBound; i < upperBound; ++i) {
-				auto& iter = m_spCellContainer->at(i);
+				auto& iter = m_CellContainer.at(i);
 				if (true == iter->IsIn(_vPosition, iNeighborIndex)) {
 					float yDiff = _vPosition.y - iter->GetHeightAtXZ(_vPosition.x, _vPosition.z);
 					if (minYDiff == -1.0f || yDiff < minYDiff) {
@@ -210,19 +224,19 @@ namespace Core {
 	}
 
 	SHPTR<ACell> ANavigation::FindCell(const _int& _iIndex) {
-		RETURN_CHECK(nullptr == m_spCellContainer, nullptr);
+		RETURN_CHECK(0 == m_CellContainer.size(), nullptr);
 		_int iNeighborIndex{ 0 };
 		Vector3 vLine{};
 		_int range = 100;
 		_int lowerBound = _iIndex - range;
 		_int upperBound = _iIndex + range;
 
-		while (lowerBound >= 0 || upperBound < m_spCellContainer->size()) {
+		while (lowerBound >= 0 || upperBound < m_CellContainer.size()) {
 			if (lowerBound < 0) lowerBound = 0;
-			if (upperBound > m_spCellContainer->size()) upperBound = static_cast<_int>(m_spCellContainer->size());
+			if (upperBound > m_CellContainer.size()) upperBound = static_cast<_int>(m_CellContainer.size());
 
 			for (_int i = lowerBound; i < upperBound; ++i) {
-				auto& iter = m_spCellContainer->at(i);
+				auto& iter = m_CellContainer.at(i);
 				if (iter->GetIndex() == _iIndex) {
 					m_spPrevCell = m_spCurCell;
 					m_iCurIndex = _iIndex;
@@ -237,19 +251,19 @@ namespace Core {
 	}
 
 	SHPTR<ACell> ANavigation::FindCellWithoutUpdate(const _int& _iIndex) {
-		RETURN_CHECK(nullptr == m_spCellContainer, nullptr);
+		RETURN_CHECK(0 == m_CellContainer.size(), nullptr);
 		_int iNeighborIndex{ 0 };
 		Vector3 vLine{};
 		_int range = 25;
 		_int lowerBound = _iIndex - range;
 		_int upperBound = _iIndex + range;
 
-		while (lowerBound >= 0 || upperBound < m_spCellContainer->size()) {
+		while (lowerBound >= 0 || upperBound < m_CellContainer.size()) {
 			if (lowerBound < 0) lowerBound = 0;
-			if (upperBound > m_spCellContainer->size()) upperBound = static_cast<_int>(m_spCellContainer->size());
+			if (upperBound > m_CellContainer.size()) upperBound = static_cast<_int>(m_CellContainer.size());
 
 			for (_int i = lowerBound; i < upperBound; ++i) {
-				auto& iter = m_spCellContainer->at(i);
+				auto& iter = m_CellContainer.at(i);
 				if (iter->GetIndex() == _iIndex) {
 					return iter;
 				}
@@ -274,10 +288,10 @@ namespace Core {
 
 	void ANavigation::AddCell(SHPTR<ACell>& _spCell)
 	{
-		if (nullptr == m_spCellContainer)
+		if (0 == m_CellContainer.size())
 			return;
 
-		m_spCellContainer->emplace_back(_spCell);
+		m_CellContainer.emplace_back(_spCell);
 	}
 
 	_bool ANavigation::Load(const _string& _strPath)
@@ -287,9 +301,9 @@ namespace Core {
 
 		_uint numCells;
 		load.read(reinterpret_cast<char*>(&numCells), sizeof(_uint));
-		m_spCellContainer->reserve(numCells);
+		m_CellContainer.resize(numCells);
 		
-		for (_uint i = 0; i < numCells; ++i) 
+		for (auto& iter : m_CellContainer)
 		{
 			ACell::CELLDECS tDesc;
 			Vector3 f3Color;
@@ -303,10 +317,10 @@ namespace Core {
 			load.read(reinterpret_cast<char*>(&tDesc.bisJumpable), sizeof(tDesc.bisJumpable));
 
 			SHPTR<ACell> NewCell = CreateInitNative<ACell>(tDesc);
-			m_spCellContainer->push_back(NewCell);
+			iter = NewCell;
 		}
 
-		RETURN_CHECK(ReadyNeighbor(), false);
+		RETURN_CHECK(false == ReadyNeighbor(), false);
 
 		return true;
 	}
@@ -318,10 +332,11 @@ namespace Core {
 
 	_bool ANavigation::ReadyNeighbor()
 	{
-		RETURN_CHECK(nullptr == m_spCellContainer, false);
+		RETURN_CHECK(0 == m_CellContainer.size(), false);
 
-		for (auto& pSourCell : (*m_spCellContainer.get())) {
-			for (auto& pDestCell : (*m_spCellContainer.get())) {
+		for (auto& pSourCell : m_CellContainer) {
+			for (auto& pDestCell : m_CellContainer) {
+
 				if (pSourCell == pDestCell)
 					continue;
 
@@ -339,8 +354,7 @@ namespace Core {
 					pSourCell->SetNeighbor(ACell::LINE_CA, pDestCell);
 			}
 		}
-
-		return S_OK;
+		return true;
 	}
 
 	Vector3 ANavigation::ClampPositionToCell(const Vector3& position)
@@ -381,15 +395,38 @@ namespace Core {
 		return delta.x + delta.y + delta.z;
 	}
 
-	ANavigation::PathFindingState ANavigation::StartPathFinding(const Vector3& start, const Vector3& end, CSHPTRREF<ACell> _startCell, CSHPTRREF<ACell> _destCell)
+	VECTOR<Vector3> ANavigation::ComputePath(PathFindingState& _PathFindingState)
+	{
+		return std::move(OptimizePath(_PathFindingState.path, _PathFindingState.vStartPos, _PathFindingState.vEndPos));
+	}
+
+	PathFindingState ANavigation::StartPathFinding(SHPTR<ATransform> _spStartTr, SHPTR<ATransform> _spEndTr)
+	{
+		Vector3 vStart = _spStartTr->GetPos();
+		Vector3 vEnd = _spEndTr->GetPos();
+		return StartPathFinding(vStart, vEnd, FindCell(vStart), FindCell(vEnd));
+	}
+
+	PathFindingState ANavigation::StartPathFinding(const Vector3 start, const Vector3 end)
+	{
+		return StartPathFinding(start, end, FindCell(start), FindCell(end));
+	}
+
+	PathFindingState ANavigation::StartPathFinding(const Vector3& start, const Vector3& end, CSHPTRREF<ACell> _startCell, CSHPTRREF<ACell> _endCell)
 	{
 		PathFindingState state;
-		state.endCell = _destCell;
+		if (nullptr == _startCell || nullptr == _endCell)
+			return state;
+
+		state.endCell = _endCell;
 
 		SHPTR<ACell> startCell = _startCell;
 		state.openSet.push({ startCell, 0, Heuristic(start, end), 0, nullptr });
 		state.costSoFar[startCell] = 0;
 
+		state.vStartPos = start;
+		state.vEndPos = _endCell->GetCenterPos();
+		state.isPathFound = true;
 		return state;
 	}
 
@@ -404,7 +441,7 @@ namespace Core {
 
 		if (current.cell == state.endCell) {
 			// 경로를 추적하여 반환
-			state.pathFound = true;
+			state.isPathFound = true;
 			for (SHPTR<ACell> c = state.endCell; c != nullptr; c = state.cameFrom[c]) {
 				state.path.push_back(c);
 			}
@@ -447,7 +484,7 @@ namespace Core {
 		straightPath.reserve(optimizedPath.size());
 
 		Vector3 lastPoint = start;
-		straightPath.push_back(lastPoint);
+	//	straightPath.push_back(lastPoint);
 
 		for (size_t i = 1; i < optimizedPath.size() - 1; ++i) {
 			if (!LineTest(lastPoint, optimizedPath[i + 1])) {
@@ -478,7 +515,7 @@ namespace Core {
 
 			if (!currentCell->IsIn(currentPos, iNeighborIndex)) {
 				if (iNeighborIndex >= 0) {
-					SHPTR<ACell> neighborCell = (*m_spCellContainer.get())[iNeighborIndex];
+					SHPTR<ACell> neighborCell = (m_CellContainer)[iNeighborIndex];
 					if (neighborCell && neighborCell->IsIn(currentPos, iNeighborIndex)) {
 						currentCell = neighborCell;
 					}

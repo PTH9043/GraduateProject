@@ -42,6 +42,7 @@ namespace Core
 #ifdef USE_DEBUG
 			delete g_pDeadLockProfiler;
 #endif
+			ThreadMiliRelax(100);
 			delete g_pMemoryAdminster;
 			delete g_pLogger;
 		}

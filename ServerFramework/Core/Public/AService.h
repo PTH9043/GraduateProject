@@ -43,6 +43,8 @@ public: /* get set */
 	const SESSIONCONTAINER& GetSessionContainer() const { return m_SessionContainer; }
 	const MOBOBJCONTAINER& GetMobObjContainer() const { return m_MobObjContainer; }
 	IOContext& GetIOContext(REF_RETURN) { return m_IOContext; }
+
+	void IncreaseCurrentSessionCount(_llong _Count);
 protected:
 	virtual void Connect() PURE;
 	virtual SESSIONID GiveID();

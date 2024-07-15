@@ -8,7 +8,7 @@ BEGIN(Server)
 class CMummyAnimController final : public AAnimController {
 public:
 	CMummyAnimController(OBJCON_CONSTRUCTOR, SHPTR<APawn> _spPawn,
-		const _string& _strFolderPath, const _string& _strFileName);
+		const _string& _strFolderPath, const _string& _strFileName, const _float4x4& _PivotMatrix = _float4x4::Identity);
 	DESTRUCTOR(CMummyAnimController)
 public:
 	virtual void Tick(const _double& _dTimeDelta) override;

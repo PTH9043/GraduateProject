@@ -26,6 +26,7 @@ namespace Core {
 	void AMainLoop::TimerThread(const boost::system::error_code& _error)
 	{
 		m_spGameTimer->Tick();
+		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
 		SHPTR<AService> spServerService = m_wpServerService.lock();
 		{
 			_double dTimeDelta = m_spGameTimer->GetDeltaTime();
@@ -51,6 +52,8 @@ namespace Core {
 				{
 					iter->Tick(dTimeDelta);
 				}
+				// Collision 
+				spCoreInstance->CollisionSituation(dTimeDelta);
 			}
 		}
 		RegisterTimer();

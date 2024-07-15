@@ -31,38 +31,52 @@ namespace Server
 	{
 		__super::Start(_ReceiveDatas);
 		ASSERT_CRASH(_ReceiveDatas.size() >= 0);
+		_float4x4 Matrix = _float4x4::CreateScale(0.1f) * _float4x4::CreateRotationY(DirectX::XMConvertToRadians(180));
+#ifndef CREATED_SERVERMOBDATA
 		MOBDATA* pMoveData = static_cast<MOBDATA*>(_ReceiveDatas[0]);
 		SESSIONID* pSessionID = static_cast<SESSIONID*>(_ReceiveDatas[1]);
 
 		SHPTR<CSacrophagusAnimController> spSacrophagusAnimController = nullptr;
 
+		SHPTR<CMummy> spMummy;
 		switch (m_eSarcophagusType)
 		{
 		case SARCO_LAYING:
 		{
 			spSacrophagusAnimController =	Create<CSacrophagusAnimController>(GetCoreInstance(), ThisShared<CSarcophagus>(), 
-				"..\\..\\Resource\\Anim\\Sarcophagus\\", "SarcophagusLaying_FBX.bin");
-			m_spMummy = Create<CMummy>(GetCoreInstance(), *pSessionID, MUMMYTYPE::MUMMY_LAYING, GetMonsterJobTimer());
+				"..\\..\\Resource\\Anim\\Sarcophagus\\", "SarcophagusLaying_FBX.bin", Matrix);
+			spMummy = Create<CMummy>(GetCoreInstance(), *pSessionID, MUMMYTYPE::MUMMY_LAYING, GetMonsterJobTimer());
 		}
 		break;
 		case SARCO_STANDING:
 		{
 			spSacrophagusAnimController = Create<CSacrophagusAnimController>(GetCoreInstance(), ThisShared<CSarcophagus>(),
-				"..\\..\\Resource\\Anim\\Sarcophagus\\", "SarcophagusStanding_FBX.bin");
-			m_spMummy = Create<CMummy>(GetCoreInstance(), *pSessionID, MUMMYTYPE::MUMMY_STANDING, GetMonsterJobTimer());
+				"..\\..\\Resource\\Anim\\Sarcophagus\\", "SarcophagusStanding_FBX.bin", Matrix);
+			spMummy = Create<CMummy>(GetCoreInstance(), *pSessionID, MUMMYTYPE::MUMMY_STANDING, GetMonsterJobTimer());
 		}
 		break;
 		}
-		
 		SetAnimController(spSacrophagusAnimController);
-		m_spMummy->Start({ _ReceiveDatas[0] });	
+		spMummy->Start({ _ReceiveDatas[0] });
 		GetTransform()->SetNewWorldMtx(pMoveData->mWorldMatrix);
 		GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
 		BringCellIndextoPosition();
-		GetCoreInstance()->InsertMobObject(m_spMummy->GetSessionID(), m_spMummy);
+		GetCoreInstance()->InsertMobObject(spMummy->GetSessionID(), spMummy);
 
 		if (SARCO_LAYING == m_eSarcophagusType)
-			m_spMummy->GetTransform()->TranslateDir((m_spMummy->GetTransform()->GetLook()), 1, 12);
+			spMummy->GetTransform()->TranslateDir((spMummy->GetTransform()->GetLook()), 1, 12);
+#else
+		SHPTR<CSacrophagusAnimController> spSacrophagusAnimController = Create<CSacrophagusAnimController>(GetCoreInstance(), ThisShared<CSarcophagus>(),
+			"..\\..\\Resource\\Anim\\Sarcophagus\\", "SarcophagusLaying_FBX.bin", Matrix);
+		SetAnimController(spSacrophagusAnimController);
+
+		MOBSERVERDATA* pMobData = static_cast<MOBSERVERDATA*>(_ReceiveDatas[0]);
+		GetAnimController()->SetAnimation(pMobData->iStartAnimIndex);
+		GetTransform()->SetNewWorldMtx(pMobData->mWorldMatrix);
+		GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
+		BringCellIndextoPosition();
+		SetSessionID(pMobData->iMobID);
+#endif
 		return S_OK;
 	}
 
@@ -80,15 +94,12 @@ namespace Server
 				SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
 				SHPTR<AAnimation> spCurAnimation = GetAnimController()->GetCurAnimation();
 				SHPTR<ATransform> spTransform = GetTransform();
-				SHPTR<CMummy> spMummy = GetMummy();
 
 				SC_MONSTERSTATE scMonsterState;
 				PROTOFUNC::MakeScMonsterState(&scMonsterState, GetSessionID(), dDuration, AnimIndex, TAG_MOB_FIRSTFIND_STATE);
 				CombineProto<SC_MONSTERSTATE>(GetCopyBuffer(), GetPacketHead(), scMonsterState, TAG_SC_MONSTERSTATE);
 				spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
 				m_isInitStart = true;
-
-				spMummy->SetFoundPlayerFirstTime(true);
 			}
 		}
 	}
@@ -98,14 +109,21 @@ namespace Server
 		FindPlayer(_spSession);
 	}
 
+	bool CSarcophagus::IsHit(APawn* _pPawn, const _double& _dTimeDelta)
+	{
+		return false;
+	}
+
+	void CSarcophagus::Collision(APawn* _pPawn, const _double& _dTimeDelta)
+	{
+	}
+
 	void CSarcophagus::LastBehavior()
 	{
 		if (true == IsPermanentDisable())
 			return;
 
-		SHPTR<CMummy> spMummy = m_spMummy;
 		ActivePermanentDisable();
-
 		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
 
 		SC_MONSTERSTATE scMonsterState;

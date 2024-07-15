@@ -11,7 +11,7 @@ namespace Core
 {
 	AGameObject::AGameObject(OBJCON_CONSTRUCTOR, SESSIONID _ID, SESSIONTYPE _SessionType) : 
 		ACoreObject(OBJCON_CONDATA), m_SessionID{_ID}, m_SessionType{_SessionType}, m_SpaceIndex{0},
-		m_spTransform{ nullptr }, m_spCollider{ nullptr }, m_CellIndex{0}, m_fMoveSpeed{0.f}, m_fRunSpeed{0.f}
+		m_spTransform{ nullptr }, m_CellIndex{0}, m_fMoveSpeed{0.f}, m_fRunSpeed{0.f}
 		, m_isActive{false}, m_isPermanentDisable{false}, m_CopyHead{}
 	{
 		MemoryInitialization(m_CopyBuffer.data(), MAX_BUFFER_LENGTH);
@@ -23,33 +23,16 @@ namespace Core
 		return true;
 	}
 
-	void AGameObject::CreateColliderAndTransform(const COLLIDERINFO& _ColliderInfo, const Vector3& _vPos)
+	void AGameObject::InsertColliderContainer(const COLLIDERINFO& _ColliderInfo)
 	{
-		m_spCollider = Create<ACollider>((ACollider::TYPE)_ColliderInfo.iColliderType,
-			ACollider::COLLIDERDESC{ _ColliderInfo.vPos, _ColliderInfo.vScale });
+		m_ColliderContainer.push_back(Create<ACollider>((ACollider::TYPE)_ColliderInfo.iColliderType,
+			ACollider::COLLIDERDESC{ _ColliderInfo.vPos, _ColliderInfo.vScale }));
 	}
 
 	void AGameObject::BringSpaceIndex(SHPTR<ASpace> _spSpace)
 	{
 		RETURN_CHECK(nullptr == _spSpace, ;);
 		m_SpaceIndex = _spSpace->GetSpaceIndex();
-	}
-
-	void AGameObject::Placement(_int _CellIndex)
-	{
-		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
-		SHPTR<ANavigation> spNavigation = spCoreInstance->GetNavigation();
-		SHPTR<ACell> spCell = spNavigation->FindCell(_CellIndex);
-		GetTransform()->SetPos(spCell->GetCenterPos());
-	}
-
-	void AGameObject::BringCellIndextoPosition()
-	{
-		ASSERT_CRASH(nullptr != m_spTransform);
-		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
-		SHPTR<ANavigation> spNavigation = spCoreInstance->GetNavigation();
-		SHPTR<ACell> spCell = spNavigation->FindCell(GetTransform()->GetPos());
-		SetCellIndex(spCell->GetIndex());
 	}
 
 	_float AGameObject::OtherCharacterToDistance(SHPTR<ATransform> _spOtherTransform)
@@ -144,6 +127,10 @@ namespace Core
 	}
 
 	void AGameObject::LastBehavior()
+	{
+	}
+
+	void AGameObject::RestrictPositionToNavi()
 	{
 	}
 

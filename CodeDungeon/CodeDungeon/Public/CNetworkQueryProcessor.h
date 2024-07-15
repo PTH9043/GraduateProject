@@ -16,10 +16,6 @@ public:
 public:
 	virtual void MakeActors(const NETWORKRECEIVEINITDATA& _NetworkRecvInitData) override;
 private:
-#ifdef _ENABLE_PROTOBUFF
-	void MakeMonster(const NETWORKRECEIVEINITDATA& _NetworkRecvInitData);
-#endif
-private:
 	virtual void Free() override;
 };
 

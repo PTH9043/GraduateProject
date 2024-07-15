@@ -8,9 +8,9 @@
 namespace Core {
 
 	AAnimController::AAnimController(OBJCON_CONSTRUCTOR, SHPTR<APawn> _spPawn,
-		const _string& _strFolderPath, const _string& _strFileName) :
+		const _string& _strFolderPath, const _string& _strFileName, const _float4x4& _PivotMatrix) :
 		ACoreObject(OBJCON_CONDATA), m_spAnimator{ Create<AAnimator>(OBJCON_CONDATA,
-			_strFolderPath, _strFileName)}, m_wpOwnerPawn{_spPawn},
+			_strFolderPath, _strFileName, _PivotMatrix)}, m_wpOwnerPawn{_spPawn},
 		m_dAccumulator{0},m_dElapsedTime{0}, m_strInputTrigger{""}, m_iPawnState{0}, m_iAnimState{0}
 	{
 	}
@@ -99,10 +99,19 @@ namespace Core {
 		SHPTR<AAnimator> spAnimator = GetAnimator();
 		spAnimator->ResetCurAnimEvent();
 		{
-			AWriteSpinLockGuard(m_TriggerLock);
+			WRITE_SPINLOCK(m_TriggerLock);
 			m_strInputTrigger = _strTrigger;
 		}
 		m_iAnimState = _AnimState;
+	}
+
+	void AAnimController::ClearState()
+	{
+		{
+			WRITE_SPINLOCK(m_TriggerLock);
+			m_strInputTrigger = "";
+		}
+		m_iAnimState = -1;
 	}
 
 	const _int AAnimController::GetCurAnimIndex() const

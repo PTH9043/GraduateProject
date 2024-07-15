@@ -5,7 +5,7 @@ BEGIN(Server)
 
 class CMobLayOutSaver {
 public:
-	CMobLayOutSaver(const _string& _strPath, const VECTOR< MOBDATA>& _MobData);
+	CMobLayOutSaver(const _string& _strPath, const VECTOR< MOBSERVERDATA>& _MobData);
 };
 
 END

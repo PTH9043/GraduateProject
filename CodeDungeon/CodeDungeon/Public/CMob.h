@@ -9,20 +9,6 @@ END
 BEGIN(Client)
 class CMob : public UCharacter {
 public:
-    struct MOBNETWORKDATA
-    {
-        _int            iCellIndex;
-        _float3      vPos;
-        _float3      vRotate;
-        _float3      vScale;
-        _int            iAnimIndex;
-
-        MOBNETWORKDATA() : iCellIndex(0), vPos{}, vRotate {}, vScale{}, iAnimIndex{ 0 } {}
-
-        MOBNETWORKDATA(_int _iCellIndex, const _float3& _vPos, const _float3& _vRotate, const _float3& _vScale, _int _iAnimIndex)  : 
-            iCellIndex(_iCellIndex), vPos{_vPos}, vRotate(_vRotate), vScale{ _vScale }, iAnimIndex{ _iAnimIndex } {}
-    };
-
     enum
     {
         MOBORDER = UCharacter::CHARACTERDESCORDER + 1

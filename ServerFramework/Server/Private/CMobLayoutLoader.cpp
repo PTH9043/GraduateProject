@@ -36,4 +36,20 @@ namespace Server {
 		}
 	}
 
+	CMobServerLayoutLoader::CMobServerLayoutLoader(const _string& _strPath)
+	{
+		std::ifstream read{ _strPath, std::ios::binary };
+		ASSERT_CRASH(false == read.fail());
+
+		size_t MobDatsSize = 0;
+		read.read((_char*)&MobDatsSize, sizeof(size_t));
+		m_MobData.reserve(MobDatsSize);
+		for (_int i = 0; i < MobDatsSize; ++i)
+		{
+			MOBSERVERDATA mobServerData;
+			read.read((_char*)&mobServerData, sizeof(MOBSERVERDATA));
+			m_MobData.emplace_back(mobServerData);
+		}
+		int a = 0;
+	}
 }
