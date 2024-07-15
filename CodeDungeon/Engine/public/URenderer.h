@@ -68,9 +68,9 @@ public:
 	void TurnOffFog() { m_bTurnShader.m_bTurnFog = false; }
 	void TurnOnDieEffect() { m_bTurnShader.m_bTurnDie = true; }
 	void TurnOffDieEffect() { m_bTurnShader.m_bTurnDie = false; }
-	void TurnOnAbilityEffect() { m_bTurnShader.m_bTurnAbility = true; }
+	void TurnOnAbilityEffect() { if (!m_bTurnShader.m_bTurnHit && !m_bTurnShader.m_bTurnDie)m_bTurnShader.m_bTurnAbility = true; }
 	void TurnOffAbilityEffect() { m_bTurnShader.m_bTurnAbility = false; }
-	void TurnOnHitEffect() { m_bTurnShader.m_bTurnHit = true; }
+	void TurnOnHitEffect() { if (!m_bTurnShader.m_bTurnDie)m_bTurnShader.m_bTurnHit = true; }
 	void TurnOffHitEffect() { m_bTurnShader.m_bTurnHit = false; }
 private:
 	void RenderRTs();

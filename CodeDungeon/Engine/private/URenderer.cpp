@@ -253,6 +253,9 @@ void URenderer::Tick(const _double& _dTimeDelta)
 
     if (m_bTurnShader.m_bTurnAbility) {
         m_bTurnShader.m_fAbilityTime += _dTimeDelta;
+        if (m_bTurnShader.m_fAbilityTime > 3.5f) {
+            m_bTurnShader.m_bTurnAbility = false;
+        }
     }
     else {
         m_bTurnShader.m_fAbilityTime = 0;
@@ -260,6 +263,9 @@ void URenderer::Tick(const _double& _dTimeDelta)
 
     if (m_bTurnShader.m_bTurnHit) {
         m_bTurnShader.m_fHitTime += _dTimeDelta;
+        if (m_bTurnShader.m_fHitTime > 3.f) {
+            m_bTurnShader.m_bTurnHit = false;
+        }
     }
     else {
         m_bTurnShader.m_fHitTime = 0;
@@ -315,12 +321,10 @@ HRESULT URenderer::Render()
         TurnDie++;
     }
     if (spGameInstance->GetDIKeyDown(DIK_F3)) {
-        if(!m_bTurnShader.m_bTurnDie)
-        TurnHit++;
+        TurnOnHitEffect();
     }
     if (spGameInstance->GetDIKeyDown(DIK_F4)) {
-        if(!m_bTurnShader.m_bTurnHit&&!m_bTurnShader.m_bTurnDie)
-        TurnAbility++;
+        TurnOnAbilityEffect();
     }
     if (TurnDie % 2 == 1) {
         TurnOnDieEffect();
@@ -328,18 +332,7 @@ HRESULT URenderer::Render()
     else {
         TurnOffDieEffect();
     }
-    if (TurnHit % 2 == 1) {
-        TurnOnHitEffect();
-    }
-    else {
-        TurnOffHitEffect();
-    }
-    if (TurnAbility % 2 == 1) {
-        TurnOnAbilityEffect();
-    }
-    else {
-        TurnOffAbilityEffect();
-    }
+   
 #endif
     return S_OK;
 }

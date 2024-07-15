@@ -104,8 +104,8 @@ PS_OUT PS_Main(PS_In Input)
         float4 outputColor;
 
         float initialBlendTime = 0.3f;
-        float fadeOutStartTime = 2.3f;
-        float fadeOutEndTime = 2.8f;
+        float fadeOutStartTime = 1.25f;
+        float fadeOutEndTime = 1.8f;
        
         float initialRadius = 0.001f;
         float finalRadius = 750.0f;
