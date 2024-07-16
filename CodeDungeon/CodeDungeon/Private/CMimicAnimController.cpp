@@ -1,13 +1,13 @@
 #include "ClientDefines.h"
-#include "CMummyAnimController.h"
-#include "CMummy.h"
+#include "CMimicAnimController.h"
+#include "CMimic.h"
 #include "UGameInstance.h"
 #include "UAnimModel.h"
 #include "UCharacter.h"
 #include "UAnimation.h"
 #include "UTransform.h"
 
-CMummyAnimController::CMummyAnimController(CSHPTRREF<UDevice> _spDevice)
+CMimicAnimController::CMimicAnimController(CSHPTRREF<UDevice> _spDevice)
     : UAnimationController(_spDevice),
     m_bAttackMode{ false },
     m_bTauntMode{ false },
@@ -23,7 +23,7 @@ CMummyAnimController::CMummyAnimController(CSHPTRREF<UDevice> _spDevice)
 {
 }
 
-CMummyAnimController::CMummyAnimController(const CMummyAnimController& _rhs)
+CMimicAnimController::CMimicAnimController(const CMimicAnimController& _rhs)
     : UAnimationController(_rhs),
     m_bAttackMode{ false },
     m_bTauntMode{ false },
@@ -39,25 +39,25 @@ CMummyAnimController::CMummyAnimController(const CMummyAnimController& _rhs)
 {
 }
 
-void CMummyAnimController::Free()
+void CMimicAnimController::Free()
 {
 }
 
-HRESULT CMummyAnimController::NativeConstruct()
+HRESULT CMimicAnimController::NativeConstruct()
 {
     return __super::NativeConstruct();
 }
 
-HRESULT CMummyAnimController::NativeConstructClone(const VOIDDATAS& _tDatas)
+HRESULT CMimicAnimController::NativeConstructClone(const VOIDDATAS& _tDatas)
 {
     RETURN_CHECK_FAILED(__super::NativeConstructClone(_tDatas), E_FAIL);
 
-    m_wpMummyMob = std::dynamic_pointer_cast<CMummy>(GetOwnerCharacter());
+    m_wpMimicMob = std::dynamic_pointer_cast<CMimic>(GetOwnerCharacter());
 
     return S_OK;
 }
 
-void CMummyAnimController::Tick(const _double& _dTimeDelta)
+void CMimicAnimController::Tick(const _double& _dTimeDelta)
 {
     SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
@@ -69,17 +69,17 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
 
     ClearTrigger();
     SetAnimState(-1);
-    SHPTR<CMummy> spMummy = m_wpMummyMob.lock();
-    SHPTR<UAnimModel> spAnimModel = spMummy->GetAnimModel();
+    SHPTR<CMimic> spMimic = m_wpMimicMob.lock();
+    SHPTR<UAnimModel> spAnimModel = spMimic->GetAnimModel();
 
 #ifndef _ENABLE_PROTOBUFF
     const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
 
-    _float DistanceFromPlayer = spMummy->GetDistanceFromPlayer();
-    _bool FoundPlayer = spMummy->GetFoundTargetState();
+    _float DistanceFromPlayer = spMimic->GetDistanceFromPlayer();
+    _bool FoundPlayer = spMimic->GetFoundTargetState();
     _bool Hit = false;
 
-    if (spMummy->GetPrevHealth() > spMummy->GetHealth())
+    if (spMimic->GetPrevHealth() > spMimic->GetHealth())
         Hit = true;
 
     _float AttackRange = 10.0f;
@@ -123,7 +123,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
             }
             else if (m_iRandomValue != 0)
             {
-                UpdateState(spAnimModel, ANIM_MOVE, L"WALKF");
+                UpdateState(spAnimModel, ANIM_MOVE, L"WALK");
             }
         }
     }
@@ -154,7 +154,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     {   
         spAnimModel->SetAnimation(L"gotHit");
         spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
-        spMummy->SetPrevHealth(spMummy->GetHealth());
+        spMimic->SetPrevHealth(spMimic->GetHealth());
     }
 
     // Handle attack mode state
@@ -178,27 +178,27 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     }
 
     // Check for death
-    if (spMummy->GetHealth() <= 0)
+    if (spMimic->GetHealth() <= 0)
     {
-        spMummy->SetDeathState(true);
+        spMimic->SetDeathState(true);
     }
 
     // Handle death state
-    if (spMummy->GetDeathState())
+    if (spMimic->GetDeathState())
     {
         spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         UpdateState(spAnimModel, ANIM_DEATH, L"DEAD");
     }
 
 #else
-spAnimModel->TickAnimChangeTransform(spMummy->GetTransform(), _dTimeDelta);
+spAnimModel->TickAnimChangeTransform(spMimic->GetTransform(), _dTimeDelta);
 #endif
 }
 
-void CMummyAnimController::ReceiveNetworkProcessData(void* _pData)
+void CMimicAnimController::ReceiveNetworkProcessData(void* _pData)
 {
 #ifdef _ENABLE_PROTOBUFF
-    SHPTR<CMummy> spSarcophagus = m_wpMummyMob.lock();
+    SHPTR<CMimic> spSarcophagus = m_wpMimicMob.lock();
     SHPTR<UAnimModel> spAnimModel = spSarcophagus->GetAnimModel();
     {
         SC_MONSTERSTATEHAVEPOS* pMonsterData = static_cast<SC_MONSTERSTATEHAVEPOS*>(_pData);

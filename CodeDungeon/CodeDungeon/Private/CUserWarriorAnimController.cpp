@@ -137,6 +137,27 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
         else UpdateState(spAnimModel, ANIM_ROLL, L"ROLL_F");
     }
 
+    // Hit state
+    if (Hit && !isKicked) {
+        spAnimModel->SetAnimation(L"hit_head_back");
+        spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
+        spWarriorPlayer->SetPrevHealth(spWarriorPlayer->GetHealth());
+    }
+
+    // Rise state
+    if (isRise) {
+         UpdateState(spAnimModel, ANIM_MOVE, L"RISE1");
+        spAnimModel->SetAnimation(L"rise01");
+    }
+    if (CurAnimName == L"rise01")
+        spWarriorPlayer->SetRiseState(false);
+
+    // Kicked state
+    if (isKicked && CurAnimName != L"rise01") {
+        UpdateState(spAnimModel, ANIM_HIT, L"GOTKICKED");
+        spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
+    }
+
     // Attack handling
     if (isAttack && !Hit) {
         if (isWAttack) {
@@ -187,26 +208,6 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     }
     else {
         spWarriorPlayer->IfAttack(false);
-    }
-
-    // Hit state
-    if (Hit && !isKicked) {
-        UpdateState(spAnimModel, ANIM_HIT, L"HIT_BACK");
-        spWarriorPlayer->SetPrevHealth(spWarriorPlayer->GetHealth());
-    }
-
-    // Rise state
-    if (isRise) {
-       
-        UpdateState(spAnimModel, ANIM_MOVE, L"RISE1");
-        spAnimModel->SetAnimation(L"rise01");
-    }
-    if (CurAnimName == L"rise01")
-        spWarriorPlayer->SetRiseState(false);
-
-    // Kicked state
-    if (isKicked && CurAnimName != L"rise01") {
-        UpdateState(spAnimModel, ANIM_HIT, L"GOTKICKED");
     }
 
     if (true == spGameInstance->IsMouseInWindowSize())

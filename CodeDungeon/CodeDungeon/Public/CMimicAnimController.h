@@ -3,25 +3,25 @@
 #include "UAnimationController.h"
 
 BEGIN(Client)
-class CAnubis;
+class CMimic;
 /*
 @ Date: 2024-05-13, Writer: 이성현
 @ Explain
--  Anubis를 조종하는 클래스
+-  Mimic를 조종하는 클래스
 */
-class CAnubisAnimController final : public UAnimationController {
+class CMimicAnimController final : public UAnimationController {
 public:
-	CAnubisAnimController(CSHPTRREF<UDevice> _spDevice);
-	CAnubisAnimController(const CAnubisAnimController& _rhs);
-	virtual ~CAnubisAnimController() = default;
+	CMimicAnimController(CSHPTRREF<UDevice> _spDevice);
+	CMimicAnimController(const CMimicAnimController& _rhs);
+	virtual ~CMimicAnimController() = default;
 
-	enum AnubisSTATE
+	enum MimicSTATE
 	{
 		ANIM_SLEEP = 6, ANIM_AWAKE = 7, ANIM_TAUNT = 8
 	};
 public:
 	virtual void Free() override;
-	CLONE_MACRO(CAnubisAnimController, "CAnubisAnimController::Clone To Failed")
+	CLONE_MACRO(CMimicAnimController, "CMimicAnimController::Clone To Failed")
 public:
 	// Native Construct 
 	virtual HRESULT NativeConstruct() override;
@@ -32,11 +32,9 @@ public:
 	// 네트워크 정보를 받아오는 함수
 	virtual void ReceiveNetworkProcessData(void* _pData) override;
 private:
-	WKPTR< CAnubis>			m_wpAnubisMob;
+	WKPTR< CMimic>			m_wpMimicMob;
 
 	_bool					m_bAttackMode;
-	_bool					m_bAttackStart;
-
 	_bool					m_bTauntMode;
 	_double					m_dlastHitTime;
 	_double					m_dlastAttackTime;
@@ -46,8 +44,6 @@ private:
 	_bool					m_bFoundPlayerFirsttime;
 	_double					m_didleRandomValueChoosingTimer;
 	_int					m_iRandomValue;
-
-	_int				 m_iRandomValueforAttack;
 	_double				m_dRecvAnimDuration;
 
 };

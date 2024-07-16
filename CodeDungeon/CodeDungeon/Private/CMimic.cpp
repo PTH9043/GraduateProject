@@ -1,5 +1,5 @@
 #include "ClientDefines.h"
-#include "CAnubis.h"
+#include "CMimic.h"
 #include "UGameInstance.h"
 #include "URenderer.h"
 #include "CMainCamera.h"
@@ -7,8 +7,7 @@
 #include "UAnimModel.h"
 #include "URegion.h"
 #include "UNavigation.h"
-#include "CAnubis.h"
-#include "CAnubisAnimController.h"
+#include "CMimicAnimController.h"
 #include "UCell.h"
 #include "UMethod.h"
 #include "UPlayer.h"
@@ -17,42 +16,36 @@
 #include "UParticleSystem.h"
 #include "CModelObjects.h"
 #include "UAnimation.h"
-#include "CAnubisStaff.h"
+#include "UProcessedData.h"
 
-CAnubis::CAnubis(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
-	: CMob(_spDevice, _wstrLayer, _eCloneType), m_AnubisType{},
+CMimic::CMimic(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
+	: CMob(_spDevice, _wstrLayer, _eCloneType), m_MimicType{},
 	m_PathFindingState{},
 	m_AstarPath{},
 	m_isPathFinding{ false },
-	m_currentPathIndex{ 0 },
-	m_spAnubisStaff{ nullptr },
-	m_f3OriginPos{ },
-	m_f3OriginDirection{}
+	m_currentPathIndex{ 0 }
 {
 }
 
-CAnubis::CAnubis(const CAnubis& _rhs)
-	: CMob(_rhs), m_AnubisType{},
+CMimic::CMimic(const CMimic& _rhs)
+	: CMob(_rhs), m_MimicType{},
 	m_PathFindingState{},
 	m_AstarPath{},
 	m_isPathFinding{ false },
-	m_currentPathIndex{ 0 },
-	m_spAnubisStaff{nullptr},
-	m_f3OriginPos{},
-	m_f3OriginDirection{}
+	m_currentPathIndex{ 0 }
 {
 }
 
-void CAnubis::Free()
+void CMimic::Free()
 {
 }
 
-HRESULT CAnubis::NativeConstruct()
+HRESULT CMimic::NativeConstruct()
 {
 	return __super::NativeConstruct();
 }
 
-HRESULT CAnubis::NativeConstructClone(const VOIDDATAS& _Datas)
+HRESULT CMimic::NativeConstructClone(const VOIDDATAS& _Datas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
@@ -117,18 +110,15 @@ HRESULT CAnubis::NativeConstructClone(const VOIDDATAS& _Datas)
 		m_spSlashParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
 	}
 	{
+		
+		
 		m_spSlashParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleType = PARTICLE_TYPE_DEFAULT;
 		m_spSlashParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
-		m_spSlashParticle->SetTexture(L"Slash2");
+		m_spSlashParticle->SetTexture(L"Slash3");
 		
 		m_spSlashParticle->SetParticleType(PARTICLE_SLASH);
 		*m_spSlashParticle->GetParticleSystem()->GetCreateInterval() = 0.35f;
 		*m_spSlashParticle->GetParticleSystem()->GetAddParticleAmount() = 1;
-	}
-	{
-		CAnubisStaff::EQDESC Desc1(std::static_pointer_cast<UModel>(spGameInstance->CloneResource(PROTO_RES_ANUBISSTAFFMODEL)), ThisShared<UCharacter>(), L"..\\..\\Resource\\Model\\Item\\Equip\\AnubisHook\\Convert\\EquipDesc\\Anubis_Staff_FBX.bin");
-		m_spAnubisStaff = std::static_pointer_cast<CAnubisStaff>(spGameInstance->CloneActorAdd(PROTO_ACTOR_ANUBISSTAFF, { &Desc1 }));
-
 	}
 
 	UCollider::COLLIDERDESC tDesc;
@@ -145,13 +135,38 @@ HRESULT CAnubis::NativeConstructClone(const VOIDDATAS& _Datas)
 	}
 
 	SetHealth(100);
-	SetActivationRange(50);
+	SetActivationRange(30);
 	SetDeactivationRange(80);
 
+
+	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
+	SHPTR<UCell> spCell = spNavigation->FindCell(GetTransform()->GetPos());
+	/*GetTransform()->SetPos(spCell->GetCenterPos());*/
 	return S_OK;
 }
 
-void CAnubis::TickActive(const _double& _dTimeDelta)
+void CMimic::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
+{
+#ifdef _ENABLE_PROTOBUFF
+
+	__super::ReceiveNetworkProcessData(_ProcessData);
+
+	switch (_ProcessData.GetDataType())
+	{
+	case TAG_SC_MONSTERSTATEHAVEMOVE:
+	{
+		SC_MONSTERSTATEHAVEPOS scMonsterState;
+		scMonsterState.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
+		GetAnimationController()->ReceiveNetworkProcessData(&scMonsterState);
+		GetTransform()->SetPos({ scMonsterState.posx(), scMonsterState.posy(), scMonsterState.posz() });
+		GetTransform()->RotateFix({ scMonsterState.rotatex(), scMonsterState.rotatey(), scMonsterState.rotatez() });
+	}
+	break;
+	}
+#endif
+}
+
+void CMimic::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
 	GetAnimationController()->Tick(_dTimeDelta);
@@ -166,8 +181,6 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 	_float3 CurrentPlayerPos = GetTargetPlayer()->GetTransform()->GetPos();
 	SHPTR<UCell> CurrentMobCell = GetCurrentNavi()->GetCurCell();
 	SHPTR<UCell> CurrentPlayerCell = GetTargetPlayer()->GetCurrentNavi()->GetCurCell();
-
-	_float walkingSpeed = 15;
 
 	if (CurAnimState == UAnimationController::ANIM_MOVE)
 	{
@@ -203,16 +216,15 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 				_float3 direction = CurrentMobPos - GetTargetPos();
 				GetTransform()->SetDirectionFixedUp(-direction, _dTimeDelta, 5);
 			}
-			GetTransform()->TranslateDir(GetTransform()->GetLook(), _dTimeDelta, walkingSpeed);
 		}
-		else 
+		else // patrolling when player is not found
 		{
 			SetOutline(false);
 			SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-			SHPTR<UCell> originCell = spNavigation->FindCell(m_f3OriginPos);
-			if (GetTimeAccumulator() >= 0.5)
+			SHPTR<UCell> spNeighborCell = spNavigation->ChooseRandomNeighborCell(3);
+			if (GetTimeAccumulator() >= 5.0)
 			{
-				m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, originCell->GetCenterPos(), CurrentMobCell, originCell));
+				m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, spNeighborCell->GetCenterPos(), CurrentMobCell, spNeighborCell));
 				m_isPathFinding = true;
 				SetTimeAccumulator(0.0);
 			}
@@ -223,7 +235,7 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 					m_isPathFinding = false;
 					if (m_PathFindingState.pathFound)
 					{
-						m_AstarPath = (spNavigation->OptimizePath(m_PathFindingState.path, CurrentMobPos, originCell->GetCenterPos()));
+						m_AstarPath = (spNavigation->OptimizePath(m_PathFindingState.path, CurrentMobPos, spNeighborCell->GetCenterPos()));
 						m_currentPathIndex = 0; // index initialized when path is optimized
 					}
 				}
@@ -234,7 +246,6 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 				_float3 direction = CurrentMobPos - GetTargetPos();
 				GetTransform()->SetDirectionFixedUp(-direction, _dTimeDelta, 5);
 			}
-			GetTransform()->TranslateDir(GetTransform()->GetLook(), _dTimeDelta, walkingSpeed);
 		}
 	}
 	else if (CurAnimState == UAnimationController::ANIM_ATTACK)
@@ -268,11 +279,10 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 
 	UpdateCollision();
 #else
-GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
 #endif
 }
 
-void CAnubis::LateTickActive(const _double& _dTimeDelta)
+void CMimic::LateTickActive(const _double& _dTimeDelta)
 {
 	__super::LateTickActive(_dTimeDelta);
 
@@ -295,7 +305,7 @@ void CAnubis::LateTickActive(const _double& _dTimeDelta)
 	}
 }
 
-HRESULT CAnubis::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
+HRESULT CMimic::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
 	const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
 
@@ -306,17 +316,17 @@ HRESULT CAnubis::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDe
 	return S_OK;
 }
 
-HRESULT CAnubis::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
+HRESULT CMimic::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
 	return __super::RenderShadowActive(_spCommand, _spTableDescriptor);
 }
 
-HRESULT CAnubis::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)
+HRESULT CMimic::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)
 {
 	return __super::RenderOutlineActive(_spCommand, _spTableDescriptor,_pass);
 }
 
-void CAnubis::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
+void CMimic::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	PAWNTYPE ePawnType = _pEnemy->GetPawnType();
@@ -324,6 +334,11 @@ void CAnubis::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 
 	_float3 direction = (_pEnemy->GetTransform()->GetPos() - GetTransform()->GetPos());
 	direction.Normalize();
+	_bool IsHit = true;
+#ifdef _ENABLE_PROTOBUFF
+	_bool isCollision = false;
+	_int DamageEnable = 0;
+#endif
 
 	auto handleCollisionWithPlayer = [&](UCharacter* pCharacter) {
 		for (const auto& iter : GetColliderContainer())
@@ -339,12 +354,14 @@ void CAnubis::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 						m_spSlashParticle->SetActive(true);
 						m_spBloodParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 						m_spSlashParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+#ifndef _ENABLE_PROTOBUFF
 						// Decrease health on hit
 						DecreaseHealth(pCharacter->GetAttack());
+#else
+						isCollision = true;
+						DamageEnable = 1;
+#endif
 					}
-					
-
-
 					SetHitAlreadyState(true);
 				}
 			}
@@ -359,6 +376,9 @@ void CAnubis::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 				{
 					SetCollisionState(true);
 					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
+#ifdef _ENABLE_PROTOBUFF
+					isCollision = true;
+#endif
 				}
 				else
 				{
@@ -377,6 +397,9 @@ void CAnubis::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 				{
 					SetCollisionState(true);
 					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
+#ifdef _ENABLE_PROTOBUFF
+					isCollision = true;
+#endif
 				}
 				else
 				{
@@ -394,8 +417,11 @@ void CAnubis::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 				SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
 				if (GetCollidedNormal() != _float3::Zero)
 				{
-					_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 50.0f : 20.0f;
+					_float speed = 20.0f;
 					ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
+#ifdef _ENABLE_PROTOBUFF
+					isCollision = true;
+#endif
 				}
 			}
 		}
@@ -416,4 +442,10 @@ void CAnubis::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 		CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
 		handleCollisionWithStaticObject(pModelObject);
 	}
+#ifdef _ENABLE_PROTOBUFF
+	if (true == isCollision)
+	{
+		
+	}
+#endif
 }

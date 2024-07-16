@@ -128,9 +128,9 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
 
     // Handle hit state
     if (Hit)
-    {
-        UpdateState(spAnimModel, ANIM_HIT, L"HIT");
+    {  
         spAnimModel->SetAnimation(L"hit_1");
+        spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         spMinotaur->SetPrevHealth(spMinotaur->GetHealth());
     }
 
@@ -192,6 +192,7 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
     // Check for death
     if (spMinotaur->GetHealth() <= 0)
     {
+        spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         spMinotaur->SetDeathState(true);
     }
 
