@@ -58,6 +58,8 @@ void CSarcophagus::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 {
 #ifdef _ENABLE_PROTOBUFF
 
+	__super::ReceiveNetworkProcessData(_ProcessData);
+
 	switch (_ProcessData.GetDataType())
 	{
 	case TAG_SC_MONSTERSTATE:

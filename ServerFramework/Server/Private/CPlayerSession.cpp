@@ -7,6 +7,7 @@
 #include "ANavigation.h"
 #include "AMonster.h"
 #include "AAnimController.h"
+#include "ACollider.h"
 
 namespace Server {
 
@@ -32,10 +33,18 @@ namespace Server {
 		SetRunSpeed(30.f);
 		SetCurOnCellIndex(m_iStartCellIndex);
 
-		SHPTR<ANavigation> spNavigation = GetNavigation();
+		COLLIDERINFO Info{ ACollider::TYPE_OBB, Vector3(0.f, 0.f, 0.f), Vector3(0.f, 0.f, 0.f) };
+		InsertColliderContainer(Info);
+		for (auto& Colliders : GetColliderContainer())
+		{
+			Colliders->SetScale(Vector3{ 4, 10, 4 });
+			Colliders->SetTranslate(Vector3{ 0, 10, 0 });
+		}
 
+		SHPTR<ANavigation> spNavigation = GetNavigation();
 		SHPTR<ACell> spCell = spNavigation->FindCell(m_iStartCellIndex);
 		GetTransform()->SetPos(spCell->GetCenterPos());
+		SetCharStatus(CHARSTATUS{ 1, 1, 100 });
 		return true;
 	}
 
@@ -76,7 +85,7 @@ namespace Server {
 
 	bool CPlayerSession::IsHit(APawn* _pPawn, const _double& _dTimeDelta)
 	{
-		return false;
+		return __super::IsHit(_pPawn, _dTimeDelta);
 	}
 
 	void CPlayerSession::Collision(APawn* _pPawn, const _double& _dTimeDelta)
@@ -109,6 +118,16 @@ namespace Server {
 			case TAG_CS::TAG_CS_PLAYERSTATE:
 			{
 				PlayerState(spCoreInstance, SessionID, _pPacket, _PacketHead);
+			}
+			break;
+			case TAG_CS::TAG_CS_PLAYERCOLLISION:
+			{
+				PlayerCollisionState(spCoreInstance, SessionID, _pPacket, _PacketHead);
+			}
+			break;
+			case TAG_CS::TAG_CS_MONSTERCOLIISION:
+			{
+				MonsterCollisionState(spCoreInstance, SessionID, _pPacket, _PacketHead);
 			}
 			break;
 		}
@@ -174,6 +193,7 @@ namespace Server {
 	void CPlayerSession::MoveState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
 	{
 		SHPTR<ANavigation> spNavigation = GetNavigation();
+		SHPTR<ATransform> spTransform = GetTransform();
 
 		VECTOR3			vSendPosition;
 		VECTOR3			vSendRotate;
@@ -202,6 +222,13 @@ namespace Server {
 			}
 			PROTOFUNC::MakeVector3(OUT & vSendPosition, vPosition.x, vPosition.y, vPosition.z);
 			PROTOFUNC::MakeVector3(OUT & vSendRotate, vRotate.x, vRotate.y, vRotate.z);
+		}
+		{
+			_float4x4 worldMatrix = spTransform->GetWorldMatrix();
+			for (auto& iter : GetColliderContainer())
+			{
+				iter->SetTransform(worldMatrix);
+			}
 		}
 		// 몬스터 활성화 
 		{
@@ -245,10 +272,43 @@ namespace Server {
 
 	void CPlayerSession::PlayerState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
 	{
+#ifdef USE_DEBUG
+		std::cout << "PlayerState [" << _SessionID << "]\n";
+#endif
 		PLAYERSTATE PlayerState;
 		PlayerState.ParseFromArray(_pPacket, _PacketHead.PacketSize);
 		CombineProto(REF_OUT GetCopyBuffer(), REF_OUT GetPacketHead(), PlayerState, TAG_SC::TAG_SC_PLAYERSTATE);
 		_spCoreInstance->BroadCastMessageExcludingSession(PlayerState.id(), GetCopyBufferPointer(), GetPacketHead());
+	}
+
+	void CPlayerSession::PlayerCollisionState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
+	{
+		COLLISIONDATA CollisionData;
+		CollisionData.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+		SHPTR<ASession> spSession = _spCoreInstance->FindSession(CollisionData.id());
+		SHPTR<ATransform> spTransform = spSession->GetTransform();
+		spTransform->SetPos(Vector3{ CollisionData.posx(), CollisionData.posy(), CollisionData.posz() });
+
+		if (1 == CollisionData.damageenable())
+		{
+			SHPTR<AMonster> spMonster = _spCoreInstance->FindMobObject(CollisionData.id());
+			spSession->Damaged(spMonster->GetCharStatus().fPower);
+		}
+	}
+
+	void CPlayerSession::MonsterCollisionState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
+	{
+		COLLISIONDATA CollisionData;
+		CollisionData.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+		SHPTR<AMonster> spMonster = _spCoreInstance->FindMobObject(CollisionData.id());
+		SHPTR<ATransform> spTransform = spMonster->GetTransform();
+		spTransform->SetPos(Vector3{CollisionData.posx(), CollisionData.posy(), CollisionData.posz() });
+
+		if (1 == CollisionData.damageenable())
+		{
+			SHPTR<ASession> spSession = _spCoreInstance->FindSession(CollisionData.enemyid());
+			spMonster->Damaged(spSession->GetCharStatus().fPower);
+		}
 	}
 
 	void CPlayerSession::Free()

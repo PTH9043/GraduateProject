@@ -57,6 +57,39 @@ namespace Core {
 		return spCell->GetCenterPos();
 	}
 
+	bool APawn::IsHit(APawn* _pPawn, const _double& _dTimeDelta)
+	{
+		SHPTR<ATransform> spSelfTr = GetTransform();
+		SHPTR<ATransform> spTargetTr = _pPawn->GetTransform();
+
+		Vector3 vSelfPos = spSelfTr->GetPos();
+		Vector3 vTargetPos = spTargetTr->GetPos();
+		const static _float RESTIRICT_COLLISION = 30 * 30;
+		_float fDistance = Vector3::DistanceSquared(vSelfPos, vTargetPos);
+		if (fDistance <= RESTIRICT_COLLISION)
+		{
+			Collision(_pPawn, _dTimeDelta);
+		}
+		return false;
+	}
+
+	void APawn::GameObjectHeal(_float _fHeal)
+	{
+		m_CharStatus.fHp += _fHeal;
+		if (m_CharStatus.fHp >= m_CharStatus.fSaveHp)
+			m_CharStatus.fHp = m_CharStatus.fSaveHp;
+	}
+
+	void APawn::Damaged(_float _fDamage)
+	{
+		m_CharStatus.fHp -= _fDamage;
+		if (m_CharStatus.fHp <= 0)
+		{
+			m_isDead = true;
+		}
+	}
+
+
 
 	void APawn::Free()
 	{

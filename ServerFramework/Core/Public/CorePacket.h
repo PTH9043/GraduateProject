@@ -5,8 +5,8 @@ namespace Core
 {
 	enum
 	{
-		TCP_PORT_NUM = 8080,
-		UDP_PORT_NUM = 8081,
+		TCP_PORT_NUM = 9998,
+		UDP_PORT_NUM = 9999,
 		PACKET_SIZE_CNT = 2
 	};
 

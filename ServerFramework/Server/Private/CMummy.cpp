@@ -6,11 +6,11 @@
 #include "ANavigation.h"
 #include "ACoreInstance.h"
 #include "ACell.h"
-#include "APathFinder.h"
 #include "AAnimator.h"
 #include "AAnimController.h"
 #include "AAnimation.h"
 #include "ASession.h"
+#include "ACollider.h"
 
 namespace Server
 {
@@ -28,7 +28,7 @@ namespace Server
 		{
 			SetMonsterType(TAG_CHAR::TAG_MUMMY_STANDING);
 		}
-		UpdateFindRange(30.f, 80.f);
+		UpdateFindRange(40.f, 80.f);
 		SetMoveSpeed(5);
 		SetAttackRange(15.f);
 	}
@@ -38,6 +38,15 @@ namespace Server
 		_float4x4 Matrix = _float4x4::CreateScale(0.1f) * _float4x4::CreateRotationY(DirectX::XMConvertToRadians(180));
 		SetAnimController(Create<CMummyAnimController>(GetCoreInstance(), ThisShared<CMummy>(),
 			"..\\..\\Resource\\Anim\\Mummy\\", "Mummy_DEMO_1_FBX.bin", Matrix));
+
+		COLLIDERINFO Info{ ACollider::TYPE_OBB, Vector3(0.f, 0.f, 0.f), Vector3(0.f, 0.f, 0.f) };
+		InsertColliderContainer(Info);
+		for (auto& Colliders : GetColliderContainer())
+		{
+			Colliders->SetScale(Vector3{ 1, 8, 1 });
+			Colliders->SetTranslate(Vector3{ 0, 10, 0 });
+		}
+
 #ifndef CREATED_SERVERMOBDATA
 		MOBDATA* pMobData = static_cast<MOBDATA*>(_ReceiveDatas[0]);
 		// Setting Animation 
@@ -148,6 +157,11 @@ namespace Server
 
 		ComputeNextDir(_dTimeDelta);
 		__super::Tick(_dTimeDelta);
+
+		for (auto& iter : GetColliderContainer())
+		{
+			iter->SetTransform(spTransform);
+		}
 	}
 
 	void CMummy::State(SHPTR<ASession> _spSession, _int _MonsterState)
@@ -161,10 +175,18 @@ namespace Server
 		SHPTR<ATransform> spTransform = GetTransform();
 		_string strCurAnimName = spCurAnimation->GetAnimName();
 
-		if (true == IsCurrentFindPlayer())
-		{
-			UpdateTargetPos(_spSession->GetTransform());
-		}
+		UpdateTargetPos(_spSession->GetTransform());
+	}
+
+	void CMummy::TickSendPacket(const _double& _dTimeDelta)
+	{
+		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+		SHPTR<AAnimController> spAnimController = GetAnimController();
+		SHPTR<AAnimator> spAnimator = spAnimController->GetAnimator();
+		SHPTR<AAnimation> spCurAnimation = spAnimator->GetCurAnimation();
+		SHPTR<ATransform> spTransform = GetTransform();
+		_string strCurAnimName = spCurAnimation->GetAnimName();
+		_bool Hit = false;
 
 		VECTOR3 vRotate;
 		VECTOR3 vPos;
@@ -190,12 +212,50 @@ namespace Server
 
 	bool CMummy::IsHit(APawn* _pPawn, const _double& _dTimeDelta)
 	{
-		return false;
+		return __super::IsHit(_pPawn, _dTimeDelta);
 	}
 
 	void CMummy::Collision(APawn* _pPawn, const _double& _dTimeDelta)
 	{
+		SHPTR<ATransform> spTransform = GetTransform();
+		SHPTR<ATransform> spOtherTr = _pPawn->GetTransform();
+		CONVECTOR<SHPTR<ACollider>>& OtherCollisionContainer = _pPawn->GetColliderContainer();
+		CONVECTOR<SHPTR<ACollider>>& SelfCollisionContainer = GetColliderContainer();
 
+
+		Vector3 vPos = spTransform->GetPos();
+		Vector3 vOtherPos = spOtherTr->GetPos();
+
+		Vector3 vDirection = vOtherPos - vPos;
+		vDirection.Normalize();
+
+		switch (_pPawn->GetSessionType())
+		{
+		case SESSIONTYPE::PLAYER:
+			for (auto& iter : SelfCollisionContainer)
+			{
+				for (auto& other : OtherCollisionContainer)
+				{
+					if (true == iter->IsCollision(other))
+					{
+						spTransform->SetPos(vPos - vDirection * 7 * _dTimeDelta);
+					}
+				}
+			}
+			break;
+		case SESSIONTYPE::MONSTER:
+			for (auto& iter : SelfCollisionContainer)
+			{
+				for (auto& other : OtherCollisionContainer)
+				{
+					if (true == iter->IsCollision(other))
+					{
+						spTransform->SetPos(vPos - vDirection * 7 * _dTimeDelta);
+					}
+				}
+			}
+			break;
+		}
 	}
 
 	void CMummy::Free()

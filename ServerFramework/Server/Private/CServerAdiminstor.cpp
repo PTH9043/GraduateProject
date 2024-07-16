@@ -32,9 +32,8 @@ namespace Server
 #else
 		CreateServerMob();
 #endif
-		ThreadMiliRelax(100);
 		Connect();
-		return __super::Start();
+		return  __super::Start();
 	}
 
 	void CServerAdiminstor::Connect()
@@ -121,7 +120,6 @@ namespace Server
 		spCoreInstance->RegisterJob(TIMERTYPE::TIMER_MOB, spMonsterJobTimer);
 
 		CMobServerLayoutLoader MobServerLayoutLoader("..\\..\\Resource\\NetworkMobData.bin");
-		ThreadMiliRelax(100);
 		for (auto& iter : MobServerLayoutLoader.GetMobData())
 		{
 			SHPTR<AMonster> spMonster = nullptr;
@@ -147,7 +145,6 @@ namespace Server
 				break;
 			}
 			spCoreInstance->InsertMobObject(spMonster->GetSessionID(), spMonster);
-			spCoreInstance->AddMonsterPawnList(spMonster.get());
 			spMonster->Start({ &iter });
 		}
 		IncreaseCurrentSessionCount(MobServerLayoutLoader.GetMobData().size());

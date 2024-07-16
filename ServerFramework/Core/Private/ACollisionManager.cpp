@@ -6,19 +6,19 @@
 namespace Core {
 
 
-	ACollisionManager::ACollisionManager() : m_MonsterPawnList{}
+	ACollisionManager::ACollisionManager() : m_CollisionPawnList{}
 	{
 	}
 
-	void ACollisionManager::AddMonsterPawnList(APawn* _pPawn)
+	void ACollisionManager::AddCollisionList(APawn* _pPawn)
 	{
 		assert(nullptr != _pPawn);
-		m_MonsterPawnList.insert(_pPawn);
+		m_CollisionPawnList.insert(_pPawn);
 	}
 
 	void ACollisionManager::CollisionSituation(const _double _dTimeDelta)
 	{
-		for (auto& iter : m_MonsterPawnList)
+		for (auto& iter : m_CollisionPawnList)
 		{
 			if (nullptr == iter)
 				continue;
@@ -29,7 +29,7 @@ namespace Core {
 			if (false == iter->IsActive())
 				continue;
 
-			for (auto& Monster : m_MonsterPawnList)
+			for (auto& Monster : m_CollisionPawnList)
 			{
 				if (nullptr == Monster)
 					continue;
@@ -42,23 +42,6 @@ namespace Core {
 
 				iter->IsHit(Monster, _dTimeDelta);
 			}
-		}
-	}
-
-	void ACollisionManager::CollisionSituationToPlayer(ASession* _pSession, const _double _dTimeDelta)
-	{
-		for (auto& iter : m_MonsterPawnList)
-		{
-			if (nullptr == iter)
-				continue;
-
-			if (true == iter->IsPermanentDisable())
-				continue;
-
-			if (false == iter->IsActive())
-				continue;
-
-			_pSession->IsHit(iter, _dTimeDelta);
 		}
 	}
 

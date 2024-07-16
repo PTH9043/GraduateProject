@@ -30,11 +30,15 @@ protected:
     virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
     virtual HRESULT RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass = true) override;
     virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) override;
-
+    virtual void ReceiveNetworkProcessData(const UProcessedData& _ProcessData) override;
+#ifdef _ENABLE_PROTOBUFF
+    void SendCollisionData(_int _DamageEnable);
+#endif
 private:
     void SearchForPlayers();
     void CalculateDistanceBetweenPlayers(const _float3& _CurrentPlayerPos, const _float3& _CurrentMobPos);
-
+    // 태현 추가
+    void SendMobStateData();
 public:
     CSHPTRREF<UPlayer> GetTargetPlayer() { return m_spTargetPlayer; }
     void SetTargetPlayer(CSHPTRREF<UPlayer> _targetPlayer) { m_spTargetPlayer = _targetPlayer; }
@@ -57,8 +61,6 @@ public:
     void SetActivationRange(_float _dvalue) { m_fActivationRange = _dvalue; }
     _float GetDeactivationRange() const { return m_fDeactivationRange; }
     void SetDeactivationRange(_float _dvalue) { m_fDeactivationRange = _dvalue; }
-
-
 private:
     _float m_fDistancefromNearestPlayer;
     _bool m_bFoundTarget;
@@ -71,6 +73,8 @@ private:
 
     _double                         m_dtimeAccumulator;
     _double                         m_delapsedTime;
+    // 태현 추가
+    _bool                              m_isNeedServerSendData;
 };
 
 END

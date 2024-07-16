@@ -68,6 +68,18 @@ void PROTOFUNC::MakeCharMove(CHARMOVE* _pOut, LLONG _id, const VECTOR3& _move, c
 	_pOut->set_rotatez(_rotate.z());
 }
 
+void PROTOFUNC::MakeCollisionData(COLLISIONDATA* _pOut, LLONG _id, const VECTOR3& _vPos, int _damageEnable, LLONG _enemyID)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_id);
+	_pOut->set_posx(_vPos.x());
+	_pOut->set_posy(_vPos.x());
+	_pOut->set_posz(_vPos.x());
+	_pOut->set_damageenable(_damageEnable);
+	_pOut->set_enemyid(_enemyID);
+}
+
+
 /* =========== SC =============== */
 // Server To Client 
 
@@ -146,6 +158,19 @@ void PROTOFUNC::MakeScMonsterStateHavePos(SC_MONSTERSTATEHAVEPOS* _pOut, LLONG _
 	_pOut->set_animationtime(_dAnimTime);
 	_pOut->set_animationindex(_animindex);
 	_pOut->set_state(_state);
+}
+
+void PROTOFUNC::MakeScNeedMonsterState(SC_NEEDMONSTERSTATE* _pOut, LLONG _id)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_id);
+}
+
+void PROTOFUNC::MakeScMonsterFindPlayer(SC_MONSTERFINDPLAYER* _pOut, LLONG _id, LLONG _targetID)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_id);
+	_pOut->set_targetid(_targetID);
 }
 
 /* =========== CS =============== */
