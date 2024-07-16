@@ -102,6 +102,8 @@ void UParticle::TickActive(const _double& _dTimeDelta)
 		}*/
 		break;
 	case PARTICLE_ATTACK:
+	case PARTICLE_OPENCHEST:
+	case PARTICLE_HEAL:
 
 		break;
 	case PARTICLE_SLASH:
@@ -137,6 +139,8 @@ void UParticle::LateTickActive(const _double& _dTimeDelta)
 		AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
 		break;
 	case PARTICLE_ATTACK:
+	case PARTICLE_OPENCHEST:
+	case PARTICLE_HEAL:
 		AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
 		break;
 	case PARTICLE_SLASH:
@@ -192,6 +196,8 @@ SHPTR<URenderTargetGroup> spShadowDepthGroup{ spGameInstance->FindRenderTargetGr
 		GetShader()->BindSRVBuffer(SRV_REGISTER::T7, m_spTexGroup->GetTexture(BloodTextureIndices[7]));
 		break;
 	case PARTICLE_ATTACK:
+	case PARTICLE_OPENCHEST:
+	case PARTICLE_HEAL:
 		GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTexGroup->GetTexture(TextureIndex));
 		GetShader()->BindSRVBuffer(SRV_REGISTER::T1, spShadowDepthGroup->GetRenderTargetTexture(RTOBJID::NONALPHA_DEPTH_DEFFERED));
 		break;

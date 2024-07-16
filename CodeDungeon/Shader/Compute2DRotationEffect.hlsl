@@ -143,7 +143,7 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
             //    g_ParticleWritedata[threadIndex.x].vWorldPos = g_GrobalParticleInfo.fParticlePosition;
             //    g_ParticleWritedata[threadIndex.x].vWorldDir = normalize(dir);
             //}
-            int radius = 15.5;
+            int radius = 7.5;
 
 
             if (threadIndex.x % 2 == 0) {

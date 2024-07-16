@@ -62,8 +62,8 @@ void TRotationEffectView::LoadMultipleParticleResource()
 
 			tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
 			//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 15.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 5.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 2.5f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 2.5f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 3.5f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.3f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 10.f;
@@ -91,9 +91,9 @@ void TRotationEffectView::LoadMultipleParticleResource()
 	}
 
 
-	*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() = 0.15f;
+	*m_MultipleParticle[0]->GetParticleSystem()->GetCreateInterval() = 0.05f;
 	*m_MultipleParticle[0]->GetParticleSystem()->GetAddParticleAmount() = 1;
-	*m_MultipleParticle[1]->GetParticleSystem()->GetCreateInterval() = 0.15f;
+	*m_MultipleParticle[1]->GetParticleSystem()->GetCreateInterval() = 0.05f;
 	*m_MultipleParticle[1]->GetParticleSystem()->GetAddParticleAmount() = 1;
 	/*
 for (int i = 0; i < m_iMultipleParticleSize; i++) {

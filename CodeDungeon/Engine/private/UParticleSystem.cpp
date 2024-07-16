@@ -82,7 +82,19 @@ HRESULT UParticleSystem::NativeConstructClone(const VOIDDATAS& _vecDatas)
 
 		break;
 	case PARTICLE_ATTACK:
-		m_iMaxParitcleCnt = 10;
+		m_iMaxParitcleCnt = 512;
+		m_spComputeShaderTypeConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::PARTICLETYPEBUFFER, PARTICLETYPEPARAM_SIZE);
+		m_spParticleStructedBuffer = CreateNative<UShaderStructedBuffer>(GetDevice(), sizeof(PARTICLE), m_iMaxParitcleCnt);
+
+		break;
+	case PARTICLE_OPENCHEST:
+		m_iMaxParitcleCnt = 512;
+		m_spComputeShaderTypeConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::PARTICLETYPEBUFFER, PARTICLETYPEPARAM_SIZE);
+		m_spParticleStructedBuffer = CreateNative<UShaderStructedBuffer>(GetDevice(), sizeof(PARTICLE), m_iMaxParitcleCnt);
+
+		break;
+	case PARTICLE_HEAL:
+		m_iMaxParitcleCnt = 512;
 		m_spComputeShaderTypeConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::PARTICLETYPEBUFFER, PARTICLETYPEPARAM_SIZE);
 		m_spParticleStructedBuffer = CreateNative<UShaderStructedBuffer>(GetDevice(), sizeof(PARTICLE), m_iMaxParitcleCnt);
 
@@ -148,13 +160,15 @@ void UParticleSystem::Update(const _double& _dTimeDelta)
 			m_stParticleParam.stGlobalParticleInfo.iAddCount = add;
 			break;
 		case PARTICLE_ATTACK:
+		case PARTICLE_OPENCHEST:
+		case PARTICLE_HEAL:
 			add = m_iParticleAddAmount;
-			/*
+			
 			if (m_fCreateInterval < m_stParticleParam.stGlobalParticleInfo.fAccTime)
 			{
 				add = 0;
 			}
-			*/
+			
 			m_stParticleParam.stGlobalParticleInfo.iAddCount = add;
 			break;
 		case PARTICLE_SLASH:
@@ -219,6 +233,8 @@ void UParticleSystem::Render(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDes
 
 		break;
 	case PARTICLE_ATTACK:
+	case PARTICLE_HEAL:
+	case PARTICLE_OPENCHEST:
 		m_spComputeShader->BindUAVBuffer(UAV_REGISTER::PARTICLEWRITEDATA, m_spParticleStructedBuffer);
 		m_spComputeShader->BindCBVBuffer(m_spComputeShaderTypeConstantBuffer, &m_stParticleType, PARTICLETYPEPARAM_SIZE);
 
@@ -268,6 +284,8 @@ void UParticleSystem::BindShaderParams(CSHPTRREF<UShader> _spShader)
 
 		break;
 	case PARTICLE_ATTACK:
+	case PARTICLE_HEAL:
+	case PARTICLE_OPENCHEST:
 		_spShader->BindSRVBuffer(SRV_REGISTER::T14, m_spParticleStructedBuffer);
 		_spShader->BindCBVBuffer(m_spGraphicsShaderParticleConstantBuffer, &m_stParticleParam, PARTICLEPARAM_SIZE);
 
