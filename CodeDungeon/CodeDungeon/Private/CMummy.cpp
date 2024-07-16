@@ -184,7 +184,7 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 
 	if (CurAnimState == UAnimationController::ANIM_MOVE)
 	{
-		AddTimeAccumulatorwDSA(_dTimeDelta);
+		AddTimeAccumulator(_dTimeDelta);
 
 		// A* for moving towards player when player is found
 		if (GetFoundTargetState())
@@ -442,9 +442,10 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 		CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
 		handleCollisionWithStaticObject(pModelObject);
 	}
-
+#ifdef _ENABLE_PROTOBUFF
 	if (true == isCollision)
 	{
-
+		
 	}
+#endif
 }

@@ -472,11 +472,12 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 		}
 	}
 
-
+#ifdef _ENABLE_PROTOBUFF
 	if (true == isCollision)
 	{
 		SendCollisionData(_pEnemy.get(), DamageEnable);
 	}
+#endif
 }
 
 #ifdef _ENABLE_PROTOBUFF
