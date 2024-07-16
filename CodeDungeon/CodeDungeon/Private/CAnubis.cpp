@@ -17,13 +17,17 @@
 #include "UParticleSystem.h"
 #include "CModelObjects.h"
 #include "UAnimation.h"
+#include "CAnubisStaff.h"
 
 CAnubis::CAnubis(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: CMob(_spDevice, _wstrLayer, _eCloneType), m_AnubisType{},
 	m_PathFindingState{},
 	m_AstarPath{},
 	m_isPathFinding{ false },
-	m_currentPathIndex{ 0 }
+	m_currentPathIndex{ 0 },
+	m_spAnubisStaff{ nullptr },
+	m_f3OriginPos{ },
+	m_f3OriginDirection{}
 {
 }
 
@@ -32,7 +36,10 @@ CAnubis::CAnubis(const CAnubis& _rhs)
 	m_PathFindingState{},
 	m_AstarPath{},
 	m_isPathFinding{ false },
-	m_currentPathIndex{ 0 }
+	m_currentPathIndex{ 0 },
+	m_spAnubisStaff{nullptr},
+	m_f3OriginPos{},
+	m_f3OriginDirection{}
 {
 }
 
@@ -110,8 +117,6 @@ HRESULT CAnubis::NativeConstructClone(const VOIDDATAS& _Datas)
 		m_spSlashParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
 	}
 	{
-		
-		
 		m_spSlashParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleType = PARTICLE_TYPE_DEFAULT;
 		m_spSlashParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
 		m_spSlashParticle->SetTexture(L"Slash2");
@@ -119,6 +124,11 @@ HRESULT CAnubis::NativeConstructClone(const VOIDDATAS& _Datas)
 		m_spSlashParticle->SetParticleType(PARTICLE_SLASH);
 		*m_spSlashParticle->GetParticleSystem()->GetCreateInterval() = 0.35f;
 		*m_spSlashParticle->GetParticleSystem()->GetAddParticleAmount() = 1;
+	}
+	{
+		CAnubisStaff::EQDESC Desc1(std::static_pointer_cast<UModel>(spGameInstance->CloneResource(PROTO_RES_ANUBISSTAFFMODEL)), ThisShared<UCharacter>(), L"..\\..\\Resource\\Model\\Item\\Equip\\AnubisHook\\Convert\\EquipDesc\\Anubis_Staff_FBX.bin");
+		m_spAnubisStaff = std::static_pointer_cast<CAnubisStaff>(spGameInstance->CloneActorAdd(PROTO_ACTOR_ANUBISSTAFF, { &Desc1 }));
+
 	}
 
 	UCollider::COLLIDERDESC tDesc;
@@ -157,6 +167,8 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 	SHPTR<UCell> CurrentMobCell = GetCurrentNavi()->GetCurCell();
 	SHPTR<UCell> CurrentPlayerCell = GetTargetPlayer()->GetCurrentNavi()->GetCurCell();
 
+	_float walkingSpeed = 15;
+
 	if (CurAnimState == UAnimationController::ANIM_MOVE)
 	{
 		AddTimeAccumulator(_dTimeDelta);
@@ -191,15 +203,16 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 				_float3 direction = CurrentMobPos - GetTargetPos();
 				GetTransform()->SetDirectionFixedUp(-direction, _dTimeDelta, 5);
 			}
+			GetTransform()->TranslateDir(GetTransform()->GetLook(), _dTimeDelta, walkingSpeed);
 		}
-		else // patrolling when player is not found
+		else 
 		{
 			SetOutline(false);
 			SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-			SHPTR<UCell> spNeighborCell = spNavigation->ChooseRandomNeighborCell(3);
-			if (GetTimeAccumulator() >= 5.0)
+			SHPTR<UCell> originCell = spNavigation->FindCell(m_f3OriginPos);
+			if (GetTimeAccumulator() >= 0.5)
 			{
-				m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, spNeighborCell->GetCenterPos(), CurrentMobCell, spNeighborCell));
+				m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, originCell->GetCenterPos(), CurrentMobCell, originCell));
 				m_isPathFinding = true;
 				SetTimeAccumulator(0.0);
 			}
@@ -210,7 +223,7 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 					m_isPathFinding = false;
 					if (m_PathFindingState.pathFound)
 					{
-						m_AstarPath = (spNavigation->OptimizePath(m_PathFindingState.path, CurrentMobPos, spNeighborCell->GetCenterPos()));
+						m_AstarPath = (spNavigation->OptimizePath(m_PathFindingState.path, CurrentMobPos, originCell->GetCenterPos()));
 						m_currentPathIndex = 0; // index initialized when path is optimized
 					}
 				}
@@ -221,6 +234,7 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 				_float3 direction = CurrentMobPos - GetTargetPos();
 				GetTransform()->SetDirectionFixedUp(-direction, _dTimeDelta, 5);
 			}
+			GetTransform()->TranslateDir(GetTransform()->GetLook(), _dTimeDelta, walkingSpeed);
 		}
 	}
 	else if (CurAnimState == UAnimationController::ANIM_ATTACK)

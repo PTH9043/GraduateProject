@@ -151,9 +151,9 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
 
     // Handle hit state
     if (Hit)
-    {
-        UpdateState(spAnimModel, ANIM_HIT, L"HIT");
+    {   
         spAnimModel->SetAnimation(L"gotHit");
+        spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         spMummy->SetPrevHealth(spMummy->GetHealth());
     }
 
@@ -186,6 +186,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     // Handle death state
     if (spMummy->GetDeathState())
     {
+        spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         UpdateState(spAnimModel, ANIM_DEATH, L"DEAD");
     }
 

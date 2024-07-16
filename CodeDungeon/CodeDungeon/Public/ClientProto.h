@@ -8,6 +8,7 @@
 #define PROTO_ACTOR_IRONBARS L"Proto_Actor_IronBars"
 #define PROTO_ACTOR_CHEST L"Proto_Actor_Chest"
 #define PROTO_ACTOR_ANUBISSTAFF L"Proto_Actor_AnubisStaff"
+#define PROTO_ACTOR_MIMIC L"Proto_Actor_Mimic"
 
 #define PROTO_ACTOR_WARRIORPLAYER L"Proto_Actor_WarriorPlayer"
 #define PROTO_ACTOR_MUMMY L"Proto_Actor_Mummy"
@@ -33,6 +34,7 @@
 #define PROTO_RES_LONGSWORDMODEL L"Proto_Res_LongSwordModel"
 #define PROTO_RES_SHURIKENMODEL L"Proto_Res_ShurikenModel"
 #define PROTO_RES_ANUBISSTAFFMODEL L"Proto_Res_AnubisStaffModel"
+#define PROTO_RES_MIMICANIMMODEL L"Proto_Res_MimicAnimModel"
 
 #define PROTO_COMP_USERWARRIORANIMCONTROLLER L"Proto_Comp_UserWarriorAnimController"
 #define PROTO_COMP_MUMMYANIMCONTROLLER L"Proto_Comp_MummyAnimController"
@@ -42,3 +44,4 @@
 #define PROTO_COMP_MINOTAURANIMCONTROLLER L"Proto_Comp_MinotaurAnimController"
 #define PROTO_COMP_HARLEQUINNANIMCONTROLLER L"Proto_Comp_HarlequinnAnimController"
 #define PROTO_COMP_ANUBISANIMCONTROLLER L"Proto_Comp_AnubisAnimController"
+#define PROTO_COMP_MIMICANIMCONTROLLER L"Proto_Comp_MimicAnimController"

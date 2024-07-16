@@ -24,6 +24,7 @@
 #include "CMinotaur.h"
 #include "CHarlequinn.h"
 #include "CAnubis.h"
+#include "CMimic.h"
 
 CMap::CMap(CSHPTRREF<UDevice> _spDevice) : UComponent(_spDevice),
 m_spRoomContainer{nullptr},
@@ -142,6 +143,7 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 	MOBCONTAINER _MinotaurVec;
 	MOBCONTAINER _HarlequinnVec;
 	MOBCONTAINER _AnubisVec;
+	MOBCONTAINER _MimicVec;
 
 	for (auto& it : (*m_spMapLayout->GetMapMobsContainer().get()))
 	{
@@ -234,12 +236,27 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 				SHPTR<CAnubis> _Anubis = std::static_pointer_cast<CAnubis>(spGameInstance->CloneActorAdd(
 					PROTO_ACTOR_ANUBIS, { &AnubisDesc }));
 				_Anubis->GetTransform()->SetPos(vecit._mWorldMatrix.Get_Pos());
+				_Anubis->SetOriginPos(_Anubis->GetTransform()->GetPos());
 				_Anubis->GetTransform()->SetDirection(vecit._mWorldMatrix.Get_Look());
+				_Anubis->SetOriginDirection(vecit._mWorldMatrix.Get_Look());
 				_Anubis->GetAnimModel()->SetAnimation(UMethod::ConvertSToW(vecit._sAnimName));
 				_Anubis->SetTargetPlayer(_spPlayer);
 				_Anubis->GetCurrentNavi()->FindCell(_Anubis->GetTransform()->GetPos());
 				spGameInstance->AddCollisionPawnList(_Anubis);
 				_AnubisVec.push_back(_Anubis);
+			}
+			else if (vecit._sAnimModelName == "Mimic_FBX.bin")
+			{
+				CMimic::CHARACTERDESC MimicDesc{ PROTO_RES_MIMICANIMMODEL, PROTO_COMP_MIMICANIMCONTROLLER };
+				SHPTR<CMimic> _Mimic = std::static_pointer_cast<CMimic>(spGameInstance->CloneActorAdd(
+					PROTO_ACTOR_MIMIC, { &MimicDesc }));
+				_Mimic->GetTransform()->SetPos(vecit._mWorldMatrix.Get_Pos());				
+				_Mimic->GetTransform()->SetDirection(vecit._mWorldMatrix.Get_Look());			
+				_Mimic->GetAnimModel()->SetAnimation(UMethod::ConvertSToW(vecit._sAnimName));
+				_Mimic->SetTargetPlayer(_spPlayer);
+				_Mimic->GetCurrentNavi()->FindCell(_Mimic->GetTransform()->GetPos());
+				spGameInstance->AddCollisionPawnList(_Mimic);
+				_MimicVec.push_back(_Mimic);
 			}
 #endif
 		}
@@ -250,5 +267,6 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 	m_spMobsContainer->emplace("minotaur_FBX.bin", _MinotaurVec);
 	m_spMobsContainer->emplace("Harlequin1_FBX.bin", _HarlequinnVec);
 	m_spMobsContainer->emplace("Anubis_FBX.bin", _AnubisVec);
+	m_spMobsContainer->emplace("Mimic_FBX.bin", _MimicVec);
 }
 
