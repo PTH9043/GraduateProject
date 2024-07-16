@@ -93,6 +93,7 @@ public: /* get set */
 
 	const _float4x4& GetPivotMatirx() const { return m_mPivotMatrix; }
 
+	void SetAnimModelRim(_int _SetRim) { m_DrawRim._drawRim = _SetRim; }
 	void SetSupplyLerpValue(const _float _fSupplyLerpValue) { this->m_fSupplyLerpValue = _fSupplyLerpValue; }
 	void SetAnimParam(const ANIMATIONPARAM& _stAnimParam) { this->m_stAnimParam = _stAnimParam; }
 	void UpdateAttackData(const _bool _isCanAttackSituation, CSHPTRREF<UCollider> _spCollider);
@@ -120,6 +121,7 @@ private:
 	// Bone, PrevBone
 	SHPTR<UShaderConstantBuffer>		m_spBoneMatrixShaderConstantBuffer;
 	SHPTR<UShaderConstantBuffer>		m_spPrevBoneMatrixShaderConstantBuffer;
+	SHPTR<UShaderConstantBuffer>		m_spDrawRimLightBuffer;
 	//UpLoadResource
 	ComPtr<Dx12Resource>						m_cpUpLoadResource;
 
@@ -131,6 +133,9 @@ private:
 	_float															m_fSupplyLerpValue;
 	_bool															m_isChangeAnim;
 	_float4x4													m_mPivotMatrix;
+
+
+	RIMDRAW			m_DrawRim;
 
 	SHPTR<UMeshFilter>								m_spMeshFilterController;
 	ANIMEVENTCOLLIDERCONTAINER		m_AnimEventColliderContainer;

@@ -157,6 +157,11 @@ _float3 UCharacter::OtherCharacterDirToLookVectorF3(CSHPTRREF<UTransform> _spOth
 	return vDirection;
 }
 
+void UCharacter::SetAnimModelRim(_int _SetRim)
+{
+	m_spAnimModel->SetAnimModelRim(_SetRim);
+}
+
 void UCharacter::TickActive(const _double& _dTimeDelta)
 {
 	m_vPrevPos = GetTransform()->GetPos();

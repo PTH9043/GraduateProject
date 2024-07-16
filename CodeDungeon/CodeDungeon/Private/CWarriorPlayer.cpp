@@ -159,6 +159,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetOutline(false);
 	SetIfOutlineScale(false);//플레이어는 안그리도록 
 	SetHealth(10000);
+	
 
 	return S_OK;
 }
@@ -242,10 +243,13 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 
 	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_HIT) {
 		m_spBlood->SetActive(true);
+
 		m_spBlood->SetTimer(1.75f);
+		SetAnimModelRim(true);
 	}
 	if (m_spBlood->CheckTimeOver()) {
 		m_spBlood->SetActive(false);
+		SetAnimModelRim(false);
 	}
 		
 	if (spGameInstance->GetDIKeyDown(DIK_F5)) {

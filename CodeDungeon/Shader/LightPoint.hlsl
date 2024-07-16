@@ -94,7 +94,7 @@ PS_OUT PS_Main(PS_In Input)
     
     Out.vAmbient = tLightColor.vAmbient;
     Out.vShade = tLightColor.vDiffuse;
-    Out.vSpecular = tLightColor.vSpecular;
+    Out.vSpecular = tLightColor.vSpecular ;
     
     
     float deltaTimeRepeat = frac(fGrobalDeltaTime);

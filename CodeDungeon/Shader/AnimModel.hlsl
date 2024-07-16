@@ -33,6 +33,13 @@ cbuffer PREVBONEMATRIXPARAM : register(b13)
     BONEMATRIX g_PrevBoneMatrix;
 };
 
+cbuffer DrawRim : register(b14)
+{
+    int g_DrawRim;
+    int g_DrawRim1;
+    int g_DrawRim2;
+    int g_DrawRim3;
+};
 
 struct VS_IN
 {
@@ -62,6 +69,7 @@ struct VS_OUT
 	float4 vWorldPos : TEXCOORD5;
 	float4 vProjPos : TEXCOORD6;
 	float4 vVelocity : TEXCOORD7;
+    float3 vViewDir : TEXCOORD8;
 };
 
 VS_OUT VS_Main(VS_IN In)
@@ -96,7 +104,8 @@ VS_OUT VS_Main(VS_IN In)
     Out.vTexUV4 = In.vTexUV4;
     Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
     Out.vProjPos = Out.vPosition;
-    
+    Out.vViewDir = normalize(g_ViewProjInfoArr[g_CamID].vCamPosition - Out.vWorldPos.xyz); // Compute the view direction
+
    
     
     if (true == g_isObjectMotionBlur)
@@ -144,6 +153,7 @@ struct PS_IN
     float4 vWorldPos : TEXCOORD5;
     float4 vProjPos : TEXCOORD6;
     float4 vVelocity : TEXCOORD7;
+    float3 vViewDir : TEXCOORD8;
 };
 
 struct PS_OUT
@@ -179,14 +189,22 @@ PS_OUT PS_Main(PS_IN In)
     //float3x3 TBN = float3x3(T, B, N);
     //vNormal = mul(vNormal, TBN);
 
-    
+   
     
    Out.vNormal = float4(float3(In.vNormal.xyz) * 0.5f + 0.5f, 1.f);
   
     Out.vDepth = float4(In.vProjPos.w / tMainViewProj.fCamFar, In.vProjPos.z / In.vProjPos.w, 1.f, In.vPosition.w);
     Out.vPosition = In.vWorldPos;
- 
-    
+    if (g_DrawRim)
+    {
+        float rimFactor = 1.0 - saturate(dot(normalize(In.vViewDir), normalize(In.vNormal.xyz)));
+        rimFactor = pow(rimFactor, 3.5) * 3;
+        float4 rimLight = rimFactor * float4(1, 0, 0, 1);
+
+    // Combine rim lighting with the final color
+        Out.vDiffuse.rgb += rimLight.rgb;
+    }
+  
     return Out;
 }
 

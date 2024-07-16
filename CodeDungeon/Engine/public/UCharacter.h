@@ -105,7 +105,7 @@ public: /* get set */
 
 	const _bool& GetIsHItAlreadyState() const { return m_bisHitAlready; }
 	void SetHitAlreadyState(_bool _newState) { m_bisHitAlready = _newState; }
-
+	void SetAnimModelRim(_int _SetRim);
 
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) PURE;

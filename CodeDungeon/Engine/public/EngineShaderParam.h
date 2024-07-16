@@ -182,6 +182,14 @@ namespace Engine {
 		_bool		isAnimPadding2 = false;
 	}ANIMATIONPARAM;
 
+	typedef struct tagDrawRim
+	{
+		_int		_drawRim = false;
+		_int		_drawRim1= false;
+		_int		_drawRim2= false;
+		_int		_drawRim3 = false;
+	}RIMDRAW;
+
 #pragma endregion ANIMATIONPARAM
 
 #pragma region BONEPARAM

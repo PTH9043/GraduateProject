@@ -249,6 +249,8 @@ void CMinotaur::LateTickActive(const _double& _dTimeDelta)
 	_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
 	GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
 
+	
+
 	/*for (auto& Colliders : GetColliderContainer())
 		if(Colliders.first == L"Main")
 			Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);*/
@@ -262,6 +264,7 @@ void CMinotaur::LateTickActive(const _double& _dTimeDelta)
 			spGameInstance->RemoveCollisionPawn(ThisShared<CMob>());
 		}
 	}
+
 }
 
 HRESULT CMinotaur::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
@@ -298,6 +301,7 @@ void CMinotaur::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 			{
 				if (!GetIsHItAlreadyState())
 				{
+					SetAnimModelRim(true);
 					m_spParticle->SetActive(true);
 					m_spParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 					//등을 맞았을 때에만
@@ -317,6 +321,7 @@ void CMinotaur::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 			}
 			else
 			{
+				SetAnimModelRim(false);
 				SetHitAlreadyState(false);
 			}
 
