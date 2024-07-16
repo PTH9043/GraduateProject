@@ -50,7 +50,7 @@ HRESULT UMat::NativeConstructClone(const VOIDDATAS& _vecDatas)
 
 	AddShader(PROTO_RES_MATSHADER);
 
-	ScaleValue = _float3(10, 10, 1);
+	ScaleValue = _float3(30, 30, 1);
 	GetTransform()->SetScale(ScaleValue);
 	GetTransform()->RotateFix(_float3(90, 0, 0));
 
@@ -121,7 +121,7 @@ void UMat::SetColorTexture(_uint _index)
 
 void UMat::SetTimer(_float _setTime)
 {
-	ScaleValue = _float3(10, 10, 1);
+	ScaleValue = _float3(30, 30, 1);
 	_bloodTimer.m_fFullTime = _setTime;
 	_bloodTimer.m_fLeftTime = _setTime;
 }

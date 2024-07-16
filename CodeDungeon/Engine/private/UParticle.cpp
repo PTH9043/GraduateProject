@@ -77,6 +77,8 @@ void UParticle::TickActive(const _double& _dTimeDelta)
 	}*/switch (m_spParticleSystem->GetParticleType()) {
 	case PARTICLE_ORIGINAL:
 		break;
+	case PARTICLE_ROTATION:
+		break;
 	case PARTICLE_FLARE:
 		break;
 	case PARTICLE_BLOOD:
@@ -125,6 +127,9 @@ void UParticle::LateTickActive(const _double& _dTimeDelta)
 	case PARTICLE_ORIGINAL:
 		AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
 	break;
+	case PARTICLE_ROTATION:
+		AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
+	break;
 	case PARTICLE_FLARE:
 		AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
 		break;
@@ -165,6 +170,10 @@ SHPTR<URenderTargetGroup> spShadowDepthGroup{ spGameInstance->FindRenderTargetGr
 	// bind Srv Buffer 
 	switch (m_spParticleSystem->GetParticleType()) {
 	case PARTICLE_ORIGINAL:
+		GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTexGroup->GetTexture(TextureIndex)); 
+		GetShader()->BindSRVBuffer(SRV_REGISTER::T1, spShadowDepthGroup->GetRenderTargetTexture(RTOBJID::NONALPHA_DEPTH_DEFFERED));
+		break;
+	case PARTICLE_ROTATION:
 		GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTexGroup->GetTexture(TextureIndex)); 
 		GetShader()->BindSRVBuffer(SRV_REGISTER::T1, spShadowDepthGroup->GetRenderTargetTexture(RTOBJID::NONALPHA_DEPTH_DEFFERED));
 		break;

@@ -66,6 +66,11 @@ HRESULT UParticleSystem::NativeConstructClone(const VOIDDATAS& _vecDatas)
 		m_spComputeShaderTypeConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::PARTICLETYPEBUFFER, PARTICLETYPEPARAM_SIZE);
 		m_spParticleStructedBuffer = CreateNative<UShaderStructedBuffer>(GetDevice(), sizeof(PARTICLE), m_iMaxParitcleCnt);
 		break;
+	case PARTICLE_ROTATION:
+		m_iMaxParitcleCnt = 102;
+		m_spComputeShaderTypeConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::PARTICLETYPEBUFFER, PARTICLETYPEPARAM_SIZE);
+		m_spParticleStructedBuffer = CreateNative<UShaderStructedBuffer>(GetDevice(), sizeof(PARTICLE), m_iMaxParitcleCnt);
+		break;
 	case PARTICLE_FLARE:
 		m_iMaxParitcleCnt = 116;
 		m_spParticleStructedBufferPlus = CreateNative<UShaderStructedBuffer>(GetDevice(), sizeof(PARTICLEPLUS), m_iMaxParitcleCnt);
@@ -124,6 +129,7 @@ void UParticleSystem::Update(const _double& _dTimeDelta)
 	
 		switch (m_stParticleParam.stGlobalParticleInfo.fParticleKind) {
 		case PARTICLE_ORIGINAL:
+		case PARTICLE_ROTATION:
 		case PARTICLE_FLARE:				
 		case PARTICLE_ANIM:
 			if (m_fCreateInterval < m_stParticleParam.stGlobalParticleInfo.fAccTime)
@@ -200,6 +206,10 @@ void UParticleSystem::Render(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDes
 		m_spComputeShader->BindUAVBuffer(UAV_REGISTER::PARTICLEWRITEDATA, m_spParticleStructedBuffer);
 		m_spComputeShader->BindCBVBuffer(m_spComputeShaderTypeConstantBuffer, &m_stParticleType, PARTICLETYPEPARAM_SIZE);
 		break;
+	case PARTICLE_ROTATION:
+		m_spComputeShader->BindUAVBuffer(UAV_REGISTER::PARTICLEWRITEDATA, m_spParticleStructedBuffer);
+		m_spComputeShader->BindCBVBuffer(m_spComputeShaderTypeConstantBuffer, &m_stParticleType, PARTICLETYPEPARAM_SIZE);
+		break;
 	case PARTICLE_FLARE:
 		m_spComputeShader->BindUAVBuffer(UAV_REGISTER::PARTICLEWRITEDATA, m_spParticleStructedBufferPlus);
 		break;
@@ -242,6 +252,10 @@ void UParticleSystem::BindShaderParams(CSHPTRREF<UShader> _spShader)
 	RETURN_CHECK(nullptr == _spShader, ;);
 	switch (m_stParticleParam.stGlobalParticleInfo.fParticleKind) {
 	case PARTICLE_ORIGINAL:
+		_spShader->BindSRVBuffer(SRV_REGISTER::T14, m_spParticleStructedBuffer);
+		_spShader->BindCBVBuffer(m_spGraphicsShaderParticleConstantBuffer, &m_stParticleParam, PARTICLEPARAM_SIZE);
+		break;
+	case PARTICLE_ROTATION:
 		_spShader->BindSRVBuffer(SRV_REGISTER::T14, m_spParticleStructedBuffer);
 		_spShader->BindCBVBuffer(m_spGraphicsShaderParticleConstantBuffer, &m_stParticleParam, PARTICLEPARAM_SIZE);
 		break;

@@ -469,6 +469,9 @@
     <Filter Include="98.ShaderFile\Mat">
       <UniqueIdentifier>{069db005-ae2a-4488-9604-b3ca4cd4ee33}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98.ShaderFile\Common\Particle\Rotation">
+      <UniqueIdentifier>{9a6204ae-a069-4a90-a8ed-d8110cf0aecc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -1377,9 +1380,6 @@
     <FxCompile Include="..\..\Shader\3DNormalCube.hlsl">
       <Filter>98.ShaderFile\Common\NonAlpha</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\Shader\Compute2DRotationEffect.hlsl">
-      <Filter>98.ShaderFile\Common\Particle</Filter>
-    </FxCompile>
     <FxCompile Include="..\..\Shader\2DFire.hlsl">
       <Filter>98.ShaderFile\Common\Fire</Filter>
     </FxCompile>
@@ -1505,6 +1505,12 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\HdrTwo.hlsl">
       <Filter>98.ShaderFile\Common\HdrBloomBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\Compute2DRotationEffect.hlsl">
+      <Filter>98.ShaderFile\Common\Particle\Rotation</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\2DParticleRotation.hlsl">
+      <Filter>98.ShaderFile\Common\Particle\Rotation</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

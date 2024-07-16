@@ -398,7 +398,7 @@ void TFireView::FireView()
 
 				m_stMat->SetActive(true);
 				m_stMat->SetTimer(50.f);
-				m_stMat->GetTransform()->SetPos(_float3(-196, -79, 132));
+				m_stMat->GetTransform()->SetPos(_float3(0, -5, 0));
 
 				_float3 firepos = m_stFire->GetTransform()->GetPos();
 				m_MultipleParticle[0]->GetTransform()->SetPos(_float3(firepos.x, firepos.y-3.f, firepos.z));
