@@ -328,6 +328,9 @@
     <FxCompile Include="..\..\Shader\2DParticleBlood.hlsl" />
     <FxCompile Include="..\..\Shader\2DParticleFlare.hlsl" />
     <FxCompile Include="..\..\Shader\2DParticleFootPrint.hlsl" />
+    <FxCompile Include="..\..\Shader\2DParticleHeal.hlsl" />
+    <FxCompile Include="..\..\Shader\2DParticleOpenChest.hlsl" />
+    <FxCompile Include="..\..\Shader\2DParticleRotation.hlsl" />
     <FxCompile Include="..\..\Shader\2DParticleSlash.hlsl" />
     <FxCompile Include="..\..\Shader\3DNormalCube.hlsl" />
     <FxCompile Include="..\..\Shader\AnimDepthRecord.hlsl" />
@@ -341,6 +344,8 @@
     <FxCompile Include="..\..\Shader\Bloom.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DAttackEffect.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DFootPrint.hlsl" />
+    <FxCompile Include="..\..\Shader\Compute2DHeal.hlsl" />
+    <FxCompile Include="..\..\Shader\Compute2DOpenChest.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DSlash.hlsl" />
     <FxCompile Include="..\..\Shader\DefaultUI.hlsl" />
     <FxCompile Include="..\..\Shader\DepthRecord.hlsl" />

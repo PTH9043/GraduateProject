@@ -76,14 +76,14 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 		m_stParticleType = m_spBloodParticle->GetParticleSystem()->GetParticleTypeParam();
 		m_stParticleType->fParticleType = PARTICLE_TYPE_DEFAULT;
 		m_stParticleType->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
-		m_spBloodParticle->SetBloodTexture(0, L"blood"); // y°ª Áõ°¡ x ¿ø
-		m_spBloodParticle->SetBloodTexture(1, L"blood1"); // y°ª Áõ°¡ x ¿ø
-		m_spBloodParticle->SetBloodTexture(2, L"blood2"); // y°ª Áõ°¡ x ¿ø
-		m_spBloodParticle->SetBloodTexture(3, L"blood3"); // y°ª Áõ°¡ x ¿ø
-		m_spBloodParticle->SetBloodTexture(4, L"blood4"); // y°ª Áõ°¡ x ¿ø
-		m_spBloodParticle->SetBloodTexture(5, L"blood5"); // y°ª Áõ°¡ x ¿ø
-		m_spBloodParticle->SetBloodTexture(6, L"blood6"); // y°ª Áõ°¡ x ¿ø
-		m_spBloodParticle->SetBloodTexture(7, L"blood7"); // y°ª Áõ°¡ x ¿ø
+		m_spBloodParticle->SetBloodTexture(0, L"blood"); // yï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ x ï¿½ï¿½
+		m_spBloodParticle->SetBloodTexture(1, L"blood1"); // yï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ x ï¿½ï¿½
+		m_spBloodParticle->SetBloodTexture(2, L"blood2"); // yï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ x ï¿½ï¿½
+		m_spBloodParticle->SetBloodTexture(3, L"blood3"); // yï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ x ï¿½ï¿½
+		m_spBloodParticle->SetBloodTexture(4, L"blood4"); // yï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ x ï¿½ï¿½
+		m_spBloodParticle->SetBloodTexture(5, L"blood5"); // yï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ x ï¿½ï¿½
+		m_spBloodParticle->SetBloodTexture(6, L"blood6"); // yï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ x ï¿½ï¿½
+		m_spBloodParticle->SetBloodTexture(7, L"blood7"); // yï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ x ï¿½ï¿½
 		m_spBloodParticle->SetParticleType(PARTICLE_BLOOD);
 		*m_spBloodParticle->GetParticleSystem()->GetCreateInterval() = 0.85f;
 		*m_spBloodParticle->GetParticleSystem()->GetAddParticleAmount() = 5;
@@ -141,7 +141,9 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 
 	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
 	SHPTR<UCell> spCell = spNavigation->FindCell(GetTransform()->GetPos());
-	/*GetTransform()->SetPos(spCell->GetCenterPos());*/
+
+	//GetTransform()->SetPos(spCell->GetCenterPos());
+
 	return S_OK;
 }
 

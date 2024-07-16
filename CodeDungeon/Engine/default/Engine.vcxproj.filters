@@ -469,6 +469,15 @@
     <Filter Include="98.ShaderFile\Mat">
       <UniqueIdentifier>{069db005-ae2a-4488-9604-b3ca4cd4ee33}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98.ShaderFile\Common\Particle\Rotation">
+      <UniqueIdentifier>{9a6204ae-a069-4a90-a8ed-d8110cf0aecc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.ShaderFile\Common\Particle\OpenChest">
+      <UniqueIdentifier>{f3e2974c-968b-4830-9ab3-76aa0ab61e0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.ShaderFile\Common\Particle\Heal">
+      <UniqueIdentifier>{ff851950-a394-4e04-89e7-3e476c24a52c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -1377,9 +1386,6 @@
     <FxCompile Include="..\..\Shader\3DNormalCube.hlsl">
       <Filter>98.ShaderFile\Common\NonAlpha</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\Shader\Compute2DRotationEffect.hlsl">
-      <Filter>98.ShaderFile\Common\Particle</Filter>
-    </FxCompile>
     <FxCompile Include="..\..\Shader\2DFire.hlsl">
       <Filter>98.ShaderFile\Common\Fire</Filter>
     </FxCompile>
@@ -1505,6 +1511,24 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\HdrTwo.hlsl">
       <Filter>98.ShaderFile\Common\HdrBloomBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\Compute2DRotationEffect.hlsl">
+      <Filter>98.ShaderFile\Common\Particle\Rotation</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\2DParticleRotation.hlsl">
+      <Filter>98.ShaderFile\Common\Particle\Rotation</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\2DParticleHeal.hlsl">
+      <Filter>98.ShaderFile\Common\Particle\Heal</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\Compute2DHeal.hlsl">
+      <Filter>98.ShaderFile\Common\Particle\Heal</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\2DParticleOpenChest.hlsl">
+      <Filter>98.ShaderFile\Common\Particle\OpenChest</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\Compute2DOpenChest.hlsl">
+      <Filter>98.ShaderFile\Common\Particle\OpenChest</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
