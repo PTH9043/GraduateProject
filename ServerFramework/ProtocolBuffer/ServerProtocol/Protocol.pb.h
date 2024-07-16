@@ -56,15 +56,18 @@ struct TableStruct_Protocol_2eproto {
 };
 extern const ::google::protobuf::internal::DescriptorTable
     descriptor_table_Protocol_2eproto;
+class ATKCOLLISION;
+struct ATKCOLLISIONDefaultTypeInternal;
+extern ATKCOLLISIONDefaultTypeInternal _ATKCOLLISION_default_instance_;
 class CHARMOVE;
 struct CHARMOVEDefaultTypeInternal;
 extern CHARMOVEDefaultTypeInternal _CHARMOVE_default_instance_;
+class COLLISIONDATA;
+struct COLLISIONDATADefaultTypeInternal;
+extern COLLISIONDATADefaultTypeInternal _COLLISIONDATA_default_instance_;
 class CS_ATTACK;
 struct CS_ATTACKDefaultTypeInternal;
 extern CS_ATTACKDefaultTypeInternal _CS_ATTACK_default_instance_;
-class CS_CHARCOLLISION;
-struct CS_CHARCOLLISIONDefaultTypeInternal;
-extern CS_CHARCOLLISIONDefaultTypeInternal _CS_CHARCOLLISION_default_instance_;
 class CS_DISCONNECT;
 struct CS_DISCONNECTDefaultTypeInternal;
 extern CS_DISCONNECTDefaultTypeInternal _CS_DISCONNECT_default_instance_;
@@ -83,6 +86,9 @@ extern PLAYERSTATEDefaultTypeInternal _PLAYERSTATE_default_instance_;
 class SC_CONNECTSUCCESS;
 struct SC_CONNECTSUCCESSDefaultTypeInternal;
 extern SC_CONNECTSUCCESSDefaultTypeInternal _SC_CONNECTSUCCESS_default_instance_;
+class SC_MONSTERFINDPLAYER;
+struct SC_MONSTERFINDPLAYERDefaultTypeInternal;
+extern SC_MONSTERFINDPLAYERDefaultTypeInternal _SC_MONSTERFINDPLAYER_default_instance_;
 class SC_MONSTERRESOURCEDATA;
 struct SC_MONSTERRESOURCEDATADefaultTypeInternal;
 extern SC_MONSTERRESOURCEDATADefaultTypeInternal _SC_MONSTERRESOURCEDATA_default_instance_;
@@ -95,6 +101,9 @@ extern SC_MONSTERSTATEHAVEPOSDefaultTypeInternal _SC_MONSTERSTATEHAVEPOS_default
 class SC_MOVEFAILED;
 struct SC_MOVEFAILEDDefaultTypeInternal;
 extern SC_MOVEFAILEDDefaultTypeInternal _SC_MOVEFAILED_default_instance_;
+class SC_NEEDMONSTERSTATE;
+struct SC_NEEDMONSTERSTATEDefaultTypeInternal;
+extern SC_NEEDMONSTERSTATEDefaultTypeInternal _SC_NEEDMONSTERSTATE_default_instance_;
 class SC_OTHERCLIENTLOGIN;
 struct SC_OTHERCLIENTLOGINDefaultTypeInternal;
 extern SC_OTHERCLIENTLOGINDefaultTypeInternal _SC_OTHERCLIENTLOGIN_default_instance_;
@@ -839,7 +848,7 @@ class SC_START_INFORMATION_SUCCESS final :
                &_SC_START_INFORMATION_SUCCESS_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    9;
+    11;
 
   friend void swap(SC_START_INFORMATION_SUCCESS& a, SC_START_INFORMATION_SUCCESS& b) {
     a.Swap(&b);
@@ -1026,7 +1035,7 @@ class SC_OTHERCLIENTLOGIN final :
                &_SC_OTHERCLIENTLOGIN_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    7;
+    9;
 
   friend void swap(SC_OTHERCLIENTLOGIN& a, SC_OTHERCLIENTLOGIN& b) {
     a.Swap(&b);
@@ -1166,6 +1175,181 @@ class SC_OTHERCLIENTLOGIN final :
   friend struct ::TableStruct_Protocol_2eproto;
 };// -------------------------------------------------------------------
 
+class SC_NEEDMONSTERSTATE final :
+    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:SC_NEEDMONSTERSTATE) */ {
+ public:
+  inline SC_NEEDMONSTERSTATE() : SC_NEEDMONSTERSTATE(nullptr) {}
+  ~SC_NEEDMONSTERSTATE() override;
+  template<typename = void>
+  explicit PROTOBUF_CONSTEXPR SC_NEEDMONSTERSTATE(::google::protobuf::internal::ConstantInitialized);
+
+  inline SC_NEEDMONSTERSTATE(const SC_NEEDMONSTERSTATE& from)
+      : SC_NEEDMONSTERSTATE(nullptr, from) {}
+  SC_NEEDMONSTERSTATE(SC_NEEDMONSTERSTATE&& from) noexcept
+    : SC_NEEDMONSTERSTATE() {
+    *this = ::std::move(from);
+  }
+
+  inline SC_NEEDMONSTERSTATE& operator=(const SC_NEEDMONSTERSTATE& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline SC_NEEDMONSTERSTATE& operator=(SC_NEEDMONSTERSTATE&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetArena() == from.GetArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const SC_NEEDMONSTERSTATE& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const SC_NEEDMONSTERSTATE* internal_default_instance() {
+    return reinterpret_cast<const SC_NEEDMONSTERSTATE*>(
+               &_SC_NEEDMONSTERSTATE_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    16;
+
+  friend void swap(SC_NEEDMONSTERSTATE& a, SC_NEEDMONSTERSTATE& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(SC_NEEDMONSTERSTATE* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() != nullptr &&
+        GetArena() == other->GetArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() == other->GetArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(SC_NEEDMONSTERSTATE* other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  SC_NEEDMONSTERSTATE* New(::google::protobuf::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<SC_NEEDMONSTERSTATE>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const SC_NEEDMONSTERSTATE& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom( const SC_NEEDMONSTERSTATE& from) {
+    SC_NEEDMONSTERSTATE::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  ::size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::google::protobuf::internal::ParseContext* ctx) final;
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target, ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
+  void SharedCtor(::google::protobuf::Arena* arena);
+  void SharedDtor();
+  void InternalSwap(SC_NEEDMONSTERSTATE* other);
+
+  private:
+  friend class ::google::protobuf::internal::AnyMetadata;
+  static ::absl::string_view FullMessageName() {
+    return "SC_NEEDMONSTERSTATE";
+  }
+  protected:
+  explicit SC_NEEDMONSTERSTATE(::google::protobuf::Arena* arena);
+  SC_NEEDMONSTERSTATE(::google::protobuf::Arena* arena, const SC_NEEDMONSTERSTATE& from);
+  public:
+
+  static const ClassData _class_data_;
+  const ::google::protobuf::Message::ClassData*GetClassData() const final;
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kIdFieldNumber = 1,
+  };
+  // int64 id = 1;
+  void clear_id() ;
+  ::int64_t id() const;
+  void set_id(::int64_t value);
+
+  private:
+  ::int64_t _internal_id() const;
+  void _internal_set_id(::int64_t value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:SC_NEEDMONSTERSTATE)
+ private:
+  class _Internal;
+
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      0, 1, 0,
+      0, 2>
+      _table_;
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+
+        inline explicit constexpr Impl_(
+            ::google::protobuf::internal::ConstantInitialized) noexcept;
+        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                              ::google::protobuf::Arena* arena);
+        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                              ::google::protobuf::Arena* arena, const Impl_& from);
+    ::int64_t id_;
+    mutable ::google::protobuf::internal::CachedSize _cached_size_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_Protocol_2eproto;
+};// -------------------------------------------------------------------
+
 class SC_MONSTERSTATEHAVEPOS final :
     public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:SC_MONSTERSTATEHAVEPOS) */ {
  public:
@@ -1225,7 +1409,7 @@ class SC_MONSTERSTATEHAVEPOS final :
                &_SC_MONSTERSTATEHAVEPOS_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    13;
+    15;
 
   friend void swap(SC_MONSTERSTATEHAVEPOS& a, SC_MONSTERSTATEHAVEPOS& b) {
     a.Swap(&b);
@@ -1508,7 +1692,7 @@ class SC_MONSTERSTATE final :
                &_SC_MONSTERSTATE_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    12;
+    14;
 
   friend void swap(SC_MONSTERSTATE& a, SC_MONSTERSTATE& b) {
     a.Swap(&b);
@@ -1719,7 +1903,7 @@ class SC_MONSTERRESOURCEDATA final :
                &_SC_MONSTERRESOURCEDATA_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    8;
+    10;
 
   friend void swap(SC_MONSTERRESOURCEDATA& a, SC_MONSTERRESOURCEDATA& b) {
     a.Swap(&b);
@@ -1907,6 +2091,193 @@ class SC_MONSTERRESOURCEDATA final :
   friend struct ::TableStruct_Protocol_2eproto;
 };// -------------------------------------------------------------------
 
+class SC_MONSTERFINDPLAYER final :
+    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:SC_MONSTERFINDPLAYER) */ {
+ public:
+  inline SC_MONSTERFINDPLAYER() : SC_MONSTERFINDPLAYER(nullptr) {}
+  ~SC_MONSTERFINDPLAYER() override;
+  template<typename = void>
+  explicit PROTOBUF_CONSTEXPR SC_MONSTERFINDPLAYER(::google::protobuf::internal::ConstantInitialized);
+
+  inline SC_MONSTERFINDPLAYER(const SC_MONSTERFINDPLAYER& from)
+      : SC_MONSTERFINDPLAYER(nullptr, from) {}
+  SC_MONSTERFINDPLAYER(SC_MONSTERFINDPLAYER&& from) noexcept
+    : SC_MONSTERFINDPLAYER() {
+    *this = ::std::move(from);
+  }
+
+  inline SC_MONSTERFINDPLAYER& operator=(const SC_MONSTERFINDPLAYER& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline SC_MONSTERFINDPLAYER& operator=(SC_MONSTERFINDPLAYER&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetArena() == from.GetArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const SC_MONSTERFINDPLAYER& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const SC_MONSTERFINDPLAYER* internal_default_instance() {
+    return reinterpret_cast<const SC_MONSTERFINDPLAYER*>(
+               &_SC_MONSTERFINDPLAYER_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    17;
+
+  friend void swap(SC_MONSTERFINDPLAYER& a, SC_MONSTERFINDPLAYER& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(SC_MONSTERFINDPLAYER* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() != nullptr &&
+        GetArena() == other->GetArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() == other->GetArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(SC_MONSTERFINDPLAYER* other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  SC_MONSTERFINDPLAYER* New(::google::protobuf::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<SC_MONSTERFINDPLAYER>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const SC_MONSTERFINDPLAYER& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom( const SC_MONSTERFINDPLAYER& from) {
+    SC_MONSTERFINDPLAYER::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  ::size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::google::protobuf::internal::ParseContext* ctx) final;
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target, ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
+  void SharedCtor(::google::protobuf::Arena* arena);
+  void SharedDtor();
+  void InternalSwap(SC_MONSTERFINDPLAYER* other);
+
+  private:
+  friend class ::google::protobuf::internal::AnyMetadata;
+  static ::absl::string_view FullMessageName() {
+    return "SC_MONSTERFINDPLAYER";
+  }
+  protected:
+  explicit SC_MONSTERFINDPLAYER(::google::protobuf::Arena* arena);
+  SC_MONSTERFINDPLAYER(::google::protobuf::Arena* arena, const SC_MONSTERFINDPLAYER& from);
+  public:
+
+  static const ClassData _class_data_;
+  const ::google::protobuf::Message::ClassData*GetClassData() const final;
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kIdFieldNumber = 1,
+    kTargetIDFieldNumber = 2,
+  };
+  // int64 id = 1;
+  void clear_id() ;
+  ::int64_t id() const;
+  void set_id(::int64_t value);
+
+  private:
+  ::int64_t _internal_id() const;
+  void _internal_set_id(::int64_t value);
+
+  public:
+  // int64 targetID = 2;
+  void clear_targetid() ;
+  ::int64_t targetid() const;
+  void set_targetid(::int64_t value);
+
+  private:
+  ::int64_t _internal_targetid() const;
+  void _internal_set_targetid(::int64_t value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:SC_MONSTERFINDPLAYER)
+ private:
+  class _Internal;
+
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      1, 2, 0,
+      0, 2>
+      _table_;
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+
+        inline explicit constexpr Impl_(
+            ::google::protobuf::internal::ConstantInitialized) noexcept;
+        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                              ::google::protobuf::Arena* arena);
+        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                              ::google::protobuf::Arena* arena, const Impl_& from);
+    ::int64_t id_;
+    ::int64_t targetid_;
+    mutable ::google::protobuf::internal::CachedSize _cached_size_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_Protocol_2eproto;
+};// -------------------------------------------------------------------
+
 class SC_CONNECTSUCCESS final :
     public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:SC_CONNECTSUCCESS) */ {
  public:
@@ -1966,7 +2337,7 @@ class SC_CONNECTSUCCESS final :
                &_SC_CONNECTSUCCESS_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    8;
 
   friend void swap(SC_CONNECTSUCCESS& a, SC_CONNECTSUCCESS& b) {
     a.Swap(&b);
@@ -2611,7 +2982,7 @@ class CS_RESOURCE_RECEIVE_SUCCES final :
                &_CS_RESOURCE_RECEIVE_SUCCES_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    15;
+    19;
 
   friend void swap(CS_RESOURCE_RECEIVE_SUCCES& a, CS_RESOURCE_RECEIVE_SUCCES& b) {
     a.Swap(&b);
@@ -2786,7 +3157,7 @@ class CS_LOGIN final :
                &_CS_LOGIN_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    14;
+    18;
 
   friend void swap(CS_LOGIN& a, CS_LOGIN& b) {
     a.Swap(&b);
@@ -2961,7 +3332,7 @@ class CS_DISCONNECT final :
                &_CS_DISCONNECT_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    18;
+    21;
 
   friend void swap(CS_DISCONNECT& a, CS_DISCONNECT& b) {
     a.Swap(&b);
@@ -3077,26 +3448,26 @@ class CS_DISCONNECT final :
   friend struct ::TableStruct_Protocol_2eproto;
 };// -------------------------------------------------------------------
 
-class CS_CHARCOLLISION final :
-    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:CS_CHARCOLLISION) */ {
+class COLLISIONDATA final :
+    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:COLLISIONDATA) */ {
  public:
-  inline CS_CHARCOLLISION() : CS_CHARCOLLISION(nullptr) {}
-  ~CS_CHARCOLLISION() override;
+  inline COLLISIONDATA() : COLLISIONDATA(nullptr) {}
+  ~COLLISIONDATA() override;
   template<typename = void>
-  explicit PROTOBUF_CONSTEXPR CS_CHARCOLLISION(::google::protobuf::internal::ConstantInitialized);
+  explicit PROTOBUF_CONSTEXPR COLLISIONDATA(::google::protobuf::internal::ConstantInitialized);
 
-  inline CS_CHARCOLLISION(const CS_CHARCOLLISION& from)
-      : CS_CHARCOLLISION(nullptr, from) {}
-  CS_CHARCOLLISION(CS_CHARCOLLISION&& from) noexcept
-    : CS_CHARCOLLISION() {
+  inline COLLISIONDATA(const COLLISIONDATA& from)
+      : COLLISIONDATA(nullptr, from) {}
+  COLLISIONDATA(COLLISIONDATA&& from) noexcept
+    : COLLISIONDATA() {
     *this = ::std::move(from);
   }
 
-  inline CS_CHARCOLLISION& operator=(const CS_CHARCOLLISION& from) {
+  inline COLLISIONDATA& operator=(const COLLISIONDATA& from) {
     CopyFrom(from);
     return *this;
   }
-  inline CS_CHARCOLLISION& operator=(CS_CHARCOLLISION&& from) noexcept {
+  inline COLLISIONDATA& operator=(COLLISIONDATA&& from) noexcept {
     if (this == &from) return *this;
     if (GetArena() == from.GetArena()
   #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
@@ -3128,20 +3499,20 @@ class CS_CHARCOLLISION final :
   static const ::google::protobuf::Reflection* GetReflection() {
     return default_instance().GetMetadata().reflection;
   }
-  static const CS_CHARCOLLISION& default_instance() {
+  static const COLLISIONDATA& default_instance() {
     return *internal_default_instance();
   }
-  static inline const CS_CHARCOLLISION* internal_default_instance() {
-    return reinterpret_cast<const CS_CHARCOLLISION*>(
-               &_CS_CHARCOLLISION_default_instance_);
+  static inline const COLLISIONDATA* internal_default_instance() {
+    return reinterpret_cast<const COLLISIONDATA*>(
+               &_COLLISIONDATA_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    17;
+    7;
 
-  friend void swap(CS_CHARCOLLISION& a, CS_CHARCOLLISION& b) {
+  friend void swap(COLLISIONDATA& a, COLLISIONDATA& b) {
     a.Swap(&b);
   }
-  inline void Swap(CS_CHARCOLLISION* other) {
+  inline void Swap(COLLISIONDATA* other) {
     if (other == this) return;
   #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
     if (GetArena() != nullptr &&
@@ -3154,7 +3525,7 @@ class CS_CHARCOLLISION final :
       ::google::protobuf::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(CS_CHARCOLLISION* other) {
+  void UnsafeArenaSwap(COLLISIONDATA* other) {
     if (other == this) return;
     ABSL_DCHECK(GetArena() == other->GetArena());
     InternalSwap(other);
@@ -3162,14 +3533,14 @@ class CS_CHARCOLLISION final :
 
   // implements Message ----------------------------------------------
 
-  CS_CHARCOLLISION* New(::google::protobuf::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<CS_CHARCOLLISION>(arena);
+  COLLISIONDATA* New(::google::protobuf::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<COLLISIONDATA>(arena);
   }
   using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const CS_CHARCOLLISION& from);
+  void CopyFrom(const COLLISIONDATA& from);
   using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom( const CS_CHARCOLLISION& from) {
-    CS_CHARCOLLISION::MergeImpl(*this, from);
+  void MergeFrom( const COLLISIONDATA& from) {
+    COLLISIONDATA::MergeImpl(*this, from);
   }
   private:
   static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
@@ -3187,16 +3558,16 @@ class CS_CHARCOLLISION final :
   ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
   void SharedCtor(::google::protobuf::Arena* arena);
   void SharedDtor();
-  void InternalSwap(CS_CHARCOLLISION* other);
+  void InternalSwap(COLLISIONDATA* other);
 
   private:
   friend class ::google::protobuf::internal::AnyMetadata;
   static ::absl::string_view FullMessageName() {
-    return "CS_CHARCOLLISION";
+    return "COLLISIONDATA";
   }
   protected:
-  explicit CS_CHARCOLLISION(::google::protobuf::Arena* arena);
-  CS_CHARCOLLISION(::google::protobuf::Arena* arena, const CS_CHARCOLLISION& from);
+  explicit COLLISIONDATA(::google::protobuf::Arena* arena);
+  COLLISIONDATA(::google::protobuf::Arena* arena, const COLLISIONDATA& from);
   public:
 
   static const ClassData _class_data_;
@@ -3210,21 +3581,11 @@ class CS_CHARCOLLISION final :
 
   enum : int {
     kIdFieldNumber = 1,
-    kTypeFieldNumber = 2,
-    kDamageFieldNumber = 3,
-    kRightxFieldNumber = 4,
-    kRightyFieldNumber = 5,
-    kRightzFieldNumber = 6,
-    kUpxFieldNumber = 7,
-    kUpyFieldNumber = 8,
-    kUpzFieldNumber = 9,
-    kForwardxFieldNumber = 10,
-    kForwardyFieldNumber = 11,
-    kForwardzFieldNumber = 12,
-    kPosxFieldNumber = 13,
-    kPosyFieldNumber = 14,
-    kCollisionTypeFieldNumber = 16,
-    kPoszFieldNumber = 15,
+    kPosxFieldNumber = 2,
+    kPosyFieldNumber = 3,
+    kDamageEnableFieldNumber = 5,
+    kEnemyIDFieldNumber = 6,
+    kPoszFieldNumber = 4,
   };
   // int64 id = 1;
   void clear_id() ;
@@ -3236,117 +3597,7 @@ class CS_CHARCOLLISION final :
   void _internal_set_id(::int64_t value);
 
   public:
-  // int64 type = 2;
-  void clear_type() ;
-  ::int64_t type() const;
-  void set_type(::int64_t value);
-
-  private:
-  ::int64_t _internal_type() const;
-  void _internal_set_type(::int64_t value);
-
-  public:
-  // float damage = 3;
-  void clear_damage() ;
-  float damage() const;
-  void set_damage(float value);
-
-  private:
-  float _internal_damage() const;
-  void _internal_set_damage(float value);
-
-  public:
-  // float rightx = 4;
-  void clear_rightx() ;
-  float rightx() const;
-  void set_rightx(float value);
-
-  private:
-  float _internal_rightx() const;
-  void _internal_set_rightx(float value);
-
-  public:
-  // float righty = 5;
-  void clear_righty() ;
-  float righty() const;
-  void set_righty(float value);
-
-  private:
-  float _internal_righty() const;
-  void _internal_set_righty(float value);
-
-  public:
-  // float rightz = 6;
-  void clear_rightz() ;
-  float rightz() const;
-  void set_rightz(float value);
-
-  private:
-  float _internal_rightz() const;
-  void _internal_set_rightz(float value);
-
-  public:
-  // float upx = 7;
-  void clear_upx() ;
-  float upx() const;
-  void set_upx(float value);
-
-  private:
-  float _internal_upx() const;
-  void _internal_set_upx(float value);
-
-  public:
-  // float upy = 8;
-  void clear_upy() ;
-  float upy() const;
-  void set_upy(float value);
-
-  private:
-  float _internal_upy() const;
-  void _internal_set_upy(float value);
-
-  public:
-  // float upz = 9;
-  void clear_upz() ;
-  float upz() const;
-  void set_upz(float value);
-
-  private:
-  float _internal_upz() const;
-  void _internal_set_upz(float value);
-
-  public:
-  // float forwardx = 10;
-  void clear_forwardx() ;
-  float forwardx() const;
-  void set_forwardx(float value);
-
-  private:
-  float _internal_forwardx() const;
-  void _internal_set_forwardx(float value);
-
-  public:
-  // float forwardy = 11;
-  void clear_forwardy() ;
-  float forwardy() const;
-  void set_forwardy(float value);
-
-  private:
-  float _internal_forwardy() const;
-  void _internal_set_forwardy(float value);
-
-  public:
-  // float forwardz = 12;
-  void clear_forwardz() ;
-  float forwardz() const;
-  void set_forwardz(float value);
-
-  private:
-  float _internal_forwardz() const;
-  void _internal_set_forwardz(float value);
-
-  public:
-  // float posx = 13;
+  // float posx = 2;
   void clear_posx() ;
   float posx() const;
   void set_posx(float value);
@@ -3356,7 +3607,7 @@ class CS_CHARCOLLISION final :
   void _internal_set_posx(float value);
 
   public:
-  // float posy = 14;
+  // float posy = 3;
   void clear_posy() ;
   float posy() const;
   void set_posy(float value);
@@ -3366,17 +3617,27 @@ class CS_CHARCOLLISION final :
   void _internal_set_posy(float value);
 
   public:
-  // int64 collisionType = 16;
-  void clear_collisiontype() ;
-  ::int64_t collisiontype() const;
-  void set_collisiontype(::int64_t value);
+  // int64 damageEnable = 5;
+  void clear_damageenable() ;
+  ::int64_t damageenable() const;
+  void set_damageenable(::int64_t value);
 
   private:
-  ::int64_t _internal_collisiontype() const;
-  void _internal_set_collisiontype(::int64_t value);
+  ::int64_t _internal_damageenable() const;
+  void _internal_set_damageenable(::int64_t value);
 
   public:
-  // float posz = 15;
+  // int64 enemyID = 6;
+  void clear_enemyid() ;
+  ::int64_t enemyid() const;
+  void set_enemyid(::int64_t value);
+
+  private:
+  ::int64_t _internal_enemyid() const;
+  void _internal_set_enemyid(::int64_t value);
+
+  public:
+  // float posz = 4;
   void clear_posz() ;
   float posz() const;
   void set_posz(float value);
@@ -3386,13 +3647,13 @@ class CS_CHARCOLLISION final :
   void _internal_set_posz(float value);
 
   public:
-  // @@protoc_insertion_point(class_scope:CS_CHARCOLLISION)
+  // @@protoc_insertion_point(class_scope:COLLISIONDATA)
  private:
   class _Internal;
 
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      4, 16, 0,
+      3, 6, 0,
       0, 2>
       _table_;
   friend class ::google::protobuf::MessageLite;
@@ -3410,20 +3671,10 @@ class CS_CHARCOLLISION final :
         inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                               ::google::protobuf::Arena* arena, const Impl_& from);
     ::int64_t id_;
-    ::int64_t type_;
-    float damage_;
-    float rightx_;
-    float righty_;
-    float rightz_;
-    float upx_;
-    float upy_;
-    float upz_;
-    float forwardx_;
-    float forwardy_;
-    float forwardz_;
     float posx_;
     float posy_;
-    ::int64_t collisiontype_;
+    ::int64_t damageenable_;
+    ::int64_t enemyid_;
     float posz_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
@@ -3679,6 +3930,217 @@ class CHARMOVE final :
   friend struct ::TableStruct_Protocol_2eproto;
 };// -------------------------------------------------------------------
 
+class ATKCOLLISION final :
+    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ATKCOLLISION) */ {
+ public:
+  inline ATKCOLLISION() : ATKCOLLISION(nullptr) {}
+  ~ATKCOLLISION() override;
+  template<typename = void>
+  explicit PROTOBUF_CONSTEXPR ATKCOLLISION(::google::protobuf::internal::ConstantInitialized);
+
+  inline ATKCOLLISION(const ATKCOLLISION& from)
+      : ATKCOLLISION(nullptr, from) {}
+  ATKCOLLISION(ATKCOLLISION&& from) noexcept
+    : ATKCOLLISION() {
+    *this = ::std::move(from);
+  }
+
+  inline ATKCOLLISION& operator=(const ATKCOLLISION& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline ATKCOLLISION& operator=(ATKCOLLISION&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetArena() == from.GetArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const ATKCOLLISION& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const ATKCOLLISION* internal_default_instance() {
+    return reinterpret_cast<const ATKCOLLISION*>(
+               &_ATKCOLLISION_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    6;
+
+  friend void swap(ATKCOLLISION& a, ATKCOLLISION& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(ATKCOLLISION* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() != nullptr &&
+        GetArena() == other->GetArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() == other->GetArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(ATKCOLLISION* other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  ATKCOLLISION* New(::google::protobuf::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<ATKCOLLISION>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const ATKCOLLISION& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom( const ATKCOLLISION& from) {
+    ATKCOLLISION::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  ::size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::google::protobuf::internal::ParseContext* ctx) final;
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target, ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
+  void SharedCtor(::google::protobuf::Arena* arena);
+  void SharedDtor();
+  void InternalSwap(ATKCOLLISION* other);
+
+  private:
+  friend class ::google::protobuf::internal::AnyMetadata;
+  static ::absl::string_view FullMessageName() {
+    return "ATKCOLLISION";
+  }
+  protected:
+  explicit ATKCOLLISION(::google::protobuf::Arena* arena);
+  ATKCOLLISION(::google::protobuf::Arena* arena, const ATKCOLLISION& from);
+  public:
+
+  static const ClassData _class_data_;
+  const ::google::protobuf::Message::ClassData*GetClassData() const final;
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kIdFieldNumber = 1,
+    kCollXFieldNumber = 2,
+    kMoveYFieldNumber = 3,
+    kMoveZFieldNumber = 4,
+  };
+  // int64 id = 1;
+  void clear_id() ;
+  ::int64_t id() const;
+  void set_id(::int64_t value);
+
+  private:
+  ::int64_t _internal_id() const;
+  void _internal_set_id(::int64_t value);
+
+  public:
+  // float collX = 2;
+  void clear_collx() ;
+  float collx() const;
+  void set_collx(float value);
+
+  private:
+  float _internal_collx() const;
+  void _internal_set_collx(float value);
+
+  public:
+  // float moveY = 3;
+  void clear_movey() ;
+  float movey() const;
+  void set_movey(float value);
+
+  private:
+  float _internal_movey() const;
+  void _internal_set_movey(float value);
+
+  public:
+  // float moveZ = 4;
+  void clear_movez() ;
+  float movez() const;
+  void set_movez(float value);
+
+  private:
+  float _internal_movez() const;
+  void _internal_set_movez(float value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:ATKCOLLISION)
+ private:
+  class _Internal;
+
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      2, 4, 0,
+      0, 2>
+      _table_;
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+
+        inline explicit constexpr Impl_(
+            ::google::protobuf::internal::ConstantInitialized) noexcept;
+        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                              ::google::protobuf::Arena* arena);
+        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                              ::google::protobuf::Arena* arena, const Impl_& from);
+    ::int64_t id_;
+    float collx_;
+    float movey_;
+    float movez_;
+    mutable ::google::protobuf::internal::CachedSize _cached_size_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_Protocol_2eproto;
+};// -------------------------------------------------------------------
+
 class SC_VIEWINRANGE final :
     public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:SC_VIEWINRANGE) */ {
  public:
@@ -3738,7 +4200,7 @@ class SC_VIEWINRANGE final :
                &_SC_VIEWINRANGE_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    11;
+    13;
 
   friend void swap(SC_VIEWINRANGE& a, SC_VIEWINRANGE& b) {
     a.Swap(&b);
@@ -3955,7 +4417,7 @@ class SC_MOVEFAILED final :
                &_SC_MOVEFAILED_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    10;
+    12;
 
   friend void swap(SC_MOVEFAILED& a, SC_MOVEFAILED& b) {
     a.Swap(&b);
@@ -4148,7 +4610,7 @@ class CS_ATTACK final :
                &_CS_ATTACK_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    16;
+    20;
 
   friend void swap(CS_ATTACK& a, CS_ATTACK& b) {
     a.Swap(&b);
@@ -4972,6 +5434,244 @@ inline void CHARMOVE::_internal_set_rotatez(float value) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   ;
   _impl_.rotatez_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// ATKCOLLISION
+
+// int64 id = 1;
+inline void ATKCOLLISION::clear_id() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.id_ = ::int64_t{0};
+}
+inline ::int64_t ATKCOLLISION::id() const {
+  // @@protoc_insertion_point(field_get:ATKCOLLISION.id)
+  return _internal_id();
+}
+inline void ATKCOLLISION::set_id(::int64_t value) {
+  _internal_set_id(value);
+  // @@protoc_insertion_point(field_set:ATKCOLLISION.id)
+}
+inline ::int64_t ATKCOLLISION::_internal_id() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.id_;
+}
+inline void ATKCOLLISION::_internal_set_id(::int64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.id_ = value;
+}
+
+// float collX = 2;
+inline void ATKCOLLISION::clear_collx() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.collx_ = 0;
+}
+inline float ATKCOLLISION::collx() const {
+  // @@protoc_insertion_point(field_get:ATKCOLLISION.collX)
+  return _internal_collx();
+}
+inline void ATKCOLLISION::set_collx(float value) {
+  _internal_set_collx(value);
+  // @@protoc_insertion_point(field_set:ATKCOLLISION.collX)
+}
+inline float ATKCOLLISION::_internal_collx() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.collx_;
+}
+inline void ATKCOLLISION::_internal_set_collx(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.collx_ = value;
+}
+
+// float moveY = 3;
+inline void ATKCOLLISION::clear_movey() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.movey_ = 0;
+}
+inline float ATKCOLLISION::movey() const {
+  // @@protoc_insertion_point(field_get:ATKCOLLISION.moveY)
+  return _internal_movey();
+}
+inline void ATKCOLLISION::set_movey(float value) {
+  _internal_set_movey(value);
+  // @@protoc_insertion_point(field_set:ATKCOLLISION.moveY)
+}
+inline float ATKCOLLISION::_internal_movey() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.movey_;
+}
+inline void ATKCOLLISION::_internal_set_movey(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.movey_ = value;
+}
+
+// float moveZ = 4;
+inline void ATKCOLLISION::clear_movez() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.movez_ = 0;
+}
+inline float ATKCOLLISION::movez() const {
+  // @@protoc_insertion_point(field_get:ATKCOLLISION.moveZ)
+  return _internal_movez();
+}
+inline void ATKCOLLISION::set_movez(float value) {
+  _internal_set_movez(value);
+  // @@protoc_insertion_point(field_set:ATKCOLLISION.moveZ)
+}
+inline float ATKCOLLISION::_internal_movez() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.movez_;
+}
+inline void ATKCOLLISION::_internal_set_movez(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.movez_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// COLLISIONDATA
+
+// int64 id = 1;
+inline void COLLISIONDATA::clear_id() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.id_ = ::int64_t{0};
+}
+inline ::int64_t COLLISIONDATA::id() const {
+  // @@protoc_insertion_point(field_get:COLLISIONDATA.id)
+  return _internal_id();
+}
+inline void COLLISIONDATA::set_id(::int64_t value) {
+  _internal_set_id(value);
+  // @@protoc_insertion_point(field_set:COLLISIONDATA.id)
+}
+inline ::int64_t COLLISIONDATA::_internal_id() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.id_;
+}
+inline void COLLISIONDATA::_internal_set_id(::int64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.id_ = value;
+}
+
+// float posx = 2;
+inline void COLLISIONDATA::clear_posx() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.posx_ = 0;
+}
+inline float COLLISIONDATA::posx() const {
+  // @@protoc_insertion_point(field_get:COLLISIONDATA.posx)
+  return _internal_posx();
+}
+inline void COLLISIONDATA::set_posx(float value) {
+  _internal_set_posx(value);
+  // @@protoc_insertion_point(field_set:COLLISIONDATA.posx)
+}
+inline float COLLISIONDATA::_internal_posx() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.posx_;
+}
+inline void COLLISIONDATA::_internal_set_posx(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.posx_ = value;
+}
+
+// float posy = 3;
+inline void COLLISIONDATA::clear_posy() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.posy_ = 0;
+}
+inline float COLLISIONDATA::posy() const {
+  // @@protoc_insertion_point(field_get:COLLISIONDATA.posy)
+  return _internal_posy();
+}
+inline void COLLISIONDATA::set_posy(float value) {
+  _internal_set_posy(value);
+  // @@protoc_insertion_point(field_set:COLLISIONDATA.posy)
+}
+inline float COLLISIONDATA::_internal_posy() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.posy_;
+}
+inline void COLLISIONDATA::_internal_set_posy(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.posy_ = value;
+}
+
+// float posz = 4;
+inline void COLLISIONDATA::clear_posz() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.posz_ = 0;
+}
+inline float COLLISIONDATA::posz() const {
+  // @@protoc_insertion_point(field_get:COLLISIONDATA.posz)
+  return _internal_posz();
+}
+inline void COLLISIONDATA::set_posz(float value) {
+  _internal_set_posz(value);
+  // @@protoc_insertion_point(field_set:COLLISIONDATA.posz)
+}
+inline float COLLISIONDATA::_internal_posz() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.posz_;
+}
+inline void COLLISIONDATA::_internal_set_posz(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.posz_ = value;
+}
+
+// int64 damageEnable = 5;
+inline void COLLISIONDATA::clear_damageenable() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.damageenable_ = ::int64_t{0};
+}
+inline ::int64_t COLLISIONDATA::damageenable() const {
+  // @@protoc_insertion_point(field_get:COLLISIONDATA.damageEnable)
+  return _internal_damageenable();
+}
+inline void COLLISIONDATA::set_damageenable(::int64_t value) {
+  _internal_set_damageenable(value);
+  // @@protoc_insertion_point(field_set:COLLISIONDATA.damageEnable)
+}
+inline ::int64_t COLLISIONDATA::_internal_damageenable() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.damageenable_;
+}
+inline void COLLISIONDATA::_internal_set_damageenable(::int64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.damageenable_ = value;
+}
+
+// int64 enemyID = 6;
+inline void COLLISIONDATA::clear_enemyid() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.enemyid_ = ::int64_t{0};
+}
+inline ::int64_t COLLISIONDATA::enemyid() const {
+  // @@protoc_insertion_point(field_get:COLLISIONDATA.enemyID)
+  return _internal_enemyid();
+}
+inline void COLLISIONDATA::set_enemyid(::int64_t value) {
+  _internal_set_enemyid(value);
+  // @@protoc_insertion_point(field_set:COLLISIONDATA.enemyID)
+}
+inline ::int64_t COLLISIONDATA::_internal_enemyid() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.enemyid_;
+}
+inline void COLLISIONDATA::_internal_set_enemyid(::int64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.enemyid_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -5959,6 +6659,83 @@ inline void SC_MONSTERSTATEHAVEPOS::_internal_set_state(::int64_t value) {
 
 // -------------------------------------------------------------------
 
+// SC_NEEDMONSTERSTATE
+
+// int64 id = 1;
+inline void SC_NEEDMONSTERSTATE::clear_id() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.id_ = ::int64_t{0};
+}
+inline ::int64_t SC_NEEDMONSTERSTATE::id() const {
+  // @@protoc_insertion_point(field_get:SC_NEEDMONSTERSTATE.id)
+  return _internal_id();
+}
+inline void SC_NEEDMONSTERSTATE::set_id(::int64_t value) {
+  _internal_set_id(value);
+  // @@protoc_insertion_point(field_set:SC_NEEDMONSTERSTATE.id)
+}
+inline ::int64_t SC_NEEDMONSTERSTATE::_internal_id() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.id_;
+}
+inline void SC_NEEDMONSTERSTATE::_internal_set_id(::int64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.id_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// SC_MONSTERFINDPLAYER
+
+// int64 id = 1;
+inline void SC_MONSTERFINDPLAYER::clear_id() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.id_ = ::int64_t{0};
+}
+inline ::int64_t SC_MONSTERFINDPLAYER::id() const {
+  // @@protoc_insertion_point(field_get:SC_MONSTERFINDPLAYER.id)
+  return _internal_id();
+}
+inline void SC_MONSTERFINDPLAYER::set_id(::int64_t value) {
+  _internal_set_id(value);
+  // @@protoc_insertion_point(field_set:SC_MONSTERFINDPLAYER.id)
+}
+inline ::int64_t SC_MONSTERFINDPLAYER::_internal_id() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.id_;
+}
+inline void SC_MONSTERFINDPLAYER::_internal_set_id(::int64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.id_ = value;
+}
+
+// int64 targetID = 2;
+inline void SC_MONSTERFINDPLAYER::clear_targetid() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.targetid_ = ::int64_t{0};
+}
+inline ::int64_t SC_MONSTERFINDPLAYER::targetid() const {
+  // @@protoc_insertion_point(field_get:SC_MONSTERFINDPLAYER.targetID)
+  return _internal_targetid();
+}
+inline void SC_MONSTERFINDPLAYER::set_targetid(::int64_t value) {
+  _internal_set_targetid(value);
+  // @@protoc_insertion_point(field_set:SC_MONSTERFINDPLAYER.targetID)
+}
+inline ::int64_t SC_MONSTERFINDPLAYER::_internal_targetid() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.targetid_;
+}
+inline void SC_MONSTERFINDPLAYER::_internal_set_targetid(::int64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.targetid_ = value;
+}
+
+// -------------------------------------------------------------------
+
 // CS_LOGIN
 
 // int64 id = 1;
@@ -6155,378 +6932,6 @@ inline void CS_ATTACK::_internal_set_damage(float value) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   ;
   _impl_.damage_ = value;
-}
-
-// -------------------------------------------------------------------
-
-// CS_CHARCOLLISION
-
-// int64 id = 1;
-inline void CS_CHARCOLLISION::clear_id() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.id_ = ::int64_t{0};
-}
-inline ::int64_t CS_CHARCOLLISION::id() const {
-  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.id)
-  return _internal_id();
-}
-inline void CS_CHARCOLLISION::set_id(::int64_t value) {
-  _internal_set_id(value);
-  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.id)
-}
-inline ::int64_t CS_CHARCOLLISION::_internal_id() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.id_;
-}
-inline void CS_CHARCOLLISION::_internal_set_id(::int64_t value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.id_ = value;
-}
-
-// int64 type = 2;
-inline void CS_CHARCOLLISION::clear_type() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.type_ = ::int64_t{0};
-}
-inline ::int64_t CS_CHARCOLLISION::type() const {
-  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.type)
-  return _internal_type();
-}
-inline void CS_CHARCOLLISION::set_type(::int64_t value) {
-  _internal_set_type(value);
-  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.type)
-}
-inline ::int64_t CS_CHARCOLLISION::_internal_type() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.type_;
-}
-inline void CS_CHARCOLLISION::_internal_set_type(::int64_t value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.type_ = value;
-}
-
-// float damage = 3;
-inline void CS_CHARCOLLISION::clear_damage() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.damage_ = 0;
-}
-inline float CS_CHARCOLLISION::damage() const {
-  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.damage)
-  return _internal_damage();
-}
-inline void CS_CHARCOLLISION::set_damage(float value) {
-  _internal_set_damage(value);
-  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.damage)
-}
-inline float CS_CHARCOLLISION::_internal_damage() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.damage_;
-}
-inline void CS_CHARCOLLISION::_internal_set_damage(float value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.damage_ = value;
-}
-
-// float rightx = 4;
-inline void CS_CHARCOLLISION::clear_rightx() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.rightx_ = 0;
-}
-inline float CS_CHARCOLLISION::rightx() const {
-  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.rightx)
-  return _internal_rightx();
-}
-inline void CS_CHARCOLLISION::set_rightx(float value) {
-  _internal_set_rightx(value);
-  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.rightx)
-}
-inline float CS_CHARCOLLISION::_internal_rightx() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.rightx_;
-}
-inline void CS_CHARCOLLISION::_internal_set_rightx(float value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.rightx_ = value;
-}
-
-// float righty = 5;
-inline void CS_CHARCOLLISION::clear_righty() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.righty_ = 0;
-}
-inline float CS_CHARCOLLISION::righty() const {
-  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.righty)
-  return _internal_righty();
-}
-inline void CS_CHARCOLLISION::set_righty(float value) {
-  _internal_set_righty(value);
-  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.righty)
-}
-inline float CS_CHARCOLLISION::_internal_righty() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.righty_;
-}
-inline void CS_CHARCOLLISION::_internal_set_righty(float value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.righty_ = value;
-}
-
-// float rightz = 6;
-inline void CS_CHARCOLLISION::clear_rightz() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.rightz_ = 0;
-}
-inline float CS_CHARCOLLISION::rightz() const {
-  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.rightz)
-  return _internal_rightz();
-}
-inline void CS_CHARCOLLISION::set_rightz(float value) {
-  _internal_set_rightz(value);
-  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.rightz)
-}
-inline float CS_CHARCOLLISION::_internal_rightz() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.rightz_;
-}
-inline void CS_CHARCOLLISION::_internal_set_rightz(float value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.rightz_ = value;
-}
-
-// float upx = 7;
-inline void CS_CHARCOLLISION::clear_upx() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.upx_ = 0;
-}
-inline float CS_CHARCOLLISION::upx() const {
-  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.upx)
-  return _internal_upx();
-}
-inline void CS_CHARCOLLISION::set_upx(float value) {
-  _internal_set_upx(value);
-  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.upx)
-}
-inline float CS_CHARCOLLISION::_internal_upx() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.upx_;
-}
-inline void CS_CHARCOLLISION::_internal_set_upx(float value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.upx_ = value;
-}
-
-// float upy = 8;
-inline void CS_CHARCOLLISION::clear_upy() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.upy_ = 0;
-}
-inline float CS_CHARCOLLISION::upy() const {
-  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.upy)
-  return _internal_upy();
-}
-inline void CS_CHARCOLLISION::set_upy(float value) {
-  _internal_set_upy(value);
-  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.upy)
-}
-inline float CS_CHARCOLLISION::_internal_upy() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.upy_;
-}
-inline void CS_CHARCOLLISION::_internal_set_upy(float value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.upy_ = value;
-}
-
-// float upz = 9;
-inline void CS_CHARCOLLISION::clear_upz() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.upz_ = 0;
-}
-inline float CS_CHARCOLLISION::upz() const {
-  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.upz)
-  return _internal_upz();
-}
-inline void CS_CHARCOLLISION::set_upz(float value) {
-  _internal_set_upz(value);
-  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.upz)
-}
-inline float CS_CHARCOLLISION::_internal_upz() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.upz_;
-}
-inline void CS_CHARCOLLISION::_internal_set_upz(float value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.upz_ = value;
-}
-
-// float forwardx = 10;
-inline void CS_CHARCOLLISION::clear_forwardx() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.forwardx_ = 0;
-}
-inline float CS_CHARCOLLISION::forwardx() const {
-  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.forwardx)
-  return _internal_forwardx();
-}
-inline void CS_CHARCOLLISION::set_forwardx(float value) {
-  _internal_set_forwardx(value);
-  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.forwardx)
-}
-inline float CS_CHARCOLLISION::_internal_forwardx() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.forwardx_;
-}
-inline void CS_CHARCOLLISION::_internal_set_forwardx(float value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.forwardx_ = value;
-}
-
-// float forwardy = 11;
-inline void CS_CHARCOLLISION::clear_forwardy() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.forwardy_ = 0;
-}
-inline float CS_CHARCOLLISION::forwardy() const {
-  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.forwardy)
-  return _internal_forwardy();
-}
-inline void CS_CHARCOLLISION::set_forwardy(float value) {
-  _internal_set_forwardy(value);
-  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.forwardy)
-}
-inline float CS_CHARCOLLISION::_internal_forwardy() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.forwardy_;
-}
-inline void CS_CHARCOLLISION::_internal_set_forwardy(float value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.forwardy_ = value;
-}
-
-// float forwardz = 12;
-inline void CS_CHARCOLLISION::clear_forwardz() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.forwardz_ = 0;
-}
-inline float CS_CHARCOLLISION::forwardz() const {
-  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.forwardz)
-  return _internal_forwardz();
-}
-inline void CS_CHARCOLLISION::set_forwardz(float value) {
-  _internal_set_forwardz(value);
-  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.forwardz)
-}
-inline float CS_CHARCOLLISION::_internal_forwardz() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.forwardz_;
-}
-inline void CS_CHARCOLLISION::_internal_set_forwardz(float value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.forwardz_ = value;
-}
-
-// float posx = 13;
-inline void CS_CHARCOLLISION::clear_posx() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.posx_ = 0;
-}
-inline float CS_CHARCOLLISION::posx() const {
-  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.posx)
-  return _internal_posx();
-}
-inline void CS_CHARCOLLISION::set_posx(float value) {
-  _internal_set_posx(value);
-  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.posx)
-}
-inline float CS_CHARCOLLISION::_internal_posx() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.posx_;
-}
-inline void CS_CHARCOLLISION::_internal_set_posx(float value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.posx_ = value;
-}
-
-// float posy = 14;
-inline void CS_CHARCOLLISION::clear_posy() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.posy_ = 0;
-}
-inline float CS_CHARCOLLISION::posy() const {
-  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.posy)
-  return _internal_posy();
-}
-inline void CS_CHARCOLLISION::set_posy(float value) {
-  _internal_set_posy(value);
-  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.posy)
-}
-inline float CS_CHARCOLLISION::_internal_posy() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.posy_;
-}
-inline void CS_CHARCOLLISION::_internal_set_posy(float value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.posy_ = value;
-}
-
-// float posz = 15;
-inline void CS_CHARCOLLISION::clear_posz() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.posz_ = 0;
-}
-inline float CS_CHARCOLLISION::posz() const {
-  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.posz)
-  return _internal_posz();
-}
-inline void CS_CHARCOLLISION::set_posz(float value) {
-  _internal_set_posz(value);
-  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.posz)
-}
-inline float CS_CHARCOLLISION::_internal_posz() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.posz_;
-}
-inline void CS_CHARCOLLISION::_internal_set_posz(float value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.posz_ = value;
-}
-
-// int64 collisionType = 16;
-inline void CS_CHARCOLLISION::clear_collisiontype() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.collisiontype_ = ::int64_t{0};
-}
-inline ::int64_t CS_CHARCOLLISION::collisiontype() const {
-  // @@protoc_insertion_point(field_get:CS_CHARCOLLISION.collisionType)
-  return _internal_collisiontype();
-}
-inline void CS_CHARCOLLISION::set_collisiontype(::int64_t value) {
-  _internal_set_collisiontype(value);
-  // @@protoc_insertion_point(field_set:CS_CHARCOLLISION.collisionType)
-}
-inline ::int64_t CS_CHARCOLLISION::_internal_collisiontype() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.collisiontype_;
-}
-inline void CS_CHARCOLLISION::_internal_set_collisiontype(::int64_t value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.collisiontype_ = value;
 }
 
 // -------------------------------------------------------------------

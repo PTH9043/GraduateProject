@@ -189,10 +189,6 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
         UpdateState(spAnimModel, ANIM_DEATH, L"DEAD");
     }
 
-#endif
-
-    // Tick event
-    spAnimModel->TickEvent(spMummy.get(), GetTrigger(), _dTimeDelta);
 #else
 spAnimModel->TickAnimChangeTransform(spMummy->GetTransform(), _dTimeDelta);
 #endif

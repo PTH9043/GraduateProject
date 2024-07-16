@@ -47,9 +47,13 @@ namespace Server {
 	{
 	}
 
+	void CChest::TickSendPacket(const _double& _dTimeDelta)
+	{
+	}
+
 	bool CChest::IsHit(APawn* _pPawn, const _double& _dTimeDelta)
 	{
-		return false;
+		return __super::IsHit(_pPawn, _dTimeDelta);
 	}
 
 	void CChest::Collision(APawn* _pPawn, const _double& _dTimeDelta)

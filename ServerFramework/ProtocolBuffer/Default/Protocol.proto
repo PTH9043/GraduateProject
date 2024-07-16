@@ -74,6 +74,16 @@ message ATKCOLLISION
 	float moveZ = 4;
 }
 
+message COLLISIONDATA
+{
+	int64 id = 1;
+	float posx = 2;
+	float posy = 3;
+	float posz = 4;
+	int64 damageEnable = 5;
+	int64 enemyID = 6;
+}
+
 /*
 ======================================
 Server
@@ -161,6 +171,17 @@ message SC_MOVEFAILED
 	 int64     state = 10;
  }
 
+ message SC_NEEDMONSTERSTATE 
+ {
+	 int64 id = 1;
+ }
+
+ message SC_MONSTERFINDPLAYER 
+ {
+	 int64 id = 1;
+	 int64 targetID = 2;
+ }
+
 /*
 ======================================
 Client
@@ -185,28 +206,6 @@ message CS_ATTACK
 	VECTOR3 attackPos = 2;
 	float damage = 3;
 }
-
-// 몬스터가 맞았는지 판정 
-message CS_CHARCOLLISION
-{
-	int64 id = 1;
-	int64 type = 2;
-	float damage = 3;
-	float rightx = 4;
-	float righty = 5;
-	float rightz = 6;
-	float upx = 7;
-	float upy = 8;
-	float upz = 9;
-	float forwardx = 10;
-	float forwardy = 11;
-	float forwardz = 12;
-	float posx = 13;
-	float posy = 14;
-	float posz = 15;
-	int64 collisionType = 16;
-}
-
 // 연결 해제
 message CS_DISCONNECT 
 {

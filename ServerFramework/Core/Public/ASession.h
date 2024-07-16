@@ -29,6 +29,7 @@ public:
 	virtual void RecvData() PURE;
 	// 클라이언트에게 버퍼를 조합하여 전송하는 함수
 	virtual _bool SendData(_char* _pPacket, const PACKETHEAD& _PacketHead) PURE;
+	virtual bool IsHit(APawn* _pPawn, const _double& _dTimeDelta) PURE;
 	virtual void Disconnect() PURE;
 	virtual void ConnectTcpSocket() PURE;
 	/*

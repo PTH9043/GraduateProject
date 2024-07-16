@@ -18,6 +18,8 @@ public:
 	void FindPlayer(SHPTR<ASession> _spSession);
 	virtual void Tick(const _double& _dTimeDelta) PURE;
 	virtual void State(SHPTR<ASession> _spSession, _int _MonsterState = 0) PURE;
+	virtual void TickSendPacket(const _double& _dTimeDelta) PURE;
+	virtual bool IsHit(APawn* _pPawn, const _double& _dTimeDelta) PURE;
 	void InsertMobJobTimer(_int _PlayerID);
 
 	_bool IsChangeTargetPlayer(SESSIONID _TargetPlayerID, _float _fDistance);

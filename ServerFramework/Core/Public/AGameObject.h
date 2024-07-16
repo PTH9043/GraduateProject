@@ -42,7 +42,6 @@ public:/*Get Set */
 	const SESSIONID& GetSessionID() const { return m_SessionID; }
 	const SESSIONTYPE& GetSessionType() const { return m_SessionType; }
 	const _int& GetSpaceIndex() const { return m_SpaceIndex; }
-	const CHARSTATUS& GetCharStatus() const { return m_CharStatus; }
 	SHPTR<ATransform> GetTransform() const { return m_spTransform; }
 	const _int GetGameObjectType() const { return m_GameObjectType; }
 	const _int GetCellIndex() const { return m_CellIndex; }
@@ -52,6 +51,7 @@ public:/*Get Set */
 	const _int GetCurOnCellIndex() const { return m_iCurOnCellIndex; }
 	const _bool IsActive() const { return m_isActive; }
 	const _bool IsPermanentDisable() const { return m_isPermanentDisable; }
+	COLLIDERCONTAINER& GetColliderContainer() { return m_ColliderContainer; }
 
 	void SetJumpable(const _bool _isJumpable) { this->m_isJumpable = _isJumpable; }
 	virtual void SetActive(const _bool _isActive);
@@ -76,7 +76,6 @@ protected: /* Get Set */
 	void SetSessionID(const SESSIONID& _SessionID) { this->m_SessionID = _SessionID; }
 	void SetSessionType(const SESSIONTYPE& _SessionType) { this->m_SessionType = _SessionType; }
 	void SetSpaceIndex(const _int& _SpaceIndex) { this->m_SpaceIndex = _SpaceIndex; }
-	void SetCharStatus(const CHARSTATUS& _charStatus) { ::memcpy(&m_CharStatus, &_charStatus, sizeof(CHARSTATUS)); }
 	void SetGameObjectType(const _int _GameObjectType) { this->m_GameObjectType = _GameObjectType; }
 	void SetCellIndex(const _int _CellIndex) { this->m_CellIndex = _CellIndex; }
 	void SetMoveSpeed(const _float _fMoveSpeed) { this->m_fMoveSpeed = _fMoveSpeed; }
@@ -86,7 +85,6 @@ protected: /* Get Set */
 	PACKETHEAD& GetPacketHead() { return m_CopyHead; }
 	BUFFER& GetCopyBuffer(REF_RETURN) { return m_CopyBuffer; }
 	_char* GetCopyBufferPointer(_int _iBufferIndex = 0) { return &m_CopyBuffer[0]; }
-	COLLIDERCONTAINER& GetColliderContainer() { return m_ColliderContainer; }
 private:
 	virtual void Free() override;
 public:
@@ -98,7 +96,6 @@ private:
 	_int										m_GameObjectType;
 	_int										m_CellIndex;
 	_bool									m_isJumpable;
-	CHARSTATUS					m_CharStatus;
 
 	SHPTR<ATransform>		m_spTransform;
 	// ÇöÀç ¼¿ À§¿¡ ÀÖ´Â ÀÎµ¦½º

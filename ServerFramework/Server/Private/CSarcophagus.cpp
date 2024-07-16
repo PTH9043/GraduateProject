@@ -109,9 +109,13 @@ namespace Server
 		FindPlayer(_spSession);
 	}
 
+	void CSarcophagus::TickSendPacket(const _double& _dTimeDelta)
+	{
+	}
+
 	bool CSarcophagus::IsHit(APawn* _pPawn, const _double& _dTimeDelta)
 	{
-		return false;
+		return __super::IsHit(_pPawn, _dTimeDelta);
 	}
 
 	void CSarcophagus::Collision(APawn* _pPawn, const _double& _dTimeDelta)

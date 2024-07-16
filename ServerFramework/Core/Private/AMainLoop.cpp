@@ -18,7 +18,7 @@ namespace Core {
 
 	void AMainLoop::RegisterTimer()
 	{
-		m_SteadyTimer.expires_from_now(std::chrono::microseconds(10));
+		m_SteadyTimer.expires_from_now(std::chrono::microseconds(0));
 		// 타이머의 비동기 대기 설정
 		m_SteadyTimer.async_wait(std::bind(&AMainLoop::TimerThread, this, std::placeholders::_1));
 	}
@@ -45,15 +45,26 @@ namespace Core {
 						aliveMonster.push_back(spMonster);
 					}
 				}
+
+				if (true == aliveMonster.empty())
+				{
+					std::this_thread::sleep_for(std::chrono::milliseconds(1));
+					RegisterTimer();
+				}
 			}
 			// Animation 활성 
 			{
+				std::atomic_thread_fence(std::memory_order_seq_cst);
 				for (auto& iter : aliveMonster)
 				{
 					iter->Tick(dTimeDelta);
 				}
 				// Collision 
-				spCoreInstance->CollisionSituation(dTimeDelta);
+	//			spCoreInstance->CollisionSituation(dTimeDelta);
+				for (auto& iter : aliveMonster)
+				{
+					iter->TickSendPacket(dTimeDelta);
+				}
 			}
 		}
 		RegisterTimer();

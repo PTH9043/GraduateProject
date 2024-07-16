@@ -149,6 +149,8 @@ void CMummy::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 {
 #ifdef _ENABLE_PROTOBUFF
 
+	__super::ReceiveNetworkProcessData(_ProcessData);
+
 	switch (_ProcessData.GetDataType())
 	{
 	case TAG_SC_MONSTERSTATEHAVEMOVE:
@@ -182,7 +184,7 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 
 	if (CurAnimState == UAnimationController::ANIM_MOVE)
 	{
-		AddTimeAccumulatorwDSA(_dTimeDelta);
+		AddTimeAccumulator(_dTimeDelta);
 
 		// A* for moving towards player when player is found
 		if (GetFoundTargetState())
@@ -332,6 +334,11 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 
 	_float3 direction = (_pEnemy->GetTransform()->GetPos() - GetTransform()->GetPos());
 	direction.Normalize();
+	_bool IsHit = true;
+#ifdef _ENABLE_PROTOBUFF
+	_bool isCollision = false;
+	_int DamageEnable = 0;
+#endif
 
 	auto handleCollisionWithPlayer = [&](UCharacter* pCharacter) {
 		for (const auto& iter : GetColliderContainer())
@@ -347,8 +354,13 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 						m_spSlashParticle->SetActive(true);
 						m_spBloodParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 						m_spSlashParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+#ifndef _ENABLE_PROTOBUFF
 						// Decrease health on hit
 						DecreaseHealth(pCharacter->GetAttack());
+#else
+						isCollision = true;
+						DamageEnable = 1;
+#endif
 					}
 					SetHitAlreadyState(true);
 				}
@@ -364,6 +376,9 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 				{
 					SetCollisionState(true);
 					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
+#ifdef _ENABLE_PROTOBUFF
+					isCollision = true;
+#endif
 				}
 				else
 				{
@@ -382,6 +397,9 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 				{
 					SetCollisionState(true);
 					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
+#ifdef _ENABLE_PROTOBUFF
+					isCollision = true;
+#endif
 				}
 				else
 				{
@@ -399,8 +417,11 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 				SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
 				if (GetCollidedNormal() != _float3::Zero)
 				{
-					_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 50.0f : 20.0f;
+					_float speed = 20.0f;
 					ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
+#ifdef _ENABLE_PROTOBUFF
+					isCollision = true;
+#endif
 				}
 			}
 		}
@@ -421,4 +442,10 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 		CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
 		handleCollisionWithStaticObject(pModelObject);
 	}
+#ifdef _ENABLE_PROTOBUFF
+	if (true == isCollision)
+	{
+		
+	}
+#endif
 }

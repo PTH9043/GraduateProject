@@ -15,7 +15,7 @@ namespace Core
 		{
 			MEMORYHEADER* header;
 			m_MemoryQueue.try_pop(header);
-			std::this_thread::sleep_for(std::chrono::microseconds(1));
+			ThreadMicroRelax(1);
 			::free(header);
 		}
 	}

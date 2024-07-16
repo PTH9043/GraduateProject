@@ -47,11 +47,13 @@ namespace Core
 			}
 			else if (m_fDistanceToPlayer <= m_fActiveRange )
 			{
+				m_CurrentTargetPlayerID = _spSession->GetSessionID();
 				SetMonsterState(MONSTERSTATE::MOB_FIND_STATE);
 				UpdateSelfStateToPlayerDistance(false, true, false);
 			}
 			else if (m_fDeactiveRange >= m_fDistanceToPlayer)
 			{
+
 				SetMonsterState(MONSTERSTATE::MOB_MOVE_STATE);
 				UpdateSelfStateToPlayerDistance(false, false, true);
 			}
@@ -65,6 +67,11 @@ namespace Core
 		RestrictPositionToNavi();
 	}
 
+
+	bool AMonster::IsHit(APawn* _pPawn, const _double& _dTimeDelta)
+	{
+		return __super::IsHit(_pPawn, _dTimeDelta);
+	}
 
 	void AMonster::InsertMobJobTimer(_int _PlayerID)
 	{

@@ -12,6 +12,7 @@
 #include "UMethod.h"
 #include "CMob.h"
 #include "UCollider.h"
+#include "UProcessedData.h"
 
 CMob::CMob(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UCharacter(_spDevice, _wstrLayer, _eCloneType),
@@ -22,7 +23,8 @@ CMob::CMob(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONE
 	m_dtimeAccumulator{ 0 },
 	m_delapsedTime{ 0 },
 	m_fActivationRange{ 0 },
-	m_fDeactivationRange{0}
+	m_fDeactivationRange{0},
+	m_isNeedServerSendData{ false }
 {
 }
 
@@ -35,7 +37,8 @@ CMob::CMob(const CMob& _rhs)
 	m_dtimeAccumulator{ 0 },
 	m_delapsedTime{ 0 },
 	m_fActivationRange{ 0 },
-	m_fDeactivationRange{ 0 }
+	m_fDeactivationRange{ 0 },
+	m_isNeedServerSendData{ false }
 {
 }
 
@@ -82,7 +85,6 @@ void CMob::TickActive(const _double& _dTimeDelta)
 void CMob::LateTickActive(const _double& _dTimeDelta)
 {
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
-
 #ifndef _ENABLE_PROTOBUFF
 	_float3 vPosition{ GetTransform()->GetPos() };
 	SHPTR<UCell> newCell{};
@@ -118,6 +120,26 @@ void CMob::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
 }
 
+void CMob::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
+{
+}
+
+#ifdef _ENABLE_PROTOBUFF
+void CMob::SendCollisionData(_int _DamageEnable)
+{
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	COLLISIONDATA csCollision;
+	VECTOR3 Pos;
+	_llong NetworkID = GetNetworkID();
+	{
+		_float3 vPos = GetTransform()->GetPos();
+		PROTOFUNC::MakeVector3(&Pos, vPos.x, vPos.y, vPos.z);
+		PROTOFUNC::MakeCollisionData(&csCollision, NetworkID, Pos, _DamageEnable, 
+			spGameInstance->GetNetworkOwnerID());
+	}
+	spGameInstance->SendProcessPacket(UProcessedData(NetworkID, csCollision, TAG_CS_MONSTERCOLIISION));
+}
+#endif
 
 void CMob::SearchForPlayers()
 {
@@ -132,6 +154,10 @@ void CMob::SearchForPlayers()
 void CMob::CalculateDistanceBetweenPlayers(const _float3& _CurrentPlayerPos, const _float3& _CurrentMobPos)
 {
 	m_fDistancefromNearestPlayer = _float3::Distance(_CurrentMobPos, _CurrentPlayerPos);
+}
+
+void CMob::SendMobStateData()
+{
 }
 
 void CMob::SetMobPlacement(_int _CellIndex)

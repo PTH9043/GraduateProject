@@ -25,10 +25,9 @@ namespace Core
 	{
 		RETURN_CHECK(nullptr == _spService, ;);
 		m_spService = _spService;
-
-	//	m_spMySqlDriver = CreateInitConstructor<AMySqlDriver>(ThisShared<ACoreInstance>(), "tcp://127.0.0.1:3306", 
-	//		"root", "Qkrxogus0652!");
-
+#ifdef USE_DEBUG
+		std::cout << "Load Navigation" << "\n";
+#endif
 		m_spNavigation = CreateInitNative<ANavigation>("..\\..\\Resource\\Navigation\\interior.bin");
 	}
 
@@ -226,22 +225,10 @@ namespace Core
 		spMySqlDriver->BindParam(_TableType, _ParamIndex, _Value);
 	}
 
-	void ACoreInstance::AddMonsterPawnList(APawn* _pPawn)
-	{
-		SHPTR<ACollisionManager> spCollisionManager = m_spCollisionManager;
-		spCollisionManager->AddMonsterPawnList(_pPawn);
-	}
-
 	void ACoreInstance::CollisionSituation(const _double _dTimeDelta)
 	{
 		SHPTR<ACollisionManager> spCollisionManager = m_spCollisionManager;
 		spCollisionManager->CollisionSituation(_dTimeDelta);
-	}
-
-	void ACoreInstance::CollisionSituationToPlayer(ASession* _pSession, const _double _dTimeDelta)
-	{
-		SHPTR<ACollisionManager> spCollisionManager = m_spCollisionManager;
-		spCollisionManager->CollisionSituationToPlayer(_pSession, _dTimeDelta);
 	}
 
 	SHPTR<ANavigation> ACoreInstance::CloneNavi()

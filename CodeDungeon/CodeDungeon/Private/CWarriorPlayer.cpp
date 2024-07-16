@@ -330,7 +330,10 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	PAWNTYPE ePawnType = _pEnemy->GetPawnType();
 	const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
-
+#ifdef _ENABLE_PROTOBUFF
+	_bool isCollision = false;
+	_int DamageEnable = 0;
+#endif
 	if (PAWNTYPE::PAWN_CHAR == ePawnType)
 	{
 		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
@@ -362,12 +365,15 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							GetTransform()->SetDirectionFixedUp(pCharacter->GetTransform()->GetLook());
 							m_bisKicked = true;
 						}
-
+#ifndef _ENABLE_PROTOBUFF
 						if (!GetIsHItAlreadyState())
 						{
 							DecreaseHealth(1);
 						}
-		
+#else
+						isCollision = true;
+						DamageEnable = 1;
+#endif
 						SetHitAlreadyState(true);
 					}
 				}
@@ -375,11 +381,14 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 				{
 					if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead01" && !m_bisKicked)
 					{
+#ifndef _ENABLE_PROTOBUFF
 						if (!GetIsHItAlreadyState())
 						{
 							DecreaseHealth(1);
 						}
-
+#else
+						isCollision = true;
+#endif
 						SetHitAlreadyState(true);
 					}
 				}
@@ -396,6 +405,9 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 				if (iter.second->IsCollision(iter2.second))
 				{
 					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 10 * _dTimeDelta);
+#ifdef _ENABLE_PROTOBUFF
+					isCollision = true;
+#endif
 				}
 			}
 		}
@@ -416,7 +428,9 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 					_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 50.0f : 20.0f;
 
 					ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
-
+#ifdef _ENABLE_PROTOBUFF
+					isCollision = true;
+#endif
 				}
 				else
 				{
@@ -436,11 +450,15 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 				{
 					if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead01" && !m_bisKicked)
 					{
+#ifndef _ENABLE_PROTOBUFF
 						if (!GetIsHItAlreadyState())
 						{
 							DecreaseHealth(1);
 						}
-
+#else
+						isCollision = true;
+						DamageEnable = 1;
+#endif
 						SetHitAlreadyState(true);
 					}
 				}
@@ -453,6 +471,13 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 
 		}
 	}
+
+#ifdef _ENABLE_PROTOBUFF
+	if (true == isCollision)
+	{
+		SendCollisionData(_pEnemy.get(), DamageEnable);
+	}
+#endif
 }
 
 #ifdef _ENABLE_PROTOBUFF
@@ -473,6 +498,22 @@ void CWarriorPlayer::SendMoveData(CSHPTRREF<UGameInstance> spGameInstance)
 	PROTOFUNC::MakeCharMove(OUT & charMove, spGameInstance->GetNetworkOwnerID(), vMove, vRotate);
 	spGameInstance->SendProcessPacket(std::move(UProcessedData(charMove, TAG_CS_MOVE)));
 }
+
+void CWarriorPlayer::SendCollisionData(UPawn* _pPawn, _int _DamageEnable)
+{
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	COLLISIONDATA csCollision;
+	VECTOR3 Pos;
+	_llong NetworkID = spGameInstance->GetNetworkOwnerID();
+	{
+		_float3 vPos = GetTransform()->GetPos();
+		PROTOFUNC::MakeVector3(&Pos, vPos.x, vPos.y, vPos.z);
+		PROTOFUNC::MakeCollisionData(&csCollision, NetworkID, Pos, _DamageEnable, 
+			_pPawn->GetNetworkID());
+	}
+	spGameInstance->SendProcessPacket(UProcessedData(NetworkID, csCollision, TAG_CS_PLAYERCOLLISION));
+}
+
 #endif
 
 void CWarriorPlayer::TranslateStateMoveAndRunF(CSHPTRREF<UGameInstance> _spGameInstance, const _double& _dTimeDelta, const _float _fSpeed)
