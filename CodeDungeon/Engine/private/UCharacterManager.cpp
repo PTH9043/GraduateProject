@@ -1,6 +1,7 @@
 #include "EngineDefine.h"
 #include "UCharacterManager.h"
 #include "UCharacter.h"
+#include "UTransform.h"
 
 UCharacterManager::UCharacterManager() : m_spCurrentPlayer{nullptr}
 {
@@ -32,8 +33,10 @@ void UCharacterManager::TickCollider(const _double& _dTimeDelta)
 		{
 			if (Pawn == Coll)
 				continue;
-
-			Pawn->IsHit(Coll, _dTimeDelta);
+			if (_float3::Distance(Pawn->GetTransform()->GetPos(), Coll->GetTransform()->GetPos()) < 20)
+			{
+				Pawn->IsHit(Coll, _dTimeDelta);
+			}
 		}
 	}
 }

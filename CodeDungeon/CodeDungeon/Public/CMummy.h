@@ -17,7 +17,7 @@ public:
 	CMummy(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType);
 	CMummy(const CMummy& _rhs);
 	enum MUMMYTYPE {
-		TYPE_STANDING, TYPE_LYING, TYPE_END
+		TYPE_STANDING, TYPE_LYING, TYPE_WALKING, TYPE_END
 	};
 	DESTRUCTOR(CMummy)
 public:

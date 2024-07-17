@@ -50,10 +50,6 @@ HRESULT UGuard::NativeConstructClone(const VOIDDATAS& _vecDatas)
 
 	// Add Shader 
 	AddShader(PROTO_RES_GUARDSHADER);
-
-	GetTransform()->SetScale(_float3(40,40,1));
-	GetTransform()->RotateTurn(_float3(0, 150, 0));
-	GetTransform()->SetPos(_float3(-728, -140, 407));
 	return S_OK;
 }
 

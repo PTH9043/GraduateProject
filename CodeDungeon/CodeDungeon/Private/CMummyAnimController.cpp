@@ -88,6 +88,10 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     if (FoundPlayer && !m_bFoundPlayerFirsttime)
     {
         UpdateState(spAnimModel, ANIM_AWAKE, L"WAKEUP");
+   /*     if(spMummy->GetMummyType() == CMummy::TYPE_STANDING)
+            spAnimModel->SetAnimation(L"openStanding");
+        else
+            spAnimModel->SetAnimation(L"openLaying");*/
         m_bFoundPlayerFirsttime = true;
         m_dIdleTimer = 0;
     }
@@ -189,6 +193,9 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
         spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         UpdateState(spAnimModel, ANIM_DEATH, L"DEAD");
     }
+
+    // Tick event
+    spAnimModel->TickEvent(spMummy.get(), GetTrigger(), _dTimeDelta);
 
 #else
 spAnimModel->TickAnimChangeTransform(spMummy->GetTransform(), _dTimeDelta);
