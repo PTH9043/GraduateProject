@@ -315,9 +315,9 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		
 		m_spHealParticle->SetPosition(pos);
 		m_spHealParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
-		
-		
+				
 	}
+
 	if (HealTrigger)
 	{
 		HealTimer += _dTimeDelta;

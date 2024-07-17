@@ -91,8 +91,8 @@ void TParticleView::LoadSingleParticleResource()
 			tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle =0.05f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.5f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.1f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 1.99f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 1.99f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 1.88f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 1.88f;
 			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount =512;
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 1.f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.f, 0.f);
@@ -105,7 +105,9 @@ void TParticleView::LoadSingleParticleResource()
 		m_SingleParticleType[i]->fParticleType = PARTICLE_TYPE_DEFAULT;
 		m_SingleParticleType[i]->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT; 
 		m_SingleParticle[i]->SetParticleType(PARTICLE_ATTACK);
-
+		*m_SingleParticle[0]->GetParticleSystem()->GetAddParticleAmount() = 1;
+			*m_SingleParticle[0]->GetParticleSystem()->GetCreateInterval() = 0.5f;
+			m_SingleParticle[i]->SetTexture(L"RedDot");
 	}
 
 
