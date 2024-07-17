@@ -161,6 +161,8 @@ HRESULT CMainScene::LoadSceneData()
 		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 1.f}, {0.3f, 0.3f,0.3f, 1.f}, {0.15f, 0.15f, 0.15f, 1.f}, {0.f, -1.f, 0.f,}, {0.f, 100.f, 0.f}, 0.f, 0.f ,
 	1.f, 20.f });
 
+		
+
 		for (auto& obj : (*m_spMap->GetStaticObjs().get()))
 		{
 			int count = 0;
@@ -177,6 +179,20 @@ HRESULT CMainScene::LoadSceneData()
 				}
 			}
 		}
+
+		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_SPOT,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 0.f}, {0.5f, 0.25f, 0.11f, 1.f}, {0.f, 1.5f, 1.2f, 1.f}, {0.f, -1.f, 0.f,}
+			, _float3(-364.225,-20,253.010), 100.f, 60.f ,
+			100.f, 32.f, 8.0f,(float)cos(DirectX::XMConvertToRadians(30.f)),(float)cos(DirectX::XMConvertToRadians(15.f)),_float3(1.0f, 0.01f, 0.0001f) });
+
+		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_SPOT,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 0.f}, {0.5f, 0.25f, 0.11f, 1.f}, {0.f, 1.5f, 1.2f, 1.f}, {0.f, -1.f, 0.f,}
+			, _float3(-535.39,-20,154.5), 100.f, 60.f ,
+			100.f, 32.f, 8.0f,(float)cos(DirectX::XMConvertToRadians(30.f)),(float)cos(DirectX::XMConvertToRadians(15.f)),_float3(1.0f, 0.01f, 0.0001f) });
+
+		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_SPOT,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 0.f}, {0.5f, 0.25f, 0.11f, 1.f}, {0.f, 1.5f, 1.2f, 1.f}, {0.f, -1.f, 0.f,}
+			, _float3(-494.5,-45,289.265), 100.f, 60.f ,
+			100.f, 32.f, 8.0f,(float)cos(DirectX::XMConvertToRadians(45.f)),(float)cos(DirectX::XMConvertToRadians(30.f)),_float3(1.0f, 0.01f, 0.0001f) });
+
+
 	}
 #ifndef _ENABLE_PROTOBUFF
 	{

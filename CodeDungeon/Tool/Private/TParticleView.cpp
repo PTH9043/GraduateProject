@@ -81,8 +81,8 @@ void TParticleView::LoadSingleParticleResource()
 		{
 			
 			UParticle::PARTICLEDESC tDesc;
-			tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEPARTICLE2DSHADER;
-			tDesc.wstrParticleShader = PROTO_RES_PARTICLE2DSHADER;
+			tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEATTACKEFFECT2DSHADER;
+			tDesc.wstrParticleShader = PROTO_RES_PARTICLEATTACK2DSHADER;
 
 			
 			tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
@@ -97,14 +97,14 @@ void TParticleView::LoadSingleParticleResource()
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 1.f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.f, 0.f);
 			tDesc.ParticleParam.stGlobalParticleInfo.fParticlePosition = _float3(0.f, 0.f, 0.f);
-			tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_ORIGINAL;
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_ATTACK;
 			m_SingleParticle[i] = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
 		}
 		m_SingleParticleParam[i] = m_SingleParticle[i]->GetParticleSystem()->GetParticleParam();
 		m_SingleParticleType[i] = m_SingleParticle[i]->GetParticleSystem()->GetParticleTypeParam();
 		m_SingleParticleType[i]->fParticleType = PARTICLE_TYPE_DEFAULT;
 		m_SingleParticleType[i]->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT; 
-		m_SingleParticle[i]->SetParticleType(PARTICLE_ORIGINAL);
+		m_SingleParticle[i]->SetParticleType(PARTICLE_ATTACK);
 
 	}
 

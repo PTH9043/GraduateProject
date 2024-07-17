@@ -237,7 +237,8 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
             float3 dir;
             dir.x = (noise.x - 0.5f) * 2.f;
             dir.yz = abs(noise.yz) * 2.0f; // Ensure upward movement
-
+            dir.y /= 2.f;
+            
             g_ParticleWritedata[threadIndex.x].vWorldPos = g_GrobalParticleInfo.fParticlePosition; // Start at central point
             g_ParticleWritedata[threadIndex.x].vWorldDir = normalize(dir);
            
@@ -270,7 +271,7 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
         }
         else
         {
-            g_ParticleWritedata[threadIndex.x].vWorldPos += g_ParticleWritedata[threadIndex.x].vWorldDir * speed * g_GrobalParticleInfo.fDeltaTime + gravityEffect;
+            g_ParticleWritedata[threadIndex.x].vWorldPos += g_ParticleWritedata[threadIndex.x].vWorldDir * speed * g_GrobalParticleInfo.fDeltaTime * float3(0.0, -0.8, 0.0);
 
         }
        

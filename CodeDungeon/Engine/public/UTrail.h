@@ -40,7 +40,19 @@ private:
 	_float							m_fTime = 0.f;
 	LIST<std::pair<_float3, _float3>>	m_listPos; //Top,Bottom
 	LIST<std::pair<_float3, _float3>>	m_listRomPos;
+
+	_uint ColorTextureIndex = 0;
+	_uint ShapeTextureIndex = 0;
+	_uint NoiseTextureIndex = 0;
 public:
+
+	void SetColorTexture(const _wstring& TexName);
+	void SetColorTexture(_uint _index);
+	void SetTrailShapeTexture(const _wstring& TexName);
+	void SetTrailShapeTexture(_uint _index);
+	void SetTrailNoiseTexture(const _wstring& TexName);
+	void SetTrailNoiseTexture(_uint _index);
+
 	void AddTrail(_float3 _top, _float3 _bottom);
 	void SetRenderingTrail(_bool isOn);
 	void Update(const _double& _dTimeDelta);

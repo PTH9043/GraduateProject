@@ -176,6 +176,11 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 		tDesc.iMaxVertexCount = 100;
 		m_spTrail = std::static_pointer_cast<UTrail>(spGameInstance->CloneActorAdd(PROTO_ACTOR_TRAIL, { &tDesc }));
 		m_spTrail->SetActive(true);
+
+		m_spTrail->SetColorTexture(L"GlowDiffuse");
+		m_spTrail->SetTrailShapeTexture(L"Noise_Bee");
+		m_spTrail->SetTrailNoiseTexture(L"GlowDiffuse");
+		
 	}
 	{
 		m_spBlood = std::static_pointer_cast<UBlood>(spGameInstance->CloneActorAdd(PROTO_ACTOR_BLOOD));

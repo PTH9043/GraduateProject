@@ -54,8 +54,8 @@ PS_OUT PS_Main(PS_In Input)
     float4 vDepth = g_Texture1.Sample(g_Sampler_Normal, Input.vTexUV);
     float4 vWorldPosition = g_Texture2.Sample(g_Sampler_Normal, Input.vTexUV);
     float4 vWorldNormal = normalize(vector(vNormal.xyz * 2.f - 1.f, 0.f));
-    float4 vViewPosition = mul(vWorldPosition, g_ViewProjInfoArr[g_CamID].mViewMatrix);
-    float4 vViewNormal = mul(vWorldNormal, g_ViewProjInfoArr[g_CamID].mViewMatrix);
+    float4 vViewPosition = mul(vWorldPosition, g_ViewProjInfoArr[MAIN_CAM_ID].mViewMatrix);
+    float4 vViewNormal = mul(vWorldNormal, g_ViewProjInfoArr[MAIN_CAM_ID].mViewMatrix);
     vViewNormal = normalize(vViewNormal);
   
 
