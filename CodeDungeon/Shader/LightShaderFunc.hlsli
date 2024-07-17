@@ -195,7 +195,7 @@ LIGHTCOLOR LightingInWorld(float3 vWorldPosition, float3 vWorldNormal)
    // float3 vCameraPosition = float3(g_tLightParam.vLightCamPos.x, g_tLightParam.vLightCamPos.y, g_tLightParam.vLightCamPos.z);
     float3 vToCamera = normalize(g_ViewProjInfoArr[MAIN_CAM_ID].vCamPosition - vWorldPosition);
    
-    float4 vCameraViewPosition = mul(float4(g_ViewProjInfoArr[g_CamID].vCamPosition, 1.0f), g_ViewProjInfoArr[g_CamID].mViewMatrix);
+    float4 vCameraViewPosition = mul(float4(g_ViewProjInfoArr[MAIN_CAM_ID].vCamPosition, 1.0f), g_ViewProjInfoArr[g_CamID].mViewMatrix);
     float3 vViewToCamera = normalize(vCameraViewPosition.xyz - vWorldPosition);
 
       [unroll(MAX_LIGHTS)]

@@ -19,6 +19,7 @@ struct GROBALPARTICLEINFO
     // ===============
    
     float fStartScaleParticle;
+    
     float fEndScaleParticle;
     float fParticleThickness;
     int fParticleKind;
@@ -121,16 +122,20 @@ void GS_Main(point VS_OUT input[1], inout TriangleStream<GS_OUT> outputStream)
         return;
 
     float ratio = g_ParticleData[id].fCurTime / g_ParticleData[id].fLifeTime;
-    float scale = ((g_GrobalParticleInfo.fEndScaleParticle - g_GrobalParticleInfo.fStartScaleParticle) * ratio +
-    g_GrobalParticleInfo.fStartScaleParticle) / 2.f;
+    float startScale = g_GrobalParticleInfo.fStartScaleParticle;
+    float endScale = g_GrobalParticleInfo.fEndScaleParticle;
+    float scale = ((endScale - startScale) * ratio + startScale) / 2.f;
+
+// Adjust scale for x and y based on the ratio
+    float scaleX = scale * (1.0f - 0.5f * ratio); // X starts at original and reduces to half
+    float scaleY = scale * (1.0f + 1.0f * ratio); // Y starts at original and increases to twice
 
     float4 positions[4] =
     {
-        float4(-scale, scale, 0.f, 0.f),
-        float4(scale, scale, 0.f, 0.f),
-        float4(scale, -scale, 0.f, 0.f),
-        float4(-scale, -scale, 0.f, 0.f)
-
+        float4(-scaleX, scaleY, 0.f, 0.f),
+    float4(scaleX, scaleY, 0.f, 0.f),
+    float4(scaleX, -scaleY, 0.f, 0.f),
+    float4(-scaleX, -scaleY, 0.f, 0.f)
     };
 
     float2 texCoords[4] =

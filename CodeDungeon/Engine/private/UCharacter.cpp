@@ -162,6 +162,11 @@ void UCharacter::SetAnimModelRim(_int _SetRim)
 	m_spAnimModel->SetAnimModelRim(_SetRim);
 }
 
+void UCharacter::SetAnimModelRimColor(_float3 _SetRimColor)
+{
+	m_spAnimModel->SetAnimModelRimColor(_SetRimColor);
+}
+
 void UCharacter::TickActive(const _double& _dTimeDelta)
 {
 	m_vPrevPos = GetTransform()->GetPos();

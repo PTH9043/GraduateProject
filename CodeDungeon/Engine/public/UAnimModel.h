@@ -94,6 +94,7 @@ public: /* get set */
 	const _float4x4& GetPivotMatirx() const { return m_mPivotMatrix; }
 
 	void SetAnimModelRim(_int _SetRim) { m_DrawRim._drawRim = _SetRim; }
+	void SetAnimModelRimColor(_float3 _SetRimColor) { m_DrawRim.RimRGB = _SetRimColor; }
 	void SetSupplyLerpValue(const _float _fSupplyLerpValue) { this->m_fSupplyLerpValue = _fSupplyLerpValue; }
 	void SetAnimParam(const ANIMATIONPARAM& _stAnimParam) { this->m_stAnimParam = _stAnimParam; }
 	void UpdateAttackData(const _bool _isCanAttackSituation, CSHPTRREF<UCollider> _spCollider);

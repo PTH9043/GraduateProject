@@ -55,6 +55,10 @@ HRESULT CShurikenThrowing::NativeConstructClone(const VOIDDATAS& _vecDatas)
 		tDesc.iMaxVertexCount = 100;
 		m_spTrail = std::static_pointer_cast<UTrail>(spGameInstance->CloneActorAdd(PROTO_ACTOR_TRAIL, { &tDesc }));
 		m_spTrail->SetActive(true);
+
+		m_spTrail->SetColorTexture(L"GlowDiffuse");
+		m_spTrail->SetTrailShapeTexture(L"Noise_Bee");
+		m_spTrail->SetTrailNoiseTexture(L"Sun");
 	}
 
 	{

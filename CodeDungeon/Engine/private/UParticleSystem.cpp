@@ -160,6 +160,13 @@ void UParticleSystem::Update(const _double& _dTimeDelta)
 			m_stParticleParam.stGlobalParticleInfo.iAddCount = add;
 			break;
 		case PARTICLE_ATTACK:
+			if (m_fCreateInterval < m_stParticleParam.stGlobalParticleInfo.fAccTime)
+			{
+				m_stParticleParam.stGlobalParticleInfo.fAccTime = m_stParticleParam.stGlobalParticleInfo.fAccTime - m_fCreateInterval;
+				add = m_iParticleAddAmount;
+			}
+			m_stParticleParam.stGlobalParticleInfo.iAddCount = add;
+			break;
 		case PARTICLE_OPENCHEST:
 		case PARTICLE_HEAL:
 			add = m_iParticleAddAmount;

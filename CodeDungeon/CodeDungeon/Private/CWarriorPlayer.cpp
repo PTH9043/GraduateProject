@@ -29,7 +29,7 @@ CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _ws
 	isAttack{ false }, 
 	m_stParticleType{}, 
 	m_stParticleParam{},
-	m_spParticle{nullptr},
+	m_spFootPrintParticle{nullptr},
 	m_spTrail{nullptr},
 	m_spBlood{nullptr},
 	m_bisKicked{ false },
@@ -45,7 +45,7 @@ CWarriorPlayer::CWarriorPlayer(const CWarriorPlayer& _rhs) :
 	isAttack{ false },
 	m_stParticleType{},
 	m_stParticleParam{},
-	m_spParticle{ nullptr },
+	m_spFootPrintParticle{ nullptr },
 	m_spTrail{ nullptr },
 	m_spBlood{ nullptr },
 	m_bisKicked{ false },
@@ -116,20 +116,54 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 		tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = -GetTransform()->GetLook();
 		tDesc.ParticleParam.stGlobalParticleInfo.fParticlePosition = GetTransform()->GetPos();
 		tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_FOOTPRINT;
-		m_spParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
-	}
-	m_stParticleParam = m_spParticle->GetParticleSystem()->GetParticleParam();
-	m_stParticleType = m_spParticle->GetParticleSystem()->GetParticleTypeParam();
+		m_spFootPrintParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
+	
+	m_stParticleParam = m_spFootPrintParticle->GetParticleSystem()->GetParticleParam();
+	m_stParticleType = m_spFootPrintParticle->GetParticleSystem()->GetParticleTypeParam();
 	m_stParticleType->fParticleType = PARTICLE_TYPE_AUTO;
 	m_stParticleType->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
-	m_spParticle->SetTexture(L"Sand");// DUST 
+	m_spFootPrintParticle->SetTexture(L"Sand");// DUST 
 	
-	{
-		*m_spParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
-		*m_spParticle->GetParticleSystem()->GetAddParticleAmount() = 4;
-		m_spParticle->SetParticleType(PARTICLE_FOOTPRINT);
-		m_spParticle->SetActive(false);
+	
+		*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
+		*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 4;
+		m_spFootPrintParticle->SetParticleType(PARTICLE_FOOTPRINT);
+		m_spFootPrintParticle->SetActive(false);
 	}
+	//Heal Effect
+	
+	
+		{
+			
+			UParticle::PARTICLEDESC tDesc;
+			tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEHEAL2DSHADER;
+			tDesc.wstrParticleShader = PROTO_RES_PARTICLEHEAL2DSHADER;
+
+			
+			tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
+			//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 0.9f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle =0.05f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 2.0f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.1f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 1.99f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 1.99f;
+			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount =512;
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 1.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.f, 0.f);
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticlePosition = _float3(0.f, 0.f, 0.f);
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_HEAL;
+			m_spHealParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
+		
+		
+		 m_spHealParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleType = PARTICLE_TYPE_DEFAULT;
+		 m_spHealParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT; 
+		m_spHealParticle->SetParticleType(PARTICLE_HEAL);
+		*m_spHealParticle->GetParticleSystem()->GetAddParticleAmount() = 1;
+		*m_spHealParticle->GetParticleSystem()->GetCreateInterval() = 1.1f;
+		m_spHealParticle->SetTexture(L"Twinkle");
+	}
+
 
 	{
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
@@ -142,6 +176,11 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 		tDesc.iMaxVertexCount = 100;
 		m_spTrail = std::static_pointer_cast<UTrail>(spGameInstance->CloneActorAdd(PROTO_ACTOR_TRAIL, { &tDesc }));
 		m_spTrail->SetActive(true);
+
+		m_spTrail->SetColorTexture(L"GlowDiffuse");
+		m_spTrail->SetTrailShapeTexture(L"Noise_Bee");
+		m_spTrail->SetTrailNoiseTexture(L"GlowDiffuse");
+		
 	}
 	{
 		m_spBlood = std::static_pointer_cast<UBlood>(spGameInstance->CloneActorAdd(PROTO_ACTOR_BLOOD));
@@ -161,6 +200,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetOutline(false);
 	SetIfOutlineScale(false);//플레이어는 안그리도록 
 	SetHealth(10000);
+	SetAnimModelRim(true);
 	
 
 	return S_OK;
@@ -225,33 +265,34 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		m_spTrail->AddTrail(plusPoint, minusPoint);
 	}
 	
-	m_spParticle->SetActive(true);
+	m_spFootPrintParticle->SetActive(true);
 
 	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_MOVE)  {//|| AnimState == CWarriorAnimController::ANIM_ATTACK|| AnimState == CWarriorAnimController::ANIM_COMBO
-		*m_spParticle->GetParticleSystem()->GetAddParticleAmount() =4;
-		*m_spParticle->GetParticleSystem()->GetCreateInterval() = 0.355f;
+		*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() =4;
+		*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.355f;
 		_float3 pos = GetTransform()->GetPos() + GetTransform()->GetRight();
 		pos.y += 1.0;
 		_float3 Look = GetTransform()->GetLook();
 		_float3 Right = 1.2 * GetTransform()->GetRight();
 		//pos -= 3 * Look;
-		m_spParticle->SetPosition(pos);
-		m_spParticle->SetDirection(Right);
+		m_spFootPrintParticle->SetPosition(pos);
+		m_spFootPrintParticle->SetDirection(Right);
 	}
 	else {	
-		*m_spParticle->GetParticleSystem()->GetAddParticleAmount() = 0;
-		*m_spParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
+		*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 0;
+		*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
 	}
 
 	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_HIT) {
 		m_spBlood->SetActive(true);
-
+		SetAnimModelRimColor(_float3(1, 0,0));
 		m_spBlood->SetTimer(1.75f);
-		SetAnimModelRim(true);
+		
 	}
 	if (m_spBlood->CheckTimeOver()) {
 		m_spBlood->SetActive(false);
-		SetAnimModelRim(false);
+		
+		
 	}
 		
 	if (spGameInstance->GetDIKeyDown(DIK_F5)) {
@@ -265,6 +306,33 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		m_spDust->SetActive(false);
 	}
 	
+	if (spGameInstance->GetDIKeyDown(DIK_E)) {//2.1초 지속
+		HealTrigger = true;
+		SetAnimModelRimColor(_float3(0, 1, 0));
+		m_spHealParticle->SetActive(true);
+		_float3 pos = GetTransform()->GetPos();
+		pos.y += 2;
+		
+		m_spHealParticle->SetPosition(pos);
+		m_spHealParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+		
+		
+	}
+	if (HealTrigger)
+	{
+		HealTimer += _dTimeDelta;
+		if (HealTimer > 2.0f) {
+			SetAnimModelRimColor(_float3(1, 0, 0));
+			HealTimer = 0;
+			HealTrigger = false;
+		}
+		
+	}
+
+		
+	
+
+
 	// Rotation 
 	{
 		POINT ptCursorPos;

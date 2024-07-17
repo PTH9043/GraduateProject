@@ -46,8 +46,11 @@ HRESULT UTrail::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	
 
 	if (m_spTrailTexGroup == nullptr)m_spTrailTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_TRAILTEXTUREGROUP,_vecDatas));
-
 	
+	ColorTextureIndex=m_spTrailTexGroup->GetTextureIndex(L"GlowDiffuse");
+	ShapeTextureIndex=m_spTrailTexGroup->GetTextureIndex(L"Noise_Bee");
+	NoiseTextureIndex=m_spTrailTexGroup->GetTextureIndex(L"Sun");
+		
 	// Add Shader 
 	AddShader(PROTO_RES_TRAILSHADER);
 
@@ -151,9 +154,9 @@ HRESULT UTrail::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDes
 	__super::RenderActive(_spCommand, _spTableDescriptor);
 
 		GetTransform()->BindTransformData(GetShader());
-	GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTrailTexGroup->GetTexture(L"Noise_Bee"));
-	GetShader()->BindSRVBuffer(SRV_REGISTER::T1, m_spTrailTexGroup->GetTexture(L"VAP1_Noise_17"));
-	GetShader()->BindSRVBuffer(SRV_REGISTER::T2, m_spTrailTexGroup->GetTexture(L"neon"));
+	GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTrailTexGroup->GetTexture(ShapeTextureIndex));		//(L"Noise_Bee"));
+	GetShader()->BindSRVBuffer(SRV_REGISTER::T1, m_spTrailTexGroup->GetTexture(NoiseTextureIndex));		//(L"VAP1_Noise_17"));
+	GetShader()->BindSRVBuffer(SRV_REGISTER::T2, m_spTrailTexGroup->GetTexture(ColorTextureIndex));		//(L"GlowDiffuse"));
 	
 	//GlowDiffuse 가 형광, FireRed가 용암, neon 네온색
 	if (m_bRender) {
@@ -224,3 +227,31 @@ HRESULT UTrail::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UT
 	return __super::RenderOutlineActive(_spCommand, _spTableDescriptor,_pass);
 }
 
+void UTrail::SetColorTexture(const _wstring& TexName)
+{
+	ColorTextureIndex = m_spTrailTexGroup->GetTextureIndex(TexName);
+}
+
+void UTrail::SetColorTexture(_uint _index)
+{
+	ColorTextureIndex = _index;
+}
+void UTrail::SetTrailShapeTexture(const _wstring& TexName)
+{
+	ShapeTextureIndex = m_spTrailTexGroup->GetTextureIndex(TexName);
+}
+
+void UTrail::SetTrailShapeTexture(_uint _index)
+{
+	ShapeTextureIndex = _index;
+}
+
+void UTrail::SetTrailNoiseTexture(const _wstring& TexName)
+{
+	NoiseTextureIndex = m_spTrailTexGroup->GetTextureIndex(TexName);
+}
+
+void UTrail::SetTrailNoiseTexture(_uint _index)
+{
+	NoiseTextureIndex = _index;
+}

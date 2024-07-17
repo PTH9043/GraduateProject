@@ -185,9 +185,7 @@ namespace Engine {
 	typedef struct tagDrawRim
 	{
 		_int		_drawRim = false;
-		_int		_drawRim1= false;
-		_int		_drawRim2= false;
-		_int		_drawRim3 = false;
+		_float3     RimRGB = _float3(1, 0, 0);
 	}RIMDRAW;
 
 #pragma endregion ANIMATIONPARAM
