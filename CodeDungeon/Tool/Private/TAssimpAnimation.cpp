@@ -35,6 +35,9 @@ void TAssimpAnimation::Free()
 HRESULT TAssimpAnimation::NativeConstruct(aiAnimation* _pAIAnim, CSHPTRREF<TAssimpModel> _spModel)
 {
 	m_wstrName = UMethod::ConvertSToW(_pAIAnim->mName.data);
+	size_t index = m_wstrName.find(L"|");
+	m_wstrName = m_wstrName.substr(index + 1, m_wstrName.length());
+
 	AnimationStringNameSplit(m_wstrName);
 	m_dDuration = _pAIAnim->mDuration;
 	m_dTickPerSeconds = _pAIAnim->mTicksPerSecond;

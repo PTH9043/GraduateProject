@@ -62,6 +62,25 @@ void CMainScene::TurnMobsOnRange()
 
 
 }
+void CMainScene::TurnGuardsOnRange()
+{
+	_float3 PlayerPos = m_spMainCamera->GetTransform()->GetPos();
+	for (auto& mob : m_spMap->GetGuards())
+	{
+		_float3 mobPos = mob.second->GetTransform()->GetPos();
+		_float3 distance = mobPos - PlayerPos;
+		float distanceSq = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
+
+		if (distanceSq <= 200 * 200)
+		{
+			mob.second->SetActive(true);
+		}
+		else {
+			mob.second->SetActive(false);
+		}
+	}
+}
+
 void CMainScene::TurnLightsOnRange()
 {
 	_float3 PlayerPos = m_spMainCamera->GetTransform()->GetPos();
@@ -222,7 +241,7 @@ HRESULT CMainScene::LoadSceneData()
 	}
 
 	m_spMap->LoadMobs(m_spWarriorPlayer);
-
+	m_spMap->LoadGuards();
 	//{
 	//	CMummy::CHARACTERDESC CharDesc{PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_MUMMYANIMCONTROLLER};
 	//	m_spMummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(
@@ -245,12 +264,12 @@ HRESULT CMainScene::LoadSceneData()
 	//	//�̶� ��ġ����
 	//	m_spMummy->GetTransform()->TranslateDir((m_spMummy->GetTransform()->GetLook()), 1, 10);
 	//}
-	{
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		m_stGuard = std::static_pointer_cast<UGuard>(spGameInstance->CloneActorAdd(PROTO_ACTOR_GUARD));
-		m_stGuard->SetActive(true);
-		m_stGuard->SetColorTexture(L"asdf");
-	}
+	//{
+	//	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	//	m_stGuard = std::static_pointer_cast<UGuard>(spGameInstance->CloneActorAdd(PROTO_ACTOR_GUARD));
+	//	m_stGuard->SetActive(true);
+	//	m_stGuard->SetColorTexture(L"asdf");
+	//}
 #endif
 	return S_OK;
 }
@@ -260,7 +279,7 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
 	TurnLightsOnRange();
 	TurnRoomsOnRange();
-
+	TurnGuardsOnRange();
 
 	SHPTR<ULight> DirLight;
 	OutLight(LIGHTTYPE::TYPE_DIRECTIONAL, 0, DirLight);

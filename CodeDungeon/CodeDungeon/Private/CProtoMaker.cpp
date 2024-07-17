@@ -146,7 +146,7 @@ HRESULT CProtoMaker::CreateMainSceneProtoData(CSHPTRREF<UGameInstance> _spGameIn
 
 	Matrix = _float4x4::CreateScale(100.0f);
 	_spGameInstance->AddPrototype(PROTO_RES_CHESTANIMMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
-		_spDevice, L"..\\..\\Resource\\AnimModel\\Chest\\Convert\\Chest_FBX.bin", Matrix));
+		_spDevice, L"..\\..\\Resource\\AnimModel\\Chest\\Convert\\Chest 1_FBX.bin", Matrix));
 
 
 

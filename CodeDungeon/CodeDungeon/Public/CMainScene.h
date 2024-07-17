@@ -23,6 +23,7 @@ private:
 	void TurnLightsOnRange();
 	void TurnRoomsOnRange();
 	void TurnMobsOnRange();
+	void TurnGuardsOnRange();
 public:
 	// UScene을(를) 통해 상속됨
 	virtual void Free() override;

@@ -138,12 +138,6 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetActivationRange(30);
 	SetDeactivationRange(80);
 
-
-	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-	SHPTR<UCell> spCell = spNavigation->FindCell(GetTransform()->GetPos());
-
-	//GetTransform()->SetPos(spCell->GetCenterPos());
-
 	return S_OK;
 }
 
@@ -310,10 +304,10 @@ void CMummy::LateTickActive(const _double& _dTimeDelta)
 HRESULT CMummy::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
 	const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
-
+	
 	if(CurAnimName != L"staticLaying" && CurAnimName != L"staticStanding")
 	{
-		 __super::RenderActive(_spCommand, _spTableDescriptor);
+		__super::RenderActive(_spCommand, _spTableDescriptor);
 	}
 	return S_OK;
 }

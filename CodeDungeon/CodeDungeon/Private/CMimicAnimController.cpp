@@ -190,6 +190,8 @@ void CMimicAnimController::Tick(const _double& _dTimeDelta)
         UpdateState(spAnimModel, ANIM_DEATH, L"DEAD");
     }
 
+    // Tick event
+    spAnimModel->TickEvent(spMimic.get(), GetTrigger(), _dTimeDelta);
 #else
 spAnimModel->TickAnimChangeTransform(spMimic->GetTransform(), _dTimeDelta);
 #endif
