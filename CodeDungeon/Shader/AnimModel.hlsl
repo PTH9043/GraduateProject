@@ -36,9 +36,7 @@ cbuffer PREVBONEMATRIXPARAM : register(b13)
 cbuffer DrawRim : register(b14)
 {
     int g_DrawRim;
-    int g_DrawRim1;
-    int g_DrawRim2;
-    int g_DrawRim3;
+    float3 RimColor;
 };
 
 struct VS_IN
@@ -199,7 +197,7 @@ PS_OUT PS_Main(PS_IN In)
     {
         float rimFactor = 1.0 - saturate(dot(normalize(In.vViewDir), normalize(In.vNormal.xyz)));
         rimFactor = pow(rimFactor, 3.5) * 3;
-        float4 rimLight = rimFactor * float4(1, 0, 0, 1);
+        float4 rimLight = rimFactor * float4(RimColor, 1);
 
     // Combine rim lighting with the final color
         Out.vDiffuse.rgb += rimLight.rgb;

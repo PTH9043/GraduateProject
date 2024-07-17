@@ -39,6 +39,7 @@ struct VS_OUT
     float2 vTexUV4 : TEXCOORD4;
     float4 vWorldPos : TEXCOORD5;
     float4 vProjPos : TEXCOORD6;
+    float3 vViewDir : TEXCOORD7;
 };
 
 
@@ -78,6 +79,7 @@ struct PS_IN
     float2 vTexUV4 : TEXCOORD4;
     float4 vWorldPos : TEXCOORD5;
     float4 vProjPos : TEXCOORD6;
+    float3 vViewDir : TEXCOORD7;
 };
 
 struct PS_OUT
@@ -122,7 +124,12 @@ PS_OUT PS_Main(PS_IN In)
     {
         Out.vNormal = In.vNormal;
     }
+    //float rimFactor = 1.0 - saturate(dot(normalize(In.vViewDir), normalize(In.vNormal.xyz)));
+    //rimFactor = pow(rimFactor, 32) * 3;
+    //float4 rimLight = rimFactor * float4(0,0,1, 1);
 
+    //// Combine rim lighting with the final color
+    //Out.vDiffuse.rgb += rimLight.rgb;
 
     Out.vDepth = float4(In.vProjPos.w / tMainViewProj.fCamFar, In.vProjPos.z / In.vProjPos.w, 1.f, In.vPosition.w);
     Out.vPosition = In.vWorldPos;
