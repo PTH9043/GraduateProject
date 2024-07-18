@@ -1530,5 +1530,8 @@
     <FxCompile Include="..\..\Shader\Compute2DOpenChest.hlsl">
       <Filter>98.ShaderFile\Common\Particle\OpenChest</Filter>
     </FxCompile>
+    <FxCompile Include="..\..\Shader\2DParticleAttackTwo.hlsl">
+      <Filter>98.ShaderFile\Common\Particle\Attack</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

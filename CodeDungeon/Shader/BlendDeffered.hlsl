@@ -67,15 +67,7 @@ PS_OUT PS_Main(PS_In In)
     //vector vColor = vDiffuseDesc * LightCol;
     
     vector vColor;
-    if (vGetLightDesc.a == 0.5f)
-    {
-        vColor = vDiffuseDesc;
-    }
-    else
-    {
-       
-        
-    }
+    
    
     if (vGlowDesc.a == 0.5f)//trail //가드가 0.51이고ㅓ 얘는 안개받도록
     {
@@ -85,6 +77,15 @@ PS_OUT PS_Main(PS_In In)
     else
     {
         vColor = vDiffuseDesc * LightCol;
+    }
+    if (vGetLightDesc.a == 0.5f)
+    {
+        vColor = vDiffuseDesc;
+    }
+    else
+    {
+       
+        
     }
     
     //vector vColor = lerp(vDiffuseDesc, (vShadeDesc + vAmbientDesc + vSpecularDesc), 0.5f);
