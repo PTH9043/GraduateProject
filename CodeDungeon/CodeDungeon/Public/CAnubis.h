@@ -43,12 +43,13 @@ protected:
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
 	virtual HRESULT RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass = true) override;
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) override;
-
+	void CreateParticles();
 private:
 	AnubisTYPE					m_AnubisType;
 	SHPTR<UParticle>			m_spBloodParticle;
 	SHPTR<UParticle>			m_spSlashParticle;
 	SHPTR<UParticle>			m_spAttackParticle;
+	SHPTR<UParticle>			m_spAttackParticleTwo;
 	PARTICLEPARAM*			m_stParticleParam;
 	ComputeParticleType*	m_stParticleType;
 

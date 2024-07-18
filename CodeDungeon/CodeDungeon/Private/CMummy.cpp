@@ -45,9 +45,8 @@ HRESULT CMummy::NativeConstruct()
 	return __super::NativeConstruct();
 }
 
-HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
+void CMummy::CreateParticles()
 {
-	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	{
@@ -110,71 +109,86 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 		m_spSlashParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
 	}
 	{
-		
-		
+
+
 		m_spSlashParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleType = PARTICLE_TYPE_DEFAULT;
 		m_spSlashParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
 		m_spSlashParticle->SetTexture(L"Slash3");
-		
+
 		m_spSlashParticle->SetParticleType(PARTICLE_SLASH);
 		*m_spSlashParticle->GetParticleSystem()->GetCreateInterval() = 0.35f;
 		*m_spSlashParticle->GetParticleSystem()->GetAddParticleAmount() = 1;
 	}
-	
-		
-		//{
-
-		//	UParticle::PARTICLEDESC tDesc;
-		//	tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEATTACKEFFECT2DSHADER;
-		//	tDesc.wstrParticleShader = PROTO_RES_PARTICLEATTACK2DSHADER;
 
 
-		//	tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
-		//	//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
-		//	tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 1.43f;
-		//	tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 0.05f;
-		//	tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.5f;
-		//	tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.1f;
-		//	tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 5.88f;
-		//	tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 1.88f;
-		//	tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 512;
-		//	tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 1.f;
-		//	tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.f, 0.f);
-		//	tDesc.ParticleParam.stGlobalParticleInfo.fParticlePosition = _float3(0.f, 0.f, 0.f);
-		//	tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_ATTACK;
-		//	m_spAttackParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
-		//}
-		{
+	{
 
-			UParticle::PARTICLEDESC tDesc;
-			tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEATTACKEFFECT2DSHADER;
-			tDesc.wstrParticleShader = PROTO_RES_PARTICLEATTACK2DSHADER;
+		UParticle::PARTICLEDESC tDesc;
+		tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEATTACKEFFECT2DSHADER;
+		tDesc.wstrParticleShader = PROTO_RES_PARTICLEATTACK2DSHADER;
 
 
-			tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle =  0.4;///0.4;//	 0.8f
-			tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle =0.2;///0.2;//	 1.0f
-			tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.5f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.1f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 1.88;//3.25f
-			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 1.88f;
-			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 512;
-			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 1.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.f, 0.f);
-			tDesc.ParticleParam.stGlobalParticleInfo.fParticlePosition = _float3(0.f, 0.f, 0.f);
-			tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_ATTACK;
-			m_spAttackParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
-		}
+		tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 0.4;///0.4;//	 0.8f
+		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 0.2;///0.2;//	 1.0f
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.5f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.1f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 1.88;//3.25f
+		tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 1.88f;
+		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 512;
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 1.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.f, 0.f);
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticlePosition = _float3(0.f, 0.f, 0.f);
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_ATTACK;
+		m_spAttackParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
+	}
+	{
 		m_spAttackParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleType = PARTICLE_TYPE_DEFAULT;
 		m_spAttackParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
 		m_spAttackParticle->SetParticleType(PARTICLE_ATTACK);
 		*m_spAttackParticle->GetParticleSystem()->GetAddParticleAmount() = 4;
 		*m_spAttackParticle->GetParticleSystem()->GetCreateInterval() = 0.5f;
 		m_spAttackParticle->SetTexture(L"FireSpark3");
-	
+	}
+	{
+
+		UParticle::PARTICLEDESC tDesc;
+		tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEATTACKEFFECT2DSHADER;
+		tDesc.wstrParticleShader = PROTO_RES_PARTICLEATTACKTWO2DSHADER;
 
 
+		tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 1.0f;///0.4;//	 0.8f
+		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 1.2f;///0.2;//	 1.0f
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.5f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.1f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 7.25f;//3.25f
+		tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 1.88f;
+		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 512;
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 1.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.f, 0.f);
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticlePosition = _float3(0.f, 0.f, 0.f);
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_ATTACK;
+		m_spAttackParticleTwo = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
+	}
+	{
+		m_spAttackParticleTwo->GetParticleSystem()->GetParticleTypeParam()->fParticleType = PARTICLE_TYPE_DEFAULT;
+		m_spAttackParticleTwo->GetParticleSystem()->GetParticleTypeParam()->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
+		m_spAttackParticleTwo->SetParticleType(PARTICLE_ATTACK);
+		*m_spAttackParticleTwo->GetParticleSystem()->GetAddParticleAmount() = 3;
+		*m_spAttackParticleTwo->GetParticleSystem()->GetCreateInterval() = 0.5f;
+		m_spAttackParticleTwo->SetTexture(L"FireSpark3");
+	}
+}
+
+HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
+{
+	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+	CreateParticles();
 
 	UCollider::COLLIDERDESC tDesc;
 	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
@@ -228,6 +242,7 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 	m_spBloodParticle->SetPosition(pos);
 	m_spSlashParticle->SetPosition(pos);
 	m_spAttackParticle->SetPosition(pos);
+	m_spAttackParticleTwo->SetPosition(pos);
 	_int CurAnimState = GetAnimationController()->GetAnimState();
 	_float3 CurrentMobPos = GetTransform()->GetPos();
 	_float3 CurrentPlayerPos = GetTargetPlayer()->GetTransform()->GetPos();
@@ -404,10 +419,12 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 					{
 						//m_spBloodParticle->SetActive(true);
 						m_spAttackParticle->SetActive(true);
+						m_spAttackParticleTwo->SetActive(true);
 						//m_spSlashParticle->SetActive(true);
 						SetAnimModelRim(true);
 						m_spBloodParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 						m_spAttackParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+						m_spAttackParticleTwo->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 						m_spSlashParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 #ifndef _ENABLE_PROTOBUFF
 						// Decrease health on hit
@@ -505,3 +522,5 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 	}
 #endif
 }
+
+

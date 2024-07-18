@@ -56,6 +56,7 @@
 #define PROTO_RES_PARTICLEFOOTPRINT2DSHADER L"Proto_Res_ParticleFootPrint2DShader"
 #define PROTO_RES_PARTICLEBLOOD2DSHADER L"Proto_Res_ParticleBlood2DShader"
 #define PROTO_RES_PARTICLEATTACK2DSHADER L"Proto_Res_ParticleAttack2DShader"
+#define PROTO_RES_PARTICLEATTACKTWO2DSHADER L"Proto_Res_ParticleAttackTWO2DShader"
 #define PROTO_RES_PARTICLEHEAL2DSHADER L"Proto_Res_ParticleHeal2DShader"
 #define PROTO_RES_PARTICLEOPENCHEST2DSHADER L"Proto_Res_ParticleOpenChest2DShader"
 #define PROTO_RES_PARTICLESLASH2DSHADER L"Proto_Res_ParticleSlash2DShader"
