@@ -104,6 +104,7 @@ void CHarlequinnAnimController::Tick(const _double& _dTimeDelta)
     // Handle found player state
     if (!FoundPlayer)
     {
+        spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         // Handle idle mode with 1/3 probability and 3-second duration
         m_bAttackMode = false;
         m_bTauntMode = false;
