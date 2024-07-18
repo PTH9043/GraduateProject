@@ -70,9 +70,9 @@ HRESULT TMainScene::LoadSceneData()
 		_float3(-355,-20,166), 100.f, 0.f ,
 		1.f, 32.f,0.f,0.f,0.f,_float3(1.f,0.01f,0.0001f) });*/
 		
-			AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_SPOT,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 0.f}, {0.15f, 0.125f, 0.11f, 1.f}, {1.f, 0.5f, 0.2f, 1.f}, {0.f, -1.f, 0.f,}
+		/*	AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_SPOT,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 0.f}, {0.15f, 0.125f, 0.11f, 1.f}, {1.f, 0.5f, 0.2f, 1.f}, {0.f, -1.f, 0.f,}
 			, m_spMainCamera->GetTransform()->GetPos(), 100.f, 60.f ,
-			100.f, 32.f, 8.0f,(float)cos(DirectX::XMConvertToRadians(30.f)),(float)cos(DirectX::XMConvertToRadians(15.f)),_float3(1.0f, 0.01f, 0.0001f) });
+			100.f, 32.f, 8.0f,(float)cos(DirectX::XMConvertToRadians(30.f)),(float)cos(DirectX::XMConvertToRadians(15.f)),_float3(1.0f, 0.01f, 0.0001f) });*/
 		
 		/*
 		* SpecularPowValue가 클수록 국소범위 줄어듬 더 좁은면적에서 반사. 권장 32 . 1로갈수록 Specular범위 커짐.
@@ -125,8 +125,8 @@ void TMainScene::Tick(const _double& _dTimeDelta)
 {
 	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
 	SHPTR<ULight> SpotLight;
-	OutLight(LIGHTTYPE::TYPE_SPOT, 0, SpotLight);
-	SpotLight->SetLightPos(m_spMainCamera->GetTransform()->GetPos());
+	/*OutLight(LIGHTTYPE::TYPE_SPOT, 0, SpotLight);
+	SpotLight->SetLightPos(m_spMainCamera->GetTransform()->GetPos());*/
 //	SpotLight->SetDirection(m_spMainCamera->GetTransform()->GetLook());
 
 
