@@ -2,6 +2,7 @@
 #include "UScene.h"
 BEGIN(Engine)
 class UGuard;
+class UFire;
 END
 BEGIN(Client)
 
@@ -40,6 +41,8 @@ private:
 	SHPTR<CMummy>				m_spMummy;
 	SHPTR<CSarcophagus>			m_spSarcophagus;
 	SHPTR<UGuard> m_stGuard;
+	SHPTR<UFire> m_stFireOne;
+	SHPTR<UFire> m_stFireTwo;
 };
 
 END
