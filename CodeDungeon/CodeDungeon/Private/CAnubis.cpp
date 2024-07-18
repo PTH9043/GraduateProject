@@ -134,8 +134,8 @@ HRESULT CAnubis::NativeConstructClone(const VOIDDATAS& _Datas)
 
 			tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
 			//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 0.85; //1.13f; scale ²ø¶§
-			tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 1.0;//0.05f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle =   0.85; //1.13f; scale ²ø¶§
+			tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 1.0 ;  //0.05f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.5f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.1f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 5.88f;
@@ -151,7 +151,7 @@ HRESULT CAnubis::NativeConstructClone(const VOIDDATAS& _Datas)
 		m_spAttackParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleType = PARTICLE_TYPE_DEFAULT;
 		m_spAttackParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
 		m_spAttackParticle->SetParticleType(PARTICLE_ATTACK);
-		*m_spAttackParticle->GetParticleSystem()->GetAddParticleAmount() = 9;
+		*m_spAttackParticle->GetParticleSystem()->GetAddParticleAmount() = 12;
 		*m_spAttackParticle->GetParticleSystem()->GetCreateInterval() = 0.5f;
 		m_spAttackParticle->SetTexture(L"FireSpark3");
 	}

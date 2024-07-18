@@ -153,7 +153,7 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 
 			tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 0.8f;//0.4
+			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle =   0.8f;//0.4
 			tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 1.0f;//0.2
 			tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.5f;
 			tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.1f;
@@ -169,7 +169,7 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 		m_spAttackParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleType = PARTICLE_TYPE_DEFAULT;
 		m_spAttackParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
 		m_spAttackParticle->SetParticleType(PARTICLE_ATTACK);
-		*m_spAttackParticle->GetParticleSystem()->GetAddParticleAmount() = 5;
+		*m_spAttackParticle->GetParticleSystem()->GetAddParticleAmount() = 8;
 		*m_spAttackParticle->GetParticleSystem()->GetCreateInterval() = 0.5f;
 		m_spAttackParticle->SetTexture(L"FireSpark3");
 	
