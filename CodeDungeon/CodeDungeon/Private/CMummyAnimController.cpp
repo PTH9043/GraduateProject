@@ -88,15 +88,12 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     if (FoundPlayer && !m_bFoundPlayerFirsttime)
     {
         UpdateState(spAnimModel, ANIM_AWAKE, L"WAKEUP");
-   /*     if(spMummy->GetMummyType() == CMummy::TYPE_STANDING)
-            spAnimModel->SetAnimation(L"openStanding");
-        else
-            spAnimModel->SetAnimation(L"openLaying");*/
         m_bFoundPlayerFirsttime = true;
         m_dIdleTimer = 0;
     }
     else if (!FoundPlayer && m_bFoundPlayerFirsttime)
     {
+        spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         // Handle idle mode with 1/3 probability and 3-second duration
         m_bAttackMode = false;
         m_bTauntMode = false;
@@ -131,7 +128,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
             }
         }
     }
-    else if (FoundPlayer && m_bFoundPlayerFirsttime)
+    else if (FoundPlayer && m_bFoundPlayerFirsttime && !m_bAttackMode)
     {
         m_bTauntMode = true;
         m_dIdleTimer = 0;
@@ -145,12 +142,12 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
 
     if (m_bTauntMode)
     {
-        UpdateState(spAnimModel, ANIM_TAUNT, L"TAUNT");
         if (CurAnimName == L"taunt")
         {
             m_bAttackMode = true;
             m_bTauntMode = false;
         }
+        spAnimModel->SetAnimation(L"taunt");
     }
 
     // Handle hit state

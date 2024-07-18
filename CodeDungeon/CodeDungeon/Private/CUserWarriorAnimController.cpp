@@ -139,7 +139,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
 
     // Hit state
     if (Hit && !isKicked) {
-        spAnimModel->SetAnimation(L"hit_head_back");
+        UpdateState(spAnimModel, ANIM_HIT, L"HIT_BACK");
         spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         spWarriorPlayer->SetPrevHealth(spWarriorPlayer->GetHealth());
     }

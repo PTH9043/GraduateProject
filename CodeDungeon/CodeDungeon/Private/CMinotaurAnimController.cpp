@@ -88,6 +88,7 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
 
     if (!FoundPlayer)
     {
+        spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         // Handle idle mode with 1/3 probability and 3-second duration
         m_bAttackMode = false;
         //Idle Timer

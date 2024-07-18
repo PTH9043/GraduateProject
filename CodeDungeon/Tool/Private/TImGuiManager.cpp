@@ -191,10 +191,12 @@ HRESULT TImGuiManager::ReadyImGuiClass()
 		m_spMainView->InsertImGuiView(spFogView);
 	}
 	{
+
 		SHPTR<TNavigationView> spNavigationView = CreateConstructorNative<TNavigationView>(m_spDevice);
 		spNavigationView->CloseImGui();
 		m_ImGuiObjectContainer.insert(MakePair(IMGTAG::NAVITOOL, spNavigationView));
 		m_spMainView->InsertImGuiView(spNavigationView);
+
 
 	}
 	{

@@ -94,8 +94,11 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	tDesc.vScale = _float3(0, 0, 0);
 	SHPTR<UCollider> Collider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
 	_wstring mainColliderTag = L"Main";
-
 	AddColliderInContainer(mainColliderTag, Collider);
+
+	Collider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
+	_wstring attackColliderTag = L"ForAttack";
+	AddColliderInContainer(attackColliderTag, Collider);
 
 	{
 		UParticle::PARTICLEDESC tDesc;
@@ -191,11 +194,8 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 
 	for (auto& Colliders : GetColliderContainer())
 	{
-		if (Colliders.first == L"Main")
-		{
-			Colliders.second->SetScale(_float3(4, 10, 4));
-			Colliders.second->SetTranslate(_float3(0, 10, 0));
-		}
+		Colliders.second->SetScale(_float3(4, 10, 4));
+		Colliders.second->SetTranslate(_float3(0, 10, 0));
 	}
 	SetOutline(false);
 	SetIfOutlineScale(false);//플레이어는 안그리도록 
@@ -345,18 +345,36 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	{
 		for (auto& Colliders : GetColliderContainer())
 		{
-			Colliders.second->SetScale(_float3(3, 10, 3));
-			Colliders.second->SetTranslate(_float3(0, 10, 0));
-			Colliders.second->SetTransform(GetTransform()->GetWorldMatrix());
+			if(Colliders.first == L"ForAttack")
+			{
+				Colliders.second->SetScale(_float3(3, 10, 3));
+				Colliders.second->SetTranslate(_float3(0, 10, 0));
+				Colliders.second->SetTransform(GetTransform()->GetWorldMatrix());
+			}
+			else
+			{
+				Colliders.second->SetScale(_float3(4, 10, 4));
+				Colliders.second->SetTranslate(_float3(0, 10, 0));
+				Colliders.second->SetTransform(GetTransform()->GetWorldMatrix());
+			}
 		}
 	}
 	else
 	{
 		for (auto& Colliders : GetColliderContainer())
 		{
-			Colliders.second->SetScale(_float3(0, 0, 0));
-			Colliders.second->SetTranslate(_float3(0, 10, 0));
-			Colliders.second->SetTransform(GetTransform()->GetWorldMatrix());
+			if (Colliders.first == L"ForAttack")
+			{
+				Colliders.second->SetScale(_float3(0, 0, 0));
+				Colliders.second->SetTranslate(_float3(0, 10, 0));
+				Colliders.second->SetTransform(GetTransform()->GetWorldMatrix());
+			}
+			else
+			{
+				Colliders.second->SetScale(_float3(4, 10, 4));
+				Colliders.second->SetTranslate(_float3(0, 10, 0));
+				Colliders.second->SetTransform(GetTransform()->GetWorldMatrix());
+			}
 		}
 	}
 
@@ -422,68 +440,71 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 
 		for (auto& iter : GetColliderContainer())
 		{
-			if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
+			if (iter.first == L"ForAttack")
 			{
-				if (EnemyCurAnimName == L"attack4_kick" || EnemyCurAnimName == L"attack5_kick"
-					|| EnemyCurAnimName == L"Attack 2" || EnemyCurAnimName == L"Attack 3" || EnemyCurAnimName == L"Jump Forward")
+				if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
 				{
-					if (CurAnimName != L"rise01" && CurAnimName != L"rise02")
+					if (EnemyCurAnimName == L"attack4_kick" || EnemyCurAnimName == L"attack5_kick"
+						|| EnemyCurAnimName == L"Attack 2" || EnemyCurAnimName == L"Attack 3" || EnemyCurAnimName == L"Jump Forward")
 					{
-						if (m_dKickedElapsed >= 50)
+						if (CurAnimName != L"rise01" && CurAnimName != L"rise02")
 						{
-							m_dKickedElapsed = 0;
-							m_bisKicked = false;
-						}
-						else
-						{
-							GetTransform()->SetDirectionFixedUp(pCharacter->GetTransform()->GetLook());
-							m_bisKicked = true;
-						}
+							if (m_dKickedElapsed >= 50)
+							{
+								m_dKickedElapsed = 0;
+								m_bisKicked = false;
+							}
+							else
+							{
+								GetTransform()->SetDirectionFixedUp(pCharacter->GetTransform()->GetLook());
+								m_bisKicked = true;
+							}
 #ifndef _ENABLE_PROTOBUFF
-						if (!GetIsHItAlreadyState())
-						{
-							DecreaseHealth(1);
-						}
+							if (!GetIsHItAlreadyState())
+							{
+								DecreaseHealth(1);
+							}
 #else
-						isCollision = true;
-						DamageEnable = 1;
+							isCollision = true;
+							DamageEnable = 1;
 #endif
-						SetHitAlreadyState(true);
+							SetHitAlreadyState(true);
+						}
+					}
+					else
+					{
+						if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead01" && !m_bisKicked)
+						{
+#ifndef _ENABLE_PROTOBUFF
+							if (!GetIsHItAlreadyState())
+							{
+								DecreaseHealth(1);
+							}
+#else
+							isCollision = true;
+#endif
+							SetHitAlreadyState(true);
+						}
 					}
 				}
 				else
 				{
-					if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead01" && !m_bisKicked)
-					{
-#ifndef _ENABLE_PROTOBUFF
-						if (!GetIsHItAlreadyState())
-						{
-							DecreaseHealth(1);
-						}
-#else
-						isCollision = true;
-#endif
-						SetHitAlreadyState(true);
-					}
+					SetHitAlreadyState(false);
 				}
 			}
 			else
 			{
-				SetHitAlreadyState(false);
-			}
-
-		
-
-			for (auto& iter2 : pCharacter->GetColliderContainer())
-			{
-				if (iter.second->IsCollision(iter2.second))
+				for (auto& iter2 : pCharacter->GetColliderContainer())
 				{
-					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 10 * _dTimeDelta);
+					if (iter.second->IsCollision(iter2.second))
+					{
+						GetTransform()->SetPos(GetTransform()->GetPos() - direction * 10 * _dTimeDelta);
 #ifdef _ENABLE_PROTOBUFF
-					isCollision = true;
+						isCollision = true;
 #endif
+					}
 				}
-			}
+			}		
 		}
 	}
 	else if (PAWNTYPE::PAWN_STATICOBJ == ePawnType)
@@ -491,24 +512,28 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 		CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
 		for (auto& iter : GetColliderContainer())
 		{
-			for (auto& iter2 : pModelObject->GetColliderContainer())
+			if (iter.first == L"Main")
 			{
-				SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
-
-				if (GetCollidedNormal() != _float3::Zero) // 충돌이 발생한 경우
+				for (auto& iter2 : pModelObject->GetColliderContainer())
 				{
-					SetOBJCollisionState(true);
-					// 속도 결정
-					_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 50.0f : 20.0f;
+					SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
 
-					ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
+					if (GetCollidedNormal() != _float3::Zero) // 충돌이 발생한 경우
+					{
+						SetOBJCollisionState(true);
+						// 속도 결정
+						_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 60.0f : 20.0f;
+						if (CurAnimName == L"roll_back" || CurAnimName == L"roll_front" || CurAnimName == L"roll_left" || CurAnimName == L"roll_right")
+							speed = 100;
+						ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
 #ifdef _ENABLE_PROTOBUFF
-					isCollision = true;
+						isCollision = true;
 #endif
-				}
-				else
-				{
-					SetOBJCollisionState(false);
+					}
+					else
+					{
+						SetOBJCollisionState(false);
+					}
 				}
 			}
 		}
@@ -518,29 +543,32 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 		CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
 		for (auto& iter : GetColliderContainer())
 		{
-			for (auto& iter2 : pModelObject->GetColliderContainer())
+			if (iter.first == L"ForAttack")
 			{
-				if (iter.second->IsCollision(iter2.second))
+				for (auto& iter2 : pModelObject->GetColliderContainer())
 				{
-					if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead01" && !m_bisKicked)
+					if (iter.second->IsCollision(iter2.second))
 					{
-#ifndef _ENABLE_PROTOBUFF
-						if (!GetIsHItAlreadyState())
+						if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead01" && !m_bisKicked)
 						{
-							DecreaseHealth(1);
-						}
+#ifndef _ENABLE_PROTOBUFF
+							if (!GetIsHItAlreadyState())
+							{
+								DecreaseHealth(1);
+							}
 #else
-						isCollision = true;
-						DamageEnable = 1;
+							isCollision = true;
+							DamageEnable = 1;
 #endif
-						SetHitAlreadyState(true);
+							SetHitAlreadyState(true);
+						}
 					}
-				}
-				else
-				{
-					SetHitAlreadyState(false);
-				}
+					else
+					{
+						SetHitAlreadyState(false);
+					}
 
+				}
 			}
 
 		}
