@@ -128,20 +128,20 @@ void GS_Main(point VS_OUT input[1], inout TriangleStream<GS_OUT> outputStream)
     float ScaleX = g_ParticleData[id].vAnimUV.x * scale;
     float ScaleY = g_ParticleData[id].vAnimUV.y * scale;
 
-    float4 positions[4] =
-    {
-        float4(-ScaleX, ScaleY, 0.f, 0.f),
-    float4(ScaleX, ScaleY, 0.f, 0.f),
-    float4(ScaleX, -ScaleY, 0.f, 0.f),
-    float4(-ScaleX, -ScaleY, 0.f, 0.f)
-    };
     //float4 positions[4] =
     //{
-    //    float4(-scale, scale, 0.f, 0.f),
-    //float4(scale, scale, 0.f, 0.f),
-    //float4(scale, -scale, 0.f, 0.f),
-    //float4(-scale, -scale, 0.f, 0.f)
+    //    float4(-ScaleX, ScaleY, 0.f, 0.f),
+    //float4(ScaleX, ScaleY, 0.f, 0.f),
+    //float4(ScaleX, -ScaleY, 0.f, 0.f),
+    //float4(-ScaleX, -ScaleY, 0.f, 0.f)
     //};
+   float4 positions[4] =
+   {
+       float4(-scale, scale, 0.f, 0.f),
+   float4(scale, scale, 0.f, 0.f),
+   float4(scale, -scale, 0.f, 0.f),
+   float4(-scale, -scale, 0.f, 0.f)
+   };
 
     float2 texCoords[4] =
     {
