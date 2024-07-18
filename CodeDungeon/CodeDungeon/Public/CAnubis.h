@@ -48,6 +48,7 @@ private:
 	AnubisTYPE					m_AnubisType;
 	SHPTR<UParticle>			m_spBloodParticle;
 	SHPTR<UParticle>			m_spSlashParticle;
+	SHPTR<UParticle>			m_spAttackParticle;
 	PARTICLEPARAM*			m_stParticleParam;
 	ComputeParticleType*	m_stParticleType;
 

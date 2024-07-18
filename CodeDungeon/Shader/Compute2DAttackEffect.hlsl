@@ -228,9 +228,9 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
             };
 
             float3 dir;
-            dir.x = (noise.x - 0.5f) * 2.f;
-            dir.yz = abs(noise.yz) * 2.0f; // Ensure upward movement
-            dir.z *= 2.f;
+            dir.xz = (noise.xz - 0.5f) * 2.f;
+            dir.y = abs(noise.y) * 2.0f; // Ensure upward movement
+            
             // Random initial speed
             float initialSpeed = (g_GrobalParticleInfo.fMaxSpeed - g_GrobalParticleInfo.fMinSpeed) * Rand(float2(x * 2.0f, g_GrobalParticleInfo.fAccTime)) + g_GrobalParticleInfo.fMinSpeed;
 
@@ -240,6 +240,7 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
             g_ParticleWritedata[threadIndex.x].fLifeTime = (g_GrobalParticleInfo.fMaxLifeTime - g_GrobalParticleInfo.fMinLifeTime) * Rand(float2(x * 3.0f, g_GrobalParticleInfo.fAccTime)) + g_GrobalParticleInfo.fMinLifeTime;
             g_ParticleWritedata[threadIndex.x].fTransparency = 1.f;
             g_ParticleWritedata[threadIndex.x].fCurTime = 0.f;
+            g_ParticleWritedata[threadIndex.x].vAnimUV = float2(g_GrobalParticleInfo.fStartScaleParticle * dir.x, g_GrobalParticleInfo.fEndScaleParticle * dir.z);
         }
     }
     else
@@ -252,8 +253,8 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
         }
 
         float ratio = g_ParticleWritedata[threadIndex.x].fCurTime / g_ParticleWritedata[threadIndex.x].fLifeTime;
-        float speed = length(g_ParticleWritedata[threadIndex.x].vWorldDir);
-
+        //float speed = length(g_ParticleWritedata[threadIndex.x].vWorldDir);
+        float speed = (g_GrobalParticleInfo.fMaxSpeed - g_GrobalParticleInfo.fMinSpeed) * ratio + g_GrobalParticleInfo.fMinSpeed;
         // Apply gravity
         float3 gravity = float3(0.0, -9.8, 0.0) * g_GrobalParticleInfo.fDeltaTime;
         if (ratio > 0.5)
@@ -262,7 +263,7 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
         }
 
         // Update position
-        g_ParticleWritedata[threadIndex.x].vWorldPos += g_ParticleWritedata[threadIndex.x].vWorldDir * g_GrobalParticleInfo.fDeltaTime;
+        g_ParticleWritedata[threadIndex.x].vWorldPos += g_ParticleWritedata[threadIndex.x].vWorldDir * g_GrobalParticleInfo.fDeltaTime * speed;
 
         // Optional: Fade out particle transparency based on lifetime ratio
         g_ParticleWritedata[threadIndex.x].fTransparency = 1.0f - ratio;

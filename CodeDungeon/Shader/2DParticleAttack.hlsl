@@ -125,14 +125,23 @@ void GS_Main(point VS_OUT input[1], inout TriangleStream<GS_OUT> outputStream)
     float scale = ((g_GrobalParticleInfo.fEndScaleParticle - g_GrobalParticleInfo.fStartScaleParticle) * ratio +
     g_GrobalParticleInfo.fStartScaleParticle) / 2.f;
 
+    float ScaleX = g_ParticleData[id].vAnimUV.x * scale;
+    float ScaleY = g_ParticleData[id].vAnimUV.y * scale;
 
     float4 positions[4] =
     {
-        float4(-scale, scale, 0.f, 0.f),
-    float4(scale, scale, 0.f, 0.f),
-    float4(scale, -scale, 0.f, 0.f),
-    float4(-scale, -scale, 0.f, 0.f)
+        float4(-ScaleX, ScaleY, 0.f, 0.f),
+    float4(ScaleX, ScaleY, 0.f, 0.f),
+    float4(ScaleX, -ScaleY, 0.f, 0.f),
+    float4(-ScaleX, -ScaleY, 0.f, 0.f)
     };
+    //float4 positions[4] =
+    //{
+    //    float4(-scale, scale, 0.f, 0.f),
+    //float4(scale, scale, 0.f, 0.f),
+    //float4(scale, -scale, 0.f, 0.f),
+    //float4(-scale, -scale, 0.f, 0.f)
+    //};
 
     float2 texCoords[4] =
     {
@@ -201,18 +210,19 @@ PS_OUT PS_Main(GS_OUT In)
 
 // 텍스처 샘플링
     Out.vColor = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV);
-  //  Out.vColor.rgb *= 1.25;
+   //Out.vColor.rgb *= 1.5;
 // 최소 알파 값을 유지하여 전체적으로 파티클이 보이도록 함
-  //  float minAlpha = 0.2; // 최소 알파 값, 필요시 조정
-  //  Out.vColor.a *= fDistance;
+    float minAlpha = 0.2; // 최소 알파 값, 필요시 조정
+    Out.vColor.a *= fDistance;
 
-    
+    Out.vGlow = (Out.vColor.rgb,0.5);
     
     float particleTransparency = g_ParticleData[In.iInstanceID].fCurTime / g_ParticleData[In.iInstanceID].fLifeTime;
     Out.vColor.a *= particleTransparency;
-    //if (Out.vColor.a < 0.1)
-    //    discard;
-    Out.vGlow = Out.vColor;
+   if (Out.vColor.a < 0.05)
+       discard;
+  
+  
   
         return Out;
 }
