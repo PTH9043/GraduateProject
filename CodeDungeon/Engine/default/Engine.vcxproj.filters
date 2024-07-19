@@ -478,6 +478,9 @@
     <Filter Include="98.ShaderFile\Common\Particle\Heal">
       <UniqueIdentifier>{ff851950-a394-4e04-89e7-3e476c24a52c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98.ShaderFile\UI">
+      <UniqueIdentifier>{2465e371-ae53-4c40-9e01-3f1b157389a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -1485,9 +1488,6 @@
     <FxCompile Include="..\..\Shader\Guard.hlsl">
       <Filter>98.ShaderFile\Guard</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\Shader\DefaultUI.hlsl">
-      <Filter>98.ShaderFile\Common\NonAlpha</Filter>
-    </FxCompile>
     <FxCompile Include="..\..\Shader\2DParticleSlash.hlsl">
       <Filter>98.ShaderFile\Common\Particle\Slash</Filter>
     </FxCompile>
@@ -1532,6 +1532,15 @@
     </FxCompile>
     <FxCompile Include="..\..\Shader\2DParticleAttackTwo.hlsl">
       <Filter>98.ShaderFile\Common\Particle\Attack</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\DefaultUI.hlsl">
+      <Filter>98.ShaderFile\UI</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\ButtonUI.hlsl">
+      <Filter>98.ShaderFile\UI</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\2DParticleSkull.hlsl">
+      <Filter>98.ShaderFile\Common\Particle\Heal</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

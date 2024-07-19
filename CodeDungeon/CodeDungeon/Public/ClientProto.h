@@ -20,6 +20,7 @@
 #define PROTO_ACTOR_ANUBIS L"Proto_Actor_Anubis"
 
 #define PROTO_ACTOR_IMAGEUI L"Proto_Actor_ImageUI"
+#define PROTO_ACTOR_BUTTONUI L"Proto_Actor_ButtonUI"
 
 #define PROTO_RES_UITEXTUREGROUP L"Proto_Res_UITextureGroup"
 

@@ -3,10 +3,6 @@
 
 #include "ShaderGrobalFunc.hlsli"
 
-cbuffer RECTCOLOR : register(b4)
-{
-    float4 g_RectColor;
-};
 
 struct VS_IN
 {
@@ -46,6 +42,8 @@ PS_OUT PS_Main(PS_In In)
     PS_OUT Out = (PS_OUT) 0;
 
     Out.vColor = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV);
+    if (Out.vColor.a < 0.1)
+        discard;
     return Out;
 }
 

@@ -163,6 +163,7 @@
     <ClInclude Include="..\Public\CAnubisAnimController.h" />
     <ClInclude Include="..\Public\CAnubisStaff.h" />
     <ClInclude Include="..\Public\CBackgroundUI.h" />
+    <ClInclude Include="..\Public\CButtonUI.h" />
     <ClInclude Include="..\Public\CClientApp.h" />
     <ClInclude Include="..\Public\CDataManager.h" />
     <ClInclude Include="..\Public\CHarlequinn.h" />
@@ -210,6 +211,7 @@
     <ClCompile Include="..\Private\CAnubisAnimController.cpp" />
     <ClCompile Include="..\Private\CAnubisStaff.cpp" />
     <ClCompile Include="..\Private\CBackgroundUI.cpp" />
+    <ClCompile Include="..\Private\CButtonUI.cpp" />
     <ClCompile Include="..\Private\CClientApp.cpp" />
     <ClCompile Include="..\Private\CDataManager.cpp" />
     <ClCompile Include="..\Private\CHarlequinn.cpp" />
