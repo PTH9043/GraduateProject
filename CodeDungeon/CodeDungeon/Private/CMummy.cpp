@@ -417,10 +417,10 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 				{
 					if (!GetIsHItAlreadyState())
 					{
-						//m_spBloodParticle->SetActive(true);
+						m_spBloodParticle->SetActive(true);
 						m_spAttackParticle->SetActive(true);
 						m_spAttackParticleTwo->SetActive(true);
-						//m_spSlashParticle->SetActive(true);
+						m_spSlashParticle->SetActive(true);
 						SetAnimModelRim(true);
 						m_spBloodParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 						m_spAttackParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
