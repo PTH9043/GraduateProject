@@ -10,8 +10,9 @@ BEGIN(Client)
 class CButtonUI final : public UUserInterface {
 	struct BUTTONDESC
 	{
-		_float3 _vButtonColor;
+		_float ifPressed;
 		_float _durationTime;
+		_float2 _padding;
 	};
 public:
 	CButtonUI(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType);
@@ -37,11 +38,9 @@ private:
 	virtual void Free() override;
 
 public:
-	void SetButtonColor(_float3 _col) {
-		_buttonDesc._vButtonColor = _col;
-	}
+	
 	void SetIfPicked(_bool _picked) {
-		isPicked = _picked;
+		_buttonDesc.ifPressed= _picked;
 	}
 
 private:
@@ -49,7 +48,7 @@ private:
 	SHPTR<UTexGroup>			m_spUITextureGroup;
 	SHPTR< UShaderConstantBuffer>	m_spButtonUIBuffer;
 	BUTTONDESC _buttonDesc;
-	_bool isPicked = false;
+
 };
 
 

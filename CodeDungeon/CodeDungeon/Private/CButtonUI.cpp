@@ -30,7 +30,7 @@ HRESULT CButtonUI::NativeConstructClone(const VOIDDATAS& _vecDatas)
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
-	AddShader(PROTO_RES_BUTTONUISHADER);
+	AddShader(GetUIDesc()._shaderName);
 	m_spUITextureGroup = std::static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_UITEXTUREGROUP));
 	
 	m_spButtonUIBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::BUTTONUI,
@@ -41,7 +41,7 @@ HRESULT CButtonUI::NativeConstructClone(const VOIDDATAS& _vecDatas)
 
 void CButtonUI::TickActive(const _double& _dTimeDelta)
 {
-	if (isPicked) {
+	if (_buttonDesc.ifPressed) {
 		_buttonDesc._durationTime += _dTimeDelta;
 	}
 	else {
@@ -60,7 +60,8 @@ HRESULT CButtonUI::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTable
 	__super::RenderActive(_spCommand, _spTableDescriptor);
 
 	GetTransform()->BindTransformData(GetShader(), 1);
-	m_spUITextureGroup->SetUpTextureName(GetShader(), SRV_REGISTER::T0, GetUIDesc().strImgName);
+	m_spUITextureGroup->SetUpTextureName(GetShader(), SRV_REGISTER::T0, L"Enter1");
+	m_spUITextureGroup->SetUpTextureName(GetShader(), SRV_REGISTER::T1, L"Enter2");
 	GetShader()->BindCBVBuffer(m_spButtonUIBuffer, &_buttonDesc, sizeof(BUTTONDESC));
 	GetVIBufferRect()->Render(GetShader(), _spCommand);
 	

@@ -654,6 +654,11 @@ void UGameInstance::RegisterScene(CSHPTRREF<UScene> _spScene)
 	m_spSceneManager->RegisterScene(_spScene);
 }
 
+void UGameInstance::RegisterSceneWithOutLoadingData(CSHPTRREF<UScene> _spScene)
+{
+	m_spSceneManager->RegisterSceneWithOutLoadingData(_spScene);
+}
+
 HRESULT UGameInstance::AddLight(const LIGHTINFO& _stInfo)
 {
 	return m_spSceneManager->AddLight(_stInfo);
@@ -1573,8 +1578,18 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 					SHADERLIST{ VS_MAIN, PS_MAIN }, RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::LESS, BLEND_TYPE::ALPHA_BLEND));
 		}
 		{
+			CreateGraphicsShader(PROTO_RES_BACKGROUNDUISHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"BackGroundUI", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }));
+		}
+		{
 			CreateGraphicsShader(PROTO_RES_BUTTONUISHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"ButtonUI", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }, RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::LESS, BLEND_TYPE::ALPHA_BLEND));
+		}
+		{
+			CreateGraphicsShader(PROTO_RES_LOADINGUISHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"LoadingUI", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN }, RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::LESS, BLEND_TYPE::ALPHA_BLEND));
 		}
 		//// Create  Tess

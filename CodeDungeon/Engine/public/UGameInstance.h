@@ -186,6 +186,7 @@ public: /* SceneManager*/
 
 	CSHPTRREF<UScene> GetCurScene() const;
 	void RegisterScene(CSHPTRREF<UScene> _spScene);
+	void RegisterSceneWithOutLoadingData(CSHPTRREF<UScene> _spScene);
 	// Add
 	HRESULT AddLight(const LIGHTINFO& _stInfo);
 	// Out Light

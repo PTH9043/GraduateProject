@@ -18,8 +18,9 @@ struct VS_OUT
 
 cbuffer ButtonTimerBuffer : register(b13)
 {
-    float3 _vButtonColor;
+    float _ifPressed;
     float _durationTime;
+    float2 _padding;
 };
 
 
@@ -47,27 +48,37 @@ struct PS_OUT
 PS_OUT PS_Main(PS_In In)
 {
     PS_OUT Out = (PS_OUT) 0;
-    
-    float4 texColor = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV);
-    
-    float progress = frac(_durationTime); 
-    float borderSize = 0.01; 
 
-    float2 center = float2(0.5, 0.5); 
-    float2 dir = normalize(In.vTexUV - center);
-    float angle = atan2(dir.y, dir.x) / (2 * 3.14159) + 0.5; 
-
-   
-    if (length(In.vTexUV - center) > (0.5 - borderSize) && angle < progress)
+    float4 texColor;
+    if (_ifPressed)
     {
-        Out.vColor = float4(_vButtonColor, 1.0);
+        texColor = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV);
+    }
+    else
+    {
+        texColor = g_Texture1.Sample(g_Sampler_Normal, In.vTexUV);
+    }
+
+    float borderSize = 0.01;
+
+// Define the rectangular border conditions
+    bool isBorder = (In.vTexUV.x < borderSize || In.vTexUV.x > (1.0 - borderSize) ||
+                 In.vTexUV.y < borderSize || In.vTexUV.y > (1.0 - borderSize));
+
+    if (_ifPressed && isBorder)
+    {
+        Out.vColor = float4(float3(1, 0, 0), 1.0); // Red color for the border
     }
     else
     {
         Out.vColor = texColor;
     }
 
+    if (Out.vColor.a < 0.1)
+        discard;
+
     return Out;
+
 }
 
 #endif // _RECT_H_DEFAULTUI_HLSL_LSL_

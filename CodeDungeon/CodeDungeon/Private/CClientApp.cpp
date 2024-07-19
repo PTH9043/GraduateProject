@@ -88,6 +88,7 @@ void CClientApp::Render()
 
 	// Register 
 	//m_spGameInstance->RegisterScene(CreateConstructorNative<CLogoScene>(stOutputData.wpDevice.lock()));
+	//CreateConstructorNative<CMainScene>(stOutputData.wpDevice.lock())->LoadSceneData();
 	m_spGameInstance->RegisterScene(CreateConstructorNative<CMainScene>(stOutputData.wpDevice.lock()));
 
 	m_spDeltaTimer = m_spGameInstance->CreateTimerAdd(DELTA_TIMER);

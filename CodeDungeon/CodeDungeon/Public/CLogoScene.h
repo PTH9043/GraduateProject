@@ -22,7 +22,8 @@ public:
 private:
 	SHPTR<CImageUI>			m_spImageUI;
 	SHPTR<CButtonUI>			m_spButtonUI;
-	SHPTR<CImageUI>			m_spOtherImageUI;
+	SHPTR<CImageUI>			m_spMainTitleUI;
+	SHPTR<CImageUI>			m_spBackEffectUI;
 };
 
 END

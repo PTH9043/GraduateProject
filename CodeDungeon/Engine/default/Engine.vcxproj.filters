@@ -1542,5 +1542,11 @@
     <FxCompile Include="..\..\Shader\2DParticleSkull.hlsl">
       <Filter>98.ShaderFile\Common\Particle\Heal</Filter>
     </FxCompile>
+    <FxCompile Include="..\..\Shader\LoadingUI.hlsl">
+      <Filter>98.ShaderFile\UI</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\BackGroundUI.hlsl">
+      <Filter>98.ShaderFile\UI</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
