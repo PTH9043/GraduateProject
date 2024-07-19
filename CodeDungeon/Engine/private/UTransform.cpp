@@ -415,6 +415,7 @@ void UTransform::SetDirection(const _float3& direction)
 	SetRight(DirectX::XMVector3TransformNormal(_float3::Right * m_vScale.x, RotationMatrix));
 	SetUp(DirectX::XMVector3TransformNormal(_float3::Up * m_vScale.y, RotationMatrix));
 	SetLook(DirectX::XMVector3TransformNormal(_float3::Forward * m_vScale.z, RotationMatrix));
+
 }
 
 void UTransform::SetDirection(const _float3& targetDirection, float deltaTime, float rotationSpeed)

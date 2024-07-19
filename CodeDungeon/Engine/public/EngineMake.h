@@ -10,6 +10,7 @@
 #define PROTO_COMP_SPHERECOLLIDER L"Proto_Comp_SphereCollider"
 #define PROTO_COMP_REGION L"Proto_Comp_Region"
 #define PROTO_NAVI_INTERIOR L"Proto_Navi_Interior"
+#define PROTO_NAVI_CAMERA L"Proto_Navi_Camera"
 
 /* Graphics Shader */
 #define PROTO_RES_DEBUG2DTARGETSHADER L"Proto_Res_Debug2DTargetShader"

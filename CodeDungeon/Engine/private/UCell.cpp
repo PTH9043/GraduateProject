@@ -359,3 +359,38 @@ _float UCell::GetHeightAtXZ(const _float& x, const _float& z) const {
 
 	return y;
 }
+
+_float3 UCell::GetXZatHeight(const _float& y) const {
+	// Points of the triangle
+	_float3 P1 = m_arrPoints[0];
+	_float3 P2 = m_arrPoints[1];
+	_float3 P3 = m_arrPoints[2];
+
+	// Calculate the plane equation coefficients
+	_float A = (P2.y - P1.y) * (P3.z - P1.z) - (P2.z - P1.z) * (P3.y - P1.y);
+	_float B = (P2.z - P1.z) * (P3.x - P1.x) - (P2.x - P1.x) * (P3.z - P1.z);
+	_float C = (P2.x - P1.x) * (P3.y - P1.y) - (P2.y - P1.y) * (P3.x - P1.x);
+	_float D = -(A * P1.x + B * P1.y + C * P1.z);
+
+	// Choose arbitrary values for x and z
+	_float x = P1.x;
+	_float z = P1.z;
+
+	// Calculate x and z based on the given y
+	if (B != 0) {
+		_float x = P1.x;
+		_float z = -(A * x + B * y + D) / C;
+	}
+	else {
+		// If B is zero, we need another approach
+		// Choose arbitrary values for y and solve for z
+		if (A != 0) {
+			x = -(B * y + C * z + D) / A;
+		}
+		else if (C != 0) {
+			z = -(A * x + B * y + D) / C;
+		}
+	}
+
+	return _float3(x, y, z);
+}

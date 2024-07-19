@@ -70,8 +70,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 
 	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
 
-	int cellIndex = 424;
-	cellIndex = 541;
+	int cellIndex = 0;
 	SHPTR<UCell> spCell = spNavigation->FindCell(cellIndex);
 
 
@@ -382,6 +381,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	JumpState(_dTimeDelta);
 
 
+
 #ifdef _ENABLE_PROTOBUFF
 	SendMoveData(spGameInstance);
 #endif
@@ -394,7 +394,25 @@ void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
+
 	FollowCameraMove(_float3{ 0.f, 20.f, -40.f }, _dTimeDelta);
+	_float3 vCamPosition{ GetFollowCamera()->GetTransform()->GetPos() };
+	SHPTR<UNavigation> CamNavi = static_pointer_cast<CMainCamera>(GetFollowCamera())->GetCurrentNavi();
+	SHPTR<UCell> newCell{};
+	if(_float3::Distance(GetFollowCamera()->GetTransform()->GetPos(), GetTransform()->GetPos()) < 30)
+	{
+		//카메라 네비 검사
+		if (false == CamNavi->IsMove(vCamPosition, REF_OUT newCell))
+		{
+			_float3 closestPoint = CamNavi->ClampPositionToCell(vCamPosition);
+			GetFollowCamera()->GetTransform()->SetPos(_float3(closestPoint.x, vCamPosition.y, closestPoint.z));
+			vCamPosition = GetFollowCamera()->GetTransform()->GetPos();
+		}
+	}
+	else
+	{
+		GetFollowCamera()->GetTransform()->SetPos(GetTransform()->GetPos());
+	}
 
 	/*for (auto& Colliders : GetColliderContainer())
 		if(Colliders.first == L"Main")
@@ -573,6 +591,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 
 		}
 	}
+
 
 #ifdef _ENABLE_PROTOBUFF
 	if (true == isCollision)

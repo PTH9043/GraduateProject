@@ -142,12 +142,12 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
 
     if (m_bTauntMode)
     {
+        UpdateState(spAnimModel, ANIM_TAUNT, L"TAUNT");
         if (CurAnimName == L"taunt")
         {
             m_bAttackMode = true;
             m_bTauntMode = false;
         }
-        spAnimModel->SetAnimation(L"taunt");
     }
 
     // Handle hit state

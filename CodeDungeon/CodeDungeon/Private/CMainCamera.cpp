@@ -2,17 +2,17 @@
 #include "CMainCamera.h"
 #include "UGameInstance.h"
 #include "UTransform.h"
-
+#include "UNavigation.h"
 
 CMainCamera::CMainCamera(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UCamera(_spDevice, _wstrLayer, _eCloneType),
-	m_isMoveState{ true }
+	m_isMoveState{ true }, m_spCurNavi{nullptr}, m_vPrevPos{}
 {
 }
 
 CMainCamera::CMainCamera(const CMainCamera& _rhs) :
 	UCamera(_rhs),
-	m_isMoveState{ true }
+	m_isMoveState{ true }, m_spCurNavi{ nullptr }, m_vPrevPos{}
 {
 }
 
@@ -32,12 +32,20 @@ HRESULT CMainCamera::NativeConstructClone(const VOIDDATAS& _vecDatas)
 {
     if (FAILED(__super::NativeConstructClone(_vecDatas)))
         return E_FAIL;
+    SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+    UNavigation::NAVDESC navDesc;
+    navDesc.iCurIndex = 0;
+    m_spCurNavi = std::static_pointer_cast<UNavigation>(spGameInstance->CloneComp(PROTO_NAVI_CAMERA, { &navDesc }));
+    assert(nullptr != m_spCurNavi);
 
     return S_OK;
 }
 
 void CMainCamera::TickActive(const _double& _dTimeDelta)
 {
+    m_vPrevPos = GetTransform()->GetPos();
+    GetCurrentNavi()->FindCell(GetTransform()->GetPos());
 }
 
 void CMainCamera::LateTickActive(const _double& _dTimeDelta)
@@ -72,4 +80,5 @@ void CMainCamera::LateTickActive(const _double& _dTimeDelta)
         if (pGameInstance->IsMouseInWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT))
             GetTransform()->MoveForward(pGameInstance->GetDIMMoveState(DIMOUSEMOVE::DIMM_WHEEL) * 0.003f, GetCamMoveSpeed());
     }
+
 }

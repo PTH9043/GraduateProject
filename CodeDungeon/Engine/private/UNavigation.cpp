@@ -275,25 +275,14 @@ SHPTR<UCell> UNavigation::FindCell(const _int& _iIndex) {
 	RETURN_CHECK(nullptr == m_spCellContainer, nullptr);
 	_int iNeighborIndex{ 0 };
 	_float3 vLine{};
-	_int range = 100;
-	_int lowerBound = _iIndex - range;
-	_int upperBound = _iIndex + range;
 
-	while (lowerBound >= 0 || upperBound < m_spCellContainer->size()) {
-		if (lowerBound < 0) lowerBound = 0;
-		if (upperBound > m_spCellContainer->size()) upperBound = static_cast<_int>(m_spCellContainer->size());
-
-		for (_int i = lowerBound; i < upperBound; ++i) {
-			auto& iter = m_spCellContainer->at(i);
-			if (iter->GetIndex() == _iIndex) {
-				m_spPrevCell = m_spCurCell;
-				m_iCurIndex = _iIndex;
-				return iter;
-			}
+	for (auto& Cells : *(m_spCellContainer))
+	{
+		if (Cells->GetIndex() == _iIndex) {
+			m_spPrevCell = m_spCurCell;
+			m_iCurIndex = _iIndex;
+			return Cells;
 		}
-		range += 100;
-		lowerBound = _iIndex - range;
-		upperBound = _iIndex + range;
 	}
 	return nullptr;
 }
@@ -302,23 +291,12 @@ SHPTR<UCell> UNavigation::FindCellWithoutUpdate(const _int& _iIndex) {
 	RETURN_CHECK(nullptr == m_spCellContainer, nullptr);
 	_int iNeighborIndex{ 0 };
 	_float3 vLine{};
-	_int range = 25;
-	_int lowerBound = _iIndex - range;
-	_int upperBound = _iIndex + range;
 
-	while (lowerBound >= 0 || upperBound < m_spCellContainer->size()) {
-		if (lowerBound < 0) lowerBound = 0;
-		if (upperBound > m_spCellContainer->size()) upperBound = static_cast<_int>(m_spCellContainer->size());
-
-		for (_int i = lowerBound; i < upperBound; ++i) {
-			auto& iter = m_spCellContainer->at(i);
-			if (iter->GetIndex() == _iIndex) {
-				return iter;
-			}
+	for (auto& Cells : *(m_spCellContainer))
+	{
+		if (Cells->GetIndex() == _iIndex) {
+			return Cells;
 		}
-		range += 25;
-		lowerBound = _iIndex - range;
-		upperBound = _iIndex + range;
 	}
 	return nullptr;
 }

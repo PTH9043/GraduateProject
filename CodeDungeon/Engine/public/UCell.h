@@ -60,6 +60,8 @@ public:
 
 	_float GetHeightAtXZ(const _float& x, const _float& z) const;
 
+	_float3 GetXZatHeight(const _float& y) const;
+
 	const _bool& GetJumpableState() const { return m_bisJumpable; }
 	void SetJumpableState(_bool _isJump) { m_bisJumpable = _isJump; }
 #ifdef _EDIT_NAVI
