@@ -125,6 +125,32 @@ void CMainScene::TurnLightsOnRange()
 			}
 		}
 	}
+
+	
+	
+		
+		/*_float3 lightPos0 = _float3(-364.225, -20, 253.010);
+		_float3 lightPos1 = _float3(-535.39, -20, 154.5);
+		_float3 lightPos2 = _float3(-494.5, -45, 289.265);
+		
+		_float3 distance = lightPos1 - PlayerPos;
+		float distanceSq = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
+		if (distanceSq <= 50 * 50)
+		{
+			for (int i = 0; i < 3; i++) {
+
+				ActiveLIght(LIGHTTYPE::TYPE_SPOT, i, LIGHTACTIVE::ISACTIVE);
+			}
+		}
+		else
+		{
+			for (int i = 0; i < 3; i++) {
+
+				ActiveLIght(LIGHTTYPE::TYPE_SPOT, i, LIGHTACTIVE::NONACTIVE);
+			}
+			
+		}*/
+	
 }
 
 void CMainScene::TurnRoomsOnRange()
@@ -212,6 +238,27 @@ HRESULT CMainScene::LoadSceneData()
 			100.f, 32.f, 8.0f,(float)cos(DirectX::XMConvertToRadians(45.f)),(float)cos(DirectX::XMConvertToRadians(30.f)),_float3(1.0f, 0.01f, 0.0001f) });
 
 
+	}
+	{
+		UFire::FIREDESC tFireDesc;
+		tFireDesc.wstrFireShader = PROTO_RES_2DFIRESHADER;
+		m_stFireOne = std::static_pointer_cast<UFire>(spGameInstance->CloneActorAdd(PROTO_ACTOR_FIRE, { &tFireDesc }));
+		m_stFireTwo = std::static_pointer_cast<UFire>(spGameInstance->CloneActorAdd(PROTO_ACTOR_FIRE, { &tFireDesc }));
+		
+		 float ScaleX = 1.99f;
+		 float ScaleY = 3.64f;
+		_float3 ScaleFloat3 = _float3(ScaleX, ScaleY, 1);
+
+		m_stFireOne->GetTransform()->SetScale(ScaleFloat3);
+		m_stFireOne->GetTransform()->SetPos(_float3(-438.7,-50.8,156.4));
+		m_stFireOne->SetColorTexture(L"BlueFlame");
+		m_stFireOne->SetNoiseTexture(L"WFX_T_NukeFlames");
+		m_stFireTwo->GetTransform()->SetScale(ScaleFloat3);
+		m_stFireTwo->GetTransform()->SetPos(_float3(-410.6, -50.8, 172.8));
+		m_stFireTwo->SetColorTexture(L"BlueFlame");
+		m_stFireTwo->SetNoiseTexture(L"WFX_T_NukeFlames");
+		m_stFireOne->SetActive(true);
+			m_stFireTwo->SetActive(true);
 	}
 #ifndef _ENABLE_PROTOBUFF
 	{
