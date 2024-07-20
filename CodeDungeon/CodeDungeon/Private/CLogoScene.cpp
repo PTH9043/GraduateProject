@@ -23,6 +23,7 @@ HRESULT CLogoScene::LoadSceneData()
 	{
 		tDesc.fZBufferOrder = 0.99f;
 		tDesc.strImgName = L"Background";
+		tDesc._shaderName = PROTO_RES_BACKGROUNDUISHADER;
 		tDesc.v2Size.x = static_cast<_float>(1280);
 		tDesc.v2Size.y = static_cast<_float>(1080 );
 		tDesc.v2Pos = _float2{ 640,540 };
@@ -32,6 +33,7 @@ HRESULT CLogoScene::LoadSceneData()
 	{
 		tDesc1.fZBufferOrder = 0.1f;
 		tDesc1.strImgName = L"";
+		tDesc1._shaderName = PROTO_RES_BUTTONUISHADER;
 		tDesc1.v2Size.x = static_cast<_float>(200);
 		tDesc1.v2Size.y = static_cast<_float>(100);
 		tDesc1.v2Pos = _float2{ (_float)(WINDOW_WIDTH), (_float)(WINDOW_HEIGHT)+400 } / 2.f;
@@ -41,6 +43,7 @@ HRESULT CLogoScene::LoadSceneData()
 		// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
 		tDesc.fZBufferOrder = 0.97f;
 		tDesc.strImgName = L"MainTitle";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
 		tDesc.v2Size.x = static_cast<_float>(640);
 		tDesc.v2Size.y = static_cast<_float>(240);
 		tDesc.v2Pos = _float2{ 640,240};

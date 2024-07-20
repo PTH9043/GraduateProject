@@ -46,9 +46,9 @@ HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, C
 	_spGameInstance->AddPrototype(PROTO_ACTOR_LONGSWORD, CreateConstructorToNative< CSword>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_CHEST, CreateConstructorToNative< CItemChest>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_MINOTAUR, CreateConstructorToNative< CMinotaur>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
-	_spGameInstance->AddPrototype(PROTO_ACTOR_IMAGEUI, CreateConstructorToNative<CImageUI>(_spDevice, LAYER_UI, CLONETYPE::CLONE_STATIC));
-	_spGameInstance->AddPrototype(PROTO_ACTOR_BUTTONUI, CreateConstructorToNative<CButtonUI>(_spDevice, LAYER_UI, CLONETYPE::CLONE_STATIC));
-	_spGameInstance->AddPrototype(PROTO_ACTOR_LOADINGUI, CreateConstructorToNative<CLoadingUI>(_spDevice, LAYER_UI, CLONETYPE::CLONE_STATIC));
+	_spGameInstance->AddPrototype(PROTO_ACTOR_IMAGEUI, CreateConstructorToNative<CImageUI>(_spDevice, LAYER_UI, CLONETYPE::CLONE_ONCE));
+	_spGameInstance->AddPrototype(PROTO_ACTOR_BUTTONUI, CreateConstructorToNative<CButtonUI>(_spDevice, LAYER_UI, CLONETYPE::CLONE_ONCE));
+	_spGameInstance->AddPrototype(PROTO_ACTOR_LOADINGUI, CreateConstructorToNative<CLoadingUI>(_spDevice, LAYER_UI, CLONETYPE::CLONE_ONCE));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_HARLEQUINN, CreateConstructorToNative< CHarlequinn>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_SHURIKEN, CreateConstructorToNative< CShuriken>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_SHURIKENTHROWING, CreateConstructorToNative< CShurikenThrowing>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));

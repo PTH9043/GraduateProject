@@ -108,7 +108,7 @@ UGpuCommand::FRAMECONTEXT* UGpuCommand::WaitForNextFrameResources(const HANDLE& 
 		numWaitableObjects = 2;
 	}
 
-	WaitForMultipleObjects(numWaitableObjects, waitableObjects, TRUE, INFINITE);
+	//WaitForMultipleObjects(numWaitableObjects, waitableObjects, TRUE, INFINITE);
 	return frameCtx;
 }
 
