@@ -59,6 +59,7 @@
 #define PROTO_RES_PARTICLEATTACK2DSHADER L"Proto_Res_ParticleAttack2DShader"
 #define PROTO_RES_PARTICLEATTACKTWO2DSHADER L"Proto_Res_ParticleAttackTWO2DShader"
 #define PROTO_RES_PARTICLEHEAL2DSHADER L"Proto_Res_ParticleHeal2DShader"
+#define PROTO_RES_PARTICLESKULL2DSHADER L"Proto_Res_ParticleSkull2DShader"
 #define PROTO_RES_PARTICLEOPENCHEST2DSHADER L"Proto_Res_ParticleOpenChest2DShader"
 #define PROTO_RES_PARTICLESLASH2DSHADER L"Proto_Res_ParticleSlash2DShader"
 #define PROTO_RES_PARTICLEFLARE2DSHADER L"Proto_Res_ParticleFlare2DShader"
@@ -74,6 +75,9 @@
 #define PROTO_RES_SCREENRENDERONBJSHADER L"Proto_Res_ScreenRenderObjShader"
 #define PROTO_RES_EQUIPMENTSHADER L"Proto_Res_EquipmentShader"
 #define PROTO_RES_DEFAULTUISHADER L"Proto_Res_DefaultUIShader"
+#define PROTO_RES_BACKGROUNDUISHADER L"Proto_Res_BackGroundUIShader"
+#define PROTO_RES_BUTTONUISHADER L"Proto_Res_ButtonUIShader"
+#define PROTO_RES_LOADINGUISHADER L"Proto_Res_LoadingUIShader"
 
 /* Compute Shader*/
 #define PROTO_RES_COMPUTEANIMATIONSHADER L"Proto_Res_ConputeAnimatonShader"

@@ -47,6 +47,20 @@ void USceneManager::RegisterScene(CSHPTRREF<UScene> _spScene)
 	m_spCurScene->LoadSceneData();
 }
 
+void USceneManager::RegisterSceneWithOutLoadingData(CSHPTRREF<UScene> _spScene)
+{
+	RETURN_CHECK(nullptr == _spScene, ;);
+
+	m_spCurScene.reset();
+
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	spGameInstance->ClearOnceTypeData();
+	spGameInstance->SetSceneIDToNetController(_spScene->GetSceneID());
+
+	m_spCurScene = _spScene;
+	
+}
+
 void USceneManager::Tick(const _double& _dTimeDelta)
 {
 	RETURN_CHECK(nullptr == m_spCurScene, ;);

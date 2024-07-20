@@ -11,7 +11,9 @@ class CMap;
 class CWarriorPlayer;
 class CMummy;
 class CSarcophagus;
-
+class CImageUI;
+class CButtonUI;
+class CLoadingUI;
 
 
 class CMainScene final : public UScene{
@@ -32,6 +34,8 @@ public:
 	virtual void Tick(const _double& _dTimeDelta) override;
 	virtual void LateTick(const _double& _dTimeDelta) override;
 	void CollisionTick(const _double& _dTimeDelta);
+
+	void DrawStartSceneUI(const _double& _dTimeDelta);
 private:
 	// Main
 	SHPTR<CMainCamera>			m_spMainCamera;
@@ -43,6 +47,20 @@ private:
 	SHPTR<UGuard> m_stGuard;
 	SHPTR<UFire> m_stFireOne;
 	SHPTR<UFire> m_stFireTwo;
+private:
+	//------------START SCENE UI-------------------
+	SHPTR<CImageUI>			m_spBackgroundUI;
+	SHPTR<CImageUI>			m_spMainTitleUI;
+	SHPTR<CImageUI>			m_spBackEffectUI;
+
+	SHPTR<CImageUI>			m_spLoadingBackgroundUI;
+	SHPTR<CLoadingUI>			m_spLoadingFillingUI;
+
+	SHPTR<CButtonUI>			m_spButtonUI;
+	_float m_fStartSceneLoadingTimer = 0;
+	_bool m_bStartScene = false;
+	//-------------------------------------------
+
 };
 
 END

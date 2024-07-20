@@ -26,7 +26,9 @@
 #include "UAnimModel.h"
 #include "CIronBars.h"
 #include "CModelObjects.h"
-
+#include "CImageUI.h"
+#include "CButtonUI.h"
+#include "CLoadingUI.h"
 
 BEGIN(Client)
 
@@ -180,6 +182,69 @@ HRESULT CMainScene::LoadSceneData()
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	CProtoMaker::CreateMainSceneProtoData(spGameInstance, GetDevice(), std::static_pointer_cast<UCommand>(spGameInstance->GetGpuCommand()));
+	{
+		CImageUI::UIDESC tDesc;
+		{
+			tDesc.fZBufferOrder = 0.5f;
+			tDesc.strImgName = L"Background";
+			tDesc._shaderName = PROTO_RES_BACKGROUNDUISHADER;
+			tDesc.v2Size.x = static_cast<_float>(1280);
+			tDesc.v2Size.y = static_cast<_float>(1080);
+			tDesc.v2Pos = _float2{ 640,540 };
+			m_spBackgroundUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+			m_spBackgroundUI->SetActive(true);
+		}
+		CImageUI::UIDESC tDesc1;
+		{
+			// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
+			tDesc1.fZBufferOrder = 0.47f;
+			tDesc1.strImgName = L"LoadingBar_Background";
+			tDesc1._shaderName = PROTO_RES_DEFAULTUISHADER;
+			tDesc1.v2Size.x = static_cast<_float>(1080);
+			tDesc1.v2Size.y = static_cast<_float>(30);
+			tDesc1.v2Pos = _float2{ 640,750 };
+			m_spLoadingBackgroundUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc1 }));
+			m_spLoadingBackgroundUI->SetActive(false);
+		}
+		CButtonUI::UIDESC tDesc2;
+		{
+			tDesc2.fZBufferOrder = 0.45f;
+			tDesc2.strImgName = L"";
+			tDesc2._shaderName = PROTO_RES_LOADINGUISHADER;
+			tDesc2.v2Size.x = static_cast<_float>(1000);
+			tDesc2.v2Size.y = static_cast<_float>(25);
+			tDesc2.v2Pos = _float2{ 640,750 };
+			m_spLoadingFillingUI = std::static_pointer_cast<CLoadingUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_LOADINGUI, { &tDesc2 }));
+			m_spLoadingFillingUI->SetActive(false);
+		}		
+		CImageUI::UIDESC tDesc3;
+		{
+			// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
+			tDesc3.fZBufferOrder = 0.48f;
+			tDesc3.strImgName = L"MainTitle";
+			tDesc3._shaderName = PROTO_RES_DEFAULTUISHADER;
+			tDesc3.v2Size.x = static_cast<_float>(640);
+			tDesc3.v2Size.y = static_cast<_float>(240);
+			tDesc3.v2Pos = _float2{ 640,240 };
+			m_spMainTitleUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc3 }));
+			m_spMainTitleUI->SetActive(true);
+		}
+		CButtonUI::UIDESC tDesc4;
+		{
+			tDesc4.fZBufferOrder = 0.44f;
+			tDesc4.strImgName = L"";
+			tDesc4._shaderName = PROTO_RES_BUTTONUISHADER;
+			tDesc4.v2Size.x = static_cast<_float>(200);
+			tDesc4.v2Size.y = static_cast<_float>(100);
+			tDesc4.v2Pos = _float2{ (_float)(WINDOW_WIDTH), (_float)(WINDOW_HEIGHT)+400 } / 2.f;
+			m_spButtonUI = std::static_pointer_cast<CButtonUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_BUTTONUI, { &tDesc4 }));
+			m_spButtonUI->SetActive(true);
+		}
+		
+	}
+
+
+
 #ifdef _ENABLE_PROTOBUFF
 	UCamera::CAMDESC tDesc;
 	tDesc.stCamProj = UCamera::CAMPROJ(UCamera::PROJECTION_TYPE::PERSPECTIVE, _float3(0.f, 0.f, 0.f),
@@ -322,9 +387,45 @@ HRESULT CMainScene::LoadSceneData()
 	return S_OK;
 }
 
+void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
+{
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+	if (m_spButtonUI->IsMouseOnRect()&& m_spButtonUI->IsActive()) {
+
+		m_spButtonUI->SetIfPicked(true);
+
+		if (true == spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_L)&&!m_bStartScene) {
+			m_bStartScene = true;		
+		}
+	}
+	else {
+		m_spButtonUI->SetIfPicked(false);
+	}
+	if (m_bStartScene) {
+		m_fStartSceneLoadingTimer += _dTimeDelta;
+		m_spButtonUI->SetActive(false);
+		m_spLoadingBackgroundUI->SetActive(true);
+		m_spLoadingFillingUI->SetActive(true);
+		m_spLoadingFillingUI->SetIfPicked(true);
+	}
+
+	if (m_fStartSceneLoadingTimer > 10.f) {
+
+		m_spBackgroundUI->SetActive(false);
+		m_spMainTitleUI->SetActive(false);
+		m_spLoadingFillingUI->SetActive(false);
+		m_spLoadingBackgroundUI->SetActive(false);
+		m_spButtonUI->SetActive(false);
+		m_fStartSceneLoadingTimer = 0.f;
+		m_bStartScene = false;
+	}
+}
+
 void CMainScene::Tick(const _double& _dTimeDelta)
 {
 	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
+	DrawStartSceneUI(_dTimeDelta);
 	TurnLightsOnRange();
 	TurnRoomsOnRange();
 	TurnGuardsOnRange();
@@ -349,4 +450,5 @@ void CMainScene::CollisionTick(const _double& _dTimeDelta)
 {
 	
 }
+
 END

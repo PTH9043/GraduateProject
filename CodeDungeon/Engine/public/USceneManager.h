@@ -25,6 +25,7 @@ public:
 	virtual void Free() override;
 	HRESULT ReadySceneManager(UGameInstance* _pGameInstance);
 	void RegisterScene(CSHPTRREF<UScene> _spScene);
+	void RegisterSceneWithOutLoadingData(CSHPTRREF<UScene> _spScene);
 	void Tick(const _double& _dTimeDelta);
 	void LateTick(const _double& _dTimeDelta);
 

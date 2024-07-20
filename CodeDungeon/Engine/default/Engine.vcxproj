@@ -332,17 +332,20 @@
     <FxCompile Include="..\..\Shader\2DParticleHeal.hlsl" />
     <FxCompile Include="..\..\Shader\2DParticleOpenChest.hlsl" />
     <FxCompile Include="..\..\Shader\2DParticleRotation.hlsl" />
+    <FxCompile Include="..\..\Shader\2DParticleSkull.hlsl" />
     <FxCompile Include="..\..\Shader\2DParticleSlash.hlsl" />
     <FxCompile Include="..\..\Shader\3DNormalCube.hlsl" />
     <FxCompile Include="..\..\Shader\AnimDepthRecord.hlsl" />
     <FxCompile Include="..\..\Shader\AnimModel.hlsl" />
     <FxCompile Include="..\..\Shader\AnimNorPos.hlsl" />
+    <FxCompile Include="..\..\Shader\BackGroundUI.hlsl" />
     <FxCompile Include="..\..\Shader\BlendDeffered.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\Shader\Blood.hlsl" />
     <FxCompile Include="..\..\Shader\Bloom.hlsl" />
+    <FxCompile Include="..\..\Shader\ButtonUI.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DAttackEffect.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DFootPrint.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DHeal.hlsl" />
@@ -375,6 +378,7 @@
     <FxCompile Include="..\..\Shader\HorizontalBlur.hlsl" />
     <FxCompile Include="..\..\Shader\LightDirection.hlsl" />
     <FxCompile Include="..\..\Shader\LightPoint.hlsl" />
+    <FxCompile Include="..\..\Shader\LoadingUI.hlsl" />
     <FxCompile Include="..\..\Shader\Mat.hlsl" />
     <FxCompile Include="..\..\Shader\Model.hlsl" />
     <FxCompile Include="..\..\Shader\NormalObject.hlsl" />

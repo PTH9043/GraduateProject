@@ -6,6 +6,7 @@ END
 
 BEGIN(Client)
 class CImageUI;
+class CButtonUI;
 
 class CLogoScene   final : public UScene {
 public:
@@ -20,7 +21,9 @@ public:
 	virtual void LateTick(const _double& _dTimeDelta) override;
 private:
 	SHPTR<CImageUI>			m_spImageUI;
-	SHPTR<CImageUI>			m_spOtherImageUI;
+	SHPTR<CButtonUI>			m_spButtonUI;
+	SHPTR<CImageUI>			m_spMainTitleUI;
+	SHPTR<CImageUI>			m_spBackEffectUI;
 };
 
 END
