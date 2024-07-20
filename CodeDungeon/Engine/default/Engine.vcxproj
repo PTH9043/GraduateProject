@@ -378,11 +378,13 @@
     <FxCompile Include="..\..\Shader\HorizontalBlur.hlsl" />
     <FxCompile Include="..\..\Shader\LightDirection.hlsl" />
     <FxCompile Include="..\..\Shader\LightPoint.hlsl" />
+    <FxCompile Include="..\..\Shader\LoadingDotUI.hlsl" />
     <FxCompile Include="..\..\Shader\LoadingUI.hlsl" />
     <FxCompile Include="..\..\Shader\Mat.hlsl" />
     <FxCompile Include="..\..\Shader\Model.hlsl" />
     <FxCompile Include="..\..\Shader\NormalObject.hlsl" />
     <FxCompile Include="..\..\Shader\NorPos.hlsl" />
+    <FxCompile Include="..\..\Shader\PleaseWaitUI.hlsl" />
     <FxCompile Include="..\..\Shader\Rect.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>

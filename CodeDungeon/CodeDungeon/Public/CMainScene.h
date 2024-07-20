@@ -59,6 +59,10 @@ private:
 	SHPTR<CImageUI>			m_spLoadingBackgroundUI;
 	SHPTR<CLoadingUI>			m_spLoadingFillingUI;
 
+	SHPTR<CImageUI>			m_spLoadingTextUI;
+	SHPTR<CLoadingUI>			m_spLoadingDotsUI;
+	SHPTR<CLoadingUI>			m_spPleaseWaitTextUI;
+
 	SHPTR<CButtonUI>			m_spButtonUI;
 	_float m_fStartSceneLoadingTimer = 0;
 	_bool m_bStartScene = false;

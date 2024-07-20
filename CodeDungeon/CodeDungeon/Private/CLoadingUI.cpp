@@ -60,7 +60,7 @@ HRESULT CLoadingUI::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTabl
 	__super::RenderActive(_spCommand, _spTableDescriptor);
 
 	GetTransform()->BindTransformData(GetShader(), 1);
-	m_spUITextureGroup->SetUpTextureName(GetShader(), SRV_REGISTER::T0, L"LoadingBar_Fill");
+	m_spUITextureGroup->SetUpTextureName(GetShader(), SRV_REGISTER::T0, GetUIDesc().strImgName);
 	GetShader()->BindCBVBuffer(m_spLoadingUIBuffer, &_LoadingDesc, sizeof(LOADINGDESC));
 	GetVIBufferRect()->Render(GetShader(), _spCommand);
 
