@@ -5,14 +5,16 @@
 
 cbuffer FogBuffer : register(b14)
 {
+    int IsGameStart;
     int IsFogOn;
     int IsDead;
     int IsAbility;
     int IsHit;
+    float GameStartTime;
     float DieTime;
     float AbilityTime;
     float HitTime;
-    float padding;
+    float3 padding;
 };
 
 
@@ -60,28 +62,68 @@ PS_OUT PS_Main(PS_In Input)
     float distanceFromOrigin = distance(float2(640, 460), float2(Input.vPosition.xy));
    
     float4 baseColor = g_Texture0.Sample(g_Sampler_Normal, Input.vTexUV);
-    
+    //{
+    //    float4 targetColor = g_Texture8.Sample(g_Sampler_Normal, Input.vTexUV);
+    //    targetColor += float4(0.15, 0.15, 0.15, 0);
+    //    float4 outputColor;
+
+    //    float initialRadius = 600.0f;
+    //    float finalRadius = 850.0f;
+    //    float currentRadius = initialRadius; // 2.8초 후의 반경
+
+
+    //    if (distanceFromOrigin <= currentRadius)
+    //    {
+    //        outputColor = baseColor;
+    //    }
+    //    else
+    //    {
+    //        float distanceFactor = saturate((distanceFromOrigin - currentRadius) / (finalRadius - currentRadius));
+    //        outputColor = lerp(baseColor, targetColor, distanceFactor);
+    //    }
+
+    //    baseColor = outputColor;
+    //}
+   
+    if (IsGameStart)
     {
         float4 targetColor = g_Texture8.Sample(g_Sampler_Normal, Input.vTexUV);
         targetColor += float4(0.15, 0.15, 0.15, 0);
         float4 outputColor;
 
-        float initialRadius = 600.0f;
-        float finalRadius = 850.0f;
-        float currentRadius = initialRadius; // 2.8초 후의 반경
+        float initialBlendTime = 0.3f;
+        float fadeOutStartTime = 1.25f;
+        float fadeOutEndTime = 1.8f;
+       
+        float initialRadius =500.f;
+        float finalRadius = 800.0f;
+        float currentRadius;
 
-        if (distanceFromOrigin <= currentRadius)
+
+        if (GameStartTime > initialBlendTime)
         {
-            outputColor = baseColor;
+            float normalizedBlendFactor = saturate((GameStartTime - initialBlendTime) / (fadeOutEndTime - initialBlendTime));
+            currentRadius = lerp(finalRadius, initialRadius, normalizedBlendFactor);
         }
         else
         {
-            float distanceFactor = saturate((distanceFromOrigin - currentRadius) / (finalRadius - currentRadius));
-            outputColor = lerp(baseColor, targetColor, distanceFactor);
+            currentRadius = finalRadius;
         }
 
-        baseColor = outputColor;
-        
+
+       if (distanceFromOrigin <= currentRadius)
+       {
+           outputColor = baseColor;
+       }
+       else
+       {
+           float distanceFactor = saturate((distanceFromOrigin - currentRadius) / (finalRadius - currentRadius));
+           outputColor = lerp(baseColor, targetColor, distanceFactor);
+       }
+
+       baseColor = outputColor;
+
+
     }
  
     float transitionProgress;

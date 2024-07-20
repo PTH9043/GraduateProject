@@ -322,6 +322,7 @@ private: /* Ready Datas */
 public: //Renderer Fog Bool
 	void TurnOnFog();
 	void TurnOffFog();
+	void SetGameStartEffect();
 	void TurnOnDieEffect();
 	void TurnOffDieEffect();
 	void TurnOnAbilityEffect();

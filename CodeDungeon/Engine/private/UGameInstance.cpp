@@ -1062,6 +1062,11 @@ void UGameInstance::TurnOffFog() {
 	if (m_spRenderer != nullptr)m_spRenderer->TurnOffFog();
 }
 
+void UGameInstance::SetGameStartEffect()
+{
+	if (m_spRenderer != nullptr)m_spRenderer->SetGameStartEffect();
+}
+
 void UGameInstance::TurnOnDieEffect() {
 	if (m_spRenderer != nullptr)m_spRenderer->TurnOnDieEffect();
 }
@@ -1580,7 +1585,7 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 		{
 			CreateGraphicsShader(PROTO_RES_BACKGROUNDUISHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"BackGroundUI", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
-					SHADERLIST{ VS_MAIN, PS_MAIN }));
+					SHADERLIST{ VS_MAIN, PS_MAIN }, RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::LESS_EQUAL));
 		}
 		{
 			CreateGraphicsShader(PROTO_RES_BUTTONUISHADER, CLONETYPE::CLONE_STATIC,

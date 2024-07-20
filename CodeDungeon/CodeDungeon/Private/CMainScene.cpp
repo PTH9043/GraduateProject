@@ -484,6 +484,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 
 	if (m_fStartSceneLoadingTimer > 10.f) {
 
+		spGameInstance->SetGameStartEffect();
 		m_spBackgroundUI->SetActive(false);
 		m_spMainTitleUI->SetActive(false);
 		m_spLoadingTextUI->SetActive(false);

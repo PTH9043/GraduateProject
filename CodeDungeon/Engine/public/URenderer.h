@@ -66,6 +66,7 @@ public:
 	void BindDefferedTransform(SHPTR<UShader> _spShader);
 	void TurnOnFog() { m_bTurnShader.m_bTurnFog = true; }
 	void TurnOffFog() { m_bTurnShader.m_bTurnFog = false; }
+	void SetGameStartEffect() { m_bTurnShader.m_bGameStart = true; }
 	void TurnOnDieEffect() { m_bTurnShader.m_bTurnDie = true; }
 	void TurnOffDieEffect() { m_bTurnShader.m_bTurnDie = false; }
 	void TurnOnAbilityEffect() { if (!m_bTurnShader.m_bTurnHit && !m_bTurnShader.m_bTurnDie)m_bTurnShader.m_bTurnAbility = true; }
