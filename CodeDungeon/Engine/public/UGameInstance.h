@@ -329,9 +329,12 @@ public: //Renderer Fog Bool
 	void TurnOffAbilityEffect();
 	void TurnOnHitEffect();
 	void TurnOffHitEffect();
+	void PauseGame();
+	void ResumeGame();
 private:
 	_bool															m_isGamming;
-	
+	_bool				m_isPause = false;
+
 	SHPTR<UGraphicDevice>						m_spGraphicDevice;
 	SHPTR<UShaderBufferManager>		m_spShaderBufferManager;
 	SHPTR<UTimerManager>						m_spTimerManager;

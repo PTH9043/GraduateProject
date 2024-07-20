@@ -219,9 +219,17 @@ void UGameInstance::Tick(const _double& _dTimeDelta)
 		m_spNetworkQueryProcessing->ProcessQueryData();
 	}
 
-	m_spRenderer->Tick(_dTimeDelta);
+	
 	m_spSceneManager->Tick(_dTimeDelta);
-	m_spActorManager->Tick(_dTimeDelta);
+	if (m_isPause) {
+		m_spRenderer->Tick(0.f);
+		m_spActorManager->Tick(0.f);
+	}
+	else {
+		m_spRenderer->Tick(_dTimeDelta);
+		m_spActorManager->Tick(_dTimeDelta);
+	}
+	
 }
 
 void UGameInstance::LateTick(const _double& _dTimeDelta)
@@ -231,9 +239,19 @@ void UGameInstance::LateTick(const _double& _dTimeDelta)
 		m_spNetworkQueryProcessing->ProcessQueryData();
 	}
 
-	m_spSceneManager->LateTick(_dTimeDelta);
-	m_spActorManager->LateTick(_dTimeDelta);
-	m_spCharacterManager->TickCollider(_dTimeDelta);
+	
+	if (m_isPause) {
+		m_spActorManager->LateTick(0.f);
+		m_spCharacterManager->TickCollider(0.f);
+		m_spSceneManager->LateTick(0.f);
+	}
+	else {
+		m_spActorManager->LateTick(_dTimeDelta);
+		m_spCharacterManager->TickCollider(_dTimeDelta);
+		m_spSceneManager->LateTick(_dTimeDelta);
+	}
+	
+	
 }
 
 void UGameInstance::RenderBegin()
@@ -1091,6 +1109,16 @@ void UGameInstance::TurnOffHitEffect() {
 	if (m_spRenderer != nullptr)m_spRenderer->TurnOffHitEffect();
 }
 
+void UGameInstance::PauseGame()
+{
+	m_isPause = true;
+}
+
+void UGameInstance::ResumeGame()
+{
+	m_isPause = false;
+}
+
 /*
 ==================================================
 Renderer Fog Setting
@@ -1585,7 +1613,7 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 		{
 			CreateGraphicsShader(PROTO_RES_BACKGROUNDUISHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"BackGroundUI", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
-					SHADERLIST{ VS_MAIN, PS_MAIN }, RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::LESS_EQUAL));
+					SHADERLIST{ VS_MAIN, PS_MAIN }, RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::LESS));
 		}
 		{
 			CreateGraphicsShader(PROTO_RES_BUTTONUISHADER, CLONETYPE::CLONE_STATIC,

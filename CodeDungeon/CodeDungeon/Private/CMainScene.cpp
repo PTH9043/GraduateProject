@@ -244,7 +244,7 @@ void CMainScene::CreateStartSceneUI()
 		CImageUI::UIDESC tDesc5;
 		{
 			// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
-			tDesc5.fZBufferOrder = 0.88f;
+			tDesc5.fZBufferOrder = 0.8f;
 			tDesc5.strImgName = L"T_TitleLogo_Shadow_SmokeWave_UI";
 			tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
 			tDesc5.v2Size.x = static_cast<_float>(640);
@@ -512,7 +512,12 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 	SHPTR<ULight> DirLight;
 	OutLight(LIGHTTYPE::TYPE_DIRECTIONAL, 0, DirLight);
 	
-
+	if (pGameInstance->GetDIKeyDown(DIK_F6)) {
+		pGameInstance->PauseGame();
+	}
+	if (pGameInstance->GetDIKeyDown(DIK_F7)) {
+		pGameInstance->ResumeGame();
+	}
 	SHPTR<ULight> PointLight;
 	OutLight(LIGHTTYPE::TYPE_POINT, 0, PointLight);
 
