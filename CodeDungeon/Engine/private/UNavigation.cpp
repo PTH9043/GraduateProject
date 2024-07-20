@@ -232,6 +232,7 @@ SHPTR<UCell> UNavigation::FindCell(const _float3& _vPosition) {
 		return nullptr;
 }
 
+
 SHPTR<UCell> UNavigation::FindCellWithoutUpdate(const _float3& _vPosition) {
 	RETURN_CHECK(nullptr == m_spCellContainer, nullptr);
 	_int iNeighborIndex{ 0 };
@@ -269,6 +270,20 @@ SHPTR<UCell> UNavigation::FindCellWithoutUpdate(const _float3& _vPosition) {
 		return closestCell;
 	else
 		return nullptr;
+}
+
+SHPTR<UCell> UNavigation::FindCellForCamera(const _float3& _vPosition) {
+	RETURN_CHECK(nullptr == m_spCellContainer, nullptr);
+	_int iNeighborIndex{ 0 };
+	_float3 vLine{};
+	_bool success = false;
+	SHPTR<UCell> closestCell{};
+	for (auto& Cells : *(m_spCellContainer))
+	{
+		if (true == Cells->IsIn(_vPosition, iNeighborIndex, vLine)) {
+
+		}
+	}
 }
 
 SHPTR<UCell> UNavigation::FindCell(const _int& _iIndex) {
