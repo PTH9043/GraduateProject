@@ -36,6 +36,7 @@ public:
 	void CollisionTick(const _double& _dTimeDelta);
 
 	void DrawStartSceneUI(const _double& _dTimeDelta);
+	void CreateStartSceneUI();
 private:
 	// Main
 	SHPTR<CMainCamera>			m_spMainCamera;
@@ -51,6 +52,8 @@ private:
 	//------------START SCENE UI-------------------
 	SHPTR<CImageUI>			m_spBackgroundUI;
 	SHPTR<CImageUI>			m_spMainTitleUI;
+	SHPTR<CImageUI>			m_spMainTitleEffectUI;
+	SHPTR<CImageUI>			m_spLineEffectUI;
 	SHPTR<CImageUI>			m_spBackEffectUI;
 
 	SHPTR<CImageUI>			m_spLoadingBackgroundUI;

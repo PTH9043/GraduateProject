@@ -52,6 +52,7 @@ PS_OUT PS_Main(PS_In In)
     float4 texColor;
     texColor = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV);
     float duration = _durationTime / 10.f;
+    texColor *= float4(255, 1, 1, 1);
     if (In.vTexUV.x <= duration)
     {
         Out.vColor = texColor;
