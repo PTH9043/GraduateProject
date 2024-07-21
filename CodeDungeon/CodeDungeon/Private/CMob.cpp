@@ -63,6 +63,7 @@ HRESULT CMob::NativeConstructClone(const VOIDDATAS& _Datas)
 	GetAnimModel()->SetAnimation(MobServerData.iStartAnimIndex);
 #else
 	GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
+	SetTargetPlayer(nullptr);
 #endif
 	return S_OK;
 }
@@ -71,11 +72,18 @@ void CMob::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
 #ifndef _ENABLE_PROTOBUFF
+
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	_float3 CurrentMobPos = GetTransform()->GetPos();
+
+	if (nullptr == m_spTargetPlayer)
+	{
+		m_spTargetPlayer = spGameInstance->FindPlayerToDistance(CurrentMobPos);
+	}
+
 	if(m_spTargetPlayer)
 	{
-		_float3 CurrentMobPos = GetTransform()->GetPos();
 		_float3 CurrentPlayerPos = m_spTargetPlayer->GetTransform()->GetPos();
-
 		CalculateDistanceBetweenPlayers(CurrentPlayerPos, CurrentMobPos);
 		SearchForPlayers();
 	}
@@ -143,8 +151,6 @@ void CMob::SendCollisionData(_int _DamageEnable)
 
 void CMob::SearchForPlayers()
 {
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-
 	if (m_fDistancefromNearestPlayer < m_fActivationRange)
 		m_bFoundTarget = true;
 	else if(m_fDistancefromNearestPlayer >= m_fDeactivationRange)

@@ -69,6 +69,7 @@ class UPawn;
 class UModelMaterial;
 class USwapChain;
 class UFont;
+class UPlayer;
 
 struct PICKINGDESC;
 struct WAITCHECKACTOR;
@@ -296,7 +297,11 @@ public: /* CharacterManager*/
 	void RegisterCurrentPlayer(CSHPTRREF<UCharacter> _spCurrentPlayer);
 	void AddCollisionPawnList(CSHPTRREF<UPawn> _spPawn);
 	void RemoveCollisionPawn(CSHPTRREF<UPawn> _spPawn);
+	void RemovePlayerInContainer(CSHPTRREF<UPlayer> _spPlayer);
+	void AddPlayerInContainer(SHPTR<UPlayer> _spPlayer);
 
+	SHPTR<UPlayer> FindPlayerToNetworkID(_int _iNetworkID);
+	SHPTR<UPlayer> FindPlayerToDistance(const _float3& _vPos);
 public: /* Material Manager*/
 	void AddModelMaterial(const _uint _MaterialIndex, CSHPTRREF<UModelMaterial> _spModelMaterial);
 	void  CopyToMaterialShaderParam(REF_IN GLOBALPARAM& _GrobalParam);

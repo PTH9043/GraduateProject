@@ -1044,6 +1044,26 @@ void UGameInstance::RemoveCollisionPawn(CSHPTRREF<UPawn> _spPawn)
 	m_spCharacterManager->RemoveCollisionPawn(_spPawn);
 }
 
+void UGameInstance::RemovePlayerInContainer(CSHPTRREF<UPlayer> _spPlayer)
+{
+	m_spCharacterManager->RemovePlayerInContainer(_spPlayer);
+}
+
+void UGameInstance::AddPlayerInContainer(SHPTR<UPlayer> _spPlayer)
+{
+	m_spCharacterManager->AddPlayerInContainer(_spPlayer);
+}
+
+SHPTR<UPlayer> UGameInstance::FindPlayerToNetworkID(_int _iNetworkID)
+{
+	return 	m_spCharacterManager->FindPlayerToNetworkID(_iNetworkID);
+}
+
+SHPTR<UPlayer> UGameInstance::FindPlayerToDistance(const _float3& _vPos)
+{
+	return 	m_spCharacterManager->FindPlayerToDistance(_vPos);
+}
+
 /*
 ==================================================
 CharacterManager

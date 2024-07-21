@@ -90,9 +90,7 @@ void UGpuCommand::WaitForLastSubmittedFrame()
 
 UGpuCommand::FRAMECONTEXT* UGpuCommand::WaitForNextFrameResources(const HANDLE& _hSwapchainEvent, const _uint _iBackBufferIndex)
 {
-	m_iFrameValue = m_iFrameValue + 1;
-	if (m_iFrameValue >= FRAME_CNT)
-		m_iFrameValue = 0;
+	m_iFrameValue = (m_iFrameValue + 1) % FRAME_CNT;
 
 	HANDLE waitableObjects[] = { _hSwapchainEvent, NULL };
 	DWORD numWaitableObjects = 1;
@@ -101,10 +99,13 @@ UGpuCommand::FRAMECONTEXT* UGpuCommand::WaitForNextFrameResources(const HANDLE& 
 	FRAMECONTEXT* frameCtx = &m_arrFrameContexts[m_iFrameIndex];
 	_uint fenceValue = frameCtx->fenceValue;
 
-	frameCtx->fenceValue = 0;
-	SetEventOnCompletion(fenceValue);
-	waitableObjects[1] = GetFenceEvent();
-	numWaitableObjects = 2;
+	if (0 != fenceValue)
+	{
+		frameCtx->fenceValue = 0;
+		SetEventOnCompletion(fenceValue);
+		waitableObjects[1] = GetFenceEvent();
+		numWaitableObjects = 2;
+	}
 
 	WaitForMultipleObjects(numWaitableObjects, waitableObjects, TRUE, INFINITE);
 	return frameCtx;

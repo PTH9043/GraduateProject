@@ -79,7 +79,7 @@ namespace Engine {
 			// 메모리 풀에서 꺼내온다. 
 			Header = m_PoolTable[AllocateSize]->Pop();
 		}
-		::memset(Header, 0, AllocateSize);
+		::ZeroMemory(Header, AllocateSize);
 		return UMemoryHeader::AttachHeader(Header, AllocateSize);
 	}
 
