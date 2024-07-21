@@ -10,12 +10,13 @@ public:
 	typedef struct tagUIDesc
 	{
 		tagUIDesc() = default;
-		tagUIDesc(const _wstring& _strImgName, const _wstring& _shaderName, const _float2& _v2Pos, const _float2& _v2Size, const _float& _fZBufferOrder)
-			: strImgName(_strImgName), _shaderName(_shaderName), v2Pos(_v2Pos), v2Size(_v2Size), fZBufferOrder(_fZBufferOrder)
+		tagUIDesc(const _wstring& _strImgName, const _wstring& _shaderName, const _wstring& _drawOrder, const _float2& _v2Pos, const _float2& _v2Size, const _float& _fZBufferOrder)
+			: strImgName(_strImgName), _shaderName(_shaderName), DrawOrder(_drawOrder), v2Pos(_v2Pos), v2Size(_v2Size), fZBufferOrder(_fZBufferOrder)
 		{}
 		_float2		v2Pos;
 		_float2		v2Size;
 		_float			fZBufferOrder{ 0.f };
+		_wstring			DrawOrder{ L"" };
 		_wstring		strImgName{ L"" };
 		_wstring		_shaderName{ L"" };
 	}UIDESC;

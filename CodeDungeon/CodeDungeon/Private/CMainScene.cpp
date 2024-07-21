@@ -189,6 +189,7 @@ void CMainScene::CreateStartSceneUI()
 			tDesc.fZBufferOrder = 0.99f;
 			tDesc.strImgName = L"Background";
 			tDesc._shaderName = PROTO_RES_BACKGROUNDUISHADER;
+			tDesc.DrawOrder = L"Priority";
 			tDesc.v2Size.x = static_cast<_float>(1280);
 			tDesc.v2Size.y = static_cast<_float>(1080);
 			tDesc.v2Pos = _float2{ 640,540 };
@@ -201,6 +202,7 @@ void CMainScene::CreateStartSceneUI()
 			tDesc1.fZBufferOrder = 0.97f;
 			tDesc1.strImgName = L"LoadingBar_Background";
 			tDesc1._shaderName = PROTO_RES_DEFAULTUISHADER;
+			tDesc1.DrawOrder = L"Middle";
 			tDesc1.v2Size.x = static_cast<_float>(1080);
 			tDesc1.v2Size.y = static_cast<_float>(30);
 			tDesc1.v2Pos = _float2{ 640,840 };
@@ -212,6 +214,7 @@ void CMainScene::CreateStartSceneUI()
 			tDesc2.fZBufferOrder = 0.97f;
 			tDesc2.strImgName = L"LoadingBar_Fill";
 			tDesc2._shaderName = PROTO_RES_LOADINGUISHADER;
+			tDesc2.DrawOrder = L"Last";
 			tDesc2.v2Size.x = static_cast<_float>(1000);
 			tDesc2.v2Size.y = static_cast<_float>(25);
 			tDesc2.v2Pos = _float2{ 640,840 };
@@ -224,6 +227,7 @@ void CMainScene::CreateStartSceneUI()
 			tDesc3.fZBufferOrder = 0.88f;
 			tDesc3.strImgName = L"MainTitle";
 			tDesc3._shaderName = PROTO_RES_DEFAULTUISHADER;
+			tDesc3.DrawOrder = L"Last";
 			tDesc3.v2Size.x = static_cast<_float>(640);
 			tDesc3.v2Size.y = static_cast<_float>(240);
 			tDesc3.v2Pos = _float2{ 640,220 };
@@ -233,13 +237,25 @@ void CMainScene::CreateStartSceneUI()
 		CButtonUI::UIDESC tDesc4;
 		{
 			tDesc4.fZBufferOrder = 0.47f;
-			tDesc4.strImgName = L"";
+			tDesc4.strImgName = L"Enter";
 			tDesc4._shaderName = PROTO_RES_BUTTONUISHADER;
+			tDesc4.DrawOrder = L"Last";
 			tDesc4.v2Size.x = static_cast<_float>(200);
 			tDesc4.v2Size.y = static_cast<_float>(100);
-			tDesc4.v2Pos = _float2{ 640, 750 } ;
-			m_spButtonUI = std::static_pointer_cast<CButtonUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_BUTTONUI, { &tDesc4 }));
-			m_spButtonUI->SetActive(true);
+			tDesc4.v2Pos = _float2{ 640, 650 } ;
+			m_spEnterButtonUI = std::static_pointer_cast<CButtonUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_BUTTONUI, { &tDesc4 }));
+			m_spEnterButtonUI->SetActive(true);
+		}
+		{
+			tDesc4.fZBufferOrder = 0.47f;
+			tDesc4.strImgName = L"Exit";
+			tDesc4._shaderName = PROTO_RES_BUTTONUISHADER;
+			tDesc4.DrawOrder = L"Last";
+			tDesc4.v2Size.x = static_cast<_float>(180);
+			tDesc4.v2Size.y = static_cast<_float>(80);
+			tDesc4.v2Pos = _float2{ 640, 770 };
+			m_spExitButtonUI = std::static_pointer_cast<CButtonUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_BUTTONUI, { &tDesc4 }));
+			m_spExitButtonUI->SetActive(true);
 		}
 		CImageUI::UIDESC tDesc5;
 		{
@@ -247,6 +263,7 @@ void CMainScene::CreateStartSceneUI()
 			tDesc5.fZBufferOrder = 0.8f;
 			tDesc5.strImgName = L"T_TitleLogo_Shadow_SmokeWave_UI";
 			tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+			tDesc5.DrawOrder = L"Middle";
 			tDesc5.v2Size.x = static_cast<_float>(640);
 			tDesc5.v2Size.y = static_cast<_float>(250);
 			tDesc5.v2Pos = _float2{ 640,212.5 };
@@ -259,6 +276,7 @@ void CMainScene::CreateStartSceneUI()
 			tDesc5.fZBufferOrder = 0.48f;
 			tDesc5.strImgName = L"T_TitleLogo_Shadow_Line_UI";
 			tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+			tDesc5.DrawOrder = L"Last";
 			tDesc5.v2Size.x = static_cast<_float>(1080);
 			tDesc5.v2Size.y = static_cast<_float>(25);
 			tDesc5.v2Pos = _float2{ 640,870 };
@@ -270,6 +288,7 @@ void CMainScene::CreateStartSceneUI()
 			tDesc5.fZBufferOrder = 0.43f;
 			tDesc5.strImgName = L"Loading";
 			tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+			tDesc5.DrawOrder = L"Last";
 			tDesc5.v2Size.x = static_cast<_float>(150);
 			tDesc5.v2Size.y = static_cast<_float>(50);
 			tDesc5.v2Pos = _float2{ 1050,800 };
@@ -281,6 +300,7 @@ void CMainScene::CreateStartSceneUI()
 			tDesc5.fZBufferOrder = 0.43f;
 			tDesc5.strImgName = L"LoadingDot";
 			tDesc5._shaderName = PROTO_RES_LOADINGDOTUISHADER;
+			tDesc5.DrawOrder = L"Last";
 			tDesc5.v2Size.x = static_cast<_float>(60);
 			tDesc5.v2Size.y = static_cast<_float>(25);
 			tDesc5.v2Pos = _float2{ 1145,805 };
@@ -292,9 +312,10 @@ void CMainScene::CreateStartSceneUI()
 			tDesc5.fZBufferOrder = 0.43f;
 			tDesc5.strImgName = L"PleaseWait";
 			tDesc5._shaderName = PROTO_RES_PLEASEWAITUISHADER;
+			tDesc5.DrawOrder = L"Last";
 			tDesc5.v2Size.x = static_cast<_float>(200);
 			tDesc5.v2Size.y = static_cast<_float>(75);
-			tDesc5.v2Pos = _float2{ 640,700 };
+			tDesc5.v2Pos = _float2{ 640, 650 };
 			m_spPleaseWaitTextUI = std::static_pointer_cast<CLoadingUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_LOADINGUI, { &tDesc5 }));
 			m_spPleaseWaitTextUI->SetActive(false);
 		}
@@ -456,20 +477,32 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
-	if (m_spButtonUI->IsMouseOnRect()&& m_spButtonUI->IsActive()) {
+	if (m_spEnterButtonUI->IsMouseOnRect()&& m_spEnterButtonUI->IsActive()) {
 
-		m_spButtonUI->SetIfPicked(true);
+		m_spEnterButtonUI->SetIfPicked(true);
 
 		if (true == spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_L)&&!m_bStartScene) {
 			m_bStartScene = true;		
 		}
 	}
 	else {
-		m_spButtonUI->SetIfPicked(false);
+		m_spEnterButtonUI->SetIfPicked(false);
 	}
+	if (m_spExitButtonUI->IsMouseOnRect()&& m_spExitButtonUI->IsActive()) {
+
+		m_spExitButtonUI->SetIfPicked(true);
+
+		if (true == spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_L)) {
+			::PostQuitMessage(0);
+		}
+	}
+	else {
+		m_spExitButtonUI->SetIfPicked(false);
+	}
+
 	if (m_bStartScene) {
 		m_fStartSceneLoadingTimer += _dTimeDelta;
-		m_spButtonUI->SetActive(false);
+		m_spEnterButtonUI->SetActive(false);
 	//	m_spLoadingBackgroundUI->SetActive(true);
 		m_spLoadingFillingUI->SetActive(true);
 		m_spLoadingFillingUI->SetIfPicked(true);
@@ -495,7 +528,8 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 		m_spPleaseWaitTextUI->SetActive(false);
 		m_spLoadingFillingUI->SetActive(false);
 		m_spLoadingBackgroundUI->SetActive(false);
-		m_spButtonUI->SetActive(false);
+		m_spEnterButtonUI->SetActive(false);
+		m_spExitButtonUI->SetActive(false);
 		m_fStartSceneLoadingTimer = 0.f;
 		m_bStartScene = false;
 	}

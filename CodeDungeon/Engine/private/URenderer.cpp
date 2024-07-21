@@ -309,7 +309,9 @@ HRESULT URenderer::Render()
    UpSample();
     RenderBloom();
     RenderEnd();
-    Render2DUI();
+    Render2DUIPriority();
+    Render2DUIMiddle();
+    Render2DUILast();
     Render3DUI();
     //원상복구하려면 Blur두개 키고 DownSample 2개를 꺼야함. 그리고 Upsample입력 텍스쳐를 BlurResult로
 #ifdef _USE_DEBUGGING
@@ -590,9 +592,26 @@ void URenderer::Render3DUI()
 {
 }
 
-void URenderer::Render2DUI()
+void URenderer::Render2DUIPriority()
 {
-    for (auto& iter : m_arrActiveDrawRenderList[RENDERID::RI_2DUI])
+    for (auto& iter : m_arrActiveDrawRenderList[RENDERID::RI_2DUIPRIORITY])
+    {
+        RenderObject(iter.first, iter.second);
+    }
+}
+
+
+void URenderer::Render2DUIMiddle()
+{
+    for (auto& iter : m_arrActiveDrawRenderList[RENDERID::RI_2DUIMIDDLE])
+    {
+        RenderObject(iter.first, iter.second);
+    }
+}
+
+void URenderer::Render2DUILast()
+{
+    for (auto& iter : m_arrActiveDrawRenderList[RENDERID::RI_2DUILAST])
     {
         RenderObject(iter.first, iter.second);
     }
