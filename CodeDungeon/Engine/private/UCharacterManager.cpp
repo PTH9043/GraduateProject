@@ -1,10 +1,7 @@
 #include "EngineDefine.h"
 #include "UCharacterManager.h"
 #include "UCharacter.h"
-<<<<<<< HEAD
 #include "UPlayer.h"
-=======
->>>>>>> 3987a0223b251a7dd4bb520acb5f1bbc6e22f07b
 #include "UTransform.h"
 
 UCharacterManager::UCharacterManager() : m_spCurrentPlayer{nullptr}

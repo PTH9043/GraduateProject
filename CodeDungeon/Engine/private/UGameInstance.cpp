@@ -218,12 +218,8 @@ void UGameInstance::Tick(const _double& _dTimeDelta)
 	{
 		m_spNetworkQueryProcessing->ProcessQueryData();
 	}
-<<<<<<< HEAD
-	m_spRenderer->Tick(_dTimeDelta);
-=======
 
-	
->>>>>>> 3987a0223b251a7dd4bb520acb5f1bbc6e22f07b
+	m_spRenderer->Tick(_dTimeDelta);
 	m_spSceneManager->Tick(_dTimeDelta);
 	if (m_isPause) {
 		m_spRenderer->Tick(0.f);
@@ -238,18 +234,16 @@ void UGameInstance::Tick(const _double& _dTimeDelta)
 
 void UGameInstance::LateTick(const _double& _dTimeDelta)
 {
-<<<<<<< HEAD
 	m_spSceneManager->LateTick(_dTimeDelta);
 	m_spActorManager->LateTick(_dTimeDelta);
 	m_spCharacterManager->TickCollider(_dTimeDelta);
 	m_spActorManager->SendPacketActive(_dTimeDelta);
-=======
+
 	if (nullptr != m_spNetworkQueryProcessing)
 	{
 		m_spNetworkQueryProcessing->ProcessQueryData();
 	}
 
-	
 	if (m_isPause) {
 		m_spActorManager->LateTick(0.f);
 		m_spCharacterManager->TickCollider(0.f);
@@ -260,9 +254,6 @@ void UGameInstance::LateTick(const _double& _dTimeDelta)
 		m_spCharacterManager->TickCollider(_dTimeDelta);
 		m_spSceneManager->LateTick(_dTimeDelta);
 	}
-	
-	
->>>>>>> 3987a0223b251a7dd4bb520acb5f1bbc6e22f07b
 }
 
 void UGameInstance::RenderBegin()
@@ -274,7 +265,7 @@ void UGameInstance::RenderBegin()
 
 void UGameInstance::RenderEnd()
 {
-	/* Gpu µ¿±âÈ­ ½ÃÅ°´Â ºÎºÐ */
+	/* Gpu ï¿½ï¿½ï¿½ï¿½È­ ï¿½ï¿½Å°ï¿½ï¿½ ï¿½Îºï¿½ */
 	m_spGraphicDevice->MainRenderEnd();
 }
 
@@ -596,7 +587,7 @@ SHPTR<UActor> UGameInstance::CloneActorAddAndNotInLayer(const _wstring& _wstrPro
 void UGameInstance::RemoveActor(CSHPTRREF<UActor> _spActor)
 {
 	m_spActorManager->RemoveActor(_spActor);
-	// Collision pawn ¾È¿¡ ÀÖ´Â ³à¼® Áö¿ì±â
+	// Collision pawn ï¿½È¿ï¿½ ï¿½Ö´ï¿½ ï¿½à¼® ï¿½ï¿½ï¿½ï¿½ï¿½
 	SHPTR<UPawn> spPawn = std::dynamic_pointer_cast<UPawn>(_spActor);
 	if (nullptr != spPawn)
 	{
@@ -1886,7 +1877,7 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 					RTDESC{ RTOBJID::NONALPHA_POSITION_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
 							GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f }},
 							RTDESC{ RTOBJID::NONALPHA_GLOW_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R16G16B16A16_FLOAT,
-					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f } //GLow ¿µ¿ªÀ» ÇÈ¼¿´ÜÀ§·Î ÅØ½ºÃÄ¿¡ ½Äº°»ö»ó(ex.»¡°£»ö)À¸·Î Ãâ·ÂÇÏ¿© ±× ÇØ´ç ¿µ¿ª Á¶¸í¿¡¼­ ½ê°Ô¹Þ°ÔÇÏ´øÁö.
+					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f } //GLow ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½È¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ø½ï¿½ï¿½Ä¿ï¿½ ï¿½Äºï¿½ï¿½ï¿½ï¿½ï¿½(ex.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ô¹Þ°ï¿½ï¿½Ï´ï¿½ï¿½ï¿½.
 			}
 			};
 			// Add RenderTargetGroup
@@ -2014,7 +2005,7 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 
 #ifdef _USE_DEBUGGING
 	/*
-	·»´õ Å¸°Ù µð¹ö±ëÀ» À§ÇÑ °Í
+	ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
 	*/
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_POSITION_DEFFERED,
 		_float2(100.f, 100.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());

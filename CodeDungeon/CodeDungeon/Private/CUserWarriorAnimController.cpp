@@ -213,28 +213,6 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
         spWarriorPlayer->IfAttack(false);
     }
 
-    // Hit state
-    if (Hit && !isKicked) {
-        UpdateState(spAnimModel, ANIM_HIT, L"HIT_BACK");
-#ifndef _ENABLE_PROTOBUFF
-        spWarriorPlayer->SetPrevHealth(spWarriorPlayer->GetHealth());
-#endif
-    }
-
-    // Rise state
-    if (isRise) {
-       
-        UpdateState(spAnimModel, ANIM_MOVE, L"RISE1");
-        spAnimModel->SetAnimation(L"rise01");
-    }
-    if (CurAnimName == L"rise01")
-        spWarriorPlayer->SetRiseState(false);
-
-    // Kicked state
-    if (isKicked && CurAnimName != L"rise01") {
-        UpdateState(spAnimModel, ANIM_HIT, L"GOTKICKED");
-    }
-
     if (true == spGameInstance->IsMouseInWindowSize())
     { 
         // Mouse Move

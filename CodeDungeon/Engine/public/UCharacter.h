@@ -9,9 +9,9 @@ class UAnimationController;
 class UNavigation;
 class UShaderConstantBuffer;
 /*
-@ Date: 2024-02-25, Writer: ¹ÚÅÂÇö
+@ Date: 2024-02-25, Writer: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 @ Explain
--  »ç¿ëÀÚ°¡ ¿òÁ÷ÀÌ°Å³ª AI°¡ ¿òÁ÷ÀÏ ¶§ »ç¿ëÇÏ´Â Å¬·¡½ºÀÌ´Ù. 
+-  ï¿½ï¿½ï¿½ï¿½Ú°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì°Å³ï¿½ AIï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½. 
 */
 class UCharacter abstract : public UPawn {
 public:
@@ -35,37 +35,37 @@ public:
 	UCharacter(const UCharacter& _rhs);
 	DESTRUCTOR(UCharacter)
 public:
-	// UPawnÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+	// UPawnï¿½ï¿½(ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Óµï¿½
 	virtual SHPTR<UCloneObject> Clone(const VOIDDATAS& _vecDatas) PURE;
 	virtual void Free() PURE;
 	virtual HRESULT NativeConstruct() PURE;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _Datas) PURE;
 public:
-	// ´Ù¸¥ Ä³¸¯ÅÍ¿ÍÀÇ °Å¸® »êÃâ 
+	// ï¿½Ù¸ï¿½ Ä³ï¿½ï¿½ï¿½Í¿ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 	_float OtherCharacterToDistance(CSHPTRREF<UActor> _spOtherActor);
-	// ´Ù¸¥ Ä³¸¯ÅÍ¸¦ ¹Ù¶óº¸´Â ÀÚ±â ÀÚ½ÅÀÇ Look Angle 
+	// ï¿½Ù¸ï¿½ Ä³ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½Ù¶óº¸´ï¿½ ï¿½Ú±ï¿½ ï¿½Ú½ï¿½ï¿½ï¿½ Look Angle 
 	_float OtherCharacterDirToLook(CSHPTRREF<UActor> _spOtherActor);
-	// ´Ù¸¥ Ä³¸¯ÅÍ¸¦ ±âÁØÀ¸·Î ¹Ù¶óº¸´Â ÀÚ±â ÀÚ½ÅÀÇ Right Angle 
+	// ï¿½Ù¸ï¿½ Ä³ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¶óº¸´ï¿½ ï¿½Ú±ï¿½ ï¿½Ú½ï¿½ï¿½ï¿½ Right Angle 
 	_float OhterCharacterDirToRight(CSHPTRREF<UActor> _spOtherActor);
-	// ´Ù¸¥ Ä³¸¯ÅÍ¸¦ ¹Ù¶óº¸´Â ÀÚ±â ÀÚ½ÅÀÇ Look Angle ( 180 ~ -180 )
+	// ï¿½Ù¸ï¿½ Ä³ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½Ù¶óº¸´ï¿½ ï¿½Ú±ï¿½ ï¿½Ú½ï¿½ï¿½ï¿½ Look Angle ( 180 ~ -180 )
 	_float OtherCharacterDirToLookConverter(CSHPTRREF<UActor>  _spOtherActor);
-	// ´Ù¸¥ Ä³¸¯ÅÍ¸¦ ¹Ù¶óº¸´Â ÀÚ±â ÀÚ½ÅÀÇ Look Direction
+	// ï¿½Ù¸ï¿½ Ä³ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½Ù¶óº¸´ï¿½ ï¿½Ú±ï¿½ ï¿½Ú½ï¿½ï¿½ï¿½ Look Direction
 	_float3 OtherCharacterDirToLookVectorF3(CSHPTRREF<UActor>  _spOtherActor);
-	// ´Ù¸¥ Ä³¸¯ÅÍ¿ÍÀÇ °Å¸® »êÃâ 
+	// ï¿½Ù¸ï¿½ Ä³ï¿½ï¿½ï¿½Í¿ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 	_float OtherCharacterToDistance(CSHPTRREF<UTransform> _spOtherTransform);
-	// ´Ù¸¥ Ä³¸¯ÅÍ¸¦ ¹Ù¶óº¸´Â ÀÚ±â ÀÚ½ÅÀÇ Look Angle 
+	// ï¿½Ù¸ï¿½ Ä³ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½Ù¶óº¸´ï¿½ ï¿½Ú±ï¿½ ï¿½Ú½ï¿½ï¿½ï¿½ Look Angle 
 	_float OtherCharacterDirToLook(CSHPTRREF<UTransform> _spOtherTransform);
-	// ´Ù¸¥ Ä³¸¯ÅÍ¸¦ ±âÁØÀ¸·Î ¹Ù¶óº¸´Â ÀÚ±â ÀÚ½ÅÀÇ Right Angle 
+	// ï¿½Ù¸ï¿½ Ä³ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¶óº¸´ï¿½ ï¿½Ú±ï¿½ ï¿½Ú½ï¿½ï¿½ï¿½ Right Angle 
 	_float OhterCharacterDirToRight(CSHPTRREF<UTransform> _spOtherTransform);
-	// ´Ù¸¥ Ä³¸¯ÅÍ¸¦ ¹Ù¶óº¸´Â ÀÚ±â ÀÚ½ÅÀÇ Look Angle ( 180 ~ -180 )
+	// ï¿½Ù¸ï¿½ Ä³ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½Ù¶óº¸´ï¿½ ï¿½Ú±ï¿½ ï¿½Ú½ï¿½ï¿½ï¿½ Look Angle ( 180 ~ -180 )
 	_float OtherCharacterDirToLookConverter(CSHPTRREF<UTransform> _spOtherTransform);
-	// ´Ù¸¥ Ä³¸¯ÅÍ¸¦ ¹Ù¶óº¸´Â ÀÚ±â ÀÚ½ÅÀÇ Look Direction
+	// ï¿½Ù¸ï¿½ Ä³ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½Ù¶óº¸´ï¿½ ï¿½Ú±ï¿½ ï¿½Ú½ï¿½ï¿½ï¿½ Look Direction
 	_float3 OtherCharacterDirToLookVectorF3(CSHPTRREF<UTransform> _spOtherTransform);
 public: /* get set */
 	CSHPTRREF<UAnimModel> GetAnimModel() const { return m_spAnimModel; }
 	SHPTR<UNavigation> GetCurrentNavi() const { return m_spCurNavi; }
 	CSHPTRREF<UCollider> GetHitCollider() const { return m_spHitCollider; }
-	// ÇØ´çÇÏ´Â ¿ÀºêÁ§Æ®°¡ Network¿Í ¿¬°áµÇ¾îÀÖ´ÂÁö È®ÀÎÇÏ´Â º¯¼ö
+	// ï¿½Ø´ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ Networkï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½Ö´ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
 	const _bool IsNetworkConnected() const { return m_isNetworkConnected; }
 
 	const _bool& GetHitState() const { return m_bisHit; }
@@ -105,15 +105,11 @@ public: /* get set */
 
 	const _bool& GetIsHItAlreadyState() const { return m_bisHitAlready; }
 	void SetHitAlreadyState(_bool _newState) { m_bisHitAlready = _newState; }
-<<<<<<< HEAD
 
 	const _bool IsDamaged() const { return m_isDamaged; }
 	void SetDamaged(const _bool _isDamaged) { this->m_isDamaged = _isDamaged; }
-=======
 	void SetAnimModelRim(_int _SetRim);
 	void SetAnimModelRimColor(_float3 _SetRimColor);
-
->>>>>>> 3987a0223b251a7dd4bb520acb5f1bbc6e22f07b
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) PURE;
 	virtual void LateTickActive(const _double& _dTimeDelta) PURE;
@@ -148,23 +144,23 @@ private:
 	SHPTR< UAnimModel>					m_spAnimModel;
 
 	SHPTR<UAnimationController>	m_spAnimationController;
-	// ÀÌÀü À§Ä¡ ÀúÀå
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
 	_float3												m_vPrevPos;
-	// ÇöÀç ½ºÅ×ÀÌÁö
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	SHPTR<UNavigation>						m_spCurNavi;
 	SHPTR<UCollider>							m_spHitCollider;
 
-	//ÀÌµ¿ ¼Óµµ
+	//ï¿½Ìµï¿½ ï¿½Óµï¿½
 	_float													m_fMoveSpeed;
 	_float													m_fRunSpeed;
 	_bool													m_bIsRunning;
 	_bool													m_bisHit;
 	_bool													m_bisCollision;
 
-	//ÀÌµ¿ÇÑ ¹æÇâ
+	//ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	_float3												m_f3MovedDirection;
 	_float3												m_f3LastMovedDirection;
-	// ÇØ´çÇÏ´Â ¿ÀºêÁ§Æ®°¡ Network ObjectÀÎÁö È®ÀÎÇÏ´Â º¯¼ö
+	// ï¿½Ø´ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ Network Objectï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
 	_bool													m_isNetworkConnected;
 
 	_bool													m_DrawOutline=false;
