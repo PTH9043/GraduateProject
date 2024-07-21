@@ -339,8 +339,7 @@ void CMainScene::CreateGameSceneUI()
 		tDesc5.v2Pos = _float2{ 250, 900 };
 		m_spHpBarUI = std::static_pointer_cast<CHpBarUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_HPBARUI, { &tDesc5 }));
 		m_spHpBarUI->SetActive(false);
-		m_spHpBarUI->SetMaxHp(500.f);
-		m_spHpBarUI->SetCurHp(258.f);
+		
 	}
 	{
 		// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
@@ -430,9 +429,10 @@ HRESULT CMainScene::LoadSceneData()
 	// Font Create 
 	{
 		m_spTestFont = spGameInstance->AddFont(FONT_NANUMSQUARE_ACBOLD);
-		m_spTestFont->SetPos(_float2{ WINDOW_WIDTH / 2.f, WINDOW_HEIGHT / 2.f });
-		m_spTestFont->SetText(L"Alive Enemy : ");
+		m_spTestFont->SetPos(_float2{ 300,860 });
+		m_spTestFont->SetScale(_float2(1.0, 1.0));
 		m_spTestFont->SetDepths(0.f);
+		m_spTestFont->SetRender(false);
 	}
 	
 	CProtoMaker::CreateMainSceneProtoData(spGameInstance, GetDevice(), std::static_pointer_cast<UCommand>(spGameInstance->GetGpuCommand()));
@@ -578,6 +578,9 @@ HRESULT CMainScene::LoadSceneData()
 	//	m_stGuard->SetActive(true);
 	//	m_stGuard->SetColorTexture(L"asdf");
 	//}
+
+
+	
 #endif
 	return S_OK;
 }
@@ -642,9 +645,13 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 		m_fStartSceneLoadingTimer = 0.f;
 		m_bStartSceneForUI = false;
 		m_bStartGameForUI = true;
+		
 	}
 
 	if (!m_bStartSceneForUI && m_bStartGameForUI) {
+		{//font
+			m_spTestFont->SetRender(true);
+		}
 		m_spHpBarUI->SetActive(true);
 		m_spBackPlayerFrameUI->SetActive(true);
 		m_spBackDragonPlayerFrameUI->SetActive(true);
@@ -677,6 +684,23 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 	}
 	SHPTR<ULight> PointLight;
 	OutLight(LIGHTTYPE::TYPE_POINT, 0, PointLight);
+	{
+		m_spHpBarUI->SetMaxHp(m_spWarriorPlayer->GetMaxHealth());
+		m_spHpBarUI->SetCurHp(m_spWarriorPlayer->GetHealth());
+	} 
+	{
+
+	}
+	{
+		int max_health = m_spWarriorPlayer->GetMaxHealth();
+		int current_health = m_spWarriorPlayer->GetHealth();
+
+		std::wstringstream ws;
+		ws << current_health << L" / " << max_health;
+		std::wstring health_string = ws.str();	
+		m_spTestFont->SetText(health_string);
+		
+	}
 
 	if(pGameInstance->GetDIKeyDown(DIK_ESCAPE))
 		::PostQuitMessage(0);

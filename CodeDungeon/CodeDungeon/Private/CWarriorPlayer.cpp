@@ -199,6 +199,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetOutline(false);
 	SetIfOutlineScale(false);//플레이어는 안그리도록 
 	SetHealth(10000);
+	SetMaxHealth(10000);
 	SetAnimModelRim(true);
 	
 

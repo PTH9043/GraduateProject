@@ -26,7 +26,7 @@ public:
 	void SetScale(const _float2& _vScale) { this->m_tFontDesc.vScale = _vScale; }
 	void SetSpriteEffects(const DirectX::DX12::SpriteEffects& _eEffects) { this->m_tFontDesc.eSpriteEffects = _eEffects; }
 	void SetDepths(const _float _fDepths) { this->m_tFontDesc.fDepths = _fDepths; }
-
+	void SetRender(const _bool _render) { m_isRender = _render; }
 	void SetFontDesc(const FONTDESC& _tFontDesc) { this->m_tFontDesc = _tFontDesc; }
 
 	const _uint& GetFontIndex() const { return m_iFontIndex; }
@@ -40,6 +40,8 @@ private:
 	SHPTR<DirectX::SpriteFont>				m_SpriteFont;
 	SHPTR<UDevice>									m_spDevice;
 	SHPTR<UGpuCommand>						m_spGpuCommand;
+
+	_bool		m_isRender=false;
 };
 
 END

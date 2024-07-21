@@ -198,7 +198,9 @@ HRESULT CMinotaur::NativeConstructClone(const VOIDDATAS& _Datas)
 		Colliders.second->SetTranslate(_float3(0, 10, 0));
 	}
 
+
 	SetHealth(200);
+	SetMaxHealth(200);
 	SetActivationRange(50);
 	SetDeactivationRange(80);
 	return S_OK;

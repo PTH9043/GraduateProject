@@ -82,9 +82,11 @@ public: /* get set */
 	const _bool& GetOutlineScaleState()const { return m_OutlineWithScale; }
 
 	const _int& GetHealth() const { return m_iHealth; }
+	const _int& GetMaxHealth() const { return m_iMaxHealth; }
 	const _int& GetPrevHealth() const { return m_iPrevHealth; }
 
 	void SetHealth(const _int& _inewHealth) { m_iHealth = _inewHealth; }
+	void SetMaxHealth(const _int& _inewHealth) { m_iMaxHealth = _inewHealth; }
 	void SetPrevHealth(const _int& _inewHealth) { m_iPrevHealth = _inewHealth; }
 
 	void DecreaseHealth(_int amount)
@@ -170,6 +172,7 @@ private:
 
 	_float3			m_f3CollidedNormal;
 
+	_int			m_iMaxHealth;
 	_int			m_iHealth;
 	_int			m_iPrevHealth;
 

@@ -212,6 +212,7 @@ HRESULT CAnubis::NativeConstructClone(const VOIDDATAS& _Datas)
 	}
 
 	SetHealth(100);
+	SetMaxHealth(100);
 	SetActivationRange(50);
 	SetDeactivationRange(80);
 

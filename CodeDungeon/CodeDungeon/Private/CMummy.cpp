@@ -204,6 +204,7 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 	}
 
 	SetHealth(100);
+	SetMaxHealth(100);
 	SetActivationRange(30);
 	SetDeactivationRange(80);
 

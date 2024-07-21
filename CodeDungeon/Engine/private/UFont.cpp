@@ -44,8 +44,10 @@ HRESULT UFont::NativeConstruct(CSHPTRREF<UDevice> _spDevice, CSHPTRREF<UGpuComma
 
 void UFont::Render(DirectX::SpriteBatch* _pBatch, const D3D12_VIEWPORT& _tViewPort)
 {
-	m_SpriteFont->DrawString(_pBatch, m_tFontDesc.wstrText.c_str(), m_tFontDesc.vPos, m_tFontDesc.vColor,
-		m_tFontDesc.fRotation, m_tFontDesc.vOrigin, m_tFontDesc.vScale, m_tFontDesc.eSpriteEffects, m_tFontDesc.fDepths);
+	if (m_isRender) {
+		m_SpriteFont->DrawString(_pBatch, m_tFontDesc.wstrText.c_str(), m_tFontDesc.vPos, m_tFontDesc.vColor,
+			m_tFontDesc.fRotation, m_tFontDesc.vOrigin, m_tFontDesc.vScale, m_tFontDesc.eSpriteEffects, m_tFontDesc.fDepths);
+	}
 }
 
 void UFont::Free()

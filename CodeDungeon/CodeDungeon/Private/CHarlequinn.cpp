@@ -237,6 +237,7 @@ HRESULT CHarlequinn::NativeConstructClone(const VOIDDATAS& _Datas)
 	}
 
 	SetHealth(200);
+	SetMaxHealth(200);
 
 	SetActivationRange(50);
 	SetDeactivationRange(100);
