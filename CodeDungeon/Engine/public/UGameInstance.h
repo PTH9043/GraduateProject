@@ -67,8 +67,6 @@ class UGrid;
 class UPawn;
 class UModelMaterial;
 
-class UPlayer;
-
 struct PICKINGDESC;
 struct WAITCHECKACTOR;
 struct MAINGRID;
@@ -291,14 +289,10 @@ public: /* NetworkManager */
 	}
 public: /* CharacterManager*/
 	CSHPTRREF<UCharacter> GetCurrPlayer() const;
-	const SET<SHPTR<UPlayer>>& GetPlayerContainer() const;
-
 	void RegisterCurrentPlayer(CSHPTRREF<UCharacter> _spCurrentPlayer);
 	void AddCollisionPawnList(CSHPTRREF<UPawn> _spPawn);
 	void RemoveCollisionPawn(CSHPTRREF<UPawn> _spPawn);
-	void AddPlayerContainer(CSHPTRREF<UPlayer> _spPlayer);
-	SHPTR<UPlayer> FindPlayerToDistance(const _float3& _vPos);
-	SHPTR<UPlayer> FindPlayerToNetworkID(const _int _iNetworkID);
+
 public: /* Material Manager*/
 	void AddModelMaterial(const _uint _MaterialIndex, CSHPTRREF<UModelMaterial> _spModelMaterial);
 	void  CopyToMaterialShaderParam(REF_IN GLOBALPARAM& _GrobalParam);

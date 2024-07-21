@@ -13,6 +13,7 @@ UNetworkBaseController::UNetworkBaseController() :
 	m_ClientUdpSocket{NULL},
 	m_WsaData{},
 	m_llNetworkOwnerID{0},
+	m_TcpTotalBuffer{},
 	m_RemainBufferLength{0},
 	m_spNetworkAddress{nullptr},
 	m_iSceneID{0},
@@ -81,16 +82,7 @@ void UNetworkBaseController::SendProcessPacket(const UProcessedData& _ProcceedDa
 
 void UNetworkBaseController::InsertNetworkProcessInQuery(UProcessedData&& _data)
 {
-	std::atomic_thread_fence(std::memory_order_seq_cst);
-	if(nullptr != m_spNetworkQueryProcessing)
-	{
-		m_spNetworkQueryProcessing->InsertQueryData(std::move(_data));
-	}
-}
-
-void UNetworkBaseController::SetNetworkQueryProcessing(CSHPTRREF<UNetworkQueryProcessing> _spNetworkQueryProcessing)
-{
-	this->m_spNetworkQueryProcessing = _spNetworkQueryProcessing;
+	GetNetworkQueryProcessing()->InsertQueryData(std::move(_data));
 }
 
 void UNetworkBaseController::ServerTick()
@@ -123,7 +115,6 @@ void UNetworkBaseController::ServerTick()
 		break;
 	case OP_TCP_RECV:
 		CombineRecvPacket(ex_over, num_bytes);
-//		Make::xdelete(ex_over);
 		RecvTcpPacket();
 		break;
 	}
@@ -136,48 +127,38 @@ void UNetworkBaseController::NativePacket()
 
 void UNetworkBaseController::CombineRecvPacket(UOverExp* _pOverExp, _llong _numBytes)
 {
-	std::atomic_thread_fence(std::memory_order_seq_cst);
-
-	if (m_RemainBufferLength < 0 || m_RemainBufferLength >= MAX_PROCESSBUF_LENGTH)
-	{
-		::ZeroMemory(&m_RecvBuffer[0], MAX_PROCESSBUF_LENGTH);
-		m_RemainBufferLength = 0;
-	}
 	// 버퍼를 조합한다. 
 	{
-		::memcpy(&m_RecvBuffer[m_RemainBufferLength], _pOverExp->GetBufferAddress(0), _numBytes);
-		m_RemainBufferLength += _numBytes;
+		::memcpy(&m_TcpTotalBuffer[m_RemainBufferLength], _pOverExp->GetBufferAddress(0), _numBytes);
 	}
 	short moveBuffer{ 0 };
-	char* pBufferMove = &m_RecvBuffer[0];
+	char* pBufferMove = &m_TcpTotalBuffer[0];
 	// 만약 BufferLocation이 존재할 때
-	while (m_RemainBufferLength > 0)
+	while (_numBytes != 0)
 	{
 		// PacketSize를 구한다. 
 		PACKETHEAD PacketHead;
-		memcpy(&PacketHead, &pBufferMove[moveBuffer], PACKETHEAD_SIZE);
+		memcpy(&PacketHead, pBufferMove, PACKETHEAD_SIZE);
 		short CurrPacket = PacketHead.PacketSize + PACKETHEAD_SIZE;
 		// 패킷의 현재 위치가 음수가 되는 경우면 
-		if ((m_RemainBufferLength - CurrPacket) < 0)
+		if ((_numBytes - CurrPacket) < 0)
 		{
-			// 최종적인 버퍼에 PacketSize만큼 이동하여 앞쪽에 존재하는 데이터들을 지운다. 
-			memmove(&m_RecvBuffer[0], pBufferMove, MAX_PROCESSBUF_LENGTH - moveBuffer);
-			return;
+			::memcpy(&m_TcpTotalBuffer[0], pBufferMove, _numBytes);
+			m_RemainBufferLength += _numBytes;
+			break;
 		}
 		ProcessPacket(&pBufferMove[PACKETHEAD_SIZE], PacketHead);
 		// Buffer의 위치를 옮긴다. 
-		m_RemainBufferLength -= CurrPacket;
-		moveBuffer += CurrPacket;
+		_numBytes -= CurrPacket;
 		pBufferMove += CurrPacket;
-	}	
-	::ZeroMemory(&m_RecvBuffer[0], MAX_PROCESSBUF_LENGTH);
+		moveBuffer += CurrPacket;
+	}
 	m_RemainBufferLength = 0;
 }
 
 void UNetworkBaseController::RecvTcpPacket()
 {
-	//UOverExp* pOverExp = Make::xnew<UOverExp>();
-	UServerMethods::RecvTcpPacket(m_ClientTcpSocket, m_RecvTcpOverExp);
+	UServerMethods::RecvTcpPacket(m_ClientTcpSocket, REF_OUT m_RecvTcpOverExp);
 }
 
 void UNetworkBaseController::ServerThread(void* _pData)

@@ -219,7 +219,7 @@ void UGameInstance::Tick(const _double& _dTimeDelta)
 		m_spNetworkQueryProcessing->ProcessQueryData();
 	}
 
-	m_spRenderer->Tick(_dTimeDelta);
+	
 	m_spSceneManager->Tick(_dTimeDelta);
 	if (m_isPause) {
 		m_spRenderer->Tick(0.f);
@@ -234,16 +234,12 @@ void UGameInstance::Tick(const _double& _dTimeDelta)
 
 void UGameInstance::LateTick(const _double& _dTimeDelta)
 {
-	m_spSceneManager->LateTick(_dTimeDelta);
-	m_spActorManager->LateTick(_dTimeDelta);
-	m_spCharacterManager->TickCollider(_dTimeDelta);
-	m_spActorManager->SendPacketActive(_dTimeDelta);
-
 	if (nullptr != m_spNetworkQueryProcessing)
 	{
 		m_spNetworkQueryProcessing->ProcessQueryData();
 	}
 
+	
 	if (m_isPause) {
 		m_spActorManager->LateTick(0.f);
 		m_spCharacterManager->TickCollider(0.f);
@@ -254,6 +250,8 @@ void UGameInstance::LateTick(const _double& _dTimeDelta)
 		m_spCharacterManager->TickCollider(_dTimeDelta);
 		m_spSceneManager->LateTick(_dTimeDelta);
 	}
+	
+	
 }
 
 void UGameInstance::RenderBegin()
@@ -265,6 +263,7 @@ void UGameInstance::RenderBegin()
 
 void UGameInstance::RenderEnd()
 {
+	/* Gpu µ¿±âÈ­ ½ÃÅ°´Â ºÎºÐ */
 	m_spGraphicDevice->MainRenderEnd();
 }
 
@@ -586,6 +585,7 @@ SHPTR<UActor> UGameInstance::CloneActorAddAndNotInLayer(const _wstring& _wstrPro
 void UGameInstance::RemoveActor(CSHPTRREF<UActor> _spActor)
 {
 	m_spActorManager->RemoveActor(_spActor);
+	// Collision pawn ¾È¿¡ ÀÖ´Â ³à¼® Áö¿ì±â
 	SHPTR<UPawn> spPawn = std::dynamic_pointer_cast<UPawn>(_spActor);
 	if (nullptr != spPawn)
 	{
@@ -1019,11 +1019,6 @@ CSHPTRREF<UCharacter> UGameInstance::GetCurrPlayer() const
 	return m_spCharacterManager->GetCurrPlayer();
 }
 
-const SET<SHPTR<UPlayer>>& UGameInstance::GetPlayerContainer() const
-{
-	return m_spCharacterManager->GetPlayerContainer();
-}
-
 void UGameInstance::RegisterCurrentPlayer(CSHPTRREF<UCharacter> _spCurrentPlayer)
 {
 	m_spCharacterManager->RegisterCurrentPlayer(_spCurrentPlayer);
@@ -1037,21 +1032,6 @@ void UGameInstance::AddCollisionPawnList(CSHPTRREF<UPawn> _spPawn)
 void UGameInstance::RemoveCollisionPawn(CSHPTRREF<UPawn> _spPawn)
 {
 	m_spCharacterManager->RemoveCollisionPawn(_spPawn);
-}
-
-void UGameInstance::AddPlayerContainer(CSHPTRREF<UPlayer> _spPlayer)
-{
-	m_spCharacterManager->AddPlayerContainer(_spPlayer);
-}
-
-SHPTR<UPlayer> UGameInstance::FindPlayerToDistance(const _float3& _vPos)
-{
-	return m_spCharacterManager->FindPlayerToDistance(_vPos);
-}
-
-SHPTR<UPlayer> UGameInstance::FindPlayerToNetworkID(const _int _iNetworkID)
-{
-	return m_spCharacterManager->FindPlayerToNetworkID(_iNetworkID);
 }
 
 /*
@@ -1875,7 +1855,7 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 					RTDESC{ RTOBJID::NONALPHA_POSITION_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
 							GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f }},
 							RTDESC{ RTOBJID::NONALPHA_GLOW_DEFFERED, DXGI_FORMAT::DXGI_FORMAT_R16G16B16A16_FLOAT,
-					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f } //GLow ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½È¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ø½ï¿½ï¿½Ä¿ï¿½ ï¿½Äºï¿½ï¿½ï¿½ï¿½ï¿½(ex.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ô¹Þ°ï¿½ï¿½Ï´ï¿½ï¿½ï¿½.
+					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f } //GLow ¿µ¿ªÀ» ÇÈ¼¿´ÜÀ§·Î ÅØ½ºÃÄ¿¡ ½Äº°»ö»ó(ex.»¡°£»ö)À¸·Î Ãâ·ÂÇÏ¿© ±× ÇØ´ç ¿µ¿ª Á¶¸í¿¡¼­ ½ê°Ô¹Þ°ÔÇÏ´øÁö.
 			}
 			};
 			// Add RenderTargetGroup
@@ -2003,7 +1983,7 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 
 #ifdef _USE_DEBUGGING
 	/*
-	ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+	·»´õ Å¸°Ù µð¹ö±ëÀ» À§ÇÑ °Í
 	*/
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_POSITION_DEFFERED,
 		_float2(100.f, 100.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());

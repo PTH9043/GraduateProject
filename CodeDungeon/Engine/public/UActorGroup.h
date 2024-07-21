@@ -17,7 +17,6 @@ public:
 public:
 	void Tick(const _double& _dTimeDelta);
 	void LateTick(const _double& _dTimeDelta);
-	void SendPacketTick(const _double& _dTimeDelta);
 	void AddActive(CSHPTRREF<UActor> _pActor);
 	void AddDelete(CSHPTRREF<UActor> _pActor);
 private:

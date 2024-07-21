@@ -147,7 +147,12 @@ void UVIBufferTrail::SetVertices(VECTOR<VTXDEFAULT>& pVertices, _int iVertexCoun
 			throw std::runtime_error("Failed to map GPU buffer.");
 		}*/
 
+		// ������ ����
 		memcpy(m_pBufferDataBegin, pVertices.data(), sizeof(VTXDEFAULT) * iVertexCount);
+
+	
+
+		// ��Ÿ ��� ���� ����
 		m_stD3DVertexBufferView.SizeInBytes = sizeof(VTXDEFAULT) * iVertexCount;
 		m_iVertexCnt = iVertexCount;
 	}

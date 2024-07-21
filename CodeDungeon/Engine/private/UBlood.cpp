@@ -61,8 +61,8 @@ HRESULT UBlood::NativeConstructClone(const VOIDDATAS& _vecDatas)
 
 void UBlood::TickActive(const _double& _dTimeDelta)
 {
-	if (_bloodTimer.m_fLeftTime > 0.f)
-		_bloodTimer.m_fLeftTime -= _dTimeDelta;
+	if (_bloodTimer.m_fLeftTime > 0.f)_bloodTimer.m_fLeftTime -= _dTimeDelta;
+
 }
 
 

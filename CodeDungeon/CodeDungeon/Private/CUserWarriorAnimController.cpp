@@ -64,18 +64,8 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     _bool isAttack = isWAttack || isRAttack || isSAttack || isCombo1 || isCombo2;
     _bool isRoll = spGameInstance->GetDIKeyDown(DIK_C);
     _bool Hit = false;
-#ifdef _ENABLE_PROTOBUFF
-    if (spWarriorPlayer->IsDamaged())
-    {
-        Hit = true;
-        spWarriorPlayer->SetDamaged(false);
-    }
-#else
     if (spWarriorPlayer->GetPrevHealth() > spWarriorPlayer->GetHealth())
-    {
         Hit = true;
-    }
-#endif
     _bool isKicked = spWarriorPlayer->GetKickedState();
     _bool isJump = spGameInstance->GetDIKeyDown(DIK_SPACE);
     _bool isRise = spWarriorPlayer->GetRiseState();
@@ -253,6 +243,17 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
    }
    else
      spAnimModel->TickAnimChangeTransform(spWarriorPlayer->GetTransform(), _dTimeDelta);
+
+#ifdef _ENABLE_PROTOBUFF
+   _int NetworkID = spGameInstance->GetNetworkOwnerID();
+   PLAYERSTATE csPlayerState;
+   PROTOFUNC::MakePlayerState(OUT& csPlayerState, NetworkID, isAttack,
+       GetAnimState(), isRunshift ? 30.f : 10.f, spAnimModel->GetCurrentAnimation()->GetDuration(),
+       spAnimModel->GetCurrentAnimIndex());
+   {
+       spGameInstance->SendProcessPacket(UProcessedData(csPlayerState, TAG_CS_PLAYERSTATE));
+   }
+#endif
 }
 
 

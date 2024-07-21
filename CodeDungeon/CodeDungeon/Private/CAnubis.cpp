@@ -103,7 +103,7 @@ void CAnubis::CreateParticles()
 		//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 1.75f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 0.5f;
-		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 0.30f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 0.30;
 		tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.15f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 7;
 		tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 5;
