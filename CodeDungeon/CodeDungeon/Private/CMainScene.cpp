@@ -203,8 +203,8 @@ void CMainScene::CreateStartSceneUI()
 			tDesc1.strImgName = L"LoadingBar_Background";
 			tDesc1._shaderName = PROTO_RES_DEFAULTUISHADER;
 			tDesc1.DrawOrder = L"Middle";
-			tDesc1.v2Size.x = static_cast<_float>(1080);
-			tDesc1.v2Size.y = static_cast<_float>(30);
+			tDesc1.v2Size.x = static_cast<_float>(1020);
+			tDesc1.v2Size.y = static_cast<_float>(27);
 			tDesc1.v2Pos = _float2{ 640,840 };
 			m_spLoadingBackgroundUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc1 }));
 			m_spLoadingBackgroundUI->SetActive(false);
@@ -502,7 +502,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 	if (m_bStartScene) {
 		m_fStartSceneLoadingTimer += _dTimeDelta;
 		m_spEnterButtonUI->SetActive(false);
-	//	m_spLoadingBackgroundUI->SetActive(true);
+		m_spLoadingBackgroundUI->SetActive(true);
 		m_spLoadingFillingUI->SetActive(true);
 		m_spLoadingFillingUI->SetIfPicked(true);
 		m_spLoadingTextUI->SetActive(true);
