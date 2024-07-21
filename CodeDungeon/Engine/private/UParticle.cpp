@@ -77,6 +77,8 @@ void UParticle::TickActive(const _double& _dTimeDelta)
 	}*/switch (m_spParticleSystem->GetParticleType()) {
 	case PARTICLE_ORIGINAL:
 		break;
+	case PARTICLE_ROTATION:
+		break;
 	case PARTICLE_FLARE:
 		break;
 	case PARTICLE_BLOOD:
@@ -100,6 +102,8 @@ void UParticle::TickActive(const _double& _dTimeDelta)
 		}*/
 		break;
 	case PARTICLE_ATTACK:
+	case PARTICLE_OPENCHEST:
+	case PARTICLE_HEAL:
 
 		break;
 	case PARTICLE_SLASH:
@@ -125,6 +129,9 @@ void UParticle::LateTickActive(const _double& _dTimeDelta)
 	case PARTICLE_ORIGINAL:
 		AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
 	break;
+	case PARTICLE_ROTATION:
+		AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
+	break;
 	case PARTICLE_FLARE:
 		AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
 		break;
@@ -132,6 +139,8 @@ void UParticle::LateTickActive(const _double& _dTimeDelta)
 		AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
 		break;
 	case PARTICLE_ATTACK:
+	case PARTICLE_OPENCHEST:
+	case PARTICLE_HEAL:
 		AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
 		break;
 	case PARTICLE_SLASH:
@@ -168,6 +177,10 @@ SHPTR<URenderTargetGroup> spShadowDepthGroup{ spGameInstance->FindRenderTargetGr
 		GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTexGroup->GetTexture(TextureIndex)); 
 		GetShader()->BindSRVBuffer(SRV_REGISTER::T1, spShadowDepthGroup->GetRenderTargetTexture(RTOBJID::NONALPHA_DEPTH_DEFFERED));
 		break;
+	case PARTICLE_ROTATION:
+		GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTexGroup->GetTexture(TextureIndex)); 
+		GetShader()->BindSRVBuffer(SRV_REGISTER::T1, spShadowDepthGroup->GetRenderTargetTexture(RTOBJID::NONALPHA_DEPTH_DEFFERED));
+		break;
 
 	case PARTICLE_FLARE:
 		GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTexGroup->GetTexture(TextureIndex));
@@ -183,6 +196,8 @@ SHPTR<URenderTargetGroup> spShadowDepthGroup{ spGameInstance->FindRenderTargetGr
 		GetShader()->BindSRVBuffer(SRV_REGISTER::T7, m_spTexGroup->GetTexture(BloodTextureIndices[7]));
 		break;
 	case PARTICLE_ATTACK:
+	case PARTICLE_OPENCHEST:
+	case PARTICLE_HEAL:
 		GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTexGroup->GetTexture(TextureIndex));
 		GetShader()->BindSRVBuffer(SRV_REGISTER::T1, spShadowDepthGroup->GetRenderTargetTexture(RTOBJID::NONALPHA_DEPTH_DEFFERED));
 		break;

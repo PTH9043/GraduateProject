@@ -33,9 +33,10 @@ void UActorManager::LateTick(const _double& _dTimeDelta)
 	}
 }
 
-void UActorManager::Collision(const _double& _dTimeDelta)
+void UActorManager::SendPacketActive(const _double& _dTimeDelta)
 {
-
+	for (auto& iter : m_vecTickClones)
+		iter->SendPacketTick(_dTimeDelta);
 }
 
 HRESULT UActorManager::ReadyActorManager(CSHPTRREF<URenderer> _spRenderer)

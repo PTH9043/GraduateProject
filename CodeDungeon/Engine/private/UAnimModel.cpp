@@ -27,9 +27,11 @@ UAnimModel::UAnimModel(CSHPTRREF<UDevice> _spDevice) :
 	m_stAnimParam{},
 	m_spBoneMatrixShaderConstantBuffer{ nullptr },
 	m_spPrevBoneMatrixShaderConstantBuffer{ nullptr },
+	m_spDrawRimLightBuffer{ nullptr },
 	m_cpUpLoadResource{ nullptr },
 	m_spCurAnimation{ nullptr },
 	m_spNextAnimation{ nullptr },
+	m_DrawRim{ 0 },
 	m_iCurAnimIndex{ 0 },
 	m_iNextAnimIndex{ 0 },
 	m_fSupplyLerpValue{ 0.f },
@@ -254,6 +256,8 @@ HRESULT UAnimModel::Render(const _uint _iMeshIndex, CSHPTRREF<UShader> _spShader
 	_spShader->BindCBVBuffer(m_spBoneMatrixShaderConstantBuffer, m_vecSetupBonMatrix[_iMeshIndex].data(), GetTypeSize<BONEMATRIXPARAM>());
 	// 애니메이션 세팅
 	_spShader->BindCBVBuffer(m_spAnimShaderConstantBuffer, &m_stAnimParam, GetTypeSize<ANIMATIONPARAM>());
+	
+	_spShader->BindCBVBuffer(m_spDrawRimLightBuffer, &m_DrawRim, GetTypeSize<RIMDRAW>());
 	spMeshContainer->RenderAnimModel(m_spMeshFilterController, _spShader, _spCommand, _iMeshIndex);
 	return S_OK;
 }
@@ -599,6 +603,8 @@ HRESULT UAnimModel::CreateShaderConstantBuffer()
 
 	m_spPrevBoneMatrixShaderConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::PREVBONEMATRIX, GetTypeSize<BONEMATRIXPARAM>());
 	RETURN_CHECK(nullptr == m_spPrevBoneMatrixShaderConstantBuffer, E_FAIL);
-
+	
+	m_spDrawRimLightBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::ANIMMODELRIMDRAW, GetTypeSize<RIMDRAW>());
+	RETURN_CHECK(nullptr == m_spDrawRimLightBuffer, E_FAIL);
 	return S_OK;
 }

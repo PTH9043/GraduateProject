@@ -45,9 +45,8 @@ HRESULT CMummy::NativeConstruct()
 	return __super::NativeConstruct();
 }
 
-HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
+void CMummy::CreateParticles()
 {
-	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	{
@@ -76,14 +75,14 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 		m_stParticleType = m_spBloodParticle->GetParticleSystem()->GetParticleTypeParam();
 		m_stParticleType->fParticleType = PARTICLE_TYPE_DEFAULT;
 		m_stParticleType->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
-		m_spBloodParticle->SetBloodTexture(0, L"blood"); // y°ª Áõ°¡ x ¿ø
-		m_spBloodParticle->SetBloodTexture(1, L"blood1"); // y°ª Áõ°¡ x ¿ø
-		m_spBloodParticle->SetBloodTexture(2, L"blood2"); // y°ª Áõ°¡ x ¿ø
-		m_spBloodParticle->SetBloodTexture(3, L"blood3"); // y°ª Áõ°¡ x ¿ø
-		m_spBloodParticle->SetBloodTexture(4, L"blood4"); // y°ª Áõ°¡ x ¿ø
-		m_spBloodParticle->SetBloodTexture(5, L"blood5"); // y°ª Áõ°¡ x ¿ø
-		m_spBloodParticle->SetBloodTexture(6, L"blood6"); // y°ª Áõ°¡ x ¿ø
-		m_spBloodParticle->SetBloodTexture(7, L"blood7"); // y°ª Áõ°¡ x ¿ø
+		m_spBloodParticle->SetBloodTexture(0, L"blood"); // yï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ x ï¿½ï¿½
+		m_spBloodParticle->SetBloodTexture(1, L"blood1"); // yï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ x ï¿½ï¿½
+		m_spBloodParticle->SetBloodTexture(2, L"blood2"); // yï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ x ï¿½ï¿½
+		m_spBloodParticle->SetBloodTexture(3, L"blood3"); // yï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ x ï¿½ï¿½
+		m_spBloodParticle->SetBloodTexture(4, L"blood4"); // yï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ x ï¿½ï¿½
+		m_spBloodParticle->SetBloodTexture(5, L"blood5"); // yï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ x ï¿½ï¿½
+		m_spBloodParticle->SetBloodTexture(6, L"blood6"); // yï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ x ï¿½ï¿½
+		m_spBloodParticle->SetBloodTexture(7, L"blood7"); // yï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ x ï¿½ï¿½
 		m_spBloodParticle->SetParticleType(PARTICLE_BLOOD);
 		*m_spBloodParticle->GetParticleSystem()->GetCreateInterval() = 0.85f;
 		*m_spBloodParticle->GetParticleSystem()->GetAddParticleAmount() = 5;
@@ -110,16 +109,84 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 		m_spSlashParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
 	}
 	{
-		
-		
 		m_spSlashParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleType = PARTICLE_TYPE_DEFAULT;
 		m_spSlashParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
 		m_spSlashParticle->SetTexture(L"Slash3");
-		
+
 		m_spSlashParticle->SetParticleType(PARTICLE_SLASH);
 		*m_spSlashParticle->GetParticleSystem()->GetCreateInterval() = 0.35f;
 		*m_spSlashParticle->GetParticleSystem()->GetAddParticleAmount() = 1;
 	}
+
+
+	{
+
+		UParticle::PARTICLEDESC tDesc;
+		tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEATTACKEFFECT2DSHADER;
+		tDesc.wstrParticleShader = PROTO_RES_PARTICLEATTACK2DSHADER;
+
+
+		tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 0.4;///0.4;//	 0.8f
+		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 0.2;///0.2;//	 1.0f
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.5f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.1f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 1.88;//3.25f
+		tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 1.88f;
+		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 512;
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 1.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.f, 0.f);
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticlePosition = _float3(0.f, 0.f, 0.f);
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_ATTACK;
+		m_spAttackParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
+	}
+	{
+		m_spAttackParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleType = PARTICLE_TYPE_DEFAULT;
+		m_spAttackParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
+		m_spAttackParticle->SetParticleType(PARTICLE_ATTACK);
+		*m_spAttackParticle->GetParticleSystem()->GetAddParticleAmount() = 4;
+		*m_spAttackParticle->GetParticleSystem()->GetCreateInterval() = 0.5f;
+		m_spAttackParticle->SetTexture(L"FireSpark3");
+	}
+	{
+
+		UParticle::PARTICLEDESC tDesc;
+		tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEATTACKEFFECT2DSHADER;
+		tDesc.wstrParticleShader = PROTO_RES_PARTICLEATTACKTWO2DSHADER;
+
+
+		tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 1.0f;///0.4;//	 0.8f
+		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 1.2f;///0.2;//	 1.0f
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.5f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.1f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 7.25f;//3.25f
+		tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 1.88f;
+		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 512;
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 1.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.f, 0.f);
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticlePosition = _float3(0.f, 0.f, 0.f);
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_ATTACK;
+		m_spAttackParticleTwo = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
+	}
+	{
+		m_spAttackParticleTwo->GetParticleSystem()->GetParticleTypeParam()->fParticleType = PARTICLE_TYPE_DEFAULT;
+		m_spAttackParticleTwo->GetParticleSystem()->GetParticleTypeParam()->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
+		m_spAttackParticleTwo->SetParticleType(PARTICLE_ATTACK);
+		*m_spAttackParticleTwo->GetParticleSystem()->GetAddParticleAmount() = 3;
+		*m_spAttackParticleTwo->GetParticleSystem()->GetCreateInterval() = 0.5f;
+		m_spAttackParticleTwo->SetTexture(L"FireSpark3");
+	}
+}
+
+HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
+{
+	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+	CreateParticles();
 
 	UCollider::COLLIDERDESC tDesc;
 	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
@@ -137,25 +204,60 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetHealth(100);
 	SetActivationRange(30);
 	SetDeactivationRange(80);
-
-
-	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-	SHPTR<UCell> spCell = spNavigation->FindCell(GetTransform()->GetPos());
-	GetTransform()->SetPos(spCell->GetCenterPos());
 	return S_OK;
 }
 
 void CMummy::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 {
 #ifdef _ENABLE_PROTOBUFF
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	__super::ReceiveNetworkProcessData(_ProcessData);
-
 	switch (_ProcessData.GetDataType())
 	{
-	case TAG_SC_MONSTERSTATEHAVEMOVE:
+	case TAG_SC_MONSTERFIND:
 	{
-		SC_MONSTERSTATEHAVEPOS scMonsterState;
+		SC_MONSTERFIND scMonsterFind;
+		scMonsterFind.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
+		SetMoveStateActive(true);
+		GetAnimModel()->NotApplyAnimPositionDisable();
+
+		//switch (scMonsterFind.findtype())
+		//{
+		//case TAG_FIND_NEAR:
+		//case TAG_FIND_ATK:
+		//{
+		//	if(-1 != scMonsterFind.targetid())
+		//	{
+		//		SetTargetPlayer(spGameInstance->FindPlayerToNetworkID(scMonsterFind.targetid()));
+		//	}
+		//	else
+		//	{
+		//		SetTargetPlayer(spGameInstance->FindPlayerToDistance(GetTransform()->GetPos()));
+		//	}
+		//	
+		//	if (nullptr != GetTargetPlayer())
+		//	{
+		//		_float3 CurrentMobPos = GetTransform()->GetPos();
+		//		_float3 CurrentPlayerPos = GetTargetPlayer()->GetTransform()->GetPos();
+
+		//		CalculateDistanceBetweenPlayers(CurrentPlayerPos, CurrentMobPos);
+		//		SearchForPlayers();
+		//	}
+		//break;
+		//case TAG_FIND_DISABLE:
+		//{
+		//	SetMoveStateActive(false);
+		//	GetAnimModel()->NotApplyAnimPositionEnable();
+		//	SetTargetPlayer(nullptr);
+		//}
+		//break;
+		//}
+	}
+	break;
+	case TAG_SC_MONSTERSTATE:
+	{
+		CHARSTATE scMonsterState;
 		scMonsterState.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
 		GetAnimationController()->ReceiveNetworkProcessData(&scMonsterState);
 		GetTransform()->SetPos({ scMonsterState.posx(), scMonsterState.posy(), scMonsterState.posz() });
@@ -169,13 +271,16 @@ void CMummy::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 void CMummy::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
-	GetAnimationController()->Tick(_dTimeDelta);
+//	FindPlayer();
 #ifndef _ENABLE_PROTOBUFF
+	GetAnimationController()->Tick(_dTimeDelta);
 	_float3 pos = GetTransform()->GetPos();
 	
 	pos.y += 5;
 	m_spBloodParticle->SetPosition(pos);
 	m_spSlashParticle->SetPosition(pos);
+	m_spAttackParticle->SetPosition(pos);
+	m_spAttackParticleTwo->SetPosition(pos);
 	_int CurAnimState = GetAnimationController()->GetAnimState();
 	_float3 CurrentMobPos = GetTransform()->GetPos();
 	_float3 CurrentPlayerPos = GetTargetPlayer()->GetTransform()->GetPos();
@@ -276,31 +381,152 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 		GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
 		SetElapsedTime(0.0);
 	}
-
-	UpdateCollision();
 #else
+	if (true == IsMoveStateActive())
+	{
+		FindPlayer();
+		GetAnimationController()->Tick(_dTimeDelta);
+		_float3 pos = GetTransform()->GetPos();
+		pos.y += 5;
+		m_spBloodParticle->SetPosition(pos);
+		m_spSlashParticle->SetPosition(pos);
+		_int CurAnimState = GetAnimationController()->GetAnimState();
+		_float3 CurrentMobPos = GetTransform()->GetPos();
+		SHPTR<UCell> CurrentMobCell = GetCurrentNavi()->GetCurCell();
+
+
+		if (CurAnimState == UAnimationController::ANIM_MOVE)
+		{
+			AddTimeAccumulator(_dTimeDelta);
+
+			// A* for moving towards player when player is found
+			if (nullptr != GetTargetPlayer() && GetFoundTargetState())
+			{
+				_float3 CurrentPlayerPos = GetTargetPlayer()->GetTransform()->GetPos();
+				SHPTR<UCell> CurrentPlayerCell = GetTargetPlayer()->GetCurrentNavi()->GetCurCell();
+
+				SetOutline(true);
+				if (GetTimeAccumulator() >= 0.5)
+				{
+					SHPTR<UNavigation> spNavigation = GetCurrentNavi();
+					m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, CurrentPlayerPos, CurrentMobCell, CurrentPlayerCell));
+					m_isPathFinding = true;
+					SetTimeAccumulator(0.0);
+				}
+				if (m_isPathFinding)
+				{
+					SHPTR<UNavigation> spNavigation = GetCurrentNavi();
+					if (spNavigation->StepPathFinding(m_PathFindingState))
+					{
+						m_isPathFinding = false;
+						if (m_PathFindingState.pathFound)
+						{
+							m_AstarPath = (spNavigation->OptimizePath(m_PathFindingState.path, CurrentMobPos, CurrentPlayerPos));
+							m_currentPathIndex = 0; // index initialized when path is optimized
+						}
+					}
+				}
+				if (!m_AstarPath.empty())
+				{
+					MoveAlongPath(m_AstarPath, m_currentPathIndex, _dTimeDelta);
+					_float3 direction = CurrentMobPos - GetTargetPos();
+					GetTransform()->SetDirectionFixedUp(-direction, _dTimeDelta, 5);
+				}
+			}
+			else // patrolling when player is not found
+			{
+				SetOutline(false);
+				SHPTR<UNavigation> spNavigation = GetCurrentNavi();
+				SHPTR<UCell> spNeighborCell = spNavigation->ChooseRandomNeighborCell(3);
+				if (GetTimeAccumulator() >= 5.0)
+				{
+					m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, spNeighborCell->GetCenterPos(), CurrentMobCell, spNeighborCell));
+					m_isPathFinding = true;
+					SetTimeAccumulator(0.0);
+				}
+				if (m_isPathFinding)
+				{
+					if (spNavigation->StepPathFinding(m_PathFindingState))
+					{
+						m_isPathFinding = false;
+						if (m_PathFindingState.pathFound)
+						{
+							m_AstarPath = (spNavigation->OptimizePath(m_PathFindingState.path, CurrentMobPos, spNeighborCell->GetCenterPos()));
+							m_currentPathIndex = 0; // index initialized when path is optimized
+						}
+					}
+				}
+				if (!m_AstarPath.empty())
+				{
+					MoveAlongPath(m_AstarPath, m_currentPathIndex, _dTimeDelta);
+					_float3 direction = CurrentMobPos - GetTargetPos();
+					GetTransform()->SetDirectionFixedUp(-direction, _dTimeDelta, 5);
+				}
+			}
+		}
+		else if (CurAnimState == UAnimationController::ANIM_ATTACK)
+		{
+			if(nullptr != GetTargetPlayer() && GetFoundTargetState())
+			{
+				_float3 CurrentPlayerPos = GetTargetPlayer()->GetTransform()->GetPos();
+				_float3 direction = CurrentMobPos - CurrentPlayerPos;
+				GetTransform()->SetDirectionFixedUp(-direction, _dTimeDelta, 5);
+			}
+		}
+
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+		// death animation
+		if (CurAnimState == UAnimationController::ANIM_DEATH)
+		{
+			_double DeathAnimSpeed = 20;
+			SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
+			_double DeathTimeArcOpenEnd = 50;
+			if (GetElapsedTime() < DeathTimeArcOpenEnd)
+				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
+		}
+		else if (CurAnimState == UAnimationController::ANIM_IDLE)
+		{
+			SetOutline(false);
+			GetAnimModel()->TickAnimation(_dTimeDelta);
+			GetTransform()->SetPos(GetTransform()->GetPos());
+		}
+		else
+		{
+			GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
+			SetElapsedTime(0.0);
+		}
+	}
+	else
+	{
+		GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
+	}
 #endif
+	UpdateCollision();
 }
 
 void CMummy::LateTickActive(const _double& _dTimeDelta)
 {
 	__super::LateTickActive(_dTimeDelta);
 
-	_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
-	GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
-
-	//for (auto& Colliders : GetColliderContainer())
-	//	if(Colliders.first == L"Main")
-	//		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
-
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	_int CurAnimState = GetAnimationController()->GetAnimState();
-	if (CurAnimState == UAnimationController::ANIM_DEATH)
+	if (true == IsMoveStateActive())
 	{
-		if (GetElapsedTime() >= 100.0)
+		_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
+		GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
+
+		//for (auto& Colliders : GetColliderContainer())
+		//	if(Colliders.first == L"Main")
+		//		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
+
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		_int CurAnimState = GetAnimationController()->GetAnimState();
+		if (CurAnimState == UAnimationController::ANIM_DEATH)
 		{
-			SetActive(false);
-			spGameInstance->RemoveCollisionPawn(ThisShared<CMob>());
+			if (GetElapsedTime() >= 100.0)
+			{
+				SetActive(false);
+				spGameInstance->RemoveCollisionPawn(ThisShared<CMob>());
+			}
 		}
 	}
 }
@@ -308,10 +534,10 @@ void CMummy::LateTickActive(const _double& _dTimeDelta)
 HRESULT CMummy::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
 	const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
-
+	
 	if(CurAnimName != L"staticLaying" && CurAnimName != L"staticStanding")
 	{
-		 __super::RenderActive(_spCommand, _spTableDescriptor);
+		__super::RenderActive(_spCommand, _spTableDescriptor);
 	}
 	return S_OK;
 }
@@ -334,11 +560,7 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 
 	_float3 direction = (_pEnemy->GetTransform()->GetPos() - GetTransform()->GetPos());
 	direction.Normalize();
-	_bool IsHit = true;
-#ifdef _ENABLE_PROTOBUFF
-	_bool isCollision = false;
-	_int DamageEnable = 0;
-#endif
+	_bool IsHit = false;
 
 	auto handleCollisionWithPlayer = [&](UCharacter* pCharacter) {
 		for (const auto& iter : GetColliderContainer())
@@ -351,16 +573,19 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 					if (!GetIsHItAlreadyState())
 					{
 						m_spBloodParticle->SetActive(true);
+						m_spAttackParticle->SetActive(true);
+						m_spAttackParticleTwo->SetActive(true);
 						m_spSlashParticle->SetActive(true);
+						SetAnimModelRim(true);
 						m_spBloodParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+						m_spAttackParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+						m_spAttackParticleTwo->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 						m_spSlashParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 #ifndef _ENABLE_PROTOBUFF
 						// Decrease health on hit
 						DecreaseHealth(pCharacter->GetAttack());
-#else
-						isCollision = true;
-						DamageEnable = 1;
 #endif
+						SendCollisionDamagedData(_pEnemy.get());
 					}
 					SetHitAlreadyState(true);
 				}
@@ -368,6 +593,7 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 			else
 			{
 				SetHitAlreadyState(false);
+				SetAnimModelRim(false);
 			}
 
 			for (const auto& iter2 : pCharacter->GetColliderContainer())
@@ -376,9 +602,6 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 				{
 					SetCollisionState(true);
 					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
-#ifdef _ENABLE_PROTOBUFF
-					isCollision = true;
-#endif
 				}
 				else
 				{
@@ -397,9 +620,6 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 				{
 					SetCollisionState(true);
 					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
-#ifdef _ENABLE_PROTOBUFF
-					isCollision = true;
-#endif
 				}
 				else
 				{
@@ -419,9 +639,6 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 				{
 					_float speed = 20.0f;
 					ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
-#ifdef _ENABLE_PROTOBUFF
-					isCollision = true;
-#endif
 				}
 			}
 		}
@@ -442,10 +659,6 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 		CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
 		handleCollisionWithStaticObject(pModelObject);
 	}
-#ifdef _ENABLE_PROTOBUFF
-	if (true == isCollision)
-	{
-		
-	}
-#endif
 }
+
+

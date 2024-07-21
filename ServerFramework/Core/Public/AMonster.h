@@ -18,11 +18,9 @@ public:
 	void FindPlayer(SHPTR<ASession> _spSession);
 	virtual void Tick(const _double& _dTimeDelta) PURE;
 	virtual void State(SHPTR<ASession> _spSession, _int _MonsterState = 0) PURE;
-	virtual void TickSendPacket(const _double& _dTimeDelta) PURE;
-	virtual bool IsHit(APawn* _pPawn, const _double& _dTimeDelta) PURE;
-	void InsertMobJobTimer(_int _PlayerID);
-
-	_bool IsChangeTargetPlayer(SESSIONID _TargetPlayerID, _float _fDistance);
+	virtual void ProcessPacket(_int _type, void* _pData) PURE;
+	void InsertMobJobTimer(SESSIONID _PlayerID);
+	_bool IsCanMove(const Vector3 _vPos);
 public: /* get set */
 	const MONSTERSTATE GetMonsterState() const { return m_MobState; }
 	const Vector3 GetNextPos() const { return m_vNextPos; }
@@ -42,6 +40,7 @@ protected:
 	void UpdateTargetPos(SHPTR<ATransform> _ArriveTr);
 	void UpdateFindRange(const _float _fActiveRange, const _float _fDeactiveRange);
 	void UpdateSelfStateToPlayerDistance(_bool _isCurAtkPlayer, _bool _isCurFindPlayer, _bool _isCurJustMove);
+	virtual void ChangeCurrentFindPlayer(SESSIONID _CurPlayerSessionID, SESSIONID _ChangePlayerSessionID);
 protected: /* get set*/
 	SHPTR<AJobTimer> GetMonsterJobTimer() { return m_wpMonsterJobTimer.lock(); }
 	const _float GetActiveRange() const { return m_fActiveRange; }
@@ -51,14 +50,16 @@ protected: /* get set*/
 
 	void SetMonsterJobTimer(SHPTR<AJobTimer> _spJobTimer) { m_wpMonsterJobTimer = _spJobTimer; }
 	void SetMonsterType(_int _iMonsterType) { this->m_iMonsterType = _iMonsterType; }
-	void SetActiveRange(const _float _fActiveRange) { this->m_fActiveRange = _fActiveRange * _fActiveRange; }
-	void SetDeactiveRange(const _float _fDeactiveRange) { this->m_fDeactiveRange = _fDeactiveRange * _fDeactiveRange; }
-	void SetAttackRange(const _float _fAttackRange) { this->m_fAttackRange = _fAttackRange * _fAttackRange; }
+	void SetActiveRange(const _float _fActiveRange) { this->m_fActiveRange = _fActiveRange ; }
+	void SetDeactiveRange(const _float _fDeactiveRange) { this->m_fDeactiveRange = _fDeactiveRange ; }
+	void SetAttackRange(const _float _fAttackRange) { this->m_fAttackRange = _fAttackRange ; }
 	void SetTargetPlayerID(const SESSIONID _SessionID){ m_CurrentTargetPlayerID = _SessionID; }
 	void SetCurrentAtkPlayer(const _bool _isCurrentAtkPlayer) { this->m_isCurrentAtkPlayer = _isCurrentAtkPlayer; }
 	void SetCurrentFindPlayer(const _bool _isCurrentFindPlayer) {	m_isCurrentFindPlayer = _isCurrentFindPlayer; }
 	void SetCurrentJustMove(const _bool _isCurrentJustMove) { m_isCurrentJustMove = _isCurrentJustMove; }
 	void SetMoveSpeed(const _float _fMoveSpeed) { this->m_fMoveSpeed = _fMoveSpeed; }
+private:
+	void ChangePlayerTargetID(SESSIONID _SessionID);
 private:
 	virtual void Free() override;
 private:
@@ -90,11 +91,12 @@ private:
 	ATOMIC<_float>							m_fDistanceToPlayer;
 	std::atomic_bool							m_isPathFinding;
 
-	PathFindingState							m_PathFindState;
+	PathFindingState						m_PathFindState;
 	ATOMIC<_bool>							m_isRecvPathFindState;
 	AFastSpinLock								m_TargetPosLock;
 	ATOMIC<_int>								m_iNextPathIndex;
 	Vector3											m_vTargetPos;
+	ATOMIC<_bool>							m_isCurrentPlayerTargetChangeSituation;
 };
 
 

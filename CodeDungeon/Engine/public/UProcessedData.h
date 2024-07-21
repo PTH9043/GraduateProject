@@ -18,21 +18,21 @@ public:
 	template<class T>
 		requires CheckProtoType<T>
 	UProcessedData(const T& _data, short _tag) : m_DataType{ _tag },
-		 m_DataSize{ 0 }, m_iNetworkID{ -1 }
+		 m_DataSize{ (_int)sizeof(T) }, m_iNetworkID{-1}
 	{
-		::memset(&m_Data[0], 0, MAX_BUFFER_LENGTH);
+		m_Data.resize(m_DataSize + 1);
+		ZeroMemory(&m_Data[0], m_DataSize + 1);
 		_data.SerializePartialToArray((void*)&m_Data[0], static_cast<int>(_data.ByteSizeLong()));
-		m_DataSize = static_cast<_int>(_data.ByteSizeLong());
 	}
 	// Recv
 	template<class T>
 		requires CheckProtoType<T>
 	UProcessedData(const _int _NetworkID, const T& _data, short _tag) : m_DataType{ _tag },
-		m_DataSize{ 0 }, m_iNetworkID{ _NetworkID }
+		m_DataSize{ (_int)sizeof(T) }, m_iNetworkID{_NetworkID}
 	{
-		::memset(&m_Data[0], 0, MAX_BUFFER_LENGTH);
+		m_Data.resize(m_DataSize + 1);
+		ZeroMemory(&m_Data[0], m_DataSize + 1);
 		_data.SerializePartialToArray((void*)&m_Data[0], static_cast<int>(_data.ByteSizeLong()));
-		m_DataSize = static_cast<_int>(_data.ByteSizeLong());
 	}
 
 	// Send
@@ -41,7 +41,8 @@ public:
 	UProcessedData(const T& _data, short _tag, const size_t _DataSize) : m_DataType{ _tag },
 		 m_DataSize{ static_cast<_int>(_DataSize) }, m_iNetworkID{ -1 }
 	{
-		::memset(&m_Data[0], 0, MAX_BUFFER_LENGTH);
+		m_Data.resize(_DataSize + 1);
+		ZeroMemory(&m_Data[0], _DataSize + 1);
 		_data.SerializePartialToArray((void*)&m_Data[0], static_cast<int>(_data.ByteSizeLong()));
 	}
 	// Recv
@@ -50,7 +51,8 @@ public:
 	UProcessedData(const _int _NetworkID, const T& _data, short _tag, const size_t _DataSize) : m_DataType{ _tag },
 		 m_DataSize{ static_cast<_int>(_DataSize) }, m_iNetworkID{ _NetworkID }
 	{
-		::memset(&m_Data[0], 0, MAX_BUFFER_LENGTH);
+		m_Data.resize(m_DataSize + 1);
+		ZeroMemory(&m_Data[0], _DataSize + 1);
 		_data.SerializePartialToArray((void*)&m_Data[0], static_cast<int>(_data.ByteSizeLong()));
 	}
 
@@ -58,7 +60,11 @@ public:
 	template<class T>
 		requires CheckProtoType<T>
 	UProcessedData(const _int _NetworkID, T* _data, short _tag) : m_Data{ reinterpret_cast<_char*>(_data) }, m_DataType{ _tag },
-		m_DataSize{ static_cast<_int>( sizeof(T)) }, m_iNetworkID{ _NetworkID } { }
+		m_DataSize{ static_cast<_int>( sizeof(T)) }, m_iNetworkID{ _NetworkID }
+	{ 
+		m_Data.resize(m_DataSize + 1);
+		::memcpy(&m_Data[0], _data, m_DataSize + 1);
+	}
 
 	~UProcessedData();
 
@@ -67,15 +73,15 @@ public:
 	template<class T>
 	T* ConvertData() { return reinterpret_cast<T*>(m_Data.data()); }
 public: /* get Set */
-	_int GetDataID() const { return m_iNetworkID.load(); }
+	_int GetDataID() const { return m_iNetworkID; }
 	_int GetDataType() const { return m_DataType; }
 	_int GetDataSize() const { return m_DataSize; }
 	_char* GetData() const { return &m_Data[0]; }
 private:
-	std::atomic_int			m_iNetworkID;
-	mutable BUFFER		m_Data;
-	std::atomic_int			m_DataType;
-	std::atomic_int			m_DataSize;
+	_int												m_iNetworkID;
+	mutable VECTOR<_char>		m_Data;
+	_int												m_DataType;
+	_int												m_DataSize;
 };
 
 END

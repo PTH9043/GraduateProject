@@ -29,7 +29,7 @@ CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _ws
 	isAttack{ false }, 
 	m_stParticleType{}, 
 	m_stParticleParam{},
-	m_spParticle{nullptr},
+	m_spFootPrintParticle{nullptr},
 	m_spTrail{nullptr},
 	m_spBlood{nullptr},
 	m_bisKicked{ false },
@@ -45,7 +45,7 @@ CWarriorPlayer::CWarriorPlayer(const CWarriorPlayer& _rhs) :
 	isAttack{ false },
 	m_stParticleType{},
 	m_stParticleParam{},
-	m_spParticle{ nullptr },
+	m_spFootPrintParticle{ nullptr },
 	m_spTrail{ nullptr },
 	m_spBlood{ nullptr },
 	m_bisKicked{ false },
@@ -69,12 +69,12 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-	int cellIndex = 424;
-	cellIndex = 100;
+
+	int cellIndex = 0;
 	SHPTR<UCell> spCell = spNavigation->FindCell(cellIndex);
 
-	GetTransform()->SetPos(spCell->GetCenterPos());
 
+	GetTransform()->SetPos(spCell->GetCenterPos());
 	SHPTR<CMainCamera> spMainCamera = std::static_pointer_cast<CMainCamera>(GetFollowCamera());
 	if (nullptr != spMainCamera)
 	{
@@ -92,9 +92,15 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	tDesc.vScale = _float3(0, 0, 0);
 	SHPTR<UCollider> Collider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
 	_wstring mainColliderTag = L"Main";
-
 	AddColliderInContainer(mainColliderTag, Collider);
+<<<<<<< HEAD
+=======
 
+	Collider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
+	_wstring attackColliderTag = L"ForAttack";
+	AddColliderInContainer(attackColliderTag, Collider);
+
+>>>>>>> 3987a0223b251a7dd4bb520acb5f1bbc6e22f07b
 	{
 		UParticle::PARTICLEDESC tDesc;
 		tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEFOOTPRINT2DSHADER;
@@ -114,21 +120,65 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 		tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = -GetTransform()->GetLook();
 		tDesc.ParticleParam.stGlobalParticleInfo.fParticlePosition = GetTransform()->GetPos();
 		tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_FOOTPRINT;
-		m_spParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
-	}
-	m_stParticleParam = m_spParticle->GetParticleSystem()->GetParticleParam();
-	m_stParticleType = m_spParticle->GetParticleSystem()->GetParticleTypeParam();
+		m_spFootPrintParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
+	
+	m_stParticleParam = m_spFootPrintParticle->GetParticleSystem()->GetParticleParam();
+	m_stParticleType = m_spFootPrintParticle->GetParticleSystem()->GetParticleTypeParam();
 	m_stParticleType->fParticleType = PARTICLE_TYPE_AUTO;
 	m_stParticleType->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
+<<<<<<< HEAD
 	m_spParticle->SetTexture(L"Sand");// DUST 
-	
 	{
 		*m_spParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
 		*m_spParticle->GetParticleSystem()->GetAddParticleAmount() = 4;
 		m_spParticle->SetParticleType(PARTICLE_FOOTPRINT);
 		m_spParticle->SetActive(false);
 	}
+=======
+	m_spFootPrintParticle->SetTexture(L"Sand");// DUST 
+	
+	
+		*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
+		*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 4;
+		m_spFootPrintParticle->SetParticleType(PARTICLE_FOOTPRINT);
+		m_spFootPrintParticle->SetActive(false);
+	}
+	//Heal Effect
+	
+	
+		{
+			
+			UParticle::PARTICLEDESC tDesc;
+			tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEHEAL2DSHADER;
+			tDesc.wstrParticleShader = PROTO_RES_PARTICLEHEAL2DSHADER;
 
+			
+			tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
+			//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 0.9f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle =0.05f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 2.0f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.1f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 1.99f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 1.99f;
+			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount =512;
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 1.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.f, 0.f);
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticlePosition = _float3(0.f, 0.f, 0.f);
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_HEAL;
+			m_spHealParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
+		
+		
+		 m_spHealParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleType = PARTICLE_TYPE_DEFAULT;
+		 m_spHealParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT; 
+		m_spHealParticle->SetParticleType(PARTICLE_HEAL);
+		*m_spHealParticle->GetParticleSystem()->GetAddParticleAmount() = 1;
+		*m_spHealParticle->GetParticleSystem()->GetCreateInterval() = 1.1f;
+		m_spHealParticle->SetTexture(L"Twinkle");
+	}
+
+
+>>>>>>> 3987a0223b251a7dd4bb520acb5f1bbc6e22f07b
 	{
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 		CSword::EQDESC Desc(std::static_pointer_cast<UModel>(spGameInstance->CloneResource(PROTO_RES_LONGSWORDMODEL)), ThisShared<UCharacter>(), L"..\\..\\Resource\\Model\\Item\\Equip\\Sword\\Convert\\EquipDesc\\sword_FBX.bin");
@@ -140,6 +190,11 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 		tDesc.iMaxVertexCount = 100;
 		m_spTrail = std::static_pointer_cast<UTrail>(spGameInstance->CloneActorAdd(PROTO_ACTOR_TRAIL, { &tDesc }));
 		m_spTrail->SetActive(true);
+
+		m_spTrail->SetColorTexture(L"GlowDiffuse");
+		m_spTrail->SetTrailShapeTexture(L"Noise_Bee");
+		m_spTrail->SetTrailNoiseTexture(L"GlowDiffuse");
+		
 	}
 	{
 		m_spBlood = std::static_pointer_cast<UBlood>(spGameInstance->CloneActorAdd(PROTO_ACTOR_BLOOD));
@@ -147,18 +202,18 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	{
 		m_spDust = std::static_pointer_cast<UDust>(spGameInstance->CloneActorAdd(PROTO_ACTOR_DUST));
 	}
-
 	for (auto& Colliders : GetColliderContainer())
 	{
-		if (Colliders.first == L"Main")
-		{
-			Colliders.second->SetScale(_float3(4, 10, 4));
-			Colliders.second->SetTranslate(_float3(0, 10, 0));
-		}
+		Colliders.second->SetScale(_float3(4, 10, 4));
+		Colliders.second->SetTranslate(_float3(0, 10, 0));
 	}
 	SetOutline(false);
 	SetIfOutlineScale(false);//플레이어는 안그리도록 
 	SetHealth(10000);
+	SetAnimModelRim(true);
+	
+
+
 
 	return S_OK;
 }
@@ -174,26 +229,19 @@ void CWarriorPlayer::ReceiveNetworkProcessData(const UProcessedData& _ProcessDat
 	{
 	case TAG_SC_PLAYERSTATE:
 	{
-		PLAYERSTATE PlayerState;
+		CHARSTATE PlayerState;
 		PlayerState.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
-		IfAttack(PlayerState.ifattack());
 		GetAnimationController()->ReceiveNetworkProcessData(&PlayerState);
+		GetTransform()->SetPos(_float3{ PlayerState.posx(), PlayerState.posy(), PlayerState.posz() });
+		GetTransform()->RotateFix(_float3{ PlayerState.rotatex(), PlayerState.rotatey(), PlayerState.rotatez() });
 	}
 	break;
 	case TAG_SC_SELFPLAYERMOVE:
 	{
-		SELFPLAYERMOVE selfPlayerMove;
+		SC_SEEPLAYERMOVE selfPlayerMove;
 		selfPlayerMove.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
 		// SelfPlayer 
-		GetTransform()->SetPos(_float3{ selfPlayerMove.movex(), selfPlayerMove.movey(), selfPlayerMove.movez() });
-	}
-	break;
-	case TAG_SC_CHARMOVE:
-	{
-		CHARMOVE charMove;
-		charMove.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
-		GetTransform()->SetPos(_float3{ charMove.movex(), charMove.movey(), charMove.movez() });
-		GetTransform()->RotateFix(_float3{ charMove.rotatex(), charMove.rotatey(), charMove.rotatez() });
+		GetTransform()->SetPos(_float3{ selfPlayerMove.posx(), selfPlayerMove.posy(), selfPlayerMove.posz() });
 	}
 	break;
 	}
@@ -222,30 +270,34 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		m_spTrail->AddTrail(plusPoint, minusPoint);
 	}
 	
-	m_spParticle->SetActive(true);
+	m_spFootPrintParticle->SetActive(true);
 
 	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_MOVE)  {//|| AnimState == CWarriorAnimController::ANIM_ATTACK|| AnimState == CWarriorAnimController::ANIM_COMBO
-		*m_spParticle->GetParticleSystem()->GetAddParticleAmount() =4;
-		*m_spParticle->GetParticleSystem()->GetCreateInterval() = 0.355f;
+		*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() =4;
+		*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.355f;
 		_float3 pos = GetTransform()->GetPos() + GetTransform()->GetRight();
 		pos.y += 1.0;
 		_float3 Look = GetTransform()->GetLook();
 		_float3 Right = 1.2 * GetTransform()->GetRight();
 		//pos -= 3 * Look;
-		m_spParticle->SetPosition(pos);
-		m_spParticle->SetDirection(Right);
+		m_spFootPrintParticle->SetPosition(pos);
+		m_spFootPrintParticle->SetDirection(Right);
 	}
 	else {	
-		*m_spParticle->GetParticleSystem()->GetAddParticleAmount() = 0;
-		*m_spParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
+		*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 0;
+		*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
 	}
 
 	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_HIT) {
 		m_spBlood->SetActive(true);
+		SetAnimModelRimColor(_float3(1, 0,0));
 		m_spBlood->SetTimer(1.75f);
+		
 	}
 	if (m_spBlood->CheckTimeOver()) {
 		m_spBlood->SetActive(false);
+		
+		
 	}
 		
 	if (spGameInstance->GetDIKeyDown(DIK_F5)) {
@@ -259,6 +311,33 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		m_spDust->SetActive(false);
 	}
 	
+	if (spGameInstance->GetDIKeyDown(DIK_E)) {//2.1초 지속
+		HealTrigger = true;
+		SetAnimModelRimColor(_float3(0, 1, 0));
+		m_spHealParticle->SetActive(true);
+		_float3 pos = GetTransform()->GetPos();
+		pos.y += 2;
+		
+		m_spHealParticle->SetPosition(pos);
+		m_spHealParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+				
+	}
+
+	if (HealTrigger)
+	{
+		HealTimer += _dTimeDelta;
+		if (HealTimer > 2.0f) {
+			SetAnimModelRimColor(_float3(1, 0, 0));
+			HealTimer = 0;
+			HealTrigger = false;
+		}
+		
+	}
+
+		
+	
+
+
 	// Rotation 
 	{
 		POINT ptCursorPos;
@@ -271,28 +350,50 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	{
 		for (auto& Colliders : GetColliderContainer())
 		{
-			Colliders.second->SetScale(_float3(3, 10, 3));
-			Colliders.second->SetTranslate(_float3(0, 10, 0));
-			Colliders.second->SetTransform(GetTransform()->GetWorldMatrix());
+			if(Colliders.first == L"ForAttack")
+			{
+				Colliders.second->SetScale(_float3(3, 10, 3));
+				Colliders.second->SetTranslate(_float3(0, 10, 0));
+				Colliders.second->SetTransform(GetTransform()->GetWorldMatrix());
+			}
+			else
+			{
+				Colliders.second->SetScale(_float3(4, 10, 4));
+				Colliders.second->SetTranslate(_float3(0, 10, 0));
+				Colliders.second->SetTransform(GetTransform()->GetWorldMatrix());
+			}
 		}
 	}
 	else
 	{
 		for (auto& Colliders : GetColliderContainer())
 		{
-			Colliders.second->SetScale(_float3(0, 0, 0));
-			Colliders.second->SetTranslate(_float3(0, 10, 0));
-			Colliders.second->SetTransform(GetTransform()->GetWorldMatrix());
+			if (Colliders.first == L"ForAttack")
+			{
+				Colliders.second->SetScale(_float3(0, 0, 0));
+				Colliders.second->SetTranslate(_float3(0, 10, 0));
+				Colliders.second->SetTransform(GetTransform()->GetWorldMatrix());
+			}
+			else
+			{
+				Colliders.second->SetScale(_float3(4, 10, 4));
+				Colliders.second->SetTranslate(_float3(0, 10, 0));
+				Colliders.second->SetTransform(GetTransform()->GetWorldMatrix());
+			}
 		}
 	}
 
 
 	JumpState(_dTimeDelta);
+<<<<<<< HEAD
+=======
+
 
 
 #ifdef _ENABLE_PROTOBUFF
 	SendMoveData(spGameInstance);
 #endif
+>>>>>>> 3987a0223b251a7dd4bb520acb5f1bbc6e22f07b
 }
 
 void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
@@ -302,17 +403,45 @@ void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
-	FollowCameraMove(_float3{ 0.f, 20.f, -40.f }, _dTimeDelta);
+<<<<<<< HEAD
+=======
 
-	/*for (auto& Colliders : GetColliderContainer())
-		if(Colliders.first == L"Main")
-			Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);*/
+	FollowCameraMove(_float3{ 0.f, 20.f, -40.f }, _dTimeDelta);
+	_float3 vCamPosition{ GetFollowCamera()->GetTransform()->GetPos() };
+	SHPTR<UNavigation> CamNavi = static_pointer_cast<CMainCamera>(GetFollowCamera())->GetCurrentNavi();
+	SHPTR<UCell> newCell{};
+	if(_float3::Distance(GetFollowCamera()->GetTransform()->GetPos(), GetTransform()->GetPos()) < 30)
+	{
+		//카메라 네비 검사
+		if (false == CamNavi->IsMove(vCamPosition, REF_OUT newCell))
+		{
+			_float3 closestPoint = CamNavi->ClampPositionToCell(vCamPosition);
+			GetFollowCamera()->GetTransform()->SetPos(_float3(closestPoint.x, vCamPosition.y, closestPoint.z));
+			vCamPosition = GetFollowCamera()->GetTransform()->GetPos();
+		}
+	}
+	else
+	{
+		GetFollowCamera()->GetTransform()->SetPos(GetTransform()->GetPos());
+	}
+>>>>>>> 3987a0223b251a7dd4bb520acb5f1bbc6e22f07b
+
+	if (false == IsNetworkConnected())
+	{
+		FollowCameraMove(_float3{ 0.f, 20.f, -40.f }, _dTimeDelta);
+	}
 }
 
+void CWarriorPlayer::SendPacketTickActive(const _double& _dTimeDelta)
+{
+#ifdef _ENABLE_PROTOBUFF
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	SendMoveData(spGameInstance);
+#endif
+}
 
 HRESULT CWarriorPlayer::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
-	
 	return __super::RenderActive(_spCommand, _spTableDescriptor);
 }
 
@@ -327,13 +456,13 @@ HRESULT CWarriorPlayer::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHP
 
 void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
+	if (true == IsNetworkConnected())
+		return;
+
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	PAWNTYPE ePawnType = _pEnemy->GetPawnType();
 	const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
-#ifdef _ENABLE_PROTOBUFF
-	_bool isCollision = false;
-	_int DamageEnable = 0;
-#endif
+
 	if (PAWNTYPE::PAWN_CHAR == ePawnType)
 	{
 		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
@@ -348,15 +477,16 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 
 		for (auto& iter : GetColliderContainer())
 		{
-			if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
+			if (iter.first == L"ForAttack")
 			{
-				if (EnemyCurAnimName == L"attack4_kick" || EnemyCurAnimName == L"attack5_kick"
-					|| EnemyCurAnimName == L"Attack 2" || EnemyCurAnimName == L"Attack 3" || EnemyCurAnimName == L"Jump Forward")
+				if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
 				{
-					if (CurAnimName != L"rise01" && CurAnimName != L"rise02")
+					if (EnemyCurAnimName == L"attack4_kick" || EnemyCurAnimName == L"attack5_kick"
+						|| EnemyCurAnimName == L"Attack 2" || EnemyCurAnimName == L"Attack 3" || EnemyCurAnimName == L"Jump Forward")
 					{
-						if (m_dKickedElapsed >= 50)
+						if (CurAnimName != L"rise01" && CurAnimName != L"rise02")
 						{
+<<<<<<< HEAD
 							m_dKickedElapsed = 0;
 							m_bisKicked = false;
 						}
@@ -365,51 +495,90 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							GetTransform()->SetDirectionFixedUp(pCharacter->GetTransform()->GetLook());
 							m_bisKicked = true;
 						}
-#ifndef _ENABLE_PROTOBUFF
 						if (!GetIsHItAlreadyState())
 						{
+#ifndef _ENABLE_PROTOBUFF
 							DecreaseHealth(1);
-						}
-#else
-						isCollision = true;
-						DamageEnable = 1;
 #endif
+							SetDamaged(true);
+						}
 						SetHitAlreadyState(true);
+=======
+							if (m_dKickedElapsed >= 50)
+							{
+								m_dKickedElapsed = 0;
+								m_bisKicked = false;
+							}
+							else
+							{
+								GetTransform()->SetDirectionFixedUp(pCharacter->GetTransform()->GetLook());
+								m_bisKicked = true;
+							}
+#ifndef _ENABLE_PROTOBUFF
+							if (!GetIsHItAlreadyState())
+							{
+								DecreaseHealth(1);
+							}
+#else
+							isCollision = true;
+							DamageEnable = 1;
+#endif
+							SetHitAlreadyState(true);
+						}
+					}
+					else
+					{
+						if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead01" && !m_bisKicked)
+						{
+#ifndef _ENABLE_PROTOBUFF
+							if (!GetIsHItAlreadyState())
+							{
+								DecreaseHealth(1);
+							}
+#else
+							isCollision = true;
+#endif
+							SetHitAlreadyState(true);
+						}
+>>>>>>> 3987a0223b251a7dd4bb520acb5f1bbc6e22f07b
 					}
 				}
 				else
 				{
+<<<<<<< HEAD
 					if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead01" && !m_bisKicked)
 					{
-#ifndef _ENABLE_PROTOBUFF
 						if (!GetIsHItAlreadyState())
 						{
+#ifndef _ENABLE_PROTOBUFF
 							DecreaseHealth(1);
-						}
-#else
-						isCollision = true;
 #endif
+							SetDamaged(true);
+						}
 						SetHitAlreadyState(true);
 					}
+=======
+					SetHitAlreadyState(false);
+>>>>>>> 3987a0223b251a7dd4bb520acb5f1bbc6e22f07b
 				}
 			}
 			else
 			{
-				SetHitAlreadyState(false);
-			}
-
-		
-
-			for (auto& iter2 : pCharacter->GetColliderContainer())
-			{
-				if (iter.second->IsCollision(iter2.second))
+				for (auto& iter2 : pCharacter->GetColliderContainer())
 				{
+<<<<<<< HEAD
 					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 10 * _dTimeDelta);
+=======
+					if (iter.second->IsCollision(iter2.second))
+					{
+						GetTransform()->SetPos(GetTransform()->GetPos() - direction * 10 * _dTimeDelta);
 #ifdef _ENABLE_PROTOBUFF
-					isCollision = true;
+						isCollision = true;
 #endif
+					}
+>>>>>>> 3987a0223b251a7dd4bb520acb5f1bbc6e22f07b
 				}
-			}
+			}		
 		}
 	}
 	else if (PAWNTYPE::PAWN_STATICOBJ == ePawnType)
@@ -417,24 +586,36 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 		CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
 		for (auto& iter : GetColliderContainer())
 		{
-			for (auto& iter2 : pModelObject->GetColliderContainer())
+			if (iter.first == L"Main")
 			{
-				SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
-
-				if (GetCollidedNormal() != _float3::Zero) // 충돌이 발생한 경우
+				for (auto& iter2 : pModelObject->GetColliderContainer())
 				{
-					SetOBJCollisionState(true);
-					// 속도 결정
-					_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 50.0f : 20.0f;
+					SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
 
+<<<<<<< HEAD
 					ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
-#ifdef _ENABLE_PROTOBUFF
-					isCollision = true;
-#endif
 				}
 				else
 				{
 					SetOBJCollisionState(false);
+=======
+					if (GetCollidedNormal() != _float3::Zero) // 충돌이 발생한 경우
+					{
+						SetOBJCollisionState(true);
+						// 속도 결정
+						_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 60.0f : 20.0f;
+						if (CurAnimName == L"roll_back" || CurAnimName == L"roll_front" || CurAnimName == L"roll_left" || CurAnimName == L"roll_right")
+							speed = 100;
+						ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
+#ifdef _ENABLE_PROTOBUFF
+						isCollision = true;
+#endif
+					}
+					else
+					{
+						SetOBJCollisionState(false);
+					}
+>>>>>>> 3987a0223b251a7dd4bb520acb5f1bbc6e22f07b
 				}
 			}
 		}
@@ -444,33 +625,54 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 		CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
 		for (auto& iter : GetColliderContainer())
 		{
-			for (auto& iter2 : pModelObject->GetColliderContainer())
+			if (iter.first == L"ForAttack")
 			{
-				if (iter.second->IsCollision(iter2.second))
+				for (auto& iter2 : pModelObject->GetColliderContainer())
 				{
-					if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead01" && !m_bisKicked)
+					if (iter.second->IsCollision(iter2.second))
 					{
-#ifndef _ENABLE_PROTOBUFF
+<<<<<<< HEAD
 						if (!GetIsHItAlreadyState())
 						{
+#ifndef _ENABLE_PROTOBUFF
 							DecreaseHealth(1);
-						}
-#else
-						isCollision = true;
-						DamageEnable = 1;
 #endif
+							SetDamaged(true);
+						}
 						SetHitAlreadyState(true);
 					}
 				}
 				else
 				{
 					SetHitAlreadyState(false);
+=======
+						if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead01" && !m_bisKicked)
+						{
+#ifndef _ENABLE_PROTOBUFF
+							if (!GetIsHItAlreadyState())
+							{
+								DecreaseHealth(1);
+							}
+#else
+							isCollision = true;
+							DamageEnable = 1;
+#endif
+							SetHitAlreadyState(true);
+						}
+					}
+					else
+					{
+						SetHitAlreadyState(false);
+					}
+
+>>>>>>> 3987a0223b251a7dd4bb520acb5f1bbc6e22f07b
 				}
-
 			}
-
 		}
 	}
+<<<<<<< HEAD
+=======
+
 
 #ifdef _ENABLE_PROTOBUFF
 	if (true == isCollision)
@@ -478,12 +680,17 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 		SendCollisionData(_pEnemy.get(), DamageEnable);
 	}
 #endif
+>>>>>>> 3987a0223b251a7dd4bb520acb5f1bbc6e22f07b
 }
 
 #ifdef _ENABLE_PROTOBUFF
 void CWarriorPlayer::SendMoveData(CSHPTRREF<UGameInstance> spGameInstance)
 {
 	RETURN_CHECK(true == IsNetworkConnected(), ;);
+
+	_int AnimIndex = GetAnimModel()->GetCurrentAnimIndex();
+	_int AnimState = GetAnimationController()->GetAnimState();
+	_int Hit = IsDamaged();
 
 	_float3 vCharacterPos = GetTransform()->GetPos();
 	_float3 vCharRotate = GetTransform()->GetRotationValue();
@@ -494,12 +701,13 @@ void CWarriorPlayer::SendMoveData(CSHPTRREF<UGameInstance> spGameInstance)
 		PROTOFUNC::MakeVector3(OUT & vMove, vCharacterPos.x, vCharacterPos.y, vCharacterPos.z);
 		PROTOFUNC::MakeVector3(OUT & vRotate, vCharRotate.x, vCharRotate.y, vCharRotate.z);
 	}
-	CHARMOVE charMove;
-	PROTOFUNC::MakeCharMove(OUT & charMove, spGameInstance->GetNetworkOwnerID(), vMove, vRotate);
-	spGameInstance->SendProcessPacket(std::move(UProcessedData(charMove, TAG_CS_MOVE)));
+	CHARSTATE charMove;
+	PROTOFUNC::MakeCharState(OUT & charMove, spGameInstance->GetNetworkOwnerID(), vMove, vRotate, 
+		AnimState, AnimIndex, Hit);
+	spGameInstance->SendProcessPacket(std::move(UProcessedData(charMove, TAG_CS_PLAYERSTATE)));
 }
 
-void CWarriorPlayer::SendCollisionData(UPawn* _pPawn, _int _DamageEnable)
+void CWarriorPlayer::SendCollisionData(UPawn* _pPawn)
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	COLLISIONDATA csCollision;
@@ -507,9 +715,7 @@ void CWarriorPlayer::SendCollisionData(UPawn* _pPawn, _int _DamageEnable)
 	_llong NetworkID = spGameInstance->GetNetworkOwnerID();
 	{
 		_float3 vPos = GetTransform()->GetPos();
-		PROTOFUNC::MakeVector3(&Pos, vPos.x, vPos.y, vPos.z);
-		PROTOFUNC::MakeCollisionData(&csCollision, NetworkID, Pos, _DamageEnable, 
-			_pPawn->GetNetworkID());
+		PROTOFUNC::MakeCollisionData(&csCollision, NetworkID, _pPawn->GetNetworkID());
 	}
 	spGameInstance->SendProcessPacket(UProcessedData(NetworkID, csCollision, TAG_CS_PLAYERCOLLISION));
 }

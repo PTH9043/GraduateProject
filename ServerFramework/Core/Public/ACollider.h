@@ -30,12 +30,12 @@ public:
 	const Vector3& GetTranslate();
 	const _float4x4& GetTransformMatrix() const { return m_mTransformMatrix; }
 
-	void SetScale(const Vector3 _vScale);
-	void SetScaleToFitModel(const Vector3 minVertex, const Vector3 maxVertex);
-	void SetTranslate(const Vector3 _vTranslate);
-	void SetTransform(const Vector3 _vPos, const Vector4 _vQuaternion);
+	void SetScale(const Vector3& _vScale);
+	void SetScaleToFitModel(const Vector3& minVertex, const Vector3& maxVertex);
+	void SetTranslate(const Vector3& _vTranslate);
+	void SetTransform(const Vector3& _vPos, const Vector4& _vQuaternion);
 	void SetTransform(CSHPTRREF< ATransform> _spTransform);
-	void SetTransform(const _float4x4 _Matrix);
+	void SetTransform(const _float4x4& _Matrix);
 	// UComponent을(를) 통해 상속됨
 	virtual void Free() override;
 	_bool IsCollision(CSHPTRREF<ACollider> _pCollider);
@@ -80,8 +80,6 @@ private:
 	Vector3																	m_vPos;
 
 	ARRAY<Vector3, 6>												m_vObbNormals;
-
-	AFastSpinLock														m_ColliderSpinLock;
 };
 
 END

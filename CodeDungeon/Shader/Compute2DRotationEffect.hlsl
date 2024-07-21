@@ -82,7 +82,7 @@ RWStructuredBuffer<COMPUTESHARED> g_SharedData : register(u1);
 // g_int_0  : Particle Max Count
 // g_int_1  : AddCount
 // g_vec4_0 : MinLifeTime / MaxLifeTime / MinSpeed / MaxSpeed
-[numthreads(1024, 1, 1)]
+[numthreads(102, 1, 1)]
 void CS_Main(int3 threadIndex : SV_DispatchThreadID)
 {
     if (threadIndex.x >= g_GrobalParticleInfo.iMaxCount)
@@ -143,7 +143,7 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
             //    g_ParticleWritedata[threadIndex.x].vWorldPos = g_GrobalParticleInfo.fParticlePosition;
             //    g_ParticleWritedata[threadIndex.x].vWorldDir = normalize(dir);
             //}
-            int radius = 15;
+            int radius = 7.5;
 
 
             if (threadIndex.x % 2 == 0) {

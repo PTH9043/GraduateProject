@@ -23,7 +23,10 @@ namespace Server
 		SHPTR<AMonster> spMonster = spCoreInstance->FindMobObject(_TimerEvent.llObjID);
 		SHPTR<ASession> spPlayer = spCoreInstance->FindSession(_TimerEvent.llTargetID);
 		
-		spMonster->State(spPlayer, _TimerEvent.eEventType);
+		if (nullptr != spMonster && nullptr != spPlayer)
+		{
+			spMonster->State(spPlayer, _TimerEvent.eEventType);
+		}
 	}
 
 	void CMonsterJobTimer::Free()

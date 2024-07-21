@@ -104,6 +104,7 @@ void CHarlequinnAnimController::Tick(const _double& _dTimeDelta)
     // Handle found player state
     if (!FoundPlayer)
     {
+        spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         // Handle idle mode with 1/3 probability and 3-second duration
         m_bAttackMode = false;
         m_bTauntMode = false;
@@ -158,8 +159,8 @@ void CHarlequinnAnimController::Tick(const _double& _dTimeDelta)
     // Handle hit state
     if (Hit)
     {
-        UpdateState(spAnimModel, ANIM_HIT, L"HIT");
         spAnimModel->SetAnimation(L"Get Hit");
+        spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         spHarlequinn->SetPrevHealth(spHarlequinn->GetHealth());
     }
 
@@ -382,6 +383,7 @@ void CHarlequinnAnimController::Tick(const _double& _dTimeDelta)
     // Check for death
     if (spHarlequinn->GetHealth() <= 0)
     {
+        spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         spHarlequinn->SetDeathState(true);
     }
 

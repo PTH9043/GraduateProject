@@ -22,6 +22,7 @@ public:
 	DESTRUCTOR(AGameObject)
 public:
 	virtual _bool Start(const VOIDDATAS& _ReceiveDatas = {}) PURE;
+	virtual void RunningPermanentDisableSituation();
 	void InsertColliderContainer(const COLLIDERINFO& _ColliderInfo);
 	void BringSpaceIndex(SHPTR<ASpace> _spSpace);
 
@@ -39,7 +40,7 @@ public:
 	_bool IsCanSee(Vector3 _OtherPos);
 	_bool IsCanSee(SHPTR<ATransform> _spTransform);
 public:/*Get Set */
-	const SESSIONID& GetSessionID() const { return m_SessionID; }
+	const SESSIONID GetSessionID() const { return m_SessionID; }
 	const SESSIONTYPE& GetSessionType() const { return m_SessionType; }
 	const _int& GetSpaceIndex() const { return m_SpaceIndex; }
 	SHPTR<ATransform> GetTransform() const { return m_spTransform; }
@@ -50,8 +51,7 @@ public:/*Get Set */
 	const _float GetRunSpeed() const { return m_fRunSpeed; }
 	const _int GetCurOnCellIndex() const { return m_iCurOnCellIndex; }
 	const _bool IsActive() const { return m_isActive; }
-	const _bool IsPermanentDisable() const { return m_isPermanentDisable; }
-	COLLIDERCONTAINER& GetColliderContainer() { return m_ColliderContainer; }
+	const _bool IsPermanentDisable() const;
 
 	void SetJumpable(const _bool _isJumpable) { this->m_isJumpable = _isJumpable; }
 	virtual void SetActive(const _bool _isActive);
@@ -71,6 +71,8 @@ public:/*Get Set */
 protected:
 	// 영구적으로 해당 오브젝트를 사용하지 않도록 결정할 경우 보낼 메시지 
 	virtual void LastBehavior();
+	virtual void CallActiveEnable();
+	virtual void CallActiveDisable();
 	void RestrictPositionToNavi();
 protected: /* Get Set */
 	void SetSessionID(const SESSIONID& _SessionID) { this->m_SessionID = _SessionID; }
@@ -85,12 +87,13 @@ protected: /* Get Set */
 	PACKETHEAD& GetPacketHead() { return m_CopyHead; }
 	BUFFER& GetCopyBuffer(REF_RETURN) { return m_CopyBuffer; }
 	_char* GetCopyBufferPointer(_int _iBufferIndex = 0) { return &m_CopyBuffer[0]; }
+	COLLIDERCONTAINER& GetColliderContainer() { return m_ColliderContainer; }
 private:
 	virtual void Free() override;
 public:
 	static	constexpr _int		SEE_RANGE{ 100 };
 private:
-	SESSIONID							m_SessionID;
+	ATOMIC<SESSIONID>		m_SessionID;
 	SESSIONTYPE					m_SessionType;
 	_int										m_SpaceIndex;
 	_int										m_GameObjectType;
@@ -109,7 +112,7 @@ private:
 	PACKETHEAD					m_CopyHead;
 	BUFFER								m_CopyBuffer;
 
-	COLLIDERCONTAINER		m_ColliderContainer;
+	COLLIDERCONTAINER	m_ColliderContainer;
 };
 
 

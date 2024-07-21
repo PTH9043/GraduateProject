@@ -55,11 +55,6 @@ namespace Core
 		return true;
 	}
 
-	bool ASession::IsHit(APawn* _pPawn, const _double& _dTimeDelta)
-	{
-		return __super::IsHit(_pPawn, _dTimeDelta);
-	}
-
 	void ASession::Disconnect()
 	{
 #ifdef USE_DEBUG

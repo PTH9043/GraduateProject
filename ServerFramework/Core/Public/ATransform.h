@@ -22,21 +22,21 @@ public:
 	const _float GetZAngle() const;
 	const _float4x4 GetWorldMatrixTP() { TransformUpdate(); return XMMatrixTranspose(XMLoadFloat4x4(&m_mChangeWorldMatrix)); }
 	const _float4x4 GetWorldMatrixInv() { TransformUpdate();  return XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_mChangeWorldMatrix)); }
-	const _float4x4& GetWorldMatrix() const { READ_SPINLOCK(m_WorldSpinLock); return m_mWorldMatrix;}
+	const _float4x4 GetWorldMatrix() const { READ_SPINLOCK(m_WorldSpinLock); return m_mWorldMatrix;}
 
 	const _float4x4& GetChangeMatrix() { TransformUpdate();   return m_mChangeWorldMatrix; }
 	// Get Parents Local Matrix
 	const _float4x4 GetParentsMatrix();
 
-	const Vector3& GetRight() const { READ_SPINLOCK(m_WorldSpinLock); return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_RIGHT][0]); }
-	const Vector3& GetUp() const { READ_SPINLOCK(m_WorldSpinLock); return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_UP][0]); }
-	const Vector3& GetLook() const { READ_SPINLOCK(m_WorldSpinLock); return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_LOOK][0]); }
-	const Vector3& GetPos() const { READ_SPINLOCK(m_WorldSpinLock); return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_POS][0]); }
+	const Vector3 GetRight() const { READ_SPINLOCK(m_WorldSpinLock); return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_RIGHT][0]); }
+	const Vector3 GetUp() const { READ_SPINLOCK(m_WorldSpinLock); return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_UP][0]); }
+	const Vector3 GetLook() const { READ_SPINLOCK(m_WorldSpinLock); return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_LOOK][0]); }
+	const Vector3 GetPos() const { READ_SPINLOCK(m_WorldSpinLock); return *((Vector3*)&m_mWorldMatrix.m[DirectX::PTH::MATROW_POS][0]); }
 
-	const Vector3& GetChangeRight() const { READ_SPINLOCK(m_ChangeSpinLock); return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_RIGHT][0]); }
-	const Vector3& GetChangeUp() const { READ_SPINLOCK(m_ChangeSpinLock);  return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_UP][0]); }
-	const Vector3& GetChangeLook() const { READ_SPINLOCK(m_ChangeSpinLock);  return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_LOOK][0]); }
-	const Vector3& GetChangePos() const { READ_SPINLOCK(m_ChangeSpinLock); return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_POS][0]); }
+	const Vector3 GetChangeRight() const { READ_SPINLOCK(m_ChangeSpinLock); return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_RIGHT][0]); }
+	const Vector3 GetChangeUp() const { READ_SPINLOCK(m_ChangeSpinLock);  return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_UP][0]); }
+	const Vector3 GetChangeLook() const { READ_SPINLOCK(m_ChangeSpinLock);  return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_LOOK][0]); }
+	const Vector3 GetChangePos() const { READ_SPINLOCK(m_ChangeSpinLock); return *((Vector3*)&m_mChangeWorldMatrix.m[DirectX::PTH::MATROW_POS][0]); }
 
 	const SHPTR<ATransform>& GetParentsTransform() const { return m_spParentsTransform; }
 

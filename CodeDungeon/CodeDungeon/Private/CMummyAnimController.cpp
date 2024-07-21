@@ -66,21 +66,22 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     std::uniform_int_distribution<> dis_patrol(0, 3);
     std::uniform_int_distribution<> dis_attack(0, 1);
 
-
     ClearTrigger();
     SetAnimState(-1);
     SHPTR<CMummy> spMummy = m_wpMummyMob.lock();
     SHPTR<UAnimModel> spAnimModel = spMummy->GetAnimModel();
 
-#ifndef _ENABLE_PROTOBUFF
     const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
 
     _float DistanceFromPlayer = spMummy->GetDistanceFromPlayer();
     _bool FoundPlayer = spMummy->GetFoundTargetState();
     _bool Hit = false;
 
-    if (spMummy->GetPrevHealth() > spMummy->GetHealth())
+    if (spMummy->IsDamaged())
+    {
         Hit = true;
+        spMummy->SetDamaged(false);
+    }
 
     _float AttackRange = 10.0f;
 
@@ -93,6 +94,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     }
     else if (!FoundPlayer && m_bFoundPlayerFirsttime)
     {
+        spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         // Handle idle mode with 1/3 probability and 3-second duration
         m_bAttackMode = false;
         m_bTauntMode = false;
@@ -127,7 +129,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
             }
         }
     }
-    else if (FoundPlayer && m_bFoundPlayerFirsttime)
+    else if (FoundPlayer && m_bFoundPlayerFirsttime && !m_bAttackMode)
     {
         m_bTauntMode = true;
         m_dIdleTimer = 0;
@@ -152,8 +154,9 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     // Handle hit state
     if (Hit)
     {
-        UpdateState(spAnimModel, ANIM_HIT, L"HIT");
+     //   UpdateState(spAnimModel, ANIM_HIT, L"HIT");
         spAnimModel->SetAnimation(L"gotHit");
+        spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         spMummy->SetPrevHealth(spMummy->GetHealth());
     }
 
@@ -177,20 +180,23 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
         }
     }
 
+#ifndef _ENABLE_PROTOBUFF
     // Check for death
     if (spMummy->GetHealth() <= 0)
     {
         spMummy->SetDeathState(true);
     }
-
+#endif
     // Handle death state
     if (spMummy->GetDeathState())
     {
+        spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         UpdateState(spAnimModel, ANIM_DEATH, L"DEAD");
     }
 
+    spAnimModel->TickEvent(spMummy.get(), GetTrigger(), _dTimeDelta);
 #else
-spAnimModel->TickAnimChangeTransform(spMummy->GetTransform(), _dTimeDelta);
+    spAnimModel->TickAnimChangeTransform(spMummy->GetTransform(), _dTimeDelta);
 #endif
 }
 
@@ -200,12 +206,12 @@ void CMummyAnimController::ReceiveNetworkProcessData(void* _pData)
     SHPTR<CMummy> spSarcophagus = m_wpMummyMob.lock();
     SHPTR<UAnimModel> spAnimModel = spSarcophagus->GetAnimModel();
     {
-        SC_MONSTERSTATEHAVEPOS* pMonsterData = static_cast<SC_MONSTERSTATEHAVEPOS*>(_pData);
-        m_dRecvAnimDuration = pMonsterData->animationtime();
-
-        if (pMonsterData->animationindex() != spAnimModel->GetCurrentAnimIndex())
+        CHARSTATE* pMonsterData = static_cast<CHARSTATE*>(_pData);
+        if (pMonsterData->animationindex() != spAnimModel->GetCurrentAnimIndex() || 
+            1 == pMonsterData->triggeron())
         {
             spAnimModel->SetAnimation(pMonsterData->animationindex());
+            SetAnimState(pMonsterData->state());
         }
     }
 #endif

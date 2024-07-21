@@ -40,7 +40,7 @@ HRESULT UPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	// VOIDDATAS에 CharacterDesc 0번, PlayerDesc 1번에 값을 채워야한다. 
 	SetPawnType(PAWN_PLAYER);
 
-	if (_Datas.size() >= 2)
+	if (false == IsNetworkConnected() && _Datas.size() >= 2)
 	{
 		PLAYERDESC PlayerDesc = UMethod::ConvertTemplate_Index<PLAYERDESC>(_Datas, PLAYERDESCORDER);
 		m_spFollowCamera = PlayerDesc.spFollowCamera;

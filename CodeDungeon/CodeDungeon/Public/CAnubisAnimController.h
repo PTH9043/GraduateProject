@@ -35,6 +35,8 @@ private:
 	WKPTR< CAnubis>			m_wpAnubisMob;
 
 	_bool					m_bAttackMode;
+	_bool					m_bAttackStart;
+
 	_bool					m_bTauntMode;
 	_double					m_dlastHitTime;
 	_double					m_dlastAttackTime;
@@ -44,6 +46,8 @@ private:
 	_bool					m_bFoundPlayerFirsttime;
 	_double					m_didleRandomValueChoosingTimer;
 	_int					m_iRandomValue;
+
+	_int				 m_iRandomValueforAttack;
 	_double				m_dRecvAnimDuration;
 
 };

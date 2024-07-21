@@ -251,6 +251,10 @@ void URenderer::Tick(const _double& _dTimeDelta)
         m_bTurnShader.m_fDieTime = 0;
     }
 
+    if (m_bTurnShader.m_bGameStart) {
+        m_bTurnShader.m_fGameStartTime += _dTimeDelta;
+    }
+
     if (m_bTurnShader.m_bTurnAbility) {
         m_bTurnShader.m_fAbilityTime += _dTimeDelta;
         if (m_bTurnShader.m_fAbilityTime > 3.5f) {
@@ -326,6 +330,7 @@ HRESULT URenderer::Render()
     if (spGameInstance->GetDIKeyDown(DIK_F4)) {
         TurnOnAbilityEffect();
     }
+    
     if (TurnDie % 2 == 1) {
         TurnOnDieEffect();
     }

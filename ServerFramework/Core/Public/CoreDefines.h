@@ -91,8 +91,6 @@
 #include <mysql/cppconn/exception.h>
 #include <mysql/cppconn/resultset.h>
 #include <mysql/cppconn/statement.h>
-#include <concurrent_priority_queue.h>
-#include <concurrent_queue.h>
 
 extern "C" {
 #include <lua/lua.h>

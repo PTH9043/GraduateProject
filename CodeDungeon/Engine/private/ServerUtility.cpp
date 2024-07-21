@@ -37,6 +37,13 @@ void UServerMethods::RecvTcpPacket(const SOCKET& _Socket, REF_IN UOverExp& _Over
 	WSARecv(_Socket, _OverExp.GetWsaBuffPointer(), 1, 0, &recv_flag,	_OverExp.GetOverlappedPointer(), 0);
 }
 
+void UServerMethods::RecvTcpPacket(const SOCKET& _Socket, POINTER_IN UOverExp* _OverExp)
+{
+	DWORD recv_flag = 0;
+	_OverExp->RecvReset();
+	WSARecv(_Socket, _OverExp->GetWsaBuffPointer(), 1, 0, &recv_flag, _OverExp->GetOverlappedPointer(), 0);
+}
+
 void UServerMethods::SendTcpPacket(const SOCKET& _Socket, UOverExp* _pOverExp)
 {
 	WSASend(_Socket, _pOverExp->GetWsaBuffPointer(), 1, 0, 0, _pOverExp->GetOverlappedPointer(), 0);

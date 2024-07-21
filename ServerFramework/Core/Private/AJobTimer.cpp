@@ -15,7 +15,7 @@ namespace Core {
 
 	void AJobTimer::RegisterTimer(_int _RegisterTimer)
 	{
-		m_SteadyEvent.expires_from_now(std::chrono::milliseconds(_RegisterTimer));
+		m_SteadyEvent.expires_from_now(std::chrono::microseconds(_RegisterTimer));
 		// 타이머의 비동기 대기 설정
 		m_SteadyEvent.async_wait(std::bind(&AJobTimer::TimerThread, this, std::placeholders::_1));
 	}
@@ -25,9 +25,6 @@ namespace Core {
 		TIMEREVENT TimerEvent;
 		auto CurrentTime = std::chrono::system_clock::now();
 
-		if(m_TimerEventQueue.empty())
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
-
 		if (true == m_TimerEventQueue.try_pop(TimerEvent))
 		{
 			if (TimerEvent.WakeUpTime > CurrentTime) {
@@ -36,6 +33,12 @@ namespace Core {
 			}
 			TickTimer(TimerEvent);
 		}
+		else
+		{
+			RegisterTimer(10);
+			return;
+		}
+
 		RegisterTimer(0);
 	}
 

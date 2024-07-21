@@ -31,6 +31,7 @@ public:
 public:
 	_bool NativeConstruct(const ARRAY<Vector3, POINT_END>& _Points, const _int _iIndex);
 	_bool NativeConstruct(const CELLDECS& _tCellDesc);
+	_bool IsIn(const Vector3& _vPos, REF_IN ATOMIC<_int>& _NeighborIndex);
 	_bool IsIn(const Vector3& _vPos, REF_IN _int& _NeighborIndex);
 	_bool IsComparePoints(const Vector3& _vPointA, const Vector3& _vPointB);
 	_bool IsComparePoint(CSHPTRREF<ACell> _pCell);

@@ -11,13 +11,6 @@ namespace Core
 
 	AMemoryPool::~AMemoryPool()
 	{
-		while (!m_MemoryQueue.empty())            
-		{
-			MEMORYHEADER* header;
-			m_MemoryQueue.try_pop(header);
-			ThreadMicroRelax(1);
-			::free(header);
-		}
 	}
 	/*
 	* 반납된 메모리를 풀에 저장한다. 
@@ -55,6 +48,17 @@ namespace Core
 		return Header;
 	}
 
+	void AMemoryPool::Release()
+	{
+		while (!m_MemoryQueue.empty())
+		{
+			MEMORYHEADER* header;
+			m_MemoryQueue.try_pop(header);
+			std::this_thread::sleep_for(std::chrono::microseconds(1));
+			::free(header);
+		}
+	}
+
 	/*
 	-------------------------------
 	MEMORYPOOL
@@ -79,6 +83,8 @@ namespace Core
 	{
 		for (auto& iter : m_PoolTable)
 		{
+			if (nullptr != iter)
+				iter->Release();
 			delete iter;
 		}
 	}

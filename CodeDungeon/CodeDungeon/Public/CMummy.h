@@ -17,7 +17,7 @@ public:
 	CMummy(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType);
 	CMummy(const CMummy& _rhs);
 	enum MUMMYTYPE {
-		TYPE_STANDING, TYPE_LYING, TYPE_END
+		TYPE_STANDING, TYPE_LYING, TYPE_WALKING, TYPE_END
 	};
 	DESTRUCTOR(CMummy)
 public:
@@ -37,11 +37,13 @@ protected:
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
 	virtual HRESULT RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass = true) override;
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) override;
-
+	void CreateParticles();
 private:
 	MUMMYTYPE					m_MummyType;
 	SHPTR<UParticle>			m_spBloodParticle;
 	SHPTR<UParticle>			m_spSlashParticle;
+	SHPTR<UParticle>			m_spAttackParticle;
+	SHPTR<UParticle>			m_spAttackParticleTwo;
 	PARTICLEPARAM*			m_stParticleParam;
 	ComputeParticleType*	m_stParticleType;
 

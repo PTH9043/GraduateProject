@@ -148,6 +148,18 @@
     <Filter Include="05.Objects\ModelObjects\Weapons\AnubisStaff">
       <UniqueIdentifier>{89acc89b-44a7-4665-b66a-3b4c74e997e8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Objects\Character\Mob\Mimic">
+      <UniqueIdentifier>{77c1135d-0f6c-4341-b162-b2fd437ec8ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\Mimic">
+      <UniqueIdentifier>{f7842d32-ca05-4f19-b835-29b116ce5388}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.UI\Button">
+      <UniqueIdentifier>{94413744-fb03-458f-9961-978d544906ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.UI\Loading">
+      <UniqueIdentifier>{aa086bab-c5d1-4ff4-ab18-dd9608ad1145}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ClientDefines.h">
@@ -279,6 +291,18 @@
     <ClInclude Include="..\Public\CAnubisStaff.h">
       <Filter>05.Objects\ModelObjects\Weapons\AnubisStaff</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CMimic.h">
+      <Filter>05.Objects\Character\Mob\Mimic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CMimicAnimController.h">
+      <Filter>06.Comp\Controller\Mimic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CButtonUI.h">
+      <Filter>07.UI\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CLoadingUI.h">
+      <Filter>07.UI\Loading</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -402,6 +426,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\CAnubisStaff.cpp">
       <Filter>05.Objects\ModelObjects\Weapons\AnubisStaff</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CMimic.cpp">
+      <Filter>05.Objects\Character\Mob\Mimic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CMimicAnimController.cpp">
+      <Filter>06.Comp\Controller\Mimic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CButtonUI.cpp">
+      <Filter>07.UI\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CLoadingUI.cpp">
+      <Filter>07.UI\Loading</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

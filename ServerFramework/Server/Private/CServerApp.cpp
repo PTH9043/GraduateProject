@@ -12,8 +12,9 @@ namespace Server
 
 	_bool CServerApp::Start()
 	{
-		std::cout << "Start Server!\n";
 		GetCoreInstance()->ReadyCoreInstance(CreateServiceObject<CServerAdiminstor>());
+
+		std::cout << "Start Server!\n";
 		try
 		{
 			std::cout << "Create Service Object!\n";

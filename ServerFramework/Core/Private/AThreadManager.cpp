@@ -44,7 +44,7 @@ namespace Core
 	*/
 	void AThreadManager::Join()
 	{
-		m_spMainLoop->RegisterTimer();
+	//	m_spMainLoop->RegisterTimer(1);
 
 		for (auto& iter : m_JobThreadContainer)
 		{

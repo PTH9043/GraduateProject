@@ -32,8 +32,9 @@ namespace Server
 #else
 		CreateServerMob();
 #endif
+		ThreadMiliRelax(100);
 		Connect();
-		return  __super::Start();
+		return __super::Start();
 	}
 
 	void CServerAdiminstor::Connect()
@@ -120,6 +121,7 @@ namespace Server
 		spCoreInstance->RegisterJob(TIMERTYPE::TIMER_MOB, spMonsterJobTimer);
 
 		CMobServerLayoutLoader MobServerLayoutLoader("..\\..\\Resource\\NetworkMobData.bin");
+		ThreadMiliRelax(100);
 		for (auto& iter : MobServerLayoutLoader.GetMobData())
 		{
 			SHPTR<AMonster> spMonster = nullptr;
@@ -129,14 +131,6 @@ namespace Server
 			case TAG_CHEST:
 				spMonster = Create<CChest>(GetCoreInstance(), iter.iMobID, spMonsterJobTimer);
 				break;
-			case TAG_SARCOPHAGUS_LAYING:
-				spMonster = Create<CSarcophagus>(GetCoreInstance(), iter.iMobID, SARCOPHAGUSTYPE::SARCO_LAYING,
-					spMonsterJobTimer);
-				break;
-			case TAG_SARCOPHAGUS_STANDING:
-				spMonster = Create<CSarcophagus>(GetCoreInstance(), iter.iMobID, SARCOPHAGUSTYPE::SARCO_STANDING,
-					spMonsterJobTimer);
-				break;
 			case TAG_MUMMY_LAYING:
 				spMonster = Create<CMummy>(GetCoreInstance(), iter.iMobID, MUMMYTYPE::MUMMY_LAYING, spMonsterJobTimer);
 				break;
@@ -144,6 +138,10 @@ namespace Server
 				spMonster = Create<CMummy>(GetCoreInstance(), iter.iMobID, MUMMYTYPE::MUMMY_STANDING, spMonsterJobTimer);
 				break;
 			}
+
+			if (nullptr == spMonster)
+				continue;
+
 			spCoreInstance->InsertMobObject(spMonster->GetSessionID(), spMonster);
 			spMonster->Start({ &iter });
 		}

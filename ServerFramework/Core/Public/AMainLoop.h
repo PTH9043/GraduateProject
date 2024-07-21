@@ -12,7 +12,7 @@ public:
 	AMainLoop(OBJCON_CONSTRUCTOR, Asio::io_context& _context, SHPTR<AService> _spServerService);
 	DESTRUCTOR(AMainLoop)
 public:
-	void RegisterTimer();
+	void RegisterTimer(_int _iTime);
 	void TimerThread(const boost::system::error_code& _error);
 private:
 	virtual void Free() override;

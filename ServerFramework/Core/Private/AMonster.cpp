@@ -13,10 +13,10 @@ namespace Core
 		APawn(OBJCON_CONDATA, _ID, SESSIONTYPE::MONSTER), m_vNextPos{}, 
 		m_MobState{ MOB_DISABLE_STATE }, m_RoomIndex{}, m_PathList{}, m_strAnimTriggerName{""}, m_strCurAnimName{""}, 
 		m_wpMonsterJobTimer{_spMonsterJobTimer}, m_isFoundPlayerFistTime{false}, m_fActiveRange{0},
-		m_fDeactiveRange{0}, m_iMonsterType{0}, m_fDistanceToPlayer{0},
+		m_fDeactiveRange{0}, m_iMonsterType{0}, m_fDistanceToPlayer{-1},
 		m_isCurrentAtkPlayer{ false }, m_isCurrentFindPlayer { false}, m_isCurrentJustMove{ false },
 		m_fMoveSpeed { 0 }, m_CurrentTargetPlayerID{ -1 }, m_FindNextPosTimer{0.5, std::memory_order_seq_cst},
-		m_TargetPosLock{},  m_iNextPathIndex{0}, m_vTargetPos{}, m_isPathFinding{false}
+		m_TargetPosLock{},  m_iNextPathIndex{0}, m_vTargetPos{}, m_isPathFinding{false}, m_isCurrentPlayerTargetChangeSituation{false}
 	{
 		m_FindNextPosTimer.fTimer = 100.f;
 		m_FindNextPosTimer.isPass = true;
@@ -38,24 +38,25 @@ namespace Core
 			Vector3 vPlayerPos = spPlayerTr->GetPos();
 			Vector3 vDirection = vPlayerPos - vMobPos;
 
-			m_fDistanceToPlayer = vDirection.LengthSquared();
+			m_fDistanceToPlayer = vDirection.Length();
 
 			if (m_fDistanceToPlayer <= m_fAttackRange)
 			{
 				SetMonsterState(MONSTERSTATE::MOB_ATTACK_STATE);
 				UpdateSelfStateToPlayerDistance(true, false, false);
+				ChangePlayerTargetID(_spSession->GetSessionID());
 			}
-			else if (m_fDistanceToPlayer <= m_fActiveRange )
+			else if (m_fDistanceToPlayer <= m_fActiveRange)
 			{
-				m_CurrentTargetPlayerID = _spSession->GetSessionID();
 				SetMonsterState(MONSTERSTATE::MOB_FIND_STATE);
 				UpdateSelfStateToPlayerDistance(false, true, false);
+				ChangePlayerTargetID(_spSession->GetSessionID());
 			}
 			else if (m_fDeactiveRange >= m_fDistanceToPlayer)
 			{
-
 				SetMonsterState(MONSTERSTATE::MOB_MOVE_STATE);
 				UpdateSelfStateToPlayerDistance(false, false, true);
+				m_isCurrentPlayerTargetChangeSituation = true;
 			}
 		}
 	}
@@ -68,45 +69,43 @@ namespace Core
 	}
 
 
-	bool AMonster::IsHit(APawn* _pPawn, const _double& _dTimeDelta)
-	{
-		return __super::IsHit(_pPawn, _dTimeDelta);
-	}
-
-	void AMonster::InsertMobJobTimer(_int _PlayerID)
+	void AMonster::InsertMobJobTimer(SESSIONID _PlayerID)
 	{
 		if (true == IsPermanentDisable())
 			return;
 
+		_bool isCurrentPlayerTargetSituation = m_isCurrentPlayerTargetChangeSituation;
+		SESSIONID CurrentTargetID = m_CurrentTargetPlayerID.load();
+
+		if (- 1 != CurrentTargetID && _PlayerID != CurrentTargetID)
+		{
+			return;
+		}
+
 		SetActive(true);
+		if (-1 != CurrentTargetID && _PlayerID != CurrentTargetID &&
+			true == isCurrentPlayerTargetSituation)
+		{
+			ChangeCurrentFindPlayer(CurrentTargetID, _PlayerID);
+		}
 
 		SHPTR<AJobTimer> spJobTimer = m_wpMonsterJobTimer.lock();
 		if (nullptr != spJobTimer)
 		{
-			spJobTimer->InsertTimerEvent(TIMEREVENT(GetSessionID(), _PlayerID, EVENT_TYPE::EV_MOB_ACTIVE));
+			SESSIONID SessionID = GetSessionID();
+			spJobTimer->InsertTimerEvent(TIMEREVENT(SessionID, _PlayerID, EVENT_TYPE::EV_MOB_ACTIVE));
 		}
 	}
 
-	_bool AMonster::IsChangeTargetPlayer(SESSIONID _TargetPlayerID, _float _fDistance)
+	_bool AMonster::IsCanMove(const Vector3 _vPos)
 	{
-		std::atomic_thread_fence(std::memory_order_seq_cst);
-		SESSIONID CurrentTargetPlayerID = m_CurrentTargetPlayerID;
-		_float DistanceToPlayer = m_fDistanceToPlayer;
-
-		if (CurrentTargetPlayerID == _TargetPlayerID)
-			return true;
-
-		if (-1 == CurrentTargetPlayerID)
-			return true;
-
-		// 현재 감지하고 있는 플레이어가 인지 범위를 벗어나야 한다. 
-		if (m_fDeactiveRange >= DistanceToPlayer)
+		SHPTR<ATransform> spTransform = GetTransform();
+		SHPTR<ANavigation> spNaviagation = GetNavigation();
+		SHPTR<ACell> spCell = nullptr;
+		if (true == spNaviagation->IsMove(_vPos, spCell))
 		{
-			if (DistanceToPlayer > _fDistance)
-			{
-				m_CurrentTargetPlayerID = _TargetPlayerID;
-				return true;
-			}
+			spTransform->SetPos(_vPos);
+			return true;
 		}
 		return false;
 	}
@@ -203,8 +202,8 @@ namespace Core
 
 	void AMonster::UpdateFindRange(const _float _fActiveRange, const _float _fDeactiveRange)
 	{
-		m_fActiveRange = _fActiveRange * _fActiveRange;
-		m_fDeactiveRange = _fDeactiveRange * _fDeactiveRange;
+		m_fActiveRange = _fActiveRange;
+		m_fDeactiveRange = _fDeactiveRange;
 	}
 
 	void AMonster::UpdateSelfStateToPlayerDistance(_bool _isCurAtkPlayer, _bool _isCurFindPlayer, _bool _isCurJustMove)
@@ -212,6 +211,19 @@ namespace Core
 		m_isCurrentAtkPlayer = _isCurAtkPlayer;
 		m_isCurrentFindPlayer = _isCurFindPlayer;
 		m_isCurrentJustMove = _isCurJustMove;
+	}
+
+	void AMonster::ChangeCurrentFindPlayer(SESSIONID _CurPlayerSessionID, SESSIONID _ChangePlayerSessionID)
+	{
+	}
+
+	void AMonster::ChangePlayerTargetID(SESSIONID _SessionID)
+	{
+		if (true == m_isCurrentPlayerTargetChangeSituation)
+		{
+			m_CurrentTargetPlayerID = _SessionID;
+			m_isCurrentPlayerTargetChangeSituation = false;
+		}
 	}
 
 	void AMonster::Free()

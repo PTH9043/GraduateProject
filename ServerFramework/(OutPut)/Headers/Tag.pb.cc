@@ -20,54 +20,48 @@ PROTOBUF_PRAGMA_INIT_SEG
 namespace _pb = ::google::protobuf;
 namespace _pbi = ::google::protobuf::internal;
 namespace _fl = ::google::protobuf::internal::field_layout;
-static const ::_pb::EnumDescriptor* file_level_enum_descriptors_Tag_2eproto[6];
+static const ::_pb::EnumDescriptor* file_level_enum_descriptors_Tag_2eproto[7];
 static constexpr const ::_pb::ServiceDescriptor**
     file_level_service_descriptors_Tag_2eproto = nullptr;
 const ::uint32_t TableStruct_Tag_2eproto::offsets[1] = {};
 static constexpr ::_pbi::MigrationSchema* schemas = nullptr;
 static constexpr ::_pb::Message* const* file_default_instances = nullptr;
 const char descriptor_table_protodef_Tag_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-    "\n\tTag.proto*\301\002\n\006TAG_CS\022\020\n\014TAG_CS_DUMMY\020\000"
-    "\022\020\n\014TAG_CS_LOGIN\020\001\022#\n\037TAG_CS_RESOURCE_RE"
-    "CEIVE_SUCCESS\020\002\022\017\n\013TAG_CS_MOVE\020\003\022\021\n\rTAG_"
-    "CS_ATTACK\020\004\022\021\n\rTAG_CS_LOGOUT\020\005\022\026\n\022TAG_CS"
-    "_PLAYERSTATE\020\006\022\023\n\017TAG_CS_CHARMOVE\020\007\022\032\n\026T"
-    "AG_CS_PLAYERANIMSTATE\020\010\022\030\n\024TAG_CS_CHARCO"
-    "LLISION\020\t\022\033\n\027TAG_CS_SENDMONSTERSTATE\020\n\022\032"
-    "\n\026TAG_CS_PLAYERCOLLISION\020\013\022\033\n\027TAG_CS_MON"
-    "STERCOLIISION\020\014*\266\003\n\006TAG_SC\022\020\n\014TAG_SC_DUM"
-    "MY\020\000\022$\n TAG_SC_START_INFORMATION_SUCCESS"
-    "\020\001\022\031\n\025TAG_SC_CONNECTSUCCESS\020\002\022\033\n\027TAG_SC_"
-    "OTHERCLIENTLOGIN\020\003\022\036\n\032TAG_SC_MONSTERRESO"
-    "URCEDATA\020\004\022\025\n\021TAG_SC_MOVEFAILED\020\005\022\023\n\017TAG"
-    "_SC_CHARMOVE\020\006\022\026\n\022TAG_SC_VIEWINRANGE\020\007\022\026"
-    "\n\022TAG_SC_PLAYERSTATE\020\010\022\031\n\025TAG_SC_SELFPLA"
-    "YERMOVE\020\t\022\032\n\026TAG_SC_PLAYERANIMSTATE\020\n\022\037\n"
-    "\033TAG_SC_MONSTERSTATEHAVEMOVE\020\013\022\027\n\023TAG_SC"
-    "_MONSTERSTATE\020\014\022\033\n\027TAG_SC_NEEDMONSTERSTA"
-    "TE\020\r\022\034\n\030TAG_SC_MONSTERFINDPLAYER\020\016\022\024\n\020TA"
-    "G_SC_COLLISION\020\017*\271\001\n\010TAG_CHAR\022\r\n\tTAG_DUM"
-    "MY\020\000\022\022\n\016TAG_MAINPLAYER\020\001\022\023\n\017TAG_OTHERPLA"
-    "YER\020\002\022\024\n\020TAG_MUMMY_LAYING\020\003\022\026\n\022TAG_MUMMY"
-    "_STANDING\020\004\022\032\n\026TAG_SARCOPHAGUS_LAYING\020\005\022"
-    "\034\n\030TAG_SARCOPHAGUS_STANDING\020\006\022\r\n\tTAG_CHE"
-    "ST\020\007*C\n\016TAG_PLAYERTYPE\022\017\n\013TAG_WARRIOR\020\000\022"
-    "\016\n\nTAG_ARCHOR\020\001\022\020\n\014TAG_MAGICAIN\020\002*\242\002\n\013TA"
-    "G_MOBANIM\022\031\n\025TAG_MOB_DISABLE_STATE\020\000\022\026\n\022"
-    "TAG_MOB_IDLE_STATE\020\001\022\026\n\022TAG_MOB_MOVE_STA"
-    "TE\020\002\022\030\n\024TAG_MOB_ATTACK_STATE\020\003\022\027\n\023TAG_MO"
-    "B_DEATH_STATE\020\004\022\025\n\021TAG_MOB_HIT_STATE\020\005\022\027"
-    "\n\023TAG_MOB_SLEEP_STATE\020\006\022\027\n\023TAG_MOB_AWAKE"
-    "_STATE\020\007\022\026\n\022TAG_MOB_FIND_STATE\020\010\022\033\n\027TAG_"
-    "MOB_FIRSTFIND_STATE\020\t\022\027\n\023TAG_MOB_TAUNT_S"
-    "TATE\020\n*3\n\014TAG_COLLTYPE\022\020\n\014TAG_COLL_HIT\020\000"
-    "\022\021\n\rTAG_COLL_JUST\020\001b\006proto3"
+    "\n\tTag.proto*\324\001\n\006TAG_CS\022\020\n\014TAG_CS_DUMMY\020\000"
+    "\022\020\n\014TAG_CS_LOGIN\020\001\022\021\n\rTAG_CS_LOGOUT\020\002\022\017\n"
+    "\013TAG_CS_MOVE\020\003\022\026\n\022TAG_CS_PLAYERSTATE\020\004\022\030"
+    "\n\024TAG_CS_CHARCOLLISION\020\005\022\032\n\026TAG_CS_PLAYE"
+    "RCOLLISION\020\006\022\033\n\027TAG_CS_MONSTERCOLIISION\020"
+    "\007\022\027\n\023TAG_CS_MONSTERSTATE\020\010*\335\001\n\006TAG_SC\022\020\n"
+    "\014TAG_SC_DUMMY\020\000\022\031\n\025TAG_SC_CONNECTSUCCESS"
+    "\020\001\022\033\n\027TAG_SC_OTHERCLIENTLOGIN\020\002\022\026\n\022TAG_S"
+    "C_PLAYERSTATE\020\003\022\024\n\020TAG_SC_COLLISION\020\004\022\026\n"
+    "\022TAG_SC_MONSTERFIND\020\005\022\017\n\013TAG_SC_DEAD\020\006\022\027"
+    "\n\023TAG_SC_MONSTERSTATE\020\007\022\031\n\025TAG_SC_SELFPL"
+    "AYERMOVE\020\010*\271\001\n\010TAG_CHAR\022\r\n\tTAG_DUMMY\020\000\022\022"
+    "\n\016TAG_MAINPLAYER\020\001\022\023\n\017TAG_OTHERPLAYER\020\002\022"
+    "\024\n\020TAG_MUMMY_LAYING\020\003\022\026\n\022TAG_MUMMY_STAND"
+    "ING\020\004\022\032\n\026TAG_SARCOPHAGUS_LAYING\020\005\022\034\n\030TAG"
+    "_SARCOPHAGUS_STANDING\020\006\022\r\n\tTAG_CHEST\020\007*C"
+    "\n\016TAG_PLAYERTYPE\022\017\n\013TAG_WARRIOR\020\000\022\016\n\nTAG"
+    "_ARCHOR\020\001\022\020\n\014TAG_MAGICAIN\020\002*\242\002\n\013TAG_MOBA"
+    "NIM\022\031\n\025TAG_MOB_DISABLE_STATE\020\000\022\026\n\022TAG_MO"
+    "B_IDLE_STATE\020\001\022\026\n\022TAG_MOB_MOVE_STATE\020\002\022\030"
+    "\n\024TAG_MOB_ATTACK_STATE\020\003\022\027\n\023TAG_MOB_DEAT"
+    "H_STATE\020\004\022\025\n\021TAG_MOB_HIT_STATE\020\005\022\027\n\023TAG_"
+    "MOB_SLEEP_STATE\020\006\022\027\n\023TAG_MOB_AWAKE_STATE"
+    "\020\007\022\026\n\022TAG_MOB_FIND_STATE\020\010\022\033\n\027TAG_MOB_FI"
+    "RSTFIND_STATE\020\t\022\027\n\023TAG_MOB_TAUNT_STATE\020\n"
+    "*3\n\014TAG_COLLTYPE\022\020\n\014TAG_COLL_HIT\020\000\022\021\n\rTA"
+    "G_COLL_JUST\020\001*^\n\014TAG_FINDTYPE\022\023\n\017TAG_FIN"
+    "D_ACTIVE\020\000\022\021\n\rTAG_FIND_NEAR\020\001\022\020\n\014TAG_FIN"
+    "D_ATK\020\002\022\024\n\020TAG_FIND_DISABLE\020\003b\006proto3"
 };
 static ::absl::once_flag descriptor_table_Tag_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Tag_2eproto = {
     false,
     false,
-    1387,
+    1157,
     descriptor_table_protodef_Tag_2eproto,
     "Tag.proto",
     &descriptor_table_Tag_2eproto_once,
@@ -104,18 +98,18 @@ const ::google::protobuf::EnumDescriptor* TAG_CS_descriptor() {
   return file_level_enum_descriptors_Tag_2eproto[0];
 }
 PROTOBUF_CONSTINIT const uint32_t TAG_CS_internal_data_[] = {
-    851968u, 0u, };
+    589824u, 0u, };
 bool TAG_CS_IsValid(int value) {
-  return 0 <= value && value <= 12;
+  return 0 <= value && value <= 8;
 }
 const ::google::protobuf::EnumDescriptor* TAG_SC_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&descriptor_table_Tag_2eproto);
   return file_level_enum_descriptors_Tag_2eproto[1];
 }
 PROTOBUF_CONSTINIT const uint32_t TAG_SC_internal_data_[] = {
-    1048576u, 0u, };
+    589824u, 0u, };
 bool TAG_SC_IsValid(int value) {
-  return 0 <= value && value <= 15;
+  return 0 <= value && value <= 8;
 }
 const ::google::protobuf::EnumDescriptor* TAG_CHAR_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&descriptor_table_Tag_2eproto);
@@ -152,6 +146,15 @@ PROTOBUF_CONSTINIT const uint32_t TAG_COLLTYPE_internal_data_[] = {
     131072u, 0u, };
 bool TAG_COLLTYPE_IsValid(int value) {
   return 0 <= value && value <= 1;
+}
+const ::google::protobuf::EnumDescriptor* TAG_FINDTYPE_descriptor() {
+  ::google::protobuf::internal::AssignDescriptors(&descriptor_table_Tag_2eproto);
+  return file_level_enum_descriptors_Tag_2eproto[6];
+}
+PROTOBUF_CONSTINIT const uint32_t TAG_FINDTYPE_internal_data_[] = {
+    262144u, 0u, };
+bool TAG_FINDTYPE_IsValid(int value) {
+  return 0 <= value && value <= 3;
 }
 // @@protoc_insertion_point(namespace_scope)
 namespace google {

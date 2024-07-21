@@ -16,33 +16,36 @@ public:
 	void Placement(_int _CellIndex);
 	Vector3 BringCellIndextoPosition();
 	virtual bool IsHit(APawn* _pPawn, const _double& _dTimeDelta) PURE;
-	void GameObjectHeal(_float _fHeal);
-	void Damaged(_float _fDamage);
+
+	void HealHp(const _float _fHeal);
+	void DamageToEnemy(const _float _fDamge);
 public: /* get set */
 	SHPTR<AAnimController> GetAnimController() { return m_spAnimController; }
 	const CHARSTATUS& GetCharStatus() const { return m_CharStatus; }
-	_bool IsHitState() const { return m_isHitState.load(); }
+	const _bool IsDamaged() const { return m_isDamaged; }
+	const _bool IsDead() const { return m_isDead; }
 
 	virtual void SetActive(const _bool _isActive) override;
-	void SetHitState(const _bool _isHit) { this->m_isHitState = _isHit; }
+	void SetDamaged(const _bool _isDamaged) { this->m_isDamaged = _isDamaged; }
 protected:
 	// Damaged
 	virtual void Collision(APawn* _pPawn, const _double& _dTimeDelta) PURE;
 	void RestrictPositionToNavi();
 protected: /* get set*/
-	void SetCharStatus(const CHARSTATUS& _charStatus) { ::memcpy(&m_CharStatus, &_charStatus, sizeof(CHARSTATUS)); }
 	void SetAnimController(SHPTR<AAnimController> _spAnimController) { this->m_spAnimController = _spAnimController; }
 	SHPTR<ANavigation> GetNavigation() { return m_spNavigation; }
+
+	void SetCharStatus(const CHARSTATUS& _charStatus) { ::memcpy(&m_CharStatus, &_charStatus, sizeof(CHARSTATUS)); }
 private:
 	virtual void Free() override;
 private:
 	// Animator
 	SHPTR< AAnimController>		m_spAnimController;
-	SHPTR<ANavigation>					m_spNavigation;
-	ATOMIC<_bool>							m_isHitState;
+	SHPTR<ANavigation>				m_spNavigation;
 	CHARSTATUS								m_CharStatus;
+	ATOMIC<_bool>							m_isDamaged;
 	ATOMIC<_bool>							m_isDead;
-};	
+};
 
 
 END

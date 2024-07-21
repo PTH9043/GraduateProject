@@ -27,7 +27,7 @@ public:
 	// Tick, LateTick 
 	void Tick(const _double& _dTimeDelta);
 	void LateTick(const _double& _dTimeDelta);
-	void Collision(const _double& _dTimeDelta);
+	void SendPacketActive(const _double& _dTimeDelta);
 
 	HRESULT ReadyActorManager(CSHPTRREF<URenderer> _spRenderer);
 	HRESULT AddPrototypes(const _wstring& _wstrName, const SHPTR<UActor>& _spActor);

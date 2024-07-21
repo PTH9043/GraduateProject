@@ -8,7 +8,7 @@ BEGIN(Engine)
 class UActor;
 
 using TOTALBUFFER = ARRAY<_char, MAX_PROCESSBUF_LENGTH>;
-using NETWORKACTORCONTAINER = UNORMAP<_int, SHPTR<UActor>>;
+using NETWORKACTORCONTAINER = CONUNOMAP<_int, SHPTR<UActor>>;
 using NETWORKINITDATACONTAINER = UNORMAP<_int, NETWORKRECEIVEINITDATA>;
 
 class UActor;
@@ -36,11 +36,11 @@ public:
 public: /* get set */
 	const _llong GetNetworkOwnerID() const { return m_llNetworkOwnerID; }
 	const NETWORKACTORCONTAINER& GetNetworkActorContainer() const { return m_NetworkActorContainer; }
-	SHPTR<UNetworkQueryProcessing> GetNetworkQueryProcessing() { return m_spNetworkQueryProcessing.load(); }
+	SHPTR<UNetworkQueryProcessing> GetNetworkQueryProcessing() { return m_spNetworkQueryProcessing; }
 	const _bool IsNetworkResourceRecvSuccess() const { return m_isNetworkResourceReceiveSuccess; }
 
 	void SetSceneID(const _int _iSceneID) { this->m_iSceneID = _iSceneID; }
-	void SetNetworkQueryProcessing(CSHPTRREF<UNetworkQueryProcessing> _spNetworkQueryProcessing) { this->m_spNetworkQueryProcessing = _spNetworkQueryProcessing; }
+	void SetNetworkQueryProcessing(CSHPTRREF<UNetworkQueryProcessing> _spNetworkQueryProcessing);
 protected:
 	void ServerTick();
 	virtual void NativePacket() PURE;
@@ -83,16 +83,16 @@ private:
 	SOCKET																						m_ClientTcpSocket;
 	SOCKET																						m_ClientUdpSocket;
 	WSADATA																					m_WsaData{};
+	TOTALBUFFER																			m_RecvBuffer;
 
-	TOTALBUFFER																			m_TcpTotalBuffer;
 	_llong																							m_CurrentBufferLength;
-	_llong																							m_RemainBufferLength;
+	std::atomic<_llong>																m_RemainBufferLength;
 	_llong																							m_llNetworkOwnerID;
 
-	SHPTR< UNetworkAddress>													m_spNetworkAddress;
+	SHPTR< UNetworkAddress>												m_spNetworkAddress;
 	NETWORKACTORCONTAINER												m_NetworkActorContainer;
 	NETWORKINITDATACONTAINER											m_NetworkInitDataContainer;
-	std::atomic<SHPTR<UNetworkQueryProcessing>>			m_spNetworkQueryProcessing;
+	SHPTR<UNetworkQueryProcessing>									m_spNetworkQueryProcessing;
 	_int																								m_iSceneID;
 	_bool																							m_isNetworkResourceReceiveSuccess;
 	_int																								m_iMakeMonsterNum;

@@ -98,10 +98,10 @@ namespace Core
 	using CONVECTOR = tbb::concurrent_vector<Type>;
 
 	template<class Type>
-	using CONQUEUE = concurrency::concurrent_queue<Type>;
+	using CONQUEUE = tbb::concurrent_queue<Type>;
 
 	template<class Type>
-	using CONPRIORITYQUEUE = concurrency::concurrent_priority_queue<Type>;
+	using CONPRIORITYQUEUE = tbb::concurrent_priority_queue<Type>;
 
 	template<class Type>
 	using CONSET = tbb::concurrent_set<Type>;

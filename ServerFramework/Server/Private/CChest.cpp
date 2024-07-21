@@ -47,16 +47,20 @@ namespace Server {
 	{
 	}
 
-	void CChest::TickSendPacket(const _double& _dTimeDelta)
+	void CChest::ProcessPacket(_int _type, void* _pData)
 	{
 	}
 
 	bool CChest::IsHit(APawn* _pPawn, const _double& _dTimeDelta)
 	{
-		return __super::IsHit(_pPawn, _dTimeDelta);
+		return false;
 	}
 
 	void CChest::Collision(APawn* _pPawn, const _double& _dTimeDelta)
+	{
+	}
+
+	void CChest::ChangeCurrentFindPlayer(SESSIONID _CurPlayerSessionID, SESSIONID _ChangePlayerSessionID)
 	{
 	}
 

@@ -28,7 +28,7 @@ HRESULT CImageUI::NativeConstructClone(const VOIDDATAS& _vecDatas)
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
-	AddShader(PROTO_RES_DEFAULTUISHADER);
+	AddShader(GetUIDesc()._shaderName);
 	m_spUITextureGroup = std::static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_UITEXTUREGROUP));
 	return S_OK;
 }

@@ -34,11 +34,10 @@ namespace Core {
 	{
 		_float						 fPower;
 		_float						 fDefensive;
-		ATOMIC<_float>	 fHp;
-		_float						 fSaveHp;
-
-		CHARSTATUS() : fPower{ 0.0f }, fDefensive{ 0.0f }, fHp{ 0.0f }, fSaveHp{ 0.f } {}
-		CHARSTATUS(_float _fPower, _float _fDefensive, _float _fHp) : fPower{ _fPower }, fDefensive{ _fDefensive }, fHp{ _fHp }, fSaveHp{ _fHp } {}
+		ATOMIC<_float>	  fHp;
+		_float						  fSaveHp;
+		CHARSTATUS() : fPower{ 0.0f }, fDefensive{ 0.0f }, fHp{ 0.0f }, fSaveHp{ 0 }  {}
+		CHARSTATUS(_float _fPower, _float _fDefensive, _float _fHp) : fPower{ _fPower }, fDefensive{ _fDefensive }, fHp{ _fHp }, fSaveHp{ fHp } {}
 	};
 
 #pragma region ANIMMATIONFASTSECTION 

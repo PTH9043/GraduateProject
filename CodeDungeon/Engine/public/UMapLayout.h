@@ -23,7 +23,9 @@ public:
 	using MAPOBJECTS = VECTOR<OBJDESC>;
 	using MAPMOBS = VECTOR<MOBDESC>;
 	using MAPOBJECTSCONTAINER = UNORMAP<_string, MAPOBJECTS>; //<방 이름, 데이터>
+	using GUARDSSCONTAINER = UNORMAP<_string, MAPOBJECTS>;
 	using MAPMOBSCONTAINER = UNORMAP<_string, MAPMOBS>;
+	
 public:
 	UMapLayout(CSHPTRREF <UDevice> _spDevice);
 	UMapLayout(const UMapLayout& _rhs);
@@ -38,17 +40,18 @@ public:
 	_bool SaveMapMobs(const _wstring& _wstrPath);
 	_bool LoadMapObjects();
 	_bool LoadMapMobs();
-
+	_bool LoadMapGuards();
 	
 	void AddtoMapContainer(const _string& _RoomName, MAPOBJECTS& _ObjData);
 	void AddtoMobsContainer(const _string& _MobName, MAPMOBS& MobData);
 
 	CSHPTRREF<MAPOBJECTSCONTAINER> GetMapObjectsContainer() { return m_spMapObjectsContainer; };
 	CSHPTRREF<MAPMOBSCONTAINER> GetMapMobsContainer() { return m_spMapMobsContainer; };
-
+	CSHPTRREF<GUARDSSCONTAINER> GetGuardsContainer() { return m_spGuardsContainer; };
 private:
 	SHPTR<MAPOBJECTSCONTAINER> m_spMapObjectsContainer;
 	SHPTR<MAPMOBSCONTAINER> m_spMapMobsContainer;
+	SHPTR< GUARDSSCONTAINER> m_spGuardsContainer;
 
 };
 

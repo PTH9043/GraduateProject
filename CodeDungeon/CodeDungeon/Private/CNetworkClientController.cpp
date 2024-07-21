@@ -44,6 +44,8 @@ void CNetworkClientController::MakeActors(const VECTOR<SHPTR<UActor>>& _actorCon
 
 				spGameInstance->RegisterCurrentPlayer(spWarriorPlayer);
 				AddCreatedNetworkActor(CharInitData.first, spWarriorPlayer);
+				spGameInstance->RegisterCurrentPlayer(spWarriorPlayer);
+				spGameInstance->AddPlayerContainer(spWarriorPlayer);
 			}
 		}
 		break;
@@ -53,12 +55,13 @@ void CNetworkClientController::MakeActors(const VECTOR<SHPTR<UActor>>& _actorCon
 			// Main Camera Load 
 			{
 				CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_NETWORKWARRIORANIMCONTROLLER, true };
-				CWarriorPlayer::PLAYERDESC PlayerDesc{ std::static_pointer_cast<UCamera>(_actorContainer[MAINCAMERA_ACTORS_ID]) };
 				SHPTR<CWarriorPlayer> spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
-					PROTO_ACTOR_WARRIORPLAYER, { &CharDesc, &PlayerDesc }));
+					PROTO_ACTOR_WARRIORPLAYER, { &CharDesc }));
 
 				spGameInstance->RegisterCurrentPlayer(spWarriorPlayer);
 				AddCreatedNetworkActor(CharInitData.first, spWarriorPlayer);
+				spGameInstance->AddCollisionPawnList(spWarriorPlayer);
+				spGameInstance->AddPlayerContainer(spWarriorPlayer);
 			}
 		}
 		break;
@@ -76,7 +79,11 @@ void CNetworkClientController::NativePacket()
 void CNetworkClientController::ProcessPacket(_char* _pPacket, PACKETHEAD _PacketHead)
 {
 #ifdef _ENABLE_PROTOBUFF
-	size_t value = GetNetworkActorContainer().size();
+	if (!strcmp(_pPacket, ""))
+		return;
+
+	if (_PacketHead.PacketSize <= 0)
+		return;
 
 	switch (_PacketHead.PacketType)
 	{
@@ -95,11 +102,6 @@ void CNetworkClientController::ProcessPacket(_char* _pPacket, PACKETHEAD _Packet
 			PlayerAnimState(_pPacket, _PacketHead);
 		}
 		break;
-		case TAG_SC::TAG_SC_CHARMOVE:
-		{
-			CharMoveState(_pPacket, _PacketHead);
-		}
-		break;
 		case TAG_SC::TAG_SC_SELFPLAYERMOVE:
 		{
 			SelfPlayerMoveState(_pPacket, _PacketHead);
@@ -110,9 +112,14 @@ void CNetworkClientController::ProcessPacket(_char* _pPacket, PACKETHEAD _Packet
 			MonsterState(_pPacket, _PacketHead);
 		}
 		break;
-		case TAG_SC::TAG_SC_MONSTERSTATEHAVEMOVE:
+		case TAG_SC::TAG_SC_MONSTERFIND:
 		{
-			MonsterStateHaveMove(_pPacket, _PacketHead);
+			FindMonster(_pPacket, _PacketHead);
+		}
+		break;
+		case TAG_SC::TAG_SC_DEAD:
+		{
+			Dead(_pPacket, _PacketHead);
 		}
 		break;
 	}
@@ -148,6 +155,7 @@ void CNetworkClientController::CreateServerMobData()
 			CItemChest::CHARACTERDESC chestDesc{ PROTO_RES_CHESTANIMMODEL, PROTO_COMP_CHESTANIMCONTROLLER };;
 			SHPTR<CItemChest> Chest = std::static_pointer_cast<CItemChest>(spGameInstance->CloneActorAdd(PROTO_ACTOR_CHEST, { &chestDesc, &iter }));
 			AddCreatedNetworkActor(iter.iMobID, Chest);
+			spGameInstance->AddCollisionPawnList(Chest);
 		}
 			break;
 		case TAG_CHAR::TAG_SARCOPHAGUS_LAYING:
@@ -157,6 +165,7 @@ void CNetworkClientController::CreateServerMobData()
 				PROTO_ACTOR_SARCOPHAGUSLYING, { &SarcDesc, &iter }));
 			AddCreatedNetworkActor(iter.iMobID, Saracophagus);
 			Saracophagus->SetSarcophagusType(CSarcophagus::SARCOTYPE::TYPE_LYING);
+		//	spGameInstance->AddCollisionPawnList(Saracophagus);
 		}
 			break;
 		case TAG_CHAR::TAG_SARCOPHAGUS_STANDING:
@@ -166,6 +175,7 @@ void CNetworkClientController::CreateServerMobData()
 				PROTO_ACTOR_SARCOPHAGUSLYING, { &SarcDesc, &iter }));
 			AddCreatedNetworkActor(iter.iMobID, Saracophagus);
 			Saracophagus->SetSarcophagusType(CSarcophagus::SARCOTYPE::TYPE_STANDING);
+		//	spGameInstance->AddCollisionPawnList(Saracophagus);
 		}
 			break;
 		case TAG_CHAR::TAG_MUMMY_LAYING:
@@ -174,6 +184,7 @@ void CNetworkClientController::CreateServerMobData()
 			SHPTR<CMummy> Mummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MUMMY, { &MummyDesc, &iter }));
 			AddCreatedNetworkActor(iter.iMobID, Mummy);
 			Mummy->SetMummyType(CMummy::TYPE_LYING);
+			spGameInstance->AddCollisionPawnList(Mummy);
 		}
 			break;
 		case TAG_CHAR::TAG_MUMMY_STANDING:
@@ -182,6 +193,7 @@ void CNetworkClientController::CreateServerMobData()
 			SHPTR<CMummy> Mummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MUMMY, { &MummyDesc, &iter }));
 			AddCreatedNetworkActor(iter.iMobID, Mummy);
 			Mummy->SetMummyType(CMummy::TYPE_STANDING);
+			spGameInstance->AddCollisionPawnList(Mummy);
 		}
 			break;
 		}
@@ -228,25 +240,16 @@ void CNetworkClientController::OtherClientLoginState(_char* _pPacket, const PACK
 
 void CNetworkClientController::PlayerAnimState(_char* _pPacket, const PACKETHEAD& _PacketHead)
 {
-	PLAYERSTATE PlayerState;
-	PlayerState.ParseFromArray(_pPacket, _PacketHead.PacketSize);
-	//// 해당하는 ID에 데이터 전달
-	InsertNetworkProcessInQuery(std::move(UProcessedData(PlayerState.id(), PlayerState, TAG_SC_PLAYERSTATE,
-		_PacketHead.PacketSize)));
-}
-
-void CNetworkClientController::CharMoveState(_char* _pPacket, const PACKETHEAD& _PacketHead)
-{
-	CHARMOVE charMove;
+	CHARSTATE charMove;
 	charMove.ParseFromArray(_pPacket, _PacketHead.PacketSize);
 	//// 해당하는 ID에 데이터 전달
 	InsertNetworkProcessInQuery(std::move(UProcessedData(charMove.id(), charMove,
-		TAG_SC_CHARMOVE, _PacketHead.PacketSize)));
+		TAG_SC_PLAYERSTATE, _PacketHead.PacketSize)));
 }
 
 void CNetworkClientController::SelfPlayerMoveState(_char* _pPacket, const PACKETHEAD& _PacketHead)
 {
-	SELFPLAYERMOVE selfPlayerMove;
+	SC_SEEPLAYERMOVE selfPlayerMove;
 	selfPlayerMove.ParseFromArray(_pPacket, _PacketHead.PacketSize);
 	//// 해당하는 ID에 데이터 전달
 	InsertNetworkProcessInQuery(std::move(UProcessedData(selfPlayerMove.id(), selfPlayerMove,
@@ -255,18 +258,26 @@ void CNetworkClientController::SelfPlayerMoveState(_char* _pPacket, const PACKET
 
 void CNetworkClientController::MonsterState(_char* _pPacket, const PACKETHEAD& _PacketHead)
 {
-	SC_MONSTERSTATE scMonsterState;
+	CHARSTATE scMonsterState;
 	scMonsterState.ParseFromArray(_pPacket, _PacketHead.PacketSize);
 	InsertNetworkProcessInQuery(UProcessedData(scMonsterState.id(), scMonsterState,
 		TAG_SC_MONSTERSTATE, _PacketHead.PacketSize));
 }
 
-void CNetworkClientController::MonsterStateHaveMove(_char* _pPacket, const PACKETHEAD& _PacketHead)
+void CNetworkClientController::FindMonster(_char* _pPacket, const PACKETHEAD& _PacketHead)
 {
-	SC_MONSTERSTATEHAVEPOS scMonsterState;
-	scMonsterState.ParseFromArray(_pPacket, _PacketHead.PacketSize);
-	InsertNetworkProcessInQuery(UProcessedData(scMonsterState.id(), scMonsterState,
-		TAG_SC_MONSTERSTATEHAVEMOVE, _PacketHead.PacketSize));
+	SC_MONSTERFIND scFindMonster;
+	scFindMonster.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+	InsertNetworkProcessInQuery(UProcessedData(scFindMonster.id(), scFindMonster,
+		TAG_SC_MONSTERFIND, _PacketHead.PacketSize));
+}
+
+void CNetworkClientController::Dead(_char* _pPacket, const PACKETHEAD& _PacketHead)
+{
+	SC_DEAD scCharHp;
+	scCharHp.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+	InsertNetworkProcessInQuery(UProcessedData(scCharHp.id(), scCharHp,
+		TAG_SC_DEAD, _PacketHead.PacketSize));
 }
 
 #endif

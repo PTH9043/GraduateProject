@@ -6,7 +6,6 @@
 BEGIN(Core)
 class AMonster;
 class ASession;
-class ACollisionManager;
 /*
 @ Date: 2024-01-06, Writer: นฺลยว๖
 @ Explain
@@ -56,19 +55,17 @@ protected: /* Get Set */
 private:
 	virtual void Free() override;
 private:
-	SERVICETYPE								m_ServiceType;
-	ATOMIC<SESSIONID>					m_IDIssuance;
-	ATOMIC<_llong>							m_CurrentSessionCount;
+	SERVICETYPE						m_ServiceType;
+	ATOMIC<SESSIONID>			m_IDIssuance;
+	ATOMIC<_llong>					m_CurrentSessionCount;
 	// Boost/Asio Context
-	IOContext										m_IOContext;
-	TCPSOCKET									m_TcpSocket;
+	IOContext								m_IOContext;
+	TCPSOCKET							m_TcpSocket;
 	// Lock
-	MUTEX											m_Lock;
+	MUTEX									m_Lock;
 	// Session Conatiner
-	SESSIONCONTAINER					m_SessionContainer;
-	MOBOBJCONTAINER					m_MobObjContainer;
-
-	WKPTR<ACollisionManager>		m_wpCollisionManager;
+	SESSIONCONTAINER			m_SessionContainer;
+	MOBOBJCONTAINER			m_MobObjContainer;
 };
 
 END

@@ -52,6 +52,7 @@ namespace Core {
 
 		void Push(MEMORYHEADER* _ptr);
 		MEMORYHEADER* Pop();
+		void Release();
 	private:
 		_ullong														m_AllocateSize;
 		ATOMIC<_uint>										m_AllocateCount;

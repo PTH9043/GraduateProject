@@ -9,7 +9,8 @@
 namespace Core {
 
 	APawn::APawn(OBJCON_CONSTRUCTOR, SESSIONID _ID, SESSIONTYPE _SessionType) : 
-		AGameObject(OBJCON_CONDATA, _ID, _SessionType), m_spAnimController{nullptr}, m_spNavigation{nullptr}
+		AGameObject(OBJCON_CONDATA, _ID, _SessionType), m_spAnimController{nullptr}, m_spNavigation{nullptr}, m_isDamaged{false},
+		m_isDead{false}
 	{
 		m_spNavigation = GetCoreInstance()->CloneNavi();
 	}
@@ -59,37 +60,24 @@ namespace Core {
 
 	bool APawn::IsHit(APawn* _pPawn, const _double& _dTimeDelta)
 	{
-		SHPTR<ATransform> spSelfTr = GetTransform();
-		SHPTR<ATransform> spTargetTr = _pPawn->GetTransform();
-
-		Vector3 vSelfPos = spSelfTr->GetPos();
-		Vector3 vTargetPos = spTargetTr->GetPos();
-		const static _float RESTIRICT_COLLISION = 30 * 30;
-		_float fDistance = Vector3::DistanceSquared(vSelfPos, vTargetPos);
-		if (fDistance <= RESTIRICT_COLLISION)
-		{
-			Collision(_pPawn, _dTimeDelta);
-		}
 		return false;
 	}
 
-	void APawn::GameObjectHeal(_float _fHeal)
+	void APawn::HealHp(const _float _fHeal)
 	{
 		m_CharStatus.fHp += _fHeal;
 		if (m_CharStatus.fHp >= m_CharStatus.fSaveHp)
 			m_CharStatus.fHp = m_CharStatus.fSaveHp;
 	}
 
-	void APawn::Damaged(_float _fDamage)
+	void APawn::DamageToEnemy(const _float _fDamge)
 	{
-		m_CharStatus.fHp -= _fDamage;
+		m_CharStatus.fHp -= _fDamge;
 		if (m_CharStatus.fHp <= 0)
 		{
 			m_isDead = true;
 		}
 	}
-
-
 
 	void APawn::Free()
 	{

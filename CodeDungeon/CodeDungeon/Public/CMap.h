@@ -1,10 +1,12 @@
 #pragma once
 #include "UComponent.h"
 #include "UMapLayout.h"
+#include "UGuard.h"
 
 BEGIN(ENGINE)
 class UStageManager;
 class UMapLayout;
+
 END
 
 /*
@@ -24,6 +26,7 @@ using MOBCONTAINER = VECTOR<SHPTR<CMob>>;
 
 using STATICOBJCONTAINER = UNORMAP<_wstring, OBJCONTAINER>;
 using MOBSCONTAINER = UNORMAP<_wstring, MOBCONTAINER>;
+using GUARDCONTAINER = UNORMAP<_wstring, SHPTR<UGuard>>;
 
 class CMap : public UComponent
 {
@@ -40,11 +43,13 @@ public:
 
 	void LoadRooms();
 	void LoadStaticObjects();
+	void LoadGuards();
 	void LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer);
 	
 	CSHPTRREF<ROOMCONTAINER> GetRooms() { return m_spRoomContainer; }
 	CSHPTRREF<STATICOBJCONTAINER> GetStaticObjs() { return m_spStaticObjContainer;}
 	CSHPTRREF<MOBSCONTAINER> GetMobs() { return m_spMobsContainer; }
+	const GUARDCONTAINER& GetGuards() { return m_GuardContainer; }
 
 	void AddLightCount() { m_iLightCount++; }
 	const _uint GetLightCount() { return m_iLightCount; }
@@ -52,6 +57,8 @@ private:
 	SHPTR<ROOMCONTAINER>			m_spRoomContainer;
 	SHPTR<UMapLayout>				m_spMapLayout;
 	SHPTR<STATICOBJCONTAINER>		m_spStaticObjContainer;
+	GUARDCONTAINER			m_GuardContainer;
+
 	_uint							m_iLightCount;
 
 	SHPTR<MOBSCONTAINER>			m_spMobsContainer;

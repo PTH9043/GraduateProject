@@ -16,9 +16,9 @@ namespace Core {
 
 	}
 
-	void AMainLoop::RegisterTimer()
+	void AMainLoop::RegisterTimer(_int _iTime)
 	{
-		m_SteadyTimer.expires_from_now(std::chrono::microseconds(0));
+		m_SteadyTimer.expires_from_now(std::chrono::microseconds(_iTime));
 		// 타이머의 비동기 대기 설정
 		m_SteadyTimer.async_wait(std::bind(&AMainLoop::TimerThread, this, std::placeholders::_1));
 	}
@@ -46,28 +46,23 @@ namespace Core {
 					}
 				}
 
-				if (true == aliveMonster.empty())
+				if (0 >= aliveMonster.size())
 				{
-					std::this_thread::sleep_for(std::chrono::milliseconds(1));
-					RegisterTimer();
+					RegisterTimer(10);
+					return;
 				}
 			}
 			// Animation 활성 
 			{
-				std::atomic_thread_fence(std::memory_order_seq_cst);
 				for (auto& iter : aliveMonster)
 				{
 					iter->Tick(dTimeDelta);
 				}
 				// Collision 
-	//			spCoreInstance->CollisionSituation(dTimeDelta);
-				for (auto& iter : aliveMonster)
-				{
-					iter->TickSendPacket(dTimeDelta);
-				}
+				spCoreInstance->CollisionSituation(dTimeDelta);
 			}
 		}
-		RegisterTimer();
+		RegisterTimer(0);
 	}
 
 	void AMainLoop::Free()

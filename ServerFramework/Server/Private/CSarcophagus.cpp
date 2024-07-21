@@ -80,28 +80,18 @@ namespace Server
 		return S_OK;
 	}
 
+	void CSarcophagus::RunningPermanentDisableSituation()
+	{
+		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+		SC_MONSTERFIND scMonsterFind;
+		PROTOFUNC::MakeScMonsterFind(&scMonsterFind, GetSessionID(), TAG_FIND_ACTIVE, GetCurrentTargetPlayerID());
+		CombineProto<SC_MONSTERFIND>(GetCopyBuffer(), GetPacketHead(), scMonsterFind, TAG_SC_MONSTERFIND);
+		spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
+	}
+
 	void CSarcophagus::Tick(const _double& _dTimeDelta)
 	{
 		__super::Tick(_dTimeDelta);
-
-		if (true == IsCurrentFindPlayer())
-		{
-			if (false == m_isInitStart)
-			{
-				_int AnimIndex = GetAnimController()->GetCurAnimIndex();
-				_double dDuration = GetAnimController()->GetElapsedTime();
-
-				SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
-				SHPTR<AAnimation> spCurAnimation = GetAnimController()->GetCurAnimation();
-				SHPTR<ATransform> spTransform = GetTransform();
-
-				SC_MONSTERSTATE scMonsterState;
-				PROTOFUNC::MakeScMonsterState(&scMonsterState, GetSessionID(), dDuration, AnimIndex, TAG_MOB_FIRSTFIND_STATE);
-				CombineProto<SC_MONSTERSTATE>(GetCopyBuffer(), GetPacketHead(), scMonsterState, TAG_SC_MONSTERSTATE);
-				spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
-				m_isInitStart = true;
-			}
-		}
 	}
 
 	void CSarcophagus::State(SHPTR<ASession> _spSession, _int _MonsterState)
@@ -109,31 +99,25 @@ namespace Server
 		FindPlayer(_spSession);
 	}
 
-	void CSarcophagus::TickSendPacket(const _double& _dTimeDelta)
+	void CSarcophagus::ProcessPacket(_int _type, void* _pData)
 	{
 	}
 
 	bool CSarcophagus::IsHit(APawn* _pPawn, const _double& _dTimeDelta)
 	{
-		return __super::IsHit(_pPawn, _dTimeDelta);
+		return false;
 	}
 
 	void CSarcophagus::Collision(APawn* _pPawn, const _double& _dTimeDelta)
 	{
 	}
 
+	void CSarcophagus::ChangeCurrentFindPlayer(SESSIONID _CurPlayerSessionID, SESSIONID _ChangePlayerSessionID)
+	{
+	}
+
 	void CSarcophagus::LastBehavior()
 	{
-		if (true == IsPermanentDisable())
-			return;
-
-		ActivePermanentDisable();
-		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
-
-		SC_MONSTERSTATE scMonsterState;
-		PROTOFUNC::MakeScMonsterState(&scMonsterState, GetSessionID(), 0, 0, TAG_MOB_DISABLE_STATE);
-		CombineProto<SC_MONSTERSTATE>(GetCopyBuffer(), GetPacketHead(), scMonsterState, TAG_SC_MONSTERSTATE);
-		spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
 	}
 
 	void CSarcophagus::Free()

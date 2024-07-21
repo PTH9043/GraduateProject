@@ -29,59 +29,27 @@ message EQINFO
 	float increaseHp = 4;
 }
 
- /*
-WarriorPlayerState
-*/
-message PLAYERSTATE
-{
-	int64			id = 1;
-	bool				ifattack = 2;
-	int64			animstate = 3;
-	int64			movespeed = 4;
-	double		animationTime = 5;
-	int64			animationIndex = 6;
-}
-
-// 자기 자신이 움직였을 때의 패킷
-message SELFPLAYERMOVE
-{
-	int64 id = 1;
-	float moveX = 2;
-	float moveY = 3;
-	float moveZ = 4;
-}
-
 // 움직였을 때 전송하는 함수 
-message CHARMOVE
+message CHARSTATE
 {
-	int64 id = 1;
+	int64	id = 1;
 	// Move
-	float moveX = 2;
-	float moveY = 3;
-	float moveZ = 4;
+	float	posX = 2;
+	float	posY = 3;
+	float	posZ = 4;
 	// Rotate
-	float rotateX = 5;
-	float rotateY = 6;
-	float rotateZ = 7;
-}
-
-message ATKCOLLISION 
-{
-	int64 id = 1;
-	// Move
-	float collX = 2;
-	float moveY = 3;
-	float moveZ = 4;
+	float	rotateX = 5;
+	float	rotateY = 6;
+	float	rotateZ = 7;
+	int64	animationIndex = 8;
+	int64  state = 9;
+	int64	triggerOn = 10;
 }
 
 message COLLISIONDATA
 {
 	int64 id = 1;
-	float posx = 2;
-	float posy = 3;
-	float posz = 4;
-	int64 damageEnable = 5;
-	int64 enemyID = 6;
+	int64 enemyID = 2;
 }
 
 /*
@@ -111,76 +79,26 @@ message SC_OTHERCLIENTLOGIN
 	int64 type = 3;
 }
 
-message SC_MONSTERRESOURCEDATA
-{
-	int64 id = 1;
-	float posX = 2;
-	float posY = 3;
-	float posZ = 4;
-	int64 animindex = 5;
-	int64 cellIndex = 6;
-	int64 type = 7;
-}
-
-message SC_START_INFORMATION_SUCCESS {
-	int64 id = 1;
-	int64 monsternum = 2;
-}
-
-/*
-클라이언트에서 움직이는 것이 실패했을 때
-*/
-message SC_MOVEFAILED
-{
-	int64 id = 1;
-	VECTOR3 prevPos = 3;
-}
-
-/*
-다른 녀석들이 시야에 보인다. 
-*/
-
- message SC_VIEWINRANGE
- {
-	int64 id = 1;
-	VECTOR3 position = 2;
-	int64 cellindex = 3;
-	int64 type = 4;
- }
-
- message SC_MONSTERSTATE 
- {
-	 int64		id = 1;
-	 double	animationTime = 2;
-	 int64		animationIndex = 3;
-	 int64     state = 4;
- }
-
- // Monster State 
- message SC_MONSTERSTATEHAVEPOS
+ message SC_MONSTERFIND 
  {
 	 int64 id = 1;
+	 int64 findtype = 2;
+	 int64 targetID = 3;
+ }
+
+ message SC_DEAD
+ {
+	 int64 id = 1;
+ }
+
+ message SC_SEEPLAYERMOVE
+{
+	int64 id = 1;
+	// Move
 	float	posX = 2;
 	float	posY = 3;
 	float	posZ = 4;
-	float	rotateX = 5;
-	float	rotateY = 6;
-	float	rotateZ = 7;
-	 double	animationTime = 8;
-	 int64		animationIndex = 9;
-	 int64     state = 10;
- }
-
- message SC_NEEDMONSTERSTATE 
- {
-	 int64 id = 1;
- }
-
- message SC_MONSTERFINDPLAYER 
- {
-	 int64 id = 1;
-	 int64 targetID = 2;
- }
+}
 
 /*
 ======================================
@@ -190,11 +108,6 @@ Client
 
 // Client가 로그인 했음을 다른 클라이언트에게 알린다. 
 message CS_LOGIN 
-{
-	int64 id = 1;
-}
-
-message CS_RESOURCE_RECEIVE_SUCCES 
 {
 	int64 id = 1;
 }

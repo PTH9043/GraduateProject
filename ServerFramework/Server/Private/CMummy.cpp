@@ -10,7 +10,6 @@
 #include "AAnimController.h"
 #include "AAnimation.h"
 #include "ASession.h"
-#include "ACollider.h"
 
 namespace Server
 {
@@ -18,7 +17,7 @@ namespace Server
 		: AMonster(OBJCON_CONDATA, _ID, _spMonsterJobTimer), 
 		m_eMumyType{ _MummyType }, m_isAttackMode{ false }, m_isLastAttackWasFirst{ false },
 		m_IdleTimer{2}, m_IdleRandomValueChooseTimer{2}, m_AttackTimer{3},
-		m_iRandomValue{0}
+		m_iRandomValue{0}, m_isSendMonsterFindPacket{true}
 	{
 		if (MUMMY_LAYING == m_eMumyType)
 		{
@@ -28,9 +27,9 @@ namespace Server
 		{
 			SetMonsterType(TAG_CHAR::TAG_MUMMY_STANDING);
 		}
-		UpdateFindRange(40.f, 80.f);
+		UpdateFindRange(30.f, 80.f);
 		SetMoveSpeed(5);
-		SetAttackRange(15.f);
+		SetAttackRange(9.f);
 	}
 	_bool CMummy::Start(const VOIDDATAS& _ReceiveDatas)
 	{
@@ -38,15 +37,6 @@ namespace Server
 		_float4x4 Matrix = _float4x4::CreateScale(0.1f) * _float4x4::CreateRotationY(DirectX::XMConvertToRadians(180));
 		SetAnimController(Create<CMummyAnimController>(GetCoreInstance(), ThisShared<CMummy>(),
 			"..\\..\\Resource\\Anim\\Mummy\\", "Mummy_DEMO_1_FBX.bin", Matrix));
-
-		COLLIDERINFO Info{ ACollider::TYPE_OBB, Vector3(0.f, 0.f, 0.f), Vector3(0.f, 0.f, 0.f) };
-		InsertColliderContainer(Info);
-		for (auto& Colliders : GetColliderContainer())
-		{
-			Colliders->SetScale(Vector3{ 1, 8, 1 });
-			Colliders->SetTranslate(Vector3{ 0, 10, 0 });
-		}
-
 #ifndef CREATED_SERVERMOBDATA
 		MOBDATA* pMobData = static_cast<MOBDATA*>(_ReceiveDatas[0]);
 		// Setting Animation 
@@ -62,151 +52,58 @@ namespace Server
 		BringCellIndextoPosition();
 		SetSessionID(pMobData->iMobID);
 #endif
+		SetCharStatus(CHARSTATUS{ 1, 0, 5 });
 		return true;
 	}
 
 	void CMummy::Tick(const _double& _dTimeDelta)
 	{
-		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
-		SHPTR<AAnimController> spAnimController = GetAnimController();
-		SHPTR<AAnimator> spAnimator = spAnimController->GetAnimator();
-		SHPTR<AAnimation> spCurAnimation = spAnimator->GetCurAnimation();
-		SHPTR<ATransform> spTransform = GetTransform();
-		_string strCurAnimName = spCurAnimation->GetAnimName();
-		_bool Hit = false;
+		SESSIONID CurrentTargetPlayerID = GetCurrentTargetPlayerID();
 
-		spAnimController->ClearState();
+		int type = TAG_FIND_ACTIVE;
 		if (true == IsCurrentFindPlayer())
 		{
-			// wakeUp
-			if (false == IsFoundPlayerFirstTime())
-			{
-				// Tick event
-				spAnimController->UpdateState("WAKEUP", MUMMYANIMSTATE::MUMMY_ANIM_AWAKE);
-				SetMonsterState(MOB_FIRSTFIND_STATE);
-				SetFoundPlayerFirstTime(true);
-			}
+			type = TAG_FIND_NEAR;
+			m_isSendMonsterFindPacket = false;
 		}
-		else
+		else if (true == IsCurrentAtkPlayer())
 		{
-			if (strCurAnimName == "idle")
-			{
-				if (m_IdleTimer.IsOver(_dTimeDelta))
-				{
-					m_IdleTimer.ResetTimer();
-				}
-			}
-			else
-			{
-				m_IdleTimer.ResetTimer();
-			}
-
-			if (0 == m_IdleTimer.fTimer)
-			{
-				if (m_IdleRandomValueChooseTimer.IsOver(_dTimeDelta))
-				{
-					m_iRandomValue = std::rand() % 4;
-				}
-
-				if (0 == m_iRandomValue)
-				{
-					spAnimController->UpdateState("IDLE", ANIM_IDLE);
-				}
-				else
-				{
-					spAnimController->UpdateState("WALKF", ANIM_MOVE);
-				}
-			}
+			type = TAG_FIND_ATK;
+			m_isSendMonsterFindPacket = false;
 		}
 
-		if (true == Hit)
+		if (false == m_isSendMonsterFindPacket)
 		{
-			spAnimController->UpdateState("HIT", ANIM_HIT);
-			spAnimator->SetAnimation("gotHit");
-		}
-		else
-		{
-			if (true == m_isAttackMode)
-			{
-				if (m_AttackTimer.IsOver(_dTimeDelta))
-				{
-					m_isLastAttackWasFirst = !m_isLastAttackWasFirst;
-					m_AttackTimer.ResetTimer();
-				}
-
-				if (false == IsCurrentAtkPlayer())
-				{
-					spAnimController->UpdateState("WALKF", ANIM_MOVE);
-				}
-				else
-				{
-					spAnimController->UpdateState(m_isLastAttackWasFirst ? "ATTACK02" : "ATTACK01", ANIM_ATTACK);
-				}
-			}
-		}
-	
-		if (false == m_isAttackMode)
-		{
-			if ("openLaying" == strCurAnimName || "openStanding" == strCurAnimName)
-			{
-				spAnimController->UpdateState("TAUNT", MUMMYANIMSTATE::MUMMY_ANIM_TAUNT);
-				SetMonsterState(MOB_FIND_STATE);
-				m_isAttackMode = true;
-			}
-		}
-
-		ComputeNextDir(_dTimeDelta);
-		__super::Tick(_dTimeDelta);
-
-		for (auto& iter : GetColliderContainer())
-		{
-			iter->SetTransform(spTransform);
+			SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+			SC_MONSTERFIND scMonsterFind;
+			PROTOFUNC::MakeScMonsterFind(&scMonsterFind, GetSessionID(), type, CurrentTargetPlayerID);
+			CombineProto<SC_MONSTERFIND>(GetCopyBuffer(), GetPacketHead(), scMonsterFind, TAG_SC_MONSTERFIND);
+			spCoreInstance->DirectSendMessage(GetCurrentTargetPlayerID(), GetCopyBufferPointer(), GetPacketHead());
+			m_isSendMonsterFindPacket = true;
 		}
 	}
 
 	void CMummy::State(SHPTR<ASession> _spSession, _int _MonsterState)
 	{
 		FindPlayer(_spSession);
-
-		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
-		SHPTR<AAnimController> spAnimController = GetAnimController();
-		SHPTR<AAnimator> spAnimator = spAnimController->GetAnimator();
-		SHPTR<AAnimation> spCurAnimation = spAnimator->GetCurAnimation();
-		SHPTR<ATransform> spTransform = GetTransform();
-		_string strCurAnimName = spCurAnimation->GetAnimName();
-
-		UpdateTargetPos(_spSession->GetTransform());
 	}
 
-	void CMummy::TickSendPacket(const _double& _dTimeDelta)
+	void CMummy::ProcessPacket(_int _type, void* _pData)
 	{
-		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
-		SHPTR<AAnimController> spAnimController = GetAnimController();
-		SHPTR<AAnimator> spAnimator = spAnimController->GetAnimator();
-		SHPTR<AAnimation> spCurAnimation = spAnimator->GetCurAnimation();
-		SHPTR<ATransform> spTransform = GetTransform();
-		_string strCurAnimName = spCurAnimation->GetAnimName();
-		_bool Hit = false;
-
-		VECTOR3 vRotate;
-		VECTOR3 vPos;
-		// Pos, Rotate를 만든다. 
+		switch (_type)
 		{
-			Vector3 vRecvRotate = spTransform->GetRotationValue();
-			Vector3 vRecvPos = spTransform->GetPos();
-
-			PROTOFUNC::MakeVector3(&vRotate, vRecvRotate.x, vRecvRotate.y, vRecvRotate.z);
-			PROTOFUNC::MakeVector3(&vPos, vRecvPos.x, vRecvPos.y, vRecvPos.z);
+		case TAG_CS_MONSTERSTATE:
+		{
+			CHARSTATE* MonsterStateData = static_cast<CHARSTATE*>(_pData);
+			SHPTR<ATransform> spTransform = GetTransform();
+			SHPTR<AAnimController> spAnimController = GetAnimController();
+			{
+				spTransform->SetPos({ MonsterStateData->posx(), MonsterStateData->posy(), MonsterStateData->posz() });
+				spTransform->RotateFix({ MonsterStateData->rotatex(), MonsterStateData->rotatey(), MonsterStateData->rotatez() });
+				spAnimController->SetAnimation(MonsterStateData->animationindex());
+			}
 		}
-		// Send Packet
-		SC_MONSTERSTATEHAVEPOS scMonsterStateHavePos;
-		{
-			_int AnimIndex = spAnimController->GetCurAnimIndex();
-			_double dTimeAcc = spCurAnimation->GetTimeAcc();
-			PROTOFUNC::MakeScMonsterStateHavePos(&scMonsterStateHavePos, GetSessionID(), vPos, vRotate,
-				dTimeAcc, AnimIndex, GetMonsterState());
-			CombineProto<SC_MONSTERSTATEHAVEPOS>(GetCopyBuffer(), GetPacketHead(), scMonsterStateHavePos, TAG_SC_MONSTERSTATEHAVEMOVE);
-			spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
+			break;
 		}
 	}
 
@@ -215,46 +112,31 @@ namespace Server
 		return __super::IsHit(_pPawn, _dTimeDelta);
 	}
 
+	void CMummy::CallActiveEnable()
+	{
+		//SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+		//SC_MONSTERFIND scMonsterFind;
+		//PROTOFUNC::MakeScMonsterFind(&scMonsterFind, GetSessionID(), TAG_FIND_ACTIVE, GetCurrentTargetPlayerID());
+		//CombineProto<SC_MONSTERFIND>(GetCopyBuffer(), GetPacketHead(), scMonsterFind, TAG_SC_MONSTERFIND);
+		//spCoreInstance->DirectSendMessage(GetCurrentTargetPlayerID(), GetCopyBufferPointer(), GetPacketHead());
+	}
+
+	void CMummy::CallActiveDisable()
+	{
+	}
+
 	void CMummy::Collision(APawn* _pPawn, const _double& _dTimeDelta)
 	{
-		SHPTR<ATransform> spTransform = GetTransform();
-		SHPTR<ATransform> spOtherTr = _pPawn->GetTransform();
-		CONVECTOR<SHPTR<ACollider>>& OtherCollisionContainer = _pPawn->GetColliderContainer();
-		CONVECTOR<SHPTR<ACollider>>& SelfCollisionContainer = GetColliderContainer();
+	}
 
-
-		Vector3 vPos = spTransform->GetPos();
-		Vector3 vOtherPos = spOtherTr->GetPos();
-
-		Vector3 vDirection = vOtherPos - vPos;
-		vDirection.Normalize();
-
-		switch (_pPawn->GetSessionType())
+	void CMummy::ChangeCurrentFindPlayer(SESSIONID _CurPlayerSessionID, SESSIONID _ChangePlayerSessionID)
+	{
+		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+		SC_MONSTERFIND scMonsterFind;
 		{
-		case SESSIONTYPE::PLAYER:
-			for (auto& iter : SelfCollisionContainer)
-			{
-				for (auto& other : OtherCollisionContainer)
-				{
-					if (true == iter->IsCollision(other))
-					{
-						spTransform->SetPos(vPos - vDirection * 7 * _dTimeDelta);
-					}
-				}
-			}
-			break;
-		case SESSIONTYPE::MONSTER:
-			for (auto& iter : SelfCollisionContainer)
-			{
-				for (auto& other : OtherCollisionContainer)
-				{
-					if (true == iter->IsCollision(other))
-					{
-						spTransform->SetPos(vPos - vDirection * 7 * _dTimeDelta);
-					}
-				}
-			}
-			break;
+			PROTOFUNC::MakeScMonsterFind(&scMonsterFind, GetSessionID(), TAG_FIND_DISABLE, _CurPlayerSessionID);
+			CombineProto<SC_MONSTERFIND>(GetCopyBuffer(), GetPacketHead(), scMonsterFind, TAG_SC_MONSTERFIND);
+			spCoreInstance->DirectSendMessage(_CurPlayerSessionID, GetCopyBufferPointer(), GetPacketHead());
 		}
 	}
 

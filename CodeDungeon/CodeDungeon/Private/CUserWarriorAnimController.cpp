@@ -64,8 +64,11 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     _bool isAttack = isWAttack || isRAttack || isSAttack || isCombo1 || isCombo2;
     _bool isRoll = spGameInstance->GetDIKeyDown(DIK_C);
     _bool Hit = false;
-    if (spWarriorPlayer->GetPrevHealth() > spWarriorPlayer->GetHealth())
+    if (spWarriorPlayer->IsDamaged())
+    {
         Hit = true;
+        spWarriorPlayer->SetDamaged(false);
+    }
     _bool isKicked = spWarriorPlayer->GetKickedState();
     _bool isJump = spGameInstance->GetDIKeyDown(DIK_SPACE);
     _bool isRise = spWarriorPlayer->GetRiseState();
@@ -137,6 +140,27 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
         else UpdateState(spAnimModel, ANIM_ROLL, L"ROLL_F");
     }
 
+    // Hit state
+    if (Hit && !isKicked) {
+        UpdateState(spAnimModel, ANIM_HIT, L"HIT_BACK");
+        spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
+        spWarriorPlayer->SetPrevHealth(spWarriorPlayer->GetHealth());
+    }
+
+    // Rise state
+    if (isRise) {
+         UpdateState(spAnimModel, ANIM_MOVE, L"RISE1");
+        spAnimModel->SetAnimation(L"rise01");
+    }
+    if (CurAnimName == L"rise01")
+        spWarriorPlayer->SetRiseState(false);
+
+    // Kicked state
+    if (isKicked && CurAnimName != L"rise01") {
+        UpdateState(spAnimModel, ANIM_HIT, L"GOTKICKED");
+        spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
+    }
+
     // Attack handling
     if (isAttack && !Hit) {
         if (isWAttack) {
@@ -192,7 +216,9 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     // Hit state
     if (Hit && !isKicked) {
         UpdateState(spAnimModel, ANIM_HIT, L"HIT_BACK");
+#ifndef _ENABLE_PROTOBUFF
         spWarriorPlayer->SetPrevHealth(spWarriorPlayer->GetHealth());
+#endif
     }
 
     // Rise state
@@ -242,17 +268,6 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
    }
    else
      spAnimModel->TickAnimChangeTransform(spWarriorPlayer->GetTransform(), _dTimeDelta);
-
-#ifdef _ENABLE_PROTOBUFF
-   _int NetworkID = spGameInstance->GetNetworkOwnerID();
-   PLAYERSTATE csPlayerState;
-   PROTOFUNC::MakePlayerState(OUT& csPlayerState, NetworkID, isAttack,
-       GetAnimState(), isRunshift ? 30.f : 10.f, spAnimModel->GetCurrentAnimation()->GetDuration(),
-       spAnimModel->GetCurrentAnimIndex());
-   {
-       spGameInstance->SendProcessPacket(UProcessedData(csPlayerState, TAG_CS_PLAYERSTATE));
-   }
-#endif
 }
 
 

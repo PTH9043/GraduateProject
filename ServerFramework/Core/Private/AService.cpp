@@ -3,7 +3,6 @@
 #include "ASession.h"
 #include "ACoreInstance.h"
 #include "AMonster.h"
-#include "ACollisionManager.h"
 
 namespace Core {
 
@@ -14,12 +13,10 @@ namespace Core {
 		m_CurrentSessionCount{0},
 		m_IDIssuance{1}
 	{
-		m_wpCollisionManager = GetCoreInstance()->GetCollisionManager();
 	}
 
 	_bool AService::Start()
 	{
-		
 		return true;
 	}
 
@@ -93,9 +90,6 @@ namespace Core {
 		SHPTR<ASession> spSession = FindSession(_SessionID);
 		RETURN_CHECK(nullptr == _spSession && nullptr != spSession, ;);
 		m_SessionContainer.insert(MakePair(_SessionID, _spSession));
-
-		//SHPTR<ACollisionManager> spCollisionManager = m_wpCollisionManager.lock();
-		//spCollisionManager->AddCollisionList(_spSession.get());
 	}
 
 	void AService::InsertMobObject(SESSIONID _SessionID, SHPTR<AMonster> _spMobObject)
@@ -103,9 +97,6 @@ namespace Core {
 		SHPTR<AMonster> spObject = FindMobObject(_SessionID);
 		RETURN_CHECK(nullptr == spObject && nullptr != spObject, ;);
 		m_MobObjContainer.insert(MakePair(_SessionID, _spMobObject));
-
-		//SHPTR<ACollisionManager> spCollisionManager = m_wpCollisionManager.lock();
-		//spCollisionManager->AddCollisionList(_spMobObject.get());
 	}
 
 	void AService::IncreaseCurrentSessionCount(_llong _Count)

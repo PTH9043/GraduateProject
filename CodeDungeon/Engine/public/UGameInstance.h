@@ -67,6 +67,8 @@ class UGrid;
 class UPawn;
 class UModelMaterial;
 
+class UPlayer;
+
 struct PICKINGDESC;
 struct WAITCHECKACTOR;
 struct MAINGRID;
@@ -186,6 +188,7 @@ public: /* SceneManager*/
 
 	CSHPTRREF<UScene> GetCurScene() const;
 	void RegisterScene(CSHPTRREF<UScene> _spScene);
+	void RegisterSceneWithOutLoadingData(CSHPTRREF<UScene> _spScene);
 	// Add
 	HRESULT AddLight(const LIGHTINFO& _stInfo);
 	// Out Light
@@ -288,10 +291,14 @@ public: /* NetworkManager */
 	}
 public: /* CharacterManager*/
 	CSHPTRREF<UCharacter> GetCurrPlayer() const;
+	const SET<SHPTR<UPlayer>>& GetPlayerContainer() const;
+
 	void RegisterCurrentPlayer(CSHPTRREF<UCharacter> _spCurrentPlayer);
 	void AddCollisionPawnList(CSHPTRREF<UPawn> _spPawn);
 	void RemoveCollisionPawn(CSHPTRREF<UPawn> _spPawn);
-
+	void AddPlayerContainer(CSHPTRREF<UPlayer> _spPlayer);
+	SHPTR<UPlayer> FindPlayerToDistance(const _float3& _vPos);
+	SHPTR<UPlayer> FindPlayerToNetworkID(const _int _iNetworkID);
 public: /* Material Manager*/
 	void AddModelMaterial(const _uint _MaterialIndex, CSHPTRREF<UModelMaterial> _spModelMaterial);
 	void  CopyToMaterialShaderParam(REF_IN GLOBALPARAM& _GrobalParam);
@@ -321,15 +328,19 @@ private: /* Ready Datas */
 public: //Renderer Fog Bool
 	void TurnOnFog();
 	void TurnOffFog();
+	void SetGameStartEffect();
 	void TurnOnDieEffect();
 	void TurnOffDieEffect();
 	void TurnOnAbilityEffect();
 	void TurnOffAbilityEffect();
 	void TurnOnHitEffect();
 	void TurnOffHitEffect();
+	void PauseGame();
+	void ResumeGame();
 private:
 	_bool															m_isGamming;
-	
+	_bool				m_isPause = false;
+
 	SHPTR<UGraphicDevice>						m_spGraphicDevice;
 	SHPTR<UShaderBufferManager>		m_spShaderBufferManager;
 	SHPTR<UTimerManager>						m_spTimerManager;

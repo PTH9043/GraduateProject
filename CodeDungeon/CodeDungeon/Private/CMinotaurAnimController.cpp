@@ -88,6 +88,7 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
 
     if (!FoundPlayer)
     {
+        spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         // Handle idle mode with 1/3 probability and 3-second duration
         m_bAttackMode = false;
         //Idle Timer
@@ -128,9 +129,9 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
 
     // Handle hit state
     if (Hit)
-    {
-        UpdateState(spAnimModel, ANIM_HIT, L"HIT");
+    {  
         spAnimModel->SetAnimation(L"hit_1");
+        spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         spMinotaur->SetPrevHealth(spMinotaur->GetHealth());
     }
 
@@ -192,6 +193,7 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
     // Check for death
     if (spMinotaur->GetHealth() <= 0)
     {
+        spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         spMinotaur->SetDeathState(true);
     }
 

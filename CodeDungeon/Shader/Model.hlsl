@@ -40,6 +40,7 @@ struct VS_OUT
     float2 vTexUV4 : TEXCOORD4;
     float4 vWorldPos : TEXCOORD5;
     float4 vProjPos : TEXCOORD6;
+    float3 vViewDir : TEXCOORD8;
 };
 
 
@@ -62,6 +63,8 @@ VS_OUT VS_Main(VS_IN In)
     Out.vTexUV4 = In.vTexUV4;
     Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
     Out.vProjPos = Out.vPosition;
+    Out.vViewDir = normalize(g_ViewProjInfoArr[g_CamID].vCamPosition - Out.vWorldPos.xyz); // Compute the view direction
+
     return Out;
 }
 
@@ -78,6 +81,7 @@ struct PS_IN
     float2 vTexUV4 : TEXCOORD4;
     float4 vWorldPos : TEXCOORD5;
     float4 vProjPos : TEXCOORD6;
+    float3 vViewDir : TEXCOORD8;
 };
 
 struct PS_OUT
@@ -121,8 +125,17 @@ PS_OUT PS_Main(PS_IN In)
     {
         Out.vNormal = In.vNormal;
     }
+    
+    
+    float g_RimLightIntensity = 0.8; // Example intensity value
+    float g_RimLightPower = 6.0; // Example power value
+    float4 g_RimLightColor = float4(0.6, 0.25, 0, 1); // Example color (white)
+    float rimFactor = 1.0 - saturate(dot(normalize(In.vViewDir), normalize(In.vNormal.xyz)));
+    rimFactor = pow(rimFactor, g_RimLightPower) * g_RimLightIntensity;
+    float4 rimLight = rimFactor * g_RimLightColor;
 
-
+    // Combine rim lighting with the final color
+    Out.vDiffuse.rgb += rimLight.rgb;
     Out.vDepth = float4(In.vProjPos.w / tMainViewProj.fCamFar, In.vProjPos.z / In.vProjPos.w, 1.f, In.vPosition.w);
     Out.vPosition = In.vWorldPos;
 

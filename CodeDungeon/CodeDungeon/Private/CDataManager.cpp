@@ -31,7 +31,8 @@ HRESULT CDataManager::Load_Data()
 	m_spModelManager->CreateModelProtos(spGameInstance, spGameInstance->GetDevice());
 
 	m_spStageManager->Load();
-	spGameInstance->AddPrototype(PROTO_NAVI_INTERIOR, m_spStageManager->GetStage()->GetRegion(0)->GetNavigation());
+	spGameInstance->AddPrototype(PROTO_NAVI_CAMERA, m_spStageManager->GetStage()->GetRegion(0)->GetNavigation());
+	spGameInstance->AddPrototype(PROTO_NAVI_INTERIOR, m_spStageManager->GetStage()->GetRegion(1)->GetNavigation());
 
 	return S_OK;
 }

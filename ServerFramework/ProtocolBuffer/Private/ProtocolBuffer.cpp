@@ -34,51 +34,42 @@ void PROTOFUNC::MakeEqInfo(EQINFO* _pOut, float _gold, float _increasePower, flo
 	_pOut->set_increasehp(_increaseHp);
 }
 
-void PROTOFUNC::MakePlayerState(PLAYERSTATE* _pOut, LLONG _id, bool _ifattack, bool _animstate, 
-	bool _movespeed, double _animDuration, int _curAnimIndex)
+void PROTOFUNC::MakeCollisionData(COLLISIONDATA* _pOut, LLONG _id, LLONG _enemyID)
 {
 	assert(nullptr != _pOut);
 	_pOut->set_id(_id);
-	_pOut->set_ifattack(_ifattack);
-	_pOut->set_animstate(_animstate);
-	_pOut->set_movespeed(_movespeed);
-	_pOut->set_animationtime(_animDuration);
-	_pOut->set_animationindex(_curAnimIndex);
+	_pOut->set_enemyid(_enemyID);
 }
 
-void PROTOFUNC::MakeSelfPlayerMove(SELFPLAYERMOVE* _pOut, LLONG _id, const VECTOR3& _move)
-{
-	assert(nullptr != _pOut);
-	_pOut->set_id(_id);
-	_pOut->set_movex(_move.x());
-	_pOut->set_movey(_move.y());
-	_pOut->set_movez(_move.z());
-}
-
-void PROTOFUNC::MakeCharMove(CHARMOVE* _pOut, LLONG _id, const VECTOR3& _move, const VECTOR3& _rotate)
-{
-	assert(nullptr != _pOut);
-	_pOut->set_id(_id);
-	_pOut->set_movex(_move.x());
-	_pOut->set_movey(_move.y());
-	_pOut->set_movez(_move.z());
-	// rotate
-	_pOut->set_rotatex(_rotate.x());
-	_pOut->set_rotatey(_rotate.y());
-	_pOut->set_rotatez(_rotate.z());
-}
-
-void PROTOFUNC::MakeCollisionData(COLLISIONDATA* _pOut, LLONG _id, const VECTOR3& _vPos, int _damageEnable, LLONG _enemyID)
+void PROTOFUNC::MakeCharState(CHARSTATE* _pOut, LLONG _id, const VECTOR3& _vPos,
+	const VECTOR3& _vRotate, int _animstate, int _curAnimIndex, int _triggerOn)
 {
 	assert(nullptr != _pOut);
 	_pOut->set_id(_id);
 	_pOut->set_posx(_vPos.x());
-	_pOut->set_posy(_vPos.x());
-	_pOut->set_posz(_vPos.x());
-	_pOut->set_damageenable(_damageEnable);
-	_pOut->set_enemyid(_enemyID);
+	_pOut->set_posy(_vPos.y());
+	_pOut->set_posz(_vPos.z());
+	// rotate
+	_pOut->set_rotatex(_vRotate.x());
+	_pOut->set_rotatey(_vRotate.y());
+	_pOut->set_rotatez(_vRotate.z());
+	_pOut->set_state(_animstate);
+	_pOut->set_animationindex(_curAnimIndex);
+	_pOut->set_triggeron(_triggerOn);
 }
 
+void PROTOFUNC::MakeCharState(CHARSTATE* _pOut, LLONG _id, const VECTOR3& _vPos, const VECTOR3& _vRotate)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_id);
+	_pOut->set_posx(_vPos.x());
+	_pOut->set_posy(_vPos.y());
+	_pOut->set_posz(_vPos.z());
+	// rotate
+	_pOut->set_rotatex(_vRotate.x());
+	_pOut->set_rotatey(_vRotate.y());
+	_pOut->set_rotatez(_vRotate.z());
+}
 
 /* =========== SC =============== */
 // Server To Client 
@@ -99,78 +90,27 @@ void PROTOFUNC::MakeScOtherClientLogin(SC_OTHERCLIENTLOGIN* _pOut, LLONG _id, in
 	_pOut->set_type(_type);
 }
 
-void PROTOFUNC::MakeScMoveFailed(SC_MOVEFAILED* _pOut, LLONG _id, VECTOR3* _pPrevPos)
+void PROTOFUNC::MakeScMonsterFind(SC_MONSTERFIND* _pOut, LLONG _id, int _findtype, int _targetID)
 {
 	assert(nullptr != _pOut);
 	_pOut->set_id(_id);
-	_pOut->set_allocated_prevpos(_pPrevPos);
-}
-
-void PROTOFUNC::MakeScViewInRange(SC_VIEWINRANGE* _pOut, LLONG _id, VECTOR3* _pPos, int _cellIndex, int _type)
-{
-	assert(nullptr != _pOut);
-	_pOut->set_id(_id);
-	_pOut->set_allocated_position(_pPos);
-	_pOut->set_cellindex(_cellIndex);
-	_pOut->set_type(_type);
-}
-
-void PROTOFUNC::MakeScStartInformationSucess(SC_START_INFORMATION_SUCCESS* _pOut, LLONG _id, int _monsterNum)
-{
-	assert(nullptr != _pOut);
-	_pOut->set_id(_id);
-	_pOut->set_monsternum(_monsterNum);
-}
-
-void PROTOFUNC::MakeScMonsterResourceData(SC_MONSTERRESOURCEDATA* _pOut, LLONG _id, const VECTOR3& _vPos, 
-int _animIndex, int _cellIndex, int _type)
-{
-	assert(nullptr != _pOut);
-	_pOut->set_id(_id);
-	_pOut->set_posx(_vPos.x());
-	_pOut->set_posy(_vPos.y());
-	_pOut->set_posz(_vPos.z());
-	_pOut->set_cellindex(_cellIndex);
-	_pOut->set_animindex(_animIndex);
-	_pOut->set_type(_type);
-}
-
-void PROTOFUNC::MakeScMonsterState(SC_MONSTERSTATE* _pOut, LLONG _id, const double& _dAnimTime, int _animindex, int _state)
-{
-	assert(nullptr != _pOut);
-	_pOut->set_id(_id);
-	_pOut->set_animationtime(_dAnimTime);
-	_pOut->set_animationindex(_animindex);
-	_pOut->set_state(_state);
-}
-
-void PROTOFUNC::MakeScMonsterStateHavePos(SC_MONSTERSTATEHAVEPOS* _pOut, LLONG _id, const VECTOR3& _vPos, const VECTOR3& _vRotate,
-	const double& _dAnimTime, int _animindex, int _state)
-{
-	assert(nullptr != _pOut);
-	_pOut->set_id(_id);
-	_pOut->set_posx(_vPos.x());
-	_pOut->set_posy(_vPos.y());
-	_pOut->set_posz(_vPos.z());
-	_pOut->set_rotatex(_vRotate.x());
-	_pOut->set_rotatey(_vRotate.y());
-	_pOut->set_rotatez(_vRotate.z());
-	_pOut->set_animationtime(_dAnimTime);
-	_pOut->set_animationindex(_animindex);
-	_pOut->set_state(_state);
-}
-
-void PROTOFUNC::MakeScNeedMonsterState(SC_NEEDMONSTERSTATE* _pOut, LLONG _id)
-{
-	assert(nullptr != _pOut);
-	_pOut->set_id(_id);
-}
-
-void PROTOFUNC::MakeScMonsterFindPlayer(SC_MONSTERFINDPLAYER* _pOut, LLONG _id, LLONG _targetID)
-{
-	assert(nullptr != _pOut);
-	_pOut->set_id(_id);
+	_pOut->set_findtype(_findtype);
 	_pOut->set_targetid(_targetID);
+}
+
+void PROTOFUNC::MakeScDead(SC_DEAD* _pOut, LLONG _id)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_id);
+}
+
+void PROTOFUNC::MakeScSeePlayerMove(SC_SEEPLAYERMOVE* _pOut, LLONG _id, const VECTOR3& _vPos)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_id);
+	_pOut->set_posx(_vPos.x());
+	_pOut->set_posy(_vPos.y());
+	_pOut->set_posz(_vPos.z());
 }
 
 /* =========== CS =============== */
@@ -192,12 +132,6 @@ void PROTOFUNC::MakeCsAttack(CS_ATTACK* _pOut, LLONG _id, float _damage, VECTOR3
 }
 
 void PROTOFUNC::MakeCsDisconnect(CS_DISCONNECT* _pOut, LLONG _id)
-{
-	assert(nullptr != _pOut);
-	_pOut->set_id(_id);
-}
-
-void PROTOFUNC::MakeScResourceReceiveSuccess(CS_RESOURCE_RECEIVE_SUCCES* _pOut, LLONG _id)
 {
 	assert(nullptr != _pOut);
 	_pOut->set_id(_id);

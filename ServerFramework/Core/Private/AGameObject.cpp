@@ -23,6 +23,10 @@ namespace Core
 		return true;
 	}
 
+	void AGameObject::RunningPermanentDisableSituation()
+	{
+	}
+
 	void AGameObject::InsertColliderContainer(const COLLIDERINFO& _ColliderInfo)
 	{
 		m_ColliderContainer.push_back(Create<ACollider>((ACollider::TYPE)_ColliderInfo.iColliderType,
@@ -103,15 +107,27 @@ namespace Core
 		return IsCanSee(_spTransform->GetPos());
 	}
 
+	const _bool AGameObject::IsPermanentDisable() const
+	{
+		return m_isPermanentDisable;
+	}
+
 	void AGameObject::SetActive(const _bool _isActive)
 	{
-		m_isActive = _isActive;
 		while (true)
 		{
 			_bool value = m_isActive.load();
 
 			if (true == CAS_VALUE(m_isActive, value, _isActive))
 			{
+				if (true == m_isActive)
+				{
+					CallActiveEnable();
+				}
+				else
+				{
+					CallActiveDisable();
+				}
 				break;
 			}
 		}
@@ -119,14 +135,27 @@ namespace Core
 
 	void AGameObject::ActivePermanentDisable()
 	{
-		while(!m_isPermanentDisable.load())
+		while (true)
 		{
-			m_isPermanentDisable = true;
+			_bool value = m_isActive.load();
+
+			if (true == CAS_VALUE(m_isPermanentDisable, value, true))
+			{
+				break;
+			}
 		}
 		LastBehavior();
 	}
 
 	void AGameObject::LastBehavior()
+	{
+	}
+
+	void AGameObject::CallActiveEnable()
+	{
+	}
+
+	void AGameObject::CallActiveDisable()
 	{
 	}
 

@@ -13,6 +13,7 @@
 #include "CMob.h"
 #include "UCollider.h"
 #include "UProcessedData.h"
+#include "UAnimation.h"
 
 CMob::CMob(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UCharacter(_spDevice, _wstrLayer, _eCloneType),
@@ -24,7 +25,12 @@ CMob::CMob(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONE
 	m_delapsedTime{ 0 },
 	m_fActivationRange{ 0 },
 	m_fDeactivationRange{0},
-	m_isNeedServerSendData{ false }
+	m_isNeedServerSendData{ false },
+	m_isNetworkMoveSituation{ false },
+	m_isNetworkRotateSituation{ false },
+	m_vMovePos{},
+	m_fRotateSpeed{DirectX::XMConvertToRadians(90.f)},
+	m_isMoveStateActive{ false }
 {
 }
 
@@ -38,7 +44,12 @@ CMob::CMob(const CMob& _rhs)
 	m_delapsedTime{ 0 },
 	m_fActivationRange{ 0 },
 	m_fDeactivationRange{ 0 },
-	m_isNeedServerSendData{ false }
+	m_isNeedServerSendData{ false },
+	m_isNetworkMoveSituation{ false },
+	m_isNetworkRotateSituation{ false },
+	m_vMovePos{},
+	m_fRotateSpeed{ DirectX::XMConvertToRadians(90.f) },
+	m_isMoveStateActive{ false }
 {
 }
 
@@ -61,6 +72,13 @@ HRESULT CMob::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetNetworkID(MobServerData.iMobID);
 	GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
 	GetAnimModel()->SetAnimation(MobServerData.iStartAnimIndex);
+
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	if (33 == spGameInstance->GetNetworkOwnerID())
+	{
+		SetMoveStateActive(true);
+		GetAnimModel()->NotApplyAnimPositionDisable();
+	}
 #else
 	GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
 #endif
@@ -70,36 +88,50 @@ HRESULT CMob::NativeConstructClone(const VOIDDATAS& _Datas)
 void CMob::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
-#ifndef _ENABLE_PROTOBUFF
-	if(m_spTargetPlayer)
-	{
-		_float3 CurrentMobPos = GetTransform()->GetPos();
-		_float3 CurrentPlayerPos = m_spTargetPlayer->GetTransform()->GetPos();
-
-		CalculateDistanceBetweenPlayers(CurrentPlayerPos, CurrentMobPos);
-		SearchForPlayers();
-	}
-#endif
 }
 
 void CMob::LateTickActive(const _double& _dTimeDelta)
 {
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
-#ifndef _ENABLE_PROTOBUFF
-	_float3 vPosition{ GetTransform()->GetPos() };
-	SHPTR<UCell> newCell{};
-
-	if (false == GetCurrentNavi()->IsMove(vPosition, REF_OUT newCell))
+	if (true == IsMoveStateActive())
 	{
-		_float3 closestPoint = GetCurrentNavi()->ClampPositionToCell(vPosition);
-		GetTransform()->SetPos(_float3(closestPoint.x, vPosition.y, closestPoint.z));
-		vPosition = GetTransform()->GetPos();
-	}
+		_float3 vPosition{ GetTransform()->GetPos() };
+		SHPTR<UCell> newCell{};
 
-	_float newHeight = GetCurrentNavi()->ComputeHeight(vPosition);
-	GetTransform()->SetPos(_float3(vPosition.x, newHeight, vPosition.z));
-#endif
+		if (false == GetCurrentNavi()->IsMove(vPosition, REF_OUT newCell))
+		{
+			_float3 closestPoint = GetCurrentNavi()->ClampPositionToCell(vPosition);
+			GetTransform()->SetPos(_float3(closestPoint.x, vPosition.y, closestPoint.z));
+			vPosition = GetTransform()->GetPos();
+		}
+
+		_float newHeight = GetCurrentNavi()->ComputeHeight(vPosition);
+		GetTransform()->SetPos(_float3(vPosition.x, newHeight, vPosition.z));
+
+	}
 	__super::LateTickActive(_dTimeDelta);
+}
+
+void CMob::SendPacketTickActive(const _double& _dTimeDelta)
+{
+	if (true == IsMoveStateActive())
+	{
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+#ifdef _ENABLE_PROTOBUFF
+		CHARSTATE MonsterStateData;
+		VECTOR3 SendPos, SendRotate;
+		_double dTimeAcc = GetAnimModel()->GetCurrentAnimation()->GetTimeAcc();
+		_int AnimIndex = GetAnimModel()->GetCurrentAnimIndex();
+		{
+			_float3 vPos = GetTransform()->GetPos(), vRotate = GetTransform()->GetRotationValue();
+			PROTOFUNC::MakeVector3(&SendPos, vPos.x, vPos.y, vPos.z);
+			PROTOFUNC::MakeVector3(&SendRotate, vRotate.x, vRotate.y, vRotate.z);
+		}
+		PROTOFUNC::MakeCharState(&MonsterStateData,
+			GetNetworkID(), SendPos, SendRotate, AnimIndex, GetAnimationController()->GetAnimState(), IsDamaged());
+		spGameInstance->SendProcessPacket(UProcessedData(MonsterStateData, TAG_CS_MONSTERSTATE));
+#endif
+	}
 }
 
 HRESULT CMob::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
@@ -122,29 +154,39 @@ void CMob::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 
 void CMob::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 {
+#ifdef _ENABLE_PROTOBUFF
+	__super::ReceiveNetworkProcessData(_ProcessData);
+	switch (_ProcessData.GetDataType())
+	{
+	case TAG_SC_DEAD:
+	{
+		SC_DEAD scDamaged;
+		SetDeathState(true);
+	}
+	break;
+	}
+#endif
 }
 
-#ifdef _ENABLE_PROTOBUFF
-void CMob::SendCollisionData(_int _DamageEnable)
+void CMob::FindPlayer()
 {
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	COLLISIONDATA csCollision;
-	VECTOR3 Pos;
-	_llong NetworkID = GetNetworkID();
+	if (false == GetFoundTargetState())
 	{
-		_float3 vPos = GetTransform()->GetPos();
-		PROTOFUNC::MakeVector3(&Pos, vPos.x, vPos.y, vPos.z);
-		PROTOFUNC::MakeCollisionData(&csCollision, NetworkID, Pos, _DamageEnable, 
-			spGameInstance->GetNetworkOwnerID());
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		m_spTargetPlayer = spGameInstance->FindPlayerToDistance(GetTransform()->GetPos());
 	}
-	spGameInstance->SendProcessPacket(UProcessedData(NetworkID, csCollision, TAG_CS_MONSTERCOLIISION));
+	if (m_spTargetPlayer)
+	{
+		_float3 CurrentMobPos = GetTransform()->GetPos();
+		_float3 CurrentPlayerPos = m_spTargetPlayer->GetTransform()->GetPos();
+
+		CalculateDistanceBetweenPlayers(CurrentPlayerPos, CurrentMobPos);
+		SearchForPlayers();
+	}
 }
-#endif
 
 void CMob::SearchForPlayers()
 {
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-
 	if (m_fDistancefromNearestPlayer < m_fActivationRange)
 		m_bFoundTarget = true;
 	else if(m_fDistancefromNearestPlayer >= m_fDeactivationRange)
@@ -155,11 +197,22 @@ void CMob::CalculateDistanceBetweenPlayers(const _float3& _CurrentPlayerPos, con
 {
 	m_fDistancefromNearestPlayer = _float3::Distance(_CurrentMobPos, _CurrentPlayerPos);
 }
-
+#ifdef _ENABLE_PROTOBUFF
 void CMob::SendMobStateData()
 {
-}
 
+}
+void CMob::SendCollisionDamagedData(UPawn* _pPawn)
+{
+	RETURN_CHECK(false == IsDamaged(), ;);
+
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	COLLISIONDATA CollisionData;
+	PROTOFUNC::MakeCollisionData(&CollisionData, GetNetworkID(), _pPawn->GetNetworkID());
+	spGameInstance->SendProcessPacket(UProcessedData(CollisionData, TAG_CS_MONSTERCOLIISION));
+	SetDamaged(true);
+}
+#endif
 void CMob::SetMobPlacement(_int _CellIndex)
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);

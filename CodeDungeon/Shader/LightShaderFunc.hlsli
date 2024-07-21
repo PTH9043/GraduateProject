@@ -4,21 +4,20 @@
 #include "LightShaderParam.hlsli"
 
 
-//float RimLight(in float4 vWorldPos, in float4 vNormal)
-//{
-//    float4 vCamLook = normalize(float4(vWorldPos.xyz - g_ViewProjInfoArr[g_CamID].vCamPosition.xyz, 0.f));
-//    float4 vLightDir = normalize(g_tLightInfo.vDirection);
-//    vLightDir.w = 0.f;
-//    float fLightDensity = dot(vCamLook * -1.f, normalize(vNormal));
+float RimLight(float3 vWorldPos,  float3 vNormal,int index)
+{
+    float3 vCamLook = normalize(float3(vWorldPos.xyz - g_ViewProjInfoArr[g_CamID].vCamPosition.xyz));
+    float4 vLightDir = normalize(g_tLightInfo[index].vDirection);
+    vLightDir.w = 0.f;
+    float fLightDensity = dot(vCamLook * -1.f, normalize(vNormal));
 
-//    float rimLightIntensity = max(0.f, 1.f - fLightDensity);
-//    rimLightIntensity = pow(rimLightIntensity, g_tLightControl.fRimLightPower);
-//    rimLightIntensity = smoothstep(g_tLightControl.fRimMin, g_tLightControl.fRimMax, rimLightIntensity);
-//    if (0.f == g_tLightControl.fRimLightPower)
-//        rimLightIntensity = 0.f;
+    float rimLightIntensity = max(0.f, 1.f - fLightDensity);
+    rimLightIntensity = pow(rimLightIntensity, 12);
+    rimLightIntensity = smoothstep(0.2, 0.8, rimLightIntensity);
+   
 
-//    return rimLightIntensity;
-//}
+    return rimLightIntensity;
+}
 
 
 //=========================================================================================================================================
@@ -196,7 +195,7 @@ LIGHTCOLOR LightingInWorld(float3 vWorldPosition, float3 vWorldNormal)
    // float3 vCameraPosition = float3(g_tLightParam.vLightCamPos.x, g_tLightParam.vLightCamPos.y, g_tLightParam.vLightCamPos.z);
     float3 vToCamera = normalize(g_ViewProjInfoArr[MAIN_CAM_ID].vCamPosition - vWorldPosition);
    
-    float4 vCameraViewPosition = mul(float4(g_ViewProjInfoArr[g_CamID].vCamPosition, 1.0f), g_ViewProjInfoArr[g_CamID].mViewMatrix);
+    float4 vCameraViewPosition = mul(float4(g_ViewProjInfoArr[MAIN_CAM_ID].vCamPosition, 1.0f), g_ViewProjInfoArr[g_CamID].mViewMatrix);
     float3 vViewToCamera = normalize(vCameraViewPosition.xyz - vWorldPosition);
 
       [unroll(MAX_LIGHTS)]
@@ -221,7 +220,7 @@ LIGHTCOLOR LightingInWorld(float3 vWorldPosition, float3 vWorldNormal)
 
             color.vAmbient += PointLight(i,vWorldPosition, vWorldNormal, vToCamera).vAmbient;
 
-            color.vSpecular += PointLight(i,vWorldPosition, vWorldNormal, vToCamera).vSpecular;
+                color.vSpecular += PointLight(i, vWorldPosition, vWorldNormal, vToCamera).vSpecular; //+ RimLight(vWorldPosition, vWorldNormal,i)
 
         }
         else if (g_tLightInfo[i].eLightType == SPOT_LIGHT)

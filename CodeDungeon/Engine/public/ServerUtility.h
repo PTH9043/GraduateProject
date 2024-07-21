@@ -29,6 +29,7 @@ public:
 	static SOCKET CreateTcpSocket();
 	static SOCKET CreateUdpSocket();
 	static void RecvTcpPacket(const SOCKET& _Socket, REF_IN UOverExp& _OverExp);
+	static void RecvTcpPacket(const SOCKET& _Socket, POINTER_IN UOverExp* _OverExp);
 	static void SendTcpPacket(const SOCKET& _Socket, UOverExp* _pOverExp);
 	static void StartNonBlocking(const SOCKET& _Socket);
 	static bool ServerToConnect(const SOCKET& _Socket, SOCKADDR_IN* _pSocketAddr);

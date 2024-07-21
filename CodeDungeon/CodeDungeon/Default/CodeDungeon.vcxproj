@@ -163,6 +163,7 @@
     <ClInclude Include="..\Public\CAnubisAnimController.h" />
     <ClInclude Include="..\Public\CAnubisStaff.h" />
     <ClInclude Include="..\Public\CBackgroundUI.h" />
+    <ClInclude Include="..\Public\CButtonUI.h" />
     <ClInclude Include="..\Public\CClientApp.h" />
     <ClInclude Include="..\Public\CDataManager.h" />
     <ClInclude Include="..\Public\CHarlequinn.h" />
@@ -173,10 +174,13 @@
     <ClInclude Include="..\Public\CItemChestAnimController.h" />
     <ClInclude Include="..\Public\ClientDefines.h" />
     <ClInclude Include="..\Public\ClientProto.h" />
+    <ClInclude Include="..\Public\CLoadingUI.h" />
     <ClInclude Include="..\Public\CLogoScene.h" />
     <ClInclude Include="..\Public\CMainCamera.h" />
     <ClInclude Include="..\Public\CMainScene.h" />
     <ClInclude Include="..\Public\CMap.h" />
+    <ClInclude Include="..\Public\CMimic.h" />
+    <ClInclude Include="..\Public\CMimicAnimController.h" />
     <ClInclude Include="..\Public\CMinotaur.h" />
     <ClInclude Include="..\Public\CMinotaurAnimController.h" />
     <ClInclude Include="..\Public\CMob.h" />
@@ -208,6 +212,7 @@
     <ClCompile Include="..\Private\CAnubisAnimController.cpp" />
     <ClCompile Include="..\Private\CAnubisStaff.cpp" />
     <ClCompile Include="..\Private\CBackgroundUI.cpp" />
+    <ClCompile Include="..\Private\CButtonUI.cpp" />
     <ClCompile Include="..\Private\CClientApp.cpp" />
     <ClCompile Include="..\Private\CDataManager.cpp" />
     <ClCompile Include="..\Private\CHarlequinn.cpp" />
@@ -216,10 +221,13 @@
     <ClCompile Include="..\Private\CIronBars.cpp" />
     <ClCompile Include="..\Private\CItemChest.cpp" />
     <ClCompile Include="..\Private\CItemChestAnimController.cpp" />
+    <ClCompile Include="..\Private\CLoadingUI.cpp" />
     <ClCompile Include="..\Private\CLogoScene.cpp" />
     <ClCompile Include="..\Private\CMainCamera.cpp" />
     <ClCompile Include="..\Private\CMainScene.cpp" />
     <ClCompile Include="..\Private\CMap.cpp" />
+    <ClCompile Include="..\Private\CMimic.cpp" />
+    <ClCompile Include="..\Private\CMimicAnimController.cpp" />
     <ClCompile Include="..\Private\CMinotaur.cpp" />
     <ClCompile Include="..\Private\CMinotaurAnimController.cpp" />
     <ClCompile Include="..\Private\CMob.cpp" />

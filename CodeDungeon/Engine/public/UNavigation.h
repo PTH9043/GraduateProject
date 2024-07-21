@@ -54,6 +54,7 @@ public:
 	// Find
 	SHPTR<UCell> FindCell(const _float3& _vPosition);
 	SHPTR<UCell> FindCellWithoutUpdate(const _float3& _vPosition);
+	SHPTR<UCell> FindCellForCamera(const _float3& _vPosition);
 	SHPTR<UCell> FindCell(const _int& _iIndex);
 	SHPTR<UCell> FindCellWithoutUpdate(const _int& _iIndex);
 	// Is Collision

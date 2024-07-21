@@ -25,7 +25,7 @@ void UNetworkQueryProcessing::ProcessQueryData()
 	ThreadID = m_NetworkInitQueryIndex.load();
 
 	SHPTR<UNetworkBaseController> spNetworkBaseController = m_wpNetworkBaseController.lock();
-	const NETWORKACTORCONTAINER& NetworkActorContainer = spNetworkBaseController->GetNetworkActorContainer();
+	const NETWORKACTORCONTAINER NetworkActorContainer = spNetworkBaseController->GetNetworkActorContainer();
 	{
 		auto& QueryContainer = m_NetworkJobQueryContainer[ThreadID];
 		for (auto& iter : QueryContainer)

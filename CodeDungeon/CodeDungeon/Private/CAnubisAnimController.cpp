@@ -19,7 +19,9 @@ CAnubisAnimController::CAnubisAnimController(CSHPTRREF<UDevice> _spDevice)
     m_bFoundPlayerFirsttime{false},
     m_didleRandomValueChoosingTimer{0},
     m_iRandomValue{ 0 },
-    m_dRecvAnimDuration{ 0 }
+    m_dRecvAnimDuration{ 0 },
+    m_iRandomValueforAttack{ 0 },
+    m_bAttackStart{ false }
 {
 }
 
@@ -35,7 +37,9 @@ CAnubisAnimController::CAnubisAnimController(const CAnubisAnimController& _rhs)
     m_bFoundPlayerFirsttime{ false },
     m_didleRandomValueChoosingTimer{ 0 },
     m_iRandomValue{ 0 },
-    m_dRecvAnimDuration{ 0 }
+    m_dRecvAnimDuration{ 0 },
+    m_iRandomValueforAttack{ 0 },
+    m_bAttackStart{ false }
 {
 }
 
@@ -63,14 +67,16 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis_patrol(0, 3);
-    std::uniform_int_distribution<> dis_attack(0, 1);
+    std::uniform_int_distribution<> dis_attack(0, 3);
 
 
     ClearTrigger();
     SetAnimState(-1);
     SHPTR<CAnubis> spAnubis = m_wpAnubisMob.lock();
     SHPTR<UAnimModel> spAnimModel = spAnubis->GetAnimModel();
+
+    _float AttackRange_Long = 40;
+    _float AttackRange_Close = 10.0f;
 
 #ifndef _ENABLE_PROTOBUFF
     const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
@@ -87,93 +93,88 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
     // Handle found player state
     if (FoundPlayer && !m_bFoundPlayerFirsttime)
     {
-        UpdateState(spAnimModel, ANIM_AWAKE, L"WAKEUP");
-        m_bFoundPlayerFirsttime = true;
-        m_dIdleTimer = 0;
+        UpdateState(spAnimModel, ANIM_AWAKE, L"TOATTACKIDLE");
+        m_bFoundPlayerFirsttime = true; 
     }
     else if (!FoundPlayer && m_bFoundPlayerFirsttime)
     {
-        // Handle idle mode with 1/3 probability and 3-second duration
         m_bAttackMode = false;
-        m_bTauntMode = false;
-        //Idle Timer
-        if (CurAnimName == L"idle")
+        m_bAttackStart = false;
+
+        if (_float3::Distance(spAnubis->GetTransform()->GetPos(), spAnubis->GetOriginPos()) > 2)
         {
-            m_dIdleTimer += _dTimeDelta;
-            if (m_dIdleTimer >= 2.0)
-            {
-                m_dIdleTimer = 0.0;
-            }
-          
+            UpdateState(spAnimModel, ANIM_MOVE, L"WALK");
         }
         else
-            m_dIdleTimer = 0;
-
-        if(m_dIdleTimer == 0)
         {
-            m_didleRandomValueChoosingTimer += _dTimeDelta;
-            if (m_didleRandomValueChoosingTimer > 2)
-            {
-                m_iRandomValue = dis_patrol(gen);
-            }
-
-            if (m_iRandomValue == 0)
-            {
-                UpdateState(spAnimModel, ANIM_IDLE, L"IDLE");
-            }
-            else if (m_iRandomValue != 0)
-            {
-                UpdateState(spAnimModel, ANIM_MOVE, L"WALKF");
-            }
+            UpdateState(spAnimModel, ANIM_AWAKE, L"TOGUARDIDLE");
+            m_bFoundPlayerFirsttime = false;
         }
     }
-    else if (FoundPlayer && m_bFoundPlayerFirsttime)
+    else if (FoundPlayer && m_bFoundPlayerFirsttime && !m_bAttackMode)
     {
-        m_bTauntMode = true;
-        m_dIdleTimer = 0;
-    }
-
-    // Handle taunt mode state
-    if (CurAnimName == L"openLaying" || CurAnimName == L"openStanding")
-    {
-        m_bTauntMode = true;
-    }
-
-    if (m_bTauntMode)
-    {
-        UpdateState(spAnimModel, ANIM_TAUNT, L"TAUNT");
-        if (CurAnimName == L"taunt")
-        {
+        if(CurAnimName == L"Guard Idle to Attack Idle" || CurAnimName == L"Walk")
             m_bAttackMode = true;
-            m_bTauntMode = false;
+
+    }
+    else if (!FoundPlayer && !m_bFoundPlayerFirsttime)
+    {
+        if(CurAnimName == L"Attack Idle to Guard Idle")
+        {
+            if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.9)
+            {
+                UpdateState(spAnimModel, ANIM_IDLE, L"GUARDIDLE");
+            }
         }
+        else 
+            spAnubis->GetTransform()->SetDirectionFixedUp(spAnubis->GetOriginDirection(), _dTimeDelta, 5);
+            
     }
 
     // Handle hit state
     if (Hit)
     {
-        UpdateState(spAnimModel, ANIM_HIT, L"HIT");
-        spAnimModel->SetAnimation(L"gotHit");
+        spAnimModel->SetAnimation(L"Hit Reaction");
+        spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         spAnubis->SetPrevHealth(spAnubis->GetHealth());
     }
 
-    // Handle attack mode state
+    
     if (m_bAttackMode && !Hit)
     {
-        m_dlastAttackTime += _dTimeDelta;
-        if (m_dlastAttackTime > 3.0)
-        {
-            m_blastAttackWasFirst = !m_blastAttackWasFirst;
-            m_dlastAttackTime = 0;
-        }
+        UpdateState(spAnimModel, ANIM_IDLE, L"ATTACKIDLE");
 
-        if (DistanceFromPlayer > AttackRange)
+        if(!m_bAttackStart)
         {
-            UpdateState(spAnimModel, ANIM_MOVE, L"WALKF");
-        }
-        else
+            spAnimModel->SetAnimation(L"Attack Idle");
+            m_bAttackStart = true;
+        }             
+
+
+        if(m_bAttackStart)
         {
-            UpdateState(spAnimModel, m_blastAttackWasFirst ? ANIM_ATTACK : ANIM_ATTACK, m_blastAttackWasFirst ? L"ATTACK02" : L"ATTACK01");
+            if (DistanceFromPlayer > AttackRange_Long)
+            {
+                UpdateState(spAnimModel, ANIM_MOVE, L"WALK");
+            }
+            else if (DistanceFromPlayer < AttackRange_Long && DistanceFromPlayer > AttackRange_Close)
+            {
+                UpdateState(spAnimModel, ANIM_ATTACK, L"CAST");
+            }
+            else if (DistanceFromPlayer < AttackRange_Close)
+            {
+                if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.9)
+                    m_iRandomValueforAttack = dis_attack(gen); 
+
+                if (m_iRandomValueforAttack == 0)
+                    UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK1");
+                if (m_iRandomValueforAttack == 1)
+                    UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK2");
+                if (m_iRandomValueforAttack == 2)
+                    UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK3");
+                if (m_iRandomValueforAttack == 3)
+                    UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK4");
+            }
         }
     }
 
@@ -186,7 +187,8 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
     // Handle death state
     if (spAnubis->GetDeathState())
     {
-        UpdateState(spAnimModel, ANIM_DEATH, L"DEAD");
+        spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
+        UpdateState(spAnimModel, ANIM_DEATH, L"DEATH");
     }
 
 #endif
@@ -201,7 +203,7 @@ void CAnubisAnimController::ReceiveNetworkProcessData(void* _pData)
     SHPTR<CAnubis> spSarcophagus = m_wpAnubisMob.lock();
     SHPTR<UAnimModel> spAnimModel = spSarcophagus->GetAnimModel();
     {
-        SC_MONSTERSTATEHAVEPOS* pMonsterData = static_cast<SC_MONSTERSTATEHAVEPOS*>(_pData);
+        MONSTERSTATEDATA* pMonsterData = static_cast<MONSTERSTATEDATA*>(_pData);
         m_dRecvAnimDuration = pMonsterData->animationtime();
 
         if (pMonsterData->animationindex() != spAnimModel->GetCurrentAnimIndex())

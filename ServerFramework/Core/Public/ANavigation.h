@@ -45,7 +45,7 @@ public:
 	_bool Load(const _string& _wstrPath);
 
 	CELLCONTAINER GetCells() const { return m_CellContainer; }
-	const _int& GetCurIndex() const { return m_iCurIndex; }
+	const _int GetCurIndex() const { return m_iCurIndex; }
 	void SetCurIndex(const _int& _iIndex) { m_iCurIndex = _iIndex; }
 	// Get Collider
 	CSHPTRREF<ACollider> GetCollider() { return m_spCollider; }
@@ -84,8 +84,8 @@ private:
 	CELLCONTAINER						m_CellContainer;
 	SHPTR<ACell>							m_spCurCell;
 	SHPTR<ACell>							m_spPrevCell;
-	_int												m_iPrevIndex;
-	_int												m_iCurIndex;
+	ATOMIC<_int>							m_iPrevIndex;
+	ATOMIC<_int>							m_iCurIndex;
 	SHPTR<ACollider>					m_spCollider;
 };
 

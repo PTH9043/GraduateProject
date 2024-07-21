@@ -35,6 +35,12 @@ void UActorGroup::LateTick(const _double& _dTimeDelta)
 		iter->LateTick(_dTimeDelta);
 }
 
+void UActorGroup::SendPacketTick(const _double& _dTimeDelta)
+{
+	for (auto& iter : m_lsActiveActors)
+		iter->SendPacketTick(_dTimeDelta);
+}
+
 void UActorGroup::AddActive(CSHPTRREF<UActor> _pActor)
 {
 	m_lsActiveActors.insert(_pActor);

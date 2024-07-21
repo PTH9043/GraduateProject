@@ -15,12 +15,13 @@ public:
 	ACollisionManager();
 	DESTRUCTOR(ACollisionManager)
 public:
-	void AddCollisionList(APawn* _pPawn);
+	void AddMonsterPawnList(APawn* _pPawn);
 	void CollisionSituation(const _double _dTimeDelta);
+	void CollisionSituationToPlayer(ASession* _pSession, const _double _dTimeDelta);
 private:
 	virtual void Free() override;
 private:
-	COLLISIONPAWNLIST		m_CollisionPawnList;
+	COLLISIONPAWNLIST		m_MonsterPawnList;
 };
 
 END

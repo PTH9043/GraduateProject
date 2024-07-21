@@ -26,7 +26,9 @@
 #include "UAnimModel.h"
 #include "CIronBars.h"
 #include "CModelObjects.h"
-
+#include "CImageUI.h"
+#include "CButtonUI.h"
+#include "CLoadingUI.h"
 
 BEGIN(Client)
 
@@ -62,6 +64,25 @@ void CMainScene::TurnMobsOnRange()
 
 
 }
+void CMainScene::TurnGuardsOnRange()
+{
+	_float3 PlayerPos = m_spMainCamera->GetTransform()->GetPos();
+	for (auto& mob : m_spMap->GetGuards())
+	{
+		_float3 mobPos = mob.second->GetTransform()->GetPos();
+		_float3 distance = mobPos - PlayerPos;
+		float distanceSq = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
+
+		if (distanceSq <= 200 * 200)
+		{
+			mob.second->SetActive(true);
+		}
+		else {
+			mob.second->SetActive(false);
+		}
+	}
+}
+
 void CMainScene::TurnLightsOnRange()
 {
 	_float3 PlayerPos = m_spMainCamera->GetTransform()->GetPos();
@@ -106,6 +127,32 @@ void CMainScene::TurnLightsOnRange()
 			}
 		}
 	}
+
+	
+	
+		
+		/*_float3 lightPos0 = _float3(-364.225, -20, 253.010);
+		_float3 lightPos1 = _float3(-535.39, -20, 154.5);
+		_float3 lightPos2 = _float3(-494.5, -45, 289.265);
+		
+		_float3 distance = lightPos1 - PlayerPos;
+		float distanceSq = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
+		if (distanceSq <= 50 * 50)
+		{
+			for (int i = 0; i < 3; i++) {
+
+				ActiveLIght(LIGHTTYPE::TYPE_SPOT, i, LIGHTACTIVE::ISACTIVE);
+			}
+		}
+		else
+		{
+			for (int i = 0; i < 3; i++) {
+
+				ActiveLIght(LIGHTTYPE::TYPE_SPOT, i, LIGHTACTIVE::NONACTIVE);
+			}
+			
+		}*/
+	
 }
 
 void CMainScene::TurnRoomsOnRange()
@@ -131,10 +178,137 @@ void CMainScene::Free()
 {
 }
 
+
+void CMainScene::CreateStartSceneUI()
+{
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+	{
+		CImageUI::UIDESC tDesc;
+		{
+			tDesc.fZBufferOrder = 0.99f;
+			tDesc.strImgName = L"Background";
+			tDesc._shaderName = PROTO_RES_BACKGROUNDUISHADER;
+			tDesc.v2Size.x = static_cast<_float>(1280);
+			tDesc.v2Size.y = static_cast<_float>(1080);
+			tDesc.v2Pos = _float2{ 640,540 };
+			m_spBackgroundUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+			m_spBackgroundUI->SetActive(true);
+		}
+		CImageUI::UIDESC tDesc1;
+		{
+			// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
+			tDesc1.fZBufferOrder = 0.97f;
+			tDesc1.strImgName = L"LoadingBar_Background";
+			tDesc1._shaderName = PROTO_RES_DEFAULTUISHADER;
+			tDesc1.v2Size.x = static_cast<_float>(1080);
+			tDesc1.v2Size.y = static_cast<_float>(30);
+			tDesc1.v2Pos = _float2{ 640,840 };
+			m_spLoadingBackgroundUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc1 }));
+			m_spLoadingBackgroundUI->SetActive(false);
+		}
+		CButtonUI::UIDESC tDesc2;
+		{
+			tDesc2.fZBufferOrder = 0.97f;
+			tDesc2.strImgName = L"LoadingBar_Fill";
+			tDesc2._shaderName = PROTO_RES_LOADINGUISHADER;
+			tDesc2.v2Size.x = static_cast<_float>(1000);
+			tDesc2.v2Size.y = static_cast<_float>(25);
+			tDesc2.v2Pos = _float2{ 640,840 };
+			m_spLoadingFillingUI = std::static_pointer_cast<CLoadingUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_LOADINGUI, { &tDesc2 }));
+			m_spLoadingFillingUI->SetActive(false);
+		}
+		CImageUI::UIDESC tDesc3;
+		{
+			// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
+			tDesc3.fZBufferOrder = 0.88f;
+			tDesc3.strImgName = L"MainTitle";
+			tDesc3._shaderName = PROTO_RES_DEFAULTUISHADER;
+			tDesc3.v2Size.x = static_cast<_float>(640);
+			tDesc3.v2Size.y = static_cast<_float>(240);
+			tDesc3.v2Pos = _float2{ 640,220 };
+			m_spMainTitleUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc3 }));
+			m_spMainTitleUI->SetActive(true);
+		}
+		CButtonUI::UIDESC tDesc4;
+		{
+			tDesc4.fZBufferOrder = 0.47f;
+			tDesc4.strImgName = L"";
+			tDesc4._shaderName = PROTO_RES_BUTTONUISHADER;
+			tDesc4.v2Size.x = static_cast<_float>(200);
+			tDesc4.v2Size.y = static_cast<_float>(100);
+			tDesc4.v2Pos = _float2{ 640, 750 } ;
+			m_spButtonUI = std::static_pointer_cast<CButtonUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_BUTTONUI, { &tDesc4 }));
+			m_spButtonUI->SetActive(true);
+		}
+		CImageUI::UIDESC tDesc5;
+		{
+			// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
+			tDesc5.fZBufferOrder = 0.8f;
+			tDesc5.strImgName = L"T_TitleLogo_Shadow_SmokeWave_UI";
+			tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+			tDesc5.v2Size.x = static_cast<_float>(640);
+			tDesc5.v2Size.y = static_cast<_float>(250);
+			tDesc5.v2Pos = _float2{ 640,212.5 };
+			m_spMainTitleEffectUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+			m_spMainTitleEffectUI->SetActive(true);
+		}
+		
+		{
+			// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
+			tDesc5.fZBufferOrder = 0.48f;
+			tDesc5.strImgName = L"T_TitleLogo_Shadow_Line_UI";
+			tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+			tDesc5.v2Size.x = static_cast<_float>(1080);
+			tDesc5.v2Size.y = static_cast<_float>(25);
+			tDesc5.v2Pos = _float2{ 640,870 };
+			m_spLineEffectUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+			m_spLineEffectUI->SetActive(true);
+		}
+		{
+			// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
+			tDesc5.fZBufferOrder = 0.43f;
+			tDesc5.strImgName = L"Loading";
+			tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+			tDesc5.v2Size.x = static_cast<_float>(150);
+			tDesc5.v2Size.y = static_cast<_float>(50);
+			tDesc5.v2Pos = _float2{ 1050,800 };
+			m_spLoadingTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+			m_spLoadingTextUI->SetActive(false);
+		}
+		{
+			// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
+			tDesc5.fZBufferOrder = 0.43f;
+			tDesc5.strImgName = L"LoadingDot";
+			tDesc5._shaderName = PROTO_RES_LOADINGDOTUISHADER;
+			tDesc5.v2Size.x = static_cast<_float>(60);
+			tDesc5.v2Size.y = static_cast<_float>(25);
+			tDesc5.v2Pos = _float2{ 1145,805 };
+			m_spLoadingDotsUI = std::static_pointer_cast<CLoadingUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_LOADINGUI, { &tDesc5 }));
+			m_spLoadingDotsUI->SetActive(false);
+		}
+		{
+			// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
+			tDesc5.fZBufferOrder = 0.43f;
+			tDesc5.strImgName = L"PleaseWait";
+			tDesc5._shaderName = PROTO_RES_PLEASEWAITUISHADER;
+			tDesc5.v2Size.x = static_cast<_float>(200);
+			tDesc5.v2Size.y = static_cast<_float>(75);
+			tDesc5.v2Pos = _float2{ 640,700 };
+			m_spPleaseWaitTextUI = std::static_pointer_cast<CLoadingUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_LOADINGUI, { &tDesc5 }));
+			m_spPleaseWaitTextUI->SetActive(false);
+		}
+	}
+}
+
 HRESULT CMainScene::LoadSceneData()
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	CProtoMaker::CreateMainSceneProtoData(spGameInstance, GetDevice(), std::static_pointer_cast<UCommand>(spGameInstance->GetGpuCommand()));
+	
+
+	CreateStartSceneUI();
+
 #ifdef _ENABLE_PROTOBUFF
 	UCamera::CAMDESC tDesc;
 	tDesc.stCamProj = UCamera::CAMPROJ(UCamera::PROJECTION_TYPE::PERSPECTIVE, _float3(0.f, 0.f, 0.f),
@@ -161,6 +335,8 @@ HRESULT CMainScene::LoadSceneData()
 		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 1.f}, {0.3f, 0.3f,0.3f, 1.f}, {0.15f, 0.15f, 0.15f, 1.f}, {0.f, -1.f, 0.f,}, {0.f, 100.f, 0.f}, 0.f, 0.f ,
 	1.f, 20.f });
 
+		
+
 		for (auto& obj : (*m_spMap->GetStaticObjs().get()))
 		{
 			int count = 0;
@@ -177,6 +353,41 @@ HRESULT CMainScene::LoadSceneData()
 				}
 			}
 		}
+
+		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_SPOT,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 0.f}, {0.5f, 0.25f, 0.11f, 1.f}, {0.f, 1.5f, 1.2f, 1.f}, {0.f, -1.f, 0.f,}
+			, _float3(-364.225,-20,253.010), 100.f, 60.f ,
+			100.f, 32.f, 8.0f,(float)cos(DirectX::XMConvertToRadians(30.f)),(float)cos(DirectX::XMConvertToRadians(15.f)),_float3(1.0f, 0.01f, 0.0001f) });
+
+		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_SPOT,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 0.f}, {0.5f, 0.25f, 0.11f, 1.f}, {0.f, 1.5f, 1.2f, 1.f}, {0.f, -1.f, 0.f,}
+			, _float3(-535.39,-20,154.5), 100.f, 60.f ,
+			100.f, 32.f, 8.0f,(float)cos(DirectX::XMConvertToRadians(30.f)),(float)cos(DirectX::XMConvertToRadians(15.f)),_float3(1.0f, 0.01f, 0.0001f) });
+
+		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_SPOT,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 0.f}, {0.5f, 0.25f, 0.11f, 1.f}, {0.f, 1.5f, 1.2f, 1.f}, {0.f, -1.f, 0.f,}
+			, _float3(-494.5,-45,289.265), 100.f, 60.f ,
+			100.f, 32.f, 8.0f,(float)cos(DirectX::XMConvertToRadians(45.f)),(float)cos(DirectX::XMConvertToRadians(30.f)),_float3(1.0f, 0.01f, 0.0001f) });
+
+
+	}
+	{
+		UFire::FIREDESC tFireDesc;
+		tFireDesc.wstrFireShader = PROTO_RES_2DFIRESHADER;
+		m_stFireOne = std::static_pointer_cast<UFire>(spGameInstance->CloneActorAdd(PROTO_ACTOR_FIRE, { &tFireDesc }));
+		m_stFireTwo = std::static_pointer_cast<UFire>(spGameInstance->CloneActorAdd(PROTO_ACTOR_FIRE, { &tFireDesc }));
+		
+		 float ScaleX = 1.99f;
+		 float ScaleY = 3.64f;
+		_float3 ScaleFloat3 = _float3(ScaleX, ScaleY, 1);
+
+		m_stFireOne->GetTransform()->SetScale(ScaleFloat3);
+		m_stFireOne->GetTransform()->SetPos(_float3(-438.7,-50.8,156.4));
+		m_stFireOne->SetColorTexture(L"BlueFlame");
+		m_stFireOne->SetNoiseTexture(L"WFX_T_NukeFlames");
+		m_stFireTwo->GetTransform()->SetScale(ScaleFloat3);
+		m_stFireTwo->GetTransform()->SetPos(_float3(-410.6, -50.8, 172.8));
+		m_stFireTwo->SetColorTexture(L"BlueFlame");
+		m_stFireTwo->SetNoiseTexture(L"WFX_T_NukeFlames");
+		m_stFireOne->SetActive(true);
+			m_stFireTwo->SetActive(true);
 	}
 #ifndef _ENABLE_PROTOBUFF
 	{
@@ -195,18 +406,20 @@ HRESULT CMainScene::LoadSceneData()
 			vecDatas.push_back(&tDesc);
 
 			m_spMainCamera = std::static_pointer_cast<CMainCamera>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MAINCAMERA, vecDatas));
-			m_spMainCamera->GetTransform()->SetPos({ 0.f, 10.f, -100.f });
 
 			CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_USERWARRIORANIMCONTROLLER };
 			CWarriorPlayer::PLAYERDESC PlayerDesc{ m_spMainCamera };
 			m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
 				PROTO_ACTOR_WARRIORPLAYER, { &CharDesc, &PlayerDesc }));
 			spGameInstance->RegisterCurrentPlayer(m_spWarriorPlayer);
+			spGameInstance->AddPlayerContainer(m_spWarriorPlayer);
+			m_spMainCamera->GetTransform()->SetPos(m_spWarriorPlayer->GetTransform()->GetPos());
+		
 		}
 	}
 
 	m_spMap->LoadMobs(m_spWarriorPlayer);
-
+	m_spMap->LoadGuards();
 	//{
 	//	CMummy::CHARACTERDESC CharDesc{PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_MUMMYANIMCONTROLLER};
 	//	m_spMummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(
@@ -229,27 +442,83 @@ HRESULT CMainScene::LoadSceneData()
 	//	//�̶� ��ġ����
 	//	m_spMummy->GetTransform()->TranslateDir((m_spMummy->GetTransform()->GetLook()), 1, 10);
 	//}
-	{
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		m_stGuard = std::static_pointer_cast<UGuard>(spGameInstance->CloneActorAdd(PROTO_ACTOR_GUARD));
-		m_stGuard->SetActive(true);
-		m_stGuard->SetColorTexture(L"asdf");
-	}
+	//{
+	//	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	//	m_stGuard = std::static_pointer_cast<UGuard>(spGameInstance->CloneActorAdd(PROTO_ACTOR_GUARD));
+	//	m_stGuard->SetActive(true);
+	//	m_stGuard->SetColorTexture(L"asdf");
+	//}
 #endif
 	return S_OK;
 }
 
+void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
+{
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+	if (m_spButtonUI->IsMouseOnRect()&& m_spButtonUI->IsActive()) {
+
+		m_spButtonUI->SetIfPicked(true);
+
+		if (true == spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_L)&&!m_bStartScene) {
+			m_bStartScene = true;		
+		}
+	}
+	else {
+		m_spButtonUI->SetIfPicked(false);
+	}
+	if (m_bStartScene) {
+		m_fStartSceneLoadingTimer += _dTimeDelta;
+		m_spButtonUI->SetActive(false);
+	//	m_spLoadingBackgroundUI->SetActive(true);
+		m_spLoadingFillingUI->SetActive(true);
+		m_spLoadingFillingUI->SetIfPicked(true);
+		m_spLoadingTextUI->SetActive(true);
+		
+		m_spLoadingDotsUI->SetActive(true);
+		m_spLoadingDotsUI->SetIfPicked(true);
+		m_spPleaseWaitTextUI->SetActive(true);
+		m_spPleaseWaitTextUI->SetIfPicked(true);
+
+
+	}
+
+	if (m_fStartSceneLoadingTimer > 10.f) {
+
+		spGameInstance->SetGameStartEffect();
+		m_spBackgroundUI->SetActive(false);
+		m_spMainTitleUI->SetActive(false);
+		m_spLoadingTextUI->SetActive(false);
+		m_spLineEffectUI->SetActive(false);
+		m_spMainTitleEffectUI->SetActive(false);
+		m_spLoadingDotsUI->SetActive(false);
+		m_spPleaseWaitTextUI->SetActive(false);
+		m_spLoadingFillingUI->SetActive(false);
+		m_spLoadingBackgroundUI->SetActive(false);
+		m_spButtonUI->SetActive(false);
+		m_fStartSceneLoadingTimer = 0.f;
+		m_bStartScene = false;
+	}
+}
+
+
 void CMainScene::Tick(const _double& _dTimeDelta)
 {
 	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
+	DrawStartSceneUI(_dTimeDelta);
 	TurnLightsOnRange();
 	TurnRoomsOnRange();
-
+	TurnGuardsOnRange();
 
 	SHPTR<ULight> DirLight;
 	OutLight(LIGHTTYPE::TYPE_DIRECTIONAL, 0, DirLight);
 	
-
+	if (pGameInstance->GetDIKeyDown(DIK_F6)) {
+		pGameInstance->PauseGame();
+	}
+	if (pGameInstance->GetDIKeyDown(DIK_F7)) {
+		pGameInstance->ResumeGame();
+	}
 	SHPTR<ULight> PointLight;
 	OutLight(LIGHTTYPE::TYPE_POINT, 0, PointLight);
 
@@ -266,4 +535,5 @@ void CMainScene::CollisionTick(const _double& _dTimeDelta)
 {
 	
 }
+
 END

@@ -26,7 +26,7 @@ public:
 	const _double& GetDuration() const { return m_dDuration; }
 	const _double& GetTimeAcc() const { return m_dTimeAcc; }
 	const _float& GetTotalAnimFastValue() const { return m_fTotalAnimationFastValue; }
-	const _double& GetAnimationProgressRate() const { return m_dAnimationProgressRate; }
+	const _double GetAnimationProgressRate() const { return m_dTimeAcc / m_dDuration; }
 	const VECTOR<ANIMFASTSECTION>& GetAnimFastSection() const { return m_AnimFastSections; }
 	const ANIMEVENTCONTAINER& GetAnimEventContainer() const { return m_AnimEventContainer; }
 	const _bool IsApplyRootBoneMove() const { return m_isApplyRootBoneMove; }

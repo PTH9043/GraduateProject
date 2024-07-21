@@ -60,7 +60,6 @@ namespace Core {
 
 	const Vector3& ACollider::GetCurPos()
 	{
-		READ_SPINLOCK(m_ColliderSpinLock);
 		m_vPos = Vector3::Zero;
 		switch (m_eType)
 		{
@@ -82,69 +81,60 @@ namespace Core {
 
 	const Vector3& ACollider::GetScale()
 	{
-		READ_SPINLOCK(m_ColliderSpinLock);
 		return m_vCurScale;
 	}
 
 	const Vector3& ACollider::GetTranslate()
 	{
-		READ_SPINLOCK(m_ColliderSpinLock);
 		return m_vTranslate;
 	}
 
-	void ACollider::SetScale(const Vector3 _vScale)
+	void ACollider::SetScale(const Vector3& _vScale)
 	{
+		switch (m_eType)
 		{
-			WRITE_SPINLOCK(m_ColliderSpinLock);
-			switch (m_eType)
-			{
-			case TYPE_AABB:
-				m_spAABB_Original->Extents = _vScale;
-				m_vCurScale = _vScale;
-				break;
-			case TYPE_OBB:
-				m_spOBB_Original->Extents = _vScale;
-				m_vCurScale = _vScale;
-				break;
-			case TYPE_SPHERE:
-				m_spSphere_Original->Radius = _vScale.x;
-				m_vCurScale = { _vScale.x, _vScale.x, _vScale.x };
-				break;
-			}
+		case TYPE_AABB:
+			m_spAABB_Original->Extents = _vScale;
+			m_vCurScale = _vScale;
+			break;
+		case TYPE_OBB:
+			m_spOBB_Original->Extents = _vScale;
+			m_vCurScale = _vScale;
+			break;
+		case TYPE_SPHERE:
+			m_spSphere_Original->Radius = _vScale.x;
+			m_vCurScale = { _vScale.x, _vScale.x, _vScale.x };
+			break;
 		}
 		m_vModelScale = m_vCurScale;
 	}
 
-	void ACollider::SetScaleToFitModel(const Vector3 minVertex, const Vector3 maxVertex)
+	void ACollider::SetScaleToFitModel(const Vector3& minVertex, const Vector3& maxVertex)
 	{
 		Vector3 size = (maxVertex - minVertex) * 0.5f;
 		Vector3 center = (maxVertex + minVertex) * 0.5f;
 
+		switch (m_eType)
 		{
-			WRITE_SPINLOCK(m_ColliderSpinLock);
-			switch (m_eType)
-			{
-			case TYPE_AABB:
-				m_spAABB_Original->Center = center;
-				m_spAABB_Original->Extents = size;
-				m_vModelScale = size * 2;
-				break;
-			case TYPE_OBB:
-				m_spOBB_Original->Center = center;
-				m_spOBB_Original->Extents = size;
-				m_vModelScale = size * 2;
-				break;
-			case TYPE_SPHERE:
-				m_spSphere_Original->Radius = (size).x;
-				m_vModelScale = { (size * 2).x, (size * 2).x, (size * 2).x };
-				break;
-			}
+		case TYPE_AABB:
+			m_spAABB_Original->Center = center;
+			m_spAABB_Original->Extents = size;
+			m_vModelScale = size * 2;
+			break;
+		case TYPE_OBB:
+			m_spOBB_Original->Center = center;
+			m_spOBB_Original->Extents = size;
+			m_vModelScale = size * 2;
+			break;
+		case TYPE_SPHERE:
+			m_spSphere_Original->Radius = (size).x;
+			m_vModelScale = { (size * 2).x, (size * 2).x, (size * 2).x };
+			break;
 		}
 	}
 
-	void ACollider::SetTranslate(const Vector3 _vTranslate)
+	void ACollider::SetTranslate(const Vector3& _vTranslate)
 	{
-		WRITE_SPINLOCK(m_ColliderSpinLock);
 		switch (m_eType)
 		{
 		case TYPE_AABB:
@@ -160,34 +150,25 @@ namespace Core {
 		m_vTranslate = _vTranslate;
 	}
 
-	void ACollider::SetTransform(const Vector3 _vPos, const Vector4 _vQuaternion)
+	void ACollider::SetTransform(const Vector3& _vPos, const Vector4& _vQuaternion)
 	{
 		switch (m_eType)
 		{
 		case TYPE_AABB:
 			m_mTransformMatrix = _float4x4::Identity;
 			m_mTransformMatrix.Set_Pos(_vPos);
-			{
-				WRITE_SPINLOCK(m_ColliderSpinLock);
-				m_spAABB_Original->Transform(*m_spAABB.get(), m_mTransformMatrix);
-			}
+			m_spAABB_Original->Transform(*m_spAABB.get(), m_mTransformMatrix);
 			break;
 		case TYPE_OBB:
 			m_mTransformMatrix = XMMatrixRotationQuaternion(_vQuaternion);
 			m_mTransformMatrix.Set_Pos(_vPos);
-			{
-				WRITE_SPINLOCK(m_ColliderSpinLock);
-				m_spOBB_Original->Transform(*m_spOBB.get(), m_mTransformMatrix);
-			}
+			m_spOBB_Original->Transform(*m_spOBB.get(), m_mTransformMatrix);
 			SetOBBNormals(m_mTransformMatrix);
 			break;
 		case TYPE_SPHERE:
 			m_mTransformMatrix = XMMatrixRotationQuaternion(_vQuaternion);
 			m_mTransformMatrix.Set_Pos(_vPos);
-			{
-				WRITE_SPINLOCK(m_ColliderSpinLock);
-				m_spSphere_Original->Transform(*m_spSphere.get(), m_mTransformMatrix);
-			}
+			m_spSphere_Original->Transform(*m_spSphere.get(), m_mTransformMatrix);
 			break;
 		}
 	}
@@ -200,35 +181,25 @@ namespace Core {
 		case TYPE_AABB:
 			m_mTransformMatrix = _float4x4::Identity;
 			m_mTransformMatrix.Set_Pos(_spTransform->GetPos());
-			{
-				WRITE_SPINLOCK(m_ColliderSpinLock);
-				m_spAABB_Original->Transform(*m_spAABB.get(), m_mTransformMatrix);
-			}
+			m_spAABB_Original->Transform(*m_spAABB.get(), m_mTransformMatrix);
 			break;
 		case TYPE_OBB:
 			m_mTransformMatrix = _spTransform->GetWorldMatrix();
-			{
-				WRITE_SPINLOCK(m_ColliderSpinLock);
-				m_spOBB_Original->Transform(*m_spOBB.get(), m_mTransformMatrix);
-			}
+			m_spOBB_Original->Transform(*m_spOBB.get(), m_mTransformMatrix);
 			m_vModelScale = Vector3(m_spOBB->Extents) * 2;
 			SetOBBNormals(m_mTransformMatrix);
 			break;
 		case TYPE_SPHERE:
 			m_mTransformMatrix = _spTransform->GetWorldMatrix();
-			{
-				WRITE_SPINLOCK(m_ColliderSpinLock);
-				m_spSphere_Original->Transform(*m_spSphere.get(), m_mTransformMatrix);
-			}
+			m_spSphere_Original->Transform(*m_spSphere.get(), m_mTransformMatrix);
 			m_vModelScale = Vector3((m_spSphere->Radius, m_spSphere->Radius, m_spSphere->Radius));
 			break;
 		}
 	}
 
-	void ACollider::SetTransform(const _float4x4 _Matrix)
+	void ACollider::SetTransform(const _float4x4& _Matrix)
 	{
 		_float4x4 Matrix = m_mTransformMatrix * _Matrix;
-		WRITE_SPINLOCK(m_ColliderSpinLock);
 		switch (m_eType)
 		{
 		case TYPE_AABB:
@@ -253,7 +224,6 @@ namespace Core {
 
 	_bool ACollider::IsCollision(CSHPTRREF<ACollider> _pCollider)
 	{
-		READ_SPINLOCK(m_ColliderSpinLock);
 		switch (m_eType)
 		{
 		case TYPE_AABB:
@@ -301,7 +271,6 @@ namespace Core {
 
 	_bool ACollider::IsCollisionWithRay(const Vector3& _vOrigin, const Vector3& _vDirection, _float* _pDist)
 	{
-		READ_SPINLOCK(m_ColliderSpinLock);
 		switch (m_eType)
 		{
 		case TYPE_AABB:

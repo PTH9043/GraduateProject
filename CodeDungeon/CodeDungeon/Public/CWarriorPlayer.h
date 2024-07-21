@@ -28,7 +28,7 @@ public:
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _Datas) override;
 	virtual void ReceiveNetworkProcessData(const UProcessedData& _ProcessData);
 public: /* Get Set */
-	SHPTR<UParticle>& GetParticle() { return m_spParticle; }
+	SHPTR<UParticle>& GetParticle() { return m_spFootPrintParticle; }
 
 	void IfAttack(_bool is) { isAttack = is; }
 
@@ -47,18 +47,22 @@ public: /* Get Set */
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
+	virtual void SendPacketTickActive(const _double& _dTimeDelta) override;
 	virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
 	virtual HRESULT RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass = true) override;
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) override;
 #ifdef _ENABLE_PROTOBUFF
 	void SendMoveData(CSHPTRREF<UGameInstance> spGameInstance);
-	void SendCollisionData(UPawn* _pPawn, _int _DamageEnable);
+	void SendCollisionData(UPawn* _pPawn);
 #endif
 private:
 	void TranslateStateMoveAndRunF(CSHPTRREF<UGameInstance> _spGameInstance, const _double& _dTimeDelta, const _float _fSpeed);
 private:
-	SHPTR<UParticle>										m_spParticle;
+	SHPTR<UParticle>										m_spFootPrintParticle;
+	SHPTR<UParticle>										m_spHealParticle;
+	_float HealTimer = 0;
+	_bool HealTrigger = false;
 	PARTICLEPARAM* m_stParticleParam;
 	ComputeParticleType* m_stParticleType;
 

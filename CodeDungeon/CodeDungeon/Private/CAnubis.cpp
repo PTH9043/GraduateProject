@@ -17,13 +17,17 @@
 #include "UParticleSystem.h"
 #include "CModelObjects.h"
 #include "UAnimation.h"
+#include "CAnubisStaff.h"
 
 CAnubis::CAnubis(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: CMob(_spDevice, _wstrLayer, _eCloneType), m_AnubisType{},
 	m_PathFindingState{},
 	m_AstarPath{},
 	m_isPathFinding{ false },
-	m_currentPathIndex{ 0 }
+	m_currentPathIndex{ 0 },
+	m_spAnubisStaff{ nullptr },
+	m_f3OriginPos{ },
+	m_f3OriginDirection{}
 {
 }
 
@@ -32,7 +36,10 @@ CAnubis::CAnubis(const CAnubis& _rhs)
 	m_PathFindingState{},
 	m_AstarPath{},
 	m_isPathFinding{ false },
-	m_currentPathIndex{ 0 }
+	m_currentPathIndex{ 0 },
+	m_spAnubisStaff{nullptr},
+	m_f3OriginPos{},
+	m_f3OriginDirection{}
 {
 }
 
@@ -45,11 +52,9 @@ HRESULT CAnubis::NativeConstruct()
 	return __super::NativeConstruct();
 }
 
-HRESULT CAnubis::NativeConstructClone(const VOIDDATAS& _Datas)
+void CAnubis::CreateParticles()
 {
-	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-
 	{
 		UParticle::PARTICLEDESC tDesc;
 		tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEBLOODEFFECT2DSHADER;
@@ -110,15 +115,87 @@ HRESULT CAnubis::NativeConstructClone(const VOIDDATAS& _Datas)
 		m_spSlashParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
 	}
 	{
-		
-		
 		m_spSlashParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleType = PARTICLE_TYPE_DEFAULT;
 		m_spSlashParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
 		m_spSlashParticle->SetTexture(L"Slash2");
-		
+
 		m_spSlashParticle->SetParticleType(PARTICLE_SLASH);
 		*m_spSlashParticle->GetParticleSystem()->GetCreateInterval() = 0.35f;
 		*m_spSlashParticle->GetParticleSystem()->GetAddParticleAmount() = 1;
+	}
+	{
+
+		UParticle::PARTICLEDESC tDesc;
+		tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEATTACKEFFECT2DSHADER;
+		tDesc.wstrParticleShader = PROTO_RES_PARTICLEATTACK2DSHADER;
+
+
+		tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
+		//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 0.45f;  //0.45f;  //0.85 scale ²ø¶§
+		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 0.05f;  //0.05f;  //1.0 
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.5f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.1f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 2.88f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 1.88f;
+		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 512;
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 1.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.f, 0.f);
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticlePosition = _float3(0.f, 0.f, 0.f);
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_ATTACK;
+		m_spAttackParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
+	}
+	{
+		m_spAttackParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleType = PARTICLE_TYPE_DEFAULT;
+		m_spAttackParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
+		m_spAttackParticle->SetParticleType(PARTICLE_ATTACK);
+		*m_spAttackParticle->GetParticleSystem()->GetAddParticleAmount() = 7;
+		*m_spAttackParticle->GetParticleSystem()->GetCreateInterval() = 0.5f;
+		m_spAttackParticle->SetTexture(L"FireSpark3");
+	}
+	{
+
+		UParticle::PARTICLEDESC tDesc;
+		tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEATTACKEFFECT2DSHADER;
+		tDesc.wstrParticleShader = PROTO_RES_PARTICLEATTACKTWO2DSHADER;
+
+
+		tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 1.0f;///0.4;//	 0.8f
+		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 1.2f;///0.2;//	 1.0f
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.5f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.1f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 7.25f;//3.25f
+		tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 1.88f;
+		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 512;
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 1.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.f, 0.f);
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticlePosition = _float3(0.f, 0.f, 0.f);
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_ATTACK;
+		m_spAttackParticleTwo = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
+	}
+	{
+		m_spAttackParticleTwo->GetParticleSystem()->GetParticleTypeParam()->fParticleType = PARTICLE_TYPE_DEFAULT;
+		m_spAttackParticleTwo->GetParticleSystem()->GetParticleTypeParam()->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
+		m_spAttackParticleTwo->SetParticleType(PARTICLE_ATTACK);
+		*m_spAttackParticleTwo->GetParticleSystem()->GetAddParticleAmount() = 3;
+		*m_spAttackParticleTwo->GetParticleSystem()->GetCreateInterval() = 0.5f;
+		m_spAttackParticleTwo->SetTexture(L"FireSpark3");
+	}
+}
+
+
+HRESULT CAnubis::NativeConstructClone(const VOIDDATAS& _Datas)
+{
+	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+	CreateParticles();
+	{
+		CAnubisStaff::EQDESC Desc1(std::static_pointer_cast<UModel>(spGameInstance->CloneResource(PROTO_RES_ANUBISSTAFFMODEL)), ThisShared<UCharacter>(), L"..\\..\\Resource\\Model\\Item\\Equip\\AnubisHook\\Convert\\EquipDesc\\Anubis_Staff_FBX.bin");
+		m_spAnubisStaff = std::static_pointer_cast<CAnubisStaff>(spGameInstance->CloneActorAdd(PROTO_ACTOR_ANUBISSTAFF, { &Desc1 }));
+
 	}
 
 	UCollider::COLLIDERDESC tDesc;
@@ -151,11 +228,15 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 	pos.y += 5;
 	m_spBloodParticle->SetPosition(pos);
 	m_spSlashParticle->SetPosition(pos);
+	m_spAttackParticle->SetPosition(pos);
+	m_spAttackParticleTwo->SetPosition(pos);
 	_int CurAnimState = GetAnimationController()->GetAnimState();
 	_float3 CurrentMobPos = GetTransform()->GetPos();
 	_float3 CurrentPlayerPos = GetTargetPlayer()->GetTransform()->GetPos();
 	SHPTR<UCell> CurrentMobCell = GetCurrentNavi()->GetCurCell();
 	SHPTR<UCell> CurrentPlayerCell = GetTargetPlayer()->GetCurrentNavi()->GetCurCell();
+
+	_float walkingSpeed = 15;
 
 	if (CurAnimState == UAnimationController::ANIM_MOVE)
 	{
@@ -191,15 +272,16 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 				_float3 direction = CurrentMobPos - GetTargetPos();
 				GetTransform()->SetDirectionFixedUp(-direction, _dTimeDelta, 5);
 			}
+			GetTransform()->TranslateDir(GetTransform()->GetLook(), _dTimeDelta, walkingSpeed);
 		}
-		else // patrolling when player is not found
+		else 
 		{
 			SetOutline(false);
 			SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-			SHPTR<UCell> spNeighborCell = spNavigation->ChooseRandomNeighborCell(3);
-			if (GetTimeAccumulator() >= 5.0)
+			SHPTR<UCell> originCell = spNavigation->FindCell(m_f3OriginPos);
+			if (GetTimeAccumulator() >= 0.5)
 			{
-				m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, spNeighborCell->GetCenterPos(), CurrentMobCell, spNeighborCell));
+				m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, originCell->GetCenterPos(), CurrentMobCell, originCell));
 				m_isPathFinding = true;
 				SetTimeAccumulator(0.0);
 			}
@@ -210,7 +292,7 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 					m_isPathFinding = false;
 					if (m_PathFindingState.pathFound)
 					{
-						m_AstarPath = (spNavigation->OptimizePath(m_PathFindingState.path, CurrentMobPos, spNeighborCell->GetCenterPos()));
+						m_AstarPath = (spNavigation->OptimizePath(m_PathFindingState.path, CurrentMobPos, originCell->GetCenterPos()));
 						m_currentPathIndex = 0; // index initialized when path is optimized
 					}
 				}
@@ -221,6 +303,7 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 				_float3 direction = CurrentMobPos - GetTargetPos();
 				GetTransform()->SetDirectionFixedUp(-direction, _dTimeDelta, 5);
 			}
+			GetTransform()->TranslateDir(GetTransform()->GetLook(), _dTimeDelta, walkingSpeed);
 		}
 	}
 	else if (CurAnimState == UAnimationController::ANIM_ATTACK)
@@ -323,8 +406,12 @@ void CAnubis::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 					{
 						m_spBloodParticle->SetActive(true);
 						m_spSlashParticle->SetActive(true);
+						m_spAttackParticle->SetActive(true);
+						m_spAttackParticleTwo->SetActive(true);
 						m_spBloodParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 						m_spSlashParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+						m_spAttackParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+						m_spAttackParticleTwo->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 						// Decrease health on hit
 						DecreaseHealth(pCharacter->GetAttack());
 					}
@@ -403,3 +490,4 @@ void CAnubis::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 		handleCollisionWithStaticObject(pModelObject);
 	}
 }
+

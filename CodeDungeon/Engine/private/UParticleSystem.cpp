@@ -66,6 +66,11 @@ HRESULT UParticleSystem::NativeConstructClone(const VOIDDATAS& _vecDatas)
 		m_spComputeShaderTypeConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::PARTICLETYPEBUFFER, PARTICLETYPEPARAM_SIZE);
 		m_spParticleStructedBuffer = CreateNative<UShaderStructedBuffer>(GetDevice(), sizeof(PARTICLE), m_iMaxParitcleCnt);
 		break;
+	case PARTICLE_ROTATION:
+		m_iMaxParitcleCnt = 102;
+		m_spComputeShaderTypeConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::PARTICLETYPEBUFFER, PARTICLETYPEPARAM_SIZE);
+		m_spParticleStructedBuffer = CreateNative<UShaderStructedBuffer>(GetDevice(), sizeof(PARTICLE), m_iMaxParitcleCnt);
+		break;
 	case PARTICLE_FLARE:
 		m_iMaxParitcleCnt = 116;
 		m_spParticleStructedBufferPlus = CreateNative<UShaderStructedBuffer>(GetDevice(), sizeof(PARTICLEPLUS), m_iMaxParitcleCnt);
@@ -77,7 +82,19 @@ HRESULT UParticleSystem::NativeConstructClone(const VOIDDATAS& _vecDatas)
 
 		break;
 	case PARTICLE_ATTACK:
-		m_iMaxParitcleCnt = 10;
+		m_iMaxParitcleCnt = 512;
+		m_spComputeShaderTypeConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::PARTICLETYPEBUFFER, PARTICLETYPEPARAM_SIZE);
+		m_spParticleStructedBuffer = CreateNative<UShaderStructedBuffer>(GetDevice(), sizeof(PARTICLE), m_iMaxParitcleCnt);
+
+		break;
+	case PARTICLE_OPENCHEST:
+		m_iMaxParitcleCnt = 512;
+		m_spComputeShaderTypeConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::PARTICLETYPEBUFFER, PARTICLETYPEPARAM_SIZE);
+		m_spParticleStructedBuffer = CreateNative<UShaderStructedBuffer>(GetDevice(), sizeof(PARTICLE), m_iMaxParitcleCnt);
+
+		break;
+	case PARTICLE_HEAL:
+		m_iMaxParitcleCnt = 512;
 		m_spComputeShaderTypeConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::PARTICLETYPEBUFFER, PARTICLETYPEPARAM_SIZE);
 		m_spParticleStructedBuffer = CreateNative<UShaderStructedBuffer>(GetDevice(), sizeof(PARTICLE), m_iMaxParitcleCnt);
 
@@ -124,6 +141,7 @@ void UParticleSystem::Update(const _double& _dTimeDelta)
 	
 		switch (m_stParticleParam.stGlobalParticleInfo.fParticleKind) {
 		case PARTICLE_ORIGINAL:
+		case PARTICLE_ROTATION:
 		case PARTICLE_FLARE:				
 		case PARTICLE_ANIM:
 			if (m_fCreateInterval < m_stParticleParam.stGlobalParticleInfo.fAccTime)
@@ -142,13 +160,30 @@ void UParticleSystem::Update(const _double& _dTimeDelta)
 			m_stParticleParam.stGlobalParticleInfo.iAddCount = add;
 			break;
 		case PARTICLE_ATTACK:
+			/*if (m_fCreateInterval < m_stParticleParam.stGlobalParticleInfo.fAccTime)
+			{
+				m_stParticleParam.stGlobalParticleInfo.fAccTime = m_stParticleParam.stGlobalParticleInfo.fAccTime - m_fCreateInterval;
+				add = m_iParticleAddAmount;
+			}
+			m_stParticleParam.stGlobalParticleInfo.iAddCount = add;*/
 			add = m_iParticleAddAmount;
-			/*
+
 			if (m_fCreateInterval < m_stParticleParam.stGlobalParticleInfo.fAccTime)
 			{
 				add = 0;
 			}
-			*/
+
+			m_stParticleParam.stGlobalParticleInfo.iAddCount = add;
+			break;
+		case PARTICLE_OPENCHEST:
+		case PARTICLE_HEAL:
+			add = m_iParticleAddAmount;
+			
+			if (m_fCreateInterval < m_stParticleParam.stGlobalParticleInfo.fAccTime)
+			{
+				add = 0;
+			}
+			
 			m_stParticleParam.stGlobalParticleInfo.iAddCount = add;
 			break;
 		case PARTICLE_SLASH:
@@ -200,6 +235,10 @@ void UParticleSystem::Render(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDes
 		m_spComputeShader->BindUAVBuffer(UAV_REGISTER::PARTICLEWRITEDATA, m_spParticleStructedBuffer);
 		m_spComputeShader->BindCBVBuffer(m_spComputeShaderTypeConstantBuffer, &m_stParticleType, PARTICLETYPEPARAM_SIZE);
 		break;
+	case PARTICLE_ROTATION:
+		m_spComputeShader->BindUAVBuffer(UAV_REGISTER::PARTICLEWRITEDATA, m_spParticleStructedBuffer);
+		m_spComputeShader->BindCBVBuffer(m_spComputeShaderTypeConstantBuffer, &m_stParticleType, PARTICLETYPEPARAM_SIZE);
+		break;
 	case PARTICLE_FLARE:
 		m_spComputeShader->BindUAVBuffer(UAV_REGISTER::PARTICLEWRITEDATA, m_spParticleStructedBufferPlus);
 		break;
@@ -209,6 +248,8 @@ void UParticleSystem::Render(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDes
 
 		break;
 	case PARTICLE_ATTACK:
+	case PARTICLE_HEAL:
+	case PARTICLE_OPENCHEST:
 		m_spComputeShader->BindUAVBuffer(UAV_REGISTER::PARTICLEWRITEDATA, m_spParticleStructedBuffer);
 		m_spComputeShader->BindCBVBuffer(m_spComputeShaderTypeConstantBuffer, &m_stParticleType, PARTICLETYPEPARAM_SIZE);
 
@@ -245,6 +286,10 @@ void UParticleSystem::BindShaderParams(CSHPTRREF<UShader> _spShader)
 		_spShader->BindSRVBuffer(SRV_REGISTER::T14, m_spParticleStructedBuffer);
 		_spShader->BindCBVBuffer(m_spGraphicsShaderParticleConstantBuffer, &m_stParticleParam, PARTICLEPARAM_SIZE);
 		break;
+	case PARTICLE_ROTATION:
+		_spShader->BindSRVBuffer(SRV_REGISTER::T14, m_spParticleStructedBuffer);
+		_spShader->BindCBVBuffer(m_spGraphicsShaderParticleConstantBuffer, &m_stParticleParam, PARTICLEPARAM_SIZE);
+		break;
 	case PARTICLE_FLARE:
 		_spShader->BindSRVBuffer(SRV_REGISTER::T14, m_spParticleStructedBufferPlus);
 		break;
@@ -254,6 +299,8 @@ void UParticleSystem::BindShaderParams(CSHPTRREF<UShader> _spShader)
 
 		break;
 	case PARTICLE_ATTACK:
+	case PARTICLE_HEAL:
+	case PARTICLE_OPENCHEST:
 		_spShader->BindSRVBuffer(SRV_REGISTER::T14, m_spParticleStructedBuffer);
 		_spShader->BindCBVBuffer(m_spGraphicsShaderParticleConstantBuffer, &m_stParticleParam, PARTICLEPARAM_SIZE);
 

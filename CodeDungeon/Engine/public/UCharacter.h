@@ -105,8 +105,15 @@ public: /* get set */
 
 	const _bool& GetIsHItAlreadyState() const { return m_bisHitAlready; }
 	void SetHitAlreadyState(_bool _newState) { m_bisHitAlready = _newState; }
+<<<<<<< HEAD
 
+	const _bool IsDamaged() const { return m_isDamaged; }
+	void SetDamaged(const _bool _isDamaged) { this->m_isDamaged = _isDamaged; }
+=======
+	void SetAnimModelRim(_int _SetRim);
+	void SetAnimModelRimColor(_float3 _SetRimColor);
 
+>>>>>>> 3987a0223b251a7dd4bb520acb5f1bbc6e22f07b
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) PURE;
 	virtual void LateTickActive(const _double& _dTimeDelta) PURE;
@@ -134,9 +141,6 @@ protected: /* get set */
 
 	const _float3& GetCollidedNormal() const { return m_f3CollidedNormal; }
 	void SetCollidedNormal(const _float3& _f3Normal) { m_f3CollidedNormal = _f3Normal; }
-
-
-
 private:
 
 	SHPTR< UShaderConstantBuffer>						m_spScaleOutlineBuffer;
@@ -163,20 +167,21 @@ private:
 	// 해당하는 오브젝트가 Network Object인지 확인하는 변수
 	_bool													m_isNetworkConnected;
 
-	_bool			m_DrawOutline=false;
-	_bool			m_OutlineWithScale = false;
-	_bool			m_isPlayer=false;
+	_bool													m_DrawOutline=false;
+	_bool													m_OutlineWithScale = false;
+	_bool													m_isPlayer=false;
 
-	_float3			m_f3CollidedNormal;
+	_float3												m_f3CollidedNormal;
 
-	_int			m_iHealth;
-	_int			m_iPrevHealth;
+	_int														m_iHealth;
+	_int														m_iPrevHealth;
 
-	_int			m_iAttack;
+	_int														m_iAttack;
 
-	_bool			m_bisDeath;
+	_bool													m_bisDeath;
 
-	_bool			m_bisHitAlready;
+	_bool													m_bisHitAlready;
+	_bool													m_isDamaged;
 };
 
 END

@@ -86,9 +86,9 @@ public: /* MySqlDriver */
 	void BindParam(SQLTABLETYPE _TableType, _int _ParamIndex, _llong _Value);
 	void BindParam(SQLTABLETYPE _TableType, _int _ParamIndex, const _string& _Value);
 public:
+	void AddMonsterPawnList(APawn* _pPawn);
 	void CollisionSituation(const _double _dTimeDelta);
-public:
-	SHPTR<ACollisionManager> GetCollisionManager() const { return m_spCollisionManager; }
+	void CollisionSituationToPlayer(ASession* _pSession, const _double _dTimeDelta);
 public:
 	SHPTR<ANavigation> CloneNavi();
 private:
