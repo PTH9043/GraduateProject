@@ -32,8 +32,8 @@ static const float2 fDistortion3 = float2(0.1f, 0.1f);
 
 static const float fDistortionScale = 0.8;
 static const float fDistortionBias = 0.5;
-static const float3 fScrollSpeeds = float3(2.1f, 1.1f, 1.3f);
-static const float3 fScales = float3(1.0f, 2.0f, 3.0f);
+static const float3 fScrollSpeeds = float3(1.3f, 2.1f, 2.3f);
+static const float3 fScales = float3(1.0f, 5.0f, 1.0f);
 
 VS_OUT VS_Main(VS_IN In)
 {
@@ -45,13 +45,13 @@ VS_OUT VS_Main(VS_IN In)
     
 
     Out.vTexUV1 = (In.vTexUV * fScales.x);
-    Out.vTexUV1.x= Out.vTexUV1.x + (fGrobalDeltaTime*0.15 * fScrollSpeeds.x);
+    Out.vTexUV1.x= Out.vTexUV1.x + (fGrobalDeltaTime*0.05 * fScrollSpeeds.x);
 
     Out.vTexUV2 = (In.vTexUV * fScales.y);
-    Out.vTexUV2.x = Out.vTexUV2.x + (fGrobalDeltaTime * 0.15 * fScrollSpeeds.y);
+    Out.vTexUV2.x = Out.vTexUV2.x + (fGrobalDeltaTime * 0.05 * fScrollSpeeds.y);
 
    Out.vTexUV3 = (In.vTexUV * fScales.z);
-    Out.vTexUV3.x = Out.vTexUV3.x + (fGrobalDeltaTime * 0.15 * fScrollSpeeds.z);
+    Out.vTexUV3.x = Out.vTexUV3.x + (fGrobalDeltaTime * 0.05 * fScrollSpeeds.z);
 
     return Out;
 }

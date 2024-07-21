@@ -330,7 +330,7 @@ void CMainScene::CreateGameSceneUI()
 	{
 		// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
 		tDesc5.fZBufferOrder = 0.43f;
-		tDesc5.strImgName = L"";
+		tDesc5.strImgName = L"Player";
 		tDesc5._shaderName = PROTO_RES_HPBARUISHADER;
 		tDesc5.DrawOrder = L"Last";
 		tDesc5.v2Size.x = static_cast<_float>(350);
@@ -378,7 +378,47 @@ void CMainScene::CreateGameSceneUI()
 		m_spFrontPlayerFrameUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
 		m_spFrontPlayerFrameUI->SetActive(false);
 	}
+	{
+		// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"PlayerLogo";
+		tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(100);
+		tDesc5.v2Size.y = static_cast<_float>(45);
+		tDesc5.v2Pos = _float2{ 220,865 };
+		m_spPlayerNameUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spPlayerNameUI->SetActive(false);
+	}
 	
+	//=====================Minotaur UI=========================
+	CImageUI::UIDESC tDesc1;
+	{
+		// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
+		tDesc1.fZBufferOrder = 0.43f;
+		tDesc1.strImgName = L"Boss";
+		tDesc1._shaderName = PROTO_RES_HPBARUISHADER;
+		tDesc1.DrawOrder = L"Middle";
+		tDesc1.v2Size.x = static_cast<_float>(1000);
+		tDesc1.v2Size.y = static_cast<_float>(35);
+		tDesc1.v2Pos = _float2{ 640, 50 };
+		m_spMinotaurHpBarUI = std::static_pointer_cast<CHpBarUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_HPBARUI, { &tDesc1 }));
+		m_spMinotaurHpBarUI->SetActive(false);
+		m_spMinotaurHpBarUI->SetMaxHp(500.f);
+		m_spMinotaurHpBarUI->SetCurHp(258.f);
+	}
+	{
+		// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"MinotaurFrame";
+		tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc5.DrawOrder = L"Middle";
+		tDesc5.v2Size.x = static_cast<_float>(80);
+		tDesc5.v2Size.y = static_cast<_float>(80);
+		tDesc5.v2Pos = _float2{ 100,50 };
+		m_spMinotaurFrameUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spMinotaurFrameUI->SetActive(false);
+	}
 }
 
 HRESULT CMainScene::LoadSceneData()
@@ -598,6 +638,11 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 		m_spBackPlayerFrameUI->SetActive(true);
 		m_spBackDragonPlayerFrameUI->SetActive(true);
 		m_spFrontPlayerFrameUI->SetActive(true);
+		m_spPlayerNameUI->SetActive(true);
+
+		//==========Minotaur Hp===============
+		m_spMinotaurHpBarUI->SetActive(true);
+		m_spMinotaurFrameUI->SetActive(true);
 	}
 }
 

@@ -76,6 +76,12 @@ private:
 	SHPTR<CImageUI>			m_spBackPlayerFrameUI;
 	SHPTR<CImageUI>			m_spBackDragonPlayerFrameUI;
 	SHPTR<CImageUI>			m_spFrontPlayerFrameUI;
+	SHPTR<CImageUI>			m_spPlayerNameUI;
+
+	//==============Boss Frame UI-=================
+	//MinoTaur
+	SHPTR<CImageUI>			m_spMinotaurFrameUI;
+	SHPTR<CHpBarUI>			m_spMinotaurHpBarUI;
 };
 
 END

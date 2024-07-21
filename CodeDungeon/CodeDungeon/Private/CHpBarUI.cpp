@@ -65,7 +65,14 @@ HRESULT CHpBarUI::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableD
 	__super::RenderActive(_spCommand, _spTableDescriptor);
 
 	GetTransform()->BindTransformData(GetShader(), 1);
-	m_spUITextureGroup->SetUpTextureName(GetShader(), SRV_REGISTER::T0, L"T_HPGaugeTexture_UI");
+	if (GetUIDesc().strImgName == L"Player") {
+		m_spUITextureGroup->SetUpTextureName(GetShader(), SRV_REGISTER::T0, L"PlayerHp");
+	}
+	else if (GetUIDesc().strImgName == L"Boss") {
+		m_spUITextureGroup->SetUpTextureName(GetShader(), SRV_REGISTER::T0, L"GreenHp");
+	}
+	
+	
 	m_spUITextureGroup->SetUpTextureName(GetShader(), SRV_REGISTER::T1, L"noise01");
 	GetShader()->BindCBVBuffer(m_spHpBarUIBuffer, &_HpDesc, sizeof(HPDESC));
 	GetVIBufferRect()->Render(GetShader(), _spCommand);
