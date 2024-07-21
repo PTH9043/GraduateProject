@@ -376,6 +376,7 @@
     <FxCompile Include="..\..\Shader\Grid.hlsl" />
     <FxCompile Include="..\..\Shader\HdrTwo.hlsl" />
     <FxCompile Include="..\..\Shader\HorizontalBlur.hlsl" />
+    <FxCompile Include="..\..\Shader\HpBarUI.hlsl" />
     <FxCompile Include="..\..\Shader\LightDirection.hlsl" />
     <FxCompile Include="..\..\Shader\LightPoint.hlsl" />
     <FxCompile Include="..\..\Shader\LoadingDotUI.hlsl" />

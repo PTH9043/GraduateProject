@@ -29,6 +29,7 @@
 #include "CImageUI.h"
 #include "CButtonUI.h"
 #include "CLoadingUI.h"
+#include "CHpBarUI.h"
 
 BEGIN(Client)
 
@@ -322,6 +323,26 @@ void CMainScene::CreateStartSceneUI()
 	}
 }
 
+void CMainScene::CreateGameSceneUI()
+{
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	CImageUI::UIDESC tDesc5;
+	{
+		// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"";
+		tDesc5._shaderName = PROTO_RES_HPBARUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(300);
+		tDesc5.v2Size.y = static_cast<_float>(30);
+		tDesc5.v2Pos = _float2{ 200, 950 };
+		m_spHpBarUI = std::static_pointer_cast<CHpBarUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_HPBARUI, { &tDesc5 }));
+		m_spHpBarUI->SetActive(false);
+		m_spHpBarUI->SetMaxHp(500.f);
+		m_spHpBarUI->SetCurHp(258.f);
+	}
+}
+
 HRESULT CMainScene::LoadSceneData()
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
@@ -329,7 +350,7 @@ HRESULT CMainScene::LoadSceneData()
 	
 
 	CreateStartSceneUI();
-
+	CreateGameSceneUI();
 #ifdef _ENABLE_PROTOBUFF
 	UCamera::CAMDESC tDesc;
 	tDesc.stCamProj = UCamera::CAMPROJ(UCamera::PROJECTION_TYPE::PERSPECTIVE, _float3(0.f, 0.f, 0.f),
@@ -480,8 +501,8 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 
 		m_spEnterButtonUI->SetIfPicked(true);
 
-		if (true == spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_L)&&!m_bStartScene) {
-			m_bStartScene = true;		
+		if (true == spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_L)&&!m_bStartSceneForUI) {
+			m_bStartSceneForUI = true;		
 		}
 	}
 	else {
@@ -499,7 +520,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 		m_spExitButtonUI->SetIfPicked(false);
 	}
 
-	if (m_bStartScene) {
+	if (m_bStartSceneForUI&& !m_bStartGameForUI) {
 		m_fStartSceneLoadingTimer += _dTimeDelta;
 		m_spEnterButtonUI->SetActive(false);
 		m_spLoadingBackgroundUI->SetActive(true);
@@ -530,7 +551,12 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 		m_spEnterButtonUI->SetActive(false);
 		m_spExitButtonUI->SetActive(false);
 		m_fStartSceneLoadingTimer = 0.f;
-		m_bStartScene = false;
+		m_bStartSceneForUI = false;
+		m_bStartGameForUI = true;
+	}
+
+	if (!m_bStartSceneForUI && m_bStartGameForUI) {
+		m_spHpBarUI->SetActive(true);
 	}
 }
 

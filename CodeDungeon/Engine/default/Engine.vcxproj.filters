@@ -1554,5 +1554,8 @@
     <FxCompile Include="..\..\Shader\LoadingDotUI.hlsl">
       <Filter>98.ShaderFile\UI</Filter>
     </FxCompile>
+    <FxCompile Include="..\..\Shader\HpBarUI.hlsl">
+      <Filter>98.ShaderFile\UI</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

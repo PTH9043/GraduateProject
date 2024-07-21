@@ -14,6 +14,7 @@ class CSarcophagus;
 class CImageUI;
 class CButtonUI;
 class CLoadingUI;
+class CHpBarUI;
 
 
 class CMainScene final : public UScene{
@@ -37,6 +38,7 @@ public:
 
 	void DrawStartSceneUI(const _double& _dTimeDelta);
 	void CreateStartSceneUI();
+	void CreateGameSceneUI();
 private:
 	// Main
 	SHPTR<CMainCamera>			m_spMainCamera;
@@ -66,9 +68,11 @@ private:
 	SHPTR<CButtonUI>			m_spEnterButtonUI;
 	SHPTR<CButtonUI>			m_spExitButtonUI;
 	_float m_fStartSceneLoadingTimer = 0;
-	_bool m_bStartScene = false;
+	_bool m_bStartSceneForUI = false;
+	_bool m_bStartGameForUI = false;
 	//-------------------------------------------
-
+	//------------GAME SCENE UI-------------------
+	SHPTR<CHpBarUI>			m_spHpBarUI;
 };
 
 END
