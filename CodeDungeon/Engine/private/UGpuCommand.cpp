@@ -100,15 +100,13 @@ UGpuCommand::FRAMECONTEXT* UGpuCommand::WaitForNextFrameResources(const HANDLE& 
 	m_iFrameIndex = m_iFrameValue;
 	FRAMECONTEXT* frameCtx = &m_arrFrameContexts[m_iFrameIndex];
 	_uint fenceValue = frameCtx->fenceValue;
-	if (fenceValue != 0) // means no fence was signaled
-	{
-		frameCtx->fenceValue = 0;
-		SetEventOnCompletion(fenceValue);
-		waitableObjects[1] = GetFenceEvent();
-		numWaitableObjects = 2;
-	}
 
-	//WaitForMultipleObjects(numWaitableObjects, waitableObjects, TRUE, INFINITE);
+	frameCtx->fenceValue = 0;
+	SetEventOnCompletion(fenceValue);
+	waitableObjects[1] = GetFenceEvent();
+	numWaitableObjects = 2;
+
+	WaitForMultipleObjects(numWaitableObjects, waitableObjects, TRUE, INFINITE);
 	return frameCtx;
 }
 
