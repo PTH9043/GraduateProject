@@ -203,9 +203,7 @@ void CMimicAnimController::ReceiveNetworkProcessData(void* _pData)
     SHPTR<CMimic> spSarcophagus = m_wpMimicMob.lock();
     SHPTR<UAnimModel> spAnimModel = spSarcophagus->GetAnimModel();
     {
-        SC_MONSTERSTATEHAVEPOS* pMonsterData = static_cast<SC_MONSTERSTATEHAVEPOS*>(_pData);
-        m_dRecvAnimDuration = pMonsterData->animationtime();
-
+        CHARSTATE* pMonsterData = static_cast<CHARSTATE*>(_pData);
         if (pMonsterData->animationindex() != spAnimModel->GetCurrentAnimIndex())
         {
             spAnimModel->SetAnimation(pMonsterData->animationindex());
