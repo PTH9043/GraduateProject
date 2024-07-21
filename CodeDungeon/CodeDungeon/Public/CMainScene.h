@@ -73,6 +73,9 @@ private:
 	//-------------------------------------------
 	//------------GAME SCENE UI-------------------
 	SHPTR<CHpBarUI>			m_spHpBarUI;
+	SHPTR<CImageUI>			m_spBackPlayerFrameUI;
+	SHPTR<CImageUI>			m_spBackDragonPlayerFrameUI;
+	SHPTR<CImageUI>			m_spFrontPlayerFrameUI;
 };
 
 END

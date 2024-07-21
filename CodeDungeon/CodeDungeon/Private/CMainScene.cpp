@@ -333,14 +333,52 @@ void CMainScene::CreateGameSceneUI()
 		tDesc5.strImgName = L"";
 		tDesc5._shaderName = PROTO_RES_HPBARUISHADER;
 		tDesc5.DrawOrder = L"Last";
-		tDesc5.v2Size.x = static_cast<_float>(300);
-		tDesc5.v2Size.y = static_cast<_float>(30);
-		tDesc5.v2Pos = _float2{ 200, 950 };
+		tDesc5.v2Size.x = static_cast<_float>(350);
+		tDesc5.v2Size.y = static_cast<_float>(32.5);
+		tDesc5.v2Pos = _float2{ 250, 900 };
 		m_spHpBarUI = std::static_pointer_cast<CHpBarUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_HPBARUI, { &tDesc5 }));
 		m_spHpBarUI->SetActive(false);
 		m_spHpBarUI->SetMaxHp(500.f);
 		m_spHpBarUI->SetCurHp(258.f);
 	}
+	{
+		// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"UnitFrame_Dragon";
+		tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc5.DrawOrder = L"Priority";
+		tDesc5.v2Size.x = static_cast<_float>(142.5);
+		tDesc5.v2Size.y = static_cast<_float>(142.5);
+		tDesc5.v2Pos = _float2{ 110,832.5 };
+		m_spBackDragonPlayerFrameUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spBackDragonPlayerFrameUI->SetActive(false);
+	}
+	{
+		// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"UnitFrame_Avatar_Background";
+		tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc5.DrawOrder = L"Middle";
+		tDesc5.v2Size.x = static_cast<_float>(80);
+		tDesc5.v2Size.y = static_cast<_float>(80);
+		tDesc5.v2Pos = _float2{ 115,840 };
+		m_spBackPlayerFrameUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spBackPlayerFrameUI->SetActive(false);
+	}
+		
+	{
+		// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"UnitFrame_Avatar_Example";
+		tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(75);
+		tDesc5.v2Size.y = static_cast<_float>(75);
+		tDesc5.v2Pos = _float2{ 115,840 };
+		m_spFrontPlayerFrameUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spFrontPlayerFrameUI->SetActive(false);
+	}
+	
 }
 
 HRESULT CMainScene::LoadSceneData()
@@ -557,6 +595,9 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 
 	if (!m_bStartSceneForUI && m_bStartGameForUI) {
 		m_spHpBarUI->SetActive(true);
+		m_spBackPlayerFrameUI->SetActive(true);
+		m_spBackDragonPlayerFrameUI->SetActive(true);
+		m_spFrontPlayerFrameUI->SetActive(true);
 	}
 }
 
