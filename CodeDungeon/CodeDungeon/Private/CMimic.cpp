@@ -153,9 +153,9 @@ void CMimic::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 
 	switch (_ProcessData.GetDataType())
 	{
-	case TAG_SC_MONSTERSTATEHAVEMOVE:
+	case TAG_SC_MONSTERSTATE:
 	{
-		SC_MONSTERSTATEHAVEPOS scMonsterState;
+		CHARSTATE scMonsterState;
 		scMonsterState.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
 		GetAnimationController()->ReceiveNetworkProcessData(&scMonsterState);
 		GetTransform()->SetPos({ scMonsterState.posx(), scMonsterState.posy(), scMonsterState.posz() });

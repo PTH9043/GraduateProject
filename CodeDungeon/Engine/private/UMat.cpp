@@ -62,10 +62,10 @@ void UMat::TickActive(const _double& _dTimeDelta)
 {
 
 	if (_bloodTimer.m_fLeftTime > 0.f) {
-		_bloodTimer.m_fLeftTime -= _dTimeDelta;
-		GetTransform()->RotateTurn(_float3(0, 1, 0), 30* _dTimeDelta);
-		ScaleValue.x += 3.5 * _dTimeDelta;
-		ScaleValue.y += 2.5 * _dTimeDelta;
+		_bloodTimer.m_fLeftTime -= static_cast<_float>(_dTimeDelta);
+		GetTransform()->RotateTurn(_float3(0, 1, 0), 30* static_cast<_float>(_dTimeDelta));
+		ScaleValue.x += static_cast<_float>(3.5 * _dTimeDelta);
+		ScaleValue.y += static_cast<_float>(2.5 * _dTimeDelta);
 	}
 	
 }

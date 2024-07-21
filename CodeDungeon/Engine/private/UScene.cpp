@@ -100,7 +100,7 @@ void UScene::RenderLights()
 
     }
     m_stLightParams.nLights = CUR_LIGHT_NUMS;
-    for (int i = 0; i < CUR_LIGHT_NUMS; i++) {
+    for (_uint i = 0; i < CUR_LIGHT_NUMS; i++) {
         m_stLightParams.tLightInfos[i] = m_AllLightContainer[i]->GetLightInfo();
         m_stLightParamVector[i]= m_AllLightContainer[i]->GetLightInfo();
     }

@@ -97,7 +97,7 @@ void CMummy::CreateParticles()
 		//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 1.75f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 0.5f;
-		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 0.30;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 0.30f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.15f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 7;
 		tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 5;
@@ -128,11 +128,11 @@ void CMummy::CreateParticles()
 
 		tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
-		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 0.4;///0.4;//	 0.8f
-		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 0.2;///0.2;//	 1.0f
+		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 0.4f;///0.4;//	 0.8f
+		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 0.2f;///0.2;//	 1.0f
 		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.5f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.1f;
-		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 1.88;//3.25f
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 1.88f;//3.25f
 		tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 1.88f;
 		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 512;
 		tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 1.f;

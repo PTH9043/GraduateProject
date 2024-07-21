@@ -238,25 +238,24 @@ HRESULT URenderer::AddDebugRenderGroup(const DEBUGRENDERID _eID, CSHPTRREF<UShad
 
 void URenderer::Tick(const _double& _dTimeDelta)
 {
+    _float fDelta =  static_cast<_float>(_dTimeDelta);
 
     SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-    m_fGrobalDeltaTime += static_cast<_float>(_dTimeDelta);
-
-    
+    m_fGrobalDeltaTime += fDelta;
 
     if (m_bTurnShader.m_bTurnDie) {      
-        m_bTurnShader.m_fDieTime += _dTimeDelta;
+        m_bTurnShader.m_fDieTime += fDelta;
     }
     else {        
         m_bTurnShader.m_fDieTime = 0;
     }
 
     if (m_bTurnShader.m_bGameStart) {
-        m_bTurnShader.m_fGameStartTime += _dTimeDelta;
+        m_bTurnShader.m_fGameStartTime += fDelta;
     }
 
     if (m_bTurnShader.m_bTurnAbility) {
-        m_bTurnShader.m_fAbilityTime += _dTimeDelta;
+        m_bTurnShader.m_fAbilityTime += fDelta;
         if (m_bTurnShader.m_fAbilityTime > 3.5f) {
             m_bTurnShader.m_bTurnAbility = false;
         }

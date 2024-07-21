@@ -53,7 +53,7 @@ protected:
 	virtual HRESULT RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass = true) override;
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) override;
 #ifdef _ENABLE_PROTOBUFF
-	void SendMoveData(CSHPTRREF<UGameInstance> spGameInstance);
+	void SendMoveData();
 	void SendCollisionData(UPawn* _pPawn);
 #endif
 private:

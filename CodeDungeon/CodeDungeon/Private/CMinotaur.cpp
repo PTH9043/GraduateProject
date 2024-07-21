@@ -95,7 +95,7 @@ void CMinotaur::CreateParticles()
 		//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 1.75f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 0.5f;
-		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 0.30;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 0.30f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.15f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 7;
 		tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 5;
@@ -207,7 +207,7 @@ HRESULT CMinotaur::NativeConstructClone(const VOIDDATAS& _Datas)
 void CMinotaur::TickActive(const _double& _dTimeDelta)
 {
 	_float3 pos = GetTransform()->GetPos();
-	pos.y += 7.55;
+	pos.y += 7.55f;
 	m_spBloodParticle->SetPosition(pos);
 	m_spSlashParticle->SetPosition(pos);
 	m_spAttackParticle->SetPosition(pos);

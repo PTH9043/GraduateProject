@@ -265,7 +265,6 @@ void UGameInstance::RenderBegin()
 
 void UGameInstance::RenderEnd()
 {
-	/* Gpu ����ȭ ��Ű�� �κ� */
 	m_spGraphicDevice->MainRenderEnd();
 }
 
@@ -587,7 +586,6 @@ SHPTR<UActor> UGameInstance::CloneActorAddAndNotInLayer(const _wstring& _wstrPro
 void UGameInstance::RemoveActor(CSHPTRREF<UActor> _spActor)
 {
 	m_spActorManager->RemoveActor(_spActor);
-	// Collision pawn �ȿ� �ִ� �༮ �����
 	SHPTR<UPawn> spPawn = std::dynamic_pointer_cast<UPawn>(_spActor);
 	if (nullptr != spPawn)
 	{

@@ -9,9 +9,9 @@ class UAnimationController;
 class UNavigation;
 class UShaderConstantBuffer;
 /*
-@ Date: 2024-02-25, Writer: ������
+@ Date: 2024-02-25, Writer: 박태현
 @ Explain
--  ����ڰ� �����̰ų� AI�� ������ �� ����ϴ� Ŭ�����̴�. 
+-  캐릭터
 */
 class UCharacter abstract : public UPawn {
 public:
@@ -35,37 +35,25 @@ public:
 	UCharacter(const UCharacter& _rhs);
 	DESTRUCTOR(UCharacter)
 public:
-	// UPawn��(��) ���� ��ӵ�
 	virtual SHPTR<UCloneObject> Clone(const VOIDDATAS& _vecDatas) PURE;
 	virtual void Free() PURE;
 	virtual HRESULT NativeConstruct() PURE;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _Datas) PURE;
 public:
-	// �ٸ� ĳ���Ϳ��� �Ÿ� ���� 
 	_float OtherCharacterToDistance(CSHPTRREF<UActor> _spOtherActor);
-	// �ٸ� ĳ���͸� �ٶ󺸴� �ڱ� �ڽ��� Look Angle 
 	_float OtherCharacterDirToLook(CSHPTRREF<UActor> _spOtherActor);
-	// �ٸ� ĳ���͸� �������� �ٶ󺸴� �ڱ� �ڽ��� Right Angle 
 	_float OhterCharacterDirToRight(CSHPTRREF<UActor> _spOtherActor);
-	// �ٸ� ĳ���͸� �ٶ󺸴� �ڱ� �ڽ��� Look Angle ( 180 ~ -180 )
 	_float OtherCharacterDirToLookConverter(CSHPTRREF<UActor>  _spOtherActor);
-	// �ٸ� ĳ���͸� �ٶ󺸴� �ڱ� �ڽ��� Look Direction
 	_float3 OtherCharacterDirToLookVectorF3(CSHPTRREF<UActor>  _spOtherActor);
-	// �ٸ� ĳ���Ϳ��� �Ÿ� ���� 
 	_float OtherCharacterToDistance(CSHPTRREF<UTransform> _spOtherTransform);
-	// �ٸ� ĳ���͸� �ٶ󺸴� �ڱ� �ڽ��� Look Angle 
 	_float OtherCharacterDirToLook(CSHPTRREF<UTransform> _spOtherTransform);
-	// �ٸ� ĳ���͸� �������� �ٶ󺸴� �ڱ� �ڽ��� Right Angle 
 	_float OhterCharacterDirToRight(CSHPTRREF<UTransform> _spOtherTransform);
-	// �ٸ� ĳ���͸� �ٶ󺸴� �ڱ� �ڽ��� Look Angle ( 180 ~ -180 )
 	_float OtherCharacterDirToLookConverter(CSHPTRREF<UTransform> _spOtherTransform);
-	// �ٸ� ĳ���͸� �ٶ󺸴� �ڱ� �ڽ��� Look Direction
 	_float3 OtherCharacterDirToLookVectorF3(CSHPTRREF<UTransform> _spOtherTransform);
 public: /* get set */
 	CSHPTRREF<UAnimModel> GetAnimModel() const { return m_spAnimModel; }
 	SHPTR<UNavigation> GetCurrentNavi() const { return m_spCurNavi; }
 	CSHPTRREF<UCollider> GetHitCollider() const { return m_spHitCollider; }
-	// �ش��ϴ� ������Ʈ�� Network�� ����Ǿ��ִ��� Ȯ���ϴ� ����
 	const _bool IsNetworkConnected() const { return m_isNetworkConnected; }
 
 	const _bool& GetHitState() const { return m_bisHit; }
@@ -144,23 +132,18 @@ private:
 	SHPTR< UAnimModel>					m_spAnimModel;
 
 	SHPTR<UAnimationController>	m_spAnimationController;
-	// ���� ��ġ ����
 	_float3												m_vPrevPos;
-	// ���� ��������
 	SHPTR<UNavigation>						m_spCurNavi;
 	SHPTR<UCollider>							m_spHitCollider;
 
-	//�̵� �ӵ�
 	_float													m_fMoveSpeed;
 	_float													m_fRunSpeed;
 	_bool													m_bIsRunning;
 	_bool													m_bisHit;
 	_bool													m_bisCollision;
 
-	//�̵��� ����
 	_float3												m_f3MovedDirection;
 	_float3												m_f3LastMovedDirection;
-	// �ش��ϴ� ������Ʈ�� Network Object���� Ȯ���ϴ� ����
 	_bool													m_isNetworkConnected;
 
 	_bool													m_DrawOutline=false;

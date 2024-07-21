@@ -216,26 +216,19 @@ void CWarriorPlayer::ReceiveNetworkProcessData(const UProcessedData& _ProcessDat
 	{
 	case TAG_SC_PLAYERSTATE:
 	{
-		PLAYERSTATE PlayerState;
+		CHARSTATE PlayerState;
 		PlayerState.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
-		IfAttack(PlayerState.ifattack());
+		GetTransform()->SetPos(_float3{ PlayerState.posx(), PlayerState.posy(), PlayerState.posz() });
+		GetTransform()->RotateFix(_float3{ PlayerState.rotatex(), PlayerState.rotatey(), PlayerState.rotatez() });
 		GetAnimationController()->ReceiveNetworkProcessData(&PlayerState);
 	}
 	break;
 	case TAG_SC_SELFPLAYERMOVE:
 	{
-		SELFPLAYERMOVE selfPlayerMove;
+		SC_SEEPLAYERMOVE selfPlayerMove;
 		selfPlayerMove.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
 		// SelfPlayer 
-		GetTransform()->SetPos(_float3{ selfPlayerMove.movex(), selfPlayerMove.movey(), selfPlayerMove.movez() });
-	}
-	break;
-	case TAG_SC_CHARMOVE:
-	{
-		CHARMOVE charMove;
-		charMove.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
-		GetTransform()->SetPos(_float3{ charMove.movex(), charMove.movey(), charMove.movez() });
-		GetTransform()->RotateFix(_float3{ charMove.rotatex(), charMove.rotatey(), charMove.rotatez() });
+		GetTransform()->SetPos(_float3{ selfPlayerMove.posx(), selfPlayerMove.posy(), selfPlayerMove.posz() });
 	}
 	break;
 	}
@@ -416,7 +409,7 @@ void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 void CWarriorPlayer::SendPacketTickActive(const _double& _dTimeDelta)
 {
 #ifdef _ENABLE_PROTOBUFF
-	SendMoveData(spGameInstance);
+	SendMoveData();
 #endif
 }
 
@@ -583,12 +576,16 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 }
 
 #ifdef _ENABLE_PROTOBUFF
-void CWarriorPlayer::SendMoveData(CSHPTRREF<UGameInstance> spGameInstance)
+void CWarriorPlayer::SendMoveData()
 {
 	RETURN_CHECK(true == IsNetworkConnected(), ;);
 
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
 	_float3 vCharacterPos = GetTransform()->GetPos();
 	_float3 vCharRotate = GetTransform()->GetRotationValue();
+	_int AnimIndex = GetAnimModel()->GetCurrentAnimIndex();
+	_int State = GetAnimationController()->GetAnimState();
 
 	VECTOR3 vMove;
 	VECTOR3 vRotate; 
@@ -596,8 +593,9 @@ void CWarriorPlayer::SendMoveData(CSHPTRREF<UGameInstance> spGameInstance)
 		PROTOFUNC::MakeVector3(OUT & vMove, vCharacterPos.x, vCharacterPos.y, vCharacterPos.z);
 		PROTOFUNC::MakeVector3(OUT & vRotate, vCharRotate.x, vCharRotate.y, vCharRotate.z);
 	}
-	CHARMOVE charMove;
-	PROTOFUNC::MakeCharMove(OUT & charMove, spGameInstance->GetNetworkOwnerID(), vMove, vRotate);
+	CHARSTATE charMove;
+	PROTOFUNC::MakeCharState(OUT & charMove, spGameInstance->GetNetworkOwnerID(), vMove, vRotate, 
+		State, AnimIndex, IsDamaged());
 	spGameInstance->SendProcessPacket(std::move(UProcessedData(charMove, TAG_CS_MOVE)));
 }
 
@@ -608,10 +606,7 @@ void CWarriorPlayer::SendCollisionData(UPawn* _pPawn)
 	VECTOR3 Pos;
 	_llong NetworkID = spGameInstance->GetNetworkOwnerID();
 	{
-		_float3 vPos = GetTransform()->GetPos();
-		PROTOFUNC::MakeVector3(&Pos, vPos.x, vPos.y, vPos.z);
-		PROTOFUNC::MakeCollisionData(&csCollision, NetworkID, Pos, _DamageEnable, 
-			_pPawn->GetNetworkID());
+		PROTOFUNC::MakeCollisionData(&csCollision, NetworkID, _pPawn->GetNetworkID());
 	}
 	spGameInstance->SendProcessPacket(UProcessedData(NetworkID, csCollision, TAG_CS_PLAYERCOLLISION));
 }
