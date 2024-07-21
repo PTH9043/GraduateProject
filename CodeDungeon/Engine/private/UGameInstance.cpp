@@ -5,7 +5,7 @@
 #include "UTimerManager.h"
 #include "UInputManager.h"
 #include "UThreadManager.h"
-//#include  "UFontManager.h"
+#include  "UFontManager.h"
 #include "UActorManager.h"
 #include "UComponentManager.h"
 #include "UResourceManager.h"
@@ -19,6 +19,7 @@
 #include "UCharacterManager.h"
 #include "UMaterialManager.h"
 #include "UNetworkQueryProcessing.h"
+#include "UFontManager.h"
 
 #include "URenderer.h"
 
@@ -104,7 +105,8 @@ UGameInstance::UGameInstance() :
 	m_spAudioSystemManager{ Create<UAudioSystemManager>() },
 	m_spCharacterManager{Create<UCharacterManager>()},
 	m_spMaterialManager{ Create<UMaterialManager>()},
-	m_spRenderer{ nullptr }
+	m_spRenderer{ nullptr },
+	m_spFontMananger{ Create<UFontManager>() }
 	//m_spGraphicRenderObject{ nullptr }
 {
 }
@@ -115,6 +117,7 @@ UGameInstance::~UGameInstance()
 
 void UGameInstance::Free()
 {
+	ClearOnceTypeData();
 	m_spNetworkQueryProcessing.reset();
 	m_spNetworkBaseController.reset();
 	m_isGamming = false;
@@ -123,6 +126,7 @@ void UGameInstance::Free()
 	m_spRenderer.reset();
 	//m_spGraphicRenderObject.reset();
 	//m_spRandomManager.reset();
+	m_spFontMananger.reset();
 	m_spMaterialManager.reset();
 	m_spCharacterManager.reset();
 	m_spNetworkBaseController.reset();
@@ -158,6 +162,7 @@ HRESULT UGameInstance::ReadyInstance(const GRAPHICDESC& _stDesc, OUTPUTDATA& _st
 	RETURN_CHECK_FAILED(m_spActorManager->ReadyActorManager(m_spRenderer), E_FAIL);
 	RETURN_CHECK_FAILED(m_spSceneManager->ReadySceneManager(this), E_FAIL);
 	
+	RETURN_CHECK_FAILED(m_spFontMananger->ReadyFontManager(this, m_spRenderTargetManager), E_FAIL);
 	RETURN_CHECK_FAILED(m_spPipeLine->ReadyPipeLine(this), E_FAIL);
 	RETURN_CHECK_FAILED(m_spAudioSystemManager->ReadyAudioSystemManager(this), E_FAIL);
 	RETURN_CHECK_FAILED(m_spPicking->ReadyPickingDesc(m_spGraphicDevice->GetGraphicDesc()), E_FAIL);
@@ -258,7 +263,7 @@ void UGameInstance::RenderBegin()
 {
 	m_spGraphicDevice->MainRenderBegin();
 	m_spRenderer->Render();
-//	m_spFontMananger->Render();
+	m_spFontMananger->Render();
 }
 
 void UGameInstance::RenderEnd()
@@ -390,6 +395,11 @@ CSHPTRREF<UTableDescriptor> UGameInstance::GetComputeTableDescriptor() const
 CSHPTRREF<URootSignature> UGameInstance::GetRootSignature() const
 {
 	return m_spGraphicDevice->GetRootSignature();
+}
+
+CSHPTRREF<USwapChain> UGameInstance::GetSwapChain() const
+{
+	return m_spGraphicDevice->GetSwapChain();
 }
 
 HRESULT UGameInstance::AddRenderTargetGroup(const RTGROUPID& _eGroupID, const std::vector<RTDESC>& _rtVec)
@@ -1153,9 +1163,43 @@ _bool UGameInstance::PickingMesh(const _float3& _RayPos, const _float3& _RayDir,
 	return m_spPicking->PickingMesh(_RayPos, _RayDir, _spPawn, _spVIBuffer, _pDist, _pOut);
 }
 
+
 /*
 ==================================================
 Picking
+==================================================
+FontManager
+==================================================
+*/
+
+HRESULT UGameInstance::FontCreate(const _wstring& _wstrFontName, const _wstring& _wstrPath)
+{
+	return m_spFontMananger->FontCreate(_wstrFontName, _wstrPath);
+}
+
+SHPTR<UFont> UGameInstance::FontCreateAdd(const _wstring& _wstrFontName, const _wstring& _wstrPath)
+{
+	return m_spFontMananger->FontCreateAdd(_wstrFontName, _wstrPath);
+}
+
+SHPTR<UFont> UGameInstance::AddFont(const _wstring& _wstrFontName)
+{
+	return m_spFontMananger->AddFont(_wstrFontName);
+}
+
+void UGameInstance::ReleaseOriginFont(const _wstring& _wstrFontName)
+{
+	m_spFontMananger->ReleaseOriginFont(_wstrFontName);
+}
+
+void UGameInstance::RemoveFont(CSHPTRREF<UFont> _spFont)
+{
+	m_spFontMananger->RemoveFont(_spFont);
+}
+
+/*
+==================================================
+FontManager
 ==================================================
 ReadyDatas
 ==================================================

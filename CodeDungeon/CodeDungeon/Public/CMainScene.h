@@ -3,7 +3,9 @@
 BEGIN(Engine)
 class UGuard;
 class UFire;
+class UFont;
 END
+
 BEGIN(Client)
 
 class CMainCamera;
@@ -14,7 +16,6 @@ class CSarcophagus;
 class CImageUI;
 class CButtonUI;
 class CLoadingUI;
-
 
 class CMainScene final : public UScene{
 public:
@@ -46,8 +47,8 @@ private:
 	SHPTR<CMummy>				m_spMummy;
 	SHPTR<CSarcophagus>			m_spSarcophagus;
 	SHPTR<UGuard> m_stGuard;
-	SHPTR<UFire> m_stFireOne;
-	SHPTR<UFire> m_stFireTwo;
+	SHPTR<UFire>	m_stFireOne;
+	SHPTR<UFire>	m_stFireTwo;
 private:
 	//------------START SCENE UI-------------------
 	SHPTR<CImageUI>			m_spBackgroundUI;
@@ -67,6 +68,8 @@ private:
 	_float m_fStartSceneLoadingTimer = 0;
 	_bool m_bStartScene = false;
 	//-------------------------------------------
+
+	SHPTR<UFont>				m_spTestFont;
 
 };
 

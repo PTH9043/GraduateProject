@@ -1,0 +1,1 @@
+MakeSpriteFont "나눔스퀘어OTF_ac Bold" NanumSquare_acBold.spritefont /FontSize:16

@@ -63,15 +63,40 @@ namespace Server
 		// Standing
 		{
 			VECTOR< MOBDATA> MobData;
-			CMobLayoutLoader MummyStandingLayout("..\\..\\Resource\\MobsLayouts\\Mummy_Standing.bin");
-			CMobLayoutLoader MummylayingLayout("..\\..\\Resource\\MobsLayouts\\Mummy_Laying.bin");
-			MobData.reserve(MummyStandingLayout.GetMobData().size() + MummylayingLayout.GetMobData().size());
+			CMobLayoutLoader Chest("..\\..\\Resource\\MobsLayouts\\Chests.bin");
+			CMobLayoutLoader Interior_Hallway_E("..\\..\\Resource\\MobsLayouts\\Interior_Hallway_E.bin");
+			CMobLayoutLoader Interior_Room_C("..\\..\\Resource\\MobsLayouts\\Interior_Room_C.bin");
+			CMobLayoutLoader Interior_Room_D("..\\..\\Resource\\MobsLayouts\\Interior_Room_D.bin");
+			CMobLayoutLoader Interior_Room_E("..\\..\\Resource\\MobsLayouts\\Interior_Room_E.bin");
+			CMobLayoutLoader Interior_Room_F("..\\..\\Resource\\MobsLayouts\\Interior_Room_F.bin");
+			CMobLayoutLoader Interior_Room_G("..\\..\\Resource\\MobsLayouts\\Interior_Room_G.bin");
+
 			// Mob데이터를 받아온다. 
-			for (auto& iter : MummyStandingLayout.GetMobData())
+			for (auto& iter : Chest.GetMobData())
 			{
 				MobData.push_back(iter);
 			}
-			for (auto& iter : MummylayingLayout.GetMobData())
+			for (auto& iter : Interior_Hallway_E.GetMobData())
+			{
+				MobData.push_back(iter);
+			}
+			for (auto& iter : Interior_Room_C.GetMobData())
+			{
+				MobData.push_back(iter);
+			}
+			for (auto& iter : Interior_Room_D.GetMobData())
+			{
+				MobData.push_back(iter);
+			}
+			for (auto& iter : Interior_Room_E.GetMobData())
+			{
+				MobData.push_back(iter);
+			}
+			for (auto& iter : Interior_Room_F.GetMobData())
+			{
+				MobData.push_back(iter);
+			}
+			for (auto& iter : Interior_Room_G.GetMobData())
 			{
 				MobData.push_back(iter);
 			}

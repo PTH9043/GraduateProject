@@ -58,6 +58,27 @@
     <Filter Include="05.AnimController\Chest">
       <UniqueIdentifier>{5d7cd28b-96ed-4c94-8b72-613be2ab66c3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.AnimController\Minotaur">
+      <UniqueIdentifier>{87439335-b12c-40f9-bc20-7f1c7b6e93f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.AnimController\Harlequin">
+      <UniqueIdentifier>{459b4758-5d83-47a1-9178-be3fe54c2f5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.AnimController\Anubis">
+      <UniqueIdentifier>{637bbda7-78bf-4cd5-9d13-c44a7ed082e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Session\Monster\Mimic">
+      <UniqueIdentifier>{cca80810-ca35-4f15-a2ba-2f4ef7fd3f97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Session\Monster\Harlequin">
+      <UniqueIdentifier>{12775f33-b5da-4794-afd6-cfe67982657d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Session\Monster\Minotaur">
+      <UniqueIdentifier>{5d1b1984-f22f-4fd7-aad7-e5fb0a968cf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Session\Monster\Anubis">
+      <UniqueIdentifier>{b27ad188-2619-4e3a-bf7f-39498a9b66a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -99,6 +120,18 @@
     <ClCompile Include="..\Private\CChestAnimController.cpp">
       <Filter>05.AnimController\Chest</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\CMimic.cpp">
+      <Filter>03.Session\Monster\Mimic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CHarlequin.cpp">
+      <Filter>03.Session\Monster\Harlequin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CMinotaur.cpp">
+      <Filter>03.Session\Monster\Minotaur</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CAnubis.cpp">
+      <Filter>03.Session\Monster\Anubis</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\CServerApp.h">
@@ -139,6 +172,18 @@
     </ClInclude>
     <ClInclude Include="..\Public\CChestAnimController.h">
       <Filter>05.AnimController\Chest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CMimic.h">
+      <Filter>03.Session\Monster\Mimic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CHarlequin.h">
+      <Filter>03.Session\Monster\Harlequin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CMinotaur.h">
+      <Filter>03.Session\Monster\Minotaur</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CAnubis.h">
+      <Filter>03.Session\Monster\Anubis</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

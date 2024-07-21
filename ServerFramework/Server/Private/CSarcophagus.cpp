@@ -63,8 +63,8 @@ namespace Server
 		BringCellIndextoPosition();
 		GetCoreInstance()->InsertMobObject(spMummy->GetSessionID(), spMummy);
 
-		if (SARCO_LAYING == m_eSarcophagusType)
-			spMummy->GetTransform()->TranslateDir((spMummy->GetTransform()->GetLook()), 1, 12);
+	//	if (SARCO_LAYING == m_eSarcophagusType)
+	//		spMummy->GetTransform()->TranslateDir((spMummy->GetTransform()->GetLook()), 1, 12);
 #else
 		SHPTR<CSacrophagusAnimController> spSacrophagusAnimController = Create<CSacrophagusAnimController>(GetCoreInstance(), ThisShared<CSarcophagus>(),
 			"..\\..\\Resource\\Anim\\Sarcophagus\\", "SarcophagusLaying_FBX.bin", Matrix);

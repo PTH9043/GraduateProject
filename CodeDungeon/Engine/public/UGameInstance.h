@@ -28,6 +28,7 @@ class UCharacterManager;
 class UMaterialManager;
 class UAnimEventManager;
 class UNetworkQueryProcessing;
+class UFontManager;
 
 class URenderer;
 class UCollider;
@@ -66,6 +67,8 @@ class UStage;
 class UGrid;
 class UPawn;
 class UModelMaterial;
+class USwapChain;
+class UFont;
 
 struct PICKINGDESC;
 struct WAITCHECKACTOR;
@@ -111,12 +114,13 @@ public:
 	void SetTemporaryViewPort(D3D12_VIEWPORT _viewport, D3D12_RECT _rect);
 	void ClearOnceTypeData();
 public:
-	CSHPTRREF<UDevice>			GetDevice() const;
+	CSHPTRREF<UDevice>						GetDevice() const;
 	CSHPTRREF<UGpuCommand>		GetGpuCommand() const;
 	CSHPTRREF<UComputeCommand>		GetComputeCommand() const;
 	CSHPTRREF<UTableDescriptor>	GetTableDescriptor() const;
 	CSHPTRREF<UTableDescriptor>	GetComputeTableDescriptor() const;
 	CSHPTRREF<URootSignature>	GetRootSignature() const;
+	CSHPTRREF<USwapChain> GetSwapChain() const;
 
 public: /*  GraphicDevice */
 	const _bool	IsGamePaused() const;
@@ -312,6 +316,12 @@ public: /* Picking */
 	_bool PickingMesh(const _float3& _RayPos, const _float3& _RayDir, CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer,
 		_float* _pDist, _float3* _pOut);
 
+public: /* Font Manager */
+	HRESULT FontCreate(const _wstring& _wstrFontName, const _wstring& _wstrPath);
+	SHPTR<UFont> FontCreateAdd(const _wstring& _wstrFontName, const _wstring& _wstrPath);
+	SHPTR<UFont> AddFont(const _wstring& _wstrFontName);
+	void ReleaseOriginFont(const _wstring& _wstrFontName);
+	void RemoveFont(CSHPTRREF<UFont> _spFont);
 
 private: /* Ready Datas */
 	HRESULT ReadyResource(const OUTPUTDATA& _stData);
@@ -335,32 +345,32 @@ private:
 	_bool															m_isGamming;
 	_bool				m_isPause = false;
 
-	SHPTR<UGraphicDevice>						m_spGraphicDevice;
-	SHPTR<UShaderBufferManager>		m_spShaderBufferManager;
-	SHPTR<UTimerManager>						m_spTimerManager;
-	SHPTR<UInputManager>						m_spInputManager;
-	SHPTR<UThreadManager>					m_spThreadManager;
+	SHPTR<UGraphicDevice>								m_spGraphicDevice;
+	SHPTR<UShaderBufferManager>				m_spShaderBufferManager;
+	SHPTR<UTimerManager>								m_spTimerManager;
+	SHPTR<UInputManager>								m_spInputManager;
+	SHPTR<UThreadManager>							m_spThreadManager;
 
-	SHPTR<UActorManager>						m_spActorManager;
-	SHPTR<UComponentManager>			m_spComponentManager;
-	SHPTR<UResourceManager>				m_spResourceManager;
-	SHPTR<USceneManager>						m_spSceneManager;
+	SHPTR<UActorManager>								m_spActorManager;
+	SHPTR<UComponentManager>					m_spComponentManager;
+	SHPTR<UResourceManager>						m_spResourceManager;
+	SHPTR<USceneManager>							m_spSceneManager;
 
-	SHPTR<URenderTargetManager>		m_spRenderTargetManager;
+	SHPTR<URenderTargetManager>				m_spRenderTargetManager;
 
-	SHPTR<UPipeLine>									m_spPipeLine;
-	SHPTR<UFilePathManager>					m_spFilePathManager;
-	SHPTR< UAudioSystemManager>		m_spAudioSystemManager;
-	SHPTR< UNetworkBaseController>		m_spNetworkBaseController;
-	SHPTR<UCharacterManager>				m_spCharacterManager;
-	SHPTR< UMaterialManager>					m_spMaterialManager;
+	SHPTR<UPipeLine>										m_spPipeLine;
+	SHPTR<UFilePathManager>							m_spFilePathManager;
+	SHPTR< UAudioSystemManager>				m_spAudioSystemManager;
+	SHPTR< UNetworkBaseController>			m_spNetworkBaseController;
+	SHPTR<UCharacterManager>						m_spCharacterManager;
+	SHPTR< UMaterialManager>						m_spMaterialManager;
 
-	SHPTR<URenderer>								m_spRenderer;
-	SHPTR< UNetworkQueryProcessing> m_spNetworkQueryProcessing;
+	SHPTR<URenderer>										m_spRenderer;
+	SHPTR< UNetworkQueryProcessing>		m_spNetworkQueryProcessing;
 
-	//SHPTR< UFontManager>						m_spFontMananger;
-	//SHPTR<UComputeManager>				m_spComputeManager;
-	SHPTR<UPicking>									m_spPicking;
+	SHPTR< UFontManager>								m_spFontMananger;
+	//SHPTR<UComputeManager>					m_spComputeManager;
+	SHPTR<UPicking>											m_spPicking;			
 
 	//SHPTR<URandomManager>				m_spRandomManager;
 };

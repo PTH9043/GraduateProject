@@ -82,7 +82,12 @@ void UNetworkBaseController::SendProcessPacket(const UProcessedData& _ProcceedDa
 
 void UNetworkBaseController::InsertNetworkProcessInQuery(UProcessedData&& _data)
 {
-	GetNetworkQueryProcessing()->InsertQueryData(std::move(_data));
+	std::atomic_thread_fence(std::memory_order_seq_cst);
+	SHPTR<UNetworkQueryProcessing> spNetworkQueryProcessing = m_spNetworkQueryProcessing;
+	if (nullptr != spNetworkQueryProcessing)
+	{
+		spNetworkQueryProcessing->InsertQueryData(std::move(_data));
+	}
 }
 
 void UNetworkBaseController::ServerTick()

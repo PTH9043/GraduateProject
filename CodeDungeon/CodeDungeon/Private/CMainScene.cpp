@@ -29,6 +29,7 @@
 #include "CImageUI.h"
 #include "CButtonUI.h"
 #include "CLoadingUI.h"
+#include "UFont.h"
 
 BEGIN(Client)
 
@@ -303,12 +304,19 @@ void CMainScene::CreateStartSceneUI()
 
 HRESULT CMainScene::LoadSceneData()
 {
+	
+	
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	// Font Create 
+	{
+		m_spTestFont = spGameInstance->AddFont(FONT_NANUMSQUARE_ACBOLD);
+		m_spTestFont->SetPos(_float2{ WINDOW_WIDTH / 2.f, WINDOW_HEIGHT / 2.f });
+		m_spTestFont->SetText(L"Alive Enemy : ");
+		m_spTestFont->SetDepths(0.f);
+	}
+	
 	CProtoMaker::CreateMainSceneProtoData(spGameInstance, GetDevice(), std::static_pointer_cast<UCommand>(spGameInstance->GetGpuCommand()));
 	
-
-	CreateStartSceneUI();
-
 #ifdef _ENABLE_PROTOBUFF
 	UCamera::CAMDESC tDesc;
 	tDesc.stCamProj = UCamera::CAMPROJ(UCamera::PROJECTION_TYPE::PERSPECTIVE, _float3(0.f, 0.f, 0.f),
@@ -325,6 +333,8 @@ HRESULT CMainScene::LoadSceneData()
 	m_spMainCamera->GetTransform()->SetPos({ 0.f, 10.f, -100.f });
 
 	spGameInstance->MakeActors({ m_spMainCamera });
+#else 
+	CreateStartSceneUI();
 #endif
 	{
 		m_spMap = CreateConstructorNative<CMap>(spGameInstance->GetDevice());

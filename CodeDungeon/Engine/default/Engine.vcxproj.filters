@@ -382,9 +382,6 @@
     <Filter Include="02.DxClass\Command\Render">
       <UniqueIdentifier>{00d8aaee-0be5-4d40-8da7-75d8480beac8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Manager\CommandManager">
-      <UniqueIdentifier>{4d076d5d-2275-40e0-b8bc-96d308a65c34}</UniqueIdentifier>
-    </Filter>
     <Filter Include="98.ShaderFile\Common\HdrBloomBlur">
       <UniqueIdentifier>{5ef97c52-d6c8-4703-9de2-c9dd896bf7ae}</UniqueIdentifier>
     </Filter>
@@ -480,6 +477,12 @@
     </Filter>
     <Filter Include="98.ShaderFile\UI">
       <UniqueIdentifier>{2465e371-ae53-4c40-9e01-3f1b157389a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Utility\Font">
+      <UniqueIdentifier>{8b977eb7-f2d1-4575-9bf9-23ae97e7d388}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Manager\FontManager">
+      <UniqueIdentifier>{4d076d5d-2275-40e0-b8bc-96d308a65c34}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -890,6 +893,12 @@
     </ClCompile>
     <ClCompile Include="..\private\UMat.cpp">
       <Filter>05.Actor\Mat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UFont.cpp">
+      <Filter>03.Utility\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UFontManager.cpp">
+      <Filter>01.Manager\FontManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1333,6 +1342,12 @@
     </ClInclude>
     <ClInclude Include="..\public\UMat.h">
       <Filter>05.Actor\Mat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UFont.h">
+      <Filter>03.Utility\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UFontManager.h">
+      <Filter>01.Manager\FontManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

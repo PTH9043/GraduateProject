@@ -58,6 +58,8 @@
     <ClInclude Include="..\public\UEquipment.h" />
     <ClInclude Include="..\public\UFire.h" />
     <ClInclude Include="..\public\UFog.h" />
+    <ClInclude Include="..\public\UFont.h" />
+    <ClInclude Include="..\public\UFontManager.h" />
     <ClInclude Include="..\public\UGrid.h" />
     <ClInclude Include="..\public\UAnimationController.h" />
     <ClInclude Include="..\public\UGuard.h" />
@@ -190,6 +192,8 @@
     <ClCompile Include="..\private\UEquipment.cpp" />
     <ClCompile Include="..\private\UFire.cpp" />
     <ClCompile Include="..\private\UFog.cpp" />
+    <ClCompile Include="..\private\UFont.cpp" />
+    <ClCompile Include="..\private\UFontManager.cpp" />
     <ClCompile Include="..\private\UGrid.cpp" />
     <ClCompile Include="..\private\UAnimationController.cpp" />
     <ClCompile Include="..\private\UGuard.cpp" />

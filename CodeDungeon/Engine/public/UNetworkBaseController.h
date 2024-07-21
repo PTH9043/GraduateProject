@@ -36,7 +36,7 @@ public:
 public: /* get set */
 	const _llong GetNetworkOwnerID() const { return m_llNetworkOwnerID; }
 	const NETWORKACTORCONTAINER& GetNetworkActorContainer() const { return m_NetworkActorContainer; }
-	SHPTR<UNetworkQueryProcessing> GetNetworkQueryProcessing() { return m_spNetworkQueryProcessing.load(); }
+	SHPTR<UNetworkQueryProcessing> GetNetworkQueryProcessing() { return m_spNetworkQueryProcessing; }
 	const _bool IsNetworkResourceRecvSuccess() const { return m_isNetworkResourceReceiveSuccess; }
 
 	void SetSceneID(const _int _iSceneID) { this->m_iSceneID = _iSceneID; }
@@ -85,14 +85,14 @@ private:
 	WSADATA																					m_WsaData{};
 
 	TOTALBUFFER																			m_TcpTotalBuffer;
-	_llong																							m_CurrentBufferLength;
-	_llong																							m_RemainBufferLength;
+	std::atomic<_llong>																m_CurrentBufferLength;
+	std::atomic < _llong>																m_RemainBufferLength;
 	_llong																							m_llNetworkOwnerID;
 
-	SHPTR< UNetworkAddress>													m_spNetworkAddress;
+	SHPTR< UNetworkAddress>												m_spNetworkAddress;
 	NETWORKACTORCONTAINER												m_NetworkActorContainer;
 	NETWORKINITDATACONTAINER											m_NetworkInitDataContainer;
-	std::atomic<SHPTR<UNetworkQueryProcessing>>			m_spNetworkQueryProcessing;
+	SHPTR<UNetworkQueryProcessing>									m_spNetworkQueryProcessing;
 	_int																								m_iSceneID;
 	_bool																							m_isNetworkResourceReceiveSuccess;
 	_int																								m_iMakeMonsterNum;

@@ -47,3 +47,5 @@
 #define PROTO_COMP_HARLEQUINNANIMCONTROLLER L"Proto_Comp_HarlequinnAnimController"
 #define PROTO_COMP_ANUBISANIMCONTROLLER L"Proto_Comp_AnubisAnimController"
 #define PROTO_COMP_MIMICANIMCONTROLLER L"Proto_Comp_MimicAnimController"
+
+#define FONT_NANUMSQUARE_ACBOLD L"Font_NanumSquare_AcBold"

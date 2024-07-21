@@ -694,6 +694,37 @@ namespace Engine {
 	};
 #pragma endregion EQUIPMENTINFO
 
+
+#pragma region FONT 
+
+	typedef struct tagFontDesc {
+
+		tagFontDesc() = default;
+		tagFontDesc(const _wstring& _wstrText, const _float2& _vPos, const _float4& _vColor = { 255.f, 255.f, 255.f, 255.f },
+			const _float _fRotation = 0.f, const _float2& _vScale = {}, const _float _fDepths = 0.f, const _float2& _vOrigin = {},
+			const DirectX::DX12::SpriteEffects& _eSpriteEffects = DirectX::DX12::SpriteEffects_None) :
+			wstrText{ _wstrText },
+			vPos{ _vPos },
+			vColor{ _vColor },
+			fRotation{ _fRotation },
+			vOrigin{ _vOrigin },
+			vScale{ _vScale },
+			eSpriteEffects{ _eSpriteEffects },
+			fDepths{ _fDepths }
+		{}
+
+		_wstring										wstrText{};
+		_float2											vPos{};
+		_float4											vColor{ 1.f, 1.f, 1.f, 1.f };
+		_float												fRotation{ 0.f };
+		_float2											vOrigin{};
+		_float2											vScale{ 1.f, 1.f };
+		DirectX::DX12::SpriteEffects	eSpriteEffects;
+		_float												fDepths{ 1.f };
+	}FONTDESC;
+
+#pragma endregion FONT 
+
 #pragma region NETWORKDATA 
 	/*
 	NETWORKDATA
