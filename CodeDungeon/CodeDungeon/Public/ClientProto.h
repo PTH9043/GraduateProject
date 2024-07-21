@@ -22,6 +22,7 @@
 #define PROTO_ACTOR_IMAGEUI L"Proto_Actor_ImageUI"
 #define PROTO_ACTOR_BUTTONUI L"Proto_Actor_ButtonUI"
 #define PROTO_ACTOR_LOADINGUI L"Proto_Actor_LoadingUI"
+#define PROTO_ACTOR_HPBARUI L"Proto_Actor_HpBarUI"
 
 #define PROTO_RES_UITEXTUREGROUP L"Proto_Res_UITextureGroup"
 

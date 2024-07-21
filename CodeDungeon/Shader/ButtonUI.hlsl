@@ -74,8 +74,8 @@ PS_OUT PS_Main(PS_In In)
         Out.vColor = texColor;
     }
 
-    if (Out.vColor.a < 0.1)
-        discard;
+   // if (Out.vColor.a < 0.1)
+   //     discard;
 
     return Out;
 

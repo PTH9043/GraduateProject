@@ -96,7 +96,9 @@ private:
 	// Render 3D UI
 	void Render3DUI();
 	// UI 
-	void Render2DUI();
+	void Render2DUIPriority();
+	void Render2DUIMiddle();
+	void Render2DUILast();
 	// HDR
 	void RenderHDR();
 	void RenderHDRTWO();

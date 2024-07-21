@@ -168,6 +168,7 @@
     <ClInclude Include="..\Public\CDataManager.h" />
     <ClInclude Include="..\Public\CHarlequinn.h" />
     <ClInclude Include="..\Public\CHarlequinnAnimController.h" />
+    <ClInclude Include="..\Public\CHpBarUI.h" />
     <ClInclude Include="..\Public\CImageUI.h" />
     <ClInclude Include="..\Public\CIronBars.h" />
     <ClInclude Include="..\Public\CItemChest.h" />
@@ -217,6 +218,7 @@
     <ClCompile Include="..\Private\CDataManager.cpp" />
     <ClCompile Include="..\Private\CHarlequinn.cpp" />
     <ClCompile Include="..\Private\CHarlequinnAnimController.cpp" />
+    <ClCompile Include="..\Private\CHpBarUI.cpp" />
     <ClCompile Include="..\Private\CImageUI.cpp" />
     <ClCompile Include="..\Private\CIronBars.cpp" />
     <ClCompile Include="..\Private\CItemChest.cpp" />

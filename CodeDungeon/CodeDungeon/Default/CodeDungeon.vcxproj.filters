@@ -160,6 +160,9 @@
     <Filter Include="07.UI\Loading">
       <UniqueIdentifier>{aa086bab-c5d1-4ff4-ab18-dd9608ad1145}</UniqueIdentifier>
     </Filter>
+    <Filter Include="07.UI\HP">
+      <UniqueIdentifier>{39df75d3-ba44-4fb1-9b9b-e2f69cd2b6ea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ClientDefines.h">
@@ -303,6 +306,9 @@
     <ClInclude Include="..\Public\CLoadingUI.h">
       <Filter>07.UI\Loading</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CHpBarUI.h">
+      <Filter>07.UI\HP</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -438,6 +444,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\CLoadingUI.cpp">
       <Filter>07.UI\Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CHpBarUI.cpp">
+      <Filter>07.UI\HP</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

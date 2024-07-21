@@ -16,6 +16,7 @@ class CSarcophagus;
 class CImageUI;
 class CButtonUI;
 class CLoadingUI;
+class CHpBarUI;
 
 class CMainScene final : public UScene{
 public:
@@ -23,13 +24,11 @@ public:
 	NO_COPY(CMainScene)
 	DESTRUCTOR(CMainScene)
 private:
-	//기능 함수들 일시
 	void TurnLightsOnRange();
 	void TurnRoomsOnRange();
 	void TurnMobsOnRange();
 	void TurnGuardsOnRange();
 public:
-	// UScene을(를) 통해 상속됨
 	virtual void Free() override;
 	virtual HRESULT LoadSceneData() override;
 	virtual void Tick(const _double& _dTimeDelta) override;
@@ -38,6 +37,7 @@ public:
 
 	void DrawStartSceneUI(const _double& _dTimeDelta);
 	void CreateStartSceneUI();
+	void CreateGameSceneUI();
 private:
 	// Main
 	SHPTR<CMainCamera>			m_spMainCamera;
@@ -64,13 +64,24 @@ private:
 	SHPTR<CLoadingUI>			m_spLoadingDotsUI;
 	SHPTR<CLoadingUI>			m_spPleaseWaitTextUI;
 
-	SHPTR<CButtonUI>			m_spButtonUI;
+	SHPTR<CButtonUI>			m_spEnterButtonUI;
+	SHPTR<CButtonUI>			m_spExitButtonUI;
 	_float m_fStartSceneLoadingTimer = 0;
-	_bool m_bStartScene = false;
+	_bool m_bStartSceneForUI = false;
+	_bool m_bStartGameForUI = false;
 	//-------------------------------------------
-
-	SHPTR<UFont>				m_spTestFont;
-
+	//------------GAME SCENE UI-------------------
+	SHPTR<CHpBarUI>			m_spHpBarUI;
+	SHPTR<CImageUI>			m_spBackPlayerFrameUI;
+	SHPTR<CImageUI>			m_spBackDragonPlayerFrameUI;
+	SHPTR<CImageUI>			m_spFrontPlayerFrameUI;
+	SHPTR<CImageUI>			m_spPlayerNameUI;
+	//==============Boss Frame UI-=================
+	//MinoTaur
+	SHPTR<CImageUI>			m_spMinotaurFrameUI;
+	SHPTR<CHpBarUI>			m_spMinotaurHpBarUI;
+	// -------------- Test Font --------------------
+	SHPTR<UFont>			m_spTestFont;
 };
 
 END

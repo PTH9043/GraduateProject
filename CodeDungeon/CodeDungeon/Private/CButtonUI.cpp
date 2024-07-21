@@ -51,8 +51,17 @@ void CButtonUI::TickActive(const _double& _dTimeDelta)
 
 void CButtonUI::LateTickActive(const _double& _dTimeDelta)
 {
-	if (nullptr != GetVIBufferRect())
-		AddRenderGroup(RENDERID::RI_2DUI);
+	if (nullptr != GetVIBufferRect()) {
+		if (GetUIDesc().DrawOrder == L"Priority") {
+			AddRenderGroup(RENDERID::RI_2DUIPRIORITY);
+		}
+		else if (GetUIDesc().DrawOrder == L"Middle") {
+			AddRenderGroup(RENDERID::RI_2DUIMIDDLE);
+		}
+		else if (GetUIDesc().DrawOrder == L"Last") {
+			AddRenderGroup(RENDERID::RI_2DUILAST);
+		}
+	}
 }
 
 HRESULT CButtonUI::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
@@ -60,8 +69,15 @@ HRESULT CButtonUI::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTable
 	__super::RenderActive(_spCommand, _spTableDescriptor);
 
 	GetTransform()->BindTransformData(GetShader(), 1);
-	m_spUITextureGroup->SetUpTextureName(GetShader(), SRV_REGISTER::T0, L"Enter1");
-	m_spUITextureGroup->SetUpTextureName(GetShader(), SRV_REGISTER::T1, L"Enter2");
+	if (GetUIDesc().strImgName == L"Enter") {
+		m_spUITextureGroup->SetUpTextureName(GetShader(), SRV_REGISTER::T0, L"EnterDown");
+		m_spUITextureGroup->SetUpTextureName(GetShader(), SRV_REGISTER::T1, L"EnterUp");
+	}
+	else if (GetUIDesc().strImgName == L"Exit") {
+		m_spUITextureGroup->SetUpTextureName(GetShader(), SRV_REGISTER::T0, L"ExitDown");
+		m_spUITextureGroup->SetUpTextureName(GetShader(), SRV_REGISTER::T1, L"ExitUp");
+	}
+
 	GetShader()->BindCBVBuffer(m_spButtonUIBuffer, &_buttonDesc, sizeof(BUTTONDESC));
 	GetVIBufferRect()->Render(GetShader(), _spCommand);
 	

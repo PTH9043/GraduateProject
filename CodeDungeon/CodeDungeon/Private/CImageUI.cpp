@@ -39,8 +39,18 @@ void CImageUI::TickActive(const _double& _dTimeDelta)
 
 void CImageUI::LateTickActive(const _double& _dTimeDelta)
 {
-	if (nullptr != GetVIBufferRect())
-		AddRenderGroup(RENDERID::RI_2DUI);
+	if (nullptr != GetVIBufferRect()) {
+		if (GetUIDesc().DrawOrder == L"Priority") {
+			AddRenderGroup(RENDERID::RI_2DUIPRIORITY);
+		}
+		else if (GetUIDesc().DrawOrder == L"Middle") {
+			AddRenderGroup(RENDERID::RI_2DUIMIDDLE);
+		}
+		else if (GetUIDesc().DrawOrder == L"Last") {
+			AddRenderGroup(RENDERID::RI_2DUILAST);
+		}
+	}
+		
 }
 
 HRESULT CImageUI::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
