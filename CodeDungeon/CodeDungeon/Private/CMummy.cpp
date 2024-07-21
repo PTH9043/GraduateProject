@@ -584,8 +584,9 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 #ifndef _ENABLE_PROTOBUFF
 						// Decrease health on hit
 						DecreaseHealth(pCharacter->GetAttack());
-#endif
+#else
 						SendCollisionDamagedData(_pEnemy.get());
+#endif
 					}
 					SetHitAlreadyState(true);
 				}

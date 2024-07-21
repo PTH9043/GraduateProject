@@ -379,12 +379,6 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 
 
 	JumpState(_dTimeDelta);
-
-
-
-#ifdef _ENABLE_PROTOBUFF
-	SendMoveData(spGameInstance);
-#endif
 }
 
 void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
@@ -419,6 +413,12 @@ void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 			Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);*/
 }
 
+void CWarriorPlayer::SendPacketTickActive(const _double& _dTimeDelta)
+{
+#ifdef _ENABLE_PROTOBUFF
+	SendMoveData(spGameInstance);
+#endif
+}
 
 HRESULT CWarriorPlayer::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
@@ -440,10 +440,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	PAWNTYPE ePawnType = _pEnemy->GetPawnType();
 	const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
-#ifdef _ENABLE_PROTOBUFF
-	_bool isCollision = false;
-	_int DamageEnable = 0;
-#endif
+
 	if (PAWNTYPE::PAWN_CHAR == ePawnType)
 	{
 		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
@@ -477,15 +474,14 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 								GetTransform()->SetDirectionFixedUp(pCharacter->GetTransform()->GetLook());
 								m_bisKicked = true;
 							}
-#ifndef _ENABLE_PROTOBUFF
 							if (!GetIsHItAlreadyState())
 							{
+#ifndef _ENABLE_PROTOBUFF
 								DecreaseHealth(1);
-							}
 #else
-							isCollision = true;
-							DamageEnable = 1;
+								SendCollisionData(_pEnemy.get());
 #endif
+							}
 							SetHitAlreadyState(true);
 						}
 					}
@@ -493,14 +489,14 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 					{
 						if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead01" && !m_bisKicked)
 						{
-#ifndef _ENABLE_PROTOBUFF
 							if (!GetIsHItAlreadyState())
 							{
+#ifndef _ENABLE_PROTOBUFF
 								DecreaseHealth(1);
-							}
 #else
-							isCollision = true;
+								SendCollisionData(_pEnemy.get());
 #endif
+							}
 							SetHitAlreadyState(true);
 						}
 					}
@@ -517,9 +513,6 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 					if (iter.second->IsCollision(iter2.second))
 					{
 						GetTransform()->SetPos(GetTransform()->GetPos() - direction * 10 * _dTimeDelta);
-#ifdef _ENABLE_PROTOBUFF
-						isCollision = true;
-#endif
 					}
 				}
 			}		
@@ -544,9 +537,6 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 						if (CurAnimName == L"roll_back" || CurAnimName == L"roll_front" || CurAnimName == L"roll_left" || CurAnimName == L"roll_right")
 							speed = 100;
 						ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
-#ifdef _ENABLE_PROTOBUFF
-						isCollision = true;
-#endif
 					}
 					else
 					{
@@ -569,15 +559,14 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 					{
 						if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead01" && !m_bisKicked)
 						{
-#ifndef _ENABLE_PROTOBUFF
 							if (!GetIsHItAlreadyState())
 							{
+#ifndef _ENABLE_PROTOBUFF
 								DecreaseHealth(1);
-							}
 #else
-							isCollision = true;
-							DamageEnable = 1;
+								SendCollisionData(_pEnemy.get());
 #endif
+							}
 							SetHitAlreadyState(true);
 						}
 					}
@@ -591,14 +580,6 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 
 		}
 	}
-
-
-#ifdef _ENABLE_PROTOBUFF
-	if (true == isCollision)
-	{
-		SendCollisionData(_pEnemy.get(), DamageEnable);
-	}
-#endif
 }
 
 #ifdef _ENABLE_PROTOBUFF
@@ -620,7 +601,7 @@ void CWarriorPlayer::SendMoveData(CSHPTRREF<UGameInstance> spGameInstance)
 	spGameInstance->SendProcessPacket(std::move(UProcessedData(charMove, TAG_CS_MOVE)));
 }
 
-void CWarriorPlayer::SendCollisionData(UPawn* _pPawn, _int _DamageEnable)
+void CWarriorPlayer::SendCollisionData(UPawn* _pPawn)
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	COLLISIONDATA csCollision;

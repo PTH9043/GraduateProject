@@ -77,11 +77,18 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     _bool FoundPlayer = spMummy->GetFoundTargetState();
     _bool Hit = false;
 
+#ifdef _ENABLE_PROTOBUFF
     if (spMummy->IsDamaged())
     {
         Hit = true;
         spMummy->SetDamaged(false);
     }
+#else
+    if (spMummy->GetPrevHealth() > spMummy->GetHealth())
+    {
+        Hit = true;
+    }
+#endif
 
     _float AttackRange = 10.0f;
 
@@ -179,19 +186,14 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
         }
     }
 
-#ifndef _ENABLE_PROTOBUFF
-    // Check for death
-    if (spMummy->GetHealth() <= 0)
-    {
-        spMummy->SetDeathState(true);
-    }
-#endif
     // Handle death state
     if (spMummy->GetDeathState())
     {
         spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         UpdateState(spAnimModel, ANIM_DEATH, L"DEAD");
     }
+
+#ifdef _ENABLE_PROTOBUFF
     // Tick event
     spAnimModel->TickEvent(spMummy.get(), GetTrigger(), _dTimeDelta);
 #else
