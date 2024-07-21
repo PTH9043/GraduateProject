@@ -19,16 +19,15 @@ UCharacter::UCharacter(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer,
 	UPawn(_spDevice, _wstrLayer, _eCloneType, BACKINGTYPE::DYNAMIC, PAWNTYPE::PAWN_CHAR),
 	m_spAnimModel{ nullptr }, m_spAnimationController{ nullptr }, m_vPrevPos{}, 	m_spCurNavi{nullptr }, m_spHitCollider{nullptr}, 
 	m_fMoveSpeed{0.f}, m_fRunSpeed{0.f}, m_bIsRunning{false}, m_bisHit{false}, m_bisCollision{false}, m_DrawOutline{false},
-	m_isNetworkConnected{ false }, m_isPlayer{ false }, m_f3CollidedNormal{}, m_iHealth{}, m_iPrevHealth{}, m_bisHitAlready{false}, m_spScaleOutlineBuffer{ nullptr },
-	m_isDamaged{false}
+	m_isNetworkConnected{ false }, m_isPlayer{ false }, m_f3CollidedNormal{}, m_iHealth{}, m_iPrevHealth{}, m_bisHitAlready{false}, m_spScaleOutlineBuffer{ nullptr }
 {
 }
 
 UCharacter::UCharacter(const UCharacter& _rhs) : UPawn(_rhs), 
 m_spAnimModel{ _rhs.m_spAnimModel }, m_spAnimationController{ _rhs.m_spAnimationController }, m_vPrevPos{}, m_spCurNavi{ _rhs.m_spCurNavi }, m_spHitCollider{ nullptr },
 m_fMoveSpeed{ 0.f }, m_fRunSpeed{ 0.f }, m_bIsRunning{ false }, m_bisHit{ false }, m_bisCollision{ false }, m_DrawOutline{ false },
-m_isNetworkConnected{ false }, m_isPlayer{ false }, m_f3CollidedNormal{}, m_iHealth{}, m_iPrevHealth{}, m_bisHitAlready{ false }, 
-m_spScaleOutlineBuffer{nullptr}, m_isDamaged{ false }
+m_isNetworkConnected{ false }, m_isPlayer{ false }, m_f3CollidedNormal{}, m_iHealth{}, m_iPrevHealth{}, m_bisHitAlready{ false }, m_spScaleOutlineBuffer{nullptr}
+
 {
 }
 

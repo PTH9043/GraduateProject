@@ -62,9 +62,21 @@ void CSarcophagus::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 
 	switch (_ProcessData.GetDataType())
 	{
-	case TAG_SC_MONSTERFIND:
+	case TAG_SC_MONSTERSTATE:
 	{
-		SetFoundTargetState(true);
+		SC_MONSTERSTATE scMonsterState;
+		scMonsterState.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
+
+		if (TAG_MOBANIM::TAG_MOB_FIRSTFIND_STATE == scMonsterState.state())
+		{
+			SetFoundTargetState(true);
+		}
+		else
+		{
+			SetFoundTargetState(false);
+		}
+
+		GetAnimationController()->ReceiveNetworkProcessData(&scMonsterState);
 	}
 		break;
 	}
@@ -74,7 +86,6 @@ void CSarcophagus::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 void CSarcophagus::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
-	FindPlayer();
 
 	_double SarcophagusOpeningSpeed = 20;
 	_double LyingSarcophagusTimeArcOpenStart = 50;
@@ -90,15 +101,11 @@ void CSarcophagus::TickActive(const _double& _dTimeDelta)
 	if (GetSarcophagusType() == SARCOTYPE::TYPE_LYING)
 	{
 		if (GetElapsedTime() < LyingSarcophagusTimeArcOpenEnd)
-		{
 			GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, LyingSarcophagusTimeArcOpenStart + GetElapsedTime());
-		}
 	}
 	else
 		if (GetElapsedTime() < StandingSarcophagusTimeArcOpenEnd)
-		{
 			GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
-		}
 
 	for (auto& Containers : GetColliderContainer())
 	{

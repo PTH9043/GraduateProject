@@ -26,40 +26,27 @@ public:
 protected:
     virtual void TickActive(const _double& _dTimeDelta) override;
     virtual void LateTickActive(const _double& _dTimeDelta) override;
-    virtual void SendPacketTickActive(const _double& _dTimeDelta) override;
     virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
     virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
     virtual HRESULT RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass = true) override;
     virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) override;
     virtual void ReceiveNetworkProcessData(const UProcessedData& _ProcessData) override;
-    void FindPlayer();
+#ifdef _ENABLE_PROTOBUFF
+    void SendCollisionData(_int _DamageEnable);
+#endif
+private:
     void SearchForPlayers();
     void CalculateDistanceBetweenPlayers(const _float3& _CurrentPlayerPos, const _float3& _CurrentMobPos);
-#ifdef _ENABLE_PROTOBUFF
     // 태현 추가
     void SendMobStateData();
-    void SendCollisionDamagedData(UPawn* _pPawn);
-#endif
 public:
     CSHPTRREF<UPlayer> GetTargetPlayer() { return m_spTargetPlayer; }
     void SetTargetPlayer(CSHPTRREF<UPlayer> _targetPlayer) { m_spTargetPlayer = _targetPlayer; }
     const _bool& GetFoundTargetState() { return m_bFoundTarget; }
     void SetFoundTargetState(_bool _isFoundTarget) { this->m_bFoundTarget = _isFoundTarget; }
-    void SetMovePos(const _float3& _vMovePos) { this->m_vMovePos = _vMovePos; }
-    void SetRotateAngle(const _float3& _vRotateAngle) { this->m_vRotateAngle = _vRotateAngle; }
-    void SetMoveStateActive(const _bool _isMoveStateActive) { this->m_isMoveStateActive = _isMoveStateActive; }
 
     const _float& GetDistanceFromPlayer() { return m_fDistancefromNearestPlayer; }
     const _float3& GetTargetPos() { return m_f3TargetPos; }
-    const _float3& GetMovePos() const { return m_vMovePos; }
-    const _float3& GetRotateAngle() const { return m_vRotateAngle; }
-    const _bool IsNetworkMoveSituation() const { return m_isNetworkMoveSituation; }
-    const _bool IsNetworkRotateSituation() const { return m_isNetworkRotateSituation; }
-    const _float GetRotateSpeed() const { return m_fRotateSpeed; }
-    const _bool IsMoveStateActive() const { return m_isMoveStateActive; }
- 
-    void SetNetworkMoveSituation(const _bool _isNetworkChangeSituation) { this->m_isNetworkMoveSituation = _isNetworkChangeSituation; }
-    void SetNetworkRotateSituation(const _bool _isNetworkRotateSituation) { this->m_isNetworkRotateSituation = _isNetworkRotateSituation; }
     void SetMobPlacement(_int _CellIndex);
     void MoveAlongPath(const VECTOR<_float3>& path, size_t& currentPathIndex, const _double& _dTimeDelta);
 
@@ -88,12 +75,6 @@ private:
     _double                         m_delapsedTime;
     // 태현 추가
     _bool                              m_isNeedServerSendData;
-    _float3                           m_vMovePos;
-    _float3                           m_vRotateAngle;
-    _bool                              m_isNetworkMoveSituation;
-    _bool                              m_isNetworkRotateSituation;
-    _float                             m_fRotateSpeed;
-    _bool                             m_isMoveStateActive;
 };
 
 END

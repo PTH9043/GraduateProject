@@ -355,15 +355,15 @@ HRESULT CMainScene::LoadSceneData()
 		}
 
 		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_SPOT,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 0.f}, {0.5f, 0.25f, 0.11f, 1.f}, {0.f, 1.5f, 1.2f, 1.f}, {0.f, -1.f, 0.f,}
-			, _float3(-364.225f,-20.f, 253.010f), 100.f, 60.f ,
+			, _float3(-364.225,-20,253.010), 100.f, 60.f ,
 			100.f, 32.f, 8.0f,(float)cos(DirectX::XMConvertToRadians(30.f)),(float)cos(DirectX::XMConvertToRadians(15.f)),_float3(1.0f, 0.01f, 0.0001f) });
 
 		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_SPOT,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 0.f}, {0.5f, 0.25f, 0.11f, 1.f}, {0.f, 1.5f, 1.2f, 1.f}, {0.f, -1.f, 0.f,}
-			, _float3(-535.39f,-20.f,154.5f), 100.f, 60.f ,
+			, _float3(-535.39,-20,154.5), 100.f, 60.f ,
 			100.f, 32.f, 8.0f,(float)cos(DirectX::XMConvertToRadians(30.f)),(float)cos(DirectX::XMConvertToRadians(15.f)),_float3(1.0f, 0.01f, 0.0001f) });
 
 		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_SPOT,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 0.f}, {0.5f, 0.25f, 0.11f, 1.f}, {0.f, 1.5f, 1.2f, 1.f}, {0.f, -1.f, 0.f,}
-			, _float3(-494.5f,-45.f,289.265f), 100.f, 60.f ,
+			, _float3(-494.5,-45,289.265), 100.f, 60.f ,
 			100.f, 32.f, 8.0f,(float)cos(DirectX::XMConvertToRadians(45.f)),(float)cos(DirectX::XMConvertToRadians(30.f)),_float3(1.0f, 0.01f, 0.0001f) });
 
 
@@ -412,7 +412,6 @@ HRESULT CMainScene::LoadSceneData()
 			m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
 				PROTO_ACTOR_WARRIORPLAYER, { &CharDesc, &PlayerDesc }));
 			spGameInstance->RegisterCurrentPlayer(m_spWarriorPlayer);
-			spGameInstance->AddPlayerContainer(m_spWarriorPlayer);
 			m_spMainCamera->GetTransform()->SetPos(m_spWarriorPlayer->GetTransform()->GetPos());
 		
 		}

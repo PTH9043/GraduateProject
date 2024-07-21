@@ -66,29 +66,21 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     std::uniform_int_distribution<> dis_patrol(0, 3);
     std::uniform_int_distribution<> dis_attack(0, 1);
 
+
     ClearTrigger();
     SetAnimState(-1);
     SHPTR<CMummy> spMummy = m_wpMummyMob.lock();
     SHPTR<UAnimModel> spAnimModel = spMummy->GetAnimModel();
 
+#ifndef _ENABLE_PROTOBUFF
     const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
 
     _float DistanceFromPlayer = spMummy->GetDistanceFromPlayer();
     _bool FoundPlayer = spMummy->GetFoundTargetState();
     _bool Hit = false;
 
-#ifdef _ENABLE_PROTOBUFF
-    if (spMummy->IsDamaged())
-    {
-        Hit = true;
-        spMummy->SetDamaged(false);
-    }
-#else
     if (spMummy->GetPrevHealth() > spMummy->GetHealth())
-    {
         Hit = true;
-    }
-#endif
 
     _float AttackRange = 10.0f;
 
@@ -186,6 +178,12 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
         }
     }
 
+    // Check for death
+    if (spMummy->GetHealth() <= 0)
+    {
+        spMummy->SetDeathState(true);
+    }
+
     // Handle death state
     if (spMummy->GetDeathState())
     {
@@ -193,11 +191,11 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
         UpdateState(spAnimModel, ANIM_DEATH, L"DEAD");
     }
 
-#ifdef _ENABLE_PROTOBUFF
     // Tick event
     spAnimModel->TickEvent(spMummy.get(), GetTrigger(), _dTimeDelta);
+
 #else
-    spAnimModel->TickAnimChangeTransform(spMummy->GetTransform(), _dTimeDelta);
+spAnimModel->TickAnimChangeTransform(spMummy->GetTransform(), _dTimeDelta);
 #endif
 }
 
@@ -207,12 +205,12 @@ void CMummyAnimController::ReceiveNetworkProcessData(void* _pData)
     SHPTR<CMummy> spSarcophagus = m_wpMummyMob.lock();
     SHPTR<UAnimModel> spAnimModel = spSarcophagus->GetAnimModel();
     {
-        CHARSTATE* pMonsterData = static_cast<CHARSTATE*>(_pData);
-        if (pMonsterData->animationindex() != spAnimModel->GetCurrentAnimIndex() || 
-            1 == pMonsterData->triggeron())
+        SC_MONSTERSTATEHAVEPOS* pMonsterData = static_cast<SC_MONSTERSTATEHAVEPOS*>(_pData);
+        m_dRecvAnimDuration = pMonsterData->animationtime();
+
+        if (pMonsterData->animationindex() != spAnimModel->GetCurrentAnimIndex())
         {
             spAnimModel->SetAnimation(pMonsterData->animationindex());
-            SetAnimState(pMonsterData->state());
         }
     }
 #endif

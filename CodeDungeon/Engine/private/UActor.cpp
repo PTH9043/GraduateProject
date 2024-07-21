@@ -21,7 +21,6 @@ UActor::UActor(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer,
 	m_pAwakeTick{ &UActor::AwakeTickActive },
 	m_pTick{ &UActor::TickActive },
 	m_pLateTick{ &UActor::LateTickActive },
-	m_pSendPacket{&UActor::SendPacketTickActive},
 	m_pRender{ &UActor::RenderActive },
 	m_pShadowRender{ &UActor::RenderShadowActive },
 	m_pOutlineRender{ &UActor::RenderOutlineActive },
@@ -43,7 +42,6 @@ UActor::UActor(const UActor& _rhs)
 	m_pAwakeTick{ &UActor::AwakeTickActive },
 	m_pTick{ &UActor::TickActive },
 	m_pLateTick{ &UActor::LateTickActive },
-	m_pSendPacket{ &UActor::SendPacketTickActive },
 	m_pRender{ &UActor::RenderActive },
 	m_pShadowRender{ &UActor::RenderShadowActive },
 	m_pOutlineRender{ &UActor::RenderOutlineActive },
@@ -64,7 +62,6 @@ void UActor::SetActive(const _bool _isActvie)
 		m_pTick = &UActor::TickActive;
 		m_pLateTick = &UActor::LateTickActive;
 		m_pRender = &UActor::RenderActive;
-		m_pSendPacket = &UActor::SendPacketTickActive;
 	}
 	else
 	{
@@ -72,7 +69,6 @@ void UActor::SetActive(const _bool _isActvie)
 		m_pTick = &UActor::TickNonActive;
 		m_pLateTick = &UActor::LateTickNonActive;
 		m_pRender = &UActor::RenderNonActive;
-		m_pSendPacket = &UActor::SendPacketTickNonActive;
 	}
 	m_isActive = _isActvie;
 }
@@ -84,14 +80,12 @@ void UActor::SetTickActive(const _bool _isActvie)
 		m_pAwakeTick = &UActor::AwakeTickActive;
 		m_pTick = &UActor::TickActive;
 		m_pLateTick = &UActor::LateTickActive;
-		m_pSendPacket = &UActor::SendPacketTickActive;
 	}
 	else
 	{
 		m_pAwakeTick = &UActor::AwakeTickNonActive;
 		m_pTick = &UActor::TickNonActive;
 		m_pLateTick = &UActor::LateTickNonActive;
-		m_pSendPacket = &UActor::SendPacketTickNonActive;
 	}
 	m_isTickActive = _isActvie;
 }
@@ -194,10 +188,6 @@ void UActor::TickActive(const _double& _dTimeDelta)
 }
 
 void UActor::LateTickActive(const _double& _dTimeDelta)
-{
-}
-
-void UActor::SendPacketTickActive(const _double& _dTimeDelta)
 {
 }
 

@@ -1,7 +1,6 @@
 #include "EngineDefine.h"
 #include "UCharacterManager.h"
 #include "UCharacter.h"
-#include "UPlayer.h"
 #include "UTransform.h"
 
 UCharacterManager::UCharacterManager() : m_spCurrentPlayer{nullptr}
@@ -21,40 +20,9 @@ void UCharacterManager::AddCollisionPawnList(CSHPTRREF<UPawn> _spPawn)
 	m_CollisionPawnList.insert(_spPawn);
 }
 
-void UCharacterManager::AddPlayerContainer(CSHPTRREF<UPlayer> _spPlayer)
-{
-	m_PlayerContainer.insert(_spPlayer);
-}
-
 void UCharacterManager::RemoveCollisionPawn(CSHPTRREF<UPawn> _spPawn)
 {
 	m_CollisionPawnList.erase(_spPawn);
-}
-
-SHPTR<UPlayer> UCharacterManager::FindPlayerToDistance(const _float3& _vPos)
-{
-	SHPTR<UPlayer> spPlayer = nullptr;
-	_float fDistance = 99999999.f;
-	for (auto& iter : GetPlayerContainer())
-	{
-		_float fComputeDistance = _float3::DistanceSquared(iter->GetTransform()->GetPos(), _vPos);
-		if (fDistance >= fComputeDistance)
-		{
-			spPlayer = iter;
-			fDistance = fComputeDistance;
-		}
-	}
-	return spPlayer;
-}
-
-SHPTR<UPlayer> UCharacterManager::FindPlayerToNetworkID(const _int _iNetworkID)
-{
-	for (auto& iter : m_PlayerContainer)
-	{
-		if (_iNetworkID == iter->GetNetworkID())
-			return iter;
-	}
-	return nullptr;
 }
 
 void UCharacterManager::TickCollider(const _double& _dTimeDelta)

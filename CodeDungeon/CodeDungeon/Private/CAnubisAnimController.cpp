@@ -203,7 +203,8 @@ void CAnubisAnimController::ReceiveNetworkProcessData(void* _pData)
     SHPTR<CAnubis> spSarcophagus = m_wpAnubisMob.lock();
     SHPTR<UAnimModel> spAnimModel = spSarcophagus->GetAnimModel();
     {
-        CHARSTATE* pMonsterData = static_cast<CHARSTATE*>(_pData);
+        SC_MONSTERSTATEHAVEPOS* pMonsterData = static_cast<SC_MONSTERSTATEHAVEPOS*>(_pData);
+        m_dRecvAnimDuration = pMonsterData->animationtime();
 
         if (pMonsterData->animationindex() != spAnimModel->GetCurrentAnimIndex())
             spAnimModel->SetAnimation(pMonsterData->animationindex());
