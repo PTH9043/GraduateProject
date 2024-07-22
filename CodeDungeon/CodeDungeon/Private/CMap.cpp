@@ -188,6 +188,7 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 				SHPTR<CItemChest> _Chest = std::static_pointer_cast<CItemChest>(spGameInstance->CloneActorAdd(PROTO_ACTOR_CHEST, { &chestDesc }));
 				_Chest->GetTransform()->SetNewWorldMtx(vecit._mWorldMatrix);
 				_Chest->GetAnimModel()->SetModelName(UMethod::ConvertSToW(vecit._sAnimModelName));
+				_Chest->SetTargetPlayer(_spPlayer);
 				_Mobs.push_back(_Chest);
 				spGameInstance->AddCollisionPawnList(_Chest);
 			}

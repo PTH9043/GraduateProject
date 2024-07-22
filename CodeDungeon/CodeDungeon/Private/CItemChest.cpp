@@ -36,13 +36,16 @@ HRESULT CItemChest::NativeConstructClone(const VOIDDATAS& _Datas)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	SetPawnType(PAWNTYPE::PAWN_STATICOBJ);
 
+	SetActivationRange(10);
+	SetDeactivationRange(20);
+
 	UCollider::COLLIDERDESC tDesc;
 	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
 	tDesc.vScale = _float3(1.f, 1.f, 1.f);
 	SHPTR<UCollider> Collider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
 	_wstring mainColliderTag = L"Main";
 	AddColliderInContainer(mainColliderTag, Collider);
-	GetAnimModel()->SetAnimation(L"ature|ArmatureAction");
+	GetAnimModel()->SetAnimation(L"Open");
 	for (auto& Containers : GetColliderContainer())
 	{
 		Containers.second->SetTranslate(GetAnimModel()->GetCenterPos());
@@ -58,14 +61,26 @@ void CItemChest::TickActive(const _double& _dTimeDelta)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	static _double elapsedTime = 0;
-	_double ItemChestOpeningSpeed = 20;
-	_double ItemChestTimeArcOpenEnd = 50;
+	_double ItemChestOpeningSpeed = 2;
+	_double ItemChestTimeArcOpenEnd = 3;
 	GetAnimationController()->Tick(_dTimeDelta);
+	if (GetFoundTargetState())
+	{
+		if (spGameInstance->GetDIKeyDown(DIK_F))
+			SetOpeningState(true);
+	}
+
+	if (m_bisOpen)
+	{
+		SetElapsedTime(GetElapsedTime() + _dTimeDelta * ItemChestOpeningSpeed);
+		if (GetElapsedTime() < ItemChestTimeArcOpenEnd)
+			GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
+	}
+
 	for (auto& Containers : GetColliderContainer())
 	{
 		Containers.second->SetTransform(GetTransform());
 	}
-
 }
 
 void CItemChest::LateTickActive(const _double& _dTimeDelta)

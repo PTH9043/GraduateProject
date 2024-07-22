@@ -30,6 +30,9 @@ public:
 	void CalculateAndSetCollider();
 	void SetOutline(_bool _draw) { m_bDrawOutline = _draw; }
 	const _bool& GetOutlineState()const { return m_bDrawOutline; }
+
+	const _bool& GetInteractionState() { return m_bisInteraction; }
+	void SetInteractionState(const _bool& _newState) { m_bisInteraction = _newState; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
@@ -44,6 +47,7 @@ private:
 
 	SHPTR<UCollider>			m_spCollider;
 	_bool		m_bDrawOutline;
+	_bool		m_bisInteraction;
 };
 
 END
