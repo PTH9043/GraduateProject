@@ -287,7 +287,7 @@ void CMainScene::CreateAbilityUI() {
 		tDesc.fZBufferOrder = 0.99f;
 		tDesc.strImgName = L"AbilityFrame";
 		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
-		tDesc.DrawOrder = L"Last";
+		tDesc.DrawOrder = L"Priority";
 		tDesc.v2Size.x = static_cast<_float>(1280);
 		tDesc.v2Size.y = static_cast<_float>(1080);
 		tDesc.v2Pos = _float2{ 640,540 };
@@ -305,6 +305,122 @@ void CMainScene::CreateAbilityUI() {
 		tDesc2.v2Pos = _float2{ 1080,150 };
 		m_spRecUI = std::static_pointer_cast<CLoadingUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_LOADINGUI, { &tDesc2 }));
 		m_spRecUI->SetActive(false);
+	}
+}
+
+void CMainScene::CreateAttackUI()
+{
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	CImageUI::UIDESC tDesc;
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"T_DLCBossMission_103_001";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Middle";
+		tDesc.v2Size.x = static_cast<_float>(80);
+		tDesc.v2Size.y = static_cast<_float>(80);
+		tDesc.v2Pos = _float2{ 550,900 };
+		m_spUltimateAttackOneUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spUltimateAttackOneUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"Inventory_Slot_IconFrame";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(90);
+		tDesc.v2Size.y = static_cast<_float>(90);
+		tDesc.v2Pos = _float2{ 550,900 };
+		m_spUltimateAttackOneFrameUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spUltimateAttackOneFrameUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"T_DLCBossMission_105_002";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Middle";
+		tDesc.v2Size.x = static_cast<_float>(80);
+		tDesc.v2Size.y = static_cast<_float>(80);
+		tDesc.v2Pos = _float2{ 750,900 };
+		m_spUltimateAttackTwoUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spUltimateAttackTwoUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"Inventory_Slot_IconFrame";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(90);
+		tDesc.v2Size.y = static_cast<_float>(90);
+		tDesc.v2Pos = _float2{ 750,900 };
+		m_spUltimateAttackTwoFrameUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spUltimateAttackTwoFrameUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"T_DLCBossMission_315";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Priority";
+		tDesc.v2Size.x = static_cast<_float>(80);
+		tDesc.v2Size.y = static_cast<_float>(80);
+		tDesc.v2Pos = _float2{ 950,900 };
+		m_spDetactAbilityIconUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spDetactAbilityIconUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"Inventory_Slot_IconFrame";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Middle";
+		tDesc.v2Size.x = static_cast<_float>(90);
+		tDesc.v2Size.y = static_cast<_float>(90);
+		tDesc.v2Pos = _float2{ 950,900 };
+		m_spDetactAbilityIconFrameUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spDetactAbilityIconFrameUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"Key_R";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(30);
+		tDesc.v2Size.y = static_cast<_float>(30);
+		tDesc.v2Pos = _float2{ 980,930 };
+		m_spDetactAbilityKeyIconUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spDetactAbilityKeyIconUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"T_DLC_ApplyDamage07";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Priority";
+		tDesc.v2Size.x = static_cast<_float>(80);
+		tDesc.v2Size.y = static_cast<_float>(80);
+		tDesc.v2Pos = _float2{ 1150,900 };
+		m_spShortAttackIconUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spShortAttackIconUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"Inventory_Slot_IconFrame";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Middle";
+		tDesc.v2Size.x = static_cast<_float>(90);
+		tDesc.v2Size.y = static_cast<_float>(90);
+		tDesc.v2Pos = _float2{ 1150,900 };
+		m_spShortAttackIconFrameUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spShortAttackIconFrameUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"Key_Q";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(30);
+		tDesc.v2Size.y = static_cast<_float>(30);
+		tDesc.v2Pos = _float2{ 1180,930 };
+		m_spShortAttackKeyIconUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spShortAttackKeyIconUI->SetActive(false);
 	}
 }
 
@@ -928,6 +1044,7 @@ HRESULT CMainScene::LoadSceneData()
 	CreateStartSceneUI();
 #endif
 	CreateAbilityUI();
+	CreateAttackUI();
 	CreateKeyInfoUI();
 	CreateGameSceneUI();
 	{
@@ -1187,7 +1304,18 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 		m_spPlayerNameUI->SetActive(true);
 		m_spTABUI->SetActive(true);
 		m_spTABTEXTUI->SetActive(true);
-
+		{//attack ui
+			m_spUltimateAttackOneFrameUI->SetActive(true);
+			m_spUltimateAttackOneUI->SetActive(true);
+			m_spUltimateAttackTwoFrameUI->SetActive(true);
+			m_spUltimateAttackTwoUI->SetActive(true);
+			m_spDetactAbilityIconFrameUI->SetActive(true);
+			m_spDetactAbilityIconUI->SetActive(true);
+			m_spDetactAbilityKeyIconUI->SetActive(true);
+			m_spShortAttackIconFrameUI->SetActive(true);
+			m_spShortAttackIconUI->SetActive(true);
+			m_spShortAttackKeyIconUI->SetActive(true);
+		}
 	
 
 	}

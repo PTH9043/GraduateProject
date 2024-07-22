@@ -40,6 +40,7 @@ public:
 	void CreateGameSceneUI();
 	void CreateKeyInfoUI();
 	void CreateAbilityUI();
+	void CreateAttackUI();
 private:
 	// Main
 	SHPTR<CMainCamera>			m_spMainCamera;
@@ -134,6 +135,18 @@ private:
 
 	SHPTR<CImageUI>			m_spTABUI;
 	SHPTR<CImageUI>			m_spTABTEXTUI;
+	//--------------ATTACK UI------------------
+	SHPTR<CImageUI>			m_spUltimateAttackOneFrameUI;
+	SHPTR<CImageUI>			m_spUltimateAttackOneUI;
+	SHPTR<CImageUI>			m_spUltimateAttackTwoFrameUI;
+	SHPTR<CImageUI>			m_spUltimateAttackTwoUI;
+	SHPTR<CImageUI>			m_spDetactAbilityIconFrameUI;
+	SHPTR<CImageUI>			m_spDetactAbilityIconUI;
+	SHPTR<CImageUI>			m_spDetactAbilityKeyIconUI;
+	SHPTR<CImageUI>			m_spShortAttackIconFrameUI;
+	SHPTR<CImageUI>			m_spShortAttackIconUI;
+	SHPTR<CImageUI>			m_spShortAttackKeyIconUI;
+	
 	//==============Boss Frame UI-=================
 	//MinoTaur
 	SHPTR<CImageUI>			m_spMinotaurFrameUI;
