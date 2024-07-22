@@ -1548,7 +1548,7 @@
     <FxCompile Include="..\..\Shader\2DParticleAttackTwo.hlsl">
       <Filter>98.ShaderFile\Common\Particle\Attack</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\Shader\DefaultUI.hlsl">
+    <FxCompile Include="..\..\Shader\DefaultHighlightUI.hlsl">
       <Filter>98.ShaderFile\UI</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Shader\ButtonUI.hlsl">
@@ -1570,6 +1570,9 @@
       <Filter>98.ShaderFile\UI</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Shader\HpBarUI.hlsl">
+      <Filter>98.ShaderFile\UI</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\DefaultUI.hlsl">
       <Filter>98.ShaderFile\UI</Filter>
     </FxCompile>
   </ItemGroup>

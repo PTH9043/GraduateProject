@@ -38,6 +38,7 @@ public:
 	void DrawStartSceneUI(const _double& _dTimeDelta);
 	void CreateStartSceneUI();
 	void CreateGameSceneUI();
+	void CreateKeyInfoUI();
 private:
 	// Main
 	SHPTR<CMainCamera>			m_spMainCamera;
@@ -50,6 +51,41 @@ private:
 	SHPTR<UFire>	m_stFireOne;
 	SHPTR<UFire>	m_stFireTwo;
 private:
+	//------------Á¶ÀÛ¹ý Controll Keys UI-----------
+	SHPTR<CImageUI>			m_spBOOKPAGEUI;
+	SHPTR<CImageUI>			m_spKEYBOARDCONTROLSUI;
+
+	SHPTR<CImageUI>			m_spMOVEUI;
+	SHPTR<CImageUI>			m_spMOVETextUI; //wasd - move
+
+	SHPTR<CImageUI>			m_spRUNUI;
+	SHPTR<CImageUI>			m_spRUNTextUI; //shift - run
+
+	SHPTR<CImageUI>			m_spJUMPSTANDUPUI;
+	SHPTR<CImageUI>			m_spJUMPSTANDUPTextUI;
+
+	SHPTR<CImageUI>			m_spSHORTATTACKUI;
+	SHPTR<CImageUI>			m_spSHORTATTACKTextUI;
+
+	SHPTR<CImageUI>			m_spULTIMATEATTACKONEUI;
+	SHPTR<CImageUI>			m_spULTIMATEATTACKONETextUI;
+
+	SHPTR<CImageUI>			m_spULTIMATEATTACKTWOUI;
+	SHPTR<CImageUI>			m_spULTIMATEATTACKTWOTextUI;
+
+	SHPTR<CImageUI>			m_spDETACTABILITYUI;
+	SHPTR<CImageUI>			m_spDETACTABILITYTextUI;
+
+	SHPTR<CImageUI>			m_spROLLUI;
+	SHPTR<CImageUI>			m_spROLLTextUI;
+
+
+	SHPTR<CImageUI>			m_spCOMBOATTACKONEUI;
+	SHPTR<CImageUI>			m_spCOMBOATTACKONETextUI;
+
+	SHPTR<CImageUI>			m_spCOMBOATTACKTWOUI;
+	SHPTR<CImageUI>			m_spCOMBOATTACKTWOTextUI;
+
 	//------------START SCENE UI-------------------
 	SHPTR<CImageUI>			m_spBackgroundUI;
 	SHPTR<CImageUI>			m_spMainTitleUI;
@@ -76,6 +112,9 @@ private:
 	SHPTR<CImageUI>			m_spBackDragonPlayerFrameUI;
 	SHPTR<CImageUI>			m_spFrontPlayerFrameUI;
 	SHPTR<CImageUI>			m_spPlayerNameUI;
+
+	SHPTR<CImageUI>			m_spTABUI;
+	SHPTR<CImageUI>			m_spTABTEXTUI;
 	//==============Boss Frame UI-=================
 	//MinoTaur
 	SHPTR<CImageUI>			m_spMinotaurFrameUI;
