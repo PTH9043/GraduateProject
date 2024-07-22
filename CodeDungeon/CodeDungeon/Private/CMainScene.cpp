@@ -253,6 +253,45 @@ void CMainScene::TurnLightsOnRange()
 				count++;
 			}
 		}
+		if (UMethod::ConvertWToS(obj.first) == "Cores")
+		{
+			auto Cores_it = obj.second.begin();
+			while (Cores_it != obj.second.end())
+			{
+				_wstring Name = Cores_it->get()->GetModel()->GetModelName();
+				if (Name == L"MinotaurCore")
+					if (m_bIsDead_Minotaur)
+						Cores_it->get()->SetActive(true);
+				if (Name == L"HarlequinnCore")
+					if (m_bisDead_Harlequinn)
+						Cores_it->get()->SetActive(true);
+				if (Name == L"AnubisCore")
+					if (m_bisDead_Anubis)
+						Cores_it->get()->SetActive(true);
+
+				Cores_it++;
+			}
+		}
+		else
+		{
+			auto Models_it = obj.second.begin();
+			while (Models_it != obj.second.end())
+			{
+				_float3 modelPos = Models_it->get()->GetTransform()->GetPos();
+				_float3 distance = modelPos - PlayerPos;
+				float distanceSq = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
+				if (distanceSq <= 200 * 200)
+				{
+					Models_it->get()->SetActive(true);
+				}
+				else
+				{
+					Models_it->get()->SetActive(false);
+				}
+				Models_it++;
+			}
+		}
+
 	}
 
 }

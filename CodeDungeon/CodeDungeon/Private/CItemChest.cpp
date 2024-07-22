@@ -64,6 +64,8 @@ void CItemChest::TickActive(const _double& _dTimeDelta)
 	_double ItemChestOpeningSpeed = 2;
 	_double ItemChestTimeArcOpenEnd = 3;
 	GetAnimationController()->Tick(_dTimeDelta);
+
+	//상자 여는 트리거
 	if (GetFoundTargetState())
 	{
 		if (spGameInstance->GetDIKeyDown(DIK_F))

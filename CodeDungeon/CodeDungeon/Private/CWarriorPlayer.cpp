@@ -559,6 +559,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 					}
 					else if (iter2.first == L"ForInteraction")
 					{
+						//철장 여는 용도
 						if (spGameInstance->GetDIKeyDown(DIK_F))
 							pModelObject->SetInteractionState(true);
 					}
