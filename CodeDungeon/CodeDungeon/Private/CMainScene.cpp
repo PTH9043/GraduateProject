@@ -9,6 +9,7 @@
 #include "ULight.h"
 #include "UParticle.h"
 #include "UParticleSystem.h"
+#include "URenderer.h"
 #include "CMap.h"
 #include "UStageManager.h"
 #include "UStage.h"
@@ -264,6 +265,33 @@ void CMainScene::Free()
 {
 }
 
+void CMainScene::CreateAbilityUI() {
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	CImageUI::UIDESC tDesc;
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"AbilityFrame";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(1280);
+		tDesc.v2Size.y = static_cast<_float>(1080);
+		tDesc.v2Pos = _float2{ 640,540 };
+		m_spAbilityFrameUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spAbilityFrameUI->SetActive(false);
+	}
+	CButtonUI::UIDESC tDesc2;
+	{
+		tDesc2.fZBufferOrder = 0.97f;
+		tDesc2.strImgName = L"Rec";
+		tDesc2._shaderName = PROTO_RES_PLEASEWAITUISHADER;
+		tDesc2.DrawOrder = L"Last";
+		tDesc2.v2Size.x = static_cast<_float>(200);
+		tDesc2.v2Size.y = static_cast<_float>(75);
+		tDesc2.v2Pos = _float2{ 1080,150 };
+		m_spRecUI = std::static_pointer_cast<CLoadingUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_LOADINGUI, { &tDesc2 }));
+		m_spRecUI->SetActive(false);
+	}
+}
 
 void CMainScene::CreateStartSceneUI()
 {
@@ -783,11 +811,19 @@ HRESULT CMainScene::LoadSceneData()
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	// Font Create 
 	{
-		m_spTestFont = spGameInstance->AddFont(FONT_NANUMSQUARE_ACBOLD);
-		m_spTestFont->SetPos(_float2{ 300,860 });
-		m_spTestFont->SetScale(_float2(1.0, 1.0));
-		m_spTestFont->SetDepths(0.f);
-		m_spTestFont->SetRender(false);
+		m_spPlayerHpFont = spGameInstance->AddFont(FONT_NANUMSQUARE_ACBOLD);
+		m_spPlayerHpFont->SetPos(_float2{ 300,860 });
+		m_spPlayerHpFont->SetScale(_float2(1.0, 1.0));
+		m_spPlayerHpFont->SetDepths(0.f);
+		m_spPlayerHpFont->SetRender(false);
+	}
+	{
+		
+		m_spPlayerAbilityLeftTimeFont = spGameInstance->AddFont(FONT_NANUMSQUARE_ACBOLD);
+		m_spPlayerAbilityLeftTimeFont->SetPos(_float2{ 150,150 });
+		m_spPlayerAbilityLeftTimeFont->SetScale(_float2(2.0, 2.0));
+		m_spPlayerAbilityLeftTimeFont->SetDepths(0.f);
+		m_spPlayerAbilityLeftTimeFont->SetRender(false);
 	}
 	
 	CProtoMaker::CreateMainSceneProtoData(spGameInstance, GetDevice(), std::static_pointer_cast<UCommand>(spGameInstance->GetGpuCommand()));
@@ -811,6 +847,7 @@ HRESULT CMainScene::LoadSceneData()
 #else 
 	CreateStartSceneUI();
 #endif
+	CreateAbilityUI();
 	CreateKeyInfoUI();
 	CreateGameSceneUI();
 	{
@@ -1008,7 +1045,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 
 	if (!m_bStartSceneForUI && m_bStartGameForUI) {
 		{//font
-			m_spTestFont->SetRender(true);
+			m_spPlayerHpFont->SetRender(true);
 		}
 		if (spGameInstance->GetDIKeyPressing(DIK_TAB)) {
 			{//키 조작 UI들 활성화
@@ -1110,8 +1147,31 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 		std::wstringstream ws;
 		ws << current_health << L" / " << max_health;
 		std::wstring health_string = ws.str();	
-		m_spTestFont->SetText(health_string);
+		m_spPlayerHpFont->SetText(health_string);
 		
+	}
+	{  // If Use R Ability
+		if (pGameInstance->GetDIKeyDown(DIK_R)&& m_bStartGameForUI)
+		{
+			pGameInstance->TurnOnAbilityEffect();
+		}
+		if (pGameInstance->GetIfAbilityIsOn()) {
+			m_spRecUI->SetIfPicked(true);
+			m_spRecUI->SetActive(true);
+			m_spAbilityFrameUI->SetActive(true);
+			_float AbilityLeftOverTime=5.f-pGameInstance->GetAbilityTime();
+			std::wstringstream wss;
+			wss << std::fixed << std::setprecision(4) << AbilityLeftOverTime;
+			std::wstring formattedString = wss.str();
+			m_spPlayerAbilityLeftTimeFont->SetText(formattedString);
+			m_spPlayerAbilityLeftTimeFont->SetRender(true);
+		}
+		else {
+			m_spRecUI->SetIfPicked(false);
+			m_spRecUI->SetActive(false);
+			m_spAbilityFrameUI->SetActive(false);
+			m_spPlayerAbilityLeftTimeFont->SetRender(false);
+		}
 	}
 
 	if(pGameInstance->GetDIKeyDown(DIK_ESCAPE))

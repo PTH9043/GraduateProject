@@ -344,6 +344,8 @@ public: //Renderer Fog Bool
 	void TurnOffAbilityEffect();
 	void TurnOnHitEffect();
 	void TurnOffHitEffect();
+	_bool GetIfAbilityIsOn();
+	_float GetAbilityTime();
 	void PauseGame();
 	void ResumeGame();
 private:

@@ -1139,6 +1139,16 @@ void UGameInstance::TurnOffHitEffect() {
 	if (m_spRenderer != nullptr)m_spRenderer->TurnOffHitEffect();
 }
 
+_bool UGameInstance::GetIfAbilityIsOn()
+{
+	return m_spRenderer->GetIfAbilityIsOn();
+}
+
+_float UGameInstance::GetAbilityTime()
+{
+	return m_spRenderer->GetAbilityTime();
+}
+
 void UGameInstance::PauseGame()
 {
 	m_isPause = true;
