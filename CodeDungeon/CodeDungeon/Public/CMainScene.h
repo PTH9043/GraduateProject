@@ -39,6 +39,7 @@ public:
 	void CreateStartSceneUI();
 	void CreateGameSceneUI();
 	void CreateKeyInfoUI();
+	void CreateAbilityUI();
 private:
 	// Main
 	SHPTR<CMainCamera>			m_spMainCamera;
@@ -119,8 +120,13 @@ private:
 	//MinoTaur
 	SHPTR<CImageUI>			m_spMinotaurFrameUI;
 	SHPTR<CHpBarUI>			m_spMinotaurHpBarUI;
-	// -------------- Test Font --------------------
-	SHPTR<UFont>			m_spTestFont;
+	// -------------- Font --------------------
+	SHPTR<UFont>			m_spPlayerHpFont;
+	SHPTR<UFont>			m_spPlayerAbilityLeftTimeFont;
+
+	//============Ability UI=======================
+	SHPTR<CImageUI>			m_spAbilityFrameUI;
+	SHPTR<CLoadingUI>			m_spRecUI;
 };
 
 END
