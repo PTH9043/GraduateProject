@@ -37,50 +37,159 @@ BEGIN(Client)
 CMainScene::CMainScene(CSHPTRREF<UDevice> _spDevice) : 
 	UScene(_spDevice, SCENE::SCENE_STAGE1),
 	m_spMainCamera{ nullptr },
-	m_spMap{nullptr}
+	m_spMap{nullptr},
+	m_bIsFoundPlayer_Minotaur{ false },
+    m_bisFoundPlayer_Harlequinn{ false },
+    m_bisFoundPlayer_Anubis{ false },
+    m_iMinotaurHP{ 0 },
+    m_iHarlequinnHP{ 0 },
+    m_iAnubisHP{ 0 },
+	m_bisMobsAllDead_Interior_Hallway_E{false},
+	m_bisMobsAllDead_Interior_Room_D{ false },
+	m_bisMobsAllDead_Interior_Room_F{ false },
+	m_bisMobsAllDead_Interior_Room_G{ false }
 {
 }
 
-void CMainScene::TurnMobsOnRange()
+void CMainScene::UpdateMobsStatus()
 {
 	_float3 PlayerPos = m_spMainCamera->GetTransform()->GetPos();
-	for (auto& mob : (*m_spMap->GetMobs().get()))
+	_int deadmobcount_RoomD = 0;
+	_int deadmobcount_HallwayE = 0;
+	_int deadmobcount_RoomF = 0;
+	_int deadmobcount_RoomG = 0;
+
+	for (auto& mobcontainer : (*m_spMap->GetMobs().get()))
 	{
-		auto mob_it = mob.second.begin();
-		while (mob_it != mob.second.end())
+		for (auto& mobs : mobcontainer.second)
 		{
-			_float3 mobPos = mob_it->get()->GetTransform()->GetPos();
-			_float3 distance = mobPos - PlayerPos;
-			float distanceSq = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
-			
-			if (distanceSq <= 200 * 200)
+			if(mobs->GetDeathState() == false)
+			{	
+				//보스몹 상태 업데이트
+				{
+					if (mobs->GetAnimModel()->GetModelName() == L"minotaur_FBX.bin")
+					{
+						m_iMinotaurHP = mobs->GetHealth();
+						m_bIsFoundPlayer_Minotaur = mobs->GetFoundTargetState();
+					}
+					if (mobs->GetAnimModel()->GetModelName() == L"Harlequin1_FBX.bin")
+					{
+						m_iHarlequinnHP = mobs->GetHealth();
+						m_bisFoundPlayer_Harlequinn = mobs->GetFoundTargetState();
+					}
+					if (mobs->GetAnimModel()->GetModelName() == L"Anubis_FBX.bin")
+					{
+						m_iAnubisHP = mobs->GetHealth();
+						m_bisFoundPlayer_Anubis = mobs->GetFoundTargetState();
+					}
+				}			
+			}
+			else
 			{
-				mob_it->get()->SetActive(true);
+				if(mobs->GetAnimModel()->GetModelName() != L"Chest 1_FBX.bin")
+				{
+					//몹들 사망 상태 업데이트
+					if (mobcontainer.first == L"Interior_Room_D" && !m_bisMobsAllDead_Interior_Room_D)
+						deadmobcount_RoomD++;
+					else if (mobcontainer.first == L"Interior_Hallway_E" && !m_bisMobsAllDead_Interior_Hallway_E)
+						deadmobcount_HallwayE++;
+					else if (mobcontainer.first == L"Interior_Room_F" && !m_bisMobsAllDead_Interior_Room_F)
+						deadmobcount_RoomF++;
+					else if (mobcontainer.first == L"Interior_Room_G" && !m_bisMobsAllDead_Interior_Room_G)
+						deadmobcount_RoomG++;
+				}
 			}
-			else {
-				mob_it->get()->SetActive(false);
+
+			//거리별 최적화
+			{
+				_float3 mobPos = mobs->GetTransform()->GetPos();
+				_float3 distance = mobPos - PlayerPos;
+				_float ydistance = mobPos.y - PlayerPos.y;
+				float distanceSq = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
+
+				if(abs(ydistance) > 50)
+					mobs->SetActive(false);
+				else
+				{
+					if (distanceSq <= 200 * 200)
+					{
+						if (!mobs->GetDeathState())
+						{
+							mobs->SetActive(true);
+						}
+					}
+					else
+					{
+						mobs->SetActive(false);
+					}
+				}		
 			}
-			mob_it++;
 		}
 	}
 
-
+	//방별 몹 전체 사망 상태 업데이트
+	for (auto& mobcontainer : (*m_spMap->GetMobs().get()))
+	{
+		if (mobcontainer.first == L"Interior_Room_D")
+		{
+			if (mobcontainer.second.size() == deadmobcount_RoomD && !m_bisMobsAllDead_Interior_Room_D)
+				m_bisMobsAllDead_Interior_Room_D = true;
+		}
+		else if (mobcontainer.first == L"Interior_Hallway_E")
+		{
+			if (mobcontainer.second.size() == deadmobcount_HallwayE && !m_bisMobsAllDead_Interior_Hallway_E)
+				m_bisMobsAllDead_Interior_Hallway_E = true;
+		}
+		else if (mobcontainer.first == L"Interior_Room_F")
+		{
+			if (mobcontainer.second.size() == deadmobcount_RoomF && !m_bisMobsAllDead_Interior_Room_F)
+				m_bisMobsAllDead_Interior_Room_F = true;
+		}
+		else if (mobcontainer.first == L"Interior_Room_G")
+		{
+			if (mobcontainer.second.size() == deadmobcount_RoomG && !m_bisMobsAllDead_Interior_Room_G)
+				m_bisMobsAllDead_Interior_Room_G = true;
+		}
+	}
 }
+
 void CMainScene::TurnGuardsOnRange()
 {
 	_float3 PlayerPos = m_spMainCamera->GetTransform()->GetPos();
-	for (auto& mob : m_spMap->GetGuards())
+	for (auto& guardcontainer : m_spMap->GetGuards())
 	{
-		_float3 mobPos = mob.second->GetTransform()->GetPos();
+		_float3 mobPos = guardcontainer.second->GetTransform()->GetPos();
 		_float3 distance = mobPos - PlayerPos;
 		float distanceSq = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
 
 		if (distanceSq <= 200 * 200)
 		{
-			mob.second->SetActive(true);
+			guardcontainer.second->SetActive(true);
 		}
 		else {
-			mob.second->SetActive(false);
+			guardcontainer.second->SetActive(false);
+		}
+
+		//가드 상태 업데이트
+		if (guardcontainer.first == L"Interior_Room_D")
+		{
+			if(m_bisMobsAllDead_Interior_Room_D)
+				guardcontainer.second->SetActive(false);
+		}
+		else if (guardcontainer.first == L"Interior_Hallway_E")
+		{
+			if (m_bisMobsAllDead_Interior_Hallway_E)
+				guardcontainer.second->SetActive(false);
+		}
+		else if (guardcontainer.first == L"Interior_Room_F")
+		{
+			if (m_bisMobsAllDead_Interior_Room_F)
+				guardcontainer.second->SetActive(false);
+		}
+		else if (guardcontainer.first == L"Interior_Room_G")
+		{
+			if (m_bisMobsAllDead_Interior_Room_G)
+				guardcontainer.second->SetActive(false);
 		}
 	}
 }
@@ -130,31 +239,6 @@ void CMainScene::TurnLightsOnRange()
 		}
 	}
 
-	
-	
-		
-		/*_float3 lightPos0 = _float3(-364.225, -20, 253.010);
-		_float3 lightPos1 = _float3(-535.39, -20, 154.5);
-		_float3 lightPos2 = _float3(-494.5, -45, 289.265);
-		
-		_float3 distance = lightPos1 - PlayerPos;
-		float distanceSq = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
-		if (distanceSq <= 50 * 50)
-		{
-			for (int i = 0; i < 3; i++) {
-
-				ActiveLIght(LIGHTTYPE::TYPE_SPOT, i, LIGHTACTIVE::ISACTIVE);
-			}
-		}
-		else
-		{
-			for (int i = 0; i < 3; i++) {
-
-				ActiveLIght(LIGHTTYPE::TYPE_SPOT, i, LIGHTACTIVE::NONACTIVE);
-			}
-			
-		}*/
-	
 }
 
 void CMainScene::TurnRoomsOnRange()
@@ -421,6 +505,7 @@ void CMainScene::CreateGameSceneUI()
 	}
 }
 
+
 HRESULT CMainScene::LoadSceneData()
 {
 	
@@ -671,7 +756,6 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 	DrawStartSceneUI(_dTimeDelta);
 	TurnLightsOnRange();
 	TurnRoomsOnRange();
-	TurnGuardsOnRange();
 
 	SHPTR<ULight> DirLight;
 	OutLight(LIGHTTYPE::TYPE_DIRECTIONAL, 0, DirLight);
@@ -708,7 +792,8 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 
 void CMainScene::LateTick(const _double& _dTimeDelta)
 {
-	TurnMobsOnRange();
+	UpdateMobsStatus();
+	TurnGuardsOnRange();
 }
 
 void CMainScene::CollisionTick(const _double& _dTimeDelta)

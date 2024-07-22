@@ -165,6 +165,9 @@
     <ClInclude Include="..\Public\CBackgroundUI.h" />
     <ClInclude Include="..\Public\CButtonUI.h" />
     <ClInclude Include="..\Public\CClientApp.h" />
+    <ClInclude Include="..\Public\CCoreAnubis.h" />
+    <ClInclude Include="..\Public\CCoreHarlequinn.h" />
+    <ClInclude Include="..\Public\CCoreMinotaur.h" />
     <ClInclude Include="..\Public\CDataManager.h" />
     <ClInclude Include="..\Public\CHarlequinn.h" />
     <ClInclude Include="..\Public\CHarlequinnAnimController.h" />
@@ -199,6 +202,7 @@
     <ClInclude Include="..\Public\CSarcophagusAnimController.h" />
     <ClInclude Include="..\Public\CShuriken.h" />
     <ClInclude Include="..\Public\CShurikenThrowing.h" />
+    <ClInclude Include="..\Public\CStatue.h" />
     <ClInclude Include="..\Public\CSword.h" />
     <ClInclude Include="..\Public\CTorch.h" />
     <ClInclude Include="..\Public\CWarriorPlayer.h" />
@@ -215,6 +219,9 @@
     <ClCompile Include="..\Private\CBackgroundUI.cpp" />
     <ClCompile Include="..\Private\CButtonUI.cpp" />
     <ClCompile Include="..\Private\CClientApp.cpp" />
+    <ClCompile Include="..\Private\CCoreAnubis.cpp" />
+    <ClCompile Include="..\Private\CCoreHarlequinn.cpp" />
+    <ClCompile Include="..\Private\CCoreMinotaur.cpp" />
     <ClCompile Include="..\Private\CDataManager.cpp" />
     <ClCompile Include="..\Private\CHarlequinn.cpp" />
     <ClCompile Include="..\Private\CHarlequinnAnimController.cpp" />
@@ -247,6 +254,7 @@
     <ClCompile Include="..\Private\CSarcophagusAnimController.cpp" />
     <ClCompile Include="..\Private\CShuriken.cpp" />
     <ClCompile Include="..\Private\CShurikenThrowing.cpp" />
+    <ClCompile Include="..\Private\CStatue.cpp" />
     <ClCompile Include="..\Private\CSword.cpp" />
     <ClCompile Include="..\Private\CTorch.cpp" />
     <ClCompile Include="..\Private\CWarriorPlayer.cpp" />

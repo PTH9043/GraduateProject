@@ -12,12 +12,12 @@
 #include "UProcessedData.h"
 
 CSarcophagus::CSarcophagus(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
-	: CMob(_spDevice, _wstrLayer, _eCloneType), m_SarcophagusType{}
+	: CMob(_spDevice, _wstrLayer, _eCloneType), m_SarcophagusType{}, m_dElapsedTimeForDeath{}
 {
 }
 
 CSarcophagus::CSarcophagus(const CSarcophagus& _rhs)
-	: CMob(_rhs), m_SarcophagusType{}
+	: CMob(_rhs), m_SarcophagusType{}, m_dElapsedTimeForDeath{}
 {
 }
 
@@ -94,18 +94,21 @@ void CSarcophagus::TickActive(const _double& _dTimeDelta)
 
 	GetAnimationController()->Tick(_dTimeDelta);
 
-	if (GetFoundTargetState())
+	if(!GetDeathState())
 	{
-		SetElapsedTime(GetElapsedTime() + _dTimeDelta * SarcophagusOpeningSpeed);
+		if (GetFoundTargetState())
+		{
+			SetElapsedTime(GetElapsedTime() + _dTimeDelta * SarcophagusOpeningSpeed);
+		}
+		if (GetSarcophagusType() == SARCOTYPE::TYPE_LYING)
+		{
+			if (GetElapsedTime() < LyingSarcophagusTimeArcOpenEnd)
+				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, LyingSarcophagusTimeArcOpenStart + GetElapsedTime());
+		}
+		else
+			if (GetElapsedTime() < StandingSarcophagusTimeArcOpenEnd)
+				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
 	}
-	if (GetSarcophagusType() == SARCOTYPE::TYPE_LYING)
-	{
-		if (GetElapsedTime() < LyingSarcophagusTimeArcOpenEnd)
-			GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, LyingSarcophagusTimeArcOpenStart + GetElapsedTime());
-	}
-	else
-		if (GetElapsedTime() < StandingSarcophagusTimeArcOpenEnd)
-			GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
 
 	for (auto& Containers : GetColliderContainer())
 	{
@@ -116,6 +119,17 @@ void CSarcophagus::TickActive(const _double& _dTimeDelta)
 void CSarcophagus::LateTickActive(const _double& _dTimeDelta)
 {
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	if (GetOwnerMummy()->GetDeathState() == true)
+	{
+		SetDeathState(true);
+		m_dElapsedTimeForDeath += _dTimeDelta * 20;
+		if (m_dElapsedTimeForDeath >= 100.0)
+		{
+			SetActive(false);
+			spGameInstance->RemoveCollisionPawn(ThisShared<CMob>());
+		}
+	}
 }
 
 HRESULT CSarcophagus::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)

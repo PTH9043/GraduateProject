@@ -53,6 +53,7 @@ public:
 
 	void AddLightCount() { m_iLightCount++; }
 	const _uint GetLightCount() { return m_iLightCount; }
+	const _int GetSarcophagusCount() { return m_iSarcophagusCount; }
 private:
 	SHPTR<ROOMCONTAINER>			m_spRoomContainer;
 	SHPTR<UMapLayout>				m_spMapLayout;
@@ -60,6 +61,7 @@ private:
 	GUARDCONTAINER			m_GuardContainer;
 
 	_uint							m_iLightCount;
+	_int							m_iSarcophagusCount;
 
 	SHPTR<MOBSCONTAINER>			m_spMobsContainer;
 

@@ -49,6 +49,8 @@ public:
 	_float3 GetMaxVertexPos();
 	_float3 GetMinVertexPos();
 	_float3 GetCenterPos();
+
+	void SetModelName(const _wstring& _newName) { m_wstrModelName = _newName; }
 public:
 	CLONE_MACRO(UModel, "UModel::Clone To Failed")
 	virtual void Free() override;

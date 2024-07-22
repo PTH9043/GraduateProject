@@ -9,6 +9,7 @@
 #define PROTO_ACTOR_CHEST L"Proto_Actor_Chest"
 #define PROTO_ACTOR_ANUBISSTAFF L"Proto_Actor_AnubisStaff"
 #define PROTO_ACTOR_MIMIC L"Proto_Actor_Mimic"
+#define PROTO_ACTOR_STATUE L"Proto_Actor_Statue"
 
 #define PROTO_ACTOR_WARRIORPLAYER L"Proto_Actor_WarriorPlayer"
 #define PROTO_ACTOR_MUMMY L"Proto_Actor_Mummy"

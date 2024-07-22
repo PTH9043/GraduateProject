@@ -420,7 +420,8 @@ void CMinotaur::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 					}
 					else
 					{
-						DecreaseHealth(1);
+						/*DecreaseHealth(1);*/
+						DecreaseHealth(pCharacter->GetAttack());
 					}
 				}
 

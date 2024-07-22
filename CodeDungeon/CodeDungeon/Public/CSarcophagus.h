@@ -1,5 +1,6 @@
 #pragma once
 #include "CMob.h"
+#include "CMummy.h"
 
 BEGIN(Client)
 
@@ -21,6 +22,9 @@ public:
 
 	void SetSarcophagusType(SARCOTYPE _type) { m_SarcophagusType = _type; }
 	SARCOTYPE GetSarcophagusType() { return m_SarcophagusType; }
+
+	void SetOwnerMummy(CSHPTRREF<CMummy> _spMummy) { m_spOwnerMummy = _spMummy; }
+	CSHPTRREF<CMummy> GetOwnerMummy() { return m_spOwnerMummy; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
@@ -31,7 +35,9 @@ protected:
 
 private:
 	SARCOTYPE m_SarcophagusType;
+	SHPTR<CMummy> m_spOwnerMummy;
 
+	_double		m_dElapsedTimeForDeath;
 };
 
 END

@@ -26,8 +26,8 @@ public:
 private:
 	void TurnLightsOnRange();
 	void TurnRoomsOnRange();
-	void TurnMobsOnRange();
 	void TurnGuardsOnRange();
+	void UpdateMobsStatus();
 public:
 	virtual void Free() override;
 	virtual HRESULT LoadSceneData() override;
@@ -42,13 +42,24 @@ private:
 	// Main
 	SHPTR<CMainCamera>			m_spMainCamera;
 
-	SHPTR<CMap>							m_spMap;
+	SHPTR<CMap>					m_spMap;
 	SHPTR<CWarriorPlayer>		m_spWarriorPlayer;
-	SHPTR<CMummy>				m_spMummy;
-	SHPTR<CSarcophagus>			m_spSarcophagus;
-	SHPTR<UGuard> m_stGuard;
+
 	SHPTR<UFire>	m_stFireOne;
 	SHPTR<UFire>	m_stFireTwo;
+
+	_bool			m_bIsFoundPlayer_Minotaur;
+	_bool			m_bisFoundPlayer_Harlequinn;
+	_bool			m_bisFoundPlayer_Anubis;
+
+	_int			m_iMinotaurHP;
+	_int			m_iHarlequinnHP;
+	_int			m_iAnubisHP;
+
+	_bool			m_bisMobsAllDead_Interior_Hallway_E;
+	_bool			m_bisMobsAllDead_Interior_Room_D;
+	_bool			m_bisMobsAllDead_Interior_Room_F;
+	_bool			m_bisMobsAllDead_Interior_Room_G;
 private:
 	//------------START SCENE UI-------------------
 	SHPTR<CImageUI>			m_spBackgroundUI;

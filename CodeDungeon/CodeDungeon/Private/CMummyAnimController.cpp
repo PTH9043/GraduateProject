@@ -194,7 +194,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     // Tick event
     spAnimModel->TickEvent(spMummy.get(), GetTrigger(), _dTimeDelta);
 #else
-spAnimModel->TickAnimChangeTransform(spMummy->GetTransform(), _dTimeDelta);
+    spAnimModel->TickAnimChangeTransform(spMummy->GetTransform(), _dTimeDelta);
 #endif
 }
 

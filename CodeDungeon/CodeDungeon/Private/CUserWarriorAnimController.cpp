@@ -161,7 +161,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     // Attack handling
     if (isAttack && !Hit) {
         if (isWAttack) {
-            spWarriorPlayer->SetAttack(5);
+            spWarriorPlayer->SetAttack(50);
             if (CurAnimName == L"combo02_1") m_iWComboStack = 2;
             else if (CurAnimName == L"combo02_2") m_iWComboStack = 3;
             else m_iWComboStack = 1;
@@ -173,7 +173,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
             }
         }
         else if (isSAttack) {
-            spWarriorPlayer->SetAttack(10);
+            spWarriorPlayer->SetAttack(50);
             if (CurAnimName == L"combo06_1") m_iSComboStack = 2;
             else if (CurAnimName == L"combo06_2") m_iSComboStack = 3;
             else m_iSComboStack = 1;

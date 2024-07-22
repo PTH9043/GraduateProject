@@ -33,6 +33,7 @@
 #include "CAnubisStaff.h"
 #include "CMimic.h"
 #include "CMimicAnimController.h"
+#include "CStatue.h"
 
 HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, CSHPTRREF<UDevice> _spDevice, CSHPTRREF<UCommand> _spCommand)
 {
@@ -57,7 +58,8 @@ HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, C
 	_spGameInstance->AddPrototype(PROTO_ACTOR_ANUBIS, CreateConstructorToNative< CAnubis>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_ANUBISSTAFF, CreateConstructorToNative< CAnubisStaff>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_MIMIC, CreateConstructorToNative< CMimic>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
-
+	_spGameInstance->AddPrototype(PROTO_ACTOR_STATUE, CreateConstructorToNative< CStatue>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
+	
 	_spGameInstance->AddPrototype(PROTO_RES_PARTICLETEXTUREGROUP, CLONETYPE::CLONE_STATIC,
 		CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\Particle", true));
 

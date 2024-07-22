@@ -163,6 +163,12 @@
     <Filter Include="07.UI\HP">
       <UniqueIdentifier>{39df75d3-ba44-4fb1-9b9b-e2f69cd2b6ea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Objects\ModelObjects\StaticObjects\Cores">
+      <UniqueIdentifier>{4e016d66-4aec-4ed7-99f0-6d3dd4892a9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Objects\ModelObjects\StaticObjects\Statue">
+      <UniqueIdentifier>{42811dff-5f82-4d5f-9433-45ec2d741e56}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ClientDefines.h">
@@ -309,6 +315,18 @@
     <ClInclude Include="..\Public\CHpBarUI.h">
       <Filter>07.UI\HP</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CCoreAnubis.h">
+      <Filter>05.Objects\ModelObjects\StaticObjects\Cores</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CCoreHarlequinn.h">
+      <Filter>05.Objects\ModelObjects\StaticObjects\Cores</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CCoreMinotaur.h">
+      <Filter>05.Objects\ModelObjects\StaticObjects\Cores</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CStatue.h">
+      <Filter>05.Objects\ModelObjects\StaticObjects\Statue</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -447,6 +465,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\CHpBarUI.cpp">
       <Filter>07.UI\HP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CCoreAnubis.cpp">
+      <Filter>05.Objects\ModelObjects\StaticObjects\Cores</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CCoreHarlequinn.cpp">
+      <Filter>05.Objects\ModelObjects\StaticObjects\Cores</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CCoreMinotaur.cpp">
+      <Filter>05.Objects\ModelObjects\StaticObjects\Cores</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CStatue.cpp">
+      <Filter>05.Objects\ModelObjects\StaticObjects\Statue</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
