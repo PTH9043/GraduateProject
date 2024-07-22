@@ -42,9 +42,9 @@ CMainScene::CMainScene(CSHPTRREF<UDevice> _spDevice) :
 	m_bIsFoundPlayer_Minotaur{ false },
     m_bisFoundPlayer_Harlequinn{ false },
     m_bisFoundPlayer_Anubis{ false },
-    m_iMinotaurHP{ 0 },
-    m_iHarlequinnHP{ 0 },
-    m_iAnubisHP{ 0 },
+    m_iMinotaurCurHP{ 0 },
+    m_iHarlequinnCurHP{ 0 },
+    m_iAnubisCurHP{ 0 },
 	m_bisMobsAllDead_Interior_Hallway_E{false},
 	m_bisMobsAllDead_Interior_Room_D{ false },
 	m_bisMobsAllDead_Interior_Room_F{ false },
@@ -64,23 +64,38 @@ void CMainScene::UpdateMobsStatus()
 	{
 		for (auto& mobs : mobcontainer.second)
 		{
+			if (mobs->GetAnimModel()->GetModelName() == L"minotaur_FBX.bin") {
+				m_bIsDead_Minotaur = mobs->GetDeathState();
+			}
+			if (mobs->GetAnimModel()->GetModelName() == L"Harlequin1_FBX.bin") {
+				m_bisDead_Harlequinn = mobs->GetDeathState();
+			}
+			if (mobs->GetAnimModel()->GetModelName() == L"Anubis_FBX.bin") {
+				m_bisDead_Anubis = mobs->GetDeathState();
+			}
 			if(mobs->GetDeathState() == false)
 			{	
 				//보스몹 상태 업데이트
 				{
 					if (mobs->GetAnimModel()->GetModelName() == L"minotaur_FBX.bin")
 					{
-						m_iMinotaurHP = mobs->GetHealth();
+						m_iMinotaurCurHP = mobs->GetHealth();
+						m_iMinotaurMaxHP = mobs->GetMaxHealth();
+						
 						m_bIsFoundPlayer_Minotaur = mobs->GetFoundTargetState();
 					}
 					if (mobs->GetAnimModel()->GetModelName() == L"Harlequin1_FBX.bin")
 					{
-						m_iHarlequinnHP = mobs->GetHealth();
+						m_iHarlequinnCurHP = mobs->GetHealth();
+						m_iHarlequinnMaxHP = mobs->GetMaxHealth();
+						
 						m_bisFoundPlayer_Harlequinn = mobs->GetFoundTargetState();
 					}
 					if (mobs->GetAnimModel()->GetModelName() == L"Anubis_FBX.bin")
 					{
-						m_iAnubisHP = mobs->GetHealth();
+						m_iAnubisCurHP = mobs->GetHealth();
+						m_iAnubisMaxHP = mobs->GetMaxHealth();
+						
 						m_bisFoundPlayer_Anubis = mobs->GetFoundTargetState();
 					}
 				}			
@@ -272,7 +287,7 @@ void CMainScene::CreateAbilityUI() {
 		tDesc.fZBufferOrder = 0.99f;
 		tDesc.strImgName = L"AbilityFrame";
 		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
-		tDesc.DrawOrder = L"Last";
+		tDesc.DrawOrder = L"Priority";
 		tDesc.v2Size.x = static_cast<_float>(1280);
 		tDesc.v2Size.y = static_cast<_float>(1080);
 		tDesc.v2Pos = _float2{ 640,540 };
@@ -290,6 +305,122 @@ void CMainScene::CreateAbilityUI() {
 		tDesc2.v2Pos = _float2{ 1080,150 };
 		m_spRecUI = std::static_pointer_cast<CLoadingUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_LOADINGUI, { &tDesc2 }));
 		m_spRecUI->SetActive(false);
+	}
+}
+
+void CMainScene::CreateAttackUI()
+{
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	CImageUI::UIDESC tDesc;
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"T_DLCBossMission_103_001";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Middle";
+		tDesc.v2Size.x = static_cast<_float>(80);
+		tDesc.v2Size.y = static_cast<_float>(80);
+		tDesc.v2Pos = _float2{ 550,900 };
+		m_spUltimateAttackOneUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spUltimateAttackOneUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"Inventory_Slot_IconFrame";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(90);
+		tDesc.v2Size.y = static_cast<_float>(90);
+		tDesc.v2Pos = _float2{ 550,900 };
+		m_spUltimateAttackOneFrameUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spUltimateAttackOneFrameUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"T_DLCBossMission_105_002";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Middle";
+		tDesc.v2Size.x = static_cast<_float>(80);
+		tDesc.v2Size.y = static_cast<_float>(80);
+		tDesc.v2Pos = _float2{ 750,900 };
+		m_spUltimateAttackTwoUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spUltimateAttackTwoUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"Inventory_Slot_IconFrame";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(90);
+		tDesc.v2Size.y = static_cast<_float>(90);
+		tDesc.v2Pos = _float2{ 750,900 };
+		m_spUltimateAttackTwoFrameUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spUltimateAttackTwoFrameUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"T_DLCBossMission_315";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Priority";
+		tDesc.v2Size.x = static_cast<_float>(80);
+		tDesc.v2Size.y = static_cast<_float>(80);
+		tDesc.v2Pos = _float2{ 950,900 };
+		m_spDetactAbilityIconUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spDetactAbilityIconUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"Inventory_Slot_IconFrame";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Middle";
+		tDesc.v2Size.x = static_cast<_float>(90);
+		tDesc.v2Size.y = static_cast<_float>(90);
+		tDesc.v2Pos = _float2{ 950,900 };
+		m_spDetactAbilityIconFrameUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spDetactAbilityIconFrameUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"Key_R";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(30);
+		tDesc.v2Size.y = static_cast<_float>(30);
+		tDesc.v2Pos = _float2{ 980,930 };
+		m_spDetactAbilityKeyIconUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spDetactAbilityKeyIconUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"T_DLC_ApplyDamage07";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Priority";
+		tDesc.v2Size.x = static_cast<_float>(80);
+		tDesc.v2Size.y = static_cast<_float>(80);
+		tDesc.v2Pos = _float2{ 1150,900 };
+		m_spShortAttackIconUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spShortAttackIconUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"Inventory_Slot_IconFrame";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Middle";
+		tDesc.v2Size.x = static_cast<_float>(90);
+		tDesc.v2Size.y = static_cast<_float>(90);
+		tDesc.v2Pos = _float2{ 1150,900 };
+		m_spShortAttackIconFrameUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spShortAttackIconFrameUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"Key_Q";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(30);
+		tDesc.v2Size.y = static_cast<_float>(30);
+		tDesc.v2Pos = _float2{ 1180,930 };
+		m_spShortAttackKeyIconUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spShortAttackKeyIconUI->SetActive(false);
 	}
 }
 
@@ -536,8 +667,6 @@ void CMainScene::CreateGameSceneUI()
 		tDesc1.v2Pos = _float2{ 640, 50 };
 		m_spMinotaurHpBarUI = std::static_pointer_cast<CHpBarUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_HPBARUI, { &tDesc1 }));
 		m_spMinotaurHpBarUI->SetActive(false);
-		m_spMinotaurHpBarUI->SetMaxHp(500.f);
-		m_spMinotaurHpBarUI->SetCurHp(258.f);
 	}
 	{
 		tDesc5.fZBufferOrder = 0.43f;
@@ -549,6 +678,52 @@ void CMainScene::CreateGameSceneUI()
 		tDesc5.v2Pos = _float2{ 100,50 };
 		m_spMinotaurFrameUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
 		m_spMinotaurFrameUI->SetActive(false);
+	}
+	//=====================Harlequinn UI=========================
+	{
+		tDesc1.fZBufferOrder = 0.43f;
+		tDesc1.strImgName = L"Boss";
+		tDesc1._shaderName = PROTO_RES_HPBARUISHADER;
+		tDesc1.DrawOrder = L"Middle";
+		tDesc1.v2Size.x = static_cast<_float>(1000);
+		tDesc1.v2Size.y = static_cast<_float>(35);
+		tDesc1.v2Pos = _float2{ 640, 50 };
+		m_spHarlequinnHpBarUI = std::static_pointer_cast<CHpBarUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_HPBARUI, { &tDesc1 }));
+		m_spHarlequinnHpBarUI->SetActive(false);
+	}
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"Harlequinn";
+		tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc5.DrawOrder = L"Middle";
+		tDesc5.v2Size.x = static_cast<_float>(80);
+		tDesc5.v2Size.y = static_cast<_float>(80);
+		tDesc5.v2Pos = _float2{ 100,50 };
+		m_spHarlequinnFrameUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spHarlequinnFrameUI->SetActive(false);
+	}
+	//=====================Anubis UI=========================
+	{
+		tDesc1.fZBufferOrder = 0.43f;
+		tDesc1.strImgName = L"Boss";
+		tDesc1._shaderName = PROTO_RES_HPBARUISHADER;
+		tDesc1.DrawOrder = L"Middle";
+		tDesc1.v2Size.x = static_cast<_float>(1000);
+		tDesc1.v2Size.y = static_cast<_float>(35);
+		tDesc1.v2Pos = _float2{ 640, 50 };
+		m_spAnubisHpBarUI = std::static_pointer_cast<CHpBarUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_HPBARUI, { &tDesc1 }));
+		m_spAnubisHpBarUI->SetActive(false);
+	}
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"NasusFrame";
+		tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc5.DrawOrder = L"Middle";
+		tDesc5.v2Size.x = static_cast<_float>(80);
+		tDesc5.v2Size.y = static_cast<_float>(80);
+		tDesc5.v2Pos = _float2{ 100,50 };
+		m_spAnubisFrameUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spAnubisFrameUI->SetActive(false);
 	}
 }
 
@@ -816,6 +991,27 @@ HRESULT CMainScene::LoadSceneData()
 		m_spPlayerHpFont->SetScale(_float2(1.0, 1.0));
 		m_spPlayerHpFont->SetDepths(0.f);
 		m_spPlayerHpFont->SetRender(false);
+	} 
+	{
+		m_spMinotaurHpFont = spGameInstance->AddFont(FONT_NANUMSQUARE_ACBOLD);
+		m_spMinotaurHpFont->SetPos(_float2{ 550,80 });
+		m_spMinotaurHpFont->SetScale(_float2(1.25, 1.25));
+		m_spMinotaurHpFont->SetDepths(0.f);
+		m_spMinotaurHpFont->SetRender(false);
+	}
+	{
+		m_spHarlequinnHpFont = spGameInstance->AddFont(FONT_NANUMSQUARE_ACBOLD);
+		m_spHarlequinnHpFont->SetPos(_float2{ 550,80 });
+		m_spHarlequinnHpFont->SetScale(_float2(1.25, 1.25));
+		m_spHarlequinnHpFont->SetDepths(0.f);
+		m_spHarlequinnHpFont->SetRender(false);
+	}
+	{
+		m_spAnubisHpFont = spGameInstance->AddFont(FONT_NANUMSQUARE_ACBOLD);
+		m_spAnubisHpFont->SetPos(_float2{ 550,80 });
+		m_spAnubisHpFont->SetScale(_float2(1.25, 1.25));
+		m_spAnubisHpFont->SetDepths(0.f);
+		m_spAnubisHpFont->SetRender(false);
 	}
 	{
 		
@@ -848,6 +1044,7 @@ HRESULT CMainScene::LoadSceneData()
 	CreateStartSceneUI();
 #endif
 	CreateAbilityUI();
+	CreateAttackUI();
 	CreateKeyInfoUI();
 	CreateGameSceneUI();
 	{
@@ -1107,10 +1304,20 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 		m_spPlayerNameUI->SetActive(true);
 		m_spTABUI->SetActive(true);
 		m_spTABTEXTUI->SetActive(true);
+		{//attack ui
+			m_spUltimateAttackOneFrameUI->SetActive(true);
+			m_spUltimateAttackOneUI->SetActive(true);
+			m_spUltimateAttackTwoFrameUI->SetActive(true);
+			m_spUltimateAttackTwoUI->SetActive(true);
+			m_spDetactAbilityIconFrameUI->SetActive(true);
+			m_spDetactAbilityIconUI->SetActive(true);
+			m_spDetactAbilityKeyIconUI->SetActive(true);
+			m_spShortAttackIconFrameUI->SetActive(true);
+			m_spShortAttackIconUI->SetActive(true);
+			m_spShortAttackKeyIconUI->SetActive(true);
+		}
+	
 
-		//==========Minotaur Hp===============
-		m_spMinotaurHpBarUI->SetActive(true);
-		m_spMinotaurFrameUI->SetActive(true);
 	}
 }
 
@@ -1136,9 +1343,30 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 	{
 		m_spHpBarUI->SetMaxHp(m_spWarriorPlayer->GetMaxHealth());
 		m_spHpBarUI->SetCurHp(m_spWarriorPlayer->GetHealth());
+		m_spMinotaurHpBarUI->SetMaxHp(m_iMinotaurMaxHP);
+		m_spMinotaurHpBarUI->SetCurHp(m_iMinotaurCurHP);
+		m_spHarlequinnHpBarUI->SetMaxHp(m_iHarlequinnMaxHP);
+		m_spHarlequinnHpBarUI->SetCurHp(m_iHarlequinnCurHP);
+		m_spAnubisHpBarUI->SetMaxHp(m_iAnubisMaxHP);
+		m_spAnubisHpBarUI->SetCurHp(m_iAnubisCurHP);				
 	} 
 	{
-
+		std::wstringstream ws;
+		ws << m_iMinotaurCurHP << L" / " << m_iMinotaurMaxHP;
+		std::wstring health_string = ws.str();
+		m_spMinotaurHpFont->SetText(health_string);
+	}
+	{
+		std::wstringstream ws;
+		ws << m_iHarlequinnCurHP << L" / " << m_iHarlequinnMaxHP;
+		std::wstring health_string = ws.str();
+		m_spHarlequinnHpFont->SetText(health_string);
+	}
+	{
+		std::wstringstream ws;
+		ws << m_iAnubisCurHP << L" / " << m_iAnubisMaxHP;
+		std::wstring health_string = ws.str();
+		m_spAnubisHpFont->SetText(health_string);
 	}
 	{
 		int max_health = m_spWarriorPlayer->GetMaxHealth();
@@ -1147,7 +1375,39 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 		std::wstringstream ws;
 		ws << current_health << L" / " << max_health;
 		std::wstring health_string = ws.str();	
-		m_spPlayerHpFont->SetText(health_string);
+		m_spPlayerHpFont->SetText(health_string);		
+	}
+	{	//==========Minotaur Hp===============
+		if (m_bIsFoundPlayer_Minotaur&&!m_bIsDead_Minotaur) {
+			m_spMinotaurHpFont->SetRender(true);
+			m_spMinotaurFrameUI->SetActive(true);
+				m_spMinotaurHpBarUI->SetActive(true);
+		}
+		else {
+			m_spMinotaurHpFont->SetRender(false);
+			m_spMinotaurFrameUI->SetActive(false);
+			m_spMinotaurHpBarUI->SetActive(false);
+		}
+		if (m_bisFoundPlayer_Harlequinn&&!m_bisDead_Harlequinn) {
+			m_spHarlequinnHpFont->SetRender(true);
+			m_spHarlequinnFrameUI->SetActive(true);
+			m_spHarlequinnHpBarUI->SetActive(true);
+		}
+		else {
+			m_spHarlequinnHpFont->SetRender(false);
+			m_spHarlequinnFrameUI->SetActive(false);
+			m_spHarlequinnHpBarUI->SetActive(false);
+		}
+		if (m_bisFoundPlayer_Anubis&&!m_bisDead_Anubis) {
+			m_spAnubisHpFont->SetRender(true);
+			m_spAnubisFrameUI->SetActive(true);
+			m_spAnubisHpBarUI->SetActive(true);
+		}
+		else {
+			m_spAnubisHpFont->SetRender(false);
+			m_spAnubisFrameUI->SetActive(false);
+			m_spAnubisHpBarUI->SetActive(false);
+		}
 		
 	}
 	{  // If Use R Ability

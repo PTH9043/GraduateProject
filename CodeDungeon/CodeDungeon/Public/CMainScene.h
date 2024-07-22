@@ -40,6 +40,7 @@ public:
 	void CreateGameSceneUI();
 	void CreateKeyInfoUI();
 	void CreateAbilityUI();
+	void CreateAttackUI();
 private:
 	// Main
 	SHPTR<CMainCamera>			m_spMainCamera;
@@ -54,9 +55,16 @@ private:
 	_bool			m_bisFoundPlayer_Harlequinn;
 	_bool			m_bisFoundPlayer_Anubis;
 
-	_int			m_iMinotaurHP;
-	_int			m_iHarlequinnHP;
-	_int			m_iAnubisHP;
+	_bool			m_bIsDead_Minotaur;
+	_bool			m_bisDead_Harlequinn;
+	_bool			m_bisDead_Anubis;
+
+	_int			m_iMinotaurMaxHP;
+	_int			m_iMinotaurCurHP;
+	_int			m_iHarlequinnMaxHP;
+	_int			m_iHarlequinnCurHP;
+	_int			m_iAnubisMaxHP;
+	_int			m_iAnubisCurHP;
 
 	_bool			m_bisMobsAllDead_Interior_Hallway_E;
 	_bool			m_bisMobsAllDead_Interior_Room_D;
@@ -127,13 +135,35 @@ private:
 
 	SHPTR<CImageUI>			m_spTABUI;
 	SHPTR<CImageUI>			m_spTABTEXTUI;
+	//--------------ATTACK UI------------------
+	SHPTR<CImageUI>			m_spUltimateAttackOneFrameUI;
+	SHPTR<CImageUI>			m_spUltimateAttackOneUI;
+	SHPTR<CImageUI>			m_spUltimateAttackTwoFrameUI;
+	SHPTR<CImageUI>			m_spUltimateAttackTwoUI;
+	SHPTR<CImageUI>			m_spDetactAbilityIconFrameUI;
+	SHPTR<CImageUI>			m_spDetactAbilityIconUI;
+	SHPTR<CImageUI>			m_spDetactAbilityKeyIconUI;
+	SHPTR<CImageUI>			m_spShortAttackIconFrameUI;
+	SHPTR<CImageUI>			m_spShortAttackIconUI;
+	SHPTR<CImageUI>			m_spShortAttackKeyIconUI;
+	
 	//==============Boss Frame UI-=================
 	//MinoTaur
 	SHPTR<CImageUI>			m_spMinotaurFrameUI;
 	SHPTR<CHpBarUI>			m_spMinotaurHpBarUI;
+	//Harlequinn
+	SHPTR<CImageUI>			m_spHarlequinnFrameUI;
+	SHPTR<CHpBarUI>			m_spHarlequinnHpBarUI;
+	//Anubis
+	SHPTR<CImageUI>			m_spAnubisFrameUI;
+	SHPTR<CHpBarUI>			m_spAnubisHpBarUI;
 	// -------------- Font --------------------
 	SHPTR<UFont>			m_spPlayerHpFont;
+	SHPTR<UFont>			m_spMinotaurHpFont;
+	SHPTR<UFont>			m_spHarlequinnHpFont;
+	SHPTR<UFont>			m_spAnubisHpFont;
 	SHPTR<UFont>			m_spPlayerAbilityLeftTimeFont;
+	
 
 	//============Ability UI=======================
 	SHPTR<CImageUI>			m_spAbilityFrameUI;
