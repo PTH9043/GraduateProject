@@ -1188,9 +1188,8 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 		m_spTABUI->SetActive(true);
 		m_spTABTEXTUI->SetActive(true);
 
-		//==========Minotaur Hp===============
-		m_spMinotaurHpBarUI->SetActive(true);
-		m_spMinotaurFrameUI->SetActive(true);
+	
+
 	}
 }
 
@@ -1250,7 +1249,7 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 		std::wstring health_string = ws.str();	
 		m_spPlayerHpFont->SetText(health_string);		
 	}
-	{
+	{	//==========Minotaur Hp===============
 		if (m_bIsFoundPlayer_Minotaur&&!m_bIsDead_Minotaur) {
 			m_spMinotaurHpFont->SetRender(true);
 			m_spMinotaurFrameUI->SetActive(true);
