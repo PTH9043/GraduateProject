@@ -287,7 +287,7 @@ void CMainScene::CreateStartSceneUI()
 			// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
 			tDesc1.fZBufferOrder = 0.97f;
 			tDesc1.strImgName = L"LoadingBar_Background";
-			tDesc1._shaderName = PROTO_RES_DEFAULTUISHADER;
+			tDesc1._shaderName = PROTO_RES_DEFAULTHIGHLIGHTUISHADER;
 			tDesc1.DrawOrder = L"Middle";
 			tDesc1.v2Size.x = static_cast<_float>(1020);
 			tDesc1.v2Size.y = static_cast<_float>(27);
@@ -312,7 +312,7 @@ void CMainScene::CreateStartSceneUI()
 			// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
 			tDesc3.fZBufferOrder = 0.88f;
 			tDesc3.strImgName = L"MainTitle";
-			tDesc3._shaderName = PROTO_RES_DEFAULTUISHADER;
+			tDesc3._shaderName = PROTO_RES_DEFAULTHIGHLIGHTUISHADER;
 			tDesc3.DrawOrder = L"Last";
 			tDesc3.v2Size.x = static_cast<_float>(640);
 			tDesc3.v2Size.y = static_cast<_float>(240);
@@ -331,6 +331,7 @@ void CMainScene::CreateStartSceneUI()
 			tDesc4.v2Pos = _float2{ 640, 650 } ;
 			m_spEnterButtonUI = std::static_pointer_cast<CButtonUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_BUTTONUI, { &tDesc4 }));
 			m_spEnterButtonUI->SetActive(true);
+			
 		}
 		{
 			tDesc4.fZBufferOrder = 0.47f;
@@ -342,38 +343,41 @@ void CMainScene::CreateStartSceneUI()
 			tDesc4.v2Pos = _float2{ 640, 770 };
 			m_spExitButtonUI = std::static_pointer_cast<CButtonUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_BUTTONUI, { &tDesc4 }));
 			m_spExitButtonUI->SetActive(true);
+			
 		}
 		CImageUI::UIDESC tDesc5;
 		{
 			// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
 			tDesc5.fZBufferOrder = 0.8f;
 			tDesc5.strImgName = L"T_TitleLogo_Shadow_SmokeWave_UI";
-			tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+			tDesc5._shaderName = PROTO_RES_DEFAULTHIGHLIGHTUISHADER;
 			tDesc5.DrawOrder = L"Middle";
 			tDesc5.v2Size.x = static_cast<_float>(640);
 			tDesc5.v2Size.y = static_cast<_float>(250);
 			tDesc5.v2Pos = _float2{ 640,212.5 };
 			m_spMainTitleEffectUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
 			m_spMainTitleEffectUI->SetActive(true);
+			
 		}
 		
 		{
 			// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
 			tDesc5.fZBufferOrder = 0.48f;
 			tDesc5.strImgName = L"T_TitleLogo_Shadow_Line_UI";
-			tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+			tDesc5._shaderName = PROTO_RES_DEFAULTHIGHLIGHTUISHADER;
 			tDesc5.DrawOrder = L"Last";
 			tDesc5.v2Size.x = static_cast<_float>(1080);
 			tDesc5.v2Size.y = static_cast<_float>(25);
 			tDesc5.v2Pos = _float2{ 640,870 };
 			m_spLineEffectUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
 			m_spLineEffectUI->SetActive(true);
+			
 		}
 		{
 			// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
 			tDesc5.fZBufferOrder = 0.43f;
 			tDesc5.strImgName = L"Loading";
-			tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+			tDesc5._shaderName = PROTO_RES_DEFAULTHIGHLIGHTUISHADER;
 			tDesc5.DrawOrder = L"Last";
 			tDesc5.v2Size.x = static_cast<_float>(150);
 			tDesc5.v2Size.y = static_cast<_float>(50);
@@ -413,7 +417,6 @@ void CMainScene::CreateGameSceneUI()
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	CImageUI::UIDESC tDesc5;
 	{
-		// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
 		tDesc5.fZBufferOrder = 0.43f;
 		tDesc5.strImgName = L"Player";
 		tDesc5._shaderName = PROTO_RES_HPBARUISHADER;
@@ -426,10 +429,9 @@ void CMainScene::CreateGameSceneUI()
 		
 	}
 	{
-		// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
 		tDesc5.fZBufferOrder = 0.43f;
 		tDesc5.strImgName = L"UnitFrame_Dragon";
-		tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc5._shaderName = PROTO_RES_DEFAULTHIGHLIGHTUISHADER;
 		tDesc5.DrawOrder = L"Priority";
 		tDesc5.v2Size.x = static_cast<_float>(142.5);
 		tDesc5.v2Size.y = static_cast<_float>(142.5);
@@ -438,10 +440,9 @@ void CMainScene::CreateGameSceneUI()
 		m_spBackDragonPlayerFrameUI->SetActive(false);
 	}
 	{
-		// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
 		tDesc5.fZBufferOrder = 0.43f;
 		tDesc5.strImgName = L"UnitFrame_Avatar_Background";
-		tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc5._shaderName = PROTO_RES_DEFAULTHIGHLIGHTUISHADER;
 		tDesc5.DrawOrder = L"Middle";
 		tDesc5.v2Size.x = static_cast<_float>(80);
 		tDesc5.v2Size.y = static_cast<_float>(80);
@@ -451,10 +452,9 @@ void CMainScene::CreateGameSceneUI()
 	}
 		
 	{
-		// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
 		tDesc5.fZBufferOrder = 0.43f;
 		tDesc5.strImgName = L"UnitFrame_Avatar_Example";
-		tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc5._shaderName = PROTO_RES_DEFAULTHIGHLIGHTUISHADER;
 		tDesc5.DrawOrder = L"Last";
 		tDesc5.v2Size.x = static_cast<_float>(75);
 		tDesc5.v2Size.y = static_cast<_float>(75);
@@ -463,10 +463,9 @@ void CMainScene::CreateGameSceneUI()
 		m_spFrontPlayerFrameUI->SetActive(false);
 	}
 	{
-		// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
 		tDesc5.fZBufferOrder = 0.43f;
 		tDesc5.strImgName = L"PlayerLogo";
-		tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc5._shaderName = PROTO_RES_DEFAULTHIGHLIGHTUISHADER;
 		tDesc5.DrawOrder = L"Last";
 		tDesc5.v2Size.x = static_cast<_float>(100);
 		tDesc5.v2Size.y = static_cast<_float>(45);
@@ -474,11 +473,32 @@ void CMainScene::CreateGameSceneUI()
 		m_spPlayerNameUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
 		m_spPlayerNameUI->SetActive(false);
 	}
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"Key_Tab";
+		tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(50);
+		tDesc5.v2Size.y = static_cast<_float>(50);
+		tDesc5.v2Pos = _float2{ 115,960 };
+		m_spTABUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spTABUI->SetActive(false);
+	}
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"KeySettings";
+		tDesc5._shaderName = PROTO_RES_DEFAULTHIGHLIGHTUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(100);
+		tDesc5.v2Size.y = static_cast<_float>(50);
+		tDesc5.v2Pos = _float2{ 200,960 };
+		m_spTABTEXTUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spTABTEXTUI->SetActive(false);
+	}
 	
 	//=====================Minotaur UI=========================
 	CImageUI::UIDESC tDesc1;
 	{
-		// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
 		tDesc1.fZBufferOrder = 0.43f;
 		tDesc1.strImgName = L"Boss";
 		tDesc1._shaderName = PROTO_RES_HPBARUISHADER;
@@ -492,7 +512,6 @@ void CMainScene::CreateGameSceneUI()
 		m_spMinotaurHpBarUI->SetCurHp(258.f);
 	}
 	{
-		// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
 		tDesc5.fZBufferOrder = 0.43f;
 		tDesc5.strImgName = L"MinotaurFrame";
 		tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
@@ -505,6 +524,257 @@ void CMainScene::CreateGameSceneUI()
 	}
 }
 
+void CMainScene::CreateKeyInfoUI()
+{
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	CImageUI::UIDESC tDesc5;
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"BookPage";
+		tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc5.DrawOrder = L"Middle";
+		tDesc5.v2Size.x = static_cast<_float>(1000);
+		tDesc5.v2Size.y = static_cast<_float>(650);
+		tDesc5.v2Pos = _float2{ 640,400 };
+		m_spBOOKPAGEUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spBOOKPAGEUI->SetActive(false);
+	}
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"KeyboardControls";
+		tDesc5._shaderName = PROTO_RES_DEFAULTHIGHLIGHTUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(260);
+		tDesc5.v2Size.y = static_cast<_float>(80);
+		tDesc5.v2Pos = _float2{ 315,125};
+		m_spKEYBOARDCONTROLSUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spKEYBOARDCONTROLSUI->SetActive(false);
+	}
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"wasd";
+		tDesc5._shaderName = PROTO_RES_DEFAULTHIGHLIGHTUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(180);
+		tDesc5.v2Size.y = static_cast<_float>(100);
+		tDesc5.v2Pos = _float2{ 352.5,230 };
+		m_spMOVEUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spMOVEUI->SetActive(false);
+	}
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"Move";
+		tDesc5._shaderName = PROTO_RES_DEFAULTHIGHLIGHTUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(120);
+		tDesc5.v2Size.y = static_cast<_float>(50);
+		tDesc5.v2Pos = _float2{ 350,310 };
+		m_spMOVETextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spMOVETextUI->SetActive(false);
+	}
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"Key_ShiftL";
+		tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(180);
+		tDesc5.v2Size.y = static_cast<_float>(60);
+		tDesc5.v2Pos = _float2{ 625,250 };
+		m_spRUNUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spRUNUI->SetActive(false);
+	}
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"Run";
+		tDesc5._shaderName = PROTO_RES_DEFAULTHIGHLIGHTUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(120);
+		tDesc5.v2Size.y = static_cast<_float>(50);
+		tDesc5.v2Pos = _float2{ 625,310 };
+		m_spRUNTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spRUNTextUI->SetActive(false);
+	}
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"Key_Space";
+		tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(200);
+		tDesc5.v2Size.y = static_cast<_float>(60);
+		tDesc5.v2Pos = _float2{925,250 };
+		m_spJUMPSTANDUPUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spJUMPSTANDUPUI->SetActive(false);
+	}
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"JumpStandUp";
+		tDesc5._shaderName = PROTO_RES_DEFAULTHIGHLIGHTUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(240);
+		tDesc5.v2Size.y = static_cast<_float>(75);
+		tDesc5.v2Pos = _float2{ 925,315 };
+		m_spJUMPSTANDUPTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spJUMPSTANDUPTextUI->SetActive(false);
+	}
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"Key_Q";
+		tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(50);
+		tDesc5.v2Size.y = static_cast<_float>(50);
+		tDesc5.v2Pos = _float2{ 325,400 };
+		m_spSHORTATTACKUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spSHORTATTACKUI->SetActive(false);
+	}
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"ShortDoubleAttack";
+		tDesc5._shaderName = PROTO_RES_DEFAULTHIGHLIGHTUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(200);
+		tDesc5.v2Size.y = static_cast<_float>(50);
+		tDesc5.v2Pos = _float2{ 325,450 };
+		m_spSHORTATTACKTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spSHORTATTACKTextUI->SetActive(false);
+	}
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"Key_1";
+		tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(50);
+		tDesc5.v2Size.y = static_cast<_float>(50);
+		tDesc5.v2Pos = _float2{ 525,400 };
+		m_spULTIMATEATTACKONEUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spULTIMATEATTACKONEUI->SetActive(false);
+	}
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"UltimateAttack1";
+		tDesc5._shaderName = PROTO_RES_DEFAULTHIGHLIGHTUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(200);
+		tDesc5.v2Size.y = static_cast<_float>(50);
+		tDesc5.v2Pos = _float2{ 525,450 };
+		m_spULTIMATEATTACKONETextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spULTIMATEATTACKONETextUI->SetActive(false);
+	}
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"Key_2";
+		tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(50);
+		tDesc5.v2Size.y = static_cast<_float>(50);
+		tDesc5.v2Pos = _float2{ 725,400 };
+		m_spULTIMATEATTACKTWOUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spULTIMATEATTACKTWOUI->SetActive(false);
+	}
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"UltimateAttack2";
+		tDesc5._shaderName = PROTO_RES_DEFAULTHIGHLIGHTUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(200);
+		tDesc5.v2Size.y = static_cast<_float>(50);
+		tDesc5.v2Pos = _float2{ 725,450 };
+		m_spULTIMATEATTACKTWOTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spULTIMATEATTACKTWOTextUI->SetActive(false);
+	}
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"Key_R";
+		tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(50);
+		tDesc5.v2Size.y = static_cast<_float>(50);
+		tDesc5.v2Pos = _float2{ 925,400 };
+		m_spDETACTABILITYUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spDETACTABILITYUI->SetActive(false);
+	}
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"DetactAbility";
+		tDesc5._shaderName = PROTO_RES_DEFAULTHIGHLIGHTUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(200);
+		tDesc5.v2Size.y = static_cast<_float>(50);
+		tDesc5.v2Pos = _float2{ 925,450 };
+		m_spDETACTABILITYTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spDETACTABILITYTextUI->SetActive(false);
+	}
+
+
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"Key_C";
+		tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(50);
+		tDesc5.v2Size.y = static_cast<_float>(50);
+		tDesc5.v2Pos = _float2{ 325,600 };
+		m_spROLLUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spROLLUI->SetActive(false);
+	}
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"Roll";
+		tDesc5._shaderName = PROTO_RES_DEFAULTHIGHLIGHTUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(100);
+		tDesc5.v2Size.y = static_cast<_float>(50);
+		tDesc5.v2Pos = _float2{ 325,650 };
+		m_spROLLTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spROLLTextUI->SetActive(false);
+	}
+
+
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"Trg_Mouse_LeftClick";
+		tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(100);
+		tDesc5.v2Size.y = static_cast<_float>(100);
+		tDesc5.v2Pos = _float2{ 725,600 };
+		m_spCOMBOATTACKONEUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spCOMBOATTACKONEUI->SetActive(false);
+	}
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"ComboAttack1";
+		tDesc5._shaderName = PROTO_RES_DEFAULTHIGHLIGHTUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(100);
+		tDesc5.v2Size.y = static_cast<_float>(50);
+		tDesc5.v2Pos = _float2{ 725,672 };
+		m_spCOMBOATTACKONETextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spCOMBOATTACKONETextUI->SetActive(false);
+	}
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"Trg_Mouse_RightClick";
+		tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(100);
+		tDesc5.v2Size.y = static_cast<_float>(100);
+		tDesc5.v2Pos = _float2{ 925,600 };
+		m_spCOMBOATTACKTWOUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spCOMBOATTACKTWOUI->SetActive(false);
+	}
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"ComboAttack2";
+		tDesc5._shaderName = PROTO_RES_DEFAULTHIGHLIGHTUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(100);
+		tDesc5.v2Size.y = static_cast<_float>(50);
+		tDesc5.v2Pos = _float2{ 925,672 };
+		m_spCOMBOATTACKTWOTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spCOMBOATTACKTWOTextUI->SetActive(false);
+	}
+}
 
 HRESULT CMainScene::LoadSceneData()
 {
@@ -541,6 +811,7 @@ HRESULT CMainScene::LoadSceneData()
 #else 
 	CreateStartSceneUI();
 #endif
+	CreateKeyInfoUI();
 	CreateGameSceneUI();
 	{
 		m_spMap = CreateConstructorNative<CMap>(spGameInstance->GetDevice());
@@ -673,6 +944,8 @@ HRESULT CMainScene::LoadSceneData()
 void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	
+	
 
 	if (m_spEnterButtonUI->IsMouseOnRect()&& m_spEnterButtonUI->IsActive()) {
 
@@ -714,7 +987,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 	}
 
 	if (m_fStartSceneLoadingTimer > 10.f) {
-
+		//GameStart 시
 		spGameInstance->SetGameStartEffect();
 		m_spBackgroundUI->SetActive(false);
 		m_spMainTitleUI->SetActive(false);
@@ -737,11 +1010,66 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 		{//font
 			m_spTestFont->SetRender(true);
 		}
+		if (spGameInstance->GetDIKeyPressing(DIK_TAB)) {
+			{//키 조작 UI들 활성화
+				m_spBOOKPAGEUI->SetActive(true);
+				m_spKEYBOARDCONTROLSUI->SetActive(true);
+				m_spMOVEUI->SetActive(true);
+				m_spMOVETextUI->SetActive(true);
+				m_spRUNUI->SetActive(true);
+				m_spRUNTextUI->SetActive(true);
+				m_spJUMPSTANDUPUI->SetActive(true);
+				m_spJUMPSTANDUPTextUI->SetActive(true);
+				m_spSHORTATTACKUI->SetActive(true);
+				m_spSHORTATTACKTextUI->SetActive(true);
+				m_spULTIMATEATTACKONEUI->SetActive(true);
+				m_spULTIMATEATTACKONETextUI->SetActive(true);
+				m_spULTIMATEATTACKTWOUI->SetActive(true);
+				m_spULTIMATEATTACKTWOTextUI->SetActive(true);
+				m_spDETACTABILITYUI->SetActive(true);
+				m_spDETACTABILITYTextUI->SetActive(true);
+				m_spROLLUI->SetActive(true);
+				m_spROLLTextUI->SetActive(true);
+				m_spCOMBOATTACKONEUI->SetActive(true);
+				m_spCOMBOATTACKONETextUI->SetActive(true);
+				m_spCOMBOATTACKTWOUI->SetActive(true);
+				m_spCOMBOATTACKTWOTextUI->SetActive(true);
+			}
+		}
+		else {
+			{//키 조작 UI들 비활성화
+				m_spBOOKPAGEUI->SetActive(false);
+				m_spKEYBOARDCONTROLSUI->SetActive(false);
+				m_spMOVEUI->SetActive(false);
+				m_spMOVETextUI->SetActive(false);
+				m_spRUNUI->SetActive(false);
+				m_spRUNTextUI->SetActive(false);
+				m_spJUMPSTANDUPUI->SetActive(false);
+				m_spJUMPSTANDUPTextUI->SetActive(false);
+				m_spSHORTATTACKUI->SetActive(false);
+				m_spSHORTATTACKTextUI->SetActive(false);
+				m_spULTIMATEATTACKONEUI->SetActive(false);
+				m_spULTIMATEATTACKONETextUI->SetActive(false);
+				m_spULTIMATEATTACKTWOUI->SetActive(false);
+				m_spULTIMATEATTACKTWOTextUI->SetActive(false);
+				m_spDETACTABILITYUI->SetActive(false);
+				m_spDETACTABILITYTextUI->SetActive(false);
+				m_spROLLUI->SetActive(false);
+				m_spROLLTextUI->SetActive(false);
+				m_spCOMBOATTACKONEUI->SetActive(false);
+				m_spCOMBOATTACKONETextUI->SetActive(false);
+				m_spCOMBOATTACKTWOUI->SetActive(false);
+				m_spCOMBOATTACKTWOTextUI->SetActive(false);
+			}
+		}
+
 		m_spHpBarUI->SetActive(true);
 		m_spBackPlayerFrameUI->SetActive(true);
 		m_spBackDragonPlayerFrameUI->SetActive(true);
 		m_spFrontPlayerFrameUI->SetActive(true);
 		m_spPlayerNameUI->SetActive(true);
+		m_spTABUI->SetActive(true);
+		m_spTABTEXTUI->SetActive(true);
 
 		//==========Minotaur Hp===============
 		m_spMinotaurHpBarUI->SetActive(true);
