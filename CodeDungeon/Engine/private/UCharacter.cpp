@@ -173,6 +173,16 @@ void UCharacter::DecreaseHealth(_int amount)
 	}
 }
 
+void UCharacter::IncreaseHealth(_int amount)
+{
+	m_iPrevHealth = m_iHealth;
+	m_iHealth += amount;
+	if (m_iHealth > m_iMaxHealth)
+	{
+		m_iHealth = m_iMaxHealth;
+	}
+}
+
 void UCharacter::SetAnimModelRim(_int _SetRim)
 {
 	m_spAnimModel->SetAnimModelRim(_SetRim);

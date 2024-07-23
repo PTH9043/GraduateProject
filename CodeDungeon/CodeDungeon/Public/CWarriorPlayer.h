@@ -47,7 +47,14 @@ public: /* Get Set */
 	const _double& GetWarriorKickedTimeElapsed() { return m_dKickedElapsed; }
 	void SetWarriorKickedTimeElapsed(_double _newTime) { m_dKickedElapsed = _newTime; }
 
-	void SetCanInteractState(const _bool& _newState) { m_bCanInteract = _newState; }
+	void SetCanInteractChestState(const _bool& _newState) { m_bCanInteractChest = _newState; }
+	_bool GetCanInteractChestState() { return m_bCanInteractChest; }
+	void SetCanInteractBarState(const _bool& _newState) { m_bCanInteractBar = _newState; }
+	_bool GetCanInteractBarState() { return m_bCanInteractBar; }
+	void SetCanInteractStatueState(const _bool& _newState) { m_bCanInteractStatue = _newState; }
+	_bool GetCanInteractStatueState() { return m_bCanInteractStatue; }
+
+	_float GetInteractionElapsedTime() { return m_fInteractionTimeElapsed; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
@@ -87,7 +94,11 @@ private:
 	_bool m_bisRise;
 
 	_double											m_dKickedElapsed;
-	_bool											m_bCanInteract;
+	_bool											m_bCanInteractChest;
+	_bool											m_bCanInteractBar;
+	_bool											m_bCanInteractStatue;
+
+	_float			m_fInteractionTimeElapsed=0;
 };
 END
 

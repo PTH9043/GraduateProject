@@ -92,6 +92,7 @@ public: /* get set */
 	void SetPrevHealth(const _int& _inewHealth) { m_iPrevHealth = _inewHealth; }
 
 	void DecreaseHealth(_int amount);
+	void IncreaseHealth(_int amount);
 	const _bool& GetDeathState() { return m_bisDeath; }
 	void SetDeathState(_bool _isDead) { m_bisDeath = _isDead; }
 

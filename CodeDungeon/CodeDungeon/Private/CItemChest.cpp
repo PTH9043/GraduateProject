@@ -105,7 +105,8 @@ void CItemChest::TickActive(const _double& _dTimeDelta)
 	//상자 여는 트리거
 	if (GetFoundTargetState())
 	{
-		static_pointer_cast<CWarriorPlayer>(GetTargetPlayer())->SetCanInteractState(true);
+		if(!m_bisOpen)
+		static_pointer_cast<CWarriorPlayer>(GetTargetPlayer())->SetCanInteractChestState(true);
 		if (spGameInstance->GetDIKeyDown(DIK_F)&&!m_bisOpen) {
 			static_pointer_cast<CWarriorPlayer>(GetTargetPlayer())->SetIfOpenChest(true);
 			SetOpeningState(true);
@@ -114,7 +115,7 @@ void CItemChest::TickActive(const _double& _dTimeDelta)
 	}
 	else
 	{
-		static_pointer_cast<CWarriorPlayer>(GetTargetPlayer())->SetCanInteractState(false);
+		static_pointer_cast<CWarriorPlayer>(GetTargetPlayer())->SetCanInteractChestState(false);
 	}
 
 	if (m_bisOpen)

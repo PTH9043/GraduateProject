@@ -35,7 +35,7 @@ CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _ws
 	m_bisKicked{ false },
 	m_dKickedElapsed{ 0 },
 	m_bisRise{ false },
-	m_bCanInteract{ false }
+	m_bCanInteractChest{ false }
 {
 }
 
@@ -52,7 +52,7 @@ CWarriorPlayer::CWarriorPlayer(const CWarriorPlayer& _rhs) :
 	m_bisKicked{ false },
 	m_dKickedElapsed{ 0 },
 	m_bisRise{ false },
-	m_bCanInteract{ false }
+	m_bCanInteractChest{ false }
 {
 }
 
@@ -200,7 +200,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetOutline(true);
 	SetifPlayer(true);//depth만 기록하고 outline안그리도록 다른 물체  outline depth판정위해
 	//SetIfOutlineScale(false); 만약 플레이어 그릴거면 SetifPlayer->false, SetIfOutlineScale->true
-	SetHealth(10000);
+	SetHealth(5000);
 	SetMaxHealth(10000);
 	SetAnimModelRim(true);
 	
@@ -301,6 +301,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	
 	if (IfOpenChestForHeal) {//2.1초 지속
 		HealTrigger = true;
+		IncreaseHealth(1); //이렇게 하면 119정도 오름
 		SetAnimModelRimColor(_float3(0, 1, 0));
 		m_spHealParticle->SetActive(true);
 		_float3 pos = GetTransform()->GetPos();
@@ -527,24 +528,59 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							SetOBJCollisionState(false);
 						}
 					}
-					else if (iter2.first == L"ForInteraction")
+					else if (iter2.first == L"ForInteractionStatue")
 					{
 						if (iter.second->IsCollision(iter2.second))
 						{
-							m_bCanInteract = true;
+							m_bCanInteractStatue = true;
 							pModelObject->SetOutline(true);
 						
 							//철장 여는 용도
-							if (spGameInstance->GetDIKeyDown(DIK_F)) {
+							if (spGameInstance->GetDIKeyPressing(DIK_F)) {
+								m_fInteractionTimeElapsed += _dTimeDelta;
+								
+							}
+							else {
+								m_fInteractionTimeElapsed = 0;
+							}
+							if (m_fInteractionTimeElapsed > 4.f) {
 								pModelObject->SetInteractionState(true);
-								pModelObject->SetOutline(false);
+								//pModelObject->SetOutline(false);
 							}
 								
 						}
 						else
 						{
 							pModelObject->SetOutline(false);
-							m_bCanInteract = false;
+							m_bCanInteractStatue = false;
+						}
+					}
+					else if (iter2.first == L"ForInteractionBars")
+					{
+						if (iter.second->IsCollision(iter2.second))
+						{
+							m_bCanInteractBar = true;
+							pModelObject->SetOutline(true);
+
+							//철장 여는 용도
+							if (spGameInstance->GetDIKeyPressing(DIK_F)) {
+								if(m_fInteractionTimeElapsed<4.f)
+								m_fInteractionTimeElapsed += _dTimeDelta;
+
+							}
+							else {
+								m_fInteractionTimeElapsed = 0;
+							}
+							if (m_fInteractionTimeElapsed > 3.99f) {
+								pModelObject->SetInteractionState(true);
+								//pModelObject->SetOutline(false);
+							}
+
+						}
+						else
+						{
+							pModelObject->SetOutline(false);
+							m_bCanInteractBar = false;
 						}
 					}
 				}
