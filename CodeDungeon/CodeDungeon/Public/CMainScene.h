@@ -152,6 +152,7 @@ private:
 	SHPTR<CImageUI>			m_spShortAttackKeyIconUI;
 	
 	//==============Boss Frame UI-=================
+	SHPTR<CImageUI>			m_spBossHpBarFrameUI;
 	//MinoTaur
 	SHPTR<CImageUI>			m_spMinotaurFrameUI;
 	SHPTR<CHpBarUI>			m_spMinotaurHpBarUI;

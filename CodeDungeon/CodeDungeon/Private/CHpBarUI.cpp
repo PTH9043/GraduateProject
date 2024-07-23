@@ -69,7 +69,7 @@ HRESULT CHpBarUI::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableD
 		m_spUITextureGroup->SetUpTextureName(GetShader(), SRV_REGISTER::T0, L"PlayerHp");
 	}
 	else if (GetUIDesc().strImgName == L"Boss") {
-		m_spUITextureGroup->SetUpTextureName(GetShader(), SRV_REGISTER::T0, L"GreenHp");
+		m_spUITextureGroup->SetUpTextureName(GetShader(), SRV_REGISTER::T0, L"BossHp");
 	}
 	
 	

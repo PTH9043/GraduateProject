@@ -702,6 +702,18 @@ void CMainScene::CreateGameSceneUI()
 	//=====================Minotaur UI=========================
 	CImageUI::UIDESC tDesc1;
 	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"BossHpGauge_Deco";
+		tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc5.DrawOrder = L"Middle";
+		tDesc5.v2Size.x = static_cast<_float>(1000);
+		tDesc5.v2Size.y = static_cast<_float>(15);
+		tDesc5.v2Pos = _float2{ 640,25 };
+		m_spBossHpBarFrameUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spBossHpBarFrameUI->SetActive(false);
+	}
+
+	{
 		tDesc1.fZBufferOrder = 0.43f;
 		tDesc1.strImgName = L"Boss";
 		tDesc1._shaderName = PROTO_RES_HPBARUISHADER;
@@ -1423,7 +1435,14 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 		m_spPlayerHpFont->SetText(health_string);		
 	}
 	{	//==========Minotaur Hp===============
+		if ((m_bIsFoundPlayer_Minotaur && !m_bIsDead_Minotaur) || (m_bisFoundPlayer_Harlequinn && !m_bisDead_Harlequinn) || (m_bisFoundPlayer_Anubis && !m_bisDead_Anubis)) {
+			m_spBossHpBarFrameUI->SetActive(true);
+		}
+		else {
+			m_spBossHpBarFrameUI->SetActive(false);
+		}
 		if (m_bIsFoundPlayer_Minotaur&&!m_bIsDead_Minotaur) {
+			
 			m_spMinotaurHpFont->SetRender(true);
 			m_spMinotaurFrameUI->SetActive(true);
 				m_spMinotaurHpBarUI->SetActive(true);
