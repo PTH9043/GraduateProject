@@ -139,6 +139,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
 
     // Hit state
     if (Hit && !isKicked) {
+        HitStack++;
         UpdateState(spAnimModel, ANIM_HIT, L"HIT_BACK");
         spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         spWarriorPlayer->SetPrevHealth(spWarriorPlayer->GetHealth());
@@ -155,6 +156,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     // Kicked state
     if (isKicked && CurAnimName != L"rise01") {
         UpdateState(spAnimModel, ANIM_HIT, L"GOTKICKED");
+        HitStack++;
         spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
     }
 
@@ -243,6 +245,13 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     }
     else {
         ShortAttackisAvailable = true;
+    }
+    if (HitStack >= 5) {
+        HitStack = 0;
+        BlindEffectOn = true;
+    }
+    else {
+        BlindEffectOn = false;
     }
 
     // Combo attack state

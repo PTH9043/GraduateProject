@@ -34,7 +34,7 @@ public:
 	_float GetUltAttackOneCoolTime() {return UltimateAttackOneCoolTime;}
 	_float GetUltAttackTwoCoolTime() {return UltimateAttackTwoCoolTime;}
 	_float GetShortAttackCoolTime() {return ShortAttackCoolTime;}
-
+	_bool GetBlindEffectBool() { return BlindEffectOn; }
 private:
 	WKPTR< CWarriorPlayer>			m_wpWarriorPlayer;
 	_int													m_iWComboStack;
@@ -52,6 +52,8 @@ private:
 	_bool UltAttackTwoisAvailable = true;
 	_bool ShortAttackisAvailable = true;
 
+	_float HitStack = 0;
+	_bool BlindEffectOn = false;
 };
 
 END

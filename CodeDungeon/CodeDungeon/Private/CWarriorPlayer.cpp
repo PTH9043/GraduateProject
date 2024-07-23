@@ -673,3 +673,9 @@ _float CWarriorPlayer::GetShortAttackCoolTime()
 	SHPTR<CUserWarriorAnimController> spController = static_pointer_cast<CUserWarriorAnimController>(GetAnimationController());
 	return spController->GetShortAttackCoolTime();
 }
+
+_bool CWarriorPlayer::GetBlindEffectBool()
+{
+	SHPTR<CUserWarriorAnimController> spController = static_pointer_cast<CUserWarriorAnimController>(GetAnimationController());
+	return spController->GetBlindEffectBool();
+}

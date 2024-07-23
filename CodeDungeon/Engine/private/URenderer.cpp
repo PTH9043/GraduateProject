@@ -326,9 +326,7 @@ HRESULT URenderer::Render()
     if (spGameInstance->GetDIKeyDown(DIK_F2)) {
         TurnDie++;
     }
-    if (spGameInstance->GetDIKeyDown(DIK_F3)) {
-        TurnOnHitEffect();
-    }
+
    
     
     if (TurnDie % 2 == 1) {
