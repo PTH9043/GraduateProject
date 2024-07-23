@@ -184,22 +184,65 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
             case 3: UpdateState(spAnimModel, ANIM_ATTACK, L"SATTACK3"); break;
             }
         }
-        else if (isRAttack) {
+        else if (isRAttack&& ShortAttackisAvailable&& UltimateAttackOneDurationTime< 0.0001f && UltimateAttackTwoDurationTime< 0.0001f) {
+            ShortAttackCoolTime = Q_SKILL;
+            ShortAttackDurationTime = 1.f;
             UpdateState(spAnimModel, ANIM_ATTACK, L"RATTACK");
             m_iWComboStack = 0;
             m_iSComboStack = 0;
         }
-        else if (isCombo1) {
+        else if (isCombo1&& UltAttackOneisAvailable&& UltimateAttackTwoDurationTime<0.0001f&& ShortAttackDurationTime< 0.0001f) {
+            UltimateAttackOneCoolTime = ONE_SKILL;
+            UltimateAttackOneDurationTime = 2.25f;
             UpdateState(spAnimModel, ANIM_ATTACK, L"COMBO5");
             m_iWComboStack = 0;
             m_iSComboStack = 0;
         }
-        else if (isCombo2) {
+        else if (isCombo2&& UltAttackTwoisAvailable&& ShortAttackDurationTime< 0.0001f && UltimateAttackOneDurationTime< 0.0001f) {
+            UltimateAttackTwoCoolTime = TWO_SKILL;
+            UltimateAttackTwoDurationTime = 2.5f;
             UpdateState(spAnimModel, ANIM_ATTACK, L"COMBO9");
             m_iWComboStack = 0;
             m_iSComboStack = 0;
         }
 
+    }
+
+    if (UltimateAttackOneCoolTime > 0.f) {
+        UltAttackOneisAvailable = false;
+       
+        UltimateAttackOneDurationTime -= _dTimeDelta;
+        if (UltimateAttackOneDurationTime <= 0)
+        {
+            UltimateAttackOneCoolTime -= _dTimeDelta;
+        }
+    }
+    else {
+        UltAttackOneisAvailable = true;
+    }
+
+    if (UltimateAttackTwoCoolTime > 0.f) {
+        UltAttackTwoisAvailable = false;
+        UltimateAttackTwoDurationTime -= _dTimeDelta;
+        if (UltimateAttackTwoDurationTime <= 0)
+        {
+            UltimateAttackTwoCoolTime -= _dTimeDelta;
+        }
+    }
+    else {
+        UltAttackTwoisAvailable = true;
+    }
+    if (ShortAttackCoolTime > 0.f) {
+        ShortAttackisAvailable = false;
+        ShortAttackDurationTime -= _dTimeDelta;
+        if (ShortAttackDurationTime <= 0)
+        {
+            ShortAttackCoolTime -= _dTimeDelta;
+        }
+      
+    }
+    else {
+        ShortAttackisAvailable = true;
     }
 
     // Combo attack state

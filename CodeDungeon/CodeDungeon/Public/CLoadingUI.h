@@ -12,6 +12,8 @@ class CLoadingUI final : public UUserInterface {
 	{
 		_float ifPressed;
 		_float _durationTime;
+		_float _DefaultcoolTime=1.f;
+		_float _LeftcoolTime=1.f;
 		_float2 _padding;
 	};
 public:
@@ -41,6 +43,12 @@ public:
 
 	void SetIfPicked(_bool _picked) {
 		_LoadingDesc.ifPressed = _picked;
+	}
+	void SetDefaultCoolTime(_float _coolTime) {
+		_LoadingDesc._DefaultcoolTime = _coolTime;
+	}
+	void SetLeftCoolTime(_float _leftTime) {
+		_LoadingDesc._LeftcoolTime = _leftTime;
 	}
 
 private:

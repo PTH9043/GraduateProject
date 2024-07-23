@@ -645,3 +645,21 @@ void CWarriorPlayer::TranslateStateMoveAndRunF(CSHPTRREF<UGameInstance> _spGameI
 		GetTransform()->MoveForward(_dTimeDelta, _fSpeed);
 	}
 }
+
+_float CWarriorPlayer::GetUltAttackOneCoolTime()
+{
+	SHPTR<CUserWarriorAnimController> spController = static_pointer_cast<CUserWarriorAnimController>(GetAnimationController());
+	return spController->GetUltAttackOneCoolTime();
+}
+
+_float CWarriorPlayer::GetUltAttackTwoCoolTime()
+{
+	SHPTR<CUserWarriorAnimController> spController = static_pointer_cast<CUserWarriorAnimController>(GetAnimationController());
+	return spController->GetUltAttackTwoCoolTime();
+}
+
+_float CWarriorPlayer::GetShortAttackCoolTime()
+{
+	SHPTR<CUserWarriorAnimController> spController = static_pointer_cast<CUserWarriorAnimController>(GetAnimationController());
+	return spController->GetShortAttackCoolTime();
+}

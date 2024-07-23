@@ -31,11 +31,26 @@ public:
 	// 네트워크 정보를 받아오는 함수
 	virtual void ReceiveNetworkProcessData(void* _pData) override;
 
+	_float GetUltAttackOneCoolTime() {return UltimateAttackOneCoolTime;}
+	_float GetUltAttackTwoCoolTime() {return UltimateAttackTwoCoolTime;}
+	_float GetShortAttackCoolTime() {return ShortAttackCoolTime;}
 
 private:
 	WKPTR< CWarriorPlayer>			m_wpWarriorPlayer;
 	_int													m_iWComboStack;
 	_int													m_iSComboStack;
+
+	_float			UltimateAttackOneCoolTime = 0;
+	_float			UltimateAttackTwoCoolTime = 0;
+	_float			ShortAttackCoolTime = 0;
+
+	_float			UltimateAttackOneDurationTime = 0;
+	_float			UltimateAttackTwoDurationTime = 0;
+	_float			ShortAttackDurationTime = 0;
+
+	_bool UltAttackOneisAvailable = true;
+	_bool UltAttackTwoisAvailable = true;
+	_bool ShortAttackisAvailable = true;
 
 };
 

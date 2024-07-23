@@ -57,6 +57,10 @@ protected:
 #endif
 private:
 	void TranslateStateMoveAndRunF(CSHPTRREF<UGameInstance> _spGameInstance, const _double& _dTimeDelta, const _float _fSpeed);
+public:
+	_float GetUltAttackOneCoolTime();
+	_float GetUltAttackTwoCoolTime();
+	_float GetShortAttackCoolTime() ;
 private:
 	SHPTR<UParticle>										m_spFootPrintParticle;
 	SHPTR<UParticle>										m_spHealParticle;

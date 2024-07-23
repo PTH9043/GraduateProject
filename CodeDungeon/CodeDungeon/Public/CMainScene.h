@@ -70,6 +70,10 @@ private:
 	_bool			m_bisMobsAllDead_Interior_Room_D;
 	_bool			m_bisMobsAllDead_Interior_Room_F;
 	_bool			m_bisMobsAllDead_Interior_Room_G;
+
+	_float r_AbilityCoolTime = 0;
+	_float r_AbilityDurationTime = 0;
+	_bool r_AbilityisAvailable = true;
 private:
 	//------------Á¶ÀÛ¹ý Controll Keys UI-----------
 	SHPTR<CImageUI>			m_spBOOKPAGEUI;
@@ -137,14 +141,14 @@ private:
 	SHPTR<CImageUI>			m_spTABTEXTUI;
 	//--------------ATTACK UI------------------
 	SHPTR<CImageUI>			m_spUltimateAttackOneFrameUI;
-	SHPTR<CImageUI>			m_spUltimateAttackOneUI;
+	SHPTR<CLoadingUI>			m_spUltimateAttackOneUI;
 	SHPTR<CImageUI>			m_spUltimateAttackTwoFrameUI;
-	SHPTR<CImageUI>			m_spUltimateAttackTwoUI;
+	SHPTR<CLoadingUI>			m_spUltimateAttackTwoUI;
 	SHPTR<CImageUI>			m_spDetactAbilityIconFrameUI;
-	SHPTR<CImageUI>			m_spDetactAbilityIconUI;
+	SHPTR<CLoadingUI>			m_spDetactAbilityIconUI;
 	SHPTR<CImageUI>			m_spDetactAbilityKeyIconUI;
 	SHPTR<CImageUI>			m_spShortAttackIconFrameUI;
-	SHPTR<CImageUI>			m_spShortAttackIconUI;
+	SHPTR<CLoadingUI>			m_spShortAttackIconUI;
 	SHPTR<CImageUI>			m_spShortAttackKeyIconUI;
 	
 	//==============Boss Frame UI-=================

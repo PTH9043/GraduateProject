@@ -1575,5 +1575,8 @@
     <FxCompile Include="..\..\Shader\DefaultUI.hlsl">
       <Filter>98.ShaderFile\UI</Filter>
     </FxCompile>
+    <FxCompile Include="..\..\Shader\CoolTimeUI.hlsl">
+      <Filter>98.ShaderFile\UI</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

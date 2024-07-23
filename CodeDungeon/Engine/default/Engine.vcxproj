@@ -355,6 +355,7 @@
     <FxCompile Include="..\..\Shader\Compute2DHeal.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DOpenChest.hlsl" />
     <FxCompile Include="..\..\Shader\Compute2DSlash.hlsl" />
+    <FxCompile Include="..\..\Shader\CoolTimeUI.hlsl" />
     <FxCompile Include="..\..\Shader\DefaultHighlightUI.hlsl" />
     <FxCompile Include="..\..\Shader\DefaultUI.hlsl" />
     <FxCompile Include="..\..\Shader\DepthRecord.hlsl" />

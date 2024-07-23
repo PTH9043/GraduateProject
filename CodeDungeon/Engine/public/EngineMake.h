@@ -79,6 +79,7 @@
 #define PROTO_RES_BACKGROUNDUISHADER L"Proto_Res_BackGroundUIShader"
 #define PROTO_RES_BUTTONUISHADER L"Proto_Res_ButtonUIShader"
 #define PROTO_RES_LOADINGUISHADER L"Proto_Res_LoadingUIShader"
+#define PROTO_RES_COOLTIMEUISHADER L"Proto_Res_CoolTimeUIShader"
 #define PROTO_RES_LOADINGDOTUISHADER L"Proto_Res_LoadingDotUIShader"
 #define PROTO_RES_PLEASEWAITUISHADER L"Proto_Res_PleaseWaitUIShader"
 #define PROTO_RES_HPBARUISHADER L"Proto_Res_HpBarUIShader"

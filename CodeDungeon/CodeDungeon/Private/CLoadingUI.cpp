@@ -47,6 +47,7 @@ void CLoadingUI::TickActive(const _double& _dTimeDelta)
 	else {
 		_LoadingDesc._durationTime = 0;
 	}
+
 }
 
 void CLoadingUI::LateTickActive(const _double& _dTimeDelta)

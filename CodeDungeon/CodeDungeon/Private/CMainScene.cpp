@@ -315,13 +315,14 @@ void CMainScene::CreateAttackUI()
 	{
 		tDesc.fZBufferOrder = 0.99f;
 		tDesc.strImgName = L"T_DLCBossMission_103_001";
-		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc._shaderName = PROTO_RES_COOLTIMEUISHADER;
 		tDesc.DrawOrder = L"Middle";
 		tDesc.v2Size.x = static_cast<_float>(80);
 		tDesc.v2Size.y = static_cast<_float>(80);
 		tDesc.v2Pos = _float2{ 550,900 };
-		m_spUltimateAttackOneUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spUltimateAttackOneUI = std::static_pointer_cast<CLoadingUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_LOADINGUI, { &tDesc }));
 		m_spUltimateAttackOneUI->SetActive(false);
+		m_spUltimateAttackOneUI->SetDefaultCoolTime(ONE_SKILL);
 	}
 	{
 		tDesc.fZBufferOrder = 0.99f;
@@ -337,13 +338,14 @@ void CMainScene::CreateAttackUI()
 	{
 		tDesc.fZBufferOrder = 0.99f;
 		tDesc.strImgName = L"T_DLCBossMission_105_002";
-		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc._shaderName = PROTO_RES_COOLTIMEUISHADER;
 		tDesc.DrawOrder = L"Middle";
 		tDesc.v2Size.x = static_cast<_float>(80);
 		tDesc.v2Size.y = static_cast<_float>(80);
 		tDesc.v2Pos = _float2{ 750,900 };
-		m_spUltimateAttackTwoUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spUltimateAttackTwoUI = std::static_pointer_cast<CLoadingUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_LOADINGUI, { &tDesc }));
 		m_spUltimateAttackTwoUI->SetActive(false);
+		m_spUltimateAttackTwoUI->SetDefaultCoolTime(TWO_SKILL);
 	}
 	{
 		tDesc.fZBufferOrder = 0.99f;
@@ -355,50 +357,18 @@ void CMainScene::CreateAttackUI()
 		tDesc.v2Pos = _float2{ 750,900 };
 		m_spUltimateAttackTwoFrameUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
 		m_spUltimateAttackTwoFrameUI->SetActive(false);
-	}
-	{
-		tDesc.fZBufferOrder = 0.99f;
-		tDesc.strImgName = L"T_DLCBossMission_315";
-		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
-		tDesc.DrawOrder = L"Priority";
-		tDesc.v2Size.x = static_cast<_float>(80);
-		tDesc.v2Size.y = static_cast<_float>(80);
-		tDesc.v2Pos = _float2{ 950,900 };
-		m_spDetactAbilityIconUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
-		m_spDetactAbilityIconUI->SetActive(false);
-	}
-	{
-		tDesc.fZBufferOrder = 0.99f;
-		tDesc.strImgName = L"Inventory_Slot_IconFrame";
-		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
-		tDesc.DrawOrder = L"Middle";
-		tDesc.v2Size.x = static_cast<_float>(90);
-		tDesc.v2Size.y = static_cast<_float>(90);
-		tDesc.v2Pos = _float2{ 950,900 };
-		m_spDetactAbilityIconFrameUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
-		m_spDetactAbilityIconFrameUI->SetActive(false);
-	}
-	{
-		tDesc.fZBufferOrder = 0.99f;
-		tDesc.strImgName = L"Key_R";
-		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
-		tDesc.DrawOrder = L"Last";
-		tDesc.v2Size.x = static_cast<_float>(30);
-		tDesc.v2Size.y = static_cast<_float>(30);
-		tDesc.v2Pos = _float2{ 980,930 };
-		m_spDetactAbilityKeyIconUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
-		m_spDetactAbilityKeyIconUI->SetActive(false);
-	}
+	}	
 	{
 		tDesc.fZBufferOrder = 0.99f;
 		tDesc.strImgName = L"T_DLC_ApplyDamage07";
-		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc._shaderName = PROTO_RES_COOLTIMEUISHADER;
 		tDesc.DrawOrder = L"Priority";
 		tDesc.v2Size.x = static_cast<_float>(80);
 		tDesc.v2Size.y = static_cast<_float>(80);
-		tDesc.v2Pos = _float2{ 1150,900 };
-		m_spShortAttackIconUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		tDesc.v2Pos = _float2{ 950,900 };
+		m_spShortAttackIconUI = std::static_pointer_cast<CLoadingUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_LOADINGUI, { &tDesc }));
 		m_spShortAttackIconUI->SetActive(false);
+		m_spShortAttackIconUI->SetDefaultCoolTime(Q_SKILL);
 	}
 	{
 		tDesc.fZBufferOrder = 0.99f;
@@ -407,7 +377,7 @@ void CMainScene::CreateAttackUI()
 		tDesc.DrawOrder = L"Middle";
 		tDesc.v2Size.x = static_cast<_float>(90);
 		tDesc.v2Size.y = static_cast<_float>(90);
-		tDesc.v2Pos = _float2{ 1150,900 };
+		tDesc.v2Pos = _float2{ 950,900 };
 		m_spShortAttackIconFrameUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
 		m_spShortAttackIconFrameUI->SetActive(false);
 	}
@@ -418,9 +388,44 @@ void CMainScene::CreateAttackUI()
 		tDesc.DrawOrder = L"Last";
 		tDesc.v2Size.x = static_cast<_float>(30);
 		tDesc.v2Size.y = static_cast<_float>(30);
-		tDesc.v2Pos = _float2{ 1180,930 };
+		tDesc.v2Pos = _float2{ 980,930 };
 		m_spShortAttackKeyIconUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
 		m_spShortAttackKeyIconUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"T_DLCBossMission_315";
+		tDesc._shaderName = PROTO_RES_COOLTIMEUISHADER;
+		tDesc.DrawOrder = L"Priority";
+		tDesc.v2Size.x = static_cast<_float>(80);
+		tDesc.v2Size.y = static_cast<_float>(80);
+		tDesc.v2Pos = _float2{ 1150,900 };
+		m_spDetactAbilityIconUI = std::static_pointer_cast<CLoadingUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_LOADINGUI, { &tDesc }));
+		m_spDetactAbilityIconUI->SetDefaultCoolTime(R_SKILL);
+		m_spDetactAbilityIconUI->SetActive(false);
+	
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"Inventory_Slot_IconFrame";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Middle";
+		tDesc.v2Size.x = static_cast<_float>(90);
+		tDesc.v2Size.y = static_cast<_float>(90);
+		tDesc.v2Pos = _float2{ 1150,900 };
+		m_spDetactAbilityIconFrameUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spDetactAbilityIconFrameUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"Key_R";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(30);
+		tDesc.v2Size.y = static_cast<_float>(30);
+		tDesc.v2Pos = _float2{ 1180,930 };
+		m_spDetactAbilityKeyIconUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spDetactAbilityKeyIconUI->SetActive(false);
 	}
 }
 
@@ -1325,6 +1330,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 void CMainScene::Tick(const _double& _dTimeDelta)
 {
 	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
+
 	DrawStartSceneUI(_dTimeDelta);
 	TurnLightsOnRange();
 	TurnRoomsOnRange();
@@ -1411,10 +1417,32 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 		
 	}
 	{  // If Use R Ability
-		if (pGameInstance->GetDIKeyDown(DIK_R)&& m_bStartGameForUI)
+		if (pGameInstance->GetDIKeyDown(DIK_R) && m_bStartGameForUI && !pGameInstance->GetIfAbilityIsOn()&& r_AbilityisAvailable)
 		{
+			
 			pGameInstance->TurnOnAbilityEffect();
+			r_AbilityCoolTime = R_SKILL;
+			r_AbilityDurationTime = 5.f;
 		}
+		if (r_AbilityCoolTime > 0) { 
+			r_AbilityisAvailable = false;
+			r_AbilityDurationTime -= _dTimeDelta;
+			if (r_AbilityDurationTime <= 0) {
+				r_AbilityCoolTime -= _dTimeDelta;
+			}
+			 
+		}else {
+			r_AbilityisAvailable = true;
+		}
+		{ //SKILL COOLTIME
+
+			m_spUltimateAttackOneUI->SetLeftCoolTime(m_spWarriorPlayer->GetUltAttackOneCoolTime());
+			m_spUltimateAttackTwoUI->SetLeftCoolTime(m_spWarriorPlayer->GetUltAttackTwoCoolTime());
+			m_spDetactAbilityIconUI->SetLeftCoolTime(r_AbilityCoolTime);
+			m_spShortAttackIconUI->SetLeftCoolTime(m_spWarriorPlayer->GetShortAttackCoolTime());
+		}
+		
+	
 		if (pGameInstance->GetIfAbilityIsOn()) {
 			m_spRecUI->SetIfPicked(true);
 			m_spRecUI->SetActive(true);
@@ -1433,6 +1461,7 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 			m_spPlayerAbilityLeftTimeFont->SetRender(false);
 		}
 	}
+	
 
 	if(pGameInstance->GetDIKeyDown(DIK_ESCAPE))
 		::PostQuitMessage(0);
