@@ -77,7 +77,6 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 
 	int cellIndex = 0;
 	SHPTR<UCell> spCell = spNavigation->FindCell(cellIndex);
-
 	GetTransform()->SetPos(spCell->GetCenterPos());
 	SetSpawnPoint(spCell);
 	SetSpawnPoint(spCell->GetCenterPos());
@@ -88,7 +87,6 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 		spMainCamera->SetMoveState(false);
 	}
 	GetAnimModel()->SetAnimation(L"idle01");
-	//GetTransform()->RotateFix(_float3{ 0.f, DirectX::XMConvertToRadians(180.f), 0.f });
 	GetTransform()->SetScale({ 0.5f, 0.5f, 0.5f });
 	SetMovingSpeed(50.f);
 	SetRunningSpeed(100.f);

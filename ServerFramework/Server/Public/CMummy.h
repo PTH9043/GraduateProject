@@ -1,11 +1,11 @@
 #ifndef _SERVERFRAMEWORK_SERVER_PUBLIC_CMUMMY_H
 #define _SERVERFRAMEWORK_SERVER_PUBLIC_CMUMMY_H
 
-#include "AMonster.h"
+#include "CServerMonster.h"
 
 BEGIN(Server)
 
-class CMummy final : public AMonster {
+class CMummy final : public CServerMonster {
 public:
 	CMummy(OBJCON_CONSTRUCTOR, SESSIONID _ID, MUMMYTYPE _MummyType, SHPTR<AJobTimer> _spMonsterJobTimer);
 	DESTRUCTOR(CMummy)

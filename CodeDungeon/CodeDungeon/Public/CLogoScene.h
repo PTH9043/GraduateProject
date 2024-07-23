@@ -34,7 +34,11 @@ private:
 	SHPTR<CLoadingUI>			m_spLoadingDotsUI;
 	SHPTR<CLoadingUI>			m_spPleaseWaitTextUI;
 
-	SHPTR<CButtonUI>			m_spButtonUI;
+	SHPTR<CButtonUI>			m_spEnterButtonUI;
+	SHPTR<CButtonUI>			m_spExitButtonUI;
+	_float m_fStartSceneLoadingTimer = 0;
+	_bool m_bStartSceneForUI = false;
+	_bool m_bStartGameForUI = false;
 };
 
 END

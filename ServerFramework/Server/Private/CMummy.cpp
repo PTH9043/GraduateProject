@@ -14,7 +14,7 @@
 namespace Server
 {
 	CMummy::CMummy(OBJCON_CONSTRUCTOR,  SESSIONID _ID, MUMMYTYPE _MummyType, SHPTR<AJobTimer> _spMonsterJobTimer)
-		: AMonster(OBJCON_CONDATA, _ID, _spMonsterJobTimer), 
+		: CServerMonster(OBJCON_CONDATA, _ID, _spMonsterJobTimer),
 		m_eMumyType{ _MummyType }, m_isAttackMode{ false }, m_isLastAttackWasFirst{ false },
 		m_IdleTimer{2}, m_IdleRandomValueChooseTimer{2}, m_AttackTimer{3},
 		m_iRandomValue{0}, m_isSendMonsterFindPacket{true}
@@ -27,7 +27,7 @@ namespace Server
 		{
 			SetMonsterType(TAG_CHAR::TAG_MUMMY_STANDING);
 		}
-		UpdateFindRange(30.f, 80.f);
+		UpdateFindRange(40.f, 90.f);
 		SetMoveSpeed(5);
 		SetAttackRange(9.f);
 	}
@@ -85,7 +85,7 @@ namespace Server
 
 	void CMummy::State(SHPTR<ASession> _spSession, _int _MonsterState)
 	{
-		FindPlayer(_spSession);
+		__super::State(_spSession, _MonsterState);
 	}
 
 	void CMummy::ProcessPacket(_int _type, void* _pData)
@@ -94,7 +94,7 @@ namespace Server
 		{
 		case TAG_CS_MONSTERSTATE:
 		{
-			CHARSTATE* MonsterStateData = static_cast<CHARSTATE*>(_pData);
+			MOBSTATE* MonsterStateData = static_cast<MOBSTATE*>(_pData);
 			SHPTR<ATransform> spTransform = GetTransform();
 			SHPTR<AAnimController> spAnimController = GetAnimController();
 			{

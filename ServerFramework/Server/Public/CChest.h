@@ -1,11 +1,11 @@
 #ifndef _SERVERFRAMEWORK_SERVER_PUBLIC_CCHEST_H
 #define _SERVERFRAMEWORK_SERVER_PUBLIC_CCHEST_H
 
-#include "AMonster.h"
+#include "CServerMonster.h"
 
 BEGIN(Server)
 
-class CChest final : public AMonster {
+class CChest final : public CServerMonster {
 public:
 	CChest(OBJCON_CONSTRUCTOR, SESSIONID _ID, SHPTR<AJobTimer> _spMonsterJobTimer);
 	DESTRUCTOR(CChest)

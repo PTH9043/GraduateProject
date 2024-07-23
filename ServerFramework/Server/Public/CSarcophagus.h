@@ -1,12 +1,12 @@
 #ifndef _SERVERFRAMEWORK_SERVER_PUBLIC_CSARCOPHAGUS_H
 #define _SERVERFRAMEWORK_SERVER_PUBLIC_CSARCOPHAGUS_H
 
-#include "AMonster.h"
+#include "CServerMonster.h"
 
 BEGIN(Server)
 class CMummy;
 
-class CSarcophagus final : public AMonster {
+class CSarcophagus final : public CServerMonster {
 public:
 	CSarcophagus(OBJCON_CONSTRUCTOR, SESSIONID _ID, SARCOPHAGUSTYPE _eSarcophagusType, SHPTR<AJobTimer> _spMonsterJobTimer);
 	DESTRUCTOR(CSarcophagus)

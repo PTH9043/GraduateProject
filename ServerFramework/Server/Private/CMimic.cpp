@@ -7,13 +7,12 @@ namespace Server {
 
 	CMimic::CMimic(OBJCON_CONSTRUCTOR, SESSIONID _ID,
 		SHPTR<AJobTimer> _spMonsterJobTimer) : 
-		AMonster(OBJCON_CONDATA, _ID, _spMonsterJobTimer)
+		CServerMonster(OBJCON_CONDATA, _ID, _spMonsterJobTimer)
 	{
 		SetMonsterType(TAG_CHAR::TAG_MIMIC);
-		UpdateFindRange(40.f, 60.f);
-		SetMoveSpeed(10);
-		SetAttackRange(20.f);
-		SetActive(false);
+		UpdateFindRange(40.f, 90.f);
+		SetMoveSpeed(5);
+		SetAttackRange(9.f);
 	}
 
 	_bool CMimic::Start(const VOIDDATAS& _ReceiveDatas)
@@ -46,10 +45,26 @@ namespace Server {
 
 	void CMimic::State(SHPTR<ASession> _spSession, _int _MonsterState)
 	{
+		__super::State(_spSession, _MonsterState);
 	}
 
 	void CMimic::ProcessPacket(_int _type, void* _pData)
 	{
+		switch (_type)
+		{
+		case TAG_CS_MONSTERSTATE:
+		{
+			MOBSTATE* MonsterStateData = static_cast<MOBSTATE*>(_pData);
+			SHPTR<ATransform> spTransform = GetTransform();
+			SHPTR<AAnimController> spAnimController = GetAnimController();
+			{
+				spTransform->SetPos({ MonsterStateData->posx(), MonsterStateData->posy(), MonsterStateData->posz() });
+				spTransform->RotateFix({ MonsterStateData->rotatex(), MonsterStateData->rotatey(), MonsterStateData->rotatez() });
+				spAnimController->SetAnimation(MonsterStateData->animationindex());
+			}
+		}
+		break;
+		}
 	}
 
 	bool CMimic::IsHit(APawn* _pPawn, const _double& _dTimeDelta)

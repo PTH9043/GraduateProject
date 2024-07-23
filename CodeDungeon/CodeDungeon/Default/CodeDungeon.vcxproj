@@ -182,6 +182,7 @@
     <ClInclude Include="..\Public\CLogoScene.h" />
     <ClInclude Include="..\Public\CMainCamera.h" />
     <ClInclude Include="..\Public\CMainScene.h" />
+    <ClInclude Include="..\Public\CMainSceneLoading.h" />
     <ClInclude Include="..\Public\CMap.h" />
     <ClInclude Include="..\Public\CMimic.h" />
     <ClInclude Include="..\Public\CMimicAnimController.h" />
@@ -235,6 +236,7 @@
     <ClCompile Include="..\Private\CLogoScene.cpp" />
     <ClCompile Include="..\Private\CMainCamera.cpp" />
     <ClCompile Include="..\Private\CMainScene.cpp" />
+    <ClCompile Include="..\Private\CMainSceneLoading.cpp" />
     <ClCompile Include="..\Private\CMap.cpp" />
     <ClCompile Include="..\Private\CMimic.cpp" />
     <ClCompile Include="..\Private\CMimicAnimController.cpp" />
