@@ -62,8 +62,8 @@ public:
     _float GetDeactivationRange() const { return m_fDeactivationRange; }
     void SetDeactivationRange(_float _dvalue) { m_fDeactivationRange = _dvalue; }
 
-    const _bool IsSendDataToBehavior() const { return m_isRecvDataToBehavior; }
-    void SetSendDataToBehavior(const _bool _isRecvDataToBehavior) { this->m_isRecvDataToBehavior = _isRecvDataToBehavior; }
+    const _bool IsSendDataToBehavior() const { return m_isSendDataToBehavior; }
+    void SetSendDataToBehavior(const _bool _isRecvDataToBehavior) { this->m_isSendDataToBehavior = _isRecvDataToBehavior; }
 private:
     _float m_fDistancefromNearestPlayer;
     _bool m_bFoundTarget;
@@ -77,7 +77,7 @@ private:
     _double                         m_dtimeAccumulator;
     _double                         m_delapsedTime;
 
-    _bool                              m_isRecvDataToBehavior;
+    _bool                              m_isSendDataToBehavior;
 };
 
 END

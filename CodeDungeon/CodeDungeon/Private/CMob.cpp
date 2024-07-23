@@ -24,7 +24,7 @@ CMob::CMob(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONE
 	m_delapsedTime{ 0 },
 	m_fActivationRange{ 0 },
 	m_fDeactivationRange{0},
-	m_isRecvDataToBehavior{true}
+	m_isSendDataToBehavior{true}
 {
 }
 
@@ -38,7 +38,7 @@ CMob::CMob(const CMob& _rhs)
 	m_delapsedTime{ 0 },
 	m_fActivationRange{ 0 },
 	m_fDeactivationRange{ 0 },
-	m_isRecvDataToBehavior{ true }
+	m_isSendDataToBehavior{ true }
 {
 }
 
@@ -64,7 +64,9 @@ HRESULT CMob::NativeConstructClone(const VOIDDATAS& _Datas)
 #else
 	GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
 	SetTargetPlayer(nullptr);
+
 	m_isRecvDataToBehavior = true;
+
 #endif
 	return S_OK;
 }
