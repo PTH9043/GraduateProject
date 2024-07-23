@@ -345,7 +345,6 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 		GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
 		SetElapsedTime(0.0);
 	}
-
 	UpdateCollision();
 #else
 #endif
@@ -357,11 +356,6 @@ void CMummy::LateTickActive(const _double& _dTimeDelta)
 
 	_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
 	GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
-
-	//for (auto& Colliders : GetColliderContainer())
-	//	if(Colliders.first == L"Main")
-	//		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
-
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	_int CurAnimState = GetAnimationController()->GetAnimState();
 	if (CurAnimState == UAnimationController::ANIM_DEATH)

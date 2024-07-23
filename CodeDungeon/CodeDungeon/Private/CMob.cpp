@@ -21,7 +21,6 @@ CMob::CMob(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONE
 	m_spTargetPlayer{ nullptr },
 	m_f3TargetPos{},
 	m_dtimeAccumulator{ 0 },
-	m_delapsedTime{ 0 },
 	m_fActivationRange{ 0 },
 	m_fDeactivationRange{0},
 	m_isNeedServerSendData{ false }
@@ -35,7 +34,6 @@ CMob::CMob(const CMob& _rhs)
 	m_spTargetPlayer{ nullptr },
 	m_f3TargetPos{},
 	m_dtimeAccumulator{ 0 },
-	m_delapsedTime{ 0 },
 	m_fActivationRange{ 0 },
 	m_fDeactivationRange{ 0 },
 	m_isNeedServerSendData{ false }

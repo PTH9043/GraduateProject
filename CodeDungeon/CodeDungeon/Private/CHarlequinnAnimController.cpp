@@ -375,11 +375,6 @@ void CHarlequinnAnimController::Tick(const _double& _dTimeDelta)
             spHarlequinn->ThrowShurikens(i, _dTimeDelta, m_arrThrowingDir[i]);
     }
 
-
-
-
-
-
     // Check for death
     if (spHarlequinn->GetHealth() <= 0)
     {
@@ -392,8 +387,6 @@ void CHarlequinnAnimController::Tick(const _double& _dTimeDelta)
     {
         UpdateState(spAnimModel, ANIM_DEATH, L"DEATH");
     }
-
-
 
     // Tick event
     spAnimModel->TickEvent(spHarlequinn.get(), GetTrigger(), _dTimeDelta);

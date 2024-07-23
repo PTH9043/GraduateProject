@@ -63,6 +63,7 @@ public:
 	_float GetUltAttackTwoCoolTime();
 	_float GetShortAttackCoolTime() ;
 	_bool GetBlindEffectBool();
+	_bool GetDieEffectBool();
 private:
 	SHPTR<UParticle>										m_spFootPrintParticle;
 	SHPTR<UParticle>										m_spHealParticle;

@@ -110,6 +110,9 @@ public: /* get set */
 	void SetAnimModelRim(_int _SetRim);
 	void SetAnimModelRimColor(_float3 _SetRimColor);
 
+	_double GetElapsedTime() const { return m_delapsedTime; }
+	void SetElapsedTime(_double _dvalue) { m_delapsedTime = _dvalue; }
+
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) PURE;
 	virtual void LateTickActive(const _double& _dTimeDelta) PURE;
@@ -165,6 +168,8 @@ private:
 	_float3												m_f3LastMovedDirection;
 	// 해당하는 오브젝트가 Network Object인지 확인하는 변수
 	_bool													m_isNetworkConnected;
+
+	_double                         m_delapsedTime;
 
 	_bool			m_DrawOutline=false;
 	_bool			m_OutlineWithScale = false;

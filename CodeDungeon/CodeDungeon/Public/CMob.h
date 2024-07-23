@@ -54,8 +54,6 @@ public:
     void SetTimeAccumulator(_double _dvalue) { m_dtimeAccumulator = _dvalue; }
     void AddTimeAccumulator(_double _dvalue) { m_dtimeAccumulator += _dvalue; }
 
-    _double GetElapsedTime() const { return m_delapsedTime; }
-    void SetElapsedTime(_double _dvalue) { m_delapsedTime = _dvalue; }
 
     _float GetActivationRange() const { return m_fActivationRange; }
     void SetActivationRange(_float _dvalue) { m_fActivationRange = _dvalue; }
@@ -72,7 +70,6 @@ private:
 
 
     _double                         m_dtimeAccumulator;
-    _double                         m_delapsedTime;
     // 태현 추가
     _bool                              m_isNeedServerSendData;
 };

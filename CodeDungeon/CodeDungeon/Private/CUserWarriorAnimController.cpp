@@ -268,33 +268,71 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
         _long		MouseMove = spGameInstance->GetDIMMoveState(DIMM_X);
         if (MouseMove)
         {
-            if(CurAnimName != L"dead01")
+            if(CurAnimName != L"dead01" && CurAnimName != L"dead03")
             {
                 spWarriorPlayer->GetTransform()->RotateTurn(_float3(0.f, 1.f, 0.f), MouseMove * 5.f, _dTimeDelta);
             }
         }
     }
 
-   // Tick eve
-   spAnimModel->TickEvent(spWarriorPlayer.get(), GetTrigger(), _dTimeDelta);
+    // Check for death
+    if (spWarriorPlayer->GetHealth() <= 0)
+    {
+        spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
+        spWarriorPlayer->SetDeathState(true);
+        m_bDieEffectTurnedOn = true;  
+    }
+    // Handle death state
+    if (spWarriorPlayer->GetDeathState())
+    {
+        UpdateState(spAnimModel, ANIM_DEATH, L"DEAD");
+    }
 
-
+    // Tick eve
+    spAnimModel->TickEvent(spWarriorPlayer.get(), GetTrigger(), _dTimeDelta);
    //if Kicked & Stunned
-   if (isKicked)
+   if (CurAnimName == L"dead03")
    {
-       spWarriorPlayer->SetWarriorKickedTimeElapsed(KickedTimeElapsed + _dTimeDelta * KickedAnimSpeed);
-       if (KickedTimeElapsed < KickedTimeArcOpenEnd)
-           spAnimModel->TickAnimToTimeAccChangeTransform(spWarriorPlayer->GetTransform(), _dTimeDelta, KickedTimeElapsed);
-       if (KickedTimeElapsed >= 50)
+       _double DeathAnimSpeed = 20;
+       spWarriorPlayer->SetElapsedTime(spWarriorPlayer->GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
+       _double DeathTimeArcOpenEnd = 50;
+       if (spWarriorPlayer->GetElapsedTime() < DeathTimeArcOpenEnd)
+       {
+           spAnimModel->TickAnimToTimeAccChangeTransform(spWarriorPlayer->GetTransform(), _dTimeDelta, spWarriorPlayer->GetElapsedTime());
+       }
+       if(spWarriorPlayer->GetElapsedTime() >= 70)
+       {
            if (spGameInstance->GetDIKeyDown(DIK_SPACE))
            {
-               KickedTimeElapsed = 0;
-               spWarriorPlayer->SetKickedState(false);
-               spWarriorPlayer->SetRiseState(true);
+               m_bDieEffectTurnedOn = false;
+               spWarriorPlayer->SetElapsedTime(0);
+               spWarriorPlayer->SetDeathState(false);
+               spWarriorPlayer->SetHealth(50);
+               spGameInstance->TurnOffDieEffect();
+               UpdateState(spAnimModel, ANIM_IDLE, L"IDLE");
+               spAnimModel->SetAnimation(L"idle01");
            }
+       }
    }
-   else
-     spAnimModel->TickAnimChangeTransform(spWarriorPlayer->GetTransform(), _dTimeDelta);
+   else {
+       if (isKicked)
+       {
+           spWarriorPlayer->SetWarriorKickedTimeElapsed(KickedTimeElapsed + _dTimeDelta * KickedAnimSpeed);
+           if (KickedTimeElapsed < KickedTimeArcOpenEnd)
+               spAnimModel->TickAnimToTimeAccChangeTransform(spWarriorPlayer->GetTransform(), _dTimeDelta, KickedTimeElapsed);
+           if (KickedTimeElapsed >= 50)
+               if (spGameInstance->GetDIKeyDown(DIK_SPACE))
+               {
+                   KickedTimeElapsed = 0;
+                   spWarriorPlayer->SetKickedState(false);
+                   spWarriorPlayer->SetRiseState(true);
+               }
+       }
+       else
+           spAnimModel->TickAnimChangeTransform(spWarriorPlayer->GetTransform(), _dTimeDelta);
+   }
+   
+
 
 #ifdef _ENABLE_PROTOBUFF
    _int NetworkID = spGameInstance->GetNetworkOwnerID();

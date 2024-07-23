@@ -1507,7 +1507,12 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 		
 		if (m_spWarriorPlayer->GetBlindEffectBool()) {
 			pGameInstance->TurnOnHitEffect();
-	}
+		}
+
+		if (m_spWarriorPlayer->GetDieEffectBool()) {
+			pGameInstance->TurnOnDieEffect();
+		}
+
 		if (pGameInstance->GetIfAbilityIsOn()) {
 			m_spRecUI->SetIfPicked(true);
 			m_spRecUI->SetActive(true);
