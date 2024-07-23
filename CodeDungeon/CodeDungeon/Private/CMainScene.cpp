@@ -207,6 +207,11 @@ void CMainScene::TurnGuardsOnRange()
 			if (m_bisMobsAllDead_Interior_Room_G)
 				guardcontainer.second->SetActive(false);
 		}
+		else if (guardcontainer.first == L"Interior_Room_A")
+		{
+			if (m_bisDead_Anubis && m_bisDead_Harlequinn && m_bIsDead_Minotaur)
+				guardcontainer.second->SetActive(false);
+		}
 	}
 }
 

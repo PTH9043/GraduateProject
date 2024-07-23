@@ -9,15 +9,17 @@
 #include "CItemChest.h"
 #include "CItemChestAnimController.h"
 #include "UCollider.h"
+#include "UPlayer.h"
+#include "CWarriorPlayer.h"
 
 
 CItemChest::CItemChest(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
-	: CMob(_spDevice, _wstrLayer, _eCloneType)
+	: CMob(_spDevice, _wstrLayer, _eCloneType), m_bisOpen{false}
 {
 }
 
 CItemChest::CItemChest(const CItemChest& _rhs)
-	: CMob(_rhs)
+	: CMob(_rhs), m_bisOpen{false}
 {
 }
 
@@ -68,15 +70,22 @@ void CItemChest::TickActive(const _double& _dTimeDelta)
 	//상자 여는 트리거
 	if (GetFoundTargetState())
 	{
+		static_pointer_cast<CWarriorPlayer>(GetTargetPlayer())->SetCanInteractState(true);
 		if (spGameInstance->GetDIKeyDown(DIK_F))
 			SetOpeningState(true);
+	}
+	else
+	{
+		static_pointer_cast<CWarriorPlayer>(GetTargetPlayer())->SetCanInteractState(false);
 	}
 
 	if (m_bisOpen)
 	{
-		SetElapsedTime(GetElapsedTime() + _dTimeDelta * ItemChestOpeningSpeed);
 		if (GetElapsedTime() < ItemChestTimeArcOpenEnd)
+		{
+			SetElapsedTime(GetElapsedTime() + _dTimeDelta * ItemChestOpeningSpeed);
 			GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
+		}
 	}
 
 	for (auto& Containers : GetColliderContainer())

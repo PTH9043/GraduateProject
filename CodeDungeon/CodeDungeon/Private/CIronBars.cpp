@@ -77,7 +77,6 @@ void CIronBars::TickActive(const _double& _dTimeDelta)
 		if(GetTransform()->GetPos().y - m_f3OriginPos.y < 30)
 			GetTransform()->TranslateDir(_float3(0, 1, 0), _dTimeDelta, 2);
 	}
-
 }
 
 
@@ -110,14 +109,5 @@ HRESULT CIronBars::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF
 
 void CIronBars::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
-
-
-
-
-
-
-
-
-
 }
 

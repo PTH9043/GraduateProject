@@ -45,8 +45,11 @@ HRESULT CStatue::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	_wstring mainColliderTag = L"Main";
 	AddColliderInContainer(mainColliderTag, Collider);
 
-	SetPawnType(PAWNTYPE::PAWN_STATICOBJ);
+	SHPTR<UCollider> Collider2 = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
+	_wstring subColliderTag = L"ForInteraction";
+	AddColliderInContainer(subColliderTag, Collider2);
 
+	SetPawnType(PAWNTYPE::PAWN_STATICOBJ);
 	/*SetOutline(true);*/
 	return S_OK;
 }
@@ -56,19 +59,39 @@ void CStatue::TickActive(const _double& _dTimeDelta)
 	__super::TickActive(_dTimeDelta);
 	for (auto& Containers : GetColliderContainer())
 	{
-		Containers.second->SetTranslate(GetModel()->GetCenterPos());
-		Containers.second->SetScaleToFitModel(GetModel()->GetMinVertexPos(), GetModel()->GetMaxVertexPos());
-		Containers.second->SetTransform(GetTransform());
+		if(Containers.first != L"ForInteraction")
+		{
+			Containers.second->SetTranslate(GetModel()->GetCenterPos());
+			Containers.second->SetScaleToFitModel(GetModel()->GetMinVertexPos(), GetModel()->GetMaxVertexPos());
+			Containers.second->SetTransform(GetTransform());
+		}
+		else
+		{
+			Containers.second->SetTranslate(GetModel()->GetCenterPos());
+			Containers.second->SetScale(_float3(12, 20, 12));
+			Containers.second->SetTransform(GetTransform());
+		}
+	}
 
+	if (GetInteractionState())
+	{
+		
 	}
 }
-
 
 void CStatue::LateTickActive(const _double& _dTimeDelta)
 {
 	__super::LateTickActive(_dTimeDelta);
-	//for (auto& Colliders : GetColliderContainer())
-	//	Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
+	//for (auto& Containers : GetColliderContainer())
+	//{
+	//	if (Containers.first != L"ForInteraction")
+	//	{
+	//	}
+	//	else
+	//	{
+	//		Containers.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
+	//	}
+	//}
 }
 
 HRESULT CStatue::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
