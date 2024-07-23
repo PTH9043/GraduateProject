@@ -1139,6 +1139,16 @@ void UGameInstance::TurnOffHitEffect() {
 	if (m_spRenderer != nullptr)m_spRenderer->TurnOffHitEffect();
 }
 
+_bool UGameInstance::GetIfAbilityIsOn()
+{
+	return m_spRenderer->GetIfAbilityIsOn();
+}
+
+_float UGameInstance::GetAbilityTime()
+{
+	return m_spRenderer->GetAbilityTime();
+}
+
 void UGameInstance::PauseGame()
 {
 	m_isPause = true;
@@ -1668,6 +1678,11 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 			CreateGraphicsShader(PROTO_RES_GRIDSHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"Grid", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN }, RASTERIZER_TYPE::WIREFRAME));
+		}
+		{
+			CreateGraphicsShader(PROTO_RES_DEFAULTHIGHLIGHTUISHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"DefaultHighlightUI", VTXDEFAULT_DECLARATION::Element, VTXDEFAULT_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN }, RASTERIZER_TYPE::CULL_BACK, DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE, BLEND_TYPE::ALPHA_BLEND));
 		}
 		{
 			CreateGraphicsShader(PROTO_RES_DEFAULTUISHADER, CLONETYPE::CLONE_STATIC,

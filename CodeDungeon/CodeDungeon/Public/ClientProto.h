@@ -9,6 +9,10 @@
 #define PROTO_ACTOR_CHEST L"Proto_Actor_Chest"
 #define PROTO_ACTOR_ANUBISSTAFF L"Proto_Actor_AnubisStaff"
 #define PROTO_ACTOR_MIMIC L"Proto_Actor_Mimic"
+#define PROTO_ACTOR_STATUE L"Proto_Actor_Statue"
+#define PROTO_ACTOR_ANUBISCORE L"Proto_Actor_AnubisCore"
+#define PROTO_ACTOR_HARLEQUINNCORE L"Proto_Actor_HarlequinnCore"
+#define PROTO_ACTOR_MINOTAURCORE L"Proto_Actor_MinotaurCore"
 
 #define PROTO_ACTOR_WARRIORPLAYER L"Proto_Actor_WarriorPlayer"
 #define PROTO_ACTOR_MUMMY L"Proto_Actor_Mummy"
@@ -18,12 +22,10 @@
 #define PROTO_ACTOR_LONGSWORD L"Proto_Actor_LongSword"
 #define PROTO_ACTOR_HARLEQUINN L"Proto_Actor_Harlequinn"
 #define PROTO_ACTOR_ANUBIS L"Proto_Actor_Anubis"
-
 #define PROTO_ACTOR_IMAGEUI L"Proto_Actor_ImageUI"
 #define PROTO_ACTOR_BUTTONUI L"Proto_Actor_ButtonUI"
 #define PROTO_ACTOR_LOADINGUI L"Proto_Actor_LoadingUI"
 #define PROTO_ACTOR_HPBARUI L"Proto_Actor_HpBarUI"
-
 #define PROTO_RES_UITEXTUREGROUP L"Proto_Res_UITextureGroup"
 
 #define PROTO_RES_FEMAILPLAYERANIMMODEL L"Proto_Res_FemailPlayerAnimModel"

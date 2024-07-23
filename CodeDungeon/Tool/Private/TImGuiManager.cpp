@@ -48,7 +48,7 @@ HRESULT TImGuiManager::ReadyManager(const GRAPHICDESC& _stGraphicDesc, const OUT
 	ImGuiContext* pContext = ImGui::CreateContext();
 
 	ImGuiIO& io = ImGui::GetIO();
-	io.Fonts->AddFontFromFileTTF("..\\..\\Resource\\Font\\NanumSquare_acB.ttf", 15, NULL, io.Fonts->GetGlyphRangesKorean());
+	/*io.Fonts->AddFontFromFileTTF("..\\..\\Resource\\Font\\NanumSquare_acB.ttf", 15, NULL, io.Fonts->GetGlyphRangesKorean());*/
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows

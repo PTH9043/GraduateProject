@@ -99,6 +99,7 @@ public: /* get set */
 	void SetAnimParam(const ANIMATIONPARAM& _stAnimParam) { this->m_stAnimParam = _stAnimParam; }
 	void UpdateAttackData(const _bool _isCanAttackSituation, CSHPTRREF<UCollider> _spCollider);
 	void NotApplyAnimPositionEnable() { this->m_isNotApplyAnimPosition = true; }
+
 private:
 	// CreateAnimation
 	HRESULT CreateAnimation(const VECTOR<ANIMDESC>& _convecAnimDesc, const _wstring& _wstrPath);

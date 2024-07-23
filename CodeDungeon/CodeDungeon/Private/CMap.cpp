@@ -26,12 +26,17 @@
 #include "CAnubis.h"
 #include "CMimic.h"
 #include "UGuard.h"
+#include "CStatue.h"
+#include "CCoreAnubis.h"
+#include "CCoreHarlequinn.h"
+#include "CCoreMinotaur.h"
 
 CMap::CMap(CSHPTRREF<UDevice> _spDevice) : UComponent(_spDevice),
 m_spRoomContainer{nullptr},
 m_spMapLayout{ nullptr },
 m_spMobsContainer{nullptr},
-m_iLightCount{ 0 }
+m_iLightCount{ 0 },
+m_iSarcophagusCount{0}
 {
 }
 
@@ -39,7 +44,8 @@ CMap::CMap(const CMap& _rhs) : UComponent(_rhs),
 m_spRoomContainer{ nullptr },
 m_spMapLayout{ nullptr },
 m_spMobsContainer{ nullptr },
-m_iLightCount{0}
+m_iLightCount{0},
+m_iSarcophagusCount{ 0 }
 {
 }
 
@@ -109,6 +115,8 @@ void CMap::LoadStaticObjects()
 	m_spMapLayout->LoadMapObjects();
 	OBJCONTAINER _TorchVec;
 	OBJCONTAINER _BarsVec;
+	OBJCONTAINER _StatueVec;
+	OBJCONTAINER _CoreVec;
 	for (auto& it : (*m_spMapLayout->GetMapObjectsContainer().get()))
 	{
 		for (auto& vecit : it.second)
@@ -128,10 +136,44 @@ void CMap::LoadStaticObjects()
 				_BarsVec.push_back(_IronBars);
 				spGameInstance->AddCollisionPawnList(_IronBars);
 			}
+			if (vecit._sModelName == "Statue_FBX.bin")
+			{
+				CStatue::STATUEDESC StatueDesc;
+				StatueDesc._Worldm = vecit._mWorldMatrix;
+				SHPTR<CStatue> _Statue = std::static_pointer_cast<CStatue>(spGameInstance->CloneActorAdd(PROTO_ACTOR_STATUE, { &StatueDesc }));
+				_StatueVec.push_back(_Statue);
+				spGameInstance->AddCollisionPawnList(_Statue);
+			}
+			if (vecit._sModelName == "minotaurhead_FBX.bin")
+			{
+				CCoreMinotaur::COREMINOTAURDESC coreDesc;
+				coreDesc._Worldm = vecit._mWorldMatrix;
+				SHPTR<CCoreMinotaur> _Core = std::static_pointer_cast<CCoreMinotaur>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MINOTAURCORE, { &coreDesc }));
+				_Core->GetModel()->SetModelName(L"MinotaurCore");
+				_CoreVec.push_back(_Core);
+			}
+			if (vecit._sModelName == "anubishead_FBX.bin")
+			{
+				CCoreAnubis::COREANUBISNDESC coreDesc;
+				coreDesc._Worldm = vecit._mWorldMatrix;
+				SHPTR<CCoreAnubis> _Core = std::static_pointer_cast<CCoreAnubis>(spGameInstance->CloneActorAdd(PROTO_ACTOR_ANUBISCORE, { &coreDesc }));
+				_Core->GetModel()->SetModelName(L"AnubisCore");
+				_CoreVec.push_back(_Core);
+			}
+			if (vecit._sModelName == "HarlequinnHead_FBX.bin")
+			{
+				CCoreHarlequinn::COREHARLEQUINNDESC coreDesc;
+				coreDesc._Worldm = vecit._mWorldMatrix;
+				SHPTR<CCoreHarlequinn> _Core = std::static_pointer_cast<CCoreHarlequinn>(spGameInstance->CloneActorAdd(PROTO_ACTOR_HARLEQUINNCORE, { &coreDesc }));
+				_Core->GetModel()->SetModelName(L"HarlequinnCore");
+				_CoreVec.push_back(_Core);
+			}
 		}
 	}
 	m_spStaticObjContainer->emplace("Torch_FBX.bin", _TorchVec);
 	m_spStaticObjContainer->emplace("Bars_FBX.bin", _BarsVec);
+	m_spStaticObjContainer->emplace("Statue_FBX.bin", _StatueVec);
+	m_spStaticObjContainer->emplace("Cores", _CoreVec);
 }
 
 void CMap::LoadGuards()
@@ -174,6 +216,8 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 				CItemChest::CHARACTERDESC chestDesc{ PROTO_RES_CHESTANIMMODEL, PROTO_COMP_CHESTANIMCONTROLLER };;
 				SHPTR<CItemChest> _Chest = std::static_pointer_cast<CItemChest>(spGameInstance->CloneActorAdd(PROTO_ACTOR_CHEST, { &chestDesc }));
 				_Chest->GetTransform()->SetNewWorldMtx(vecit._mWorldMatrix);
+				_Chest->GetAnimModel()->SetModelName(UMethod::ConvertSToW(vecit._sAnimModelName));
+				_Chest->SetTargetPlayer(_spPlayer);
 				_Mobs.push_back(_Chest);
 				spGameInstance->AddCollisionPawnList(_Chest);
 			}
@@ -186,6 +230,7 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 				_Mummy->GetTransform()->SetPos(vecit._mWorldMatrix.Get_Pos());
 				_Mummy->GetTransform()->SetDirection(vecit._mWorldMatrix.Get_Look());
 				_Mummy->GetAnimModel()->SetAnimation(UMethod::ConvertSToW(vecit._sAnimName));
+				_Mummy->GetAnimModel()->SetModelName(UMethod::ConvertSToW(vecit._sAnimModelName));
 				if (vecit._sAnimName == "staticLaying")
 				{
 					_Mummy->SetMummyType(CMummy::MUMMYTYPE::TYPE_LYING);
@@ -211,6 +256,8 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 					_Mummy->GetTransform()->TranslateDir((-_Mummy->GetTransform()->GetLook()), 1, 10);
 					_Sarcophagus->GetAnimModel()->SetAnimation(0);
 					_Sarcophagus->SetTargetPlayer(_spPlayer);
+					_Sarcophagus->SetOwnerMummy(_Mummy);
+					_Sarcophagus->GetAnimModel()->SetModelName(UMethod::ConvertSToW(vecit._sAnimModelName));
 					_Mobs.push_back(_Sarcophagus);
 				}
 				else if (vecit._sAnimName == "staticStanding")
@@ -222,6 +269,8 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 					_Sarcophagus->GetTransform()->SetNewWorldMtx(_Mummy->GetTransform()->GetWorldMatrix());
 					_Sarcophagus->GetAnimModel()->SetAnimation(0);
 					_Sarcophagus->SetTargetPlayer(_spPlayer);
+					_Sarcophagus->SetOwnerMummy(_Mummy);
+					_Sarcophagus->GetAnimModel()->SetModelName(UMethod::ConvertSToW(vecit._sAnimModelName));
 					_Mobs.push_back(_Sarcophagus);
 				}
 
@@ -237,6 +286,7 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 				_Minotaur->GetTransform()->SetPos(vecit._mWorldMatrix.Get_Pos());
 				_Minotaur->GetTransform()->SetDirection(vecit._mWorldMatrix.Get_Look());
 				_Minotaur->GetAnimModel()->SetAnimation(UMethod::ConvertSToW(vecit._sAnimName));
+				_Minotaur->GetAnimModel()->SetModelName(UMethod::ConvertSToW(vecit._sAnimModelName));
 				_Minotaur->SetTargetPlayer(_spPlayer);
 				_Minotaur->GetCurrentNavi()->FindCell(_Minotaur->GetTransform()->GetPos());
 				spGameInstance->AddCollisionPawnList(_Minotaur);
@@ -251,6 +301,7 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 				_Harlequinn->GetTransform()->SetPos(vecit._mWorldMatrix.Get_Pos());
 				_Harlequinn->GetTransform()->SetDirection(vecit._mWorldMatrix.Get_Look());
 				_Harlequinn->GetAnimModel()->SetAnimation(UMethod::ConvertSToW(vecit._sAnimName));
+				_Harlequinn->GetAnimModel()->SetModelName(UMethod::ConvertSToW(vecit._sAnimModelName));
 				_Harlequinn->SetTargetPlayer(_spPlayer);
 				_Harlequinn->GetCurrentNavi()->FindCell(_Harlequinn->GetTransform()->GetPos());
 				spGameInstance->AddCollisionPawnList(_Harlequinn);
@@ -266,6 +317,7 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 				_Anubis->GetTransform()->SetDirection(vecit._mWorldMatrix.Get_Look());
 				_Anubis->SetOriginDirection(vecit._mWorldMatrix.Get_Look());
 				_Anubis->GetAnimModel()->SetAnimation(UMethod::ConvertSToW(vecit._sAnimName));
+				_Anubis->GetAnimModel()->SetModelName(UMethod::ConvertSToW(vecit._sAnimModelName));
 				_Anubis->SetTargetPlayer(_spPlayer);
 				_Anubis->GetCurrentNavi()->FindCell(_Anubis->GetTransform()->GetPos());
 				spGameInstance->AddCollisionPawnList(_Anubis);
@@ -279,6 +331,7 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 				_Mimic->GetTransform()->SetPos(vecit._mWorldMatrix.Get_Pos());
 				_Mimic->GetTransform()->SetDirection(vecit._mWorldMatrix.Get_Look());
 				_Mimic->GetAnimModel()->SetAnimation(UMethod::ConvertSToW(vecit._sAnimName));
+				_Mimic->GetAnimModel()->SetModelName(UMethod::ConvertSToW(vecit._sAnimModelName));
 				_Mimic->SetTargetPlayer(_spPlayer);
 				_Mimic->GetCurrentNavi()->FindCell(_Mimic->GetTransform()->GetPos());
 				spGameInstance->AddCollisionPawnList(_Mimic);

@@ -33,6 +33,10 @@
 #include "CAnubisStaff.h"
 #include "CMimic.h"
 #include "CMimicAnimController.h"
+#include "CStatue.h"
+#include "CCoreAnubis.h"
+#include "CCoreHarlequinn.h"
+#include "CCoreMinotaur.h"
 
 HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, CSHPTRREF<UDevice> _spDevice, CSHPTRREF<UCommand> _spCommand)
 {
@@ -57,12 +61,12 @@ HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, C
 	_spGameInstance->AddPrototype(PROTO_ACTOR_ANUBIS, CreateConstructorToNative< CAnubis>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_ANUBISSTAFF, CreateConstructorToNative< CAnubisStaff>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_MIMIC, CreateConstructorToNative< CMimic>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
-
+	_spGameInstance->AddPrototype(PROTO_ACTOR_STATUE, CreateConstructorToNative<CStatue>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
+	_spGameInstance->AddPrototype(PROTO_ACTOR_ANUBISCORE, CreateConstructorToNative<CCoreAnubis>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
+	_spGameInstance->AddPrototype(PROTO_ACTOR_HARLEQUINNCORE, CreateConstructorToNative<CCoreHarlequinn>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
+	_spGameInstance->AddPrototype(PROTO_ACTOR_MINOTAURCORE, CreateConstructorToNative<CCoreMinotaur>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_RES_PARTICLETEXTUREGROUP, CLONETYPE::CLONE_STATIC,
 		CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\Particle", true));
-
-	//_spGameInstance->AddPrototype(PROTO_RES_ANIMPARTICLETEXTUREGROUP, CLONETYPE::CLONE_STATIC,
-	//	CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\AnimParticle", true));
 
 	_spGameInstance->AddPrototype(PROTO_RES_FIRECOLORTEXTUREGROUP, CLONETYPE::CLONE_STATIC,
 		CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\Fire\\Color", true));
@@ -97,6 +101,7 @@ HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, C
 	_spGameInstance->AddPrototype(PROTO_COMP_HARLEQUINNANIMCONTROLLER, CreateConstructorToNative<CHarlequinnAnimController>(_spDevice));
 	_spGameInstance->AddPrototype(PROTO_COMP_ANUBISANIMCONTROLLER, CreateConstructorToNative<CAnubisAnimController>(_spDevice));
 	_spGameInstance->AddPrototype(PROTO_COMP_MIMICANIMCONTROLLER, CreateConstructorToNative<CMimicAnimController>(_spDevice));
+
 
 	_spGameInstance->FontCreate(FONT_NANUMSQUARE_ACBOLD, L"..\\..\\Resource\\Font\\NanumSquare.spritefont");
 	return S_OK;
@@ -152,7 +157,7 @@ HRESULT CProtoMaker::CreateMainSceneProtoData(CSHPTRREF<UGameInstance> _spGameIn
 		_spDevice, L"..\\..\\Resource\\AnimModel\\Mimic\\Convert\\Mimic_FBX.bin"));
 
 
-	Matrix = _float4x4::CreateScale(100.0f);
+	Matrix = _float4x4::CreateScale(1.0f);
 	_spGameInstance->AddPrototype(PROTO_RES_CHESTANIMMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
 		_spDevice, L"..\\..\\Resource\\AnimModel\\Chest\\Convert\\Chest 1_FBX.bin", Matrix));
 

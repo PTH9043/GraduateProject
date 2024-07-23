@@ -517,7 +517,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 				{
 					if (iter.second->IsCollision(iter2.second))
 					{
-						GetTransform()->SetPos(GetTransform()->GetPos() - direction * 10 * _dTimeDelta);
+						/*GetTransform()->SetPos(GetTransform()->GetPos() - direction * 10 * _dTimeDelta);*/
 #ifdef _ENABLE_PROTOBUFF
 						isCollision = true;
 #endif
@@ -535,23 +535,33 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 			{
 				for (auto& iter2 : pModelObject->GetColliderContainer())
 				{
-					SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
+					if (iter2.first == L"Main")
+					{
+						SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
 
-					if (GetCollidedNormal() != _float3::Zero) // 충돌이 발생한 경우
-					{
-						SetOBJCollisionState(true);
-						// 속도 결정
-						_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 60.0f : 20.0f;
-						if (CurAnimName == L"roll_back" || CurAnimName == L"roll_front" || CurAnimName == L"roll_left" || CurAnimName == L"roll_right")
-							speed = 100;
-						ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
+						if (GetCollidedNormal() != _float3::Zero) // 충돌이 발생한 경우
+						{
+							SetOBJCollisionState(true);
+							// 속도 결정
+							_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 60.0f : 20.0f;
+							if (CurAnimName == L"roll_back" || CurAnimName == L"roll_front" || CurAnimName == L"roll_left" || CurAnimName == L"roll_right")
+								GetTransform()->SetPos(GetPrevPos());
+							else
+								ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
 #ifdef _ENABLE_PROTOBUFF
-						isCollision = true;
+							isCollision = true;
 #endif
+						}
+						else
+						{
+							SetOBJCollisionState(false);
+						}
 					}
-					else
+					else if (iter2.first == L"ForInteraction")
 					{
-						SetOBJCollisionState(false);
+						//철장 여는 용도
+						if (spGameInstance->GetDIKeyDown(DIK_F))
+							pModelObject->SetInteractionState(true);
 					}
 				}
 			}

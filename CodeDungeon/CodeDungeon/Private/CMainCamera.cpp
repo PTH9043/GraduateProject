@@ -45,7 +45,6 @@ HRESULT CMainCamera::NativeConstructClone(const VOIDDATAS& _vecDatas)
 void CMainCamera::TickActive(const _double& _dTimeDelta)
 {
     m_vPrevPos = GetTransform()->GetPos();
-    GetCurrentNavi()->FindCell(GetTransform()->GetPos());
 }
 
 void CMainCamera::LateTickActive(const _double& _dTimeDelta)

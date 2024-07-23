@@ -235,8 +235,9 @@ void CMummy::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 void CMummy::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
-	GetAnimationController()->Tick(_dTimeDelta);
+
 #ifndef _ENABLE_PROTOBUFF
+	GetAnimationController()->Tick(_dTimeDelta);
 	_float3 pos = GetTransform()->GetPos();
 	
 	pos.y += 5;

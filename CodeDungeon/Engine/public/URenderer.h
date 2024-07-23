@@ -70,6 +70,8 @@ public:
 	void TurnOnDieEffect() { m_bTurnShader.m_bTurnDie = true; }
 	void TurnOffDieEffect() { m_bTurnShader.m_bTurnDie = false; }
 	void TurnOnAbilityEffect() { if (!m_bTurnShader.m_bTurnHit && !m_bTurnShader.m_bTurnDie)m_bTurnShader.m_bTurnAbility = true; }
+	_bool GetIfAbilityIsOn() { return m_bTurnShader.m_bTurnAbility; }
+	_float GetAbilityTime() { return m_bTurnShader.m_fAbilityTime; }
 	void TurnOffAbilityEffect() { m_bTurnShader.m_bTurnAbility = false; }
 	void TurnOnHitEffect() { if (!m_bTurnShader.m_bTurnDie)m_bTurnShader.m_bTurnHit = true; }
 	void TurnOffHitEffect() { m_bTurnShader.m_bTurnHit = false; }

@@ -37,13 +37,23 @@ HRESULT CIronBars::NativeConstructClone(const VOIDDATAS& _vecDatas)
 
 	IRONBARSDESC tBarsDesc = UMethod::ConvertTemplate_Index<IRONBARSDESC>(_vecDatas, 0);
 	GetTransform()->SetNewWorldMtx(tBarsDesc._Worldm);
+	m_f3OriginPos = GetTransform()->GetPos();
 
 	UCollider::COLLIDERDESC tDesc;
 	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
-	tDesc.vScale = _float3(1.f, 1.f, 1.f);
-	SHPTR<UCollider> Collider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
+	tDesc.vScale = _float3(410, 350, 0);
+	SHPTR<UCollider> Collider1 = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
 	_wstring mainColliderTag = L"Main";
-	AddColliderInContainer(mainColliderTag, Collider);
+	AddColliderInContainer(mainColliderTag, Collider1);
+
+
+	UCollider::COLLIDERDESC tDesc2;
+	tDesc2.vTranslation = _float3(0.f, 0.f, 0.f);
+	tDesc2.vScale = _float3(410, 350, 100);
+	SHPTR<UCollider> Collider2 = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc2 }));
+	_wstring subColliderTag = L"ForInteraction";
+	AddColliderInContainer(subColliderTag, Collider2);
+
 
 	SetPawnType(PAWNTYPE::PAWN_STATICOBJ);
 
@@ -54,13 +64,20 @@ HRESULT CIronBars::NativeConstructClone(const VOIDDATAS& _vecDatas)
 void CIronBars::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
 	for (auto& Containers : GetColliderContainer())
 	{
 		Containers.second->SetTranslate(GetModel()->GetCenterPos());
-		Containers.second->SetScaleToFitModel(GetModel()->GetMinVertexPos(), GetModel()->GetMaxVertexPos());
 		Containers.second->SetTransform(GetTransform());
-
 	}
+
+	if(GetInteractionState())
+	{
+		if(GetTransform()->GetPos().y - m_f3OriginPos.y < 30)
+			GetTransform()->TranslateDir(_float3(0, 1, 0), _dTimeDelta, 2);
+	}
+
 }
 
 
@@ -68,7 +85,10 @@ void CIronBars::LateTickActive(const _double& _dTimeDelta)
 {
 	__super::LateTickActive(_dTimeDelta);
 	//for (auto& Colliders : GetColliderContainer())
-	//	Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
+	//{
+	//	if(Colliders.first == L"ForInteraction")
+	//		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
+	//}
 }
 
 HRESULT CIronBars::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
@@ -90,5 +110,14 @@ HRESULT CIronBars::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF
 
 void CIronBars::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
+
+
+
+
+
+
+
+
+
 }
 
