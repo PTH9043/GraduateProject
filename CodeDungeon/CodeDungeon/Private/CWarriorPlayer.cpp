@@ -193,7 +193,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetifPlayer(true);//depth만 기록하고 outline안그리도록 다른 물체  outline depth판정위해
 	//SetIfOutlineScale(false); 만약 플레이어 그릴거면 SetifPlayer->false, SetIfOutlineScale->true
 	SetHealth(1);
-	SetMaxHealth(100);
+	SetMaxHealth(1000);
 	SetAnimModelRim(true);
 
 	return S_OK;
@@ -384,6 +384,13 @@ void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 	{
 		GetFollowCamera()->GetTransform()->SetPos(GetTransform()->GetPos());
 	}
+}
+
+void CWarriorPlayer::NetworkTickActive(const _double& _dTimeDelta)
+{
+#ifdef _ENABLE_PROTOBUFF
+	SendMoveData();
+#endif
 }
 
 HRESULT CWarriorPlayer::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
