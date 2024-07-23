@@ -335,10 +335,9 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 
 void CMummy::LateTickActive(const _double& _dTimeDelta)
 {
+	__super::LateTickActive(_dTimeDelta);
 	if (true == IsSendDataToBehavior())
 	{
-		__super::LateTickActive(_dTimeDelta);
-
 		_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
 		GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
 

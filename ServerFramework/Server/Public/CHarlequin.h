@@ -1,11 +1,11 @@
 #ifndef _SERVERFRAMEWORK_SERVER_PUBLIC_CHARLEQUIN_H
 #define _SERVERFRAMEWORK_SERVER_PUBLIC_CHARLEQUIN_H
 
-#include "AMonster.h"
+#include "CServerMonster.h"
 
 BEGIN(Server)
 
-class CHarlequin final : public AMonster {
+class CHarlequin final : public CServerMonster {
 public:
 	CHarlequin(OBJCON_CONSTRUCTOR, SESSIONID _ID, SHPTR<AJobTimer> _spMonsterJobTimer);
 	DESTRUCTOR(CHarlequin)

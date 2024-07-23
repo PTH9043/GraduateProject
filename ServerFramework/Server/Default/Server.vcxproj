@@ -38,6 +38,7 @@
     <ClInclude Include="..\Public\CSarcophagus.h" />
     <ClInclude Include="..\Public\CServerAdiminstor.h" />
     <ClInclude Include="..\Public\CServerApp.h" />
+    <ClInclude Include="..\Public\CServerMonster.h" />
     <ClInclude Include="..\Public\ServerDefines.h" />
     <ClInclude Include="..\Public\CPlayerSession.h" />
   </ItemGroup>
@@ -62,6 +63,7 @@
     <ClCompile Include="..\Private\CServerAdiminstor.cpp" />
     <ClCompile Include="..\Private\CServerApp.cpp" />
     <ClCompile Include="..\Private\CPlayerSession.cpp" />
+    <ClCompile Include="..\Private\CServerMonster.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -147,6 +147,9 @@
     <ClCompile Include="..\Private\CMimicAnimController.cpp">
       <Filter>05.AnimController\Mimic</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\CServerMonster.cpp">
+      <Filter>03.Session\Monster</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\CServerApp.h">
@@ -211,6 +214,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\CMimicAnimController.h">
       <Filter>05.AnimController\Mimic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CServerMonster.h">
+      <Filter>03.Session\Monster</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -172,6 +172,9 @@
     <Filter Include="06.Comp\Controller\MonsterAnimController\Mummy\Sarcophagus">
       <UniqueIdentifier>{7cb8b3b7-4d4b-4879-a8fc-22626d27452c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Scene\Logo\Loading">
+      <UniqueIdentifier>{8267953d-ddfb-42e8-8d2b-9366d350317a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ClientDefines.h">
@@ -333,6 +336,9 @@
     <ClInclude Include="..\Public\CMonsterAnimController.h">
       <Filter>06.Comp\Controller\MonsterAnimController</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CMainSceneLoading.h">
+      <Filter>01.Scene\Logo\Loading</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -486,6 +492,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\CMonsterAnimController.cpp">
       <Filter>06.Comp\Controller\MonsterAnimController</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CMainSceneLoading.cpp">
+      <Filter>01.Scene\Logo\Loading</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

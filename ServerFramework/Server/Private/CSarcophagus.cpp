@@ -13,7 +13,7 @@ namespace Server
 {
 	CSarcophagus::CSarcophagus(OBJCON_CONSTRUCTOR, SESSIONID _ID, SARCOPHAGUSTYPE _eSarcophagusType, 
 		SHPTR<AJobTimer> _spMonsterJobTimer) :
-		AMonster(OBJCON_CONDATA, _ID, _spMonsterJobTimer), m_eSarcophagusType{_eSarcophagusType}, m_isInitStart{false}
+		CServerMonster(OBJCON_CONDATA, _ID, _spMonsterJobTimer), m_eSarcophagusType{_eSarcophagusType}, m_isInitStart{false}
 	{
 		if (SARCO_LAYING == m_eSarcophagusType)
 		{

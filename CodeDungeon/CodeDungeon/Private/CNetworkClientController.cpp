@@ -268,7 +268,7 @@ void CNetworkClientController::SelfPlayerMoveState(_char* _pPacket, const PACKET
 
 void CNetworkClientController::MonsterState(_char* _pPacket, const PACKETHEAD& _PacketHead)
 {
-	CHARSTATE scMonsterState;
+	MOBSTATE scMonsterState;
 	scMonsterState.ParseFromArray(_pPacket, _PacketHead.PacketSize);
 	InsertNetworkProcessInQuery(UProcessedData(scMonsterState.id(), scMonsterState,
 		TAG_SC_MONSTERSTATE, _PacketHead.PacketSize));

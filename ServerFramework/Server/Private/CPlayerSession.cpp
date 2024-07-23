@@ -11,7 +11,7 @@
 namespace Server {
 
 	CPlayerSession::CPlayerSession(SESSION_CONSTRUCTOR)
-		: Core::ASession(SESSION_CONDATA(Core::SESSIONTYPE::PLAYER)), m_iStartCellIndex{ 100 }
+		: Core::ASession(SESSION_CONDATA(Core::SESSIONTYPE::PLAYER)), m_iStartCellIndex{ 0 }
 	{
 	}
 
@@ -178,27 +178,27 @@ namespace Server {
 			CombineProto(REF_OUT GetCopyBuffer(), REF_OUT GetPacketHead(), csMove, TAG_SC::TAG_SC_PLAYERSTATE);
 			_spCoreInstance->BroadCastMessageExcludingSession(_SessionID, GetCopyBufferPointer(), GetPacketHead());
 		}
-		// 몬스터 활성화 
-		//{
-		//	const MOBOBJCONTAINER& MobObjectContainer = _spCoreInstance->GetMobObjContainer();
-		//	for (auto& iter : MobObjectContainer)
-		//	{
-		//		// 영구적 비활성화
-		//		if (true == iter.second->IsPermanentDisable())
-		//			continue;
 
-		//		// 거리를 받아옴
-		//		_float fDistanace = iter.second->GetTransform()->ComputeDistanceSq(vPosition);
-		//		if (true == iter.second->IsCanSee(iter.second->GetTransform()))
-		//		{
-		//			iter.second->InsertMobJobTimer(GetSessionID());
-		//		}
-		//		else
-		//		{
-		//			iter.second->SetActive(false);
-		//		}
-		//	}
-		//}
+		{
+			const MOBOBJCONTAINER& MobObjectContainer = _spCoreInstance->GetMobObjContainer();
+			for (auto& iter : MobObjectContainer)
+			{
+				// 영구적 비활성화
+				if (true == iter.second->IsPermanentDisable())
+					continue;
+
+				// 거리를 받아옴
+				_float fDistanace = iter.second->GetTransform()->ComputeDistanceSq(vPosition);
+				if (true == iter.second->IsCanSee(iter.second->GetTransform()))
+				{
+					iter.second->InsertMobJobTimer(GetSessionID());
+				}
+				else
+				{
+					iter.second->SetActive(false);
+				}
+			}
+		}
 	}
 
 	void CPlayerSession::PlayerCollisionState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
@@ -234,10 +234,8 @@ namespace Server {
 
 	void CPlayerSession::MonsterState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
 	{
-		MONSTERSTATE monsterState;
+		MOBSTATE monsterState;
 		monsterState.ParseFromArray(_pPacket, _PacketHead.PacketSize);
-		CombineProto<MONSTERSTATE>(GetCopyBuffer(), GetPacketHead(), monsterState, TAG_SC_MONSTERSTATE);
-		_spCoreInstance->BroadCastMessageExcludingSession(_SessionID, GetCopyBufferPointer(), GetPacketHead());
 		_int MonsterID = monsterState.id();
 		SHPTR<AMonster> spMonster = _spCoreInstance->FindMobObject(MonsterID);
 		if (nullptr != spMonster)

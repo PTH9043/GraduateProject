@@ -1,11 +1,11 @@
 #ifndef _SERVERFRAMEWORK_SERVER_PUBLIC_CMINOTAUR_H
 #define _SERVERFRAMEWORK_SERVER_PUBLIC_CMINOTAUR_H
 
-#include "AMonster.h"
+#include "CServerMonster.h"
 
 BEGIN(Server)
 
-class CMinotaur final : public AMonster {
+class CMinotaur final : public CServerMonster {
 public:
 	CMinotaur(OBJCON_CONSTRUCTOR, SESSIONID _ID, SHPTR<AJobTimer> _spMonsterJobTimer);
 	DESTRUCTOR(CMinotaur)

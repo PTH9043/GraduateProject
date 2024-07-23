@@ -1,11 +1,11 @@
 #ifndef _SERVERFRAMEWORK_SERVER_PUBLIC_CMIMIC_H
 #define _SERVERFRAMEWORK_SERVER_PUBLIC_CMIMIC_H
 
-#include "AMonster.h"
+#include "CServerMonster.h"
 
 BEGIN(Server)
 
-class CMimic final : public AMonster {
+class CMimic final : public CServerMonster {
 public:
 	CMimic(OBJCON_CONSTRUCTOR, SESSIONID _ID, SHPTR<AJobTimer> _spMonsterJobTimer);
 	DESTRUCTOR(CMimic)

@@ -1,11 +1,11 @@
 #ifndef _SERVERFRAMEWORK_SERVER_PUBLIC_CANUBIS_H
 #define _SERVERFRAMEWORK_SERVER_PUBLIC_CANUBIS_H
 
-#include "AMonster.h"
+#include "CServerMonster.h"
 
 BEGIN(Server)
 
-class CAnubis final : public AMonster {
+class CAnubis final : public CServerMonster {
 public:
 	CAnubis(OBJCON_CONSTRUCTOR, SESSIONID _ID, SHPTR<AJobTimer> _spMonsterJobTimer);
 	DESTRUCTOR(CAnubis)

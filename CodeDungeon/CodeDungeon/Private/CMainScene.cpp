@@ -1102,8 +1102,8 @@ HRESULT CMainScene::LoadSceneData()
 
 	spGameInstance->MakeActors({ m_spMainCamera });
 #else 
-	CreateStartSceneUI();
 #endif
+	CreateStartSceneUI();
 	CreateAbilityUI();
 	CreateAttackUI();
 	CreateKeyInfoUI();
