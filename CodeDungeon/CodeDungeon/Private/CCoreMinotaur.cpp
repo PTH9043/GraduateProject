@@ -33,42 +33,25 @@ HRESULT CCoreMinotaur::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_vecDatas), E_FAIL);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
-	SetModel(L"Proto_Res_Model_Bars_FBX.bin");
+	SetModel(L"Proto_Res_Model_minotaurhead_FBX.bin");
 
 	COREMINOTAURDESC tBarsDesc = UMethod::ConvertTemplate_Index<COREMINOTAURDESC>(_vecDatas, 0);
 	GetTransform()->SetNewWorldMtx(tBarsDesc._Worldm);
-
-	UCollider::COLLIDERDESC tDesc;
-	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
-	tDesc.vScale = _float3(1.f, 1.f, 1.f);
-	SHPTR<UCollider> Collider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
-	_wstring mainColliderTag = L"Main";
-	AddColliderInContainer(mainColliderTag, Collider);
-
 	SetPawnType(PAWNTYPE::PAWN_STATICOBJ);
-
-	/*SetOutline(true);*/
+	SetActive(false);
+	//SetOutline(true);
 	return S_OK;
 }
 
 void CCoreMinotaur::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
-	for (auto& Containers : GetColliderContainer())
-	{
-		Containers.second->SetTranslate(GetModel()->GetCenterPos());
-		Containers.second->SetScaleToFitModel(GetModel()->GetMinVertexPos(), GetModel()->GetMaxVertexPos());
-		Containers.second->SetTransform(GetTransform());
-
-	}
 }
 
 
 void CCoreMinotaur::LateTickActive(const _double& _dTimeDelta)
 {
 	__super::LateTickActive(_dTimeDelta);
-	//for (auto& Colliders : GetColliderContainer())
-	//	Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
 }
 
 HRESULT CCoreMinotaur::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)

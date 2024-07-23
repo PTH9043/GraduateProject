@@ -14,7 +14,7 @@ public:
 		virtual void Free() override;
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _Datas) override;
-
+	void SetOpeningState(const _bool& _newState) { m_bisOpen = _newState; }
 
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
@@ -24,6 +24,7 @@ protected:
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) override;
 
 private:
+	_bool			m_bisOpen;
 };
 
 END

@@ -26,10 +26,8 @@ private:
 	void ConnectSuccessState(_char* _pPacket, const PACKETHEAD& _PacketHead);
 	void OtherClientLoginState(_char* _pPacket, const PACKETHEAD& _PacketHead);
 	void PlayerAnimState(_char* _pPacket, const PACKETHEAD& _PacketHead);
-	void CharMoveState(_char* _pPacket, const PACKETHEAD& _PacketHead);
 	void SelfPlayerMoveState(_char* _pPacket, const PACKETHEAD& _PacketHead);
 	void MonsterState(_char* _pPacket, const PACKETHEAD& _PacketHead);
-	void MonsterStateHaveMove(_char* _pPacket, const PACKETHEAD& _PacketHead);
 #endif
 private:
 	virtual void Free() override;

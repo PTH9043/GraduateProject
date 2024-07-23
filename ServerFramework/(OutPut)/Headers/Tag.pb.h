@@ -148,6 +148,10 @@ enum TAG_CHAR : int {
   TAG_SARCOPHAGUS_LAYING = 5,
   TAG_SARCOPHAGUS_STANDING = 6,
   TAG_CHEST = 7,
+  TAG_MIMIC = 8,
+  TAG_ANUBIS = 9,
+  TAG_HARLEQUINN = 10,
+  TAG_MINOTAUR = 11,
   TAG_CHAR_INT_MIN_SENTINEL_DO_NOT_USE_ =
       std::numeric_limits<::int32_t>::min(),
   TAG_CHAR_INT_MAX_SENTINEL_DO_NOT_USE_ =
@@ -157,8 +161,8 @@ enum TAG_CHAR : int {
 bool TAG_CHAR_IsValid(int value);
 extern const uint32_t TAG_CHAR_internal_data_[];
 constexpr TAG_CHAR TAG_CHAR_MIN = static_cast<TAG_CHAR>(0);
-constexpr TAG_CHAR TAG_CHAR_MAX = static_cast<TAG_CHAR>(7);
-constexpr int TAG_CHAR_ARRAYSIZE = 7 + 1;
+constexpr TAG_CHAR TAG_CHAR_MAX = static_cast<TAG_CHAR>(11);
+constexpr int TAG_CHAR_ARRAYSIZE = 11 + 1;
 const ::google::protobuf::EnumDescriptor*
 TAG_CHAR_descriptor();
 template <typename T>
@@ -171,7 +175,7 @@ const std::string& TAG_CHAR_Name(T value) {
 template <>
 inline const std::string& TAG_CHAR_Name(TAG_CHAR value) {
   return ::google::protobuf::internal::NameOfDenseEnum<TAG_CHAR_descriptor,
-                                                 0, 7>(
+                                                 0, 11>(
       static_cast<int>(value));
 }
 inline bool TAG_CHAR_Parse(absl::string_view name, TAG_CHAR* value) {

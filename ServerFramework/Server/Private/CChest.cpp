@@ -19,7 +19,7 @@ namespace Server {
 	{
 		__super::Start(_ReceiveDatas);
 		SetAnimController(Create<CChestAnimController>(GetCoreInstance(), ThisShared<CChest>(),
-			"..\\..\\Resource\\Anim\\Chest\\", "Chest_FBX.bin"));
+			"..\\..\\Resource\\Anim\\Chest\\", "Chest 1_FBX.bin"));
 #ifndef CREATED_SERVERMOBDATA
 		MOBDATA* pMobData = static_cast<MOBDATA*>(_ReceiveDatas[0]);
 		// Setting Animation 

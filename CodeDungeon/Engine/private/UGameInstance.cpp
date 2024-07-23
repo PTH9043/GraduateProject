@@ -20,8 +20,8 @@
 #include "UMaterialManager.h"
 #include "UNetworkQueryProcessing.h"
 #include "UFontManager.h"
-
 #include "URenderer.h"
+#include "UNetworkSender.h"
 
 
 #include "URootSignature.h"
@@ -224,7 +224,6 @@ void UGameInstance::Tick(const _double& _dTimeDelta)
 		m_spNetworkQueryProcessing->ProcessQueryData();
 	}
 
-	
 	m_spSceneManager->Tick(_dTimeDelta);
 	if (m_isPause) {
 		m_spRenderer->Tick(0.f);
@@ -234,7 +233,6 @@ void UGameInstance::Tick(const _double& _dTimeDelta)
 		m_spRenderer->Tick(_dTimeDelta);
 		m_spActorManager->Tick(_dTimeDelta);
 	}
-	
 }
 
 void UGameInstance::LateTick(const _double& _dTimeDelta)
@@ -244,19 +242,20 @@ void UGameInstance::LateTick(const _double& _dTimeDelta)
 		m_spNetworkQueryProcessing->ProcessQueryData();
 	}
 
-	
-	if (m_isPause) {
-		m_spActorManager->LateTick(0.f);
-		m_spCharacterManager->TickCollider(0.f);
-		m_spSceneManager->LateTick(0.f);
+	_double dTimeDelta = _dTimeDelta;
+	if (m_isPause)
+		dTimeDelta = 0.0;
+
+	m_spActorManager->LateTick(dTimeDelta);
+	m_spCharacterManager->TickCollider(dTimeDelta);
+	m_spSceneManager->LateTick(dTimeDelta);
+
+	m_spActorManager->NetworkTick(dTimeDelta);
+
+	if (nullptr != m_spNetworkSender)
+	{
+		m_spNetworkSender->SendDataInQuery();
 	}
-	else {
-		m_spActorManager->LateTick(_dTimeDelta);
-		m_spCharacterManager->TickCollider(_dTimeDelta);
-		m_spSceneManager->LateTick(_dTimeDelta);
-	}
-	
-	
 }
 
 void UGameInstance::RenderBegin()
@@ -967,6 +966,7 @@ void UGameInstance::StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBas
 {
 	m_spNetworkBaseController = _spNetworkBaseController;
 	m_spNetworkQueryProcessing = _spNetworkQueryProcessing;
+	m_spNetworkSender = Create<UNetworkSender>(m_spNetworkBaseController);
 }
 
 void UGameInstance::MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer)
@@ -975,16 +975,16 @@ void UGameInstance::MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer)
 	m_spNetworkBaseController->MakeActors(_actorContainer);
 }
 
-void UGameInstance::SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize)
+void UGameInstance::InsertSendTcpPacketInQuery(_char* _pPacket, _short _PacketType, _short _PacketSize)
 {
-	assert(nullptr != m_spNetworkBaseController);
-	m_spNetworkBaseController->SendTcpPacket(_pPacket, _PacketType, _PacketSize);
+	assert(nullptr != m_spNetworkSender);
+	m_spNetworkSender->InsertSendTcpPacketInQuery(_pPacket, _PacketType, _PacketSize);
 }
 
-void UGameInstance::SendProcessPacket(UProcessedData&& _ProcessData)
+void UGameInstance::InsertSendProcessPacketInQuery(UProcessedData&& _ProcessData)
 {
-	assert(nullptr != m_spNetworkBaseController);
-	m_spNetworkBaseController->SendProcessPacket(std::move(_ProcessData));
+	assert(nullptr != m_spNetworkSender);
+	m_spNetworkSender->InsertSendProcessPacketInQuery(std::move(_ProcessData));
 }
 
 SHPTR<UActor> UGameInstance::FindNetworkActor(const _int _NetworkID)

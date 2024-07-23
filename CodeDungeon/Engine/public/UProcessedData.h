@@ -12,6 +12,7 @@ class UProcessedData {
 public:
 	UProcessedData();
 	UProcessedData(const _int _NetworkID, void* _pData, size_t _Size, _int _DataType);
+	UProcessedData(void* _pData, size_t _Size, _int _DataType);
 	UProcessedData(const UProcessedData& _rhs);
 	UProcessedData(UProcessedData&& _rhs) noexcept;
 	// Send

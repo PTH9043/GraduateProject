@@ -24,20 +24,19 @@ public:
 	DESTRUCTOR(UNetworkBaseController)
 public:
 	virtual HRESULT NativeConstruct(const _string& _strIPAddress, const _int _PortNumber) PURE;
-	void SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize);
 	virtual void MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer) PURE;
 	void AddNetworkInitData(_int _NetworkID, const NETWORKRECEIVEINITDATA& _NetworkInitData);
 	void AddCreatedNetworkActor(_int _NetworkID, CSHPTRREF<UActor> _spActor);
 
 	void InsertNetworkInitDataInQuery(const NETWORKRECEIVEINITDATA& _networkInitData);
 	SHPTR<UActor> FindNetworkActor(const _int _NetworkID);
-	void SendProcessPacket(const UProcessedData& _ProcceedData);
 	void InsertNetworkProcessInQuery(UProcessedData&& _data);
 public: /* get set */
 	const _llong GetNetworkOwnerID() const { return m_llNetworkOwnerID; }
 	const NETWORKACTORCONTAINER& GetNetworkActorContainer() const { return m_NetworkActorContainer; }
 	SHPTR<UNetworkQueryProcessing> GetNetworkQueryProcessing() { return m_spNetworkQueryProcessing; }
 	const _bool IsNetworkResourceRecvSuccess() const { return m_isNetworkResourceReceiveSuccess; }
+	SOCKET* GetClientSocketPointer() { return &m_ClientTcpSocket; }
 
 	void SetSceneID(const _int _iSceneID) { this->m_iSceneID = _iSceneID; }
 	void SetNetworkQueryProcessing(CSHPTRREF<UNetworkQueryProcessing> _spNetworkQueryProcessing) { this->m_spNetworkQueryProcessing = _spNetworkQueryProcessing; }
@@ -86,7 +85,7 @@ private:
 
 	TOTALBUFFER																			m_TcpTotalBuffer;
 	std::atomic<_llong>																m_CurrentBufferLength;
-	std::atomic < _llong>																m_RemainBufferLength;
+	std::atomic <_llong>																m_RemainBufferLength;
 	_llong																							m_llNetworkOwnerID;
 
 	SHPTR< UNetworkAddress>												m_spNetworkAddress;

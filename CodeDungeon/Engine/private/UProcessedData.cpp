@@ -12,6 +12,12 @@ UProcessedData::UProcessedData(const _int _NetworkID, void* _pData, size_t _Size
 	::memcpy(&m_Data[0], _pData, _Size);
 }
 
+UProcessedData::UProcessedData(void* _pData, size_t _Size, _int _DataType) :
+	m_Data{  }, m_DataType{ _DataType }, m_DataSize{ static_cast<_int>(_Size) }, m_iNetworkID{ 0 }
+{
+	::memcpy(&m_Data[0], _pData, _Size);
+}
+
 UProcessedData::UProcessedData(const UProcessedData& _rhs) : m_Data{ _rhs.m_Data },
 m_DataType{ _rhs.m_DataType.load() },  m_DataSize{ _rhs.m_DataSize.load() }, m_iNetworkID{_rhs.m_iNetworkID.load() }
 {

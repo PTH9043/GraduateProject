@@ -39,12 +39,6 @@ HRESULT UNetworkBaseController::NativeConstruct(const _string& _strIPAddress, co
 	return S_OK;
 }
 
-void UNetworkBaseController::SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize)
-{
-	UOverExp* pOverExp = Make::xnew<UOverExp>(_pPacket, _PacketType, _PacketSize);
-	UServerMethods::SendTcpPacket(m_ClientTcpSocket, pOverExp);
-}
-
 void UNetworkBaseController::MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer)
 {
 	m_NetworkInitDataContainer.clear();
@@ -73,11 +67,6 @@ SHPTR<UActor> UNetworkBaseController::FindNetworkActor(const _int _NetworkID)
 	const auto& iter = m_NetworkActorContainer.find(_NetworkID);
 	RETURN_CHECK(m_NetworkActorContainer.end() == iter, nullptr);
 	return iter->second;
-}
-void UNetworkBaseController::SendProcessPacket(const UProcessedData& _ProcceedData)
-{
-	// Send Tcp Packet
-	SendTcpPacket(&_ProcceedData.GetData()[0], _ProcceedData.GetDataType(), _ProcceedData.GetDataSize());
 }
 
 void UNetworkBaseController::InsertNetworkProcessInQuery(UProcessedData&& _data)

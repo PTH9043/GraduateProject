@@ -48,6 +48,7 @@ public:
 	void AwakeTick(const _double& _dTimeDelta) { (this->*m_pAwakeTick)(_dTimeDelta); }
 	void Tick(const _double& _dTimeDelta) { (this->*m_pTick)(_dTimeDelta); }
 	void LateTick(const _double& _dTimeDelta) { (this->*m_pLateTick)(_dTimeDelta); }
+	void NetworkTick(const _double& _dTimeDelta) { (this->*m_pNetworkTick)(_dTimeDelta); }
 
 
 	HRESULT Render(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) { return (this->*m_pRender)(_spCommand, _spTableDescriptor); }
@@ -60,6 +61,8 @@ protected:
 	void AwakeTickNonActive(const _double& _dTimeDelta) {}
 	void TickNonActive(const _double& _dTimeDelta) {}
 	void LateTickNonActive(const _double& _dTimeDelta) {}
+	void NetowkrTickNonActive(const _double& _dTimeDelta) {}
+
 	HRESULT RenderNonActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) { return S_OK; }
 	HRESULT RenderShadowNonActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) { return S_OK; }
 	HRESULT RenderOutlineNonActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor,_bool _pass) { return S_OK; }
@@ -84,6 +87,7 @@ protected:
 	// Tick, LateTick, Render
 	virtual void TickActive(const _double& _dTimeDelta) PURE;
 	virtual void LateTickActive(const _double& _dTimeDelta) PURE;
+	virtual void NetworkTickActive(const _double&);
 	virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) PURE;
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) PURE;
 	virtual HRESULT RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor,_bool _pass=true) PURE;
@@ -120,6 +124,7 @@ private:
 	void															(UActor::* m_pAwakeTick)(const _double&);
 	void															(UActor::* m_pTick)(const _double&);
 	void															(UActor::* m_pLateTick)(const _double&);
+	void															(UActor::* m_pNetworkTick)(const _double&);
 	HRESULT												(UActor::* m_pRender)(CSHPTRREF<UCommand>, CSHPTRREF<UTableDescriptor>);
 	HRESULT												(UActor::* m_pShadowRender)(CSHPTRREF<UCommand>, CSHPTRREF<UTableDescriptor>);
 	HRESULT												(UActor::* m_pOutlineRender)(CSHPTRREF<UCommand>, CSHPTRREF<UTableDescriptor>,_bool);

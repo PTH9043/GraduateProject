@@ -79,6 +79,9 @@
     <Filter Include="03.Session\Monster\Anubis">
       <UniqueIdentifier>{b27ad188-2619-4e3a-bf7f-39498a9b66a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.AnimController\Mimic">
+      <UniqueIdentifier>{7b28baa7-8314-4f8a-9a8c-87eb5e490693}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -132,6 +135,18 @@
     <ClCompile Include="..\Private\CAnubis.cpp">
       <Filter>03.Session\Monster\Anubis</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\CAnubisAnimController.cpp">
+      <Filter>05.AnimController\Anubis</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CHarlequinAnimController.cpp">
+      <Filter>05.AnimController\Harlequin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CMinotaurAnimController.cpp">
+      <Filter>05.AnimController\Minotaur</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CMimicAnimController.cpp">
+      <Filter>05.AnimController\Mimic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\CServerApp.h">
@@ -184,6 +199,18 @@
     </ClInclude>
     <ClInclude Include="..\Public\CAnubis.h">
       <Filter>03.Session\Monster\Anubis</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CAnubisAnimController.h">
+      <Filter>05.AnimController\Anubis</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CHarlequinAnimController.h">
+      <Filter>05.AnimController\Harlequin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CMinotaurAnimController.h">
+      <Filter>05.AnimController\Minotaur</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CMimicAnimController.h">
+      <Filter>05.AnimController\Mimic</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
