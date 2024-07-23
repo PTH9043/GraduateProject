@@ -1,5 +1,6 @@
 #pragma once
 #include "UPlayer.h"
+#include "UCell.h"
 
 BEGIN(Engine)
 class UGameInstance;
@@ -55,6 +56,12 @@ public: /* Get Set */
 	_bool GetCanInteractStatueState() { return m_bCanInteractStatue; }
 
 	_float GetInteractionElapsedTime() { return m_fInteractionTimeElapsed; }
+
+	CSHPTRREF<UCell> GetSpawnPointCell() { return m_spSpawnPoint; }
+	const _float3& GetSpawnPointPos() { return m_f3SpawnPoint; }
+	void SetSpawnPoint(SHPTR<UCell> _newSpawnPoint) { m_spSpawnPoint = _newSpawnPoint; }
+	void SetSpawnPoint(_float3 _newSpawnPoint) { m_f3SpawnPoint = _newSpawnPoint; }
+	
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
@@ -98,8 +105,11 @@ private:
 	_bool											m_bCanInteractChest;
 	_bool											m_bCanInteractBar;
 	_bool											m_bCanInteractStatue;
+	_bool											m_bCanInteractGuard;
 
 	_float			m_fInteractionTimeElapsed=0;
+	SHPTR<UCell>			m_spSpawnPoint;
+	_float3					m_f3SpawnPoint;
 };
 END
 

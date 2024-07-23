@@ -73,7 +73,7 @@ void UCharacterManager::TickCollider(const _double& _dTimeDelta)
 		{
 			if (Pawn == Coll)
 				continue;
-			if (_float3::Distance(Pawn->GetTransform()->GetPos(), Coll->GetTransform()->GetPos()) < 20)
+			if (_float3::Distance(Pawn->GetTransform()->GetPos(), Coll->GetTransform()->GetPos()) < 30)
 			{
 				Pawn->IsHit(Coll, _dTimeDelta);
 			}

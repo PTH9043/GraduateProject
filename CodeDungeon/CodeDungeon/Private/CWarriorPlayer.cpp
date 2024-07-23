@@ -21,6 +21,7 @@
 #include "UMethod.h"
 #include "UAnimation.h"
 #include "UDust.h"
+#include "UGuard.h"
 
 CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UPlayer(_spDevice, _wstrLayer, _eCloneType), 
@@ -35,7 +36,8 @@ CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _ws
 	m_bisKicked{ false },
 	m_dKickedElapsed{ 0 },
 	m_bisRise{ false },
-	m_bCanInteractChest{ false }
+	m_bCanInteractChest{ false },
+	m_bCanInteractGuard{ false }
 {
 }
 
@@ -52,7 +54,8 @@ CWarriorPlayer::CWarriorPlayer(const CWarriorPlayer& _rhs) :
 	m_bisKicked{ false },
 	m_dKickedElapsed{ 0 },
 	m_bisRise{ false },
-	m_bCanInteractChest{ false }
+	m_bCanInteractChest{ false },
+	m_bCanInteractGuard{ false }
 {
 }
 
@@ -76,6 +79,8 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SHPTR<UCell> spCell = spNavigation->FindCell(cellIndex);
 
 	GetTransform()->SetPos(spCell->GetCenterPos());
+	SetSpawnPoint(spCell);
+	SetSpawnPoint(spCell->GetCenterPos());
 
 	SHPTR<CMainCamera> spMainCamera = std::static_pointer_cast<CMainCamera>(GetFollowCamera());
 	if (nullptr != spMainCamera)
@@ -440,7 +445,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 					if (EnemyCurAnimName == L"attack4_kick" || EnemyCurAnimName == L"attack5_kick"
 						|| EnemyCurAnimName == L"Attack 2" || EnemyCurAnimName == L"Attack 3" || EnemyCurAnimName == L"Jump Forward")
 					{
-						if (CurAnimName != L"rise01" && CurAnimName != L"rise02")
+						if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead03")
 						{
 							if (m_dKickedElapsed >= 50)
 							{
@@ -461,7 +466,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 					}
 					else
 					{
-						if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead01" && !m_bisKicked)
+						if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead01" && !m_bisKicked && CurAnimName != L"dead03")
 						{
 							if (!GetIsHItAlreadyState())
 							{
@@ -533,6 +538,8 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							}
 							if (m_fInteractionTimeElapsed > 4.f) {
 								pModelObject->SetInteractionState(true);
+								SetSpawnPoint(GetCurrentNavi()->GetCurCell());
+								SetSpawnPoint(GetTransform()->GetPos());
 								//pModelObject->SetOutline(false);
 							}
 								
@@ -570,7 +577,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							pModelObject->SetOutline(false);
 							m_bCanInteractBar = false;
 						}
-					}
+					}				
 				}
 			}
 		}
@@ -586,7 +593,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 				{
 					if (iter.second->IsCollision(iter2.second))
 					{
-						if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead01" && !m_bisKicked)
+						if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead01" && !m_bisKicked && CurAnimName != L"dead03")
 						{
 							if (!GetIsHItAlreadyState())
 							{
@@ -600,6 +607,49 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 						SetHitAlreadyState(false);
 					}
 
+				}
+			}
+		}
+	}
+	else if (PAWNTYPE::PAWN_ECT == ePawnType) //가드 충돌
+	{
+		UGuard* pGuard = static_cast<UGuard*>(_pEnemy.get());
+		for (auto& iter : GetColliderContainer())
+		{
+			if (iter.first == L"Main")
+			{
+				for (auto& iter2 : pGuard->GetColliderContainer())
+				{
+					if (iter2.first == L"Main")
+					{
+						SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
+
+						if (GetCollidedNormal() != _float3::Zero) // 충돌이 발생한 경우
+						{
+							SetOBJCollisionState(true);
+							// 속도 결정
+							_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 60.0f : 20.0f;
+							if (CurAnimName == L"roll_back" || CurAnimName == L"roll_front" || CurAnimName == L"roll_left" || CurAnimName == L"roll_right")
+								GetTransform()->SetPos(GetPrevPos());
+							else
+								ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
+						}
+						else
+						{
+							SetOBJCollisionState(false);
+						}
+					}
+					else if (iter2.first == L"ForInteractionGuard")
+					{
+						if (iter.second->IsCollision(iter2.second))
+						{
+							m_bCanInteractGuard = true;
+						}
+						else
+						{
+							m_bCanInteractGuard = false;
+						}
+					}
 				}
 			}
 		}

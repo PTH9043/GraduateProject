@@ -641,6 +641,7 @@ _float3 UTransform::GetRotationValue()
 	return OutMatrix.vRot;
 }
 
+
 void UTransform::GravityFall(const _double& _deltaTime)
 {
 	m_vVelocity += m_vGravity * static_cast<_float>(_deltaTime);

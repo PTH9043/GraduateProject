@@ -13,6 +13,7 @@
 #include "CMob.h"
 #include "UCollider.h"
 #include "UProcessedData.h"
+#include "UAnimation.h"
 
 CMob::CMob(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UCharacter(_spDevice, _wstrLayer, _eCloneType),
@@ -75,6 +76,7 @@ void CMob::TickActive(const _double& _dTimeDelta)
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	_float3 CurrentMobPos = GetTransform()->GetPos();
+
 
 	if (nullptr == m_spTargetPlayer)
 	{

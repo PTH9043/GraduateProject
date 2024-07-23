@@ -192,6 +192,7 @@ void CMap::LoadGuards()
 			_Guard->GetTransform()->SetScale(_float3(40, 40, 1));
 			_Guard->GetTransform()->SetDirection(vecit._mWorldMatrix.Get_Look());
 			_Guard->GetTransform()->SetPos(_float3(vecit._mWorldMatrix.Get_Pos().x, vecit._mWorldMatrix.Get_Pos().y + 20, vecit._mWorldMatrix.Get_Pos().z));
+			spGameInstance->AddCollisionPawnList(_Guard);
 			m_GuardContainer.emplace(it.first, _Guard);
 		}
 	}

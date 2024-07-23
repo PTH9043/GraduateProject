@@ -19,6 +19,7 @@ public:
 	const _float4x4 GetWorldMatrixTP() { TransformUpdate();  return XMMatrixTranspose(XMLoadFloat4x4(&m_mChangeWorldMatrix)); }
 	const _float4x4 GetWorldMatrixInv() { TransformUpdate();   return XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_mChangeWorldMatrix)); }
 	const _float4x4& GetWorldMatrix() const { return m_mWorldMatrix; }
+	const _quaternion& GetQuaternion() { return m_vQuaternion; }
 
 	const _float4x4& GetChangeMatrix() { TransformUpdate();   return m_mChangeWorldMatrix; }
 	// Get Parents Local Matrix
@@ -123,6 +124,7 @@ public:
 	void DisableJump();
 	void JumpMovement(const _double& _deltaTime);
 	_float3 GetRotationValue();
+
 #ifdef _USE_IMGUI
 public:
 	virtual void ShowObjectInfo() override;
