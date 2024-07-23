@@ -89,16 +89,7 @@ public: /* get set */
 	void SetMaxHealth(const _int& _inewHealth) { m_iMaxHealth = _inewHealth; }
 	void SetPrevHealth(const _int& _inewHealth) { m_iPrevHealth = _inewHealth; }
 
-	void DecreaseHealth(_int amount)
-	{
-		m_iPrevHealth = m_iHealth;
-		m_iHealth -= amount;
-		if (m_iHealth < 0)
-		{
-			m_iHealth = 0;
-		}
-	}
-
+	void DecreaseHealth(_int amount);
 	const _bool& GetDeathState() { return m_bisDeath; }
 	void SetDeathState(_bool _isDead) { m_bisDeath = _isDead; }
 
@@ -110,6 +101,8 @@ public: /* get set */
 	void SetAnimModelRim(_int _SetRim);
 	void SetAnimModelRimColor(_float3 _SetRimColor);
 
+	const _bool IsDamaged() const { return m_isDamaged; }
+	void SetDamaged(const _bool _isDamaged) { this->m_isDamaged = _isDamaged; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) PURE;
 	virtual void LateTickActive(const _double& _dTimeDelta) PURE;
@@ -181,6 +174,7 @@ private:
 	_bool			m_bisDeath;
 
 	_bool			m_bisHitAlready;
+	_bool			m_isDamaged;
 };
 
 END

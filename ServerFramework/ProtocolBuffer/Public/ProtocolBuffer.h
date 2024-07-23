@@ -26,6 +26,10 @@ namespace PROTOFUNC
 	void MakeCharState(CHARSTATE* _pOut, LLONG _id, const VECTOR3& _vPos, const VECTOR3& _vRotate,
 		int _animstate, int _curAnimIndex, int _triggerOn);
 	void MakeCharState(CHARSTATE* _pOut, LLONG _id, const VECTOR3& _vPos, const VECTOR3& _vRotate);
+	void MakeMobState(MOBSTATE* _pOut, LLONG _id, const VECTOR3& _vPos, const VECTOR3& _vRotate,
+		int _animstate, int _curAnimIndex, int _triggerOn, int _outlineOn);
+	void MakeMobState(MOBSTATE* _pOut, LLONG _id, const VECTOR3& _vPos, const VECTOR3& _vRotate);
+
 
 	/* =========== SC =============== */
 	// Server To Client 
@@ -33,7 +37,7 @@ namespace PROTOFUNC
 	void MakeScConnectSuccess(SC_CONNECTSUCCESS* _pOut, LLONG _id,  int _cellIndex,  int _type);
 	void MakeScOtherClientLogin(SC_OTHERCLIENTLOGIN* _pOut, LLONG _id, int _cellIndex, int _type);
 	void MakeScMonsterFind(SC_MONSTERFIND* _pOut, LLONG _id, int _findtype, int _targetID);
-	void MakeScDead(SC_DEAD* _pOut, LLONG _id);
+	void MakeScDamaged(SC_DAMAGED* _pOut, LLONG _id, float _curhp);
 	void MakeScSeePlayerMove(SC_SEEPLAYERMOVE* _pOut, LLONG _id, const VECTOR3& _vPos);
 
 	/* =========== CS =============== */

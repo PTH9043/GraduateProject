@@ -6,12 +6,12 @@
 #include "UCharacter.h"
 
 CItemChestAnimController::CItemChestAnimController(CSHPTRREF<UDevice> _spDevice)
-	: UAnimationController(_spDevice)
+	: CMonsterAnimController(_spDevice)
 {
 }
 
 CItemChestAnimController::CItemChestAnimController(const CItemChestAnimController& _rhs)
-	: UAnimationController(_rhs)
+	: CMonsterAnimController(_rhs)
 {
 }
 

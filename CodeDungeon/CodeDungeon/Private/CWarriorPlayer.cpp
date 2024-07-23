@@ -217,26 +217,19 @@ void CWarriorPlayer::ReceiveNetworkProcessData(const UProcessedData& _ProcessDat
 	{
 	case TAG_SC_PLAYERSTATE:
 	{
-		PLAYERSTATE PlayerState;
+		CHARSTATE PlayerState;
 		PlayerState.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
-		IfAttack(PlayerState.ifattack());
 		GetAnimationController()->ReceiveNetworkProcessData(&PlayerState);
+		GetTransform()->SetPos(_float3{ PlayerState.posx(), PlayerState.posy(), PlayerState.posz() });
+		GetTransform()->RotateFix(_float3{ PlayerState.rotatex(), PlayerState.rotatey(), PlayerState.rotatez() });
 	}
 	break;
 	case TAG_SC_SELFPLAYERMOVE:
 	{
-		SELFPLAYERMOVE selfPlayerMove;
+		SC_SEEPLAYERMOVE selfPlayerMove;
 		selfPlayerMove.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
 		// SelfPlayer 
-		GetTransform()->SetPos(_float3{ selfPlayerMove.movex(), selfPlayerMove.movey(), selfPlayerMove.movez() });
-	}
-	break;
-	case TAG_SC_CHARMOVE:
-	{
-		CHARMOVE charMove;
-		charMove.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
-		GetTransform()->SetPos(_float3{ charMove.movex(), charMove.movey(), charMove.movez() });
-		GetTransform()->RotateFix(_float3{ charMove.rotatex(), charMove.rotatey(), charMove.rotatez() });
+		GetTransform()->SetPos(_float3{ selfPlayerMove.posx(), selfPlayerMove.posy(), selfPlayerMove.posz() });
 	}
 	break;
 	}
@@ -380,12 +373,6 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 
 
 	JumpState(_dTimeDelta);
-
-
-
-#ifdef _ENABLE_PROTOBUFF
-	SendMoveData(spGameInstance);
-#endif
 }
 
 void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
@@ -414,16 +401,17 @@ void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 	{
 		GetFollowCamera()->GetTransform()->SetPos(GetTransform()->GetPos());
 	}
-
-	/*for (auto& Colliders : GetColliderContainer())
-		if(Colliders.first == L"Main")
-			Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);*/
 }
 
+void CWarriorPlayer::NetworkTickActive(const _double& _dTimeDelta)
+{
+#ifdef _ENABLE_PROTOBUFF
+	SendMoveData();
+#endif
+}
 
 HRESULT CWarriorPlayer::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
-	
 	return __super::RenderActive(_spCommand, _spTableDescriptor);
 }
 
@@ -438,13 +426,15 @@ HRESULT CWarriorPlayer::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHP
 
 void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
+	if (true == IsDamaged())
+	{
+		SetDamaged(false);
+	}
+
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	PAWNTYPE ePawnType = _pEnemy->GetPawnType();
 	const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
-#ifdef _ENABLE_PROTOBUFF
-	_bool isCollision = false;
-	_int DamageEnable = 0;
-#endif
+
 	if (PAWNTYPE::PAWN_CHAR == ePawnType)
 	{
 		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
@@ -478,15 +468,10 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 								GetTransform()->SetDirectionFixedUp(pCharacter->GetTransform()->GetLook());
 								m_bisKicked = true;
 							}
-#ifndef _ENABLE_PROTOBUFF
 							if (!GetIsHItAlreadyState())
 							{
 								DecreaseHealth(1);
 							}
-#else
-							isCollision = true;
-							DamageEnable = 1;
-#endif
 							SetHitAlreadyState(true);
 						}
 					}
@@ -494,14 +479,10 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 					{
 						if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead01" && !m_bisKicked)
 						{
-#ifndef _ENABLE_PROTOBUFF
 							if (!GetIsHItAlreadyState())
 							{
 								DecreaseHealth(1);
 							}
-#else
-							isCollision = true;
-#endif
 							SetHitAlreadyState(true);
 						}
 					}
@@ -518,9 +499,6 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 					if (iter.second->IsCollision(iter2.second))
 					{
 						/*GetTransform()->SetPos(GetTransform()->GetPos() - direction * 10 * _dTimeDelta);*/
-#ifdef _ENABLE_PROTOBUFF
-						isCollision = true;
-#endif
 					}
 				}
 			}		
@@ -548,9 +526,6 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 								GetTransform()->SetPos(GetPrevPos());
 							else
 								ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
-#ifdef _ENABLE_PROTOBUFF
-							isCollision = true;
-#endif
 						}
 						else
 						{
@@ -580,15 +555,10 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 					{
 						if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead01" && !m_bisKicked)
 						{
-#ifndef _ENABLE_PROTOBUFF
 							if (!GetIsHItAlreadyState())
 							{
 								DecreaseHealth(1);
 							}
-#else
-							isCollision = true;
-							DamageEnable = 1;
-#endif
 							SetHitAlreadyState(true);
 						}
 					}
@@ -602,23 +572,25 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 
 		}
 	}
-
-
 #ifdef _ENABLE_PROTOBUFF
-	if (true == isCollision)
+	if (true == IsDamaged())
 	{
-		SendCollisionData(_pEnemy.get(), DamageEnable);
+		SendCollisionData(_pEnemy.get());
 	}
 #endif
 }
 
 #ifdef _ENABLE_PROTOBUFF
-void CWarriorPlayer::SendMoveData(CSHPTRREF<UGameInstance> spGameInstance)
+void CWarriorPlayer::SendMoveData()
 {
 	RETURN_CHECK(true == IsNetworkConnected(), ;);
+	CSHPTRREF<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	_float3 vCharacterPos = GetTransform()->GetPos();
 	_float3 vCharRotate = GetTransform()->GetRotationValue();
+
+	_int state = GetAnimationController()->GetAnimState();
+	_int AnimIndex = GetAnimModel()->GetCurrentAnimIndex();
 
 	VECTOR3 vMove;
 	VECTOR3 vRotate; 
@@ -626,24 +598,24 @@ void CWarriorPlayer::SendMoveData(CSHPTRREF<UGameInstance> spGameInstance)
 		PROTOFUNC::MakeVector3(OUT & vMove, vCharacterPos.x, vCharacterPos.y, vCharacterPos.z);
 		PROTOFUNC::MakeVector3(OUT & vRotate, vCharRotate.x, vCharRotate.y, vCharRotate.z);
 	}
-	CHARMOVE charMove;
-	PROTOFUNC::MakeCharMove(OUT & charMove, spGameInstance->GetNetworkOwnerID(), vMove, vRotate);
-	spGameInstance->SendProcessPacket(std::move(UProcessedData(charMove, TAG_CS_MOVE)));
+	CHARSTATE charMove;
+	PROTOFUNC::MakeCharState(OUT & charMove, spGameInstance->GetNetworkOwnerID(), vMove, vRotate, 
+		state, AnimIndex, IsDamaged() == true ? 1 : 0);
+	spGameInstance->InsertSendProcessPacketInQuery(std::move(UProcessedData(charMove, TAG_CS_PLAYERSTATE)));
 }
 
-void CWarriorPlayer::SendCollisionData(UPawn* _pPawn, _int _DamageEnable)
+void CWarriorPlayer::SendCollisionData(UPawn* _pPawn)
 {
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	COLLISIONDATA csCollision;
-	VECTOR3 Pos;
-	_llong NetworkID = spGameInstance->GetNetworkOwnerID();
+	if (true == IsDamaged())
 	{
-		_float3 vPos = GetTransform()->GetPos();
-		PROTOFUNC::MakeVector3(&Pos, vPos.x, vPos.y, vPos.z);
-		PROTOFUNC::MakeCollisionData(&csCollision, NetworkID, Pos, _DamageEnable, 
-			_pPawn->GetNetworkID());
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		COLLISIONDATA csCollision;
+		_llong NetworkID = spGameInstance->GetNetworkOwnerID();
+		{
+			PROTOFUNC::MakeCollisionData(&csCollision, NetworkID, _pPawn->GetNetworkID());
+		}
+		spGameInstance->InsertSendProcessPacketInQuery(UProcessedData(NetworkID, csCollision, TAG_CS_PLAYERCOLLISION));
 	}
-	spGameInstance->SendProcessPacket(UProcessedData(NetworkID, csCollision, TAG_CS_PLAYERCOLLISION));
 }
 
 #endif

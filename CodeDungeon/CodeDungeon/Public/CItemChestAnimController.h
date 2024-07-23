@@ -1,10 +1,10 @@
 #pragma once
-#include "UAnimationController.h"
+#include "CMonsterAnimController.h"
 
 BEGIN(Client)
 class CItemChest;
 
-class CItemChestAnimController final : public UAnimationController {
+class CItemChestAnimController final : public CMonsterAnimController {
 public:
 	CItemChestAnimController(CSHPTRREF<UDevice> _spDevice);
 	CItemChestAnimController(const CItemChestAnimController& _rhs);

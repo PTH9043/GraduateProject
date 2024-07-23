@@ -1,11 +1,11 @@
 
 #pragma once
-#include "UAnimationController.h"
+#include "CMonsterAnimController.h"
 
 BEGIN(Client)
 class CSarcophagus;
 
-class CSarcophagusAnimController final : public UAnimationController {
+class CSarcophagusAnimController final : public CMonsterAnimController {
 public:
 	CSarcophagusAnimController(CSHPTRREF<UDevice> _spDevice);
 	CSarcophagusAnimController(const CSarcophagusAnimController& _rhs);
@@ -20,8 +20,6 @@ public:
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _tDatas) override;
 	// Tick
 	virtual void Tick(const _double& _dTimeDelta) override;
-	// 네트워크 정보를 받아오는 함수
-	virtual void ReceiveNetworkProcessData(void* _pData) override;
 private:
 	WKPTR< CSarcophagus>			m_wpSarcophagusMob;
 	_double											m_dRecvAnimDuration;

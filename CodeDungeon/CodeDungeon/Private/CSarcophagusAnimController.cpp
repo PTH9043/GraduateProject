@@ -6,12 +6,12 @@
 #include "UCharacter.h"
 
 CSarcophagusAnimController::CSarcophagusAnimController(CSHPTRREF<UDevice> _spDevice)
-	: UAnimationController(_spDevice), m_dRecvAnimDuration{0}
+	: CMonsterAnimController(_spDevice), m_dRecvAnimDuration{0}
 {
 }
 
 CSarcophagusAnimController::CSarcophagusAnimController(const CSarcophagusAnimController& _rhs)
-	: UAnimationController(_rhs), m_dRecvAnimDuration{0}
+	: CMonsterAnimController(_rhs), m_dRecvAnimDuration{0}
 {
 }
 
@@ -54,20 +54,5 @@ void CSarcophagusAnimController::Tick(const _double& _dTimeDelta)
 	spAnimModel->TickEventToRatio(spSarcophagus.get(), L"", m_dRecvAnimDuration, _dTimeDelta);
 #else
 	spAnimModel->TickEvent(spSarcophagus.get(), GetTrigger(), _dTimeDelta);
-#endif
-}
-
-void CSarcophagusAnimController::ReceiveNetworkProcessData(void* _pData)
-{
-#ifdef _ENABLE_PROTOBUFF
-	SHPTR<CSarcophagus> spSarcophagus = m_wpSarcophagusMob.lock();
-	SHPTR<UAnimModel> spAnimModel = spSarcophagus->GetAnimModel();
-	{
-		SC_MONSTERSTATE* pPlayerData = static_cast<SC_MONSTERSTATE*>(_pData);
-		m_dRecvAnimDuration = pPlayerData->animationtime();
-
-		if (pPlayerData->animationindex() != spAnimModel->GetCurrentAnimIndex())
-			spAnimModel->SetAnimation(pPlayerData->animationindex());
-	}
 #endif
 }

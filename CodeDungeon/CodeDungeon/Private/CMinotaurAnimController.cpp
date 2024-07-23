@@ -10,7 +10,7 @@
 #include "CWarriorPlayer.h"
 
 CMinotaurAnimController::CMinotaurAnimController(CSHPTRREF<UDevice> _spDevice)
-    : UAnimationController(_spDevice),
+    : CMonsterAnimController(_spDevice),
     m_bAttackMode{ false },
     m_dlastHitTime{ 0 },
     m_dlastAttackTime{ 0 },
@@ -26,7 +26,7 @@ CMinotaurAnimController::CMinotaurAnimController(CSHPTRREF<UDevice> _spDevice)
 }
 
 CMinotaurAnimController::CMinotaurAnimController(const CMinotaurAnimController& _rhs)
-    : UAnimationController(_rhs),
+    : CMonsterAnimController(_rhs),
     m_bAttackMode{ false },
     m_dlastHitTime{ 0 },
     m_dlastAttackTime{ 0 },

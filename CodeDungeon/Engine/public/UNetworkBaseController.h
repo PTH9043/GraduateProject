@@ -31,6 +31,8 @@ public:
 	void InsertNetworkInitDataInQuery(const NETWORKRECEIVEINITDATA& _networkInitData);
 	SHPTR<UActor> FindNetworkActor(const _int _NetworkID);
 	void InsertNetworkProcessInQuery(UProcessedData&& _data);
+
+	void SendTcpData(_char* _pData, short _tag, short _size);
 public: /* get set */
 	const _llong GetNetworkOwnerID() const { return m_llNetworkOwnerID; }
 	const NETWORKACTORCONTAINER& GetNetworkActorContainer() const { return m_NetworkActorContainer; }
@@ -58,7 +60,7 @@ protected:
 		static BUFFER Buffer;
 		_data.SerializePartialToArray((void*)&Buffer[0], static_cast<int>(_data.ByteSizeLong()));
 		short size = static_cast<short>(_data.ByteSizeLong());
-		SendTcpPacket(&Buffer[0], _tag, size);
+		SendTcpData(&Buffer[0], _tag, size);
 	}
 	void CountingMakeMonsterNum() { ++m_iRealMakeMonsterNum; }
 protected: /* get set */

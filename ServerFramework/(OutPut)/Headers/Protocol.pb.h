@@ -74,12 +74,15 @@ extern CS_LOGINDefaultTypeInternal _CS_LOGIN_default_instance_;
 class EQINFO;
 struct EQINFODefaultTypeInternal;
 extern EQINFODefaultTypeInternal _EQINFO_default_instance_;
+class MOBSTATE;
+struct MOBSTATEDefaultTypeInternal;
+extern MOBSTATEDefaultTypeInternal _MOBSTATE_default_instance_;
 class SC_CONNECTSUCCESS;
 struct SC_CONNECTSUCCESSDefaultTypeInternal;
 extern SC_CONNECTSUCCESSDefaultTypeInternal _SC_CONNECTSUCCESS_default_instance_;
-class SC_DEAD;
-struct SC_DEADDefaultTypeInternal;
-extern SC_DEADDefaultTypeInternal _SC_DEAD_default_instance_;
+class SC_DAMAGED;
+struct SC_DAMAGEDDefaultTypeInternal;
+extern SC_DAMAGEDDefaultTypeInternal _SC_DAMAGED_default_instance_;
 class SC_MONSTERFIND;
 struct SC_MONSTERFINDDefaultTypeInternal;
 extern SC_MONSTERFINDDefaultTypeInternal _SC_MONSTERFIND_default_instance_;
@@ -610,7 +613,7 @@ class SC_SEEPLAYERMOVE final :
                &_SC_SEEPLAYERMOVE_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    9;
+    10;
 
   friend void swap(SC_SEEPLAYERMOVE& a, SC_SEEPLAYERMOVE& b) {
     a.Swap(&b);
@@ -821,7 +824,7 @@ class SC_OTHERCLIENTLOGIN final :
                &_SC_OTHERCLIENTLOGIN_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    7;
 
   friend void swap(SC_OTHERCLIENTLOGIN& a, SC_OTHERCLIENTLOGIN& b) {
     a.Swap(&b);
@@ -1020,7 +1023,7 @@ class SC_MONSTERFIND final :
                &_SC_MONSTERFIND_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    7;
+    8;
 
   friend void swap(SC_MONSTERFIND& a, SC_MONSTERFIND& b) {
     a.Swap(&b);
@@ -1160,26 +1163,26 @@ class SC_MONSTERFIND final :
   friend struct ::TableStruct_Protocol_2eproto;
 };// -------------------------------------------------------------------
 
-class SC_DEAD final :
-    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:SC_DEAD) */ {
+class SC_DAMAGED final :
+    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:SC_DAMAGED) */ {
  public:
-  inline SC_DEAD() : SC_DEAD(nullptr) {}
-  ~SC_DEAD() override;
+  inline SC_DAMAGED() : SC_DAMAGED(nullptr) {}
+  ~SC_DAMAGED() override;
   template<typename = void>
-  explicit PROTOBUF_CONSTEXPR SC_DEAD(::google::protobuf::internal::ConstantInitialized);
+  explicit PROTOBUF_CONSTEXPR SC_DAMAGED(::google::protobuf::internal::ConstantInitialized);
 
-  inline SC_DEAD(const SC_DEAD& from)
-      : SC_DEAD(nullptr, from) {}
-  SC_DEAD(SC_DEAD&& from) noexcept
-    : SC_DEAD() {
+  inline SC_DAMAGED(const SC_DAMAGED& from)
+      : SC_DAMAGED(nullptr, from) {}
+  SC_DAMAGED(SC_DAMAGED&& from) noexcept
+    : SC_DAMAGED() {
     *this = ::std::move(from);
   }
 
-  inline SC_DEAD& operator=(const SC_DEAD& from) {
+  inline SC_DAMAGED& operator=(const SC_DAMAGED& from) {
     CopyFrom(from);
     return *this;
   }
-  inline SC_DEAD& operator=(SC_DEAD&& from) noexcept {
+  inline SC_DAMAGED& operator=(SC_DAMAGED&& from) noexcept {
     if (this == &from) return *this;
     if (GetArena() == from.GetArena()
   #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
@@ -1211,20 +1214,20 @@ class SC_DEAD final :
   static const ::google::protobuf::Reflection* GetReflection() {
     return default_instance().GetMetadata().reflection;
   }
-  static const SC_DEAD& default_instance() {
+  static const SC_DAMAGED& default_instance() {
     return *internal_default_instance();
   }
-  static inline const SC_DEAD* internal_default_instance() {
-    return reinterpret_cast<const SC_DEAD*>(
-               &_SC_DEAD_default_instance_);
+  static inline const SC_DAMAGED* internal_default_instance() {
+    return reinterpret_cast<const SC_DAMAGED*>(
+               &_SC_DAMAGED_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    8;
+    9;
 
-  friend void swap(SC_DEAD& a, SC_DEAD& b) {
+  friend void swap(SC_DAMAGED& a, SC_DAMAGED& b) {
     a.Swap(&b);
   }
-  inline void Swap(SC_DEAD* other) {
+  inline void Swap(SC_DAMAGED* other) {
     if (other == this) return;
   #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
     if (GetArena() != nullptr &&
@@ -1237,7 +1240,7 @@ class SC_DEAD final :
       ::google::protobuf::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(SC_DEAD* other) {
+  void UnsafeArenaSwap(SC_DAMAGED* other) {
     if (other == this) return;
     ABSL_DCHECK(GetArena() == other->GetArena());
     InternalSwap(other);
@@ -1245,14 +1248,14 @@ class SC_DEAD final :
 
   // implements Message ----------------------------------------------
 
-  SC_DEAD* New(::google::protobuf::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<SC_DEAD>(arena);
+  SC_DAMAGED* New(::google::protobuf::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<SC_DAMAGED>(arena);
   }
   using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const SC_DEAD& from);
+  void CopyFrom(const SC_DAMAGED& from);
   using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom( const SC_DEAD& from) {
-    SC_DEAD::MergeImpl(*this, from);
+  void MergeFrom( const SC_DAMAGED& from) {
+    SC_DAMAGED::MergeImpl(*this, from);
   }
   private:
   static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
@@ -1270,16 +1273,16 @@ class SC_DEAD final :
   ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
   void SharedCtor(::google::protobuf::Arena* arena);
   void SharedDtor();
-  void InternalSwap(SC_DEAD* other);
+  void InternalSwap(SC_DAMAGED* other);
 
   private:
   friend class ::google::protobuf::internal::AnyMetadata;
   static ::absl::string_view FullMessageName() {
-    return "SC_DEAD";
+    return "SC_DAMAGED";
   }
   protected:
-  explicit SC_DEAD(::google::protobuf::Arena* arena);
-  SC_DEAD(::google::protobuf::Arena* arena, const SC_DEAD& from);
+  explicit SC_DAMAGED(::google::protobuf::Arena* arena);
+  SC_DAMAGED(::google::protobuf::Arena* arena, const SC_DAMAGED& from);
   public:
 
   static const ClassData _class_data_;
@@ -1293,6 +1296,7 @@ class SC_DEAD final :
 
   enum : int {
     kIdFieldNumber = 1,
+    kCurhpFieldNumber = 2,
   };
   // int64 id = 1;
   void clear_id() ;
@@ -1304,13 +1308,23 @@ class SC_DEAD final :
   void _internal_set_id(::int64_t value);
 
   public:
-  // @@protoc_insertion_point(class_scope:SC_DEAD)
+  // float curhp = 2;
+  void clear_curhp() ;
+  float curhp() const;
+  void set_curhp(float value);
+
+  private:
+  float _internal_curhp() const;
+  void _internal_set_curhp(float value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:SC_DAMAGED)
  private:
   class _Internal;
 
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      0, 1, 0,
+      1, 2, 0,
       0, 2>
       _table_;
   friend class ::google::protobuf::MessageLite;
@@ -1328,6 +1342,7 @@ class SC_DEAD final :
         inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                               ::google::protobuf::Arena* arena, const Impl_& from);
     ::int64_t id_;
+    float curhp_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -1394,7 +1409,7 @@ class SC_CONNECTSUCCESS final :
                &_SC_CONNECTSUCCESS_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    6;
 
   friend void swap(SC_CONNECTSUCCESS& a, SC_CONNECTSUCCESS& b) {
     a.Swap(&b);
@@ -1527,6 +1542,301 @@ class SC_CONNECTSUCCESS final :
     ::int64_t id_;
     ::int64_t cellindex_;
     ::int64_t type_;
+    mutable ::google::protobuf::internal::CachedSize _cached_size_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_Protocol_2eproto;
+};// -------------------------------------------------------------------
+
+class MOBSTATE final :
+    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:MOBSTATE) */ {
+ public:
+  inline MOBSTATE() : MOBSTATE(nullptr) {}
+  ~MOBSTATE() override;
+  template<typename = void>
+  explicit PROTOBUF_CONSTEXPR MOBSTATE(::google::protobuf::internal::ConstantInitialized);
+
+  inline MOBSTATE(const MOBSTATE& from)
+      : MOBSTATE(nullptr, from) {}
+  MOBSTATE(MOBSTATE&& from) noexcept
+    : MOBSTATE() {
+    *this = ::std::move(from);
+  }
+
+  inline MOBSTATE& operator=(const MOBSTATE& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline MOBSTATE& operator=(MOBSTATE&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetArena() == from.GetArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const MOBSTATE& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const MOBSTATE* internal_default_instance() {
+    return reinterpret_cast<const MOBSTATE*>(
+               &_MOBSTATE_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    4;
+
+  friend void swap(MOBSTATE& a, MOBSTATE& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(MOBSTATE* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() != nullptr &&
+        GetArena() == other->GetArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() == other->GetArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(MOBSTATE* other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  MOBSTATE* New(::google::protobuf::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<MOBSTATE>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const MOBSTATE& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom( const MOBSTATE& from) {
+    MOBSTATE::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  ::size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::google::protobuf::internal::ParseContext* ctx) final;
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target, ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
+  void SharedCtor(::google::protobuf::Arena* arena);
+  void SharedDtor();
+  void InternalSwap(MOBSTATE* other);
+
+  private:
+  friend class ::google::protobuf::internal::AnyMetadata;
+  static ::absl::string_view FullMessageName() {
+    return "MOBSTATE";
+  }
+  protected:
+  explicit MOBSTATE(::google::protobuf::Arena* arena);
+  MOBSTATE(::google::protobuf::Arena* arena, const MOBSTATE& from);
+  public:
+
+  static const ClassData _class_data_;
+  const ::google::protobuf::Message::ClassData*GetClassData() const final;
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kIdFieldNumber = 1,
+    kPosXFieldNumber = 2,
+    kPosYFieldNumber = 3,
+    kPosZFieldNumber = 4,
+    kRotateXFieldNumber = 5,
+    kRotateYFieldNumber = 6,
+    kRotateZFieldNumber = 7,
+    kAnimationIndexFieldNumber = 8,
+    kStateFieldNumber = 9,
+    kTriggerOnFieldNumber = 10,
+    kOutlineOnFieldNumber = 11,
+  };
+  // int64 id = 1;
+  void clear_id() ;
+  ::int64_t id() const;
+  void set_id(::int64_t value);
+
+  private:
+  ::int64_t _internal_id() const;
+  void _internal_set_id(::int64_t value);
+
+  public:
+  // float posX = 2;
+  void clear_posx() ;
+  float posx() const;
+  void set_posx(float value);
+
+  private:
+  float _internal_posx() const;
+  void _internal_set_posx(float value);
+
+  public:
+  // float posY = 3;
+  void clear_posy() ;
+  float posy() const;
+  void set_posy(float value);
+
+  private:
+  float _internal_posy() const;
+  void _internal_set_posy(float value);
+
+  public:
+  // float posZ = 4;
+  void clear_posz() ;
+  float posz() const;
+  void set_posz(float value);
+
+  private:
+  float _internal_posz() const;
+  void _internal_set_posz(float value);
+
+  public:
+  // float rotateX = 5;
+  void clear_rotatex() ;
+  float rotatex() const;
+  void set_rotatex(float value);
+
+  private:
+  float _internal_rotatex() const;
+  void _internal_set_rotatex(float value);
+
+  public:
+  // float rotateY = 6;
+  void clear_rotatey() ;
+  float rotatey() const;
+  void set_rotatey(float value);
+
+  private:
+  float _internal_rotatey() const;
+  void _internal_set_rotatey(float value);
+
+  public:
+  // float rotateZ = 7;
+  void clear_rotatez() ;
+  float rotatez() const;
+  void set_rotatez(float value);
+
+  private:
+  float _internal_rotatez() const;
+  void _internal_set_rotatez(float value);
+
+  public:
+  // int64 animationIndex = 8;
+  void clear_animationindex() ;
+  ::int64_t animationindex() const;
+  void set_animationindex(::int64_t value);
+
+  private:
+  ::int64_t _internal_animationindex() const;
+  void _internal_set_animationindex(::int64_t value);
+
+  public:
+  // int64 state = 9;
+  void clear_state() ;
+  ::int64_t state() const;
+  void set_state(::int64_t value);
+
+  private:
+  ::int64_t _internal_state() const;
+  void _internal_set_state(::int64_t value);
+
+  public:
+  // int64 triggerOn = 10;
+  void clear_triggeron() ;
+  ::int64_t triggeron() const;
+  void set_triggeron(::int64_t value);
+
+  private:
+  ::int64_t _internal_triggeron() const;
+  void _internal_set_triggeron(::int64_t value);
+
+  public:
+  // int64 outlineOn = 11;
+  void clear_outlineon() ;
+  ::int64_t outlineon() const;
+  void set_outlineon(::int64_t value);
+
+  private:
+  ::int64_t _internal_outlineon() const;
+  void _internal_set_outlineon(::int64_t value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:MOBSTATE)
+ private:
+  class _Internal;
+
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      4, 11, 0,
+      0, 2>
+      _table_;
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+
+        inline explicit constexpr Impl_(
+            ::google::protobuf::internal::ConstantInitialized) noexcept;
+        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                              ::google::protobuf::Arena* arena);
+        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                              ::google::protobuf::Arena* arena, const Impl_& from);
+    ::int64_t id_;
+    float posx_;
+    float posy_;
+    float posz_;
+    float rotatex_;
+    float rotatey_;
+    float rotatez_;
+    ::int64_t animationindex_;
+    ::int64_t state_;
+    ::int64_t triggeron_;
+    ::int64_t outlineon_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -1804,7 +2114,7 @@ class CS_LOGIN final :
                &_CS_LOGIN_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    10;
+    11;
 
   friend void swap(CS_LOGIN& a, CS_LOGIN& b) {
     a.Swap(&b);
@@ -1979,7 +2289,7 @@ class CS_DISCONNECT final :
                &_CS_DISCONNECT_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    12;
+    13;
 
   friend void swap(CS_DISCONNECT& a, CS_DISCONNECT& b) {
     a.Swap(&b);
@@ -2154,7 +2464,7 @@ class COLLISIONDATA final :
                &_COLLISIONDATA_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    5;
 
   friend void swap(COLLISIONDATA& a, COLLISIONDATA& b) {
     a.Swap(&b);
@@ -2624,7 +2934,7 @@ class CS_ATTACK final :
                &_CS_ATTACK_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    11;
+    12;
 
   friend void swap(CS_ATTACK& a, CS_ATTACK& b) {
     a.Swap(&b);
@@ -3283,6 +3593,263 @@ inline void CHARSTATE::_internal_set_triggeron(::int64_t value) {
 
 // -------------------------------------------------------------------
 
+// MOBSTATE
+
+// int64 id = 1;
+inline void MOBSTATE::clear_id() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.id_ = ::int64_t{0};
+}
+inline ::int64_t MOBSTATE::id() const {
+  // @@protoc_insertion_point(field_get:MOBSTATE.id)
+  return _internal_id();
+}
+inline void MOBSTATE::set_id(::int64_t value) {
+  _internal_set_id(value);
+  // @@protoc_insertion_point(field_set:MOBSTATE.id)
+}
+inline ::int64_t MOBSTATE::_internal_id() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.id_;
+}
+inline void MOBSTATE::_internal_set_id(::int64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.id_ = value;
+}
+
+// float posX = 2;
+inline void MOBSTATE::clear_posx() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.posx_ = 0;
+}
+inline float MOBSTATE::posx() const {
+  // @@protoc_insertion_point(field_get:MOBSTATE.posX)
+  return _internal_posx();
+}
+inline void MOBSTATE::set_posx(float value) {
+  _internal_set_posx(value);
+  // @@protoc_insertion_point(field_set:MOBSTATE.posX)
+}
+inline float MOBSTATE::_internal_posx() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.posx_;
+}
+inline void MOBSTATE::_internal_set_posx(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.posx_ = value;
+}
+
+// float posY = 3;
+inline void MOBSTATE::clear_posy() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.posy_ = 0;
+}
+inline float MOBSTATE::posy() const {
+  // @@protoc_insertion_point(field_get:MOBSTATE.posY)
+  return _internal_posy();
+}
+inline void MOBSTATE::set_posy(float value) {
+  _internal_set_posy(value);
+  // @@protoc_insertion_point(field_set:MOBSTATE.posY)
+}
+inline float MOBSTATE::_internal_posy() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.posy_;
+}
+inline void MOBSTATE::_internal_set_posy(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.posy_ = value;
+}
+
+// float posZ = 4;
+inline void MOBSTATE::clear_posz() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.posz_ = 0;
+}
+inline float MOBSTATE::posz() const {
+  // @@protoc_insertion_point(field_get:MOBSTATE.posZ)
+  return _internal_posz();
+}
+inline void MOBSTATE::set_posz(float value) {
+  _internal_set_posz(value);
+  // @@protoc_insertion_point(field_set:MOBSTATE.posZ)
+}
+inline float MOBSTATE::_internal_posz() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.posz_;
+}
+inline void MOBSTATE::_internal_set_posz(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.posz_ = value;
+}
+
+// float rotateX = 5;
+inline void MOBSTATE::clear_rotatex() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.rotatex_ = 0;
+}
+inline float MOBSTATE::rotatex() const {
+  // @@protoc_insertion_point(field_get:MOBSTATE.rotateX)
+  return _internal_rotatex();
+}
+inline void MOBSTATE::set_rotatex(float value) {
+  _internal_set_rotatex(value);
+  // @@protoc_insertion_point(field_set:MOBSTATE.rotateX)
+}
+inline float MOBSTATE::_internal_rotatex() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.rotatex_;
+}
+inline void MOBSTATE::_internal_set_rotatex(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.rotatex_ = value;
+}
+
+// float rotateY = 6;
+inline void MOBSTATE::clear_rotatey() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.rotatey_ = 0;
+}
+inline float MOBSTATE::rotatey() const {
+  // @@protoc_insertion_point(field_get:MOBSTATE.rotateY)
+  return _internal_rotatey();
+}
+inline void MOBSTATE::set_rotatey(float value) {
+  _internal_set_rotatey(value);
+  // @@protoc_insertion_point(field_set:MOBSTATE.rotateY)
+}
+inline float MOBSTATE::_internal_rotatey() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.rotatey_;
+}
+inline void MOBSTATE::_internal_set_rotatey(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.rotatey_ = value;
+}
+
+// float rotateZ = 7;
+inline void MOBSTATE::clear_rotatez() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.rotatez_ = 0;
+}
+inline float MOBSTATE::rotatez() const {
+  // @@protoc_insertion_point(field_get:MOBSTATE.rotateZ)
+  return _internal_rotatez();
+}
+inline void MOBSTATE::set_rotatez(float value) {
+  _internal_set_rotatez(value);
+  // @@protoc_insertion_point(field_set:MOBSTATE.rotateZ)
+}
+inline float MOBSTATE::_internal_rotatez() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.rotatez_;
+}
+inline void MOBSTATE::_internal_set_rotatez(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.rotatez_ = value;
+}
+
+// int64 animationIndex = 8;
+inline void MOBSTATE::clear_animationindex() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.animationindex_ = ::int64_t{0};
+}
+inline ::int64_t MOBSTATE::animationindex() const {
+  // @@protoc_insertion_point(field_get:MOBSTATE.animationIndex)
+  return _internal_animationindex();
+}
+inline void MOBSTATE::set_animationindex(::int64_t value) {
+  _internal_set_animationindex(value);
+  // @@protoc_insertion_point(field_set:MOBSTATE.animationIndex)
+}
+inline ::int64_t MOBSTATE::_internal_animationindex() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.animationindex_;
+}
+inline void MOBSTATE::_internal_set_animationindex(::int64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.animationindex_ = value;
+}
+
+// int64 state = 9;
+inline void MOBSTATE::clear_state() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.state_ = ::int64_t{0};
+}
+inline ::int64_t MOBSTATE::state() const {
+  // @@protoc_insertion_point(field_get:MOBSTATE.state)
+  return _internal_state();
+}
+inline void MOBSTATE::set_state(::int64_t value) {
+  _internal_set_state(value);
+  // @@protoc_insertion_point(field_set:MOBSTATE.state)
+}
+inline ::int64_t MOBSTATE::_internal_state() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.state_;
+}
+inline void MOBSTATE::_internal_set_state(::int64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.state_ = value;
+}
+
+// int64 triggerOn = 10;
+inline void MOBSTATE::clear_triggeron() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.triggeron_ = ::int64_t{0};
+}
+inline ::int64_t MOBSTATE::triggeron() const {
+  // @@protoc_insertion_point(field_get:MOBSTATE.triggerOn)
+  return _internal_triggeron();
+}
+inline void MOBSTATE::set_triggeron(::int64_t value) {
+  _internal_set_triggeron(value);
+  // @@protoc_insertion_point(field_set:MOBSTATE.triggerOn)
+}
+inline ::int64_t MOBSTATE::_internal_triggeron() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.triggeron_;
+}
+inline void MOBSTATE::_internal_set_triggeron(::int64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.triggeron_ = value;
+}
+
+// int64 outlineOn = 11;
+inline void MOBSTATE::clear_outlineon() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.outlineon_ = ::int64_t{0};
+}
+inline ::int64_t MOBSTATE::outlineon() const {
+  // @@protoc_insertion_point(field_get:MOBSTATE.outlineOn)
+  return _internal_outlineon();
+}
+inline void MOBSTATE::set_outlineon(::int64_t value) {
+  _internal_set_outlineon(value);
+  // @@protoc_insertion_point(field_set:MOBSTATE.outlineOn)
+}
+inline ::int64_t MOBSTATE::_internal_outlineon() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.outlineon_;
+}
+inline void MOBSTATE::_internal_set_outlineon(::int64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.outlineon_ = value;
+}
+
+// -------------------------------------------------------------------
+
 // COLLISIONDATA
 
 // int64 id = 1;
@@ -3552,29 +4119,52 @@ inline void SC_MONSTERFIND::_internal_set_targetid(::int64_t value) {
 
 // -------------------------------------------------------------------
 
-// SC_DEAD
+// SC_DAMAGED
 
 // int64 id = 1;
-inline void SC_DEAD::clear_id() {
+inline void SC_DAMAGED::clear_id() {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   _impl_.id_ = ::int64_t{0};
 }
-inline ::int64_t SC_DEAD::id() const {
-  // @@protoc_insertion_point(field_get:SC_DEAD.id)
+inline ::int64_t SC_DAMAGED::id() const {
+  // @@protoc_insertion_point(field_get:SC_DAMAGED.id)
   return _internal_id();
 }
-inline void SC_DEAD::set_id(::int64_t value) {
+inline void SC_DAMAGED::set_id(::int64_t value) {
   _internal_set_id(value);
-  // @@protoc_insertion_point(field_set:SC_DEAD.id)
+  // @@protoc_insertion_point(field_set:SC_DAMAGED.id)
 }
-inline ::int64_t SC_DEAD::_internal_id() const {
+inline ::int64_t SC_DAMAGED::_internal_id() const {
   PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
   return _impl_.id_;
 }
-inline void SC_DEAD::_internal_set_id(::int64_t value) {
+inline void SC_DAMAGED::_internal_set_id(::int64_t value) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   ;
   _impl_.id_ = value;
+}
+
+// float curhp = 2;
+inline void SC_DAMAGED::clear_curhp() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.curhp_ = 0;
+}
+inline float SC_DAMAGED::curhp() const {
+  // @@protoc_insertion_point(field_get:SC_DAMAGED.curhp)
+  return _internal_curhp();
+}
+inline void SC_DAMAGED::set_curhp(float value) {
+  _internal_set_curhp(value);
+  // @@protoc_insertion_point(field_set:SC_DAMAGED.curhp)
+}
+inline float SC_DAMAGED::_internal_curhp() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.curhp_;
+}
+inline void SC_DAMAGED::_internal_set_curhp(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.curhp_ = value;
 }
 
 // -------------------------------------------------------------------

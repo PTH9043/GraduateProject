@@ -146,141 +146,123 @@ HRESULT CMimic::NativeConstructClone(const VOIDDATAS& _Datas)
 	return S_OK;
 }
 
-void CMimic::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
-{
-#ifdef _ENABLE_PROTOBUFF
-
-	__super::ReceiveNetworkProcessData(_ProcessData);
-
-	switch (_ProcessData.GetDataType())
-	{
-	case TAG_SC_MONSTERSTATEHAVEMOVE:
-	{
-		SC_MONSTERSTATEHAVEPOS scMonsterState;
-		scMonsterState.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
-		GetAnimationController()->ReceiveNetworkProcessData(&scMonsterState);
-		GetTransform()->SetPos({ scMonsterState.posx(), scMonsterState.posy(), scMonsterState.posz() });
-		GetTransform()->RotateFix({ scMonsterState.rotatex(), scMonsterState.rotatey(), scMonsterState.rotatez() });
-	}
-	break;
-	}
-#endif
-}
-
 void CMimic::TickActive(const _double& _dTimeDelta)
 {
-	__super::TickActive(_dTimeDelta);
-	GetAnimationController()->Tick(_dTimeDelta);
-#ifndef _ENABLE_PROTOBUFF
-	_float3 pos = GetTransform()->GetPos();
-	
-	pos.y += 5;
-	m_spBloodParticle->SetPosition(pos);
-	m_spSlashParticle->SetPosition(pos);
-	_int CurAnimState = GetAnimationController()->GetAnimState();
-	_float3 CurrentMobPos = GetTransform()->GetPos();
-	_float3 CurrentPlayerPos = GetTargetPlayer()->GetTransform()->GetPos();
-	SHPTR<UCell> CurrentMobCell = GetCurrentNavi()->GetCurCell();
-	SHPTR<UCell> CurrentPlayerCell = GetTargetPlayer()->GetCurrentNavi()->GetCurCell();
-
-	if (CurAnimState == UAnimationController::ANIM_MOVE)
+	if (true == IsSendDataToBehavior())
 	{
-		AddTimeAccumulator(_dTimeDelta);
+		__super::TickActive(_dTimeDelta);
+		GetAnimationController()->Tick(_dTimeDelta);
+		_float3 pos = GetTransform()->GetPos();
 
-		// A* for moving towards player when player is found
-		if (GetFoundTargetState())
+		pos.y += 5;
+		m_spBloodParticle->SetPosition(pos);
+		m_spSlashParticle->SetPosition(pos);
+		_int CurAnimState = GetAnimationController()->GetAnimState();
+		_float3 CurrentMobPos = GetTransform()->GetPos();
+		_float3 CurrentPlayerPos = GetTargetPlayer()->GetTransform()->GetPos();
+		SHPTR<UCell> CurrentMobCell = GetCurrentNavi()->GetCurCell();
+		SHPTR<UCell> CurrentPlayerCell = GetTargetPlayer()->GetCurrentNavi()->GetCurCell();
+
+		if (CurAnimState == UAnimationController::ANIM_MOVE)
 		{
-			SetOutline(true);
-			if (GetTimeAccumulator() >= 0.5)
+			AddTimeAccumulator(_dTimeDelta);
+
+			// A* for moving towards player when player is found
+			if (GetFoundTargetState())
 			{
-				SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-				m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, CurrentPlayerPos, CurrentMobCell, CurrentPlayerCell));
-				m_isPathFinding = true;
-				SetTimeAccumulator(0.0);
-			}
-			if (m_isPathFinding)
-			{
-				SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-				if (spNavigation->StepPathFinding(m_PathFindingState))
+				SetOutline(true);
+				if (GetTimeAccumulator() >= 0.5)
 				{
-					m_isPathFinding = false;
-					if (m_PathFindingState.pathFound)
+					SHPTR<UNavigation> spNavigation = GetCurrentNavi();
+					m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, CurrentPlayerPos, CurrentMobCell, CurrentPlayerCell));
+					m_isPathFinding = true;
+					SetTimeAccumulator(0.0);
+				}
+				if (m_isPathFinding)
+				{
+					SHPTR<UNavigation> spNavigation = GetCurrentNavi();
+					if (spNavigation->StepPathFinding(m_PathFindingState))
 					{
-						m_AstarPath = (spNavigation->OptimizePath(m_PathFindingState.path, CurrentMobPos, CurrentPlayerPos));
-						m_currentPathIndex = 0; // index initialized when path is optimized
+						m_isPathFinding = false;
+						if (m_PathFindingState.pathFound)
+						{
+							m_AstarPath = (spNavigation->OptimizePath(m_PathFindingState.path, CurrentMobPos, CurrentPlayerPos));
+							m_currentPathIndex = 0; // index initialized when path is optimized
+						}
 					}
 				}
+				if (!m_AstarPath.empty())
+				{
+					MoveAlongPath(m_AstarPath, m_currentPathIndex, _dTimeDelta);
+					_float3 direction = CurrentMobPos - GetTargetPos();
+					GetTransform()->SetDirectionFixedUp(-direction, _dTimeDelta, 5);
+				}
 			}
-			if (!m_AstarPath.empty())
-			{			
-				MoveAlongPath(m_AstarPath, m_currentPathIndex, _dTimeDelta);
-				_float3 direction = CurrentMobPos - GetTargetPos();
-				GetTransform()->SetDirectionFixedUp(-direction, _dTimeDelta, 5);
+			else // patrolling when player is not found
+			{
+				SetOutline(false);
+				SHPTR<UNavigation> spNavigation = GetCurrentNavi();
+				SHPTR<UCell> spNeighborCell = spNavigation->ChooseRandomNeighborCell(3);
+				if (GetTimeAccumulator() >= 5.0)
+				{
+					m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, spNeighborCell->GetCenterPos(), CurrentMobCell, spNeighborCell));
+					m_isPathFinding = true;
+					SetTimeAccumulator(0.0);
+				}
+				if (m_isPathFinding)
+				{
+					if (spNavigation->StepPathFinding(m_PathFindingState))
+					{
+						m_isPathFinding = false;
+						if (m_PathFindingState.pathFound)
+						{
+							m_AstarPath = (spNavigation->OptimizePath(m_PathFindingState.path, CurrentMobPos, spNeighborCell->GetCenterPos()));
+							m_currentPathIndex = 0; // index initialized when path is optimized
+						}
+					}
+				}
+				if (!m_AstarPath.empty())
+				{
+					MoveAlongPath(m_AstarPath, m_currentPathIndex, _dTimeDelta);
+					_float3 direction = CurrentMobPos - GetTargetPos();
+					GetTransform()->SetDirectionFixedUp(-direction, _dTimeDelta, 5);
+				}
 			}
 		}
-		else // patrolling when player is not found
+		else if (CurAnimState == UAnimationController::ANIM_ATTACK)
+		{
+			_float3 direction = CurrentMobPos - CurrentPlayerPos;
+			GetTransform()->SetDirectionFixedUp(-direction, _dTimeDelta, 5);
+		}
+
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+		// death animation
+		if (CurAnimState == UAnimationController::ANIM_DEATH)
+		{
+			_double DeathAnimSpeed = 20;
+			SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
+			_double DeathTimeArcOpenEnd = 50;
+			if (GetElapsedTime() < DeathTimeArcOpenEnd)
+				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
+		}
+		else if (CurAnimState == UAnimationController::ANIM_IDLE)
 		{
 			SetOutline(false);
-			SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-			SHPTR<UCell> spNeighborCell = spNavigation->ChooseRandomNeighborCell(3);
-			if (GetTimeAccumulator() >= 5.0)
-			{
-				m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, spNeighborCell->GetCenterPos(), CurrentMobCell, spNeighborCell));
-				m_isPathFinding = true;
-				SetTimeAccumulator(0.0);
-			}
-			if (m_isPathFinding)
-			{
-				if (spNavigation->StepPathFinding(m_PathFindingState))
-				{
-					m_isPathFinding = false;
-					if (m_PathFindingState.pathFound)
-					{
-						m_AstarPath = (spNavigation->OptimizePath(m_PathFindingState.path, CurrentMobPos, spNeighborCell->GetCenterPos()));
-						m_currentPathIndex = 0; // index initialized when path is optimized
-					}
-				}
-			}
-			if (!m_AstarPath.empty())
-			{
-				MoveAlongPath(m_AstarPath, m_currentPathIndex, _dTimeDelta);
-				_float3 direction = CurrentMobPos - GetTargetPos();
-				GetTransform()->SetDirectionFixedUp(-direction, _dTimeDelta, 5);
-			}
+			GetAnimModel()->TickAnimation(_dTimeDelta);
+			GetTransform()->SetPos(GetTransform()->GetPos());
 		}
-	}
-	else if (CurAnimState == UAnimationController::ANIM_ATTACK)
-	{
-		_float3 direction = CurrentMobPos - CurrentPlayerPos;
-		GetTransform()->SetDirectionFixedUp(-direction, _dTimeDelta, 5);
-	}
-
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-
-	// death animation
-	if (CurAnimState == UAnimationController::ANIM_DEATH)
-	{
-		_double DeathAnimSpeed = 20;
-		SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
-		_double DeathTimeArcOpenEnd = 50;
-		if (GetElapsedTime() < DeathTimeArcOpenEnd)
-			GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
-	}
-	else if (CurAnimState == UAnimationController::ANIM_IDLE)
-	{
-		SetOutline(false);
-		GetAnimModel()->TickAnimation(_dTimeDelta);
-		GetTransform()->SetPos(GetTransform()->GetPos());
+		else
+		{
+			GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
+			SetElapsedTime(0.0);
+		}
 	}
 	else
 	{
-		GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
-		SetElapsedTime(0.0);
-	}
 
+	}
 	UpdateCollision();
-#else
-#endif
 }
 
 void CMimic::LateTickActive(const _double& _dTimeDelta)
@@ -355,13 +337,8 @@ void CMimic::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 						m_spSlashParticle->SetActive(true);
 						m_spBloodParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 						m_spSlashParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
-#ifndef _ENABLE_PROTOBUFF
 						// Decrease health on hit
 						DecreaseHealth(pCharacter->GetAttack());
-#else
-						isCollision = true;
-						DamageEnable = 1;
-#endif
 					}
 					SetHitAlreadyState(true);
 				}
@@ -377,9 +354,6 @@ void CMimic::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 				{
 					SetCollisionState(true);
 					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
-#ifdef _ENABLE_PROTOBUFF
-					isCollision = true;
-#endif
 				}
 				else
 				{
@@ -398,9 +372,6 @@ void CMimic::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 				{
 					SetCollisionState(true);
 					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
-#ifdef _ENABLE_PROTOBUFF
-					isCollision = true;
-#endif
 				}
 				else
 				{
@@ -420,9 +391,6 @@ void CMimic::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 				{
 					_float speed = 20.0f;
 					ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
-#ifdef _ENABLE_PROTOBUFF
-					isCollision = true;
-#endif
 				}
 			}
 		}
@@ -443,10 +411,8 @@ void CMimic::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 		CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
 		handleCollisionWithStaticObject(pModelObject);
 	}
+
 #ifdef _ENABLE_PROTOBUFF
-	if (true == isCollision)
-	{
-		
-	}
+	SendCollisionData();
 #endif
 }

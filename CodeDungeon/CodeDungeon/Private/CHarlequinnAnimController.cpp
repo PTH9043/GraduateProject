@@ -11,7 +11,7 @@
 #include "CShurikenThrowing.h"
 
 CHarlequinnAnimController::CHarlequinnAnimController(CSHPTRREF<UDevice> _spDevice)
-    : UAnimationController(_spDevice),
+    : CMonsterAnimController(_spDevice),
     m_bAttackMode{ false },
     m_dlastHitTime{ 0 },
     m_dlastAttackTime{ 0 },
@@ -32,7 +32,7 @@ CHarlequinnAnimController::CHarlequinnAnimController(CSHPTRREF<UDevice> _spDevic
 }
 
 CHarlequinnAnimController::CHarlequinnAnimController(const CHarlequinnAnimController& _rhs)
-    : UAnimationController(_rhs),
+    : CMonsterAnimController(_rhs),
     m_bAttackMode{ false },
     m_dlastHitTime{ 0 },
     m_dlastAttackTime{ 0 },

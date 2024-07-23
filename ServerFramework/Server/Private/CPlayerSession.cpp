@@ -211,13 +211,10 @@ namespace Server {
 		SHPTR<AMonster> spMonster = _spCoreInstance->FindMobObject(CollisionData.enemyid());
 		spSession->DamageToEnemy(spMonster->GetCharStatus().fPower);
 
-		if (spMonster->IsDead())
-		{
-			SC_DEAD scDamaged;
-			PROTOFUNC::MakeScDead(&scDamaged, spSession->GetSessionID());
-			CombineProto<SC_DEAD>(GetCopyBuffer(), GetPacketHead(), scDamaged, TAG_SC_DEAD);
-			_spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
-		}
+		SC_DAMAGED scDamaged;
+		PROTOFUNC::MakeScDamaged(&scDamaged, spSession->GetSessionID(), spSession->GetCharStatus().fHp);
+		CombineProto<SC_DAMAGED>(GetCopyBuffer(), GetPacketHead(), scDamaged, TAG_SC_DAMAGED);
+		_spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
 	}
 
 	void CPlayerSession::MonsterCollisionState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
@@ -229,20 +226,17 @@ namespace Server {
 		SHPTR<ASession> spSession = _spCoreInstance->FindSession(CollisionData.enemyid());
 		spMonster->DamageToEnemy(spSession->GetCharStatus().fPower);
 
-		if (spMonster->IsDead())
-		{
-			SC_DEAD scDamaged;
-			PROTOFUNC::MakeScDead(&scDamaged, spMonster->GetSessionID());
-			CombineProto<SC_DEAD>(GetCopyBuffer(), GetPacketHead(), scDamaged, TAG_SC_DEAD);
-			_spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
-		}
+		SC_DAMAGED scDamaged;
+		PROTOFUNC::MakeScDamaged(&scDamaged, spSession->GetSessionID(), spSession->GetCharStatus().fHp);
+		CombineProto<SC_DAMAGED>(GetCopyBuffer(), GetPacketHead(), scDamaged, TAG_SC_DAMAGED);
+		_spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
 	}
 
 	void CPlayerSession::MonsterState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
 	{
-		CHARSTATE monsterState;
+		MONSTERSTATE monsterState;
 		monsterState.ParseFromArray(_pPacket, _PacketHead.PacketSize);
-		CombineProto<CHARSTATE>(GetCopyBuffer(), GetPacketHead(), monsterState, TAG_SC_MONSTERSTATE);
+		CombineProto<MONSTERSTATE>(GetCopyBuffer(), GetPacketHead(), monsterState, TAG_SC_MONSTERSTATE);
 		_spCoreInstance->BroadCastMessageExcludingSession(_SessionID, GetCopyBufferPointer(), GetPacketHead());
 		_int MonsterID = monsterState.id();
 		SHPTR<AMonster> spMonster = _spCoreInstance->FindMobObject(MonsterID);

@@ -128,24 +128,25 @@ struct SC_MONSTERFINDDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 SC_MONSTERFINDDefaultTypeInternal _SC_MONSTERFIND_default_instance_;
 
-inline constexpr SC_DEAD::Impl_::Impl_(
+inline constexpr SC_DAMAGED::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : id_{::int64_t{0}},
+        curhp_{0},
         _cached_size_{0} {}
 
 template <typename>
-PROTOBUF_CONSTEXPR SC_DEAD::SC_DEAD(::_pbi::ConstantInitialized)
+PROTOBUF_CONSTEXPR SC_DAMAGED::SC_DAMAGED(::_pbi::ConstantInitialized)
     : _impl_(::_pbi::ConstantInitialized()) {}
-struct SC_DEADDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR SC_DEADDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~SC_DEADDefaultTypeInternal() {}
+struct SC_DAMAGEDDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR SC_DAMAGEDDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~SC_DAMAGEDDefaultTypeInternal() {}
   union {
-    SC_DEAD _instance;
+    SC_DAMAGED _instance;
   };
 };
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 SC_DEADDefaultTypeInternal _SC_DEAD_default_instance_;
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 SC_DAMAGEDDefaultTypeInternal _SC_DAMAGED_default_instance_;
 
 inline constexpr SC_CONNECTSUCCESS::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
@@ -167,6 +168,35 @@ struct SC_CONNECTSUCCESSDefaultTypeInternal {
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 SC_CONNECTSUCCESSDefaultTypeInternal _SC_CONNECTSUCCESS_default_instance_;
+
+inline constexpr MOBSTATE::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : id_{::int64_t{0}},
+        posx_{0},
+        posy_{0},
+        posz_{0},
+        rotatex_{0},
+        rotatey_{0},
+        rotatez_{0},
+        animationindex_{::int64_t{0}},
+        state_{::int64_t{0}},
+        triggeron_{::int64_t{0}},
+        outlineon_{::int64_t{0}},
+        _cached_size_{0} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR MOBSTATE::MOBSTATE(::_pbi::ConstantInitialized)
+    : _impl_(::_pbi::ConstantInitialized()) {}
+struct MOBSTATEDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR MOBSTATEDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~MOBSTATEDefaultTypeInternal() {}
+  union {
+    MOBSTATE _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 MOBSTATEDefaultTypeInternal _MOBSTATE_default_instance_;
 
 inline constexpr EQINFO::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
@@ -296,7 +326,7 @@ struct CS_ATTACKDefaultTypeInternal {
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CS_ATTACKDefaultTypeInternal _CS_ATTACK_default_instance_;
-static ::_pb::Metadata file_level_metadata_Protocol_2eproto[13];
+static ::_pb::Metadata file_level_metadata_Protocol_2eproto[14];
 static const ::_pb::EnumDescriptor* file_level_enum_descriptors_Protocol_2eproto[1];
 static constexpr const ::_pb::ServiceDescriptor**
     file_level_service_descriptors_Protocol_2eproto = nullptr;
@@ -356,6 +386,25 @@ const ::uint32_t TableStruct_Protocol_2eproto::offsets[] PROTOBUF_SECTION_VARIAB
     PROTOBUF_FIELD_OFFSET(::CHARSTATE, _impl_.state_),
     PROTOBUF_FIELD_OFFSET(::CHARSTATE, _impl_.triggeron_),
     ~0u,  // no _has_bits_
+    PROTOBUF_FIELD_OFFSET(::MOBSTATE, _internal_metadata_),
+    ~0u,  // no _extensions_
+    ~0u,  // no _oneof_case_
+    ~0u,  // no _weak_field_map_
+    ~0u,  // no _inlined_string_donated_
+    ~0u,  // no _split_
+    ~0u,  // no sizeof(Split)
+    PROTOBUF_FIELD_OFFSET(::MOBSTATE, _impl_.id_),
+    PROTOBUF_FIELD_OFFSET(::MOBSTATE, _impl_.posx_),
+    PROTOBUF_FIELD_OFFSET(::MOBSTATE, _impl_.posy_),
+    PROTOBUF_FIELD_OFFSET(::MOBSTATE, _impl_.posz_),
+    PROTOBUF_FIELD_OFFSET(::MOBSTATE, _impl_.rotatex_),
+    PROTOBUF_FIELD_OFFSET(::MOBSTATE, _impl_.rotatey_),
+    PROTOBUF_FIELD_OFFSET(::MOBSTATE, _impl_.rotatez_),
+    PROTOBUF_FIELD_OFFSET(::MOBSTATE, _impl_.animationindex_),
+    PROTOBUF_FIELD_OFFSET(::MOBSTATE, _impl_.state_),
+    PROTOBUF_FIELD_OFFSET(::MOBSTATE, _impl_.triggeron_),
+    PROTOBUF_FIELD_OFFSET(::MOBSTATE, _impl_.outlineon_),
+    ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::COLLISIONDATA, _internal_metadata_),
     ~0u,  // no _extensions_
     ~0u,  // no _oneof_case_
@@ -399,14 +448,15 @@ const ::uint32_t TableStruct_Protocol_2eproto::offsets[] PROTOBUF_SECTION_VARIAB
     PROTOBUF_FIELD_OFFSET(::SC_MONSTERFIND, _impl_.findtype_),
     PROTOBUF_FIELD_OFFSET(::SC_MONSTERFIND, _impl_.targetid_),
     ~0u,  // no _has_bits_
-    PROTOBUF_FIELD_OFFSET(::SC_DEAD, _internal_metadata_),
+    PROTOBUF_FIELD_OFFSET(::SC_DAMAGED, _internal_metadata_),
     ~0u,  // no _extensions_
     ~0u,  // no _oneof_case_
     ~0u,  // no _weak_field_map_
     ~0u,  // no _inlined_string_donated_
     ~0u,  // no _split_
     ~0u,  // no sizeof(Split)
-    PROTOBUF_FIELD_OFFSET(::SC_DEAD, _impl_.id_),
+    PROTOBUF_FIELD_OFFSET(::SC_DAMAGED, _impl_.id_),
+    PROTOBUF_FIELD_OFFSET(::SC_DAMAGED, _impl_.curhp_),
     ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::SC_SEEPLAYERMOVE, _internal_metadata_),
     ~0u,  // no _extensions_
@@ -459,15 +509,16 @@ static const ::_pbi::MigrationSchema
         {11, -1, -1, sizeof(::VECTOR4)},
         {23, -1, -1, sizeof(::EQINFO)},
         {35, -1, -1, sizeof(::CHARSTATE)},
-        {53, -1, -1, sizeof(::COLLISIONDATA)},
-        {63, -1, -1, sizeof(::SC_CONNECTSUCCESS)},
-        {74, -1, -1, sizeof(::SC_OTHERCLIENTLOGIN)},
-        {85, -1, -1, sizeof(::SC_MONSTERFIND)},
-        {96, -1, -1, sizeof(::SC_DEAD)},
-        {105, -1, -1, sizeof(::SC_SEEPLAYERMOVE)},
-        {117, -1, -1, sizeof(::CS_LOGIN)},
-        {126, 137, -1, sizeof(::CS_ATTACK)},
-        {140, -1, -1, sizeof(::CS_DISCONNECT)},
+        {53, -1, -1, sizeof(::MOBSTATE)},
+        {72, -1, -1, sizeof(::COLLISIONDATA)},
+        {82, -1, -1, sizeof(::SC_CONNECTSUCCESS)},
+        {93, -1, -1, sizeof(::SC_OTHERCLIENTLOGIN)},
+        {104, -1, -1, sizeof(::SC_MONSTERFIND)},
+        {115, -1, -1, sizeof(::SC_DAMAGED)},
+        {125, -1, -1, sizeof(::SC_SEEPLAYERMOVE)},
+        {137, -1, -1, sizeof(::CS_LOGIN)},
+        {146, 157, -1, sizeof(::CS_ATTACK)},
+        {160, -1, -1, sizeof(::CS_DISCONNECT)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -475,11 +526,12 @@ static const ::_pb::Message* const file_default_instances[] = {
     &::_VECTOR4_default_instance_._instance,
     &::_EQINFO_default_instance_._instance,
     &::_CHARSTATE_default_instance_._instance,
+    &::_MOBSTATE_default_instance_._instance,
     &::_COLLISIONDATA_default_instance_._instance,
     &::_SC_CONNECTSUCCESS_default_instance_._instance,
     &::_SC_OTHERCLIENTLOGIN_default_instance_._instance,
     &::_SC_MONSTERFIND_default_instance_._instance,
-    &::_SC_DEAD_default_instance_._instance,
+    &::_SC_DAMAGED_default_instance_._instance,
     &::_SC_SEEPLAYERMOVE_default_instance_._instance,
     &::_CS_LOGIN_default_instance_._instance,
     &::_CS_ATTACK_default_instance_._instance,
@@ -495,32 +547,38 @@ const char descriptor_table_protodef_Protocol_2eproto[] PROTOBUF_SECTION_VARIABL
     "osX\030\002 \001(\002\022\014\n\004posY\030\003 \001(\002\022\014\n\004posZ\030\004 \001(\002\022\017\n"
     "\007rotateX\030\005 \001(\002\022\017\n\007rotateY\030\006 \001(\002\022\017\n\007rotat"
     "eZ\030\007 \001(\002\022\026\n\016animationIndex\030\010 \001(\003\022\r\n\005stat"
-    "e\030\t \001(\003\022\021\n\ttriggerOn\030\n \001(\003\",\n\rCOLLISIOND"
-    "ATA\022\n\n\002id\030\001 \001(\003\022\017\n\007enemyID\030\002 \001(\003\"@\n\021SC_C"
-    "ONNECTSUCCESS\022\n\n\002id\030\001 \001(\003\022\021\n\tcellIndex\030\002"
-    " \001(\003\022\014\n\004type\030\004 \001(\003\"B\n\023SC_OTHERCLIENTLOGI"
-    "N\022\n\n\002id\030\001 \001(\003\022\021\n\tcellIndex\030\002 \001(\003\022\014\n\004type"
-    "\030\003 \001(\003\"@\n\016SC_MONSTERFIND\022\n\n\002id\030\001 \001(\003\022\020\n\010"
-    "findtype\030\002 \001(\003\022\020\n\010targetID\030\003 \001(\003\"\025\n\007SC_D"
-    "EAD\022\n\n\002id\030\001 \001(\003\"H\n\020SC_SEEPLAYERMOVE\022\n\n\002i"
-    "d\030\001 \001(\003\022\014\n\004posX\030\002 \001(\002\022\014\n\004posY\030\003 \001(\002\022\014\n\004p"
-    "osZ\030\004 \001(\002\"\026\n\010CS_LOGIN\022\n\n\002id\030\001 \001(\003\"D\n\tCS_"
-    "ATTACK\022\n\n\002id\030\001 \001(\003\022\033\n\tattackPos\030\002 \001(\0132\010."
-    "VECTOR3\022\016\n\006damage\030\003 \001(\002\"\033\n\rCS_DISCONNECT"
-    "\022\n\n\002id\030\001 \001(\003*2\n\tDirection\022\006\n\002UP\020\000\022\010\n\004DOW"
-    "N\020\001\022\010\n\004LEFT\020\002\022\t\n\005RIGHT\020\003b\006proto3"
+    "e\030\t \001(\003\022\021\n\ttriggerOn\030\n \001(\003\"\300\001\n\010MOBSTATE\022"
+    "\n\n\002id\030\001 \001(\003\022\014\n\004posX\030\002 \001(\002\022\014\n\004posY\030\003 \001(\002\022"
+    "\014\n\004posZ\030\004 \001(\002\022\017\n\007rotateX\030\005 \001(\002\022\017\n\007rotate"
+    "Y\030\006 \001(\002\022\017\n\007rotateZ\030\007 \001(\002\022\026\n\016animationInd"
+    "ex\030\010 \001(\003\022\r\n\005state\030\t \001(\003\022\021\n\ttriggerOn\030\n \001"
+    "(\003\022\021\n\toutlineOn\030\013 \001(\003\",\n\rCOLLISIONDATA\022\n"
+    "\n\002id\030\001 \001(\003\022\017\n\007enemyID\030\002 \001(\003\"@\n\021SC_CONNEC"
+    "TSUCCESS\022\n\n\002id\030\001 \001(\003\022\021\n\tcellIndex\030\002 \001(\003\022"
+    "\014\n\004type\030\004 \001(\003\"B\n\023SC_OTHERCLIENTLOGIN\022\n\n\002"
+    "id\030\001 \001(\003\022\021\n\tcellIndex\030\002 \001(\003\022\014\n\004type\030\003 \001("
+    "\003\"@\n\016SC_MONSTERFIND\022\n\n\002id\030\001 \001(\003\022\020\n\010findt"
+    "ype\030\002 \001(\003\022\020\n\010targetID\030\003 \001(\003\"\'\n\nSC_DAMAGE"
+    "D\022\n\n\002id\030\001 \001(\003\022\r\n\005curhp\030\002 \001(\002\"H\n\020SC_SEEPL"
+    "AYERMOVE\022\n\n\002id\030\001 \001(\003\022\014\n\004posX\030\002 \001(\002\022\014\n\004po"
+    "sY\030\003 \001(\002\022\014\n\004posZ\030\004 \001(\002\"\026\n\010CS_LOGIN\022\n\n\002id"
+    "\030\001 \001(\003\"D\n\tCS_ATTACK\022\n\n\002id\030\001 \001(\003\022\033\n\tattac"
+    "kPos\030\002 \001(\0132\010.VECTOR3\022\016\n\006damage\030\003 \001(\002\"\033\n\r"
+    "CS_DISCONNECT\022\n\n\002id\030\001 \001(\003*2\n\tDirection\022\006"
+    "\n\002UP\020\000\022\010\n\004DOWN\020\001\022\010\n\004LEFT\020\002\022\t\n\005RIGHT\020\003b\006p"
+    "roto3"
 };
 static ::absl::once_flag descriptor_table_Protocol_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Protocol_2eproto = {
     false,
     false,
-    912,
+    1125,
     descriptor_table_protodef_Protocol_2eproto,
     "Protocol.proto",
     &descriptor_table_Protocol_2eproto_once,
     nullptr,
     0,
-    13,
+    14,
     schemas,
     file_default_instances,
     TableStruct_Protocol_2eproto::offsets,
@@ -1904,6 +1962,497 @@ void CHARSTATE::InternalSwap(CHARSTATE* PROTOBUF_RESTRICT other) {
 }
 // ===================================================================
 
+class MOBSTATE::_Internal {
+ public:
+};
+
+MOBSTATE::MOBSTATE(::google::protobuf::Arena* arena)
+    : ::google::protobuf::Message(arena) {
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:MOBSTATE)
+}
+MOBSTATE::MOBSTATE(
+    ::google::protobuf::Arena* arena, const MOBSTATE& from)
+    : MOBSTATE(arena) {
+  MergeFrom(from);
+}
+inline PROTOBUF_NDEBUG_INLINE MOBSTATE::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility,
+    ::google::protobuf::Arena* arena)
+      : _cached_size_{0} {}
+
+inline void MOBSTATE::SharedCtor(::_pb::Arena* arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  ::memset(reinterpret_cast<char *>(&_impl_) +
+               offsetof(Impl_, id_),
+           0,
+           offsetof(Impl_, outlineon_) -
+               offsetof(Impl_, id_) +
+               sizeof(Impl_::outlineon_));
+}
+MOBSTATE::~MOBSTATE() {
+  // @@protoc_insertion_point(destructor:MOBSTATE)
+  _internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  SharedDtor();
+}
+inline void MOBSTATE::SharedDtor() {
+  ABSL_DCHECK(GetArena() == nullptr);
+  _impl_.~Impl_();
+}
+
+PROTOBUF_NOINLINE void MOBSTATE::Clear() {
+// @@protoc_insertion_point(message_clear_start:MOBSTATE)
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  ::memset(&_impl_.id_, 0, static_cast<::size_t>(
+      reinterpret_cast<char*>(&_impl_.outlineon_) -
+      reinterpret_cast<char*>(&_impl_.id_)) + sizeof(_impl_.outlineon_));
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+const char* MOBSTATE::_InternalParse(
+    const char* ptr, ::_pbi::ParseContext* ctx) {
+  ptr = ::_pbi::TcParser::ParseLoop(this, ptr, ctx, &_table_.header);
+  return ptr;
+}
+
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<4, 11, 0, 0, 2> MOBSTATE::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    11, 120,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294965248,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    11,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    &_MOBSTATE_default_instance_._instance,
+    ::_pbi::TcParser::GenericFallback,  // fallback
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+    // int64 id = 1;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(MOBSTATE, _impl_.id_), 63>(),
+     {8, 63, 0, PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.id_)}},
+    // float posX = 2;
+    {::_pbi::TcParser::FastF32S1,
+     {21, 63, 0, PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.posx_)}},
+    // float posY = 3;
+    {::_pbi::TcParser::FastF32S1,
+     {29, 63, 0, PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.posy_)}},
+    // float posZ = 4;
+    {::_pbi::TcParser::FastF32S1,
+     {37, 63, 0, PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.posz_)}},
+    // float rotateX = 5;
+    {::_pbi::TcParser::FastF32S1,
+     {45, 63, 0, PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.rotatex_)}},
+    // float rotateY = 6;
+    {::_pbi::TcParser::FastF32S1,
+     {53, 63, 0, PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.rotatey_)}},
+    // float rotateZ = 7;
+    {::_pbi::TcParser::FastF32S1,
+     {61, 63, 0, PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.rotatez_)}},
+    // int64 animationIndex = 8;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(MOBSTATE, _impl_.animationindex_), 63>(),
+     {64, 63, 0, PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.animationindex_)}},
+    // int64 state = 9;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(MOBSTATE, _impl_.state_), 63>(),
+     {72, 63, 0, PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.state_)}},
+    // int64 triggerOn = 10;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(MOBSTATE, _impl_.triggeron_), 63>(),
+     {80, 63, 0, PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.triggeron_)}},
+    // int64 outlineOn = 11;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(MOBSTATE, _impl_.outlineon_), 63>(),
+     {88, 63, 0, PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.outlineon_)}},
+    {::_pbi::TcParser::MiniParse, {}},
+    {::_pbi::TcParser::MiniParse, {}},
+    {::_pbi::TcParser::MiniParse, {}},
+    {::_pbi::TcParser::MiniParse, {}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // int64 id = 1;
+    {PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.id_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
+    // float posX = 2;
+    {PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.posx_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kFloat)},
+    // float posY = 3;
+    {PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.posy_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kFloat)},
+    // float posZ = 4;
+    {PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.posz_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kFloat)},
+    // float rotateX = 5;
+    {PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.rotatex_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kFloat)},
+    // float rotateY = 6;
+    {PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.rotatey_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kFloat)},
+    // float rotateZ = 7;
+    {PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.rotatez_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kFloat)},
+    // int64 animationIndex = 8;
+    {PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.animationindex_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
+    // int64 state = 9;
+    {PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.state_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
+    // int64 triggerOn = 10;
+    {PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.triggeron_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
+    // int64 outlineOn = 11;
+    {PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.outlineon_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
+  }},
+  // no aux_entries
+  {{
+  }},
+};
+
+::uint8_t* MOBSTATE::_InternalSerialize(
+    ::uint8_t* target,
+    ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:MOBSTATE)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  // int64 id = 1;
+  if (this->_internal_id() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::
+        WriteInt64ToArrayWithField<1>(
+            stream, this->_internal_id(), target);
+  }
+
+  // float posX = 2;
+  static_assert(sizeof(::uint32_t) == sizeof(float),
+                "Code assumes ::uint32_t and float are the same size.");
+  float tmp_posx = this->_internal_posx();
+  ::uint32_t raw_posx;
+  memcpy(&raw_posx, &tmp_posx, sizeof(tmp_posx));
+  if (raw_posx != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteFloatToArray(
+        2, this->_internal_posx(), target);
+  }
+
+  // float posY = 3;
+  static_assert(sizeof(::uint32_t) == sizeof(float),
+                "Code assumes ::uint32_t and float are the same size.");
+  float tmp_posy = this->_internal_posy();
+  ::uint32_t raw_posy;
+  memcpy(&raw_posy, &tmp_posy, sizeof(tmp_posy));
+  if (raw_posy != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteFloatToArray(
+        3, this->_internal_posy(), target);
+  }
+
+  // float posZ = 4;
+  static_assert(sizeof(::uint32_t) == sizeof(float),
+                "Code assumes ::uint32_t and float are the same size.");
+  float tmp_posz = this->_internal_posz();
+  ::uint32_t raw_posz;
+  memcpy(&raw_posz, &tmp_posz, sizeof(tmp_posz));
+  if (raw_posz != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteFloatToArray(
+        4, this->_internal_posz(), target);
+  }
+
+  // float rotateX = 5;
+  static_assert(sizeof(::uint32_t) == sizeof(float),
+                "Code assumes ::uint32_t and float are the same size.");
+  float tmp_rotatex = this->_internal_rotatex();
+  ::uint32_t raw_rotatex;
+  memcpy(&raw_rotatex, &tmp_rotatex, sizeof(tmp_rotatex));
+  if (raw_rotatex != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteFloatToArray(
+        5, this->_internal_rotatex(), target);
+  }
+
+  // float rotateY = 6;
+  static_assert(sizeof(::uint32_t) == sizeof(float),
+                "Code assumes ::uint32_t and float are the same size.");
+  float tmp_rotatey = this->_internal_rotatey();
+  ::uint32_t raw_rotatey;
+  memcpy(&raw_rotatey, &tmp_rotatey, sizeof(tmp_rotatey));
+  if (raw_rotatey != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteFloatToArray(
+        6, this->_internal_rotatey(), target);
+  }
+
+  // float rotateZ = 7;
+  static_assert(sizeof(::uint32_t) == sizeof(float),
+                "Code assumes ::uint32_t and float are the same size.");
+  float tmp_rotatez = this->_internal_rotatez();
+  ::uint32_t raw_rotatez;
+  memcpy(&raw_rotatez, &tmp_rotatez, sizeof(tmp_rotatez));
+  if (raw_rotatez != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteFloatToArray(
+        7, this->_internal_rotatez(), target);
+  }
+
+  // int64 animationIndex = 8;
+  if (this->_internal_animationindex() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::
+        WriteInt64ToArrayWithField<8>(
+            stream, this->_internal_animationindex(), target);
+  }
+
+  // int64 state = 9;
+  if (this->_internal_state() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::
+        WriteInt64ToArrayWithField<9>(
+            stream, this->_internal_state(), target);
+  }
+
+  // int64 triggerOn = 10;
+  if (this->_internal_triggeron() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::
+        WriteInt64ToArrayWithField<10>(
+            stream, this->_internal_triggeron(), target);
+  }
+
+  // int64 outlineOn = 11;
+  if (this->_internal_outlineon() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::
+        WriteInt64ToArrayWithField<11>(
+            stream, this->_internal_outlineon(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:MOBSTATE)
+  return target;
+}
+
+::size_t MOBSTATE::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:MOBSTATE)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // int64 id = 1;
+  if (this->_internal_id() != 0) {
+    total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
+        this->_internal_id());
+  }
+
+  // float posX = 2;
+  static_assert(sizeof(::uint32_t) == sizeof(float),
+                "Code assumes ::uint32_t and float are the same size.");
+  float tmp_posx = this->_internal_posx();
+  ::uint32_t raw_posx;
+  memcpy(&raw_posx, &tmp_posx, sizeof(tmp_posx));
+  if (raw_posx != 0) {
+    total_size += 5;
+  }
+
+  // float posY = 3;
+  static_assert(sizeof(::uint32_t) == sizeof(float),
+                "Code assumes ::uint32_t and float are the same size.");
+  float tmp_posy = this->_internal_posy();
+  ::uint32_t raw_posy;
+  memcpy(&raw_posy, &tmp_posy, sizeof(tmp_posy));
+  if (raw_posy != 0) {
+    total_size += 5;
+  }
+
+  // float posZ = 4;
+  static_assert(sizeof(::uint32_t) == sizeof(float),
+                "Code assumes ::uint32_t and float are the same size.");
+  float tmp_posz = this->_internal_posz();
+  ::uint32_t raw_posz;
+  memcpy(&raw_posz, &tmp_posz, sizeof(tmp_posz));
+  if (raw_posz != 0) {
+    total_size += 5;
+  }
+
+  // float rotateX = 5;
+  static_assert(sizeof(::uint32_t) == sizeof(float),
+                "Code assumes ::uint32_t and float are the same size.");
+  float tmp_rotatex = this->_internal_rotatex();
+  ::uint32_t raw_rotatex;
+  memcpy(&raw_rotatex, &tmp_rotatex, sizeof(tmp_rotatex));
+  if (raw_rotatex != 0) {
+    total_size += 5;
+  }
+
+  // float rotateY = 6;
+  static_assert(sizeof(::uint32_t) == sizeof(float),
+                "Code assumes ::uint32_t and float are the same size.");
+  float tmp_rotatey = this->_internal_rotatey();
+  ::uint32_t raw_rotatey;
+  memcpy(&raw_rotatey, &tmp_rotatey, sizeof(tmp_rotatey));
+  if (raw_rotatey != 0) {
+    total_size += 5;
+  }
+
+  // float rotateZ = 7;
+  static_assert(sizeof(::uint32_t) == sizeof(float),
+                "Code assumes ::uint32_t and float are the same size.");
+  float tmp_rotatez = this->_internal_rotatez();
+  ::uint32_t raw_rotatez;
+  memcpy(&raw_rotatez, &tmp_rotatez, sizeof(tmp_rotatez));
+  if (raw_rotatez != 0) {
+    total_size += 5;
+  }
+
+  // int64 animationIndex = 8;
+  if (this->_internal_animationindex() != 0) {
+    total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
+        this->_internal_animationindex());
+  }
+
+  // int64 state = 9;
+  if (this->_internal_state() != 0) {
+    total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
+        this->_internal_state());
+  }
+
+  // int64 triggerOn = 10;
+  if (this->_internal_triggeron() != 0) {
+    total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
+        this->_internal_triggeron());
+  }
+
+  // int64 outlineOn = 11;
+  if (this->_internal_outlineon() != 0) {
+    total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
+        this->_internal_outlineon());
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
+}
+
+const ::google::protobuf::Message::ClassData MOBSTATE::_class_data_ = {
+    MOBSTATE::MergeImpl,
+    nullptr,  // OnDemandRegisterArenaDtor
+};
+const ::google::protobuf::Message::ClassData* MOBSTATE::GetClassData() const {
+  return &_class_data_;
+}
+
+void MOBSTATE::MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg) {
+  auto* const _this = static_cast<MOBSTATE*>(&to_msg);
+  auto& from = static_cast<const MOBSTATE&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:MOBSTATE)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from._internal_id() != 0) {
+    _this->_internal_set_id(from._internal_id());
+  }
+  static_assert(sizeof(::uint32_t) == sizeof(float),
+                "Code assumes ::uint32_t and float are the same size.");
+  float tmp_posx = from._internal_posx();
+  ::uint32_t raw_posx;
+  memcpy(&raw_posx, &tmp_posx, sizeof(tmp_posx));
+  if (raw_posx != 0) {
+    _this->_internal_set_posx(from._internal_posx());
+  }
+  static_assert(sizeof(::uint32_t) == sizeof(float),
+                "Code assumes ::uint32_t and float are the same size.");
+  float tmp_posy = from._internal_posy();
+  ::uint32_t raw_posy;
+  memcpy(&raw_posy, &tmp_posy, sizeof(tmp_posy));
+  if (raw_posy != 0) {
+    _this->_internal_set_posy(from._internal_posy());
+  }
+  static_assert(sizeof(::uint32_t) == sizeof(float),
+                "Code assumes ::uint32_t and float are the same size.");
+  float tmp_posz = from._internal_posz();
+  ::uint32_t raw_posz;
+  memcpy(&raw_posz, &tmp_posz, sizeof(tmp_posz));
+  if (raw_posz != 0) {
+    _this->_internal_set_posz(from._internal_posz());
+  }
+  static_assert(sizeof(::uint32_t) == sizeof(float),
+                "Code assumes ::uint32_t and float are the same size.");
+  float tmp_rotatex = from._internal_rotatex();
+  ::uint32_t raw_rotatex;
+  memcpy(&raw_rotatex, &tmp_rotatex, sizeof(tmp_rotatex));
+  if (raw_rotatex != 0) {
+    _this->_internal_set_rotatex(from._internal_rotatex());
+  }
+  static_assert(sizeof(::uint32_t) == sizeof(float),
+                "Code assumes ::uint32_t and float are the same size.");
+  float tmp_rotatey = from._internal_rotatey();
+  ::uint32_t raw_rotatey;
+  memcpy(&raw_rotatey, &tmp_rotatey, sizeof(tmp_rotatey));
+  if (raw_rotatey != 0) {
+    _this->_internal_set_rotatey(from._internal_rotatey());
+  }
+  static_assert(sizeof(::uint32_t) == sizeof(float),
+                "Code assumes ::uint32_t and float are the same size.");
+  float tmp_rotatez = from._internal_rotatez();
+  ::uint32_t raw_rotatez;
+  memcpy(&raw_rotatez, &tmp_rotatez, sizeof(tmp_rotatez));
+  if (raw_rotatez != 0) {
+    _this->_internal_set_rotatez(from._internal_rotatez());
+  }
+  if (from._internal_animationindex() != 0) {
+    _this->_internal_set_animationindex(from._internal_animationindex());
+  }
+  if (from._internal_state() != 0) {
+    _this->_internal_set_state(from._internal_state());
+  }
+  if (from._internal_triggeron() != 0) {
+    _this->_internal_set_triggeron(from._internal_triggeron());
+  }
+  if (from._internal_outlineon() != 0) {
+    _this->_internal_set_outlineon(from._internal_outlineon());
+  }
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void MOBSTATE::CopyFrom(const MOBSTATE& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:MOBSTATE)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+PROTOBUF_NOINLINE bool MOBSTATE::IsInitialized() const {
+  return true;
+}
+
+::_pbi::CachedSize* MOBSTATE::AccessCachedSize() const {
+  return &_impl_._cached_size_;
+}
+void MOBSTATE::InternalSwap(MOBSTATE* PROTOBUF_RESTRICT other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.outlineon_)
+      + sizeof(MOBSTATE::_impl_.outlineon_)
+      - PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.id_)>(
+          reinterpret_cast<char*>(&_impl_.id_),
+          reinterpret_cast<char*>(&other->_impl_.id_));
+}
+
+::google::protobuf::Metadata MOBSTATE::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_Protocol_2eproto_getter, &descriptor_table_Protocol_2eproto_once,
+      file_level_metadata_Protocol_2eproto[4]);
+}
+// ===================================================================
+
 class COLLISIONDATA::_Internal {
  public:
 };
@@ -2104,7 +2653,7 @@ void COLLISIONDATA::InternalSwap(COLLISIONDATA* PROTOBUF_RESTRICT other) {
 ::google::protobuf::Metadata COLLISIONDATA::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_Protocol_2eproto_getter, &descriptor_table_Protocol_2eproto_once,
-      file_level_metadata_Protocol_2eproto[4]);
+      file_level_metadata_Protocol_2eproto[5]);
 }
 // ===================================================================
 
@@ -2331,7 +2880,7 @@ void SC_CONNECTSUCCESS::InternalSwap(SC_CONNECTSUCCESS* PROTOBUF_RESTRICT other)
 ::google::protobuf::Metadata SC_CONNECTSUCCESS::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_Protocol_2eproto_getter, &descriptor_table_Protocol_2eproto_once,
-      file_level_metadata_Protocol_2eproto[5]);
+      file_level_metadata_Protocol_2eproto[6]);
 }
 // ===================================================================
 
@@ -2558,7 +3107,7 @@ void SC_OTHERCLIENTLOGIN::InternalSwap(SC_OTHERCLIENTLOGIN* PROTOBUF_RESTRICT ot
 ::google::protobuf::Metadata SC_OTHERCLIENTLOGIN::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_Protocol_2eproto_getter, &descriptor_table_Protocol_2eproto_once,
-      file_level_metadata_Protocol_2eproto[6]);
+      file_level_metadata_Protocol_2eproto[7]);
 }
 // ===================================================================
 
@@ -2785,55 +3334,62 @@ void SC_MONSTERFIND::InternalSwap(SC_MONSTERFIND* PROTOBUF_RESTRICT other) {
 ::google::protobuf::Metadata SC_MONSTERFIND::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_Protocol_2eproto_getter, &descriptor_table_Protocol_2eproto_once,
-      file_level_metadata_Protocol_2eproto[7]);
+      file_level_metadata_Protocol_2eproto[8]);
 }
 // ===================================================================
 
-class SC_DEAD::_Internal {
+class SC_DAMAGED::_Internal {
  public:
 };
 
-SC_DEAD::SC_DEAD(::google::protobuf::Arena* arena)
+SC_DAMAGED::SC_DAMAGED(::google::protobuf::Arena* arena)
     : ::google::protobuf::Message(arena) {
   SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:SC_DEAD)
+  // @@protoc_insertion_point(arena_constructor:SC_DAMAGED)
 }
-SC_DEAD::SC_DEAD(
-    ::google::protobuf::Arena* arena, const SC_DEAD& from)
-    : SC_DEAD(arena) {
+SC_DAMAGED::SC_DAMAGED(
+    ::google::protobuf::Arena* arena, const SC_DAMAGED& from)
+    : SC_DAMAGED(arena) {
   MergeFrom(from);
 }
-inline PROTOBUF_NDEBUG_INLINE SC_DEAD::Impl_::Impl_(
+inline PROTOBUF_NDEBUG_INLINE SC_DAMAGED::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* arena)
       : _cached_size_{0} {}
 
-inline void SC_DEAD::SharedCtor(::_pb::Arena* arena) {
+inline void SC_DAMAGED::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
-  _impl_.id_ = {};
+  ::memset(reinterpret_cast<char *>(&_impl_) +
+               offsetof(Impl_, id_),
+           0,
+           offsetof(Impl_, curhp_) -
+               offsetof(Impl_, id_) +
+               sizeof(Impl_::curhp_));
 }
-SC_DEAD::~SC_DEAD() {
-  // @@protoc_insertion_point(destructor:SC_DEAD)
+SC_DAMAGED::~SC_DAMAGED() {
+  // @@protoc_insertion_point(destructor:SC_DAMAGED)
   _internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   SharedDtor();
 }
-inline void SC_DEAD::SharedDtor() {
+inline void SC_DAMAGED::SharedDtor() {
   ABSL_DCHECK(GetArena() == nullptr);
   _impl_.~Impl_();
 }
 
-PROTOBUF_NOINLINE void SC_DEAD::Clear() {
-// @@protoc_insertion_point(message_clear_start:SC_DEAD)
+PROTOBUF_NOINLINE void SC_DAMAGED::Clear() {
+// @@protoc_insertion_point(message_clear_start:SC_DAMAGED)
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  _impl_.id_ = ::int64_t{0};
+  ::memset(&_impl_.id_, 0, static_cast<::size_t>(
+      reinterpret_cast<char*>(&_impl_.curhp_) -
+      reinterpret_cast<char*>(&_impl_.id_)) + sizeof(_impl_.curhp_));
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
-const char* SC_DEAD::_InternalParse(
+const char* SC_DAMAGED::_InternalParse(
     const char* ptr, ::_pbi::ParseContext* ctx) {
   ptr = ::_pbi::TcParser::ParseLoop(this, ptr, ctx, &_table_.header);
   return ptr;
@@ -2841,39 +3397,45 @@ const char* SC_DEAD::_InternalParse(
 
 
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 1, 0, 0, 2> SC_DEAD::_table_ = {
+const ::_pbi::TcParseTable<1, 2, 0, 0, 2> SC_DAMAGED::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    1, 0,  // max_field_number, fast_idx_mask
+    2, 8,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967294,  // skipmap
+    4294967292,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    1,  // num_field_entries
+    2,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
-    &_SC_DEAD_default_instance_._instance,
+    &_SC_DAMAGED_default_instance_._instance,
     ::_pbi::TcParser::GenericFallback,  // fallback
   }, {{
+    // float curhp = 2;
+    {::_pbi::TcParser::FastF32S1,
+     {21, 63, 0, PROTOBUF_FIELD_OFFSET(SC_DAMAGED, _impl_.curhp_)}},
     // int64 id = 1;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(SC_DEAD, _impl_.id_), 63>(),
-     {8, 63, 0, PROTOBUF_FIELD_OFFSET(SC_DEAD, _impl_.id_)}},
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(SC_DAMAGED, _impl_.id_), 63>(),
+     {8, 63, 0, PROTOBUF_FIELD_OFFSET(SC_DAMAGED, _impl_.id_)}},
   }}, {{
     65535, 65535
   }}, {{
     // int64 id = 1;
-    {PROTOBUF_FIELD_OFFSET(SC_DEAD, _impl_.id_), 0, 0,
+    {PROTOBUF_FIELD_OFFSET(SC_DAMAGED, _impl_.id_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
+    // float curhp = 2;
+    {PROTOBUF_FIELD_OFFSET(SC_DAMAGED, _impl_.curhp_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kFloat)},
   }},
   // no aux_entries
   {{
   }},
 };
 
-::uint8_t* SC_DEAD::_InternalSerialize(
+::uint8_t* SC_DAMAGED::_InternalSerialize(
     ::uint8_t* target,
     ::google::protobuf::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:SC_DEAD)
+  // @@protoc_insertion_point(serialize_to_array_start:SC_DAMAGED)
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
@@ -2884,17 +3446,29 @@ const ::_pbi::TcParseTable<0, 1, 0, 0, 2> SC_DEAD::_table_ = {
             stream, this->_internal_id(), target);
   }
 
+  // float curhp = 2;
+  static_assert(sizeof(::uint32_t) == sizeof(float),
+                "Code assumes ::uint32_t and float are the same size.");
+  float tmp_curhp = this->_internal_curhp();
+  ::uint32_t raw_curhp;
+  memcpy(&raw_curhp, &tmp_curhp, sizeof(tmp_curhp));
+  if (raw_curhp != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteFloatToArray(
+        2, this->_internal_curhp(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target =
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
             _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:SC_DEAD)
+  // @@protoc_insertion_point(serialize_to_array_end:SC_DAMAGED)
   return target;
 }
 
-::size_t SC_DEAD::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:SC_DEAD)
+::size_t SC_DAMAGED::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:SC_DAMAGED)
   ::size_t total_size = 0;
 
   ::uint32_t cached_has_bits = 0;
@@ -2907,21 +3481,31 @@ const ::_pbi::TcParseTable<0, 1, 0, 0, 2> SC_DEAD::_table_ = {
         this->_internal_id());
   }
 
+  // float curhp = 2;
+  static_assert(sizeof(::uint32_t) == sizeof(float),
+                "Code assumes ::uint32_t and float are the same size.");
+  float tmp_curhp = this->_internal_curhp();
+  ::uint32_t raw_curhp;
+  memcpy(&raw_curhp, &tmp_curhp, sizeof(tmp_curhp));
+  if (raw_curhp != 0) {
+    total_size += 5;
+  }
+
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
-const ::google::protobuf::Message::ClassData SC_DEAD::_class_data_ = {
-    SC_DEAD::MergeImpl,
+const ::google::protobuf::Message::ClassData SC_DAMAGED::_class_data_ = {
+    SC_DAMAGED::MergeImpl,
     nullptr,  // OnDemandRegisterArenaDtor
 };
-const ::google::protobuf::Message::ClassData* SC_DEAD::GetClassData() const {
+const ::google::protobuf::Message::ClassData* SC_DAMAGED::GetClassData() const {
   return &_class_data_;
 }
 
-void SC_DEAD::MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg) {
-  auto* const _this = static_cast<SC_DEAD*>(&to_msg);
-  auto& from = static_cast<const SC_DEAD&>(from_msg);
-  // @@protoc_insertion_point(class_specific_merge_from_start:SC_DEAD)
+void SC_DAMAGED::MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg) {
+  auto* const _this = static_cast<SC_DAMAGED*>(&to_msg);
+  auto& from = static_cast<const SC_DAMAGED&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:SC_DAMAGED)
   ABSL_DCHECK_NE(&from, _this);
   ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
@@ -2929,33 +3513,46 @@ void SC_DEAD::MergeImpl(::google::protobuf::Message& to_msg, const ::google::pro
   if (from._internal_id() != 0) {
     _this->_internal_set_id(from._internal_id());
   }
+  static_assert(sizeof(::uint32_t) == sizeof(float),
+                "Code assumes ::uint32_t and float are the same size.");
+  float tmp_curhp = from._internal_curhp();
+  ::uint32_t raw_curhp;
+  memcpy(&raw_curhp, &tmp_curhp, sizeof(tmp_curhp));
+  if (raw_curhp != 0) {
+    _this->_internal_set_curhp(from._internal_curhp());
+  }
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
 
-void SC_DEAD::CopyFrom(const SC_DEAD& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:SC_DEAD)
+void SC_DAMAGED::CopyFrom(const SC_DAMAGED& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:SC_DAMAGED)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-PROTOBUF_NOINLINE bool SC_DEAD::IsInitialized() const {
+PROTOBUF_NOINLINE bool SC_DAMAGED::IsInitialized() const {
   return true;
 }
 
-::_pbi::CachedSize* SC_DEAD::AccessCachedSize() const {
+::_pbi::CachedSize* SC_DAMAGED::AccessCachedSize() const {
   return &_impl_._cached_size_;
 }
-void SC_DEAD::InternalSwap(SC_DEAD* PROTOBUF_RESTRICT other) {
+void SC_DAMAGED::InternalSwap(SC_DAMAGED* PROTOBUF_RESTRICT other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-        swap(_impl_.id_, other->_impl_.id_);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(SC_DAMAGED, _impl_.curhp_)
+      + sizeof(SC_DAMAGED::_impl_.curhp_)
+      - PROTOBUF_FIELD_OFFSET(SC_DAMAGED, _impl_.id_)>(
+          reinterpret_cast<char*>(&_impl_.id_),
+          reinterpret_cast<char*>(&other->_impl_.id_));
 }
 
-::google::protobuf::Metadata SC_DEAD::GetMetadata() const {
+::google::protobuf::Metadata SC_DAMAGED::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_Protocol_2eproto_getter, &descriptor_table_Protocol_2eproto_once,
-      file_level_metadata_Protocol_2eproto[8]);
+      file_level_metadata_Protocol_2eproto[9]);
 }
 // ===================================================================
 
@@ -3245,7 +3842,7 @@ void SC_SEEPLAYERMOVE::InternalSwap(SC_SEEPLAYERMOVE* PROTOBUF_RESTRICT other) {
 ::google::protobuf::Metadata SC_SEEPLAYERMOVE::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_Protocol_2eproto_getter, &descriptor_table_Protocol_2eproto_once,
-      file_level_metadata_Protocol_2eproto[9]);
+      file_level_metadata_Protocol_2eproto[10]);
 }
 // ===================================================================
 
@@ -3415,7 +4012,7 @@ void CS_LOGIN::InternalSwap(CS_LOGIN* PROTOBUF_RESTRICT other) {
 ::google::protobuf::Metadata CS_LOGIN::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_Protocol_2eproto_getter, &descriptor_table_Protocol_2eproto_once,
-      file_level_metadata_Protocol_2eproto[10]);
+      file_level_metadata_Protocol_2eproto[11]);
 }
 // ===================================================================
 
@@ -3701,7 +4298,7 @@ void CS_ATTACK::InternalSwap(CS_ATTACK* PROTOBUF_RESTRICT other) {
 ::google::protobuf::Metadata CS_ATTACK::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_Protocol_2eproto_getter, &descriptor_table_Protocol_2eproto_once,
-      file_level_metadata_Protocol_2eproto[11]);
+      file_level_metadata_Protocol_2eproto[12]);
 }
 // ===================================================================
 
@@ -3871,7 +4468,7 @@ void CS_DISCONNECT::InternalSwap(CS_DISCONNECT* PROTOBUF_RESTRICT other) {
 ::google::protobuf::Metadata CS_DISCONNECT::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_Protocol_2eproto_getter, &descriptor_table_Protocol_2eproto_once,
-      file_level_metadata_Protocol_2eproto[12]);
+      file_level_metadata_Protocol_2eproto[13]);
 }
 // @@protoc_insertion_point(namespace_scope)
 namespace google {

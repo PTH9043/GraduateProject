@@ -50,9 +50,7 @@ void CNetworkWarriorPlayerController::Tick(const _double& _dTimeDelta)
 		spWarriorPlayer->GetTransform()->MoveForward(_dTimeDelta, static_cast<_float>(m_JumpSpeed));
 	}
 
-	spAnimModel->TickEventToRatio(spWarriorPlayer.get(), L"", m_dRecvAnimDuration, _dTimeDelta);
-	spAnimModel->UpdateCurAnimationToRatio(m_dRecvAnimDuration);
-
+	spAnimModel->TickAnimation(_dTimeDelta);
 }
 
 void CNetworkWarriorPlayerController::ReceiveNetworkProcessData(void* _pData)
@@ -61,12 +59,11 @@ void CNetworkWarriorPlayerController::ReceiveNetworkProcessData(void* _pData)
 	SHPTR<CWarriorPlayer> spWarriorPlayer = m_wpWarriorPlayer.lock();
 	SHPTR<UAnimModel> spAnimModel = spWarriorPlayer->GetAnimModel();
 	{
-		PLAYERSTATE* pPlayerData = static_cast<PLAYERSTATE*>(_pData);
-		m_JumpSpeed = pPlayerData->movespeed();
-		m_dRecvAnimDuration = pPlayerData->animationtime();
-		SetAnimState(pPlayerData->animstate());
+		CHARSTATE* pPlayerData = static_cast<CHARSTATE*>(_pData);
+		SetAnimState(pPlayerData->state());
 
-		if (pPlayerData->animationindex() != spAnimModel->GetCurrentAnimIndex())
+		if (pPlayerData->animationindex() != spAnimModel->GetCurrentAnimIndex() 
+			|| 1 == pPlayerData->triggeron())
 			spAnimModel->SetAnimation(pPlayerData->animationindex());
 	}
 #endif

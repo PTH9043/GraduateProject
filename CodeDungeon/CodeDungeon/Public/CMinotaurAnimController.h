@@ -1,6 +1,6 @@
 
 #pragma once
-#include "UAnimationController.h"
+#include "CMonsterAnimController.h"
 
 BEGIN(Client)
 class CMinotaur;
@@ -9,7 +9,7 @@ class CMinotaur;
 @ Explain
 -  Minotaur를 조종하는 클래스
 */
-class CMinotaurAnimController final : public UAnimationController {
+class CMinotaurAnimController final : public CMonsterAnimController {
 public:
 	CMinotaurAnimController(CSHPTRREF<UDevice> _spDevice);
 	CMinotaurAnimController(const CMinotaurAnimController& _rhs);

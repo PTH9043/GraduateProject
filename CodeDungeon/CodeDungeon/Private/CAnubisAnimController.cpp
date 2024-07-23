@@ -8,7 +8,7 @@
 #include "UTransform.h"
 
 CAnubisAnimController::CAnubisAnimController(CSHPTRREF<UDevice> _spDevice)
-    : UAnimationController(_spDevice),
+    : CMonsterAnimController(_spDevice),
     m_bAttackMode{ false },
     m_bTauntMode{ false },
     m_dlastHitTime{ 0 },
@@ -26,7 +26,7 @@ CAnubisAnimController::CAnubisAnimController(CSHPTRREF<UDevice> _spDevice)
 }
 
 CAnubisAnimController::CAnubisAnimController(const CAnubisAnimController& _rhs)
-    : UAnimationController(_rhs),
+    : CMonsterAnimController(_rhs),
     m_bAttackMode{ false },
     m_bTauntMode{ false },
     m_dlastHitTime{ 0 },
@@ -69,7 +69,6 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis_attack(0, 3);
 
-
     ClearTrigger();
     SetAnimState(-1);
     SHPTR<CAnubis> spAnubis = m_wpAnubisMob.lock();
@@ -78,7 +77,6 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
     _float AttackRange_Long = 40;
     _float AttackRange_Close = 10.0f;
 
-#ifndef _ENABLE_PROTOBUFF
     const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
 
     _float DistanceFromPlayer = spAnubis->GetDistanceFromPlayer();
@@ -94,7 +92,7 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
     if (FoundPlayer && !m_bFoundPlayerFirsttime)
     {
         UpdateState(spAnimModel, ANIM_AWAKE, L"TOATTACKIDLE");
-        m_bFoundPlayerFirsttime = true; 
+        m_bFoundPlayerFirsttime = true;
     }
     else if (!FoundPlayer && m_bFoundPlayerFirsttime)
     {
@@ -113,22 +111,22 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
     }
     else if (FoundPlayer && m_bFoundPlayerFirsttime && !m_bAttackMode)
     {
-        if(CurAnimName == L"Guard Idle to Attack Idle" || CurAnimName == L"Walk")
+        if (CurAnimName == L"Guard Idle to Attack Idle" || CurAnimName == L"Walk")
             m_bAttackMode = true;
 
     }
     else if (!FoundPlayer && !m_bFoundPlayerFirsttime)
     {
-        if(CurAnimName == L"Attack Idle to Guard Idle")
+        if (CurAnimName == L"Attack Idle to Guard Idle")
         {
             if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.9)
             {
                 UpdateState(spAnimModel, ANIM_IDLE, L"GUARDIDLE");
             }
         }
-        else 
+        else
             spAnubis->GetTransform()->SetDirectionFixedUp(spAnubis->GetOriginDirection(), _dTimeDelta, 5);
-            
+
     }
 
     // Handle hit state
@@ -139,19 +137,19 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
         spAnubis->SetPrevHealth(spAnubis->GetHealth());
     }
 
-    
+
     if (m_bAttackMode && !Hit)
     {
         UpdateState(spAnimModel, ANIM_IDLE, L"ATTACKIDLE");
 
-        if(!m_bAttackStart)
+        if (!m_bAttackStart)
         {
             spAnimModel->SetAnimation(L"Attack Idle");
             m_bAttackStart = true;
-        }             
+        }
 
 
-        if(m_bAttackStart)
+        if (m_bAttackStart)
         {
             if (DistanceFromPlayer > AttackRange_Long)
             {
@@ -164,7 +162,7 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
             else if (DistanceFromPlayer < AttackRange_Close)
             {
                 if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.9)
-                    m_iRandomValueforAttack = dis_attack(gen); 
+                    m_iRandomValueforAttack = dis_attack(gen);
 
                 if (m_iRandomValueforAttack == 0)
                     UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK1");
@@ -190,24 +188,4 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
         spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         UpdateState(spAnimModel, ANIM_DEATH, L"DEATH");
     }
-
-#endif
-
-    // Tick event
-    spAnimModel->TickEvent(spAnubis.get(), GetTrigger(), _dTimeDelta);
-}
-
-void CAnubisAnimController::ReceiveNetworkProcessData(void* _pData)
-{
-#ifdef _ENABLE_PROTOBUFF
-    SHPTR<CAnubis> spSarcophagus = m_wpAnubisMob.lock();
-    SHPTR<UAnimModel> spAnimModel = spSarcophagus->GetAnimModel();
-    {
-        SC_MONSTERSTATEHAVEPOS* pMonsterData = static_cast<SC_MONSTERSTATEHAVEPOS*>(_pData);
-        m_dRecvAnimDuration = pMonsterData->animationtime();
-
-        if (pMonsterData->animationindex() != spAnimModel->GetCurrentAnimIndex())
-            spAnimModel->SetAnimation(pMonsterData->animationindex());
-    }
-#endif
 }

@@ -134,6 +134,7 @@ VS_OUT VS_Main(VS_IN In)
         Out.vVelocity.xy = velocity;
         Out.vVelocity.zw = Out.vPosition.zw;
     }
+    
 	return Out;
 }
 
@@ -173,21 +174,9 @@ PS_OUT PS_Main(PS_IN In)
     // Out Color    
     
     Out.vDiffuse = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV0);
-    //Out.vSpecular = g_Texture1.Sample(g_Sampler_Normal, In.vTexUV0);
-    
+ 
     if (Out.vDiffuse.a <= 0.05)
         discard;
-
-    //vector vNormalDesc = g_Texture2.Sample(g_Sampler_Normal, In.vTexUV0);
-    //float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
-
-    //float3 N = normalize(In.vNormal);
-    //float3 T = normalize(In.vTangent);
-    //float3 B = normalize(In.vBinormal);
-    //float3x3 TBN = float3x3(T, B, N);
-    //vNormal = mul(vNormal, TBN);
-
-   
     
    Out.vNormal = float4(float3(In.vNormal.xyz) * 0.5f + 0.5f, 1.f);
   
