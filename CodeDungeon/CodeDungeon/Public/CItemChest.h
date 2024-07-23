@@ -1,6 +1,9 @@
 #pragma once
 #include "CMob.h"
-
+BEGIN(Engine)
+class UParticle;
+class UParticleSystem;
+END
 BEGIN(Client)
 
 class CItemChest final : public CMob {
@@ -25,6 +28,8 @@ protected:
 
 private:
 	_bool			m_bisOpen;
+	SHPTR<UParticle>										m_spOpenChestParticle;
+	_float ParticleActiveTime = 0;
 };
 
 END

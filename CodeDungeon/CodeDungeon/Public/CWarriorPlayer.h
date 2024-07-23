@@ -41,20 +41,31 @@ public: /* Get Set */
 	const _bool& GetRiseState() const { return m_bisRise; }
 	void SetRiseState(_bool _newState) { m_bisRise = _newState; }
 
+	const _bool& GetIfOpenChest() const { return IfOpenChestForHeal; }
+	void SetIfOpenChest(_bool _newState) { IfOpenChestForHeal = _newState; }
+
 	const _double& GetWarriorKickedTimeElapsed() { return m_dKickedElapsed; }
 	void SetWarriorKickedTimeElapsed(_double _newTime) { m_dKickedElapsed = _newTime; }
 
-	void SetCanInteractState(const _bool& _newState) { m_bCanInteract = _newState; }
+	void SetCanInteractChestState(const _bool& _newState) { m_bCanInteractChest = _newState; }
+	_bool GetCanInteractChestState() { return m_bCanInteractChest; }
+	void SetCanInteractBarState(const _bool& _newState) { m_bCanInteractBar = _newState; }
+	_bool GetCanInteractBarState() { return m_bCanInteractBar; }
+	void SetCanInteractStatueState(const _bool& _newState) { m_bCanInteractStatue = _newState; }
+	_bool GetCanInteractStatueState() { return m_bCanInteractStatue; }
+
+	_float GetInteractionElapsedTime() { return m_fInteractionTimeElapsed; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
+	virtual void NetworkTickActive(const _double& _dTimeDelta) override;
 	virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
 	virtual HRESULT RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass = true) override;
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) override;
 #ifdef _ENABLE_PROTOBUFF
-	void SendMoveData(CSHPTRREF<UGameInstance> spGameInstance);
-	void SendCollisionData(UPawn* _pPawn, _int _DamageEnable);
+	void SendMoveData();
+	void SendCollisionData(UPawn* _pPawn);
 #endif
 private:
 	void TranslateStateMoveAndRunF(CSHPTRREF<UGameInstance> _spGameInstance, const _double& _dTimeDelta, const _float _fSpeed);
@@ -69,6 +80,7 @@ private:
 	SHPTR<UParticle>										m_spHealParticle;
 	_float HealTimer = 0;
 	_bool HealTrigger = false;
+	_bool IfOpenChestForHeal = false;
 	PARTICLEPARAM* m_stParticleParam;
 	ComputeParticleType* m_stParticleType;
 
@@ -83,7 +95,11 @@ private:
 	_bool m_bisRise;
 
 	_double											m_dKickedElapsed;
-	_bool											m_bCanInteract;
+	_bool											m_bCanInteractChest;
+	_bool											m_bCanInteractBar;
+	_bool											m_bCanInteractStatue;
+
+	_float			m_fInteractionTimeElapsed=0;
 };
 END
 

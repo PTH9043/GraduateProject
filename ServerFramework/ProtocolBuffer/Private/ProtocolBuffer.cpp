@@ -71,6 +71,36 @@ void PROTOFUNC::MakeCharState(CHARSTATE* _pOut, LLONG _id, const VECTOR3& _vPos,
 	_pOut->set_rotatez(_vRotate.z());
 }
 
+void PROTOFUNC::MakeMobState(MOBSTATE* _pOut, LLONG _id, const VECTOR3& _vPos, const VECTOR3& _vRotate, int _animstate, int _curAnimIndex, int _triggerOn, int _outlineOn)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_id);
+	_pOut->set_posx(_vPos.x());
+	_pOut->set_posy(_vPos.y());
+	_pOut->set_posz(_vPos.z());
+	// rotate
+	_pOut->set_rotatex(_vRotate.x());
+	_pOut->set_rotatey(_vRotate.y());
+	_pOut->set_rotatez(_vRotate.z());
+	_pOut->set_state(_animstate);
+	_pOut->set_animationindex(_curAnimIndex);
+	_pOut->set_triggeron(_triggerOn);
+	_pOut->set_outlineon(_outlineOn);
+}
+
+void PROTOFUNC::MakeMobState(MOBSTATE* _pOut, LLONG _id, const VECTOR3& _vPos, const VECTOR3& _vRotate)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_id);
+	_pOut->set_posx(_vPos.x());
+	_pOut->set_posy(_vPos.y());
+	_pOut->set_posz(_vPos.z());
+	// rotate
+	_pOut->set_rotatex(_vRotate.x());
+	_pOut->set_rotatey(_vRotate.y());
+	_pOut->set_rotatez(_vRotate.z());
+}
+
 /* =========== SC =============== */
 // Server To Client 
 
@@ -98,10 +128,11 @@ void PROTOFUNC::MakeScMonsterFind(SC_MONSTERFIND* _pOut, LLONG _id, int _findtyp
 	_pOut->set_targetid(_targetID);
 }
 
-void PROTOFUNC::MakeScDead(SC_DEAD* _pOut, LLONG _id)
+void PROTOFUNC::MakeScDamaged(SC_DAMAGED* _pOut, LLONG _id, float _curhp)
 {
 	assert(nullptr != _pOut);
 	_pOut->set_id(_id);
+	_pOut->set_curhp(_curhp);
 }
 
 void PROTOFUNC::MakeScSeePlayerMove(SC_SEEPLAYERMOVE* _pOut, LLONG _id, const VECTOR3& _vPos)

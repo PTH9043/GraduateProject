@@ -190,6 +190,7 @@
     <ClInclude Include="..\Public\CMob.h" />
     <ClInclude Include="..\Public\CModelManager.h" />
     <ClInclude Include="..\Public\CModelObjects.h" />
+    <ClInclude Include="..\Public\CMonsterAnimController.h" />
     <ClInclude Include="..\Public\CMummy.h" />
     <ClInclude Include="..\Public\CMummyAnimController.h" />
     <ClInclude Include="..\Public\CNavigationManager.h" />
@@ -242,6 +243,7 @@
     <ClCompile Include="..\Private\CMob.cpp" />
     <ClCompile Include="..\Private\CModelManager.cpp" />
     <ClCompile Include="..\Private\CModelObjects.cpp" />
+    <ClCompile Include="..\Private\CMonsterAnimController.cpp" />
     <ClCompile Include="..\Private\CMummy.cpp" />
     <ClCompile Include="..\Private\CMummyAnimController.cpp" />
     <ClCompile Include="..\Private\CNavigationManager.cpp" />

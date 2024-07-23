@@ -22,7 +22,6 @@ cbuffer LoadingTimerBuffer : register(b13)
     float _durationTime;
     float _defaultCoolTime;
     float _leftCoolTime;
-    float2 _padding;
 };
 
 VS_OUT VS_Main(VS_IN In)

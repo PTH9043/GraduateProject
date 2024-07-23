@@ -1,6 +1,6 @@
 
 #pragma once
-#include "UAnimationController.h"
+#include "CMonsterAnimController.h"
 
 BEGIN(Client)
 class CMummy;
@@ -9,7 +9,7 @@ class CMummy;
 @ Explain
 -  Mummy를 조종하는 클래스
 */
-class CMummyAnimController final : public UAnimationController {
+class CMummyAnimController final : public CMonsterAnimController {
 public:
 	CMummyAnimController(CSHPTRREF<UDevice> _spDevice);
 	CMummyAnimController(const CMummyAnimController& _rhs);
@@ -29,8 +29,6 @@ public:
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _tDatas) override;
 	// Tick
 	virtual void Tick(const _double& _dTimeDelta) override;
-	// 네트워크 정보를 받아오는 함수
-	virtual void ReceiveNetworkProcessData(void* _pData) override;
 private:
 	WKPTR< CMummy>			m_wpMummyMob;
 

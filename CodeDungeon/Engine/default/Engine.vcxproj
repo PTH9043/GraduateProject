@@ -365,6 +365,7 @@
     <FxCompile Include="..\..\Shader\DownSamplingTwo.hlsl" />
     <FxCompile Include="..\..\Shader\Dust.hlsl" />
     <FxCompile Include="..\..\Shader\Equipment.hlsl" />
+    <FxCompile Include="..\..\Shader\GageUI.hlsl" />
     <FxCompile Include="..\..\Shader\GrayScale.hlsl" />
     <FxCompile Include="..\..\Shader\Guard.hlsl" />
     <FxCompile Include="..\..\Shader\Hdr.hlsl" />

@@ -211,9 +211,6 @@
     <Filter Include="95.Super\Base">
       <UniqueIdentifier>{9f88f402-6580-4c6d-9e57-26991de1c9fc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Manager\NetworkManager">
-      <UniqueIdentifier>{86cb24b7-9ef5-4892-9a87-debaf5c9a572}</UniqueIdentifier>
-    </Filter>
     <Filter Include="20.Network">
       <UniqueIdentifier>{558750bb-ac4b-4610-aa42-d72cfef50944}</UniqueIdentifier>
     </Filter>
@@ -1585,6 +1582,9 @@
       <Filter>98.ShaderFile\UI</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Shader\CoolTimeUI.hlsl">
+      <Filter>98.ShaderFile\UI</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\GageUI.hlsl">
       <Filter>98.ShaderFile\UI</Filter>
     </FxCompile>
   </ItemGroup>

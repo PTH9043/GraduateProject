@@ -8,7 +8,7 @@
 #include "UTransform.h"
 
 CMimicAnimController::CMimicAnimController(CSHPTRREF<UDevice> _spDevice)
-    : UAnimationController(_spDevice),
+    : CMonsterAnimController(_spDevice),
     m_bAttackMode{ false },
     m_bTauntMode{ false },
     m_dlastHitTime{ 0 },
@@ -24,7 +24,7 @@ CMimicAnimController::CMimicAnimController(CSHPTRREF<UDevice> _spDevice)
 }
 
 CMimicAnimController::CMimicAnimController(const CMimicAnimController& _rhs)
-    : UAnimationController(_rhs),
+    : CMonsterAnimController(_rhs),
     m_bAttackMode{ false },
     m_bTauntMode{ false },
     m_dlastHitTime{ 0 },
@@ -72,7 +72,6 @@ void CMimicAnimController::Tick(const _double& _dTimeDelta)
     SHPTR<CMimic> spMimic = m_wpMimicMob.lock();
     SHPTR<UAnimModel> spAnimModel = spMimic->GetAnimModel();
 
-#ifndef _ENABLE_PROTOBUFF
     const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
 
     _float DistanceFromPlayer = spMimic->GetDistanceFromPlayer();
@@ -104,12 +103,12 @@ void CMimicAnimController::Tick(const _double& _dTimeDelta)
             {
                 m_dIdleTimer = 0.0;
             }
-          
+
         }
         else
             m_dIdleTimer = 0;
 
-        if(m_dIdleTimer == 0)
+        if (m_dIdleTimer == 0)
         {
             m_didleRandomValueChoosingTimer += _dTimeDelta;
             if (m_didleRandomValueChoosingTimer > 2)
@@ -151,7 +150,7 @@ void CMimicAnimController::Tick(const _double& _dTimeDelta)
 
     // Handle hit state
     if (Hit)
-    {   
+    {
         spAnimModel->SetAnimation(L"gotHit");
         spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         spMimic->SetPrevHealth(spMimic->GetHealth());
@@ -192,24 +191,4 @@ void CMimicAnimController::Tick(const _double& _dTimeDelta)
 
     // Tick event
     spAnimModel->TickEvent(spMimic.get(), GetTrigger(), _dTimeDelta);
-#else
-spAnimModel->TickAnimChangeTransform(spMimic->GetTransform(), _dTimeDelta);
-#endif
-}
-
-void CMimicAnimController::ReceiveNetworkProcessData(void* _pData)
-{
-#ifdef _ENABLE_PROTOBUFF
-    SHPTR<CMimic> spSarcophagus = m_wpMimicMob.lock();
-    SHPTR<UAnimModel> spAnimModel = spSarcophagus->GetAnimModel();
-    {
-        SC_MONSTERSTATEHAVEPOS* pMonsterData = static_cast<SC_MONSTERSTATEHAVEPOS*>(_pData);
-        m_dRecvAnimDuration = pMonsterData->animationtime();
-
-        if (pMonsterData->animationindex() != spAnimModel->GetCurrentAnimIndex())
-        {
-            spAnimModel->SetAnimation(pMonsterData->animationindex());
-        }
-    }
-#endif
 }

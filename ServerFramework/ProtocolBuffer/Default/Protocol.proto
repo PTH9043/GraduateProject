@@ -46,6 +46,23 @@ message CHARSTATE
 	int64	triggerOn = 10;
 }
 
+message MOBSTATE
+{
+	int64	id = 1;
+	// Move
+	float	posX = 2;
+	float	posY = 3;
+	float	posZ = 4;
+	// Rotate
+	float	rotateX = 5;
+	float	rotateY = 6;
+	float	rotateZ = 7;
+	int64	animationIndex = 8;
+	int64  state = 9;
+	int64	triggerOn = 10;
+	int64  outlineOn = 11;
+}
+
 message COLLISIONDATA
 {
 	int64 id = 1;
@@ -86,9 +103,10 @@ message SC_OTHERCLIENTLOGIN
 	 int64 targetID = 3;
  }
 
- message SC_DEAD
+ message SC_DAMAGED
  {
 	 int64 id = 1;
+	 float curhp = 2;
  }
 
  message SC_SEEPLAYERMOVE

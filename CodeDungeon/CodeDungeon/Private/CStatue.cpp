@@ -46,11 +46,12 @@ HRESULT CStatue::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	AddColliderInContainer(mainColliderTag, Collider);
 
 	SHPTR<UCollider> Collider2 = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
-	_wstring subColliderTag = L"ForInteraction";
+	_wstring subColliderTag = L"ForInteractionStatue";
 	AddColliderInContainer(subColliderTag, Collider2);
 
 	SetPawnType(PAWNTYPE::PAWN_STATICOBJ);
 	/*SetOutline(true);*/
+	SetIfOutlineScale(true);
 	return S_OK;
 }
 

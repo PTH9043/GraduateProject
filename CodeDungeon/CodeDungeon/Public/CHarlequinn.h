@@ -35,7 +35,6 @@ public:
 
 
 	CSHPTRREF<VECTOR<SHPTR<CShurikenThrowing>>> GetShurikens() { return m_spShurikensForThrowing; }
-
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;

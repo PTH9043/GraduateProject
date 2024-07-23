@@ -14,7 +14,6 @@ class CLoadingUI final : public UUserInterface {
 		_float _durationTime;
 		_float _DefaultcoolTime=1.f;
 		_float _LeftcoolTime=1.f;
-		_float2 _padding;
 	};
 public:
 	CLoadingUI(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType);

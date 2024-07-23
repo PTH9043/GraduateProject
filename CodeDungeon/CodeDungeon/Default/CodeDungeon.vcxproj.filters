@@ -61,14 +61,8 @@
     <Filter Include="05.Objects\Character\Mob\Mummy\Sarcophagus">
       <UniqueIdentifier>{31bb1955-26f5-4600-a91e-f2f0c691126d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06.Comp\Controller\Mummy">
-      <UniqueIdentifier>{d8d4649f-7429-418e-9892-1d154660c603}</UniqueIdentifier>
-    </Filter>
     <Filter Include="06.Comp\Controller\WarriorPlayer">
       <UniqueIdentifier>{8e65972a-1a9b-4fbc-b8bf-becdde15900f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="06.Comp\Controller\Mummy\Sarcophagus">
-      <UniqueIdentifier>{7cb8b3b7-4d4b-4879-a8fc-22626d27452c}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Scene\Logo">
       <UniqueIdentifier>{015198a0-1235-4fa2-8256-779fd2151a27}</UniqueIdentifier>
@@ -78,9 +72,6 @@
     </Filter>
     <Filter Include="06.Comp\Controller\WarriorPlayer\Network">
       <UniqueIdentifier>{735716c5-05aa-4508-87a1-47c9ac944ad1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="06.Comp\Controller\Chest">
-      <UniqueIdentifier>{1e1c8903-9b1f-41c8-9252-457c36619fa3}</UniqueIdentifier>
     </Filter>
     <Filter Include="12.NavigationManager">
       <UniqueIdentifier>{7f384494-a96d-43c6-8e68-97b1019739b5}</UniqueIdentifier>
@@ -96,9 +87,6 @@
     </Filter>
     <Filter Include="05.Objects\Character\Mob\Minotaur">
       <UniqueIdentifier>{6c5c1ca6-90fb-4a2f-9031-c84814cdb111}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="06.Comp\Controller\Minotaur">
-      <UniqueIdentifier>{894a6e00-a512-431a-b630-87aa3b846df4}</UniqueIdentifier>
     </Filter>
     <Filter Include="05.Objects\ModelObjects\Rooms">
       <UniqueIdentifier>{783c0105-2ccc-4d69-94cd-c94ed23468a9}</UniqueIdentifier>
@@ -127,9 +115,6 @@
     <Filter Include="05.Objects\Character\Mob\Harlequinn">
       <UniqueIdentifier>{25b897e8-6731-4480-a35a-4b69465773a9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06.Comp\Controller\Harlequinn">
-      <UniqueIdentifier>{4153a380-debe-4b94-91e6-e73e29016bcb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="05.Objects\ModelObjects\Weapons">
       <UniqueIdentifier>{15e7d5ab-400e-41bb-bef7-c92b39c9707b}</UniqueIdentifier>
     </Filter>
@@ -142,17 +127,11 @@
     <Filter Include="05.Objects\Character\Mob\Anubis">
       <UniqueIdentifier>{fcf64ec0-1e3c-45c3-a721-df65c23b5da6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06.Comp\Controller\Anubis">
-      <UniqueIdentifier>{d40f1837-17e8-4770-a84a-0446a88b1b10}</UniqueIdentifier>
-    </Filter>
     <Filter Include="05.Objects\ModelObjects\Weapons\AnubisStaff">
       <UniqueIdentifier>{89acc89b-44a7-4665-b66a-3b4c74e997e8}</UniqueIdentifier>
     </Filter>
     <Filter Include="05.Objects\Character\Mob\Mimic">
       <UniqueIdentifier>{77c1135d-0f6c-4341-b162-b2fd437ec8ce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="06.Comp\Controller\Mimic">
-      <UniqueIdentifier>{f7842d32-ca05-4f19-b835-29b116ce5388}</UniqueIdentifier>
     </Filter>
     <Filter Include="07.UI\Button">
       <UniqueIdentifier>{94413744-fb03-458f-9961-978d544906ec}</UniqueIdentifier>
@@ -168,6 +147,30 @@
     </Filter>
     <Filter Include="05.Objects\ModelObjects\StaticObjects\Statue">
       <UniqueIdentifier>{42811dff-5f82-4d5f-9433-45ec2d741e56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\MonsterAnimController">
+      <UniqueIdentifier>{31cc6bb4-1f28-4cfd-be72-3b61116a902a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\MonsterAnimController\Anubis">
+      <UniqueIdentifier>{d40f1837-17e8-4770-a84a-0446a88b1b10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\MonsterAnimController\Chest">
+      <UniqueIdentifier>{1e1c8903-9b1f-41c8-9252-457c36619fa3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\MonsterAnimController\Harlequinn">
+      <UniqueIdentifier>{4153a380-debe-4b94-91e6-e73e29016bcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\MonsterAnimController\Mimic">
+      <UniqueIdentifier>{f7842d32-ca05-4f19-b835-29b116ce5388}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\MonsterAnimController\Minotaur">
+      <UniqueIdentifier>{894a6e00-a512-431a-b630-87aa3b846df4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\MonsterAnimController\Mummy">
+      <UniqueIdentifier>{d8d4649f-7429-418e-9892-1d154660c603}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\MonsterAnimController\Mummy\Sarcophagus">
+      <UniqueIdentifier>{7cb8b3b7-4d4b-4879-a8fc-22626d27452c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -229,10 +232,10 @@
       <Filter>05.Objects\Character\Mob\Mummy\Sarcophagus</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CMummyAnimController.h">
-      <Filter>06.Comp\Controller\Mummy</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Mummy</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CSarcophagusAnimController.h">
-      <Filter>06.Comp\Controller\Mummy\Sarcophagus</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Mummy\Sarcophagus</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CMob.h">
       <Filter>05.Objects\Character\Mob</Filter>
@@ -253,7 +256,7 @@
       <Filter>05.Objects\ModelObjects\ItemChest</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CItemChestAnimController.h">
-      <Filter>06.Comp\Controller\Chest</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Chest</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CTorch.h">
       <Filter>05.Objects\ModelObjects\StaticObjects\Torch</Filter>
@@ -271,7 +274,7 @@
       <Filter>05.Objects\Character\Mob\Minotaur</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CMinotaurAnimController.h">
-      <Filter>06.Comp\Controller\Minotaur</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Minotaur</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CBackgroundUI.h">
       <Filter>07.UI\Background</Filter>
@@ -283,7 +286,7 @@
       <Filter>05.Objects\Character\Mob\Harlequinn</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CHarlequinnAnimController.h">
-      <Filter>06.Comp\Controller\Harlequinn</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Harlequinn</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CShuriken.h">
       <Filter>05.Objects\ModelObjects\Weapons\Shurikens</Filter>
@@ -295,7 +298,7 @@
       <Filter>05.Objects\Character\Mob\Anubis</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CAnubisAnimController.h">
-      <Filter>06.Comp\Controller\Anubis</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Anubis</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CAnubisStaff.h">
       <Filter>05.Objects\ModelObjects\Weapons\AnubisStaff</Filter>
@@ -304,7 +307,7 @@
       <Filter>05.Objects\Character\Mob\Mimic</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CMimicAnimController.h">
-      <Filter>06.Comp\Controller\Mimic</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Mimic</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CButtonUI.h">
       <Filter>07.UI\Button</Filter>
@@ -326,6 +329,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\CStatue.h">
       <Filter>05.Objects\ModelObjects\StaticObjects\Statue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CMonsterAnimController.h">
+      <Filter>06.Comp\Controller\MonsterAnimController</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -380,10 +386,10 @@
       <Filter>05.Objects\Character\Mob\Mummy\Sarcophagus</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CMummyAnimController.cpp">
-      <Filter>06.Comp\Controller\Mummy</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Mummy</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CSarcophagusAnimController.cpp">
-      <Filter>06.Comp\Controller\Mummy\Sarcophagus</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Mummy\Sarcophagus</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CMob.cpp">
       <Filter>05.Objects\Character\Mob</Filter>
@@ -404,7 +410,7 @@
       <Filter>05.Objects\ModelObjects\ItemChest</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CItemChestAnimController.cpp">
-      <Filter>06.Comp\Controller\Chest</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Chest</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CTorch.cpp">
       <Filter>05.Objects\ModelObjects\StaticObjects\Torch</Filter>
@@ -422,7 +428,7 @@
       <Filter>05.Objects\Character\Mob\Minotaur</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CMinotaurAnimController.cpp">
-      <Filter>06.Comp\Controller\Minotaur</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Minotaur</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CBackgroundUI.cpp">
       <Filter>07.UI\Background</Filter>
@@ -434,7 +440,7 @@
       <Filter>05.Objects\Character\Mob\Harlequinn</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CHarlequinnAnimController.cpp">
-      <Filter>06.Comp\Controller\Harlequinn</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Harlequinn</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CShuriken.cpp">
       <Filter>05.Objects\ModelObjects\Weapons\Shurikens</Filter>
@@ -446,7 +452,7 @@
       <Filter>05.Objects\Character\Mob\Anubis</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CAnubisAnimController.cpp">
-      <Filter>06.Comp\Controller\Anubis</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Anubis</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CAnubisStaff.cpp">
       <Filter>05.Objects\ModelObjects\Weapons\AnubisStaff</Filter>
@@ -455,7 +461,7 @@
       <Filter>05.Objects\Character\Mob\Mimic</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CMimicAnimController.cpp">
-      <Filter>06.Comp\Controller\Mimic</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Mimic</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CButtonUI.cpp">
       <Filter>07.UI\Button</Filter>
@@ -477,6 +483,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\CStatue.cpp">
       <Filter>05.Objects\ModelObjects\StaticObjects\Statue</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CMonsterAnimController.cpp">
+      <Filter>06.Comp\Controller\MonsterAnimController</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -26,7 +26,6 @@ public:
 		virtual void Free() override;
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _Datas) override;
-	virtual void ReceiveNetworkProcessData(const UProcessedData& _ProcessData) override;
 	SHPTR<UParticle>& GetParticle() { return m_spBloodParticle; }
 	void SetMimicType(MimicTYPE _type) { m_MimicType = _type; }
 	MimicTYPE GetMimicType() { return m_MimicType; }

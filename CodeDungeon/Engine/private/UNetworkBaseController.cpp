@@ -4,6 +4,7 @@
 #include "UActor.h"
 #include "UProcessedData.h"
 #include "UNetworkQueryProcessing.h"
+#include "UMethod.h"
 
 UNetworkBaseController::UNetworkBaseController() : 
 	m_isNetworkTickRunning{true},
@@ -79,6 +80,12 @@ void UNetworkBaseController::InsertNetworkProcessInQuery(UProcessedData&& _data)
 	}
 }
 
+void UNetworkBaseController::SendTcpData(_char* _pData, short _tag, short _size)
+{
+	UOverExp* pOverExp = Make::xnew<UOverExp>(_pData, _tag, _size);
+	UServerMethods::SendTcpPacket(m_ClientTcpSocket, pOverExp);
+}
+
 void UNetworkBaseController::ServerTick()
 {
 	DWORD num_bytes;
@@ -88,7 +95,6 @@ void UNetworkBaseController::ServerTick()
 	if (SERVER_END == num_bytes)
 		return;
 	UOverExp* ex_over = reinterpret_cast<UOverExp*>(over);
-
 
 	if (FALSE == ret) {
 		assert("Failed Connect");

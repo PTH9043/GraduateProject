@@ -23,10 +23,9 @@ public:
 public:
 	// UPlayer을(를) 통해 상속됨
 	CLONE_MACRO(CMummy, "CMummy::CloneToFailed")
-		virtual void Free() override;
+	virtual void Free() override;
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _Datas) override;
-	virtual void ReceiveNetworkProcessData(const UProcessedData& _ProcessData) override;
 	SHPTR<UParticle>& GetParticle() { return m_spBloodParticle; }
 	void SetMummyType(MUMMYTYPE _type) { m_MummyType = _type; }
 	MUMMYTYPE GetMummyType() { return m_MummyType; }

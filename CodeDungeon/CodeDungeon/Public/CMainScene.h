@@ -41,6 +41,7 @@ public:
 	void CreateKeyInfoUI();
 	void CreateAbilityUI();
 	void CreateAttackUI();
+	void CreateInteractUI();
 private:
 	// Main
 	SHPTR<CMainCamera>			m_spMainCamera;
@@ -173,6 +174,19 @@ private:
 	//============Ability UI=======================
 	SHPTR<CImageUI>			m_spAbilityFrameUI;
 	SHPTR<CLoadingUI>			m_spRecUI;
+
+	//============Interact UI=======================
+	SHPTR<CImageUI>			m_spOpenChestTextUI;
+	SHPTR<CImageUI>			m_spLiftCageTextUI;
+	SHPTR<CImageUI>			m_spSaveCheckPointTextUI;
+	SHPTR<CImageUI>			m_spFKeyOpenChestTextUI;
+	SHPTR<CImageUI>			m_spFKeyLiftCageTextUI;
+	SHPTR<CImageUI>			m_spFKeySaveCheckPointTextUI;
+
+	SHPTR<CImageUI>			m_spLiftLoadGageBackgroundTextUI;
+	SHPTR<CLoadingUI>			m_spLiftFillGageBackgroundTextUI;
+	SHPTR<CImageUI>			m_spCheckPointLoadGageBackgroundTextUI;
+	SHPTR<CLoadingUI>			m_spCheckPointFillGageBackgroundTextUI;
 };
 
 END

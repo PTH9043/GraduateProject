@@ -23,7 +23,7 @@ CMob::CMob(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONE
 	m_dtimeAccumulator{ 0 },
 	m_fActivationRange{ 0 },
 	m_fDeactivationRange{0},
-	m_isNeedServerSendData{ false }
+	m_isSendDataToBehavior{true}
 {
 }
 
@@ -36,7 +36,7 @@ CMob::CMob(const CMob& _rhs)
 	m_dtimeAccumulator{ 0 },
 	m_fActivationRange{ 0 },
 	m_fDeactivationRange{ 0 },
-	m_isNeedServerSendData{ false }
+	m_isSendDataToBehavior{ true }
 {
 }
 
@@ -62,6 +62,9 @@ HRESULT CMob::NativeConstructClone(const VOIDDATAS& _Datas)
 #else
 	GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
 	SetTargetPlayer(nullptr);
+
+	m_isSendDataToBehavior = true;
+
 #endif
 	return S_OK;
 }
@@ -69,7 +72,6 @@ HRESULT CMob::NativeConstructClone(const VOIDDATAS& _Datas)
 void CMob::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
-#ifndef _ENABLE_PROTOBUFF
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	_float3 CurrentMobPos = GetTransform()->GetPos();
@@ -79,19 +81,18 @@ void CMob::TickActive(const _double& _dTimeDelta)
 		m_spTargetPlayer = spGameInstance->FindPlayerToDistance(CurrentMobPos);
 	}
 
-	if(m_spTargetPlayer)
+	if (m_spTargetPlayer)
 	{
 		_float3 CurrentPlayerPos = m_spTargetPlayer->GetTransform()->GetPos();
 		CalculateDistanceBetweenPlayers(CurrentPlayerPos, CurrentMobPos);
 		SearchForPlayers();
 	}
-#endif
 }
 
 void CMob::LateTickActive(const _double& _dTimeDelta)
 {
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
-#ifndef _ENABLE_PROTOBUFF
+
 	_float3 vPosition{ GetTransform()->GetPos() };
 	SHPTR<UCell> newCell{};
 
@@ -104,8 +105,18 @@ void CMob::LateTickActive(const _double& _dTimeDelta)
 
 	_float newHeight = GetCurrentNavi()->ComputeHeight(vPosition);
 	GetTransform()->SetPos(_float3(vPosition.x, newHeight, vPosition.z));
-#endif
+
 	__super::LateTickActive(_dTimeDelta);
+}
+
+void CMob::NetworkTickActive(const _double& _dTimeDelta)
+{
+	if (false == IsSendDataToBehavior())
+	{
+#ifdef _ENABLE_PROTOBUFF
+		SendMobStateData();
+#endif
+	}
 }
 
 HRESULT CMob::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
@@ -124,26 +135,67 @@ HRESULT CMob::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTab
 
 void CMob::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
+	if (true == IsDamaged())
+	{
+		SetDamaged(false);
+	}
 }
 
 void CMob::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 {
+#ifdef _ENABLE_PROTOBUFF
+
+	switch (_ProcessData.GetDataType())
+	{
+	case TAG_SC_MONSTERSTATE:
+	{
+		CHARSTATE scMonsterState;
+		scMonsterState.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
+		GetAnimationController()->ReceiveNetworkProcessData(&scMonsterState);
+		GetTransform()->SetPos({ scMonsterState.posx(), scMonsterState.posy(), scMonsterState.posz() });
+		GetTransform()->RotateFix({ scMonsterState.rotatex(), scMonsterState.rotatey(), scMonsterState.rotatez() });
+	}
+	break;
+	}
+#endif
 }
 
 #ifdef _ENABLE_PROTOBUFF
-void CMob::SendCollisionData(_int _DamageEnable)
+void CMob::SendMobStateData()
 {
+	RETURN_CHECK(true == IsNetworkConnected(), ;);
+	CSHPTRREF<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+	_float3 vCharacterPos = GetTransform()->GetPos();
+	_float3 vCharRotate = GetTransform()->GetRotationValue();
+
+	_int state = GetAnimationController()->GetAnimState();
+	_int AnimIndex = GetAnimModel()->GetCurrentAnimIndex();
+
+	VECTOR3 vMove;
+	VECTOR3 vRotate;
+	{
+		PROTOFUNC::MakeVector3(OUT & vMove, vCharacterPos.x, vCharacterPos.y, vCharacterPos.z);
+		PROTOFUNC::MakeVector3(OUT & vRotate, vCharRotate.x, vCharRotate.y, vCharRotate.z);
+	}
+	CHARSTATE charMove;
+	PROTOFUNC::MakeCharState(OUT & charMove, spGameInstance->GetNetworkOwnerID(), vMove, vRotate,
+		state, AnimIndex, IsDamaged() == true ? 1 : 0);
+	spGameInstance->InsertSendProcessPacketInQuery(std::move(UProcessedData(charMove, TAG_CS_MONSTERSTATE)));
+}
+
+void CMob::SendCollisionData()
+{
+	RETURN_CHECK(false == IsDamaged(), ;);
+
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	COLLISIONDATA csCollision;
 	VECTOR3 Pos;
 	_llong NetworkID = GetNetworkID();
 	{
-		_float3 vPos = GetTransform()->GetPos();
-		PROTOFUNC::MakeVector3(&Pos, vPos.x, vPos.y, vPos.z);
-		PROTOFUNC::MakeCollisionData(&csCollision, NetworkID, Pos, _DamageEnable, 
-			spGameInstance->GetNetworkOwnerID());
+		PROTOFUNC::MakeCollisionData(&csCollision, NetworkID, spGameInstance->GetNetworkOwnerID());
 	}
-	spGameInstance->SendProcessPacket(UProcessedData(NetworkID, csCollision, TAG_CS_MONSTERCOLIISION));
+	spGameInstance->InsertSendProcessPacketInQuery(UProcessedData(NetworkID, csCollision, TAG_CS_MONSTERCOLIISION));
 }
 #endif
 
@@ -158,10 +210,6 @@ void CMob::SearchForPlayers()
 void CMob::CalculateDistanceBetweenPlayers(const _float3& _CurrentPlayerPos, const _float3& _CurrentMobPos)
 {
 	m_fDistancefromNearestPlayer = _float3::Distance(_CurrentMobPos, _CurrentPlayerPos);
-}
-
-void CMob::SendMobStateData()
-{
 }
 
 void CMob::SetMobPlacement(_int _CellIndex)
@@ -186,7 +234,6 @@ void CMob::MoveAlongPath(const VECTOR<_float3>& path, size_t& currentPathIndex, 
     _float distance = direction.Length();
     direction.Normalize();
 
-    // ��ǥ ��ġ�� �����ߴ��� Ȯ��
     if (distance < 1.0f)
     {
 		currentPosition = targetPosition;

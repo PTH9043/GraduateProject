@@ -31,7 +31,7 @@ namespace Server {
 		BringCellIndextoPosition();
 #else
 		MOBSERVERDATA* pMobData = static_cast<MOBSERVERDATA*>(_ReceiveDatas[0]);
-		GetAnimController()->SetAnimation(pMobData->strAnimName);
+		GetAnimController()->SetAnimation(pMobData->iStartAnimIndex);
 		GetTransform()->SetNewWorldMtx(pMobData->mWorldMatrix);
 		GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
 		BringCellIndextoPosition();

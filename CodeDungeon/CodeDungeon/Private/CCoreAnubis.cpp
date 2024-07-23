@@ -39,7 +39,8 @@ HRESULT CCoreAnubis::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	GetTransform()->SetNewWorldMtx(tBarsDesc._Worldm);
 	SetPawnType(PAWNTYPE::PAWN_STATICOBJ);
 	SetActive(false);
-	/*SetOutline(true);*/
+	SetOutline(true);
+	SetIfOutlineScale(true);
 	return S_OK;
 }
 
