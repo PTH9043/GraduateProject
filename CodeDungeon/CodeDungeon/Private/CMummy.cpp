@@ -205,8 +205,8 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 
 	SetHealth(100);
 	SetMaxHealth(100);
-	SetActivationRange(30);
-	SetDeactivationRange(80);
+	SetActivationRange(100);
+	SetDeactivationRange(180);
 	SetOutlineByAbility(true);
 
 	return S_OK;
@@ -347,6 +347,10 @@ void CMummy::LateTickActive(const _double& _dTimeDelta)
 		{
 			if (GetElapsedTime() >= 100.0)
 			{
+				m_spBloodParticle->SetActive(false);
+				m_spSlashParticle->SetActive(false);
+				m_spAttackParticle->SetActive(false);
+				m_spAttackParticleTwo->SetActive(false);
 				SetActive(false);
 				spGameInstance->RemoveCollisionPawn(ThisShared<CMob>());
 			}
