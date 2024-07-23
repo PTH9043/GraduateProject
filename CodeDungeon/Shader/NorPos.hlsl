@@ -4,6 +4,11 @@
 #include "ShaderGrobalFunc.hlsli"
 #include "LightShaderParam.hlsli"
 
+cbuffer USESCALEPARAM : register(b14)
+{
+    bool ifUseScale;
+};
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -20,10 +25,26 @@ struct VS_OUT
 VS_OUT VS_Main(VS_IN In)
 {
     VS_OUT Out = (VS_OUT) 0.f;
-
-    float gSize = 1.5;
-    In.vPosition.xyz += In.vNormal * gSize;
-    Out.vPosition = Compute_FinalMatrix(In.vPosition);
+    if (ifUseScale)
+    {
+        float gScale = 1.01; // 예를 들어 1.1로 설정하여 10% 확대
+        matrix scaleMatrix =
+        {
+            gScale, 0.0f, 0.0f, 0.0f,
+                           0.0f, gScale, 0.0f, 0.0f,
+                           0.0f, 0.0f, gScale, 0.0f,
+                           0.0f, 0.0f, 0.0f, 1.0f
+        };
+        vector vPosition = mul(float4(In.vPosition, 1.f), scaleMatrix);
+        Out.vPosition = Compute_FinalMatrix(vPosition);
+    }
+    else
+    {
+        float gSize = 1.5;
+        In.vPosition.xyz += In.vNormal * gSize;
+        Out.vPosition = Compute_FinalMatrix(In.vPosition);
+    }
+   
     
    
   

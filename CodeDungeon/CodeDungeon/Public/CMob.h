@@ -32,7 +32,7 @@ protected:
     virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) override;
     virtual void ReceiveNetworkProcessData(const UProcessedData& _ProcessData) override;
 #ifdef _ENABLE_PROTOBUFF
-    // ÅÂÇö Ãß°¡
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
     void SendMobStateData();
     void SendCollisionData();
 #endif
@@ -54,8 +54,6 @@ public:
     void SetTimeAccumulator(_double _dvalue) { m_dtimeAccumulator = _dvalue; }
     void AddTimeAccumulator(_double _dvalue) { m_dtimeAccumulator += _dvalue; }
 
-    _double GetElapsedTime() const { return m_delapsedTime; }
-    void SetElapsedTime(_double _dvalue) { m_delapsedTime = _dvalue; }
 
     _float GetActivationRange() const { return m_fActivationRange; }
     void SetActivationRange(_float _dvalue) { m_fActivationRange = _dvalue; }
@@ -75,8 +73,8 @@ private:
 
 
     _double                         m_dtimeAccumulator;
+    _bool                              m_isNeedServerSendData;
     _double                         m_delapsedTime;
-
     _bool                              m_isSendDataToBehavior;
 };
 

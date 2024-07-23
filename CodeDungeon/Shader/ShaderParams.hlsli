@@ -54,7 +54,8 @@ Texture2D g_Texture5 : register(t5);
 Texture2D g_Texture6 : register(t6);
 Texture2D g_Texture7 : register(t7);
 Texture2D g_Texture8 : register(t8);
-TextureCube g_Texture9 : register(t9);
+Texture2D g_Texture9 : register(t9);
+TextureCube g_Texture10 : register(t10);
 
 static const int MAIN_CAM_ID = 0;
 static const int DEFFERED_CAM_ID = 1;

@@ -30,6 +30,8 @@ public:
 	void CalculateAndSetCollider();
 	void SetOutline(_bool _draw) { m_bDrawOutline = _draw; }
 	const _bool& GetOutlineState()const { return m_bDrawOutline; }
+	void SetIfOutlineScale(_bool _Draw) { m_OutlineWithScale = _Draw; }
+	const _bool& GetOutlineScaleState()const { return m_OutlineWithScale; }
 
 	const _bool& GetInteractionState() { return m_bisInteraction; }
 	void SetInteractionState(const _bool& _newState) { m_bisInteraction = _newState; }
@@ -43,10 +45,12 @@ protected:
 private:
 	SHPTR<UModel>								m_spModel;
 	SHPTR<UShaderConstantBuffer>				m_spShaderTexCheckBuffer;
+	SHPTR< UShaderConstantBuffer>						m_spScaleOutlineBuffer;
 	int HasTex[4]{};
 
 	SHPTR<UCollider>			m_spCollider;
 	_bool		m_bDrawOutline;
+	_bool			m_OutlineWithScale = false;
 	_bool		m_bisInteraction;
 };
 

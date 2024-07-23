@@ -172,6 +172,7 @@ void CMinotaur::CreateParticles()
 		*m_spAttackParticleTwo->GetParticleSystem()->GetCreateInterval() = 0.5f;
 		m_spAttackParticleTwo->SetTexture(L"FireSpark3");
 	}
+	SetOutlineByAbility(true);
 }
 
 HRESULT CMinotaur::NativeConstructClone(const VOIDDATAS& _Datas)

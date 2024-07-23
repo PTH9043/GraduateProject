@@ -51,12 +51,12 @@ HRESULT CIronBars::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	tDesc2.vTranslation = _float3(0.f, 0.f, 0.f);
 	tDesc2.vScale = _float3(410, 350, 100);
 	SHPTR<UCollider> Collider2 = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc2 }));
-	_wstring subColliderTag = L"ForInteraction";
+	_wstring subColliderTag = L"ForInteractionBars";
 	AddColliderInContainer(subColliderTag, Collider2);
 
 
 	SetPawnType(PAWNTYPE::PAWN_STATICOBJ);
-
+	SetIfOutlineScale(false);
 	/*SetOutline(true);*/
 	return S_OK;
 }
@@ -75,7 +75,7 @@ void CIronBars::TickActive(const _double& _dTimeDelta)
 	if(GetInteractionState())
 	{
 		if(GetTransform()->GetPos().y - m_f3OriginPos.y < 30)
-			GetTransform()->TranslateDir(_float3(0, 1, 0), _dTimeDelta, 2);
+			GetTransform()->TranslateDir(_float3(0, 1, 0), _dTimeDelta, 3);
 	}
 }
 

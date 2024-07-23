@@ -234,20 +234,31 @@ PS_OUT PS_Main(PS_In Input)
     }
    
     
- 
+  
     Out.vColor += g_Texture1.Sample(g_Sampler_Normal, Input.vTexUV); //AlphaDeffered
-
+    float4 vDepthDesc = g_Texture4.Sample(g_Sampler_Normal, Input.vTexUV);
     if (IsAbility)
     {
-        float4 outline = g_Texture5.Sample(g_Sampler_Normal, Input.vTexUV);
+        float4 outline = g_Texture9.Sample(g_Sampler_Normal, Input.vTexUV);
     
-        float4 vDepthDesc = g_Texture4.Sample(g_Sampler_Normal, Input.vTexUV);
+       
    
         if (vDepthDesc.g >= 1.f && outline.w <= 1.f)
         {
             Out.vColor.xyz += outline.xyz;
         }
     }
+    else
+    {        
+        float4 outline = g_Texture5.Sample(g_Sampler_Normal, Input.vTexUV);
+    
+        
+        if (vDepthDesc.g >= 1.f && outline.w <= 1.f)
+        {
+            Out.vColor.xyz += outline.xyz;
+        }
+    }
+   
    
   
     
