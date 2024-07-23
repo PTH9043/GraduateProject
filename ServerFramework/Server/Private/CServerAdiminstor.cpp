@@ -10,6 +10,10 @@
 #include "CChest.h"
 #include "ATransform.h"
 #include "AAnimController.h"
+#include "CAnubis.h"
+#include "CMimic.h"
+#include "CHarlequin.h"
+#include "CMinotaur.h"
 
 //#define CREATED_SERVERMOBDATA
 
@@ -103,9 +107,9 @@ namespace Server
 			// Mob 데이터를 상자로 만든다. 
 			for (auto& iter : MobData)
 			{
-				if (iter.strAnimModelName == "Chest_FBX.bin")
+				if (iter.strAnimModelName == "Chest 1_FBX.bin")
 				{
-					CreateChest(&iter, spMonsterJobTimer);
+					CreateMonster<CChest>(&iter, spMonsterJobTimer);
 				}
 				else if (iter.strAnimModelName == "Mummy_DEMO_1_FBX.bin")
 				{
@@ -117,6 +121,22 @@ namespace Server
 					{
 						CreateMummyAndSarphagousMob(&iter, SARCO_STANDING, spMonsterJobTimer);
 					}
+				}
+				else if (iter.strAnimModelName == "minotaur_FBX")
+				{
+					CreateMonster<CMinotaur>(&iter, spMonsterJobTimer);
+				}
+				else if (iter.strAnimModelName == "Harlequin1_FBX")
+				{
+					CreateMonster<CHarlequin>(&iter, spMonsterJobTimer);
+				}
+				else if (iter.strAnimModelName == "Anubis_FBX")
+				{
+					CreateMonster<CAnubis>(&iter, spMonsterJobTimer);
+				}
+				else if (iter.strAnimModelName == "Mimic_FBX")
+				{
+					CreateMonster<CMimic>(&iter, spMonsterJobTimer);
 				}
 			}
 			// Monster 
@@ -162,6 +182,18 @@ namespace Server
 			case TAG_MUMMY_STANDING:
 				spMonster = Create<CMummy>(GetCoreInstance(), iter.iMobID, MUMMYTYPE::MUMMY_STANDING, spMonsterJobTimer);
 				break;
+			case TAG_ANUBIS:
+				spMonster = Create<CAnubis>(GetCoreInstance(), iter.iMobID, spMonsterJobTimer);
+				break;
+			case TAG_HARLEQUINN:
+				spMonster = Create<CHarlequin>(GetCoreInstance(), iter.iMobID, spMonsterJobTimer);
+				break;
+			case TAG_MINOTAUR:
+				spMonster = Create<CMinotaur>(GetCoreInstance(), iter.iMobID, spMonsterJobTimer);
+				break;
+			case TAG_MIMIC:
+				spMonster = Create<CMimic>(GetCoreInstance(), iter.iMobID, spMonsterJobTimer);
+				break;
 			}
 
 			if (nullptr == spMonster)
@@ -179,13 +211,6 @@ namespace Server
 		SESSIONID MummyID = GiveID();
 		spSarcophagus->Start(VOIDDATAS{ _pData, &MummyID });
 		InsertMobObject(spSarcophagus->GetSessionID(), spSarcophagus);
-	}
-
-	void CServerAdiminstor::CreateChest(void* _pData, SHPTR<AJobTimer> _spMonsterJobTimer)
-	{
-		SHPTR<CChest> spChest = Create<CChest>(GetCoreInstance(), GiveID(), _spMonsterJobTimer);
-		spChest->Start(VOIDDATAS{ _pData });
-		InsertMobObject(spChest->GetSessionID(), spChest);
 	}
 
 	void CServerAdiminstor::Free()

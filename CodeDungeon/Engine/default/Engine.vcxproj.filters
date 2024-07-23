@@ -484,6 +484,9 @@
     <Filter Include="01.Manager\FontManager">
       <UniqueIdentifier>{4d076d5d-2275-40e0-b8bc-96d308a65c34}</UniqueIdentifier>
     </Filter>
+    <Filter Include="20.Network\NetworkSend">
+      <UniqueIdentifier>{3f3c8566-84ab-4351-9969-d85d0fe1b491}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\EngineStruct.cpp">
@@ -899,6 +902,9 @@
     </ClCompile>
     <ClCompile Include="..\private\UFontManager.cpp">
       <Filter>01.Manager\FontManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UNetworkSender.cpp">
+      <Filter>20.Network\NetworkSend</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1348,6 +1354,9 @@
     </ClInclude>
     <ClInclude Include="..\public\UFontManager.h">
       <Filter>01.Manager\FontManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UNetworkSender.h">
+      <Filter>20.Network\NetworkSend</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

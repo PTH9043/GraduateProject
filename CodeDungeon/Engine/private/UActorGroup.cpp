@@ -35,6 +35,12 @@ void UActorGroup::LateTick(const _double& _dTimeDelta)
 		iter->LateTick(_dTimeDelta);
 }
 
+void UActorGroup::NetworkTick(const _double& _dTimeDelta)
+{
+	for (auto& iter : m_lsActiveActors)
+		iter->NetworkTick(_dTimeDelta);
+}
+
 void UActorGroup::AddActive(CSHPTRREF<UActor> _pActor)
 {
 	m_lsActiveActors.insert(_pActor);

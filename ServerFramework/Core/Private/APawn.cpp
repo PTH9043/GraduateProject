@@ -54,6 +54,10 @@ namespace Core {
 	{
 		SHPTR<ANavigation> spNavigation = m_spNavigation;
 		SHPTR<ACell> spCell = spNavigation->FindCell(GetTransform()->GetPos());
+		if (nullptr == spCell)
+		{
+			return GetTransform()->GetPos();
+		}
 		SetCellIndex(spCell->GetIndex());
 		return spCell->GetCenterPos();
 	}

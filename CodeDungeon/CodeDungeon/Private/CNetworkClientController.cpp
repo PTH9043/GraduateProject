@@ -11,6 +11,10 @@
 #include "CMap.h"
 #include "CMob.h"
 #include "CItemChest.h"
+#include "CAnubis.h"
+#include "CHarlequinn.h"
+#include "CMinotaur.h"
+#include "CMimic.h"
 
 CNetworkClientController::CNetworkClientController()
 {
@@ -95,11 +99,6 @@ void CNetworkClientController::ProcessPacket(_char* _pPacket, PACKETHEAD _Packet
 			PlayerAnimState(_pPacket, _PacketHead);
 		}
 		break;
-		case TAG_SC::TAG_SC_CHARMOVE:
-		{
-			CharMoveState(_pPacket, _PacketHead);
-		}
-		break;
 		case TAG_SC::TAG_SC_SELFPLAYERMOVE:
 		{
 			SelfPlayerMoveState(_pPacket, _PacketHead);
@@ -108,11 +107,6 @@ void CNetworkClientController::ProcessPacket(_char* _pPacket, PACKETHEAD _Packet
 		case TAG_SC::TAG_SC_MONSTERSTATE:
 		{
 			MonsterState(_pPacket, _PacketHead);
-		}
-		break;
-		case TAG_SC::TAG_SC_MONSTERSTATEHAVEMOVE:
-		{
-			MonsterStateHaveMove(_pPacket, _PacketHead);
 		}
 		break;
 	}
@@ -184,6 +178,34 @@ void CNetworkClientController::CreateServerMobData()
 			Mummy->SetMummyType(CMummy::TYPE_STANDING);
 		}
 			break;
+		case TAG_CHAR::TAG_ANUBIS:
+		{
+			CAnubis::CHARACTERDESC Desc{ PROTO_RES_ANUBISANIMMODEL, PROTO_COMP_ANUBISANIMCONTROLLER };;
+			SHPTR<UActor> Anubis = std::static_pointer_cast<UActor>(spGameInstance->CloneActorAdd(PROTO_ACTOR_ANUBIS, { &Desc, &iter }));
+			AddCreatedNetworkActor(iter.iMobID, Anubis);
+		}
+		break;
+		case TAG_CHAR::TAG_MIMIC:
+		{
+			CAnubis::CHARACTERDESC Desc{ PROTO_RES_MIMICANIMMODEL, PROTO_COMP_MIMICANIMCONTROLLER };;
+			SHPTR<UActor> Anubis = std::static_pointer_cast<UActor>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MIMIC, { &Desc, &iter }));
+			AddCreatedNetworkActor(iter.iMobID, Anubis);
+		}
+		break;
+		case TAG_CHAR::TAG_MINOTAUR:
+		{
+			CAnubis::CHARACTERDESC Desc{ PROTO_RES_MINOTAURANIMMODEL, PROTO_COMP_MINOTAURANIMCONTROLLER };;
+			SHPTR<UActor> Anubis = std::static_pointer_cast<UActor>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MINOTAUR, { &Desc, &iter }));
+			AddCreatedNetworkActor(iter.iMobID, Anubis);
+		}
+		break;
+		case TAG_CHAR::TAG_HARLEQUINN:
+		{
+			CAnubis::CHARACTERDESC Desc{ PROTO_RES_HARLEQUINNANIMMODEL, PROTO_COMP_HARLEQUINNANIMCONTROLLER };;
+			SHPTR<UActor> Anubis = std::static_pointer_cast<UActor>(spGameInstance->CloneActorAdd(PROTO_ACTOR_HARLEQUINN, { &Desc, &iter }));
+			AddCreatedNetworkActor(iter.iMobID, Anubis);
+		}
+		break;
 		}
 	}
 }
@@ -228,25 +250,16 @@ void CNetworkClientController::OtherClientLoginState(_char* _pPacket, const PACK
 
 void CNetworkClientController::PlayerAnimState(_char* _pPacket, const PACKETHEAD& _PacketHead)
 {
-	PLAYERSTATE PlayerState;
+	CHARSTATE PlayerState;
 	PlayerState.ParseFromArray(_pPacket, _PacketHead.PacketSize);
 	//// 해당하는 ID에 데이터 전달
 	InsertNetworkProcessInQuery(std::move(UProcessedData(PlayerState.id(), PlayerState, TAG_SC_PLAYERSTATE,
 		_PacketHead.PacketSize)));
 }
 
-void CNetworkClientController::CharMoveState(_char* _pPacket, const PACKETHEAD& _PacketHead)
-{
-	CHARMOVE charMove;
-	charMove.ParseFromArray(_pPacket, _PacketHead.PacketSize);
-	//// 해당하는 ID에 데이터 전달
-	InsertNetworkProcessInQuery(std::move(UProcessedData(charMove.id(), charMove,
-		TAG_SC_CHARMOVE, _PacketHead.PacketSize)));
-}
-
 void CNetworkClientController::SelfPlayerMoveState(_char* _pPacket, const PACKETHEAD& _PacketHead)
 {
-	SELFPLAYERMOVE selfPlayerMove;
+	SC_SEEPLAYERMOVE selfPlayerMove;
 	selfPlayerMove.ParseFromArray(_pPacket, _PacketHead.PacketSize);
 	//// 해당하는 ID에 데이터 전달
 	InsertNetworkProcessInQuery(std::move(UProcessedData(selfPlayerMove.id(), selfPlayerMove,
@@ -255,18 +268,10 @@ void CNetworkClientController::SelfPlayerMoveState(_char* _pPacket, const PACKET
 
 void CNetworkClientController::MonsterState(_char* _pPacket, const PACKETHEAD& _PacketHead)
 {
-	SC_MONSTERSTATE scMonsterState;
+	CHARSTATE scMonsterState;
 	scMonsterState.ParseFromArray(_pPacket, _PacketHead.PacketSize);
 	InsertNetworkProcessInQuery(UProcessedData(scMonsterState.id(), scMonsterState,
 		TAG_SC_MONSTERSTATE, _PacketHead.PacketSize));
-}
-
-void CNetworkClientController::MonsterStateHaveMove(_char* _pPacket, const PACKETHEAD& _PacketHead)
-{
-	SC_MONSTERSTATEHAVEPOS scMonsterState;
-	scMonsterState.ParseFromArray(_pPacket, _PacketHead.PacketSize);
-	InsertNetworkProcessInQuery(UProcessedData(scMonsterState.id(), scMonsterState,
-		TAG_SC_MONSTERSTATEHAVEMOVE, _PacketHead.PacketSize));
 }
 
 #endif

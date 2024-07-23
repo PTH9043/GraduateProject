@@ -70,6 +70,7 @@ class UModelMaterial;
 class USwapChain;
 class UFont;
 class UPlayer;
+class UNetworkSender;
 
 struct PICKINGDESC;
 struct WAITCHECKACTOR;
@@ -272,8 +273,8 @@ public: /* AudioSystemManager*/
 public: /* NetworkManager */
 	void StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController, CSHPTRREF<UNetworkQueryProcessing> _spNetworkQueryProcessing);
 	void MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer);
-	void SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize);
-	void SendProcessPacket(UProcessedData&& _ProcessData);
+	void InsertSendTcpPacketInQuery(_char* _pPacket, _short _PacketType, _short _PacketSize);
+	void InsertSendProcessPacketInQuery(UProcessedData&& _ProcessData);
 	SHPTR<UActor> FindNetworkActor(const _int _NetworkID);
 	void NetworkEnd();
 	void SetSceneIDToNetController(const _int _iSceneID);
@@ -372,6 +373,7 @@ private:
 
 	SHPTR<URenderer>										m_spRenderer;
 	SHPTR< UNetworkQueryProcessing>		m_spNetworkQueryProcessing;
+	SHPTR< UNetworkSender>							m_spNetworkSender;
 
 	SHPTR< UFontManager>								m_spFontMananger;
 	//SHPTR<UComputeManager>					m_spComputeManager;

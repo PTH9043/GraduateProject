@@ -1,6 +1,7 @@
 #include "ServerDefines.h"
 #include "CMinotaur.h"
 #include "ATransform.h"
+#include "CMinotaurAnimController.h"
 
 namespace Server {
 
@@ -17,15 +18,19 @@ namespace Server {
 	_bool CMinotaur::Start(const VOIDDATAS& _ReceiveDatas)
 	{
 		__super::Start(_ReceiveDatas);
+		SetAnimController(Create<CMinotaurAnimController>(GetCoreInstance(), ThisShared<CMinotaur>(),
+			"..\\..\\Resource\\Anim\\MinoTaur\\", "minotaur_FBX.bin"));
 #ifndef CREATED_SERVERMOBDATA
 		MOBDATA* pMobData = static_cast<MOBDATA*>(_ReceiveDatas[0]);
 		// Setting Animation 
+		GetAnimController()->SetAnimation(pMobData->strAnimName);
 		GetTransform()->SetPos(pMobData->mWorldMatrix.Get_Pos());
 		GetTransform()->SetDirection(pMobData->mWorldMatrix.Get_Look());
 		GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
 		BringCellIndextoPosition();
 #else
 		MOBSERVERDATA* pMobData = static_cast<MOBSERVERDATA*>(_ReceiveDatas[0]);
+		GetAnimController()->SetAnimation(pMobData->strAnimName);
 		GetTransform()->SetNewWorldMtx(pMobData->mWorldMatrix);
 		GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
 		BringCellIndextoPosition();

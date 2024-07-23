@@ -30,7 +30,14 @@ private:
 	void CreateServerMob();
 
 	void CreateMummyAndSarphagousMob(void* _pData, SARCOPHAGUSTYPE _SarcophagusType, SHPTR< AJobTimer> _spMonsterJobTimer);
-	void CreateChest(void* _pData, SHPTR<AJobTimer> _spMonsterJobTimer);
+
+	template<class T>
+	void CreateMonster(void* _pData, SHPTR<AJobTimer> _spMonsterJobTimer)
+	{
+		SHPTR<T> spMonster = Create<T>(GetCoreInstance(), GiveID(), _spMonsterJobTimer);
+		spMonster->Start(VOIDDATAS{ _pData });
+		InsertMobObject(spMonster->GetSessionID(), spMonster);
+	}
 private:
 	void Free() override;
 };

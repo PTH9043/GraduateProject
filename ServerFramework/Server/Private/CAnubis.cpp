@@ -1,6 +1,7 @@
 #include "ServerDefines.h"
 #include "CAnubis.h"
 #include "ATransform.h"
+#include "CAnubisAnimController.h"
 
 namespace Server
 {
@@ -17,10 +18,13 @@ namespace Server
 	_bool CAnubis::Start(const VOIDDATAS& _ReceiveDatas)
 	{
 		__super::Start(_ReceiveDatas);
+		SetAnimController(Create<CAnubisAnimController>(GetCoreInstance(), ThisShared<CAnubis>(),
+			"..\\..\\Resource\\Anim\\Anubis\\", "Anubis_FBX.bin"));
 #ifndef CREATED_SERVERMOBDATA
 		MOBDATA* pMobData = static_cast<MOBDATA*>(_ReceiveDatas[0]);
 		// Setting Animation 
-		// GetTransform()->SetPos(pMobData->mWorldMatrix.Get_Pos());
+		GetAnimController()->SetAnimation(pMobData->strAnimName);
+		GetTransform()->SetPos(pMobData->mWorldMatrix.Get_Pos());
 		GetTransform()->SetDirection(pMobData->mWorldMatrix.Get_Look());
 		GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
 		BringCellIndextoPosition();

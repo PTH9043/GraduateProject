@@ -33,6 +33,13 @@ void UActorManager::LateTick(const _double& _dTimeDelta)
 	}
 }
 
+void UActorManager::NetworkTick(const _double& _dTimeDelta)
+{
+	for (auto& iter : m_vecTickClones) {
+		iter->NetworkTick(_dTimeDelta);
+	}
+}
+
 void UActorManager::Collision(const _double& _dTimeDelta)
 {
 

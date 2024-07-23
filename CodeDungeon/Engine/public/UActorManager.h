@@ -27,6 +27,7 @@ public:
 	// Tick, LateTick 
 	void Tick(const _double& _dTimeDelta);
 	void LateTick(const _double& _dTimeDelta);
+	void NetworkTick(const _double& _dTimeDelta);
 	void Collision(const _double& _dTimeDelta);
 
 	HRESULT ReadyActorManager(CSHPTRREF<URenderer> _spRenderer);
@@ -43,7 +44,7 @@ private:
 	// Containers
 	PROTOTYPES				m_ProtoTypes;
 	CLONEARR					m_arrClones;
-	CLONEVECTOR				m_vecTickClones;
+	CLONEVECTOR			m_vecTickClones;
 	SHPTR<URenderer>	m_spRenderer;
 };
 
