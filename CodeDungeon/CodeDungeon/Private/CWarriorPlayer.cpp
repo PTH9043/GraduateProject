@@ -34,7 +34,8 @@ CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _ws
 	m_spBlood{nullptr},
 	m_bisKicked{ false },
 	m_dKickedElapsed{ 0 },
-	m_bisRise{ false }
+	m_bisRise{ false },
+	m_bCanInteract{ false }
 {
 }
 
@@ -50,7 +51,8 @@ CWarriorPlayer::CWarriorPlayer(const CWarriorPlayer& _rhs) :
 	m_spBlood{ nullptr },
 	m_bisKicked{ false },
 	m_dKickedElapsed{ 0 },
-	m_bisRise{ false }
+	m_bisRise{ false },
+	m_bCanInteract{ false }
 {
 }
 
@@ -181,8 +183,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 
 		m_spTrail->SetColorTexture(L"GlowDiffuse");
 		m_spTrail->SetTrailShapeTexture(L"Noise_Bee");
-		m_spTrail->SetTrailNoiseTexture(L"GlowDiffuse");
-		
+		m_spTrail->SetTrailNoiseTexture(L"GlowDiffuse");	
 	}
 	{
 		m_spBlood = std::static_pointer_cast<UBlood>(spGameInstance->CloneActorAdd(PROTO_ACTOR_BLOOD));
@@ -283,9 +284,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		
 	}
 	if (m_spBlood->CheckTimeOver()) {
-		m_spBlood->SetActive(false);
-		
-		
+		m_spBlood->SetActive(false);		
 	}
 		
 	if (spGameInstance->GetDIKeyDown(DIK_F5)) {
@@ -307,8 +306,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		pos.y += 2;
 		
 		m_spHealParticle->SetPosition(pos);
-		m_spHealParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
-				
+		m_spHealParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;		
 	}
 
 	if (HealTrigger)
@@ -319,12 +317,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 			HealTimer = 0;
 			HealTrigger = false;
 		}
-		
 	}
-
-		
-	
-
 
 	// Rotation 
 	{
@@ -534,9 +527,17 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 					}
 					else if (iter2.first == L"ForInteraction")
 					{
-						//철장 여는 용도
-						if (spGameInstance->GetDIKeyDown(DIK_F))
-							pModelObject->SetInteractionState(true);
+						if (iter.second->IsCollision(iter2.second))
+						{
+							m_bCanInteract = true;
+							//철장 여는 용도
+							if (spGameInstance->GetDIKeyDown(DIK_F))
+								pModelObject->SetInteractionState(true);
+						}
+						else
+						{
+							m_bCanInteract = false;
+						}
 					}
 				}
 			}

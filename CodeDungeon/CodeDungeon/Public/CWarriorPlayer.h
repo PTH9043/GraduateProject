@@ -44,6 +44,7 @@ public: /* Get Set */
 	const _double& GetWarriorKickedTimeElapsed() { return m_dKickedElapsed; }
 	void SetWarriorKickedTimeElapsed(_double _newTime) { m_dKickedElapsed = _newTime; }
 
+	void SetCanInteractState(const _bool& _newState) { m_bCanInteract = _newState; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
@@ -82,6 +83,7 @@ private:
 	_bool m_bisRise;
 
 	_double											m_dKickedElapsed;
+	_bool											m_bCanInteract;
 };
 END
 
