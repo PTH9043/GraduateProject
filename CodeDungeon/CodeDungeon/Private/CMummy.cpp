@@ -207,6 +207,7 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetMaxHealth(100);
 	SetActivationRange(30);
 	SetDeactivationRange(80);
+	SetOutlineByAbility(true);
 
 	return S_OK;
 }

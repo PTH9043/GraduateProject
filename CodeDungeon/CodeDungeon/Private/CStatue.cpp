@@ -51,6 +51,7 @@ HRESULT CStatue::NativeConstructClone(const VOIDDATAS& _vecDatas)
 
 	SetPawnType(PAWNTYPE::PAWN_STATICOBJ);
 	/*SetOutline(true);*/
+	SetIfOutlineScale(true);
 	return S_OK;
 }
 

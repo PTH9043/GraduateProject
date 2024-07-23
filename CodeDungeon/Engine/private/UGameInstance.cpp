@@ -1920,7 +1920,14 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 			// Add RenderTargetGroup
 			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::OUTLINE_POS_NOR, vecRts);
 		}
-
+		{
+			std::vector<RTDESC> vecRts{
+				RTDESC{ RTOBJID::OUTLINE_DEPTH_POS_FORABILITY, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
+					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f } }
+			};
+			// Add RenderTargetGroup
+			m_spRenderTargetManager->AddRenderTargetGroup(RTGROUPID::OUTLINE_POS_NOR_FORABILITY, vecRts);
+		}
 		{
 			std::vector<RTDESC> vecRts{
 				RTDESC{ RTOBJID::DEPTH_RECORD, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,

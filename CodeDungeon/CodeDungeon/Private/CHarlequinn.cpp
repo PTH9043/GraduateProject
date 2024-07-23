@@ -181,6 +181,7 @@ void CHarlequinn::CreateParticles()
 		*m_spAttackParticleTwo->GetParticleSystem()->GetCreateInterval() = 0.5f;
 		m_spAttackParticleTwo->SetTexture(L"FireSpark3");
 	}
+	SetOutlineByAbility(true);
 }
 
 

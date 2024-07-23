@@ -39,6 +39,8 @@ HRESULT CCoreMinotaur::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	GetTransform()->SetNewWorldMtx(tBarsDesc._Worldm);
 	SetPawnType(PAWNTYPE::PAWN_STATICOBJ);
 	SetActive(false);
+	SetOutline(true);
+	SetIfOutlineScale(true);
 	//SetOutline(true);
 	return S_OK;
 }

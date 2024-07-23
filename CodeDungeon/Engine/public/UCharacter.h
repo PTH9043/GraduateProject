@@ -81,6 +81,8 @@ public: /* get set */
 	const _bool& GetOutlineState()const { return m_DrawOutline; }
 	const _bool& GetOutlineScaleState()const { return m_OutlineWithScale; }
 
+	void SetOutlineByAbility(_bool Set) { ifDrawOutlineByAbility = Set; }
+
 	const _int& GetHealth() const { return m_iHealth; }
 	const _int& GetMaxHealth() const { return m_iMaxHealth; }
 	const _int& GetPrevHealth() const { return m_iPrevHealth; }
@@ -175,6 +177,8 @@ private:
 
 	_bool			m_bisHitAlready;
 	_bool			m_isDamaged;
+
+	_bool ifDrawOutlineByAbility=false;
 };
 
 END

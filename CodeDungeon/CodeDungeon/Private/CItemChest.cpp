@@ -11,7 +11,8 @@
 #include "UCollider.h"
 #include "UPlayer.h"
 #include "CWarriorPlayer.h"
-
+#include "UParticle.h"
+#include "UParticleSystem.h"
 
 CItemChest::CItemChest(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: CMob(_spDevice, _wstrLayer, _eCloneType), m_bisOpen{false}
@@ -48,11 +49,45 @@ HRESULT CItemChest::NativeConstructClone(const VOIDDATAS& _Datas)
 	_wstring mainColliderTag = L"Main";
 	AddColliderInContainer(mainColliderTag, Collider);
 	GetAnimModel()->SetAnimation(L"Open");
+
+	//SetOutline(true);
+	//SetIfOutlineScale(true);
+
 	for (auto& Containers : GetColliderContainer())
 	{
 		Containers.second->SetTranslate(GetAnimModel()->GetCenterPos());
 		Containers.second->SetScaleToFitModel(GetAnimModel()->GetMinVertexPos(), GetAnimModel()->GetMaxVertexPos());
 	}
+		
+		
+		{
+
+			UParticle::PARTICLEDESC tDesc;
+			tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEOPENCHEST2DSHADER;
+			tDesc.wstrParticleShader = PROTO_RES_PARTICLEOPENCHEST2DSHADER;
+
+
+			tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 1.3f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle =0.05f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.5f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.1f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 2.1f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 2.1f;
+			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 512;
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 1.f;
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.f, 0.1f);
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticlePosition = _float3(0.f, 0.f, 0.f);
+			tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_OPENCHEST;
+			m_spOpenChestParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
+		}
+		 m_spOpenChestParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleType = PARTICLE_TYPE_DEFAULT;
+		 m_spOpenChestParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
+		m_spOpenChestParticle->SetParticleType(PARTICLE_OPENCHEST);
+		*m_spOpenChestParticle->GetParticleSystem()->GetAddParticleAmount() = 2;
+		*m_spOpenChestParticle->GetParticleSystem()->GetCreateInterval() = 1.1f;
+		m_spOpenChestParticle->SetTexture(L"Twinkle");
 	
 	return S_OK;
 }
@@ -81,12 +116,23 @@ void CItemChest::TickActive(const _double& _dTimeDelta)
 
 	if (m_bisOpen)
 	{
+		ParticleActiveTime += _dTimeDelta;
 		if (GetElapsedTime() < ItemChestTimeArcOpenEnd)
 		{
 			SetElapsedTime(GetElapsedTime() + _dTimeDelta * ItemChestOpeningSpeed);
 			GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
 		}
+		m_spOpenChestParticle->SetActive(true);
+		m_spOpenChestParticle->SetPosition(GetTransform()->GetPos());
+		m_spOpenChestParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+
 	}
+	
+	if (ParticleActiveTime > 5.f) {
+		m_spOpenChestParticle->SetActive(false);
+	}
+	
+	
 
 	for (auto& Containers : GetColliderContainer())
 	{

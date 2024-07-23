@@ -197,8 +197,9 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 		Colliders.second->SetScale(_float3(4, 10, 4));
 		Colliders.second->SetTranslate(_float3(0, 10, 0));
 	}
-	SetOutline(false);
-	SetIfOutlineScale(false);//플레이어는 안그리도록 
+	SetOutline(true);
+	SetifPlayer(true);//depth만 기록하고 outline안그리도록 다른 물체  outline depth판정위해
+	//SetIfOutlineScale(false); 만약 플레이어 그릴거면 SetifPlayer->false, SetIfOutlineScale->true
 	SetHealth(10000);
 	SetMaxHealth(10000);
 	SetAnimModelRim(true);
@@ -530,12 +531,18 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 						if (iter.second->IsCollision(iter2.second))
 						{
 							m_bCanInteract = true;
+							pModelObject->SetOutline(true);
+						
 							//철장 여는 용도
-							if (spGameInstance->GetDIKeyDown(DIK_F))
+							if (spGameInstance->GetDIKeyDown(DIK_F)) {
 								pModelObject->SetInteractionState(true);
+								pModelObject->SetOutline(false);
+							}
+								
 						}
 						else
 						{
+							pModelObject->SetOutline(false);
 							m_bCanInteract = false;
 						}
 					}

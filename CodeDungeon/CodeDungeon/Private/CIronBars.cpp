@@ -56,7 +56,7 @@ HRESULT CIronBars::NativeConstructClone(const VOIDDATAS& _vecDatas)
 
 
 	SetPawnType(PAWNTYPE::PAWN_STATICOBJ);
-
+	SetIfOutlineScale(false);
 	/*SetOutline(true);*/
 	return S_OK;
 }

@@ -424,6 +424,18 @@ void URenderer::RenderPosNormal()
 {
     SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
+    SHPTR<URenderTargetGroup> spRenderTargetGroup0{ m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::OUTLINE_POS_NOR_FORABILITY) };
+    {
+        spRenderTargetGroup0->WaitResourceToTarget(m_spCastingCommand);
+        spRenderTargetGroup0->ClearRenderTargetView(m_spCastingCommand);
+        spRenderTargetGroup0->OmSetRenderTargets(m_spCastingCommand);
+    }
+
+    for (auto& iter : m_arrActiveDrawRenderList[RENDERID::RI_NORPOS_FORABILITY])
+    {
+        RenderOutlineObject(iter.first, iter.second, false); //false°¡ NorPos true°¡ depth
+    }
+    spRenderTargetGroup0->WaitTargetToResource(m_spCastingCommand);
 
     SHPTR<URenderTargetGroup> spRenderTargetGroup{ m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::OUTLINE_POS_NOR) };
     {
@@ -962,6 +974,9 @@ void URenderer::RenderEnd()
         spDefferedShader->BindSRVBuffer(SRV_REGISTER::T5, m_spRenderTargetManager->
             FindRenderTargetTexture(RTGROUPID::OUTLINE_POS_NOR,
                 RTOBJID::OUTLINE_DEPTH_POS));
+        spDefferedShader->BindSRVBuffer(SRV_REGISTER::T9, m_spRenderTargetManager->
+            FindRenderTargetTexture(RTGROUPID::OUTLINE_POS_NOR_FORABILITY,
+                RTOBJID::OUTLINE_DEPTH_POS_FORABILITY));
       /*  spDefferedShader->BindSRVBuffer(SRV_REGISTER::T6, m_spRenderTargetManager->
             FindRenderTargetTexture(RTGROUPID::NONALPHA_DEFFERED,
                 RTOBJID::NONALPHA_SPECULAR_DEFFERED));*/
