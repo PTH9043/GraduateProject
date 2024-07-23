@@ -65,7 +65,7 @@ HRESULT CMob::NativeConstructClone(const VOIDDATAS& _Datas)
 	GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
 	SetTargetPlayer(nullptr);
 
-	m_isRecvDataToBehavior = true;
+	m_isSendDataToBehavior = true;
 
 #endif
 	return S_OK;

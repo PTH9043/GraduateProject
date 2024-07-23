@@ -41,6 +41,9 @@ public: /* Get Set */
 	const _bool& GetRiseState() const { return m_bisRise; }
 	void SetRiseState(_bool _newState) { m_bisRise = _newState; }
 
+	const _bool& GetIfOpenChest() const { return IfOpenChestForHeal; }
+	void SetIfOpenChest(_bool _newState) { IfOpenChestForHeal = _newState; }
+
 	const _double& GetWarriorKickedTimeElapsed() { return m_dKickedElapsed; }
 	void SetWarriorKickedTimeElapsed(_double _newTime) { m_dKickedElapsed = _newTime; }
 
@@ -69,6 +72,7 @@ private:
 	SHPTR<UParticle>										m_spHealParticle;
 	_float HealTimer = 0;
 	_bool HealTrigger = false;
+	_bool IfOpenChestForHeal = false;
 	PARTICLEPARAM* m_stParticleParam;
 	ComputeParticleType* m_stParticleType;
 

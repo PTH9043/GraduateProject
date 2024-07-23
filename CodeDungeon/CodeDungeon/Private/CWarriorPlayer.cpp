@@ -299,7 +299,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		m_spDust->SetActive(false);
 	}
 	
-	if (spGameInstance->GetDIKeyDown(DIK_E)) {//2.1초 지속
+	if (IfOpenChestForHeal) {//2.1초 지속
 		HealTrigger = true;
 		SetAnimModelRimColor(_float3(0, 1, 0));
 		m_spHealParticle->SetActive(true);
@@ -317,6 +317,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 			SetAnimModelRimColor(_float3(1, 0, 0));
 			HealTimer = 0;
 			HealTrigger = false;
+			IfOpenChestForHeal = false;
 		}
 	}
 

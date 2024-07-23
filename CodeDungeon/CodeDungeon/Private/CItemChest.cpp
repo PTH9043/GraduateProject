@@ -106,8 +106,11 @@ void CItemChest::TickActive(const _double& _dTimeDelta)
 	if (GetFoundTargetState())
 	{
 		static_pointer_cast<CWarriorPlayer>(GetTargetPlayer())->SetCanInteractState(true);
-		if (spGameInstance->GetDIKeyDown(DIK_F))
+		if (spGameInstance->GetDIKeyDown(DIK_F)&&!m_bisOpen) {
+			static_pointer_cast<CWarriorPlayer>(GetTargetPlayer())->SetIfOpenChest(true);
 			SetOpeningState(true);
+		}
+			
 	}
 	else
 	{
