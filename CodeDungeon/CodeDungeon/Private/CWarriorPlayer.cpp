@@ -195,7 +195,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetOutline(true);
 	SetifPlayer(true);//depth만 기록하고 outline안그리도록 다른 물체  outline depth판정위해
 	//SetIfOutlineScale(false); 만약 플레이어 그릴거면 SetifPlayer->false, SetIfOutlineScale->true
-	SetHealth(1);
+	SetHealth(1000);
 	SetMaxHealth(1000);
 	SetAnimModelRim(true);
 
@@ -270,14 +270,17 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
 	}
 
-	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_HIT) {
-		m_spBlood->SetActive(true);
-		SetAnimModelRimColor(_float3(1, 0,0));
-		m_spBlood->SetTimer(1.75f);
-		
-	}
-	if (m_spBlood->CheckTimeOver()) {
-		m_spBlood->SetActive(false);		
+	if (true == IsNetworkConnected())
+	{
+		if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_HIT) {
+			m_spBlood->SetActive(true);
+			SetAnimModelRimColor(_float3(1, 0, 0));
+			m_spBlood->SetTimer(1.75f);
+
+		}
+		if (m_spBlood->CheckTimeOver()) {
+			m_spBlood->SetActive(false);
+		}
 	}
 		
 	if (spGameInstance->GetDIKeyDown(DIK_F5)) {
@@ -369,23 +372,26 @@ void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
 
-	FollowCameraMove(_float3{ 0.f, 20.f, -40.f }, _dTimeDelta);
-	_float3 vCamPosition{ GetFollowCamera()->GetTransform()->GetPos() };
-	SHPTR<UNavigation> CamNavi = static_pointer_cast<CMainCamera>(GetFollowCamera())->GetCurrentNavi();
-	SHPTR<UCell> newCell{};
-	if(_float3::Distance(GetFollowCamera()->GetTransform()->GetPos(), GetTransform()->GetPos()) < 30)
+	if (nullptr != GetFollowCamera())
 	{
-		//카메라 네비 검사
-		if (false == CamNavi->IsMove(vCamPosition, REF_OUT newCell))
+		FollowCameraMove(_float3{ 0.f, 20.f, -40.f }, _dTimeDelta);
+		_float3 vCamPosition{ GetFollowCamera()->GetTransform()->GetPos() };
+		SHPTR<UNavigation> CamNavi = static_pointer_cast<CMainCamera>(GetFollowCamera())->GetCurrentNavi();
+		SHPTR<UCell> newCell{};
+		if (_float3::Distance(GetFollowCamera()->GetTransform()->GetPos(), GetTransform()->GetPos()) < 30)
 		{
-			_float3 closestPoint = CamNavi->ClampPositionToCell(vCamPosition);
-			GetFollowCamera()->GetTransform()->SetPos(_float3(closestPoint.x, vCamPosition.y, closestPoint.z));
-			vCamPosition = GetFollowCamera()->GetTransform()->GetPos();
+			//카메라 네비 검사
+			if (false == CamNavi->IsMove(vCamPosition, REF_OUT newCell))
+			{
+				_float3 closestPoint = CamNavi->ClampPositionToCell(vCamPosition);
+				GetFollowCamera()->GetTransform()->SetPos(_float3(closestPoint.x, vCamPosition.y, closestPoint.z));
+				vCamPosition = GetFollowCamera()->GetTransform()->GetPos();
+			}
 		}
-	}
-	else
-	{
-		GetFollowCamera()->GetTransform()->SetPos(GetTransform()->GetPos());
+		else
+		{
+			GetFollowCamera()->GetTransform()->SetPos(GetTransform()->GetPos());
+		}
 	}
 }
 

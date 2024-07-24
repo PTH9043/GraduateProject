@@ -473,124 +473,6 @@ void CMainScene::CreateAttackUI()
 	}
 }
 
-void CMainScene::CreateInteractUI()
-{
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	CImageUI::UIDESC tDesc;
-	{
-		tDesc.fZBufferOrder = 0.99f;
-		tDesc.strImgName = L"Key_F";
-		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
-		tDesc.DrawOrder = L"Last";
-		tDesc.v2Size.x = static_cast<_float>(75);
-		tDesc.v2Size.y = static_cast<_float>(75);
-		tDesc.v2Pos = _float2{ 450,200 };
-		m_spFKeyOpenChestTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
-		m_spFKeyOpenChestTextUI->SetActive(false);
-	}
-	{
-		tDesc.fZBufferOrder = 0.99f;
-		tDesc.strImgName = L"OpenChest";
-		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
-		tDesc.DrawOrder = L"Middle";
-		tDesc.v2Size.x = static_cast<_float>(800);
-		tDesc.v2Size.y = static_cast<_float>(140);
-		tDesc.v2Pos = _float2{ 640,200 };
-		m_spOpenChestTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
-		m_spOpenChestTextUI->SetActive(false);
-	}
-	{
-		tDesc.fZBufferOrder = 0.99f;
-		tDesc.strImgName = L"Key_F";
-		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
-		tDesc.DrawOrder = L"Last";
-		tDesc.v2Size.x = static_cast<_float>(75);
-		tDesc.v2Size.y = static_cast<_float>(75);
-		tDesc.v2Pos = _float2{ 700,200 };
-		m_spFKeyLiftCageTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
-		m_spFKeyLiftCageTextUI->SetActive(false);
-	}
-	{
-		tDesc.fZBufferOrder = 0.99f;
-		tDesc.strImgName = L"LiftText";
-		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
-		tDesc.DrawOrder = L"Middle";
-		tDesc.v2Size.x = static_cast<_float>(800);
-		tDesc.v2Size.y = static_cast<_float>(140);
-		tDesc.v2Pos = _float2{ 640,200 };
-		m_spLiftCageTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
-		m_spLiftCageTextUI->SetActive(false);
-	}
-	{
-		tDesc.fZBufferOrder = 0.99f;
-		tDesc.strImgName = L"XPBar_Background";
-		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
-		tDesc.DrawOrder = L"Middle";
-		tDesc.v2Size.x = static_cast<_float>(500);
-		tDesc.v2Size.y = static_cast<_float>(25);
-		tDesc.v2Pos = _float2{ 640,280 };
-		m_spLiftLoadGageBackgroundTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
-		m_spLiftLoadGageBackgroundTextUI->SetActive(false);
-	}
-	{
-		tDesc.fZBufferOrder = 0.99f;
-		tDesc.strImgName = L"XPBar_Fill";
-		tDesc._shaderName = PROTO_RES_GAGEUISHADER;
-		tDesc.DrawOrder = L"Last";
-		tDesc.v2Size.x = static_cast<_float>(500);
-		tDesc.v2Size.y = static_cast<_float>(25);
-		tDesc.v2Pos = _float2{ 640,280 };
-		m_spLiftFillGageBackgroundTextUI = std::static_pointer_cast<CLoadingUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_LOADINGUI, { &tDesc }));
-		m_spLiftFillGageBackgroundTextUI->SetActive(false);
-		m_spLiftFillGageBackgroundTextUI->SetDefaultCoolTime(4.f);
-	}
-	{
-		tDesc.fZBufferOrder = 0.99f;
-		tDesc.strImgName = L"Key_F";
-		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
-		tDesc.DrawOrder = L"Last";
-		tDesc.v2Size.x = static_cast<_float>(75);
-		tDesc.v2Size.y = static_cast<_float>(75);
-		tDesc.v2Pos = _float2{ 575,200 };
-		m_spFKeySaveCheckPointTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
-		m_spFKeySaveCheckPointTextUI->SetActive(false);
-	}
-	{
-		tDesc.fZBufferOrder = 0.99f;
-		tDesc.strImgName = L"Checkpoint";
-		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
-		tDesc.DrawOrder = L"Middle";
-		tDesc.v2Size.x = static_cast<_float>(800);
-		tDesc.v2Size.y = static_cast<_float>(140);
-		tDesc.v2Pos = _float2{ 640,200 };
-		m_spSaveCheckPointTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
-		m_spSaveCheckPointTextUI->SetActive(false);
-	}
-	{
-		tDesc.fZBufferOrder = 0.99f;
-		tDesc.strImgName = L"XPBar_Background";
-		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
-		tDesc.DrawOrder = L"Middle";
-		tDesc.v2Size.x = static_cast<_float>(500);
-		tDesc.v2Size.y = static_cast<_float>(25);
-		tDesc.v2Pos = _float2{ 640,280 };
-		m_spCheckPointLoadGageBackgroundTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
-		m_spCheckPointLoadGageBackgroundTextUI->SetActive(false);
-	}
-	{
-		tDesc.fZBufferOrder = 0.99f;
-		tDesc.strImgName = L"XPBar_Fill";
-		tDesc._shaderName = PROTO_RES_GAGEUISHADER;
-		tDesc.DrawOrder = L"Last";
-		tDesc.v2Size.x = static_cast<_float>(500);
-		tDesc.v2Size.y = static_cast<_float>(25);
-		tDesc.v2Pos = _float2{ 640,280 };
-		m_spCheckPointFillGageBackgroundTextUI = std::static_pointer_cast<CLoadingUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_LOADINGUI, { &tDesc }));
-		m_spCheckPointFillGageBackgroundTextUI->SetActive(false);
-		m_spCheckPointFillGageBackgroundTextUI->SetDefaultCoolTime(4.f);
-	}
-}
-
 void CMainScene::CreateStartSceneUI()
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
@@ -1223,7 +1105,6 @@ HRESULT CMainScene::LoadSceneData()
 #endif
 	CreateStartSceneUI();
 	CreateAbilityUI();
-	CreateInteractUI();
 	CreateAttackUI();
 	CreateKeyInfoUI();
 	CreateGameSceneUI();
@@ -1319,7 +1200,6 @@ HRESULT CMainScene::LoadSceneData()
 	}
 
 	m_spMap->LoadMobs(m_spWarriorPlayer);
-	m_spMap->LoadGuards();
 	//{
 	//	CMummy::CHARACTERDESC CharDesc{PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_MUMMYANIMCONTROLLER};
 	//	m_spMummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(
@@ -1352,6 +1232,9 @@ HRESULT CMainScene::LoadSceneData()
 
 	
 #endif
+
+	m_spMap->LoadGuards();
+	m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
 	return S_OK;
 }
 
@@ -1496,38 +1379,8 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 			m_spShortAttackIconUI->SetActive(true);
 			m_spShortAttackKeyIconUI->SetActive(true);
 		}
-		if (m_spWarriorPlayer->GetCanInteractChestState()) {
-			m_spOpenChestTextUI->SetActive(true);
-			m_spFKeyOpenChestTextUI->SetActive(true);
-		}
-		else {
-			m_spOpenChestTextUI->SetActive(false);
-			m_spFKeyOpenChestTextUI->SetActive(false);
-		}
-		if (m_spWarriorPlayer->GetCanInteractBarState()) {
-			m_spLiftCageTextUI->SetActive(true);
-			m_spFKeyLiftCageTextUI->SetActive(true);
-			m_spLiftLoadGageBackgroundTextUI->SetActive(true);
-			m_spLiftFillGageBackgroundTextUI->SetActive(true);
-		}
-		else {
-			m_spLiftCageTextUI->SetActive(false);
-			m_spFKeyLiftCageTextUI->SetActive(false);
-			m_spLiftLoadGageBackgroundTextUI->SetActive(false);
-			m_spLiftFillGageBackgroundTextUI->SetActive(false);
-		}
-		if (m_spWarriorPlayer->GetCanInteractStatueState()) {
-			m_spSaveCheckPointTextUI->SetActive(true);
-			m_spFKeySaveCheckPointTextUI->SetActive(true);
-			m_spCheckPointLoadGageBackgroundTextUI->SetActive(true);
-			m_spCheckPointFillGageBackgroundTextUI->SetActive(true);
-		}
-		else {
-			m_spSaveCheckPointTextUI->SetActive(false);
-			m_spFKeySaveCheckPointTextUI->SetActive(false);
-			m_spCheckPointLoadGageBackgroundTextUI->SetActive(false);
-			m_spCheckPointFillGageBackgroundTextUI->SetActive(false);
-		}
+	
+		m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
 	}
 }
 
@@ -1653,20 +1506,10 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 			m_spDetactAbilityIconUI->SetLeftCoolTime(r_AbilityCoolTime);
 			m_spShortAttackIconUI->SetLeftCoolTime(m_spWarriorPlayer->GetShortAttackCoolTime());
 		}
-		{	//Gage 
-			m_spLiftFillGageBackgroundTextUI->SetLeftCoolTime(m_spWarriorPlayer->GetInteractionElapsedTime());
-			m_spCheckPointFillGageBackgroundTextUI->SetLeftCoolTime(m_spWarriorPlayer->GetInteractionElapsedTime());
-		
-		}
 		
 		if (m_spWarriorPlayer->GetBlindEffectBool()) {
 			pGameInstance->TurnOnHitEffect();
-		}
-
-		if (m_spWarriorPlayer->GetDieEffectBool()) {
-			pGameInstance->TurnOnDieEffect();
-		}
-
+	}
 		if (pGameInstance->GetIfAbilityIsOn()) {
 			m_spRecUI->SetIfPicked(true);
 			m_spRecUI->SetActive(true);

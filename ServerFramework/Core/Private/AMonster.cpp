@@ -16,7 +16,8 @@ namespace Core
 		m_fDeactiveRange{0}, m_iMonsterType{0}, m_fDistanceToPlayer{-1},
 		m_isCurrentAtkPlayer{ false }, m_isCurrentFindPlayer { false}, m_isCurrentJustMove{ false },
 		m_fMoveSpeed { 0 }, m_CurrentTargetPlayerID{ -1 }, m_FindNextPosTimer{0.5, std::memory_order_seq_cst},
-		m_TargetPosLock{},  m_iNextPathIndex{0}, m_vTargetPos{}, m_isPathFinding{false}, m_isCurrentPlayerTargetChangeSituation{false}
+		m_TargetPosLock{},  m_iNextPathIndex{0}, m_vTargetPos{}, m_isPathFinding{false}, m_isCurrentPlayerTargetChangeSituation{false},
+		m_OwnerMonsterSessionID{-1}
 	{
 		m_FindNextPosTimer.fTimer = 100.f;
 		m_FindNextPosTimer.isPass = true;

@@ -58,13 +58,14 @@ namespace Server
 		}
 		SetAnimController(spSacrophagusAnimController);
 		spMummy->Start({ _ReceiveDatas[0] });
+		SetOwnerMonsterSessionID(spMummy->GetSessionID());
 		GetTransform()->SetNewWorldMtx(pMoveData->mWorldMatrix);
 		GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
 		BringCellIndextoPosition();
 		GetCoreInstance()->InsertMobObject(spMummy->GetSessionID(), spMummy);
 
-	//	if (SARCO_LAYING == m_eSarcophagusType)
-	//		spMummy->GetTransform()->TranslateDir((spMummy->GetTransform()->GetLook()), 1, 12);
+		if (SARCO_LAYING == m_eSarcophagusType)
+			spMummy->GetTransform()->TranslateDir((spMummy->GetTransform()->GetLook() * -1), 1, 10);
 #else
 		SHPTR<CSacrophagusAnimController> spSacrophagusAnimController = Create<CSacrophagusAnimController>(GetCoreInstance(), ThisShared<CSarcophagus>(),
 			"..\\..\\Resource\\Anim\\Sarcophagus\\", "SarcophagusLaying_FBX.bin", Matrix);
@@ -101,6 +102,7 @@ namespace Server
 
 	void CSarcophagus::ProcessPacket(_int _type, void* _pData)
 	{
+		__super::ProcessPacket(_type, _pData);
 	}
 
 	bool CSarcophagus::IsHit(APawn* _pPawn, const _double& _dTimeDelta)
