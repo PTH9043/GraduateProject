@@ -209,6 +209,7 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetDeactivationRange(180);
 	SetOutlineByAbility(true);
 
+	SetOutlineColor(_float3(1, 0, 0));
 	return S_OK;
 }
 
@@ -304,7 +305,12 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 		}
 
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-
+		if (spGameInstance->GetDIKeyPressing(DIK_H)) {
+			SetIfOutlineScale(true);
+		}
+		else {
+			SetIfOutlineScale(false);
+		}
 		// death animation
 		if (CurAnimState == UAnimationController::ANIM_DEATH)
 		{

@@ -195,7 +195,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetOutline(true);
 	SetifPlayer(true);//depth만 기록하고 outline안그리도록 다른 물체  outline depth판정위해
 	//SetIfOutlineScale(false); 만약 플레이어 그릴거면 SetifPlayer->false, SetIfOutlineScale->true
-	SetHealth(1);
+	SetHealth(20);
 	SetMaxHealth(1000);
 	SetAnimModelRim(true);
 

@@ -71,7 +71,8 @@ HRESULT UCharacter::NativeConstructClone(const VOIDDATAS& _Datas)
 		assert(nullptr != m_spCurNavi);
 	}
 	{
-		m_spScaleOutlineBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::BLOODTIMERBUFFER, sizeof(_bool));
+		m_spScaleOutlineBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::OUTLINESCALE, static_cast< _int>(sizeof(_bool)));
+		m_spColorOutlineBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::OUTLINECOLOR, static_cast< _int>(sizeof(_float3)));
 	}
 	AddShader(PROTO_RES_ANIMMODELSHADER, RES_SHADER);
 	AddOutlineShader(PROTO_RES_ANIMDEPTHRECORDSHADER, RES_SHADER);
@@ -272,7 +273,8 @@ HRESULT UCharacter::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRRE
 		{
 			// Bind Transform 
 			GetTransform()->BindTransformData(GetNorPosShader());
-			GetNorPosShader()->BindCBVBuffer(m_spScaleOutlineBuffer, &m_OutlineWithScale, sizeof(_bool));
+			GetNorPosShader()->BindCBVBuffer(m_spScaleOutlineBuffer, &m_OutlineifScale, static_cast<_int>(sizeof(_bool)));
+			GetNorPosShader()->BindCBVBuffer(m_spColorOutlineBuffer, &m_OutlineColor, static_cast<_int>(sizeof(_float3)));
 
 			// Render
 			m_spAnimModel->Render(i, GetNorPosShader(), _spCommand);

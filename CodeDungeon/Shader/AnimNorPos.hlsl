@@ -32,9 +32,16 @@ cbuffer PREVBONEMATRIXPARAM : register(b13)
     BONEMATRIX g_PrevBoneMatrix;
 };
 
-cbuffer USESCALEPARAM : register(b14)
+cbuffer OUTLINECOLOR : register(b9)
 {
+    float3 OutlineColor;
+}
+
+cbuffer USESCALEPARAM : register(b6)
+{
+ 
     bool ifUseScale;
+  
 };
 
 struct VS_IN
@@ -138,8 +145,9 @@ struct PS_OUT
 PS_OUT PS_Main(VS_OUT In) 
 {
     PS_OUT Out = (PS_OUT) 0;
-    Out.vColor.xyz = float3(255, 0, 0);
-    Out.vColor.w = In.vPosition.z / In.vPosition.w;
+    //Out.vColor.xyz = OutlineColor;
+    //Out.vColor.w = In.vPosition.z / In.vPosition.w;
+    Out.vColor = float4(OutlineColor, In.vPosition.z / In.vPosition.w);
     return Out;
 
 }
