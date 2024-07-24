@@ -331,19 +331,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
        else
            spAnimModel->TickAnimChangeTransform(spWarriorPlayer->GetTransform(), _dTimeDelta);
    }
-   
-
-
-#ifdef _ENABLE_PROTOBUFF
-   _int NetworkID = spGameInstance->GetNetworkOwnerID();
-   PLAYERSTATE csPlayerState;
-   PROTOFUNC::MakePlayerState(OUT& csPlayerState, NetworkID, isAttack,
-       GetAnimState(), isRunshift ? 30.f : 10.f, spAnimModel->GetCurrentAnimation()->GetDuration(),
-       spAnimModel->GetCurrentAnimIndex());
-   {
-       spGameInstance->SendProcessPacket(UProcessedData(csPlayerState, TAG_CS_PLAYERSTATE));
-   }
-#endif
+  
 }
 
 
