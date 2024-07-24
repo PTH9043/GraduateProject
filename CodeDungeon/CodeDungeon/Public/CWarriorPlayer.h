@@ -54,6 +54,10 @@ public: /* Get Set */
 	_bool GetCanInteractBarState() { return m_bCanInteractBar; }
 	void SetCanInteractStatueState(const _bool& _newState) { m_bCanInteractStatue = _newState; }
 	_bool GetCanInteractStatueState() { return m_bCanInteractStatue; }
+	void SetCheckpointSaveState(const _bool& _newState) { m_bSaveCheckpointStatue = _newState; }
+	_bool GetCheckpointSaveState() { return m_bSaveCheckpointStatue; }
+	void SetCanInteractGuardState(const _bool& _newState) { m_bCanInteractGuard = _newState; }
+	_bool GetCanInteractGuardState() { return m_bCanInteractGuard; }
 
 	_float GetInteractionElapsedTime() { return m_fInteractionTimeElapsed; }
 
@@ -108,6 +112,7 @@ private:
 	_bool											m_bCanInteractChest;
 	_bool											m_bCanInteractBar;
 	_bool											m_bCanInteractStatue;
+	_bool											m_bSaveCheckpointStatue;
 	_bool											m_bCanInteractGuard;
 
 	_float			m_fInteractionTimeElapsed=0;

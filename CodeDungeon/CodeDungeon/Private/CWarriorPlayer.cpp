@@ -535,8 +535,10 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							}
 							else {
 								m_fInteractionTimeElapsed = 0;
+								
 							}
 							if (m_fInteractionTimeElapsed > 4.f) {
+								m_bSaveCheckpointStatue = true;
 								pModelObject->SetInteractionState(true);
 								pModelObject->SetCheckPointToOtherColor(true);
 								SetSpawnPoint(GetCurrentNavi()->GetCurCell());
