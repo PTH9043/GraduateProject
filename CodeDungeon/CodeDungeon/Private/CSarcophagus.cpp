@@ -36,7 +36,7 @@ HRESULT CSarcophagus::NativeConstructClone(const VOIDDATAS& _Datas)
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	SetPawnType(PAWNTYPE::PAWN_STATICOBJ);
-	SetActivationRange(30);
+	SetActivationRange(60);
 	SetDeactivationRange(80);
 	/*UCollider::COLLIDERDESC tDesc;
 	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
@@ -62,7 +62,7 @@ void CSarcophagus::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
 
-	_double SarcophagusOpeningSpeed = 20;
+	_double SarcophagusOpeningSpeed = 40;
 	_double LyingSarcophagusTimeArcOpenStart = 50;
 	_double LyingSarcophagusTimeArcOpenEnd = 50;
 	_double StandingSarcophagusTimeArcOpenEnd = 30;

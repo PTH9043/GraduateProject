@@ -386,6 +386,7 @@ void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 	}
 	else
 	{
+		CamNavi->FindCell(GetTransform()->GetPos());
 		GetFollowCamera()->GetTransform()->SetPos(GetTransform()->GetPos());
 	}
 }
@@ -623,22 +624,22 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 				{
 					if (iter2.first == L"Main")
 					{
-						SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
+						//SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
 
-						if (GetCollidedNormal() != _float3::Zero) // 충돌이 발생한 경우
-						{
-							SetOBJCollisionState(true);
-							// 속도 결정
-							_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 60.0f : 20.0f;
-							if (CurAnimName == L"roll_back" || CurAnimName == L"roll_front" || CurAnimName == L"roll_left" || CurAnimName == L"roll_right")
-								GetTransform()->SetPos(GetPrevPos());
-							else
-								ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
-						}
-						else
-						{
-							SetOBJCollisionState(false);
-						}
+						//if (GetCollidedNormal() != _float3::Zero) // 충돌이 발생한 경우
+						//{
+						//	SetOBJCollisionState(true);
+						//	// 속도 결정
+						//	_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 60.0f : 20.0f;
+						//	if (CurAnimName == L"roll_back" || CurAnimName == L"roll_front" || CurAnimName == L"roll_left" || CurAnimName == L"roll_right")
+						//		GetTransform()->SetPos(GetPrevPos());
+						//	else
+						//		ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
+						//}
+						//else
+						//{
+						//	SetOBJCollisionState(false);
+						//}
 					}
 					else if (iter2.first == L"ForInteractionGuard")
 					{

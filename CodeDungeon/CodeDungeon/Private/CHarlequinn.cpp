@@ -378,7 +378,7 @@ void CHarlequinn::LateTickActive(const _double& _dTimeDelta)
 
 	const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
 
-	if(CurAnimName != L"Jump Forward" && CurAnimName != L"Attack 4" && CurAnimName != L"Attack")
+	if(CurAnimName != L"Jump Forward" && CurAnimName != L"Attack 4" && CurAnimName != L"Attack 3")
 	{
 		_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
 		GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));

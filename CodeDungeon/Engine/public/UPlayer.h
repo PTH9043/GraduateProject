@@ -47,6 +47,7 @@ public:
 
 	const _bool& GetFallOverState() { return m_bisFallOver; }
 	void SetFallOverState(const _bool& _fallstate) { m_bisFallOver = _fallstate; }
+	CSHPTRREF<UCamera> GetFollowCamera() const { return m_spFollowCamera; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) PURE;
 	virtual void LateTickActive(const _double& _dTimeDelta) PURE;
@@ -58,7 +59,7 @@ protected:
 	void FollowCameraMove(const _float3& _vPlayerToDistancePosition, const _double& _TimeElapsed);
 	void JumpState(const _double& _dTimeDelta);
 protected: /* get set */
-	CSHPTRREF<UCamera> GetFollowCamera() const { return m_spFollowCamera; }
+
 private:
 	SHPTR<UCamera>		m_spFollowCamera;
 	_bool								m_bisJumping;

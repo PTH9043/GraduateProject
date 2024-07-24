@@ -84,19 +84,17 @@ void CMimicAnimController::Tick(const _double& _dTimeDelta)
     _float AttackRange = 10.0f;
 
     // Handle found player state
-    if (FoundPlayer && !m_bFoundPlayerFirsttime)
+    if (FoundPlayer)
     {
-        UpdateState(spAnimModel, ANIM_AWAKE, L"WAKEUP");
-        m_bFoundPlayerFirsttime = true;
-        m_dIdleTimer = 0;
+        m_bAttackMode = true;
     }
-    else if (!FoundPlayer && m_bFoundPlayerFirsttime)
+    else
     {
         // Handle idle mode with 1/3 probability and 3-second duration
         m_bAttackMode = false;
         m_bTauntMode = false;
         //Idle Timer
-        if (CurAnimName == L"idle")
+        if (CurAnimName == L"Idle")
         {
             m_dIdleTimer += _dTimeDelta;
             if (m_dIdleTimer >= 2.0)
@@ -126,32 +124,12 @@ void CMimicAnimController::Tick(const _double& _dTimeDelta)
             }
         }
     }
-    else if (FoundPlayer && m_bFoundPlayerFirsttime)
-    {
-        m_bTauntMode = true;
-        m_dIdleTimer = 0;
-    }
 
-    // Handle taunt mode state
-    if (CurAnimName == L"openLaying" || CurAnimName == L"openStanding")
-    {
-        m_bTauntMode = true;
-    }
-
-    if (m_bTauntMode)
-    {
-        UpdateState(spAnimModel, ANIM_TAUNT, L"TAUNT");
-        if (CurAnimName == L"taunt")
-        {
-            m_bAttackMode = true;
-            m_bTauntMode = false;
-        }
-    }
 
     // Handle hit state
     if (Hit)
     {
-        spAnimModel->SetAnimation(L"gotHit");
+        spAnimModel->SetAnimation(L"Hit");
         spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         spMimic->SetPrevHealth(spMimic->GetHealth());
     }
@@ -168,11 +146,11 @@ void CMimicAnimController::Tick(const _double& _dTimeDelta)
 
         if (DistanceFromPlayer > AttackRange)
         {
-            UpdateState(spAnimModel, ANIM_MOVE, L"WALKF");
+            UpdateState(spAnimModel, ANIM_MOVE, L"WALK");
         }
         else
         {
-            UpdateState(spAnimModel, m_blastAttackWasFirst ? ANIM_ATTACK : ANIM_ATTACK, m_blastAttackWasFirst ? L"ATTACK02" : L"ATTACK01");
+            UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK");
         }
     }
 
