@@ -33,6 +33,8 @@ public:
 	void SetIfOutlineScale(_bool _Draw) { m_OutlineWithScale = _Draw; }
 	const _bool& GetOutlineScaleState()const { return m_OutlineWithScale; }
 
+	void SetCheckPointToOtherColor(_bool _true) { isCheckpoint = _true; }
+
 	const _bool& GetInteractionState() { return m_bisInteraction; }
 	void SetInteractionState(const _bool& _newState) { m_bisInteraction = _newState; }
 protected:
@@ -45,6 +47,8 @@ protected:
 private:
 	SHPTR<UModel>								m_spModel;
 	SHPTR<UShaderConstantBuffer>				m_spShaderTexCheckBuffer;
+	SHPTR<UShaderConstantBuffer>				m_spShaderCheckPointBuffer;
+	_bool isCheckpoint;
 	SHPTR< UShaderConstantBuffer>						m_spScaleOutlineBuffer;
 	int HasTex[4]{};
 

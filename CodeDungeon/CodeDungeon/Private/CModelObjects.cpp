@@ -35,6 +35,7 @@ HRESULT CModelObjects::NativeConstructClone(const VOIDDATAS& _vecDatas)
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	m_spShaderTexCheckBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::MODELCHECKBUF, static_cast<_int>(sizeof(HasTex)));
+	m_spShaderCheckPointBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::OUTLINESCALE, sizeof(_bool));
 	{
 		m_spScaleOutlineBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::BLOODTIMERBUFFER, sizeof(_bool));
 	}
@@ -118,6 +119,7 @@ HRESULT CModelObjects::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UT
 
 
 			GetShader()->BindCBVBuffer(m_spShaderTexCheckBuffer, &HasTex, sizeof(HasTex));
+			GetShader()->BindCBVBuffer(m_spShaderCheckPointBuffer, &isCheckpoint, sizeof(_bool));
 			// Render
 			m_spModel->Render(i, GetShader(), _spCommand);
 		}

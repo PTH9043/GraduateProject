@@ -537,6 +537,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							}
 							if (m_fInteractionTimeElapsed > 4.f) {
 								pModelObject->SetInteractionState(true);
+								pModelObject->SetCheckPointToOtherColor(true);
 								SetSpawnPoint(GetCurrentNavi()->GetCurCell());
 								SetSpawnPointCamera(static_pointer_cast<CMainCamera>(GetFollowCamera())->GetCurrentNavi()->GetCurCell());
 								SetSpawnPoint(GetTransform()->GetPos());
