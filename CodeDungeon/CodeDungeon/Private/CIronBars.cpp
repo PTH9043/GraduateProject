@@ -33,6 +33,7 @@ HRESULT CIronBars::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_vecDatas), E_FAIL);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
+
 	SetModel(L"Proto_Res_Model_Bars_FBX.bin");
 
 	IRONBARSDESC tBarsDesc = UMethod::ConvertTemplate_Index<IRONBARSDESC>(_vecDatas, 0);

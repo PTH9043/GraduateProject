@@ -362,6 +362,10 @@ void CAnubis::LateTickActive(const _double& _dTimeDelta)
 	{
 		if (GetElapsedTime() >= 100.0)
 		{
+			m_spBloodParticle->SetActive(false);
+				m_spSlashParticle->SetActive(false);
+				m_spAttackParticle->SetActive(false);
+				m_spAttackParticleTwo->SetActive(false);
 			SetActive(false);
 			spGameInstance->RemoveCollisionPawn(ThisShared<CMob>());
 		}

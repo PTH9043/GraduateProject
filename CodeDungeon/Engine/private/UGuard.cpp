@@ -14,7 +14,7 @@
 
 UGuard::UGuard(CSHPTRREF<UDevice> _spDevice,
 	const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
-	: UPawn(_spDevice, _wstrLayer, _eCloneType, BACKINGTYPE::NON),
+	: UPawn(_spDevice, _wstrLayer, _eCloneType, BACKINGTYPE::NON, PAWNTYPE::PAWN_ECT),
 	m_spVIBufferRect{ nullptr }
 {
 }
@@ -47,6 +47,21 @@ HRESULT UGuard::NativeConstructClone(const VOIDDATAS& _vecDatas)
 
 	if (m_spGuardTexGroup == nullptr)m_spGuardTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_GUARDTEXTUREGROUP, _vecDatas));
 
+	UCollider::COLLIDERDESC tDesc;
+	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
+	tDesc.vScale = _float3(0, 0, 0);
+	SHPTR<UCollider> Collider1 = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
+	_wstring mainColliderTag = L"Main";
+	AddColliderInContainer(mainColliderTag, Collider1);
+
+	UCollider::COLLIDERDESC tDesc2;
+	tDesc2.vTranslation = _float3(0.f, 0.f, 0.f);
+	tDesc2.vScale = _float3(0, 0, 0);
+	SHPTR<UCollider> Collider2 = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc2 }));
+	_wstring subColliderTag = L"ForInteractionGuard";
+	AddColliderInContainer(subColliderTag, Collider2);
+
+	/*SetPawnType(PAWNTYPE::PAWN_STATICOBJ);*/
 
 	// Add Shader 
 	AddShader(PROTO_RES_GUARDSHADER);
@@ -56,8 +71,14 @@ HRESULT UGuard::NativeConstructClone(const VOIDDATAS& _vecDatas)
 
 void UGuard::TickActive(const _double& _dTimeDelta)
 {
-	
-
+	for (auto& Containers : GetColliderContainer())
+	{
+		if(Containers.first == L"Main")
+			Containers.second->SetScale(_float3(40, 40, 0));
+		else
+			Containers.second->SetScale(_float3(40, 40, 10));
+		Containers.second->SetTransform(GetTransform()->GetPos(), GetTransform()->GetQuaternion());
+	}
 }
 
 
@@ -66,7 +87,11 @@ void UGuard::LateTickActive(const _double& _dTimeDelta)
 {
 
 	AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
-
+	//for (auto& Colliders : GetColliderContainer())
+	//{
+	//	if (Colliders.first == L"Main")
+	//		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
+	//}
 }
 
 HRESULT UGuard::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)

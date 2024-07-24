@@ -100,7 +100,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
         if (CurAnimName == L"idle")
         {
             m_dIdleTimer += _dTimeDelta;
-            if (m_dIdleTimer >= 2.0)
+            if (m_dIdleTimer >= 1.0)
             {
                 m_dIdleTimer = 0.0;
             }
@@ -112,7 +112,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
         if (m_dIdleTimer == 0)
         {
             m_didleRandomValueChoosingTimer += _dTimeDelta;
-            if (m_didleRandomValueChoosingTimer > 2)
+            if (m_didleRandomValueChoosingTimer > 3)
             {
                 m_iRandomValue = dis_patrol(gen);
             }
@@ -121,6 +121,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
             {
                 UpdateState(spAnimModel, ANIM_IDLE, L"IDLE");
             }
+
             else if (m_iRandomValue != 0)
             {
                 UpdateState(spAnimModel, ANIM_MOVE, L"WALKF");

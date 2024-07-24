@@ -13,6 +13,7 @@
 #include "CMob.h"
 #include "UCollider.h"
 #include "UProcessedData.h"
+#include "UAnimation.h"
 
 CMob::CMob(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UCharacter(_spDevice, _wstrLayer, _eCloneType),
@@ -78,6 +79,7 @@ HRESULT CMob::NativeConstructClone(const VOIDDATAS& _Datas)
 void CMob::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
+
 	if (true == IsSendDataToBehavior())
 	{
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
