@@ -489,6 +489,180 @@ void CMainScene::CreateAttackUI()
 	}
 }
 
+void CMainScene::CreateInteractUI()
+{
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	CImageUI::UIDESC tDesc;
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"Key_F";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(75);
+		tDesc.v2Size.y = static_cast<_float>(75);
+		tDesc.v2Pos = _float2{ 450,200 };
+		m_spFKeyOpenChestTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spFKeyOpenChestTextUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"OpenChest";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Middle";
+		tDesc.v2Size.x = static_cast<_float>(800);
+		tDesc.v2Size.y = static_cast<_float>(140);
+		tDesc.v2Pos = _float2{ 640,200 };
+		m_spOpenChestTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spOpenChestTextUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"Key_F";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(75);
+		tDesc.v2Size.y = static_cast<_float>(75);
+		tDesc.v2Pos = _float2{ 700,200 };
+		m_spFKeyLiftCageTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spFKeyLiftCageTextUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"LiftText";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Middle";
+		tDesc.v2Size.x = static_cast<_float>(800);
+		tDesc.v2Size.y = static_cast<_float>(140);
+		tDesc.v2Pos = _float2{ 640,200 };
+		m_spLiftCageTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spLiftCageTextUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"XPBar_Background";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Middle";
+		tDesc.v2Size.x = static_cast<_float>(500);
+		tDesc.v2Size.y = static_cast<_float>(25);
+		tDesc.v2Pos = _float2{ 640,280 };
+		m_spLiftLoadGageBackgroundTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spLiftLoadGageBackgroundTextUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"XPBar_Fill";
+		tDesc._shaderName = PROTO_RES_GAGEUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(500);
+		tDesc.v2Size.y = static_cast<_float>(25);
+		tDesc.v2Pos = _float2{ 640,280 };
+		m_spLiftFillGageBackgroundTextUI = std::static_pointer_cast<CLoadingUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_LOADINGUI, { &tDesc }));
+		m_spLiftFillGageBackgroundTextUI->SetActive(false);
+		m_spLiftFillGageBackgroundTextUI->SetDefaultCoolTime(4.f);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"Key_F";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(75);
+		tDesc.v2Size.y = static_cast<_float>(75);
+		tDesc.v2Pos = _float2{ 575,200 };
+		m_spFKeySaveCheckPointTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spFKeySaveCheckPointTextUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"Checkpoint";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Middle";
+		tDesc.v2Size.x = static_cast<_float>(800);
+		tDesc.v2Size.y = static_cast<_float>(140);
+		tDesc.v2Pos = _float2{ 640,200 };
+		m_spSaveCheckPointTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spSaveCheckPointTextUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"CheckPointSaved";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Middle";
+		tDesc.v2Size.x = static_cast<_float>(800);
+		tDesc.v2Size.y = static_cast<_float>(140);
+		tDesc.v2Pos = _float2{ 640,200 };
+		m_spCheckPointCompleteTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spCheckPointCompleteTextUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"XPBar_Background";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Middle";
+		tDesc.v2Size.x = static_cast<_float>(500);
+		tDesc.v2Size.y = static_cast<_float>(25);
+		tDesc.v2Pos = _float2{ 640,280 };
+		m_spCheckPointLoadGageBackgroundTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spCheckPointLoadGageBackgroundTextUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"XPBar_Fill";
+		tDesc._shaderName = PROTO_RES_GAGEUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(500);
+		tDesc.v2Size.y = static_cast<_float>(25);
+		tDesc.v2Pos = _float2{ 640,280 };
+		m_spCheckPointFillGageBackgroundTextUI = std::static_pointer_cast<CLoadingUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_LOADINGUI, { &tDesc }));
+		m_spCheckPointFillGageBackgroundTextUI->SetActive(false);
+		m_spCheckPointFillGageBackgroundTextUI->SetDefaultCoolTime(4.f);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"GuardText";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Middle";
+		tDesc.v2Size.x = static_cast<_float>(800);
+		tDesc.v2Size.y = static_cast<_float>(140);
+		tDesc.v2Pos = _float2{ 640,200 };
+		m_spCollideGuardTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spCollideGuardTextUI->SetActive(false);
+	}
+
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"Wasted";
+		tDesc._shaderName = PROTO_RES_PLEASEWAITUISHADER;
+		tDesc.DrawOrder = L"Middle";
+		tDesc.v2Size.x = static_cast<_float>(450);
+		tDesc.v2Size.y = static_cast<_float>(150);
+		tDesc.v2Pos = _float2{ 640,540 };
+		m_spDieTextUI = std::static_pointer_cast<CLoadingUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_LOADINGUI, { &tDesc }));
+		m_spDieTextUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"PressRespawn";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Middle";
+		tDesc.v2Size.x = static_cast<_float>(800);
+		tDesc.v2Size.y = static_cast<_float>(140);
+		tDesc.v2Pos = _float2{ 640,200 };
+		m_spDieReviveTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spDieReviveTextUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"Key_G";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(50);
+		tDesc.v2Size.y = static_cast<_float>(50);
+		tDesc.v2Pos = _float2{ 420,200 };
+		m_spDieKeyGUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spDieKeyGUI->SetActive(false);
+	}
+}
+
 void CMainScene::CreateStartSceneUI()
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
@@ -887,11 +1061,11 @@ void CMainScene::CreateKeyInfoUI()
 	}
 	{
 		tDesc5.fZBufferOrder = 0.43f;
-		tDesc5.strImgName = L"JumpStandUp";
+		tDesc5.strImgName = L"Jump";
 		tDesc5._shaderName = PROTO_RES_DEFAULTHIGHLIGHTUISHADER;
 		tDesc5.DrawOrder = L"Last";
-		tDesc5.v2Size.x = static_cast<_float>(240);
-		tDesc5.v2Size.y = static_cast<_float>(75);
+		tDesc5.v2Size.x = static_cast<_float>(120);
+		tDesc5.v2Size.y = static_cast<_float>(50);
 		tDesc5.v2Pos = _float2{ 925,315 };
 		m_spJUMPSTANDUPTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
 		m_spJUMPSTANDUPTextUI->SetActive(false);
@@ -1009,6 +1183,28 @@ void CMainScene::CreateKeyInfoUI()
 		m_spROLLTextUI->SetActive(false);
 	}
 
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"Key_G";
+		tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(50);
+		tDesc5.v2Size.y = static_cast<_float>(50);
+		tDesc5.v2Pos = _float2{ 525,600 };
+		m_spREVIVEUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spREVIVEUI->SetActive(false);
+	}
+	{
+		tDesc5.fZBufferOrder = 0.43f;
+		tDesc5.strImgName = L"Revive";
+		tDesc5._shaderName = PROTO_RES_DEFAULTHIGHLIGHTUISHADER;
+		tDesc5.DrawOrder = L"Last";
+		tDesc5.v2Size.x = static_cast<_float>(100);
+		tDesc5.v2Size.y = static_cast<_float>(50);
+		tDesc5.v2Pos = _float2{ 525,650 };
+		m_spREVIVETextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spREVIVETextUI->SetActive(false);
+	}
 
 	{
 		tDesc5.fZBufferOrder = 0.43f;
@@ -1353,6 +1549,8 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 				m_spDETACTABILITYTextUI->SetActive(true);
 				m_spROLLUI->SetActive(true);
 				m_spROLLTextUI->SetActive(true);
+				m_spREVIVEUI->SetActive(true);
+				m_spREVIVETextUI->SetActive(true);
 				m_spCOMBOATTACKONEUI->SetActive(true);
 				m_spCOMBOATTACKONETextUI->SetActive(true);
 				m_spCOMBOATTACKTWOUI->SetActive(true);
@@ -1379,6 +1577,8 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 				m_spDETACTABILITYTextUI->SetActive(false);
 				m_spROLLUI->SetActive(false);
 				m_spROLLTextUI->SetActive(false);
+				m_spREVIVEUI->SetActive(false);
+				m_spREVIVETextUI->SetActive(false);
 				m_spCOMBOATTACKONEUI->SetActive(false);
 				m_spCOMBOATTACKONETextUI->SetActive(false);
 				m_spCOMBOATTACKTWOUI->SetActive(false);
@@ -1407,6 +1607,81 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 		}
 	
 		m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
+		
+		//상자 충돌 시
+			if (m_spWarriorPlayer->GetCanInteractChestState()) {
+				m_spOpenChestTextUI->SetActive(true);
+				m_spFKeyOpenChestTextUI->SetActive(true);
+			}
+			else {
+				m_spOpenChestTextUI->SetActive(false);
+				m_spFKeyOpenChestTextUI->SetActive(false);
+			}
+			//철창 충돌시
+			if (m_spWarriorPlayer->GetCanInteractBarState()) {
+				m_spLiftCageTextUI->SetActive(true);
+				m_spFKeyLiftCageTextUI->SetActive(true);
+				m_spLiftLoadGageBackgroundTextUI->SetActive(true);
+				m_spLiftFillGageBackgroundTextUI->SetActive(true);
+			}
+			else {
+				m_spLiftCageTextUI->SetActive(false);
+				m_spFKeyLiftCageTextUI->SetActive(false);
+				m_spLiftLoadGageBackgroundTextUI->SetActive(false);
+				m_spLiftFillGageBackgroundTextUI->SetActive(false);
+			}
+			//석상 충돌 시
+			if (m_spWarriorPlayer->GetCanInteractStatueState()) {
+				m_spSaveCheckPointTextUI->SetActive(true);
+				m_spFKeySaveCheckPointTextUI->SetActive(true);
+				m_spCheckPointLoadGageBackgroundTextUI->SetActive(true);
+				m_spCheckPointFillGageBackgroundTextUI->SetActive(true);
+			}
+			else {
+				m_spSaveCheckPointTextUI->SetActive(false);
+				m_spFKeySaveCheckPointTextUI->SetActive(false);
+				m_spCheckPointLoadGageBackgroundTextUI->SetActive(false);
+				m_spCheckPointFillGageBackgroundTextUI->SetActive(false);
+			}
+			//가드 충돌시
+			if (m_spWarriorPlayer->GetCanInteractGuardState()) {
+				m_spCollideGuardTextUI->SetActive(true);
+			}
+			else {
+				m_spCollideGuardTextUI->SetActive(false);
+			}
+			// 체크포인트 저장시
+			if (m_spWarriorPlayer->GetCheckpointSaveState()) {
+				m_spCheckPointCompleteTextUI->SetActive(true);
+				m_spSaveCheckPointTextUI->SetActive(false);
+				m_spFKeySaveCheckPointTextUI->SetActive(false);
+				m_spCheckPointLoadGageBackgroundTextUI->SetActive(false);
+				m_spCheckPointFillGageBackgroundTextUI->SetActive(false);
+				CheckPointCompleteElapsedTime += _dTimeDelta;
+				if (CheckPointCompleteElapsedTime > 1.f) { 
+					CheckPointCompleteElapsedTime = 0;
+					m_spWarriorPlayer->SetCheckpointSaveState(false);
+				}
+			}
+			else {
+				m_spCheckPointCompleteTextUI->SetActive(false);
+			}
+			//플레이어 죽거나 , 단축키 설명 창 펼칠 시
+			if (m_spWarriorPlayer->GetDeathState()||spGameInstance->GetDIKeyPressing(DIK_TAB)) {
+				m_spOpenChestTextUI->SetActive(false);
+				m_spFKeyOpenChestTextUI->SetActive(false);
+				m_spLiftCageTextUI->SetActive(false);
+				m_spFKeyLiftCageTextUI->SetActive(false);
+				m_spLiftLoadGageBackgroundTextUI->SetActive(false);
+				m_spLiftFillGageBackgroundTextUI->SetActive(false);
+				m_spSaveCheckPointTextUI->SetActive(false);
+				m_spCheckPointCompleteTextUI->SetActive(false);
+				m_spFKeySaveCheckPointTextUI->SetActive(false);
+				m_spCheckPointLoadGageBackgroundTextUI->SetActive(false);
+				m_spCheckPointFillGageBackgroundTextUI->SetActive(false);
+				m_spCollideGuardTextUI->SetActive(false);
+			}
+		
 	}
 }
 
@@ -1506,6 +1781,20 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 			m_spAnubisHpBarUI->SetActive(false);
 		}
 		
+	}
+	{//if Die
+		if (m_spWarriorPlayer->GetDeathState()) {
+			m_spDieTextUI->SetActive(true);
+			m_spDieTextUI->SetIfPicked(true);
+			m_spDieKeyGUI->SetActive(true);
+			m_spDieReviveTextUI->SetActive(true);
+		}
+		else {
+			m_spDieTextUI->SetActive(false);
+			m_spDieTextUI->SetIfPicked(false);
+			m_spDieKeyGUI->SetActive(false);
+			m_spDieReviveTextUI->SetActive(false);
+		}
 	}
 	{  // If Use R Ability
 		if (pGameInstance->GetDIKeyDown(DIK_R) && m_bStartGameForUI && !pGameInstance->GetIfAbilityIsOn()&& r_AbilityisAvailable)

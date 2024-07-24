@@ -111,6 +111,9 @@ private:
 	SHPTR<CImageUI>			m_spCOMBOATTACKTWOUI;
 	SHPTR<CImageUI>			m_spCOMBOATTACKTWOTextUI;
 
+	SHPTR<CImageUI>			m_spREVIVEUI;
+	SHPTR<CImageUI>			m_spREVIVETextUI;
+
 	//------------START SCENE UI-------------------
 	SHPTR<CImageUI>			m_spBackgroundUI;
 	SHPTR<CImageUI>			m_spMainTitleUI;
@@ -180,6 +183,8 @@ private:
 	SHPTR<CImageUI>			m_spOpenChestTextUI;
 	SHPTR<CImageUI>			m_spLiftCageTextUI;
 	SHPTR<CImageUI>			m_spSaveCheckPointTextUI;
+	SHPTR<CImageUI>			m_spCheckPointCompleteTextUI;
+	_float CheckPointCompleteElapsedTime = 0;
 	SHPTR<CImageUI>			m_spFKeyOpenChestTextUI;
 	SHPTR<CImageUI>			m_spFKeyLiftCageTextUI;
 	SHPTR<CImageUI>			m_spFKeySaveCheckPointTextUI;
@@ -188,6 +193,13 @@ private:
 	SHPTR<CLoadingUI>			m_spLiftFillGageBackgroundTextUI;
 	SHPTR<CImageUI>			m_spCheckPointLoadGageBackgroundTextUI;
 	SHPTR<CLoadingUI>			m_spCheckPointFillGageBackgroundTextUI;
+
+	SHPTR<CImageUI>			m_spCollideGuardTextUI;
+	
+	//================IF DIE============
+	SHPTR<CLoadingUI>			m_spDieTextUI;
+	SHPTR<CImageUI>			m_spDieKeyGUI;
+	SHPTR<CImageUI>			m_spDieReviveTextUI;
 };
 
 END
