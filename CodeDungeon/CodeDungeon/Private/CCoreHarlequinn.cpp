@@ -40,7 +40,7 @@ HRESULT CCoreHarlequinn::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	SetPawnType(PAWNTYPE::PAWN_STATICOBJ);
 	SetActive(false);
 	SetOutline(true);
-	SetIfOutlineScale(true);
+
 	return S_OK;
 }
 

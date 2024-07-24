@@ -195,7 +195,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetOutline(true);
 	SetifPlayer(true);//depth만 기록하고 outline안그리도록 다른 물체  outline depth판정위해
 	//SetIfOutlineScale(false); 만약 플레이어 그릴거면 SetifPlayer->false, SetIfOutlineScale->true
-	SetHealth(20);
+	SetHealth(1);
 	SetMaxHealth(1000);
 	SetAnimModelRim(true);
 
@@ -536,6 +536,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							}
 							if (m_fInteractionTimeElapsed > 4.f) {
 								pModelObject->SetInteractionState(true);
+								pModelObject->SetCheckPointToOtherColor(true);
 								SetSpawnPoint(GetCurrentNavi()->GetCurCell());
 								SetSpawnPoint(GetTransform()->GetPos());
 								//pModelObject->SetOutline(false);
@@ -618,36 +619,36 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 			{
 				for (auto& iter2 : pGuard->GetColliderContainer())
 				{
-					if (iter2.first == L"Main")
-					{
-						SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
+					//if (iter2.first == L"Main")
+					//{
+					//	SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
 
-						if (GetCollidedNormal() != _float3::Zero) // 충돌이 발생한 경우
-						{
-							SetOBJCollisionState(true);
-							// 속도 결정
-							_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 60.0f : 20.0f;
-							if (CurAnimName == L"roll_back" || CurAnimName == L"roll_front" || CurAnimName == L"roll_left" || CurAnimName == L"roll_right")
-								GetTransform()->SetPos(GetPrevPos());
-							else
-								ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
-						}
-						else
-						{
-							SetOBJCollisionState(false);
-						}
-					}
-					else if (iter2.first == L"ForInteractionGuard")
-					{
-						if (iter.second->IsCollision(iter2.second))
-						{
-							m_bCanInteractGuard = true;
-						}
-						else
-						{
-							m_bCanInteractGuard = false;
-						}
-					}
+					//	if (GetCollidedNormal() != _float3::Zero) // 충돌이 발생한 경우
+					//	{
+					//		SetOBJCollisionState(true);
+					//		// 속도 결정
+					//		_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 60.0f : 20.0f;
+					//		if (CurAnimName == L"roll_back" || CurAnimName == L"roll_front" || CurAnimName == L"roll_left" || CurAnimName == L"roll_right")
+					//			GetTransform()->SetPos(GetPrevPos());
+					//		else
+					//			ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
+					//	}
+					//	else
+					//	{
+					//		SetOBJCollisionState(false);
+					//	}
+					//}
+					//else if (iter2.first == L"ForInteractionGuard")
+					//{
+					//	if (iter.second->IsCollision(iter2.second))
+					//	{
+					//		m_bCanInteractGuard = true;
+					//	}
+					//	else
+					//	{
+					//		m_bCanInteractGuard = false;
+					//	}
+					//}
 				}
 			}
 		}
