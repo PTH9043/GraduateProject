@@ -80,6 +80,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	GetTransform()->SetPos(spCell->GetCenterPos());
 	SetSpawnPoint(spCell);
 	SetSpawnPoint(spCell->GetCenterPos());
+	SetSpawnPointCamera(static_pointer_cast<CMainCamera>(GetFollowCamera())->GetCurrentNavi()->FindCell(GetTransform()->GetPos()));
 
 	SHPTR<CMainCamera> spMainCamera = std::static_pointer_cast<CMainCamera>(GetFollowCamera());
 	if (nullptr != spMainCamera)
@@ -542,7 +543,9 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							}
 							if (m_fInteractionTimeElapsed > 4.f) {
 								pModelObject->SetInteractionState(true);
+								pModelObject->SetCheckPointToOtherColor(true);
 								SetSpawnPoint(GetCurrentNavi()->GetCurCell());
+								SetSpawnPointCamera(static_pointer_cast<CMainCamera>(GetFollowCamera())->GetCurrentNavi()->GetCurCell());
 								SetSpawnPoint(GetTransform()->GetPos());
 								//pModelObject->SetOutline(false);
 							}

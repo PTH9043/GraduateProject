@@ -11,11 +11,11 @@ class UShaderConstantBuffer;
 /*
 @ Date: 2024-02-25, Writer: ������
 @ Explain
--  ����ڰ� �����̰ų� AI�� ������ �� ����ϴ� Ŭ�����̴�. 
+-  ����ڰ� �����̰ų� AI�� ������ �� ����ϴ� Ŭ�����̴�.
 */
 class UCharacter abstract : public UPawn {
 public:
-	enum{
+	enum {
 		CHARACTERDESCORDER = 0
 	};
 	struct CHARACTERDESC {
@@ -23,13 +23,14 @@ public:
 		_wstring		wstrAnimControllerProtoData;
 		_bool			isNetworkConnected;
 
-		CHARACTERDESC() :wstrAnimModelProtoData{L" "}, wstrAnimControllerProtoData{L" "}, isNetworkConnected{false}
+		CHARACTERDESC() :wstrAnimModelProtoData{ L" " }, wstrAnimControllerProtoData{ L" " }, isNetworkConnected{ false }
 		{ }
-		CHARACTERDESC(const _wstring& _wstrAnimModelPathData, const _wstring& _wstrAnimControllerProtoData, 
+		CHARACTERDESC(const _wstring& _wstrAnimModelPathData, const _wstring& _wstrAnimControllerProtoData,
 			const _bool _isNetworkConnected = false) :
-			wstrAnimModelProtoData{ _wstrAnimModelPathData }, wstrAnimControllerProtoData{ _wstrAnimControllerProtoData }, 
+			wstrAnimModelProtoData{ _wstrAnimModelPathData }, wstrAnimControllerProtoData{ _wstrAnimControllerProtoData },
 			isNetworkConnected{ _isNetworkConnected } {}
 	};
+
 public:
 	UCharacter(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType);
 	UCharacter(const UCharacter& _rhs);
@@ -75,11 +76,12 @@ public: /* get set */
 	void SetCollisionState(_bool _newState) { m_bisCollision = _newState; }
 
 	void SetOutline(_bool _Draw) { m_DrawOutline = _Draw; }
-	void SetIfOutlineScale(_bool _Draw) { m_OutlineWithScale = _Draw; }
+	void SetIfOutlineScale(_bool _Draw) { m_OutlineifScale = _Draw; }
+	void SetOutlineColor(_float3 _color) { m_OutlineColor = _color; }
 	void SetifPlayer(_bool _isPlayer) { m_isPlayer = _isPlayer; }
 
 	const _bool& GetOutlineState()const { return m_DrawOutline; }
-	const _bool& GetOutlineScaleState()const { return m_OutlineWithScale; }
+	const _bool& GetOutlineScaleState()const { return m_OutlineifScale; }
 
 	void SetOutlineByAbility(_bool Set) { ifDrawOutlineByAbility = Set; }
 
@@ -142,6 +144,7 @@ protected: /* get set */
 private:
 
 	SHPTR< UShaderConstantBuffer>						m_spScaleOutlineBuffer;
+	SHPTR< UShaderConstantBuffer>						m_spColorOutlineBuffer;
 	// AnimationModel
 	SHPTR< UAnimModel>					m_spAnimModel;
 
@@ -167,9 +170,11 @@ private:
 
 	_double                         m_delapsedTime;
 
-	_bool			m_DrawOutline=false;
-	_bool			m_OutlineWithScale = false;
-	_bool			m_isPlayer=false;
+	_bool			m_DrawOutline = false;
+
+	_bool m_OutlineifScale;
+	_float3 m_OutlineColor;
+	_bool			m_isPlayer = false;
 
 	_float3			m_f3CollidedNormal;
 
@@ -184,7 +189,7 @@ private:
 	_bool			m_bisHitAlready;
 	_bool			m_isDamaged;
 
-	_bool ifDrawOutlineByAbility=false;
+	_bool ifDrawOutlineByAbility = false;
 };
 
 END

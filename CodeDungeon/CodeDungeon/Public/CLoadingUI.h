@@ -40,6 +40,15 @@ private:
 
 public:
 
+	_bool GetIfPicked() { return _LoadingDesc.ifPressed; }
+
+	void SetDurationTimePlus(_float _coolTime) {
+		_LoadingDesc._durationTime += _coolTime;
+	}
+	void SetDurationTime(_float _coolTime) {
+		_LoadingDesc._durationTime = _coolTime;
+	}
+
 	void SetIfPicked(_bool _picked) {
 		_LoadingDesc.ifPressed = _picked;
 	}

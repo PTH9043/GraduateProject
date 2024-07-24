@@ -2,7 +2,10 @@
 #define _MODEL_HLSL_
 
 #include "ShaderGrobalFunc.hlsli"
-
+cbuffer CheckPointBuffer : register(b6)
+{
+    bool isCheckPoint;
+};
 
 cbuffer HasNormalBuffer : register(b7)
 {
@@ -105,7 +108,7 @@ PS_OUT PS_Main(PS_IN In)
     //if (HasBuffer[1])
     //    Out.vSpecular = g_Texture1.Sample(g_Sampler_Normal, In.vTexUV0);
 
-
+    
     
 
     if (HasBuffer[2])
@@ -130,15 +133,20 @@ PS_OUT PS_Main(PS_IN In)
     float g_RimLightIntensity = 0.8; // Example intensity value
     float g_RimLightPower = 6.0; // Example power value
     float4 g_RimLightColor = float4(0.6, 0.25, 0, 1); // Example color (white)
+    float4 g_RimLightColor2 = float4(1, 0, 0, 1); // Example color (white)
     float rimFactor = 1.0 - saturate(dot(normalize(In.vViewDir), normalize(In.vNormal.xyz)));
     rimFactor = pow(rimFactor, g_RimLightPower) * g_RimLightIntensity;
     float4 rimLight = rimFactor * g_RimLightColor;
+    float4 rimLight2 = rimFactor * g_RimLightColor2;
 
     // Combine rim lighting with the final color
-    Out.vDiffuse.rgb += rimLight.rgb;
+    Out.vDiffuse.rgb += 1.25*rimLight.rgb;
     Out.vDepth = float4(In.vProjPos.w / tMainViewProj.fCamFar, In.vProjPos.z / In.vProjPos.w, 1.f, In.vPosition.w);
     Out.vPosition = In.vWorldPos;
 
+    if (isCheckPoint)
+        Out.vDiffuse.rgb += 10 * rimLight2.rgb;
+    
     return Out;
 }
 

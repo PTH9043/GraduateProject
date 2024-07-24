@@ -50,9 +50,7 @@ HRESULT CItemChest::NativeConstructClone(const VOIDDATAS& _Datas)
 	AddColliderInContainer(mainColliderTag, Collider);
 	GetAnimModel()->SetAnimation(L"Open");
 
-	//SetOutline(true);
-	//SetIfOutlineScale(true);
-
+	SetOutlineColor(_float3(0, 1, 0));
 	for (auto& Containers : GetColliderContainer())
 	{
 		Containers.second->SetTranslate(GetAnimModel()->GetCenterPos());
@@ -96,6 +94,8 @@ void CItemChest::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	
+	
 
 	static _double elapsedTime = 0;
 	_double ItemChestOpeningSpeed = 2;
@@ -105,6 +105,9 @@ void CItemChest::TickActive(const _double& _dTimeDelta)
 	//상자 여는 트리거
 	if (GetFoundTargetState())
 	{
+
+		SetOutline(true);
+		SetIfOutlineScale(true);
 		if(!m_bisOpen)
 		static_pointer_cast<CWarriorPlayer>(GetTargetPlayer())->SetCanInteractChestState(true);
 		if (spGameInstance->GetDIKeyDown(DIK_F)&&!m_bisOpen) {
@@ -115,6 +118,9 @@ void CItemChest::TickActive(const _double& _dTimeDelta)
 	}
 	else
 	{
+
+		SetOutline(false);
+		
 		static_pointer_cast<CWarriorPlayer>(GetTargetPlayer())->SetCanInteractChestState(false);
 	}
 
@@ -147,6 +153,13 @@ void CItemChest::TickActive(const _double& _dTimeDelta)
 void CItemChest::LateTickActive(const _double& _dTimeDelta)
 {
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
+	
+		AddOutlineRenderGroup(RI_DEPTHRECORD);
+		//AddNorPosRenderGroup(RI_NORPOS_FORABILITY);
+		AddNorPosRenderGroup(RI_NORPOS);
+
+
+	
 	/*for (auto& Colliders : GetColliderContainer())
 		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);*/
 }

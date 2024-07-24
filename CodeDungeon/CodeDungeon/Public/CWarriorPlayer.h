@@ -61,7 +61,10 @@ public: /* Get Set */
 	const _float3& GetSpawnPointPos() { return m_f3SpawnPoint; }
 	void SetSpawnPoint(SHPTR<UCell> _newSpawnPoint) { m_spSpawnPoint = _newSpawnPoint; }
 	void SetSpawnPoint(_float3 _newSpawnPoint) { m_f3SpawnPoint = _newSpawnPoint; }
+	CSHPTRREF<UCell> GetSpawnPointCamera() { return m_spSpawnPointForCamera; }
+	void SetSpawnPointCamera(SHPTR<UCell> _newSpawnPoint) { m_spSpawnPointForCamera = _newSpawnPoint; }
 	
+
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
@@ -109,6 +112,7 @@ private:
 
 	_float			m_fInteractionTimeElapsed=0;
 	SHPTR<UCell>			m_spSpawnPoint;
+	SHPTR<UCell>			m_spSpawnPointForCamera;
 	_float3					m_f3SpawnPoint;
 };
 END

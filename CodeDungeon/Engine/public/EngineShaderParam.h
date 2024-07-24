@@ -170,6 +170,8 @@ namespace Engine {
 		_float3				PaddingValue;
 	};
 
+	
+
 #pragma endregion MODELDATAPARAM
 
 #pragma region ANIMATIONPARAM

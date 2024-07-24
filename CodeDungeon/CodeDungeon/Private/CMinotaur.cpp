@@ -172,7 +172,7 @@ void CMinotaur::CreateParticles()
 		*m_spAttackParticleTwo->GetParticleSystem()->GetCreateInterval() = 0.5f;
 		m_spAttackParticleTwo->SetTexture(L"FireSpark3");
 	}
-	SetOutlineByAbility(true);
+	
 }
 
 HRESULT CMinotaur::NativeConstructClone(const VOIDDATAS& _Datas)
@@ -195,8 +195,8 @@ HRESULT CMinotaur::NativeConstructClone(const VOIDDATAS& _Datas)
 		Colliders.second->SetScale(_float3(3, 10, 3));
 		Colliders.second->SetTranslate(_float3(0, 10, 0));
 	}
-
-
+	SetOutlineByAbility(true);
+	SetOutlineColor(_float3(0, 0, 1));
 	SetHealth(200);
 	SetMaxHealth(200);
 	SetActivationRange(50);
@@ -206,6 +206,7 @@ HRESULT CMinotaur::NativeConstructClone(const VOIDDATAS& _Datas)
 
 void CMinotaur::TickActive(const _double& _dTimeDelta)
 {
+
 	if (true == IsSendDataToBehavior())
 	{
 		_float3 pos = GetTransform()->GetPos();

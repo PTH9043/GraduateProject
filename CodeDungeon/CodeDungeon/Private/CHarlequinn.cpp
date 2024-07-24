@@ -181,7 +181,7 @@ void CHarlequinn::CreateParticles()
 		*m_spAttackParticleTwo->GetParticleSystem()->GetCreateInterval() = 0.5f;
 		m_spAttackParticleTwo->SetTexture(L"FireSpark3");
 	}
-	SetOutlineByAbility(true);
+	
 }
 
 
@@ -242,7 +242,8 @@ HRESULT CHarlequinn::NativeConstructClone(const VOIDDATAS& _Datas)
 
 	SetActivationRange(50);
 	SetDeactivationRange(100);
-
+	SetOutlineByAbility(true);
+	SetOutlineColor(_float3(1, 1, 0));
 	return S_OK;
 }
 

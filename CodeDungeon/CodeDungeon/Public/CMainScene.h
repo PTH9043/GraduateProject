@@ -130,6 +130,7 @@ private:
 	_float m_fStartSceneLoadingTimer = 0;
 	_bool m_bStartSceneForUI = false;
 	_bool m_bStartGameForUI = false;
+	_bool m_bStartGameDefault = true;
 	//-------------------------------------------
 	//------------GAME SCENE UI-------------------
 	SHPTR<CHpBarUI>			m_spHpBarUI;
