@@ -243,6 +243,7 @@ HRESULT CHarlequinn::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetActivationRange(50);
 	SetDeactivationRange(100);
 	SetOutlineByAbility(true);
+	SetOutline(true);
 	SetOutlineColor(_float3(1, 1, 0));
 	return S_OK;
 }
@@ -399,6 +400,7 @@ void CHarlequinn::LateTickActive(const _double& _dTimeDelta)
 				m_spAttackParticle->SetActive(false);
 				m_spAttackParticleTwo->SetActive(false);
 			SetActive(false);
+			SetOutline(false);
 			spGameInstance->RemoveCollisionPawn(ThisShared<CMob>());
 		}
 	}

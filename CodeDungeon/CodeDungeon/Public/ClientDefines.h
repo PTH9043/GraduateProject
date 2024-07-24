@@ -57,7 +57,7 @@ namespace Client
 		Q_SKILL = 5,
 		ONE_SKILL = 12,
 		TWO_SKILL=15,
-		R_SKILL=15
+		R_SKILL = 10
 
 
 	};

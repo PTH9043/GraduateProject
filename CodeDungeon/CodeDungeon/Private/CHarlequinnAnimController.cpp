@@ -165,7 +165,7 @@ void CHarlequinnAnimController::Tick(const _double& _dTimeDelta)
     }
 
     // Handle attack mode state
-    if (m_bAttackMode && !Hit)
+    if (m_bAttackMode && !Hit&& !spHarlequinn->GetTargetPlayer()->GetDeathState())
     {
         if (DistanceFromPlayer > AttackRange_Long)
         {

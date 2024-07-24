@@ -117,6 +117,7 @@ void CMainScene::UpdateMobsStatus()
 			}
 
 			//거리별 최적화
+			
 			{
 				_float3 mobPos = mobs->GetTransform()->GetPos();
 				_float3 distance = mobPos - PlayerPos;
@@ -124,22 +125,39 @@ void CMainScene::UpdateMobsStatus()
 				float distanceSq = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
 
 				if(abs(ydistance) > 50)
+				{
 					mobs->SetActive(false);
+				}
 				else
 				{
-					if (distanceSq <= 200 * 200)
+					if (r_AbilityCoolTime >= 0)
 					{
-						if (!mobs->GetDeathState())
+						if (distanceSq <= 200 * 200)
 						{
-							mobs->SetActive(true);
+							if (!mobs->GetDeathState())
+							{
+								mobs->SetActive(true);
+							}
+						}
+						else
+						{
+							mobs->SetActive(false);
 						}
 					}
 					else
 					{
-						mobs->SetActive(false);
+						if (distanceSq <= 400 * 400)
+						{
+							mobs->SetActive(true);
+						}
+						else
+						{
+							mobs->SetActive(false);
+						}
 					}
 				}		
 			}
+
 		}
 	}
 
