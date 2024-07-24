@@ -1820,6 +1820,11 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 				m_spCheckPointLoadGageBackgroundTextUI->SetActive(false);
 				m_spCheckPointFillGageBackgroundTextUI->SetActive(false);
 			}
+			//게임 종료 조건
+			if (m_spWarriorPlayer->GetDoneCoreMinotaurState() && m_spWarriorPlayer->GetDoneCoreHarlequinnState() && m_spWarriorPlayer->GetDoneCoreAnubisState()) {
+				//TODO
+				//게임 종료
+			}
 
 			//수호자들 코어 충돌시
 			//MINO
