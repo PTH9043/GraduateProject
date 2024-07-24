@@ -42,6 +42,7 @@ public:
 	void CreateAbilityUI();
 	void CreateAttackUI();
 	void CreateInteractUI();
+	void CreateDeactivateUI();
 private:
 	// Main
 	SHPTR<CMainCamera>			m_spMainCamera;
@@ -200,6 +201,26 @@ private:
 	SHPTR<CLoadingUI>			m_spDieTextUI;
 	SHPTR<CImageUI>			m_spDieKeyGUI;
 	SHPTR<CImageUI>			m_spDieReviveTextUI;
+
+	//===============Deactivate==============
+	SHPTR<CImageUI>			m_spDeactivateMinotaurTextUI;
+	SHPTR<CImageUI>			m_spDeActivatedMinotaurTextUI;
+	SHPTR<CImageUI>			m_spDeActivateMinotaurBackgroundUI;
+	SHPTR<CLoadingUI>		m_spDeActivateMinotaurGageUI;
+
+	SHPTR<CImageUI>			m_spDeactivateHarelequinTextUI;
+	SHPTR<CImageUI>			m_spDeActivatedHarelequinTextUI;
+	SHPTR<CImageUI>			m_spDeActivateHarelequinBackgroundUI;
+	SHPTR<CLoadingUI>		m_spDeActivateHarelequinGageUI;
+
+	SHPTR<CImageUI>			m_spDeactivateAnubisTextUI;
+	SHPTR<CImageUI>			m_spDeActivatedAnubisTextUI;
+	SHPTR<CImageUI>			m_spDeActivateAnubisBackgroundUI;
+	SHPTR<CLoadingUI>		m_spDeActivateAnubisGageUI;
+
+	SHPTR<CImageUI>			m_spKeyFUIMinotaur;
+	SHPTR<CImageUI>			m_spKeyFUIHarelequin;
+	SHPTR<CImageUI>			m_spKeyFUIAnubis;
 };
 
 END
