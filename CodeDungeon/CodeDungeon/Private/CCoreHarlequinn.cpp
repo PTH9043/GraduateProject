@@ -41,20 +41,39 @@ HRESULT CCoreHarlequinn::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	SetActive(false);
 	SetOutline(true);
 
+	UCollider::COLLIDERDESC tDesc;
+	tDesc.vTranslation = _float3(0.f, 37.f, 0.f);
+	tDesc.vScale = _float3(10, 10, 10);
+	SHPTR<UCollider> Collider1 = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_SPHERECOLLIDER, { &tDesc }));
+	_wstring mainColliderTag = L"ForInteractionCore";
+	AddColliderInContainer(mainColliderTag, Collider1);
+
+
 	return S_OK;
 }
 
 void CCoreHarlequinn::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
+	for (auto& Containers : GetColliderContainer())
+	{
+		Containers.second->SetTransform(GetTransform()->GetPos(), GetTransform()->GetQuaternion());
+	}
+
+	if (GetInteractionState())
+	{
+	}
 }
 
 
 void CCoreHarlequinn::LateTickActive(const _double& _dTimeDelta)
 {
 	__super::LateTickActive(_dTimeDelta);
+	for (auto& Colliders : GetColliderContainer())
+	{
+		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
+	}
 }
-
 HRESULT CCoreHarlequinn::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
 	__super::RenderActive(_spCommand, _spTableDescriptor);

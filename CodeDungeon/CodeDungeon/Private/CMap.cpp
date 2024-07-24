@@ -214,9 +214,17 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 
 			if (vecit._sAnimModelName == "Mimic_FBX.bin")
 			{
+				CItemChest::CHARACTERDESC chestDesc{ PROTO_RES_CHESTANIMMODEL, PROTO_COMP_CHESTANIMCONTROLLER };;
+				SHPTR<CItemChest> _Chest = std::static_pointer_cast<CItemChest>(spGameInstance->CloneActorAdd(PROTO_ACTOR_CHEST, { &chestDesc }));
+				_Chest->GetTransform()->SetNewWorldMtx(vecit._mWorldMatrix);
+				_Chest->GetAnimModel()->SetModelName(UMethod::ConvertSToW(vecit._sAnimModelName));
+				_Chest->SetChestType(CItemChest::TYPE_MIMIC);
+				_Chest->SetTargetPlayer(_spPlayer);
+				_Mobs.push_back(_Chest);
+				spGameInstance->AddCollisionPawnList(_Chest);
 
-				CMimic::CHARACTERDESC chestDesc{ PROTO_RES_MIMICANIMMODEL, PROTO_COMP_MIMICANIMCONTROLLER };
-				SHPTR<CMimic> _Mimic = std::static_pointer_cast<CMimic>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MIMIC, { &chestDesc }));
+				CMimic::CHARACTERDESC mimicDesc{ PROTO_RES_MIMICANIMMODEL, PROTO_COMP_MIMICANIMCONTROLLER };
+				SHPTR<CMimic> _Mimic = std::static_pointer_cast<CMimic>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MIMIC, { &mimicDesc }));
 				_Mimic->GetTransform()->SetPos(vecit._mWorldMatrix.Get_Pos());
 				_Mimic->GetTransform()->SetDirection(vecit._mWorldMatrix.Get_Look());
 				_Mimic->GetAnimModel()->SetAnimation(UMethod::ConvertSToW(vecit._sAnimName));
@@ -233,6 +241,7 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 				_Chest->GetTransform()->SetNewWorldMtx(vecit._mWorldMatrix);
 				_Chest->GetAnimModel()->SetModelName(UMethod::ConvertSToW(vecit._sAnimModelName));
 				_Chest->SetTargetPlayer(_spPlayer);
+				_Chest->SetChestType(CItemChest::TYPE_CHEST);
 				_Mobs.push_back(_Chest);
 				spGameInstance->AddCollisionPawnList(_Chest);
 			}

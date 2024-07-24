@@ -25,6 +25,8 @@ public:
 	void CreateParticles();
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _Datas) override;
 	SHPTR<UParticle>& GetParticle() { return m_spBloodParticle; }
+	void SetOpeningState(const _bool& _newState) { m_bisOpen = _newState; }
+	const _bool& GetOpeningState() { return m_bisOpen; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
@@ -45,6 +47,7 @@ private:
 	VECTOR<_float3> m_AstarPath;
 	_bool m_isPathFinding = false;
 	size_t m_currentPathIndex = 0;
+	_bool			m_bisOpen;
 };
 
 END

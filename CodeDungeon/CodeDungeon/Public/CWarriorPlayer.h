@@ -114,6 +114,7 @@ private:
 	_bool											m_bCanInteractStatue;
 	_bool											m_bSaveCheckpointStatue;
 	_bool											m_bCanInteractGuard;
+	_bool											m_bCanInteractCore;
 
 	_float			m_fInteractionTimeElapsed=0;
 	SHPTR<UCell>			m_spSpawnPoint;

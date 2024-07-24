@@ -11,6 +11,9 @@ public:
 	CItemChest(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType);
 	CItemChest(const CItemChest& _rhs);
 	DESTRUCTOR(CItemChest)
+	enum CHESTTYPE {
+		TYPE_MIMIC, TYPE_CHEST, TYPE_END
+	};
 public:
 	// UPlayer을(를) 통해 상속됨
 	CLONE_MACRO(CItemChest, "CItemChest::CloneToFailed")
@@ -18,6 +21,9 @@ public:
 	virtual HRESULT NativeConstruct() override;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _Datas) override;
 	void SetOpeningState(const _bool& _newState) { m_bisOpen = _newState; }
+
+	void SetChestType(CHESTTYPE _type) { m_ChestType = _type; }
+	CHESTTYPE GetChestType() { return m_ChestType; }
 
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
@@ -27,6 +33,7 @@ protected:
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) override;
 
 private:
+	CHESTTYPE m_ChestType;
 	_bool			m_bisOpen;
 	SHPTR<UParticle>										m_spOpenChestParticle;
 	_float ParticleActiveTime = 0;
