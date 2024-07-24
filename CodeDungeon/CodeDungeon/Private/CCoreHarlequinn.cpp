@@ -39,13 +39,13 @@ HRESULT CCoreHarlequinn::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	GetTransform()->SetNewWorldMtx(tBarsDesc._Worldm);
 	SetPawnType(PAWNTYPE::PAWN_STATICOBJ);
 	SetActive(false);
-	SetOutline(true);
+	
 
 	UCollider::COLLIDERDESC tDesc;
 	tDesc.vTranslation = _float3(0.f, 37.f, 0.f);
-	tDesc.vScale = _float3(10, 10, 10);
+	tDesc.vScale = _float3(12.5, 12.5, 12.5);
 	SHPTR<UCollider> Collider1 = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_SPHERECOLLIDER, { &tDesc }));
-	_wstring mainColliderTag = L"ForInteractionCore";
+	_wstring mainColliderTag = L"ForInteractionCoreHarlequinn";
 	AddColliderInContainer(mainColliderTag, Collider1);
 
 

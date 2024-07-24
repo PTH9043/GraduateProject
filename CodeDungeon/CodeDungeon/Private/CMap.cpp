@@ -151,6 +151,7 @@ void CMap::LoadStaticObjects()
 				SHPTR<CCoreMinotaur> _Core = std::static_pointer_cast<CCoreMinotaur>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MINOTAURCORE, { &coreDesc }));
 				_Core->GetModel()->SetModelName(L"MinotaurCore");
 				_CoreVec.push_back(_Core);
+				spGameInstance->AddCollisionPawnList(_Core);
 			}
 			if (vecit._sModelName == "anubishead_FBX.bin")
 			{
@@ -159,6 +160,7 @@ void CMap::LoadStaticObjects()
 				SHPTR<CCoreAnubis> _Core = std::static_pointer_cast<CCoreAnubis>(spGameInstance->CloneActorAdd(PROTO_ACTOR_ANUBISCORE, { &coreDesc }));
 				_Core->GetModel()->SetModelName(L"AnubisCore");
 				_CoreVec.push_back(_Core);
+				spGameInstance->AddCollisionPawnList(_Core);
 			}
 			if (vecit._sModelName == "HarlequinnHead_FBX.bin")
 			{
@@ -167,6 +169,7 @@ void CMap::LoadStaticObjects()
 				SHPTR<CCoreHarlequinn> _Core = std::static_pointer_cast<CCoreHarlequinn>(spGameInstance->CloneActorAdd(PROTO_ACTOR_HARLEQUINNCORE, { &coreDesc }));
 				_Core->GetModel()->SetModelName(L"HarlequinnCore");
 				_CoreVec.push_back(_Core);
+				spGameInstance->AddCollisionPawnList(_Core);
 			}
 		}
 	}

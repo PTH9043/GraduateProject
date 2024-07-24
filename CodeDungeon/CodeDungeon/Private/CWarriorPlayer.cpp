@@ -37,8 +37,7 @@ CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _ws
 	m_dKickedElapsed{ 0 },
 	m_bisRise{ false },
 	m_bCanInteractChest{ false },
-	m_bCanInteractGuard{ false },
-	m_bCanInteractCore{ false }
+	m_bCanInteractGuard{ false }
 {
 }
 
@@ -56,8 +55,7 @@ CWarriorPlayer::CWarriorPlayer(const CWarriorPlayer& _rhs) :
 	m_dKickedElapsed{ 0 },
 	m_bisRise{ false },
 	m_bCanInteractChest{ false },
-	m_bCanInteractGuard{ false },
-	m_bCanInteractCore{ false }
+	m_bCanInteractGuard{ false }
 {
 }
 
@@ -76,8 +74,8 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-
 	int cellIndex = 1;
+
 	SHPTR<UCell> spCell = spNavigation->FindCell(cellIndex);
 	GetTransform()->SetPos(spCell->GetCenterPos());
 	SetSpawnPoint(spCell);
@@ -638,17 +636,110 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							m_bCanInteractBar = false;
 						}
 					}
-					else if (iter2.first == L"ForInteractionCore")
+					else if (iter2.first == L"ForInteractionCoreMinotaur")
 					{
 						if (iter.second->IsCollision(iter2.second))
 						{
-							m_bCanInteractCore = true;
+							m_bCanInteractCoreMinotaur = true;
+							pModelObject->SetOutline(true);
+							if (pModelObject->GetCheckPointToOtherColor()) {
+								m_bDoneInteractCoreMinotaur = true;
+							}
+							else {
+								m_bDoneInteractCoreMinotaur = false;
+							}
+
+							if (spGameInstance->GetDIKeyPressing(DIK_F)) {
+								m_fInteractionTimeElapsed += _dTimeDelta;
+
+							}
+							else {
+								m_fInteractionTimeElapsed = 0;
+
+							}
+
+							if (m_fInteractionTimeElapsed > 5.f && !pModelObject->GetCheckPointToOtherColor()) {
+							
+								m_bDeactivatedCoreMinotaur = true;
+								pModelObject->SetInteractionState(true);
+								pModelObject->SetCheckPointToOtherColor(true);				
+								m_fInteractionTimeElapsed = 0;
+							}
 						}
 						else
 						{
-							m_bCanInteractCore = false;
+							pModelObject->SetOutline(false);
+							m_bCanInteractCoreMinotaur = false;
 						}
 					}
+					else if (iter2.first == L"ForInteractionCoreHarlequinn")
+					{
+						if (iter.second->IsCollision(iter2.second))
+						{
+							m_bCanInteractCoreHarlequinn = true;
+							pModelObject->SetOutline(true);
+							if (pModelObject->GetCheckPointToOtherColor()) {
+								m_bDoneInteractCoreHarlequinn = true;
+							}
+							else {
+								m_bDoneInteractCoreHarlequinn = false;
+							}
+							if (spGameInstance->GetDIKeyPressing(DIK_F)) {
+								m_fInteractionTimeElapsed += _dTimeDelta;
+
+							}
+							else {
+								m_fInteractionTimeElapsed = 0;
+
+							}
+							if (m_fInteractionTimeElapsed > 5.f && !pModelObject->GetCheckPointToOtherColor()) {
+								
+								m_bDeactivatedCoreHarlequinn = true;
+								pModelObject->SetInteractionState(true);
+								pModelObject->SetCheckPointToOtherColor(true);
+								m_fInteractionTimeElapsed = 0;
+							}
+						}
+						else
+						{
+							pModelObject->SetOutline(false);
+							m_bCanInteractCoreHarlequinn = false;
+						}
+					}
+					else if (iter2.first == L"ForInteractionCoreAnubis")
+					{
+						if (iter.second->IsCollision(iter2.second))
+						{
+							m_bCanInteractCoreAnubis = true;
+							pModelObject->SetOutline(true);
+							if (pModelObject->GetCheckPointToOtherColor()) {
+								m_bDoneInteractCoreAnubis = true;
+							}
+							else {
+								m_bDoneInteractCoreAnubis = false;
+							}
+							if (spGameInstance->GetDIKeyPressing(DIK_F)) {
+								m_fInteractionTimeElapsed += _dTimeDelta;
+
+							}
+							else {
+								m_fInteractionTimeElapsed = 0;
+
+							}
+							if (m_fInteractionTimeElapsed > 5.f && !pModelObject->GetCheckPointToOtherColor()) {
+
+								m_bDeactivatedCoreAnubis = true;
+								pModelObject->SetInteractionState(true);
+								pModelObject->SetCheckPointToOtherColor(true);
+								m_fInteractionTimeElapsed = 0;
+							}
+						}
+						else
+						{
+							pModelObject->SetOutline(false);
+							m_bCanInteractCoreAnubis = false;
+						}
+						}
 				}
 			}
 		}

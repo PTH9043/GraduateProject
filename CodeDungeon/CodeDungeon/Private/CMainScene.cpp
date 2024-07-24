@@ -681,6 +681,180 @@ void CMainScene::CreateInteractUI()
 	}
 }
 
+void CMainScene::CreateDeactivateUI()
+{
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	CImageUI::UIDESC tDesc;
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"PressToDeactMino";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Middle";
+		tDesc.v2Size.x = static_cast<_float>(800);
+		tDesc.v2Size.y = static_cast<_float>(140);
+		tDesc.v2Pos = _float2{ 640,200 };
+		m_spDeactivateMinotaurTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spDeactivateMinotaurTextUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"DeactivateMinotaur";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Middle";
+		tDesc.v2Size.x = static_cast<_float>(600);
+		tDesc.v2Size.y = static_cast<_float>(140);
+		tDesc.v2Pos = _float2{ 640,200 };
+		m_spDeActivatedMinotaurTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spDeActivatedMinotaurTextUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"XPBar_Background";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Middle";
+		tDesc.v2Size.x = static_cast<_float>(500);
+		tDesc.v2Size.y = static_cast<_float>(25);
+		tDesc.v2Pos = _float2{ 640,280 };
+		m_spDeActivateMinotaurBackgroundUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spDeActivateMinotaurBackgroundUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"XPBar_Fill";
+		tDesc._shaderName = PROTO_RES_GAGEUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(500);
+		tDesc.v2Size.y = static_cast<_float>(25);
+		tDesc.v2Pos = _float2{ 640,280 };
+		m_spDeActivateMinotaurGageUI = std::static_pointer_cast<CLoadingUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_LOADINGUI, { &tDesc }));
+		m_spDeActivateMinotaurGageUI->SetActive(false);
+		m_spDeActivateMinotaurGageUI->SetDefaultCoolTime(5.f);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"PressToDeactHarlequin";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Middle";
+		tDesc.v2Size.x = static_cast<_float>(800);
+		tDesc.v2Size.y = static_cast<_float>(140);
+		tDesc.v2Pos = _float2{ 640,200 };
+		m_spDeactivateHarelequinTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spDeactivateHarelequinTextUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"DeactivateHarlequin";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Middle";
+		tDesc.v2Size.x = static_cast<_float>(600);
+		tDesc.v2Size.y = static_cast<_float>(140);
+		tDesc.v2Pos = _float2{ 640,200 };
+		m_spDeActivatedHarelequinTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spDeActivatedHarelequinTextUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"XPBar_Background";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Middle";
+		tDesc.v2Size.x = static_cast<_float>(500);
+		tDesc.v2Size.y = static_cast<_float>(25);
+		tDesc.v2Pos = _float2{ 640,280 };
+		m_spDeActivateHarelequinBackgroundUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spDeActivateHarelequinBackgroundUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"XPBar_Fill";
+		tDesc._shaderName = PROTO_RES_GAGEUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(500);
+		tDesc.v2Size.y = static_cast<_float>(25);
+		tDesc.v2Pos = _float2{ 640,280 };
+		m_spDeActivateHarelequinGageUI = std::static_pointer_cast<CLoadingUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_LOADINGUI, { &tDesc }));
+		m_spDeActivateHarelequinGageUI->SetActive(false);
+		m_spDeActivateHarelequinGageUI->SetDefaultCoolTime(5.f);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"PressToDeactAnubis";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Middle";
+		tDesc.v2Size.x = static_cast<_float>(800);
+		tDesc.v2Size.y = static_cast<_float>(140);
+		tDesc.v2Pos = _float2{ 640,200 };
+		m_spDeactivateAnubisTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spDeactivateAnubisTextUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"DeactivateAnubis";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Middle";
+		tDesc.v2Size.x = static_cast<_float>(600);
+		tDesc.v2Size.y = static_cast<_float>(140);
+		tDesc.v2Pos = _float2{ 640,200 };
+		m_spDeActivatedAnubisTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spDeActivatedAnubisTextUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"XPBar_Background";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Middle";
+		tDesc.v2Size.x = static_cast<_float>(500);
+		tDesc.v2Size.y = static_cast<_float>(25);
+		tDesc.v2Pos = _float2{ 640,280 };
+		m_spDeActivateAnubisBackgroundUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spDeActivateAnubisBackgroundUI->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"XPBar_Fill";
+		tDesc._shaderName = PROTO_RES_GAGEUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(500);
+		tDesc.v2Size.y = static_cast<_float>(25);
+		tDesc.v2Pos = _float2{ 640,280 };
+		m_spDeActivateAnubisGageUI = std::static_pointer_cast<CLoadingUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_LOADINGUI, { &tDesc }));
+		m_spDeActivateAnubisGageUI->SetActive(false);
+		m_spDeActivateAnubisGageUI->SetDefaultCoolTime(5.f);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"Key_F";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(50);
+		tDesc.v2Size.y = static_cast<_float>(50);
+		tDesc.v2Pos = _float2{ 545,200 };
+		m_spKeyFUIMinotaur = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spKeyFUIMinotaur->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"Key_F";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(50);
+		tDesc.v2Size.y = static_cast<_float>(50);
+		tDesc.v2Pos = _float2{ 535,200 };
+		m_spKeyFUIHarelequin = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spKeyFUIHarelequin->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"Key_F";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(50);
+		tDesc.v2Size.y = static_cast<_float>(50);
+		tDesc.v2Pos = _float2{ 555,200 };
+		m_spKeyFUIAnubis = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spKeyFUIAnubis->SetActive(false);
+	}
+}
+
 void CMainScene::CreateStartSceneUI()
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
@@ -1337,6 +1511,7 @@ HRESULT CMainScene::LoadSceneData()
 	CreateAbilityUI();
 	CreateInteractUI();
 	CreateAttackUI();
+	CreateDeactivateUI();
 	CreateKeyInfoUI();
 	CreateGameSceneUI();
 	{
@@ -1473,6 +1648,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	
+
 	if (m_bStartGameDefault) {
 		spGameInstance->PauseGame();
 		m_bStartGameDefault = false;
@@ -1662,6 +1838,106 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 				m_spCheckPointLoadGageBackgroundTextUI->SetActive(false);
 				m_spCheckPointFillGageBackgroundTextUI->SetActive(false);
 			}
+
+			//수호자들 코어 충돌시
+			//MINO
+			if (m_spWarriorPlayer->GetCanInteractMinoCoreState()&& !m_spWarriorPlayer->GetDoneCoreMinotaurState()) {
+				m_spDeactivateMinotaurTextUI->SetActive(true);
+				//m_spDeActivatedMinotaurTextUI->SetActive(true);
+				m_spDeActivateMinotaurBackgroundUI->SetActive(true);
+				m_spDeActivateMinotaurGageUI->SetActive(true);
+				m_spKeyFUIMinotaur->SetActive(true);
+			}
+			else {
+				m_spDeactivateMinotaurTextUI->SetActive(false);
+				//m_spDeActivatedMinotaurTextUI->SetActive(false);
+				m_spDeActivateMinotaurBackgroundUI->SetActive(false);
+				m_spDeActivateMinotaurGageUI->SetActive(false);
+				m_spKeyFUIMinotaur->SetActive(false);
+			}
+
+			//할리퀸
+			if (m_spWarriorPlayer->GetCanInteractHarlCoreState() && !m_spWarriorPlayer->GetDoneCoreHarlequinnState()) {
+				m_spDeactivateHarelequinTextUI->SetActive(true);
+				//m_spDeActivatedHarelequinTextUI->SetActive(true);
+				m_spDeActivateHarelequinBackgroundUI->SetActive(true);
+				m_spDeActivateHarelequinGageUI->SetActive(true);
+				m_spKeyFUIHarelequin->SetActive(true);
+			}
+			else {
+				m_spDeactivateHarelequinTextUI->SetActive(false);
+				//m_spDeActivatedHarelequinTextUI->SetActive(false);
+				m_spDeActivateHarelequinBackgroundUI->SetActive(false);
+				m_spDeActivateHarelequinGageUI->SetActive(false);
+				m_spKeyFUIHarelequin->SetActive(false);
+			}
+
+			//나서스
+			if (m_spWarriorPlayer->GetCanInteractAnubisCoreState() && !m_spWarriorPlayer->GetDoneCoreAnubisState()) {
+				m_spDeactivateAnubisTextUI->SetActive(true);
+				//m_spDeActivatedAnubisTextUI->SetActive(true);
+				m_spDeActivateAnubisBackgroundUI->SetActive(true);
+				m_spDeActivateAnubisGageUI->SetActive(true);
+				m_spKeyFUIAnubis->SetActive(true);
+			}
+			else {
+				m_spDeactivateAnubisTextUI->SetActive(false);
+				//m_spDeActivatedAnubisTextUI->SetActive(false);
+				m_spDeActivateAnubisBackgroundUI->SetActive(false);
+				m_spDeActivateAnubisGageUI->SetActive(false);
+				m_spKeyFUIAnubis->SetActive(false);
+			}
+
+			//코어 해제시
+			if (m_spWarriorPlayer->GetDeactivatedCoreMinotaurState()) {
+				m_spDeactivateMinotaurTextUI->SetActive(false);
+				m_spDeActivatedMinotaurTextUI->SetActive(true);
+				m_spDeActivateMinotaurBackgroundUI->SetActive(false);
+				m_spDeActivateMinotaurGageUI->SetActive(false);
+				m_spKeyFUIMinotaur->SetActive(false);
+				DeactivateElapsedTime += _dTimeDelta;
+				if (DeactivateElapsedTime > 2.f) {
+					DeactivateElapsedTime = 0;
+					m_spWarriorPlayer->SetDeactivatedCoreMinotaurState(false);
+				}
+
+			}
+			else {
+				m_spDeActivatedMinotaurTextUI->SetActive(false);
+			}
+			if (m_spWarriorPlayer->GetDeactivatedCoreHarlequinnState()) {
+				m_spDeactivateHarelequinTextUI->SetActive(false);
+				m_spDeActivatedHarelequinTextUI->SetActive(true);
+				m_spDeActivateHarelequinBackgroundUI->SetActive(false);
+				m_spDeActivateHarelequinGageUI->SetActive(false);
+				m_spKeyFUIHarelequin->SetActive(false);
+				DeactivateElapsedTime += _dTimeDelta;
+				if (DeactivateElapsedTime > 2.f) {
+					DeactivateElapsedTime = 0;
+					m_spWarriorPlayer->SetDeactivatedCoreHarlequinnState(false);
+				}
+
+			}
+			else {
+				m_spDeActivatedHarelequinTextUI->SetActive(false);
+			}
+			if (m_spWarriorPlayer->GetDeactivatedCoreAnubisState()) {
+				m_spDeactivateAnubisTextUI->SetActive(false);
+				m_spDeActivatedAnubisTextUI->SetActive(true);
+				m_spDeActivateAnubisBackgroundUI->SetActive(false);
+				m_spDeActivateAnubisGageUI->SetActive(false);
+				m_spKeyFUIAnubis->SetActive(false);
+				DeactivateElapsedTime += _dTimeDelta;
+				if (DeactivateElapsedTime > 2.f) {
+					DeactivateElapsedTime = 0;
+					m_spWarriorPlayer->SetDeactivatedCoreAnubisState(false);
+				}
+
+			}
+			else {
+				m_spDeActivatedAnubisTextUI->SetActive(false);
+			}
+
 			//가드 충돌시
 			if (m_spWarriorPlayer->GetCanInteractGuardState()) {
 				m_spCollideGuardTextUI->SetActive(true);
@@ -1699,6 +1975,23 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 				m_spCheckPointLoadGageBackgroundTextUI->SetActive(false);
 				m_spCheckPointFillGageBackgroundTextUI->SetActive(false);
 				m_spCollideGuardTextUI->SetActive(false);
+
+				//core
+				m_spDeactivateMinotaurTextUI->SetActive(false);
+				m_spDeActivateMinotaurBackgroundUI->SetActive(false);
+				m_spDeActivatedMinotaurTextUI->SetActive(false);
+				m_spDeActivateMinotaurGageUI->SetActive(false);
+				m_spKeyFUIMinotaur->SetActive(false);
+				m_spDeactivateHarelequinTextUI->SetActive(false);			
+				m_spDeActivatedHarelequinTextUI->SetActive(false);
+				m_spDeActivateHarelequinBackgroundUI->SetActive(false);
+				m_spDeActivateHarelequinGageUI->SetActive(false);
+				m_spKeyFUIHarelequin->SetActive(false);
+				m_spDeactivateAnubisTextUI->SetActive(false);
+				m_spDeActivatedAnubisTextUI->SetActive(false);
+				m_spDeActivateAnubisBackgroundUI->SetActive(false);
+				m_spDeActivateAnubisGageUI->SetActive(false);
+				m_spKeyFUIAnubis->SetActive(false);
 			}
 		
 	}
@@ -1843,6 +2136,9 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 		{	//Gage 
 			m_spLiftFillGageBackgroundTextUI->SetLeftCoolTime(m_spWarriorPlayer->GetInteractionElapsedTime());
 			m_spCheckPointFillGageBackgroundTextUI->SetLeftCoolTime(m_spWarriorPlayer->GetInteractionElapsedTime());
+			m_spDeActivateMinotaurGageUI->SetLeftCoolTime(m_spWarriorPlayer->GetInteractionElapsedTime());
+			m_spDeActivateHarelequinGageUI->SetLeftCoolTime(m_spWarriorPlayer->GetInteractionElapsedTime());
+			m_spDeActivateAnubisGageUI->SetLeftCoolTime(m_spWarriorPlayer->GetInteractionElapsedTime());
 
 		}
 		if (m_spWarriorPlayer->GetDieEffectBool()) {
