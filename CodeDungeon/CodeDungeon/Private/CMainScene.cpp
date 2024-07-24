@@ -1317,6 +1317,7 @@ HRESULT CMainScene::LoadSceneData()
 #endif
 	CreateStartSceneUI();
 	CreateAbilityUI();
+	CreateInteractUI();
 	CreateAttackUI();
 	CreateKeyInfoUI();
 	CreateGameSceneUI();
