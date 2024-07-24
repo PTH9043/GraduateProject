@@ -9,6 +9,7 @@
 #include "UProcessedData.h"
 #include "UMethod.h"
 #include "UNavigation.h"
+#include "CMainCamera.h"
 
 CUserWarriorAnimController::CUserWarriorAnimController(CSHPTRREF<UDevice> _spDevice) 
 	: UAnimationController(_spDevice), m_iWComboStack{ 0 }, m_iSComboStack{ 0 }
@@ -77,7 +78,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     _double KickedTimeArcOpenEnd = 40;
 
     // Idle state check
-    if (CurAnimName != L"rise01" || !isRoll || !isKicked || !isJump || !isRise && !isMoveFront && !isMoveBack && !isMoveLeft && !isMoveRight && !isAttack && !isCombo1 && !isCombo2) {
+    if (CurAnimName != L"dead03" && CurAnimName != L"rise01" && !isRoll && !isKicked && !isJump && !isRise && !isMoveFront && !isMoveBack && !isMoveLeft && !isMoveRight && !isAttack && !isCombo1 && !isCombo2) {
         UpdateState(spAnimModel, ANIM_IDLE, L"IDLE");
     }
     else if (GetAnimState() == ANIM_ATTACK) {
@@ -117,7 +118,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
 
     // Jumping logic
     if (!isAttack && !isMoveBack && isJump) {
-        if (CurAnimName != L"hit_head_back" && CurAnimName != L"dead01" && CurAnimName != L"rise01" && CurAnimName != L"rise02"
+        if (CurAnimName != L"dead03" && CurAnimName != L"hit_head_back" && CurAnimName != L"dead01" && CurAnimName != L"rise01" && CurAnimName != L"rise02"
             && CurAnimName != L"combo02_1" && CurAnimName != L"combo02_2" && CurAnimName != L"combo02_3"
             && CurAnimName != L"combo06_1" && CurAnimName != L"combo06_2" && CurAnimName != L"combo06_3"
             && CurAnimName != L"combo05" && CurAnimName != L"combo09" && CurAnimName != L"attack04")
@@ -162,7 +163,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     }
 
     // Attack handling
-    if (isAttack && !Hit) {
+    if (isAttack && !Hit && !spWarriorPlayer->GetDeathState()) {
         if (isWAttack) {
             spWarriorPlayer->SetAttack(50);
             if (CurAnimName == L"combo02_1") m_iWComboStack = 2;
@@ -188,27 +189,39 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
             }
         }
         else if (isRAttack&& ShortAttackisAvailable&& UltimateAttackOneDurationTime< 0.0001f && UltimateAttackTwoDurationTime< 0.0001f) {
-            ShortAttackCoolTime = Q_SKILL;
-            ShortAttackDurationTime = 1.f;
+            
             UpdateState(spAnimModel, ANIM_ATTACK, L"RATTACK");
             m_iWComboStack = 0;
             m_iSComboStack = 0;
         }
-        else if (isCombo1&& UltAttackOneisAvailable&& UltimateAttackTwoDurationTime<0.0001f&& ShortAttackDurationTime< 0.0001f) {
-            UltimateAttackOneCoolTime = ONE_SKILL;
-            UltimateAttackOneDurationTime = 2.25f;
+        else if (isCombo1&& UltAttackOneisAvailable&& UltimateAttackTwoDurationTime<0.0001f&& ShortAttackDurationTime< 0.0001f) {        
             UpdateState(spAnimModel, ANIM_ATTACK, L"COMBO5");
             m_iWComboStack = 0;
             m_iSComboStack = 0;
         }
         else if (isCombo2&& UltAttackTwoisAvailable&& ShortAttackDurationTime< 0.0001f && UltimateAttackOneDurationTime< 0.0001f) {
-            UltimateAttackTwoCoolTime = TWO_SKILL;
-            UltimateAttackTwoDurationTime = 2.5f;
+          
             UpdateState(spAnimModel, ANIM_ATTACK, L"COMBO9");
             m_iWComboStack = 0;
             m_iSComboStack = 0;
         }
 
+    }
+
+    if (CurAnimName == L"combo05")
+    {
+        UltimateAttackOneCoolTime = ONE_SKILL;
+        UltimateAttackOneDurationTime = 2.25f;
+    }
+    if (CurAnimName == L"combo09")
+    {
+        UltimateAttackTwoCoolTime = TWO_SKILL;
+        UltimateAttackTwoDurationTime = 2.5f;
+    }
+    if (CurAnimName == L"attack04")
+    {
+        ShortAttackCoolTime = Q_SKILL;
+        ShortAttackDurationTime = 1.f;
     }
 
     if (UltimateAttackOneCoolTime > 0.f) {
@@ -308,6 +321,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
                m_bDieEffectTurnedOn = false;
                spWarriorPlayer->GetCurrentNavi()->FindCell(spWarriorPlayer->GetSpawnPointCell()->GetIndex());
                spWarriorPlayer->GetTransform()->SetPos(_float3(spWarriorPlayer->GetSpawnPointPos().x, spWarriorPlayer->GetSpawnPointPos().y + 5, spWarriorPlayer->GetSpawnPointPos().z));
+               static_pointer_cast<CMainCamera>(spWarriorPlayer->GetFollowCamera())->GetCurrentNavi()->FindCell(spWarriorPlayer->GetSpawnPointCamera()->GetIndex());
                spWarriorPlayer->SetElapsedTime(0);
                spWarriorPlayer->SetDeathState(false);
                spWarriorPlayer->SetHealth(1);

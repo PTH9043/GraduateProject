@@ -80,6 +80,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	GetTransform()->SetPos(spCell->GetCenterPos());
 	SetSpawnPoint(spCell);
 	SetSpawnPoint(spCell->GetCenterPos());
+	SetSpawnPointCamera(static_pointer_cast<CMainCamera>(GetFollowCamera())->GetCurrentNavi()->FindCell(GetTransform()->GetPos()));
 
 	SHPTR<CMainCamera> spMainCamera = std::static_pointer_cast<CMainCamera>(GetFollowCamera());
 	if (nullptr != spMainCamera)
@@ -195,7 +196,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetOutline(true);
 	SetifPlayer(true);//depth만 기록하고 outline안그리도록 다른 물체  outline depth판정위해
 	//SetIfOutlineScale(false); 만약 플레이어 그릴거면 SetifPlayer->false, SetIfOutlineScale->true
-	SetHealth(20);
+	SetHealth(1);
 	SetMaxHealth(1000);
 	SetAnimModelRim(true);
 
@@ -537,6 +538,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							if (m_fInteractionTimeElapsed > 4.f) {
 								pModelObject->SetInteractionState(true);
 								SetSpawnPoint(GetCurrentNavi()->GetCurCell());
+								SetSpawnPointCamera(static_pointer_cast<CMainCamera>(GetFollowCamera())->GetCurrentNavi()->GetCurCell());
 								SetSpawnPoint(GetTransform()->GetPos());
 								//pModelObject->SetOutline(false);
 							}
