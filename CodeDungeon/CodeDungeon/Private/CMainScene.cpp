@@ -1615,7 +1615,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 				m_spFKeyOpenChestTextUI->SetActive(false);
 			}
 			//철창 충돌시
-			if (m_spWarriorPlayer->GetCanInteractBarState()) {
+			if (m_spWarriorPlayer->GetCanInteractBarState() && !m_spWarriorPlayer->GetDoneInteractBarState()) {
 				m_spLiftCageTextUI->SetActive(true);
 				m_spFKeyLiftCageTextUI->SetActive(true);
 				m_spLiftLoadGageBackgroundTextUI->SetActive(true);
@@ -1628,7 +1628,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 				m_spLiftFillGageBackgroundTextUI->SetActive(false);
 			}
 			//석상 충돌 시
-			if (m_spWarriorPlayer->GetCanInteractStatueState()) {
+			if (m_spWarriorPlayer->GetCanInteractStatueState()&&!m_spWarriorPlayer->GetDoneInteractStatueState()) {
 				m_spSaveCheckPointTextUI->SetActive(true);
 				m_spFKeySaveCheckPointTextUI->SetActive(true);
 				m_spCheckPointLoadGageBackgroundTextUI->SetActive(true);

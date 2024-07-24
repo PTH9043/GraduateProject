@@ -59,6 +59,12 @@ public: /* Get Set */
 	void SetCanInteractGuardState(const _bool& _newState) { m_bCanInteractGuard = _newState; }
 	_bool GetCanInteractGuardState() { return m_bCanInteractGuard; }
 
+	void GetDoneInteractStatueState(const _bool& _newState) { m_bDoneInteractStatue = _newState; }
+	_bool GetDoneInteractStatueState() { return m_bDoneInteractStatue; }
+	void GetDoneInteractBarState(const _bool& _newState) { m_bDoneInteractBar = _newState; }
+	_bool GetDoneInteractBarState() { return m_bDoneInteractBar; }
+
+
 	_float GetInteractionElapsedTime() { return m_fInteractionTimeElapsed; }
 
 	CSHPTRREF<UCell> GetSpawnPointCell() { return m_spSpawnPoint; }
@@ -111,9 +117,15 @@ private:
 	_double											m_dKickedElapsed;
 	_bool											m_bCanInteractChest;
 	_bool											m_bCanInteractBar;
+	_bool											m_bDoneInteractBar;
 	_bool											m_bCanInteractStatue;
+	_bool											m_bDoneInteractStatue;
 	_bool											m_bSaveCheckpointStatue;
 	_bool											m_bCanInteractGuard;
+
+	_float							m_fSaveCheckpointCount = 0;
+
+	
 
 	_float			m_fInteractionTimeElapsed=0;
 	SHPTR<UCell>			m_spSpawnPoint;
