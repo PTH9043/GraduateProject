@@ -13,6 +13,7 @@
 #include "CMob.h"
 #include "UCollider.h"
 #include "UProcessedData.h"
+#include "UAnimation.h"
 
 CMob::CMob(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UCharacter(_spDevice, _wstrLayer, _eCloneType),
@@ -21,6 +22,7 @@ CMob::CMob(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONE
 	m_spTargetPlayer{ nullptr },
 	m_f3TargetPos{},
 	m_dtimeAccumulator{ 0 },
+	m_delapsedTime{ 0 },
 	m_fActivationRange{ 0 },
 	m_fDeactivationRange{0},
 	m_isSendDataToBehavior{true}
@@ -34,6 +36,7 @@ CMob::CMob(const CMob& _rhs)
 	m_spTargetPlayer{ nullptr },
 	m_f3TargetPos{},
 	m_dtimeAccumulator{ 0 },
+	m_delapsedTime{ 0 },
 	m_fActivationRange{ 0 },
 	m_fDeactivationRange{ 0 },
 	m_isSendDataToBehavior{ true }
@@ -61,16 +64,14 @@ HRESULT CMob::NativeConstructClone(const VOIDDATAS& _Datas)
 	GetAnimModel()->SetAnimation(MobServerData.iStartAnimIndex);
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	if (spGameInstance->GetNetworkOwnerID() == 37)
+	if (spGameInstance->GetNetworkOwnerID() == 57)
 	{
 		m_isSendDataToBehavior = true;
 	}
 #else
 	GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
 	SetTargetPlayer(nullptr);
-
 	m_isSendDataToBehavior = true;
-
 #endif
 	return S_OK;
 }
@@ -78,6 +79,7 @@ HRESULT CMob::NativeConstructClone(const VOIDDATAS& _Datas)
 void CMob::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
+
 	if (true == IsSendDataToBehavior())
 	{
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);

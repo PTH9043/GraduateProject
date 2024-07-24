@@ -8,6 +8,7 @@
 #include "UTransform.h"
 #include "UProcessedData.h"
 #include "UMethod.h"
+#include "UNavigation.h"
 
 CUserWarriorAnimController::CUserWarriorAnimController(CSHPTRREF<UDevice> _spDevice) 
 	: UAnimationController(_spDevice), m_iWComboStack{ 0 }, m_iSComboStack{ 0 }
@@ -302,12 +303,14 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
        }
        if(spWarriorPlayer->GetElapsedTime() >= 70)
        {
-           if (spGameInstance->GetDIKeyDown(DIK_SPACE))
+           if (spGameInstance->GetDIKeyDown(DIK_G))
            {
                m_bDieEffectTurnedOn = false;
+               spWarriorPlayer->GetCurrentNavi()->FindCell(spWarriorPlayer->GetSpawnPointCell()->GetIndex());
+               spWarriorPlayer->GetTransform()->SetPos(_float3(spWarriorPlayer->GetSpawnPointPos().x, spWarriorPlayer->GetSpawnPointPos().y + 5, spWarriorPlayer->GetSpawnPointPos().z));
                spWarriorPlayer->SetElapsedTime(0);
                spWarriorPlayer->SetDeathState(false);
-               spWarriorPlayer->SetHealth(50);
+               spWarriorPlayer->SetHealth(1);
                spGameInstance->TurnOffDieEffect();
                UpdateState(spAnimModel, ANIM_IDLE, L"IDLE");
                spAnimModel->SetAnimation(L"idle01");
@@ -331,19 +334,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
        else
            spAnimModel->TickAnimChangeTransform(spWarriorPlayer->GetTransform(), _dTimeDelta);
    }
-   
-
-
-#ifdef _ENABLE_PROTOBUFF
-   _int NetworkID = spGameInstance->GetNetworkOwnerID();
-   PLAYERSTATE csPlayerState;
-   PROTOFUNC::MakePlayerState(OUT& csPlayerState, NetworkID, isAttack,
-       GetAnimState(), isRunshift ? 30.f : 10.f, spAnimModel->GetCurrentAnimation()->GetDuration(),
-       spAnimModel->GetCurrentAnimIndex());
-   {
-       spGameInstance->SendProcessPacket(UProcessedData(csPlayerState, TAG_CS_PLAYERSTATE));
-   }
-#endif
+  
 }
 
 

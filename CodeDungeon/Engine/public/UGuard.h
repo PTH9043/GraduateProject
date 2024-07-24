@@ -6,6 +6,7 @@ BEGIN(Engine)
 class UTexGroup;
 class UVIBufferRect;
 class UShaderConstantBuffer;
+class UCollider;
 
 class UGuard : public UPawn {
 public:
@@ -25,6 +26,7 @@ protected:
 	virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
 	virtual HRESULT RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass = true) override;
+	
 protected:
 	SHPTR<UTexGroup>				m_spGuardTexGroup;
 
@@ -38,8 +40,7 @@ public:
 	void SetColorTexture(_uint _index);
 	
 	_uint ColorTextureIndex = 0;
-
-
+	SHPTR<UCollider>			m_spCollider;
 };
 
 END
