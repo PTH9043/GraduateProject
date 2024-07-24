@@ -31,10 +31,12 @@ public: /* get set */
 	const _bool IsCurrentAtkPlayer() const {return m_isCurrentAtkPlayer; }
 	const _bool IsCurrentFindPlayer() const { return m_isCurrentFindPlayer; }
 	const _bool IsCurrentJustMove() const { return m_isCurrentJustMove; }
+	const SESSIONID& GetOwnerMonsterSessionID() const { return m_OwnerMonsterSessionID; }
 
 	void SetNextPos(const Vector3 _vNextPos) { this->m_vNextPos = _vNextPos; }
 	void SetMonsterState(const MONSTERSTATE _MonsterState);
 	void SetFoundPlayerFirstTime(_bool _isFindFirstTime);
+	void SetOwnerMonsterSessionID(const SESSIONID& _OwnerMonsterSessionID) { this->m_OwnerMonsterSessionID = _OwnerMonsterSessionID; }
 protected:
 	void ComputeNextDir(const _double _dTimeDelta);
 	void UpdateTargetPos(SHPTR<ATransform> _ArriveTr);
@@ -97,6 +99,7 @@ private:
 	ATOMIC<_int>								m_iNextPathIndex;
 	Vector3											m_vTargetPos;
 	ATOMIC<_bool>							m_isCurrentPlayerTargetChangeSituation;
+	SESSIONID									m_OwnerMonsterSessionID;
 };
 
 

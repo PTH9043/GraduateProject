@@ -752,7 +752,8 @@ namespace Engine {
 		_int					iMobType;
 		_float4x4		mWorldMatrix;
 		_int					iMobID;
-		MOBSERVERDATA() : iStartAnimIndex{ 0 }, iMobType{ 0 }, mWorldMatrix{ _float4x4::Identity }, iMobID{ 0 } {}
+		_int					iMobParentsID;
+		MOBSERVERDATA() : iStartAnimIndex{ 0 }, iMobType{ 0 }, mWorldMatrix{ _float4x4::Identity }, iMobID{ 0 }, iMobParentsID{ 0 } {}
 	};
 
 #pragma endregion NETWORKDATA

@@ -62,8 +62,9 @@ HRESULT CMob::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetNetworkID(MobServerData.iMobID);
 	GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
 	GetAnimModel()->SetAnimation(MobServerData.iStartAnimIndex);
-
+	GetCurrentNavi()->FindCell(GetTransform()->GetPos());
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	spGameInstance->AddCollisionPawnList(ThisShared<UPawn>());
 	if (spGameInstance->GetNetworkOwnerID() == 57)
 	{
 		m_isSendDataToBehavior = true;

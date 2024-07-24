@@ -152,6 +152,7 @@ namespace Server
 					data.iMobID = iter.second->GetSessionID();
 					data.iMobType = iter.second->GetMonsterType();
 					data.iStartAnimIndex = iter.second->GetAnimController()->GetCurAnimIndex();
+					data.iMobParentsID = iter.second->GetOwnerMonsterSessionID();
 					MobData.push_back(data);
 				}
 				CMobLayOutSaver saver("..\\..\\NetworkMobData.bin", MobData);

@@ -1413,7 +1413,6 @@ HRESULT CMainScene::LoadSceneData()
 	}
 
 	m_spMap->LoadMobs(m_spWarriorPlayer);
-	m_spMap->LoadGuards();
 	//{
 	//	CMummy::CHARACTERDESC CharDesc{PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_MUMMYANIMCONTROLLER};
 	//	m_spMummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(
@@ -1446,6 +1445,9 @@ HRESULT CMainScene::LoadSceneData()
 
 	
 #endif
+
+	m_spMap->LoadGuards();
+	m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
 	return S_OK;
 }
 
@@ -1604,6 +1606,8 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 			m_spShortAttackIconUI->SetActive(true);
 			m_spShortAttackKeyIconUI->SetActive(true);
 		}
+	
+		m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
 		
 		//상자 충돌 시
 			if (m_spWarriorPlayer->GetCanInteractChestState()) {
@@ -1615,7 +1619,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 				m_spFKeyOpenChestTextUI->SetActive(false);
 			}
 			//철창 충돌시
-			if (m_spWarriorPlayer->GetCanInteractBarState()) {
+			if (m_spWarriorPlayer->GetCanInteractBarState() && !m_spWarriorPlayer->GetDoneInteractBarState()) {
 				m_spLiftCageTextUI->SetActive(true);
 				m_spFKeyLiftCageTextUI->SetActive(true);
 				m_spLiftLoadGageBackgroundTextUI->SetActive(true);
@@ -1628,7 +1632,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 				m_spLiftFillGageBackgroundTextUI->SetActive(false);
 			}
 			//석상 충돌 시
-			if (m_spWarriorPlayer->GetCanInteractStatueState()) {
+			if (m_spWarriorPlayer->GetCanInteractStatueState()&&!m_spWarriorPlayer->GetDoneInteractStatueState()) {
 				m_spSaveCheckPointTextUI->SetActive(true);
 				m_spFKeySaveCheckPointTextUI->SetActive(true);
 				m_spCheckPointLoadGageBackgroundTextUI->SetActive(true);
@@ -1821,17 +1825,14 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 		{	//Gage 
 			m_spLiftFillGageBackgroundTextUI->SetLeftCoolTime(m_spWarriorPlayer->GetInteractionElapsedTime());
 			m_spCheckPointFillGageBackgroundTextUI->SetLeftCoolTime(m_spWarriorPlayer->GetInteractionElapsedTime());
-		
-		}
-		
-		if (m_spWarriorPlayer->GetBlindEffectBool()) {
-			pGameInstance->TurnOnHitEffect();
-		}
 
+		}
 		if (m_spWarriorPlayer->GetDieEffectBool()) {
 			pGameInstance->TurnOnDieEffect();
 		}
-
+		if (m_spWarriorPlayer->GetBlindEffectBool()) {
+			pGameInstance->TurnOnHitEffect();
+	}
 		if (pGameInstance->GetIfAbilityIsOn()) {
 			m_spRecUI->SetIfPicked(true);
 			m_spRecUI->SetActive(true);

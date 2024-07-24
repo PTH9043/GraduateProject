@@ -46,7 +46,8 @@ namespace Server
 		Core::_int				iMobType;
 		Core::_float4x4	mWorldMatrix;
 		Core::_int				iMobID;
-		MOBSERVERDATA() : iStartAnimIndex{ 0 }, iMobType{ 0 }, mWorldMatrix{ Core::_float4x4::Identity }, iMobID{ 0 } {}
+		Core::_int				iMobParentsID;
+		MOBSERVERDATA() : iStartAnimIndex{ 0 }, iMobType{ 0 }, mWorldMatrix{ Core::_float4x4::Identity }, iMobID{ 0 }, iMobParentsID{ 0 } {}
 	};
 
 	enum COMMONSTATE

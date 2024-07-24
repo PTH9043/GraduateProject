@@ -236,12 +236,15 @@ namespace Server {
 	{
 		MOBSTATE monsterState;
 		monsterState.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+		CombineProto<MOBSTATE>(GetCopyBuffer(), GetPacketHead(), monsterState, TAG_SC_MONSTERSTATE);
 		_int MonsterID = monsterState.id();
 		SHPTR<AMonster> spMonster = _spCoreInstance->FindMobObject(MonsterID);
 		if (nullptr != spMonster)
 		{
 			spMonster->ProcessPacket(TAG_CS_MONSTERSTATE, &monsterState);
 		}
+
+		_spCoreInstance->BroadCastMessageExcludingSession(_SessionID, GetCopyBufferPointer(), GetPacketHead());
 	}
 
 	void CPlayerSession::Free()

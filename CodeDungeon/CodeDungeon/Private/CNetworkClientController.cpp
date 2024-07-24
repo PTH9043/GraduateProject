@@ -54,14 +54,12 @@ void CNetworkClientController::MakeActors(const VECTOR<SHPTR<UActor>>& _actorCon
 		case TAG_CHAR::TAG_OTHERPLAYER:
 		{
 			SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-			// Main Camera Load 
 			{
 				CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_NETWORKWARRIORANIMCONTROLLER, true };
-				CWarriorPlayer::PLAYERDESC PlayerDesc{ std::static_pointer_cast<UCamera>(_actorContainer[MAINCAMERA_ACTORS_ID]) };
 				SHPTR<CWarriorPlayer> spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
-					PROTO_ACTOR_WARRIORPLAYER, { &CharDesc, &PlayerDesc }));
+					PROTO_ACTOR_WARRIORPLAYER, { &CharDesc }));
 
-				spGameInstance->RegisterCurrentPlayer(spWarriorPlayer);
+				spGameInstance->AddCollisionPawnList(spWarriorPlayer);
 				AddCreatedNetworkActor(CharInitData.first, spWarriorPlayer);
 			}
 		}
@@ -132,6 +130,8 @@ void CNetworkClientController::CreateServerMobData()
 	}
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	UNORMAP<_int, CSarcophagus*> SaracophagusContainer;
+	UNORMAP<_int, SHPTR<CMummy>> MuumyContainer;
 
 	for (auto& iter : MobServerData)
 	{
@@ -151,6 +151,7 @@ void CNetworkClientController::CreateServerMobData()
 				PROTO_ACTOR_SARCOPHAGUSLYING, { &SarcDesc, &iter }));
 			AddCreatedNetworkActor(iter.iMobID, Saracophagus);
 			Saracophagus->SetSarcophagusType(CSarcophagus::SARCOTYPE::TYPE_LYING);
+			SaracophagusContainer.insert(MakePair(iter.iMobParentsID, Saracophagus.get()));
 		}
 			break;
 		case TAG_CHAR::TAG_SARCOPHAGUS_STANDING:
@@ -160,14 +161,16 @@ void CNetworkClientController::CreateServerMobData()
 				PROTO_ACTOR_SARCOPHAGUSLYING, { &SarcDesc, &iter }));
 			AddCreatedNetworkActor(iter.iMobID, Saracophagus);
 			Saracophagus->SetSarcophagusType(CSarcophagus::SARCOTYPE::TYPE_STANDING);
+			SaracophagusContainer.insert(MakePair(iter.iMobParentsID, Saracophagus.get()));
 		}
 			break;
 		case TAG_CHAR::TAG_MUMMY_LAYING:
 		{
 			CMummy::CHARACTERDESC MummyDesc{ PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_MUMMYANIMCONTROLLER };;
-			SHPTR<CMummy> Mummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MUMMY, { &MummyDesc, &iter }));
+			SHPTR<CMummy> Mummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MUMMY, { &MummyDesc, &iter }));	
 			AddCreatedNetworkActor(iter.iMobID, Mummy);
 			Mummy->SetMummyType(CMummy::TYPE_LYING);
+			MuumyContainer.insert(MakePair(Mummy->GetNetworkID(), Mummy));
 		}
 			break;
 		case TAG_CHAR::TAG_MUMMY_STANDING:
@@ -176,6 +179,7 @@ void CNetworkClientController::CreateServerMobData()
 			SHPTR<CMummy> Mummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MUMMY, { &MummyDesc, &iter }));
 			AddCreatedNetworkActor(iter.iMobID, Mummy);
 			Mummy->SetMummyType(CMummy::TYPE_STANDING);
+			MuumyContainer.insert(MakePair(Mummy->GetNetworkID(), Mummy));
 		}
 			break;
 		case TAG_CHAR::TAG_ANUBIS:
@@ -207,6 +211,12 @@ void CNetworkClientController::CreateServerMobData()
 		}
 		break;
 		}
+	}
+
+	for (auto& iter : SaracophagusContainer)
+	{
+		const auto& MummyPair = MuumyContainer.find(iter.first);
+		iter.second->SetOwnerMummy(MummyPair->second);
 	}
 }
 
