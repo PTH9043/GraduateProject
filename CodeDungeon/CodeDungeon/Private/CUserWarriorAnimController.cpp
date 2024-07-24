@@ -211,17 +211,17 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     if (CurAnimName == L"combo05")
     {
         UltimateAttackOneCoolTime = ONE_SKILL;
-        UltimateAttackOneDurationTime = 2.25f;
+        
     }
     if (CurAnimName == L"combo09")
     {
         UltimateAttackTwoCoolTime = TWO_SKILL;
-        UltimateAttackTwoDurationTime = 2.5f;
+       
     }
     if (CurAnimName == L"attack04")
     {
         ShortAttackCoolTime = Q_SKILL;
-        ShortAttackDurationTime = 1.f;
+        
     }
 
     if (UltimateAttackOneCoolTime > 0.f) {

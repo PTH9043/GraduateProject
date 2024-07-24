@@ -19,7 +19,7 @@
 #include "UProcessedData.h"
 
 CMimic::CMimic(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
-	: CMob(_spDevice, _wstrLayer, _eCloneType), m_MimicType{},
+	: CMob(_spDevice, _wstrLayer, _eCloneType), 
 	m_PathFindingState{},
 	m_AstarPath{},
 	m_isPathFinding{ false },
@@ -28,7 +28,7 @@ CMimic::CMimic(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const C
 }
 
 CMimic::CMimic(const CMimic& _rhs)
-	: CMob(_rhs), m_MimicType{},
+	: CMob(_rhs), 
 	m_PathFindingState{},
 	m_AstarPath{},
 	m_isPathFinding{ false },
@@ -45,9 +45,8 @@ HRESULT CMimic::NativeConstruct()
 	return __super::NativeConstruct();
 }
 
-HRESULT CMimic::NativeConstructClone(const VOIDDATAS& _Datas)
+void CMimic::CreateParticles()
 {
-	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	{
@@ -76,14 +75,14 @@ HRESULT CMimic::NativeConstructClone(const VOIDDATAS& _Datas)
 		m_stParticleType = m_spBloodParticle->GetParticleSystem()->GetParticleTypeParam();
 		m_stParticleType->fParticleType = PARTICLE_TYPE_DEFAULT;
 		m_stParticleType->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
-		m_spBloodParticle->SetBloodTexture(0, L"blood"); // y값 증가 x 원
-		m_spBloodParticle->SetBloodTexture(1, L"blood1"); // y값 증가 x 원
-		m_spBloodParticle->SetBloodTexture(2, L"blood2"); // y값 증가 x 원
-		m_spBloodParticle->SetBloodTexture(3, L"blood3"); // y값 증가 x 원
-		m_spBloodParticle->SetBloodTexture(4, L"blood4"); // y값 증가 x 원
-		m_spBloodParticle->SetBloodTexture(5, L"blood5"); // y값 증가 x 원
-		m_spBloodParticle->SetBloodTexture(6, L"blood6"); // y값 증가 x 원
-		m_spBloodParticle->SetBloodTexture(7, L"blood7"); // y값 증가 x 원
+		m_spBloodParticle->SetBloodTexture(0, L"blood"); 
+		m_spBloodParticle->SetBloodTexture(1, L"blood1");
+		m_spBloodParticle->SetBloodTexture(2, L"blood2");
+		m_spBloodParticle->SetBloodTexture(3, L"blood3");
+		m_spBloodParticle->SetBloodTexture(4, L"blood4");
+		m_spBloodParticle->SetBloodTexture(5, L"blood5");
+		m_spBloodParticle->SetBloodTexture(6, L"blood6");
+		m_spBloodParticle->SetBloodTexture(7, L"blood7");
 		m_spBloodParticle->SetParticleType(PARTICLE_BLOOD);
 		*m_spBloodParticle->GetParticleSystem()->GetCreateInterval() = 0.85f;
 		*m_spBloodParticle->GetParticleSystem()->GetAddParticleAmount() = 5;
@@ -110,16 +109,87 @@ HRESULT CMimic::NativeConstructClone(const VOIDDATAS& _Datas)
 		m_spSlashParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
 	}
 	{
-		
-		
+
+
 		m_spSlashParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleType = PARTICLE_TYPE_DEFAULT;
 		m_spSlashParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
 		m_spSlashParticle->SetTexture(L"Slash3");
-		
+
 		m_spSlashParticle->SetParticleType(PARTICLE_SLASH);
 		*m_spSlashParticle->GetParticleSystem()->GetCreateInterval() = 0.35f;
 		*m_spSlashParticle->GetParticleSystem()->GetAddParticleAmount() = 1;
 	}
+
+
+	{
+
+		UParticle::PARTICLEDESC tDesc;
+		tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEATTACKEFFECT2DSHADER;
+		tDesc.wstrParticleShader = PROTO_RES_PARTICLEATTACK2DSHADER;
+
+
+		tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 0.4;///0.4;//	 0.8f
+		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 0.2;///0.2;//	 1.0f
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.5f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.1f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 1.88;//3.25f
+		tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 1.88f;
+		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 512;
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 1.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.f, 0.f);
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticlePosition = _float3(0.f, 0.f, 0.f);
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_ATTACK;
+		m_spAttackParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
+	}
+	{
+		m_spAttackParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleType = PARTICLE_TYPE_DEFAULT;
+		m_spAttackParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
+		m_spAttackParticle->SetParticleType(PARTICLE_ATTACK);
+		*m_spAttackParticle->GetParticleSystem()->GetAddParticleAmount() = 4;
+		*m_spAttackParticle->GetParticleSystem()->GetCreateInterval() = 0.5f;
+		m_spAttackParticle->SetTexture(L"FireSpark3");
+	}
+	{
+
+		UParticle::PARTICLEDESC tDesc;
+		tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEATTACKEFFECT2DSHADER;
+		tDesc.wstrParticleShader = PROTO_RES_PARTICLEATTACKTWO2DSHADER;
+
+
+		tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 1.0f;///0.4;//	 0.8f
+		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 1.2f;///0.2;//	 1.0f
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.5f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.1f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 7.25f;//3.25f
+		tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 1.88f;
+		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 512;
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 1.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.f, 0.f);
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticlePosition = _float3(0.f, 0.f, 0.f);
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_ATTACK;
+		m_spAttackParticleTwo = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
+	}
+	{
+		m_spAttackParticleTwo->GetParticleSystem()->GetParticleTypeParam()->fParticleType = PARTICLE_TYPE_DEFAULT;
+		m_spAttackParticleTwo->GetParticleSystem()->GetParticleTypeParam()->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
+		m_spAttackParticleTwo->SetParticleType(PARTICLE_ATTACK);
+		*m_spAttackParticleTwo->GetParticleSystem()->GetAddParticleAmount() = 3;
+		*m_spAttackParticleTwo->GetParticleSystem()->GetCreateInterval() = 0.5f;
+		m_spAttackParticleTwo->SetTexture(L"FireSpark3");
+	}
+}
+
+HRESULT CMimic::NativeConstructClone(const VOIDDATAS& _Datas)
+{
+	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+	CreateParticles();
+
 
 	UCollider::COLLIDERDESC tDesc;
 	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
@@ -130,8 +200,8 @@ HRESULT CMimic::NativeConstructClone(const VOIDDATAS& _Datas)
 	AddColliderInContainer(mainColliderTag, Collider);
 	for (auto& Colliders : GetColliderContainer())
 	{
-		Colliders.second->SetScale(_float3(1, 8, 1));
-		Colliders.second->SetTranslate(_float3(0, 10, 0));
+		Colliders.second->SetScale(_float3(5, 7, 5));
+		Colliders.second->SetTranslate(_float3(0, 3, 0));
 	}
 
 	SetHealth(100);
@@ -140,8 +210,7 @@ HRESULT CMimic::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetDeactivationRange(80);
 
 
-	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-	SHPTR<UCell> spCell = spNavigation->FindCell(GetTransform()->GetPos());
+
 	/*GetTransform()->SetPos(spCell->GetCenterPos());*/
 	return S_OK;
 }
@@ -195,8 +264,9 @@ void CMimic::TickActive(const _double& _dTimeDelta)
 				{
 					MoveAlongPath(m_AstarPath, m_currentPathIndex, _dTimeDelta);
 					_float3 direction = CurrentMobPos - GetTargetPos();
-					GetTransform()->SetDirectionFixedUp(-direction, _dTimeDelta, 5);
+					GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
 				}
+				GetTransform()->TranslateDir(-GetTransform()->GetLook(), _dTimeDelta, 20);
 			}
 			else // patrolling when player is not found
 			{
@@ -225,14 +295,15 @@ void CMimic::TickActive(const _double& _dTimeDelta)
 				{
 					MoveAlongPath(m_AstarPath, m_currentPathIndex, _dTimeDelta);
 					_float3 direction = CurrentMobPos - GetTargetPos();
-					GetTransform()->SetDirectionFixedUp(-direction, _dTimeDelta, 5);
+					GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
 				}
+				GetTransform()->TranslateDir(-GetTransform()->GetLook(), _dTimeDelta, 20);
 			}
 		}
 		else if (CurAnimState == UAnimationController::ANIM_ATTACK)
 		{
 			_float3 direction = CurrentMobPos - CurrentPlayerPos;
-			GetTransform()->SetDirectionFixedUp(-direction, _dTimeDelta, 5);
+			GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
 		}
 
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
@@ -245,12 +316,6 @@ void CMimic::TickActive(const _double& _dTimeDelta)
 			_double DeathTimeArcOpenEnd = 50;
 			if (GetElapsedTime() < DeathTimeArcOpenEnd)
 				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
-		}
-		else if (CurAnimState == UAnimationController::ANIM_IDLE)
-		{
-			SetOutline(false);
-			GetAnimModel()->TickAnimation(_dTimeDelta);
-			GetTransform()->SetPos(GetTransform()->GetPos());
 		}
 		else
 		{
@@ -272,9 +337,9 @@ void CMimic::LateTickActive(const _double& _dTimeDelta)
 	_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
 	GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
 
-	//for (auto& Colliders : GetColliderContainer())
-	//	if(Colliders.first == L"Main")
-	//		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
+	for (auto& Colliders : GetColliderContainer())
+		if(Colliders.first == L"Main")
+			Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	_int CurAnimState = GetAnimationController()->GetAnimState();
@@ -292,10 +357,8 @@ HRESULT CMimic::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDes
 {
 	const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
 
-	if(CurAnimName != L"staticLaying" && CurAnimName != L"staticStanding")
-	{
-		 __super::RenderActive(_spCommand, _spTableDescriptor);
-	}
+	__super::RenderActive(_spCommand, _spTableDescriptor);
+
 	return S_OK;
 }
 
@@ -328,8 +391,7 @@ void CMimic::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 		{
 			if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
 			{
-				if (CurAnimName != L"openLaying" && CurAnimName != L"openStanding" &&
-					CurAnimName != L"taunt" && CurAnimName != L"death")
+				if (CurAnimName != L"death")
 				{
 					if (!GetIsHItAlreadyState())
 					{

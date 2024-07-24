@@ -123,9 +123,10 @@ HRESULT UAnimModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	vecAnims.reserve(m_vecAnimations.size());
 	for (auto& iter : m_vecAnimations)
 	{
-		vecAnims.push_back(iter->Clone(spAnimModel));
+		vecAnims.push_back(iter->Clone(spAnimModel));		
 	}
 	m_vecAnimations = vecAnims;
+
 
 	if (m_vecAnimations.size() > 0)
 	{

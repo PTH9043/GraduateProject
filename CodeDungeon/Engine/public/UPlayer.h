@@ -8,9 +8,9 @@ class UCamera;
 class UStageManager;
 class URegion;
 /*
-@ Date: 2024-04-30, Writer: ¹ÚÅÂÇö
+@ Date: 2024-04-30, Writer: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 @ Explain
--  »ç¿ëÀÚ°¡ Á÷Á¢ Á¶Á¾ÇÏ´Â Å¬·¡½ºÀÌ´Ù. 
+-  ï¿½ï¿½ï¿½ï¿½Ú°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½. 
 */
 class UPlayer abstract : public UCharacter  {
 public:
@@ -33,7 +33,7 @@ public:
 	UPlayer(const UPlayer& _rhs);
 	DESTRUCTOR(UPlayer)
 public:
-	// UCharacterÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+	// UCharacterï¿½ï¿½(ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Óµï¿½
 	virtual SHPTR<UCloneObject> Clone(const VOIDDATAS& _vecDatas) PURE;
 	virtual void Free() PURE;
 	virtual HRESULT NativeConstruct() PURE;
@@ -47,6 +47,7 @@ public:
 
 	const _bool& GetFallOverState() { return m_bisFallOver; }
 	void SetFallOverState(const _bool& _fallstate) { m_bisFallOver = _fallstate; }
+	CSHPTRREF<UCamera> GetFollowCamera() const { return m_spFollowCamera; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) PURE;
 	virtual void LateTickActive(const _double& _dTimeDelta) PURE;
@@ -57,8 +58,6 @@ protected:
 
 	void FollowCameraMove(const _float3& _vPlayerToDistancePosition, const _double& _TimeElapsed);
 	void JumpState(const _double& _dTimeDelta);
-public: /* get set */
-	CSHPTRREF<UCamera> GetFollowCamera() const { return m_spFollowCamera; }
 private:
 	SHPTR<UCamera>		m_spFollowCamera;
 	_bool								m_bisJumping;
