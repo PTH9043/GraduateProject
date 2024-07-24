@@ -196,7 +196,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetOutline(true);
 	SetifPlayer(true);//depth만 기록하고 outline안그리도록 다른 물체  outline depth판정위해
 	//SetIfOutlineScale(false); 만약 플레이어 그릴거면 SetifPlayer->false, SetIfOutlineScale->true
-	SetHealth(1000);
+	SetHealth(1);
 	SetMaxHealth(1000);
 	SetAnimModelRim(true);
 
@@ -271,17 +271,14 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
 	}
 
-	if (true == IsNetworkConnected())
-	{
-		if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_HIT) {
-			m_spBlood->SetActive(true);
-			SetAnimModelRimColor(_float3(1, 0, 0));
-			m_spBlood->SetTimer(1.75f);
-
-		}
-		if (m_spBlood->CheckTimeOver()) {
-			m_spBlood->SetActive(false);
-		}
+	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_HIT) {
+		m_spBlood->SetActive(true);
+		SetAnimModelRimColor(_float3(1, 0,0));
+		m_spBlood->SetTimer(1.75f);
+		
+	}
+	if (m_spBlood->CheckTimeOver()) {
+		m_spBlood->SetActive(false);		
 	}
 		
 	if (spGameInstance->GetDIKeyDown(DIK_F5)) {
@@ -373,26 +370,24 @@ void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
 
-	if (nullptr != GetFollowCamera())
+	FollowCameraMove(_float3{ 0.f, 20.f, -40.f }, _dTimeDelta);
+	_float3 vCamPosition{ GetFollowCamera()->GetTransform()->GetPos() };
+	SHPTR<UNavigation> CamNavi = static_pointer_cast<CMainCamera>(GetFollowCamera())->GetCurrentNavi();
+	SHPTR<UCell> newCell{};
+	if(_float3::Distance(GetFollowCamera()->GetTransform()->GetPos(), GetTransform()->GetPos()) < 30)
 	{
-		FollowCameraMove(_float3{ 0.f, 20.f, -40.f }, _dTimeDelta);
-		_float3 vCamPosition{ GetFollowCamera()->GetTransform()->GetPos() };
-		SHPTR<UNavigation> CamNavi = static_pointer_cast<CMainCamera>(GetFollowCamera())->GetCurrentNavi();
-		SHPTR<UCell> newCell{};
-		if (_float3::Distance(GetFollowCamera()->GetTransform()->GetPos(), GetTransform()->GetPos()) < 30)
+		//카메라 네비 검사
+		if (false == CamNavi->IsMove(vCamPosition, REF_OUT newCell))
 		{
-			//카메라 네비 검사
-			if (false == CamNavi->IsMove(vCamPosition, REF_OUT newCell))
-			{
-				_float3 closestPoint = CamNavi->ClampPositionToCell(vCamPosition);
-				GetFollowCamera()->GetTransform()->SetPos(_float3(closestPoint.x, vCamPosition.y, closestPoint.z));
-				vCamPosition = GetFollowCamera()->GetTransform()->GetPos();
-			}
+			_float3 closestPoint = CamNavi->ClampPositionToCell(vCamPosition);
+			GetFollowCamera()->GetTransform()->SetPos(_float3(closestPoint.x, vCamPosition.y, closestPoint.z));
+			vCamPosition = GetFollowCamera()->GetTransform()->GetPos();
 		}
-		else
-		{
-			GetFollowCamera()->GetTransform()->SetPos(GetTransform()->GetPos());
-		}
+	}
+	else
+	{
+		CamNavi->FindCell(GetTransform()->GetPos());
+		GetFollowCamera()->GetTransform()->SetPos(GetTransform()->GetPos());
 	}
 }
 
@@ -631,22 +626,22 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 				{
 					if (iter2.first == L"Main")
 					{
-						SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
+						//SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
 
-						if (GetCollidedNormal() != _float3::Zero) // 충돌이 발생한 경우
-						{
-							SetOBJCollisionState(true);
-							// 속도 결정
-							_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 60.0f : 20.0f;
-							if (CurAnimName == L"roll_back" || CurAnimName == L"roll_front" || CurAnimName == L"roll_left" || CurAnimName == L"roll_right")
-								GetTransform()->SetPos(GetPrevPos());
-							else
-								ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
-						}
-						else
-						{
-							SetOBJCollisionState(false);
-						}
+						//if (GetCollidedNormal() != _float3::Zero) // 충돌이 발생한 경우
+						//{
+						//	SetOBJCollisionState(true);
+						//	// 속도 결정
+						//	_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 60.0f : 20.0f;
+						//	if (CurAnimName == L"roll_back" || CurAnimName == L"roll_front" || CurAnimName == L"roll_left" || CurAnimName == L"roll_right")
+						//		GetTransform()->SetPos(GetPrevPos());
+						//	else
+						//		ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
+						//}
+						//else
+						//{
+						//	SetOBJCollisionState(false);
+						//}
 					}
 					else if (iter2.first == L"ForInteractionGuard")
 					{

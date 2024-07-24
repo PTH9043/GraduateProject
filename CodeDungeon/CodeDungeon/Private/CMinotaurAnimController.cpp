@@ -95,7 +95,7 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
         if (CurAnimName == L"idle")
         {
             m_dIdleTimer += _dTimeDelta;
-            if (m_dIdleTimer >= 2.0)
+            if (m_dIdleTimer >= 1.0)
             {
                 m_dIdleTimer = 0.0;
             }

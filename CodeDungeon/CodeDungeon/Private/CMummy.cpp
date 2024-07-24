@@ -205,8 +205,8 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 
 	SetHealth(100);
 	SetMaxHealth(100);
-	SetActivationRange(32);
-	SetDeactivationRange(80);
+	SetActivationRange(60);
+	SetDeactivationRange(160);
 	SetOutlineByAbility(true);
 
 	SetOutlineColor(_float3(1, 0, 0));
@@ -372,6 +372,7 @@ HRESULT CMummy::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDes
 	{
 		__super::RenderActive(_spCommand, _spTableDescriptor);
 	}
+	
 	return S_OK;
 }
 
@@ -403,7 +404,7 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 			if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
 			{
 				if (CurAnimName != L"openLaying" && CurAnimName != L"openStanding" &&
-					CurAnimName != L"taunt" && CurAnimName != L"death")
+					CurAnimName != L"death")
 				{
 					if (!GetIsHItAlreadyState())
 					{

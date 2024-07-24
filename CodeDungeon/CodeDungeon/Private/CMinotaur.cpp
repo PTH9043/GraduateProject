@@ -180,9 +180,6 @@ HRESULT CMinotaur::NativeConstructClone(const VOIDDATAS& _Datas)
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	CreateParticles();
-	
-
-
 	UCollider::COLLIDERDESC tDesc;
 	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
 	tDesc.vScale = _float3(0, 0, 0);
@@ -199,8 +196,8 @@ HRESULT CMinotaur::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetOutlineColor(_float3(0, 0, 1));
 	SetHealth(200);
 	SetMaxHealth(200);
-	SetActivationRange(50);
-	SetDeactivationRange(80);
+	SetActivationRange(160);
+	SetDeactivationRange(160);
 	return S_OK;
 }
 

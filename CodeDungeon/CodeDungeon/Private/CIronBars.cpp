@@ -75,8 +75,10 @@ void CIronBars::TickActive(const _double& _dTimeDelta)
 
 	if(GetInteractionState())
 	{
-		if(GetTransform()->GetPos().y - m_f3OriginPos.y < 30)
+		if (GetTransform()->GetPos().y - m_f3OriginPos.y < 30)
 			GetTransform()->TranslateDir(_float3(0, 1, 0), _dTimeDelta, 3);
+		else
+			SetActive(false);
 	}
 }
 

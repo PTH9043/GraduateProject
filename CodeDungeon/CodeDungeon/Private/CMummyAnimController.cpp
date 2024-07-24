@@ -87,6 +87,10 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     if (FoundPlayer && !m_bFoundPlayerFirsttime)
     {
         UpdateState(spAnimModel, ANIM_AWAKE, L"WAKEUP");
+        if(spMummy->GetMummyType() == CMummy::TYPE_LYING)
+            spAnimModel->SetAnimation(L"openLaying");
+        else if(spMummy->GetMummyType() == CMummy::TYPE_STANDING)
+            spAnimModel->SetAnimation(L"openStanding");
         m_bFoundPlayerFirsttime = true;
         m_dIdleTimer = 0;
     }

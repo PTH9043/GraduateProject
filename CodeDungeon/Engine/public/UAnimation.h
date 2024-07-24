@@ -38,6 +38,9 @@ public:
 	void SetApplyRootBoneMove(const _bool _isApplyRootBoneMove) { this->m_isApplyRootBoneMove = _isApplyRootBoneMove; }
 
 	void UpdateTimeAccToChannelIndex(const _double& _dTimeAcc);
+
+	void SetAnimIndex(_int _newIndex) { m_iAnimIndex = _newIndex; }
+	
 public:
 	SHPTR<UAnimation> Clone(CSHPTRREF<UAnimModel> _spAnimModel);
 	virtual void Free() override;

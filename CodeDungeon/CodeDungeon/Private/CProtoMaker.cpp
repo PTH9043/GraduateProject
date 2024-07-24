@@ -154,7 +154,7 @@ HRESULT CProtoMaker::CreateMainSceneProtoData(CSHPTRREF<UGameInstance> _spGameIn
 
 	Matrix = _float4x4::CreateScale(0.1f);
 	_spGameInstance->AddPrototype(PROTO_RES_MIMICANIMMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
-		_spDevice, L"..\\..\\Resource\\AnimModel\\Mimic\\Convert\\Mimic_FBX.bin"));
+		_spDevice, L"..\\..\\Resource\\AnimModel\\Mimic\\Convert\\Mimic_FBX.bin", Matrix));
 
 
 	Matrix = _float4x4::CreateScale(1.0f);

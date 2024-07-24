@@ -16,19 +16,15 @@ class CMimic final : public CMob {
 public:
 	CMimic(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType);
 	CMimic(const CMimic& _rhs);
-	enum MimicTYPE {
-		TYPE_STANDING, TYPE_LYING, TYPE_END
-	};
 	DESTRUCTOR(CMimic)
 public:
 	// UPlayer을(를) 통해 상속됨
 	CLONE_MACRO(CMimic, "CMimic::CloneToFailed")
 		virtual void Free() override;
 	virtual HRESULT NativeConstruct() override;
+	void CreateParticles();
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _Datas) override;
 	SHPTR<UParticle>& GetParticle() { return m_spBloodParticle; }
-	void SetMimicType(MimicTYPE _type) { m_MimicType = _type; }
-	MimicTYPE GetMimicType() { return m_MimicType; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
@@ -38,11 +34,12 @@ protected:
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) override;
 
 private:
-	MimicTYPE					m_MimicType;
 	SHPTR<UParticle>			m_spBloodParticle;
 	SHPTR<UParticle>			m_spSlashParticle;
-	PARTICLEPARAM*			m_stParticleParam;
-	ComputeParticleType*	m_stParticleType;
+	SHPTR<UParticle>			m_spAttackParticle;
+	SHPTR<UParticle>			m_spAttackParticleTwo;
+	PARTICLEPARAM* m_stParticleParam;
+	ComputeParticleType* m_stParticleType;
 
 	UNavigation::PathFindingState m_PathFindingState;
 	VECTOR<_float3> m_AstarPath;
