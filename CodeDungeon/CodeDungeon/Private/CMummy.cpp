@@ -240,7 +240,7 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 			if (GetFoundTargetState())
 			{
 				SetOutline(true);
-				if (GetTimeAccumulator() >= 0.5)
+				if (GetTimeAccumulator() >= 1.0)
 				{
 					SHPTR<UNavigation> spNavigation = GetCurrentNavi();
 					m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, CurrentPlayerPos, CurrentMobCell, CurrentPlayerCell));

@@ -122,6 +122,7 @@ private:
 	_bool											m_bDoneInteractStatue;
 	_bool											m_bSaveCheckpointStatue;
 	_bool											m_bCanInteractGuard;
+	_bool											m_bCanInteractCore;
 
 	_float							m_fSaveCheckpointCount = 0;
 

@@ -23,7 +23,8 @@ CMimic::CMimic(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const C
 	m_PathFindingState{},
 	m_AstarPath{},
 	m_isPathFinding{ false },
-	m_currentPathIndex{ 0 }
+	m_currentPathIndex{ 0 },
+	m_bisOpen{false}
 {
 }
 
@@ -32,7 +33,8 @@ CMimic::CMimic(const CMimic& _rhs)
 	m_PathFindingState{},
 	m_AstarPath{},
 	m_isPathFinding{ false },
-	m_currentPathIndex{ 0 }
+	m_currentPathIndex{ 0 },
+	m_bisOpen{ false }
 {
 }
 
@@ -200,14 +202,14 @@ HRESULT CMimic::NativeConstructClone(const VOIDDATAS& _Datas)
 	AddColliderInContainer(mainColliderTag, Collider);
 	for (auto& Colliders : GetColliderContainer())
 	{
-		Colliders.second->SetScale(_float3(5, 7, 5));
+		Colliders.second->SetScale(_float3(3, 7, 3));
 		Colliders.second->SetTranslate(_float3(0, 3, 0));
 	}
 
 	SetHealth(100);
 	SetMaxHealth(100);
-	SetActivationRange(30);
-	SetDeactivationRange(80);
+	SetActivationRange(10);
+	SetDeactivationRange(120);
 
 
 
@@ -231,6 +233,7 @@ void CMimic::TickActive(const _double& _dTimeDelta)
 		_float3 CurrentPlayerPos = GetTargetPlayer()->GetTransform()->GetPos();
 		SHPTR<UCell> CurrentMobCell = GetCurrentNavi()->GetCurCell();
 		SHPTR<UCell> CurrentPlayerCell = GetTargetPlayer()->GetCurrentNavi()->GetCurCell();
+		const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
 
 		if (CurAnimState == UAnimationController::ANIM_MOVE)
 		{
@@ -266,7 +269,8 @@ void CMimic::TickActive(const _double& _dTimeDelta)
 					_float3 direction = CurrentMobPos - GetTargetPos();
 					GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
 				}
-				GetTransform()->TranslateDir(-GetTransform()->GetLook(), _dTimeDelta, 20);
+				if(CurAnimName != L"Hit")
+					GetTransform()->TranslateDir(-GetTransform()->GetLook(), _dTimeDelta, 20);
 			}
 			else // patrolling when player is not found
 			{
@@ -306,6 +310,11 @@ void CMimic::TickActive(const _double& _dTimeDelta)
 			GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
 		}
 
+		if (CurAnimName == L"Hit")
+		{
+			GetTransform()->TranslateDir(GetTransform()->GetLook(), _dTimeDelta, 10);
+		}
+
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 		// death animation
@@ -337,9 +346,6 @@ void CMimic::LateTickActive(const _double& _dTimeDelta)
 	_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
 	GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
 
-	for (auto& Colliders : GetColliderContainer())
-		if(Colliders.first == L"Main")
-			Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	_int CurAnimState = GetAnimationController()->GetAnimState();
@@ -357,7 +363,8 @@ HRESULT CMimic::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDes
 {
 	const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
 
-	__super::RenderActive(_spCommand, _spTableDescriptor);
+	if(m_bisOpen)
+		__super::RenderActive(_spCommand, _spTableDescriptor);
 
 	return S_OK;
 }
@@ -385,94 +392,96 @@ void CMimic::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 	_bool isCollision = false;
 	_int DamageEnable = 0;
 #endif
-
-	auto handleCollisionWithPlayer = [&](UCharacter* pCharacter) {
-		for (const auto& iter : GetColliderContainer())
-		{
-			if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
+	if(m_bisOpen)
+	{
+		auto handleCollisionWithPlayer = [&](UCharacter* pCharacter) {
+			for (const auto& iter : GetColliderContainer())
 			{
-				if (CurAnimName != L"death")
+				if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
 				{
-					if (!GetIsHItAlreadyState())
+					if (CurAnimName != L"death")
 					{
-						m_spBloodParticle->SetActive(true);
-						m_spSlashParticle->SetActive(true);
-						m_spBloodParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
-						m_spSlashParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
-						// Decrease health on hit
-						DecreaseHealth(pCharacter->GetAttack());
+						if (!GetIsHItAlreadyState())
+						{
+							m_spBloodParticle->SetActive(true);
+							m_spSlashParticle->SetActive(true);
+							m_spBloodParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+							m_spSlashParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+							// Decrease health on hit
+							DecreaseHealth(pCharacter->GetAttack());
+						}
+						SetHitAlreadyState(true);
 					}
-					SetHitAlreadyState(true);
-				}
-			}
-			else
-			{
-				SetHitAlreadyState(false);
-			}
-
-			for (const auto& iter2 : pCharacter->GetColliderContainer())
-			{
-				if (iter.second->IsCollision(iter2.second))
-				{
-					SetCollisionState(true);
-					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
 				}
 				else
 				{
-					SetCollisionState(false);
+					SetHitAlreadyState(false);
+				}
+
+				for (const auto& iter2 : pCharacter->GetColliderContainer())
+				{
+					if (iter.second->IsCollision(iter2.second))
+					{
+						SetCollisionState(true);
+						GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
+					}
+					else
+					{
+						SetCollisionState(false);
+					}
 				}
 			}
-		}
-		};
+			};
 
-	auto handleCollisionWithCharacter = [&](UCharacter* pCharacter) {
-		for (const auto& iter : GetColliderContainer())
-		{
-			for (const auto& iter2 : pCharacter->GetColliderContainer())
+		auto handleCollisionWithCharacter = [&](UCharacter* pCharacter) {
+			for (const auto& iter : GetColliderContainer())
 			{
-				if (iter.second->IsCollision(iter2.second))
+				for (const auto& iter2 : pCharacter->GetColliderContainer())
 				{
-					SetCollisionState(true);
-					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
-				}
-				else
-				{
-					SetCollisionState(false);
+					if (iter.second->IsCollision(iter2.second))
+					{
+						SetCollisionState(true);
+						GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
+					}
+					else
+					{
+						SetCollisionState(false);
+					}
 				}
 			}
-		}
-		};
+			};
 
-	auto handleCollisionWithStaticObject = [&](CModelObjects* pModelObject) {
-		for (const auto& iter : GetColliderContainer())
-		{
-			for (const auto& iter2 : pModelObject->GetColliderContainer())
+		auto handleCollisionWithStaticObject = [&](CModelObjects* pModelObject) {
+			for (const auto& iter : GetColliderContainer())
 			{
-				SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
-				if (GetCollidedNormal() != _float3::Zero)
+				for (const auto& iter2 : pModelObject->GetColliderContainer())
 				{
-					_float speed = 20.0f;
-					ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
+					SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
+					if (GetCollidedNormal() != _float3::Zero)
+					{
+						_float speed = 20.0f;
+						ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
+					}
 				}
 			}
-		}
-		};
+			};
 
-	if (ePawnType == PAWNTYPE::PAWN_PLAYER)
-	{
-		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
-		handleCollisionWithPlayer(pCharacter);
-	}
-	else if (ePawnType == PAWNTYPE::PAWN_CHAR)
-	{
-		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
-		handleCollisionWithCharacter(pCharacter);
-	}
-	else if (ePawnType == PAWNTYPE::PAWN_STATICOBJ)
-	{
-		CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
-		handleCollisionWithStaticObject(pModelObject);
-	}
+		if (ePawnType == PAWNTYPE::PAWN_PLAYER)
+		{
+			UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
+			handleCollisionWithPlayer(pCharacter);
+		}
+		else if (ePawnType == PAWNTYPE::PAWN_CHAR)
+		{
+			UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
+			handleCollisionWithCharacter(pCharacter);
+		}
+		else if (ePawnType == PAWNTYPE::PAWN_STATICOBJ)
+		{
+			CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
+			handleCollisionWithStaticObject(pModelObject);
+		}
+		}
 
 #ifdef _ENABLE_PROTOBUFF
 	SendCollisionData();

@@ -37,7 +37,8 @@ CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _ws
 	m_dKickedElapsed{ 0 },
 	m_bisRise{ false },
 	m_bCanInteractChest{ false },
-	m_bCanInteractGuard{ false }
+	m_bCanInteractGuard{ false },
+	m_bCanInteractCore{ false }
 {
 }
 
@@ -55,7 +56,8 @@ CWarriorPlayer::CWarriorPlayer(const CWarriorPlayer& _rhs) :
 	m_dKickedElapsed{ 0 },
 	m_bisRise{ false },
 	m_bCanInteractChest{ false },
-	m_bCanInteractGuard{ false }
+	m_bCanInteractGuard{ false },
+	m_bCanInteractCore{ false }
 {
 }
 
@@ -75,7 +77,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 
 	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
 
-	int cellIndex = 0;
+	int cellIndex = 383;
 	SHPTR<UCell> spCell = spNavigation->FindCell(cellIndex);
 	GetTransform()->SetPos(spCell->GetCenterPos());
 	SetSpawnPoint(spCell);
@@ -615,8 +617,8 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 
 							//철장 여는 용도
 							if (spGameInstance->GetDIKeyPressing(DIK_F)) {
-								if(m_fInteractionTimeElapsed<4.f)
-								m_fInteractionTimeElapsed += _dTimeDelta;
+								if (m_fInteractionTimeElapsed < 4.f)
+									m_fInteractionTimeElapsed += _dTimeDelta;
 
 							}
 							else {
@@ -635,7 +637,18 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							pModelObject->SetOutline(false);
 							m_bCanInteractBar = false;
 						}
-					}				
+					}
+					else if (iter2.first == L"ForInteractionCore")
+					{
+						if (iter.second->IsCollision(iter2.second))
+						{
+							m_bCanInteractCore = true;
+						}
+						else
+						{
+							m_bCanInteractCore = false;
+						}
+					}
 				}
 			}
 		}

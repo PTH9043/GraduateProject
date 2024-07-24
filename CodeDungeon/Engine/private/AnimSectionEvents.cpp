@@ -143,7 +143,6 @@ _bool UAnimColliderEvent::EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, con
 	if (GetAnimSectionDesc().IsAnimEventActive(_dTimeAcc))
 	{
 		EventSituation(_pPawn, _pAnimModel, _dTimeDelta, _dTimeAcc);
-		m_AnimColliderDesc.spCollider->AddRenderer(RENDERID::RI_NONALPHA_LAST);
 		return true;
 	}
 	_pAnimModel->UpdateAttackData( false, m_AnimColliderDesc.spCollider);
