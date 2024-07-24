@@ -36,7 +36,7 @@ HRESULT CSarcophagus::NativeConstructClone(const VOIDDATAS& _Datas)
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	SetPawnType(PAWNTYPE::PAWN_STATICOBJ);
-	SetActivationRange(60);
+	SetActivationRange(50);
 	SetDeactivationRange(80);
 	/*UCollider::COLLIDERDESC tDesc;
 	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
@@ -50,6 +50,7 @@ HRESULT CSarcophagus::NativeConstructClone(const VOIDDATAS& _Datas)
 		Containers.second->SetTranslate(GetAnimModel()->GetCenterPos());
 		Containers.second->SetScaleToFitModel(GetAnimModel()->GetMinVertexPos(), GetAnimModel()->GetMaxVertexPos());
 	}*/
+
 	return S_OK;
 }
 

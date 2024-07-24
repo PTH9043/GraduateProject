@@ -158,7 +158,6 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     // Kicked state
     if (isKicked && CurAnimName != L"rise01") {
         UpdateState(spAnimModel, ANIM_HIT, L"GOTKICKED");
-        HitStack++;
         spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
     }
 
@@ -300,37 +299,38 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     if (spWarriorPlayer->GetDeathState())
     {
         UpdateState(spAnimModel, ANIM_DEATH, L"DEAD");
+        spWarriorPlayer->SetKickedState(false);
     }
 
     // Tick eve
     spAnimModel->TickEvent(spWarriorPlayer.get(), GetTrigger(), _dTimeDelta);
    //if Kicked & Stunned
-   if (CurAnimName == L"dead03")
-   {
-       _double DeathAnimSpeed = 20;
-       spWarriorPlayer->SetElapsedTime(spWarriorPlayer->GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
-       _double DeathTimeArcOpenEnd = 50;
-       if (spWarriorPlayer->GetElapsedTime() < DeathTimeArcOpenEnd)
-       {
-           spAnimModel->TickAnimToTimeAccChangeTransform(spWarriorPlayer->GetTransform(), _dTimeDelta, spWarriorPlayer->GetElapsedTime());
-       }
-       if(spWarriorPlayer->GetElapsedTime() >= 70)
-       {
-           if (spGameInstance->GetDIKeyDown(DIK_G))
-           {
-               m_bDieEffectTurnedOn = false;
-               spWarriorPlayer->GetCurrentNavi()->FindCell(spWarriorPlayer->GetSpawnPointCell()->GetIndex());
-               spWarriorPlayer->GetTransform()->SetPos(_float3(spWarriorPlayer->GetSpawnPointPos().x, spWarriorPlayer->GetSpawnPointPos().y + 5, spWarriorPlayer->GetSpawnPointPos().z));
-               static_pointer_cast<CMainCamera>(spWarriorPlayer->GetFollowCamera())->GetCurrentNavi()->FindCell(spWarriorPlayer->GetSpawnPointCamera()->GetIndex());
-               spWarriorPlayer->SetElapsedTime(0);
-               spWarriorPlayer->SetDeathState(false);
-               spWarriorPlayer->SetHealth(1);
-               spGameInstance->TurnOffDieEffect();
-               UpdateState(spAnimModel, ANIM_IDLE, L"IDLE");
-               spAnimModel->SetAnimation(L"idle01");
-           }
-       }
-   }
+    if (CurAnimName == L"dead03")
+    {
+        _double DeathAnimSpeed = 20;
+        spWarriorPlayer->SetElapsedTime(spWarriorPlayer->GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
+        _double DeathTimeArcOpenEnd = 50;
+        if (spWarriorPlayer->GetElapsedTime() < DeathTimeArcOpenEnd)
+        {
+            spAnimModel->TickAnimToTimeAccChangeTransform(spWarriorPlayer->GetTransform(), _dTimeDelta, spWarriorPlayer->GetElapsedTime());
+        }
+        if (spWarriorPlayer->GetElapsedTime() >= 70)
+        {         
+            if (spGameInstance->GetDIKeyDown(DIK_G))
+            {
+                m_bDieEffectTurnedOn = false;
+                spWarriorPlayer->GetCurrentNavi()->FindCell(spWarriorPlayer->GetSpawnPointCell()->GetIndex());
+                spWarriorPlayer->GetTransform()->SetPos(_float3(spWarriorPlayer->GetSpawnPointPos().x, spWarriorPlayer->GetSpawnPointPos().y + 5, spWarriorPlayer->GetSpawnPointPos().z));
+                static_pointer_cast<CMainCamera>(spWarriorPlayer->GetFollowCamera())->GetCurrentNavi()->FindCell(spWarriorPlayer->GetSpawnPointCamera()->GetIndex());
+                spWarriorPlayer->SetElapsedTime(0);
+                spWarriorPlayer->SetDeathState(false);
+                spWarriorPlayer->SetHealth(1);
+                spGameInstance->TurnOffDieEffect();
+                UpdateState(spAnimModel, ANIM_IDLE, L"IDLE");
+                spAnimModel->SetAnimation(L"idle01");
+            }
+        }
+    }
    else {
        if (isKicked)
        {

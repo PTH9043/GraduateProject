@@ -6,6 +6,7 @@
 #include "UCharacter.h"
 #include "UAnimation.h"
 #include "UTransform.h"
+#include "UPlayer.h"
 
 CAnubisAnimController::CAnubisAnimController(CSHPTRREF<UDevice> _spDevice)
     : CMonsterAnimController(_spDevice),
@@ -138,7 +139,7 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
     }
 
 
-    if (m_bAttackMode && !Hit)
+    if (m_bAttackMode && !Hit && !spAnubis->GetTargetPlayer()->GetDeathState())
     {
         UpdateState(spAnimModel, ANIM_IDLE, L"ATTACKIDLE");
 
@@ -147,7 +148,6 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
             spAnimModel->SetAnimation(L"Attack Idle");
             m_bAttackStart = true;
         }
-
 
         if (m_bAttackStart)
         {

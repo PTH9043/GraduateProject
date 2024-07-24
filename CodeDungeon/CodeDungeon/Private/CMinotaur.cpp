@@ -198,6 +198,7 @@ HRESULT CMinotaur::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetMaxHealth(200);
 	SetActivationRange(160);
 	SetDeactivationRange(160);
+	SetOutline(true);
 	return S_OK;
 }
 
@@ -234,7 +235,6 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 			// A* for moving towards player when player is found
 			if (GetFoundTargetState())
 			{
-				SetOutline(true);
 				if (GetTimeAccumulator() >= 1.0)
 				{
 					SHPTR<UNavigation> spNavigation = GetCurrentNavi();
@@ -308,8 +308,7 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 			}
 
 		}
-		else if (CurAnimState == UAnimationController::ANIM_IDLE)
-			SetOutline(false);
+
 		if (CurAnimName == L"hit_1")
 		{
 			_float3 direction = CurrentMobPos - CurrentPlayerPos;
@@ -365,6 +364,7 @@ void CMinotaur::LateTickActive(const _double& _dTimeDelta)
 				m_spSlashParticle->SetActive(false);
 				m_spAttackParticle->SetActive(false);
 				m_spAttackParticleTwo->SetActive(false);
+				SetOutline(false);
 				SetActive(false);
 				spGameInstance->RemoveCollisionPawn(ThisShared<CMob>());
 			}

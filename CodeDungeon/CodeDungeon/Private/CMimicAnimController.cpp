@@ -5,6 +5,7 @@
 #include "UAnimModel.h"
 #include "UCharacter.h"
 #include "UAnimation.h"
+#include "UPlayer.h"
 #include "UTransform.h"
 
 CMimicAnimController::CMimicAnimController(CSHPTRREF<UDevice> _spDevice)
@@ -81,7 +82,7 @@ void CMimicAnimController::Tick(const _double& _dTimeDelta)
     if (spMimic->GetPrevHealth() > spMimic->GetHealth())
         Hit = true;
 
-    _float AttackRange = 10.0f;
+    _float AttackRange = 5.0f;
 
  
 
@@ -142,7 +143,7 @@ void CMimicAnimController::Tick(const _double& _dTimeDelta)
     }
 
     // Handle attack mode state
-    if (m_bAttackMode && !Hit)
+    if (m_bAttackMode && !Hit && !spMimic->GetTargetPlayer()->GetDeathState())
     {
         m_dlastAttackTime += _dTimeDelta;
         if (m_dlastAttackTime > 3.0)

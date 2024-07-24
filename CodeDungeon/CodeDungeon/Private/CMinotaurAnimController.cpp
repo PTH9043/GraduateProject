@@ -136,7 +136,7 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
     }
 
     // Handle attack mode state
-    if (m_bAttackMode && !Hit && !m_bRushMode)
+    if (m_bAttackMode && !Hit && !m_bRushMode && !spMinotaur->GetTargetPlayer()->GetDeathState())
     {
         m_dlastAttackTime += _dTimeDelta;
         if (m_dlastAttackTime > 3.0)

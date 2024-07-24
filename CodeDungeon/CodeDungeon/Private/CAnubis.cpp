@@ -215,7 +215,8 @@ HRESULT CAnubis::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetMaxHealth(100);
 	SetActivationRange(50);
 	SetDeactivationRange(80);
-
+	SetOutlineByAbility(true);
+	SetOutlineColor(_float3(1, 1, 0));
 	return S_OK;
 }
 

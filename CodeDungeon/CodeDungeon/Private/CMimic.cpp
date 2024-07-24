@@ -210,8 +210,8 @@ HRESULT CMimic::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetMaxHealth(100);
 	SetActivationRange(10);
 	SetDeactivationRange(120);
-
-
+	SetOutlineByAbility(true);
+	SetOutline(true);
 
 	/*GetTransform()->SetPos(spCell->GetCenterPos());*/
 	return S_OK;
@@ -242,7 +242,6 @@ void CMimic::TickActive(const _double& _dTimeDelta)
 			// A* for moving towards player when player is found
 			if (GetFoundTargetState())
 			{
-				SetOutline(true);
 				if (GetTimeAccumulator() >= 0.5)
 				{
 					SHPTR<UNavigation> spNavigation = GetCurrentNavi();
@@ -274,7 +273,6 @@ void CMimic::TickActive(const _double& _dTimeDelta)
 			}
 			else // patrolling when player is not found
 			{
-				SetOutline(false);
 				SHPTR<UNavigation> spNavigation = GetCurrentNavi();
 				SHPTR<UCell> spNeighborCell = spNavigation->ChooseRandomNeighborCell(3);
 				if (GetTimeAccumulator() >= 5.0)
@@ -353,7 +351,12 @@ void CMimic::LateTickActive(const _double& _dTimeDelta)
 	{
 		if (GetElapsedTime() >= 100.0)
 		{
+			m_spBloodParticle->SetActive(false);
+			m_spSlashParticle->SetActive(false);
+			m_spAttackParticle->SetActive(false);
+			m_spAttackParticleTwo->SetActive(false);
 			SetActive(false);
+			SetOutline(false);
 			spGameInstance->RemoveCollisionPawn(ThisShared<CMob>());
 		}
 	}
