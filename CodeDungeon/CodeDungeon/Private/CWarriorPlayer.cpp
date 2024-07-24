@@ -282,6 +282,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 
 	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_HIT) {
 		m_spBlood->SetActive(true);
+		m_fInteractionTimeElapsed = 0;
 		SetAnimModelRimColor(_float3(1, 0,0));
 		m_spBlood->SetTimer(1.75f);
 		
