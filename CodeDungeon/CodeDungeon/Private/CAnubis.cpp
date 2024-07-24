@@ -343,6 +343,7 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 	}
 	UpdateCollision();
 	SetOutlineByAbility(true);
+	SetOutlineColor(_float3(0,1,0));
 }
 
 void CAnubis::LateTickActive(const _double& _dTimeDelta)

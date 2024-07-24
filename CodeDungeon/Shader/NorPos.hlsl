@@ -40,7 +40,7 @@ VS_OUT VS_Main(VS_IN In)
     }
     else
     {
-        float gSize = 1.5;
+        float gSize = 1.25;
         In.vPosition.xyz += In.vNormal * gSize;
         Out.vPosition = Compute_FinalMatrix(In.vPosition);
     }
