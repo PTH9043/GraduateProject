@@ -41,7 +41,7 @@ HRESULT CCoreMinotaur::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	SetActive(false);
 	
 	UCollider::COLLIDERDESC tDesc;
-	tDesc.vTranslation = _float3(0.f, 25, -5.f);
+	tDesc.vTranslation = _float3(0.f, 37.f, -5.f);
 	tDesc.vScale = _float3(10, 10, 10);
 	SHPTR<UCollider> Collider1 = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_SPHERECOLLIDER, { &tDesc }));
 	_wstring mainColliderTag = L"ForInteractionCoreMinotaur";

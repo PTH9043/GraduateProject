@@ -1253,10 +1253,10 @@ void CMainScene::CreateKeyInfoUI()
 	}
 	{
 		tDesc5.fZBufferOrder = 0.43f;
-		tDesc5.strImgName = L"Jump";
+		tDesc5.strImgName = L"JumpStandUp";
 		tDesc5._shaderName = PROTO_RES_DEFAULTHIGHLIGHTUISHADER;
 		tDesc5.DrawOrder = L"Last";
-		tDesc5.v2Size.x = static_cast<_float>(120);
+		tDesc5.v2Size.x = static_cast<_float>(240);
 		tDesc5.v2Size.y = static_cast<_float>(50);
 		tDesc5.v2Pos = _float2{ 925,315 };
 		m_spJUMPSTANDUPTextUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
