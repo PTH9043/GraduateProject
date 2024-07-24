@@ -186,6 +186,7 @@ private:
 	SHPTR<CImageUI>			m_spSaveCheckPointTextUI;
 	SHPTR<CImageUI>			m_spCheckPointCompleteTextUI;
 	_float CheckPointCompleteElapsedTime = 0;
+	_float DeactivateElapsedTime = 0;
 	SHPTR<CImageUI>			m_spFKeyOpenChestTextUI;
 	SHPTR<CImageUI>			m_spFKeyLiftCageTextUI;
 	SHPTR<CImageUI>			m_spFKeySaveCheckPointTextUI;

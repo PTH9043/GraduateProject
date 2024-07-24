@@ -65,6 +65,24 @@ public: /* Get Set */
 	_bool GetDoneInteractBarState() { return m_bDoneInteractBar; }
 
 
+	_bool GetDeactivatedCoreMinotaurState() { return m_bDeactivatedCoreMinotaur; }
+	void SetDeactivatedCoreMinotaurState(const _bool& _newState) { m_bDeactivatedCoreMinotaur= _newState; }
+	_bool GetDeactivatedCoreHarlequinnState() { return m_bDeactivatedCoreHarlequinn; }
+	void SetDeactivatedCoreHarlequinnState(const _bool& _newState) { m_bDeactivatedCoreHarlequinn = _newState; }
+	_bool GetDeactivatedCoreAnubisState() { return m_bDeactivatedCoreAnubis; }
+	void SetDeactivatedCoreAnubisState(const _bool& _newState) { m_bDeactivatedCoreAnubis = _newState; }
+
+	_bool GetDoneCoreMinotaurState() { return m_bDoneInteractCoreMinotaur; }
+	_bool GetDoneCoreHarlequinnState() { return m_bDoneInteractCoreHarlequinn; }
+	_bool GetDoneCoreAnubisState() { return m_bDoneInteractCoreAnubis; }
+
+	void SetCanInteractMinoCoreState(const _bool& _newState) { m_bCanInteractCoreMinotaur = _newState; }
+	_bool GetCanInteractMinoCoreState() { return m_bCanInteractCoreMinotaur; }
+	void SetCanInteractHarlCoreState(const _bool& _newState) { m_bCanInteractCoreHarlequinn = _newState; }
+	_bool GetCanInteractHarlCoreState() { return m_bCanInteractCoreHarlequinn; }
+	void SetCanInteractAnubisCoreState(const _bool& _newState) { m_bCanInteractCoreAnubis = _newState; }
+	_bool GetCanInteractAnubisCoreState() { return m_bCanInteractCoreAnubis; }
+
 	_float GetInteractionElapsedTime() { return m_fInteractionTimeElapsed; }
 
 	CSHPTRREF<UCell> GetSpawnPointCell() { return m_spSpawnPoint; }
@@ -122,7 +140,20 @@ private:
 	_bool											m_bDoneInteractStatue;
 	_bool											m_bSaveCheckpointStatue;
 	_bool											m_bCanInteractGuard;
-	_bool											m_bCanInteractCore;
+
+
+	_bool											m_bCanInteractCoreMinotaur;
+	_bool											m_bCanInteractCoreHarlequinn;
+	_bool											m_bCanInteractCoreAnubis;
+
+	_bool											m_bDeactivatedCoreMinotaur;
+	_bool											m_bDeactivatedCoreHarlequinn;
+	_bool											m_bDeactivatedCoreAnubis;
+
+
+	_bool											m_bDoneInteractCoreMinotaur;
+	_bool											m_bDoneInteractCoreHarlequinn;
+	_bool											m_bDoneInteractCoreAnubis;
 
 	_float							m_fSaveCheckpointCount = 0;
 

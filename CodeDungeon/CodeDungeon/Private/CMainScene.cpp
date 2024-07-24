@@ -1820,6 +1820,106 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 				m_spCheckPointLoadGageBackgroundTextUI->SetActive(false);
 				m_spCheckPointFillGageBackgroundTextUI->SetActive(false);
 			}
+
+			//수호자들 코어 충돌시
+			//MINO
+			if (m_spWarriorPlayer->GetCanInteractMinoCoreState()&& !m_spWarriorPlayer->GetDoneCoreMinotaurState()) {
+				m_spDeactivateMinotaurTextUI->SetActive(true);
+				//m_spDeActivatedMinotaurTextUI->SetActive(true);
+				m_spDeActivateMinotaurBackgroundUI->SetActive(true);
+				m_spDeActivateMinotaurGageUI->SetActive(true);
+				m_spKeyFUIMinotaur->SetActive(true);
+			}
+			else {
+				m_spDeactivateMinotaurTextUI->SetActive(false);
+				//m_spDeActivatedMinotaurTextUI->SetActive(false);
+				m_spDeActivateMinotaurBackgroundUI->SetActive(false);
+				m_spDeActivateMinotaurGageUI->SetActive(false);
+				m_spKeyFUIMinotaur->SetActive(false);
+			}
+
+			//할리퀸
+			if (m_spWarriorPlayer->GetCanInteractHarlCoreState() && !m_spWarriorPlayer->GetDoneCoreHarlequinnState()) {
+				m_spDeactivateHarelequinTextUI->SetActive(true);
+				//m_spDeActivatedHarelequinTextUI->SetActive(true);
+				m_spDeActivateHarelequinBackgroundUI->SetActive(true);
+				m_spDeActivateHarelequinGageUI->SetActive(true);
+				m_spKeyFUIHarelequin->SetActive(true);
+			}
+			else {
+				m_spDeactivateHarelequinTextUI->SetActive(false);
+				//m_spDeActivatedHarelequinTextUI->SetActive(false);
+				m_spDeActivateHarelequinBackgroundUI->SetActive(false);
+				m_spDeActivateHarelequinGageUI->SetActive(false);
+				m_spKeyFUIHarelequin->SetActive(false);
+			}
+
+			//나서스
+			if (m_spWarriorPlayer->GetCanInteractAnubisCoreState() && !m_spWarriorPlayer->GetDoneCoreAnubisState()) {
+				m_spDeactivateAnubisTextUI->SetActive(true);
+				//m_spDeActivatedAnubisTextUI->SetActive(true);
+				m_spDeActivateAnubisBackgroundUI->SetActive(true);
+				m_spDeActivateAnubisGageUI->SetActive(true);
+				m_spKeyFUIAnubis->SetActive(true);
+			}
+			else {
+				m_spDeactivateAnubisTextUI->SetActive(false);
+				//m_spDeActivatedAnubisTextUI->SetActive(false);
+				m_spDeActivateAnubisBackgroundUI->SetActive(false);
+				m_spDeActivateAnubisGageUI->SetActive(false);
+				m_spKeyFUIAnubis->SetActive(false);
+			}
+
+			//코어 해제시
+			if (m_spWarriorPlayer->GetDeactivatedCoreMinotaurState()) {
+				m_spDeactivateMinotaurTextUI->SetActive(false);
+				m_spDeActivatedMinotaurTextUI->SetActive(true);
+				m_spDeActivateMinotaurBackgroundUI->SetActive(false);
+				m_spDeActivateMinotaurGageUI->SetActive(false);
+				m_spKeyFUIMinotaur->SetActive(false);
+				DeactivateElapsedTime += _dTimeDelta;
+				if (DeactivateElapsedTime > 2.f) {
+					DeactivateElapsedTime = 0;
+					m_spWarriorPlayer->SetDeactivatedCoreMinotaurState(false);
+				}
+
+			}
+			else {
+				m_spDeActivatedMinotaurTextUI->SetActive(false);
+			}
+			if (m_spWarriorPlayer->GetDeactivatedCoreHarlequinnState()) {
+				m_spDeactivateHarelequinTextUI->SetActive(false);
+				m_spDeActivatedHarelequinTextUI->SetActive(true);
+				m_spDeActivateHarelequinBackgroundUI->SetActive(false);
+				m_spDeActivateHarelequinGageUI->SetActive(false);
+				m_spKeyFUIHarelequin->SetActive(false);
+				DeactivateElapsedTime += _dTimeDelta;
+				if (DeactivateElapsedTime > 2.f) {
+					DeactivateElapsedTime = 0;
+					m_spWarriorPlayer->SetDeactivatedCoreHarlequinnState(false);
+				}
+
+			}
+			else {
+				m_spDeActivatedHarelequinTextUI->SetActive(false);
+			}
+			if (m_spWarriorPlayer->GetDeactivatedCoreAnubisState()) {
+				m_spDeactivateAnubisTextUI->SetActive(false);
+				m_spDeActivatedAnubisTextUI->SetActive(true);
+				m_spDeActivateAnubisBackgroundUI->SetActive(false);
+				m_spDeActivateAnubisGageUI->SetActive(false);
+				m_spKeyFUIAnubis->SetActive(false);
+				DeactivateElapsedTime += _dTimeDelta;
+				if (DeactivateElapsedTime > 2.f) {
+					DeactivateElapsedTime = 0;
+					m_spWarriorPlayer->SetDeactivatedCoreAnubisState(false);
+				}
+
+			}
+			else {
+				m_spDeActivatedAnubisTextUI->SetActive(false);
+			}
+
 			//가드 충돌시
 			if (m_spWarriorPlayer->GetCanInteractGuardState()) {
 				m_spCollideGuardTextUI->SetActive(true);
@@ -1857,6 +1957,23 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 				m_spCheckPointLoadGageBackgroundTextUI->SetActive(false);
 				m_spCheckPointFillGageBackgroundTextUI->SetActive(false);
 				m_spCollideGuardTextUI->SetActive(false);
+
+				//core
+				m_spDeactivateMinotaurTextUI->SetActive(false);
+				m_spDeActivateMinotaurBackgroundUI->SetActive(false);
+				m_spDeActivatedMinotaurTextUI->SetActive(false);
+				m_spDeActivateMinotaurGageUI->SetActive(false);
+				m_spKeyFUIMinotaur->SetActive(false);
+				m_spDeactivateHarelequinTextUI->SetActive(false);			
+				m_spDeActivatedHarelequinTextUI->SetActive(false);
+				m_spDeActivateHarelequinBackgroundUI->SetActive(false);
+				m_spDeActivateHarelequinGageUI->SetActive(false);
+				m_spKeyFUIHarelequin->SetActive(false);
+				m_spDeactivateAnubisTextUI->SetActive(false);
+				m_spDeActivatedAnubisTextUI->SetActive(false);
+				m_spDeActivateAnubisBackgroundUI->SetActive(false);
+				m_spDeActivateAnubisGageUI->SetActive(false);
+				m_spKeyFUIAnubis->SetActive(false);
 			}
 		
 	}
@@ -2001,6 +2118,9 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 		{	//Gage 
 			m_spLiftFillGageBackgroundTextUI->SetLeftCoolTime(m_spWarriorPlayer->GetInteractionElapsedTime());
 			m_spCheckPointFillGageBackgroundTextUI->SetLeftCoolTime(m_spWarriorPlayer->GetInteractionElapsedTime());
+			m_spDeActivateMinotaurGageUI->SetLeftCoolTime(m_spWarriorPlayer->GetInteractionElapsedTime());
+			m_spDeActivateHarelequinGageUI->SetLeftCoolTime(m_spWarriorPlayer->GetInteractionElapsedTime());
+			m_spDeActivateAnubisGageUI->SetLeftCoolTime(m_spWarriorPlayer->GetInteractionElapsedTime());
 
 		}
 		if (m_spWarriorPlayer->GetDieEffectBool()) {
