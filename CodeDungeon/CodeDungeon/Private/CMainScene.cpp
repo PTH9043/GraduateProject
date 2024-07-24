@@ -171,6 +171,7 @@ void CMainScene::UpdateMobsStatus()
 
 void CMainScene::TurnGuardsOnRange()
 {
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	_float3 PlayerPos = m_spMainCamera->GetTransform()->GetPos();
 	for (auto& guardcontainer : m_spMap->GetGuards())
 	{
@@ -190,27 +191,42 @@ void CMainScene::TurnGuardsOnRange()
 		if (guardcontainer.first == L"Interior_Room_D")
 		{
 			if(m_bisMobsAllDead_Interior_Room_D)
+			{
 				guardcontainer.second->SetActive(false);
+				spGameInstance->RemoveCollisionPawn(guardcontainer.second);
+			}
 		}
 		else if (guardcontainer.first == L"Interior_Hallway_E")
 		{
 			if (m_bisMobsAllDead_Interior_Hallway_E)
+			{
 				guardcontainer.second->SetActive(false);
+				spGameInstance->RemoveCollisionPawn(guardcontainer.second);
+			}
 		}
 		else if (guardcontainer.first == L"Interior_Room_F")
 		{
 			if (m_bisMobsAllDead_Interior_Room_F)
+			{
 				guardcontainer.second->SetActive(false);
+				spGameInstance->RemoveCollisionPawn(guardcontainer.second);
+			}
 		}
 		else if (guardcontainer.first == L"Interior_Room_G")
 		{
 			if (m_bisMobsAllDead_Interior_Room_G)
+			{
 				guardcontainer.second->SetActive(false);
+				spGameInstance->RemoveCollisionPawn(guardcontainer.second);
+			}
 		}
 		else if (guardcontainer.first == L"Interior_Room_A")
 		{
 			if (m_bisDead_Anubis && m_bisDead_Harlequinn && m_bIsDead_Minotaur)
+			{
 				guardcontainer.second->SetActive(false);
+				spGameInstance->RemoveCollisionPawn(guardcontainer.second);
+			}
 		}
 	}
 }
