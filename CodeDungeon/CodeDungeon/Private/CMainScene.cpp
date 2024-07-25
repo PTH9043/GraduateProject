@@ -1654,7 +1654,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 	
 
 	if (m_bStartGameDefault) {
-		spGameInstance->SoundPlayBGM(L"StartBGM");
+		//spGameInstance->SoundPlayBGM(L"StartBGM");
 		//SHPTR<USound> spSound =	spGameInstance->BringSound(L"StartBGM");
 		//spSound->Tick();
 		//spSound->Play();
@@ -1665,8 +1665,11 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 	if (m_spEnterButtonUI->IsMouseOnRect()&& m_spEnterButtonUI->IsActive()) {
 
 		m_spEnterButtonUI->SetIfPicked(true);
-
+		
 		if (true == spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_L)&&!m_bStartSceneForUI) {
+			SHPTR<USound> spSound = spGameInstance->BringSound(L"PressedButton");
+			spSound->Play();
+			
 			m_bStartSceneForUI = true;		
 		}
 	}
