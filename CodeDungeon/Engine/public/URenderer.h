@@ -95,6 +95,8 @@ private:
 	void RenderAlphaBlend();
 	// Distortion
 	void RenderDistortion();
+	// MotionBlur
+	void RenderMotionBlur();
 	// Render 3D UI
 	void Render3DUI();
 	// UI 
