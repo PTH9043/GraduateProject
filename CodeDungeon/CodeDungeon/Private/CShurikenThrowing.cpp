@@ -11,6 +11,7 @@
 #include "UTrail.h"
 #include "UVIBufferTrail.h"
 #include "UNavigation.h"
+#include "CHarlequinn.h"
 
 CShurikenThrowing::CShurikenThrowing(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: CModelObjects(_spDevice, _wstrLayer, _eCloneType),
@@ -49,6 +50,7 @@ HRESULT CShurikenThrowing::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	SHPTR<UCollider> Collider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
 	_wstring mainColliderTag = L"Main";
 	AddColliderInContainer(mainColliderTag, Collider);
+	Collider->SetScaleToFitModel(GetModel()->GetMinVertexPos(), GetModel()->GetMaxVertexPos());
 
 	{
 		UVIBufferTrail::TrailVertexCnt tDesc;
@@ -105,7 +107,6 @@ void CShurikenThrowing::TickActive(const _double& _dTimeDelta)
 	for (auto& Containers : GetColliderContainer())
 	{
 		Containers.second->SetTranslate(GetModel()->GetCenterPos());
-		Containers.second->SetScaleToFitModel(GetModel()->GetMinVertexPos(), GetModel()->GetMaxVertexPos());
 		Containers.second->SetTransform(GetTransform());
 		for (auto& Containers : GetColliderContainer())
 		{
@@ -120,6 +121,7 @@ void CShurikenThrowing::TickActive(const _double& _dTimeDelta)
 			}
 		}
 	}
+
 
 	
 }
@@ -137,11 +139,9 @@ void CShurikenThrowing::LateTickActive(const _double& _dTimeDelta)
 	if (m_bisThrown)
 	{
 		if (false == GetCurrentNavi()->IsMove(vPosition, REF_OUT newCell))
-		{
-
+		{	
 			m_bisThrown = false;
 			m_ftraveledDistance = 0;
-
 		}
 	}
 }

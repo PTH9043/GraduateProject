@@ -22,6 +22,8 @@
 #include "UAnimation.h"
 #include "UDust.h"
 #include "UGuard.h"
+#include "CShurikenThrowing.h"
+#include "CAnubis.h"
 
 CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UPlayer(_spDevice, _wstrLayer, _eCloneType), 
@@ -203,7 +205,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetOutline(true);
 	SetifPlayer(true);//depth만 기록하고 outline안그리도록 다른 물체  outline depth판정위해
 	//SetIfOutlineScale(false); 만약 플레이어 그릴거면 SetifPlayer->false, SetIfOutlineScale->true
-	SetHealth(1);
+	SetHealth(100);
 	SetMaxHealth(1000);
 	SetAnimModelRim(true);
 
@@ -518,16 +520,67 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 				{
 					SetHitAlreadyState(false);
 				}
+
+				for (auto& iter2 : pCharacter->GetColliderContainer())
+				{
+					
+					//아누비스 공격 충돌
+					if (iter2.first == L"MagicSphere")
+					{
+						CAnubis* pAnubis = static_cast<CAnubis*>(_pEnemy.get());
+						if (pAnubis->GetShieldState())
+						{
+							if (iter.second->IsCollision(iter2.second))
+							{
+								if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead03")
+								{
+									if (m_dKickedElapsed >= 50)
+									{
+										m_dKickedElapsed = 0;
+										m_bisKicked = false;
+									}
+									else
+									{
+										GetTransform()->SetDirectionFixedUp(-pAnubis->GetTransform()->GetLook());
+										m_bisKicked = true;
+									}
+									if (!GetIsHItAlreadyState())
+									{
+										DecreaseHealth(1);
+									}
+									SetHitAlreadyState(true);
+								}
+							}
+							else
+								SetHitAlreadyState(false);
+						}
+					}
+					//아누비스 공격 충돌
+					else if (iter2.first == L"MagicCircle")
+					{
+						CAnubis* pAnubis = static_cast<CAnubis*>(_pEnemy.get());
+						if (pAnubis->GetFireAttackState())
+						{
+							if (iter.second->IsCollision(iter2.second))
+							{
+								if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead01" && !m_bisKicked && CurAnimName != L"dead03")
+								{
+									if (!GetIsHItAlreadyState())
+									{
+										DecreaseHealth(1);
+									}
+									SetHitAlreadyState(true);
+								}
+							}
+							else
+								SetHitAlreadyState(false);
+						}
+					}
+				}
 			}
 			else
 			{
-				for (auto& iter2 : pCharacter->GetColliderContainer())
-				{
-					if (iter.second->IsCollision(iter2.second))
-					{
-						/*GetTransform()->SetPos(GetTransform()->GetPos() - direction * 10 * _dTimeDelta);*/
-					}
-				}
+			
 			}		
 		}
 	}
@@ -746,27 +799,30 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 	}
 	else if (PAWNTYPE::PAWN_PROJECTILE == ePawnType)
 	{
-		CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
+		CShurikenThrowing* pModelObject = static_cast<CShurikenThrowing*>(_pEnemy.get());
 		for (auto& iter : GetColliderContainer())
 		{
 			if (iter.first == L"ForAttack")
 			{
 				for (auto& iter2 : pModelObject->GetColliderContainer())
 				{
-					if (iter.second->IsCollision(iter2.second))
+					if(pModelObject->GetThrowingState())
 					{
-						if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead01" && !m_bisKicked && CurAnimName != L"dead03")
+						if (iter.second->IsCollision(iter2.second))
 						{
-							if (!GetIsHItAlreadyState())
+							if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead01" && !m_bisKicked && CurAnimName != L"dead03")
 							{
-								DecreaseHealth(1);
+								if (!GetIsHItAlreadyState())
+								{
+									DecreaseHealth(1);
+								}
+								SetHitAlreadyState(true);
 							}
-							SetHitAlreadyState(true);
 						}
-					}
-					else
-					{
-						SetHitAlreadyState(false);
+						else
+						{
+							SetHitAlreadyState(false);
+						}
 					}
 
 				}

@@ -49,7 +49,7 @@ private:
 	_double				m_dRecvAnimDuration;
 
 	_double				m_dTimerForFireCircle;
-	_bool				m_bisFireAttack;
+	_double				m_dShieldCooltime;
 };
 
 END

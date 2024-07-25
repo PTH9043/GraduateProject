@@ -272,20 +272,6 @@ SHPTR<UCell> UNavigation::FindCellWithoutUpdate(const _float3& _vPosition) {
 		return nullptr;
 }
 
-SHPTR<UCell> UNavigation::FindCellForCamera(const _float3& _vPosition) {
-	RETURN_CHECK(nullptr == m_spCellContainer, nullptr);
-	_int iNeighborIndex{ 0 };
-	_float3 vLine{};
-	_bool success = false;
-	SHPTR<UCell> closestCell{};
-	for (auto& Cells : *(m_spCellContainer))
-	{
-		if (true == Cells->IsIn(_vPosition, iNeighborIndex, vLine)) {
-
-		}
-	}
-}
-
 SHPTR<UCell> UNavigation::FindCell(const _int& _iIndex) {
 	RETURN_CHECK(nullptr == m_spCellContainer, nullptr);
 	_int iNeighborIndex{ 0 };
@@ -296,6 +282,7 @@ SHPTR<UCell> UNavigation::FindCell(const _int& _iIndex) {
 		if (Cells->GetIndex() == _iIndex) {
 			m_spPrevCell = m_spCurCell;
 			m_iCurIndex = _iIndex;
+			m_spCurCell = Cells;
 			return Cells;
 		}
 	}
@@ -595,7 +582,7 @@ SHPTR<UCell> UNavigation::ChooseRandomNeighborCell(int iterations)
 		// Choose a random neighbor index
 		int randomIndex = std::rand() % validNeighbors.size();
 
-		SHPTR<UCell> neighborCell = FindCell(validNeighbors[randomIndex]);
+		SHPTR<UCell> neighborCell = FindCellWithoutUpdate(validNeighbors[randomIndex]);
 
 		RETURN_CHECK(nullptr == neighborCell, nullptr);
 

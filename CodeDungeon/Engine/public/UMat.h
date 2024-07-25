@@ -34,6 +34,8 @@ private:
 	SHPTR< UShaderConstantBuffer>						m_spTimerBuffer;
 	SHPTR< UVIBufferRect>								m_spVIBufferRect;
 	BLOODTIMER _bloodTimer;
+
+	SHPTR<UCollider>									m_spCollider;
 public:
 	CSHPTRREF<UTexGroup> GetTextureGroup() const { return m_spDustTexGroup; }
 	void SetColorTexture(const _wstring& TexName);

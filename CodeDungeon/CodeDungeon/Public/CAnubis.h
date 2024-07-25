@@ -43,9 +43,13 @@ public:
 
 	CSHPTRREF<UMat> GetMagicCircle() { return m_spMagicCircle; }
 	CSHPTRREF<UMat> GetFireCircle() { return m_spFireCircle; }
+	CSHPTRREF<UMat> GetFireCircle1() { return m_spFireCircle1; }
 
 	const _bool& GetShieldState() { return m_bisShield; }
 	void SetShieldState(_bool _newState) { m_bisShield = _newState; }
+
+	const _bool& GetFireAttackState() { return m_bisFireAttack; }
+	void SetFireAttackState(_bool _newState) { m_bisFireAttack = _newState; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
@@ -65,6 +69,7 @@ private:
 
 	SHPTR<UMat>				m_spMagicCircle;
 	SHPTR<UMat>				m_spFireCircle;
+	SHPTR<UMat>				m_spFireCircle1;
 	SHPTR<UGuard>			m_spMagicSphere;
 	SHPTR<CAnubisStaff>			m_spAnubisStaff;
 
@@ -72,6 +77,10 @@ private:
 	_float3						m_f3OriginDirection;
 
 	_bool						m_bisShield;
+	_bool						m_bisFireAttack;
+	_float						m_fShieldRadius;
+	_float						m_fMagicCircleRadius;
+	_double						m_dShieldTimer;
 
 	UNavigation::PathFindingState m_PathFindingState;
 	VECTOR<_float3> m_AstarPath;

@@ -86,7 +86,7 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
 
     _float AttackRange = 10.0f;
 
-    if (!FoundPlayer)
+    if (!FoundPlayer || spMinotaur->GetTargetPlayer()->GetDeathState())
     {
         spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         // Handle idle mode with 1/3 probability and 3-second duration
@@ -121,7 +121,8 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
             }
         }
     }
-    else
+
+    if(FoundPlayer && !spMinotaur->GetTargetPlayer()->GetDeathState())
     {
         if(!m_bRushMode)
             m_bAttackMode = true;
@@ -136,7 +137,7 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
     }
 
     // Handle attack mode state
-    if (m_bAttackMode && !Hit && !m_bRushMode && !spMinotaur->GetTargetPlayer()->GetDeathState())
+    if (m_bAttackMode && !Hit && !m_bRushMode)
     {
         m_dlastAttackTime += _dTimeDelta;
         if (m_dlastAttackTime > 3.0)

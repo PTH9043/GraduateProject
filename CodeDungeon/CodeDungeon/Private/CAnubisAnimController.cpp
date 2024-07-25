@@ -26,7 +26,7 @@ CAnubisAnimController::CAnubisAnimController(CSHPTRREF<UDevice> _spDevice)
     m_iRandomValueforAttack{ 0 },
     m_bAttackStart{ false },
     m_dTimerForFireCircle{0},
-    m_bisFireAttack{false}
+    m_dShieldCooltime{3}
 {
 }
 
@@ -46,7 +46,7 @@ CAnubisAnimController::CAnubisAnimController(const CAnubisAnimController& _rhs)
     m_iRandomValueforAttack{ 0 },
     m_bAttackStart{ false },
     m_dTimerForFireCircle{0},
-    m_bisFireAttack{ false }
+    m_dShieldCooltime{3}
 {
 }
 
@@ -74,7 +74,7 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis_attack(0, 3);
+    std::uniform_int_distribution<> dis_attack(0, 1);
 
     ClearTrigger();
     SetAnimState(-1);
@@ -96,45 +96,53 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
     _float AttackRange = 10.0f;
 
     // Handle found player state
-    if (FoundPlayer && !m_bFoundPlayerFirsttime)
+    if (FoundPlayer && !spAnubis->GetTargetPlayer()->GetDeathState())
     {
-        UpdateState(spAnimModel, ANIM_AWAKE, L"TOATTACKIDLE");
-        m_bFoundPlayerFirsttime = true;
-    }
-    else if (!FoundPlayer && m_bFoundPlayerFirsttime)
-    {
-        m_bAttackMode = false;
-        m_bAttackStart = false;
-
-        if (_float3::Distance(spAnubis->GetTransform()->GetPos(), spAnubis->GetOriginPos()) > 2)
+        if(!m_bFoundPlayerFirsttime)
         {
-            UpdateState(spAnimModel, ANIM_MOVE, L"WALK");
+            UpdateState(spAnimModel, ANIM_AWAKE, L"TOATTACKIDLE");
+            spAnimModel->SetAnimation(L"Guard Idle to Attack Idle");
+            m_bFoundPlayerFirsttime = true;
         }
         else
         {
-            UpdateState(spAnimModel, ANIM_AWAKE, L"TOGUARDIDLE");
-            m_bFoundPlayerFirsttime = false;
+            if (CurAnimName == L"Guard Idle to Attack Idle" || CurAnimName == L"Walk")
+                m_bAttackMode = true;
         }
     }
-    else if (FoundPlayer && m_bFoundPlayerFirsttime && !m_bAttackMode)
+    if ((!FoundPlayer && m_bFoundPlayerFirsttime) || spAnubis->GetTargetPlayer()->GetDeathState())
     {
-        if (CurAnimName == L"Guard Idle to Attack Idle" || CurAnimName == L"Walk")
-            m_bAttackMode = true;
-
-    }
-    else if (!FoundPlayer && !m_bFoundPlayerFirsttime)
-    {
-        if (CurAnimName == L"Attack Idle to Guard Idle")
+        if(m_bFoundPlayerFirsttime)
         {
-            if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.9)
+            m_bAttackMode = false;
+            m_bAttackStart = false;
+
+            if (_float3::Distance(spAnubis->GetTransform()->GetPos(), spAnubis->GetOriginPos()) > 2)
             {
-                UpdateState(spAnimModel, ANIM_IDLE, L"GUARDIDLE");
+                UpdateState(spAnimModel, ANIM_MOVE, L"WALK");
+            }
+            else
+            {
+                UpdateState(spAnimModel, ANIM_AWAKE, L"TOGUARDIDLE");
+                m_bFoundPlayerFirsttime = false;
+                m_dShieldCooltime = 3;
             }
         }
         else
-            spAnubis->GetTransform()->SetDirectionFixedUp(spAnubis->GetOriginDirection(), _dTimeDelta, 5);
-
+        {
+            if (CurAnimName == L"Attack Idle to Guard Idle")
+            {
+                if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.9)
+                {
+                    UpdateState(spAnimModel, ANIM_IDLE, L"GUARDIDLE");
+                }
+            }
+            else
+                spAnubis->GetTransform()->SetDirectionFixedUp(spAnubis->GetOriginDirection(), _dTimeDelta, 5);
+        }
     }
+
+
 
     // Handle hit state
     if (Hit)
@@ -143,12 +151,16 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
         spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         spAnubis->SetPrevHealth(spAnubis->GetHealth());
     }
+  
 
-
-    if (m_bAttackMode && !Hit && !spAnubis->GetTargetPlayer()->GetDeathState())
+    if (m_bAttackMode && !Hit)
     {
         UpdateState(spAnimModel, ANIM_IDLE, L"ATTACKIDLE");
-
+        if (spAnubis->GetShieldState() == false)
+        {
+            m_dShieldCooltime += _dTimeDelta;
+        }
+  
         if (!m_bAttackStart)
         {
             spAnimModel->SetAnimation(L"Attack Idle");
@@ -157,39 +169,53 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
 
         if (m_bAttackStart)
         {
-            if (DistanceFromPlayer > AttackRange_Long)
+            if (spAnubis->GetShieldState() == false && m_dShieldCooltime > 3)
             {
-                UpdateState(spAnimModel, ANIM_MOVE, L"WALK");
+                UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK3");
             }
-            else if (DistanceFromPlayer < AttackRange_Long && DistanceFromPlayer > AttackRange_Close)
+            else
             {
-                UpdateState(spAnimModel, ANIM_ATTACK, L"CAST");
-            }
-            else if (DistanceFromPlayer < AttackRange_Close)
-            {
-                if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.9)
-                    m_iRandomValueforAttack = dis_attack(gen);
+                if (DistanceFromPlayer > AttackRange_Long)
+                {
+                    UpdateState(spAnimModel, ANIM_MOVE, L"WALK");
+                }
+                else if (DistanceFromPlayer < AttackRange_Long && DistanceFromPlayer > AttackRange_Close)
+                {
+                    UpdateState(spAnimModel, ANIM_ATTACK, L"CAST");
+                }
+                else if (DistanceFromPlayer < AttackRange_Close)
+                {
+                    if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.9)
+                        m_iRandomValueforAttack = dis_attack(gen);
 
-                if (m_iRandomValueforAttack == 0)
-                    UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK1");
-                if (m_iRandomValueforAttack == 1)
-                    UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK2");
-                if (m_iRandomValueforAttack == 2)
-                    UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK3");
-                if (m_iRandomValueforAttack == 3)
-                    UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK4");
+                    if (m_iRandomValueforAttack == 0)
+                        UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK1");
+                    if (m_iRandomValueforAttack == 1)
+                        UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK4");
+                }
             }
         }
     }
+
+    if (CurAnimName == L"Attack3")
+    {
+        if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.65 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.66)
+        {
+            m_dShieldCooltime = 0;
+            spAnubis->SetShieldState(true);
+        }
+    }
+
+
 
     if (CurAnimName == L"Cast")
     {
         if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.65 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.66)
         {
-            m_bisFireAttack = true;        
+            spAnubis->SetFireAttackState(true); 
         }
     }
-    if (m_bisFireAttack)
+    if (spAnubis->GetFireAttackState())
     {
         m_dTimerForFireCircle += _dTimeDelta;
         float scale_factor = 1 + 100 * m_dTimerForFireCircle * m_dTimerForFireCircle;
@@ -197,13 +223,17 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
         {
             spAnubis->GetFireCircle()->GetTransform()->SetScale(_float3(scale_factor, scale_factor, 2));
             spAnubis->GetFireCircle()->SetActive(true);
+            spAnubis->GetFireCircle1()->GetTransform()->SetScale(_float3(scale_factor - 5, scale_factor - 5, 2));
+            spAnubis->GetFireCircle1()->SetActive(true);
         }
         else
         {
             m_dTimerForFireCircle = 0;
             spAnubis->GetFireCircle()->GetTransform()->SetScale(_float3(1, 1, 1));
             spAnubis->GetFireCircle()->SetActive(false);
-            m_bisFireAttack = false;
+            spAnubis->GetFireCircle1()->GetTransform()->SetScale(_float3(1, 1, 1));
+            spAnubis->GetFireCircle1()->SetActive(false);
+            spAnubis->SetFireAttackState(false);
         }
     }
 

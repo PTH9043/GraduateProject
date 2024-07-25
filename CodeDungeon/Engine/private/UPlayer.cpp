@@ -196,17 +196,8 @@ void UPlayer::JumpState(const _double& _dTimeDelta)
 
 		//떨어지고 있지 않을 때, 그리고 점프하여 올라가고 있지 않을 때 셀 위의 높이를 탐
 		if (!m_bisFalling && !m_bisJumping)
-		{
-			
+		{		
 			spNavigation->ComputeHeight(GetTransform());
-			if (std::abs(GetPrevPos().y - GetTransform()->GetPos().y) > 30.f)
-			{
-				if (!PrevCell->GetJumpableState())
-				{
-					GetTransform()->SetPos(GetPrevPos());
-					spNavigation->SetCurCell(PrevCell);
-				}
-			}
 		}
 	}
 }

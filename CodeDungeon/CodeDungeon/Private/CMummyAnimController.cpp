@@ -85,17 +85,20 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     _float AttackRange = 10.0f;
 
     // Handle found player state
-    if (FoundPlayer && !m_bFoundPlayerFirsttime)
+    if (FoundPlayer && !spMummy->GetTargetPlayer()->GetDeathState())
     {
-        UpdateState(spAnimModel, ANIM_AWAKE, L"WAKEUP");
-        if(spMummy->GetMummyType() == CMummy::TYPE_LYING)
-            spAnimModel->SetAnimation(L"openLaying");
-        else if(spMummy->GetMummyType() == CMummy::TYPE_STANDING)
-            spAnimModel->SetAnimation(L"openStanding");
-        m_bFoundPlayerFirsttime = true;
-        m_dIdleTimer = 0;
+        if(!m_bFoundPlayerFirsttime)
+        {
+            UpdateState(spAnimModel, ANIM_AWAKE, L"WAKEUP");
+            if (spMummy->GetMummyType() == CMummy::TYPE_LYING)
+                spAnimModel->SetAnimation(L"openLaying");
+            else if (spMummy->GetMummyType() == CMummy::TYPE_STANDING)
+                spAnimModel->SetAnimation(L"openStanding");
+            m_bFoundPlayerFirsttime = true;
+            m_dIdleTimer = 0;
+        }
     }
-    else if (!FoundPlayer && m_bFoundPlayerFirsttime)
+     if ((!FoundPlayer && m_bFoundPlayerFirsttime) || spMummy->GetTargetPlayer()->GetDeathState())
     {
         spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         // Handle idle mode with 1/3 probability and 3-second duration
@@ -133,7 +136,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
             }
         }
     }
-    else if (FoundPlayer && m_bFoundPlayerFirsttime && !m_bAttackMode)
+     if (FoundPlayer && m_bFoundPlayerFirsttime && !m_bAttackMode)
     {
         m_bTauntMode = true;
         m_dIdleTimer = 0;
@@ -164,7 +167,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     }
 
     // Handle attack mode state
-    if (m_bAttackMode && !Hit && !spMummy->GetTargetPlayer()->GetDeathState())
+    if (m_bAttackMode && !Hit)
     {
         m_dlastAttackTime += _dTimeDelta;
         if (m_dlastAttackTime > 3.0)

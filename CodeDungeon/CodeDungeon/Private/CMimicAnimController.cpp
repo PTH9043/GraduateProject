@@ -87,14 +87,14 @@ void CMimicAnimController::Tick(const _double& _dTimeDelta)
  
 
     // Handle found player state
-    if (FoundPlayer && !spMimic->GetOpeningState())
+    if (FoundPlayer && !spMimic->GetOpeningState() && !spMimic->GetTargetPlayer()->GetDeathState())
     {
         if (spGameInstance->GetDIKeyDown(DIK_F)) {
             spMimic->SetOpeningState(true);
             spAnimModel->SetAnimation(L"Enter");
         }
     }
-    else if(!FoundPlayer && spMimic->GetOpeningState())
+    if ((!FoundPlayer && spMimic->GetOpeningState()) || spMimic->GetTargetPlayer()->GetDeathState())
     {
         // Handle idle mode with 1/3 probability and 3-second duration
         m_bAttackMode = false;
@@ -143,7 +143,7 @@ void CMimicAnimController::Tick(const _double& _dTimeDelta)
     }
 
     // Handle attack mode state
-    if (m_bAttackMode && !Hit && !spMimic->GetTargetPlayer()->GetDeathState())
+    if (m_bAttackMode && !Hit)
     {
         m_dlastAttackTime += _dTimeDelta;
         if (m_dlastAttackTime > 3.0)

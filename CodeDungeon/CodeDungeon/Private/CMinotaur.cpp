@@ -233,7 +233,7 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 			AddTimeAccumulator(_dTimeDelta);
 
 			// A* for moving towards player when player is found
-			if (GetFoundTargetState())
+			if (GetFoundTargetState() && !GetTargetPlayer()->GetDeathState())
 			{
 				if (GetTimeAccumulator() >= 1.0)
 				{

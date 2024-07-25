@@ -23,6 +23,7 @@
 
 IMPLEMENT_SINGLETON(TImGuiManager)
 
+
 TImGuiManager::TImGuiManager() :
 	m_ImGuiObjectContainer{},
 	m_spMainView{ nullptr },

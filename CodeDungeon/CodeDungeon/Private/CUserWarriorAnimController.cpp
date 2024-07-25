@@ -320,7 +320,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
             {
                 m_bDieEffectTurnedOn = false;
                 spWarriorPlayer->GetCurrentNavi()->FindCell(spWarriorPlayer->GetSpawnPointCell()->GetIndex());
-                spWarriorPlayer->GetTransform()->SetPos(_float3(spWarriorPlayer->GetSpawnPointPos().x, spWarriorPlayer->GetSpawnPointPos().y + 5, spWarriorPlayer->GetSpawnPointPos().z));
+                spWarriorPlayer->GetTransform()->SetPos(spWarriorPlayer->GetSpawnPointCell()->GetCenterPos());
                 static_pointer_cast<CMainCamera>(spWarriorPlayer->GetFollowCamera())->GetCurrentNavi()->FindCell(spWarriorPlayer->GetSpawnPointCamera()->GetIndex());
                 spWarriorPlayer->SetElapsedTime(0);
                 spWarriorPlayer->SetDeathState(false);

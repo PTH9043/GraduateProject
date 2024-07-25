@@ -9,6 +9,7 @@ class UNavigation;
 END
 
 BEGIN(Client)
+class CHarlequinn;
 /*
 @ Date: 2024-05-12, Writer: ÀÌ¼ºÇö
 @ Explain
@@ -32,11 +33,13 @@ public:
 
 	void ThrowShurikens(const _double& _dTimeDelta, _float3 _dir);
 	void SetThrow(const _bool& _isThrow) { m_bisThrown = _isThrow; }
+	const _bool& GetThrowingState() { return m_bisThrown; }
 
 	const _float& GetTraveledDistance() { return m_ftraveledDistance; }
 	void SetTraveledDistance(const _float& _new) { m_ftraveledDistance = _new; }
 
 	SHPTR<UNavigation> GetCurrentNavi() const { return m_spCurNavi; }
+
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
@@ -52,6 +55,7 @@ private:
 	_bool						m_bisThrown;
 
 	SHPTR<UNavigation>			m_spCurNavi;
+	
 };
 
 END

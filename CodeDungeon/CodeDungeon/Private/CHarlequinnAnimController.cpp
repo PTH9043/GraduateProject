@@ -102,12 +102,13 @@ void CHarlequinnAnimController::Tick(const _double& _dTimeDelta)
     _float AttackRange_Jump = 40;
     _float AttackRange_Close = 10.0f;
     // Handle found player state
-    if (!FoundPlayer)
+    if (!FoundPlayer || spHarlequinn->GetTargetPlayer()->GetDeathState())
     {
         spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         // Handle idle mode with 1/3 probability and 3-second duration
         m_bAttackMode = false;
         m_bTauntMode = false;
+
         //Idle Timer
         if (CurAnimName == L"Idle")
         {
@@ -139,8 +140,14 @@ void CHarlequinnAnimController::Tick(const _double& _dTimeDelta)
                 UpdateState(spAnimModel, ANIM_MOVE, L"WALK");
             }
         }
+
+        if (CurAnimName == L"Crouch Idle")
+        {
+           spAnimModel->SetAnimation(L"idle");
+           UpdateState(spAnimModel, ANIM_IDLE, L"IDLE");
+        }
     }
-    else if (FoundPlayer && !m_bAttackMode)
+    if (FoundPlayer && !m_bAttackMode && !spHarlequinn->GetTargetPlayer()->GetDeathState())
     {
         m_bTauntMode = true;
         m_dIdleTimer = 0;
@@ -369,6 +376,7 @@ void CHarlequinnAnimController::Tick(const _double& _dTimeDelta)
         if ((*spHarlequinn->GetShurikens())[i]->GetTraveledDistance() > 100)
         {
             (*spHarlequinn->GetShurikens())[i]->SetThrow(false);
+            (*spHarlequinn->GetShurikens())[i]->GetTransform()->SetPos(spHarlequinn->GetTransform()->GetPos());
             (*spHarlequinn->GetShurikens())[i]->SetTraveledDistance(0);
         }
         else

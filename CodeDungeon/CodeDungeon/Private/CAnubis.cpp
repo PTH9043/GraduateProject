@@ -33,7 +33,12 @@ CAnubis::CAnubis(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const
 	m_spMagicCircle{ nullptr },
 	m_spMagicSphere{nullptr},
 	m_bisShield{false},
-	m_spFireCircle{nullptr}
+	m_spFireCircle{nullptr},
+	m_spFireCircle1{nullptr},
+	m_dShieldTimer{},
+	m_fShieldRadius{},
+	m_fMagicCircleRadius{},
+	m_bisFireAttack{false}
 {
 }
 
@@ -48,7 +53,13 @@ CAnubis::CAnubis(const CAnubis& _rhs)
 	m_f3OriginDirection{},
 	m_spMagicCircle{ nullptr },
 	m_spMagicSphere{ nullptr },
-	m_bisShield{ false }
+	m_bisShield{ false },
+	m_spFireCircle{ nullptr },
+	m_spFireCircle1{ nullptr },
+	m_dShieldTimer{},
+	m_fShieldRadius{},
+	m_fMagicCircleRadius{},
+	m_bisFireAttack{ false }
 {
 }
 
@@ -208,33 +219,48 @@ HRESULT CAnubis::NativeConstructClone(const VOIDDATAS& _Datas)
 	}
 
 	UCollider::COLLIDERDESC tDesc;
-	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
-	tDesc.vScale = _float3(0, 0, 0);
+	tDesc.vTranslation = _float3(1, 8, 1);
+	tDesc.vScale = _float3(0, 10, 0);
 	SHPTR<UCollider> Collider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
 	_wstring mainColliderTag = L"Main";
 
 	AddColliderInContainer(mainColliderTag, Collider);
-	for (auto& Colliders : GetColliderContainer())
-	{
-		Colliders.second->SetScale(_float3(1, 8, 1));
-		Colliders.second->SetTranslate(_float3(0, 10, 0));
-	}
+	UCollider::COLLIDERDESC tDesc2;
+	tDesc2.vTranslation = _float3(0.f, 5.f, 0.f);
+	tDesc2.vScale = _float3(8, 8, 8);
+	SHPTR<UCollider> Collider2 = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_SPHERECOLLIDER, { &tDesc2 }));
+	_wstring mainColliderTag2 = L"MagicSphere";
+
+	AddColliderInContainer(mainColliderTag2, Collider2);
+	UCollider::COLLIDERDESC tDesc3;
+	tDesc3.vTranslation = _float3(0.f, 0.5f, 0.f);
+	tDesc3.vScale = _float3(1, 1, 1);
+	SHPTR<UCollider> Collider3 = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc3 }));
+	_wstring mainColliderTag3 = L"MagicCircle";
+	AddColliderInContainer(mainColliderTag3, Collider3);
 
 	m_spMagicCircle = std::static_pointer_cast<UMat>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MAT));
 	m_spMagicCircle->SetColorTexture(L"Magic5");
-	m_spMagicCircle ->GetTransform()->SetScale(_float3(20, 20 , 1));
+	m_fMagicCircleRadius = 20;
+	m_spMagicCircle ->GetTransform()->SetScale(_float3(1, 1, 1));
 
 	m_spFireCircle = std::static_pointer_cast<UMat>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MAT));
-	m_spFireCircle->SetColorTexture(L"FireCircle");
+	m_spFireCircle->SetColorTexture(L"firecircle3");
 	m_spFireCircle->GetTransform()->SetScale(_float3(1, 1, 1));
 	m_spFireCircle->SetActive(false);
+
+	m_spFireCircle1 = std::static_pointer_cast<UMat>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MAT));
+	m_spFireCircle1->SetColorTexture(L"FireCircle");
+	m_spFireCircle1->GetTransform()->SetScale(_float3(1, 1, 1));
+	m_spFireCircle1->SetActive(false);
 
 	UGuard::GUARDDESC guardDesc;
 	guardDesc.GuardType = UGuard::TYPE_SPHERE;
 	m_spMagicSphere = std::static_pointer_cast<UGuard>(spGameInstance->CloneActorAdd(PROTO_ACTOR_GUARD, { &guardDesc }));
 	m_spMagicSphere->SetActive(true);
 	m_spMagicSphere->SetColorTexture(L"purple");
-	m_spMagicSphere->GetTransform()->SetScale(_float3(8, 8, 8));
+	m_fShieldRadius = 8;
+	m_spMagicSphere->GetTransform()->SetScale(_float3(m_fShieldRadius, m_fShieldRadius, m_fShieldRadius));
 
 	//spGameInstance->AddCollisionPawnList(m_spMagicSphere);
 
@@ -274,7 +300,7 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 			AddTimeAccumulator(_dTimeDelta);
 
 			// A* for moving towards player when player is found
-			if (GetFoundTargetState())
+			if (GetFoundTargetState() && !GetTargetPlayer()->GetDeathState())
 			{
 				SetOutline(true);
 				if (GetTimeAccumulator() >= 0.5)
@@ -371,7 +397,22 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 	{
 
 	}
-	UpdateCollision();
+
+
+	for (auto& iter : GetColliderContainer())
+	{
+		if (iter.first == L"Main")
+			iter.second->SetTransform(GetTransform()->GetWorldMatrix());
+		else if (iter.first == L"MagicSphere")
+			iter.second->SetTransform(GetTransform()->GetPos(), GetTransform()->GetQuaternion());
+		else
+		{
+			iter.second->SetTransform(GetTransform()->GetPos(), m_spFireCircle->GetTransform()->GetQuaternion());
+			iter.second->SetScale(_float3(m_spFireCircle->GetTransform()->GetScale().x - 7, 0.3, m_spFireCircle->GetTransform()->GetScale().y - 7));
+		}
+
+	}
+
 	SetOutlineByAbility(true);
 	SetOutlineColor(_float3(0,1,0));
 }
@@ -384,8 +425,10 @@ void CAnubis::LateTickActive(const _double& _dTimeDelta)
 	GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
 
 	//for (auto& Colliders : GetColliderContainer())
-	//	if(Colliders.first == L"Main")
+	//{
+	//	if (Colliders.first == L"MagicCircle")
 	//		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
+	//}
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	_int CurAnimState = GetAnimationController()->GetAnimState();
@@ -402,12 +445,41 @@ void CAnubis::LateTickActive(const _double& _dTimeDelta)
 		}
 	}
 
-	m_spFireCircle->GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, GetTransform()->GetPos().y + 0.5, GetTransform()->GetPos().z));
-	m_spFireCircle->GetTransform()->RotateTurn(_float3(0, 1, 0), 1000, _dTimeDelta);
-	m_spMagicSphere->GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, GetTransform()->GetPos().y + 5, GetTransform()->GetPos().z));
+	m_spFireCircle1->GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, GetTransform()->GetPos().y + 0.5, GetTransform()->GetPos().z));
+	m_spFireCircle1->GetTransform()->RotateTurn(_float3(0, 1, 0), 500, _dTimeDelta);
 
-	m_spMagicCircle->GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, GetTransform()->GetPos().y + 0.5, GetTransform()->GetPos().z));
-	m_spMagicCircle->GetTransform()->RotateTurn(_float3(0, 1, 0), 30, _dTimeDelta);
+	m_spFireCircle->GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, GetTransform()->GetPos().y + 0.5, GetTransform()->GetPos().z));
+	m_spFireCircle->GetTransform()->RotateTurn(_float3(0, 1, 0), 500, _dTimeDelta);
+	
+	if(m_bisShield)
+	{
+		m_dShieldTimer += _dTimeDelta;
+		m_spMagicCircle->SetActive(true);
+		m_spMagicSphere->SetActive(true);
+		if(m_dShieldTimer <= 8)
+		{
+			m_spMagicSphere->GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, GetTransform()->GetPos().y + 5, GetTransform()->GetPos().z));
+			m_spMagicCircle->GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, GetTransform()->GetPos().y + 0.5, GetTransform()->GetPos().z));
+			m_spMagicCircle->GetTransform()->RotateTurn(_float3(0, 1, 0), 30, _dTimeDelta);
+			if (1 + 20 * m_dShieldTimer < m_fMagicCircleRadius)
+			{
+				m_spMagicCircle->GetTransform()->SetScale(_float3(1 + 20 * m_dShieldTimer, 1 + 20 * m_dShieldTimer, 1));
+			}
+			if (1 + 10 * m_dShieldTimer < m_fShieldRadius)
+			{
+				m_spMagicSphere->GetTransform()->SetScale(_float3(1 + 10 * m_dShieldTimer, 1 + 10 * m_dShieldTimer, 1 + 10 * m_dShieldTimer));
+			}
+		}
+		else
+		{
+			m_dShieldTimer = 0;
+			m_bisShield = false;
+			m_spMagicCircle->SetActive(false);
+			m_spMagicSphere->SetActive(false);
+			m_spMagicCircle->GetTransform()->SetScale(_float3(1, 1, 1));
+			m_spMagicSphere->GetTransform()->SetScale(_float3(1, 1, 1));
+		}
+	}
 }
 
 HRESULT CAnubis::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
@@ -442,45 +514,51 @@ void CAnubis::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 	auto handleCollisionWithPlayer = [&](UCharacter* pCharacter) {
 		for (const auto& iter : GetColliderContainer())
 		{
-			if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
+			if(iter.first == L"Main")
 			{
-				if (CurAnimName != L"openLaying" && CurAnimName != L"openStanding" &&
-					CurAnimName != L"taunt" && CurAnimName != L"death")
+				if(!m_bisShield)
 				{
-					if (!GetIsHItAlreadyState())
+					if (pCharacter->GetAnimModel()->IsCollisionAttackCollider(iter.second))
 					{
-						m_spBloodParticle->SetActive(true);
-						m_spSlashParticle->SetActive(true);
-						m_spAttackParticle->SetActive(true);
-						m_spAttackParticleTwo->SetActive(true);
-						m_spBloodParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
-						m_spSlashParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
-						m_spAttackParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
-						m_spAttackParticleTwo->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
-						// Decrease health on hit
-						DecreaseHealth(pCharacter->GetAttack());
+						if (CurAnimName != L"openLaying" && CurAnimName != L"openStanding" &&
+							CurAnimName != L"taunt" && CurAnimName != L"death")
+						{
+							if (!GetIsHItAlreadyState())
+							{
+								m_spBloodParticle->SetActive(true);
+								m_spSlashParticle->SetActive(true);
+								m_spAttackParticle->SetActive(true);
+								m_spAttackParticleTwo->SetActive(true);
+								m_spBloodParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+								m_spSlashParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+								m_spAttackParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+								m_spAttackParticleTwo->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+								// Decrease health on hit
+								DecreaseHealth(pCharacter->GetAttack());
+							}
+
+
+
+							SetHitAlreadyState(true);
+						}
 					}
-					
-
-
-					SetHitAlreadyState(true);
+					else
+					{
+						SetHitAlreadyState(false);
+					}
 				}
-			}
-			else
-			{
-				SetHitAlreadyState(false);
-			}
 
-			for (const auto& iter2 : pCharacter->GetColliderContainer())
-			{
-				if (iter.second->IsCollision(iter2.second))
+				for (const auto& iter2 : pCharacter->GetColliderContainer())
 				{
-					SetCollisionState(true);
-					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
-				}
-				else
-				{
-					SetCollisionState(false);
+					if (iter.second->IsCollision(iter2.second))
+					{
+						SetCollisionState(true);
+						GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
+					}
+					else
+					{
+						SetCollisionState(false);
+					}
 				}
 			}
 		}
@@ -489,16 +567,19 @@ void CAnubis::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 	auto handleCollisionWithCharacter = [&](UCharacter* pCharacter) {
 		for (const auto& iter : GetColliderContainer())
 		{
-			for (const auto& iter2 : pCharacter->GetColliderContainer())
+			if (iter.first == L"Main")
 			{
-				if (iter.second->IsCollision(iter2.second))
+				for (const auto& iter2 : pCharacter->GetColliderContainer())
 				{
-					SetCollisionState(true);
-					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
-				}
-				else
-				{
-					SetCollisionState(false);
+					if (iter.second->IsCollision(iter2.second))
+					{
+						SetCollisionState(true);
+						GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
+					}
+					else
+					{
+						SetCollisionState(false);
+					}
 				}
 			}
 		}
@@ -507,13 +588,16 @@ void CAnubis::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 	auto handleCollisionWithStaticObject = [&](CModelObjects* pModelObject) {
 		for (const auto& iter : GetColliderContainer())
 		{
-			for (const auto& iter2 : pModelObject->GetColliderContainer())
+			if (iter.first == L"Main")
 			{
-				SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
-				if (GetCollidedNormal() != _float3::Zero)
+				for (const auto& iter2 : pModelObject->GetColliderContainer())
 				{
-					_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 50.0f : 20.0f;
-					ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
+					SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
+					if (GetCollidedNormal() != _float3::Zero)
+					{
+						_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 50.0f : 20.0f;
+						ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
+					}
 				}
 			}
 		}

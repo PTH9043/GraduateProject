@@ -278,7 +278,7 @@ void CHarlequinn::TickActive(const _double& _dTimeDelta)
 			AddTimeAccumulator(_dTimeDelta);
 
 			// A* for moving towards player when player is found
-			if (GetFoundTargetState())
+			if (GetFoundTargetState() && !GetTargetPlayer()->GetDeathState())
 			{
 				//SetOutline(true);
 				if (GetTimeAccumulator() >= 1.0)
@@ -379,7 +379,11 @@ void CHarlequinn::LateTickActive(const _double& _dTimeDelta)
 
 	const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
 
-	if(CurAnimName != L"Jump Forward" && CurAnimName != L"Attack 4" && CurAnimName != L"Attack 3")
+	if(CurAnimName == L"Jump Forward" || CurAnimName == L"Attack 4" || CurAnimName == L"Attack 3")
+	{
+		
+	}
+	else
 	{
 		_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
 		GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
