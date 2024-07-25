@@ -149,7 +149,10 @@ void CMainScene::UpdateMobsStatus()
 					{
 						if (distanceSq <= 400 * 400)
 						{
-							mobs->SetActive(true);
+							if (!mobs->GetDeathState())
+							{
+								mobs->SetActive(true);
+							}
 						}
 						else
 						{
