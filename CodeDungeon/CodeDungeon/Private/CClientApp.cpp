@@ -94,7 +94,7 @@ void CClientApp::Render()
 	m_spTickTimer = m_spGameInstance->CreateTimerAdd(TICK_TIMER);
 	m_spRenderTimer = m_spGameInstance->CreateTimerAdd(RENDER_TIMER);
 	m_spRenderDeltaTimer = m_spGameInstance->CreateTimerAdd(RENDER_DELETATIMER);
-
+	
 	MSG msg{};
 	ZeroMemory(&msg, sizeof(MSG));
 

@@ -7,6 +7,7 @@
 #include "UGuard.h"
 #include "UTransform.h"
 #include "ULight.h"
+#include "USound.h"
 #include "UParticle.h"
 #include "UParticleSystem.h"
 #include "URenderer.h"
@@ -1650,6 +1651,10 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 	
 
 	if (m_bStartGameDefault) {
+		spGameInstance->SoundPlayBGM(L"StartBGM");
+		//SHPTR<USound> spSound =	spGameInstance->BringSound(L"StartBGM");
+		//spSound->Tick();
+		//spSound->Play();
 		spGameInstance->PauseGame();
 		m_bStartGameDefault = false;
 	}

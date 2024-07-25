@@ -102,6 +102,8 @@ HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, C
 	_spGameInstance->AddPrototype(PROTO_COMP_ANUBISANIMCONTROLLER, CreateConstructorToNative<CAnubisAnimController>(_spDevice));
 	_spGameInstance->AddPrototype(PROTO_COMP_MIMICANIMCONTROLLER, CreateConstructorToNative<CMimicAnimController>(_spDevice));
 
+	_spGameInstance->CreateAudioSystemToFolderNameAndRegister(SOUNDTYPE::SOUND_BACKGROUND, L"BackgroundSound");
+	//_spGameInstance->CreateAudioSystemToFolderNameAndRegister(SOUNDTYPE::SOUND_GAME, L"InGameSound");
 
 	_spGameInstance->FontCreate(FONT_NANUMSQUARE_ACBOLD, L"..\\..\\Resource\\Font\\NanumSquare.spritefont");
 	return S_OK;
@@ -160,7 +162,6 @@ HRESULT CProtoMaker::CreateMainSceneProtoData(CSHPTRREF<UGameInstance> _spGameIn
 	Matrix = _float4x4::CreateScale(1.0f);
 	_spGameInstance->AddPrototype(PROTO_RES_CHESTANIMMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
 		_spDevice, L"..\\..\\Resource\\AnimModel\\Chest\\Convert\\Chest 1_FBX.bin", Matrix));
-
 
 
 
