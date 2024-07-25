@@ -35,6 +35,16 @@ const ANIMOTHEREVENTDESC*  UAnimOccursTimePassEvent::OutOtherEventDesc()
 	return &m_AnimChangeDesc;
 }
 
+_bool UAnimOccursTimePassEvent::EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc, const _wstring& _wstrInputTrigger)
+{
+	if (GetAnimOccursDesc().IsAnimOcurrs(_dTimeAcc))
+	{
+		EventSituation(_pPawn, _pAnimModel, _dTimeDelta, _dTimeAcc);
+		return true;
+	}
+	return false;
+}
+
 void UAnimOccursTimePassEvent::EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc)
 {
 	// 만약 EnableLastLerp가 켜져 있지 않다면
@@ -106,6 +116,16 @@ SHPTR<UAnimEvent> UAnimSoundEvent::Clone(UAnimModel* _pAnimModel)
 const ANIMOTHEREVENTDESC* UAnimSoundEvent::OutOtherEventDesc()
 {
 	return &m_AnimSoundDesc;
+}
+
+_bool UAnimSoundEvent::EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc, const _wstring& _wstrInputTrigger)
+{
+	if (GetAnimOccursDesc().IsAnimOcurrs(_dTimeAcc))
+	{
+		EventSituation(_pPawn, _pAnimModel, _dTimeDelta, _dTimeAcc);
+		return true;
+	}
+	return false;
 }
 
 void UAnimSoundEvent::EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc)

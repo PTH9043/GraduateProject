@@ -20,6 +20,9 @@ public:
 	virtual SHPTR<UAnimEvent> Clone(UAnimModel* _pAnimModel = nullptr) override;
 	// UAnimSectionEvent을(를) 통해 상속됨
 	virtual const ANIMOTHEREVENTDESC*  OutOtherEventDesc() override;
+
+	virtual _bool EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc,
+		const _wstring& _wstrInputTrigger) override;
 protected:
 	// Event 상황일 때를 정의
 	virtual void EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc) override;
@@ -50,6 +53,9 @@ public:
 	virtual SHPTR<UAnimEvent> Clone(UAnimModel* _pAnimModel = nullptr) override;
 	// UAnimSectionEvent을(를) 통해 상속됨
 	virtual const ANIMOTHEREVENTDESC* OutOtherEventDesc() override;
+
+	virtual _bool EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc,
+		const _wstring& _wstrInputTrigger) override;
 protected:
 	// Event 상황일 때를 정의
 	virtual void EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc) override;

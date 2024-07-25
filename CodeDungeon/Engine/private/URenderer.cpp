@@ -303,6 +303,7 @@ HRESULT URenderer::Render()
     RenderBlend();
     RenderAlphaBlend();
     RenderDistortion();
+    RenderMotionBlur();
     RenderHDR();
     RenderHDRTWO();
     RenderGrayScale();
@@ -615,8 +616,11 @@ void URenderer::RenderMotionBlur()
     spShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
     spShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
     {
-        SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLEND_DEFFERED);
-        spShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::BLEND_SCREEN_DEFFERED));
+        SHPTR<URenderTargetGroup> spBlend = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLEND_DEFFERED);
+        spShader->BindSRVBuffer(SRV_REGISTER::T0, spBlend->GetRenderTargetTexture(RTOBJID::BLEND_SCREEN_DEFFERED));
+
+        SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::NONALPHA_DEFFERED);
+        spShader->BindSRVBuffer(SRV_REGISTER::T1, spNonAlpha->GetRenderTargetTexture(RTOBJID::NONALPHA_VELOCITY_DEFFERED));
     }
 
     m_spVIBufferPlane->Render(spShader, m_spCastingCommand);
