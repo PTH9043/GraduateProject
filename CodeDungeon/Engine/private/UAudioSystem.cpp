@@ -66,14 +66,14 @@ void UAudioSystem::Tick()
 void UAudioSystem::Play(const _wstring& _wstrSoundName)
 {
 	m_spSound = BringSound(_wstrSoundName);
-	assert(nullptr != m_spSound);
+	RETURN_CHECK(nullptr == m_spSound, ;);
 	m_spSound->Play();
 }
 
 void UAudioSystem::Play(const _wstring& _wstrSoundName, const _float _fVolumeUpdate)
 {
 	m_spSound = BringSound(_wstrSoundName);
-	assert(nullptr != m_spSound);
+	RETURN_CHECK(nullptr == m_spSound, ;);
 	m_spSound->Play();
 	m_spSound->UpdateVolume(_fVolumeUpdate);
 }
@@ -81,14 +81,14 @@ void UAudioSystem::Play(const _wstring& _wstrSoundName, const _float _fVolumeUpd
 void UAudioSystem::PlayBGM(const _wstring& _wstrSoundName)
 {
 	m_spBgmSound = BringSound(_wstrSoundName);
-	assert(nullptr != m_spBgmSound);
+	RETURN_CHECK(nullptr == m_spBgmSound, ;);
 	m_spBgmSound->PlayBGM(&m_pBGmChannel);
 }
 
 void UAudioSystem::PlayBGM(const _wstring& _wstrSoundName, const _float _fVolumeUpdate)
 {
 	m_spBgmSound = BringSound(_wstrSoundName);
-	assert(nullptr != m_spBgmSound);
+	RETURN_CHECK(nullptr == m_spBgmSound, ;);
 	m_spBgmSound->PlayBGM(&m_pBGmChannel);
 	m_spBgmSound->UpdateVolume(_fVolumeUpdate);
 }
@@ -96,14 +96,14 @@ void UAudioSystem::PlayBGM(const _wstring& _wstrSoundName, const _float _fVolume
 void UAudioSystem::Stop(const _wstring& _wstrSoundName)
 {
 	m_spSound = BringSound(_wstrSoundName);
-	assert(nullptr != m_spSound);
+	RETURN_CHECK(nullptr == m_spSound, ;);
 	m_spSound->Stop();
 }
 
 void UAudioSystem::VolumeUpdate(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate)
 {
 	m_spSound = BringSound(_wstrSoundName);
-	assert(nullptr != m_spSound);
+	RETURN_CHECK(nullptr == m_spSound, ;);
 	m_spSound->UpdateVolume(_fVolumeUpdate);
 }
 
