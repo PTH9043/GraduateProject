@@ -80,9 +80,9 @@ void UAudioSystem::Play(const _wstring& _wstrSoundName, const _float _fVolumeUpd
 
 void UAudioSystem::PlayBGM(const _wstring& _wstrSoundName)
 {
-	m_spSound = BringSound(_wstrSoundName);
-	assert(nullptr != m_spSound);
-	m_spSound->PlayBGM(&m_pBGmChannel);
+	m_spBgmSound = BringSound(_wstrSoundName);
+	assert(nullptr != m_spBgmSound);
+	m_spBgmSound->PlayBGM(&m_pBGmChannel);
 }
 
 void UAudioSystem::PlayBGM(const _wstring& _wstrSoundName, const _float _fVolumeUpdate)
