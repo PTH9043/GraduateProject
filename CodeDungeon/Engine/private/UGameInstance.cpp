@@ -914,6 +914,11 @@ void UGameInstance::SoundPlay(const _wstring& _wstrSoundName, const _float& _fVo
 	m_spAudioSystemManager->Play(_wstrSoundName, _fVolumeUpdate);
 }
 
+void UGameInstance::SoundPlayOnce(const _wstring& _wstrSoundName)
+{
+	m_spAudioSystemManager->PlayOnce(_wstrSoundName);
+}
+
 void UGameInstance::SoundPlayBGM(const _wstring& _wstrSoundName)
 {
 	m_spAudioSystemManager->PlayBGM(_wstrSoundName);
@@ -927,6 +932,11 @@ void UGameInstance::SoundPlayBGM(const _wstring& _wstrSoundName, const _float& _
 void UGameInstance::StopSound(const _wstring& _wstrSoundName)
 {
 	m_spAudioSystemManager->Stop(_wstrSoundName);
+}
+
+void UGameInstance::SoundDisableOncePlay(const _wstring& _wstrSoundName)
+{
+	m_spAudioSystemManager->DisableOncePlay(_wstrSoundName);
 }
 
 void UGameInstance::UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, const _float3& _vSoundVelocity, CSHPTRREF<UTransform> _spTargetTransform)

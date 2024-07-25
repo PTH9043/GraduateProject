@@ -26,12 +26,14 @@ public:
 	void Tick();
 	void Play();
 	void PlayBGM(IN FMOD::Channel** _ppChannel);
+	void PlayOnce();
 	void Stop();
 	void UpdateVolume(const _float _fVolume) ;
 	void UpdateSound3D(const _float3& _vSoudPos, const _float3& _vSoundVelocity, CSHPTRREF<UTransform> _spTargetTransform_CanNullptr = nullptr);
 	void UpdateSound3D(CSHPTRREF<UTransform> _spSelfTransform, const _float3& _vSoundVelocity,
 		CSHPTRREF<UTransform> _spTargetTransform_CanNullptr = nullptr);
 	void ChangeMinMaxDistance3D(const _float _fMinDistance, const _float _fMaxDistance);
+	void DisableOncePlay() { m_isOncePlay = false; }
 private:
 	_int							m_iIndex;
 	SOUNDDESC			m_SoundDesc;
@@ -47,6 +49,8 @@ private:
 	FMOD::System*	m_pSystem;
 	FMOD::Sound*		m_pSound;
 	FMOD::Channel*  m_pChannel;
+
+	_bool						m_isOncePlay;
 };
 
 /* 

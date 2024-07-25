@@ -796,7 +796,11 @@ void TAnimControlView::AnimSoundShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFl
 	{
 		static _string StartT = "Start";
 		static _string EndT = "End";
-		static _string RemoveButton{ "Remove" };
+		static _string Velocity{ "SoundVelocity" };
+		static _string Volume{ "Volume" };
+		static _string MinDistance{ "MinDistance" };
+		static _string MaxDistance{ "MaxDistance" };
+		static _string Remove{ "Remove" };
 		static _string InputSoundName;
 		static 	ANIMSOUNDDESC* SelectSoundDesc{ nullptr };
 		static _int SelectRemoveItem{ -1 };
@@ -875,10 +879,22 @@ void TAnimControlView::AnimSoundShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFl
 					// 4
 					{
 						ImGui::SetNextItemWidth(300);
-						ImGui::InputFloat3("SoundVelocity", &ChangeDesc->vSoundVelocity.x);
+						ImGui::InputFloat3(Velocity + Index, &ChangeDesc->vSoundVelocity.x);
 					}
-
-					if (ImGui::Button(RemoveButton + Index))
+					// 5
+					{
+						ImGui::SetNextItemWidth(100);
+						ImGui::InputFloat3(MaxDistance + Index, & ChangeDesc->fMaxSoundDistance);
+						ImGui::SameLine();
+						ImGui::SetNextItemWidth(100);
+						ImGui::InputFloat3(MinDistance + Index, &ChangeDesc->fMinSoundDistance);
+					}
+					// 5
+					{
+						ImGui::SetNextItemWidth(100);
+						ImGui::InputFloat3(Volume + Index, &ChangeDesc->fSoundVolume);
+					}
+					if (ImGui::Button(Remove + Index))
 					{
 						SelectRemoveItem = iIndex;
 					}

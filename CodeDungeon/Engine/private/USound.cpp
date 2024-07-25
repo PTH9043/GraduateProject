@@ -7,7 +7,7 @@
 USound::USound(FMOD::System* _pSystem, const _wstring& _wstrSoundPath, _int _SoundIndex) :
 	m_iIndex{ _SoundIndex }, m_SoundDesc{ SOUND_END, 0.5f }, m_isSoundPlay{ false },
 	m_SoundPos{}, m_SoundVelocity{}, m_ListenerPos{}, m_ListenerLook{}, m_ListenerUp{}, 
-	m_pSystem{_pSystem}, m_pSound{nullptr}, m_pChannel{nullptr}
+	m_pSystem{_pSystem}, m_pSound{nullptr}, m_pChannel{nullptr}, m_isOncePlay{false}
 {
 	assert(nullptr != m_pSystem);
 	FMOD_RESULT Result = m_pSystem->createSound(UMethod::ConvertWToS(_wstrSoundPath).c_str(), FMOD_DEFAULT, nullptr, &m_pSound);
@@ -38,6 +38,15 @@ void USound::PlayBGM(IN FMOD::Channel** _ppChannel)
 	(*_ppChannel)->setMode(FMOD_LOOP_NORMAL);
 	(*_ppChannel)->setVolume(m_SoundDesc.fVolume);
 	m_pSystem->update();
+}
+
+void USound::PlayOnce()
+{
+	Tick();
+	if (false == IsSoundPlay() || false == m_isOncePlay) {
+		Play();
+		m_isOncePlay = true;
+	}
 }
 
 void USound::Stop()

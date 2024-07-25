@@ -2,6 +2,7 @@
 #include "EngineStruct.h"
 #include <filesystem>
 #include "UGameInstance.h"
+#include "USound.h"
 
 namespace Engine {
 
@@ -249,4 +250,13 @@ namespace Engine {
 			return true;
 		return false;
 	}
+
+	/*
+	===================================
+	AnimOccur
+	===================================
+	SoundOnce
+	==================================
+	*/
+
 }

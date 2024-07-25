@@ -261,9 +261,11 @@ public: /* AudioSystemManager*/
 	HRESULT CreateAudioSystemToFolderNameAndRegister(SOUNDTYPE _SoundType, const _wstring& _wstrSoundFolderName);
 	void SoundPlay(const _wstring& _wstrSoundName);
 	void SoundPlay(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
+	void SoundPlayOnce(const _wstring& _wstrSoundName);
 	void SoundPlayBGM(const _wstring& _wstrSoundName);
 	void SoundPlayBGM(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
 	void StopSound(const _wstring& _wstrSoundName);
+	void SoundDisableOncePlay(const _wstring& _wstrSoundName);
 	void UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, const _float3& _vSoundVelocity, 
 		CSHPTRREF<UTransform> _spTargetTransform = nullptr);
 	void VolumeUpdate(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);

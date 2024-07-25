@@ -6,6 +6,7 @@ class UCollider;
 class UBoneNode;
 class UCharacter;
 class USound;
+class UActor;
 
 /*
 @ Date: 2024-02-17, Writer: 박태현
@@ -93,6 +94,8 @@ public:
 
 	virtual _bool EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc,
 		const _wstring& _wstrInputTrigger) override;
+
+	void UpdateSoundOnwer(SHPTR<UActor> _spSoundOnwer) { this->m_wpPlayerCharacter = _spSoundOnwer; }
 protected:
 	// Event 상황일 때를 정의
 	virtual void EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc) override;
@@ -102,8 +105,8 @@ private:
 	virtual void Free() override;
 private:
 	ANIMSOUNDDESC			m_AnimSoundDesc;
-	SHPTR<USound>			m_spSound;
-	SHPTR<UCharacter>		m_spPlayerCharacter;
+	USound*							m_pSound;
+	WKPTR<UActor>				m_wpPlayerCharacter;
 	_bool									m_isPlayOnce;
 };
 

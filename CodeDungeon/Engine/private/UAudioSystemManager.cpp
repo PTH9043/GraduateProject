@@ -73,6 +73,15 @@ void UAudioSystemManager::Play(const _wstring& _wstrSoundName, const _float& _fV
 	}
 }
 
+void UAudioSystemManager::PlayOnce(const _wstring& _wstrSoundName)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+			iter->PlayOnce(_wstrSoundName);
+	}
+}
+
 void UAudioSystemManager::PlayBGM(const _wstring& _wstrSoundName)
 {
 	for (auto& iter : m_AudioSystemContainer)
@@ -106,6 +115,15 @@ void UAudioSystemManager::VolumeUpdate(const _wstring& _wstrSoundName, const _fl
 	{
 		if (nullptr != iter)
 			iter->VolumeUpdate(_wstrSoundName, _fVolumeUpdate);
+	}
+}
+
+void UAudioSystemManager::DisableOncePlay(const _wstring& _wstrSoundName)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+			iter->DisableOncePlay(_wstrSoundName);
 	}
 }
 
