@@ -33,10 +33,12 @@ public:
 
 	void Play(const _wstring& _wstrSoundName);
 	void Play(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
+	void PlayOnce(const _wstring& _wstrSoundName);
 	void PlayBGM(const _wstring& _wstrSoundName);
 	void PlayBGM(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
 	void Stop(const _wstring& _wstrSoundName);
 	void VolumeUpdate(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
+	void DisableOncePlay(const _wstring& _wstrSoundName);
 
 	void UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, const _float3& _vSoundVelocity, 
 		CSHPTRREF<UTransform> _spTargetTransform = nullptr);

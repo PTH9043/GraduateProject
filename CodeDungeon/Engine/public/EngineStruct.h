@@ -659,12 +659,14 @@ namespace Engine {
 	-  애니메이션 특정 구역에 Collider를 붙이기 위한 구조체이다.
 	*/
 	struct ANIMSOUNDDESC : public ANIMOTHEREVENTDESC {
-		_wstring				wstrSoundName;
+		_wstring			wstrSoundName;
 		_float3				vSoundVelocity;
 		_float					fMinSoundDistance;
 		_float					fMaxSoundDistance;
+		_float					fSoundVolume;
 
-		ANIMSOUNDDESC() : wstrSoundName{ L"" }, vSoundVelocity{}, fMinSoundDistance{ 0.f }, fMaxSoundDistance{ 1.f }  {}
+		ANIMSOUNDDESC() : wstrSoundName{ L"" }, vSoundVelocity{}, fMinSoundDistance{ 0.f }, fMaxSoundDistance{ 1.f }, 
+			fSoundVolume{ 0.5f } {}
 
 	};
 #pragma endregion ANIMEVENTTYPE
@@ -724,6 +726,7 @@ namespace Engine {
 	}FONTDESC;
 
 #pragma endregion FONT 
+
 
 #pragma region NETWORKDATA 
 	/*

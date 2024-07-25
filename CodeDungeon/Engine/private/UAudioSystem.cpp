@@ -60,9 +60,9 @@ void UAudioSystem::Tick()
 	for (auto& iter : m_SoundContainer)
 	{
 		iter->Tick();
-	}
 }
 
+	}
 void UAudioSystem::Play(const _wstring& _wstrSoundName)
 {
 	m_spSound = BringSound(_wstrSoundName);
@@ -76,6 +76,13 @@ void UAudioSystem::Play(const _wstring& _wstrSoundName, const _float _fVolumeUpd
 	RETURN_CHECK(nullptr == m_spSound, ;);
 	m_spSound->Play();
 	m_spSound->UpdateVolume(_fVolumeUpdate);
+}
+
+void UAudioSystem::PlayOnce(const _wstring& _wstrSoundName)
+{
+	m_spSound = BringSound(_wstrSoundName);
+	RETURN_CHECK(nullptr == m_spSound, ;);
+	m_spSound->PlayOnce();
 }
 
 void UAudioSystem::PlayBGM(const _wstring& _wstrSoundName)
@@ -105,6 +112,13 @@ void UAudioSystem::VolumeUpdate(const _wstring& _wstrSoundName, const _float& _f
 	m_spSound = BringSound(_wstrSoundName);
 	RETURN_CHECK(nullptr == m_spSound, ;);
 	m_spSound->UpdateVolume(_fVolumeUpdate);
+}
+
+void UAudioSystem::DisableOncePlay(const _wstring& _wstrSoundName)
+{
+	m_spSound = BringSound(_wstrSoundName);
+	RETURN_CHECK(nullptr == m_spSound, ;);
+	m_spSound->DisableOncePlay();
 }
 
 void UAudioSystem::UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, 

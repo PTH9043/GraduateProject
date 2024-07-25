@@ -209,17 +209,17 @@ AnimSoundEvent
 */
 
 UAnimSoundEvent::UAnimSoundEvent() :
-	UAnimSectionEvent(ANIMEVENTTYPE::ANIMEVENT_SOUND), m_spSound{ nullptr }, m_isPlayOnce{ false }
+	UAnimSectionEvent(ANIMEVENTTYPE::ANIMEVENT_SOUND), m_pSound{ nullptr }, m_isPlayOnce{ false }
 {
 }
 
 UAnimSoundEvent::UAnimSoundEvent(const UAnimSoundEvent& _rhs) :
-	UAnimSectionEvent(_rhs), m_AnimSoundDesc{ _rhs.m_AnimSoundDesc }, m_isPlayOnce{ false }
+	UAnimSectionEvent(_rhs), m_AnimSoundDesc{ _rhs.m_AnimSoundDesc }, m_pSound{ nullptr }, m_isPlayOnce{ false }
 {
 }
 
 UAnimSoundEvent::UAnimSoundEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) :
-	UAnimSectionEvent(ANIMEVENTTYPE::ANIMEVENT_SOUND), m_spSound{ nullptr }, m_isPlayOnce{ false }
+	UAnimSectionEvent(ANIMEVENTTYPE::ANIMEVENT_SOUND), m_pSound{ nullptr }, m_isPlayOnce{ false }
 {
 	LoadEvent(_spAnimModel, _load);
 }
@@ -243,9 +243,9 @@ _bool UAnimSoundEvent::EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const 
 	}
 	else
 	{
-		if (nullptr != m_spSound)
+		if (nullptr != m_pSound)
 		{
-			m_spSound->Stop();
+			m_pSound->Stop();
 		}
 		m_isPlayOnce = false;
 	}
@@ -256,27 +256,33 @@ void UAnimSoundEvent::EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, con
 {
 	RETURN_CHECK(true == m_AnimSoundDesc.wstrSoundName.empty(), ;);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	SHPTR<USound> spSound = spGameInstance->BringSound(m_AnimSoundDesc.wstrSoundName);
+	USound* pSound = spGameInstance->BringSound(m_AnimSoundDesc.wstrSoundName).get();
 	{
-		if (nullptr != m_spSound && spSound != m_spSound)
+		if (nullptr != m_pSound && pSound != m_pSound)
 		{
-			m_spSound->Stop();
-			m_spSound = spSound;
+			m_pSound->Stop();
+			m_pSound = pSound;
 		}
+		m_pSound->UpdateVolume(m_AnimSoundDesc.fSoundVolume);
+		m_pSound = spGameInstance->BringSound(m_AnimSoundDesc.wstrSoundName).get();
+		m_pSound->ChangeMinMaxDistance3D(m_AnimSoundDesc.fMinSoundDistance, m_AnimSoundDesc.fMaxSoundDistance);
 
-		m_spSound = spGameInstance->BringSound(m_AnimSoundDesc.wstrSoundName);
-		m_spSound->ChangeMinMaxDistance3D(m_AnimSoundDesc.fMinSoundDistance, m_AnimSoundDesc.fMaxSoundDistance);
-		m_spPlayerCharacter = spGameInstance->GetCurrPlayer();
+		if (nullptr == m_wpPlayerCharacter.lock())
+		{
+			m_wpPlayerCharacter = spGameInstance->GetCurrPlayer();
+		}
 	}
-	m_spSound->Tick();
-	if (false == m_spSound->IsSoundPlay() || false == m_isPlayOnce) {
-		m_spSound->Play();
+	SHPTR<UActor> spPlayer = m_wpPlayerCharacter.lock();
+
+	m_pSound->Tick();
+	if (false == m_pSound->IsSoundPlay() || false == m_isPlayOnce) {
+		m_pSound->Play();
 		m_isPlayOnce = true;
 	}
-	if (nullptr == m_spPlayerCharacter)
-		m_spSound->UpdateSound3D(_pPawn->GetTransform(), m_AnimSoundDesc.vSoundVelocity);
+	if (nullptr == spPlayer)
+		m_pSound->UpdateSound3D(_pPawn->GetTransform(), m_AnimSoundDesc.vSoundVelocity);
 	else
-		m_spSound->UpdateSound3D(_pPawn->GetTransform(), m_AnimSoundDesc.vSoundVelocity, m_spPlayerCharacter->GetTransform());
+		m_pSound->UpdateSound3D(_pPawn->GetTransform(), m_AnimSoundDesc.vSoundVelocity, spPlayer->GetTransform());
 }
 
 void UAnimSoundEvent::SaveEvent(std::ofstream& _save)
