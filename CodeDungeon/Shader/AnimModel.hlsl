@@ -162,6 +162,8 @@ struct PS_OUT
     float4 vNormal : SV_TARGET2;
     float4 vDepth : SV_TARGET3;
     float4 vPosition : SV_Target4;
+    float4 vGlow : SV_Target5;
+    float4 vVelocity : SV_Target6;
 };
 
 /* 픽셀의 색을 결정한다. */
@@ -191,7 +193,13 @@ PS_OUT PS_Main(PS_IN In)
     // Combine rim lighting with the final color
         Out.vDiffuse.rgb += rimLight.rgb;
     }
-  
+    
+    if (true == g_isObjectMotionBlur)
+    {
+        Out.vVelocity = In.vVelocity;
+        Out.vVelocity.z = 1.f;
+        Out.vVelocity.w = In.vVelocity.z / In.vVelocity.w;
+    }
     return Out;
 }
 

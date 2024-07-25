@@ -5,6 +5,8 @@
 #include "UGameInstance.h"
 #include "UShader.h"
 
+_bool  UTransform::m_isMotionBlurOn = true;
+
 UTransform::UTransform(CSHPTRREF<UDevice> _spDevice) :
 	UComponent(_spDevice),
 	// Shader 
