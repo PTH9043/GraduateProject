@@ -794,8 +794,8 @@ void TAnimControlView::AnimSoundShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFl
 {
 	if (ImGui::TreeNodeEx("SoundEventList", ImGuiTreeNodeFlags_Bullet))
 	{
-		static _string InputTrigger = "InputTrigger";
-		static _string OverT = "OverT";
+		static _string StartT = "Start";
+		static _string EndT = "End";
 		static _string RemoveButton{ "Remove" };
 		static _string InputSoundName;
 		static 	ANIMSOUNDDESC* SelectSoundDesc{ nullptr };
@@ -845,28 +845,27 @@ void TAnimControlView::AnimSoundShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFl
 
 				if (true == ImGui::TreeNodeEx(ImGuiSoundNodes + Index, ImGuiTreeNodeFlags_Bullet))
 				{
-					ANIMOCURRESDESC* OccursDesc = remove_const<ANIMOCURRESDESC*, ANIMEVENTDESC*>(iter->OutAnimEventDesc());
+					ANIMEVENTSECTIONDESC* SectionDesc = remove_const<ANIMEVENTSECTIONDESC*, ANIMEVENTDESC*>(iter->OutAnimEventDesc());
 					ANIMSOUNDDESC* ChangeDesc = remove_const<ANIMSOUNDDESC*, ANIMOTHEREVENTDESC*>(iter->OutOtherEventDesc());
 					if (true == ImGui::Button("Selectable Sound"))
 					{
 						SelectSoundDesc = ChangeDesc;
 					}
+
 					// 1
 					{
 						ImGui::SetNextItemWidth(100);
-						_string str = UMethod::ConvertWToS(OccursDesc->wstrEventTrigger);
-						if (true == ImGui::InputText(InputTrigger + Index, &str[0], MAX_BUFFER_LENGTH))
-						{
-							OccursDesc->wstrEventTrigger = UMethod::ConvertSToW(str);
-						}
+						_float StartTime = static_cast<_float>(SectionDesc->dStartTime);
+						ImGui::InputFloat(StartT + Index, &StartTime, 0.0f, Duration);
+						SectionDesc->dStartTime = static_cast<_double>(StartTime);
 					}
-					ImGui::SameLine();
 					// 2
 					{
+						ImGui::SameLine();
 						ImGui::SetNextItemWidth(100);
-						_float OccursTime = static_cast<_float>(OccursDesc->dAnimOccursTime);
-						ImGui::DragFloat(OverT + Index, &OccursTime, 0.0f, Duration);
-						OccursDesc->dAnimOccursTime = static_cast<_double>(OccursTime);
+						_float EndTime = static_cast<_float>(SectionDesc->dEndTime);
+						ImGui::InputFloat(EndT + Index, &EndTime, 0.0f, Duration);
+						SectionDesc->dEndTime = static_cast<_double>(EndTime);
 					}
 					// 3
 					{

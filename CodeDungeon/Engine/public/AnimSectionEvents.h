@@ -4,6 +4,8 @@
 BEGIN(Engine)
 class UCollider;
 class UBoneNode;
+class UCharacter;
+class USound;
 
 /*
 @ Date: 2024-02-17, Writer: 박태현
@@ -74,10 +76,36 @@ private:
 =================================================
 AnimColliderEvent
 =================================================
-AnimParticleEvent
+AnimSoundEvent
 =================================================
 */
 
+class UAnimSoundEvent final : public UAnimSectionEvent {
+public:
+	UAnimSoundEvent();
+	UAnimSoundEvent(const UAnimSoundEvent& _rhs);
+	UAnimSoundEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load);
+	DESTRUCTOR(UAnimSoundEvent)
+public:
+	virtual SHPTR<UAnimEvent> Clone(UAnimModel* _pAnimModel = nullptr) override;
+	// UAnimSectionEvent을(를) 통해 상속됨
+	virtual const ANIMOTHEREVENTDESC* OutOtherEventDesc() override;
+
+	virtual _bool EventCheck(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc,
+		const _wstring& _wstrInputTrigger) override;
+protected:
+	// Event 상황일 때를 정의
+	virtual void EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, const _double& _dTimeDelta, const _double& _dTimeAcc) override;
+	virtual void SaveEvent(std::ofstream& _save) override;
+	virtual void LoadEvent(CSHPTRREF<UAnimModel> _spAnimModel, std::ifstream& _load) override;
+private:
+	virtual void Free() override;
+private:
+	ANIMSOUNDDESC			m_AnimSoundDesc;
+	SHPTR<USound>			m_spSound;
+	SHPTR<UCharacter>		m_spPlayerCharacter;
+	_bool									m_isPlayOnce;
+};
 
 
 END
