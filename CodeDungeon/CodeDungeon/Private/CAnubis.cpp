@@ -31,7 +31,9 @@ CAnubis::CAnubis(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const
 	m_f3OriginPos{ },
 	m_f3OriginDirection{},
 	m_spMagicCircle{ nullptr },
-	m_spMagicSphere{nullptr}
+	m_spMagicSphere{nullptr},
+	m_bisShield{false},
+	m_spFireCircle{nullptr}
 {
 }
 
@@ -45,7 +47,8 @@ CAnubis::CAnubis(const CAnubis& _rhs)
 	m_f3OriginPos{},
 	m_f3OriginDirection{},
 	m_spMagicCircle{ nullptr },
-	m_spMagicSphere{ nullptr }
+	m_spMagicSphere{ nullptr },
+	m_bisShield{ false }
 {
 }
 
@@ -219,13 +222,19 @@ HRESULT CAnubis::NativeConstructClone(const VOIDDATAS& _Datas)
 
 	m_spMagicCircle = std::static_pointer_cast<UMat>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MAT));
 	m_spMagicCircle->SetColorTexture(L"Magic5");
+	m_spMagicCircle ->GetTransform()->SetScale(_float3(20, 20 , 1));
+
+	m_spFireCircle = std::static_pointer_cast<UMat>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MAT));
+	m_spFireCircle->SetColorTexture(L"FireCircle");
+	m_spFireCircle->GetTransform()->SetScale(_float3(1, 1, 1));
+	m_spFireCircle->SetActive(false);
 
 	UGuard::GUARDDESC guardDesc;
 	guardDesc.GuardType = UGuard::TYPE_SPHERE;
 	m_spMagicSphere = std::static_pointer_cast<UGuard>(spGameInstance->CloneActorAdd(PROTO_ACTOR_GUARD, { &guardDesc }));
 	m_spMagicSphere->SetActive(true);
 	m_spMagicSphere->SetColorTexture(L"purple");
-	m_spMagicSphere->GetTransform()->SetScale(_float3(5, 5, 5));
+	m_spMagicSphere->GetTransform()->SetScale(_float3(8, 8, 8));
 
 	//spGameInstance->AddCollisionPawnList(m_spMagicSphere);
 
@@ -385,29 +394,27 @@ void CAnubis::LateTickActive(const _double& _dTimeDelta)
 		if (GetElapsedTime() >= 100.0)
 		{
 			m_spBloodParticle->SetActive(false);
-				m_spSlashParticle->SetActive(false);
-				m_spAttackParticle->SetActive(false);
-				m_spAttackParticleTwo->SetActive(false);
+			m_spSlashParticle->SetActive(false);
+			m_spAttackParticle->SetActive(false);
+			m_spAttackParticleTwo->SetActive(false);
 			SetActive(false);
 			spGameInstance->RemoveCollisionPawn(ThisShared<CMob>());
 		}
 	}
 
-	
+	m_spFireCircle->GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, GetTransform()->GetPos().y + 0.5, GetTransform()->GetPos().z));
+	m_spFireCircle->GetTransform()->RotateTurn(_float3(0, 1, 0), 1000, _dTimeDelta);
 	m_spMagicSphere->GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, GetTransform()->GetPos().y + 5, GetTransform()->GetPos().z));
 
 	m_spMagicCircle->GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, GetTransform()->GetPos().y + 0.5, GetTransform()->GetPos().z));
-	m_spMagicCircle->GetTransform()->RotateTurn(_float3(0, 1, 0), 15, _dTimeDelta);
+	m_spMagicCircle->GetTransform()->RotateTurn(_float3(0, 1, 0), 30, _dTimeDelta);
 }
 
 HRESULT CAnubis::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
 	const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
 
-	if(CurAnimName != L"staticLaying" && CurAnimName != L"staticStanding")
-	{
-		 __super::RenderActive(_spCommand, _spTableDescriptor);
-	}
+	__super::RenderActive(_spCommand, _spTableDescriptor);
 	return S_OK;
 }
 

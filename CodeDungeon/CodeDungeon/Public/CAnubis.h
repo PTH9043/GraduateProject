@@ -42,6 +42,10 @@ public:
 	void SetOriginDirection(_float3 _newDir) { m_f3OriginDirection = _newDir; }
 
 	CSHPTRREF<UMat> GetMagicCircle() { return m_spMagicCircle; }
+	CSHPTRREF<UMat> GetFireCircle() { return m_spFireCircle; }
+
+	const _bool& GetShieldState() { return m_bisShield; }
+	void SetShieldState(_bool _newState) { m_bisShield = _newState; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
@@ -60,11 +64,14 @@ private:
 	ComputeParticleType*	m_stParticleType;
 
 	SHPTR<UMat>				m_spMagicCircle;
+	SHPTR<UMat>				m_spFireCircle;
 	SHPTR<UGuard>			m_spMagicSphere;
 	SHPTR<CAnubisStaff>			m_spAnubisStaff;
 
 	_float3						m_f3OriginPos;
 	_float3						m_f3OriginDirection;
+
+	_bool						m_bisShield;
 
 	UNavigation::PathFindingState m_PathFindingState;
 	VECTOR<_float3> m_AstarPath;

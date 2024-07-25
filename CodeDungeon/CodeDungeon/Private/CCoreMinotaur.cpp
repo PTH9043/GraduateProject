@@ -69,10 +69,7 @@ void CCoreMinotaur::TickActive(const _double& _dTimeDelta)
 void CCoreMinotaur::LateTickActive(const _double& _dTimeDelta)
 {
 	__super::LateTickActive(_dTimeDelta);
-	for (auto& Colliders : GetColliderContainer())
-	{
-		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
-	}
+
 }
 
 HRESULT CCoreMinotaur::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)

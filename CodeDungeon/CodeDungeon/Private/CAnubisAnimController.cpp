@@ -6,7 +6,9 @@
 #include "UCharacter.h"
 #include "UAnimation.h"
 #include "UTransform.h"
+#include "UGuard.h"
 #include "UPlayer.h"
+#include "UMat.h"
 
 CAnubisAnimController::CAnubisAnimController(CSHPTRREF<UDevice> _spDevice)
     : CMonsterAnimController(_spDevice),
@@ -22,7 +24,9 @@ CAnubisAnimController::CAnubisAnimController(CSHPTRREF<UDevice> _spDevice)
     m_iRandomValue{ 0 },
     m_dRecvAnimDuration{ 0 },
     m_iRandomValueforAttack{ 0 },
-    m_bAttackStart{ false }
+    m_bAttackStart{ false },
+    m_dTimerForFireCircle{0},
+    m_bisFireAttack{false}
 {
 }
 
@@ -40,7 +44,9 @@ CAnubisAnimController::CAnubisAnimController(const CAnubisAnimController& _rhs)
     m_iRandomValue{ 0 },
     m_dRecvAnimDuration{ 0 },
     m_iRandomValueforAttack{ 0 },
-    m_bAttackStart{ false }
+    m_bAttackStart{ false },
+    m_dTimerForFireCircle{0},
+    m_bisFireAttack{ false }
 {
 }
 
@@ -76,7 +82,7 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
     SHPTR<UAnimModel> spAnimModel = spAnubis->GetAnimModel();
 
     _float AttackRange_Long = 40;
-    _float AttackRange_Close = 10.0f;
+    _float AttackRange_Close = 15.0f;
 
     const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
 
@@ -173,6 +179,31 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
                 if (m_iRandomValueforAttack == 3)
                     UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK4");
             }
+        }
+    }
+
+    if (CurAnimName == L"Cast")
+    {
+        if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.65 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.66)
+        {
+            m_bisFireAttack = true;        
+        }
+    }
+    if (m_bisFireAttack)
+    {
+        m_dTimerForFireCircle += _dTimeDelta;
+        float scale_factor = 1 + 100 * m_dTimerForFireCircle * m_dTimerForFireCircle;
+        if(m_dTimerForFireCircle < 1)
+        {
+            spAnubis->GetFireCircle()->GetTransform()->SetScale(_float3(scale_factor, scale_factor, 2));
+            spAnubis->GetFireCircle()->SetActive(true);
+        }
+        else
+        {
+            m_dTimerForFireCircle = 0;
+            spAnubis->GetFireCircle()->GetTransform()->SetScale(_float3(1, 1, 1));
+            spAnubis->GetFireCircle()->SetActive(false);
+            m_bisFireAttack = false;
         }
     }
 

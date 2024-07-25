@@ -48,6 +48,8 @@ private:
 	_int				 m_iRandomValueforAttack;
 	_double				m_dRecvAnimDuration;
 
+	_double				m_dTimerForFireCircle;
+	_bool				m_bisFireAttack;
 };
 
 END
