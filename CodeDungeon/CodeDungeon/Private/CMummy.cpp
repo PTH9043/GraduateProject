@@ -205,10 +205,10 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 
 	SetHealth(100);
 	SetMaxHealth(100);
-	SetActivationRange(60);
-	SetDeactivationRange(160);
+	SetActivationRange(50);
+	SetDeactivationRange(80);
 	SetOutlineByAbility(true);
-
+	SetOutline(true);
 	SetOutlineColor(_float3(1, 0, 0));
 	return S_OK;
 }
@@ -239,8 +239,7 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 			// A* for moving towards player when player is found
 			if (GetFoundTargetState())
 			{
-				SetOutline(true);
-				if (GetTimeAccumulator() >= 0.5)
+				if (GetTimeAccumulator() >= 1.0)
 				{
 					SHPTR<UNavigation> spNavigation = GetCurrentNavi();
 					m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, CurrentPlayerPos, CurrentMobCell, CurrentPlayerCell));
@@ -322,7 +321,6 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 		}
 		else if (CurAnimState == UAnimationController::ANIM_IDLE)
 		{
-			SetOutline(false);
 			GetAnimModel()->TickAnimation(_dTimeDelta);
 			GetTransform()->SetPos(GetTransform()->GetPos());
 		}
@@ -357,6 +355,7 @@ void CMummy::LateTickActive(const _double& _dTimeDelta)
 				m_spSlashParticle->SetActive(false);
 				m_spAttackParticle->SetActive(false);
 				m_spAttackParticleTwo->SetActive(false);
+				SetOutline(false);
 				SetActive(false);
 				spGameInstance->RemoveCollisionPawn(ThisShared<CMob>());
 			}

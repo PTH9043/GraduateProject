@@ -5,6 +5,7 @@
 #include "UAnimModel.h"
 #include "UCharacter.h"
 #include "UAnimation.h"
+#include "UPlayer.h"
 #include "UTransform.h"
 
 CMimicAnimController::CMimicAnimController(CSHPTRREF<UDevice> _spDevice)
@@ -81,14 +82,19 @@ void CMimicAnimController::Tick(const _double& _dTimeDelta)
     if (spMimic->GetPrevHealth() > spMimic->GetHealth())
         Hit = true;
 
-    _float AttackRange = 10.0f;
+    _float AttackRange = 5.0f;
+
+ 
 
     // Handle found player state
-    if (FoundPlayer)
+    if (FoundPlayer && !spMimic->GetOpeningState())
     {
-        m_bAttackMode = true;
+        if (spGameInstance->GetDIKeyDown(DIK_F)) {
+            spMimic->SetOpeningState(true);
+            spAnimModel->SetAnimation(L"Enter");
+        }
     }
-    else
+    else if(!FoundPlayer && spMimic->GetOpeningState())
     {
         // Handle idle mode with 1/3 probability and 3-second duration
         m_bAttackMode = false;
@@ -125,6 +131,8 @@ void CMimicAnimController::Tick(const _double& _dTimeDelta)
         }
     }
 
+    if (CurAnimName == L"Enter")
+        m_bAttackMode = true;
 
     // Handle hit state
     if (Hit)
@@ -135,7 +143,7 @@ void CMimicAnimController::Tick(const _double& _dTimeDelta)
     }
 
     // Handle attack mode state
-    if (m_bAttackMode && !Hit)
+    if (m_bAttackMode && !Hit && !spMimic->GetTargetPlayer()->GetDeathState())
     {
         m_dlastAttackTime += _dTimeDelta;
         if (m_dlastAttackTime > 3.0)
@@ -164,7 +172,7 @@ void CMimicAnimController::Tick(const _double& _dTimeDelta)
     if (spMimic->GetDeathState())
     {
         spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
-        UpdateState(spAnimModel, ANIM_DEATH, L"DEAD");
+        UpdateState(spAnimModel, ANIM_DEATH, L"DEATH");
     }
 
     // Tick event

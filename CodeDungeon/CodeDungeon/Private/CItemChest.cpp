@@ -15,12 +15,12 @@
 #include "UParticleSystem.h"
 
 CItemChest::CItemChest(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
-	: CMob(_spDevice, _wstrLayer, _eCloneType), m_bisOpen{false}
+	: CMob(_spDevice, _wstrLayer, _eCloneType), m_bisOpen{false}, m_ChestType{}
 {
 }
 
 CItemChest::CItemChest(const CItemChest& _rhs)
-	: CMob(_rhs), m_bisOpen{false}
+	: CMob(_rhs), m_bisOpen{false}, m_ChestType{}
 {
 }
 
@@ -111,7 +111,8 @@ void CItemChest::TickActive(const _double& _dTimeDelta)
 		if(!m_bisOpen)
 		static_pointer_cast<CWarriorPlayer>(GetTargetPlayer())->SetCanInteractChestState(true);
 		if (spGameInstance->GetDIKeyDown(DIK_F)&&!m_bisOpen) {
-			static_pointer_cast<CWarriorPlayer>(GetTargetPlayer())->SetIfOpenChest(true);
+			if(m_ChestType == TYPE_CHEST)
+				static_pointer_cast<CWarriorPlayer>(GetTargetPlayer())->SetIfOpenChest(true);
 			SetOpeningState(true);
 		}
 			
@@ -126,15 +127,23 @@ void CItemChest::TickActive(const _double& _dTimeDelta)
 
 	if (m_bisOpen)
 	{
-		ParticleActiveTime += _dTimeDelta;
-		if (GetElapsedTime() < ItemChestTimeArcOpenEnd)
+		if (m_ChestType == TYPE_CHEST)
 		{
-			SetElapsedTime(GetElapsedTime() + _dTimeDelta * ItemChestOpeningSpeed);
-			GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
+			ParticleActiveTime += _dTimeDelta;
+			if (GetElapsedTime() < ItemChestTimeArcOpenEnd)
+			{
+				SetElapsedTime(GetElapsedTime() + _dTimeDelta * ItemChestOpeningSpeed);
+				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
+			}
+			m_spOpenChestParticle->SetActive(true);
+			m_spOpenChestParticle->SetPosition(GetTransform()->GetPos());
+			m_spOpenChestParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 		}
-		m_spOpenChestParticle->SetActive(true);
-		m_spOpenChestParticle->SetPosition(GetTransform()->GetPos());
-		m_spOpenChestParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+		else
+		{
+			spGameInstance->RemoveCollisionPawn(ThisShared<CMob>());
+			SetActive(false);
+		}
 
 	}
 	

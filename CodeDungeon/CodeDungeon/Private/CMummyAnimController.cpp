@@ -6,6 +6,7 @@
 #include "UCharacter.h"
 #include "UAnimation.h"
 #include "UTransform.h"
+#include "UPlayer.h"
 
 CMummyAnimController::CMummyAnimController(CSHPTRREF<UDevice> _spDevice)
     : CMonsterAnimController(_spDevice),
@@ -163,7 +164,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     }
 
     // Handle attack mode state
-    if (m_bAttackMode && !Hit)
+    if (m_bAttackMode && !Hit && !spMummy->GetTargetPlayer()->GetDeathState())
     {
         m_dlastAttackTime += _dTimeDelta;
         if (m_dlastAttackTime > 3.0)

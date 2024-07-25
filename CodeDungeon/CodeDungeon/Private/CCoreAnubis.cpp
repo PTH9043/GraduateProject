@@ -39,19 +39,40 @@ HRESULT CCoreAnubis::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	GetTransform()->SetNewWorldMtx(tBarsDesc._Worldm);
 	SetPawnType(PAWNTYPE::PAWN_STATICOBJ);
 	SetActive(false);
-	SetOutline(true);
+
 	SetIfOutlineScale(true);
+
+	UCollider::COLLIDERDESC tDesc;
+	tDesc.vTranslation = _float3(-10.f, 10.f, 15.f);
+	tDesc.vScale = _float3(12.5, 12.5, 12.5);
+	SHPTR<UCollider> Collider1 = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_SPHERECOLLIDER, { &tDesc }));
+	_wstring mainColliderTag = L"ForInteractionCoreAnubis";
+	AddColliderInContainer(mainColliderTag, Collider1);
+
+
 	return S_OK;
 }
 
 void CCoreAnubis::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
+	for (auto& Containers : GetColliderContainer())
+	{
+		Containers.second->SetTransform(GetTransform()->GetPos(), GetTransform()->GetQuaternion());
+	}
+
+	if (GetInteractionState())
+	{
+	}
 }
 
 void CCoreAnubis::LateTickActive(const _double& _dTimeDelta)
 {
 	__super::LateTickActive(_dTimeDelta);
+	for (auto& Colliders : GetColliderContainer())
+	{
+		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
+	}
 }
 
 HRESULT CCoreAnubis::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)

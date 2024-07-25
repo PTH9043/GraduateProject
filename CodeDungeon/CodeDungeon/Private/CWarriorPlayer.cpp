@@ -74,8 +74,8 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
+	int cellIndex = 1;
 
-	int cellIndex = 0;
 	SHPTR<UCell> spCell = spNavigation->FindCell(cellIndex);
 	GetTransform()->SetPos(spCell->GetCenterPos());
 	SetSpawnPoint(spCell);
@@ -177,9 +177,16 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 		m_spTrail = std::static_pointer_cast<UTrail>(spGameInstance->CloneActorAdd(PROTO_ACTOR_TRAIL, { &tDesc }));
 		m_spTrail->SetActive(true);
 
-		m_spTrail->SetColorTexture(L"GlowDiffuse");
+		m_spTrail->SetColorTexture(L"elec");
 		m_spTrail->SetTrailShapeTexture(L"Noise_Bee");
 		m_spTrail->SetTrailNoiseTexture(L"GlowDiffuse");	
+
+		
+
+		
+
+	
+
 	}
 	{
 		m_spBlood = std::static_pointer_cast<UBlood>(spGameInstance->CloneActorAdd(PROTO_ACTOR_BLOOD));
@@ -237,6 +244,8 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+	JumpState(_dTimeDelta);
 	GetAnimationController()->Tick(_dTimeDelta);
 
 	_int AnimState = GetAnimationController()->GetAnimState();
@@ -273,6 +282,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 
 	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_HIT) {
 		m_spBlood->SetActive(true);
+		m_fInteractionTimeElapsed = 0;
 		SetAnimModelRimColor(_float3(1, 0,0));
 		m_spBlood->SetTimer(1.75f);
 		
@@ -359,7 +369,33 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 			}
 		}
 	}
-	JumpState(_dTimeDelta);
+	{
+		
+		if (m_fSaveCheckpointCount == 0) {
+			m_spTrail->SetColorTexture(L"elec");
+			m_spTrail->SetTrailShapeTexture(L"Noise_Bee");
+			m_spTrail->SetTrailNoiseTexture(L"GlowDiffuse");			
+		}
+		else if (m_fSaveCheckpointCount == 1) {
+			m_spTrail->SetColorTexture(L"FireRed2");
+			m_spTrail->SetTrailShapeTexture(L"T_Sword_Slash_11");
+			m_spTrail->SetTrailNoiseTexture(L"elec");			
+		}
+		else if (m_fSaveCheckpointCount == 2) {
+			m_spTrail->SetColorTexture(L"Cloudy");
+			m_spTrail->SetTrailShapeTexture(L"Noise_Bee");
+			m_spTrail->SetTrailNoiseTexture(L"GlowDiffuse");			
+		}
+		else if (m_fSaveCheckpointCount == 3) {
+			m_spTrail->SetColorTexture(L"Pink");
+			m_spTrail->SetTrailShapeTexture(L"Noise_Thunder");
+			m_spTrail->SetTrailNoiseTexture(L"GlowDiffuse");			
+		}
+		else {
+			m_fSaveCheckpointCount = 0;
+		}
+	}
+
 }
 
 void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
@@ -389,6 +425,8 @@ void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 		CamNavi->FindCell(GetTransform()->GetPos());
 		GetFollowCamera()->GetTransform()->SetPos(GetTransform()->GetPos());
 	}
+
+
 }
 
 void CWarriorPlayer::NetworkTickActive(const _double& _dTimeDelta)
@@ -527,7 +565,12 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 						{
 							m_bCanInteractStatue = true;
 							pModelObject->SetOutline(true);
-						
+							if (pModelObject->GetCheckPointToOtherColor()) {
+								m_bDoneInteractStatue = true;
+							}
+							else {
+								m_bDoneInteractStatue = false;
+							}
 							//철장 여는 용도
 							if (spGameInstance->GetDIKeyPressing(DIK_F)) {
 								m_fInteractionTimeElapsed += _dTimeDelta;
@@ -537,7 +580,8 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 								m_fInteractionTimeElapsed = 0;
 								
 							}
-							if (m_fInteractionTimeElapsed > 4.f) {
+							if (m_fInteractionTimeElapsed > 4.f&&!pModelObject->GetCheckPointToOtherColor()) {
+								m_fSaveCheckpointCount++;
 								m_bSaveCheckpointStatue = true;
 								pModelObject->SetInteractionState(true);
 								pModelObject->SetCheckPointToOtherColor(true);
@@ -545,6 +589,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 								SetSpawnPointCamera(static_pointer_cast<CMainCamera>(GetFollowCamera())->GetCurrentNavi()->GetCurCell());
 								SetSpawnPoint(GetTransform()->GetPos());
 								//pModelObject->SetOutline(false);
+								m_fInteractionTimeElapsed = 0;
 							}
 								
 						}
@@ -561,10 +606,17 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							m_bCanInteractBar = true;
 							pModelObject->SetOutline(true);
 
+							if (pModelObject->GetCheckPointToOtherColor()) {
+								m_bDoneInteractBar = true;
+							}
+							else {
+								m_bDoneInteractBar = false;
+							}
+
 							//철장 여는 용도
 							if (spGameInstance->GetDIKeyPressing(DIK_F)) {
-								if(m_fInteractionTimeElapsed<4.f)
-								m_fInteractionTimeElapsed += _dTimeDelta;
+								if (m_fInteractionTimeElapsed < 4.f)
+									m_fInteractionTimeElapsed += _dTimeDelta;
 
 							}
 							else {
@@ -572,6 +624,8 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							}
 							if (m_fInteractionTimeElapsed > 3.99f) {
 								pModelObject->SetInteractionState(true);
+								pModelObject->SetCheckPointToOtherColor(true);
+								m_fInteractionTimeElapsed = 0;
 								//pModelObject->SetOutline(false);
 							}
 
@@ -581,7 +635,111 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							pModelObject->SetOutline(false);
 							m_bCanInteractBar = false;
 						}
-					}				
+					}
+					else if (iter2.first == L"ForInteractionCoreMinotaur")
+					{
+						if (iter.second->IsCollision(iter2.second))
+						{
+							m_bCanInteractCoreMinotaur = true;
+							pModelObject->SetOutline(true);
+							if (pModelObject->GetCheckPointToOtherColor()) {
+								m_bDoneInteractCoreMinotaur = true;
+							}
+							else {
+								m_bDoneInteractCoreMinotaur = false;
+							}
+
+							if (spGameInstance->GetDIKeyPressing(DIK_F)) {
+								m_fInteractionTimeElapsed += _dTimeDelta;
+
+							}
+							else {
+								m_fInteractionTimeElapsed = 0;
+
+							}
+
+							if (m_fInteractionTimeElapsed > 5.f && !pModelObject->GetCheckPointToOtherColor()) {
+							
+								m_bDeactivatedCoreMinotaur = true;
+								pModelObject->SetInteractionState(true);
+								pModelObject->SetCheckPointToOtherColor(true);				
+								m_fInteractionTimeElapsed = 0;
+							}
+						}
+						else
+						{
+							pModelObject->SetOutline(false);
+							m_bCanInteractCoreMinotaur = false;
+						}
+					}
+					else if (iter2.first == L"ForInteractionCoreHarlequinn")
+					{
+						if (iter.second->IsCollision(iter2.second))
+						{
+							m_bCanInteractCoreHarlequinn = true;
+							pModelObject->SetOutline(true);
+							if (pModelObject->GetCheckPointToOtherColor()) {
+								m_bDoneInteractCoreHarlequinn = true;
+							}
+							else {
+								m_bDoneInteractCoreHarlequinn = false;
+							}
+							if (spGameInstance->GetDIKeyPressing(DIK_F)) {
+								m_fInteractionTimeElapsed += _dTimeDelta;
+
+							}
+							else {
+								m_fInteractionTimeElapsed = 0;
+
+							}
+							if (m_fInteractionTimeElapsed > 5.f && !pModelObject->GetCheckPointToOtherColor()) {
+								
+								m_bDeactivatedCoreHarlequinn = true;
+								pModelObject->SetInteractionState(true);
+								pModelObject->SetCheckPointToOtherColor(true);
+								m_fInteractionTimeElapsed = 0;
+							}
+						}
+						else
+						{
+							pModelObject->SetOutline(false);
+							m_bCanInteractCoreHarlequinn = false;
+						}
+					}
+					else if (iter2.first == L"ForInteractionCoreAnubis")
+					{
+						if (iter.second->IsCollision(iter2.second))
+						{
+							m_bCanInteractCoreAnubis = true;
+							pModelObject->SetOutline(true);
+							if (pModelObject->GetCheckPointToOtherColor()) {
+								m_bDoneInteractCoreAnubis = true;
+							}
+							else {
+								m_bDoneInteractCoreAnubis = false;
+							}
+							if (spGameInstance->GetDIKeyPressing(DIK_F)) {
+								m_fInteractionTimeElapsed += _dTimeDelta;
+
+							}
+							else {
+								m_fInteractionTimeElapsed = 0;
+
+							}
+							if (m_fInteractionTimeElapsed > 5.f && !pModelObject->GetCheckPointToOtherColor()) {
+
+								m_bDeactivatedCoreAnubis = true;
+								pModelObject->SetInteractionState(true);
+								pModelObject->SetCheckPointToOtherColor(true);
+								m_fInteractionTimeElapsed = 0;
+							}
+						}
+						else
+						{
+							pModelObject->SetOutline(false);
+							m_bCanInteractCoreAnubis = false;
+						}
+						}
 				}
 			}
 		}
@@ -624,6 +782,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 			{
 				for (auto& iter2 : pGuard->GetColliderContainer())
 				{
+
 					if (iter2.first == L"Main")
 					{
 						//SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
@@ -654,6 +813,8 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							m_bCanInteractGuard = false;
 						}
 					}
+				
+
 				}
 			}
 		}

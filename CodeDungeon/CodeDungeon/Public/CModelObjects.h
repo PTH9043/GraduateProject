@@ -34,6 +34,7 @@ public:
 	const _bool& GetOutlineScaleState()const { return m_OutlineWithScale; }
 
 	void SetCheckPointToOtherColor(_bool _true) { isCheckpoint = _true; }
+	_bool GetCheckPointToOtherColor() { return isCheckpoint; }
 
 	const _bool& GetInteractionState() { return m_bisInteraction; }
 	void SetInteractionState(const _bool& _newState) { m_bisInteraction = _newState; }
