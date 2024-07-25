@@ -124,10 +124,7 @@ VS_OUT VS_Main(VS_IN In)
         float3 dir = Out.vPosition.xyz - vPrevPosition.xyz;
         float4 NORMAL = mul(Out.vNormal, tMainViewProj.mPrevViewMatirx);
         float a = dot(normalize(dir), normalize(NORMAL.xyz));
-        if (a < 0.f)
-            Out.vPosition = vPrevPosition;
-        else
-            Out.vPosition = vPosition;
+
         float2 velocity = ((Out.vPosition.xy / Out.vPosition.w -
 			(vPrevPosition.xy / vPrevPosition.w)) * 0.5f);
         velocity.y *= -1.f;

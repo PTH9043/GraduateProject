@@ -54,6 +54,10 @@ public:
 	void SetNotApplyScale(const _bool _isActive) { this->m_isNotApplyScale = _isActive; }
 	void SetParentsTransform(CSHPTRREF<UTransform> _spTransform) { this->m_spParentsTransform = _spTransform; }
 	void SetNewWorldMtx(const _float4x4& _newworldMtx);
+
+	static _bool IsMotionBlurOn() { return m_isMotionBlurOn; }
+	void EnableMotionBlurOn() { this->m_isMotionBlurOn = true; }
+	void DisableMotionBlurOn() { this->m_isMotionBlurOn = false; }
 public:
 	virtual void Free() override;
 	CLONE_MACRO(UTransform, "UTransform::Cloen To Failed")
@@ -150,6 +154,8 @@ private:
     _float3 m_vVelocity; 
 	const _float3 m_vGravity;
 	_float3 m_vJumpvelocity;
+
+	static _bool									m_isMotionBlurOn;
 };
 
 END
