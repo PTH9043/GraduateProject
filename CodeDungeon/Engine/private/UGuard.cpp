@@ -10,6 +10,7 @@
 #include "UMethod.h"
 #include "UTexGroup.h"
 #include "UTexture.h"
+#include "UVIBufferSphere.h"
 
 
 UGuard::UGuard(CSHPTRREF<UDevice> _spDevice,
@@ -40,23 +41,29 @@ HRESULT UGuard::NativeConstructClone(const VOIDDATAS& _vecDatas)
 {
 	if (FAILED(__super::NativeConstructClone(_vecDatas)))
 		return E_FAIL;
+	GUARDDESC guardDesc = UMethod::ConvertTemplate_Index<GUARDDESC>(_vecDatas, 0);
+
+	m_GuardType = guardDesc.GuardType;
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	m_spVIBufferRect = static_pointer_cast<UVIBufferRect>(spGameInstance->CloneResource(PROTO_RES_VIBUFFERRECT));
 
+	if(m_GuardType == TYPE_RECT)
+		m_spVIBufferRect = static_pointer_cast<UVIBufferRect>(spGameInstance->CloneResource(PROTO_RES_VIBUFFERRECT));
+	else
+		m_spVIBufferSphere = static_pointer_cast<UVIBufferSphere>(spGameInstance->CloneResource(PROTO_RES_VIBUFFERSPHERE));
 
 	if (m_spGuardTexGroup == nullptr)m_spGuardTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_GUARDTEXTUREGROUP, _vecDatas));
 
 	UCollider::COLLIDERDESC tDesc;
 	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
-	tDesc.vScale = _float3(0, 0, 0);
+	tDesc.vScale = _float3(40, 40, 0);
 	SHPTR<UCollider> Collider1 = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
 	_wstring mainColliderTag = L"Main";
 	AddColliderInContainer(mainColliderTag, Collider1);
 
 	UCollider::COLLIDERDESC tDesc2;
 	tDesc2.vTranslation = _float3(0.f, 0.f, 0.f);
-	tDesc2.vScale = _float3(0, 0, 0);
+	tDesc2.vScale = _float3(40, 40, 10);
 	SHPTR<UCollider> Collider2 = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc2 }));
 	_wstring subColliderTag = L"ForInteractionGuard";
 	AddColliderInContainer(subColliderTag, Collider2);
@@ -73,10 +80,6 @@ void UGuard::TickActive(const _double& _dTimeDelta)
 {
 	for (auto& Containers : GetColliderContainer())
 	{
-		if(Containers.first == L"Main")
-			Containers.second->SetScale(_float3(40, 40, 0));
-		else
-			Containers.second->SetScale(_float3(40, 40, 10));
 		Containers.second->SetTransform(GetTransform()->GetPos(), GetTransform()->GetQuaternion());
 	}
 }
@@ -100,15 +103,15 @@ HRESULT UGuard::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDes
 
 	GetTransform()->BindTransformData(GetShader());
 	GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spGuardTexGroup->GetTexture(ColorTextureIndex));
+
 	GetShader()->BindSRVBuffer(SRV_REGISTER::T1, m_spGuardTexGroup->GetTexture(L"FireNoise"));
+
 	GetShader()->BindSRVBuffer(SRV_REGISTER::T2, m_spGuardTexGroup->GetTexture(L"alpha01"));
 
-
-	
-
-
-	m_spVIBufferRect->Render(GetShader(), _spCommand);
-	
+	if (m_GuardType == TYPE_RECT)
+		m_spVIBufferRect->Render(GetShader(), _spCommand);
+	else
+		m_spVIBufferSphere->Render(GetShader(), _spCommand);
 
 	return S_OK;
 }

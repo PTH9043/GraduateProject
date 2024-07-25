@@ -1,9 +1,13 @@
 #pragma once
 #include "CMob.h"
+
+
 BEGIN(Engine)
 class UGameInstance;
 class UParticle;
 class UParticleSystem;
+class UMat;
+class UGuard;
 END
 
 BEGIN(Client)
@@ -36,6 +40,8 @@ public:
 
 	const _float3& GetOriginDirection() const { return m_f3OriginDirection; }
 	void SetOriginDirection(_float3 _newDir) { m_f3OriginDirection = _newDir; }
+
+	CSHPTRREF<UMat> GetMagicCircle() { return m_spMagicCircle; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
@@ -53,6 +59,8 @@ private:
 	PARTICLEPARAM*			m_stParticleParam;
 	ComputeParticleType*	m_stParticleType;
 
+	SHPTR<UMat>				m_spMagicCircle;
+	SHPTR<UGuard>			m_spMagicSphere;
 	SHPTR<CAnubisStaff>			m_spAnubisStaff;
 
 	_float3						m_f3OriginPos;

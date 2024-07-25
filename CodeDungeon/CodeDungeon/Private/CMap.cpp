@@ -189,7 +189,9 @@ void CMap::LoadGuards()
 		for (auto& vecit : it.second)
 		{
 			SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-			SHPTR<UGuard> _Guard = std::static_pointer_cast<UGuard>(spGameInstance->CloneActorAdd(PROTO_ACTOR_GUARD));
+			UGuard::GUARDDESC guardDesc;
+			guardDesc.GuardType = UGuard::TYPE_RECT;
+			SHPTR<UGuard> _Guard = std::static_pointer_cast<UGuard>(spGameInstance->CloneActorAdd(PROTO_ACTOR_GUARD, {&guardDesc}));
 			_Guard->SetActive(true);
 			_Guard->SetColorTexture(L"asdf");
 			_Guard->GetTransform()->SetScale(_float3(40, 40, 1));

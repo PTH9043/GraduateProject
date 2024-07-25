@@ -18,6 +18,8 @@
 #include "CModelObjects.h"
 #include "UAnimation.h"
 #include "CAnubisStaff.h"
+#include "UMat.h"
+#include "UGuard.h"
 
 CAnubis::CAnubis(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: CMob(_spDevice, _wstrLayer, _eCloneType), m_AnubisType{},
@@ -27,7 +29,9 @@ CAnubis::CAnubis(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const
 	m_currentPathIndex{ 0 },
 	m_spAnubisStaff{ nullptr },
 	m_f3OriginPos{ },
-	m_f3OriginDirection{}
+	m_f3OriginDirection{},
+	m_spMagicCircle{ nullptr },
+	m_spMagicSphere{nullptr}
 {
 }
 
@@ -39,7 +43,9 @@ CAnubis::CAnubis(const CAnubis& _rhs)
 	m_currentPathIndex{ 0 },
 	m_spAnubisStaff{nullptr},
 	m_f3OriginPos{},
-	m_f3OriginDirection{}
+	m_f3OriginDirection{},
+	m_spMagicCircle{ nullptr },
+	m_spMagicSphere{ nullptr }
 {
 }
 
@@ -211,6 +217,18 @@ HRESULT CAnubis::NativeConstructClone(const VOIDDATAS& _Datas)
 		Colliders.second->SetTranslate(_float3(0, 10, 0));
 	}
 
+	m_spMagicCircle = std::static_pointer_cast<UMat>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MAT));
+	m_spMagicCircle->SetColorTexture(L"Magic5");
+
+	UGuard::GUARDDESC guardDesc;
+	guardDesc.GuardType = UGuard::TYPE_SPHERE;
+	m_spMagicSphere = std::static_pointer_cast<UGuard>(spGameInstance->CloneActorAdd(PROTO_ACTOR_GUARD, { &guardDesc }));
+	m_spMagicSphere->SetActive(true);
+	m_spMagicSphere->SetColorTexture(L"purple");
+	m_spMagicSphere->GetTransform()->SetScale(_float3(5, 5, 5));
+
+	//spGameInstance->AddCollisionPawnList(m_spMagicSphere);
+
 	SetHealth(100);
 	SetMaxHealth(100);
 	SetActivationRange(50);
@@ -239,6 +257,7 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 		SHPTR<UCell> CurrentMobCell = GetCurrentNavi()->GetCurCell();
 		SHPTR<UCell> CurrentPlayerCell = GetTargetPlayer()->GetCurrentNavi()->GetCurCell();
 
+		const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
 		_float walkingSpeed = 15;
 
 		if (CurAnimState == UAnimationController::ANIM_MOVE)
@@ -275,7 +294,8 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 					_float3 direction = CurrentMobPos - GetTargetPos();
 					GetTransform()->SetDirectionFixedUp(-direction, _dTimeDelta, 5);
 				}
-				GetTransform()->TranslateDir(GetTransform()->GetLook(), _dTimeDelta, walkingSpeed);
+				if(CurAnimName != L"Cast")
+					GetTransform()->TranslateDir(GetTransform()->GetLook(), _dTimeDelta, walkingSpeed);
 			}
 			else
 			{
@@ -372,6 +392,12 @@ void CAnubis::LateTickActive(const _double& _dTimeDelta)
 			spGameInstance->RemoveCollisionPawn(ThisShared<CMob>());
 		}
 	}
+
+	
+	m_spMagicSphere->GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, GetTransform()->GetPos().y + 5, GetTransform()->GetPos().z));
+
+	m_spMagicCircle->GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, GetTransform()->GetPos().y + 0.5, GetTransform()->GetPos().z));
+	m_spMagicCircle->GetTransform()->RotateTurn(_float3(0, 1, 0), 15, _dTimeDelta);
 }
 
 HRESULT CAnubis::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)

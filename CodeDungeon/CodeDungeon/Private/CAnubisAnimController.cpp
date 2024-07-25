@@ -188,4 +188,7 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
         spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         UpdateState(spAnimModel, ANIM_DEATH, L"DEATH");
     }
+
+    // Tick event
+    spAnimModel->TickEvent(spAnubis.get(), GetTrigger(), _dTimeDelta);
 }
