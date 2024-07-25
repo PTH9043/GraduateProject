@@ -55,6 +55,14 @@ HRESULT UAudioSystem::NativeConstructClone(const VOIDDATAS& _Datas)
 }
 
 
+void UAudioSystem::Tick()
+{
+	for (auto& iter : m_SoundContainer)
+	{
+		iter->Tick();
+	}
+}
+
 void UAudioSystem::Play(const _wstring& _wstrSoundName)
 {
 	m_spSound = BringSound(_wstrSoundName);

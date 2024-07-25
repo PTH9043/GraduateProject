@@ -163,6 +163,8 @@ HRESULT CProtoMaker::CreateMainSceneProtoData(CSHPTRREF<UGameInstance> _spGameIn
 
 
 
+	_spGameInstance->CreateAudioSystemToFolderNameAndRegister(SOUNDTYPE::SOUND_BACKGROUND, L"BackgroundSound");
+	_spGameInstance->CreateAudioSystemToFolderNameAndRegister(SOUNDTYPE::SOUND_GAME, L"GameSound");
 
 	return S_OK;
 }
