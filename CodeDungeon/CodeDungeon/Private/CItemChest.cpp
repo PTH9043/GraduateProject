@@ -111,8 +111,11 @@ void CItemChest::TickActive(const _double& _dTimeDelta)
 		if(!m_bisOpen)
 		static_pointer_cast<CWarriorPlayer>(GetTargetPlayer())->SetCanInteractChestState(true);
 		if (spGameInstance->GetDIKeyDown(DIK_F)&&!m_bisOpen) {
-			if(m_ChestType == TYPE_CHEST)
+			if (m_ChestType == TYPE_CHEST) {
 				static_pointer_cast<CWarriorPlayer>(GetTargetPlayer())->SetIfOpenChest(true);
+				spGameInstance->SoundPlayOnce(L"ChestOpen");
+			}
+				
 			SetOpeningState(true);
 		}
 			
@@ -129,6 +132,12 @@ void CItemChest::TickActive(const _double& _dTimeDelta)
 	{
 		if (m_ChestType == TYPE_CHEST)
 		{
+			if (!m_bisOpenSound) {
+				spGameInstance->SoundPlayOnce(L"Heal");
+				m_bisOpenSound = true;
+			}
+			
+			
 			ParticleActiveTime += _dTimeDelta;
 			if (GetElapsedTime() < ItemChestTimeArcOpenEnd)
 			{

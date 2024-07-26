@@ -224,6 +224,9 @@ private:
 	SHPTR<CImageUI>			m_spKeyFUIMinotaur;
 	SHPTR<CImageUI>			m_spKeyFUIHarelequin;
 	SHPTR<CImageUI>			m_spKeyFUIAnubis;
+
+	//======================SOUND BOOL-=====================
+	_bool EnterGameModeBGM = false;
 };
 
 END

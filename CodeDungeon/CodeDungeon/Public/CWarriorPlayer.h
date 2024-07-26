@@ -132,6 +132,8 @@ private:
 	_bool m_bisKicked;
 	_bool m_bisRise;
 
+	_bool LiftBarsSound = false;
+
 	_double											m_dKickedElapsed;
 	_bool											m_bCanInteractChest;
 	_bool											m_bCanInteractBar;

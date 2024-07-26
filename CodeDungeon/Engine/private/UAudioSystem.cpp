@@ -121,6 +121,13 @@ void UAudioSystem::VolumeUpdate(const _wstring& _wstrSoundName, const _float& _f
 	m_spSound->UpdateVolume(_fVolumeUpdate);
 }
 
+void UAudioSystem::BGMVolumeUpdate(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate)
+{
+	m_spSound = BringSound(_wstrSoundName);
+	RETURN_CHECK(nullptr == m_spSound, ;);
+	m_spSound->UpdateVolume(&m_pBGmChannel,_fVolumeUpdate);
+}
+
 void UAudioSystem::Restart(const _wstring& _wstrSoundName)
 {
 	m_spSound = BringSound(_wstrSoundName);

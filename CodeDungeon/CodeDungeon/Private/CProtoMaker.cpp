@@ -105,7 +105,7 @@ HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, C
 	_spGameInstance->AddPrototype(PROTO_COMP_ANUBISANIMCONTROLLER, CreateConstructorToNative<CAnubisAnimController>(_spDevice));
 	_spGameInstance->AddPrototype(PROTO_COMP_MIMICANIMCONTROLLER, CreateConstructorToNative<CMimicAnimController>(_spDevice));
 
-	//_spGameInstance->CreateAudioSystemAndRegister(SOUNDTYPE::SOUND_BACKGROUND, L"..\\..\\Resource\\Sound\\BackgroundSound");
+	_spGameInstance->CreateAudioSystemAndRegister(SOUNDTYPE::SOUND_BACKGROUND, L"..\\..\\Resource\\Sound\\BackgroundSound");
 	_spGameInstance->CreateAudioSystemAndRegister(SOUNDTYPE::SOUND_GAME, L"..\\..\\Resource\\Sound\\InGameSound");
 
 	_spGameInstance->FontCreate(FONT_NANUMSQUARE_ACBOLD, L"..\\..\\Resource\\Font\\NanumSquare.spritefont");

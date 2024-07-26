@@ -76,7 +76,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-	int cellIndex = 1;
+	int cellIndex = 349;
 
 	SHPTR<UCell> spCell = spNavigation->FindCell(cellIndex);
 	GetTransform()->SetPos(spCell->GetCenterPos());
@@ -668,14 +668,25 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 
 							//철장 여는 용도
 							if (spGameInstance->GetDIKeyPressing(DIK_F)) {
-								if (m_fInteractionTimeElapsed < 4.f)
+								if (m_fInteractionTimeElapsed < 4.f) {//BarLift
+									if (!LiftBarsSound&& !m_bDoneInteractBar) {
+										spGameInstance->SoundPlayOnce(L"BarLift");
+										LiftBarsSound = true;
+									}
+									
 									m_fInteractionTimeElapsed += _dTimeDelta;
-
+								}
 							}
 							else {
+								if (LiftBarsSound) {
+									LiftBarsSound = false;
+									spGameInstance->StopSound(L"BarLift");
+								}
 								m_fInteractionTimeElapsed = 0;
 							}
 							if (m_fInteractionTimeElapsed > 3.99f) {
+								spGameInstance->SoundPlayOnce(L"BarLiftStart");
+								spGameInstance->SoundPlayOnce(L"BarLift2");						
 								pModelObject->SetInteractionState(true);
 								pModelObject->SetCheckPointToOtherColor(true);
 								m_fInteractionTimeElapsed = 0;

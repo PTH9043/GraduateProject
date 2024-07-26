@@ -35,6 +35,7 @@ protected:
 private:
 	CHESTTYPE m_ChestType;
 	_bool			m_bisOpen;
+	_bool			m_bisOpenSound=false;
 	SHPTR<UParticle>										m_spOpenChestParticle;
 	_float ParticleActiveTime = 0;
 };

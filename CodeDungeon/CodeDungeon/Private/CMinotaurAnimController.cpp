@@ -89,37 +89,8 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
     if (!FoundPlayer || spMinotaur->GetTargetPlayer()->GetDeathState())
     {
         spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
-        // Handle idle mode with 1/3 probability and 3-second duration
         m_bAttackMode = false;
-        //Idle Timer
-        if (CurAnimName == L"idle")
-        {
-            m_dIdleTimer += _dTimeDelta;
-            if (m_dIdleTimer >= 1.0)
-            {
-                m_dIdleTimer = 0.0;
-            }
-        }
-        else
-            m_dIdleTimer = 0;
-
-        if(m_dIdleTimer == 0)
-        {
-            m_didleRandomValueChoosingTimer += _dTimeDelta;
-            if(m_didleRandomValueChoosingTimer > 2)
-            {
-                m_iRandomValue = dis_patrol(gen);
-            }
-
-            if (m_iRandomValue == 0)
-            {
-                UpdateState(spAnimModel, ANIM_IDLE, L"IDLE");
-            }
-            else if (m_iRandomValue != 0)
-            {
-                UpdateState(spAnimModel, ANIM_MOVE, L"WALK");
-            }
-        }
+        UpdateState(spAnimModel, ANIM_MOVE, L"WALK");
     }
 
     if(FoundPlayer && !spMinotaur->GetTargetPlayer()->GetDeathState())
