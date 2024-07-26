@@ -281,6 +281,7 @@ public: /* AudioSystemManager*/
 	void FadeIn(const _wstring& _wstrSoundName, float fadeDuration);
 	void FadeOut(const _wstring& _wstrSoundName, float fadeDuration);
 	void UpdateVolume(const _wstring& _wstrSoundName, const _float _fVolume);
+	void BGMUpdateVolume(const _wstring& _wstrSoundName, const _float _fVolume);
 	void UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, const _float3& _vSoundVelocity, 
 		CSHPTRREF<UTransform> _spTargetTransform = nullptr);
 	void VolumeUpdate(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);

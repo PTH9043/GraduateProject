@@ -41,6 +41,7 @@ public:
 	void PlayBGM(const _wstring& _wstrSoundName, const _float  _fVolumeUpdate);
 	void Stop(const _wstring& _wstrSoundName);
 	void VolumeUpdate(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
+	void BGMVolumeUpdate(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
 	void Restart(const _wstring& _wstrSoundName);
 	void RestartOnce(const _wstring& _wstrSoundName);
 	void Pause(const _wstring& _wstrSoundName);

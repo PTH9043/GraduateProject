@@ -42,22 +42,22 @@ void UAnimChangeBetweenEvent::EventSituation(UPawn* _pPawn, UAnimModel* _pAnimMo
 {
 	RETURN_CHECK(_pAnimModel->GetCurrentAnimIndex() == m_AnimChangeDesc.iNextAnimIndex, ;);
 
-	// ¸¸¾à EnableLastLerp°¡ ÄÑÁ® ÀÖÁö ¾Ê´Ù¸é
+	// ï¿½ï¿½ï¿½ï¿½ EnableLastLerpï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´Ù¸ï¿½
 	if (false == m_AnimChangeDesc.isEnableLastSettingAnim)
 	{
-		// ¹Ù²ã¾ß ÇÏ´Â ±¸°£¿¡ ¹Ù²Û´Ù. 
+		// ï¿½Ù²ï¿½ï¿½ ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù²Û´ï¿½. 
 		if (m_AnimChangeDesc.fAnimChangeTime <= _dTimeAcc)
 		{
 			ResetEventData();
-			// ÇöÀç event ºñÈ°¼ºÈ­
+			// ï¿½ï¿½ï¿½ï¿½ event ï¿½ï¿½È°ï¿½ï¿½È­
 			_pAnimModel->SetSupplyLerpValue(m_AnimChangeDesc.fSupplyAnimValue);
 			_pAnimModel->ChangeAnimation(m_AnimChangeDesc.iNextAnimIndex, m_AnimChangeDesc.dNextAnimTimeAcc);
 		}
 	}
-	// ÄÑÀú ÀÖ´Ù¸é
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ù¸ï¿½
 	else
 	{
-		// ¸¸¾à
+		// ï¿½ï¿½ï¿½ï¿½
 		if (_pAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= m_AnimChangeDesc.fLastProgressValue)
 		{
 			ResetEventData();
@@ -263,8 +263,10 @@ void UAnimSoundEvent::EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, con
 			m_pSound->Stop();
 			m_pSound = pSound;
 		}
+
 		/*m_pSound->UpdateVolume(m_AnimSoundDesc.fSoundVolume);*/
 		m_pSound = spGameInstance->BringSound(m_AnimSoundDesc.wstrSoundName).get();
+
 		m_pSound->ChangeMinMaxDistance3D(m_AnimSoundDesc.fMinSoundDistance, m_AnimSoundDesc.fMaxSoundDistance);
 
 		if (nullptr == m_wpPlayerCharacter.lock())

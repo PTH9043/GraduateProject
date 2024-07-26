@@ -43,6 +43,7 @@ public:
 	void FadeIn(float fadeDuration);
 	void FadeOut(float fadeDuration);
 	void UpdateVolume(const _float _fVolume) ;
+	void UpdateVolume(IN FMOD::Channel** _ppChannel,const _float _fVolume) ;
 	void UpdateSound3D(const _float3& _vSoudPos, const _float3& _vSoundVelocity, CSHPTRREF<UTransform> _spTargetTransform_CanNullptr = nullptr);
 	void UpdateSound3D(CSHPTRREF<UTransform> _spSelfTransform, const _float3& _vSoundVelocity,
 		CSHPTRREF<UTransform> _spTargetTransform_CanNullptr = nullptr);
