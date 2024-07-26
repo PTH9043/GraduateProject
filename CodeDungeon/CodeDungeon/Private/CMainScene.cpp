@@ -191,7 +191,7 @@ void CMainScene::UpdateMobsStatus()
 	}
 }
 
-void CMainScene::TurnGuardsOnRange()
+void CMainScene::TurnGuardsOnRange(const _double& _dTimeDelta)
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	_float3 PlayerPos = m_spMainCamera->GetTransform()->GetPos();
@@ -214,6 +214,18 @@ void CMainScene::TurnGuardsOnRange()
 		{
 			if(m_bisMobsAllDead_Interior_Room_D)
 			{
+				if (!m_fGuardSound_D) {
+					spGameInstance->SoundPlayOnce(L"GuardDeactivate");
+					m_fGuardSound_D = true;
+				}
+				
+				if (m_fGuardTimer_D > 2.f) {
+					m_spGuardDeactivate_G->SetActive(false);
+				}
+				else {
+					m_fGuardTimer_D += _dTimeDelta;
+					m_spGuardDeactivate_G->SetActive(true);
+				}
 				guardcontainer.second->SetActive(false);
 				spGameInstance->RemoveCollisionPawn(guardcontainer.second);
 			}
@@ -222,6 +234,17 @@ void CMainScene::TurnGuardsOnRange()
 		{
 			if (m_bisMobsAllDead_Interior_Hallway_E)
 			{
+				if (!m_fGuardSound_E) {
+					spGameInstance->SoundPlayOnce(L"GuardDeactivate");
+					m_fGuardSound_E = true;
+				}
+				if (m_fGuardTimer_E > 2.f) {
+					m_spGuardDeactivate_D->SetActive(false);
+				}
+				else {
+					m_fGuardTimer_E += _dTimeDelta;
+					m_spGuardDeactivate_D->SetActive(true);
+				}
 				guardcontainer.second->SetActive(false);
 				spGameInstance->RemoveCollisionPawn(guardcontainer.second);
 			}
@@ -230,6 +253,17 @@ void CMainScene::TurnGuardsOnRange()
 		{
 			if (m_bisMobsAllDead_Interior_Room_F)
 			{
+				if (!m_fGuardSound_F) {
+					spGameInstance->SoundPlayOnce(L"GuardDeactivate");
+					m_fGuardSound_F = true;
+				}
+				if (m_fGuardTimer_F > 2.f) {
+					m_spGuardDeactivate_F->SetActive(false);
+				}
+				else {
+					m_fGuardTimer_F += _dTimeDelta;
+					m_spGuardDeactivate_F->SetActive(true);
+				}
 				guardcontainer.second->SetActive(false);
 				spGameInstance->RemoveCollisionPawn(guardcontainer.second);
 			}
@@ -238,6 +272,18 @@ void CMainScene::TurnGuardsOnRange()
 		{
 			if (m_bisMobsAllDead_Interior_Room_G)
 			{
+				if (!m_fGuardSound_G) {
+					spGameInstance->SoundPlayOnce(L"GuardDeactivate");
+					m_fGuardSound_G = true;
+				}
+				
+				if (m_fGuardTimer_G > 2.f) {
+					m_spGuardDeactivate_E->SetActive(false);
+				}
+				else {
+					m_fGuardTimer_G += _dTimeDelta;
+					m_spGuardDeactivate_E->SetActive(true);
+				}
 				guardcontainer.second->SetActive(false);
 				spGameInstance->RemoveCollisionPawn(guardcontainer.second);
 			}
@@ -246,7 +292,18 @@ void CMainScene::TurnGuardsOnRange()
 		{
 			if (m_spWarriorPlayer->GetDoneCoreMinotaurState() && m_spWarriorPlayer->GetDoneCoreHarlequinnState() && m_spWarriorPlayer->GetDoneCoreAnubisState()&&m_bisDead_Anubis && m_bisDead_Harlequinn && m_bIsDead_Minotaur)
 			{
-				m_spEndingText->SetActive(true);
+				if (!m_fGuardSound_Final) {
+					spGameInstance->SoundPlayOnce(L"GuardDeactivate");
+					m_fGuardSound_Final = true;
+				}
+				if (m_fTextTimer_Final > 5.f) {
+					m_spEndingText->SetActive(false);
+				}
+				else {
+					m_fTextTimer_Final += _dTimeDelta;
+					m_spEndingText->SetActive(true);
+				}
+				
 				guardcontainer.second->SetActive(false);
 				spGameInstance->RemoveCollisionPawn(guardcontainer.second);
 			}
@@ -256,6 +313,7 @@ void CMainScene::TurnGuardsOnRange()
 
 void CMainScene::TurnLightsOnRange()
 {
+
 	_float3 PlayerPos = m_spMainCamera->GetTransform()->GetPos();
 	for (auto& obj : (*m_spMap->GetStaticObjs().get()))
 	{
@@ -857,6 +915,49 @@ void CMainScene::CreateDeactivateUI()
 		tDesc.v2Pos = _float2{ 555,200 };
 		m_spKeyFUIAnubis = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
 		m_spKeyFUIAnubis->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"FirstGuardDeActivated";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(600);
+		tDesc.v2Size.y = static_cast<_float>(140);
+		tDesc.v2Pos = _float2{ 640,200 };
+		m_spGuardDeactivate_D = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spGuardDeactivate_D->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"SecondGuardDeActivated";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(600);
+		tDesc.v2Size.y = static_cast<_float>(140);
+		tDesc.v2Pos = _float2{ 640,200 };
+		m_spGuardDeactivate_E = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spGuardDeactivate_E->SetActive(false);
+	} {
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"ThirdGuardDeActivated";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(600);
+		tDesc.v2Size.y = static_cast<_float>(140);
+		tDesc.v2Pos = _float2{ 640,200 };
+		m_spGuardDeactivate_F = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spGuardDeactivate_F->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"FourthGuardDeActivated";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(600);
+		tDesc.v2Size.y = static_cast<_float>(140);
+		tDesc.v2Pos = _float2{ 640,200 };
+		m_spGuardDeactivate_G = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spGuardDeactivate_G->SetActive(false);
 	}
 }
 
@@ -2234,7 +2335,7 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 void CMainScene::LateTick(const _double& _dTimeDelta)
 {
 	UpdateMobsStatus();
-	TurnGuardsOnRange();
+	TurnGuardsOnRange(_dTimeDelta);
 }
 
 void CMainScene::CollisionTick(const _double& _dTimeDelta)

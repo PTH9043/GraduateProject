@@ -631,7 +631,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							//철장 여는 용도
 							if (spGameInstance->GetDIKeyPressing(DIK_F)) {
 								if (!CheckPointSaveSound && !m_bDoneInteractStatue) {
-									//spGameInstance->SoundPlayOnce(L"BarLift"); checkpoint saving 중
+									spGameInstance->SoundPlayOnce(L"CheckpointSaving");
 									CheckPointSaveSound = true;
 								}
 								m_fInteractionTimeElapsed += _dTimeDelta;
@@ -640,7 +640,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							else {
 								if (CheckPointSaveSound) {
 									CheckPointSaveSound = false;
-									//spGameInstance->StopSound(L"BarLift");
+									spGameInstance->StopSound(L"CheckpointSaving");
 								}
 								m_fInteractionTimeElapsed = 0;
 								
