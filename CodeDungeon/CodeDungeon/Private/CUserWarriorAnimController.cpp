@@ -48,9 +48,12 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     SetAnimState(-1);
 
     SHPTR<CWarriorPlayer> spWarriorPlayer = m_wpWarriorPlayer.lock();
+    SHPTR<UTransform>    spSelfTransform = spWarriorPlayer->GetTransform();
     SHPTR<UAnimModel> spAnimModel = spWarriorPlayer->GetAnimModel();
     SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
     const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
+
+    spSelfTransform->DisableMotionblurOn();
 
     // Input checks
     _bool isRunshift = spGameInstance->GetDIKeyPressing(DIK_LSHIFT);
@@ -114,6 +117,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
         m_iWComboStack = 0;
         m_iSComboStack = 0;
         spWarriorPlayer->GetTransform()->MoveForward(_dTimeDelta, isRunshift ? 30.f : 10.f);
+        spSelfTransform->EnableMotionblurOn();
     }
 
     // Jumping logic
@@ -137,6 +141,8 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
         else if (isMoveLeft) UpdateState(spAnimModel, ANIM_ROLL, L"ROLL_L");
         else if (isMoveRight) UpdateState(spAnimModel, ANIM_ROLL, L"ROLL_R");
         else UpdateState(spAnimModel, ANIM_ROLL, L"ROLL_F");
+
+        spSelfTransform->EnableMotionblurOn();
     }
 
     // Hit state
@@ -145,6 +151,8 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
         UpdateState(spAnimModel, ANIM_HIT, L"HIT_BACK");
         spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         spWarriorPlayer->SetPrevHealth(spWarriorPlayer->GetHealth());
+
+        spSelfTransform->EnableMotionblurOn();
     }
 
     // Rise state
@@ -205,6 +213,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
             m_iSComboStack = 0;
         }
 
+        spSelfTransform->EnableMotionblurOn();
     }
 
     if (CurAnimName == L"combo05")

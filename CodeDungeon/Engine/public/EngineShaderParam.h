@@ -52,7 +52,8 @@ namespace Engine {
 		_float4x4 mWorldMatrix{ _float4x4::Identity };
 		_float4x4 mPrevWorldMatrix{ _float4x4::Identity };
 		_uint		iCamIndex{ 0 };
-		_int3		  iPadding;
+		_int			iMotionBlurOn{ 0 };
+		_int2		iPadding;
 	}TRANSFORMPARAM;
 
 #pragma endregion TRANSFORM

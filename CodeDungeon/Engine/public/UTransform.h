@@ -56,8 +56,11 @@ public:
 	void SetNewWorldMtx(const _float4x4& _newworldMtx);
 
 	static _bool IsMotionBlurOn() { return m_isMotionBlurOn; }
-	void EnableMotionBlurOn() { this->m_isMotionBlurOn = true; }
-	void DisableMotionBlurOn() { this->m_isMotionBlurOn = false; }
+	static void EnableAllMotionBlurOn() { m_isMotionBlurOn = true; }
+	static void DisableAllMotionBlurOn() { m_isMotionBlurOn = false; }
+
+	void EnableMotionblurOn() { m_stTransformParam.iMotionBlurOn = 1; }
+	void DisableMotionblurOn() { m_stTransformParam.iMotionBlurOn = 0; }
 public:
 	virtual void Free() override;
 	CLONE_MACRO(UTransform, "UTransform::Cloen To Failed")

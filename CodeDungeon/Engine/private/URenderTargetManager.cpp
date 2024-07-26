@@ -199,7 +199,7 @@ void URenderTargetManager::RenderDebugObjects(CSHPTRREF<UShader> _spShader, CSHP
     for (auto& iter : m_vecRtObjects)
     {
         if (iter.eRtObjID == RTOBJID::SHADOW_DEPTH_FOURBYFOUR && iter.eRtGroupID == RTGROUPID::SHADOW_MAP) {
-            iter.stTransformParam.iPadding = _int3(1, 1, 1);
+            iter.stTransformParam.iPadding = _int2(1, 1);
         }
         _spShader->BindCBVBuffer(m_spTransformConstantBuffer, &iter.stTransformParam, GetTypeSize<TRANSFORMPARAM>());
         _spShader->BindSRVBuffer(_eSrvRegister, FindRenderTargetTexture(iter.eRtGroupID, iter.eRtObjID));

@@ -37,7 +37,8 @@ cbuffer TRANSFORM_PARAMS : register(b3)
     matrix     g_WorldMatrix;
     matrix     g_PrevWorldMatrix;
     int            g_CamID;
-    int3      g_TransformPadding;
+    int            g_TransformMotionBlurOn;
+    int2         g_TransformPadding;
 };
 
 SamplerState g_Sampler_Normal : register(s0);

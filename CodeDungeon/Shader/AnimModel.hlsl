@@ -106,7 +106,7 @@ VS_OUT VS_Main(VS_IN In)
 
    
     
-    if (true == g_isObjectMotionBlur)
+    if (true == g_isObjectMotionBlur || 0 != g_TransformMotionBlurOn)
     {
         matrix PrevBoneMatrix = (g_PrevBoneMatrix.BoneMatrix[In.vBlendIndex.x] * In.vBlendWeight.x) +
                         (g_PrevBoneMatrix.BoneMatrix[In.vBlendIndex.y] * In.vBlendWeight.y) +
