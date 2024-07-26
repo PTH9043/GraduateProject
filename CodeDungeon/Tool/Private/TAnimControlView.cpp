@@ -892,7 +892,7 @@ void TAnimControlView::AnimSoundShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFl
 					// 5
 					{
 						ImGui::SetNextItemWidth(100);
-						ImGui::InputFloat3(Volume + Index, &ChangeDesc->fSoundVolume);
+						ImGui::InputFloat(Volume + Index, &ChangeDesc->fSoundVolume);
 					}
 					if (ImGui::Button(Remove + Index))
 					{

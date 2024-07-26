@@ -263,8 +263,8 @@ void UAnimSoundEvent::EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, con
 			m_pSound->Stop();
 			m_pSound = pSound;
 		}
+		m_pSound = pSound;
 		m_pSound->UpdateVolume(m_AnimSoundDesc.fSoundVolume);
-		m_pSound = spGameInstance->BringSound(m_AnimSoundDesc.wstrSoundName).get();
 		m_pSound->ChangeMinMaxDistance3D(m_AnimSoundDesc.fMinSoundDistance, m_AnimSoundDesc.fMaxSoundDistance);
 
 		if (nullptr == m_wpPlayerCharacter.lock())
