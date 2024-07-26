@@ -181,7 +181,11 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
                 }
                 else if (DistanceFromPlayer < AttackRange_Long && DistanceFromPlayer > AttackRange_Close)
                 {
-                    UpdateState(spAnimModel, ANIM_ATTACK, L"CAST");
+                    if((spAnubis->GetTargetPlayer()->GetTransform()->GetPos().y - spAnubis->GetTransform()->GetPos().y) > 0.2 ||
+                        (spAnubis->GetTargetPlayer()->GetTransform()->GetPos().y - spAnubis->GetTransform()->GetPos().y) < -0.2)
+                        UpdateState(spAnimModel, ANIM_MOVE, L"WALK");
+                    else
+                        UpdateState(spAnimModel, ANIM_ATTACK, L"CAST");
                 }
                 else if (DistanceFromPlayer < AttackRange_Close)
                 {
