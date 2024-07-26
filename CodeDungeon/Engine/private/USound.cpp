@@ -65,6 +65,29 @@ void USound::Restart()
 	m_pChannel->setVolume(m_SoundDesc.fVolume);
 }
 
+void USound::RestartOnce()
+{
+	Tick();
+	if (false == IsSoundPlay() || false == m_isOncePlay) {
+		Restart();
+		m_isOncePlay = true;
+	}
+}
+void USound::Stop()
+{
+	RETURN_CHECK(nullptr == m_pChannel, ;);
+	m_pChannel->stop();
+	m_pChannel = nullptr;
+}
+
+void USound::StopBGM(IN FMOD::Channel** _ppChannel)
+{
+	if (_ppChannel)
+	{
+		(*_ppChannel)->stop();
+		_ppChannel = nullptr;  // 채널 포인터를 해제
+	}
+}
 
 void USound::Pause()
 {
@@ -147,12 +170,6 @@ void USound::FadeOut(float fadeDuration)
 	Stop();
 }
 
-void USound::Stop()
-{
-	RETURN_CHECK(nullptr == m_pChannel, ;);
-	m_pChannel->stop();
-	m_pChannel = nullptr;
-}
 
 void USound::UpdateVolume(const _float _fVolume)
 {

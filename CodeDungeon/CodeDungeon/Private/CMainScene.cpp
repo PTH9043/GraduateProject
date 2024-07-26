@@ -1654,42 +1654,64 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 	
 
 	if (m_bStartGameDefault) {
-		//spGameInstance->SoundPlayBGM(L"StartBGM");
-		//SHPTR<USound> spSound =	spGameInstance->BringSound(L"StartBGM");
-		//spSound->Tick();
-		//spSound->Play();
+		
+		spGameInstance->SoundPlayBGM(L"BGM2");
 		spGameInstance->PauseGame();
 		m_bStartGameDefault = false;
 	}
+	
+	
 
-	if (m_spEnterButtonUI->IsMouseOnRect()&& m_spEnterButtonUI->IsActive()) {
 
+	if (m_spEnterButtonUI->IsMouseOnRect() && m_spEnterButtonUI->IsActive()) {
 		m_spEnterButtonUI->SetIfPicked(true);
-		spGameInstance->SoundPlayOnce(L"UI_Select");
-		if (true == spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_L)&&!m_bStartSceneForUI) {
-			SHPTR<USound> spSound = spGameInstance->BringSound(L"PressedButton");
-			spSound->PlayOnce();
-			
-			m_bStartSceneForUI = true;		
+
+		
+		if (!wasMouseEnterOverButton) {
+			spGameInstance->SoundPlayOnce(L"UI_Select");
+			wasMouseEnterOverButton = true;  // 상태를 업데이트
+		}
+
+		
+		if (true == spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_L) && !m_bStartSceneForUI) {
+			spGameInstance->SoundPlayOnce(L"PressedButton");
+			spGameInstance->SoundStopBGM(L"BGM2");
+			m_bStartSceneForUI = true;
 		}
 	}
 	else {
+	
+		if (wasMouseEnterOverButton) {
+			wasMouseEnterOverButton = false;
+			spGameInstance->StopSound(L"UI_Select");
+		}
 		m_spEnterButtonUI->SetIfPicked(false);
 	}
-	if (m_spExitButtonUI->IsMouseOnRect()&& m_spExitButtonUI->IsActive()) {
 
+	if (m_spExitButtonUI->IsMouseOnRect()&& m_spExitButtonUI->IsActive()) {
+		if (!wasMouseExitOverButton) {
+			spGameInstance->SoundRestartOnce(L"UI_Mouseover");
+			wasMouseExitOverButton = true;  // 상태를 업데이트
+		}
+		
 		m_spExitButtonUI->SetIfPicked(true);
-		spGameInstance->SoundPlayOnce(L"UI_Select");
+		
 		if (true == spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_L)) {
+			spGameInstance->SoundPlayOnce(L"PressedButton2");
 			::PostQuitMessage(0);
 		}
 	}
 	else {
+		if (wasMouseExitOverButton) {
+			wasMouseExitOverButton = false;
+			spGameInstance->StopSound(L"UI_Mouseover");
+		}
+		
 		m_spExitButtonUI->SetIfPicked(false);
 	}
 
 	if (m_bStartSceneForUI&& !m_bStartGameForUI) {
-		
+		spGameInstance->SoundPlayOnce(L"BGM3");
 		m_fStartSceneLoadingTimer += _dTimeDelta;
 
 		m_spLoadingFillingUI->SetDurationTimePlus(_dTimeDelta);
@@ -1712,6 +1734,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 
 	if (m_fStartSceneLoadingTimer > 10.f) {
 		//GameStart 시
+		spGameInstance->StopSound(L"BGM3");
 		spGameInstance->ResumeGame();
 		spGameInstance->SetGameStartEffect();
 		m_spBackgroundUI->SetActive(false);

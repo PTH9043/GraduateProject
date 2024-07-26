@@ -92,6 +92,13 @@ void UAudioSystem::PlayBGM(const _wstring& _wstrSoundName)
 	m_spBgmSound->PlayBGM(&m_pBGmChannel);
 }
 
+void UAudioSystem::StopBGM(const _wstring& _wstrSoundName)
+{
+	m_spBgmSound = BringSound(_wstrSoundName);
+	RETURN_CHECK(nullptr == m_spBgmSound, ;);
+	m_spBgmSound->StopBGM(&m_pBGmChannel);
+}
+
 void UAudioSystem::PlayBGM(const _wstring& _wstrSoundName, const _float _fVolumeUpdate)
 {
 	m_spBgmSound = BringSound(_wstrSoundName);
@@ -119,6 +126,13 @@ void UAudioSystem::Restart(const _wstring& _wstrSoundName)
 	m_spSound = BringSound(_wstrSoundName);
 	RETURN_CHECK(nullptr == m_spSound, ;);
 	m_spSound->Restart();
+}
+
+void UAudioSystem::RestartOnce(const _wstring& _wstrSoundName)
+{
+	m_spSound = BringSound(_wstrSoundName);
+	RETURN_CHECK(nullptr == m_spSound, ;);
+	m_spSound->RestartOnce();
 }
 
 void UAudioSystem::Pause(const _wstring& _wstrSoundName)

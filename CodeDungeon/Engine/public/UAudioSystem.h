@@ -37,10 +37,12 @@ public:
 	void Play(const _wstring& _wstrSoundName, const _float _fVolumeUpdate);
 	void PlayOnce(const _wstring& _wstrSoundName);
 	void PlayBGM(const _wstring& _wstrSoundName);
+	void StopBGM(const _wstring& _wstrSoundName);
 	void PlayBGM(const _wstring& _wstrSoundName, const _float  _fVolumeUpdate);
 	void Stop(const _wstring& _wstrSoundName);
 	void VolumeUpdate(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
 	void Restart(const _wstring& _wstrSoundName);
+	void RestartOnce(const _wstring& _wstrSoundName);
 	void Pause(const _wstring& _wstrSoundName);
 	void Resume(const _wstring& _wstrSoundName);
 	void SetPlaybackPosition(const _wstring& _wstrSoundName,unsigned int position);

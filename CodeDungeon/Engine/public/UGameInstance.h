@@ -263,10 +263,12 @@ public: /* AudioSystemManager*/
 	void SoundPlay(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
 	void SoundPlayOnce(const _wstring& _wstrSoundName);
 	void SoundPlayBGM(const _wstring& _wstrSoundName);
+	void SoundStopBGM(const _wstring& _wstrSoundName);
 	void SoundPlayBGM(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
 	void StopSound(const _wstring& _wstrSoundName);
 	void SoundDisableOncePlay(const _wstring& _wstrSoundName);
 	void Restart(const _wstring& _wstrSoundName);
+	void SoundRestartOnce(const _wstring& _wstrSoundName);
 	void Pause(const _wstring& _wstrSoundName);
 	void Resume(const _wstring& _wstrSoundName);
 	void SetPlaybackPosition(const _wstring& _wstrSoundName, unsigned int position);
