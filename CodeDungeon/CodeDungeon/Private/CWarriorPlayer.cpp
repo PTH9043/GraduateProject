@@ -208,6 +208,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetHealth(100);
 	SetMaxHealth(1000);
 	SetAnimModelRim(true);
+	SetAnimModelRim(true);
 
 	return S_OK;
 }
@@ -246,7 +247,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-
+	
 	JumpState(_dTimeDelta);
 	GetAnimationController()->Tick(_dTimeDelta);
 
@@ -289,6 +290,9 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		m_spBlood->SetTimer(1.75f);
 		
 	}
+	else {
+		SetAnimModelRimColor(_float3(204 / 204.f, 255 / 204.f, 0));
+	}
 	if (m_spBlood->CheckTimeOver()) {
 		m_spBlood->SetActive(false);		
 	}
@@ -320,7 +324,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	{
 		HealTimer += _dTimeDelta;
 		if (HealTimer > 2.0f) {
-			SetAnimModelRimColor(_float3(1, 0, 0));
+			//SetAnimModelRimColor(_float3(1, 0, 0));
 			HealTimer = 0;
 			HealTrigger = false;
 			IfOpenChestForHeal = false;

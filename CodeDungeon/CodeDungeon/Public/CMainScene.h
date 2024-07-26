@@ -227,6 +227,11 @@ private:
 
 	//======================SOUND BOOL-=====================
 	_bool EnterGameModeBGM = false;
+
+
+
+	///=================ENDING============================
+	SHPTR<CImageUI>			m_spEndingText;
 };
 
 END

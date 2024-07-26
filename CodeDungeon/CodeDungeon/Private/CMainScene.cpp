@@ -244,8 +244,9 @@ void CMainScene::TurnGuardsOnRange()
 		}
 		else if (guardcontainer.first == L"Interior_Room_A")
 		{
-			if (m_bisDead_Anubis && m_bisDead_Harlequinn && m_bIsDead_Minotaur)
+			if (m_spWarriorPlayer->GetDoneCoreMinotaurState() && m_spWarriorPlayer->GetDoneCoreHarlequinnState() && m_spWarriorPlayer->GetDoneCoreAnubisState()&&m_bisDead_Anubis && m_bisDead_Harlequinn && m_bIsDead_Minotaur)
 			{
+				m_spEndingText->SetActive(true);
 				guardcontainer.second->SetActive(false);
 				spGameInstance->RemoveCollisionPawn(guardcontainer.second);
 			}
@@ -1172,6 +1173,18 @@ void CMainScene::CreateGameSceneUI()
 		m_spAnubisFrameUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
 		m_spAnubisFrameUI->SetActive(false);
 	}
+	//===================ENDING=====================FreedomText
+	{
+		tDesc5.fZBufferOrder = 0.99f;
+		tDesc5.strImgName = L"FreedomText";
+		tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc5.DrawOrder = L"Middle";
+		tDesc5.v2Size.x = static_cast<_float>(800);
+		tDesc5.v2Size.y = static_cast<_float>(175);
+		tDesc5.v2Pos = _float2{ 640,400 };
+		m_spEndingText = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spEndingText->SetActive(false);
+	}
 }
 
 void CMainScene::CreateKeyInfoUI()
@@ -1759,7 +1772,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 		if (!EnterGameModeBGM) {
 			spGameInstance->SoundPlayBGM(L"GamePlayBGM");//게임 플레이 bgm
 			//SHPTR<USound> Bgm = spGameInstance->BringSound(L"GamePlayBGM");
-			spGameInstance->BGMUpdateVolume(L"GamePlayBGM",1.f);
+			spGameInstance->BGMUpdateVolume(L"GamePlayBGM",0.3f);
 			EnterGameModeBGM = true;
 		}
 		
