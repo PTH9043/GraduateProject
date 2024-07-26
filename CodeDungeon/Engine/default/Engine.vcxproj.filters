@@ -1587,5 +1587,11 @@
     <FxCompile Include="..\..\Shader\GageUI.hlsl">
       <Filter>98.ShaderFile\UI</Filter>
     </FxCompile>
+    <FxCompile Include="..\..\Shader\MiddleRenderScreen.hlsl">
+      <Filter>98.ShaderFile\RTS</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Shader\MotionBlur.hlsl">
+      <Filter>98.ShaderFile\Common\HdrBloomBlur</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
