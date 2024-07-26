@@ -130,7 +130,9 @@ private:
 	SHPTR<CLoadingUI>			m_spPleaseWaitTextUI;
 
 	SHPTR<CButtonUI>			m_spEnterButtonUI;
+	_bool wasMouseEnterOverButton = false;
 	SHPTR<CButtonUI>			m_spExitButtonUI;
+	_bool wasMouseExitOverButton = false;
 	_float m_fStartSceneLoadingTimer = 0;
 	_bool m_bStartSceneForUI = false;
 	_bool m_bStartGameForUI = false;

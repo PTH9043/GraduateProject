@@ -28,7 +28,9 @@ public:
 	void PlayBGM(IN FMOD::Channel** _ppChannel);
 	void PlayOnce();
 	void Stop();
+	void StopBGM(IN FMOD::Channel** _ppChannel);
 	void Restart();
+	void RestartOnce();
 	void Pause();
 	void Resume();
 	void SetPlaybackPosition(unsigned int position);
