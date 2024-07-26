@@ -57,6 +57,9 @@ private:
 
 	_float HitStack = 0;
 	_bool BlindEffectOn = false;
+
+	//=====================SOUND BOOL================
+	_bool m_bReviveSoundPlay = false;
 };
 
 END

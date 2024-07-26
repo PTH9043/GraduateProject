@@ -304,6 +304,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
         spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         spWarriorPlayer->SetDeathState(true);
         m_bDieEffectTurnedOn = true;  
+        m_bReviveSoundPlay = false;
     }
     // Handle death state
     if (spWarriorPlayer->GetDeathState())
@@ -329,7 +330,11 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
             if (spGameInstance->GetDIKeyDown(DIK_G))
             {
                 m_bDieEffectTurnedOn = false;
-                spGameInstance->SoundPlayOnce(L"Revive");
+                if (!m_bReviveSoundPlay) {
+                    spGameInstance->SoundPlayOnce(L"Revive");
+                    m_bReviveSoundPlay = true;
+                }
+              
                 spWarriorPlayer->GetCurrentNavi()->FindCell(spWarriorPlayer->GetSpawnPointCell()->GetIndex());
                 spWarriorPlayer->GetTransform()->SetPos(spWarriorPlayer->GetSpawnPointCell()->GetCenterPos());
                 static_pointer_cast<CMainCamera>(spWarriorPlayer->GetFollowCamera())->GetCurrentNavi()->FindCell(spWarriorPlayer->GetSpawnPointCamera()->GetIndex());
