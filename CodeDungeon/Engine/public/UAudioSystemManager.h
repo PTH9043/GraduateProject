@@ -39,7 +39,19 @@ public:
 	void Stop(const _wstring& _wstrSoundName);
 	void VolumeUpdate(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
 	void DisableOncePlay(const _wstring& _wstrSoundName);
-
+	void Restart(const _wstring& _wstrSoundName);
+	void Pause(const _wstring& _wstrSoundName);
+	void Resume(const _wstring& _wstrSoundName);
+	void SetPlaybackPosition(const _wstring& _wstrSoundName, unsigned int position);
+	//unsigned int GetPlaybackPosition(const _wstring& _wstrSoundName);
+	void SetLooping(const _wstring& _wstrSoundName, bool loop);
+	void SetPitch(const _wstring& _wstrSoundName, float pitch);
+	void SetPan(const _wstring& _wstrSoundName, float pan);
+	void Mute(const _wstring& _wstrSoundName);
+	void Unmute(const _wstring& _wstrSoundName);
+	void FadeIn(const _wstring& _wstrSoundName, float fadeDuration);
+	void FadeOut(const _wstring& _wstrSoundName, float fadeDuration);
+	void UpdateVolume(const _wstring& _wstrSoundName, const _float _fVolume);
 	void UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, const _float3& _vSoundVelocity, 
 		CSHPTRREF<UTransform> _spTargetTransform = nullptr);
 	void UpdateSound3D(const _wstring& _wstrSoundName, CSHPTRREF<UTransform> _spSoundTransform, const _float3& _vSoundVelocity,

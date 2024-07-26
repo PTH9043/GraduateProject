@@ -49,6 +49,104 @@ void USound::PlayOnce()
 	}
 }
 
+void USound::Restart()
+{
+	// Stop the sound if it's playing
+	if (m_pChannel) {
+		bool isPlaying = false;
+		m_pChannel->isPlaying(&isPlaying);
+		if (isPlaying) {
+			m_pChannel->stop();
+		}
+	}
+
+	// Play the sound from the beginning
+	m_pSystem->playSound(m_pSound, nullptr, false, &m_pChannel);
+	m_pChannel->setVolume(m_SoundDesc.fVolume);
+}
+
+
+void USound::Pause()
+{
+	RETURN_CHECK(nullptr == m_pChannel, ;);
+	m_pChannel->setPaused(true);
+}
+
+void USound::Resume()
+{
+	RETURN_CHECK(nullptr == m_pChannel, ;);
+	m_pChannel->setPaused(false);
+}
+
+void USound::SetPlaybackPosition(unsigned int position)
+{
+	RETURN_CHECK(nullptr == m_pChannel, ;);
+	m_pChannel->setPosition(position, FMOD_TIMEUNIT_MS);
+}
+
+//unsigned int USound::GetPlaybackPosition()
+//{
+//	RETURN_CHECK(nullptr == m_pChannel, 0);
+//	unsigned int position = 0;
+//	m_pChannel->getPosition(&position, FMOD_TIMEUNIT_MS);
+//	return position;
+//}
+
+void USound::SetLooping(bool loop)
+{
+	RETURN_CHECK(nullptr == m_pChannel, ;);
+	m_pChannel->setMode(loop ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF);
+}
+
+void USound::SetPitch(float pitch)
+{
+	RETURN_CHECK(nullptr == m_pChannel, ;);
+	m_pChannel->setPitch(pitch);
+}
+
+void USound::SetPan(float pan)
+{
+	RETURN_CHECK(nullptr == m_pChannel, ;);
+	m_pChannel->setPan(pan);
+}
+
+void USound::Mute()
+{
+	RETURN_CHECK(nullptr == m_pChannel, ;);
+	m_pChannel->setMute(true);
+}
+
+void USound::Unmute()
+{
+	RETURN_CHECK(nullptr == m_pChannel, ;);
+	m_pChannel->setMute(false);
+}
+
+void USound::FadeIn(float fadeDuration)
+{
+	RETURN_CHECK(nullptr == m_pChannel, ;);
+	m_pChannel->setVolume(0.0f);
+	m_pChannel->setPaused(false);
+	for (float volume = 0.0f; volume <= m_SoundDesc.fVolume; volume += (m_SoundDesc.fVolume / fadeDuration))
+	{
+		m_pChannel->setVolume(volume);
+		Sleep(10); // Sleep for 10 milliseconds
+	}
+	m_pChannel->setVolume(m_SoundDesc.fVolume);
+}
+
+void USound::FadeOut(float fadeDuration)
+{
+	RETURN_CHECK(nullptr == m_pChannel, ;);
+	for (float volume = m_SoundDesc.fVolume; volume >= 0.0f; volume -= (m_SoundDesc.fVolume / fadeDuration))
+	{
+		m_pChannel->setVolume(volume);
+		Sleep(10); // Sleep for 10 milliseconds
+	}
+	m_pChannel->setVolume(0.0f);
+	Stop();
+}
+
 void USound::Stop()
 {
 	RETURN_CHECK(nullptr == m_pChannel, ;);

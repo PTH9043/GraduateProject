@@ -114,6 +114,98 @@ void UAudioSystem::VolumeUpdate(const _wstring& _wstrSoundName, const _float& _f
 	m_spSound->UpdateVolume(_fVolumeUpdate);
 }
 
+void UAudioSystem::Restart(const _wstring& _wstrSoundName)
+{
+	m_spSound = BringSound(_wstrSoundName);
+	RETURN_CHECK(nullptr == m_spSound, ;);
+	m_spSound->Restart();
+}
+
+void UAudioSystem::Pause(const _wstring& _wstrSoundName)
+{
+	m_spSound = BringSound(_wstrSoundName);
+	RETURN_CHECK(nullptr == m_spSound, ;);
+	m_spSound->Pause();
+}
+
+void UAudioSystem::Resume(const _wstring& _wstrSoundName)
+{
+	m_spSound = BringSound(_wstrSoundName);
+	RETURN_CHECK(nullptr == m_spSound, ;);
+	m_spSound->Resume();
+}
+
+void UAudioSystem::SetPlaybackPosition(const _wstring& _wstrSoundName, unsigned int position)
+{
+	m_spSound = BringSound(_wstrSoundName);
+	RETURN_CHECK(nullptr == m_spSound, ;);
+	m_spSound->SetPlaybackPosition(position);
+}
+
+//unsigned int UAudioSystem::GetPlaybackPosition(const _wstring& _wstrSoundName)
+//{
+//	m_spSound = BringSound(_wstrSoundName);
+//	RETURN_CHECK(nullptr == m_spSound, ;);
+//	unsigned int pos = m_spSound->GetPlaybackPosition();
+//	return pos;
+//}
+
+void UAudioSystem::SetLooping(const _wstring& _wstrSoundName, bool loop)
+{
+	m_spSound = BringSound(_wstrSoundName);
+	RETURN_CHECK(nullptr == m_spSound, ;);
+	m_spSound->SetLooping(loop);
+}
+
+void UAudioSystem::SetPitch(const _wstring& _wstrSoundName, float pitch)
+{
+	m_spSound = BringSound(_wstrSoundName);
+	RETURN_CHECK(nullptr == m_spSound, ;);
+	m_spSound->SetPitch(pitch);
+}
+
+void UAudioSystem::SetPan(const _wstring& _wstrSoundName, float pan)
+{
+	m_spSound = BringSound(_wstrSoundName);
+	RETURN_CHECK(nullptr == m_spSound, ;);
+	m_spSound->SetPan(pan);
+}
+
+void UAudioSystem::Mute(const _wstring& _wstrSoundName)
+{
+	m_spSound = BringSound(_wstrSoundName);
+	RETURN_CHECK(nullptr == m_spSound, ;);
+	m_spSound->Mute();
+}
+
+void UAudioSystem::Unmute(const _wstring& _wstrSoundName)
+{
+	m_spSound = BringSound(_wstrSoundName);
+	RETURN_CHECK(nullptr == m_spSound, ;);
+	m_spSound->Unmute();
+}
+
+void UAudioSystem::FadeIn(const _wstring& _wstrSoundName, float fadeDuration)
+{
+	m_spSound = BringSound(_wstrSoundName);
+	RETURN_CHECK(nullptr == m_spSound, ;);
+	m_spSound->FadeIn(fadeDuration);
+}
+
+void UAudioSystem::FadeOut(const _wstring& _wstrSoundName, float fadeDuration)
+{
+	m_spSound = BringSound(_wstrSoundName);
+	RETURN_CHECK(nullptr == m_spSound, ;);
+	m_spSound->FadeOut(fadeDuration);
+}
+
+void UAudioSystem::UpdateVolume(const _wstring& _wstrSoundName, const _float _fVolume)
+{
+	m_spSound = BringSound(_wstrSoundName);
+	RETURN_CHECK(nullptr == m_spSound, ;);
+	m_spSound->FadeOut(_fVolume);
+}
+
 void UAudioSystem::DisableOncePlay(const _wstring& _wstrSoundName)
 {
 	m_spSound = BringSound(_wstrSoundName);
