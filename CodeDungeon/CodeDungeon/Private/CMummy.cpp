@@ -317,7 +317,10 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 			SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
 			_double DeathTimeArcOpenEnd = 50;
 			if (GetElapsedTime() < DeathTimeArcOpenEnd)
+			{
 				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
+				GetAnimModel()->UpdateDissolveTImer(_dTimeDelta * DeathAnimSpeed);
+			}
 		}
 		else if (CurAnimState == UAnimationController::ANIM_IDLE)
 		{

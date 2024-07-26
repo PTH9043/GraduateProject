@@ -13,6 +13,7 @@
 #include "UStage.h"
 #include "UCell.h"
 #include "UCollider.h"
+#include "UTexGroup.h"
 
 UCharacter::UCharacter(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, 
 	const CLONETYPE& _eCloneType) : 
@@ -20,7 +21,7 @@ UCharacter::UCharacter(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer,
 	m_spAnimModel{ nullptr }, m_spAnimationController{ nullptr }, m_vPrevPos{}, 	m_spCurNavi{nullptr }, m_spHitCollider{nullptr}, 
 	m_fMoveSpeed{0.f}, m_fRunSpeed{0.f}, m_bIsRunning{false}, m_bisHit{false}, m_bisCollision{false}, m_DrawOutline{false},
 	m_isNetworkConnected{ false }, m_isPlayer{ false }, m_f3CollidedNormal{}, m_iMaxHealth{}, m_iHealth{}, m_iPrevHealth{},
-	m_bisHitAlready{false}, m_spScaleOutlineBuffer{ nullptr }, m_isDamaged{false}, ifDrawOutlineByAbility{ true }
+	m_bisHitAlready{false}, m_spScaleOutlineBuffer{ nullptr }, m_isDamaged{false}, ifDrawOutlineByAbility{ true }, m_spDissovleTexTGroup{nullptr}
 {
 }
 
@@ -28,7 +29,7 @@ UCharacter::UCharacter(const UCharacter& _rhs) : UPawn(_rhs),
 m_spAnimModel{ _rhs.m_spAnimModel }, m_spAnimationController{ _rhs.m_spAnimationController }, m_vPrevPos{}, m_spCurNavi{ _rhs.m_spCurNavi }, m_spHitCollider{ nullptr },
 m_fMoveSpeed{ 0.f }, m_fRunSpeed{ 0.f }, m_bIsRunning{ false }, m_bisHit{ false }, m_bisCollision{ false }, m_DrawOutline{ false },
 m_isNetworkConnected{ false }, m_isPlayer{ false }, m_f3CollidedNormal{}, m_iMaxHealth{}, m_iHealth{}, m_iPrevHealth{}, 
-m_bisHitAlready{ false }, m_spScaleOutlineBuffer{nullptr}, m_isDamaged{ false }, ifDrawOutlineByAbility{ true }
+m_bisHitAlready{ false }, m_spScaleOutlineBuffer{nullptr}, m_isDamaged{ false }, ifDrawOutlineByAbility{ true }, m_spDissovleTexTGroup{ nullptr }
 
 {
 }
@@ -50,6 +51,7 @@ HRESULT UCharacter::NativeConstructClone(const VOIDDATAS& _Datas)
 	CHARACTERDESC CharacterDesc = UMethod::ConvertTemplate_Index<CHARACTERDESC>(_Datas, CHARACTERDESCORDER);
 	assert(false == CharacterDesc.wstrAnimControllerProtoData.empty());
 	m_isNetworkConnected = CharacterDesc.isNetworkConnected;
+	m_wstrDissolveTextureName = CharacterDesc.wstrDissolveTextureName;
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	{
@@ -73,6 +75,9 @@ HRESULT UCharacter::NativeConstructClone(const VOIDDATAS& _Datas)
 	{
 		m_spScaleOutlineBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::OUTLINESCALE, static_cast< _int>(sizeof(_bool)));
 		m_spColorOutlineBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::OUTLINECOLOR, static_cast< _int>(sizeof(_float3)));
+	}
+	{
+		m_spDissovleTexTGroup = std::static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_DISSOLVETEXTUREGROUP));
 	}
 	AddShader(PROTO_RES_ANIMMODELSHADER, RES_SHADER);
 	AddOutlineShader(PROTO_RES_ANIMDEPTHRECORDSHADER, RES_SHADER);
@@ -232,6 +237,8 @@ HRESULT UCharacter::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTabl
 		{
 			// Bind Transform 
 			GetTransform()->BindTransformData(GetShader());
+			if (nullptr != m_spDissovleTexTGroup)
+				m_spDissovleTexTGroup->SetUpTextureName(GetShader(), SRV_REGISTER::T2, m_wstrDissolveTextureName);
 
 			m_spAnimModel->BindTexture(i, SRV_REGISTER::T0, TEXTYPE::TextureType_DIFFUSE, GetShader());
 			m_spAnimModel->BindTexture(i, SRV_REGISTER::T1, TEXTYPE::TextureType_NORMALS, GetShader());

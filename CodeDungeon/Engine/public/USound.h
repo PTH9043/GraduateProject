@@ -21,6 +21,7 @@ public: /* get set */
 	FMOD::Sound* GetSound() const { return m_pSound; }
 	const _bool IsSoundPlay() const { return m_isSoundPlay; }
 
+	void SetVolume(const _float _fVolume) { m_SoundDesc.fVolume = _fVolume; }
 public:
 	virtual void Free() override;
 	void Tick();

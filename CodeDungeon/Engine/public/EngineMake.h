@@ -156,6 +156,7 @@
 #define PROTO_RES_TRAILTEXTUREGROUP L"Proto_Res_TrailTextureGroup"
 #define PROTO_RES_GUARDTEXTUREGROUP L"Proto_Res_GuardTextureGroup"
 #define PROTO_RES_BLOODTEXTUREGROUP L"Proto_Res_BloodTextureGroup"
+#define PROTO_RES_DISSOLVETEXTUREGROUP L"Proto_Res_DissolveTextureGroup"
 // material 
 
 #define PROTO_RES_MATERIAL L"Proto_Res_Material"

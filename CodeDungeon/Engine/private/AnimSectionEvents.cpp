@@ -264,7 +264,7 @@ void UAnimSoundEvent::EventSituation(UPawn* _pPawn, UAnimModel* _pAnimModel, con
 			m_pSound = pSound;
 		}
 		m_pSound = pSound;
-		m_pSound->UpdateVolume(m_AnimSoundDesc.fSoundVolume);
+		m_pSound->SetVolume(m_AnimSoundDesc.fSoundVolume);
 		m_pSound->ChangeMinMaxDistance3D(m_AnimSoundDesc.fMinSoundDistance, m_AnimSoundDesc.fMaxSoundDistance);
 
 		if (nullptr == m_wpPlayerCharacter.lock())

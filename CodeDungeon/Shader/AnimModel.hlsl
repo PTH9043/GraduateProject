@@ -23,6 +23,7 @@ cbuffer ANIMATIONPARAM : register(b11)
     bool g_isObjectMotionblur = false;
     
     float g_fDissolveTimer = 0;
+    float3 g_remains;
 };
 
 cbuffer BONEMATRIXPARAM : register(b12)
@@ -175,7 +176,7 @@ PS_OUT PS_Main(PS_IN In)
     VIEWPROJINFO tMainViewProj = GetViewProjInfo();
     // Out Color    
    
-    if (g_isObjectDissolve)
+    if (true == g_isObjectDissolve)
     {
         vector vDissorveColor = g_Texture2.Sample(g_Sampler_Normal, In.vTexUV0);
    //     vector vShow_DisorveColor = g_Texture3.Sample(g_Sampler_Normal, In.vTexUV0);

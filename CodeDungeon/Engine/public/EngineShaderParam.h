@@ -185,6 +185,7 @@ namespace Engine {
 		_bool		isAnimPadding = false;
 
 		_float		fDissolveTimer = 0;
+		_float3	fRemains;
 	}ANIMATIONPARAM;
 
 	typedef struct tagDrawRim

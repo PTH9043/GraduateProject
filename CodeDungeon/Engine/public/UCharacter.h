@@ -8,11 +8,8 @@ class UAnimModel;
 class UAnimationController;
 class UNavigation;
 class UShaderConstantBuffer;
-/*
-@ Date: 2024-02-25, Writer: ������
-@ Explain
--  ����ڰ� �����̰ų� AI�� ������ �� ����ϴ� Ŭ�����̴�.
-*/
+class UTexGroup;
+
 class UCharacter abstract : public UPawn {
 public:
 	enum {
@@ -21,14 +18,19 @@ public:
 	struct CHARACTERDESC {
 		_wstring		wstrAnimModelProtoData;
 		_wstring		wstrAnimControllerProtoData;
-		_bool			isNetworkConnected;
+		_wstring		wstrDissolveTextureName;
+		_bool				isNetworkConnected;
 
-		CHARACTERDESC() :wstrAnimModelProtoData{ L" " }, wstrAnimControllerProtoData{ L" " }, isNetworkConnected{ false }
+		CHARACTERDESC() :wstrAnimModelProtoData{ L" " }, wstrAnimControllerProtoData{ L" " }, isNetworkConnected{ false }, wstrDissolveTextureName{L""}
 		{ }
 		CHARACTERDESC(const _wstring& _wstrAnimModelPathData, const _wstring& _wstrAnimControllerProtoData,
 			const _bool _isNetworkConnected = false) :
 			wstrAnimModelProtoData{ _wstrAnimModelPathData }, wstrAnimControllerProtoData{ _wstrAnimControllerProtoData },
-			isNetworkConnected{ _isNetworkConnected } {}
+			isNetworkConnected{ _isNetworkConnected }, wstrDissolveTextureName{ L"T_FX_Enemy_Executioner_WarterNoiz" } {}
+		CHARACTERDESC(const _wstring& _wstrAnimModelPathData, const _wstring& _wstrAnimControllerProtoData,
+			const _wstring& _wstrDissoveTextureName, const _bool _isNetworkConnected = false) :
+			wstrAnimModelProtoData{ _wstrAnimModelPathData }, wstrAnimControllerProtoData{ _wstrAnimControllerProtoData },
+			isNetworkConnected{ _isNetworkConnected }, wstrDissolveTextureName{_wstrDissoveTextureName} {}
 	};
 
 public:
@@ -125,58 +127,41 @@ protected: /* get set */
 
 	const _float3& GetCollidedNormal() const { return m_f3CollidedNormal; }
 	void SetCollidedNormal(const _float3& _f3Normal) { m_f3CollidedNormal = _f3Normal; }
-
-
-
 private:
-
 	SHPTR< UShaderConstantBuffer>						m_spScaleOutlineBuffer;
 	SHPTR< UShaderConstantBuffer>						m_spColorOutlineBuffer;
 	// AnimationModel
 	SHPTR< UAnimModel>					m_spAnimModel;
 
 	SHPTR<UAnimationController>	m_spAnimationController;
-	// ���� ��ġ ����
 	_float3												m_vPrevPos;
-	// ���� ��������
-	SHPTR<UNavigation>						m_spCurNavi;
+	SHPTR<UNavigation>					m_spCurNavi;
 	SHPTR<UCollider>							m_spHitCollider;
-
-	//�̵� �ӵ�
 	_float													m_fMoveSpeed;
 	_float													m_fRunSpeed;
 	_bool													m_bIsRunning;
 	_bool													m_bisHit;
 	_bool													m_bisCollision;
-
-	//�̵��� ����
 	_float3												m_f3MovedDirection;
 	_float3												m_f3LastMovedDirection;
-	// �ش��ϴ� ������Ʈ�� Network Object���� Ȯ���ϴ� ����
 	_bool													m_isNetworkConnected;
-
-	_double                         m_delapsedTime;
-
-	_bool			m_DrawOutline = false;
-
-	_bool m_OutlineifScale;
-	_float3 m_OutlineColor;
-	_bool			m_isPlayer = false;
-
-	_float3			m_f3CollidedNormal;
-
-	_int			m_iMaxHealth;
-	_int			m_iHealth;
-	_int			m_iPrevHealth;
-
-	_int			m_iAttack;
-
-	_bool			m_bisDeath;
-
-	_bool			m_bisHitAlready;
-	_bool			m_isDamaged;
-
-	_bool ifDrawOutlineByAbility = false;
+	_double												m_delapsedTime;
+	_bool													m_DrawOutline = false;
+	_bool													m_OutlineifScale;
+	_float3												m_OutlineColor;
+	_bool													m_isPlayer = false;
+	_float3												m_f3CollidedNormal;
+	_int														m_iMaxHealth;
+	_int														m_iHealth;
+	_int														m_iPrevHealth;
+	_int														m_iAttack;
+	_bool													m_bisDeath;
+	_bool													m_bisHitAlready;
+	_bool													m_isDamaged;
+	_bool													 ifDrawOutlineByAbility = false;
+	// Dissolve Texture Group
+	SHPTR<UTexGroup>						m_spDissovleTexTGroup;
+	_wstring											m_wstrDissolveTextureName;
 };
 
 END
