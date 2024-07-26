@@ -132,7 +132,7 @@ private:
 	_bool m_bisKicked;
 	_bool m_bisRise;
 
-	_bool LiftBarsSound = false;
+	
 
 	_double											m_dKickedElapsed;
 	_bool											m_bCanInteractChest;
@@ -165,6 +165,17 @@ private:
 	SHPTR<UCell>			m_spSpawnPoint;
 	SHPTR<UCell>			m_spSpawnPointForCamera;
 	_float3					m_f3SpawnPoint;
+
+	//===========SOUND BOOL=================
+
+	_bool LiftBarsSound = false;
+	_bool CheckPointSaveSound = false;
+	_bool MinotaurCoreSound = false;
+	_bool HalequinCoreSound = false;
+	_bool AnubisCoreSound = false;
+	_bool GuardCollideSound = false;
+
+
 };
 END
 

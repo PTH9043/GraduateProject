@@ -2102,13 +2102,13 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 		m_spPlayerHpFont->SetText(health_string);		
 	}
 	{	//==========Minotaur Hp===============
-		if ((m_bIsFoundPlayer_Minotaur && !m_bIsDead_Minotaur) || (m_bisFoundPlayer_Harlequinn && !m_bisDead_Harlequinn) || (m_bisFoundPlayer_Anubis && !m_bisDead_Anubis)) {
+		if (!m_spWarriorPlayer->GetDeathState()&&((m_bIsFoundPlayer_Minotaur && !m_bIsDead_Minotaur) || (m_bisFoundPlayer_Harlequinn && !m_bisDead_Harlequinn) || (m_bisFoundPlayer_Anubis && !m_bisDead_Anubis))) {
 			m_spBossHpBarFrameUI->SetActive(true);
 		}
 		else {
 			m_spBossHpBarFrameUI->SetActive(false);
 		}
-		if (m_bIsFoundPlayer_Minotaur&&!m_bIsDead_Minotaur) {
+		if (!m_spWarriorPlayer->GetDeathState() && m_bIsFoundPlayer_Minotaur&&!m_bIsDead_Minotaur) {
 			
 			m_spMinotaurHpFont->SetRender(true);
 			m_spMinotaurFrameUI->SetActive(true);
@@ -2119,7 +2119,7 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 			m_spMinotaurFrameUI->SetActive(false);
 			m_spMinotaurHpBarUI->SetActive(false);
 		}
-		if (m_bisFoundPlayer_Harlequinn&&!m_bisDead_Harlequinn) {
+		if (!m_spWarriorPlayer->GetDeathState() && m_bisFoundPlayer_Harlequinn&&!m_bisDead_Harlequinn) {
 			m_spHarlequinnHpFont->SetRender(true);
 			m_spHarlequinnFrameUI->SetActive(true);
 			m_spHarlequinnHpBarUI->SetActive(true);
@@ -2129,7 +2129,7 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 			m_spHarlequinnFrameUI->SetActive(false);
 			m_spHarlequinnHpBarUI->SetActive(false);
 		}
-		if (m_bisFoundPlayer_Anubis&&!m_bisDead_Anubis) {
+		if (!m_spWarriorPlayer->GetDeathState() && m_bisFoundPlayer_Anubis&&!m_bisDead_Anubis) {
 			m_spAnubisHpFont->SetRender(true);
 			m_spAnubisFrameUI->SetActive(true);
 			m_spAnubisHpBarUI->SetActive(true);

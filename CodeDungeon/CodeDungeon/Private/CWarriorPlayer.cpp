@@ -626,14 +626,23 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							}
 							//철장 여는 용도
 							if (spGameInstance->GetDIKeyPressing(DIK_F)) {
+								if (!CheckPointSaveSound && !m_bDoneInteractStatue) {
+									//spGameInstance->SoundPlayOnce(L"BarLift"); checkpoint saving 중
+									CheckPointSaveSound = true;
+								}
 								m_fInteractionTimeElapsed += _dTimeDelta;
 								
 							}
 							else {
+								if (CheckPointSaveSound) {
+									CheckPointSaveSound = false;
+									//spGameInstance->StopSound(L"BarLift");
+								}
 								m_fInteractionTimeElapsed = 0;
 								
 							}
 							if (m_fInteractionTimeElapsed > 4.f&&!pModelObject->GetCheckPointToOtherColor()) {
+								spGameInstance->SoundPlayOnce(L"CheckPointSave");
 								m_fSaveCheckpointCount++;
 								m_bSaveCheckpointStatue = true;
 								pModelObject->SetInteractionState(true);
@@ -714,16 +723,24 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							}
 
 							if (spGameInstance->GetDIKeyPressing(DIK_F)) {
+								if (!MinotaurCoreSound&&!m_bDoneInteractCoreMinotaur) {
+									spGameInstance->SoundPlayOnce(L"MinoCore");
+									MinotaurCoreSound = true;
+								}
 								m_fInteractionTimeElapsed += _dTimeDelta;
 
 							}
 							else {
+								if (MinotaurCoreSound) {
+									MinotaurCoreSound = false;
+									spGameInstance->StopSound(L"MinoCore");
+								}
 								m_fInteractionTimeElapsed = 0;
 
 							}
 
 							if (m_fInteractionTimeElapsed > 5.f && !pModelObject->GetCheckPointToOtherColor()) {
-							
+								spGameInstance->SoundPlayOnce(L"CoreComplete");
 								m_bDeactivatedCoreMinotaur = true;
 								pModelObject->SetInteractionState(true);
 								pModelObject->SetCheckPointToOtherColor(true);				
@@ -749,15 +766,23 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 								m_bDoneInteractCoreHarlequinn = false;
 							}
 							if (spGameInstance->GetDIKeyPressing(DIK_F)) {
+								if (!HalequinCoreSound && !m_bDoneInteractCoreHarlequinn) {
+									spGameInstance->SoundPlayOnce(L"HalequinCore");
+									HalequinCoreSound = true;
+								}
 								m_fInteractionTimeElapsed += _dTimeDelta;
 
 							}
 							else {
+								if (HalequinCoreSound) {
+									HalequinCoreSound = false;
+									spGameInstance->StopSound(L"HalequinCore");
+								}
 								m_fInteractionTimeElapsed = 0;
 
 							}
 							if (m_fInteractionTimeElapsed > 5.f && !pModelObject->GetCheckPointToOtherColor()) {
-								
+								spGameInstance->SoundPlayOnce(L"CoreComplete2");
 								m_bDeactivatedCoreHarlequinn = true;
 								pModelObject->SetInteractionState(true);
 								pModelObject->SetCheckPointToOtherColor(true);
@@ -783,15 +808,23 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 								m_bDoneInteractCoreAnubis = false;
 							}
 							if (spGameInstance->GetDIKeyPressing(DIK_F)) {
+								if (!AnubisCoreSound && !m_bDoneInteractCoreAnubis) {
+									spGameInstance->SoundPlayOnce(L"AnubisCore");
+									AnubisCoreSound = true;
+								}
 								m_fInteractionTimeElapsed += _dTimeDelta;
 
 							}
 							else {
+								if (AnubisCoreSound) {
+									AnubisCoreSound = false;
+									spGameInstance->StopSound(L"AnubisCore");
+								}
 								m_fInteractionTimeElapsed = 0;
 
 							}
 							if (m_fInteractionTimeElapsed > 5.f && !pModelObject->GetCheckPointToOtherColor()) {
-
+								spGameInstance->SoundPlayOnce(L"CoreComplete3");
 								m_bDeactivatedCoreAnubis = true;
 								pModelObject->SetInteractionState(true);
 								pModelObject->SetCheckPointToOtherColor(true);
@@ -852,22 +885,28 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 
 					if (iter2.first == L"Main")
 					{
-						//SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
+						SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
 
-						//if (GetCollidedNormal() != _float3::Zero) // 충돌이 발생한 경우
-						//{
-						//	SetOBJCollisionState(true);
-						//	// 속도 결정
-						//	_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 60.0f : 20.0f;
-						//	if (CurAnimName == L"roll_back" || CurAnimName == L"roll_front" || CurAnimName == L"roll_left" || CurAnimName == L"roll_right")
-						//		GetTransform()->SetPos(GetPrevPos());
-						//	else
-						//		ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
-						//}
-						//else
-						//{
-						//	SetOBJCollisionState(false);
-						//}
+						if (GetCollidedNormal() != _float3::Zero) // 충돌이 발생한 경우
+						{
+							if (!GuardCollideSound) {
+								spGameInstance->SoundPlayOnce(L"GuardCollideSound");
+								GuardCollideSound = true;
+							}
+
+							SetOBJCollisionState(true);
+							// 속도 결정
+							_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 60.0f : 20.0f;
+							if (CurAnimName == L"roll_back" || CurAnimName == L"roll_front" || CurAnimName == L"roll_left" || CurAnimName == L"roll_right")
+								GetTransform()->SetPos(GetPrevPos());
+							else
+								ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
+						}
+						else
+						{
+							GuardCollideSound = false;
+							SetOBJCollisionState(false);
+						}
 					}
 					else if (iter2.first == L"ForInteractionGuard")
 					{
