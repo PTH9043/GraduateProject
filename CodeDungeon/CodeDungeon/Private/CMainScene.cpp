@@ -1711,6 +1711,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 	}
 
 	if (m_bStartSceneForUI&& !m_bStartGameForUI) {
+	
 		spGameInstance->SoundPlayOnce(L"BGM3");
 		m_fStartSceneLoadingTimer += _dTimeDelta;
 
@@ -1755,6 +1756,13 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 	}
 
 	if (!m_bStartSceneForUI && m_bStartGameForUI) {
+		if (!EnterGameModeBGM) {
+			spGameInstance->SoundPlayBGM(L"GamePlayBGM");//게임 플레이 bgm
+			//SHPTR<USound> Bgm = spGameInstance->BringSound(L"GamePlayBGM");
+			spGameInstance->BGMUpdateVolume(L"GamePlayBGM",1.f);
+			EnterGameModeBGM = true;
+		}
+		
 		{//font
 			m_spPlayerHpFont->SetRender(true);
 		}

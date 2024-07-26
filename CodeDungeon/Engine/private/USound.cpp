@@ -82,10 +82,10 @@ void USound::Stop()
 
 void USound::StopBGM(IN FMOD::Channel** _ppChannel)
 {
-	if (_ppChannel)
+	if (_ppChannel && *_ppChannel)
 	{
 		(*_ppChannel)->stop();
-		_ppChannel = nullptr;  // 채널 포인터를 해제
+		*_ppChannel = nullptr;  // 채널 포인터를 해제
 	}
 }
 
@@ -145,7 +145,7 @@ void USound::Unmute()
 	m_pChannel->setMute(false);
 }
 
-void USound::FadeIn(float fadeDuration)
+void USound::FadeIn(float fadeDuration)// 볼륨 서서히 증가
 {
 	RETURN_CHECK(nullptr == m_pChannel, ;);
 	m_pChannel->setVolume(0.0f);
@@ -176,6 +176,14 @@ void USound::UpdateVolume(const _float _fVolume)
 	RETURN_CHECK(nullptr == m_pChannel, ;);
 	m_SoundDesc.fVolume = _fVolume;
 	m_pChannel->setVolume(_fVolume);
+}
+
+
+void USound::UpdateVolume(IN FMOD::Channel** _ppChannel,const _float _fVolume)
+{
+	RETURN_CHECK(nullptr == *_ppChannel, ;);
+	m_SoundDesc.fVolume = _fVolume;
+	(*_ppChannel)->setVolume(_fVolume);
 }
 
 void USound::UpdateSound3D(const _float3& _vSoudPos, const _float3& _vSoundVelocity, 

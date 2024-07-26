@@ -328,6 +328,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
             if (spGameInstance->GetDIKeyDown(DIK_G))
             {
                 m_bDieEffectTurnedOn = false;
+                spGameInstance->SoundPlayOnce(L"Revive");
                 spWarriorPlayer->GetCurrentNavi()->FindCell(spWarriorPlayer->GetSpawnPointCell()->GetIndex());
                 spWarriorPlayer->GetTransform()->SetPos(spWarriorPlayer->GetSpawnPointCell()->GetCenterPos());
                 static_pointer_cast<CMainCamera>(spWarriorPlayer->GetFollowCamera())->GetCurrentNavi()->FindCell(spWarriorPlayer->GetSpawnPointCamera()->GetIndex());

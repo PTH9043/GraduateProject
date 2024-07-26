@@ -262,6 +262,15 @@ void UAudioSystemManager::UpdateVolume(const _wstring& _wstrSoundName, const _fl
 	}
 }
 
+void UAudioSystemManager::BGMUpdateVolume(const _wstring& _wstrSoundName, const _float _fVolume)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+			iter->BGMVolumeUpdate(_wstrSoundName, _fVolume);
+	}
+}
+
 void UAudioSystemManager::UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, const _float3& _vSoundVelocity, CSHPTRREF<UTransform> _spTargetTransform)
 {
 	for (auto& iter : m_AudioSystemContainer)

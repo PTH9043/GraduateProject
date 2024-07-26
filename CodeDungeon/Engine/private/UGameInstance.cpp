@@ -1016,6 +1016,11 @@ void UGameInstance::UpdateVolume(const _wstring& _wstrSoundName, const _float _f
 	m_spAudioSystemManager->UpdateVolume(_wstrSoundName, _fVolume);
 }
 
+void UGameInstance::BGMUpdateVolume(const _wstring& _wstrSoundName, const _float _fVolume)
+{
+	m_spAudioSystemManager->BGMUpdateVolume(_wstrSoundName, _fVolume);
+}
+
 void UGameInstance::UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, const _float3& _vSoundVelocity, CSHPTRREF<UTransform> _spTargetTransform)
 {
 	m_spAudioSystemManager->UpdateSound3D(_wstrSoundName, _vSoudPos, _vSoundVelocity, _spTargetTransform);
