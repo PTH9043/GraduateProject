@@ -36,37 +36,25 @@ public:
 	UCharacter(const UCharacter& _rhs);
 	DESTRUCTOR(UCharacter)
 public:
-	// UPawn��(��) ���� ��ӵ�
 	virtual SHPTR<UCloneObject> Clone(const VOIDDATAS& _vecDatas) PURE;
 	virtual void Free() PURE;
 	virtual HRESULT NativeConstruct() PURE;
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _Datas) PURE;
 public:
-	// �ٸ� ĳ���Ϳ��� �Ÿ� ���� 
 	_float OtherCharacterToDistance(CSHPTRREF<UActor> _spOtherActor);
-	// �ٸ� ĳ���͸� �ٶ󺸴� �ڱ� �ڽ��� Look Angle 
 	_float OtherCharacterDirToLook(CSHPTRREF<UActor> _spOtherActor);
-	// �ٸ� ĳ���͸� �������� �ٶ󺸴� �ڱ� �ڽ��� Right Angle 
 	_float OhterCharacterDirToRight(CSHPTRREF<UActor> _spOtherActor);
-	// �ٸ� ĳ���͸� �ٶ󺸴� �ڱ� �ڽ��� Look Angle ( 180 ~ -180 )
 	_float OtherCharacterDirToLookConverter(CSHPTRREF<UActor>  _spOtherActor);
-	// �ٸ� ĳ���͸� �ٶ󺸴� �ڱ� �ڽ��� Look Direction
 	_float3 OtherCharacterDirToLookVectorF3(CSHPTRREF<UActor>  _spOtherActor);
-	// �ٸ� ĳ���Ϳ��� �Ÿ� ���� 
 	_float OtherCharacterToDistance(CSHPTRREF<UTransform> _spOtherTransform);
-	// �ٸ� ĳ���͸� �ٶ󺸴� �ڱ� �ڽ��� Look Angle 
 	_float OtherCharacterDirToLook(CSHPTRREF<UTransform> _spOtherTransform);
-	// �ٸ� ĳ���͸� �������� �ٶ󺸴� �ڱ� �ڽ��� Right Angle 
 	_float OhterCharacterDirToRight(CSHPTRREF<UTransform> _spOtherTransform);
-	// �ٸ� ĳ���͸� �ٶ󺸴� �ڱ� �ڽ��� Look Angle ( 180 ~ -180 )
 	_float OtherCharacterDirToLookConverter(CSHPTRREF<UTransform> _spOtherTransform);
-	// �ٸ� ĳ���͸� �ٶ󺸴� �ڱ� �ڽ��� Look Direction
 	_float3 OtherCharacterDirToLookVectorF3(CSHPTRREF<UTransform> _spOtherTransform);
 public: /* get set */
 	CSHPTRREF<UAnimModel> GetAnimModel() const { return m_spAnimModel; }
 	SHPTR<UNavigation> GetCurrentNavi() const { return m_spCurNavi; }
 	CSHPTRREF<UCollider> GetHitCollider() const { return m_spHitCollider; }
-	// �ش��ϴ� ������Ʈ�� Network�� ����Ǿ��ִ��� Ȯ���ϴ� ����
 	const _bool IsNetworkConnected() const { return m_isNetworkConnected; }
 
 	const _bool& GetHitState() const { return m_bisHit; }
@@ -121,7 +109,6 @@ protected:
 
 	virtual HRESULT MakeCollider(const _float3& _vTranslate, const _float3& _vScale, const _int _ColliderType);
 	void ApplySlidingMovement(const _float3& _collidedNormal, _float _speed, _float _deltaTime);
-
 protected: /* get set */
 	CSHPTRREF<UAnimationController> GetAnimationController() const { return m_spAnimationController; }
 	const _float3& GetPrevPos() const { return m_vPrevPos; }

@@ -33,7 +33,6 @@ public:
 	UPlayer(const UPlayer& _rhs);
 	DESTRUCTOR(UPlayer)
 public:
-	// UCharacter��(��) ���� ��ӵ�
 	virtual SHPTR<UCloneObject> Clone(const VOIDDATAS& _vecDatas) PURE;
 	virtual void Free() PURE;
 	virtual HRESULT NativeConstruct() PURE;
