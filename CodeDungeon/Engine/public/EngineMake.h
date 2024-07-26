@@ -85,6 +85,7 @@
 #define PROTO_RES_PLEASEWAITUISHADER L"Proto_Res_PleaseWaitUIShader"
 #define PROTO_RES_HPBARUISHADER L"Proto_Res_HpBarUIShader"
 #define PROTO_RES_MOTIONBLURSHADER L"Proto_Res_MotionBlurShader"
+#define PROTO_RES_MIDDLERENDERSCREENSHADER L"Proto_Res_MiddleRenderScreenShader"
 
 /* Compute Shader*/
 #define PROTO_RES_COMPUTEANIMATIONSHADER L"Proto_Res_ConputeAnimatonShader"

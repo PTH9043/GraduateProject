@@ -42,6 +42,7 @@ struct PS_IN
 struct PS_OUT
 {
     float4 vColor : SV_TARGET0;
+    float4 vJudge : SV_TARGET1;
 };
 
 PS_OUT PS_Main(PS_IN In)
@@ -64,19 +65,12 @@ PS_OUT PS_Main(PS_IN In)
         {
             iCnt++;
             OUT += OutColor;
-            judgeData = 1;
+            Out.vJudge.a = 1;
         }
     }
     
-    if(0 == judgeData)
-    {
-        discard;
-    }
-    else
-    {
-        Out.vColor = OUT;
-        Out.vColor /= ((float) iCnt);
-    }
+    Out.vColor = OUT;
+    Out.vColor /= ((float) iCnt);
     return Out;
 }
 

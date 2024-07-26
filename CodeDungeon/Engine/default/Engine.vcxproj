@@ -391,7 +391,9 @@
     <FxCompile Include="..\..\Shader\LoadingDotUI.hlsl" />
     <FxCompile Include="..\..\Shader\LoadingUI.hlsl" />
     <FxCompile Include="..\..\Shader\Mat.hlsl" />
+    <FxCompile Include="..\..\Shader\MiddleRenderScreen.hlsl" />
     <FxCompile Include="..\..\Shader\Model.hlsl" />
+    <FxCompile Include="..\..\Shader\MotionBlur.hlsl" />
     <FxCompile Include="..\..\Shader\NormalObject.hlsl" />
     <FxCompile Include="..\..\Shader\NorPos.hlsl" />
     <FxCompile Include="..\..\Shader\PleaseWaitUI.hlsl" />

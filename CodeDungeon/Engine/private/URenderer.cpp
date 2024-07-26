@@ -105,6 +105,9 @@ HRESULT URenderer::NativeConstruct()
 
             m_ShaderObjects.insert(std::pair<_wstring, SHPTR<UShader>>(PROTO_RES_MOTIONBLURSHADER, static_pointer_cast<UShader>(
                 spGameInstance->CloneResource(PROTO_RES_MOTIONBLURSHADER))));
+
+            m_ShaderObjects.insert(std::pair<_wstring, SHPTR<UShader>>(PROTO_RES_MIDDLERENDERSCREENSHADER, static_pointer_cast<UShader>(
+                spGameInstance->CloneResource(PROTO_RES_MIDDLERENDERSCREENSHADER))));
 #ifdef _USE_DEBUGGING
             m_ShaderObjects.insert(std::pair<_wstring, SHPTR<UShader>>(PROTO_RES_DEBUG2DTARGETSHADER, static_pointer_cast<UShader>(
                 spGameInstance->CloneResource(PROTO_RES_DEBUG2DTARGETSHADER))));
@@ -604,27 +607,51 @@ void URenderer::RenderDistortion()
 void URenderer::RenderMotionBlur()
 {
     SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-
     // Set Render Tareget
-    SHPTR<URenderTargetGroup> spRenderTargetGroup{ m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::MOTIONBLUR_DEFFERED) };
-    spRenderTargetGroup->WaitResourceToTarget(m_spCastingCommand);
-    spRenderTargetGroup->ClearRenderTargetView(m_spCastingCommand);
-    spRenderTargetGroup->OmSetRenderTargets(m_spCastingCommand);
-    // Bind Shader 
-    SHPTR<UShader> spShader = FindShader(PROTO_RES_MOTIONBLURSHADER);
-    spShader->SettingPipeLineState(m_spCastingCommand);
-    spShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
-    spShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
     {
-        SHPTR<URenderTargetGroup> spBlend = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLEND_DEFFERED);
-        spShader->BindSRVBuffer(SRV_REGISTER::T0, spBlend->GetRenderTargetTexture(RTOBJID::BLEND_SCREEN_DEFFERED));
+        SHPTR<URenderTargetGroup> spRenderTargetGroup{ m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::MOTIONBLUR_DEFFERED) };
+        spRenderTargetGroup->WaitResourceToTarget(m_spCastingCommand);
+        spRenderTargetGroup->ClearRenderTargetView(m_spCastingCommand);
+        spRenderTargetGroup->OmSetRenderTargets(m_spCastingCommand);
+        // Bind Shader 
+        SHPTR<UShader> spShader = FindShader(PROTO_RES_MOTIONBLURSHADER);
+        spShader->SettingPipeLineState(m_spCastingCommand);
+        spShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
+        spShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+        {
+            SHPTR<URenderTargetGroup> spBlend = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLEND_DEFFERED);
+            spShader->BindSRVBuffer(SRV_REGISTER::T0, spBlend->GetRenderTargetTexture(RTOBJID::BLEND_SCREEN_DEFFERED));
 
-        SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::NONALPHA_DEFFERED);
-        spShader->BindSRVBuffer(SRV_REGISTER::T1, spNonAlpha->GetRenderTargetTexture(RTOBJID::NONALPHA_VELOCITY_DEFFERED));
+            SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::NONALPHA_DEFFERED);
+            spShader->BindSRVBuffer(SRV_REGISTER::T1, spNonAlpha->GetRenderTargetTexture(RTOBJID::NONALPHA_VELOCITY_DEFFERED));
+        }
+
+        m_spVIBufferPlane->Render(spShader, m_spCastingCommand);
+        spRenderTargetGroup->WaitTargetToResource(m_spCastingCommand);
     }
 
-    m_spVIBufferPlane->Render(spShader, m_spCastingCommand);
-    spRenderTargetGroup->WaitTargetToResource(m_spCastingCommand);
+    SHPTR<URenderTargetGroup> spRenderTargetGroup{ m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLEND_DEFFERED) };
+    {
+        spRenderTargetGroup->WaitResourceToTarget(m_spCastingCommand);
+        spRenderTargetGroup->OmSetRenderTargets(m_spCastingCommand);
+
+        // Bind Shader 
+        SHPTR<UShader> spShader = FindShader(PROTO_RES_MIDDLERENDERSCREENSHADER);
+        spShader->SettingPipeLineState(m_spCastingCommand);
+        spShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
+        spShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+        {
+
+            SHPTR<URenderTargetGroup> spMotionBlur = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::MOTIONBLUR_DEFFERED);
+            SHPTR<URenderTargetGroup> spBlend = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLEND_DEFFERED);
+            spShader->BindSRVBuffer(SRV_REGISTER::T0, spMotionBlur->GetRenderTargetTexture(RTOBJID::MOTIONBLUR_DIFFUSE_DEFFERED));
+            spShader->BindSRVBuffer(SRV_REGISTER::T1, spMotionBlur->GetRenderTargetTexture(RTOBJID::MOTIONBLUR_JUDGECOLOR_DEFFERED));
+        //    spShader->BindSRVBuffer(SRV_REGISTER::T2, spBlend->GetRenderTargetTexture(RTOBJID::BLEND_SCREEN_DEFFERED));
+        }
+
+        m_spVIBufferPlane->Render(spShader, m_spCastingCommand);
+        spRenderTargetGroup->WaitTargetToResource(m_spCastingCommand);
+    }
 }
 
 void URenderer::Render3DUI()
@@ -804,7 +831,6 @@ void URenderer::DownSample2()
     spGameInstance->SetDefaultViewPort();
 
 }
-
 
 void URenderer::UpSample()
 {

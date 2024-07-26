@@ -108,6 +108,7 @@ void UPipeLine::UpdateViewProjMatrix(const _float _fGrobalDeltaTime)
 
 void UPipeLine::BindViewProjMatrix(CSHPTRREF<UCommand> _spCommand)
 {
+	m_stViewProjParam.isObjectMotionBlur = UTransform::IsMotionBlurOn();
 	m_spViewProjGlobalBuffer->SettingGlobalData(_spCommand, &m_stViewProjParam, VIEWPARAM_SIZE);
 }
 

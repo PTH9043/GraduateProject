@@ -68,26 +68,29 @@ VS_OUT VS_Main(VS_IN In)
     Out.vProjPos = Out.vPosition;
     Out.vViewDir = normalize(g_ViewProjInfoArr[g_CamID].vCamPosition - Out.vWorldPos.xyz); // Compute the view direction
 
-    if (true == g_isObjectMotionBlur)
-    {
-        vector vPrevPosition = float4(In.vPosition, 1.f);
+   // if (true == g_isObjectMotionBlur)
+   // {
+   //     vector vPrevPosition = float4(In.vPosition, 1.f);
         
-        VIEWPROJINFO tMainViewProj = GetViewProjInfo();
+   //     VIEWPROJINFO tMainViewProj = GetViewProjInfo();
         
-        vPrevPosition = mul(vPrevPosition, g_PrevWorldMatrix);
-        vPrevPosition = mul(vPrevPosition, tMainViewProj.mPrevViewMatirx);
-        vPrevPosition = mul(vPrevPosition, tMainViewProj.mProjMatrix);
+   //     vPrevPosition = mul(vPrevPosition, g_PrevWorldMatrix);
+   //     vPrevPosition = mul(vPrevPosition, tMainViewProj.mPrevViewMatirx);
+   //     vPrevPosition = mul(vPrevPosition, tMainViewProj.mProjMatrix);
         
-        float3 dir = Out.vPosition.xyz - vPrevPosition.xyz;
-        float4 NORMAL = mul(Out.vNormal, tMainViewProj.mPrevViewMatirx);
-        float a = dot(normalize(dir), normalize(NORMAL.xyz));
-
-        float2 velocity = ((Out.vPosition.xy / Out.vPosition.w -
-			(vPrevPosition.xy / vPrevPosition.w)) * 0.5f);
-        velocity.y *= -1.f;
-        Out.vVelocity.xy = velocity;
-        Out.vVelocity.zw = Out.vPosition.zw;
-    }
+   //     float3 dir = Out.vPosition.xyz - vPrevPosition.xyz;
+   //     float4 NORMAL = mul(Out.vNormal, tMainViewProj.mPrevViewMatirx);
+   //     float a = dot(normalize(dir), normalize(NORMAL.xyz));
+        
+   //     if (a < 0.f)
+   //         Out.vPosition = vPrevPosition;
+        
+   //     float2 velocity = ((Out.vPosition.xy / Out.vPosition.w -
+			//(vPrevPosition.xy / vPrevPosition.w)) * 0.5f);
+   //     velocity.y *= -1.f;
+   //     Out.vVelocity.xy = velocity;
+   //     Out.vVelocity.zw = Out.vPosition.zw;
+   // }
 
     
     return Out;
@@ -172,12 +175,12 @@ PS_OUT PS_Main(PS_IN In)
     if (isCheckPoint)
         Out.vDiffuse.rgb += 10 * rimLight2.rgb;
     
-    if (true == g_isObjectMotionBlur)
-    {
-        Out.vVelocity = In.vVelocity;
-        Out.vVelocity.z = 1.f;
-        Out.vVelocity.w = In.vVelocity.z / In.vVelocity.w;
-    }
+    //if (true == g_isObjectMotionBlur)
+    //{
+    //    Out.vVelocity = In.vVelocity;
+    //    Out.vVelocity.z = 1.f;
+    //    Out.vVelocity.w = In.vVelocity.z / In.vVelocity.w;
+    //}
     
     return Out;
 }
