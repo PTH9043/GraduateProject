@@ -19,8 +19,10 @@ cbuffer ANIMATIONPARAM : register(b11)
 {
     bool g_isOutLineExist = false;
     bool g_isNomralExist = true;
-    bool g_isAnimPadding;
-    bool g_isAnimPadding2;
+    bool g_isObjectDissolve = false;
+    bool g_isObjectMotionblur = false;
+    
+    float g_fDissolveTimer = 0;
 };
 
 cbuffer BONEMATRIXPARAM : register(b12)
@@ -172,33 +174,54 @@ PS_OUT PS_Main(PS_IN In)
 
     VIEWPROJINFO tMainViewProj = GetViewProjInfo();
     // Out Color    
-    
-    Out.vDiffuse = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV0);
+   
+    if (g_isObjectDissolve)
+    {
+        vector vDissorveColor = g_Texture2.Sample(g_Sampler_Normal, In.vTexUV0);
+   //     vector vShow_DisorveColor = g_Texture3.Sample(g_Sampler_Normal, In.vTexUV0);
+        float fColorLength = vDissorveColor.r + vDissorveColor.g + vDissorveColor.b;
+        if (fColorLength <= g_fDissolveTimer)
+        {
+            if (fColorLength - 0.2f <= g_fDissolveTimer)
+            {
+                discard;
+            }
+            Out.vDiffuse += float4(1.f, -0.22f, -0.22f, 0.f);
+        }
+    }
+    else
+    {
+        Out.vDiffuse = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV0);
  
-    if (Out.vDiffuse.a <= 0.05)
-        discard;
-    
-   Out.vNormal = float4(float3(In.vNormal.xyz) * 0.5f + 0.5f, 1.f);
+        if (Out.vDiffuse.a <= 0.05)
+            discard;
+        
+        if (g_DrawRim)
+        {
+            float rimFactor = 1.0 - saturate(dot(normalize(In.vViewDir), normalize(In.vNormal.xyz)));
+            rimFactor = pow(rimFactor, 3.5) * 3;
+            float4 rimLight = rimFactor * float4(RimColor, 1);
+
+    // Combine rim lighting with the final color
+            Out.vDiffuse.rgb += rimLight.rgb;
+        }
+    }
+   
+    Out.vNormal = float4(float3(In.vNormal.xyz) * 0.5f + 0.5f, 1.f);
   
     Out.vDepth = float4(In.vProjPos.w / tMainViewProj.fCamFar, In.vProjPos.z / In.vProjPos.w, 1.f, In.vPosition.w);
     Out.vPosition = In.vWorldPos;
-    if (g_DrawRim)
-    {
-        float rimFactor = 1.0 - saturate(dot(normalize(In.vViewDir), normalize(In.vNormal.xyz)));
-        rimFactor = pow(rimFactor, 3.5) * 3;
-        float4 rimLight = rimFactor * float4(RimColor, 1);
-
-    // Combine rim lighting with the final color
-        Out.vDiffuse.rgb += rimLight.rgb;
-    }
     
-    if (true == g_isObjectMotionBlur)
+    if (true == g_isObjectMotionBlur || 0 != g_TransformMotionBlurOn)
     {
         Out.vVelocity = In.vVelocity;
         Out.vVelocity.z = 1.f;
         Out.vVelocity.w = In.vVelocity.z / In.vVelocity.w;
     }
+        
     return Out;
 }
+
+
 
 #endif // _ANIMMODEL_HLSL_

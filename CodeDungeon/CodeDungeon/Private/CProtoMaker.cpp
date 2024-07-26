@@ -92,6 +92,9 @@ HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, C
 	_spGameInstance->AddPrototype(PROTO_RES_UITEXTUREGROUP, CLONETYPE::CLONE_STATIC,
 		CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\UI\\Demo", true));
 
+	_spGameInstance->AddPrototype(PROTO_RES_DISSOLVETEXTUREGROUP, CLONETYPE::CLONE_STATIC,
+		CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\UI\\Dissolve", true));
+
 	_spGameInstance->AddPrototype(PROTO_COMP_USERWARRIORANIMCONTROLLER, CreateConstructorToNative<CUserWarriorAnimController>(_spDevice));
 	_spGameInstance->AddPrototype(PROTO_COMP_NETWORKWARRIORANIMCONTROLLER, CreateConstructorNative<CNetworkWarriorPlayerController>(_spDevice));
 	_spGameInstance->AddPrototype(PROTO_COMP_MUMMYANIMCONTROLLER, CreateConstructorToNative<CMummyAnimController>(_spDevice));

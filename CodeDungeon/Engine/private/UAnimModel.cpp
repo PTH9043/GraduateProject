@@ -394,6 +394,11 @@ void UAnimModel::OutAnimationDataToServer(const _wstring& _wstrPath)
 	}
 }
 
+void UAnimModel::UpdateDissolveTImer(const _double& _dTimeDelta)
+{
+	m_stAnimParam.fDissolveTimer += static_cast<_float>(_dTimeDelta);
+}
+
 void UAnimModel::UpdateAttackData(const _bool _isCanAttackSituation, CSHPTRREF<UCollider> _spCollider)
 {
 	m_isCanAttackSituation = _isCanAttackSituation;

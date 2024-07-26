@@ -181,8 +181,10 @@ namespace Engine {
 	{
 		_bool		isOutLineExist = false;
 		_bool		isNomralExist = true;
+		_bool		isObjectDissolve = false;
 		_bool		isAnimPadding = false;
-		_bool		isAnimPadding2 = false;
+
+		_float		fDissolveTimer = 0;
 	}ANIMATIONPARAM;
 
 	typedef struct tagDrawRim

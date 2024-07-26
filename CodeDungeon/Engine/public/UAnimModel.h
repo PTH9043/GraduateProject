@@ -77,6 +77,8 @@ public:
 	_bool IsCollisionAttackCollider(CSHPTRREF<UCollider> _spEnemyCollider);
 
 	void OutAnimationDataToServer(const _wstring& _wstrPath);
+	void UpdateDissolveTImer(const _double& _dTimeDelta);
+	void ResetDissolveTimer() { m_stAnimParam.fDissolveTimer = 0; }
 public: /* get set */
 	ANIMATIONS& GetAnimations() { return m_vecAnimations; }
 	const ANIMATIONPARAM& GetAnimParam() const { return m_stAnimParam; }

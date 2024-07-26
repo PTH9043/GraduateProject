@@ -41,6 +41,8 @@
 #define PROTO_RES_ANUBISSTAFFMODEL L"Proto_Res_AnubisStaffModel"
 #define PROTO_RES_MIMICANIMMODEL L"Proto_Res_MimicAnimModel"
 
+#define PROTO_RES_DISSOLVETEXTUREGROUP L"Proto_Res_DissolveTextureGroup"
+
 #define PROTO_COMP_USERWARRIORANIMCONTROLLER L"Proto_Comp_UserWarriorAnimController"
 #define PROTO_COMP_MUMMYANIMCONTROLLER L"Proto_Comp_MummyAnimController"
 #define PROTO_COMP_SARCOPHAGUSANIMCONTROLLER L"Proto_Comp_SarcophagusAniMController"
