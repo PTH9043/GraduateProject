@@ -1665,10 +1665,10 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 	if (m_spEnterButtonUI->IsMouseOnRect()&& m_spEnterButtonUI->IsActive()) {
 
 		m_spEnterButtonUI->SetIfPicked(true);
-		
+		spGameInstance->SoundPlayOnce(L"UI_Select");
 		if (true == spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_L)&&!m_bStartSceneForUI) {
 			SHPTR<USound> spSound = spGameInstance->BringSound(L"PressedButton");
-			spSound->Play();
+			spSound->PlayOnce();
 			
 			m_bStartSceneForUI = true;		
 		}
@@ -1679,7 +1679,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 	if (m_spExitButtonUI->IsMouseOnRect()&& m_spExitButtonUI->IsActive()) {
 
 		m_spExitButtonUI->SetIfPicked(true);
-
+		spGameInstance->SoundPlayOnce(L"UI_Select");
 		if (true == spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_L)) {
 			::PostQuitMessage(0);
 		}

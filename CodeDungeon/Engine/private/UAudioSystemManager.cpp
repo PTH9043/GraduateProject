@@ -127,6 +127,123 @@ void UAudioSystemManager::DisableOncePlay(const _wstring& _wstrSoundName)
 	}
 }
 
+void UAudioSystemManager::Restart(const _wstring& _wstrSoundName)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+			iter->Restart(_wstrSoundName);
+	}
+}
+
+void UAudioSystemManager::Pause(const _wstring& _wstrSoundName)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+			iter->Pause(_wstrSoundName);
+	}
+}
+
+void UAudioSystemManager::Resume(const _wstring& _wstrSoundName)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+			iter->Resume(_wstrSoundName);
+	}
+}
+
+void UAudioSystemManager::SetPlaybackPosition(const _wstring& _wstrSoundName, unsigned int position)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+			iter->SetPlaybackPosition(_wstrSoundName, position);
+	}
+}
+
+//unsigned int UAudioSystemManager::GetPlaybackPosition(const _wstring& _wstrSoundName)
+//{
+//	for (auto& iter : m_AudioSystemContainer)
+//	{
+//		if (nullptr != iter)
+//			return iter->GetPlaybackPosition(_wstrSoundName);
+//	}
+//}
+
+void UAudioSystemManager::SetLooping(const _wstring& _wstrSoundName, bool loop)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+			iter->SetLooping(_wstrSoundName, loop);
+	}
+}
+
+void UAudioSystemManager::SetPitch(const _wstring& _wstrSoundName, float pitch)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+			iter->SetPitch(_wstrSoundName, pitch);
+	}
+}
+
+void UAudioSystemManager::SetPan(const _wstring& _wstrSoundName, float pan)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+			iter->SetPan(_wstrSoundName, pan);
+	}
+}
+
+void UAudioSystemManager::Mute(const _wstring& _wstrSoundName)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+			iter->Mute(_wstrSoundName);
+	}
+}
+
+void UAudioSystemManager::Unmute(const _wstring& _wstrSoundName)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+			iter->Unmute(_wstrSoundName);
+	}
+}
+
+void UAudioSystemManager::FadeIn(const _wstring& _wstrSoundName, float fadeDuration)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+			iter->FadeIn(_wstrSoundName, fadeDuration);
+	}
+}
+
+void UAudioSystemManager::FadeOut(const _wstring& _wstrSoundName, float fadeDuration)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+			iter->FadeOut(_wstrSoundName, fadeDuration);
+	}
+}
+
+void UAudioSystemManager::UpdateVolume(const _wstring& _wstrSoundName, const _float _fVolume)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+			iter->UpdateVolume(_wstrSoundName, _fVolume);
+	}
+}
+
 void UAudioSystemManager::UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, const _float3& _vSoundVelocity, CSHPTRREF<UTransform> _spTargetTransform)
 {
 	for (auto& iter : m_AudioSystemContainer)

@@ -939,6 +939,73 @@ void UGameInstance::SoundDisableOncePlay(const _wstring& _wstrSoundName)
 	m_spAudioSystemManager->DisableOncePlay(_wstrSoundName);
 }
 
+void UGameInstance::Restart(const _wstring& _wstrSoundName)
+{
+	m_spAudioSystemManager->Restart(_wstrSoundName);
+}
+
+void UGameInstance::Pause(const _wstring& _wstrSoundName)
+{
+	m_spAudioSystemManager->Pause(_wstrSoundName);// 사운드 일시 정지
+}
+
+void UGameInstance::Resume(const _wstring& _wstrSoundName)//일시 정지된 사운드를 재개합니다.
+{
+	m_spAudioSystemManager->Resume(_wstrSoundName);
+}
+
+void UGameInstance::SetPlaybackPosition(const _wstring& _wstrSoundName, unsigned int position)
+{
+	m_spAudioSystemManager->SetPlaybackPosition(_wstrSoundName, position);//// 재생 위치를 1000 밀리초(1초)로 설정//USoundInstance->SetPlaybackPosition(1000);
+	
+}
+
+//unsigned int UGameInstance::GetPlaybackPosition(const _wstring& _wstrSoundName)
+//{
+//	return m_spAudioSystemManager->GetPlaybackPosition(_wstrSoundName);//// 현재 재생 위치 가져오기
+//}
+
+void UGameInstance::SetLooping(const _wstring& _wstrSoundName, bool loop)
+{
+	m_spAudioSystemManager->SetLooping(_wstrSoundName, loop);// 사운드를 반복 재생으로 설정// 사운드 반복 재생 비활성화
+}
+
+void UGameInstance::SetPitch(const _wstring& _wstrSoundName, float pitch)
+{
+	m_spAudioSystemManager->SetPitch(_wstrSoundName, pitch);// 사운드 피치를 1.2로 설정 (원래 피치보다 높게)
+
+}
+
+void UGameInstance::SetPan(const _wstring& _wstrSoundName, float pan)
+{
+	m_spAudioSystemManager->SetPan(_wstrSoundName, pan);// 사운드를 왼쪽으로 패닝
+}
+
+void UGameInstance::Mute(const _wstring& _wstrSoundName)
+{
+	m_spAudioSystemManager->Mute(_wstrSoundName);// 사운드 음소거
+}
+
+void UGameInstance::Unmute(const _wstring& _wstrSoundName)
+{
+	m_spAudioSystemManager->Unmute(_wstrSoundName);
+}
+
+void UGameInstance::FadeIn(const _wstring& _wstrSoundName, float fadeDuration)
+{
+	m_spAudioSystemManager->FadeIn(_wstrSoundName, fadeDuration);// 사운드를 2초 동안 페이드 인 볼륨 서서히 증가
+}
+
+void UGameInstance::FadeOut(const _wstring& _wstrSoundName, float fadeDuration)
+{
+	m_spAudioSystemManager->FadeOut(_wstrSoundName, fadeDuration); //사운드의 볼륨을 서서히 감소시켜 정지합니다.
+}
+
+void UGameInstance::UpdateVolume(const _wstring& _wstrSoundName, const _float _fVolume)
+{
+	m_spAudioSystemManager->UpdateVolume(_wstrSoundName, _fVolume);
+}
+
 void UGameInstance::UpdateSound3D(const _wstring& _wstrSoundName, const _float3& _vSoudPos, const _float3& _vSoundVelocity, CSHPTRREF<UTransform> _spTargetTransform)
 {
 	m_spAudioSystemManager->UpdateSound3D(_wstrSoundName, _vSoudPos, _vSoundVelocity, _spTargetTransform);
