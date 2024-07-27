@@ -7,6 +7,7 @@
 #include "UAnimation.h"
 #include "UTransform.h"
 #include "UPlayer.h"
+#include "USound.h"
 
 CMummyAnimController::CMummyAnimController(CSHPTRREF<UDevice> _spDevice)
     : CMonsterAnimController(_spDevice),
@@ -183,6 +184,47 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
         else
         {
             UpdateState(spAnimModel, m_blastAttackWasFirst ? ANIM_ATTACK : ANIM_ATTACK, m_blastAttackWasFirst ? L"ATTACK02" : L"ATTACK01");
+        }
+    }
+
+    if (CurAnimName == L"attack1")
+    {
+        USound* AttackSound1 = spGameInstance->BringSound(L"Attack1_VO_1").get();
+        USound* SwooshSound1 = spGameInstance->BringSound(L"ClothWhoosh_1").get();   
+        if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.8)
+        {
+            AttackSound1->Stop();
+            SwooshSound1->Stop();
+        }
+        else if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.1 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.11)
+        {
+            AttackSound1->Play();
+            AttackSound1->UpdateSound3D(spMummy->GetTransform(), _float3(0, 0, 0), spMummy->GetTargetPlayer()->GetTransform());
+            SwooshSound1->Play();
+            SwooshSound1->UpdateSound3D(spMummy->GetTransform(), _float3(0, 0, 0), spMummy->GetTargetPlayer()->GetTransform());
+        }
+    }
+
+    spGameInstance->HandleSounds3DForAnimation(spMummy, spMummy->GetTargetPlayer(), L"attack1", L"Attack1_VO_1", 0.1, 0.8);
+    spGameInstance->HandleSounds3DForAnimation(spMummy, spMummy->GetTargetPlayer(), L"attack1", L"ClothWhoosh_1", 0.1, 0.8);
+    spGameInstance->HandleSounds3DForAnimation(spMummy, spMummy->GetTargetPlayer(), L"attack2", L"Attack1_VO_2", 0.1, 0.8);
+    spGameInstance->HandleSounds3DForAnimation(spMummy, spMummy->GetTargetPlayer(), L"attack2", L"ClothWhoosh_2", 0.1, 0.8);
+
+    if (CurAnimName == L"attack2")
+    {
+        USound* AttackSound2 = spGameInstance->BringSound(L"Attack1_VO_2").get();
+        USound* SwooshSound2 = spGameInstance->BringSound(L"ClothWhoosh_2").get();
+        if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.8)
+        {
+            AttackSound2->Stop();
+            SwooshSound2->Stop();
+        }
+        else if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.1 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.11)
+        {
+            AttackSound2->Play();
+            AttackSound2->UpdateSound3D(spMummy->GetTransform(), _float3(0, 0, 0), spMummy->GetTargetPlayer()->GetTransform());
+            SwooshSound2->Play();
+            SwooshSound2->UpdateSound3D(spMummy->GetTransform(), _float3(0, 0, 0), spMummy->GetTargetPlayer()->GetTransform());
         }
     }
 

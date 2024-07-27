@@ -4,6 +4,7 @@
 #include "UAnimModel.h"
 #include "UAnimation.h"
 #include "UMethod.h"
+#include "UGameInstance.h"
 
 UAnimationController::UAnimationController(CSHPTRREF<UDevice> _spDevice)
 	: UController(_spDevice), m_iAnimState{0}

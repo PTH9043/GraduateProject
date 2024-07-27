@@ -9,6 +9,8 @@ class UGameInstance;
 class UAudioSystem;
 class USound;
 class UTransform;
+class UCharacter;
+
 
 using AUDIOSYSTEMCONTAINER = ARRAY <SHPTR< UAudioSystem>, SOUND_END>;
 /*
@@ -60,11 +62,14 @@ public:
 	void UpdateSound3D(const _wstring& _wstrSoundName, CSHPTRREF<UTransform> _spSoundTransform, const _float3& _vSoundVelocity,
 		CSHPTRREF<UTransform> _spTargetTransform = nullptr);
 	void ChangeMinMaxDistance3D(const _wstring& _wstrSoundName, const _float _fMinDistance, const _float _fMaxDistance);
+	void HandleSounds3DForAnimation(CSHPTRREF<UCharacter> _Owner, CSHPTRREF<UCharacter> _target, const _wstring& animName, const _wstring& SoundName, _float startThreshold, _float endThreshold);
+	void HandleSoundsForAnimation(CSHPTRREF<UCharacter> _Owner, const _wstring& animName, const _wstring& SoundName, _float startThreshold, _float endThreshold);
 
 	SHPTR<USound> BringSound(const _int _Index);
 	SHPTR<USound> BringSound(const _wstring& _wstrSoundName);
 private:
 	virtual void Free() override;
+	
 private:
 	FMOD::System*						m_pSystem;
 	AUDIOSYSTEMCONTAINER	m_AudioSystemContainer;
