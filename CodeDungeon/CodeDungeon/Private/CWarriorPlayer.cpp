@@ -208,6 +208,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetHealth(100);
 	SetMaxHealth(1000);
 	SetAnimModelRim(true);
+	SetAnimModelRim(true);
 
 	return S_OK;
 }
@@ -246,7 +247,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-
+	
 	JumpState(_dTimeDelta);
 	GetAnimationController()->Tick(_dTimeDelta);
 
@@ -289,6 +290,9 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		m_spBlood->SetTimer(1.75f);
 		
 	}
+	else {
+		SetAnimModelRimColor(_float3(204 / 204.f, 255 / 204.f, 0));
+	}
 	if (m_spBlood->CheckTimeOver()) {
 		m_spBlood->SetActive(false);		
 	}
@@ -306,7 +310,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	
 	if (IfOpenChestForHeal) {//2.1초 지속
 		HealTrigger = true;
-		IncreaseHealth(1); //이렇게 하면 119정도 오름
+		IncreaseHealth(2); //이렇게 하면 119정도 오름
 		SetAnimModelRimColor(_float3(0, 1, 0));
 		m_spHealParticle->SetActive(true);
 		_float3 pos = GetTransform()->GetPos();
@@ -319,8 +323,9 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	if (HealTrigger)
 	{
 		HealTimer += _dTimeDelta;
-		if (HealTimer > 2.0f) {
-			SetAnimModelRimColor(_float3(1, 0, 0));
+		if (HealTimer > 1.75f) {
+			//SetAnimModelRimColor(_float3(1, 0, 0));
+			m_spHealParticle->SetActive(false);
 			HealTimer = 0;
 			HealTrigger = false;
 			IfOpenChestForHeal = false;
@@ -627,7 +632,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							//철장 여는 용도
 							if (spGameInstance->GetDIKeyPressing(DIK_F)) {
 								if (!CheckPointSaveSound && !m_bDoneInteractStatue) {
-									//spGameInstance->SoundPlayOnce(L"BarLift"); checkpoint saving 중
+									spGameInstance->SoundPlayOnce(L"CheckpointSaving");
 									CheckPointSaveSound = true;
 								}
 								m_fInteractionTimeElapsed += _dTimeDelta;
@@ -636,7 +641,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							else {
 								if (CheckPointSaveSound) {
 									CheckPointSaveSound = false;
-									//spGameInstance->StopSound(L"BarLift");
+									spGameInstance->StopSound(L"CheckpointSaving");
 								}
 								m_fInteractionTimeElapsed = 0;
 								

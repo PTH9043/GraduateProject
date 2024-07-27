@@ -26,7 +26,7 @@ public:
 private:
 	void TurnLightsOnRange();
 	void TurnRoomsOnRange();
-	void TurnGuardsOnRange();
+	void TurnGuardsOnRange(const _double& _dTimeDelta);
 	void UpdateMobsStatus();
 public:
 	virtual void Free() override;
@@ -225,8 +225,30 @@ private:
 	SHPTR<CImageUI>			m_spKeyFUIHarelequin;
 	SHPTR<CImageUI>			m_spKeyFUIAnubis;
 
+	SHPTR<CImageUI>			m_spGuardDeactivate_D;
+	SHPTR<CImageUI>			m_spGuardDeactivate_E;
+	SHPTR<CImageUI>			m_spGuardDeactivate_F;
+	SHPTR<CImageUI>			m_spGuardDeactivate_G;
+	_float m_fGuardTimer_D = 0;
+	_float m_fGuardTimer_E = 0;
+	_float m_fGuardTimer_F = 0;
+	_float m_fGuardTimer_G = 0;
+	_float m_fTextTimer_Final = 0;
+
+	_bool m_fGuardSound_D = false;
+	_bool m_fGuardSound_E = false;
+	_bool m_fGuardSound_F = false;
+	_bool m_fGuardSound_G= false;
+	_bool m_fGuardSound_Final= false;
+
 	//======================SOUND BOOL-=====================
 	_bool EnterGameModeBGM = false;
+	_bool EnterGameModeSound= false;
+
+
+
+	///=================ENDING============================
+	SHPTR<CImageUI>			m_spEndingText;
 };
 
 END

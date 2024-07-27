@@ -37,6 +37,7 @@ protected:
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) override;
 	void CreateParticles();
 private:
+	SHPTR<UParticle>										m_spFootPrintParticle;
 	SHPTR<UParticle>			m_spBloodParticle;
 	SHPTR<UParticle>			m_spSlashParticle;
 	SHPTR<UParticle>			m_spAttackParticle;

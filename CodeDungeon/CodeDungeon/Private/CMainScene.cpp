@@ -191,7 +191,7 @@ void CMainScene::UpdateMobsStatus()
 	}
 }
 
-void CMainScene::TurnGuardsOnRange()
+void CMainScene::TurnGuardsOnRange(const _double& _dTimeDelta)
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	_float3 PlayerPos = m_spMainCamera->GetTransform()->GetPos();
@@ -214,6 +214,18 @@ void CMainScene::TurnGuardsOnRange()
 		{
 			if(m_bisMobsAllDead_Interior_Room_D)
 			{
+				if (!m_fGuardSound_D) {
+					spGameInstance->SoundPlayOnce(L"GuardDeactivate");
+					m_fGuardSound_D = true;
+				}
+				
+				if (m_fGuardTimer_D > 2.f) {
+					m_spGuardDeactivate_G->SetActive(false);
+				}
+				else {
+					m_fGuardTimer_D += _dTimeDelta;
+					m_spGuardDeactivate_G->SetActive(true);
+				}
 				guardcontainer.second->SetActive(false);
 				spGameInstance->RemoveCollisionPawn(guardcontainer.second);
 			}
@@ -222,6 +234,17 @@ void CMainScene::TurnGuardsOnRange()
 		{
 			if (m_bisMobsAllDead_Interior_Hallway_E)
 			{
+				if (!m_fGuardSound_E) {
+					spGameInstance->SoundPlayOnce(L"GuardDeactivate");
+					m_fGuardSound_E = true;
+				}
+				if (m_fGuardTimer_E > 2.f) {
+					m_spGuardDeactivate_D->SetActive(false);
+				}
+				else {
+					m_fGuardTimer_E += _dTimeDelta;
+					m_spGuardDeactivate_D->SetActive(true);
+				}
 				guardcontainer.second->SetActive(false);
 				spGameInstance->RemoveCollisionPawn(guardcontainer.second);
 			}
@@ -230,6 +253,17 @@ void CMainScene::TurnGuardsOnRange()
 		{
 			if (m_bisMobsAllDead_Interior_Room_F)
 			{
+				if (!m_fGuardSound_F) {
+					spGameInstance->SoundPlayOnce(L"GuardDeactivate");
+					m_fGuardSound_F = true;
+				}
+				if (m_fGuardTimer_F > 2.f) {
+					m_spGuardDeactivate_F->SetActive(false);
+				}
+				else {
+					m_fGuardTimer_F += _dTimeDelta;
+					m_spGuardDeactivate_F->SetActive(true);
+				}
 				guardcontainer.second->SetActive(false);
 				spGameInstance->RemoveCollisionPawn(guardcontainer.second);
 			}
@@ -238,14 +272,38 @@ void CMainScene::TurnGuardsOnRange()
 		{
 			if (m_bisMobsAllDead_Interior_Room_G)
 			{
+				if (!m_fGuardSound_G) {
+					spGameInstance->SoundPlayOnce(L"GuardDeactivate");
+					m_fGuardSound_G = true;
+				}
+				
+				if (m_fGuardTimer_G > 2.f) {
+					m_spGuardDeactivate_E->SetActive(false);
+				}
+				else {
+					m_fGuardTimer_G += _dTimeDelta;
+					m_spGuardDeactivate_E->SetActive(true);
+				}
 				guardcontainer.second->SetActive(false);
 				spGameInstance->RemoveCollisionPawn(guardcontainer.second);
 			}
 		}
 		else if (guardcontainer.first == L"Interior_Room_A")
 		{
-			if (m_bisDead_Anubis && m_bisDead_Harlequinn && m_bIsDead_Minotaur)
+			if (m_spWarriorPlayer->GetDoneCoreMinotaurState() && m_spWarriorPlayer->GetDoneCoreHarlequinnState() && m_spWarriorPlayer->GetDoneCoreAnubisState()&&m_bisDead_Anubis && m_bisDead_Harlequinn && m_bIsDead_Minotaur)
 			{
+				if (!m_fGuardSound_Final) {
+					spGameInstance->SoundPlayOnce(L"GuardDeactivate");
+					m_fGuardSound_Final = true;
+				}
+				if (m_fTextTimer_Final > 5.f) {
+					m_spEndingText->SetActive(false);
+				}
+				else {
+					m_fTextTimer_Final += _dTimeDelta;
+					m_spEndingText->SetActive(true);
+				}
+				
 				guardcontainer.second->SetActive(false);
 				spGameInstance->RemoveCollisionPawn(guardcontainer.second);
 			}
@@ -255,6 +313,7 @@ void CMainScene::TurnGuardsOnRange()
 
 void CMainScene::TurnLightsOnRange()
 {
+
 	_float3 PlayerPos = m_spMainCamera->GetTransform()->GetPos();
 	for (auto& obj : (*m_spMap->GetStaticObjs().get()))
 	{
@@ -857,6 +916,49 @@ void CMainScene::CreateDeactivateUI()
 		m_spKeyFUIAnubis = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
 		m_spKeyFUIAnubis->SetActive(false);
 	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"FirstGuardDeActivated";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(600);
+		tDesc.v2Size.y = static_cast<_float>(140);
+		tDesc.v2Pos = _float2{ 640,200 };
+		m_spGuardDeactivate_D = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spGuardDeactivate_D->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"SecondGuardDeActivated";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(600);
+		tDesc.v2Size.y = static_cast<_float>(140);
+		tDesc.v2Pos = _float2{ 640,200 };
+		m_spGuardDeactivate_E = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spGuardDeactivate_E->SetActive(false);
+	} {
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"ThirdGuardDeActivated";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(600);
+		tDesc.v2Size.y = static_cast<_float>(140);
+		tDesc.v2Pos = _float2{ 640,200 };
+		m_spGuardDeactivate_F = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spGuardDeactivate_F->SetActive(false);
+	}
+	{
+		tDesc.fZBufferOrder = 0.99f;
+		tDesc.strImgName = L"FourthGuardDeActivated";
+		tDesc._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc.DrawOrder = L"Last";
+		tDesc.v2Size.x = static_cast<_float>(600);
+		tDesc.v2Size.y = static_cast<_float>(140);
+		tDesc.v2Pos = _float2{ 640,200 };
+		m_spGuardDeactivate_G = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc }));
+		m_spGuardDeactivate_G->SetActive(false);
+	}
 }
 
 void CMainScene::CreateStartSceneUI()
@@ -1171,6 +1273,18 @@ void CMainScene::CreateGameSceneUI()
 		tDesc5.v2Pos = _float2{ 100,50 };
 		m_spAnubisFrameUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
 		m_spAnubisFrameUI->SetActive(false);
+	}
+	//===================ENDING=====================FreedomText
+	{
+		tDesc5.fZBufferOrder = 0.99f;
+		tDesc5.strImgName = L"FreedomText";
+		tDesc5._shaderName = PROTO_RES_DEFAULTUISHADER;
+		tDesc5.DrawOrder = L"Middle";
+		tDesc5.v2Size.x = static_cast<_float>(800);
+		tDesc5.v2Size.y = static_cast<_float>(175);
+		tDesc5.v2Pos = _float2{ 640,400 };
+		m_spEndingText = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spEndingText->SetActive(false);
 	}
 }
 
@@ -1736,6 +1850,10 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 	if (m_fStartSceneLoadingTimer > 1.f) {
 		//GameStart 시
 		spGameInstance->StopSound(L"BGM3");
+		if (!EnterGameModeSound) {
+			spGameInstance->SoundPlayOnce(L"FinishLoading");
+			EnterGameModeSound = true;
+		}	
 		spGameInstance->ResumeGame();
 		spGameInstance->SetGameStartEffect();
 		m_spBackgroundUI->SetActive(false);
@@ -1759,7 +1877,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 		if (!EnterGameModeBGM) {
 			spGameInstance->SoundPlayBGM(L"GamePlayBGM");//게임 플레이 bgm
 			//SHPTR<USound> Bgm = spGameInstance->BringSound(L"GamePlayBGM");
-			spGameInstance->BGMUpdateVolume(L"GamePlayBGM",1.f);
+			spGameInstance->BGMUpdateVolume(L"GamePlayBGM",0.3f);
 			EnterGameModeBGM = true;
 		}
 		
@@ -1846,7 +1964,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 		m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
 		
 		//상자 충돌 시
-			if (m_spWarriorPlayer->GetCanInteractChestState()) {
+			if (m_spWarriorPlayer->GetCanInteractChestState() && !m_spWarriorPlayer->GetDeathState()) {
 				m_spOpenChestTextUI->SetActive(true);
 				m_spFKeyOpenChestTextUI->SetActive(true);
 			}
@@ -1855,7 +1973,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 				m_spFKeyOpenChestTextUI->SetActive(false);
 			}
 			//철창 충돌시
-			if (m_spWarriorPlayer->GetCanInteractBarState() && !m_spWarriorPlayer->GetDoneInteractBarState()) {
+			if (m_spWarriorPlayer->GetCanInteractBarState() && !m_spWarriorPlayer->GetDoneInteractBarState() && !m_spWarriorPlayer->GetDeathState()) {
 				m_spLiftCageTextUI->SetActive(true);
 				m_spFKeyLiftCageTextUI->SetActive(true);
 				m_spLiftLoadGageBackgroundTextUI->SetActive(true);
@@ -1868,7 +1986,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 				m_spLiftFillGageBackgroundTextUI->SetActive(false);
 			}
 			//석상 충돌 시
-			if (m_spWarriorPlayer->GetCanInteractStatueState()&&!m_spWarriorPlayer->GetDoneInteractStatueState()) {
+			if (m_spWarriorPlayer->GetCanInteractStatueState()&&!m_spWarriorPlayer->GetDoneInteractStatueState() && !m_spWarriorPlayer->GetDeathState()) {
 				m_spSaveCheckPointTextUI->SetActive(true);
 				m_spFKeySaveCheckPointTextUI->SetActive(true);
 				m_spCheckPointLoadGageBackgroundTextUI->SetActive(true);
@@ -1888,7 +2006,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 
 			//수호자들 코어 충돌시
 			//MINO
-			if (m_spWarriorPlayer->GetCanInteractMinoCoreState()&& !m_spWarriorPlayer->GetDoneCoreMinotaurState()) {
+			if (m_spWarriorPlayer->GetCanInteractMinoCoreState()&& !m_spWarriorPlayer->GetDoneCoreMinotaurState() && !m_spWarriorPlayer->GetDeathState()) {
 				m_spDeactivateMinotaurTextUI->SetActive(true);
 				//m_spDeActivatedMinotaurTextUI->SetActive(true);
 				m_spDeActivateMinotaurBackgroundUI->SetActive(true);
@@ -1904,7 +2022,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 			}
 
 			//할리퀸
-			if (m_spWarriorPlayer->GetCanInteractHarlCoreState() && !m_spWarriorPlayer->GetDoneCoreHarlequinnState()) {
+			if (m_spWarriorPlayer->GetCanInteractHarlCoreState() && !m_spWarriorPlayer->GetDoneCoreHarlequinnState() && !m_spWarriorPlayer->GetDeathState()) {
 				m_spDeactivateHarelequinTextUI->SetActive(true);
 				//m_spDeActivatedHarelequinTextUI->SetActive(true);
 				m_spDeActivateHarelequinBackgroundUI->SetActive(true);
@@ -1920,7 +2038,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 			}
 
 			//나서스
-			if (m_spWarriorPlayer->GetCanInteractAnubisCoreState() && !m_spWarriorPlayer->GetDoneCoreAnubisState()) {
+			if (m_spWarriorPlayer->GetCanInteractAnubisCoreState() && !m_spWarriorPlayer->GetDoneCoreAnubisState()&&!m_spWarriorPlayer->GetDeathState()) {
 				m_spDeactivateAnubisTextUI->SetActive(true);
 				//m_spDeActivatedAnubisTextUI->SetActive(true);
 				m_spDeActivateAnubisBackgroundUI->SetActive(true);
@@ -1936,7 +2054,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 			}
 
 			//코어 해제시
-			if (m_spWarriorPlayer->GetDeactivatedCoreMinotaurState()) {
+			if (m_spWarriorPlayer->GetDeactivatedCoreMinotaurState()&&!m_spWarriorPlayer->GetDeathState()) {
 				m_spDeactivateMinotaurTextUI->SetActive(false);
 				m_spDeActivatedMinotaurTextUI->SetActive(true);
 				m_spDeActivateMinotaurBackgroundUI->SetActive(false);
@@ -1952,7 +2070,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 			else {
 				m_spDeActivatedMinotaurTextUI->SetActive(false);
 			}
-			if (m_spWarriorPlayer->GetDeactivatedCoreHarlequinnState()) {
+			if (m_spWarriorPlayer->GetDeactivatedCoreHarlequinnState()&&!m_spWarriorPlayer->GetDeathState()) {
 				m_spDeactivateHarelequinTextUI->SetActive(false);
 				m_spDeActivatedHarelequinTextUI->SetActive(true);
 				m_spDeActivateHarelequinBackgroundUI->SetActive(false);
@@ -1968,7 +2086,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 			else {
 				m_spDeActivatedHarelequinTextUI->SetActive(false);
 			}
-			if (m_spWarriorPlayer->GetDeactivatedCoreAnubisState()) {
+			if (m_spWarriorPlayer->GetDeactivatedCoreAnubisState()&&!m_spWarriorPlayer->GetDeathState()) {
 				m_spDeactivateAnubisTextUI->SetActive(false);
 				m_spDeActivatedAnubisTextUI->SetActive(true);
 				m_spDeActivateAnubisBackgroundUI->SetActive(false);
@@ -1986,14 +2104,14 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 			}
 
 			//가드 충돌시
-			if (m_spWarriorPlayer->GetCanInteractGuardState()) {
+			if (m_spWarriorPlayer->GetCanInteractGuardState()&&!m_spWarriorPlayer->GetDeathState()) {
 				m_spCollideGuardTextUI->SetActive(true);
 			}
 			else {
 				m_spCollideGuardTextUI->SetActive(false);
 			}
 			// 체크포인트 저장시
-			if (m_spWarriorPlayer->GetCheckpointSaveState()) {
+			if (m_spWarriorPlayer->GetCheckpointSaveState()&&!m_spWarriorPlayer->GetDeathState()) {
 				m_spCheckPointCompleteTextUI->SetActive(true);
 				m_spSaveCheckPointTextUI->SetActive(false);
 				m_spFKeySaveCheckPointTextUI->SetActive(false);
@@ -2039,6 +2157,12 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 				m_spDeActivateAnubisBackgroundUI->SetActive(false);
 				m_spDeActivateAnubisGageUI->SetActive(false);
 				m_spKeyFUIAnubis->SetActive(false);
+				m_spEndingText->SetActive(false);
+				m_spGuardDeactivate_G->SetActive(false);
+				m_spGuardDeactivate_F->SetActive(false);
+				m_spGuardDeactivate_E->SetActive(false);
+				m_spGuardDeactivate_D->SetActive(false);
+				m_spGuardDeactivate_D->SetActive(false);
 			}
 		
 	}
@@ -2221,7 +2345,7 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 void CMainScene::LateTick(const _double& _dTimeDelta)
 {
 	UpdateMobsStatus();
-	TurnGuardsOnRange();
+	TurnGuardsOnRange(_dTimeDelta);
 }
 
 void CMainScene::CollisionTick(const _double& _dTimeDelta)

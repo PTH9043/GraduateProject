@@ -81,7 +81,7 @@ float3 g_Gravity = float3(0.0, -9.8, 0.0);
 // g_int_0  : Particle Max Count
 // g_int_1  : AddCount
 // g_vec4_0 : MinLifeTime / MaxLifeTime / MinSpeed / MaxSpeed
-[numthreads(512, 1, 1)]
+[numthreads(412, 1, 1)]
 void CS_Main(int3 threadIndex : SV_DispatchThreadID)
 {
     if (threadIndex.x >= g_GrobalParticleInfo.iMaxCount)

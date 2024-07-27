@@ -172,7 +172,39 @@ void CMinotaur::CreateParticles()
 		*m_spAttackParticleTwo->GetParticleSystem()->GetCreateInterval() = 0.5f;
 		m_spAttackParticleTwo->SetTexture(L"FireSpark3");
 	}
-	
+	{
+		UParticle::PARTICLEDESC tDesc;
+		tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEFOOTPRINT2DSHADER;
+		tDesc.wstrParticleShader = PROTO_RES_PARTICLEFOOTPRINT2DSHADER;
+
+
+		tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
+		//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 7.5f;// 6.5f
+		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 4.5f; //3.1f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 2.0f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.1f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 1.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 1.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 50;
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 1.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = -GetTransform()->GetLook();
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticlePosition = GetTransform()->GetPos();
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_FOOTPRINT;
+		m_spFootPrintParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
+
+		m_stParticleParam = m_spFootPrintParticle->GetParticleSystem()->GetParticleParam();
+		m_stParticleType = m_spFootPrintParticle->GetParticleSystem()->GetParticleTypeParam();
+		m_stParticleType->fParticleType = PARTICLE_TYPE_AUTO;
+		m_stParticleType->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
+		m_spFootPrintParticle->SetTexture(L"Sand");// DUST 
+
+
+		*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
+		*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 2;
+		m_spFootPrintParticle->SetParticleType(PARTICLE_FOOTPRINT);
+		m_spFootPrintParticle->SetActive(false);
+	}
 }
 
 HRESULT CMinotaur::NativeConstructClone(const VOIDDATAS& _Datas)
@@ -227,14 +259,28 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 
 		_float runningSpeed = 30;
 		_float walkingSpeed = 5;
+		
+
 
 		if (CurAnimState == UAnimationController::ANIM_MOVE)
 		{
 			AddTimeAccumulator(_dTimeDelta);
-
+			
 			// A* for moving towards player when player is found
 			if (GetFoundTargetState() && !GetTargetPlayer()->GetDeathState())
 			{
+				m_spFootPrintParticle->SetActive(true);
+				{
+					*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 4;
+					*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.355f;
+					_float3 pos = GetTransform()->GetPos() + GetTransform()->GetRight();
+					pos.y += 1.0;
+					_float3 Look = GetTransform()->GetLook();
+					_float3 Right = 1.2 * GetTransform()->GetRight();
+					//pos -= 3 * Look;
+					m_spFootPrintParticle->SetPosition(pos);
+					m_spFootPrintParticle->SetDirection(Right);
+				}
 				if (GetTimeAccumulator() >= 1.0)
 				{
 					SHPTR<UNavigation> spNavigation = GetCurrentNavi();
@@ -308,7 +354,11 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 			}
 
 		}
-
+		else {
+			m_spFootPrintParticle->SetActive(false);
+			*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 0;
+			*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
+		}
 		if (CurAnimName == L"hit_1")
 		{
 			_float3 direction = CurrentMobPos - CurrentPlayerPos;
@@ -364,6 +414,7 @@ void CMinotaur::LateTickActive(const _double& _dTimeDelta)
 				m_spSlashParticle->SetActive(false);
 				m_spAttackParticle->SetActive(false);
 				m_spAttackParticleTwo->SetActive(false);
+				m_spFootPrintParticle->SetActive(false);
 				SetOutline(false);
 				SetActive(false);
 				spGameInstance->RemoveCollisionPawn(ThisShared<CMob>());
