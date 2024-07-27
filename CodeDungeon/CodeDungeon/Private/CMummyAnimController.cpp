@@ -191,41 +191,53 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     {
         USound* AttackSound1 = spGameInstance->BringSound(L"Attack1_VO_1").get();
         USound* SwooshSound1 = spGameInstance->BringSound(L"ClothWhoosh_1").get();   
-        if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.8)
-        {
-            AttackSound1->StopWithManyChannels();
-            SwooshSound1->StopWithManyChannels();
-        }
-        else if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.1 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.11)
+        //if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.8)
+        //{
+        //    AttackSound1->StopWithManyChannels();
+        //    SwooshSound1->StopWithManyChannels();
+        //}
+        //else if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.1 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.11)
+        //{
+        //    AttackSound1->PlayWithManyChannels();
+        //   // AttackSound1->UpdateSound3D(spMummy->GetTransform(), _float3(0, 0, 0), spMummy->GetTargetPlayer()->GetTransform());
+        //    SwooshSound1->PlayWithManyChannels();
+        //   // SwooshSound1->UpdateSound3D(spMummy->GetTransform(), _float3(0, 0, 0), spMummy->GetTargetPlayer()->GetTransform());
+        //}
+
+        if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.1 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.11)
         {
             AttackSound1->PlayWithManyChannels();
-           // AttackSound1->UpdateSound3D(spMummy->GetTransform(), _float3(0, 0, 0), spMummy->GetTargetPlayer()->GetTransform());
-            SwooshSound1->PlayWithManyChannels();
-           // SwooshSound1->UpdateSound3D(spMummy->GetTransform(), _float3(0, 0, 0), spMummy->GetTargetPlayer()->GetTransform());
+             SwooshSound1->PlayWithManyChannels();
+             
         }
+
     }
 
-   //spGameInstance->HandleSounds3DForAnimation(spMummy, spMummy->GetTargetPlayer(), L"attack1", L"Attack1_VO_1", 0.1, 0.8);
-   //spGameInstance->HandleSounds3DForAnimation(spMummy, spMummy->GetTargetPlayer(), L"attack1", L"ClothWhoosh_1", 0.1, 0.8);
-   //spGameInstance->HandleSounds3DForAnimation(spMummy, spMummy->GetTargetPlayer(), L"attack2", L"Attack1_VO_2", 0.1, 0.8);
-   //spGameInstance->HandleSounds3DForAnimation(spMummy, spMummy->GetTargetPlayer(), L"attack2", L"ClothWhoosh_2", 0.1, 0.8);
 
     if (CurAnimName == L"attack2")
     {
+
         USound* AttackSound2 = spGameInstance->BringSound(L"Attack1_VO_2").get();
         USound* SwooshSound2 = spGameInstance->BringSound(L"ClothWhoosh_2").get();
-        if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.8)
-        {
-            AttackSound2->StopWithManyChannels();
-            SwooshSound2->StopWithManyChannels();
-        }
-        else if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.1 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.11)
+        if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.1 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.11)
         {
             AttackSound2->PlayWithManyChannels();
-            //AttackSound2->UpdateSound3D(spMummy->GetTransform(), _float3(0, 0, 0), spMummy->GetTargetPlayer()->GetTransform());
             SwooshSound2->PlayWithManyChannels();
-            //SwooshSound2->UpdateSound3D(spMummy->GetTransform(), _float3(0, 0, 0), spMummy->GetTargetPlayer()->GetTransform());
+   
         }
+        
+        //if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.8)
+        //{
+        //    AttackSound2->StopWithManyChannels();
+        //    SwooshSound2->StopWithManyChannels();
+        //}
+        //else if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.1 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.11)
+        //{
+        //    AttackSound2->PlayWithManyChannels();
+        //    //AttackSound2->UpdateSound3D(spMummy->GetTransform(), _float3(0, 0, 0), spMummy->GetTargetPlayer()->GetTransform());
+        //    SwooshSound2->PlayWithManyChannels();
+        //    //SwooshSound2->UpdateSound3D(spMummy->GetTransform(), _float3(0, 0, 0), spMummy->GetTargetPlayer()->GetTransform());
+        //}
     }
 
     // Check for death

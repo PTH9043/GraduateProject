@@ -47,6 +47,7 @@ void USound::Play()
 
 void USound::PlayWithManyChannels()
 {
+	TickWithManyChannels();
 	FMOD::Channel* channel = nullptr;
 	m_pSystem->playSound(m_pSound, nullptr, false, &channel);
 	m_Channels.push_back(channel);
@@ -74,9 +75,9 @@ void USound::PlayOnce()
 
 void USound::PlayOnceWithManyChannels()
 {
-	TickWithManyChannels();
+	//TickWithManyChannels();
 	if (!m_isOncePlay) {
-		Play();
+		PlayWithManyChannels();
 		m_isOncePlay = true;
 	}
 }

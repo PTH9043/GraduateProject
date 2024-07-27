@@ -44,6 +44,7 @@ private:
 	_int					m_iRandomValue;
 	_double				m_dRecvAnimDuration;
 
+	//=====================SOUND BOOL================
 };
 
 END

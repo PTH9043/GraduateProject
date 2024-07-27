@@ -60,6 +60,7 @@ private:
 
 	//=====================SOUND BOOL================
 	_bool m_bReviveSoundPlay = false;
+
 };
 
 END
