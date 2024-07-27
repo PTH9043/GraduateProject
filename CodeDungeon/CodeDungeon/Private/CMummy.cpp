@@ -371,7 +371,7 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 				USound* DeathSound1 = spGameInstance->BringSound(L"Death_VO_1").get();
 				USound* DeathSound2 = spGameInstance->BringSound(L"BodyHitFloor_1").get();
 				DeathSound1->PlayWithInputChannel(&m_pDeathChannel);
-				DeathSound2->PlayWithInputChannel(&m_pDeathChannel);
+				DeathSound2->PlayWithInputChannel(&m_pDeath2Channel);
 			}
 			SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
 			_double DeathTimeArcOpenEnd = 500;
@@ -379,6 +379,11 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 			{		
 				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
 				GetAnimModel()->UpdateDissolveTImer(_dTimeDelta);
+				if (!m_bDissolveSound) {
+					SHPTR<USound> DsSound=spGameInstance->BringSound(L"DissolveSound");
+					DsSound->PlayWithInputChannel(&m_pDissolveChannel);
+					m_bDissolveSound = true;
+				}
 			}
 			
 		}
@@ -389,6 +394,7 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 		}
 		else
 		{
+			m_bDissolveSound = false;
 			GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
 			SetElapsedTime(0.0);
 		}

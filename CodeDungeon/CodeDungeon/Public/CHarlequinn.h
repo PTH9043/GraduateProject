@@ -59,6 +59,8 @@ private:
 	VECTOR<_float3> m_AstarPath;
 	_bool m_isPathFinding = false;
 	size_t m_currentPathIndex = 0;
+
+	_bool m_bDissolveSound = false;
 };
 
 END

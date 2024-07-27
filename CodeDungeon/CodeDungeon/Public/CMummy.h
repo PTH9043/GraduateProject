@@ -55,8 +55,11 @@ private:
 	_bool m_isPathFinding = false;
 	size_t m_currentPathIndex = 0;
 
+	_bool m_bDissolveSound = false;
+
 	FMOD::Channel* m_pDeathChannel;
 	FMOD::Channel* m_pDeath2Channel;
+	FMOD::Channel* m_pDissolveChannel;
 };
 
 END
