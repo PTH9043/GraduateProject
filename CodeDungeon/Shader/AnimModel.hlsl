@@ -205,23 +205,60 @@ PS_OUT PS_Main(PS_IN In)
         Out.vVelocity.w = In.vVelocity.z / In.vVelocity.w;
     }
     
+    //if (1 == g_iObjectDissolve)
+    //{
+        
+    //    vector vDisorveColor = g_Texture2.Sample(g_Sampler_Normal, In.vTexUV0 * noiseTiling);
+
+    //    float fColorLength = vDisorveColor.r + vDisorveColor.g + vDisorveColor.b;
+        
+    //    if (fColorLength <= g_fDissolveTimer)
+    //    {
+    //        if (fColorLength - 0.2f <= g_fDissolveTimer)
+    //        {
+    //            discard;
+    //        }
+    //        float4 vColor = float4(1.f, -0.22f, -0.22f, Out.vDiffuse.a);
+    //        Out.vDiffuse = vColor;
+    //    }
+    //}
+    
     if (1 == g_iObjectDissolve)
     {
-        
-        vector vDisorveColor = g_Texture2.Sample(g_Sampler_Normal, In.vTexUV0 * noiseTiling);
+        vector vDisolveColor = g_Texture2.Sample(g_Sampler_Normal, In.vTexUV0 * noiseTiling);
 
-        float fColorLength = vDisorveColor.r + vDisorveColor.g + vDisorveColor.b;
+        float fColorLength = vDisolveColor.r + vDisolveColor.g + vDisolveColor.b;    
+
+        float edgeThickness = 0.05f; 
+   
+        float4 baseEdgeColor = float4(1.0f, 0.5f, 0.0f, 1.0f); 
+        float4 burnColor = float4(1.0f, 0.0f, 0.0f, 1.0f); 
+        float brightness = 4.0f;
         
+        float4 dissolveColor = float4(1.f, -0.22f, -0.22f, Out.vDiffuse.a);
+
         if (fColorLength <= g_fDissolveTimer)
         {
-            if (fColorLength - 0.2f <= g_fDissolveTimer)
+            if (fColorLength >= g_fDissolveTimer - edgeThickness)
+            {
+                float factor = (g_fDissolveTimer - fColorLength) / edgeThickness;
+                float4 edgeColor = lerp(baseEdgeColor, burnColor, factor); 
+                edgeColor.rgb *= brightness; 
+                Out.vDiffuse = edgeColor;
+                Out.vGlow = edgeColor;
+            }
+            else
             {
                 discard;
+               // Out.vDiffuse = dissolveColor;
             }
-            float4 vColor = float4(1.f, -0.22f, -0.22f, Out.vDiffuse.a);
-            Out.vDiffuse = vColor;
+        }
+        else
+        {
+            Out.vDiffuse = Out.vDiffuse;
         }
     }
+
         
     return Out;
 }

@@ -63,7 +63,10 @@ void UAudioSystemManager::Play(const _wstring& _wstrSoundName)
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
-			iter->Play(_wstrSoundName);
+		{
+			if (true == iter->Play(_wstrSoundName))
+				return;
+		}
 	}
 }
 
@@ -72,7 +75,10 @@ void UAudioSystemManager::Play(const _wstring& _wstrSoundName, const _float& _fV
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
-			iter->Play(_wstrSoundName, _fVolumeUpdate);
+		{
+			if (true == iter->Play(_wstrSoundName, _fVolumeUpdate))
+				return;
+		}
 	}
 }
 
@@ -81,7 +87,10 @@ void UAudioSystemManager::PlayOnce(const _wstring& _wstrSoundName)
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
-			iter->PlayOnce(_wstrSoundName);
+		{
+			if (true == iter->PlayOnce(_wstrSoundName))
+				return;
+		}
 	}
 }
 
@@ -90,7 +99,10 @@ void UAudioSystemManager::PlayBGM(const _wstring& _wstrSoundName)
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
-			iter->PlayBGM(_wstrSoundName);
+		{
+			if (true == iter->PlayBGM(_wstrSoundName))
+				return;
+		}
 	}
 }
 
@@ -99,7 +111,10 @@ void UAudioSystemManager::StopBGM(const _wstring& _wstrSoundName)
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
-			iter->StopBGM(_wstrSoundName);
+		{
+			if (true == iter->StopBGM(_wstrSoundName))
+				return;
+		}
 	}
 }
 
@@ -108,7 +123,10 @@ void UAudioSystemManager::PlayBGM(const _wstring& _wstrSoundName, const _float& 
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
-			iter->PlayBGM(_wstrSoundName, _fVolumeUpdate);
+		{
+			if (true == iter->PlayBGM(_wstrSoundName, _fVolumeUpdate))
+				return;
+		}
 	}
 }
 
@@ -116,8 +134,11 @@ void UAudioSystemManager::Stop(const _wstring& _wstrSoundName)
 {
 	for (auto& iter : m_AudioSystemContainer)
 	{
-		if(nullptr != iter)
-			iter->Stop(_wstrSoundName);
+		if (nullptr != iter)
+		{
+			if (true == iter->Stop(_wstrSoundName))
+				return;
+		}
 	}
 }
 
@@ -126,7 +147,10 @@ void UAudioSystemManager::VolumeUpdate(const _wstring& _wstrSoundName, const _fl
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
-			iter->VolumeUpdate(_wstrSoundName, _fVolumeUpdate);
+		{
+			if (true == iter->VolumeUpdate(_wstrSoundName, _fVolumeUpdate))
+				return;
+		}
 	}
 }
 
@@ -135,7 +159,10 @@ void UAudioSystemManager::DisableOncePlay(const _wstring& _wstrSoundName)
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
-			iter->DisableOncePlay(_wstrSoundName);
+		{
+			if (true == iter->DisableOncePlay(_wstrSoundName))
+				return;
+		}
 	}
 }
 
@@ -144,7 +171,10 @@ void UAudioSystemManager::Restart(const _wstring& _wstrSoundName)
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
-			iter->Restart(_wstrSoundName);
+		{
+			if (true == iter->Restart(_wstrSoundName))
+				return;
+		}
 	}
 }
 
@@ -153,7 +183,10 @@ void UAudioSystemManager::RestartOnce(const _wstring& _wstrSoundName)
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
-			iter->RestartOnce(_wstrSoundName);
+		{
+			if (true == iter->RestartOnce(_wstrSoundName))
+				return;
+		}
 	}
 }
 
@@ -162,7 +195,10 @@ void UAudioSystemManager::Pause(const _wstring& _wstrSoundName)
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
-			iter->Pause(_wstrSoundName);
+		{
+			if (true == iter->Pause(_wstrSoundName))
+				return;
+		}
 	}
 }
 
@@ -171,7 +207,10 @@ void UAudioSystemManager::Resume(const _wstring& _wstrSoundName)
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
-			iter->Resume(_wstrSoundName);
+		{
+			if (true == iter->Resume(_wstrSoundName))
+				return;
+		}
 	}
 }
 
@@ -180,7 +219,10 @@ void UAudioSystemManager::SetPlaybackPosition(const _wstring& _wstrSoundName, un
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
-			iter->SetPlaybackPosition(_wstrSoundName, position);
+		{
+			if (true == iter->SetPlaybackPosition(_wstrSoundName, position))
+				return;
+		}
 	}
 }
 
@@ -198,7 +240,10 @@ void UAudioSystemManager::SetLooping(const _wstring& _wstrSoundName, bool loop)
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
-			iter->SetLooping(_wstrSoundName, loop);
+		{
+			if (true == iter->SetLooping(_wstrSoundName, loop))
+				return;
+		}
 	}
 }
 
@@ -207,7 +252,10 @@ void UAudioSystemManager::SetPitch(const _wstring& _wstrSoundName, float pitch)
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
-			iter->SetPitch(_wstrSoundName, pitch);
+		{
+			if (true == iter->SetPitch(_wstrSoundName, pitch))
+				return;
+		}
 	}
 }
 
@@ -216,7 +264,10 @@ void UAudioSystemManager::SetPan(const _wstring& _wstrSoundName, float pan)
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
-			iter->SetPan(_wstrSoundName, pan);
+		{
+			if (true == iter->SetPan(_wstrSoundName, pan))
+				return;
+		}
 	}
 }
 
@@ -225,7 +276,10 @@ void UAudioSystemManager::Mute(const _wstring& _wstrSoundName)
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
-			iter->Mute(_wstrSoundName);
+		{
+			if (true == iter->Mute(_wstrSoundName))
+				return;
+		}
 	}
 }
 
@@ -234,7 +288,10 @@ void UAudioSystemManager::Unmute(const _wstring& _wstrSoundName)
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
-			iter->Unmute(_wstrSoundName);
+		{
+			if (true == iter->Unmute(_wstrSoundName))
+				return;
+		}
 	}
 }
 
@@ -243,7 +300,10 @@ void UAudioSystemManager::FadeIn(const _wstring& _wstrSoundName, float fadeDurat
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
-			iter->FadeIn(_wstrSoundName, fadeDuration);
+		{
+			if (true == iter->FadeIn(_wstrSoundName, fadeDuration))
+				return;
+		}
 	}
 }
 
@@ -252,7 +312,10 @@ void UAudioSystemManager::FadeOut(const _wstring& _wstrSoundName, float fadeDura
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
-			iter->FadeOut(_wstrSoundName, fadeDuration);
+		{
+			if (true == iter->FadeOut(_wstrSoundName, fadeDuration))
+				return;
+		}
 	}
 }
 
@@ -261,7 +324,10 @@ void UAudioSystemManager::UpdateVolume(const _wstring& _wstrSoundName, const _fl
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
-			iter->UpdateVolume(_wstrSoundName, _fVolume);
+		{
+			if (true == iter->UpdateVolume(_wstrSoundName, _fVolume))
+				return;
+		}
 	}
 }
 
@@ -270,7 +336,10 @@ void UAudioSystemManager::BGMUpdateVolume(const _wstring& _wstrSoundName, const 
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
-			iter->BGMVolumeUpdate(_wstrSoundName, _fVolume);
+		{
+			if (true == iter->BGMVolumeUpdate(_wstrSoundName, _fVolume))
+				return;
+		}
 	}
 }
 
@@ -279,7 +348,10 @@ void UAudioSystemManager::UpdateSound3D(const _wstring& _wstrSoundName, const _f
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
-			iter->UpdateSound3D(_wstrSoundName, _vSoudPos, _vSoundVelocity, _spTargetTransform);
+		{
+			if (true == iter->UpdateSound3D(_wstrSoundName, _vSoudPos, _vSoundVelocity, _spTargetTransform))
+				return;
+		}
 	}
 }
 
@@ -288,7 +360,10 @@ void UAudioSystemManager::UpdateSound3D(const _wstring& _wstrSoundName, CSHPTRRE
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
-			iter->UpdateSound3D(_wstrSoundName, _spSoundTransform, _vSoundVelocity, _spTargetTransform);
+		{
+			if (true == iter->UpdateSound3D(_wstrSoundName, _spSoundTransform, _vSoundVelocity, _spTargetTransform))
+				return;
+		}
 	}
 }
 
@@ -297,7 +372,10 @@ void UAudioSystemManager::ChangeMinMaxDistance3D(const _wstring& _wstrSoundName,
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
-			iter->ChangeMinMaxDistance3D(_wstrSoundName, _fMinDistance, _fMaxDistance);
+		{
+			if (true == iter->ChangeMinMaxDistance3D(_wstrSoundName, _fMinDistance, _fMaxDistance))
+				return;
+		}
 	}
 }
 
@@ -313,7 +391,7 @@ SHPTR<USound> UAudioSystemManager::BringSound(const _int _Index)
 				return spSound;
 		}
 	}
-	return spSound;
+	return nullptr;
 }
 
 SHPTR<USound> UAudioSystemManager::BringSound(const _wstring& _wstrSoundName)
@@ -328,7 +406,7 @@ SHPTR<USound> UAudioSystemManager::BringSound(const _wstring& _wstrSoundName)
 				return spSound;
 		}
 	}
-	return spSound;
+	return nullptr;
 }
 
 void UAudioSystemManager::Free()

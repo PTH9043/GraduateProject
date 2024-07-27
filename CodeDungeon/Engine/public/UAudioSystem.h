@@ -33,36 +33,36 @@ public:
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _Datas) override;
 
 	void Tick();
-	void Play(const _wstring& _wstrSoundName);
-	void Play(const _wstring& _wstrSoundName, const _float _fVolumeUpdate);
-	void PlayOnce(const _wstring& _wstrSoundName);
-	void PlayBGM(const _wstring& _wstrSoundName);
-	void StopBGM(const _wstring& _wstrSoundName);
-	void PlayBGM(const _wstring& _wstrSoundName, const _float  _fVolumeUpdate);
-	void Stop(const _wstring& _wstrSoundName);
-	void VolumeUpdate(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
-	void BGMVolumeUpdate(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
-	void Restart(const _wstring& _wstrSoundName);
-	void RestartOnce(const _wstring& _wstrSoundName);
-	void Pause(const _wstring& _wstrSoundName);
-	void Resume(const _wstring& _wstrSoundName);
-	void SetPlaybackPosition(const _wstring& _wstrSoundName,unsigned int position);
+	_bool Play(const _wstring& _wstrSoundName);
+	_bool Play(const _wstring& _wstrSoundName, const _float _fVolumeUpdate);
+	_bool PlayOnce(const _wstring& _wstrSoundName);
+	_bool PlayBGM(const _wstring& _wstrSoundName);
+	_bool StopBGM(const _wstring& _wstrSoundName);
+	_bool PlayBGM(const _wstring& _wstrSoundName, const _float  _fVolumeUpdate);
+	_bool Stop(const _wstring& _wstrSoundName);
+	_bool VolumeUpdate(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
+	_bool BGMVolumeUpdate(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
+	_bool Restart(const _wstring& _wstrSoundName);
+	_bool RestartOnce(const _wstring& _wstrSoundName);
+	_bool Pause(const _wstring& _wstrSoundName);
+	_bool Resume(const _wstring& _wstrSoundName);
+	_bool SetPlaybackPosition(const _wstring& _wstrSoundName,unsigned int position);
 	//unsigned int GetPlaybackPosition(const _wstring& _wstrSoundName);
-	void SetLooping(const _wstring& _wstrSoundName,bool loop);
-	void SetPitch(const _wstring& _wstrSoundName,float pitch);
-	void SetPan(const _wstring& _wstrSoundName,float pan);
-	void Mute(const _wstring& _wstrSoundName);
-	void Unmute(const _wstring& _wstrSoundName);
-	void FadeIn(const _wstring& _wstrSoundName,float fadeDuration);
-	void FadeOut(const _wstring& _wstrSoundName,float fadeDuration);
-	void UpdateVolume(const _wstring& _wstrSoundName,const _float _fVolume);
-	void DisableOncePlay(const _wstring& _wstrSoundName);
+	_bool SetLooping(const _wstring& _wstrSoundName,bool loop);
+	_bool SetPitch(const _wstring& _wstrSoundName,float pitch);
+	_bool SetPan(const _wstring& _wstrSoundName,float pan);
+	_bool Mute(const _wstring& _wstrSoundName);
+	_bool Unmute(const _wstring& _wstrSoundName);
+	_bool FadeIn(const _wstring& _wstrSoundName,float fadeDuration);
+	_bool FadeOut(const _wstring& _wstrSoundName,float fadeDuration);
+	_bool UpdateVolume(const _wstring& _wstrSoundName,const _float _fVolume);
+	_bool DisableOncePlay(const _wstring& _wstrSoundName);
 
-	void UpdateSound3D(const _wstring& _wstrSoundName ,const _float3& _vSoudPos, const _float3& _vSoundVelocity, 
+	_bool UpdateSound3D(const _wstring& _wstrSoundName ,const _float3& _vSoudPos, const _float3& _vSoundVelocity,
 		CSHPTRREF<UTransform> _spTargetTransform_CanNullptr = nullptr);
-	void UpdateSound3D(const _wstring& _wstrSoundName, CSHPTRREF<UTransform> _spSelfTransform, const _float3& _vSoundVelocity,
+	_bool UpdateSound3D(const _wstring& _wstrSoundName, CSHPTRREF<UTransform> _spSelfTransform, const _float3& _vSoundVelocity,
 		CSHPTRREF<UTransform> _spTargetTransform_CanNullptr = nullptr);
-	void ChangeMinMaxDistance3D(const _wstring& _wstrSoundName, const _float _fMinDistance, const _float _fMaxDistance);
+	_bool ChangeMinMaxDistance3D(const _wstring& _wstrSoundName, const _float _fMinDistance, const _float _fMaxDistance);
 
 	SHPTR<USound> BringSound(const _int _Index);
 	SHPTR<USound> BringSound(const _wstring& _wstrSoundName);
