@@ -147,10 +147,9 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
         spSelfTransform->EnableMotionblurOn();
     }
     
-    spGameInstance->HandleSoundsForAnimation(spWarriorPlayer, L"roll_left", L"Player_Rolling", 0.1, 0.8);
-    spGameInstance->HandleSoundsForAnimation(spWarriorPlayer, L"roll_right", L"Player_Rolling", 0.1, 0.8);
-    spGameInstance->HandleSoundsForAnimation(spWarriorPlayer, L"roll_front", L"Player_Rolling", 0.1, 0.8);
-    spGameInstance->HandleSoundsForAnimation(spWarriorPlayer, L"roll_back", L"Player_Rolling", 0.1, 0.8);
+    /*spGameInstance->HandleSoundsForAnimation(spWarriorPlayer, L"roll_left", L"Player_Rolling", 0.1, 0.75);
+    spGameInstance->HandleSoundsForAnimation(spWarriorPlayer, L"roll_front", L"Player_Rolling", 0.1, 0.75);
+    spGameInstance->HandleSoundsForAnimation(spWarriorPlayer, L"roll_back", L"Player_Rolling", 0.1, 0.75);*/
 
     // Hit state
     if (Hit && !isKicked) {

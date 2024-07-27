@@ -206,38 +206,11 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
 
         if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.1 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.11)
         {
+
             AttackSound1->PlayWithManyChannels();
              SwooshSound1->PlayWithManyChannels();
-             
         }
 
-    }
-
-
-    if (CurAnimName == L"attack2")
-    {
-
-        USound* AttackSound2 = spGameInstance->BringSound(L"Attack1_VO_2").get();
-        USound* SwooshSound2 = spGameInstance->BringSound(L"ClothWhoosh_2").get();
-        if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.1 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.11)
-        {
-            AttackSound2->PlayWithManyChannels();
-            SwooshSound2->PlayWithManyChannels();
-   
-        }
-        
-        //if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.8)
-        //{
-        //    AttackSound2->StopWithManyChannels();
-        //    SwooshSound2->StopWithManyChannels();
-        //}
-        //else if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.1 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.11)
-        //{
-        //    AttackSound2->PlayWithManyChannels();
-        //    //AttackSound2->UpdateSound3D(spMummy->GetTransform(), _float3(0, 0, 0), spMummy->GetTargetPlayer()->GetTransform());
-        //    SwooshSound2->PlayWithManyChannels();
-        //    //SwooshSound2->UpdateSound3D(spMummy->GetTransform(), _float3(0, 0, 0), spMummy->GetTargetPlayer()->GetTransform());
-        //}
     }
 
     // Check for death
@@ -245,6 +218,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     {
         spMummy->SetDeathState(true);
     }
+     
 
     // Handle death state
     if (spMummy->GetDeathState())

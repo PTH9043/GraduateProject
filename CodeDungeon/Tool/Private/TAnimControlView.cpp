@@ -93,7 +93,7 @@ HRESULT TAnimControlView::LoadResource()
 		}
 
 		SHPTR<UGameInstance> spGameInstance = GetGameInstance();
-		SHPTR<UAudioSystem> spAudioSystem = spGameInstance->GetAudioSystem(SOUND_GAME);
+		SHPTR<UAudioSystem> spAudioSystem = spGameInstance->GetAudioSystem(SOUND_PLAYER);
 		m_FindSoundNames.clear();
 		// 미리 넣어두기 
 		for (auto& Sound : spAudioSystem->GetSoundOrders())
@@ -807,7 +807,7 @@ void TAnimControlView::AnimSoundShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFl
 		// Find Sounds 
 		{
 			SHPTR<UGameInstance> spGameInstance = GetGameInstance();
-			SHPTR<UAudioSystem> spAudioSystem = spGameInstance->GetAudioSystem(SOUND_GAME);
+			SHPTR<UAudioSystem> spAudioSystem = spGameInstance->GetAudioSystem(SOUND_PLAYER);
 
 			if (true == ImGui::InputText("FindSName", &InputSoundName[0], MAX_BUFFER_LENGTH))
 			{
