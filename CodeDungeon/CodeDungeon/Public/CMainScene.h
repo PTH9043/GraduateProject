@@ -246,6 +246,7 @@ private:
 	_bool EnterGameModeSound= false;
 	_bool EnterAbilitySound= false;
 	_bool ExitAbilitySound= false;
+	_bool EnterMinoSound= false;
 
 
 

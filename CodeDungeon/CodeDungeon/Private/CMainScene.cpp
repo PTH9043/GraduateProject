@@ -2235,12 +2235,20 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 			m_spBossHpBarFrameUI->SetActive(false);
 		}
 		if (!m_spWarriorPlayer->GetDeathState() && m_bIsFoundPlayer_Minotaur&&!m_bIsDead_Minotaur) {
-			
+			if (!EnterMinoSound) {
+				pGameInstance->SoundPlay(L"MinoBackground");
+				pGameInstance->SetLooping(L"MinoBackground", true);
+				EnterMinoSound = true;
+			}			
 			m_spMinotaurHpFont->SetRender(true);
 			m_spMinotaurFrameUI->SetActive(true);
 				m_spMinotaurHpBarUI->SetActive(true);
+
 		}
 		else {
+			pGameInstance->StopSound(L"MinoBackground");
+			pGameInstance->SetLooping(L"MinoBackground", false);
+			EnterMinoSound = false;
 			m_spMinotaurHpFont->SetRender(false);
 			m_spMinotaurFrameUI->SetActive(false);
 			m_spMinotaurHpBarUI->SetActive(false);
