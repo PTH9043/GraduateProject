@@ -92,6 +92,8 @@ public: /* Get Set */
 	CSHPTRREF<UCell> GetSpawnPointCamera() { return m_spSpawnPointForCamera; }
 	void SetSpawnPointCamera(SHPTR<UCell> _newSpawnPoint) { m_spSpawnPointForCamera = _newSpawnPoint; }
 	
+	void SetIfStartedGame(_bool is) { m_bStartedGame = is; }
+	_bool GetIfStartedGame() { return m_bStartedGame; }
 
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
@@ -165,6 +167,8 @@ private:
 	SHPTR<UCell>			m_spSpawnPoint;
 	SHPTR<UCell>			m_spSpawnPointForCamera;
 	_float3					m_f3SpawnPoint;
+
+	_bool m_bStartedGame = false;
 
 	//===========SOUND BOOL=================
 

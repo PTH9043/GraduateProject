@@ -1771,6 +1771,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 		
 		spGameInstance->SoundPlayBGM(L"BGM2");
 		spGameInstance->PauseGame();
+		m_spWarriorPlayer->SetIfStartedGame(false);
 		m_bStartGameDefault = false;
 	}
 	
@@ -1847,13 +1848,14 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 
 	}
 
-	if (m_fStartSceneLoadingTimer > 1.f) {
+	if (m_fStartSceneLoadingTimer > 10.f) {
 		//GameStart 시
 		spGameInstance->StopSound(L"BGM3");
 		if (!EnterGameModeSound) {
 			spGameInstance->SoundPlayOnce(L"FinishLoading");
 			EnterGameModeSound = true;
 		}	
+		m_spWarriorPlayer->SetIfStartedGame(true);
 		spGameInstance->ResumeGame();
 		spGameInstance->SetGameStartEffect();
 		m_spBackgroundUI->SetActive(false);
@@ -2282,7 +2284,10 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 	{  // If Use R Ability
 		if (pGameInstance->GetDIKeyDown(DIK_R) && m_bStartGameForUI && !pGameInstance->GetIfAbilityIsOn()&& r_AbilityisAvailable)
 		{
-			
+			if (!EnterAbilitySound) {
+				pGameInstance->SoundPlayOnce(L"Abilitysound");
+				EnterAbilitySound = true;
+			}
 			pGameInstance->TurnOnAbilityEffect();
 			r_AbilityCoolTime = R_SKILL;
 			r_AbilityDurationTime = 5.f;
@@ -2291,10 +2296,16 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 			r_AbilityisAvailable = false;
 			r_AbilityDurationTime -= _dTimeDelta;
 			if (r_AbilityDurationTime <= 0) {
+				if(!ExitAbilitySound) {
+					pGameInstance->SoundPlayOnce(L"ability");
+					ExitAbilitySound = true;
+				}
 				r_AbilityCoolTime -= _dTimeDelta;
 			}
 			 
 		}else {
+			EnterAbilitySound = false;
+			ExitAbilitySound = false;
 			r_AbilityisAvailable = true;
 		}
 		{ //SKILL COOLTIME

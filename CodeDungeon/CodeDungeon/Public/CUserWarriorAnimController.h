@@ -36,6 +36,7 @@ public:
 	_float GetShortAttackCoolTime() {return ShortAttackCoolTime;}
 	_bool GetBlindEffectBool() { return BlindEffectOn; }
 	const _bool& GetDieEffectBool() { return m_bDieEffectTurnedOn; }
+
 private:
 	WKPTR< CWarriorPlayer>			m_wpWarriorPlayer;
 	_int													m_iWComboStack;
@@ -58,8 +59,11 @@ private:
 	_float HitStack = 0;
 	_bool BlindEffectOn = false;
 
+	_bool ifStartedGame = false;
+
 	//=====================SOUND BOOL================
 	_bool m_bReviveSoundPlay = false;
+	_bool m_bDieSoundPlay = false;
 
 };
 
