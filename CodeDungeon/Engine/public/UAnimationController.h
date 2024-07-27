@@ -50,7 +50,7 @@ public: /* get set*/
 protected:
 	SHPTR<UCharacter> GetOwnerCharacter() { return m_wpOwnerCharacter.lock(); }
 protected: /* get set  */
-	void UpdateState(CSHPTRREF<UAnimModel> _spAnimModel, const _int _iAnimState, const _wstring& _wstrTrigger);
+	void UpdateState(CSHPTRREF<UAnimModel> _spAnimModel, const _int _iAnimState, const _wstring& _wstrTrigger);	
 private:
 	_int										m_iAnimState;
 	_wstring									m_wstrTrigger;

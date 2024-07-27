@@ -54,6 +54,13 @@ HRESULT TProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance,
 		CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\Fog", true));
 
 	//_spGameInstance->CreateAudioSystemAndRegister(SOUNDTYPE::SOUND_BACKGROUND, L"..\\..\\Resource\\Sound\\BackgroundSound");
+	_spGameInstance->CreateAudioSystemAndRegister(SOUNDTYPE::SOUND_BACKGROUND, L"..\\..\\Resource\\Sound\\BackgroundSound");
 	_spGameInstance->CreateAudioSystemAndRegister(SOUNDTYPE::SOUND_GAME, L"..\\..\\Resource\\Sound\\InGameSound");
+	_spGameInstance->CreateAudioSystemAndRegister(SOUNDTYPE::SOUND_MUMMY, L"..\\..\\Resource\\Sound\\Mummy");
+	_spGameInstance->CreateAudioSystemAndRegister(SOUNDTYPE::SOUND_PLAYER, L"..\\..\\Resource\\Sound\\Player");
+	_spGameInstance->CreateAudioSystemAndRegister(SOUNDTYPE::SOUND_HARLEQUINN, L"..\\..\\Resource\\Sound\\Harle");
+	_spGameInstance->CreateAudioSystemAndRegister(SOUNDTYPE::SOUND_ANUBIS, L"..\\..\\Resource\\Sound\\Anubis");
+	_spGameInstance->CreateAudioSystemAndRegister(SOUNDTYPE::SOUND_MINOTAUR, L"..\\..\\Resource\\Sound\\Miono");
+	_spGameInstance->CreateAudioSystemAndRegister(SOUNDTYPE::SOUND_MIMIC, L"..\\..\\Resource\\Sound\\mimic");
 	return S_OK;
 }

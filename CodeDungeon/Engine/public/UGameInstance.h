@@ -288,6 +288,8 @@ public: /* AudioSystemManager*/
 	void ChangeMinMaxDistance3D(const _wstring& _wstrSoundName, const _float _fMinDistance, const _float _fMaxDistance);
 	SHPTR<USound> BringSound(const _int _Index);
 	SHPTR<USound> BringSound(const _wstring& _wstrSoundName);
+	void HandleSounds3DForAnimation(CSHPTRREF<UCharacter> _Owner, CSHPTRREF<UCharacter> _target, const _wstring& animName, const _wstring& SoundName, _float startThreshold, _float endThreshold);
+	void HandleSoundsForAnimation(CSHPTRREF<UCharacter> _Owner, const _wstring& animName, const _wstring& SoundName, _float startThreshold, _float endThreshold);
 public: /* NetworkManager */
 	void StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController, CSHPTRREF<UNetworkQueryProcessing> _spNetworkQueryProcessing);
 	void MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer);

@@ -3,6 +3,9 @@
 #include "UGameInstance.h"
 #include "UAudioSystem.h"
 #include "UTransform.h"
+#include "UCharacter.h"
+#include "UAnimModel.h"
+#include "UAnimation.h"
 
 UAudioSystemManager::UAudioSystemManager() : m_AudioSystemContainer{}, m_pSystem { nullptr }
 {
@@ -304,7 +307,11 @@ SHPTR<USound> UAudioSystemManager::BringSound(const _int _Index)
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
+		{
 			spSound = iter->BringSound(_Index);
+			if (nullptr != spSound)
+				return spSound;
+		}
 	}
 	return spSound;
 }
@@ -315,7 +322,11 @@ SHPTR<USound> UAudioSystemManager::BringSound(const _wstring& _wstrSoundName)
 	for (auto& iter : m_AudioSystemContainer)
 	{
 		if (nullptr != iter)
+		{
 			spSound = iter->BringSound(_wstrSoundName);
+			if (nullptr != spSound)
+				return spSound;
+		}
 	}
 	return spSound;
 }
@@ -332,5 +343,48 @@ void UAudioSystemManager::Free()
 
 	if (m_pSystem) {
 		m_pSystem->release();
+	}
+}
+
+void UAudioSystemManager::HandleSounds3DForAnimation(CSHPTRREF<UCharacter> _Owner, CSHPTRREF<UCharacter> _target, const _wstring& animName, const _wstring& SoundName, _float startThreshold, _float endThreshold)
+{
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	const _wstring& CurAnimName = _Owner->GetAnimModel()->GetCurrentAnimation()->GetAnimName();
+
+	if (CurAnimName == animName)
+	{
+		USound* Sound = spGameInstance->BringSound(SoundName).get();
+		_float progressRate = _Owner->GetAnimModel()->GetCurrentAnimation()->GetAnimationProgressRate();
+
+		if (progressRate >= endThreshold)
+		{
+			Sound->Stop();
+		}
+		else if (progressRate >= startThreshold && progressRate < (startThreshold + 0.01))
+		{
+			Sound->Play();
+			Sound->UpdateSound3D(_Owner->GetTransform(), _float3(0, 0, 0), _target->GetTransform());
+		}
+	}
+}
+
+void UAudioSystemManager::HandleSoundsForAnimation(CSHPTRREF<UCharacter> _Owner, const _wstring& animName, const _wstring& SoundName, _float startThreshold, _float endThreshold)
+{
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	const _wstring& CurAnimName = _Owner->GetAnimModel()->GetCurrentAnimation()->GetAnimName();
+
+	if (CurAnimName == animName)
+	{
+		USound* Sound = spGameInstance->BringSound(SoundName).get();
+		_float progressRate = _Owner->GetAnimModel()->GetCurrentAnimation()->GetAnimationProgressRate();
+
+		if (progressRate >= endThreshold)
+		{
+			Sound->Stop();
+		}
+		else if (progressRate >= startThreshold && progressRate < (startThreshold + 0.01))
+		{
+			Sound->Play();
+		}
 	}
 }
