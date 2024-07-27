@@ -244,6 +244,11 @@ private:
 	//======================SOUND BOOL-=====================
 	_bool EnterGameModeBGM = false;
 	_bool EnterGameModeSound= false;
+	_bool EnterAbilitySound= false;
+	_bool ExitAbilitySound= false;
+	_bool EnterMinoSound= false;
+	_bool EnterQuinnSound= false;
+	_bool EnterAnubisSound= false;
 
 
 
