@@ -321,8 +321,11 @@ void CMimic::TickActive(const _double& _dTimeDelta)
 			_double DeathAnimSpeed = 20;
 			SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
 			_double DeathTimeArcOpenEnd = 50;
-			if (GetElapsedTime() < DeathTimeArcOpenEnd)
+			if (GetElapsedTime() < DeathTimeArcOpenEnd) {
 				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
+				GetAnimModel()->UpdateDissolveTImer(_dTimeDelta * 1.2f);
+			}
+				
 		}
 		else
 		{
