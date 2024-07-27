@@ -1061,6 +1061,16 @@ SHPTR<USound> UGameInstance::BringSound(const _wstring& _wstrSoundName)
 	return m_spAudioSystemManager->BringSound(_wstrSoundName);
 }
 
+
+void UGameInstance::HandleSoundsForAnimation(CSHPTRREF<UCharacter> _Owner, const _wstring& animName, const _wstring& SoundName, _float startThreshold, _float endThreshold)
+{
+	m_spAudioSystemManager->HandleSoundsForAnimation(_Owner, animName, SoundName, startThreshold, endThreshold);
+}
+
+void UGameInstance::HandleSoundsForAnimationWithManyChannels(CSHPTRREF<UCharacter> _Owner, const _wstring& animName, const _wstring& SoundName, _float startThreshold, _float endThreshold)
+{
+	m_spAudioSystemManager->HandleSoundsForAnimationWithManyChannels(_Owner, animName, SoundName, startThreshold, endThreshold);
+}
 /*
 ==================================================
 AudioSystemManager
