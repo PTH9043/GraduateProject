@@ -5,7 +5,6 @@
 #define _SILENCE_ALL_CXX23_DEPRECATION_WARNINGS
 
 #include "EngineDefine.h"
-//#include "ProtocolBuffer.h"
 
 #ifdef _DEBUG
 #pragma comment(lib, "EngineD.lib")
