@@ -33,13 +33,17 @@ public:
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _Datas) override;
 
 	void Tick();
+	void TickWithManyChannels();
 	_bool Play(const _wstring& _wstrSoundName);
+	_bool PlayWithManyChannels(const _wstring& _wstrSoundName);
 	_bool Play(const _wstring& _wstrSoundName, const _float _fVolumeUpdate);
 	_bool PlayOnce(const _wstring& _wstrSoundName);
+	_bool PlayOnceWithManyChannels(const _wstring& _wstrSoundName);
 	_bool PlayBGM(const _wstring& _wstrSoundName);
 	_bool StopBGM(const _wstring& _wstrSoundName);
 	_bool PlayBGM(const _wstring& _wstrSoundName, const _float  _fVolumeUpdate);
 	_bool Stop(const _wstring& _wstrSoundName);
+	_bool StopWithManyChannels(const _wstring& _wstrSoundName);
 	_bool VolumeUpdate(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
 	_bool BGMVolumeUpdate(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
 	_bool Restart(const _wstring& _wstrSoundName);

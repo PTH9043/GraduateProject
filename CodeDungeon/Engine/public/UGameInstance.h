@@ -260,12 +260,15 @@ public: /* AudioSystemManager*/
 	HRESULT CreateAudioSystemAndRegister(SOUNDTYPE _SoundType, CSHPTRREF<FILEGROUP> _spSoundFileGroup);
 	HRESULT CreateAudioSystemToFolderNameAndRegister(SOUNDTYPE _SoundType, const _wstring& _wstrSoundFolderName);
 	void SoundPlay(const _wstring& _wstrSoundName);
+	void SoundPlayWithManyChannels(const _wstring& _wstrSoundName);
 	void SoundPlay(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
 	void SoundPlayOnce(const _wstring& _wstrSoundName);
+	void SoundPlayOnceWithManyChannels(const _wstring& _wstrSoundName);
 	void SoundPlayBGM(const _wstring& _wstrSoundName);
 	void SoundStopBGM(const _wstring& _wstrSoundName);
 	void SoundPlayBGM(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
 	void StopSound(const _wstring& _wstrSoundName);
+	void StopSoundWithManyChannels(const _wstring& _wstrSoundName);
 	void SoundDisableOncePlay(const _wstring& _wstrSoundName);
 	void Restart(const _wstring& _wstrSoundName);
 	void SoundRestartOnce(const _wstring& _wstrSoundName);

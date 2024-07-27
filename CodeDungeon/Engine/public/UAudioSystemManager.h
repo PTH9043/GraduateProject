@@ -34,12 +34,15 @@ public:
 	HRESULT CreateAudioSystemToFolderNameAndRegister(UGameInstance* _pGameInstance, SOUNDTYPE _SoundType, const _wstring& _wstrSoundFolderName);
 
 	void Play(const _wstring& _wstrSoundName);
+	void PlayWithManyChannels(const _wstring& _wstrSoundName);
 	void Play(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
 	void PlayOnce(const _wstring& _wstrSoundName);
+	void PlayOnceWithManyChannels(const _wstring& _wstrSoundName);
 	void PlayBGM(const _wstring& _wstrSoundName);
 	void StopBGM(const _wstring& _wstrSoundName);
 	void PlayBGM(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
 	void Stop(const _wstring& _wstrSoundName);
+	void StopWithManyChannels(const _wstring& _wstrSoundName);
 	void VolumeUpdate(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
 	void DisableOncePlay(const _wstring& _wstrSoundName);
 	void Restart(const _wstring& _wstrSoundName);

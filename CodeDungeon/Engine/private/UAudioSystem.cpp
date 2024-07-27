@@ -63,11 +63,26 @@ void UAudioSystem::Tick()
 }
 
 	}
+void UAudioSystem::TickWithManyChannels()
+{
+	for (auto& iter : m_SoundContainer)
+	{
+		iter->TickWithManyChannels();
+	}
+}
 _bool UAudioSystem::Play(const _wstring& _wstrSoundName)
 {
 	m_spSound = BringSound(_wstrSoundName);
 	RETURN_CHECK(nullptr == m_spSound, false);
 	m_spSound->Play();
+	return true;
+}
+
+_bool UAudioSystem::PlayWithManyChannels(const _wstring& _wstrSoundName)
+{
+	m_spSound = BringSound(_wstrSoundName);
+	RETURN_CHECK(nullptr == m_spSound, false);
+	m_spSound->PlayWithManyChannels();
 	return true;
 }
 
@@ -85,6 +100,14 @@ _bool UAudioSystem::PlayOnce(const _wstring& _wstrSoundName)
 	m_spSound = BringSound(_wstrSoundName);
 	RETURN_CHECK(nullptr == m_spSound, false);
 	m_spSound->PlayOnce();
+	return true;
+}
+
+_bool UAudioSystem::PlayOnceWithManyChannels(const _wstring& _wstrSoundName)
+{
+	m_spSound = BringSound(_wstrSoundName);
+	RETURN_CHECK(nullptr == m_spSound, false);
+	m_spSound->PlayOnceWithManyChannels();
 	return true;
 }
 
@@ -118,6 +141,14 @@ _bool UAudioSystem::Stop(const _wstring& _wstrSoundName)
 	m_spSound = BringSound(_wstrSoundName);
 	RETURN_CHECK(nullptr == m_spSound, false);
 	m_spSound->Stop();
+	return true;
+}
+
+_bool UAudioSystem::StopWithManyChannels(const _wstring& _wstrSoundName)
+{
+	m_spSound = BringSound(_wstrSoundName);
+	RETURN_CHECK(nullptr == m_spSound, false);
+	m_spSound->StopWithManyChannels();
 	return true;
 }
 

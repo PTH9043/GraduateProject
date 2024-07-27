@@ -70,6 +70,18 @@ void UAudioSystemManager::Play(const _wstring& _wstrSoundName)
 	}
 }
 
+void UAudioSystemManager::PlayWithManyChannels(const _wstring& _wstrSoundName)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+		{
+			if (true == iter->PlayWithManyChannels(_wstrSoundName))
+				return;
+		}
+	}
+}
+
 void UAudioSystemManager::Play(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate)
 {
 	for (auto& iter : m_AudioSystemContainer)
@@ -92,6 +104,19 @@ void UAudioSystemManager::PlayOnce(const _wstring& _wstrSoundName)
 				return;
 		}
 	}
+}
+
+void UAudioSystemManager::PlayOnceWithManyChannels(const _wstring& _wstrSoundName)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+		{
+			if (true == iter->PlayOnceWithManyChannels(_wstrSoundName))
+				return;
+		}
+	}
+
 }
 
 void UAudioSystemManager::PlayBGM(const _wstring& _wstrSoundName)
@@ -131,6 +156,18 @@ void UAudioSystemManager::PlayBGM(const _wstring& _wstrSoundName, const _float& 
 }
 
 void UAudioSystemManager::Stop(const _wstring& _wstrSoundName)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+		{
+			if (true == iter->Stop(_wstrSoundName))
+				return;
+		}
+	}
+}
+
+void UAudioSystemManager::StopWithManyChannels(const _wstring& _wstrSoundName)
 {
 	for (auto& iter : m_AudioSystemContainer)
 	{

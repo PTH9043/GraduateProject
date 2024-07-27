@@ -24,12 +24,35 @@ void USound::Tick()
 	}
 }
 
+void USound::TickWithManyChannels()
+{
+	for (auto it = m_Channels.begin(); it != m_Channels.end(); ) {
+		bool isPlaying = false;
+		(*it)->isPlaying(&isPlaying);
+		if (!isPlaying) {
+			it = m_Channels.erase(it);
+		}
+		else {
+			++it;
+		}
+	}
+}
+
 void USound::Play()
 {
 	Stop();
 	m_pSystem->playSound(m_pSound, nullptr, false, &m_pChannel);
 	m_pChannel->setVolume(m_SoundDesc.fVolume);
 }
+
+void USound::PlayWithManyChannels()
+{
+	FMOD::Channel* channel = nullptr;
+	m_pSystem->playSound(m_pSound, nullptr, false, &channel);
+	m_Channels.push_back(channel);
+}
+
+
 
 void USound::PlayBGM(IN FMOD::Channel** _ppChannel)
 {
@@ -44,6 +67,15 @@ void USound::PlayOnce()
 {
 	Tick();
 	if (false == IsSoundPlay() || false == m_isOncePlay) {
+		Play();
+		m_isOncePlay = true;
+	}
+}
+
+void USound::PlayOnceWithManyChannels()
+{
+	TickWithManyChannels();
+	if (!m_isOncePlay) {
 		Play();
 		m_isOncePlay = true;
 	}
@@ -78,6 +110,16 @@ void USound::Stop()
 	RETURN_CHECK(nullptr == m_pChannel, ;);
 	m_pChannel->stop();
 	m_pChannel = nullptr;
+}
+
+void USound::StopWithManyChannels() {
+	for (auto& channel : m_Channels) {
+		if (channel) {
+			channel->stop();
+		}
+	}
+	m_Channels.clear();
+	m_isOncePlay = false;
 }
 
 void USound::StopBGM(IN FMOD::Channel** _ppChannel)

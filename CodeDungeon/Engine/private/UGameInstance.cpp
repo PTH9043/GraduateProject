@@ -909,6 +909,11 @@ void UGameInstance::SoundPlay(const _wstring& _wstrSoundName)
 	m_spAudioSystemManager->Play(_wstrSoundName);
 }
 
+void UGameInstance::SoundPlayWithManyChannels(const _wstring& _wstrSoundName)
+{
+	m_spAudioSystemManager->PlayWithManyChannels(_wstrSoundName);
+}
+
 void UGameInstance::SoundPlay(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate)
 {
 	m_spAudioSystemManager->Play(_wstrSoundName, _fVolumeUpdate);
@@ -922,6 +927,11 @@ void UGameInstance::SoundRestartOnce(const _wstring& _wstrSoundName)
 void UGameInstance::SoundPlayOnce(const _wstring& _wstrSoundName)
 {
 	m_spAudioSystemManager->PlayOnce(_wstrSoundName);
+}
+
+void UGameInstance::SoundPlayOnceWithManyChannels(const _wstring& _wstrSoundName)
+{
+	m_spAudioSystemManager->PlayOnceWithManyChannels(_wstrSoundName);
 }
 
 void UGameInstance::SoundPlayBGM(const _wstring& _wstrSoundName)
@@ -942,6 +952,11 @@ void UGameInstance::SoundPlayBGM(const _wstring& _wstrSoundName, const _float& _
 void UGameInstance::StopSound(const _wstring& _wstrSoundName)
 {
 	m_spAudioSystemManager->Stop(_wstrSoundName);
+}
+
+void UGameInstance::StopSoundWithManyChannels(const _wstring& _wstrSoundName)
+{
+	m_spAudioSystemManager->StopWithManyChannels(_wstrSoundName);
 }
 
 void UGameInstance::SoundDisableOncePlay(const _wstring& _wstrSoundName)
@@ -1045,17 +1060,6 @@ SHPTR<USound> UGameInstance::BringSound(const _wstring& _wstrSoundName)
 {
 	return m_spAudioSystemManager->BringSound(_wstrSoundName);
 }
-
-void UGameInstance::HandleSounds3DForAnimation(CSHPTRREF<UCharacter> _Owner, CSHPTRREF<UCharacter> _target, const _wstring& animName, const _wstring& SoundName, _float startThreshold, _float endThreshold)
-{
-	m_spAudioSystemManager->HandleSounds3DForAnimation(_Owner, _target, animName, SoundName, startThreshold, endThreshold);
-}
-
-void UGameInstance::HandleSoundsForAnimation(CSHPTRREF<UCharacter> _Owner, const _wstring& animName, const _wstring& SoundName, _float startThreshold, _float endThreshold)
-{
-	m_spAudioSystemManager->HandleSoundsForAnimation(_Owner, animName, SoundName, startThreshold, endThreshold);
-}
-
 
 /*
 ==================================================

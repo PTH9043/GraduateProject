@@ -25,10 +25,14 @@ public: /* get set */
 public:
 	virtual void Free() override;
 	void Tick();
+	void TickWithManyChannels();
 	void Play();
+	void PlayWithManyChannels();
 	void PlayBGM(IN FMOD::Channel** _ppChannel);
 	void PlayOnce();
+	void PlayOnceWithManyChannels();
 	void Stop();
+	void StopWithManyChannels();
 	void StopBGM(IN FMOD::Channel** _ppChannel);
 	void Restart();
 	void RestartOnce();
@@ -65,7 +69,7 @@ private:
 	FMOD::System*	m_pSystem;
 	FMOD::Sound*		m_pSound;
 	FMOD::Channel*  m_pChannel;
-
+	std::vector<FMOD::Channel*> m_Channels;
 	_bool						m_isOncePlay;
 };
 
