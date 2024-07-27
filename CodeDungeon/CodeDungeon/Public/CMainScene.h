@@ -247,6 +247,8 @@ private:
 	_bool EnterAbilitySound= false;
 	_bool ExitAbilitySound= false;
 	_bool EnterMinoSound= false;
+	_bool EnterQuinnSound= false;
+	_bool EnterAnubisSound= false;
 
 
 

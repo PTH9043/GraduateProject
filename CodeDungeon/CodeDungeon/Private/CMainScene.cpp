@@ -83,21 +83,38 @@ void CMainScene::UpdateMobsStatus()
 						m_iMinotaurCurHP = mobs->GetHealth();
 						m_iMinotaurMaxHP = mobs->GetMaxHealth();
 						
-						m_bIsFoundPlayer_Minotaur = mobs->GetFoundTargetState();
+					
+						if (m_spWarriorPlayer->GetDeathState()) {
+							m_bIsFoundPlayer_Minotaur = false;
+						}
+						else {
+							m_bIsFoundPlayer_Minotaur = mobs->GetFoundTargetState();
+						}
+							
 					}
 					if (mobs->GetAnimModel()->GetModelName() == L"Harlequin1_FBX.bin")
 					{
 						m_iHarlequinnCurHP = mobs->GetHealth();
 						m_iHarlequinnMaxHP = mobs->GetMaxHealth();
+						if (m_spWarriorPlayer->GetDeathState()) {
+							m_bisFoundPlayer_Harlequinn = false;
+						}
+						else {
+							m_bisFoundPlayer_Harlequinn = mobs->GetFoundTargetState();
+						}
 						
-						m_bisFoundPlayer_Harlequinn = mobs->GetFoundTargetState();
 					}
 					if (mobs->GetAnimModel()->GetModelName() == L"Anubis_FBX.bin")
 					{
 						m_iAnubisCurHP = mobs->GetHealth();
 						m_iAnubisMaxHP = mobs->GetMaxHealth();
+						if (m_spWarriorPlayer->GetDeathState()) {
+							m_bisFoundPlayer_Anubis = false;
+						}
+						else {
+							m_bisFoundPlayer_Anubis = mobs->GetFoundTargetState();
+						}
 						
-						m_bisFoundPlayer_Anubis = mobs->GetFoundTargetState();
 					}
 				}			
 			}
@@ -2254,21 +2271,37 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 			m_spMinotaurHpBarUI->SetActive(false);
 		}
 		if (!m_spWarriorPlayer->GetDeathState() && m_bisFoundPlayer_Harlequinn&&!m_bisDead_Harlequinn) {
+			if (!EnterQuinnSound) {
+				pGameInstance->SoundPlay(L"QuinnEnterBackground");
+				pGameInstance->SetLooping(L"QuinnEnterBackground", true);
+				EnterQuinnSound = true;
+			}
 			m_spHarlequinnHpFont->SetRender(true);
 			m_spHarlequinnFrameUI->SetActive(true);
 			m_spHarlequinnHpBarUI->SetActive(true);
 		}
 		else {
+			pGameInstance->StopSound(L"QuinnEnterBackground");
+			pGameInstance->SetLooping(L"QuinnEnterBackground", false);
+			EnterQuinnSound = false;
 			m_spHarlequinnHpFont->SetRender(false);
 			m_spHarlequinnFrameUI->SetActive(false);
 			m_spHarlequinnHpBarUI->SetActive(false);
 		}
 		if (!m_spWarriorPlayer->GetDeathState() && m_bisFoundPlayer_Anubis&&!m_bisDead_Anubis) {
+			if (!EnterAnubisSound) {
+				pGameInstance->SoundPlay(L"AnubisEnterBackground");
+				pGameInstance->SetLooping(L"AnubisEnterBackground", true);
+				EnterAnubisSound = true;
+			}
 			m_spAnubisHpFont->SetRender(true);
 			m_spAnubisFrameUI->SetActive(true);
 			m_spAnubisHpBarUI->SetActive(true);
 		}
 		else {
+			pGameInstance->StopSound(L"AnubisEnterBackground");
+			pGameInstance->SetLooping(L"AnubisEnterBackground", false);
+			EnterAnubisSound = false;
 			m_spAnubisHpFont->SetRender(false);
 			m_spAnubisFrameUI->SetActive(false);
 			m_spAnubisHpBarUI->SetActive(false);
