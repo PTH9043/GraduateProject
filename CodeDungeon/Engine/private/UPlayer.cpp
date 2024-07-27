@@ -79,6 +79,7 @@ void UPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 
 void UPlayer::FollowCameraMove(const _float3& _vPlayerToDistancePosition, const _double& _TimeElapsed)
 {
+	RETURN_CHECK(true == IsNetworkConnected(), ;);
 	RETURN_CHECK(nullptr == m_spFollowCamera, ;);
     // 카메라의 목표 위치를 계산.
     _float3 vTargetPosition = DirectX::XMVector3Transform(_vPlayerToDistancePosition, GetTransform()->GetWorldMatrix());

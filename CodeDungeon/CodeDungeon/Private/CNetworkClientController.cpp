@@ -61,6 +61,7 @@ void CNetworkClientController::MakeActors(const VECTOR<SHPTR<UActor>>& _actorCon
 
 				spGameInstance->AddCollisionPawnList(spWarriorPlayer);
 				AddCreatedNetworkActor(CharInitData.first, spWarriorPlayer);
+				spGameInstance->AddPlayerInContainer(spWarriorPlayer);
 			}
 		}
 		break;

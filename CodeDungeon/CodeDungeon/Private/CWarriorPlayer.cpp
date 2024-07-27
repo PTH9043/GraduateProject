@@ -76,19 +76,24 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-	//int cellIndex = 349;
-	int cellIndex = 0;
+	int cellIndex = 349;
+	//int cellIndex = 0;
 	SHPTR<UCell> spCell = spNavigation->FindCell(cellIndex);
 	GetTransform()->SetPos(spCell->GetCenterPos());
 	SetSpawnPoint(spCell);
 	SetSpawnPoint(spCell->GetCenterPos());
-	SetSpawnPointCamera(static_pointer_cast<CMainCamera>(GetFollowCamera())->GetCurrentNavi()->FindCell(GetTransform()->GetPos()));
 
-	SHPTR<CMainCamera> spMainCamera = std::static_pointer_cast<CMainCamera>(GetFollowCamera());
-	if (nullptr != spMainCamera)
+	if (false == IsNetworkConnected())
 	{
-		spMainCamera->SetMoveState(false);
+		SetSpawnPointCamera(static_pointer_cast<CMainCamera>(GetFollowCamera())->GetCurrentNavi()->FindCell(GetTransform()->GetPos()));
+
+		SHPTR<CMainCamera> spMainCamera = std::static_pointer_cast<CMainCamera>(GetFollowCamera());
+		if (nullptr != spMainCamera)
+		{
+			spMainCamera->SetMoveState(false);
+		}
 	}
+
 	GetAnimModel()->SetAnimation(L"idle01");
 	GetTransform()->SetScale({ 0.5f, 0.5f, 0.5f });
 	SetMovingSpeed(50.f);
@@ -178,17 +183,9 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 		tDesc.iMaxVertexCount = 100;
 		m_spTrail = std::static_pointer_cast<UTrail>(spGameInstance->CloneActorAdd(PROTO_ACTOR_TRAIL, { &tDesc }));
 		m_spTrail->SetActive(true);
-
 		m_spTrail->SetColorTexture(L"elec");
 		m_spTrail->SetTrailShapeTexture(L"Noise_Bee");
 		m_spTrail->SetTrailNoiseTexture(L"GlowDiffuse");	
-
-		
-
-		
-
-	
-
 	}
 	{
 		m_spBlood = std::static_pointer_cast<UBlood>(spGameInstance->CloneActorAdd(PROTO_ACTOR_BLOOD));
@@ -407,11 +404,12 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 
 void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 {
-	__super::LateTickActive(_dTimeDelta);
-	_float3 direction(0.0f, 0.0f, 0.0f);
-
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
+	RETURN_CHECK(true == IsNetworkConnected(), ;);
+
+	__super::LateTickActive(_dTimeDelta);
+	_float3 direction(0.0f, 0.0f, 0.0f);
 
 	FollowCameraMove(_float3{ 0.f, 20.f, -40.f }, _dTimeDelta);
 	_float3 vCamPosition{ GetFollowCamera()->GetTransform()->GetPos() };
@@ -980,6 +978,8 @@ void CWarriorPlayer::SendCollisionData(UPawn* _pPawn)
 
 void CWarriorPlayer::TranslateStateMoveAndRunF(CSHPTRREF<UGameInstance> _spGameInstance, const _double& _dTimeDelta, const _float _fSpeed)
 {
+	RETURN_CHECK(true == IsNetworkConnected(), ;);
+
 	if (_spGameInstance->GetDIKeyPressing(DIK_W))
 	{
 		GetTransform()->MoveForward(_dTimeDelta, _fSpeed);
@@ -988,30 +988,35 @@ void CWarriorPlayer::TranslateStateMoveAndRunF(CSHPTRREF<UGameInstance> _spGameI
 
 _float CWarriorPlayer::GetUltAttackOneCoolTime()
 {
+	RETURN_CHECK(true == IsNetworkConnected(), 0.f);
 	SHPTR<CUserWarriorAnimController> spController = static_pointer_cast<CUserWarriorAnimController>(GetAnimationController());
 	return spController->GetUltAttackOneCoolTime();
 }
 
 _float CWarriorPlayer::GetUltAttackTwoCoolTime()
 {
+	RETURN_CHECK(true == IsNetworkConnected(), 0.f);
 	SHPTR<CUserWarriorAnimController> spController = static_pointer_cast<CUserWarriorAnimController>(GetAnimationController());
 	return spController->GetUltAttackTwoCoolTime();
 }
 
 _float CWarriorPlayer::GetShortAttackCoolTime()
 {
+	RETURN_CHECK(true == IsNetworkConnected(), 0.f);
 	SHPTR<CUserWarriorAnimController> spController = static_pointer_cast<CUserWarriorAnimController>(GetAnimationController());
 	return spController->GetShortAttackCoolTime();
 }
 
 _bool CWarriorPlayer::GetBlindEffectBool()
 {
+	RETURN_CHECK(true == IsNetworkConnected(), false);
 	SHPTR<CUserWarriorAnimController> spController = static_pointer_cast<CUserWarriorAnimController>(GetAnimationController());
 	return spController->GetBlindEffectBool();
 }
 
 _bool CWarriorPlayer::GetDieEffectBool()
 {
+	RETURN_CHECK(true == IsNetworkConnected(), false);
 	SHPTR<CUserWarriorAnimController> spController = static_pointer_cast<CUserWarriorAnimController>(GetAnimationController());
 	return spController->GetDieEffectBool();
 }

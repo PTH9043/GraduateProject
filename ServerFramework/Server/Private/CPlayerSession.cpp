@@ -11,7 +11,7 @@
 namespace Server {
 
 	CPlayerSession::CPlayerSession(SESSION_CONSTRUCTOR)
-		: Core::ASession(SESSION_CONDATA(Core::SESSIONTYPE::PLAYER)), m_iStartCellIndex{ 0 }
+		: Core::ASession(SESSION_CONDATA(Core::SESSIONTYPE::PLAYER)), m_iStartCellIndex{ 349 }
 	{
 	}
 

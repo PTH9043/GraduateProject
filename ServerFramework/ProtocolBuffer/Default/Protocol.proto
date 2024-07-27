@@ -48,19 +48,22 @@ message CHARSTATE
 
 message MOBSTATE
 {
-	int64	id = 1;
+	int64		id = 1;
 	// Move
-	float	posX = 2;
-	float	posY = 3;
-	float	posZ = 4;
+	float		posX = 2;
+	float		posY = 3;
+	float		posZ = 4;
 	// Rotate
-	float	rotateX = 5;
-	float	rotateY = 6;
-	float	rotateZ = 7;
-	int64	animationIndex = 8;
-	int64  state = 9;
-	int64	triggerOn = 10;
-	int64  outlineOn = 11;
+	float		rotateX = 5;
+	float		rotateY = 6;
+	float		rotateZ = 7;
+	int64		animationIndex = 8;
+	int64		state = 9;
+	bool		triggerOn = 10;
+	bool		outlineOn = 11;
+	bool		footprintOn = 12;
+	bool		ramins = 13;
+	double	animtime = 14;
 }
 
 message COLLISIONDATA
@@ -68,6 +71,7 @@ message COLLISIONDATA
 	int64 id = 1;
 	int64 enemyID = 2;
 }
+
 
 /*
 ======================================
@@ -142,4 +146,3 @@ message CS_DISCONNECT
 {
 	int64 id = 1;
 }
-

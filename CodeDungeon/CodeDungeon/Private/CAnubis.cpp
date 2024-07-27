@@ -238,7 +238,6 @@ void CAnubis::CreateParticles()
 	}
 }
 
-
 HRESULT CAnubis::NativeConstructClone(const VOIDDATAS& _Datas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);
@@ -450,7 +449,6 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 
 	}
 
-
 	for (auto& iter : GetColliderContainer())
 	{
 		if (iter.first == L"Main")
@@ -462,25 +460,20 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 			iter.second->SetTransform(GetTransform()->GetPos(), m_spFireCircle->GetTransform()->GetQuaternion());
 			iter.second->SetScale(_float3(m_spFireCircle->GetTransform()->GetScale().x - 7, 0.3, m_spFireCircle->GetTransform()->GetScale().y - 7));
 		}
-
 	}
-
 	SetOutlineByAbility(true);
 	SetOutlineColor(_float3(0,1,0));
 }
 
 void CAnubis::LateTickActive(const _double& _dTimeDelta)
 {
+	if (true == IsSendDataToBehavior())
+	{
+		_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
+		GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
+	}
+
 	__super::LateTickActive(_dTimeDelta);
-
-	_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
-	GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
-
-	//for (auto& Colliders : GetColliderContainer())
-	//{
-	//	if (Colliders.first == L"MagicCircle")
-	//		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
-	//}
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	_int CurAnimState = GetAnimationController()->GetAnimState();
@@ -503,13 +496,14 @@ void CAnubis::LateTickActive(const _double& _dTimeDelta)
 
 	m_spFireCircle->GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, GetTransform()->GetPos().y + 0.5, GetTransform()->GetPos().z));
 	m_spFireCircle->GetTransform()->RotateTurn(_float3(0, 1, 0), 500, _dTimeDelta);
-	
-	if(m_bisShield)
+
+
+	if (m_bisShield)
 	{
 		m_dShieldTimer += _dTimeDelta;
 		m_spMagicCircle->SetActive(true);
 		m_spMagicSphere->SetActive(true);
-		if(m_dShieldTimer <= 8)
+		if (m_dShieldTimer <= 8)
 		{
 			m_spMagicSphere->GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, GetTransform()->GetPos().y + 5, GetTransform()->GetPos().z));
 			m_spMagicCircle->GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, GetTransform()->GetPos().y + 0.5, GetTransform()->GetPos().z));

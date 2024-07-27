@@ -268,9 +268,6 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 		if (CurAnimState == UAnimationController::ANIM_MOVE)
 		{
 			AddTimeAccumulator(_dTimeDelta);
-
-			
-
 			// A* for moving towards player when player is found
 			if (GetFoundTargetState() && !GetTargetPlayer()->GetDeathState())
 			{

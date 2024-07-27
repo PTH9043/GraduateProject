@@ -142,8 +142,6 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
         }
     }
 
-
-
     // Handle hit state
     if (Hit)
     {
@@ -151,8 +149,7 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
         spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         spAnubis->SetPrevHealth(spAnubis->GetHealth());
     }
-  
-
+ 
     if (m_bAttackMode && !Hit)
     {
         UpdateState(spAnimModel, ANIM_IDLE, L"ATTACKIDLE");
@@ -209,8 +206,6 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
             spAnubis->SetShieldState(true);
         }
     }
-
-
 
     if (CurAnimName == L"Cast")
     {

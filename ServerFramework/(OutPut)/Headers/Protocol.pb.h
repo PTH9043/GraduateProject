@@ -1690,8 +1690,11 @@ class MOBSTATE final :
     kRotateZFieldNumber = 7,
     kAnimationIndexFieldNumber = 8,
     kStateFieldNumber = 9,
+    kAnimtimeFieldNumber = 14,
     kTriggerOnFieldNumber = 10,
     kOutlineOnFieldNumber = 11,
+    kFootprintOnFieldNumber = 12,
+    kRaminsFieldNumber = 13,
   };
   // int64 id = 1;
   void clear_id() ;
@@ -1783,24 +1786,54 @@ class MOBSTATE final :
   void _internal_set_state(::int64_t value);
 
   public:
-  // int64 triggerOn = 10;
-  void clear_triggeron() ;
-  ::int64_t triggeron() const;
-  void set_triggeron(::int64_t value);
+  // double animtime = 14;
+  void clear_animtime() ;
+  double animtime() const;
+  void set_animtime(double value);
 
   private:
-  ::int64_t _internal_triggeron() const;
-  void _internal_set_triggeron(::int64_t value);
+  double _internal_animtime() const;
+  void _internal_set_animtime(double value);
 
   public:
-  // int64 outlineOn = 11;
-  void clear_outlineon() ;
-  ::int64_t outlineon() const;
-  void set_outlineon(::int64_t value);
+  // bool triggerOn = 10;
+  void clear_triggeron() ;
+  bool triggeron() const;
+  void set_triggeron(bool value);
 
   private:
-  ::int64_t _internal_outlineon() const;
-  void _internal_set_outlineon(::int64_t value);
+  bool _internal_triggeron() const;
+  void _internal_set_triggeron(bool value);
+
+  public:
+  // bool outlineOn = 11;
+  void clear_outlineon() ;
+  bool outlineon() const;
+  void set_outlineon(bool value);
+
+  private:
+  bool _internal_outlineon() const;
+  void _internal_set_outlineon(bool value);
+
+  public:
+  // bool footprintOn = 12;
+  void clear_footprinton() ;
+  bool footprinton() const;
+  void set_footprinton(bool value);
+
+  private:
+  bool _internal_footprinton() const;
+  void _internal_set_footprinton(bool value);
+
+  public:
+  // bool ramins = 13;
+  void clear_ramins() ;
+  bool ramins() const;
+  void set_ramins(bool value);
+
+  private:
+  bool _internal_ramins() const;
+  void _internal_set_ramins(bool value);
 
   public:
   // @@protoc_insertion_point(class_scope:MOBSTATE)
@@ -1809,7 +1842,7 @@ class MOBSTATE final :
 
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      4, 11, 0,
+      4, 14, 0,
       0, 2>
       _table_;
   friend class ::google::protobuf::MessageLite;
@@ -1835,8 +1868,11 @@ class MOBSTATE final :
     float rotatez_;
     ::int64_t animationindex_;
     ::int64_t state_;
-    ::int64_t triggeron_;
-    ::int64_t outlineon_;
+    double animtime_;
+    bool triggeron_;
+    bool outlineon_;
+    bool footprinton_;
+    bool ramins_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -3802,50 +3838,119 @@ inline void MOBSTATE::_internal_set_state(::int64_t value) {
   _impl_.state_ = value;
 }
 
-// int64 triggerOn = 10;
+// bool triggerOn = 10;
 inline void MOBSTATE::clear_triggeron() {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.triggeron_ = ::int64_t{0};
+  _impl_.triggeron_ = false;
 }
-inline ::int64_t MOBSTATE::triggeron() const {
+inline bool MOBSTATE::triggeron() const {
   // @@protoc_insertion_point(field_get:MOBSTATE.triggerOn)
   return _internal_triggeron();
 }
-inline void MOBSTATE::set_triggeron(::int64_t value) {
+inline void MOBSTATE::set_triggeron(bool value) {
   _internal_set_triggeron(value);
   // @@protoc_insertion_point(field_set:MOBSTATE.triggerOn)
 }
-inline ::int64_t MOBSTATE::_internal_triggeron() const {
+inline bool MOBSTATE::_internal_triggeron() const {
   PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
   return _impl_.triggeron_;
 }
-inline void MOBSTATE::_internal_set_triggeron(::int64_t value) {
+inline void MOBSTATE::_internal_set_triggeron(bool value) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   ;
   _impl_.triggeron_ = value;
 }
 
-// int64 outlineOn = 11;
+// bool outlineOn = 11;
 inline void MOBSTATE::clear_outlineon() {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.outlineon_ = ::int64_t{0};
+  _impl_.outlineon_ = false;
 }
-inline ::int64_t MOBSTATE::outlineon() const {
+inline bool MOBSTATE::outlineon() const {
   // @@protoc_insertion_point(field_get:MOBSTATE.outlineOn)
   return _internal_outlineon();
 }
-inline void MOBSTATE::set_outlineon(::int64_t value) {
+inline void MOBSTATE::set_outlineon(bool value) {
   _internal_set_outlineon(value);
   // @@protoc_insertion_point(field_set:MOBSTATE.outlineOn)
 }
-inline ::int64_t MOBSTATE::_internal_outlineon() const {
+inline bool MOBSTATE::_internal_outlineon() const {
   PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
   return _impl_.outlineon_;
 }
-inline void MOBSTATE::_internal_set_outlineon(::int64_t value) {
+inline void MOBSTATE::_internal_set_outlineon(bool value) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   ;
   _impl_.outlineon_ = value;
+}
+
+// bool footprintOn = 12;
+inline void MOBSTATE::clear_footprinton() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.footprinton_ = false;
+}
+inline bool MOBSTATE::footprinton() const {
+  // @@protoc_insertion_point(field_get:MOBSTATE.footprintOn)
+  return _internal_footprinton();
+}
+inline void MOBSTATE::set_footprinton(bool value) {
+  _internal_set_footprinton(value);
+  // @@protoc_insertion_point(field_set:MOBSTATE.footprintOn)
+}
+inline bool MOBSTATE::_internal_footprinton() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.footprinton_;
+}
+inline void MOBSTATE::_internal_set_footprinton(bool value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.footprinton_ = value;
+}
+
+// bool ramins = 13;
+inline void MOBSTATE::clear_ramins() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.ramins_ = false;
+}
+inline bool MOBSTATE::ramins() const {
+  // @@protoc_insertion_point(field_get:MOBSTATE.ramins)
+  return _internal_ramins();
+}
+inline void MOBSTATE::set_ramins(bool value) {
+  _internal_set_ramins(value);
+  // @@protoc_insertion_point(field_set:MOBSTATE.ramins)
+}
+inline bool MOBSTATE::_internal_ramins() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.ramins_;
+}
+inline void MOBSTATE::_internal_set_ramins(bool value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.ramins_ = value;
+}
+
+// double animtime = 14;
+inline void MOBSTATE::clear_animtime() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.animtime_ = 0;
+}
+inline double MOBSTATE::animtime() const {
+  // @@protoc_insertion_point(field_get:MOBSTATE.animtime)
+  return _internal_animtime();
+}
+inline void MOBSTATE::set_animtime(double value) {
+  _internal_set_animtime(value);
+  // @@protoc_insertion_point(field_set:MOBSTATE.animtime)
+}
+inline double MOBSTATE::_internal_animtime() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.animtime_;
+}
+inline void MOBSTATE::_internal_set_animtime(double value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.animtime_ = value;
 }
 
 // -------------------------------------------------------------------
