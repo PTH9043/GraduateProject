@@ -156,6 +156,22 @@ void USound::StopBGM(IN FMOD::Channel** _ppChannel)
 	}
 }
 
+void USound::PauseBGM(IN FMOD::Channel** _ppChannel)
+{
+	if (_ppChannel && *_ppChannel)
+	{
+		(*_ppChannel)->setPaused(true);
+	}
+}
+
+void USound::ResumeBGM(IN FMOD::Channel** _ppChannel)
+{
+	if (_ppChannel && *_ppChannel)
+	{
+		(*_ppChannel)->setPaused(false);
+	}
+}
+
 void USound::Pause()
 {
 	RETURN_CHECK(nullptr == m_pChannel, ;);

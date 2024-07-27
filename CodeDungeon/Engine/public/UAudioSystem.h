@@ -41,6 +41,8 @@ public:
 	_bool PlayOnceWithManyChannels(const _wstring& _wstrSoundName);
 	_bool PlayBGM(const _wstring& _wstrSoundName);
 	_bool StopBGM(const _wstring& _wstrSoundName);
+	_bool PauseBGM(const _wstring& _wstrSoundName);
+	_bool ResumeBGM(const _wstring& _wstrSoundName);
 	_bool PlayBGM(const _wstring& _wstrSoundName, const _float  _fVolumeUpdate);
 	_bool Stop(const _wstring& _wstrSoundName);
 	_bool StopWithManyChannels(const _wstring& _wstrSoundName);

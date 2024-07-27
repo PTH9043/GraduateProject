@@ -229,7 +229,7 @@ HRESULT CMinotaur::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetHealth(200);
 	SetMaxHealth(200);
 	SetActivationRange(100);
-	SetDeactivationRange(160);
+	SetDeactivationRange(120);
 	SetOutline(true);
 	return S_OK;
 }

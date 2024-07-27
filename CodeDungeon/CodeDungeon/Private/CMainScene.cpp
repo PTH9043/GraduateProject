@@ -84,11 +84,11 @@ void CMainScene::UpdateMobsStatus()
 						m_iMinotaurMaxHP = mobs->GetMaxHealth();
 						
 					
-						if (m_spWarriorPlayer->GetDeathState()) {
-							m_bIsFoundPlayer_Minotaur = false;
+						if (!m_spWarriorPlayer->GetDeathState()) {
+							m_bIsFoundPlayer_Minotaur = mobs->GetFoundTargetState();							
 						}
 						else {
-							m_bIsFoundPlayer_Minotaur = mobs->GetFoundTargetState();
+							m_bIsFoundPlayer_Minotaur = false;
 						}
 							
 					}
@@ -96,11 +96,11 @@ void CMainScene::UpdateMobsStatus()
 					{
 						m_iHarlequinnCurHP = mobs->GetHealth();
 						m_iHarlequinnMaxHP = mobs->GetMaxHealth();
-						if (m_spWarriorPlayer->GetDeathState()) {
-							m_bisFoundPlayer_Harlequinn = false;
+						if (!m_spWarriorPlayer->GetDeathState()) {
+							m_bisFoundPlayer_Harlequinn = mobs->GetFoundTargetState();							
 						}
 						else {
-							m_bisFoundPlayer_Harlequinn = mobs->GetFoundTargetState();
+							m_bisFoundPlayer_Harlequinn = false;
 						}
 						
 					}
@@ -108,11 +108,11 @@ void CMainScene::UpdateMobsStatus()
 					{
 						m_iAnubisCurHP = mobs->GetHealth();
 						m_iAnubisMaxHP = mobs->GetMaxHealth();
-						if (m_spWarriorPlayer->GetDeathState()) {
-							m_bisFoundPlayer_Anubis = false;
+						if (!m_spWarriorPlayer->GetDeathState()) {
+							m_bisFoundPlayer_Anubis = mobs->GetFoundTargetState();							
 						}
 						else {
-							m_bisFoundPlayer_Anubis = mobs->GetFoundTargetState();
+							m_bisFoundPlayer_Anubis = false;
 						}
 						
 					}
@@ -379,13 +379,13 @@ void CMainScene::TurnLightsOnRange()
 			{
 				_wstring Name = Cores_it->get()->GetModel()->GetModelName();
 				if (Name == L"MinotaurCore")
-					if (!m_bIsDead_Minotaur)
+					if (m_bIsDead_Minotaur)
 						Cores_it->get()->SetActive(true);
 				if (Name == L"HarlequinnCore")
-					if (!m_bisDead_Harlequinn)
+					if (m_bisDead_Harlequinn)
 						Cores_it->get()->SetActive(true);
 				if (Name == L"AnubisCore")
-					if (!m_bisDead_Anubis)
+					if (m_bisDead_Anubis)
 						Cores_it->get()->SetActive(true);
 
 				Cores_it++;
@@ -1896,7 +1896,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 		if (!EnterGameModeBGM) {
 			spGameInstance->SoundPlayBGM(L"GamePlayBGM");//게임 플레이 bgm
 			//SHPTR<USound> Bgm = spGameInstance->BringSound(L"GamePlayBGM");
-			spGameInstance->BGMUpdateVolume(L"GamePlayBGM",0.3f);
+			spGameInstance->BGMUpdateVolume(L"GamePlayBGM",0.5f);
 			EnterGameModeBGM = true;
 		}
 		
@@ -2247,22 +2247,27 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 	{	//==========Minotaur Hp===============
 		if (!m_spWarriorPlayer->GetDeathState()&&((m_bIsFoundPlayer_Minotaur && !m_bIsDead_Minotaur) || (m_bisFoundPlayer_Harlequinn && !m_bisDead_Harlequinn) || (m_bisFoundPlayer_Anubis && !m_bisDead_Anubis))) {
 			m_spBossHpBarFrameUI->SetActive(true);
+			pGameInstance->BGMUpdateVolume(L"GamePlayBGM", 0.f);
 		}
 		else {
+			pGameInstance->BGMUpdateVolume(L"GamePlayBGM", 1.f);
 			m_spBossHpBarFrameUI->SetActive(false);
 		}
 		if (!m_spWarriorPlayer->GetDeathState() && m_bIsFoundPlayer_Minotaur&&!m_bIsDead_Minotaur) {
 			if (!EnterMinoSound) {
+				
 				pGameInstance->SoundPlay(L"MinoBackground");
 				pGameInstance->SetLooping(L"MinoBackground", true);
 				EnterMinoSound = true;
-			}			
+			}	
+		
 			m_spMinotaurHpFont->SetRender(true);
 			m_spMinotaurFrameUI->SetActive(true);
 				m_spMinotaurHpBarUI->SetActive(true);
 
 		}
 		else {
+		
 			pGameInstance->StopSound(L"MinoBackground");
 			pGameInstance->SetLooping(L"MinoBackground", false);
 			EnterMinoSound = false;
@@ -2272,10 +2277,12 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 		}
 		if (!m_spWarriorPlayer->GetDeathState() && m_bisFoundPlayer_Harlequinn&&!m_bisDead_Harlequinn) {
 			if (!EnterQuinnSound) {
+				
 				pGameInstance->SoundPlay(L"QuinnEnterBackground");
 				pGameInstance->SetLooping(L"QuinnEnterBackground", true);
 				EnterQuinnSound = true;
 			}
+
 			m_spHarlequinnHpFont->SetRender(true);
 			m_spHarlequinnFrameUI->SetActive(true);
 			m_spHarlequinnHpBarUI->SetActive(true);
@@ -2290,6 +2297,7 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 		}
 		if (!m_spWarriorPlayer->GetDeathState() && m_bisFoundPlayer_Anubis&&!m_bisDead_Anubis) {
 			if (!EnterAnubisSound) {
+			
 				pGameInstance->SoundPlay(L"AnubisEnterBackground");
 				pGameInstance->SetLooping(L"AnubisEnterBackground", true);
 				EnterAnubisSound = true;
@@ -2299,6 +2307,7 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 			m_spAnubisHpBarUI->SetActive(true);
 		}
 		else {
+			
 			pGameInstance->StopSound(L"AnubisEnterBackground");
 			pGameInstance->SetLooping(L"AnubisEnterBackground", false);
 			EnterAnubisSound = false;
@@ -2306,7 +2315,6 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 			m_spAnubisFrameUI->SetActive(false);
 			m_spAnubisHpBarUI->SetActive(false);
 		}
-		
 	}
 	{//if Die
 		if (m_spWarriorPlayer->GetDeathState()) {
