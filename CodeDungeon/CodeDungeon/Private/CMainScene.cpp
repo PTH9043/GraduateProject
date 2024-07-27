@@ -2377,8 +2377,15 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 			pGameInstance->TurnOnDieEffect();
 		}
 		if (m_spWarriorPlayer->GetBlindEffectBool()) {
+			if (!EnterBlindSound) {
+				pGameInstance->SoundPlayOnce(L"BlindSound");
+				EnterBlindSound = true;
+			}
 			pGameInstance->TurnOnHitEffect();
-	}
+		}
+		else {
+			EnterBlindSound = false;
+		}
 		if (pGameInstance->GetIfAbilityIsOn()) {
 			m_spRecUI->SetIfPicked(true);
 			m_spRecUI->SetActive(true);
