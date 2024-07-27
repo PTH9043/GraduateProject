@@ -1960,7 +1960,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 		m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
 		
 		//상자 충돌 시
-			if (m_spWarriorPlayer->GetCanInteractChestState()) {
+			if (m_spWarriorPlayer->GetCanInteractChestState() && !m_spWarriorPlayer->GetDeathState()) {
 				m_spOpenChestTextUI->SetActive(true);
 				m_spFKeyOpenChestTextUI->SetActive(true);
 			}
@@ -1969,7 +1969,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 				m_spFKeyOpenChestTextUI->SetActive(false);
 			}
 			//철창 충돌시
-			if (m_spWarriorPlayer->GetCanInteractBarState() && !m_spWarriorPlayer->GetDoneInteractBarState()) {
+			if (m_spWarriorPlayer->GetCanInteractBarState() && !m_spWarriorPlayer->GetDoneInteractBarState() && !m_spWarriorPlayer->GetDeathState()) {
 				m_spLiftCageTextUI->SetActive(true);
 				m_spFKeyLiftCageTextUI->SetActive(true);
 				m_spLiftLoadGageBackgroundTextUI->SetActive(true);
@@ -1982,7 +1982,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 				m_spLiftFillGageBackgroundTextUI->SetActive(false);
 			}
 			//석상 충돌 시
-			if (m_spWarriorPlayer->GetCanInteractStatueState()&&!m_spWarriorPlayer->GetDoneInteractStatueState()) {
+			if (m_spWarriorPlayer->GetCanInteractStatueState()&&!m_spWarriorPlayer->GetDoneInteractStatueState() && !m_spWarriorPlayer->GetDeathState()) {
 				m_spSaveCheckPointTextUI->SetActive(true);
 				m_spFKeySaveCheckPointTextUI->SetActive(true);
 				m_spCheckPointLoadGageBackgroundTextUI->SetActive(true);
@@ -2002,7 +2002,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 
 			//수호자들 코어 충돌시
 			//MINO
-			if (m_spWarriorPlayer->GetCanInteractMinoCoreState()&& !m_spWarriorPlayer->GetDoneCoreMinotaurState()) {
+			if (m_spWarriorPlayer->GetCanInteractMinoCoreState()&& !m_spWarriorPlayer->GetDoneCoreMinotaurState() && !m_spWarriorPlayer->GetDeathState()) {
 				m_spDeactivateMinotaurTextUI->SetActive(true);
 				//m_spDeActivatedMinotaurTextUI->SetActive(true);
 				m_spDeActivateMinotaurBackgroundUI->SetActive(true);
@@ -2018,7 +2018,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 			}
 
 			//할리퀸
-			if (m_spWarriorPlayer->GetCanInteractHarlCoreState() && !m_spWarriorPlayer->GetDoneCoreHarlequinnState()) {
+			if (m_spWarriorPlayer->GetCanInteractHarlCoreState() && !m_spWarriorPlayer->GetDoneCoreHarlequinnState() && !m_spWarriorPlayer->GetDeathState()) {
 				m_spDeactivateHarelequinTextUI->SetActive(true);
 				//m_spDeActivatedHarelequinTextUI->SetActive(true);
 				m_spDeActivateHarelequinBackgroundUI->SetActive(true);
@@ -2034,7 +2034,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 			}
 
 			//나서스
-			if (m_spWarriorPlayer->GetCanInteractAnubisCoreState() && !m_spWarriorPlayer->GetDoneCoreAnubisState()) {
+			if (m_spWarriorPlayer->GetCanInteractAnubisCoreState() && !m_spWarriorPlayer->GetDoneCoreAnubisState()&&!m_spWarriorPlayer->GetDeathState()) {
 				m_spDeactivateAnubisTextUI->SetActive(true);
 				//m_spDeActivatedAnubisTextUI->SetActive(true);
 				m_spDeActivateAnubisBackgroundUI->SetActive(true);
@@ -2050,7 +2050,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 			}
 
 			//코어 해제시
-			if (m_spWarriorPlayer->GetDeactivatedCoreMinotaurState()) {
+			if (m_spWarriorPlayer->GetDeactivatedCoreMinotaurState()&&!m_spWarriorPlayer->GetDeathState()) {
 				m_spDeactivateMinotaurTextUI->SetActive(false);
 				m_spDeActivatedMinotaurTextUI->SetActive(true);
 				m_spDeActivateMinotaurBackgroundUI->SetActive(false);
@@ -2066,7 +2066,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 			else {
 				m_spDeActivatedMinotaurTextUI->SetActive(false);
 			}
-			if (m_spWarriorPlayer->GetDeactivatedCoreHarlequinnState()) {
+			if (m_spWarriorPlayer->GetDeactivatedCoreHarlequinnState()&&!m_spWarriorPlayer->GetDeathState()) {
 				m_spDeactivateHarelequinTextUI->SetActive(false);
 				m_spDeActivatedHarelequinTextUI->SetActive(true);
 				m_spDeActivateHarelequinBackgroundUI->SetActive(false);
@@ -2082,7 +2082,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 			else {
 				m_spDeActivatedHarelequinTextUI->SetActive(false);
 			}
-			if (m_spWarriorPlayer->GetDeactivatedCoreAnubisState()) {
+			if (m_spWarriorPlayer->GetDeactivatedCoreAnubisState()&&!m_spWarriorPlayer->GetDeathState()) {
 				m_spDeactivateAnubisTextUI->SetActive(false);
 				m_spDeActivatedAnubisTextUI->SetActive(true);
 				m_spDeActivateAnubisBackgroundUI->SetActive(false);
@@ -2100,14 +2100,14 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 			}
 
 			//가드 충돌시
-			if (m_spWarriorPlayer->GetCanInteractGuardState()) {
+			if (m_spWarriorPlayer->GetCanInteractGuardState()&&!m_spWarriorPlayer->GetDeathState()) {
 				m_spCollideGuardTextUI->SetActive(true);
 			}
 			else {
 				m_spCollideGuardTextUI->SetActive(false);
 			}
 			// 체크포인트 저장시
-			if (m_spWarriorPlayer->GetCheckpointSaveState()) {
+			if (m_spWarriorPlayer->GetCheckpointSaveState()&&!m_spWarriorPlayer->GetDeathState()) {
 				m_spCheckPointCompleteTextUI->SetActive(true);
 				m_spSaveCheckPointTextUI->SetActive(false);
 				m_spFKeySaveCheckPointTextUI->SetActive(false);
@@ -2153,6 +2153,12 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 				m_spDeActivateAnubisBackgroundUI->SetActive(false);
 				m_spDeActivateAnubisGageUI->SetActive(false);
 				m_spKeyFUIAnubis->SetActive(false);
+				m_spEndingText->SetActive(false);
+				m_spGuardDeactivate_G->SetActive(false);
+				m_spGuardDeactivate_F->SetActive(false);
+				m_spGuardDeactivate_E->SetActive(false);
+				m_spGuardDeactivate_D->SetActive(false);
+				m_spGuardDeactivate_D->SetActive(false);
 			}
 		
 	}

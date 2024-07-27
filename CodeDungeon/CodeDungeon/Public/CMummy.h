@@ -43,6 +43,7 @@ private:
 	SHPTR<UParticle>			m_spSlashParticle;
 	SHPTR<UParticle>			m_spAttackParticle;
 	SHPTR<UParticle>			m_spAttackParticleTwo;
+	SHPTR<UParticle>										m_spFootPrintParticle;
 	PARTICLEPARAM*			m_stParticleParam;
 	ComputeParticleType*	m_stParticleType;
 
