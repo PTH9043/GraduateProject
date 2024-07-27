@@ -38,11 +38,26 @@ void USound::TickWithManyChannels()
 	}
 }
 
+void USound::TickWithInputChannel(IN FMOD::Channel** _ppChannel)
+{
+	_bool isPlaying;
+	(*_ppChannel)->isPlaying(&isPlaying);
+	if (false == isPlaying) {
+		*_ppChannel = nullptr;
+	}
+}
+
 void USound::Play()
 {
 	Stop();
 	m_pSystem->playSound(m_pSound, nullptr, false, &m_pChannel);
 	m_pChannel->setVolume(m_SoundDesc.fVolume);
+}
+
+void USound::PlayWithInputChannel(IN FMOD::Channel** _ppChannel)
+{
+	TickWithInputChannel(_ppChannel);
+	m_pSystem->playSound(m_pSound, nullptr, false, _ppChannel);
 }
 
 void USound::PlayWithManyChannels()
@@ -111,6 +126,15 @@ void USound::Stop()
 	RETURN_CHECK(nullptr == m_pChannel, ;);
 	m_pChannel->stop();
 	m_pChannel = nullptr;
+}
+
+void USound::StopWithInputChannel(IN FMOD::Channel** _ppChannel)
+{
+	if (_ppChannel && *_ppChannel)
+	{
+		(*_ppChannel)->stop();
+		*_ppChannel = nullptr;  // 채널 포인터를 해제
+	}
 }
 
 void USound::StopWithManyChannels() {
