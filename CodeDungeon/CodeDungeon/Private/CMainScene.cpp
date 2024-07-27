@@ -2286,6 +2286,7 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 		{
 			if (!EnterAbilitySound) {
 				pGameInstance->SoundPlayOnce(L"Abilitysound");
+				pGameInstance->SoundPlayOnce(L"AbilityStart");
 				EnterAbilitySound = true;
 			}
 			pGameInstance->TurnOnAbilityEffect();
