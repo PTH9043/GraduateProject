@@ -78,7 +78,7 @@ RWStructuredBuffer<COMPUTESHARED> g_SharedData : register(u1);
 float3 g_Gravity = float3(0.0, -9.8, 0.0);
 
 
-[numthreads(512, 1, 1)]
+[numthreads(212, 1, 1)]
 void CS_Main(int3 threadIndex : SV_DispatchThreadID)
 {
     if (threadIndex.x >= g_GrobalParticleInfo.iMaxCount)

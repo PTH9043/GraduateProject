@@ -63,7 +63,7 @@ void CMummy::CreateParticles()
 		tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.3f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 7;
 		tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 5;
-		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 400;
+		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 212;
 		tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 1.f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.f, 0.1f);
 		tDesc.ParticleParam.stGlobalParticleInfo.fParticlePosition = _float3(0.f, 0.f, 0.f);
@@ -166,7 +166,7 @@ void CMummy::CreateParticles()
 		tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.1f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 7.25f;//3.25f
 		tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 1.88f;
-		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 512;
+		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 212;
 		tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 1.f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.f, 0.f);
 		tDesc.ParticleParam.stGlobalParticleInfo.fParticlePosition = _float3(0.f, 0.f, 0.f);

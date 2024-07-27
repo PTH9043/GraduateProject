@@ -243,6 +243,7 @@ private:
 
 	//======================SOUND BOOL-=====================
 	_bool EnterGameModeBGM = false;
+	_bool EnterGameModeSound= false;
 
 
 

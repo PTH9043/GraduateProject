@@ -1850,6 +1850,10 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 	if (m_fStartSceneLoadingTimer > 10.f) {
 		//GameStart 시
 		spGameInstance->StopSound(L"BGM3");
+		if (!EnterGameModeSound) {
+			spGameInstance->SoundPlayOnce(L"FinishLoading");
+			EnterGameModeSound = true;
+		}	
 		spGameInstance->ResumeGame();
 		spGameInstance->SetGameStartEffect();
 		m_spBackgroundUI->SetActive(false);

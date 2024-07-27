@@ -310,7 +310,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	
 	if (IfOpenChestForHeal) {//2.1초 지속
 		HealTrigger = true;
-		IncreaseHealth(1); //이렇게 하면 119정도 오름
+		IncreaseHealth(2); //이렇게 하면 119정도 오름
 		SetAnimModelRimColor(_float3(0, 1, 0));
 		m_spHealParticle->SetActive(true);
 		_float3 pos = GetTransform()->GetPos();
@@ -323,8 +323,9 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	if (HealTrigger)
 	{
 		HealTimer += _dTimeDelta;
-		if (HealTimer > 2.0f) {
+		if (HealTimer > 1.75f) {
 			//SetAnimModelRimColor(_float3(1, 0, 0));
+			m_spHealParticle->SetActive(false);
 			HealTimer = 0;
 			HealTrigger = false;
 			IfOpenChestForHeal = false;
