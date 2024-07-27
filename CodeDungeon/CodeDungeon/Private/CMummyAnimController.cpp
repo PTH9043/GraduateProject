@@ -22,7 +22,8 @@ CMummyAnimController::CMummyAnimController(CSHPTRREF<UDevice> _spDevice)
     m_didleRandomValueChoosingTimer{0},
     m_iRandomValue{ 0 },
     m_dRecvAnimDuration{ 0 },
-    m_bPlayAttackSound{false},
+    m_bPlayAttackSound1{false},
+    m_bPlayAttackSound2{false},
     m_bPlayHitSound{ false }
 {
 }
@@ -40,7 +41,8 @@ CMummyAnimController::CMummyAnimController(const CMummyAnimController& _rhs)
     m_didleRandomValueChoosingTimer{ 0 },
     m_iRandomValue{ 0 },
     m_dRecvAnimDuration{ 0 },
-    m_bPlayAttackSound{false},
+    m_bPlayAttackSound1{false},
+    m_bPlayAttackSound2{false},
     m_bPlayHitSound{ false }
 {
 }
@@ -195,34 +197,53 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
             UpdateState(spAnimModel, m_blastAttackWasFirst ? ANIM_ATTACK : ANIM_ATTACK, m_blastAttackWasFirst ? L"ATTACK02" : L"ATTACK01");
         }
     }
-
+    USound* AttackSound1 = spGameInstance->BringSound(L"Attack1_VO_1").get();
+    USound* SwooshSound1 = spGameInstance->BringSound(L"ClothWhoosh_1").get();
     if (CurAnimName == L"attack1")
     {
-        if (!m_bPlayAttackSound)
+        if (!m_bPlayAttackSound1)
         {
-            USound* AttackSound1 = spGameInstance->BringSound(L"Attack1_VO_1").get();
-            USound* SwooshSound1 = spGameInstance->BringSound(L"ClothWhoosh_1").get();
+            
             AttackSound1->PlayWithInputChannel(&m_pAttack1Channel);
             SwooshSound1->PlayWithInputChannel(&m_pSwhoosh1Channel);
+            //AttackSound1->PlayWithManyChannels();
+            //SwooshSound1->PlayWithManyChannels();
         }
-        m_bPlayAttackSound = true;   
+        m_bPlayAttackSound1 = true;
+       
     }
-    else
-        m_bPlayAttackSound = false;
+    else {
+        m_bPlayAttackSound1 = false;
+        AttackSound1->StopWithInputChannel(&m_pAttack1Channel);
+        SwooshSound1->StopWithInputChannel(&m_pSwhoosh1Channel);
+    }
+    
+   
+  
 
+    USound* AttackSound2 = spGameInstance->BringSound(L"Attack1_VO_2").get();
+    USound* SwooshSound2 = spGameInstance->BringSound(L"ClothWhoosh_2").get();
     if (CurAnimName == L"attack2")
     {
-        if (!m_bPlayAttackSound)
+        if (!m_bPlayAttackSound2)
         {
-            USound* AttackSound2 = spGameInstance->BringSound(L"Attack1_VO_2").get();
-            USound* SwooshSound2 = spGameInstance->BringSound(L"ClothWhoosh_2").get();
             AttackSound2->PlayWithInputChannel(&m_pAttack2Channel);
             SwooshSound2->PlayWithInputChannel(&m_pSwhoosh2Channel);
+           //AttackSound2->PlayWithManyChannels();
+           //SwooshSound2->PlayWithManyChannels();
         }
-        m_bPlayAttackSound = true;
+        m_bPlayAttackSound2 = true;
+
+        
     }
-    else
-        m_bPlayAttackSound = false;
+    else {
+        m_bPlayAttackSound2 = false;
+        AttackSound2->StopWithInputChannel(&m_pAttack2Channel);
+        SwooshSound2->StopWithInputChannel(&m_pSwhoosh2Channel);
+    }
+   
+   
+        
 
     if (CurAnimName == L"gotHit")
     {

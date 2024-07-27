@@ -54,7 +54,8 @@ private:
 
 	FMOD::Channel* m_pHitChannel;
 
-	_bool		m_bPlayAttackSound;
+	_bool		m_bPlayAttackSound1;
+	_bool		m_bPlayAttackSound2;
 	_bool		m_bPlayHitSound;
 
 };
