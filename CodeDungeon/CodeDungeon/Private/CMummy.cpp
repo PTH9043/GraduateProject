@@ -366,13 +366,21 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 		if (CurAnimState == UAnimationController::ANIM_DEATH)
 		{
 			_double DeathAnimSpeed = 20;
+			if (GetElapsedTime() == 0.0)
+			{
+				USound* DeathSound1 = spGameInstance->BringSound(L"Death_VO_1").get();
+				USound* DeathSound2 = spGameInstance->BringSound(L"BodyHitFloor_1").get();
+				DeathSound1->PlayWithInputChannel(&m_pDeathChannel);
+				DeathSound2->PlayWithInputChannel(&m_pDeathChannel);
+			}
 			SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
 			_double DeathTimeArcOpenEnd = 500;
 			if (GetElapsedTime() < DeathTimeArcOpenEnd)
-			{
+			{		
 				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
 				GetAnimModel()->UpdateDissolveTImer(_dTimeDelta);
 			}
+			
 		}
 		else if (CurAnimState == UAnimationController::ANIM_IDLE)
 		{

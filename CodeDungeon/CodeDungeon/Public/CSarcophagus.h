@@ -1,6 +1,7 @@
 #pragma once
 #include "CMob.h"
 #include "CMummy.h"
+#include "USound.h"
 
 BEGIN(Client)
 
@@ -38,6 +39,11 @@ private:
 	SHPTR<CMummy> m_spOwnerMummy;
 
 	_double		m_dElapsedTimeForDeath;
+
+	FMOD::Channel* m_pLaying1Channel;
+	FMOD::Channel* m_pLaying2Channel;
+	FMOD::Channel* m_pStanding1Channel;
+	FMOD::Channel* m_pStanding2Channel;
 };
 
 END

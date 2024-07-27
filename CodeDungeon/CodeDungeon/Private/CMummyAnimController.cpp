@@ -21,7 +21,9 @@ CMummyAnimController::CMummyAnimController(CSHPTRREF<UDevice> _spDevice)
     m_bFoundPlayerFirsttime{false},
     m_didleRandomValueChoosingTimer{0},
     m_iRandomValue{ 0 },
-    m_dRecvAnimDuration{ 0 }
+    m_dRecvAnimDuration{ 0 },
+    m_bPlayAttackSound{false},
+    m_bPlayHitSound{ false }
 {
 }
 
@@ -37,7 +39,9 @@ CMummyAnimController::CMummyAnimController(const CMummyAnimController& _rhs)
     m_bFoundPlayerFirsttime{ false },
     m_didleRandomValueChoosingTimer{ 0 },
     m_iRandomValue{ 0 },
-    m_dRecvAnimDuration{ 0 }
+    m_dRecvAnimDuration{ 0 },
+    m_bPlayAttackSound{false},
+    m_bPlayHitSound{ false }
 {
 }
 
@@ -154,6 +158,9 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
         UpdateState(spAnimModel, ANIM_TAUNT, L"TAUNT");
         if (CurAnimName == L"taunt")
         {
+            USound* TauntSound1 = spGameInstance->BringSound(L"Taunt_VO2").get();
+            TauntSound1->PlayWithInputChannel(&m_pTauntChannel);
+
             m_bAttackMode = true;
             m_bTauntMode = false;
         }
@@ -163,6 +170,8 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     if (Hit)
     {
         spAnimModel->SetAnimation(L"gotHit");
+        USound* HitSound = spGameInstance->BringSound(L"GotHit_VO_2").get();
+        HitSound->PlayWithInputChannel(&m_pHitChannel);
         spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         spMummy->SetPrevHealth(spMummy->GetHealth());
     }
@@ -189,65 +198,46 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
 
     if (CurAnimName == L"attack1")
     {
-        USound* AttackSound1 = spGameInstance->BringSound(L"Attack1_VO_1").get();
-        USound* SwooshSound1 = spGameInstance->BringSound(L"ClothWhoosh_1").get();   
-       /* if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.8)
+        if (!m_bPlayAttackSound)
         {
-            AttackSound1->StopWithInputChannel(&m_pAttack1Channel);
-            SwooshSound1->StopWithInputChannel(&m_pSwhoosh1Channel);
-        }
-        else if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.1 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.11)
-        {
-            AttackSound1->PlayWithInputChannel(&m_pAttack1Channel);
-            SwooshSound1->PlayWithInputChannel(&m_pSwhoosh1Channel);
-        }*/
-
-        if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.1 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.11)
-        {
+            USound* AttackSound1 = spGameInstance->BringSound(L"Attack1_VO_1").get();
+            USound* SwooshSound1 = spGameInstance->BringSound(L"ClothWhoosh_1").get();
             AttackSound1->PlayWithInputChannel(&m_pAttack1Channel);
             SwooshSound1->PlayWithInputChannel(&m_pSwhoosh1Channel);
         }
-
-
-     /*  if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.1 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.11)
-        {
-            AttackSound1->PlayWithManyChannels();
-             SwooshSound1->PlayWithManyChannels();
-             
-        }*/
-
+        m_bPlayAttackSound = true;   
     }
-
+    else
+        m_bPlayAttackSound = false;
 
     if (CurAnimName == L"attack2")
     {
-
-        USound* AttackSound2 = spGameInstance->BringSound(L"Attack1_VO_2").get();
-        USound* SwooshSound2 = spGameInstance->BringSound(L"ClothWhoosh_2").get();
-      /*  if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.1 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.11)
+        if (!m_bPlayAttackSound)
         {
-            AttackSound2->PlayWithManyChannels();
-            SwooshSound2->PlayWithManyChannels();
-   
-        }*/
-
-        if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.1 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.11)
-        {
+            USound* AttackSound2 = spGameInstance->BringSound(L"Attack1_VO_2").get();
+            USound* SwooshSound2 = spGameInstance->BringSound(L"ClothWhoosh_2").get();
             AttackSound2->PlayWithInputChannel(&m_pAttack2Channel);
             SwooshSound2->PlayWithInputChannel(&m_pSwhoosh2Channel);
         }
-
-     /*   if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.8)
-        {
-            AttackSound2->StopWithInputChannel(&m_pAttack2Channel);
-            SwooshSound2->StopWithInputChannel(&m_pSwhoosh2Channel);
-        }
-        else if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.1 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.11)
-        {
-            AttackSound2->PlayWithInputChannel(&m_pAttack2Channel);
-            SwooshSound2->PlayWithInputChannel(&m_pSwhoosh2Channel);
-         }*/
+        m_bPlayAttackSound = true;
     }
+    else
+        m_bPlayAttackSound = false;
+
+    if (CurAnimName == L"gotHit")
+    {
+        if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() != 0)
+            m_bPlayHitSound = true;
+        else
+            m_bPlayHitSound = false;
+
+        if (!m_bPlayHitSound)
+        {
+           
+        }
+    }
+
+   
 
     // Check for death
     if (spMummy->GetHealth() <= 0)

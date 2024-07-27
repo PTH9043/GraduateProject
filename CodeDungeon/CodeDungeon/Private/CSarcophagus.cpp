@@ -70,42 +70,42 @@ void CSarcophagus::TickActive(const _double& _dTimeDelta)
 
 	GetAnimationController()->Tick(_dTimeDelta);
 
-	if(!GetDeathState())
+	if (!GetDeathState())
 	{
 		if (GetFoundTargetState())
 		{
-			SetElapsedTime(GetElapsedTime() + _dTimeDelta * SarcophagusOpeningSpeed);
 			if (GetSarcophagusType() == SARCOTYPE::TYPE_LYING)
 			{
-				if (GetElapsedTime() < LyingSarcophagusTimeArcOpenEnd)
+				USound* Layingsound1 = spGameInstance->BringSound(L"CrumblingRock").get();
+				USound* Layingsound2 = spGameInstance->BringSound(L"StoneSlide").get();
+				if (GetElapsedTime() == 0)
 				{
-					spGameInstance->SoundPlayOnce(L"CrumblingRock");
-					spGameInstance->SoundPlayOnce(L"StoneSlide");
-					GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, LyingSarcophagusTimeArcOpenStart + GetElapsedTime());
-				}
-				else if(GetElapsedTime() >= 80)
-				{
-					spGameInstance->StopSound(L"CrumblingRock");
-					spGameInstance->StopSound(L"StoneSlide");
+					Layingsound1->PlayWithInputChannel(&m_pLaying1Channel);
+					Layingsound2->PlayWithInputChannel(&m_pLaying2Channel);
 				}
 			}
 			else
 			{
-				if (GetElapsedTime() < StandingSarcophagusTimeArcOpenEnd)
+				USound* Standingsound1 = spGameInstance->BringSound(L"Coffin_InsideImpact").get();
+				USound* Standingsound2 = spGameInstance->BringSound(L"DebrisandImpact").get();
+				if (GetElapsedTime() == 0)
 				{
-					spGameInstance->SoundPlayOnce(L"Coffin_InsideImpact");
-					spGameInstance->SoundPlayOnce(L"DebrisandImpact");
-					GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
-				}
-				else if(GetElapsedTime() >= 80)
-				{
-					spGameInstance->StopSound(L"Coffin_InsideImpact");
-					spGameInstance->StopSound(L"DebrisandImpact");
+					Standingsound1->PlayWithInputChannel(&m_pStanding1Channel);
+					Standingsound1->PlayWithInputChannel(&m_pStanding2Channel);
 				}
 			}
+			SetElapsedTime(GetElapsedTime() + _dTimeDelta * SarcophagusOpeningSpeed);
 		}
-	
+		if (GetSarcophagusType() == SARCOTYPE::TYPE_LYING)
+		{
+			if (GetElapsedTime() < LyingSarcophagusTimeArcOpenEnd)
+				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, LyingSarcophagusTimeArcOpenStart + GetElapsedTime());
+		}
+		else
+			if (GetElapsedTime() < StandingSarcophagusTimeArcOpenEnd)
+				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
 	}
+
 
 	for (auto& Containers : GetColliderContainer())
 	{

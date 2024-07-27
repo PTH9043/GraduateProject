@@ -50,6 +50,12 @@ private:
 	FMOD::Channel* m_pAttack2Channel;
 	FMOD::Channel* m_pSwhoosh1Channel;
 	FMOD::Channel* m_pSwhoosh2Channel;
+	FMOD::Channel* m_pTauntChannel;
+
+	FMOD::Channel* m_pHitChannel;
+
+	_bool		m_bPlayAttackSound;
+	_bool		m_bPlayHitSound;
 
 };
 
