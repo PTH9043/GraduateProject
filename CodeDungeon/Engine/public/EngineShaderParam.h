@@ -179,13 +179,10 @@ namespace Engine {
 
 	typedef struct tagAnimationParam
 	{
-		_bool		isOutLineExist = false;
-		_bool		isNomralExist = true;
-		_bool		isObjectDissolve = false;
-		_bool		isAnimPadding = false;
-
-		_float		fDissolveTimer = 0;
-		_float3	fRemains;
+		_int		iOutLineExist = 0;
+		_int		iNomralExist = 1;
+		_int		iObjectDissolve = 0;
+		_float	fDissolveTimer = 0;
 	}ANIMATIONPARAM;
 
 	typedef struct tagDrawRim

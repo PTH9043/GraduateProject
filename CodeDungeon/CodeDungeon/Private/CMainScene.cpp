@@ -1733,7 +1733,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 
 	}
 
-	if (m_fStartSceneLoadingTimer > 10.f) {
+	if (m_fStartSceneLoadingTimer > 1.f) {
 		//GameStart 시
 		spGameInstance->StopSound(L"BGM3");
 		spGameInstance->ResumeGame();

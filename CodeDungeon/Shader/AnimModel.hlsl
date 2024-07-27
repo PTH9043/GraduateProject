@@ -17,13 +17,10 @@ struct BONEMATRIX
 
 cbuffer ANIMATIONPARAM : register(b11)
 {
-    bool g_isOutLineExist = false;
-    bool g_isNomralExist = true;
-    bool g_isObjectDissolve = false;
-    bool g_isObjectMotionblur = false;
-    
-    float g_fDissolveTimer = 0;
-    float3 g_remains;
+    int             g_iOutLineExist = 0;
+    int             g_iNomralExist = 1;
+    int             g_iObjectDissolve = 0;
+    float         g_fDissolveTimer = 0;
 };
 
 cbuffer BONEMATRIXPARAM : register(b12)
@@ -41,6 +38,11 @@ cbuffer DrawRim : register(b14)
     int g_DrawRim;
     float3 RimColor;
 };
+
+static const float dissolveAmount = 0.3f;
+static const float4 edgeColor = float4(1.f, 0.f, 0.f, 0.f);
+static const float noiseTiling = 2.f;
+static const float edgeThickness = 0.1f;
 
 struct VS_IN
 {
@@ -176,36 +178,19 @@ PS_OUT PS_Main(PS_IN In)
     VIEWPROJINFO tMainViewProj = GetViewProjInfo();
     // Out Color    
    
-    if (true == g_isObjectDissolve)
-    {
-        vector vDissorveColor = g_Texture2.Sample(g_Sampler_Normal, In.vTexUV0);
-   //     vector vShow_DisorveColor = g_Texture3.Sample(g_Sampler_Normal, In.vTexUV0);
-        float fColorLength = vDissorveColor.r + vDissorveColor.g + vDissorveColor.b;
-        if (fColorLength <= g_fDissolveTimer)
-        {
-            if (fColorLength - 0.2f <= g_fDissolveTimer)
-            {
-                discard;
-            }
-            Out.vDiffuse += float4(1.f, -0.22f, -0.22f, 0.f);
-        }
-    }
-    else
-    {
-        Out.vDiffuse = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV0);
+    Out.vDiffuse = g_Texture0.Sample(g_Sampler_Normal, In.vTexUV0);
  
-        if (Out.vDiffuse.a <= 0.05)
-            discard;
-        
-        if (g_DrawRim)
-        {
-            float rimFactor = 1.0 - saturate(dot(normalize(In.vViewDir), normalize(In.vNormal.xyz)));
-            rimFactor = pow(rimFactor, 3.5) * 3;
-            float4 rimLight = rimFactor * float4(RimColor, 1);
+    if (Out.vDiffuse.a <= 0.05)
+        discard;
+    
+    if (g_DrawRim)
+    {
+        float rimFactor = 1.0 - saturate(dot(normalize(In.vViewDir), normalize(In.vNormal.xyz)));
+        rimFactor = pow(rimFactor, 3.5) * 3;
+        float4 rimLight = rimFactor * float4(RimColor, 1);
 
     // Combine rim lighting with the final color
-            Out.vDiffuse.rgb += rimLight.rgb;
-        }
+        Out.vDiffuse.rgb += rimLight.rgb;
     }
    
     Out.vNormal = float4(float3(In.vNormal.xyz) * 0.5f + 0.5f, 1.f);
@@ -218,6 +203,24 @@ PS_OUT PS_Main(PS_IN In)
         Out.vVelocity = In.vVelocity;
         Out.vVelocity.z = 1.f;
         Out.vVelocity.w = In.vVelocity.z / In.vVelocity.w;
+    }
+    
+    if (1 == g_iObjectDissolve)
+    {
+        
+        vector vDisorveColor = g_Texture2.Sample(g_Sampler_Normal, In.vTexUV0 * noiseTiling);
+
+        float fColorLength = vDisorveColor.r + vDisorveColor.g + vDisorveColor.b;
+        
+        if (fColorLength <= g_fDissolveTimer)
+        {
+            if (fColorLength - 0.2f <= g_fDissolveTimer)
+            {
+                discard;
+            }
+            float4 vColor = float4(1.f, -0.22f, -0.22f, Out.vDiffuse.a);
+            Out.vDiffuse = vColor;
+        }
     }
         
     return Out;

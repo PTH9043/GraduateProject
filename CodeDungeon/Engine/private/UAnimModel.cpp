@@ -396,14 +396,14 @@ void UAnimModel::OutAnimationDataToServer(const _wstring& _wstrPath)
 
 void UAnimModel::UpdateDissolveTImer(const _double& _dTimeDelta)
 {
-	m_stAnimParam.isObjectDissolve = true;
+	m_stAnimParam.iObjectDissolve = 1;
 	m_stAnimParam.fDissolveTimer += static_cast<_float>(_dTimeDelta);
 }
 
 void UAnimModel::ResetDissolveTimer()
 {
 	m_stAnimParam.fDissolveTimer = 0;
-	m_stAnimParam.isObjectDissolve = false;
+	m_stAnimParam.iObjectDissolve = 0;
 }
 
 void UAnimModel::UpdateAttackData(const _bool _isCanAttackSituation, CSHPTRREF<UCollider> _spCollider)
