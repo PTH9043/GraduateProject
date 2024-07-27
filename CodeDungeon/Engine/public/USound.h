@@ -26,12 +26,15 @@ public:
 	virtual void Free() override;
 	void Tick();
 	void TickWithManyChannels();
+	void TickWithInputChannel(IN FMOD::Channel** _ppChannel);
 	void Play();
+	void PlayWithInputChannel(IN FMOD::Channel** _ppChannel);
 	void PlayWithManyChannels();
 	void PlayBGM(IN FMOD::Channel** _ppChannel);
 	void PlayOnce();
 	void PlayOnceWithManyChannels();
 	void Stop();
+	void StopWithInputChannel(IN FMOD::Channel** _ppChannel);
 	void StopWithManyChannels();
 	void StopBGM(IN FMOD::Channel** _ppChannel);
 	void Restart();

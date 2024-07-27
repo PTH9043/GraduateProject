@@ -1,7 +1,8 @@
 
 #pragma once
 #include "CMonsterAnimController.h"
-
+#include "USound.h"
+#include "UResource.h"
 BEGIN(Client)
 class CMummy;
 /*
@@ -44,7 +45,12 @@ private:
 	_int					m_iRandomValue;
 	_double				m_dRecvAnimDuration;
 
-	//=====================SOUND BOOL================
+	//=====================SOUND CHANNEL================
+	FMOD::Channel* m_pAttack1Channel;
+	FMOD::Channel* m_pAttack2Channel;
+	FMOD::Channel* m_pSwhoosh1Channel;
+	FMOD::Channel* m_pSwhoosh2Channel;
+
 };
 
 END
