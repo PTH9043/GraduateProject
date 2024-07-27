@@ -229,7 +229,7 @@ HRESULT CMinotaur::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetHealth(200);
 	SetMaxHealth(200);
 	SetActivationRange(100);
-	SetDeactivationRange(160);
+	SetDeactivationRange(120);
 	SetOutline(true);
 	return S_OK;
 }
@@ -377,6 +377,10 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 			if (GetElapsedTime() < DeathTimeArcOpenEnd) {
 				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
 				GetAnimModel()->UpdateDissolveTImer(_dTimeDelta * 1.2f);
+				if (!m_bDissolveSound) {
+					spGameInstance->SoundPlayOnce(L"DissolveSound2");
+					m_bDissolveSound = true;
+				}
 			}
 					}
 		else if (CurAnimState == UAnimationController::ANIM_IDLE)
@@ -386,6 +390,7 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 		}
 		else
 		{
+			m_bDissolveSound = false;
 			GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
 			SetElapsedTime(0.0);
 		}

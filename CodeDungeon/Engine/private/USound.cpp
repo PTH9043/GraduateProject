@@ -38,6 +38,15 @@ void USound::TickWithManyChannels()
 	}
 }
 
+void USound::TickWithInputChannel(IN FMOD::Channel** _ppChannel)
+{
+	_bool isPlaying;
+	(*_ppChannel)->isPlaying(&isPlaying);
+	if (false == isPlaying) {
+		*_ppChannel = nullptr;
+	}
+}
+
 void USound::Play()
 {
 	Stop();
@@ -45,8 +54,15 @@ void USound::Play()
 	m_pChannel->setVolume(m_SoundDesc.fVolume);
 }
 
+void USound::PlayWithInputChannel(IN FMOD::Channel** _ppChannel)
+{
+	TickWithInputChannel(_ppChannel);
+	m_pSystem->playSound(m_pSound, nullptr, false, _ppChannel);
+}
+
 void USound::PlayWithManyChannels()
 {
+	TickWithManyChannels();
 	FMOD::Channel* channel = nullptr;
 	m_pSystem->playSound(m_pSound, nullptr, false, &channel);
 	m_Channels.push_back(channel);
@@ -72,9 +88,9 @@ void USound::PlayOnce()
 
 void USound::PlayOnceWithManyChannels()
 {
-	TickWithManyChannels();
+	//TickWithManyChannels();
 	if (!m_isOncePlay) {
-		Play();
+		PlayWithManyChannels();
 		m_isOncePlay = true;
 	}
 }
@@ -110,6 +126,15 @@ void USound::Stop()
 	m_pChannel = nullptr;
 }
 
+void USound::StopWithInputChannel(IN FMOD::Channel** _ppChannel)
+{
+	if (_ppChannel && *_ppChannel)
+	{
+		(*_ppChannel)->stop();
+		*_ppChannel = nullptr;  // 채널 포인터를 해제
+	}
+}
+
 void USound::StopWithManyChannels() {
 	for (auto& channel : m_Channels) {
 		if (channel) {
@@ -126,6 +151,22 @@ void USound::StopBGM(IN FMOD::Channel** _ppChannel)
 	{
 		(*_ppChannel)->stop();
 		*_ppChannel = nullptr;  // 채널 포인터를 해제
+	}
+}
+
+void USound::PauseBGM(IN FMOD::Channel** _ppChannel)
+{
+	if (_ppChannel && *_ppChannel)
+	{
+		(*_ppChannel)->setPaused(true);
+	}
+}
+
+void USound::ResumeBGM(IN FMOD::Channel** _ppChannel)
+{
+	if (_ppChannel && *_ppChannel)
+	{
+		(*_ppChannel)->setPaused(false);
 	}
 }
 

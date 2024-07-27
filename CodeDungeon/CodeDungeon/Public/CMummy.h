@@ -1,5 +1,7 @@
 #pragma once
 #include "CMob.h"
+#include "USound.h"
+
 BEGIN(Engine)
 class UGameInstance;
 class UParticle;
@@ -47,10 +49,17 @@ private:
 	PARTICLEPARAM*			m_stParticleParam;
 	ComputeParticleType*	m_stParticleType;
 
+
 	UNavigation::PathFindingState m_PathFindingState;
 	VECTOR<_float3> m_AstarPath;
 	_bool m_isPathFinding = false;
 	size_t m_currentPathIndex = 0;
+
+	_bool m_bDissolveSound = false;
+
+	FMOD::Channel* m_pDeathChannel;
+	FMOD::Channel* m_pDeath2Channel;
+	FMOD::Channel* m_pDissolveChannel;
 };
 
 END

@@ -1,6 +1,7 @@
 #pragma once
 #include "CMonsterAnimController.h"
-
+#include "USound.h"
+#include "UResource.h"
 BEGIN(Client)
 class CMummy;
 /*
@@ -42,6 +43,19 @@ private:
 	_double					m_didleRandomValueChoosingTimer;
 	_int					m_iRandomValue;
 	_double				m_dRecvAnimDuration;
+
+	//=====================SOUND CHANNEL================
+	FMOD::Channel* m_pAttack1Channel;
+	FMOD::Channel* m_pAttack2Channel;
+	FMOD::Channel* m_pSwhoosh1Channel;
+	FMOD::Channel* m_pSwhoosh2Channel;
+	FMOD::Channel* m_pTauntChannel;
+
+	FMOD::Channel* m_pHitChannel;
+
+	_bool		m_bPlayAttackSound1;
+	_bool		m_bPlayAttackSound2;
+	_bool		m_bPlayHitSound;
 
 };
 

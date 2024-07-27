@@ -266,6 +266,8 @@ public: /* AudioSystemManager*/
 	void SoundPlayOnceWithManyChannels(const _wstring& _wstrSoundName);
 	void SoundPlayBGM(const _wstring& _wstrSoundName);
 	void SoundStopBGM(const _wstring& _wstrSoundName);
+	void SoundPauseBGM(const _wstring& _wstrSoundName);
+	void SoundResumeBGM(const _wstring& _wstrSoundName);
 	void SoundPlayBGM(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
 	void StopSound(const _wstring& _wstrSoundName);
 	void StopSoundWithManyChannels(const _wstring& _wstrSoundName);

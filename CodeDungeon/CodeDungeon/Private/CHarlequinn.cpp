@@ -409,10 +409,15 @@ void CHarlequinn::TickActive(const _double& _dTimeDelta)
 			if (GetElapsedTime() < DeathTimeArcOpenEnd) {
 				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
 				GetAnimModel()->UpdateDissolveTImer(_dTimeDelta * 1.2f);
+				if (!m_bDissolveSound) {
+					spGameInstance->SoundPlayOnce(L"DissolveSound2");
+					m_bDissolveSound = true;
+				}
 			}
 		}
 		else
 		{
+			m_bDissolveSound = false;
 			GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
 			SetElapsedTime(0.0);
 		}

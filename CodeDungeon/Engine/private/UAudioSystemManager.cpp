@@ -143,6 +143,30 @@ void UAudioSystemManager::StopBGM(const _wstring& _wstrSoundName)
 	}
 }
 
+void UAudioSystemManager::PauseBGM(const _wstring& _wstrSoundName)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+		{
+			if (true == iter->PauseBGM(_wstrSoundName))
+				return;
+		}
+	}
+}
+
+void UAudioSystemManager::ResumeBGM(const _wstring& _wstrSoundName)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+		{
+			if (true == iter->ResumeBGM(_wstrSoundName))
+				return;
+		}
+	}
+}
+
 void UAudioSystemManager::PlayBGM(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate)
 {
 	for (auto& iter : m_AudioSystemContainer)
@@ -462,15 +486,15 @@ void UAudioSystemManager::Free()
 }
 
 
-
 void UAudioSystemManager::HandleSoundsForAnimation(CSHPTRREF<UCharacter> _Owner, const _wstring& animName, const _wstring& SoundName, _float startThreshold, _float endThreshold)
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	const _wstring& CurAnimName = _Owner->GetAnimModel()->GetCurrentAnimation()->GetAnimName();
-
+	SHPTR<USound> Sound = spGameInstance->BringSound(SoundName);
 	if (CurAnimName == animName)
 	{
 		SHPTR<USound> Sound = spGameInstance->BringSound(SoundName);
+
 		_float progressRate = _Owner->GetAnimModel()->GetCurrentAnimation()->GetAnimationProgressRate();
 
 		if (progressRate >= endThreshold)
@@ -479,7 +503,7 @@ void UAudioSystemManager::HandleSoundsForAnimation(CSHPTRREF<UCharacter> _Owner,
 		}
 		else if (progressRate >= startThreshold && progressRate < (startThreshold + 0.01))
 		{
-			Sound->Play();
+			Sound->PlayOnce();
 		}
 	}
 }

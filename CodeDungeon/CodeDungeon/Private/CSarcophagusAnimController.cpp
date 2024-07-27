@@ -4,6 +4,7 @@
 #include "UGameInstance.h"
 #include "UAnimModel.h"
 #include "UCharacter.h"
+#include "UPlayer.h"
 
 CSarcophagusAnimController::CSarcophagusAnimController(CSHPTRREF<UDevice> _spDevice)
 	: CMonsterAnimController(_spDevice), m_dRecvAnimDuration{0}
@@ -44,6 +45,7 @@ void CSarcophagusAnimController::Tick(const _double& _dTimeDelta)
 	SHPTR<UAnimModel> spAnimModel = spSarcophagus->GetAnimModel();
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
 
 	//_bool isIdle = false;
 	//_bool isMove = false;

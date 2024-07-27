@@ -55,6 +55,12 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
 
     spSelfTransform->DisableMotionblurOn();
 
+    ifStartedGame = spWarriorPlayer->GetIfStartedGame();
+
+    if (ifStartedGame) {
+
+    
+
     // Input checks
     _bool isRunshift = spGameInstance->GetDIKeyPressing(DIK_LSHIFT);
     _bool isMoveFront = spGameInstance->GetDIKeyPressing(DIK_W);
@@ -147,10 +153,9 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
         spSelfTransform->EnableMotionblurOn();
     }
     
-    spGameInstance->HandleSoundsForAnimation(spWarriorPlayer, L"roll_left", L"Player_Rolling", 0.1, 0.8);
-    spGameInstance->HandleSoundsForAnimation(spWarriorPlayer, L"roll_right", L"Player_Rolling", 0.1, 0.8);
-    spGameInstance->HandleSoundsForAnimation(spWarriorPlayer, L"roll_front", L"Player_Rolling", 0.1, 0.8);
-    spGameInstance->HandleSoundsForAnimation(spWarriorPlayer, L"roll_back", L"Player_Rolling", 0.1, 0.8);
+    /*spGameInstance->HandleSoundsForAnimation(spWarriorPlayer, L"roll_left", L"Player_Rolling", 0.1, 0.75);
+    spGameInstance->HandleSoundsForAnimation(spWarriorPlayer, L"roll_front", L"Player_Rolling", 0.1, 0.75);
+    spGameInstance->HandleSoundsForAnimation(spWarriorPlayer, L"roll_back", L"Player_Rolling", 0.1, 0.75);*/
 
     // Hit state
     if (Hit && !isKicked) {
@@ -308,12 +313,18 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     {
         spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         spWarriorPlayer->SetDeathState(true);
+
         m_bDieEffectTurnedOn = true;  
         m_bReviveSoundPlay = false;
     }
     // Handle death state
     if (spWarriorPlayer->GetDeathState())
     {
+        if (!m_bDieSoundPlay) {
+            spGameInstance->SoundPlayOnce(L"Die");
+            m_bDieSoundPlay = true;
+        }
+        
         UpdateState(spAnimModel, ANIM_DEATH, L"DEAD");
         spWarriorPlayer->SetKickedState(false);
     }
@@ -339,6 +350,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
                     spGameInstance->SoundPlayOnce(L"Revive");
                     m_bReviveSoundPlay = true;
                 }
+                m_bDieSoundPlay = false;
               
                 spWarriorPlayer->GetCurrentNavi()->FindCell(spWarriorPlayer->GetSpawnPointCell()->GetIndex());
                 spWarriorPlayer->GetTransform()->SetPos(spWarriorPlayer->GetSpawnPointCell()->GetCenterPos());
@@ -369,7 +381,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
        else
            spAnimModel->TickAnimChangeTransform(spWarriorPlayer->GetTransform(), _dTimeDelta);
    }
-  
+  }
 }
 
 

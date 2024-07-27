@@ -48,6 +48,8 @@ private:
 	_bool m_isPathFinding = false;
 	size_t m_currentPathIndex = 0;
 	_bool			m_bisOpen;
+
+	_bool m_bDissolveSound = false;
 };
 
 END

@@ -37,7 +37,7 @@ HRESULT CSarcophagus::NativeConstructClone(const VOIDDATAS& _Datas)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	SetPawnType(PAWNTYPE::PAWN_STATICOBJ);
 	SetActivationRange(50);
-	SetDeactivationRange(80);
+	SetDeactivationRange(120);
 	/*UCollider::COLLIDERDESC tDesc;
 	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
 	tDesc.vScale = _float3(1.f, 1.f, 1.f);
@@ -62,7 +62,7 @@ void CSarcophagus::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 void CSarcophagus::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
-
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	_double SarcophagusOpeningSpeed = 40;
 	_double LyingSarcophagusTimeArcOpenStart = 50;
 	_double LyingSarcophagusTimeArcOpenEnd = 50;
@@ -70,10 +70,30 @@ void CSarcophagus::TickActive(const _double& _dTimeDelta)
 
 	GetAnimationController()->Tick(_dTimeDelta);
 
-	if(!GetDeathState())
+	if (!GetDeathState())
 	{
 		if (GetFoundTargetState())
 		{
+			if (GetSarcophagusType() == SARCOTYPE::TYPE_LYING)
+			{
+				USound* Layingsound1 = spGameInstance->BringSound(L"CrumblingRock").get();
+				USound* Layingsound2 = spGameInstance->BringSound(L"StoneSlide").get();
+				if (GetElapsedTime() == 0)
+				{
+					Layingsound1->PlayWithInputChannel(&m_pLaying1Channel);
+					Layingsound2->PlayWithInputChannel(&m_pLaying2Channel);
+				}
+			}
+			else
+			{
+				USound* Standingsound1 = spGameInstance->BringSound(L"Coffin_InsideImpact").get();
+				USound* Standingsound2 = spGameInstance->BringSound(L"DebrisandImpact").get();
+				if (GetElapsedTime() == 0)
+				{
+					Standingsound1->PlayWithInputChannel(&m_pStanding1Channel);
+					Standingsound1->PlayWithInputChannel(&m_pStanding2Channel);
+				}
+			}
 			SetElapsedTime(GetElapsedTime() + _dTimeDelta * SarcophagusOpeningSpeed);
 		}
 		if (GetSarcophagusType() == SARCOTYPE::TYPE_LYING)
@@ -85,6 +105,7 @@ void CSarcophagus::TickActive(const _double& _dTimeDelta)
 			if (GetElapsedTime() < StandingSarcophagusTimeArcOpenEnd)
 				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
 	}
+
 
 	for (auto& Containers : GetColliderContainer())
 	{

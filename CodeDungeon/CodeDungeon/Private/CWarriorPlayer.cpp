@@ -76,8 +76,9 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-	int cellIndex = 349;
 	//int cellIndex = 0;
+	//int cellIndex = 349;
+	int cellIndex = 1;
 	SHPTR<UCell> spCell = spNavigation->FindCell(cellIndex);
 	GetTransform()->SetPos(spCell->GetCenterPos());
 	SetSpawnPoint(spCell);
@@ -202,8 +203,8 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetOutline(true);
 	SetifPlayer(true);//depth만 기록하고 outline안그리도록 다른 물체  outline depth판정위해
 	//SetIfOutlineScale(false); 만약 플레이어 그릴거면 SetifPlayer->false, SetIfOutlineScale->true
-	SetHealth(100);
-	SetMaxHealth(1000);
+	SetHealth(1);
+	SetMaxHealth(10000);
 	SetAnimModelRim(true);
 	SetAnimModelRim(true);
 
@@ -888,28 +889,28 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 
 					if (iter2.first == L"Main")
 					{
-						SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
+						//SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
 
-						if (GetCollidedNormal() != _float3::Zero) // 충돌이 발생한 경우
-						{
-							if (!GuardCollideSound) {
-								spGameInstance->SoundPlayOnce(L"GuardCollideSound");
-								GuardCollideSound = true;
-							}
+						//if (GetCollidedNormal() != _float3::Zero) // 충돌이 발생한 경우
+						//{
+						//	if (!GuardCollideSound) {
+						//		spGameInstance->SoundPlayOnce(L"GuardCollideSound");
+						//		GuardCollideSound = true;
+						//	}
 
-							SetOBJCollisionState(true);
-							// 속도 결정
-							_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 60.0f : 20.0f;
-							if (CurAnimName == L"roll_back" || CurAnimName == L"roll_front" || CurAnimName == L"roll_left" || CurAnimName == L"roll_right")
-								GetTransform()->SetPos(GetPrevPos());
-							else
-								ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
-						}
-						else
-						{
-							GuardCollideSound = false;
-							SetOBJCollisionState(false);
-						}
+						//	SetOBJCollisionState(true);
+						//	// 속도 결정
+						//	_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 60.0f : 20.0f;
+						//	if (CurAnimName == L"roll_back" || CurAnimName == L"roll_front" || CurAnimName == L"roll_left" || CurAnimName == L"roll_right")
+						//		GetTransform()->SetPos(GetPrevPos());
+						//	else
+						//		ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
+						//}
+						//else
+						//{
+						//	GuardCollideSound = false;
+						//	SetOBJCollisionState(false);
+						//}
 					}
 					else if (iter2.first == L"ForInteractionGuard")
 					{
@@ -922,7 +923,6 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							m_bCanInteractGuard = false;
 						}
 					}
-				
 
 				}
 			}

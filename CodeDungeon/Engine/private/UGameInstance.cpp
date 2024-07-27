@@ -944,6 +944,17 @@ void UGameInstance::SoundStopBGM(const _wstring& _wstrSoundName)
 	m_spAudioSystemManager->StopBGM(_wstrSoundName);
 }
 
+void UGameInstance::SoundPauseBGM(const _wstring& _wstrSoundName)
+{
+	m_spAudioSystemManager->PauseBGM(_wstrSoundName);
+}
+
+void UGameInstance::SoundResumeBGM(const _wstring& _wstrSoundName)
+{
+	m_spAudioSystemManager->ResumeBGM(_wstrSoundName);
+}
+
+
 void UGameInstance::SoundPlayBGM(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate)
 {
 	m_spAudioSystemManager->PlayBGM(_wstrSoundName, _fVolumeUpdate);
