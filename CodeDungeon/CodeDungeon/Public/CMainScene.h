@@ -53,9 +53,9 @@ private:
 	SHPTR<UFire>	m_stFireOne;
 	SHPTR<UFire>	m_stFireTwo;
 
-	_bool			m_bIsFoundPlayer_Minotaur;
-	_bool			m_bisFoundPlayer_Harlequinn;
-	_bool			m_bisFoundPlayer_Anubis;
+	_bool			m_bIsFoundPlayer_Minotaur=false;
+	_bool			m_bisFoundPlayer_Harlequinn = false;
+	_bool			m_bisFoundPlayer_Anubis = false;
 
 	_bool			m_bIsDead_Minotaur;
 	_bool			m_bisDead_Harlequinn;
@@ -93,7 +93,7 @@ private:
 	SHPTR<CImageUI>			m_spSHORTATTACKUI;
 	SHPTR<CImageUI>			m_spSHORTATTACKTextUI;
 
-	SHPTR<CImageUI>			m_spULTIMATEATTACKONEUI;
+	SHPTR<CImageUI>			m_spULTIMATEATTACKONESUI;
 	SHPTR<CImageUI>			m_spULTIMATEATTACKONETextUI;
 
 	SHPTR<CImageUI>			m_spULTIMATEATTACKTWOUI;
@@ -241,6 +241,8 @@ private:
 	_bool m_fGuardSound_G= false;
 	_bool m_fGuardSound_Final= false;
 
+	SHPTR<CImageUI>			m_spEndingMent;
+
 	//======================SOUND BOOL-=====================
 	_bool EnterGameModeBGM = false;
 	_bool EnterGameModeSound= false;
@@ -250,7 +252,7 @@ private:
 	_bool EnterQuinnSound= false;
 	_bool EnterAnubisSound= false;
 	_bool EnterBlindSound= false;
-
+	_bool EndGameSound = false;
 
 
 	///=================ENDING============================
