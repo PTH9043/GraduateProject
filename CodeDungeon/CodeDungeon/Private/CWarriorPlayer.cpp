@@ -78,7 +78,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
 	//int cellIndex = 0;
 	//int cellIndex = 349;
-	int cellIndex = 1;
+	int cellIndex = 349;
 	SHPTR<UCell> spCell = spNavigation->FindCell(cellIndex);
 	GetTransform()->SetPos(spCell->GetCenterPos());
 	SetSpawnPoint(spCell);
@@ -250,7 +250,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	GetAnimationController()->Tick(_dTimeDelta);
 
 	//게임끝 트리거
-	if (GetCurrentNavi()->GetCurIndex() == 1139 || GetCurrentNavi()->GetCurIndex() == 1138)
+	if (GetCurrentNavi()->GetCurIndex() == 1156)
 		m_bisGameEnd = true;
 
 	_int AnimState = GetAnimationController()->GetAnimState();
