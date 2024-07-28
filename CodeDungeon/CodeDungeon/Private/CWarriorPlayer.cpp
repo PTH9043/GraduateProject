@@ -250,7 +250,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	GetAnimationController()->Tick(_dTimeDelta);
 
 	//게임끝 트리거
-	if (GetCurrentNavi()->GetCurIndex() == 1139 || GetCurrentNavi()->GetCurIndex() == 1138)
+	if (GetCurrentNavi()->GetCurIndex() == 1156)
 		m_bisGameEnd = true;
 
 	_int AnimState = GetAnimationController()->GetAnimState();
