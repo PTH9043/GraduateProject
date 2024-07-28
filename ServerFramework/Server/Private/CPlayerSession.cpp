@@ -30,7 +30,7 @@ namespace Server {
 		SetMoveSpeed(10.f);
 		SetRunSpeed(30.f);
 		SetCurOnCellIndex(m_iStartCellIndex);
-		SetCharStatus(CHARSTATUS{ 1, 0, 100 });
+		SetCharStatus(CHARSTATUS{ 100, 0, 2500 });
 
 		SHPTR<ANavigation> spNavigation = GetNavigation();
 
@@ -101,7 +101,7 @@ namespace Server {
 				PlayerState(spCoreInstance, SessionID, _pPacket, _PacketHead);
 			}
 			break;
-			case TAG_CS::TAG_CS_CHARCOLLISION:
+			case TAG_CS::TAG_CS_DAMAGED:
 			{
 				PlayerCollisionState(spCoreInstance, SessionID, _pPacket, _PacketHead);
 			}
@@ -204,18 +204,16 @@ namespace Server {
 
 	void CPlayerSession::PlayerCollisionState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
 	{
-		COLLISIONDATA CollisionData;
+		CS_DAMAGED CollisionData;
 		CollisionData.ParseFromArray(_pPacket, _PacketHead.PacketSize);
 		SHPTR<ASession> spSession = _spCoreInstance->FindSession(CollisionData.id());
-		SHPTR<ATransform> spPlayerTr = spSession->GetTransform();
 		spSession->SetDamaged(true);
-		SHPTR<AMonster> spMonster = _spCoreInstance->FindMobObject(CollisionData.enemyid());
-		spSession->DamageToEnemy(spMonster->GetCharStatus().fPower);
+		spSession->DamageToEnemy(CollisionData.damage());
 
-		SC_DAMAGED scDamaged;
-		PROTOFUNC::MakeScDamaged(&scDamaged, spSession->GetSessionID(), spSession->GetCharStatus().fHp);
-		CombineProto<SC_DAMAGED>(GetCopyBuffer(), GetPacketHead(), scDamaged, TAG_SC_DAMAGED);
-		_spCoreInstance->BroadCastMessageExcludingSession(_SessionID, GetCopyBufferPointer(), GetPacketHead());
+		if (spSession->IsDead())
+		{
+
+		}
 	}
 
 	void CPlayerSession::MonsterCollisionState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
@@ -227,10 +225,13 @@ namespace Server {
 		SHPTR<ASession> spSession = _spCoreInstance->FindSession(CollisionData.enemyid());
 		spMonster->DamageToEnemy(spSession->GetCharStatus().fPower);
 
-		//SC_DAMAGED scDamaged;
-		//PROTOFUNC::MakeScDamaged(&scDamaged, spSession->GetSessionID(), spSession->GetCharStatus().fHp);
-		//CombineProto<SC_DAMAGED>(GetCopyBuffer(), GetPacketHead(), scDamaged, TAG_SC_DAMAGED);
-		//_spCoreInstance->BroadCastMessageExcludingSession(_SessionID, GetCopyBufferPointer(), GetPacketHead());
+		if (spMonster->IsDead())
+		{
+			SC_DEAD scDead;
+			scDead.set_id(spSession->GetSessionID());
+			CombineProto<SC_DEAD>(GetCopyBuffer(), GetPacketHead(), scDead, TAG_SC_DEAD);
+			_spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
+		}
 	}
 
 	void CPlayerSession::MonsterState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)

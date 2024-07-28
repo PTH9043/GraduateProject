@@ -10,9 +10,10 @@ namespace Server {
 		CServerMonster(OBJCON_CONDATA, _ID, _spMonsterJobTimer)
 	{
 		SetMonsterType(TAG_CHAR::TAG_MIMIC);
-		UpdateFindRange(40.f, 90.f);
+		UpdateFindRange(10, 120);
 		SetMoveSpeed(5);
 		SetAttackRange(9.f);
+		SetCharStatus(CHARSTATUS{ 1, 0, 200 });
 	}
 
 	_bool CMimic::Start(const VOIDDATAS& _ReceiveDatas)

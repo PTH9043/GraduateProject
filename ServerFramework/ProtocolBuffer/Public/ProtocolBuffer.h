@@ -36,7 +36,7 @@ namespace PROTOFUNC
 	void MakeScConnectSuccess(SC_CONNECTSUCCESS* _pOut, LLONG _id,  int _cellIndex,  int _type);
 	void MakeScOtherClientLogin(SC_OTHERCLIENTLOGIN* _pOut, LLONG _id, int _cellIndex, int _type);
 	void MakeScMonsterFind(SC_MONSTERFIND* _pOut, LLONG _id, int _findtype, int _targetID);
-	void MakeScDamaged(SC_DAMAGED* _pOut, LLONG _id, float _curhp);
+	void MakeScDamaged(SC_DAMAGED* _pOut, LLONG _id, float _damage);
 	void MakeScSeePlayerMove(SC_SEEPLAYERMOVE* _pOut, LLONG _id, const VECTOR3& _vPos);
 
 	/* =========== CS =============== */
@@ -45,6 +45,7 @@ namespace PROTOFUNC
 	void MakeCsLogin(CS_LOGIN* _pOut, LLONG _id);
 	void MakeCsAttack(CS_ATTACK* _pOut, LLONG _id, float _damage, VECTOR3* _pMovePos);
 	void MakeCsDisconnect(CS_DISCONNECT* _pOut, LLONG _id);
+	void MakeCsDamaged(SC_DAMAGED* _pOut, LLONG _id, float _damage);
 
 	class PROTOCOL_MEMORY_LEAK_REMOVER
 	{

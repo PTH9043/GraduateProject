@@ -9,9 +9,10 @@ namespace Server {
 		CServerMonster(OBJCON_CONDATA, _ID, _spMonsterJobTimer)
 	{
 		SetMonsterType(TAG_CHAR::TAG_HARLEQUINN);
-		UpdateFindRange(40.f, 90.f);
+		UpdateFindRange(80, 150);
 		SetMoveSpeed(5);
 		SetAttackRange(9.f);
+		SetCharStatus(CHARSTATUS{ 1, 0, 1500 });
 	}
 
 	_bool CHarlequin::Start(const VOIDDATAS& _ReceiveDatas)

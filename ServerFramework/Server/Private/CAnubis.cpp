@@ -10,10 +10,10 @@ namespace Server
 		: CServerMonster(OBJCON_CONDATA, _ID, _spMonsterJobTimer)
 	{
 		SetMonsterType(TAG_CHAR::TAG_ANUBIS);
-		UpdateFindRange(40.f, 90.f);
+		UpdateFindRange(70, 80);
 		SetMoveSpeed(5);
 		SetAttackRange(9.f);
-		SetCharStatus({ 1, 0, 100 });
+		SetCharStatus(CHARSTATUS{ 1, 0, 1000 });
 	}
 	_bool CAnubis::Start(const VOIDDATAS& _ReceiveDatas)
 	{

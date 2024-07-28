@@ -90,7 +90,7 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
     _bool Hit = false;
 
 #ifndef _ENABLE_PROTOBUFF
-    if (spMinotaur->GetPrevHealth() > spHarlequinn->GetHealth())
+    if (spMinotaur->GetPrevHealth() > spMinotaur->GetHealth())
         Hit = true;
 #else
     if (true == spMinotaur->IsDamaged())

@@ -290,10 +290,11 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	}
 
 	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_HIT) {
-#ifndef _ENABLE_PROTOBUFF
-		m_spBlood->SetActive(true);
-		m_spBlood->SetTimer(1.75f);
-#endif
+		if (false == IsNetworkConnected())
+		{
+			m_spBlood->SetActive(true);
+			m_spBlood->SetTimer(1.75f);
+		}
 		m_fInteractionTimeElapsed = 0;
 		m_bSetRimOn = true;
 	}
@@ -312,11 +313,12 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		m_bSetRimTimeElapsed = 0.f;
 		//SetAnimModelRimColor(_float3(0, 0, 0));
 	}
-#ifndef _ENABLE_PROTOBUFF
-	if (m_spBlood->CheckTimeOver()) {
-		m_spBlood->SetActive(false);		
+	if (false == IsNetworkConnected())
+	{
+		if (m_spBlood->CheckTimeOver()) {
+			m_spBlood->SetActive(false);
+		}
 	}
-#endif
 	//if (spGameInstance->GetDIKeyDown(DIK_F5)) {
 	//	m_spDust->SetActive(true);
 	//	m_spDust->SetTimer(2.f);
@@ -909,7 +911,9 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 			if (iter.first == L"Main")
 			{
 				for (auto& iter2 : pGuard->GetColliderContainer())
-				{			
+				{
+					
+
 					if (iter2.first == L"Main")
 					{
 						SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));

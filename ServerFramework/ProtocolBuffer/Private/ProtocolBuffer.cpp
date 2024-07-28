@@ -130,11 +130,11 @@ void PROTOFUNC::MakeScMonsterFind(SC_MONSTERFIND* _pOut, LLONG _id, int _findtyp
 	_pOut->set_targetid(_targetID);
 }
 
-void PROTOFUNC::MakeScDamaged(SC_DAMAGED* _pOut, LLONG _id, float _curhp)
+void PROTOFUNC::MakeScDamaged(SC_DAMAGED* _pOut, LLONG _id, float _damage)
 {
 	assert(nullptr != _pOut);
 	_pOut->set_id(_id);
-	_pOut->set_curhp(_curhp);
+	_pOut->set_damage(_damage);
 }
 
 void PROTOFUNC::MakeScSeePlayerMove(SC_SEEPLAYERMOVE* _pOut, LLONG _id, const VECTOR3& _vPos)
@@ -168,4 +168,11 @@ void PROTOFUNC::MakeCsDisconnect(CS_DISCONNECT* _pOut, LLONG _id)
 {
 	assert(nullptr != _pOut);
 	_pOut->set_id(_id);
+}
+
+void PROTOFUNC::MakeCsDamaged(SC_DAMAGED* _pOut, LLONG _id, float _damage)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_id);
+	_pOut->set_damage(_damage);
 }

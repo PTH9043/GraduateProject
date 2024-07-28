@@ -88,7 +88,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     _bool Hit = false;
 
 #ifndef _ENABLE_PROTOBUFF
-    if (spMummy->GetPrevHealth() > spHarlequinn->GetHealth())
+    if (spMummy->GetPrevHealth() > spMummy->GetHealth())
         Hit = true;
 #else
     if (true == spMummy->IsDamaged())

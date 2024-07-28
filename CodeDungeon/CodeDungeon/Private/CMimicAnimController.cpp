@@ -80,7 +80,7 @@ void CMimicAnimController::Tick(const _double& _dTimeDelta)
     _bool Hit = false;
 
 #ifndef _ENABLE_PROTOBUFF
-    if (spMimic->GetPrevHealth() > spHarlequinn->GetHealth())
+    if (spMimic->GetPrevHealth() > spMimic->GetHealth())
         Hit = true;
 #else
     if (true == spMimic->IsDamaged())

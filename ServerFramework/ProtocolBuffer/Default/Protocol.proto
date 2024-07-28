@@ -110,7 +110,12 @@ message SC_OTHERCLIENTLOGIN
  message SC_DAMAGED
  {
 	 int64 id = 1;
-	 float curhp = 2;
+	 float damage = 2;
+ }
+
+ message SC_DEAD
+ {
+	 int64 id = 1;
  }
 
  message SC_SEEPLAYERMOVE
@@ -146,3 +151,9 @@ message CS_DISCONNECT
 {
 	int64 id = 1;
 }
+
+ message CS_DAMAGED
+ {
+	 int64 id = 1;
+	 float damage = 2;
+ }

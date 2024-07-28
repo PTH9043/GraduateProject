@@ -30,6 +30,7 @@ namespace Server
 		UpdateFindRange(40.f, 90.f);
 		SetMoveSpeed(5);
 		SetAttackRange(9.f);
+		SetCharStatus(CHARSTATUS{ 1, 0, 500 });
 	}
 	_bool CMummy::Start(const VOIDDATAS& _ReceiveDatas)
 	{
