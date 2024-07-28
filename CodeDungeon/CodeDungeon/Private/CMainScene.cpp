@@ -96,6 +96,7 @@ void CMainScene::UpdateMobsStatus()
 					{
 						m_iHarlequinnCurHP = mobs->GetHealth();
 						m_iHarlequinnMaxHP = mobs->GetMaxHealth();
+					
 						if (!m_spWarriorPlayer->GetDeathState()) {
 							m_bisFoundPlayer_Harlequinn = mobs->GetFoundTargetState();							
 						}
@@ -1021,6 +1022,18 @@ void CMainScene::CreateStartSceneUI()
 			m_spMainTitleUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc3 }));
 			m_spMainTitleUI->SetActive(true);
 		}
+		{
+			// ZBufferOrder는 이미지 Order 순서를 표현한다. 0에 가까울수록 맨 위, 1에 가까울수록 맨 뒤에 있는다. (0, 1)는 사용 X
+			tDesc3.fZBufferOrder = 0.88f;
+			tDesc3.strImgName = L"THANKYOU";
+			tDesc3._shaderName = PROTO_RES_DEFAULTHIGHLIGHTUISHADER;
+			tDesc3.DrawOrder = L"Middle";
+			tDesc3.v2Size.x = static_cast<_float>(640);
+			tDesc3.v2Size.y = static_cast<_float>(240);
+			tDesc3.v2Pos = _float2{ 640,500 };
+			m_spEndingMent = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc3 }));
+			m_spEndingMent->SetActive(false);
+		}
 		CButtonUI::UIDESC tDesc4;
 		{
 			tDesc4.fZBufferOrder = 0.47f;
@@ -1415,8 +1428,8 @@ void CMainScene::CreateKeyInfoUI()
 		tDesc5.v2Size.x = static_cast<_float>(50);
 		tDesc5.v2Size.y = static_cast<_float>(50);
 		tDesc5.v2Pos = _float2{ 525,400 };
-		m_spULTIMATEATTACKONEUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
-		m_spULTIMATEATTACKONEUI->SetActive(false);
+		m_spULTIMATEATTACKONESUI = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc5 }));
+		m_spULTIMATEATTACKONESUI->SetActive(false);
 	}
 	{
 		tDesc5.fZBufferOrder = 0.43f;
@@ -1872,7 +1885,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 				m_spJUMPSTANDUPTextUI->SetActive(true);
 				m_spSHORTATTACKUI->SetActive(true);
 				m_spSHORTATTACKTextUI->SetActive(true);
-				m_spULTIMATEATTACKONEUI->SetActive(true);
+				m_spULTIMATEATTACKONESUI->SetActive(true);
 				m_spULTIMATEATTACKONETextUI->SetActive(true);
 				m_spULTIMATEATTACKTWOUI->SetActive(true);
 				m_spULTIMATEATTACKTWOTextUI->SetActive(true);
@@ -1900,7 +1913,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 				m_spJUMPSTANDUPTextUI->SetActive(false);
 				m_spSHORTATTACKUI->SetActive(false);
 				m_spSHORTATTACKTextUI->SetActive(false);
-				m_spULTIMATEATTACKONEUI->SetActive(false);
+				m_spULTIMATEATTACKONESUI->SetActive(false);
 				m_spULTIMATEATTACKONETextUI->SetActive(false);
 				m_spULTIMATEATTACKTWOUI->SetActive(false);
 				m_spULTIMATEATTACKTWOTextUI->SetActive(false);
@@ -2148,7 +2161,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 void CMainScene::Tick(const _double& _dTimeDelta)
 {
 	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
-
+	
 	DrawStartSceneUI(_dTimeDelta);
 	TurnLightsOnRange();
 	TurnRoomsOnRange();
@@ -2156,12 +2169,7 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 	SHPTR<ULight> DirLight;
 	OutLight(LIGHTTYPE::TYPE_DIRECTIONAL, 0, DirLight);
 	
-	if (pGameInstance->GetDIKeyDown(DIK_F6)) {
-		pGameInstance->PauseGame();
-	}
-	if (pGameInstance->GetDIKeyDown(DIK_F7)) {
-		pGameInstance->ResumeGame();
-	}
+	
 	SHPTR<ULight> PointLight;
 	OutLight(LIGHTTYPE::TYPE_POINT, 0, PointLight);
 	{
@@ -2202,80 +2210,11 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 		m_spPlayerHpFont->SetText(health_string);		
 	}
 	{	//==========Minotaur Hp===============
-		if (!m_spWarriorPlayer->GetDeathState()&&((m_bIsFoundPlayer_Minotaur && !m_bIsDead_Minotaur) || (m_bisFoundPlayer_Harlequinn && !m_bisDead_Harlequinn) || (m_bisFoundPlayer_Anubis && !m_bisDead_Anubis))) {
-			m_spBossHpBarFrameUI->SetActive(true);
-			pGameInstance->BGMUpdateVolume(L"GamePlayBGM", 0.f);
-		}
-		else {
-			pGameInstance->BGMUpdateVolume(L"GamePlayBGM", 0.5f);
-			m_spBossHpBarFrameUI->SetActive(false);
-		}
-		if (!m_spWarriorPlayer->GetDeathState() && m_bIsFoundPlayer_Minotaur&&!m_bIsDead_Minotaur) {
-			if (!EnterMinoSound) {
-				pGameInstance->SoundPlayOnce(L"MinoEnterMoan");
-				pGameInstance->SoundPlay(L"MinoBackground");
-				pGameInstance->SetLooping(L"MinoBackground", true);
-				EnterMinoSound = true;
-			}	
-			
-			m_spMinotaurHpFont->SetRender(true);
-			m_spMinotaurFrameUI->SetActive(true);
-				m_spMinotaurHpBarUI->SetActive(true);
-
-		}
-		else {
 		
-			pGameInstance->StopSound(L"MinoBackground");
-			pGameInstance->SetLooping(L"MinoBackground", false);
-			EnterMinoSound = false;
-			m_spMinotaurHpFont->SetRender(false);
-			m_spMinotaurFrameUI->SetActive(false);
-			m_spMinotaurHpBarUI->SetActive(false);
-		}
-		if (!m_spWarriorPlayer->GetDeathState() && m_bisFoundPlayer_Harlequinn&&!m_bisDead_Harlequinn) {
-			if (!EnterQuinnSound) {
-				
-				pGameInstance->SoundPlayOnce(L"12042307_1");
-				pGameInstance->SoundPlay(L"QuinnEnterBackground");
-				pGameInstance->SetLooping(L"QuinnEnterBackground", true);
-				EnterQuinnSound = true;
-			}
-
-			m_spHarlequinnHpFont->SetRender(true);
-			m_spHarlequinnFrameUI->SetActive(true);
-			m_spHarlequinnHpBarUI->SetActive(true);
-		}
-		else {
-			pGameInstance->StopSound(L"QuinnEnterBackground");
-			pGameInstance->SetLooping(L"QuinnEnterBackground", false);
-			EnterQuinnSound = false;
-			m_spHarlequinnHpFont->SetRender(false);
-			m_spHarlequinnFrameUI->SetActive(false);
-			m_spHarlequinnHpBarUI->SetActive(false);
-		}
-		if (!m_spWarriorPlayer->GetDeathState() && m_bisFoundPlayer_Anubis&&!m_bisDead_Anubis) {
-			if (!EnterAnubisSound) {
-				pGameInstance->SoundPlayOnce(L"AnubisEnterMoan");
-				pGameInstance->SoundPlay(L"AnubisEnterBackground");
-				pGameInstance->SetLooping(L"AnubisEnterBackground", true);
-				EnterAnubisSound = true;
-			}
-			m_spAnubisHpFont->SetRender(true);
-			m_spAnubisFrameUI->SetActive(true);
-			m_spAnubisHpBarUI->SetActive(true);
-		}
-		else {
-			
-			pGameInstance->StopSound(L"AnubisEnterBackground");
-			pGameInstance->SetLooping(L"AnubisEnterBackground", false);
-			EnterAnubisSound = false;
-			m_spAnubisHpFont->SetRender(false);
-			m_spAnubisFrameUI->SetActive(false);
-			m_spAnubisHpBarUI->SetActive(false);
-		}
 	}
 	{//if Die
 		if (m_spWarriorPlayer->GetDeathState()) {
+		
 			m_spDieTextUI->SetActive(true);
 			m_spDieTextUI->SetIfPicked(true);
 			m_spDieKeyGUI->SetActive(true);
@@ -2362,6 +2301,48 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 			m_spPlayerAbilityLeftTimeFont->SetRender(false);
 		}
 	}
+	//게임 찐 종료
+	if (m_spWarriorPlayer->GetDoneCoreMinotaurState() && m_spWarriorPlayer->GetDoneCoreHarlequinnState() && m_spWarriorPlayer->GetDoneCoreAnubisState() && m_bisDead_Anubis && m_bisDead_Harlequinn && m_bIsDead_Minotaur)
+	{
+		if (!EndGameSound) {
+			pGameInstance->SoundStopBGM(L"GamePlayBGM");
+			pGameInstance->SoundPlayOnce(L"EndingSong");
+			pGameInstance->SetLooping(L"EndingSong", true);
+			EndGameSound = true;
+		}
+		if (m_spWarriorPlayer->GetIfPlayerIsInEnd()) {
+			EndingTimeElapsed += _dTimeDelta;
+			if (EndingTimeElapsed > 4.5f) {
+				::PostQuitMessage(0);
+			}
+			m_spBackgroundUI->SetActive(true);
+			m_spEndingMent->SetActive(true);
+			m_spMainTitleUI->SetActive(true);
+			m_spMainTitleEffectUI->SetActive(true);
+			//-------
+			m_spPlayerHpFont->SetRender(false);
+			m_spHpBarUI->SetActive(false);
+			m_spBackPlayerFrameUI->SetActive(false);
+			m_spBackDragonPlayerFrameUI->SetActive(false);
+			m_spFrontPlayerFrameUI->SetActive(false);
+			m_spPlayerNameUI->SetActive(false);
+			m_spTABUI->SetActive(false);
+			m_spTABTEXTUI->SetActive(false);
+			{//attack ui
+				m_spUltimateAttackOneFrameUI->SetActive(false);
+				m_spUltimateAttackOneUI->SetActive(false);
+				m_spUltimateAttackTwoFrameUI->SetActive(false);
+				m_spUltimateAttackTwoUI->SetActive(false);
+				m_spDetactAbilityIconFrameUI->SetActive(false);
+				m_spDetactAbilityIconUI->SetActive(false);
+				m_spDetactAbilityKeyIconUI->SetActive(false);
+				m_spShortAttackIconFrameUI->SetActive(false);
+				m_spShortAttackIconUI->SetActive(false);
+				m_spShortAttackKeyIconUI->SetActive(false);
+			}
+		}
+
+	}
 	
 
 	if(pGameInstance->GetDIKeyDown(DIK_ESCAPE))
@@ -2372,6 +2353,78 @@ void CMainScene::LateTick(const _double& _dTimeDelta)
 {
 	UpdateMobsStatus();
 	TurnGuardsOnRange(_dTimeDelta);
+	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
+	if (!m_spWarriorPlayer->GetDeathState() && ((m_bIsFoundPlayer_Minotaur && !m_bIsDead_Minotaur) || (m_bisFoundPlayer_Harlequinn && !m_bisDead_Harlequinn) || (m_bisFoundPlayer_Anubis && !m_bisDead_Anubis))) {
+		m_spBossHpBarFrameUI->SetActive(true);
+		pGameInstance->BGMUpdateVolume(L"GamePlayBGM", 0.f);
+	}
+	else {
+		pGameInstance->BGMUpdateVolume(L"GamePlayBGM", 0.5f);
+		m_spBossHpBarFrameUI->SetActive(false);
+	}
+	if (!m_spWarriorPlayer->GetDeathState() && m_bIsFoundPlayer_Minotaur && !m_bIsDead_Minotaur) {
+		if (!EnterMinoSound) {
+			pGameInstance->SoundPlayOnce(L"MinoEnterMoan");
+			pGameInstance->SoundPlay(L"MinoBackground");
+			pGameInstance->SetLooping(L"MinoBackground", true);
+			EnterMinoSound = true;
+		}
+
+		m_spMinotaurHpFont->SetRender(true);
+		m_spMinotaurFrameUI->SetActive(true);
+		m_spMinotaurHpBarUI->SetActive(true);
+
+	}
+	else {
+
+		pGameInstance->StopSound(L"MinoBackground");
+		pGameInstance->SetLooping(L"MinoBackground", false);
+		EnterMinoSound = false;
+		m_spMinotaurHpFont->SetRender(false);
+		m_spMinotaurFrameUI->SetActive(false);
+		m_spMinotaurHpBarUI->SetActive(false);
+	}
+	if (!m_spWarriorPlayer->GetDeathState() && m_bisFoundPlayer_Harlequinn && !m_bisDead_Harlequinn) {
+		if (!EnterQuinnSound) {
+
+			pGameInstance->SoundPlayOnce(L"12042307_1");
+			pGameInstance->SoundPlay(L"QuinnEnterBackground");
+			pGameInstance->SetLooping(L"QuinnEnterBackground", true);
+			EnterQuinnSound = true;
+		}
+
+		m_spHarlequinnHpFont->SetRender(true);
+		m_spHarlequinnFrameUI->SetActive(true);
+		m_spHarlequinnHpBarUI->SetActive(true);
+	}
+	else {
+		pGameInstance->StopSound(L"QuinnEnterBackground");
+		pGameInstance->SetLooping(L"QuinnEnterBackground", false);
+		EnterQuinnSound = false;
+		m_spHarlequinnHpFont->SetRender(false);
+		m_spHarlequinnFrameUI->SetActive(false);
+		m_spHarlequinnHpBarUI->SetActive(false);
+	}
+	if (!m_spWarriorPlayer->GetDeathState() && m_bisFoundPlayer_Anubis && !m_bisDead_Anubis) {
+		if (!EnterAnubisSound) {
+			pGameInstance->SoundPlayOnce(L"AnubisEnterMoan");
+			pGameInstance->SoundPlay(L"AnubisEnterBackground");
+			pGameInstance->SetLooping(L"AnubisEnterBackground", true);
+			EnterAnubisSound = true;
+		}
+		m_spAnubisHpFont->SetRender(true);
+		m_spAnubisFrameUI->SetActive(true);
+		m_spAnubisHpBarUI->SetActive(true);
+	}
+	else {
+
+		pGameInstance->StopSound(L"AnubisEnterBackground");
+		pGameInstance->SetLooping(L"AnubisEnterBackground", false);
+		EnterAnubisSound = false;
+		m_spAnubisHpFont->SetRender(false);
+		m_spAnubisFrameUI->SetActive(false);
+		m_spAnubisHpBarUI->SetActive(false);
+	}
 }
 
 void CMainScene::CollisionTick(const _double& _dTimeDelta)

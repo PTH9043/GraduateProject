@@ -95,7 +95,9 @@ public: /* Get Set */
 	void SetIfStartedGame(_bool is) { m_bStartedGame = is; }
 	_bool GetIfStartedGame() { return m_bStartedGame; }
 
-
+	_bool GetIfPlayerIsInEnd() {
+		return m_bisGameEnd;
+	}
 
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
@@ -183,6 +185,7 @@ private:
 	_bool HalequinCoreSound = false;
 	_bool AnubisCoreSound = false;
 	_bool GuardCollideSound = false;
+
 
 
 };
