@@ -351,10 +351,14 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 
 	// Rotation 
 	{
-		if (m_bStartedGame|| !m_bisGameEnd) {
+		if (m_bStartedGame&& !m_bisGameEnd) {
 
 			POINT ptCursorPos;
 			ShowCursor(FALSE);
+			SetCursorPos(1000, 400);
+		}
+		if (m_bisGameEnd) {
+			ShowCursor(TRUE);
 			SetCursorPos(1000, 400);
 		}
 	}
