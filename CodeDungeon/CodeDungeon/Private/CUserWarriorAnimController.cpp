@@ -350,7 +350,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
                     static_pointer_cast<CMainCamera>(spWarriorPlayer->GetFollowCamera())->GetCurrentNavi()->FindCell(spWarriorPlayer->GetSpawnPointCamera()->GetIndex());
                     spWarriorPlayer->SetElapsedTime(0);
                     spWarriorPlayer->SetDeathState(false);
-                    spWarriorPlayer->SetHealth(1000);
+                    spWarriorPlayer->SetHealth(2500);
                     spGameInstance->TurnOffDieEffect();
                     UpdateState(spAnimModel, ANIM_IDLE, L"IDLE");
                     spAnimModel->SetAnimation(L"idle01");
