@@ -79,7 +79,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	//int cellIndex = 0;
 	//int cellIndex = 349;
 
-	int cellIndex = 289;
+	int cellIndex = 0;
 
 	SHPTR<UCell> spCell = spNavigation->FindCell(cellIndex);
 	GetTransform()->SetPos(spCell->GetCenterPos());
@@ -205,10 +205,10 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetOutline(true);
 	SetifPlayer(true);//depth만 기록하고 outline안그리도록 다른 물체  outline depth판정위해
 	//SetIfOutlineScale(false); 만약 플레이어 그릴거면 SetifPlayer->false, SetIfOutlineScale->true
-	SetHealth(1);
-	SetMaxHealth(10000);
+	SetHealth(1000);
+	SetMaxHealth(1000);
 	SetAnimModelRim(true);
-	
+	SetAttack(100);
 
 	return S_OK;
 }
@@ -329,7 +329,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	
 	if (IfOpenChestForHeal) {//2.1초 지속
 		HealTrigger = true;
-		IncreaseHealth(2); //이렇게 하면 119정도 오름
+		IncreaseHealth(5); //이렇게 하면 119정도 오름
 		SetAnimModelRimColor(_float3(0, 1, 0));
 		m_spHealParticle->SetActive(true);
 		_float3 pos = GetTransform()->GetPos();
@@ -530,7 +530,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							}
 							if (!GetIsHItAlreadyState())
 							{
-								DecreaseHealth(1);
+								DecreaseHealth(100);
 							}
 							SetHitAlreadyState(true);
 						}
@@ -541,7 +541,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 						{
 							if (!GetIsHItAlreadyState())
 							{
-								DecreaseHealth(1);
+								DecreaseHealth(50);
 							}
 							SetHitAlreadyState(true);
 						}
@@ -577,7 +577,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 									}
 									if (!GetIsHItAlreadyState())
 									{
-										DecreaseHealth(1);
+										DecreaseHealth(50);
 									}
 									SetHitAlreadyState(true);
 								}
@@ -598,7 +598,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 								{
 									if (!GetIsHItAlreadyState())
 									{
-										DecreaseHealth(1);
+										DecreaseHealth(100);
 									}
 									SetHitAlreadyState(true);
 								}
@@ -889,7 +889,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							{
 								if (!GetIsHItAlreadyState())
 								{
-									DecreaseHealth(1);
+									DecreaseHealth(100);
 								}
 								SetHitAlreadyState(true);
 							}

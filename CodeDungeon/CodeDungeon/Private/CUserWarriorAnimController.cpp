@@ -179,7 +179,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
         // Attack handling
         if (isAttack && !Hit && !spWarriorPlayer->GetDeathState()) {
             if (isWAttack) {
-                spWarriorPlayer->SetAttack(50);
+    
                 if (CurAnimName == L"combo02_1") m_iWComboStack = 2;
                 else if (CurAnimName == L"combo02_2") m_iWComboStack = 3;
                 else m_iWComboStack = 1;
@@ -191,7 +191,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
                 }
             }
             else if (isSAttack) {
-                spWarriorPlayer->SetAttack(50);
+
                 if (CurAnimName == L"combo06_1") m_iSComboStack = 2;
                 else if (CurAnimName == L"combo06_2") m_iSComboStack = 3;
                 else m_iSComboStack = 1;
@@ -203,7 +203,6 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
                 }
             }
             else if (isRAttack && ShortAttackisAvailable && UltimateAttackOneDurationTime < 0.0001f && UltimateAttackTwoDurationTime < 0.0001f) {
-
                 UpdateState(spAnimModel, ANIM_ATTACK, L"RATTACK");
                 m_iWComboStack = 0;
                 m_iSComboStack = 0;
@@ -214,7 +213,6 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
                 m_iSComboStack = 0;
             }
             else if (isCombo2 && UltAttackTwoisAvailable && ShortAttackDurationTime < 0.0001f && UltimateAttackOneDurationTime < 0.0001f) {
-
                 UpdateState(spAnimModel, ANIM_ATTACK, L"COMBO9");
                 m_iWComboStack = 0;
                 m_iSComboStack = 0;

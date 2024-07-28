@@ -226,8 +226,8 @@ HRESULT CMinotaur::NativeConstructClone(const VOIDDATAS& _Datas)
 	}
 	SetOutlineByAbility(true);
 	SetOutlineColor(_float3(0, 0, 1));
-	SetHealth(200);
-	SetMaxHealth(200);
+	SetHealth(2500);
+	SetMaxHealth(2500);
 	SetActivationRange(100);
 	SetDeactivationRange(120);
 	SetOutline(true);

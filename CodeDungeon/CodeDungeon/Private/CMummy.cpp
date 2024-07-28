@@ -236,8 +236,8 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 		Colliders.second->SetTranslate(_float3(0, 10, 0));
 	}
 
-	SetHealth(100);
-	SetMaxHealth(100);
+	SetHealth(500);
+	SetMaxHealth(500);
 	SetActivationRange(50);
 	SetDeactivationRange(80);
 	SetOutlineByAbility(true);

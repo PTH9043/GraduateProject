@@ -269,8 +269,8 @@ HRESULT CHarlequinn::NativeConstructClone(const VOIDDATAS& _Datas)
 		Colliders.second->SetTranslate(_float3(0, 10, 0));
 	}
 
-	SetHealth(200);
-	SetMaxHealth(200);
+	SetHealth(1500);
+	SetMaxHealth(1500);
 
 	SetActivationRange(50);
 	SetDeactivationRange(100);
@@ -355,7 +355,6 @@ void CHarlequinn::TickActive(const _double& _dTimeDelta)
 			}
 			else // patrolling when player is not found
 			{
-				SetOutline(false);
 				SHPTR<UNavigation> spNavigation = GetCurrentNavi();
 				SHPTR<UCell> spNeighborCell = spNavigation->ChooseRandomNeighborCell(3);
 				if (GetTimeAccumulator() >= 5.0)
