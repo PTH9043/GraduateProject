@@ -205,8 +205,8 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetOutline(true);
 	SetifPlayer(true);//depth만 기록하고 outline안그리도록 다른 물체  outline depth판정위해
 	//SetIfOutlineScale(false); 만약 플레이어 그릴거면 SetifPlayer->false, SetIfOutlineScale->true
-	SetHealth(1000);
-	SetMaxHealth(1000);
+	SetHealth(2500);
+	SetMaxHealth(2500);
 	SetAnimModelRim(true);
 	SetAttack(100);
 
@@ -329,7 +329,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	
 	if (IfOpenChestForHeal) {//2.1초 지속
 		HealTrigger = true;
-		IncreaseHealth(5); //이렇게 하면 119정도 오름
+		IncreaseHealth(10); //이렇게 하면 119정도 오름
 		SetAnimModelRimColor(_float3(0, 1, 0));
 		m_spHealParticle->SetActive(true);
 		_float3 pos = GetTransform()->GetPos();
@@ -530,7 +530,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							}
 							if (!GetIsHItAlreadyState())
 							{
-								DecreaseHealth(100);
+								DecreaseHealth(200);
 							}
 							SetHitAlreadyState(true);
 						}
@@ -598,7 +598,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 								{
 									if (!GetIsHItAlreadyState())
 									{
-										DecreaseHealth(100);
+										DecreaseHealth(10);
 									}
 									SetHitAlreadyState(true);
 								}
@@ -917,41 +917,41 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 
 					if (iter2.first == L"Main")
 					{
-						SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
+						//SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
 
-						if (GetCollidedNormal() != _float3::Zero) // 충돌이 발생한 경우
-						{
-							if (!GuardCollideSound) {
-								spGameInstance->SoundPlayOnce(L"GuardCollideSound");
-								GuardCollideSound = true;
-							}
-							if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead03")
-							{
-								if (m_dKickedElapsed >= 50)
-								{
-									m_dKickedElapsed = 0;
-									m_bisKicked = false;
-								}
-								else
-								{
-									GetTransform()->SetDirectionFixedUp(-pGuard->GetTransform()->GetLook());
-									m_bisKicked = true;
-								}
-						
-							}
-							SetOBJCollisionState(true);
-							// 속도 결정
-							_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 60.0f : 20.0f;
-							if (CurAnimName == L"roll_back" || CurAnimName == L"roll_front" || CurAnimName == L"roll_left" || CurAnimName == L"roll_right"|| CurAnimName== L"jumpZ0")
-								GetTransform()->SetPos(GetPrevPos());
-							else
-								ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
-						}
-						else
-						{
-							GuardCollideSound = false;
-							SetOBJCollisionState(false);
-						}
+						//if (GetCollidedNormal() != _float3::Zero) // 충돌이 발생한 경우
+						//{
+						//	if (!GuardCollideSound) {
+						//		spGameInstance->SoundPlayOnce(L"GuardCollideSound");
+						//		GuardCollideSound = true;
+						//	}
+						//	if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead03")
+						//	{
+						//		if (m_dKickedElapsed >= 50)
+						//		{
+						//			m_dKickedElapsed = 0;
+						//			m_bisKicked = false;
+						//		}
+						//		else
+						//		{
+						//			GetTransform()->SetDirectionFixedUp(-pGuard->GetTransform()->GetLook());
+						//			m_bisKicked = true;
+						//		}
+						//
+						//	}
+						//	SetOBJCollisionState(true);
+						//	// 속도 결정
+						//	_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 60.0f : 20.0f;
+						//	if (CurAnimName == L"roll_back" || CurAnimName == L"roll_front" || CurAnimName == L"roll_left" || CurAnimName == L"roll_right"|| CurAnimName== L"jumpZ0")
+						//		GetTransform()->SetPos(GetPrevPos());
+						//	else
+						//		ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
+						//}
+						//else
+						//{
+						//	GuardCollideSound = false;
+						//	SetOBJCollisionState(false);
+						//}
 					}
 					else if (iter2.first == L"ForInteractionGuard")
 					{

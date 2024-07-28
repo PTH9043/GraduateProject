@@ -40,10 +40,7 @@ HRESULT CStatue::NativeConstructClone(const VOIDDATAS& _vecDatas)
 
 	UCollider::COLLIDERDESC tDesc;
 	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
-	tDesc.vScale = _float3(1.f, 1.f, 1.f);
-	SHPTR<UCollider> Collider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
-	_wstring mainColliderTag = L"Main";
-	AddColliderInContainer(mainColliderTag, Collider);
+	tDesc.vScale = _float3(15.f, 30.f, 15.f);
 
 	SHPTR<UCollider> Collider2 = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
 	_wstring subColliderTag = L"ForInteractionStatue";
@@ -60,17 +57,10 @@ void CStatue::TickActive(const _double& _dTimeDelta)
 	__super::TickActive(_dTimeDelta);
 	for (auto& Containers : GetColliderContainer())
 	{
-		if(Containers.first != L"ForInteraction")
+		if(Containers.first == L"ForInteractionStatue")
 		{
-			Containers.second->SetTranslate(GetModel()->GetCenterPos());
-			Containers.second->SetScaleToFitModel(GetModel()->GetMinVertexPos(), GetModel()->GetMaxVertexPos());
-			Containers.second->SetTransform(GetTransform());
-		}
-		else
-		{
-			Containers.second->SetTranslate(GetModel()->GetCenterPos());
-			Containers.second->SetScale(_float3(12, 20, 12));
-			Containers.second->SetTransform(GetTransform());
+			Containers.second->SetTranslate(_float3(GetModel()->GetCenterPos().x, GetModel()->GetCenterPos().y - 10, GetModel()->GetCenterPos().z));
+			Containers.second->SetTransform(GetTransform()->GetPos(), GetTransform()->GetQuaternion());
 		}
 	}
 
@@ -85,10 +75,7 @@ void CStatue::LateTickActive(const _double& _dTimeDelta)
 	__super::LateTickActive(_dTimeDelta);
 	//for (auto& Containers : GetColliderContainer())
 	//{
-	//	if (Containers.first != L"ForInteraction")
-	//	{
-	//	}
-	//	else
+	//	if (Containers.first == L"ForInteractionStatue")
 	//	{
 	//		Containers.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
 	//	}

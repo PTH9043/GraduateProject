@@ -272,8 +272,8 @@ HRESULT CHarlequinn::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetHealth(1500);
 	SetMaxHealth(1500);
 
-	SetActivationRange(50);
-	SetDeactivationRange(100);
+	SetActivationRange(80);
+	SetDeactivationRange(150);
 	SetOutlineByAbility(true);
 	SetOutline(true);
 	SetOutlineColor(_float3(1, 1, 0));

@@ -296,9 +296,9 @@ HRESULT CAnubis::NativeConstructClone(const VOIDDATAS& _Datas)
 
 	//spGameInstance->AddCollisionPawnList(m_spMagicSphere);
 
-	SetHealth(500);
-	SetMaxHealth(500);
-	SetActivationRange(50);
+	SetHealth(1000);
+	SetMaxHealth(1000);
+	SetActivationRange(70);
 	SetDeactivationRange(80);
 	SetOutlineByAbility(true);
 	SetOutlineColor(_float3(1, 1, 0));
