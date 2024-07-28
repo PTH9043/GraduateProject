@@ -131,18 +131,19 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
                 m_dShieldCooltime = 3;
             }
         }
-        else
+    }
+
+    if(!m_bFoundPlayerFirsttime)
+    {
+        if (CurAnimName == L"Attack Idle to Guard Idle")
         {
-            if (CurAnimName == L"Attack Idle to Guard Idle")
+            if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.9)
             {
-                if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.9)
-                {
-                    UpdateState(spAnimModel, ANIM_IDLE, L"GUARDIDLE");
-                }
+                UpdateState(spAnimModel, ANIM_IDLE, L"GUARDIDLE");
             }
-            else if(CurAnimName == L"Guard Idle")
-                spAnubis->GetTransform()->SetDirectionFixedUp(spAnubis->GetOriginDirection(), _dTimeDelta, 5);
         }
+        else if (CurAnimName == L"Guard Idle")
+            spAnubis->GetTransform()->SetDirectionFixedUp(spAnubis->GetOriginDirection(), _dTimeDelta, 5);
     }
 
     if (Hit)
