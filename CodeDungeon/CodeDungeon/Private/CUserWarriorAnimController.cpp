@@ -172,7 +172,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
 
         // Kicked state
         if (isKicked && CurAnimName != L"rise01") {
-            UpdateState(spAnimModel, ANIM_HIT, L"GOTKICKED");
+            UpdateState(spAnimModel, ANIM_HIT, L"GOTKICKED");         
             spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         }
 
@@ -364,6 +364,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
                 if (spWarriorPlayer->GetWarriorKickedTimeElapsed() == 0)
                 {
                     spGameInstance->SoundPlayOnce(L"Kicked");
+                    spAnimModel->SetAnimation(L"dead01");
                 }
                 spWarriorPlayer->SetWarriorKickedTimeElapsed(spWarriorPlayer->GetWarriorKickedTimeElapsed() + _dTimeDelta * KickedAnimSpeed);
                 if (spWarriorPlayer->GetWarriorKickedTimeElapsed() < KickedTimeArcOpenEnd)
