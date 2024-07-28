@@ -51,4 +51,11 @@
 #define PROTO_COMP_ANUBISANIMCONTROLLER L"Proto_Comp_AnubisAnimController"
 #define PROTO_COMP_MIMICANIMCONTROLLER L"Proto_Comp_MimicAnimController"
 
+#define PROTO_COMP_NETWORKMUMMYANIMCONTROLLER L"Proto_Comp_NetworkMummyAnimController"
+#define PROTO_COMP_NETWORKCHESTANIMCONTROLLER  L"Proto_Comp_NetworkChestAniMController"
+#define PROTO_COMP_NETWORKMINOTAURANIMCONTROLLER L"Proto_Comp_NetworkMinotaurAnimController"
+#define PROTO_COMP_NETWORKHARLEQUINNANIMCONTROLLER L"Proto_Comp_NetworkHarlequinnAnimController"
+#define PROTO_COMP_NETWORKANUBISANIMCONTROLLER L"Proto_Comp_NetworkAnubisAnimController"
+#define PROTO_COMP_NETWORKMIMICANIMCONTROLLER L"Proto_Comp_NetworkMimicAnimController"
+
 #define FONT_NANUMSQUARE_ACBOLD L"Font_NanumSquare_AcBold"

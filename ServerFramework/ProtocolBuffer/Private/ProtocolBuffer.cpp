@@ -71,7 +71,7 @@ void PROTOFUNC::MakeCharState(CHARSTATE* _pOut, LLONG _id, const VECTOR3& _vPos,
 	_pOut->set_rotatez(_vRotate.z());
 }
 
-void PROTOFUNC::MakeMobState(MOBSTATE* _pOut, LLONG _id, const VECTOR3& _vPos, const VECTOR3& _vRotate, int _animstate, int _curAnimIndex, int _triggerOn, int _outlineOn)
+void PROTOFUNC::MakeMobState(MOBSTATE* _pOut, LLONG _id, const VECTOR3& _vPos, const VECTOR3& _vRotate, int _animstate, int _curAnimIndex, bool _triggerOn, bool _foundOn, double _animtime)
 {
 	assert(nullptr != _pOut);
 	_pOut->set_id(_id);
@@ -85,8 +85,10 @@ void PROTOFUNC::MakeMobState(MOBSTATE* _pOut, LLONG _id, const VECTOR3& _vPos, c
 	_pOut->set_state(_animstate);
 	_pOut->set_animationindex(_curAnimIndex);
 	_pOut->set_triggeron(_triggerOn);
-	_pOut->set_outlineon(_outlineOn);
+	_pOut->set_foundon(_foundOn);
+	_pOut->set_animtime(_animtime);
 }
+
 
 void PROTOFUNC::MakeMobState(MOBSTATE* _pOut, LLONG _id, const VECTOR3& _vPos, const VECTOR3& _vRotate)
 {

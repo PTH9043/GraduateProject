@@ -22,7 +22,8 @@ CMummyAnimController::CMummyAnimController(CSHPTRREF<UDevice> _spDevice)
     m_didleRandomValueChoosingTimer{0},
     m_iRandomValue{ 0 },
     m_dRecvAnimDuration{ 0 },
-    m_bPlayAttackSound{false},
+    m_bPlayAttackSound1{false},
+    m_bPlayAttackSound2{false},
     m_bPlayHitSound{ false }
 {
 }
@@ -40,7 +41,8 @@ CMummyAnimController::CMummyAnimController(const CMummyAnimController& _rhs)
     m_didleRandomValueChoosingTimer{ 0 },
     m_iRandomValue{ 0 },
     m_dRecvAnimDuration{ 0 },
-    m_bPlayAttackSound{false},
+    m_bPlayAttackSound1{false},
+    m_bPlayAttackSound2{false},
     m_bPlayHitSound{ false }
 {
 }
@@ -214,6 +216,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
                 UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK02");
         }
     }
+
 
     // Check for death
     if (spMummy->GetHealth() <= 0)

@@ -61,6 +61,7 @@ void CNetworkClientController::MakeActors(const VECTOR<SHPTR<UActor>>& _actorCon
 
 				spGameInstance->AddCollisionPawnList(spWarriorPlayer);
 				AddCreatedNetworkActor(CharInitData.first, spWarriorPlayer);
+				spGameInstance->AddPlayerInContainer(spWarriorPlayer);
 			}
 		}
 		break;
@@ -139,7 +140,7 @@ void CNetworkClientController::CreateServerMobData()
 		{
 		case TAG_CHAR::TAG_CHEST:
 		{
-			CItemChest::CHARACTERDESC chestDesc{ PROTO_RES_CHESTANIMMODEL, PROTO_COMP_CHESTANIMCONTROLLER };;
+			CItemChest::CHARACTERDESC chestDesc{ PROTO_RES_CHESTANIMMODEL, PROTO_COMP_NETWORKCHESTANIMCONTROLLER };;
 			SHPTR<CItemChest> Chest = std::static_pointer_cast<CItemChest>(spGameInstance->CloneActorAdd(PROTO_ACTOR_CHEST, { &chestDesc, &iter }));
 			AddCreatedNetworkActor(iter.iMobID, Chest);
 		}
@@ -166,7 +167,7 @@ void CNetworkClientController::CreateServerMobData()
 			break;
 		case TAG_CHAR::TAG_MUMMY_LAYING:
 		{
-			CMummy::CHARACTERDESC MummyDesc{ PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_MUMMYANIMCONTROLLER };;
+			CMummy::CHARACTERDESC MummyDesc{ PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_NETWORKMUMMYANIMCONTROLLER };;
 			SHPTR<CMummy> Mummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MUMMY, { &MummyDesc, &iter }));	
 			AddCreatedNetworkActor(iter.iMobID, Mummy);
 			Mummy->SetMummyType(CMummy::TYPE_LYING);
@@ -175,7 +176,7 @@ void CNetworkClientController::CreateServerMobData()
 			break;
 		case TAG_CHAR::TAG_MUMMY_STANDING:
 		{
-			CMummy::CHARACTERDESC MummyDesc{ PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_MUMMYANIMCONTROLLER };;
+			CMummy::CHARACTERDESC MummyDesc{ PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_NETWORKMUMMYANIMCONTROLLER };;
 			SHPTR<CMummy> Mummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MUMMY, { &MummyDesc, &iter }));
 			AddCreatedNetworkActor(iter.iMobID, Mummy);
 			Mummy->SetMummyType(CMummy::TYPE_STANDING);
@@ -184,28 +185,28 @@ void CNetworkClientController::CreateServerMobData()
 			break;
 		case TAG_CHAR::TAG_ANUBIS:
 		{
-			CAnubis::CHARACTERDESC Desc{ PROTO_RES_ANUBISANIMMODEL, PROTO_COMP_ANUBISANIMCONTROLLER };;
+			CAnubis::CHARACTERDESC Desc{ PROTO_RES_ANUBISANIMMODEL, PROTO_COMP_NETWORKANUBISANIMCONTROLLER };;
 			SHPTR<UActor> Anubis = std::static_pointer_cast<UActor>(spGameInstance->CloneActorAdd(PROTO_ACTOR_ANUBIS, { &Desc, &iter }));
 			AddCreatedNetworkActor(iter.iMobID, Anubis);
 		}
 		break;
 		case TAG_CHAR::TAG_MIMIC:
 		{
-			CAnubis::CHARACTERDESC Desc{ PROTO_RES_MIMICANIMMODEL, PROTO_COMP_MIMICANIMCONTROLLER };;
+			CAnubis::CHARACTERDESC Desc{ PROTO_RES_MIMICANIMMODEL, PROTO_COMP_NETWORKMIMICANIMCONTROLLER };;
 			SHPTR<UActor> Anubis = std::static_pointer_cast<UActor>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MIMIC, { &Desc, &iter }));
 			AddCreatedNetworkActor(iter.iMobID, Anubis);
 		}
 		break;
 		case TAG_CHAR::TAG_MINOTAUR:
 		{
-			CAnubis::CHARACTERDESC Desc{ PROTO_RES_MINOTAURANIMMODEL, PROTO_COMP_MINOTAURANIMCONTROLLER };;
+			CAnubis::CHARACTERDESC Desc{ PROTO_RES_MINOTAURANIMMODEL, PROTO_COMP_NETWORKMINOTAURANIMCONTROLLER };;
 			SHPTR<UActor> Anubis = std::static_pointer_cast<UActor>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MINOTAUR, { &Desc, &iter }));
 			AddCreatedNetworkActor(iter.iMobID, Anubis);
 		}
 		break;
 		case TAG_CHAR::TAG_HARLEQUINN:
 		{
-			CAnubis::CHARACTERDESC Desc{ PROTO_RES_HARLEQUINNANIMMODEL, PROTO_COMP_HARLEQUINNANIMCONTROLLER };;
+			CAnubis::CHARACTERDESC Desc{ PROTO_RES_HARLEQUINNANIMMODEL, PROTO_COMP_NETWORKHARLEQUINNANIMCONTROLLER };;
 			SHPTR<UActor> Anubis = std::static_pointer_cast<UActor>(spGameInstance->CloneActorAdd(PROTO_ACTOR_HARLEQUINN, { &Desc, &iter }));
 			AddCreatedNetworkActor(iter.iMobID, Anubis);
 		}

@@ -37,6 +37,12 @@
 #include "CCoreAnubis.h"
 #include "CCoreHarlequinn.h"
 #include "CCoreMinotaur.h"
+#include "CNetworkAnubisAnimController.h"
+#include "CNetworkHarlequinnAnimController.h"
+#include "CNetworkItemChestAnimController.h"
+#include "CNetworkMimicAnimController.h"
+#include "CNetworkMinotaurAnimController.h"
+#include "CNetworkMummyAnimController.h"
 
 HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, CSHPTRREF<UDevice> _spDevice, CSHPTRREF<UCommand> _spCommand)
 {
@@ -104,6 +110,15 @@ HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, C
 	_spGameInstance->AddPrototype(PROTO_COMP_HARLEQUINNANIMCONTROLLER, CreateConstructorToNative<CHarlequinnAnimController>(_spDevice));
 	_spGameInstance->AddPrototype(PROTO_COMP_ANUBISANIMCONTROLLER, CreateConstructorToNative<CAnubisAnimController>(_spDevice));
 	_spGameInstance->AddPrototype(PROTO_COMP_MIMICANIMCONTROLLER, CreateConstructorToNative<CMimicAnimController>(_spDevice));
+
+
+	_spGameInstance->AddPrototype(PROTO_COMP_NETWORKMUMMYANIMCONTROLLER, CreateConstructorToNative<CNetworkMummyAnimController>(_spDevice));
+	_spGameInstance->AddPrototype(PROTO_COMP_NETWORKCHESTANIMCONTROLLER, CreateConstructorToNative<CNetworkItemChestAnimController>(_spDevice));
+	_spGameInstance->AddPrototype(PROTO_COMP_NETWORKMINOTAURANIMCONTROLLER, CreateConstructorToNative<CNetworkMinotaurAnimController>(_spDevice));
+	_spGameInstance->AddPrototype(PROTO_COMP_NETWORKHARLEQUINNANIMCONTROLLER, CreateConstructorToNative<CNetworkHarlequinnAnimController>(_spDevice));
+	_spGameInstance->AddPrototype(PROTO_COMP_NETWORKANUBISANIMCONTROLLER, CreateConstructorToNative<CNetworkAnubisAnimController>(_spDevice));
+	_spGameInstance->AddPrototype(PROTO_COMP_NETWORKMIMICANIMCONTROLLER, CreateConstructorToNative<CNetworkMimicAnimController>(_spDevice));
+
 
 	_spGameInstance->CreateAudioSystemAndRegister(SOUNDTYPE::SOUND_BACKGROUND, L"..\\..\\Resource\\Sound\\BackgroundSound");
 	_spGameInstance->CreateAudioSystemAndRegister(SOUNDTYPE::SOUND_GAME, L"..\\..\\Resource\\Sound\\InGameSound");

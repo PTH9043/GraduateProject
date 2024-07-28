@@ -144,7 +144,7 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
                 spAnubis->GetTransform()->SetDirectionFixedUp(spAnubis->GetOriginDirection(), _dTimeDelta, 5);
         }
     }
-  
+
     if (Hit)
     {
         m_irandomNumforhit = dis_hit(gen);
@@ -177,19 +177,6 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
         }
         spAnubis->SetPrevHealth(spAnubis->GetHealth());
     }
-
-    if (m_bisHitCooldown)
-    {
-        m_dHitCooldownTime += _dTimeDelta;
-
-        if (m_dHitCooldownTime >= HIT_COOLDOWN_DURATION)
-        {
-            m_iHitCount = 0;
-            m_dHitCooldownTime = 0;
-            m_bisHitCooldown = false;
-        }
-    }
-
 
     if (m_bAttackMode && !Hit)
     {
@@ -247,8 +234,6 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
             spAnubis->SetShieldState(true);
         }
     }
-
-
 
     if (CurAnimName == L"Cast")
     {

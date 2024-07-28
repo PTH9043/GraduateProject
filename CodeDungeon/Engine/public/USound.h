@@ -37,6 +37,8 @@ public:
 	void StopWithInputChannel(IN FMOD::Channel** _ppChannel);
 	void StopWithManyChannels();
 	void StopBGM(IN FMOD::Channel** _ppChannel);
+	void PauseBGM(IN FMOD::Channel** _ppChannel);
+	void ResumeBGM(IN FMOD::Channel** _ppChannel);
 	void Restart();
 	void RestartOnce();
 	void Pause();

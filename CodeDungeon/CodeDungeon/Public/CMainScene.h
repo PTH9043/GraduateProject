@@ -249,6 +249,7 @@ private:
 	_bool EnterMinoSound= false;
 	_bool EnterQuinnSound= false;
 	_bool EnterAnubisSound= false;
+	_bool EnterBlindSound= false;
 
 
 

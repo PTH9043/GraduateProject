@@ -238,7 +238,6 @@ void CAnubis::CreateParticles()
 	}
 }
 
-
 HRESULT CAnubis::NativeConstructClone(const VOIDDATAS& _Datas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);
@@ -308,18 +307,18 @@ HRESULT CAnubis::NativeConstructClone(const VOIDDATAS& _Datas)
 
 void CAnubis::TickActive(const _double& _dTimeDelta)
 {
+	__super::TickActive(_dTimeDelta);
+	GetAnimationController()->Tick(_dTimeDelta);
+	_float3 pos = GetTransform()->GetPos();
+
+	pos.y += 5;
+	m_spBloodParticle->SetPosition(pos);
+	m_spSlashParticle->SetPosition(pos);
+	m_spAttackParticle->SetPosition(pos);
+	m_spAttackParticleTwo->SetPosition(pos);
+	_int CurAnimState = GetAnimationController()->GetAnimState();
 	if (true == IsSendDataToBehavior())
 	{
-		__super::TickActive(_dTimeDelta);
-		GetAnimationController()->Tick(_dTimeDelta);
-		_float3 pos = GetTransform()->GetPos();
-
-		pos.y += 5;
-		m_spBloodParticle->SetPosition(pos);
-		m_spSlashParticle->SetPosition(pos);
-		m_spAttackParticle->SetPosition(pos);
-		m_spAttackParticleTwo->SetPosition(pos);
-		_int CurAnimState = GetAnimationController()->GetAnimState();
 		_float3 CurrentMobPos = GetTransform()->GetPos();
 		_float3 CurrentPlayerPos = GetTargetPlayer()->GetTransform()->GetPos();
 		SHPTR<UCell> CurrentMobCell = GetCurrentNavi()->GetCurCell();
@@ -374,7 +373,7 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 					_float3 direction = CurrentMobPos - GetTargetPos();
 					GetTransform()->SetDirectionFixedUp(-direction, _dTimeDelta, 5);
 				}
-				if(CurAnimName != L"Cast")
+				if (CurAnimName != L"Cast")
 					GetTransform()->TranslateDir(GetTransform()->GetLook(), _dTimeDelta, walkingSpeed);
 			}
 			else
@@ -435,7 +434,11 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 			_double DeathTimeArcOpenEnd = 50;
 			if (GetElapsedTime() < DeathTimeArcOpenEnd) {
 				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
-				GetAnimModel()->UpdateDissolveTImer(_dTimeDelta*1.2f);
+				GetAnimModel()->UpdateDissolveTImer(_dTimeDelta * 1.2f);
+				if (!m_bDissolveSound) {
+					spGameInstance->SoundPlayOnce(L"DissolveSound");
+					m_bDissolveSound = true;
+				}
 			}
 		}
 		else if (CurAnimState == UAnimationController::ANIM_IDLE)
@@ -446,15 +449,72 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 		}
 		else
 		{
+			m_bDissolveSound = false;
 			GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
 			SetElapsedTime(0.0);
 		}
 	}
 	else
 	{
-
+		if (CurAnimState == UAnimationController::ANIM_MOVE)
+		{
+			if (GetFoundTargetState() && !GetTargetPlayer()->GetDeathState())
+			{
+				m_spFootPrintParticle->SetActive(true);
+				{
+					*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 4;
+					*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.355f;
+					_float3 pos = GetTransform()->GetPos() + GetTransform()->GetRight();
+					pos.y += 1.0;
+					_float3 Look = GetTransform()->GetLook();
+					_float3 Right = 1.2 * GetTransform()->GetRight();
+					//pos -= 3 * Look;
+					m_spFootPrintParticle->SetPosition(pos);
+					m_spFootPrintParticle->SetDirection(Right);
+				}
+				SetOutline(true);
+			}
+			else
+			{
+				SetOutline(false);
+			}
+		}
+		else if (CurAnimState == UAnimationController::ANIM_ATTACK){}
+		else
+		{
+			m_spFootPrintParticle->SetActive(false);
+			*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 0;
+			*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
+		}
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		// death animation
+		if (CurAnimState == UAnimationController::ANIM_DEATH)
+		{
+			_double DeathAnimSpeed = 20;
+			SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
+			_double DeathTimeArcOpenEnd = 50;
+			if (GetElapsedTime() < DeathTimeArcOpenEnd) {
+				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
+				GetAnimModel()->UpdateDissolveTImer(_dTimeDelta * 1.2f);
+				if (!m_bDissolveSound) {
+					spGameInstance->SoundPlayOnce(L"DissolveSound");
+					m_bDissolveSound = true;
+				}
+			}
+		}
+		else if (CurAnimState == UAnimationController::ANIM_IDLE)
+		{
+			SetOutline(false);
+			GetAnimModel()->TickAnimation(_dTimeDelta);
+			GetTransform()->SetPos(GetTransform()->GetPos());
+		}
+		else
+		{
+			m_bDissolveSound = false;
+			GetAnimModel()->TickAnimation(_dTimeDelta);
+			SetElapsedTime(0.0);
+		}
 	}
-
 
 	for (auto& iter : GetColliderContainer())
 	{
@@ -467,25 +527,20 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 			iter.second->SetTransform(GetTransform()->GetPos(), m_spFireCircle->GetTransform()->GetQuaternion());
 			iter.second->SetScale(_float3(m_spFireCircle->GetTransform()->GetScale().x - 7, 0.3, m_spFireCircle->GetTransform()->GetScale().y - 7));
 		}
-
 	}
-
 	SetOutlineByAbility(true);
-	SetOutlineColor(_float3(0,1,0));
+	SetOutlineColor(_float3(0, 1, 0));
 }
 
 void CAnubis::LateTickActive(const _double& _dTimeDelta)
 {
+	if (true == IsSendDataToBehavior())
+	{
+		_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
+		GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
+	}
+
 	__super::LateTickActive(_dTimeDelta);
-
-	_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
-	GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
-
-	//for (auto& Colliders : GetColliderContainer())
-	//{
-	//	if (Colliders.first == L"MagicCircle")
-	//		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
-	//}
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	_int CurAnimState = GetAnimationController()->GetAnimState();
@@ -508,8 +563,9 @@ void CAnubis::LateTickActive(const _double& _dTimeDelta)
 
 	m_spFireCircle->GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, GetTransform()->GetPos().y + 0.5, GetTransform()->GetPos().z));
 	m_spFireCircle->GetTransform()->RotateTurn(_float3(0, 1, 0), 500, _dTimeDelta);
-	
-	if(m_bisShield)
+
+
+	if (m_bisShield)
 	{
 		if(m_dShieldTimer == 0)
 		{
@@ -519,7 +575,7 @@ void CAnubis::LateTickActive(const _double& _dTimeDelta)
 		m_dShieldTimer += _dTimeDelta;
 		m_spMagicCircle->SetActive(true);
 		m_spMagicSphere->SetActive(true);
-		if(m_dShieldTimer <= 8)
+		if (m_dShieldTimer <= 8)
 		{
 			m_spMagicSphere->GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, GetTransform()->GetPos().y + 5, GetTransform()->GetPos().z));
 			m_spMagicCircle->GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, GetTransform()->GetPos().y + 0.5, GetTransform()->GetPos().z));

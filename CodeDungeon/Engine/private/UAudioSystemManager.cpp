@@ -143,6 +143,30 @@ void UAudioSystemManager::StopBGM(const _wstring& _wstrSoundName)
 	}
 }
 
+void UAudioSystemManager::PauseBGM(const _wstring& _wstrSoundName)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+		{
+			if (true == iter->PauseBGM(_wstrSoundName))
+				return;
+		}
+	}
+}
+
+void UAudioSystemManager::ResumeBGM(const _wstring& _wstrSoundName)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+		{
+			if (true == iter->ResumeBGM(_wstrSoundName))
+				return;
+		}
+	}
+}
+
 void UAudioSystemManager::PlayBGM(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate)
 {
 	for (auto& iter : m_AudioSystemContainer)

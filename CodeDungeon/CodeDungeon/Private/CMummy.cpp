@@ -248,18 +248,18 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 
 void CMummy::TickActive(const _double& _dTimeDelta)
 {
+	__super::TickActive(_dTimeDelta);
+	GetAnimationController()->Tick(_dTimeDelta);
+	_float3 pos = GetTransform()->GetPos();
+
+	pos.y += 5;
+	m_spBloodParticle->SetPosition(pos);
+	m_spSlashParticle->SetPosition(pos);
+	m_spAttackParticle->SetPosition(pos);
+	m_spAttackParticleTwo->SetPosition(pos);
+	_int CurAnimState = GetAnimationController()->GetAnimState();
 	if (true == IsSendDataToBehavior())
 	{
-		__super::TickActive(_dTimeDelta);
-		GetAnimationController()->Tick(_dTimeDelta);
-		_float3 pos = GetTransform()->GetPos();
-
-		pos.y += 5;
-		m_spBloodParticle->SetPosition(pos);
-		m_spSlashParticle->SetPosition(pos);
-		m_spAttackParticle->SetPosition(pos);
-		m_spAttackParticleTwo->SetPosition(pos);
-		_int CurAnimState = GetAnimationController()->GetAnimState();
 		_float3 CurrentMobPos = GetTransform()->GetPos();
 		_float3 CurrentPlayerPos = GetTargetPlayer()->GetTransform()->GetPos();
 		SHPTR<UCell> CurrentMobCell = GetCurrentNavi()->GetCurCell();
@@ -268,9 +268,6 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 		if (CurAnimState == UAnimationController::ANIM_MOVE)
 		{
 			AddTimeAccumulator(_dTimeDelta);
-
-			
-
 			// A* for moving towards player when player is found
 			if (GetFoundTargetState() && !GetTargetPlayer()->GetDeathState())
 			{
@@ -371,16 +368,21 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 				USound* DeathSound1 = spGameInstance->BringSound(L"Death_VO_1").get();
 				USound* DeathSound2 = spGameInstance->BringSound(L"BodyHitFloor_1").get();
 				DeathSound1->PlayWithInputChannel(&m_pDeathChannel);
-				DeathSound2->PlayWithInputChannel(&m_pDeathChannel);
+				DeathSound2->PlayWithInputChannel(&m_pDeath2Channel);
 			}
 			SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
 			_double DeathTimeArcOpenEnd = 500;
 			if (GetElapsedTime() < DeathTimeArcOpenEnd)
-			{		
+			{
 				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
 				GetAnimModel()->UpdateDissolveTImer(_dTimeDelta);
+				if (!m_bDissolveSound) {
+					SHPTR<USound> DsSound = spGameInstance->BringSound(L"DissolveSound");
+					DsSound->PlayWithInputChannel(&m_pDissolveChannel);
+					m_bDissolveSound = true;
+				}
 			}
-			
+
 		}
 		else if (CurAnimState == UAnimationController::ANIM_IDLE)
 		{
@@ -389,12 +391,86 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 		}
 		else
 		{
+			m_bDissolveSound = false;
 			GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
 			SetElapsedTime(0.0);
 		}
 	}
 	else
 	{
+		if (CurAnimState == UAnimationController::ANIM_MOVE)
+		{
+			// A* for moving towards player when player is found
+			if (GetFoundTargetState() && !GetTargetPlayer()->GetDeathState())
+			{
+				m_spFootPrintParticle->SetActive(true);
+				{
+					*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 4;
+					*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.355f;
+					_float3 pos = GetTransform()->GetPos() + GetTransform()->GetRight();
+					pos.y += 0.5;
+					_float3 Look = GetTransform()->GetLook();
+					_float3 Right = 1.2 * GetTransform()->GetRight();
+					//pos -= 3 * Look;
+					m_spFootPrintParticle->SetPosition(pos);
+					m_spFootPrintParticle->SetDirection(Right);
+				}
+			}
+			else
+			{
+				SetOutline(false);
+			}
+		}
+		else if (CurAnimState == UAnimationController::ANIM_ATTACK){}
+		else {
+			m_spFootPrintParticle->SetActive(false);
+			*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 0;
+			*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
+		}
+
+
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		if (spGameInstance->GetDIKeyPressing(DIK_H)) {
+			SetIfOutlineScale(true);
+		}
+		else {
+			SetIfOutlineScale(false);
+		}
+
+		// death animation
+		if (CurAnimState == UAnimationController::ANIM_DEATH)
+		{
+			_double DeathAnimSpeed = 20;
+			if (GetElapsedTime() == 0.0)
+			{
+				USound* DeathSound1 = spGameInstance->BringSound(L"Death_VO_1").get();
+				USound* DeathSound2 = spGameInstance->BringSound(L"BodyHitFloor_1").get();
+				DeathSound1->PlayWithInputChannel(&m_pDeathChannel);
+				DeathSound2->PlayWithInputChannel(&m_pDeath2Channel);
+			}
+			SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
+			_double DeathTimeArcOpenEnd = 500;
+			if (GetElapsedTime() < DeathTimeArcOpenEnd)
+			{
+				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
+				GetAnimModel()->UpdateDissolveTImer(_dTimeDelta);
+				if (!m_bDissolveSound) {
+					SHPTR<USound> DsSound = spGameInstance->BringSound(L"DissolveSound");
+					DsSound->PlayWithInputChannel(&m_pDissolveChannel);
+					m_bDissolveSound = true;
+				}
+			}
+		}
+		else if (CurAnimState == UAnimationController::ANIM_IDLE)
+		{
+			GetAnimModel()->TickAnimation(_dTimeDelta);
+		}
+		else
+		{
+			m_bDissolveSound = false;
+			GetAnimModel()->TickAnimation(_dTimeDelta);
+			SetElapsedTime(0.0);
+		}
 
 	}
 	UpdateCollision();

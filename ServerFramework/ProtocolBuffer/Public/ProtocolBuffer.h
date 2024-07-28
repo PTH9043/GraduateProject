@@ -27,9 +27,8 @@ namespace PROTOFUNC
 		int _animstate, int _curAnimIndex, int _triggerOn);
 	void MakeCharState(CHARSTATE* _pOut, LLONG _id, const VECTOR3& _vPos, const VECTOR3& _vRotate);
 	void MakeMobState(MOBSTATE* _pOut, LLONG _id, const VECTOR3& _vPos, const VECTOR3& _vRotate,
-		int _animstate, int _curAnimIndex, int _triggerOn, int _outlineOn);
+		int _animstate, int _curAnimIndex, bool _triggerOn, bool _foundOn, double _animtime);
 	void MakeMobState(MOBSTATE* _pOut, LLONG _id, const VECTOR3& _vPos, const VECTOR3& _vRotate);
-
 
 	/* =========== SC =============== */
 	// Server To Client 

@@ -151,29 +151,53 @@
     <Filter Include="06.Comp\Controller\MonsterAnimController">
       <UniqueIdentifier>{31cc6bb4-1f28-4cfd-be72-3b61116a902a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06.Comp\Controller\MonsterAnimController\Anubis">
-      <UniqueIdentifier>{d40f1837-17e8-4770-a84a-0446a88b1b10}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="06.Comp\Controller\MonsterAnimController\Chest">
-      <UniqueIdentifier>{1e1c8903-9b1f-41c8-9252-457c36619fa3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="06.Comp\Controller\MonsterAnimController\Harlequinn">
-      <UniqueIdentifier>{4153a380-debe-4b94-91e6-e73e29016bcb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="06.Comp\Controller\MonsterAnimController\Mimic">
-      <UniqueIdentifier>{f7842d32-ca05-4f19-b835-29b116ce5388}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="06.Comp\Controller\MonsterAnimController\Minotaur">
-      <UniqueIdentifier>{894a6e00-a512-431a-b630-87aa3b846df4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="06.Comp\Controller\MonsterAnimController\Mummy">
-      <UniqueIdentifier>{d8d4649f-7429-418e-9892-1d154660c603}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="06.Comp\Controller\MonsterAnimController\Mummy\Sarcophagus">
-      <UniqueIdentifier>{7cb8b3b7-4d4b-4879-a8fc-22626d27452c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Scene\Logo\Loading">
       <UniqueIdentifier>{8267953d-ddfb-42e8-8d2b-9366d350317a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\MonsterAnimController\Client">
+      <UniqueIdentifier>{f5dcb8f8-8605-43a6-91c6-547fd6313582}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\MonsterAnimController\Client\Mummy">
+      <UniqueIdentifier>{d8d4649f-7429-418e-9892-1d154660c603}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\MonsterAnimController\Client\Mummy\Sarcophagus">
+      <UniqueIdentifier>{7cb8b3b7-4d4b-4879-a8fc-22626d27452c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\MonsterAnimController\Client\Anubis">
+      <UniqueIdentifier>{d40f1837-17e8-4770-a84a-0446a88b1b10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\MonsterAnimController\Client\Chest">
+      <UniqueIdentifier>{1e1c8903-9b1f-41c8-9252-457c36619fa3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\MonsterAnimController\Client\Harlequinn">
+      <UniqueIdentifier>{4153a380-debe-4b94-91e6-e73e29016bcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\MonsterAnimController\Client\Mimic">
+      <UniqueIdentifier>{f7842d32-ca05-4f19-b835-29b116ce5388}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\MonsterAnimController\Client\Minotaur">
+      <UniqueIdentifier>{894a6e00-a512-431a-b630-87aa3b846df4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\MonsterAnimController\Network">
+      <UniqueIdentifier>{98b7fcd2-a9d6-457a-8daf-9b8b4203f6b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\MonsterAnimController\Network\Mummy">
+      <UniqueIdentifier>{cc920fec-6b76-47c7-a5a1-046dc1af541a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\MonsterAnimController\Network\Minotaur">
+      <UniqueIdentifier>{17e1be10-651c-4bb1-9def-a62c6ac3b2da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\MonsterAnimController\Network\Mimic">
+      <UniqueIdentifier>{7e76d965-534b-4be8-a591-cf71dcd8932d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\MonsterAnimController\Network\Chest">
+      <UniqueIdentifier>{735891b9-eae4-48a1-8c06-379da5a65fa0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\MonsterAnimController\Network\Harlequinn">
+      <UniqueIdentifier>{2fb38f08-1804-4f49-b925-0cb4b52b6a4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Comp\Controller\MonsterAnimController\Network\Anubis">
+      <UniqueIdentifier>{0d2b1971-745d-4fa7-9ad3-3a25a017a733}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -235,10 +259,10 @@
       <Filter>05.Objects\Character\Mob\Mummy\Sarcophagus</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CMummyAnimController.h">
-      <Filter>06.Comp\Controller\MonsterAnimController\Mummy</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Client\Mummy</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CSarcophagusAnimController.h">
-      <Filter>06.Comp\Controller\MonsterAnimController\Mummy\Sarcophagus</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Client\Mummy\Sarcophagus</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CMob.h">
       <Filter>05.Objects\Character\Mob</Filter>
@@ -259,7 +283,7 @@
       <Filter>05.Objects\ModelObjects\ItemChest</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CItemChestAnimController.h">
-      <Filter>06.Comp\Controller\MonsterAnimController\Chest</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Client\Chest</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CTorch.h">
       <Filter>05.Objects\ModelObjects\StaticObjects\Torch</Filter>
@@ -277,7 +301,7 @@
       <Filter>05.Objects\Character\Mob\Minotaur</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CMinotaurAnimController.h">
-      <Filter>06.Comp\Controller\MonsterAnimController\Minotaur</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Client\Minotaur</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CBackgroundUI.h">
       <Filter>07.UI\Background</Filter>
@@ -289,7 +313,7 @@
       <Filter>05.Objects\Character\Mob\Harlequinn</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CHarlequinnAnimController.h">
-      <Filter>06.Comp\Controller\MonsterAnimController\Harlequinn</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Client\Harlequinn</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CShuriken.h">
       <Filter>05.Objects\ModelObjects\Weapons\Shurikens</Filter>
@@ -301,7 +325,7 @@
       <Filter>05.Objects\Character\Mob\Anubis</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CAnubisAnimController.h">
-      <Filter>06.Comp\Controller\MonsterAnimController\Anubis</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Client\Anubis</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CAnubisStaff.h">
       <Filter>05.Objects\ModelObjects\Weapons\AnubisStaff</Filter>
@@ -310,7 +334,7 @@
       <Filter>05.Objects\Character\Mob\Mimic</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CMimicAnimController.h">
-      <Filter>06.Comp\Controller\MonsterAnimController\Mimic</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Client\Mimic</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CButtonUI.h">
       <Filter>07.UI\Button</Filter>
@@ -338,6 +362,24 @@
     </ClInclude>
     <ClInclude Include="..\Public\CMainSceneLoading.h">
       <Filter>01.Scene\Logo\Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CNetworkMummyAnimController.h">
+      <Filter>06.Comp\Controller\MonsterAnimController\Network\Mummy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CNetworkMinotaurAnimController.h">
+      <Filter>06.Comp\Controller\MonsterAnimController\Network\Minotaur</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CNetworkMimicAnimController.h">
+      <Filter>06.Comp\Controller\MonsterAnimController\Network\Mimic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CNetworkHarlequinnAnimController.h">
+      <Filter>06.Comp\Controller\MonsterAnimController\Network\Harlequinn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CNetworkItemChestAnimController.h">
+      <Filter>06.Comp\Controller\MonsterAnimController\Network\Chest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CNetworkAnubisAnimController.h">
+      <Filter>06.Comp\Controller\MonsterAnimController\Network\Anubis</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -392,10 +434,10 @@
       <Filter>05.Objects\Character\Mob\Mummy\Sarcophagus</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CMummyAnimController.cpp">
-      <Filter>06.Comp\Controller\MonsterAnimController\Mummy</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Client\Mummy</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CSarcophagusAnimController.cpp">
-      <Filter>06.Comp\Controller\MonsterAnimController\Mummy\Sarcophagus</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Client\Mummy\Sarcophagus</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CMob.cpp">
       <Filter>05.Objects\Character\Mob</Filter>
@@ -416,7 +458,7 @@
       <Filter>05.Objects\ModelObjects\ItemChest</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CItemChestAnimController.cpp">
-      <Filter>06.Comp\Controller\MonsterAnimController\Chest</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Client\Chest</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CTorch.cpp">
       <Filter>05.Objects\ModelObjects\StaticObjects\Torch</Filter>
@@ -434,7 +476,7 @@
       <Filter>05.Objects\Character\Mob\Minotaur</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CMinotaurAnimController.cpp">
-      <Filter>06.Comp\Controller\MonsterAnimController\Minotaur</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Client\Minotaur</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CBackgroundUI.cpp">
       <Filter>07.UI\Background</Filter>
@@ -446,7 +488,7 @@
       <Filter>05.Objects\Character\Mob\Harlequinn</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CHarlequinnAnimController.cpp">
-      <Filter>06.Comp\Controller\MonsterAnimController\Harlequinn</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Client\Harlequinn</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CShuriken.cpp">
       <Filter>05.Objects\ModelObjects\Weapons\Shurikens</Filter>
@@ -458,7 +500,7 @@
       <Filter>05.Objects\Character\Mob\Anubis</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CAnubisAnimController.cpp">
-      <Filter>06.Comp\Controller\MonsterAnimController\Anubis</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Client\Anubis</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CAnubisStaff.cpp">
       <Filter>05.Objects\ModelObjects\Weapons\AnubisStaff</Filter>
@@ -467,7 +509,7 @@
       <Filter>05.Objects\Character\Mob\Mimic</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CMimicAnimController.cpp">
-      <Filter>06.Comp\Controller\MonsterAnimController\Mimic</Filter>
+      <Filter>06.Comp\Controller\MonsterAnimController\Client\Mimic</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CButtonUI.cpp">
       <Filter>07.UI\Button</Filter>
@@ -495,6 +537,24 @@
     </ClCompile>
     <ClCompile Include="..\Private\CMainSceneLoading.cpp">
       <Filter>01.Scene\Logo\Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CNetworkMummyAnimController.cpp">
+      <Filter>06.Comp\Controller\MonsterAnimController\Network\Mummy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CNetworkMinotaurAnimController.cpp">
+      <Filter>06.Comp\Controller\MonsterAnimController\Network\Minotaur</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CNetworkMimicAnimController.cpp">
+      <Filter>06.Comp\Controller\MonsterAnimController\Network\Mimic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CNetworkHarlequinnAnimController.cpp">
+      <Filter>06.Comp\Controller\MonsterAnimController\Network\Harlequinn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CNetworkItemChestAnimController.cpp">
+      <Filter>06.Comp\Controller\MonsterAnimController\Network\Chest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CNetworkAnubisAnimController.cpp">
+      <Filter>06.Comp\Controller\MonsterAnimController\Network\Anubis</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -229,7 +229,7 @@ HRESULT CMinotaur::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetHealth(200);
 	SetMaxHealth(200);
 	SetActivationRange(100);
-	SetDeactivationRange(160);
+	SetDeactivationRange(120);
 	SetOutline(true);
 	return S_OK;
 }
@@ -237,17 +237,17 @@ HRESULT CMinotaur::NativeConstructClone(const VOIDDATAS& _Datas)
 void CMinotaur::TickActive(const _double& _dTimeDelta)
 {
 
+	_float3 pos = GetTransform()->GetPos();
+	pos.y += 7.55;
+	m_spBloodParticle->SetPosition(pos);
+	m_spSlashParticle->SetPosition(pos);
+	m_spAttackParticle->SetPosition(pos);
+	m_spAttackParticleTwo->SetPosition(pos);
+	__super::TickActive(_dTimeDelta);
+	GetAnimationController()->Tick(_dTimeDelta);
+	_int CurAnimState = GetAnimationController()->GetAnimState();
 	if (true == IsSendDataToBehavior())
 	{
-		_float3 pos = GetTransform()->GetPos();
-		pos.y += 7.55;
-		m_spBloodParticle->SetPosition(pos);
-		m_spSlashParticle->SetPosition(pos);
-		m_spAttackParticle->SetPosition(pos);
-		m_spAttackParticleTwo->SetPosition(pos);
-		__super::TickActive(_dTimeDelta);
-		GetAnimationController()->Tick(_dTimeDelta);
-		_int CurAnimState = GetAnimationController()->GetAnimState();
 		const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
 		_float3 CurrentMobPos = GetTransform()->GetPos();
 		_float3 CurrentPlayerPos = GetTargetPlayer()->GetTransform()->GetPos();
@@ -259,13 +259,11 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 
 		_float runningSpeed = 30;
 		_float walkingSpeed = 5;
-		
-
 
 		if (CurAnimState == UAnimationController::ANIM_MOVE)
 		{
 			AddTimeAccumulator(_dTimeDelta);
-			
+
 			// A* for moving towards player when player is found
 			if (GetFoundTargetState() && !GetTargetPlayer()->GetDeathState())
 			{
@@ -364,7 +362,65 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 			_float3 direction = CurrentMobPos - CurrentPlayerPos;
 			GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
 		}
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
+		// death animation
+		if (CurAnimState == UAnimationController::ANIM_DEATH)
+		{
+			_double DeathAnimSpeed = 20;
+			SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
+			_double DeathTimeArcOpenEnd = 50;
+			if (GetElapsedTime() < DeathTimeArcOpenEnd) {
+				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
+				GetAnimModel()->UpdateDissolveTImer(_dTimeDelta * 1.2f);
+				if (!m_bDissolveSound) {
+					spGameInstance->SoundPlayOnce(L"DissolveSound2");
+					m_bDissolveSound = true;
+				}
+			}
+		}
+		else if (CurAnimState == UAnimationController::ANIM_IDLE)
+		{
+			GetAnimModel()->TickAnimation(_dTimeDelta);
+			GetTransform()->SetPos(GetTransform()->GetPos());
+		}
+		else
+		{
+			m_bDissolveSound = false;
+			GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
+			SetElapsedTime(0.0);
+		}
+	}
+	else
+	{
+		if (CurAnimState == UAnimationController::ANIM_MOVE)
+		{
+			// A* for moving towards player when player is found
+			if (GetFoundTargetState() && !GetTargetPlayer()->GetDeathState())
+			{
+				m_spFootPrintParticle->SetActive(true);
+				{
+					*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 4;
+					*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.355f;
+					_float3 pos = GetTransform()->GetPos() + GetTransform()->GetRight();
+					pos.y += 1.0;
+					_float3 Look = GetTransform()->GetLook();
+					_float3 Right = 1.2 * GetTransform()->GetRight();
+					//pos -= 3 * Look;
+					m_spFootPrintParticle->SetPosition(pos);
+					m_spFootPrintParticle->SetDirection(Right);
+				}
+			}
+			else // patrolling when player is not found
+			{
+				SetOutline(false);
+			}
+		}
+		else {
+			m_spFootPrintParticle->SetActive(false);
+			*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 0;
+			*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
+		}
 
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
@@ -381,8 +437,12 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 			if (GetElapsedTime() < DeathTimeArcOpenEnd) {
 				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
 				GetAnimModel()->UpdateDissolveTImer(_dTimeDelta * 1.2f);
+				if (!m_bDissolveSound) {
+					spGameInstance->SoundPlayOnce(L"DissolveSound2");
+					m_bDissolveSound = true;
+				}
 			}
-					}
+		}
 		else if (CurAnimState == UAnimationController::ANIM_IDLE)
 		{
 			GetAnimModel()->TickAnimation(_dTimeDelta);
@@ -390,41 +450,39 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 		}
 		else
 		{
-			GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
+			m_bDissolveSound = false;
+			GetAnimModel()->TickAnimation(_dTimeDelta);
 			SetElapsedTime(0.0);
 		}
 	}
-	else
-	{
 
-	}
 	UpdateCollision();
 }
 
 void CMinotaur::LateTickActive(const _double& _dTimeDelta)
 {
+	__super::LateTickActive(_dTimeDelta);
+
 	if (true == IsSendDataToBehavior())
 	{
-		__super::LateTickActive(_dTimeDelta);
-
 		_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
 		GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
+	}
 
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		_int CurAnimState = GetAnimationController()->GetAnimState();
-		if (CurAnimState == UAnimationController::ANIM_DEATH)
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	_int CurAnimState = GetAnimationController()->GetAnimState();
+	if (CurAnimState == UAnimationController::ANIM_DEATH)
+	{
+		if (GetElapsedTime() >= 100.0)
 		{
-			if (GetElapsedTime() >= 100.0)
-			{	
-				m_spBloodParticle->SetActive(false);
-				m_spSlashParticle->SetActive(false);
-				m_spAttackParticle->SetActive(false);
-				m_spAttackParticleTwo->SetActive(false);
-				m_spFootPrintParticle->SetActive(false);
-				SetOutline(false);
-				SetActive(false);
-				spGameInstance->RemoveCollisionPawn(ThisShared<CMob>());
-			}
+			m_spBloodParticle->SetActive(false);
+			m_spSlashParticle->SetActive(false);
+			m_spAttackParticle->SetActive(false);
+			m_spAttackParticleTwo->SetActive(false);
+			m_spFootPrintParticle->SetActive(false);
+			SetOutline(false);
+			SetActive(false);
+			spGameInstance->RemoveCollisionPawn(ThisShared<CMob>());
 		}
 	}
 }

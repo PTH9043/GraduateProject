@@ -1,4 +1,3 @@
-
 #pragma once
 #include "CMonsterAnimController.h"
 #include "USound.h"
@@ -55,7 +54,8 @@ private:
 	_int	m_irandomNumforhit = 0;
 	FMOD::Channel* m_pHitChannel;
 
-	_bool		m_bPlayAttackSound;
+	_bool		m_bPlayAttackSound1;
+	_bool		m_bPlayAttackSound2;
 	_bool		m_bPlayHitSound;
 	 
 

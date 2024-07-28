@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -195,7 +195,13 @@
     <ClInclude Include="..\Public\CMummy.h" />
     <ClInclude Include="..\Public\CMummyAnimController.h" />
     <ClInclude Include="..\Public\CNavigationManager.h" />
+    <ClInclude Include="..\Public\CNetworkAnubisAnimController.h" />
+    <ClInclude Include="..\Public\CNetworkItemChestAnimController.h" />
     <ClInclude Include="..\Public\CNetworkClientController.h" />
+    <ClInclude Include="..\Public\CNetworkHarlequinnAnimController.h" />
+    <ClInclude Include="..\Public\CNetworkMimicAnimController.h" />
+    <ClInclude Include="..\Public\CNetworkMinotaurAnimController.h" />
+    <ClInclude Include="..\Public\CNetworkMummyAnimController.h" />
     <ClInclude Include="..\Public\CNetworkQueryProcessor.h" />
     <ClInclude Include="..\Public\CNetworkWarriorPlayerController.h" />
     <ClInclude Include="..\Public\CProtoMaker.h" />
@@ -249,7 +255,13 @@
     <ClCompile Include="..\Private\CMummy.cpp" />
     <ClCompile Include="..\Private\CMummyAnimController.cpp" />
     <ClCompile Include="..\Private\CNavigationManager.cpp" />
+    <ClCompile Include="..\Private\CNetworkAnubisAnimController.cpp" />
+    <ClCompile Include="..\Private\CNetworkItemChestAnimController.cpp" />
     <ClCompile Include="..\Private\CNetworkClientController.cpp" />
+    <ClCompile Include="..\Private\CNetworkHarlequinnAnimController.cpp" />
+    <ClCompile Include="..\Private\CNetworkMimicAnimController.cpp" />
+    <ClCompile Include="..\Private\CNetworkMinotaurAnimController.cpp" />
+    <ClCompile Include="..\Private\CNetworkMummyAnimController.cpp" />
     <ClCompile Include="..\Private\CNetworkQueryProcessor.cpp" />
     <ClCompile Include="..\Private\CNetworkWarriorPlayerController.cpp" />
     <ClCompile Include="..\Private\CProtoMaker.cpp" />

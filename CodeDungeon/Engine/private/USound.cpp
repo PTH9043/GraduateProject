@@ -68,8 +68,6 @@ void USound::PlayWithManyChannels()
 	m_Channels.push_back(channel);
 }
 
-
-
 void USound::PlayBGM(IN FMOD::Channel** _ppChannel)
 {
 	assert(nullptr != _ppChannel);
@@ -153,6 +151,22 @@ void USound::StopBGM(IN FMOD::Channel** _ppChannel)
 	{
 		(*_ppChannel)->stop();
 		*_ppChannel = nullptr;  // 채널 포인터를 해제
+	}
+}
+
+void USound::PauseBGM(IN FMOD::Channel** _ppChannel)
+{
+	if (_ppChannel && *_ppChannel)
+	{
+		(*_ppChannel)->setPaused(true);
+	}
+}
+
+void USound::ResumeBGM(IN FMOD::Channel** _ppChannel)
+{
+	if (_ppChannel && *_ppChannel)
+	{
+		(*_ppChannel)->setPaused(false);
 	}
 }
 

@@ -127,6 +127,22 @@ _bool UAudioSystem::StopBGM(const _wstring& _wstrSoundName)
 	return true;
 }
 
+_bool UAudioSystem::PauseBGM(const _wstring& _wstrSoundName)
+{
+	m_spBgmSound = BringSound(_wstrSoundName);
+	RETURN_CHECK(nullptr == m_spBgmSound, false);
+	m_spBgmSound->PauseBGM(&m_pBGmChannel);
+	return true;
+}
+
+_bool UAudioSystem::ResumeBGM(const _wstring& _wstrSoundName)
+{
+	m_spBgmSound = BringSound(_wstrSoundName);
+	RETURN_CHECK(nullptr == m_spBgmSound, false);
+	m_spBgmSound->ResumeBGM(&m_pBGmChannel);
+	return true;
+}
+
 _bool UAudioSystem::PlayBGM(const _wstring& _wstrSoundName, const _float _fVolumeUpdate)
 {
 	m_spBgmSound = BringSound(_wstrSoundName);

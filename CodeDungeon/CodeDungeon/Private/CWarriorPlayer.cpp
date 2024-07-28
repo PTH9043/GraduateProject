@@ -76,19 +76,25 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
+	//int cellIndex = 0;
 	//int cellIndex = 349;
 	int cellIndex = 1;
 	SHPTR<UCell> spCell = spNavigation->FindCell(cellIndex);
 	GetTransform()->SetPos(spCell->GetCenterPos());
 	SetSpawnPoint(spCell);
 	SetSpawnPoint(spCell->GetCenterPos());
-	SetSpawnPointCamera(static_pointer_cast<CMainCamera>(GetFollowCamera())->GetCurrentNavi()->FindCell(GetTransform()->GetPos()));
 
-	SHPTR<CMainCamera> spMainCamera = std::static_pointer_cast<CMainCamera>(GetFollowCamera());
-	if (nullptr != spMainCamera)
+	if (false == IsNetworkConnected())
 	{
-		spMainCamera->SetMoveState(false);
+		SetSpawnPointCamera(static_pointer_cast<CMainCamera>(GetFollowCamera())->GetCurrentNavi()->FindCell(GetTransform()->GetPos()));
+
+		SHPTR<CMainCamera> spMainCamera = std::static_pointer_cast<CMainCamera>(GetFollowCamera());
+		if (nullptr != spMainCamera)
+		{
+			spMainCamera->SetMoveState(false);
+		}
 	}
+
 	GetAnimModel()->SetAnimation(L"idle01");
 	GetTransform()->SetScale({ 0.5f, 0.5f, 0.5f });
 	SetMovingSpeed(50.f);
@@ -178,24 +184,16 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 		tDesc.iMaxVertexCount = 100;
 		m_spTrail = std::static_pointer_cast<UTrail>(spGameInstance->CloneActorAdd(PROTO_ACTOR_TRAIL, { &tDesc }));
 		m_spTrail->SetActive(true);
-
 		m_spTrail->SetColorTexture(L"elec");
 		m_spTrail->SetTrailShapeTexture(L"Noise_Bee");
 		m_spTrail->SetTrailNoiseTexture(L"GlowDiffuse");	
-
-		
-
-		
-
-	
-
 	}
 	{
 		m_spBlood = std::static_pointer_cast<UBlood>(spGameInstance->CloneActorAdd(PROTO_ACTOR_BLOOD));
 	}
-	{
+	/*{
 		m_spDust = std::static_pointer_cast<UDust>(spGameInstance->CloneActorAdd(PROTO_ACTOR_DUST));
-	}
+	}*/
 
 	for (auto& Colliders : GetColliderContainer())
 	{
@@ -208,7 +206,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetHealth(1);
 	SetMaxHealth(10000);
 	SetAnimModelRim(true);
-	SetAnimModelRim(true);
+	
 
 	return S_OK;
 }
@@ -281,36 +279,51 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		//pos -= 3 * Look;
 		m_spFootPrintParticle->SetPosition(pos);
 		m_spFootPrintParticle->SetDirection(Right);
+		SetAnimModelRimColor(_float3(204 / 204.f, 255 / 204.f, 0));
 	}
 	else {	
 		*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 0;
 		*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
+		SetAnimModelRimColor(_float3(0,0, 0));
 	}
 
 	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_HIT) {
 		m_spBlood->SetActive(true);
 		m_fInteractionTimeElapsed = 0;
-		SetAnimModelRimColor(_float3(1, 0,0));
+		m_bSetRimOn = true;
 		m_spBlood->SetTimer(1.75f);
 		
 	}
 	else {
-		SetAnimModelRimColor(_float3(204 / 204.f, 255 / 204.f, 0));
+	//	SetAnimModelRimColor(_float3(0, 0, 0));
 	}
+
+	if (m_bSetRimOn) {
+		SetAnimModelRimColor(_float3(1, 0, 0));
+		m_bSetRimTimeElapsed += _dTimeDelta;
+		if (m_bSetRimTimeElapsed > 1.f) {
+			m_bSetRimOn = false;
+		}
+	}
+	else {
+		m_bSetRimTimeElapsed = 0.f;
+		//SetAnimModelRimColor(_float3(0, 0, 0));
+	}
+
 	if (m_spBlood->CheckTimeOver()) {
 		m_spBlood->SetActive(false);		
 	}
 		
-	if (spGameInstance->GetDIKeyDown(DIK_F5)) {
-		m_spDust->SetActive(true);
-		m_spDust->SetTimer(2.f);
-		_float3 pos = GetTransform()->GetPos();
-		pos.y += 1;
-		m_spDust->GetTransform()->SetPos(pos);
-	}
-	if (m_spDust->CheckTimeOver()) {
-		m_spDust->SetActive(false);
-	}
+	//if (spGameInstance->GetDIKeyDown(DIK_F5)) {
+	//	m_spDust->SetActive(true);
+	//	m_spDust->SetTimer(2.f);
+	//	_float3 pos = GetTransform()->GetPos();
+	//	pos.y += 1;
+	//	m_spDust->GetTransform()->SetPos(pos);
+	//}
+	//if (m_spDust->CheckTimeOver()) {
+	//	m_spDust->SetActive(false);
+	//}
 	
 	if (IfOpenChestForHeal) {//2.1초 지속
 		HealTrigger = true;
@@ -411,11 +424,12 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 
 void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 {
-	__super::LateTickActive(_dTimeDelta);
-	_float3 direction(0.0f, 0.0f, 0.0f);
-
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
+	RETURN_CHECK(true == IsNetworkConnected(), ;);
+
+	__super::LateTickActive(_dTimeDelta);
+	_float3 direction(0.0f, 0.0f, 0.0f);
 
 	FollowCameraMove(_float3{ 0.f, 20.f, -40.f }, _dTimeDelta);
 	_float3 vCamPosition{ GetFollowCamera()->GetTransform()->GetPos() };
@@ -891,42 +905,66 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 			{
 				for (auto& iter2 : pGuard->GetColliderContainer())
 				{
+					
 
 					if (iter2.first == L"Main")
 					{
-						//SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
+						SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
 
-						//if (GetCollidedNormal() != _float3::Zero) // 충돌이 발생한 경우
-						//{
-						//	if (!GuardCollideSound) {
-						//		spGameInstance->SoundPlayOnce(L"GuardCollideSound");
-						//		GuardCollideSound = true;
-						//	}
-
-						//	SetOBJCollisionState(true);
-						//	// 속도 결정
-						//	_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 60.0f : 20.0f;
-						//	if (CurAnimName == L"roll_back" || CurAnimName == L"roll_front" || CurAnimName == L"roll_left" || CurAnimName == L"roll_right")
-						//		GetTransform()->SetPos(GetPrevPos());
-						//	else
-						//		ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
-						//}
-						//else
-						//{
-						//	GuardCollideSound = false;
-						//	SetOBJCollisionState(false);
-						//}
+						if (GetCollidedNormal() != _float3::Zero) // 충돌이 발생한 경우
+						{
+							if (!GuardCollideSound) {
+								spGameInstance->SoundPlayOnce(L"GuardCollideSound");
+								GuardCollideSound = true;
+							}
+							if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead03")
+							{
+								if (m_dKickedElapsed >= 50)
+								{
+									m_dKickedElapsed = 0;
+									m_bisKicked = false;
+								}
+								else
+								{
+									GetTransform()->SetDirectionFixedUp(-pGuard->GetTransform()->GetLook());
+									m_bisKicked = true;
+								}
+						
+							}
+							SetOBJCollisionState(true);
+							// 속도 결정
+							_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 60.0f : 20.0f;
+							if (CurAnimName == L"roll_back" || CurAnimName == L"roll_front" || CurAnimName == L"roll_left" || CurAnimName == L"roll_right"|| CurAnimName== L"jumpZ0")
+								GetTransform()->SetPos(GetPrevPos());
+							else
+								ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
+						}
+						else
+						{
+							GuardCollideSound = false;
+							SetOBJCollisionState(false);
+						}
 					}
 					else if (iter2.first == L"ForInteractionGuard")
 					{
 						if (iter.second->IsCollision(iter2.second))
 						{
 							m_bCanInteractGuard = true;
+							
+						}
+						else {
+							
+							m_bCanInteractGuard = false;
+						}
+							
+						/*if (iter.second->IsCollision(iter2.second))
+						{
+							m_bCanInteractGuard = true;
 						}
 						else
 						{
 							m_bCanInteractGuard = false;
-						}
+						}*/
 					}
 
 				}
@@ -983,6 +1021,8 @@ void CWarriorPlayer::SendCollisionData(UPawn* _pPawn)
 
 void CWarriorPlayer::TranslateStateMoveAndRunF(CSHPTRREF<UGameInstance> _spGameInstance, const _double& _dTimeDelta, const _float _fSpeed)
 {
+	RETURN_CHECK(true == IsNetworkConnected(), ;);
+
 	if (_spGameInstance->GetDIKeyPressing(DIK_W))
 	{
 		GetTransform()->MoveForward(_dTimeDelta, _fSpeed);
@@ -991,30 +1031,35 @@ void CWarriorPlayer::TranslateStateMoveAndRunF(CSHPTRREF<UGameInstance> _spGameI
 
 _float CWarriorPlayer::GetUltAttackOneCoolTime()
 {
+	RETURN_CHECK(true == IsNetworkConnected(), 0.f);
 	SHPTR<CUserWarriorAnimController> spController = static_pointer_cast<CUserWarriorAnimController>(GetAnimationController());
 	return spController->GetUltAttackOneCoolTime();
 }
 
 _float CWarriorPlayer::GetUltAttackTwoCoolTime()
 {
+	RETURN_CHECK(true == IsNetworkConnected(), 0.f);
 	SHPTR<CUserWarriorAnimController> spController = static_pointer_cast<CUserWarriorAnimController>(GetAnimationController());
 	return spController->GetUltAttackTwoCoolTime();
 }
 
 _float CWarriorPlayer::GetShortAttackCoolTime()
 {
+	RETURN_CHECK(true == IsNetworkConnected(), 0.f);
 	SHPTR<CUserWarriorAnimController> spController = static_pointer_cast<CUserWarriorAnimController>(GetAnimationController());
 	return spController->GetShortAttackCoolTime();
 }
 
 _bool CWarriorPlayer::GetBlindEffectBool()
 {
+	RETURN_CHECK(true == IsNetworkConnected(), false);
 	SHPTR<CUserWarriorAnimController> spController = static_pointer_cast<CUserWarriorAnimController>(GetAnimationController());
 	return spController->GetBlindEffectBool();
 }
 
 _bool CWarriorPlayer::GetDieEffectBool()
 {
+	RETURN_CHECK(true == IsNetworkConnected(), false);
 	SHPTR<CUserWarriorAnimController> spController = static_pointer_cast<CUserWarriorAnimController>(GetAnimationController());
 	return spController->GetDieEffectBool();
 }

@@ -1690,8 +1690,11 @@ class MOBSTATE final :
     kRotateZFieldNumber = 7,
     kAnimationIndexFieldNumber = 8,
     kStateFieldNumber = 9,
+    kAnimtimeFieldNumber = 14,
     kTriggerOnFieldNumber = 10,
-    kOutlineOnFieldNumber = 11,
+    kFoundOnFieldNumber = 11,
+    kRemain1FieldNumber = 12,
+    kRemain2FieldNumber = 13,
   };
   // int64 id = 1;
   void clear_id() ;
@@ -1783,24 +1786,54 @@ class MOBSTATE final :
   void _internal_set_state(::int64_t value);
 
   public:
-  // int64 triggerOn = 10;
-  void clear_triggeron() ;
-  ::int64_t triggeron() const;
-  void set_triggeron(::int64_t value);
+  // double animtime = 14;
+  void clear_animtime() ;
+  double animtime() const;
+  void set_animtime(double value);
 
   private:
-  ::int64_t _internal_triggeron() const;
-  void _internal_set_triggeron(::int64_t value);
+  double _internal_animtime() const;
+  void _internal_set_animtime(double value);
 
   public:
-  // int64 outlineOn = 11;
-  void clear_outlineon() ;
-  ::int64_t outlineon() const;
-  void set_outlineon(::int64_t value);
+  // bool triggerOn = 10;
+  void clear_triggeron() ;
+  bool triggeron() const;
+  void set_triggeron(bool value);
 
   private:
-  ::int64_t _internal_outlineon() const;
-  void _internal_set_outlineon(::int64_t value);
+  bool _internal_triggeron() const;
+  void _internal_set_triggeron(bool value);
+
+  public:
+  // bool foundOn = 11;
+  void clear_foundon() ;
+  bool foundon() const;
+  void set_foundon(bool value);
+
+  private:
+  bool _internal_foundon() const;
+  void _internal_set_foundon(bool value);
+
+  public:
+  // bool remain1 = 12;
+  void clear_remain1() ;
+  bool remain1() const;
+  void set_remain1(bool value);
+
+  private:
+  bool _internal_remain1() const;
+  void _internal_set_remain1(bool value);
+
+  public:
+  // bool remain2 = 13;
+  void clear_remain2() ;
+  bool remain2() const;
+  void set_remain2(bool value);
+
+  private:
+  bool _internal_remain2() const;
+  void _internal_set_remain2(bool value);
 
   public:
   // @@protoc_insertion_point(class_scope:MOBSTATE)
@@ -1809,7 +1842,7 @@ class MOBSTATE final :
 
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      4, 11, 0,
+      4, 14, 0,
       0, 2>
       _table_;
   friend class ::google::protobuf::MessageLite;
@@ -1835,8 +1868,11 @@ class MOBSTATE final :
     float rotatez_;
     ::int64_t animationindex_;
     ::int64_t state_;
-    ::int64_t triggeron_;
-    ::int64_t outlineon_;
+    double animtime_;
+    bool triggeron_;
+    bool foundon_;
+    bool remain1_;
+    bool remain2_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -3802,50 +3838,119 @@ inline void MOBSTATE::_internal_set_state(::int64_t value) {
   _impl_.state_ = value;
 }
 
-// int64 triggerOn = 10;
+// bool triggerOn = 10;
 inline void MOBSTATE::clear_triggeron() {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.triggeron_ = ::int64_t{0};
+  _impl_.triggeron_ = false;
 }
-inline ::int64_t MOBSTATE::triggeron() const {
+inline bool MOBSTATE::triggeron() const {
   // @@protoc_insertion_point(field_get:MOBSTATE.triggerOn)
   return _internal_triggeron();
 }
-inline void MOBSTATE::set_triggeron(::int64_t value) {
+inline void MOBSTATE::set_triggeron(bool value) {
   _internal_set_triggeron(value);
   // @@protoc_insertion_point(field_set:MOBSTATE.triggerOn)
 }
-inline ::int64_t MOBSTATE::_internal_triggeron() const {
+inline bool MOBSTATE::_internal_triggeron() const {
   PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
   return _impl_.triggeron_;
 }
-inline void MOBSTATE::_internal_set_triggeron(::int64_t value) {
+inline void MOBSTATE::_internal_set_triggeron(bool value) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   ;
   _impl_.triggeron_ = value;
 }
 
-// int64 outlineOn = 11;
-inline void MOBSTATE::clear_outlineon() {
+// bool foundOn = 11;
+inline void MOBSTATE::clear_foundon() {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.outlineon_ = ::int64_t{0};
+  _impl_.foundon_ = false;
 }
-inline ::int64_t MOBSTATE::outlineon() const {
-  // @@protoc_insertion_point(field_get:MOBSTATE.outlineOn)
-  return _internal_outlineon();
+inline bool MOBSTATE::foundon() const {
+  // @@protoc_insertion_point(field_get:MOBSTATE.foundOn)
+  return _internal_foundon();
 }
-inline void MOBSTATE::set_outlineon(::int64_t value) {
-  _internal_set_outlineon(value);
-  // @@protoc_insertion_point(field_set:MOBSTATE.outlineOn)
+inline void MOBSTATE::set_foundon(bool value) {
+  _internal_set_foundon(value);
+  // @@protoc_insertion_point(field_set:MOBSTATE.foundOn)
 }
-inline ::int64_t MOBSTATE::_internal_outlineon() const {
+inline bool MOBSTATE::_internal_foundon() const {
   PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.outlineon_;
+  return _impl_.foundon_;
 }
-inline void MOBSTATE::_internal_set_outlineon(::int64_t value) {
+inline void MOBSTATE::_internal_set_foundon(bool value) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   ;
-  _impl_.outlineon_ = value;
+  _impl_.foundon_ = value;
+}
+
+// bool remain1 = 12;
+inline void MOBSTATE::clear_remain1() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.remain1_ = false;
+}
+inline bool MOBSTATE::remain1() const {
+  // @@protoc_insertion_point(field_get:MOBSTATE.remain1)
+  return _internal_remain1();
+}
+inline void MOBSTATE::set_remain1(bool value) {
+  _internal_set_remain1(value);
+  // @@protoc_insertion_point(field_set:MOBSTATE.remain1)
+}
+inline bool MOBSTATE::_internal_remain1() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.remain1_;
+}
+inline void MOBSTATE::_internal_set_remain1(bool value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.remain1_ = value;
+}
+
+// bool remain2 = 13;
+inline void MOBSTATE::clear_remain2() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.remain2_ = false;
+}
+inline bool MOBSTATE::remain2() const {
+  // @@protoc_insertion_point(field_get:MOBSTATE.remain2)
+  return _internal_remain2();
+}
+inline void MOBSTATE::set_remain2(bool value) {
+  _internal_set_remain2(value);
+  // @@protoc_insertion_point(field_set:MOBSTATE.remain2)
+}
+inline bool MOBSTATE::_internal_remain2() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.remain2_;
+}
+inline void MOBSTATE::_internal_set_remain2(bool value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.remain2_ = value;
+}
+
+// double animtime = 14;
+inline void MOBSTATE::clear_animtime() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.animtime_ = 0;
+}
+inline double MOBSTATE::animtime() const {
+  // @@protoc_insertion_point(field_get:MOBSTATE.animtime)
+  return _internal_animtime();
+}
+inline void MOBSTATE::set_animtime(double value) {
+  _internal_set_animtime(value);
+  // @@protoc_insertion_point(field_set:MOBSTATE.animtime)
+}
+inline double MOBSTATE::_internal_animtime() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.animtime_;
+}
+inline void MOBSTATE::_internal_set_animtime(double value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.animtime_ = value;
 }
 
 // -------------------------------------------------------------------

@@ -40,6 +40,8 @@ public:
 	void PlayOnceWithManyChannels(const _wstring& _wstrSoundName);
 	void PlayBGM(const _wstring& _wstrSoundName);
 	void StopBGM(const _wstring& _wstrSoundName);
+	void PauseBGM(const _wstring& _wstrSoundName);
+	void ResumeBGM(const _wstring& _wstrSoundName);
 	void PlayBGM(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
 	void Stop(const _wstring& _wstrSoundName);
 	void StopWithManyChannels(const _wstring& _wstrSoundName);

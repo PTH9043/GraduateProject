@@ -250,7 +250,6 @@ PS_OUT PS_Main(PS_IN In)
             else
             {
                 discard;
-               // Out.vDiffuse = dissolveColor;
             }
         }
         else
