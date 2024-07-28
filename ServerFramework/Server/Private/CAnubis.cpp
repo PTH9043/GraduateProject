@@ -13,6 +13,7 @@ namespace Server
 		UpdateFindRange(40.f, 90.f);
 		SetMoveSpeed(5);
 		SetAttackRange(9.f);
+		SetCharStatus({ 1, 0, 100 });
 	}
 	_bool CAnubis::Start(const VOIDDATAS& _ReceiveDatas)
 	{

@@ -56,36 +56,33 @@ HRESULT CItemChest::NativeConstructClone(const VOIDDATAS& _Datas)
 		Containers.second->SetTranslate(GetAnimModel()->GetCenterPos());
 		Containers.second->SetScaleToFitModel(GetAnimModel()->GetMinVertexPos(), GetAnimModel()->GetMaxVertexPos());
 	}
-		
-		
-		{
-
-			UParticle::PARTICLEDESC tDesc;
-			tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEOPENCHEST2DSHADER;
-			tDesc.wstrParticleShader = PROTO_RES_PARTICLEOPENCHEST2DSHADER;
+	{
+		UParticle::PARTICLEDESC tDesc;
+		tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEOPENCHEST2DSHADER;
+		tDesc.wstrParticleShader = PROTO_RES_PARTICLEOPENCHEST2DSHADER;
 
 
-			tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 1.3f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle =0.05f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.5f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.1f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 2.1f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 2.1f;
-			tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 512;
-			tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 1.f;
-			tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.f, 0.1f);
-			tDesc.ParticleParam.stGlobalParticleInfo.fParticlePosition = _float3(0.f, 0.f, 0.f);
-			tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_OPENCHEST;
-			m_spOpenChestParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
-		}
-		 m_spOpenChestParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleType = PARTICLE_TYPE_DEFAULT;
-		 m_spOpenChestParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
-		m_spOpenChestParticle->SetParticleType(PARTICLE_OPENCHEST);
-		*m_spOpenChestParticle->GetParticleSystem()->GetAddParticleAmount() = 2;
-		*m_spOpenChestParticle->GetParticleSystem()->GetCreateInterval() = 1.1f;
-		m_spOpenChestParticle->SetTexture(L"Twinkle");
+		tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 1.3f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 0.05f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.5f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.1f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 2.1f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 2.1f;
+		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 512;
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 1.f;
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleDirection = _float3(0.f, 0.f, 0.1f);
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticlePosition = _float3(0.f, 0.f, 0.f);
+		tDesc.ParticleParam.stGlobalParticleInfo.fParticleKind = PARTICLE_OPENCHEST;
+		m_spOpenChestParticle = std::static_pointer_cast<UParticle>(spGameInstance->CloneActorAdd(PROTO_ACTOR_PARTICLE, { &tDesc }));
+	}
+	m_spOpenChestParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleType = PARTICLE_TYPE_DEFAULT;
+	m_spOpenChestParticle->GetParticleSystem()->GetParticleTypeParam()->fParticleLifeTimeType = PARTICLE_LIFETIME_TYPE_DEFAULT;
+	m_spOpenChestParticle->SetParticleType(PARTICLE_OPENCHEST);
+	*m_spOpenChestParticle->GetParticleSystem()->GetAddParticleAmount() = 2;
+	*m_spOpenChestParticle->GetParticleSystem()->GetCreateInterval() = 1.1f;
+	m_spOpenChestParticle->SetTexture(L"Twinkle");
 	
 	return S_OK;
 }
@@ -94,37 +91,31 @@ void CItemChest::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	
-	
 
 	static _double elapsedTime = 0;
 	_double ItemChestOpeningSpeed = 2;
 	_double ItemChestTimeArcOpenEnd = 3;
 	GetAnimationController()->Tick(_dTimeDelta);
-
+	SetTargetPlayer(std::static_pointer_cast<UPlayer>(spGameInstance->GetCurrPlayer()));
 	//상자 여는 트리거
 	if (GetFoundTargetState())
 	{
-
 		SetOutline(true);
 		SetIfOutlineScale(true);
-		if(!m_bisOpen)
-		static_pointer_cast<CWarriorPlayer>(GetTargetPlayer())->SetCanInteractChestState(true);
-		if (spGameInstance->GetDIKeyDown(DIK_F)&&!m_bisOpen) {
+		if (!m_bisOpen)
+			static_pointer_cast<CWarriorPlayer>(GetTargetPlayer())->SetCanInteractChestState(true);
+		if (spGameInstance->GetDIKeyDown(DIK_F) && !m_bisOpen) {
 			if (m_ChestType == TYPE_CHEST) {
 				static_pointer_cast<CWarriorPlayer>(GetTargetPlayer())->SetIfOpenChest(true);
 				spGameInstance->SoundPlayOnce(L"ChestOpen");
 			}
-				
 			SetOpeningState(true);
 		}
-			
 	}
 	else
 	{
-
 		SetOutline(false);
-		
+
 		static_pointer_cast<CWarriorPlayer>(GetTargetPlayer())->SetCanInteractChestState(false);
 	}
 
@@ -136,8 +127,7 @@ void CItemChest::TickActive(const _double& _dTimeDelta)
 				spGameInstance->SoundPlayOnce(L"Heal");
 				m_bisOpenSound = true;
 			}
-			
-			
+
 			ParticleActiveTime += _dTimeDelta;
 			if (GetElapsedTime() < ItemChestTimeArcOpenEnd)
 			{
@@ -153,14 +143,11 @@ void CItemChest::TickActive(const _double& _dTimeDelta)
 			spGameInstance->RemoveCollisionPawn(ThisShared<CMob>());
 			SetActive(false);
 		}
-
 	}
-	
+
 	if (ParticleActiveTime > 5.f) {
 		m_spOpenChestParticle->SetActive(false);
 	}
-	
-	
 
 	for (auto& Containers : GetColliderContainer())
 	{
@@ -172,9 +159,9 @@ void CItemChest::LateTickActive(const _double& _dTimeDelta)
 {
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
 	
-		AddOutlineRenderGroup(RI_DEPTHRECORD);
-		//AddNorPosRenderGroup(RI_NORPOS_FORABILITY);
-		AddNorPosRenderGroup(RI_NORPOS);
+	AddOutlineRenderGroup(RI_DEPTHRECORD);
+	//AddNorPosRenderGroup(RI_NORPOS_FORABILITY);
+	AddNorPosRenderGroup(RI_NORPOS);
 
 
 	

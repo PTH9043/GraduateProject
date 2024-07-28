@@ -25,7 +25,8 @@ CMob::CMob(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONE
 	m_delapsedTime{ 0 },
 	m_fActivationRange{ 0 },
 	m_fDeactivationRange{0},
-	m_isSendDataToBehavior{true}
+	m_isSendDataToBehavior{false},
+	m_isFirstFoundState{ false }
 {
 }
 
@@ -39,7 +40,8 @@ CMob::CMob(const CMob& _rhs)
 	m_delapsedTime{ 0 },
 	m_fActivationRange{ 0 },
 	m_fDeactivationRange{ 0 },
-	m_isSendDataToBehavior{ true }
+	m_isSendDataToBehavior{ false },
+	m_isFirstFoundState{ false }
 {
 }
 
@@ -65,7 +67,7 @@ HRESULT CMob::NativeConstructClone(const VOIDDATAS& _Datas)
 	GetCurrentNavi()->FindCell(GetTransform()->GetPos());
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	spGameInstance->AddCollisionPawnList(ThisShared<UPawn>());
-	if (spGameInstance->GetNetworkOwnerID() == 57)
+	if (spGameInstance->GetNetworkOwnerID() == 61)
 	{
 		m_isSendDataToBehavior = true;
 	}
@@ -81,22 +83,19 @@ void CMob::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
 
-	if (true == IsSendDataToBehavior())
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	_float3 CurrentMobPos = GetTransform()->GetPos();
+
+	if (nullptr == m_spTargetPlayer)
 	{
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		_float3 CurrentMobPos = GetTransform()->GetPos();
+		m_spTargetPlayer = spGameInstance->FindPlayerToDistance(CurrentMobPos);
+	}
 
-		if (nullptr == m_spTargetPlayer)
-		{
-			m_spTargetPlayer = spGameInstance->FindPlayerToDistance(CurrentMobPos);
-		}
-
-		if (m_spTargetPlayer)
-		{
-			_float3 CurrentPlayerPos = m_spTargetPlayer->GetTransform()->GetPos();
-			CalculateDistanceBetweenPlayers(CurrentPlayerPos, CurrentMobPos);
-			SearchForPlayers();
-		}
+	if (m_spTargetPlayer)
+	{
+		_float3 CurrentPlayerPos = m_spTargetPlayer->GetTransform()->GetPos();
+		CalculateDistanceBetweenPlayers(CurrentPlayerPos, CurrentMobPos);
+		SearchForPlayers();
 	}
 }
 
@@ -124,13 +123,15 @@ void CMob::LateTickActive(const _double& _dTimeDelta)
 
 void CMob::NetworkTickActive(const _double& _dTimeDelta)
 {
-	if (false == IsSendDataToBehavior())
+	_int CurAnimState = GetAnimationController()->GetAnimState();
+	if (true == IsSendDataToBehavior() && CurAnimState != UAnimationController::ANIM_DEATH)
 	{
-		if (true == GetFoundTargetState())
+		if (true == GetFoundTargetState() || true == m_isFirstFoundState)
 		{
 #ifdef _ENABLE_PROTOBUFF
 			SendMobStateData();
 #endif
+			m_isFirstFoundState = true;
 		}
 	}
 }
@@ -165,12 +166,20 @@ void CMob::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 	{
 	case TAG_SC_MONSTERSTATE:
 	{
+		if (true == IsSendDataToBehavior())
+			return;
+
 		MOBSTATE scMonsterState;
 		scMonsterState.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
 		GetAnimationController()->ReceiveNetworkProcessData(&scMonsterState);
 		GetTransform()->SetPos({ scMonsterState.posx(), scMonsterState.posy(), scMonsterState.posz() });
 		GetTransform()->RotateFix({ scMonsterState.rotatex(), scMonsterState.rotatey(), scMonsterState.rotatez() });
-		SetOutline(scMonsterState.outlineon());
+		SetFoundTargetState(scMonsterState.foundon());
+	}
+	break;
+	case TAG_SC_DAMAGED:
+	{
+		SetDamaged(true);
 	}
 	break;
 	}
@@ -180,7 +189,6 @@ void CMob::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 #ifdef _ENABLE_PROTOBUFF
 void CMob::SendMobStateData()
 {
-	RETURN_CHECK(true == IsNetworkConnected(), ;);
 	CSHPTRREF<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	_float3 vCharacterPos = GetTransform()->GetPos();
@@ -188,7 +196,7 @@ void CMob::SendMobStateData()
 
 	_int state = GetAnimationController()->GetAnimState();
 	_int AnimIndex = GetAnimModel()->GetCurrentAnimIndex();
-	_double Animtime = GetAnimModel()->GetCurrentAnimation()->GetDuration();
+	_double Animtime = GetAnimModel()->GetCurrentAnimation()->GetTimeAcc();
 
 	VECTOR3 vMove;
 	VECTOR3 vRotate;
@@ -197,7 +205,7 @@ void CMob::SendMobStateData()
 		PROTOFUNC::MakeVector3(OUT & vRotate, vCharRotate.x, vCharRotate.y, vCharRotate.z);
 	}
 	MOBSTATE charMove;
-	PROTOFUNC::MakeMobState(OUT & charMove, spGameInstance->GetNetworkOwnerID(), vMove, vRotate,
+	PROTOFUNC::MakeMobState(OUT & charMove, GetNetworkID(), vMove, vRotate,
 		state, AnimIndex, IsDamaged(), GetFoundTargetState(), Animtime);
 	spGameInstance->InsertSendProcessPacketInQuery(std::move(UProcessedData(charMove, TAG_CS_MONSTERSTATE)));
 }

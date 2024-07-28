@@ -67,13 +67,14 @@ namespace Server
 		// Standing
 		{
 			VECTOR< MOBDATA> MobData;
-			CMobLayoutLoader Chest("..\\..\\Resource\\MobsLayouts\\Chests.bin");
+			CMobLayoutLoader Chest("..\\..\\Resource\\MobsLayouts\\Chest.bin");
 			CMobLayoutLoader Interior_Hallway_E("..\\..\\Resource\\MobsLayouts\\Interior_Hallway_E.bin");
 			CMobLayoutLoader Interior_Room_C("..\\..\\Resource\\MobsLayouts\\Interior_Room_C.bin");
 			CMobLayoutLoader Interior_Room_D("..\\..\\Resource\\MobsLayouts\\Interior_Room_D.bin");
 			CMobLayoutLoader Interior_Room_E("..\\..\\Resource\\MobsLayouts\\Interior_Room_E.bin");
 			CMobLayoutLoader Interior_Room_F("..\\..\\Resource\\MobsLayouts\\Interior_Room_F.bin");
 			CMobLayoutLoader Interior_Room_G("..\\..\\Resource\\MobsLayouts\\Interior_Room_G.bin");
+			CMobLayoutLoader Mimic("..\\..\\Resource\\MobsLayouts\\Mimics.bin");
 
 			// Mob데이터를 받아온다. 
 			for (auto& iter : Chest.GetMobData())
@@ -101,6 +102,10 @@ namespace Server
 				MobData.push_back(iter);
 			}
 			for (auto& iter : Interior_Room_G.GetMobData())
+			{
+				MobData.push_back(iter);
+			}
+			for (auto& iter : Mimic.GetMobData())
 			{
 				MobData.push_back(iter);
 			}

@@ -71,6 +71,7 @@ class USwapChain;
 class UFont;
 class UPlayer;
 class UNetworkSender;
+class UNetworkQueryProcessing;
 
 struct PICKINGDESC;
 struct WAITCHECKACTOR;

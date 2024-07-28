@@ -25,13 +25,12 @@ void UNetworkQueryProcessing::ProcessQueryData()
 	ThreadID = m_NetworkInitQueryIndex.load();
 
 	SHPTR<UNetworkBaseController> spNetworkBaseController = m_wpNetworkBaseController.lock();
-	const NETWORKACTORCONTAINER& NetworkActorContainer = spNetworkBaseController->GetNetworkActorContainer();
 	{
 		auto& QueryContainer = m_NetworkJobQueryContainer[ThreadID];
 		for (auto& iter : QueryContainer)
 		{
-			const auto& ActorPair = NetworkActorContainer.find(iter.GetDataID());
-			if (NetworkActorContainer.end() != ActorPair)
+			const auto& ActorPair = m_NetworkActorContainer.find(iter.GetDataID());
+			if (m_NetworkActorContainer.end() != ActorPair)
 			{
 				ActorPair->second->ReceiveNetworkProcessData(std::move(iter));
 			}
@@ -44,7 +43,6 @@ void UNetworkQueryProcessing::InsertNetworkInitData(NETWORKRECEIVEINITDATA _Netw
 {
 	_int ThreadID = m_NetworkInitQueryIndex.load();
 	ThreadID = ThreadID == 0 ? 1 : 0;
-
 	m_NetworkInitQueryContainer[ThreadID].push_back(_NetworkRecvInitData);
 }
 
@@ -61,6 +59,12 @@ void UNetworkQueryProcessing::ProcessNetworkInitData()
 		}
 		InitContainer.clear();
 	}
+}
+
+void UNetworkQueryProcessing::AddCreatedNetworkActor(_int _NetworkID, CSHPTRREF<UActor> _spActor)
+{
+	assert(nullptr != _spActor);
+	m_NetworkActorContainer.insert(MakePair(_NetworkID, _spActor));
 }
 
 void UNetworkQueryProcessing::MakeActors(const NETWORKRECEIVEINITDATA& _NetworkRecvInitData)

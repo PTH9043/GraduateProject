@@ -53,9 +53,12 @@ void UNetworkBaseController::AddNetworkInitData(_int _NetworkID, const NETWORKRE
 
 void UNetworkBaseController::AddCreatedNetworkActor(_int _NetworkID, CSHPTRREF<UActor> _spActor)
 {
-	assert(nullptr != _spActor);
-	_spActor->SetNetworkID(_NetworkID);
-	m_NetworkActorContainer.insert(MakePair(_NetworkID, _spActor));
+	if (nullptr != m_spNetworkQueryProcessing)
+	{
+		m_spNetworkQueryProcessing->AddCreatedNetworkActor(_NetworkID, _spActor);
+		_spActor->SetNetworkID(_NetworkID);
+		m_NetworkActorContainer.insert(MakePair(_NetworkID, _spActor));
+	}
 }
 
 void UNetworkBaseController::InsertNetworkInitDataInQuery(const NETWORKRECEIVEINITDATA& _networkInitData)
@@ -72,11 +75,9 @@ SHPTR<UActor> UNetworkBaseController::FindNetworkActor(const _int _NetworkID)
 
 void UNetworkBaseController::InsertNetworkProcessInQuery(UProcessedData&& _data)
 {
-	std::atomic_thread_fence(std::memory_order_seq_cst);
-	SHPTR<UNetworkQueryProcessing> spNetworkQueryProcessing = m_spNetworkQueryProcessing;
-	if (nullptr != spNetworkQueryProcessing)
+	if (nullptr != m_spNetworkQueryProcessing)
 	{
-		spNetworkQueryProcessing->InsertQueryData(std::move(_data));
+		m_spNetworkQueryProcessing->InsertQueryData(std::move(_data));
 	}
 }
 
@@ -127,6 +128,7 @@ void UNetworkBaseController::NativePacket()
 
 void UNetworkBaseController::CombineRecvPacket(UOverExp* _pOverExp, _llong _numBytes)
 {
+	std::lock_guard Lock{ m_Lock };
 	// 버퍼를 조합한다. 
 	{
 		::memcpy(&m_TcpTotalBuffer[m_RemainBufferLength], _pOverExp->GetBufferAddress(0), _numBytes);

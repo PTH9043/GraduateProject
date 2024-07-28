@@ -70,6 +70,7 @@ private:
 
     _float                          m_fActivationRange;
     _float                          m_fDeactivationRange;
+    _bool                           m_isFirstFoundState;
 
 
     _double                         m_dtimeAccumulator;

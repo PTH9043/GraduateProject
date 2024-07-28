@@ -176,6 +176,7 @@ namespace Server {
 		{
 		//	PROTOFUNC::MakeCharState(OUT & csMove, _SessionID, vSendPosition, vSendRotate);
 			CombineProto(REF_OUT GetCopyBuffer(), REF_OUT GetPacketHead(), csMove, TAG_SC::TAG_SC_PLAYERSTATE);
+	//		_spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
 			_spCoreInstance->BroadCastMessageExcludingSession(_SessionID, GetCopyBufferPointer(), GetPacketHead());
 		}
 
@@ -214,7 +215,7 @@ namespace Server {
 		SC_DAMAGED scDamaged;
 		PROTOFUNC::MakeScDamaged(&scDamaged, spSession->GetSessionID(), spSession->GetCharStatus().fHp);
 		CombineProto<SC_DAMAGED>(GetCopyBuffer(), GetPacketHead(), scDamaged, TAG_SC_DAMAGED);
-		_spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
+		_spCoreInstance->BroadCastMessageExcludingSession(_SessionID, GetCopyBufferPointer(), GetPacketHead());
 	}
 
 	void CPlayerSession::MonsterCollisionState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
@@ -226,10 +227,10 @@ namespace Server {
 		SHPTR<ASession> spSession = _spCoreInstance->FindSession(CollisionData.enemyid());
 		spMonster->DamageToEnemy(spSession->GetCharStatus().fPower);
 
-		SC_DAMAGED scDamaged;
-		PROTOFUNC::MakeScDamaged(&scDamaged, spSession->GetSessionID(), spSession->GetCharStatus().fHp);
-		CombineProto<SC_DAMAGED>(GetCopyBuffer(), GetPacketHead(), scDamaged, TAG_SC_DAMAGED);
-		_spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
+		//SC_DAMAGED scDamaged;
+		//PROTOFUNC::MakeScDamaged(&scDamaged, spSession->GetSessionID(), spSession->GetCharStatus().fHp);
+		//CombineProto<SC_DAMAGED>(GetCopyBuffer(), GetPacketHead(), scDamaged, TAG_SC_DAMAGED);
+		//_spCoreInstance->BroadCastMessageExcludingSession(_SessionID, GetCopyBufferPointer(), GetPacketHead());
 	}
 
 	void CPlayerSession::MonsterState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
@@ -243,8 +244,8 @@ namespace Server {
 		{
 			spMonster->ProcessPacket(TAG_CS_MONSTERSTATE, &monsterState);
 		}
-
-		_spCoreInstance->BroadCastMessageExcludingSession(_SessionID, GetCopyBufferPointer(), GetPacketHead());
+		//_spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
+		 _spCoreInstance->BroadCastMessageExcludingSession(_SessionID, GetCopyBufferPointer(), GetPacketHead());
 	}
 
 	void CPlayerSession::Free()

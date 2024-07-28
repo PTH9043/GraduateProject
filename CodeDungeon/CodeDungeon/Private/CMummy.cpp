@@ -48,7 +48,6 @@ HRESULT CMummy::NativeConstruct()
 void CMummy::CreateParticles()
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-
 	{
 		UParticle::PARTICLEDESC tDesc;
 		tDesc.wstrParticleComputeShader = PROTO_RES_COMPUTEBLOODEFFECT2DSHADER;

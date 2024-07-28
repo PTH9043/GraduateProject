@@ -2,6 +2,7 @@
 #include "CMonsterAnimController.h"
 #include "UCharacter.h"
 #include "UAnimModel.h"
+#include "UAnimation.h"
 
 CMonsterAnimController::CMonsterAnimController(CSHPTRREF<UDevice> _spDevice)
     : UAnimationController(_spDevice)
@@ -37,12 +38,13 @@ void CMonsterAnimController::ReceiveNetworkProcessData(void* _pData)
     SHPTR<UCharacter> spMonster = GetOwnerCharacter();
     SHPTR<UAnimModel> spAnimModel = spMonster->GetAnimModel();
     {
-        CHARSTATE* pMonsterData = static_cast<CHARSTATE*>(_pData);
+        MOBSTATE* pMonsterData = static_cast<MOBSTATE*>(_pData);
         SetAnimState(pMonsterData->state());
 
-        if (pMonsterData->animationindex() != spAnimModel->GetCurrentAnimIndex()
-            || 1 == pMonsterData->triggeron())
+        if (pMonsterData->animationindex() != spAnimModel->GetCurrentAnimIndex() || 1 == pMonsterData->triggeron())
             spAnimModel->SetAnimation(pMonsterData->animationindex());
+
+        spAnimModel->GetCurrentAnimation()->SetAnimTimeAcc(pMonsterData->animtime());
     }
 #endif
 }

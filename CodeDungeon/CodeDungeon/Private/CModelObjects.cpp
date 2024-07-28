@@ -75,12 +75,8 @@ void CModelObjects::LateTickActive(const _double& _dTimeDelta)
 		if (m_bDrawOutline) {
 			AddOutlineRenderGroup(RI_DEPTHRECORD);
 			AddNorPosRenderGroup(RI_NORPOS);
-		}
-			
-		
-		
+		}		
 	}
-	
 }
 
 HRESULT CModelObjects::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
@@ -115,8 +111,6 @@ HRESULT CModelObjects::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UT
 			else {
 				HasTex[2] = 1;
 			}
-
-
 
 			GetShader()->BindCBVBuffer(m_spShaderTexCheckBuffer, &HasTex, sizeof(HasTex));
 			GetShader()->BindCBVBuffer(m_spShaderCheckPointBuffer, &isCheckpoint, sizeof(_bool));

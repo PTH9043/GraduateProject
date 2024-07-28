@@ -89,9 +89,16 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
     _bool FoundPlayer = spMinotaur->GetFoundTargetState();
     _bool Hit = false;
 
-    if (spMinotaur->GetPrevHealth() > spMinotaur->GetHealth())
+#ifndef _ENABLE_PROTOBUFF
+    if (spMinotaur->GetPrevHealth() > spHarlequinn->GetHealth())
         Hit = true;
-
+#else
+    if (true == spMinotaur->IsDamaged())
+    {
+        Hit = true;
+        spMinotaur->SetDamaged(false);
+    }
+#endif
     _float AttackRange = 10.0f;
 
     if (!FoundPlayer || spMinotaur->GetTargetPlayer()->GetDeathState())

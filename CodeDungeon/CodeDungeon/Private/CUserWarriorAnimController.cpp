@@ -58,9 +58,6 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
     ifStartedGame = spWarriorPlayer->GetIfStartedGame();
 
     if (ifStartedGame) {
-
-
-
         // Input checks
         _bool isRunshift = spGameInstance->GetDIKeyPressing(DIK_LSHIFT);
         _bool isMoveFront = spGameInstance->GetDIKeyPressing(DIK_W);
@@ -80,8 +77,6 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
         _bool isKicked = spWarriorPlayer->GetKickedState();
         _bool isJump = spGameInstance->GetDIKeyDown(DIK_SPACE);
         _bool isRise = spWarriorPlayer->GetRiseState();
-
-
         _double KickedAnimSpeed = 20;
         _double KickedTimeArcOpenEnd = 35;
 
@@ -89,7 +84,6 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
         if (!isRoll && !isKicked && !isJump && !isRise && !isMoveFront && !isMoveBack && !isMoveLeft && !isMoveRight && !isAttack && !isCombo1 && !isCombo2) {
             UpdateState(spAnimModel, ANIM_IDLE, L"IDLE");
         }
-
 
         // Movement handling
         auto updateMovement = [&](const wchar_t* walkAnim, const wchar_t* runAnim, _bool isMove) {
@@ -102,7 +96,6 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
                 }
             }
             };
-
         updateMovement(L"WALKF", L"RUNF", isMoveFront);
         updateMovement(L"WALKB", L"RUNB", isMoveBack);
         updateMovement(L"WALKL", L"RUNL", isMoveLeft);
@@ -289,16 +282,13 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
             spWarriorPlayer->IfAttack(false);
         }
 
-        if (true == spGameInstance->IsMouseInWindowSize())
+        // Mouse Move
+        _long		MouseMove = spGameInstance->GetDIMMoveState(DIMM_X);
+        if (MouseMove)
         {
-            // Mouse Move
-            _long		MouseMove = spGameInstance->GetDIMMoveState(DIMM_X);
-            if (MouseMove)
+            if (CurAnimName != L"dead01" && CurAnimName != L"dead03")
             {
-                if (CurAnimName != L"dead01" && CurAnimName != L"dead03")
-                {
-                    spWarriorPlayer->GetTransform()->RotateTurn(_float3(0.f, 1.f, 0.f), MouseMove * 5.f, _dTimeDelta);
-                }
+                spWarriorPlayer->GetTransform()->RotateTurn(_float3(0.f, 1.f, 0.f), MouseMove * 5.f, _dTimeDelta);
             }
         }
 

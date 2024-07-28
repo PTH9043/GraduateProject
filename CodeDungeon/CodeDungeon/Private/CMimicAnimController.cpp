@@ -79,9 +79,16 @@ void CMimicAnimController::Tick(const _double& _dTimeDelta)
     _bool FoundPlayer = spMimic->GetFoundTargetState();
     _bool Hit = false;
 
-    if (spMimic->GetPrevHealth() > spMimic->GetHealth())
+#ifndef _ENABLE_PROTOBUFF
+    if (spMimic->GetPrevHealth() > spHarlequinn->GetHealth())
         Hit = true;
-
+#else
+    if (true == spMimic->IsDamaged())
+    {
+        Hit = true;
+        spMimic->SetDamaged(false);
+    }
+#endif
     _float AttackRange = 5.0f;
 
     if (spMimic->GetTargetPlayer()->GetDeathState())

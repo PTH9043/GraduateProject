@@ -97,9 +97,16 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
     _float DistanceFromPlayer = spAnubis->GetDistanceFromPlayer();
     _bool FoundPlayer = spAnubis->GetFoundTargetState();
     _bool Hit = false;
-
+#ifndef _ENABLE_PROTOBUFF
     if (spAnubis->GetPrevHealth() > spAnubis->GetHealth())
         Hit = true;
+#else
+    if (true == spAnubis->IsDamaged())
+    {
+        Hit = true;
+        spAnubis->SetDamaged(false);
+    }
+#endif
 
     _float AttackRange = 10.0f;
 

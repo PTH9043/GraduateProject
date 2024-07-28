@@ -8,7 +8,6 @@ BEGIN(Engine)
 class UActor;
 
 using TOTALBUFFER = ARRAY<_char, MAX_PROCESSBUF_LENGTH>;
-using NETWORKACTORCONTAINER = UNORMAP<_int, SHPTR<UActor>>;
 using NETWORKINITDATACONTAINER = UNORMAP<_int, NETWORKRECEIVEINITDATA>;
 
 class UActor;
@@ -19,6 +18,7 @@ class UNetworkQueryProcessing;
 - NetworkBaseController로 상속받아서 사용할 Server와 통신 클래스
 */
 class UNetworkBaseController abstract : public UBase {
+	using NETWORKACTORCONTAINER = CONUNOMAP<_int, SHPTR<UActor>>;
 public:
 	UNetworkBaseController();
 	DESTRUCTOR(UNetworkBaseController)
@@ -98,6 +98,8 @@ private:
 	_bool																							m_isNetworkResourceReceiveSuccess;
 	_int																								m_iMakeMonsterNum;
 	_int																								m_iRealMakeMonsterNum;
+
+	std::mutex																				m_Lock;
 };	
 
 END

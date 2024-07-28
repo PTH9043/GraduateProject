@@ -102,8 +102,16 @@ void CHarlequinnAnimController::Tick(const _double& _dTimeDelta)
     _bool FoundPlayer = spHarlequinn->GetFoundTargetState();
     _bool Hit = false;
 
+#ifndef _ENABLE_PROTOBUFF
     if (spHarlequinn->GetPrevHealth() > spHarlequinn->GetHealth())
         Hit = true;
+#else
+    if (true == spHarlequinn->IsDamaged())
+    {
+        Hit = true;
+        spHarlequinn->SetDamaged(false);
+    }
+#endif
 
     _float AttackRange_Long = 50;
     _float AttackRange_Jump = 40;

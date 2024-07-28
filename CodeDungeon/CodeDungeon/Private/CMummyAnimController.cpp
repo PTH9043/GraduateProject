@@ -87,9 +87,16 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     _bool FoundPlayer = spMummy->GetFoundTargetState();
     _bool Hit = false;
 
-    if (spMummy->GetPrevHealth() > spMummy->GetHealth())
+#ifndef _ENABLE_PROTOBUFF
+    if (spMummy->GetPrevHealth() > spHarlequinn->GetHealth())
         Hit = true;
-
+#else
+    if (true == spMummy->IsDamaged())
+    {
+        Hit = true;
+        spMummy->SetDamaged(false);
+    }
+#endif
     _float AttackRange = 10.0f;
 
     // Handle found player state

@@ -236,7 +236,6 @@ HRESULT CMinotaur::NativeConstructClone(const VOIDDATAS& _Datas)
 
 void CMinotaur::TickActive(const _double& _dTimeDelta)
 {
-
 	_float3 pos = GetTransform()->GetPos();
 	pos.y += 7.55;
 	m_spBloodParticle->SetPosition(pos);
@@ -266,8 +265,7 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 
 			// A* for moving towards player when player is found
 			if (GetFoundTargetState() && !GetTargetPlayer()->GetDeathState())
-			{
-				
+			{			
 				m_spFootPrintParticle->SetActive(true);
 				{
 					*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 4;
@@ -414,7 +412,7 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 			}
 			else // patrolling when player is not found
 			{
-				//SetOutline(false);
+				SetOutline(false);
 			}
 		}
 		else {
