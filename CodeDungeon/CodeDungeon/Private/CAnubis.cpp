@@ -302,6 +302,7 @@ HRESULT CAnubis::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetDeactivationRange(80);
 	SetOutlineByAbility(true);
 	SetOutlineColor(_float3(1, 1, 0));
+	SetOutline(true);
 	return S_OK;
 }
 
@@ -346,7 +347,7 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 					m_spFootPrintParticle->SetPosition(pos);
 					m_spFootPrintParticle->SetDirection(Right);
 				}
-				SetOutline(true);
+			//	SetOutline(true);
 				if (GetTimeAccumulator() >= 0.5)
 				{
 					SHPTR<UNavigation> spNavigation = GetCurrentNavi();
@@ -378,7 +379,7 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 			}
 			else
 			{
-				SetOutline(false);
+				//SetOutline(false);
 				SHPTR<UNavigation> spNavigation = GetCurrentNavi();
 				SHPTR<UCell> originCell = spNavigation->FindCell(m_f3OriginPos);
 				if (GetTimeAccumulator() >= 0.5)
@@ -443,7 +444,7 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 		}
 		else if (CurAnimState == UAnimationController::ANIM_IDLE)
 		{
-			SetOutline(false);
+		//	SetOutline(false);
 			GetAnimModel()->TickAnimation(_dTimeDelta);
 			GetTransform()->SetPos(GetTransform()->GetPos());
 		}
@@ -472,11 +473,11 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 					m_spFootPrintParticle->SetPosition(pos);
 					m_spFootPrintParticle->SetDirection(Right);
 				}
-				SetOutline(true);
+			//	SetOutline(true);
 			}
 			else
 			{
-				SetOutline(false);
+				//SetOutline(false);
 			}
 		}
 		else if (CurAnimState == UAnimationController::ANIM_ATTACK){}
@@ -528,8 +529,6 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 			iter.second->SetScale(_float3(m_spFireCircle->GetTransform()->GetScale().x - 7, 0.3, m_spFireCircle->GetTransform()->GetScale().y - 7));
 		}
 	}
-	SetOutlineByAbility(true);
-	SetOutlineColor(_float3(0, 1, 0));
 }
 
 void CAnubis::LateTickActive(const _double& _dTimeDelta)

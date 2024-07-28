@@ -355,7 +355,7 @@ void CHarlequinn::TickActive(const _double& _dTimeDelta)
 			}
 			else // patrolling when player is not found
 			{
-				SetOutline(false);
+				//SetOutline(false);
 				SHPTR<UNavigation> spNavigation = GetCurrentNavi();
 				SHPTR<UCell> spNeighborCell = spNavigation->ChooseRandomNeighborCell(3);
 				if (GetTimeAccumulator() >= 5.0)
@@ -443,7 +443,7 @@ void CHarlequinn::TickActive(const _double& _dTimeDelta)
 			}
 			else // patrolling when player is not found
 			{
-				SetOutline(false);
+				//SetOutline(false);
 			}
 		}
 		else {
