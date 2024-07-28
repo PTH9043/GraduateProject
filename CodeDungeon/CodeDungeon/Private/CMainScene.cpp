@@ -2212,12 +2212,12 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 		}
 		if (!m_spWarriorPlayer->GetDeathState() && m_bIsFoundPlayer_Minotaur&&!m_bIsDead_Minotaur) {
 			if (!EnterMinoSound) {
-				
+				pGameInstance->SoundPlayOnce(L"MinoEnterMoan");
 				pGameInstance->SoundPlay(L"MinoBackground");
 				pGameInstance->SetLooping(L"MinoBackground", true);
 				EnterMinoSound = true;
 			}	
-		
+			
 			m_spMinotaurHpFont->SetRender(true);
 			m_spMinotaurFrameUI->SetActive(true);
 				m_spMinotaurHpBarUI->SetActive(true);
@@ -2235,6 +2235,7 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 		if (!m_spWarriorPlayer->GetDeathState() && m_bisFoundPlayer_Harlequinn&&!m_bisDead_Harlequinn) {
 			if (!EnterQuinnSound) {
 				
+				pGameInstance->SoundPlayOnce(L"12042307_1");
 				pGameInstance->SoundPlay(L"QuinnEnterBackground");
 				pGameInstance->SetLooping(L"QuinnEnterBackground", true);
 				EnterQuinnSound = true;
@@ -2254,7 +2255,7 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 		}
 		if (!m_spWarriorPlayer->GetDeathState() && m_bisFoundPlayer_Anubis&&!m_bisDead_Anubis) {
 			if (!EnterAnubisSound) {
-			
+				pGameInstance->SoundPlayOnce(L"AnubisEnterMoan");
 				pGameInstance->SoundPlay(L"AnubisEnterBackground");
 				pGameInstance->SetLooping(L"AnubisEnterBackground", true);
 				EnterAnubisSound = true;
