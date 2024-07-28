@@ -287,17 +287,18 @@ void CHarlequinn::ThrowShurikens(_int _shurikenIndex, const _double& _dTimeDelta
 
 void CHarlequinn::TickActive(const _double& _dTimeDelta)
 {
+
+	_float3 pos = GetTransform()->GetPos();
+	pos.y += 5;
+	m_spBloodParticle->SetPosition(pos);
+	m_spSlashParticle->SetPosition(pos);
+	m_spAttackParticle->SetPosition(pos);
+	m_spAttackParticleTwo->SetPosition(pos);
+	__super::TickActive(_dTimeDelta);
+	GetAnimationController()->Tick(_dTimeDelta);
+	_int CurAnimState = GetAnimationController()->GetAnimState();
 	if (true == IsSendDataToBehavior())
 	{
-		_float3 pos = GetTransform()->GetPos();
-		pos.y += 5;
-		m_spBloodParticle->SetPosition(pos);
-		m_spSlashParticle->SetPosition(pos);
-		m_spAttackParticle->SetPosition(pos);
-		m_spAttackParticleTwo->SetPosition(pos);
-		__super::TickActive(_dTimeDelta);
-		GetAnimationController()->Tick(_dTimeDelta);
-		_int CurAnimState = GetAnimationController()->GetAnimState();
 		const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
 		_float3 CurrentMobPos = GetTransform()->GetPos();
 		_float3 CurrentPlayerPos = GetTargetPlayer()->GetTransform()->GetPos();
@@ -395,8 +396,6 @@ void CHarlequinn::TickActive(const _double& _dTimeDelta)
 			_float3 direction = CurrentMobPos - CurrentPlayerPos;
 			GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
 		}
-		
-
 
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
@@ -424,7 +423,58 @@ void CHarlequinn::TickActive(const _double& _dTimeDelta)
 	}
 	else
 	{
+		if (CurAnimState == UAnimationController::ANIM_MOVE)
+		{
+			// A* for moving towards player when player is found
+			if (GetFoundTargetState() && !GetTargetPlayer()->GetDeathState())
+			{
+				m_spFootPrintParticle->SetActive(true);
+				{
+					*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 4;
+					*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.355f;
+					_float3 pos = GetTransform()->GetPos() + GetTransform()->GetRight();
+					pos.y += 1.0;
+					_float3 Look = GetTransform()->GetLook();
+					_float3 Right = 1.2 * GetTransform()->GetRight();
+					//pos -= 3 * Look;
+					m_spFootPrintParticle->SetPosition(pos);
+					m_spFootPrintParticle->SetDirection(Right);
+				}
+			}
+			else // patrolling when player is not found
+			{
+				SetOutline(false);
+			}
+		}
+		else {
+			m_spFootPrintParticle->SetActive(false);
+			*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 0;
+			*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
+		}
 
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+		// death animation
+		if (CurAnimState == UAnimationController::ANIM_DEATH)
+		{
+			_double DeathAnimSpeed = 20;
+			SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
+			_double DeathTimeArcOpenEnd = 50;
+			if (GetElapsedTime() < DeathTimeArcOpenEnd) {
+				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
+				GetAnimModel()->UpdateDissolveTImer(_dTimeDelta * 1.2f);
+				if (!m_bDissolveSound) {
+					spGameInstance->SoundPlayOnce(L"DissolveSound2");
+					m_bDissolveSound = true;
+				}
+			}
+		}
+		else
+		{
+			m_bDissolveSound = false;
+			GetAnimModel()->TickAnimation( _dTimeDelta);
+			SetElapsedTime(0.0);
+		}
 	}
 
 	UpdateCollision();
@@ -434,22 +484,21 @@ void CHarlequinn::LateTickActive(const _double& _dTimeDelta)
 {
 	__super::LateTickActive(_dTimeDelta);
 
-	const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
-
-	if(CurAnimName == L"Jump Forward" || CurAnimName == L"Attack 4" || CurAnimName == L"Attack 3")
+	if (true == IsSendDataToBehavior())
 	{
-		
-	}
-	else
-	{
-		_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
-		GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
+		const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
+
+		if (CurAnimName == L"Jump Forward" || CurAnimName == L"Attack 4" || CurAnimName == L"Attack 3")
+		{
+
+		}
+		else
+		{
+			_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
+			GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
+		}
 	}
 
-
-	/*for (auto& Colliders : GetColliderContainer())
-		if(Colliders.first == L"Main")
-			Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);*/
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	_int CurAnimState = GetAnimationController()->GetAnimState();
 	if (CurAnimState == UAnimationController::ANIM_DEATH)

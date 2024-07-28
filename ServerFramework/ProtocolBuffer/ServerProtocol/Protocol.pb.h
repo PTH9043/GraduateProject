@@ -1692,9 +1692,9 @@ class MOBSTATE final :
     kStateFieldNumber = 9,
     kAnimtimeFieldNumber = 14,
     kTriggerOnFieldNumber = 10,
-    kOutlineOnFieldNumber = 11,
-    kFootprintOnFieldNumber = 12,
-    kRaminsFieldNumber = 13,
+    kFoundOnFieldNumber = 11,
+    kRemain1FieldNumber = 12,
+    kRemain2FieldNumber = 13,
   };
   // int64 id = 1;
   void clear_id() ;
@@ -1806,34 +1806,34 @@ class MOBSTATE final :
   void _internal_set_triggeron(bool value);
 
   public:
-  // bool outlineOn = 11;
-  void clear_outlineon() ;
-  bool outlineon() const;
-  void set_outlineon(bool value);
+  // bool foundOn = 11;
+  void clear_foundon() ;
+  bool foundon() const;
+  void set_foundon(bool value);
 
   private:
-  bool _internal_outlineon() const;
-  void _internal_set_outlineon(bool value);
+  bool _internal_foundon() const;
+  void _internal_set_foundon(bool value);
 
   public:
-  // bool footprintOn = 12;
-  void clear_footprinton() ;
-  bool footprinton() const;
-  void set_footprinton(bool value);
+  // bool remain1 = 12;
+  void clear_remain1() ;
+  bool remain1() const;
+  void set_remain1(bool value);
 
   private:
-  bool _internal_footprinton() const;
-  void _internal_set_footprinton(bool value);
+  bool _internal_remain1() const;
+  void _internal_set_remain1(bool value);
 
   public:
-  // bool ramins = 13;
-  void clear_ramins() ;
-  bool ramins() const;
-  void set_ramins(bool value);
+  // bool remain2 = 13;
+  void clear_remain2() ;
+  bool remain2() const;
+  void set_remain2(bool value);
 
   private:
-  bool _internal_ramins() const;
-  void _internal_set_ramins(bool value);
+  bool _internal_remain2() const;
+  void _internal_set_remain2(bool value);
 
   public:
   // @@protoc_insertion_point(class_scope:MOBSTATE)
@@ -1870,9 +1870,9 @@ class MOBSTATE final :
     ::int64_t state_;
     double animtime_;
     bool triggeron_;
-    bool outlineon_;
-    bool footprinton_;
-    bool ramins_;
+    bool foundon_;
+    bool remain1_;
+    bool remain2_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -3861,73 +3861,73 @@ inline void MOBSTATE::_internal_set_triggeron(bool value) {
   _impl_.triggeron_ = value;
 }
 
-// bool outlineOn = 11;
-inline void MOBSTATE::clear_outlineon() {
+// bool foundOn = 11;
+inline void MOBSTATE::clear_foundon() {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.outlineon_ = false;
+  _impl_.foundon_ = false;
 }
-inline bool MOBSTATE::outlineon() const {
-  // @@protoc_insertion_point(field_get:MOBSTATE.outlineOn)
-  return _internal_outlineon();
+inline bool MOBSTATE::foundon() const {
+  // @@protoc_insertion_point(field_get:MOBSTATE.foundOn)
+  return _internal_foundon();
 }
-inline void MOBSTATE::set_outlineon(bool value) {
-  _internal_set_outlineon(value);
-  // @@protoc_insertion_point(field_set:MOBSTATE.outlineOn)
+inline void MOBSTATE::set_foundon(bool value) {
+  _internal_set_foundon(value);
+  // @@protoc_insertion_point(field_set:MOBSTATE.foundOn)
 }
-inline bool MOBSTATE::_internal_outlineon() const {
+inline bool MOBSTATE::_internal_foundon() const {
   PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.outlineon_;
+  return _impl_.foundon_;
 }
-inline void MOBSTATE::_internal_set_outlineon(bool value) {
+inline void MOBSTATE::_internal_set_foundon(bool value) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   ;
-  _impl_.outlineon_ = value;
+  _impl_.foundon_ = value;
 }
 
-// bool footprintOn = 12;
-inline void MOBSTATE::clear_footprinton() {
+// bool remain1 = 12;
+inline void MOBSTATE::clear_remain1() {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.footprinton_ = false;
+  _impl_.remain1_ = false;
 }
-inline bool MOBSTATE::footprinton() const {
-  // @@protoc_insertion_point(field_get:MOBSTATE.footprintOn)
-  return _internal_footprinton();
+inline bool MOBSTATE::remain1() const {
+  // @@protoc_insertion_point(field_get:MOBSTATE.remain1)
+  return _internal_remain1();
 }
-inline void MOBSTATE::set_footprinton(bool value) {
-  _internal_set_footprinton(value);
-  // @@protoc_insertion_point(field_set:MOBSTATE.footprintOn)
+inline void MOBSTATE::set_remain1(bool value) {
+  _internal_set_remain1(value);
+  // @@protoc_insertion_point(field_set:MOBSTATE.remain1)
 }
-inline bool MOBSTATE::_internal_footprinton() const {
+inline bool MOBSTATE::_internal_remain1() const {
   PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.footprinton_;
+  return _impl_.remain1_;
 }
-inline void MOBSTATE::_internal_set_footprinton(bool value) {
+inline void MOBSTATE::_internal_set_remain1(bool value) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   ;
-  _impl_.footprinton_ = value;
+  _impl_.remain1_ = value;
 }
 
-// bool ramins = 13;
-inline void MOBSTATE::clear_ramins() {
+// bool remain2 = 13;
+inline void MOBSTATE::clear_remain2() {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.ramins_ = false;
+  _impl_.remain2_ = false;
 }
-inline bool MOBSTATE::ramins() const {
-  // @@protoc_insertion_point(field_get:MOBSTATE.ramins)
-  return _internal_ramins();
+inline bool MOBSTATE::remain2() const {
+  // @@protoc_insertion_point(field_get:MOBSTATE.remain2)
+  return _internal_remain2();
 }
-inline void MOBSTATE::set_ramins(bool value) {
-  _internal_set_ramins(value);
-  // @@protoc_insertion_point(field_set:MOBSTATE.ramins)
+inline void MOBSTATE::set_remain2(bool value) {
+  _internal_set_remain2(value);
+  // @@protoc_insertion_point(field_set:MOBSTATE.remain2)
 }
-inline bool MOBSTATE::_internal_ramins() const {
+inline bool MOBSTATE::_internal_remain2() const {
   PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.ramins_;
+  return _impl_.remain2_;
 }
-inline void MOBSTATE::_internal_set_ramins(bool value) {
+inline void MOBSTATE::_internal_set_remain2(bool value) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   ;
-  _impl_.ramins_ = value;
+  _impl_.remain2_ = value;
 }
 
 // double animtime = 14;

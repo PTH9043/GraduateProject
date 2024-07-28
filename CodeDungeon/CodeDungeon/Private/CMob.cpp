@@ -188,6 +188,7 @@ void CMob::SendMobStateData()
 
 	_int state = GetAnimationController()->GetAnimState();
 	_int AnimIndex = GetAnimModel()->GetCurrentAnimIndex();
+	_double Animtime = GetAnimModel()->GetCurrentAnimation()->GetDuration();
 
 	VECTOR3 vMove;
 	VECTOR3 vRotate;
@@ -197,7 +198,7 @@ void CMob::SendMobStateData()
 	}
 	MOBSTATE charMove;
 	PROTOFUNC::MakeMobState(OUT & charMove, spGameInstance->GetNetworkOwnerID(), vMove, vRotate,
-		state, AnimIndex, IsDamaged() == true ? 1 : 0, GetOutlineState() == true ? 1 : 0);
+		state, AnimIndex, IsDamaged(), GetFoundTargetState(), Animtime);
 	spGameInstance->InsertSendProcessPacketInQuery(std::move(UProcessedData(charMove, TAG_CS_MONSTERSTATE)));
 }
 

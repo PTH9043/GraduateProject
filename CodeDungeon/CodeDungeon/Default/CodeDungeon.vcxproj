@@ -195,7 +195,11 @@
     <ClInclude Include="..\Public\CMummy.h" />
     <ClInclude Include="..\Public\CMummyAnimController.h" />
     <ClInclude Include="..\Public\CNavigationManager.h" />
+    <ClInclude Include="..\Public\CNetworkAnubisAnimController.h" />
+    <ClInclude Include="..\Public\CNetworkItemChestAnimController.h" />
     <ClInclude Include="..\Public\CNetworkClientController.h" />
+    <ClInclude Include="..\Public\CNetworkHarlequinnAnimController.h" />
+    <ClInclude Include="..\Public\CNetworkMimicAnimController.h" />
     <ClInclude Include="..\Public\CNetworkMinotaurAnimController.h" />
     <ClInclude Include="..\Public\CNetworkMummyAnimController.h" />
     <ClInclude Include="..\Public\CNetworkQueryProcessor.h" />
@@ -251,7 +255,11 @@
     <ClCompile Include="..\Private\CMummy.cpp" />
     <ClCompile Include="..\Private\CMummyAnimController.cpp" />
     <ClCompile Include="..\Private\CNavigationManager.cpp" />
+    <ClCompile Include="..\Private\CNetworkAnubisAnimController.cpp" />
+    <ClCompile Include="..\Private\CNetworkItemChestAnimController.cpp" />
     <ClCompile Include="..\Private\CNetworkClientController.cpp" />
+    <ClCompile Include="..\Private\CNetworkHarlequinnAnimController.cpp" />
+    <ClCompile Include="..\Private\CNetworkMimicAnimController.cpp" />
     <ClCompile Include="..\Private\CNetworkMinotaurAnimController.cpp" />
     <ClCompile Include="..\Private\CNetworkMummyAnimController.cpp" />
     <ClCompile Include="..\Private\CNetworkQueryProcessor.cpp" />

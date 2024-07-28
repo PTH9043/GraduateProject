@@ -60,9 +60,9 @@ message MOBSTATE
 	int64		animationIndex = 8;
 	int64		state = 9;
 	bool		triggerOn = 10;
-	bool		outlineOn = 11;
-	bool		footprintOn = 12;
-	bool		ramins = 13;
+	bool		foundOn = 11;
+	bool		remain1 = 12;
+	bool		remain2 = 13;
 	double	animtime = 14;
 }
 

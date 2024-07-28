@@ -369,6 +369,18 @@
     <ClInclude Include="..\Public\CNetworkMinotaurAnimController.h">
       <Filter>06.Comp\Controller\MonsterAnimController\Network\Minotaur</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CNetworkMimicAnimController.h">
+      <Filter>06.Comp\Controller\MonsterAnimController\Network\Mimic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CNetworkHarlequinnAnimController.h">
+      <Filter>06.Comp\Controller\MonsterAnimController\Network\Harlequinn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CNetworkItemChestAnimController.h">
+      <Filter>06.Comp\Controller\MonsterAnimController\Network\Chest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CNetworkAnubisAnimController.h">
+      <Filter>06.Comp\Controller\MonsterAnimController\Network\Anubis</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -531,6 +543,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\CNetworkMinotaurAnimController.cpp">
       <Filter>06.Comp\Controller\MonsterAnimController\Network\Minotaur</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CNetworkMimicAnimController.cpp">
+      <Filter>06.Comp\Controller\MonsterAnimController\Network\Mimic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CNetworkHarlequinnAnimController.cpp">
+      <Filter>06.Comp\Controller\MonsterAnimController\Network\Harlequinn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CNetworkItemChestAnimController.cpp">
+      <Filter>06.Comp\Controller\MonsterAnimController\Network\Chest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CNetworkAnubisAnimController.cpp">
+      <Filter>06.Comp\Controller\MonsterAnimController\Network\Anubis</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

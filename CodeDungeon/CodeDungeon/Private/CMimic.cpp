@@ -219,16 +219,17 @@ HRESULT CMimic::NativeConstructClone(const VOIDDATAS& _Datas)
 
 void CMimic::TickActive(const _double& _dTimeDelta)
 {
+
+	__super::TickActive(_dTimeDelta);
+	GetAnimationController()->Tick(_dTimeDelta);
+	_float3 pos = GetTransform()->GetPos();
+
+	pos.y += 5;
+	m_spBloodParticle->SetPosition(pos);
+	m_spSlashParticle->SetPosition(pos);
+	_int CurAnimState = GetAnimationController()->GetAnimState();
 	if (true == IsSendDataToBehavior())
 	{
-		__super::TickActive(_dTimeDelta);
-		GetAnimationController()->Tick(_dTimeDelta);
-		_float3 pos = GetTransform()->GetPos();
-
-		pos.y += 5;
-		m_spBloodParticle->SetPosition(pos);
-		m_spSlashParticle->SetPosition(pos);
-		_int CurAnimState = GetAnimationController()->GetAnimState();
 		_float3 CurrentMobPos = GetTransform()->GetPos();
 		_float3 CurrentPlayerPos = GetTargetPlayer()->GetTransform()->GetPos();
 		SHPTR<UCell> CurrentMobCell = GetCurrentNavi()->GetCurCell();
@@ -268,7 +269,7 @@ void CMimic::TickActive(const _double& _dTimeDelta)
 					_float3 direction = CurrentMobPos - GetTargetPos();
 					GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
 				}
-				if(CurAnimName != L"Hit")
+				if (CurAnimName != L"Hit")
 					GetTransform()->TranslateDir(-GetTransform()->GetLook(), _dTimeDelta, 20);
 			}
 			else // patrolling when player is not found
@@ -329,7 +330,7 @@ void CMimic::TickActive(const _double& _dTimeDelta)
 					m_bDissolveSound = true;
 				}
 			}
-				
+
 		}
 		else
 		{
@@ -340,7 +341,28 @@ void CMimic::TickActive(const _double& _dTimeDelta)
 	}
 	else
 	{
-
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		// death animation
+		if (CurAnimState == UAnimationController::ANIM_DEATH)
+		{
+			_double DeathAnimSpeed = 20;
+			SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
+			_double DeathTimeArcOpenEnd = 50;
+			if (GetElapsedTime() < DeathTimeArcOpenEnd) {
+				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
+				GetAnimModel()->UpdateDissolveTImer(_dTimeDelta * 1.2f);
+				if (!m_bDissolveSound) {
+					spGameInstance->SoundPlayOnce(L"DissolveSound3");
+					m_bDissolveSound = true;
+				}
+			}
+		}
+		else
+		{
+			m_bDissolveSound = false;
+			GetAnimModel()->TickAnimation(_dTimeDelta);
+			SetElapsedTime(0.0);
+		}
 	}
 	UpdateCollision();
 }
@@ -349,9 +371,11 @@ void CMimic::LateTickActive(const _double& _dTimeDelta)
 {
 	__super::LateTickActive(_dTimeDelta);
 
-	_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
-	GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
-
+	if (true == IsSendDataToBehavior())
+	{
+		_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
+		GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
+	}
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	_int CurAnimState = GetAnimationController()->GetAnimState();

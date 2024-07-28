@@ -182,9 +182,9 @@ inline constexpr MOBSTATE::Impl_::Impl_(
         state_{::int64_t{0}},
         animtime_{0},
         triggeron_{false},
-        outlineon_{false},
-        footprinton_{false},
-        ramins_{false},
+        foundon_{false},
+        remain1_{false},
+        remain2_{false},
         _cached_size_{0} {}
 
 template <typename>
@@ -406,9 +406,9 @@ const ::uint32_t TableStruct_Protocol_2eproto::offsets[] PROTOBUF_SECTION_VARIAB
     PROTOBUF_FIELD_OFFSET(::MOBSTATE, _impl_.animationindex_),
     PROTOBUF_FIELD_OFFSET(::MOBSTATE, _impl_.state_),
     PROTOBUF_FIELD_OFFSET(::MOBSTATE, _impl_.triggeron_),
-    PROTOBUF_FIELD_OFFSET(::MOBSTATE, _impl_.outlineon_),
-    PROTOBUF_FIELD_OFFSET(::MOBSTATE, _impl_.footprinton_),
-    PROTOBUF_FIELD_OFFSET(::MOBSTATE, _impl_.ramins_),
+    PROTOBUF_FIELD_OFFSET(::MOBSTATE, _impl_.foundon_),
+    PROTOBUF_FIELD_OFFSET(::MOBSTATE, _impl_.remain1_),
+    PROTOBUF_FIELD_OFFSET(::MOBSTATE, _impl_.remain2_),
     PROTOBUF_FIELD_OFFSET(::MOBSTATE, _impl_.animtime_),
     ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::COLLISIONDATA, _internal_metadata_),
@@ -553,33 +553,33 @@ const char descriptor_table_protodef_Protocol_2eproto[] PROTOBUF_SECTION_VARIABL
     "osX\030\002 \001(\002\022\014\n\004posY\030\003 \001(\002\022\014\n\004posZ\030\004 \001(\002\022\017\n"
     "\007rotateX\030\005 \001(\002\022\017\n\007rotateY\030\006 \001(\002\022\017\n\007rotat"
     "eZ\030\007 \001(\002\022\026\n\016animationIndex\030\010 \001(\003\022\r\n\005stat"
-    "e\030\t \001(\003\022\021\n\ttriggerOn\030\n \001(\003\"\367\001\n\010MOBSTATE\022"
+    "e\030\t \001(\003\022\021\n\ttriggerOn\030\n \001(\003\"\362\001\n\010MOBSTATE\022"
     "\n\n\002id\030\001 \001(\003\022\014\n\004posX\030\002 \001(\002\022\014\n\004posY\030\003 \001(\002\022"
     "\014\n\004posZ\030\004 \001(\002\022\017\n\007rotateX\030\005 \001(\002\022\017\n\007rotate"
     "Y\030\006 \001(\002\022\017\n\007rotateZ\030\007 \001(\002\022\026\n\016animationInd"
     "ex\030\010 \001(\003\022\r\n\005state\030\t \001(\003\022\021\n\ttriggerOn\030\n \001"
-    "(\010\022\021\n\toutlineOn\030\013 \001(\010\022\023\n\013footprintOn\030\014 \001"
-    "(\010\022\016\n\006ramins\030\r \001(\010\022\020\n\010animtime\030\016 \001(\001\",\n\r"
-    "COLLISIONDATA\022\n\n\002id\030\001 \001(\003\022\017\n\007enemyID\030\002 \001"
-    "(\003\"@\n\021SC_CONNECTSUCCESS\022\n\n\002id\030\001 \001(\003\022\021\n\tc"
-    "ellIndex\030\002 \001(\003\022\014\n\004type\030\004 \001(\003\"B\n\023SC_OTHER"
-    "CLIENTLOGIN\022\n\n\002id\030\001 \001(\003\022\021\n\tcellIndex\030\002 \001"
-    "(\003\022\014\n\004type\030\003 \001(\003\"@\n\016SC_MONSTERFIND\022\n\n\002id"
-    "\030\001 \001(\003\022\020\n\010findtype\030\002 \001(\003\022\020\n\010targetID\030\003 \001"
-    "(\003\"\'\n\nSC_DAMAGED\022\n\n\002id\030\001 \001(\003\022\r\n\005curhp\030\002 "
-    "\001(\002\"H\n\020SC_SEEPLAYERMOVE\022\n\n\002id\030\001 \001(\003\022\014\n\004p"
-    "osX\030\002 \001(\002\022\014\n\004posY\030\003 \001(\002\022\014\n\004posZ\030\004 \001(\002\"\026\n"
-    "\010CS_LOGIN\022\n\n\002id\030\001 \001(\003\"D\n\tCS_ATTACK\022\n\n\002id"
-    "\030\001 \001(\003\022\033\n\tattackPos\030\002 \001(\0132\010.VECTOR3\022\016\n\006d"
-    "amage\030\003 \001(\002\"\033\n\rCS_DISCONNECT\022\n\n\002id\030\001 \001(\003"
-    "*2\n\tDirection\022\006\n\002UP\020\000\022\010\n\004DOWN\020\001\022\010\n\004LEFT\020"
-    "\002\022\t\n\005RIGHT\020\003b\006proto3"
+    "(\010\022\017\n\007foundOn\030\013 \001(\010\022\017\n\007remain1\030\014 \001(\010\022\017\n\007"
+    "remain2\030\r \001(\010\022\020\n\010animtime\030\016 \001(\001\",\n\rCOLLI"
+    "SIONDATA\022\n\n\002id\030\001 \001(\003\022\017\n\007enemyID\030\002 \001(\003\"@\n"
+    "\021SC_CONNECTSUCCESS\022\n\n\002id\030\001 \001(\003\022\021\n\tcellIn"
+    "dex\030\002 \001(\003\022\014\n\004type\030\004 \001(\003\"B\n\023SC_OTHERCLIEN"
+    "TLOGIN\022\n\n\002id\030\001 \001(\003\022\021\n\tcellIndex\030\002 \001(\003\022\014\n"
+    "\004type\030\003 \001(\003\"@\n\016SC_MONSTERFIND\022\n\n\002id\030\001 \001("
+    "\003\022\020\n\010findtype\030\002 \001(\003\022\020\n\010targetID\030\003 \001(\003\"\'\n"
+    "\nSC_DAMAGED\022\n\n\002id\030\001 \001(\003\022\r\n\005curhp\030\002 \001(\002\"H"
+    "\n\020SC_SEEPLAYERMOVE\022\n\n\002id\030\001 \001(\003\022\014\n\004posX\030\002"
+    " \001(\002\022\014\n\004posY\030\003 \001(\002\022\014\n\004posZ\030\004 \001(\002\"\026\n\010CS_L"
+    "OGIN\022\n\n\002id\030\001 \001(\003\"D\n\tCS_ATTACK\022\n\n\002id\030\001 \001("
+    "\003\022\033\n\tattackPos\030\002 \001(\0132\010.VECTOR3\022\016\n\006damage"
+    "\030\003 \001(\002\"\033\n\rCS_DISCONNECT\022\n\n\002id\030\001 \001(\003*2\n\tD"
+    "irection\022\006\n\002UP\020\000\022\010\n\004DOWN\020\001\022\010\n\004LEFT\020\002\022\t\n\005"
+    "RIGHT\020\003b\006proto3"
 };
 static ::absl::once_flag descriptor_table_Protocol_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Protocol_2eproto = {
     false,
     false,
-    1180,
+    1175,
     descriptor_table_protodef_Protocol_2eproto,
     "Protocol.proto",
     &descriptor_table_Protocol_2eproto_once,
@@ -1993,9 +1993,9 @@ inline void MOBSTATE::SharedCtor(::_pb::Arena* arena) {
   ::memset(reinterpret_cast<char *>(&_impl_) +
                offsetof(Impl_, id_),
            0,
-           offsetof(Impl_, ramins_) -
+           offsetof(Impl_, remain2_) -
                offsetof(Impl_, id_) +
-               sizeof(Impl_::ramins_));
+               sizeof(Impl_::remain2_));
 }
 MOBSTATE::~MOBSTATE() {
   // @@protoc_insertion_point(destructor:MOBSTATE)
@@ -2015,8 +2015,8 @@ PROTOBUF_NOINLINE void MOBSTATE::Clear() {
   (void) cached_has_bits;
 
   ::memset(&_impl_.id_, 0, static_cast<::size_t>(
-      reinterpret_cast<char*>(&_impl_.ramins_) -
-      reinterpret_cast<char*>(&_impl_.id_)) + sizeof(_impl_.ramins_));
+      reinterpret_cast<char*>(&_impl_.remain2_) -
+      reinterpret_cast<char*>(&_impl_.id_)) + sizeof(_impl_.remain2_));
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
@@ -2073,15 +2073,15 @@ const ::_pbi::TcParseTable<4, 14, 0, 0, 2> MOBSTATE::_table_ = {
     // bool triggerOn = 10;
     {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(MOBSTATE, _impl_.triggeron_), 63>(),
      {80, 63, 0, PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.triggeron_)}},
-    // bool outlineOn = 11;
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(MOBSTATE, _impl_.outlineon_), 63>(),
-     {88, 63, 0, PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.outlineon_)}},
-    // bool footprintOn = 12;
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(MOBSTATE, _impl_.footprinton_), 63>(),
-     {96, 63, 0, PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.footprinton_)}},
-    // bool ramins = 13;
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(MOBSTATE, _impl_.ramins_), 63>(),
-     {104, 63, 0, PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.ramins_)}},
+    // bool foundOn = 11;
+    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(MOBSTATE, _impl_.foundon_), 63>(),
+     {88, 63, 0, PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.foundon_)}},
+    // bool remain1 = 12;
+    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(MOBSTATE, _impl_.remain1_), 63>(),
+     {96, 63, 0, PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.remain1_)}},
+    // bool remain2 = 13;
+    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(MOBSTATE, _impl_.remain2_), 63>(),
+     {104, 63, 0, PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.remain2_)}},
     // double animtime = 14;
     {::_pbi::TcParser::FastF64S1,
      {113, 63, 0, PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.animtime_)}},
@@ -2119,14 +2119,14 @@ const ::_pbi::TcParseTable<4, 14, 0, 0, 2> MOBSTATE::_table_ = {
     // bool triggerOn = 10;
     {PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.triggeron_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kBool)},
-    // bool outlineOn = 11;
-    {PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.outlineon_), 0, 0,
+    // bool foundOn = 11;
+    {PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.foundon_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kBool)},
-    // bool footprintOn = 12;
-    {PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.footprinton_), 0, 0,
+    // bool remain1 = 12;
+    {PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.remain1_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kBool)},
-    // bool ramins = 13;
-    {PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.ramins_), 0, 0,
+    // bool remain2 = 13;
+    {PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.remain2_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kBool)},
     // double animtime = 14;
     {PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.animtime_), 0, 0,
@@ -2244,25 +2244,25 @@ const ::_pbi::TcParseTable<4, 14, 0, 0, 2> MOBSTATE::_table_ = {
         10, this->_internal_triggeron(), target);
   }
 
-  // bool outlineOn = 11;
-  if (this->_internal_outlineon() != 0) {
+  // bool foundOn = 11;
+  if (this->_internal_foundon() != 0) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteBoolToArray(
-        11, this->_internal_outlineon(), target);
+        11, this->_internal_foundon(), target);
   }
 
-  // bool footprintOn = 12;
-  if (this->_internal_footprinton() != 0) {
+  // bool remain1 = 12;
+  if (this->_internal_remain1() != 0) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteBoolToArray(
-        12, this->_internal_footprinton(), target);
+        12, this->_internal_remain1(), target);
   }
 
-  // bool ramins = 13;
-  if (this->_internal_ramins() != 0) {
+  // bool remain2 = 13;
+  if (this->_internal_remain2() != 0) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteBoolToArray(
-        13, this->_internal_ramins(), target);
+        13, this->_internal_remain2(), target);
   }
 
   // double animtime = 14;
@@ -2387,18 +2387,18 @@ const ::_pbi::TcParseTable<4, 14, 0, 0, 2> MOBSTATE::_table_ = {
     total_size += 2;
   }
 
-  // bool outlineOn = 11;
-  if (this->_internal_outlineon() != 0) {
+  // bool foundOn = 11;
+  if (this->_internal_foundon() != 0) {
     total_size += 2;
   }
 
-  // bool footprintOn = 12;
-  if (this->_internal_footprinton() != 0) {
+  // bool remain1 = 12;
+  if (this->_internal_remain1() != 0) {
     total_size += 2;
   }
 
-  // bool ramins = 13;
-  if (this->_internal_ramins() != 0) {
+  // bool remain2 = 13;
+  if (this->_internal_remain2() != 0) {
     total_size += 2;
   }
 
@@ -2489,14 +2489,14 @@ void MOBSTATE::MergeImpl(::google::protobuf::Message& to_msg, const ::google::pr
   if (from._internal_triggeron() != 0) {
     _this->_internal_set_triggeron(from._internal_triggeron());
   }
-  if (from._internal_outlineon() != 0) {
-    _this->_internal_set_outlineon(from._internal_outlineon());
+  if (from._internal_foundon() != 0) {
+    _this->_internal_set_foundon(from._internal_foundon());
   }
-  if (from._internal_footprinton() != 0) {
-    _this->_internal_set_footprinton(from._internal_footprinton());
+  if (from._internal_remain1() != 0) {
+    _this->_internal_set_remain1(from._internal_remain1());
   }
-  if (from._internal_ramins() != 0) {
-    _this->_internal_set_ramins(from._internal_ramins());
+  if (from._internal_remain2() != 0) {
+    _this->_internal_set_remain2(from._internal_remain2());
   }
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -2519,8 +2519,8 @@ void MOBSTATE::InternalSwap(MOBSTATE* PROTOBUF_RESTRICT other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.ramins_)
-      + sizeof(MOBSTATE::_impl_.ramins_)
+      PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.remain2_)
+      + sizeof(MOBSTATE::_impl_.remain2_)
       - PROTOBUF_FIELD_OFFSET(MOBSTATE, _impl_.id_)>(
           reinterpret_cast<char*>(&_impl_.id_),
           reinterpret_cast<char*>(&other->_impl_.id_));
