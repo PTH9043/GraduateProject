@@ -7,6 +7,7 @@
 #include "UAnimation.h"
 #include "UTransform.h"
 #include "UPlayer.h"
+#include "USound.h"
 #include "CWarriorPlayer.h"
 
 CMinotaurAnimController::CMinotaurAnimController(CSHPTRREF<UDevice> _spDevice)
@@ -67,6 +68,7 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis_patrol(0, 3);
     std::uniform_int_distribution<> dis_attack(0, 3);
+    std::uniform_int_distribution<> dis_hit(0, 2);
 
     ClearTrigger();
     SetAnimState(-1);
@@ -99,12 +101,49 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
             m_bAttackMode = true;
     }
 
-    // Handle hit state
     if (Hit)
-    {  
-        spAnimModel->SetAnimation(L"hit_1");
-        spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
+    {
+        m_irandomNumforhit = dis_hit(gen);
+        if (m_irandomNumforhit == 0)
+        {
+            USound* HitSound1 = spGameInstance->BringSound(L"enemy_hit1").get();
+            HitSound1->PlayWithInputChannel(&m_pHitChannel);
+        }
+        else if (m_irandomNumforhit == 1)
+        {
+            USound* HitSound2 = spGameInstance->BringSound(L"enemy_hit2").get();
+            HitSound2->PlayWithInputChannel(&m_pHitChannel);
+        }
+        else if (m_irandomNumforhit == 2)
+        {
+            USound* HitSound3 = spGameInstance->BringSound(L"enemy_hit3").get();
+            HitSound3->PlayWithInputChannel(&m_pHitChannel);
+        }
+
+        if (m_iHitCount < 3)
+        {
+            spAnimModel->SetAnimation(L"hit_1");
+            spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());       
+            m_iHitCount++;
+        }
+
+        if (m_iHitCount >= 3)
+        {
+            m_bisHitCooldown = true;
+        }
         spMinotaur->SetPrevHealth(spMinotaur->GetHealth());
+    }
+   
+    if(m_bisHitCooldown)
+    {
+        m_dHitCooldownTime += _dTimeDelta;
+
+        if (m_dHitCooldownTime >= HIT_COOLDOWN_DURATION)
+        {
+            m_iHitCount = 0;
+            m_dHitCooldownTime = 0;
+            m_bisHitCooldown = false;
+        }
     }
 
     // Handle attack mode state

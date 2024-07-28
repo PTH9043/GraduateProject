@@ -251,6 +251,10 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	JumpState(_dTimeDelta);
 	GetAnimationController()->Tick(_dTimeDelta);
 
+	//게임끝 트리거
+	if (GetCurrentNavi()->GetCurIndex() == 1139 || GetCurrentNavi()->GetCurIndex() == 1138)
+		m_bisGameEnd = true;
+
 	_int AnimState = GetAnimationController()->GetAnimState();
 	const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
 
@@ -568,7 +572,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 						{
 							if (iter.second->IsCollision(iter2.second))
 							{
-								if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead01" && !m_bisKicked && CurAnimName != L"dead03")
+								if (CurAnimName != L"jumpZ0" && CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead01")
 								{
 									if (!GetIsHItAlreadyState())
 									{

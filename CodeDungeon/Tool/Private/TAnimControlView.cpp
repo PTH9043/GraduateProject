@@ -93,7 +93,7 @@ HRESULT TAnimControlView::LoadResource()
 		}
 
 		SHPTR<UGameInstance> spGameInstance = GetGameInstance();
-		SHPTR<UAudioSystem> spAudioSystem = spGameInstance->GetAudioSystem(SOUND_PLAYER);
+		SHPTR<UAudioSystem> spAudioSystem = spGameInstance->GetAudioSystem(SOUND_HARLEQUINN);
 		m_FindSoundNames.clear();
 		// 미리 넣어두기 
 		for (auto& Sound : spAudioSystem->GetSoundOrders())
@@ -806,8 +806,9 @@ void TAnimControlView::AnimSoundShow(CSHPTRREF<UAnimation> _spAnim, ImGuiTableFl
 		static _int SelectRemoveItem{ -1 };
 		// Find Sounds 
 		{
+
 			SHPTR<UGameInstance> spGameInstance = GetGameInstance();
-			SHPTR<UAudioSystem> spAudioSystem = spGameInstance->GetAudioSystem(SOUND_PLAYER);
+			SHPTR<UAudioSystem> spAudioSystem = spGameInstance->GetAudioSystem(SOUND_HARLEQUINN);
 
 			if (true == ImGui::InputText("FindSName", &InputSoundName[0], MAX_BUFFER_LENGTH))
 			{

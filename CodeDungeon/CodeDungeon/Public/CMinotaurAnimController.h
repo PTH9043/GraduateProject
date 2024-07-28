@@ -1,7 +1,7 @@
 
 #pragma once
 #include "CMonsterAnimController.h"
-
+#include "USound.h"
 BEGIN(Client)
 class CMinotaur;
 /*
@@ -45,6 +45,14 @@ private:
 	_double					m_dRushAttackTimer;
 	_double					m_didleRandomValueChoosingTimer;
 	_int					m_iRandomValue;
+
+	_int m_irandomNumforhit = 0;
+	_int m_iHitCount = 0;           
+	_bool	m_bisHitCooldown = false;
+	_double m_dHitCooldownTime = 0; 
+	const _double HIT_COOLDOWN_DURATION = 5.0;
+
+	FMOD::Channel* m_pHitChannel;
 };
 
 END

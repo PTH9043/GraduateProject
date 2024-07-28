@@ -169,6 +169,7 @@ private:
 	_float3					m_f3SpawnPoint;
 
 	_bool m_bStartedGame = false;
+	_bool m_bisGameEnd = false;
 
 	//===========SOUND BOOL=================
 

@@ -71,6 +71,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis_patrol(0, 3);
     std::uniform_int_distribution<> dis_attack(0, 1);
+    std::uniform_int_distribution<> dis_hit(0, 2);
 
 
     ClearTrigger();
@@ -141,7 +142,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
             }
         }
     }
-     if (FoundPlayer && m_bFoundPlayerFirsttime && !m_bAttackMode)
+    if (FoundPlayer && m_bFoundPlayerFirsttime && !m_bAttackMode && !spMummy->GetTargetPlayer()->GetDeathState())
     {
         m_bTauntMode = true;
         m_dIdleTimer = 0;
@@ -170,6 +171,24 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     if (Hit)
     {
         spAnimModel->SetAnimation(L"gotHit");
+
+        m_irandomNumforhit = dis_hit(gen);
+        if (m_irandomNumforhit == 0)
+        {
+            USound* HitSound1 = spGameInstance->BringSound(L"enemy_hit1").get();
+            HitSound1->PlayWithInputChannel(&m_pHitChannel);
+        }
+        else if (m_irandomNumforhit == 1)
+        {
+            USound* HitSound2 = spGameInstance->BringSound(L"enemy_hit2").get();
+            HitSound2->PlayWithInputChannel(&m_pHitChannel);
+        }
+        else if (m_irandomNumforhit == 2)
+        {
+            USound* HitSound3 = spGameInstance->BringSound(L"enemy_hit3").get();
+            HitSound3->PlayWithInputChannel(&m_pHitChannel);
+        }
+
         USound* HitSound = spGameInstance->BringSound(L"GotHit_VO_2").get();
         HitSound->PlayWithInputChannel(&m_pHitChannel);
         spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
@@ -179,65 +198,22 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
     // Handle attack mode state
     if (m_bAttackMode && !Hit)
     {
-        m_dlastAttackTime += _dTimeDelta;
-        if (m_dlastAttackTime > 3.0)
-        {
-            m_blastAttackWasFirst = !m_blastAttackWasFirst;
-            m_dlastAttackTime = 0;
-        }
-
         if (DistanceFromPlayer > AttackRange)
         {
             UpdateState(spAnimModel, ANIM_MOVE, L"WALKF");
         }
         else
-        {
-            UpdateState(spAnimModel, m_blastAttackWasFirst ? ANIM_ATTACK : ANIM_ATTACK, m_blastAttackWasFirst ? L"ATTACK02" : L"ATTACK01");
+        {         
+            if (CurAnimName == L"attack1")
+                m_blastAttackWasFirst = false;
+            else if(CurAnimName == L"attack2")
+                m_blastAttackWasFirst = true;
+            if (m_blastAttackWasFirst)
+                UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK01");           
+            else
+                UpdateState(spAnimModel, ANIM_ATTACK, L"ATTACK02");
         }
     }
-
-    if (CurAnimName == L"attack1")
-    {
-        if (!m_bPlayAttackSound)
-        {
-            USound* AttackSound1 = spGameInstance->BringSound(L"Attack1_VO_1").get();
-            USound* SwooshSound1 = spGameInstance->BringSound(L"ClothWhoosh_1").get();
-            AttackSound1->PlayWithInputChannel(&m_pAttack1Channel);
-            SwooshSound1->PlayWithInputChannel(&m_pSwhoosh1Channel);
-        }
-        m_bPlayAttackSound = true;   
-    }
-    else
-        m_bPlayAttackSound = false;
-
-    if (CurAnimName == L"attack2")
-    {
-        if (!m_bPlayAttackSound)
-        {
-            USound* AttackSound2 = spGameInstance->BringSound(L"Attack1_VO_2").get();
-            USound* SwooshSound2 = spGameInstance->BringSound(L"ClothWhoosh_2").get();
-            AttackSound2->PlayWithInputChannel(&m_pAttack2Channel);
-            SwooshSound2->PlayWithInputChannel(&m_pSwhoosh2Channel);
-        }
-        m_bPlayAttackSound = true;
-    }
-    else
-        m_bPlayAttackSound = false;
-
-    if (CurAnimName == L"gotHit")
-    {
-        if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() != 0)
-            m_bPlayHitSound = true;
-        else
-            m_bPlayHitSound = false;
-
-        if (!m_bPlayHitSound)
-        {
-           
-        }
-    }
-
-   
 
     // Check for death
     if (spMummy->GetHealth() <= 0)
@@ -245,7 +221,6 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
         spMummy->SetDeathState(true);
     }
      
-
     // Handle death state
     if (spMummy->GetDeathState())
     {

@@ -425,6 +425,11 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 		// death animation
 		if (CurAnimState == UAnimationController::ANIM_DEATH)
 		{
+			if (GetElapsedTime() == 0)
+			{
+				spGameInstance->SoundPlayOnce(L"AnubisDeath");
+			}
+
 			_double DeathAnimSpeed = 20;
 			SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
 			_double DeathTimeArcOpenEnd = 50;
@@ -506,6 +511,11 @@ void CAnubis::LateTickActive(const _double& _dTimeDelta)
 	
 	if(m_bisShield)
 	{
+		if(m_dShieldTimer == 0)
+		{
+			spGameInstance->SoundPlayOnce(L"barrier_make");
+		}
+
 		m_dShieldTimer += _dTimeDelta;
 		m_spMagicCircle->SetActive(true);
 		m_spMagicSphere->SetActive(true);

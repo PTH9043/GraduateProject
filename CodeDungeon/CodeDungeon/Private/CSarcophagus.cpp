@@ -99,12 +99,18 @@ void CSarcophagus::TickActive(const _double& _dTimeDelta)
 		if (GetSarcophagusType() == SARCOTYPE::TYPE_LYING)
 		{
 			if (GetElapsedTime() < LyingSarcophagusTimeArcOpenEnd)
+			{
 				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, LyingSarcophagusTimeArcOpenStart + GetElapsedTime());
+			}
 		}
 		else
 			if (GetElapsedTime() < StandingSarcophagusTimeArcOpenEnd)
+			{
 				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
+			}
 	}
+	else
+		GetAnimModel()->UpdateDissolveTImer(_dTimeDelta);
 
 
 	for (auto& Containers : GetColliderContainer())

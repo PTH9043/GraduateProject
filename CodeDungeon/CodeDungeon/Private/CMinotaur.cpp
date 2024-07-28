@@ -372,6 +372,10 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 		if (CurAnimState == UAnimationController::ANIM_DEATH)
 		{
 			_double DeathAnimSpeed = 20;
+			if (GetElapsedTime() == 0)
+			{
+				spGameInstance->SoundPlayOnce(L"Mino_Death");
+			}
 			SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
 			_double DeathTimeArcOpenEnd = 50;
 			if (GetElapsedTime() < DeathTimeArcOpenEnd) {

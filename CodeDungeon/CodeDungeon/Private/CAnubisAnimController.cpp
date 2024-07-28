@@ -9,6 +9,7 @@
 #include "UGuard.h"
 #include "UPlayer.h"
 #include "UMat.h"
+#include "USound.h"
 
 CAnubisAnimController::CAnubisAnimController(CSHPTRREF<UDevice> _spDevice)
     : CMonsterAnimController(_spDevice),
@@ -75,6 +76,8 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis_attack(0, 1);
+    std::uniform_int_distribution<> dis_hit(0, 2);
+
 
     ClearTrigger();
     SetAnimState(-1);
@@ -141,17 +144,52 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
                 spAnubis->GetTransform()->SetDirectionFixedUp(spAnubis->GetOriginDirection(), _dTimeDelta, 5);
         }
     }
-
-
-
-    // Handle hit state
+  
     if (Hit)
     {
-        spAnimModel->SetAnimation(L"Hit Reaction");
-        spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
+        m_irandomNumforhit = dis_hit(gen);
+        if (m_irandomNumforhit == 0)
+        {
+            USound* HitSound1 = spGameInstance->BringSound(L"enemy_hit1").get();
+            HitSound1->PlayWithInputChannel(&m_pHitChannel);
+        }
+        else if (m_irandomNumforhit == 1)
+        {
+            USound* HitSound2 = spGameInstance->BringSound(L"enemy_hit2").get();
+            HitSound2->PlayWithInputChannel(&m_pHitChannel);
+        }
+        else if(m_irandomNumforhit == 2)
+        {
+            USound* HitSound3 = spGameInstance->BringSound(L"enemy_hit3").get();
+            HitSound3->PlayWithInputChannel(&m_pHitChannel);
+        }
+
+        if (m_iHitCount < 3)
+        {
+            spAnimModel->SetAnimation(L"Hit Reaction");
+            spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
+            m_iHitCount++;
+        }
+
+        if (m_iHitCount >= 3)
+        {
+            m_bisHitCooldown = true;
+        }
         spAnubis->SetPrevHealth(spAnubis->GetHealth());
     }
-  
+
+    if (m_bisHitCooldown)
+    {
+        m_dHitCooldownTime += _dTimeDelta;
+
+        if (m_dHitCooldownTime >= HIT_COOLDOWN_DURATION)
+        {
+            m_iHitCount = 0;
+            m_dHitCooldownTime = 0;
+            m_bisHitCooldown = false;
+        }
+    }
+
 
     if (m_bAttackMode && !Hit)
     {
@@ -221,6 +259,10 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
     }
     if (spAnubis->GetFireAttackState())
     {
+        if (m_dTimerForFireCircle == 0)
+        {
+            spGameInstance->SoundPlayOnce(L"FireWarm");
+        }
         m_dTimerForFireCircle += _dTimeDelta;
         float scale_factor = 1 + 100 * m_dTimerForFireCircle * m_dTimerForFireCircle;
         if(m_dTimerForFireCircle < 1)

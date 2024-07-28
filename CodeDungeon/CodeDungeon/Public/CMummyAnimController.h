@@ -52,10 +52,12 @@ private:
 	FMOD::Channel* m_pSwhoosh2Channel;
 	FMOD::Channel* m_pTauntChannel;
 
+	_int	m_irandomNumforhit = 0;
 	FMOD::Channel* m_pHitChannel;
 
 	_bool		m_bPlayAttackSound;
 	_bool		m_bPlayHitSound;
+	 
 
 };
 

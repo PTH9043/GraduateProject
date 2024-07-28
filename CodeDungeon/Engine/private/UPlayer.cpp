@@ -161,11 +161,14 @@ void UPlayer::JumpState(const _double& _dTimeDelta)
 			//낭떠러지 셀이 아닐 경우
 			if (!spNavigation->GetCurCell()->GetJumpableState())
 			{
-				// 움직이려는 위치가 셀 밖에 있는 경우 현재 셀의 가장 가까운 선 위의 점으로 조정
-				// 슬라이딩 벡터의 효과를 낼 수 있음
-				_float3 closestPoint = spNavigation->ClampPositionToCell(vPosition);
-				GetTransform()->SetPos(_float3(closestPoint.x, vPosition.y, closestPoint.z));
-				vPosition = GetTransform()->GetPos();
+				if (GetElapsedTime() < 70)
+				{
+					// 움직이려는 위치가 셀 밖에 있는 경우 현재 셀의 가장 가까운 선 위의 점으로 조정
+					// 슬라이딩 벡터의 효과를 낼 수 있음
+					_float3 closestPoint = spNavigation->ClampPositionToCell(vPosition);
+					GetTransform()->SetPos(_float3(closestPoint.x, vPosition.y, closestPoint.z));
+					vPosition = GetTransform()->GetPos();
+				}
 			}
 			//낭떠러지 셀인 경우
 			else
