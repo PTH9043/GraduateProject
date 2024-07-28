@@ -909,9 +909,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 			if (iter.first == L"Main")
 			{
 				for (auto& iter2 : pGuard->GetColliderContainer())
-				{
-					
-
+				{			
 					if (iter2.first == L"Main")
 					{
 						SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));

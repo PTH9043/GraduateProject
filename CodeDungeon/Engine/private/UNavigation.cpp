@@ -458,12 +458,18 @@ UNavigation::PathFindingState UNavigation::StartPathFinding(const _float3& start
 
 bool UNavigation::StepPathFinding(PathFindingState& state)
 {
+	if (state.endCell == nullptr)
+		return false;
+
 	if (state.openSet.empty()) {
 		return true; // 경로를 찾지 못함
 	}
 
 	CellPathNode current = state.openSet.top();
 	state.openSet.pop();
+
+	if (current.cell == nullptr)
+		return false;
 
 	if (current.cell == state.endCell) {
 		// 경로를 추적하여 반환
@@ -478,6 +484,9 @@ bool UNavigation::StepPathFinding(PathFindingState& state)
 	for (int neighborIndex : current.cell->GetNeighbor()) {
 		if (neighborIndex == -1) continue;
 		SHPTR<UCell> neighbor = FindCellWithoutUpdate(neighborIndex);
+
+		if (neighbor == nullptr)
+			return false;
 
 		_float newCost = state.costSoFar[current.cell] + Heuristic(current.cell->GetCenterPos(), neighbor->GetCenterPos());
 		if (state.costSoFar.find(neighbor) == state.costSoFar.end() || newCost < state.costSoFar[neighbor]) {
