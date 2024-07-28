@@ -2219,7 +2219,7 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 			pGameInstance->BGMUpdateVolume(L"GamePlayBGM", 0.f);
 		}
 		else {
-			pGameInstance->BGMUpdateVolume(L"GamePlayBGM", 1.f);
+			pGameInstance->BGMUpdateVolume(L"GamePlayBGM", 0.5f);
 			m_spBossHpBarFrameUI->SetActive(false);
 		}
 		if (!m_spWarriorPlayer->GetDeathState() && m_bIsFoundPlayer_Minotaur&&!m_bIsDead_Minotaur) {
