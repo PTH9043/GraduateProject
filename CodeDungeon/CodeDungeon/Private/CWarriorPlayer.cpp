@@ -359,7 +359,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		}
 		if (m_bisGameEnd) {
 			ShowCursor(TRUE);
-			SetCursorPos(1000, 400);
+		
 		}
 	}
 
