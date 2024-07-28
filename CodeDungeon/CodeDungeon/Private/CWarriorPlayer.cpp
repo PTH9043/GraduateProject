@@ -886,42 +886,66 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 			{
 				for (auto& iter2 : pGuard->GetColliderContainer())
 				{
+					
 
 					if (iter2.first == L"Main")
 					{
-						//SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
+						SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
 
-						//if (GetCollidedNormal() != _float3::Zero) // 충돌이 발생한 경우
-						//{
-						//	if (!GuardCollideSound) {
-						//		spGameInstance->SoundPlayOnce(L"GuardCollideSound");
-						//		GuardCollideSound = true;
-						//	}
-
-						//	SetOBJCollisionState(true);
-						//	// 속도 결정
-						//	_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 60.0f : 20.0f;
-						//	if (CurAnimName == L"roll_back" || CurAnimName == L"roll_front" || CurAnimName == L"roll_left" || CurAnimName == L"roll_right")
-						//		GetTransform()->SetPos(GetPrevPos());
-						//	else
-						//		ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
-						//}
-						//else
-						//{
-						//	GuardCollideSound = false;
-						//	SetOBJCollisionState(false);
-						//}
+						if (GetCollidedNormal() != _float3::Zero) // 충돌이 발생한 경우
+						{
+							if (!GuardCollideSound) {
+								spGameInstance->SoundPlayOnce(L"GuardCollideSound");
+								GuardCollideSound = true;
+							}
+							if (CurAnimName != L"rise01" && CurAnimName != L"rise02" && CurAnimName != L"dead03")
+							{
+								if (m_dKickedElapsed >= 50)
+								{
+									m_dKickedElapsed = 0;
+									m_bisKicked = false;
+								}
+								else
+								{
+									GetTransform()->SetDirectionFixedUp(-pGuard->GetTransform()->GetLook());
+									m_bisKicked = true;
+								}
+						
+							}
+							SetOBJCollisionState(true);
+							// 속도 결정
+							_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 60.0f : 20.0f;
+							if (CurAnimName == L"roll_back" || CurAnimName == L"roll_front" || CurAnimName == L"roll_left" || CurAnimName == L"roll_right"|| CurAnimName== L"jumpZ0")
+								GetTransform()->SetPos(GetPrevPos());
+							else
+								ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
+						}
+						else
+						{
+							GuardCollideSound = false;
+							SetOBJCollisionState(false);
+						}
 					}
 					else if (iter2.first == L"ForInteractionGuard")
 					{
 						if (iter.second->IsCollision(iter2.second))
 						{
 							m_bCanInteractGuard = true;
+							
+						}
+						else {
+							
+							m_bCanInteractGuard = false;
+						}
+							
+						/*if (iter.second->IsCollision(iter2.second))
+						{
+							m_bCanInteractGuard = true;
 						}
 						else
 						{
 							m_bCanInteractGuard = false;
-						}
+						}*/
 					}
 
 				}
