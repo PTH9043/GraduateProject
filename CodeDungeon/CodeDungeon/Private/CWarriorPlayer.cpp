@@ -351,9 +351,12 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 
 	// Rotation 
 	{
-		POINT ptCursorPos;
-	//	ShowCursor(FALSE);
-	/*SetCursorPos(1000, 400);*/
+		if (m_bStartedGame) {
+
+			POINT ptCursorPos;
+			ShowCursor(FALSE);
+			SetCursorPos(1000, 400);
+		}
 	}
 
 	if(CurAnimName != L"roll_back" && CurAnimName != L"roll_front"&& CurAnimName != L"roll_right"&& CurAnimName != L"roll_left"&&

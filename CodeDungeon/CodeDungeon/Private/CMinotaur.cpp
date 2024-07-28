@@ -267,6 +267,7 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 			// A* for moving towards player when player is found
 			if (GetFoundTargetState() && !GetTargetPlayer()->GetDeathState())
 			{
+				
 				m_spFootPrintParticle->SetActive(true);
 				{
 					*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 4;
@@ -321,7 +322,7 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 			}
 			else // patrolling when player is not found
 			{
-				SetOutline(false);
+				
 				SHPTR<UNavigation> spNavigation = GetCurrentNavi();
 				SHPTR<UCell> spNeighborCell = spNavigation->ChooseRandomNeighborCell(3);
 				if (GetTimeAccumulator() >= 5.0)
@@ -413,7 +414,7 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 			}
 			else // patrolling when player is not found
 			{
-				SetOutline(false);
+				//SetOutline(false);
 			}
 		}
 		else {

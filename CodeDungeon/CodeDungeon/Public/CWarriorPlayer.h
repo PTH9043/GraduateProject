@@ -95,6 +95,8 @@ public: /* Get Set */
 	void SetIfStartedGame(_bool is) { m_bStartedGame = is; }
 	_bool GetIfStartedGame() { return m_bStartedGame; }
 
+
+
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
