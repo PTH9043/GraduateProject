@@ -668,14 +668,17 @@ void CAnubis::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 
 				for (const auto& iter2 : pCharacter->GetColliderContainer())
 				{
-					if (iter.second->IsCollision(iter2.second))
+					if (iter2.first == L"Main")
 					{
-						SetCollisionState(true);
-						GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
-					}
-					else
-					{
-						SetCollisionState(false);
+						if (iter.second->IsCollision(iter2.second))
+						{
+							SetCollisionState(true);
+							GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
+						}
+						else
+						{
+							SetCollisionState(false);
+						}
 					}
 				}
 			}
@@ -685,9 +688,9 @@ void CAnubis::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 	auto handleCollisionWithCharacter = [&](UCharacter* pCharacter) {
 		for (const auto& iter : GetColliderContainer())
 		{
-			if (iter.first == L"Main")
+			for (const auto& iter2 : pCharacter->GetColliderContainer())
 			{
-				for (const auto& iter2 : pCharacter->GetColliderContainer())
+				if (iter2.first == L"Main")
 				{
 					if (iter.second->IsCollision(iter2.second))
 					{
@@ -706,9 +709,9 @@ void CAnubis::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 	auto handleCollisionWithStaticObject = [&](CModelObjects* pModelObject) {
 		for (const auto& iter : GetColliderContainer())
 		{
-			if (iter.first == L"Main")
+			for (const auto& iter2 : pModelObject->GetColliderContainer())
 			{
-				for (const auto& iter2 : pModelObject->GetColliderContainer())
+				if (iter2.first == L"Main")
 				{
 					SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
 					if (GetCollidedNormal() != _float3::Zero)

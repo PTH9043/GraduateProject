@@ -571,14 +571,17 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 
 			for (const auto& iter2 : pCharacter->GetColliderContainer())
 			{
-				if (iter.second->IsCollision(iter2.second))
+				if (iter2.first == L"Main")
 				{
-					SetCollisionState(true);
-					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
-				}
-				else
-				{
-					SetCollisionState(false);
+					if (iter.second->IsCollision(iter2.second))
+					{
+						SetCollisionState(true);
+						GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
+					}
+					else
+					{
+						SetCollisionState(false);
+					}
 				}
 			}
 		}
@@ -589,14 +592,17 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 		{
 			for (const auto& iter2 : pCharacter->GetColliderContainer())
 			{
-				if (iter.second->IsCollision(iter2.second))
+				if (iter2.first == L"Main")
 				{
-					SetCollisionState(true);
-					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
-				}
-				else
-				{
-					SetCollisionState(false);
+					if (iter.second->IsCollision(iter2.second))
+					{
+						SetCollisionState(true);
+						GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
+					}
+					else
+					{
+						SetCollisionState(false);
+					}
 				}
 			}
 		}
@@ -607,15 +613,19 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 		{
 			for (const auto& iter2 : pModelObject->GetColliderContainer())
 			{
-				SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
-				if (GetCollidedNormal() != _float3::Zero)
+				if (iter2.first == L"Main")
 				{
-					_float speed = 20.0f;
-					ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
+					SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
+					if (GetCollidedNormal() != _float3::Zero)
+					{
+						_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 50.0f : 20.0f;
+						ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
+					}
 				}
 			}
 		}
 		};
+
 
 	if (ePawnType == PAWNTYPE::PAWN_PLAYER)
 	{
