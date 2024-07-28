@@ -1030,7 +1030,7 @@ void CMainScene::CreateStartSceneUI()
 			tDesc3.DrawOrder = L"Middle";
 			tDesc3.v2Size.x = static_cast<_float>(640);
 			tDesc3.v2Size.y = static_cast<_float>(240);
-			tDesc3.v2Pos = _float2{ 640,400 };
+			tDesc3.v2Pos = _float2{ 640,500 };
 			m_spEndingMent = std::static_pointer_cast<CImageUI>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IMAGEUI, { &tDesc3 }));
 			m_spEndingMent->SetActive(false);
 		}
