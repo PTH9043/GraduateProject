@@ -2305,16 +2305,18 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 	if (m_spWarriorPlayer->GetDoneCoreMinotaurState() && m_spWarriorPlayer->GetDoneCoreHarlequinnState() && m_spWarriorPlayer->GetDoneCoreAnubisState() && m_bisDead_Anubis && m_bisDead_Harlequinn && m_bIsDead_Minotaur)
 	{
 		if (!EndGameSound) {
-			pGameInstance->BGMUpdateVolume(L"GamePlayBGM", 0.f);
+			pGameInstance->SoundStopBGM(L"GamePlayBGM");
 			pGameInstance->SoundPlayOnce(L"EndingSong");
 			pGameInstance->SetLooping(L"EndingSong", true);
 			EndGameSound = true;
 		}
 		if (m_spWarriorPlayer->GetIfPlayerIsInEnd()) {
-			pGameInstance->PauseGame();
+			EndingTimeElapsed += _dTimeDelta;
+			if (EndingTimeElapsed > 4.5f) {
+				::PostQuitMessage(0);
+			}
 			m_spBackgroundUI->SetActive(true);
 			m_spEndingMent->SetActive(true);
-			m_spExitButtonUI->SetActive(true);
 			m_spMainTitleUI->SetActive(true);
 			m_spMainTitleEffectUI->SetActive(true);
 			//-------

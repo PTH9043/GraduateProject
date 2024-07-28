@@ -254,6 +254,7 @@ private:
 	_bool EnterBlindSound= false;
 	_bool EndGameSound = false;
 
+	_float EndingTimeElapsed = 0;
 
 	///=================ENDING============================
 	SHPTR<CImageUI>			m_spEndingText;
