@@ -275,10 +275,12 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		//pos -= 3 * Look;
 		m_spFootPrintParticle->SetPosition(pos);
 		m_spFootPrintParticle->SetDirection(Right);
+		SetAnimModelRimColor(_float3(204 / 204.f, 255 / 204.f, 0));
 	}
 	else {	
 		*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 0;
 		*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
+		SetAnimModelRimColor(_float3(0,0, 0));
 	}
 
 	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_HIT) {
@@ -289,7 +291,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		
 	}
 	else {
-		SetAnimModelRimColor(_float3(204 / 204.f, 255 / 204.f, 0));
+	//	SetAnimModelRimColor(_float3(0, 0, 0));
 	}
 
 	if (m_bSetRimOn) {
@@ -301,7 +303,7 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	}
 	else {
 		m_bSetRimTimeElapsed = 0.f;
-		SetAnimModelRimColor(_float3(204 / 204.f, 255 / 204.f, 0));
+		//SetAnimModelRimColor(_float3(0, 0, 0));
 	}
 
 	if (m_spBlood->CheckTimeOver()) {
