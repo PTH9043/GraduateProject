@@ -78,7 +78,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
 	//int cellIndex = 0;
 	//int cellIndex = 349;
-	int cellIndex = 349;
+	int cellIndex = 289;
 	SHPTR<UCell> spCell = spNavigation->FindCell(cellIndex);
 	GetTransform()->SetPos(spCell->GetCenterPos());
 	SetSpawnPoint(spCell);
@@ -354,8 +354,8 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		if (m_bStartedGame) {
 
 			POINT ptCursorPos;
-			ShowCursor(FALSE);
-			SetCursorPos(1000, 400);
+			//ShowCursor(FALSE);
+			//SetCursorPos(1000, 400);
 		}
 	}
 

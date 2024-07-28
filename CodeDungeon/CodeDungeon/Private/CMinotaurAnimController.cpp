@@ -80,6 +80,12 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
     _float playerKickedTime = static_pointer_cast<CWarriorPlayer>(spMinotaur->GetTargetPlayer())->GetWarriorKickedTimeElapsed();
     _float DistanceFromPlayer = spMinotaur->GetDistanceFromPlayer();
   
+    if (spMinotaur->GetTargetPlayer()->GetDeathState())
+    {
+        spMinotaur->SetFoundTargetState(false);
+    }
+
+
     _bool FoundPlayer = spMinotaur->GetFoundTargetState();
     _bool Hit = false;
 
@@ -100,6 +106,7 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
         if(!m_bRushMode)
             m_bAttackMode = true;
     }
+
 
     if (Hit)
     {

@@ -87,6 +87,11 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
     _float AttackRange_Long = 40;
     _float AttackRange_Close = 15.0f;
 
+    if (spAnubis->GetTargetPlayer()->GetDeathState())
+    {
+        spAnubis->SetFoundTargetState(false);
+    }
+
     const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
 
     _float DistanceFromPlayer = spAnubis->GetDistanceFromPlayer();
@@ -113,23 +118,21 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
                 m_bAttackMode = true;
         }
     }
-    if ((!FoundPlayer && m_bFoundPlayerFirsttime) || spAnubis->GetTargetPlayer()->GetDeathState())
+    if ((!FoundPlayer) && m_bFoundPlayerFirsttime)
     {
-        if(m_bFoundPlayerFirsttime)
-        {
-            m_bAttackMode = false;
-            m_bAttackStart = false;
+        m_bAttackMode = false;
+        m_bAttackStart = false;
 
-            if (_float3::Distance(spAnubis->GetTransform()->GetPos(), spAnubis->GetOriginPos()) > 2)
-            {
-                UpdateState(spAnimModel, ANIM_MOVE, L"WALK");
-            }
-            else
-            {
-                UpdateState(spAnimModel, ANIM_AWAKE, L"TOGUARDIDLE");
-                m_bFoundPlayerFirsttime = false;
-                m_dShieldCooltime = 3;
-            }
+        if (_float3::Distance(spAnubis->GetTransform()->GetPos(), spAnubis->GetOriginPos()) > 2)
+        {
+            UpdateState(spAnimModel, ANIM_MOVE, L"WALK");
+        }
+        else
+        {
+            UpdateState(spAnimModel, ANIM_AWAKE, L"TOGUARDIDLE");
+            spAnimModel->SetAnimation(L"Attack Idle to Guard Idle");
+            m_bFoundPlayerFirsttime = false;
+            m_dShieldCooltime = 3;
         }
     }
 
@@ -145,6 +148,8 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
         else if (CurAnimName == L"Guard Idle")
             spAnubis->GetTransform()->SetDirectionFixedUp(spAnubis->GetOriginDirection(), _dTimeDelta, 5);
     }
+
+ 
 
     if (Hit)
     {

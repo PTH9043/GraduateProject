@@ -94,6 +94,11 @@ void CHarlequinnAnimController::Tick(const _double& _dTimeDelta)
 
     _float3 directionToPlayer = spHarlequinn->GetTransform()->GetPos() - spHarlequinn->GetTargetPlayer()->GetTransform()->GetPos();
 
+    if (spHarlequinn->GetTargetPlayer()->GetDeathState())
+    {
+        spHarlequinn->SetFoundTargetState(false);
+    }
+
     _bool FoundPlayer = spHarlequinn->GetFoundTargetState();
     _bool Hit = false;
 
@@ -154,6 +159,9 @@ void CHarlequinnAnimController::Tick(const _double& _dTimeDelta)
         m_bTauntMode = true;
         m_dIdleTimer = 0;
     }
+
+
+
 
     if (m_bTauntMode)
     {
