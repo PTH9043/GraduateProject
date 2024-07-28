@@ -148,33 +148,16 @@ void CMainScene::UpdateMobsStatus()
 				}
 				else
 				{
-					if (r_AbilityCoolTime >= 0)
+					if (distanceSq <= 200 * 200)
 					{
-						if (distanceSq <= 200 * 200)
+						if (!mobs->GetDeathState())
 						{
-							if (!mobs->GetDeathState())
-							{
-								mobs->SetActive(true);
-							}
-						}
-						else
-						{
-							mobs->SetActive(false);
+							mobs->SetActive(true);
 						}
 					}
 					else
 					{
-						if (distanceSq <= 400 * 400)
-						{
-							if (!mobs->GetDeathState())
-							{
-								mobs->SetActive(true);
-							}
-						}
-						else
-						{
-							mobs->SetActive(false);
-						}
+						mobs->SetActive(false);
 					}
 				}		
 			}
