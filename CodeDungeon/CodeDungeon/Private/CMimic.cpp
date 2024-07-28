@@ -206,8 +206,8 @@ HRESULT CMimic::NativeConstructClone(const VOIDDATAS& _Datas)
 		Colliders.second->SetTranslate(_float3(0, 3, 0));
 	}
 
-	SetHealth(100);
-	SetMaxHealth(100);
+	SetHealth(200);
+	SetMaxHealth(200);
 	SetActivationRange(10);
 	SetDeactivationRange(120);
 	SetOutlineByAbility(true);
