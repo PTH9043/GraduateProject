@@ -140,7 +140,7 @@ void CAnubisAnimController::Tick(const _double& _dTimeDelta)
                     UpdateState(spAnimModel, ANIM_IDLE, L"GUARDIDLE");
                 }
             }
-            else
+            else if(CurAnimName == L"Guard Idle")
                 spAnubis->GetTransform()->SetDirectionFixedUp(spAnubis->GetOriginDirection(), _dTimeDelta, 5);
         }
     }
