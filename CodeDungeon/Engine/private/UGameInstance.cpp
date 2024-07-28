@@ -508,7 +508,6 @@ _bool UGameInstance::GetDIMBtnPressing(_ubyte _eMouseBtn)
 
 _long UGameInstance::GetDIMMoveState(_ubyte _eMouseMove)
 {
-	if (!GetDIKeyPressing(DIK_E))
 	return m_spInputManager->GetDIMMoveState(_eMouseMove);
 }
 
