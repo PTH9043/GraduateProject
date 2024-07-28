@@ -233,6 +233,7 @@ void CMainScene::TurnGuardsOnRange(const _double& _dTimeDelta)
 			{
 				if (!m_fGuardSound_D) {
 					spGameInstance->SoundPlayOnce(L"GuardDeactivate");
+					spGameInstance->SoundPlayOnce(L"GuardDeactivate2");
 					m_fGuardSound_D = true;
 				}
 				
@@ -253,6 +254,7 @@ void CMainScene::TurnGuardsOnRange(const _double& _dTimeDelta)
 			{
 				if (!m_fGuardSound_E) {
 					spGameInstance->SoundPlayOnce(L"GuardDeactivate");
+					spGameInstance->SoundPlayOnce(L"GuardDeactivate2");
 					m_fGuardSound_E = true;
 				}
 				if (m_fGuardTimer_E > 2.f) {
@@ -272,6 +274,7 @@ void CMainScene::TurnGuardsOnRange(const _double& _dTimeDelta)
 			{
 				if (!m_fGuardSound_F) {
 					spGameInstance->SoundPlayOnce(L"GuardDeactivate");
+					spGameInstance->SoundPlayOnce(L"GuardDeactivate2");
 					m_fGuardSound_F = true;
 				}
 				if (m_fGuardTimer_F > 2.f) {
@@ -291,6 +294,7 @@ void CMainScene::TurnGuardsOnRange(const _double& _dTimeDelta)
 			{
 				if (!m_fGuardSound_G) {
 					spGameInstance->SoundPlayOnce(L"GuardDeactivate");
+					spGameInstance->SoundPlayOnce(L"GuardDeactivate2");
 					m_fGuardSound_G = true;
 				}
 				
@@ -311,6 +315,7 @@ void CMainScene::TurnGuardsOnRange(const _double& _dTimeDelta)
 			{
 				if (!m_fGuardSound_Final) {
 					spGameInstance->SoundPlayOnce(L"GuardDeactivate");
+					spGameInstance->SoundPlayOnce(L"GuardDeactivate2");
 					m_fGuardSound_Final = true;
 				}
 				if (m_fTextTimer_Final > 5.f) {

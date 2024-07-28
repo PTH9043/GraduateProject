@@ -191,9 +191,9 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	{
 		m_spBlood = std::static_pointer_cast<UBlood>(spGameInstance->CloneActorAdd(PROTO_ACTOR_BLOOD));
 	}
-	{
+	/*{
 		m_spDust = std::static_pointer_cast<UDust>(spGameInstance->CloneActorAdd(PROTO_ACTOR_DUST));
-	}
+	}*/
 
 	for (auto& Colliders : GetColliderContainer())
 	{
@@ -206,7 +206,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetHealth(1);
 	SetMaxHealth(10000);
 	SetAnimModelRim(true);
-	SetAnimModelRim(true);
+	
 
 	return S_OK;
 }
@@ -284,27 +284,40 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_HIT) {
 		m_spBlood->SetActive(true);
 		m_fInteractionTimeElapsed = 0;
-		SetAnimModelRimColor(_float3(1, 0,0));
+		m_bSetRimOn = true;
 		m_spBlood->SetTimer(1.75f);
 		
 	}
 	else {
 		SetAnimModelRimColor(_float3(204 / 204.f, 255 / 204.f, 0));
 	}
+
+	if (m_bSetRimOn) {
+		SetAnimModelRimColor(_float3(1, 0, 0));
+		m_bSetRimTimeElapsed += _dTimeDelta;
+		if (m_bSetRimTimeElapsed > 1.f) {
+			m_bSetRimOn = false;
+		}
+	}
+	else {
+		m_bSetRimTimeElapsed = 0.f;
+		SetAnimModelRimColor(_float3(204 / 204.f, 255 / 204.f, 0));
+	}
+
 	if (m_spBlood->CheckTimeOver()) {
 		m_spBlood->SetActive(false);		
 	}
 		
-	if (spGameInstance->GetDIKeyDown(DIK_F5)) {
-		m_spDust->SetActive(true);
-		m_spDust->SetTimer(2.f);
-		_float3 pos = GetTransform()->GetPos();
-		pos.y += 1;
-		m_spDust->GetTransform()->SetPos(pos);
-	}
-	if (m_spDust->CheckTimeOver()) {
-		m_spDust->SetActive(false);
-	}
+	//if (spGameInstance->GetDIKeyDown(DIK_F5)) {
+	//	m_spDust->SetActive(true);
+	//	m_spDust->SetTimer(2.f);
+	//	_float3 pos = GetTransform()->GetPos();
+	//	pos.y += 1;
+	//	m_spDust->GetTransform()->SetPos(pos);
+	//}
+	//if (m_spDust->CheckTimeOver()) {
+	//	m_spDust->SetActive(false);
+	//}
 	
 	if (IfOpenChestForHeal) {//2.1초 지속
 		HealTrigger = true;

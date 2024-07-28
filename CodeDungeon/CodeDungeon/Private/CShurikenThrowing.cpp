@@ -58,9 +58,9 @@ HRESULT CShurikenThrowing::NativeConstructClone(const VOIDDATAS& _vecDatas)
 		m_spTrail = std::static_pointer_cast<UTrail>(spGameInstance->CloneActorAdd(PROTO_ACTOR_TRAIL, { &tDesc }));
 		m_spTrail->SetActive(true);
 
-		m_spTrail->SetColorTexture(L"GlowDiffuse");
-		m_spTrail->SetTrailShapeTexture(L"Noise_Bee");
-		m_spTrail->SetTrailNoiseTexture(L"Sun");
+		m_spTrail->SetColorTexture(L"Pink");
+		m_spTrail->SetTrailShapeTexture(L"Noise_Thunder");
+		m_spTrail->SetTrailNoiseTexture(L"GlowDiffuse");
 	}
 
 	{

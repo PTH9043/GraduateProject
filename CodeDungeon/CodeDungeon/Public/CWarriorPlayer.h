@@ -127,7 +127,7 @@ private:
 	SHPTR<CSword>												m_spSword;
 	SHPTR<UTrail>												m_spTrail;
 	SHPTR<UBlood>												m_spBlood;
-	SHPTR<UDust>												m_spDust;
+	//SHPTR<UDust>												m_spDust;
 	_bool																isAttack;
 
 	_bool m_bisCollisionWithObj;
@@ -164,6 +164,8 @@ private:
 	
 
 	_float			m_fInteractionTimeElapsed=0;
+	_bool			m_bSetRimOn=false;
+	_float			m_bSetRimTimeElapsed=false;
 	SHPTR<UCell>			m_spSpawnPoint;
 	SHPTR<UCell>			m_spSpawnPointForCamera;
 	_float3					m_f3SpawnPoint;
