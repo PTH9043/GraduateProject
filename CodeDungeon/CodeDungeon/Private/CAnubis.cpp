@@ -455,67 +455,6 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 			SetElapsedTime(0.0);
 		}
 	}
-	else
-	{
-		if (CurAnimState == UAnimationController::ANIM_MOVE)
-		{
-			if (GetFoundTargetState() && !GetTargetPlayer()->GetDeathState())
-			{
-				m_spFootPrintParticle->SetActive(true);
-				{
-					*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 4;
-					*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.355f;
-					_float3 pos = GetTransform()->GetPos() + GetTransform()->GetRight();
-					pos.y += 1.0;
-					_float3 Look = GetTransform()->GetLook();
-					_float3 Right = 1.2 * GetTransform()->GetRight();
-					//pos -= 3 * Look;
-					m_spFootPrintParticle->SetPosition(pos);
-					m_spFootPrintParticle->SetDirection(Right);
-				}
-			//	SetOutline(true);
-			}
-			else
-			{
-				//SetOutline(false);
-			}
-		}
-		else if (CurAnimState == UAnimationController::ANIM_ATTACK){}
-		else
-		{
-			m_spFootPrintParticle->SetActive(false);
-			*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 0;
-			*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
-		}
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		// death animation
-		if (CurAnimState == UAnimationController::ANIM_DEATH)
-		{
-			_double DeathAnimSpeed = 20;
-			SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
-			_double DeathTimeArcOpenEnd = 50;
-			if (GetElapsedTime() < DeathTimeArcOpenEnd) {
-				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
-				GetAnimModel()->UpdateDissolveTImer(_dTimeDelta * 1.2f);
-				if (!m_bDissolveSound) {
-					spGameInstance->SoundPlayOnce(L"DissolveSound");
-					m_bDissolveSound = true;
-				}
-			}
-		}
-		else if (CurAnimState == UAnimationController::ANIM_IDLE)
-		{
-			SetOutline(false);
-			GetAnimModel()->TickAnimation(_dTimeDelta);
-			GetTransform()->SetPos(GetTransform()->GetPos());
-		}
-		else
-		{
-			m_bDissolveSound = false;
-			GetAnimModel()->TickAnimation(_dTimeDelta);
-			SetElapsedTime(0.0);
-		}
-	}
 
 	for (auto& iter : GetColliderContainer())
 	{

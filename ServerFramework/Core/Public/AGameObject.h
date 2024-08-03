@@ -91,7 +91,7 @@ protected: /* Get Set */
 private:
 	virtual void Free() override;
 public:
-	static	constexpr _int		SEE_RANGE{ 100 };
+	static	constexpr _int		SEE_RANGE{ 150 };
 private:
 	ATOMIC<SESSIONID>		m_SessionID;
 	SESSIONTYPE					m_SessionType;

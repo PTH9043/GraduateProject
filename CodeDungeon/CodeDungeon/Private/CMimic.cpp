@@ -343,31 +343,6 @@ void CMimic::TickActive(const _double& _dTimeDelta)
 			SetElapsedTime(0.0);
 		}
 	}
-	else
-	{
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		// death animation
-		if (CurAnimState == UAnimationController::ANIM_DEATH)
-		{
-			_double DeathAnimSpeed = 20;
-			SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
-			_double DeathTimeArcOpenEnd = 50;
-			if (GetElapsedTime() < DeathTimeArcOpenEnd) {
-				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
-				GetAnimModel()->UpdateDissolveTImer(_dTimeDelta * 1.2f);
-				if (!m_bDissolveSound) {
-					spGameInstance->SoundPlayOnce(L"DissolveSound3");
-					m_bDissolveSound = true;
-				}
-			}
-		}
-		else
-		{
-			m_bDissolveSound = false;
-			GetAnimModel()->TickAnimation(_dTimeDelta);
-			SetElapsedTime(0.0);
-		}
-	}
 	UpdateCollision();
 }
 

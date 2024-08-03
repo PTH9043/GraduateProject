@@ -28,7 +28,7 @@ public:
 	static void RegisterIocpToSocket(const SOCKET& _Socket, const HANDLE& _IocpHandle);
 	static SOCKET CreateTcpSocket();
 	static SOCKET CreateUdpSocket();
-	static void RecvTcpPacket(const SOCKET& _Socket, REF_IN UOverExp& _OverExp);
+	static _int RecvTcpPacket(const SOCKET& _Socket, REF_IN UOverExp& _OverExp, REF_IN size_t& _recvBytes);
 	static void SendTcpPacket(const SOCKET& _Socket, UOverExp* _pOverExp);
 	static void StartNonBlocking(const SOCKET& _Socket);
 	static bool ServerToConnect(const SOCKET& _Socket, SOCKADDR_IN* _pSocketAddr);
@@ -54,6 +54,7 @@ public:
 	UOverExp(COMP_TYPE _type = OP_TCP_RECV);
 	UOverExp(_char* _pPacket, _short _PacketType, _short _PacketSize, COMP_TYPE _type = OP_TCP_SEND);
 public:
+	void SendBufferReady(_char* _pPacket, _short _PacketType, _short _PacketSize, COMP_TYPE _type = OP_TCP_SEND);
 	void RecvReset(COMP_TYPE _type = OP_TCP_RECV);
 public: /* get set */
 	WSAOVERLAPPED* GetOverlappedPointer() { return &m_Over; }

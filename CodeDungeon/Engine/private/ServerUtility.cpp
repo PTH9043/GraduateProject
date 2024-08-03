@@ -30,11 +30,13 @@ SOCKET UServerMethods::CreateUdpSocket()
 	return socket(AF_INET, SOCK_STREAM, IPPROTO_UDP);
 }
 
-void UServerMethods::RecvTcpPacket(const SOCKET& _Socket, REF_IN UOverExp& _OverExp)
+_int UServerMethods::RecvTcpPacket(const SOCKET& _Socket, REF_IN UOverExp& _OverExp, REF_IN size_t& _recvBytes)
 {
-	DWORD recv_flag = 0;
 	_OverExp.RecvReset();
-	WSARecv(_Socket, _OverExp.GetWsaBuffPointer(), 1, 0, &recv_flag,	_OverExp.GetOverlappedPointer(), 0);
+	DWORD receiveFlag{ 0 }, receiveByte{ 0 };
+	int Recv = WSARecv(_Socket, _OverExp.GetWsaBuffPointer(), 1, &receiveByte, &receiveFlag, 0, 0);
+	_recvBytes = receiveByte;
+	return Recv;
 }
 
 void UServerMethods::SendTcpPacket(const SOCKET& _Socket, UOverExp* _pOverExp)
@@ -80,6 +82,20 @@ UOverExp::UOverExp(COMP_TYPE _type)
 }
 
 UOverExp::UOverExp(_char* _pPacket, _short _PacketType, _short _PacketSize, COMP_TYPE _type)
+{
+	ZeroMemory(&m_Over, sizeof(WSAOVERLAPPED));
+	ZeroMemory(&m_Buffer[0], MAX_BUFFER_LENGTH);
+
+	PACKETHEAD Packet{ _PacketSize, _PacketType };
+	::memcpy(&m_Buffer[0], &Packet, PACKETHEAD_SIZE);
+	::memcpy(&m_Buffer[PACKETHEAD_SIZE], _pPacket, _PacketSize);
+
+	m_wsaBuffer.len = _PacketSize + PACKETHEAD_SIZE;
+	m_wsaBuffer.buf = &m_Buffer[0];
+	m_CompType = _type;
+}
+
+void UOverExp::SendBufferReady(_char* _pPacket, _short _PacketType, _short _PacketSize, COMP_TYPE _type)
 {
 	ZeroMemory(&m_Over, sizeof(WSAOVERLAPPED));
 	ZeroMemory(&m_Buffer[0], MAX_BUFFER_LENGTH);

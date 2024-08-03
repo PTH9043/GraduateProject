@@ -39,10 +39,10 @@ namespace Core {
 		RETURN_CHECK(0 >= m_SessionContainer.size(), ;);
 		for (auto& iter : m_SessionContainer)
 		{
-			if (true == iter.second->IsPermanentDisable())
+			SHPTR<ASession> spSession = iter.second;
+			if (true == spSession->IsPermanentDisable())
 				continue;
-
-			iter.second->SendData(_pPacket, _PacketHead);
+			spSession->SendData(_pPacket, _PacketHead);
 		}
 	}
 

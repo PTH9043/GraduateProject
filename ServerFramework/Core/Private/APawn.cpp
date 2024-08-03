@@ -10,37 +10,46 @@ namespace Core {
 
 	APawn::APawn(OBJCON_CONSTRUCTOR, SESSIONID _ID, SESSIONTYPE _SessionType) : 
 		AGameObject(OBJCON_CONDATA, _ID, _SessionType), m_spAnimController{nullptr}, m_spNavigation{nullptr}, m_isDamaged{false},
-		m_isDead{false}
+		m_isDead{false}, m_vPrevPosition{}, m_isDeadStateEnable{false}
 	{
 		m_spNavigation = GetCoreInstance()->CloneNavi();
+	}
+
+	SHPTR<ACell> APawn::GetCurCell()
+	{
+		SHPTR<ANavigation> spNavigation = GetNavigation();
+		SHPTR<ACell> spCell = spNavigation->GetCurCell();
+		if (nullptr == spCell)
+		{
+			SHPTR<ATransform> spTransform = GetTransform();
+			spNavigation->IsMove(spTransform->GetPos(), spCell);
+		}
+		return spCell;
 	}
 
 	void APawn::SetActive(const _bool _isActive)
 	{
 		__super::SetActive(_isActive);
-		if (nullptr != m_spAnimController)
-		{
-			m_spAnimController->SetOwnerPawnActiveStrong(_isActive);
-		}
 	}
 
 	void APawn::RestrictPositionToNavi()
 	{
-		SHPTR<ANavigation> spNavigation = m_spNavigation;
 		SHPTR<ATransform> spTransform = GetTransform();
-
-		Vector3 vPosition{ spTransform->GetPos() };
-		SHPTR<ACell> newCell{};
-
-		if (false == spNavigation->IsMove(vPosition, REF_OUT newCell))
+		SHPTR<ANavigation> spNaviagation = GetNavigation();
 		{
-			Vector3 closestPoint = spNavigation->ClampPositionToCell(vPosition);
-			spTransform->SetPos(Vector3(closestPoint.x, vPosition.y, closestPoint.z));
-			vPosition = spTransform->GetPos();
-		}
+			Vector3 vPosition = spTransform->GetPos();
+			SHPTR<ACell> spNewCell{};
 
-		_float newHeight = spNavigation->ComputeHeight(vPosition);
-		spTransform->SetPos(Vector3(vPosition.x, newHeight, vPosition.z));
+			if (false == spNaviagation->IsMove(vPosition, spNewCell))
+			{
+				spTransform->SetPos(m_vPrevPosition);
+			}
+			else
+			{
+				spNaviagation->ComputeHeight(vPosition);
+				spTransform->SetPos(vPosition);
+			}
+		}
 	}
 
 	void APawn::Placement(_int _CellIndex)

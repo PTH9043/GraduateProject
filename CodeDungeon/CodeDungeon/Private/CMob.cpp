@@ -67,10 +67,8 @@ HRESULT CMob::NativeConstructClone(const VOIDDATAS& _Datas)
 	GetCurrentNavi()->FindCell(GetTransform()->GetPos());
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	spGameInstance->AddCollisionPawnList(ThisShared<UPawn>());
-	if (spGameInstance->GetNetworkOwnerID() == 61)
-	{
-		m_isSendDataToBehavior = true;
-	}
+	m_isSendDataToBehavior = false;
+	SetActive(false);
 #else
 	GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
 	SetTargetPlayer(nullptr);
@@ -169,11 +167,11 @@ void CMob::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 		if (true == IsSendDataToBehavior())
 			return;
 
-		MOBSTATE scMonsterState;
+		static MOBSTATE scMonsterState;
 		scMonsterState.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
 		GetAnimationController()->ReceiveNetworkProcessData(&scMonsterState);
-		GetTransform()->SetPos({ scMonsterState.posx(), scMonsterState.posy(), scMonsterState.posz() });
-		GetTransform()->RotateFix({ scMonsterState.rotatex(), scMonsterState.rotatey(), scMonsterState.rotatez() });
+		GetTransform()->SetPos(_float3{ scMonsterState.posx(), scMonsterState.posy(), scMonsterState.posz() });
+		GetTransform()->RotateFix(_float3{ scMonsterState.rotatex(), scMonsterState.rotatey(), scMonsterState.rotatez() });
 		SetFoundTargetState(scMonsterState.foundon());
 	}
 	break;
@@ -189,7 +187,7 @@ void CMob::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 #ifdef _ENABLE_PROTOBUFF
 void CMob::SendMobStateData()
 {
-	CSHPTRREF<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	/*CSHPTRREF<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	_float3 vCharacterPos = GetTransform()->GetPos();
 	_float3 vCharRotate = GetTransform()->GetRotationValue();
@@ -207,7 +205,7 @@ void CMob::SendMobStateData()
 	MOBSTATE charMove;
 	PROTOFUNC::MakeMobState(OUT & charMove, GetNetworkID(), vMove, vRotate,
 		state, AnimIndex, IsDamaged(), GetFoundTargetState(), Animtime);
-	spGameInstance->InsertSendProcessPacketInQuery(std::move(UProcessedData(charMove, TAG_CS_MONSTERSTATE)));
+	spGameInstance->InsertSendProcessPacketInQuery(std::move(UProcessedData(charMove, TAG_CS_MONSTERSTATE)));*/
 }
 
 void CMob::SendCollisionData()
@@ -262,7 +260,6 @@ void CMob::MoveAlongPath(const VECTOR<_float3>& path, size_t& currentPathIndex, 
 
     if (distance < 1.0f)
     {
-		currentPosition = targetPosition;
         currentPathIndex++;
     }
 	m_f3TargetPos = targetPosition;

@@ -38,19 +38,7 @@ HRESULT CSarcophagus::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetPawnType(PAWNTYPE::PAWN_STATICOBJ);
 	SetActivationRange(50);
 	SetDeactivationRange(120);
-	/*UCollider::COLLIDERDESC tDesc;
-	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
-	tDesc.vScale = _float3(1.f, 1.f, 1.f);
-	SHPTR<UCollider> Collider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &tDesc }));
-	_wstring mainColliderTag = L"Main";
-	AddColliderInContainer(mainColliderTag, Collider);
-
-	for (auto& Containers : GetColliderContainer())
-	{
-		Containers.second->SetTranslate(GetAnimModel()->GetCenterPos());
-		Containers.second->SetScaleToFitModel(GetAnimModel()->GetMinVertexPos(), GetAnimModel()->GetMaxVertexPos());
-	}*/
-
+	SetActive(true);
 	return S_OK;
 }
 

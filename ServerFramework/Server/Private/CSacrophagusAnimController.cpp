@@ -17,39 +17,7 @@ namespace Server {
 
 	void CSacrophagusAnimController::Tick(const _double& _dTimeDelta)
 	{
-		SHPTR<APawn> spPawn = GetOwner();
-		SHPTR<ATransform> spTransform = spPawn->GetTransform();
 
-		if (true == IsOwnerPawnActive())
-		{
-			if (MOB_FIND_STATE == GetPawnState())
-			{
-				if (TAG_CHAR::TAG_SARCOPHAGUS_LAYING == m_iOwnerType)
-				{
-					if (m_dLyingSarcophagusTimeArcOpenEnd >= GetElapsedTime())
-					{
-						GetAnimator()->TickAnimToTimeAccChangeTransform(spTransform, _dTimeDelta,
-							m_dLyingSarcophagusTimeArcOpenStart + GetElapsedTime());
-					}
-					else
-					{
-						spPawn->ActivePermanentDisable();
-					}
-				}
-				else
-				{
-					if (m_dStandingSarcophagusTimeArcOpenEnd >= GetElapsedTime())
-					{
-						GetAnimator()->TickAnimation(GetElapsedTime());
-					}
-					else
-					{
-						spPawn->ActivePermanentDisable();
-					}
-				}
-				SetElapsedTime(GetElapsedTime() + _dTimeDelta * m_dSarcophagusOpeningSpeed);
-			}
-		}
 	}
 
 	void CSacrophagusAnimController::Free()

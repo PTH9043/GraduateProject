@@ -2,6 +2,7 @@
 #include "CMonsterAnimController.h"
 #include "USound.h"
 #include "UResource.h"
+
 BEGIN(Client)
 class CMummy;
 /*

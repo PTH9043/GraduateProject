@@ -1623,7 +1623,6 @@ HRESULT CMainScene::LoadSceneData()
 	
 	CProtoMaker::CreateMainSceneProtoData(spGameInstance, GetDevice(), std::static_pointer_cast<UCommand>(spGameInstance->GetGpuCommand()));
 
-#ifdef _ENABLE_PROTOBUFF
 	UCamera::CAMDESC tDesc;
 	tDesc.stCamProj = UCamera::CAMPROJ(UCamera::PROJECTION_TYPE::PERSPECTIVE, _float3(0.f, 0.f, 0.f),
 		_float3(0.f, 0.f, 1.f),
@@ -1636,9 +1635,8 @@ HRESULT CMainScene::LoadSceneData()
 	vecDatas.push_back(&tDesc);
 
 	m_spMainCamera = std::static_pointer_cast<CMainCamera>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MAINCAMERA, vecDatas));
-	spGameInstance->MakeActors({ m_spMainCamera });
-#else 
-#endif
+	spGameInstance->MakeActorsInit({ m_spMainCamera });
+
 	CreateStartSceneUI();
 	CreateAbilityUI();
 	CreateInteractUI();
@@ -1704,37 +1702,6 @@ HRESULT CMainScene::LoadSceneData()
 		m_stFireOne->SetActive(true);
 			m_stFireTwo->SetActive(true);
 	}
-#ifndef _ENABLE_PROTOBUFF
-	{
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		// Main Camera Load 
-		{
-			UCamera::CAMDESC tDesc;
-			tDesc.stCamProj = UCamera::CAMPROJ(UCamera::PROJECTION_TYPE::PERSPECTIVE, _float3(0.f, 0.f, 0.f),
-				_float3(0.f, 0.f, 1.f),
-				DirectX::XMConvertToRadians(60.0f), WINDOW_WIDTH, WINDOW_HEIGHT, 0.2f, 1000.f);
-			tDesc.stCamValue = UCamera::CAMVALUE(20.f, DirectX::XMConvertToRadians(90.f));
-			tDesc.eCamType = CAMERATYPE::MAIN;
-			// Actor Add Main Camera
-
-			VOIDDATAS vecDatas;
-			vecDatas.push_back(&tDesc);
-
-			m_spMainCamera = std::static_pointer_cast<CMainCamera>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MAINCAMERA, vecDatas));
-
-			CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_USERWARRIORANIMCONTROLLER };
-			CWarriorPlayer::PLAYERDESC PlayerDesc{ m_spMainCamera };
-			m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
-				PROTO_ACTOR_WARRIORPLAYER, { &CharDesc, &PlayerDesc }));
-			spGameInstance->RegisterCurrentPlayer(m_spWarriorPlayer);
-			m_spMainCamera->GetTransform()->SetPos(m_spWarriorPlayer->GetTransform()->GetPos());
-		
-		}
-	}
-
-	m_spMap->LoadMobs(m_spWarriorPlayer);
-	
-#endif
 
 	m_spMap->LoadGuards();
 	m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
@@ -1745,7 +1712,6 @@ HRESULT CMainScene::LoadSceneData()
 void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	
 
 	if (m_bStartGameDefault) {
 		
@@ -1755,13 +1721,9 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 		m_bStartGameDefault = false;
 	}
 	
-	
-
-
 	if (m_spEnterButtonUI->IsMouseOnRect() && m_spEnterButtonUI->IsActive()) {
 		m_spEnterButtonUI->SetIfPicked(true);
 
-		
 		if (!wasMouseEnterOverButton) {
 			spGameInstance->SoundPlayOnce(L"UI_Select");
 			wasMouseEnterOverButton = true;  // 상태를 업데이트
@@ -1943,8 +1905,6 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 			m_spShortAttackKeyIconUI->SetActive(true);
 		}
 	
-		m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
-		
 		//상자 충돌 시
 			if (m_spWarriorPlayer->GetCanInteractChestState() && !m_spWarriorPlayer->GetDeathState()) {
 				m_spOpenChestTextUI->SetActive(true);

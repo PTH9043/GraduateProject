@@ -998,16 +998,17 @@ void CWarriorPlayer::SendMoveData()
 	_int state = GetAnimationController()->GetAnimState();
 	_int AnimIndex = GetAnimModel()->GetCurrentAnimIndex();
 
-	VECTOR3 vMove;
-	VECTOR3 vRotate; 
+
+	VECTOR3 vSendPos, vSendRotate;
 	{
-		PROTOFUNC::MakeVector3(OUT & vMove, vCharacterPos.x, vCharacterPos.y, vCharacterPos.z);
-		PROTOFUNC::MakeVector3(OUT & vRotate, vCharRotate.x, vCharRotate.y, vCharRotate.z);
+		PROTOFUNC::MakeVector3(&vSendPos, vCharacterPos.x, vCharacterPos.y, vCharacterPos.z);
+		PROTOFUNC::MakeVector3(&vSendRotate, vCharRotate.x, vCharRotate.y, vCharRotate.z);
 	}
-	CHARSTATE charMove;
-	PROTOFUNC::MakeCharState(OUT & charMove, spGameInstance->GetNetworkOwnerID(), vMove, vRotate, 
+
+	static CHARSTATE charMove;
+	PROTOFUNC::MakeCharState(OUT &charMove, spGameInstance->GetNetworkOwnerID(), vSendPos, vSendRotate,
 		state, AnimIndex, IsDamaged() == true ? 1 : 0);
-	spGameInstance->InsertSendProcessPacketInQuery(std::move(UProcessedData(charMove, TAG_CS_PLAYERSTATE)));
+	spGameInstance->InsertSendProcessPacketInQuery(UProcessedData(charMove, TAG_CS_PLAYERSTATE));
 }
 
 void CWarriorPlayer::SendCollisionData(UPawn* _pPawn)

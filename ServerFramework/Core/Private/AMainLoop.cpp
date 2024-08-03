@@ -25,6 +25,8 @@ namespace Core {
 
 	void AMainLoop::TimerThread(const boost::system::error_code& _error)
 	{
+		std::atomic_thread_fence(std::memory_order_seq_cst);
+
 		m_spGameTimer->Tick();
 		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
 		SHPTR<AService> spServerService = m_wpServerService.lock();
@@ -57,12 +59,13 @@ namespace Core {
 				for (auto& iter : aliveMonster)
 				{
 					iter->Tick(dTimeDelta);
+					iter->LateTick(dTimeDelta);
 				}
 				// Collision 
 				spCoreInstance->CollisionSituation(dTimeDelta);
 			}
 		}
-		RegisterTimer(0);
+		RegisterTimer(1);
 	}
 
 	void AMainLoop::Free()

@@ -5,6 +5,7 @@
 
 BEGIN(Engine)
 class UNetworkBaseController;
+class UOverExp;
 
 class UNetworkSender final : public UBase  {
 	friend  UNetworkBaseController;
@@ -20,6 +21,7 @@ private:
 	virtual void Free() override;
 private:
 	SOCKET*						m_pClientTcpSocket;
+	UOverExp*					m_pOverExp;
 	SENDQUERY					m_SendQuery;
 };
 

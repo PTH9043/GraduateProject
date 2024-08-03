@@ -433,9 +433,6 @@
     <Filter Include="98.ShaderFile\Outline">
       <UniqueIdentifier>{2a53e5f9-6b0e-4792-a8ee-802911b68873}</UniqueIdentifier>
     </Filter>
-    <Filter Include="20.Network\NetworkQuery">
-      <UniqueIdentifier>{487bf57c-27ba-41bc-80fa-ba307f3367fe}</UniqueIdentifier>
-    </Filter>
     <Filter Include="05.Actor\Guard">
       <UniqueIdentifier>{2f98755e-8a2d-47b8-bec7-20f54b6a2c96}</UniqueIdentifier>
     </Filter>
@@ -878,9 +875,6 @@
     </ClCompile>
     <ClCompile Include="..\private\UInputReceiver.cpp">
       <Filter>06.Component\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\UNetworkQueryProcessing.cpp">
-      <Filter>20.Network\NetworkQuery</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UGuard.cpp">
       <Filter>05.Actor\Guard</Filter>
@@ -1330,9 +1324,6 @@
     </ClInclude>
     <ClInclude Include="..\public\UInputReceiver.h">
       <Filter>06.Component\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\UNetworkQueryProcessing.h">
-      <Filter>20.Network\NetworkQuery</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UGuard.h">
       <Filter>05.Actor\Guard</Filter>

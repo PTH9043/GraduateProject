@@ -24,6 +24,11 @@ UFontManager::UFontManager() :
 
 void UFontManager::Free()
 {
+	m_pDescriptor.reset();
+	m_pGraphicMemory.reset();
+	m_spSpriteBatch.reset();
+
+
 }
 
 HRESULT UFontManager::ReadyFontManager(UGameInstance* _pGameInstance, CSHPTRREF<URenderTargetManager> _spRenderTargetManager)

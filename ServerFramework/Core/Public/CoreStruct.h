@@ -260,6 +260,60 @@ namespace Core {
 		std::memory_order		MemoryOrder;
 	}CUSTIMER;
 
+
+	struct TWINTIMER
+	{
+		TWINTIMER() = default;
+		TWINTIMER(const _float& _fStandardTime_low,  const _float& _fStandardTime_High,std::memory_order _memoryOrder = std::memory_order_relaxed)
+			: fStandardTime_low(_fStandardTime_low), fStandardTime_high{_fStandardTime_High}, MemoryOrder{_memoryOrder}
+		{
+			fTimer = 0.f;
+			isPass = false;
+		}
+
+		_bool IsOverLow()
+		{
+			if (fTimer.load(MemoryOrder) >= fStandardTime_low)
+			{
+				return true;
+			}
+			return false;
+		}
+
+		_bool IsOverHigh()
+		{
+			if (fTimer.load(MemoryOrder) >= fStandardTime_high)
+			{
+				return true;
+			}
+			return false;
+		}
+
+		void ResetTimer()
+		{
+			fTimer.store(0.f, MemoryOrder);
+			isPass.store(false, MemoryOrder);
+		}
+
+		void PlusTime(const _double& _dTimeDelta)
+		{
+			fTimer.store(static_cast<_float>(_dTimeDelta), MemoryOrder);
+		}
+
+		void ChangeStandardTime(const _float& _fStandardTime_low, const _float& _fStandardTime_High)
+		{
+			fStandardTime_low = _fStandardTime_low;
+			fStandardTime_high = _fStandardTime_High;
+		}
+		// Timer
+		std::atomic<_float>		fTimer = 0.f;
+		std::atomic<_bool>		isPass{ false };
+	private:
+		_float									fStandardTime_low = 0.f;
+		_float									fStandardTime_high = 0.f;
+		std::memory_order		MemoryOrder;
+	};
+
 #pragma endregion ANIMEVENTTYPE
 
 	typedef struct tagNavDesc {

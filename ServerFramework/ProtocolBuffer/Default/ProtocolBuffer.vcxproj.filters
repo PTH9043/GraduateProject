@@ -31,14 +31,14 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Private\ProtocolBuffer.cpp">
-      <Filter>ProtoFunc</Filter>
-    </ClCompile>
     <ClCompile Include="..\ServerProtocol\Tag.pb.cc">
       <Filter>ProtoHeader</Filter>
     </ClCompile>
     <ClCompile Include="..\ServerProtocol\Protocol.pb.cc">
       <Filter>ProtoHeader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ProtocolBuffer.cpp">
+      <Filter>ProtoFunc</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

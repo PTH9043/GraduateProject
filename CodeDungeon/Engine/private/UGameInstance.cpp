@@ -1,5 +1,4 @@
 #include "UGameInstance.h"
-//#include "UGraphicRenderManager.h"
 #include "UShaderBufferManager.h"
 #include "UGraphicDevice.h"
 #include "UTimerManager.h"
@@ -18,7 +17,6 @@
 #include "UAudioSystemManager.h"
 #include "UCharacterManager.h"
 #include "UMaterialManager.h"
-#include "UNetworkQueryProcessing.h"
 #include "UFontManager.h"
 #include "URenderer.h"
 #include "UNetworkSender.h"
@@ -118,7 +116,6 @@ UGameInstance::~UGameInstance()
 void UGameInstance::Free()
 {
 	ClearOnceTypeData();
-	m_spNetworkQueryProcessing.reset();
 	m_spNetworkBaseController.reset();
 	m_isGamming = false;
 	//ClearOnceTypeData();
@@ -126,7 +123,6 @@ void UGameInstance::Free()
 	m_spRenderer.reset();
 	//m_spGraphicRenderObject.reset();
 	//m_spRandomManager.reset();
-	m_spFontMananger.reset();
 	m_spMaterialManager.reset();
 	m_spCharacterManager.reset();
 	m_spNetworkBaseController.reset();
@@ -141,6 +137,7 @@ void UGameInstance::Free()
 	m_spComponentManager.reset();
 	m_spActorManager.reset();
 	m_spThreadManager.reset();
+	m_spFontMananger.reset();
 	m_spInputManager.reset();
 	m_spTimerManager.reset();
 	m_spGraphicDevice.reset();
@@ -173,7 +170,6 @@ HRESULT UGameInstance::ReadyInstance(const GRAPHICDESC& _stDesc, OUTPUTDATA& _st
 HRESULT UGameInstance::CreateGraphicsShader(const _wstring& _wstrProtoName, const CLONETYPE _eCloneType,
 	const SHADERDESC& _stShaderDesc, const GRAPHICRENDEROBJECT_TYPE _eType)
 {
-	
 	SHPTR<UShader> pShader = CreateConstructorToNative<UShader>(
 		m_spGraphicDevice->GetDevice(), m_spGraphicDevice->GetRootSignature(),
 		_stShaderDesc
@@ -204,10 +200,10 @@ void UGameInstance::OtherFrame(const _double& _dTimeDelta, const WPARAM& _wParam
 
 void UGameInstance::AwakeTick()
 {
-	if (nullptr != m_spNetworkQueryProcessing)
+	if (nullptr != m_spNetworkBaseController)
 	{
-		m_spNetworkQueryProcessing->ProcessNetworkInitData();
-		m_spNetworkQueryProcessing->ProcessQueryData();
+		m_spNetworkBaseController->ServerTick();
+		m_spNetworkBaseController->MakeActorsTick();
 	}
 
 	m_spInputManager->KeyTick();
@@ -219,9 +215,10 @@ void UGameInstance::AwakeTick()
 
 void UGameInstance::Tick(const _double& _dTimeDelta)
 {
-	if (nullptr != m_spNetworkQueryProcessing)
+	if (nullptr != m_spNetworkBaseController)
 	{
-		m_spNetworkQueryProcessing->ProcessQueryData();
+		m_spNetworkBaseController->ServerTick();
+		m_spNetworkBaseController->MakeActorsTick();
 	}
 
 	m_spSceneManager->Tick(_dTimeDelta);
@@ -237,11 +234,6 @@ void UGameInstance::Tick(const _double& _dTimeDelta)
 
 void UGameInstance::LateTick(const _double& _dTimeDelta)
 {
-	if (nullptr != m_spNetworkQueryProcessing)
-	{
-		m_spNetworkQueryProcessing->ProcessQueryData();
-	}
-
 	_double dTimeDelta = _dTimeDelta;
 	if (m_isPause)
 		dTimeDelta = 0.0;
@@ -1090,17 +1082,16 @@ NetworkManager
 ==================================================
 */
 
-void UGameInstance::StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController, CSHPTRREF<UNetworkQueryProcessing> _spNetworkQueryProcessing)
+void UGameInstance::StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController)
 {
 	m_spNetworkBaseController = _spNetworkBaseController;
-	m_spNetworkQueryProcessing = _spNetworkQueryProcessing;
 	m_spNetworkSender = Create<UNetworkSender>(m_spNetworkBaseController);
 }
 
-void UGameInstance::MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer)
+void UGameInstance::MakeActorsInit(const VECTOR<SHPTR<UActor>>& _actorContainer)
 {
 	assert(nullptr != m_spNetworkBaseController);
-	m_spNetworkBaseController->MakeActors(_actorContainer);
+	m_spNetworkBaseController->MakeActorsInit(_actorContainer);
 }
 
 void UGameInstance::InsertSendTcpPacketInQuery(_char* _pPacket, _short _PacketType, _short _PacketSize)
@@ -1138,10 +1129,11 @@ const _llong UGameInstance::GetNetworkOwnerID() const
 	return m_spNetworkBaseController->GetNetworkOwnerID();
 }
 
-const _bool UGameInstance::IsNetworkResourceRecvSuccess() const
+
+void UGameInstance::DisableNetworkTickRunning()
 {
 	assert(nullptr != m_spNetworkBaseController);
-	return m_spNetworkBaseController->IsNetworkResourceRecvSuccess();
+	m_spNetworkBaseController->DisableNetworkTickRunning();
 }
 
 /*

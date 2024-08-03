@@ -185,9 +185,6 @@ private:
 	_bool HalequinCoreSound = false;
 	_bool AnubisCoreSound = false;
 	_bool GuardCollideSound = false;
-
-
-
 };
 END
 

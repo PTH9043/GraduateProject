@@ -7,7 +7,6 @@
 #include "CMainScene.h"
 #include "CDataManager.h"
 #include "CLogoScene.h"
-#include "CNetworkQueryProcessor.h"
 
 CClientApp::CClientApp() :
 	m_iTickCount{ 0 },
@@ -40,26 +39,13 @@ HRESULT CClientApp::NativeConstruct(const HINSTANCE& _hInst, const _uint& _iCmdS
 	m_iCmdShow = _iCmdShow;
 	m_spGameInstance = GET_INSTANCE(UGameInstance);
 
-	m_spGameInstance->RegisterFuncToRegister(ClientThread, this);
-#ifdef _ENABLE_PROTOBUFF
 	SHPTR<CNetworkClientController> spNetworkClientController = CreateNative<CNetworkClientController>(IP_ADDRESS, TCP_PORT_NUM);
-	SHPTR<CNetworkQueryProcessor> spNetworkQueryProccesor = Create<CNetworkQueryProcessor>(spNetworkClientController);
-	spNetworkClientController->SetNetworkQueryProcessing(spNetworkQueryProccesor);
-	m_spGameInstance->StartNetwork(spNetworkClientController, spNetworkQueryProccesor);
-#endif
+	m_spGameInstance->StartNetwork(spNetworkClientController);
 	return S_OK;
-}
-
-void CClientApp::ClientThread(void* _pData)
-{
-	RETURN_CHECK(nullptr == _pData, ;);
-	CClientApp* pClient = static_cast<CClientApp*>(_pData);
-	pClient->Render();
 }
 
 void CClientApp::Render()
 {
-	ThreadMiliRelax(500);
 	if (FALSE == InitInstance(m_hInst, m_iCmdShow))
 	{
 		return;
@@ -81,14 +67,13 @@ void CClientApp::Render()
 	OUTPUTDATA stOutputData;
 	RETURN_CHECK_FAILED(m_spGameInstance->ReadyInstance(stGraphicDesc, stOutputData), ;);
 	RETURN_CHECK_FAILED(m_spGameInstance->LoadFirstFolder(FIRST_RESOURCE_FOLDER), ;);
-
 	m_spDataManager = CreateNative<CDataManager>();
 	CProtoMaker::CreateProtoData(m_spGameInstance, stOutputData.wpDevice.lock(), stOutputData.wpGpuCmd.lock());
 	m_spDataManager->Load_Data();
 
 	// Register 
 	//m_spGameInstance->RegisterScene(CreateConstructorNative<CLogoScene>(stOutputData.wpDevice.lock()));
-		m_spGameInstance->RegisterScene(CreateConstructorNative<CMainScene>(stOutputData.wpDevice.lock()));
+	m_spGameInstance->RegisterScene(CreateConstructorNative<CMainScene>(stOutputData.wpDevice.lock()));
 
 	m_spDeltaTimer = m_spGameInstance->CreateTimerAdd(DELTA_TIMER);
 	m_spTickTimer = m_spGameInstance->CreateTimerAdd(TICK_TIMER);
@@ -97,8 +82,6 @@ void CClientApp::Render()
 	
 	MSG msg{};
 	ZeroMemory(&msg, sizeof(MSG));
-
-	// �⺻ �޽��� �����Դϴ�:
 	while (m_isTickThread)
 	{
 		// if PeekMeesage
@@ -130,9 +113,7 @@ void CClientApp::Render()
 			// Render
 			m_spGameInstance->RenderBegin();
 			m_spGameInstance->RenderEnd();
-
 			++m_iTickCount;
-
 			m_dShowTickFPS += m_dDeltaTime;
 			if (m_dShowTickFPS >= 1.0)
 			{

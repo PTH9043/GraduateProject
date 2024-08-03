@@ -29,11 +29,9 @@ namespace Server
 
 	_bool CSarcophagus::Start(const VOIDDATAS& _ReceiveDatas)
 	{
-		__super::Start(_ReceiveDatas);
 		ASSERT_CRASH(_ReceiveDatas.size() >= 0);
 		_float4x4 Matrix = _float4x4::CreateScale(0.1f) * _float4x4::CreateRotationY(DirectX::XMConvertToRadians(180));
 #ifndef CREATED_SERVERMOBDATA
-		MOBDATA* pMoveData = static_cast<MOBDATA*>(_ReceiveDatas[0]);
 		SESSIONID* pSessionID = static_cast<SESSIONID*>(_ReceiveDatas[1]);
 
 		SHPTR<CSacrophagusAnimController> spSacrophagusAnimController = nullptr;
@@ -59,9 +57,6 @@ namespace Server
 		SetAnimController(spSacrophagusAnimController);
 		spMummy->Start({ _ReceiveDatas[0] });
 		SetOwnerMonsterSessionID(spMummy->GetSessionID());
-		GetTransform()->SetNewWorldMtx(pMoveData->mWorldMatrix);
-		GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
-		BringCellIndextoPosition();
 		GetCoreInstance()->InsertMobObject(spMummy->GetSessionID(), spMummy);
 
 		if (SARCO_LAYING == m_eSarcophagusType)
@@ -70,15 +65,8 @@ namespace Server
 		SHPTR<CSacrophagusAnimController> spSacrophagusAnimController = Create<CSacrophagusAnimController>(GetCoreInstance(), ThisShared<CSarcophagus>(),
 			"..\\..\\Resource\\Anim\\Sarcophagus\\", "SarcophagusLaying_FBX.bin", Matrix);
 		SetAnimController(spSacrophagusAnimController);
-
-		MOBSERVERDATA* pMobData = static_cast<MOBSERVERDATA*>(_ReceiveDatas[0]);
-		GetAnimController()->SetAnimation(pMobData->iStartAnimIndex);
-		GetTransform()->SetNewWorldMtx(pMobData->mWorldMatrix);
-		GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
-		BringCellIndextoPosition();
-		SetSessionID(pMobData->iMobID);
 #endif
-		return S_OK;
+		return __super::Start(_ReceiveDatas);
 	}
 
 	void CSarcophagus::RunningPermanentDisableSituation()
@@ -92,7 +80,11 @@ namespace Server
 
 	void CSarcophagus::Tick(const _double& _dTimeDelta)
 	{
-		__super::Tick(_dTimeDelta);
+	//	__super::Tick(_dTimeDelta);
+	}
+
+	void CSarcophagus::LateTick(const _double& _dTimeDelta)
+	{
 	}
 
 	void CSarcophagus::State(SHPTR<ASession> _spSession, _int _MonsterState)
@@ -111,10 +103,6 @@ namespace Server
 	}
 
 	void CSarcophagus::Collision(APawn* _pPawn, const _double& _dTimeDelta)
-	{
-	}
-
-	void CSarcophagus::ChangeCurrentFindPlayer(SESSIONID _CurPlayerSessionID, SESSIONID _ChangePlayerSessionID)
 	{
 	}
 

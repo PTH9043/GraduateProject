@@ -11,7 +11,7 @@ namespace Core
 {
 	AGameObject::AGameObject(OBJCON_CONSTRUCTOR, SESSIONID _ID, SESSIONTYPE _SessionType) : 
 		ACoreObject(OBJCON_CONDATA), m_SessionID{_ID}, m_SessionType{_SessionType}, m_SpaceIndex{0},
-		m_spTransform{ nullptr }, m_CellIndex{0}, m_fMoveSpeed{0.f}, m_fRunSpeed{0.f}
+		m_spTransform{ Create<ATransform>() }, m_CellIndex{0}, m_fMoveSpeed{0.f}, m_fRunSpeed{0.f}
 		, m_isActive{false}, m_isPermanentDisable{false}, m_CopyHead{}
 	{
 		MemoryInitialization(m_CopyBuffer.data(), MAX_BUFFER_LENGTH);
@@ -19,7 +19,6 @@ namespace Core
 
 	_bool AGameObject::Start(const VOIDDATAS& _ReceiveDatas)
 	{
-		m_spTransform = Create<ATransform>();
 		return true;
 	}
 
@@ -95,10 +94,7 @@ namespace Core
 	_bool AGameObject::IsCanSee(Vector3 _OtherPos)
 	{
 		SHPTR<ATransform> spTransform = GetTransform();
-		Vector3 vPos = spTransform->GetPos();
-		vPos.y = 0.f;
-		_OtherPos.y = 0.f;
-		return Vector3::DistanceSquared(vPos, _OtherPos) < SEE_RANGE;
+		return spTransform->ComputeDistance(_OtherPos) <= SEE_RANGE;
 	}
 
 	_bool AGameObject::IsCanSee(SHPTR<ATransform> _spTransform)

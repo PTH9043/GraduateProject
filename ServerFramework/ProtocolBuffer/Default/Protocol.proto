@@ -34,36 +34,36 @@ message CHARSTATE
 {
 	int64	id = 1;
 	// Move
-	float	posX = 2;
-	float	posY = 3;
-	float	posZ = 4;
+	float  posx = 2;
+	float  posy = 3;
+	float  posz = 4;
 	// Rotate
-	float	rotateX = 5;
-	float	rotateY = 6;
-	float	rotateZ = 7;
+	float  rotatex = 5;
+	float  rotatey = 6;
+	float  rotatez = 7;
 	int64	animationIndex = 8;
-	int64  state = 9;
-	int64	triggerOn = 10;
+	int32  state = 9;
+	int32	triggerOn = 10;
 }
 
 message MOBSTATE
 {
 	int64		id = 1;
 	// Move
-	float		posX = 2;
-	float		posY = 3;
-	float		posZ = 4;
+	float		posx = 2;
+	float		posy = 3;
+	float		posz = 4;
 	// Rotate
-	float		rotateX = 5;
-	float		rotateY = 6;
-	float		rotateZ = 7;
-	int64		animationIndex = 8;
-	int64		state = 9;
+	float		rotatex = 5;
+	float		rotatey = 6;
+	float		rotatez = 7;
+	int32		animationIndex = 8;
+	int32		state = 9;
 	bool		triggerOn = 10;
 	bool		foundOn = 11;
-	bool		remain1 = 12;
+	bool		damageOn = 12;
 	bool		remain2 = 13;
-	double	animtime = 14;
+	float		animtime = 14;
 }
 
 message COLLISIONDATA

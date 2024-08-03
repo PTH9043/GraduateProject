@@ -202,7 +202,6 @@
     <ClInclude Include="..\Public\CNetworkMimicAnimController.h" />
     <ClInclude Include="..\Public\CNetworkMinotaurAnimController.h" />
     <ClInclude Include="..\Public\CNetworkMummyAnimController.h" />
-    <ClInclude Include="..\Public\CNetworkQueryProcessor.h" />
     <ClInclude Include="..\Public\CNetworkWarriorPlayerController.h" />
     <ClInclude Include="..\Public\CProtoMaker.h" />
     <ClInclude Include="..\Public\CRooms.h" />
@@ -262,7 +261,6 @@
     <ClCompile Include="..\Private\CNetworkMimicAnimController.cpp" />
     <ClCompile Include="..\Private\CNetworkMinotaurAnimController.cpp" />
     <ClCompile Include="..\Private\CNetworkMummyAnimController.cpp" />
-    <ClCompile Include="..\Private\CNetworkQueryProcessor.cpp" />
     <ClCompile Include="..\Private\CNetworkWarriorPlayerController.cpp" />
     <ClCompile Include="..\Private\CProtoMaker.cpp" />
     <ClCompile Include="..\Private\CRooms.cpp" />

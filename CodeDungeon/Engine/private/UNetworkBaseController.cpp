@@ -3,12 +3,11 @@
 #include "UGameInstance.h"
 #include "UActor.h"
 #include "UProcessedData.h"
-#include "UNetworkQueryProcessing.h"
 #include "UMethod.h"
 
 UNetworkBaseController::UNetworkBaseController() : 
+	m_iSceneID{ 0 },
 	m_isNetworkTickRunning{true},
-	m_IocpHandle{NULL},
 	m_RecvTcpOverExp{},
 	m_ClientTcpSocket{NULL}, 
 	m_ClientUdpSocket{NULL},
@@ -16,11 +15,7 @@ UNetworkBaseController::UNetworkBaseController() :
 	m_llNetworkOwnerID{0},
 	m_TcpTotalBuffer{},
 	m_RemainBufferLength{0},
-	m_spNetworkAddress{nullptr},
-	m_iSceneID{0},
-	m_isNetworkResourceReceiveSuccess{false}, 
-	m_iMakeMonsterNum{0},
-	m_iRealMakeMonsterNum{0}
+	m_spNetworkAddress{nullptr}
 {
 }
 
@@ -32,15 +27,26 @@ HRESULT UNetworkBaseController::NativeConstruct(const _string& _strIPAddress, co
 	RETURN_CHECK(UServerMethods::ReadyConnectToServer(&m_WsaData), E_FAIL);	
 	m_ClientTcpSocket = UServerMethods::CreateTcpSocket();
 	RETURN_CHECK(UServerMethods::ServerToConnect(m_ClientTcpSocket, m_spNetworkAddress), E_FAIL);
-	m_IocpHandle = UServerMethods::CreateIocpHandle();
-	UServerMethods::RegisterIocpToSocket(m_ClientTcpSocket, m_IocpHandle);
+
+	u_long mode = 1;  // 1 to enable non-blocking socket
+	if (ioctlsocket(m_ClientTcpSocket, FIONBIO, &mode) != NO_ERROR) {
+		printf("ioctlsocket failed with error: %ld\n", WSAGetLastError());
+		WSACleanup();
+		return E_FAIL;
+	}
+
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	spGameInstance->RegisterFuncToRegister(ServerThread, this);
 	return S_OK;
 }
 
-void UNetworkBaseController::MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer)
+void UNetworkBaseController::MakeActorsInit(const VECTOR<SHPTR<UActor>>& _actorContainer)
+{
+	m_NetworkInitDataContainer.clear();
+}
+
+void UNetworkBaseController::MakeActorsTick()
 {
 	m_NetworkInitDataContainer.clear();
 }
@@ -51,19 +57,9 @@ void UNetworkBaseController::AddNetworkInitData(_int _NetworkID, const NETWORKRE
 	m_NetworkInitDataContainer.insert(MakePair(_NetworkID, _NetworkInitData));
 }
 
-void UNetworkBaseController::AddCreatedNetworkActor(_int _NetworkID, CSHPTRREF<UActor> _spActor)
+void UNetworkBaseController::InsertNetworkActorInContainer(_int _NetworkID, CSHPTRREF<UActor> _spActor)
 {
-	if (nullptr != m_spNetworkQueryProcessing)
-	{
-		m_spNetworkQueryProcessing->AddCreatedNetworkActor(_NetworkID, _spActor);
-		_spActor->SetNetworkID(_NetworkID);
-		m_NetworkActorContainer.insert(MakePair(_NetworkID, _spActor));
-	}
-}
-
-void UNetworkBaseController::InsertNetworkInitDataInQuery(const NETWORKRECEIVEINITDATA& _networkInitData)
-{
-	GetNetworkQueryProcessing()->InsertNetworkInitData(_networkInitData);
+	m_NetworkActorContainer.insert(MakePair(_NetworkID, _spActor));
 }
 
 SHPTR<UActor> UNetworkBaseController::FindNetworkActor(const _int _NetworkID)
@@ -71,14 +67,6 @@ SHPTR<UActor> UNetworkBaseController::FindNetworkActor(const _int _NetworkID)
 	const auto& iter = m_NetworkActorContainer.find(_NetworkID);
 	RETURN_CHECK(m_NetworkActorContainer.end() == iter, nullptr);
 	return iter->second;
-}
-
-void UNetworkBaseController::InsertNetworkProcessInQuery(UProcessedData&& _data)
-{
-	if (nullptr != m_spNetworkQueryProcessing)
-	{
-		m_spNetworkQueryProcessing->InsertQueryData(std::move(_data));
-	}
 }
 
 void UNetworkBaseController::SendTcpData(_char* _pData, short _tag, short _size)
@@ -89,78 +77,64 @@ void UNetworkBaseController::SendTcpData(_char* _pData, short _tag, short _size)
 
 void UNetworkBaseController::ServerTick()
 {
-	DWORD num_bytes;
-	ULONG_PTR key;
-	WSAOVERLAPPED* over = nullptr;
-	BOOL ret = GetQueuedCompletionStatus(m_IocpHandle, &num_bytes, &key, &over, INFINITE);
-	if (SERVER_END == num_bytes)
-		return;
-	UOverExp* ex_over = reinterpret_cast<UOverExp*>(over);
-
-	if (FALSE == ret) {
-		assert("Failed Connect");
-		if (ex_over->GetCompType() < OP_SEND_END)
-			Make::xdelete(ex_over);
-	}
-
-	if ((0 == num_bytes) && ((ex_over->GetCompType() == OP_TCP_RECV) || (ex_over->GetCompType() == OP_TCP_SEND))) {
-		assert("Failed Connect");
-		if (ex_over->GetCompType() < OP_SEND_END)
-			Make::xdelete(ex_over);
-	}
-
-	switch (ex_over->GetCompType()) {
-	case OP_TCP_SEND:
-	case OP_UDP_SEND:
-		Make::xdelete(ex_over);
-		break;
-	case OP_TCP_RECV:
-		CombineRecvPacket(ex_over, num_bytes);
-		RecvTcpPacket();
-		break;
+	size_t numBytes{ 0 };
+	_int result = UServerMethods::RecvTcpPacket(m_ClientTcpSocket, REF_OUT m_RecvTcpOverExp, REF_OUT numBytes);
+	if (result != SOCKET_ERROR) {
+		CombineRecvPacket(&m_RecvTcpOverExp, numBytes);
 	}
 }
 
 void UNetworkBaseController::NativePacket()
 {
-	RecvTcpPacket();
+	m_isNetworkTickRunning = true;
 }
 
-void UNetworkBaseController::CombineRecvPacket(UOverExp* _pOverExp, _llong _numBytes)
+void UNetworkBaseController::CombineRecvPacket(UOverExp* _pOverExp, size_t _numBytes)
 {
-	std::lock_guard Lock{ m_Lock };
+	if (0 >= _numBytes)
+		return;
+
 	// 버퍼를 조합한다. 
 	{
 		::memcpy(&m_TcpTotalBuffer[m_RemainBufferLength], _pOverExp->GetBufferAddress(0), _numBytes);
 	}
-	short moveBuffer{ 0 };
 	char* pBufferMove = &m_TcpTotalBuffer[0];
+	size_t reaminBytes = _numBytes;
 	// 만약 BufferLocation이 존재할 때
-	while (_numBytes != 0)
+	while (reaminBytes > 0)
 	{
 		// PacketSize를 구한다. 
 		PACKETHEAD PacketHead;
 		memcpy(&PacketHead, pBufferMove, PACKETHEAD_SIZE);
 		short CurrPacket = PacketHead.PacketSize + PACKETHEAD_SIZE;
+
+		short Bytes = reaminBytes - CurrPacket;
 		// 패킷의 현재 위치가 음수가 되는 경우면 
-		if ((_numBytes - CurrPacket) < 0)
+		if (0 > Bytes)
 		{
-			::memcpy(&m_TcpTotalBuffer[0], pBufferMove, _numBytes);
-			m_RemainBufferLength += _numBytes;
+			::memcpy(&m_TcpTotalBuffer[0], pBufferMove, reaminBytes);
+			m_RemainBufferLength = reaminBytes;
 			break;
 		}
 		ProcessPacket(&pBufferMove[PACKETHEAD_SIZE], PacketHead);
 		// Buffer의 위치를 옮긴다. 
-		_numBytes -= CurrPacket;
+		reaminBytes -= CurrPacket;
 		pBufferMove += CurrPacket;
-		moveBuffer += CurrPacket;
 	}
 	m_RemainBufferLength = 0;
 }
 
-void UNetworkBaseController::RecvTcpPacket()
+void UNetworkBaseController::InsertProcessedDataInActor(const UProcessedData& _ProcessedData)
 {
-	UServerMethods::RecvTcpPacket(m_ClientTcpSocket, REF_OUT m_RecvTcpOverExp);
+	SHPTR<UActor> spActor = FindNetworkActor(_ProcessedData.GetDataID());
+	if (nullptr != spActor)
+	{
+		spActor->ReceiveNetworkProcessData(_ProcessedData);
+	}
+	else
+	{
+		assert(nullptr != spActor);
+	}
 }
 
 void UNetworkBaseController::ServerThread(void* _pData)
@@ -168,20 +142,15 @@ void UNetworkBaseController::ServerThread(void* _pData)
 	UNetworkBaseController* pNetworkBaseController = static_cast<UNetworkBaseController*>(_pData);
 	RETURN_CHECK(nullptr == pNetworkBaseController, ;);
 	pNetworkBaseController->NativePacket();
-	g_threadID = 1;
 	while (pNetworkBaseController->m_isNetworkTickRunning)
 	{
 		pNetworkBaseController->ServerTick();
 	}
-	CloseHandle(pNetworkBaseController->m_IocpHandle);
 }
 
 void UNetworkBaseController::Free()
 {
-	std::atomic_thread_fence(std::memory_order_seq_cst);
 	m_isNetworkTickRunning = false;
-	PostQueuedCompletionStatus(m_IocpHandle, SERVER_END, 0, 0);
-	WaitForSingleObject(m_IocpHandle, INFINITE);
 	closesocket(m_ClientTcpSocket);
 	WSACleanup();
 }

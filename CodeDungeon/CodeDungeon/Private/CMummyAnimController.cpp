@@ -78,6 +78,7 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
 
     ClearTrigger();
     SetAnimState(-1);
+
     SHPTR<CMummy> spMummy = m_wpMummyMob.lock();
     SHPTR<UAnimModel> spAnimModel = spMummy->GetAnimModel();
 

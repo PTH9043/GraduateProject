@@ -41,15 +41,14 @@ void PROTOFUNC::MakeCollisionData(COLLISIONDATA* _pOut, LLONG _id, LLONG _enemyI
 	_pOut->set_enemyid(_enemyID);
 }
 
-void PROTOFUNC::MakeCharState(CHARSTATE* _pOut, LLONG _id, const VECTOR3& _vPos,
-	const VECTOR3& _vRotate, int _animstate, int _curAnimIndex, int _triggerOn)
+void PROTOFUNC::MakeCharState(CHARSTATE* _pOut, LLONG _id, const VECTOR3& _vPos, const VECTOR3& _vRotate,
+	int _animstate, int _curAnimIndex, int _triggerOn)
 {
 	assert(nullptr != _pOut);
 	_pOut->set_id(_id);
 	_pOut->set_posx(_vPos.x());
 	_pOut->set_posy(_vPos.y());
 	_pOut->set_posz(_vPos.z());
-	// rotate
 	_pOut->set_rotatex(_vRotate.x());
 	_pOut->set_rotatey(_vRotate.y());
 	_pOut->set_rotatez(_vRotate.z());
@@ -65,20 +64,19 @@ void PROTOFUNC::MakeCharState(CHARSTATE* _pOut, LLONG _id, const VECTOR3& _vPos,
 	_pOut->set_posx(_vPos.x());
 	_pOut->set_posy(_vPos.y());
 	_pOut->set_posz(_vPos.z());
-	// rotate
 	_pOut->set_rotatex(_vRotate.x());
 	_pOut->set_rotatey(_vRotate.y());
 	_pOut->set_rotatez(_vRotate.z());
 }
 
-void PROTOFUNC::MakeMobState(MOBSTATE* _pOut, LLONG _id, const VECTOR3& _vPos, const VECTOR3& _vRotate, int _animstate, int _curAnimIndex, bool _triggerOn, bool _foundOn, double _animtime)
+void PROTOFUNC::MakeMobState(MOBSTATE* _pOut, LLONG _id, const VECTOR3& _vPos, const VECTOR3& _vRotate,
+	int _animstate, int _curAnimIndex, bool _triggerOn, bool _foundOn, bool _damageOn, double _animtime)
 {
 	assert(nullptr != _pOut);
 	_pOut->set_id(_id);
 	_pOut->set_posx(_vPos.x());
 	_pOut->set_posy(_vPos.y());
 	_pOut->set_posz(_vPos.z());
-	// rotate
 	_pOut->set_rotatex(_vRotate.x());
 	_pOut->set_rotatey(_vRotate.y());
 	_pOut->set_rotatez(_vRotate.z());
@@ -86,22 +84,10 @@ void PROTOFUNC::MakeMobState(MOBSTATE* _pOut, LLONG _id, const VECTOR3& _vPos, c
 	_pOut->set_animationindex(_curAnimIndex);
 	_pOut->set_triggeron(_triggerOn);
 	_pOut->set_foundon(_foundOn);
+	_pOut->set_damageon(_damageOn);
 	_pOut->set_animtime(_animtime);
 }
 
-
-void PROTOFUNC::MakeMobState(MOBSTATE* _pOut, LLONG _id, const VECTOR3& _vPos, const VECTOR3& _vRotate)
-{
-	assert(nullptr != _pOut);
-	_pOut->set_id(_id);
-	_pOut->set_posx(_vPos.x());
-	_pOut->set_posy(_vPos.y());
-	_pOut->set_posz(_vPos.z());
-	// rotate
-	_pOut->set_rotatex(_vRotate.x());
-	_pOut->set_rotatey(_vRotate.y());
-	_pOut->set_rotatez(_vRotate.z());
-}
 
 /* =========== SC =============== */
 // Server To Client 

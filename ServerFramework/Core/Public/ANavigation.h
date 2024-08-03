@@ -27,10 +27,10 @@ public:
 public:
 	_bool NativeConstruct(const _string& _Paths);
 	// Compute Height
-	const _float  ComputeHeight(const Vector3& _vPosition);
+	void ComputeHeight(REF_OUT  Vector3& _vPosition);
 	void ComputeHeight(CSHPTRREF<ATransform> _spTransform);
 	// Move
-	_bool IsMove(const Vector3& _vPosition, SHPTR<ACell>& _spCell);
+	_bool IsMove(const Vector3& _vPosition, REF_OUT SHPTR<ACell>& _spCell);
 	_bool IsMove(_int _iCurOnCellIndex, const Vector3& _vPosition, SHPTR<ACell>& _spCell);
 	// Find
 	SHPTR<ACell> FindCell(const Vector3& _vPosition);
@@ -53,31 +53,27 @@ public:
 	CSHPTRREF<ACell> GetPrevCell() { return m_spPrevCell; }
 
 	SHPTR<ACell> GetCell(const _int _index) { return m_CellContainer[_index]; }
-
 	void SetCurCell(CSHPTRREF<ACell> newCell);
 	// Ready Neighbor
 	_bool ReadyNeighbor();
-
 	/*
 	@ Date: 2024-05-14, Writer: 이성현
 	@ Explain
 	-  슬라이딩 벡터 계산 함수.
 	*/
 	Vector3 ClampPositionToCell(const Vector3& position);
-
 	/*
 	@ Date: 2024-06-03, Writer: 이성현
 	@ Explain
 	-  A* 알고리즘
 	*/
 	_float Heuristic(const Vector3& a, const Vector3& b);
-	VECTOR<Vector3> ComputePath(PathFindingState& _PathFindingState);
-	PathFindingState StartPathFinding(SHPTR<ATransform> _spStartTr, SHPTR<ATransform> _spEndTr);
-	PathFindingState StartPathFinding(const Vector3 start, const Vector3 end);
-	PathFindingState StartPathFinding(const Vector3& start, const Vector3& end, CSHPTRREF<ACell> _startCell, CSHPTRREF<ACell> _endCell);
+	PathFindingState StartPathFinding(const Vector3& start, const Vector3& end, CSHPTRREF<ACell> _startCell, CSHPTRREF<ACell> _destCell);
 	bool StepPathFinding(PathFindingState& state);
 	VECTOR<Vector3> OptimizePath(const VECTOR<SHPTR<ACell>>& path, const Vector3& start, const Vector3& end);
 	bool LineTest(const Vector3& start, const Vector3& end);
+
+	SHPTR<ACell> ChooseRandomNeighborCell(int iterations);
 private:
 	virtual void Free() override;
 private:

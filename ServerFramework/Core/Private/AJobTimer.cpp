@@ -22,6 +22,8 @@ namespace Core {
 
 	void AJobTimer::TimerThread(const boost::system::error_code& _error)
 	{
+		std::atomic_thread_fence(std::memory_order_seq_cst);
+
 		TIMEREVENT TimerEvent;
 		auto CurrentTime = std::chrono::system_clock::now();
 
@@ -39,7 +41,7 @@ namespace Core {
 			return;
 		}
 
-		RegisterTimer(0);
+		RegisterTimer(1);
 	}
 
 	void AJobTimer::InsertTimerEvent(TIMEREVENT _TimerEvent)

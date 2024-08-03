@@ -52,4 +52,7 @@ void UFont::Render(DirectX::SpriteBatch* _pBatch, const D3D12_VIEWPORT& _tViewPo
 
 void UFont::Free()
 {
+	m_SpriteFont.reset();
+	m_spDevice.reset();
+	m_spGpuCommand.reset();
 }

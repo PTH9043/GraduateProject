@@ -46,40 +46,29 @@ public: /* get set */
 	SHPTR<AAnimation> GetCurAnimation() const;
 	SHPTR<AAnimation> GetNextAnimation() const;
 	SHPTR<APawn> GetOwner() const { return m_wpOwnerPawn.lock(); }
-	_bool IsOwnerPawnActive() const { return m_isOwnerPawnActive; }
-	_int GetPawnState() const { return m_iPawnState; }
+	const _int GetAnimState() const { return m_iAnimState; }
 
 	SHPTR<AAnimator> GetAnimator() { return m_spAnimator; }
-	const _double GetAccumulator() const { return m_dAccumulator; }
-	const _double GetElapsedTime() const { return m_dElapsedTime; }
 	const _string& GetInputTrigger() const { READ_SPINLOCK(m_TriggerLock); return m_strInputTrigger; }
 
+	AFastSpinLock& GetChangeOwnerDataLock() { return m_ChangeOwnerDataLock; }
+protected:
 	void SetSupplyLerpValue(const _float _fSupplyLerpValue);
-	void SetOwnerPawnActiveStrong(_bool _isOwnerPawnActive);
-	void SetOwnerPawnActiveWeak(_bool _isOwnerPawnActive);
-	void SetPawnState(_int _State);
 	void SetAnimState(_int _iAnimState);
 	void SetInputTrigger(const _string& _inputTrigger) { WRITE_SPINLOCK(m_TriggerLock);  this->m_strInputTrigger = _inputTrigger; }
-protected: /* get set */
-	void SetAccumulator(const _double& _dAccumulator) { this->m_dAccumulator = _dAccumulator; }
-	void SetElapsedTime(const _double& _dDelapsedTime) { this->m_dElapsedTime = _dDelapsedTime; }
-
 private:
 	virtual void Free() override;
 private:
-	_double							m_dAccumulator;
-	ATOMIC<_double>		m_dElapsedTime;
 	_string							m_strInputTrigger;
-	// Owner Pawn Active
-	ATOMIC<_bool>			m_isOwnerPawnActive;
-	ATOMIC<_int>				m_iPawnState;
-
 	AFastSpinLock				m_TriggerLock;
 	// Animator, OwenrPawn
 	SHPTR<AAnimator>	m_spAnimator;
 	WKPTR<APawn>			m_wpOwnerPawn;
 	// Anim State
 	ATOMIC<_int>				m_iAnimState;
+
+	// Owner data를 바꾸기 위한 함수
+	AFastSpinLock				m_ChangeOwnerDataLock;
 };
 
 END

@@ -17,35 +17,23 @@ namespace Server {
 
 	_bool CHarlequin::Start(const VOIDDATAS& _ReceiveDatas)
 	{
-		__super::Start(_ReceiveDatas);
 		SetAnimController(Create<CHarlequinAnimController>(GetCoreInstance(), ThisShared<CHarlequin>(),
 			"..\\..\\Resource\\Anim\\Harlequin\\", "Harlequin1_FBX.bin"));
-#ifndef CREATED_SERVERMOBDATA
-		MOBDATA* pMobData = static_cast<MOBDATA*>(_ReceiveDatas[0]);
-		// Setting Animation 
-		GetAnimController()->SetAnimation(pMobData->strAnimName);
-		GetTransform()->SetPos(pMobData->mWorldMatrix.Get_Pos());
-		GetTransform()->SetDirection(pMobData->mWorldMatrix.Get_Look());
-		GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
-		BringCellIndextoPosition();
-#else
-		MOBSERVERDATA* pMobData = static_cast<MOBSERVERDATA*>(_ReceiveDatas[0]);
-		GetAnimController()->SetAnimation(pMobData->iStartAnimIndex);
-		GetTransform()->SetNewWorldMtx(pMobData->mWorldMatrix);
-		GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
-		BringCellIndextoPosition();
-		SetSessionID(pMobData->iMobID);
-#endif
-		return true;
+
+		return __super::Start(_ReceiveDatas);
 	}
 
 	void CHarlequin::Tick(const _double& _dTimeDelta)
 	{
 	}
 
+	void CHarlequin::LateTick(const _double& _dTimeDelta)
+	{
+	}
+
 	void CHarlequin::State(SHPTR<ASession> _spSession, _int _MonsterState)
 	{
-		__super::State(_spSession, _MonsterState);
+	//	__super::State(_spSession, _MonsterState);
 	}
 
 	void CHarlequin::ProcessPacket(_int _type, void* _pData)
@@ -59,10 +47,6 @@ namespace Server {
 	}
 
 	void CHarlequin::Collision(APawn* _pPawn, const _double& _dTimeDelta)
-	{
-	}
-
-	void CHarlequin::ChangeCurrentFindPlayer(SESSIONID _CurPlayerSessionID, SESSIONID _ChangePlayerSessionID)
 	{
 	}
 

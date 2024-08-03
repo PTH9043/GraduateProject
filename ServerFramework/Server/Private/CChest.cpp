@@ -16,35 +16,23 @@ namespace Server {
 
 	_bool CChest::Start(const VOIDDATAS& _ReceiveDatas)
 	{
-		__super::Start(_ReceiveDatas);
+		_float4x4 Matrix = _float4x4::CreateScale(0.1f);
 		SetAnimController(Create<CChestAnimController>(GetCoreInstance(), ThisShared<CChest>(),
-			"..\\..\\Resource\\Anim\\Chest\\", "Chest 1_FBX.bin"));
-#ifndef CREATED_SERVERMOBDATA
-		MOBDATA* pMobData = static_cast<MOBDATA*>(_ReceiveDatas[0]);
-		// Setting Animation 
-		GetAnimController()->SetAnimation(pMobData->strAnimName);
-		GetTransform()->SetPos(pMobData->mWorldMatrix.Get_Pos());
-		GetTransform()->SetDirection(pMobData->mWorldMatrix.Get_Look());
-		GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
-		BringCellIndextoPosition();
-#else
-		MOBSERVERDATA* pMobData = static_cast<MOBSERVERDATA*>(_ReceiveDatas[0]);
-		GetAnimController()->SetAnimation(pMobData->iStartAnimIndex);
-		GetTransform()->SetNewWorldMtx(pMobData->mWorldMatrix);
-		GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
-		BringCellIndextoPosition();
-		SetSessionID(pMobData->iMobID);
-#endif
-		return true;
+			"..\\..\\Resource\\Anim\\Chest\\", "Chest 1_FBX.bin", Matrix));
+		return __super::Start(_ReceiveDatas);
 	}
 
 	void CChest::Tick(const _double& _dTimeDelta)
 	{
 	}
 
+	void CChest::LateTick(const _double& _dTimeDelta)
+	{
+	}
+
 	void CChest::State(SHPTR<ASession> _spSession, _int _MonsterState)
 	{
-		__super::State(_spSession, _MonsterState);
+	//	__super::State(_spSession, _MonsterState);
 	}
 
 	void CChest::ProcessPacket(_int _type, void* _pData)
@@ -58,10 +46,6 @@ namespace Server {
 	}
 
 	void CChest::Collision(APawn* _pPawn, const _double& _dTimeDelta)
-	{
-	}
-
-	void CChest::ChangeCurrentFindPlayer(SESSIONID _CurPlayerSessionID, SESSIONID _ChangePlayerSessionID)
 	{
 	}
 

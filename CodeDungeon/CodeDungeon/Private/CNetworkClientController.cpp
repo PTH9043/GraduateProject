@@ -4,7 +4,6 @@
 #include "CMainCamera.h"
 #include "UGameInstance.h"
 #include "UTransform.h"
-#include "CNetworkQueryProcessor.h"
 #include "UMethod.h"
 #include "CMummy.h"
 #include "CSarcophagus.h"
@@ -26,13 +25,20 @@ HRESULT CNetworkClientController::NativeConstruct(const _string& _strIPAddress, 
 	return S_OK;
 }
 
-void CNetworkClientController::MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer)
+void CNetworkClientController::MakeActorsInit(const VECTOR<SHPTR<UActor>>& _actorContainer)
 {
-#ifdef _ENABLE_PROTOBUFF
+	{
+		std::mutex Lock;
+		std::lock_guard<std::mutex> LL(Lock);
+		DisableNetworkTickRunning();
+	}
+	ThreadMiliRelax(100);
 
 	CreateServerMobData();
 
-	for (auto& CharInitData : GetNetworkInitDataContainer())
+	const NETWORKINITDATACONTAINER& InitNetworkDataContainer = GetNetworkInitDataContainer();
+
+	for (auto& CharInitData : InitNetworkDataContainer)
 	{
 		switch (CharInitData.second.iType)
 		{
@@ -42,12 +48,11 @@ void CNetworkClientController::MakeActors(const VECTOR<SHPTR<UActor>>& _actorCon
 			// Main Camera Load 
 			{
 				CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_USERWARRIORANIMCONTROLLER };
-				CWarriorPlayer::PLAYERDESC PlayerDesc{ std::static_pointer_cast<UCamera>(_actorContainer[MAINCAMERA_ACTORS_ID])};
+				CWarriorPlayer::PLAYERDESC PlayerDesc{ std::static_pointer_cast<UCamera>(_actorContainer[MAINCAMERA_ACTORS_ID]) };
 				SHPTR<CWarriorPlayer> spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
 					PROTO_ACTOR_WARRIORPLAYER, { &CharDesc, &PlayerDesc }));
-
 				spGameInstance->RegisterCurrentPlayer(spWarriorPlayer);
-				AddCreatedNetworkActor(CharInitData.first, spWarriorPlayer);
+				InsertNetworkActorInContainer(CharInitData.first, spWarriorPlayer);
 			}
 		}
 		break;
@@ -58,17 +63,33 @@ void CNetworkClientController::MakeActors(const VECTOR<SHPTR<UActor>>& _actorCon
 				CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_NETWORKWARRIORANIMCONTROLLER, true };
 				SHPTR<CWarriorPlayer> spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
 					PROTO_ACTOR_WARRIORPLAYER, { &CharDesc }));
-
-		//		spGameInstance->AddCollisionPawnList(spWarriorPlayer);
-				AddCreatedNetworkActor(CharInitData.first, spWarriorPlayer);
 				spGameInstance->AddPlayerInContainer(spWarriorPlayer);
+				InsertNetworkActorInContainer(CharInitData.first, spWarriorPlayer);
 			}
 		}
 		break;
 		}
 	}
-	__super::MakeActors(_actorContainer);
-#endif
+	__super::MakeActorsInit(_actorContainer);
+}
+
+void CNetworkClientController::MakeActorsTick()
+{
+	for (auto& CharInitData : GetNetworkInitDataContainer())
+	{
+		switch (CharInitData.second.iType)
+		{
+			SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+			{
+				CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_NETWORKWARRIORANIMCONTROLLER, true };
+				SHPTR<CWarriorPlayer> spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
+					PROTO_ACTOR_WARRIORPLAYER, { &CharDesc }));
+				spGameInstance->AddPlayerInContainer(spWarriorPlayer);
+				InsertNetworkActorInContainer(CharInitData.first, spWarriorPlayer);
+			}
+		}
+	}
+	__super::MakeActorsTick();
 }
 
 void CNetworkClientController::NativePacket()
@@ -78,38 +99,36 @@ void CNetworkClientController::NativePacket()
 
 void CNetworkClientController::ProcessPacket(_char* _pPacket, PACKETHEAD _PacketHead)
 {
-#ifdef _ENABLE_PROTOBUFF
 	size_t value = GetNetworkActorContainer().size();
 
 	switch (_PacketHead.PacketType)
 	{
-		case TAG_SC::TAG_SC_CONNECTSUCCESS:
-		{
-			ConnectSuccessState(_pPacket, _PacketHead);
-		}
-		break; 
-		case TAG_SC::TAG_SC_OTHERCLIENTLOGIN:
-		{
-			OtherClientLoginState(_pPacket, _PacketHead);
-		}
-		break;
-		case TAG_SC::TAG_SC_PLAYERSTATE:
-		{
-			PlayerAnimState(_pPacket, _PacketHead);
-		}
-		break;
-		case TAG_SC::TAG_SC_SELFPLAYERMOVE:
-		{
-			SelfPlayerMoveState(_pPacket, _PacketHead);
-		}
-		break;
-		case TAG_SC::TAG_SC_MONSTERSTATE:
-		{
-			MonsterState(_pPacket, _PacketHead);
-		}
-		break;
+	case TAG_SC::TAG_SC_CONNECTSUCCESS:
+	{
+		ConnectSuccessState(_pPacket, _PacketHead);
 	}
-#endif
+	break;
+	case TAG_SC::TAG_SC_OTHERCLIENTLOGIN:
+	{
+		OtherClientLoginState(_pPacket, _PacketHead);
+	}
+	break;
+	case TAG_SC::TAG_SC_PLAYERSTATE:
+	{
+		PlayerAnimState(_pPacket, _PacketHead);
+	}
+	break;
+	case TAG_SC::TAG_SC_SELFPLAYERMOVE:
+	{
+		SelfPlayerMoveState(_pPacket, _PacketHead);
+	}
+	break;
+	case TAG_SC::TAG_SC_MONSTERSTATE:
+	{
+		MonsterState(_pPacket, _PacketHead);
+	}
+	break;
+	}
 }
 
 #ifdef _ENABLE_PROTOBUFF
@@ -135,10 +154,6 @@ void CNetworkClientController::CreateServerMobData()
 	UNORMAP<_int, SHPTR<CMummy>> MuumyContainer;
 
 	bool isNetwork = true;
-	if (spGameInstance->GetNetworkOwnerID() == 61)
-	{
-		isNetwork = false;
-	}
 
 	for (auto& iter : MobServerData)
 	{
@@ -148,7 +163,7 @@ void CNetworkClientController::CreateServerMobData()
 		{
 			CItemChest::CHARACTERDESC chestDesc{ PROTO_RES_CHESTANIMMODEL, PROTO_COMP_CHESTANIMCONTROLLER };
 			SHPTR<CItemChest> Chest = std::static_pointer_cast<CItemChest>(spGameInstance->CloneActorAdd(PROTO_ACTOR_CHEST, { &chestDesc, &iter }));
-			AddCreatedNetworkActor(iter.iMobID, Chest);
+			InsertNetworkActorInContainer(iter.iMobID, Chest);
 		}
 			break;
 		case TAG_CHAR::TAG_SARCOPHAGUS_LAYING:
@@ -156,7 +171,7 @@ void CNetworkClientController::CreateServerMobData()
 			CSarcophagus::CHARACTERDESC SarcDesc{ PROTO_RES_SARCOPHAGUSLYINGANIMMODEL, PROTO_COMP_SARCOPHAGUSANIMCONTROLLER };
 			SHPTR<CSarcophagus> Saracophagus = std::static_pointer_cast<CSarcophagus>(spGameInstance->CloneActorAdd(
 				PROTO_ACTOR_SARCOPHAGUSLYING, { &SarcDesc, &iter }));
-			AddCreatedNetworkActor(iter.iMobID, Saracophagus);
+			InsertNetworkActorInContainer(iter.iMobID, Saracophagus);
 			Saracophagus->SetSarcophagusType(CSarcophagus::SARCOTYPE::TYPE_LYING);
 			SaracophagusContainer.insert(MakePair(iter.iMobParentsID, Saracophagus.get()));
 		}
@@ -166,7 +181,7 @@ void CNetworkClientController::CreateServerMobData()
 			CSarcophagus::CHARACTERDESC SarcDesc{ PROTO_RES_SARCOPHAGUSSTANDINGANIMMODEL, PROTO_COMP_SARCOPHAGUSANIMCONTROLLER };
 			SHPTR<CSarcophagus> Saracophagus = std::static_pointer_cast<CSarcophagus>(spGameInstance->CloneActorAdd(
 				PROTO_ACTOR_SARCOPHAGUSLYING, { &SarcDesc, &iter }));
-			AddCreatedNetworkActor(iter.iMobID, Saracophagus);
+			InsertNetworkActorInContainer(iter.iMobID, Saracophagus);
 			Saracophagus->SetSarcophagusType(CSarcophagus::SARCOTYPE::TYPE_STANDING);
 			SaracophagusContainer.insert(MakePair(iter.iMobParentsID, Saracophagus.get()));
 		}
@@ -181,7 +196,7 @@ void CNetworkClientController::CreateServerMobData()
 
 			CMummy::CHARACTERDESC MummyDesc{ PROTO_RES_MUMMYANIMMODEL, protoName };;
 			SHPTR<CMummy> Mummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MUMMY, { &MummyDesc, &iter }));	
-			AddCreatedNetworkActor(iter.iMobID, Mummy);
+			InsertNetworkActorInContainer(iter.iMobID, Mummy);
 			Mummy->SetMummyType(CMummy::TYPE_LYING);
 			MuumyContainer.insert(MakePair(Mummy->GetNetworkID(), Mummy));
 		}
@@ -196,7 +211,7 @@ void CNetworkClientController::CreateServerMobData()
 
 			CMummy::CHARACTERDESC MummyDesc{ PROTO_RES_MUMMYANIMMODEL, protoName };;
 			SHPTR<CMummy> Mummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MUMMY, { &MummyDesc, &iter }));
-			AddCreatedNetworkActor(iter.iMobID, Mummy);
+			InsertNetworkActorInContainer(iter.iMobID, Mummy);
 			Mummy->SetMummyType(CMummy::TYPE_STANDING);
 			MuumyContainer.insert(MakePair(Mummy->GetNetworkID(), Mummy));
 		}
@@ -211,7 +226,7 @@ void CNetworkClientController::CreateServerMobData()
 
 			CAnubis::CHARACTERDESC Desc{ PROTO_RES_ANUBISANIMMODEL, protoName };;
 			SHPTR<UActor> Anubis = std::static_pointer_cast<UActor>(spGameInstance->CloneActorAdd(PROTO_ACTOR_ANUBIS, { &Desc, &iter }));
-			AddCreatedNetworkActor(iter.iMobID, Anubis);
+			InsertNetworkActorInContainer(iter.iMobID, Anubis);
 		}
 		break;
 		case TAG_CHAR::TAG_MIMIC:
@@ -223,7 +238,7 @@ void CNetworkClientController::CreateServerMobData()
 			}
 			CAnubis::CHARACTERDESC Desc{ PROTO_RES_MIMICANIMMODEL, protoName };;
 			SHPTR<UActor> Anubis = std::static_pointer_cast<UActor>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MIMIC, { &Desc, &iter }));
-			AddCreatedNetworkActor(iter.iMobID, Anubis);
+			InsertNetworkActorInContainer(iter.iMobID, Anubis);
 		}
 		break;
 		case TAG_CHAR::TAG_MINOTAUR:
@@ -235,7 +250,7 @@ void CNetworkClientController::CreateServerMobData()
 			}
 			CAnubis::CHARACTERDESC Desc{ PROTO_RES_MINOTAURANIMMODEL, protoName };;
 			SHPTR<UActor> Anubis = std::static_pointer_cast<UActor>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MINOTAUR, { &Desc, &iter }));
-			AddCreatedNetworkActor(iter.iMobID, Anubis);
+			InsertNetworkActorInContainer(iter.iMobID, Anubis);
 		}
 		break;
 		case TAG_CHAR::TAG_HARLEQUINN:
@@ -247,7 +262,7 @@ void CNetworkClientController::CreateServerMobData()
 			}
 			CAnubis::CHARACTERDESC Desc{ PROTO_RES_HARLEQUINNANIMMODEL, PROTO_COMP_NETWORKHARLEQUINNANIMCONTROLLER };;
 			SHPTR<UActor> Anubis = std::static_pointer_cast<UActor>(spGameInstance->CloneActorAdd(PROTO_ACTOR_HARLEQUINN, { &Desc, &iter }));
-			AddCreatedNetworkActor(iter.iMobID, Anubis);
+			InsertNetworkActorInContainer(iter.iMobID, Anubis);
 		}
 		break;
 		}
@@ -286,41 +301,33 @@ void CNetworkClientController::OtherClientLoginState(_char* _pPacket, const PACK
 	{
 		NETWORKRECEIVEINITDATA networkRecvInitData(csOtherClientLogin.id(),
 			csOtherClientLogin.cellindex(), csOtherClientLogin.type());
-		switch (GetSceneID())
-		{
-		case SCENE_LOGO:
-			AddNetworkInitData(networkRecvInitData.iNetworkID, networkRecvInitData);
-			break;
-		case SCENE_STAGE1:
-			InsertNetworkInitDataInQuery(networkRecvInitData);
-			break;
-		}
+		AddNetworkInitData(networkRecvInitData.iNetworkID, networkRecvInitData);
 	}
 }
 
 void CNetworkClientController::PlayerAnimState(_char* _pPacket, const PACKETHEAD& _PacketHead)
 {
-	CHARSTATE PlayerState;
+	static CHARSTATE PlayerState;
 	PlayerState.ParseFromArray(_pPacket, _PacketHead.PacketSize);
 	//// 해당하는 ID에 데이터 전달
-	InsertNetworkProcessInQuery(std::move(UProcessedData(PlayerState.id(), PlayerState, TAG_SC_PLAYERSTATE,
-		_PacketHead.PacketSize)));
+	InsertProcessedDataInActor(UProcessedData(PlayerState.id(), PlayerState, TAG_SC_PLAYERSTATE,
+		_PacketHead.PacketSize));
 }
 
 void CNetworkClientController::SelfPlayerMoveState(_char* _pPacket, const PACKETHEAD& _PacketHead)
 {
-	SC_SEEPLAYERMOVE selfPlayerMove;
+	static SC_SEEPLAYERMOVE selfPlayerMove;
 	selfPlayerMove.ParseFromArray(_pPacket, _PacketHead.PacketSize);
 	//// 해당하는 ID에 데이터 전달
-	InsertNetworkProcessInQuery(std::move(UProcessedData(selfPlayerMove.id(), selfPlayerMove,
-		TAG_SC_SELFPLAYERMOVE, _PacketHead.PacketSize)));
+	InsertProcessedDataInActor(UProcessedData(selfPlayerMove.id(), selfPlayerMove,
+		TAG_SC_SELFPLAYERMOVE, _PacketHead.PacketSize));
 }
 
 void CNetworkClientController::MonsterState(_char* _pPacket, const PACKETHEAD& _PacketHead)
 {
-	MOBSTATE scMonsterState;
+	static MOBSTATE scMonsterState;
 	scMonsterState.ParseFromArray(_pPacket, _PacketHead.PacketSize);
-	InsertNetworkProcessInQuery(UProcessedData(scMonsterState.id(), scMonsterState,
+	InsertProcessedDataInActor(UProcessedData(scMonsterState.id(), scMonsterState,
 		TAG_SC_MONSTERSTATE, _PacketHead.PacketSize));
 }
 

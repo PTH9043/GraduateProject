@@ -39,12 +39,12 @@ namespace Core {
 		return Load(_Paths);
 	}
 
-	const _float ANavigation::ComputeHeight(const Vector3& _vPosition)
+	void ANavigation::ComputeHeight(REF_OUT  Vector3& _vPosition)
 	{
-		RETURN_CHECK(0 == m_CellContainer.size(), _vPosition.y);
+		RETURN_CHECK(0 == m_CellContainer.size(), ;);
 
 		if (nullptr != m_spCurCell) {
-			return m_spCurCell->ComputeHeight(_vPosition);
+			_vPosition.y = m_spCurCell->ComputeHeight(_vPosition);
 		}
 		else {
 			Vector3 vLine{};
@@ -62,26 +62,21 @@ namespace Core {
 			}
 
 			if (nullptr != closestCell) {
-				m_spCurCell = closestCell;
-				return m_spCurCell->ComputeHeight(_vPosition);
+				_vPosition.y = closestCell->ComputeHeight(_vPosition);
 			}
 		}
-
-		return _vPosition.y;
 	}
 
 
 	void ANavigation::ComputeHeight(CSHPTRREF<ATransform> _spTransform)
 	{
 		RETURN_CHECK(nullptr == _spTransform, ;);
-		_float vValue = ComputeHeight(_spTransform->GetPos());
-
-		Vector3 vPos = _spTransform->GetPos();
-		vPos.y = vValue;
+		Vector3 vPos;
+		ComputeHeight(REF_OUT vPos);
 		_spTransform->SetPos(vPos);
 	}
 
-	_bool ANavigation::IsMove(const Vector3& _vPosition, SHPTR<ACell>& _spCell) {
+	_bool ANavigation::IsMove(const Vector3& _vPosition, REF_OUT SHPTR<ACell>& _spCell) {
 		RETURN_CHECK(0 == m_CellContainer.size(), _vPosition.y);
 
 		if (-1 == m_iCurIndex || m_iCurIndex >= (m_CellContainer).size()) {
@@ -395,49 +390,32 @@ namespace Core {
 		return delta.x + delta.y + delta.z;
 	}
 
-	VECTOR<Vector3> ANavigation::ComputePath(PathFindingState& _PathFindingState)
-	{
-		return std::move(OptimizePath(_PathFindingState.path, _PathFindingState.vStartPos, _PathFindingState.vEndPos));
-	}
-
-	PathFindingState ANavigation::StartPathFinding(SHPTR<ATransform> _spStartTr, SHPTR<ATransform> _spEndTr)
-	{
-		Vector3 vStart = _spStartTr->GetPos();
-		Vector3 vEnd = _spEndTr->GetPos();
-		return StartPathFinding(vStart, vEnd, FindCell(vStart), FindCell(vEnd));
-	}
-
-	PathFindingState ANavigation::StartPathFinding(const Vector3 start, const Vector3 end)
-	{
-		return StartPathFinding(start, end, FindCell(start), FindCell(end));
-	}
-
 	PathFindingState ANavigation::StartPathFinding(const Vector3& start, const Vector3& end, CSHPTRREF<ACell> _startCell, CSHPTRREF<ACell> _endCell)
 	{
 		PathFindingState state;
-		if (nullptr == _startCell || nullptr == _endCell)
-			return state;
-
 		state.endCell = _endCell;
 
 		SHPTR<ACell> startCell = _startCell;
 		state.openSet.push({ startCell, 0, Heuristic(start, end), 0, nullptr });
 		state.costSoFar[startCell] = 0;
 
-		state.vStartPos = start;
-		state.vEndPos = _endCell->GetCenterPos();
-		state.isPathFound = true;
 		return state;
 	}
 
 	bool ANavigation::StepPathFinding(PathFindingState& state)
 	{
+		if (state.endCell == nullptr)
+			return false;
+
 		if (state.openSet.empty()) {
 			return true; // 경로를 찾지 못함
 		}
 
 		CellPathNode current = state.openSet.top();
 		state.openSet.pop();
+
+		if (current.cell == nullptr)
+			return false;
 
 		if (current.cell == state.endCell) {
 			// 경로를 추적하여 반환
@@ -452,6 +430,9 @@ namespace Core {
 		for (int neighborIndex : current.cell->GetNeighbor()) {
 			if (neighborIndex == -1) continue;
 			SHPTR<ACell> neighbor = FindCellWithoutUpdate(neighborIndex);
+
+			if (neighbor == nullptr)
+				return false;
 
 			_float newCost = state.costSoFar[current.cell] + Heuristic(current.cell->GetCenterPos(), neighbor->GetCenterPos());
 			if (state.costSoFar.find(neighbor) == state.costSoFar.end() || newCost < state.costSoFar[neighbor]) {
@@ -484,7 +465,7 @@ namespace Core {
 		straightPath.reserve(optimizedPath.size());
 
 		Vector3 lastPoint = start;
-	//	straightPath.push_back(lastPoint);
+		straightPath.push_back(lastPoint);
 
 		for (size_t i = 1; i < optimizedPath.size() - 1; ++i) {
 			if (!LineTest(lastPoint, optimizedPath[i + 1])) {
@@ -529,5 +510,40 @@ namespace Core {
 			}
 		}
 		return true;
+	}
+
+	SHPTR<ACell> ANavigation::ChooseRandomNeighborCell(int iterations)
+	{
+		RETURN_CHECK(nullptr == m_spCurCell, nullptr);
+
+		SHPTR<ACell> currentCell = m_spCurCell;
+
+		for (int i = 0; i < iterations; ++i) {
+			const std::array<int, ACell::POINT_END>& neighbors = currentCell->GetNeighbor();
+			std::vector<int> validNeighbors;
+
+			// Collect all valid neighbor indices
+			for (int neighborIndex : neighbors) {
+				if (neighborIndex != -1) {
+					validNeighbors.push_back(neighborIndex);
+				}
+			}
+			RETURN_CHECK(validNeighbors.empty(), nullptr);
+
+			// Seed the random number generator
+			std::srand(static_cast<unsigned>(std::time(nullptr)));
+
+			// Choose a random neighbor index
+			int randomIndex = std::rand() % validNeighbors.size();
+
+			SHPTR<ACell> neighborCell = FindCellWithoutUpdate(validNeighbors[randomIndex]);
+
+			RETURN_CHECK(nullptr == neighborCell, nullptr);
+
+			// Update currentCell to the chosen neighbor
+			currentCell = neighborCell;
+		}
+
+		return currentCell;
 	}
 }

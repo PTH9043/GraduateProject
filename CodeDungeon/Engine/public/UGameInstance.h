@@ -71,7 +71,6 @@ class USwapChain;
 class UFont;
 class UPlayer;
 class UNetworkSender;
-class UNetworkQueryProcessing;
 
 struct PICKINGDESC;
 struct WAITCHECKACTOR;
@@ -107,7 +106,6 @@ public:
 	void LateTick(const _double& _dTimeDelta);
 	void RenderBegin();
 	void RenderEnd();
-
 	void SetImGuiContext(ImGuiContext* _pContext);
 public:
 	HRESULT	OnWindowResize(const _uint& _iWinSizeX, const _uint& _iWinSizeY, const GRAPHICDESC::WINMODE _eWindowMode);
@@ -124,7 +122,6 @@ public:
 	CSHPTRREF<UTableDescriptor>	GetComputeTableDescriptor() const;
 	CSHPTRREF<URootSignature>	GetRootSignature() const;
 	CSHPTRREF<USwapChain> GetSwapChain() const;
-
 public: /*  GraphicDevice */
 	const _bool	IsGamePaused() const;
 	const _bool	IsScreenMinimized() const;
@@ -137,17 +134,14 @@ public: /*  GraphicDevice */
 	CSHPTRREF<GRAPHICDESC> GetGraphicDesc() const;
 	// Ready
 	SHPTR<UTexture>		GetDefaultBackTexture() const;
-
 public: /* ShaderBufferManager*/
 	void	 BindGlobalBuffer(const GLOBAL_CBUFFERTYPE _eGrobalCBuffer, CSHPTRREF<UCommand> _spCommand, const void* _pBuffer, const _uint _iSize);
 	HRESULT GetGlobalConstantBuffer(const GLOBAL_CBUFFERTYPE _eGrobalCBuffer, SHPTRREF<UGlobalConstantBuffer> _spGrobalConstantBuffer);
 	HRESULT GetPreAllocatedConstantBuffer(const PREALLOCATED_CBUFFERTYPE _ePreAllocatedCBufferType, SHPTRREF<UShaderConstantBuffer> _spShaderConstantBuffer);
-
 public: /* TimerManager */
 	HRESULT CreateTimer(const _wstring& _wstrName);
 	SHPTR<UTimer> CreateTimerAdd(const _wstring& _wstrName);
 	HRESULT RemoveTimer(const _wstring& _wstrName);
-
 public: /* InputManager*/
 	void AddKeyMethod( _ubyte _bFirstKeyID, const _wstring& _wstrSecondsKeyName, const KEYACTIONFUNC& _keyMethod);
 	void DeleteKeyMethod( _ubyte _bFirstKeyID, const _wstring& _wstrSecondsKeyName);
@@ -175,22 +169,18 @@ public: /* ActorManager */
 	SHPTR<UActor> CloneActorAdd(const _wstring& _wstrProto, const VOIDDATAS& _stDatas = VOIDDATAS{});
 	SHPTR<UActor> CloneActorAddAndNotInLayer(const _wstring& _wstrProto, const VOIDDATAS& _stDatas = VOIDDATAS{});
 	void RemoveActor(CSHPTRREF<UActor> _spActor);
-
 public: /*  ComponentManager */
 	HRESULT AddPrototype(const _wstring& _wstrPrototypes, CSHPTRREF<UComponent> _spComponent);
 	SHPTR<UComponent> CloneComp(const _wstring& _wstrPrototypes, const VOIDDATAS& _stDatas = VOIDDATAS{});
-
 public: /* ResourceManager*/
 	HRESULT AddPrototype(const _wstring& _wstrPrototype, const CLONETYPE& _eCloneType, CSHPTRREF<UResource> _spResource);
 	SHPTR<UResource> CloneResource(const _wstring& _wstrPrototype, const VOIDDATAS& _stDatas = VOIDDATAS{});
 	void		FindResourceProtoTag(CSHPTRREF<UResource> _spResource, _wstring& _wstrResourceTag);
-
 	void AddPipeLineState(const _wstring& _wstrName, const ComPtr<Dx12PipelineState>& _cpPipeLineState);
 	void SettingPipeLineState(const _wstring& _wstrName, CSHPTRREF<UCommand> _spCommand);
 public: /* SceneManager*/
 	void OutLightControlInfo(LIGHTPARAM& _stLightControl);
 	void ChangeLightCamIndex(const CAMID& _iID);
-
 	CSHPTRREF<UScene> GetCurScene() const;
 	void RegisterScene(CSHPTRREF<UScene> _spScene);
 	void RegisterSceneWithOutLoadingData(CSHPTRREF<UScene> _spScene);
@@ -204,11 +194,9 @@ public: /* SceneManager*/
 	HRESULT DeleteLight(const LIGHTTYPE& _eLightType, const _uint& _iIndex);
 	// Clear
 	HRESULT ClearLight();
-
 public: /*  RenderTargetManager */
 	HRESULT		AddRenderTargetGroup(const RTGROUPID& _eGroupID, const std::vector<RTDESC>& _rtVec);
 	void					RemoveRenderTargetGroup(const RTGROUPID _eGroupID);
-
 	// OMSetRenderTarget 
 	void					OmSetRenderTargets(CSHPTRREF<UCommand> _spCommand, const RTGROUPID& _eGroupID, const _uint _index, const _uint _iOffset);
 	void					OmSetRenderTargets(CSHPTRREF<UCommand> _spCommand, const RTGROUPID& _eGroupID);
@@ -221,32 +209,24 @@ public: /*  RenderTargetManager */
 	// Get RT Group 
 	SHPTR<URenderTargetGroup>	 FindRenderTargetGroup(const RTGROUPID& _eGroupID);
 	SHPTR<UTexture> FindRenderTargetTexture(const RTGROUPID _eGroupID, const RTOBJID _eObjID);
-
 public: /* PipeLine */
 	void RegisterCameraInPipeline(CSHPTRREF<UCamera> _spCamera, CAMID& _iCamID,
 		const VIEWPROJMATRIX& _stViewProjMatrix, const CAMERATYPE _eType = CAMERATYPE::OTHER);
 	void RemoveCameraInPipeLine(CAMID _CamID);
-
 	_bool IsFrustomContains(const _float3& _vPos, const _float _fRadius, const CAMID& _iCamID = MAIN_CAMERA_ID);
-
 	const _float4x4 GetMainCamViewMatrix() const;
 	const _float4x4& GetMainCamProjMatrix() const;
 	const _float3& GetMainCamPosition();
-
 	const _float4x4 GetCamViewMatrix(const CAMID& _iID) const;
 	const _float4x4& GetCamProjMatrix(const CAMID& _iID) const;
 	const _float3& GetCameraPosition(const CAMID& _iID);
 	SHPTR<UTransform> GetMainCameraTransform();
 	const _float GetCamFar(const CAMID& _iID);
-
 	void ChangeRenderCamera(CSHPTRREF<UCamera> _spCamera);
 	void ChangeRenderCamera(CAMID _iID);
-
 	void AddRenderCamList(CSHPTRREF<UCamera> _spCamera);
 	void AddRenderCamList(CAMID _iID);
-
 	const CAMID GetRenderCamID() const;
-
 public: /* FilePath Manager*/
 	SHPTR<FILEGROUP> FindFolder(const PATHS& _vecFolderList);
 	// 같은 이름을 가진 폴더를 찾아서 리턴한다. 단 PatentsFolderName이 비어있다면 최상위 폴더를 찾아서 리턴, 입력했으면 상위 폴더의 이름까지 검색한다. 
@@ -295,18 +275,17 @@ public: /* AudioSystemManager*/
 	SHPTR<USound> BringSound(const _int _Index);
 	SHPTR<USound> BringSound(const _wstring& _wstrSoundName);
 	void HandleSoundsForAnimation(CSHPTRREF<UCharacter> _Owner, const _wstring& animName, const _wstring& SoundName, _float startThreshold, _float endThreshold);
-void HandleSoundsForAnimationWithManyChannels(CSHPTRREF<UCharacter> _Owner, const _wstring& animName, const _wstring& SoundName, _float startThreshold, _float endThreshold);
-
+	void HandleSoundsForAnimationWithManyChannels(CSHPTRREF<UCharacter> _Owner, const _wstring& animName, const _wstring& SoundName, _float startThreshold, _float endThreshold);
 public: /* NetworkManager */
-	void StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController, CSHPTRREF<UNetworkQueryProcessing> _spNetworkQueryProcessing);
-	void MakeActors(const VECTOR<SHPTR<UActor>>& _actorContainer);
+	void StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController);
+	void MakeActorsInit(const VECTOR<SHPTR<UActor>>& _actorContainer);
 	void InsertSendTcpPacketInQuery(_char* _pPacket, _short _PacketType, _short _PacketSize);
 	void InsertSendProcessPacketInQuery(UProcessedData&& _ProcessData);
 	SHPTR<UActor> FindNetworkActor(const _int _NetworkID);
 	void NetworkEnd();
 	void SetSceneIDToNetController(const _int _iSceneID);
 	const _llong GetNetworkOwnerID() const;
-	const _bool IsNetworkResourceRecvSuccess() const;
+	void DisableNetworkTickRunning();
 	/*
 	@ Date: 2024-02-04, Writer: 박태현
 	@ Explain
@@ -327,7 +306,6 @@ public: /* CharacterManager*/
 	void RemoveCollisionPawn(CSHPTRREF<UPawn> _spPawn);
 	void RemovePlayerInContainer(CSHPTRREF<UPlayer> _spPlayer);
 	void AddPlayerInContainer(SHPTR<UPlayer> _spPlayer);
-
 	SHPTR<UPlayer> FindPlayerToNetworkID(_int _iNetworkID);
 	SHPTR<UPlayer> FindPlayerToDistance(const _float3& _vPos);
 public: /* Material Manager*/
@@ -348,20 +326,17 @@ public: /* Picking */
 	const PICKINGDESC GetPickDesc();
 	_bool PickingMesh(const _float3& _RayPos, const _float3& _RayDir, CSHPTRREF<UPawn> _spPawn, CSHPTRREF<UVIBuffer> _spVIBuffer,
 		_float* _pDist, _float3* _pOut);
-
 public: /* Font Manager */
 	HRESULT FontCreate(const _wstring& _wstrFontName, const _wstring& _wstrPath);
 	SHPTR<UFont> FontCreateAdd(const _wstring& _wstrFontName, const _wstring& _wstrPath);
 	SHPTR<UFont> AddFont(const _wstring& _wstrFontName);
 	void ReleaseOriginFont(const _wstring& _wstrFontName);
 	void RemoveFont(CSHPTRREF<UFont> _spFont);
-
 private: /* Ready Datas */
 	HRESULT ReadyResource(const OUTPUTDATA& _stData);
 	HRESULT ReadyComp(const OUTPUTDATA& _stData);
 	HRESULT ReadyActor(const OUTPUTDATA& _stData);
 	HRESULT ReadyRenderTarget(const OUTPUTDATA& _stData);
-
 public: //Renderer Fog Bool
 	void TurnOnFog();
 	void TurnOffFog();
@@ -377,8 +352,8 @@ public: //Renderer Fog Bool
 	void PauseGame();
 	void ResumeGame();
 private:
-	_bool															m_isGamming;
-	_bool				m_isPause = false;
+	_bool																	m_isGamming;
+	_bool																	m_isPause = false;
 
 	SHPTR<UGraphicDevice>								m_spGraphicDevice;
 	SHPTR<UShaderBufferManager>				m_spShaderBufferManager;
@@ -401,7 +376,6 @@ private:
 	SHPTR< UMaterialManager>						m_spMaterialManager;
 
 	SHPTR<URenderer>										m_spRenderer;
-	SHPTR< UNetworkQueryProcessing>		m_spNetworkQueryProcessing;
 	SHPTR< UNetworkSender>							m_spNetworkSender;
 
 	SHPTR< UFontManager>								m_spFontMananger;

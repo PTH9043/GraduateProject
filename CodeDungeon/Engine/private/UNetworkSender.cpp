@@ -4,10 +4,10 @@
 #include "ServerUtility.h"
 
 UNetworkSender::UNetworkSender(SHPTR<UNetworkBaseController> _spNetworkBaseController) :
-	m_pClientTcpSocket{NULL},
-	m_SendQuery{}
+	m_pClientTcpSocket{NULL}, m_SendQuery{}, m_pOverExp{nullptr}
 {
 	m_pClientTcpSocket = _spNetworkBaseController->GetClientSocketPointer();
+	m_pOverExp = Make::xnew<UOverExp>();
 }
 
 void UNetworkSender::InsertSendProcessPacketInQuery(const UProcessedData& _ProcceedData)
@@ -24,8 +24,8 @@ void UNetworkSender::SendDataInQuery()
 {
 	for (auto& iter : m_SendQuery)
 	{
-		UOverExp* pOverExp = Make::xnew<UOverExp>(&iter.GetData()[0], iter.GetDataType(), iter.GetDataSize());
-		UServerMethods::SendTcpPacket(*m_pClientTcpSocket, pOverExp);
+		m_pOverExp->SendBufferReady(& iter.GetData()[0], iter.GetDataType(), iter.GetDataSize());
+		UServerMethods::SendTcpPacket(*m_pClientTcpSocket, m_pOverExp);
 	}
 	m_SendQuery.clear();
 }

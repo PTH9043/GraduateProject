@@ -96,7 +96,7 @@ void CMummy::CreateParticles()
 		//tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 1.75f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 0.5f;
-		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 0.30;
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 0.30f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.15f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 7;
 		tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 5;
@@ -129,11 +129,11 @@ void CMummy::CreateParticles()
 
 		tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
-		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 0.4;///0.4;//	 0.8f
-		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 0.2;///0.2;//	 1.0f
+		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 0.4f;///0.4;//	 0.8f
+		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 0.2f;///0.2;//	 1.0f
 		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.5f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.1f;
-		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 1.88;//3.25f
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 1.88f;//3.25f
 		tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 1.88f;
 		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 512;
 		tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 1.f;
@@ -242,6 +242,7 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetOutlineByAbility(true);
 	SetOutline(true);
 	SetOutlineColor(_float3(1, 0, 0));
+	SetActive(true);
 	return S_OK;
 }
 
@@ -250,25 +251,19 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 	__super::TickActive(_dTimeDelta);
 	GetAnimationController()->Tick(_dTimeDelta);
 	_float3 pos = GetTransform()->GetPos();
-
 	pos.y += 5;
+
 	m_spBloodParticle->SetPosition(pos);
 	m_spSlashParticle->SetPosition(pos);
 	m_spAttackParticle->SetPosition(pos);
 	m_spAttackParticleTwo->SetPosition(pos);
 	_int CurAnimState = GetAnimationController()->GetAnimState();
-	if (true == IsSendDataToBehavior())
 	{
-		_float3 CurrentMobPos = GetTransform()->GetPos();
-		_float3 CurrentPlayerPos = GetTargetPlayer()->GetTransform()->GetPos();
-		SHPTR<UCell> CurrentMobCell = GetCurrentNavi()->GetCurCell();
-		SHPTR<UCell> CurrentPlayerCell = GetTargetPlayer()->GetCurrentNavi()->GetCurCell();
-
 		if (CurAnimState == UAnimationController::ANIM_MOVE)
 		{
 			AddTimeAccumulator(_dTimeDelta);
 			// A* for moving towards player when player is found
-			if (GetFoundTargetState() && !GetTargetPlayer()->GetDeathState())
+			if (GetFoundTargetState())
 			{
 				m_spFootPrintParticle->SetActive(true);
 				{
@@ -277,145 +272,14 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 					_float3 pos = GetTransform()->GetPos() + GetTransform()->GetRight();
 					pos.y += 0.5;
 					_float3 Look = GetTransform()->GetLook();
-					_float3 Right = 1.2 * GetTransform()->GetRight();
+					_float3 Right = 1.2f * GetTransform()->GetRight();
 					//pos -= 3 * Look;
 					m_spFootPrintParticle->SetPosition(pos);
 					m_spFootPrintParticle->SetDirection(Right);
 				}
-				if (GetTimeAccumulator() >= 1.0)
-				{
-					SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-					m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, CurrentPlayerPos, CurrentMobCell, CurrentPlayerCell));
-					m_isPathFinding = true;
-					SetTimeAccumulator(0.0);
-				}
-				if (m_isPathFinding)
-				{
-					SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-					if (spNavigation->StepPathFinding(m_PathFindingState))
-					{
-						m_isPathFinding = false;
-						if (m_PathFindingState.pathFound)
-						{
-							m_AstarPath = (spNavigation->OptimizePath(m_PathFindingState.path, CurrentMobPos, CurrentPlayerPos));
-							m_currentPathIndex = 0; // index initialized when path is optimized
-						}
-					}
-				}
-				if (!m_AstarPath.empty())
-				{
-					MoveAlongPath(m_AstarPath, m_currentPathIndex, _dTimeDelta);
-					_float3 direction = CurrentMobPos - GetTargetPos();
-					GetTransform()->SetDirectionFixedUp(-direction, _dTimeDelta, 5);
-				}
+				SetOutline(true);
 			}
 			else // patrolling when player is not found
-			{
-				SetOutline(false);
-				SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-				SHPTR<UCell> spNeighborCell = spNavigation->ChooseRandomNeighborCell(3);
-				if (GetTimeAccumulator() >= 5.0)
-				{
-					m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, spNeighborCell->GetCenterPos(), CurrentMobCell, spNeighborCell));
-					m_isPathFinding = true;
-					SetTimeAccumulator(0.0);
-				}
-				if (m_isPathFinding)
-				{
-					if (spNavigation->StepPathFinding(m_PathFindingState))
-					{
-						m_isPathFinding = false;
-						if (m_PathFindingState.pathFound)
-						{
-							m_AstarPath = (spNavigation->OptimizePath(m_PathFindingState.path, CurrentMobPos, spNeighborCell->GetCenterPos()));
-							m_currentPathIndex = 0; // index initialized when path is optimized
-						}
-					}
-				}
-				if (!m_AstarPath.empty())
-				{
-					MoveAlongPath(m_AstarPath, m_currentPathIndex, _dTimeDelta);
-					_float3 direction = CurrentMobPos - GetTargetPos();
-					GetTransform()->SetDirectionFixedUp(-direction, _dTimeDelta, 5);
-				}
-			}
-		}
-		else if (CurAnimState == UAnimationController::ANIM_ATTACK)
-		{
-			_float3 direction = CurrentMobPos - CurrentPlayerPos;
-			GetTransform()->SetDirectionFixedUp(-direction, _dTimeDelta, 5);
-		}
-		else {
-			m_spFootPrintParticle->SetActive(false);
-			*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 0;
-			*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
-		}
-
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		if (spGameInstance->GetDIKeyPressing(DIK_H)) {
-			SetIfOutlineScale(true);
-		}
-		else {
-			SetIfOutlineScale(false);
-		}
-		// death animation
-		if (CurAnimState == UAnimationController::ANIM_DEATH)
-		{
-			_double DeathAnimSpeed = 20;
-			if (GetElapsedTime() == 0.0)
-			{
-				USound* DeathSound1 = spGameInstance->BringSound(L"Death_VO_1").get();
-				USound* DeathSound2 = spGameInstance->BringSound(L"BodyHitFloor_1").get();
-				DeathSound1->PlayWithInputChannel(&m_pDeathChannel);
-				DeathSound2->PlayWithInputChannel(&m_pDeath2Channel);
-			}
-			SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
-			_double DeathTimeArcOpenEnd = 500;
-			if (GetElapsedTime() < DeathTimeArcOpenEnd)
-			{
-				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
-				GetAnimModel()->UpdateDissolveTImer(_dTimeDelta);
-				if (!m_bDissolveSound) {
-					SHPTR<USound> DsSound = spGameInstance->BringSound(L"DissolveSound");
-					DsSound->PlayWithInputChannel(&m_pDissolveChannel);
-					m_bDissolveSound = true;
-				}
-			}
-
-		}
-		else if (CurAnimState == UAnimationController::ANIM_IDLE)
-		{
-			GetAnimModel()->TickAnimation(_dTimeDelta);
-			GetTransform()->SetPos(GetTransform()->GetPos());
-		}
-		else
-		{
-			m_bDissolveSound = false;
-			GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
-			SetElapsedTime(0.0);
-		}
-	}
-	else
-	{
-		if (CurAnimState == UAnimationController::ANIM_MOVE)
-		{
-			// A* for moving towards player when player is found
-			if (GetFoundTargetState() && !GetTargetPlayer()->GetDeathState())
-			{
-				m_spFootPrintParticle->SetActive(true);
-				{
-					*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 4;
-					*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.355f;
-					_float3 pos = GetTransform()->GetPos() + GetTransform()->GetRight();
-					pos.y += 0.5;
-					_float3 Look = GetTransform()->GetLook();
-					_float3 Right = 1.2 * GetTransform()->GetRight();
-					//pos -= 3 * Look;
-					m_spFootPrintParticle->SetPosition(pos);
-					m_spFootPrintParticle->SetDirection(Right);
-				}
-			}
-			else
 			{
 				SetOutline(false);
 			}
@@ -427,15 +291,7 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 			*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
 		}
 
-
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		if (spGameInstance->GetDIKeyPressing(DIK_H)) {
-			SetIfOutlineScale(true);
-		}
-		else {
-			SetIfOutlineScale(false);
-		}
-
 		// death animation
 		if (CurAnimState == UAnimationController::ANIM_DEATH)
 		{
@@ -459,18 +315,19 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 					m_bDissolveSound = true;
 				}
 			}
-		}
-		else if (CurAnimState == UAnimationController::ANIM_IDLE)
-		{
-			GetAnimModel()->TickAnimation(_dTimeDelta);
+
 		}
 		else
 		{
-			m_bDissolveSound = false;
 			GetAnimModel()->TickAnimation(_dTimeDelta);
-			SetElapsedTime(0.0);
 		}
 
+		if (spGameInstance->GetDIKeyPressing(DIK_H)) {
+			SetIfOutlineScale(true);
+		}
+		else {
+			SetIfOutlineScale(false);
+		}
 	}
 	UpdateCollision();
 }
@@ -478,26 +335,21 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 void CMummy::LateTickActive(const _double& _dTimeDelta)
 {
 	__super::LateTickActive(_dTimeDelta);
-	if (true == IsSendDataToBehavior())
-	{
-		_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
-		GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
 
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		_int CurAnimState = GetAnimationController()->GetAnimState();
-		if (CurAnimState == UAnimationController::ANIM_DEATH)
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	_int CurAnimState = GetAnimationController()->GetAnimState();
+	if (CurAnimState == UAnimationController::ANIM_DEATH)
+	{
+		if (GetElapsedTime() >= 100.0)
 		{
-			if (GetElapsedTime() >= 100.0)
-			{
-				m_spBloodParticle->SetActive(false);
-				m_spSlashParticle->SetActive(false);
-				m_spFootPrintParticle->SetActive(false);
-				m_spAttackParticle->SetActive(false);
-				m_spAttackParticleTwo->SetActive(false);
-				SetOutline(false);
-				SetActive(false);
-				spGameInstance->RemoveCollisionPawn(ThisShared<CMob>());
-			}
+			m_spBloodParticle->SetActive(false);
+			m_spSlashParticle->SetActive(false);
+			m_spFootPrintParticle->SetActive(false);
+			m_spAttackParticle->SetActive(false);
+			m_spAttackParticleTwo->SetActive(false);
+			SetOutline(false);
+			SetActive(false);
+			spGameInstance->RemoveCollisionPawn(ThisShared<CMob>());
 		}
 	}
 }

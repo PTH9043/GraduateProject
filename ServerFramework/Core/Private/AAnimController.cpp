@@ -11,17 +11,14 @@ namespace Core {
 		const _string& _strFolderPath, const _string& _strFileName, const _float4x4& _PivotMatrix) :
 		ACoreObject(OBJCON_CONDATA), m_spAnimator{ Create<AAnimator>(OBJCON_CONDATA,
 			_strFolderPath, _strFileName, _PivotMatrix)}, m_wpOwnerPawn{_spPawn},
-		m_dAccumulator{0},m_dElapsedTime{0}, m_strInputTrigger{""}, m_iPawnState{0}, m_iAnimState{0}
+		m_strInputTrigger{""}, m_iAnimState{0}
 	{
 	}
 
 	void AAnimController::Tick(const _double& _dTimeDelta)
 	{
 		SHPTR<APawn> spPawn = m_wpOwnerPawn.lock();
-		SHPTR<ATransform> spTransform = spPawn->GetTransform();
-
 		m_spAnimator->TickEvent(spPawn.get(), m_strInputTrigger, _dTimeDelta);
-		m_spAnimator->TickAnimChangeTransform(spTransform, _dTimeDelta);
 	}
 
 	SHPTR<ABoneNode> AAnimController::FindBoneNode(const _string& _strBoneNode) const
@@ -132,39 +129,6 @@ namespace Core {
 	void AAnimController::SetSupplyLerpValue(const _float _fSupplyLerpValue)
 	{
 		m_spAnimator->SetSupplyLerpValue(_fSupplyLerpValue);
-	}
-
-	void AAnimController::SetOwnerPawnActiveStrong(_bool _isOwnerPawnActive)
-	{
-		bool isActive = m_isOwnerPawnActive.load();
-		if (m_isOwnerPawnActive.compare_exchange_strong(isActive, _isOwnerPawnActive))
-			return;
-	}
-
-	void AAnimController::SetOwnerPawnActiveWeak(_bool _isOwnerPawnActive)
-	{
-		if (IsOwnerPawnActive() == _isOwnerPawnActive)
-			return;
-
-		while (true)
-		{
-			bool isActive = m_isOwnerPawnActive.load();
-			if (m_isOwnerPawnActive.compare_exchange_strong(isActive, _isOwnerPawnActive))
-				break;
-		}
-	}
-
-	void AAnimController::SetPawnState(_int _State)
-	{
-		if (GetPawnState() == _State)
-			return;
-
-		while (true)
-		{
-			_int iPawnState = m_iPawnState.load();
-			if (true == m_iPawnState.compare_exchange_strong(iPawnState, _State))
-				break;
-		}
 	}
 
 	void AAnimController::SetAnimState(_int _iAnimState)

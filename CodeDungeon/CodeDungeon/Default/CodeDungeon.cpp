@@ -39,7 +39,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     SHPTR<CClientApp>       spClientApp = nullptr;
     spClientApp = CreateNative<CClientApp>(hInstance, nCmdShow);
     // 스레드 실행
-    spGameInstance->JoinRegister();
+    spGameInstance->DetachRegister();
     spClientApp->Render();
     spClientApp.reset();
     spGameInstance->Free();

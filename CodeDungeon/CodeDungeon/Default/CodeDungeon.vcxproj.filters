@@ -79,9 +79,6 @@
     <Filter Include="20.Server\Controller">
       <UniqueIdentifier>{905061dc-5702-4185-a1ee-7675ff181f6f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="20.Server\Query">
-      <UniqueIdentifier>{2d63f30f-8770-4a82-b8c1-bb5e23d23348}</UniqueIdentifier>
-    </Filter>
     <Filter Include="05.Objects\ModelObjects\ItemChest">
       <UniqueIdentifier>{eebb04af-b87a-4a58-9d81-ff49a6d27511}</UniqueIdentifier>
     </Filter>
@@ -294,9 +291,6 @@
     <ClInclude Include="..\Public\CNetworkClientController.h">
       <Filter>20.Server\Controller</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CNetworkQueryProcessor.h">
-      <Filter>20.Server\Query</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\CMinotaur.h">
       <Filter>05.Objects\Character\Mob\Minotaur</Filter>
     </ClInclude>
@@ -468,9 +462,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\CNavigationManager.cpp">
       <Filter>12.NavigationManager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\CNetworkQueryProcessor.cpp">
-      <Filter>20.Server\Query</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CMinotaur.cpp">
       <Filter>05.Objects\Character\Mob\Minotaur</Filter>
