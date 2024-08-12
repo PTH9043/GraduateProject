@@ -13,6 +13,7 @@
 #include "CWarriorPlayer.h"
 #include "UParticle.h"
 #include "UParticleSystem.h"
+#include "UProcessedData.h"
 
 CItemChest::CItemChest(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: CMob(_spDevice, _wstrLayer, _eCloneType), m_bisOpen{false}, m_ChestType{}
@@ -83,13 +84,12 @@ HRESULT CItemChest::NativeConstructClone(const VOIDDATAS& _Datas)
 	*m_spOpenChestParticle->GetParticleSystem()->GetAddParticleAmount() = 2;
 	*m_spOpenChestParticle->GetParticleSystem()->GetCreateInterval() = 1.1f;
 	m_spOpenChestParticle->SetTexture(L"Twinkle");
-	
+	SetActive(true);
 	return S_OK;
 }
 
 void CItemChest::TickActive(const _double& _dTimeDelta)
 {
-	__super::TickActive(_dTimeDelta);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	static _double elapsedTime = 0;
@@ -108,6 +108,11 @@ void CItemChest::TickActive(const _double& _dTimeDelta)
 			if (m_ChestType == TYPE_CHEST) {
 				static_pointer_cast<CWarriorPlayer>(GetTargetPlayer())->SetIfOpenChest(true);
 				spGameInstance->SoundPlayOnce(L"ChestOpen");
+
+				CS_HEAL csHeal;
+				PROTOFUNC::MakeCsHeal(&csHeal, GetNetworkID());
+				spGameInstance->SendProtoData(UProcessedData(csHeal, TAG_CS_HEAL));
+				csHeal.Clear();
 			}
 			SetOpeningState(true);
 		}

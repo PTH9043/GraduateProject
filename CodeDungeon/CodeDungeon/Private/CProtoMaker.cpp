@@ -43,6 +43,7 @@
 #include "CNetworkMimicAnimController.h"
 #include "CNetworkMinotaurAnimController.h"
 #include "CNetworkMummyAnimController.h"
+#include "UMethod.h"
 
 HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, CSHPTRREF<UDevice> _spDevice, CSHPTRREF<UCommand> _spCommand)
 {
@@ -183,11 +184,49 @@ HRESULT CProtoMaker::CreateMainSceneProtoData(CSHPTRREF<UGameInstance> _spGameIn
 		_spDevice, L"..\\..\\Resource\\AnimModel\\Mimic\\Convert\\Mimic_FBX.bin", Matrix));
 
 
-	Matrix = _float4x4::CreateScale(1.0f);
+	Matrix = _float4x4::CreateScale(0.1f);
 	_spGameInstance->AddPrototype(PROTO_RES_CHESTANIMMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
 		_spDevice, L"..\\..\\Resource\\AnimModel\\Chest\\Convert\\Chest 1_FBX.bin", Matrix));
 
 
 
 	return S_OK;
+}
+
+CMobServerLayoutLoader::CMobServerLayoutLoader(const _string& _strPath)
+{
+	std::ifstream read{ _strPath, std::ios::binary };
+
+	size_t MobDatsSize = 0;
+	read.read((_char*)&MobDatsSize, sizeof(size_t));
+	m_MobData.reserve(MobDatsSize);
+	for (_int i = 0; i < MobDatsSize; ++i)
+	{
+		MOBSERVERDATA mobServerData;
+		read.read((_char*)&mobServerData.iStartAnimIndex, sizeof(_int));
+		read.read((_char*)&mobServerData.iMobType, sizeof(_int));
+		read.read((_char*)&mobServerData.mWorldMatrix, sizeof(_float4x4));
+		read.read((_char*)&mobServerData.iMobID, sizeof(_int));
+		read.read((_char*)&mobServerData.iMobParentsID, sizeof(_int));
+		UMethod::ReadString(read, mobServerData.strRoomName);
+		m_MobData.emplace_back(mobServerData);
+	}
+}
+
+CStaticObjServerLayoutLoader::CStaticObjServerLayoutLoader(const _string& _strPath)
+{
+	std::ifstream read{ _strPath, std::ios::binary };
+
+	size_t StaticObjDataSize = 0;
+	read.read((_char*)&StaticObjDataSize, sizeof(size_t));
+	m_StaticObjData.reserve(StaticObjDataSize);
+	for (_int i = 0; i < StaticObjDataSize; ++i)
+	{
+		STATICOBJSERVERDATA staticObjServerData;
+		read.read((_char*)&staticObjServerData.mWorldMatrix, sizeof(_float4x4));
+		read.read((_char*)&staticObjServerData.iServerID, sizeof(_int));
+		read.read((_char*)&staticObjServerData.iObjType, sizeof(_int));
+		UMethod::ReadString(read, staticObjServerData.strRoomName);
+		m_StaticObjData.emplace_back(staticObjServerData);
+	}
 }

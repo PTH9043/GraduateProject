@@ -51,7 +51,7 @@ namespace Core
 			m_AnimSelector.emplace(MakePair(spAnimation->GetAnimName(), i));
 		}
 
-		ACollider::COLLIDERDESC Desc{};
+		COLLIDERDESC Desc{};
 		m_AnimEventColliderContainer.emplace(MakePair(ACollider::TYPE_AABB, Create<ACollider>(ACollider::TYPE_AABB, Desc)));
 		m_AnimEventColliderContainer.emplace(MakePair(ACollider::TYPE_OBB, Create<ACollider>(ACollider::TYPE_OBB, Desc)));
 		m_AnimEventColliderContainer.emplace(MakePair(ACollider::TYPE_SPHERE, Create<ACollider>(ACollider::TYPE_SPHERE, Desc)));

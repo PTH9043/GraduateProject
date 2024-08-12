@@ -97,6 +97,7 @@ namespace Core
 				{
 					if (value <= 1)
 					{
+						delete m_Ptr;
 						Core::MemoryRelease<ARefCounter<T>>(this);
 					}
 					return --value;
@@ -841,7 +842,7 @@ namespace Core
 	class AEnableSharedFromThis {
 		friend  class ASharedPtr<T>;
 		friend  class ARefCounter<T>;
-	protected:
+	public:
 		AEnableSharedFromThis()
 			: m_Wptr()
 		{}
@@ -878,10 +879,10 @@ namespace Core
 	ASharedPtr<T> MakeShared(Args&&... _args)
 	{
 		ASharedPtr<T> SharedPtr;
-		T* ptr =  Core::MemoryAlloc<T>(std::forward<Args>(_args)...);
+		T* ptr =  new T(std::forward<Args>(_args)...);
 		ARefCounter<T>* pRefCounter = Core::MemoryAlloc<ARefCounter<T>>(ptr);
 		SharedPtr.SetEnableShared(ptr, pRefCounter);
-		return std::move(SharedPtr);
+		return SharedPtr;
 	}
 
 	template<class T, class U>

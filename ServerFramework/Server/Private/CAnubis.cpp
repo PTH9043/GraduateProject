@@ -2,6 +2,7 @@
 #include "CAnubis.h"
 #include "ATransform.h"
 #include "CAnubisAnimController.h"
+#include "ACollider.h"
 
 namespace Server
 {
@@ -17,18 +18,26 @@ namespace Server
 	}
 	_bool CAnubis::Start(const VOIDDATAS& _ReceiveDatas)
 	{
-		_float4x4 Matrix = _float4x4::CreateScale(0.1f);
+		_float4x4 Matrix = _float4x4::CreateScale(0.1f) * _float4x4::CreateRotationY(DirectX::XMConvertToRadians(180));
 		SetAnimController(Create<CAnubisAnimController>(GetCoreInstance(), ThisShared<CAnubis>(),
 			"..\\..\\Resource\\Anim\\Anubis\\", "Anubis_FBX.bin", Matrix));
+
+		InsertColliderContainer(COLLIDERTYPE::COLLIDER_MAIN, ACollider::TYPE_OBB,
+			COLLIDERDESC{ {0.f, 10.f, 0.f}, {1.f, 8.f, 1.f} });
+
+		InsertColliderContainer(COLLIDERTYPE::COLLIDER_MAGICSPHERE, ACollider::TYPE_SPHERE,
+			COLLIDERDESC{ {8.f, 8.f, 8.f}, {0.f, 5.f, 0.f} });
+
+		InsertColliderContainer(COLLIDERTYPE::COLLIDER_MAGICCIRCLE, ACollider::TYPE_OBB,
+			COLLIDERDESC{ {1.f, 1.f, 1.f}, {0.f, 0.5f, 0.f} });
+
 		return  __super::Start(_ReceiveDatas);
 	}
 
 	void CAnubis::Tick(const _double& _dTimeDelta)
 	{
-	}
-
-	void CAnubis::LateTick(const _double& _dTimeDelta)
-	{
+		SHPTR<ASession> spSession = GetTargetSession();
+		TickUpdateBehavior(_dTimeDelta, spSession);
 	}
 
 	void CAnubis::State(SHPTR<ASession> _spSession, _int _MonsterState)
@@ -41,13 +50,9 @@ namespace Server
 		__super::ProcessPacket(_type, _pData);
 	}
 
-	bool CAnubis::IsHit(APawn* _pPawn, const _double& _dTimeDelta)
+	void CAnubis::Collision(AGameObject* _pGameObject, const _double& _dTimeDelta)
 	{
-		return false;
-	}
-
-	void CAnubis::Collision(APawn* _pPawn, const _double& _dTimeDelta)
-	{
+		__super::Collision(_pGameObject, _dTimeDelta);
 	}
 
 	void CAnubis::Free()

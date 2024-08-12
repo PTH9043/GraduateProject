@@ -12,17 +12,11 @@ public:
 public:
 	virtual _bool Start(const VOIDDATAS& _ReceiveDatas = {}) override;
 	virtual void Tick(const _double& _dTimeDelta) override;
-	virtual void LateTick(const _double& _dTimeDelta) override;
 	virtual void State(SHPTR<ASession> _spSession, _int _MonsterState = 0) override;
 	virtual void ProcessPacket(_int _type, void* _pData) override;
-	virtual bool IsHit(APawn* _pPawn, const _double& _dTimeDelta) override;
-	virtual void CallActiveEnable() override;
-	virtual void CallActiveDisable() override;
+	virtual void Collision(AGameObject* _pGameObject, const _double& _dTimeDelta) override;
 public: /* get set*/
 	MUMMYTYPE GetMummyType() const { return m_eMummyType; }
-protected:
-	// Damaged
-	virtual void Collision(APawn* _pPawn, const _double& _dTimeDelta) override;
 private:
 	virtual void Free() override;
 private:

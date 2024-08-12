@@ -27,17 +27,16 @@ public:
 	virtual _bool SendData(_char* _pPacket, const Core::PACKETHEAD& _PacketHead) override;
 	virtual void Disconnect() override;
 	virtual void ConnectTcpSocket() override;
-	virtual bool IsHit(APawn* _pPawn, const _double& _dTimeDelta) override;
+	virtual void Collision(AGameObject* _pGameObject, const _double& _dTimeDelta) override;
 protected:
-	// Damaged
-	virtual void Collision(APawn* _pPawn, const _double& _dTimeDelta) override;
 	virtual _bool ProcessPacket(_char* _pPacket, const Core::PACKETHEAD& _PacketHead) override;
 private: 
 	void LoginState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead);
 	void PlayerState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead);
 	void PlayerCollisionState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead);
 	void MonsterCollisionState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead);
-	void MonsterState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead);
+	void PlayerHealState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead);
+	void PressKeyState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead);
 private:
 	virtual void Free() override;
 private:

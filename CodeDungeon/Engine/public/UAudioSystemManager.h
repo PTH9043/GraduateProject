@@ -32,7 +32,7 @@ public:
 	HRESULT CreateAudioSystemAndRegister(UGameInstance* _pGameInstance,  SOUNDTYPE _SoundType, const _wstring& _wstrSoundFolderPath);
 	HRESULT CreateAudioSystemAndRegister(UGameInstance* _pGameInstance, SOUNDTYPE _SoundType, CSHPTRREF<FILEGROUP> _spSoundFileGroup);
 	HRESULT CreateAudioSystemToFolderNameAndRegister(UGameInstance* _pGameInstance, SOUNDTYPE _SoundType, const _wstring& _wstrSoundFolderName);
-
+	_bool IsSoundPlay(const _wstring& _wstrSoundName, FMOD::Channel* _pChannel);
 	void Play(const _wstring& _wstrSoundName);
 	void PlayWithManyChannels(const _wstring& _wstrSoundName);
 	void Play(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);

@@ -39,7 +39,9 @@ CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _ws
 	m_dKickedElapsed{ 0 },
 	m_bisRise{ false },
 	m_bCanInteractChest{ false },
-	m_bCanInteractGuard{ false }
+	m_bCanInteractGuard{ false },
+	m_fNetworkRecvMaxHeal{ 210 },
+	m_fPrevHealHp{0}
 {
 }
 
@@ -57,7 +59,9 @@ CWarriorPlayer::CWarriorPlayer(const CWarriorPlayer& _rhs) :
 	m_dKickedElapsed{ 0 },
 	m_bisRise{ false },
 	m_bCanInteractChest{ false },
-	m_bCanInteractGuard{ false }
+	m_bCanInteractGuard{ false },
+	m_fNetworkRecvMaxHeal{ 210 },
+	m_fPrevHealHp{ 0 }
 {
 }
 
@@ -239,6 +243,22 @@ void CWarriorPlayer::ReceiveNetworkProcessData(const UProcessedData& _ProcessDat
 		GetTransform()->SetPos(_float3{ selfPlayerMove.posx(), selfPlayerMove.posy(), selfPlayerMove.posz() });
 	}
 	break;
+	case TAG_SC_DAMAGED:
+	{
+		SC_DAMAGED scDamaged;
+		scDamaged.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
+		if (0 >= scDamaged.hp())
+		{
+			SetDeathState(true);
+			SetHealth(0);
+		}
+		else
+		{
+			SetHealth(scDamaged.hp());
+			SetDamaged(true);
+		}
+	}
+	break;
 	}
 #endif
 }
@@ -251,9 +271,9 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	JumpState(_dTimeDelta);
 	GetAnimationController()->Tick(_dTimeDelta);
 
-	//게임끝 트리거
-	if (GetCurrentNavi()->GetCurIndex() == 1141)
-		m_bisGameEnd = true;
+	////게임끝 트리거
+	//if (GetCurrentNavi()->GetCurIndex() == 1141)
+	//	m_bisGameEnd = true;
 
 	_int AnimState = GetAnimationController()->GetAnimState();
 	const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
@@ -331,8 +351,8 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	//}
 	
 	if (IfOpenChestForHeal) {//2.1초 지속
-		HealTrigger = true;
-		IncreaseHealth(10); //이렇게 하면 119정도 오름
+		IncreaseHealth(10);
+		m_isHealTrigger = true;
 		SetAnimModelRimColor(_float3(0, 1, 0));
 		m_spHealParticle->SetActive(true);
 		_float3 pos = GetTransform()->GetPos();
@@ -341,16 +361,24 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		m_spHealParticle->SetPosition(pos);
 		m_spHealParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;		
 	}
+	else
+	{
+		m_fPrevHealHp = GetHealth();
+	}
 
-	if (HealTrigger)
+	if (m_isHealTrigger)
 	{
 		HealTimer += _dTimeDelta;
 		if (HealTimer > 1.75f) {
 			//SetAnimModelRimColor(_float3(1, 0, 0));
 			m_spHealParticle->SetActive(false);
 			HealTimer = 0;
-			HealTrigger = false;
 			IfOpenChestForHeal = false;
+		}
+
+		if (GetHealth() >= m_fPrevHealHp + m_fNetworkRecvMaxHeal)
+		{
+			m_isHealTrigger = false;
 		}
 	}
 
@@ -461,15 +489,14 @@ void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 		CamNavi->FindCell(GetTransform()->GetPos());
 		GetFollowCamera()->GetTransform()->SetPos(GetTransform()->GetPos());
 	}
-
-
 }
 
 void CWarriorPlayer::NetworkTickActive(const _double& _dTimeDelta)
 {
-#ifdef _ENABLE_PROTOBUFF
-	SendMoveData();
-#endif
+	if (m_bStartedGame && !m_bisGameEnd) {
+		SendMoveData();
+		SendPressKeyState();
+	}
 }
 
 HRESULT CWarriorPlayer::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
@@ -489,11 +516,6 @@ HRESULT CWarriorPlayer::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHP
 
 void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
-	if (true == IsDamaged())
-	{
-		SetDamaged(false);
-	}
-
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	PAWNTYPE ePawnType = _pEnemy->GetPawnType();
 	const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
@@ -533,7 +555,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							}
 							if (!GetIsHItAlreadyState())
 							{
-								DecreaseHealth(200);
+								SendCollisionData(_pEnemy.get(), 200);
 							}
 							SetHitAlreadyState(true);
 						}
@@ -544,7 +566,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 						{
 							if (!GetIsHItAlreadyState())
 							{
-								DecreaseHealth(50);
+								SendCollisionData(_pEnemy.get(), 50);
 							}
 							SetHitAlreadyState(true);
 						}
@@ -556,8 +578,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 				}
 
 				for (auto& iter2 : pCharacter->GetColliderContainer())
-				{
-					
+				{			
 					//아누비스 공격 충돌
 					if (iter2.first == L"MagicSphere")
 					{
@@ -581,6 +602,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 									if (!GetIsHItAlreadyState())
 									{
 										DecreaseHealth(50);
+										SendCollisionData(_pEnemy.get(), 50);
 									}
 									SetHitAlreadyState(true);
 								}
@@ -602,6 +624,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 									if (!GetIsHItAlreadyState())
 									{
 										DecreaseHealth(10);
+										SendCollisionData(_pEnemy.get(), 10);
 									}
 									SetHitAlreadyState(true);
 								}
@@ -689,54 +712,6 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 						{
 							pModelObject->SetOutline(false);
 							m_bCanInteractStatue = false;
-						}
-					}
-					else if (iter2.first == L"ForInteractionBars")
-					{
-						if (iter.second->IsCollision(iter2.second))
-						{
-							m_bCanInteractBar = true;
-							pModelObject->SetOutline(true);
-
-							if (pModelObject->GetCheckPointToOtherColor()) {
-								m_bDoneInteractBar = true;
-							}
-							else {
-								m_bDoneInteractBar = false;
-							}
-
-							//철장 여는 용도
-							if (spGameInstance->GetDIKeyPressing(DIK_F)) {
-								if (m_fInteractionTimeElapsed < 4.f) {//BarLift
-									if (!LiftBarsSound&& !m_bDoneInteractBar) {
-										spGameInstance->SoundPlayOnce(L"BarLift");
-										LiftBarsSound = true;
-									}
-									
-									m_fInteractionTimeElapsed += _dTimeDelta;
-								}
-							}
-							else {
-								if (LiftBarsSound) {
-									LiftBarsSound = false;
-									spGameInstance->StopSound(L"BarLift");
-								}
-								m_fInteractionTimeElapsed = 0;
-							}
-							if (m_fInteractionTimeElapsed > 3.99f) {
-								spGameInstance->SoundPlayOnce(L"BarLiftStart");
-								spGameInstance->SoundPlayOnce(L"BarLift2");						
-								pModelObject->SetInteractionState(true);
-								pModelObject->SetCheckPointToOtherColor(true);
-								m_fInteractionTimeElapsed = 0;
-								//pModelObject->SetOutline(false);
-							}
-
-						}
-						else
-						{
-							pModelObject->SetOutline(false);
-							m_bCanInteractBar = false;
 						}
 					}
 					else if (iter2.first == L"ForInteractionCoreMinotaur")
@@ -889,6 +864,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 								if (!GetIsHItAlreadyState())
 								{
 									DecreaseHealth(100);
+									SendCollisionData(_pEnemy.get(), 100);
 								}
 								SetHitAlreadyState(true);
 							}
@@ -911,9 +887,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 			if (iter.first == L"Main")
 			{
 				for (auto& iter2 : pGuard->GetColliderContainer())
-				{
-					
-
+				{				
 					if (iter2.first == L"Main")
 					{
 						SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
@@ -963,27 +937,12 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							
 							m_bCanInteractGuard = false;
 						}
-							
-						/*if (iter.second->IsCollision(iter2.second))
-						{
-							m_bCanInteractGuard = true;
-						}
-						else
-						{
-							m_bCanInteractGuard = false;
-						}*/
 					}
 
 				}
 			}
 		}
 	}
-#ifdef _ENABLE_PROTOBUFF
-	if (true == IsDamaged())
-	{
-		SendCollisionData(_pEnemy.get());
-	}
-#endif
 }
 
 #ifdef _ENABLE_PROTOBUFF
@@ -1005,24 +964,36 @@ void CWarriorPlayer::SendMoveData()
 		PROTOFUNC::MakeVector3(&vSendRotate, vCharRotate.x, vCharRotate.y, vCharRotate.z);
 	}
 
-	static CHARSTATE charMove;
+	CHARSTATE charMove;
 	PROTOFUNC::MakeCharState(OUT &charMove, spGameInstance->GetNetworkOwnerID(), vSendPos, vSendRotate,
 		state, AnimIndex, IsDamaged() == true ? 1 : 0);
-	spGameInstance->InsertSendProcessPacketInQuery(UProcessedData(charMove, TAG_CS_PLAYERSTATE));
+	spGameInstance->SendProtoData(UProcessedData(charMove, TAG_CS_PLAYERSTATE));
 }
 
-void CWarriorPlayer::SendCollisionData(UPawn* _pPawn)
+void CWarriorPlayer::SendCollisionData(UPawn* _pPawn, _float _fDamaged)
 {
-	if (true == IsDamaged())
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	CS_DAMAGED csPlayerDamaged;
+	_int NetworkID = GetNetworkID();
 	{
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		COLLISIONDATA csCollision;
-		_llong NetworkID = spGameInstance->GetNetworkOwnerID();
-		{
-			PROTOFUNC::MakeCollisionData(&csCollision, NetworkID, _pPawn->GetNetworkID());
-		}
-		spGameInstance->InsertSendProcessPacketInQuery(UProcessedData(NetworkID, csCollision, TAG_CS_PLAYERCOLLISION));
+		PROTOFUNC::MakeCsDamaged(&csPlayerDamaged, NetworkID, _fDamaged);
 	}
+	spGameInstance->SendProtoData(UProcessedData(NetworkID, csPlayerDamaged,
+		TAG_CS_PLAYERDAMAGED));
+}
+
+void CWarriorPlayer::SendPressKeyState()
+{
+	CS_PRESSKEY csPressKey;
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	_int keyState = 0;
+	if (spGameInstance->GetDIKeyPressing(DIK_F))
+	{
+		keyState = KEYBOARD_F;
+	}
+
+	PROTOFUNC::MakeCsPressKey(&csPressKey, GetNetworkID(), keyState);
+	spGameInstance->SendProtoData(UProcessedData(csPressKey, TAG_CS_PRESSKEY));
 }
 
 #endif

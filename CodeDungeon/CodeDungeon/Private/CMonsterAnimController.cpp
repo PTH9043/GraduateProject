@@ -5,7 +5,7 @@
 #include "UAnimation.h"
 
 CMonsterAnimController::CMonsterAnimController(CSHPTRREF<UDevice> _spDevice)
-    : UAnimationController(_spDevice)
+    : UAnimationController(_spDevice), m_dTimeAccToNetworkAnim{0}
 {
 }
 
@@ -34,17 +34,17 @@ void CMonsterAnimController::Tick(const _double& _dTimeDelta)
 
 void CMonsterAnimController::ReceiveNetworkProcessData(void* _pData)
 {
-#ifdef _ENABLE_PROTOBUFF
     SHPTR<UCharacter> spMonster = GetOwnerCharacter();
     SHPTR<UAnimModel> spAnimModel = spMonster->GetAnimModel();
     {
         MOBSTATE* pMonsterData = static_cast<MOBSTATE*>(_pData);
         SetAnimState(pMonsterData->state());
 
-        if (pMonsterData->animationindex() != spAnimModel->GetCurrentAnimIndex() || 1 == pMonsterData->triggeron())
+        if (pMonsterData->animationindex() != spAnimModel->GetCurrentAnimIndex())
             spAnimModel->SetAnimation(pMonsterData->animationindex());
 
-        spAnimModel->GetCurrentAnimation()->SetAnimTimeAcc(pMonsterData->animtime());
+
+        m_dTimeAccToNetworkAnim = static_cast<_double>(pMonsterData->animtime());
+     //   spAnimModel->GetCurrentAnimation()->SetAnimTimeAcc(pMonsterData->animtime());
     }
-#endif
 }

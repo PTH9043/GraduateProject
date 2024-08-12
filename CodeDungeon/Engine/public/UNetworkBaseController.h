@@ -4,7 +4,7 @@
 #include "UProcessedData.h"
 
 BEGIN(Engine)
-
+class UOverExp;
 class UActor;
 
 using TOTALBUFFER = ARRAY<_char, MAX_PROCESSBUF_LENGTH>;
@@ -24,12 +24,14 @@ public:
 	DESTRUCTOR(UNetworkBaseController)
 public:
 	virtual HRESULT NativeConstruct(const _string& _strIPAddress, const _int _PortNumber) PURE;
-	virtual void MakeActorsInit(const VECTOR<SHPTR<UActor>>& _actorContainer) PURE;
+	virtual void MakeActorsInit(const VECTOR<SHPTR<UBase>>& _actorContainer) PURE;
 	virtual void MakeActorsTick() PURE;
+	void ProcessedData();
 	void AddNetworkInitData(_int _NetworkID, const NETWORKRECEIVEINITDATA& _NetworkInitData);
 	void InsertNetworkActorInContainer(_int _NetworkID, CSHPTRREF<UActor> _spActor);
 	SHPTR<UActor> FindNetworkActor(const _int _NetworkID);
 	void SendTcpData(_char* _pData, short _tag, short _size);
+	void SendProtoData(const UProcessedData& _ProcessedData);
 	void ServerTick();
 public: /* get set */
 	const _llong GetNetworkOwnerID() const { return m_llNetworkOwnerID; }
@@ -86,6 +88,10 @@ private:
 	SHPTR< UNetworkAddress>		m_spNetworkAddress;
 	NETWORKACTORCONTAINER		m_NetworkActorContainer;
 	NETWORKINITDATACONTAINER	m_NetworkInitDataContainer;
+
+	UOverExp*										m_pSendOverExp;
+
+	LIST<UProcessedData>					m_ProccessedDataList;
 };	
 
 END

@@ -1620,7 +1620,11 @@ HRESULT CMainScene::LoadSceneData()
 		m_spPlayerAbilityLeftTimeFont->SetDepths(0.f);
 		m_spPlayerAbilityLeftTimeFont->SetRender(false);
 	}
-	
+	{
+		m_spMap = CreateConstructorNative<CMap>(spGameInstance->GetDevice());
+		m_spMap->LoadRooms();
+		m_spMap->LoadStaticObjects();
+	}
 	CProtoMaker::CreateMainSceneProtoData(spGameInstance, GetDevice(), std::static_pointer_cast<UCommand>(spGameInstance->GetGpuCommand()));
 
 	UCamera::CAMDESC tDesc;
@@ -1635,7 +1639,7 @@ HRESULT CMainScene::LoadSceneData()
 	vecDatas.push_back(&tDesc);
 
 	m_spMainCamera = std::static_pointer_cast<CMainCamera>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MAINCAMERA, vecDatas));
-	spGameInstance->MakeActorsInit({ m_spMainCamera });
+	spGameInstance->MakeActorsInit({ m_spMainCamera, m_spMap });
 
 	CreateStartSceneUI();
 	CreateAbilityUI();
@@ -1645,9 +1649,6 @@ HRESULT CMainScene::LoadSceneData()
 	CreateKeyInfoUI();
 	CreateGameSceneUI();
 	{
-		m_spMap = CreateConstructorNative<CMap>(spGameInstance->GetDevice());
-		m_spMap->LoadRooms();
-		m_spMap->LoadStaticObjects();
 		spGameInstance->TurnOnFog();
 
 		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 1.f}, {0.3f, 0.3f,0.3f, 1.f}, {0.15f, 0.15f, 0.15f, 1.f}, {0.f, -1.f, 0.f,}, {0.f, 100.f, 0.f}, 0.f, 0.f ,1.f, 20.f });
@@ -2110,7 +2111,6 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 	}
 }
 
-
 void CMainScene::Tick(const _double& _dTimeDelta)
 {
 	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
@@ -2296,10 +2296,6 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 		}
 
 	}
-	
-
-	if(pGameInstance->GetDIKeyDown(DIK_ESCAPE))
-		::PostQuitMessage(0);
 }
 
 void CMainScene::LateTick(const _double& _dTimeDelta)

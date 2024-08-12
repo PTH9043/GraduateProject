@@ -244,8 +244,8 @@ namespace Core {
 		_load.read((_char*)&m_AnimColliderDesc.iColliderType, sizeof(_int));
 		_string strBoneName = ConvertWToS(wstrBoneName);
 
-		ACollider::COLLIDERDESC Desc;
-		_load.read((_char*)&Desc, sizeof(ACollider::COLLIDERDESC));
+		COLLIDERDESC Desc;
+		_load.read((_char*)&Desc, sizeof(COLLIDERDESC));
 
 		m_AnimColliderDesc.vColliderScale = Desc.vScale;
 		m_AnimColliderDesc.vColliderTranslation = Desc.vTranslation;

@@ -31,7 +31,7 @@ public:
 	HRESULT NativeConstruct(FMOD::System* _pSystem, const _wstring& _wstrSoudFolderPath);
 	HRESULT NativeConstruct(FMOD::System* _pSystem, CSHPTRREF<FILEGROUP> _spSoundFileGroup);
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _Datas) override;
-
+	_bool IsSoundPlay(const _wstring& _wstrSoundName, FMOD::Channel* _pChannel);
 	void Tick();
 	void TickWithManyChannels();
 	_bool Play(const _wstring& _wstrSoundName);

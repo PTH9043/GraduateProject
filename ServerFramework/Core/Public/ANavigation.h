@@ -37,6 +37,10 @@ public:
 	SHPTR<ACell> FindCellWithoutUpdate(const Vector3& _vPosition);
 	SHPTR<ACell> FindCell(const _int& _iIndex);
 	SHPTR<ACell> FindCellWithoutUpdate(const _int& _iIndex);
+	SHPTR<ACell> FindCell(SHPTR<ACell> _spOtherCell);
+	SHPTR<ACell> FindCellWithoutUpdate(SHPTR<ACell> _spOtherCell);
+
+
 	// Is Collision
 	_bool IsCollision(SHPTR<ACollider>& _pCollider);
 	// Insert Cell

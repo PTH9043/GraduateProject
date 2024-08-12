@@ -59,9 +59,9 @@ public: /* Get Set */
 	void SetCanInteractGuardState(const _bool& _newState) { m_bCanInteractGuard = _newState; }
 	_bool GetCanInteractGuardState() { return m_bCanInteractGuard; }
 
-	void GetDoneInteractStatueState(const _bool& _newState) { m_bDoneInteractStatue = _newState; }
+	void SetDoneInteractStatueState(const _bool& _newState) { m_bDoneInteractStatue = _newState; }
 	_bool GetDoneInteractStatueState() { return m_bDoneInteractStatue; }
-	void GetDoneInteractBarState(const _bool& _newState) { m_bDoneInteractBar = _newState; }
+	void SetDoneInteractBarState(const _bool& _newState) { m_bDoneInteractBar = _newState; }
 	_bool GetDoneInteractBarState() { return m_bDoneInteractBar; }
 
 
@@ -109,7 +109,8 @@ protected:
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) override;
 #ifdef _ENABLE_PROTOBUFF
 	void SendMoveData();
-	void SendCollisionData(UPawn* _pPawn);
+	void SendCollisionData(UPawn* _pPawn, _float _fDamaged);
+	void SendPressKeyState();
 #endif
 private:
 	void TranslateStateMoveAndRunF(CSHPTRREF<UGameInstance> _spGameInstance, const _double& _dTimeDelta, const _float _fSpeed);
@@ -123,24 +124,26 @@ private:
 	SHPTR<UParticle>										m_spFootPrintParticle;
 	SHPTR<UParticle>										m_spHealParticle;
 	_float HealTimer = 0;
-	_bool HealTrigger = false;
+	_bool m_isHealTrigger = false;
 	_bool IfOpenChestForHeal = false;
 	PARTICLEPARAM* m_stParticleParam;
 	ComputeParticleType* m_stParticleType;
 
-	SHPTR<CSword>												m_spSword;
-	SHPTR<UTrail>												m_spTrail;
-	SHPTR<UBlood>												m_spBlood;
-	//SHPTR<UDust>												m_spDust;
-	_bool																isAttack;
+	SHPTR<CSword>						m_spSword;
+	SHPTR<UTrail>						m_spTrail;
+	SHPTR<UBlood>						m_spBlood;
+	//SHPTR<UDust>						m_spDust;
+	_bool											isAttack;
+	_float											m_fNetworkRecvMaxHeal;
+	_float											m_fPrevHealHp;
 
-	_bool m_bisCollisionWithObj;
-	_bool m_bisKicked;
-	_bool m_bisRise;
+	_bool											m_bisCollisionWithObj;
+	_bool											m_bisKicked;
+	_bool											m_bisRise;
 
 	
 
-	_double											m_dKickedElapsed;
+	_double										m_dKickedElapsed;
 	_bool											m_bCanInteractChest;
 	_bool											m_bCanInteractBar;
 	_bool											m_bDoneInteractBar;

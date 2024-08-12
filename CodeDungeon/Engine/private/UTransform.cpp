@@ -223,15 +223,17 @@ void UTransform::MovePos(const _float3& _vPos)
 	SetPos(GetPos() + _vPos);
 }
 
-void UTransform::TranslatePos(const _float3& _vPos, const _double& _dTimeDelta, const _float& _fSpeed, const _float& _fLimitDistance)
+_bool UTransform::TranslatePos(const _float3& _vPos, const _double& _dTimeDelta, const _float& _fSpeed, const _float& _fLimitDistance)
 {
-	if (ComputeDistance(_vPos) <= _fLimitDistance * _fLimitDistance) {
+	if (ComputeDistanceSq(_vPos) <= _fLimitDistance) {
 		_float3 vPosition = GetPos();
 		_float3 vLook = _vPos - vPosition;
 
 		vPosition += vLook * static_cast<_float>(_dTimeDelta) * _fSpeed;
 		SetPos(vPosition);
+		return false;
 	}
+	return true;
 }
 
 void UTransform::TranslateDir(const _float3& _vDir, const _double& _dTimeDelta, const _float& _fSpeed)
@@ -242,29 +244,33 @@ void UTransform::TranslateDir(const _float3& _vDir, const _double& _dTimeDelta, 
 	SetPos(vPosition);
 }
 
-void UTransform::TranslateTrans(CSHPTRREF<UTransform> _pTransform, const _double& _dTimeDelta, const _float& _fSpeed, const _float& _fLimitDistance)
+_bool UTransform::TranslateTrans(CSHPTRREF<UTransform> _pTransform, const _double& _dTimeDelta, const _float& _fSpeed, const _float& _fLimitDistance)
 {
-	RETURN_CHECK(nullptr == _pTransform, ; );
+	RETURN_CHECK(nullptr == _pTransform, false);
 	const _float3& _vPos = _pTransform->GetPos();
-	if (ComputeDistance(_vPos) <= _fLimitDistance * _fLimitDistance) {
+	if (ComputeDistance(_vPos) <= _fLimitDistance) {
 		_float3 vPosition = GetPos();
 		_float3 vLook = _vPos - vPosition;
 
 		vPosition += vLook * static_cast<_float>(_dTimeDelta) * _fSpeed;
 		SetPos(vPosition);
+		return false;
 	}
+	return true;
 }
 
-void UTransform::TranslatePosNotY(const _float3& _vPos, const _double& _dTimeDelta, const _float& _fSpeed, const _float& _fLimitDistance)
+_bool UTransform::TranslatePosNotY(const _float3& _vPos, const _double& _dTimeDelta, const _float& _fSpeed, const _float& _fLimitDistance)
 {
-	if (ComputeDistance(_vPos) <= _fLimitDistance * _fLimitDistance) {
+	if (ComputeDistance(_vPos) <= _fLimitDistance) {
 		_float3 vPosition = GetPos();
 		_float3 vLook = _vPos - vPosition;
 
 		vPosition += vLook * static_cast<_float>(_dTimeDelta) * _fSpeed;
 		vLook.y = 0;
 		SetPos(vPosition);
+		return false;
 	}
+	return true;
 }
 
 void UTransform::TranslateDirNotY(const _float3& _vDir, const _double& _dTimeDelta, const _float& _fSpeed)
@@ -276,18 +282,20 @@ void UTransform::TranslateDirNotY(const _float3& _vDir, const _double& _dTimeDel
 	SetPos(vPosition);
 }
 
-void UTransform::TranslateTransNotY(CSHPTRREF<UTransform> _pTransform, const _double& _dTimeDelta, const _float& _fSpeed, const _float& _fLimitDistance)
+_bool UTransform::TranslateTransNotY(CSHPTRREF<UTransform> _pTransform, const _double& _dTimeDelta, const _float& _fSpeed, const _float& _fLimitDistance)
 {
-	RETURN_CHECK(nullptr == _pTransform, ; );
+	RETURN_CHECK(nullptr == _pTransform, false);
 	const _float3& _vPos = _pTransform->GetPos();
-	if (ComputeDistance(_vPos) <= _fLimitDistance * _fLimitDistance) {
+	if (ComputeDistance(_vPos) <= _fLimitDistance) {
 		_float3 vPosition = GetPos();
 		_float3 vLook = _vPos - vPosition;
 
 		vPosition += vLook * static_cast<_float>(_dTimeDelta) * _fSpeed;
 		vPosition.y = 0.f;
 		SetPos(vPosition);
+		return false;
 	}
+	return true;
 }
 
 void UTransform::RotateFix(const _float3& _vStandardAngle, const _float _fTurnAnge)

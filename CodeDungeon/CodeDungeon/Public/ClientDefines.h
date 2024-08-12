@@ -35,6 +35,12 @@ namespace Client
 		SCENE_LOGO, SCENE_STAGE1, SCENE_STAGE2, SCENE_END
 	};
 
+	enum
+	{
+		ENABLE_KEY = 0x01,
+		KEYBOARD_F = 0x10,
+	};
+
 	enum WARRIORPLAYERSTATE
 	{
 		RUNSHIFT = 0,
@@ -96,6 +102,30 @@ namespace Client
 			warriorPlayerFallingState{ _isWarriorPlayerFaillingState }, runningState{ _isRunningState }
 		{}
 	};
+
+	struct MOBSERVERDATA
+	{
+		_int				iStartAnimIndex;
+		_int				iMobType;
+		_float4x4	mWorldMatrix;
+		_int				iMobID;
+		_int				iMobParentsID;
+		_string					strRoomName;
+
+		MOBSERVERDATA() : iStartAnimIndex{ 0 }, iMobType{ 0 }, mWorldMatrix{ _float4x4::Identity }, iMobID{ 0 }, iMobParentsID{ 0 },
+			strRoomName{ "" } {}
+	};
+
+	struct STATICOBJSERVERDATA
+	{
+		_float4x4	mWorldMatrix;
+		_int				iServerID;
+		_int				iObjType;
+		_string					strRoomName;
+
+		STATICOBJSERVERDATA() : mWorldMatrix{ _float4x4::Identity }, iServerID{ 0 }, iObjType{ 0 }, strRoomName{ "" } {}
+	};
+
 
 #define WINDOW_WIDTH					Client::DXVALUE::g_iWindowWidth
 #define WINDOW_HEIGHT					Client::DXVALUE::g_iWindowHeight

@@ -149,30 +149,6 @@ void TModelView::LateTickActive(const _double& _dTimeDetla)
 				Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
 		}
 	}
-
-	//for (auto& ShowModel : m_ShowModelsContainer)
-	//{
-	//	//픽킹이 가능하도록 픽킹목록에 추가
-	//	SHPTR<UModel> spModel = ShowModel.second->GetShowModel();
-	//	for (auto& Mesh : spModel->GetMeshContainers())
-	//	{
-	//		SHPTR<UVIBuffer> spVIbuffer = static_pointer_cast<UVIBuffer>(Mesh);
-	//		SHPTR<UPawn> pawnModel = static_pointer_cast<UPawn>(ShowModel.second);
-	//		GetGameInstance()->AddPickingObject(pawnModel, spVIbuffer);
-	//	}
-	//}
-
-	//for (auto& ShowAnimModel : m_ShowAnimModelsContainer)
-	//{
-	//	//픽킹이 가능하도록 픽킹목록에 추가
-	//	SHPTR<UModel> spModel = ShowAnimModel.second->GetAnimModel();
-	//	for (auto& Mesh : spModel->GetMeshContainers())
-	//	{
-	//		SHPTR<UVIBuffer> spVIbuffer = static_pointer_cast<UVIBuffer>(Mesh);
-	//		SHPTR<UPawn> pawnModel = static_pointer_cast<UPawn>(ShowAnimModel.second);
-	//		GetGameInstance()->AddPickingObject(pawnModel, spVIbuffer);
-	//	}
-	//}
 }
 
 void TModelView::RenderActive()
@@ -296,6 +272,7 @@ void TModelView::ShowModelList()
 				if (ImGui::Selectable(Model.first.c_str(), &isTrue))
 				{
 					m_spSelectedModel = static_pointer_cast<UPawn>(Model.second);
+					m_spShowModelObject = Model.second;
 					m_SelectedModelName = Model.first;
 					m_bSelectedhasAnim = false;
 				}
@@ -305,11 +282,29 @@ void TModelView::ShowModelList()
 		if (ImGui::Button("Clear All ShowModels"))
 			ClearAllShowModels();
 
+		ImGui::SameLine();
+
+		if (true == ImGui::Button("Create MinMaxPos"))
+		{
+			SHPTR < UModel> spModel = m_spShowModelObject->GetShowModel();
+			_string strModelName = m_SelectedModelName;
+			_string path = "..\\..\\" + strModelName;
+			std::ofstream save{ path };
+			if (save.is_open())
+			{
+				_float3 vMin = spModel->GetMinVertexPos();
+				_float3 vMax = spModel->GetMaxVertexPos();
+				save.write((_char*)&vMin, sizeof(_float3));
+				save.write((_char*)&vMin, sizeof(_float3));
+			}
+		}
+
 		if (ImGui::Button("Add Current ShowModels to MapLayout"))
 		{
 			m_bshowLayoutAddPopup = true;
 			ImGui::OpenPopup("Add to MapLayouts");
 		}
+
 		AddModelstoMapLayout();
 
 		ImGui::TreePop();

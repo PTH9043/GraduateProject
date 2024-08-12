@@ -41,7 +41,7 @@ message CHARSTATE
 	float  rotatex = 5;
 	float  rotatey = 6;
 	float  rotatez = 7;
-	int64	animationIndex = 8;
+	int32	animationIndex = 8;
 	int32  state = 9;
 	int32	triggerOn = 10;
 }
@@ -86,36 +86,30 @@ message SC_CONNECTSUCCESS{
 	// id 
 	int64 id = 1;
 	// 시작 위치
-	int64 cellIndex = 2;
+	int32 cellIndex = 2;
 	// 캐릭터 타입
-	int64 type = 4;
+	int32 type = 4;
 }
 
 // 다른 클라이언트가 로그인 했을 때 
 message SC_OTHERCLIENTLOGIN 
 {
 	int64 id = 1;
-	int64 cellIndex = 2;
+	int32 cellIndex = 2;
 	// 캐릭터 타입
-	int64 type = 3;
+	int32 type = 3;
 }
 
  message SC_MONSTERFIND 
  {
 	 int64 id = 1;
-	 int64 findtype = 2;
-	 int64 targetID = 3;
+	 int32 targetID = 2;
  }
 
  message SC_DAMAGED
  {
 	 int64 id = 1;
-	 float damage = 2;
- }
-
- message SC_DEAD
- {
-	 int64 id = 1;
+	 float  hp = 2;
  }
 
  message SC_SEEPLAYERMOVE
@@ -125,6 +119,21 @@ message SC_OTHERCLIENTLOGIN
 	float	posX = 2;
 	float	posY = 3;
 	float	posZ = 4;
+}
+
+message SC_STATICOBJFIND
+{
+	int64 id = 1;
+	int32 enable = 2;
+}
+
+message SC_HARLEQUINTHROWING
+{
+	int32 id = 1;
+	// Pos
+	float  posX = 2;
+	float  posY = 3;
+	float  posZ = 4;
 }
 
 /*
@@ -146,14 +155,32 @@ message CS_ATTACK
 	VECTOR3 attackPos = 2;
 	float damage = 3;
 }
+
+message CS_HEAL
+{
+	int64 id = 1;
+}
+
+message CS_PRESSKEY
+{
+	int64 id = 1;
+	int32 key = 2; // 작동시켰는지 판단
+}
+
+message CS_PLAYERORDER
+{
+	int64 id = 1;
+	int32 order = 2;
+}
+
+message CS_DAMAGED 
+{
+	int64 id = 1;
+	float damage = 2;
+}
+
 // 연결 해제
 message CS_DISCONNECT 
 {
 	int64 id = 1;
 }
-
- message CS_DAMAGED
- {
-	 int64 id = 1;
-	 float damage = 2;
- }

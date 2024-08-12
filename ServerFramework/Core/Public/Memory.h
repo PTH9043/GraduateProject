@@ -88,7 +88,8 @@ namespace Core {
 
 		void* Allocate(_ullong _Size);
 		void Release(void* _Ptr);
-
+	public:
+		void Free();
 	private:
 		void MakeMemoryPool(unsigned int& _Size, unsigned int& _MemoryIndex,
 			unsigned int& _TableIndex, const unsigned int  _Limited, const 	unsigned int  _AddValue);

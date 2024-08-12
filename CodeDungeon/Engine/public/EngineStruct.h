@@ -749,15 +749,5 @@ namespace Engine {
 			vRotate {	_vRotate}, vScale{ _vScale } {}
 	};
 
-	struct MOBSERVERDATA
-	{
-		_int					iStartAnimIndex;
-		_int					iMobType;
-		_float4x4		mWorldMatrix;
-		_int					iMobID;
-		_int					iMobParentsID;
-		MOBSERVERDATA() : iStartAnimIndex{ 0 }, iMobType{ 0 }, mWorldMatrix{ _float4x4::Identity }, iMobID{ 0 }, iMobParentsID{ 0 } {}
-	};
-
 #pragma endregion NETWORKDATA
 }

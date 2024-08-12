@@ -15,15 +15,16 @@ class ACollider;
 */
 class CORE_DLL AGameObject abstract : public ACoreObject {
 public:
-	using COLLIDERCONTAINER = CONVECTOR<SHPTR<ACollider>>;
+	using COLLIDERCONTAINER = CONUNORMAP<_int, SHPTR<ACollider>>;
 	using BUFFER = ARRAY<_char, MAX_BUFFER_LENGTH>;
 public:
 	AGameObject(OBJCON_CONSTRUCTOR, SESSIONID _ID, SESSIONTYPE _SessionType);
 	DESTRUCTOR(AGameObject)
 public:
 	virtual _bool Start(const VOIDDATAS& _ReceiveDatas = {}) PURE;
+	virtual void Tick(const _double& _dTimeDelta);
 	virtual void RunningPermanentDisableSituation();
-	void InsertColliderContainer(const COLLIDERINFO& _ColliderInfo);
+	void InsertColliderContainer(_int _ColliderTag, _int _ColliderType, const COLLIDERDESC& _ColliderDesc);
 	void BringSpaceIndex(SHPTR<ASpace> _spSpace);
 
 	// 다른 캐릭터와의 거리 산출 
@@ -39,6 +40,21 @@ public:
 
 	_bool IsCanSee(Vector3 _OtherPos);
 	_bool IsCanSee(SHPTR<ATransform> _spTransform);
+
+	/*
+	@ Date: 2024-01-04, Writer: 박태현
+	@ Explain
+	- ProtocolBuffer를 조합하기 위한 함수이다.
+	*/
+	template<class T>
+	void CombineProto(REF_IN BUFFER& _Buffer, REF_IN PACKETHEAD& _PacketHead, const T& _data, _int _tag)
+	{
+		_data.SerializePartialToArray((void*)&_Buffer[0], static_cast<int>(_data.ByteSizeLong()));
+		_PacketHead.PacketSize = static_cast<short>(_data.ByteSizeLong());
+		_PacketHead.PacketType = static_cast<short>(_tag);
+	}
+	// Damaged
+	virtual void Collision(AGameObject* _pGameObject, const _double& _dTimeDelta) PURE;
 public:/*Get Set */
 	const SESSIONID GetSessionID() const { return m_SessionID; }
 	const SESSIONTYPE& GetSessionType() const { return m_SessionType; }
@@ -52,28 +68,18 @@ public:/*Get Set */
 	const _int GetCurOnCellIndex() const { return m_iCurOnCellIndex; }
 	const _bool IsActive() const { return m_isActive; }
 	const _bool IsPermanentDisable() const;
+	COLLIDERCONTAINER& GetColliderContainer() { return m_ColliderContainer; }
 
 	void SetJumpable(const _bool _isJumpable) { this->m_isJumpable = _isJumpable; }
 	virtual void SetActive(const _bool _isActive);
 	void ActivePermanentDisable();
-	/*
-	@ Date: 2024-01-04, Writer: 박태현
-	@ Explain
-	- ProtocolBuffer를 조합하기 위한 함수이다.
-	*/
-	template<class T>
-	void CombineProto(REF_IN BUFFER& _Buffer, REF_IN PACKETHEAD& _PacketHead, const T& _data, _int _tag)
-	{
-		_data.SerializePartialToArray((void*)&_Buffer[0], static_cast<int>(_data.ByteSizeLong()));
-		_PacketHead.PacketSize = static_cast<short>(_data.ByteSizeLong());
-		_PacketHead.PacketType = static_cast<short>(_tag);
-	}
 protected:
 	// 영구적으로 해당 오브젝트를 사용하지 않도록 결정할 경우 보낼 메시지 
 	virtual void LastBehavior();
 	virtual void CallActiveEnable();
 	virtual void CallActiveDisable();
 	void RestrictPositionToNavi();
+	virtual void UpdateColliderData();
 protected: /* Get Set */
 	void SetSessionID(const SESSIONID& _SessionID) { this->m_SessionID = _SessionID; }
 	void SetSessionType(const SESSIONTYPE& _SessionType) { this->m_SessionType = _SessionType; }
@@ -87,7 +93,6 @@ protected: /* Get Set */
 	PACKETHEAD& GetPacketHead() { return m_CopyHead; }
 	BUFFER& GetCopyBuffer(REF_RETURN) { return m_CopyBuffer; }
 	_char* GetCopyBufferPointer(_int _iBufferIndex = 0) { return &m_CopyBuffer[0]; }
-	COLLIDERCONTAINER& GetColliderContainer() { return m_ColliderContainer; }
 private:
 	virtual void Free() override;
 public:

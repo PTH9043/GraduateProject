@@ -44,7 +44,15 @@ HRESULT CSarcophagus::NativeConstructClone(const VOIDDATAS& _Datas)
 
 void CSarcophagus::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 {
+	switch (_ProcessData.GetDataType())
+	{
+	case TAG_SC_MONSTERFIND:
+	{
+		SetFoundTargetState(true);
+	}
+	break;
 
+	}
 }
 
 void CSarcophagus::TickActive(const _double& _dTimeDelta)
@@ -56,9 +64,11 @@ void CSarcophagus::TickActive(const _double& _dTimeDelta)
 	_double LyingSarcophagusTimeArcOpenEnd = 50;
 	_double StandingSarcophagusTimeArcOpenEnd = 30;
 
+	SHPTR<CMummy> spMummy = GetOwnerMummy();
+
 	GetAnimationController()->Tick(_dTimeDelta);
 
-	if (!GetDeathState())
+	if (!spMummy->GetDeathState())
 	{
 		if (GetFoundTargetState())
 		{

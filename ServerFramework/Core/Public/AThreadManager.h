@@ -9,6 +9,7 @@ class AJobTimer;
 class AMainLoop;
 class ACoreInstance;
 class AService;
+class AGameObject;
 
 using THREAD = std::thread;
 using THRAEDVECTOR = VECTOR<THREAD>;
@@ -29,6 +30,8 @@ public:
 	void CreateMainLoop(SHPTR<ACoreInstance> _spCoreinstance, Asio::io_service& _service, SHPTR< AService> _spService);
 	void RegisterFunc(const THREADFUNC& _CallBack, void* _Data);
 	void RegisterJob(_int _jobType, CSHPTRREF<AJobTimer> _spJobTimer);
+	void InsertPawnCollisionList(AGameObject* _pGameObject);
+	void InsertStaticObjCollisionList(AGameObject* _pGameObject);
 	SHPTR<AJobTimer> FindJobTimer(_int _JobTimer);
 	void Join();
 	void Detach();

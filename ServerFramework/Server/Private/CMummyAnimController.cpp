@@ -7,15 +7,14 @@
 
 namespace Server {
 
-	CMummyAnimController::CMummyAnimController(OBJCON_CONSTRUCTOR, SHPTR<APawn> _spPawn, 
-		const _string & _strFolderPath, const _string & _strFileName, const _float4x4& _PivotMatrix) :
+	CMummyAnimController::CMummyAnimController(OBJCON_CONSTRUCTOR, SHPTR<APawn> _spPawn,
+		const _string& _strFolderPath, const _string& _strFileName, const _float4x4& _PivotMatrix) :
 		AAnimController(OBJCON_CONDATA, _spPawn, _strFolderPath, _strFileName, _PivotMatrix),
-		m_spMummy{nullptr}, m_isAttackMode{false},	
-		m_LastHitTimer{}, m_LastAttackTimer{}, 
-		m_IdleRandomValueChooseTimer{3},
-		m_isStartlastHitTime{false},  m_isLastAttackWasFirst{false}, m_iRandomValue{0}
+		m_wpMummy{  }, m_isTauntMode{ false }, m_isAttackMode{ false },
+		m_IdleTimer{ 1 }, m_IdleRandomValueChooseTimer { 3 },
+		m_isStartlastHitTime{ false }, m_isLastAttackWasFirst{ true }, m_iRandomValue{ 0 }
 	{
-		m_spMummy = static_shared_cast<CMummy>(_spPawn);
+		m_wpMummy = static_shared_cast<CMummy>(_spPawn);
 	}
 
 	void CMummyAnimController::Tick(const _double& _dTimeDelta)
@@ -28,13 +27,14 @@ namespace Server {
 		static std::uniform_int_distribution<> dis_patrol(0, 3);
 		static std::uniform_int_distribution<> dis_attack(0, 1);
 
-		SHPTR<CMummy> spMummy = m_spMummy;
+		SHPTR<CMummy> spMummy = m_wpMummy.lock();
 		SHPTR<AAnimator> spAnimator = GetAnimator();
 		SHPTR<AAnimation> spCurAnimation = GetCurAnimation();
-	
+
 		_string CurAnimName = spCurAnimation->GetAnimName();
 		_bool isHit = spMummy->IsDamaged();
 		_bool isFoundPlayer = spMummy->IsCurrentFindPlayer();
+		_bool isDisableFoundPlayer = spMummy->IsCurrentNotFound();
 		_bool isAtkPlayer = spMummy->IsCurrentAtkPlayer();
 		_bool isFirstFound = spMummy->IsFoundPlayerFirstTime();
 		_bool isDeadState = spMummy->IsDead();
@@ -50,6 +50,7 @@ namespace Server {
 		static const char* GOTHITANIM = "gotHit";
 		static const char* ATTACK1ANIM = "attack1";
 		static const char* ATTACK2ANIM = "attack2";
+		static const char* IDLE_ANIMNAME = "idle";
 
 		static const char* WAKEUPORDER = "WAKEUP";
 		static const char* IDLEORDER = "IDLE";
@@ -60,9 +61,14 @@ namespace Server {
 		static const char* ATTACK2ORDER = "ATTACK02";
 		static const char* DEADORDER = "DEAD";
 
-		if(false == isDeadStateEnable)
+		if (false == isDeadState)
 		{
-			if (isFirstFoundState)
+			if (false == isFoundPlayer && false == isAtkPlayer && true == isDisableFoundPlayer)
+			{
+				m_isTauntMode = true;
+			}
+
+			if (true == isFoundPlayer && false == isFirstFound)
 			{
 				UpdateState(WAKEUPORDER, MOB_AWAKE_STATE);
 				if (MUMMYTYPE::MUMMY_LAYING == eMummyType)
@@ -72,7 +78,7 @@ namespace Server {
 
 				spMummy->SetFoundPlayerFirstTime(true);
 			}
-			else
+			else if(false == isFoundPlayer && true == isFirstFound)
 			{
 				m_isAttackMode = false;
 
@@ -82,19 +88,45 @@ namespace Server {
 					m_IdleRandomValueChooseTimer.ResetTimer();
 				}
 
-				if (0 == m_iRandomValue)
-					UpdateState(IDLEORDER, MOB_IDLE_STATE);
-				else
+				if (IDLE_ANIMNAME == CurAnimName)
+				{
+					if (m_IdleTimer.IsOver(_dTimeDelta))
+					{
+						m_IdleTimer.ResetTimer();
+					}
+				}
+
+				if (0 == m_IdleTimer.fTimer)
+				{
+					if (0 == m_iRandomValue)
+						UpdateState(IDLEORDER, MOB_IDLE_STATE);
+					else
+						UpdateState(WALKFORDER, MOB_MOVE_STATE);
+				}
+			}
+			else
+			{
+				if (false == isAtkPlayer)
+				{
 					UpdateState(WALKFORDER, MOB_MOVE_STATE);
+				}
 			}
 
-			if (true == isFoundState && false == m_isAttackMode || 
-				OPENLAYING == CurAnimName || OPENSTANDING == CurAnimName)
+			if (OPENLAYING == CurAnimName || OPENSTANDING == CurAnimName)
 			{
-				UpdateState(TAUNTORDER, MOB_TAUNT_STATE);
-				if (CurAnimName == TAUNTANIM)
+				m_isTauntMode = true;
+			}
+
+			if (m_isTauntMode && false == isDisableFoundPlayer)
+			{
+				if (true == isFoundState && false == m_isAttackMode)
 				{
-					m_isAttackMode = true;
+					UpdateState(TAUNTORDER, MOB_TAUNT_STATE);
+					if (TAUNTANIM == CurAnimName)
+					{
+						m_isAttackMode = true;
+						m_isTauntMode = false;
+					}
 				}
 			}
 
@@ -104,13 +136,14 @@ namespace Server {
 				UpdateState(GOTHITORDER, MOB_HIT_STATE);
 				spMummy->SetDamaged(false);
 			}
-			else if (true == m_isAttackMode)
+			
+			if (true == m_isAttackMode && false == isHit)
 			{
 				if (true == isAtkPlayer)
 				{
 					if (ATTACK1ANIM == CurAnimName)
 						m_isLastAttackWasFirst = false;
-					else if(ATTACK2ANIM == CurAnimName)
+					else if (ATTACK2ANIM == CurAnimName)
 						m_isLastAttackWasFirst = true;
 
 					if (true == m_isLastAttackWasFirst)
@@ -129,6 +162,10 @@ namespace Server {
 		if (true == isDeadState)
 		{
 			UpdateState(DEADORDER, MOB_DEATH_STATE);
+		}
+		else if (false == isFirstFound)
+		{
+			SetAnimState(MOB_IDLE_STATE);
 		}
 
 		spAnimator->TickEvent(spMummy.get(), GetInputTrigger(), _dTimeDelta);

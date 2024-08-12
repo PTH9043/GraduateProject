@@ -81,12 +81,7 @@ namespace Core
 
 	AMemoryAdiminstor::~AMemoryAdiminstor()
 	{
-		for (auto& iter : m_PoolTable)
-		{
-			if (nullptr != iter)
-				iter->Release();
-			delete iter;
-		}
+		
 	}
 
 	// SIze의 크기가 해당 메모리에 없으면 그냥 할당, 아니라면 해제한다. 
@@ -132,6 +127,17 @@ namespace Core
 		}
 #endif
 	}
+
+	void AMemoryAdiminstor::Free()
+	{
+		for (auto& iter : m_PoolTable)
+		{
+			if (nullptr != iter)
+				iter->Release();
+			delete iter;
+		}
+	}
+
 	// 메모리 할당을 해주는 함수이다. 
 	void AMemoryAdiminstor::MakeMemoryPool(unsigned int& _Size, unsigned int& _MemoryIndex,
 		unsigned int& _TableIndex, const unsigned int  _Limited, const 	unsigned int  _AddValue)

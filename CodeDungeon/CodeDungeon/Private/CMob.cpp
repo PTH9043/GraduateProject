@@ -67,7 +67,6 @@ HRESULT CMob::NativeConstructClone(const VOIDDATAS& _Datas)
 	GetCurrentNavi()->FindCell(GetTransform()->GetPos());
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	spGameInstance->AddCollisionPawnList(ThisShared<UPawn>());
-	m_isSendDataToBehavior = false;
 	SetActive(false);
 #else
 	GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
@@ -81,20 +80,20 @@ void CMob::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
 
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	_float3 CurrentMobPos = GetTransform()->GetPos();
+//	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	//_float3 CurrentMobPos = GetTransform()->GetPos();
 
-	if (nullptr == m_spTargetPlayer)
-	{
-		m_spTargetPlayer = spGameInstance->FindPlayerToDistance(CurrentMobPos);
-	}
+	//if (nullptr == m_spTargetPlayer)
+	//{
+	//	m_spTargetPlayer = spGameInstance->FindPlayerToDistance(CurrentMobPos);
+	//}
 
-	if (m_spTargetPlayer)
-	{
-		_float3 CurrentPlayerPos = m_spTargetPlayer->GetTransform()->GetPos();
-		CalculateDistanceBetweenPlayers(CurrentPlayerPos, CurrentMobPos);
-		SearchForPlayers();
-	}
+	//if (m_spTargetPlayer)
+	//{
+	//	_float3 CurrentPlayerPos = m_spTargetPlayer->GetTransform()->GetPos();
+	//	CalculateDistanceBetweenPlayers(CurrentPlayerPos, CurrentMobPos);
+	//	SearchForPlayers();
+	//}
 }
 
 void CMob::LateTickActive(const _double& _dTimeDelta)
@@ -164,20 +163,25 @@ void CMob::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 	{
 	case TAG_SC_MONSTERSTATE:
 	{
-		if (true == IsSendDataToBehavior())
-			return;
-
-		static MOBSTATE scMonsterState;
-		scMonsterState.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
-		GetAnimationController()->ReceiveNetworkProcessData(&scMonsterState);
-		GetTransform()->SetPos(_float3{ scMonsterState.posx(), scMonsterState.posy(), scMonsterState.posz() });
-		GetTransform()->RotateFix(_float3{ scMonsterState.rotatex(), scMonsterState.rotatey(), scMonsterState.rotatez() });
-		SetFoundTargetState(scMonsterState.foundon());
+		static MOBSTATE MobState;
+		MobState.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
+		GetAnimationController()->ReceiveNetworkProcessData(&MobState);
+		GetTransform()->SetPos(_float3{ MobState.posx(), MobState.posy(), MobState.posz() });
+		GetTransform()->RotateFix(_float3{ MobState.rotatex(), MobState.rotatey(), MobState.rotatez() });
+		SetFoundTargetState(MobState.foundon());
+		MobState.Clear();
 	}
 	break;
 	case TAG_SC_DAMAGED:
 	{
+		static SC_DAMAGED scDamaged;
+		scDamaged.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
+		if (0 >= scDamaged.hp())
+		{
+			SetDeathState(true);
+		}
 		SetDamaged(true);
+		scDamaged.Clear();
 	}
 	break;
 	}
@@ -187,40 +191,21 @@ void CMob::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 #ifdef _ENABLE_PROTOBUFF
 void CMob::SendMobStateData()
 {
-	/*CSHPTRREF<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
-	_float3 vCharacterPos = GetTransform()->GetPos();
-	_float3 vCharRotate = GetTransform()->GetRotationValue();
-
-	_int state = GetAnimationController()->GetAnimState();
-	_int AnimIndex = GetAnimModel()->GetCurrentAnimIndex();
-	_double Animtime = GetAnimModel()->GetCurrentAnimation()->GetTimeAcc();
-
-	VECTOR3 vMove;
-	VECTOR3 vRotate;
-	{
-		PROTOFUNC::MakeVector3(OUT & vMove, vCharacterPos.x, vCharacterPos.y, vCharacterPos.z);
-		PROTOFUNC::MakeVector3(OUT & vRotate, vCharRotate.x, vCharRotate.y, vCharRotate.z);
-	}
-	MOBSTATE charMove;
-	PROTOFUNC::MakeMobState(OUT & charMove, GetNetworkID(), vMove, vRotate,
-		state, AnimIndex, IsDamaged(), GetFoundTargetState(), Animtime);
-	spGameInstance->InsertSendProcessPacketInQuery(std::move(UProcessedData(charMove, TAG_CS_MONSTERSTATE)));*/
 }
 
-void CMob::SendCollisionData()
+void CMob::SendCollisionData(UPawn* _pPawn, _float _fDamaged)
 {
-	RETURN_CHECK(false == IsDamaged(), ;);
-
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	COLLISIONDATA csCollision;
-	VECTOR3 Pos;
-	_llong NetworkID = GetNetworkID();
+	CS_DAMAGED csPlayerDamaged;
+	_int NetworkID = GetNetworkID();
 	{
-		PROTOFUNC::MakeCollisionData(&csCollision, NetworkID, spGameInstance->GetNetworkOwnerID());
+		PROTOFUNC::MakeCsDamaged(&csPlayerDamaged, NetworkID, _fDamaged);
 	}
-	spGameInstance->InsertSendProcessPacketInQuery(UProcessedData(NetworkID, csCollision, TAG_CS_MONSTERCOLIISION));
+	spGameInstance->SendProtoData(UProcessedData(NetworkID, csPlayerDamaged,
+		TAG_CS_MONSTERCOLIISION));
 }
+
 #endif
 
 void CMob::SearchForPlayers()

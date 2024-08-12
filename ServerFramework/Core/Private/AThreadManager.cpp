@@ -31,6 +31,18 @@ namespace Core
 		m_JobThreadContainer.emplace(MakePair(_jobType, _spJobTimer));
 	}
 
+	void AThreadManager::InsertPawnCollisionList(AGameObject* _pGameObject)
+	{
+		assert(nullptr != _pGameObject);
+		m_spMainLoop->InsertPawnCollisionList(_pGameObject);
+	}
+
+	void AThreadManager::InsertStaticObjCollisionList(AGameObject* _pGameObject)
+	{
+		assert(nullptr != _pGameObject);
+		m_spMainLoop->InsertStaticObjCollisionList(_pGameObject);
+	}
+
 	SHPTR<AJobTimer> AThreadManager::FindJobTimer(_int _JobTimer)
 	{
 		const auto& iter = m_JobThreadContainer.find(_JobTimer);
@@ -44,7 +56,7 @@ namespace Core
 	*/
 	void AThreadManager::Join()
 	{
-	//	m_spMainLoop->RegisterTimer(1);
+		m_spMainLoop->RegisterTimer(1);
 
 		for (auto& iter : m_JobThreadContainer)
 		{

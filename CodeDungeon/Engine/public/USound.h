@@ -20,10 +20,10 @@ public: /* get set */
 	_float GetVolume() const { return m_SoundDesc.fVolume; }
 	FMOD::Sound* GetSound() const { return m_pSound; }
 	const _bool IsSoundPlay() const { return m_isSoundPlay; }
-
 	void SetVolume(const _float _fVolume) { m_SoundDesc.fVolume = _fVolume; }
 public:
 	virtual void Free() override;
+	_bool IsSoundPlay(FMOD::Channel* _pChannel);
 	void Tick();
 	void TickWithManyChannels();
 	void TickWithInputChannel(IN FMOD::Channel** _ppChannel);

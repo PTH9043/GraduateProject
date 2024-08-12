@@ -54,6 +54,9 @@ public:
 	void AddLightCount() { m_iLightCount++; }
 	const _uint GetLightCount() { return m_iLightCount; }
 	const _int GetSarcophagusCount() { return m_iSarcophagusCount; }
+
+	void SetMobContainer(SHPTR<MOBSCONTAINER> _spMobContainer);
+	void InsertStaticObjContainer(SHPTR<STATICOBJCONTAINER> _spStaticObjContainer);
 private:
 	SHPTR<ROOMCONTAINER>			m_spRoomContainer;
 	SHPTR<UMapLayout>				m_spMapLayout;

@@ -27,10 +27,10 @@ public:
 private:
 	virtual void Free() override;
 private:
-	SHPTR<CMummy>		m_spMummy;
+	WKPTR<CMummy>	m_wpMummy;
+	_bool								m_isTauntMode;
 	_bool								m_isAttackMode;
-	CUSTIMER						m_LastHitTimer;
-	CUSTIMER						m_LastAttackTimer;
+	CUSTIMER						m_IdleTimer;
 	CUSTIMER						m_IdleRandomValueChooseTimer;
 	_bool								m_isStartlastHitTime;
 	_bool								m_isLastAttackWasFirst;

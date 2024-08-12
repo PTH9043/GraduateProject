@@ -44,8 +44,10 @@ public:
 		CombineProto<T>(REF_OUT _buffer, REF_OUT PacketHead, _data, _tag);
 		SendData(&_buffer[0], PacketHead);
 	}
+	void ResetKeyState() { this->m_KeyState = 0; }
 public: /*Get Set */
 	TCPSOCKET& GetTcpSocket(REF_RETURN) { return m_TcpSocket; }
+	const _int GetKeyState() const { return m_KeyState; }
 protected:
 	virtual _bool ProcessPacket(_char* _pPacket, const PACKETHEAD& _PacketHead) PURE;
 	void PacketCombine(_char* _pPacket, _llong _Size);
@@ -53,6 +55,7 @@ protected:
 	void Leave();
 protected: /* get set*/
 	BUFFER& GetSendBuff(REF_RETURN) { return m_SendBuffer; }
+	void SetKeyState(_int _KeyState) { this->m_KeyState = _KeyState; }
 private:
 	virtual void Free() override;
 
@@ -64,6 +67,8 @@ private:
 	BUFFER							m_RecvBuffer;
 	// SendBuffer
 	BUFFER							m_SendBuffer;
+	// KeyState
+	ATOMIC<_int>				m_KeyState;
 };
 
 END

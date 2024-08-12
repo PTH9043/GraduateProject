@@ -32,4 +32,5 @@ void UNetworkSender::SendDataInQuery()
 
 void UNetworkSender::Free()
 {
+	Make::xdelete(m_pOverExp);
 }

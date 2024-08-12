@@ -54,15 +54,20 @@ HRESULT UAudioSystem::NativeConstructClone(const VOIDDATAS& _Datas)
 	return __super::NativeConstructClone(_Datas);
 }
 
+_bool UAudioSystem::IsSoundPlay(const _wstring& _wstrSoundName, FMOD::Channel* _pChannel)
+{
+	m_spSound = BringSound(_wstrSoundName);
+	RETURN_CHECK(nullptr == m_spSound, false);
+	return m_spSound->IsSoundPlay(_pChannel);
+}
 
 void UAudioSystem::Tick()
 {
 	for (auto& iter : m_SoundContainer)
 	{
 		iter->Tick();
-}
-
 	}
+}
 void UAudioSystem::TickWithManyChannels()
 {
 	for (auto& iter : m_SoundContainer)

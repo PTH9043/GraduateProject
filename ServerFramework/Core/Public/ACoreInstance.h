@@ -19,14 +19,15 @@ class ACell;
 class AJobTimer;
 class AMonster;
 class AServerService;
-class ACollisionManager;
 class APawn;
+class AStaticObject;
 
 using NAVIGATIONWORKBENCH = ARRAY<SHPTR<ANavigation>, TLS::MAX_WORKTHREAD>;
 using PATHFINDERWORKBENCH = ARRAY<SHPTR<APathFinder>, TLS::MAX_WORKTHREAD>;
 
 using SESSIONCONTAINER = CONUNORMAP<SESSIONID, SHPTR<ASession>>;
 using MOBOBJCONTAINER = CONUNORMAP<SESSIONID, SHPTR<AMonster>>;
+using STATICOBJCONTAINER = CONUNORMAP<SESSIONID, SHPTR<AStaticObject>>;
 /*
 @ Date: 2024-01-23
 @ Writer: 박태현
@@ -47,6 +48,8 @@ public: /* Service */
 	 SHPTR<ASession> FindSession(const SESSIONID _SessionID);
 	 // ID를 통해서 GameObject를 찾아온다. 
 	 SHPTR<AMonster> FindMobObject(const SESSIONID _SessionID);
+	 // ID를 통해서 GameObject를 찾아온다. 
+	 SHPTR<AStaticObject> FindStaticObject(const SESSIONID _SessionID);
 	// 전체 서버 참여자에게 메시지를 보내는 함수이다. 
 	 void BroadCastMessage(_char* _pPacket, const PACKETHEAD& _PacketHead);
 	 // 해당 Session ID를 제외한 전체 서버 참여자에게 메시지를 보내는 함수
@@ -59,14 +62,18 @@ public: /* Service */
 	 void InsertSession(SESSIONID _SessionID, SHPTR<ASession> _spSession);
 	 // GameObject를 집어넣는 함수
 	 void InsertMobObject(SESSIONID _SessionID, SHPTR<AMonster> _spMobObject);
+	 // StaticObject 
+	 void InsertStaticObj(SESSIONID _SessionID, SHPTR<AStaticObject> _spStaticObj);
 	 // Get 
 	 const SESSIONCONTAINER& GetSessionContainer() const;
 	 const MOBOBJCONTAINER& GetMobObjContainer() const;
-
+	 const STATICOBJCONTAINER& GetStaticObjContainer() const;
 	 SHPTR<AServerService> GetServerService();
 public: /* ThreadManager */
 	void RegisterFunc(const THREADFUNC& _CallBack, void* _Data);
 	void RegisterJob(_int _jobType, CSHPTRREF<AJobTimer> _spJobTimer);
+	void InsertPawnCollisionList(AGameObject* _pGameObject);
+	void InsertStaticObjCollisionList(AGameObject* _pGameObject);
 	SHPTR<AJobTimer> FindJobTimer(_int _JobTimer);
 	void Join();
 public: /* RandomManager */
@@ -86,22 +93,23 @@ public: /* MySqlDriver */
 	void BindParam(SQLTABLETYPE _TableType, _int _ParamIndex, _llong _Value);
 	void BindParam(SQLTABLETYPE _TableType, _int _ParamIndex, const _string& _Value);
 public:
-	void AddMonsterPawnList(APawn* _pPawn);
-	void CollisionSituation(const _double _dTimeDelta);
-	void CollisionSituationToPlayer(ASession* _pSession, const _double _dTimeDelta);
-public:
 	SHPTR<ANavigation> CloneNavi();
+public:
+	void CheckAllPlayerDie();
+
+	_bool IsCheckAllPlayerDie() const { return m_isCheckAllPlayerDie; }
 private:
 	virtual void Free() override;
 private:
 	MUTEX											m_Mutex;
 	SHPTR<AService>						m_spService;
 	SHPTR<AThreadManager>		m_spThreadManager;
-	SHPTR<ARandomManager>		m_spRandomManager;
+	SHPTR<ARandomManager>	m_spRandomManager;
 	SHPTR<ASpaceManager>			m_spSpaceManager;
 	SHPTR< AMySqlDriver>				m_spMySqlDriver;
-	SHPTR<ANavigation>					m_spNavigation;
-	SHPTR<ACollisionManager>		m_spCollisionManager;
+	SHPTR<ANavigation>				m_spNavigation;
+
+	ATOMIC<_bool>							m_isCheckAllPlayerDie;
 };
 
 END

@@ -575,6 +575,19 @@ namespace Core {
 		return Vector3::LengthSquared(GetPos() - _vPos);
 	}
 
+	void ATransform::ApplySlidingMovement(const Vector3& _vPrevPos, const Vector3& _vNormal,
+		const _float _fSpeed, const _double& _dTimeDelta)
+	{
+		Vector3 vCurPosition = GetPos();
+		Vector3 movementDirection = GetLook();
+
+		_float DotProduct = Vector3::Dot(movementDirection, _vNormal);
+		Vector3 vSlidingVector3 = movementDirection - _vNormal * DotProduct;
+		Vector3 Offset = _vNormal * 0.01f;
+		Vector3 vNewPosition = _vPrevPos + (vSlidingVector3 * _fSpeed * (_float)_dTimeDelta);
+		SetPos(vNewPosition);
+	}
+
 	void ATransform::GravityFall(const _double& _deltaTime)
 	{
 		std::atomic_thread_fence(std::memory_order_seq_cst);

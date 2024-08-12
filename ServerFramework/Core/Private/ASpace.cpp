@@ -14,7 +14,7 @@ namespace Core {
 	_bool ASpace::NativeConstruct(const SPACEINFO& _SpaceInfo, SHPTR<ASpace> _spParents)
 	{
 		m_wpParents = _spParents;
-		m_spCollider = Create<ACollider>(ACollider::TYPE_AABB, ACollider::COLLIDERDESC{ _SpaceInfo.vCenter, _SpaceInfo.vExtents });
+		m_spCollider = Create<ACollider>(ACollider::TYPE_AABB, COLLIDERDESC{ _SpaceInfo.vCenter, _SpaceInfo.vExtents });
 		m_DepthLevel = _SpaceInfo.Depths;
 		m_SpaceIndex = _SpaceInfo.Index;
 		return true;

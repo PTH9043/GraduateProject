@@ -18,6 +18,7 @@ namespace Server
 
 	void CMonsterJobTimer::TickTimer(const TIMEREVENT& _TimerEvent)
 	{
+		std::atomic_thread_fence(std::memory_order_seq_cst);
 		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
 
 		SHPTR<AMonster> spMonster = spCoreInstance->FindMobObject(_TimerEvent.llObjID);

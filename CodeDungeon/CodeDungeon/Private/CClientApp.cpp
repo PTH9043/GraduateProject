@@ -96,6 +96,13 @@ void CClientApp::Render()
 				return;
 			}
 		}
+		if (m_spGameInstance->GetDIKeyDown(DIK_ESCAPE))
+		{
+			m_spGameInstance->NetworkEnd();
+			m_spGameInstance.reset();
+			::PostQuitMessage(0);
+			break;
+		}
 		// Run Func
 		m_spDeltaTimer->Tick();
 

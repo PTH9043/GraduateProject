@@ -128,23 +128,23 @@ void CMap::LoadStaticObjects()
 				SHPTR<CTorch> _Torch = std::static_pointer_cast<CTorch>(spGameInstance->CloneActorAdd(PROTO_ACTOR_TORCH, {&torchDesc}));
 				_TorchVec.push_back(_Torch);		
 			}
-			if (vecit._sModelName == "Bars_FBX.bin")
-			{
-				CIronBars::IRONBARSDESC BarsDesc;
-				BarsDesc._Worldm = vecit._mWorldMatrix;
-				SHPTR<CIronBars> _IronBars = std::static_pointer_cast<CIronBars>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IRONBARS, { &BarsDesc }));
-				_BarsVec.push_back(_IronBars);
-				spGameInstance->AddCollisionPawnList(_IronBars);
-			}
-			if (vecit._sModelName == "Statue_FBX.bin")
-			{
-				CStatue::STATUEDESC StatueDesc;
-				StatueDesc._Worldm = vecit._mWorldMatrix;
-				SHPTR<CStatue> _Statue = std::static_pointer_cast<CStatue>(spGameInstance->CloneActorAdd(PROTO_ACTOR_STATUE, { &StatueDesc }));
-				_StatueVec.push_back(_Statue);
-				spGameInstance->AddCollisionPawnList(_Statue);
-			}
-			if (vecit._sModelName == "minotaurhead_FBX.bin")
+			//if (vecit._sModelName == "Bars_FBX.bin")
+			//{
+			//	CIronBars::IRONBARSDESC BarsDesc;
+			//	BarsDesc._Worldm = vecit._mWorldMatrix;
+			//	SHPTR<CIronBars> _IronBars = std::static_pointer_cast<CIronBars>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IRONBARS, { &BarsDesc }));
+			//	_BarsVec.push_back(_IronBars);
+			//	spGameInstance->AddCollisionPawnList(_IronBars);
+			//}
+			//if (vecit._sModelName == "Statue_FBX.bin")
+			//{
+			//	CStatue::STATUEDESC StatueDesc;
+			//	StatueDesc._Worldm = vecit._mWorldMatrix;
+			//	SHPTR<CStatue> _Statue = std::static_pointer_cast<CStatue>(spGameInstance->CloneActorAdd(PROTO_ACTOR_STATUE, { &StatueDesc }));
+			//	_StatueVec.push_back(_Statue);
+			//	spGameInstance->AddCollisionPawnList(_Statue);
+			//}
+	/*		if (vecit._sModelName == "minotaurhead_FBX.bin")
 			{
 				CCoreMinotaur::COREMINOTAURDESC coreDesc;
 				coreDesc._Worldm = vecit._mWorldMatrix;
@@ -170,7 +170,7 @@ void CMap::LoadStaticObjects()
 				_Core->GetModel()->SetModelName(L"HarlequinnCore");
 				_CoreVec.push_back(_Core);
 				spGameInstance->AddCollisionPawnList(_Core);
-			}
+			}*/
 		}
 	}
 	m_spStaticObjContainer->emplace("Torch_FBX.bin", _TorchVec);
@@ -373,3 +373,17 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 
 }
 
+void CMap::SetMobContainer(SHPTR<MOBSCONTAINER> _spMobContainer)
+{
+	m_spMobsContainer = _spMobContainer;
+}
+
+void CMap::InsertStaticObjContainer(SHPTR<STATICOBJCONTAINER> _spStaticObjContainer)
+{
+	for (auto& iter : (*_spStaticObjContainer))
+	{
+		(*m_spStaticObjContainer)[iter.first] = iter.second;
+	}
+}
+
+ 

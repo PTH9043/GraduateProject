@@ -72,8 +72,13 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
         _bool isAttack = isWAttack || isRAttack || isSAttack || isCombo1 || isCombo2;
         _bool isRoll = spGameInstance->GetDIKeyDown(DIK_C);
         _bool Hit = false;
-        if (spWarriorPlayer->GetPrevHealth() > spWarriorPlayer->GetHealth())
+
+        if (spWarriorPlayer->IsDamaged())
+        {
             Hit = true;
+            spWarriorPlayer->SetDamaged(false);
+        }
+
         _bool isKicked = spWarriorPlayer->GetKickedState();
         _bool isJump = spGameInstance->GetDIKeyDown(DIK_SPACE);
         _bool isRise = spWarriorPlayer->GetRiseState();

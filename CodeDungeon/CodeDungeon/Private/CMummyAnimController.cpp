@@ -152,7 +152,8 @@ void CMummyAnimController::Tick(const _double& _dTimeDelta)
             }
         }
     }
-    if (FoundPlayer && m_bFoundPlayerFirsttime && !m_bAttackMode && !spMummy->GetTargetPlayer()->GetDeathState())
+    if (FoundPlayer && m_bFoundPlayerFirsttime && !m_bAttackMode && 
+        !spMummy->GetTargetPlayer()->GetDeathState())
     {
         m_bTauntMode = true;
         m_dIdleTimer = 0;

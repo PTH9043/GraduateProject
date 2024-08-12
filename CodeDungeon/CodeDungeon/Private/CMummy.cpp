@@ -243,13 +243,14 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetOutline(true);
 	SetOutlineColor(_float3(1, 0, 0));
 	SetActive(true);
+	SetMovingSpeed(5.f);
 	return S_OK;
 }
 
 void CMummy::TickActive(const _double& _dTimeDelta)
 {
-	__super::TickActive(_dTimeDelta);
 	GetAnimationController()->Tick(_dTimeDelta);
+	__super::TickActive(_dTimeDelta);
 	_float3 pos = GetTransform()->GetPos();
 	pos.y += 5;
 
@@ -257,78 +258,79 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 	m_spSlashParticle->SetPosition(pos);
 	m_spAttackParticle->SetPosition(pos);
 	m_spAttackParticleTwo->SetPosition(pos);
-	_int CurAnimState = GetAnimationController()->GetAnimState();
+
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	// death animation
+	if (GetDeathState())
 	{
-		if (CurAnimState == UAnimationController::ANIM_MOVE)
+		_double DeathAnimSpeed = 20;
+		if (GetElapsedTime() == 0.0)
 		{
-			AddTimeAccumulator(_dTimeDelta);
-			// A* for moving towards player when player is found
-			if (GetFoundTargetState())
+			USound* DeathSound1 = spGameInstance->BringSound(L"Death_VO_1").get();
+			USound* DeathSound2 = spGameInstance->BringSound(L"BodyHitFloor_1").get();
+			DeathSound1->PlayWithInputChannel(&m_pDeathChannel);
+			DeathSound2->PlayWithInputChannel(&m_pDeath2Channel);
+		}
+		SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
+		_double DeathTimeArcOpenEnd = 500;
+		if (GetElapsedTime() < DeathTimeArcOpenEnd)
+		{
+			GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
+			GetAnimModel()->UpdateDissolveTImer(_dTimeDelta);
+			if (!m_bDissolveSound) {
+				SHPTR<USound> DsSound = spGameInstance->BringSound(L"DissolveSound");
+				DsSound->PlayWithInputChannel(&m_pDissolveChannel);
+				m_bDissolveSound = true;
+			}
+		}
+
+	}
+	else
+	{
+		_int CurAnimState = GetAnimationController()->GetAnimState();
+		{
+			if (CurAnimState == UAnimationController::ANIM_MOVE)
 			{
-				m_spFootPrintParticle->SetActive(true);
+				AddTimeAccumulator(_dTimeDelta);
+				// A* for moving towards player when player is found
+				if (GetFoundTargetState())
 				{
-					*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 4;
-					*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.355f;
-					_float3 pos = GetTransform()->GetPos() + GetTransform()->GetRight();
-					pos.y += 0.5;
-					_float3 Look = GetTransform()->GetLook();
-					_float3 Right = 1.2f * GetTransform()->GetRight();
-					//pos -= 3 * Look;
-					m_spFootPrintParticle->SetPosition(pos);
-					m_spFootPrintParticle->SetDirection(Right);
+					m_spFootPrintParticle->SetActive(true);
+					{
+						*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 4;
+						*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.355f;
+						_float3 pos = GetTransform()->GetPos() + GetTransform()->GetRight();
+						pos.y += 0.5;
+						_float3 Look = GetTransform()->GetLook();
+						_float3 Right = 1.2f * GetTransform()->GetRight();
+						//pos -= 3 * Look;
+						m_spFootPrintParticle->SetPosition(pos);
+						m_spFootPrintParticle->SetDirection(Right);
+					}
+					SetOutline(true);
 				}
-				SetOutline(true);
-			}
-			else // patrolling when player is not found
-			{
-				SetOutline(false);
-			}
-		}
-		else if (CurAnimState == UAnimationController::ANIM_ATTACK){}
-		else {
-			m_spFootPrintParticle->SetActive(false);
-			*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 0;
-			*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
-		}
-
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-		// death animation
-		if (CurAnimState == UAnimationController::ANIM_DEATH)
-		{
-			_double DeathAnimSpeed = 20;
-			if (GetElapsedTime() == 0.0)
-			{
-				USound* DeathSound1 = spGameInstance->BringSound(L"Death_VO_1").get();
-				USound* DeathSound2 = spGameInstance->BringSound(L"BodyHitFloor_1").get();
-				DeathSound1->PlayWithInputChannel(&m_pDeathChannel);
-				DeathSound2->PlayWithInputChannel(&m_pDeath2Channel);
-			}
-			SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
-			_double DeathTimeArcOpenEnd = 500;
-			if (GetElapsedTime() < DeathTimeArcOpenEnd)
-			{
-				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
-				GetAnimModel()->UpdateDissolveTImer(_dTimeDelta);
-				if (!m_bDissolveSound) {
-					SHPTR<USound> DsSound = spGameInstance->BringSound(L"DissolveSound");
-					DsSound->PlayWithInputChannel(&m_pDissolveChannel);
-					m_bDissolveSound = true;
+				else // patrolling when player is not found
+				{
+					SetOutline(false);
 				}
 			}
-
-		}
-		else
-		{
-			GetAnimModel()->TickAnimation(_dTimeDelta);
-		}
-
-		if (spGameInstance->GetDIKeyPressing(DIK_H)) {
-			SetIfOutlineScale(true);
-		}
-		else {
-			SetIfOutlineScale(false);
+			else if (CurAnimState == UAnimationController::ANIM_ATTACK) {}
+			else {
+				m_spFootPrintParticle->SetActive(false);
+				*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 0;
+				*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
+			}
 		}
 	}
+
+	GetAnimModel()->TickAnimation(_dTimeDelta);
+	if (spGameInstance->GetDIKeyPressing(DIK_H)) {
+		SetIfOutlineScale(true);
+	}
+	else {
+		SetIfOutlineScale(false);
+	}
+
 	UpdateCollision();
 }
 
@@ -408,7 +410,7 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 						m_spAttackParticleTwo->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 						m_spSlashParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 						// Decrease health on hit
-						DecreaseHealth(pCharacter->GetAttack());
+						SendCollisionData(_pEnemy.get(), 100);
 					}
 					
 					SetHitAlreadyState(true);
@@ -419,83 +421,14 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 				SetHitAlreadyState(false);
 				SetAnimModelRim(false);
 			}
-
-			for (const auto& iter2 : pCharacter->GetColliderContainer())
-			{
-				if (iter2.first == L"Main")
-				{
-					if (iter.second->IsCollision(iter2.second))
-					{
-						SetCollisionState(true);
-						GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
-					}
-					else
-					{
-						SetCollisionState(false);
-					}
-				}
-			}
 		}
 		};
-
-	auto handleCollisionWithCharacter = [&](UCharacter* pCharacter) {
-		for (const auto& iter : GetColliderContainer())
-		{
-			for (const auto& iter2 : pCharacter->GetColliderContainer())
-			{
-				if (iter2.first == L"Main")
-				{
-					if (iter.second->IsCollision(iter2.second))
-					{
-						SetCollisionState(true);
-						GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
-					}
-					else
-					{
-						SetCollisionState(false);
-					}
-				}
-			}
-		}
-		};
-
-	auto handleCollisionWithStaticObject = [&](CModelObjects* pModelObject) {
-		for (const auto& iter : GetColliderContainer())
-		{
-			for (const auto& iter2 : pModelObject->GetColliderContainer())
-			{
-				if (iter2.first == L"Main")
-				{
-					SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
-					if (GetCollidedNormal() != _float3::Zero)
-					{
-						_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 50.0f : 20.0f;
-						ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
-					}
-				}
-			}
-		}
-		};
-
 
 	if (ePawnType == PAWNTYPE::PAWN_PLAYER)
 	{
 		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
 		handleCollisionWithPlayer(pCharacter);
 	}
-	else if (ePawnType == PAWNTYPE::PAWN_CHAR)
-	{
-		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
-		handleCollisionWithCharacter(pCharacter);
-	}
-	else if (ePawnType == PAWNTYPE::PAWN_STATICOBJ)
-	{
-		CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
-		handleCollisionWithStaticObject(pModelObject);
-	}
-#ifdef _ENABLE_PROTOBUFF
-	SendCollisionData();
-#endif
 }
 
 

@@ -59,10 +59,6 @@ namespace Engine {
 
 	UMemoryAdminstor::~UMemoryAdminstor()
 	{
-		for (auto& iter : m_MemoryTable)
-		{
-			delete iter;
-		}
 	}
 
 	void* UMemoryAdminstor::Allocate(unsigned long long _Size)
@@ -99,6 +95,14 @@ namespace Engine {
 		}
 	}
 
+	void UMemoryAdminstor::Free()
+	{
+		for (auto& iter : m_MemoryTable)
+		{
+			delete iter;
+		}
+	}
+
 	void UMemoryAdminstor::MakeMemoryPool(unsigned int&  _Size, unsigned int& _MemoryIndex ,
 		unsigned int& _TableIndex, const unsigned int  _Limited, const 	unsigned int  _AddValue)
 	{
@@ -126,6 +130,7 @@ namespace Engine {
 			m_pMemoryAdiminster = new UMemoryAdminstor;
 		}
 		~MemoryGlobal() {
+			m_pMemoryAdiminster->Free();
 			delete m_pMemoryAdiminster;
 		}
 	public:

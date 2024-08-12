@@ -18,23 +18,30 @@ public:
 public:
 	virtual _bool Start(const VOIDDATAS& _ReceiveDatas = {}) override;
 	virtual void Tick(const _double& _dTimeDelta) override;
-	virtual void LateTick(const _double& _dTimeDelta) override;
 	virtual void State(SHPTR<ASession> _spSession, _int _MonsterState = 0) override;
 	virtual void ProcessPacket(_int _type, void* _pData) override;
-	virtual bool IsHit(APawn* _pPawn, const _double& _dTimeDelta) override;
-
-	void TickUpdateBehavior(const _double _dTimeDelta, SHPTR<ASession> _spSession);
+	virtual void Collision(AGameObject* _pGameObject, const _double& _dTimeDelta) override;
 public: /* get set */
-	_double GetElapsedTime() const { return m_dElapsedTime; }
-	_double GetDeadTimeArcOpenEnd() const { return m_dDeadTimeArcOpenEnd; }
+	const _double& GetElapsedTime() const { return m_dElapsedTime; }
+	const _double& GetDeadAnimSpeed() const { return m_dDeadAnimSpeed; }
+	const _double& GetDeadTimeArcOpenEnd() const { return m_dDeadTimeArcOpenEnd; }
+	const _float GetCollisionNuckbackSpeed() const { return m_fCollisionNuckbackSpeed; }
+	const _float GetApplySlidingMovementSpeed() const { return m_fApplySlidingMovementSpeed; }
+	const Vector3& GetTargetToDir() const { return m_vTargetToDir; }
+	const _string& GetRootName() const { return m_strRoomName; }
 
 	void SetElapsedTime(_double _dElapsedTime) { m_dElapsedTime = _dElapsedTime; }
 protected:
-	void MoveAlongPath(const _double& _dTimeDelta);
-	void FindPath(SHPTR<ANavigation> _spNavigation, SHPTR<ACell> _spSelfCell, SHPTR<ACell> _spTargetCell, const Vector3 _vSelfPos ,const Vector3 _vTargetPos);
-protected:
-	// Damaged
-	virtual void Collision(APawn* _pPawn, const _double& _dTimeDelta) override;
+	virtual void TickUpdateBehavior(const _double& _dTimeDelta, SHPTR<ASession> _spSession);
+	virtual void MoveAlongPath(const _double& _dTimeDelta);
+	void StartFindPath(SHPTR<ANavigation> _spNavigation, SHPTR<ACell> _spSelfCell, SHPTR<ACell> _spTargetCell, const Vector3 _vSelfPos ,const Vector3 _vTargetPos);
+	void FindingPath(SHPTR<ANavigation> _spNavigation, const Vector3 _vSelfPos, const Vector3 _vTargetPos);
+protected: /* get set */
+	TWINTIMER& GetTimeAccumulator(REF_RETURN) { return m_TimeAccumulator; }
+	_bool IsPathFinding() const { return m_isPathFinding; }
+	PathFindingState& GetPathFindState(REF_RETURN) { return m_PathFindState; }
+	const MOBSTATE& GetMobState() const { return m_MobState; }
+	const _float GetRotSpeed() const { return m_fRotSpeed; }
 private:
 	virtual void Free() override;
 private:
@@ -48,6 +55,13 @@ private:
 	_double							m_dElapsedTime;
 	_double							m_dDeadTimeArcOpenEnd;
 	MOBSTATE					m_MobState;
+
+	// RotateSpeed;
+	_float								m_fRotSpeed;
+	_float								m_fCollisionNuckbackSpeed;
+	_float								m_fApplySlidingMovementSpeed;
+	Vector3							m_vTargetToDir;
+	_string							m_strRoomName;
 };
 
 END

@@ -2,6 +2,10 @@
 #include "EngineDefine.h"
 #include "UBase.h"
 
+BEGIN(FMOD)
+class Channel;
+END
+
 BEGIN(Engine)
 class UGraphicRenderManager;
 class UShaderBufferManager;
@@ -240,6 +244,7 @@ public: /* AudioSystemManager*/
 	HRESULT CreateAudioSystemAndRegister(SOUNDTYPE _SoundType, const _wstring& _wstrSoundFolderPath);
 	HRESULT CreateAudioSystemAndRegister(SOUNDTYPE _SoundType, CSHPTRREF<FILEGROUP> _spSoundFileGroup);
 	HRESULT CreateAudioSystemToFolderNameAndRegister(SOUNDTYPE _SoundType, const _wstring& _wstrSoundFolderName);
+	_bool IsSoundPlay(const _wstring& _wstrSoundName, FMOD::Channel* _pChannel);
 	void SoundPlay(const _wstring& _wstrSoundName);
 	void SoundPlayWithManyChannels(const _wstring& _wstrSoundName);
 	void SoundPlay(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
@@ -278,9 +283,9 @@ public: /* AudioSystemManager*/
 	void HandleSoundsForAnimationWithManyChannels(CSHPTRREF<UCharacter> _Owner, const _wstring& animName, const _wstring& SoundName, _float startThreshold, _float endThreshold);
 public: /* NetworkManager */
 	void StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController);
-	void MakeActorsInit(const VECTOR<SHPTR<UActor>>& _actorContainer);
-	void InsertSendTcpPacketInQuery(_char* _pPacket, _short _PacketType, _short _PacketSize);
-	void InsertSendProcessPacketInQuery(UProcessedData&& _ProcessData);
+	void MakeActorsInit(const VECTOR<SHPTR<UBase>>& _actorContainer);
+	void SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize);
+	void SendProtoData(const UProcessedData& _ProcessData);
 	SHPTR<UActor> FindNetworkActor(const _int _NetworkID);
 	void NetworkEnd();
 	void SetSceneIDToNetController(const _int _iSceneID);
@@ -376,7 +381,6 @@ private:
 	SHPTR< UMaterialManager>						m_spMaterialManager;
 
 	SHPTR<URenderer>										m_spRenderer;
-	SHPTR< UNetworkSender>							m_spNetworkSender;
 
 	SHPTR< UFontManager>								m_spFontMananger;
 	//SHPTR<UComputeManager>					m_spComputeManager;

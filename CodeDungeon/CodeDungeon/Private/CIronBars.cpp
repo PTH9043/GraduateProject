@@ -8,9 +8,12 @@
 #include "UParticle.h"
 #include "UParticleSystem.h"
 #include "UModel.h"
+#include "UProcessedData.h"
+#include "CWarriorPlayer.h"
 
 CIronBars::CIronBars(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
-	: CModelObjects(_spDevice, _wstrLayer, _eCloneType)
+	: CModelObjects(_spDevice, _wstrLayer, _eCloneType),
+	m_SoundTimer{4}, m_isEnable{false}
 {
 }
 
@@ -32,8 +35,6 @@ HRESULT CIronBars::NativeConstructClone(const VOIDDATAS& _vecDatas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_vecDatas), E_FAIL);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-
-
 	SetModel(L"Proto_Res_Model_Bars_FBX.bin");
 
 	IRONBARSDESC tBarsDesc = UMethod::ConvertTemplate_Index<IRONBARSDESC>(_vecDatas, 0);
@@ -58,6 +59,7 @@ HRESULT CIronBars::NativeConstructClone(const VOIDDATAS& _vecDatas)
 
 	SetPawnType(PAWNTYPE::PAWN_STATICOBJ);
 	SetIfOutlineScale(false);
+
 	/*SetOutline(true);*/
 	return S_OK;
 }
@@ -67,30 +69,59 @@ void CIronBars::TickActive(const _double& _dTimeDelta)
 	__super::TickActive(_dTimeDelta);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
-	for (auto& Containers : GetColliderContainer())
+	if (false == m_isEnable)
 	{
-		Containers.second->SetTranslate(GetModel()->GetCenterPos());
-		Containers.second->SetTransform(GetTransform());
+		if (m_SoundTimer.fTimer > 0)
+		{
+			spGameInstance->StopSound(L"BarLift");
+			m_SoundTimer.ResetTimer();
+		}
 	}
 
-	if(GetInteractionState())
+	if (GetInteractionState())
 	{
 		if (GetTransform()->GetPos().y - m_f3OriginPos.y < 30)
 			GetTransform()->TranslateDir(_float3(0, 1, 0), _dTimeDelta, 3);
 		else
 			SetActive(false);
+
+		for (auto& Containers : GetColliderContainer())
+		{
+			Containers.second->SetTranslate(GetModel()->GetCenterPos());
+			Containers.second->SetTransform(GetTransform());
+		}
 	}
 }
 
 
 void CIronBars::LateTickActive(const _double& _dTimeDelta)
 {
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	SHPTR<CWarriorPlayer> spPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
+
+	if (false == m_isEnable)
+	{
+		spPlayer->SetCanInteractBarState(false);
+		SetOutline(false);
+		spGameInstance->StopSound(L"BarLift");
+	}
+	else
+	{
+		SetOutline(true);
+		spPlayer->SetCanInteractBarState(true);
+
+		if (GetCheckPointToOtherColor())
+			spPlayer->SetDoneInteractBarState(true);
+		else
+			spPlayer->SetDoneInteractBarState(false);
+	}
+	m_isEnable = false;
+
 	__super::LateTickActive(_dTimeDelta);
-	//for (auto& Colliders : GetColliderContainer())
-	//{
-	//	if(Colliders.first == L"ForInteraction")
-	//		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
-	//}
+}
+
+void CIronBars::NetworkTickActive(const _double& _dTimeDelta)
+{
 }
 
 HRESULT CIronBars::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
@@ -112,5 +143,42 @@ HRESULT CIronBars::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF
 
 void CIronBars::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
+}
+
+void CIronBars::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
+{
+	m_isEnable = true;
+	switch (_ProcessData.GetDataType())
+	{
+	case TAG_SC_STATICOBJFIND:
+	{
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		SHPTR<CWarriorPlayer> spPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
+
+		SC_STATICOBJFIND scStaticObjFind;
+		scStaticObjFind.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
+		{
+			if (0 == scStaticObjFind.enable())
+			{
+
+			}
+			else if(1 == scStaticObjFind.enable())
+			{
+				spGameInstance->SoundPlayOnce(L"BarLift");
+			}
+			else
+			{
+				spGameInstance->StopSound(L"BarLift");
+				spGameInstance->SoundPlayOnce(L"BarLiftStart");
+				spGameInstance->SoundPlayOnce(L"BarLift2");
+				SetInteractionState(true);
+				SetCheckPointToOtherColor(true);
+				m_SoundTimer.ResetTimer();
+			}
+		}
+		scStaticObjFind.Clear();
+	}
+		break;
+	}
 }
 

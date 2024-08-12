@@ -41,6 +41,7 @@ private:
 
 	_int								m_iRandomNumforhit;
 	FMOD::Channel*		m_pHitChannel;
+	FMOD::Channel*		m_pGotHitChannel;
 
 	_bool							m_isPlayAttackSound1;
 	_bool							m_isPlayAttackSound2;

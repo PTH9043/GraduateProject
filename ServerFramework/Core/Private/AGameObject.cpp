@@ -22,14 +22,18 @@ namespace Core
 		return true;
 	}
 
+	void AGameObject::Tick(const _double& _dTimeDelta)
+	{
+	}
+
 	void AGameObject::RunningPermanentDisableSituation()
 	{
 	}
 
-	void AGameObject::InsertColliderContainer(const COLLIDERINFO& _ColliderInfo)
+	void AGameObject::InsertColliderContainer(_int _ColliderTag, _int _ColliderType, const COLLIDERDESC& _ColliderDesc)
 	{
-		m_ColliderContainer.push_back(Create<ACollider>((ACollider::TYPE)_ColliderInfo.iColliderType,
-			ACollider::COLLIDERDESC{ _ColliderInfo.vPos, _ColliderInfo.vScale }));
+		m_ColliderContainer.insert(MakePair(_ColliderTag, Create<ACollider>((ACollider::TYPE)_ColliderType,
+			_ColliderDesc)));
 	}
 
 	void AGameObject::BringSpaceIndex(SHPTR<ASpace> _spSpace)
@@ -110,36 +114,23 @@ namespace Core
 
 	void AGameObject::SetActive(const _bool _isActive)
 	{
-		while (true)
+		m_isActive = _isActive;
+		if (true == _isActive)
 		{
-			_bool value = m_isActive.load();
-
-			if (true == CAS_VALUE(m_isActive, value, _isActive))
-			{
-				if (true == m_isActive)
-				{
-					CallActiveEnable();
-				}
-				else
-				{
-					CallActiveDisable();
-				}
-				break;
-			}
+			CallActiveEnable();
+		}
+		else
+		{
+			CallActiveDisable();
 		}
 	}
 
 	void AGameObject::ActivePermanentDisable()
 	{
-		while (true)
-		{
-			_bool value = m_isActive.load();
+		if (true == m_isPermanentDisable)
+			return;
 
-			if (true == CAS_VALUE(m_isPermanentDisable, value, true))
-			{
-				break;
-			}
-		}
+		m_isPermanentDisable = true;
 		LastBehavior();
 	}
 
@@ -157,6 +148,15 @@ namespace Core
 
 	void AGameObject::RestrictPositionToNavi()
 	{
+	}
+
+	void AGameObject::UpdateColliderData()
+	{
+		SHPTR<ATransform> spTransform = GetTransform();
+		for (auto& iter : m_ColliderContainer)
+		{
+			iter.second->SetTransform(spTransform);
+		}
 	}
 
 	void AGameObject::Free()

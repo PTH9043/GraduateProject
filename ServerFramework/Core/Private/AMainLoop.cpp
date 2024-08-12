@@ -25,30 +25,36 @@ namespace Core {
 
 	void AMainLoop::TimerThread(const boost::system::error_code& _error)
 	{
-		std::atomic_thread_fence(std::memory_order_seq_cst);
-
 		m_spGameTimer->Tick();
 		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
 		SHPTR<AService> spServerService = m_wpServerService.lock();
 		{
 			_double dTimeDelta = m_spGameTimer->GetDeltaTime();
-			LIST<SHPTR<AMonster>> aliveMonster;
+			LIST<AGameObject*> AliveObjectList;
 			{
 				// Mob을 찾음 
-				for (auto& iter : spServerService->GetMobObjContainer())
+				for (AGameObject* iter : m_PawnCollisionList)
 				{
-					SHPTR<AMonster> spMonster = iter.second;
+					AGameObject* spObject = iter;
 
-					if (true == spMonster->IsPermanentDisable())
+					if (true == spObject->IsPermanentDisable())
 						continue;
 
-					if (true == spMonster->IsActive())
-					{
-						aliveMonster.push_back(spMonster);
-					}
+					AliveObjectList.push_back(spObject);
 				}
 
-				if (0 >= aliveMonster.size())
+				// Mob을 찾음 
+				for (AGameObject* iter : m_StaticObjCollisionList)
+				{
+					AGameObject* spObject = iter;
+
+					if (true == spObject->IsPermanentDisable())
+						continue;
+
+					AliveObjectList.push_back(spObject);
+				}
+
+				if (0 >= AliveObjectList.size())
 				{
 					RegisterTimer(10);
 					return;
@@ -56,16 +62,54 @@ namespace Core {
 			}
 			// Animation 활성 
 			{
-				for (auto& iter : aliveMonster)
+				std::atomic_thread_fence(std::memory_order_seq_cst);
+				for (auto& iter : AliveObjectList)
 				{
 					iter->Tick(dTimeDelta);
-					iter->LateTick(dTimeDelta);
 				}
-				// Collision 
-				spCoreInstance->CollisionSituation(dTimeDelta);
+				// Pawn Collision 
+				for (AGameObject* iter : m_PawnCollisionList)
+				{
+					if (true == iter->IsPermanentDisable())
+						continue;
+					// Pawn Collision
+					for (AGameObject* value : m_PawnCollisionList)
+					{
+						if (iter == value)
+							continue;
+
+						iter->Collision(value, dTimeDelta);
+					}
+					// Static Obj Coll
+					for (AGameObject* value : m_StaticObjCollisionList)
+					{
+						iter->Collision(value, dTimeDelta);
+					}
+				}
+				// Static Obj CollisionList 
+				for (AGameObject* iter : m_StaticObjCollisionList)
+				{
+					if (true == iter->IsPermanentDisable())
+						continue;
+
+					for (AGameObject* value : m_PawnCollisionList)
+					{
+						iter->Collision(value, dTimeDelta);
+					}
+				}
 			}
 		}
 		RegisterTimer(1);
+	}
+
+	void AMainLoop::InsertPawnCollisionList(AGameObject* _pGameObject)
+	{
+		m_PawnCollisionList.insert(_pGameObject);
+	}
+
+	void AMainLoop::InsertStaticObjCollisionList(AGameObject* _pGameObject)
+	{
+		m_StaticObjCollisionList.insert(_pGameObject);
 	}
 
 	void AMainLoop::Free()

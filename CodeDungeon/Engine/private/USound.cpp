@@ -14,6 +14,15 @@ USound::USound(FMOD::System* _pSystem, const _wstring& _wstrSoundPath, _int _Sou
 	assert(FMOD_OK == Result);
 }
 
+_bool USound::IsSoundPlay(FMOD::Channel* _pChannel)
+{
+	RETURN_CHECK(nullptr == _pChannel, false);
+	_bool isSoundPlay{ false };
+	_pChannel->isPlaying(&isSoundPlay);
+	return isSoundPlay;
+}
+
+
 void USound::Tick()
 {
 	RETURN_CHECK(nullptr == m_pChannel, ;);

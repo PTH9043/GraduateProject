@@ -32,9 +32,8 @@ protected:
     virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) override;
     virtual void ReceiveNetworkProcessData(const UProcessedData& _ProcessData) override;
 #ifdef _ENABLE_PROTOBUFF
-    // ���� �߰�
     void SendMobStateData();
-    void SendCollisionData();
+    void SendCollisionData(UPawn* _pPawn, _float _fDamaged);
 #endif
 private:
     void SearchForPlayers();
@@ -63,20 +62,23 @@ public:
     const _bool IsSendDataToBehavior() const { return m_isSendDataToBehavior; }
     void SetSendDataToBehavior(const _bool _isRecvDataToBehavior) { this->m_isSendDataToBehavior = _isRecvDataToBehavior; }
 private:
-    _float m_fDistancefromNearestPlayer;
-    _bool m_bFoundTarget;
-    SHPTR<UPlayer> m_spTargetPlayer;
-    _float3 m_f3TargetPos;
+    _float                            m_fDistancefromNearestPlayer;
+    _bool                             m_bFoundTarget;
+    SHPTR<UPlayer>       m_spTargetPlayer;
+    _float3                          m_f3TargetPos;
 
-    _float                          m_fActivationRange;
-    _float                          m_fDeactivationRange;
-    _bool                           m_isFirstFoundState;
+    _float                            m_fActivationRange;
+    _float                            m_fDeactivationRange;
+    _bool                             m_isFirstFoundState;
 
 
     _double                         m_dtimeAccumulator;
     _bool                              m_isNeedServerSendData;
     _double                         m_delapsedTime;
     _bool                              m_isSendDataToBehavior;
+
+    _float3                           m_vMovePos;
+    _bool                              m_isRecvMovePosition;
 };
 
 END

@@ -219,7 +219,6 @@ HRESULT CMimic::NativeConstructClone(const VOIDDATAS& _Datas)
 
 void CMimic::TickActive(const _double& _dTimeDelta)
 {
-
 	__super::TickActive(_dTimeDelta);
 	GetAnimationController()->Tick(_dTimeDelta);
 	_float3 pos = GetTransform()->GetPos();
@@ -422,7 +421,7 @@ void CMimic::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 							m_spBloodParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 							m_spSlashParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 							// Decrease health on hit
-							DecreaseHealth(pCharacter->GetAttack());
+							SendCollisionData(_pEnemy.get(), 100);
 						}
 						SetHitAlreadyState(true);
 					}
@@ -506,7 +505,4 @@ void CMimic::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 		}
 		}
 
-#ifdef _ENABLE_PROTOBUFF
-	SendCollisionData();
-#endif
 }

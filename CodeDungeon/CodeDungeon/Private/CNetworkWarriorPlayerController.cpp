@@ -62,8 +62,7 @@ void CNetworkWarriorPlayerController::ReceiveNetworkProcessData(void* _pData)
 		CHARSTATE* pPlayerData = static_cast<CHARSTATE*>(_pData);
 		SetAnimState(pPlayerData->state());
 
-		if (pPlayerData->animationindex() != spAnimModel->GetCurrentAnimIndex() 
-			|| 1 == pPlayerData->triggeron())
+		if (pPlayerData->animationindex() != spAnimModel->GetCurrentAnimIndex())
 			spAnimModel->SetAnimation(pPlayerData->animationindex());
 	}
 #endif

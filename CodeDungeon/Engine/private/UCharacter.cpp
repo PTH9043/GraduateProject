@@ -167,12 +167,12 @@ _float3 UCharacter::OtherCharacterDirToLookVectorF3(CSHPTRREF<UTransform> _spOth
 
 void UCharacter::DecreaseHealth(_int amount)
 {
-	m_iPrevHealth = m_iHealth;
-	m_iHealth -= amount;
-	if (m_iHealth < 0)
-	{
-		m_iHealth = 0;
-	}
+	//m_iPrevHealth = m_iHealth;
+	//m_iHealth -= amount;
+	//if (m_iHealth < 0)
+	//{
+	//	m_iHealth = 0;
+	//}
 	if(false == m_isDamaged)
 	{
 		m_isDamaged = true;

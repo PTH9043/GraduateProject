@@ -158,7 +158,7 @@ private:
 	_bool													m_bisDeath;
 	_bool													m_bisHitAlready;
 	_bool													m_isDamaged;
-	_bool													 ifDrawOutlineByAbility = false;
+	_bool													ifDrawOutlineByAbility = false;
 	// Dissolve Texture Group
 	SHPTR<UTexGroup>						m_spDissovleTexTGroup;
 	_wstring											m_wstrDissolveTextureName;

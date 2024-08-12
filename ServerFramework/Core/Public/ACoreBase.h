@@ -9,10 +9,10 @@ BEGIN(Core)
 - 최상위 부모 클래스, 서버에서 객체의 역활을 하는 모든 클래스는 모두 이 클래스를 무조건 상속 받는다.
 */
 class  CORE_DLL  ACoreBase abstract : public Core::AEnableSharedFromThis<ACoreBase> {
-protected:
+public:
 	ACoreBase();
 	ACoreBase(const ACoreBase& _rhs);
-	virtual ~ACoreBase();
+	virtual ~ACoreBase(){}
 
 public:
 	/*

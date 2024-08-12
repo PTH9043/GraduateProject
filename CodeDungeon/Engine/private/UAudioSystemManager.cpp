@@ -58,6 +58,19 @@ HRESULT UAudioSystemManager::CreateAudioSystemToFolderNameAndRegister(UGameInsta
 	return CreateAudioSystemAndRegister(_pGameInstance, _SoundType, spAudioFolder);
 }
 
+_bool UAudioSystemManager::IsSoundPlay(const _wstring& _wstrSoundName, FMOD::Channel* _pChannel)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+		{
+			if (true == iter->IsSoundPlay(_wstrSoundName, _pChannel))
+				return true;
+		}
+	}
+	return false;
+}
+
 void UAudioSystemManager::Play(const _wstring& _wstrSoundName)
 {
 	for (auto& iter : m_AudioSystemContainer)

@@ -58,7 +58,7 @@ void CNetworkMummyAnimController::Tick(const _double& _dTimeDelta)
 
     static const _tchar* TAUNTANIM = L"taunt";
 
-    static const _tchar* TAUNTV02_SOUNDNAME = L"Taunt_V02";
+    static const _tchar* TAUNTV02_SOUNDNAME = L"Taunt_VO2";
     static const _tchar* ENEMYHIT1_SOUNDNAME = L"enemy_hit1";
     static const _tchar* ENEMYHIT2_SOUNDNAME = L"enemy_hit2";
     static const _tchar* ENEMYHIT3_SOUNDNAME = L"enemy_hit3";
@@ -68,7 +68,10 @@ void CNetworkMummyAnimController::Tick(const _double& _dTimeDelta)
     if (TAUNTANIM == CurAnimName)
     {
         SHPTR<USound> spTauntSound1 = spGameInstance->BringSound(TAUNTV02_SOUNDNAME);
-        spTauntSound1->PlayWithInputChannel(&m_pTauntChannel);
+        if (false == spTauntSound1->IsSoundPlay(m_pTauntChannel))
+        {
+            spTauntSound1->PlayWithInputChannel(&m_pTauntChannel);
+        }
     }
 
     if (true == isHit)
@@ -76,15 +79,43 @@ void CNetworkMummyAnimController::Tick(const _double& _dTimeDelta)
         _int Random = dis_hit(gen);
 
         SHPTR<USound> spHitSound = nullptr;
-        if(0 == Random)
-            spGameInstance->BringSound(ENEMYHIT1_SOUNDNAME);
-        else if(1 == Random)
-            spGameInstance->BringSound(ENEMYHIT2_SOUNDNAME);
-        else
-            spGameInstance->BringSound(ENEMYHIT3_SOUNDNAME);
+        if (nullptr == spHitSound)
+        {
+            if (0 == Random)
+                spHitSound = spGameInstance->BringSound(ENEMYHIT1_SOUNDNAME);
+            else if (1 == Random)
+                spHitSound = spGameInstance->BringSound(ENEMYHIT2_SOUNDNAME);
+            else
+                spHitSound = spGameInstance->BringSound(ENEMYHIT3_SOUNDNAME);
 
-        spHitSound->PlayWithInputChannel(&m_pHitChannel);
+            spHitSound->PlayWithInputChannel(&m_pHitChannel);
+        }
+        else
+        {
+            if (false == spHitSound->IsSoundPlay(m_pHitChannel))
+            {
+                spHitSound->PlayWithInputChannel(&m_pHitChannel);
+            }
+            else
+            {
+                if (0 == Random)
+                    spHitSound = spGameInstance->BringSound(ENEMYHIT1_SOUNDNAME);
+                else if (1 == Random)
+                    spHitSound = spGameInstance->BringSound(ENEMYHIT2_SOUNDNAME);
+                else
+                    spHitSound = spGameInstance->BringSound(ENEMYHIT3_SOUNDNAME);
+
+                spHitSound->PlayWithInputChannel(&m_pHitChannel);
+            }
+        }
+
         SHPTR<USound> spGotHitSound = spGameInstance->BringSound(GOTHITVO2_SOUNDNAME);
-        spGotHitSound->PlayWithInputChannel(&m_pHitChannel);
+
+        if (false == spGotHitSound->IsSoundPlay(m_pGotHitChannel))
+            spGotHitSound->PlayWithInputChannel(&m_pGotHitChannel);
     }
+
+
+    spAnimModel->TickEventToRatio(spMummy.get(), GetTrigger(), GetTimeAccToNetworkAnim(), _dTimeDelta);
+    spMummy->SetDamaged(false);
 }

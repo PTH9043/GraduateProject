@@ -23,8 +23,12 @@
     <ClInclude Include="..\Public\CAnubisAnimController.h" />
     <ClInclude Include="..\Public\CChest.h" />
     <ClInclude Include="..\Public\CChestAnimController.h" />
+    <ClInclude Include="..\Public\CCoreAnubis.h" />
+    <ClInclude Include="..\Public\CCoreHarlequin.h" />
+    <ClInclude Include="..\Public\CCoreMinotaur.h" />
     <ClInclude Include="..\Public\CHarlequin.h" />
     <ClInclude Include="..\Public\CHarlequinAnimController.h" />
+    <ClInclude Include="..\Public\CIronBar.h" />
     <ClInclude Include="..\Public\CMimic.h" />
     <ClInclude Include="..\Public\CMimicAnimController.h" />
     <ClInclude Include="..\Public\CMinotaur.h" />
@@ -39,6 +43,9 @@
     <ClInclude Include="..\Public\CServerAdiminstor.h" />
     <ClInclude Include="..\Public\CServerApp.h" />
     <ClInclude Include="..\Public\CServerMonster.h" />
+    <ClInclude Include="..\Public\CServerStaticObject.h" />
+    <ClInclude Include="..\Public\CShurikenThrowing.h" />
+    <ClInclude Include="..\Public\CStatue.h" />
     <ClInclude Include="..\Public\ServerDefines.h" />
     <ClInclude Include="..\Public\CPlayerSession.h" />
   </ItemGroup>
@@ -47,8 +54,12 @@
     <ClCompile Include="..\Private\CAnubisAnimController.cpp" />
     <ClCompile Include="..\Private\CChest.cpp" />
     <ClCompile Include="..\Private\CChestAnimController.cpp" />
+    <ClCompile Include="..\Private\CCoreAnubis.cpp" />
+    <ClCompile Include="..\Private\CCoreHarlequin.cpp" />
+    <ClCompile Include="..\Private\CCoreMinotaur.cpp" />
     <ClCompile Include="..\Private\CHarlequin.cpp" />
     <ClCompile Include="..\Private\CHarlequinAnimController.cpp" />
+    <ClCompile Include="..\Private\CIronBar.cpp" />
     <ClCompile Include="..\Private\CMimic.cpp" />
     <ClCompile Include="..\Private\CMimicAnimController.cpp" />
     <ClCompile Include="..\Private\CMinotaur.cpp" />
@@ -64,6 +75,9 @@
     <ClCompile Include="..\Private\CServerApp.cpp" />
     <ClCompile Include="..\Private\CPlayerSession.cpp" />
     <ClCompile Include="..\Private\CServerMonster.cpp" />
+    <ClCompile Include="..\Private\CServerStaticObject.cpp" />
+    <ClCompile Include="..\Private\CShurikenThrowing.cpp" />
+    <ClCompile Include="..\Private\CStatue.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -106,6 +106,9 @@ public:
 	const _float ComputeDistance(const Vector3& _vPos);
 	const _float ComputeDistanceSq(const Vector3& _vPos);
 
+	void ApplySlidingMovement(const Vector3& _vPrevPos, const Vector3& _vNormal, 
+		const _float _fSpeed, const _double& _dTimeDelta);
+
 	void GravityFall(const _double& _deltaTime);
 	void DisableGravity();
 

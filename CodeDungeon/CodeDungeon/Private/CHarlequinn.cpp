@@ -515,7 +515,8 @@ void CHarlequinn::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta
 						m_spAttackParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 						m_spAttackParticleTwo->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 						// Decrease health on hit
-						DecreaseHealth(pCharacter->GetAttack());
+							// Decrease health on hit
+						SendCollisionData(_pEnemy.get(), 100);
 					}
 				}
 
@@ -599,8 +600,4 @@ void CHarlequinn::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta
 		CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
 		handleCollisionWithStaticObject(pModelObject);
 	}
-
-#ifdef _ENABLE_PROTOBUFF
-	SendCollisionData();
-#endif
 }

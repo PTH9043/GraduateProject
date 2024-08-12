@@ -13,15 +13,6 @@ class ATransform;
 class CORE_DLL ACollider final : public ACoreBase {
 public:
 	enum TYPE { TYPE_AABB, TYPE_OBB, TYPE_SPHERE, TYPE_END };
-	struct COLLIDERDESC
-	{
-		Vector3		vScale;
-		Vector3		vTranslation;
-
-		COLLIDERDESC() : vScale{1.f, 1.f, 1.f}, vTranslation{0.5f, 0.5f, 0.5f} {}
-		COLLIDERDESC(const Vector3& _vScale, const Vector3& _vTranslation) : vScale{ _vScale }, vTranslation{ _vTranslation } {}
-	};
-
 	ACollider(const TYPE& _eType, const COLLIDERDESC& _CollisionDesc);
 	DESTRUCTOR(ACollider)
 public:

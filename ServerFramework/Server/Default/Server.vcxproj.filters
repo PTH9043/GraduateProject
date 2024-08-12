@@ -49,9 +49,6 @@
     <Filter Include="05.AnimController\Sacrophagus">
       <UniqueIdentifier>{d2bfc898-87ac-4435-8a85-192f4eec63ad}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.Session\Monster\Chest">
-      <UniqueIdentifier>{495a9a85-7b70-4dc0-a256-85e81f03b31b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="91.Saver">
       <UniqueIdentifier>{9412cc0a-2d52-4538-a62c-0a3f0c793a78}</UniqueIdentifier>
     </Filter>
@@ -79,8 +76,32 @@
     <Filter Include="03.Session\Monster\Anubis">
       <UniqueIdentifier>{b27ad188-2619-4e3a-bf7f-39498a9b66a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.Session\Object">
+      <UniqueIdentifier>{97630184-cce0-4b4f-9964-59f13d4e6eec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Session\Object\IronBars">
+      <UniqueIdentifier>{6aafb18f-ef1f-484e-a0ac-3a87058a8dbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Session\Object\Statue">
+      <UniqueIdentifier>{26e25ec4-eb47-4257-ba17-70099b9613c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Session\Object\CoreAnubis">
+      <UniqueIdentifier>{1bdacfa9-f2fb-424e-99c9-c51ef81f9f61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Session\Object\CoreHarlequin">
+      <UniqueIdentifier>{297e1a58-221f-40ea-80cd-d3503827b8fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Session\Object\CoreMinotaur">
+      <UniqueIdentifier>{8bebef4b-bdda-4838-ae66-13de2c9ee436}</UniqueIdentifier>
+    </Filter>
     <Filter Include="05.AnimController\Mimic">
       <UniqueIdentifier>{7b28baa7-8314-4f8a-9a8c-87eb5e490693}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Session\Object\ShurikenThrowing">
+      <UniqueIdentifier>{23d3cf31-a8b3-4645-b92b-47e5be1f35be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Session\Monster\Chest">
+      <UniqueIdentifier>{495a9a85-7b70-4dc0-a256-85e81f03b31b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -138,9 +159,6 @@
     <ClCompile Include="..\Private\CAnubisAnimController.cpp">
       <Filter>05.AnimController\Anubis</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CHarlequinAnimController.cpp">
-      <Filter>05.AnimController\Harlequin</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\CMinotaurAnimController.cpp">
       <Filter>05.AnimController\Minotaur</Filter>
     </ClCompile>
@@ -149,6 +167,30 @@
     </ClCompile>
     <ClCompile Include="..\Private\CServerMonster.cpp">
       <Filter>03.Session\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CIronBar.cpp">
+      <Filter>03.Session\Object\IronBars</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CServerStaticObject.cpp">
+      <Filter>03.Session\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CStatue.cpp">
+      <Filter>03.Session\Object\Statue</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CCoreAnubis.cpp">
+      <Filter>03.Session\Object\CoreAnubis</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CCoreHarlequin.cpp">
+      <Filter>03.Session\Object\CoreHarlequin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CCoreMinotaur.cpp">
+      <Filter>03.Session\Object\CoreMinotaur</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CHarlequinAnimController.cpp">
+      <Filter>05.AnimController\Harlequin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CShurikenThrowing.cpp">
+      <Filter>03.Session\Object\ShurikenThrowing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -206,9 +248,6 @@
     <ClInclude Include="..\Public\CAnubisAnimController.h">
       <Filter>05.AnimController\Anubis</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CHarlequinAnimController.h">
-      <Filter>05.AnimController\Harlequin</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\CMinotaurAnimController.h">
       <Filter>05.AnimController\Minotaur</Filter>
     </ClInclude>
@@ -217,6 +256,30 @@
     </ClInclude>
     <ClInclude Include="..\Public\CServerMonster.h">
       <Filter>03.Session\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CIronBar.h">
+      <Filter>03.Session\Object\IronBars</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CServerStaticObject.h">
+      <Filter>03.Session\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CStatue.h">
+      <Filter>03.Session\Object\Statue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CCoreAnubis.h">
+      <Filter>03.Session\Object\CoreAnubis</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CCoreHarlequin.h">
+      <Filter>03.Session\Object\CoreHarlequin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CCoreMinotaur.h">
+      <Filter>03.Session\Object\CoreMinotaur</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CHarlequinAnimController.h">
+      <Filter>05.AnimController\Harlequin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CShurikenThrowing.h">
+      <Filter>03.Session\Object\ShurikenThrowing</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

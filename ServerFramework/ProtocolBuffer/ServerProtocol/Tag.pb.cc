@@ -20,44 +20,49 @@ PROTOBUF_PRAGMA_INIT_SEG
 namespace _pb = ::google::protobuf;
 namespace _pbi = ::google::protobuf::internal;
 namespace _fl = ::google::protobuf::internal::field_layout;
-static const ::_pb::EnumDescriptor* file_level_enum_descriptors_Tag_2eproto[6];
+static const ::_pb::EnumDescriptor* file_level_enum_descriptors_Tag_2eproto[7];
 static constexpr const ::_pb::ServiceDescriptor**
     file_level_service_descriptors_Tag_2eproto = nullptr;
 const ::uint32_t TableStruct_Tag_2eproto::offsets[1] = {};
 static constexpr ::_pbi::MigrationSchema* schemas = nullptr;
 static constexpr ::_pb::Message* const* file_default_instances = nullptr;
 const char descriptor_table_protodef_Tag_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-    "\n\tTag.proto*\350\001\n\006TAG_CS\022\020\n\014TAG_CS_DUMMY\020\000"
+    "\n\tTag.proto*\246\002\n\006TAG_CS\022\020\n\014TAG_CS_DUMMY\020\000"
     "\022\020\n\014TAG_CS_LOGIN\020\001\022\021\n\rTAG_CS_LOGOUT\020\002\022\017\n"
-    "\013TAG_CS_MOVE\020\003\022\026\n\022TAG_CS_PLAYERSTATE\020\004\022\030"
-    "\n\024TAG_CS_CHARCOLLISION\020\005\022\032\n\026TAG_CS_PLAYE"
-    "RCOLLISION\020\006\022\033\n\027TAG_CS_MONSTERCOLIISION\020"
-    "\007\022\027\n\023TAG_CS_MONSTERSTATE\020\010\022\022\n\016TAG_CS_DAM"
-    "AGED\020\t*\361\001\n\006TAG_SC\022\020\n\014TAG_SC_DUMMY\020\000\022\031\n\025T"
-    "AG_SC_CONNECTSUCCESS\020\001\022\033\n\027TAG_SC_OTHERCL"
-    "IENTLOGIN\020\002\022\026\n\022TAG_SC_PLAYERSTATE\020\003\022\024\n\020T"
-    "AG_SC_COLLISION\020\004\022\026\n\022TAG_SC_MONSTERFIND\020"
-    "\005\022\022\n\016TAG_SC_DAMAGED\020\006\022\027\n\023TAG_SC_MONSTERS"
-    "TATE\020\007\022\031\n\025TAG_SC_SELFPLAYERMOVE\020\010\022\017\n\013TAG"
-    "_SC_DEAD\020\t*\376\001\n\010TAG_CHAR\022\r\n\tTAG_DUMMY\020\000\022\022"
-    "\n\016TAG_MAINPLAYER\020\001\022\023\n\017TAG_OTHERPLAYER\020\002\022"
-    "\024\n\020TAG_MUMMY_LAYING\020\003\022\026\n\022TAG_MUMMY_STAND"
-    "ING\020\004\022\032\n\026TAG_SARCOPHAGUS_LAYING\020\005\022\034\n\030TAG"
-    "_SARCOPHAGUS_STANDING\020\006\022\r\n\tTAG_CHEST\020\007\022\r"
-    "\n\tTAG_MIMIC\020\010\022\016\n\nTAG_ANUBIS\020\t\022\022\n\016TAG_HAR"
-    "LEQUINN\020\n\022\020\n\014TAG_MINOTAUR\020\013*C\n\016TAG_PLAYE"
-    "RTYPE\022\017\n\013TAG_WARRIOR\020\000\022\016\n\nTAG_ARCHOR\020\001\022\020"
-    "\n\014TAG_MAGICAIN\020\002*3\n\014TAG_COLLTYPE\022\020\n\014TAG_"
-    "COLL_HIT\020\000\022\021\n\rTAG_COLL_JUST\020\001*^\n\014TAG_FIN"
-    "DTYPE\022\023\n\017TAG_FIND_ACTIVE\020\000\022\021\n\rTAG_FIND_N"
-    "EAR\020\001\022\020\n\014TAG_FIND_ATK\020\002\022\024\n\020TAG_FIND_DISA"
-    "BLE\020\003b\006proto3"
+    "\013TAG_CS_MOVE\020\003\022\026\n\022TAG_CS_PLAYERSTATE\020\004\022\032"
+    "\n\026TAG_CS_PLAYERCOLLISION\020\005\022\033\n\027TAG_CS_MON"
+    "STERCOLIISION\020\006\022\027\n\023TAG_CS_MONSTERSTATE\020\007"
+    "\022\022\n\016TAG_CS_DAMAGED\020\010\022\017\n\013TAG_CS_HEAL\020\t\022\026\n"
+    "\022TAG_CS_PLAYERORDER\020\n\022\030\n\024TAG_CS_PLAYERDA"
+    "MAGED\020\013\022\023\n\017TAG_CS_PRESSKEY\020\014*\213\002\n\006TAG_SC\022"
+    "\020\n\014TAG_SC_DUMMY\020\000\022\031\n\025TAG_SC_CONNECTSUCCE"
+    "SS\020\001\022\033\n\027TAG_SC_OTHERCLIENTLOGIN\020\002\022\026\n\022TAG"
+    "_SC_PLAYERSTATE\020\003\022\024\n\020TAG_SC_COLLISION\020\004\022"
+    "\026\n\022TAG_SC_MONSTERFIND\020\005\022\022\n\016TAG_SC_DAMAGE"
+    "D\020\006\022\027\n\023TAG_SC_MONSTERSTATE\020\007\022\031\n\025TAG_SC_S"
+    "ELFPLAYERMOVE\020\010\022\017\n\013TAG_SC_DEAD\020\t\022\030\n\024TAG_"
+    "SC_STATICOBJFIND\020\n*\376\001\n\010TAG_CHAR\022\r\n\tTAG_D"
+    "UMMY\020\000\022\022\n\016TAG_MAINPLAYER\020\001\022\023\n\017TAG_OTHERP"
+    "LAYER\020\002\022\024\n\020TAG_MUMMY_LAYING\020\003\022\026\n\022TAG_MUM"
+    "MY_STANDING\020\004\022\032\n\026TAG_SARCOPHAGUS_LAYING\020"
+    "\005\022\034\n\030TAG_SARCOPHAGUS_STANDING\020\006\022\r\n\tTAG_C"
+    "HEST\020\007\022\r\n\tTAG_MIMIC\020\010\022\016\n\nTAG_ANUBIS\020\t\022\022\n"
+    "\016TAG_HARLEQUINN\020\n\022\020\n\014TAG_MINOTAUR\020\013*\203\001\n\r"
+    "TAG_STATICOBJ\022\020\n\014TAG_DUMMYOBJ\020\000\022\017\n\013TAG_I"
+    "RONBAR\020\001\022\016\n\nTAG_STATUE\020\002\022\022\n\016TAG_COREANUB"
+    "IS\020\003\022\025\n\021TAG_COREHARLEQUIN\020\004\022\024\n\020TAG_COREM"
+    "INOTAUR\020\005*C\n\016TAG_PLAYERTYPE\022\017\n\013TAG_WARRI"
+    "OR\020\000\022\016\n\nTAG_ARCHOR\020\001\022\020\n\014TAG_MAGICAIN\020\002*3"
+    "\n\014TAG_COLLTYPE\022\020\n\014TAG_COLL_HIT\020\000\022\021\n\rTAG_"
+    "COLL_JUST\020\001*^\n\014TAG_FINDTYPE\022\023\n\017TAG_FIND_"
+    "ACTIVE\020\000\022\021\n\rTAG_FIND_NEAR\020\001\022\020\n\014TAG_FIND_"
+    "ATK\020\002\022\024\n\020TAG_FIND_DISABLE\020\003b\006proto3"
 };
 static ::absl::once_flag descriptor_table_Tag_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Tag_2eproto = {
     false,
     false,
-    973,
+    1195,
     descriptor_table_protodef_Tag_2eproto,
     "Tag.proto",
     &descriptor_table_Tag_2eproto_once,
@@ -94,18 +99,18 @@ const ::google::protobuf::EnumDescriptor* TAG_CS_descriptor() {
   return file_level_enum_descriptors_Tag_2eproto[0];
 }
 PROTOBUF_CONSTINIT const uint32_t TAG_CS_internal_data_[] = {
-    655360u, 0u, };
+    851968u, 0u, };
 bool TAG_CS_IsValid(int value) {
-  return 0 <= value && value <= 9;
+  return 0 <= value && value <= 12;
 }
 const ::google::protobuf::EnumDescriptor* TAG_SC_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&descriptor_table_Tag_2eproto);
   return file_level_enum_descriptors_Tag_2eproto[1];
 }
 PROTOBUF_CONSTINIT const uint32_t TAG_SC_internal_data_[] = {
-    655360u, 0u, };
+    720896u, 0u, };
 bool TAG_SC_IsValid(int value) {
-  return 0 <= value && value <= 9;
+  return 0 <= value && value <= 10;
 }
 const ::google::protobuf::EnumDescriptor* TAG_CHAR_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&descriptor_table_Tag_2eproto);
@@ -116,9 +121,18 @@ PROTOBUF_CONSTINIT const uint32_t TAG_CHAR_internal_data_[] = {
 bool TAG_CHAR_IsValid(int value) {
   return 0 <= value && value <= 11;
 }
-const ::google::protobuf::EnumDescriptor* TAG_PLAYERTYPE_descriptor() {
+const ::google::protobuf::EnumDescriptor* TAG_STATICOBJ_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&descriptor_table_Tag_2eproto);
   return file_level_enum_descriptors_Tag_2eproto[3];
+}
+PROTOBUF_CONSTINIT const uint32_t TAG_STATICOBJ_internal_data_[] = {
+    393216u, 0u, };
+bool TAG_STATICOBJ_IsValid(int value) {
+  return 0 <= value && value <= 5;
+}
+const ::google::protobuf::EnumDescriptor* TAG_PLAYERTYPE_descriptor() {
+  ::google::protobuf::internal::AssignDescriptors(&descriptor_table_Tag_2eproto);
+  return file_level_enum_descriptors_Tag_2eproto[4];
 }
 PROTOBUF_CONSTINIT const uint32_t TAG_PLAYERTYPE_internal_data_[] = {
     196608u, 0u, };
@@ -127,7 +141,7 @@ bool TAG_PLAYERTYPE_IsValid(int value) {
 }
 const ::google::protobuf::EnumDescriptor* TAG_COLLTYPE_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&descriptor_table_Tag_2eproto);
-  return file_level_enum_descriptors_Tag_2eproto[4];
+  return file_level_enum_descriptors_Tag_2eproto[5];
 }
 PROTOBUF_CONSTINIT const uint32_t TAG_COLLTYPE_internal_data_[] = {
     131072u, 0u, };
@@ -136,7 +150,7 @@ bool TAG_COLLTYPE_IsValid(int value) {
 }
 const ::google::protobuf::EnumDescriptor* TAG_FINDTYPE_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&descriptor_table_Tag_2eproto);
-  return file_level_enum_descriptors_Tag_2eproto[5];
+  return file_level_enum_descriptors_Tag_2eproto[6];
 }
 PROTOBUF_CONSTINIT const uint32_t TAG_FINDTYPE_internal_data_[] = {
     262144u, 0u, };

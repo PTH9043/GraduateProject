@@ -8,6 +8,7 @@
 #include "AAnimation.h"
 #include "CMobLayoutLoader.h"
 #include "CMobLayOutSaver.h"
+#include "ASession.h"
 
 namespace Server
 {
@@ -24,7 +25,7 @@ namespace Server
 			SetMonsterType(TAG_CHAR::TAG_SARCOPHAGUS_STANDING);
 		}
 
-		UpdateFindRange(40.f, 80.f);
+		UpdateFindRange(50.f, 90.f);
 	}
 
 	_bool CSarcophagus::Start(const VOIDDATAS& _ReceiveDatas)
@@ -71,25 +72,24 @@ namespace Server
 
 	void CSarcophagus::RunningPermanentDisableSituation()
 	{
-		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
-		SC_MONSTERFIND scMonsterFind;
-		PROTOFUNC::MakeScMonsterFind(&scMonsterFind, GetSessionID(), TAG_FIND_ACTIVE, GetCurrentTargetPlayerID());
-		CombineProto<SC_MONSTERFIND>(GetCopyBuffer(), GetPacketHead(), scMonsterFind, TAG_SC_MONSTERFIND);
-		spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
 	}
 
-	void CSarcophagus::Tick(const _double& _dTimeDelta)
-	{
-	//	__super::Tick(_dTimeDelta);
-	}
-
-	void CSarcophagus::LateTick(const _double& _dTimeDelta)
-	{
-	}
+	void CSarcophagus::Tick(const _double& _dTimeDelta){ }
 
 	void CSarcophagus::State(SHPTR<ASession> _spSession, _int _MonsterState)
 	{
 		FindPlayer(_spSession);
+
+		if (true == IsCurrentFindPlayer())
+		{
+			SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+
+			SC_MONSTERFIND scMonsterFind;
+			PROTOFUNC::MakeScMonsterFind(&scMonsterFind, GetSessionID(), _spSession->GetSessionID());
+			CombineProto<SC_MONSTERFIND>(GetCopyBuffer(), GetPacketHead(), scMonsterFind, TAG_SC_MONSTERFIND);
+			spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
+			ActivePermanentDisable();
+		}
 	}
 
 	void CSarcophagus::ProcessPacket(_int _type, void* _pData)
@@ -97,12 +97,7 @@ namespace Server
 		__super::ProcessPacket(_type, _pData);
 	}
 
-	bool CSarcophagus::IsHit(APawn* _pPawn, const _double& _dTimeDelta)
-	{
-		return false;
-	}
-
-	void CSarcophagus::Collision(APawn* _pPawn, const _double& _dTimeDelta)
+	void CSarcophagus::Collision(AGameObject* _pGameObject, const _double& _dTimeDelta)
 	{
 	}
 

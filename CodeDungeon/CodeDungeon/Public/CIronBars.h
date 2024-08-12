@@ -32,12 +32,16 @@ public:
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
+	virtual void NetworkTickActive(const _double& _dTimeDelta) override;
 	virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
 	virtual HRESULT RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass = true) override;
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) override;
+	virtual void ReceiveNetworkProcessData(const UProcessedData& _ProcessData) override;
 private:
-	_float3 m_f3OriginPos;
+	_float3			m_f3OriginPos;
+	CUSTIMER		m_SoundTimer;
+	_bool				m_isEnable;
 
 };
 

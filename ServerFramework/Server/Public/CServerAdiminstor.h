@@ -27,7 +27,7 @@ protected:
 	virtual void Connect() override;
 private:
 	void CreateServerMobResourceData();
-	void CreateServerMob();
+	void CreateServerData();
 
 	void CreateMummyAndSarphagousMob(void* _pData, SARCOPHAGUSTYPE _SarcophagusType, SHPTR< AJobTimer> _spMonsterJobTimer);
 
@@ -37,6 +37,14 @@ private:
 		SHPTR<T> spMonster = Create<T>(GetCoreInstance(), GiveID(), _spMonsterJobTimer);
 		spMonster->Start(VOIDDATAS{ _pData });
 		InsertMobObject(spMonster->GetSessionID(), spMonster);
+	}
+
+	template<class T>
+	void CreateStaticObject(void* _pData)
+	{
+		SHPTR<T> spStaticObject = Create<T>(GetCoreInstance(), GiveID());
+		spStaticObject->Start(VOIDDATAS{ _pData });
+		InsertStaticObj(spStaticObject->GetSessionID(), spStaticObject);
 	}
 private:
 	void Free() override;

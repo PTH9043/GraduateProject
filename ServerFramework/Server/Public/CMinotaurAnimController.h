@@ -4,6 +4,7 @@
 #include "AAnimController.h"
 
 BEGIN(Server)
+class CMinotaur;
 
 class CMinotaurAnimController final : public AAnimController {
 public:
@@ -15,6 +16,24 @@ public:
 private:
 	virtual void Free() override;
 private:
+	static constexpr _float RUNNING_DISTANCE{ 10 };
+
+	WKPTR<CMinotaur>	m_wpMinotaur;
+	_bool								m_isAttackMode;
+	_bool								m_isRushMode;
+	CUSTIMER						m_LastHitTimer;
+	CUSTIMER						m_LastAttackTimer;
+	CUSTIMER						m_IdleRandomValueChooseTimer;
+	CUSTIMER						m_RushModeTimer;
+	CUSTIMER						m_RushAttackTimer;
+	CUSTIMER						m_HitCooldownTimer;
+	_bool								m_isStartlastHitTime;
+	_bool								m_isLastAttackWasFirst;
+	_int									m_iRandomValue;
+	Vector3							m_vRushTargetPos;
+	_int									m_iRandomNumForHit;
+	_int									m_iHitCount;
+	
 };
 
 END

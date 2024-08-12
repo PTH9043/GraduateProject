@@ -7,7 +7,7 @@
 #include "AMySqlDriver.h"
 #include "AServerService.h"
 #include "APawn.h"
-#include "ACollisionManager.h"
+#include "ASession.h"
 
 namespace Core
 {
@@ -15,8 +15,7 @@ namespace Core
 		m_spService{ nullptr },
 		m_spThreadManager{ Create<Core::AThreadManager>() },
 		m_spRandomManager{ Create<Core::ARandomManager>() },
-		m_spSpaceManager{ Create<Core::ASpaceManager>() },
-		m_spCollisionManager{Create<Core::ACollisionManager>()}
+		m_spSpaceManager{ Create<Core::ASpaceManager>() }
 	{
 
 	}
@@ -49,6 +48,12 @@ namespace Core
 	{
 		SHPTR<AService> spService = m_spService;
 		return spService->FindMobObject(_SessionID);
+	}
+
+	SHPTR<AStaticObject> ACoreInstance::FindStaticObject(const SESSIONID _SessionID)
+	{
+		SHPTR<AService> spService = m_spService;
+		return spService->FindStaticObject(_SessionID);
 	}
 
 	void ACoreInstance::BroadCastMessage(_char* _pPacket, const PACKETHEAD& _PacketHead)
@@ -87,6 +92,12 @@ namespace Core
 		spService->InsertMobObject(_SessionID, _spMobObject);
 	}
 
+	void ACoreInstance::InsertStaticObj(SESSIONID _SessionID, SHPTR<AStaticObject> _spStaticObj)
+	{
+		SHPTR<AService> spService = m_spService;
+		spService->InsertStaticObj(_SessionID, _spStaticObj);
+	}
+
 	const SESSIONCONTAINER& ACoreInstance::GetSessionContainer() const
 	{
 		SHPTR<AService> spService = m_spService;
@@ -99,6 +110,13 @@ namespace Core
 		SHPTR<AService> spService = m_spService;
 		ASSERT_CRASH(nullptr != spService);
 		return spService->GetMobObjContainer();
+	}
+
+	const STATICOBJCONTAINER& ACoreInstance::GetStaticObjContainer() const
+	{
+		SHPTR<AService> spService = m_spService;
+		ASSERT_CRASH(nullptr != spService);
+		return spService->GetStaticObjContainer();
 	}
 
 	SHPTR<AServerService> ACoreInstance::GetServerService()
@@ -122,6 +140,16 @@ namespace Core
 	void ACoreInstance::RegisterJob(_int _jobType, CSHPTRREF<AJobTimer> _spJobTimer)
 	{
 		m_spThreadManager->RegisterJob(_jobType, _spJobTimer);
+	}
+
+	void ACoreInstance::InsertPawnCollisionList(AGameObject* _pGameObject)
+	{
+		m_spThreadManager->InsertPawnCollisionList(_pGameObject);
+	}
+
+	void ACoreInstance::InsertStaticObjCollisionList(AGameObject* _pGameObject)
+	{
+		m_spThreadManager->InsertStaticObjCollisionList(_pGameObject);
 	}
 
 	SHPTR<AJobTimer> ACoreInstance::FindJobTimer(_int _JobTimer)
@@ -226,27 +254,22 @@ namespace Core
 		spMySqlDriver->BindParam(_TableType, _ParamIndex, _Value);
 	}
 
-	void ACoreInstance::AddMonsterPawnList(APawn* _pPawn)
-	{
-		SHPTR<ACollisionManager> spCollisionManager = m_spCollisionManager;
-		spCollisionManager->AddMonsterPawnList(_pPawn);
-	}
-
-	void ACoreInstance::CollisionSituation(const _double _dTimeDelta)
-	{
-		SHPTR<ACollisionManager> spCollisionManager = m_spCollisionManager;
-		spCollisionManager->CollisionSituation(_dTimeDelta);
-	}
-
-	void ACoreInstance::CollisionSituationToPlayer(ASession* _pSession, const _double _dTimeDelta)
-	{
-		SHPTR<ACollisionManager> spCollisionManager = m_spCollisionManager;
-		spCollisionManager->CollisionSituationToPlayer(_pSession, _dTimeDelta);
-	}
-
 	SHPTR<ANavigation> ACoreInstance::CloneNavi()
 	{
 		return Create<ANavigation>(*m_spNavigation.get());
+	}
+
+	void ACoreInstance::CheckAllPlayerDie()
+	{
+		const auto& SessionContainer = GetSessionContainer();
+		for (auto& value : SessionContainer)
+		{
+			if (false == value.second->IsDead())
+			{
+				return;
+			}
+		}
+		m_isCheckAllPlayerDie = true;
 	}
 
 	void ACoreInstance::Free()

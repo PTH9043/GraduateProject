@@ -37,9 +37,11 @@ namespace PROTOFUNC
 
 	void MakeScConnectSuccess(SC_CONNECTSUCCESS* _pOut, LLONG _id,  int _cellIndex,  int _type);
 	void MakeScOtherClientLogin(SC_OTHERCLIENTLOGIN* _pOut, LLONG _id, int _cellIndex, int _type);
-	void MakeScMonsterFind(SC_MONSTERFIND* _pOut, LLONG _id, int _findtype, int _targetID);
-	void MakeScDamaged(SC_DAMAGED* _pOut, LLONG _id, float _damage);
+	void MakeScMonsterFind(SC_MONSTERFIND* _pOut, LLONG _id, int _targetID);
+	void MakeScDamaged(SC_DAMAGED* _pOut, LLONG _id, float _hp);
 	void MakeScSeePlayerMove(SC_SEEPLAYERMOVE* _pOut, LLONG _id, const VECTOR3& _vPos);
+	void MakeScHarlequinThrowing(SC_HARLEQUINTHROWING* _pOut, int _index, const VECTOR3& _vPos);
+	void MakeScStaticObjFind(SC_STATICOBJFIND* _pOut, LLONG _id, int _enable);
 
 	/* =========== CS =============== */
 	// Client To Server 
@@ -47,7 +49,10 @@ namespace PROTOFUNC
 	void MakeCsLogin(CS_LOGIN* _pOut, LLONG _id);
 	void MakeCsAttack(CS_ATTACK* _pOut, LLONG _id, float _damage, VECTOR3* _pMovePos);
 	void MakeCsDisconnect(CS_DISCONNECT* _pOut, LLONG _id);
-	void MakeCsDamaged(SC_DAMAGED* _pOut, LLONG _id, float _damage);
+	void MakeCsHeal(CS_HEAL* _pOut, LLONG _id);
+	void MakeCsPlayerOrder(CS_PLAYERORDER* _pOut, LLONG _id, int _playerOrder);
+	void MakeCsDamaged(CS_DAMAGED* _pOut, LLONG _id, float _Damaged);
+	void MakeCsPressKey(CS_PRESSKEY* _pOut, LLONG _id, int _key);
 
 	class PROTOCOL_MEMORY_LEAK_REMOVER
 	{

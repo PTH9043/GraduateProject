@@ -21,11 +21,15 @@ namespace Core {
 	@ Date: 2024-06-15, Writer: 박태현
 	@ Explain: 콜라이더에 대한 정보 정의 
 	*/
-	struct COLLIDERINFO {
-		_int							iColliderType;
-		Vector3					vPos;
-		Vector3					vScale;
+	struct COLLIDERDESC
+	{
+		Vector3		vScale;
+		Vector3		vTranslation;
+
+		COLLIDERDESC() : vScale{ 1.f, 1.f, 1.f }, vTranslation{ 0.5f, 0.5f, 0.5f } {}
+		COLLIDERDESC(const Vector3& _vScale, const Vector3& _vTranslation) : vScale{ _vScale }, vTranslation{ _vTranslation } {}
 	};
+
 	/*
 	@ Date: 2024-06-16, Writer: 박태현
 	@ Explain: 캐릭터 스테이터스에 대한 정보 
@@ -297,7 +301,7 @@ namespace Core {
 
 		void PlusTime(const _double& _dTimeDelta)
 		{
-			fTimer.store(static_cast<_float>(_dTimeDelta), MemoryOrder);
+			fTimer.store(fTimer.load(MemoryOrder) + static_cast<_float>(_dTimeDelta), MemoryOrder);
 		}
 
 		void ChangeStandardTime(const _float& _fStandardTime_low, const _float& _fStandardTime_High)

@@ -82,16 +82,16 @@ public:
 	void MoveLeftNotY(const _double& _dTimeDelta, const _float& _fSpeed);
 	void MoveRightNotY(const _double& _dTimeDelta, const _float& _fSpeed);
 	void MovePos(const _float3& _vPos);
-	void TranslatePos(const _float3& _vPos, const _double& _dTimeDelta, const _float& _fSpeed,
+	_bool TranslatePos(const _float3& _vPos, const _double& _dTimeDelta, const _float& _fSpeed,
 		const _float& _fLimitDistance = 0.1f);
 	void TranslateDir(const _float3& _vDir, const _double& _dTimeDelta, const _float& _fSpeed);
-	void TranslateTrans(CSHPTRREF<UTransform> _pTransform, const _double& _dTimeDelta, const _float& _fSpeed,
+	_bool TranslateTrans(CSHPTRREF<UTransform> _pTransform, const _double& _dTimeDelta, const _float& _fSpeed,
 		const _float& _fLimitDistance = 0.1f);
 	// Translate To Pos Not Y
-	void TranslatePosNotY(const _float3& _vPos, const _double& _dTimeDelta, const _float& _fSpeed,
+	_bool TranslatePosNotY(const _float3& _vPos, const _double& _dTimeDelta, const _float& _fSpeed,
 		const _float& _fLimitDistance = 0.1f);
 	void TranslateDirNotY(const _float3& _vDir, const _double& _dTimeDelta, const _float& _fSpeed);
-	void TranslateTransNotY(CSHPTRREF<UTransform> _pTransform, const _double& _dTimeDelta, const _float& _fSpeed,
+	_bool TranslateTransNotY(CSHPTRREF<UTransform> _pTransform, const _double& _dTimeDelta, const _float& _fSpeed,
 		const _float& _fLimitDistance = 0.1f);
 
 	void RotateFix(const _float3& _vStandardAngle, const _float _fTurnAnge);

@@ -11,8 +11,7 @@ namespace Core
 
 	}
 
-	ACoreBase::~ACoreBase()
+	void ACoreBase::Free()
 	{
-
 	}
 }

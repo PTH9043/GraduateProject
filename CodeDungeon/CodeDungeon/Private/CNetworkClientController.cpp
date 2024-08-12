@@ -14,6 +14,12 @@
 #include "CHarlequinn.h"
 #include "CMinotaur.h"
 #include "CMimic.h"
+#include "CIronBars.h"
+#include "CStatue.h"
+#include "CCoreAnubis.h"
+#include "CCoreHarlequinn.h"
+#include "CCoreMinotaur.h"
+#include "CProtoMaker.h"
 
 CNetworkClientController::CNetworkClientController()
 {
@@ -25,7 +31,7 @@ HRESULT CNetworkClientController::NativeConstruct(const _string& _strIPAddress, 
 	return S_OK;
 }
 
-void CNetworkClientController::MakeActorsInit(const VECTOR<SHPTR<UActor>>& _actorContainer)
+void CNetworkClientController::MakeActorsInit(const VECTOR<SHPTR<UBase>>& _actorContainer)
 {
 	{
 		std::mutex Lock;
@@ -34,7 +40,10 @@ void CNetworkClientController::MakeActorsInit(const VECTOR<SHPTR<UActor>>& _acto
 	}
 	ThreadMiliRelax(100);
 
-	CreateServerMobData();
+	CMap* pMap = (CMap*)(_actorContainer[1].get());
+
+	CreateServerMobData(pMap);
+	CreateStaticObjData(pMap);
 
 	const NETWORKINITDATACONTAINER& InitNetworkDataContainer = GetNetworkInitDataContainer();
 
@@ -53,6 +62,7 @@ void CNetworkClientController::MakeActorsInit(const VECTOR<SHPTR<UActor>>& _acto
 					PROTO_ACTOR_WARRIORPLAYER, { &CharDesc, &PlayerDesc }));
 				spGameInstance->RegisterCurrentPlayer(spWarriorPlayer);
 				InsertNetworkActorInContainer(CharInitData.first, spWarriorPlayer);
+
 			}
 		}
 		break;
@@ -123,40 +133,42 @@ void CNetworkClientController::ProcessPacket(_char* _pPacket, PACKETHEAD _Packet
 		SelfPlayerMoveState(_pPacket, _PacketHead);
 	}
 	break;
+	case TAG_SC::TAG_SC_DAMAGED:
+	{
+		CharDamaged(_pPacket, _PacketHead);
+	}
+	break;
 	case TAG_SC::TAG_SC_MONSTERSTATE:
 	{
 		MonsterState(_pPacket, _PacketHead);
 	}
+	break;
+	case TAG_SC::TAG_SC_MONSTERFIND:
+	{
+		MonsterFind(_pPacket, _PacketHead);
+	}
+	break;
+	case TAG_SC::TAG_SC_STATICOBJFIND:
+		StaticObjFind(_pPacket, _PacketHead);
 	break;
 	}
 }
 
 #ifdef _ENABLE_PROTOBUFF
 
-void CNetworkClientController::CreateServerMobData()
+void CNetworkClientController::CreateServerMobData(CMap* _pMap)
 {
-	VECTOR<MOBSERVERDATA> MobServerData;
-	std::ifstream read{ L"..\\..\\Resource\\ServerLayout\\NetworkMobData.bin", std::ios::binary};
-	assert(false == read.fail());
 
-	size_t MobDatsSize = 0;
-	read.read((_char*)&MobDatsSize, sizeof(size_t));
-	MobServerData.reserve(MobDatsSize);
-	for (_int i = 0; i < MobDatsSize; ++i)
-	{
-		MOBSERVERDATA mobServerData;
-		read.read((_char*)&mobServerData, sizeof(MOBSERVERDATA));
-		MobServerData.emplace_back(mobServerData);
-	}
+	CMobServerLayoutLoader Loader{ "..\\..\\Resource\\ServerLayout\\NetworkMobData.bin"};
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	UNORMAP<_int, CSarcophagus*> SaracophagusContainer;
 	UNORMAP<_int, SHPTR<CMummy>> MuumyContainer;
+	SHPTR<MOBSCONTAINER> MobContainer = Create<MOBSCONTAINER>();
 
-	bool isNetwork = true;
-
-	for (auto& iter : MobServerData)
+	for (auto& iter : Loader.GetMobData())
 	{
+		SHPTR<CMob> spMob;
 		switch (iter.iMobType)
 		{
 		case TAG_CHAR::TAG_CHEST:
@@ -164,6 +176,7 @@ void CNetworkClientController::CreateServerMobData()
 			CItemChest::CHARACTERDESC chestDesc{ PROTO_RES_CHESTANIMMODEL, PROTO_COMP_CHESTANIMCONTROLLER };
 			SHPTR<CItemChest> Chest = std::static_pointer_cast<CItemChest>(spGameInstance->CloneActorAdd(PROTO_ACTOR_CHEST, { &chestDesc, &iter }));
 			InsertNetworkActorInContainer(iter.iMobID, Chest);
+			spMob = Chest;
 		}
 			break;
 		case TAG_CHAR::TAG_SARCOPHAGUS_LAYING:
@@ -174,6 +187,7 @@ void CNetworkClientController::CreateServerMobData()
 			InsertNetworkActorInContainer(iter.iMobID, Saracophagus);
 			Saracophagus->SetSarcophagusType(CSarcophagus::SARCOTYPE::TYPE_LYING);
 			SaracophagusContainer.insert(MakePair(iter.iMobParentsID, Saracophagus.get()));
+			spMob = Saracophagus;
 		}
 			break;
 		case TAG_CHAR::TAG_SARCOPHAGUS_STANDING:
@@ -184,88 +198,64 @@ void CNetworkClientController::CreateServerMobData()
 			InsertNetworkActorInContainer(iter.iMobID, Saracophagus);
 			Saracophagus->SetSarcophagusType(CSarcophagus::SARCOTYPE::TYPE_STANDING);
 			SaracophagusContainer.insert(MakePair(iter.iMobParentsID, Saracophagus.get()));
+			spMob = Saracophagus;
 		}
 			break;
 		case TAG_CHAR::TAG_MUMMY_LAYING:
 		{
-			_wstring protoName = PROTO_COMP_NETWORKMUMMYANIMCONTROLLER;
-			if (false == isNetwork)
-			{
-				protoName = PROTO_COMP_MUMMYANIMCONTROLLER;
-			}
-
-			CMummy::CHARACTERDESC MummyDesc{ PROTO_RES_MUMMYANIMMODEL, protoName };;
+			CMummy::CHARACTERDESC MummyDesc{ PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_NETWORKMUMMYANIMCONTROLLER };;
 			SHPTR<CMummy> Mummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MUMMY, { &MummyDesc, &iter }));	
 			InsertNetworkActorInContainer(iter.iMobID, Mummy);
 			Mummy->SetMummyType(CMummy::TYPE_LYING);
 			MuumyContainer.insert(MakePair(Mummy->GetNetworkID(), Mummy));
+			spMob = Mummy;
 		}
 			break;
 		case TAG_CHAR::TAG_MUMMY_STANDING:
 		{
-			_wstring protoName = PROTO_COMP_NETWORKMUMMYANIMCONTROLLER;
-			if (false == isNetwork)
-			{
-				protoName = PROTO_COMP_MUMMYANIMCONTROLLER;
-			}
-
-			CMummy::CHARACTERDESC MummyDesc{ PROTO_RES_MUMMYANIMMODEL, protoName };;
+			CMummy::CHARACTERDESC MummyDesc{ PROTO_RES_MUMMYANIMMODEL, PROTO_COMP_NETWORKMUMMYANIMCONTROLLER };;
 			SHPTR<CMummy> Mummy = std::static_pointer_cast<CMummy>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MUMMY, { &MummyDesc, &iter }));
 			InsertNetworkActorInContainer(iter.iMobID, Mummy);
 			Mummy->SetMummyType(CMummy::TYPE_STANDING);
 			MuumyContainer.insert(MakePair(Mummy->GetNetworkID(), Mummy));
+			spMob = Mummy;
 		}
 			break;
 		case TAG_CHAR::TAG_ANUBIS:
 		{
-			_wstring protoName = PROTO_COMP_NETWORKANUBISANIMCONTROLLER;
-			if (false == isNetwork)
-			{
-				protoName = PROTO_COMP_ANUBISANIMCONTROLLER;
-			}
-
-			CAnubis::CHARACTERDESC Desc{ PROTO_RES_ANUBISANIMMODEL, protoName };;
-			SHPTR<UActor> Anubis = std::static_pointer_cast<UActor>(spGameInstance->CloneActorAdd(PROTO_ACTOR_ANUBIS, { &Desc, &iter }));
+			CAnubis::CHARACTERDESC Desc{ PROTO_RES_ANUBISANIMMODEL, PROTO_COMP_NETWORKANUBISANIMCONTROLLER };;
+			SHPTR<CAnubis> Anubis = std::static_pointer_cast<CAnubis>(spGameInstance->CloneActorAdd(PROTO_ACTOR_ANUBIS, { &Desc, &iter }));
 			InsertNetworkActorInContainer(iter.iMobID, Anubis);
+			spMob = Anubis;
 		}
 		break;
 		case TAG_CHAR::TAG_MIMIC:
 		{
-			_wstring protoName = PROTO_COMP_NETWORKMIMICANIMCONTROLLER;
-			if (false == isNetwork)
-			{
-				protoName = PROTO_COMP_MIMICANIMCONTROLLER;
-			}
-			CAnubis::CHARACTERDESC Desc{ PROTO_RES_MIMICANIMMODEL, protoName };;
-			SHPTR<UActor> Anubis = std::static_pointer_cast<UActor>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MIMIC, { &Desc, &iter }));
-			InsertNetworkActorInContainer(iter.iMobID, Anubis);
+			CAnubis::CHARACTERDESC Desc{ PROTO_RES_MIMICANIMMODEL, PROTO_COMP_NETWORKMIMICANIMCONTROLLER };;
+			SHPTR<CMimic> Mimic = std::static_pointer_cast<CMimic>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MIMIC, { &Desc, &iter }));
+			InsertNetworkActorInContainer(iter.iMobID, Mimic);
+			spMob = Mimic;
 		}
 		break;
 		case TAG_CHAR::TAG_MINOTAUR:
 		{
-			_wstring protoName = PROTO_COMP_NETWORKMINOTAURANIMCONTROLLER;
-			if (false == isNetwork)
-			{
-				protoName = PROTO_COMP_MINOTAURANIMCONTROLLER;
-			}
-			CAnubis::CHARACTERDESC Desc{ PROTO_RES_MINOTAURANIMMODEL, protoName };;
-			SHPTR<UActor> Anubis = std::static_pointer_cast<UActor>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MINOTAUR, { &Desc, &iter }));
-			InsertNetworkActorInContainer(iter.iMobID, Anubis);
+			CAnubis::CHARACTERDESC Desc{ PROTO_RES_MINOTAURANIMMODEL, PROTO_COMP_NETWORKMINOTAURANIMCONTROLLER };;
+			SHPTR<CMinotaur> Minotaur = std::static_pointer_cast<CMinotaur>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MINOTAUR, { &Desc, &iter }));
+			InsertNetworkActorInContainer(iter.iMobID, Minotaur);
+			spMob = Minotaur;
 		}
 		break;
 		case TAG_CHAR::TAG_HARLEQUINN:
 		{
-			_wstring protoName = PROTO_COMP_NETWORKHARLEQUINNANIMCONTROLLER;
-			if (false == isNetwork)
-			{
-				protoName = PROTO_COMP_HARLEQUINNANIMCONTROLLER;
-			}
 			CAnubis::CHARACTERDESC Desc{ PROTO_RES_HARLEQUINNANIMMODEL, PROTO_COMP_NETWORKHARLEQUINNANIMCONTROLLER };;
-			SHPTR<UActor> Anubis = std::static_pointer_cast<UActor>(spGameInstance->CloneActorAdd(PROTO_ACTOR_HARLEQUINN, { &Desc, &iter }));
-			InsertNetworkActorInContainer(iter.iMobID, Anubis);
+			SHPTR<CHarlequinn> Harlequin = std::static_pointer_cast<CHarlequinn>(spGameInstance->CloneActorAdd(PROTO_ACTOR_HARLEQUINN, { &Desc, &iter }));
+			InsertNetworkActorInContainer(iter.iMobID, Harlequin);
+			spMob = Harlequin;
 		}
 		break;
 		}
+
+		(*MobContainer)[UMethod::ConvertSToW(iter.strRoomName)].push_back(spMob);
 	}
 
 	for (auto& iter : SaracophagusContainer)
@@ -273,6 +263,78 @@ void CNetworkClientController::CreateServerMobData()
 		const auto& MummyPair = MuumyContainer.find(iter.first);
 		iter.second->SetOwnerMummy(MummyPair->second);
 	}
+
+	_pMap->SetMobContainer(MobContainer);
+}
+
+void CNetworkClientController::CreateStaticObjData(CMap* _pMap)
+{
+	CStaticObjServerLayoutLoader Loader{ "..\\..\\Resource\\ServerLayout\\NetworkStaticObjData.bin" };
+
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	SHPTR<STATICOBJCONTAINER> staticObjContainer = Create<STATICOBJCONTAINER>();
+
+	for (auto& iter : Loader.GetStaticObjData())
+	{
+		SHPTR<CModelObjects> spModelObj;
+
+		switch (iter.iObjType)
+		{
+		case TAG_STATUE:
+		{
+			CStatue::STATUEDESC StatueDesc;
+			StatueDesc._Worldm = iter.mWorldMatrix;
+			SHPTR<CStatue> Statue = std::static_pointer_cast<CStatue>(spGameInstance->CloneActorAdd(PROTO_ACTOR_STATUE, { &StatueDesc }));
+			spGameInstance->AddCollisionPawnList(Statue);
+			InsertNetworkActorInContainer(iter.iServerID, Statue);
+			spModelObj = Statue;
+		}
+			break;
+		case TAG_IRONBAR:
+		{
+			CIronBars::IRONBARSDESC BarsDesc;
+			BarsDesc._Worldm = iter.mWorldMatrix;
+			SHPTR<CIronBars> _IronBars = std::static_pointer_cast<CIronBars>(spGameInstance->CloneActorAdd(PROTO_ACTOR_IRONBARS, { &BarsDesc }));
+			spGameInstance->AddCollisionPawnList(_IronBars);
+			InsertNetworkActorInContainer(iter.iServerID, _IronBars);
+			spModelObj = _IronBars;
+		}
+		break;
+		case TAG_COREANUBIS:
+		{
+			CCoreAnubis::COREANUBISNDESC CoreAnubisDesc;
+			CoreAnubisDesc._Worldm = iter.mWorldMatrix;
+			SHPTR<CCoreAnubis> CoreAnubis = std::static_pointer_cast<CCoreAnubis>(spGameInstance->CloneActorAdd(PROTO_ACTOR_ANUBISCORE, { &CoreAnubisDesc }));
+			spGameInstance->AddCollisionPawnList(CoreAnubis);
+			InsertNetworkActorInContainer(iter.iServerID, CoreAnubis);
+			spModelObj = CoreAnubis;
+		}
+		break;
+		case TAG_COREHARLEQUIN:
+		{
+			CCoreHarlequinn::COREHARLEQUINNDESC Desc;
+			Desc._Worldm = iter.mWorldMatrix;
+			SHPTR<CCoreHarlequinn> Core = std::static_pointer_cast<CCoreHarlequinn>(spGameInstance->CloneActorAdd(PROTO_ACTOR_HARLEQUINNCORE, { &Desc }));
+			spGameInstance->AddCollisionPawnList(Core);
+			InsertNetworkActorInContainer(iter.iServerID, Core);
+			spModelObj = Core;
+		}
+		break;
+		case TAG_COREMINOTAUR:
+		{
+			CCoreMinotaur::COREMINOTAURDESC Desc;
+			Desc._Worldm = iter.mWorldMatrix;
+			SHPTR<CCoreMinotaur> Core = std::static_pointer_cast<CCoreMinotaur>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MINOTAURCORE, { &Desc }));
+			spGameInstance->AddCollisionPawnList(Core);
+			InsertNetworkActorInContainer(iter.iServerID, Core);
+			spModelObj = Core;
+		}
+		break;
+		}
+
+		(*staticObjContainer)[UMethod::ConvertSToW(iter.strRoomName)].push_back(spModelObj);
+	}
+	_pMap->InsertStaticObjContainer(staticObjContainer);
 }
 
 void CNetworkClientController::ConnectSuccessState(_char* _pPacket, const PACKETHEAD& _PacketHead)
@@ -312,11 +374,22 @@ void CNetworkClientController::PlayerAnimState(_char* _pPacket, const PACKETHEAD
 	//// 해당하는 ID에 데이터 전달
 	InsertProcessedDataInActor(UProcessedData(PlayerState.id(), PlayerState, TAG_SC_PLAYERSTATE,
 		_PacketHead.PacketSize));
+	PlayerState.Clear();
+}
+
+void CNetworkClientController::CharDamaged(_char* _pPacket, const PACKETHEAD& _PacketHead)
+{
+	static SC_DAMAGED Damaged;
+	Damaged.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+	//// 해당하는 ID에 데이터 전달
+	InsertProcessedDataInActor(UProcessedData(Damaged.id(), Damaged, TAG_SC_DAMAGED,
+		_PacketHead.PacketSize));
+	Damaged.Clear();
 }
 
 void CNetworkClientController::SelfPlayerMoveState(_char* _pPacket, const PACKETHEAD& _PacketHead)
 {
-	static SC_SEEPLAYERMOVE selfPlayerMove;
+	SC_SEEPLAYERMOVE selfPlayerMove;
 	selfPlayerMove.ParseFromArray(_pPacket, _PacketHead.PacketSize);
 	//// 해당하는 ID에 데이터 전달
 	InsertProcessedDataInActor(UProcessedData(selfPlayerMove.id(), selfPlayerMove,
@@ -325,12 +398,31 @@ void CNetworkClientController::SelfPlayerMoveState(_char* _pPacket, const PACKET
 
 void CNetworkClientController::MonsterState(_char* _pPacket, const PACKETHEAD& _PacketHead)
 {
-	static MOBSTATE scMonsterState;
-	scMonsterState.ParseFromArray(_pPacket, _PacketHead.PacketSize);
-	InsertProcessedDataInActor(UProcessedData(scMonsterState.id(), scMonsterState,
+	static MOBSTATE MobState;
+	MobState.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+	//// 해당하는 ID에 데이터 전달
+	InsertProcessedDataInActor(UProcessedData(MobState.id(), MobState,
 		TAG_SC_MONSTERSTATE, _PacketHead.PacketSize));
+	MobState.Clear();
 }
 
+void CNetworkClientController::MonsterFind(_char* _pPacket, const PACKETHEAD& _PacketHead)
+{
+	static SC_MONSTERFIND scMonsterFind;
+	scMonsterFind.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+	//// 해당하는 ID에 데이터 전달
+	InsertProcessedDataInActor(UProcessedData(scMonsterFind.id(), scMonsterFind,
+		TAG_SC_MONSTERFIND, _PacketHead.PacketSize));
+	scMonsterFind.Clear();
+}
+void CNetworkClientController::StaticObjFind(_char* _pPacket, const PACKETHEAD& _PacketHead)
+{
+	static SC_STATICOBJFIND scStaticObjFind;
+	scStaticObjFind.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+	InsertProcessedDataInActor(UProcessedData(scStaticObjFind.id(), scStaticObjFind,
+		TAG_SC_STATICOBJFIND, _PacketHead.PacketSize));
+	scStaticObjFind.Clear();
+}
 #endif
 
 void CNetworkClientController::Free()

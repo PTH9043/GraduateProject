@@ -127,9 +127,6 @@
     <Filter Include="03.Network\AGameObject">
       <UniqueIdentifier>{6eee76c7-f955-4782-896b-71c9159bd679}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.Network\AGameObject\Build">
-      <UniqueIdentifier>{a09e1466-cfe9-4c97-8c55-e53b63d09ba5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="08.Animator">
       <UniqueIdentifier>{99d09ad4-3f47-40f1-8629-d64e1ef74042}</UniqueIdentifier>
     </Filter>
@@ -166,8 +163,8 @@
     <Filter Include="08.Animator\Controller">
       <UniqueIdentifier>{aa34c3b8-2935-4b16-a5e9-3cb9009fb280}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Manager\CollisionManager">
-      <UniqueIdentifier>{756e784f-9d37-43a9-8671-a88b474f452b}</UniqueIdentifier>
+    <Filter Include="03.Network\AGameObject\StaticObject">
+      <UniqueIdentifier>{5371b58d-b7a8-44ef-86d1-f995bcda9f05}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -345,8 +342,8 @@
     <ClInclude Include="..\Public\AAnimController.h">
       <Filter>08.Animator\Controller</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\ACollisionManager.h">
-      <Filter>02.Manager\CollisionManager</Filter>
+    <ClInclude Include="..\Public\AStaticObject.h">
+      <Filter>03.Network\AGameObject\StaticObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -491,8 +488,8 @@
     <ClCompile Include="..\Private\AAnimController.cpp">
       <Filter>08.Animator\Controller</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\ACollisionManager.cpp">
-      <Filter>02.Manager\CollisionManager</Filter>
+    <ClCompile Include="..\Private\AStaticObject.cpp">
+      <Filter>03.Network\AGameObject\StaticObject</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

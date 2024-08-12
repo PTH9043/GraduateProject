@@ -37,12 +37,15 @@ namespace Core
 			{
 				CRASH("NOT REGISTER APP")
 			}
+			g_pMemoryAdminster->Free();
 			delete g_RegisterApp;
 
 #ifdef USE_DEBUG
 			delete g_pDeadLockProfiler;
 #endif
+
 			ThreadMiliRelax(1000);
+
 			delete g_pMemoryAdminster;
 			delete g_pLogger;
 		}

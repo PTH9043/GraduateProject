@@ -108,19 +108,18 @@ void PROTOFUNC::MakeScOtherClientLogin(SC_OTHERCLIENTLOGIN* _pOut, LLONG _id, in
 	_pOut->set_type(_type);
 }
 
-void PROTOFUNC::MakeScMonsterFind(SC_MONSTERFIND* _pOut, LLONG _id, int _findtype, int _targetID)
+void PROTOFUNC::MakeScMonsterFind(SC_MONSTERFIND* _pOut, LLONG _id, int _targetID)
 {
 	assert(nullptr != _pOut);
 	_pOut->set_id(_id);
-	_pOut->set_findtype(_findtype);
 	_pOut->set_targetid(_targetID);
 }
 
-void PROTOFUNC::MakeScDamaged(SC_DAMAGED* _pOut, LLONG _id, float _damage)
+void PROTOFUNC::MakeScDamaged(SC_DAMAGED* _pOut, LLONG _id, float _hp)
 {
 	assert(nullptr != _pOut);
 	_pOut->set_id(_id);
-	_pOut->set_damage(_damage);
+	_pOut->set_hp(_hp);
 }
 
 void PROTOFUNC::MakeScSeePlayerMove(SC_SEEPLAYERMOVE* _pOut, LLONG _id, const VECTOR3& _vPos)
@@ -130,6 +129,22 @@ void PROTOFUNC::MakeScSeePlayerMove(SC_SEEPLAYERMOVE* _pOut, LLONG _id, const VE
 	_pOut->set_posx(_vPos.x());
 	_pOut->set_posy(_vPos.y());
 	_pOut->set_posz(_vPos.z());
+}
+
+void PROTOFUNC::MakeScHarlequinThrowing(SC_HARLEQUINTHROWING* _pOut, int _index, const VECTOR3& _vPos)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_index);
+	_pOut->set_posx(_vPos.x());
+	_pOut->set_posy(_vPos.y());
+	_pOut->set_posz(_vPos.z());
+}
+
+void PROTOFUNC::MakeScStaticObjFind(SC_STATICOBJFIND* _pOut, LLONG _id, int _enable)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_id);
+	_pOut->set_enable(_enable);
 }
 
 /* =========== CS =============== */
@@ -156,9 +171,29 @@ void PROTOFUNC::MakeCsDisconnect(CS_DISCONNECT* _pOut, LLONG _id)
 	_pOut->set_id(_id);
 }
 
-void PROTOFUNC::MakeCsDamaged(SC_DAMAGED* _pOut, LLONG _id, float _damage)
+void PROTOFUNC::MakeCsHeal(CS_HEAL* _pOut, LLONG _id)
 {
 	assert(nullptr != _pOut);
 	_pOut->set_id(_id);
-	_pOut->set_damage(_damage);
+}
+
+void PROTOFUNC::MakeCsPlayerOrder(CS_PLAYERORDER* _pOut, LLONG _id, int _playerOrder)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_id);
+	_pOut->set_order(_playerOrder);
+}
+
+void PROTOFUNC::MakeCsDamaged(CS_DAMAGED* _pOut, LLONG _id, float _Damaged)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_id);
+	_pOut->set_damage(_Damaged);
+}
+
+void PROTOFUNC::MakeCsPressKey(CS_PRESSKEY* _pOut, LLONG _id, int _key)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_id);
+	_pOut->set_key(_key);
 }

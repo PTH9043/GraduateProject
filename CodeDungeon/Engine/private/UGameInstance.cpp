@@ -121,23 +121,20 @@ void UGameInstance::Free()
 	//ClearOnceTypeData();
 	m_spRenderer->ClearAllData();
 	m_spRenderer.reset();
-	//m_spGraphicRenderObject.reset();
-	//m_spRandomManager.reset();
 	m_spMaterialManager.reset();
 	m_spCharacterManager.reset();
 	m_spNetworkBaseController.reset();
+	m_spSceneManager.reset();
+	m_spFontMananger.reset();
 	m_spAudioSystemManager.reset();
 	m_spFilePathManager.reset();
 	m_spPicking.reset();
 	m_spPipeLine.reset();
-	//m_spComputeManager.reset();
 	m_spRenderTargetManager.reset();
-	m_spSceneManager.reset();
 	m_spResourceManager.reset();
 	m_spComponentManager.reset();
 	m_spActorManager.reset();
 	m_spThreadManager.reset();
-	m_spFontMananger.reset();
 	m_spInputManager.reset();
 	m_spTimerManager.reset();
 	m_spGraphicDevice.reset();
@@ -215,12 +212,6 @@ void UGameInstance::AwakeTick()
 
 void UGameInstance::Tick(const _double& _dTimeDelta)
 {
-	if (nullptr != m_spNetworkBaseController)
-	{
-		m_spNetworkBaseController->ServerTick();
-		m_spNetworkBaseController->MakeActorsTick();
-	}
-
 	m_spSceneManager->Tick(_dTimeDelta);
 	if (m_isPause) {
 		m_spRenderer->Tick(0.f);
@@ -243,11 +234,6 @@ void UGameInstance::LateTick(const _double& _dTimeDelta)
 	m_spSceneManager->LateTick(dTimeDelta);
 
 	m_spActorManager->NetworkTick(dTimeDelta);
-
-	if (nullptr != m_spNetworkSender)
-	{
-		m_spNetworkSender->SendDataInQuery();
-	}
 }
 
 void UGameInstance::RenderBegin()
@@ -896,6 +882,11 @@ HRESULT UGameInstance::CreateAudioSystemToFolderNameAndRegister(SOUNDTYPE _Sound
 	return m_spAudioSystemManager->CreateAudioSystemToFolderNameAndRegister(this, _SoundType, _wstrSoundFolderName);
 }
 
+_bool UGameInstance::IsSoundPlay(const _wstring& _wstrSoundName, FMOD::Channel* _pChannel)
+{
+	return m_spAudioSystemManager->IsSoundPlay(_wstrSoundName, _pChannel);
+}
+
 void UGameInstance::SoundPlay(const _wstring& _wstrSoundName)
 {
 	m_spAudioSystemManager->Play(_wstrSoundName);
@@ -1085,25 +1076,22 @@ NetworkManager
 void UGameInstance::StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController)
 {
 	m_spNetworkBaseController = _spNetworkBaseController;
-	m_spNetworkSender = Create<UNetworkSender>(m_spNetworkBaseController);
 }
 
-void UGameInstance::MakeActorsInit(const VECTOR<SHPTR<UActor>>& _actorContainer)
+void UGameInstance::MakeActorsInit(const VECTOR<SHPTR<UBase>>& _actorContainer)
 {
 	assert(nullptr != m_spNetworkBaseController);
 	m_spNetworkBaseController->MakeActorsInit(_actorContainer);
 }
 
-void UGameInstance::InsertSendTcpPacketInQuery(_char* _pPacket, _short _PacketType, _short _PacketSize)
+void UGameInstance::SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize)
 {
-	assert(nullptr != m_spNetworkSender);
-	m_spNetworkSender->InsertSendTcpPacketInQuery(_pPacket, _PacketType, _PacketSize);
+	m_spNetworkBaseController->SendTcpData(_pPacket, _PacketType, _PacketSize);
 }
 
-void UGameInstance::InsertSendProcessPacketInQuery(UProcessedData&& _ProcessData)
+void UGameInstance::SendProtoData(const UProcessedData& _ProcessData)
 {
-	assert(nullptr != m_spNetworkSender);
-	m_spNetworkSender->InsertSendProcessPacketInQuery(std::move(_ProcessData));
+	m_spNetworkBaseController->SendProtoData(_ProcessData);
 }
 
 SHPTR<UActor> UGameInstance::FindNetworkActor(const _int _NetworkID)

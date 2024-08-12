@@ -27,6 +27,7 @@ namespace Core {
 		{
 			m_CellContainer.push_back(Create<ACell>(*iter.get()));
 		}
+	//	RETURN_CHECK(false == ReadyNeighbor(), ;);
 	}
 
 	void ANavigation::Free()
@@ -249,23 +250,45 @@ namespace Core {
 		RETURN_CHECK(0 == m_CellContainer.size(), nullptr);
 		_int iNeighborIndex{ 0 };
 		Vector3 vLine{};
-		_int range = 25;
-		_int lowerBound = _iIndex - range;
-		_int upperBound = _iIndex + range;
 
-		while (lowerBound >= 0 || upperBound < m_CellContainer.size()) {
-			if (lowerBound < 0) lowerBound = 0;
-			if (upperBound > m_CellContainer.size()) upperBound = static_cast<_int>(m_CellContainer.size());
-
-			for (_int i = lowerBound; i < upperBound; ++i) {
-				auto& iter = m_CellContainer.at(i);
-				if (iter->GetIndex() == _iIndex) {
-					return iter;
-				}
+		for (auto& Cells : m_CellContainer)
+		{
+			if (Cells->GetIndex() == _iIndex) {
+				return Cells;
 			}
-			range += 25;
-			lowerBound = _iIndex - range;
-			upperBound = _iIndex + range;
+		}
+		return nullptr;
+	}
+
+	SHPTR<ACell> ANavigation::FindCell(SHPTR<ACell> _spOtherCell)
+	{
+		RETURN_CHECK(0 == m_CellContainer.size(), nullptr);
+		RETURN_CHECK(nullptr == _spOtherCell, nullptr);
+		_int iNeighborIndex{ 0 };
+		Vector3 vLine{};
+
+		for (auto& Cells : m_CellContainer)
+		{
+			if (Cells->GetIndex() == _spOtherCell->GetIndex()) {
+				m_iCurIndex = Cells->GetIndex();
+				return Cells;
+			}
+		}
+		return nullptr;
+	}
+
+	SHPTR<ACell> ANavigation::FindCellWithoutUpdate(SHPTR<ACell> _spOtherCell)
+	{
+		RETURN_CHECK(0 == m_CellContainer.size(), nullptr);
+		RETURN_CHECK(nullptr == _spOtherCell, nullptr);
+		_int iNeighborIndex{ 0 };
+		Vector3 vLine{};
+
+		for (auto& Cells : m_CellContainer)
+		{
+			if (Cells->GetIndex() == _spOtherCell->GetIndex()) {
+				return Cells;
+			}
 		}
 		return nullptr;
 	}
@@ -407,42 +430,44 @@ namespace Core {
 		if (state.endCell == nullptr)
 			return false;
 
-		if (state.openSet.empty()) {
-			return true; // 경로를 찾지 못함
-		}
-
-		CellPathNode current = state.openSet.top();
-		state.openSet.pop();
-
-		if (current.cell == nullptr)
-			return false;
-
-		if (current.cell == state.endCell) {
-			// 경로를 추적하여 반환
-			state.isPathFound = true;
-			for (SHPTR<ACell> c = state.endCell; c != nullptr; c = state.cameFrom[c]) {
-				state.path.push_back(c);
+		//for (int i = 0; i < 5; ++i)
+		{
+			if (state.openSet.empty()) {
+				return true; // 경로를 찾지 못함
 			}
-			std::reverse(state.path.begin(), state.path.end());
-			return true; // 경로 찾음
-		}
 
-		for (int neighborIndex : current.cell->GetNeighbor()) {
-			if (neighborIndex == -1) continue;
-			SHPTR<ACell> neighbor = FindCellWithoutUpdate(neighborIndex);
+			CellPathNode current = state.openSet.top();
+			state.openSet.pop();
 
-			if (neighbor == nullptr)
+			if (current.cell == nullptr)
 				return false;
 
-			_float newCost = state.costSoFar[current.cell] + Heuristic(current.cell->GetCenterPos(), neighbor->GetCenterPos());
-			if (state.costSoFar.find(neighbor) == state.costSoFar.end() || newCost < state.costSoFar[neighbor]) {
-				state.costSoFar[neighbor] = newCost;
-				_float priority = newCost + Heuristic(neighbor->GetCenterPos(), state.endCell->GetCenterPos());
-				state.openSet.push({ neighbor, newCost, Heuristic(neighbor->GetCenterPos(), state.endCell->GetCenterPos()), priority, current.cell });
-				state.cameFrom[neighbor] = current.cell;
+			if (current.cell == state.endCell) {
+				// 경로를 추적하여 반환
+				state.isPathFound = true;
+				for (SHPTR<ACell> c = state.endCell; c != nullptr; c = state.cameFrom[c]) {
+					state.path.push_back(c);
+				}
+				std::reverse(state.path.begin(), state.path.end());
+				return true; // 경로 찾음
+			}
+
+			for (int neighborIndex : current.cell->GetNeighbor()) {
+				if (neighborIndex == -1) continue;
+				SHPTR<ACell> neighbor = FindCellWithoutUpdate(neighborIndex);
+
+				if (neighbor == nullptr)
+					return false;
+
+				_float newCost = state.costSoFar[current.cell] + Heuristic(current.cell->GetCenterPos(), neighbor->GetCenterPos());
+				if (state.costSoFar.find(neighbor) == state.costSoFar.end() || newCost < state.costSoFar[neighbor]) {
+					state.costSoFar[neighbor] = newCost;
+					_float priority = newCost + Heuristic(neighbor->GetCenterPos(), state.endCell->GetCenterPos());
+					state.openSet.push({ neighbor, newCost, Heuristic(neighbor->GetCenterPos(), state.endCell->GetCenterPos()), priority, current.cell });
+					state.cameFrom[neighbor] = current.cell;
+				}
 			}
 		}
-
 		return false; // 아직 경로를 찾지 못함
 	}
 

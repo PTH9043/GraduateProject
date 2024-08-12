@@ -468,15 +468,16 @@ void CMinotaur::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 					m_spAttackParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 					m_spAttackParticleTwo->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;	//등을 맞았을 때에만
 					if (dotProduct < -0.5f)
-					{
-						
+					{				
 						// Decrease health on hit
-						DecreaseHealth(pCharacter->GetAttack());
+	//					DecreaseHealth(pCharacter->GetAttack());
+						SendCollisionData(pCharacter, 100);
 					}
 					else
 					{
+						SendCollisionData(pCharacter, 1);
 						/*DecreaseHealth(1);*/
-						DecreaseHealth(pCharacter->GetAttack());
+					//	DecreaseHealth(pCharacter->GetAttack());
 					}
 				}
 
@@ -507,62 +508,59 @@ void CMinotaur::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 		}
 		};
 
-	auto handleCollisionWithCharacter = [&](UCharacter* pCharacter) {
-		for (const auto& iter : GetColliderContainer())
-		{
-			for (const auto& iter2 : pCharacter->GetColliderContainer())
-			{
-				if (iter2.first == L"Main")
-				{
-					if (iter.second->IsCollision(iter2.second))
-					{
-						SetCollisionState(true);
-						GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
-					}
-					else
-					{
-						SetCollisionState(false);
-					}
-				}
-			}
-		}
-		};
+	////auto handleCollisionWithCharacter = [&](UCharacter* pCharacter) {
+	////	for (const auto& iter : GetColliderContainer())
+	////	{
+	////		for (const auto& iter2 : pCharacter->GetColliderContainer())
+	////		{
+	////			if (iter2.first == L"Main")
+	////			{
+	////				if (iter.second->IsCollision(iter2.second))
+	////				{
+	////					SetCollisionState(true);
+	////					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
+	////				}
+	////				else
+	////				{
+	////					SetCollisionState(false);
+	////				}
+	////			}
+	////		}
+	////	}
+	////	};
 
-	auto handleCollisionWithStaticObject = [&](CModelObjects* pModelObject) {
-		for (const auto& iter : GetColliderContainer())
-		{
-			for (const auto& iter2 : pModelObject->GetColliderContainer())
-			{
-				if (iter2.first == L"Main")
-				{
-					SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
-					if (GetCollidedNormal() != _float3::Zero)
-					{
-						_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 50.0f : 20.0f;
-						ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
-					}
-				}
-			}
-		}
-	};
+	////auto handleCollisionWithStaticObject = [&](CModelObjects* pModelObject) {
+	////	for (const auto& iter : GetColliderContainer())
+	////	{
+	////		for (const auto& iter2 : pModelObject->GetColliderContainer())
+	////		{
+	////			if (iter2.first == L"Main")
+	////			{
+	////				SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
+	////				if (GetCollidedNormal() != _float3::Zero)
+	////				{
+	////					_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 50.0f : 20.0f;
+	////					ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
+	////				}
+	////			}
+	////		}
+	////	}
+	////};
 
 	if (ePawnType == PAWNTYPE::PAWN_PLAYER)
 	{
 		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
 		handleCollisionWithPlayer(pCharacter);
 	}
-	else if (ePawnType == PAWNTYPE::PAWN_CHAR)
-	{
-		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
-		handleCollisionWithCharacter(pCharacter);
-	}
-	else if (ePawnType == PAWNTYPE::PAWN_STATICOBJ)
-	{
-		CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
-		handleCollisionWithStaticObject(pModelObject);
-	}
+	//else if (ePawnType == PAWNTYPE::PAWN_CHAR)
+	//{
+	//	UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
+	//	handleCollisionWithCharacter(pCharacter);
+	//}
+	//else if (ePawnType == PAWNTYPE::PAWN_STATICOBJ)
+	//{
+	//	CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
+	//	handleCollisionWithStaticObject(pModelObject);
+	//}
 
-#ifdef _ENABLE_PROTOBUFF
-	SendCollisionData();
-#endif
 }

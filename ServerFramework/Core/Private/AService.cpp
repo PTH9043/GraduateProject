@@ -3,6 +3,7 @@
 #include "ASession.h"
 #include "ACoreInstance.h"
 #include "AMonster.h"
+#include "AStaticObject.h"
 
 namespace Core {
 
@@ -31,6 +32,13 @@ namespace Core {
 	{
 		const auto& iter = m_MobObjContainer.find(_SessionID);
 		RETURN_CHECK(m_MobObjContainer.end() == iter, nullptr);
+		return iter->second;
+	}
+
+	SHPTR<AStaticObject> AService::FindStaticObject(const SESSIONID _SessionID)
+	{
+		const auto& iter = m_StaticObjContainer.find(_SessionID);
+		RETURN_CHECK(m_StaticObjContainer.end() == iter, nullptr);
 		return iter->second;
 	}
 
@@ -90,13 +98,35 @@ namespace Core {
 		SHPTR<ASession> spSession = FindSession(_SessionID);
 		RETURN_CHECK(nullptr == _spSession && nullptr != spSession, ;);
 		m_SessionContainer.insert(MakePair(_SessionID, _spSession));
+		// Insert CollisionList
+		{
+			SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+			spCoreInstance->InsertPawnCollisionList(_spSession.get());
+		}
 	}
 
 	void AService::InsertMobObject(SESSIONID _SessionID, SHPTR<AMonster> _spMobObject)
 	{
 		SHPTR<AMonster> spObject = FindMobObject(_SessionID);
-		RETURN_CHECK(nullptr == spObject && nullptr != spObject, ;);
+		RETURN_CHECK(nullptr == _spMobObject && nullptr != spObject, ;);
 		m_MobObjContainer.insert(MakePair(_SessionID, _spMobObject));
+		// Insert CollisionList
+		{
+			SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+			spCoreInstance->InsertPawnCollisionList(_spMobObject.get());
+		}
+	}
+
+	void AService::InsertStaticObj(SESSIONID _SessionID, SHPTR<AStaticObject> _spStaticObj)
+	{
+		SHPTR<AStaticObject> spObject = FindStaticObject(_SessionID);
+		RETURN_CHECK(nullptr == _spStaticObj && nullptr != spObject, ;);
+		m_StaticObjContainer.insert(MakePair(_SessionID, _spStaticObj));
+		// Insert CollisionList
+		{
+			SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+			spCoreInstance->InsertStaticObjCollisionList(_spStaticObj.get());
+		}
 	}
 
 	void AService::IncreaseCurrentSessionCount(_llong _Count)

@@ -6,6 +6,7 @@
 BEGIN(Core)
 class AMonster;
 class ASession;
+class AStaticObject;
 /*
 @ Date: 2024-01-06, Writer: 박태현
 @ Explain
@@ -15,6 +16,7 @@ class CORE_DLL AService abstract : public ACoreObject {
 public:
 	using SESSIONCONTAINER = CONUNORMAP<SESSIONID, SHPTR<ASession>>;
 	using MOBOBJCONTAINER = CONUNORMAP<SESSIONID, SHPTR<AMonster>>;
+	using STATICOBJCONTAINER = CONUNORMAP<SESSIONID, SHPTR<AStaticObject>>;
 public:
 	AService(OBJCON_CONSTRUCTOR, SERVICETYPE _Type);
 	DESTRUCTOR(AService)
@@ -27,6 +29,8 @@ public:
 	SHPTR<ASession> FindSession(const SESSIONID _SessionID) ;
 	// ID를 통해서 GameObject를 찾아온다. 
 	SHPTR<AMonster> FindMobObject(const SESSIONID _SessionID);
+	// 
+	SHPTR<AStaticObject> FindStaticObject(const SESSIONID _SessionID);
 	// 전체 서버 참여자에게 메시지를 보내는 함수이다. 
 	void BroadCastMessage(_char* _pPacket, const PACKETHEAD& _PacketHead) ;
 	// 해당 Session ID를 제외한 전체 서버 참여자에게 메시지를 보내는 함수
@@ -39,9 +43,12 @@ public:
 	void InsertSession(SESSIONID _SessionID, SHPTR<ASession> _spSession) ;
 	// GameObject를 집어넣는 함수
 	void InsertMobObject(SESSIONID _SessionID, SHPTR<AMonster> _spMobObject);
+	// StaticObject 
+	void InsertStaticObj(SESSIONID _SessionID, SHPTR<AStaticObject> _spStaticObj);
 public: /* get set */
 	const SESSIONCONTAINER& GetSessionContainer() const { return m_SessionContainer; }
 	const MOBOBJCONTAINER& GetMobObjContainer() const { return m_MobObjContainer; }
+	const STATICOBJCONTAINER& GetStaticObjContainer() const { return m_StaticObjContainer; }
 	IOContext& GetIOContext(REF_RETURN) { return m_IOContext; }
 
 	void IncreaseCurrentSessionCount(_llong _Count);
@@ -66,6 +73,7 @@ private:
 	// Session Conatiner
 	SESSIONCONTAINER			m_SessionContainer;
 	MOBOBJCONTAINER			m_MobObjContainer;
+	STATICOBJCONTAINER		m_StaticObjContainer;
 };
 
 END

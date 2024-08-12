@@ -15,8 +15,10 @@ UNetworkBaseController::UNetworkBaseController() :
 	m_llNetworkOwnerID{0},
 	m_TcpTotalBuffer{},
 	m_RemainBufferLength{0},
-	m_spNetworkAddress{nullptr}
+	m_spNetworkAddress{nullptr},
+	m_pSendOverExp{nullptr}
 {
+	m_pSendOverExp = Make::xnew<UOverExp>();
 }
 
 HRESULT UNetworkBaseController::NativeConstruct(const _string& _strIPAddress, const _int _PortNumber)
@@ -41,7 +43,7 @@ HRESULT UNetworkBaseController::NativeConstruct(const _string& _strIPAddress, co
 	return S_OK;
 }
 
-void UNetworkBaseController::MakeActorsInit(const VECTOR<SHPTR<UActor>>& _actorContainer)
+void UNetworkBaseController::MakeActorsInit(const VECTOR<SHPTR<UBase>>& _actorContainer)
 {
 	m_NetworkInitDataContainer.clear();
 }
@@ -59,6 +61,7 @@ void UNetworkBaseController::AddNetworkInitData(_int _NetworkID, const NETWORKRE
 
 void UNetworkBaseController::InsertNetworkActorInContainer(_int _NetworkID, CSHPTRREF<UActor> _spActor)
 {
+	_spActor->SetNetworkID(_NetworkID);
 	m_NetworkActorContainer.insert(MakePair(_NetworkID, _spActor));
 }
 
@@ -71,8 +74,14 @@ SHPTR<UActor> UNetworkBaseController::FindNetworkActor(const _int _NetworkID)
 
 void UNetworkBaseController::SendTcpData(_char* _pData, short _tag, short _size)
 {
-	UOverExp* pOverExp = Make::xnew<UOverExp>(_pData, _tag, _size);
-	UServerMethods::SendTcpPacket(m_ClientTcpSocket, pOverExp);
+	m_pSendOverExp->SendBufferReady(_pData, _tag, _size);
+	UServerMethods::SendTcpPacket(m_ClientTcpSocket, m_pSendOverExp);
+}
+
+void UNetworkBaseController::SendProtoData(const UProcessedData& _ProcessedData)
+{
+	m_pSendOverExp->SendBufferReady(&_ProcessedData.GetData()[0], _ProcessedData.GetDataType(), _ProcessedData.GetDataSize());
+	UServerMethods::SendTcpPacket(m_ClientTcpSocket, m_pSendOverExp);
 }
 
 void UNetworkBaseController::ServerTick()
@@ -151,6 +160,7 @@ void UNetworkBaseController::ServerThread(void* _pData)
 void UNetworkBaseController::Free()
 {
 	m_isNetworkTickRunning = false;
+	Make::xdelete(m_pSendOverExp);
 	closesocket(m_ClientTcpSocket);
 	WSACleanup();
 }

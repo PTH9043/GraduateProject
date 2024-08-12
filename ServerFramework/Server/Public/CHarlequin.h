@@ -4,23 +4,26 @@
 #include "CServerMonster.h"
 
 BEGIN(Server)
+class CShurikenThrowing;
 
 class CHarlequin final : public CServerMonster {
+	static constexpr int THROWING_NUM{ 6 };
+	using SHURIKENCONTAINER = ARRAY<SHPTR<CShurikenThrowing>, THROWING_NUM>;
 public:
 	CHarlequin(OBJCON_CONSTRUCTOR, SESSIONID _ID, SHPTR<AJobTimer> _spMonsterJobTimer);
 	DESTRUCTOR(CHarlequin)
 public:
 	virtual _bool Start(const VOIDDATAS& _ReceiveDatas = {}) override;
 	virtual void Tick(const _double& _dTimeDelta) override;
-	virtual void LateTick(const _double& _dTimeDelta) override;
 	virtual void State(SHPTR<ASession> _spSession, _int _MonsterState = 0) override;
 	virtual void ProcessPacket(_int _type, void* _pData) override;
-	virtual bool IsHit(APawn* _pPawn, const _double& _dTimeDelta) override;
-protected:
-	// Damaged
-	virtual void Collision(APawn* _pPawn, const _double& _dTimeDelta) override;
+	virtual void Collision(AGameObject* _pGameObject, const _double& _dTimeDelta) override;
+public: 
+	SHPTR<CShurikenThrowing> GetShurikenThrowing(_int _iIndex);
 private:
 	virtual void Free() override;
+private:
+	SHURIKENCONTAINER		m_ShurikenContainer;
 };
 
 END

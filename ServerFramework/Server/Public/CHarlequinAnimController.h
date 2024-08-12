@@ -4,8 +4,14 @@
 #include "AAnimController.h"
 
 BEGIN(Server)
+class CHarlequin;
 
 class CHarlequinAnimController final : public AAnimController {
+public:
+	enum MUMMYSTATE
+	{
+		MOB_TAUNT_STATE = MOB_STATE_END,
+	};
 public:
 	CHarlequinAnimController(OBJCON_CONSTRUCTOR, SHPTR<APawn> _spPawn,
 		const _string& _strFolderPath, const _string& _strFileName, const _float4x4& _PivotMatrix = _float4x4::Identity);
@@ -15,6 +21,27 @@ public:
 private:
 	virtual void Free() override;
 private:
+	WKPTR<CHarlequin>		m_wpHarlequin;
+	_bool									m_isTauntMode;
+	_bool									m_isAttackMode;
+	CUSTIMER							m_LastHitTimer;
+	CUSTIMER							m_LastAttackTimer;
+	CUSTIMER							m_IdleTimer;
+	CUSTIMER							m_Attack1FirstTime;
+	CUSTIMER							m_IdleRandomValueChoosingTimerForPartrol;
+	CUSTIMER							m_HitCoolTimer;
+	_bool									m_isStartLastHitTime;
+	_bool									m_isLastAttackWasFirst;
+	Vector3								m_vThrowingPos;
+	ARRAY<Vector3, 6>		m_arrThrowindDir;
+	_int										m_iRandomValueForPatrol;
+	_int										m_iRandomValueForDoge;
+	_bool									m_isDoge;
+	_bool									m_isWillWalkUntilCloseRange;
+	_bool									m_isWillJumpToCloseRange;
+	_bool									m_isHitCooldown;
+	_int										m_iHitCount;
+	_float									m_fRotValue;
 };
 
 END

@@ -50,8 +50,8 @@ HRESULT TProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance,
 	_spGameInstance->AddPrototype(PROTO_RES_FIREALPHATEXTUREGROUP, CLONETYPE::CLONE_STATIC,
 		CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\Fire\\Alpha", true));
 
-	_spGameInstance->AddPrototype(PROTO_RES_FOGTEXTUREGROUP, CLONETYPE::CLONE_STATIC,
-		CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\Fog", true));
+	//_spGameInstance->AddPrototype(PROTO_RES_FOGTEXTUREGROUP, CLONETYPE::CLONE_STATIC,
+	//	CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\Fog", true));
 
 	//_spGameInstance->CreateAudioSystemAndRegister(SOUNDTYPE::SOUND_BACKGROUND, L"..\\..\\Resource\\Sound\\BackgroundSound");
 	_spGameInstance->CreateAudioSystemAndRegister(SOUNDTYPE::SOUND_BACKGROUND, L"..\\..\\Resource\\Sound\\BackgroundSound");

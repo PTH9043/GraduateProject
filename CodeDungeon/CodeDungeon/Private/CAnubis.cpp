@@ -591,11 +591,10 @@ void CAnubis::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 								m_spAttackParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 								m_spAttackParticleTwo->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 								// Decrease health on hit
-								DecreaseHealth(pCharacter->GetAttack());
+							//	DecreaseHealth(pCharacter->GetAttack());
+								// Decrease health on hit
+								SendCollisionData(_pEnemy.get(), 100);
 							}
-
-
-
 							SetHitAlreadyState(true);
 						}
 					}
@@ -679,8 +678,5 @@ void CAnubis::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 		handleCollisionWithStaticObject(pModelObject);
 	}
 
-#ifdef _ENABLE_PROTOBUFF
-	SendCollisionData();
-#endif
 }
 

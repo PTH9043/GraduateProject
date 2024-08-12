@@ -7,6 +7,8 @@
 #include "ANavigation.h"
 #include "AMonster.h"
 #include "AAnimController.h"
+#include "ACollider.h"
+#include "AStaticObject.h"
 
 namespace Server {
 
@@ -36,6 +38,12 @@ namespace Server {
 
 		SHPTR<ACell> spCell = spNavigation->FindCell(m_iStartCellIndex);
 		GetTransform()->SetPos(spCell->GetCenterPos());
+
+		InsertColliderContainer(COLLIDERTYPE::COLLIDER_MAIN, ACollider::TYPE_OBB,
+			COLLIDERDESC{ {4.f, 10.f, 4.f}, {0.f, 10.f, 0.f} });
+		InsertColliderContainer(COLLIDERTYPE::COLLIDER_FORATTACK, ACollider::TYPE_OBB,
+			COLLIDERDESC{ {4.f, 10.f, 4.f}, {0.f, 10.f, 0.f} });
+
 		return true;
 	}
 
@@ -74,13 +82,9 @@ namespace Server {
 
 	void CPlayerSession::ConnectTcpSocket(){}
 
-	bool CPlayerSession::IsHit(APawn* _pPawn, const _double& _dTimeDelta)
+	void CPlayerSession::Collision(AGameObject* _pGameObject, const _double& _dTimeDelta)
 	{
-		return false;
-	}
 
-	void CPlayerSession::Collision(APawn* _pPawn, const _double& _dTimeDelta)
-	{
 	}
 
 	_bool CPlayerSession::ProcessPacket(_char* _pPacket, const Core::PACKETHEAD& _PacketHead)
@@ -101,7 +105,7 @@ namespace Server {
 				PlayerState(spCoreInstance, SessionID, _pPacket, _PacketHead);
 			}
 			break;
-			case TAG_CS::TAG_CS_DAMAGED:
+			case TAG_CS_PLAYERDAMAGED:
 			{
 				PlayerCollisionState(spCoreInstance, SessionID, _pPacket, _PacketHead);
 			}
@@ -111,9 +115,14 @@ namespace Server {
 				MonsterCollisionState(spCoreInstance, SessionID, _pPacket, _PacketHead);
 			}
 			break;
-			case TAG_CS::TAG_CS_MONSTERSTATE:
+			case TAG_CS::TAG_CS_HEAL:
 			{
-				MonsterState(spCoreInstance, SessionID, _pPacket, _PacketHead);
+				PlayerHealState(spCoreInstance, SessionID, _pPacket, _PacketHead);
+			}
+			break;
+			case TAG_CS::TAG_CS_PRESSKEY:
+			{
+				PressKeyState(spCoreInstance, SessionID, _pPacket, _PacketHead);
 			}
 			break;
 		}
@@ -163,7 +172,7 @@ namespace Server {
 	void CPlayerSession::PlayerState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
 	{
 		SHPTR<ANavigation> spNavigation = GetNavigation();
-
+		SHPTR<ACell> spCurCell = nullptr;
 		Vector3				vPosition;
 
 		CHARSTATE csMove;
@@ -172,15 +181,15 @@ namespace Server {
 			vPosition = Vector3(csMove.posx(), csMove.posy(), csMove.posz());
 			GetTransform()->SetPos(vPosition);
 		}
-		//  다른 모든 클라이언트에 메시지 보낸다. 
+		spNavigation->IsMove(vPosition, spCurCell);		//  다른 모든 클라이언트에 메시지 보낸다. 
 		{
-		//	PROTOFUNC::MakeCharState(OUT & csMove, _SessionID, vSendPosition, vSendRotate);
 			CombineProto(REF_OUT GetCopyBuffer(), REF_OUT GetPacketHead(), csMove, TAG_SC::TAG_SC_PLAYERSTATE);
 			_spCoreInstance->BroadCastMessageExcludingSession(_SessionID, GetCopyBufferPointer(), GetPacketHead());
 		}
-
+		
 		{
 			const MOBOBJCONTAINER& MobObjectContainer = _spCoreInstance->GetMobObjContainer();
+			SHPTR<ASession> spSession = ThisShared<ASession>();
 			for (auto& iter : MobObjectContainer)
 			{
 				// 영구적 비활성화
@@ -190,7 +199,20 @@ namespace Server {
 				// 거리를 받아옴
 				if (true == IsCanSee(iter.second->GetTransform()))
 				{
-					iter.second->InsertMobJobTimer(GetSessionID());
+					iter.second->State(spSession);
+				}
+			}
+
+			const STATICOBJCONTAINER& StaticObjContainer = _spCoreInstance->GetStaticObjContainer();
+			for (auto& iter : StaticObjContainer)
+			{
+				if (true == iter.second->IsPermanentDisable())
+					continue;
+
+				// 거리를 받아옴
+				if (true == IsCanSee(iter.second->GetTransform()))
+				{
+					iter.second->State(spSession);
 				}
 			}
 		}
@@ -198,87 +220,60 @@ namespace Server {
 
 	void CPlayerSession::PlayerCollisionState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
 	{
-		//CS_DAMAGED CollisionData;
-		//CollisionData.ParseFromArray(_pPacket, _PacketHead.PacketSize);
-		//SHPTR<ASession> spSession = _spCoreInstance->FindSession(CollisionData.id());
-		//spSession->SetDamaged(true);
-		//spSession->DamageToEnemy(CollisionData.damage());
+		CS_DAMAGED CollisionData;
+		CollisionData.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+		SHPTR<ASession> spSession = _spCoreInstance->FindSession(CollisionData.id());
+		spSession->Damaged(CollisionData.damage());
 
-		//if (spSession->IsDead())
-		//{
-
-		//}
+		SC_DAMAGED Damage;
+		PROTOFUNC::MakeScDamaged(&Damage, GetSessionID(), spSession->GetCharStatus().fHp);
+		CombineProto<SC_DAMAGED>(GetCopyBuffer(), GetPacketHead(), Damage, TAG_SC_DAMAGED);
+		_spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
+		// Dead
+		if (true == spSession->IsDead())
+		{
+			_spCoreInstance->CheckAllPlayerDie();
+		}
+		CollisionData.Clear();
+		Damage.Clear();
 	}
 
 	void CPlayerSession::MonsterCollisionState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
 	{
-		//COLLISIONDATA CollisionData;
-		//CollisionData.ParseFromArray(_pPacket, _PacketHead.PacketSize);
-		//SHPTR<AMonster> spMonster = _spCoreInstance->FindMobObject(CollisionData.id());
-		//spMonster->SetDamaged(true);
-		//SHPTR<ASession> spSession = _spCoreInstance->FindSession(CollisionData.enemyid());
-		//spMonster->DamageToEnemy(spSession->GetCharStatus().fPower);
+		CS_DAMAGED CollisionData;
+		CollisionData.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+		SHPTR<AMonster> spMonster = _spCoreInstance->FindMobObject(CollisionData.id());
+		spMonster->Damaged(CollisionData.damage());
 
-		//if (spMonster->IsDead())
-		//{
-		//	SC_DEAD scDead;
-		//	scDead.set_id(spSession->GetSessionID());
-		//	CombineProto<SC_DEAD>(GetCopyBuffer(), GetPacketHead(), scDead, TAG_SC_DEAD);
-		//	_spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
-		//}
+		if(spMonster->IsDead())
+		{
+			SC_DAMAGED Damage;
+			PROTOFUNC::MakeScDamaged(&Damage, spMonster->GetSessionID(), 0.f);
+			CombineProto<SC_DAMAGED>(GetCopyBuffer(), GetPacketHead(), Damage, TAG_SC_DAMAGED);
+			_spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
+			Damage.Clear();
+		}
+
+		CollisionData.Clear();
 	}
 
-	void CPlayerSession::MonsterState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
+	void CPlayerSession::PlayerHealState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
 	{
-		//MOBSTATE monsterState;
-		//monsterState.ParseFromArray(_pPacket, _PacketHead.PacketSize);
-		//CombineProto<MOBSTATE>(GetCopyBuffer(), GetPacketHead(), monsterState, TAG_SC_MONSTERSTATE);
-		//_int MonsterID = monsterState.id();
-		//SHPTR<AMonster> spMonster = _spCoreInstance->FindMobObject(MonsterID);
-		//if (nullptr != spMonster)
-		//{
-		//	spMonster->ProcessPacket(TAG_CS_MONSTERSTATE, &monsterState);
-		//}
-		////_spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
-		// _spCoreInstance->BroadCastMessageExcludingSession(_SessionID, GetCopyBufferPointer(), GetPacketHead());
+		static CS_HEAL csHeal;
+		csHeal.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+		SHPTR<AMonster> spMonster = _spCoreInstance->FindMobObject(csHeal.id());
+		spMonster->ActivePermanentDisable();
+		csHeal.Clear();
+	}
+
+	void CPlayerSession::PressKeyState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
+	{
+		CS_PRESSKEY scPressKey;
+		scPressKey.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+		SetKeyState(scPressKey.key());
 	}
 
 	void CPlayerSession::Free()
 	{
 	}
 }
-
-
-/*
-				// Login Packet을 조합하고 메시지를 보낸다.
-				{
-					const MOBOBJCONTAINER& GameObjectContainer = spCoreInstance->GetMobObjContainer();
-					SC_VIEWINRANGE scViewInRange;
-					// GameObject
-					SET<AMonster*> GameObjectList;
-					{
-						// 시야처리
-						for (auto& iter : GameObjectContainer)
-						{
-							GameObjectList.insert(iter.second.get());
-						}
-						SC_VIEWINRANGE scViewRange;
-						PROTOALLOC(VECTOR3, position);
-						// 해당 녀석들이 있다고 보낸다.
-						for (auto& iter : GameObjectList)
-						{
-							if (Login.id() == iter->GetSessionID())
-								continue;
-
-							_int GameObjectID = GetGameObjectType();
-
-							SHPTR<ATransform> spTransform = iter->GetTransform();
-							Vector3 vPosition = spTransform->GetPos();
-							PROTOFUNC::MakeVector3(OUT  position, vPosition.x, vPosition.y, vPosition.z);
-							PROTOFUNC::MakeScViewInRange(OUT &scViewRange, iter->GetSessionID(), IN position, iter->GetCellIndex(), GameObjectID);
-							CombineProto(REF_OUT m_CopyBuffer, REF_OUT m_CopyPacketHead, scViewInRange, TAG_SC::TAG_SC_VIEWINRANGE);
-							spCoreInstance->DirectSendMessage(iter->GetSessionID(), &m_CopyBuffer[0], m_CopyPacketHead);
-						}
-					}
-				}
-*/

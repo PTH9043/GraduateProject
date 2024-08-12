@@ -4,6 +4,7 @@
 #include "AAnimController.h"
 
 BEGIN(Server)
+class CMimic;
 
 class CMimicAnimController final : public AAnimController {
 public:
@@ -15,6 +16,10 @@ public:
 private:
 	virtual void Free() override;
 private:
+	WKPTR< CMimic>		m_wpMimic;
+	_bool								m_isAttackMode;
+	CUSTIMER						m_IdleTimer;
+	CUSTIMER						m_IdleRandomValueChooseTimer;
 };
 
 END
