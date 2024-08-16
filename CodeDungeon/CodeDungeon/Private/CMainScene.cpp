@@ -338,7 +338,7 @@ void CMainScene::TurnLightsOnRange()
 				count++;
 			}
 		}
-		if (UMethod::ConvertWToS(obj.first) == "Cores")
+		else if (UMethod::ConvertWToS(obj.first) == "Cores")
 		{
 			auto Cores_it = obj.second.begin();
 			while (Cores_it != obj.second.end())

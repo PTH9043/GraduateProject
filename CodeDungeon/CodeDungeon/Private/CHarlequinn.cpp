@@ -469,59 +469,10 @@ void CHarlequinn::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta
 		}
 		};
 
-	auto handleCollisionWithCharacter = [&](UCharacter* pCharacter) {
-		for (const auto& iter : GetColliderContainer())
-		{
-			for (const auto& iter2 : pCharacter->GetColliderContainer())
-			{
-				if (iter2.first == L"Main")
-				{
-					if (iter.second->IsCollision(iter2.second))
-					{
-						SetCollisionState(true);
-						GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
-					}
-					else
-					{
-						SetCollisionState(false);
-					}
-				}
-			}
-		}
-		};
-
-	auto handleCollisionWithStaticObject = [&](CModelObjects* pModelObject) {
-		for (const auto& iter : GetColliderContainer())
-		{
-			for (const auto& iter2 : pModelObject->GetColliderContainer())
-			{
-				if (iter2.first == L"Main")
-				{
-					SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
-					if (GetCollidedNormal() != _float3::Zero)
-					{
-						_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 50.0f : 20.0f;
-						ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
-					}
-				}
-			}
-		}
-		};
-
 	if (ePawnType == PAWNTYPE::PAWN_PLAYER)
 	{
 		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
 		handleCollisionWithPlayer(pCharacter);
-	}
-	else if (ePawnType == PAWNTYPE::PAWN_CHAR)
-	{
-		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
-		handleCollisionWithCharacter(pCharacter);
-	}
-	else if (ePawnType == PAWNTYPE::PAWN_STATICOBJ)
-	{
-		CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
-		handleCollisionWithStaticObject(pModelObject);
 	}
 }
 

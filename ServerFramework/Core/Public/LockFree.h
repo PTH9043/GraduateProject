@@ -274,10 +274,6 @@ namespace Core
 			}
 			~LFNODE() 
 			{
-				if constexpr ((std::is_pointer<T>()))
-				{
-					Core::MemoryAlloc(value);
-				}
 			}
 			LFNODE* GetNext() { 
 				return reinterpret_cast<LFNODE*>(next & MASK_VALUE);

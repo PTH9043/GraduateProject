@@ -69,11 +69,18 @@ void UCharacterManager::TickCollider(const _double& _dTimeDelta)
 {
 	for (auto& Pawn : m_CollisionPawnList)
 	{
+		if (false == Pawn->IsActive())
+			continue;
+
 		for (auto& Coll : m_CollisionPawnList)
 		{
 			if (Pawn == Coll)
 				continue;
-			if (_float3::Distance(Pawn->GetTransform()->GetPos(), Coll->GetTransform()->GetPos()) < 40)
+
+			if (false == Coll->IsActive())
+				continue;
+
+			if (_float3::Distance(Pawn->GetTransform()->GetPos(), Coll->GetTransform()->GetPos()) < 50)
 			{
 				Pawn->IsHit(Coll, _dTimeDelta);
 			}

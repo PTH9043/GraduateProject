@@ -127,6 +127,10 @@ namespace Server
 			{
 				ObjectData.push_back(iter);
 			}
+			for (auto& iter : Cores.GetMobData())
+			{
+				ObjectData.push_back(iter);
+			}
 			// Mob 데이터를 상자로 만든다. 
 			for (auto& iter : MobData)
 			{

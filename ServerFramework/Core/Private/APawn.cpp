@@ -11,7 +11,7 @@ namespace Core {
 	APawn::APawn(OBJCON_CONSTRUCTOR, SESSIONID _ID, SESSIONTYPE _SessionType) :
 		AGameObject(OBJCON_CONDATA, _ID, _SessionType), m_spAnimController{ nullptr }, m_spNavigation{ nullptr }, m_isDamaged{ false },
 		m_isDead{ false }, m_vPrevPosition{}, m_isDeadStateEnable{ false }, m_isEnemyHitState{false},
-		m_isHitAlreadyState{false}, m_isCollisionState{false}, m_DeadTimer{10}, m_DamageToEnemyTimer{0.1f, std::memory_order_seq_cst}
+		m_isHitAlreadyState{false}, m_isCollisionState{false}, m_DeadTimer{10}, m_DamageToEnemyTimer{0.2f, std::memory_order_seq_cst}
 	{
 		m_spNavigation = GetCoreInstance()->CloneNavi();
 		m_DamageToEnemyTimer.fTimer = m_DamageToEnemyTimer.fStandardTime;

@@ -47,6 +47,8 @@ namespace Server {
 			COLLIDERDESC{ {4.f, 10.f, 4.f}, {0.f, 10.f, 0.f} });
 		InsertColliderContainer(COLLIDERTYPE::COLLIDER_FORATTACK, ACollider::TYPE_OBB,
 			COLLIDERDESC{ {4.f, 10.f, 4.f}, {0.f, 10.f, 0.f} });
+
+		SetActive(true);
 		return true;
 	}
 
@@ -174,8 +176,8 @@ namespace Server {
 
 	void CPlayerSession::PlayerState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
 	{
-		m_spGameTimer->Tick();
-		Tick(m_spGameTimer->GetDeltaTime());
+//		m_spGameTimer->Tick();
+//		Tick(m_spGameTimer->GetDeltaTime());
 
 		SHPTR<ANavigation> spNavigation = GetNavigation();
 		SHPTR<ATransform> spTransform = GetTransform();
@@ -241,9 +243,7 @@ namespace Server {
 		CollisionData.ParseFromArray(_pPacket, _PacketHead.PacketSize);
 		SHPTR<ASession> spSession = _spCoreInstance->FindSession(CollisionData.id());
 		SHPTR<AMonster> spMonster = _spCoreInstance->FindMobObject(CollisionData.enemyid());
-		assert(nullptr != spMonster);
-
-		if (true == spMonster->IsDamagedToEnemyTimerPass() || true == spSession->IsDead())
+		if (nullptr == spMonster)
 		{
 			SC_DAMAGED Damage;
 			PROTOFUNC::MakeScDamaged(&Damage, GetSessionID(), spSession->Damaged(CollisionData.damage()));
@@ -255,7 +255,23 @@ namespace Server {
 			{
 				_spCoreInstance->CheckAllPlayerDie();
 			}
-			spMonster->ResetDamagedToEnemyTimer();
+		}
+		else
+		{
+			if (true == spMonster->IsDamagedToEnemyTimerPass() || true == spSession->IsDead())
+			{
+				SC_DAMAGED Damage;
+				PROTOFUNC::MakeScDamaged(&Damage, GetSessionID(), spSession->Damaged(CollisionData.damage()));
+				CombineProto<SC_DAMAGED>(GetCopyBuffer(), GetPacketHead(), Damage, TAG_SC_DAMAGED);
+				_spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
+				Damage.Clear();
+				// Dead
+				if (true == spSession->IsDead())
+				{
+					_spCoreInstance->CheckAllPlayerDie();
+				}
+				spMonster->ResetDamagedToEnemyTimer();
+			}
 		}
 		CollisionData.Clear();
 	}

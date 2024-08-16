@@ -9,7 +9,7 @@ class AGameTimer;
 class AGameObject;
 
 class AMainLoop final : public ACoreObject {
-	using COLLISIONLIST = CONSET<AGameObject*>;
+	using GAMEOBJECTLIST = CONSET<AGameObject*>;
 public:
 	AMainLoop(OBJCON_CONSTRUCTOR, Asio::io_context& _context, SHPTR<AService> _spServerService);
 	DESTRUCTOR(AMainLoop)
@@ -26,8 +26,8 @@ private:
 	SHPTR<AGameTimer>			m_spGameTimer;
 	WKPTR< AService>				m_wpServerService;
 
-	COLLISIONLIST							m_PawnCollisionList;
-	COLLISIONLIST							m_StaticObjCollisionList;
+	GAMEOBJECTLIST					m_PawnCollisionList;
+	GAMEOBJECTLIST					m_StaticObjCollisionList;
 };
 
 END
