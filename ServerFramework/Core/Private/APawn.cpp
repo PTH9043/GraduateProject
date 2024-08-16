@@ -11,9 +11,10 @@ namespace Core {
 	APawn::APawn(OBJCON_CONSTRUCTOR, SESSIONID _ID, SESSIONTYPE _SessionType) :
 		AGameObject(OBJCON_CONDATA, _ID, _SessionType), m_spAnimController{ nullptr }, m_spNavigation{ nullptr }, m_isDamaged{ false },
 		m_isDead{ false }, m_vPrevPosition{}, m_isDeadStateEnable{ false }, m_isEnemyHitState{false},
-		m_isHitAlreadyState{false}, m_isCollisionState{false}, m_DeadTimer{10}
+		m_isHitAlreadyState{false}, m_isCollisionState{false}, m_DeadTimer{10}, m_DamageToEnemyTimer{0.1f, std::memory_order_seq_cst}
 	{
 		m_spNavigation = GetCoreInstance()->CloneNavi();
+		m_DamageToEnemyTimer.fTimer = m_DamageToEnemyTimer.fStandardTime;
 	}
 
 	SHPTR<ACell> APawn::GetCurCell()
@@ -56,6 +57,11 @@ namespace Core {
 		}
 	}
 
+	void APawn::RunningDamagedToEnemyTimer(const _double& _dTimeDelta)
+	{
+		m_DamageToEnemyTimer.PlusTime(_dTimeDelta);
+	}
+
 	void APawn::Placement(_int _CellIndex)
 	{
 		SHPTR<ANavigation> spNavigation = m_spNavigation;
@@ -75,26 +81,29 @@ namespace Core {
 		return spCell->GetCenterPos();
 	}
 
-	void APawn::HealHp(const _float _fHeal)
+	_float APawn::HealHp(const _float _fHeal)
 	{
 		m_CharStatus.fHp += _fHeal;
 		if (m_CharStatus.fHp >= m_CharStatus.fSaveHp)
 			m_CharStatus.fHp = m_CharStatus.fSaveHp;
+
+		return m_CharStatus.fHp;
 	}
 
-	void APawn::DamageToEnemy(SHPTR<APawn> _spPawn)
+	_float APawn::DamageToEnemy(SHPTR<APawn> _spPawn)
 	{
 		assert(nullptr != _spPawn);
-		RETURN_CHECK(true == m_isDamaged, ;);
+		RETURN_CHECK(true == m_isDamaged, 0.f);
 		m_CharStatus.fHp -= _spPawn->GetCharStatus().fPower;
 		if (m_CharStatus.fHp <= 0)
 		{
 			m_isDead = true;
 		}
 		m_isDamaged = true;
+		return m_CharStatus.fHp;
 	}
 
-	void APawn::Damaged(float _fDamaged)
+	_float APawn::Damaged(float _fDamaged)
 	{
 		m_CharStatus.fHp -= _fDamaged;
 		if (m_CharStatus.fHp <= 0)
@@ -102,6 +111,7 @@ namespace Core {
 			m_isDead = true;
 		}
 		m_isDamaged = true;
+		return m_CharStatus.fHp;
 	}
 
 	_float APawn::OtherCharacterToDistance(SHPTR<ATransform> _spOtherTransform)

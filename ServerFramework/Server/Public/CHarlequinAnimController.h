@@ -11,6 +11,7 @@ public:
 	enum MUMMYSTATE
 	{
 		MOB_TAUNT_STATE = MOB_STATE_END,
+		MOB_JUMP_STATE,
 	};
 public:
 	CHarlequinAnimController(OBJCON_CONSTRUCTOR, SHPTR<APawn> _spPawn,
@@ -30,6 +31,7 @@ private:
 	CUSTIMER							m_Attack1FirstTime;
 	CUSTIMER							m_IdleRandomValueChoosingTimerForPartrol;
 	CUSTIMER							m_HitCoolTimer;
+	CUSTIMER							m_JumpTimer;
 	_bool									m_isStartLastHitTime;
 	_bool									m_isLastAttackWasFirst;
 	Vector3								m_vThrowingPos;
@@ -41,7 +43,9 @@ private:
 	_bool									m_isWillJumpToCloseRange;
 	_bool									m_isHitCooldown;
 	_int										m_iHitCount;
-	_float									m_fRotValue;
+	_bool									m_isJumpEnable;
+	_int										m_iJumpCounter;
+	_int										m_iMaxJumpCount;
 };
 
 END

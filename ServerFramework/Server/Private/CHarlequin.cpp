@@ -8,6 +8,9 @@
 #include "AAnimation.h"
 #include "ATransform.h"
 #include "CShurikenThrowing.h"
+#include "ACoreInstance.h"
+#include "ANavigation.h"
+#include "ACell.h"
 
 namespace Server {
 
@@ -17,8 +20,8 @@ namespace Server {
 		SetMonsterType(TAG_CHAR::TAG_HARLEQUINN);
 		UpdateFindRange(80, 150);
 		SetMoveSpeed(5);
-		SetAttackRange(9.f);
-		SetCharStatus(CHARSTATUS{ 1, 0, 1500 });
+		SetAttackRange(60.f);
+		SetCharStatus(CHARSTATUS{ 1, 0, 1 });
 
 		SESSIONID id = 0;
 		for (auto& iter : m_ShurikenContainer)
@@ -29,7 +32,7 @@ namespace Server {
 
 	_bool CHarlequin::Start(const VOIDDATAS& _ReceiveDatas)
 	{
-		_float4x4 Matrix = _float4x4::CreateScale(0.1f) * _float4x4::CreateRotationY(DirectX::XMConvertToRadians(180));
+		_float4x4 	Matrix = _float4x4::CreateScale(0.1f) * _float4x4::CreateRotationY(DirectX::XMConvertToRadians(180));
 		SetAnimController(Create<CHarlequinAnimController>(GetCoreInstance(), ThisShared<CHarlequin>(),
 			"..\\..\\Resource\\Anim\\Harlequin\\", "Harlequin1_FBX.bin", Matrix));
 
@@ -41,10 +44,10 @@ namespace Server {
 		SHPTR<ATransform> spTransform = GetTransform();
 		_float4x4 mWorldMatrix = spTransform->GetWorldMatrix();
 
-		//for (auto& iter : m_ShurikenContainer)
-		//{
-		//	iter->Start({ &mWorldMatrix });
-		//}
+		for (auto& iter : m_ShurikenContainer)
+		{
+			iter->Start({ &mWorldMatrix });
+		}
 		return true;
 	}
 
@@ -52,77 +55,15 @@ namespace Server {
 	{
 		SHPTR<ASession> spSession = GetTargetSession();
 		TickUpdateBehavior(_dTimeDelta, spSession);
-
-		SHPTR<AAnimator> spAnimator = GetAnimController()->GetAnimator();
-		SHPTR<AAnimation> spAnimation = spAnimator->GetCurAnimation();
-		_string strCurAnimName = spAnimation->GetAnimName();
-
-		DEFINE_STATIC_CONSTCHAR(JUMP_ANIMNAME, "Jump Forward");
-		DEFINE_STATIC_CONSTCHAR(ATTACK4_ANIMNAME, "Attack 4");
-		DEFINE_STATIC_CONSTCHAR(ATTACK3_ANIMNAME, "Attack 3");
-
-		if (strCurAnimName != JUMP_ANIMNAME && strCurAnimName != ATTACK3_ANIMNAME &&
-			strCurAnimName != ATTACK4_ANIMNAME)
-		{
-			RestrictPositionToNavi();
-		}
-
+		RunningDamagedToEnemyTimer(_dTimeDelta);
+		DeadStateEnable(_dTimeDelta);
 		UpdateColliderData();
 		ResetTargetPlayer();
 	}
 
 	void CHarlequin::State(SHPTR<ASession> _spSession, _int _MonsterState)
 	{
-		FindPlayer(_spSession);
-
-		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
-
-		_bool isCurrentFindPlayer = IsCurrentFindPlayer();
-		_bool isDamaged = IsDamaged();
-
-		if (true == IsDeadStateEnable())
-		{
-			// 영구적 비활성화
-			ActivePermanentDisable();
-		}
-		else
-		{
-			SHPTR<ATransform> spTransform = GetTransform();
-			SHPTR<AAnimController> spAnimController = GetAnimController();
-			SHPTR<AAnimator> spAnimator = spAnimController->GetAnimator();
-			SHPTR<AAnimation> spCurAnimation = spAnimator->GetCurAnimation();
-
-			Vector3 vPos = spTransform->GetPos();
-			Vector3 vRotate = spTransform->GetRotationValue();
-
-			VECTOR3 vSendPos, vSendRotate;
-			{
-				PROTOFUNC::MakeVector3(&vSendPos, vPos.x, vPos.y, vPos.z);
-				PROTOFUNC::MakeVector3(&vSendRotate, vRotate.x, vRotate.y, vRotate.z);
-			}
-
-			_int AnimState = spAnimController->GetAnimState();
-			_double dTimeAcc = spCurAnimation->GetTimeAcc();
-			_int AnimIndex = spAnimator->GetCurAnimIndex();
-
-			MOBSTATE monsterState;
-			PROTOFUNC::MakeMobState(&monsterState, GetSessionID(), vSendPos, vSendRotate,
-				AnimState, AnimIndex, false, isCurrentFindPlayer, isDamaged, dTimeAcc);
-			CombineProto<MOBSTATE>(GetCopyBuffer(), GetPacketHead(), monsterState, TAG_SC_MONSTERSTATE);
-			_spSession->SendData(GetCopyBufferPointer(), GetPacketHead());
-
-			if (true == isCurrentFindPlayer)
-			{
-				for (_int i = 0; i < THROWING_NUM; ++i)
-				{
-					SHPTR<CShurikenThrowing> spShuriken = GetShurikenThrowing(i);
-					SHPTR<ATransform> spTransform = spShuriken->GetTransform();
-
-		//			static SC_HARLEQUINTHROWING scHarlequinThrowing;
-			//		PROTOFUNC::MakeScHarlequinThrowing(&scHarlequinThrowing, i, );
-				}
-			}
-		}
+		__super::State(_spSession, _MonsterState);
 	}
 
 	void CHarlequin::ProcessPacket(_int _type, void* _pData)
@@ -139,6 +80,115 @@ namespace Server {
 	{
 		RETURN_CHECK(_iIndex >= THROWING_NUM, nullptr);
 		return m_ShurikenContainer[_iIndex];
+	}
+
+	void CHarlequin::TickUpdateBehavior(const _double& _dTimeDelta, SHPTR<ASession> _spSession)
+	{
+		SHPTR<AAnimController> spAnimController = GetAnimController();
+		SHPTR<AAnimator> spAnimator = spAnimController->GetAnimator();
+		SHPTR<AAnimation> spAnimation = spAnimator->GetCurAnimation();
+		SHPTR<ATransform> spTransform = GetTransform();
+		SHPTR<ANavigation> spNaviagation = GetNavigation();
+		SHPTR<ACell> spCurrentMobCell = GetCurCell();
+		SHPTR<ACell> spTargetCell = nullptr;
+		Vector3 vCurrentMobPos = spTransform->GetPos();
+		Vector3 vTargetPos;
+		_string strCurAnimationName = spAnimation->GetAnimName();
+		_int iCurrentPlayerState{ 0 };
+
+		DEFINE_STATIC_CONSTCHAR(HITNAME, "Get Hit");
+		DEFINE_STATIC_CONSTCHAR(JUMPFORWARD, "Jump Forward");
+		DEFINE_STATIC_CONSTCHAR(ATTACK3, "Attack 4");
+		DEFINE_STATIC_CONSTCHAR(ATTACK4, "Attack 3");
+
+		if (nullptr != _spSession)
+		{
+			SHPTR<ATransform> spTargetTr = _spSession->GetTransform();
+			spTargetCell = spNaviagation->FindCell(_spSession->GetCurCell());
+			vTargetPos = spTargetTr->GetPos();
+			iCurrentPlayerState = _spSession->GetCurrentAnimState();
+			SetTargetPos(vTargetPos);
+		}
+		Vector3 vDir = vTargetPos - vCurrentMobPos;
+		SetDistanceToPlayer(vDir.Length());
+		SetPrevPosition(vCurrentMobPos);
+		SetPlayerToDot(OtherCharacterDirToLookConverter(vTargetPos));
+		vDir.Normalize();
+		SetTargetToDir(vDir);
+
+		_bool isFoudnTargetState = IsCurrentFindPlayer();
+		_bool isDeadState = IsDead();
+
+		_int MobState = spAnimController->GetAnimState();
+
+		spAnimController->Tick(_dTimeDelta);
+
+		if (MOB_MOVE_STATE == MobState)
+		{
+			if (false == isDeadState)
+			{
+				if (true == isFoudnTargetState)
+				{
+					if (GetTimeAccumulatorRefP().IsOverLow())
+					{
+						StartFindPath(spNaviagation, spCurrentMobCell, spTargetCell, vCurrentMobPos, vTargetPos);
+					}
+				}
+				else
+				{
+					spTargetCell = spNaviagation->ChooseRandomNeighborCell(3);
+					vTargetPos = spTargetCell->GetCenterPos();
+
+					if (GetTimeAccumulatorRefP().IsOverHigh())
+					{
+						StartFindPath(spNaviagation, spCurrentMobCell, spTargetCell, vCurrentMobPos, vTargetPos);
+					}
+				}
+				SetTargetPos(vTargetPos);
+				FindingPath(spNaviagation, vCurrentMobPos, vTargetPos);
+				MoveAlongPath(_dTimeDelta);
+			}
+		}
+
+		if (strCurAnimationName == HITNAME)
+		{
+			spTransform->SetDirectionFixedUp(GetTargetToDir(), _dTimeDelta, GetRotSpeed());
+		}
+
+		if (MOB_IDLE_STATE == MobState)
+		{
+			spAnimator->TickAnimation(_dTimeDelta);
+		}
+		else
+		{
+			spAnimator->TickAnimChangeTransform(spTransform, _dTimeDelta);
+			SetElapsedTime(0);
+		}
+
+		GetTimeAccumulatorRefP().PlusTime(_dTimeDelta);
+		DisableDamaged(iCurrentPlayerState, _dTimeDelta);
+
+		if (strCurAnimationName != JUMPFORWARD && strCurAnimationName != ATTACK4 &&
+			strCurAnimationName != ATTACK3)
+		{
+			RestrictPositionToNavi();
+		}
+		else
+		{
+			SHPTR<ACell> spCell = nullptr;
+			if (false == spNaviagation->IsMove(vCurrentMobPos, REF_OUT spCell))
+			{
+				Vector3 vChangePos = spTransform->GetPos();
+				vCurrentMobPos.y = vChangePos.y;
+				spTransform->SetPos(vCurrentMobPos);
+				m_isDontMove = true;
+			}
+		}
+	}
+
+	void CHarlequin::MoveAlongPath(const _double& _dTimeDelta)
+	{
+		__super::MoveAlongPath(_dTimeDelta);
 	}
 
 	void CHarlequin::Free()

@@ -6,6 +6,7 @@
 BEGIN(Core)
 class AService;
 class ACoreInstance;
+class AGameTimer;
 END
 
 BEGIN(Server)
@@ -21,6 +22,7 @@ public:
 	DESTRUCTOR(CPlayerSession)
 public:
 	virtual _bool Start(const VOIDDATAS& _ReceiveDatas = {}) override;
+	virtual void Tick(const _double& _dTimeDelta) override;
 	// 클라이언트에서 전송된 버퍼를 읽는 함수
 	virtual void RecvData() override;
 	// 클라이언트에게 버퍼를 조합하여 전송하는 함수
@@ -35,12 +37,12 @@ private:
 	void PlayerState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead);
 	void PlayerCollisionState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead);
 	void MonsterCollisionState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead);
-	void PlayerHealState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead);
 	void PressKeyState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead);
 private:
 	virtual void Free() override;
 private:
-	_int						m_iStartCellIndex;
+	_int											m_iStartCellIndex;
+	SHPTR<AGameTimer>		m_spGameTimer;
 };
 
 

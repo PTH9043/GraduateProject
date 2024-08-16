@@ -1,5 +1,6 @@
 #pragma once
 #include "CMonsterAnimController.h"
+#include "USound.h"
 
 BEGIN(Client)
 class CHarlequinn;
@@ -32,28 +33,22 @@ public:
 
 private:
 	WKPTR< CHarlequinn>			m_wpHarlequinnMob;
+	_float3										m_f3ThrowingPos;
+	ARRAY<_float3, 6>					m_arrThrowingDir;
+	//=====================SOUND CHANNEL================
+	FMOD::Channel* m_pAttack1Channel;
+	FMOD::Channel* m_pAttack2Channel;
+	FMOD::Channel* m_pSwhoosh1Channel;
+	FMOD::Channel* m_pSwhoosh2Channel;
+	FMOD::Channel* m_pTauntChannel;
 
-	_bool					m_bAttackMode;
-	_double					m_dlastHitTime;
-	_double					m_dlastAttackTime;
-	_bool					m_bstartlastHitTime;
-	_bool					m_blastAttackWasFirst;
-	_double					m_dIdleTimer;
-	_bool					m_bTauntMode;
+	_int								m_iRandomNumforhit;
+	FMOD::Channel* m_pHitChannel;
+	FMOD::Channel* m_pGotHitChannel;
 
-	_bool					m_bAttack1FirstTime;
-	_float3					m_f3ThrowingPos;
-
-	ARRAY<_float3, 6>		m_arrThrowingDir;
-
-	_double					m_didleRandomValueChoosingTimerforPatrol;
-
-	_int					m_iRandomValueforPatrol;
-	_int					m_iRandomValueforDodge;
-
-	_bool					m_bDodge;
-	_bool					m_bWillWalkUntilCloseRange;
-	_bool					m_bWillJumpToCloseRange;
+	_bool							m_isPlayAttackSound1;
+	_bool							m_isPlayAttackSound2;
+	_bool							m_isPlayHitSound;
 
 };
 

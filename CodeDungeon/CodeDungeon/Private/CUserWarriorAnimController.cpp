@@ -170,7 +170,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
 
         // Kicked state
         if (isKicked && CurAnimName != L"rise01") {
-            UpdateState(spAnimModel, ANIM_HIT, L"GOTKICKED");         
+            UpdateState(spAnimModel, ANIM_FALLDOWN, L"GOTKICKED");
             spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
         }
 

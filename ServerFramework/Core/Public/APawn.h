@@ -18,9 +18,9 @@ public:
 	void Placement(_int _CellIndex);
 	Vector3 BringCellIndextoPosition();
 
-	void HealHp(const _float _fHeal);
-	void DamageToEnemy(SHPTR<APawn> _spPawn);
-	void Damaged(float _fDamaged);
+	_float HealHp(const _float _fHeal);
+	_float DamageToEnemy(SHPTR<APawn> _spPawn);
+	_float Damaged(float _fDamaged);
 
 	_float OtherCharacterToDistance(SHPTR<ATransform> _spOtherTransform);
 	_float OtherCharacterDirToLook(SHPTR<ATransform> _spOtherTransform);
@@ -34,6 +34,7 @@ public:
 	Vector3 OtherCharacterDirToLookVectorF3(Vector3 _targetPos);
 	virtual void Collision(AGameObject* _pGameObject, const _double& _dTimeDelta) PURE;
 	void DeadStateEnable(const _double& _dTimeDelta);
+	void ResetDamagedToEnemyTimer() { m_DamageToEnemyTimer.ResetTimer(); }
 public: /* get set */
 	SHPTR<AAnimController> GetAnimController() { return m_spAnimController; }
 	const CHARSTATUS& GetCharStatus() const { return m_CharStatus; }
@@ -42,12 +43,15 @@ public: /* get set */
 	const _bool IsDeadStateEnable() const { return m_isDeadStateEnable; }
 	const _bool IsEnemyHitState() const { return m_isEnemyHitState; }
 	SHPTR<ACell> GetCurCell();
+	CUSTIMER& GetDamageToEnemyTimerRefP(REF_RETURN) { return m_DamageToEnemyTimer; }
 
 	virtual void SetActive(const _bool _isActive) override;
 	void SetDamaged(const _bool _isDamaged) { this->m_isDamaged = _isDamaged; }
 	void SetEnemyHitState(const _bool _isEnemyHitState) { this->m_isEnemyHitState = _isEnemyHitState; }
+	_bool IsDamagedToEnemyTimerPass() { return m_DamageToEnemyTimer.IsOver(); }
 protected:
 	void RestrictPositionToNavi();
+	void RunningDamagedToEnemyTimer(const _double& _dTimeDelta);
 protected: /* get set*/
 	void SetAnimController(SHPTR<AAnimController> _spAnimController) { this->m_spAnimController = _spAnimController; }
 	SHPTR<ANavigation> GetNavigation() { return m_spNavigation; }
@@ -79,6 +83,7 @@ private:
 	ATOMIC<_bool>							m_isCollisionState;
 
 	CUSTIMER										m_DeadTimer;
+	CUSTIMER										m_DamageToEnemyTimer;
 };
 
 

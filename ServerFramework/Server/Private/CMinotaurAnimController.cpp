@@ -12,11 +12,12 @@ namespace Server {
 		AAnimController(OBJCON_CONDATA, _spPawn, _strFolderPath, _strFileName, _PivotMatrix),
 		m_wpMinotaur{}, m_isAttackMode{false}, m_isRushMode{false},
 		m_LastHitTimer{}, m_LastAttackTimer{3}, m_IdleRandomValueChooseTimer{},
-		m_RushModeTimer{2}, m_RushAttackTimer{1}, m_HitCooldownTimer{5},
+		m_RushModeTimer{2.5}, m_RushAttackTimer{1}, m_HitCooldownTimer{5},
 		m_isStartlastHitTime{false}, m_isLastAttackWasFirst{false}, m_iRandomValue{0},
-		m_vRushTargetPos{}, m_iRandomNumForHit{0},	m_iHitCount{0}
+		m_vRushTargetPos{}, m_iRandomNumForHit{0},	m_iHitCount{0}, m_ChangeStateTimer{3}
 	{
 		m_wpMinotaur = static_shared_cast<CMinotaur>(_spPawn);
+		m_ChangeStateTimer.fTimer = 3.f;
 	}
 
 	void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
@@ -26,8 +27,8 @@ namespace Server {
 
 		static std::random_device rd;
 		static std::mt19937 gen(rd());
-		static std::uniform_int_distribution<> dis_patrol(0, 3);
-		static std::uniform_int_distribution<> dis_attack(0, 1);
+		static std::uniform_int_distribution<> dis_rush(0, 10);
+		static std::uniform_int_distribution<> dis_attack(0, 10);
 
 		SHPTR<CMinotaur> spMinotaur = m_wpMinotaur.lock();
 		SHPTR<AAnimator> spAnimator = GetAnimator();
@@ -41,6 +42,7 @@ namespace Server {
 		_bool isDeadState = spMinotaur->IsDead();
 		_bool isDeadStateEnable = spMinotaur->IsDeadStateEnable();
 		_float fTargetToDistance = spMinotaur->GetDistanceToPlayer();
+
 
 		static const char* IDLEORDER = "IDLE";
 		static const char* WALKORDER_1 = "WALK";
@@ -88,40 +90,47 @@ namespace Server {
 			}
 			else if (true == m_isAttackMode)
 			{
-				if(true == m_LastAttackTimer.IsOver(_dTimeDelta))
-				{
-					m_isLastAttackWasFirst = !m_isLastAttackWasFirst;
-					m_LastAttackTimer.ResetTimer();
-				}
-
 				if (false == isAtkPlayer)
 				{
-					UpdateState(WALKORDER_2, MOB_MOVE_STATE);
+					if (m_ChangeStateTimer.IsOver(_dTimeDelta))
+					{
+						_bool isTrue = dis_rush(gen) >= 5 ? true : false;
+						if (false == isTrue)
+							m_isRushMode = true;
+						m_ChangeStateTimer.ResetTimer();
+					}
+
+					if (false == m_isRushMode)
+					{
+						UpdateState(WALKORDER_2, MOB_MOVE_STATE);
+					}
 				}
 				else
 				{
+					m_isLastAttackWasFirst = dis_attack(gen) >= 5 ? true : false;
 					UpdateState(m_isLastAttackWasFirst ? ATTACKORDER : KICKORDER_1, MOB_ATTACK_STATE);
 				}
 			}
 
 			if (true == m_isRushMode)
 			{
-				if (true == m_RushModeTimer.IsOver(_dTimeDelta))
+				if (fTargetToDistance >= RUNNING_DISTANCE)
 				{
-					UpdateState(WALKBACK_ORDER, MOB_MOVE_STATE);
+					UpdateState(RUNORDER, MOB_RUN_STATE);
 				}
 				else
 				{
-					if (fTargetToDistance >= RUNNING_DISTANCE)
+					if (true == m_RushAttackTimer.IsOver(_dTimeDelta))
 					{
-						UpdateState(RUNORDER, MOB_MOVE_STATE);
+						m_isRushMode = false;
+						m_RushAttackTimer.ResetTimer();
 					}
 					else
 					{
-						UpdateState(KICKORDER_2, MOB_ATTACK_STATE);
-						if (true == m_RushAttackTimer.IsOver(_dTimeDelta))
+						if (true == m_RushModeTimer.IsOver(_dTimeDelta))
 						{
 							m_isRushMode = false;
+							UpdateState(WALKBACK_ORDER, MOB_BACK_STATE);
 							m_RushAttackTimer.ResetTimer();
 							m_RushModeTimer.ResetTimer();
 						}

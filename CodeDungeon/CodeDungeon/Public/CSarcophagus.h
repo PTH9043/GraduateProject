@@ -39,6 +39,8 @@ private:
 	SHPTR<CMummy> m_spOwnerMummy;
 
 	_double		m_dElapsedTimeForDeath;
+	_double		m_dAnimTimeRatio;
+	_bool			m_isFound;
 
 	FMOD::Channel* m_pLaying1Channel;
 	FMOD::Channel* m_pLaying2Channel;

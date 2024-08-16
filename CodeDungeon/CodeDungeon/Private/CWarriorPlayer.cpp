@@ -61,7 +61,8 @@ CWarriorPlayer::CWarriorPlayer(const CWarriorPlayer& _rhs) :
 	m_bCanInteractChest{ false },
 	m_bCanInteractGuard{ false },
 	m_fNetworkRecvMaxHeal{ 210 },
-	m_fPrevHealHp{ 0 }
+	m_fPrevHealHp{ 0 },
+	m_fInteractionTimeElapsed{0.f}
 {
 }
 
@@ -81,9 +82,9 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 
 	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
 	//int cellIndex = 0;
-	//int cellIndex = 349;
+	int cellIndex = 349;
 
-	int cellIndex = 0;
+	//int cellIndex = 210;
 
 	SHPTR<UCell> spCell = spNavigation->FindCell(cellIndex);
 	GetTransform()->SetPos(spCell->GetCenterPos());
@@ -295,9 +296,9 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() =4;
 		*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.355f;
 		_float3 pos = GetTransform()->GetPos() + GetTransform()->GetRight();
-		pos.y += 1.0;
+		pos.y += 1.0f;
 		_float3 Look = GetTransform()->GetLook();
-		_float3 Right = 1.2 * GetTransform()->GetRight();
+		_float3 Right = 1.2f * GetTransform()->GetRight();
 		//pos -= 3 * Look;
 		m_spFootPrintParticle->SetPosition(pos);
 		m_spFootPrintParticle->SetDirection(Right);
@@ -601,8 +602,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 									}
 									if (!GetIsHItAlreadyState())
 									{
-										DecreaseHealth(50);
-										SendCollisionData(_pEnemy.get(), 50);
+										SendCollisionData(_pEnemy.get(), 100);
 									}
 									SetHitAlreadyState(true);
 								}
@@ -623,8 +623,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 								{
 									if (!GetIsHItAlreadyState())
 									{
-										DecreaseHealth(10);
-										SendCollisionData(_pEnemy.get(), 10);
+										SendCollisionData(_pEnemy.get(), 20);
 									}
 									SetHitAlreadyState(true);
 								}
@@ -863,7 +862,6 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							{
 								if (!GetIsHItAlreadyState())
 								{
-									DecreaseHealth(100);
 									SendCollisionData(_pEnemy.get(), 100);
 								}
 								SetHitAlreadyState(true);
@@ -972,14 +970,17 @@ void CWarriorPlayer::SendMoveData()
 
 void CWarriorPlayer::SendCollisionData(UPawn* _pPawn, _float _fDamaged)
 {
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	CS_DAMAGED csPlayerDamaged;
-	_int NetworkID = GetNetworkID();
+	if (nullptr != _pPawn)
 	{
-		PROTOFUNC::MakeCsDamaged(&csPlayerDamaged, NetworkID, _fDamaged);
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		CS_DAMAGEDTOMONSTER csPlayerDamaged;
+		_int NetworkID = GetNetworkID();
+		{
+			PROTOFUNC::MakeCsDamagedToMonster(&csPlayerDamaged, NetworkID, _fDamaged, _pPawn->GetNetworkID());
+		}
+		spGameInstance->SendProtoData(UProcessedData(NetworkID, csPlayerDamaged,
+			TAG_CS_PLAYERDAMAGED));
 	}
-	spGameInstance->SendProtoData(UProcessedData(NetworkID, csPlayerDamaged,
-		TAG_CS_PLAYERDAMAGED));
 }
 
 void CWarriorPlayer::SendPressKeyState()
@@ -990,6 +991,10 @@ void CWarriorPlayer::SendPressKeyState()
 	if (spGameInstance->GetDIKeyPressing(DIK_F))
 	{
 		keyState = KEYBOARD_F;
+	}
+	else if (spGameInstance->GetDIKeyPressing(DIK_G))
+	{
+		keyState = KEYBOARD_G;
 	}
 
 	PROTOFUNC::MakeCsPressKey(&csPressKey, GetNetworkID(), keyState);

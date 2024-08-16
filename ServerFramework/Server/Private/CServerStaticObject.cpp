@@ -48,19 +48,19 @@ namespace Server {
 		_int KeyState = _spSession->GetKeyState();
 		if (KeyState == KEYBOARD_F)
 		{
-			m_isDoneInteractStaticObject = true;
+			SetDoneInteractiveStaticObject(true);
 		}
 		else
 		{
-			m_isDoneInteractStaticObject = false;
-			m_ActiveTimer.ResetTimer();
+			SetDoneInteractiveStaticObject(false);
+			GetActiveTimerRefP().ResetTimer();
 		}
-		_bool IsPass = m_ActiveTimer.IsOver();
-		enable = (true == IsPass ? 2 : (true == m_isDoneInteractStaticObject ? 1 : 0));
+		_bool IsPass = GetActiveTimerRefP(REF_RETURN).IsOver();
+		enable = (true == IsPass ? 2 : (true == IsDoneInteractStaticObject() ? 1 : 0));
 
 		SC_STATICOBJFIND scStaticObjectFind;
 		PROTOFUNC::MakeScStaticObjFind(&scStaticObjectFind, GetSessionID(), enable);
-		CombineProto<SC_STATICOBJFIND>(GetCopyBuffer(), GetPacketHead(), scStaticObjectFind, 
+		CombineProto<SC_STATICOBJFIND>(GetCopyBuffer(), GetPacketHead(), scStaticObjectFind,
 			TAG_SC_STATICOBJFIND);
 		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
 		spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
@@ -73,20 +73,6 @@ namespace Server {
 		SESSIONTYPE EnemySessionType = _pGameObject->GetSessionType();
 		RETURN_CHECK(SESSIONTYPE::PLAYER != EnemySessionType, ;);
 		RETURN_CHECK(false == IsCurrentFindPlayer(), ;);
-
-		//const auto& SelfCollisionCollider = GetColliderContainer();
-		//const auto& TargetCollisionCollider = _pGameObject->GetColliderContainer();
-
-		//for (auto& iter : SelfCollisionCollider)
-		//{
-		//	for (auto& value : TargetCollisionCollider)
-		//	{
-		//		if (true == iter.second->IsCollision(value.second))
-		//		{
-		//			m_isDoneInteractStaticObject = true;
-		//		}
-		//	}
-		//}
 	}
 
 	void CServerStaticObject::LastBehavior()

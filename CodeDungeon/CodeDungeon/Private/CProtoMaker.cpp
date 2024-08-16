@@ -146,11 +146,11 @@ HRESULT CProtoMaker::CreateMainSceneProtoData(CSHPTRREF<UGameInstance> _spGameIn
 	_spGameInstance->AddPrototype(PROTO_RES_MUMMYANIMMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
 		_spDevice, L"..\\..\\Resource\\AnimModel\\Mummy\\Convert\\Mummy_DEMO_1_FBX.bin", Matrix));
 
-	Matrix = _float4x4::CreateScale(0.1f);
+	Matrix = _float4x4::CreateScale(0.1f) * _float4x4::CreateRotationY(DirectX::XMConvertToRadians(180));
 	_spGameInstance->AddPrototype(PROTO_RES_MINOTAURANIMMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
 		_spDevice, L"..\\..\\Resource\\AnimModel\\MinoTaur\\Convert\\minotaur_FBX.bin", Matrix));
 
-	Matrix = _float4x4::CreateScale(0.1f);
+	Matrix = _float4x4::CreateScale(0.1f) * _float4x4::CreateRotationY(DirectX::XMConvertToRadians(180));
 	_spGameInstance->AddPrototype(PROTO_RES_HARLEQUINNANIMMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
 		_spDevice, L"..\\..\\Resource\\AnimModel\\Harlequin1\\Convert\\Harlequin1_FBX.bin", Matrix));
 

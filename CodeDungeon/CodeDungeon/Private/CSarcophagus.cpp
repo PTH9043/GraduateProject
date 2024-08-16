@@ -12,12 +12,12 @@
 #include "UProcessedData.h"
 
 CSarcophagus::CSarcophagus(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
-	: CMob(_spDevice, _wstrLayer, _eCloneType), m_SarcophagusType{}, m_dElapsedTimeForDeath{}
+	: CMob(_spDevice, _wstrLayer, _eCloneType), m_SarcophagusType{}, m_dElapsedTimeForDeath{}, m_dAnimTimeRatio{0}, m_isFound{ false }
 {
 }
 
 CSarcophagus::CSarcophagus(const CSarcophagus& _rhs)
-	: CMob(_rhs), m_SarcophagusType{}, m_dElapsedTimeForDeath{}
+	: CMob(_rhs), m_SarcophagusType{}, m_dElapsedTimeForDeath{}, m_dAnimTimeRatio{ 0 }, m_isFound{false}
 {
 }
 
@@ -39,19 +39,21 @@ HRESULT CSarcophagus::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetActivationRange(50);
 	SetDeactivationRange(120);
 	SetActive(true);
+//	SetDeathState(true);
 	return S_OK;
 }
 
 void CSarcophagus::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 {
+	__super::ReceiveNetworkProcessData(_ProcessData);
+
 	switch (_ProcessData.GetDataType())
 	{
 	case TAG_SC_MONSTERFIND:
 	{
-		SetFoundTargetState(true);
+		m_isFound = true;
 	}
 	break;
-
 	}
 }
 
@@ -70,7 +72,7 @@ void CSarcophagus::TickActive(const _double& _dTimeDelta)
 
 	if (!spMummy->GetDeathState())
 	{
-		if (GetFoundTargetState())
+		if (m_isFound)
 		{
 			if (GetSarcophagusType() == SARCOTYPE::TYPE_LYING)
 			{
@@ -92,20 +94,29 @@ void CSarcophagus::TickActive(const _double& _dTimeDelta)
 					Standingsound1->PlayWithInputChannel(&m_pStanding2Channel);
 				}
 			}
-			SetElapsedTime(GetElapsedTime() + _dTimeDelta * SarcophagusOpeningSpeed);
-		}
-		if (GetSarcophagusType() == SARCOTYPE::TYPE_LYING)
-		{
-			if (GetElapsedTime() < LyingSarcophagusTimeArcOpenEnd)
+
+			_double dElapsedTime = GetElapsedTime();
+			if (GetSarcophagusType() == SARCOTYPE::TYPE_LYING)
 			{
-				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, LyingSarcophagusTimeArcOpenStart + GetElapsedTime());
+				if (GetElapsedTime() < LyingSarcophagusTimeArcOpenEnd)
+				{
+					GetAnimModel()->UpdateCurAnimationToRatio(LyingSarcophagusTimeArcOpenStart + GetElapsedTime());
+				}
 			}
+			else
+			{
+				SarcophagusOpeningSpeed = 20;
+				if (dElapsedTime < StandingSarcophagusTimeArcOpenEnd)
+				{
+					GetAnimModel()->UpdateCurAnimationToRatio(dElapsedTime);
+				}
+			}
+			SetElapsedTime(dElapsedTime + _dTimeDelta * SarcophagusOpeningSpeed);
 		}
 		else
-			if (GetElapsedTime() < StandingSarcophagusTimeArcOpenEnd)
-			{
-				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
-			}
+		{
+			GetAnimModel()->UpdateCurAnimationToRatio(0.0);
+		}
 	}
 	else
 		GetAnimModel()->UpdateDissolveTImer(_dTimeDelta);

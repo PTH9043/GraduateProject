@@ -12,7 +12,7 @@ class UAnimation;
 class CUserWarriorAnimController final : public UAnimationController {
 public:
 	enum WARRIOR_STATE {
-		ANIM_ROLL = 6, ANIM_RUN = 7, ANIM_JUMP = 8
+		ANIM_ROLL = 6, ANIM_RUN = 7, ANIM_JUMP = 8, ANIM_FALLDOWN = 9
 	};
 public:
 	CUserWarriorAnimController(CSHPTRREF<UDevice> _spDevice);

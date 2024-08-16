@@ -46,15 +46,5 @@ void CSarcophagusAnimController::Tick(const _double& _dTimeDelta)
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
-
-	//_bool isIdle = false;
-	//_bool isMove = false;
-
-	//SetTrigger(L"IDLE");
-	//SetAnimState(ANIM_IDLE);
-#ifdef _ENABLE_PROTOBUFF
 	spAnimModel->TickEventToRatio(spSarcophagus.get(), L"", m_dRecvAnimDuration, _dTimeDelta);
-#else
-	spAnimModel->TickEvent(spSarcophagus.get(), GetTrigger(), _dTimeDelta);
-#endif
 }

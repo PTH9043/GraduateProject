@@ -19,6 +19,7 @@
 #include "CCoreAnubis.h"
 #include "CCoreHarlequinn.h"
 #include "CCoreMinotaur.h"
+#include "UModel.h"
 #include "CProtoMaker.h"
 
 CNetworkClientController::CNetworkClientController()
@@ -149,7 +150,14 @@ void CNetworkClientController::ProcessPacket(_char* _pPacket, PACKETHEAD _Packet
 	}
 	break;
 	case TAG_SC::TAG_SC_STATICOBJFIND:
+	{
 		StaticObjFind(_pPacket, _PacketHead);
+	}
+	break;
+	case TAG_SC::TAG_SC_HARLEQUINTHROWING:
+	{
+		HarlequinThrowing(_pPacket, _PacketHead);
+	}
 	break;
 	}
 }
@@ -194,7 +202,7 @@ void CNetworkClientController::CreateServerMobData(CMap* _pMap)
 		{
 			CSarcophagus::CHARACTERDESC SarcDesc{ PROTO_RES_SARCOPHAGUSSTANDINGANIMMODEL, PROTO_COMP_SARCOPHAGUSANIMCONTROLLER };
 			SHPTR<CSarcophagus> Saracophagus = std::static_pointer_cast<CSarcophagus>(spGameInstance->CloneActorAdd(
-				PROTO_ACTOR_SARCOPHAGUSLYING, { &SarcDesc, &iter }));
+				PROTO_ACTOR_SARCOPHAGUSSTANDING, { &SarcDesc, &iter }));
 			InsertNetworkActorInContainer(iter.iMobID, Saracophagus);
 			Saracophagus->SetSarcophagusType(CSarcophagus::SARCOTYPE::TYPE_STANDING);
 			SaracophagusContainer.insert(MakePair(iter.iMobParentsID, Saracophagus.get()));
@@ -307,6 +315,7 @@ void CNetworkClientController::CreateStaticObjData(CMap* _pMap)
 			SHPTR<CCoreAnubis> CoreAnubis = std::static_pointer_cast<CCoreAnubis>(spGameInstance->CloneActorAdd(PROTO_ACTOR_ANUBISCORE, { &CoreAnubisDesc }));
 			spGameInstance->AddCollisionPawnList(CoreAnubis);
 			InsertNetworkActorInContainer(iter.iServerID, CoreAnubis);
+			CoreAnubis->GetModel()->SetModelName(L"AnubisCore");
 			spModelObj = CoreAnubis;
 		}
 		break;
@@ -317,6 +326,7 @@ void CNetworkClientController::CreateStaticObjData(CMap* _pMap)
 			SHPTR<CCoreHarlequinn> Core = std::static_pointer_cast<CCoreHarlequinn>(spGameInstance->CloneActorAdd(PROTO_ACTOR_HARLEQUINNCORE, { &Desc }));
 			spGameInstance->AddCollisionPawnList(Core);
 			InsertNetworkActorInContainer(iter.iServerID, Core);
+			Core->GetModel()->SetModelName(L"HarlequinnCore");
 			spModelObj = Core;
 		}
 		break;
@@ -327,6 +337,7 @@ void CNetworkClientController::CreateStaticObjData(CMap* _pMap)
 			SHPTR<CCoreMinotaur> Core = std::static_pointer_cast<CCoreMinotaur>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MINOTAURCORE, { &Desc }));
 			spGameInstance->AddCollisionPawnList(Core);
 			InsertNetworkActorInContainer(iter.iServerID, Core);
+			Core->GetModel()->SetModelName(L"MinotaurCore");
 			spModelObj = Core;
 		}
 		break;
@@ -423,6 +434,16 @@ void CNetworkClientController::StaticObjFind(_char* _pPacket, const PACKETHEAD& 
 		TAG_SC_STATICOBJFIND, _PacketHead.PacketSize));
 	scStaticObjFind.Clear();
 }
+
+void CNetworkClientController::HarlequinThrowing(_char* _pPacket, const PACKETHEAD& _PacketHead)
+{
+	static SC_HARLEQUINTHROWING scHarlequinThrowing;
+	scHarlequinThrowing.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+	InsertProcessedDataInActor(UProcessedData(scHarlequinThrowing.id(), scHarlequinThrowing,
+		TAG_SC_HARLEQUINTHROWING, _PacketHead.PacketSize));
+	scHarlequinThrowing.Clear();
+}
+
 #endif
 
 void CNetworkClientController::Free()

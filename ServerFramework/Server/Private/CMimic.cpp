@@ -28,7 +28,7 @@ namespace Server {
 
 	_bool CMimic::Start(const VOIDDATAS& _ReceiveDatas)
 	{
-		_float4x4 Matrix = _float4x4::CreateScale(0.1f) * _float4x4::CreateRotationY(DirectX::XMConvertToRadians(180));
+		_float4x4 Matrix = _float4x4::CreateScale(0.1f);
 		SetAnimController(Create<CMimicAnimController>(GetCoreInstance(), ThisShared<CMimic>(),
 			"..\\..\\Resource\\Anim\\Mimic\\", "Mimic_FBX.bin", Matrix));
 
@@ -48,6 +48,25 @@ namespace Server {
 	void CMimic::State(SHPTR<ASession> _spSession, _int _MonsterState)
 	{
     	__super::State(_spSession, _MonsterState);
+
+		if (IsCurrentFindPlayer())
+		{
+			if (false == m_isPressKeyEnable)
+			{
+				SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+				_int KeyState = _spSession->GetKeyState();
+				_int enable = KeyState == KEYBOARD_F ? 1 : 0;
+				SC_STATICOBJFIND scMonsterFind;
+				PROTOFUNC::MakeScStaticObjFind(&scMonsterFind, GetSessionID(), enable);
+				CombineProto<SC_STATICOBJFIND>(GetCopyBuffer(), GetPacketHead(), scMonsterFind, TAG_SC_STATICOBJFIND);
+				spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
+				if (1 == enable)
+				{
+					m_isPressKeyEnable = true;
+				}
+				std::cout << "Mimic Found" << "\n";
+			}
+		}
 	}
 
 	void CMimic::ProcessPacket(_int _type, void* _pData)
@@ -73,15 +92,6 @@ namespace Server {
 		Vector3 vTargetPos;
 		_string strCurAnimationName = spAnimation->GetAnimName();
 
-		if (nullptr != _spSession)
-		{
-			_int KeyState = _spSession->GetKeyState();
-			if (KeyState == KEYBOARD_F)
-			{
-				m_isPressKeyEnable = true;
-			}
-		}
-
 		DEFINE_STATIC_CONSTCHAR(HITNAME, "Hit");
 
 		if (nullptr != _spSession)
@@ -89,9 +99,10 @@ namespace Server {
 			SHPTR<ATransform> spTargetTr = _spSession->GetTransform();
 			spTargetCell = spNaviagation->FindCell(_spSession->GetCurCell());
 			vTargetPos = spTargetTr->GetPos();
+
 			SetTargetPos(vTargetPos);
 		}
-
+		SetDistanceToPlayer(Vector3::Distance(vTargetPos, vCurrentMobPos));
 		SetPrevPosition(vCurrentMobPos);
 
 		_bool isFoudnTargetState = IsCurrentFindPlayer();
@@ -107,7 +118,7 @@ namespace Server {
 			{
 				if (true == isFoudnTargetState)
 				{
-					if (GetTimeAccumulator().IsOverLow())
+					if (GetTimeAccumulatorRefP().IsOverLow())
 					{
 						StartFindPath(spNaviagation, spCurrentMobCell, spTargetCell, vCurrentMobPos, vTargetPos);
 					}
@@ -117,7 +128,7 @@ namespace Server {
 					spTargetCell = spNaviagation->ChooseRandomNeighborCell(3);
 					vTargetPos = spTargetCell->GetCenterPos();
 
-					if (GetTimeAccumulator().IsOverHigh())
+					if (GetTimeAccumulatorRefP().IsOverHigh())
 					{
 						StartFindPath(spNaviagation, spCurrentMobCell, spTargetCell, vCurrentMobPos, vTargetPos);
 					}
@@ -157,7 +168,7 @@ namespace Server {
 			SetElapsedTime(0);
 		}
 
-		GetTimeAccumulator().PlusTime(_dTimeDelta);
+		GetTimeAccumulatorRefP().PlusTime(_dTimeDelta);
 		SetDamaged(false);
 	}
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "CMonsterAnimController.h"
+#include "USound.h"
 
 BEGIN(Client)
 class CMimic;
@@ -30,18 +31,20 @@ public:
 	virtual void Tick(const _double& _dTimeDelta) override;
 private:
 	WKPTR< CMimic>			m_wpMimicMob;
+	//=====================SOUND CHANNEL================
+	FMOD::Channel* m_pAttack1Channel;
+	FMOD::Channel* m_pAttack2Channel;
+	FMOD::Channel* m_pSwhoosh1Channel;
+	FMOD::Channel* m_pSwhoosh2Channel;
+	FMOD::Channel* m_pTauntChannel;
 
-	_bool					m_bAttackMode;
-	_bool					m_bTauntMode;
-	_double					m_dlastHitTime;
-	_double					m_dlastAttackTime;
-	_bool					m_bstartlastHitTime;
-	_bool					m_blastAttackWasFirst;
-	_double					m_dIdleTimer;
-	_bool					m_bFoundPlayerFirsttime;
-	_double					m_didleRandomValueChoosingTimer;
-	_int					m_iRandomValue;
-	_double				m_dRecvAnimDuration;
+	_int								m_iRandomNumforhit;
+	FMOD::Channel* m_pHitChannel;
+	FMOD::Channel* m_pGotHitChannel;
+
+	_bool							m_isPlayAttackSound1;
+	_bool							m_isPlayAttackSound2;
+	_bool							m_isPlayHitSound;
 
 };
 

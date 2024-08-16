@@ -5,23 +5,28 @@ BEGIN(Core)
 class ASession;
 class ACell;
 class AJobTimer;
+class ATransform;
 
 using ANIMFUNC = std::function<void*>(const _double&);
 
 class CORE_DLL AMonster abstract : public APawn {
 	using PATHCONTAINER = VECTOR<Vector3>;
+	using PLAYERPOSITIONCONTAINER = CONUNORMAP<SESSIONID, Vector3>;
+	using PLAYERFINDWEIGHTCONTAINER = CONUNORMAP<SESSIONID, _float>;
 public:
 	AMonster(OBJCON_CONSTRUCTOR, SESSIONID _ID, SHPTR<AJobTimer> _spMonsterJobTimer);
 	DESTRUCTOR(AMonster)
 public:
 	virtual _bool Start(const VOIDDATAS& _ReceiveDatas = {}) PURE;
-	void FindPlayer(SHPTR<ASession> _spSession);
-	virtual void Tick(const _double& _dTimeDelta) PURE;
+	virtual void FindPlayer(SHPTR<ASession> _spSession);
+	virtual void Tick(const _double& _dTimeDelta) override;
 	virtual void State(SHPTR<ASession> _spSession, _int _MonsterState = 0) PURE;
 	virtual void ProcessPacket(_int _type, void* _pData) PURE;
 	void InsertMobJobTimer(SESSIONID _PlayerID);
 	_bool IsCanMove(const Vector3 _vPos);
-	
+	void SetDirectionFixedUp(const _double& _dTimeDelta, 	const _float _fCurrentDot, const _float _JudgeDot, const Vector3& _vTargetPos);
+
+	static void UpdatePlayerToWeight(const SESSIONID _SessionID, const _float _fWeight);
 public: /* get set */
 	const MONSTERSTATE GetMonsterState() const { return m_MobState; }
 	const _int GetMonsterType() const { return m_iMonsterType; }
@@ -32,10 +37,14 @@ public: /* get set */
 	const _bool IsCurrentNotFound() const { return m_isCurrentNotFound; }
 	const SESSIONID& GetOwnerMonsterSessionID() const { return m_OwnerMonsterSessionID; }
 	const Vector3 GetTargetPos() const { return m_vTargetPos; }
+	SHPTR<ASession> GetTargetSession() const { return m_spTargetSession; }
+	const _bool IsDamageEnable() const { return m_isDamageEnable; }
+	static PLAYERPOSITIONCONTAINER& GetPlayerPositionContainerRefP(REF_RETURN) { return s_PlayerPositionContainer; }
 
 	void SetMonsterState(const MONSTERSTATE _MonsterState) {	m_MobState = _MonsterState;}
 	void SetFoundPlayerFirstTime(_bool _isFindFirstTime) {m_isFoundPlayerFistTime = _isFindFirstTime;	}
 	void SetOwnerMonsterSessionID(const SESSIONID& _OwnerMonsterSessionID) { this->m_OwnerMonsterSessionID = _OwnerMonsterSessionID; }
+	void SetDamageEnable(const _bool _isDamageEnable) { this->m_isDamageEnable = _isDamageEnable; }
 protected:
 	void ComputeNextDir(const _double _dTimeDelta);
 	void UpdateFindRange(const _float _fActiveRange, const _float _fDeactiveRange);
@@ -46,7 +55,6 @@ protected: /* get set*/
 	const _float GetActiveRange() const { return m_fActiveRange; }
 	const _float GetDeactiveRange() const { return m_fDeactiveRange; }
 	const _float GetAttackRange() const { return m_fAttackRange; }
-	SHPTR<ASession> GetTargetSession() const { return m_spTargetSession; }
 
 	void SetMonsterJobTimer(SHPTR<AJobTimer> _spJobTimer) { m_wpMonsterJobTimer = _spJobTimer; }
 	void SetMonsterType(_int _iMonsterType) { this->m_iMonsterType = _iMonsterType; }
@@ -58,6 +66,8 @@ protected: /* get set*/
 	void SetCurrentJustMove(const _bool _isCurrentJustMove) { m_isCurrentNotFound = _isCurrentJustMove; }
 	void SetMoveSpeed(const _float _fMoveSpeed) { this->m_fMoveSpeed = _fMoveSpeed; }
 	void SetTargetPos(const Vector3 _vTargetPos) { this->m_vTargetPos = _vTargetPos; }
+	void SetDistanceToPlayer(const _float _fDistance) { this->m_fDistanceToPlayer = _fDistance; }
+	void SetTargetSession(SHPTR<ASession> _spSession) { this->m_spTargetSession = _spSession; }
 private:
 	virtual void Free() override;
 private:
@@ -84,6 +94,11 @@ private:
 
 	SHPTR<ASession>						m_spTargetSession;
 	Vector3											m_vTargetPos;
+	_bool												m_isDamageEnable;
+
+	constexpr static _float				ROT_SPEED{ DirectX::XMConvertToRadians(90) };
+	static PLAYERPOSITIONCONTAINER			s_PlayerPositionContainer;
+	static PLAYERFINDWEIGHTCONTAINER		s_PlayerFindWeightContainer;
 };
 
 

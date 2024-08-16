@@ -44,6 +44,7 @@ private:
 	void MonsterState(_char* _pPacket, const PACKETHEAD& _PacketHead);
 	void MonsterFind(_char* _pPacket, const PACKETHEAD& _PacketHead);
 	void StaticObjFind(_char* _pPacket, const PACKETHEAD& _PacketHead);
+	void HarlequinThrowing(_char* _pPacket, const PACKETHEAD& _PacketHead);
 #endif
 private:
 	virtual void Free() override;

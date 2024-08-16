@@ -5,6 +5,7 @@
 #include "CChestAnimController.h"
 #include "ACoreInstance.h"
 #include "ASession.h"
+#include "AAnimator.h"
 
 namespace Server {
 	CChest::CChest(OBJCON_CONSTRUCTOR, SESSIONID _ID, SHPTR<AJobTimer> _spMonsterJobTimer) : 
@@ -13,7 +14,8 @@ namespace Server {
 		SetMonsterType(TAG_CHAR::TAG_CHEST);
 		UpdateFindRange(10.f, 20.f);
 		SetMoveSpeed(5);
-		SetAttackRange(9.f);
+		SetAttackRange(3.f);
+		SetCharStatus(CHARSTATUS{ 1, 0, 1000 });
 	}
 
 	_bool CChest::Start(const VOIDDATAS& _ReceiveDatas)
@@ -26,22 +28,49 @@ namespace Server {
 
 	void CChest::Tick(const _double& _dTimeDelta)
 	{
-		SHPTR<ASession> spSession = GetTargetSession();
-		TickUpdateBehavior(_dTimeDelta, spSession);
+		static constexpr _double ItemChestOpeningSpeed = 2;
+		static constexpr _double ItemChestTimeArcOpenEnd = 3;
+
+		if (GetElapsedTime() < ItemChestTimeArcOpenEnd)
+		{
+			SHPTR<ATransform> spTransform = GetTransform();
+			SHPTR<AAnimController> spAnimController = GetAnimController();
+			SHPTR<AAnimator> spAnimator = spAnimController->GetAnimator();
+
+			SetElapsedTime(GetElapsedTime() + _dTimeDelta * ItemChestOpeningSpeed);
+			spAnimator->TickAnimToTimeAccChangeTransform(spTransform, _dTimeDelta, GetElapsedTime());
+		}
+
+		UpdateColliderData();
+		DeadStateEnable(_dTimeDelta);
 	}
 
 	void CChest::State(SHPTR<ASession> _spSession, _int _MonsterState)
 	{
-		FindPlayer(_spSession);
-
-		if (true == IsCurrentFindPlayer())
+		if (true == IsDead())
 		{
-			SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+			ActivePermanentDisable();
+		}
+		else
+		{
+			FindPlayer(_spSession);
 
-			static SC_MONSTERFIND scMonsterFind;
-			PROTOFUNC::MakeScMonsterFind(&scMonsterFind, GetSessionID(), _spSession->GetSessionID());
-			CombineProto<SC_MONSTERFIND>(GetCopyBuffer(), GetPacketHead(), scMonsterFind, TAG_SC_MONSTERFIND);
-			spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
+			if (true == IsCurrentFindPlayer())
+			{
+				SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+				_int KeyState = _spSession->GetKeyState();
+				_int enable = KeyState == KEYBOARD_F ? 1 : 0;
+				SC_STATICOBJFIND scMonsterFind;
+				PROTOFUNC::MakeScStaticObjFind(&scMonsterFind, GetSessionID(), enable);
+				CombineProto<SC_STATICOBJFIND>(GetCopyBuffer(), GetPacketHead(), scMonsterFind, TAG_SC_STATICOBJFIND);
+				spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
+				if (1 == enable)
+				{
+					SHPTR<ASession> spSession = _spSession;
+					spSession->HealHp(210.f);
+					ActivePermanentDisable();
+				}
+			}
 		}
 	}
 
@@ -57,8 +86,6 @@ namespace Server {
 
 	void CChest::LastBehavior()
 	{
-		SHPTR<ASession> spSession = GetTargetSession();
-		spSession->HealHp(210.f);
 	}
 
 	void CChest::Free()

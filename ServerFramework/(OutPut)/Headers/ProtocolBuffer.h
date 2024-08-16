@@ -40,8 +40,10 @@ namespace PROTOFUNC
 	void MakeScMonsterFind(SC_MONSTERFIND* _pOut, LLONG _id, int _targetID);
 	void MakeScDamaged(SC_DAMAGED* _pOut, LLONG _id, float _hp);
 	void MakeScSeePlayerMove(SC_SEEPLAYERMOVE* _pOut, LLONG _id, const VECTOR3& _vPos);
-	void MakeScHarlequinThrowing(SC_HARLEQUINTHROWING* _pOut, int _index, const VECTOR3& _vPos);
+	void MakeScHarlequinThrowing(SC_HARLEQUINTHROWING* _pOut, LLONG _id, const VECTOR3& _vPos,
+		int _throwenable, int _index);
 	void MakeScStaticObjFind(SC_STATICOBJFIND* _pOut, LLONG _id, int _enable);
+	void MakeScAnubisState(SC_ANUBISSTATE* _pOut, LLONG _id, int _shieldOn, float _ShieldTimer);
 
 	/* =========== CS =============== */
 	// Client To Server 
@@ -53,6 +55,7 @@ namespace PROTOFUNC
 	void MakeCsPlayerOrder(CS_PLAYERORDER* _pOut, LLONG _id, int _playerOrder);
 	void MakeCsDamaged(CS_DAMAGED* _pOut, LLONG _id, float _Damaged);
 	void MakeCsPressKey(CS_PRESSKEY* _pOut, LLONG _id, int _key);
+	void MakeCsDamagedToMonster(CS_DAMAGEDTOMONSTER* _pOut, LLONG _id, float _damge, LLONG _enemyID);
 
 	class PROTOCOL_MEMORY_LEAK_REMOVER
 	{

@@ -103,6 +103,9 @@
     <Filter Include="03.Session\Monster\Chest">
       <UniqueIdentifier>{495a9a85-7b70-4dc0-a256-85e81f03b31b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.AnimController\Player">
+      <UniqueIdentifier>{def6b981-376b-40f3-847b-d6a69d91c277}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -192,6 +195,9 @@
     <ClCompile Include="..\Private\CShurikenThrowing.cpp">
       <Filter>03.Session\Object\ShurikenThrowing</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\CPlayerAnimController.cpp">
+      <Filter>05.AnimController\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\CServerApp.h">
@@ -280,6 +286,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\CShurikenThrowing.h">
       <Filter>03.Session\Object\ShurikenThrowing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CPlayerAnimController.h">
+      <Filter>05.AnimController\Player</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

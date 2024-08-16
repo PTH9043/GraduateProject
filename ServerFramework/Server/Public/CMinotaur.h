@@ -18,11 +18,12 @@ public:
 	virtual void Collision(AGameObject* _pGameObject, const _double& _dTimeDelta) override;
 protected:
 	virtual void TickUpdateBehavior(const _double& _dTimeDelta, SHPTR<ASession> _spSession) override;
+	virtual void MoveAlongPath(const _double& _dTimeDelta) override;
 private:
 	virtual void Free() override;
 private:
-	static constexpr _float RUNNING_SPEED{ 30 };
-	static constexpr _float WALKING_SPEED{ 5 };
+	static constexpr _float RUNNING_SPEED{ 45 };
+	static constexpr _float WALKING_SPEED{ 25 };
 
 	WKPTR< CMinotaurAnimController>			m_wpMinotaurAnimController;
 };

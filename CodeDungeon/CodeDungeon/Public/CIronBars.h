@@ -42,6 +42,7 @@ private:
 	_float3			m_f3OriginPos;
 	CUSTIMER		m_SoundTimer;
 	_bool				m_isEnable;
+	_bool				m_isOpenstart;
 
 };
 

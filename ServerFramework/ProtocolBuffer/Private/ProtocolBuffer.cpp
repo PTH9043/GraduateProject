@@ -131,13 +131,16 @@ void PROTOFUNC::MakeScSeePlayerMove(SC_SEEPLAYERMOVE* _pOut, LLONG _id, const VE
 	_pOut->set_posz(_vPos.z());
 }
 
-void PROTOFUNC::MakeScHarlequinThrowing(SC_HARLEQUINTHROWING* _pOut, int _index, const VECTOR3& _vPos)
+void PROTOFUNC::MakeScHarlequinThrowing(SC_HARLEQUINTHROWING* _pOut, LLONG _id, const VECTOR3& _vPos,
+	int _throwenable, int _index)
 {
 	assert(nullptr != _pOut);
-	_pOut->set_id(_index);
+	_pOut->set_id(_id);
 	_pOut->set_posx(_vPos.x());
 	_pOut->set_posy(_vPos.y());
 	_pOut->set_posz(_vPos.z());
+	_pOut->set_throwon(_throwenable);
+	_pOut->set_index(_index);
 }
 
 void PROTOFUNC::MakeScStaticObjFind(SC_STATICOBJFIND* _pOut, LLONG _id, int _enable)
@@ -145,6 +148,14 @@ void PROTOFUNC::MakeScStaticObjFind(SC_STATICOBJFIND* _pOut, LLONG _id, int _ena
 	assert(nullptr != _pOut);
 	_pOut->set_id(_id);
 	_pOut->set_enable(_enable);
+}
+
+void PROTOFUNC::MakeScAnubisState(SC_ANUBISSTATE* _pOut, LLONG _id, int _shieldOn, float _ShieldTimer)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_id);
+	_pOut->set_shieldon(_shieldOn);
+	_pOut->set_shieldtimer(_ShieldTimer);
 }
 
 /* =========== CS =============== */
@@ -196,4 +207,12 @@ void PROTOFUNC::MakeCsPressKey(CS_PRESSKEY* _pOut, LLONG _id, int _key)
 	assert(nullptr != _pOut);
 	_pOut->set_id(_id);
 	_pOut->set_key(_key);
+}
+
+void PROTOFUNC::MakeCsDamagedToMonster(CS_DAMAGEDTOMONSTER* _pOut, LLONG _id, float _damage, LLONG _enemyID)
+{
+	assert(nullptr != _pOut);
+	_pOut->set_id(_id);
+	_pOut->set_damage(_damage);
+	_pOut->set_enemyid(_enemyID);
 }

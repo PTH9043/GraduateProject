@@ -19,11 +19,6 @@ namespace Server
 
 		InsertColliderContainer(COLLIDERTYPE::COLLIDER_MAIN, ACollider::TYPE_OBB,
 			COLLIDERDESC{ {1.f, 1.f, 1.f}, {0.f, 0.f, 0.f} });
-
-		//for (auto& iter : GetColliderContainer())
-		//{
-		//	iter.second->SetScaleToFitModel()
-		//}
 		return true;
 	}
 

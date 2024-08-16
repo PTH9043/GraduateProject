@@ -39,7 +39,7 @@ public:
 	Vector3 OtherCharacterDirToLookVectorF3(SHPTR<ATransform> _spOtherTransform);
 
 	_bool IsCanSee(Vector3 _OtherPos);
-	_bool IsCanSee(SHPTR<ATransform> _spTransform);
+	_bool IsCanSee(SHPTR<ATransform> _spTransform) ;
 
 	/*
 	@ Date: 2024-01-04, Writer: 박태현
@@ -71,7 +71,7 @@ public:/*Get Set */
 	COLLIDERCONTAINER& GetColliderContainer() { return m_ColliderContainer; }
 
 	void SetJumpable(const _bool _isJumpable) { this->m_isJumpable = _isJumpable; }
-	virtual void SetActive(const _bool _isActive);
+	virtual void SetActive(const _bool _isActive) ;
 	void ActivePermanentDisable();
 protected:
 	// 영구적으로 해당 오브젝트를 사용하지 않도록 결정할 경우 보낼 메시지 
@@ -97,6 +97,7 @@ private:
 	virtual void Free() override;
 public:
 	static	constexpr _int		SEE_RANGE{ 150 };
+	static constexpr _int		SEE_RANGE_TICKACTIVE{ 500 };
 private:
 	ATOMIC<SESSIONID>		m_SessionID;
 	SESSIONTYPE					m_SessionType;

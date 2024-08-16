@@ -26,6 +26,7 @@ public:
 	CHESTTYPE GetChestType() { return m_ChestType; }
 
 protected:
+	virtual void ReceiveNetworkProcessData(const UProcessedData& _ProcessData) override;
 	virtual void TickActive(const _double& _dTimeDelta) override;
 	virtual void LateTickActive(const _double& _dTimeDelta) override;
 	virtual HRESULT RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;

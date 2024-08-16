@@ -1,5 +1,6 @@
 #pragma once
 #include "CMonsterAnimController.h"
+#include "USound.h"
 
 BEGIN(Client)
 class CMinotaur;
@@ -24,26 +25,23 @@ public:
 	virtual HRESULT NativeConstructClone(const VOIDDATAS& _tDatas) override;
 	// Tick
 	virtual void Tick(const _double& _dTimeDelta) override;
-
-	const _bool& GetRushMode() { return m_bRushMode; }
-	const _float3& GetTargetPos() { return m_f3RushTargetPos; }
 private:
 	WKPTR< CMinotaur>			m_wpMinotaurMob;
 
-	_bool					m_bAttackMode;
-	_double					m_dlastHitTime;
-	_double					m_dlastAttackTime;
-	_bool					m_bstartlastHitTime;
-	_bool					m_blastAttackWasFirst;
-	_double					m_dIdleTimer;
+	//=====================SOUND CHANNEL================
+	FMOD::Channel* m_pAttack1Channel;
+	FMOD::Channel* m_pAttack2Channel;
+	FMOD::Channel* m_pSwhoosh1Channel;
+	FMOD::Channel* m_pSwhoosh2Channel;
+	FMOD::Channel* m_pTauntChannel;
 
-	_bool					m_bRushMode;
-	_float3					m_f3RushTargetPos;
-	_double					m_dRushModeTimer;
+	_int								m_iRandomNumforhit;
+	FMOD::Channel* m_pHitChannel;
+	FMOD::Channel* m_pGotHitChannel;
 
-	_double					m_dRushAttackTimer;
-	_double					m_didleRandomValueChoosingTimer;
-	_int					m_iRandomValue;
+	_bool							m_isPlayAttackSound1;
+	_bool							m_isPlayAttackSound2;
+	_bool							m_isPlayHitSound;
 };
 
 END

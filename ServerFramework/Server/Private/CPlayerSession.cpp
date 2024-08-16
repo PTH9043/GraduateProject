@@ -9,12 +9,16 @@
 #include "AAnimController.h"
 #include "ACollider.h"
 #include "AStaticObject.h"
+#include "CPlayerAnimController.h"
+#include "AGameTimer.h"
 
 namespace Server {
 
 	CPlayerSession::CPlayerSession(SESSION_CONSTRUCTOR)
-		: Core::ASession(SESSION_CONDATA(Core::SESSIONTYPE::PLAYER)), m_iStartCellIndex{ 0 }
+		: Core::ASession(SESSION_CONDATA(Core::SESSIONTYPE::PLAYER)),
+		m_iStartCellIndex{ 349 }, m_spGameTimer{ Create<AGameTimer>() }
 	{
+	
 	}
 
 	_bool CPlayerSession::Start(const VOIDDATAS& _ReceiveDatas)
@@ -43,8 +47,12 @@ namespace Server {
 			COLLIDERDESC{ {4.f, 10.f, 4.f}, {0.f, 10.f, 0.f} });
 		InsertColliderContainer(COLLIDERTYPE::COLLIDER_FORATTACK, ACollider::TYPE_OBB,
 			COLLIDERDESC{ {4.f, 10.f, 4.f}, {0.f, 10.f, 0.f} });
-
 		return true;
+	}
+
+	void CPlayerSession::Tick(const _double& _dTimeDelta)
+	{
+		__super::Tick(_dTimeDelta);
 	}
 
 	void CPlayerSession::RecvData()
@@ -115,11 +123,6 @@ namespace Server {
 				MonsterCollisionState(spCoreInstance, SessionID, _pPacket, _PacketHead);
 			}
 			break;
-			case TAG_CS::TAG_CS_HEAL:
-			{
-				PlayerHealState(spCoreInstance, SessionID, _pPacket, _PacketHead);
-			}
-			break;
 			case TAG_CS::TAG_CS_PRESSKEY:
 			{
 				PressKeyState(spCoreInstance, SessionID, _pPacket, _PacketHead);
@@ -171,7 +174,11 @@ namespace Server {
 
 	void CPlayerSession::PlayerState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
 	{
+		m_spGameTimer->Tick();
+		Tick(m_spGameTimer->GetDeltaTime());
+
 		SHPTR<ANavigation> spNavigation = GetNavigation();
+		SHPTR<ATransform> spTransform = GetTransform();
 		SHPTR<ACell> spCurCell = nullptr;
 		Vector3				vPosition;
 
@@ -179,12 +186,22 @@ namespace Server {
 		csMove.ParseFromArray(_pPacket, _PacketHead.PacketSize);
 		{
 			vPosition = Vector3(csMove.posx(), csMove.posy(), csMove.posz());
-			GetTransform()->SetPos(vPosition);
+			spTransform->SetPos(vPosition);
 		}
 		spNavigation->IsMove(vPosition, spCurCell);		//  다른 모든 클라이언트에 메시지 보낸다. 
 		{
 			CombineProto(REF_OUT GetCopyBuffer(), REF_OUT GetPacketHead(), csMove, TAG_SC::TAG_SC_PLAYERSTATE);
 			_spCoreInstance->BroadCastMessageExcludingSession(_SessionID, GetCopyBufferPointer(), GetPacketHead());
+		}
+
+		SetCurrentAnimState(csMove.state());
+
+		if (false == IsFallDownState())
+		{
+			if (PLAYER_ANIM_FALLDOWN == csMove.state())
+			{
+				EnableFallDownState();
+			}
 		}
 		
 		{
@@ -197,7 +214,7 @@ namespace Server {
 					continue;
 
 				// 거리를 받아옴
-				if (true == IsCanSee(iter.second->GetTransform()))
+				if (true == iter.second->IsCanSee(spTransform))
 				{
 					iter.second->State(spSession);
 				}
@@ -210,7 +227,7 @@ namespace Server {
 					continue;
 
 				// 거리를 받아옴
-				if (true == IsCanSee(iter.second->GetTransform()))
+				if (true == iter.second->IsCanSee(spTransform))
 				{
 					iter.second->State(spSession);
 				}
@@ -220,22 +237,27 @@ namespace Server {
 
 	void CPlayerSession::PlayerCollisionState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
 	{
-		CS_DAMAGED CollisionData;
+		CS_DAMAGEDTOMONSTER CollisionData;
 		CollisionData.ParseFromArray(_pPacket, _PacketHead.PacketSize);
 		SHPTR<ASession> spSession = _spCoreInstance->FindSession(CollisionData.id());
-		spSession->Damaged(CollisionData.damage());
+		SHPTR<AMonster> spMonster = _spCoreInstance->FindMobObject(CollisionData.enemyid());
+		assert(nullptr != spMonster);
 
-		SC_DAMAGED Damage;
-		PROTOFUNC::MakeScDamaged(&Damage, GetSessionID(), spSession->GetCharStatus().fHp);
-		CombineProto<SC_DAMAGED>(GetCopyBuffer(), GetPacketHead(), Damage, TAG_SC_DAMAGED);
-		_spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
-		// Dead
-		if (true == spSession->IsDead())
+		if (true == spMonster->IsDamagedToEnemyTimerPass() || true == spSession->IsDead())
 		{
-			_spCoreInstance->CheckAllPlayerDie();
+			SC_DAMAGED Damage;
+			PROTOFUNC::MakeScDamaged(&Damage, GetSessionID(), spSession->Damaged(CollisionData.damage()));
+			CombineProto<SC_DAMAGED>(GetCopyBuffer(), GetPacketHead(), Damage, TAG_SC_DAMAGED);
+			_spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
+			Damage.Clear();
+			// Dead
+			if (true == spSession->IsDead())
+			{
+				_spCoreInstance->CheckAllPlayerDie();
+			}
+			spMonster->ResetDamagedToEnemyTimer();
 		}
 		CollisionData.Clear();
-		Damage.Clear();
 	}
 
 	void CPlayerSession::MonsterCollisionState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
@@ -243,27 +265,17 @@ namespace Server {
 		CS_DAMAGED CollisionData;
 		CollisionData.ParseFromArray(_pPacket, _PacketHead.PacketSize);
 		SHPTR<AMonster> spMonster = _spCoreInstance->FindMobObject(CollisionData.id());
-		spMonster->Damaged(CollisionData.damage());
-
-		if(spMonster->IsDead())
+		
+		if (true == IsDamagedToEnemyTimerPass() || spMonster->IsDead())
 		{
 			SC_DAMAGED Damage;
-			PROTOFUNC::MakeScDamaged(&Damage, spMonster->GetSessionID(), 0.f);
+			PROTOFUNC::MakeScDamaged(&Damage, spMonster->GetSessionID(), spMonster->Damaged(CollisionData.damage()));
 			CombineProto<SC_DAMAGED>(GetCopyBuffer(), GetPacketHead(), Damage, TAG_SC_DAMAGED);
 			_spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
+			ResetDamagedToEnemyTimer();
 			Damage.Clear();
 		}
-
 		CollisionData.Clear();
-	}
-
-	void CPlayerSession::PlayerHealState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
-	{
-		static CS_HEAL csHeal;
-		csHeal.ParseFromArray(_pPacket, _PacketHead.PacketSize);
-		SHPTR<AMonster> spMonster = _spCoreInstance->FindMobObject(csHeal.id());
-		spMonster->ActivePermanentDisable();
-		csHeal.Clear();
 	}
 
 	void CPlayerSession::PressKeyState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)

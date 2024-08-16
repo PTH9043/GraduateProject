@@ -84,6 +84,7 @@ public: /* Get Set */
 	_bool GetCanInteractAnubisCoreState() { return m_bCanInteractCoreAnubis; }
 
 	_float GetInteractionElapsedTime() { return m_fInteractionTimeElapsed; }
+	void SetInteractionElapsedTime(const _float _fTime) { m_fInteractionTimeElapsed = _fTime; }
 
 	CSHPTRREF<UCell> GetSpawnPointCell() { return m_spSpawnPoint; }
 	const _float3& GetSpawnPointPos() { return m_f3SpawnPoint; }
@@ -166,28 +167,28 @@ private:
 	_bool											m_bDoneInteractCoreHarlequinn;
 	_bool											m_bDoneInteractCoreAnubis;
 
-	_float							m_fSaveCheckpointCount = 0;
+	_float											m_fSaveCheckpointCount = 0;
 
 	
 
-	_float			m_fInteractionTimeElapsed=0;
-	_bool			m_bSetRimOn=false;
-	_float			m_bSetRimTimeElapsed=false;
-	SHPTR<UCell>			m_spSpawnPoint;
-	SHPTR<UCell>			m_spSpawnPointForCamera;
-	_float3					m_f3SpawnPoint;
+	_float											m_fInteractionTimeElapsed=0;
+	_bool											m_bSetRimOn=false;
+	_float											m_bSetRimTimeElapsed=false;
+	SHPTR<UCell>							m_spSpawnPoint;
+	SHPTR<UCell>							m_spSpawnPointForCamera;
+	_float3										m_f3SpawnPoint;
 
-	_bool m_bStartedGame = false;
-	_bool m_bisGameEnd = false;
+	_bool											m_bStartedGame = false;
+	_bool											m_bisGameEnd = false;
 
 	//===========SOUND BOOL=================
 
-	_bool LiftBarsSound = false;
-	_bool CheckPointSaveSound = false;
-	_bool MinotaurCoreSound = false;
-	_bool HalequinCoreSound = false;
-	_bool AnubisCoreSound = false;
-	_bool GuardCollideSound = false;
+	_bool											LiftBarsSound = false;
+	_bool											CheckPointSaveSound = false;
+	_bool											MinotaurCoreSound = false;
+	_bool											HalequinCoreSound = false;
+	_bool											AnubisCoreSound = false;
+	_bool											GuardCollideSound = false;
 };
 END
 

@@ -18,12 +18,19 @@ public:
 	virtual void State(SHPTR<ASession> _spSession, _int _MonsterState = 0) override;
 	virtual void ProcessPacket(_int _type, void* _pData) override;
 	virtual void Collision(AGameObject* _pGameObject, const _double& _dTimeDelta) override;
+public:
+	void SetDontMove(const _bool _isDontMove) { this->m_isDontMove = _isDontMove; }
+	_bool IsDontMove() const { return m_isDontMove; }
 public: 
 	SHPTR<CShurikenThrowing> GetShurikenThrowing(_int _iIndex);
+protected:
+	virtual void TickUpdateBehavior(const _double& _dTimeDelta, SHPTR<ASession> _spSession) override;
+	virtual void MoveAlongPath(const _double& _dTimeDelta) override;
 private:
 	virtual void Free() override;
 private:
 	SHURIKENCONTAINER		m_ShurikenContainer;
+	_bool										m_isDontMove;
 };
 
 END

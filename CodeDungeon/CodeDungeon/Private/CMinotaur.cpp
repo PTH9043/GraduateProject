@@ -226,169 +226,84 @@ HRESULT CMinotaur::NativeConstructClone(const VOIDDATAS& _Datas)
 	}
 	SetOutlineByAbility(true);
 	SetOutlineColor(_float3(0, 0, 1));
-	SetHealth(2500);
-	SetMaxHealth(2500);
+	SetHealth(1);
+	SetMaxHealth(1);
 	SetActivationRange(100);
 	SetDeactivationRange(120);
 	SetOutline(true);
+	SetMobType(TAG_MINOTAUR);
 	return S_OK;
 }
 
 void CMinotaur::TickActive(const _double& _dTimeDelta)
 {
+	GetAnimationController()->Tick(_dTimeDelta);
+	__super::TickActive(_dTimeDelta);
 	_float3 pos = GetTransform()->GetPos();
-	pos.y += 7.55;
+	pos.y += 5;
+
 	m_spBloodParticle->SetPosition(pos);
 	m_spSlashParticle->SetPosition(pos);
 	m_spAttackParticle->SetPosition(pos);
 	m_spAttackParticleTwo->SetPosition(pos);
-	__super::TickActive(_dTimeDelta);
-	GetAnimationController()->Tick(_dTimeDelta);
+
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	_int CurAnimState = GetAnimationController()->GetAnimState();
-	if (true == IsSendDataToBehavior())
+	if (GetDeathState())
 	{
-		const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
-		_float3 CurrentMobPos = GetTransform()->GetPos();
-		_float3 CurrentPlayerPos = GetTargetPlayer()->GetTransform()->GetPos();
-		SHPTR<UCell> CurrentMobCell = GetCurrentNavi()->GetCurCell();
-		SHPTR<UCell> CurrentPlayerCell = GetTargetPlayer()->GetCurrentNavi()->GetCurCell();
-
-		_bool isRushMode = static_pointer_cast<CMinotaurAnimController>(GetAnimationController())->GetRushMode();
-		_float3 RushTargetPos = static_pointer_cast<CMinotaurAnimController>(GetAnimationController())->GetTargetPos();
-
-		_float runningSpeed = 30;
-		_float walkingSpeed = 5;
-
+		_double DeathAnimSpeed = 20;
+		SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
+		_double DeathTimeArcOpenEnd = 50;
+		if (GetElapsedTime() < DeathTimeArcOpenEnd) {
+			GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
+			GetAnimModel()->UpdateDissolveTImer(_dTimeDelta * 1.2f);
+			if (!m_bDissolveSound) {
+				spGameInstance->SoundPlayOnce(L"DissolveSound2");
+				m_bDissolveSound = true;
+			}
+		}
+	}
+	else
+	{
 		if (CurAnimState == UAnimationController::ANIM_MOVE)
 		{
 			AddTimeAccumulator(_dTimeDelta);
-
 			// A* for moving towards player when player is found
-			if (GetFoundTargetState() && !GetTargetPlayer()->GetDeathState())
-			{			
+			if (GetFoundTargetState())
+			{
 				m_spFootPrintParticle->SetActive(true);
 				{
 					*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 4;
 					*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.355f;
 					_float3 pos = GetTransform()->GetPos() + GetTransform()->GetRight();
-					pos.y += 1.0;
+					pos.y += 0.5;
 					_float3 Look = GetTransform()->GetLook();
-					_float3 Right = 1.2 * GetTransform()->GetRight();
+					_float3 Right = 1.2f * GetTransform()->GetRight();
 					//pos -= 3 * Look;
 					m_spFootPrintParticle->SetPosition(pos);
 					m_spFootPrintParticle->SetDirection(Right);
 				}
-				if (GetTimeAccumulator() >= 1.0)
-				{
-					SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-					if (!isRushMode)
-						m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, CurrentPlayerPos, CurrentMobCell, CurrentPlayerCell));
-					else
-						m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, RushTargetPos, CurrentMobCell, spNavigation->FindCell(RushTargetPos)));
-					m_isPathFinding = true;
-					SetTimeAccumulator(0.0);
-				}
-				if (m_isPathFinding)
-				{
-					SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-					if (spNavigation->StepPathFinding(m_PathFindingState))
-					{
-						m_isPathFinding = false;
-						if (m_PathFindingState.pathFound)
-						{
-							if (!isRushMode)
-								m_AstarPath = (spNavigation->OptimizePath(m_PathFindingState.path, CurrentMobPos, CurrentPlayerPos));
-							else
-								m_AstarPath = (spNavigation->OptimizePath(m_PathFindingState.path, CurrentMobPos, RushTargetPos));
-							m_currentPathIndex = 0; // index initialized when path is optimized
-						}
-					}
-				}
-				if (!m_AstarPath.empty())
-				{
-					MoveAlongPath(m_AstarPath, m_currentPathIndex, _dTimeDelta);
-					_float3 direction = CurrentMobPos - GetTargetPos();
-					GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
-				}
-
-				if (CurAnimName == L"walk_forward2")
-					GetTransform()->TranslateDir(-GetTransform()->GetLook(), _dTimeDelta, runningSpeed);
-				else if (CurAnimName == L"run")
-					GetTransform()->TranslateDir(-GetTransform()->GetLook(), _dTimeDelta, runningSpeed * 2);
-				else if (CurAnimName == L"walk_back")
-					GetTransform()->TranslateDir(GetTransform()->GetLook(), _dTimeDelta, walkingSpeed * 2);
+				SetOutline(true);
 			}
 			else // patrolling when player is not found
 			{
-				
-				SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-				SHPTR<UCell> spNeighborCell = spNavigation->ChooseRandomNeighborCell(3);
-				if (GetTimeAccumulator() >= 5.0)
-				{
-					m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, spNeighborCell->GetCenterPos(), CurrentMobCell, spNeighborCell));
-					m_isPathFinding = true;
-					SetTimeAccumulator(0.0);
-				}
-				if (m_isPathFinding)
-				{
-					if (spNavigation->StepPathFinding(m_PathFindingState))
-					{
-						m_isPathFinding = false;
-						if (m_PathFindingState.pathFound)
-						{
-							m_AstarPath = (spNavigation->OptimizePath(m_PathFindingState.path, CurrentMobPos, spNeighborCell->GetCenterPos()));
-							m_currentPathIndex = 0; // index initialized when path is optimized
-						}
-					}
-				}
-				if (!m_AstarPath.empty())
-				{
-					MoveAlongPath(m_AstarPath, m_currentPathIndex, _dTimeDelta);
-					_float3 direction = CurrentMobPos - GetTargetPos();
-					GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
-				}
-				GetTransform()->TranslateDir(-GetTransform()->GetLook(), _dTimeDelta, walkingSpeed);
+				SetOutline(false);
 			}
-
 		}
+		else if (CurAnimState == UAnimationController::ANIM_ATTACK) {}
 		else {
 			m_spFootPrintParticle->SetActive(false);
 			*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 0;
 			*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
 		}
-		if (CurAnimName == L"hit_1")
-		{
-			_float3 direction = CurrentMobPos - CurrentPlayerPos;
-			GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
-		}
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	}
 
-		// death animation
-		if (CurAnimState == UAnimationController::ANIM_DEATH)
-		{
-			_double DeathAnimSpeed = 20;
-			SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
-			_double DeathTimeArcOpenEnd = 50;
-			if (GetElapsedTime() < DeathTimeArcOpenEnd) {
-				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
-				GetAnimModel()->UpdateDissolveTImer(_dTimeDelta * 1.2f);
-				if (!m_bDissolveSound) {
-					spGameInstance->SoundPlayOnce(L"DissolveSound2");
-					m_bDissolveSound = true;
-				}
-			}
-		}
-		else if (CurAnimState == UAnimationController::ANIM_IDLE)
-		{
-			GetAnimModel()->TickAnimation(_dTimeDelta);
-			GetTransform()->SetPos(GetTransform()->GetPos());
-		}
-		else
-		{
-			m_bDissolveSound = false;
-			GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
-			SetElapsedTime(0.0);
-		}
+	GetAnimModel()->TickAnimation(_dTimeDelta);
+	if (spGameInstance->GetDIKeyPressing(DIK_H)) {
+		SetIfOutlineScale(true);
+	}
+	else {
+		SetIfOutlineScale(false);
 	}
 
 	UpdateCollision();
@@ -397,12 +312,6 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 void CMinotaur::LateTickActive(const _double& _dTimeDelta)
 {
 	__super::LateTickActive(_dTimeDelta);
-
-	if (true == IsSendDataToBehavior())
-	{
-		_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
-		GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
-	}
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	_int CurAnimState = GetAnimationController()->GetAnimState();
@@ -448,7 +357,7 @@ void CMinotaur::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 	_float3 direction = (_pEnemy->GetTransform()->GetPos() - GetTransform()->GetPos());
 	direction.Normalize();
 
-	_float3 forward = -GetTransform()->GetLook();
+	_float3 forward = GetTransform()->GetLook();
 	_float dotProduct = forward.Dot(direction);
 
 	auto handleCollisionWithPlayer = [&](UCharacter* pCharacter) {
@@ -469,15 +378,11 @@ void CMinotaur::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 					m_spAttackParticleTwo->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;	//등을 맞았을 때에만
 					if (dotProduct < -0.5f)
 					{				
-						// Decrease health on hit
-	//					DecreaseHealth(pCharacter->GetAttack());
 						SendCollisionData(pCharacter, 100);
 					}
 					else
 					{
 						SendCollisionData(pCharacter, 1);
-						/*DecreaseHealth(1);*/
-					//	DecreaseHealth(pCharacter->GetAttack());
 					}
 				}
 
@@ -507,60 +412,9 @@ void CMinotaur::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 			}
 		}
 		};
-
-	////auto handleCollisionWithCharacter = [&](UCharacter* pCharacter) {
-	////	for (const auto& iter : GetColliderContainer())
-	////	{
-	////		for (const auto& iter2 : pCharacter->GetColliderContainer())
-	////		{
-	////			if (iter2.first == L"Main")
-	////			{
-	////				if (iter.second->IsCollision(iter2.second))
-	////				{
-	////					SetCollisionState(true);
-	////					GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
-	////				}
-	////				else
-	////				{
-	////					SetCollisionState(false);
-	////				}
-	////			}
-	////		}
-	////	}
-	////	};
-
-	////auto handleCollisionWithStaticObject = [&](CModelObjects* pModelObject) {
-	////	for (const auto& iter : GetColliderContainer())
-	////	{
-	////		for (const auto& iter2 : pModelObject->GetColliderContainer())
-	////		{
-	////			if (iter2.first == L"Main")
-	////			{
-	////				SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
-	////				if (GetCollidedNormal() != _float3::Zero)
-	////				{
-	////					_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 50.0f : 20.0f;
-	////					ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
-	////				}
-	////			}
-	////		}
-	////	}
-	////};
-
 	if (ePawnType == PAWNTYPE::PAWN_PLAYER)
 	{
 		UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
 		handleCollisionWithPlayer(pCharacter);
 	}
-	//else if (ePawnType == PAWNTYPE::PAWN_CHAR)
-	//{
-	//	UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
-	//	handleCollisionWithCharacter(pCharacter);
-	//}
-	//else if (ePawnType == PAWNTYPE::PAWN_STATICOBJ)
-	//{
-	//	CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
-	//	handleCollisionWithStaticObject(pModelObject);
-	//}
-
 }

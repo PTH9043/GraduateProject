@@ -40,6 +40,9 @@ namespace Core {
 					if (true == spObject->IsPermanentDisable())
 						continue;
 
+					if (false == spObject->IsActive())
+						continue;
+
 					AliveObjectList.push_back(spObject);
 				}
 
@@ -49,6 +52,9 @@ namespace Core {
 					AGameObject* spObject = iter;
 
 					if (true == spObject->IsPermanentDisable())
+						continue;
+
+					if (false == spObject->IsActive())
 						continue;
 
 					AliveObjectList.push_back(spObject);

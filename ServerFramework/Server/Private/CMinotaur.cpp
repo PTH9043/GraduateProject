@@ -21,12 +21,12 @@ namespace Server {
 		UpdateFindRange(100, 120);
 		SetMoveSpeed(5);
 		SetAttackRange(9.f);
-		SetCharStatus(CHARSTATUS{ 1, 0, 2500 });
+		SetCharStatus(CHARSTATUS{ 1, 0, 1 });
 	}
 
 	_bool CMinotaur::Start(const VOIDDATAS& _ReceiveDatas)
 	{
-		_float4x4 Matrix = _float4x4::CreateScale(0.1f) * _float4x4::CreateRotationY(DirectX::XMConvertToRadians(180));
+		_float4x4 	Matrix = _float4x4::CreateScale(0.1f) * _float4x4::CreateRotationY(DirectX::XMConvertToRadians(180));
 		SHPTR<CMinotaurAnimController> spMino = Create<CMinotaurAnimController>(GetCoreInstance(), ThisShared<CMinotaur>(),
 			"..\\..\\Resource\\Anim\\MinoTaur\\", "minotaur_FBX.bin", Matrix);
 
@@ -48,7 +48,7 @@ namespace Server {
 
 	void CMinotaur::State(SHPTR<ASession> _spSession, _int _MonsterState)
 	{
-//		__super::State(_spSession, _MonsterState);
+	__super::State(_spSession, _MonsterState);
 	}
 
 	void CMinotaur::ProcessPacket(_int _type, void* _pData)
@@ -73,6 +73,7 @@ namespace Server {
 		Vector3 vCurrentMobPos = spTransform->GetPos();
 		Vector3 vTargetPos;
 		_string strCurAnimationName = spAnimation->GetAnimName();
+		_int iCurrentPlayerState{ 0 };
 
 		DEFINE_STATIC_CONSTCHAR(WALKFORWARD_ANIMNAME, "walk_forward2");
 		DEFINE_STATIC_CONSTCHAR(RUN_ANIMNAME, "run");
@@ -84,10 +85,13 @@ namespace Server {
 			SHPTR<ATransform> spTargetTr = _spSession->GetTransform();
 			spTargetCell = spNaviagation->FindCell(_spSession->GetCurCell());
 			vTargetPos = spTargetTr->GetPos();
+			iCurrentPlayerState = _spSession->GetCurrentAnimState();
 			SetTargetPos(vTargetPos);
 		}
 
+		SetDistanceToPlayer(Vector3::Distance(vTargetPos , vCurrentMobPos));
 		SetPrevPosition(vCurrentMobPos);
+		SetPlayerToDot(OtherCharacterDirToLookConverter(vTargetPos));
 
 		_bool isFoudnTargetState = IsCurrentFindPlayer();
 		_bool isDeadState = IsDead();
@@ -96,67 +100,57 @@ namespace Server {
 
 		spAnimController->Tick(_dTimeDelta);
 
-		if (MOB_MOVE_STATE == MobState)
+		if (MOB_MOVE_STATE == MobState || CMinotaurAnimController::MOB_RUN_STATE == MobState || 
+			CMinotaurAnimController::MOB_BACK_STATE == MobState)
 		{
 			if (false == isDeadState)
 			{
 				if (true == isFoudnTargetState)
 				{
-					if (GetTimeAccumulator().IsOverLow())
+					if (GetTimeAccumulatorRefP().IsOverLow())
 					{
 						StartFindPath(spNaviagation, spCurrentMobCell, spTargetCell, vCurrentMobPos, vTargetPos);
 					}
 
 					FindingPath(spNaviagation, vCurrentMobPos, vTargetPos);
 					MoveAlongPath(_dTimeDelta);
-
-					if (WALKFORWARD_ANIMNAME == strCurAnimationName)
-					{
-						spTransform->MoveBack(_dTimeDelta, RUNNING_SPEED);
-					}
-					else if (RUN_ANIMNAME == strCurAnimationName)
-					{
-						spTransform->MoveBack(_dTimeDelta, RUNNING_SPEED);
-					}
-					else if (WALKBACK_ANIMNAME == strCurAnimationName)
-					{
-						spTransform->MoveForward(_dTimeDelta, WALKING_SPEED);
-					}
 				}
 				else
 				{
 					spTargetCell = spNaviagation->ChooseRandomNeighborCell(3);
 					vTargetPos = spTargetCell->GetCenterPos();
 
-					if (GetTimeAccumulator().IsOverHigh())
+					if (GetTimeAccumulatorRefP().IsOverHigh())
 					{
 						StartFindPath(spNaviagation, spCurrentMobCell, spTargetCell, vCurrentMobPos, vTargetPos);
 					}
 
+					SetTargetPos(vTargetPos);
 					FindingPath(spNaviagation, vCurrentMobPos, vTargetPos);
 					MoveAlongPath(_dTimeDelta);
 				}
 			}
 		}
-		else if (MOB_ATTACK_STATE == MobState)
+		else if (MOB_ATTACK_STATE == MobState || MOB_HIT_STATE == MobState)
 		{
-			spTransform->LookAt(vTargetPos);
-		}
-		else if (MOB_HIT_STATE == MobState)
-		{
-			Vector3 vDirection = vTargetPos - vCurrentMobPos;
-			spTransform->SetDirectionFixedUp(vDirection, _dTimeDelta, GetRotSpeed());
+			SetDirectionFixedUp(_dTimeDelta, GetPlayerToDot(), 10, vTargetPos);
 		}
 
-		if (MOB_DEATH_STATE == MobState)
+		if (MOB_MOVE_STATE == MobState)
 		{
-			SetElapsedTime(GetElapsedTime() + (_dTimeDelta * GetDeadAnimSpeed()));
-			if (GetElapsedTime() < GetDeadTimeArcOpenEnd())
-			{
-				spAnimator->TickAnimToTimeAccChangeTransform(spTransform, _dTimeDelta, GetElapsedTime());
-			}
+			spTransform->MoveForward(_dTimeDelta, WALKING_SPEED);
 		}
-		else if (MOB_IDLE_STATE == MobState)
+		else if (CMinotaurAnimController::MOB_RUN_STATE == MobState)
+		{
+			spTransform->MoveForward(_dTimeDelta, RUNNING_SPEED);
+		}
+		else if (CMinotaurAnimController::MOB_BACK_STATE == MobState)
+		{
+			spTransform->MoveBack(_dTimeDelta, WALKING_SPEED);
+		}
+
+
+		if (MOB_IDLE_STATE == MobState)
 		{
 			spAnimator->TickAnimation(_dTimeDelta);
 		}
@@ -166,8 +160,13 @@ namespace Server {
 			SetElapsedTime(0);
 		}
 
-		GetTimeAccumulator().PlusTime(_dTimeDelta);
-		SetDamaged(false);
+		GetTimeAccumulatorRefP().PlusTime(_dTimeDelta);
+		DisableDamaged(iCurrentPlayerState, _dTimeDelta);
+	}
+
+	void CMinotaur::MoveAlongPath(const _double& _dTimeDelta)
+	{
+		__super::MoveAlongPath(_dTimeDelta);
 	}
 
 	void CMinotaur::Free()

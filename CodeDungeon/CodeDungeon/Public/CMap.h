@@ -48,7 +48,7 @@ public:
 	
 	CSHPTRREF<ROOMCONTAINER> GetRooms() { return m_spRoomContainer; }
 	CSHPTRREF<STATICOBJCONTAINER> GetStaticObjs() { return m_spStaticObjContainer;}
-	CSHPTRREF<MOBSCONTAINER> GetMobs() { return m_spMobsContainer; }
+	const MOBSCONTAINER& GetMobs() { return *m_spMobsContainer.get(); }
 	const GUARDCONTAINER& GetGuards() { return m_GuardContainer; }
 
 	void AddLightCount() { m_iLightCount++; }

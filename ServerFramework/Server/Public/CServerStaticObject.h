@@ -22,6 +22,9 @@ protected:
 	virtual void LastBehavior() override;
 protected: /* get set */
 	void SetStaticObjType(const _int _StaticObjType) { m_StaticObjType = _StaticObjType; }
+	void SetDoneInteractiveStaticObject(const _bool _isDoneInteractiveStaticObject) { this->m_isDoneInteractStaticObject = _isDoneInteractiveStaticObject; }
+
+	CUSTIMER& GetActiveTimerRefP(REF_RETURN) { return m_ActiveTimer; }
 private:
 	virtual void Free() override;
 private:

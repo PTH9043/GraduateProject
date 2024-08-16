@@ -61,61 +61,38 @@ void CMainScene::UpdateMobsStatus()
 	_int deadmobcount_RoomF = 0;
 	_int deadmobcount_RoomG = 0;
 
-	for (auto& mobcontainer : (*m_spMap->GetMobs().get()))
+	for (auto& mobcontainer : (m_spMap->GetMobs()))
 	{
 		for (auto& mobs : mobcontainer.second)
 		{
-			if (mobs->GetAnimModel()->GetModelName() == L"minotaur_FBX.bin") {
+			if (mobs->GetMobType() == TAG_MINOTAUR) {
 				m_bIsDead_Minotaur = mobs->GetDeathState();
 			}
-			if (mobs->GetAnimModel()->GetModelName() == L"Harlequin1_FBX.bin") {
+			else if (mobs->GetMobType() == TAG_HARLEQUINN) {
 				m_bisDead_Harlequinn = mobs->GetDeathState();
 			}
-			if (mobs->GetAnimModel()->GetModelName() == L"Anubis_FBX.bin") {
+			else if (mobs->GetMobType() == TAG_ANUBIS) {
 				m_bisDead_Anubis = mobs->GetDeathState();
 			}
 			if(mobs->GetDeathState() == false)
 			{	
 				//보스몹 상태 업데이트
 				{
-					if (mobs->GetAnimModel()->GetModelName() == L"minotaur_FBX.bin")
-					{
+					if (mobs->GetMobType() == TAG_MINOTAUR) {
 						m_iMinotaurCurHP = mobs->GetHealth();
 						m_iMinotaurMaxHP = mobs->GetMaxHealth();
-						
-					
-						if (!m_spWarriorPlayer->GetDeathState()) {
-							m_bIsFoundPlayer_Minotaur = mobs->GetFoundTargetState();							
-						}
-						else {
-							m_bIsFoundPlayer_Minotaur = false;
-						}
-							
+						m_bIsFoundPlayer_Minotaur = mobs->GetFoundTargetState();
+
 					}
-					if (mobs->GetAnimModel()->GetModelName() == L"Harlequin1_FBX.bin")
-					{
+					else if (mobs->GetMobType() == TAG_HARLEQUINN) {
 						m_iHarlequinnCurHP = mobs->GetHealth();
 						m_iHarlequinnMaxHP = mobs->GetMaxHealth();
-					
-						if (!m_spWarriorPlayer->GetDeathState()) {
-							m_bisFoundPlayer_Harlequinn = mobs->GetFoundTargetState();							
-						}
-						else {
-							m_bisFoundPlayer_Harlequinn = false;
-						}
-						
+						m_bisFoundPlayer_Harlequinn = mobs->GetFoundTargetState();
 					}
-					if (mobs->GetAnimModel()->GetModelName() == L"Anubis_FBX.bin")
-					{
+					else if (mobs->GetMobType() == TAG_ANUBIS) {
 						m_iAnubisCurHP = mobs->GetHealth();
 						m_iAnubisMaxHP = mobs->GetMaxHealth();
-						if (!m_spWarriorPlayer->GetDeathState()) {
-							m_bisFoundPlayer_Anubis = mobs->GetFoundTargetState();							
-						}
-						else {
-							m_bisFoundPlayer_Anubis = false;
-						}
-						
+						m_bisFoundPlayer_Anubis = mobs->GetFoundTargetState();
 					}
 				}			
 			}
@@ -167,7 +144,7 @@ void CMainScene::UpdateMobsStatus()
 	}
 
 	//방별 몹 전체 사망 상태 업데이트
-	for (auto& mobcontainer : (*m_spMap->GetMobs().get()))
+	for (auto& mobcontainer : (m_spMap->GetMobs()))
 	{
 		if (mobcontainer.first == L"Interior_Room_D")
 		{
@@ -1693,11 +1670,11 @@ HRESULT CMainScene::LoadSceneData()
 		_float3 ScaleFloat3 = _float3(ScaleX, ScaleY, 1);
 
 		m_stFireOne->GetTransform()->SetScale(ScaleFloat3);
-		m_stFireOne->GetTransform()->SetPos(_float3(-438.7,-50.8,156.4));
+		m_stFireOne->GetTransform()->SetPos(_float3(-438.7f,-50.8f,156.4f));
 		m_stFireOne->SetColorTexture(L"BlueFlame");
 		m_stFireOne->SetNoiseTexture(L"WFX_T_NukeFlames");
 		m_stFireTwo->GetTransform()->SetScale(ScaleFloat3);
-		m_stFireTwo->GetTransform()->SetPos(_float3(-410.6, -50.8, 172.8));
+		m_stFireTwo->GetTransform()->SetPos(_float3(-410.6f, -50.8f, 172.8f));
 		m_stFireTwo->SetColorTexture(L"BlueFlame");
 		m_stFireTwo->SetNoiseTexture(L"WFX_T_NukeFlames");
 		m_stFireOne->SetActive(true);
@@ -2322,10 +2299,8 @@ void CMainScene::LateTick(const _double& _dTimeDelta)
 		m_spMinotaurHpFont->SetRender(true);
 		m_spMinotaurFrameUI->SetActive(true);
 		m_spMinotaurHpBarUI->SetActive(true);
-
 	}
 	else {
-
 		pGameInstance->StopSound(L"MinoBackground");
 		pGameInstance->SetLooping(L"MinoBackground", false);
 		EnterMinoSound = false;

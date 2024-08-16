@@ -37,8 +37,9 @@ namespace Client
 
 	enum
 	{
-		ENABLE_KEY = 0x01,
-		KEYBOARD_F = 0x10,
+		ENABLE_KEY = 0,
+		KEYBOARD_F = 1,
+		KEYBOARD_G = 2,
 	};
 
 	enum WARRIORPLAYERSTATE

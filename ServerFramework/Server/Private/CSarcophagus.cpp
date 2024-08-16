@@ -26,6 +26,7 @@ namespace Server
 		}
 
 		UpdateFindRange(50.f, 90.f);
+		SetActive(false);
 	}
 
 	_bool CSarcophagus::Start(const VOIDDATAS& _ReceiveDatas)
@@ -63,21 +64,73 @@ namespace Server
 		if (SARCO_LAYING == m_eSarcophagusType)
 			spMummy->GetTransform()->TranslateDir((spMummy->GetTransform()->GetLook() * -1), 1, 10);
 #else
-		SHPTR<CSacrophagusAnimController> spSacrophagusAnimController = Create<CSacrophagusAnimController>(GetCoreInstance(), ThisShared<CSarcophagus>(),
-			"..\\..\\Resource\\Anim\\Sarcophagus\\", "SarcophagusLaying_FBX.bin", Matrix);
-		SetAnimController(spSacrophagusAnimController);
+		switch (m_eSarcophagusType)
+		{
+		case SARCO_LAYING:
+		{
+			SHPTR<CSacrophagusAnimController> spSacrophagusAnimController = Create<CSacrophagusAnimController>(GetCoreInstance(), ThisShared<CSarcophagus>(),
+				"..\\..\\Resource\\Anim\\Sarcophagus\\", "SarcophagusLaying_FBX.bin", Matrix);
+			SetAnimController(spSacrophagusAnimController);
+		}
+			break;
+		case SARCO_STANDING:
+		{
+			SHPTR<CSacrophagusAnimController> spSacrophagusAnimController = Create<CSacrophagusAnimController>(GetCoreInstance(), ThisShared<CSarcophagus>(),
+				"..\\..\\Resource\\Anim\\Sarcophagus\\", "SarcophagusStanding_FBX.bin", Matrix);
+			SetAnimController(spSacrophagusAnimController);
+		}
+		break;
+		}
+
 #endif
 		return __super::Start(_ReceiveDatas);
 	}
 
 	void CSarcophagus::RunningPermanentDisableSituation()
 	{
+		static _double LyingSarcophagusTimeArcOpenEnd = 100;
+		static _double StandingSarcophagusTimeArcOpenEnd = 30;
+
+		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+		SHPTR<ATransform> spTransform = GetTransform();
+		SHPTR<AAnimController> spAnimController = GetAnimController();
+		SHPTR<AAnimator> spAnimator = spAnimController->GetAnimator();
+		SHPTR<AAnimation> spCurAnimation = spAnimator->GetCurAnimation();
+
+		Vector3 vPos = spTransform->GetPos();
+		Vector3 vRotate = spTransform->GetRotationValue();
+
+		VECTOR3 vSendPos, vSendRotate;
+		{
+			PROTOFUNC::MakeVector3(&vSendPos, vPos.x, vPos.y, vPos.z);
+			PROTOFUNC::MakeVector3(&vSendRotate, vRotate.x, vRotate.y, vRotate.z);
+		}
+
+		_int AnimState = 0;
+		_double dTimeAcc = 0;
+		if (m_eSarcophagusType == SARCO_LAYING)
+		{
+			dTimeAcc = LyingSarcophagusTimeArcOpenEnd;
+		}
+		else
+		{
+			dTimeAcc = StandingSarcophagusTimeArcOpenEnd;
+		}
+
+		_int AnimIndex = 0;
+		MOBSTATE monsterState;
+		PROTOFUNC::MakeMobState(&monsterState, GetSessionID(), vSendPos, vSendRotate,
+			AnimState, AnimIndex, true, false, false, dTimeAcc);
+		CombineProto<MOBSTATE>(GetCopyBuffer(), GetPacketHead(), monsterState, TAG_SC_MONSTERSTATE);
+		spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
 	}
 
 	void CSarcophagus::Tick(const _double& _dTimeDelta){ }
 
 	void CSarcophagus::State(SHPTR<ASession> _spSession, _int _MonsterState)
 	{
+		//__super::State(_spSession, _MonsterState);
+
 		FindPlayer(_spSession);
 
 		if (true == IsCurrentFindPlayer())

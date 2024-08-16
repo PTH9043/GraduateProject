@@ -9,6 +9,9 @@
 
 namespace Core
 {
+	AMonster::PLAYERPOSITIONCONTAINER AMonster::s_PlayerPositionContainer{};
+	AMonster::PLAYERFINDWEIGHTCONTAINER AMonster::s_PlayerFindWeightContainer{};
+
 	AMonster::AMonster(OBJCON_CONSTRUCTOR, SESSIONID _ID, SHPTR<AJobTimer> _spMonsterJobTimer) :
 		APawn(OBJCON_CONDATA, _ID, SESSIONTYPE::MONSTER),
 		m_MobState{ MOB_DISABLE_STATE }, m_RoomIndex{}, m_strAnimTriggerName{""}, m_strCurAnimName{""}, 
@@ -16,7 +19,7 @@ namespace Core
 		m_fDeactiveRange{0}, m_iMonsterType{0}, m_fDistanceToPlayer{-1},
 		m_isCurrentAtkPlayer{ false }, m_isCurrentFindPlayer { false}, m_isCurrentNotFound{ false },
 		m_fMoveSpeed { 0 }, m_OwnerMonsterSessionID{-1}, m_spTargetSession{nullptr},
-		m_vTargetPos{}
+		m_vTargetPos{}, m_isDamageEnable{false}
 	{
 		SetActive(true);
 	}
@@ -28,20 +31,34 @@ namespace Core
 	void AMonster::FindPlayer(SHPTR<ASession> _spSession)
 	{
 		RETURN_CHECK(nullptr == _spSession, ;);
+		SHPTR<AAnimController> spAnimController = GetAnimController();
+		if (nullptr != spAnimController)
+		{
+			RETURN_CHECK(MOB_ATTACK_STATE == GetAnimController()->GetAnimState(), ;);
+		}
 		SHPTR<ATransform> spMobTr = GetTransform();
 		SHPTR<ATransform> spPlayerTr = _spSession->GetTransform();
+		SESSIONID SessionID = _spSession->GetSessionID();
 		{
 			Vector3 vMobPos = spMobTr->GetPos();
 			Vector3 vPlayerPos = spPlayerTr->GetPos();
 			Vector3 vDirection = vPlayerPos - vMobPos;
+			s_PlayerPositionContainer[SessionID] = vPlayerPos;
 
 			float fDistanceToPlayer = vDirection.Length();
-			fDistanceToPlayer = vDirection.Length();
 
 			if (fDistanceToPlayer <= m_fActiveRange)
 			{
-				if(true == IsCurrentNotFound())
-					m_spTargetSession = _spSession;
+				SHPTR<ASession> spTargetSession = m_spTargetSession;
+				if (nullptr != spTargetSession)
+				{
+					if (spTargetSession->IsFallDownState())
+						SetTargetSession(nullptr);
+				}
+				else
+				{
+					SetTargetSession(_spSession);
+				}
 
 				if (fDistanceToPlayer <= m_fAttackRange)
 				{
@@ -55,7 +72,7 @@ namespace Core
 			else if (m_fDeactiveRange >= fDistanceToPlayer)
 			{
 				UpdateSelfStateToPlayerDistance(false, false, true);
-				m_spTargetSession = nullptr;
+				SetTargetSession(nullptr);
 			}
 		}
 	}
@@ -94,6 +111,22 @@ namespace Core
 		return false;
 	}
 
+	void AMonster::SetDirectionFixedUp(const _double& _dTimeDelta, const _float _fCurrentDot, 
+		const _float _JudgaeDot, const Vector3& _vTargetPos)
+	{
+		SHPTR<ATransform> spTransform = GetTransform();
+		_float fRot = _fCurrentDot;
+		if (fRot >= _JudgaeDot || fRot <= -_JudgaeDot)
+			spTransform->SetDirectionFixedUp((_vTargetPos - spTransform->GetPos()), static_cast<_float>(_dTimeDelta), ROT_SPEED);
+		else
+			spTransform->LookAt(_vTargetPos);
+	}
+
+	void AMonster::UpdatePlayerToWeight(const SESSIONID _SessionID, const _float _fWeight)
+	{
+		s_PlayerFindWeightContainer[_SessionID] += _fWeight;
+	}
+
 	void AMonster::ComputeNextDir(const _double _dTimeDelta)
 	{
 		SHPTR<ANavigation> spNavigation = GetNavigation();
@@ -115,8 +148,9 @@ namespace Core
 
 	void AMonster::ResetTargetPlayer()
 	{
-		RETURN_CHECK(nullptr == m_spTargetSession, ;);
-		if (true == m_spTargetSession->IsPermanentDisable())
+		SHPTR<ASession> spSession = m_spTargetSession;
+		RETURN_CHECK(nullptr == spSession, ;);
+		if (true == spSession->IsPermanentDisable())
 		{
 			UpdateSelfStateToPlayerDistance(false, false, true);
 			m_spTargetSession.reset();

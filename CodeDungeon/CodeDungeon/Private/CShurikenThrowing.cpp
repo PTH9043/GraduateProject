@@ -121,9 +121,6 @@ void CShurikenThrowing::TickActive(const _double& _dTimeDelta)
 			}
 		}
 	}
-
-
-	
 }
 
 

@@ -145,19 +145,19 @@ namespace Server
 						CreateMummyAndSarphagousMob(&iter, SARCO_STANDING, spMonsterJobTimer);
 					}
 				}
-				else if (iter.strAnimModelName == "minotaur_FBX")
+				else if (iter.strAnimModelName == "minotaur_FBX.bin")
 				{
 					CreateMonster<CMinotaur>(&iter, spMonsterJobTimer);
 				}
-				else if (iter.strAnimModelName == "Harlequin1_FBX")
+				else if (iter.strAnimModelName == "Harlequin1_FBX.bin")
 				{
 					CreateMonster<CHarlequin>(&iter, spMonsterJobTimer);
 				}
-				else if (iter.strAnimModelName == "Anubis_FBX")
+				else if (iter.strAnimModelName == "Anubis_FBX.bin")
 				{
 					CreateMonster<CAnubis>(&iter, spMonsterJobTimer);
 				}
-				else if (iter.strAnimModelName == "Mimic_FBX")
+				else if (iter.strAnimModelName == "Mimic_FBX.bin")
 				{
 					CreateMonster<CMimic>(&iter, spMonsterJobTimer);
 				}

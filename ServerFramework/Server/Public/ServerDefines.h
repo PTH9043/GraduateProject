@@ -23,8 +23,9 @@ namespace Server
 {
 	enum
 	{
-		ENABLE_KEY = 0x01,
-		KEYBOARD_F = 0x10,
+		ENABLE_KEY = 0,
+		KEYBOARD_F = 1,
+		KEYBOARD_G = 2,
 	};
 
 	enum TIMERTYPE : Core::_int
@@ -73,6 +74,12 @@ namespace Server
 		_string					strRoomName;
 
 		STATICOBJSERVERDATA() : mWorldMatrix{ Core::_float4x4::Identity }, iServerID{ 0 }, iObjType{ 0 }, strRoomName{ "" } {}
+	};
+
+	enum PLAYERSTATE
+	{
+		PLAYER_ANIM_IDLE, PLAYER_ANIM_MOVE, PLAYER_ANIM_ATTACK, PLAYER_ANIM_DEATH, PLAYER_ANIM_HIT,
+		PLAYER_ANIM_ROLL = 6, PLAYER_ANIM_RUN = 7, PLAYER_ANIM_JUMP = 8, PLAYER_ANIM_FALLDOWN = 9
 	};
 
 	enum COMMONSTATE

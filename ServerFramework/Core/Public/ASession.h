@@ -25,6 +25,7 @@ public:
 	DESTRUCTOR(ASession)
 public: 
 	virtual _bool Start(const VOIDDATAS& _ReceiveDatas = {}) PURE;
+	virtual void Tick(const _double& _dTimeDelta) override;
 	// 클라이언트에서 전송된 버퍼를 읽는 함수
 	virtual void RecvData() PURE;
 	// 클라이언트에게 버퍼를 조합하여 전송하는 함수
@@ -48,6 +49,11 @@ public:
 public: /*Get Set */
 	TCPSOCKET& GetTcpSocket(REF_RETURN) { return m_TcpSocket; }
 	const _int GetKeyState() const { return m_KeyState; }
+	const _bool IsFallDownState() const { return m_isFallDownState; }
+	const _int GetCurrentAnimState() const { return m_iCurrentAnimState; }
+
+	void EnableFallDownState() { m_isFallDownState = true; }
+	void SetEnemyAttackAnimName(_int _iEnemyAttackState) { m_EnemyAttackState = _iEnemyAttackState; }
 protected:
 	virtual _bool ProcessPacket(_char* _pPacket, const PACKETHEAD& _PacketHead) PURE;
 	void PacketCombine(_char* _pPacket, _llong _Size);
@@ -56,6 +62,7 @@ protected:
 protected: /* get set*/
 	BUFFER& GetSendBuff(REF_RETURN) { return m_SendBuffer; }
 	void SetKeyState(_int _KeyState) { this->m_KeyState = _KeyState; }
+	void SetCurrentAnimState(_int _iCurrentAnimState) { m_iCurrentAnimState = _iCurrentAnimState; }
 private:
 	virtual void Free() override;
 
@@ -69,6 +76,11 @@ private:
 	BUFFER							m_SendBuffer;
 	// KeyState
 	ATOMIC<_int>				m_KeyState;
+	// 현재 넘어진 상태인지
+	_bool								m_isFallDownState;
+	CUSTIMER						m_FallDownTimer;
+	ATOMIC<_int>				m_EnemyAttackState;
+	ATOMIC<_int>				m_iCurrentAnimState;
 };
 
 END

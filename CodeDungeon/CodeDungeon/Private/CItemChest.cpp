@@ -85,7 +85,60 @@ HRESULT CItemChest::NativeConstructClone(const VOIDDATAS& _Datas)
 	*m_spOpenChestParticle->GetParticleSystem()->GetCreateInterval() = 1.1f;
 	m_spOpenChestParticle->SetTexture(L"Twinkle");
 	SetActive(true);
+	GetAnimModel()->TickAnimation(0.0);
+
+	for (auto& Containers : GetColliderContainer())
+	{
+		_float4x4 matrix = GetAnimModel()->GetPivotMatirx();
+		matrix.Set_Pos(GetTransform()->GetPos());
+		Containers.second->SetTransform(matrix);
+	}
+	m_ChestType = CHESTTYPE::TYPE_CHEST;
 	return S_OK;
+}
+
+void CItemChest::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
+{
+	switch (_ProcessData.GetDataType())
+	{
+	case TAG_SC_STATICOBJFIND:
+	{
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		SHPTR<CWarriorPlayer> spPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
+
+		SC_STATICOBJFIND scStaticObjFind;
+		scStaticObjFind.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
+		{
+			SetOutline(true);
+			SetIfOutlineScale(true);
+			if (!m_bisOpen)
+				spPlayer->SetCanInteractChestState(true);
+			if (1 == scStaticObjFind.enable() && !m_bisOpen) {
+				if (m_ChestType == TYPE_CHEST) {
+					spPlayer->SetIfOpenChest(true);
+					spGameInstance->SoundPlayOnce(L"ChestOpen");
+				}
+				SetOpeningState(true);
+			}
+		}
+		scStaticObjFind.Clear();
+	}
+	break;
+	case TAG_SC_MONSTERSTATE:
+	{
+		static MOBSTATE MobState;
+		MobState.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
+
+		if (true == MobState.triggeron())
+		{
+			GetAnimModel()->UpdateCurAnimationToRatio(MobState.animtime());
+			SetElapsedTime(1000.0);
+			m_spOpenChestParticle->SetActive(false);
+		}
+		MobState.Clear();
+	}
+	break;
+	}
 }
 
 void CItemChest::TickActive(const _double& _dTimeDelta)
@@ -97,32 +150,6 @@ void CItemChest::TickActive(const _double& _dTimeDelta)
 	_double ItemChestTimeArcOpenEnd = 3;
 	GetAnimationController()->Tick(_dTimeDelta);
 	SetTargetPlayer(std::static_pointer_cast<UPlayer>(spGameInstance->GetCurrPlayer()));
-	//상자 여는 트리거
-	if (GetFoundTargetState())
-	{
-		SetOutline(true);
-		SetIfOutlineScale(true);
-		if (!m_bisOpen)
-			static_pointer_cast<CWarriorPlayer>(GetTargetPlayer())->SetCanInteractChestState(true);
-		if (spGameInstance->GetDIKeyDown(DIK_F) && !m_bisOpen) {
-			if (m_ChestType == TYPE_CHEST) {
-				static_pointer_cast<CWarriorPlayer>(GetTargetPlayer())->SetIfOpenChest(true);
-				spGameInstance->SoundPlayOnce(L"ChestOpen");
-
-				CS_HEAL csHeal;
-				PROTOFUNC::MakeCsHeal(&csHeal, GetNetworkID());
-				spGameInstance->SendProtoData(UProcessedData(csHeal, TAG_CS_HEAL));
-				csHeal.Clear();
-			}
-			SetOpeningState(true);
-		}
-	}
-	else
-	{
-		SetOutline(false);
-
-		static_pointer_cast<CWarriorPlayer>(GetTargetPlayer())->SetCanInteractChestState(false);
-	}
 
 	if (m_bisOpen)
 	{
@@ -149,29 +176,28 @@ void CItemChest::TickActive(const _double& _dTimeDelta)
 			SetActive(false);
 		}
 	}
-
+	else
+	{
+		GetAnimModel()->TickAnimation(0.0);
+	}
 	if (ParticleActiveTime > 5.f) {
 		m_spOpenChestParticle->SetActive(false);
-	}
-
-	for (auto& Containers : GetColliderContainer())
-	{
-		Containers.second->SetTransform(GetTransform());
 	}
 }
 
 void CItemChest::LateTickActive(const _double& _dTimeDelta)
 {
+	if (true == GetOutlineState())
+	{
+		SetOutline(false);
+		static_pointer_cast<CWarriorPlayer>(GetTargetPlayer())->SetCanInteractChestState(false);
+	}
+
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
 	
 	AddOutlineRenderGroup(RI_DEPTHRECORD);
 	//AddNorPosRenderGroup(RI_NORPOS_FORABILITY);
 	AddNorPosRenderGroup(RI_NORPOS);
-
-
-	
-	/*for (auto& Colliders : GetColliderContainer())
-		Colliders.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);*/
 }
 
 HRESULT CItemChest::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)

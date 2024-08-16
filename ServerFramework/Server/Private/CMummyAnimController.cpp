@@ -72,9 +72,13 @@ namespace Server {
 			{
 				UpdateState(WAKEUPORDER, MOB_AWAKE_STATE);
 				if (MUMMYTYPE::MUMMY_LAYING == eMummyType)
+				{
 					spAnimator->SetAnimation(OPENLAYING);
+				}
 				else
+				{
 					spAnimator->SetAnimation(OPENSTANDING);
+				}
 
 				spMummy->SetFoundPlayerFirstTime(true);
 			}

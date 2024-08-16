@@ -244,6 +244,7 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetOutlineColor(_float3(1, 0, 0));
 	SetActive(true);
 	SetMovingSpeed(5.f);
+//	SetDeathState(true);
 	return S_OK;
 }
 
@@ -386,7 +387,7 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 	PAWNTYPE ePawnType = _pEnemy->GetPawnType();
 	const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
 
-	_float3 direction = (_pEnemy->GetTransform()->GetPos() - GetTransform()->GetPos());
+	_float3 direction = (GetTransform()->GetPos() - _pEnemy->GetTransform()->GetPos());
 	direction.Normalize();
 	_bool IsHit = true;
 
@@ -410,7 +411,7 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 						m_spAttackParticleTwo->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 						m_spSlashParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 						// Decrease health on hit
-						SendCollisionData(_pEnemy.get(), 100);
+						SendCollisionData(_pEnemy.get(), 3000);
 					}
 					
 					SetHitAlreadyState(true);

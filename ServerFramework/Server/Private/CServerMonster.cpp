@@ -17,10 +17,10 @@ namespace Server {
 
 	CServerMonster::CServerMonster(OBJCON_CONSTRUCTOR, SESSIONID _ID, SHPTR<AJobTimer> _spMonsterJobTimer)
 		: AMonster(OBJCON_CONDATA, _ID, _spMonsterJobTimer),
-		m_iNextPathIndex{ 0 }, m_isPathFinding{ false }, m_TimeAccumulator{ 1, 5 },
+		m_iNextPathIndex{ 0 }, m_isPathFinding{ false }, m_TimeAccumulator{ 0.75, 2.5 },
 		m_dDeadAnimSpeed{ 20 }, m_dElapsedTime{ 0 }, m_dDeadTimeArcOpenEnd{ 500 },
-		m_fRotSpeed{ DirectX::XMConvertToRadians(60) }, m_fCollisionNuckbackSpeed{ 7.f },
-		m_fApplySlidingMovementSpeed{ 20.f }, m_strRoomName{""}
+		m_fRotSpeed{ DirectX::XMConvertToRadians(90) }, m_fCollisionNuckbackSpeed{ 7.f },
+		m_fApplySlidingMovementSpeed{ 20.f }, m_strRoomName{""}, m_DisableHitTimer{0.75f}
 	{
 	}
 
@@ -50,6 +50,7 @@ namespace Server {
 
 	void CServerMonster::Tick(const _double& _dTimeDelta)
 	{
+		RunningDamagedToEnemyTimer(_dTimeDelta);
 		DeadStateEnable(_dTimeDelta);
 		RestrictPositionToNavi();
 		UpdateColliderData();
@@ -98,16 +99,7 @@ namespace Server {
 		}
 	}
 
-	void CServerMonster::ProcessPacket(_int _type, void* _pData)
-	{
-		switch (_type)
-		{
-		case TAG_CS_MONSTERSTATE:
-		{
-		}
-		break;
-		}
-	}
+	void CServerMonster::ProcessPacket(_int _type, void* _pData){}
 
 	void CServerMonster::Collision(AGameObject* _pGameObject, const _double& _dTimeDelta)
 	{
@@ -166,6 +158,34 @@ namespace Server {
 		}
 	}
 
+	void CServerMonster::RunningPermanentDisableSituation()
+	{
+		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+		SHPTR<ATransform> spTransform = GetTransform();
+		SHPTR<AAnimController> spAnimController = GetAnimController();
+		SHPTR<AAnimator> spAnimator = spAnimController->GetAnimator();
+		SHPTR<AAnimation> spCurAnimation = spAnimator->GetCurAnimation();
+
+		Vector3 vPos = spTransform->GetPos();
+		Vector3 vRotate = spTransform->GetRotationValue();
+
+		VECTOR3 vSendPos, vSendRotate;
+		{
+			PROTOFUNC::MakeVector3(&vSendPos, vPos.x, vPos.y, vPos.z);
+			PROTOFUNC::MakeVector3(&vSendRotate, vRotate.x, vRotate.y, vRotate.z);
+		}
+
+		_int AnimState = spAnimController->GetAnimState();
+		_double dTimeAcc = spCurAnimation->GetTimeAcc();
+		_int AnimIndex = spAnimator->GetCurAnimIndex();
+
+		MOBSTATE monsterState;
+		PROTOFUNC::MakeMobState(&monsterState, GetSessionID(), vSendPos, vSendRotate,
+			AnimState, AnimIndex, true, false, false, dTimeAcc);
+		CombineProto<MOBSTATE>(GetCopyBuffer(), GetPacketHead(), monsterState, TAG_SC_MONSTERSTATE);
+		spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
+	}
+
 	void CServerMonster::TickUpdateBehavior(const _double& _dTimeDelta, SHPTR<ASession> _spSession)
 	{
 		SHPTR<AAnimController> spAnimController = GetAnimController();
@@ -178,6 +198,7 @@ namespace Server {
 		Vector3 vCurrentMobPos = spTransform->GetPos();
 		Vector3 vTargetPos;
 		_string strCurAnimationName = spAnimation->GetAnimName();
+		_int iCurrentPlayerState{ 0 };
 
 		if (nullptr != _spSession)
 		{
@@ -185,10 +206,13 @@ namespace Server {
 			spTargetCell = spNaviagation->FindCell(_spSession->GetCurCell());
 			vTargetPos = spTargetTr->GetPos();
 			SetTargetPos(vTargetPos);
+			iCurrentPlayerState = _spSession->GetCurrentAnimState();
 		}
 		m_vTargetToDir = vTargetPos - vCurrentMobPos;
+		SetDistanceToPlayer(m_vTargetToDir.Length());
 		m_vTargetToDir.Normalize();
 		SetPrevPosition(vCurrentMobPos);
+		SetPlayerToDot(OtherCharacterDirToLookConverter(vTargetPos));
 
 		_bool isFoudnTargetState = IsCurrentFindPlayer();
 		_bool isDeadState = IsDead();
@@ -217,16 +241,17 @@ namespace Server {
 						StartFindPath(spNaviagation, spCurrentMobCell, spTargetCell, vCurrentMobPos, vTargetPos);
 					}
 				}
+				SetTargetPos(vTargetPos);
 				FindingPath(spNaviagation, vCurrentMobPos, vTargetPos);
 				MoveAlongPath(_dTimeDelta);
 			}
 		}
 		else if (MOB_ATTACK_STATE == MobState)
 		{
-			spTransform->LookAt(vTargetPos);
+			SetDirectionFixedUp(_dTimeDelta, GetPlayerToDot(), 10, vTargetPos);
 		}
 
-		if (MOB_IDLE_STATE == MobState)
+		if (MOB_IDLE_STATE == MobState )
 		{
 			spAnimator->TickAnimation(_dTimeDelta);
 		}
@@ -237,7 +262,7 @@ namespace Server {
 		}
 
 		m_TimeAccumulator.PlusTime(_dTimeDelta);
-		SetDamaged(false);
+		DisableDamaged(iCurrentPlayerState, _dTimeDelta);
 	}
 
 	void CServerMonster::MoveAlongPath(const _double& _dTimeDelta)
@@ -259,10 +284,17 @@ namespace Server {
 
 			Direction = vTargetPos - vCurrentPos;
 			_float fDistance = Direction.Length();
-
-			if (fDistance <= 1.f)
+			if (fDistance > GetDistanceToPlayer())
 			{
+				vTargetPos = GetTargetPos();
 				m_iNextPathIndex.fetch_add(1);
+			}
+			else
+			{
+				if (fDistance <= 1.f)
+				{
+					m_iNextPathIndex.fetch_add(1);
+				}
 			}
 		}
 		else
@@ -270,7 +302,8 @@ namespace Server {
 			vTargetPos = GetTargetPos();
 			Direction = vTargetPos - vCurrentPos;
 		}
-		spTransform->SetDirectionFixedUp(Direction, _dTimeDelta, RotSpeed);
+
+		SetDirectionFixedUp(_dTimeDelta, GetPlayerToDot(), 10, vTargetPos);
 	}
 
 	void CServerMonster::StartFindPath(SHPTR<ANavigation> _spNavigation, SHPTR<ACell> _spSelfCell, SHPTR<ACell> _spTargetCell, 
@@ -297,6 +330,17 @@ namespace Server {
 					m_iNextPathIndex = 0;
 				}
 			}
+		}
+	}
+
+	void CServerMonster::DisableDamaged(_int _iPlayerState, const _double& _dTimeDelta)
+	{
+		RETURN_CHECK(false == IsDamaged(), ;);
+
+		if (PLAYER_ANIM_ATTACK != _iPlayerState || m_DisableHitTimer.IsOver(_dTimeDelta))
+		{
+			SetDamaged(false);
+			m_DisableHitTimer.ResetTimer();
 		}
 	}
 

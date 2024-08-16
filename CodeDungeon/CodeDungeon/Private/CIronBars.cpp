@@ -13,7 +13,7 @@
 
 CIronBars::CIronBars(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: CModelObjects(_spDevice, _wstrLayer, _eCloneType),
-	m_SoundTimer{4}, m_isEnable{false}
+	m_SoundTimer{4}, m_isEnable{false}, m_isOpenstart{false}
 {
 }
 
@@ -60,7 +60,11 @@ HRESULT CIronBars::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	SetPawnType(PAWNTYPE::PAWN_STATICOBJ);
 	SetIfOutlineScale(false);
 
-	/*SetOutline(true);*/
+	for (auto& Containers : GetColliderContainer())
+	{
+		Containers.second->SetTranslate(GetModel()->GetCenterPos());
+		Containers.second->SetTransform(GetTransform());
+	}
 	return S_OK;
 }
 
@@ -103,12 +107,22 @@ void CIronBars::LateTickActive(const _double& _dTimeDelta)
 	{
 		spPlayer->SetCanInteractBarState(false);
 		SetOutline(false);
-		spGameInstance->StopSound(L"BarLift");
+		if (true == m_isOpenstart)
+		{
+			spGameInstance->StopSound(L"BarLift");
+			spPlayer->SetInteractionElapsedTime(0);
+			m_isOpenstart = false;
+		}
 	}
 	else
 	{
 		SetOutline(true);
 		spPlayer->SetCanInteractBarState(true);
+		if (true == m_isOpenstart)
+		{
+			spPlayer->SetInteractionElapsedTime(spPlayer->GetInteractionElapsedTime() + (_float)(_dTimeDelta));
+			m_isOpenstart = false;
+		}
 
 		if (GetCheckPointToOtherColor())
 			spPlayer->SetDoneInteractBarState(true);
@@ -158,15 +172,12 @@ void CIronBars::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 		SC_STATICOBJFIND scStaticObjFind;
 		scStaticObjFind.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
 		{
-			if (0 == scStaticObjFind.enable())
-			{
-
-			}
-			else if(1 == scStaticObjFind.enable())
+			if(1 == scStaticObjFind.enable())
 			{
 				spGameInstance->SoundPlayOnce(L"BarLift");
+				m_isOpenstart = true;
 			}
-			else
+			else if(2 == scStaticObjFind.enable())
 			{
 				spGameInstance->StopSound(L"BarLift");
 				spGameInstance->SoundPlayOnce(L"BarLiftStart");

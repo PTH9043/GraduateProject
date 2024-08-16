@@ -32,8 +32,6 @@ public:
 	void ThrowShurikens(_int _shurikenIndex, const _double& _dTimeDelta, const _float3& _dir);
 
 	SHPTR<UParticle>& GetParticle() { return m_spBloodParticle; }
-
-
 	CSHPTRREF<VECTOR<SHPTR<CShurikenThrowing>>> GetShurikens() { return m_spShurikensForThrowing; }
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
@@ -42,6 +40,7 @@ protected:
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
 	virtual HRESULT RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass = true) override;
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) override;
+	virtual void ReceiveNetworkProcessData(const UProcessedData& _ProcessData) override;
 	void CreateParticles();
 private:
 	SHPTR<UParticle>										m_spFootPrintParticle;

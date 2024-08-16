@@ -254,11 +254,16 @@ namespace Core {
 			isPass.store(false, MemoryOrder);
 		}
 
+		void PlusTime(const _double& _dTimeDelta)
+		{
+			fTimer.store(fTimer.load(MemoryOrder) + static_cast<_float>(_dTimeDelta), MemoryOrder);
+		}
+
 		_bool IsPass() { return isPass; }
 		void SetStandardTime(_float _StandardTime) { fStandardTime = _StandardTime; }
 		// Timer
 		std::atomic<_float>		fTimer = 0.f;
-		_float								fStandardTime = 0.f;
+		_float									fStandardTime = 0.f;
 		std::atomic<_bool>		isPass{ false };
 	private:
 		std::memory_order		MemoryOrder;

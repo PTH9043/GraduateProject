@@ -174,9 +174,9 @@ void CMap::LoadStaticObjects()
 		}
 	}
 	m_spStaticObjContainer->emplace("Torch_FBX.bin", _TorchVec);
-	m_spStaticObjContainer->emplace("Bars_FBX.bin", _BarsVec);
-	m_spStaticObjContainer->emplace("Statue_FBX.bin", _StatueVec);
-	m_spStaticObjContainer->emplace("Cores", _CoreVec);
+	//m_spStaticObjContainer->emplace("Bars_FBX.bin", _BarsVec);
+	//m_spStaticObjContainer->emplace("Statue_FBX.bin", _StatueVec);
+	//m_spStaticObjContainer->emplace("Cores", _CoreVec);
 }
 
 void CMap::LoadGuards()

@@ -68,6 +68,9 @@ extern CS_ATTACKDefaultTypeInternal _CS_ATTACK_default_instance_;
 class CS_DAMAGED;
 struct CS_DAMAGEDDefaultTypeInternal;
 extern CS_DAMAGEDDefaultTypeInternal _CS_DAMAGED_default_instance_;
+class CS_DAMAGEDTOMONSTER;
+struct CS_DAMAGEDTOMONSTERDefaultTypeInternal;
+extern CS_DAMAGEDTOMONSTERDefaultTypeInternal _CS_DAMAGEDTOMONSTER_default_instance_;
 class CS_DISCONNECT;
 struct CS_DISCONNECTDefaultTypeInternal;
 extern CS_DISCONNECTDefaultTypeInternal _CS_DISCONNECT_default_instance_;
@@ -89,6 +92,9 @@ extern EQINFODefaultTypeInternal _EQINFO_default_instance_;
 class MOBSTATE;
 struct MOBSTATEDefaultTypeInternal;
 extern MOBSTATEDefaultTypeInternal _MOBSTATE_default_instance_;
+class SC_ANUBISSTATE;
+struct SC_ANUBISSTATEDefaultTypeInternal;
+extern SC_ANUBISSTATEDefaultTypeInternal _SC_ANUBISSTATE_default_instance_;
 class SC_CONNECTSUCCESS;
 struct SC_CONNECTSUCCESSDefaultTypeInternal;
 extern SC_CONNECTSUCCESSDefaultTypeInternal _SC_CONNECTSUCCESS_default_instance_;
@@ -1492,15 +1498,17 @@ class SC_HARLEQUINTHROWING final :
     kPosXFieldNumber = 2,
     kPosYFieldNumber = 3,
     kPosZFieldNumber = 4,
+    kThrowOnFieldNumber = 5,
+    kIndexFieldNumber = 6,
   };
-  // int32 id = 1;
+  // int64 id = 1;
   void clear_id() ;
-  ::int32_t id() const;
-  void set_id(::int32_t value);
+  ::int64_t id() const;
+  void set_id(::int64_t value);
 
   private:
-  ::int32_t _internal_id() const;
-  void _internal_set_id(::int32_t value);
+  ::int64_t _internal_id() const;
+  void _internal_set_id(::int64_t value);
 
   public:
   // float posX = 2;
@@ -1533,13 +1541,33 @@ class SC_HARLEQUINTHROWING final :
   void _internal_set_posz(float value);
 
   public:
+  // int32 throwOn = 5;
+  void clear_throwon() ;
+  ::int32_t throwon() const;
+  void set_throwon(::int32_t value);
+
+  private:
+  ::int32_t _internal_throwon() const;
+  void _internal_set_throwon(::int32_t value);
+
+  public:
+  // int32 index = 6;
+  void clear_index() ;
+  ::int32_t index() const;
+  void set_index(::int32_t value);
+
+  private:
+  ::int32_t _internal_index() const;
+  void _internal_set_index(::int32_t value);
+
+  public:
   // @@protoc_insertion_point(class_scope:SC_HARLEQUINTHROWING)
  private:
   class _Internal;
 
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      2, 4, 0,
+      3, 6, 0,
       0, 2>
       _table_;
   friend class ::google::protobuf::MessageLite;
@@ -1556,10 +1584,12 @@ class SC_HARLEQUINTHROWING final :
                               ::google::protobuf::Arena* arena);
         inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                               ::google::protobuf::Arena* arena, const Impl_& from);
-    ::int32_t id_;
+    ::int64_t id_;
     float posx_;
     float posy_;
     float posz_;
+    ::int32_t throwon_;
+    ::int32_t index_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -1946,6 +1976,205 @@ class SC_CONNECTSUCCESS final :
     ::int64_t id_;
     ::int32_t cellindex_;
     ::int32_t type_;
+    mutable ::google::protobuf::internal::CachedSize _cached_size_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_Protocol_2eproto;
+};// -------------------------------------------------------------------
+
+class SC_ANUBISSTATE final :
+    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:SC_ANUBISSTATE) */ {
+ public:
+  inline SC_ANUBISSTATE() : SC_ANUBISSTATE(nullptr) {}
+  ~SC_ANUBISSTATE() override;
+  template<typename = void>
+  explicit PROTOBUF_CONSTEXPR SC_ANUBISSTATE(::google::protobuf::internal::ConstantInitialized);
+
+  inline SC_ANUBISSTATE(const SC_ANUBISSTATE& from)
+      : SC_ANUBISSTATE(nullptr, from) {}
+  SC_ANUBISSTATE(SC_ANUBISSTATE&& from) noexcept
+    : SC_ANUBISSTATE() {
+    *this = ::std::move(from);
+  }
+
+  inline SC_ANUBISSTATE& operator=(const SC_ANUBISSTATE& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline SC_ANUBISSTATE& operator=(SC_ANUBISSTATE&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetArena() == from.GetArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const SC_ANUBISSTATE& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const SC_ANUBISSTATE* internal_default_instance() {
+    return reinterpret_cast<const SC_ANUBISSTATE*>(
+               &_SC_ANUBISSTATE_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    13;
+
+  friend void swap(SC_ANUBISSTATE& a, SC_ANUBISSTATE& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(SC_ANUBISSTATE* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() != nullptr &&
+        GetArena() == other->GetArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() == other->GetArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(SC_ANUBISSTATE* other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  SC_ANUBISSTATE* New(::google::protobuf::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<SC_ANUBISSTATE>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const SC_ANUBISSTATE& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom( const SC_ANUBISSTATE& from) {
+    SC_ANUBISSTATE::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  ::size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::google::protobuf::internal::ParseContext* ctx) final;
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target, ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
+  void SharedCtor(::google::protobuf::Arena* arena);
+  void SharedDtor();
+  void InternalSwap(SC_ANUBISSTATE* other);
+
+  private:
+  friend class ::google::protobuf::internal::AnyMetadata;
+  static ::absl::string_view FullMessageName() {
+    return "SC_ANUBISSTATE";
+  }
+  protected:
+  explicit SC_ANUBISSTATE(::google::protobuf::Arena* arena);
+  SC_ANUBISSTATE(::google::protobuf::Arena* arena, const SC_ANUBISSTATE& from);
+  public:
+
+  static const ClassData _class_data_;
+  const ::google::protobuf::Message::ClassData*GetClassData() const final;
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kIdFieldNumber = 1,
+    kShieldOnFieldNumber = 2,
+    kShieldTimerFieldNumber = 3,
+  };
+  // int64 id = 1;
+  void clear_id() ;
+  ::int64_t id() const;
+  void set_id(::int64_t value);
+
+  private:
+  ::int64_t _internal_id() const;
+  void _internal_set_id(::int64_t value);
+
+  public:
+  // int32 shieldOn = 2;
+  void clear_shieldon() ;
+  ::int32_t shieldon() const;
+  void set_shieldon(::int32_t value);
+
+  private:
+  ::int32_t _internal_shieldon() const;
+  void _internal_set_shieldon(::int32_t value);
+
+  public:
+  // float shieldTimer = 3;
+  void clear_shieldtimer() ;
+  float shieldtimer() const;
+  void set_shieldtimer(float value);
+
+  private:
+  float _internal_shieldtimer() const;
+  void _internal_set_shieldtimer(float value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:SC_ANUBISSTATE)
+ private:
+  class _Internal;
+
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      2, 3, 0,
+      0, 2>
+      _table_;
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+
+        inline explicit constexpr Impl_(
+            ::google::protobuf::internal::ConstantInitialized) noexcept;
+        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                              ::google::protobuf::Arena* arena);
+        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                              ::google::protobuf::Arena* arena, const Impl_& from);
+    ::int64_t id_;
+    ::int32_t shieldon_;
+    float shieldtimer_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -2554,7 +2783,7 @@ class CS_PRESSKEY final :
                &_CS_PRESSKEY_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    16;
+    17;
 
   friend void swap(CS_PRESSKEY& a, CS_PRESSKEY& b) {
     a.Swap(&b);
@@ -2741,7 +2970,7 @@ class CS_PLAYERORDER final :
                &_CS_PLAYERORDER_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    17;
+    18;
 
   friend void swap(CS_PLAYERORDER& a, CS_PLAYERORDER& b) {
     a.Swap(&b);
@@ -2928,7 +3157,7 @@ class CS_LOGIN final :
                &_CS_LOGIN_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    13;
+    14;
 
   friend void swap(CS_LOGIN& a, CS_LOGIN& b) {
     a.Swap(&b);
@@ -3103,7 +3332,7 @@ class CS_HEAL final :
                &_CS_HEAL_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    15;
+    16;
 
   friend void swap(CS_HEAL& a, CS_HEAL& b) {
     a.Swap(&b);
@@ -3278,7 +3507,7 @@ class CS_DISCONNECT final :
                &_CS_DISCONNECT_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    19;
+    21;
 
   friend void swap(CS_DISCONNECT& a, CS_DISCONNECT& b) {
     a.Swap(&b);
@@ -3394,6 +3623,205 @@ class CS_DISCONNECT final :
   friend struct ::TableStruct_Protocol_2eproto;
 };// -------------------------------------------------------------------
 
+class CS_DAMAGEDTOMONSTER final :
+    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:CS_DAMAGEDTOMONSTER) */ {
+ public:
+  inline CS_DAMAGEDTOMONSTER() : CS_DAMAGEDTOMONSTER(nullptr) {}
+  ~CS_DAMAGEDTOMONSTER() override;
+  template<typename = void>
+  explicit PROTOBUF_CONSTEXPR CS_DAMAGEDTOMONSTER(::google::protobuf::internal::ConstantInitialized);
+
+  inline CS_DAMAGEDTOMONSTER(const CS_DAMAGEDTOMONSTER& from)
+      : CS_DAMAGEDTOMONSTER(nullptr, from) {}
+  CS_DAMAGEDTOMONSTER(CS_DAMAGEDTOMONSTER&& from) noexcept
+    : CS_DAMAGEDTOMONSTER() {
+    *this = ::std::move(from);
+  }
+
+  inline CS_DAMAGEDTOMONSTER& operator=(const CS_DAMAGEDTOMONSTER& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline CS_DAMAGEDTOMONSTER& operator=(CS_DAMAGEDTOMONSTER&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetArena() == from.GetArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const CS_DAMAGEDTOMONSTER& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const CS_DAMAGEDTOMONSTER* internal_default_instance() {
+    return reinterpret_cast<const CS_DAMAGEDTOMONSTER*>(
+               &_CS_DAMAGEDTOMONSTER_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    20;
+
+  friend void swap(CS_DAMAGEDTOMONSTER& a, CS_DAMAGEDTOMONSTER& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(CS_DAMAGEDTOMONSTER* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() != nullptr &&
+        GetArena() == other->GetArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() == other->GetArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(CS_DAMAGEDTOMONSTER* other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  CS_DAMAGEDTOMONSTER* New(::google::protobuf::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<CS_DAMAGEDTOMONSTER>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const CS_DAMAGEDTOMONSTER& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom( const CS_DAMAGEDTOMONSTER& from) {
+    CS_DAMAGEDTOMONSTER::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  ::size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::google::protobuf::internal::ParseContext* ctx) final;
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target, ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
+  void SharedCtor(::google::protobuf::Arena* arena);
+  void SharedDtor();
+  void InternalSwap(CS_DAMAGEDTOMONSTER* other);
+
+  private:
+  friend class ::google::protobuf::internal::AnyMetadata;
+  static ::absl::string_view FullMessageName() {
+    return "CS_DAMAGEDTOMONSTER";
+  }
+  protected:
+  explicit CS_DAMAGEDTOMONSTER(::google::protobuf::Arena* arena);
+  CS_DAMAGEDTOMONSTER(::google::protobuf::Arena* arena, const CS_DAMAGEDTOMONSTER& from);
+  public:
+
+  static const ClassData _class_data_;
+  const ::google::protobuf::Message::ClassData*GetClassData() const final;
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kIdFieldNumber = 1,
+    kEnemyidFieldNumber = 3,
+    kDamageFieldNumber = 2,
+  };
+  // int64 id = 1;
+  void clear_id() ;
+  ::int64_t id() const;
+  void set_id(::int64_t value);
+
+  private:
+  ::int64_t _internal_id() const;
+  void _internal_set_id(::int64_t value);
+
+  public:
+  // int64 enemyid = 3;
+  void clear_enemyid() ;
+  ::int64_t enemyid() const;
+  void set_enemyid(::int64_t value);
+
+  private:
+  ::int64_t _internal_enemyid() const;
+  void _internal_set_enemyid(::int64_t value);
+
+  public:
+  // float damage = 2;
+  void clear_damage() ;
+  float damage() const;
+  void set_damage(float value);
+
+  private:
+  float _internal_damage() const;
+  void _internal_set_damage(float value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:CS_DAMAGEDTOMONSTER)
+ private:
+  class _Internal;
+
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      2, 3, 0,
+      0, 2>
+      _table_;
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+
+        inline explicit constexpr Impl_(
+            ::google::protobuf::internal::ConstantInitialized) noexcept;
+        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                              ::google::protobuf::Arena* arena);
+        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                              ::google::protobuf::Arena* arena, const Impl_& from);
+    ::int64_t id_;
+    ::int64_t enemyid_;
+    float damage_;
+    mutable ::google::protobuf::internal::CachedSize _cached_size_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_Protocol_2eproto;
+};// -------------------------------------------------------------------
+
 class CS_DAMAGED final :
     public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:CS_DAMAGED) */ {
  public:
@@ -3453,7 +3881,7 @@ class CS_DAMAGED final :
                &_CS_DAMAGED_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    18;
+    19;
 
   friend void swap(CS_DAMAGED& a, CS_DAMAGED& b) {
     a.Swap(&b);
@@ -4110,7 +4538,7 @@ class CS_ATTACK final :
                &_CS_ATTACK_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    14;
+    15;
 
   friend void swap(CS_ATTACK& a, CS_ATTACK& b) {
     a.Swap(&b);
@@ -5539,24 +5967,24 @@ inline void SC_STATICOBJFIND::_internal_set_enable(::int32_t value) {
 
 // SC_HARLEQUINTHROWING
 
-// int32 id = 1;
+// int64 id = 1;
 inline void SC_HARLEQUINTHROWING::clear_id() {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.id_ = 0;
+  _impl_.id_ = ::int64_t{0};
 }
-inline ::int32_t SC_HARLEQUINTHROWING::id() const {
+inline ::int64_t SC_HARLEQUINTHROWING::id() const {
   // @@protoc_insertion_point(field_get:SC_HARLEQUINTHROWING.id)
   return _internal_id();
 }
-inline void SC_HARLEQUINTHROWING::set_id(::int32_t value) {
+inline void SC_HARLEQUINTHROWING::set_id(::int64_t value) {
   _internal_set_id(value);
   // @@protoc_insertion_point(field_set:SC_HARLEQUINTHROWING.id)
 }
-inline ::int32_t SC_HARLEQUINTHROWING::_internal_id() const {
+inline ::int64_t SC_HARLEQUINTHROWING::_internal_id() const {
   PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
   return _impl_.id_;
 }
-inline void SC_HARLEQUINTHROWING::_internal_set_id(::int32_t value) {
+inline void SC_HARLEQUINTHROWING::_internal_set_id(::int64_t value) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   ;
   _impl_.id_ = value;
@@ -5629,6 +6057,125 @@ inline void SC_HARLEQUINTHROWING::_internal_set_posz(float value) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   ;
   _impl_.posz_ = value;
+}
+
+// int32 throwOn = 5;
+inline void SC_HARLEQUINTHROWING::clear_throwon() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.throwon_ = 0;
+}
+inline ::int32_t SC_HARLEQUINTHROWING::throwon() const {
+  // @@protoc_insertion_point(field_get:SC_HARLEQUINTHROWING.throwOn)
+  return _internal_throwon();
+}
+inline void SC_HARLEQUINTHROWING::set_throwon(::int32_t value) {
+  _internal_set_throwon(value);
+  // @@protoc_insertion_point(field_set:SC_HARLEQUINTHROWING.throwOn)
+}
+inline ::int32_t SC_HARLEQUINTHROWING::_internal_throwon() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.throwon_;
+}
+inline void SC_HARLEQUINTHROWING::_internal_set_throwon(::int32_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.throwon_ = value;
+}
+
+// int32 index = 6;
+inline void SC_HARLEQUINTHROWING::clear_index() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.index_ = 0;
+}
+inline ::int32_t SC_HARLEQUINTHROWING::index() const {
+  // @@protoc_insertion_point(field_get:SC_HARLEQUINTHROWING.index)
+  return _internal_index();
+}
+inline void SC_HARLEQUINTHROWING::set_index(::int32_t value) {
+  _internal_set_index(value);
+  // @@protoc_insertion_point(field_set:SC_HARLEQUINTHROWING.index)
+}
+inline ::int32_t SC_HARLEQUINTHROWING::_internal_index() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.index_;
+}
+inline void SC_HARLEQUINTHROWING::_internal_set_index(::int32_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.index_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// SC_ANUBISSTATE
+
+// int64 id = 1;
+inline void SC_ANUBISSTATE::clear_id() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.id_ = ::int64_t{0};
+}
+inline ::int64_t SC_ANUBISSTATE::id() const {
+  // @@protoc_insertion_point(field_get:SC_ANUBISSTATE.id)
+  return _internal_id();
+}
+inline void SC_ANUBISSTATE::set_id(::int64_t value) {
+  _internal_set_id(value);
+  // @@protoc_insertion_point(field_set:SC_ANUBISSTATE.id)
+}
+inline ::int64_t SC_ANUBISSTATE::_internal_id() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.id_;
+}
+inline void SC_ANUBISSTATE::_internal_set_id(::int64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.id_ = value;
+}
+
+// int32 shieldOn = 2;
+inline void SC_ANUBISSTATE::clear_shieldon() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.shieldon_ = 0;
+}
+inline ::int32_t SC_ANUBISSTATE::shieldon() const {
+  // @@protoc_insertion_point(field_get:SC_ANUBISSTATE.shieldOn)
+  return _internal_shieldon();
+}
+inline void SC_ANUBISSTATE::set_shieldon(::int32_t value) {
+  _internal_set_shieldon(value);
+  // @@protoc_insertion_point(field_set:SC_ANUBISSTATE.shieldOn)
+}
+inline ::int32_t SC_ANUBISSTATE::_internal_shieldon() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.shieldon_;
+}
+inline void SC_ANUBISSTATE::_internal_set_shieldon(::int32_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.shieldon_ = value;
+}
+
+// float shieldTimer = 3;
+inline void SC_ANUBISSTATE::clear_shieldtimer() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.shieldtimer_ = 0;
+}
+inline float SC_ANUBISSTATE::shieldtimer() const {
+  // @@protoc_insertion_point(field_get:SC_ANUBISSTATE.shieldTimer)
+  return _internal_shieldtimer();
+}
+inline void SC_ANUBISSTATE::set_shieldtimer(float value) {
+  _internal_set_shieldtimer(value);
+  // @@protoc_insertion_point(field_set:SC_ANUBISSTATE.shieldTimer)
+}
+inline float SC_ANUBISSTATE::_internal_shieldtimer() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.shieldtimer_;
+}
+inline void SC_ANUBISSTATE::_internal_set_shieldtimer(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.shieldtimer_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -5979,6 +6526,79 @@ inline void CS_DAMAGED::_internal_set_damage(float value) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   ;
   _impl_.damage_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// CS_DAMAGEDTOMONSTER
+
+// int64 id = 1;
+inline void CS_DAMAGEDTOMONSTER::clear_id() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.id_ = ::int64_t{0};
+}
+inline ::int64_t CS_DAMAGEDTOMONSTER::id() const {
+  // @@protoc_insertion_point(field_get:CS_DAMAGEDTOMONSTER.id)
+  return _internal_id();
+}
+inline void CS_DAMAGEDTOMONSTER::set_id(::int64_t value) {
+  _internal_set_id(value);
+  // @@protoc_insertion_point(field_set:CS_DAMAGEDTOMONSTER.id)
+}
+inline ::int64_t CS_DAMAGEDTOMONSTER::_internal_id() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.id_;
+}
+inline void CS_DAMAGEDTOMONSTER::_internal_set_id(::int64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.id_ = value;
+}
+
+// float damage = 2;
+inline void CS_DAMAGEDTOMONSTER::clear_damage() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.damage_ = 0;
+}
+inline float CS_DAMAGEDTOMONSTER::damage() const {
+  // @@protoc_insertion_point(field_get:CS_DAMAGEDTOMONSTER.damage)
+  return _internal_damage();
+}
+inline void CS_DAMAGEDTOMONSTER::set_damage(float value) {
+  _internal_set_damage(value);
+  // @@protoc_insertion_point(field_set:CS_DAMAGEDTOMONSTER.damage)
+}
+inline float CS_DAMAGEDTOMONSTER::_internal_damage() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.damage_;
+}
+inline void CS_DAMAGEDTOMONSTER::_internal_set_damage(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.damage_ = value;
+}
+
+// int64 enemyid = 3;
+inline void CS_DAMAGEDTOMONSTER::clear_enemyid() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.enemyid_ = ::int64_t{0};
+}
+inline ::int64_t CS_DAMAGEDTOMONSTER::enemyid() const {
+  // @@protoc_insertion_point(field_get:CS_DAMAGEDTOMONSTER.enemyid)
+  return _internal_enemyid();
+}
+inline void CS_DAMAGEDTOMONSTER::set_enemyid(::int64_t value) {
+  _internal_set_enemyid(value);
+  // @@protoc_insertion_point(field_set:CS_DAMAGEDTOMONSTER.enemyid)
+}
+inline ::int64_t CS_DAMAGEDTOMONSTER::_internal_enemyid() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.enemyid_;
+}
+inline void CS_DAMAGEDTOMONSTER::_internal_set_enemyid(::int64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.enemyid_ = value;
 }
 
 // -------------------------------------------------------------------

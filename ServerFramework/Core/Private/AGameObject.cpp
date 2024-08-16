@@ -98,7 +98,21 @@ namespace Core
 	_bool AGameObject::IsCanSee(Vector3 _OtherPos)
 	{
 		SHPTR<ATransform> spTransform = GetTransform();
-		return spTransform->ComputeDistance(_OtherPos) <= SEE_RANGE;
+		_float fLength = Vector3(spTransform->GetPos() - _OtherPos).Length();
+
+		if (fLength <= SEE_RANGE_TICKACTIVE)
+		{
+			if (fLength <= SEE_RANGE)
+			{
+				return true;
+			}
+			SetActive(true);
+		}
+		else
+		{
+			SetActive(false);
+		}
+		return false;
 	}
 
 	_bool AGameObject::IsCanSee(SHPTR<ATransform> _spTransform)

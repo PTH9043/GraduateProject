@@ -38,6 +38,7 @@
     <ClInclude Include="..\Public\CMobLayOutSaver.h" />
     <ClInclude Include="..\Public\CMummy.h" />
     <ClInclude Include="..\Public\CMummyAnimController.h" />
+    <ClInclude Include="..\Public\CPlayerAnimController.h" />
     <ClInclude Include="..\Public\CSacrophagusAnimController.h" />
     <ClInclude Include="..\Public\CSarcophagus.h" />
     <ClInclude Include="..\Public\CServerAdiminstor.h" />
@@ -69,6 +70,7 @@
     <ClCompile Include="..\Private\CMobLayOutSaver.cpp" />
     <ClCompile Include="..\Private\CMummy.cpp" />
     <ClCompile Include="..\Private\CMummyAnimController.cpp" />
+    <ClCompile Include="..\Private\CPlayerAnimController.cpp" />
     <ClCompile Include="..\Private\CSacrophagusAnimController.cpp" />
     <ClCompile Include="..\Private\CSarcophagus.cpp" />
     <ClCompile Include="..\Private\CServerAdiminstor.cpp" />

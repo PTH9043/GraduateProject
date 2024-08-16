@@ -129,11 +129,21 @@ message SC_STATICOBJFIND
 
 message SC_HARLEQUINTHROWING
 {
-	int32 id = 1;
+	int64 id = 1;
 	// Pos
 	float  posX = 2;
 	float  posY = 3;
 	float  posZ = 4;
+	// throw
+	int32 throwOn = 5;
+	int32 index = 6;
+}
+
+message SC_ANUBISSTATE
+{
+	int64 id = 1;
+	int32 shieldOn = 2;
+	float  shieldTimer = 3;
 }
 
 /*
@@ -178,6 +188,13 @@ message CS_DAMAGED
 	int64 id = 1;
 	float damage = 2;
 }
+
+ message CS_DAMAGEDTOMONSTER
+ {
+	 int64 id = 1;
+	 float damage = 2;
+	 int64 enemyid = 3;
+ }
 
 // 연결 해제
 message CS_DISCONNECT 

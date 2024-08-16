@@ -17,6 +17,7 @@
 #include "CModelObjects.h"
 #include "UAnimation.h"
 #include "UProcessedData.h"
+#include "CWarriorPlayer.h"
 
 CMimic::CMimic(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: CMob(_spDevice, _wstrLayer, _eCloneType), 
@@ -132,11 +133,11 @@ void CMimic::CreateParticles()
 
 		tDesc.ParticleParam.stGlobalParticleInfo.fAccTime = 0.f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fDeltaTime = 2.f;
-		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 0.4;///0.4;//	 0.8f
-		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 0.2;///0.2;//	 1.0f
+		tDesc.ParticleParam.stGlobalParticleInfo.fEndScaleParticle = 0.4f;///0.4;//	 0.8f
+		tDesc.ParticleParam.stGlobalParticleInfo.fStartScaleParticle = 0.2f;///0.2;//	 1.0f
 		tDesc.ParticleParam.stGlobalParticleInfo.fMaxLifeTime = 1.5f;
 		tDesc.ParticleParam.stGlobalParticleInfo.fMinLifeTime = 0.1f;
-		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 1.88;//3.25f
+		tDesc.ParticleParam.stGlobalParticleInfo.fMaxSpeed = 1.88f;//3.25f
 		tDesc.ParticleParam.stGlobalParticleInfo.fMinSpeed = 1.88f;
 		tDesc.ParticleParam.stGlobalParticleInfo.iMaxCount = 512;
 		tDesc.ParticleParam.stGlobalParticleInfo.fParticleThickness = 1.f;
@@ -192,7 +193,6 @@ HRESULT CMimic::NativeConstructClone(const VOIDDATAS& _Datas)
 
 	CreateParticles();
 
-
 	UCollider::COLLIDERDESC tDesc;
 	tDesc.vTranslation = _float3(0.f, 0.f, 0.f);
 	tDesc.vScale = _float3(0, 0, 0);
@@ -212,8 +212,6 @@ HRESULT CMimic::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetDeactivationRange(120);
 	SetOutlineByAbility(true);
 	SetOutline(true);
-
-	/*GetTransform()->SetPos(spCell->GetCenterPos());*/
 	return S_OK;
 }
 
@@ -227,96 +225,9 @@ void CMimic::TickActive(const _double& _dTimeDelta)
 	m_spBloodParticle->SetPosition(pos);
 	m_spSlashParticle->SetPosition(pos);
 	_int CurAnimState = GetAnimationController()->GetAnimState();
-	if (true == IsSendDataToBehavior())
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	{
-		_float3 CurrentMobPos = GetTransform()->GetPos();
-		_float3 CurrentPlayerPos = GetTargetPlayer()->GetTransform()->GetPos();
-		SHPTR<UCell> CurrentMobCell = GetCurrentNavi()->GetCurCell();
-		SHPTR<UCell> CurrentPlayerCell = GetTargetPlayer()->GetCurrentNavi()->GetCurCell();
-		const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
-
-		if (CurAnimState == UAnimationController::ANIM_MOVE)
-		{
-			AddTimeAccumulator(_dTimeDelta);
-
-			// A* for moving towards player when player is found
-			if (GetFoundTargetState() && !GetTargetPlayer()->GetDeathState())
-			{
-				if (GetTimeAccumulator() >= 0.5)
-				{
-					SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-					m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, CurrentPlayerPos, CurrentMobCell, CurrentPlayerCell));
-					m_isPathFinding = true;
-					SetTimeAccumulator(0.0);
-				}
-				if (m_isPathFinding)
-				{
-					SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-					if (spNavigation->StepPathFinding(m_PathFindingState))
-					{
-						m_isPathFinding = false;
-						if (m_PathFindingState.pathFound)
-						{
-							m_AstarPath = (spNavigation->OptimizePath(m_PathFindingState.path, CurrentMobPos, CurrentPlayerPos));
-							m_currentPathIndex = 0; // index initialized when path is optimized
-						}
-					}
-				}
-				if (!m_AstarPath.empty())
-				{
-					MoveAlongPath(m_AstarPath, m_currentPathIndex, _dTimeDelta);
-					_float3 direction = CurrentMobPos - GetTargetPos();
-					GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
-				}
-				if (CurAnimName != L"Hit")
-					GetTransform()->TranslateDir(-GetTransform()->GetLook(), _dTimeDelta, 20);
-			}
-			else // patrolling when player is not found
-			{
-				SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-				SHPTR<UCell> spNeighborCell = spNavigation->ChooseRandomNeighborCell(3);
-				if (GetTimeAccumulator() >= 5.0)
-				{
-					m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, spNeighborCell->GetCenterPos(), CurrentMobCell, spNeighborCell));
-					m_isPathFinding = true;
-					SetTimeAccumulator(0.0);
-				}
-				if (m_isPathFinding)
-				{
-					if (spNavigation->StepPathFinding(m_PathFindingState))
-					{
-						m_isPathFinding = false;
-						if (m_PathFindingState.pathFound)
-						{
-							m_AstarPath = (spNavigation->OptimizePath(m_PathFindingState.path, CurrentMobPos, spNeighborCell->GetCenterPos()));
-							m_currentPathIndex = 0; // index initialized when path is optimized
-						}
-					}
-				}
-				if (!m_AstarPath.empty())
-				{
-					MoveAlongPath(m_AstarPath, m_currentPathIndex, _dTimeDelta);
-					_float3 direction = CurrentMobPos - GetTargetPos();
-					GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
-				}
-				GetTransform()->TranslateDir(-GetTransform()->GetLook(), _dTimeDelta, 20);
-			}
-		}
-		else if (CurAnimState == UAnimationController::ANIM_ATTACK)
-		{
-			_float3 direction = CurrentMobPos - CurrentPlayerPos;
-			GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
-		}
-
-		if (CurAnimName == L"Hit")
-		{
-			GetTransform()->TranslateDir(GetTransform()->GetLook(), _dTimeDelta, 10);
-		}
-
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-
-		// death animation
-		if (CurAnimState == UAnimationController::ANIM_DEATH)
+		if (GetDeathState())
 		{
 			_double DeathAnimSpeed = 20;
 			if (GetElapsedTime() == 0)
@@ -333,13 +244,17 @@ void CMimic::TickActive(const _double& _dTimeDelta)
 					m_bDissolveSound = true;
 				}
 			}
-
 		}
 		else
 		{
-			m_bDissolveSound = false;
-			GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
-			SetElapsedTime(0.0);
+			if (true == GetFoundTargetState())
+			{
+				GetAnimModel()->TickAnimation(_dTimeDelta);
+			}
+			else
+			{
+				GetAnimModel()->TickAnimation(0.0);
+			}
 		}
 	}
 	UpdateCollision();
@@ -449,60 +364,40 @@ void CMimic::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 			}
 			};
 
-		auto handleCollisionWithCharacter = [&](UCharacter* pCharacter) {
-			for (const auto& iter : GetColliderContainer())
-			{
-				for (const auto& iter2 : pCharacter->GetColliderContainer())
-				{
-					if (iter2.first == L"Main")
-					{
-						if (iter.second->IsCollision(iter2.second))
-						{
-							SetCollisionState(true);
-							GetTransform()->SetPos(GetTransform()->GetPos() - direction * 7 * _dTimeDelta);
-						}
-						else
-						{
-							SetCollisionState(false);
-						}
-					}
-				}
-			}
-		};
-
-		auto handleCollisionWithStaticObject = [&](CModelObjects* pModelObject) {
-			for (const auto& iter : GetColliderContainer())
-			{
-				for (const auto& iter2 : pModelObject->GetColliderContainer())
-				{
-					if (iter2.first == L"Main")
-					{
-						SetCollidedNormal(iter.second->GetCollisionNormal(iter2.second));
-						if (GetCollidedNormal() != _float3::Zero)
-						{
-							_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 50.0f : 20.0f;
-							ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
-						}
-					}
-				}
-			}
-		};
-
 		if (ePawnType == PAWNTYPE::PAWN_PLAYER)
 		{
 			UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
 			handleCollisionWithPlayer(pCharacter);
 		}
-		else if (ePawnType == PAWNTYPE::PAWN_CHAR)
-		{
-			UCharacter* pCharacter = static_cast<UCharacter*>(_pEnemy.get());
-			handleCollisionWithCharacter(pCharacter);
-		}
-		else if (ePawnType == PAWNTYPE::PAWN_STATICOBJ)
-		{
-			CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
-			handleCollisionWithStaticObject(pModelObject);
-		}
-		}
+	}
 
+}
+
+void CMimic::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
+{
+	__super::ReceiveNetworkProcessData(_ProcessData);
+
+	switch (_ProcessData.GetDataType())
+	{
+	case TAG_SC_STATICOBJFIND:
+	{
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		SHPTR<CWarriorPlayer> spPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
+
+		SC_STATICOBJFIND scStaticObjFind;
+		scStaticObjFind.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
+		{
+			SetOutline(true);
+			SetIfOutlineScale(true);
+			if (!m_bisOpen)
+				spPlayer->SetCanInteractChestState(true);
+			if (1 == scStaticObjFind.enable() && !m_bisOpen) {
+				SetOpeningState(true);
+				spGameInstance->SoundPlayOnce(L"ChestOpen");
+			}
+		}
+		scStaticObjFind.Clear();
+	}
+	break;
+	}
 }

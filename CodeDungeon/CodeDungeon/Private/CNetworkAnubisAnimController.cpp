@@ -11,42 +11,18 @@
 #include "UMat.h"
 
 CNetworkAnubisAnimController::CNetworkAnubisAnimController(CSHPTRREF<UDevice> _spDevice)
-    : CMonsterAnimController(_spDevice),
-    m_bAttackMode{ false },
-    m_bTauntMode{ false },
-    m_dlastHitTime{ 0 },
-    m_dlastAttackTime{ 0 },
-    m_bstartlastHitTime{ false },
-    m_blastAttackWasFirst{ false },
-    m_dIdleTimer{ 0 },
-    m_bFoundPlayerFirsttime{ false },
-    m_didleRandomValueChoosingTimer{ 0 },
-    m_iRandomValue{ 0 },
-    m_dRecvAnimDuration{ 0 },
-    m_iRandomValueforAttack{ 0 },
-    m_bAttackStart{ false },
-    m_dTimerForFireCircle{ 0 },
-    m_dShieldCooltime{ 3 }
+    : CMonsterAnimController(_spDevice), m_dTimerForFireCircle{0},
+    m_pAttack1Channel{ nullptr }, m_pAttack2Channel{ nullptr }, m_pSwhoosh1Channel{ nullptr },
+    m_pSwhoosh2Channel{ nullptr }, m_pTauntChannel{ nullptr }, m_iRandomNumforhit{ 0 },
+    m_pHitChannel{ nullptr }, m_isPlayAttackSound1{ false }, m_isPlayAttackSound2{ false }, m_isPlayHitSound{ false }
 {
 }
 
 CNetworkAnubisAnimController::CNetworkAnubisAnimController(const CNetworkAnubisAnimController& _rhs)
-    : CMonsterAnimController(_rhs),
-    m_bAttackMode{ false },
-    m_bTauntMode{ false },
-    m_dlastHitTime{ 0 },
-    m_dlastAttackTime{ 0 },
-    m_bstartlastHitTime{ false },
-    m_blastAttackWasFirst{ false },
-    m_dIdleTimer{ 0 },
-    m_bFoundPlayerFirsttime{ false },
-    m_didleRandomValueChoosingTimer{ 0 },
-    m_iRandomValue{ 0 },
-    m_dRecvAnimDuration{ 0 },
-    m_iRandomValueforAttack{ 0 },
-    m_bAttackStart{ false },
-    m_dTimerForFireCircle{ 0 },
-    m_dShieldCooltime{ 3 }
+    : CMonsterAnimController(_rhs), m_dTimerForFireCircle{ 0 },
+    m_pAttack1Channel{ nullptr }, m_pAttack2Channel{ nullptr }, m_pSwhoosh1Channel{ nullptr },
+    m_pSwhoosh2Channel{ nullptr }, m_pTauntChannel{ nullptr }, m_iRandomNumforhit{ 0 },
+    m_pHitChannel{ nullptr }, m_isPlayAttackSound1{ false }, m_isPlayAttackSound2{ false }, m_isPlayHitSound{ false }
 {
 }
 
@@ -70,28 +46,77 @@ HRESULT CNetworkAnubisAnimController::NativeConstructClone(const VOIDDATAS& _tDa
 
 void CNetworkAnubisAnimController::Tick(const _double& _dTimeDelta)
 {
+    SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+    static const _tchar* ENEMYHIT1_SOUNDNAME = L"enemy_hit1";
+    static const _tchar* ENEMYHIT2_SOUNDNAME = L"enemy_hit2";
+    static const _tchar* ENEMYHIT3_SOUNDNAME = L"enemy_hit3";
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    static std::uniform_int_distribution<> dis_hit(0, 2);
+
     SHPTR<CAnubis> spAnubis = m_wpAnubisMob.lock();
     SHPTR<UAnimModel> spAnimModel = spAnubis->GetAnimModel();
     const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
 
+    _bool isHit = spAnubis->IsDamaged();
+    if (true == isHit)
+    {
+        _int Random = dis_hit(gen);
+
+        SHPTR<USound> spHitSound = nullptr;
+        if (nullptr == spHitSound)
+        {
+            if (0 == Random)
+                spHitSound = spGameInstance->BringSound(ENEMYHIT1_SOUNDNAME);
+            else if (1 == Random)
+                spHitSound = spGameInstance->BringSound(ENEMYHIT2_SOUNDNAME);
+            else
+                spHitSound = spGameInstance->BringSound(ENEMYHIT3_SOUNDNAME);
+
+            spHitSound->PlayWithInputChannel(&m_pHitChannel);
+        }
+        else
+        {
+            if (false == spHitSound->IsSoundPlay(m_pHitChannel))
+            {
+                spHitSound->PlayWithInputChannel(&m_pHitChannel);
+            }
+            else
+            {
+                if (0 == Random)
+                    spHitSound = spGameInstance->BringSound(ENEMYHIT1_SOUNDNAME);
+                else if (1 == Random)
+                    spHitSound = spGameInstance->BringSound(ENEMYHIT2_SOUNDNAME);
+                else
+                    spHitSound = spGameInstance->BringSound(ENEMYHIT3_SOUNDNAME);
+
+                spHitSound->PlayWithInputChannel(&m_pHitChannel);
+            }
+        }
+    }
+
     if (CurAnimName == L"Attack3")
     {
-        if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.65 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.66)
+        if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.65 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.7)
         {
-            m_dShieldCooltime = 0;
             spAnubis->SetShieldState(true);
         }
     }
 
     if (CurAnimName == L"Cast")
     {
-        if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.65 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.66)
+        if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.65 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.7)
         {
             spAnubis->SetFireAttackState(true);
         }
     }
     if (spAnubis->GetFireAttackState())
     {
+        if (m_dTimerForFireCircle == 0)
+        {
+            spGameInstance->SoundPlayOnce(L"FireWarm");
+        }
         m_dTimerForFireCircle += _dTimeDelta;
         float scale_factor = 1 + 100 * m_dTimerForFireCircle * m_dTimerForFireCircle;
         if (m_dTimerForFireCircle < 1)
@@ -111,4 +136,20 @@ void CNetworkAnubisAnimController::Tick(const _double& _dTimeDelta)
             spAnubis->SetFireAttackState(false);
         }
     }
+
+    // Check for death
+    if (spAnubis->GetHealth() <= 0)
+    {
+        spAnubis->SetDeathState(true);
+    }
+
+    // Handle death state
+    if (spAnubis->GetDeathState())
+    {
+        spAnimModel->UpdateAttackData(false, spAnimModel->GetAttackCollider());
+        UpdateState(spAnimModel, ANIM_DEATH, L"DEATH");
+    }
+
+    // Tick event
+    spAnimModel->TickEvent(spAnubis.get(), GetTrigger(), _dTimeDelta);
 }

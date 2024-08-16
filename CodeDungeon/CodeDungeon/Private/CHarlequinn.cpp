@@ -18,6 +18,8 @@
 #include "UAnimation.h"
 #include "CShuriken.h"
 #include "CShurikenThrowing.h"
+#include "UProcessedData.h"
+#include "CShuriken.h"
 
 CHarlequinn::CHarlequinn(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: CMob(_spDevice, _wstrLayer, _eCloneType),
@@ -277,6 +279,7 @@ HRESULT CHarlequinn::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetOutlineByAbility(true);
 	SetOutline(true);
 	SetOutlineColor(_float3(1, 1, 0));
+	SetMobType(TAG_HARLEQUINN);
 	return S_OK;
 }
 
@@ -287,163 +290,83 @@ void CHarlequinn::ThrowShurikens(_int _shurikenIndex, const _double& _dTimeDelta
 
 void CHarlequinn::TickActive(const _double& _dTimeDelta)
 {
-
+	GetAnimationController()->Tick(_dTimeDelta);
+	__super::TickActive(_dTimeDelta);
 	_float3 pos = GetTransform()->GetPos();
 	pos.y += 5;
+
 	m_spBloodParticle->SetPosition(pos);
 	m_spSlashParticle->SetPosition(pos);
 	m_spAttackParticle->SetPosition(pos);
 	m_spAttackParticleTwo->SetPosition(pos);
-	__super::TickActive(_dTimeDelta);
-	GetAnimationController()->Tick(_dTimeDelta);
-	_int CurAnimState = GetAnimationController()->GetAnimState();
-	if (true == IsSendDataToBehavior())
+
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	if (GetDeathState())
 	{
-		const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
-		_float3 CurrentMobPos = GetTransform()->GetPos();
-		_float3 CurrentPlayerPos = GetTargetPlayer()->GetTransform()->GetPos();
-		SHPTR<UCell> CurrentMobCell = GetCurrentNavi()->GetCurCell();
-		SHPTR<UCell> CurrentPlayerCell = GetTargetPlayer()->GetCurrentNavi()->GetCurCell();
+		_double DeathAnimSpeed = 20;
+		SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
+		_double DeathTimeArcOpenEnd = 50;
+		if (GetElapsedTime() < DeathTimeArcOpenEnd) {
+			GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
+			GetAnimModel()->UpdateDissolveTImer(_dTimeDelta * 1.2f);
+			if (!m_bDissolveSound) {
+				spGameInstance->SoundPlayOnce(L"DissolveSound2");
+				m_bDissolveSound = true;
+			}
+			for (auto& iter : (*m_spShurikensForThrowing))
+				iter->SetActive(false);
 
-
+			for (auto& iter : m_spShurikens)
+			{
+				if (nullptr != iter)
+					iter->SetActive(false);
+			}
+		}
+	}
+	else
+	{
+		_int CurAnimState = GetAnimationController()->GetAnimState();
 		if (CurAnimState == UAnimationController::ANIM_MOVE)
 		{
 			AddTimeAccumulator(_dTimeDelta);
-
 			// A* for moving towards player when player is found
-			if (GetFoundTargetState() && !GetTargetPlayer()->GetDeathState())
+			if (GetFoundTargetState())
 			{
 				m_spFootPrintParticle->SetActive(true);
 				{
 					*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 4;
 					*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.355f;
 					_float3 pos = GetTransform()->GetPos() + GetTransform()->GetRight();
-					pos.y += 1.0;
+					pos.y += 0.5;
 					_float3 Look = GetTransform()->GetLook();
-					_float3 Right = 1.2 * GetTransform()->GetRight();
+					_float3 Right = 1.2f * GetTransform()->GetRight();
 					//pos -= 3 * Look;
 					m_spFootPrintParticle->SetPosition(pos);
 					m_spFootPrintParticle->SetDirection(Right);
 				}
-				//SetOutline(true);
-				if (GetTimeAccumulator() >= 1.0)
-				{
-					SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-					m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, CurrentPlayerPos, CurrentMobCell, CurrentPlayerCell));
-					m_isPathFinding = true;
-					SetTimeAccumulator(0.0);
-				}
-				if (m_isPathFinding)
-				{
-					SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-					if (spNavigation->StepPathFinding(m_PathFindingState))
-					{
-						m_isPathFinding = false;
-						if (m_PathFindingState.pathFound)
-						{
-							m_AstarPath = (spNavigation->OptimizePath(m_PathFindingState.path, CurrentMobPos, CurrentPlayerPos));
-							m_currentPathIndex = 0; // index initialized when path is optimized
-						}
-					}
-				}
-				if (!m_AstarPath.empty())
-				{
-					MoveAlongPath(m_AstarPath, m_currentPathIndex, _dTimeDelta);
-					_float3 direction = CurrentMobPos - GetTargetPos();
-					GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
-				}
+				SetOutline(true);
 			}
 			else // patrolling when player is not found
 			{
-				//SetOutline(false);
-
-				SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-				SHPTR<UCell> spNeighborCell = spNavigation->ChooseRandomNeighborCell(3);
-				if (GetTimeAccumulator() >= 5.0)
-				{
-					m_PathFindingState = (spNavigation->StartPathFinding(CurrentMobPos, spNeighborCell->GetCenterPos(), CurrentMobCell, spNeighborCell));
-					m_isPathFinding = true;
-					SetTimeAccumulator(0.0);
-				}
-				if (m_isPathFinding)
-				{
-					if (spNavigation->StepPathFinding(m_PathFindingState))
-					{
-						m_isPathFinding = false;
-						if (m_PathFindingState.pathFound)
-						{
-							m_AstarPath = (spNavigation->OptimizePath(m_PathFindingState.path, CurrentMobPos, spNeighborCell->GetCenterPos()));
-							m_currentPathIndex = 0; // index initialized when path is optimized
-						}
-					}
-				}
-				if (!m_AstarPath.empty())
-				{
-					MoveAlongPath(m_AstarPath, m_currentPathIndex, _dTimeDelta);
-					_float3 direction = CurrentMobPos - GetTargetPos();
-					GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
-				}
+				SetOutline(false);
 			}
-
 		}
+		else if (CurAnimState == UAnimationController::ANIM_ATTACK) {}
 		else {
 			m_spFootPrintParticle->SetActive(false);
 			*m_spFootPrintParticle->GetParticleSystem()->GetAddParticleAmount() = 0;
 			*m_spFootPrintParticle->GetParticleSystem()->GetCreateInterval() = 0.8f;
 		}
-
-		if (CurAnimName == L"Get Hit")
-		{
-			_float3 direction = CurrentMobPos - CurrentPlayerPos;
-			GetTransform()->SetDirectionFixedUp(direction, _dTimeDelta, 5);
-		}
-
-		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-
-		// death animation
-		if (CurAnimState == UAnimationController::ANIM_DEATH)
-		{
-			_double DeathAnimSpeed = 20;
-			SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
-			_double DeathTimeArcOpenEnd = 50;
-			if (GetElapsedTime() < DeathTimeArcOpenEnd) {
-				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
-				GetAnimModel()->UpdateDissolveTImer(_dTimeDelta * 1.2f);
-				if (!m_bDissolveSound) {
-					spGameInstance->SoundPlayOnce(L"DissolveSound2");
-					m_bDissolveSound = true;
-				}
-			}
-		}
-		else
-		{
-			m_bDissolveSound = false;
-			GetAnimModel()->TickAnimChangeTransform(GetTransform(), _dTimeDelta);
-			SetElapsedTime(0.0);
-		}
+		SetElapsedTime(0.f);
 	}
 
+	GetAnimModel()->TickAnimation(_dTimeDelta);
 	UpdateCollision();
 }
 
 void CHarlequinn::LateTickActive(const _double& _dTimeDelta)
 {
 	__super::LateTickActive(_dTimeDelta);
-
-	if (true == IsSendDataToBehavior())
-	{
-		const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
-
-		if (CurAnimName == L"Jump Forward" || CurAnimName == L"Attack 4" || CurAnimName == L"Attack 3")
-		{
-
-		}
-		else
-		{
-			_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
-			GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
-		}
-	}
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	_int CurAnimState = GetAnimationController()->GetAnimState();
@@ -489,7 +412,7 @@ void CHarlequinn::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta
 	_float3 direction = (_pEnemy->GetTransform()->GetPos() - GetTransform()->GetPos());
 	direction.Normalize();
 
-	_float3 forward = -GetTransform()->GetLook();
+	_float3 forward = GetTransform()->GetLook();
 	_float dotProduct = forward.Dot(direction);
 
 	auto handleCollisionWithPlayer = [&](UCharacter* pCharacter) {
@@ -502,7 +425,7 @@ void CHarlequinn::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta
 					//등을 맞았을 때에만
 					if (dotProduct < -0.5f)
 					{
-						
+						SendCollisionData(_pEnemy.get(), 200);
 					}
 					else
 					{
@@ -516,7 +439,7 @@ void CHarlequinn::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta
 						m_spAttackParticleTwo->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 						// Decrease health on hit
 							// Decrease health on hit
-						SendCollisionData(_pEnemy.get(), 100);
+						SendCollisionData(_pEnemy.get(), 50);
 					}
 				}
 
@@ -600,4 +523,9 @@ void CHarlequinn::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta
 		CModelObjects* pModelObject = static_cast<CModelObjects*>(_pEnemy.get());
 		handleCollisionWithStaticObject(pModelObject);
 	}
+}
+
+void CHarlequinn::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
+{
+	__super::ReceiveNetworkProcessData(_ProcessData);
 }

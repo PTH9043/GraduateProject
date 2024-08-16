@@ -64,11 +64,11 @@ void CMinotaurAnimController::Tick(const _double& _dTimeDelta)
 {
     SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis_patrol(0, 3);
-    std::uniform_int_distribution<> dis_attack(0, 3);
-    std::uniform_int_distribution<> dis_hit(0, 2);
+    static std::random_device rd;
+    static  std::mt19937 gen(rd());
+    static  std::uniform_int_distribution<> dis_patrol(0, 3);
+    static std::uniform_int_distribution<> dis_attack(0, 3);
+    static  std::uniform_int_distribution<> dis_hit(0, 2);
 
     ClearTrigger();
     SetAnimState(-1);

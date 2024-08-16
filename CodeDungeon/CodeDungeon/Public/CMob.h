@@ -18,8 +18,8 @@ public:
     CMob(const CMob& _rhs);
     DESTRUCTOR(CMob)
 
-        CLONE_MACRO(CMob, "CMob::CloneToFailed")
-        virtual void Free() override;
+    CLONE_MACRO(CMob, "CMob::CloneToFailed")
+    virtual void Free() override;
     virtual HRESULT NativeConstruct() override;
     virtual HRESULT NativeConstructClone(const VOIDDATAS& _Datas) override;
 protected:
@@ -61,6 +61,11 @@ public:
 
     const _bool IsSendDataToBehavior() const { return m_isSendDataToBehavior; }
     void SetSendDataToBehavior(const _bool _isRecvDataToBehavior) { this->m_isSendDataToBehavior = _isRecvDataToBehavior; }
+
+    const _int GetMobType() const { return m_iMobType; }
+    void SetMobType(const _int _MobType) { this->m_iMobType = _MobType; }
+
+    const _bool IsMobAlreadyDeadState() const { return m_isMobAlreadyDeadState; }
 private:
     _float                            m_fDistancefromNearestPlayer;
     _bool                             m_bFoundTarget;
@@ -79,6 +84,8 @@ private:
 
     _float3                           m_vMovePos;
     _bool                              m_isRecvMovePosition;
+    _int                                 m_iMobType;
+    _bool                              m_isMobAlreadyDeadState;
 };
 
 END

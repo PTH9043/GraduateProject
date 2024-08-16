@@ -26,7 +26,9 @@ CMob::CMob(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONE
 	m_fActivationRange{ 0 },
 	m_fDeactivationRange{0},
 	m_isSendDataToBehavior{false},
-	m_isFirstFoundState{ false }
+	m_isFirstFoundState{ false },
+	m_iMobType{0},
+	m_isMobAlreadyDeadState{ false }
 {
 }
 
@@ -41,7 +43,9 @@ CMob::CMob(const CMob& _rhs)
 	m_fActivationRange{ 0 },
 	m_fDeactivationRange{ 0 },
 	m_isSendDataToBehavior{ false },
-	m_isFirstFoundState{ false }
+	m_isFirstFoundState{ false },
+	m_iMobType{0},
+	m_isMobAlreadyDeadState{false}
 {
 }
 
@@ -67,7 +71,6 @@ HRESULT CMob::NativeConstructClone(const VOIDDATAS& _Datas)
 	GetCurrentNavi()->FindCell(GetTransform()->GetPos());
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	spGameInstance->AddCollisionPawnList(ThisShared<UPawn>());
-	SetActive(false);
 #else
 	GetTransform()->SetScale({ 0.7f, 0.7f, 0.7f });
 	SetTargetPlayer(nullptr);
@@ -79,58 +82,16 @@ HRESULT CMob::NativeConstructClone(const VOIDDATAS& _Datas)
 void CMob::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
-
-//	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	//_float3 CurrentMobPos = GetTransform()->GetPos();
-
-	//if (nullptr == m_spTargetPlayer)
-	//{
-	//	m_spTargetPlayer = spGameInstance->FindPlayerToDistance(CurrentMobPos);
-	//}
-
-	//if (m_spTargetPlayer)
-	//{
-	//	_float3 CurrentPlayerPos = m_spTargetPlayer->GetTransform()->GetPos();
-	//	CalculateDistanceBetweenPlayers(CurrentPlayerPos, CurrentMobPos);
-	//	SearchForPlayers();
-	//}
 }
 
 void CMob::LateTickActive(const _double& _dTimeDelta)
 {
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
-	if (true == IsSendDataToBehavior())
-	{
-		_float3 vPosition{ GetTransform()->GetPos() };
-		SHPTR<UCell> newCell{};
-
-		if (false == GetCurrentNavi()->IsMove(vPosition, REF_OUT newCell))
-		{
-			_float3 closestPoint = GetCurrentNavi()->ClampPositionToCell(vPosition);
-			GetTransform()->SetPos(_float3(closestPoint.x, vPosition.y, closestPoint.z));
-			vPosition = GetTransform()->GetPos();
-		}
-
-		_float newHeight = GetCurrentNavi()->ComputeHeight(vPosition);
-		GetTransform()->SetPos(_float3(vPosition.x, newHeight, vPosition.z));
-
-		__super::LateTickActive(_dTimeDelta);
-	}
 }
 
 void CMob::NetworkTickActive(const _double& _dTimeDelta)
 {
-	_int CurAnimState = GetAnimationController()->GetAnimState();
-	if (true == IsSendDataToBehavior() && CurAnimState != UAnimationController::ANIM_DEATH)
-	{
-		if (true == GetFoundTargetState() || true == m_isFirstFoundState)
-		{
-#ifdef _ENABLE_PROTOBUFF
-			SendMobStateData();
-#endif
-			m_isFirstFoundState = true;
-		}
-	}
+	SetFoundTargetState(false);
 }
 
 HRESULT CMob::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
@@ -165,10 +126,22 @@ void CMob::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 	{
 		static MOBSTATE MobState;
 		MobState.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
-		GetAnimationController()->ReceiveNetworkProcessData(&MobState);
-		GetTransform()->SetPos(_float3{ MobState.posx(), MobState.posy(), MobState.posz() });
-		GetTransform()->RotateFix(_float3{ MobState.rotatex(), MobState.rotatey(), MobState.rotatez() });
-		SetFoundTargetState(MobState.foundon());
+
+		if (false == MobState.triggeron())
+		{
+			GetAnimationController()->ReceiveNetworkProcessData(&MobState);
+			GetTransform()->SetPos(_float3{ MobState.posx(), MobState.posy(), MobState.posz() });
+			GetTransform()->RotateFix(_float3{ MobState.rotatex(), MobState.rotatey(), MobState.rotatez() });
+			SetFoundTargetState(MobState.foundon());
+		}
+		else
+		{
+			GetAnimModel()->UpdateCurAnimationToRatio(MobState.animtime());
+			SetDeathState(true);
+			SetActive(false);
+			m_isMobAlreadyDeadState = true;
+			SetElapsedTime(1000.0);
+		}
 		MobState.Clear();
 	}
 	break;
@@ -179,8 +152,13 @@ void CMob::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 		if (0 >= scDamaged.hp())
 		{
 			SetDeathState(true);
+			SetHealth(0);
 		}
-		SetDamaged(true);
+		else
+		{
+			SetHealth(scDamaged.hp());
+			SetDamaged(true);
+		}
 		scDamaged.Clear();
 	}
 	break;

@@ -12,43 +12,17 @@
 
 CNetworkHarlequinnAnimController::CNetworkHarlequinnAnimController(CSHPTRREF<UDevice> _spDevice)
     : CMonsterAnimController(_spDevice),
-    m_bAttackMode{ false },
-    m_dlastHitTime{ 0 },
-    m_dlastAttackTime{ 0 },
-    m_bstartlastHitTime{ false },
-    m_blastAttackWasFirst{ false },
-    m_dIdleTimer{ 0 },
-    m_didleRandomValueChoosingTimerforPatrol{ 0 },
-    m_bAttack1FirstTime{ false },
-    m_iRandomValueforPatrol{ 0 },
-    m_bTauntMode{ false },
-    m_f3ThrowingPos{},
-    m_arrThrowingDir{},
-    m_bDodge{ false },
-    m_bWillWalkUntilCloseRange{ false },
-    m_bWillJumpToCloseRange{ false },
-    m_iRandomValueforDodge{}
+    m_pAttack1Channel{ nullptr }, m_pAttack2Channel{ nullptr }, m_pSwhoosh1Channel{ nullptr },
+    m_pSwhoosh2Channel{ nullptr }, m_pTauntChannel{ nullptr }, m_iRandomNumforhit{ 0 },
+    m_pHitChannel{ nullptr }, m_isPlayAttackSound1{ false }, m_isPlayAttackSound2{ false }, m_isPlayHitSound{ false }
 {
 }
 
 CNetworkHarlequinnAnimController::CNetworkHarlequinnAnimController(const CNetworkHarlequinnAnimController& _rhs)
     : CMonsterAnimController(_rhs),
-    m_bAttackMode{ false },
-    m_dlastHitTime{ 0 },
-    m_dlastAttackTime{ 0 },
-    m_bstartlastHitTime{ false },
-    m_blastAttackWasFirst{ false },
-    m_dIdleTimer{ 0 },
-    m_didleRandomValueChoosingTimerforPatrol{ 0 },
-    m_bAttack1FirstTime{ false },
-    m_iRandomValueforPatrol{ 0 },
-    m_bTauntMode{ false },
-    m_f3ThrowingPos{},
-    m_arrThrowingDir{},
-    m_bDodge{ false },
-    m_bWillWalkUntilCloseRange{ false },
-    m_bWillJumpToCloseRange{ false },
-    m_iRandomValueforDodge{}
+    m_pAttack1Channel{ nullptr }, m_pAttack2Channel{ nullptr }, m_pSwhoosh1Channel{ nullptr },
+    m_pSwhoosh2Channel{ nullptr }, m_pTauntChannel{ nullptr }, m_iRandomNumforhit{ 0 },
+    m_pHitChannel{ nullptr }, m_isPlayAttackSound1{ false }, m_isPlayAttackSound2{ false }, m_isPlayHitSound{ false }
 {
 }
 
@@ -72,16 +46,63 @@ HRESULT CNetworkHarlequinnAnimController::NativeConstructClone(const VOIDDATAS& 
 
 void CNetworkHarlequinnAnimController::Tick(const _double& _dTimeDelta)
 {
+    SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    static std::uniform_int_distribution<> dis_hit(0, 2);
+
+    static const _tchar* ENEMYHIT1_SOUNDNAME = L"enemy_hit1";
+    static const _tchar* ENEMYHIT2_SOUNDNAME = L"enemy_hit2";
+    static const _tchar* ENEMYHIT3_SOUNDNAME = L"enemy_hit3";
+
+
     SHPTR<CHarlequinn> spHarlequinn = m_wpHarlequinnMob.lock();
     SHPTR<UAnimModel> spAnimModel = spHarlequinn->GetAnimModel();
     const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
+
+    _bool isHit = spHarlequinn->IsDamaged();
+    if (true == isHit)
+    {
+        _int Random = dis_hit(gen);
+
+        SHPTR<USound> spHitSound = nullptr;
+        if (nullptr == spHitSound)
+        {
+            if (0 == Random)
+                spHitSound = spGameInstance->BringSound(ENEMYHIT1_SOUNDNAME);
+            else if (1 == Random)
+                spHitSound = spGameInstance->BringSound(ENEMYHIT2_SOUNDNAME);
+            else
+                spHitSound = spGameInstance->BringSound(ENEMYHIT3_SOUNDNAME);
+
+            spHitSound->PlayWithInputChannel(&m_pHitChannel);
+        }
+        else
+        {
+            if (false == spHitSound->IsSoundPlay(m_pHitChannel))
+            {
+                spHitSound->PlayWithInputChannel(&m_pHitChannel);
+            }
+            else
+            {
+                if (0 == Random)
+                    spHitSound = spGameInstance->BringSound(ENEMYHIT1_SOUNDNAME);
+                else if (1 == Random)
+                    spHitSound = spGameInstance->BringSound(ENEMYHIT2_SOUNDNAME);
+                else
+                    spHitSound = spGameInstance->BringSound(ENEMYHIT3_SOUNDNAME);
+
+                spHitSound->PlayWithInputChannel(&m_pHitChannel);
+            }
+        }
+    }
 
     if (CurAnimName == L"Attack 1")
     {
         m_f3ThrowingPos = spHarlequinn->GetTransform()->GetPos();
         m_f3ThrowingPos.y += 7.f;
 
-        if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.2 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.22)
+        if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.2 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.25)
         {
             for (int i = 0; i < 3; i++)
             {
@@ -89,7 +110,7 @@ void CNetworkHarlequinnAnimController::Tick(const _double& _dTimeDelta)
                 {
                     if (i == 0)
                     {
-                        _float3 currentLookDir = -spHarlequinn->GetTransform()->GetLook();
+                        _float3 currentLookDir = spHarlequinn->GetTransform()->GetLook();
                         _float angleRadians = 10 * (DirectX::XM_PI / 180.0f);;
                         _float cosAngle = std::cos(angleRadians);
                         _float sinAngle = std::sin(angleRadians);
@@ -101,10 +122,10 @@ void CNetworkHarlequinnAnimController::Tick(const _double& _dTimeDelta)
                         m_arrThrowingDir[i] = _float3(newX, currentLookDir.y, newZ);
                     }
                     else if (i == 1)
-                        m_arrThrowingDir[i] = -spHarlequinn->GetTransform()->GetLook();
+                        m_arrThrowingDir[i] = spHarlequinn->GetTransform()->GetLook();
                     else if (i == 2)
                     {
-                        _float3 currentLookDir = -spHarlequinn->GetTransform()->GetLook();
+                        _float3 currentLookDir = spHarlequinn->GetTransform()->GetLook();
                         _float angleRadians = -10 * (DirectX::XM_PI / 180.0f);
                         _float cosAngle = std::cos(angleRadians);
                         _float sinAngle = std::sin(angleRadians);
@@ -117,12 +138,12 @@ void CNetworkHarlequinnAnimController::Tick(const _double& _dTimeDelta)
                     }
 
                     (*spHarlequinn->GetShurikens())[i]->GetTransform()->SetPos(m_f3ThrowingPos);
-                    (*spHarlequinn->GetShurikens())[i]->GetTransform()->SetDirection(-spHarlequinn->GetTransform()->GetRight());
+                    (*spHarlequinn->GetShurikens())[i]->GetTransform()->SetDirection(spHarlequinn->GetTransform()->GetRight());
                     (*spHarlequinn->GetShurikens())[i]->SetThrow(true);
                 }
             }
         }
-        else if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.6 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.62)
+        else if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.6 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.65)
         {
             for (int i = 3; i < 6; i++)
             {
@@ -130,7 +151,7 @@ void CNetworkHarlequinnAnimController::Tick(const _double& _dTimeDelta)
                 {
                     if (i == 3)
                     {
-                        _float3 currentLookDir = -spHarlequinn->GetTransform()->GetLook();
+                        _float3 currentLookDir = spHarlequinn->GetTransform()->GetLook();
                         _float angleRadians = 10 * (DirectX::XM_PI / 180.0f);
                         _float cosAngle = std::cos(angleRadians);
                         _float sinAngle = std::sin(angleRadians);
@@ -142,10 +163,10 @@ void CNetworkHarlequinnAnimController::Tick(const _double& _dTimeDelta)
                         m_arrThrowingDir[i] = _float3(newX, currentLookDir.y, newZ);
                     }
                     else if (i == 4)
-                        m_arrThrowingDir[i] = -spHarlequinn->GetTransform()->GetLook();
+                        m_arrThrowingDir[i] = spHarlequinn->GetTransform()->GetLook();
                     else if (i == 5)
                     {
-                        _float3 currentLookDir = -spHarlequinn->GetTransform()->GetLook();
+                        _float3 currentLookDir = spHarlequinn->GetTransform()->GetLook();
                         _float angleRadians = -10 * (DirectX::XM_PI / 180.0f);;
                         _float cosAngle = std::cos(angleRadians);
                         _float sinAngle = std::sin(angleRadians);
@@ -157,7 +178,7 @@ void CNetworkHarlequinnAnimController::Tick(const _double& _dTimeDelta)
                         m_arrThrowingDir[i] = _float3(newX, currentLookDir.y, newZ);
                     }
                     (*spHarlequinn->GetShurikens())[i]->GetTransform()->SetPos(m_f3ThrowingPos);
-                    (*spHarlequinn->GetShurikens())[i]->GetTransform()->SetDirection(-spHarlequinn->GetTransform()->GetRight());
+                    (*spHarlequinn->GetShurikens())[i]->GetTransform()->SetDirection(spHarlequinn->GetTransform()->GetRight());
                     (*spHarlequinn->GetShurikens())[i]->SetThrow(true);
                 }
             }
@@ -168,7 +189,7 @@ void CNetworkHarlequinnAnimController::Tick(const _double& _dTimeDelta)
     {
         m_f3ThrowingPos = spHarlequinn->GetTransform()->GetPos();
         m_f3ThrowingPos.y += 7.f;
-        if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.2 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.22)
+        if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.2 && spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() < 0.25)
         {
             for (int i = 0; i < 6; i++)
             {
@@ -177,12 +198,12 @@ void CNetworkHarlequinnAnimController::Tick(const _double& _dTimeDelta)
                 {
                     if (i == 0)
                     {
-                        m_arrThrowingDir[i] = -spHarlequinn->GetTransform()->GetLook();
+                        m_arrThrowingDir[i] = spHarlequinn->GetTransform()->GetLook();
                     }
                     else
                     {
                         angle = 60 * (i + 1);
-                        _float3 currentLookDir = -spHarlequinn->GetTransform()->GetLook();
+                        _float3 currentLookDir = spHarlequinn->GetTransform()->GetLook();
                         _float angleRadians = angle * (DirectX::XM_PI / 180.0f);
                         _float cosAngle = std::cos(angleRadians);
                         _float sinAngle = std::sin(angleRadians);
@@ -195,7 +216,7 @@ void CNetworkHarlequinnAnimController::Tick(const _double& _dTimeDelta)
                     }
 
                     (*spHarlequinn->GetShurikens())[i]->GetTransform()->SetPos(m_f3ThrowingPos);
-                    (*spHarlequinn->GetShurikens())[i]->GetTransform()->SetDirection(-spHarlequinn->GetTransform()->GetRight());
+                    (*spHarlequinn->GetShurikens())[i]->GetTransform()->SetDirection(spHarlequinn->GetTransform()->GetRight());
                     (*spHarlequinn->GetShurikens())[i]->SetThrow(true);
                 }
             }
@@ -214,4 +235,6 @@ void CNetworkHarlequinnAnimController::Tick(const _double& _dTimeDelta)
         else
             spHarlequinn->ThrowShurikens(i, _dTimeDelta, m_arrThrowingDir[i]);
     }
+
+    spAnimModel->TickEventToRatio(spHarlequinn.get(), GetTrigger(), GetTimeAccToNetworkAnim(), _dTimeDelta);
 }

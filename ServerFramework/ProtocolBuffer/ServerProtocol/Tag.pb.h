@@ -115,6 +115,8 @@ enum TAG_SC : int {
   TAG_SC_SELFPLAYERMOVE = 8,
   TAG_SC_DEAD = 9,
   TAG_SC_STATICOBJFIND = 10,
+  TAG_SC_HARLEQUINTHROWING = 11,
+  TAG_SC_ANUBISSTATE = 12,
   TAG_SC_INT_MIN_SENTINEL_DO_NOT_USE_ =
       std::numeric_limits<::int32_t>::min(),
   TAG_SC_INT_MAX_SENTINEL_DO_NOT_USE_ =
@@ -124,8 +126,8 @@ enum TAG_SC : int {
 bool TAG_SC_IsValid(int value);
 extern const uint32_t TAG_SC_internal_data_[];
 constexpr TAG_SC TAG_SC_MIN = static_cast<TAG_SC>(0);
-constexpr TAG_SC TAG_SC_MAX = static_cast<TAG_SC>(10);
-constexpr int TAG_SC_ARRAYSIZE = 10 + 1;
+constexpr TAG_SC TAG_SC_MAX = static_cast<TAG_SC>(12);
+constexpr int TAG_SC_ARRAYSIZE = 12 + 1;
 const ::google::protobuf::EnumDescriptor*
 TAG_SC_descriptor();
 template <typename T>
@@ -138,7 +140,7 @@ const std::string& TAG_SC_Name(T value) {
 template <>
 inline const std::string& TAG_SC_Name(TAG_SC value) {
   return ::google::protobuf::internal::NameOfDenseEnum<TAG_SC_descriptor,
-                                                 0, 10>(
+                                                 0, 12>(
       static_cast<int>(value));
 }
 inline bool TAG_SC_Parse(absl::string_view name, TAG_SC* value) {
