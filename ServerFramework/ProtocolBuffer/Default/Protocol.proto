@@ -146,6 +146,27 @@ message SC_ANUBISSTATE
 	float  shieldTimer = 3;
 }
 
+ message SC_SAVEPOINTENABLE 
+ {
+	 int64 id = 1;
+	 int32 count = 2;
+ }
+
+ message SC_PLAYERGETUP
+ {
+	 int64 id = 1;
+	 float hp = 2;
+	 float posx = 3;
+	 float posy = 4;
+	 float posz = 5;
+	 int32 camCellIndex = 6;
+ }
+
+ message SC_ENDING
+ {
+	 int64 id = 1;
+ }
+
 /*
 ======================================
 Client
@@ -194,6 +215,20 @@ message CS_DAMAGED
 	 int64 id = 1;
 	 float damage = 2;
 	 int64 enemyid = 3;
+ }
+
+ message CS_SAVEPOINTENABLE 
+ {
+	 int64 id = 1;
+	 float posx = 2;
+	 float posy = 3;
+	 float posz = 4;
+	 int32 camCellIndex = 5;
+ }
+
+ message CS_CORENABLE 
+ {
+	 int64 id = 1;
  }
 
 // 연결 해제

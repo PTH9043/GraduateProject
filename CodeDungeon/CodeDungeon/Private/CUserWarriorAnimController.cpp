@@ -329,28 +329,21 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
             {
                 spAnimModel->TickAnimToTimeAccChangeTransform(spWarriorPlayer->GetTransform(), _dTimeDelta, spWarriorPlayer->GetElapsedTime());
             }
-            if (spWarriorPlayer->GetElapsedTime() >= 70)
-            {
-                if (spGameInstance->GetDIKeyDown(DIK_G))
-                {
-                    m_bDieEffectTurnedOn = false;
-                    if (!m_bReviveSoundPlay) {
-                        spGameInstance->SoundPlayOnce(L"Revive");
-                        m_bReviveSoundPlay = true;
-                    }
-                    m_bDieSoundPlay = false;
-
-                    spWarriorPlayer->GetCurrentNavi()->FindCell(spWarriorPlayer->GetSpawnPointCell()->GetIndex());
-                    spWarriorPlayer->GetTransform()->SetPos(spWarriorPlayer->GetSpawnPointCell()->GetCenterPos());
-                    static_pointer_cast<CMainCamera>(spWarriorPlayer->GetFollowCamera())->GetCurrentNavi()->FindCell(spWarriorPlayer->GetSpawnPointCamera()->GetIndex());
-                    spWarriorPlayer->SetElapsedTime(0);
-                    spWarriorPlayer->SetDeathState(false);
-                    spWarriorPlayer->SetHealth(2500);
-                    spGameInstance->TurnOffDieEffect();
-                    UpdateState(spAnimModel, ANIM_IDLE, L"IDLE");
-                    spAnimModel->SetAnimation(L"idle01");
-                }
-            }
+            //if (spWarriorPlayer->GetElapsedTime() >= 70)
+            //{
+            //    if (spGameInstance->GetDIKeyDown(DIK_G))
+            //    {
+            //        m_bDieEffectTurnedOn = false;
+            //        if (!m_bReviveSoundPlay) {
+            //            spGameInstance->SoundPlayOnce(L"Revive");
+            //            m_bReviveSoundPlay = true;
+            //        }
+            //        m_bDieSoundPlay = false;
+            //        spGameInstance->TurnOffDieEffect();
+            //        UpdateState(spAnimModel, ANIM_IDLE, L"IDLE");
+            //        spAnimModel->SetAnimation(L"idle01");
+            //    }
+            //}
         }
         else
         {

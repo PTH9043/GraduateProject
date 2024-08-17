@@ -74,6 +74,11 @@ void CSarcophagus::TickActive(const _double& _dTimeDelta)
 
 	if (!spMummy->GetDeathState())
 	{
+		if (true == spMummy->GetFoundTargetState())
+		{
+			m_isFound = true;
+		}
+
 		if (m_isFound)
 		{
 			if (GetSarcophagusType() == SARCOTYPE::TYPE_LYING)

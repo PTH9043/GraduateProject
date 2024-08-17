@@ -45,6 +45,12 @@ protected:
 	virtual HRESULT RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor) override;
 	virtual HRESULT RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass = true) override;
 	virtual void Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta) override;
+protected: /* get set */
+	_bool IsEnable() const { return m_isEnable; }
+	void SetEnable(const _bool _isEnable) { this->m_isEnable = _isEnable; }
+
+	_bool IsActiveEnable() const { return m_isActiveEnable; }
+	void SetActiveEnable(const _bool _isEnable) { this->m_isActiveEnable = _isEnable; }
 private:
 	SHPTR<UModel>								m_spModel;
 	SHPTR<UShaderConstantBuffer>				m_spShaderTexCheckBuffer;
@@ -57,6 +63,8 @@ private:
 	_bool		m_bDrawOutline;
 	_bool			m_OutlineWithScale = false;
 	_bool		m_bisInteraction;
+	_bool		m_isEnable;
+	_bool		m_isActiveEnable;
 };
 
 END

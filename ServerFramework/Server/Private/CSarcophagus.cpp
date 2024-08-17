@@ -26,6 +26,7 @@ namespace Server
 		}
 
 		UpdateFindRange(50.f, 90.f);
+//		ActivePermanentDisable();
 	}
 
 	_bool CSarcophagus::Start(const VOIDDATAS& _ReceiveDatas)
@@ -133,18 +134,16 @@ namespace Server
 
 	void CSarcophagus::State(SHPTR<ASession> _spSession, _int _MonsterState)
 	{
-		//__super::State(_spSession, _MonsterState);
-
 		FindPlayer(_spSession);
 
 		if (true == IsCurrentFindPlayer())
 		{
-			SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+			//SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
 
-			SC_MONSTERFIND scMonsterFind;
-			PROTOFUNC::MakeScMonsterFind(&scMonsterFind, GetSessionID(), _spSession->GetSessionID());
-			CombineProto<SC_MONSTERFIND>(GetCopyBuffer(), GetPacketHead(), scMonsterFind, TAG_SC_MONSTERFIND);
-			spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
+			//SC_MONSTERFIND scMonsterFind;
+			//PROTOFUNC::MakeScMonsterFind(&scMonsterFind, GetSessionID(), _spSession->GetSessionID());
+			//CombineProto<SC_MONSTERFIND>(GetCopyBuffer(), GetPacketHead(), scMonsterFind, TAG_SC_MONSTERFIND);
+			//spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
 			ActivePermanentDisable();
 		}
 	}

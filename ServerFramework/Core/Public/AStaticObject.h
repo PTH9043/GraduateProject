@@ -20,11 +20,13 @@ public: /* get set */
 	const _bool IsCurrentFindPlayer() const { return m_isCurrentFindPlayer; }
 protected: /* get set */
 	void SetActiveRange(const _float _fActiveRange) { this->m_fActiveRange = _fActiveRange; }
+	SHPTR<ASession> GetInteractiveSession() const { return m_spInteractiveSession; }
 private:
 	virtual void Free() override;
 private:
-	_float								m_fActiveRange; 
+	ATOMIC<_float>			m_fActiveRange;
 	std::atomic_bool			m_isCurrentFindPlayer;
+	SHPTR<ASession>		m_spInteractiveSession;
 };
 
 END

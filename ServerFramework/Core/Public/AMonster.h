@@ -66,7 +66,7 @@ protected: /* get set*/
 	void SetCurrentJustMove(const _bool _isCurrentJustMove) { m_isCurrentNotFound = _isCurrentJustMove; }
 	void SetMoveSpeed(const _float _fMoveSpeed) { this->m_fMoveSpeed = _fMoveSpeed; }
 	void SetTargetPos(const Vector3 _vTargetPos) { this->m_vTargetPos = _vTargetPos; }
-	void SetDistanceToPlayer(const _float _fDistance) { this->m_fDistanceToPlayer = _fDistance; }
+	void SetDistanceToPlayer(const _float _fDistance) { ChangeAtomicValue(REF_OUT m_fDistanceToPlayer, _fDistance); }
 	void SetTargetSession(SHPTR<ASession> _spSession) { this->m_spTargetSession = _spSession; }
 private:
 	virtual void Free() override;
@@ -85,9 +85,9 @@ private:
 	std::atomic_bool							m_isCurrentFindPlayer;
 	std::atomic_bool							m_isCurrentNotFound;
 
-	_float												m_fActiveRange;
-	_float												m_fDeactiveRange;
-	_float												m_fAttackRange;
+	ATOMIC<_float>							m_fActiveRange;
+	ATOMIC<_float>							m_fDeactiveRange;
+	ATOMIC<_float>							m_fAttackRange;
 	_float												m_fMoveSpeed;
 	ATOMIC<_float>							m_fDistanceToPlayer;
 	SESSIONID									m_OwnerMonsterSessionID;

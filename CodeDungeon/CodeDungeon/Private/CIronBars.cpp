@@ -13,7 +13,7 @@
 
 CIronBars::CIronBars(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: CModelObjects(_spDevice, _wstrLayer, _eCloneType),
-	m_SoundTimer{4}, m_isEnable{false}, m_isOpenstart{false}
+	m_SoundTimer{4}, m_isOpenstart{false}
 {
 }
 
@@ -73,7 +73,7 @@ void CIronBars::TickActive(const _double& _dTimeDelta)
 	__super::TickActive(_dTimeDelta);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
-	if (false == m_isEnable)
+	if (false == IsEnable())
 	{
 		if (m_SoundTimer.fTimer > 0)
 		{
@@ -103,25 +103,25 @@ void CIronBars::LateTickActive(const _double& _dTimeDelta)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	SHPTR<CWarriorPlayer> spPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
 
-	if (false == m_isEnable)
+	if (false == IsEnable())
 	{
 		spPlayer->SetCanInteractBarState(false);
 		SetOutline(false);
-		if (true == m_isOpenstart)
+		if (true == IsActiveEnable())
 		{
 			spGameInstance->StopSound(L"BarLift");
 			spPlayer->SetInteractionElapsedTime(0);
-			m_isOpenstart = false;
+			SetActiveEnable(false);
 		}
 	}
 	else
 	{
 		SetOutline(true);
 		spPlayer->SetCanInteractBarState(true);
-		if (true == m_isOpenstart)
+		if (true == IsActiveEnable())
 		{
 			spPlayer->SetInteractionElapsedTime(spPlayer->GetInteractionElapsedTime() + (_float)(_dTimeDelta));
-			m_isOpenstart = false;
+			SetActiveEnable(false);
 		}
 
 		if (GetCheckPointToOtherColor())
@@ -129,7 +129,7 @@ void CIronBars::LateTickActive(const _double& _dTimeDelta)
 		else
 			spPlayer->SetDoneInteractBarState(false);
 	}
-	m_isEnable = false;
+	SetEnable(false);
 
 	__super::LateTickActive(_dTimeDelta);
 }
@@ -161,7 +161,7 @@ void CIronBars::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 
 void CIronBars::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 {
-	m_isEnable = true;
+	SetEnable(true);
 	switch (_ProcessData.GetDataType())
 	{
 	case TAG_SC_STATICOBJFIND:
@@ -175,7 +175,7 @@ void CIronBars::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 			if(1 == scStaticObjFind.enable())
 			{
 				spGameInstance->SoundPlayOnce(L"BarLift", GetTransform(), spPlayer->GetTransform());
-				m_isOpenstart = true;
+				SetActiveEnable(true);
 			}
 			else if(2 == scStaticObjFind.enable())
 			{
@@ -185,6 +185,8 @@ void CIronBars::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 				SetInteractionState(true);
 				SetCheckPointToOtherColor(true);
 				m_SoundTimer.ResetTimer();
+				SetEnable(false);
+				spPlayer->SetInteractionElapsedTime(0);
 			}
 		}
 		scStaticObjFind.Clear();

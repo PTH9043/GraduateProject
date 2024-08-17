@@ -49,18 +49,7 @@ namespace Core {
 		}
 		else {
 			Vector3 vLine{};
-			SHPTR<ACell> closestCell{};
-			float minYDiff = -1.0f;
-
-			for (auto& iter : m_CellContainer) {
-				if (true == iter->IsIn(_vPosition, m_iCurIndex)) {
-					float yDiff = std::abs(_vPosition.y - iter->GetCenterPos().y);
-					if (minYDiff == -1.0f || yDiff < minYDiff) {
-						minYDiff = yDiff;
-						closestCell = iter;
-					}
-				}
-			}
+			SHPTR<ACell> closestCell = FindCell(_vPosition);
 
 			if (nullptr != closestCell) {
 				_vPosition.y = closestCell->ComputeHeight(_vPosition);

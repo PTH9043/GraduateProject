@@ -80,6 +80,17 @@ namespace Server {
 
 		if (false == isDeadState)
 		{
+			if (true == isFoundPlayer)
+			{
+				if (false == isFirstFound)
+				{
+					Vector3 vLookDir = vTargetToDir;
+					vLookDir.y = 0.f;
+					spTransform->LookAt(vLookDir + spTransform->GetPos());
+				}
+				spHarlequin->SetFoundPlayerFirstTime(true);
+			}
+
 			if (true == isFirstFound)
 			{
 				if (false == isFoundPlayer)
@@ -279,13 +290,6 @@ namespace Server {
 					{
 						UpdateState(WALK_ORDER, MOB_MOVE_STATE);
 					}
-				}
-			}
-			else
-			{
-				if (true == isFoundPlayer)
-				{
-					spHarlequin->SetFoundPlayerFirstTime(true);
 				}
 			}
 		}

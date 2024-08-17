@@ -38,11 +38,17 @@ private:
 	void PlayerCollisionState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead);
 	void MonsterCollisionState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead);
 	void PressKeyState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead);
+	void EnableSavePoint(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead);
+	void EnableCore(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead);
 private:
 	virtual void Free() override;
 private:
 	_int											m_iStartCellIndex;
 	SHPTR<AGameTimer>		m_spGameTimer;
+	static Vector3						s_vSavePosition;
+	static _int								s_iActiveSavePoint;
+	static _int								s_iCamCellIndex;
+	static _int								s_iCoreEnableCnt;
 };
 
 

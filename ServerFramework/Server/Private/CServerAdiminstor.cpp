@@ -43,6 +43,7 @@ namespace Server
 #endif
 		ThreadMiliRelax(100);
 		Connect();
+		std::cout << "Create Service Object!\n";
 		return __super::Start();
 	}
 

@@ -21,37 +21,14 @@ namespace Server {
 	{
 		InsertColliderContainer(COLLIDERTYPE::COLLIDER_FORINTERACTION_STATUE, ACollider::TYPE_OBB,
 			COLLIDERDESC{ {0.f, 0.f, 0.f}, {15.f, 30.f, 15.f} });
+		SetActiveRange(12);
 
 		return __super::Start(_ReceiveDatas);
 	}
 
 	void CStatue::State(SHPTR<ASession> _spSession)
 	{
-		FindPlayer(_spSession);
-		RETURN_CHECK(false == IsCurrentFindPlayer(), ;);
-		_int enable = 0;
-
-		SESSIONID sessionID = _spSession->GetSessionID();
-		_int KeyState = _spSession->GetKeyState();
-		if (KeyState == KEYBOARD_F)
-		{
-			SetDoneInteractiveStaticObject(true);
-		}
-		else
-		{
-			SetDoneInteractiveStaticObject(false);
-			GetActiveTimerRefP().ResetTimer();
-		}
-		_bool IsPass = GetActiveTimerRefP(REF_RETURN).IsOver();
-		enable = (true == IsPass ? 2 : (true == IsDoneInteractStaticObject() ? 1 : 0));
-
-		SC_STATICOBJFIND scStaticObjectFind;
-		PROTOFUNC::MakeScStaticObjFind(&scStaticObjectFind, GetSessionID(), enable);
-		CombineProto<SC_STATICOBJFIND>(GetCopyBuffer(), GetPacketHead(), scStaticObjectFind,
-			TAG_SC_STATICOBJFIND);
-		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
-		spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
-		scStaticObjectFind.Clear();
+		__super::State(_spSession);
 	}
 
 	void CStatue::Collision(AGameObject* _pGameObject, const _double& _dTimeDelta)

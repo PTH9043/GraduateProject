@@ -6,7 +6,8 @@
 namespace Core {
 
 	AStaticObject::AStaticObject(OBJCON_CONSTRUCTOR, SESSIONID _ID) : 
-		AGameObject(OBJCON_CONDATA, _ID, SESSIONTYPE::OBJECT), m_fActiveRange{ 0 }, m_isCurrentFindPlayer{ false }
+		AGameObject(OBJCON_CONDATA, _ID, SESSIONTYPE::OBJECT), m_fActiveRange{ 0 }, m_isCurrentFindPlayer{ false },
+		m_spInteractiveSession{nullptr}
 	{
 		SetActive(true);
 	}
@@ -25,12 +26,14 @@ namespace Core {
 			Vector3 vMobPos = spMobTr->GetPos();
 			Vector3 vPlayerPos = spPlayerTr->GetPos();
 			Vector3 vDirection = vPlayerPos - vMobPos;
+			_float ActiveRange = m_fActiveRange;
 
 			float fDistanceToPlayer = vDirection.Length();
 			fDistanceToPlayer = vDirection.Length();
 
-			if (fDistanceToPlayer <= m_fActiveRange)
+			if (fDistanceToPlayer <= ActiveRange)
 			{
+				m_spInteractiveSession = _spSession;
 				m_isCurrentFindPlayer = true;
 			}
 			else

@@ -55,7 +55,7 @@ namespace Server
 
 	void CAnubis::State(SHPTR<ASession> _spSession, _int _MonsterState)
 	{
-		__super::State(_spSession, _MonsterState);
+ 		__super::State(_spSession, _MonsterState);
 	}
 
 	void CAnubis::ProcessPacket(_int _type, void* _pData)

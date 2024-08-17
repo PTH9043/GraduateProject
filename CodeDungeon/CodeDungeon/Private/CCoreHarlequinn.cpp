@@ -8,6 +8,8 @@
 #include "UParticle.h"
 #include "UParticleSystem.h"
 #include "UModel.h"
+#include "UProcessedData.h"
+#include "CWarriorPlayer.h"
 
 CCoreHarlequinn::CCoreHarlequinn(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: CModelObjects(_spDevice, _wstrLayer, _eCloneType)
@@ -48,6 +50,10 @@ HRESULT CCoreHarlequinn::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	_wstring mainColliderTag = L"ForInteractionCoreHarlequinn";
 	AddColliderInContainer(mainColliderTag, Collider1);
 
+	for (auto& Containers : GetColliderContainer())
+	{
+		Containers.second->SetTransform(GetTransform()->GetPos(), GetTransform()->GetQuaternion());
+	}
 
 	return S_OK;
 }
@@ -55,14 +61,35 @@ HRESULT CCoreHarlequinn::NativeConstructClone(const VOIDDATAS& _vecDatas)
 void CCoreHarlequinn::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
-	for (auto& Containers : GetColliderContainer())
-	{
-		Containers.second->SetTransform(GetTransform()->GetPos(), GetTransform()->GetQuaternion());
-	}
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	SHPTR<CWarriorPlayer> spPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
 
-	if (GetInteractionState())
+	if (false == IsEnable())
 	{
+		spPlayer->SetCanInteractHarlCoreState(false);
+		SetOutline(false);
+		if (true == IsActiveEnable())
+		{
+			spPlayer->SetInteractionElapsedTime(0);
+			SetActiveEnable(false);
+		}
 	}
+	else
+	{
+		if (true == IsActiveEnable())
+		{
+			spPlayer->SetInteractionElapsedTime(spPlayer->GetInteractionElapsedTime() + (_float)(_dTimeDelta));
+			SetActiveEnable(false);
+		}
+		SetOutline(true);
+		spPlayer->SetCanInteractHarlCoreState(true);
+
+		if (GetCheckPointToOtherColor())
+			spPlayer->SetDoneInteractHarlequinnCoreState(true);
+		else
+			spPlayer->SetDoneInteractHarlequinnCoreState(false);
+	}
+	SetEnable(false);
 }
 
 
@@ -89,5 +116,49 @@ HRESULT CCoreHarlequinn::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSH
 
 void CCoreHarlequinn::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
+}
+
+void CCoreHarlequinn::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
+{
+	SetEnable(true);
+	switch (_ProcessData.GetDataType())
+	{
+	case TAG_SC_STATICOBJFIND:
+	{
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		SHPTR<CWarriorPlayer> spPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
+
+		SC_STATICOBJFIND scStaticObjFind;
+		scStaticObjFind.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
+		{
+			if (1 == scStaticObjFind.enable())
+			{
+				spGameInstance->SoundPlayOnce(L"HalequinCore", GetTransform(), spPlayer->GetTransform());
+				SetActiveEnable(true);
+			}
+			else if (2 == scStaticObjFind.enable())
+			{
+				spGameInstance->StopSound(L"HalequinCore");
+				spGameInstance->SoundPlayOnce(L"CoreComplete2", GetTransform(), spPlayer->GetTransform());
+				SetCheckPointToOtherColor(true);
+
+				CS_CORENABLE csCoreEnable;
+				VECTOR3 vPos;
+				_float3 vCurrentPos = GetTransform()->GetPos();
+				PROTOFUNC::MakeCsCoreEnable(&csCoreEnable, GetNetworkID());
+				spGameInstance->SendProtoData(UProcessedData(csCoreEnable, TAG_CS_COREENABLE));
+
+				SetEnable(false);
+				SetOutline(false);
+				spPlayer->SetCanInteractHarlCoreState(false);
+				spPlayer->SetDoneInteractHarlequinnCoreState(false);
+				SetTickActive(false);
+			
+			}
+		}
+		scStaticObjFind.Clear();
+	}
+	break;
+	}
 }
 

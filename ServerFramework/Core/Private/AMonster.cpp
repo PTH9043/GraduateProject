@@ -38,26 +38,13 @@ namespace Core
 		{
 			Vector3 vMobPos = spMobTr->GetPos();
 			Vector3 vPlayerPos = spPlayerTr->GetPos();
-			Vector3 vDirection = vPlayerPos - vMobPos;
+			_float ActiveRange = m_fActiveRange;
+			_float DeactiveRange = m_fDeactiveRange;
 			s_PlayerPositionContainer[SessionID] = vPlayerPos;
-
-			//if (std::abs(vDirection.y) >= 30.f)
-			//{
-			//	UpdateSelfStateToPlayerDistance(false, false, true);
-			//	float fDistanceToPlayer = vDirection.Length();
-			//	if (GetDistanceToPlayer() >= fDistanceToPlayer)
-			//	{
-			//		SetTargetSession(_spSession);
-			//	}
-			//}
-			//else
 			{
-			//	_float yPos = vDirection.y;
-			//	vDirection.y = 0.f;
+				float fDistanceToPlayer = Vector3::Distance(vMobPos, vPlayerPos);
 
-				float fDistanceToPlayer = vDirection.Length();
-
-				if (fDistanceToPlayer <= m_fActiveRange)
+				if (fDistanceToPlayer <= ActiveRange)
 				{
 					SHPTR<ASession> spTargetSession = m_spTargetSession;
 					if (nullptr != spTargetSession)
@@ -79,10 +66,9 @@ namespace Core
 						UpdateSelfStateToPlayerDistance(false, true, false);
 					}
 				}
-				else if (m_fDeactiveRange >= fDistanceToPlayer)
+				else if (DeactiveRange >= fDistanceToPlayer)
 				{
 					UpdateSelfStateToPlayerDistance(false, false, true);
-					float fDistanceToPlayer = vDirection.Length();
 					if (GetDistanceToPlayer() >= fDistanceToPlayer)
 					{
 						SetTargetSession(_spSession);
@@ -156,9 +142,9 @@ namespace Core
 
 	void AMonster::UpdateSelfStateToPlayerDistance(_bool _isCurAtkPlayer, _bool _isCurFindPlayer, _bool _isCurNotFound)
 	{
-		m_isCurrentAtkPlayer = _isCurAtkPlayer;
-		m_isCurrentFindPlayer = _isCurFindPlayer;
-		m_isCurrentNotFound = _isCurNotFound;
+		ChangeAtomicValue(REF_OUT m_isCurrentAtkPlayer, _isCurAtkPlayer);
+		ChangeAtomicValue(REF_OUT m_isCurrentFindPlayer, _isCurFindPlayer);
+		ChangeAtomicValue(REF_OUT m_isCurrentNotFound, _isCurNotFound);
 	}
 
 	void AMonster::ResetTargetPlayer()

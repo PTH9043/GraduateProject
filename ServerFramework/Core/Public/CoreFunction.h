@@ -334,6 +334,20 @@ namespace Core
 		SaveString(_os, ConvertWToS(_wstr));
 	}
 
+	template<class T>
+	static void ChangeAtomicValue(std::atomic<T>& _value, T _change)
+	{
+		while (true)
+		{
+			T value = _value.load();
+
+			if (true == CAS_VALUE(_value, value, _change))
+			{
+				return;
+			}
+		}
+	}
+
 #pragma endregion FUNCTION
 }
 

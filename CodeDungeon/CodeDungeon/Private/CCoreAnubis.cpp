@@ -8,6 +8,8 @@
 #include "UParticle.h"
 #include "UParticleSystem.h"
 #include "UModel.h"
+#include "UProcessedData.h"
+#include "CWarriorPlayer.h"
 
 CCoreAnubis::CCoreAnubis(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: CModelObjects(_spDevice, _wstrLayer, _eCloneType)
@@ -49,21 +51,45 @@ HRESULT CCoreAnubis::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	_wstring mainColliderTag = L"ForInteractionCoreAnubis";
 	AddColliderInContainer(mainColliderTag, Collider1);
 
-
+	for (auto& Containers : GetColliderContainer())
+	{
+		Containers.second->SetTransform(GetTransform()->GetPos(), GetTransform()->GetQuaternion());
+	}
 	return S_OK;
 }
 
 void CCoreAnubis::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
-	for (auto& Containers : GetColliderContainer())
-	{
-		Containers.second->SetTransform(GetTransform()->GetPos(), GetTransform()->GetQuaternion());
-	}
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	SHPTR<CWarriorPlayer> spPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
 
-	if (GetInteractionState())
+	if (false == IsEnable())
 	{
+		spPlayer->SetCanInteractAnubisCoreState(false);
+		SetOutline(false);
+		if (true == IsActiveEnable())
+		{
+			spPlayer->SetInteractionElapsedTime(0);
+			SetActiveEnable(false);
+		}
 	}
+	else
+	{
+		if (true == IsActiveEnable())
+		{
+			spPlayer->SetInteractionElapsedTime(spPlayer->GetInteractionElapsedTime() + (_float)(_dTimeDelta));
+			SetActiveEnable(false);
+		}
+		SetOutline(true);
+		spPlayer->SetCanInteractAnubisCoreState(true);
+
+		if (GetCheckPointToOtherColor())
+			spPlayer->SetDoneInteractAnubisCoreState(true);
+		else
+			spPlayer->SetDoneInteractAnubisCoreState(false);
+	}
+	SetEnable(false);
 }
 
 void CCoreAnubis::LateTickActive(const _double& _dTimeDelta)
@@ -90,5 +116,49 @@ HRESULT CCoreAnubis::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRR
 
 void CCoreAnubis::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
+}
+
+void CCoreAnubis::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
+{
+	SetEnable(true);
+	switch (_ProcessData.GetDataType())
+	{
+	case TAG_SC_STATICOBJFIND:
+	{
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		SHPTR<CWarriorPlayer> spPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
+
+		SC_STATICOBJFIND scStaticObjFind;
+		scStaticObjFind.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
+		{
+			if (1 == scStaticObjFind.enable())
+			{
+				spGameInstance->SoundPlayOnce(L"AnubisCore", GetTransform(), spPlayer->GetTransform());
+				SetActiveEnable(true);
+			}
+			else if (2 == scStaticObjFind.enable())
+			{
+				spGameInstance->StopSound(L"AnubisCore");
+				spGameInstance->SoundPlayOnce(L"CoreComplete3", GetTransform(), spPlayer->GetTransform());
+				SetCheckPointToOtherColor(true);
+
+				CS_CORENABLE csCoreEnable;
+				VECTOR3 vPos;
+				_float3 vCurrentPos = GetTransform()->GetPos();
+				PROTOFUNC::MakeCsCoreEnable(&csCoreEnable, GetNetworkID());
+				spGameInstance->SendProtoData(UProcessedData(csCoreEnable, TAG_CS_COREENABLE));
+
+				SetEnable(false);
+				SetOutline(false);
+				spPlayer->SetCanInteractAnubisCoreState(false);
+				spPlayer->SetDoneInteractAnubisCoreState(false);
+				SetTickActive(false);
+				spPlayer->SetInteractionElapsedTime(0);
+			}
+		}
+		scStaticObjFind.Clear();
+	}
+	break;
+	}
 }
 

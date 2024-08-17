@@ -159,6 +159,23 @@ void CNetworkClientController::ProcessPacket(_char* _pPacket, PACKETHEAD _Packet
 		HarlequinThrowing(_pPacket, _PacketHead);
 	}
 	break;
+	case TAG_SC::TAG_SC_SAVEPOINTENABLE:
+	{
+		SavePointEnabe(_pPacket, _PacketHead);
+	}
+	break;
+	case TAG_SC::TAG_SC_PLAYERGETUP:
+	{
+		PlayerGetup(_pPacket, _PacketHead);
+	}
+	break;
+	case TAG_SC::TAG_SC_ENDING:
+	{
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		SHPTR<CWarriorPlayer> spPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
+		spPlayer->SetIfPlayerEndEnable();
+	}
+	break;
 	}
 }
 
@@ -454,6 +471,24 @@ void CNetworkClientController::HarlequinThrowing(_char* _pPacket, const PACKETHE
 	InsertProcessedDataInActor(UProcessedData(scHarlequinThrowing.id(), scHarlequinThrowing,
 		TAG_SC_HARLEQUINTHROWING, _PacketHead.PacketSize));
 	scHarlequinThrowing.Clear();
+}
+
+void CNetworkClientController::SavePointEnabe(_char* _pPacket, const PACKETHEAD& _PacketHead)
+{
+	static SC_SAVEPOINTENABLE savePointEnable;
+	savePointEnable.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+	InsertProcessedDataInActor(UProcessedData(savePointEnable.id(), savePointEnable,
+		TAG_SC_SAVEPOINTENABLE, _PacketHead.PacketSize));
+	savePointEnable.Clear();
+}
+
+void CNetworkClientController::PlayerGetup(_char* _pPacket, const PACKETHEAD& _PacketHead)
+{
+	static SC_PLAYERGETUP playerGetUp;
+	playerGetUp.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+	InsertProcessedDataInActor(UProcessedData(playerGetUp.id(), playerGetUp,
+		TAG_SC_PLAYERGETUP, _PacketHead.PacketSize));
+	playerGetUp.Clear();
 }
 
 #endif

@@ -348,13 +348,13 @@ void CMainScene::TurnLightsOnRange()
 			{
 				_wstring Name = Cores_it->get()->GetModel()->GetModelName();
 				if (Name == L"MinotaurCore")
-					if (m_bIsDead_Minotaur)
+					//if (m_bIsDead_Minotaur)
 						Cores_it->get()->SetActive(true);
 				if (Name == L"HarlequinnCore")
-					if (m_bisDead_Harlequinn)
+			//		if (m_bisDead_Harlequinn)
 						Cores_it->get()->SetActive(true);
 				if (Name == L"AnubisCore")
-					if (m_bisDead_Anubis)
+			//		if (m_bisDead_Anubis)
 						Cores_it->get()->SetActive(true);
 
 				Cores_it++;
@@ -1780,7 +1780,7 @@ void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 
 	}
 
-	if (m_fStartSceneLoadingTimer > 10.f) {
+	if (m_fStartSceneLoadingTimer > 0.f) {
 		//GameStart 시
 		spGameInstance->StopSound(L"BGM3");
 		if (!EnterGameModeSound) {

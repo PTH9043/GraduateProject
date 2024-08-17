@@ -8,6 +8,8 @@
 #include "UParticle.h"
 #include "UParticleSystem.h"
 #include "UModel.h"
+#include "UProcessedData.h"
+#include "CWarriorPlayer.h"
 
 CCoreMinotaur::CCoreMinotaur(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: CModelObjects(_spDevice, _wstrLayer, _eCloneType)
@@ -47,22 +49,46 @@ HRESULT CCoreMinotaur::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	_wstring mainColliderTag = L"ForInteractionCoreMinotaur";
 	AddColliderInContainer(mainColliderTag, Collider1);
 
-
-	//SetOutline(true);
+	for (auto& Containers : GetColliderContainer())
+	{
+		Containers.second->SetTransform(GetTransform()->GetPos(), GetTransform()->GetQuaternion());
+	}
 	return S_OK;
 }
 
 void CCoreMinotaur::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
-	for (auto& Containers : GetColliderContainer())
-	{
-		Containers.second->SetTransform(GetTransform()->GetPos(), GetTransform()->GetQuaternion());
-	}
 
-	if (GetInteractionState())
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	SHPTR<CWarriorPlayer> spPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
+
+	if (false == IsEnable())
 	{
+		spPlayer->SetCanInteractMinoCoreState(false);
+		SetOutline(false);
+		if (true == IsActiveEnable())
+		{
+			spPlayer->SetInteractionElapsedTime(0);
+			SetActiveEnable(false);
+		}
 	}
+	else
+	{
+		SetOutline(true);
+		spPlayer->SetCanInteractMinoCoreState(true);
+		if (true == IsActiveEnable())
+		{
+			spPlayer->SetInteractionElapsedTime(spPlayer->GetInteractionElapsedTime() + (_float)(_dTimeDelta));
+			SetActiveEnable(false);
+		}
+
+		if (GetCheckPointToOtherColor())
+			spPlayer->SetDoneInteractMinoCoreState(true);
+		else
+			spPlayer->SetDoneInteractMinoCoreState(false);
+	}
+	SetEnable(false);
 }
 
 
@@ -91,5 +117,49 @@ HRESULT CCoreMinotaur::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPT
 
 void CCoreMinotaur::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
+}
+
+void CCoreMinotaur::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
+{
+	SetEnable(true);
+	switch (_ProcessData.GetDataType())
+	{
+	case TAG_SC_STATICOBJFIND:
+	{
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		SHPTR<CWarriorPlayer> spPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
+
+		SC_STATICOBJFIND scStaticObjFind;
+		scStaticObjFind.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
+		{
+			if (1 == scStaticObjFind.enable())
+			{
+				spGameInstance->SoundPlayOnce(L"MinoCore", GetTransform(), spPlayer->GetTransform());
+				SetActiveEnable(true);
+			}
+			else if (2 == scStaticObjFind.enable())
+			{
+				spGameInstance->StopSound(L"MinoCore");
+				spGameInstance->SoundPlayOnce(L"CoreComplete", GetTransform(), spPlayer->GetTransform());
+				SetCheckPointToOtherColor(true);
+
+				CS_CORENABLE csCoreEnable;
+				VECTOR3 vPos;
+				_float3 vCurrentPos = GetTransform()->GetPos();
+				PROTOFUNC::MakeCsCoreEnable(&csCoreEnable, GetNetworkID());
+				spGameInstance->SendProtoData(UProcessedData(csCoreEnable, TAG_CS_COREENABLE));
+
+				SetEnable(false);
+				SetOutline(false);
+				spPlayer->SetCanInteractMinoCoreState(false);
+				spPlayer->SetDoneInteractMinoCoreState(false);
+				SetTickActive(false);
+				spPlayer->SetInteractionElapsedTime(0);
+			}
+		}
+		scStaticObjFind.Clear();
+	}
+	break;
+	}
 }
 

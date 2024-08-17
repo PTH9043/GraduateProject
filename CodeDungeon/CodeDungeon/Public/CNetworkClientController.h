@@ -32,7 +32,7 @@ protected:
 	virtual void NativePacket() override;
 	virtual void ProcessPacket(_char* _pPacket, PACKETHEAD _PacketHead) override;
 private:
-#ifdef _ENABLE_PROTOBUFF
+
 	void CreateServerMobData(CMap* _pMap);
 	void CreateStaticObjData(CMap* _pMap);
 
@@ -45,7 +45,8 @@ private:
 	void MonsterFind(_char* _pPacket, const PACKETHEAD& _PacketHead);
 	void StaticObjFind(_char* _pPacket, const PACKETHEAD& _PacketHead);
 	void HarlequinThrowing(_char* _pPacket, const PACKETHEAD& _PacketHead);
-#endif
+	void SavePointEnabe(_char* _pPacket, const PACKETHEAD& _PacketHead);
+	void PlayerGetup(_char* _pPacket, const PACKETHEAD& _PacketHead);
 private:
 	virtual void Free() override;
 private:

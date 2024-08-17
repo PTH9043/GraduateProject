@@ -14,9 +14,14 @@
 
 namespace Server {
 
+	Vector3						CPlayerSession::s_vSavePosition;
+	 _int								CPlayerSession::s_iActiveSavePoint;
+	 _int								CPlayerSession::s_iCamCellIndex;
+	 _int								CPlayerSession::s_iCoreEnableCnt;
+
 	CPlayerSession::CPlayerSession(SESSION_CONSTRUCTOR)
 		: Core::ASession(SESSION_CONDATA(Core::SESSIONTYPE::PLAYER)),
-		m_iStartCellIndex{ 0 }, m_spGameTimer{ Create<AGameTimer>() }
+		m_iStartCellIndex{ 300 }, m_spGameTimer{ Create<AGameTimer>() }
 	{
 	
 	}
@@ -129,6 +134,16 @@ namespace Server {
 				PressKeyState(spCoreInstance, SessionID, _pPacket, _PacketHead);
 			}
 			break;
+			case TAG_CS::TAG_CS_SAVEPOINTENABLE:
+			{
+				EnableSavePoint(spCoreInstance, SessionID, _pPacket, _PacketHead);
+			}
+			break;
+			case TAG_CS::TAG_CS_COREENABLE:
+			{
+				EnableCore(spCoreInstance, SessionID, _pPacket, _PacketHead);
+			}
+			break;
 		}
 		return true;
 	}
@@ -189,7 +204,19 @@ namespace Server {
 			vPosition = Vector3(csMove.posx(), csMove.posy(), csMove.posz());
 			spTransform->SetPos(vPosition);
 		}
-		spNavigation->IsMove(vPosition, spCurCell);		//  다른 모든 클라이언트에 메시지 보낸다. 
+		if (true == spNavigation->IsMove(vPosition, spCurCell))
+		{
+			if (spCurCell->GetIndex() == 1141)
+			{
+				if (3 == s_iCoreEnableCnt)
+				{
+					SC_ENDING scEnding;
+					PROTOFUNC::MakeScEnding(&scEnding, GetSessionID());
+					CombineProto(REF_OUT GetCopyBuffer(), REF_OUT GetPacketHead(), scEnding, TAG_SC::TAG_SC_ENDING);
+					_spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
+				}
+			}
+		}
 		{
 			CombineProto(REF_OUT GetCopyBuffer(), REF_OUT GetPacketHead(), csMove, TAG_SC::TAG_SC_PLAYERSTATE);
 			_spCoreInstance->BroadCastMessageExcludingSession(_SessionID, GetCopyBufferPointer(), GetPacketHead());
@@ -204,7 +231,6 @@ namespace Server {
 				EnableFallDownState();
 			}
 		}
-//		std::cout << "D" << "\n";
 		
 		{
 			const MOBOBJCONTAINER& MobObjectContainer = _spCoreInstance->GetMobObjContainer();
@@ -299,6 +325,50 @@ namespace Server {
 		CS_PRESSKEY scPressKey;
 		scPressKey.ParseFromArray(_pPacket, _PacketHead.PacketSize);
 		SetKeyState(scPressKey.key());
+
+		if (true == IsDead())
+		{
+			if (scPressKey.key() == KEYBOARD_G)
+			{
+				for (auto& iter : _spCoreInstance->GetSessionContainer())
+				{
+					VECTOR3 vPos;
+					PROTOFUNC::MakeVector3(&vPos, s_vSavePosition.x, s_vSavePosition.y, s_vSavePosition.z);
+
+					SC_PLAYERGETUP scPlayerGetUp;
+					PROTOFUNC::MakeScPlayerGetUp(&scPlayerGetUp, iter.first, 2500.f, vPos, s_iCamCellIndex);
+					CombineProto<SC_PLAYERGETUP>(GetCopyBuffer(), GetPacketHead(), scPlayerGetUp, TAG_SC_PLAYERGETUP);
+					iter.second->SendData(GetCopyBufferPointer(), GetPacketHead());
+				}
+			}
+		}
+	}
+
+	void CPlayerSession::EnableSavePoint(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
+	{
+		CS_SAVEPOINTENABLE csSavePointEnable;
+		csSavePointEnable.ParseFromArray(_pPacket, _PacketHead.PacketSize);
+
+		s_vSavePosition = Vector3(csSavePointEnable.posx(), csSavePointEnable.posy(), csSavePointEnable.posz());
+		++s_iActiveSavePoint;
+		s_iCamCellIndex = csSavePointEnable.camcellindex();
+
+		for (auto& iter : _spCoreInstance->GetSessionContainer())
+		{
+			SC_SAVEPOINTENABLE scSavePointEnable;
+			PROTOFUNC::MakeScSavePointEnable(&scSavePointEnable, iter.first, s_iActiveSavePoint);
+			CombineProto<SC_SAVEPOINTENABLE>(GetCopyBuffer(), GetPacketHead(), scSavePointEnable, TAG_SC_SAVEPOINTENABLE);
+			iter.second->SendData(GetCopyBufferPointer(), GetPacketHead());
+		}
+
+		std::cout << s_iCamCellIndex << "\n";
+	}
+
+	void CPlayerSession::EnableCore(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
+	{
+		++s_iCoreEnableCnt;
+
+		std::cout << s_iCoreEnableCnt << "\n";
 	}
 
 	void CPlayerSession::Free()

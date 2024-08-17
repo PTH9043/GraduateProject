@@ -8,6 +8,9 @@
 #include "UParticle.h"
 #include "UParticleSystem.h"
 #include "UModel.h"
+#include "UProcessedData.h"
+#include "CWarriorPlayer.h"
+#include "CMainCamera.h"
 
 CStatue::CStatue(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: CModelObjects(_spDevice, _wstrLayer, _eCloneType)
@@ -49,37 +52,56 @@ HRESULT CStatue::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	SetPawnType(PAWNTYPE::PAWN_STATICOBJ);
 	/*SetOutline(true);*/
 	SetIfOutlineScale(true);
+
+	for (auto& Containers : GetColliderContainer())
+	{
+		Containers.second->SetTranslate(_float3(GetModel()->GetCenterPos().x, GetModel()->GetCenterPos().y - 10, GetModel()->GetCenterPos().z));
+		Containers.second->SetTransform(GetTransform()->GetPos(), GetTransform()->GetQuaternion());
+	}
+
 	return S_OK;
 }
 
 void CStatue::TickActive(const _double& _dTimeDelta)
 {
 	__super::TickActive(_dTimeDelta);
-	for (auto& Containers : GetColliderContainer())
-	{
-		if(Containers.first == L"ForInteractionStatue")
-		{
-			Containers.second->SetTranslate(_float3(GetModel()->GetCenterPos().x, GetModel()->GetCenterPos().y - 10, GetModel()->GetCenterPos().z));
-			Containers.second->SetTransform(GetTransform()->GetPos(), GetTransform()->GetQuaternion());
-		}
-	}
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	SHPTR<CWarriorPlayer> spPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
 
-	if (GetInteractionState())
+	if (false == GetInteractionState())
 	{
-		
+		if (false == IsEnable())
+		{
+			spPlayer->SetCanInteractStatueState(false);
+			SetOutline(false);
+			if (true == IsActiveEnable())
+			{
+				spPlayer->SetInteractionElapsedTime(0);
+				SetActiveEnable(false);
+			}
+		}
+		else
+		{
+			if (true == IsActiveEnable())
+			{
+				spPlayer->SetInteractionElapsedTime(spPlayer->GetInteractionElapsedTime() + (_float)(_dTimeDelta));
+				SetActiveEnable(false);
+			}
+			SetOutline(true);
+			spPlayer->SetCanInteractStatueState(true);
+
+			if (GetCheckPointToOtherColor())
+				spPlayer->SetDoneInteractStatueState(true);
+			else
+				spPlayer->SetDoneInteractStatueState(false);
+		}
+		SetEnable(false);
 	}
 }
 
 void CStatue::LateTickActive(const _double& _dTimeDelta)
 {
 	__super::LateTickActive(_dTimeDelta);
-	//for (auto& Containers : GetColliderContainer())
-	//{
-	//	if (Containers.first == L"ForInteractionStatue")
-	//	{
-	//		Containers.second->AddRenderer(RENDERID::RI_NONALPHA_LAST);
-	//	}
-	//}
 }
 
 HRESULT CStatue::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
@@ -101,5 +123,50 @@ HRESULT CStatue::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<U
 
 void CStatue::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
+}
+
+void CStatue::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
+{
+	SetEnable(true);
+	switch (_ProcessData.GetDataType())
+	{
+	case TAG_SC_STATICOBJFIND:
+	{
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		SHPTR<CWarriorPlayer> spPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
+
+		SC_STATICOBJFIND scStaticObjFind;
+		scStaticObjFind.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
+		{
+			if (1 == scStaticObjFind.enable())
+			{
+				spGameInstance->SoundPlayOnce(L"CheckpointSaving", GetTransform(), spPlayer->GetTransform());
+				SetActiveEnable(true);
+			}
+			else if (2 == scStaticObjFind.enable())
+			{
+				spGameInstance->StopSound(L"CheckpointSaving");
+				spGameInstance->SoundPlayOnce(L"CheckPointSave", GetTransform(), spPlayer->GetTransform());
+				SetCheckPointToOtherColor(true);
+
+				CS_SAVEPOINTENABLE csSavePointEnable;
+				VECTOR3 vPos;
+				_float3 vCurrentPos = GetTransform()->GetPos();
+				PROTOFUNC::MakeVector3(&vPos, vCurrentPos.x, vCurrentPos.y, vCurrentPos.z);
+				_int CellIndex = static_pointer_cast<CMainCamera>(spPlayer->GetFollowCamera())->GetCurrentNavi()->GetCurIndex();
+				PROTOFUNC::MakeCsSavePointEnable(&csSavePointEnable, GetNetworkID(), vPos, CellIndex);
+				spGameInstance->SendProtoData(UProcessedData(csSavePointEnable, TAG_CS_SAVEPOINTENABLE));
+				SetEnable(false);
+				SetOutline(false);
+				spPlayer->SetCanInteractStatueState(false);
+				spPlayer->SetDoneInteractStatueState(false);
+				SetTickActive(false);
+				spPlayer->SetInteractionElapsedTime(0);
+			}
+		}
+		scStaticObjFind.Clear();
+	}
+	break;
+	}
 }
 

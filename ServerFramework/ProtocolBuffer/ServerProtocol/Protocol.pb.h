@@ -65,6 +65,9 @@ extern COLLISIONDATADefaultTypeInternal _COLLISIONDATA_default_instance_;
 class CS_ATTACK;
 struct CS_ATTACKDefaultTypeInternal;
 extern CS_ATTACKDefaultTypeInternal _CS_ATTACK_default_instance_;
+class CS_CORENABLE;
+struct CS_CORENABLEDefaultTypeInternal;
+extern CS_CORENABLEDefaultTypeInternal _CS_CORENABLE_default_instance_;
 class CS_DAMAGED;
 struct CS_DAMAGEDDefaultTypeInternal;
 extern CS_DAMAGEDDefaultTypeInternal _CS_DAMAGED_default_instance_;
@@ -86,6 +89,9 @@ extern CS_PLAYERORDERDefaultTypeInternal _CS_PLAYERORDER_default_instance_;
 class CS_PRESSKEY;
 struct CS_PRESSKEYDefaultTypeInternal;
 extern CS_PRESSKEYDefaultTypeInternal _CS_PRESSKEY_default_instance_;
+class CS_SAVEPOINTENABLE;
+struct CS_SAVEPOINTENABLEDefaultTypeInternal;
+extern CS_SAVEPOINTENABLEDefaultTypeInternal _CS_SAVEPOINTENABLE_default_instance_;
 class EQINFO;
 struct EQINFODefaultTypeInternal;
 extern EQINFODefaultTypeInternal _EQINFO_default_instance_;
@@ -101,6 +107,9 @@ extern SC_CONNECTSUCCESSDefaultTypeInternal _SC_CONNECTSUCCESS_default_instance_
 class SC_DAMAGED;
 struct SC_DAMAGEDDefaultTypeInternal;
 extern SC_DAMAGEDDefaultTypeInternal _SC_DAMAGED_default_instance_;
+class SC_ENDING;
+struct SC_ENDINGDefaultTypeInternal;
+extern SC_ENDINGDefaultTypeInternal _SC_ENDING_default_instance_;
 class SC_HARLEQUINTHROWING;
 struct SC_HARLEQUINTHROWINGDefaultTypeInternal;
 extern SC_HARLEQUINTHROWINGDefaultTypeInternal _SC_HARLEQUINTHROWING_default_instance_;
@@ -110,6 +119,12 @@ extern SC_MONSTERFINDDefaultTypeInternal _SC_MONSTERFIND_default_instance_;
 class SC_OTHERCLIENTLOGIN;
 struct SC_OTHERCLIENTLOGINDefaultTypeInternal;
 extern SC_OTHERCLIENTLOGINDefaultTypeInternal _SC_OTHERCLIENTLOGIN_default_instance_;
+class SC_PLAYERGETUP;
+struct SC_PLAYERGETUPDefaultTypeInternal;
+extern SC_PLAYERGETUPDefaultTypeInternal _SC_PLAYERGETUP_default_instance_;
+class SC_SAVEPOINTENABLE;
+struct SC_SAVEPOINTENABLEDefaultTypeInternal;
+extern SC_SAVEPOINTENABLEDefaultTypeInternal _SC_SAVEPOINTENABLE_default_instance_;
 class SC_SEEPLAYERMOVE;
 struct SC_SEEPLAYERMOVEDefaultTypeInternal;
 extern SC_SEEPLAYERMOVEDefaultTypeInternal _SC_SEEPLAYERMOVE_default_instance_;
@@ -976,6 +991,428 @@ class SC_SEEPLAYERMOVE final :
   friend struct ::TableStruct_Protocol_2eproto;
 };// -------------------------------------------------------------------
 
+class SC_SAVEPOINTENABLE final :
+    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:SC_SAVEPOINTENABLE) */ {
+ public:
+  inline SC_SAVEPOINTENABLE() : SC_SAVEPOINTENABLE(nullptr) {}
+  ~SC_SAVEPOINTENABLE() override;
+  template<typename = void>
+  explicit PROTOBUF_CONSTEXPR SC_SAVEPOINTENABLE(::google::protobuf::internal::ConstantInitialized);
+
+  inline SC_SAVEPOINTENABLE(const SC_SAVEPOINTENABLE& from)
+      : SC_SAVEPOINTENABLE(nullptr, from) {}
+  SC_SAVEPOINTENABLE(SC_SAVEPOINTENABLE&& from) noexcept
+    : SC_SAVEPOINTENABLE() {
+    *this = ::std::move(from);
+  }
+
+  inline SC_SAVEPOINTENABLE& operator=(const SC_SAVEPOINTENABLE& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline SC_SAVEPOINTENABLE& operator=(SC_SAVEPOINTENABLE&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetArena() == from.GetArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const SC_SAVEPOINTENABLE& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const SC_SAVEPOINTENABLE* internal_default_instance() {
+    return reinterpret_cast<const SC_SAVEPOINTENABLE*>(
+               &_SC_SAVEPOINTENABLE_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    14;
+
+  friend void swap(SC_SAVEPOINTENABLE& a, SC_SAVEPOINTENABLE& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(SC_SAVEPOINTENABLE* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() != nullptr &&
+        GetArena() == other->GetArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() == other->GetArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(SC_SAVEPOINTENABLE* other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  SC_SAVEPOINTENABLE* New(::google::protobuf::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<SC_SAVEPOINTENABLE>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const SC_SAVEPOINTENABLE& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom( const SC_SAVEPOINTENABLE& from) {
+    SC_SAVEPOINTENABLE::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  ::size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::google::protobuf::internal::ParseContext* ctx) final;
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target, ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
+  void SharedCtor(::google::protobuf::Arena* arena);
+  void SharedDtor();
+  void InternalSwap(SC_SAVEPOINTENABLE* other);
+
+  private:
+  friend class ::google::protobuf::internal::AnyMetadata;
+  static ::absl::string_view FullMessageName() {
+    return "SC_SAVEPOINTENABLE";
+  }
+  protected:
+  explicit SC_SAVEPOINTENABLE(::google::protobuf::Arena* arena);
+  SC_SAVEPOINTENABLE(::google::protobuf::Arena* arena, const SC_SAVEPOINTENABLE& from);
+  public:
+
+  static const ClassData _class_data_;
+  const ::google::protobuf::Message::ClassData*GetClassData() const final;
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kIdFieldNumber = 1,
+    kCountFieldNumber = 2,
+  };
+  // int64 id = 1;
+  void clear_id() ;
+  ::int64_t id() const;
+  void set_id(::int64_t value);
+
+  private:
+  ::int64_t _internal_id() const;
+  void _internal_set_id(::int64_t value);
+
+  public:
+  // int32 count = 2;
+  void clear_count() ;
+  ::int32_t count() const;
+  void set_count(::int32_t value);
+
+  private:
+  ::int32_t _internal_count() const;
+  void _internal_set_count(::int32_t value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:SC_SAVEPOINTENABLE)
+ private:
+  class _Internal;
+
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      1, 2, 0,
+      0, 2>
+      _table_;
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+
+        inline explicit constexpr Impl_(
+            ::google::protobuf::internal::ConstantInitialized) noexcept;
+        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                              ::google::protobuf::Arena* arena);
+        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                              ::google::protobuf::Arena* arena, const Impl_& from);
+    ::int64_t id_;
+    ::int32_t count_;
+    mutable ::google::protobuf::internal::CachedSize _cached_size_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_Protocol_2eproto;
+};// -------------------------------------------------------------------
+
+class SC_PLAYERGETUP final :
+    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:SC_PLAYERGETUP) */ {
+ public:
+  inline SC_PLAYERGETUP() : SC_PLAYERGETUP(nullptr) {}
+  ~SC_PLAYERGETUP() override;
+  template<typename = void>
+  explicit PROTOBUF_CONSTEXPR SC_PLAYERGETUP(::google::protobuf::internal::ConstantInitialized);
+
+  inline SC_PLAYERGETUP(const SC_PLAYERGETUP& from)
+      : SC_PLAYERGETUP(nullptr, from) {}
+  SC_PLAYERGETUP(SC_PLAYERGETUP&& from) noexcept
+    : SC_PLAYERGETUP() {
+    *this = ::std::move(from);
+  }
+
+  inline SC_PLAYERGETUP& operator=(const SC_PLAYERGETUP& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline SC_PLAYERGETUP& operator=(SC_PLAYERGETUP&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetArena() == from.GetArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const SC_PLAYERGETUP& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const SC_PLAYERGETUP* internal_default_instance() {
+    return reinterpret_cast<const SC_PLAYERGETUP*>(
+               &_SC_PLAYERGETUP_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    15;
+
+  friend void swap(SC_PLAYERGETUP& a, SC_PLAYERGETUP& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(SC_PLAYERGETUP* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() != nullptr &&
+        GetArena() == other->GetArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() == other->GetArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(SC_PLAYERGETUP* other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  SC_PLAYERGETUP* New(::google::protobuf::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<SC_PLAYERGETUP>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const SC_PLAYERGETUP& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom( const SC_PLAYERGETUP& from) {
+    SC_PLAYERGETUP::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  ::size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::google::protobuf::internal::ParseContext* ctx) final;
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target, ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
+  void SharedCtor(::google::protobuf::Arena* arena);
+  void SharedDtor();
+  void InternalSwap(SC_PLAYERGETUP* other);
+
+  private:
+  friend class ::google::protobuf::internal::AnyMetadata;
+  static ::absl::string_view FullMessageName() {
+    return "SC_PLAYERGETUP";
+  }
+  protected:
+  explicit SC_PLAYERGETUP(::google::protobuf::Arena* arena);
+  SC_PLAYERGETUP(::google::protobuf::Arena* arena, const SC_PLAYERGETUP& from);
+  public:
+
+  static const ClassData _class_data_;
+  const ::google::protobuf::Message::ClassData*GetClassData() const final;
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kIdFieldNumber = 1,
+    kHpFieldNumber = 2,
+    kPosxFieldNumber = 3,
+    kPosyFieldNumber = 4,
+    kPoszFieldNumber = 5,
+    kCamCellIndexFieldNumber = 6,
+  };
+  // int64 id = 1;
+  void clear_id() ;
+  ::int64_t id() const;
+  void set_id(::int64_t value);
+
+  private:
+  ::int64_t _internal_id() const;
+  void _internal_set_id(::int64_t value);
+
+  public:
+  // float hp = 2;
+  void clear_hp() ;
+  float hp() const;
+  void set_hp(float value);
+
+  private:
+  float _internal_hp() const;
+  void _internal_set_hp(float value);
+
+  public:
+  // float posx = 3;
+  void clear_posx() ;
+  float posx() const;
+  void set_posx(float value);
+
+  private:
+  float _internal_posx() const;
+  void _internal_set_posx(float value);
+
+  public:
+  // float posy = 4;
+  void clear_posy() ;
+  float posy() const;
+  void set_posy(float value);
+
+  private:
+  float _internal_posy() const;
+  void _internal_set_posy(float value);
+
+  public:
+  // float posz = 5;
+  void clear_posz() ;
+  float posz() const;
+  void set_posz(float value);
+
+  private:
+  float _internal_posz() const;
+  void _internal_set_posz(float value);
+
+  public:
+  // int32 camCellIndex = 6;
+  void clear_camcellindex() ;
+  ::int32_t camcellindex() const;
+  void set_camcellindex(::int32_t value);
+
+  private:
+  ::int32_t _internal_camcellindex() const;
+  void _internal_set_camcellindex(::int32_t value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:SC_PLAYERGETUP)
+ private:
+  class _Internal;
+
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      3, 6, 0,
+      0, 2>
+      _table_;
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+
+        inline explicit constexpr Impl_(
+            ::google::protobuf::internal::ConstantInitialized) noexcept;
+        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                              ::google::protobuf::Arena* arena);
+        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                              ::google::protobuf::Arena* arena, const Impl_& from);
+    ::int64_t id_;
+    float hp_;
+    float posx_;
+    float posy_;
+    float posz_;
+    ::int32_t camcellindex_;
+    mutable ::google::protobuf::internal::CachedSize _cached_size_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_Protocol_2eproto;
+};// -------------------------------------------------------------------
+
 class SC_OTHERCLIENTLOGIN final :
     public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:SC_OTHERCLIENTLOGIN) */ {
  public:
@@ -1590,6 +2027,181 @@ class SC_HARLEQUINTHROWING final :
     float posz_;
     ::int32_t throwon_;
     ::int32_t index_;
+    mutable ::google::protobuf::internal::CachedSize _cached_size_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_Protocol_2eproto;
+};// -------------------------------------------------------------------
+
+class SC_ENDING final :
+    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:SC_ENDING) */ {
+ public:
+  inline SC_ENDING() : SC_ENDING(nullptr) {}
+  ~SC_ENDING() override;
+  template<typename = void>
+  explicit PROTOBUF_CONSTEXPR SC_ENDING(::google::protobuf::internal::ConstantInitialized);
+
+  inline SC_ENDING(const SC_ENDING& from)
+      : SC_ENDING(nullptr, from) {}
+  SC_ENDING(SC_ENDING&& from) noexcept
+    : SC_ENDING() {
+    *this = ::std::move(from);
+  }
+
+  inline SC_ENDING& operator=(const SC_ENDING& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline SC_ENDING& operator=(SC_ENDING&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetArena() == from.GetArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const SC_ENDING& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const SC_ENDING* internal_default_instance() {
+    return reinterpret_cast<const SC_ENDING*>(
+               &_SC_ENDING_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    16;
+
+  friend void swap(SC_ENDING& a, SC_ENDING& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(SC_ENDING* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() != nullptr &&
+        GetArena() == other->GetArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() == other->GetArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(SC_ENDING* other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  SC_ENDING* New(::google::protobuf::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<SC_ENDING>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const SC_ENDING& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom( const SC_ENDING& from) {
+    SC_ENDING::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  ::size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::google::protobuf::internal::ParseContext* ctx) final;
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target, ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
+  void SharedCtor(::google::protobuf::Arena* arena);
+  void SharedDtor();
+  void InternalSwap(SC_ENDING* other);
+
+  private:
+  friend class ::google::protobuf::internal::AnyMetadata;
+  static ::absl::string_view FullMessageName() {
+    return "SC_ENDING";
+  }
+  protected:
+  explicit SC_ENDING(::google::protobuf::Arena* arena);
+  SC_ENDING(::google::protobuf::Arena* arena, const SC_ENDING& from);
+  public:
+
+  static const ClassData _class_data_;
+  const ::google::protobuf::Message::ClassData*GetClassData() const final;
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kIdFieldNumber = 1,
+  };
+  // int64 id = 1;
+  void clear_id() ;
+  ::int64_t id() const;
+  void set_id(::int64_t value);
+
+  private:
+  ::int64_t _internal_id() const;
+  void _internal_set_id(::int64_t value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:SC_ENDING)
+ private:
+  class _Internal;
+
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      0, 1, 0,
+      0, 2>
+      _table_;
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+
+        inline explicit constexpr Impl_(
+            ::google::protobuf::internal::ConstantInitialized) noexcept;
+        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                              ::google::protobuf::Arena* arena);
+        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                              ::google::protobuf::Arena* arena, const Impl_& from);
+    ::int64_t id_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -2724,6 +3336,229 @@ class EQINFO final :
   friend struct ::TableStruct_Protocol_2eproto;
 };// -------------------------------------------------------------------
 
+class CS_SAVEPOINTENABLE final :
+    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:CS_SAVEPOINTENABLE) */ {
+ public:
+  inline CS_SAVEPOINTENABLE() : CS_SAVEPOINTENABLE(nullptr) {}
+  ~CS_SAVEPOINTENABLE() override;
+  template<typename = void>
+  explicit PROTOBUF_CONSTEXPR CS_SAVEPOINTENABLE(::google::protobuf::internal::ConstantInitialized);
+
+  inline CS_SAVEPOINTENABLE(const CS_SAVEPOINTENABLE& from)
+      : CS_SAVEPOINTENABLE(nullptr, from) {}
+  CS_SAVEPOINTENABLE(CS_SAVEPOINTENABLE&& from) noexcept
+    : CS_SAVEPOINTENABLE() {
+    *this = ::std::move(from);
+  }
+
+  inline CS_SAVEPOINTENABLE& operator=(const CS_SAVEPOINTENABLE& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline CS_SAVEPOINTENABLE& operator=(CS_SAVEPOINTENABLE&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetArena() == from.GetArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const CS_SAVEPOINTENABLE& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const CS_SAVEPOINTENABLE* internal_default_instance() {
+    return reinterpret_cast<const CS_SAVEPOINTENABLE*>(
+               &_CS_SAVEPOINTENABLE_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    24;
+
+  friend void swap(CS_SAVEPOINTENABLE& a, CS_SAVEPOINTENABLE& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(CS_SAVEPOINTENABLE* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() != nullptr &&
+        GetArena() == other->GetArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() == other->GetArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(CS_SAVEPOINTENABLE* other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  CS_SAVEPOINTENABLE* New(::google::protobuf::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<CS_SAVEPOINTENABLE>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const CS_SAVEPOINTENABLE& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom( const CS_SAVEPOINTENABLE& from) {
+    CS_SAVEPOINTENABLE::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  ::size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::google::protobuf::internal::ParseContext* ctx) final;
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target, ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
+  void SharedCtor(::google::protobuf::Arena* arena);
+  void SharedDtor();
+  void InternalSwap(CS_SAVEPOINTENABLE* other);
+
+  private:
+  friend class ::google::protobuf::internal::AnyMetadata;
+  static ::absl::string_view FullMessageName() {
+    return "CS_SAVEPOINTENABLE";
+  }
+  protected:
+  explicit CS_SAVEPOINTENABLE(::google::protobuf::Arena* arena);
+  CS_SAVEPOINTENABLE(::google::protobuf::Arena* arena, const CS_SAVEPOINTENABLE& from);
+  public:
+
+  static const ClassData _class_data_;
+  const ::google::protobuf::Message::ClassData*GetClassData() const final;
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kIdFieldNumber = 1,
+    kPosxFieldNumber = 2,
+    kPosyFieldNumber = 3,
+    kPoszFieldNumber = 4,
+    kCamCellIndexFieldNumber = 5,
+  };
+  // int64 id = 1;
+  void clear_id() ;
+  ::int64_t id() const;
+  void set_id(::int64_t value);
+
+  private:
+  ::int64_t _internal_id() const;
+  void _internal_set_id(::int64_t value);
+
+  public:
+  // float posx = 2;
+  void clear_posx() ;
+  float posx() const;
+  void set_posx(float value);
+
+  private:
+  float _internal_posx() const;
+  void _internal_set_posx(float value);
+
+  public:
+  // float posy = 3;
+  void clear_posy() ;
+  float posy() const;
+  void set_posy(float value);
+
+  private:
+  float _internal_posy() const;
+  void _internal_set_posy(float value);
+
+  public:
+  // float posz = 4;
+  void clear_posz() ;
+  float posz() const;
+  void set_posz(float value);
+
+  private:
+  float _internal_posz() const;
+  void _internal_set_posz(float value);
+
+  public:
+  // int32 camCellIndex = 5;
+  void clear_camcellindex() ;
+  ::int32_t camcellindex() const;
+  void set_camcellindex(::int32_t value);
+
+  private:
+  ::int32_t _internal_camcellindex() const;
+  void _internal_set_camcellindex(::int32_t value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:CS_SAVEPOINTENABLE)
+ private:
+  class _Internal;
+
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      3, 5, 0,
+      0, 2>
+      _table_;
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+
+        inline explicit constexpr Impl_(
+            ::google::protobuf::internal::ConstantInitialized) noexcept;
+        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                              ::google::protobuf::Arena* arena);
+        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                              ::google::protobuf::Arena* arena, const Impl_& from);
+    ::int64_t id_;
+    float posx_;
+    float posy_;
+    float posz_;
+    ::int32_t camcellindex_;
+    mutable ::google::protobuf::internal::CachedSize _cached_size_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_Protocol_2eproto;
+};// -------------------------------------------------------------------
+
 class CS_PRESSKEY final :
     public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:CS_PRESSKEY) */ {
  public:
@@ -2783,7 +3618,7 @@ class CS_PRESSKEY final :
                &_CS_PRESSKEY_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    17;
+    20;
 
   friend void swap(CS_PRESSKEY& a, CS_PRESSKEY& b) {
     a.Swap(&b);
@@ -2970,7 +3805,7 @@ class CS_PLAYERORDER final :
                &_CS_PLAYERORDER_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    18;
+    21;
 
   friend void swap(CS_PLAYERORDER& a, CS_PLAYERORDER& b) {
     a.Swap(&b);
@@ -3157,7 +3992,7 @@ class CS_LOGIN final :
                &_CS_LOGIN_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    14;
+    17;
 
   friend void swap(CS_LOGIN& a, CS_LOGIN& b) {
     a.Swap(&b);
@@ -3332,7 +4167,7 @@ class CS_HEAL final :
                &_CS_HEAL_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    16;
+    19;
 
   friend void swap(CS_HEAL& a, CS_HEAL& b) {
     a.Swap(&b);
@@ -3507,7 +4342,7 @@ class CS_DISCONNECT final :
                &_CS_DISCONNECT_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    21;
+    26;
 
   friend void swap(CS_DISCONNECT& a, CS_DISCONNECT& b) {
     a.Swap(&b);
@@ -3682,7 +4517,7 @@ class CS_DAMAGEDTOMONSTER final :
                &_CS_DAMAGEDTOMONSTER_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    20;
+    23;
 
   friend void swap(CS_DAMAGEDTOMONSTER& a, CS_DAMAGEDTOMONSTER& b) {
     a.Swap(&b);
@@ -3881,7 +4716,7 @@ class CS_DAMAGED final :
                &_CS_DAMAGED_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    19;
+    22;
 
   friend void swap(CS_DAMAGED& a, CS_DAMAGED& b) {
     a.Swap(&b);
@@ -4002,6 +4837,181 @@ class CS_DAMAGED final :
                               ::google::protobuf::Arena* arena, const Impl_& from);
     ::int64_t id_;
     float damage_;
+    mutable ::google::protobuf::internal::CachedSize _cached_size_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_Protocol_2eproto;
+};// -------------------------------------------------------------------
+
+class CS_CORENABLE final :
+    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:CS_CORENABLE) */ {
+ public:
+  inline CS_CORENABLE() : CS_CORENABLE(nullptr) {}
+  ~CS_CORENABLE() override;
+  template<typename = void>
+  explicit PROTOBUF_CONSTEXPR CS_CORENABLE(::google::protobuf::internal::ConstantInitialized);
+
+  inline CS_CORENABLE(const CS_CORENABLE& from)
+      : CS_CORENABLE(nullptr, from) {}
+  CS_CORENABLE(CS_CORENABLE&& from) noexcept
+    : CS_CORENABLE() {
+    *this = ::std::move(from);
+  }
+
+  inline CS_CORENABLE& operator=(const CS_CORENABLE& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline CS_CORENABLE& operator=(CS_CORENABLE&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetArena() == from.GetArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const CS_CORENABLE& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const CS_CORENABLE* internal_default_instance() {
+    return reinterpret_cast<const CS_CORENABLE*>(
+               &_CS_CORENABLE_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    25;
+
+  friend void swap(CS_CORENABLE& a, CS_CORENABLE& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(CS_CORENABLE* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() != nullptr &&
+        GetArena() == other->GetArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() == other->GetArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(CS_CORENABLE* other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  CS_CORENABLE* New(::google::protobuf::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<CS_CORENABLE>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const CS_CORENABLE& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom( const CS_CORENABLE& from) {
+    CS_CORENABLE::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  ::size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::google::protobuf::internal::ParseContext* ctx) final;
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target, ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
+  void SharedCtor(::google::protobuf::Arena* arena);
+  void SharedDtor();
+  void InternalSwap(CS_CORENABLE* other);
+
+  private:
+  friend class ::google::protobuf::internal::AnyMetadata;
+  static ::absl::string_view FullMessageName() {
+    return "CS_CORENABLE";
+  }
+  protected:
+  explicit CS_CORENABLE(::google::protobuf::Arena* arena);
+  CS_CORENABLE(::google::protobuf::Arena* arena, const CS_CORENABLE& from);
+  public:
+
+  static const ClassData _class_data_;
+  const ::google::protobuf::Message::ClassData*GetClassData() const final;
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kIdFieldNumber = 1,
+  };
+  // int64 id = 1;
+  void clear_id() ;
+  ::int64_t id() const;
+  void set_id(::int64_t value);
+
+  private:
+  ::int64_t _internal_id() const;
+  void _internal_set_id(::int64_t value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:CS_CORENABLE)
+ private:
+  class _Internal;
+
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      0, 1, 0,
+      0, 2>
+      _table_;
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+
+        inline explicit constexpr Impl_(
+            ::google::protobuf::internal::ConstantInitialized) noexcept;
+        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                              ::google::protobuf::Arena* arena);
+        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                              ::google::protobuf::Arena* arena, const Impl_& from);
+    ::int64_t id_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -4538,7 +5548,7 @@ class CS_ATTACK final :
                &_CS_ATTACK_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    15;
+    18;
 
   friend void swap(CS_ATTACK& a, CS_ATTACK& b) {
     a.Swap(&b);
@@ -6180,6 +7190,225 @@ inline void SC_ANUBISSTATE::_internal_set_shieldtimer(float value) {
 
 // -------------------------------------------------------------------
 
+// SC_SAVEPOINTENABLE
+
+// int64 id = 1;
+inline void SC_SAVEPOINTENABLE::clear_id() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.id_ = ::int64_t{0};
+}
+inline ::int64_t SC_SAVEPOINTENABLE::id() const {
+  // @@protoc_insertion_point(field_get:SC_SAVEPOINTENABLE.id)
+  return _internal_id();
+}
+inline void SC_SAVEPOINTENABLE::set_id(::int64_t value) {
+  _internal_set_id(value);
+  // @@protoc_insertion_point(field_set:SC_SAVEPOINTENABLE.id)
+}
+inline ::int64_t SC_SAVEPOINTENABLE::_internal_id() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.id_;
+}
+inline void SC_SAVEPOINTENABLE::_internal_set_id(::int64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.id_ = value;
+}
+
+// int32 count = 2;
+inline void SC_SAVEPOINTENABLE::clear_count() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.count_ = 0;
+}
+inline ::int32_t SC_SAVEPOINTENABLE::count() const {
+  // @@protoc_insertion_point(field_get:SC_SAVEPOINTENABLE.count)
+  return _internal_count();
+}
+inline void SC_SAVEPOINTENABLE::set_count(::int32_t value) {
+  _internal_set_count(value);
+  // @@protoc_insertion_point(field_set:SC_SAVEPOINTENABLE.count)
+}
+inline ::int32_t SC_SAVEPOINTENABLE::_internal_count() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.count_;
+}
+inline void SC_SAVEPOINTENABLE::_internal_set_count(::int32_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.count_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// SC_PLAYERGETUP
+
+// int64 id = 1;
+inline void SC_PLAYERGETUP::clear_id() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.id_ = ::int64_t{0};
+}
+inline ::int64_t SC_PLAYERGETUP::id() const {
+  // @@protoc_insertion_point(field_get:SC_PLAYERGETUP.id)
+  return _internal_id();
+}
+inline void SC_PLAYERGETUP::set_id(::int64_t value) {
+  _internal_set_id(value);
+  // @@protoc_insertion_point(field_set:SC_PLAYERGETUP.id)
+}
+inline ::int64_t SC_PLAYERGETUP::_internal_id() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.id_;
+}
+inline void SC_PLAYERGETUP::_internal_set_id(::int64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.id_ = value;
+}
+
+// float hp = 2;
+inline void SC_PLAYERGETUP::clear_hp() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.hp_ = 0;
+}
+inline float SC_PLAYERGETUP::hp() const {
+  // @@protoc_insertion_point(field_get:SC_PLAYERGETUP.hp)
+  return _internal_hp();
+}
+inline void SC_PLAYERGETUP::set_hp(float value) {
+  _internal_set_hp(value);
+  // @@protoc_insertion_point(field_set:SC_PLAYERGETUP.hp)
+}
+inline float SC_PLAYERGETUP::_internal_hp() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.hp_;
+}
+inline void SC_PLAYERGETUP::_internal_set_hp(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.hp_ = value;
+}
+
+// float posx = 3;
+inline void SC_PLAYERGETUP::clear_posx() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.posx_ = 0;
+}
+inline float SC_PLAYERGETUP::posx() const {
+  // @@protoc_insertion_point(field_get:SC_PLAYERGETUP.posx)
+  return _internal_posx();
+}
+inline void SC_PLAYERGETUP::set_posx(float value) {
+  _internal_set_posx(value);
+  // @@protoc_insertion_point(field_set:SC_PLAYERGETUP.posx)
+}
+inline float SC_PLAYERGETUP::_internal_posx() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.posx_;
+}
+inline void SC_PLAYERGETUP::_internal_set_posx(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.posx_ = value;
+}
+
+// float posy = 4;
+inline void SC_PLAYERGETUP::clear_posy() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.posy_ = 0;
+}
+inline float SC_PLAYERGETUP::posy() const {
+  // @@protoc_insertion_point(field_get:SC_PLAYERGETUP.posy)
+  return _internal_posy();
+}
+inline void SC_PLAYERGETUP::set_posy(float value) {
+  _internal_set_posy(value);
+  // @@protoc_insertion_point(field_set:SC_PLAYERGETUP.posy)
+}
+inline float SC_PLAYERGETUP::_internal_posy() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.posy_;
+}
+inline void SC_PLAYERGETUP::_internal_set_posy(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.posy_ = value;
+}
+
+// float posz = 5;
+inline void SC_PLAYERGETUP::clear_posz() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.posz_ = 0;
+}
+inline float SC_PLAYERGETUP::posz() const {
+  // @@protoc_insertion_point(field_get:SC_PLAYERGETUP.posz)
+  return _internal_posz();
+}
+inline void SC_PLAYERGETUP::set_posz(float value) {
+  _internal_set_posz(value);
+  // @@protoc_insertion_point(field_set:SC_PLAYERGETUP.posz)
+}
+inline float SC_PLAYERGETUP::_internal_posz() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.posz_;
+}
+inline void SC_PLAYERGETUP::_internal_set_posz(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.posz_ = value;
+}
+
+// int32 camCellIndex = 6;
+inline void SC_PLAYERGETUP::clear_camcellindex() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.camcellindex_ = 0;
+}
+inline ::int32_t SC_PLAYERGETUP::camcellindex() const {
+  // @@protoc_insertion_point(field_get:SC_PLAYERGETUP.camCellIndex)
+  return _internal_camcellindex();
+}
+inline void SC_PLAYERGETUP::set_camcellindex(::int32_t value) {
+  _internal_set_camcellindex(value);
+  // @@protoc_insertion_point(field_set:SC_PLAYERGETUP.camCellIndex)
+}
+inline ::int32_t SC_PLAYERGETUP::_internal_camcellindex() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.camcellindex_;
+}
+inline void SC_PLAYERGETUP::_internal_set_camcellindex(::int32_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.camcellindex_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// SC_ENDING
+
+// int64 id = 1;
+inline void SC_ENDING::clear_id() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.id_ = ::int64_t{0};
+}
+inline ::int64_t SC_ENDING::id() const {
+  // @@protoc_insertion_point(field_get:SC_ENDING.id)
+  return _internal_id();
+}
+inline void SC_ENDING::set_id(::int64_t value) {
+  _internal_set_id(value);
+  // @@protoc_insertion_point(field_set:SC_ENDING.id)
+}
+inline ::int64_t SC_ENDING::_internal_id() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.id_;
+}
+inline void SC_ENDING::_internal_set_id(::int64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.id_ = value;
+}
+
+// -------------------------------------------------------------------
+
 // CS_LOGIN
 
 // int64 id = 1;
@@ -6599,6 +7828,152 @@ inline void CS_DAMAGEDTOMONSTER::_internal_set_enemyid(::int64_t value) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   ;
   _impl_.enemyid_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// CS_SAVEPOINTENABLE
+
+// int64 id = 1;
+inline void CS_SAVEPOINTENABLE::clear_id() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.id_ = ::int64_t{0};
+}
+inline ::int64_t CS_SAVEPOINTENABLE::id() const {
+  // @@protoc_insertion_point(field_get:CS_SAVEPOINTENABLE.id)
+  return _internal_id();
+}
+inline void CS_SAVEPOINTENABLE::set_id(::int64_t value) {
+  _internal_set_id(value);
+  // @@protoc_insertion_point(field_set:CS_SAVEPOINTENABLE.id)
+}
+inline ::int64_t CS_SAVEPOINTENABLE::_internal_id() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.id_;
+}
+inline void CS_SAVEPOINTENABLE::_internal_set_id(::int64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.id_ = value;
+}
+
+// float posx = 2;
+inline void CS_SAVEPOINTENABLE::clear_posx() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.posx_ = 0;
+}
+inline float CS_SAVEPOINTENABLE::posx() const {
+  // @@protoc_insertion_point(field_get:CS_SAVEPOINTENABLE.posx)
+  return _internal_posx();
+}
+inline void CS_SAVEPOINTENABLE::set_posx(float value) {
+  _internal_set_posx(value);
+  // @@protoc_insertion_point(field_set:CS_SAVEPOINTENABLE.posx)
+}
+inline float CS_SAVEPOINTENABLE::_internal_posx() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.posx_;
+}
+inline void CS_SAVEPOINTENABLE::_internal_set_posx(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.posx_ = value;
+}
+
+// float posy = 3;
+inline void CS_SAVEPOINTENABLE::clear_posy() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.posy_ = 0;
+}
+inline float CS_SAVEPOINTENABLE::posy() const {
+  // @@protoc_insertion_point(field_get:CS_SAVEPOINTENABLE.posy)
+  return _internal_posy();
+}
+inline void CS_SAVEPOINTENABLE::set_posy(float value) {
+  _internal_set_posy(value);
+  // @@protoc_insertion_point(field_set:CS_SAVEPOINTENABLE.posy)
+}
+inline float CS_SAVEPOINTENABLE::_internal_posy() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.posy_;
+}
+inline void CS_SAVEPOINTENABLE::_internal_set_posy(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.posy_ = value;
+}
+
+// float posz = 4;
+inline void CS_SAVEPOINTENABLE::clear_posz() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.posz_ = 0;
+}
+inline float CS_SAVEPOINTENABLE::posz() const {
+  // @@protoc_insertion_point(field_get:CS_SAVEPOINTENABLE.posz)
+  return _internal_posz();
+}
+inline void CS_SAVEPOINTENABLE::set_posz(float value) {
+  _internal_set_posz(value);
+  // @@protoc_insertion_point(field_set:CS_SAVEPOINTENABLE.posz)
+}
+inline float CS_SAVEPOINTENABLE::_internal_posz() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.posz_;
+}
+inline void CS_SAVEPOINTENABLE::_internal_set_posz(float value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.posz_ = value;
+}
+
+// int32 camCellIndex = 5;
+inline void CS_SAVEPOINTENABLE::clear_camcellindex() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.camcellindex_ = 0;
+}
+inline ::int32_t CS_SAVEPOINTENABLE::camcellindex() const {
+  // @@protoc_insertion_point(field_get:CS_SAVEPOINTENABLE.camCellIndex)
+  return _internal_camcellindex();
+}
+inline void CS_SAVEPOINTENABLE::set_camcellindex(::int32_t value) {
+  _internal_set_camcellindex(value);
+  // @@protoc_insertion_point(field_set:CS_SAVEPOINTENABLE.camCellIndex)
+}
+inline ::int32_t CS_SAVEPOINTENABLE::_internal_camcellindex() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.camcellindex_;
+}
+inline void CS_SAVEPOINTENABLE::_internal_set_camcellindex(::int32_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.camcellindex_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// CS_CORENABLE
+
+// int64 id = 1;
+inline void CS_CORENABLE::clear_id() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.id_ = ::int64_t{0};
+}
+inline ::int64_t CS_CORENABLE::id() const {
+  // @@protoc_insertion_point(field_get:CS_CORENABLE.id)
+  return _internal_id();
+}
+inline void CS_CORENABLE::set_id(::int64_t value) {
+  _internal_set_id(value);
+  // @@protoc_insertion_point(field_set:CS_CORENABLE.id)
+}
+inline ::int64_t CS_CORENABLE::_internal_id() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.id_;
+}
+inline void CS_CORENABLE::_internal_set_id(::int64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.id_ = value;
 }
 
 // -------------------------------------------------------------------

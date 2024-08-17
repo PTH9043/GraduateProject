@@ -17,7 +17,6 @@ namespace Server
 		std::cout << "Start Server!\n";
 		try
 		{
-			std::cout << "Create Service Object!\n";
 			return GetCoreInstance()->Start();
 		}
 		catch (int _exception)

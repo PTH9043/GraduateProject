@@ -41,7 +41,7 @@ namespace Core {
 		{
 			Vector3 vPosition = spTransform->GetPos();
 			spNaviagation->ComputeHeight(REF_OUT vPosition);
-			spTransform->SetPos(vPosition);
+	//		spTransform->SetPos(vPosition);
 
 			SHPTR<ACell> spNewCell{};
 			if (false == spNaviagation->IsMove(vPosition, REF_OUT spNewCell))
@@ -53,7 +53,7 @@ namespace Core {
 			}
 			else
 			{
-				SetPrevPosition(vPosition);
+				spTransform->SetPos(vPosition);
 			}
 		}
 	}

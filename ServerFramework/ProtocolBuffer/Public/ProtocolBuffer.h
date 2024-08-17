@@ -44,6 +44,9 @@ namespace PROTOFUNC
 		int _throwenable, int _index);
 	void MakeScStaticObjFind(SC_STATICOBJFIND* _pOut, LLONG _id, int _enable);
 	void MakeScAnubisState(SC_ANUBISSTATE* _pOut, LLONG _id, int _shieldOn, float _ShieldTimer);
+	void MakeScSavePointEnable(SC_SAVEPOINTENABLE* _pOut, LLONG _id, int _count);
+	void MakeScPlayerGetUp(SC_PLAYERGETUP* _pOut, LLONG _id, float _hp,  const VECTOR3& _vPos, int _camCellIndex);
+	void MakeScEnding(SC_ENDING* _pOut, LLONG _id);
 
 	/* =========== CS =============== */
 	// Client To Server 
@@ -56,6 +59,8 @@ namespace PROTOFUNC
 	void MakeCsDamaged(CS_DAMAGED* _pOut, LLONG _id, float _Damaged);
 	void MakeCsPressKey(CS_PRESSKEY* _pOut, LLONG _id, int _key);
 	void MakeCsDamagedToMonster(CS_DAMAGEDTOMONSTER* _pOut, LLONG _id, float _damge, LLONG _enemyID);
+	void MakeCsSavePointEnable(CS_SAVEPOINTENABLE* _pOut, LLONG _id, const VECTOR3& _vPos, int _camCellIndex);
+	void MakeCsCoreEnable(CS_CORENABLE* _pOut, LLONG _id);
 
 	class PROTOCOL_MEMORY_LEAK_REMOVER
 	{

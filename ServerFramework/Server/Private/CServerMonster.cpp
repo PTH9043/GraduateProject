@@ -87,29 +87,32 @@ namespace Server {
 		}
 		else
 		{
-			SHPTR<ATransform> spTransform = GetTransform();
-			SHPTR<AAnimController> spAnimController = GetAnimController();
-			SHPTR<AAnimator> spAnimator = spAnimController->GetAnimator();
-			SHPTR<AAnimation> spCurAnimation = spAnimator->GetCurAnimation();
-
-			Vector3 vPos = spTransform->GetPos();
-			Vector3 vRotate = spTransform->GetRotationValue();
-
-			VECTOR3 vSendPos, vSendRotate;
+			if (true == IsFoundPlayerFirstTime())
 			{
-				PROTOFUNC::MakeVector3(&vSendPos, vPos.x, vPos.y, vPos.z);
-				PROTOFUNC::MakeVector3(&vSendRotate, vRotate.x, vRotate.y, vRotate.z);
+				SHPTR<ATransform> spTransform = GetTransform();
+				SHPTR<AAnimController> spAnimController = GetAnimController();
+				SHPTR<AAnimator> spAnimator = spAnimController->GetAnimator();
+				SHPTR<AAnimation> spCurAnimation = spAnimator->GetCurAnimation();
+
+				Vector3 vPos = spTransform->GetPos();
+				Vector3 vRotate = spTransform->GetRotationValue();
+
+				VECTOR3 vSendPos, vSendRotate;
+				{
+					PROTOFUNC::MakeVector3(&vSendPos, vPos.x, vPos.y, vPos.z);
+					PROTOFUNC::MakeVector3(&vSendRotate, vRotate.x, vRotate.y, vRotate.z);
+				}
+
+				_int AnimState = spAnimController->GetAnimState();
+				_double dTimeAcc = spCurAnimation->GetTimeAcc();
+				_int AnimIndex = spAnimator->GetCurAnimIndex();
+
+				MOBSTATE monsterState;
+				PROTOFUNC::MakeMobState(&monsterState, GetSessionID(), vSendPos, vSendRotate,
+					AnimState, AnimIndex, false, isCurrentFindPlayer, isDamaged, dTimeAcc);
+				CombineProto<MOBSTATE>(GetCopyBuffer(), GetPacketHead(), monsterState, TAG_SC_MONSTERSTATE);
+				_spSession->SendData(GetCopyBufferPointer(), GetPacketHead());
 			}
-
-			_int AnimState = spAnimController->GetAnimState();
-			_double dTimeAcc = spCurAnimation->GetTimeAcc();
-			_int AnimIndex = spAnimator->GetCurAnimIndex();
-
-			MOBSTATE monsterState;
-			PROTOFUNC::MakeMobState(&monsterState, GetSessionID(), vSendPos, vSendRotate,
-				AnimState, AnimIndex, false, isCurrentFindPlayer, isDamaged, dTimeAcc);
-			CombineProto<MOBSTATE>(GetCopyBuffer(), GetPacketHead(), monsterState, TAG_SC_MONSTERSTATE);
-			_spSession->SendData(GetCopyBufferPointer(), GetPacketHead());
 		}
 	}
 

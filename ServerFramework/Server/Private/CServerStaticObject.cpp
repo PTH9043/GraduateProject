@@ -11,6 +11,7 @@ namespace Server {
 		AStaticObject(OBJCON_CONDATA, _ID), m_StaticObjType{0}, 
 		m_isDoneInteractStaticObject{ false }, m_ActiveTimer{4, std::memory_order_seq_cst}
 	{
+		SetActiveRange(10.f);
 	}
 
 	_bool CServerStaticObject::Start(const VOIDDATAS& _ReceiveDatas)
@@ -26,7 +27,6 @@ namespace Server {
 		m_strRoomName = pStaticObjData->strRoomName;
 #endif
 		UpdateColliderData();
-		SetActiveRange(10.f);
 		return __super::Start(_ReceiveDatas);
 	}
 
@@ -41,6 +41,7 @@ namespace Server {
 	void CServerStaticObject::State(SHPTR<ASession> _spSession)
 	{
 		FindPlayer(_spSession);
+		RETURN_CHECK(nullptr == GetInteractiveSession(), ;);
 		RETURN_CHECK(false == IsCurrentFindPlayer(), ;);
 		_int enable = 0;
 
@@ -62,9 +63,18 @@ namespace Server {
 		PROTOFUNC::MakeScStaticObjFind(&scStaticObjectFind, GetSessionID(), enable);
 		CombineProto<SC_STATICOBJFIND>(GetCopyBuffer(), GetPacketHead(), scStaticObjectFind,
 			TAG_SC_STATICOBJFIND);
-		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
-		spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
 		scStaticObjectFind.Clear();
+
+		if (enable)
+		{
+			SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+			spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
+			ActivePermanentDisable();
+		}
+		else
+		{
+			_spSession->SendData(GetCopyBufferPointer(), GetPacketHead());
+		}
 	}
 
 	void CServerStaticObject::Collision(AGameObject* _pGameObject, const _double& _dTimeDelta)

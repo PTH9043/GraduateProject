@@ -63,7 +63,12 @@ public: /* Get Set */
 	_bool GetDoneInteractStatueState() { return m_bDoneInteractStatue; }
 	void SetDoneInteractBarState(const _bool& _newState) { m_bDoneInteractBar = _newState; }
 	_bool GetDoneInteractBarState() { return m_bDoneInteractBar; }
-
+	void SetDoneInteractMinoCoreState(const _bool& _newState) { m_bDoneInteractCoreMinotaur = _newState; }
+	_bool GetDoneInteractMinoCoreState() { return m_bDoneInteractCoreMinotaur; }
+	void SetDoneInteractHarlequinnCoreState(const _bool& _newState) { m_bDoneInteractCoreHarlequinn = _newState; }
+	_bool GetDoneInteractHarlequinnCoreState() { return m_bDoneInteractCoreHarlequinn; }
+	void SetDoneInteractAnubisCoreState(const _bool& _newState) { m_bDoneInteractCoreAnubis = _newState; }
+	_bool GetDoneInteractAnubisCoreState() { return m_bDoneInteractCoreAnubis; }
 
 	_bool GetDeactivatedCoreMinotaurState() { return m_bDeactivatedCoreMinotaur; }
 	void SetDeactivatedCoreMinotaurState(const _bool& _newState) { m_bDeactivatedCoreMinotaur= _newState; }
@@ -99,6 +104,7 @@ public: /* Get Set */
 	_bool GetIfPlayerIsInEnd() {
 		return m_bisGameEnd;
 	}
+	void SetIfPlayerEndEnable() { m_bisGameEnd = true; }
 
 protected:
 	virtual void TickActive(const _double& _dTimeDelta) override;
@@ -124,8 +130,7 @@ public:
 private:
 	SHPTR<UParticle>										m_spFootPrintParticle;
 	SHPTR<UParticle>										m_spHealParticle;
-	_float HealTimer = 0;
-	_bool m_isHealTrigger = false;
+	CUSTIMER														m_HealTimer;
 	_bool IfOpenChestForHeal = false;
 	PARTICLEPARAM* m_stParticleParam;
 	ComputeParticleType* m_stParticleType;
@@ -167,7 +172,7 @@ private:
 	_bool											m_bDoneInteractCoreHarlequinn;
 	_bool											m_bDoneInteractCoreAnubis;
 
-	_float											m_fSaveCheckpointCount = 0;
+	static _int									s_iSavePointCheckCount;
 
 	
 

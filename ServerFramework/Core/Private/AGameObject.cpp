@@ -110,11 +110,11 @@ namespace Core
 
 		if (fLength <= SEE_RANGE_TICKACTIVE)
 		{
+			SetActive(true);
 			if (fLength <= SEE_RANGE)
 			{
 				return true;
 			}
-			SetActive(true);
 		}
 		else
 		{
@@ -136,7 +136,7 @@ namespace Core
 
 	void AGameObject::SetActive(const _bool _isActive)
 	{
-		m_isActive = _isActive;
+		ChangeAtomicValue(REF_OUT m_isActive, _isActive);
 		if (true == _isActive)
 		{
 			CallActiveEnable();
@@ -152,7 +152,7 @@ namespace Core
 		if (true == m_isPermanentDisable)
 			return;
 
-		m_isPermanentDisable = true;
+		ChangeAtomicValue(REF_OUT m_isPermanentDisable, true);
 		SetActive(false);
 		LastBehavior();
 	}

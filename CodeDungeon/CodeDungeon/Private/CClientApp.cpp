@@ -8,6 +8,25 @@
 #include "CDataManager.h"
 #include "CLogoScene.h"
 
+class LoadIPAddres {
+public:
+	LoadIPAddres(const _string& _strPath) {
+		std::ifstream file(_strPath); // 읽을 파일 열기
+		if (!file.is_open()) {
+			return;
+		}
+		std::ostringstream buffer; // 문자열 스트림 생성
+		buffer << file.rdbuf(); // 파일 내용을 버퍼로 읽어오기
+
+		m_strIpAddress = buffer.str().c_str();
+	}
+public:
+	const _string& GetIPAddress() const { return m_strIpAddress; }
+private:
+	_string		m_strIpAddress{""};
+};
+
+
 CClientApp::CClientApp() :
 	m_iTickCount{ 0 },
 	m_hwnd{ NULL },
@@ -39,7 +58,9 @@ HRESULT CClientApp::NativeConstruct(const HINSTANCE& _hInst, const _uint& _iCmdS
 	m_iCmdShow = _iCmdShow;
 	m_spGameInstance = GET_INSTANCE(UGameInstance);
 
-	SHPTR<CNetworkClientController> spNetworkClientController = CreateNative<CNetworkClientController>(IP_ADDRESS, TCP_PORT_NUM);
+	LoadIPAddres IPAddress("..\\..\\Resource\\Ip.txt");
+
+	SHPTR<CNetworkClientController> spNetworkClientController = CreateNative<CNetworkClientController>(IPAddress.GetIPAddress(), TCP_PORT_NUM);
 	m_spGameInstance->StartNetwork(spNetworkClientController);
 	return S_OK;
 }

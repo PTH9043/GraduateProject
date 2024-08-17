@@ -28,7 +28,7 @@ namespace Server
 		}
 		UpdateFindRange(50.f, 90.f);
 		SetMoveSpeed(5);
-		SetAttackRange(15.f);
+		SetAttackRange(10.f);
 		SetCharStatus(CHARSTATUS{ 100, 0, 1 });
 	}
 	_bool CMummy::Start(const VOIDDATAS& _ReceiveDatas)
@@ -42,17 +42,6 @@ namespace Server
 
 		__super::Start(_ReceiveDatas);
 
-		if (MUMMY_LAYING == m_eMummyType)
-		{
-			GetAnimController()->SetAnimation("staticLaying");
-		}
-		else
-		{
-			GetAnimController()->SetAnimation("staticStanding");
-		}
-
-		SetFoundPlayerFirstTime(false);
-		UpdateSelfStateToPlayerDistance(false, false, false);
 		return true;
 	}
 
@@ -65,47 +54,7 @@ namespace Server
 
 	void CMummy::State(SHPTR<ASession> _spSession, _int _MonsterState)
 	{
-		FindPlayer(_spSession);
-
-		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
-		_bool isFirstFindPlayer = IsFoundPlayerFirstTime();
-		_bool isCurrentFindPlayer = IsCurrentFindPlayer();
-		_bool isDamaged = IsDamaged();
-
-		if (true == IsDeadStateEnable())
-		{
-			// 영구적 비활성화
-			ActivePermanentDisable();
-		}
-		else
-		{
-			if (true == isFirstFindPlayer)
-			{
-				SHPTR<ATransform> spTransform = GetTransform();
-				SHPTR<AAnimController> spAnimController = GetAnimController();
-				SHPTR<AAnimator> spAnimator = spAnimController->GetAnimator();
-				SHPTR<AAnimation> spCurAnimation = spAnimator->GetCurAnimation();
-
-				Vector3 vPos = spTransform->GetPos();
-				Vector3 vRotate = spTransform->GetRotationValue();
-
-				VECTOR3 vSendPos, vSendRotate;
-				{
-					PROTOFUNC::MakeVector3(&vSendPos, vPos.x, vPos.y, vPos.z);
-					PROTOFUNC::MakeVector3(&vSendRotate, vRotate.x, vRotate.y, vRotate.z);
-				}
-
-				_int AnimState = spAnimController->GetAnimState();
-				_double dTimeAcc = spCurAnimation->GetTimeAcc();
-				_int AnimIndex = spAnimator->GetCurAnimIndex();
-
-				MOBSTATE monsterState;
-				PROTOFUNC::MakeMobState(&monsterState, GetSessionID(), vSendPos, vSendRotate,
-					AnimState, AnimIndex, false, isCurrentFindPlayer, isDamaged, dTimeAcc);
-				CombineProto<MOBSTATE>(GetCopyBuffer(), GetPacketHead(), monsterState, TAG_SC_MONSTERSTATE);
-				_spSession->SendData(GetCopyBufferPointer(), GetPacketHead());
-			}
-		}
+		__super::State(_spSession, _MonsterState);
 	}
 
 	void CMummy::ProcessPacket(_int _type, void* _pData)

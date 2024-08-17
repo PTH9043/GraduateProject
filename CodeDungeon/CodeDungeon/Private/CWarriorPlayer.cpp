@@ -25,6 +25,8 @@
 #include "CShurikenThrowing.h"
 #include "CAnubis.h"
 
+_int								CWarriorPlayer::s_iSavePointCheckCount;
+
 CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UPlayer(_spDevice, _wstrLayer, _eCloneType), 
 	m_spSword{ nullptr }, 
@@ -41,7 +43,8 @@ CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _ws
 	m_bCanInteractChest{ false },
 	m_bCanInteractGuard{ false },
 	m_fNetworkRecvMaxHeal{ 210 },
-	m_fPrevHealHp{0}
+	m_fPrevHealHp{0},
+	m_HealTimer{2.1}
 {
 }
 
@@ -62,7 +65,8 @@ CWarriorPlayer::CWarriorPlayer(const CWarriorPlayer& _rhs) :
 	m_bCanInteractGuard{ false },
 	m_fNetworkRecvMaxHeal{ 210 },
 	m_fPrevHealHp{ 0 },
-	m_fInteractionTimeElapsed{0.f}
+	m_fInteractionTimeElapsed{0.f},
+	m_HealTimer{ 2.1 }
 {
 }
 
@@ -81,7 +85,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-	int cellIndex = 0;
+	int cellIndex = 300;
 	//int cellIndex = 349;
 
 //	int cellIndex = 210;
@@ -250,12 +254,37 @@ void CWarriorPlayer::ReceiveNetworkProcessData(const UProcessedData& _ProcessDat
 		{
 			SetDeathState(true);
 			SetHealth(0);
+			SetElapsedTime(0);
 		}
 		else
 		{
 			SetHealth(scDamaged.hp());
 			SetDamaged(true);
 		}
+		SetPrevHealth(scDamaged.hp());
+	}
+	break;
+	case TAG_SC_SAVEPOINTENABLE:
+	{
+		SC_SAVEPOINTENABLE savePointEnable;
+		savePointEnable.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
+		s_iSavePointCheckCount = savePointEnable.count();
+	}
+	break;
+	case TAG_SC_PLAYERGETUP:
+	{
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+		SC_PLAYERGETUP playerGetUp;
+		playerGetUp.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
+		static_pointer_cast<CMainCamera>(GetFollowCamera())->GetCurrentNavi()->FindCell(playerGetUp.camcellindex());
+		SetElapsedTime(0);
+		SetDeathState(false);
+		SetHealth(playerGetUp.hp());
+		GetTransform()->SetPos(_float3{playerGetUp.posx(), playerGetUp.posy(), playerGetUp.posz() });
+		spGameInstance->SoundPlayOnce(L"Revive");
+		spGameInstance->TurnOffDieEffect();
+		GetAnimationController()->SetAnimState(CUserWarriorAnimController::ANIM_IDLE);
+		GetAnimModel()->SetAnimation(L"idle01");
 	}
 	break;
 	}
@@ -309,11 +338,8 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	}
 
 	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_HIT) {
-		if (false == IsNetworkConnected())
-		{
-			m_spBlood->SetActive(true);
-			m_spBlood->SetTimer(1.75f);
-		}
+		m_spBlood->SetActive(true);
+		m_spBlood->SetTimer(1.75f);
 		m_fInteractionTimeElapsed = 0;
 		m_bSetRimOn = true;
 	}
@@ -332,65 +358,44 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		m_bSetRimTimeElapsed = 0.f;
 		//SetAnimModelRimColor(_float3(0, 0, 0));
 	}
+
+	if (m_spBlood->CheckTimeOver()) {
+		m_spBlood->SetActive(false);
+	}
+
 	if (false == IsNetworkConnected())
 	{
-		if (m_spBlood->CheckTimeOver()) {
-			m_spBlood->SetActive(false);
-		}
-	}
-	//if (spGameInstance->GetDIKeyDown(DIK_F5)) {
-	//	m_spDust->SetActive(true);
-	//	m_spDust->SetTimer(2.f);
-	//	_float3 pos = GetTransform()->GetPos();
-	//	pos.y += 1;
-	//	m_spDust->GetTransform()->SetPos(pos);
-	//}
-	//if (m_spDust->CheckTimeOver()) {
-	//	m_spDust->SetActive(false);
-	//}
-	
-	if (IfOpenChestForHeal) {//2.1초 지속
-		IncreaseHealth(10);
-		m_isHealTrigger = true;
-		SetAnimModelRimColor(_float3(0, 1, 0));
-		m_spHealParticle->SetActive(true);
-		_float3 pos = GetTransform()->GetPos();
-		pos.y += 2;
-		
-		m_spHealParticle->SetPosition(pos);
-		m_spHealParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;		
-	}
-	else
-	{
-		m_fPrevHealHp = GetHealth();
-	}
+		if (IfOpenChestForHeal) {//2.1초 지속
+			if (true == m_HealTimer.IsOver(_dTimeDelta))
+			{
+				m_spHealParticle->SetActive(false);
+				IfOpenChestForHeal = false;
+				SetHealth(GetPrevHealth() + m_fNetworkRecvMaxHeal);
+				SetPrevHealth(GetPrevHealth() + m_fNetworkRecvMaxHeal);
+				m_HealTimer.ResetTimer();
+			}
+			else
+			{
+				IncreaseHealth(10);
+				SetAnimModelRimColor(_float3(0, 1, 0));
+				m_spHealParticle->SetActive(true);
+				_float3 pos = GetTransform()->GetPos();
+				pos.y += 2;
 
-	if (m_isHealTrigger)
-	{
-		HealTimer += _dTimeDelta;
-		if (HealTimer > 1.75f) {
-			//SetAnimModelRimColor(_float3(1, 0, 0));
-			m_spHealParticle->SetActive(false);
-			HealTimer = 0;
-			IfOpenChestForHeal = false;
+				m_spHealParticle->SetPosition(pos);
+				m_spHealParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+			}
 		}
+		{	// Rotation 
+			if (m_bStartedGame && !m_bisGameEnd) {
 
-		if (GetHealth() >= m_fPrevHealHp + m_fNetworkRecvMaxHeal)
-		{
-			m_isHealTrigger = false;
-		}
-	}
-
-	// Rotation 
-	{
-		if (m_bStartedGame&& !m_bisGameEnd) {
-
-			POINT ptCursorPos;
-			ShowCursor(FALSE);
-			SetCursorPos(1000, 400);
-		}
-		if (m_bisGameEnd) {
-			spGameInstance->PauseGame();
+				POINT ptCursorPos;
+				ShowCursor(FALSE);
+				SetCursorPos(1000, 400);
+			}
+			if (m_bisGameEnd) {
+				spGameInstance->PauseGame();
+			}
 		}
 	}
 
@@ -433,28 +438,28 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	}
 	{
 		
-		if (m_fSaveCheckpointCount == 0) {
+		if (s_iSavePointCheckCount == 0) {
 			m_spTrail->SetColorTexture(L"elec");
 			m_spTrail->SetTrailShapeTexture(L"Noise_Bee");
 			m_spTrail->SetTrailNoiseTexture(L"GlowDiffuse");			
 		}
-		else if (m_fSaveCheckpointCount == 1) {
+		else if (s_iSavePointCheckCount == 1) {
 			m_spTrail->SetColorTexture(L"FireRed2");
 			m_spTrail->SetTrailShapeTexture(L"T_Sword_Slash_11");
 			m_spTrail->SetTrailNoiseTexture(L"elec");			
 		}
-		else if (m_fSaveCheckpointCount == 2) {
+		else if (s_iSavePointCheckCount == 2) {
 			m_spTrail->SetColorTexture(L"Cloudy");
 			m_spTrail->SetTrailShapeTexture(L"Noise_Bee");
 			m_spTrail->SetTrailNoiseTexture(L"GlowDiffuse");			
 		}
-		else if (m_fSaveCheckpointCount == 3) {
+		else if (s_iSavePointCheckCount == 3) {
 			m_spTrail->SetColorTexture(L"Pink");
 			m_spTrail->SetTrailShapeTexture(L"Noise_Thunder");
 			m_spTrail->SetTrailNoiseTexture(L"GlowDiffuse");			
 		}
 		else {
-			m_fSaveCheckpointCount = 0;
+			s_iSavePointCheckCount = 0;
 		}
 	}
 
@@ -464,9 +469,9 @@ void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
+	__super::LateTickActive(_dTimeDelta);
 	RETURN_CHECK(true == IsNetworkConnected(), ;);
 
-	__super::LateTickActive(_dTimeDelta);
 	_float3 direction(0.0f, 0.0f, 0.0f);
 
 	FollowCameraMove(_float3{ 0.f, 20.f, -40.f }, _dTimeDelta);
@@ -662,183 +667,6 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							SetOBJCollisionState(false);
 						}
 					}
-					else if (iter2.first == L"ForInteractionStatue")
-					{
-						if (iter.second->IsCollision(iter2.second))
-						{
-							m_bCanInteractStatue = true;
-							pModelObject->SetOutline(true);
-							if (pModelObject->GetCheckPointToOtherColor()) {
-								m_bDoneInteractStatue = true;
-							}
-							else {
-								m_bDoneInteractStatue = false;
-							}
-							//철장 여는 용도
-							if (spGameInstance->GetDIKeyPressing(DIK_F)) {
-								if (!CheckPointSaveSound && !m_bDoneInteractStatue) {
-									spGameInstance->SoundPlayOnce(L"CheckpointSaving");
-									CheckPointSaveSound = true;
-								}
-								m_fInteractionTimeElapsed += _dTimeDelta;
-								
-							}
-							else {
-								if (CheckPointSaveSound) {
-									CheckPointSaveSound = false;
-									spGameInstance->StopSound(L"CheckpointSaving");
-								}
-								m_fInteractionTimeElapsed = 0;
-								
-							}
-							if (m_fInteractionTimeElapsed > 4.f&&!pModelObject->GetCheckPointToOtherColor()) {
-								spGameInstance->SoundPlayOnce(L"CheckPointSave");
-								m_fSaveCheckpointCount++;
-								m_bSaveCheckpointStatue = true;
-								pModelObject->SetInteractionState(true);
-								pModelObject->SetCheckPointToOtherColor(true);
-								SetSpawnPoint(GetCurrentNavi()->GetCurCell());
-								SetSpawnPointCamera(static_pointer_cast<CMainCamera>(GetFollowCamera())->GetCurrentNavi()->GetCurCell());
-								SetSpawnPoint(GetTransform()->GetPos());
-								//pModelObject->SetOutline(false);
-								m_fInteractionTimeElapsed = 0;
-							}
-								
-						}
-						else
-						{
-							pModelObject->SetOutline(false);
-							m_bCanInteractStatue = false;
-						}
-					}
-					else if (iter2.first == L"ForInteractionCoreMinotaur")
-					{
-						if (iter.second->IsCollision(iter2.second))
-						{
-							m_bCanInteractCoreMinotaur = true;
-							pModelObject->SetOutline(true);
-							if (pModelObject->GetCheckPointToOtherColor()) {
-								m_bDoneInteractCoreMinotaur = true;
-							}
-							else {
-								m_bDoneInteractCoreMinotaur = false;
-							}
-
-							if (spGameInstance->GetDIKeyPressing(DIK_F)) {
-								if (!MinotaurCoreSound&&!m_bDoneInteractCoreMinotaur) {
-									spGameInstance->SoundPlayOnce(L"MinoCore");
-									MinotaurCoreSound = true;
-								}
-								m_fInteractionTimeElapsed += _dTimeDelta;
-
-							}
-							else {
-								if (MinotaurCoreSound) {
-									MinotaurCoreSound = false;
-									spGameInstance->StopSound(L"MinoCore");
-								}
-								m_fInteractionTimeElapsed = 0;
-
-							}
-
-							if (m_fInteractionTimeElapsed > 5.f && !pModelObject->GetCheckPointToOtherColor()) {
-								spGameInstance->SoundPlayOnce(L"CoreComplete");
-								m_bDeactivatedCoreMinotaur = true;
-								pModelObject->SetInteractionState(true);
-								pModelObject->SetCheckPointToOtherColor(true);				
-								m_fInteractionTimeElapsed = 0;
-							}
-						}
-						else
-						{
-							pModelObject->SetOutline(false);
-							m_bCanInteractCoreMinotaur = false;
-						}
-					}
-					else if (iter2.first == L"ForInteractionCoreHarlequinn")
-					{
-						if (iter.second->IsCollision(iter2.second))
-						{
-							m_bCanInteractCoreHarlequinn = true;
-							pModelObject->SetOutline(true);
-							if (pModelObject->GetCheckPointToOtherColor()) {
-								m_bDoneInteractCoreHarlequinn = true;
-							}
-							else {
-								m_bDoneInteractCoreHarlequinn = false;
-							}
-							if (spGameInstance->GetDIKeyPressing(DIK_F)) {
-								if (!HalequinCoreSound && !m_bDoneInteractCoreHarlequinn) {
-									spGameInstance->SoundPlayOnce(L"HalequinCore");
-									HalequinCoreSound = true;
-								}
-								m_fInteractionTimeElapsed += _dTimeDelta;
-
-							}
-							else {
-								if (HalequinCoreSound) {
-									HalequinCoreSound = false;
-									spGameInstance->StopSound(L"HalequinCore");
-								}
-								m_fInteractionTimeElapsed = 0;
-
-							}
-							if (m_fInteractionTimeElapsed > 5.f && !pModelObject->GetCheckPointToOtherColor()) {
-								spGameInstance->SoundPlayOnce(L"CoreComplete2");
-								m_bDeactivatedCoreHarlequinn = true;
-								pModelObject->SetInteractionState(true);
-								pModelObject->SetCheckPointToOtherColor(true);
-								m_fInteractionTimeElapsed = 0;
-							}
-						}
-						else
-						{
-							pModelObject->SetOutline(false);
-							m_bCanInteractCoreHarlequinn = false;
-						}
-					}
-					else if (iter2.first == L"ForInteractionCoreAnubis")
-					{
-						if (iter.second->IsCollision(iter2.second))
-						{
-							m_bCanInteractCoreAnubis = true;
-							pModelObject->SetOutline(true);
-							if (pModelObject->GetCheckPointToOtherColor()) {
-								m_bDoneInteractCoreAnubis = true;
-							}
-							else {
-								m_bDoneInteractCoreAnubis = false;
-							}
-							if (spGameInstance->GetDIKeyPressing(DIK_F)) {
-								if (!AnubisCoreSound && !m_bDoneInteractCoreAnubis) {
-									spGameInstance->SoundPlayOnce(L"AnubisCore");
-									AnubisCoreSound = true;
-								}
-								m_fInteractionTimeElapsed += _dTimeDelta;
-
-							}
-							else {
-								if (AnubisCoreSound) {
-									AnubisCoreSound = false;
-									spGameInstance->StopSound(L"AnubisCore");
-								}
-								m_fInteractionTimeElapsed = 0;
-
-							}
-							if (m_fInteractionTimeElapsed > 5.f && !pModelObject->GetCheckPointToOtherColor()) {
-								spGameInstance->SoundPlayOnce(L"CoreComplete3");
-								m_bDeactivatedCoreAnubis = true;
-								pModelObject->SetInteractionState(true);
-								pModelObject->SetCheckPointToOtherColor(true);
-								m_fInteractionTimeElapsed = 0;
-							}
-						}
-						else
-						{
-							pModelObject->SetOutline(false);
-							m_bCanInteractCoreAnubis = false;
-						}
-						}
 				}
 			}
 		}
@@ -906,12 +734,12 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 									GetTransform()->SetDirectionFixedUp(-pGuard->GetTransform()->GetLook());
 									m_bisKicked = true;
 								}
-						
+
 							}
 							SetOBJCollisionState(true);
 							// 속도 결정
 							_float speed = spGameInstance->GetDIKeyPressing(DIK_LSHIFT) ? 60.0f : 20.0f;
-							if (CurAnimName == L"roll_back" || CurAnimName == L"roll_front" || CurAnimName == L"roll_left" || CurAnimName == L"roll_right"|| CurAnimName== L"jumpZ0")
+							if (CurAnimName == L"roll_back" || CurAnimName == L"roll_front" || CurAnimName == L"roll_left" || CurAnimName == L"roll_right" || CurAnimName == L"jumpZ0")
 								GetTransform()->SetPos(GetPrevPos());
 							else
 								ApplySlidingMovement(GetCollidedNormal(), speed, _dTimeDelta);
@@ -927,10 +755,10 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 						if (iter.second->IsCollision(iter2.second))
 						{
 							m_bCanInteractGuard = true;
-							
+
 						}
 						else {
-							
+
 							m_bCanInteractGuard = false;
 						}
 					}
@@ -961,7 +789,7 @@ void CWarriorPlayer::SendMoveData()
 	}
 
 	CHARSTATE charMove;
-	PROTOFUNC::MakeCharState(OUT &charMove, spGameInstance->GetNetworkOwnerID(), vSendPos, vSendRotate,
+	PROTOFUNC::MakeCharState(OUT & charMove, spGameInstance->GetNetworkOwnerID(), vSendPos, vSendRotate,
 		state, AnimIndex, IsDamaged() == true ? 1 : 0);
 	spGameInstance->SendProtoData(UProcessedData(charMove, TAG_CS_PLAYERSTATE));
 }
@@ -992,7 +820,13 @@ void CWarriorPlayer::SendPressKeyState()
 	}
 	else if (spGameInstance->GetDIKeyPressing(DIK_G))
 	{
-		keyState = KEYBOARD_G;
+		if (true == GetDeathState())
+		{
+			if (GetElapsedTime() >= 70)
+			{
+				keyState = KEYBOARD_G;
+			}
+		}
 	}
 
 	PROTOFUNC::MakeCsPressKey(&csPressKey, GetNetworkID(), keyState);
