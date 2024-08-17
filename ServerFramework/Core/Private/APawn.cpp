@@ -46,7 +46,10 @@ namespace Core {
 			SHPTR<ACell> spNewCell{};
 			if (false == spNaviagation->IsMove(vPosition, REF_OUT spNewCell))
 			{
-				spTransform->SetPos(GetPrevPosition());
+				Vector3 closestPoint = spNaviagation->ClampPositionToCell(vPosition);
+				closestPoint.y = vPosition.y;
+				GetTransform()->SetPos(closestPoint);
+				vPosition = GetTransform()->GetPos();
 			}
 			else
 			{

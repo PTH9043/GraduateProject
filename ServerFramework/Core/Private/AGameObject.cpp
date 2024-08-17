@@ -99,12 +99,12 @@ namespace Core
 	{
 		SHPTR<ATransform> spTransform = GetTransform();
 		Vector3 vPos = spTransform->GetPos();
-		_float fYPos = (vPos.y - _OtherPos.y);
-		if (std::abs(fYPos) >= 30.f)
-		{
-			SetActive(false);
-			return false;
-		}
+		//_float fYPos = (vPos.y - _OtherPos.y);
+		//if (std::abs(fYPos) >= 30.f)
+		//{
+		//	SetActive(false);
+		//	return false;
+		//}
 
 		_float fLength = Vector3(vPos - _OtherPos).Length();
 

@@ -50,14 +50,14 @@ namespace Server {
 		UpdateSelfStateToPlayerDistance(false, false, false);
 
 
-		if (m_strRoomName == "Interior_Room_G")
-		{
-			ActivePermanentDisable();
-		}
-		else if (m_strRoomName == "Interior_Hallway_E")
-		{
-			ActivePermanentDisable();
-		}
+		//if (m_strRoomName == "Interior_Room_G")
+		//{
+		//	ActivePermanentDisable();
+		//}
+		//else if (m_strRoomName == "Interior_Hallway_E")
+		//{
+		//	ActivePermanentDisable();
+		//}
 
 		return __super::Start(_ReceiveDatas);
 	}

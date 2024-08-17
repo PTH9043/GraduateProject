@@ -22,7 +22,7 @@ public:
 private:
 	virtual void Free() override;
 private:
-	static constexpr _float RUNNING_DISTANCE{ 7 };
+	static constexpr _float RUNNING_DISTANCE{ 12 };
 
 	WKPTR<CMinotaur>	m_wpMinotaur;
 	_bool								m_isAttackMode;

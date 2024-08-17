@@ -154,16 +154,7 @@ namespace Server {
 			spTransform->SetDirectionFixedUp(GetTargetToDir(), _dTimeDelta, GetRotSpeed());
 		}
 
-		if (MOB_IDLE_STATE == MobState)
-		{
-			spAnimator->TickAnimation(_dTimeDelta);
-			SetElapsedTime(0);
-		}
-		else
-		{
-			spAnimator->TickAnimChangeTransform(spTransform, _dTimeDelta);
-		}
-
+		spAnimator->TickAnimChangeTransform(spTransform, _dTimeDelta);
 		GetTimeAccumulatorRefP().PlusTime(_dTimeDelta);
 		DisableDamaged(iCurrentPlayerState, _dTimeDelta);
 

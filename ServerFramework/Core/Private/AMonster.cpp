@@ -41,19 +41,19 @@ namespace Core
 			Vector3 vDirection = vPlayerPos - vMobPos;
 			s_PlayerPositionContainer[SessionID] = vPlayerPos;
 
-			if (std::abs(vDirection.y) >= 30.f)
+			//if (std::abs(vDirection.y) >= 30.f)
+			//{
+			//	UpdateSelfStateToPlayerDistance(false, false, true);
+			//	float fDistanceToPlayer = vDirection.Length();
+			//	if (GetDistanceToPlayer() >= fDistanceToPlayer)
+			//	{
+			//		SetTargetSession(_spSession);
+			//	}
+			//}
+			//else
 			{
-				UpdateSelfStateToPlayerDistance(false, false, true);
-				float fDistanceToPlayer = vDirection.Length();
-				if (GetDistanceToPlayer() >= fDistanceToPlayer)
-				{
-					SetTargetSession(_spSession);
-				}
-			}
-			else
-			{
-				_float yPos = vDirection.y;
-				vDirection.y = 0.f;
+			//	_float yPos = vDirection.y;
+			//	vDirection.y = 0.f;
 
 				float fDistanceToPlayer = vDirection.Length();
 
@@ -82,7 +82,11 @@ namespace Core
 				else if (m_fDeactiveRange >= fDistanceToPlayer)
 				{
 					UpdateSelfStateToPlayerDistance(false, false, true);
-					SetTargetSession(nullptr);
+					float fDistanceToPlayer = vDirection.Length();
+					if (GetDistanceToPlayer() >= fDistanceToPlayer)
+					{
+						SetTargetSession(_spSession);
+					}
 				}
 			}
 		}

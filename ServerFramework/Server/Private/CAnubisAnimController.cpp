@@ -29,7 +29,7 @@ namespace Server {
 		static std::uniform_int_distribution<> dis_hit(0, 2);
 
 		static constexpr _float ATTACKRANGE_LONG{ 40 };
-		static constexpr _float ATTACKRANGE_CLOSE{ 7.f };
+		static constexpr _float ATTACKRANGE_CLOSE{ 10 };
 
 		SHPTR<CAnubis>	spAnubis = m_wpAnubis.lock();
 		SHPTR<AAnimator> spAnimator = GetAnimator();

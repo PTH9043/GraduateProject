@@ -34,8 +34,8 @@ namespace Server {
 		static std::uniform_int_distribution<> dis_hit(0, 2);
 
 		static constexpr _float ATTACKRANGE_LONG{ 50 };
-		static constexpr _float ATTACKRANGE_JUMP{ 30 };
-		static constexpr _float ATTACKRANGE_CLOSE{ 8 };
+		static constexpr _float ATTACKRANGE_JUMP{ 40 };
+		static constexpr _float ATTACKRANGE_CLOSE{ 10 };
 		static constexpr _float END_CURANIMRATE{ 0.5f };
 		static constexpr _float ROTATE_RADIUS{ DirectX::XMConvertToDegrees(120) };
 
