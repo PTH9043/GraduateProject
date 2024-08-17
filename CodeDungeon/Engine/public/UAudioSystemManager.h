@@ -35,9 +35,12 @@ public:
 	_bool IsSoundPlay(const _wstring& _wstrSoundName, FMOD::Channel* _pChannel);
 	void Play(const _wstring& _wstrSoundName);
 	void PlayWithManyChannels(const _wstring& _wstrSoundName);
+	void PlayWithInputChannels(const _wstring& _wstrSoundName, CSHPTRREF<UTransform> _spSelfTransform, CSHPTRREF<UTransform> _spTargetTransform);
 	void Play(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
 	void PlayOnce(const _wstring& _wstrSoundName);
+	void PlayOnce(const _wstring& _wstrSoundName, CSHPTRREF<UTransform> _spSelfTransform, CSHPTRREF<UTransform> _spTargetTransform);
 	void PlayOnceWithManyChannels(const _wstring& _wstrSoundName);
+	void PlayOnceWithManyChannels(const _wstring& _wstrSoundName, CSHPTRREF<UTransform> _spSelfTransform, CSHPTRREF<UTransform> _spTargetTransform);
 	void PlayBGM(const _wstring& _wstrSoundName);
 	void StopBGM(const _wstring& _wstrSoundName);
 	void PauseBGM(const _wstring& _wstrSoundName);

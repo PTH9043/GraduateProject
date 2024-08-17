@@ -174,14 +174,14 @@ void CIronBars::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 		{
 			if(1 == scStaticObjFind.enable())
 			{
-				spGameInstance->SoundPlayOnce(L"BarLift");
+				spGameInstance->SoundPlayOnce(L"BarLift", GetTransform(), spPlayer->GetTransform());
 				m_isOpenstart = true;
 			}
 			else if(2 == scStaticObjFind.enable())
 			{
 				spGameInstance->StopSound(L"BarLift");
-				spGameInstance->SoundPlayOnce(L"BarLiftStart");
-				spGameInstance->SoundPlayOnce(L"BarLift2");
+				spGameInstance->SoundPlayOnce(L"BarLiftStart", GetTransform(), spPlayer->GetTransform());
+				spGameInstance->SoundPlayOnce(L"BarLift2", GetTransform(), spPlayer->GetTransform());
 				SetInteractionState(true);
 				SetCheckPointToOtherColor(true);
 				m_SoundTimer.ResetTimer();

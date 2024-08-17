@@ -95,6 +95,18 @@ void UAudioSystemManager::PlayWithManyChannels(const _wstring& _wstrSoundName)
 	}
 }
 
+void UAudioSystemManager::PlayWithInputChannels(const _wstring& _wstrSoundName, CSHPTRREF<UTransform> _spSelfTransform, CSHPTRREF<UTransform> _spTargetTransform)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+		{
+			if (true == iter->PlayWithManyChannels(_wstrSoundName, _spSelfTransform, _spTargetTransform))
+				return;
+		}
+	}
+}
+
 void UAudioSystemManager::Play(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate)
 {
 	for (auto& iter : m_AudioSystemContainer)
@@ -119,6 +131,18 @@ void UAudioSystemManager::PlayOnce(const _wstring& _wstrSoundName)
 	}
 }
 
+void UAudioSystemManager::PlayOnce(const _wstring& _wstrSoundName, CSHPTRREF<UTransform> _spSelfTransform, CSHPTRREF<UTransform> _spTargetTransform)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+		{
+			if (true == iter->PlayOnce(_wstrSoundName, _spSelfTransform, _spTargetTransform))
+				return;
+		}
+	}
+}
+
 void UAudioSystemManager::PlayOnceWithManyChannels(const _wstring& _wstrSoundName)
 {
 	for (auto& iter : m_AudioSystemContainer)
@@ -130,6 +154,18 @@ void UAudioSystemManager::PlayOnceWithManyChannels(const _wstring& _wstrSoundNam
 		}
 	}
 
+}
+
+void UAudioSystemManager::PlayOnceWithManyChannels(const _wstring& _wstrSoundName, CSHPTRREF<UTransform> _spSelfTransform, CSHPTRREF<UTransform> _spTargetTransform)
+{
+	for (auto& iter : m_AudioSystemContainer)
+	{
+		if (nullptr != iter)
+		{
+			if (true == iter->PlayOnceWithManyChannels(_wstrSoundName, _spSelfTransform, _spTargetTransform))
+				return;
+		}
+	}
 }
 
 void UAudioSystemManager::PlayBGM(const _wstring& _wstrSoundName)

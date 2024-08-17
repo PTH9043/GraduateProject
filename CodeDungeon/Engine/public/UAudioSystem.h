@@ -36,9 +36,12 @@ public:
 	void TickWithManyChannels();
 	_bool Play(const _wstring& _wstrSoundName);
 	_bool PlayWithManyChannels(const _wstring& _wstrSoundName);
+	_bool PlayWithManyChannels(const _wstring& _wstrSoundName, CSHPTRREF<UTransform> _spSelfTransform, CSHPTRREF<UTransform> _spTargetTransform);
 	_bool Play(const _wstring& _wstrSoundName, const _float _fVolumeUpdate);
 	_bool PlayOnce(const _wstring& _wstrSoundName);
+	_bool PlayOnce(const _wstring& _wstrSoundName, CSHPTRREF<UTransform> _spSelfTransform, CSHPTRREF<UTransform> _spTargetTransform);
 	_bool PlayOnceWithManyChannels(const _wstring& _wstrSoundName);
+	_bool PlayOnceWithManyChannels(const _wstring& _wstrSoundName, CSHPTRREF<UTransform> _spSelfTransform, CSHPTRREF<UTransform> _spTargetTransform);
 	_bool PlayBGM(const _wstring& _wstrSoundName);
 	_bool StopBGM(const _wstring& _wstrSoundName);
 	_bool PauseBGM(const _wstring& _wstrSoundName);

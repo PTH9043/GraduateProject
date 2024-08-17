@@ -9,6 +9,7 @@
 #include "UPlayer.h"
 #include "USound.h"
 
+
 CNetworkMummyAnimController::CNetworkMummyAnimController(CSHPTRREF<UDevice> _spDevice) 
 	: CMonsterAnimController(_spDevice),
     m_pAttack1Channel{nullptr}, m_pAttack2Channel{nullptr},m_pSwhoosh1Channel{nullptr},
@@ -47,6 +48,7 @@ void CNetworkMummyAnimController::Tick(const _double& _dTimeDelta)
 {
     SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
     SHPTR<CMummy> spMummy = m_wpMummyMob.lock();
+    SHPTR<UPlayer> spPlayer = spMummy->GetTargetPlayer();
     SHPTR<UAnimModel> spAnimModel = spMummy->GetAnimModel();
     const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
 
@@ -88,13 +90,13 @@ void CNetworkMummyAnimController::Tick(const _double& _dTimeDelta)
             else
                 spHitSound = spGameInstance->BringSound(ENEMYHIT3_SOUNDNAME);
 
-            spHitSound->PlayWithInputChannel(&m_pHitChannel);
+            spHitSound->PlayWithInputChannel(&m_pHitChannel, spMummy->GetTransform(), spPlayer->GetTransform());
         }
         else
         {
             if (false == spHitSound->IsSoundPlay(m_pHitChannel))
             {
-                spHitSound->PlayWithInputChannel(&m_pHitChannel);
+                spHitSound->PlayWithInputChannel(&m_pHitChannel, spMummy->GetTransform(), spPlayer->GetTransform());
             }
             else
             {
@@ -105,14 +107,14 @@ void CNetworkMummyAnimController::Tick(const _double& _dTimeDelta)
                 else
                     spHitSound = spGameInstance->BringSound(ENEMYHIT3_SOUNDNAME);
 
-                spHitSound->PlayWithInputChannel(&m_pHitChannel);
+                spHitSound->PlayWithInputChannel(&m_pHitChannel, spMummy->GetTransform(), spPlayer->GetTransform());
             }
         }
 
         SHPTR<USound> spGotHitSound = spGameInstance->BringSound(GOTHITVO2_SOUNDNAME);
 
         if (false == spGotHitSound->IsSoundPlay(m_pGotHitChannel))
-            spGotHitSound->PlayWithInputChannel(&m_pGotHitChannel);
+            spGotHitSound->PlayWithInputChannel(&m_pGotHitChannel, spMummy->GetTransform(), spPlayer->GetTransform());
     }
 
 

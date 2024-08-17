@@ -58,6 +58,7 @@ void CNetworkAnubisAnimController::Tick(const _double& _dTimeDelta)
     SHPTR<CAnubis> spAnubis = m_wpAnubisMob.lock();
     SHPTR<UAnimModel> spAnimModel = spAnubis->GetAnimModel();
     const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
+    SHPTR<UPlayer> spPlayer = spAnubis->GetTargetPlayer();
 
     _bool isHit = spAnubis->IsDamaged();
     if (true == isHit)
@@ -74,13 +75,13 @@ void CNetworkAnubisAnimController::Tick(const _double& _dTimeDelta)
             else
                 spHitSound = spGameInstance->BringSound(ENEMYHIT3_SOUNDNAME);
 
-            spHitSound->PlayWithInputChannel(&m_pHitChannel);
+            spHitSound->PlayWithInputChannel(&m_pHitChannel, spAnubis->GetTransform(), spPlayer->GetTransform());
         }
         else
         {
             if (false == spHitSound->IsSoundPlay(m_pHitChannel))
             {
-                spHitSound->PlayWithInputChannel(&m_pHitChannel);
+                spHitSound->PlayWithInputChannel(&m_pHitChannel, spAnubis->GetTransform(), spPlayer->GetTransform());
             }
             else
             {
@@ -91,7 +92,7 @@ void CNetworkAnubisAnimController::Tick(const _double& _dTimeDelta)
                 else
                     spHitSound = spGameInstance->BringSound(ENEMYHIT3_SOUNDNAME);
 
-                spHitSound->PlayWithInputChannel(&m_pHitChannel);
+                spHitSound->PlayWithInputChannel(&m_pHitChannel, spAnubis->GetTransform(), spPlayer->GetTransform());
             }
         }
     }

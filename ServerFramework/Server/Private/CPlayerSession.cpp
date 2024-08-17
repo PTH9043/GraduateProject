@@ -16,7 +16,7 @@ namespace Server {
 
 	CPlayerSession::CPlayerSession(SESSION_CONSTRUCTOR)
 		: Core::ASession(SESSION_CONDATA(Core::SESSIONTYPE::PLAYER)),
-		m_iStartCellIndex{ 349 }, m_spGameTimer{ Create<AGameTimer>() }
+		m_iStartCellIndex{ 0 }, m_spGameTimer{ Create<AGameTimer>() }
 	{
 	
 	}
@@ -101,7 +101,6 @@ namespace Server {
 	{
 		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
 		_int SessionID = GetSessionID();
-		::memset(GetCopyBufferPointer(), 0, MAX_BUFFER_LENGTH);
 
 		switch (_PacketHead.PacketType)
 		{
@@ -176,8 +175,8 @@ namespace Server {
 
 	void CPlayerSession::PlayerState(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
 	{
-//		m_spGameTimer->Tick();
-//		Tick(m_spGameTimer->GetDeltaTime());
+		m_spGameTimer->Tick();
+		Tick(m_spGameTimer->GetDeltaTime());
 
 		SHPTR<ANavigation> spNavigation = GetNavigation();
 		SHPTR<ATransform> spTransform = GetTransform();
@@ -205,6 +204,7 @@ namespace Server {
 				EnableFallDownState();
 			}
 		}
+//		std::cout << "D" << "\n";
 		
 		{
 			const MOBOBJCONTAINER& MobObjectContainer = _spCoreInstance->GetMobObjContainer();

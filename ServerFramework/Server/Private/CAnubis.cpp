@@ -22,7 +22,7 @@ namespace Server
 		UpdateFindRange(70, 80);
 		SetMoveSpeed(50);
 		SetAttackRange(10.f);
-		SetCharStatus(CHARSTATUS{ 1, 0, 1000 });
+		SetCharStatus(CHARSTATUS{ 1, 0, 100 });
 	}
 	_bool CAnubis::Start(const VOIDDATAS& _ReceiveDatas)
 	{

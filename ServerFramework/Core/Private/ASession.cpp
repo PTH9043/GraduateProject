@@ -89,30 +89,27 @@ namespace Core
 		// 버퍼를 조합한다. 
 		{
 			::memcpy(&m_TotalBuffer[m_CurBuffuerLocation], _pPacket, _Size);
-			m_CurBuffuerLocation +=_Size;
 		}
 		short moveBuffer{ 0 };
 		char* pBufferMove = &m_TotalBuffer[0];
 		// 만약 BufferLocation이 존재할 때
-		while (m_CurBuffuerLocation > 0)
+		while (_Size > 0)
 		{
 			// PacketSize를 구한다. 
 			PACKETHEAD PacketHead;
 			memcpy(&PacketHead, pBufferMove, PACKETHEAD_SIZE);
 			short CurrPacket = PacketHead.PacketSize + PACKETHEAD_SIZE;
 			// 패킷의 현재 위치가 음수가 되는 경우면 
-			if ((m_CurBuffuerLocation - CurrPacket) < 0)     
+			if ((_Size - CurrPacket) < 0)
 			{
-#ifdef USE_DEBUG
-		//		std::cout << m_CurBuffuerLocation << "\n";
-#endif
 				// 최종적인 버퍼에 PacketSize만큼 이동하여 앞쪽에 존재하는 데이터들을 지운다. 
-				memmove(&m_TotalBuffer[0], pBufferMove, MAX_PROCESSBUF_LENGTH - moveBuffer);
+				memmove(&m_TotalBuffer[0], pBufferMove, MAX_PROCESSBUF_LENGTH - _Size);
+				m_CurBuffuerLocation = _Size;
 				return;
 			}
 			ProcessPacket(&pBufferMove[PACKETHEAD_SIZE], PacketHead);
 			// Buffer의 위치를 옮긴다. 
-			m_CurBuffuerLocation -= CurrPacket;
+			_Size -= CurrPacket;
 			pBufferMove += CurrPacket;
 			moveBuffer += CurrPacket;
 		}

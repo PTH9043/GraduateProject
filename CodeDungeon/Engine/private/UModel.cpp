@@ -178,15 +178,8 @@ HRESULT UModel::NativeConstructClone(const VOIDDATAS& _vecDatas)
 		iter->FindParents(ThisShared<UModel>());
 	}
 
-	VOIDDATAS tDatas;
-	// Insert Data
-	{
-		UModel* pModel = this;
-		tDatas.push_back(&pModel);
-	}
-
 	for (auto& iter : m_MeshContainer) {
-		MeshContainers.push_back(static_pointer_cast<UMeshContainer>(iter->Clone(tDatas)));
+		MeshContainers.push_back(static_pointer_cast<UMeshContainer>(iter->Clone({this})));
 	}
 	m_MeshContainer.clear();
 	m_MeshContainer = MeshContainers;

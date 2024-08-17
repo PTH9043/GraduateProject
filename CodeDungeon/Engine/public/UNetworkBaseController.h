@@ -26,7 +26,6 @@ public:
 	virtual HRESULT NativeConstruct(const _string& _strIPAddress, const _int _PortNumber) PURE;
 	virtual void MakeActorsInit(const VECTOR<SHPTR<UBase>>& _actorContainer) PURE;
 	virtual void MakeActorsTick() PURE;
-	void ProcessedData();
 	void AddNetworkInitData(_int _NetworkID, const NETWORKRECEIVEINITDATA& _NetworkInitData);
 	void InsertNetworkActorInContainer(_int _NetworkID, CSHPTRREF<UActor> _spActor);
 	SHPTR<UActor> FindNetworkActor(const _int _NetworkID);

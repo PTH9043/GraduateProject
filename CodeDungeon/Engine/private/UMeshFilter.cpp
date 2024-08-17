@@ -23,7 +23,7 @@ HRESULT UMeshFilter::NativeConstruct(const _wstring& _wstrPath, const MESHCONTAI
 	RETURN_CHECK_FAILED(__super::NativeConstruct(), E_FAIL);
 	_wstring str = _wstrPath;
 	str.append(L"\\Filter");
-	if (0 != _wmkdir(str))
+	if (0 != _wmkdir(str.c_str()))
 	{
 		str.append(L"\\");
 		str.append(L"MeshFilter");
@@ -104,7 +104,7 @@ void UMeshFilter::Save(const _wstring& _wstrPath)
 {
 	_wstring str = _wstrPath;
 	str.append(L"\\Filter");
-	if (0 != _wmkdir(str))
+	if (0 != _wmkdir(str.c_str()))
 	{
 		str.append(L"\\");
 		str.append(L"MeshFilter");

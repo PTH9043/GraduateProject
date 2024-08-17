@@ -59,6 +59,7 @@ void CNetworkHarlequinnAnimController::Tick(const _double& _dTimeDelta)
     SHPTR<CHarlequinn> spHarlequinn = m_wpHarlequinnMob.lock();
     SHPTR<UAnimModel> spAnimModel = spHarlequinn->GetAnimModel();
     const _wstring& CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
+    SHPTR<UPlayer> spPlayer = spHarlequinn->GetTargetPlayer();
 
     _bool isHit = spHarlequinn->IsDamaged();
     if (true == isHit)
@@ -75,13 +76,13 @@ void CNetworkHarlequinnAnimController::Tick(const _double& _dTimeDelta)
             else
                 spHitSound = spGameInstance->BringSound(ENEMYHIT3_SOUNDNAME);
 
-            spHitSound->PlayWithInputChannel(&m_pHitChannel);
+            spHitSound->PlayWithInputChannel(&m_pHitChannel, spHarlequinn->GetTransform(), spPlayer->GetTransform());
         }
         else
         {
             if (false == spHitSound->IsSoundPlay(m_pHitChannel))
             {
-                spHitSound->PlayWithInputChannel(&m_pHitChannel);
+                spHitSound->PlayWithInputChannel(&m_pHitChannel, spHarlequinn->GetTransform(), spPlayer->GetTransform());
             }
             else
             {
@@ -92,7 +93,7 @@ void CNetworkHarlequinnAnimController::Tick(const _double& _dTimeDelta)
                 else
                     spHitSound = spGameInstance->BringSound(ENEMYHIT3_SOUNDNAME);
 
-                spHitSound->PlayWithInputChannel(&m_pHitChannel);
+                spHitSound->PlayWithInputChannel(&m_pHitChannel, spHarlequinn->GetTransform(), spPlayer->GetTransform());
             }
         }
     }

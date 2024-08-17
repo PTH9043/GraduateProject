@@ -28,7 +28,7 @@ namespace Server {
 
 	_bool CMimic::Start(const VOIDDATAS& _ReceiveDatas)
 	{
-		_float4x4 Matrix = _float4x4::CreateScale(0.1f);
+		_float4x4 Matrix = _float4x4::CreateScale(0.1f) * _float4x4::CreateRotationY(DirectX::XMConvertToRadians(180));
 		SetAnimController(Create<CMimicAnimController>(GetCoreInstance(), ThisShared<CMimic>(),
 			"..\\..\\Resource\\Anim\\Mimic\\", "Mimic_FBX.bin", Matrix));
 
@@ -40,6 +40,7 @@ namespace Server {
 
 	void CMimic::Tick(const _double& _dTimeDelta)
 	{
+		RETURN_CHECK(false == m_isPressKeyEnable, ;);
 		SHPTR<ASession> spSession = GetTargetSession();
 		TickUpdateBehavior(_dTimeDelta, spSession);
 		__super::Tick(_dTimeDelta);
@@ -64,7 +65,6 @@ namespace Server {
 				{
 					m_isPressKeyEnable = true;
 				}
-				std::cout << "Mimic Found" << "\n";
 			}
 		}
 	}
@@ -140,7 +140,7 @@ namespace Server {
 		}
 		else if (MOB_ATTACK_STATE == MobState)
 		{
-			spTransform->LookAt(vTargetPos);
+			SetDirectionFixedUp(_dTimeDelta, GetPlayerToDot(), 10, vTargetPos);
 		}
 		else if (MOB_HIT_STATE == MobState)
 		{

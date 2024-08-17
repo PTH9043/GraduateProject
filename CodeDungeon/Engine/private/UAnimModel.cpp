@@ -358,7 +358,7 @@ void UAnimModel::OutAnimationDataToServer(const _wstring& _wstrPath)
 {
 	_wstring str = _wstrPath;
 	str.append(L"\\ServerAnim");
-	if (0 != _wmkdir(str))
+	if (0 != _wmkdir(str.c_str()))
 	{
 		str.append(L"\\");
 		str.append(GetModelName());

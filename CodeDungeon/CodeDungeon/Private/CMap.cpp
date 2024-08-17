@@ -173,7 +173,7 @@ void CMap::LoadStaticObjects()
 			}*/
 		}
 	}
-	m_spStaticObjContainer->emplace("Torch_FBX.bin", _TorchVec);
+	m_spStaticObjContainer->emplace(L"Torch_FBX.bin", _TorchVec);
 	//m_spStaticObjContainer->emplace("Bars_FBX.bin", _BarsVec);
 	//m_spStaticObjContainer->emplace("Statue_FBX.bin", _StatueVec);
 	//m_spStaticObjContainer->emplace("Cores", _CoreVec);
@@ -198,7 +198,7 @@ void CMap::LoadGuards()
 			_Guard->GetTransform()->SetDirection(vecit._mWorldMatrix.Get_Look());
 			_Guard->GetTransform()->SetPos(_float3(vecit._mWorldMatrix.Get_Pos().x, vecit._mWorldMatrix.Get_Pos().y + 20, vecit._mWorldMatrix.Get_Pos().z));
 			spGameInstance->AddCollisionPawnList(_Guard);
-			m_GuardContainer.emplace(it.first, _Guard);
+			m_GuardContainer.emplace(UMethod::ConvertSToW(it.first), _Guard);
 		}
 	}
 }
@@ -209,14 +209,12 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 	m_spMapLayout->LoadMapMobs();
 
 	MOBCONTAINER _Mobs;
-
+#ifndef _ENABLE_PROTOBUFF
 	for (auto& it : (*m_spMapLayout->GetMapMobsContainer().get()))
 	{
 		_Mobs.clear();
 		for (auto& vecit : it.second)
 		{
-#ifndef _ENABLE_PROTOBUFF
-
 			if (vecit._sAnimModelName == "Mimic_FBX.bin")
 			{
 				CItemChest::CHARACTERDESC chestDesc{ PROTO_RES_CHESTANIMMODEL, PROTO_COMP_CHESTANIMCONTROLLER };;
@@ -366,11 +364,10 @@ void CMap::LoadMobs(CSHPTRREF<CWarriorPlayer> _spPlayer)
 				spGameInstance->AddCollisionPawnList(_Mimic);
 				_Mobs.push_back(_Mimic);
 			}
-#endif
 		}
 		m_spMobsContainer->emplace(it.first, _Mobs);
 	}
-
+#endif
 }
 
 void CMap::SetMobContainer(SHPTR<MOBSCONTAINER> _spMobContainer)

@@ -26,7 +26,6 @@ namespace Server
 		}
 
 		UpdateFindRange(50.f, 90.f);
-		SetActive(false);
 	}
 
 	_bool CSarcophagus::Start(const VOIDDATAS& _ReceiveDatas)
@@ -58,8 +57,10 @@ namespace Server
 		}
 		SetAnimController(spSacrophagusAnimController);
 		spMummy->Start({ _ReceiveDatas[0] });
+		__super::Start(_ReceiveDatas);
 		SetOwnerMonsterSessionID(spMummy->GetSessionID());
 		GetCoreInstance()->InsertMobObject(spMummy->GetSessionID(), spMummy);
+		GetTransform()->SetNewWorldMtx(spMummy->GetTransform()->GetWorldMatrix());
 
 		if (SARCO_LAYING == m_eSarcophagusType)
 			spMummy->GetTransform()->TranslateDir((spMummy->GetTransform()->GetLook() * -1), 1, 10);
@@ -81,9 +82,9 @@ namespace Server
 		}
 		break;
 		}
-
+		__super::Start(_ReceiveDatas);
 #endif
-		return __super::Start(_ReceiveDatas);
+		return true;
 	}
 
 	void CSarcophagus::RunningPermanentDisableSituation()
@@ -125,7 +126,10 @@ namespace Server
 		spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
 	}
 
-	void CSarcophagus::Tick(const _double& _dTimeDelta){ }
+	void CSarcophagus::Tick(const _double& _dTimeDelta)
+	{
+
+	}
 
 	void CSarcophagus::State(SHPTR<ASession> _spSession, _int _MonsterState)
 	{

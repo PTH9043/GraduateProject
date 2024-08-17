@@ -22,8 +22,8 @@ protected:
 private:
 	virtual void Free() override;
 private:
-	static constexpr _float RUNNING_SPEED{ 45 };
-	static constexpr _float WALKING_SPEED{ 25 };
+	static constexpr _float RUNNING_SPEED{ 25 };
+	static constexpr _float WALKING_SPEED{ 15 };
 
 	WKPTR< CMinotaurAnimController>			m_wpMinotaurAnimController;
 };

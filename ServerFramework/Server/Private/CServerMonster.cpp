@@ -22,11 +22,11 @@ namespace Server {
 		m_fRotSpeed{ DirectX::XMConvertToRadians(90) }, m_fCollisionNuckbackSpeed{ 7.f },
 		m_fApplySlidingMovementSpeed{ 20.f }, m_strRoomName{""}, m_DisableHitTimer{0.75f}
 	{
+		SetActive(false);
 	}
 
 	_bool CServerMonster::Start(const VOIDDATAS& _ReceiveDatas)
 	{
-		SHPTR<ANavigation> spNavigation = GetNavigation();
 #ifndef CREATED_SERVERMOBDATA
 		MOBDATA* pMobData = static_cast<MOBDATA*>(_ReceiveDatas[0]);
 		// Setting Animation 
@@ -43,8 +43,22 @@ namespace Server {
 		BringCellIndextoPosition();
 		m_strRoomName = pMobData->strRoomName;
 		SetSessionID(pMobData->iMobID);
+		SetOwnerMonsterSessionID(pMobData->iMobParentsID);
 #endif
 		SetPrevPosition(GetTransform()->GetPos());
+		SetFoundPlayerFirstTime(false);
+		UpdateSelfStateToPlayerDistance(false, false, false);
+
+
+		if (m_strRoomName == "Interior_Room_G")
+		{
+			ActivePermanentDisable();
+		}
+		else if (m_strRoomName == "Interior_Hallway_E")
+		{
+			ActivePermanentDisable();
+		}
+
 		return __super::Start(_ReceiveDatas);
 	}
 
@@ -103,59 +117,59 @@ namespace Server {
 
 	void CServerMonster::Collision(AGameObject* _pGameObject, const _double& _dTimeDelta)
 	{
-		AGameObject* pGameObject = _pGameObject;
-		RETURN_CHECK(nullptr == pGameObject, ;);
-		RETURN_CHECK(false == IsCurrentAtkPlayer(), ;);
-		SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
-		SESSIONTYPE EnemySessionType = pGameObject->GetSessionType();
-		SHPTR<ATransform> spSelfTr = GetTransform();
-		SHPTR<ATransform> spTargetTr = pGameObject->GetTransform();
+		//AGameObject* pGameObject = _pGameObject;
+		//RETURN_CHECK(nullptr == pGameObject, ;);
+		//RETURN_CHECK(false == IsCurrentAtkPlayer(), ;);
+		//SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+		//SESSIONTYPE EnemySessionType = pGameObject->GetSessionType();
+		//SHPTR<ATransform> spSelfTr = GetTransform();
+		//SHPTR<ATransform> spTargetTr = pGameObject->GetTransform();
 
-		Vector3 vSelfPos = spSelfTr->GetPos();
-		Vector3 vTargetPos = spTargetTr->GetPos();
+		//Vector3 vSelfPos = spSelfTr->GetPos();
+		//Vector3 vTargetPos = spTargetTr->GetPos();
 
-		Vector3 vReverseTargetDirection = vSelfPos - vTargetPos;
-		vReverseTargetDirection.Normalize();
+		//Vector3 vReverseTargetDirection = vSelfPos - vTargetPos;
+		//vReverseTargetDirection.Normalize();
 
-		const auto& SelfCollisionCollider = GetColliderContainer();
-		const auto& TargetCollisionCollider = pGameObject->GetColliderContainer();
+		//const auto& SelfCollisionCollider = GetColliderContainer();
+		//const auto& TargetCollisionCollider = pGameObject->GetColliderContainer();
 
-		if (SESSIONTYPE::PLAYER == EnemySessionType || SESSIONTYPE::MONSTER == EnemySessionType)
-		{
-			for (auto& SelfCollision : SelfCollisionCollider)
-			{
-				for (auto& TargetCollision : TargetCollisionCollider)
-				{
-					if (COLLIDERTYPE::COLLIDER_MAIN == TargetCollision.first)
-					{
-						if (SelfCollision.second->IsCollision(TargetCollision.second))
-						{
-							spSelfTr->TranslateDir(vReverseTargetDirection, _dTimeDelta, GetCollisionNuckbackSpeed());
-							break;
-						}
-					}
-				}
-			}
-		}
-		else if (SESSIONTYPE::OBJECT == EnemySessionType)
-		{
-			for (auto& SelfCollision : SelfCollisionCollider)
-			{
-				for (auto& TargetCollision : TargetCollisionCollider)
-				{
-					if (COLLIDERTYPE::COLLIDER_MAIN == TargetCollision.first)
-					{
-						if (SelfCollision.second->IsCollision(TargetCollision.second))
-						{
-							Vector3 vColliderNormal = SelfCollision.second->GetCollisionNormal(TargetCollision.second);
-							spSelfTr->ApplySlidingMovement(GetPrevPosition(), vColliderNormal,
-								GetApplySlidingMovementSpeed(), _dTimeDelta);
-							break;
-						}
-					}
-				}
-			}
-		}
+		//if (SESSIONTYPE::PLAYER == EnemySessionType || SESSIONTYPE::MONSTER == EnemySessionType)
+		//{
+		//	for (auto& SelfCollision : SelfCollisionCollider)
+		//	{
+		//		for (auto& TargetCollision : TargetCollisionCollider)
+		//		{
+		//			if (COLLIDERTYPE::COLLIDER_MAIN == TargetCollision.first)
+		//			{
+		//				if (SelfCollision.second->IsCollision(TargetCollision.second))
+		//				{
+		//					spSelfTr->TranslateDir(vReverseTargetDirection, _dTimeDelta, GetCollisionNuckbackSpeed());
+		//					break;
+		//				}
+		//			}
+		//		}
+		//	}
+		//}
+		//else if (SESSIONTYPE::OBJECT == EnemySessionType)
+		//{
+		//	for (auto& SelfCollision : SelfCollisionCollider)
+		//	{
+		//		for (auto& TargetCollision : TargetCollisionCollider)
+		//		{
+		//			if (COLLIDERTYPE::COLLIDER_MAIN == TargetCollision.first)
+		//			{
+		//				if (SelfCollision.second->IsCollision(TargetCollision.second))
+		//				{
+		//					Vector3 vColliderNormal = SelfCollision.second->GetCollisionNormal(TargetCollision.second);
+		//					spSelfTr->ApplySlidingMovement(GetPrevPosition(), vColliderNormal,
+		//						GetApplySlidingMovementSpeed(), _dTimeDelta);
+		//					break;
+		//				}
+		//			}
+		//		}
+		//	}
+		//}
 	}
 
 	void CServerMonster::RunningPermanentDisableSituation()
@@ -214,6 +228,7 @@ namespace Server {
 		SetPrevPosition(vCurrentMobPos);
 		SetPlayerToDot(OtherCharacterDirToLookConverter(vTargetPos));
 
+		_bool isFirstFoundState = IsFoundPlayerFirstTime();
 		_bool isFoudnTargetState = IsCurrentFindPlayer();
 		_bool isDeadState = IsDead();
 		_int MobState = spAnimController->GetAnimState();
@@ -251,16 +266,7 @@ namespace Server {
 			SetDirectionFixedUp(_dTimeDelta, GetPlayerToDot(), 10, vTargetPos);
 		}
 
-		if (MOB_IDLE_STATE == MobState )
-		{
-			spAnimator->TickAnimation(_dTimeDelta);
-		}
-		else
-		{
-			spAnimator->TickAnimChangeTransform(spTransform, _dTimeDelta);
-			SetElapsedTime(0);
-		}
-
+		spAnimator->TickAnimChangeTransform(spTransform, _dTimeDelta);
 		m_TimeAccumulator.PlusTime(_dTimeDelta);
 		DisableDamaged(iCurrentPlayerState, _dTimeDelta);
 	}

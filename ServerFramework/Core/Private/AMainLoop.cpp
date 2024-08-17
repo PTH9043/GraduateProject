@@ -74,36 +74,36 @@ namespace Core {
 				{
 					iter->Tick(dTimeDelta);
 				}
-				// Pawn Collision 
-				for (AGameObject* iter : m_PawnCollisionList)
-				{
-					if (true == iter->IsPermanentDisable())
-						continue;
-					// Pawn Collision
-					for (AGameObject* value : m_PawnCollisionList)
-					{
-						if (iter == value)
-							continue;
+				//// Pawn Collision 
+				//for (AGameObject* iter : m_PawnCollisionList)
+				//{
+				//	if (true == iter->IsPermanentDisable())
+				//		continue;
+				//	// Pawn Collision
+				//	for (AGameObject* value : m_PawnCollisionList)
+				//	{
+				//		if (iter == value)
+				//			continue;
 
-						iter->Collision(value, dTimeDelta);
-					}
-					// Static Obj Coll
-					for (AGameObject* value : m_StaticObjCollisionList)
-					{
-						iter->Collision(value, dTimeDelta);
-					}
-				}
-				// Static Obj CollisionList 
-				for (AGameObject* iter : m_StaticObjCollisionList)
-				{
-					if (true == iter->IsPermanentDisable())
-						continue;
+				//		iter->Collision(value, dTimeDelta);
+				//	}
+				//	// Static Obj Coll
+				//	for (AGameObject* value : m_StaticObjCollisionList)
+				//	{
+				//		iter->Collision(value, dTimeDelta);
+				//	}
+				//}
+				//// Static Obj CollisionList 
+				//for (AGameObject* iter : m_StaticObjCollisionList)
+				//{
+				//	if (true == iter->IsPermanentDisable())
+				//		continue;
 
-					for (AGameObject* value : m_PawnCollisionList)
-					{
-						iter->Collision(value, dTimeDelta);
-					}
-				}
+				//	for (AGameObject* value : m_PawnCollisionList)
+				//	{
+				//		iter->Collision(value, dTimeDelta);
+				//	}
+				//}
 			}
 		}
 		RegisterTimer(1);

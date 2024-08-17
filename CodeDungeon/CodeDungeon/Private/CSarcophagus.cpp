@@ -10,6 +10,7 @@
 #include "UMethod.h"
 #include "UCollider.h"
 #include "UProcessedData.h"
+#include "UPlayer.h"
 
 CSarcophagus::CSarcophagus(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: CMob(_spDevice, _wstrLayer, _eCloneType), m_SarcophagusType{}, m_dElapsedTimeForDeath{}, m_dAnimTimeRatio{0}, m_isFound{ false }
@@ -38,8 +39,9 @@ HRESULT CSarcophagus::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetPawnType(PAWNTYPE::PAWN_STATICOBJ);
 	SetActivationRange(50);
 	SetDeactivationRange(120);
-	SetActive(true);
+	//SetActive(true);
 //	SetDeathState(true);
+//	SetDeadDissolveEnable(true);
 	return S_OK;
 }
 
@@ -67,7 +69,7 @@ void CSarcophagus::TickActive(const _double& _dTimeDelta)
 	_double StandingSarcophagusTimeArcOpenEnd = 30;
 
 	SHPTR<CMummy> spMummy = GetOwnerMummy();
-
+	SHPTR<UPlayer> spPlayer = spMummy->GetTargetPlayer();
 	GetAnimationController()->Tick(_dTimeDelta);
 
 	if (!spMummy->GetDeathState())
@@ -80,8 +82,8 @@ void CSarcophagus::TickActive(const _double& _dTimeDelta)
 				USound* Layingsound2 = spGameInstance->BringSound(L"StoneSlide").get();
 				if (GetElapsedTime() == 0)
 				{
-					Layingsound1->PlayWithInputChannel(&m_pLaying1Channel);
-					Layingsound2->PlayWithInputChannel(&m_pLaying2Channel);
+					Layingsound1->PlayWithInputChannel(&m_pLaying1Channel, GetTransform(), spPlayer->GetTransform());
+					Layingsound2->PlayWithInputChannel(&m_pLaying2Channel, GetTransform(), spPlayer->GetTransform());
 				}
 			}
 			else
@@ -90,8 +92,8 @@ void CSarcophagus::TickActive(const _double& _dTimeDelta)
 				USound* Standingsound2 = spGameInstance->BringSound(L"DebrisandImpact").get();
 				if (GetElapsedTime() == 0)
 				{
-					Standingsound1->PlayWithInputChannel(&m_pStanding1Channel);
-					Standingsound1->PlayWithInputChannel(&m_pStanding2Channel);
+					Standingsound1->PlayWithInputChannel(&m_pStanding1Channel, GetTransform(), spPlayer->GetTransform());
+					Standingsound1->PlayWithInputChannel(&m_pStanding2Channel, GetTransform(), spPlayer->GetTransform());
 				}
 			}
 

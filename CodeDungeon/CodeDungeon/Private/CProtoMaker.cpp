@@ -179,7 +179,7 @@ HRESULT CProtoMaker::CreateMainSceneProtoData(CSHPTRREF<UGameInstance> _spGameIn
 		_spDevice, L"..\\..\\Resource\\Model\\Item\\Equip\\AnubisHook\\Convert\\Anubis_Staff_FBX.bin"));
 
 
-	Matrix = _float4x4::CreateScale(0.1f);
+	Matrix = _float4x4::CreateScale(0.1f) * _float4x4::CreateRotationY(DirectX::XMConvertToRadians(180));
 	_spGameInstance->AddPrototype(PROTO_RES_MIMICANIMMODEL, CLONETYPE::CLONE_STATIC, CreateConstructorNative<UAnimModel>(
 		_spDevice, L"..\\..\\Resource\\AnimModel\\Mimic\\Convert\\Mimic_FBX.bin", Matrix));
 

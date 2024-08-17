@@ -51,7 +51,7 @@ SHPTR<UPlayer> UCharacterManager::FindPlayerToNetworkID(_int _iNetworkID)
 SHPTR<UPlayer> UCharacterManager::FindPlayerToDistance(const _float3& _vPos)
 {
 	SHPTR<UPlayer> spPlayer;
-	_float fDistance = 99999999999;
+	_float fDistance = 99999999999.f;
 
 	for (auto& iter : m_PlayerContainer)
 	{

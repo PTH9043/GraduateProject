@@ -73,17 +73,17 @@ namespace Server
 		{
 			VECTOR< MOBDATA> MobData;
 			VECTOR< MOBDATA> ObjectData;
-			CMobLayoutLoader Chest("..\\..\\Resource\\MobsLayouts\\Chest.bin", "Chest");
-			CMobLayoutLoader Interior_Hallway_E("..\\..\\Resource\\MobsLayouts\\Interior_Hallway_E.bin", "Interior_Hallway_E");
-			CMobLayoutLoader Interior_Room_C("..\\..\\Resource\\MobsLayouts\\Interior_Room_C.bin", "Interior_Room_C");
-			CMobLayoutLoader Interior_Room_D("..\\..\\Resource\\MobsLayouts\\Interior_Room_D.bin", "Interior_Room_D");
-			CMobLayoutLoader Interior_Room_E("..\\..\\Resource\\MobsLayouts\\Interior_Room_E.bin", "Interior_Room_E");
-			CMobLayoutLoader Interior_Room_F("..\\..\\Resource\\MobsLayouts\\Interior_Room_F.bin", "Interior_Room_F");
-			CMobLayoutLoader Interior_Room_G("..\\..\\Resource\\MobsLayouts\\Interior_Room_G.bin", "Interior_Room_G");
-			CMobLayoutLoader Mimic("..\\..\\Resource\\MobsLayouts\\Mimics.bin", "Mimics");
-			CStaticObjectLayoutLoader Cores("..\\..\\Resource\\MobsLayouts\\Cores.bin", "Cores");
-			CStaticObjectLayoutLoader IronBars("..\\..\\Resource\\ObjectLayouts\\IronBars.bin", "IronBars");
-			CStaticObjectLayoutLoader Statue("..\\..\\Resource\\ObjectLayouts\\Statue.bin", "Statue");
+			CMobLayoutLoader Chest("..\\..\\Resource\\MobsLayouts\\Chest", "Chest");
+			CMobLayoutLoader Interior_Hallway_E("..\\..\\Resource\\MobsLayouts\\Interior_Hallway_E", "Interior_Hallway_E");
+			CMobLayoutLoader Interior_Room_C("..\\..\\Resource\\MobsLayouts\\Interior_Room_C", "Interior_Room_C");
+			CMobLayoutLoader Interior_Room_D("..\\..\\Resource\\MobsLayouts\\Interior_Room_D", "Interior_Room_D");
+			CMobLayoutLoader Interior_Room_E("..\\..\\Resource\\MobsLayouts\\Interior_Room_E", "Interior_Room_E");
+			CMobLayoutLoader Interior_Room_F("..\\..\\Resource\\MobsLayouts\\Interior_Room_F", "Interior_Room_F");
+			CMobLayoutLoader Interior_Room_G("..\\..\\Resource\\MobsLayouts\\Interior_Room_G", "Interior_Room_G");
+			CMobLayoutLoader Mimic("..\\..\\Resource\\MobsLayouts\\Mimics", "Mimics");
+			CStaticObjectLayoutLoader Cores("..\\..\\Resource\\ObjectLayouts\\Cores", "Cores");
+			CStaticObjectLayoutLoader IronBars("..\\..\\Resource\\ObjectLayouts\\IronBars", "IronBars");
+			CStaticObjectLayoutLoader Statue("..\\..\\Resource\\ObjectLayouts\\Statue", "Statue");
 
 			// Mob데이터를 받아온다. 
 			for (auto& iter : Chest.GetMobData())

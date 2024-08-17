@@ -116,7 +116,7 @@ void CItemChest::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 			if (1 == scStaticObjFind.enable() && !m_bisOpen) {
 				if (m_ChestType == TYPE_CHEST) {
 					spPlayer->SetIfOpenChest(true);
-					spGameInstance->SoundPlayOnce(L"ChestOpen");
+					spGameInstance->SoundPlayOnce(L"ChestOpen", GetTransform(), spPlayer->GetTransform());
 				}
 				SetOpeningState(true);
 			}
@@ -149,14 +149,13 @@ void CItemChest::TickActive(const _double& _dTimeDelta)
 	_double ItemChestOpeningSpeed = 2;
 	_double ItemChestTimeArcOpenEnd = 3;
 	GetAnimationController()->Tick(_dTimeDelta);
-	SetTargetPlayer(std::static_pointer_cast<UPlayer>(spGameInstance->GetCurrPlayer()));
 
 	if (m_bisOpen)
 	{
 		if (m_ChestType == TYPE_CHEST)
 		{
 			if (!m_bisOpenSound) {
-				spGameInstance->SoundPlayOnce(L"Heal");
+				spGameInstance->SoundPlayOnce(L"Heal", GetTransform(), GetTargetPlayer()->GetTransform());
 				m_bisOpenSound = true;
 			}
 

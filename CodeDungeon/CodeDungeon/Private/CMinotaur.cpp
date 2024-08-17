@@ -248,6 +248,7 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 	m_spAttackParticleTwo->SetPosition(pos);
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	SHPTR<UPlayer> spPlayer = GetTargetPlayer();
 	_int CurAnimState = GetAnimationController()->GetAnimState();
 	if (GetDeathState())
 	{
@@ -258,9 +259,13 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 			GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
 			GetAnimModel()->UpdateDissolveTImer(_dTimeDelta * 1.2f);
 			if (!m_bDissolveSound) {
-				spGameInstance->SoundPlayOnce(L"DissolveSound2");
+				spGameInstance->SoundPlayOnce(L"DissolveSound2", GetTransform(), spPlayer->GetTransform());
 				m_bDissolveSound = true;
 			}
+		}
+		else
+		{
+			SetDeadDissolveEnable(true);
 		}
 	}
 	else
@@ -378,11 +383,11 @@ void CMinotaur::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 					m_spAttackParticleTwo->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;	//등을 맞았을 때에만
 					if (dotProduct < -0.5f)
 					{				
-						SendCollisionData(pCharacter, 100);
+						SendCollisionData(pCharacter, 300);
 					}
 					else
 					{
-						SendCollisionData(pCharacter, 1);
+						SendCollisionData(pCharacter, 10);
 					}
 				}
 

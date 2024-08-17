@@ -40,19 +40,17 @@ namespace Core {
 		SHPTR<ANavigation> spNaviagation = GetNavigation();
 		{
 			Vector3 vPosition = spTransform->GetPos();
-			SHPTR<ACell> spNewCell{};
+			spNaviagation->ComputeHeight(REF_OUT vPosition);
+			spTransform->SetPos(vPosition);
 
+			SHPTR<ACell> spNewCell{};
 			if (false == spNaviagation->IsMove(vPosition, REF_OUT spNewCell))
 			{
-				Vector3 closestPoint = spNaviagation->ClampPositionToCell(vPosition);
-				closestPoint.y = vPosition.y;
-				GetTransform()->SetPos(closestPoint);
-				vPosition = GetTransform()->GetPos();
+				spTransform->SetPos(GetPrevPosition());
 			}
 			else
 			{
-				spNaviagation->ComputeHeight(vPosition);
-				spTransform->SetPos(vPosition);
+				SetPrevPosition(vPosition);
 			}
 		}
 	}
@@ -192,13 +190,12 @@ namespace Core {
 
 	void APawn::DeadStateEnable(const _double& _dTimeDelta)
 	{
-		RETURN_CHECK(nullptr == m_spAnimController, ;);
-		if (MOB_DEATH_STATE == m_spAnimController->GetAnimState())
+		if (true == IsDead())
 		{
 			if (true == m_DeadTimer.IsOver(_dTimeDelta))
 			{
 				m_isDeadStateEnable = true;
-				m_DeadTimer.ResetTimer();
+				ActivePermanentDisable();
 			}
 		}
 	}

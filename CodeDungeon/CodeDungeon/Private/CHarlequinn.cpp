@@ -294,7 +294,7 @@ void CHarlequinn::TickActive(const _double& _dTimeDelta)
 	__super::TickActive(_dTimeDelta);
 	_float3 pos = GetTransform()->GetPos();
 	pos.y += 5;
-
+	SHPTR<UPlayer> spPlayer = GetTargetPlayer();
 	m_spBloodParticle->SetPosition(pos);
 	m_spSlashParticle->SetPosition(pos);
 	m_spAttackParticle->SetPosition(pos);
@@ -310,7 +310,7 @@ void CHarlequinn::TickActive(const _double& _dTimeDelta)
 			GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
 			GetAnimModel()->UpdateDissolveTImer(_dTimeDelta * 1.2f);
 			if (!m_bDissolveSound) {
-				spGameInstance->SoundPlayOnce(L"DissolveSound2");
+				spGameInstance->SoundPlayOnce(L"DissolveSound2", GetTransform(), spPlayer->GetTransform());
 				m_bDissolveSound = true;
 			}
 			for (auto& iter : (*m_spShurikensForThrowing))
@@ -321,6 +321,10 @@ void CHarlequinn::TickActive(const _double& _dTimeDelta)
 				if (nullptr != iter)
 					iter->SetActive(false);
 			}
+		}
+		else
+		{
+			SetDeadDissolveEnable(true);
 		}
 	}
 	else

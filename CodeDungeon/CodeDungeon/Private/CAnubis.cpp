@@ -318,13 +318,13 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 	m_spSlashParticle->SetPosition(pos);
 	m_spAttackParticle->SetPosition(pos);
 	m_spAttackParticleTwo->SetPosition(pos);
-
+	SHPTR<UPlayer> spPlayer = GetTargetPlayer();
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	if (GetDeathState())
 	{
 		if (GetElapsedTime() == 0)
 		{
-			spGameInstance->SoundPlayOnce(L"AnubisDeath");
+			spGameInstance->SoundPlayOnce(L"AnubisDeath", GetTransform(), spPlayer->GetTransform());
 		}
 
 		constexpr static _double DeathAnimSpeed = 20;
@@ -334,7 +334,7 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 			GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
 			GetAnimModel()->UpdateDissolveTImer(_dTimeDelta * 1.2f);
 			if (!m_bDissolveSound) {
-				spGameInstance->SoundPlayOnce(L"DissolveSound");
+				spGameInstance->SoundPlayOnce(L"DissolveSound", GetTransform(), spPlayer->GetTransform());
 				m_bDissolveSound = true;
 			}
 			m_spMagicCircle->SetActive(false);
@@ -342,6 +342,10 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 			m_spFireCircle1->SetActive(false);
 			m_spMagicSphere->SetActive(false);
 			m_spAnubisStaff->SetActive(false);
+		}
+		else
+		{
+			SetDeadDissolveEnable(true);
 		}
 	}
 	else

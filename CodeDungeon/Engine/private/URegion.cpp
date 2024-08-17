@@ -110,7 +110,7 @@ URegion::URegion(CSHPTRREF<UDevice> _spDevice)
 	m_spNavigation{ nullptr },
 	m_iIndex{ 0 },
 	m_NeighborRegion{},
-	m_wsRegionName{ "name" },
+	m_wsRegionName{ L"name" },
 	m_bEditName{false}
 #ifdef _EDIT_NAVI
 	,m_DeleteCellsList{ nullptr },
@@ -127,7 +127,7 @@ URegion::URegion(const URegion& _rhs)
 	m_spNavigation{ nullptr },
 	m_iIndex{ 0 },
 	m_NeighborRegion{},
-	m_wsRegionName{"name"},
+	m_wsRegionName{ L"name"},
 	m_bEditName{false}
 #ifdef _EDIT_NAVI
 	,m_DeleteCellsList{ nullptr },

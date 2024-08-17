@@ -32,10 +32,6 @@ namespace Core
 	{
 		RETURN_CHECK(nullptr == _spSession, ;);
 		SHPTR<AAnimController> spAnimController = GetAnimController();
-		if (nullptr != spAnimController)
-		{
-			RETURN_CHECK(MOB_ATTACK_STATE == GetAnimController()->GetAnimState(), ;);
-		}
 		SHPTR<ATransform> spMobTr = GetTransform();
 		SHPTR<ATransform> spPlayerTr = _spSession->GetTransform();
 		SESSIONID SessionID = _spSession->GetSessionID();
@@ -45,34 +41,49 @@ namespace Core
 			Vector3 vDirection = vPlayerPos - vMobPos;
 			s_PlayerPositionContainer[SessionID] = vPlayerPos;
 
-			float fDistanceToPlayer = vDirection.Length();
-
-			if (fDistanceToPlayer <= m_fActiveRange)
+			if (std::abs(vDirection.y) >= 30.f)
 			{
-				SHPTR<ASession> spTargetSession = m_spTargetSession;
-				if (nullptr != spTargetSession)
-				{
-					if (spTargetSession->IsFallDownState())
-						SetTargetSession(nullptr);
-				}
-				else
+				UpdateSelfStateToPlayerDistance(false, false, true);
+				float fDistanceToPlayer = vDirection.Length();
+				if (GetDistanceToPlayer() >= fDistanceToPlayer)
 				{
 					SetTargetSession(_spSession);
 				}
-
-				if (fDistanceToPlayer <= m_fAttackRange)
-				{
-					UpdateSelfStateToPlayerDistance(true, true, false);
-				}
-				else
-				{
-					UpdateSelfStateToPlayerDistance(false, true, false);
-				}
 			}
-			else if (m_fDeactiveRange >= fDistanceToPlayer)
+			else
 			{
-				UpdateSelfStateToPlayerDistance(false, false, true);
-				SetTargetSession(nullptr);
+				_float yPos = vDirection.y;
+				vDirection.y = 0.f;
+
+				float fDistanceToPlayer = vDirection.Length();
+
+				if (fDistanceToPlayer <= m_fActiveRange)
+				{
+					SHPTR<ASession> spTargetSession = m_spTargetSession;
+					if (nullptr != spTargetSession)
+					{
+						if (spTargetSession->IsFallDownState())
+							SetTargetSession(nullptr);
+					}
+					else
+					{
+						SetTargetSession(_spSession);
+					}
+
+					if (fDistanceToPlayer <= m_fAttackRange)
+					{
+						UpdateSelfStateToPlayerDistance(true, true, false);
+					}
+					else
+					{
+						UpdateSelfStateToPlayerDistance(false, true, false);
+					}
+				}
+				else if (m_fDeactiveRange >= fDistanceToPlayer)
+				{
+					UpdateSelfStateToPlayerDistance(false, false, true);
+					SetTargetSession(nullptr);
+				}
 			}
 		}
 	}
@@ -116,10 +127,10 @@ namespace Core
 	{
 		SHPTR<ATransform> spTransform = GetTransform();
 		_float fRot = _fCurrentDot;
-		if (fRot >= _JudgaeDot || fRot <= -_JudgaeDot)
-			spTransform->SetDirectionFixedUp((_vTargetPos - spTransform->GetPos()), static_cast<_float>(_dTimeDelta), ROT_SPEED);
-		else
+		if (fRot >= _JudgaeDot && fRot >= -_JudgaeDot)
 			spTransform->LookAt(_vTargetPos);
+		else
+			spTransform->SetDirectionFixedUp((_vTargetPos - spTransform->GetPos()), static_cast<_float>(_dTimeDelta), ROT_SPEED);
 	}
 
 	void AMonster::UpdatePlayerToWeight(const SESSIONID _SessionID, const _float _fWeight)

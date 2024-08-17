@@ -91,6 +91,15 @@ _bool UAudioSystem::PlayWithManyChannels(const _wstring& _wstrSoundName)
 	return true;
 }
 
+_bool UAudioSystem::PlayWithManyChannels(const _wstring& _wstrSoundName, CSHPTRREF<UTransform> _spSelfTransform, CSHPTRREF<UTransform> _spTargetTransform)
+{
+	m_spSound = BringSound(_wstrSoundName);
+	RETURN_CHECK(nullptr == m_spSound, false);
+	m_spSound->UpdateSound3D(_spSelfTransform, _spTargetTransform);
+	m_spSound->PlayWithManyChannels();
+	return true;
+}
+
 _bool UAudioSystem::Play(const _wstring& _wstrSoundName, const _float _fVolumeUpdate)
 {
 	m_spSound = BringSound(_wstrSoundName);
@@ -108,10 +117,27 @@ _bool UAudioSystem::PlayOnce(const _wstring& _wstrSoundName)
 	return true;
 }
 
+_bool UAudioSystem::PlayOnce(const _wstring& _wstrSoundName, CSHPTRREF<UTransform> _spSelfTransform, CSHPTRREF<UTransform> _spTargetTransform)
+{
+	m_spSound = BringSound(_wstrSoundName);
+	RETURN_CHECK(nullptr == m_spSound, false);
+	m_spSound->PlayOnce(_spSelfTransform, _spTargetTransform);
+	return true;
+}
+
 _bool UAudioSystem::PlayOnceWithManyChannels(const _wstring& _wstrSoundName)
 {
 	m_spSound = BringSound(_wstrSoundName);
 	RETURN_CHECK(nullptr == m_spSound, false);
+	m_spSound->PlayOnceWithManyChannels();
+	return true;
+}
+
+_bool UAudioSystem::PlayOnceWithManyChannels(const _wstring& _wstrSoundName, CSHPTRREF<UTransform> _spSelfTransform, CSHPTRREF<UTransform> _spTargetTransform)
+{
+	m_spSound = BringSound(_wstrSoundName);
+	RETURN_CHECK(nullptr == m_spSound, false);
+	m_spSound->UpdateSound3D(_spSelfTransform, _spTargetTransform);
 	m_spSound->PlayOnceWithManyChannels();
 	return true;
 }

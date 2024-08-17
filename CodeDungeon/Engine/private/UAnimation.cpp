@@ -311,7 +311,7 @@ void UAnimation::SaveAnimSectionPathIsFolder(const _wstring& _wstrPath)
 {
 	_wstring str = _wstrPath;
 	str.append(L"\\AnimSection");
-	if (0 != _wmkdir(str))
+	if (0 != _wmkdir(str.c_str()))
 	{
 		_wstring name = m_wstrName;
 
@@ -384,7 +384,7 @@ void UAnimation::SaveAnimEventPathIsFolder(const _wstring& _wstrPath)
 {
 	_wstring str = _wstrPath;
 	str.append(L"\\AnimEvent");
-	if (0 != _wmkdir(str))
+	if (0 != _wmkdir(str.c_str()))
 	{
 		str.append(L"\\");
 		str.append(m_wstrName);

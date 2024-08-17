@@ -29,9 +29,11 @@ public:
 	void TickWithInputChannel(IN FMOD::Channel** _ppChannel);
 	void Play();
 	void PlayWithInputChannel(IN FMOD::Channel** _ppChannel);
+	void PlayWithInputChannel(IN FMOD::Channel** _ppChannel, CSHPTRREF<UTransform> _spSelfTransform, CSHPTRREF<UTransform> _spTargetTransform);	
 	void PlayWithManyChannels();
 	void PlayBGM(IN FMOD::Channel** _ppChannel);
 	void PlayOnce();
+	void PlayOnce(CSHPTRREF<UTransform> _spSelfTransform, CSHPTRREF<UTransform> _spTargetTransform);
 	void PlayOnceWithManyChannels();
 	void Stop();
 	void StopWithInputChannel(IN FMOD::Channel** _ppChannel);
@@ -55,6 +57,7 @@ public:
 	void UpdateVolume(const _float _fVolume) ;
 	void UpdateVolume(IN FMOD::Channel** _ppChannel,const _float _fVolume) ;
 	void UpdateSound3D(const _float3& _vSoudPos, const _float3& _vSoundVelocity, CSHPTRREF<UTransform> _spTargetTransform_CanNullptr = nullptr);
+	void UpdateSound3D(CSHPTRREF<UTransform> _spSelfTransform, CSHPTRREF<UTransform> _spTargetTransform_CanNullptr);
 	void UpdateSound3D(CSHPTRREF<UTransform> _spSelfTransform, const _float3& _vSoundVelocity,
 		CSHPTRREF<UTransform> _spTargetTransform_CanNullptr = nullptr);
 	void ChangeMinMaxDistance3D(const _float _fMinDistance, const _float _fMaxDistance);

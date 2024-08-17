@@ -40,8 +40,9 @@ private:
 	SHPTR<UParticle>			m_spSlashParticle;
 	SHPTR<UParticle>			m_spAttackParticle;
 	SHPTR<UParticle>			m_spAttackParticleTwo;
-	PARTICLEPARAM* m_stParticleParam;
-	ComputeParticleType* m_stParticleType;
+	PARTICLEPARAM*			m_stParticleParam;
+	ComputeParticleType*	 m_stParticleType;
+	SHPTR<UAnimModel>	m_spItemModel;
 
 	UNavigation::PathFindingState m_PathFindingState;
 	VECTOR<_float3> m_AstarPath;

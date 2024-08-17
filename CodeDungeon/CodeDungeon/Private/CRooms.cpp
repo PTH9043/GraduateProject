@@ -39,10 +39,11 @@ HRESULT CRooms::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	ModelProtoTag.append(m_wsRoomTag);
 
 	SetModel(ModelProtoTag);
+	SHPTR<UModel> spModel = GetModel();
 
 	UCollider::COLLIDERDESC collDesc;
 
-	collDesc.vTranslation = _float3(GetModel()->GetCenterPos());
+	collDesc.vTranslation = _float3(spModel->GetCenterPos());
 	collDesc.vScale = _float3(1.f, 1.f, 1.f);
 	SHPTR<UCollider> Collider = static_pointer_cast<UCollider>(spGameInstance->CloneComp(PROTO_COMP_OBBCOLLIDER, { &collDesc }));
 	Collider->SetScaleToFitModel(GetModel()->GetMinVertexPos(), GetModel()->GetMaxVertexPos());

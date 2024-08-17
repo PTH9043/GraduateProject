@@ -101,7 +101,7 @@ namespace Core {
 		// Insert CollisionList
 		{
 			SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
-			spCoreInstance->InsertPawnCollisionList(_spSession.get());
+		//	spCoreInstance->InsertPawnCollisionList(_spSession.get());
 		}
 	}
 

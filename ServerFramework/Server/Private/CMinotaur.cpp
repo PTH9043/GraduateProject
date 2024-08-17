@@ -20,7 +20,7 @@ namespace Server {
 		SetMonsterType(TAG_CHAR::TAG_MINOTAUR);
 		UpdateFindRange(100, 120);
 		SetMoveSpeed(5);
-		SetAttackRange(9.f);
+		SetAttackRange(10.f);
 		SetCharStatus(CHARSTATUS{ 1, 0, 1 });
 	}
 
@@ -111,9 +111,6 @@ namespace Server {
 					{
 						StartFindPath(spNaviagation, spCurrentMobCell, spTargetCell, vCurrentMobPos, vTargetPos);
 					}
-
-					FindingPath(spNaviagation, vCurrentMobPos, vTargetPos);
-					MoveAlongPath(_dTimeDelta);
 				}
 				else
 				{
@@ -126,40 +123,32 @@ namespace Server {
 					}
 
 					SetTargetPos(vTargetPos);
-					FindingPath(spNaviagation, vCurrentMobPos, vTargetPos);
-					MoveAlongPath(_dTimeDelta);
 				}
+
+				FindingPath(spNaviagation, vCurrentMobPos, vTargetPos);
+				MoveAlongPath(_dTimeDelta);
 			}
 		}
-		else if (MOB_ATTACK_STATE == MobState || MOB_HIT_STATE == MobState)
+		else if (MOB_ATTACK_STATE == MobState)
 		{
-			SetDirectionFixedUp(_dTimeDelta, GetPlayerToDot(), 10, vTargetPos);
+			SetDirectionFixedUp(_dTimeDelta, GetPlayerToDot(), 5, vTargetPos);
 		}
 
-		if (MOB_MOVE_STATE == MobState)
+		if (WALKFORWARD_ANIMNAME == strCurAnimationName)
 		{
 			spTransform->MoveForward(_dTimeDelta, WALKING_SPEED);
 		}
-		else if (CMinotaurAnimController::MOB_RUN_STATE == MobState)
+		else if (RUN_ANIMNAME == strCurAnimationName)
 		{
 			spTransform->MoveForward(_dTimeDelta, RUNNING_SPEED);
 		}
-		else if (CMinotaurAnimController::MOB_BACK_STATE == MobState)
+		else if(WALKBACK_ANIMNAME == strCurAnimationName)
 		{
 			spTransform->MoveBack(_dTimeDelta, WALKING_SPEED);
 		}
 
 
-		if (MOB_IDLE_STATE == MobState)
-		{
-			spAnimator->TickAnimation(_dTimeDelta);
-		}
-		else
-		{
-			spAnimator->TickAnimChangeTransform(spTransform, _dTimeDelta);
-			SetElapsedTime(0);
-		}
-
+		spAnimator->TickAnimation(_dTimeDelta);
 		GetTimeAccumulatorRefP().PlusTime(_dTimeDelta);
 		DisableDamaged(iCurrentPlayerState, _dTimeDelta);
 	}

@@ -304,7 +304,7 @@ namespace Engine {
 		static std::shared_ptr<Type> MakeShared(Args&&... args)
 		{
 			return std::shared_ptr<Type>{ xnew<Type>(std::forward<Args>(args)...), xdelete<Type> };
-	//		return std::make_shared<Type>(std::forward<Args>(args)...);
+		//	return std::make_shared<Type>(std::forward<Args>(args)...);
 		}
 	}
 }

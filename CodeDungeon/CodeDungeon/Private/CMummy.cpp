@@ -244,7 +244,7 @@ HRESULT CMummy::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetOutlineColor(_float3(1, 0, 0));
 	SetActive(true);
 	SetMovingSpeed(5.f);
-//	SetDeathState(true);
+
 	return S_OK;
 }
 
@@ -261,6 +261,7 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 	m_spAttackParticleTwo->SetPosition(pos);
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	SHPTR<UPlayer> spPlayer = GetTargetPlayer();
 	// death animation
 	if (GetDeathState())
 	{
@@ -269,8 +270,8 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 		{
 			USound* DeathSound1 = spGameInstance->BringSound(L"Death_VO_1").get();
 			USound* DeathSound2 = spGameInstance->BringSound(L"BodyHitFloor_1").get();
-			DeathSound1->PlayWithInputChannel(&m_pDeathChannel);
-			DeathSound2->PlayWithInputChannel(&m_pDeath2Channel);
+			DeathSound1->PlayWithInputChannel(&m_pDeathChannel, GetTransform(), spPlayer->GetTransform());
+			DeathSound2->PlayWithInputChannel(&m_pDeath2Channel, GetTransform(), spPlayer->GetTransform());
 		}
 		SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
 		_double DeathTimeArcOpenEnd = 500;
@@ -280,11 +281,14 @@ void CMummy::TickActive(const _double& _dTimeDelta)
 			GetAnimModel()->UpdateDissolveTImer(_dTimeDelta);
 			if (!m_bDissolveSound) {
 				SHPTR<USound> DsSound = spGameInstance->BringSound(L"DissolveSound");
-				DsSound->PlayWithInputChannel(&m_pDissolveChannel);
+				DsSound->PlayWithInputChannel(&m_pDissolveChannel, GetTransform(), spPlayer->GetTransform());
 				m_bDissolveSound = true;
 			}
 		}
-
+		else
+		{
+			SetDeadDissolveEnable(true);
+		}
 	}
 	else
 	{
@@ -411,7 +415,7 @@ void CMummy::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 						m_spAttackParticleTwo->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 						m_spSlashParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 						// Decrease health on hit
-						SendCollisionData(_pEnemy.get(), 3000);
+						SendCollisionData(_pEnemy.get(), 100);
 					}
 					
 					SetHitAlreadyState(true);

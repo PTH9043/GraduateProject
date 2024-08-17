@@ -12,6 +12,8 @@ USound::USound(FMOD::System* _pSystem, const _wstring& _wstrSoundPath, _int _Sou
 	assert(nullptr != m_pSystem);
 	FMOD_RESULT Result = m_pSystem->createSound(UMethod::ConvertWToS(_wstrSoundPath).c_str(), FMOD_DEFAULT, nullptr, &m_pSound);
 	assert(FMOD_OK == Result);
+
+	ChangeMinMaxDistance3D(10, 200);
 }
 
 _bool USound::IsSoundPlay(FMOD::Channel* _pChannel)
@@ -69,6 +71,13 @@ void USound::PlayWithInputChannel(IN FMOD::Channel** _ppChannel)
 	m_pSystem->playSound(m_pSound, nullptr, false, _ppChannel);
 }
 
+void USound::PlayWithInputChannel(IN FMOD::Channel** _ppChannel, CSHPTRREF<UTransform> _spSelfTransform, CSHPTRREF<UTransform> _spTargetTransform)
+{
+	TickWithInputChannel(_ppChannel);
+	UpdateSound3D(_spSelfTransform, _spTargetTransform);
+	m_pSystem->playSound(m_pSound, nullptr, false, _ppChannel);
+}
+
 void USound::PlayWithManyChannels()
 {
 	TickWithManyChannels();
@@ -90,6 +99,16 @@ void USound::PlayOnce()
 {
 	Tick();
 	if (false == IsSoundPlay() || false == m_isOncePlay) {
+		Play();
+		m_isOncePlay = true;
+	}
+}
+
+void USound::PlayOnce(CSHPTRREF<UTransform> _spSelfTransform, CSHPTRREF<UTransform> _spTargetTransform)
+{
+	Tick();
+	if (false == IsSoundPlay() || false == m_isOncePlay) {
+		UpdateSound3D(_spSelfTransform, _spTargetTransform);
 		Play();
 		m_isOncePlay = true;
 	}
@@ -299,8 +318,15 @@ void USound::UpdateSound3D(const _float3& _vSoudPos, const _float3& _vSoundVeloc
 		::memcpy(&m_ListenerLook, &_spTargetTransform_CanNullptr->GetLook(), GetTypeSize<_float3>());
 		::memcpy(&m_ListenerUp, &_spTargetTransform_CanNullptr->GetUp(), GetTypeSize<_float3>());
 	}
-	m_pSystem->set3DListenerAttributes(0, &m_ListenerPos, nullptr, &m_ListenerLook, &m_ListenerUp);
+	m_pSystem->set3DListenerAttributes(0, &m_ListenerPos, &m_SoundVelocity, &m_ListenerLook, &m_ListenerUp);
 	m_pSystem->update();
+}
+
+void USound::UpdateSound3D(CSHPTRREF<UTransform> _spSelfTransform, CSHPTRREF<UTransform> _spTargetTransform_CanNullptr)
+{
+	assert(nullptr != _spSelfTransform);
+	static _float3 Velocity{ 5.f, 5.f, 5.f };
+	UpdateSound3D(_spSelfTransform->GetPos(), Velocity, _spTargetTransform_CanNullptr);
 }
 
 void USound::UpdateSound3D(CSHPTRREF<UTransform> _spSelfTransform, const _float3& _vSoundVelocity, CSHPTRREF<UTransform> _spTargetTransform_CanNullptr)

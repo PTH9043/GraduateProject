@@ -58,7 +58,7 @@ void CNetworkMinotaurAnimController::Tick(const _double& _dTimeDelta)
 
     SHPTR<CMinotaur> spMino = m_wpMinotaurMob.lock();
     SHPTR<UAnimModel> spAnimModel = spMino->GetAnimModel();
-
+    SHPTR<UPlayer> spPlayer = spMino->GetTargetPlayer();
     _bool isHit = spMino->IsDamaged();
     if (true == isHit)
     {
@@ -74,13 +74,13 @@ void CNetworkMinotaurAnimController::Tick(const _double& _dTimeDelta)
             else
                 spHitSound = spGameInstance->BringSound(ENEMYHIT3_SOUNDNAME);
 
-            spHitSound->PlayWithInputChannel(&m_pHitChannel);
+            spHitSound->PlayWithInputChannel(&m_pHitChannel, spMino->GetTransform(), spPlayer->GetTransform());
         }
         else
         {
             if (false == spHitSound->IsSoundPlay(m_pHitChannel))
             {
-                spHitSound->PlayWithInputChannel(&m_pHitChannel);
+                spHitSound->PlayWithInputChannel(&m_pHitChannel, spMino->GetTransform(), spPlayer->GetTransform());
             }
             else
             {
@@ -91,14 +91,14 @@ void CNetworkMinotaurAnimController::Tick(const _double& _dTimeDelta)
                 else
                     spHitSound = spGameInstance->BringSound(ENEMYHIT3_SOUNDNAME);
 
-                spHitSound->PlayWithInputChannel(&m_pHitChannel);
+                spHitSound->PlayWithInputChannel(&m_pHitChannel, spMino->GetTransform(), spPlayer->GetTransform());
             }
         }
 
         SHPTR<USound> spGotHitSound = spGameInstance->BringSound(GOTHITVO2_SOUNDNAME);
 
         if (false == spGotHitSound->IsSoundPlay(m_pGotHitChannel))
-            spGotHitSound->PlayWithInputChannel(&m_pGotHitChannel);
+            spGotHitSound->PlayWithInputChannel(&m_pGotHitChannel, spMino->GetTransform(), spPlayer->GetTransform());
     }
 
 

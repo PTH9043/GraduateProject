@@ -65,6 +65,9 @@ public:
     const _int GetMobType() const { return m_iMobType; }
     void SetMobType(const _int _MobType) { this->m_iMobType = _MobType; }
 
+    const _bool IsDeadDissolveEnable() const { return m_isDeadDissolveEnable; }
+    void SetDeadDissolveEnable(const _bool _isDeadDissolveEnable) { this->m_isDeadDissolveEnable = _isDeadDissolveEnable; }
+
     const _bool IsMobAlreadyDeadState() const { return m_isMobAlreadyDeadState; }
 private:
     _float                            m_fDistancefromNearestPlayer;
@@ -86,6 +89,7 @@ private:
     _bool                              m_isRecvMovePosition;
     _int                                 m_iMobType;
     _bool                              m_isMobAlreadyDeadState;
+    _bool                              m_isDeadDissolveEnable;
 };
 
 END

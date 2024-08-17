@@ -32,7 +32,7 @@ HRESULT UFont::NativeConstruct(CSHPTRREF<UDevice> _spDevice, CSHPTRREF<UGpuComma
 	DirectX::ResourceUploadBatch Batch{ DEVICE.Get()};
 	Batch.Begin();
 
-	m_SpriteFont = Make::MakeShared<DirectX::SpriteFont>(DEVICE.Get(), Batch, _wstrFontPath,
+	m_SpriteFont = Make::MakeShared<DirectX::SpriteFont>(DEVICE.Get(), Batch, _wstrFontPath.c_str(),
 		_descriptor->GetCpuHandle(_iFontIndex), _descriptor->GetGpuHandle(_iFontIndex));
 
 	auto upLoadResourceFinished = Batch.End(m_spGpuCommand->GetCmdQue().Get());

@@ -41,9 +41,6 @@ namespace Server {
 		_bool isDeadStateEnable = spMummy->IsDeadStateEnable();
 		MUMMYTYPE eMummyType = spMummy->GetMummyType();
 
-		_bool isFirstFoundState = isFoundPlayer && (false == isFirstFound);
-		_bool isFoundState = isFoundPlayer && isFirstFound;
-
 		static const char* OPENLAYING = "openLaying";
 		static const char* OPENSTANDING = "openStanding";
 		static const char* TAUNTANIM = "taunt";
@@ -108,7 +105,7 @@ namespace Server {
 						UpdateState(WALKFORDER, MOB_MOVE_STATE);
 				}
 			}
-			else
+			else if(true == isFirstFound && true == isFoundPlayer)
 			{
 				if (false == isAtkPlayer)
 				{
@@ -123,7 +120,7 @@ namespace Server {
 
 			if (m_isTauntMode && false == isDisableFoundPlayer)
 			{
-				if (true == isFoundState && false == m_isAttackMode)
+				if (true == isFirstFound && true == isFoundPlayer && false == m_isAttackMode)
 				{
 					UpdateState(TAUNTORDER, MOB_TAUNT_STATE);
 					if (TAUNTANIM == CurAnimName)
@@ -140,7 +137,7 @@ namespace Server {
 				UpdateState(GOTHITORDER, MOB_HIT_STATE);
 				spMummy->SetDamaged(false);
 			}
-			
+
 			if (true == m_isAttackMode && false == isHit)
 			{
 				if (true == isAtkPlayer)
@@ -160,16 +157,15 @@ namespace Server {
 					UpdateState(WALKFORDER, MOB_MOVE_STATE);
 				}
 			}
-		}
 
-		// Handle death state
-		if (true == isDeadState)
+			if (TAUNTANIM == CurAnimName)
+			{
+				SetAnimState(MOB_TAUNT_STATE);
+			}
+		}
+		else
 		{
 			UpdateState(DEADORDER, MOB_DEATH_STATE);
-		}
-		else if (false == isFirstFound)
-		{
-			SetAnimState(MOB_IDLE_STATE);
 		}
 
 		spAnimator->TickEvent(spMummy.get(), GetInputTrigger(), _dTimeDelta);

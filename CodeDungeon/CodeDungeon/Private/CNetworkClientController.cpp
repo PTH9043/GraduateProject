@@ -272,6 +272,18 @@ void CNetworkClientController::CreateServerMobData(CMap* _pMap)
 		iter.second->SetOwnerMummy(MummyPair->second);
 	}
 
+	const auto& findIter1 = (*MobContainer).find(L"Interior_Room_G");
+	for (auto& iter : findIter1->second)
+	{
+		iter->SetDeadDissolveEnable(true);
+		iter->SetDeathState(true);
+	}
+	const auto& findIter2 = (*MobContainer).find(L"Interior_Hallway_E");
+	for (auto& iter : findIter2->second)
+	{
+		iter->SetDeadDissolveEnable(true);
+		iter->SetDeathState(true);
+	}
 	_pMap->SetMobContainer(MobContainer);
 }
 

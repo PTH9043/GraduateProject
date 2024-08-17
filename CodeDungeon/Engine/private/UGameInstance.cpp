@@ -897,6 +897,11 @@ void UGameInstance::SoundPlayWithManyChannels(const _wstring& _wstrSoundName)
 	m_spAudioSystemManager->PlayWithManyChannels(_wstrSoundName);
 }
 
+void UGameInstance::SoundPlayWithManyChannels(const _wstring& _wstrSoundName, CSHPTRREF<UTransform> _spSelfTransform, CSHPTRREF<UTransform> _spTargetTransform)
+{
+	m_spAudioSystemManager->PlayWithInputChannels(_wstrSoundName, _spSelfTransform, _spTargetTransform);
+}
+
 void UGameInstance::SoundPlay(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate)
 {
 	m_spAudioSystemManager->Play(_wstrSoundName, _fVolumeUpdate);
@@ -912,9 +917,19 @@ void UGameInstance::SoundPlayOnce(const _wstring& _wstrSoundName)
 	m_spAudioSystemManager->PlayOnce(_wstrSoundName);
 }
 
+void UGameInstance::SoundPlayOnce(const _wstring& _wstrSoundName, CSHPTRREF<UTransform> _spSelfTransform, CSHPTRREF<UTransform> _spTargetTransform)
+{
+	m_spAudioSystemManager->PlayOnce(_wstrSoundName, _spSelfTransform, _spTargetTransform);
+}
+
 void UGameInstance::SoundPlayOnceWithManyChannels(const _wstring& _wstrSoundName)
 {
 	m_spAudioSystemManager->PlayOnceWithManyChannels(_wstrSoundName);
+}
+
+void UGameInstance::SoundPlayOnceWithManyChannels(const _wstring& _wstrSoundName, CSHPTRREF<UTransform> _spSelfTransform, CSHPTRREF<UTransform> _spTargetTransform)
+{
+	m_spAudioSystemManager->PlayOnceWithManyChannels(_wstrSoundName, _spSelfTransform, _spTargetTransform);
 }
 
 void UGameInstance::SoundPlayBGM(const _wstring& _wstrSoundName)
@@ -978,11 +993,6 @@ void UGameInstance::SetPlaybackPosition(const _wstring& _wstrSoundName, unsigned
 	m_spAudioSystemManager->SetPlaybackPosition(_wstrSoundName, position);//// 재생 위치를 1000 밀리초(1초)로 설정//USoundInstance->SetPlaybackPosition(1000);
 	
 }
-
-//unsigned int UGameInstance::GetPlaybackPosition(const _wstring& _wstrSoundName)
-//{
-//	return m_spAudioSystemManager->GetPlaybackPosition(_wstrSoundName);//// 현재 재생 위치 가져오기
-//}
 
 void UGameInstance::SetLooping(const _wstring& _wstrSoundName, bool loop)
 {

@@ -28,7 +28,8 @@ CMob::CMob(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONE
 	m_isSendDataToBehavior{false},
 	m_isFirstFoundState{ false },
 	m_iMobType{0},
-	m_isMobAlreadyDeadState{ false }
+	m_isMobAlreadyDeadState{ false },
+	m_isDeadDissolveEnable{false}
 {
 }
 
@@ -45,7 +46,8 @@ CMob::CMob(const CMob& _rhs)
 	m_isSendDataToBehavior{ false },
 	m_isFirstFoundState{ false },
 	m_iMobType{0},
-	m_isMobAlreadyDeadState{false}
+	m_isMobAlreadyDeadState{false},
+	m_isDeadDissolveEnable{ false }
 {
 }
 
@@ -81,6 +83,9 @@ HRESULT CMob::NativeConstructClone(const VOIDDATAS& _Datas)
 
 void CMob::TickActive(const _double& _dTimeDelta)
 {
+	if (true == m_isDeadDissolveEnable)
+		SetActive(false);
+
 	__super::TickActive(_dTimeDelta);
 }
 
@@ -139,6 +144,7 @@ void CMob::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 			GetAnimModel()->UpdateCurAnimationToRatio(MobState.animtime());
 			SetDeathState(true);
 			SetActive(false);
+			SetDeadDissolveEnable(true);
 			m_isMobAlreadyDeadState = true;
 			SetElapsedTime(1000.0);
 		}

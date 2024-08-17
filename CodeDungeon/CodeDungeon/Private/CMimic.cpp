@@ -18,6 +18,7 @@
 #include "UAnimation.h"
 #include "UProcessedData.h"
 #include "CWarriorPlayer.h"
+#include "UShader.h"
 
 CMimic::CMimic(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: CMob(_spDevice, _wstrLayer, _eCloneType), 
@@ -190,6 +191,7 @@ HRESULT CMimic::NativeConstructClone(const VOIDDATAS& _Datas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	m_spItemModel = std::static_pointer_cast<UAnimModel>(spGameInstance->CloneResource(PROTO_RES_CHESTANIMMODEL));
 
 	CreateParticles();
 
@@ -227,33 +229,40 @@ void CMimic::TickActive(const _double& _dTimeDelta)
 	_int CurAnimState = GetAnimationController()->GetAnimState();
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	{
-		if (GetDeathState())
+		if (false == m_bisOpen)
 		{
-			_double DeathAnimSpeed = 20;
-			if (GetElapsedTime() == 0)
-			{
-				spGameInstance->SoundPlayOnce(L"mimic_death");
-			}
-			SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
-			_double DeathTimeArcOpenEnd = 50;
-			if (GetElapsedTime() < DeathTimeArcOpenEnd) {
-				GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
-				GetAnimModel()->UpdateDissolveTImer(_dTimeDelta * 1.2f);
-				if (!m_bDissolveSound) {
-					spGameInstance->SoundPlayOnce(L"DissolveSound3");
-					m_bDissolveSound = true;
-				}
-			}
+			m_spItemModel->TickAnimation(0.0);
 		}
 		else
 		{
-			if (true == GetFoundTargetState())
+			if (GetDeathState())
 			{
-				GetAnimModel()->TickAnimation(_dTimeDelta);
+				_double DeathAnimSpeed = 20;
+				if (GetElapsedTime() == 0)
+				{
+					spGameInstance->SoundPlayOnce(L"mimic_death");
+				}
+				SetElapsedTime(GetElapsedTime() + (_dTimeDelta * DeathAnimSpeed));
+				_double DeathTimeArcOpenEnd = 50;
+				if (GetElapsedTime() < DeathTimeArcOpenEnd) {
+					GetAnimModel()->TickAnimToTimeAccChangeTransform(GetTransform(), _dTimeDelta, GetElapsedTime());
+					GetAnimModel()->UpdateDissolveTImer(_dTimeDelta * 1.2f);
+					if (!m_bDissolveSound) {
+						spGameInstance->SoundPlayOnce(L"DissolveSound3");
+						m_bDissolveSound = true;
+					}
+				}
+				else
+				{
+					SetDeadDissolveEnable(true);
+				}
 			}
 			else
 			{
-				GetAnimModel()->TickAnimation(0.0);
+				if (true == GetFoundTargetState())
+				{
+					GetAnimModel()->TickAnimation(_dTimeDelta);
+				}
 			}
 		}
 	}
@@ -263,12 +272,6 @@ void CMimic::TickActive(const _double& _dTimeDelta)
 void CMimic::LateTickActive(const _double& _dTimeDelta)
 {
 	__super::LateTickActive(_dTimeDelta);
-
-	if (true == IsSendDataToBehavior())
-	{
-		_float newHeight = GetCurrentNavi()->ComputeHeight(GetTransform()->GetPos());
-		GetTransform()->SetPos(_float3(GetTransform()->GetPos().x, newHeight, GetTransform()->GetPos().z));
-	}
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	_int CurAnimState = GetAnimationController()->GetAnimState();
@@ -293,6 +296,24 @@ HRESULT CMimic::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDes
 
 	if(m_bisOpen)
 		__super::RenderActive(_spCommand, _spTableDescriptor);
+	else
+	{
+		if (nullptr != m_spItemModel)
+		{
+			// Settings 
+			GetShader()->SetTableDescriptor(_spTableDescriptor);
+
+			for (_uint i = 0; i < m_spItemModel->GetMeshContainerCnt(); ++i)
+			{
+				// Bind Transform 
+				GetTransform()->BindTransformData(GetShader());
+				m_spItemModel->BindTexture(i, SRV_REGISTER::T0, TEXTYPE::TextureType_DIFFUSE, GetShader());
+				m_spItemModel->BindTexture(i, SRV_REGISTER::T1, TEXTYPE::TextureType_NORMALS, GetShader());
+				// Render
+				m_spItemModel->Render(i, GetShader(), _spCommand);
+			}
+		}
+	}
 
 	return S_OK;
 }
@@ -393,6 +414,7 @@ void CMimic::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 				spPlayer->SetCanInteractChestState(true);
 			if (1 == scStaticObjFind.enable() && !m_bisOpen) {
 				SetOpeningState(true);
+				spPlayer->SetCanInteractChestState(false);
 				spGameInstance->SoundPlayOnce(L"ChestOpen");
 			}
 		}

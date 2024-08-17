@@ -120,7 +120,6 @@ namespace Server {
 		_bool isDeadState = IsDead();
 
 		_int MobState = spAnimController->GetAnimState();
-
 		spAnimController->Tick(_dTimeDelta);
 
 		if (MOB_MOVE_STATE == MobState)
@@ -158,11 +157,11 @@ namespace Server {
 		if (MOB_IDLE_STATE == MobState)
 		{
 			spAnimator->TickAnimation(_dTimeDelta);
+			SetElapsedTime(0);
 		}
 		else
 		{
 			spAnimator->TickAnimChangeTransform(spTransform, _dTimeDelta);
-			SetElapsedTime(0);
 		}
 
 		GetTimeAccumulatorRefP().PlusTime(_dTimeDelta);
@@ -189,6 +188,11 @@ namespace Server {
 	void CHarlequin::MoveAlongPath(const _double& _dTimeDelta)
 	{
 		__super::MoveAlongPath(_dTimeDelta);
+	}
+
+	void CHarlequin::LastBehavior()
+	{
+		__super::LastBehavior();
 	}
 
 	void CHarlequin::Free()

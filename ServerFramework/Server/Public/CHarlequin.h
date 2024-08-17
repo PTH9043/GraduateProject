@@ -26,6 +26,7 @@ public:
 protected:
 	virtual void TickUpdateBehavior(const _double& _dTimeDelta, SHPTR<ASession> _spSession) override;
 	virtual void MoveAlongPath(const _double& _dTimeDelta) override;
+	virtual void LastBehavior() override;
 private:
 	virtual void Free() override;
 private:

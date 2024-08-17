@@ -98,7 +98,15 @@ namespace Core
 	_bool AGameObject::IsCanSee(Vector3 _OtherPos)
 	{
 		SHPTR<ATransform> spTransform = GetTransform();
-		_float fLength = Vector3(spTransform->GetPos() - _OtherPos).Length();
+		Vector3 vPos = spTransform->GetPos();
+		_float fYPos = (vPos.y - _OtherPos.y);
+		if (std::abs(fYPos) >= 30.f)
+		{
+			SetActive(false);
+			return false;
+		}
+
+		_float fLength = Vector3(vPos - _OtherPos).Length();
 
 		if (fLength <= SEE_RANGE_TICKACTIVE)
 		{
@@ -145,6 +153,7 @@ namespace Core
 			return;
 
 		m_isPermanentDisable = true;
+		SetActive(false);
 		LastBehavior();
 	}
 

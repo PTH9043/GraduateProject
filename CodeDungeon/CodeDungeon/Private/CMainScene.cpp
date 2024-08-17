@@ -113,7 +113,7 @@ void CMainScene::UpdateMobsStatus()
 			}
 
 			//거리별 최적화
-			
+			if(false == mobs->IsDeadDissolveEnable())
 			{
 				_float3 mobPos = mobs->GetTransform()->GetPos();
 				_float3 distance = mobPos - PlayerPos;
@@ -139,7 +139,10 @@ void CMainScene::UpdateMobsStatus()
 					}
 				}		
 			}
-
+			else
+			{
+				mobs->SetActive(false);
+			}
 		}
 	}
 
@@ -1597,12 +1600,12 @@ HRESULT CMainScene::LoadSceneData()
 		m_spPlayerAbilityLeftTimeFont->SetDepths(0.f);
 		m_spPlayerAbilityLeftTimeFont->SetRender(false);
 	}
+	CProtoMaker::CreateMainSceneProtoData(spGameInstance, GetDevice(), std::static_pointer_cast<UCommand>(spGameInstance->GetGpuCommand()));
 	{
 		m_spMap = CreateConstructorNative<CMap>(spGameInstance->GetDevice());
 		m_spMap->LoadRooms();
 		m_spMap->LoadStaticObjects();
 	}
-	CProtoMaker::CreateMainSceneProtoData(spGameInstance, GetDevice(), std::static_pointer_cast<UCommand>(spGameInstance->GetGpuCommand()));
 
 	UCamera::CAMDESC tDesc;
 	tDesc.stCamProj = UCamera::CAMPROJ(UCamera::PROJECTION_TYPE::PERSPECTIVE, _float3(0.f, 0.f, 0.f),
@@ -1684,6 +1687,15 @@ HRESULT CMainScene::LoadSceneData()
 	m_spMap->LoadGuards();
 	m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
 	m_spMainCamera->GetTransform()->SetPos(m_spWarriorPlayer->GetTransform()->GetPos());
+
+	for (auto& mobcontainer : (m_spMap->GetMobs()))
+	{
+		for (auto& value : mobcontainer.second)
+		{
+			value->SetTargetPlayer(m_spWarriorPlayer);
+		}
+	}
+
 	return S_OK;
 }
 

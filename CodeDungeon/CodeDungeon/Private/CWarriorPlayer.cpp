@@ -81,10 +81,10 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-	//int cellIndex = 0;
-	int cellIndex = 349;
+	int cellIndex = 0;
+	//int cellIndex = 349;
 
-	//int cellIndex = 210;
+//	int cellIndex = 210;
 
 	SHPTR<UCell> spCell = spNavigation->FindCell(cellIndex);
 	GetTransform()->SetPos(spCell->GetCenterPos());
@@ -220,8 +220,6 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 
 void CWarriorPlayer::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 {
-//	if (_ProcessData.GetDataID() != GetNetworkID())
-//		return;
 
 #ifdef _ENABLE_PROTOBUFF
 

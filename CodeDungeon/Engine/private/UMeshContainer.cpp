@@ -59,7 +59,7 @@ HRESULT UMeshContainer::NativeConstruct(void* _pData, CSHPTRREF<UModel> _spModel
 HRESULT UMeshContainer::NativeConstructClone(const VOIDDATAS& _vecDatas)
 {
 	RETURN_CHECK(0 >= _vecDatas.size(), E_FAIL);
-	UModel* pModel = UMethod::ConvertTemplate_Index<UModel*>(_vecDatas, 0);
+	UModel* pModel = static_cast<UModel*>(_vecDatas[0]);
 	RETURN_CHECK(nullptr == pModel, E_FAIL);
 	VECTOR<SHPTR<UBoneNode>> BoneModels{};
 

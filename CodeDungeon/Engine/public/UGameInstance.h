@@ -247,9 +247,12 @@ public: /* AudioSystemManager*/
 	_bool IsSoundPlay(const _wstring& _wstrSoundName, FMOD::Channel* _pChannel);
 	void SoundPlay(const _wstring& _wstrSoundName);
 	void SoundPlayWithManyChannels(const _wstring& _wstrSoundName);
+	void SoundPlayWithManyChannels(const _wstring& _wstrSoundName, CSHPTRREF<UTransform> _spSelfTransform, CSHPTRREF<UTransform> _spTargetTransform);
 	void SoundPlay(const _wstring& _wstrSoundName, const _float& _fVolumeUpdate);
 	void SoundPlayOnce(const _wstring& _wstrSoundName);
+	void SoundPlayOnce(const _wstring& _wstrSoundName, CSHPTRREF<UTransform> _spSelfTransform, CSHPTRREF<UTransform> _spTargetTransform);
 	void SoundPlayOnceWithManyChannels(const _wstring& _wstrSoundName);
+	void SoundPlayOnceWithManyChannels(const _wstring& _wstrSoundName, CSHPTRREF<UTransform> _spSelfTransform, CSHPTRREF<UTransform> _spTargetTransform);
 	void SoundPlayBGM(const _wstring& _wstrSoundName);
 	void SoundStopBGM(const _wstring& _wstrSoundName);
 	void SoundPauseBGM(const _wstring& _wstrSoundName);
