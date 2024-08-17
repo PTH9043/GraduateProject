@@ -218,7 +218,6 @@ void CHarlequinn::CreateParticles()
 	}
 }
 
-
 HRESULT CHarlequinn::NativeConstructClone(const VOIDDATAS& _Datas)
 {
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_Datas), E_FAIL);

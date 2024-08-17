@@ -31,6 +31,11 @@ namespace Server {
 		__super::Collision(_pGameObject, _dTimeDelta);
 	}
 
+	void CIronBar::LastBehavior()
+	{
+		std::cout << "Last" << "\n";
+	}
+
 	void CIronBar::Free()
 	{
 	}

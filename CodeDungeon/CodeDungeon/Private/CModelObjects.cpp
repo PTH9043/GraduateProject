@@ -10,13 +10,15 @@
 
 CModelObjects::CModelObjects(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UPawn(_spDevice, _wstrLayer, _eCloneType),
-	m_spModel{ nullptr }, m_spCollider{ nullptr }, m_bDrawOutline{ false }, m_isEnable{ false }, m_isActiveEnable{ false }
+	m_spModel{ nullptr }, m_spCollider{ nullptr }, m_bDrawOutline{ false }, m_isEnable{ false }, m_isActiveEnable{ false },
+	m_fActiveRange{10.f}
 {
 }
 
 CModelObjects::CModelObjects(const CModelObjects& _rhs) :
 	UPawn(_rhs),
-	m_spModel{ nullptr }, m_spCollider{ nullptr }, m_bDrawOutline{false}, m_isEnable{ false }, m_isActiveEnable{ false }
+	m_spModel{ nullptr }, m_spCollider{ nullptr }, m_bDrawOutline{false}, m_isEnable{ false }, m_isActiveEnable{ false },
+	m_fActiveRange{ 10.f }
 {
 }
 
@@ -63,6 +65,7 @@ void CModelObjects::CalculateAndSetCollider()
 
 void CModelObjects::TickActive(const _double& _dTimeDelta)
 {
+	
 }
 
 void CModelObjects::LateTickActive(const _double& _dTimeDelta)

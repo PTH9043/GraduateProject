@@ -60,11 +60,12 @@ private:
 	int HasTex[4]{};
 
 	SHPTR<UCollider>			m_spCollider;
-	_bool		m_bDrawOutline;
-	_bool			m_OutlineWithScale = false;
-	_bool		m_bisInteraction;
-	_bool		m_isEnable;
-	_bool		m_isActiveEnable;
+	_bool									m_bDrawOutline;
+	_bool									m_OutlineWithScale = false;
+	_bool									m_bisInteraction;
+	_bool									m_isEnable;
+	_bool									m_isActiveEnable;
+	_float									m_fActiveRange;
 };
 
 END

@@ -86,6 +86,8 @@ void CMob::TickActive(const _double& _dTimeDelta)
 	if (true == m_isDeadDissolveEnable)
 		SetActive(false);
 
+	CalculateDistanceBetweenPlayers(GetTargetPlayer()->GetTransform()->GetPos(), GetTransform()->GetPos());
+	SearchForPlayers();
 	__super::TickActive(_dTimeDelta);
 }
 
@@ -137,7 +139,7 @@ void CMob::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 			GetAnimationController()->ReceiveNetworkProcessData(&MobState);
 			GetTransform()->SetPos(_float3{ MobState.posx(), MobState.posy(), MobState.posz() });
 			GetTransform()->RotateFix(_float3{ MobState.rotatex(), MobState.rotatey(), MobState.rotatez() });
-			SetFoundTargetState(MobState.foundon());
+	//		SetFoundTargetState(MobState.foundon());
 		}
 		else
 		{

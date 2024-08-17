@@ -102,6 +102,14 @@ void CIronBars::LateTickActive(const _double& _dTimeDelta)
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	SHPTR<CWarriorPlayer> spPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
+	if (_float3::Distance(spPlayer->GetTransform()->GetPos(), GetTransform()->GetPos()) >= 10.f)
+	{
+		SetEnable(false);
+	}
+	else
+	{
+		SetEnable(true);
+	}
 
 	if (false == IsEnable())
 	{
@@ -121,7 +129,11 @@ void CIronBars::LateTickActive(const _double& _dTimeDelta)
 		if (true == IsActiveEnable())
 		{
 			spPlayer->SetInteractionElapsedTime(spPlayer->GetInteractionElapsedTime() + (_float)(_dTimeDelta));
-			SetActiveEnable(false);
+			if (false == spGameInstance->GetDIKeyPressing(DIK_F))
+			{
+				spPlayer->SetInteractionElapsedTime(0);
+				SetActiveEnable(false);
+			}
 		}
 
 		if (GetCheckPointToOtherColor())
@@ -129,7 +141,6 @@ void CIronBars::LateTickActive(const _double& _dTimeDelta)
 		else
 			spPlayer->SetDoneInteractBarState(false);
 	}
-	SetEnable(false);
 
 	__super::LateTickActive(_dTimeDelta);
 }
@@ -161,7 +172,6 @@ void CIronBars::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 
 void CIronBars::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 {
-	SetEnable(true);
 	switch (_ProcessData.GetDataType())
 	{
 	case TAG_SC_STATICOBJFIND:

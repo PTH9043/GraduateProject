@@ -67,6 +67,14 @@ void CStatue::TickActive(const _double& _dTimeDelta)
 	__super::TickActive(_dTimeDelta);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	SHPTR<CWarriorPlayer> spPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
+	if (_float3::Distance(spPlayer->GetTransform()->GetPos(), GetTransform()->GetPos()) >= 10.f)
+	{
+		SetEnable(false);
+	}
+	else
+	{
+		SetEnable(true);
+	}
 
 	if (false == GetInteractionState())
 	{
@@ -85,7 +93,11 @@ void CStatue::TickActive(const _double& _dTimeDelta)
 			if (true == IsActiveEnable())
 			{
 				spPlayer->SetInteractionElapsedTime(spPlayer->GetInteractionElapsedTime() + (_float)(_dTimeDelta));
-				SetActiveEnable(false);
+				if (false == spGameInstance->GetDIKeyPressing(DIK_F))
+				{
+					spPlayer->SetInteractionElapsedTime(0);
+					SetActiveEnable(false);
+				}
 			}
 			SetOutline(true);
 			spPlayer->SetCanInteractStatueState(true);
@@ -95,7 +107,6 @@ void CStatue::TickActive(const _double& _dTimeDelta)
 			else
 				spPlayer->SetDoneInteractStatueState(false);
 		}
-		SetEnable(false);
 	}
 }
 
@@ -127,7 +138,6 @@ void CStatue::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 
 void CStatue::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 {
-	SetEnable(true);
 	switch (_ProcessData.GetDataType())
 	{
 	case TAG_SC_STATICOBJFIND:

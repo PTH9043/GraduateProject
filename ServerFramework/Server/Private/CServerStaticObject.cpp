@@ -65,7 +65,7 @@ namespace Server {
 			TAG_SC_STATICOBJFIND);
 		scStaticObjectFind.Clear();
 
-		if (enable)
+		if (2 == enable)
 		{
 			SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
 			spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
