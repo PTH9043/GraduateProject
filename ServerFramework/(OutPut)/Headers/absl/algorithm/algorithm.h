@@ -21,6 +21,11 @@
 
 #ifndef ABSL_ALGORITHM_ALGORITHM_H_
 #define ABSL_ALGORITHM_ALGORITHM_H_
+
+#include <algorithm>
+#include <iterator>
+#include <type_traits>
+
 #include "absl/base/config.h"
 
 namespace absl {
