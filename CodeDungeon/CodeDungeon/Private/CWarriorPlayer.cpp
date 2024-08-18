@@ -221,6 +221,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetAnimModelRim(true);
 	SetAttack(100);
 
+	if(false == IsNetworkConnected())
 	{
 		CS_SAVEPOINTENABLE csSavePointEnable;
 		VECTOR3 vPos;
