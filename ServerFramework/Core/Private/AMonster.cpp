@@ -79,31 +79,6 @@ namespace Core
 					SetTargetSession(nullptr);
 				}
 			}
-			else
-			{
-				SHPTR<ATransform> spPlayerTr = _spSession->GetTransform();
-				Vector3 vMobPos = spMobTr->GetPos();
-				Vector3 vPlayerPos = spPlayerTr->GetPos();
-				s_PlayerPositionContainer[SessionID] = vPlayerPos;
-				float fDistanceToPlayer = Vector3::Distance(vMobPos, vPlayerPos);
-
-				if (m_fJudgeValueToPlayerDistance >= fDistanceToPlayer)
-				{
-					if (fDistanceToPlayer <= ActiveRange)
-					{
-						if (fDistanceToPlayer <= m_fAttackRange)
-						{
-							UpdateSelfStateToPlayerDistance(true, true, false);
-						}
-						else
-						{
-							UpdateSelfStateToPlayerDistance(false, true, false);
-						}
-						SetTargetSession(m_spTargetSession);
-						ChangeAtomicValue(m_fJudgeValueToPlayerDistance, fDistanceToPlayer);
-					}
-				}
-			}
 		}
 	}
 
