@@ -155,6 +155,8 @@ void UNetworkBaseController::ServerThread(void* _pData)
 	pNetworkBaseController->NativePacket();
 	while (pNetworkBaseController->m_isNetworkTickRunning)
 	{
+		std::mutex Lock;
+		std::lock_guard<std::mutex> LL(Lock);
 		pNetworkBaseController->ServerTick();
 	}
 }
