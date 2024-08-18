@@ -74,12 +74,10 @@ private:
 private:
 	_int														m_iSceneID;
 	std::atomic_bool								m_isNetworkTickRunning;
-
 	UOverExp											m_RecvTcpOverExp;
 	SOCKET												m_ClientTcpSocket;
 	SOCKET												m_ClientUdpSocket;
 	WSADATA											m_WsaData{};
-	
 	TOTALBUFFER									m_TcpTotalBuffer;
 	_llong													m_CurrentBufferLength;
 	_llong													m_RemainBufferLength;
@@ -87,10 +85,7 @@ private:
 	SHPTR< UNetworkAddress>		m_spNetworkAddress;
 	NETWORKACTORCONTAINER		m_NetworkActorContainer;
 	NETWORKINITDATACONTAINER	m_NetworkInitDataContainer;
-
 	UOverExp*										m_pSendOverExp;
-
-	LIST<UProcessedData>					m_ProccessedDataList;
 };	
 
 END

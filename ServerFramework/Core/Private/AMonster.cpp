@@ -35,6 +35,10 @@ namespace Core
 		SHPTR<ATransform> spMobTr = GetTransform();
 		SHPTR<ATransform> spPlayerTr = _spSession->GetTransform();
 		SHPTR<ASession> spTargetSession = m_spTargetSession;
+		if (nullptr != spTargetSession)
+		{
+			spPlayerTr = spTargetSession->GetTransform();
+		}
 		SESSIONID SessionID = _spSession->GetSessionID();
 		{
 			Vector3 vMobPos = spMobTr->GetPos();
@@ -42,11 +46,12 @@ namespace Core
 			_float ActiveRange = m_fActiveRange;
 			_float DeactiveRange = m_fDeactiveRange;
 			s_PlayerPositionContainer[SessionID] = vPlayerPos;
+
 			float fDistanceToPlayer = Vector3::Distance(vMobPos, vPlayerPos);
 
 			if (fDistanceToPlayer <= ActiveRange)
 			{
-				if (_spSession == spTargetSession || nullptr == spTargetSession)
+				if (_spSession != spTargetSession || nullptr == spTargetSession)
 				{
 					if (nullptr != spTargetSession)
 					{
@@ -66,7 +71,6 @@ namespace Core
 					{
 						UpdateSelfStateToPlayerDistance(false, true, false);
 					}
-					ChangeAtomicValue(m_fJudgeValueToPlayerDistance, fDistanceToPlayer);
 				}
 			}
 			else if (DeactiveRange >= fDistanceToPlayer)

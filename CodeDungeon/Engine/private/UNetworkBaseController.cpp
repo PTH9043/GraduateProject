@@ -6,16 +6,19 @@
 #include "UMethod.h"
 
 UNetworkBaseController::UNetworkBaseController() : 
-	m_iSceneID{ 0 },
-	m_isNetworkTickRunning{true},
+	m_iSceneID{0},
+	m_isNetworkTickRunning{ false },
 	m_RecvTcpOverExp{},
-	m_ClientTcpSocket{NULL}, 
+	m_ClientTcpSocket{NULL},
 	m_ClientUdpSocket{NULL},
 	m_WsaData{},
-	m_llNetworkOwnerID{0},
 	m_TcpTotalBuffer{},
+	m_CurrentBufferLength{0},
 	m_RemainBufferLength{0},
+	m_llNetworkOwnerID{0},
 	m_spNetworkAddress{nullptr},
+	m_NetworkActorContainer{},
+	m_NetworkInitDataContainer{},
 	m_pSendOverExp{nullptr}
 {
 	m_pSendOverExp = Make::xnew<UOverExp>();
@@ -155,8 +158,6 @@ void UNetworkBaseController::ServerThread(void* _pData)
 	pNetworkBaseController->NativePacket();
 	while (pNetworkBaseController->m_isNetworkTickRunning)
 	{
-		std::mutex Lock;
-		std::lock_guard<std::mutex> LL(Lock);
 		pNetworkBaseController->ServerTick();
 	}
 }

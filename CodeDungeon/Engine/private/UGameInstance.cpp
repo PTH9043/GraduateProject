@@ -200,7 +200,7 @@ void UGameInstance::AwakeTick()
 	if (nullptr != m_spNetworkBaseController)
 	{
 		m_spNetworkBaseController->ServerTick();
-		m_spNetworkBaseController->MakeActorsTick();
+//		m_spNetworkBaseController->MakeActorsTick();
 	}
 
 	m_spInputManager->KeyTick();

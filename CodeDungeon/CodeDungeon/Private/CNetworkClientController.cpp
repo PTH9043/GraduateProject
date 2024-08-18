@@ -38,54 +38,50 @@ void CNetworkClientController::MakeActorsInit(const VECTOR<SHPTR<UBase>>& _actor
 		std::mutex Lock;
 		std::lock_guard<std::mutex> LL(Lock);
 		DisableNetworkTickRunning();
-	}
-	ThreadMiliRelax(100);
 
-	CMap* pMap = (CMap*)(_actorContainer[1].get());
+		CMap* pMap = (CMap*)(_actorContainer[1].get());
 
-	CreateServerMobData(pMap);
-	CreateStaticObjData(pMap);
+		CreateServerMobData(pMap);
+		CreateStaticObjData(pMap);
 
-	const NETWORKINITDATACONTAINER& InitNetworkDataContainer = GetNetworkInitDataContainer();
+		const NETWORKINITDATACONTAINER& InitNetworkDataContainer = GetNetworkInitDataContainer();
 
-	for (auto& CharInitData : InitNetworkDataContainer)
-	{
-		switch (CharInitData.second.iType)
+		for (auto& CharInitData : InitNetworkDataContainer)
 		{
-		case TAG_CHAR::TAG_MAINPLAYER:
-		{
-			SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-			// Main Camera Load 
+			switch (CharInitData.second.iType)
 			{
-				CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_USERWARRIORANIMCONTROLLER };
-				CWarriorPlayer::PLAYERDESC PlayerDesc{ std::static_pointer_cast<UCamera>(_actorContainer[MAINCAMERA_ACTORS_ID]) };
-				SHPTR<CWarriorPlayer> spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
-					PROTO_ACTOR_WARRIORPLAYER, { &CharDesc, &PlayerDesc }));
-				spGameInstance->RegisterCurrentPlayer(spWarriorPlayer);
-				InsertNetworkActorInContainer(CharInitData.first, spWarriorPlayer);
+			case TAG_CHAR::TAG_MAINPLAYER:
+			{
+				SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+				// Main Camera Load 
+				{
+					CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_USERWARRIORANIMCONTROLLER };
+					CWarriorPlayer::PLAYERDESC PlayerDesc{ std::static_pointer_cast<UCamera>(_actorContainer[MAINCAMERA_ACTORS_ID]) };
+					SHPTR<CWarriorPlayer> spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
+						PROTO_ACTOR_WARRIORPLAYER, { &CharDesc, &PlayerDesc }));
+					spGameInstance->RegisterCurrentPlayer(spWarriorPlayer);
+					InsertNetworkActorInContainer(CharInitData.first, spWarriorPlayer);
 
+				}
+			}
+			break;
+			case TAG_CHAR::TAG_OTHERPLAYER:
+			{
+				SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+				{
+					CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_NETWORKWARRIORANIMCONTROLLER, true };
+					SHPTR<CWarriorPlayer> spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
+						PROTO_ACTOR_WARRIORPLAYER, { &CharDesc }));
+					spGameInstance->AddPlayerInContainer(spWarriorPlayer);
+					InsertNetworkActorInContainer(CharInitData.first, spWarriorPlayer);
+				}
+			}
+			break;
 			}
 		}
-		break;
-		case TAG_CHAR::TAG_OTHERPLAYER:
-		{
-			SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-			{
-				CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_NETWORKWARRIORANIMCONTROLLER, true };
-				SHPTR<CWarriorPlayer> spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->CloneActorAdd(
-					PROTO_ACTOR_WARRIORPLAYER, { &CharDesc }));
-				spGameInstance->AddPlayerInContainer(spWarriorPlayer);
-				InsertNetworkActorInContainer(CharInitData.first, spWarriorPlayer);
-			}
-		}
-		break;
-		}
-	}
-	{
-		std::mutex Lock;
-		std::lock_guard<std::mutex> LL(Lock);
 		__super::MakeActorsInit(_actorContainer);
 	}
+	ThreadMiliRelax(100);
 }
 
 void CNetworkClientController::MakeActorsTick()
