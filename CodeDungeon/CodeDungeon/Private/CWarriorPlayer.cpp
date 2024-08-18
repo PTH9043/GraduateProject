@@ -345,16 +345,6 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		SetAnimModelRimColor(_float3(0,0, 0));
 	}
 
-	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_HIT) {
-		m_spBlood->SetActive(true);
-		m_spBlood->SetTimer(1.75f);
-		m_fInteractionTimeElapsed = 0;
-		m_bSetRimOn = true;
-	}
-	else {
-	//	SetAnimModelRimColor(_float3(0, 0, 0));
-	}
-
 	if (m_bSetRimOn) {
 		SetAnimModelRimColor(_float3(1, 0, 0));
 		m_bSetRimTimeElapsed += _dTimeDelta;
@@ -367,12 +357,19 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		//SetAnimModelRimColor(_float3(0, 0, 0));
 	}
 
-	if (m_spBlood->CheckTimeOver()) {
-		m_spBlood->SetActive(false);
-	}
-
 	if (false == IsNetworkConnected())
 	{
+		if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_HIT) {
+			m_spBlood->SetActive(true);
+			m_spBlood->SetTimer(1.75f);
+			m_fInteractionTimeElapsed = 0;
+			m_bSetRimOn = true;
+		}
+
+		if (m_spBlood->CheckTimeOver()) {
+			m_spBlood->SetActive(false);
+		}
+
 		if (IfOpenChestForHeal) {//2.1초 지속
 			if (true == m_HealTimer.IsOver(_dTimeDelta))
 			{
