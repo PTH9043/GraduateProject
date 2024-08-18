@@ -15,7 +15,8 @@ namespace Server
 		InsertColliderContainer(COLLIDERTYPE::COLLIDER_FORINTERACTION_COREHARLEQUIN, ACollider::TYPE_OBB,
 			COLLIDERDESC{ {-10.f, 10.f, 15.f}, {12.5f, 12.5f, 12.5f} });
 
-	//	GetActiveTimerRefP(REF_RETURN).SetStandardTime(5.f);
+		GetActiveTimerRefP(REF_RETURN).SetStandardTime(5.f);
+		SetActiveRange(20.f);
 		return __super::Start(_ReceiveDatas);
 	}
 

@@ -32,6 +32,7 @@ private:
 	CUSTIMER							m_IdleRandomValueChoosingTimerForPartrol;
 	CUSTIMER							m_HitCoolTimer;
 	CUSTIMER							m_JumpTimer;
+	CUSTIMER							m_RelaxTimer;
 	_bool									m_isStartLastHitTime;
 	_bool									m_isLastAttackWasFirst;
 	Vector3								m_vThrowingPos;

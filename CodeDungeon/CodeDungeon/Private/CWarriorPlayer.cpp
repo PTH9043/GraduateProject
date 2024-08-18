@@ -87,7 +87,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-	int cellIndex = 0;
+	int cellIndex =0;
 	//int cellIndex = 349;
 
 //	int cellIndex = 210;
@@ -376,9 +376,9 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 				m_spHealParticle->SetActive(false);
 				IfOpenChestForHeal = false;
 				SetHealth(GetHealth() + m_fNetworkRecvMaxHeal);
-				if (GetHealth() > 2500)
+				if (GetHealth() > 5000)
 				{
-					SetHealth(2500);
+					SetHealth(5000);
 				}
 				SetPrevHealth(GetHealth());
 				m_HealTimer.ResetTimer();

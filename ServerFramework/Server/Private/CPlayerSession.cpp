@@ -41,7 +41,7 @@ namespace Server {
 		SetMoveSpeed(10.f);
 		SetRunSpeed(30.f);
 		SetCurOnCellIndex(m_iStartCellIndex);
-		SetCharStatus(CHARSTATUS{ 100, 0, 5000 });
+		SetCharStatus(CHARSTATUS{ 100, 0, 1 });
 
 		SHPTR<ANavigation> spNavigation = GetNavigation();
 
@@ -223,17 +223,14 @@ namespace Server {
 		{
 			if (GetKeyState() == KEYBOARD_G)
 			{
-				for (auto& iter : _spCoreInstance->GetSessionContainer())
-				{
-					VECTOR3 vPos;
-					PROTOFUNC::MakeVector3(&vPos, s_vSavePosition.x, s_vSavePosition.y, s_vSavePosition.z);
+				VECTOR3 vPos;
+				PROTOFUNC::MakeVector3(&vPos, s_vSavePosition.x, s_vSavePosition.y, s_vSavePosition.z);
 
-					SC_PLAYERGETUP scPlayerGetUp;
-					PROTOFUNC::MakeScPlayerGetUp(&scPlayerGetUp, iter.first, 2500.f, vPos, s_iCamCellIndex);
-					CombineProto<SC_PLAYERGETUP>(GetCopyBuffer(), GetPacketHead(), scPlayerGetUp, TAG_SC_PLAYERGETUP);
-					iter.second->SendData(GetCopyBufferPointer(), GetPacketHead());
-				}
-				SetCharStatus({ 100, 0, 2500 });
+				SC_PLAYERGETUP scPlayerGetUp;
+				PROTOFUNC::MakeScPlayerGetUp(&scPlayerGetUp, GetSessionID(), 5000.f, vPos, s_iCamCellIndex);
+				CombineProto<SC_PLAYERGETUP>(GetCopyBuffer(), GetPacketHead(), scPlayerGetUp, TAG_SC_PLAYERGETUP);
+				SendData(GetCopyBufferPointer(), GetPacketHead());
+				SetCharStatus({ 100, 0, 5000 });
 				DisableDeadState();
 			}
 		}
