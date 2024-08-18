@@ -21,7 +21,7 @@ namespace Server {
 
 	CPlayerSession::CPlayerSession(SESSION_CONSTRUCTOR)
 		: Core::ASession(SESSION_CONDATA(Core::SESSIONTYPE::PLAYER)),
-		m_iStartCellIndex{ 0 }, m_spGameTimer{ Create<AGameTimer>() }
+		m_iStartCellIndex{ 0 }, m_spGameTimer{ Create<AGameTimer>() }, m_ReviveTimer{7, std::memory_order_seq_cst}
 	{
 	
 	}
@@ -41,7 +41,7 @@ namespace Server {
 		SetMoveSpeed(10.f);
 		SetRunSpeed(30.f);
 		SetCurOnCellIndex(m_iStartCellIndex);
-		SetCharStatus(CHARSTATUS{ 100, 0, 5000.f });
+		SetCharStatus(CHARSTATUS{ 100, 0, 5000 });
 
 		SHPTR<ANavigation> spNavigation = GetNavigation();
 
@@ -62,6 +62,10 @@ namespace Server {
 	void CPlayerSession::Tick(const _double& _dTimeDelta)
 	{
 		__super::Tick(_dTimeDelta);
+		if (true == IsDead() && GetKeyState() == KEYBOARD_G || m_ReviveTimer.fTimer > 0)
+		{
+			m_ReviveTimer.PlusTime(_dTimeDelta);
+		}
 	}
 
 	void CPlayerSession::RecvData()
@@ -219,21 +223,6 @@ namespace Server {
 				_spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
 			}
 		}
-		if (true == IsDead())
-		{
-			if (GetKeyState() == KEYBOARD_G)
-			{
-				VECTOR3 vPos;
-				PROTOFUNC::MakeVector3(&vPos, s_vSavePosition.x, s_vSavePosition.y, s_vSavePosition.z);
-
-				SC_PLAYERGETUP scPlayerGetUp;
-				PROTOFUNC::MakeScPlayerGetUp(&scPlayerGetUp, GetSessionID(), 5000.f, vPos, s_iCamCellIndex);
-				CombineProto<SC_PLAYERGETUP>(GetCopyBuffer(), GetPacketHead(), scPlayerGetUp, TAG_SC_PLAYERGETUP);
-				SendData(GetCopyBufferPointer(), GetPacketHead());
-				SetCharStatus({ 100, 0, 5000 });
-				DisableDeadState();
-			}
-		}
 		{
 			CombineProto(REF_OUT GetCopyBuffer(), REF_OUT GetPacketHead(), csMove, TAG_SC::TAG_SC_PLAYERSTATE);
 			_spCoreInstance->BroadCastMessageExcludingSession(_SessionID, GetCopyBufferPointer(), GetPacketHead());
@@ -353,6 +342,22 @@ namespace Server {
 		CS_PRESSKEY scPressKey;
 		scPressKey.ParseFromArray(_pPacket, _PacketHead.PacketSize);
 		SetKeyState(scPressKey.key());
+
+		if (true == m_ReviveTimer.IsOver())
+		{
+			if (GetKeyState() == KEYBOARD_G && true == IsDead())
+			{
+				VECTOR3 vPos;
+				PROTOFUNC::MakeVector3(&vPos, s_vSavePosition.x, s_vSavePosition.y, s_vSavePosition.z);
+
+				SC_PLAYERGETUP scPlayerGetUp;
+				PROTOFUNC::MakeScPlayerGetUp(&scPlayerGetUp, GetSessionID(), 5000.f, vPos, s_iCamCellIndex);
+				CombineProto<SC_PLAYERGETUP>(GetCopyBuffer(), GetPacketHead(), scPlayerGetUp, TAG_SC_PLAYERGETUP);
+				SendData(GetCopyBufferPointer(), GetPacketHead());
+				SetCharStatus({ 100, 0, 5000 });
+				DisableDeadState();
+			}
+		}
 	}
 
 	void CPlayerSession::EnableSavePoint(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
@@ -372,14 +377,12 @@ namespace Server {
 			iter.second->SendData(GetCopyBufferPointer(), GetPacketHead());
 		}
 
-	//	std::cout << s_iCamCellIndex << "\n";
+ 		std::cout << s_vSavePosition.x << ", " << s_vSavePosition.y << "," << s_vSavePosition.z << "\n";
 	}
 
 	void CPlayerSession::EnableCore(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
 	{
 		++s_iCoreEnableCnt;
-
-	//	std::cout << s_iCoreEnableCnt << "\n";
 	}
 
 	void CPlayerSession::Free()

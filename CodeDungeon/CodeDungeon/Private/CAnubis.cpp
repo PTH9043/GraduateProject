@@ -373,7 +373,7 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 			}
 			else // patrolling when player is not found
 			{
-				SetOutline(false);
+		//		SetOutline(false);
 			}
 		}
 		else if (CurAnimState == UAnimationController::ANIM_ATTACK) {}

@@ -42,6 +42,7 @@ HRESULT CSarcophagus::NativeConstructClone(const VOIDDATAS& _Datas)
 	//SetActive(true);
 //	SetDeathState(true);
 //	SetDeadDissolveEnable(true);
+
 	return S_OK;
 }
 

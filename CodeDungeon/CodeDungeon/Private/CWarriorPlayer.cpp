@@ -87,11 +87,11 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-	//int cellIndex =400;
+	int cellIndex = 0;
 	//int cellIndex = 349;
 
 //	int cellIndex = 210;
-	int cellIndex = 0;
+//	int cellIndex = 0;
 	SHPTR<UCell> spCell = spNavigation->FindCell(cellIndex);
 	GetTransform()->SetPos(spCell->GetCenterPos());
 	SetSpawnPoint(spCell);
@@ -285,14 +285,22 @@ void CWarriorPlayer::ReceiveNetworkProcessData(const UProcessedData& _ProcessDat
 	break;
 	case TAG_SC_PLAYERGETUP:
 	{
+		SHPTR< CUserWarriorAnimController> spUserWarrior = std::static_pointer_cast<CUserWarriorAnimController>(GetAnimationController());
+		spUserWarrior->DisableDieEffectBool();
+
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 		SC_PLAYERGETUP playerGetUp;
 		playerGetUp.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
 		static_pointer_cast<CMainCamera>(GetFollowCamera())->GetCurrentNavi()->FindCell(playerGetUp.camcellindex());
 		SetElapsedTime(0);
 		SetDeathState(false);
+		SetDamaged(false);
 		SetHealth(playerGetUp.hp());
 		GetTransform()->SetPos(_float3{playerGetUp.posx(), playerGetUp.posy(), playerGetUp.posz() });
+		spGameInstance->SoundPlayOnce(L"Revive");
+		spGameInstance->TurnOffDieEffect();
+		GetAnimationController()->SetAnimState(UAnimationController::ANIM_IDLE); 
+		GetAnimModel()->SetAnimation(L"idle01");
 	}
 	break;
 	}
@@ -524,6 +532,7 @@ HRESULT CWarriorPlayer::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHP
 
 void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta)
 {
+	RETURN_CHECK(true == GetDeathState(), ;);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	PAWNTYPE ePawnType = _pEnemy->GetPawnType();
 	const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
@@ -825,13 +834,7 @@ void CWarriorPlayer::SendPressKeyState()
 	}
 	else if (spGameInstance->GetDIKeyPressing(DIK_G))
 	{
-		if (true == GetDeathState())
-		{
-			if (GetElapsedTime() >= 70)
-			{
-				keyState = KEYBOARD_G;
-			}
-		}
+		keyState = KEYBOARD_G;
 	}
 
 	PROTOFUNC::MakeCsPressKey(&csPressKey, GetNetworkID(), keyState);
