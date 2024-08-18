@@ -31,14 +31,18 @@ namespace Core
 	void AMonster::FindPlayer(SHPTR<ASession> _spSession)
 	{
 		RETURN_CHECK(nullptr == _spSession, ;);
-		SHPTR<AAnimController> spAnimController = GetAnimController();
-		SHPTR<ATransform> spMobTr = GetTransform();
-		SHPTR<ATransform> spPlayerTr = _spSession->GetTransform();
 		SHPTR<ASession> spTargetSession = m_spTargetSession;
 		if (nullptr != spTargetSession)
 		{
-			spPlayerTr = spTargetSession->GetTransform();
+			if (spTargetSession->IsFallDownState())
+				spTargetSession = nullptr;
 		}
+
+		RETURN_CHECK(spTargetSession != nullptr && _spSession != spTargetSession, ;)
+		SHPTR<AAnimController> spAnimController = GetAnimController();
+		SHPTR<ATransform> spMobTr = GetTransform();
+		SHPTR<ATransform> spPlayerTr = _spSession->GetTransform();
+
 		SESSIONID SessionID = _spSession->GetSessionID();
 		{
 			Vector3 vMobPos = spMobTr->GetPos();
@@ -51,27 +55,15 @@ namespace Core
 
 			if (fDistanceToPlayer <= ActiveRange)
 			{
-				if (_spSession != spTargetSession || nullptr == spTargetSession)
+				if (fDistanceToPlayer <= m_fAttackRange)
 				{
-					if (nullptr != spTargetSession)
-					{
-						if (spTargetSession->IsFallDownState())
-							SetTargetSession(nullptr);
-					}
-					else
-					{
-						SetTargetSession(_spSession);
-					}
-
-					if (fDistanceToPlayer <= m_fAttackRange)
-					{
-						UpdateSelfStateToPlayerDistance(true, true, false);
-					}
-					else
-					{
-						UpdateSelfStateToPlayerDistance(false, true, false);
-					}
+					UpdateSelfStateToPlayerDistance(true, true, false);
 				}
+				else
+				{
+					UpdateSelfStateToPlayerDistance(false, true, false);
+				}
+				SetTargetSession(_spSession);
 			}
 			else if (DeactiveRange >= fDistanceToPlayer)
 			{

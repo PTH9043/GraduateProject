@@ -188,8 +188,7 @@ void CMob::SendCollisionData(UPawn* _pPawn, _float _fDamaged)
 	{
 		PROTOFUNC::MakeCsDamaged(&csPlayerDamaged, NetworkID, _fDamaged);
 	}
-	spGameInstance->SendProtoData(UProcessedData(NetworkID, csPlayerDamaged,
-		TAG_CS_MONSTERCOLIISION));
+	spGameInstance->SendProtoData(csPlayerDamaged,TAG_CS_MONSTERCOLIISION);
 }
 
 #endif

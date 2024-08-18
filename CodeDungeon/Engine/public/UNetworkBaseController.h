@@ -32,17 +32,6 @@ public:
 	void SendTcpData(_char* _pData, short _tag, short _size);
 	void SendProtoData(const UProcessedData& _ProcessedData);
 	void ServerTick();
-public: /* get set */
-	const _llong GetNetworkOwnerID() const { return m_llNetworkOwnerID; }
-	const NETWORKACTORCONTAINER& GetNetworkActorContainer() const { return m_NetworkActorContainer; }
-	SOCKET* GetClientSocketPointer() { return &m_ClientTcpSocket; }
-
-	void SetSceneID(const _int _iSceneID) { this->m_iSceneID = _iSceneID; }
-	void DisableNetworkTickRunning() { m_isNetworkTickRunning = false; }
-protected:
-	virtual void NativePacket() PURE;
-	void CombineRecvPacket(UOverExp* _pOverExp, size_t _numBytes);
-	virtual void ProcessPacket(_char* _pPacket, PACKETHEAD _PacketHead) PURE;
 	/*
 	@ Date: 2023-01-05, Writer: นฺลยว๖
 	@ Explain
@@ -57,6 +46,17 @@ protected:
 		short size = static_cast<short>(_data.ByteSizeLong());
 		SendTcpData(&Buffer[0], _tag, size);
 	}
+public: /* get set */
+	const _llong GetNetworkOwnerID() const { return m_llNetworkOwnerID; }
+	const NETWORKACTORCONTAINER& GetNetworkActorContainer() const { return m_NetworkActorContainer; }
+	SOCKET* GetClientSocketPointer() { return &m_ClientTcpSocket; }
+
+	void SetSceneID(const _int _iSceneID) { this->m_iSceneID = _iSceneID; }
+	void DisableNetworkTickRunning() { m_isNetworkTickRunning = false; }
+protected:
+	virtual void NativePacket() PURE;
+	void CombineRecvPacket(UOverExp* _pOverExp, size_t _numBytes);
+	virtual void ProcessPacket(_char* _pPacket, PACKETHEAD _PacketHead) PURE;
 
 	void InsertProcessedDataInActor(const UProcessedData& _ProcessedData);
 protected: /* get set */

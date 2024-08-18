@@ -115,6 +115,7 @@ void CClientApp::Render()
 				m_isTickThread = false;
 				m_spNetworkClientController.reset();
 				m_spGameInstance->NetworkEnd();
+				m_spGameInstance.reset();
 				::PostQuitMessage(0);
 				return;
 			}

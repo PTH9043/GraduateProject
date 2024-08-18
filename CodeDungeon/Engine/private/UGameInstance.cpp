@@ -13,14 +13,12 @@
 #include "UPipeLine.h"
 #include "URenderTargetManager.h"
 #include "UFilePathManager.h"
-#include "UNetworkBaseController.h"
 #include "UAudioSystemManager.h"
 #include "UCharacterManager.h"
 #include "UMaterialManager.h"
 #include "UFontManager.h"
 #include "URenderer.h"
 #include "UNetworkSender.h"
-
 
 #include "URootSignature.h"
 #include "UComputeRootSignature.h"
@@ -1097,11 +1095,6 @@ void UGameInstance::MakeActorsInit(const VECTOR<SHPTR<UBase>>& _actorContainer)
 void UGameInstance::SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize)
 {
 	m_spNetworkBaseController->SendTcpData(_pPacket, _PacketType, _PacketSize);
-}
-
-void UGameInstance::SendProtoData(const UProcessedData& _ProcessData)
-{
-	m_spNetworkBaseController->SendProtoData(_ProcessData);
 }
 
 SHPTR<UActor> UGameInstance::FindNetworkActor(const _int _NetworkID)

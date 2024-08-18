@@ -1,6 +1,7 @@
 #pragma once
 #include "EngineDefine.h"
 #include "UBase.h"
+#include "UNetworkBaseController.h"
 
 BEGIN(FMOD)
 class Channel;
@@ -288,7 +289,6 @@ public: /* NetworkManager */
 	void StartNetwork(CSHPTRREF<UNetworkBaseController> _spNetworkBaseController);
 	void MakeActorsInit(const VECTOR<SHPTR<UBase>>& _actorContainer);
 	void SendTcpPacket(_char* _pPacket, _short _PacketType, _short _PacketSize);
-	void SendProtoData(const UProcessedData& _ProcessData);
 	SHPTR<UActor> FindNetworkActor(const _int _NetworkID);
 	void NetworkEnd();
 	void SetSceneIDToNetController(const _int _iSceneID);
@@ -306,6 +306,17 @@ public: /* NetworkManager */
 		_data.SerializePartialToArray((void*)&_Buffer[0], static_cast<int>(_data.ByteSizeLong()));
 		short size = static_cast<short>(_data.ByteSizeLong());
 		_PacketHead = PACKETHEAD{ size, _tag };
+	}
+	/*
+@ Date: 2023-01-05, Writer: 박태현
+@ Explain
+- ProtocolBuffer를 TCP에 연결된 상대에게 보내기 위한 템플릿 함수이다.
+*/
+	template<class T>
+		requires CheckProtoType<T>
+	void SendProtoData(const T& _data, short _tag)
+	{
+		m_spNetworkBaseController->SendProtoData(_data, _tag);
 	}
 public: /* CharacterManager*/
 	CSHPTRREF<UCharacter> GetCurrPlayer() const;

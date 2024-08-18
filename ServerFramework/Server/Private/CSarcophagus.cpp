@@ -138,12 +138,12 @@ namespace Server
 
 		if (true == IsCurrentFindPlayer())
 		{
-			SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
+			//SHPTR<ACoreInstance> spCoreInstance = GetCoreInstance();
 
-			SC_MONSTERFIND scMonsterFind;
-			PROTOFUNC::MakeScMonsterFind(&scMonsterFind, GetSessionID(), _spSession->GetSessionID());
-			CombineProto<SC_MONSTERFIND>(GetCopyBuffer(), GetPacketHead(), scMonsterFind, TAG_SC_MONSTERFIND);
-			spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
+			//SC_MONSTERFIND scMonsterFind;
+			//PROTOFUNC::MakeScMonsterFind(&scMonsterFind, GetSessionID(), _spSession->GetSessionID());
+			//CombineProto<SC_MONSTERFIND>(GetCopyBuffer(), GetPacketHead(), scMonsterFind, TAG_SC_MONSTERFIND);
+			//spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
 			ActivePermanentDisable();
 		}
 	}

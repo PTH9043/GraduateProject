@@ -157,7 +157,7 @@ void CCoreHarlequinn::ReceiveNetworkProcessData(const UProcessedData& _ProcessDa
 				VECTOR3 vPos;
 				_float3 vCurrentPos = GetTransform()->GetPos();
 				PROTOFUNC::MakeCsCoreEnable(&csCoreEnable, GetNetworkID());
-				spGameInstance->SendProtoData(UProcessedData(csCoreEnable, TAG_CS_COREENABLE));
+				spGameInstance->SendProtoData(csCoreEnable, TAG_CS_COREENABLE);
 
 				SetEnable(false);
 				SetOutline(false);

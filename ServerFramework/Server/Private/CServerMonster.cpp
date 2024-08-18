@@ -308,7 +308,7 @@ namespace Server {
 			Direction = vTargetPos - vCurrentPos;
 		}
 
-		SetDirectionFixedUp(_dTimeDelta, GetPlayerToDot(), 15, vTargetPos);
+		SetDirectionFixedUp(_dTimeDelta, GetPlayerToDot(), 10, vTargetPos);
 	}
 
 	void CServerMonster::StartFindPath(SHPTR<ANavigation> _spNavigation, SHPTR<ACell> _spSelfCell, SHPTR<ACell> _spTargetCell, 

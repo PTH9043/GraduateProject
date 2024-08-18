@@ -799,10 +799,7 @@ void CWarriorPlayer::SendMoveData()
 	static CHARSTATE charMove;
 	PROTOFUNC::MakeCharState(OUT & charMove, spGameInstance->GetNetworkOwnerID(), vSendPos, vSendRotate,
 		state, AnimIndex, IsDamaged() == true ? 1 : 0);
-
-	UProcessedData* pProcessedData = Make::xnew<UProcessedData>(charMove, TAG_CS_PLAYERSTATE);
-	spGameInstance->SendProtoData(*pProcessedData);
-	Make::xdelete(pProcessedData);
+	spGameInstance->SendProtoData(charMove, TAG_CS_PLAYERSTATE);
 	vSendPos.Clear();
 	vSendRotate.Clear();
 	charMove.Clear();
@@ -818,8 +815,7 @@ void CWarriorPlayer::SendCollisionData(UPawn* _pPawn, _float _fDamaged)
 		{
 			PROTOFUNC::MakeCsDamagedToMonster(&csPlayerDamaged, NetworkID, _fDamaged, _pPawn->GetNetworkID());
 		}
-		spGameInstance->SendProtoData(UProcessedData(NetworkID, csPlayerDamaged,
-			TAG_CS_PLAYERDAMAGED));
+		spGameInstance->SendProtoData(csPlayerDamaged,TAG_CS_PLAYERDAMAGED);
 	}
 }
 
@@ -844,7 +840,7 @@ void CWarriorPlayer::SendPressKeyState()
 	}
 
 	PROTOFUNC::MakeCsPressKey(&csPressKey, GetNetworkID(), keyState);
-	spGameInstance->SendProtoData(UProcessedData(csPressKey, TAG_CS_PRESSKEY));
+	spGameInstance->SendProtoData(csPressKey, TAG_CS_PRESSKEY);
 }
 
 #endif
