@@ -34,12 +34,9 @@ HRESULT CNetworkClientController::NativeConstruct(const _string& _strIPAddress, 
 
 void CNetworkClientController::MakeActorsInit(const VECTOR<SHPTR<UBase>>& _actorContainer)
 {
-	{
-		std::mutex Lock;
-		std::lock_guard<std::mutex> LL(Lock);
-		DisableNetworkTickRunning();
-	}
-	ThreadMiliRelax(100);
+	std::mutex Lock;
+	std::lock_guard<std::mutex> LL(Lock);
+	DisableNetworkTickRunning();
 
 	CMap* pMap = (CMap*)(_actorContainer[1].get());
 
