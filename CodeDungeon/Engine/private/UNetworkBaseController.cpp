@@ -50,7 +50,8 @@ void UNetworkBaseController::MakeActorsInit(const VECTOR<SHPTR<UBase>>& _actorCo
 
 void UNetworkBaseController::MakeActorsTick()
 {
-	m_NetworkInitDataContainer.clear();
+	if (m_NetworkInitDataContainer.size() >= 1)
+		m_NetworkInitDataContainer.clear();
 }
 
 void UNetworkBaseController::AddNetworkInitData(_int _NetworkID, const NETWORKRECEIVEINITDATA& _NetworkInitData)

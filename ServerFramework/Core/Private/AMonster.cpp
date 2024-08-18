@@ -39,18 +39,17 @@ namespace Core
 			_float ActiveRange = m_fActiveRange;
 			_float DeactiveRange = m_fDeactiveRange;
 
-			if(_spSession == spTargetSession || nullptr == spTargetSession)
-			 {
-				if (nullptr == spTargetSession)
-					spTargetSession = _spSession;
+			if (nullptr == spTargetSession)
+				spTargetSession = _spSession;
 
-				SHPTR<ATransform> spPlayerTr = spTargetSession->GetTransform();
-				Vector3 vMobPos = spMobTr->GetPos();
-				Vector3 vPlayerPos = spPlayerTr->GetPos();
-				s_PlayerPositionContainer[SessionID] = vPlayerPos;
-				float fDistanceToPlayer = Vector3::Distance(vMobPos, vPlayerPos);
+			SHPTR<ATransform> spPlayerTr = spTargetSession->GetTransform();
+			Vector3 vMobPos = spMobTr->GetPos();
+			Vector3 vPlayerPos = spPlayerTr->GetPos();
+			s_PlayerPositionContainer[SessionID] = vPlayerPos;
+			float fDistanceToPlayer = Vector3::Distance(vMobPos, vPlayerPos);
 
-
+			if (fDistanceToPlayer <= m_fJudgeValueToPlayerDistance)
+			{
 				if (fDistanceToPlayer <= ActiveRange)
 				{
 					if (nullptr != spTargetSession)

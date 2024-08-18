@@ -54,6 +54,8 @@ namespace Server {
 			COLLIDERDESC{ {4.f, 10.f, 4.f}, {0.f, 10.f, 0.f} });
 
 		SetActive(true);
+		s_vSavePosition = GetTransform()->GetPos();
+		s_iCamCellIndex = 1;
 		return true;
 	}
 
