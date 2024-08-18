@@ -50,7 +50,7 @@ void CNetworkWarriorPlayerController::Tick(const _double& _dTimeDelta)
 		spWarriorPlayer->GetTransform()->MoveForward(_dTimeDelta, static_cast<_float>(m_JumpSpeed));
 	}
 
-	spAnimModel->TickAnimation(_dTimeDelta);
+	spAnimModel->TickAnimChangeTransform(spWarriorPlayer->GetTransform(), _dTimeDelta);
 	spAnimModel->TickEvent(spWarriorPlayer.get(), GetTrigger(), _dTimeDelta);
 }
 

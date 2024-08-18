@@ -285,9 +285,6 @@ void CWarriorPlayer::ReceiveNetworkProcessData(const UProcessedData& _ProcessDat
 	break;
 	case TAG_SC_PLAYERGETUP:
 	{
-		SHPTR<CUserWarriorAnimController> spController = static_pointer_cast<CUserWarriorAnimController>(GetAnimationController());
-		spController->DisableDieEffectBool();
-
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 		SC_PLAYERGETUP playerGetUp;
 		playerGetUp.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
@@ -296,10 +293,6 @@ void CWarriorPlayer::ReceiveNetworkProcessData(const UProcessedData& _ProcessDat
 		SetDeathState(false);
 		SetHealth(playerGetUp.hp());
 		GetTransform()->SetPos(_float3{playerGetUp.posx(), playerGetUp.posy(), playerGetUp.posz() });
-		spGameInstance->SoundPlayOnce(L"Revive");
-		spGameInstance->TurnOffDieEffect();
-		GetAnimationController()->SetAnimState(CUserWarriorAnimController::ANIM_IDLE);
-		GetAnimModel()->SetAnimation(L"idle01");
 	}
 	break;
 	}

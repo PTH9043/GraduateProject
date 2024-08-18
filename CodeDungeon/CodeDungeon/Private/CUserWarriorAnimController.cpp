@@ -329,21 +329,21 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
             {
                 spAnimModel->TickAnimToTimeAccChangeTransform(spWarriorPlayer->GetTransform(), _dTimeDelta, spWarriorPlayer->GetElapsedTime());
             }
-            //if (spWarriorPlayer->GetElapsedTime() >= 70)
-            //{
-            //    if (spGameInstance->GetDIKeyDown(DIK_G))
-            //    {
-            //        m_bDieEffectTurnedOn = false;
-            //        if (!m_bReviveSoundPlay) {
-            //            spGameInstance->SoundPlayOnce(L"Revive");
-            //            m_bReviveSoundPlay = true;
-            //        }
-            //        m_bDieSoundPlay = false;
-            //        spGameInstance->TurnOffDieEffect();
-            //        UpdateState(spAnimModel, ANIM_IDLE, L"IDLE");
-            //        spAnimModel->SetAnimation(L"idle01");
-            //    }
-            //}
+            if (spWarriorPlayer->GetElapsedTime() >= 70)
+            {
+                if (spGameInstance->GetDIKeyDown(DIK_G))
+                {
+                    m_bDieEffectTurnedOn = false;
+                    if (!m_bReviveSoundPlay) {
+                        spGameInstance->SoundPlayOnce(L"Revive");
+                        m_bReviveSoundPlay = true;
+                    }
+                    m_bDieSoundPlay = false;
+                    spGameInstance->TurnOffDieEffect();
+                    UpdateState(spAnimModel, ANIM_IDLE, L"IDLE");
+                    spAnimModel->SetAnimation(L"idle01");
+                }
+            }
         }
         else
         {
