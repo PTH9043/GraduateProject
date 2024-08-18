@@ -15,14 +15,13 @@ public:
 	DESTRUCTOR(UNetworkSender)
 public:
 	void InsertSendProcessPacketInQuery(const UProcessedData& _ProcceedData);
-	void InsertSendTcpPacketInQuery(_char* _pPacket, _short _PacketType, _short _PacketSize);
+	void SendProtoPacket(_char* _pPacket, _short _PacketType, _short _PacketSize);
 	void SendDataInQuery();
 private:
 	virtual void Free() override;
 private:
 	SOCKET*						m_pClientTcpSocket;
 	UOverExp*					m_pOverExp;
-	SENDQUERY					m_SendQuery;
 };
 
 END

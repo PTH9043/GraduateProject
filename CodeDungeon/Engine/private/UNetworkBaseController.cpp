@@ -19,9 +19,9 @@ UNetworkBaseController::UNetworkBaseController() :
 	m_spNetworkAddress{nullptr},
 	m_NetworkActorContainer{},
 	m_NetworkInitDataContainer{},
-	m_pSendOverExp{nullptr}
+	m_spSendOverExp{nullptr}
 {
-	m_pSendOverExp = new UOverExp();
+	m_spSendOverExp = Make::MakeShared<UOverExp>();
 }
 
 HRESULT UNetworkBaseController::NativeConstruct(const _string& _strIPAddress, const _int _PortNumber)
@@ -78,14 +78,15 @@ SHPTR<UActor> UNetworkBaseController::FindNetworkActor(const _int _NetworkID)
 
 void UNetworkBaseController::SendTcpData(_char* _pData, short _tag, short _size)
 {
-	m_pSendOverExp->SendBufferReady(_pData, _tag, _size);
-	UServerMethods::SendTcpPacket(m_ClientTcpSocket, m_pSendOverExp);
+	std::atomic_thread_fence(std::memory_order_seq_cst);
+	m_spSendOverExp->SendBufferReady(_pData, _tag, _size);
+	UServerMethods::SendTcpPacket(m_ClientTcpSocket, m_spSendOverExp.get());
 }
 
 void UNetworkBaseController::SendProtoData(const UProcessedData& _ProcessedData)
 {
-	m_pSendOverExp->SendBufferReady(&_ProcessedData.GetData()[0], _ProcessedData.GetDataType(), _ProcessedData.GetDataSize());
-	UServerMethods::SendTcpPacket(m_ClientTcpSocket, m_pSendOverExp);
+	m_spSendOverExp->SendBufferReady(&_ProcessedData.GetData()[0], _ProcessedData.GetDataType(), _ProcessedData.GetDataSize());
+	UServerMethods::SendTcpPacket(m_ClientTcpSocket, m_spSendOverExp.get());
 }
 
 void UNetworkBaseController::ServerTick()
@@ -164,7 +165,6 @@ void UNetworkBaseController::ServerThread(void* _pData)
 void UNetworkBaseController::Free()
 {
 	m_isNetworkTickRunning = false;
-	delete m_pSendOverExp;
 	closesocket(m_ClientTcpSocket);
 	WSACleanup();
 }

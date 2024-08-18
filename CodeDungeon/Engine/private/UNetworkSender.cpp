@@ -15,9 +15,10 @@ void UNetworkSender::InsertSendProcessPacketInQuery(const UProcessedData& _Procc
 	m_SendQuery.push_back(_ProcceedData);
 }
 
-void UNetworkSender::InsertSendTcpPacketInQuery(_char* _pPacket, _short _PacketType, _short _PacketSize)
+void UNetworkSender::SendProtoPacket(_char* _pPacket, _short _PacketType, _short _PacketSize)
 {
-	m_SendQuery.push_back(UProcessedData(_pPacket, (size_t)_PacketSize, (_int)_PacketType));
+	m_pOverExp->SendBufferReady(_pPacket, _PacketType, _PacketSize);
+	UServerMethods::SendTcpPacket(*m_pClientTcpSocket, m_pOverExp);
 }
 
 void UNetworkSender::SendDataInQuery()

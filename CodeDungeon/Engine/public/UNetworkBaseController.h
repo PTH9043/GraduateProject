@@ -85,7 +85,7 @@ private:
 	SHPTR< UNetworkAddress>		m_spNetworkAddress;
 	NETWORKACTORCONTAINER		m_NetworkActorContainer;
 	NETWORKINITDATACONTAINER	m_NetworkInitDataContainer;
-	UOverExp*										m_pSendOverExp;
+	SHPTR<UOverExp>							m_spSendOverExp;
 };	
 
 END
