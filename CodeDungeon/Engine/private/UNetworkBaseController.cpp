@@ -159,6 +159,8 @@ void UNetworkBaseController::ServerThread(void* _pData)
 	{
 		pNetworkBaseController->ServerTick();
 	}
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	spGameInstance->ClearThreads();
 }
 
 void UNetworkBaseController::Free()

@@ -24,6 +24,11 @@ void UThreadManager::DetachRegister()
 	}
 }
 
+void UThreadManager::ClearThreads()
+{
+	m_RegisterThreadContainer.clear();
+}
+
 
 void UThreadManager::Free()
 {

@@ -533,6 +533,11 @@ void UGameInstance::DetachRegister()
 	m_spThreadManager->DetachRegister();
 }
 
+void UGameInstance::ClearThreads()
+{
+	m_spThreadManager->ClearThreads();
+}
+
 
 /*
 ==================================================

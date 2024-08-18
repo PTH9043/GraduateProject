@@ -21,6 +21,7 @@ public:
 	void RegisterFuncToRegister(const THREADFUNC& _CallBack, void* _pData);
 	void JoinRegister();
 	void DetachRegister();
+	void ClearThreads();
 private:
 	virtual void Free() override;
 private:

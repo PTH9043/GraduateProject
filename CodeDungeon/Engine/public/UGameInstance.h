@@ -167,6 +167,7 @@ public: /* ThreadManager */
 	void JoinRegister();
 	// 등록된 함수들을 Detach
 	void DetachRegister();
+	void ClearThreads();
 public: /* ActorManager */
 	const  CLONEARR& GetClonesArr() const;
 	HRESULT AddPrototype(const _wstring& _wstrName, CSHPTRREF<UActor> _spActor);
