@@ -217,6 +217,24 @@ namespace Server {
 				}
 			}
 		}
+		if (true == IsDead())
+		{
+			if (GetKeyState() == KEYBOARD_G)
+			{
+				for (auto& iter : _spCoreInstance->GetSessionContainer())
+				{
+					VECTOR3 vPos;
+					PROTOFUNC::MakeVector3(&vPos, s_vSavePosition.x, s_vSavePosition.y, s_vSavePosition.z);
+
+					SC_PLAYERGETUP scPlayerGetUp;
+					PROTOFUNC::MakeScPlayerGetUp(&scPlayerGetUp, iter.first, 2500.f, vPos, s_iCamCellIndex);
+					CombineProto<SC_PLAYERGETUP>(GetCopyBuffer(), GetPacketHead(), scPlayerGetUp, TAG_SC_PLAYERGETUP);
+					iter.second->SendData(GetCopyBufferPointer(), GetPacketHead());
+				}
+				SetCharStatus({ 100, 0, 2500 });
+				DisableDeadState();
+			}
+		}
 		{
 			CombineProto(REF_OUT GetCopyBuffer(), REF_OUT GetPacketHead(), csMove, TAG_SC::TAG_SC_PLAYERSTATE);
 			_spCoreInstance->BroadCastMessageExcludingSession(_SessionID, GetCopyBufferPointer(), GetPacketHead());
@@ -325,23 +343,6 @@ namespace Server {
 		CS_PRESSKEY scPressKey;
 		scPressKey.ParseFromArray(_pPacket, _PacketHead.PacketSize);
 		SetKeyState(scPressKey.key());
-
-		if (true == IsDead())
-		{
-			if (scPressKey.key() == KEYBOARD_G)
-			{
-				for (auto& iter : _spCoreInstance->GetSessionContainer())
-				{
-					VECTOR3 vPos;
-					PROTOFUNC::MakeVector3(&vPos, s_vSavePosition.x, s_vSavePosition.y, s_vSavePosition.z);
-
-					SC_PLAYERGETUP scPlayerGetUp;
-					PROTOFUNC::MakeScPlayerGetUp(&scPlayerGetUp, iter.first, 2500.f, vPos, s_iCamCellIndex);
-					CombineProto<SC_PLAYERGETUP>(GetCopyBuffer(), GetPacketHead(), scPlayerGetUp, TAG_SC_PLAYERGETUP);
-					iter.second->SendData(GetCopyBufferPointer(), GetPacketHead());
-				}
-			}
-		}
 	}
 
 	void CPlayerSession::EnableSavePoint(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)

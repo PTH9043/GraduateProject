@@ -185,6 +185,7 @@ private:
 
 	_bool											m_bStartedGame = false;
 	_bool											m_bisGameEnd = false;
+	_llong											m_OtherClientID;
 
 	//===========SOUND BOOL=================
 

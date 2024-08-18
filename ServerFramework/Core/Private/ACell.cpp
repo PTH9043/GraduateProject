@@ -19,7 +19,7 @@ namespace Core {
 		m_arrPoints{ _rhs .m_arrPoints }, m_arrLines{ _rhs .m_arrLines }, m_arrNormals{ _rhs.m_arrNormals }, m_arrNeighbors{ _rhs .m_arrNeighbors},
 		m_vCenterPos{ _rhs.m_vCenterPos}, m_iIndex{ _rhs .m_iIndex }, m_vPlane{ _rhs.m_vPlane}, m_isJumpable{ _rhs.m_isJumpable }
 	{
-		//ResortPoints();
+		ResortPoints();
 	}
 
 	_bool ACell::NativeConstruct(const ARRAY<Vector3, POINT_END>& _Points, const _int _iIndex)

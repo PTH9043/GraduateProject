@@ -39,6 +39,7 @@ private:
 	_bool			m_bisOpenSound=false;
 	SHPTR<UParticle>										m_spOpenChestParticle;
 	_float ParticleActiveTime = 0;
+	_float3		m_vCurrentPos;
 };
 
 END

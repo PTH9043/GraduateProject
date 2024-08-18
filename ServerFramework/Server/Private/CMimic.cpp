@@ -23,7 +23,7 @@ namespace Server {
 		UpdateFindRange(10, 120);
 		SetMoveSpeed(20);
 		SetAttackRange(9.f);
-		SetCharStatus(CHARSTATUS{ 1, 0, 200 });
+		SetCharStatus(CHARSTATUS{ 1, 0, 1 });
 	}
 
 	_bool CMimic::Start(const VOIDDATAS& _ReceiveDatas)

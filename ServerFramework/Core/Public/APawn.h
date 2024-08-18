@@ -49,6 +49,7 @@ public: /* get set */
 	void SetDamaged(const _bool _isDamaged) { this->m_isDamaged = _isDamaged; }
 	void SetEnemyHitState(const _bool _isEnemyHitState) { this->m_isEnemyHitState = _isEnemyHitState; }
 	_bool IsDamagedToEnemyTimerPass() { return m_DamageToEnemyTimer.IsOver(); }
+	void DisableDeadState() { m_isDead = false; m_isDeadStateEnable = false; m_DeadTimer.ResetTimer(); }
 protected:
 	void RestrictPositionToNavi();
 	void RunningDamagedToEnemyTimer(const _double& _dTimeDelta);

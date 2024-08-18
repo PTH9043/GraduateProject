@@ -90,6 +90,7 @@ private:
 	ATOMIC<_float>							m_fAttackRange;
 	_float												m_fMoveSpeed;
 	ATOMIC<_float>							m_fDistanceToPlayer;
+	ATOMIC<_float>							m_fJudgeValueToPlayerDistance;
 	SESSIONID									m_OwnerMonsterSessionID;
 
 	SHPTR<ASession>						m_spTargetSession;

@@ -40,6 +40,7 @@ namespace Core {
 		SHPTR<ANavigation> spNaviagation = GetNavigation();
 		{
 			Vector3 vPosition = spTransform->GetPos();
+			spNaviagation->ComputeHeight(REF_OUT vPosition);
 	//		spTransform->SetPos(vPosition);
 
 			SHPTR<ACell> spNewCell{};
@@ -47,11 +48,9 @@ namespace Core {
 			{
 				Vector3 closestPoint = spNaviagation->ClampPositionToCell(vPosition);
 				closestPoint.y = vPosition.y;
-				GetTransform()->SetPos(closestPoint);
-				vPosition = GetTransform()->GetPos();
+				vPosition = closestPoint;
 			}
 
-			spNaviagation->ComputeHeight(REF_OUT vPosition);
 			spTransform->SetPos(vPosition);
 		}
 	}

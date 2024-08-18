@@ -69,11 +69,12 @@ namespace Core
 				else if (DeactiveRange >= fDistanceToPlayer)
 				{
 					UpdateSelfStateToPlayerDistance(false, false, true);
-					if (GetDistanceToPlayer() >= fDistanceToPlayer)
+					if (m_fJudgeValueToPlayerDistance >= fDistanceToPlayer)
 					{
 						SetTargetSession(_spSession);
 					}
 				}
+				ChangeAtomicValue(m_fJudgeValueToPlayerDistance, fDistanceToPlayer);
 			}
 		}
 	}

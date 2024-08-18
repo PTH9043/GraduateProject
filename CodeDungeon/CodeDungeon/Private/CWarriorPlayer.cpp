@@ -44,7 +44,8 @@ CWarriorPlayer::CWarriorPlayer(CSHPTRREF<UDevice> _spDevice, const _wstring& _ws
 	m_bCanInteractGuard{ false },
 	m_fNetworkRecvMaxHeal{ 210 },
 	m_fPrevHealHp{0},
-	m_HealTimer{2.1}
+	m_HealTimer{2.1},
+	m_OtherClientID{ 0 }
 {
 }
 
@@ -66,7 +67,8 @@ CWarriorPlayer::CWarriorPlayer(const CWarriorPlayer& _rhs) :
 	m_fNetworkRecvMaxHeal{ 210 },
 	m_fPrevHealHp{ 0 },
 	m_fInteractionTimeElapsed{0.f},
-	m_HealTimer{ 2.1 }
+	m_HealTimer{ 2.1 },
+	m_OtherClientID{0}
 {
 }
 
@@ -219,6 +221,15 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetAnimModelRim(true);
 	SetAttack(100);
 
+	{
+		CS_SAVEPOINTENABLE csSavePointEnable;
+		VECTOR3 vPos;
+		_float3 vCurrentPos = GetTransform()->GetPos();
+		PROTOFUNC::MakeVector3(&vPos, vCurrentPos.x, vCurrentPos.y, vCurrentPos.z);
+		_int CellIndex = static_pointer_cast<CMainCamera>(GetFollowCamera())->GetCurrentNavi()->GetCurIndex();
+		PROTOFUNC::MakeCsSavePointEnable(&csSavePointEnable, GetNetworkID(), vPos, CellIndex);
+		spGameInstance->SendProtoData(UProcessedData(csSavePointEnable, TAG_CS_SAVEPOINTENABLE));
+	}
 	return S_OK;
 }
 
@@ -299,10 +310,6 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	JumpState(_dTimeDelta);
 	GetAnimationController()->Tick(_dTimeDelta);
 
-	////게임끝 트리거
-	//if (GetCurrentNavi()->GetCurIndex() == 1141)
-	//	m_bisGameEnd = true;
-
 	_int AnimState = GetAnimationController()->GetAnimState();
 	const _wstring& CurAnimName = GetAnimModel()->GetCurrentAnimation()->GetAnimName();
 
@@ -370,13 +377,16 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 			{
 				m_spHealParticle->SetActive(false);
 				IfOpenChestForHeal = false;
-				SetHealth(GetPrevHealth() + m_fNetworkRecvMaxHeal);
-				SetPrevHealth(GetPrevHealth() + m_fNetworkRecvMaxHeal);
+				SetHealth(GetHealth() + m_fNetworkRecvMaxHeal);
+				if (GetHealth() > 2500)
+				{
+					SetHealth(2500);
+				}
+				SetPrevHealth(GetHealth());
 				m_HealTimer.ResetTimer();
 			}
 			else
 			{
-				IncreaseHealth(10);
 				SetAnimModelRimColor(_float3(0, 1, 0));
 				m_spHealParticle->SetActive(true);
 				_float3 pos = GetTransform()->GetPos();
@@ -438,28 +448,29 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	}
 	{
 		
-		if (s_iSavePointCheckCount == 0) {
+		if (s_iSavePointCheckCount == 1) {
 			m_spTrail->SetColorTexture(L"elec");
 			m_spTrail->SetTrailShapeTexture(L"Noise_Bee");
 			m_spTrail->SetTrailNoiseTexture(L"GlowDiffuse");			
 		}
-		else if (s_iSavePointCheckCount == 1) {
+		else if (s_iSavePointCheckCount == 2) {
 			m_spTrail->SetColorTexture(L"FireRed2");
 			m_spTrail->SetTrailShapeTexture(L"T_Sword_Slash_11");
 			m_spTrail->SetTrailNoiseTexture(L"elec");			
 		}
-		else if (s_iSavePointCheckCount == 2) {
+		else if (s_iSavePointCheckCount == 3) {
 			m_spTrail->SetColorTexture(L"Cloudy");
 			m_spTrail->SetTrailShapeTexture(L"Noise_Bee");
 			m_spTrail->SetTrailNoiseTexture(L"GlowDiffuse");			
 		}
-		else if (s_iSavePointCheckCount == 3) {
+		else if (s_iSavePointCheckCount == 4) {
 			m_spTrail->SetColorTexture(L"Pink");
 			m_spTrail->SetTrailShapeTexture(L"Noise_Thunder");
 			m_spTrail->SetTrailNoiseTexture(L"GlowDiffuse");			
 		}
-		else {
-			s_iSavePointCheckCount = 0;
+		else
+		{
+			s_iSavePointCheckCount = 1;
 		}
 	}
 

@@ -109,10 +109,7 @@ void CItemChest::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 		SC_STATICOBJFIND scStaticObjFind;
 		scStaticObjFind.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
 		{
-			SetOutline(true);
 			SetIfOutlineScale(true);
-			if (!m_bisOpen)
-				spPlayer->SetCanInteractChestState(true);
 			if (1 == scStaticObjFind.enable() && !m_bisOpen) {
 				if (m_ChestType == TYPE_CHEST) {
 					spPlayer->SetIfOpenChest(true);
@@ -143,7 +140,27 @@ void CItemChest::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 
 void CItemChest::TickActive(const _double& _dTimeDelta)
 {
+	__super::TickActive(_dTimeDelta);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	SHPTR<CWarriorPlayer> spPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
+	if (!m_bisOpen)
+	{
+		if (true == GetFoundTargetState())
+		{
+			spPlayer->SetCanInteractChestState(true);
+			SetOutline(true);
+		}
+		else
+		{
+			spPlayer->SetCanInteractChestState(false);
+			SetOutline(false);
+		}
+	}
+	else
+	{
+		spPlayer->SetCanInteractChestState(false);
+		SetOutline(false);
+	}
 
 	static _double elapsedTime = 0;
 	_double ItemChestOpeningSpeed = 2;
@@ -186,12 +203,6 @@ void CItemChest::TickActive(const _double& _dTimeDelta)
 
 void CItemChest::LateTickActive(const _double& _dTimeDelta)
 {
-	if (true == GetOutlineState())
-	{
-		SetOutline(false);
-		static_pointer_cast<CWarriorPlayer>(GetTargetPlayer())->SetCanInteractChestState(false);
-	}
-
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
 	
 	AddOutlineRenderGroup(RI_DEPTHRECORD);
