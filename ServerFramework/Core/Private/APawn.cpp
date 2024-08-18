@@ -48,9 +48,9 @@ namespace Core {
 			{
 				Vector3 closestPoint = spNaviagation->ClampPositionToCell(vPosition);
 				closestPoint.y = vPosition.y;
-				vPosition = closestPoint;
+				GetTransform()->SetPos(closestPoint);
+				vPosition = GetTransform()->GetPos();
 			}
-
 			spTransform->SetPos(vPosition);
 		}
 	}

@@ -27,7 +27,7 @@ namespace Core {
 		{
 			m_CellContainer.push_back(Create<ACell>(*iter.get()));
 		}
-		RETURN_CHECK(false == ReadyNeighbor(), ;);
+	//	RETURN_CHECK(false == ReadyNeighbor(), ;);
 	}
 
 	void ANavigation::Free()
