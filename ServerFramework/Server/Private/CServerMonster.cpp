@@ -111,7 +111,15 @@ namespace Server {
 				PROTOFUNC::MakeMobState(&monsterState, GetSessionID(), vSendPos, vSendRotate,
 					AnimState, AnimIndex, false, isCurrentFindPlayer, isDamaged, dTimeAcc);
 				CombineProto<MOBSTATE>(GetCopyBuffer(), GetPacketHead(), monsterState, TAG_SC_MONSTERSTATE);
-				_spSession->SendData(GetCopyBufferPointer(), GetPacketHead());
+
+				if (true == IsDead())
+				{
+					spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
+				}
+				else
+				{
+					_spSession->SendData(GetCopyBufferPointer(), GetPacketHead());
+				}
 			}
 		}
 	}

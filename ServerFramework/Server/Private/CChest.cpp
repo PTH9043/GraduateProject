@@ -67,7 +67,7 @@ namespace Server {
 				{
 					SHPTR<ASession> spSession = _spSession;
 					spSession->HealHp(210.f);
-					_spSession->SendData(GetCopyBufferPointer(), GetPacketHead());
+					spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
 					ActivePermanentDisable();
 				}
 			}

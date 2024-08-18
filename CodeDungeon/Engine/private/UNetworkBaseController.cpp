@@ -135,7 +135,6 @@ void UNetworkBaseController::CombineRecvPacket(UOverExp* _pOverExp, size_t _numB
 		pBufferMove += CurrPacket;
 	}
 	m_RemainBufferLength = 0;
-	::memset(&m_TcpTotalBuffer[0], 0, MAX_PROCESSBUF_LENGTH);
 }
 
 void UNetworkBaseController::InsertProcessedDataInActor(const UProcessedData& _ProcessedData)
