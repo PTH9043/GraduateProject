@@ -450,6 +450,7 @@ void CMinotaur::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 		{
 			SetDeathState(true);
 			SetHealth(0);
+			SetOutline(false);
 		}
 		else
 		{

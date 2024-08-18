@@ -213,10 +213,10 @@ namespace Server {
 		//spNavigation->IsMove(vPosition, spCurCell);
 		if (3 == s_iCoreEnableCnt)
 		{
-			std::cout << s_iCoreEnableCnt << "\n";
 			spNavigation->FindCell(vPosition);
-			if (spNavigation->GetCurIndex() == 1141)
+			if (spNavigation->GetCurIndex() >= 1140)
 			{
+				std::cout << s_iCoreEnableCnt << "\n";
 				SC_ENDING scEnding;
 				PROTOFUNC::MakeScEnding(&scEnding, GetSessionID());
 				CombineProto(REF_OUT GetCopyBuffer(), REF_OUT GetPacketHead(), scEnding, TAG_SC::TAG_SC_ENDING);
