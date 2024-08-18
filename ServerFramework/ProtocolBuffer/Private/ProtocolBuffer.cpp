@@ -165,7 +165,7 @@ void PROTOFUNC::MakeScSavePointEnable(SC_SAVEPOINTENABLE* _pOut, LLONG _id, int 
 	_pOut->set_count(_count);
 }
 
-void PROTOFUNC::MakeScPlayerGetUp(SC_PLAYERGETUP* _pOut, LLONG _id, float _hp, const VECTOR3& _vPos, int _camCellIndex)
+void PROTOFUNC::MakeScPlayerGetUp(SC_PLAYERGETUP* _pOut, LLONG _id, float _hp, const VECTOR3& _vPos, int _camCellIndex, int _cellIndex)
 {
 	assert(nullptr != _pOut);
 	_pOut->set_id(_id);
@@ -174,6 +174,7 @@ void PROTOFUNC::MakeScPlayerGetUp(SC_PLAYERGETUP* _pOut, LLONG _id, float _hp, c
 	_pOut->set_posy(_vPos.y());
 	_pOut->set_posz(_vPos.z());
 	_pOut->set_camcellindex(_camCellIndex);
+	_pOut->set_cellindex(_cellIndex);
 }
 
 void PROTOFUNC::MakeScEnding(SC_ENDING* _pOut, LLONG _id)
@@ -241,7 +242,7 @@ void PROTOFUNC::MakeCsDamagedToMonster(CS_DAMAGEDTOMONSTER* _pOut, LLONG _id, fl
 	_pOut->set_enemyid(_enemyID);
 }
 
-void PROTOFUNC::MakeCsSavePointEnable(CS_SAVEPOINTENABLE* _pOut, LLONG _id, const VECTOR3& _vPos, int _camCellIndex)
+void PROTOFUNC::MakeCsSavePointEnable(CS_SAVEPOINTENABLE* _pOut, LLONG _id, const VECTOR3& _vPos, int _camCellIndex, int _cellIndex)
 {
 	assert(nullptr != _pOut);
 	_pOut->set_id(_id);
@@ -249,6 +250,7 @@ void PROTOFUNC::MakeCsSavePointEnable(CS_SAVEPOINTENABLE* _pOut, LLONG _id, cons
 	_pOut->set_posy(_vPos.y());
 	_pOut->set_posz(_vPos.z());
 	_pOut->set_camcellindex(_camCellIndex);
+	_pOut->set_cellindex(_cellIndex);
 }
 
 void PROTOFUNC::MakeCsCoreEnable(CS_CORENABLE* _pOut, LLONG _id)

@@ -134,6 +134,7 @@ inline constexpr SC_PLAYERGETUP::Impl_::Impl_(
         posy_{0},
         posz_{0},
         camcellindex_{0},
+        cellindex_{0},
         _cached_size_{0} {}
 
 template <typename>
@@ -357,6 +358,7 @@ inline constexpr CS_SAVEPOINTENABLE::Impl_::Impl_(
         posy_{0},
         posz_{0},
         camcellindex_{0},
+        cellindex_{0},
         _cached_size_{0} {}
 
 template <typename>
@@ -802,6 +804,7 @@ const ::uint32_t TableStruct_Protocol_2eproto::offsets[] PROTOBUF_SECTION_VARIAB
     PROTOBUF_FIELD_OFFSET(::SC_PLAYERGETUP, _impl_.posy_),
     PROTOBUF_FIELD_OFFSET(::SC_PLAYERGETUP, _impl_.posz_),
     PROTOBUF_FIELD_OFFSET(::SC_PLAYERGETUP, _impl_.camcellindex_),
+    PROTOBUF_FIELD_OFFSET(::SC_PLAYERGETUP, _impl_.cellindex_),
     ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::SC_ENDING, _internal_metadata_),
     ~0u,  // no _extensions_
@@ -897,6 +900,7 @@ const ::uint32_t TableStruct_Protocol_2eproto::offsets[] PROTOBUF_SECTION_VARIAB
     PROTOBUF_FIELD_OFFSET(::CS_SAVEPOINTENABLE, _impl_.posy_),
     PROTOBUF_FIELD_OFFSET(::CS_SAVEPOINTENABLE, _impl_.posz_),
     PROTOBUF_FIELD_OFFSET(::CS_SAVEPOINTENABLE, _impl_.camcellindex_),
+    PROTOBUF_FIELD_OFFSET(::CS_SAVEPOINTENABLE, _impl_.cellindex_),
     ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::CS_CORENABLE, _internal_metadata_),
     ~0u,  // no _extensions_
@@ -935,17 +939,17 @@ static const ::_pbi::MigrationSchema
         {163, -1, -1, sizeof(::SC_ANUBISSTATE)},
         {174, -1, -1, sizeof(::SC_SAVEPOINTENABLE)},
         {184, -1, -1, sizeof(::SC_PLAYERGETUP)},
-        {198, -1, -1, sizeof(::SC_ENDING)},
-        {207, -1, -1, sizeof(::CS_LOGIN)},
-        {216, 227, -1, sizeof(::CS_ATTACK)},
-        {230, -1, -1, sizeof(::CS_HEAL)},
-        {239, -1, -1, sizeof(::CS_PRESSKEY)},
-        {249, -1, -1, sizeof(::CS_PLAYERORDER)},
-        {259, -1, -1, sizeof(::CS_DAMAGED)},
-        {269, -1, -1, sizeof(::CS_DAMAGEDTOMONSTER)},
-        {280, -1, -1, sizeof(::CS_SAVEPOINTENABLE)},
-        {293, -1, -1, sizeof(::CS_CORENABLE)},
-        {302, -1, -1, sizeof(::CS_DISCONNECT)},
+        {199, -1, -1, sizeof(::SC_ENDING)},
+        {208, -1, -1, sizeof(::CS_LOGIN)},
+        {217, 228, -1, sizeof(::CS_ATTACK)},
+        {231, -1, -1, sizeof(::CS_HEAL)},
+        {240, -1, -1, sizeof(::CS_PRESSKEY)},
+        {250, -1, -1, sizeof(::CS_PLAYERORDER)},
+        {260, -1, -1, sizeof(::CS_DAMAGED)},
+        {270, -1, -1, sizeof(::CS_DAMAGEDTOMONSTER)},
+        {281, -1, -1, sizeof(::CS_SAVEPOINTENABLE)},
+        {295, -1, -1, sizeof(::CS_CORENABLE)},
+        {304, -1, -1, sizeof(::CS_DISCONNECT)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -1009,29 +1013,30 @@ const char descriptor_table_protodef_Protocol_2eproto[] PROTOBUF_SECTION_VARIABL
     "ndex\030\006 \001(\005\"C\n\016SC_ANUBISSTATE\022\n\n\002id\030\001 \001(\003"
     "\022\020\n\010shieldOn\030\002 \001(\005\022\023\n\013shieldTimer\030\003 \001(\002\""
     "/\n\022SC_SAVEPOINTENABLE\022\n\n\002id\030\001 \001(\003\022\r\n\005cou"
-    "nt\030\002 \001(\005\"h\n\016SC_PLAYERGETUP\022\n\n\002id\030\001 \001(\003\022\n"
+    "nt\030\002 \001(\005\"{\n\016SC_PLAYERGETUP\022\n\n\002id\030\001 \001(\003\022\n"
     "\n\002hp\030\002 \001(\002\022\014\n\004posx\030\003 \001(\002\022\014\n\004posy\030\004 \001(\002\022\014"
-    "\n\004posz\030\005 \001(\002\022\024\n\014camCellIndex\030\006 \001(\005\"\027\n\tSC"
-    "_ENDING\022\n\n\002id\030\001 \001(\003\"\026\n\010CS_LOGIN\022\n\n\002id\030\001 "
-    "\001(\003\"D\n\tCS_ATTACK\022\n\n\002id\030\001 \001(\003\022\033\n\tattackPo"
-    "s\030\002 \001(\0132\010.VECTOR3\022\016\n\006damage\030\003 \001(\002\"\025\n\007CS_"
-    "HEAL\022\n\n\002id\030\001 \001(\003\"&\n\013CS_PRESSKEY\022\n\n\002id\030\001 "
-    "\001(\003\022\013\n\003key\030\002 \001(\005\"+\n\016CS_PLAYERORDER\022\n\n\002id"
-    "\030\001 \001(\003\022\r\n\005order\030\002 \001(\005\"(\n\nCS_DAMAGED\022\n\n\002i"
-    "d\030\001 \001(\003\022\016\n\006damage\030\002 \001(\002\"B\n\023CS_DAMAGEDTOM"
-    "ONSTER\022\n\n\002id\030\001 \001(\003\022\016\n\006damage\030\002 \001(\002\022\017\n\007en"
-    "emyid\030\003 \001(\003\"`\n\022CS_SAVEPOINTENABLE\022\n\n\002id\030"
-    "\001 \001(\003\022\014\n\004posx\030\002 \001(\002\022\014\n\004posy\030\003 \001(\002\022\014\n\004pos"
-    "z\030\004 \001(\002\022\024\n\014camCellIndex\030\005 \001(\005\"\032\n\014CS_CORE"
-    "NABLE\022\n\n\002id\030\001 \001(\003\"\033\n\rCS_DISCONNECT\022\n\n\002id"
-    "\030\001 \001(\003*2\n\tDirection\022\006\n\002UP\020\000\022\010\n\004DOWN\020\001\022\010\n"
-    "\004LEFT\020\002\022\t\n\005RIGHT\020\003b\006proto3"
+    "\n\004posz\030\005 \001(\002\022\024\n\014camCellIndex\030\006 \001(\005\022\021\n\tce"
+    "llIndex\030\007 \001(\005\"\027\n\tSC_ENDING\022\n\n\002id\030\001 \001(\003\"\026"
+    "\n\010CS_LOGIN\022\n\n\002id\030\001 \001(\003\"D\n\tCS_ATTACK\022\n\n\002i"
+    "d\030\001 \001(\003\022\033\n\tattackPos\030\002 \001(\0132\010.VECTOR3\022\016\n\006"
+    "damage\030\003 \001(\002\"\025\n\007CS_HEAL\022\n\n\002id\030\001 \001(\003\"&\n\013C"
+    "S_PRESSKEY\022\n\n\002id\030\001 \001(\003\022\013\n\003key\030\002 \001(\005\"+\n\016C"
+    "S_PLAYERORDER\022\n\n\002id\030\001 \001(\003\022\r\n\005order\030\002 \001(\005"
+    "\"(\n\nCS_DAMAGED\022\n\n\002id\030\001 \001(\003\022\016\n\006damage\030\002 \001"
+    "(\002\"B\n\023CS_DAMAGEDTOMONSTER\022\n\n\002id\030\001 \001(\003\022\016\n"
+    "\006damage\030\002 \001(\002\022\017\n\007enemyid\030\003 \001(\003\"s\n\022CS_SAV"
+    "EPOINTENABLE\022\n\n\002id\030\001 \001(\003\022\014\n\004posx\030\002 \001(\002\022\014"
+    "\n\004posy\030\003 \001(\002\022\014\n\004posz\030\004 \001(\002\022\024\n\014camCellInd"
+    "ex\030\005 \001(\005\022\021\n\tcellIndex\030\006 \001(\005\"\032\n\014CS_CORENA"
+    "BLE\022\n\n\002id\030\001 \001(\003\"\033\n\rCS_DISCONNECT\022\n\n\002id\030\001"
+    " \001(\003*2\n\tDirection\022\006\n\002UP\020\000\022\010\n\004DOWN\020\001\022\010\n\004L"
+    "EFT\020\002\022\t\n\005RIGHT\020\003b\006proto3"
 };
 static ::absl::once_flag descriptor_table_Protocol_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Protocol_2eproto = {
     false,
     false,
-    1906,
+    1944,
     descriptor_table_protodef_Protocol_2eproto,
     "Protocol.proto",
     &descriptor_table_Protocol_2eproto_once,
@@ -5364,9 +5369,9 @@ inline void SC_PLAYERGETUP::SharedCtor(::_pb::Arena* arena) {
   ::memset(reinterpret_cast<char *>(&_impl_) +
                offsetof(Impl_, id_),
            0,
-           offsetof(Impl_, camcellindex_) -
+           offsetof(Impl_, cellindex_) -
                offsetof(Impl_, id_) +
-               sizeof(Impl_::camcellindex_));
+               sizeof(Impl_::cellindex_));
 }
 SC_PLAYERGETUP::~SC_PLAYERGETUP() {
   // @@protoc_insertion_point(destructor:SC_PLAYERGETUP)
@@ -5386,8 +5391,8 @@ PROTOBUF_NOINLINE void SC_PLAYERGETUP::Clear() {
   (void) cached_has_bits;
 
   ::memset(&_impl_.id_, 0, static_cast<::size_t>(
-      reinterpret_cast<char*>(&_impl_.camcellindex_) -
-      reinterpret_cast<char*>(&_impl_.id_)) + sizeof(_impl_.camcellindex_));
+      reinterpret_cast<char*>(&_impl_.cellindex_) -
+      reinterpret_cast<char*>(&_impl_.id_)) + sizeof(_impl_.cellindex_));
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
@@ -5399,15 +5404,15 @@ const char* SC_PLAYERGETUP::_InternalParse(
 
 
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<3, 6, 0, 0, 2> SC_PLAYERGETUP::_table_ = {
+const ::_pbi::TcParseTable<3, 7, 0, 0, 2> SC_PLAYERGETUP::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    6, 56,  // max_field_number, fast_idx_mask
+    7, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967232,  // skipmap
+    4294967168,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    6,  // num_field_entries
+    7,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     &_SC_PLAYERGETUP_default_instance_._instance,
@@ -5432,7 +5437,9 @@ const ::_pbi::TcParseTable<3, 6, 0, 0, 2> SC_PLAYERGETUP::_table_ = {
     // int32 camCellIndex = 6;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(SC_PLAYERGETUP, _impl_.camcellindex_), 63>(),
      {48, 63, 0, PROTOBUF_FIELD_OFFSET(SC_PLAYERGETUP, _impl_.camcellindex_)}},
-    {::_pbi::TcParser::MiniParse, {}},
+    // int32 cellIndex = 7;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(SC_PLAYERGETUP, _impl_.cellindex_), 63>(),
+     {56, 63, 0, PROTOBUF_FIELD_OFFSET(SC_PLAYERGETUP, _impl_.cellindex_)}},
   }}, {{
     65535, 65535
   }}, {{
@@ -5453,6 +5460,9 @@ const ::_pbi::TcParseTable<3, 6, 0, 0, 2> SC_PLAYERGETUP::_table_ = {
     (0 | ::_fl::kFcSingular | ::_fl::kFloat)},
     // int32 camCellIndex = 6;
     {PROTOBUF_FIELD_OFFSET(SC_PLAYERGETUP, _impl_.camcellindex_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
+    // int32 cellIndex = 7;
+    {PROTOBUF_FIELD_OFFSET(SC_PLAYERGETUP, _impl_.cellindex_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
   }},
   // no aux_entries
@@ -5529,6 +5539,13 @@ const ::_pbi::TcParseTable<3, 6, 0, 0, 2> SC_PLAYERGETUP::_table_ = {
             stream, this->_internal_camcellindex(), target);
   }
 
+  // int32 cellIndex = 7;
+  if (this->_internal_cellindex() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::
+        WriteInt32ToArrayWithField<7>(
+            stream, this->_internal_cellindex(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target =
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -5598,6 +5615,12 @@ const ::_pbi::TcParseTable<3, 6, 0, 0, 2> SC_PLAYERGETUP::_table_ = {
         this->_internal_camcellindex());
   }
 
+  // int32 cellIndex = 7;
+  if (this->_internal_cellindex() != 0) {
+    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
+        this->_internal_cellindex());
+  }
+
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
@@ -5655,6 +5678,9 @@ void SC_PLAYERGETUP::MergeImpl(::google::protobuf::Message& to_msg, const ::goog
   if (from._internal_camcellindex() != 0) {
     _this->_internal_set_camcellindex(from._internal_camcellindex());
   }
+  if (from._internal_cellindex() != 0) {
+    _this->_internal_set_cellindex(from._internal_cellindex());
+  }
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
 
@@ -5676,8 +5702,8 @@ void SC_PLAYERGETUP::InternalSwap(SC_PLAYERGETUP* PROTOBUF_RESTRICT other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(SC_PLAYERGETUP, _impl_.camcellindex_)
-      + sizeof(SC_PLAYERGETUP::_impl_.camcellindex_)
+      PROTOBUF_FIELD_OFFSET(SC_PLAYERGETUP, _impl_.cellindex_)
+      + sizeof(SC_PLAYERGETUP::_impl_.cellindex_)
       - PROTOBUF_FIELD_OFFSET(SC_PLAYERGETUP, _impl_.id_)>(
           reinterpret_cast<char*>(&_impl_.id_),
           reinterpret_cast<char*>(&other->_impl_.id_));
@@ -7377,9 +7403,9 @@ inline void CS_SAVEPOINTENABLE::SharedCtor(::_pb::Arena* arena) {
   ::memset(reinterpret_cast<char *>(&_impl_) +
                offsetof(Impl_, id_),
            0,
-           offsetof(Impl_, camcellindex_) -
+           offsetof(Impl_, cellindex_) -
                offsetof(Impl_, id_) +
-               sizeof(Impl_::camcellindex_));
+               sizeof(Impl_::cellindex_));
 }
 CS_SAVEPOINTENABLE::~CS_SAVEPOINTENABLE() {
   // @@protoc_insertion_point(destructor:CS_SAVEPOINTENABLE)
@@ -7399,8 +7425,8 @@ PROTOBUF_NOINLINE void CS_SAVEPOINTENABLE::Clear() {
   (void) cached_has_bits;
 
   ::memset(&_impl_.id_, 0, static_cast<::size_t>(
-      reinterpret_cast<char*>(&_impl_.camcellindex_) -
-      reinterpret_cast<char*>(&_impl_.id_)) + sizeof(_impl_.camcellindex_));
+      reinterpret_cast<char*>(&_impl_.cellindex_) -
+      reinterpret_cast<char*>(&_impl_.id_)) + sizeof(_impl_.cellindex_));
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
@@ -7412,15 +7438,15 @@ const char* CS_SAVEPOINTENABLE::_InternalParse(
 
 
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<3, 5, 0, 0, 2> CS_SAVEPOINTENABLE::_table_ = {
+const ::_pbi::TcParseTable<3, 6, 0, 0, 2> CS_SAVEPOINTENABLE::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    5, 56,  // max_field_number, fast_idx_mask
+    6, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967264,  // skipmap
+    4294967232,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    5,  // num_field_entries
+    6,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     &_CS_SAVEPOINTENABLE_default_instance_._instance,
@@ -7442,7 +7468,9 @@ const ::_pbi::TcParseTable<3, 5, 0, 0, 2> CS_SAVEPOINTENABLE::_table_ = {
     // int32 camCellIndex = 5;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CS_SAVEPOINTENABLE, _impl_.camcellindex_), 63>(),
      {40, 63, 0, PROTOBUF_FIELD_OFFSET(CS_SAVEPOINTENABLE, _impl_.camcellindex_)}},
-    {::_pbi::TcParser::MiniParse, {}},
+    // int32 cellIndex = 6;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CS_SAVEPOINTENABLE, _impl_.cellindex_), 63>(),
+     {48, 63, 0, PROTOBUF_FIELD_OFFSET(CS_SAVEPOINTENABLE, _impl_.cellindex_)}},
     {::_pbi::TcParser::MiniParse, {}},
   }}, {{
     65535, 65535
@@ -7461,6 +7489,9 @@ const ::_pbi::TcParseTable<3, 5, 0, 0, 2> CS_SAVEPOINTENABLE::_table_ = {
     (0 | ::_fl::kFcSingular | ::_fl::kFloat)},
     // int32 camCellIndex = 5;
     {PROTOBUF_FIELD_OFFSET(CS_SAVEPOINTENABLE, _impl_.camcellindex_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
+    // int32 cellIndex = 6;
+    {PROTOBUF_FIELD_OFFSET(CS_SAVEPOINTENABLE, _impl_.cellindex_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
   }},
   // no aux_entries
@@ -7525,6 +7556,13 @@ const ::_pbi::TcParseTable<3, 5, 0, 0, 2> CS_SAVEPOINTENABLE::_table_ = {
             stream, this->_internal_camcellindex(), target);
   }
 
+  // int32 cellIndex = 6;
+  if (this->_internal_cellindex() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::
+        WriteInt32ToArrayWithField<6>(
+            stream, this->_internal_cellindex(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target =
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -7584,6 +7622,12 @@ const ::_pbi::TcParseTable<3, 5, 0, 0, 2> CS_SAVEPOINTENABLE::_table_ = {
         this->_internal_camcellindex());
   }
 
+  // int32 cellIndex = 6;
+  if (this->_internal_cellindex() != 0) {
+    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
+        this->_internal_cellindex());
+  }
+
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
@@ -7633,6 +7677,9 @@ void CS_SAVEPOINTENABLE::MergeImpl(::google::protobuf::Message& to_msg, const ::
   if (from._internal_camcellindex() != 0) {
     _this->_internal_set_camcellindex(from._internal_camcellindex());
   }
+  if (from._internal_cellindex() != 0) {
+    _this->_internal_set_cellindex(from._internal_cellindex());
+  }
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
 
@@ -7654,8 +7701,8 @@ void CS_SAVEPOINTENABLE::InternalSwap(CS_SAVEPOINTENABLE* PROTOBUF_RESTRICT othe
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(CS_SAVEPOINTENABLE, _impl_.camcellindex_)
-      + sizeof(CS_SAVEPOINTENABLE::_impl_.camcellindex_)
+      PROTOBUF_FIELD_OFFSET(CS_SAVEPOINTENABLE, _impl_.cellindex_)
+      + sizeof(CS_SAVEPOINTENABLE::_impl_.cellindex_)
       - PROTOBUF_FIELD_OFFSET(CS_SAVEPOINTENABLE, _impl_.id_)>(
           reinterpret_cast<char*>(&_impl_.id_),
           reinterpret_cast<char*>(&other->_impl_.id_));

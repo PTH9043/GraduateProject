@@ -164,7 +164,7 @@ void CStatue::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 				_float3 vCurrentPos = GetTransform()->GetPos();
 				PROTOFUNC::MakeVector3(&vPos, vCurrentPos.x, vCurrentPos.y, vCurrentPos.z);
 				_int CellIndex = static_pointer_cast<CMainCamera>(spPlayer->GetFollowCamera())->GetCurrentNavi()->GetCurIndex();
-				PROTOFUNC::MakeCsSavePointEnable(&csSavePointEnable, GetNetworkID(), vPos, CellIndex);
+				PROTOFUNC::MakeCsSavePointEnable(&csSavePointEnable, GetNetworkID(), vPos, CellIndex, spPlayer->GetCurrentNavi()->GetCurIndex());
 				spGameInstance->SendProtoData(csSavePointEnable, TAG_CS_SAVEPOINTENABLE);
 				SetEnable(false);
 				SetOutline(false);

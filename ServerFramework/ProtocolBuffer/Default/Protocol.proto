@@ -160,6 +160,7 @@ message SC_ANUBISSTATE
 	 float posy = 4;
 	 float posz = 5;
 	 int32 camCellIndex = 6;
+	 int32 cellIndex = 7;
  }
 
  message SC_ENDING
@@ -224,6 +225,7 @@ message CS_DAMAGED
 	 float posy = 3;
 	 float posz = 4;
 	 int32 camCellIndex = 5;
+	 int32 cellIndex = 6;
  }
 
  message CS_CORENABLE 

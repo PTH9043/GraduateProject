@@ -1316,6 +1316,7 @@ class SC_PLAYERGETUP final :
     kPosyFieldNumber = 4,
     kPoszFieldNumber = 5,
     kCamCellIndexFieldNumber = 6,
+    kCellIndexFieldNumber = 7,
   };
   // int64 id = 1;
   void clear_id() ;
@@ -1377,13 +1378,23 @@ class SC_PLAYERGETUP final :
   void _internal_set_camcellindex(::int32_t value);
 
   public:
+  // int32 cellIndex = 7;
+  void clear_cellindex() ;
+  ::int32_t cellindex() const;
+  void set_cellindex(::int32_t value);
+
+  private:
+  ::int32_t _internal_cellindex() const;
+  void _internal_set_cellindex(::int32_t value);
+
+  public:
   // @@protoc_insertion_point(class_scope:SC_PLAYERGETUP)
  private:
   class _Internal;
 
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      3, 6, 0,
+      3, 7, 0,
       0, 2>
       _table_;
   friend class ::google::protobuf::MessageLite;
@@ -1406,6 +1417,7 @@ class SC_PLAYERGETUP final :
     float posy_;
     float posz_;
     ::int32_t camcellindex_;
+    ::int32_t cellindex_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -3473,6 +3485,7 @@ class CS_SAVEPOINTENABLE final :
     kPosyFieldNumber = 3,
     kPoszFieldNumber = 4,
     kCamCellIndexFieldNumber = 5,
+    kCellIndexFieldNumber = 6,
   };
   // int64 id = 1;
   void clear_id() ;
@@ -3524,13 +3537,23 @@ class CS_SAVEPOINTENABLE final :
   void _internal_set_camcellindex(::int32_t value);
 
   public:
+  // int32 cellIndex = 6;
+  void clear_cellindex() ;
+  ::int32_t cellindex() const;
+  void set_cellindex(::int32_t value);
+
+  private:
+  ::int32_t _internal_cellindex() const;
+  void _internal_set_cellindex(::int32_t value);
+
+  public:
   // @@protoc_insertion_point(class_scope:CS_SAVEPOINTENABLE)
  private:
   class _Internal;
 
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      3, 5, 0,
+      3, 6, 0,
       0, 2>
       _table_;
   friend class ::google::protobuf::MessageLite;
@@ -3552,6 +3575,7 @@ class CS_SAVEPOINTENABLE final :
     float posy_;
     float posz_;
     ::int32_t camcellindex_;
+    ::int32_t cellindex_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -7380,6 +7404,29 @@ inline void SC_PLAYERGETUP::_internal_set_camcellindex(::int32_t value) {
   _impl_.camcellindex_ = value;
 }
 
+// int32 cellIndex = 7;
+inline void SC_PLAYERGETUP::clear_cellindex() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.cellindex_ = 0;
+}
+inline ::int32_t SC_PLAYERGETUP::cellindex() const {
+  // @@protoc_insertion_point(field_get:SC_PLAYERGETUP.cellIndex)
+  return _internal_cellindex();
+}
+inline void SC_PLAYERGETUP::set_cellindex(::int32_t value) {
+  _internal_set_cellindex(value);
+  // @@protoc_insertion_point(field_set:SC_PLAYERGETUP.cellIndex)
+}
+inline ::int32_t SC_PLAYERGETUP::_internal_cellindex() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.cellindex_;
+}
+inline void SC_PLAYERGETUP::_internal_set_cellindex(::int32_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.cellindex_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // SC_ENDING
@@ -7947,6 +7994,29 @@ inline void CS_SAVEPOINTENABLE::_internal_set_camcellindex(::int32_t value) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   ;
   _impl_.camcellindex_ = value;
+}
+
+// int32 cellIndex = 6;
+inline void CS_SAVEPOINTENABLE::clear_cellindex() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.cellindex_ = 0;
+}
+inline ::int32_t CS_SAVEPOINTENABLE::cellindex() const {
+  // @@protoc_insertion_point(field_get:CS_SAVEPOINTENABLE.cellIndex)
+  return _internal_cellindex();
+}
+inline void CS_SAVEPOINTENABLE::set_cellindex(::int32_t value) {
+  _internal_set_cellindex(value);
+  // @@protoc_insertion_point(field_set:CS_SAVEPOINTENABLE.cellIndex)
+}
+inline ::int32_t CS_SAVEPOINTENABLE::_internal_cellindex() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.cellindex_;
+}
+inline void CS_SAVEPOINTENABLE::_internal_set_cellindex(::int32_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.cellindex_ = value;
 }
 
 // -------------------------------------------------------------------

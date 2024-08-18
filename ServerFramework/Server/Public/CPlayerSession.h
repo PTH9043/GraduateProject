@@ -49,6 +49,7 @@ private:
 	static _int								s_iActiveSavePoint;
 	static _int								s_iCamCellIndex;
 	static _int								s_iCoreEnableCnt;
+	static _int								s_iCellIndex;
 	CUSTIMER								m_ReviveTimer;
 };
 

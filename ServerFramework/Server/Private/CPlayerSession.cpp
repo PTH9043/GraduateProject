@@ -18,6 +18,7 @@ namespace Server {
 	 _int								CPlayerSession::s_iActiveSavePoint;
 	 _int								CPlayerSession::s_iCamCellIndex;
 	 _int								CPlayerSession::s_iCoreEnableCnt;
+	 _int								CPlayerSession::s_iCellIndex;
 
 	CPlayerSession::CPlayerSession(SESSION_CONSTRUCTOR)
 		: Core::ASession(SESSION_CONDATA(Core::SESSIONTYPE::PLAYER)),
@@ -351,7 +352,7 @@ namespace Server {
 				PROTOFUNC::MakeVector3(&vPos, s_vSavePosition.x, s_vSavePosition.y, s_vSavePosition.z);
 
 				SC_PLAYERGETUP scPlayerGetUp;
-				PROTOFUNC::MakeScPlayerGetUp(&scPlayerGetUp, GetSessionID(), 5000.f, vPos, s_iCamCellIndex);
+				PROTOFUNC::MakeScPlayerGetUp(&scPlayerGetUp, GetSessionID(), 5000.f, vPos, s_iCamCellIndex, s_iCellIndex);
 				CombineProto<SC_PLAYERGETUP>(GetCopyBuffer(), GetPacketHead(), scPlayerGetUp, TAG_SC_PLAYERGETUP);
 				SendData(GetCopyBufferPointer(), GetPacketHead());
 				SetCharStatus({ 100, 0, 5000 });
@@ -368,6 +369,7 @@ namespace Server {
 		s_vSavePosition = Vector3(csSavePointEnable.posx(), csSavePointEnable.posy(), csSavePointEnable.posz());
 		++s_iActiveSavePoint;
 		s_iCamCellIndex = csSavePointEnable.camcellindex();
+		s_iCellIndex = csSavePointEnable.cellindex();
 
 		for (auto& iter : _spCoreInstance->GetSessionContainer())
 		{
