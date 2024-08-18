@@ -49,6 +49,14 @@ void CNetworkWarriorPlayerController::Tick(const _double& _dTimeDelta)
 	if (spWarriorPlayer->GetJumpingState() || spWarriorPlayer->GetFallingState()) {
 		spWarriorPlayer->GetTransform()->MoveForward(_dTimeDelta, static_cast<_float>(m_JumpSpeed));
 	}
+	_wstring CurAnimName = spAnimModel->GetCurrentAnimation()->GetAnimName();
+	// Combo attack state
+	if (CurAnimName == L"attack04" || CurAnimName == L"combo09" || CurAnimName == L"combo05" || CurAnimName == L"combo06_1" || CurAnimName == L"combo06_2" || CurAnimName == L"combo06_3" || CurAnimName == L"combo02_1" || CurAnimName == L"combo02_2" || CurAnimName == L"combo02_3") {
+		spWarriorPlayer->IfAttack(true);
+	}
+	else {
+		spWarriorPlayer->IfAttack(false);
+	}
 
 	spAnimModel->TickAnimation(_dTimeDelta);
 	spAnimModel->TickEvent(spWarriorPlayer.get(), GetTrigger(), _dTimeDelta);
