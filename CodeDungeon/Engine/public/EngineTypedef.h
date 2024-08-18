@@ -83,7 +83,7 @@ namespace Engine {
 	using LIST = std::list<T>;
 
 	template<class T>
-	using VECTOR = std::vector<T, UStlAllocator<T>>;
+	using VECTOR = std::vector<T>;
 
 	template<class Type, class Other, class Less = std::less<Type>>
 	using MAP = std::map<Type, Other, Less, UStlAllocator<std::pair<const Type, Other>>>;

@@ -33,20 +33,26 @@ namespace Core
 		RETURN_CHECK(nullptr == _spSession, ;);
 		SHPTR<AAnimController> spAnimController = GetAnimController();
 		SHPTR<ATransform> spMobTr = GetTransform();
-		SHPTR<ATransform> spPlayerTr = _spSession->GetTransform();
+		SHPTR<ASession> spTargetSession = m_spTargetSession;
 		SESSIONID SessionID = _spSession->GetSessionID();
 		{
-			Vector3 vMobPos = spMobTr->GetPos();
-			Vector3 vPlayerPos = spPlayerTr->GetPos();
 			_float ActiveRange = m_fActiveRange;
 			_float DeactiveRange = m_fDeactiveRange;
-			s_PlayerPositionContainer[SessionID] = vPlayerPos;
-			{
+
+			if(_spSession == spTargetSession || nullptr == spTargetSession)
+			 {
+				if (nullptr == spTargetSession)
+					spTargetSession = _spSession;
+
+				SHPTR<ATransform> spPlayerTr = spTargetSession->GetTransform();
+				Vector3 vMobPos = spMobTr->GetPos();
+				Vector3 vPlayerPos = spPlayerTr->GetPos();
+				s_PlayerPositionContainer[SessionID] = vPlayerPos;
 				float fDistanceToPlayer = Vector3::Distance(vMobPos, vPlayerPos);
+
 
 				if (fDistanceToPlayer <= ActiveRange)
 				{
-					SHPTR<ASession> spTargetSession = m_spTargetSession;
 					if (nullptr != spTargetSession)
 					{
 						if (spTargetSession->IsFallDownState())
@@ -65,16 +71,38 @@ namespace Core
 					{
 						UpdateSelfStateToPlayerDistance(false, true, false);
 					}
+					ChangeAtomicValue(m_fJudgeValueToPlayerDistance, fDistanceToPlayer);
 				}
 				else if (DeactiveRange >= fDistanceToPlayer)
 				{
 					UpdateSelfStateToPlayerDistance(false, false, true);
-					if (m_fJudgeValueToPlayerDistance >= fDistanceToPlayer)
+					SetTargetSession(nullptr);
+				}
+			}
+			else
+			{
+				SHPTR<ATransform> spPlayerTr = _spSession->GetTransform();
+				Vector3 vMobPos = spMobTr->GetPos();
+				Vector3 vPlayerPos = spPlayerTr->GetPos();
+				s_PlayerPositionContainer[SessionID] = vPlayerPos;
+				float fDistanceToPlayer = Vector3::Distance(vMobPos, vPlayerPos);
+
+				if (m_fJudgeValueToPlayerDistance >= fDistanceToPlayer)
+				{
+					if (fDistanceToPlayer <= ActiveRange)
 					{
-						SetTargetSession(_spSession);
+						if (fDistanceToPlayer <= m_fAttackRange)
+						{
+							UpdateSelfStateToPlayerDistance(true, true, false);
+						}
+						else
+						{
+							UpdateSelfStateToPlayerDistance(false, true, false);
+						}
+						SetTargetSession(m_spTargetSession);
+						ChangeAtomicValue(m_fJudgeValueToPlayerDistance, fDistanceToPlayer);
 					}
 				}
-				ChangeAtomicValue(m_fJudgeValueToPlayerDistance, fDistanceToPlayer);
 			}
 		}
 	}
