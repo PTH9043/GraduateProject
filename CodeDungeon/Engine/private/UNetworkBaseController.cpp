@@ -21,7 +21,7 @@ UNetworkBaseController::UNetworkBaseController() :
 	m_NetworkInitDataContainer{},
 	m_pSendOverExp{nullptr}
 {
-	m_pSendOverExp = Make::xnew<UOverExp>();
+	m_pSendOverExp = new UOverExp();
 }
 
 HRESULT UNetworkBaseController::NativeConstruct(const _string& _strIPAddress, const _int _PortNumber)
@@ -165,7 +165,7 @@ void UNetworkBaseController::ServerThread(void* _pData)
 void UNetworkBaseController::Free()
 {
 	m_isNetworkTickRunning = false;
-	Make::xdelete(m_pSendOverExp);
+	delete m_pSendOverExp;
 	closesocket(m_ClientTcpSocket);
 	WSACleanup();
 }

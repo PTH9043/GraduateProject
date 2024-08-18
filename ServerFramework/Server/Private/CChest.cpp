@@ -63,11 +63,11 @@ namespace Server {
 				SC_STATICOBJFIND scMonsterFind;
 				PROTOFUNC::MakeScStaticObjFind(&scMonsterFind, GetSessionID(), enable);
 				CombineProto<SC_STATICOBJFIND>(GetCopyBuffer(), GetPacketHead(), scMonsterFind, TAG_SC_STATICOBJFIND);
-				spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
 				if (1 == enable)
 				{
 					SHPTR<ASession> spSession = _spSession;
 					spSession->HealHp(210.f);
+					_spSession->SendData(GetCopyBufferPointer(), GetPacketHead());
 					ActivePermanentDisable();
 				}
 			}

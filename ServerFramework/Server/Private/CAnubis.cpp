@@ -150,7 +150,7 @@ namespace Server
 		}
 		else if (MOB_ATTACK_STATE == MobState)
 		{
-			SetDirectionFixedUp(_dTimeDelta, GetPlayerToDot(), 10, vTargetPos);
+			SetDirectionFixedUp(_dTimeDelta, GetPlayerToDot(), 15, vTargetPos);
 		}
 
 		if (strCurAnimationName == WALK_ANIM)

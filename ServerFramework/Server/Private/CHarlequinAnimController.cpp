@@ -238,7 +238,7 @@ namespace Server {
 				{
 					if (fProgressRate >= 0.0f && fProgressRate <= 0.2f)
 					{
-						spHarlequin->SetDirectionFixedUp(_dTimeDelta, fRot, 10, spHarlequin->GetTargetPos());
+						spHarlequin->SetDirectionFixedUp(_dTimeDelta, fRot, 15, spHarlequin->GetTargetPos());
 					}
 					
 					if (fProgressRate >= 0.6f)
@@ -252,11 +252,11 @@ namespace Server {
 				}
 				else if (ATTACK1_ANIMNAME == CurAnimName)
 				{
-					spHarlequin->SetDirectionFixedUp(_dTimeDelta, fRot, 10, spHarlequin->GetTargetPos());
+					spHarlequin->SetDirectionFixedUp(_dTimeDelta, fRot, 15, spHarlequin->GetTargetPos());
 				}
 				else if (ATTACK4_ANIMNAME == CurAnimName)
 				{
-					spHarlequin->SetDirectionFixedUp(_dTimeDelta, fRot, 10, spHarlequin->GetTargetPos());
+					spHarlequin->SetDirectionFixedUp(_dTimeDelta, fRot, 15, spHarlequin->GetTargetPos());
 
 					if (fProgressRate >= 0.75f)
 					{

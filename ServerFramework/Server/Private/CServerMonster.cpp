@@ -264,10 +264,6 @@ namespace Server {
 				MoveAlongPath(_dTimeDelta);
 			}
 		}
-		else if (MOB_ATTACK_STATE == MobState)
-		{
-			SetDirectionFixedUp(_dTimeDelta, GetPlayerToDot(), 10, vTargetPos);
-		}
 
 		spAnimator->TickAnimChangeTransform(spTransform, _dTimeDelta);
 		m_TimeAccumulator.PlusTime(_dTimeDelta);
@@ -312,7 +308,7 @@ namespace Server {
 			Direction = vTargetPos - vCurrentPos;
 		}
 
-		SetDirectionFixedUp(_dTimeDelta, GetPlayerToDot(), 10, vTargetPos);
+		SetDirectionFixedUp(_dTimeDelta, GetPlayerToDot(), 15, vTargetPos);
 	}
 
 	void CServerMonster::StartFindPath(SHPTR<ANavigation> _spNavigation, SHPTR<ACell> _spSelfCell, SHPTR<ACell> _spTargetCell, 
