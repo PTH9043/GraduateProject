@@ -42,7 +42,7 @@ namespace Server {
 		SetMoveSpeed(10.f);
 		SetRunSpeed(30.f);
 		SetCurOnCellIndex(m_iStartCellIndex);
-		SetCharStatus(CHARSTATUS{ 100, 0, 5000 });
+		SetCharStatus(CHARSTATUS{ 100, 0, 1 });
 
 		SHPTR<ANavigation> spNavigation = GetNavigation();
 
@@ -57,6 +57,7 @@ namespace Server {
 		SetActive(true);
 		s_vSavePosition = GetTransform()->GetPos();
 		s_iCamCellIndex = 1;
+		s_iCellIndex = 0;
 		return true;
 	}
 

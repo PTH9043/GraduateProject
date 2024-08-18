@@ -63,7 +63,7 @@ void CCoreHarlequinn::TickActive(const _double& _dTimeDelta)
 	__super::TickActive(_dTimeDelta);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	SHPTR<CWarriorPlayer> spPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
-	if (_float3::Distance(spPlayer->GetTransform()->GetPos(), GetTransform()->GetPos()) >= 40.f)
+	if (_float3::Distance(spPlayer->GetTransform()->GetPos(), GetTransform()->GetPos()) >= 30.f)
 	{
 		SetEnable(false);
 	}

@@ -216,8 +216,8 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetOutline(true);
 	SetifPlayer(true);//depth만 기록하고 outline안그리도록 다른 물체  outline depth판정위해
 	//SetIfOutlineScale(false); 만약 플레이어 그릴거면 SetifPlayer->false, SetIfOutlineScale->true
-	SetHealth(5000);
-	SetMaxHealth(5000);
+	SetHealth(2500);
+	SetMaxHealth(2500);
 	SetAnimModelRim(true);
 	SetAttack(100);
 
@@ -296,7 +296,9 @@ void CWarriorPlayer::ReceiveNetworkProcessData(const UProcessedData& _ProcessDat
 		SetDeathState(false);
 		SetDamaged(false);
 		SetHealth(playerGetUp.hp());
-		GetTransform()->SetPos(_float3{playerGetUp.posx(), playerGetUp.posy(), playerGetUp.posz() });
+		SetSpawnPoint(GetCurrentNavi()->FindCell(playerGetUp.cellindex()));
+		GetTransform()->SetPos(GetSpawnPointCell()->GetCenterPos());
+		//GetTransform()->SetPos(_float3{playerGetUp.posx(), playerGetUp.posy(), playerGetUp.posz() });
 		spGameInstance->SoundPlayOnce(L"Revive");
 		spGameInstance->TurnOffDieEffect();
 		GetAnimationController()->SetAnimState(UAnimationController::ANIM_IDLE); 
@@ -312,6 +314,11 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	__super::TickActive(_dTimeDelta);
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	
+	if (GetCurrentNavi()->GetCurIndex() == 1141)
+	{
+		SetIfPlayerEndEnable();
+	}
+
 	JumpState(_dTimeDelta);
 	GetAnimationController()->Tick(_dTimeDelta);
 
@@ -381,9 +388,9 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 			m_spHealParticle->SetActive(false);
 			IfOpenChestForHeal = false;
 			SetHealth(GetHealth() + m_fNetworkRecvMaxHeal);
-			if (GetHealth() > 5000)
+			if (GetHealth() > 2500)
 			{
-				SetHealth(5000);
+				SetHealth(2500);
 			}
 			SetPrevHealth(GetHealth());
 			m_HealTimer.ResetTimer();
