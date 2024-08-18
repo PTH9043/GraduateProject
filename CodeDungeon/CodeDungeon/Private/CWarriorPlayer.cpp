@@ -85,7 +85,7 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-	int cellIndex = 300;
+	int cellIndex = 0;
 	//int cellIndex = 349;
 
 //	int cellIndex = 210;

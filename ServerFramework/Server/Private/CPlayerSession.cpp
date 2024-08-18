@@ -21,7 +21,7 @@ namespace Server {
 
 	CPlayerSession::CPlayerSession(SESSION_CONSTRUCTOR)
 		: Core::ASession(SESSION_CONDATA(Core::SESSIONTYPE::PLAYER)),
-		m_iStartCellIndex{ 300 }, m_spGameTimer{ Create<AGameTimer>() }
+		m_iStartCellIndex{ 0 }, m_spGameTimer{ Create<AGameTimer>() }
 	{
 	
 	}

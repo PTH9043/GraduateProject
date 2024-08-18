@@ -11,7 +11,7 @@ namespace Server {
 		AStaticObject(OBJCON_CONDATA, _ID), m_StaticObjType{0}, 
 		m_isDoneInteractStaticObject{ false }, m_ActiveTimer{4, std::memory_order_seq_cst}
 	{
-		SetActiveRange(10.f);
+		SetActiveRange(12.f);
 	}
 
 	_bool CServerStaticObject::Start(const VOIDDATAS& _ReceiveDatas)

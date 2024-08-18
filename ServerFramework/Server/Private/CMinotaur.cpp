@@ -21,7 +21,7 @@ namespace Server {
 		UpdateFindRange(100, 120);
 		SetMoveSpeed(5);
 		SetAttackRange(10.f);
-		SetCharStatus(CHARSTATUS{ 1, 0, 1 });
+		SetCharStatus(CHARSTATUS{ 1, 0, 1500 });
 	}
 
 	_bool CMinotaur::Start(const VOIDDATAS& _ReceiveDatas)

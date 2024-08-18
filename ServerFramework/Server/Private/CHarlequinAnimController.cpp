@@ -98,31 +98,6 @@ namespace Server {
 					m_isAttackMode = false;
 					m_isTauntMode = false;
 
-					//if (IDLE_ANIMNAME == CurAnimName)
-					//{
-					//	if (true == m_IdleTimer.IsOver(_dTimeDelta))
-					//	{
-					//		m_IdleTimer.ResetTimer();
-					//	}
-					//}
-
-					//if (0 == m_IdleTimer.fTimer)
-					//{
-					//	if (true == m_IdleRandomValueChoosingTimerForPartrol.IsOver(_dTimeDelta))
-					//	{
-					//		m_iRandomValueForPatrol = dis_patrol(gen);
-					//		m_IdleRandomValueChoosingTimerForPartrol.ResetTimer();
-					//	}
-
-					//	if (0 == m_iRandomValueForPatrol)
-					//	{
-					//		UpdateState(IDLE_ORDER, MOB_IDLE_STATE);
-					//	}
-					//	else
-					//	{
-					//		UpdateState(WALK_ORDER, MOB_MOVE_STATE);
-					//	}
-					//}
 					if (CurAnimName == CROUCH_ANIMNAME)
 					{
 						spAnimator->SetAnimation(IDLE_ANIMNAME);
@@ -265,10 +240,10 @@ namespace Server {
 					{
 						spHarlequin->SetDirectionFixedUp(_dTimeDelta, fRot, 10, spHarlequin->GetTargetPos());
 					}
-					else if (fProgressRate >= 0.75f)
+					
+					if (fProgressRate >= 0.6f)
 					{
-						if (GetAnimState() != MOB_IDLE_STATE)
-							++m_iJumpCounter;
+						++m_iJumpCounter;
 						UpdateState(CROUCH_ORDER, MOB_IDLE_STATE);
 					}
 
@@ -281,10 +256,7 @@ namespace Server {
 				}
 				else if (ATTACK4_ANIMNAME == CurAnimName)
 				{
-					if (fProgressRate >= 0.0f && fProgressRate <= 0.2f)
-					{
-						spHarlequin->SetDirectionFixedUp(_dTimeDelta, fRot, 10, spHarlequin->GetTargetPos());
-					}
+					spHarlequin->SetDirectionFixedUp(_dTimeDelta, fRot, 10, spHarlequin->GetTargetPos());
 
 					if (fProgressRate >= 0.75f)
 					{

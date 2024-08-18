@@ -59,7 +59,7 @@ HRESULT CClientApp::NativeConstruct(const HINSTANCE& _hInst, const _uint& _iCmdS
 	m_spGameInstance = GET_INSTANCE(UGameInstance);
 
 	LoadIPAddres IPAddress("..\\..\\Resource\\Ip.txt");
-
+	IP_ADDRESS;
 	SHPTR<CNetworkClientController> spNetworkClientController = CreateNative<CNetworkClientController>(IPAddress.GetIPAddress(), TCP_PORT_NUM);
 	m_spGameInstance->StartNetwork(spNetworkClientController);
 	return S_OK;
