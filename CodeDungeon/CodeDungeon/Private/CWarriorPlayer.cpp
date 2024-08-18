@@ -353,15 +353,18 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		//SetAnimModelRimColor(_float3(0, 0, 0));
 	}
 
-	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_HIT) {
-		m_spBlood->SetActive(true);
-		m_spBlood->SetTimer(1.75f);
-		m_fInteractionTimeElapsed = 0;
-		m_bSetRimOn = true;
-	}
+	if (false == IsNetworkConnected())
+	{
+		if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_HIT) {
+			m_spBlood->SetActive(true);
+			m_spBlood->SetTimer(1.75f);
+			m_fInteractionTimeElapsed = 0;
+			m_bSetRimOn = true;
+		}
 
-	if (m_spBlood->CheckTimeOver()) {
-		m_spBlood->SetActive(false);
+		if (m_spBlood->CheckTimeOver()) {
+			m_spBlood->SetActive(false);
+		}
 	}
 
 	if (IfOpenChestForHeal) {//2.1초 지속
@@ -555,7 +558,7 @@ void CWarriorPlayer::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDe
 							}
 							else
 							{
-								GetTransform()->SetDirectionFixedUp(pCharacter->GetTransform()->GetLook());
+								GetTransform()->SetDirectionFixedUp(pCharacter->GetTransform()->GetLook() * -1.f);
 								m_bisKicked = true;
 							}
 							if (!GetIsHItAlreadyState())
