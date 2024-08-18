@@ -16,7 +16,7 @@ namespace Server
 			COLLIDERDESC{ {-10.f, 10.f, 15.f}, {12.5f, 12.5f, 12.5f} });
 
 		GetActiveTimerRefP(REF_RETURN).SetStandardTime(5.f);
-		SetActiveRange(40.f);
+		SetActiveRange(30.f);
 		return __super::Start(_ReceiveDatas);
 	}
 

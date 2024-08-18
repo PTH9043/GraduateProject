@@ -42,7 +42,7 @@ namespace Server {
 		SetMoveSpeed(10.f);
 		SetRunSpeed(30.f);
 		SetCurOnCellIndex(m_iStartCellIndex);
-		SetCharStatus(CHARSTATUS{ 100, 0, 1 });
+		SetCharStatus(CHARSTATUS{ 100, 0, 2500 });
 
 		SHPTR<ANavigation> spNavigation = GetNavigation();
 
@@ -215,15 +215,15 @@ namespace Server {
 		//spNavigation->IsMove(vPosition, spCurCell);
 		if (3 == s_iCoreEnableCnt)
 		{
-			spNavigation->FindCell(vPosition);
-			if (spNavigation->GetCurIndex() >= 1140)
-			{
-				std::cout << s_iCoreEnableCnt << "\n";
-				SC_ENDING scEnding;
-				PROTOFUNC::MakeScEnding(&scEnding, GetSessionID());
-				CombineProto(REF_OUT GetCopyBuffer(), REF_OUT GetPacketHead(), scEnding, TAG_SC::TAG_SC_ENDING);
-				_spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
-			}
+			//spNavigation->FindCell(vPosition);
+			//if (spNavigation->GetCurIndex() >= 1140)
+			//{
+			//	std::cout << s_iCoreEnableCnt << "\n";
+			//	SC_ENDING scEnding;
+			//	PROTOFUNC::MakeScEnding(&scEnding, GetSessionID());
+			//	CombineProto(REF_OUT GetCopyBuffer(), REF_OUT GetPacketHead(), scEnding, TAG_SC::TAG_SC_ENDING);
+			//	_spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
+			//}
 		}
 		{
 			CombineProto(REF_OUT GetCopyBuffer(), REF_OUT GetPacketHead(), csMove, TAG_SC::TAG_SC_PLAYERSTATE);
@@ -353,10 +353,10 @@ namespace Server {
 				PROTOFUNC::MakeVector3(&vPos, s_vSavePosition.x, s_vSavePosition.y, s_vSavePosition.z);
 
 				SC_PLAYERGETUP scPlayerGetUp;
-				PROTOFUNC::MakeScPlayerGetUp(&scPlayerGetUp, GetSessionID(), 5000.f, vPos, s_iCamCellIndex, s_iCellIndex);
+				PROTOFUNC::MakeScPlayerGetUp(&scPlayerGetUp, GetSessionID(), 2500, vPos, s_iCamCellIndex, s_iCellIndex);
 				CombineProto<SC_PLAYERGETUP>(GetCopyBuffer(), GetPacketHead(), scPlayerGetUp, TAG_SC_PLAYERGETUP);
 				SendData(GetCopyBufferPointer(), GetPacketHead());
-				SetCharStatus({ 100, 0, 5000 });
+				SetCharStatus({ 100, 0, 2500 });
 				DisableDeadState();
 			}
 		}

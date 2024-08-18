@@ -10,12 +10,12 @@
 #include "UMethod.h"
 
 CNetworkWarriorPlayerController::CNetworkWarriorPlayerController(CSHPTRREF<UDevice> _spDevice)
-	: UAnimationController(_spDevice), m_JumpSpeed{0}, m_dRecvAnimDuration{0}
+	: UAnimationController(_spDevice), m_JumpSpeed{0}, m_dRecvAnimDuration{0}, m_isSameAnim{ false }
 {
 }
 
 CNetworkWarriorPlayerController::CNetworkWarriorPlayerController(const CNetworkWarriorPlayerController& _rhs) :
-	UAnimationController(_rhs), m_dRecvAnimDuration{ 0 }
+	UAnimationController(_rhs), m_dRecvAnimDuration{ 0 }, m_isSameAnim{false}
 {
 }
 
@@ -58,7 +58,21 @@ void CNetworkWarriorPlayerController::Tick(const _double& _dTimeDelta)
 		spWarriorPlayer->IfAttack(false);
 	}
 
-	spAnimModel->TickAnimation(_dTimeDelta);
+	if (CurAnimName == L"down01" || CurAnimName == L"down02")
+	{
+		if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.9f)
+		{
+			spAnimModel->TickAnimation(0);
+		}
+		else
+		{
+			spAnimModel->TickAnimation(_dTimeDelta);
+		}
+	}
+	else
+	{
+		spAnimModel->TickAnimation(_dTimeDelta);
+	}
 	spAnimModel->TickEvent(spWarriorPlayer.get(), GetTrigger(), _dTimeDelta);
 }
 
@@ -72,7 +86,9 @@ void CNetworkWarriorPlayerController::ReceiveNetworkProcessData(void* _pData)
 		SetAnimState(pPlayerData->state());
 
 		if (pPlayerData->animationindex() != spAnimModel->GetCurrentAnimIndex())
+		{
 			spAnimModel->SetAnimation(pPlayerData->animationindex());
+		}
 	}
 #endif
 }
