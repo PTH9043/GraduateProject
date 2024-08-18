@@ -42,11 +42,11 @@ namespace Core
 			_float ActiveRange = m_fActiveRange;
 			_float DeactiveRange = m_fDeactiveRange;
 			s_PlayerPositionContainer[SessionID] = vPlayerPos;
-			if(_spSession == spTargetSession || nullptr == spTargetSession)
-			 {
-				float fDistanceToPlayer = Vector3::Distance(vMobPos, vPlayerPos);
+			float fDistanceToPlayer = Vector3::Distance(vMobPos, vPlayerPos);
 
-				if (fDistanceToPlayer <= ActiveRange)
+			if (fDistanceToPlayer <= ActiveRange)
+			{
+				if (_spSession == spTargetSession || nullptr == spTargetSession)
 				{
 					if (nullptr != spTargetSession)
 					{
@@ -68,14 +68,11 @@ namespace Core
 					}
 					ChangeAtomicValue(m_fJudgeValueToPlayerDistance, fDistanceToPlayer);
 				}
-				else if (DeactiveRange >= fDistanceToPlayer)
-				{
-					UpdateSelfStateToPlayerDistance(false, false, true);
-					if (m_fJudgeValueToPlayerDistance >= fDistanceToPlayer)
-					{
-						SetTargetSession(_spSession);
-					}
-				}
+			}
+			else if (DeactiveRange >= fDistanceToPlayer)
+			{
+				UpdateSelfStateToPlayerDistance(false, false, true);
+				SetTargetSession(nullptr);
 			}
 		}
 	}

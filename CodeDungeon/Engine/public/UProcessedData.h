@@ -8,7 +8,11 @@ BEGIN(Engine)
 - Process를 이용해서 처리된 데이터들을 저장하는 클래스이다.
 */
 class UProcessedData {
-	using BUFFER = ARRAY<_char, MAX_BUFFER_LENGTH>;
+	enum
+	{
+		PROCESSDATA_BUFFER_LENGTH = 512
+	};
+	using BUFFER = ARRAY<_char, PROCESSDATA_BUFFER_LENGTH>;
 public:
 	UProcessedData();
 	UProcessedData(const _int _NetworkID, void* _pData, size_t _Size, _int _DataType);
@@ -21,8 +25,7 @@ public:
 	UProcessedData(const T& _data, short _tag) : m_DataType{ _tag },
 		 m_DataSize{ static_cast<_int>(sizeof(T)) + 1 }, m_iNetworkID{ -1 }
 	{
-		m_Data.resize(m_DataSize);
-		::memset(&m_Data[0], 0, m_DataSize);
+		::ZeroMemory(&m_Data[0], PROCESSDATA_BUFFER_LENGTH);
 		_data.SerializePartialToArray((void*)&m_Data[0], static_cast<int>(_data.ByteSizeLong()));
 		m_DataSize = static_cast<_int>(_data.ByteSizeLong());
 	}
@@ -32,8 +35,7 @@ public:
 	UProcessedData(const _int _NetworkID, const T& _data, short _tag) : m_DataType{ _tag },
 		m_DataSize{ static_cast<_int>(sizeof(T)) + 1}, m_iNetworkID{_NetworkID}
 	{
-		m_Data.resize(m_DataSize);
-		::memset(&m_Data[0], 0, m_DataSize);
+		::ZeroMemory(&m_Data[0], PROCESSDATA_BUFFER_LENGTH);
 		_data.SerializePartialToArray((void*)&m_Data[0], static_cast<int>(_data.ByteSizeLong()));
 		m_DataSize = static_cast<_int>(_data.ByteSizeLong());
 	}
@@ -44,8 +46,7 @@ public:
 	UProcessedData(const T& _data, short _tag, const size_t _DataSize) : m_DataType{ _tag },
 		 m_DataSize{ static_cast<_int>(_DataSize) + 1 }, m_iNetworkID{ -1 }
 	{
-		m_Data.resize(m_DataSize);
-		::memset(&m_Data[0], 0, m_DataSize);
+		::ZeroMemory(&m_Data[0], PROCESSDATA_BUFFER_LENGTH);
 		_data.SerializePartialToArray((void*)&m_Data[0], static_cast<int>(_data.ByteSizeLong()));
 	}
 	// Recv
@@ -54,8 +55,7 @@ public:
 	UProcessedData(const _int _NetworkID, const T& _data, short _tag, const size_t _DataSize) : m_DataType{ _tag },
 		 m_DataSize{ static_cast<_int>(_DataSize) + 1}, m_iNetworkID{ _NetworkID }
 	{
-		m_Data.resize(m_DataSize);
-		::memset(&m_Data[0], 0, m_DataSize);
+		::ZeroMemory(&m_Data[0], PROCESSDATA_BUFFER_LENGTH);
 		_data.SerializePartialToArray((void*)&m_Data[0], static_cast<int>(_data.ByteSizeLong()));
 	}
 
@@ -77,10 +77,10 @@ public: /* get Set */
 	_int GetDataSize() const { return m_DataSize; }
 	_char* GetData() const { return &m_Data[0]; }
 private:
-	_int											m_iNetworkID;
-	mutable VECTOR<_char>	m_Data;
-	_int											m_DataType;
-	_int											m_DataSize;
+	_int									m_iNetworkID;
+	mutable BUFFER			m_Data;
+	_int									m_DataType;
+	_int									m_DataSize;
 };
 
 END
