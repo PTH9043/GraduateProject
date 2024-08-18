@@ -33,7 +33,7 @@ namespace Server {
 
 	void CIronBar::LastBehavior()
 	{
-		std::cout << "Last" << "\n";
+		//std::cout << "Last" << "\n";
 	}
 
 	void CIronBar::Free()

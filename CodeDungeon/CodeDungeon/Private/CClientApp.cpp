@@ -92,7 +92,7 @@ void CClientApp::Render()
 	CProtoMaker::CreateProtoData(m_spGameInstance, stOutputData.wpDevice.lock(), stOutputData.wpGpuCmd.lock());
 	m_spDataManager->Load_Data();
 
-	m_spNetworkClientController->ServerTick();
+	//m_spNetworkClientController->ServerTick();
 	// Register 
 	//m_spGameInstance->RegisterScene(CreateConstructorNative<CLogoScene>(stOutputData.wpDevice.lock()));
 	m_spGameInstance->RegisterScene(CreateConstructorNative<CMainScene>(stOutputData.wpDevice.lock()));

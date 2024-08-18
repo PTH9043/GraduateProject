@@ -364,14 +364,14 @@ namespace Server {
 			iter.second->SendData(GetCopyBufferPointer(), GetPacketHead());
 		}
 
-		std::cout << s_iCamCellIndex << "\n";
+	//	std::cout << s_iCamCellIndex << "\n";
 	}
 
 	void CPlayerSession::EnableCore(SHPTR<ACoreInstance> _spCoreInstance, SESSIONID _SessionID, _char* _pPacket, const Core::PACKETHEAD& _PacketHead)
 	{
 		++s_iCoreEnableCnt;
 
-		std::cout << s_iCoreEnableCnt << "\n";
+	//	std::cout << s_iCoreEnableCnt << "\n";
 	}
 
 	void CPlayerSession::Free()
