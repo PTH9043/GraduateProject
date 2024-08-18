@@ -94,12 +94,7 @@ void CMob::TickActive(const _double& _dTimeDelta)
 void CMob::LateTickActive(const _double& _dTimeDelta)
 {
 	GetRenderer()->AddRenderGroup(RENDERID::RI_NONALPHA_LAST, GetShader(), ThisShared<UPawn>());
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	if (true == GetFoundTargetState() && true == spGameInstance->GetIfAbilityIsOn())
-	{
-		GetRenderer()->AddRenderGroup(RENDERID::RI_NORPOS_FORABILITY, GetNorPosShader(), ThisShared<UPawn>());
-	//	GetRenderer()->AddRenderGroup(RENDERID::RI_NORPOS_FORABILITY, Get(), ThisShared<UPawn>());
-	}
+	__super::LateTickActive(_dTimeDelta);
 }
 
 void CMob::NetworkTickActive(const _double& _dTimeDelta)
