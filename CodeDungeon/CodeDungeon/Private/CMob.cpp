@@ -139,7 +139,6 @@ void CMob::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 			GetAnimationController()->ReceiveNetworkProcessData(&MobState);
 			GetTransform()->SetPos(_float3{ MobState.posx(), MobState.posy(), MobState.posz() });
 			GetTransform()->RotateFix(_float3{ MobState.rotatex(), MobState.rotatey(), MobState.rotatez() });
-	//		SetFoundTargetState(MobState.foundon());
 		}
 		else
 		{
@@ -167,6 +166,7 @@ void CMob::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 			SetHealth(scDamaged.hp());
 			SetDamaged(true);
 		}
+
 		scDamaged.Clear();
 	}
 	break;

@@ -432,14 +432,6 @@ void CHarlequinn::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta
 					}
 					else
 					{
-						m_spBloodParticle->SetActive(true);
-						m_spSlashParticle->SetActive(true);
-						m_spAttackParticle->SetActive(true);
-						m_spAttackParticleTwo->SetActive(true);
-						m_spBloodParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
-						m_spSlashParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
-						m_spAttackParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
-						m_spAttackParticleTwo->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
 						// Decrease health on hit
 							// Decrease health on hit
 						SendCollisionData(_pEnemy.get(), 50);
@@ -481,5 +473,54 @@ void CHarlequinn::Collision(CSHPTRREF<UPawn> _pEnemy, const _double& _dTimeDelta
 
 void CHarlequinn::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 {
-	__super::ReceiveNetworkProcessData(_ProcessData);
+	switch (_ProcessData.GetDataType())
+	{
+	case TAG_SC_MONSTERSTATE:
+	{
+		static MOBSTATE MobState;
+		MobState.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
+
+		if (false == MobState.triggeron())
+		{
+			GetAnimationController()->ReceiveNetworkProcessData(&MobState);
+			GetTransform()->SetPos(_float3{ MobState.posx(), MobState.posy(), MobState.posz() });
+			GetTransform()->RotateFix(_float3{ MobState.rotatex(), MobState.rotatey(), MobState.rotatez() });
+		}
+		else
+		{
+			GetAnimModel()->UpdateCurAnimationToRatio(MobState.animtime());
+			SetDeathState(true);
+			SetActive(false);
+			SetDeadDissolveEnable(true);
+			SetElapsedTime(1000.0);
+		}
+		MobState.Clear();
+	}
+	break;
+	case TAG_SC_DAMAGED:
+	{
+		static SC_DAMAGED scDamaged;
+		scDamaged.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());
+		if (0 >= scDamaged.hp())
+		{
+			SetDeathState(true);
+			SetHealth(0);
+		}
+		else
+		{
+			SetHealth(scDamaged.hp());
+			SetDamaged(true);
+		}
+		m_spBloodParticle->SetActive(true);
+		m_spSlashParticle->SetActive(true);
+		m_spAttackParticle->SetActive(true);
+		m_spAttackParticleTwo->SetActive(true);
+		m_spBloodParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+		m_spSlashParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+		m_spAttackParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+		m_spAttackParticleTwo->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+		scDamaged.Clear();
+	}
+	break;
+	}
 }
