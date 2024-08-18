@@ -22,7 +22,6 @@ public:
 		 m_DataSize{ static_cast<_int>(sizeof(T)) + 1 }, m_iNetworkID{ -1 }
 	{
 		m_Data.resize(m_DataSize);
-		::memset(&m_Data[0], 0, m_DataSize);
 		_data.SerializePartialToArray((void*)&m_Data[0], static_cast<int>(_data.ByteSizeLong()));
 		m_DataSize = static_cast<_int>(_data.ByteSizeLong());
 	}
@@ -33,7 +32,6 @@ public:
 		m_DataSize{ static_cast<_int>(sizeof(T)) + 1}, m_iNetworkID{_NetworkID}
 	{
 		m_Data.resize(m_DataSize);
-		::memset(&m_Data[0], 0, m_DataSize);
 		_data.SerializePartialToArray((void*)&m_Data[0], static_cast<int>(_data.ByteSizeLong()));
 		m_DataSize = static_cast<_int>(_data.ByteSizeLong());
 	}
@@ -45,8 +43,8 @@ public:
 		 m_DataSize{ static_cast<_int>(_DataSize) + 1 }, m_iNetworkID{ -1 }
 	{
 		m_Data.resize(m_DataSize);
-		::memset(&m_Data[0], 0, m_DataSize);
 		_data.SerializePartialToArray((void*)&m_Data[0], static_cast<int>(_data.ByteSizeLong()));
+		m_DataSize = static_cast<_int>(_data.ByteSizeLong());
 	}
 	// Recv
 	template<class T>
@@ -55,8 +53,8 @@ public:
 		 m_DataSize{ static_cast<_int>(_DataSize) + 1}, m_iNetworkID{ _NetworkID }
 	{
 		m_Data.resize(m_DataSize);
-		::memset(&m_Data[0], 0, m_DataSize);
 		_data.SerializePartialToArray((void*)&m_Data[0], static_cast<int>(_data.ByteSizeLong()));
+		m_DataSize = static_cast<_int>(_data.ByteSizeLong());
 	}
 
 	// Recv
