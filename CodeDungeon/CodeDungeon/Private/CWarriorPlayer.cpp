@@ -791,16 +791,18 @@ void CWarriorPlayer::SendMoveData()
 	_int AnimIndex = GetAnimModel()->GetCurrentAnimIndex();
 
 
-	VECTOR3 vSendPos, vSendRotate;
+	static VECTOR3 vSendPos; static VECTOR3 vSendRotate;
 	{
 		PROTOFUNC::MakeVector3(&vSendPos, vCharacterPos.x, vCharacterPos.y, vCharacterPos.z);
 		PROTOFUNC::MakeVector3(&vSendRotate, vCharRotate.x, vCharRotate.y, vCharRotate.z);
 	}
-
-	CHARSTATE charMove;
+	static CHARSTATE charMove;
 	PROTOFUNC::MakeCharState(OUT & charMove, spGameInstance->GetNetworkOwnerID(), vSendPos, vSendRotate,
 		state, AnimIndex, IsDamaged() == true ? 1 : 0);
 	spGameInstance->SendProtoData(UProcessedData(charMove, TAG_CS_PLAYERSTATE));
+	vSendPos.Clear();
+	vSendRotate.Clear();
+	charMove.Clear();
 }
 
 void CWarriorPlayer::SendCollisionData(UPawn* _pPawn, _float _fDamaged)
