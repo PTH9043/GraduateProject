@@ -799,7 +799,11 @@ void CWarriorPlayer::SendMoveData()
 	static CHARSTATE charMove;
 	PROTOFUNC::MakeCharState(OUT & charMove, spGameInstance->GetNetworkOwnerID(), vSendPos, vSendRotate,
 		state, AnimIndex, IsDamaged() == true ? 1 : 0);
-	spGameInstance->SendProtoData(UProcessedData(charMove, TAG_CS_PLAYERSTATE));
+
+	static UProcessedData Data;
+	Data.RecvProtocolBuffer(charMove, TAG_CS_PLAYERSTATE);
+
+	spGameInstance->SendProtoData(Data);
 	vSendPos.Clear();
 	vSendRotate.Clear();
 	charMove.Clear();
