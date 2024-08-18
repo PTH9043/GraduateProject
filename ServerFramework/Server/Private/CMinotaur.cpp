@@ -129,10 +129,6 @@ namespace Server {
 				MoveAlongPath(_dTimeDelta);
 			}
 		}
-		else if (MOB_ATTACK_STATE == MobState)
-		{
-			SetDirectionFixedUp(_dTimeDelta, GetPlayerToDot(), 5, vTargetPos);
-		}
 
 		if (WALKFORWARD_ANIMNAME == strCurAnimationName)
 		{
