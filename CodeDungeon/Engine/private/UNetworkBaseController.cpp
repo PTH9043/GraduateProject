@@ -40,8 +40,8 @@ HRESULT UNetworkBaseController::NativeConstruct(const _string& _strIPAddress, co
 	}
 
 
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	spGameInstance->RegisterFuncToRegister(ServerThread, this);
+//	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+//	spGameInstance->RegisterFuncToRegister(ServerThread, this);
 	return S_OK;
 }
 
