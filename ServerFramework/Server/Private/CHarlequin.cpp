@@ -21,7 +21,7 @@ namespace Server {
 		UpdateFindRange(80, 150);
 		SetMoveSpeed(5);
 		SetAttackRange(60.f);
-		SetCharStatus(CHARSTATUS{ 1, 0, 1 });
+		SetCharStatus(CHARSTATUS{ 1, 0, 1500 });
 
 		SESSIONID id = 0;
 		for (auto& iter : m_ShurikenContainer)

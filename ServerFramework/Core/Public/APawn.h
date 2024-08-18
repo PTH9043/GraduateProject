@@ -21,6 +21,7 @@ public:
 	_float HealHp(const _float _fHeal);
 	_float DamageToEnemy(SHPTR<APawn> _spPawn);
 	_float Damaged(float _fDamaged);
+	virtual void DeadStateSituation();
 
 	_float OtherCharacterToDistance(SHPTR<ATransform> _spOtherTransform);
 	_float OtherCharacterDirToLook(SHPTR<ATransform> _spOtherTransform);

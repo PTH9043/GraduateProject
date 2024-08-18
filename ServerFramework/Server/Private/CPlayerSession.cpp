@@ -41,7 +41,7 @@ namespace Server {
 		SetMoveSpeed(10.f);
 		SetRunSpeed(30.f);
 		SetCurOnCellIndex(m_iStartCellIndex);
-		SetCharStatus(CHARSTATUS{ 100, 0, 2500 });
+		SetCharStatus(CHARSTATUS{ 100, 0, 5000 });
 
 		SHPTR<ANavigation> spNavigation = GetNavigation();
 

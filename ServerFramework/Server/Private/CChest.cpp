@@ -65,8 +65,13 @@ namespace Server {
 				CombineProto<SC_STATICOBJFIND>(GetCopyBuffer(), GetPacketHead(), scMonsterFind, TAG_SC_STATICOBJFIND);
 				if (1 == enable)
 				{
-					SHPTR<ASession> spSession = _spSession;
-					spSession->HealHp(210.f);
+					for (auto& iter : spCoreInstance->GetSessionContainer())
+					{
+						if (true == iter.second->IsPermanentDisable())
+							continue;
+
+						iter.second->HealHp(210);
+					}
 					spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
 					ActivePermanentDisable();
 				}

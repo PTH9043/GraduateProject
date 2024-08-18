@@ -112,6 +112,10 @@ namespace Core {
 		return m_CharStatus.fHp;
 	}
 
+	void APawn::DeadStateSituation()
+	{
+	}
+
 	_float APawn::OtherCharacterToDistance(SHPTR<ATransform> _spOtherTransform)
 	{
 		assert(nullptr != _spOtherTransform);
