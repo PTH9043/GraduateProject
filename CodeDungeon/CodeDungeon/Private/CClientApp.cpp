@@ -44,7 +44,8 @@ CClientApp::CClientApp() :
 	RENDER_TIMER{ L"RENDER_TIMER" },
 	RENDER_DELETATIMER{ L"RENDER_DELTATIMER" },
 	m_isTickThread{ true },
-	m_spDataManager{nullptr}
+	m_spDataManager{nullptr},
+	m_spNetworkClientController{ nullptr }
 {
 }
 
@@ -59,9 +60,8 @@ HRESULT CClientApp::NativeConstruct(const HINSTANCE& _hInst, const _uint& _iCmdS
 	m_spGameInstance = GET_INSTANCE(UGameInstance);
 
 	LoadIPAddres IPAddress("..\\..\\Resource\\Ip.txt");
-	IP_ADDRESS;
-	SHPTR<CNetworkClientController> spNetworkClientController = CreateNative<CNetworkClientController>(IPAddress.GetIPAddress(), TCP_PORT_NUM);
-	m_spGameInstance->StartNetwork(spNetworkClientController);
+	m_spNetworkClientController = CreateNative<CNetworkClientController>(IPAddress.GetIPAddress(), TCP_PORT_NUM);
+	m_spGameInstance->StartNetwork(m_spNetworkClientController);
 	return S_OK;
 }
 
@@ -113,12 +113,15 @@ void CClientApp::Render()
 			if (msg.message == WM_QUIT)
 			{
 				m_isTickThread = false;
+				m_spNetworkClientController.reset();
 				m_spGameInstance->NetworkEnd();
+				::PostQuitMessage(0);
 				return;
 			}
 		}
 		if (m_spGameInstance->GetDIKeyDown(DIK_ESCAPE))
 		{
+			m_spNetworkClientController.reset();
 			m_spGameInstance->NetworkEnd();
 			m_spGameInstance.reset();
 			::PostQuitMessage(0);

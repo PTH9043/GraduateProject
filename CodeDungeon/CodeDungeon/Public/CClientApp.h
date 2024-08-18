@@ -11,6 +11,7 @@ END
 
 BEGIN(Client)
 class CDataManager;
+class CNetworkClientController;
 
 class CClientApp final : public UBase {
 public:
@@ -34,6 +35,7 @@ private:
 	_double											m_dRenderTick;
 
 	SHPTR<UGameInstance>			m_spGameInstance;
+	SHPTR<CNetworkClientController> m_spNetworkClientController;
 
 	SHPTR<UTimer>							m_spTickTimer;
 	SHPTR<UTimer>							m_spDeltaTimer;

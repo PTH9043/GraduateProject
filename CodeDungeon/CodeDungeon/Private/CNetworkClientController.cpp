@@ -22,7 +22,7 @@
 #include "UModel.h"
 #include "CProtoMaker.h"
 
-CNetworkClientController::CNetworkClientController()
+CNetworkClientController::CNetworkClientController() 
 {
 }
 
