@@ -19,7 +19,7 @@ namespace Core
 		m_fDeactiveRange{0}, m_iMonsterType{0}, m_fDistanceToPlayer{-1},
 		m_isCurrentAtkPlayer{ false }, m_isCurrentFindPlayer { false}, m_isCurrentNotFound{ false },
 		m_fMoveSpeed { 0 }, m_OwnerMonsterSessionID{-1}, m_spTargetSession{nullptr},
-		m_vTargetPos{}, m_isDamageEnable{false}
+		m_vTargetPos{}, m_isDamageEnable{false}, m_fJudgeValueToPlayerDistance{10000}
 	{
 		SetActive(true);
 	}
@@ -33,23 +33,19 @@ namespace Core
 		RETURN_CHECK(nullptr == _spSession, ;);
 		SHPTR<AAnimController> spAnimController = GetAnimController();
 		SHPTR<ATransform> spMobTr = GetTransform();
+		SHPTR<ATransform> spPlayerTr = _spSession->GetTransform();
 		SHPTR<ASession> spTargetSession = m_spTargetSession;
 		SESSIONID SessionID = _spSession->GetSessionID();
 		{
-			_float ActiveRange = m_fActiveRange;
-			_float DeactiveRange = m_fDeactiveRange;
-
-			if (nullptr == spTargetSession)
-				spTargetSession = _spSession;
-
-			SHPTR<ATransform> spPlayerTr = spTargetSession->GetTransform();
 			Vector3 vMobPos = spMobTr->GetPos();
 			Vector3 vPlayerPos = spPlayerTr->GetPos();
+			_float ActiveRange = m_fActiveRange;
+			_float DeactiveRange = m_fDeactiveRange;
 			s_PlayerPositionContainer[SessionID] = vPlayerPos;
-			float fDistanceToPlayer = Vector3::Distance(vMobPos, vPlayerPos);
+			if(_spSession == spTargetSession || nullptr == spTargetSession)
+			 {
+				float fDistanceToPlayer = Vector3::Distance(vMobPos, vPlayerPos);
 
-			if (fDistanceToPlayer <= m_fJudgeValueToPlayerDistance)
-			{
 				if (fDistanceToPlayer <= ActiveRange)
 				{
 					if (nullptr != spTargetSession)
@@ -75,7 +71,10 @@ namespace Core
 				else if (DeactiveRange >= fDistanceToPlayer)
 				{
 					UpdateSelfStateToPlayerDistance(false, false, true);
-					SetTargetSession(nullptr);
+					if (m_fJudgeValueToPlayerDistance >= fDistanceToPlayer)
+					{
+						SetTargetSession(_spSession);
+					}
 				}
 			}
 		}

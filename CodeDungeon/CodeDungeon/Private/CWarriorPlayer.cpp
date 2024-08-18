@@ -221,16 +221,16 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetAnimModelRim(true);
 	SetAttack(100);
 
-	if(false == IsNetworkConnected())
-	{
-		CS_SAVEPOINTENABLE csSavePointEnable;
-		VECTOR3 vPos;
-		_float3 vCurrentPos = GetTransform()->GetPos();
-		PROTOFUNC::MakeVector3(&vPos, vCurrentPos.x, vCurrentPos.y, vCurrentPos.z);
-		_int CellIndex = static_pointer_cast<CMainCamera>(GetFollowCamera())->GetCurrentNavi()->GetCurIndex();
-		PROTOFUNC::MakeCsSavePointEnable(&csSavePointEnable, GetNetworkID(), vPos, CellIndex);
-		spGameInstance->SendProtoData(UProcessedData(csSavePointEnable, TAG_CS_SAVEPOINTENABLE));
-	}
+	//if(false == IsNetworkConnected())
+	//{
+	//	CS_SAVEPOINTENABLE csSavePointEnable;
+	//	VECTOR3 vPos;
+	//	_float3 vCurrentPos = GetTransform()->GetPos();
+	//	PROTOFUNC::MakeVector3(&vPos, vCurrentPos.x, vCurrentPos.y, vCurrentPos.z);
+	//	_int CellIndex = static_pointer_cast<CMainCamera>(GetFollowCamera())->GetCurrentNavi()->GetCurIndex();
+	//	PROTOFUNC::MakeCsSavePointEnable(&csSavePointEnable, GetNetworkID(), vPos, CellIndex);
+	//	spGameInstance->SendProtoData(UProcessedData(csSavePointEnable, TAG_CS_SAVEPOINTENABLE));
+	//}
 	return S_OK;
 }
 
@@ -446,29 +446,29 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	}
 	{
 		
-		if (s_iSavePointCheckCount == 1) {
+		if (s_iSavePointCheckCount == 0) {
 			m_spTrail->SetColorTexture(L"elec");
 			m_spTrail->SetTrailShapeTexture(L"Noise_Bee");
 			m_spTrail->SetTrailNoiseTexture(L"GlowDiffuse");			
 		}
-		else if (s_iSavePointCheckCount == 2) {
+		else if (s_iSavePointCheckCount ==1) {
 			m_spTrail->SetColorTexture(L"FireRed2");
 			m_spTrail->SetTrailShapeTexture(L"T_Sword_Slash_11");
 			m_spTrail->SetTrailNoiseTexture(L"elec");			
 		}
-		else if (s_iSavePointCheckCount == 3) {
+		else if (s_iSavePointCheckCount == 2) {
 			m_spTrail->SetColorTexture(L"Cloudy");
 			m_spTrail->SetTrailShapeTexture(L"Noise_Bee");
 			m_spTrail->SetTrailNoiseTexture(L"GlowDiffuse");			
 		}
-		else if (s_iSavePointCheckCount == 4) {
+		else if (s_iSavePointCheckCount == 3) {
 			m_spTrail->SetColorTexture(L"Pink");
 			m_spTrail->SetTrailShapeTexture(L"Noise_Thunder");
 			m_spTrail->SetTrailNoiseTexture(L"GlowDiffuse");			
 		}
 		else
 		{
-			s_iSavePointCheckCount = 1;
+			s_iSavePointCheckCount = 0;
 		}
 	}
 
