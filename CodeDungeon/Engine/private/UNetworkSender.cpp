@@ -11,8 +11,8 @@ UNetworkSender::UNetworkSender(SHPTR<UNetworkBaseController> _spNetworkBaseContr
 }
 void UNetworkSender::SendProtoPacket(_char* _pPacket, _short _PacketType, _short _PacketSize)
 {
-	m_pOverExp->SendBufferReady(_pPacket, _PacketType, _PacketSize);
-	UServerMethods::SendTcpPacket(*m_pClientTcpSocket, m_pOverExp);
+	//m_pOverExp->SendBufferReady(_pPacket, _PacketType, _PacketSize);
+	//UServerMethods::SendTcpPacket(*m_pClientTcpSocket, m_pOverExp);
 }
 
 void UNetworkSender::Free()

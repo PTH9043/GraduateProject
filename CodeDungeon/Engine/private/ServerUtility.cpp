@@ -39,7 +39,7 @@ _int UServerMethods::RecvTcpPacket(const SOCKET& _Socket, REF_IN UOverExp& _Over
 	return Recv;
 }
 
-void UServerMethods::SendTcpPacket(const SOCKET& _Socket, const UOverExp& _pOverExp)
+void UServerMethods::SendTcpPacket(const SOCKET& _Socket, REF_IN  UOverExp& _pOverExp)
 {
 	WSASend(_Socket, _pOverExp.GetWsaBuffPointer(), 1, 0, 0, _pOverExp.GetOverlappedPointer(), 0);
 }
