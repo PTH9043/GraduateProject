@@ -32,6 +32,7 @@ private:
 	ATOMIC<_bool>		m_isDoneInteractStaticObject;
 	_string						m_strRoomName;
 	CUSTIMER					m_ActiveTimer;
+	SHPTR<ASession> m_spCurrentPlayer;
 	
 };
 

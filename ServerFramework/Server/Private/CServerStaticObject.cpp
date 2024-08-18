@@ -9,7 +9,8 @@ namespace Server {
 
 	CServerStaticObject::CServerStaticObject(OBJCON_CONSTRUCTOR, SESSIONID _ID) :
 		AStaticObject(OBJCON_CONDATA, _ID), m_StaticObjType{0}, 
-		m_isDoneInteractStaticObject{ false }, m_ActiveTimer{4, std::memory_order_seq_cst}
+		m_isDoneInteractStaticObject{ false }, m_ActiveTimer{4, std::memory_order_seq_cst},
+		m_spCurrentPlayer{ nullptr }
 	{
 		SetActiveRange(12.f);
 	}
@@ -45,16 +46,22 @@ namespace Server {
 		RETURN_CHECK(false == IsCurrentFindPlayer(), ;);
 		_int enable = 0;
 
+		SHPTR<ASession> spCurrentPlayer = m_spCurrentPlayer;
+		if (nullptr != spCurrentPlayer)
+			_spSession = spCurrentPlayer;
+
 		SESSIONID sessionID = _spSession->GetSessionID();
 		_int KeyState = _spSession->GetKeyState();
 		if (KeyState == KEYBOARD_F)
 		{
 			SetDoneInteractiveStaticObject(true);
+			m_spCurrentPlayer = _spSession;
 		}
 		else
 		{
 			SetDoneInteractiveStaticObject(false);
 			GetActiveTimerRefP().ResetTimer();
+			m_spCurrentPlayer = nullptr;
 		}
 		_bool IsPass = GetActiveTimerRefP(REF_RETURN).IsOver();
 		enable = (true == IsPass ? 2 : (true == IsDoneInteractStaticObject() ? 1 : 0));

@@ -16,18 +16,13 @@ namespace Server
 			COLLIDERDESC{ {-10.f, 10.f, 15.f}, {12.5f, 12.5f, 12.5f} });
 
 		GetActiveTimerRefP(REF_RETURN).SetStandardTime(5.f);
-		SetActiveRange(20.f);
+		SetActiveRange(40.f);
 		return __super::Start(_ReceiveDatas);
 	}
 
 	void CCoreHarlequin::State(SHPTR<ASession> _spSession)
 	{
 		__super::State(_spSession);
-
-		if (true == IsCurrentFindPlayer())
-		{
-			std::cout << "HalreQuinn" << "\n";;
-		}
 	}
 
 	void CCoreHarlequin::Collision(AGameObject* _pGameObject, const _double& _dTimeDelta)
