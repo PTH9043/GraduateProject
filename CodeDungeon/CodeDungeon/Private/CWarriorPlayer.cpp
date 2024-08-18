@@ -357,56 +357,52 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 		//SetAnimModelRimColor(_float3(0, 0, 0));
 	}
 
-	if (false == IsNetworkConnected())
-	{
-		if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_HIT) {
-			m_spBlood->SetActive(true);
-			m_spBlood->SetTimer(1.75f);
-			m_fInteractionTimeElapsed = 0;
-			m_bSetRimOn = true;
-		}
-
-		if (m_spBlood->CheckTimeOver()) {
-			m_spBlood->SetActive(false);
-		}
-
-		if (IfOpenChestForHeal) {//2.1초 지속
-			if (true == m_HealTimer.IsOver(_dTimeDelta))
-			{
-				m_spHealParticle->SetActive(false);
-				IfOpenChestForHeal = false;
-				SetHealth(GetHealth() + m_fNetworkRecvMaxHeal);
-				if (GetHealth() > 5000)
-				{
-					SetHealth(5000);
-				}
-				SetPrevHealth(GetHealth());
-				m_HealTimer.ResetTimer();
-			}
-			else
-			{
-				SetAnimModelRimColor(_float3(0, 1, 0));
-				m_spHealParticle->SetActive(true);
-				_float3 pos = GetTransform()->GetPos();
-				pos.y += 2;
-
-				m_spHealParticle->SetPosition(pos);
-				m_spHealParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
-			}
-		}
-		{	// Rotation 
-			if (m_bStartedGame && !m_bisGameEnd) {
-
-				POINT ptCursorPos;
-				ShowCursor(FALSE);
-				SetCursorPos(1000, 400);
-			}
-			if (m_bisGameEnd) {
-				spGameInstance->PauseGame();
-			}
-		}
+	if (GetAnimationController()->GetAnimState() == CUserWarriorAnimController::ANIM_HIT) {
+		m_spBlood->SetActive(true);
+		m_spBlood->SetTimer(1.75f);
+		m_fInteractionTimeElapsed = 0;
+		m_bSetRimOn = true;
 	}
 
+	if (m_spBlood->CheckTimeOver()) {
+		m_spBlood->SetActive(false);
+	}
+
+	if (IfOpenChestForHeal) {//2.1초 지속
+		if (true == m_HealTimer.IsOver(_dTimeDelta))
+		{
+			m_spHealParticle->SetActive(false);
+			IfOpenChestForHeal = false;
+			SetHealth(GetHealth() + m_fNetworkRecvMaxHeal);
+			if (GetHealth() > 5000)
+			{
+				SetHealth(5000);
+			}
+			SetPrevHealth(GetHealth());
+			m_HealTimer.ResetTimer();
+		}
+		else
+		{
+			SetAnimModelRimColor(_float3(0, 1, 0));
+			m_spHealParticle->SetActive(true);
+			_float3 pos = GetTransform()->GetPos();
+			pos.y += 2;
+
+			m_spHealParticle->SetPosition(pos);
+			m_spHealParticle->GetParticleSystem()->GetParticleParam()->stGlobalParticleInfo.fAccTime = 0.f;
+		}
+	}
+	{	// Rotation 
+		if (m_bStartedGame && !m_bisGameEnd) {
+
+			POINT ptCursorPos;
+			ShowCursor(FALSE);
+			SetCursorPos(1000, 400);
+		}
+		if (m_bisGameEnd) {
+			spGameInstance->PauseGame();
+		}
+	}
 	if(CurAnimName != L"roll_back" && CurAnimName != L"roll_front"&& CurAnimName != L"roll_right"&& CurAnimName != L"roll_left"&&
 		CurAnimName != L"jumpZ0" &&  CurAnimName != L"rise01"&& CurAnimName != L"rise02")
 	{

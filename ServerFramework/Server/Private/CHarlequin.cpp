@@ -165,13 +165,19 @@ namespace Server {
 		}
 		else
 		{
+			Vector3 vPosition = spTransform->GetPos();
+			spNaviagation->ComputeHeight(REF_OUT vPosition);
 			SHPTR<ACell> spCell = nullptr;
-			if (false == spNaviagation->IsMove(vCurrentMobPos, REF_OUT spCell))
+			if (false == spNaviagation->IsMove(vPosition, REF_OUT spCell))
 			{
 				Vector3 vChangePos = spTransform->GetPos();
 				vCurrentMobPos.y = vChangePos.y;
 				spTransform->SetPos(vCurrentMobPos);
 				m_isDontMove = true;
+			}
+			else
+			{
+				spTransform->SetPos(vPosition);
 			}
 		}
 	}
