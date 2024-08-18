@@ -162,7 +162,7 @@ void CCoreMinotaur::ReceiveNetworkProcessData(const UProcessedData& _ProcessData
 				SetEnable(false);
 				SetOutline(false);
 				spPlayer->SetCanInteractMinoCoreState(false);
-				spPlayer->SetDoneInteractMinoCoreState(false);
+				spPlayer->SetDoneInteractMinoCoreState(true);
 				SetTickActive(false);
 				spPlayer->SetInteractionElapsedTime(0);
 			}

@@ -162,9 +162,8 @@ void CCoreHarlequinn::ReceiveNetworkProcessData(const UProcessedData& _ProcessDa
 				SetEnable(false);
 				SetOutline(false);
 				spPlayer->SetCanInteractHarlCoreState(false);
-				spPlayer->SetDoneInteractHarlequinnCoreState(false);
 				SetTickActive(false);
-			
+				spPlayer->SetDoneInteractHarlequinnCoreState(true);
 			}
 		}
 		scStaticObjFind.Clear();

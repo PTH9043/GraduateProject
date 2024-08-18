@@ -51,6 +51,7 @@ void CNetworkWarriorPlayerController::Tick(const _double& _dTimeDelta)
 	}
 
 	spAnimModel->TickAnimation(_dTimeDelta);
+	spAnimModel->TickEvent(spWarriorPlayer.get(), GetTrigger(), _dTimeDelta);
 }
 
 void CNetworkWarriorPlayerController::ReceiveNetworkProcessData(void* _pData)

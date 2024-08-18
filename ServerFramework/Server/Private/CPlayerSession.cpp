@@ -41,7 +41,7 @@ namespace Server {
 		SetMoveSpeed(10.f);
 		SetRunSpeed(30.f);
 		SetCurOnCellIndex(m_iStartCellIndex);
-		SetCharStatus(CHARSTATUS{ 100, 0, 5000 });
+		SetCharStatus(CHARSTATUS{ 100, 0, 1.f });
 
 		SHPTR<ANavigation> spNavigation = GetNavigation();
 
@@ -208,8 +208,9 @@ namespace Server {
 		}
 		if (true == spNavigation->IsMove(vPosition, spCurCell))
 		{
-			if (spCurCell->GetIndex() == 1141)
+			if (spCurCell->GetIndex() <= 1141 && spCurCell->GetIndex() <= 1100)
 			{
+				std::cout << "1141" << "\n";
 				if (3 == s_iCoreEnableCnt)
 				{
 					SC_ENDING scEnding;
@@ -252,6 +253,7 @@ namespace Server {
 		{
 			const MOBOBJCONTAINER& MobObjectContainer = _spCoreInstance->GetMobObjContainer();
 			SHPTR<ASession> spSession = ThisShared<ASession>();
+			SET<AMonster*> MonsterList;
 			for (auto& iter : MobObjectContainer)
 			{
 				// 영구적 비활성화
@@ -261,10 +263,10 @@ namespace Server {
 				// 거리를 받아옴
 				if (true == iter.second->IsCanSee(spTransform))
 				{
-					iter.second->State(spSession);
+					MonsterList.insert(iter.second.get());
 				}
 			}
-
+			SET<AStaticObject*> StaticObj;
 			const STATICOBJCONTAINER& StaticObjContainer = _spCoreInstance->GetStaticObjContainer();
 			for (auto& iter : StaticObjContainer)
 			{
@@ -274,8 +276,18 @@ namespace Server {
 				// 거리를 받아옴
 				if (true == iter.second->IsCanSee(spTransform))
 				{
-					iter.second->State(spSession);
+					StaticObj.insert(iter.second.get());
 				}
+			}
+
+			for (auto& iter : MonsterList)
+			{
+				iter->State(spSession);
+			}
+
+			for (auto& iter : StaticObj)
+			{
+				iter->State(spSession);
 			}
 		}
 	}

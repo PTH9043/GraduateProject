@@ -162,7 +162,7 @@ void CCoreAnubis::ReceiveNetworkProcessData(const UProcessedData& _ProcessData)
 				SetEnable(false);
 				SetOutline(false);
 				spPlayer->SetCanInteractAnubisCoreState(false);
-				spPlayer->SetDoneInteractAnubisCoreState(false);
+				spPlayer->SetDoneInteractAnubisCoreState(true);
 				SetTickActive(false);
 				spPlayer->SetInteractionElapsedTime(0);
 			}

@@ -275,7 +275,7 @@ void CMainScene::TurnGuardsOnRange(const _double& _dTimeDelta)
 		}
 		else if (guardcontainer.first == L"Interior_Room_A")
 		{
-			if (m_spWarriorPlayer->GetDoneCoreMinotaurState() && m_spWarriorPlayer->GetDoneCoreHarlequinnState() && m_spWarriorPlayer->GetDoneCoreAnubisState()&&m_bisDead_Anubis && m_bisDead_Harlequinn && m_bIsDead_Minotaur)
+			if (m_spWarriorPlayer->GetDoneCoreMinotaurState() && m_spWarriorPlayer->GetDoneCoreHarlequinnState() && m_spWarriorPlayer->GetDoneCoreAnubisState())
 			{
 				if (!m_fGuardSound_Final) {
 					spGameInstance->SoundPlayOnce(L"GuardDeactivate");
@@ -348,13 +348,13 @@ void CMainScene::TurnLightsOnRange()
 			{
 				_wstring Name = Cores_it->get()->GetModel()->GetModelName();
 				if (Name == L"MinotaurCore")
-					if (m_bIsDead_Minotaur)
+					//if (m_bIsDead_Minotaur)
 						Cores_it->get()->SetActive(true);
 				if (Name == L"HarlequinnCore")
-					if (m_bisDead_Harlequinn)
+				//	if (m_bisDead_Harlequinn)
 						Cores_it->get()->SetActive(true);
 				if (Name == L"AnubisCore")
-					if (m_bisDead_Anubis)
+					//if (m_bisDead_Anubis)
 						Cores_it->get()->SetActive(true);
 
 				Cores_it++;

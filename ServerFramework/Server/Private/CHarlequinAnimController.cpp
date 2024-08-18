@@ -82,199 +82,154 @@ namespace Server {
 
 		if (false == isDeadState)
 		{
-			if (m_RelaxTimer.IsOver(_dTimeDelta))
+			if (true == isFoundPlayer)
 			{
-				if (true == isFoundPlayer)
+				if (false == isFirstFound)
 				{
-					if (false == isFirstFound)
-					{
-						Vector3 vLookDir = vTargetToDir;
-						vLookDir.y = 0.f;
-						spTransform->LookAt(vLookDir + spTransform->GetPos());
-					}
-					spHarlequin->SetFoundPlayerFirstTime(true);
+					Vector3 vLookDir = vTargetToDir;
+					vLookDir.y = 0.f;
+					spTransform->LookAt(vLookDir + spTransform->GetPos());
 				}
+				spHarlequin->SetFoundPlayerFirstTime(true);
+			}
 
-				if (true == isFirstFound)
+			if (true == isFirstFound)
+			{
+				if (false == isFoundPlayer)
 				{
-					if (false == isFoundPlayer)
-					{
-						m_isAttackMode = false;
-						m_isTauntMode = false;
+					m_isAttackMode = false;
+					m_isTauntMode = false;
 
-						if (CurAnimName == CROUCH_ANIMNAME)
-						{
-							spAnimator->SetAnimation(IDLE_ANIMNAME);
-							SetAnimState(MOB_IDLE_STATE);
-						}
-						else
-						{
-							UpdateState(IDLE_ORDER, MOB_IDLE_STATE);
-						}
+					if (CurAnimName == CROUCH_ANIMNAME)
+					{
+						spAnimator->SetAnimation(IDLE_ANIMNAME);
+						SetAnimState(MOB_IDLE_STATE);
 					}
 					else
 					{
-						if (false == m_isAttackMode)
-						{
-							m_isTauntMode = true;
-							m_IdleTimer.ResetTimer();
-						}
+						UpdateState(IDLE_ORDER, MOB_IDLE_STATE);
 					}
-
-					if (true == m_isTauntMode)
+				}
+				else
+				{
+					if (false == m_isAttackMode)
 					{
-						UpdateState(TAUNT_ORDER, MOB_TAUNT_STATE);
-						if (IDLEBREAK_ANIMNAME == CurAnimName)
-						{
-							m_isAttackMode = true;
-							m_isTauntMode = false;
-						}
+						m_isTauntMode = true;
+						m_IdleTimer.ResetTimer();
 					}
+				}
+			}
 
-					if (true == isHit && false == m_isHitCooldown)
+			if (true == m_isTauntMode)
+			{
+				UpdateState(TAUNT_ORDER, MOB_TAUNT_STATE);
+				if (IDLEBREAK_ANIMNAME == CurAnimName)
+				{
+					m_isAttackMode = true;
+					m_isTauntMode = false;
+				}
+			}
+
+			if (true == isHit && false == m_isHitCooldown)
+			{
+				if (m_iHitCount < 3)
+				{
+					spAnimator->SetAnimation(GETHIT_ANIMNAME);
+					SetAnimState(MOB_HIT_STATE);
+					++m_iHitCount;
+				}
+				else
+				{
+					m_isHitCooldown = true;
+				}
+			}
+
+			if (true == m_isHitCooldown)
+			{
+				if (true == m_HitCoolTimer.IsOver(_dTimeDelta))
+				{
+					m_iHitCount = 0;
+					m_isHitCooldown = false;
+					m_HitCoolTimer.ResetTimer();
+				}
+			}
+
+			if (true == m_isAttackMode && false == isHit)
+			{
+				if (fTargetToDistance > ATTACKRANGE_LONG)
+				{
+					if (CurAnimName != CROUCH_ANIMNAME)
+						UpdateState(ATTACK1_ORDER, MOB_ATTACK_STATE);
+					else
+						UpdateState(ATTACK4_ORDER, MOB_ATTACK_STATE);
+				}
+				else if (fTargetToDistance > ATTACKRANGE_JUMP && fTargetToDistance <= ATTACKRANGE_LONG)
+				{
+					if (CurAnimName == CROUCH_ANIMNAME)
 					{
-						if (m_iHitCount < 3)
+						UpdateState(JUMP_ORDER, MOB_MOVE_STATE);
+					}
+					else
+					{
+						UpdateState(WALK_ORDER, MOB_MOVE_STATE);
+					}
+				}
+				else if (fTargetToDistance > ATTACKRANGE_CLOSE && fTargetToDistance <= ATTACKRANGE_JUMP)
+				{
+					if (CurAnimName == CROUCH_ANIMNAME)
+					{
+						UpdateState(ATTACK4_ORDER, MOB_ATTACK_STATE);
+					}
+					else
+					{
+						UpdateState(JUMP_ORDER, MOB_MOVE_STATE);
+					}
+				}
+				else
+				{
+					if (CurAnimName == CROUCH_ANIMNAME)
+					{
+						UpdateState(ATTACK3_ORDER, MOB_ATTACK_STATE);
+					}
+					else
+					{
+						if (fProgressRate >= END_CURANIMRATE)
+							m_iRandomValueForDoge = dis_dodge(gen);
+
+						if (0 == m_iRandomValueForDoge)
 						{
-							spAnimator->SetAnimation(GETHIT_ANIMNAME);
-							SetAnimState(MOB_HIT_STATE);
-							++m_iHitCount;
+							UpdateState(ATTACK2_ORDER, MOB_ATTACK_STATE);
 						}
 						else
 						{
-							m_isHitCooldown = true;
-						}
-					}
-
-					if (true == m_isHitCooldown)
-					{
-						if (true == m_HitCoolTimer.IsOver(_dTimeDelta))
-						{
-							m_iHitCount = 0;
-							m_isHitCooldown = false;
-							m_HitCoolTimer.ResetTimer();
-						}
-					}
-
-					if (true == m_isAttackMode && false == isHit)
-					{
-						if (fTargetToDistance > ATTACKRANGE_LONG)
-						{
-							if (CurAnimName != CROUCH_ANIMNAME)
-								UpdateState(ATTACK1_ORDER, MOB_ATTACK_STATE);
-							else
-								UpdateState(ATTACK4_ORDER, MOB_ATTACK_STATE);
-						}
-						else if (fTargetToDistance > ATTACKRANGE_JUMP && fTargetToDistance <= ATTACKRANGE_LONG)
-						{
-							if (CurAnimName == CROUCH_ANIMNAME && true == m_isJumpEnable)
-							{
-								UpdateState(JUMP_ORDER, MOB_MOVE_STATE);
-							}
-							else
-							{
-								UpdateState(WALK_ORDER, MOB_MOVE_STATE);
-							}
-						}
-						else if (fTargetToDistance > ATTACKRANGE_CLOSE && fTargetToDistance <= ATTACKRANGE_JUMP)
-						{
-							if (CurAnimName == CROUCH_ANIMNAME)
-							{
-								UpdateState(ATTACK4_ORDER, MOB_ATTACK_STATE);
-							}
-							else
-							{
-								if (true == m_isJumpEnable)
-								{
-									UpdateState(JUMP_ORDER, MOB_MOVE_STATE);
-								}
-								else
-								{
-									UpdateState(ATTACK1_ORDER, MOB_ATTACK_STATE);
-								}
-							}
-						}
-						else
-						{
-							if (CurAnimName == CROUCH_ANIMNAME)
-							{
-								UpdateState(ATTACK3_ORDER, MOB_ATTACK_STATE);
-							}
-							else
-							{
-								if (fProgressRate >= END_CURANIMRATE)
-									m_iRandomValueForDoge = dis_dodge(gen);
-
-								if (0 == m_iRandomValueForDoge)
-								{
-									UpdateState(ATTACK2_ORDER, MOB_ATTACK_STATE);
-								}
-								else
-								{
-									if (true == spHarlequin->IsDontMove())
-									{
-										UpdateState(JUMP_ORDER, MOB_MOVE_STATE);
-										m_isJumpEnable = true;
-										m_JumpTimer.ResetTimer();
-										m_iMaxJumpCount = dis_jump(gen);
-										spHarlequin->SetDontMove(false);
-									}
-									else
-									{
-										UpdateState(DOGE_ORDER, MOB_ATTACK_STATE);
-									}
-								}
-							}
-						}
-					}
-
-					if (false == m_isJumpEnable)
-					{
-						if (m_JumpTimer.IsOver(_dTimeDelta))
-						{
-							m_isJumpEnable = true;
-							m_JumpTimer.ResetTimer();
-							m_iMaxJumpCount = dis_jump(gen);
-						}
-					}
-
-
-					if (JUMPFORWARD_ANIMNAME == CurAnimName)
-					{
-						if (fProgressRate >= 0.0f && fProgressRate <= 0.2f)
-						{
-							spHarlequin->SetDirectionFixedUp(_dTimeDelta, fRot, 15, spHarlequin->GetTargetPos());
-						}
-
-						if (fProgressRate >= 0.6f)
-						{
-							++m_iJumpCounter;
-							UpdateState(CROUCH_ORDER, MOB_IDLE_STATE);
-						}
-
-						if (m_iJumpCounter >= m_iMaxJumpCount)
-						{
-							m_isJumpEnable = false;
-							m_RelaxTimer.ResetTimer();
-						}
-					}
-					else if (ATTACK1_ANIMNAME == CurAnimName)
-					{
-						spHarlequin->SetDirectionFixedUp(_dTimeDelta, fRot, 15, spHarlequin->GetTargetPos());
-					}
-					else if (ATTACK4_ANIMNAME == CurAnimName)
-					{
-						spHarlequin->SetDirectionFixedUp(_dTimeDelta, fRot, 15, spHarlequin->GetTargetPos());
-
-						if (fProgressRate >= 0.75f)
-						{
-							UpdateState(WALK_ORDER, MOB_MOVE_STATE);
+							UpdateState(DOGE_ORDER, MOB_ATTACK_STATE);
 						}
 					}
 				}
 			}
-			else
+
+			if (JUMPFORWARD_ANIMNAME == CurAnimName)
 			{
-				UpdateState(IDLE_ORDER, MOB_IDLE_STATE);
+				if (fProgressRate >= 0.0f && fProgressRate <= 0.2f)
+				{
+					spHarlequin->SetDirectionFixedUp(_dTimeDelta, fRot, 10, spHarlequin->GetTargetPos());
+				}
+
+				if (fProgressRate >= 0.6f)
+				{
+					UpdateState(CROUCH_ORDER, MOB_IDLE_STATE);
+				}
+			}
+			else if (ATTACK1_ANIMNAME == CurAnimName)
+			{
+				spHarlequin->SetDirectionFixedUp(_dTimeDelta, fRot, 10, spHarlequin->GetTargetPos());
+			}
+			else if (ATTACK4_ANIMNAME == CurAnimName)
+			{
+				if (fProgressRate >= 0.75f)
+				{
+					UpdateState(WALK_ORDER, MOB_MOVE_STATE);
+				}
 			}
 		}
 		else
