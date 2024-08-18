@@ -209,6 +209,7 @@ namespace Server {
 		//spNavigation->IsMove(vPosition, spCurCell);
 		if (3 == s_iCoreEnableCnt)
 		{
+			std::cout << s_iCoreEnableCnt << "\n";
 			spNavigation->FindCell(vPosition);
 			if (spNavigation->GetCurIndex() == 1141)
 			{
