@@ -40,8 +40,8 @@ HRESULT UNetworkBaseController::NativeConstruct(const _string& _strIPAddress, co
 	}
 
 
-//	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-//	spGameInstance->RegisterFuncToRegister(ServerThread, this);
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	spGameInstance->RegisterFuncToRegister(ServerThread, this);
 	return S_OK;
 }
 
@@ -125,7 +125,7 @@ void UNetworkBaseController::CombineRecvPacket(UOverExp* _pOverExp, size_t _numB
 		// 패킷의 현재 위치가 음수가 되는 경우면 
 		if (0 > Bytes)
 		{
-			::memcpy(&m_TcpTotalBuffer[0], pBufferMove, reaminBytes);
+			memmove(&m_TcpTotalBuffer[0], pBufferMove, MAX_PROCESSBUF_LENGTH - _numBytes);
 			m_RemainBufferLength = reaminBytes;
 			break;
 		}
@@ -134,6 +134,7 @@ void UNetworkBaseController::CombineRecvPacket(UOverExp* _pOverExp, size_t _numB
 		reaminBytes -= CurrPacket;
 		pBufferMove += CurrPacket;
 	}
+	ZeroMemory(&m_TcpTotalBuffer[0], MAX_PROCESSBUF_LENGTH);
 	m_RemainBufferLength = 0;
 }
 
@@ -159,8 +160,8 @@ void UNetworkBaseController::ServerThread(void* _pData)
 	{
 		pNetworkBaseController->ServerTick();
 	}
-	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	spGameInstance->ClearThreads();
+///	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+//	spGameInstance->ClearThreads();
 }
 
 void UNetworkBaseController::Free()
