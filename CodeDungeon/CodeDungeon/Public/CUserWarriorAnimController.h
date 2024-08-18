@@ -37,6 +37,7 @@ public:
 	_bool GetBlindEffectBool() { return BlindEffectOn; }
 	const _bool& GetDieEffectBool() { return m_bDieEffectTurnedOn; }
 
+	void DisableDieEffectBool() { m_bDieEffectTurnedOn = false; }
 private:
 	WKPTR< CWarriorPlayer>			m_wpWarriorPlayer;
 	_int													m_iWComboStack;

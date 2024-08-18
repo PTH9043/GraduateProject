@@ -87,11 +87,11 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 
 	SHPTR<UNavigation> spNavigation = GetCurrentNavi();
-	int cellIndex =400;
+	//int cellIndex =400;
 	//int cellIndex = 349;
 
 //	int cellIndex = 210;
-
+	int cellIndex = 0;
 	SHPTR<UCell> spCell = spNavigation->FindCell(cellIndex);
 	GetTransform()->SetPos(spCell->GetCenterPos());
 	SetSpawnPoint(spCell);
@@ -285,6 +285,9 @@ void CWarriorPlayer::ReceiveNetworkProcessData(const UProcessedData& _ProcessDat
 	break;
 	case TAG_SC_PLAYERGETUP:
 	{
+		SHPTR<CUserWarriorAnimController> spController = static_pointer_cast<CUserWarriorAnimController>(GetAnimationController());
+		spController->DisableDieEffectBool();
+
 		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 		SC_PLAYERGETUP playerGetUp;
 		playerGetUp.ParseFromArray(_ProcessData.GetData(), _ProcessData.GetDataSize());

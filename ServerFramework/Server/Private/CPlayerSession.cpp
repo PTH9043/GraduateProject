@@ -206,18 +206,16 @@ namespace Server {
 			vPosition = Vector3(csMove.posx(), csMove.posy(), csMove.posz());
 			spTransform->SetPos(vPosition);
 		}
-		if (true == spNavigation->IsMove(vPosition, spCurCell))
+		//spNavigation->IsMove(vPosition, spCurCell);
+		if (3 == s_iCoreEnableCnt)
 		{
-			if (spCurCell->GetIndex() <= 1141 && spCurCell->GetIndex() <= 1100)
+			spNavigation->FindCell(vPosition);
+			if (spNavigation->GetCurIndex() == 1141)
 			{
-				std::cout << "1141" << "\n";
-				if (3 == s_iCoreEnableCnt)
-				{
-					SC_ENDING scEnding;
-					PROTOFUNC::MakeScEnding(&scEnding, GetSessionID());
-					CombineProto(REF_OUT GetCopyBuffer(), REF_OUT GetPacketHead(), scEnding, TAG_SC::TAG_SC_ENDING);
-					_spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
-				}
+				SC_ENDING scEnding;
+				PROTOFUNC::MakeScEnding(&scEnding, GetSessionID());
+				CombineProto(REF_OUT GetCopyBuffer(), REF_OUT GetPacketHead(), scEnding, TAG_SC::TAG_SC_ENDING);
+				_spCoreInstance->BroadCastMessage(GetCopyBufferPointer(), GetPacketHead());
 			}
 		}
 		if (true == IsDead())
