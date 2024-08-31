@@ -90,6 +90,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
+        // 다른 메시지 처리
     case WM_DESTROY:
         PostQuitMessage(0);
         break;

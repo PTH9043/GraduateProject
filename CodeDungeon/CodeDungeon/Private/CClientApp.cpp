@@ -140,6 +140,21 @@ void CClientApp::Render()
 			m_dDeltaTime = m_spTickTimer->GetDeltaTime();
 
 			m_spGameInstance->AwakeTick();
+
+			if (true == m_spGameInstance->IsMouseInWindowSize())
+			{
+				if (m_spGameInstance->GetDIMBtnDown(DIMB_L))
+				{
+					g_isActiveClient = true;
+				}
+			}
+			else
+			{
+				if (m_spGameInstance->GetDIMBtnDown(DIMB_L))
+				{
+					g_isActiveClient = false;
+				}
+			}
 			// Tick 
 			m_spGameInstance->Tick(m_dDeltaTime);
 			// LateTick

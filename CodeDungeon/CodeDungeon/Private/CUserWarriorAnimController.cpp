@@ -66,11 +66,19 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
         _bool isMoveRight = spGameInstance->GetDIKeyPressing(DIK_D);
         _bool isWAttack = spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_L);
         _bool isSAttack = spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_R);
-        _bool isRAttack = spGameInstance->GetDIKeyDown(DIK_Q);
-        _bool isCombo1 = spGameInstance->GetDIKeyDown(DIK_1);
-        _bool isCombo2 = spGameInstance->GetDIKeyDown(DIK_2);
+        _bool isRAttack = spGameInstance->GetDIKeyPressing(DIK_Q);
+        _bool isCombo1 = spGameInstance->GetDIKeyPressing(DIK_1);
+        _bool isCombo2 = spGameInstance->GetDIKeyPressing(DIK_2);
         _bool isAttack = isWAttack || isRAttack || isSAttack || isCombo1 || isCombo2;
-        _bool isRoll = spGameInstance->GetDIKeyDown(DIK_C);
+        _bool isRoll = spGameInstance->GetDIKeyPressing(DIK_C);
+        _bool isJump = spGameInstance->GetDIKeyPressing(DIK_SPACE);
+
+        if (false == g_isActiveClient)
+        {
+            spAnimModel->TickAnimChangeTransform(spWarriorPlayer->GetTransform(), _dTimeDelta);
+            return;
+        }
+
         _bool Hit = false;
 
         if (spWarriorPlayer->IsDamaged())
@@ -80,7 +88,6 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
         }
 
         _bool isKicked = spWarriorPlayer->GetKickedState();
-        _bool isJump = spGameInstance->GetDIKeyDown(DIK_SPACE);
         _bool isRise = spWarriorPlayer->GetRiseState();
         _double KickedAnimSpeed = 20;
         _double KickedTimeArcOpenEnd = 35;
@@ -358,7 +365,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
                 if (spWarriorPlayer->GetWarriorKickedTimeElapsed() < KickedTimeArcOpenEnd)
                     spAnimModel->TickAnimToTimeAccChangeTransform(spWarriorPlayer->GetTransform(), _dTimeDelta, spWarriorPlayer->GetWarriorKickedTimeElapsed());
                 if (spWarriorPlayer->GetWarriorKickedTimeElapsed() >= 40)
-                    if (spGameInstance->GetDIKeyDown(DIK_SPACE))
+                    if (isJump)
                     {
                         spWarriorPlayer->SetWarriorKickedTimeElapsed(0);
                         spWarriorPlayer->SetKickedState(false);

@@ -298,7 +298,7 @@ void CWarriorPlayer::ReceiveNetworkProcessData(const UProcessedData& _ProcessDat
 		SetHealth(playerGetUp.hp());
 		SetSpawnPoint(GetCurrentNavi()->FindCell(playerGetUp.cellindex()));
 		GetTransform()->SetPos(GetSpawnPointCell()->GetCenterPos());
-		//GetTransform()->SetPos(_float3{playerGetUp.posx(), playerGetUp.posy(), playerGetUp.posz() });
+		GetTransform()->SetPos(_float3{playerGetUp.posx(), playerGetUp.posy(), playerGetUp.posz() });
 		spGameInstance->SoundPlayOnce(L"Revive");
 		spGameInstance->TurnOffDieEffect();
 		GetAnimationController()->SetAnimState(UAnimationController::ANIM_IDLE); 
@@ -409,9 +409,9 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	{	// Rotation 
 		if (m_bStartedGame && !m_bisGameEnd) {
 
-			POINT ptCursorPos;
-			ShowCursor(FALSE);
-			SetCursorPos(1000, 400);
+		//	POINT ptCursorPos;
+		//	ShowCursor(FALSE);
+		//	SetCursorPos(1000, 400);
 		}
 		if (m_bisGameEnd) {
 			spGameInstance->PauseGame();

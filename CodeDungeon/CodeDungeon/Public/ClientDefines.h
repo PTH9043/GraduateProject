@@ -142,5 +142,7 @@ namespace Client
 
 static const char* IP_ADDRESS{ "127.0.0.1" };
 
+static _bool g_isActiveClient = true;
+
 using namespace Client;
 

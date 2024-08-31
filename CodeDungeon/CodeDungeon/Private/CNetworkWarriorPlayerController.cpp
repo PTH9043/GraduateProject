@@ -58,7 +58,9 @@ void CNetworkWarriorPlayerController::Tick(const _double& _dTimeDelta)
 		spWarriorPlayer->IfAttack(false);
 	}
 
-	if (CurAnimName == L"down01" || CurAnimName == L"down02")
+	if (CurAnimName == L"down01" || CurAnimName == L"down02" || 
+		CurAnimName == L"dead01" || CurAnimName == L"dead02" || CurAnimName == L"dead03" ||
+		CurAnimName == L"dead05" || CurAnimName == L"dead04")
 	{
 		if (spAnimModel->GetCurrentAnimation()->GetAnimationProgressRate() >= 0.9f)
 		{
