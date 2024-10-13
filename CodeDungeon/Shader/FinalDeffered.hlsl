@@ -243,7 +243,7 @@ PS_OUT PS_Main(PS_In Input)
     
        
    
-        if (vDepthDesc.g >= 1.f && outline.w <= 1.f)
+        if (vDepthDesc.g >= 1.f && outline.w > 0.f)
         {
             Out.vColor.xyz += outline.xyz;
         }
@@ -253,7 +253,7 @@ PS_OUT PS_Main(PS_In Input)
         float4 outline = g_Texture5.Sample(g_Sampler_Normal, Input.vTexUV);
     
         
-        if (vDepthDesc.g >= 1.f && outline.w <= 1.f)
+        if (vDepthDesc.g >= 1.f && outline.w >0.f)
         {
             Out.vColor.xyz += outline.xyz;
         }

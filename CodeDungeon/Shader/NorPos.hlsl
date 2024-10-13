@@ -1,5 +1,5 @@
-#ifndef _SHADOW_HLSL_
-#define _SHADOW_HLSL_
+#ifndef _NORPOS_HLSL_
+#define _NORPOS_HLSL_
 
 #include "ShaderGrobalFunc.hlsli"
 #include "LightShaderParam.hlsli"
@@ -69,4 +69,4 @@ PS_OUT PS_Main(VS_OUT In)
 
 
 
-#endif // _SHADOW_HLSL_
+#endif // _NORPOS_HLSL_
