@@ -2257,40 +2257,40 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 		_float2(100.f, 520.f), _float2(200.f, 200.f), m_spGraphicDevice->GetGraphicDesc());
 
 
-	////m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_GLOW_DEFFERED,
-	////	_float2(100.f, 430.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_GLOW_DEFFERED,
+		_float2(100.f, 430.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 
 
-	////m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_SHADE_DEFFERED,
-	////	_float2(100.f, 540.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_SHADE_DEFFERED,
+		_float2(100.f, 540.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 
-	////m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_SPECULAR_DEFFERED,
-	////	_float2(100.f, 650.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
-	////m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_AMBIENT_DEFFERED,
-	////	_float2(100.f, 760.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_SPECULAR_DEFFERED,
+		_float2(100.f, 650.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::LIGHTSHADE_DEFFERED, RTOBJID::LIGHTSHADE_AMBIENT_DEFFERED,
+		_float2(100.f, 760.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 
 
-	////m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::HDR, RTOBJID::HDR,
-	////	_float2(100.f, 870.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::HDR, RTOBJID::HDR,
+		_float2(100.f, 870.f), _float2(100.f, 100.f), m_spGraphicDevice->GetGraphicDesc());
 
 	
 
-	//m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::DEPTH_RECORD, RTOBJID::DEPTH_RECORD,
-	//	_float2(300.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::DEPTH_RECORD, RTOBJID::DEPTH_RECORD,
+		_float2(300.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
-	//m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::OUTLINE_POS_NOR, RTOBJID::OUTLINE_DEPTH_POS,
-	//	_float2(605.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::OUTLINE_POS_NOR, RTOBJID::OUTLINE_DEPTH_POS,
+		_float2(605.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
-	//m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_DEPTH_DEFFERED,
-	//	_float2(910.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
-	//m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::OUTLINE_POS_NOR, RTOBJID::OUTLINE_DEPTH_POS,
-	//	_float2(300.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_DEPTH_DEFFERED,
+		_float2(910.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::OUTLINE_POS_NOR, RTOBJID::OUTLINE_DEPTH_POS,
+		_float2(300.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
-	//m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::OUTLINE_POS_NOR_FORABILITY, RTOBJID::OUTLINE_DEPTH_POS_FORABILITY,
-	//	_float2(605.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::OUTLINE_POS_NOR_FORABILITY, RTOBJID::OUTLINE_DEPTH_POS_FORABILITY,
+		_float2(605.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
-	//m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::DEPTH_RECORD, RTOBJID::DEPTH_RECORD,
-	//	_float2(910.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::DEPTH_RECORD, RTOBJID::DEPTH_RECORD,
+		_float2(910.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 #endif
 	return S_OK;
 }

@@ -342,6 +342,7 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
                     spWarriorPlayer->SetDeathState(false);
                     spWarriorPlayer->SetHealth(2500);
                     spGameInstance->TurnOffDieEffect();
+
                     UpdateState(spAnimModel, ANIM_IDLE, L"IDLE");
                     spAnimModel->SetAnimation(L"idle01");
                 }
