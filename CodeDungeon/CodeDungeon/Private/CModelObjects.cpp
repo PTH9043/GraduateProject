@@ -123,19 +123,19 @@ HRESULT CModelObjects::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UT
 
 HRESULT CModelObjects::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
-	//if (nullptr != m_spModel)
-	//{
-	//	__super::RenderShadowActive(_spCommand, _spTableDescriptor);
+	if (nullptr != m_spModel)
+	{
+		__super::RenderShadowActive(_spCommand, _spTableDescriptor);
 
-	//	for (_uint i = 0; i < m_spModel->GetMeshContainerCnt(); ++i)
-	//	{
-	//		// Bind Transform 
-	//		GetTransform()->BindTransformData(GetShadowShader());
+		for (_uint i = 0; i < m_spModel->GetMeshContainerCnt(); ++i)
+		{
+			// Bind Transform 
+			GetTransform()->BindTransformData(GetShadowShader());
 
-	//		// Render
-	//		m_spModel->Render(i, GetShadowShader(), _spCommand);
-	//	}
-	//}
+			// Render
+			m_spModel->Render(i, GetShadowShader(), _spCommand);
+		}
+	}
 	return S_OK;
 }
 HRESULT CModelObjects::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)

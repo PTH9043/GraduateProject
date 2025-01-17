@@ -2229,7 +2229,7 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 				EnterAbilitySound = true;
 			}
 			pGameInstance->TurnOnAbilityEffect();
-			r_AbilityCoolTime = R_SKILL;
+			r_AbilityCoolTime = R_SKILL; 
 			r_AbilityDurationTime = 5.f;
 		}
 		if (r_AbilityCoolTime > 0) { 

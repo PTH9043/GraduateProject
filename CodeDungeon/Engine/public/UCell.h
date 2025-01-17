@@ -1,6 +1,6 @@
 #pragma once
 #include "UObject.h"
-#define _EDIT_NAVI
+//#define _EDIT_NAVI
 
 BEGIN(Engine)
 class UDefaultCell;

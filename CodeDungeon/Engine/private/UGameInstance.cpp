@@ -1595,6 +1595,12 @@ HRESULT UGameInstance::ReadyResource(const OUTPUTDATA & _stData)
 					RENDERFORMATS{ DXGI_FORMAT_R32_FLOAT
 					}));
 
+			CreateGraphicsShader(PROTO_RES_SHADOWANIMSHADER, CLONETYPE::CLONE_STATIC,
+				SHADERDESC(L"ShadowAnim", VTXANIMMODEL_DECLARATION::Element, VTXANIMMODEL_DECLARATION::iNumElement,
+					SHADERLIST{ VS_MAIN, PS_MAIN },
+					RENDERFORMATS{ DXGI_FORMAT_R32_FLOAT
+					}));
+
 			CreateGraphicsShader(PROTO_RES_NORPOSSHADER, CLONETYPE::CLONE_STATIC,
 				SHADERDESC(L"NorPos", VTXNORPOSINPUT_DECLARATION::Element, VTXNORPOSINPUT_DECLARATION::iNumElement,
 					SHADERLIST{ VS_MAIN, PS_MAIN },
@@ -2247,7 +2253,10 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 	/*
 	·»´õ Å¸°Ù µð¹ö±ëÀ» À§ÇÑ °Í
 	*/
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::MIDDLERENDERSCREEN_DEFFERED, RTOBJID::MIDDLERENDER_DIFFUSE_DEFFERED,
+
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::SHADOW_MAP, RTOBJID::SHADOW_DEPTH_FOURBYFOUR,
+		_float2(300.f, 300.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
+	/*m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::MIDDLERENDERSCREEN_DEFFERED, RTOBJID::MIDDLERENDER_DIFFUSE_DEFFERED,
 		_float2(100.f, 100.f), _float2(200.f, 200.f), m_spGraphicDevice->GetGraphicDesc());
 
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_VELOCITY_DEFFERED,
@@ -2290,7 +2299,7 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 		_float2(605.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
 
 	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::DEPTH_RECORD, RTOBJID::DEPTH_RECORD,
-		_float2(910.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
+		_float2(910.f, 700.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());*/
 #endif
 	return S_OK;
 }

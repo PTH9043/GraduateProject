@@ -180,8 +180,8 @@ HRESULT URenderer::NativeConstruct()
         {
             m_spTurnShaderConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::TURNSHADERBOOL, static_cast<_int>(sizeof(DRAWSHADERBUFFER)));
         }
-        m_spShadowCamera->GetTransform()->SetPos(_float3(331, 500, 0));
-        m_spShadowCamera->GetTransform()->LookAt(_float3(331, 0,0));
+        m_spShadowCamera->GetTransform()->SetPos(_float3(-865, - 140.805, 868.845));
+        m_spShadowCamera->GetTransform()->LookAt(_float3(-820, -140.805,880)); //y를 확올리기
 
         m_stFinalRenderTransformParam.iCamIndex = m_spDefferedCamera->GetCamID();
         m_stSmallRenderTransformParam.iCamIndex = m_spSmallDefferedCamera->GetCamID();
@@ -299,7 +299,7 @@ HRESULT URenderer::Render()
   //  RenderRTs();
     RenderPriority();
     RenderPosNormal();
-   // RenderShadowDepth();
+    RenderShadowDepth();
     RenderNonAlphaBlend();
     RenderLights();
     RenderNonLight();

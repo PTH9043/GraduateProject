@@ -18,6 +18,7 @@
 #define PROTO_RES_DEBUGGINGDEFAULTWHITESHADER L"Proto_Res_DebuggingDefaultWhiteShader"
 #define PROTO_RES_DEBUGGINGWIREFRAMESHADER L"Proto_Res_DebuggingWireframeShader"
 #define PROTO_RES_SHADOWSHADER L"Proto_Res_ShadowShader"
+#define PROTO_RES_SHADOWANIMSHADER L"Proto_Res_ShadowAnimShader"
 #define PROTO_RES_DEPTHRECORDSHADER L"Proto_Res_DepthRecordShader"
 #define PROTO_RES_NORPOSSHADER L"Proto_Res_NorPosShader"
 #define PROTO_RES_ANIMNORPOSSHADER L"Proto_Res_AnimNorPosShader"

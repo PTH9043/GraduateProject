@@ -40,7 +40,7 @@ HRESULT TShowAnimModelObject::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	_wstring mainColliderTag = L"Main";
 	AddColliderInContainer(mainColliderTag, Collider);
 	AddShader(PROTO_RES_ANIMMODELSHADER, RES_SHADER);
-	AddShadowShader(PROTO_RES_SHADOWSHADER, RES_SHADER);
+	AddShadowShader(PROTO_RES_SHADOWANIMSHADER, RES_SHADER);
 	AddOutlineShader(PROTO_RES_ANIMDEPTHRECORDSHADER, RES_SHADER);
 	AddNorPosShader(PROTO_RES_ANIMNORPOSSHADER, RES_SHADER);
 	GetTransform()->SetScale(_float3(0.05f, 0.05f, 0.05f));
@@ -92,12 +92,12 @@ HRESULT TShowAnimModelObject::RenderShadowActive(CSHPTRREF<UCommand> _spCommand,
 		for (_uint i = 0; i < m_spModel->GetMeshContainerCnt(); ++i)
 		{
 			// Bind Transform 
-			GetTransform()->BindTransformData(GetShader());
+			GetTransform()->BindTransformData(GetShadowShader());
 
-			m_spModel->BindTexture(i, SRV_REGISTER::T0, TEXTYPE::TextureType_DIFFUSE, GetShader());
-			m_spModel->BindTexture(i, SRV_REGISTER::T1, TEXTYPE::TextureType_NORMALS, GetShader());
+			m_spModel->BindTexture(i, SRV_REGISTER::T0, TEXTYPE::TextureType_DIFFUSE, GetShadowShader());
+			m_spModel->BindTexture(i, SRV_REGISTER::T1, TEXTYPE::TextureType_NORMALS, GetShadowShader());
 			// Render
-			m_spModel->Render(i, GetShader(), _spCommand);
+			m_spModel->Render(i, GetShadowShader(), _spCommand);
 		}
 	}
 	return S_OK;

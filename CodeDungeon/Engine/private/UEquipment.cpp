@@ -140,6 +140,7 @@ HRESULT UEquipment::NativeConstructClone(const VOIDDATAS& _Datas)
 	}
 	// Add Shader
 	AddShader(PROTO_RES_EQUIPMENTSHADER);
+//	AddShadowShader(PROTO_RES_SHADOWANIMSHADER, RES_SHADER);
 	return S_OK;
 }
 
@@ -180,6 +181,7 @@ void UEquipment::LateTickActive(const _double& _dTimeDelta)
 
 	if (nullptr != m_spEquipModel)
 	{
+		AddShadowRenderGroup(RI_SHADOW);
 		AddRenderGroup(RI_NONALPHA_MIDDLE);
 	}
 }
@@ -210,7 +212,23 @@ HRESULT UEquipment::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTabl
 
 HRESULT UEquipment::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
-	return __super::RenderShadowActive(_spCommand, _spTableDescriptor);
+
+	//if (nullptr != m_spEquipModel)
+	//{
+	//	__super::RenderShadowActive(_spCommand, _spTableDescriptor);
+
+	//	for (_uint i = 0; i < m_spEquipModel->GetMeshContainerCnt(); ++i)
+	//	{
+	//		// Bind Transform 
+	//		GetTransform()->BindTransformData(GetShadowShader());
+
+	//		m_spEquipModel->BindTexture(i, SRV_REGISTER::T0, TEXTYPE::TextureType_DIFFUSE, GetShadowShader());
+	//		m_spEquipModel->BindTexture(i, SRV_REGISTER::T1, TEXTYPE::TextureType_NORMALS, GetShadowShader());
+	//		// Render
+	//		m_spEquipModel->Render(i, GetShadowShader(), _spCommand);
+	//	}
+	//}
+	//return S_OK;
 }
 
 HRESULT UEquipment::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)

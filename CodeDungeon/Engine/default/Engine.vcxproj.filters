@@ -1593,5 +1593,8 @@
     <FxCompile Include="..\..\Shader\MotionBlur.hlsl">
       <Filter>98.ShaderFile\Common\HdrBloomBlur</Filter>
     </FxCompile>
+    <FxCompile Include="..\..\Shader\ShadowAnim.hlsl">
+      <Filter>98.ShaderFile\Common\Light</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

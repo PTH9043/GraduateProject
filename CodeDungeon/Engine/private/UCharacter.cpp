@@ -80,6 +80,7 @@ HRESULT UCharacter::NativeConstructClone(const VOIDDATAS& _Datas)
 		m_spDissovleTexTGroup = std::static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_DISSOLVETEXTUREGROUP));
 	}
 	AddShader(PROTO_RES_ANIMMODELSHADER, RES_SHADER);
+	AddShadowShader(PROTO_RES_SHADOWANIMSHADER, RES_SHADER);
 	AddOutlineShader(PROTO_RES_ANIMDEPTHRECORDSHADER, RES_SHADER);
 	AddNorPosShader(PROTO_RES_ANIMNORPOSSHADER, RES_SHADER);
 	return S_OK;
@@ -208,6 +209,7 @@ void UCharacter::TickActive(const _double& _dTimeDelta)
 
 void UCharacter::LateTickActive(const _double& _dTimeDelta)
 {
+	AddShadowRenderGroup(RI_SHADOW);
 	if (m_DrawOutline) {
 		AddOutlineRenderGroup(RI_DEPTHRECORD);
 		if (ifDrawOutlineByAbility) {
@@ -251,7 +253,23 @@ HRESULT UCharacter::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTabl
 
 HRESULT UCharacter::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
-	return __super::RenderShadowActive(_spCommand, _spTableDescriptor);
+
+	if (nullptr != m_spAnimModel)
+	{
+		__super::RenderShadowActive(_spCommand, _spTableDescriptor);
+
+		for (_uint i = 0; i < m_spAnimModel->GetMeshContainerCnt(); ++i)
+		{
+			// Bind Transform 
+			GetTransform()->BindTransformData(GetShadowShader());
+
+			m_spAnimModel->BindTexture(i, SRV_REGISTER::T0, TEXTYPE::TextureType_DIFFUSE, GetShadowShader());
+			m_spAnimModel->BindTexture(i, SRV_REGISTER::T1, TEXTYPE::TextureType_NORMALS, GetShadowShader());
+			// Render
+			m_spAnimModel->Render(i, GetShadowShader(), _spCommand);
+		}
+	}
+	return S_OK;
 }
 
 HRESULT UCharacter::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)
