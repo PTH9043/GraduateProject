@@ -406,6 +406,7 @@
     <FxCompile Include="..\..\Shader\ScreenRenderObj.hlsl" />
     <FxCompile Include="..\..\Shader\Shadow.hlsl" />
     <FxCompile Include="..\..\Shader\ShadowAnim.hlsl" />
+    <FxCompile Include="..\..\Shader\ShadowEquipment.hlsl" />
     <FxCompile Include="..\..\Shader\Trail.hlsl" />
     <FxCompile Include="..\..\Shader\UpSampling.hlsl" />
     <FxCompile Include="..\..\Shader\UpSamplingGray.hlsl" />

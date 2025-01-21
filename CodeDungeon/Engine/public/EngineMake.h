@@ -19,6 +19,7 @@
 #define PROTO_RES_DEBUGGINGWIREFRAMESHADER L"Proto_Res_DebuggingWireframeShader"
 #define PROTO_RES_SHADOWSHADER L"Proto_Res_ShadowShader"
 #define PROTO_RES_SHADOWANIMSHADER L"Proto_Res_ShadowAnimShader"
+#define PROTO_RES_SHADOWEQUIPMENTSHADER L"Proto_Res_ShadowEquipmentShader"
 #define PROTO_RES_DEPTHRECORDSHADER L"Proto_Res_DepthRecordShader"
 #define PROTO_RES_NORPOSSHADER L"Proto_Res_NorPosShader"
 #define PROTO_RES_ANIMNORPOSSHADER L"Proto_Res_AnimNorPosShader"
@@ -74,7 +75,7 @@
 #define PROTO_RES_ENVIRONMENTMAPPING L"Proto_Res_EnvironmentMappingShader"
 #define PROTO_RES_MIRRORSHADER L"Proto_Res_MirrorShader"
 #define PROTO_RES_SCREENRENDERONBJSHADER L"Proto_Res_ScreenRenderObjShader"
-#define PROTO_RES_EQUIPMENTSHADER L"Proto_Res_EquipmentShader"
+
 #define PROTO_RES_DEFAULTHIGHLIGHTUISHADER L"Proto_Res_DefaultHighlightUIShader"
 #define PROTO_RES_DEFAULTUISHADER L"Proto_Res_DefaultUIShader"
 #define PROTO_RES_BACKGROUNDUISHADER L"Proto_Res_BackGroundUIShader"

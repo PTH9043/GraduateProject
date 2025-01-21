@@ -66,9 +66,6 @@ PS_OUT PS_Main(PS_In Input)
    
     if (length(tLightColor.vDiffuse) != 0)
     {
-       
-
-       
         float4 shadowViewPos = mul(vWorldPosition, g_ViewProjInfoArr[3].mViewMatrix);
         float4 shadowClipPos = mul(shadowViewPos, g_ViewProjInfoArr[3].mProjMatrix);
         float depth = shadowClipPos.z / shadowClipPos.w;
@@ -90,6 +87,63 @@ PS_OUT PS_Main(PS_In Input)
             }
         }
     }
+    
+   // if (length(tLightColor.vDiffuse) != 0)
+   // {
+       
+   //     float width, height, numMips;
+   //     g_Texture3.GetDimensions(0, width, height, numMips);
+       
+   //     float4 shadowViewPos = mul(vWorldPosition, g_ViewProjInfoArr[3].mViewMatrix);
+   //     float4 shadowClipPos = mul(shadowViewPos, g_ViewProjInfoArr[3].mProjMatrix);
+   //     float depth = shadowClipPos.z / shadowClipPos.w - 0.0001f;
+        
+   //     if (depth < 0.0f || depth > 1.0f)
+   //     {
+   //         continue;
+   //     }
+   //     // x [-1 ~ 1] -> u [0 ~ 1]
+   //     // y [1 ~ -1] -> v [0 ~ 1]
+   //     float2 uv = shadowClipPos.xy / shadowClipPos.w;
+   //     uv.y = -uv.y;
+   //     uv = uv * 0.5 + 0.5;
+        
+   //     if (uv.x < 0.0f || uv.x > 1.0f ||
+			//uv.y < 0.0f || uv.y > 1.0f)
+   //     {
+   //         continue;
+   //     }
+        
+   //     float dx = 1.0f / width;
+   //     float percentLit = 0.0f;
+   //     const float2 offsets[9] =
+   //     {
+   //         float2(-dx, -dx), float2(0.0f, -dx), float2(dx, -dx),
+			//float2(-dx, 0.0f), float2(0.0f, 0.0f), float2(dx, 0.0f),
+			//float2(-dx, +dx), float2(0.0f, +dx), float2(dx, +dx)
+   //     };
+   //     [unroll]
+   //     for (int j = 0; j < 9; ++j)
+   //     {
+   //         percentLit += g_Texture3.SampleCmpLevelZero(g_Sampler_Border, uv.xy + offsets[j], depth).r;
+   //     }
+   //     percentLit = percentLit / 9.0f;
+        
+   //     if (percentLit < 0.33f)
+   //         percentLit = 0.33f;
+   //     else if (percentLit < 0.66f)
+   //         percentLit = 0.66f;
+   //     else
+   //         percentLit = 0.99f;
+        
+     
+   //     if (0 < uv.x && uv.x < 1 && 0 < uv.y && uv.y < 1)
+   //     {
+   //         tLightColor.vDiffuse *= percentLit;
+   //         tLightColor.vSpecular = (float4) 0.f;
+   //         tLightColor.vAmbient = (float4) 0.f;
+   //     }
+   // }
   
     
     Out.vAmbient = tLightColor.vAmbient;

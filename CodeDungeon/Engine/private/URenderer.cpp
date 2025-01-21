@@ -129,7 +129,7 @@ HRESULT URenderer::NativeConstruct()
             tDesc.stCamProj = UCamera::CAMPROJ(UCamera::PROJECTION_TYPE::PERSPECTIVE, _float3(0.f, 0.f, 0.f),
                 _float3(0.f, 0.f, 0.f),
                 DirectX::XMConvertToRadians(60.0f), spGameInstance->GetD3DViewport().Width*4,
-                spGameInstance->GetD3DViewport().Height*4,10.0f,700.f,1.f);
+                spGameInstance->GetD3DViewport().Height*4,0.05f,400.f,1.f);
             tDesc.stCamValue = UCamera::CAMVALUE(5.f, DirectX::XMConvertToRadians(90.f));
             tDesc.eCamType = CAMERATYPE::SHADOWLIGHT;
 
@@ -182,7 +182,7 @@ HRESULT URenderer::NativeConstruct()
         }
         m_spShadowCamera->GetTransform()->SetPos(_float3(-865, - 140.805, 868.845));
         m_spShadowCamera->GetTransform()->LookAt(_float3(-820, -140.805,880)); //y를 확올리기
-
+      
         m_stFinalRenderTransformParam.iCamIndex = m_spDefferedCamera->GetCamID();
         m_stSmallRenderTransformParam.iCamIndex = m_spSmallDefferedCamera->GetCamID();
             
