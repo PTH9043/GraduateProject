@@ -30,7 +30,8 @@ TMapView::TMapView(CSHPTRREF<UDevice> _spDevice) :
 	m_spSelectedModel{ nullptr },
 	m_SelectedModelName{},
 	m_DeleteModelsContainer{},
-	m_bAddtoPicking{false}
+	m_bAddtoPicking{false},
+	m_bisMapModelsLoaded{false}
 {
 }
 
@@ -138,14 +139,52 @@ void TMapView::RenderActive()
 
 void TMapView::MapView()
 {
+	static bool firstrun = true;
+	static std::future<void> loadFuture; // 비동기 로딩 상태 추적용
+
 	ImGui::Begin(m_stMapView.strName.c_str(), GetOpenPointer(), m_stMapView.imgWindowFlags);
 	{
 		if (ImGui::TreeNodeEx("ShowMap", ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			LoadMapModels();
-			ShowModelList();
-			MouseInput();
+			// 로딩 중일 때 로딩 창 표시
+			if (!m_bisMapModelsLoaded)
+			{
+				ImGui::OpenPopup("Loading##MapLoadingDialog");
+				ImGui::SetNextWindowPos(ImVec2(WINDOW_HALF_WIDTH, WINDOW_HALF_HEIGHT), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
+				if (ImGui::BeginPopupModal("Loading##MapLoadingDialog", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+				{
+					ImGui::Text("Map models are loading. Please wait...");
+					ImGui::Separator();
+
+					// 로딩 작업 확인
+					if (loadFuture.valid() && loadFuture.wait_for(std::chrono::milliseconds(0)) == std::future_status::ready)
+					{
+						m_bisMapModelsLoaded = true; // 로딩 완료
+						loadFuture.get();           // 비동기 결과 가져오기 (예외 발생 시 처리)
+					}
+
+					ImGui::EndPopup();
+				}
+			}
+
+			// 로딩 트리거
+			if (!m_bisMapModelsLoaded && !firstrun && !loadFuture.valid())
+			{
+				loadFuture = std::async(std::launch::async, [this]()
+					{
+						LoadMapModels(); // 비동기 로딩
+					});
+			}
+
+			// 로딩이 완료된 경우 UI 활성화
+			if (m_bisMapModelsLoaded)
+			{
+				ShowModelList();
+				MouseInput();
+			}
+
 			ImGui::TreePop();
+			firstrun = false;
 		}
 	}
 	ImGui::End();
@@ -191,14 +230,11 @@ void TMapView::LoadAssimpModelDatas(CSHPTRREF<FILEGROUP> _spFolder)
 
 void TMapView::LoadMapModels()
 {
-	if (ImGui::Button("ConvertMap"))
+	SHPTR<FILEGROUP> MapFolder = GetGameInstance()->FindFolder(L"Map");
+	// Folders 
+	for (const FOLDERPAIR& Folder : MapFolder->UnderFileGroupList)
 	{
-		SHPTR<FILEGROUP> MapFolder = GetGameInstance()->FindFolder(L"Map");
-		// Folders 
-		for (const FOLDERPAIR& Folder : MapFolder->UnderFileGroupList)
-		{
-			LoadAssimpModelDatas(Folder.second);
-		}
+		LoadAssimpModelDatas(Folder.second);
 	}
 }
 

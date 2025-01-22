@@ -39,7 +39,7 @@ private:
 	void DockBuildInitSetting();
 
 	void ShowModels();
-	void ShowAnimModels();
+
 	// Show Model List
 	void ShowModelList();
 	void LoadObjectLayoutsFromFile();
@@ -127,6 +127,8 @@ private:
 	_bool												m_bLayoutLoadPopup;
 	_bool												m_bErrorPopup;
 	_bool												m_bEditPosByPicking;
+	_bool												m_bisModelsLoaded;
+	_bool												m_bisAnimModelsLoaded;
 };
 
 END

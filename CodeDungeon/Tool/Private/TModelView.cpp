@@ -55,7 +55,9 @@ TModelView::TModelView(CSHPTRREF<UDevice> _spDevice) :
 	m_bLayoutSavePopup{false},
 	m_bLayoutLoadPopup{false},
 	m_bErrorPopup{},
-	m_bEditPosByPicking{false}
+	m_bEditPosByPicking{false},
+	m_bisModelsLoaded{false},
+	m_bisAnimModelsLoaded{false}
 {
 }
 
@@ -188,7 +190,6 @@ void TModelView::RenderActive()
 		// Show Model
 		ImGui::NewLine();
 		ShowModels();
-		ShowAnimModels();  // Ensure the name is consistent with your function names
 		MouseInput();
 		KeyboardInput();
 		AddModelstoMapLayout();
@@ -219,32 +220,119 @@ void TModelView::DockBuildInitSetting()
 	m_isInitSetting = true;
 }
 
-
 void TModelView::ShowModels()
 {
+	static bool Modelfirstrun = true;
+	static bool AnimModelfirstrun = true;
+	static std::future<void> loadModelFuture; // 비동기 로딩 상태 추적용
+	static std::future<void> loadAnimModelFuture; // 비동기 로딩 상태 추적용
+	static bool isModelLoadComplete = false;     // 일반 모델 로딩 완료 여부
+
+	// 일반 모델 표시
 	ImGui::Begin(m_stModelDockDesc.strName.c_str(), GetOpenPointer(), m_stModelDockDesc.imgWindowFlags);
 	{
 		if (ImGui::TreeNodeEx("ShowModel", ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			ConvertModels();
-			ResetModels();
-			ShowModelList();
+			// 일반 모델 로딩 상태 처리
+			if (!m_bisModelsLoaded)
+			{
+				ImGui::OpenPopup("Loading##ModelLoadingDialog");
+				ImGui::SetNextWindowPos(ImVec2(WINDOW_HALF_WIDTH, WINDOW_HALF_HEIGHT), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
+				if (ImGui::BeginPopupModal("Loading##ModelLoadingDialog", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+				{
+					ImGui::Text("Models are loading. Please wait...");
+					ImGui::Separator();
+
+					{
+						// 로딩 작업 확인
+						if (loadModelFuture.valid() && loadModelFuture.wait_for(std::chrono::milliseconds(0)) == std::future_status::ready)
+						{
+							
+							m_bisModelsLoaded = true;   // 로딩 완료
+							
+							loadModelFuture.get();           // 비동기 결과 가져오기 (예외 발생 시 처리)
+						}
+					}
+
+					ImGui::EndPopup();
+				}
+			}
+
+			// 로딩 트리거
+			if (!m_bisModelsLoaded && !Modelfirstrun && !loadModelFuture.valid())
+			{
+				loadModelFuture = std::async(std::launch::async, [this]()
+					{
+						ConvertModels(); // 동기적으로 호출		
+						isModelLoadComplete = true; // 일반 모델 로딩 완료
+					});
+			}
+
+
+			// 로딩 완료 시 모델 표시
+			if (m_bisModelsLoaded)
+			{
+				ResetModels();
+				ShowModelList();
+			}
+
 			ImGui::TreePop();
+			Modelfirstrun = false;
 		}
 	}
 	ImGui::End();
+
+	// 애니메이션 모델 표시 (일반 모델 로딩이 완료된 이후에만 실행)
+	if (isModelLoadComplete)
+	{
+		ImGui::Begin(m_stAnimModelDockDesc.strName.c_str(), GetOpenPointer(), m_stAnimModelDockDesc.imgWindowFlags);
+		{
+			if (ImGui::TreeNodeEx("ShowAnimModel", ImGuiTreeNodeFlags_DefaultOpen))
+			{
+				if (!m_bisAnimModelsLoaded)
+				{
+					ImGui::OpenPopup("Loading##AnimModelLoadingDialog");
+					ImGui::SetNextWindowPos(ImVec2(WINDOW_HALF_WIDTH, WINDOW_HALF_HEIGHT), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
+					if (ImGui::BeginPopupModal("Loading##AnimModelLoadingDialog", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+					{
+						ImGui::Text("Animation models are loading. Please wait...");
+						ImGui::Separator();
+
+						// 로딩 작업 확인
+						if (loadAnimModelFuture.valid() && loadAnimModelFuture.wait_for(std::chrono::milliseconds(0)) == std::future_status::ready)
+						{
+							m_bisAnimModelsLoaded = true; // 로딩 완료
+							loadAnimModelFuture.get();
+						}
+						ImGui::EndPopup();
+					}
+				}
+
+				// 로딩 트리거
+				if (!m_bisAnimModelsLoaded && !AnimModelfirstrun && !loadAnimModelFuture.valid())
+				{
+					loadAnimModelFuture = std::async(std::launch::async, [this]()
+						{
+							ConvertAnimModels(); // 동기적으로 호출
+						});
+				}
+
+				// 로딩 완료 시 애니메이션 모델 표시
+				if (m_bisAnimModelsLoaded)
+				{
+					ResetAnimModels();
+					ShowAnimModelList();
+				}
+				ImGui::TreePop();
+				AnimModelfirstrun = false;
+			}
+		}
+		ImGui::End();
+		
+	}
 }
 
-void TModelView::ShowAnimModels()
-{
-	ImGui::Begin(m_stAnimModelDockDesc.strName.c_str(), GetOpenPointer(), m_stAnimModelDockDesc.imgWindowFlags);
-	{		
-		ConvertAnimModels();
-		ResetAnimModels();
-		ShowAnimModelList();
-	}
-	ImGui::End();
-}
+
 
 void TModelView::ShowModelList()
 {
@@ -701,35 +789,29 @@ HRESULT TModelView::CopyCurrentModel()
 
 void TModelView::ConvertModels()
 {
-	if (ImGui::Button("ConvertModels"))
+	SHPTR<FILEGROUP> ModelFolder = GetGameInstance()->FindFolder(L"Model");
+	// Folders 
+	for (const FOLDERPAIR& Folder : ModelFolder->UnderFileGroupList)
 	{
-		SHPTR<FILEGROUP> ModelFolder = GetGameInstance()->FindFolder(L"Model");
-		// Folders 
-		for (const FOLDERPAIR& Folder : ModelFolder->UnderFileGroupList)
-		{
-			LoadAssimpModelDatas(Folder.second);
-		}
-		// Load 
-		GetGameInstance()->LoadFirstFolder(FIRST_RESOURCE_FOLDER);
-		m_spModelFileFolder = GetGameInstance()->FindFolder(L"Model");
+		LoadAssimpModelDatas(Folder.second);
 	}
+	// Load 
+	GetGameInstance()->LoadFirstFolder(FIRST_RESOURCE_FOLDER);
+	m_spModelFileFolder = GetGameInstance()->FindFolder(L"Model");
 }
 
 void TModelView::ConvertAnimModels()
 {
-	if (ImGui::Button("ConvertAnimModels"))
+	SHPTR<FILEGROUP> ModelFolder = GetGameInstance()->FindFolder(L"AnimModel");
+	m_AnimModelContainer.clear();
+	// Folders 
+	for (const FOLDERPAIR& Folder : ModelFolder->UnderFileGroupList)
 	{
-		SHPTR<FILEGROUP> ModelFolder = GetGameInstance()->FindFolder(L"AnimModel");
-		m_AnimModelContainer.clear();
-		// Folders 
-		for (const FOLDERPAIR& Folder : ModelFolder->UnderFileGroupList)
-		{
-			LoadAnimModelData(Folder.second);
-		}
-		// Load 
-		GetGameInstance()->LoadFirstFolder(FIRST_RESOURCE_FOLDER);
-		m_spAnimModelFileFolder = GetGameInstance()->FindFolder(L"AnimModel");
+		LoadAnimModelData(Folder.second);
 	}
+	// Load 
+	GetGameInstance()->LoadFirstFolder(FIRST_RESOURCE_FOLDER);
+	m_spAnimModelFileFolder = GetGameInstance()->FindFolder(L"AnimModel");
 }
 
 void TModelView::LoadAssimpModelDatas(CSHPTRREF<FILEGROUP> _spFolder)
@@ -868,7 +950,7 @@ void TModelView::ResetAnimModels()
 
 void TModelView::EditModel()
 {
-	ImGui::SetNextWindowPos(ImVec2(50, 50), ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowPos(ImVec2(50, 50), ImGuiCond_Once);
 	ImGui::Begin(m_stTransformEditorDesc.strName.c_str(), nullptr, ImGuiWindowFlags_NoDocking);
 	{
 		if (m_spSelectedModel != nullptr)

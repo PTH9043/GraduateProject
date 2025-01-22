@@ -57,6 +57,8 @@ private:
 	_string												m_SelectedModelName;
 
 	DELETEMODELS										m_DeleteModelsContainer;
+
+	_bool												m_bisMapModelsLoaded;
 };
 
 END
