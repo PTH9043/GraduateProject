@@ -63,13 +63,17 @@ PS_OUT PS_Main(PS_In Input)
  
     tLightColor = LightingInWorld(vWorldPosition.xyz, vWorldNormal.xyz); //용빠 월드
     
-   
+  
     if (length(tLightColor.vDiffuse) != 0)
-    {
+    { // Shadow Map 카메라 기준 View/Projection 변환
         float4 shadowViewPos = mul(vWorldPosition, g_ViewProjInfoArr[3].mViewMatrix);
         float4 shadowClipPos = mul(shadowViewPos, g_ViewProjInfoArr[3].mProjMatrix);
-        float depth = shadowClipPos.z / shadowClipPos.w;
-
+        float depth = 0;
+        if (shadowClipPos.w > 0.0f)
+        { // 카메라 뒤 영역 필터링
+            depth = shadowClipPos.z / shadowClipPos.w;
+        }
+     
         // x [-1 ~ 1] -> u [0 ~ 1]
         // y [1 ~ -1] -> v [0 ~ 1]
         float2 uv = shadowClipPos.xy / shadowClipPos.w;

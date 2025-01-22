@@ -129,7 +129,7 @@ HRESULT URenderer::NativeConstruct()
             tDesc.stCamProj = UCamera::CAMPROJ(UCamera::PROJECTION_TYPE::PERSPECTIVE, _float3(0.f, 0.f, 0.f),
                 _float3(0.f, 0.f, 0.f),
                 DirectX::XMConvertToRadians(60.0f), spGameInstance->GetD3DViewport().Width*4,
-                spGameInstance->GetD3DViewport().Height*4,0.05f,400.f,1.f);
+                spGameInstance->GetD3DViewport().Height*4,0.05f,100.f,1.f);
             tDesc.stCamValue = UCamera::CAMVALUE(5.f, DirectX::XMConvertToRadians(90.f));
             tDesc.eCamType = CAMERATYPE::SHADOWLIGHT;
 
@@ -180,8 +180,8 @@ HRESULT URenderer::NativeConstruct()
         {
             m_spTurnShaderConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::TURNSHADERBOOL, static_cast<_int>(sizeof(DRAWSHADERBUFFER)));
         }
-        m_spShadowCamera->GetTransform()->SetPos(_float3(-865, - 140.805, 868.845));
-        m_spShadowCamera->GetTransform()->LookAt(_float3(-820, -140.805,880)); //y를 확올리기
+        m_spShadowCamera->GetTransform()->SetPos(_float3(-875.66, - 135.805, 852.));
+        m_spShadowCamera->GetTransform()->LookAt(_float3(-629.466, -135.805,991.156)); //y를 확올리기
       
         m_stFinalRenderTransformParam.iCamIndex = m_spDefferedCamera->GetCamID();
         m_stSmallRenderTransformParam.iCamIndex = m_spSmallDefferedCamera->GetCamID();
@@ -324,11 +324,12 @@ HRESULT URenderer::Render()
     //원상복구하려면 Blur두개 키고 DownSample 2개를 꺼야함. 그리고 Upsample입력 텍스쳐를 BlurResult로
 #ifdef _USE_DEBUGGING
     
-    SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+    SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance); 
+    RenderDebug();
+    m_spRenderTargetManager->RenderDebugObjects(FrameReadyDrawLast(PROTO_RES_DEBUG2DTARGETSHADER), m_spVIBufferPlane,
+        m_spCastingCommand, SRV_REGISTER::T0);
     if (spGameInstance->GetDIKeyPressing(DIK_F1)) {
-        RenderDebug();
-        m_spRenderTargetManager->RenderDebugObjects(FrameReadyDrawLast(PROTO_RES_DEBUG2DTARGETSHADER), m_spVIBufferPlane,
-            m_spCastingCommand, SRV_REGISTER::T0);
+        
     }
     if (spGameInstance->GetDIKeyDown(DIK_F2)) {
         TurnDie++;
