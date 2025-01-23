@@ -111,11 +111,13 @@ void TMapView::DockBuildInitSetting()
 	RETURN_CHECK(true == m_isInitSetting, ;);
 	{
 		ImGuiID dock_main_id = m_stMainDesc.iDockSpaceID;
+
 		ImGui::DockBuilderRemoveNode(m_stMainDesc.iDockSpaceID);
 		ImGui::DockBuilderAddNode(m_stMainDesc.iDockSpaceID);
-		// Docking Build 
+
+		// 이미 독 노드가 있으면 새로운 탭으로 추가
 		m_stMapView.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Up, 0.5f, NULL, &dock_main_id);
-		ImGui::DockBuilderDockWindow(m_stMapView.strName.c_str(), m_stMapView.iDockSpaceID);
+		ImGui::DockBuilderDockWindow(m_stMapView.strName.c_str(), dock_main_id); // 기존 노드에 도킹
 		ImGui::DockBuilderFinish(m_stMainDesc.iDockSpaceID);
 	}
 	m_isInitSetting = true;

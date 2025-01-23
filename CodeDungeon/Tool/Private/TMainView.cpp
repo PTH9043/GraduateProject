@@ -4,6 +4,7 @@
 #include "UTexture.h"
 #include "TMainScene.h"
 #include "UGrid.h"
+#include "UTransform.h"
 
 TMainView::TMainView(CSHPTRREF<UDevice> _spDevice) :
     TImGuiView(_spDevice, "MainView"),
@@ -74,11 +75,13 @@ void TMainView::RenderActive()
     ImGui::SetNextWindowSize(pViewPort->WorkSize, ImGuiCond_Appearing);
     ImGui::Begin(GetName().c_str(), nullptr, m_stMainDesc.imgWindowFlags);
     {
+    
         // Basic info
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", m_dShowDeltaTime, 1.f / m_dShowDeltaTime);
         ImGui::Text("Application Delta %1f", m_dShowDeltaTime);
         ImGui::Text("Main Cam Pos (%1f,%1f,%1f) ", spGameInstance->GetCameraPosition(0).x, spGameInstance->GetCameraPosition(0).y, spGameInstance->GetCameraPosition(0).z);
-
+        ImGui::Text("Main Cam Look (%1f,%1f,%1f) ", spGameInstance->GetMainCameraTransform()->GetLook().x, spGameInstance->GetMainCameraTransform()->GetLook().y, spGameInstance->GetMainCameraTransform()->GetLook().z);
+        ImGui::Text("Main Cam Rotation (%1f,%1f,%1f) ", spGameInstance->GetMainCameraTransform()->GetRotationValue().x, spGameInstance->GetMainCameraTransform()->GetRotationValue().y, spGameInstance->GetMainCameraTransform()->GetRotationValue().z);
         m_stMainDesc.iDockSpaceID = ImGui::GetID(GetName().c_str());
         ImGui::DockSpace(m_stMainDesc.iDockSpaceID, ImVec2{ 0, 0 }, m_stMainDesc.imgDockNodeFlags);
 

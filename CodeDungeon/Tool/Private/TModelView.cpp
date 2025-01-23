@@ -71,9 +71,9 @@ HRESULT TModelView::NativeConstruct()
 		ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoCollapse, ImGuiDockNodeFlags_None,
 		ImVec2{ (_float)WINDOW_WIDTH, 0.f }, ImVec2{ 500.f, (_float)WINDOW_HEIGHT });
 
-	m_stModelDockDesc = DOCKDESC("ModelViewer", ImGuiWindowFlags_NoFocusOnAppearing,
+	m_stModelDockDesc = DOCKDESC("ModelViewer", ImGuiWindowFlags_None,
 		ImGuiDockNodeFlags_CentralNode);
-	m_stAnimModelDockDesc = DOCKDESC("AnimModelViewer", ImGuiWindowFlags_NoFocusOnAppearing,
+	m_stAnimModelDockDesc = DOCKDESC("AnimModelViewer", ImGuiWindowFlags_None,
 		ImGuiDockNodeFlags_CentralNode);
 	m_stTransformEditorDesc = DOCKDESC("ModelEditor", ImGuiWindowFlags_NoFocusOnAppearing,
 		ImGuiDockNodeFlags_CentralNode);
@@ -193,32 +193,60 @@ void TModelView::RenderActive()
 		MouseInput();
 		KeyboardInput();
 		AddModelstoMapLayout();
+		EditModel();
 	}
 	ImGui::End();
 
-	// Render the Model Editor as a separate window
-	EditModel();
 }
-
 
 void TModelView::DockBuildInitSetting()
 {
+	// 초기 설정이 이미 완료되었다면 중단
 	RETURN_CHECK(true == m_isInitSetting, ;);
+
 	{
 		ImGuiID dock_main_id = m_stMainDesc.iDockSpaceID;
+
+		// 기존 DockSpace 제거 및 새로 추가
 		ImGui::DockBuilderRemoveNode(m_stMainDesc.iDockSpaceID);
 		ImGui::DockBuilderAddNode(m_stMainDesc.iDockSpaceID);
-		// Docking Build 
-		m_stModelDockDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Up, 0.3f, NULL, &dock_main_id);
-		m_stAnimModelDockDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.4f, NULL, &dock_main_id);
 
-		ImGui::DockBuilderDockWindow(m_stModelDockDesc.strName.c_str(), m_stModelDockDesc.iDockSpaceID);
-		ImGui::DockBuilderDockWindow(m_stAnimModelDockDesc.strName.c_str(), m_stAnimModelDockDesc.iDockSpaceID);
+		// 기존 노드에 윈도우를 모두 탭 형태로 도킹
+		ImGui::DockBuilderDockWindow(m_stModelDockDesc.strName.c_str(), dock_main_id);
+		ImGui::DockBuilderDockWindow(m_stAnimModelDockDesc.strName.c_str(), dock_main_id);
 
+		m_stTransformEditorDesc.iDockSpaceID = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.3f, NULL, &dock_main_id); // 새로운 노드 생성
+		ImGui::DockBuilderDockWindow(m_stTransformEditorDesc.strName.c_str(), m_stTransformEditorDesc.iDockSpaceID); // 새 노드에 도킹
+		
+		// Dock 빌더 완료
 		ImGui::DockBuilderFinish(m_stMainDesc.iDockSpaceID);
 	}
-	m_isInitSetting = true;
+
+	m_isInitSetting = true; // 초기화 완료 플래그 설정
 }
+
+void TModelView::EditModel()
+{
+	// EditModel은 독에서 렌더링되므로 별도 ImGui::Begin 호출이 필요 없음
+	if (ImGui::Begin(m_stTransformEditorDesc.strName.c_str()))
+	{
+		if (m_spSelectedModel != nullptr)
+		{
+			m_spGuizmoManager->SetSelectedActor(m_spSelectedModel);
+
+			ImGui::Text("Selected Model: %s", m_SelectedModelName.c_str());
+			m_spGuizmoManager->EditTransformViaGuizmo();
+			ImGui::Checkbox("Show Collider", &m_bColliderActive);
+			ImGui::Checkbox("Edit Position by Picking", &m_bEditPosByPicking);
+		}
+		else
+		{
+			ImGui::Text("Selected Model: None, Select Current Model to edit transform");
+		}
+	}
+	ImGui::End();
+}
+
 
 void TModelView::ShowModels()
 {
@@ -946,28 +974,6 @@ void TModelView::ResetAnimModels()
 		m_AnimModelContainer.clear();
 		m_spAnimModelFileFolder = nullptr;
 	}
-}
-
-void TModelView::EditModel()
-{
-	ImGui::SetNextWindowPos(ImVec2(50, 50), ImGuiCond_Once);
-	ImGui::Begin(m_stTransformEditorDesc.strName.c_str(), nullptr, ImGuiWindowFlags_NoDocking);
-	{
-		if (m_spSelectedModel != nullptr)
-		{
-			m_spGuizmoManager->SetSelectedActor(m_spSelectedModel);
-
-			ImGui::Text("Selected Model: %s", m_SelectedModelName.c_str());
-			m_spGuizmoManager->EditTransformViaGuizmo();
-			ImGui::Checkbox("Show Collider", &m_bColliderActive);
-			ImGui::Checkbox("Edit Position by Picking", &m_bEditPosByPicking);
-		}
-		else
-		{
-			ImGui::Text("Selected Model: None, Select Current Model to edit transform");
-		}
-	}
-	ImGui::End();
 }
 
 

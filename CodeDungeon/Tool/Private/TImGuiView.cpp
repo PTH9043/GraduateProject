@@ -66,6 +66,7 @@ void TImGuiView::RenderActive()
 {
 }
 
+
 void TImGuiView::ActiveResetSceneData()
 {
 	SHPTR<TImGuiManager> pImGuiManager = GET_INSTANCE(TImGuiManager);

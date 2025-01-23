@@ -37,16 +37,16 @@ HRESULT TMainScene::LoadSceneData()
 		vecDatas.push_back(&tDesc);
 
 		m_spMainCamera = std::static_pointer_cast<TMainCamera>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MAINCAMERA, vecDatas));
-		m_spMainCamera->GetTransform()->SetPos({ 0.f, 10.f, -100.f });
+		m_spMainCamera->GetTransform()->SetPos({ -875.66, -135.805, 852. });
 	}
 	{
 		
 		
-		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL,LIGHTACTIVE::ISACTIVE, {1.f, 1.f, 1.f, 1.f}, {0.2f, 0.2f,0.2f, 1.f}, {0.15f, 0.15f, 0.15f, 1.f}, {0.f, -1.f, 0.f,}, {0.f, 100.f, 0.f}, 0.f, 0.f ,
+	/*	AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL,LIGHTACTIVE::ISACTIVE, {1.f, 1.f, 1.f, 1.f}, {0.2f, 0.2f,0.2f, 1.f}, {0.15f, 0.15f, 0.15f, 1.f}, {0.f, -1.f, 0.f,}, {0.f, 100.f, 0.f}, 0.f, 0.f ,
 			1.f, 20.f });
-		
+		*/
 		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_POINT,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 1.f}, {0.4f, 0.2f, 0.08f, 1.f}, {0.8f, 0.4f, 0.16f, 1.f}, {0.f, 0.f, 1.f,},
-		_float3(-871.752 ,- 154.805, 868.845), 40.f, 0.f ,
+		_float3(-883.653748, -145.2615, 847.1639), 60.f, 0.f ,
 		1.f, 32.f,0.f,0.f,0.f,_float3(1.f,0.01f,0.0001f) });
 		/*
 		* 현재 머티리얼은 Diffuse는 밝은 회색으로 개성있게 나와 곱해도 무방. Ambient, Specular추출정보 대부분 검은색이라, 조명의 Ambient Specular을 곱하면 무시되는 수준이라 적용안하는게 좋아보임.
