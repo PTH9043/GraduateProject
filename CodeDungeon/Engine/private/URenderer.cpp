@@ -15,6 +15,7 @@
 #include "USmallDefferedCamera.h"
 #include "UShadowCamera.h"
 #include "URenderTargetManager.h"
+#include "UCharacter.h"
 #include "UGlobalConstantBuffer.h"
 #include "UGpuCommand.h"
 #include "UPawn.h"
@@ -328,9 +329,17 @@ HRESULT URenderer::Render()
     RenderDebug();
     m_spRenderTargetManager->RenderDebugObjects(FrameReadyDrawLast(PROTO_RES_DEBUG2DTARGETSHADER), m_spVIBufferPlane,
         m_spCastingCommand, SRV_REGISTER::T0);
+  /*  _float3 pos = spGameInstance->GetCurrPlayer()->GetTransform()->GetPos();
+    _float3 vec = spGameInstance->GetMainCameraTransform()->GetLook();
+
+
+    m_spShadowCamera->GetTransform()->SetPos(_float3(pos.x,pos.y+20,pos.z));
+    m_spShadowCamera->GetTransform()->SetLook(pos);*/
+    m_spShadowCamera->GetTransform()->SetPos(_float3(-883.653748, -125.2615, 847.1639));
+    m_spShadowCamera->GetTransform()->LookAt(_float3(-859.759, -154.805, 860.509)); //y를 확올리기
+
     if (spGameInstance->GetDIKeyPressing(DIK_F1)) {
-        
-    }
+      }
     if (spGameInstance->GetDIKeyDown(DIK_F2)) {
         TurnDie++;
     }

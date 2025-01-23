@@ -328,6 +328,7 @@
   <ItemGroup>
     <FxCompile Include="..\..\Shader\2DAnimateParticle.hlsl" />
     <FxCompile Include="..\..\Shader\2DFire.hlsl" />
+    <FxCompile Include="..\..\Shader\2DFireShadow.hlsl" />
     <FxCompile Include="..\..\Shader\2DFog.hlsl" />
     <FxCompile Include="..\..\Shader\2DParticle.hlsl" />
     <FxCompile Include="..\..\Shader\2DParticleAttack.hlsl" />

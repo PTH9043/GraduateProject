@@ -1652,7 +1652,9 @@ HRESULT CMainScene::LoadSceneData()
 		m_spMap->LoadStaticObjects();
 		spGameInstance->TurnOnFog();
 
-		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 1.f}, {0.3f, 0.3f,0.3f, 1.f}, {0.15f, 0.15f, 0.15f, 1.f}, {0.f, -1.f, 0.f,}, {0.f, 100.f, 0.f}, 0.f, 0.f ,1.f, 20.f });
+		//AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 1.f}, {0.3f, 0.3f,0.3f, 1.f}, {0.15f, 0.15f, 0.15f, 1.f}, {0.f, -1.f, 0.f,}, {0.f, 100.f, 0.f}, 0.f, 0.f ,1.f, 20.f });
+
+		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL,LIGHTACTIVE::ISACTIVE, {0.15f, 0.15f, 0.15f, 1.f}, {0.15f, 0.15f,0.15f, 1.f}, {0.07f, 0.07f, 0.07f, 1.f}, {0.f, -1.f, 0.f,}, {0.f, 100.f, 0.f}, 0.f, 0.f ,1.f, 20.f });
 
 		for (auto& obj : (*m_spMap->GetStaticObjs().get()))
 		{

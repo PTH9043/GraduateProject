@@ -70,6 +70,7 @@
 #define PROTO_RES_2DUISHADER L"Proto_Res_2DUIShader"
 #define PROTO_RES_2DANIMATEPARTICLESHADER L"Proto_Res_2DAnimateParticleShader"
 #define PROTO_RES_2DFIRESHADER L"Proto_Res_2DFireShader"
+#define PROTO_RES_2DFIRESHADOWSHADER L"Proto_Res_2DFireShadowShader"
 #define PROTO_RES_2DFOGSHADER L"Proto_Res_2DFogShader"
 #define PROTO_RES_TERRAINTESSALATIONSHADER L"Proto_Res_TerrainTessalationShader"
 #define PROTO_RES_ENVIRONMENTMAPPING L"Proto_Res_EnvironmentMappingShader"

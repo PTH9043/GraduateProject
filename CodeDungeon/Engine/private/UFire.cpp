@@ -56,6 +56,7 @@ HRESULT UFire::NativeConstructClone(const VOIDDATAS& _convecDatas)
 		m_spVIBufferRect = static_pointer_cast<UVIBufferRect>(spGameInstance->CloneResource(PROTO_RES_VIBUFFERRECT));
 
 		AddShader(stParticleDesc.wstrFireShader);
+		AddShadowShader(PROTO_RES_2DFIRESHADOWSHADER);
 
 		SetActive(false);
 	}
@@ -105,8 +106,11 @@ void UFire::TickActive(const _double& _dTimeDelta)
 
 void UFire::LateTickActive(const _double& _dTimeDelta)
 {
-	if(IsActive())
-	AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
+	if (IsActive()) {
+		AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
+		//AddRenderGroup(RENDERID::RI_SHADOW);
+	
+	}
 }
 
 HRESULT UFire::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
@@ -129,7 +133,19 @@ HRESULT UFire::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDesc
 HRESULT UFire::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
 	__super::RenderShadowActive(_spCommand, _spTableDescriptor);
+	//GetShadowShader()->BindCBVBuffer(m_spShaderFireNoiseBuffer, &m_stFireNoiseBuffer, sizeof(FIRENOISEBUFFER));
+	//GetShadowShader()->BindCBVBuffer(m_spShaderDistortionBuffer, &m_stFireDistortionBuffer, sizeof(FIREDISTORTIONBUFFER));
 
+	//// Bind Transform
+	//GetTransform()->BindTransformData(GetShadowShader());
+
+
+	//GetShadowShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spFireColorTexGroup->GetTexture(ColorTextureIndex));
+	//GetShadowShader()->BindSRVBuffer(SRV_REGISTER::T1, m_spFireNoiseTexGroup->GetTexture(NoiseTextureIndex));
+	//GetShadowShader()->BindSRVBuffer(SRV_REGISTER::T2, m_spFireAlphaTexGroup->GetTexture(AlphaTextureIndex));
+
+
+	//m_spVIBufferRect->Render(GetShadowShader(), _spCommand);
 	return S_OK;
 }
 HRESULT UFire::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)

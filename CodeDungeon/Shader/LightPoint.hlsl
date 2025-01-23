@@ -85,9 +85,21 @@ PS_OUT PS_Main(PS_In Input)
             float shadowDepth = g_Texture3.Sample(g_Sampler_Normal, uv).x;
             if (shadowDepth > 0 && depth > shadowDepth + 0.00001f)
             {
-                tLightColor.vDiffuse *= 0.5f;
-                tLightColor.vSpecular = (float4) 0.f;
-                tLightColor.vAmbient = (float4) 0.f;
+                // 월드 좌표와 카메라 좌표 간 거리 계산
+                float distance = length(vWorldPosition.xyz - g_ViewProjInfoArr[3].vCamPosition);
+
+                // 거리 기반 계수 계산 (RangeMin, RangeMax 설정)
+                float rangeMin = 0.05f; // 최소 거리
+                float rangeMax = 100.f; // 최대 거리
+                float distanceFactor = saturate( (distance - rangeMin) / (rangeMax - rangeMin));
+                float diffuseFactor = lerp(0.05f, 1.f, distanceFactor); // 보간 수행
+
+                // 조명 계수 조정
+                tLightColor.vDiffuse *= diffuseFactor;
+                
+                
+                tLightColor.vSpecular *=(float4) diffuseFactor*0.9f;
+                tLightColor.vAmbient *= (float4) diffuseFactor * 0.9f;
             }
         }
     }

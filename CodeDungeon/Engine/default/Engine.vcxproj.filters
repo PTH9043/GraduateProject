@@ -1599,5 +1599,8 @@
     <FxCompile Include="..\..\Shader\ShadowEquipment.hlsl">
       <Filter>98.ShaderFile\Common\Light</Filter>
     </FxCompile>
+    <FxCompile Include="..\..\Shader\2DFireShadow.hlsl">
+      <Filter>98.ShaderFile\Common\Fire</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
