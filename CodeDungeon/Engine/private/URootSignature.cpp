@@ -62,13 +62,13 @@ HRESULT URootSignature::CreateRootSignature(CSHPTRREF<UDevice> _spDevice)
 		// B0 는 전역 상태
 		ARRAY< CD3DX12_DESCRIPTOR_RANGE, 2> Ranges =
 		{
-			// Constant Buffer 값을 뺀 것이다.  b0, b1 제외하고 나머지 b2부터는 tabledescriptor를 통해서 바인드하겠다.
+			// Constant Buffer 값을 뺀 것이다.  b0, b1, b2 제외하고 나머지 b3부터는 tabledescriptor를 통해서 바인드하겠다.
 			CD3DX12_DESCRIPTOR_RANGE(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, CBV_REGISTER_END - GRAPHICS_CONSTANT_BUFFER_VALUE,
 			GRAPHICS_CONSTANT_BUFFER_VALUE, GetRegisterSpace()),
 			CD3DX12_DESCRIPTOR_RANGE(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, SRV_REGISTER_END, 0, GetRegisterSpace()),
 		};
 
-		// ConstantBuffer View를 만들고, B0, B1 (전역) (GPUCOmmand)
+		// ConstantBuffer View를 만들고, B0, B1, B2 (전역) (GPUCOmmand)
 		const _uint PARAM_SIZE = 4;
 		ARRAY<CD3DX12_ROOT_PARAMETER, PARAM_SIZE> Param = {};
 		Param[0].InitAsConstantBufferView(static_cast<_uint>(CBV_REGISTER::B0));

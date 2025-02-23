@@ -71,7 +71,7 @@ void UTableDescriptor::BindUAV(const D3D12_CPU_DESCRIPTOR_HANDLE& _uavHandle, co
 
 void UTableDescriptor::CommitGraphicTable(CSHPTRREF<UCommand> _spCommand)
 {
-	// CommitTable ->DescriptorHeapStart를 가져와서 Group만큼 Bind 하는 것이다. 
+	// CommitTable ->DescriptorHeapStart를 가져와서 Group만큼 Bind 하는 것이다. //GetStaticValue->3번이다. 루트파라메터 3번이 table이라
 	_spCommand->GetGpuCmdList()->SetGraphicsRootDescriptorTable(GetStaticValue(), ReturnCommitTableHandle(_spCommand));
 }
 

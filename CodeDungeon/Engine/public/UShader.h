@@ -18,7 +18,7 @@ class UShader : public UResource{
 	// Shader Container
 	using SHADERCONTAINER = UNORMAP<SHADERMAININFO, ComPtr<DxBlob>>;
 public:
-	UShader(CSHPTRREF<UDevice> _pDevice, CSHPTRREF<URootSignature> _spRootSignature, const SHADERDESC& _tDesc);
+	UShader(CSHPTRREF<UDevice> _pDevice, CSHPTRREF<URootSignature> _spRootSignature, CSHPTRREF<UCommand> _spCommand, const SHADERDESC& _tDesc);
 	UShader(const UShader& _rhs);
 	DESTRUCTOR(UShader)
 public:

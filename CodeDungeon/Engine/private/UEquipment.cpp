@@ -134,7 +134,7 @@ HRESULT UEquipment::NativeConstructClone(const VOIDDATAS& _Datas)
 			_uint ModelBufferSize = m_spEquipModel->GetMeshContainerCnt();
 
 			m_spSocketMatrixBuffer = CreateNative< UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::SOCKETMATRIX, GetTypeSize<SOCKETMATRIXPARAM>(), ModelBufferSize);
-			m_spTexCheckBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::MODELCHECKBUF, GetTypeSize< HASBUFFERCONTAINER>(), ModelBufferSize);
+			m_spTexCheckBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::MODELCHECKBUF, GetTypeSize< HASBUFFERCONTAINER>(), ModelBufferSize, true);
 		}
 		m_wpOwner = spCharacter;
 	}
@@ -259,7 +259,7 @@ void UEquipment::UpdateBoneNode(CSHPTRREF<UAnimModel> _spAnimModel, const _wstri
 	{
 		_uint ModelBufferSize = m_spEquipModel->GetMeshContainerCnt();
 		m_spSocketMatrixBuffer = CreateNative< UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::SOCKETMATRIX, GetTypeSize<SOCKETMATRIXPARAM>(), ModelBufferSize);
-		m_spTexCheckBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::MODELCHECKBUF, GetTypeSize< HASBUFFERCONTAINER>(), ModelBufferSize);
+		m_spTexCheckBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::MODELCHECKBUF, GetTypeSize< HASBUFFERCONTAINER>(), ModelBufferSize, true);
 		m_spCharacterAnimModel = _spAnimModel;
 	}
 }
@@ -278,6 +278,6 @@ void UEquipment::UpdateBoneNode(CSHPTRREF<UCharacter> _spCharacter, const _wstri
 	{
 		_uint ModelBufferSize = m_spEquipModel->GetMeshContainerCnt();
 		m_spSocketMatrixBuffer = CreateNative< UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::SOCKETMATRIX, GetTypeSize<SOCKETMATRIXPARAM>(), ModelBufferSize);
-		m_spTexCheckBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::MODELCHECKBUF, GetTypeSize< HASBUFFERCONTAINER>(), ModelBufferSize);
+		m_spTexCheckBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::MODELCHECKBUF, GetTypeSize< HASBUFFERCONTAINER>(), ModelBufferSize, true);
 	}
 }

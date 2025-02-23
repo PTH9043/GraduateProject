@@ -47,7 +47,7 @@ HRESULT UScene::NativeConstruct()
    
     m_LightingShader= static_pointer_cast<UShader>(spGameInstance->CloneResource(PROTO_RES_LIGHTPOINTSHADER));
 
-    m_spLightConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::LIGHTCONTROL, GetTypeSize<LIGHTPARAMS>());
+    m_spLightConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::LIGHTCONTROL, GetTypeSize<LIGHTPARAMS>(),1,true);
 
     return S_OK;
 }

@@ -6,7 +6,7 @@ class UTableDescriptor;
 
 class UComputeShader : public UShader{
 public:
-	UComputeShader(CSHPTRREF<UDevice> _pDevice,  CSHPTRREF<URootSignature> _spRootSignature, const SHADERDESC & _stDesc);
+	UComputeShader(CSHPTRREF<UDevice> _pDevice,  CSHPTRREF<URootSignature> _spRootSignature, CSHPTRREF<UCommand> _spCommand, const SHADERDESC & _stDesc);
 	UComputeShader(const UComputeShader& _rhs);
 	DESTRUCTOR(UComputeShader)
 public:

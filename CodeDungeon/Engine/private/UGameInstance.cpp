@@ -175,7 +175,7 @@ HRESULT UGameInstance::CreateGraphicsShader(const _wstring& _wstrProtoName, cons
 {
 	
 	SHPTR<UShader> pShader = CreateConstructorToNative<UShader>(
-		m_spGraphicDevice->GetDevice(), m_spGraphicDevice->GetRootSignature(),
+		m_spGraphicDevice->GetDevice(), m_spGraphicDevice->GetRootSignature(), m_spGraphicDevice->GetGpuCommand(),
 		_stShaderDesc
 	);
 	RETURN_CHECK(nullptr == pShader, E_FAIL);
@@ -189,7 +189,7 @@ HRESULT UGameInstance::CreateComputeShader(const _wstring& _wstrProtoName, const
 
 	// Shader 
 	SHPTR<UComputeShader> pShader = CreateConstructorToNative<UComputeShader>(
-		m_spGraphicDevice->GetDevice(), m_spGraphicDevice->GetComputeRootSignature(),
+		m_spGraphicDevice->GetDevice(), m_spGraphicDevice->GetComputeRootSignature(), m_spGraphicDevice->GetComputeCommand(),
 		_stShaderDesc
 		);
 	RETURN_CHECK(nullptr == pShader, E_FAIL);

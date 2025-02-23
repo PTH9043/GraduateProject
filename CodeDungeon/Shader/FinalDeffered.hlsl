@@ -55,12 +55,12 @@ struct PS_OUT
 
 PS_OUT PS_Main(PS_In Input)
 {
-    PS_OUT Out = (PS_OUT) 0;
-    
-    
+    PS_OUT Out = (PS_OUT)0;
+
+
     //float distanceFromOrigin = distance(float2(640, 540), float2(Input.vPosition.xy));
     float distanceFromOrigin = distance(float2(640, 460), float2(Input.vPosition.xy));
-   
+
     float4 baseColor = g_Texture0.Sample(g_Sampler_Normal, Input.vTexUV);
     //{
     //    float4 targetColor = g_Texture8.Sample(g_Sampler_Normal, Input.vTexUV);
@@ -84,7 +84,7 @@ PS_OUT PS_Main(PS_In Input)
 
     //    baseColor = outputColor;
     //}
-   
+
     if (IsGameStart)
     {
         float4 targetColor = g_Texture8.Sample(g_Sampler_Normal, Input.vTexUV);
@@ -94,8 +94,8 @@ PS_OUT PS_Main(PS_In Input)
         float initialBlendTime = 0.3f;
         float fadeOutStartTime = 1.25f;
         float fadeOutEndTime = 1.8f;
-       
-        float initialRadius =500.f;
+
+        float initialRadius = 500.f;
         float finalRadius = 800.0f;
         float currentRadius;
 
@@ -111,44 +111,44 @@ PS_OUT PS_Main(PS_In Input)
         }
 
 
-       if (distanceFromOrigin <= currentRadius)
-       {
-           outputColor = baseColor;
-       }
-       else
-       {
-           float distanceFactor = saturate((distanceFromOrigin - currentRadius) / (finalRadius - currentRadius));
-           outputColor = lerp(baseColor, targetColor, distanceFactor);
-       }
+        if (distanceFromOrigin <= currentRadius)
+        {
+            outputColor = baseColor;
+        }
+        else
+        {
+            float distanceFactor = saturate((distanceFromOrigin - currentRadius) / (finalRadius - currentRadius));
+            outputColor = lerp(baseColor, targetColor, distanceFactor);
+        }
 
-       baseColor = outputColor;
+        baseColor = outputColor;
 
 
     }
- 
+
     float transitionProgress;
     if (IsDead)
     {
         float transitionProgress = DieTime / 1.25f;
-           
+
         float4 targetColor = g_Texture6.Sample(g_Sampler_Normal, Input.vTexUV);
 
-        
+
         float blendFactor = saturate(transitionProgress);
-        Out.vColor = lerp(float4(1, 0, 0, 1), targetColor, blendFactor);       
-        
+        Out.vColor = lerp(float4(1, 0, 0, 1), targetColor, blendFactor);
+
     }
     else if (IsHit)
     {
-    
+
         float4 targetColor = g_Texture8.Sample(g_Sampler_Normal, Input.vTexUV);
-     
+
         float4 outputColor;
 
         float initialBlendTime = 0.3f;
         float fadeOutStartTime = 1.25f;
         float fadeOutEndTime = 1.8f;
-       
+
         float initialRadius = 0.001f;
         float finalRadius = 750.0f;
         float currentRadius;
@@ -161,7 +161,7 @@ PS_OUT PS_Main(PS_In Input)
         }
         else
         {
-            currentRadius = finalRadius; 
+            currentRadius = finalRadius;
         }
 
 
@@ -177,7 +177,7 @@ PS_OUT PS_Main(PS_In Input)
 
 
         Out.vColor = outputColor;
-      
+
     }
     else if (IsAbility)
     {
@@ -185,55 +185,79 @@ PS_OUT PS_Main(PS_In Input)
         float4 targetColor = g_Texture7.Sample(g_Sampler_Normal, Input.vTexUV);
         float blendFactor = saturate(transitionProgress);
         Out.vColor = lerp(baseColor, targetColor, blendFactor);
-    }  
+    }
     else
     {
         Out.vColor = baseColor;
-       
+
     }
-    
-   
-   
-    
-   
+
+
+
+
+
     //if (Out.vColor.a == 0)
     //    discard;
+
     float3 vPosition = g_Texture2.Sample(g_Sampler_Normal, Input.vTexUV); //Position
     float4 vGlow = g_Texture3.Sample(g_Sampler_Normal, Input.vTexUV); //Glow
-    
-   
+
+
     if (IsFogOn && vGlow.a != 0.5f)//vCheckIfDrawDesc는 스페큘러 렌더타겟에 알파가 0.5는 빛 등 안받도록
     {
-       
+
         float3 vViewPixelPosition = mul(float4(vPosition, 1.0f), g_ViewProjInfoArr[g_CamID].mViewMatrix);
 
         float4 vCameraViewPosition = mul(float4(g_ViewProjInfoArr[0].vCamPosition, 1.0f), g_ViewProjInfoArr[g_CamID].mViewMatrix);
-  
+
         float dx = vViewPixelPosition.x - vCameraViewPosition.x;
         float dy = vViewPixelPosition.y - vCameraViewPosition.y;
         float dz = vViewPixelPosition.z - vCameraViewPosition.z;
         float fDistanceToCamera = sqrt(dx * dx + dy * dy + dz * dz);
-   
+
+        float fDistanceToCam = length(abs(vViewPixelPosition - vCameraViewPosition.xyz));
         //float camDistance = (vCameraViewPosition.z);
         float fogStart = 30.0f;
         float fogEnd = 150.0f + fogStart;
-   
-        float FogFactor = saturate((fogEnd - fDistanceToCamera) / (fogEnd - fogStart));
+
+        float FogFactor = saturate((fogEnd - fDistanceToCam) / (fogEnd - fogStart));
         float FogFactor2 = 1 / pow(2.781828, (fDistanceToCamera * 0.0015) * (fDistanceToCamera * 0.0015));
-        
-        
-            if (vGlow.a != 1.f)
-            {
-                Out.vColor = lerp(float4(0.21f, 0.21f, 0.21f, 1.0f), Out.vColor, FogFactor);
-            }
-        
+
+
+        if (vGlow.a != 1.f)
+        {
+            Out.vColor = lerp(float4(0.21f, 0.21f, 0.21f, 1.0f), Out.vColor, FogFactor);
+        }
+
         //guard처럼 뒤에 안개 영향 받긴 하도록. 
                //Glow인 애들은 알파값이 1로 기록하여 안개를 덜받도록.
-       
-      
+
+
     }
-   
-    
+//
+//    if (IsFogOn && vGlow.a != 0.5f) // 빛을 받지 않는 렌더타겟 제외
+//    {
+//        // 뷰 공간에서 픽셀 위치
+//        float3 vViewPixelPosition = mul(float4(vPosition, 1.0f), g_ViewProjInfoArr[g_CamID].mViewMatrix).xyz;
+//
+//        // 카메라 위치 (뷰 공간)
+//        float vCameraDepth = g_ViewProjInfoArr[0].vCamPosition.z;
+//
+//        // 픽셀과 카메라 사이 거리
+//        float fDistanceToCamera = abs(vViewPixelPosition.z - vCameraDepth);
+//
+//        // Fog 계산
+//        float fogStart = 30.0f;
+//        float fogEnd = 180.0f; // (150 + 30)
+//        float FogFactor = saturate((fogEnd - fDistanceToCamera) / max(0.001f, fogEnd - fogStart));
+//        float FogFactor2 = exp(-pow(fDistanceToCamera * 0.0015, 2));
+//
+//        // 안개 적용 (Glow가 1이면 안개 영향 적게 받음)
+//    Out.vColor = (vGlow.a == 1.0f)
+//        ? Out.vColor
+//        : lerp(float4(0.21f, 0.21f, 0.21f, 1.0f), Out.vColor, FogFactor);
+//}
+//    
   
     Out.vColor += g_Texture1.Sample(g_Sampler_Normal, Input.vTexUV); //AlphaDeffered
     float4 vDepthDesc = g_Texture4.Sample(g_Sampler_Normal, Input.vTexUV);

@@ -48,7 +48,7 @@ HRESULT UFire::NativeConstructClone(const VOIDDATAS& _convecDatas)
 		m_spShaderFireNoiseBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::FIRENOISEBUFFER,
 			static_cast<_uint>(sizeof(FIRENOISEBUFFER)));
 		m_spShaderDistortionBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::FIREDISTORTION,
-			static_cast<_uint>(sizeof(FIREDISTORTIONBUFFER)));
+			static_cast<_uint>(sizeof(FIREDISTORTIONBUFFER)),1,true);
 
 		if (m_spFireColorTexGroup == nullptr)m_spFireColorTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_FIRECOLORTEXTUREGROUP));
 		if (m_spFireNoiseTexGroup == nullptr)m_spFireNoiseTexGroup = static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_FIRENOISETEXTUREGROUP));

@@ -13,9 +13,9 @@
 
 UShader::PIPELINECONTAINER					UShader::s_m_PipeLineContainer;
 
-UShader::UShader(CSHPTRREF<UDevice> _pDevice, CSHPTRREF<URootSignature> _spRootSignature, const SHADERDESC& _tDesc)
+UShader::UShader(CSHPTRREF<UDevice> _pDevice, CSHPTRREF<URootSignature> _spRootSignature, CSHPTRREF<UCommand> _spCommand, const SHADERDESC& _tDesc)
 	: UResource(_pDevice),
-	m_spCommand{ nullptr },
+	m_spCommand{ _spCommand },
 	m_spTableDescriptor{ nullptr },
 	m_spRootSignature{ _spRootSignature },
 	m_stShaderDesc{ _tDesc }
@@ -64,7 +64,7 @@ HRESULT UShader::BindCBVBuffer(CSHPTRREF<UShaderConstantBuffer> _spShaderConstan
 {
 	RETURN_CHECK(nullptr == _spShaderConstantBuffer, E_FAIL);
 	// Bind Data
-	return _spShaderConstantBuffer->PushData(m_spTableDescriptor, _pBuffer, _iSize);
+	return _spShaderConstantBuffer->PushData(m_spCommand,m_spTableDescriptor, _pBuffer, _iSize);
 }
 
 HRESULT UShader::BindSRVBuffer(const SRV_REGISTER _eReg, CSHPTRREF<UShaderStructedBuffer> _spStructedBuffer)

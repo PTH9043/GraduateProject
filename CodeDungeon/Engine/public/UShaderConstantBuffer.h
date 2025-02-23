@@ -20,18 +20,22 @@ public:
 	DESTRUCTOR(UShaderConstantBuffer)
 public:
 	virtual void Free() override;
-	HRESULT NativeConstruct(CSHPTRREF<UDevice> _spDevice, 	const CBV_REGISTER& _eReg,   const _uint& _iSize, const _uint& _iNum = 1);
+	HRESULT NativeConstruct(CSHPTRREF<UDevice> _spDevice, 	const CBV_REGISTER& _eReg,   const _uint& _iSize, const _uint& _iNum = 1,const _bool& UseDefault=false);
 	// Shader에 값을 밀어 넣는 함수이다. 
-	HRESULT PushData(CSHPTRREF< UTableDescriptor> _spTableDescriptor, const void* _pBuffer, const _uint& _iSize);
+	HRESULT PushData(CSHPTRREF<UCommand> _spCommand,CSHPTRREF< UTableDescriptor> _spTableDescriptor, const void* _pBuffer, const _uint& _iSize);
 private:
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCpuDescriptorHandle(const _uint& _iIndex);
 private:
 	// Use Upload
 	ComPtr<Dx12Resource>						m_cpUploadBuffer;
+	ComPtr<Dx12Resource>						m_cpDefaultBuffer;
 	// Descriptor Heap
 	ComPtr<Dx12DescriptorHeap>			m_cpCpuDescriptorHeap;
 	D3D12_CPU_DESCRIPTOR_HANDLE	m_stD3DCpuDescriptorHandle;
 	_int																m_iHandleIncrementSize;
+	_bool m_bDataUpdated;
+	_bool m_bUseDefaultBuffer;
+	std::unique_ptr<_ubyte[]> m_pPreviousBuffer;
 
 	BYTE* m_pMapBuffer;
 	_uint															m_iElementSize;
