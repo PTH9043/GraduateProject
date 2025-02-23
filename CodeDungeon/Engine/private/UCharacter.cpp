@@ -73,8 +73,8 @@ HRESULT UCharacter::NativeConstructClone(const VOIDDATAS& _Datas)
 		assert(nullptr != m_spCurNavi);
 	}
 	{
-		m_spScaleOutlineBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::OUTLINESCALE, static_cast< _int>(sizeof(_bool)));
-		m_spColorOutlineBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::OUTLINECOLOR, static_cast< _int>(sizeof(_float3)));
+		m_spScaleOutlineBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::OUTLINESCALE, static_cast< _int>(sizeof(_bool)),1,true);
+		m_spColorOutlineBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::OUTLINECOLOR, static_cast< _int>(sizeof(_float3)), 1, true);
 	}
 	{
 		m_spDissovleTexTGroup = std::static_pointer_cast<UTexGroup>(spGameInstance->CloneResource(PROTO_RES_DISSOLVETEXTUREGROUP));

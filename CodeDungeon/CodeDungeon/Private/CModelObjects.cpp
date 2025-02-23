@@ -34,10 +34,10 @@ HRESULT CModelObjects::NativeConstructClone(const VOIDDATAS& _vecDatas)
 	RETURN_CHECK_FAILED(__super::NativeConstructClone(_vecDatas), E_FAIL);
 
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	m_spShaderTexCheckBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::MODELCHECKBUF, static_cast<_int>(sizeof(HasTex)));
-	m_spShaderCheckPointBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::OUTLINESCALE, sizeof(_bool));
+	m_spShaderTexCheckBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::MODELCHECKBUF, static_cast<_int>(sizeof(HasTex)), 1, true);
+	m_spShaderCheckPointBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::OUTLINESCALE, sizeof(_bool), 1, true);
 	{
-		m_spScaleOutlineBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::BLOODTIMERBUFFER, sizeof(_bool));
+		m_spScaleOutlineBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::BLOODTIMERBUFFER, sizeof(_bool), 1, true);
 	}
 	AddShader(PROTO_RES_MODELSHADER, RES_SHADER);
 	AddShadowShader(PROTO_RES_SHADOWSHADER, RES_SHADER);

@@ -11,8 +11,8 @@
 #include "UComputeCommand.h"
 
 
-UComputeShader::UComputeShader(CSHPTRREF<UDevice> _pDevice, CSHPTRREF<URootSignature> _spRootSignature, const SHADERDESC& _stDesc) :
-	UShader(_pDevice, _spRootSignature, _stDesc)
+UComputeShader::UComputeShader(CSHPTRREF<UDevice> _pDevice, CSHPTRREF<URootSignature> _spRootSignature, CSHPTRREF<UCommand> _spCommand, const SHADERDESC& _stDesc) :
+	UShader(_pDevice, _spRootSignature, _spCommand, _stDesc)
 {
 }
 

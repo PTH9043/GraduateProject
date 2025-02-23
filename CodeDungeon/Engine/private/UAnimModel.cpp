@@ -617,7 +617,7 @@ HRESULT UAnimModel::CreateShaderConstantBuffer()
 	m_spPrevBoneMatrixShaderConstantBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::PREVBONEMATRIX, GetTypeSize<BONEMATRIXPARAM>());
 	RETURN_CHECK(nullptr == m_spPrevBoneMatrixShaderConstantBuffer, E_FAIL);
 	
-	m_spDrawRimLightBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::ANIMMODELRIMDRAW, GetTypeSize<RIMDRAW>());
+	m_spDrawRimLightBuffer = CreateNative<UShaderConstantBuffer>(GetDevice(), CBV_REGISTER::ANIMMODELRIMDRAW, GetTypeSize<RIMDRAW>(), 1, true);
 	RETURN_CHECK(nullptr == m_spDrawRimLightBuffer, E_FAIL);
 	return S_OK;
 }
