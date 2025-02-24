@@ -26,10 +26,14 @@ cbuffer VIEWPROJ_PARAMS : register(b0)
     // Padding Value
     float2 g_ViewProjPaddings;
 };
-    // 태현 추가
-cbuffer GROBALINFO_PARAMS : register(b1)
-{
     
+cbuffer GLOBALINFO_PARAMS : register(b1)
+{
+    matrix     deffered_WorldMatrix;
+    matrix     deffered_PrevWorldMatrix;
+    int            deffered_CamID;
+    int            deffered_TransformMotionBlurOn;
+    int2         deffered_TransformPadding;
 }
 
 cbuffer TRANSFORM_PARAMS : register(b3)

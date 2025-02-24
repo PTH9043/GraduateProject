@@ -19,7 +19,7 @@ VS_OUT VS_Main(VS_IN In)
 {
     VS_OUT Out = (VS_OUT) 0;
 
-    Out.vPosition = Compute_FinalMatrix(In.vPosition);
+    Out.vPosition = Compute_DefferedFinalMatrix(In.vPosition);
     Out.vTexUV = In.vTexUV;
 
     return Out;

@@ -130,7 +130,7 @@ private:
 	SHPTR<UShader> FrameReadyDrawFinalRenderTarget(const _wstring& _wstrShaderName, const RTGROUPID _eGroupID);
 	SHPTR<UShader> FrameReadyDrawLast(const _wstring& _wstrShaderName);
 
-	void BindGrobalBuffer();
+	void BindGlobalBuffer();
 private:
 	GLOBALPARAM																				m_stGlobalParam;
 	SHPTR< UGlobalConstantBuffer>											m_spGlobalBuffer;
@@ -138,7 +138,8 @@ private:
 	// Deffered Transform Param		
 	TRANSFORMPARAM																	 m_stFinalRenderTransformParam;
 	TRANSFORMPARAM																	 m_stSmallRenderTransformParam;
-	SHPTR<UShaderConstantBuffer>											m_spTransformConstantBuffer;
+	//SHPTR<UShaderConstantBuffer>											m_spTransformConstantBuffer;
+	SHPTR<UGlobalConstantBuffer>											m_spGlobalTransformConstantBuffer;
 	SHPTR<UDefferedCamera>														m_spDefferedCamera;
 	SHPTR<USmallDefferedCamera>														m_spSmallDefferedCamera;
 	SHPTR<UShadowCamera>														m_spShadowCamera;

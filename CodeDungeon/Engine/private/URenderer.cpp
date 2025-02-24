@@ -28,7 +28,8 @@ URenderer::URenderer(CSHPTRREF <UDevice> _spDevice, CSHPTRREF<UCommand> _spComma
     CSHPTRREF<USceneManager> _spSceneManager, CSHPTRREF<URenderTargetManager> _spRenderTargetManager,
     CSHPTRREF<UComputeManager> _spComputeManager) :
     UComponent(_spDevice),
-    m_spTransformConstantBuffer{ nullptr },
+   // m_spTransformConstantBuffer{ nullptr },
+    m_spGlobalTransformConstantBuffer{ nullptr },
     m_fGrobalDeltaTime{0},
     m_spDefferedCamera{ nullptr },
     m_spSmallDefferedCamera{ nullptr },
@@ -188,8 +189,12 @@ HRESULT URenderer::NativeConstruct()
         m_stSmallRenderTransformParam.iCamIndex = m_spSmallDefferedCamera->GetCamID();
             
         // 이미 만들어진 Shader ConstnatBuffer를 가져옴
-        spGameInstance->GetPreAllocatedConstantBuffer(PREALLOCATED_TRANSFORM, m_spTransformConstantBuffer);
-    }
+        spGameInstance->GetGlobalConstantBuffer(GLOBAL_DEFFEREDPARAMS, m_spGlobalTransformConstantBuffer);
+        //Deffered Camera관련 정보 및 transform정보 전역으로 b2에 둔다 반복 cbv생성 비용 때문
+        // 
+       // spGameInstance->GetPreAllocatedConstantBuffer(PREALLOCATED_TRANSFORM, m_spTransformConstantBuffer);
+       
+ }
     // Initailize 
         return S_OK;
 }
@@ -293,12 +298,12 @@ HRESULT URenderer::Render()
 {
     m_spPipeLine->UpdateViewProjMatrix(m_fGrobalDeltaTime);
     m_spPipeLine->BindViewProjMatrix(m_spCastingCommand);
-    BindGrobalBuffer();
+    BindGlobalBuffer();
     // ============== Bind Static Buffer =============
   
     // Render 
   //  RenderRTs();
-    RenderPriority();
+   // RenderPriority();
     RenderPosNormal();
     RenderShadowDepth();
     RenderNonAlphaBlend();
@@ -374,7 +379,8 @@ void URenderer::ClearRenderingData()
 void URenderer::ClearAllData()
 {
     m_ShaderObjects.clear();
-    m_spTransformConstantBuffer.reset();
+    m_spGlobalTransformConstantBuffer.reset();
+   // m_spTransformConstantBuffer.reset();
     m_spDefferedCamera.reset();
     m_spShadowCamera.reset();
 
@@ -401,7 +407,7 @@ void URenderer::RenderOtherCamera()
 void URenderer::BindDefferedTransform(SHPTR<UShader> _spShader)
 {
     RETURN_CHECK(nullptr == _spShader, ;);
-    _spShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+  //  _spShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
 }
 
 void URenderer::RenderRTs()
@@ -421,7 +427,7 @@ void URenderer::RenderRTs()
 
            
             m_spPipeLine->BindViewProjMatrix(m_spCastingCommand);
-            BindGrobalBuffer();
+            BindGlobalBuffer();
 
             Mirror->Render(m_spCastingCommand, m_spGraphicDevice->GetTableDescriptor());
           
@@ -556,7 +562,7 @@ void URenderer::RenderBlend()
     SHPTR<UShader> spShader = FindShader(PROTO_RES_BLENDDEFFEREDSHADER);
     spShader->SettingPipeLineState(m_spCastingCommand);
     spShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
-    spShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+   // spShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
     {
         SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::NONALPHA_DEFFERED);
         spShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::NONALPHA_DIFFUSE_DEFFERED));
@@ -627,7 +633,7 @@ void URenderer::RenderMotionBlur()
         SHPTR<UShader> spShader = FindShader(PROTO_RES_MOTIONBLURSHADER);
         spShader->SettingPipeLineState(m_spCastingCommand);
         spShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
-        spShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+       // spShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
         {
             SHPTR<URenderTargetGroup> spBlend = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLEND_DEFFERED);
             spShader->BindSRVBuffer(SRV_REGISTER::T0, spBlend->GetRenderTargetTexture(RTOBJID::BLEND_SCREEN_DEFFERED));
@@ -649,7 +655,7 @@ void URenderer::RenderMotionBlur()
         SHPTR<UShader> spShader = FindShader(PROTO_RES_MIDDLERENDERSCREENSHADER);
         spShader->SettingPipeLineState(m_spCastingCommand);
         spShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
-        spShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+       // spShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
         {
 
             SHPTR<URenderTargetGroup> spMotionBlur = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::MOTIONBLUR_DEFFERED);
@@ -706,7 +712,7 @@ void URenderer::RenderHDR()
     SHPTR<UShader> spShader = FindShader(PROTO_RES_HDRSHADER);
     spShader->SettingPipeLineState(m_spCastingCommand);
     spShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
-    spShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+    //spShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
     {
         SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLEND_DEFFERED);
         spShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::BLEND_SCREEN_DEFFERED));
@@ -729,7 +735,7 @@ void URenderer::RenderHDRTWO()
     SHPTR<UShader> spShader = FindShader(PROTO_RES_HDRTWOSHADER);
     spShader->SettingPipeLineState(m_spCastingCommand);
     spShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
-    spShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+    //spShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
     {
         SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLEND_DEFFERED);
         spShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::BLEND_SCREEN_DEFFERED));
@@ -752,7 +758,7 @@ void URenderer::RenderGrayScale()
     SHPTR<UShader> spShader = FindShader(PROTO_RES_GRAYSCALESHADER);
     spShader->SettingPipeLineState(m_spCastingCommand);
     spShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
-    spShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+    //spShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
     {
         SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLEND_DEFFERED);
         spShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::BLEND_SCREEN_DEFFERED));
@@ -791,7 +797,7 @@ void URenderer::DownSample()
     SHPTR<UShader> spDownSamplingShader = FindShader(PROTO_RES_DOWNSAMPLINGSHADER);
     spDownSamplingShader->SettingPipeLineState(m_spCastingCommand);
     spDownSamplingShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
-    spDownSamplingShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+    //spDownSamplingShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
     {
         SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::NONALPHA_DEFFERED);
         spDownSamplingShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::NONALPHA_GLOW_DEFFERED));
@@ -830,7 +836,7 @@ void URenderer::DownSample2()
     SHPTR<UShader> spDownSamplingShader = FindShader(PROTO_RES_DOWNSAMPLINGTWOSHADER);
     spDownSamplingShader->SettingPipeLineState(m_spCastingCommand);
     spDownSamplingShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
-    spDownSamplingShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+   // spDownSamplingShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
     {
         SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::DOWNSAMPLE);
         spDownSamplingShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::DOWNSAMPLE));
@@ -855,7 +861,7 @@ void URenderer::UpSample()
     SHPTR<UShader> spUpSamplingShader = FindShader(PROTO_RES_UPSAMPLINGSHADER);
     spUpSamplingShader->SettingPipeLineState(m_spCastingCommand);
     spUpSamplingShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
-    spUpSamplingShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+   // spUpSamplingShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
     {
         //SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLUR_RESULT);
         //spUpSamplingShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::BLUR_RESULT));  
@@ -882,7 +888,7 @@ void URenderer::UpSampleGray()
     SHPTR<UShader> spUpSamplingShader = FindShader(PROTO_RES_UPSAMPLINGGRAYSHADER);
     spUpSamplingShader->SettingPipeLineState(m_spCastingCommand);
     spUpSamplingShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
-    spUpSamplingShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+   // spUpSamplingShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
     {
         //SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLUR_RESULT);
         //spUpSamplingShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::BLUR_RESULT));  
@@ -922,7 +928,7 @@ void URenderer::RenderHorizontalBlur()
     SHPTR<UShader> spHorizontalShader = FindShader(PROTO_RES_HORIZONTALBLURSHADER);
     spHorizontalShader->SettingPipeLineState(m_spCastingCommand);
     spHorizontalShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
-    spHorizontalShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+    //spHorizontalShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
     {
         SHPTR<URenderTargetGroup> spBlur = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::HDRTWO);
         spHorizontalShader->BindSRVBuffer(SRV_REGISTER::T0, spBlur->GetRenderTargetTexture(RTOBJID::HDRTWO));
@@ -947,7 +953,7 @@ void URenderer::RenderVerticalBlur()
     SHPTR<UShader> spVerticalShader = FindShader(PROTO_RES_VERTICALBLURSHADER);
     spVerticalShader->SettingPipeLineState(m_spCastingCommand);
     spVerticalShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
-    spVerticalShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+   // spVerticalShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
     {
         SHPTR<URenderTargetGroup> spNonAlpha = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::BLUR);
         spVerticalShader->BindSRVBuffer(SRV_REGISTER::T0, spNonAlpha->GetRenderTargetTexture(RTOBJID::BLUR));
@@ -973,7 +979,7 @@ void URenderer::RenderBloom()
     SHPTR<UShader> spShader = FindShader(PROTO_RES_BLOOMSHADER);
     spShader->SettingPipeLineState(m_spCastingCommand);
     spShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
-    spShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+   // spShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
     {
         SHPTR<URenderTargetGroup> spHDR = m_spRenderTargetManager->FindRenderTargetGroup(RTGROUPID::HDR);
         spShader->BindSRVBuffer(SRV_REGISTER::T0, spHDR->GetRenderTargetTexture(RTOBJID::HDR));
@@ -1002,7 +1008,7 @@ void URenderer::RenderEnd()
         SHPTR<UShader> spDefferedShader = FindShader(PROTO_RES_FINALDEFFEREDSHADER);
         spDefferedShader->SettingPipeLineState(m_spCastingCommand);
         spDefferedShader->SetTableDescriptor(m_spGraphicDevice->GetTableDescriptor());
-        spDefferedShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
+        //spDefferedShader->BindCBVBuffer(m_spTransformConstantBuffer, &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
         //  Diffuse Texture 가져와서 Bind 
        
             spDefferedShader->BindSRVBuffer(SRV_REGISTER::T0, m_spRenderTargetManager->
@@ -1133,10 +1139,12 @@ SHPTR<UShader> URenderer::FrameReadyDrawLast(const _wstring& _wstrShaderName)
     return spShader;
 }
 
-void URenderer::BindGrobalBuffer()
+void URenderer::BindGlobalBuffer()
 {
    // SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
     //spGameInstance->CopyToMaterialShaderParam(REF_OUT m_stGlobalParam);
     //// Setting Grobal Data
     //m_spGlobalBuffer->SettingGlobalData(m_spCastingCommand, &m_stGlobalParam, GetTypeSize<GLOBALPARAM>());
+    m_spGlobalTransformConstantBuffer->SettingGlobalData(m_spCastingCommand,
+        &m_stFinalRenderTransformParam, GetTypeSize<TRANSFORMPARAM>());
 }

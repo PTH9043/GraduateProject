@@ -117,7 +117,7 @@ void CClientApp::Render()
 		m_spDeltaTimer->Tick();
 
 		m_dDeltaTime += m_spDeltaTimer->GetDeltaTime();
-		if (m_dDeltaTime >= TICK_DOUBLE)
+		//if (m_dDeltaTime >= TICK_DOUBLE)
 		{
 			m_spTickTimer->Tick();
 			m_dDeltaTime = m_spTickTimer->GetDeltaTime();
