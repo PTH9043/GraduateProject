@@ -15,8 +15,8 @@ HRESULT UShaderBufferManager::ReadyShaderBufferManager(CSHPTRREF<UDevice> _spDev
 {
 	{
 		RETURN_CHECK_FAILED(CreateGlobalConstantBuffer(_spDevice, GLOBAL_VIEWPROJ, CBV_REGISTER::VIEWPROJ, sizeof(VIEWPROJPARAM)), E_FAIL);
-		RETURN_CHECK_FAILED(CreateGlobalConstantBuffer(_spDevice, GLOBAL_DEFFEREDPARAMS, CBV_REGISTER::DEFFEREDPARAMS, sizeof(TRANSFORMPARAM)), E_FAIL);
-		RETURN_CHECK_FAILED(CreateGlobalConstantBuffer(_spDevice, GLOBAL_LIGHTSTATIC, CBV_REGISTER::STATICLIGHT, sizeof(LIGHTPARAM)), E_FAIL);
+		RETURN_CHECK_FAILED(CreateGlobalConstantBuffer(_spDevice, GLOBAL_DEFFEREDPARAMS, CBV_REGISTER::DEFFEREDPARAMS, sizeof(TRANSFORMPARAM),true), E_FAIL);
+	//	RETURN_CHECK_FAILED(CreateGlobalConstantBuffer(_spDevice, GLOBAL_LIGHTSTATIC, CBV_REGISTER::STATICLIGHT, sizeof(LIGHTPARAM), true), E_FAIL);
 	}
 	{
 		RETURN_CHECK_FAILED(CreateShaderConstantBuffer(_spDevice, PREALLOCATED_TRANSFORM, CBV_REGISTER::TRANSFORM, sizeof(TRANSFORMPARAM), 10000), E_FAIL);
@@ -44,12 +44,12 @@ HRESULT UShaderBufferManager::GetPreAllocatedConstantBuffer(const PREALLOCATED_C
 	return S_OK;
 }
 
-HRESULT UShaderBufferManager::CreateGlobalConstantBuffer(CSHPTRREF<UDevice> _spDevice, const GLOBAL_CBUFFERTYPE _eType, const CBV_REGISTER& _eReg, const _uint& _iBufferSize)
+HRESULT UShaderBufferManager::CreateGlobalConstantBuffer(CSHPTRREF<UDevice> _spDevice, const GLOBAL_CBUFFERTYPE _eType, const CBV_REGISTER& _eReg, const _uint& _iBufferSize, const _bool _iUseDefaultBuffer)
 {
 	_ubyte ByteInt = static_cast<_ubyte>(_eType);
 	RETURN_CHECK(m_arrGlobalConstantBufferContainer.size() <= ByteInt || nullptr != m_arrGlobalConstantBufferContainer[ByteInt], E_FAIL);
 	// Create GlobalBuffer 
-	m_arrGlobalConstantBufferContainer[ByteInt] = CreateNative<UGlobalConstantBuffer>(_spDevice, _eReg, _iBufferSize);
+	m_arrGlobalConstantBufferContainer[ByteInt] = CreateNative<UGlobalConstantBuffer>(_spDevice, _eReg, _iBufferSize, _iUseDefaultBuffer);
 	return S_OK;
 }
 

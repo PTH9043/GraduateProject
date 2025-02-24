@@ -14,10 +14,10 @@
 #include "UGpuCommand.h"
 
 USceneManager::USceneManager() :
-	m_c_iLightParamSize{ (_uint)sizeof(LIGHTPARAM) },
-	m_iLightCamIndex{ 0 },
-	m_stLightParam{},
-	m_spLightGlobalBuffer{ nullptr },
+	//m_c_iLightParamSize{ (_uint)sizeof(LIGHTPARAM) },
+	//m_iLightCamIndex{ 0 },
+	//m_stLightParam{},
+	//m_spLightGlobalBuffer{ nullptr },
 	m_spCurScene{ nullptr }
 {
 }
@@ -29,7 +29,7 @@ void USceneManager::Free()
 
 HRESULT USceneManager::ReadySceneManager(UGameInstance* _pGameInstance)
 {
-	_pGameInstance->GetGlobalConstantBuffer(GLOBAL_LIGHTSTATIC, m_spLightGlobalBuffer);
+	//_pGameInstance->GetGlobalConstantBuffer(GLOBAL_LIGHTSTATIC, m_spLightGlobalBuffer);
 	return S_OK;
 }
 
@@ -75,12 +75,12 @@ void USceneManager::LateTick(const _double& _dTimeDelta)
 
 void USceneManager::OutLightControlInfo(LIGHTPARAM& _stLightControl)
 {
-	_stLightControl = m_stLightParam;
+	//_stLightControl = m_stLightParam;
 }
 
 void USceneManager::ChangeLightCamIndex(const CAMID& _iID)
 {
-	m_iLightCamIndex = _iID;
+	//m_iLightCamIndex = _iID;
 }
 
 void USceneManager::RenderLight(CSHPTRREF<UPipeLine> _spPipeLine, CSHPTRREF<URenderTargetManager> _spRenderTargetManager,
@@ -98,41 +98,41 @@ void USceneManager::RenderLight(CSHPTRREF<UPipeLine> _spPipeLine, CSHPTRREF<URen
 
 		if (nullptr != m_spCurScene)
 		{
-			//수정사항 2024-04-09
-			m_stLightParam.mScreenWorldMatrix = _stDefferendParam.mWorldMatrix;
-				//_spPipeLine->GetMainCamWorldMatrix();
-			{
-				// View Proj
-				m_stLightParam.mScreenViewmatrix = _spPipeLine->GetCamViewMatrix(_stDefferendParam.iCamIndex);
-				m_stLightParam.mScreenProjMatrix = _spPipeLine->GetCamProjMatrix(_stDefferendParam.iCamIndex);
-				// Far
-				m_stLightParam.fCamFar = _spPipeLine->GetCamFar(m_iLightCamIndex);
-				// View Proj
-				m_stLightParam.mViewMatrix = _spPipeLine->GetCamViewMatrix(m_iLightCamIndex);
-				m_stLightParam.mProjMatrix = _spPipeLine->GetCamProjMatrix(m_iLightCamIndex);
-				//CamPos
-				m_stLightParam.vCamPos = _spPipeLine->GetCameraPosition(m_iLightCamIndex);
-			}
+			////수정사항 2024-04-09
+			//m_stLightParam.mScreenWorldMatrix = _stDefferendParam.mWorldMatrix;
+			//	//_spPipeLine->GetMainCamWorldMatrix();
+			//{
+			//	// View Proj
+			//	m_stLightParam.mScreenViewmatrix = _spPipeLine->GetCamViewMatrix(_stDefferendParam.iCamIndex);
+			//	m_stLightParam.mScreenProjMatrix = _spPipeLine->GetCamProjMatrix(_stDefferendParam.iCamIndex);
+			//	// Far
+			//	m_stLightParam.fCamFar = _spPipeLine->GetCamFar(m_iLightCamIndex);
+			//	// View Proj
+			//	m_stLightParam.mViewMatrix = _spPipeLine->GetCamViewMatrix(m_iLightCamIndex);
+			//	m_stLightParam.mProjMatrix = _spPipeLine->GetCamProjMatrix(m_iLightCamIndex);
+			//	//CamPos
+			//	m_stLightParam.vCamPos = _spPipeLine->GetCameraPosition(m_iLightCamIndex);
+			//}
 
-			m_stLightParam.mScreenViewmatrix = m_stLightParam.mScreenViewmatrix.Transpose();
-			m_stLightParam.mScreenProjMatrix = m_stLightParam.mScreenProjMatrix.Transpose();
+			//m_stLightParam.mScreenViewmatrix = m_stLightParam.mScreenViewmatrix.Transpose();
+			//m_stLightParam.mScreenProjMatrix = m_stLightParam.mScreenProjMatrix.Transpose();
 
-			m_stLightParam.mViewMatrixInv = m_stLightParam.mViewMatrix;
-			m_stLightParam.mProjMatrixInv = m_stLightParam.mProjMatrix;
+			//m_stLightParam.mViewMatrixInv = m_stLightParam.mViewMatrix;
+			//m_stLightParam.mProjMatrixInv = m_stLightParam.mProjMatrix;
 
-			m_stLightParam.mViewMatrix = m_stLightParam.mViewMatrix.Transpose();
-			m_stLightParam.mProjMatrix = m_stLightParam.mProjMatrix.Transpose();
-			// View Proj Inverse
-			m_stLightParam.mViewMatrixInv = m_stLightParam.mViewMatrixInv.Invert();
-			m_stLightParam.mViewMatrixInv = m_stLightParam.mViewMatrixInv.Transpose();
+			//m_stLightParam.mViewMatrix = m_stLightParam.mViewMatrix.Transpose();
+			//m_stLightParam.mProjMatrix = m_stLightParam.mProjMatrix.Transpose();
+			//// View Proj Inverse
+			//m_stLightParam.mViewMatrixInv = m_stLightParam.mViewMatrixInv.Invert();
+			//m_stLightParam.mViewMatrixInv = m_stLightParam.mViewMatrixInv.Transpose();
 
-			m_stLightParam.mProjMatrixInv = m_stLightParam.mProjMatrixInv.Invert();
-			m_stLightParam.mProjMatrixInv = m_stLightParam.mProjMatrixInv.Transpose();
-			// Setting Grobal 
-			{
-				m_spLightGlobalBuffer->SettingGlobalData(spCmdList,
-					&m_stLightParam, m_c_iLightParamSize); //원래 다른 커맨드 리스트로 처리했음
-			}
+			//m_stLightParam.mProjMatrixInv = m_stLightParam.mProjMatrixInv.Invert();
+			//m_stLightParam.mProjMatrixInv = m_stLightParam.mProjMatrixInv.Transpose();
+			//// Setting Grobal 
+			//{
+			//	m_spLightGlobalBuffer->SettingGlobalData(spCmdList,
+			//		&m_stLightParam, m_c_iLightParamSize); //원래 다른 커맨드 리스트로 처리했음
+			//}
 
 			m_spCurScene->RenderLights();
 		}

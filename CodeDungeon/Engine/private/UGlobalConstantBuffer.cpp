@@ -6,10 +6,13 @@
 
 UGlobalConstantBuffer::UGlobalConstantBuffer() :
 	m_cpUploadBuffer{ NULL },
+	m_cpDefaultBuffer{ NULL },
 	m_cpCpuDescriptorHeap{ NULL },
 	m_cpCpuDescriptorHandle{ NULL },
 	m_iElementSize{ 0 },
-	m_iCbvRegisterNumber{ 0 }
+	m_iCbvRegisterNumber{ 0 },
+	m_bUseDefaultBuffer { false },
+	m_bCopiedUploadToDefaultOnce{ false }
 {
 }
 
@@ -17,11 +20,12 @@ void UGlobalConstantBuffer::Free()
 {
 }
 
-HRESULT UGlobalConstantBuffer::NativeConstruct(CSHPTRREF<UDevice> _spDevice, const CBV_REGISTER& _eReg, const _uint& _iSize)
+HRESULT UGlobalConstantBuffer::NativeConstruct(CSHPTRREF<UDevice> _spDevice, const CBV_REGISTER& _eReg, const _uint& _iSize, const _bool& UseDefault)
 {
 	RETURN_CHECK(nullptr == _spDevice, E_FAIL);
 	m_iElementSize = UMethod::CalcConstantBufferByteSize(_iSize);
 	m_iCbvRegisterNumber = (_uint)(_eReg);
+	m_bUseDefaultBuffer = UseDefault;
 	// Create Buffer
 	{
 		D3D12_HEAP_PROPERTIES heapProperty = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
@@ -30,6 +34,15 @@ HRESULT UGlobalConstantBuffer::NativeConstruct(CSHPTRREF<UDevice> _spDevice, con
 			&Desc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&m_cpUploadBuffer)), E_FAIL);
 		// UploadBuffer
 		m_cpUploadBuffer->Map(0, nullptr, (void**)&m_pMapBuffer);
+	}
+	if (m_bUseDefaultBuffer)
+	{
+		// 디폴트 버퍼
+		RETURN_CHECK_DXOBJECT(UMethod::CreateBufferResource(
+			_spDevice->GetDV(), nullptr,
+			m_iElementSize, nullptr,
+			m_cpDefaultBuffer, m_cpUploadBuffer,
+			D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER), E_FAIL);
 	}
 	// CreateView 
 	{
@@ -44,7 +57,7 @@ HRESULT UGlobalConstantBuffer::NativeConstruct(CSHPTRREF<UDevice> _spDevice, con
 
 		D3D12_CPU_DESCRIPTOR_HANDLE cbvHandle = CD3DX12_CPU_DESCRIPTOR_HANDLE(m_cpCpuDescriptorHandle, 0);
 		D3D12_CONSTANT_BUFFER_VIEW_DESC bufferViewDesc{};
-		bufferViewDesc.BufferLocation = m_cpUploadBuffer->GetGPUVirtualAddress();
+		bufferViewDesc.BufferLocation = m_bUseDefaultBuffer ? m_cpDefaultBuffer->GetGPUVirtualAddress() : m_cpUploadBuffer->GetGPUVirtualAddress();
 		bufferViewDesc.SizeInBytes = m_iElementSize;
 		_spDevice->GetDV()->CreateConstantBufferView(&bufferViewDesc, cbvHandle);
 	}
@@ -55,7 +68,34 @@ void UGlobalConstantBuffer::SettingGlobalData(CSHPTRREF<UCommand> _spCommand, co
 {
 	RETURN_CHECK(nullptr == _spCommand, ;);
 	RETURN_CHECK(m_iElementSize != ((_iSize + 255) & ~255), ;);
+
 	::memcpy(&m_pMapBuffer[0], _pBuffer, _iSize);
+
+	if (m_bUseDefaultBuffer && !m_bCopiedUploadToDefaultOnce)
+	{
+		// Default Buffer를 COPY_DEST로 변경 (최초 1회)
+		CD3DX12_RESOURCE_BARRIER transitionToCopy = CD3DX12_RESOURCE_BARRIER::Transition(
+			m_cpDefaultBuffer.Get(),
+			D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,  // 기존 상태
+			D3D12_RESOURCE_STATE_COPY_DEST                   // 복사 상태
+		);
+		_spCommand->GetGpuCmdList()->ResourceBarrier(1, &transitionToCopy);
+
+		// 업로드 버퍼에서 디폴트 버퍼로 데이터 복사
+		_spCommand->GetGpuCmdList()->CopyResource(m_cpDefaultBuffer.Get(), m_cpUploadBuffer.Get());
+
+		// Default Buffer를 GPU가 읽을 수 있도록 상태 변경
+		CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+			m_cpDefaultBuffer.Get(),
+			D3D12_RESOURCE_STATE_COPY_DEST,
+			D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER
+		);
+		_spCommand->GetGpuCmdList()->ResourceBarrier(1, &barrier);
+
+		m_bCopiedUploadToDefaultOnce = true;
+	}
+
+	
 	_spCommand->GetGpuCmdList()->SetGraphicsRootConstantBufferView(m_iCbvRegisterNumber,
-		m_cpUploadBuffer->GetGPUVirtualAddress());
+		m_bUseDefaultBuffer ? m_cpDefaultBuffer->GetGPUVirtualAddress() : m_cpUploadBuffer->GetGPUVirtualAddress());
 }

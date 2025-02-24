@@ -35,23 +35,23 @@ struct LIGHTCOLOR
 
 
 
-struct LIGHTPARAM
-{
-    float3       vLightCamPos;
-    float          fCamFar;
-    matrix       mScreenWorldMatrix;
-    matrix       mScreenViewMatrix;
-    matrix       mScreenProjMatrix;
-    matrix       mViewMatrix;
-    matrix       mProjMatrix;
-    matrix       mViewMatrixInv;
-    matrix       mProjMatrixInv;
-};
-
-cbuffer LIGHTBUFFER : register(b2)
-{
-    LIGHTPARAM g_tLightParam;
-};
+//struct LIGHTPARAM
+//{
+//    float3       vLightCamPos;
+//    float          fCamFar;
+//    matrix       mScreenWorldMatrix;
+//    matrix       mScreenViewMatrix;
+//    matrix       mScreenProjMatrix;
+//    matrix       mViewMatrix;
+//    matrix       mProjMatrix;
+//    matrix       mViewMatrixInv;
+//    matrix       mProjMatrixInv;
+//};
+//
+//cbuffer LIGHTBUFFER : register(b2)
+//{
+//    LIGHTPARAM g_tLightParam;
+//};
 
 cbuffer LIGHTCONTROLPARAM : register(b4)
 {

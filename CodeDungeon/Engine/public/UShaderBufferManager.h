@@ -25,7 +25,7 @@ public:
 private:
 	// CreateGlobalConstantBuffer
 	HRESULT CreateGlobalConstantBuffer(CSHPTRREF<UDevice> _spDevice, const GLOBAL_CBUFFERTYPE _eType,
-		const CBV_REGISTER& _eReg, const _uint& _iBufferSize);
+		const CBV_REGISTER& _eReg, const _uint& _iBufferSize, const _bool _iUseDefaultBuffer = false);
 	// CreateGlobalConstantBuffer
 	HRESULT CreateShaderConstantBuffer(CSHPTRREF<UDevice> _spDevice, const PREALLOCATED_CBUFFERTYPE _eType,
 		const CBV_REGISTER& _eReg, const _uint& _iBufferSize, const _uint _iCnt, const _bool _iUseDefaultBuffer = false);

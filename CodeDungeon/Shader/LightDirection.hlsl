@@ -20,10 +20,11 @@ VS_OUT VS_Main(VS_IN In)
 {
     VS_OUT Out = (VS_OUT) 0;
 
-    Out.vPosition = mul(float4(In.vPosition, 1.f), g_tLightParam.mScreenWorldMatrix);
-    Out.vPosition = mul(Out.vPosition, g_tLightParam.mScreenViewMatrix);
-    Out.vPosition = mul(Out.vPosition, g_tLightParam.mScreenProjMatrix);
-    //Out.vPosition = float4(In.vPosition * 2.f, 1.f);
+    Out.vPosition = float4(In.vPosition, 1.f);
+
+    Out.vPosition = mul(Out.vPosition, deffered_WorldMatrix);
+    Out.vPosition = mul(Out.vPosition, g_ViewProjInfoArr[deffered_CamID].mViewMatrix);
+    Out.vPosition = mul(Out.vPosition, g_ViewProjInfoArr[deffered_CamID].mProjMatrix);
     Out.vTexUV = In.vTexUV;
 
     return Out;
