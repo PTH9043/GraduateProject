@@ -46,12 +46,12 @@ public:
 	// Clear
 	HRESULT ClearLight();
 private:
-	//const _uint											m_c_iLightParamSize;
-	//_uint														m_iLightCamIndex;
+	const _uint											m_c_iLightParamSize;
+	_uint														m_iLightCamIndex;
 	SHPTR<UScene>									m_spCurScene;
 
-	//LIGHTPARAM											m_stLightParam;
-	//SHPTR< UGlobalConstantBuffer>	m_spLightGlobalBuffer;
+	LIGHTPARAM											m_stLightParam;
+	SHPTR< UGlobalConstantBuffer>	m_spLightGlobalBuffer;
 };
 
 END
