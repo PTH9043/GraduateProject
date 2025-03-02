@@ -27,7 +27,7 @@ VS_OUT VS_Main(VS_IN In)
     VS_OUT Out = (VS_OUT) 0.f;
     if (ifUseScale)
     {
-        float gScale = 1.01; // 예를 들어 1.1로 설정하여 10% 확대
+        float gScale = 1.01; 
         matrix scaleMatrix =
         {
             gScale, 0.0f, 0.0f, 0.0f,
@@ -44,10 +44,6 @@ VS_OUT VS_Main(VS_IN In)
         In.vPosition.xyz += In.vNormal * gSize;
         Out.vPosition = Compute_FinalMatrix(In.vPosition);
     }
-   
-    
-   
-  
 
     return Out;
 }

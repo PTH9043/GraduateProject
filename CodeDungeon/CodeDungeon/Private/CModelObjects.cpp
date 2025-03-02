@@ -140,9 +140,6 @@ HRESULT CModelObjects::RenderShadowActive(CSHPTRREF<UCommand> _spCommand, CSHPTR
 }
 HRESULT CModelObjects::RenderOutlineActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor, _bool _pass)
 {
-	
-		
-
 		if (nullptr != m_spModel&&m_bDrawOutline && _pass)
 		{
 			__super::RenderOutlineActive(_spCommand, _spTableDescriptor, _pass);
