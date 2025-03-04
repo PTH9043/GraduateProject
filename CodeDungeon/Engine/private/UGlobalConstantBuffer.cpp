@@ -2,6 +2,8 @@
 #include "UGlobalConstantBuffer.h"
 #include "UDevice.h"
 #include "UGpuCommand.h"
+#include "UGameInstance.h"
+#include "UGpuCommand.h"
 #include "UMethod.h"
 
 UGlobalConstantBuffer::UGlobalConstantBuffer() :
@@ -35,14 +37,24 @@ HRESULT UGlobalConstantBuffer::NativeConstruct(CSHPTRREF<UDevice> _spDevice, con
 		// UploadBuffer
 		m_cpUploadBuffer->Map(0, nullptr, (void**)&m_pMapBuffer);
 	}
+	//if (m_bUseDefaultBuffer)
+	//{
+	//	// 디폴트 버퍼
+	//	RETURN_CHECK_DXOBJECT(UMethod::CreateBufferResource(
+	//		_spDevice->GetDV(), nullptr,
+	//		m_iElementSize, nullptr,
+	//		m_cpDefaultBuffer, m_cpUploadBuffer,
+	//		D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER), E_FAIL);
+	//}
 	if (m_bUseDefaultBuffer)
 	{
-		// 디폴트 버퍼
-		RETURN_CHECK_DXOBJECT(UMethod::CreateBufferResource(
-			_spDevice->GetDV(), nullptr,
-			m_iElementSize, nullptr,
-			m_cpDefaultBuffer, m_cpUploadBuffer,
-			D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER), E_FAIL);
+		D3D12_HEAP_PROPERTIES defaultHeapProperty = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+		D3D12_RESOURCE_DESC defaultDesc = CD3DX12_RESOURCE_DESC::Buffer(m_iElementSize);
+
+		RETURN_CHECK_DXOBJECT(_spDevice->GetDV()->CreateCommittedResource(
+			&defaultHeapProperty, D3D12_HEAP_FLAG_NONE,
+			&defaultDesc, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, nullptr,
+			IID_PPV_ARGS(&m_cpDefaultBuffer)), E_FAIL);
 	}
 	// CreateView 
 	{
@@ -94,7 +106,7 @@ void UGlobalConstantBuffer::SettingGlobalData(CSHPTRREF<UCommand> _spCommand, co
 
 		m_bCopiedUploadToDefaultOnce = true;
 	}
-
+	
 	
 	_spCommand->GetGpuCmdList()->SetGraphicsRootConstantBufferView(m_iCbvRegisterNumber,
 		m_bUseDefaultBuffer ? m_cpDefaultBuffer->GetGPUVirtualAddress() : m_cpUploadBuffer->GetGPUVirtualAddress());

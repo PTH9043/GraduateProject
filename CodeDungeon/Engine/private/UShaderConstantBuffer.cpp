@@ -88,14 +88,24 @@ HRESULT UShaderConstantBuffer::NativeConstruct(CSHPTRREF<UDevice> _spDevice, con
 	//업로드 버퍼 매핑
 	m_cpUploadBuffer->Map(0, nullptr, (void**)&m_pMapBuffer);
 
+	//if (m_bUseDefaultBuffer)
+	//{
+	//	// 디폴트 버퍼
+	//	RETURN_CHECK_DXOBJECT(UMethod::CreateBufferResource(
+	//		_spDevice->GetDV(), nullptr,
+	//		m_iElementSize * m_iElementNum, nullptr,
+	//		m_cpDefaultBuffer, m_cpUploadBuffer,
+	//		D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER), E_FAIL);
+	//}
 	if (m_bUseDefaultBuffer)
 	{
-		// 디폴트 버퍼
-		RETURN_CHECK_DXOBJECT(UMethod::CreateBufferResource(
-			_spDevice->GetDV(), nullptr,
-			m_iElementSize * m_iElementNum, nullptr,
-			m_cpDefaultBuffer, m_cpUploadBuffer,
-			D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER), E_FAIL);
+		D3D12_HEAP_PROPERTIES defaultHeapProperty = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+		D3D12_RESOURCE_DESC defaultDesc = CD3DX12_RESOURCE_DESC::Buffer(m_iElementSize * m_iElementNum);
+
+		RETURN_CHECK_DXOBJECT(_spDevice->GetDV()->CreateCommittedResource(
+			&defaultHeapProperty, D3D12_HEAP_FLAG_NONE,
+			&defaultDesc, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, nullptr,
+			IID_PPV_ARGS(&m_cpDefaultBuffer)), E_FAIL);
 	}
 
 	//CBV 생성

@@ -89,12 +89,59 @@ HRESULT UVIBuffer::CreateVtxBuffer(const _uint& _iVertexCnt, const _uint& _iBuff
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	SHPTR<UGpuCommand> spGpuCommand = spGameInstance->GetGpuCommand();
 
-	RETURN_CHECK_FAILED(UMethod::CreateBufferResource(GetDevice()->GetDV(),
-		spGpuCommand->GetResCmdList().Get(), BUFFER_SIZE, _pVertexData,
-		m_cpVertexGpuBuffer, m_cpVertexUploadBuffer, D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER), E_FAIL);
+	//RETURN_CHECK_FAILED(UMethod::CreateBufferResource(GetDevice()->GetDV(),
+	//	spGpuCommand->GetResCmdList().Get(), BUFFER_SIZE, _pVertexData,
+	//	m_cpVertexGpuBuffer, m_cpVertexUploadBuffer, D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER), E_FAIL);
 
-	// 자원 동기화
+	//// 자원 동기화
+	//spGpuCommand->WaitForGpuResourceUpload();
+
+	{
+		D3D12_HEAP_PROPERTIES defaultHeapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+		D3D12_RESOURCE_DESC bufferDesc = CD3DX12_RESOURCE_DESC::Buffer(BUFFER_SIZE);
+
+		RETURN_CHECK_DXOBJECT(GetDevice()->GetDV()->CreateCommittedResource(
+			&defaultHeapProperties,
+			D3D12_HEAP_FLAG_NONE,
+			&bufferDesc,
+			D3D12_RESOURCE_STATE_COPY_DEST,  // 초기에는 복사 상태
+			nullptr,
+			IID_PPV_ARGS(&m_cpVertexGpuBuffer)), E_FAIL);
+
+	}
+	{
+		D3D12_HEAP_PROPERTIES uploadHeapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+		D3D12_RESOURCE_DESC bufferDesc = CD3DX12_RESOURCE_DESC::Buffer(BUFFER_SIZE);
+
+		RETURN_CHECK_DXOBJECT(GetDevice()->GetDV()->CreateCommittedResource(
+			&uploadHeapProperties,
+			D3D12_HEAP_FLAG_NONE,
+			&bufferDesc,
+			D3D12_RESOURCE_STATE_GENERIC_READ,
+			nullptr,
+			IID_PPV_ARGS(&m_cpVertexUploadBuffer)), E_FAIL);
+
+		// 업로드 버퍼에 데이터를 직접 복사
+		void* pMappedData = nullptr;
+		D3D12_RANGE readRange = { 0, 0 };
+		m_cpVertexUploadBuffer->Map(0, &readRange, &pMappedData);
+		memcpy(pMappedData, _pVertexData, BUFFER_SIZE);
+		m_cpVertexUploadBuffer->Unmap(0, nullptr);
+	}
+
+	{
+		CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+			m_cpVertexGpuBuffer.Get(),
+			D3D12_RESOURCE_STATE_COPY_DEST,
+			D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER
+		);
+
+		spGpuCommand->GetResCmdList()->CopyResource(m_cpVertexGpuBuffer.Get(), m_cpVertexUploadBuffer.Get());
+		spGpuCommand->GetResCmdList()->ResourceBarrier(1, &barrier);
+	}
+
 	spGpuCommand->WaitForGpuResourceUpload();
+
 
 	m_stD3DVertexBufferView.BufferLocation = m_cpVertexGpuBuffer->GetGPUVirtualAddress();
 	m_stD3DVertexBufferView.SizeInBytes = BUFFER_SIZE;
@@ -110,6 +157,8 @@ HRESULT UVIBuffer::CreateVtxBuffer(const _uint& _iVertexCnt, const _uint& _iBuff
 		ComputeMinMaxPosition();
 	}
 
+	m_cpVertexUploadBuffer.Reset();
+	
 	return S_OK;
 }
 HRESULT UVIBuffer::CreateVtxBuffer(const _uint& _iVertexCnt, const _uint& _iBufferSize, const void* _pVertexData,
@@ -120,11 +169,57 @@ HRESULT UVIBuffer::CreateVtxBuffer(const _uint& _iVertexCnt, const _uint& _iBuff
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	SHPTR<UGpuCommand> spGpuCommand = spGameInstance->GetGpuCommand();
 
-	RETURN_CHECK_FAILED(UMethod::CreateBufferResource(GetDevice()->GetDV(),
-		spGpuCommand->GetResCmdList().Get(), BUFFER_SIZE, _pVertexData,
-		m_cpVertexGpuBuffer, m_cpVertexUploadBuffer, D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER), E_FAIL);
+	//RETURN_CHECK_FAILED(UMethod::CreateBufferResource(GetDevice()->GetDV(),
+	//	spGpuCommand->GetResCmdList().Get(), BUFFER_SIZE, _pVertexData,
+	//	m_cpVertexGpuBuffer, m_cpVertexUploadBuffer, D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER), E_FAIL);
 
-	// 자원 동기화
+	//// 자원 동기화
+	//spGpuCommand->WaitForGpuResourceUpload();
+
+	{
+		D3D12_HEAP_PROPERTIES defaultHeapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+		D3D12_RESOURCE_DESC bufferDesc = CD3DX12_RESOURCE_DESC::Buffer(BUFFER_SIZE);
+
+		RETURN_CHECK_DXOBJECT(GetDevice()->GetDV()->CreateCommittedResource(
+			&defaultHeapProperties,
+			D3D12_HEAP_FLAG_NONE,
+			&bufferDesc,
+			D3D12_RESOURCE_STATE_COPY_DEST,  // 초기에는 복사 상태
+			nullptr,
+			IID_PPV_ARGS(&m_cpVertexGpuBuffer)), E_FAIL);
+
+	}
+	{
+		D3D12_HEAP_PROPERTIES uploadHeapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+		D3D12_RESOURCE_DESC bufferDesc = CD3DX12_RESOURCE_DESC::Buffer(BUFFER_SIZE);
+
+		RETURN_CHECK_DXOBJECT(GetDevice()->GetDV()->CreateCommittedResource(
+			&uploadHeapProperties,
+			D3D12_HEAP_FLAG_NONE,
+			&bufferDesc,
+			D3D12_RESOURCE_STATE_GENERIC_READ,
+			nullptr,
+			IID_PPV_ARGS(&m_cpVertexUploadBuffer)), E_FAIL);
+
+		// 업로드 버퍼에 데이터를 직접 복사
+		void* pMappedData = nullptr;
+		D3D12_RANGE readRange = { 0, 0 };
+		m_cpVertexUploadBuffer->Map(0, &readRange, &pMappedData);
+		memcpy(pMappedData, _pVertexData, BUFFER_SIZE);
+		m_cpVertexUploadBuffer->Unmap(0, nullptr);
+	}
+
+	{
+		CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+			m_cpVertexGpuBuffer.Get(),
+			D3D12_RESOURCE_STATE_COPY_DEST,
+			D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER
+		);
+
+		spGpuCommand->GetResCmdList()->CopyResource(m_cpVertexGpuBuffer.Get(), m_cpVertexUploadBuffer.Get());
+		spGpuCommand->GetResCmdList()->ResourceBarrier(1, &barrier);
+	}
+
 	spGpuCommand->WaitForGpuResourceUpload();
 
 	m_stD3DVertexBufferView.BufferLocation = m_cpVertexGpuBuffer->GetGPUVirtualAddress();
@@ -132,7 +227,7 @@ HRESULT UVIBuffer::CreateVtxBuffer(const _uint& _iVertexCnt, const _uint& _iBuff
 	m_stD3DVertexBufferView.StrideInBytes = _iBufferSize;
 	m_ePrimitiveTopology = _eTopology;
 
-
+	m_cpVertexUploadBuffer.Reset();
 
 
 	return S_OK;
@@ -167,11 +262,60 @@ HRESULT UVIBuffer::CreateIndexBuffer(const _uint& _iIndexCnt, const _uint& _iBuf
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
 	SHPTR<UGpuCommand> spGpuCommand = spGameInstance->GetGpuCommand();
 
-	RETURN_CHECK_FAILED(UMethod::CreateBufferResource(GetDevice()->GetDV(),
+	/*RETURN_CHECK_FAILED(UMethod::CreateBufferResource(GetDevice()->GetDV(),
 		spGpuCommand->GetResCmdList().Get(), BUFFER_SIZE, _pIndexData,
 		m_cpIndexGpuBuffer, m_cpIndexUploadBuffer, D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_INDEX_BUFFER), E_FAIL);
 
+	spGpuCommand->WaitForGpuResourceUpload();*/
+
+	// 1. Default Buffer 생성 (GPU 전용 메모리)
+	{
+		D3D12_HEAP_PROPERTIES defaultHeapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+		D3D12_RESOURCE_DESC bufferDesc = CD3DX12_RESOURCE_DESC::Buffer(BUFFER_SIZE);
+
+		RETURN_CHECK_DXOBJECT(GetDevice()->GetDV()->CreateCommittedResource(
+			&defaultHeapProperties,
+			D3D12_HEAP_FLAG_NONE,
+			&bufferDesc,
+			D3D12_RESOURCE_STATE_COPY_DEST,  // 초기 상태: 복사 대기
+			nullptr,
+			IID_PPV_ARGS(&m_cpIndexGpuBuffer)), E_FAIL);
+	}
+
+	// 2. Upload Buffer 생성 및 데이터 복사 (CPU 메모리)
+	{
+		D3D12_HEAP_PROPERTIES uploadHeapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+		D3D12_RESOURCE_DESC bufferDesc = CD3DX12_RESOURCE_DESC::Buffer(BUFFER_SIZE);
+
+		RETURN_CHECK_DXOBJECT(GetDevice()->GetDV()->CreateCommittedResource(
+			&uploadHeapProperties,
+			D3D12_HEAP_FLAG_NONE,
+			&bufferDesc,
+			D3D12_RESOURCE_STATE_GENERIC_READ,  // CPU에서 접근 가능
+			nullptr,
+			IID_PPV_ARGS(&m_cpIndexUploadBuffer)), E_FAIL);
+
+		// Upload 버퍼에 데이터 직접 복사
+		void* pMappedData = nullptr;
+		D3D12_RANGE readRange = { 0, 0 };
+		m_cpIndexUploadBuffer->Map(0, &readRange, &pMappedData);
+		memcpy(pMappedData, _pIndexData, BUFFER_SIZE);
+		m_cpIndexUploadBuffer->Unmap(0, nullptr);
+	}
+
+	// 3. Upload 버퍼에서 Default 버퍼로 복사 (GPU 메모리에 데이터 올리기)
+	{
+		CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+			m_cpIndexGpuBuffer.Get(),
+			D3D12_RESOURCE_STATE_COPY_DEST,
+			D3D12_RESOURCE_STATE_INDEX_BUFFER
+		);
+
+		spGpuCommand->GetResCmdList()->CopyResource(m_cpIndexGpuBuffer.Get(), m_cpIndexUploadBuffer.Get());
+		spGpuCommand->GetResCmdList()->ResourceBarrier(1, &barrier);
+	}
 	spGpuCommand->WaitForGpuResourceUpload();
+
 
 	m_stD3DIndexBufferView.BufferLocation = m_cpIndexGpuBuffer->GetGPUVirtualAddress();
 	m_stD3DIndexBufferView.SizeInBytes = BUFFER_SIZE;
@@ -180,6 +324,8 @@ HRESULT UVIBuffer::CreateIndexBuffer(const _uint& _iIndexCnt, const _uint& _iBuf
 	m_iIndexCnt = _iIndexCnt;
 	m_iIndexSize = m_iIndexCnt * _iIndexMultiple;
 	m_pIndices = _pIndexData;
+
+	m_cpIndexUploadBuffer.Reset();
 
 	return S_OK;
 }
