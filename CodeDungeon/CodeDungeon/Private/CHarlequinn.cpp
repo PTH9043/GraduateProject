@@ -275,7 +275,7 @@ HRESULT CHarlequinn::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetActivationRange(80);
 	SetDeactivationRange(150);
 	SetOutlineByAbility(true);
-	SetOutline(true);
+	//SetOutline(true);
 	SetOutlineColor(_float3(1, 1, 0));
 	return S_OK;
 }
@@ -477,7 +477,13 @@ void CHarlequinn::TickActive(const _double& _dTimeDelta)
 			SetElapsedTime(0.0);
 		}
 	}
-
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	if (spGameInstance->GetIfAbilityIsOn()) {
+		SetOutline(true);
+	}
+	else {
+		SetOutline(false);
+	}
 	UpdateCollision();
 }
 

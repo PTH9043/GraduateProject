@@ -230,7 +230,7 @@ HRESULT CMinotaur::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetMaxHealth(2500);
 	SetActivationRange(100);
 	SetDeactivationRange(120);
-	SetOutline(true);
+	//SetOutline(true);
 	return S_OK;
 }
 
@@ -454,7 +454,13 @@ void CMinotaur::TickActive(const _double& _dTimeDelta)
 			SetElapsedTime(0.0);
 		}
 	}
-
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	if (spGameInstance->GetIfAbilityIsOn()) {
+		SetOutline(true);
+	}
+	else {
+		SetOutline(false);
+	}
 	UpdateCollision();
 }
 

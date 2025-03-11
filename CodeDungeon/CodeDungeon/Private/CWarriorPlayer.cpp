@@ -358,9 +358,9 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	{
 		if (m_bStartedGame&& !m_bisGameEnd) {
 
-			POINT ptCursorPos;
-			ShowCursor(FALSE);
-			SetCursorPos(1000, 400);
+			//POINT ptCursorPos;
+			//ShowCursor(FALSE);
+			//SetCursorPos(1000, 400);
 		}
 		if (m_bisGameEnd) {
 			spGameInstance->PauseGame();

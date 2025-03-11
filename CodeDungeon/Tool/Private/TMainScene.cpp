@@ -37,14 +37,14 @@ HRESULT TMainScene::LoadSceneData()
 		vecDatas.push_back(&tDesc);
 
 		m_spMainCamera = std::static_pointer_cast<TMainCamera>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MAINCAMERA, vecDatas));
-		m_spMainCamera->GetTransform()->SetPos({ -875.66, -135.805, 852. });
+		m_spMainCamera->GetTransform()->SetPos({ 0, 0, 0 });
 	}
 	{
 		
 		
-	/*	AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL,LIGHTACTIVE::ISACTIVE, {1.f, 1.f, 1.f, 1.f}, {0.2f, 0.2f,0.2f, 1.f}, {0.15f, 0.15f, 0.15f, 1.f}, {0.f, -1.f, 0.f,}, {0.f, 100.f, 0.f}, 0.f, 0.f ,
+		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_DIRECTIONAL,LIGHTACTIVE::ISACTIVE, {1.f, 1.f, 1.f, 1.f}, {0.2f, 0.2f,0.2f, 1.f}, {0.15f, 0.15f, 0.15f, 1.f}, {0.f, -1.f, 0.f,}, {0.f, 100.f, 0.f}, 0.f, 0.f ,
 			1.f, 20.f });
-		*/
+		
 		AddLight(LIGHTINFO{ LIGHTTYPE::TYPE_POINT,LIGHTACTIVE::ISACTIVE, {0.3f, 0.3f, 0.3f, 1.f}, {0.4f, 0.2f, 0.08f, 1.f}, {0.8f, 0.4f, 0.16f, 1.f}, {0.f, 0.f, 1.f,},
 		_float3(-883.653748, -145.2615, 847.1639), 60.f, 0.f ,
 		1.f, 32.f,0.f,0.f,0.f,_float3(1.f,0.01f,0.0001f) });

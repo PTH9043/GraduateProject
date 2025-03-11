@@ -385,20 +385,23 @@ void TFireView::FireView()
 
 
 			if (true == ImGui::Button("Start Fire")) {
-
+				m_stGuard->SetActive(false);
+				m_stBlood->SetActive(false);
+				m_stDust->SetActive(false);
+				m_stMat->SetActive(false);
 
 				m_stFire->SetActive(true);
-				m_stGuard->SetActive(true);
-				m_stBlood->SetActive(true);
-				m_stBlood->SetTimer(1.75f);
+				//m_stGuard->SetActive(true);
+				//m_stBlood->SetActive(true);
+				//m_stBlood->SetTimer(1.75f);
 			
-				m_stDust->SetActive(true);
-				m_stDust->SetTimer(2.f);
-				m_stDust->GetTransform()->SetPos(_float3(-196, -79, 132));
-
-				m_stMat->SetActive(true);
-				m_stMat->SetTimer(50.f);
-				m_stMat->GetTransform()->SetPos(_float3(0, 0, 0));
+				//m_stDust->SetActive(true);
+				//m_stDust->SetTimer(2.f);
+				//m_stDust->GetTransform()->SetPos(_float3(-196, -79, 132));
+				//
+				//m_stMat->SetActive(true);
+				//m_stMat->SetTimer(50.f);
+				//m_stMat->GetTransform()->SetPos(_float3(0, 0, 0));
 
 				_float3 firepos = m_stFire->GetTransform()->GetPos();
 				m_MultipleParticle[0]->GetTransform()->SetPos(_float3(firepos.x, firepos.y-3.f, firepos.z));

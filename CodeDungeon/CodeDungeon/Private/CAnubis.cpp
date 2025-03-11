@@ -302,7 +302,7 @@ HRESULT CAnubis::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetDeactivationRange(80);
 	SetOutlineByAbility(true);
 	SetOutlineColor(_float3(1, 1, 0));
-	SetOutline(true);
+
 	return S_OK;
 }
 
@@ -528,6 +528,13 @@ void CAnubis::TickActive(const _double& _dTimeDelta)
 			iter.second->SetTransform(GetTransform()->GetPos(), m_spFireCircle->GetTransform()->GetQuaternion());
 			iter.second->SetScale(_float3(m_spFireCircle->GetTransform()->GetScale().x - 7, 0.3, m_spFireCircle->GetTransform()->GetScale().y - 7));
 		}
+	}
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	if (spGameInstance->GetIfAbilityIsOn()) {
+		SetOutline(true);
+	}
+	else {
+		SetOutline(false);
 	}
 }
 

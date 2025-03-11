@@ -331,9 +331,7 @@ HRESULT URenderer::Render()
 #ifdef _USE_DEBUGGING
     
     SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance); 
-    RenderDebug();
-    m_spRenderTargetManager->RenderDebugObjects(FrameReadyDrawLast(PROTO_RES_DEBUG2DTARGETSHADER), m_spVIBufferPlane,
-        m_spCastingCommand, SRV_REGISTER::T0);
+  
   /*  _float3 pos = spGameInstance->GetCurrPlayer()->GetTransform()->GetPos();
     _float3 vec = spGameInstance->GetMainCameraTransform()->GetLook();
 
@@ -344,6 +342,9 @@ HRESULT URenderer::Render()
     m_spShadowCamera->GetTransform()->LookAt(_float3(-859.759, -154.805, 860.509)); //y를 확올리기
 
     if (spGameInstance->GetDIKeyPressing(DIK_F1)) {
+        RenderDebug();
+        m_spRenderTargetManager->RenderDebugObjects(FrameReadyDrawLast(PROTO_RES_DEBUG2DTARGETSHADER), m_spVIBufferPlane,
+            m_spCastingCommand, SRV_REGISTER::T0);
       }
     if (spGameInstance->GetDIKeyDown(DIK_F2)) {
         TurnDie++;

@@ -2266,8 +2266,19 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 	·»´õ Å¸°Ù µð¹ö±ëÀ» À§ÇÑ °Í
 	*/
 
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::SHADOW_MAP, RTOBJID::SHADOW_DEPTH_FOURBYFOUR,
-		_float2(300.f, 300.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
+	/*m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::SHADOW_MAP, RTOBJID::SHADOW_DEPTH_FOURBYFOUR,
+		_float2(300.f, 300.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());*/
+
+	{
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::OUTLINE_POS_NOR, RTOBJID::OUTLINE_DEPTH_POS,
+		_float2(350.f, 500.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::OUTLINE_POS_NOR_FORABILITY, RTOBJID::OUTLINE_DEPTH_POS_FORABILITY,
+		_float2(650.f, 500.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::DEPTH_RECORD, RTOBJID::DEPTH_RECORD,
+		_float2(950.f, 500.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
+
+	}
+
 	/*m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::MIDDLERENDERSCREEN_DEFFERED, RTOBJID::MIDDLERENDER_DIFFUSE_DEFFERED,
 		_float2(100.f, 100.f), _float2(200.f, 200.f), m_spGraphicDevice->GetGraphicDesc());
 
