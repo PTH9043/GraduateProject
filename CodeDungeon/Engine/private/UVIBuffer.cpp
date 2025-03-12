@@ -104,7 +104,7 @@ HRESULT UVIBuffer::CreateVtxBuffer(const _uint& _iVertexCnt, const _uint& _iBuff
 			&defaultHeapProperties,
 			D3D12_HEAP_FLAG_NONE,
 			&bufferDesc,
-			D3D12_RESOURCE_STATE_COPY_DEST,  // 초기에는 복사 상태
+			D3D12_RESOURCE_STATE_COMMON,  // 초기에는 복사 상태
 			nullptr,
 			IID_PPV_ARGS(&m_cpVertexGpuBuffer)), E_FAIL);
 
@@ -132,11 +132,15 @@ HRESULT UVIBuffer::CreateVtxBuffer(const _uint& _iVertexCnt, const _uint& _iBuff
 	{
 		CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
 			m_cpVertexGpuBuffer.Get(),
-			D3D12_RESOURCE_STATE_COPY_DEST,
-			D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER
+			D3D12_RESOURCE_STATE_COMMON,
+			D3D12_RESOURCE_STATE_COPY_DEST
 		);
-
+		spGpuCommand->GetResCmdList()->ResourceBarrier(1, &barrier);
 		spGpuCommand->GetResCmdList()->CopyResource(m_cpVertexGpuBuffer.Get(), m_cpVertexUploadBuffer.Get());
+		barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+			m_cpVertexGpuBuffer.Get(),
+			D3D12_RESOURCE_STATE_COPY_DEST,
+			D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
 		spGpuCommand->GetResCmdList()->ResourceBarrier(1, &barrier);
 	}
 
@@ -184,7 +188,7 @@ HRESULT UVIBuffer::CreateVtxBuffer(const _uint& _iVertexCnt, const _uint& _iBuff
 			&defaultHeapProperties,
 			D3D12_HEAP_FLAG_NONE,
 			&bufferDesc,
-			D3D12_RESOURCE_STATE_COPY_DEST,  // 초기에는 복사 상태
+			D3D12_RESOURCE_STATE_COMMON,  // 초기에는 복사 상태
 			nullptr,
 			IID_PPV_ARGS(&m_cpVertexGpuBuffer)), E_FAIL);
 
@@ -212,11 +216,15 @@ HRESULT UVIBuffer::CreateVtxBuffer(const _uint& _iVertexCnt, const _uint& _iBuff
 	{
 		CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
 			m_cpVertexGpuBuffer.Get(),
-			D3D12_RESOURCE_STATE_COPY_DEST,
-			D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER
+			D3D12_RESOURCE_STATE_COMMON,
+			D3D12_RESOURCE_STATE_COPY_DEST
 		);
-
+		spGpuCommand->GetResCmdList()->ResourceBarrier(1, &barrier);
 		spGpuCommand->GetResCmdList()->CopyResource(m_cpVertexGpuBuffer.Get(), m_cpVertexUploadBuffer.Get());
+		barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+			m_cpVertexGpuBuffer.Get(),
+			D3D12_RESOURCE_STATE_COPY_DEST,
+			D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
 		spGpuCommand->GetResCmdList()->ResourceBarrier(1, &barrier);
 	}
 
@@ -277,7 +285,7 @@ HRESULT UVIBuffer::CreateIndexBuffer(const _uint& _iIndexCnt, const _uint& _iBuf
 			&defaultHeapProperties,
 			D3D12_HEAP_FLAG_NONE,
 			&bufferDesc,
-			D3D12_RESOURCE_STATE_COPY_DEST,  // 초기 상태: 복사 대기
+			D3D12_RESOURCE_STATE_COMMON,  // 초기 상태: 복사 대기
 			nullptr,
 			IID_PPV_ARGS(&m_cpIndexGpuBuffer)), E_FAIL);
 	}
@@ -307,11 +315,16 @@ HRESULT UVIBuffer::CreateIndexBuffer(const _uint& _iIndexCnt, const _uint& _iBuf
 	{
 		CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
 			m_cpIndexGpuBuffer.Get(),
+			D3D12_RESOURCE_STATE_COMMON,
+			D3D12_RESOURCE_STATE_COPY_DEST
+		);
+		spGpuCommand->GetResCmdList()->ResourceBarrier(1, &barrier);
+		spGpuCommand->GetResCmdList()->CopyResource(m_cpIndexGpuBuffer.Get(), m_cpIndexUploadBuffer.Get());
+		barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+			m_cpIndexGpuBuffer.Get(),
 			D3D12_RESOURCE_STATE_COPY_DEST,
 			D3D12_RESOURCE_STATE_INDEX_BUFFER
 		);
-
-		spGpuCommand->GetResCmdList()->CopyResource(m_cpIndexGpuBuffer.Get(), m_cpIndexUploadBuffer.Get());
 		spGpuCommand->GetResCmdList()->ResourceBarrier(1, &barrier);
 	}
 	spGpuCommand->WaitForGpuResourceUpload();

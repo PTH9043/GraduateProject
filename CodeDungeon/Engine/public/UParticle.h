@@ -6,6 +6,7 @@ BEGIN(Engine)
 
 class UTexGroup;
 class UVIBufferPoint;
+class UVIBufferRect;
 
 class UParticle : public UPawn{
 public:
@@ -68,6 +69,7 @@ protected:
 	SHPTR<UTexGroup>				m_spTexGroup;
 	SHPTR< UParticleSystem>	m_spParticleSystem;
 	SHPTR<UVIBufferPoint>		m_spVIBufferPoint;
+	SHPTR<UVIBufferRect>		m_spVIBufferRect;
 	// Texture Indexs
 	TEXTUREINDEXCONTAINER	m_TextureIndexContainer;
 	CUSTIMER									m_LifeTimer;

@@ -53,7 +53,7 @@ HRESULT UGlobalConstantBuffer::NativeConstruct(CSHPTRREF<UDevice> _spDevice, con
 
 		RETURN_CHECK_DXOBJECT(_spDevice->GetDV()->CreateCommittedResource(
 			&defaultHeapProperty, D3D12_HEAP_FLAG_NONE,
-			&defaultDesc, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, nullptr,
+			&defaultDesc, D3D12_RESOURCE_STATE_COMMON, nullptr,
 			IID_PPV_ARGS(&m_cpDefaultBuffer)), E_FAIL);
 	}
 	// CreateView 
@@ -88,7 +88,7 @@ void UGlobalConstantBuffer::SettingGlobalData(CSHPTRREF<UCommand> _spCommand, co
 		// Default Buffer를 COPY_DEST로 변경 (최초 1회)
 		CD3DX12_RESOURCE_BARRIER transitionToCopy = CD3DX12_RESOURCE_BARRIER::Transition(
 			m_cpDefaultBuffer.Get(),
-			D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,  // 기존 상태
+			D3D12_RESOURCE_STATE_COMMON,  // 기존 상태
 			D3D12_RESOURCE_STATE_COPY_DEST                   // 복사 상태
 		);
 		_spCommand->GetGpuCmdList()->ResourceBarrier(1, &transitionToCopy);

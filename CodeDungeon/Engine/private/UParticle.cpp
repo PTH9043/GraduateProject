@@ -8,18 +8,19 @@
 #include "UGameInstance.h"
 #include "UTransform.h"
 #include "UVIBufferPoint.h"
+#include "UVIBufferRect.h"
 #include "URenderTargetGroup.h"
 
 UParticle::UParticle(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer,
 	const CLONETYPE& _eCloneType)
 	: UPawn(_spDevice, _wstrLayer, _eCloneType, BACKINGTYPE::NON),
-	m_spTexGroup{ nullptr }, m_spParticleSystem{ nullptr }, m_spVIBufferPoint{ nullptr },TextureIndex{0}, m_LifeTime0{0}, m_LifeTime1{ 0 }
+	m_spTexGroup{ nullptr }, m_spParticleSystem{ nullptr }, m_spVIBufferPoint{ nullptr }, m_spVIBufferRect{ nullptr }, TextureIndex{0}, m_LifeTime0{0}, m_LifeTime1{ 0 }
 {
 }
 
 UParticle::UParticle(const UParticle& _rhs) :
 	UPawn(_rhs),
-	m_spTexGroup{ nullptr }, m_spParticleSystem{ nullptr }, m_spVIBufferPoint{ nullptr }, TextureIndex{ 0 }, m_LifeTime0{0}, m_LifeTime1{ 0 }
+	m_spTexGroup{ nullptr }, m_spParticleSystem{ nullptr }, m_spVIBufferPoint{ nullptr }, m_spVIBufferRect{ nullptr }, TextureIndex{ 0 }, m_LifeTime0{0}, m_LifeTime1{ 0 }
 {
 }
 
@@ -52,6 +53,7 @@ HRESULT UParticle::NativeConstructClone(const VOIDDATAS& _convecDatas)
 		}
 		
 			m_spVIBufferPoint = static_pointer_cast<UVIBufferPoint>(spGameInstance->CloneResource(PROTO_RES_VIBUFFERPOINT));
+			m_spVIBufferRect = static_pointer_cast<UVIBufferRect>(spGameInstance->CloneResource(PROTO_RES_VIBUFFERRECT));
 
 		m_spParticleSystem->SettingComputeShader(stParticleDesc.wstrParticleComputeShader);
 		AddShader(stParticleDesc.wstrParticleShader);
@@ -205,7 +207,8 @@ SHPTR<URenderTargetGroup> spShadowDepthGroup{ spGameInstance->FindRenderTargetGr
 		GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTexGroup->GetTexture(L"Slash3"));
 		GetShader()->BindSRVBuffer(SRV_REGISTER::T2, m_spTexGroup->GetTexture(L"Slash2"));
 		GetShader()->BindSRVBuffer(SRV_REGISTER::T1, spShadowDepthGroup->GetRenderTargetTexture(RTOBJID::NONALPHA_DEPTH_DEFFERED));
-		break;
+		
+break;
 	case PARTICLE_FOOTPRINT:
 		GetShader()->BindSRVBuffer(SRV_REGISTER::T0, m_spTexGroup->GetTexture(TextureIndex));
 		GetShader()->BindSRVBuffer(SRV_REGISTER::T1, spShadowDepthGroup->GetRenderTargetTexture(RTOBJID::NONALPHA_DEPTH_DEFFERED));
@@ -218,9 +221,9 @@ SHPTR<URenderTargetGroup> spShadowDepthGroup{ spGameInstance->FindRenderTargetGr
 		break;
 
 	}
-	
-	
-	m_spVIBufferPoint->Render(GetShader(), _spCommand, m_spParticleSystem->GetMaxParticleCnt());
+
+		m_spVIBufferPoint->Render(GetShader(), _spCommand, m_spParticleSystem->GetMaxParticleCnt());
+
 	return S_OK;
 }
 
