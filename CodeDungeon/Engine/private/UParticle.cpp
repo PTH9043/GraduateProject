@@ -134,7 +134,7 @@ void UParticle::LateTickActive(const _double& _dTimeDelta)
 	case PARTICLE_ROTATION:
 		AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
 	break;
-	case PARTICLE_FLARE:
+	case PARTICLE_FLARE://torch
 		AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
 		break;
 	case PARTICLE_BLOOD:

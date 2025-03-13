@@ -217,11 +217,12 @@ PS_OUT PS_Main(PS_In Input)
 
         float fDistanceToCam = length(abs(vViewPixelPosition - vCameraViewPosition.xyz));
         //float camDistance = (vCameraViewPosition.z);
+
         float fogStart = 30.0f;
         float fogEnd = 150.0f + fogStart;
 
         float FogFactor = saturate((fogEnd - fDistanceToCam) / (fogEnd - fogStart));
-        float FogFactor2 = 1 / pow(2.781828, (fDistanceToCamera * 0.0015) * (fDistanceToCamera * 0.0015));
+        float FogFactor2 = 1 / pow(2.781828, (fDistanceToCam * 0.0015) * (fDistanceToCam * 0.0015));
 
 
         if (vGlow.a != 1.f)

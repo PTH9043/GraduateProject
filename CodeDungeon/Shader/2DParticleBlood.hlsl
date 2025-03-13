@@ -213,7 +213,7 @@ PS_OUT PS_Main(GS_OUT In)
     if (Out.vColor.a < 0.1)
         discard;
     Out.vGlow = Out.vColor;
-   
+   //Glow의 alpha가 0.5 -> 안개 안받음 
         return Out;
 }
 

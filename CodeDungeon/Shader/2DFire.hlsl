@@ -37,6 +37,7 @@ struct VS_OUT
     float2 vTexCoords1 : TEXCOORD1;
     float2 vTexCoords2 : TEXCOORD2;
     float2 vTexCoords3 : TEXCOORD3;
+    float4 vWorldPos : POSITION;
 };
 
 
@@ -58,7 +59,7 @@ VS_OUT VS_Main(VS_IN In)
     Out.vTexCoords3 = (In.vTexCoord * fScales.z);
     Out.vTexCoords3.y = Out.vTexCoords3.y + (fGrobalDeltaTime * fScrollSpeeds.z);
 
-
+    Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
     return Out;
 }
 
@@ -133,7 +134,7 @@ PS_OUT PS_Main(VS_OUT In)
   Out.vGlow = float4(0, 0, 0, 0);
     if (fireColor.a > 0.3)
     {
-        
+      
         if (brightness < 0.2f)
         {
             Out.vGlow =0;
@@ -149,6 +150,9 @@ PS_OUT PS_Main(VS_OUT In)
         }
     }
     
+    if (fireColor.a > 0.3f) {
+          Out.vPosition = In.vWorldPos;
+    }
  
     Out.vColor = fireColor;
    

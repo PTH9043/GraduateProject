@@ -370,12 +370,6 @@
     <Filter Include="06.Component\Controller\Input">
       <UniqueIdentifier>{c529b1d4-5e06-430b-ae99-27b1bc65fad3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.Actor\01.Pawn\Item">
-      <UniqueIdentifier>{e3ae5dd9-2913-4ef1-9713-b30f8a7e30db}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05.Actor\01.Pawn\Item\Equip">
-      <UniqueIdentifier>{353774c7-46a5-453e-90da-1632ce265f21}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.DxClass\Command\Render">
       <UniqueIdentifier>{00d8aaee-0be5-4d40-8da7-75d8480beac8}</UniqueIdentifier>
     </Filter>
@@ -403,9 +397,6 @@
     <Filter Include="05.Actor\02.Camera\LightCamera">
       <UniqueIdentifier>{9cc2be41-00f5-4313-b0e9-bf566c3061ca}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.Actor\01.Pawn\Item\Equip\Weapon">
-      <UniqueIdentifier>{c5cf7c8c-64b5-451c-90b9-e8841ca88449}</UniqueIdentifier>
-    </Filter>
     <Filter Include="98.ShaderFile\Common\Particle\FootPrint">
       <UniqueIdentifier>{d5ff3202-cf55-409f-b962-639a4bf20bc7}</UniqueIdentifier>
     </Filter>
@@ -426,9 +417,6 @@
     </Filter>
     <Filter Include="06.Component\Input">
       <UniqueIdentifier>{66c229d0-027b-4124-b00b-5daacd01f105}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05.Actor\01.Pawn\Item\Equip\Defensive">
-      <UniqueIdentifier>{361b8236-ad3c-4587-b0c4-96e161645e27}</UniqueIdentifier>
     </Filter>
     <Filter Include="98.ShaderFile\Outline">
       <UniqueIdentifier>{2a53e5f9-6b0e-4792-a8ee-802911b68873}</UniqueIdentifier>
@@ -483,6 +471,18 @@
     </Filter>
     <Filter Include="20.Network\NetworkSend">
       <UniqueIdentifier>{3f3c8566-84ab-4351-9969-d85d0fe1b491}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\Item">
+      <UniqueIdentifier>{e3ae5dd9-2913-4ef1-9713-b30f8a7e30db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\Item\Equip">
+      <UniqueIdentifier>{353774c7-46a5-453e-90da-1632ce265f21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\Item\Equip\Weapon">
+      <UniqueIdentifier>{c5cf7c8c-64b5-451c-90b9-e8841ca88449}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Actor\Item\Equip\Defensive">
+      <UniqueIdentifier>{361b8236-ad3c-4587-b0c4-96e161645e27}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -841,10 +841,10 @@
       <Filter>06.Component\Controller\Input</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UItem.cpp">
-      <Filter>05.Actor\01.Pawn\Item</Filter>
+      <Filter>05.Actor\Item</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UEquipment.cpp">
-      <Filter>05.Actor\01.Pawn\Item\Equip</Filter>
+      <Filter>05.Actor\Item\Equip</Filter>
     </ClCompile>
     <ClCompile Include="..\private\URenderCommand.cpp">
       <Filter>02.DxClass\Command\Render</Filter>
@@ -862,10 +862,10 @@
       <Filter>05.Actor\02.Camera\LightCamera</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UWeapon.cpp">
-      <Filter>05.Actor\01.Pawn\Item\Equip\Weapon</Filter>
+      <Filter>05.Actor\Item\Equip\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UDefensiveGear.cpp">
-      <Filter>05.Actor\01.Pawn\Item\Equip\Defensive</Filter>
+      <Filter>05.Actor\Item\Equip\Defensive</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UTrail.cpp">
       <Filter>05.Actor\Trail</Filter>
@@ -1293,10 +1293,10 @@
       <Filter>06.Component\Controller\Input</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UItem.h">
-      <Filter>05.Actor\01.Pawn\Item</Filter>
+      <Filter>05.Actor\Item</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UEquipment.h">
-      <Filter>05.Actor\01.Pawn\Item\Equip</Filter>
+      <Filter>05.Actor\Item\Equip</Filter>
     </ClInclude>
     <ClInclude Include="..\public\URenderCommand.h">
       <Filter>02.DxClass\Command\Render</Filter>
@@ -1314,10 +1314,10 @@
       <Filter>05.Actor\02.Camera\LightCamera</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UWeapon.h">
-      <Filter>05.Actor\01.Pawn\Item\Equip\Weapon</Filter>
+      <Filter>05.Actor\Item\Equip\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UDefensiveGear.h">
-      <Filter>05.Actor\01.Pawn\Item\Equip\Defensive</Filter>
+      <Filter>05.Actor\Item\Equip\Defensive</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UTrail.h">
       <Filter>05.Actor\Trail</Filter>

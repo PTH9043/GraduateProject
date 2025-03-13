@@ -2270,13 +2270,11 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 		_float2(300.f, 300.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());*/
 
 	{
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::OUTLINE_POS_NOR, RTOBJID::OUTLINE_DEPTH_POS,
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_POSITION_DEFFERED,
 		_float2(350.f, 500.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::OUTLINE_POS_NOR_FORABILITY, RTOBJID::OUTLINE_DEPTH_POS_FORABILITY,
+	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::NONALPHA_DEFFERED, RTOBJID::NONALPHA_GLOW_DEFFERED,
 		_float2(650.f, 500.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
-	m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::DEPTH_RECORD, RTOBJID::DEPTH_RECORD,
-		_float2(950.f, 500.f), _float2(300.f, 300.f), m_spGraphicDevice->GetGraphicDesc());
-
+	
 	}
 
 	/*m_spRenderTargetManager->AddDebugRenderObjects(RTGROUPID::MIDDLERENDERSCREEN_DEFFERED, RTOBJID::MIDDLERENDER_DIFFUSE_DEFFERED,
