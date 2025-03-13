@@ -235,30 +235,7 @@ PS_OUT PS_Main(PS_In Input)
 
 
     }
-//
-//    if (IsFogOn && vGlow.a != 0.5f) // 빛을 받지 않는 렌더타겟 제외
-//    {
-//        // 뷰 공간에서 픽셀 위치
-//        float3 vViewPixelPosition = mul(float4(vPosition, 1.0f), g_ViewProjInfoArr[g_CamID].mViewMatrix).xyz;
-//
-//        // 카메라 위치 (뷰 공간)
-//        float vCameraDepth = g_ViewProjInfoArr[0].vCamPosition.z;
-//
-//        // 픽셀과 카메라 사이 거리
-//        float fDistanceToCamera = abs(vViewPixelPosition.z - vCameraDepth);
-//
-//        // Fog 계산
-//        float fogStart = 30.0f;
-//        float fogEnd = 180.0f; // (150 + 30)
-//        float FogFactor = saturate((fogEnd - fDistanceToCamera) / max(0.001f, fogEnd - fogStart));
-//        float FogFactor2 = exp(-pow(fDistanceToCamera * 0.0015, 2));
-//
-//        // 안개 적용 (Glow가 1이면 안개 영향 적게 받음)
-//    Out.vColor = (vGlow.a == 1.0f)
-//        ? Out.vColor
-//        : lerp(float4(0.21f, 0.21f, 0.21f, 1.0f), Out.vColor, FogFactor);
-//}
-//    
+
   
     Out.vColor += g_Texture1.Sample(g_Sampler_Normal, Input.vTexUV); //AlphaDeffered
     float vDepthDesc = g_Texture4.Sample(g_Sampler_Normal, Input.vTexUV);
@@ -285,8 +262,56 @@ PS_OUT PS_Main(PS_In Input)
     }
    
    
-  
+ 
+
+   
+
+     //if (vGlow.a == 0.5) // 검기 / Guard 깜빡이는 효과
+     //{
+     //    float pulse = sin(fGrobalDeltaTime) * 0.5 + 0.5; // 0 ~ 1 범위로 변동
+     //    float3 glowColor = Out.vColor.rgb * (1.0 + pulse * 0.5); // 밝기 진동 추가
+     //    Out.vColor.rgb = glowColor;
+     //}
+
+     //if (vGlow.a == 0.5) {//trail , guard 등 색상 밝기 증폭
+     //    float glowThreshold = 0.9f;  // 특정 밝기 이상만 강조
+     //    float3 glowColor = Out.vColor.rgb; // Glow 강도 적용
+
+     //    // Bloom을 적용할지 결정
+     //    float bloomFactor = step(glowThreshold, dot(glowColor, float3(0.2126, 0.7152, 0.0722)));
+     //    glowColor *= bloomFactor; // Bloom 강도가 높은 부분만 적용
+
+     //    Out.vColor.rgb += glowColor * 1.125; // 강한 빛 번짐 추가
+     //}
+    if (vGlow.a == 0.5) // 검기 / Guard / 쉴드 활성화 이펙트
+    {
+        
+        float2 diagonalPattern = float2(Input.vTexUV.x * 20.0 + Input.vTexUV.y * 20.0, Input.vTexUV.y * 20.0 - Input.vTexUV.x * 20.0);
+
+        
+        float randomFactor = frac(sin(dot(Input.vTexUV, float2(12.9898, 78.233))) * 43758.5453);
+        float movement = sin(fGrobalDeltaTime * (3.0 + randomFactor * 2.0)) * 0.2;
+
+       
+        float noise = sin(diagonalPattern.x + fGrobalDeltaTime * 5.0 + movement) * 0.5 + 0.5;
+
+        
+        float stripe = step(0.75, noise); 
+
+
+        float pulse = sin(fGrobalDeltaTime * 4.0) * 0.5 + 0.5;
+        float3 glowColor = Out.vColor.rgb * (1.0 + stripe * pulse * 1.0);
+
     
+        float glowThreshold = 0.85f; 
+        float bloomFactor = step(glowThreshold, dot(glowColor, float3(0.2126, 0.7152, 0.0722)));
+        glowColor *= bloomFactor; 
+
+        Out.vColor.rgb += glowColor * 1.3; 
+    }
+
+
+
     return Out;
 }
 
