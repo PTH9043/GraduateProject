@@ -88,6 +88,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
     switch (message)
     {
     case WM_DESTROY:
@@ -95,6 +96,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
+    case WM_ACTIVATE:
+        if (LOWORD(wParam) == WA_INACTIVE) {
+            spGameInstance->PauseGameTick();
+        }
+        else
+        {
+            spGameInstance->ResumeGameTick();
+        }
+        break;
+    case WM_KILLFOCUS:
+        spGameInstance->PauseGameTick();
+        break;
     }
     return 0;
 }

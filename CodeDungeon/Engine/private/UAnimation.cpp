@@ -116,11 +116,17 @@ HRESULT UAnimation::NativeConstruct(CSHPTRREF<UAnimModel> _spAnimModel, const AN
 
 void UAnimation::UpdateBoneMatrices(const _double& _dTimeDelta)
 {
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
 	_double dValue = m_dTickPerSeconds * _dTimeDelta;
 	for (auto& iter : m_AnimFastSections)
 	{
 		iter.Convert(dValue, m_dTimeAcc);
 	}
+
+	if (spGameInstance->IsFreeModeCameraEnable())
+		dValue = 0.0;
+
 	m_dTimeAcc += (dValue * m_fTotalAnimationFastValue);
 
 	if (m_dTimeAcc >= m_dDuration)

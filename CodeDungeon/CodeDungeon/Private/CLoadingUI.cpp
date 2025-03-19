@@ -52,6 +52,9 @@ void CLoadingUI::TickActive(const _double& _dTimeDelta)
 
 void CLoadingUI::LateTickActive(const _double& _dTimeDelta)
 {
+	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+	RETURN_CHECK(spGameInstance->IsFreeModeCameraEnable() || spGameInstance->IsGamePause(), ;);
+
 	if (nullptr != GetVIBufferRect()) {
 		if (GetUIDesc().DrawOrder == L"Priority") {
 			AddRenderGroup(RENDERID::RI_2DUIPRIORITY);

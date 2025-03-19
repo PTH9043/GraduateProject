@@ -13,6 +13,7 @@
 #define PROTO_ACTOR_ANUBISCORE L"Proto_Actor_AnubisCore"
 #define PROTO_ACTOR_HARLEQUINNCORE L"Proto_Actor_HarlequinnCore"
 #define PROTO_ACTOR_MINOTAURCORE L"Proto_Actor_MinotaurCore"
+#define PROTO_ACTOR_FREEMODECAMERA L"Proto_Actor_FreeModeCamera"
 
 #define PROTO_ACTOR_WARRIORPLAYER L"Proto_Actor_WarriorPlayer"
 #define PROTO_ACTOR_MUMMY L"Proto_Actor_Mummy"

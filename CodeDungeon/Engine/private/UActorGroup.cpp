@@ -50,3 +50,27 @@ void UActorGroup::AddDelete(CSHPTRREF<UActor> _pActor)
 {
 	m_lsDeleteActors.insert(_pActor);
 }
+
+void UActorGroup::ActorsTickDisable()
+{
+	for (auto& iter : m_lsActiveActors)
+		iter->SetTickActive(false);
+}
+
+void UActorGroup::ActorsTickEnable()
+{
+	for (auto& iter : m_lsActiveActors)
+		iter->SetTickActive(true);
+}
+
+void UActorGroup::ActorsDisable()
+{
+	for (auto& iter : m_lsActiveActors)
+		iter->SetActive(false);
+}
+
+void UActorGroup::ActorsEnable()
+{
+	for (auto& iter : m_lsActiveActors)
+		iter->SetActive(true);
+}

@@ -187,7 +187,7 @@ private:
 	_bool GuardCollideSound = false;
 
 
-
+	_bool	m_isMouseEnable{ false };
 };
 END
 

@@ -17,6 +17,7 @@ class CImageUI;
 class CButtonUI;
 class CLoadingUI;
 class CHpBarUI;
+class CFreeModeCamera;
 
 class CMainScene final : public UScene{
 public:
@@ -257,7 +258,8 @@ private:
 	_float EndingTimeElapsed = 0;
 
 	///=================ENDING============================
-	SHPTR<CImageUI>			m_spEndingText;
+	SHPTR<CImageUI>						m_spEndingText;
+	SHPTR<CFreeModeCamera>	m_spFreeModeCamera;
 };
 
 END

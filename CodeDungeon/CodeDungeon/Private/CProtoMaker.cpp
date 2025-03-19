@@ -43,6 +43,7 @@
 #include "CNetworkMimicAnimController.h"
 #include "CNetworkMinotaurAnimController.h"
 #include "CNetworkMummyAnimController.h"
+#include "CFreeModeCamera.h"
 
 HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, CSHPTRREF<UDevice> _spDevice, CSHPTRREF<UCommand> _spCommand)
 {
@@ -71,6 +72,7 @@ HRESULT CProtoMaker::CreateProtoData(CSHPTRREF<UGameInstance> _spGameInstance, C
 	_spGameInstance->AddPrototype(PROTO_ACTOR_ANUBISCORE, CreateConstructorToNative<CCoreAnubis>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_HARLEQUINNCORE, CreateConstructorToNative<CCoreHarlequinn>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_ACTOR_MINOTAURCORE, CreateConstructorToNative<CCoreMinotaur>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
+	_spGameInstance->AddPrototype(PROTO_ACTOR_FREEMODECAMERA,CreateConstructorToNative<CFreeModeCamera>(_spDevice, LAYER_DEFAULT, CLONETYPE::CLONE_STATIC));
 	_spGameInstance->AddPrototype(PROTO_RES_PARTICLETEXTUREGROUP, CLONETYPE::CLONE_STATIC,
 		CreateConstructorNative<UTexGroup>(_spDevice, L"..\\..\\Resource\\Particle", true));
 

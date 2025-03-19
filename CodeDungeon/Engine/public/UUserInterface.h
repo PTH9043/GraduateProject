@@ -36,6 +36,11 @@ public:
 	void UpdateSize(const _float2& _vSize);
 	// Mouse	On	Rect
 	_bool IsMouseOnRect();
+
+	static void EnableRender() { s_AllDisable = true; }
+	static void DisableRender() { s_AllDisable = false; }
+
+	static _bool IsAllRender() { return s_AllDisable; }
 public:
 	CSHPTRREF<URectTransform> GetRectTransform() const { return m_spRectTransform; }
 	CSHPTRREF<UVIBufferRect> GetVIBufferRect() const { return m_spVIBufferRect; }
@@ -56,6 +61,8 @@ private:
 	SHPTR< URectTransform>		m_spRectTransform;
 	SHPTR< UVIBufferRect>		m_spVIBufferRect;
 	UIDESC										m_stUIDesc;
+
+	static	_bool								s_AllDisable;
 };
 
 END

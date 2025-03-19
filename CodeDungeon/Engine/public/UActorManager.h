@@ -35,6 +35,10 @@ public:
 	void  CloneActor(const _wstring& _wstrProto, const VOIDDATAS& _stDatas = VOIDDATAS{});
 	SHPTR<UActor> CloneActorAdd(const _wstring& _wstrProto, const VOIDDATAS& _stDatas = VOIDDATAS{});
 	SHPTR<UActor> CloneActorAddAndNotInLayer(const _wstring& _wstrProto, const VOIDDATAS& _stDatas = VOIDDATAS{});
+	void ActosTickDisable();
+	void ActorsTickEnable();
+	void EnableLayers(const _wstring& _wstrLayer);
+	void DisableLayers(const _wstring& _wstrLayer);
 
 	void RemoveActor(const SHPTR<UActor>& _spActor);
 	void ClearOnceTypeData();

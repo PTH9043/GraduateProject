@@ -106,7 +106,9 @@ UGameInstance::UGameInstance() :
 	m_spCharacterManager{Create<UCharacterManager>()},
 	m_spMaterialManager{ Create<UMaterialManager>()},
 	m_spRenderer{ nullptr },
-	m_spFontMananger{ Create<UFontManager>() }
+	m_spFontMananger{ Create<UFontManager>() },
+	m_isFreeModeCameraEnable{false},
+	m_isGamePause{false}
 	//m_spGraphicRenderObject{ nullptr }
 {
 }
@@ -217,7 +219,7 @@ void UGameInstance::AwakeTick()
 	m_spRenderer->ClearRenderingData();
 }
 
-void UGameInstance::Tick(const _double& _dTimeDelta)
+void UGameInstance::Tick( _double _dTimeDelta)
 {
 	if (nullptr != m_spNetworkQueryProcessing)
 	{
@@ -235,7 +237,7 @@ void UGameInstance::Tick(const _double& _dTimeDelta)
 	}
 }
 
-void UGameInstance::LateTick(const _double& _dTimeDelta)
+void UGameInstance::LateTick(_double _dTimeDelta)
 {
 	if (nullptr != m_spNetworkQueryProcessing)
 	{
@@ -600,6 +602,16 @@ void UGameInstance::RemoveActor(CSHPTRREF<UActor> _spActor)
 	{
 		m_spCharacterManager->RemoveCollisionPawn(spPawn);
 	}
+}
+
+void UGameInstance::EnableLayers(const _wstring& _wstrLayer)
+{
+	m_spActorManager->EnableLayers(_wstrLayer);
+}
+
+void UGameInstance::DisableLayers(const _wstring& _wstrLayer)
+{
+	m_spActorManager->DisableLayers(_wstrLayer);
 }
 
 /*
@@ -1279,12 +1291,30 @@ _float UGameInstance::GetAbilityTime()
 
 void UGameInstance::PauseGame()
 {
+	RETURN_CHECK(true == m_isPause, ;);
+	//m_spActorManager->ActosTickDisable();
 	m_isPause = true;
 }
 
 void UGameInstance::ResumeGame()
 {
+	RETURN_CHECK(false == m_isPause, ;);
+	//m_spActorManager->ActorsTickEnable();
 	m_isPause = false;
+}
+
+void UGameInstance::PauseGameTick()
+{
+	RETURN_CHECK(true == m_isGamePause, ;);
+//	m_spActorManager->ActosTickDisable();
+	m_isGamePause = true;
+}
+
+void UGameInstance::ResumeGameTick()
+{
+	RETURN_CHECK(false == m_isGamePause, ;);
+//	m_spActorManager->ActorsTickEnable();
+	m_isGamePause = false;
 }
 
 /*

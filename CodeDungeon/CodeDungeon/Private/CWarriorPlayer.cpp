@@ -209,7 +209,6 @@ HRESULT CWarriorPlayer::NativeConstructClone(const VOIDDATAS& _Datas)
 	SetMaxHealth(2500);
 	SetAnimModelRim(true);
 	SetAttack(100);
-
 	return S_OK;
 }
 
@@ -319,16 +318,6 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 			m_spBlood->SetActive(false);
 		}
 	}
-	//if (spGameInstance->GetDIKeyDown(DIK_F5)) {
-	//	m_spDust->SetActive(true);
-	//	m_spDust->SetTimer(2.f);
-	//	_float3 pos = GetTransform()->GetPos();
-	//	pos.y += 1;
-	//	m_spDust->GetTransform()->SetPos(pos);
-	//}
-	//if (m_spDust->CheckTimeOver()) {
-	//	m_spDust->SetActive(false);
-	//}
 	
 	if (IfOpenChestForHeal) {//2.1초 지속
 		HealTrigger = true;
@@ -358,9 +347,19 @@ void CWarriorPlayer::TickActive(const _double& _dTimeDelta)
 	{
 		if (m_bStartedGame&& !m_bisGameEnd) {
 
-			POINT ptCursorPos;
-			ShowCursor(FALSE);
-			SetCursorPos(1000, 400);
+			if (spGameInstance->GetDIKeyDown(DIK_F9))
+			{
+				m_isMouseEnable = !m_isMouseEnable;
+				POINT ptCursorPos;
+				ShowCursor(TRUE);
+				spGameInstance->SetGamePause(m_isMouseEnable);
+			}
+			else if(false == m_isMouseEnable)
+			{
+				POINT ptCursorPos;
+				ShowCursor(FALSE);
+				SetCursorPos(1000, 400);
+			}
 		}
 		if (m_bisGameEnd) {
 			spGameInstance->PauseGame();
@@ -442,27 +441,28 @@ void CWarriorPlayer::LateTickActive(const _double& _dTimeDelta)
 	__super::LateTickActive(_dTimeDelta);
 	_float3 direction(0.0f, 0.0f, 0.0f);
 
-	FollowCameraMove(_float3{ 0.f, 20.f, -40.f }, _dTimeDelta);
-	_float3 vCamPosition{ GetFollowCamera()->GetTransform()->GetPos() };
-	SHPTR<UNavigation> CamNavi = static_pointer_cast<CMainCamera>(GetFollowCamera())->GetCurrentNavi();
-	SHPTR<UCell> newCell{};
-	if(_float3::Distance(GetFollowCamera()->GetTransform()->GetPos(), GetTransform()->GetPos()) < 30)
+	if (false == spGameInstance->IsFreeModeCameraEnable() &&  false == spGameInstance->IsGamePause())
 	{
-		//카메라 네비 검사
-		if (false == CamNavi->IsMove(vCamPosition, REF_OUT newCell))
+		FollowCameraMove(_float3{ 0.f, 20.f, -40.f }, _dTimeDelta);
+		_float3 vCamPosition{ GetFollowCamera()->GetTransform()->GetPos() };
+		SHPTR<UNavigation> CamNavi = static_pointer_cast<CMainCamera>(GetFollowCamera())->GetCurrentNavi();
+		SHPTR<UCell> newCell{};
+		if (_float3::Distance(GetFollowCamera()->GetTransform()->GetPos(), GetTransform()->GetPos()) < 30)
 		{
-			_float3 closestPoint = CamNavi->ClampPositionToCell(vCamPosition);
-			GetFollowCamera()->GetTransform()->SetPos(_float3(closestPoint.x, vCamPosition.y, closestPoint.z));
-			vCamPosition = GetFollowCamera()->GetTransform()->GetPos();
+			//카메라 네비 검사
+			if (false == CamNavi->IsMove(vCamPosition, REF_OUT newCell))
+			{
+				_float3 closestPoint = CamNavi->ClampPositionToCell(vCamPosition);
+				GetFollowCamera()->GetTransform()->SetPos(_float3(closestPoint.x, vCamPosition.y, closestPoint.z));
+				vCamPosition = GetFollowCamera()->GetTransform()->GetPos();
+			}
+		}
+		else
+		{
+			CamNavi->FindCell(GetTransform()->GetPos());
+			GetFollowCamera()->GetTransform()->SetPos(GetTransform()->GetPos());
 		}
 	}
-	else
-	{
-		CamNavi->FindCell(GetTransform()->GetPos());
-		GetFollowCamera()->GetTransform()->SetPos(GetTransform()->GetPos());
-	}
-
-
 }
 
 void CWarriorPlayer::NetworkTickActive(const _double& _dTimeDelta)

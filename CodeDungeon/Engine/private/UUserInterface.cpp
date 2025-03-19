@@ -5,6 +5,8 @@
 #include "UMethod.h"
 #include "UVIBufferRect.h"
 
+_bool UUserInterface::s_AllDisable{ false };
+
 UUserInterface::UUserInterface(CSHPTRREF<UDevice> _spDevice, const _wstring& _wstrLayer, const CLONETYPE& _eCloneType)
 	: UPawn(_spDevice, _wstrLayer, _eCloneType),
 	m_spRectTransform{ nullptr }, m_stUIDesc{}, m_spVIBufferRect{nullptr}

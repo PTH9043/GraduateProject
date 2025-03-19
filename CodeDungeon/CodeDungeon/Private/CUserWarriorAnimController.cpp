@@ -59,26 +59,34 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
 
     if (ifStartedGame) {
         // Input checks
-        _bool isRunshift = spGameInstance->GetDIKeyPressing(DIK_LSHIFT);
-        _bool isMoveFront = spGameInstance->GetDIKeyPressing(DIK_W);
-        _bool isMoveBack = spGameInstance->GetDIKeyPressing(DIK_S);
-        _bool isMoveLeft = spGameInstance->GetDIKeyPressing(DIK_A);
-        _bool isMoveRight = spGameInstance->GetDIKeyPressing(DIK_D);
-        _bool isWAttack = spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_L);
-        _bool isSAttack = spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_R);
-        _bool isRAttack = spGameInstance->GetDIKeyDown(DIK_Q);
-        _bool isCombo1 = spGameInstance->GetDIKeyDown(DIK_1);
-        _bool isCombo2 = spGameInstance->GetDIKeyDown(DIK_2);
-        _bool isAttack = isWAttack || isRAttack || isSAttack || isCombo1 || isCombo2;
-        _bool isRoll = spGameInstance->GetDIKeyDown(DIK_C);
-        _bool Hit = false;
-        if (spWarriorPlayer->GetPrevHealth() > spWarriorPlayer->GetHealth())
-            Hit = true;
-        _bool isKicked = spWarriorPlayer->GetKickedState();
-        _bool isJump = spGameInstance->GetDIKeyDown(DIK_SPACE);
-        _bool isRise = spWarriorPlayer->GetRiseState();
-        _double KickedAnimSpeed = 20;
-        _double KickedTimeArcOpenEnd = 35;
+        _bool isRunshift{ false }, isMoveFront{ false }, isMoveBack{ false }, isMoveLeft{ false },
+            isMoveRight{ false }, isWAttack{ false }, isSAttack{ false }, isRAttack{ false },
+            isCombo1{ false }, isCombo2{ false }, isAttack{ false }, isRoll{ false }, Hit{ false },
+            isKicked{ false },isJump{ false }, isRise{ false };
+
+        static constexpr _double KickedAnimSpeed = 20, KickedTimeArcOpenEnd = 35;
+
+        if (false == spGameInstance->IsFreeModeCameraEnable() && false == spGameInstance->IsGamePause())
+        {
+            isRunshift = spGameInstance->GetDIKeyPressing(DIK_LSHIFT);
+            isMoveFront = spGameInstance->GetDIKeyPressing(DIK_W);
+            isMoveBack = spGameInstance->GetDIKeyPressing(DIK_S);
+            isMoveLeft = spGameInstance->GetDIKeyPressing(DIK_A);
+            isMoveRight = spGameInstance->GetDIKeyPressing(DIK_D);
+            isWAttack = spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_L);
+            isSAttack = spGameInstance->GetDIMBtnDown(DIMOUSEBUTTON::DIMB_R);
+            isRAttack = spGameInstance->GetDIKeyDown(DIK_Q);
+            isCombo1 = spGameInstance->GetDIKeyDown(DIK_1);
+            isCombo2 = spGameInstance->GetDIKeyDown(DIK_2);
+            isAttack = isWAttack || isRAttack || isSAttack || isCombo1 || isCombo2;
+            isRoll = spGameInstance->GetDIKeyDown(DIK_C);
+            Hit = false;
+            if (spWarriorPlayer->GetPrevHealth() > spWarriorPlayer->GetHealth())
+                Hit = true;
+            isKicked = spWarriorPlayer->GetKickedState();
+            isJump = spGameInstance->GetDIKeyDown(DIK_SPACE);
+            isRise = spWarriorPlayer->GetRiseState();
+        }
 
         // Idle state check
         if (!isRoll && !isKicked && !isJump && !isRise && !isMoveFront && !isMoveBack && !isMoveLeft && !isMoveRight && !isAttack && !isCombo1 && !isCombo2) {
@@ -282,16 +290,18 @@ void CUserWarriorAnimController::Tick(const _double& _dTimeDelta)
             spWarriorPlayer->IfAttack(false);
         }
 
-        // Mouse Move
-        _long		MouseMove = spGameInstance->GetDIMMoveState(DIMM_X);
-        if (MouseMove)
+        if (false == spGameInstance->IsFreeModeCameraEnable() &&  false == spGameInstance->IsGamePause())
         {
-            if (CurAnimName != L"dead01" && CurAnimName != L"dead03")
+            // Mouse Move
+            _long		MouseMove = spGameInstance->GetDIMMoveState(DIMM_X);
+            if (MouseMove)
             {
-                spWarriorPlayer->GetTransform()->RotateTurn(_float3(0.f, 1.f, 0.f), MouseMove * 5.f, _dTimeDelta);
+                if (CurAnimName != L"dead01" && CurAnimName != L"dead03")
+                {
+                    spWarriorPlayer->GetTransform()->RotateTurn(_float3(0.f, 1.f, 0.f), MouseMove * 5.f, _dTimeDelta);
+                }
             }
         }
-
         // Check for death
         if (spWarriorPlayer->GetHealth() <= 0)
         {

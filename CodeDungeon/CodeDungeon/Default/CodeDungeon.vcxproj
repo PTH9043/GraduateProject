@@ -169,6 +169,7 @@
     <ClInclude Include="..\Public\CCoreHarlequinn.h" />
     <ClInclude Include="..\Public\CCoreMinotaur.h" />
     <ClInclude Include="..\Public\CDataManager.h" />
+    <ClInclude Include="..\Public\CFreeModeCamera.h" />
     <ClInclude Include="..\Public\CHarlequinn.h" />
     <ClInclude Include="..\Public\CHarlequinnAnimController.h" />
     <ClInclude Include="..\Public\CHpBarUI.h" />
@@ -231,6 +232,7 @@
     <ClCompile Include="..\Private\CCoreHarlequinn.cpp" />
     <ClCompile Include="..\Private\CCoreMinotaur.cpp" />
     <ClCompile Include="..\Private\CDataManager.cpp" />
+    <ClCompile Include="..\Private\CFreeModeCamera.cpp" />
     <ClCompile Include="..\Private\CHarlequinn.cpp" />
     <ClCompile Include="..\Private\CHarlequinnAnimController.cpp" />
     <ClCompile Include="..\Private\CHpBarUI.cpp" />

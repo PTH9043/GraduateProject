@@ -103,8 +103,8 @@ public:
 public:
 	void OtherFrame(const _double& _dTimeDelta, const WPARAM& _wParam);
 	void AwakeTick();
-	void Tick(const _double& _dTimeDelta);
-	void LateTick(const _double& _dTimeDelta);
+	void Tick(_double _dTimeDelta);
+	void LateTick(_double _dTimeDelta);
 	void RenderBegin();
 	void RenderEnd();
 
@@ -176,6 +176,8 @@ public: /* ActorManager */
 	SHPTR<UActor> CloneActorAddAndNotInLayer(const _wstring& _wstrProto, const VOIDDATAS& _stDatas = VOIDDATAS{});
 	void RemoveActor(CSHPTRREF<UActor> _spActor);
 
+	void EnableLayers(const _wstring& _wstrLayer);
+	void DisableLayers(const _wstring& _wstrLayer);
 public: /*  ComponentManager */
 	HRESULT AddPrototype(const _wstring& _wstrPrototypes, CSHPTRREF<UComponent> _spComponent);
 	SHPTR<UComponent> CloneComp(const _wstring& _wstrPrototypes, const VOIDDATAS& _stDatas = VOIDDATAS{});
@@ -376,6 +378,15 @@ public: //Renderer Fog Bool
 	_float GetAbilityTime();
 	void PauseGame();
 	void ResumeGame();
+	void PauseGameTick();
+	void ResumeGameTick();
+public:
+
+	void SetFreeModeCamEnable(const _bool _isFreeModeCamEnable) { this->m_isFreeModeCameraEnable = _isFreeModeCamEnable; }
+	_bool IsFreeModeCameraEnable() const { return m_isFreeModeCameraEnable ; }
+
+	void SetGamePause(const _bool _isGamePause) { this->m_isGamePause = _isGamePause; }
+	_bool IsGamePause() const { return m_isGamePause; }
 private:
 	_bool															m_isGamming;
 	_bool				m_isPause = false;
@@ -409,6 +420,9 @@ private:
 	SHPTR<UPicking>											m_spPicking;			
 
 	//SHPTR<URandomManager>				m_spRandomManager;
+
+	_bool																	m_isFreeModeCameraEnable;
+	_bool																	m_isGamePause;
 };
 
 END

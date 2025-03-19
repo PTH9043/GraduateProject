@@ -72,18 +72,18 @@ void UPipeLine::RemoveCameraInPipeLine(CAMID _CamID)
 
 void UPipeLine::FrustomTick()
 {
-	m_RenderCamID = MAIN_CAMERA_ID;
-	m_RenderCamList.clear();
-	for (_uint i = 0; i < m_arrFrustoms.size(); ++i)
-	{
-		if (nullptr != m_arrFrustoms[i])
-		{
-			if (true == m_arrCameras[i]->IsFrustomOn())
-			{
-				m_arrFrustoms[i]->Tick();
-			}
-		}
-	}
+	//m_RenderCamID = MAIN_CAMERA_ID;
+	//m_RenderCamList.clear();
+	//for (_uint i = 0; i < m_arrFrustoms.size(); ++i)
+	//{
+	//	if (nullptr != m_arrFrustoms[i])
+	//	{
+	//		if (true == m_arrCameras[i]->IsFrustomOn())
+	//		{
+	//			m_arrFrustoms[i]->Tick();
+	//		}
+	//	}
+	//}
 }
 
 _bool UPipeLine::IsFrustomContains(const _float3& _vPos, const _float _fRadius, const CAMID& _iCamID)

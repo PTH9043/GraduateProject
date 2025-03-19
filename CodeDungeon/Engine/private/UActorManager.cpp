@@ -109,6 +109,44 @@ SHPTR<UActor> UActorManager::CloneActorAddAndNotInLayer(const _wstring& _wstrPro
 	return pClones;
 }
 
+void UActorManager::ActosTickDisable()
+{
+	for (auto& iter : m_arrClones)
+	{
+		for (auto& value : iter)
+			value.second->ActorsTickDisable();
+	}
+}
+
+void UActorManager::ActorsTickEnable()
+{
+	for (auto& iter : m_arrClones)
+	{
+		for (auto& value : iter)
+			value.second->ActorsTickEnable();
+	}
+}
+
+void UActorManager::EnableLayers(const _wstring& _wstrLayer)
+{
+	for (auto& iter : m_arrClones)
+	{
+		const auto& Find = iter.find(_wstrLayer);
+		if (Find == iter.end()) continue;
+		Find->second->ActorsEnable();
+	}
+}
+
+void UActorManager::DisableLayers(const _wstring& _wstrLayer)
+{
+	for (auto& iter : m_arrClones)
+	{
+		const auto& Find = iter.find(_wstrLayer);
+		if (Find == iter.end()) continue;
+		Find->second->ActorsDisable();
+	}
+}
+
 void UActorManager::RemoveActor(const SHPTR<UActor>& _spActor)
 {
 	{

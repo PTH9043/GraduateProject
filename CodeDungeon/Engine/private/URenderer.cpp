@@ -323,37 +323,37 @@ HRESULT URenderer::Render()
     Render2DUILast();
     Render3DUI();
     //원상복구하려면 Blur두개 키고 DownSample 2개를 꺼야함. 그리고 Upsample입력 텍스쳐를 BlurResult로
-#ifdef _USE_DEBUGGING
-    
-    SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance); 
-    RenderDebug();
-    m_spRenderTargetManager->RenderDebugObjects(FrameReadyDrawLast(PROTO_RES_DEBUG2DTARGETSHADER), m_spVIBufferPlane,
-        m_spCastingCommand, SRV_REGISTER::T0);
-  /*  _float3 pos = spGameInstance->GetCurrPlayer()->GetTransform()->GetPos();
-    _float3 vec = spGameInstance->GetMainCameraTransform()->GetLook();
-
-
-    m_spShadowCamera->GetTransform()->SetPos(_float3(pos.x,pos.y+20,pos.z));
-    m_spShadowCamera->GetTransform()->SetLook(pos);*/
-    m_spShadowCamera->GetTransform()->SetPos(_float3(-883.653748, -125.2615, 847.1639));
-    m_spShadowCamera->GetTransform()->LookAt(_float3(-859.759, -154.805, 860.509)); //y를 확올리기
-
-    if (spGameInstance->GetDIKeyPressing(DIK_F1)) {
-      }
-    if (spGameInstance->GetDIKeyDown(DIK_F2)) {
-        TurnDie++;
-    }
-
-   
-    
-    if (TurnDie % 2 == 1) {
-        TurnOnDieEffect();
-    }
-    else {
-        TurnOffDieEffect();
-    }
-   
-#endif
+//#ifdef _USE_DEBUGGING
+//    
+//    SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance); 
+//    RenderDebug();
+//    m_spRenderTargetManager->RenderDebugObjects(FrameReadyDrawLast(PROTO_RES_DEBUG2DTARGETSHADER), m_spVIBufferPlane,
+//        m_spCastingCommand, SRV_REGISTER::T0);
+//  /*  _float3 pos = spGameInstance->GetCurrPlayer()->GetTransform()->GetPos();
+//    _float3 vec = spGameInstance->GetMainCameraTransform()->GetLook();
+//
+//
+//    m_spShadowCamera->GetTransform()->SetPos(_float3(pos.x,pos.y+20,pos.z));
+//    m_spShadowCamera->GetTransform()->SetLook(pos);*/
+//    m_spShadowCamera->GetTransform()->SetPos(_float3(-883.653748, -125.2615, 847.1639));
+//    m_spShadowCamera->GetTransform()->LookAt(_float3(-859.759, -154.805, 860.509)); //y를 확올리기
+//
+//    if (spGameInstance->GetDIKeyPressing(DIK_F1)) {
+//      }
+//    if (spGameInstance->GetDIKeyDown(DIK_F2)) {
+//        TurnDie++;
+//    }
+//
+//   
+//    
+//    if (TurnDie % 2 == 1) {
+//        TurnOnDieEffect();
+//    }
+//    else {
+//        TurnOffDieEffect();
+//    }
+//   
+//#endif
     return S_OK;
 }
 

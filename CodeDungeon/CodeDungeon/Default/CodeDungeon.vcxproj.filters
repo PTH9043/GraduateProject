@@ -199,6 +199,9 @@
     <Filter Include="06.Comp\Controller\MonsterAnimController\Network\Anubis">
       <UniqueIdentifier>{0d2b1971-745d-4fa7-9ad3-3a25a017a733}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Camera\FreeModeCam">
+      <UniqueIdentifier>{0e8f6ea6-5eac-4da7-ba47-f385b74aedde}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\ClientDefines.h">
@@ -381,6 +384,9 @@
     <ClInclude Include="..\Public\CNetworkAnubisAnimController.h">
       <Filter>06.Comp\Controller\MonsterAnimController\Network\Anubis</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CFreeModeCamera.h">
+      <Filter>04.Camera\FreeModeCam</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -555,6 +561,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\CNetworkAnubisAnimController.cpp">
       <Filter>06.Comp\Controller\MonsterAnimController\Network\Anubis</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CFreeModeCamera.cpp">
+      <Filter>04.Camera\FreeModeCam</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

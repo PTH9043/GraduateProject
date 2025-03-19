@@ -33,6 +33,7 @@
 #include "CLoadingUI.h"
 #include "UFont.h"
 #include "CHpBarUI.h"
+#include "CFreeModeCamera.h"
 
 BEGIN(Client)
 
@@ -49,7 +50,8 @@ CMainScene::CMainScene(CSHPTRREF<UDevice> _spDevice) :
 	m_bisMobsAllDead_Interior_Hallway_E{false},
 	m_bisMobsAllDead_Interior_Room_D{ false },
 	m_bisMobsAllDead_Interior_Room_F{ false },
-	m_bisMobsAllDead_Interior_Room_G{ false }
+	m_bisMobsAllDead_Interior_Room_G{ false },
+	m_spFreeModeCamera{nullptr}
 {
 }
 
@@ -1722,7 +1724,8 @@ HRESULT CMainScene::LoadSceneData()
 			VOIDDATAS vecDatas;
 			vecDatas.push_back(&tDesc);
 
-			m_spMainCamera = std::static_pointer_cast<CMainCamera>(spGameInstance->CloneActorAdd(PROTO_ACTOR_MAINCAMERA, vecDatas));
+			m_spMainCamera = std::static_pointer_cast<CMainCamera>(spGameInstance->
+				CloneActorAdd(PROTO_ACTOR_MAINCAMERA, {&tDesc }));
 
 			CWarriorPlayer::CHARACTERDESC CharDesc{ PROTO_RES_FEMAILPLAYERANIMMODEL, PROTO_COMP_USERWARRIORANIMCONTROLLER };
 			CWarriorPlayer::PLAYERDESC PlayerDesc{ m_spMainCamera };
@@ -1730,7 +1733,6 @@ HRESULT CMainScene::LoadSceneData()
 				PROTO_ACTOR_WARRIORPLAYER, { &CharDesc, &PlayerDesc }));
 			spGameInstance->RegisterCurrentPlayer(m_spWarriorPlayer);
 			m_spMainCamera->GetTransform()->SetPos(m_spWarriorPlayer->GetTransform()->GetPos());
-		
 		}
 	}
 
@@ -1741,24 +1743,20 @@ HRESULT CMainScene::LoadSceneData()
 	m_spMap->LoadGuards();
 	m_spWarriorPlayer = std::static_pointer_cast<CWarriorPlayer>(spGameInstance->GetCurrPlayer());
 	m_spMainCamera->GetTransform()->SetPos(m_spWarriorPlayer->GetTransform()->GetPos());
+
 	return S_OK;
 }
 
 void CMainScene::DrawStartSceneUI(const _double& _dTimeDelta)
 {
 	SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
-	
 
 	if (m_bStartGameDefault) {
-		
 		spGameInstance->SoundPlayBGM(L"BGM2");
 		spGameInstance->PauseGame();
 		m_spWarriorPlayer->SetIfStartedGame(false);
 		m_bStartGameDefault = false;
 	}
-	
-	
-
 
 	if (m_spEnterButtonUI->IsMouseOnRect() && m_spEnterButtonUI->IsActive()) {
 		m_spEnterButtonUI->SetIfPicked(true);
@@ -2346,9 +2344,27 @@ void CMainScene::Tick(const _double& _dTimeDelta)
 
 void CMainScene::LateTick(const _double& _dTimeDelta)
 {
+
+	{
+		SHPTR<UGameInstance> spGameInstance = GET_INSTANCE(UGameInstance);
+
+		if (spGameInstance->GetDIKeyPressing(DIK_F6))
+		{
+			spGameInstance->SetFreeModeCamEnable(true);
+		}
+		else if (true == spGameInstance->IsFreeModeCameraEnable() &&
+			spGameInstance->GetDIKeyPressing(DIK_F7))
+		{
+			spGameInstance->SetFreeModeCamEnable(false);
+		}
+
+	}
+
 	UpdateMobsStatus();
 	TurnGuardsOnRange(_dTimeDelta);
 	SHPTR<UGameInstance> pGameInstance = GET_INSTANCE(UGameInstance);
+	RETURN_CHECK(pGameInstance->IsFreeModeCameraEnable(), ;);
+
 	if (!m_spWarriorPlayer->GetDeathState() && ((m_bIsFoundPlayer_Minotaur && !m_bIsDead_Minotaur) || (m_bisFoundPlayer_Harlequinn && !m_bisDead_Harlequinn) || (m_bisFoundPlayer_Anubis && !m_bisDead_Anubis))) {
 		m_spBossHpBarFrameUI->SetActive(true);
 		pGameInstance->BGMUpdateVolume(L"GamePlayBGM", 0.f);
