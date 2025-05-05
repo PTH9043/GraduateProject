@@ -283,32 +283,33 @@ PS_OUT PS_Main(PS_In Input)
 
      //    Out.vColor.rgb += glowColor * 1.125; // °­ÇÑ ºû ¹øÁü Ãß°¡
      //}
-    if (vGlow.a == 0.5) // °Ë±â / Guard / ½¯µå È°¼ºÈ­ ÀÌÆåÆ®
-    {
-        
-        float2 diagonalPattern = float2(Input.vTexUV.x * 20.0 + Input.vTexUV.y * 20.0, Input.vTexUV.y * 20.0 - Input.vTexUV.x * 20.0);
-
-        
-        float randomFactor = frac(sin(dot(Input.vTexUV, float2(12.9898, 78.233))) * 43758.5453);
-        float movement = sin(fGrobalDeltaTime * (3.0 + randomFactor * 2.0)) * 0.2;
-
-       
-        float noise = sin(diagonalPattern.x + fGrobalDeltaTime * 5.0 + movement) * 0.5 + 0.5;
-
-        
-        float stripe = step(0.75, noise); 
-
-
-        float pulse = sin(fGrobalDeltaTime * 4.0) * 0.5 + 0.5;
-        float3 glowColor = Out.vColor.rgb * (1.0 + stripe * pulse * 1.0);
-
-    
-        float glowThreshold = 0.85f; 
-        float bloomFactor = step(glowThreshold, dot(glowColor, float3(0.2126, 0.7152, 0.0722)));
-        glowColor *= bloomFactor; 
-
-        Out.vColor.rgb += glowColor * 1.3; 
-    }
+     
+    //if (vGlow.a == 0.5) // °Ë±â / Guard / ½¯µå È°¼ºÈ­ ÀÌÆåÆ®
+    //{
+    //    
+    //    float2 diagonalPattern = float2(Input.vTexUV.x * 20.0 + Input.vTexUV.y * 20.0, Input.vTexUV.y * 20.0 - Input.vTexUV.x * 20.0);
+    //
+    //    
+    //    float randomFactor = frac(sin(dot(Input.vTexUV, float2(12.9898, 78.233))) * 43758.5453);
+    //    float movement = sin(fGrobalDeltaTime * (3.0 + randomFactor * 2.0)) * 0.2;
+    //
+    //   
+    //    float noise = sin(diagonalPattern.x + fGrobalDeltaTime * 5.0 + movement) * 0.5 + 0.5;
+    //
+    //    
+    //    float stripe = step(0.75, noise); 
+    //
+    //
+    //    float pulse = sin(fGrobalDeltaTime * 4.0) * 0.5 + 0.5;
+    //    float3 glowColor = Out.vColor.rgb * (1.0 + stripe * pulse * 1.0);
+    //
+    //
+    //    float glowThreshold = 0.85f; 
+    //    float bloomFactor = step(glowThreshold, dot(glowColor, float3(0.2126, 0.7152, 0.0722)));
+    //    glowColor *= bloomFactor; 
+    //
+    //    Out.vColor.rgb += glowColor * 1.3; 
+    //}
 
 
 
