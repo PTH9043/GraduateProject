@@ -38,8 +38,8 @@ private:
 	_bool							m_bRender;
 	_float							m_fCreateTime = 0.f;
 	_float							m_fTime = 0.f;
-	LIST<std::pair<_float3, _float3>>	m_listPos; //Top,Bottom
-	LIST<std::pair<_float3, _float3>>	m_listRomPos;
+	DEQUE<std::pair<_float3, _float3>>	m_listPos; //Top,Bottom
+	DEQUE<std::pair<_float3, _float3>>	m_listRomPos;
 
 	_uint ColorTextureIndex = 0;
 	_uint ShapeTextureIndex = 0;

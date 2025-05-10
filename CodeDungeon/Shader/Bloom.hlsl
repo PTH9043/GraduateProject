@@ -75,10 +75,10 @@ PS_OUT PS_Main(PS_In In)
     // 블러 효과를 강조하기 위해 블러 텍스처의 기여도를 높입니다.
     float blurWeight = 1.2f; // 블러 기여도 가중치
     vector enhancedBlurColor = vBlurColor * blurWeight;
-
-    Out.vColor = vHDRColor + enhancedBlurColor + vOriginalColor;
+     Out.vColor = vHDRColor + enhancedBlurColor + vOriginalColor;
+   // Out.vColor = pow(abs(vHDRColor), 2.2f) + pow(abs(enhancedBlurColor), 2.2f) + pow(abs(vOriginalColor), 2.2f);
    // Out.vColor = Out.vColor / (Out.vColor + 1.0f);
-   // Out.vColor = pow(Out.vColor, 1.0f / 2.2f);
+    //Out.vColor = pow(Out.vColor, 1.0f / 2.2f);
     return Out;
 }
 

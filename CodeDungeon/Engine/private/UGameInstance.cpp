@@ -2141,7 +2141,7 @@ HRESULT UGameInstance::ReadyRenderTarget(const OUTPUTDATA& _stData)
 
 		{
 			std::vector<RTDESC> vecRts{
-				RTDESC{ RTOBJID::BLOOM, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM,
+				RTDESC{ RTOBJID::BLOOM, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT,
 					GraphicDesc->iWinCX, GraphicDesc->iWinCY, { 0.f, 0.f, 0.f, 0.f }  }
 			};
 			// Add 

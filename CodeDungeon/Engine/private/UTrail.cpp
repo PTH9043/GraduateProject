@@ -73,6 +73,54 @@ void UTrail::TickActive(const _double& _dTimeDelta)
 	Update(_dTimeDelta);
 
 }
+//void UTrail::AddTrail(_float3 top, _float3 bottom)//벡터 버전 - 멤버 size_t m_iStartIndex = 0; 추가
+//{
+//	if (m_fTime >= 0.f)
+//		return;
+//
+//	m_fTime = m_fCreateTime;
+//
+//	m_vecPos.emplace_back(top, bottom);
+//
+//	// 슬라이딩 윈도우 방식
+//	if (m_vecPos.size() - m_iStartIndex > m_iMaxCount) {
+//		m_iStartIndex += 2;
+//	}
+//
+//	// 보간 불가능하면 원본 추가만
+//	if (m_vecPos.size() - m_iStartIndex <= 3) {
+//		m_vecRomPos.emplace_back(top, bottom);
+//		return;
+//	}
+//
+//	// 보간용 정점 가져오기
+//	const auto& p0 = m_vecPos[m_iStartIndex + m_vecPos.size() - m_iStartIndex - 4];
+//	const auto& p1 = m_vecPos[m_iStartIndex + m_vecPos.size() - m_iStartIndex - 3];
+//	const auto& p2 = m_vecPos[m_iStartIndex + m_vecPos.size() - m_iStartIndex - 2];
+//	const auto& p3 = m_vecPos[m_iStartIndex + m_vecPos.size() - m_iStartIndex - 1];
+//
+//	for (int i = 0; i < m_iDivide; ++i)
+//	{
+//		float t = (i + 1) / static_cast<float>(m_iDivide);
+//
+//		_float3 topInterp = XMVectorCatmullRom(
+//			XMLoadFloat3(&p0.first), XMLoadFloat3(&p1.first),
+//			XMLoadFloat3(&p2.first), XMLoadFloat3(&p3.first), t);
+//
+//		_float3 botInterp = XMVectorCatmullRom(
+//			XMLoadFloat3(&p0.second), XMLoadFloat3(&p1.second),
+//			XMLoadFloat3(&p2.second), XMLoadFloat3(&p3.second), t);
+//
+//		m_vecRomPos.emplace_back(topInterp, botInterp);
+//	}
+//
+//	// 필요 시 압축
+//	if (m_iStartIndex > 50) {
+//		m_vecPos.erase(m_vecPos.begin(), m_vecPos.begin() + m_iStartIndex);
+//		m_iStartIndex = 0;
+//	}
+//}
+
 
 void UTrail::AddTrail(_float3 _top, _float3 _bottom) {
 	if (m_fTime < 0.f)
@@ -148,6 +196,43 @@ void UTrail::LateTickActive(const _double& _dTimeDelta)
 	AddRenderGroup(RENDERID::RI_NONALPHA_LAST);
 
 }
+
+//HRESULT UTrail::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
+//{
+//	if (!m_bRender || m_vecRomPos.size() <= 1)
+//		return;
+//
+//	size_t rectCount = m_vecRomPos.size() - 1;
+//	m_vecVertices.resize(rectCount * 6); // 정점 6개 per quad
+//
+//	for (size_t i = 0; i < rectCount; ++i)
+//	{
+//		const auto& [top1, bot1] = m_vecRomPos[i];
+//		const auto& [top2, bot2] = m_vecRomPos[i + 1];
+//
+//		float ratio = static_cast<float>(i) / rectCount;
+//		float nextRatio = static_cast<float>(i + 1) / rectCount;
+//
+//		_float2 uv[4] = {
+//			{ ratio, 0.f },
+//			{ ratio, ratio },
+//			{ nextRatio, nextRatio },
+//			{ nextRatio, 0.f }
+//		};
+//
+//		int vi = i * 6;
+//		m_vecVertices[vi++] = VTXDEFAULT(bot2, uv[2]);
+//		m_vecVertices[vi++] = VTXDEFAULT(top2, uv[3]);
+//		m_vecVertices[vi++] = VTXDEFAULT(top1, uv[0]);
+//		m_vecVertices[vi++] = VTXDEFAULT(top1, uv[0]);
+//		m_vecVertices[vi++] = VTXDEFAULT(bot1, uv[1]);
+//		m_vecVertices[vi++] = VTXDEFAULT(bot2, uv[2]);
+//	}
+//
+//	// GPU 전송
+//	m_spVIBufferTrail->SetVertices(m_vecVertices, static_cast<_int>(m_vecVertices.size()));
+//	m_spVIBufferTrail->Render(GetShader(), _spCommand, static_cast<_int>(m_vecVertices.size()));
+//}
 
 HRESULT UTrail::RenderActive(CSHPTRREF<UCommand> _spCommand, CSHPTRREF<UTableDescriptor> _spTableDescriptor)
 {
