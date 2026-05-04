@@ -35,6 +35,7 @@ private:
 	_int																m_iHandleIncrementSize;
 	_bool m_bDataUpdated;
 	_bool m_bUseDefaultBuffer;
+	D3D12_RESOURCE_STATES				m_eDefaultBufferState;
 	std::unique_ptr<_ubyte[]> m_pPreviousBuffer;
 
 	BYTE* m_pMapBuffer;

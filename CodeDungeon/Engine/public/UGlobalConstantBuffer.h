@@ -33,7 +33,7 @@ private:
 	// CBV_REGISTER
 	_uint																		m_iCbvRegisterNumber;
 	_bool								m_bUseDefaultBuffer;
-	_bool								m_bCopiedUploadToDefaultOnce;
+	D3D12_RESOURCE_STATES				m_eDefaultBufferState;
 };
 
 END
